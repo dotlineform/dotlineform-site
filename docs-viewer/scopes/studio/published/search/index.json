@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-7a73cf095007e04fbee0b3be22fead12",
-    "generated_at_utc": "2026-08-11T20:02:52Z",
+    "version": "blake2b-ccdf3fddfeb88be4c1baff9d49413ca9",
+    "generated_at_utc": "2026-08-11T20:36:00Z",
     "count": 309
   },
   "entries": [
@@ -6822,10 +6822,10 @@
       "kind": "doc",
       "title": "TDL-2 — Tag Primary Document And Semantic Token Delivery",
       "href": "/docs/?scope=studio&doc=d-20260802-002213-b7d4e2",
-      "last_updated": "2026-08-11 21:02:51",
+      "last_updated": "2026-08-11 21:35:44",
       "parent_id": "d-20260804-160200-fa7bb7",
       "parent_title": "Tag Document Linking",
-      "display_meta": "2026-08-11 21:02:51 • Tag Document Linking",
+      "display_meta": "2026-08-11 21:35:44 • Tag Document Linking",
       "search_terms": [
         "tdl-2 — tag primary document and semantic token delivery",
         "tdl",
@@ -6839,16 +6839,16 @@
         "delivery",
         "tag document linking",
         "linking",
-        "2026-08-11 21:02:51",
+        "2026-08-11 21:35:44",
         "2026",
         "08",
         "11",
         "21",
-        "02",
-        "51",
+        "35",
+        "44",
         "d-20260802-002213-b7d4e2"
       ],
-      "search_text": "tdl-2 — tag primary document and semantic token delivery tdl 2 tag primary document and semantic token delivery tag document linking linking 2026-08-11 21:02:51 2026 08 11 21 02 51 d-20260802-002213-b7d4e2"
+      "search_text": "tdl-2 — tag primary document and semantic token delivery tdl 2 tag primary document and semantic token delivery tag document linking linking 2026-08-11 21:35:44 2026 08 11 21 35 44 d-20260802-002213-b7d4e2"
     },
     {
       "id": "d-20260810-115737-901d0f",

@@ -17,6 +17,17 @@ from .semantic_token_registry import (
 )
 from pipeline_config import load_pipeline_config  # noqa: E402
 
+REPO_ROOT = Path(__file__).resolve().parents[3]
+STUDIO_SERVICES_DIR = REPO_ROOT / "studio" / "services"
+DOCS_SERVICES_DIR = REPO_ROOT / "docs-viewer" / "services"
+for module_dir in (STUDIO_SERVICES_DIR, DOCS_SERVICES_DIR):
+    if str(module_dir) not in sys.path:
+        sys.path.insert(0, str(module_dir))
+
+from tags import tag_alias_mutations  # noqa: E402
+from tags import tag_document_declarations  # noqa: E402
+from tags import tag_source_model  # noqa: E402
+
 
 SEMANTIC_TARGET_LOOKUP_SCHEMA_VERSION = "docs_semantic_token_target_lookup_v2"
 DEFAULT_SEMANTIC_TARGET_LOOKUP_PATH = Path(
@@ -104,6 +115,115 @@ def browser_safe_image_src(value: Any) -> str:
     ):
         return src
     return ""
+
+
+def browser_safe_href(value: Any) -> str:
+    href = str(value or "").strip()
+    if not href.startswith("/") or href.startswith("//"):
+        return ""
+    parsed = urlsplit(href)
+    if parsed.scheme or parsed.netloc or parsed.fragment:
+        return ""
+    return href
+
+
+def aliases_by_tag_id(
+    registry_payload: dict[str, Any],
+    aliases_payload: dict[str, Any],
+    *,
+    canonical_tag_ids: set[str],
+) -> dict[str, list[str]]:
+    if aliases_payload.get("tag_aliases_version") != tag_source_model.TAG_ALIASES_VERSION:
+        raise ValueError(
+            f"Tag aliases must use {tag_source_model.TAG_ALIASES_VERSION}"
+        )
+    tag_alias_mutations.validate_alias_entries(aliases_payload, registry_payload)
+    aliases_by_tag = {tag_id: [] for tag_id in canonical_tag_ids}
+    for index, (raw_alias, raw_entry) in enumerate(aliases_payload["aliases"].items()):
+        alias = tag_source_model.sanitize_alias_key(raw_alias, index)
+        entry = tag_source_model.sanitize_alias_entry(
+            raw_entry,
+            alias,
+            "tag_aliases.aliases",
+        )
+        for tag_id in entry["tags"]:
+            aliases_by_tag[tag_id].append(alias)
+    for aliases in aliases_by_tag.values():
+        aliases.sort()
+    return aliases_by_tag
+
+
+def public_tag_document_location(document: dict[str, Any]) -> dict[str, str] | None:
+    for raw_location in document.get("locations", []):
+        if not isinstance(raw_location, dict):
+            continue
+        if str(raw_location.get("access") or "") != "public":
+            continue
+        href = browser_safe_href(raw_location.get("url"))
+        title = str(raw_location.get("title") or "").strip()
+        return {"href": href, "title": title} if href and title else None
+    return None
+
+
+def tag_target_rows(
+    family: SemanticTokenFamily,
+    target_type: SemanticTokenTargetType,
+    *,
+    registry_payload: Any,
+    aliases_payload: Any,
+    associations_payload: Any,
+) -> list[dict[str, Any]]:
+    if target_type.lookup_adapter != "tag-target-lookup":
+        return []
+    tag_rows = registry_payload["tags"]
+    aliases = aliases_by_tag_id(
+        registry_payload,
+        aliases_payload,
+        canonical_tag_ids={row["tag_id"] for row in tag_rows},
+    )
+    documents_by_tag = {
+        association["tag_id"]: association["documents"]
+        for association in associations_payload["associations"]
+    }
+    targets: list[dict[str, Any]] = []
+    for tag_row_record in tag_rows:
+        tag_id = normalize_semantic_token_id(
+            tag_row_record["tag_id"],
+            target_type.id_policy,
+        )
+        if tag_id is None:
+            raise ValueError(
+                f"Tag {tag_row_record['tag_id']!r} does not match the semantic-token policy"
+            )
+        documents = documents_by_tag.get(tag_id, [])
+        if not documents:
+            continue
+        chosen = documents[0]
+        primary = tag_row_record.get("primary_document")
+        if primary is not None:
+            chosen = next(
+                (
+                    document
+                    for document in documents
+                    if document["target"] == primary
+                ),
+                chosen,
+            )
+        location = public_tag_document_location(chosen)
+        if location is None:
+            continue
+        targets.append(
+            {
+                "family": family.key,
+                "target_type": target_type.key,
+                "target_id": tag_id,
+                "title": tag_id,
+                "href": location["href"],
+                "meta": [tag_row_record["group"], location["title"]],
+                "aliases": aliases[tag_id],
+            }
+        )
+    return targets
 
 
 def primary_image_settings(
@@ -299,29 +419,33 @@ class SemanticTargetLookupBuilder:
                 "schema_version": SEMANTIC_TARGET_LOOKUP_SCHEMA_VERSION,
                 "targets": [],
             }
-        family = registry.family("catalogue")
-        if family is None:
-            return {
-                "schema_version": SEMANTIC_TARGET_LOOKUP_SCHEMA_VERSION,
-                "targets": [],
+        catalogue_family = registry.family("catalogue")
+        if catalogue_family is not None:
+            source_root = (
+                self.repo_root / "studio" / "data" / "canonical" / "catalogue"
+            )
+            image_settings = primary_image_settings(self.repo_root)
+            work_source = CATALOGUE_KIND_SOURCES["work"]
+            work_payload = load_json(source_root / str(work_source["filename"]))
+            work_rows = json_rows(work_payload, str(work_source["root_key"]))
+            works_by_id = {
+                str(row.get("work_id") or "").strip(): row
+                for row in work_rows
+                if str(row.get("work_id") or "").strip()
             }
-        source_root = self.repo_root / "studio" / "data" / "canonical" / "catalogue"
-        image_settings = primary_image_settings(self.repo_root)
-        work_source = CATALOGUE_KIND_SOURCES["work"]
-        work_payload = load_json(source_root / str(work_source["filename"]))
-        work_rows = json_rows(work_payload, str(work_source["root_key"]))
-        works_by_id = {
-            str(row.get("work_id") or "").strip(): row
-            for row in work_rows
-            if str(row.get("work_id") or "").strip()
-        }
-        series_source = CATALOGUE_KIND_SOURCES["series"]
-        series_payload = load_json(source_root / str(series_source["filename"]))
-        series_rows = json_rows(series_payload, str(series_source["root_key"]))
-        series_titles = series_titles_by_id(series_rows)
-        for target_type in family.target_types:
-            source = CATALOGUE_KIND_SOURCES.get(target_type.key)
-            if source is not None:
+            series_source = CATALOGUE_KIND_SOURCES["series"]
+            series_payload = load_json(
+                source_root / str(series_source["filename"])
+            )
+            series_rows = json_rows(
+                series_payload,
+                str(series_source["root_key"]),
+            )
+            series_titles = series_titles_by_id(series_rows)
+            for target_type in catalogue_family.target_types:
+                source = CATALOGUE_KIND_SOURCES.get(target_type.key)
+                if source is None:
+                    continue
                 rows = work_rows if target_type.key == "work" else series_rows
                 for record in rows:
                     normalized_id = normalize_semantic_token_id(
@@ -343,7 +467,7 @@ class SemanticTargetLookupBuilder:
                             settings=image_settings,
                         )
                     row = target_row(
-                        family,
+                        catalogue_family,
                         target_type,
                         record,
                         source,
@@ -351,16 +475,49 @@ class SemanticTargetLookupBuilder:
                         image_src=image_src,
                         has_details=(
                             target_type.key == "work"
-                            and (source_root / "work_details" / f"{normalized_id}.json").is_file()
+                            and (
+                                source_root
+                                / "work_details"
+                                / f"{normalized_id}.json"
+                            ).is_file()
                         ),
                     )
                     if row is not None:
                         targets.append(row)
-                continue
+
+        tag_family = registry.family("tag")
+        if tag_family is not None:
+            tag_target_type = tag_family.target_type("tag")
+            if tag_target_type is not None:
+                targets.extend(
+                    tag_target_rows(
+                        tag_family,
+                        tag_target_type,
+                        registry_payload=tag_source_model.load_registry(
+                            self.repo_root / tag_source_model.REGISTRY_REL_PATH
+                        ),
+                        aliases_payload=tag_source_model.load_aliases(
+                            self.repo_root / tag_source_model.ALIASES_REL_PATH
+                        ),
+                        associations_payload=(
+                            tag_document_declarations.load_tag_document_association_payload(
+                                self.repo_root
+                            )
+                        ),
+                    )
+                )
         targets.sort(
             key=lambda row: (
-                family.target_type(row["target_type"]).order
-                if family.target_type(row["target_type"])
+                registry.family(row["family"]).order
+                if registry.family(row["family"])
+                else 999,
+                registry.family(row["family"]).target_type(
+                    row["target_type"]
+                ).order
+                if registry.family(row["family"])
+                and registry.family(row["family"]).target_type(
+                    row["target_type"]
+                )
                 else 999,
                 normalize_lookup_text(row["title"]),
                 row["target_id"],

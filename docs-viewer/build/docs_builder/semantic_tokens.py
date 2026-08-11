@@ -252,7 +252,7 @@ def token_closing_index(text: str, start: int) -> int:
     return -1
 
 
-def parse_catalogue_token(
+def parse_semantic_token(
     raw: str,
     *,
     start: int = 0,
@@ -263,15 +263,18 @@ def parse_catalogue_token(
     body = raw[2:-2]
     identity, separator, raw_fields = body.partition("|")
     parts = identity.split(":")
-    is_image = len(parts) == 4 and parts[1] == "image"
+    family = parts[0] if parts else ""
+    is_image = (
+        family == "catalogue"
+        and len(parts) == 4
+        and parts[1] == "image"
+    )
     if not separator or (len(parts) != 3 and not is_image):
         return None
-    family = parts[0]
     target_type = parts[-2]
     target_id = parts[-1]
     if (
-        family != "catalogue"
-        or not LEXICAL_KEY_PATTERN.fullmatch(family)
+        not LEXICAL_KEY_PATTERN.fullmatch(family)
         or not LEXICAL_KEY_PATTERN.fullmatch(target_type)
         or not LEXICAL_ID_PATTERN.fullmatch(target_id)
     ):
@@ -310,6 +313,16 @@ def parse_catalogue_token(
         fill_width=image_fields["fill_width"] if image_fields else None,
         detail_id=image_fields["detail_id"] if image_fields else "",
     )
+
+
+def parse_catalogue_token(
+    raw: str,
+    *,
+    start: int = 0,
+    registry: SemanticTokenRegistry | None = None,
+) -> SemanticTokenOccurrence | None:
+    token = parse_semantic_token(raw, start=start, registry=registry)
+    return token if token is not None and token.family == "catalogue" else None
 
 
 def _outside_inline_code_ranges(text: str, start: int, end: int) -> Iterable[tuple[int, int]]:
@@ -385,29 +398,41 @@ def semantic_token_text_ranges(markdown: str) -> Iterable[tuple[int, int]]:
         offset += len(line)
 
 
-def parse_catalogue_tokens(
+def parse_semantic_tokens(
     markdown: str,
     *,
     registry: SemanticTokenRegistry | None,
 ) -> list[SemanticTokenOccurrence]:
-    if "[[catalogue:" not in markdown:
+    if "[[" not in markdown:
         return []
     tokens: list[SemanticTokenOccurrence] = []
     for range_start, range_end in semantic_token_text_ranges(markdown):
         index = range_start
         while index < range_end:
-            opening = markdown.find("[[catalogue:", index, range_end)
+            opening = markdown.find("[[", index, range_end)
             if opening < 0:
                 break
             closing = token_closing_index(markdown, opening + 2)
             if closing < 0 or closing + 2 > range_end:
                 break
             raw = markdown[opening:closing + 2]
-            token = parse_catalogue_token(raw, start=opening, registry=registry)
+            token = parse_semantic_token(raw, start=opening, registry=registry)
             if token is not None:
                 tokens.append(token)
             index = closing + 2
     return tokens
+
+
+def parse_catalogue_tokens(
+    markdown: str,
+    *,
+    registry: SemanticTokenRegistry | None,
+) -> list[SemanticTokenOccurrence]:
+    return [
+        token
+        for token in parse_semantic_tokens(markdown, registry=registry)
+        if token.family == "catalogue"
+    ]
 
 
 def semantic_token_at_selection(
@@ -426,6 +451,25 @@ def semantic_token_at_selection(
         )
     ]
     return active[0] if len(active) == 1 else None
+
+
+def replace_semantic_tokens(
+    markdown: str,
+    *,
+    registry: SemanticTokenRegistry | None,
+    replacer: Callable[[SemanticTokenOccurrence], str],
+) -> str:
+    tokens = parse_semantic_tokens(markdown, registry=registry)
+    if not tokens:
+        return markdown
+    output: list[str] = []
+    offset = 0
+    for token in tokens:
+        output.append(markdown[offset:token.start])
+        output.append(replacer(token))
+        offset = token.end
+    output.append(markdown[offset:])
+    return "".join(output)
 
 
 def replace_catalogue_tokens(
@@ -447,6 +491,25 @@ def replace_catalogue_tokens(
     return "".join(output)
 
 
+def render_semantic_text_token(
+    token: SemanticTokenOccurrence,
+    target: dict[str, Any],
+) -> str:
+    href = str(target.get("href") or "").strip()
+    if not href:
+        return token.raw
+    attrs = (
+        f'data-semantic-token-family="{html.escape(token.family, quote=True)}" '
+        f'data-semantic-token-target-type="{html.escape(token.target_type, quote=True)}" '
+        f'data-semantic-token-target-id="{html.escape(token.target_id, quote=True)}" '
+        'target="_blank" rel="noopener noreferrer"'
+    )
+    return (
+        f'<a href="{html.escape(href, quote=True)}" {attrs}>'
+        f"{html.escape(token.title)}</a>"
+    )
+
+
 def render_catalogue_token(token: SemanticTokenOccurrence, target: dict[str, Any]) -> str:
     href = str(target.get("href") or "").strip()
     if not href:
@@ -458,10 +521,7 @@ def render_catalogue_token(token: SemanticTokenOccurrence, target: dict[str, Any
         'target="_blank" rel="noopener noreferrer"'
     )
     if token.presentation != "image":
-        return (
-            f'<a href="{html.escape(href, quote=True)}" {attrs}>'
-            f"{html.escape(token.title)}</a>"
-        )
+        return render_semantic_text_token(token, target)
     image = target.get("image") if isinstance(target.get("image"), dict) else {}
     src = browser_safe_image_src(image.get("src"))
     if not src:
@@ -623,6 +683,12 @@ def load_semantic_token_target_records(
             if isinstance(raw_target.get("meta"), list)
             else [],
         }
+        if isinstance(raw_target.get("aliases"), list):
+            target["aliases"] = [
+                str(value).strip()
+                for value in raw_target["aliases"]
+                if str(value).strip()
+            ]
         raw_image = raw_target.get("image")
         image_src = (
             browser_safe_image_src(raw_image.get("src"))
@@ -683,9 +749,13 @@ class SemanticTokensMixin:
                     "href": resolved_target["href"],
                 }
             )
-            return render_catalogue_token(token, resolved_target)
+            return (
+                render_catalogue_token(token, resolved_target)
+                if token.presentation == "image"
+                else render_semantic_text_token(token, resolved_target)
+            )
 
-        rendered = replace_catalogue_tokens(
+        rendered = replace_semantic_tokens(
             markdown,
             registry=self.semantic_token_registry,
             replacer=replace,

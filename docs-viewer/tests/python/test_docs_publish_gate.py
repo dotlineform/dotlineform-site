@@ -321,6 +321,12 @@ def test_publish_confirm_applies_explicit_exclusions_and_retains_unrelated_files
         assert (repo_root / "site/assets/data/docs/scopes/library/by-id/manage-root.json").is_file()
         assert (repo_root / "site/assets/data/docs/scopes/library/references").is_dir()
         assert (repo_root / "site/assets/data/docs/scopes/library/semantic-tokens").is_dir()
+        assert json.loads(
+            (
+                repo_root
+                / "site/assets/data/docs/scopes/library/semantic-tokens/index.json"
+            ).read_text(encoding="utf-8")
+        ) == {"schema_version": "stale"}
         assert (repo_root / "site/assets/data/docs/scopes/library/by-id/stale.json").is_file()
         assert (repo_root / "site/assets/data/docs/scopes/library/media/html/widget.html").is_file()
         assert (repo_root / "site/assets/data/docs/scopes/library/media/img/diagram.png").is_file()

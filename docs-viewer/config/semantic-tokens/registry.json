@@ -60,6 +60,47 @@
           ]
         }
       ]
+    },
+    {
+      "schema_version": "docs_semantic_token_family_definition_v1",
+      "key": "tag",
+      "labels": {
+        "family": "Tag",
+        "source_action": "Add tag token",
+        "info_view": "Tag token"
+      },
+      "occurrence_fields": [
+        {
+          "key": "title",
+          "label": "Title",
+          "required": true,
+          "editable": true,
+          "control": "text"
+        }
+      ],
+      "ui_contributions": {
+        "source_action": "source-add-tag-token",
+        "modal": "tag-token-add-modal",
+        "info_view": "tag-token-info"
+      },
+      "target_types": [
+        {
+          "key": "tag",
+          "label": "Tag",
+          "id_policy": {
+            "normalizer": "slug",
+            "input_pattern": "^[a-z0-9][a-z0-9-]*$",
+            "canonical_pattern": "^[a-z0-9][a-z0-9-]*$"
+          },
+          "lookup_adapter": "tag-target-lookup",
+          "lookup_fields": [
+            "title",
+            "href",
+            "meta",
+            "aliases"
+          ]
+        }
+      ]
     }
   ]
 }
