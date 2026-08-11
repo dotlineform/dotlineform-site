@@ -92,7 +92,12 @@
           "manifest_url": "/docs-viewer/scopes/analysis/published/documents/sub-scopes/tags/manage-manifest.json",
           "by_id_url_base": "/docs-viewer/scopes/analysis/published/documents/sub-scopes/tags/by-id",
           "sub_scope_customisation": {
-            "id": "analysis_tags"
+            "id": "analysis_tags",
+            "capabilities": {
+              "assignable_field_groups": [
+                "tag_fields"
+              ]
+            }
           }
         },
         {

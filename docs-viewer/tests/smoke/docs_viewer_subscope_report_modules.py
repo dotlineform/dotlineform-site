@@ -553,6 +553,8 @@ def assert_filter_projection(page: Page) -> None:
           };
           const analysisTags = await manageRegistry.resolveManagementDocsSubscopeCustomisation({
             id: 'analysis_tags'
+          }, {
+            collection: { scope: 'analysis', sub_scope: 'tags' }
           });
           const contribution = Object.assign({}, analysisTags, {
             notify: event => {
@@ -2192,7 +2194,18 @@ def assert_manage_report_bridge(page: Page) -> None:
             f"unexpected sub-scope package bridge state: {mounted['packageState']!r}"
         )
     assert mounted["beforeClear"]["detailProjection"] == {
-        "info": None,
+        "info": {
+            "actions": {"tagFields": False},
+            "fields": [
+                {
+                    "detail": "",
+                    "id": "tag_fields",
+                    "label": "Group",
+                    "state": "assigned",
+                    "value": "subject",
+                }
+            ],
+        },
         "record": {
             "doc_id": "detail-doc",
             "title": "Detail",
@@ -4445,6 +4458,105 @@ def assert_subscope_customisation_capability_projection(page: Page) -> None:
     }
 
 
+def assert_analysis_tags_metadata_customisation(page: Page) -> None:
+    result = page.evaluate(
+        """async () => {
+          const module = await import(
+            '/docs-viewer/runtime/js/management/docs-viewer-management-subscope-analysis-tags.js'
+          );
+          const collection = { scope: 'analysis', sub_scope: 'tags' };
+          const data = { groups: ['subject', 'domain', 'form', 'theme'] };
+          const contribution = module.createDocsViewerManagementSubscopeAnalysisTags({
+            collection,
+            descriptor: {
+              id: 'analysis_tags',
+              capabilities: { assignableFieldGroups: ['tag_fields'] }
+            }
+          });
+          const project = (document, docId = document.doc_id) => (
+            contribution.projectDetailInfo({
+              collection,
+              data,
+              document,
+              target: { scope: 'analysis', sub_scope: 'tags', doc_id: docId }
+            })
+          );
+          const withoutCapability = module.createDocsViewerManagementSubscopeAnalysisTags({
+            collection,
+            descriptor: { id: 'analysis_tags' }
+          });
+          let collectionError = '';
+          try {
+            contribution.projectDetailInfo({
+              collection: { scope: 'studio', sub_scope: 'tags' },
+              data,
+              document: { doc_id: 'wrong-collection' },
+              target: {
+                scope: 'studio', sub_scope: 'tags', doc_id: 'wrong-collection'
+              }
+            });
+          } catch (error) {
+            collectionError = error.message;
+          }
+          let targetError = '';
+          try {
+            project({ doc_id: 'exact-doc', customisation: { group: 'theme' } }, 'other-doc');
+          } catch (error) {
+            targetError = error.message;
+          }
+          const assigned = project({
+            doc_id: 'assigned-doc', customisation: { group: 'theme' }
+          });
+          const unassigned = project({ doc_id: 'unassigned-doc' });
+          const unavailable = project({
+            doc_id: 'unavailable-doc', customisation: { group: 'retired' }
+          });
+          const noCapability = withoutCapability.projectDetailInfo({
+            collection,
+            data,
+            document: { doc_id: 'no-capability-doc' },
+            target: {
+              scope: 'analysis', sub_scope: 'tags', doc_id: 'no-capability-doc'
+            }
+          });
+          return {
+            actionAvailability: [
+              assigned.actions.tagFields, noCapability.actions.tagFields
+            ],
+            fieldIdentity: {
+              id: assigned.fields[0].id, label: assigned.fields[0].label
+            },
+            collectionError,
+            targetError,
+            groups: [assigned, unassigned, unavailable].map(info => {
+              const field = info.fields[0];
+              return {
+                detail: field.detail, state: field.state, value: field.value
+              };
+            })
+          };
+        }"""
+    )
+
+    assert result == {
+        "actionAvailability": [True, False],
+        "collectionError": (
+            "Analysis/Tags customisation collection did not match its registry entry."
+        ),
+        "fieldIdentity": {"id": "tag_fields", "label": "Group"},
+        "groups": [
+            {"detail": "", "state": "assigned", "value": "theme"},
+            {"detail": "", "state": "unassigned", "value": "Unassigned"},
+            {
+                "detail": "retired",
+                "state": "unavailable",
+                "value": "Unavailable",
+            },
+        ],
+        "targetError": "Analysis/Tags metadata target is invalid.",
+    }
+
+
 def assert_dotlineform_projects_catalogue_subjects(page: Page) -> None:
     result = page.evaluate(
         """async () => {
@@ -5085,6 +5197,7 @@ def main(argv: list[str] | None = None) -> int:
                 assert_manage_report_bridge(page)
                 assert_default_report_and_customisation_framework(page)
                 assert_subscope_customisation_capability_projection(page)
+                assert_analysis_tags_metadata_customisation(page)
                 assert_dotlineform_projects_customisation(page)
                 assert_dotlineform_projects_catalogue_subjects(page)
             finally:

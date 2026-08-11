@@ -44,14 +44,19 @@ def test_current_customisations_declare_explicit_aspects() -> None:
         customisations.DocsSubScopeDocumentGroupsAspect,
     )
     assert analysis.source_validation is None
-    assert analysis.metadata is None
+    assert isinstance(analysis.metadata, customisations.DocsSubScopeMetadataAspect)
     assert analysis.import_front_matter is None
     assert analysis.browser_composition == (
         customisations.DocsSubScopeBrowserCompositionAspect(
             accesses=frozenset({"manage"}),
         )
     )
-    assert analysis.assignable_field_groups == ()
+    assert analysis.assignable_field_groups == (
+        customisations.DocsSubScopeAssignableFieldGroup(
+            group_id="tag_fields",
+            field_names=("group",),
+        ),
+    )
     assert analysis.transfer is not None
     assert analysis.transfer.contract_id == "analysis_tag_fields"
     assert analysis.transfer.owned_field_names == ("group",)
@@ -118,6 +123,43 @@ def test_current_customisations_declare_explicit_aspects() -> None:
         projects_config,
         published=True,
     ) is None
+
+    analysis_config = customisations.normalize_docs_subscope_customisation(
+        {
+            "id": "analysis_tags",
+            "settings": {"groups": ["subject", "domain", "form", "theme"]},
+        },
+        field="sub_scope_customisation",
+    )
+    assert customisations.browser_sub_scope_customisation_payload(
+        analysis_config,
+        published=False,
+    ) == {
+        "id": "analysis_tags",
+        "capabilities": {
+            "assignable_field_groups": ["tag_fields"],
+        },
+    }
+    assert customisations.browser_sub_scope_customisation_payload(
+        analysis_config,
+        published=True,
+    ) is None
+    assert customisations.sub_scope_customisation_metadata_record(
+        analysis_config,
+        {"group": " Theme "},
+        doc_id="tag-doc",
+    ) == {"group": "theme"}
+    assert customisations.sub_scope_customisation_metadata_record(
+        analysis_config,
+        {},
+        doc_id="untagged-doc",
+    ) == {"group": ""}
+    with pytest.raises(ValueError, match="not configured for the target"):
+        customisations.sub_scope_customisation_metadata_record(
+            analysis_config,
+            {"group": "retired"},
+            doc_id="retired-tag-doc",
+        )
 
     works_config = customisations.normalize_docs_subscope_customisation(
         {"id": "analysis_works", "settings": {}},

@@ -269,6 +269,7 @@ function projectDetailInfo(state, docId, payload, metadata) {
   var doc = state.docs.find(function (record) { return record.docId === docId; });
   var projected = project({
     collection: collectionTarget(state.viewerScope, state.subScopeId),
+    data: state.customisationData,
     document: documentRecord(doc),
     metadata: metadata,
     payload: payload,

@@ -30,7 +30,8 @@ function normalizeMetadataInfo(value) {
   var actions = objectRecord(record.actions);
   return Object.freeze({
     actions: Object.freeze({
-      assignSubject: Boolean(actions && actions.assignSubject === true)
+      assignSubject: Boolean(actions && actions.assignSubject === true),
+      tagFields: Boolean(actions && actions.tagFields === true)
     }),
     fields: Object.freeze(fields)
   });

@@ -4,20 +4,20 @@
   "limit": 10,
   "docs": [
     {
+      "doc_id": "d-20260804-170901-b2e74c",
+      "title": "TDL-0 — Tag Document Metadata Authoring Refactor Delivery",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260804-170901-b2e74c.json",
+      "timestamp": "2026-08-11 15:49:20",
+      "parent_id": "d-20260804-160200-fa7bb7",
+      "parent_title": "Tag Document Linking"
+    },
+    {
       "doc_id": "d-20260804-160200-fa7bb7",
       "title": "Tag Document Linking",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260804-160200-fa7bb7.json",
       "timestamp": "2026-08-11 15:29:28",
       "parent_id": "d-20260428-000000-f5ff18",
       "parent_title": "Roadmap"
-    },
-    {
-      "doc_id": "d-20260804-170901-b2e74c",
-      "title": "TDL-0 — Tag Document Metadata Authoring Refactor Delivery",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260804-170901-b2e74c.json",
-      "timestamp": "2026-08-11 15:19:20",
-      "parent_id": "d-20260804-160200-fa7bb7",
-      "parent_title": "Tag Document Linking"
     },
     {
       "doc_id": "d-20260804-160201-47af2d",
@@ -84,5 +84,5 @@
       "parent_title": "Implementation Review and Architectural Conformance"
     }
   ],
-  "generated_at": "2026-08-11T14:29:28Z"
+  "generated_at": "2026-08-11T14:49:53Z"
 }

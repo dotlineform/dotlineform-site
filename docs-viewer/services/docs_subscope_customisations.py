@@ -165,6 +165,18 @@ def _analysis_tags_document_groups(settings: Mapping[str, Any]) -> tuple[str, ..
     return tuple(str(value) for value in settings.get("groups", ()))
 
 
+def _analysis_tags_metadata_record(
+    settings: Mapping[str, Any],
+    front_matter: Mapping[str, Any],
+    *,
+    doc_id: str,
+) -> dict[str, str]:
+    del doc_id
+    raw_group = front_matter.get("group")
+    _validate_analysis_tags_transfer_field(settings, "group", raw_group)
+    return {"group": str(raw_group or "").strip().lower()}
+
+
 def _validate_analysis_tags_transfer_field(
     settings: Mapping[str, Any],
     field_name: str,
@@ -219,8 +231,17 @@ SUB_SCOPE_CUSTOMISATION_DEFINITIONS = {
         document_groups=DocsSubScopeDocumentGroupsAspect(
             resolve=_analysis_tags_document_groups,
         ),
+        metadata=DocsSubScopeMetadataAspect(
+            read_record=_analysis_tags_metadata_record,
+        ),
         browser_composition=DocsSubScopeBrowserCompositionAspect(
             accesses=frozenset({MANAGE_ACCESS}),
+        ),
+        assignable_field_groups=(
+            DocsSubScopeAssignableFieldGroup(
+                group_id="tag_fields",
+                field_names=("group",),
+            ),
         ),
         transfer=DocsSubScopeTransferAspect(
             contract_id="analysis_tag_fields",

@@ -1095,7 +1095,10 @@ group: subject
         f"/docs/?scope=studio&doc={TAGS_REPORT_DOC_ID}&subdoc={DETAIL_DOC_ID}"
     )
     assert browser_config["scopes"][0]["sub_scopes"][0]["sub_scope_customisation"] == {
-        "id": "analysis_tags"
+        "id": "analysis_tags",
+        "capabilities": {
+            "assignable_field_groups": ["tag_fields"],
+        },
     }
     assert "sub_scope_customisation" not in public_browser_config["scopes"][0]["sub_scopes"][0]
 

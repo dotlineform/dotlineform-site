@@ -291,7 +291,7 @@ def assert_manage_subscope_subject_info(page: Page) -> None:
                     last_updated: '2026-08-04'
                 },
                 subdocInfo: {
-                    actions: { assignSubject: true },
+                    actions: { assignSubject: true, tagFields: true },
                     fields: [{
                         id: 'authoring_subject',
                         label: 'Subject',
@@ -336,6 +336,7 @@ def assert_manage_subscope_subject_info(page: Page) -> None:
             return {
                 active: {
                     assignSubject: activeContext.metadataInfo.actions.assignSubject,
+                    tagFields: activeContext.metadataInfo.actions.tagFields,
                     metadataDocId: activeContext.selectedMetadata.doc_id,
                     selectedDocId: activeContext.selectedDoc.doc_id,
                     sourceTarget: activeContext.sourceTarget,
@@ -363,6 +364,7 @@ def assert_manage_subscope_subject_info(page: Page) -> None:
     assert result == {
         "active": {
             "assignSubject": True,
+            "tagFields": True,
             "metadataDocId": "project-note",
             "selectedDocId": "project-note",
             "sourceTarget": {
@@ -393,6 +395,33 @@ def assert_manage_subscope_subject_info(page: Page) -> None:
         "wrongTargetSelectedDocId": "parent-report",
         "wrongTargetSubjectInfo": None,
     }
+
+
+def assert_manage_subscope_tag_info(page: Page) -> None:
+    result = render_context(
+        page,
+        """({
+            appContext: { kind: 'manage', serviceAvailability: {} },
+            managedDocumentTarget: {
+                scope: 'analysis', sub_scope: 'tags', doc_id: 'theme-tag'
+            },
+            metadataInfo: {
+                actions: { assignSubject: false, tagFields: true },
+                fields: [{
+                    id: 'tag_fields', label: 'Group', value: 'theme', detail: ''
+                }]
+            },
+            selectedDoc: { doc_id: 'theme-tag', title: 'Theme tag' },
+            selectedMetadata: {
+                doc_id: 'theme-tag', title: 'Theme tag', summary: 'Exact tag detail'
+            }
+        })""",
+    )
+    assert result["targetKind"] == "subscope-document"
+    assert result["terms"] == ["Doc ID", "Summary", "Date", "Added", "Updated", "Group"]
+    assert result["values"] == [
+        "theme-tag", "Exact tag detail", "Not set", "Not set", "Not set", "theme"
+    ]
 
 
 def assert_manage_diagram_sources_are_logical_vscode_links(page: Page) -> None:
@@ -492,6 +521,7 @@ def run_smoke(page: Page, base_url: str, fixture_path: str) -> None:
     assert_public_reader_metadata(page)
     assert_manage_metadata(page)
     assert_manage_subscope_subject_info(page)
+    assert_manage_subscope_tag_info(page)
     assert_manage_diagram_sources_are_logical_vscode_links(page)
 
 
