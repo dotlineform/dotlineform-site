@@ -19,14 +19,13 @@ from build_docs_test_support import (
     run_cli,
     write_public_scope_config,
     write_public_source_docs,
-    write_route_config,
     write_site_tools_config,
     write_source_docs,
     write_text,
     write_json,
     write_external_scope_config,
 )
-from repo_factory import docs_scope_record, write_docs_scope_config
+from repo_factory import docs_scope_record
 
 
 def test_python_docs_builder_scripts_load_repo_local_env_before_scope_config() -> None:
