@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-f6a86059b76fb5cd6d6557c6979e902c",
-    "generated_at_utc": "2026-08-12T20:41:02Z",
-    "count": 243
+    "version": "blake2b-04d692249016e2b6d3277ea8b3fa19d7",
+    "generated_at_utc": "2026-08-12T20:45:39Z",
+    "count": 242
   },
   "entries": [
     {
@@ -4205,32 +4205,6 @@
         "d-20260808-212749-af71c2"
       ],
       "search_text": "ipad studio working slice and proof ipad studio working slice and proof ipad docs viewer docs viewer 2026-08-08 21:37:38 2026 08 21 37 38 d-20260808-212749-af71c2"
-    },
-    {
-      "id": "d-20260812-114603-9706aa",
-      "kind": "doc",
-      "title": "Media Publication Check",
-      "href": "/docs/?scope=studio&doc=d-20260812-114603-9706aa",
-      "last_updated": "2026-08-12 11:46:03",
-      "parent_id": "d-20260428-000000-f5ff18",
-      "parent_title": "Roadmap",
-      "display_meta": "2026-08-12 11:46:03 • Roadmap",
-      "search_terms": [
-        "media publication check",
-        "media",
-        "publication",
-        "check",
-        "roadmap",
-        "2026-08-12 11:46:03",
-        "2026",
-        "08",
-        "12",
-        "11",
-        "46",
-        "03",
-        "d-20260812-114603-9706aa"
-      ],
-      "search_text": "media publication check media publication check roadmap 2026-08-12 11:46:03 2026 08 12 11 46 03 d-20260812-114603-9706aa"
     },
     {
       "id": "d-20260812-102047-a3c9e7",
