@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-20defa47f5bd1fa14164a58c80038c8e",
-    "generated_at_utc": "2026-08-12T18:07:11Z",
-    "count": 244
+    "version": "blake2b-bbb4520eabb0d510c225312d8df5862b",
+    "generated_at_utc": "2026-08-12T18:28:18Z",
+    "count": 243
   },
   "entries": [
     {
@@ -4207,31 +4207,6 @@
       "search_text": "ipad studio working slice and proof ipad studio working slice and proof ipad docs viewer docs viewer 2026-08-08 21:37:38 2026 08 21 37 38 d-20260808-212749-af71c2"
     },
     {
-      "id": "d-20260812-095531-6fd2b1",
-      "kind": "doc",
-      "title": "Media Locations",
-      "href": "/docs/?scope=studio&doc=d-20260812-095531-6fd2b1",
-      "last_updated": "2026-08-12 15:38:36",
-      "parent_id": "d-20260428-000000-f5ff18",
-      "parent_title": "Roadmap",
-      "display_meta": "2026-08-12 15:38:36 • Roadmap",
-      "search_terms": [
-        "media locations",
-        "media",
-        "locations",
-        "roadmap",
-        "2026-08-12 15:38:36",
-        "2026",
-        "08",
-        "12",
-        "15",
-        "38",
-        "36",
-        "d-20260812-095531-6fd2b1"
-      ],
-      "search_text": "media locations media locations roadmap 2026-08-12 15:38:36 2026 08 12 15 38 36 d-20260812-095531-6fd2b1"
-    },
-    {
       "id": "d-20260812-114603-9706aa",
       "kind": "doc",
       "title": "Media Publication Check",
@@ -4390,26 +4365,26 @@
       "kind": "doc",
       "title": "Scope Media Management",
       "href": "/docs/?scope=studio&doc=d-20260720-100017-9855dd",
-      "last_updated": "2026-08-12 11:46:03",
+      "last_updated": "2026-08-12 19:28:18",
       "parent_id": "d-20260428-000000-f5ff18",
       "parent_title": "Roadmap",
-      "display_meta": "2026-08-12 11:46:03 • Roadmap",
+      "display_meta": "2026-08-12 19:28:18 • Roadmap",
       "search_terms": [
         "scope media management",
         "scope",
         "media",
         "management",
         "roadmap",
-        "2026-08-12 11:46:03",
+        "2026-08-12 19:28:18",
         "2026",
         "08",
         "12",
-        "11",
-        "46",
-        "03",
+        "19",
+        "28",
+        "18",
         "d-20260720-100017-9855dd"
       ],
-      "search_text": "scope media management scope media management roadmap 2026-08-12 11:46:03 2026 08 12 11 46 03 d-20260720-100017-9855dd"
+      "search_text": "scope media management scope media management roadmap 2026-08-12 19:28:18 2026 08 12 19 28 18 d-20260720-100017-9855dd"
     },
     {
       "id": "d-20260720-100017-e094d8",
