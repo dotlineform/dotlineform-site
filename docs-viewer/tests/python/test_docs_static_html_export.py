@@ -25,7 +25,6 @@ if str(DOCS_SERVICES_DIR) not in sys.path:
 import docs_management_routes as routes  # noqa: E402
 import docs_management_service  # noqa: E402
 import docs_static_html_export as exporter  # noqa: E402
-import docs_static_html_export_media as media_export  # noqa: E402
 
 
 FIXED_EXPORT_DATE = date(2026, 7, 31)
@@ -52,7 +51,13 @@ def write_scope_config(root: Path) -> None:
     write_json(
         root / "docs-viewer/config/scopes/docs_scopes.json",
         {
-            "schema_version": "docs_scopes_v3",
+            "schema_version": "docs_scopes_v4",
+            "media_workspace": {
+                "location": {
+                    "provider": "external_local",
+                    "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/media",
+                }
+            },
             "scopes": [
                 docs_scope_record(
                     "studio",
@@ -91,7 +96,7 @@ def write_generated_scope(
 
 def prepare_repo(root: Path, projects_root: Path) -> None:
     os.environ["DOTLINEFORM_PROJECTS_BASE_DIR"] = str(projects_root)
-    (projects_root / "docs-viewer").mkdir(parents=True, exist_ok=True)
+    (projects_root / "docs-viewer/media").mkdir(parents=True, exist_ok=True)
     write_scope_config(root)
     write_generated_scope(
         root / "docs-viewer/scopes/studio/published/documents",
@@ -613,7 +618,7 @@ def test_snapshot_packages_only_selected_owned_media_and_records_external_depend
         repo_root = Path(repo_path)
         projects_root = Path(projects_path)
         prepare_repo(repo_root, projects_root)
-        media_root = repo_root / "docs-viewer/scopes/studio/published/media"
+        media_root = projects_root / "docs-viewer/media/studio"
         media_objects = {
             "img/photo one.png": b"photo",
             "svg/diagram.svg": b"<svg/>",
@@ -680,28 +685,28 @@ def test_snapshot_packages_only_selected_owned_media_and_records_external_depend
             for item in provenance["media"]
         } == {
             ("files", "manual.pdf"): (
-                "repository",
+                    "external_local",
                 "media/files/manual.pdf",
                 6,
                 hashlib.sha256(b"manual").hexdigest(),
                 ["parent"],
             ),
             ("html", "widget.html"): (
-                "repository",
+                    "external_local",
                 "media/html/widget.html",
                 13,
                 hashlib.sha256(b"<p>widget</p>").hexdigest(),
                 ["parent"],
             ),
             ("img", "photo one.png"): (
-                "repository",
+                    "external_local",
                 "media/img/photo one.png",
                 5,
                 hashlib.sha256(b"photo").hexdigest(),
                 ["parent"],
             ),
             ("svg", "diagram.svg"): (
-                "repository",
+                    "external_local",
                 "media/svg/diagram.svg",
                 6,
                 hashlib.sha256(b"<svg/>").hexdigest(),
@@ -738,7 +743,7 @@ def test_snapshot_plan_revision_detects_body_and_media_byte_changes() -> None:
         )
         assert body_changed["plan_revision"] != first["plan_revision"]
 
-        media_path = repo_root / "docs-viewer/scopes/studio/published/media/img/photo.png"
+        media_path = Path(projects_path) / "docs-viewer/media/studio/img/photo.png"
         media_path.parent.mkdir(parents=True)
         media_path.write_bytes(b"first")
         payload["content_html"] = '<img src="/docs/media/studio/img/photo.png">'
@@ -779,7 +784,7 @@ def test_snapshot_apply_reads_public_and_external_local_generated_scopes() -> No
         external_payload = json.loads(external_payload_path.read_text(encoding="utf-8"))
         external_payload["content_html"] = '<img src="/docs/media/external/svg/diagram.svg">'
         write_json(external_payload_path, external_payload)
-        external_svg = projects_root / "docs-viewer/scopes/external/published/media/svg/diagram.svg"
+        external_svg = projects_root / "docs-viewer/media/external/svg/diagram.svg"
         external_svg.parent.mkdir(parents=True)
         external_svg.write_bytes(b"<svg>external</svg>")
 
@@ -802,7 +807,7 @@ def test_snapshot_apply_reads_public_and_external_local_generated_scopes() -> No
                 ).read_text(encoding="utf-8")
 
 
-def test_snapshot_apply_packages_r2_fixture_without_fetching_served_url() -> None:
+def test_snapshot_apply_packages_public_scope_managed_media_without_fetching_served_url() -> None:
     with tempfile.TemporaryDirectory() as repo_path, tempfile.TemporaryDirectory() as projects_path:
         repo_root = Path(repo_path)
         projects_root = Path(projects_path)
@@ -810,22 +815,14 @@ def test_snapshot_apply_packages_r2_fixture_without_fetching_served_url() -> Non
         library_payload_path = repo_root / "docs-viewer/scopes/library/published/documents/by-id/library.json"
         library_payload = json.loads(library_payload_path.read_text(encoding="utf-8"))
         library_payload["content_html"] = (
-            '<img src="https://media.example.test/docs/library/img/photo.webp?cache=1">'
+            '<img src="/docs/media/library/img/photo.webp?cache=1">'
         )
         write_json(library_payload_path, library_payload)
-
-        class ReadOnlyR2Fixture:
-            def get_object(self, key: str) -> bytes:
-                if key != "docs/library/img/photo.webp":
-                    raise FileNotFoundError(key)
-                return b"r2-photo"
+        managed_photo = projects_root / "docs-viewer/media/library/img/photo.webp"
+        managed_photo.parent.mkdir(parents=True)
+        managed_photo.write_bytes(b"managed-photo")
 
         with (
-            patch.object(
-                media_export,
-                "authenticated_remote_client_for_locations",
-                return_value=ReadOnlyR2Fixture(),
-            ),
             patch("urllib.request.urlopen", side_effect=AssertionError("served URL fetch attempted")),
         ):
             preview = exporter.preview_static_html_export(
@@ -837,7 +834,7 @@ def test_snapshot_apply_packages_r2_fixture_without_fetching_served_url() -> Non
 
         destination = projects_root / "docs-export/library - 2026-07-31"
         assert payload["media_count"] == 1
-        assert (destination / "media/img/photo.webp").read_bytes() == b"r2-photo"
+        assert (destination / "media/img/photo.webp").read_bytes() == b"managed-photo"
         assert 'src="../media/img/photo.webp"' in (
             destination / "docs/library.html"
         ).read_text(encoding="utf-8")

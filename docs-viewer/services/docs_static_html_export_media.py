@@ -19,7 +19,7 @@ from docs_artifact_locations import (
     authenticated_remote_client_for_locations,
     normalize_artifact_identity,
 )
-from docs_scope_config import DocsPublishedMediaConfig, DocsScopeConfig
+from docs_scope_config import DocsManagedMediaConfig, DocsScopeConfig
 
 
 SIMPLE_URL_ATTRIBUTES = frozenset({"src", "poster", "data"})
@@ -234,7 +234,7 @@ def _prefix_match(candidate: SplitResult, prefix: SplitResult) -> str | None:
 
 def owned_media_reference(
     value: str,
-    media_configs: Mapping[str, DocsPublishedMediaConfig],
+    media_configs: Mapping[str, DocsManagedMediaConfig],
 ) -> OwnedMediaReference | None:
     raw = html.unescape(str(value or "").strip())
     if not raw or raw.startswith("#"):
@@ -296,7 +296,7 @@ def _media_adapters(
     environ: Mapping[str, str] | None,
 ) -> dict[str, ArtifactLocationAdapter]:
     selected = {
-        media_type: config.published.media[media_type]
+        media_type: config.media.types[media_type]
         for media_type in sorted(set(media_types))
     }
     client = authenticated_remote_client_for_locations(
@@ -331,7 +331,7 @@ def plan_snapshot_media(
 
     for doc_id, payload in doc_payloads.items():
         def collect(element: str, attribute: str, value: str) -> str:
-            owned = owned_media_reference(value, config.published.media)
+            owned = owned_media_reference(value, config.media.types)
             if owned is not None:
                 references.setdefault((owned.media_type, owned.identity), set()).add(doc_id)
             elif _is_external_dependency(element, attribute, value):
@@ -367,7 +367,7 @@ def plan_snapshot_media(
             SnapshotMediaItem(
                 media_type=media_type,
                 identity=identity,
-                provider=config.published.media[media_type].location.provider,
+                provider=config.media.types[media_type].location.provider,
                 packaged_path=packaged_path,
                 size=len(data),
                 sha256=hashlib.sha256(data).hexdigest(),
@@ -386,7 +386,7 @@ def plan_snapshot_media(
             continue
 
         def rewrite(_element: str, _attribute: str, value: str) -> str:
-            owned = owned_media_reference(value, config.published.media)
+            owned = owned_media_reference(value, config.media.types)
             if owned is None:
                 return value
             return _packaged_media_url(items_by_identity[(owned.media_type, owned.identity)], owned.fragment)

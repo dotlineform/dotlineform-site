@@ -14,6 +14,7 @@ from docs_scope_config import (
     CONFIG_REL_PATH,
     EXTERNAL_DATA_ROOT_MARKER,
     LOCAL_EXTERNAL_SCOPE_TYPE,
+    MEDIA_WORKSPACE_ROOT_MARKER,
     PUBLISHED_DOCUMENTS_PATH,
     PUBLISHED_SEARCH_PATH,
     PUBLIC_DOCS_OUTPUT_ROOT,
@@ -30,6 +31,7 @@ from docs_scope_config import (
     published_documents_path,
     published_search_path,
     resolve_external_data_marker_path,
+    resolve_location_path,
     resolve_scope_path,
     safe_relative_path,
     safe_scope_data_path,
@@ -187,6 +189,7 @@ def backfilled_scope_record(repo_root: Path, config: DocsScopeConfig) -> dict[st
         path_record(repo_root, "source_root", source_root),
         path_record(repo_root, "source_documents_root", source_documents_root),
         path_record(repo_root, "source_sub_scopes_root", source_sub_scopes_root),
+        path_record(repo_root, "managed_media_root", resolve_location_path(repo_root, config.media.location)),
         path_record(repo_root, "scope_config", repo_root / CONFIG_REL_PATH),
     ]
     default_doc = default_source_doc_record(repo_root, config)
@@ -410,8 +413,10 @@ def planned_scope_config_record(
         else scope_root
     ).as_posix()
     local_provider = "external_local" if publishing_mode == LOCAL_EXTERNAL_MODE else "repository"
-    media: dict[str, Any] = {}
+    media_types: dict[str, Any] = {}
+    public_media: dict[str, Any] = {}
     for media_type in ("img", "svg", "files"):
+        media_types[media_type] = {"build_inputs": []}
         if publishing_mode == PUBLIC_MODE:
             if media_type == "svg":
                 media_provider = "repository"
@@ -421,28 +426,21 @@ def planned_scope_config_record(
                 media_provider = "r2"
                 media_path = f"docs/{scope_id}/{media_type}"
                 served_path = f"https://media.dotlineform.com/docs/{scope_id}/{media_type}"
-        else:
-            media_provider = local_provider
-            served_path = f"/docs/media/{scope_id}/{media_type}"
-        media_record: dict[str, Any] = {
-            "reference_prefix": f"docs/{scope_id}/{media_type}",
-            "served_path_prefix": served_path,
-            "build_inputs": [],
-        }
-        if publishing_mode == PUBLIC_MODE:
-            media_record["location"] = {"provider": media_provider, "path": media_path}
-        media[media_type] = media_record
+            public_media[media_type] = {
+                "location": {"provider": media_provider, "path": media_path},
+                "served_path_prefix": served_path,
+            }
     record = {
         "scope_id": scope_id,
         "scope_type": planned_scope_type(publishing_mode),
         "meta": planned_scope_meta(publishing_mode),
         "scope_root": {"provider": local_provider, "path": scope_root_path},
-        "source": {
-            "build_media": {},
+        "source": {},
+        "media": {
+            "types": media_types,
+            "build_sources": {},
         },
-        "published": {
-            "media": media,
-        },
+        "published": {},
         "public_projection": (
             {
                 "documents": {
@@ -457,6 +455,7 @@ def planned_scope_config_record(
                         "path": planned_public_search_projection(scope_id).as_posix(),
                     }
                 },
+                "media": public_media,
             }
             if publishing_mode == PUBLIC_MODE
             else None
@@ -479,6 +478,7 @@ def planned_storage_contract(preview: dict[str, Any]) -> dict[str, Any]:
     source_root = (Path(scope_root) / SCOPE_SOURCE_PATH).as_posix()
     docs_output = (Path(scope_root) / PUBLISHED_DOCUMENTS_PATH).as_posix()
     search_output = (Path(scope_root) / PUBLISHED_SEARCH_PATH).as_posix()
+    media_root = f"{MEDIA_WORKSPACE_ROOT_MARKER}/{config['scope_id']}"
     publish_output = str(
         _planned_role_location(config, "public_projection", "documents", "location", "path") or docs_output
     )
@@ -511,6 +511,7 @@ def planned_storage_contract(preview: dict[str, Any]) -> dict[str, Any]:
         "source_root": source_root,
         "docs_output": docs_output,
         "search_output": search_output,
+        "media_root": media_root,
         "publish_output": publish_output,
         "publish_search_output": publish_search_output,
         "summary": summary,
@@ -616,7 +617,7 @@ def created_scope_manifest_record(repo_root: Path, preview: dict[str, Any]) -> d
             "viewer_base_url": preview["planned_scope_config"]["viewer_base_url"],
             "default_doc_id": preview["planned_scope_config"]["default_doc_id"],
             "publishing_mode": publishing_mode,
-            "external_data_root": EXTERNAL_DATA_ROOT_MARKER if publishing_mode == LOCAL_EXTERNAL_MODE else "",
+            "external_data_root": EXTERNAL_DATA_ROOT_MARKER,
         },
     }
 

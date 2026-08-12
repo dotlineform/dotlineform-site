@@ -8,7 +8,6 @@ from pathlib import Path
 from typing import Any
 
 from docs_artifact_locations import (
-    ArtifactLocation,
     artifact_location_adapter,
     authenticated_remote_client_for_locations,
     local_artifact_path,
@@ -28,8 +27,8 @@ def _verified_diagram_sources(
     target: ManagedDocumentTarget,
 ) -> list[dict[str, str]]:
     config = target.parent_config
-    build = config.source.build_media.get("mermaid")
-    published_media = config.published.media.get("svg")
+    build = config.media.build_sources.get("mermaid")
+    published_media = config.media.types.get("svg")
     if (
         build is None
         or build.producer != "mermaid"
@@ -53,10 +52,7 @@ def _verified_diagram_sources(
 
     source_adapter = artifact_location_adapter(
         repo_root,
-        ArtifactLocation(
-            provider=config.source.location.provider,
-            path=config.source.location.path / build.path,
-        ),
+        build.location,
     )
     remote_client = authenticated_remote_client_for_locations(repo_root, [published_media.location])
     published_adapter = artifact_location_adapter(
@@ -129,12 +125,8 @@ def open_diagram_source(
         raise FileNotFoundError("verified Mermaid source is not registered by this document")
 
     config = target.parent_config
-    build = config.source.build_media["mermaid"]
-    source_location = ArtifactLocation(
-        provider=config.source.location.provider,
-        path=config.source.location.path / build.path,
-    )
-    source_path = local_artifact_path(repo_root, source_location, target_record["source_identity"])
+    build = config.media.build_sources["mermaid"]
+    source_path = local_artifact_path(repo_root, build.location, target_record["source_identity"])
     if source_path is None or not source_path.is_file():
         raise FileNotFoundError("verified Mermaid source is not locally openable")
 

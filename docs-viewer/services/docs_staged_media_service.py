@@ -370,10 +370,10 @@ def _prepared_mermaid_media(
     source_filename: str,
 ) -> PreparedMermaidMedia:
     config = load_docs_scope_configs(repo_root, scope_ids=(scope,))[scope]
-    build = config.source.build_media.get("mermaid")
+    build = config.media.build_sources.get("mermaid")
     if build is None or build.producer != "mermaid" or build.publishes_to != "svg":
         raise ValueError(f"scope {scope!r} does not configure Mermaid source media")
-    published_media = config.published.media.get("svg")
+    published_media = config.media.types.get("svg")
     if published_media is None or "mermaid" not in published_media.build_inputs:
         raise ValueError(f"scope {scope!r} does not register Mermaid as an SVG build input")
 
@@ -386,10 +386,7 @@ def _prepared_mermaid_media(
     )
     source_adapter = artifact_location_adapter(
         repo_root,
-        ArtifactLocation(
-            provider=config.source.location.provider,
-            path=config.source.location.path / build.path,
-        ),
+        build.location,
     )
     published_adapter = artifact_location_adapter(
         repo_root,

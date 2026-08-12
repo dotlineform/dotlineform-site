@@ -55,7 +55,7 @@ def _normalize_record(raw: Any, *, config: DocsScopeConfig, field: str) -> DocsM
     }:
         raise ValueError(f"{field} must contain only media_type, identity, source_root, and source_path")
     media_type = str(raw.get("media_type") or "")
-    if media_type not in config.published.media:
+    if media_type not in config.media.types:
         raise ValueError(f"{field}.media_type must be configured for scope {config.scope_id!r}")
     identity = validate_media_filename(str(raw.get("identity") or ""))
     source_root = normalize_projects_directory_marker(raw.get("source_root"))
@@ -71,7 +71,7 @@ def _normalize_record(raw: Any, *, config: DocsScopeConfig, field: str) -> DocsM
 
 
 def _adapter(repo_root: Path, config: DocsScopeConfig):
-    return artifact_location_adapter(repo_root, config.source.location)
+    return artifact_location_adapter(repo_root, config.media.location)
 
 
 def load_media_source_evidence(

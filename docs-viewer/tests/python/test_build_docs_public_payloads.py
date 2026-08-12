@@ -183,10 +183,19 @@ def test_python_docs_builder_public_generated_payloads_include_manage_rows() -> 
     assert manage_browser_config["scopes"][0]["index_tree_url"] == "/docs-viewer/scopes/library/published/documents/index-tree.json"
     assert manage_browser_config["scopes"][0]["recent_url"] == "/docs-viewer/scopes/library/published/documents/recent.json"
     assert manage_browser_config["scopes"][0]["scope_type"] == "public"
+    assert manage_browser_config["scopes"][0]["media"]["img"]["served_path_prefix"] == (
+        "/docs/media/library/img"
+    )
     assert public_browser_config["scopes"][0]["index_tree_url"] == "/assets/data/docs/scopes/library/index-tree.json"
     assert public_browser_config["scopes"][0]["recent_url"] == "/assets/data/docs/scopes/library/recent.json"
     assert public_browser_config["scopes"][0]["search"]["index_url"] == "/assets/data/search/library/index.json"
     assert public_browser_config["scopes"][0]["scope_type"] == "public"
+    assert public_browser_config["scopes"][0]["media"]["img"]["served_path_prefix"] == (
+        "https://media.example.test/docs/library/img"
+    )
+    assert public_browser_config["scopes"][0]["media"]["svg"]["served_path_prefix"] == (
+        "/assets/data/docs/scopes/library/media/svg"
+    )
     assert index_tree["docs"][1]["content_url"] == f"/assets/data/docs/scopes/library/by-id/{PARENT_DOC_ID}.json"
 
 def test_python_docs_builder_public_payloads_include_promoted_report_metadata() -> None:

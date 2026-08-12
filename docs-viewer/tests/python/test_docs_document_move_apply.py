@@ -704,7 +704,7 @@ def test_apply_move_writes_external_local_target_then_cleans_repository_source(
     assert (external_root / "source/documents/alpha.md").is_file()
     assert (external_root / "source/documents/grand.md").is_file()
     assert (
-        external_root / "published/media/img/photo.png"
+        projects_base / "docs-viewer/media/target/img/photo.png"
     ).read_bytes() == b"photo"
     assert not (
         local_documents_root(repo_root, "source") / "alpha.md"

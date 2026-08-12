@@ -23,6 +23,17 @@ import docs_source_model as source_model  # noqa: E402
 
 
 def write_json(path: Path, payload: object) -> None:
+    if path.name == "docs_scopes.json" and isinstance(payload, dict):
+        payload = {
+            **payload,
+            "schema_version": "docs_scopes_v4",
+            "media_workspace": {
+                "location": {
+                    "provider": "external_local",
+                    "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/media",
+                }
+            },
+        }
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
     if path.name == "docs_scopes.json":
@@ -74,7 +85,7 @@ def make_repo(tmp_path: Path) -> Path:
     write_json(
         repo_root / "docs-viewer/config/scopes/docs_scopes.json",
         {
-            "schema_version": "docs_scopes_v3",
+            "schema_version": "docs_scopes_v4",
             "scopes": [
                 docs_scope_record(
                     "source",
@@ -125,6 +136,13 @@ def make_repo(tmp_path: Path) -> Path:
     target_root.mkdir(parents=True, exist_ok=True)
     target_works_root.mkdir(parents=True, exist_ok=True)
     return repo_root
+
+
+@pytest.fixture(autouse=True)
+def isolated_media_workspace(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    projects = tmp_path / "projects"
+    (projects / "docs-viewer/media").mkdir(parents=True)
+    monkeypatch.setenv("DOTLINEFORM_PROJECTS_BASE_DIR", str(projects))
 
 
 def test_preview_and_copy_apply_routes_share_apply_plan(

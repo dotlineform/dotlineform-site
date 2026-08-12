@@ -53,14 +53,13 @@ def scope_rename_eligible(config: Any, manifest_record: dict[str, Any] | None) -
 def external_scope_roots(external_root: Path, scope_id: str) -> dict[str, Path]:
     return {
         "scope_root": external_root / "scopes" / scope_id,
+        "media_root": external_root / "media" / scope_id,
     }
 
 
 def expected_config_paths(scope_id: str) -> dict[str, str]:
     return {
         "scope_root": f"{EXTERNAL_DATA_ROOT_MARKER}/scopes/{scope_id}",
-        "media_reference_root": f"docs/{scope_id}",
-        "media_served_root": f"/docs/media/{scope_id}",
     }
 
 
@@ -95,23 +94,6 @@ def _rename_scope_role_paths(
             new_paths["scope_root"],
         )
 
-    published = record.get("published")
-    if isinstance(published, dict):
-        media = published.get("media")
-        if isinstance(media, dict):
-            for media_record in media.values():
-                if not isinstance(media_record, dict):
-                    continue
-                media_record["reference_prefix"] = _renamed_config_path(
-                    media_record.get("reference_prefix"),
-                    old_paths["media_reference_root"],
-                    new_paths["media_reference_root"],
-                )
-                media_record["served_path_prefix"] = _renamed_config_path(
-                    media_record.get("served_path_prefix"),
-                    old_paths["media_served_root"],
-                    new_paths["media_served_root"],
-                )
 
 
 def _path_present(path: Path) -> bool:
@@ -181,8 +163,9 @@ def plan_rename_scope_preview(repo_root: Path, body: dict[str, Any]) -> dict[str
         for kind, configured_path in configured_paths.items():
             if configured_path.resolve() != old_roots[kind].resolve():
                 blockers.append(f"configured {kind.replace('_', ' ')} does not match the lifecycle-owned external path")
-        if not _path_present(old_roots["scope_root"]):
-            blockers.append("external scope root does not exist")
+        for kind in old_roots:
+            if not _path_present(old_roots[kind]):
+                blockers.append(f"external {kind.replace('_', ' ')} does not exist")
         for kind, target in new_roots.items():
             if _path_present(target):
                 blockers.append(f"rename target already exists: {kind.replace('_', ' ')}")
@@ -290,7 +273,7 @@ def _move_external_roots(
     new_roots: dict[str, Path],
 ) -> list[dict[str, str]]:
     moved: list[dict[str, str]] = []
-    for kind in ("scope_root",):
+    for kind in ("scope_root", "media_root"):
         source = old_roots[kind]
         target = new_roots[kind]
         if not _path_present(source):

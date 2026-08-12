@@ -684,6 +684,11 @@ class DocsViewerRequestHandler(QuietErrorLoggingMixin, BaseHTTPRequestHandler):
             self.send_header("X-Content-Type-Options", "nosniff")
             if media_class == "files":
                 self.send_header("Content-Disposition", f"attachment; filename*=UTF-8''{quote(path.name, safe='')}")
+            if media_class == "html":
+                self.send_header(
+                    "Content-Security-Policy",
+                    "sandbox allow-scripts; default-src 'self' data: blob:; connect-src 'none'",
+                )
             self.send_header("Content-Length", str(len(body)))
             self.end_headers()
             self.wfile.write(body)

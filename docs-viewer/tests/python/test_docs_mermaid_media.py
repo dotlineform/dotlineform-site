@@ -112,13 +112,14 @@ def test_mermaid_producer_is_registered() -> None:
 
 def test_checked_studio_config_registers_and_materializes_mermaid_source() -> None:
     config = load_docs_scope_configs(REPO_ROOT)["studio"]
-    build = config.source.build_media["mermaid"]
+    build = config.media.build_sources["mermaid"]
 
-    assert build.path == Path("media/mermaid")
+    assert build.location.path == Path(
+        "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/media/studio/build-source/mermaid"
+    )
     assert build.producer == "mermaid"
     assert build.publishes_to == "svg"
-    assert config.published.media["svg"].build_inputs == ("mermaid",)
-    assert (REPO_ROOT / config.source.location.path / build.path).is_dir()
+    assert config.media.types["svg"].build_inputs == ("mermaid",)
 
 
 def test_dry_run_plans_sorted_same_basename_outputs_without_toolchain_or_writes(tmp_path: Path) -> None:

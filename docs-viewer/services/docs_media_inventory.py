@@ -9,7 +9,6 @@ import re
 from typing import Iterable, Mapping
 
 from docs_artifact_locations import (
-    ArtifactLocation,
     ArtifactLocationAdapter,
     artifact_location_adapter,
     authenticated_remote_client_for_locations,
@@ -73,10 +72,10 @@ def source_media_references(
         if len(parts) < 4 or parts[:2] != ("docs", config.scope_id):
             continue
         media_type = parts[2]
-        if media_type not in config.published.media:
+        if media_type not in config.media.types:
             continue
         found.add((media_type, Path(*parts[3:]).as_posix(), logical_path))
-    for media_type, media in config.published.media.items():
+    for media_type, media in config.media.types.items():
         for prefix in (media.reference_prefix.as_posix(), media.served_path_prefix):
             normalized_prefix = prefix.rstrip("/")
             pattern = re.compile(
@@ -124,7 +123,7 @@ def _location_adapters(
     env_files: Iterable[Path] | None,
     environ: Mapping[str, str] | None,
 ) -> tuple[dict[str, ArtifactLocationAdapter], dict[str, ArtifactLocationAdapter]]:
-    published_locations = [media.location for media in config.published.media.values()]
+    published_locations = [media.location for media in config.media.types.values()]
     remote_client = authenticated_remote_client_for_locations(
         repo_root,
         published_locations,
@@ -139,17 +138,14 @@ def _location_adapters(
             served_path_prefix=media.served_path_prefix,
             remote_client=remote_client,
         )
-        for media_type, media in config.published.media.items()
+        for media_type, media in config.media.types.items()
     }
     build_source = {
         build_type: artifact_location_adapter(
             repo_root,
-            ArtifactLocation(
-                provider=config.source.location.provider,
-                path=config.source.location.path / build.path,
-            ),
+            build.location,
         )
-        for build_type, build in config.source.build_media.items()
+        for build_type, build in config.media.build_sources.items()
     }
     return published, build_source
 
@@ -178,7 +174,7 @@ def inventory_scope_media(
     items: list[DocsMediaInventoryItem] = []
     published_identities: set[tuple[str, str]] = set()
     for media_type, adapter in sorted(published_adapters.items()):
-        media = config.published.media[media_type]
+        media = config.media.types[media_type]
         for artifact in adapter.list():
             if Path(artifact.identity).name == ".gitkeep":
                 continue
@@ -199,7 +195,7 @@ def inventory_scope_media(
                 )
             )
     for build_type, adapter in sorted(build_adapters.items()):
-        build = config.source.build_media[build_type]
+        build = config.media.build_sources[build_type]
         for artifact in adapter.list():
             if Path(artifact.identity).name == ".gitkeep":
                 continue
@@ -209,7 +205,7 @@ def inventory_scope_media(
                     media_type=build_type,
                     identity=artifact.identity,
                     role="source",
-                    provider=config.source.location.provider,
+                    provider=build.location.provider,
                     size=artifact.size,
                     etag=artifact.etag,
                     served_path="",

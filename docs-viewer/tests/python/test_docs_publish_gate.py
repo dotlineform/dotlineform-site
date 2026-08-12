@@ -10,7 +10,7 @@ from pathlib import Path
 
 import pytest
 
-from repo_factory import docs_scope_record, docs_sub_scope_record
+from repo_factory import docs_scope_record, docs_sub_scope_record, write_docs_scope_config
 
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
@@ -51,34 +51,12 @@ def write_scope_config(root: Path) -> None:
         viewer_base_url="/library/",
         include_scope_param=False,
         default_doc_id=LIBRARY_DOC_ID,
+        media_provider="repository",
+        media_types=("img", "svg", "files", "html"),
     )
-    library["published"]["media"]["img"] = {  # type: ignore[index]
-        "reference_prefix": "docs/library/img",
-        "location": {
-            "provider": "repository",
-            "path": "site/assets/data/docs/scopes/library/media/img",
-        },
-        "served_path_prefix": "/assets/data/docs/scopes/library/media/img",
-        "build_inputs": [],
-    }
-    library["published"]["media"]["html"] = {  # type: ignore[index]
-        "reference_prefix": "docs/library/html",
-        "location": {
-            "provider": "repository",
-            "path": "site/assets/data/docs/scopes/library/media/html",
-        },
-        "served_path_prefix": "/assets/data/docs/scopes/library/media/html",
-        "build_inputs": [],
-    }
-    write_json(
-        root / "docs-viewer/config/scopes/docs_scopes.json",
-        {
-            "schema_version": "docs_scopes_v3",
-            "scopes": [
-                docs_scope_record("studio", default_doc_id="studio"),
-                library,
-            ],
-        },
+    write_docs_scope_config(
+        root,
+        [docs_scope_record("studio", default_doc_id="studio"), library],
     )
 
 
@@ -147,7 +125,12 @@ def prepare_publish_repo(root: Path) -> None:
                 '<p><a href="#" title=">" DATA-DOCS-VIEWER-LOCAL-TARGET="projects/3%20symbols">3 <em>symbols</em></a> '
                 '<a href=dlf-local:bad%ZZ>/Users/private</a> '
                 '<a href="#" data-docs-viewer-local-target=""></a> '
-                '<a href="https://example.com">ordinary</a></p>'
+                '<a href="https://example.com">ordinary</a> '
+                '<img src="/docs/media/library/img/diagram.png?size=2#view"> '
+                "<iframe src='/docs/media/library/html/widget.html'></iframe> "
+                '<span data-src="/docs/media/library/img/data.png" '
+                'data-path="/docs/media/library/img/prose.png">'
+                'src="/docs/media/library/img/text.png"</span></p>'
             ),
         },
     )
@@ -304,7 +287,12 @@ def test_publish_confirm_applies_explicit_exclusions_and_retains_unrelated_files
         assert recent["docs"][0]["doc_id"] == LIBRARY_DOC_ID
         assert public_doc["content_html"] == (
             '<p>3 symbols [local file or folder] [local file or folder] '
-            '<a href="https://example.com">ordinary</a></p>'
+            '<a href="https://example.com">ordinary</a> '
+            '<img src="/assets/data/docs/scopes/library/media/img/diagram.png?size=2#view"> '
+            "<iframe src='/assets/data/docs/scopes/library/media/html/widget.html'></iframe> "
+            '<span data-src="/docs/media/library/img/data.png" '
+            'data-path="/docs/media/library/img/prose.png">'
+            'src="/docs/media/library/img/text.png"</span></p>'
         )
         assert "dlf-local:" not in json.dumps(public_doc)
         assert "data-docs-viewer-local-target" not in json.dumps(public_doc)

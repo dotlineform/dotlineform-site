@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import json
+import os
 import sys
 from collections.abc import Iterator
 from pathlib import Path
@@ -44,6 +45,17 @@ COPY_TIMESTAMP = "2026-07-24 14:00:00"
 
 
 def write_json(path: Path, payload: object) -> None:
+    if path.name == "docs_scopes.json" and isinstance(payload, dict):
+        payload = {
+            **payload,
+            "schema_version": "docs_scopes_v4",
+            "media_workspace": {
+                "location": {
+                    "provider": "external_local",
+                    "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/media",
+                }
+            },
+        }
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
     if path.name == "docs_scopes.json":
@@ -93,14 +105,8 @@ def media_path(
     media_type: str,
     identity: str,
 ) -> Path:
-    return (
-        repo_root
-        / "docs-viewer/scopes"
-        / scope
-        / "published/media"
-        / media_type
-        / identity
-    )
+    del repo_root
+    return Path(os.environ["DOTLINEFORM_PROJECTS_BASE_DIR"]) / "docs-viewer/media" / scope / media_type / identity
 
 
 def build_source_path(
@@ -109,11 +115,12 @@ def build_source_path(
     build_type: str,
     identity: str,
 ) -> Path:
+    del repo_root
     return (
-        repo_root
-        / "docs-viewer/scopes"
+        Path(os.environ["DOTLINEFORM_PROJECTS_BASE_DIR"])
+        / "docs-viewer/media"
         / scope
-        / "source/media"
+        / "build-source"
         / build_type
         / identity
     )
@@ -140,22 +147,26 @@ def base_scope(
 
 
 def add_mermaid_build(scope: dict[str, object]) -> None:
-    source = scope["source"]
-    published = scope["published"]
-    assert isinstance(source, dict)
-    assert isinstance(published, dict)
-    media = published["media"]
+    media = scope["media"]
     assert isinstance(media, dict)
-    svg = media["svg"]
+    types = media["types"]
+    assert isinstance(types, dict)
+    svg = types["svg"]
     assert isinstance(svg, dict)
-    source["build_media"] = {
+    media["build_sources"] = {
         "mermaid": {
-            "path": "media/mermaid",
             "producer": "mermaid",
             "publishes_to": "svg",
         }
     }
     svg["build_inputs"] = ["mermaid"]
+
+
+@pytest.fixture(autouse=True)
+def isolated_media_workspace(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    projects = tmp_path / "projects"
+    (projects / "docs-viewer/media").mkdir(parents=True)
+    monkeypatch.setenv("DOTLINEFORM_PROJECTS_BASE_DIR", str(projects))
 
 
 def make_repo(
@@ -168,7 +179,7 @@ def make_repo(
     write_json(
         repo_root / "docs-viewer/config/scopes/docs_scopes.json",
         {
-            "schema_version": "docs_scopes_v3",
+            "schema_version": "docs_scopes_v4",
             "scopes": [
                 source_scope or base_scope("source"),
                 target_scope or base_scope("target"),
@@ -1030,7 +1041,7 @@ def test_apply_copy_writes_external_local_target_documents_and_media(
     copied_path = external_documents / f"{result['created_doc_ids'][0]}.md"
     assert copied_path.is_file()
     assert (
-        external_root / "published/media/img/photo.png"
+        projects_base / "docs-viewer/media/target/img/photo.png"
     ).read_bytes() == b"photo"
     assert "docs/target/img/photo.png" in copied_path.read_text(encoding="utf-8")
 

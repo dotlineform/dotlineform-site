@@ -55,7 +55,13 @@ def write_site_tools_config(root: Path, *, media_base: str = "https://media.exam
 
 def write_docs_scope_config(root: Path, scopes: list[dict[str, object]], docs_viewer: dict[str, object] | None = None) -> None:
     payload: dict[str, object] = {
-        "schema_version": "docs_scopes_v3",
+        "schema_version": "docs_scopes_v4",
+        "media_workspace": {
+            "location": {
+                "provider": "external_local",
+                "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/media",
+            }
+        },
         "scopes": scopes,
     }
     if docs_viewer is not None:
@@ -97,34 +103,41 @@ def docs_scope_record(
         if external
         else f"docs-viewer/scopes/{scope_id}"
     )
-    resolved_media_provider = media_provider or (
-        "external_local" if external else ("r2" if scope_type == "public" else "repository")
-    )
-    media_root = media_location_root or (
-        f"{scope_root}/published/media"
-        if resolved_media_provider == local_provider
-        else f"docs/{scope_id}"
-    )
-    served_root = (media_served_root or (
-        f"https://media.example.test/docs/{scope_id}"
-        if resolved_media_provider == "r2"
-        else f"/docs/media/{scope_id}"
-    )).rstrip("/")
-    media: dict[str, dict[str, object]] = {}
+    managed_media: dict[str, dict[str, object]] = {}
     for media_type in media_types:
-        record: dict[str, object] = {
-            "reference_prefix": f"docs/{scope_id}/{media_type}",
-            "served_path_prefix": f"{served_root}/{media_type}",
+        managed_media[media_type] = {
             "build_inputs": [],
         }
-        if media_location_root is not None or resolved_media_provider != local_provider:
-            record["location"] = {
-                "provider": resolved_media_provider,
-                "path": f"{media_root.rstrip('/')}/{media_type}",
-            }
-        media[media_type] = record
     public_projection = None
     if scope_type == "public":
+        resolved_media_provider = media_provider or "r2"
+        media_root = media_location_root or f"docs/{scope_id}"
+        served_root = (media_served_root or (
+            f"https://media.example.test/docs/{scope_id}"
+            if resolved_media_provider == "r2"
+            else f"/assets/data/docs/scopes/{scope_id}/media"
+        )).rstrip("/")
+        public_media: dict[str, dict[str, object]] = {}
+        for media_type in media_types:
+            provider = (
+                "repository"
+                if media_provider is None and media_type == "svg"
+                else resolved_media_provider
+            )
+            path = (
+                f"site/assets/data/docs/scopes/{scope_id}/media/{media_type}"
+                if provider == "repository"
+                else f"{media_root.rstrip('/')}/{media_type}"
+            )
+            served_path = (
+                f"/assets/data/docs/scopes/{scope_id}/media/{media_type}"
+                if provider == "repository"
+                else f"{served_root}/{media_type}"
+            )
+            public_media[media_type] = {
+                "location": {"provider": provider, "path": path},
+                "served_path_prefix": served_path,
+            }
         public_projection = {
             "documents": {
                 "location": {
@@ -138,18 +151,19 @@ def docs_scope_record(
                     "path": public_search_path or f"site/assets/data/search/{scope_id}/index.json",
                 }
             },
+            "media": public_media,
         }
     record: dict[str, object] = {
         "scope_id": scope_id,
         "scope_type": scope_type,
         "meta": meta or scope_type.replace("_", " "),
         "scope_root": {"provider": local_provider, "path": scope_root},
-        "source": {
-            "build_media": {},
+        "source": {},
+        "media": {
+            "types": managed_media,
+            "build_sources": {},
         },
-        "published": {
-            "media": media,
-        },
+        "published": {},
         "public_projection": public_projection,
         "viewer_base_url": viewer_base_url,
         "include_scope_param": include_scope_param,

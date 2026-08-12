@@ -27,7 +27,7 @@ from docs_scope_config import (  # noqa: E402
     public_search_path,
     publication_documents_path,
     published_documents_path,
-    published_media_config,
+    managed_media_config,
     published_search_path,
     resolve_scope_path,
     scope_uses_external_data,

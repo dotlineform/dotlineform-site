@@ -11,7 +11,7 @@ from typing import Any, Dict
 from docs_artifact_locations import artifact_location_adapter, authenticated_remote_client_for_locations
 from docs_import_common import HTML_STAGED_SUFFIXES, is_interactive_html_import_asset
 from docs_media_storage import docs_media_file, docs_publish_succeeded, publish_docs_media_files
-from docs_scope_config import load_docs_scope_configs, published_media_config
+from docs_scope_config import load_docs_scope_configs, managed_media_config
 from docs_source_model import normalize_scope, slugify
 from studio.shared.python.projects_directories import projects_path_marker
 
@@ -22,7 +22,7 @@ def _html_media_adapter(repo_root: Path, scope: str):
     config = load_docs_scope_configs(repo_root).get(scope)
     if config is None:
         raise ValueError(f"Unknown Docs media scope: {scope!r}")
-    media = published_media_config(config, "html")
+    media = managed_media_config(config, "html")
     remote_client = authenticated_remote_client_for_locations(repo_root, [media.location])
     return config, media, artifact_location_adapter(
         repo_root,

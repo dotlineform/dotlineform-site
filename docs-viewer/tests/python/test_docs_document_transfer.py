@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import json
+import os
 import sys
 from collections.abc import Iterator
 from dataclasses import dataclass
@@ -25,6 +26,17 @@ import docs_source_model as source_model  # noqa: E402
 
 
 def write_json(path: Path, payload: object) -> None:
+    if path.name == "docs_scopes.json" and isinstance(payload, dict):
+        payload = {
+            **payload,
+            "schema_version": "docs_scopes_v4",
+            "media_workspace": {
+                "location": {
+                    "provider": "external_local",
+                    "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/media",
+                }
+            },
+        }
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
     if path.name == "docs_scopes.json":
@@ -78,22 +90,17 @@ def local_documents_root(repo_root: Path, scope: str) -> Path:
 
 
 def media_path(repo_root: Path, scope: str, media_type: str, identity: str) -> Path:
-    return (
-        repo_root
-        / "docs-viewer/scopes"
-        / scope
-        / "published/media"
-        / media_type
-        / identity
-    )
+    del repo_root
+    return Path(os.environ["DOTLINEFORM_PROJECTS_BASE_DIR"]) / "docs-viewer/media" / scope / media_type / identity
 
 
 def build_source_path(repo_root: Path, scope: str, build_type: str, identity: str) -> Path:
+    del repo_root
     return (
-        repo_root
-        / "docs-viewer/scopes"
+        Path(os.environ["DOTLINEFORM_PROJECTS_BASE_DIR"])
+        / "docs-viewer/media"
         / scope
-        / "source/media"
+        / "build-source"
         / build_type
         / identity
     )
@@ -114,22 +121,26 @@ def base_scope(scope: str, **kwargs: object) -> dict[str, object]:
 
 
 def add_mermaid_build(scope: dict[str, object]) -> None:
-    source = scope["source"]
-    published = scope["published"]
-    assert isinstance(source, dict)
-    assert isinstance(published, dict)
-    media = published["media"]
+    media = scope["media"]
     assert isinstance(media, dict)
-    svg = media["svg"]
+    types = media["types"]
+    assert isinstance(types, dict)
+    svg = types["svg"]
     assert isinstance(svg, dict)
-    source["build_media"] = {
+    media["build_sources"] = {
         "mermaid": {
-            "path": "media/mermaid",
             "producer": "mermaid",
             "publishes_to": "svg",
         }
     }
     svg["build_inputs"] = ["mermaid"]
+
+
+@pytest.fixture(autouse=True)
+def isolated_media_workspace(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    projects = tmp_path / "projects"
+    (projects / "docs-viewer/media").mkdir(parents=True)
+    monkeypatch.setenv("DOTLINEFORM_PROJECTS_BASE_DIR", str(projects))
 
 
 def make_repo(
@@ -142,7 +153,7 @@ def make_repo(
     write_json(
         repo_root / "docs-viewer/config/scopes/docs_scopes.json",
         {
-            "schema_version": "docs_scopes_v3",
+            "schema_version": "docs_scopes_v4",
             "scopes": [
                 source_scope or base_scope("source"),
                 target_scope or base_scope("target"),
@@ -204,7 +215,7 @@ def make_collection_repo(tmp_path: Path) -> Path:
     write_json(
         repo_root / "docs-viewer/config/scopes/docs_scopes.json",
         {
-            "schema_version": "docs_scopes_v3",
+            "schema_version": "docs_scopes_v4",
             "scopes": [
                 base_scope("source", sub_scopes=source_sub_scopes),
                 base_scope("target", sub_scopes=target_sub_scopes),
@@ -293,7 +304,7 @@ def make_lineage_repo(tmp_path: Path) -> Path:
     write_json(
         repo_root / "docs-viewer/config/scopes/docs_scopes.json",
         {
-            "schema_version": "docs_scopes_v3",
+            "schema_version": "docs_scopes_v4",
             "scopes": [
                 base_scope("dotlineform", sub_scopes=[source_sub_scope]),
                 docs_scope_record(
@@ -1352,11 +1363,12 @@ class FakeR2Client:
         del self.objects[key]
 
 
-def test_public_r2_source_to_external_local_target_is_provider_neutral(
+def test_public_scope_managed_source_to_external_local_target_is_provider_neutral(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     projects_base = tmp_path / "Projects"
+    (projects_base / "docs-viewer/media").mkdir(parents=True, exist_ok=True)
     monkeypatch.setenv("DOTLINEFORM_PROJECTS_BASE_DIR", str(projects_base))
     source_scope = docs_scope_record(
         "source",
@@ -1376,7 +1388,7 @@ def test_public_r2_source_to_external_local_target_is_provider_neutral(
     write_json(
         repo_root / "docs-viewer/config/scopes/docs_scopes.json",
         {
-            "schema_version": "docs_scopes_v3",
+            "schema_version": "docs_scopes_v4",
             "scopes": [source_scope, target_scope],
         },
     )
@@ -1390,8 +1402,7 @@ def test_public_r2_source_to_external_local_target_is_provider_neutral(
         projects_base / "docs-viewer/scopes/target/source/documents"
     )
     external_documents.mkdir(parents=True, exist_ok=True)
-    source_client = FakeR2Client({"docs/source/img/photo.png": b"remote"})
-    before = dict(source_client.objects)
+    write_bytes(media_path(repo_root, "source", "img", "photo.png"), b"managed")
 
     plan = transfer.plan_document_transfer(
         repo_root,
@@ -1401,21 +1412,20 @@ def test_public_r2_source_to_external_local_target_is_provider_neutral(
         transfer_mode="copy",
         operation_timestamp="2026-07-24 09:10:11",
         token_factory=sequential_tokens("aaaaaa"),
-        source_media_client=source_client,
     )
 
     assert plan.ok
-    assert source_client.objects == before
-    assert plan.media[0].source_provider == "r2"
+    assert plan.media[0].source_provider == "external_local"
     assert plan.media[0].target_provider == "external_local"
     assert plan.media[0].target_status == "create"
 
 
-def test_external_local_source_can_plan_move_to_repository_target(
+def test_external_local_source_can_plan_move_to_local_target(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     projects_base = tmp_path / "Projects"
+    (projects_base / "docs-viewer/media").mkdir(parents=True, exist_ok=True)
     monkeypatch.setenv("DOTLINEFORM_PROJECTS_BASE_DIR", str(projects_base))
     source_scope = docs_scope_record(
         "source",
@@ -1429,7 +1439,7 @@ def test_external_local_source_can_plan_move_to_repository_target(
     write_json(
         repo_root / "docs-viewer/config/scopes/docs_scopes.json",
         {
-            "schema_version": "docs_scopes_v3",
+            "schema_version": "docs_scopes_v4",
             "scopes": [source_scope, target_scope],
         },
     )
@@ -1441,7 +1451,7 @@ def test_external_local_source_can_plan_move_to_repository_target(
         body="# Root\n\n[[media:docs/source/img/photo.png Photo]]\n",
     )
     write_bytes(
-        external_scope_root / "published/media/img/photo.png",
+        media_path(repo_root, "source", "img", "photo.png"),
         b"external",
     )
     local_documents_root(repo_root, "target").mkdir(parents=True, exist_ok=True)
@@ -1457,7 +1467,7 @@ def test_external_local_source_can_plan_move_to_repository_target(
 
     assert plan.ok
     assert plan.media[0].source_provider == "external_local"
-    assert plan.media[0].target_provider == "repository"
+    assert plan.media[0].target_provider == "external_local"
     assert plan.media[0].target_status == "create"
 
 

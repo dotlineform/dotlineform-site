@@ -137,16 +137,8 @@ def write_scope_config(root: Path) -> None:
         "studio",
         meta="local management",
         default_doc_id=PARENT_DOC_ID,
+        media_types=("img", "svg", "files", "html"),
     )
-    studio["published"]["media"]["html"] = {  # type: ignore[index]
-        "reference_prefix": "docs/studio/html",
-        "location": {
-            "provider": "repository",
-            "path": "site/assets/data/docs/scopes/studio/media/html",
-        },
-        "served_path_prefix": "/assets/data/docs/scopes/studio/media/html",
-        "build_inputs": [],
-    }
     write_docs_scope_config(
         root,
         [studio],
@@ -311,7 +303,8 @@ def prepare_repo(root: Path) -> None:
     write_semantic_token_contract(root)
     write_catalogue_records(root)
     write_text(
-        root / "site/assets/data/docs/scopes/studio/media/html/chart.html",
+        Path(os.environ["DOTLINEFORM_PROJECTS_BASE_DIR"])
+        / "docs-viewer/media/studio/html/chart.html",
         "<!doctype html><title>Chart</title>",
     )
     write_source_docs(root)

@@ -92,7 +92,13 @@ def test_apply_plan_rewrites_source_hierarchy_links_and_config(tmp_path: Path) -
     _write(source_root / "parent.md", parent_source)
     _write(source_root / "child.md", child_source)
     scope_config = {
-        "schema_version": "docs_scopes_v3",
+        "schema_version": "docs_scopes_v4",
+        "media_workspace": {
+            "location": {
+                "provider": "external_local",
+                "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/media",
+            }
+        },
         "scopes": [
             docs_scope_record("studio", default_doc_id="parent")
         ],
@@ -190,7 +196,13 @@ def test_external_scope_plan_apply_and_verify_use_configured_marker(
         repo_root / migration.SOURCE_CONFIG_PATH,
         json.dumps(
             {
-                "schema_version": "docs_scopes_v3",
+                "schema_version": "docs_scopes_v4",
+                "media_workspace": {
+                    "location": {
+                        "provider": "external_local",
+                        "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/media",
+                    }
+                },
                 "scopes": [
                     docs_scope_record("notes", scope_type="local_external", default_doc_id="tmp")
                 ],

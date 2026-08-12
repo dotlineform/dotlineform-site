@@ -122,7 +122,13 @@ def test_python_docs_builder_projects_subjects_into_private_products() -> None:
         write_json(
             root / "docs-viewer/config/scopes/docs_scopes.json",
             {
-                "schema_version": "docs_scopes_v3",
+                "schema_version": "docs_scopes_v4",
+                "media_workspace": {
+                    "location": {
+                        "provider": "external_local",
+                        "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/media",
+                    }
+                },
                 "scopes": [
                     docs_scope_record(
                         "dotlineform",

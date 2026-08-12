@@ -86,6 +86,7 @@ def configured_analysis_tags(
         scope_id="analysis",
         scope_type="public",
         source=source(parent_path),
+        media=SimpleNamespace(build_sources={}),
         allow_unresolved_parent_ids=False,
         sub_scopes=(tags,),
     )
@@ -187,6 +188,7 @@ def test_watcher_reconciles_scope_and_sub_scope_state_from_config(tmp_path: Path
                 location=SimpleNamespace(path=Path(source)),
                 documents_path=Path("documents"),
             ),
+            media=SimpleNamespace(build_sources={}),
             sub_scopes=tuple(sub_scopes),
         )
 
@@ -241,7 +243,14 @@ def test_watcher_registers_configured_mermaid_root_and_renders_only_changed_iden
     module = load_docs_live_rebuild_watcher_module()
     original_configs = dict(module.DOCS_SCOPE_CONFIGS)
     original_roots = dict(module.DOCUMENT_SOURCE_ROOTS)
-    build = SimpleNamespace(path=Path("media/mermaid"), producer="mermaid", publishes_to="svg")
+    build = SimpleNamespace(
+        location=SimpleNamespace(
+            provider="repository",
+            path=Path("docs-viewer/media/studio/build-source/mermaid"),
+        ),
+        producer="mermaid",
+        publishes_to="svg",
+    )
     source = SimpleNamespace(
         location=SimpleNamespace(provider="repository", path=Path("docs-viewer/scopes/studio/source")),
         documents_path=Path("documents"),
@@ -254,7 +263,10 @@ def test_watcher_registers_configured_mermaid_root_and_renders_only_changed_iden
     config = SimpleNamespace(
         scope_type="local",
         source=source,
-        published=SimpleNamespace(media={"svg": published_media}),
+        media=SimpleNamespace(
+            build_sources={"mermaid": build},
+            types={"svg": published_media},
+        ),
         sub_scopes=(),
     )
     calls: list[tuple[str, ...]] = []
@@ -274,7 +286,7 @@ def test_watcher_registers_configured_mermaid_root_and_renders_only_changed_iden
             baseline=False,
         )
         media_state = states["studio/media/mermaid"]
-        assert media_state["root"] == tmp_path / "docs-viewer/scopes/studio/source/media/mermaid"
+        assert media_state["root"] == tmp_path / "docs-viewer/media/studio/build-source/mermaid"
         assert changes["added"] == ["studio", "studio/media/mermaid"]
         assert module.rebuild_build_media(
             tmp_path,

@@ -46,7 +46,20 @@ def with_fake_python(value: str = "/tmp/python"):
 def write_scope_config(path: Path, scopes: list[dict[str, object]]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(
-        json.dumps({"schema_version": "docs_scopes_v3", "scopes": scopes}, indent=2) + "\n",
+        json.dumps(
+            {
+                "schema_version": "docs_scopes_v4",
+                "media_workspace": {
+                    "location": {
+                        "provider": "external_local",
+                        "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/media",
+                    }
+                },
+                "scopes": scopes,
+            },
+            indent=2,
+        )
+        + "\n",
         encoding="utf-8",
     )
 

@@ -56,19 +56,19 @@
       "media": {
         "files": {
           "reference_prefix": "docs/analysis/files",
-          "served_path_prefix": "https://media.dotlineform.com/docs/analysis/files"
+          "served_path_prefix": "/docs/media/analysis/files"
         },
         "html": {
           "reference_prefix": "docs/analysis/html",
-          "served_path_prefix": "/assets/data/docs/scopes/analysis/media/html"
+          "served_path_prefix": "/docs/media/analysis/html"
         },
         "img": {
           "reference_prefix": "docs/analysis/img",
-          "served_path_prefix": "/assets/data/docs/scopes/analysis/media/img"
+          "served_path_prefix": "/docs/media/analysis/img"
         },
         "svg": {
           "reference_prefix": "docs/analysis/svg",
-          "served_path_prefix": "/assets/data/docs/scopes/analysis/media/svg"
+          "served_path_prefix": "/docs/media/analysis/svg"
         }
       },
       "index_tree_url": "/docs-viewer/scopes/analysis/published/documents/index-tree.json",

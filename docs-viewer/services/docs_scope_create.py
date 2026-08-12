@@ -20,7 +20,6 @@ from docs_route_lifecycle import (
 from docs_scope_config import (
     CONFIG_REL_PATH,
     EXTERNAL_DATA_ROOT_MARKER,
-    PUBLISHED_MEDIA_PATH,
     SCOPE_SOURCE_PATH,
     SOURCE_DOCUMENTS_PATH,
     load_docs_scope_configs,
@@ -195,7 +194,8 @@ def plan_create_scope_preview(repo_root: Path, body: dict[str, Any]) -> dict[str
             raise ValueError("planned_document_identity.doc_id must be an immutable document ID")
         if not doc_id_matches_added_date(default_doc_id, added_date):
             raise ValueError("planned_document_identity added_date must match its document ID timestamp")
-    external_data_root = resolve_external_data_root() if publishing_mode == LOCAL_EXTERNAL_MODE else None
+    managed_workspace_root = resolve_external_data_root()
+    external_data_root = managed_workspace_root if publishing_mode == LOCAL_EXTERNAL_MODE else None
     if external_data_root is not None:
         sync_blocker = external_scope_id_sync_blocker(scope_id, external_data_root)
         if sync_blocker:
@@ -234,31 +234,12 @@ def plan_create_scope_preview(repo_root: Path, body: dict[str, Any]) -> dict[str
         path_record(repo_root, "default_source_doc", created_documents_root / f"{default_doc_id}.md", action="create"),
     ]
     docs_output = local_published_docs_output_path(repo_root, planned_scope_config)
-    raw_media = planned_scope_config["published"]["media"]
-    for media_type, media in raw_media.items():
-        location = media.get("location")
-        provider = str(location["provider"]) if isinstance(location, dict) else str(
-            planned_scope_config["scope_root"]["provider"]
-        )
-        if provider == "r2":
-            continue
-        media_path = (
-            created_scope_root / PUBLISHED_MEDIA_PATH / media_type
-            if not isinstance(location, dict)
-            else repo_root / str(location["path"])
-        )
+    media_scope_root = managed_workspace_root / "media" / scope_id
+    for media_type in planned_scope_config["media"]["types"]:
+        media_path = media_scope_root / media_type
         created_files.append(
             path_record(repo_root, f"scope_media_{media_type}_root", media_path, action="create")
         )
-        if provider == "repository":
-            created_files.append(
-                path_record(
-                    repo_root,
-                    f"scope_media_{media_type}_marker",
-                    media_path / ".gitkeep",
-                    action="create",
-                )
-            )
     changed_files = [
         path_record(repo_root, "scope_config", repo_root / CONFIG_REL_PATH, action="change"),
         path_record(repo_root, "scope_manifest", repo_root / MANIFEST_REL_PATH, action="change"),
@@ -322,7 +303,7 @@ def plan_create_scope_preview(repo_root: Path, body: dict[str, Any]) -> dict[str
         "scope_id": scope_id,
         "title": title,
         "publishing_mode": publishing_mode,
-        "external_data_root": EXTERNAL_DATA_ROOT_MARKER if external_data_root else "",
+        "external_data_root": EXTERNAL_DATA_ROOT_MARKER,
         "planned_document_identity": {
             "doc_id": default_doc_id,
             "added_date": added_date,
@@ -332,7 +313,7 @@ def plan_create_scope_preview(repo_root: Path, body: dict[str, Any]) -> dict[str
             {
                 "publishing_mode": publishing_mode,
                 "planned_scope_config": planned_scope_config,
-                "external_data_root": EXTERNAL_DATA_ROOT_MARKER if external_data_root else "",
+                "external_data_root": EXTERNAL_DATA_ROOT_MARKER,
             }
         ),
         "created_files": created_files,

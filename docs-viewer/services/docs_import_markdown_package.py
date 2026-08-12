@@ -23,7 +23,7 @@ from docs_import_common import (
     slugify,
 )
 from docs_import_media import build_media_plan
-from docs_scope_config import load_docs_scope_configs, published_media_config
+from docs_scope_config import load_docs_scope_configs, managed_media_config
 from studio.shared.python.projects_directories import projects_path_marker
 
 def retarget_markdown_package_media_plans(
@@ -202,7 +202,7 @@ def next_package_media_filename(
     safe_extension = extension.lower().lstrip(".")
     staging_root = staging_root.resolve()
     scope_config = load_docs_scope_configs(repo_root)[normalized_scope]
-    media = published_media_config(scope_config, media_class)
+    media = managed_media_config(scope_config, media_class)
     index = 1
     while True:
         filename = f"{safe_doc_id}-{suffix}-{index:02d}.{safe_extension}"

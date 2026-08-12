@@ -124,6 +124,11 @@ def test_targeted_local_docs_build_does_not_resolve_unselected_external_scope() 
             },
         )
         unavailable_projects = root / "unavailable-projects"
+        (unavailable_projects / "docs-viewer/media").mkdir(parents=True)
+        write_text(
+            unavailable_projects / "docs-viewer/media/studio/html/chart.html",
+            "<!doctype html><title>Chart</title>",
+        )
         env = dict(os.environ)
         env["DOTLINEFORM_PROJECTS_BASE_DIR"] = str(unavailable_projects)
         result = subprocess.run(

@@ -20,6 +20,17 @@ from docs_management_test_support import (
 from repo_factory import docs_scope_record
 
 
+@pytest.fixture(autouse=True)
+def isolated_media_workspace(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    projects = tmp_path / "projects"
+    (projects / "docs-viewer/media").mkdir(parents=True)
+    monkeypatch.setenv("DOTLINEFORM_PROJECTS_BASE_DIR", str(projects))
+
+
+def managed_media_root(scope: str) -> Path:
+    return Path(os.environ["DOTLINEFORM_PROJECTS_BASE_DIR"]) / "docs-viewer/media" / scope
+
+
 def rebuild_sub_scope_fixture(repo_root: Path, scope: str, sub_scope: str):
     lifecycle = docs_management_service.docs_sub_scope_lifecycle
     parent = lifecycle.load_docs_scope_configs(repo_root)[scope]
@@ -147,8 +158,11 @@ def test_scope_create_preview_reports_public_readonly_site_route_and_payloads() 
     assert any(file["path"] == "site/assets/data/docs/scopes/research" for file in payload["publish_files"])
     assert any(file["path"] == "site/assets/data/docs/scopes/research/by-id" for file in payload["publish_files"])
     assert any(file["path"] == "site/assets/data/search/research/index.json" for file in payload["publish_files"])
-    assert any(file["path"] == "site/assets/data/docs/scopes/research/media/svg" for file in payload["created_files"])
-    assert any(file["path"] == "site/assets/data/docs/scopes/research/media/svg/.gitkeep" for file in payload["created_files"])
+    assert any(
+        file["path"] == (managed_media_root("research") / "svg").as_posix()
+        for file in payload["created_files"]
+    )
+    assert not any(file["path"].endswith("/.gitkeep") for file in payload["created_files"])
     changed_paths = {file["path"] for file in payload["changed_files"]}
     assert "docs-viewer/config/routes/docs-viewer-routes.json" in changed_paths
     assert "site/docs-viewer/config/routes/docs-viewer-public-routes.json" in changed_paths
@@ -225,7 +239,7 @@ def test_scope_create_preview_blocks_tmp_for_icloud_external_workspace() -> None
                 / "com~apple~CloudDocs"
                 / "dotlineform"
             )
-            (projects_root / "docs-viewer").mkdir(parents=True)
+            (projects_root / "docs-viewer/media").mkdir(parents=True)
             os.environ["DOTLINEFORM_PROJECTS_BASE_DIR"] = projects_root.as_posix()
             write_docs_scope_config(repo_root)
 
@@ -545,7 +559,7 @@ def test_scope_create_apply_writes_allowlisted_files_and_runs_rebuild() -> None:
             repo_root = Path(temp_path)
             projects_root = (repo_root.parent / f"{repo_root.name}-external-docs-data").resolve()
             external_root = projects_root / "docs-viewer"
-            external_root.mkdir(parents=True)
+            (external_root / "media").mkdir(parents=True)
             os.environ["DOTLINEFORM_PROJECTS_BASE_DIR"] = projects_root.as_posix()
             write_docs_scope_config(repo_root)
             preview = docs_management_service.docs_scope_create.plan_create_scope_preview(
@@ -575,7 +589,7 @@ def test_scope_create_apply_writes_allowlisted_files_and_runs_rebuild() -> None:
             default_doc_text = default_doc_path.read_text(encoding="utf-8")
             source_sub_scopes_exists = (external_root / "scopes/research/source/sub-scopes").exists()
             media_directories_exist = all(
-                (external_root / "scopes/research/published/media" / media_class).is_dir()
+                (external_root / "media/research" / media_class).is_dir()
                 for media_class in ("files", "img", "svg")
             )
             route_exists = (repo_root / "research/index.md").exists()
@@ -663,7 +677,7 @@ def test_scope_rename_preview_blocks_tmp_for_icloud_external_workspace() -> None
                 / "com~apple~CloudDocs"
                 / "dotlineform"
             )
-            (projects_root / "docs-viewer").mkdir(parents=True)
+            (projects_root / "docs-viewer/media").mkdir(parents=True)
             os.environ["DOTLINEFORM_PROJECTS_BASE_DIR"] = projects_root.as_posix()
             write_docs_scope_config(repo_root)
             docs_management_service.docs_scope_create.apply_create_scope(
@@ -707,7 +721,7 @@ def test_scope_rename_apply_moves_external_roots_and_preserves_links_and_doc_ids
             repo_root = Path(temp_path)
             projects_root = (repo_root.parent / f"{repo_root.name}-external-docs-data").resolve()
             external_root = projects_root / "docs-viewer"
-            external_root.mkdir(parents=True)
+            (external_root / "media").mkdir(parents=True)
             os.environ["DOTLINEFORM_PROJECTS_BASE_DIR"] = projects_root.as_posix()
             write_docs_scope_config(repo_root)
             docs_management_service.handle_scope_create_apply(
@@ -734,7 +748,7 @@ def test_scope_rename_apply_moves_external_roots_and_preserves_links_and_doc_ids
                 + f"\n[Old scope link](/docs/?scope=research&doc={default_doc_id})\n",
                 encoding="utf-8",
             )
-            media_path = external_root / "scopes/research/published/media/img/example.png"
+            media_path = external_root / "media/research/img/example.png"
             media_path.parent.mkdir(parents=True, exist_ok=True)
             media_path.write_bytes(b"image")
             write_json(external_root / "scopes/research/published/documents/index-tree.json", {"docs": []})
@@ -799,13 +813,13 @@ def test_scope_rename_apply_moves_external_roots_and_preserves_links_and_doc_ids
     assert not (external_root / "scopes/research/published/documents").exists()
     assert not (external_root / "scopes/research/published/search").exists()
     assert (external_root / "scopes/field-notes/source/sub-scopes/notes").is_dir()
-    assert (external_root / "scopes/field-notes/published/media/img/example.png").read_bytes() == b"image"
+    assert (external_root / "media/field-notes/img/example.png").read_bytes() == b"image"
     assert (external_root / "scopes/field-notes/published/documents/index-tree.json").exists()
     assert (external_root / "scopes/field-notes/published/search/index.json").exists()
     assert renamed_scope["default_doc_id"] == default_doc_id
     assert renamed_scope["scope_root"]["path"] == f"{EXTERNAL_DATA_ROOT_MARKER}/scopes/field-notes"
-    assert renamed_scope["published"]["media"]["img"]["reference_prefix"] == "docs/field-notes/img"
-    assert "location" not in renamed_scope["published"]["media"]["img"]
+    assert renamed_scope["media"]["types"]["img"]["build_inputs"] == []
+    assert "location" not in renamed_scope["media"]["types"]["img"]
     assert "source" not in renamed_scope["sub_scopes"][0]
     assert "published" not in renamed_scope["sub_scopes"][0]
     assert "ui_statuses_by_scope" not in final_config["docs_viewer"]
@@ -887,7 +901,7 @@ def test_scope_create_apply_writes_public_site_route_config_and_payloads() -> No
     assert any(route["route_id"] == "research" for route in all_routes["routes"])
     assert public_doc_exists is True
     assert public_search_exists is True
-    assert public_svg_marker_exists is True
+    assert public_svg_marker_exists is False
     records = {record["scope_id"]: record for record in manifest_payload["scopes"]}
     assert records["research"]["scope_type"] == "public"
     recorded_paths = {file["path"] for file in records["research"]["files"]}
@@ -919,13 +933,10 @@ def test_scope_create_apply_skips_public_route_for_local_scopes() -> None:
             default_doc_id = source_payload["scopes"][1]["default_doc_id"]
             default_doc_text = (repo_root / f"docs-viewer/scopes/notes/source/documents/{default_doc_id}.md").read_text(encoding="utf-8")
             media_directories_exist = all(
-                (repo_root / "docs-viewer/scopes/notes/published/media" / media_class).is_dir()
+                (managed_media_root("notes") / media_class).is_dir()
                 for media_class in ("files", "img", "svg")
             )
-            media_markers_exist = all(
-                (repo_root / "docs-viewer/scopes/notes/published/media" / media_class / ".gitkeep").is_file()
-                for media_class in ("files", "img", "svg")
-            )
+            media_markers_exist = bool(list(managed_media_root("notes").rglob(".gitkeep")))
             route_exists = (repo_root / "notes/index.md").exists()
     finally:
         docs_management_service.write_rebuild.rebuild_scope_outputs = original_rebuild
@@ -934,7 +945,7 @@ def test_scope_create_apply_skips_public_route_for_local_scopes() -> None:
     assert payload["urls"]["public"] == ""
     assert route_exists is False
     assert media_directories_exist is True
-    assert media_markers_exist is True
+    assert media_markers_exist is False
     assert "publishable:" not in default_doc_text
     assert "published:" not in default_doc_text
     assert "hidden:" not in default_doc_text
@@ -1212,7 +1223,7 @@ def test_scope_delete_apply_removes_external_scope_owned_media_with_published_do
             repo_root = Path(temp_path)
             projects_root = (repo_root.parent / f"{repo_root.name}-external-docs-data").resolve()
             external_root = projects_root / "docs-viewer"
-            external_root.mkdir(parents=True)
+            (external_root / "media").mkdir(parents=True)
             os.environ["DOTLINEFORM_PROJECTS_BASE_DIR"] = projects_root.as_posix()
             write_docs_scope_config(repo_root)
             docs_management_service.handle_scope_create_apply(
@@ -1225,7 +1236,7 @@ def test_scope_delete_apply_removes_external_scope_owned_media_with_published_do
                 },
                 dry_run=False,
             )
-            media_path = external_root / "scopes/research/published/media/img/diagram.svg"
+            media_path = external_root / "media/research/img/diagram.svg"
             media_path.parent.mkdir(parents=True, exist_ok=True)
             media_path.write_text("<svg/>", encoding="utf-8")
             preview = docs_management_service.docs_scope_delete.plan_delete_scope_preview(
@@ -1263,7 +1274,7 @@ def test_scope_delete_apply_removes_external_scope_owned_media_with_published_do
     )
     assert any(
         file["kind"] == "scope_media_img_root"
-        and file["path"] == (external_root / "scopes/research/published/media/img").as_posix()
+        and file["path"] == (external_root / "media/research/img").as_posix()
         for file in preview["delete_files"]
     )
     assert payload["ok"] is True

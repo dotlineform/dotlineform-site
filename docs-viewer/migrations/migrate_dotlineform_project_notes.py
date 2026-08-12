@@ -66,7 +66,7 @@ from docs_scope_config import (  # noqa: E402
     document_source_path,
     load_docs_scope_configs,
     publication_documents_path,
-    published_media_config,
+    managed_media_config,
     resolve_scope_path,
 )
 from local_env import runtime_env  # noqa: E402
@@ -793,7 +793,7 @@ def _media_target(paths: MigrationPaths, plan_row: dict[str, Any]) -> Path:
     filename = str(plan_row.get("source_path") or "")
     target = local_artifact_path(
         paths.repo_root,
-        published_media_config(configs[SCOPE], media_class).location,
+        managed_media_config(configs[SCOPE], media_class).location,
         filename,
     )
     if target is None:

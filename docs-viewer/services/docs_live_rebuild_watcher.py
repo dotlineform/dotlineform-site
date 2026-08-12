@@ -48,9 +48,9 @@ from docs_source_model import (
     write_text_atomic,
 )
 from docs_artifact_locations import (
-    ArtifactLocation,
     artifact_location_adapter,
     authenticated_remote_client_for_locations,
+    filesystem_location_root,
 )
 from docs_mermaid_media import produce_mermaid_svg
 from docs_scope_config import (
@@ -195,23 +195,18 @@ def desired_watch_state_specs(repo_root: Path, configs: dict[str, Any]) -> dict[
 
     def add_build_media_specs(
         scope: str,
-        sub_scope: str,
-        source_config: Any,
-        published_config: Any,
+        media_config: Any,
     ) -> None:
-        for build_type, build in sorted(getattr(source_config, "build_media", {}).items()):
-            label_prefix = f"{scope}/{sub_scope}" if sub_scope else scope
-            label = f"{label_prefix}/media/{build_type}"
+        for build_type, build in sorted(media_config.build_sources.items()):
+            label = f"{scope}/media/{build_type}"
             specs[label] = {
                 "scope": scope,
-                "sub_scope": sub_scope,
+                "sub_scope": "",
                 "label": label,
-                "root": resolve_scope_path(repo_root, source_config.location.path / build.path),
+                "root": filesystem_location_root(repo_root, build.location),
                 "config": configs[scope],
                 "watch_kind": "build_media",
                 "build_type": build_type,
-                "source_config": source_config,
-                "published_config": published_config,
             }
 
     for scope, config in sorted(configs.items()):
@@ -223,7 +218,7 @@ def desired_watch_state_specs(repo_root: Path, configs: dict[str, Any]) -> dict[
             "config": config,
             "watch_kind": "documents",
         }
-        add_build_media_specs(scope, "", config.source, getattr(config, "published", None))
+        add_build_media_specs(scope, config.media)
         for sub_scope in config.sub_scopes:
             label = f"{scope}/{sub_scope.sub_scope}"
             specs[label] = {
@@ -234,12 +229,6 @@ def desired_watch_state_specs(repo_root: Path, configs: dict[str, Any]) -> dict[
                 "config": config,
                 "watch_kind": "documents",
             }
-            add_build_media_specs(
-                scope,
-                sub_scope.sub_scope,
-                sub_scope.source,
-                getattr(sub_scope, "published", None),
-            )
     return specs
 
 
@@ -975,10 +964,9 @@ def rebuild_build_media(
         log(f"{state['label']} rebuild failed: unsupported build-media producer {build_type!r}")
         return False
 
-    source_config = state["source_config"]
-    published_config = state["published_config"]
-    build = source_config.build_media[build_type]
-    published_media = published_config.media[build.publishes_to]
+    config = state["config"]
+    build = config.media.build_sources[build_type]
+    published_media = config.media.types[build.publishes_to]
     requested_outputs = tuple(
         Path(filename).with_suffix(".svg").as_posix()
         for filename in ordered_unique(changed_files)
@@ -994,10 +982,7 @@ def rebuild_build_media(
         )
         source = artifact_location_adapter(
             repo_root,
-            ArtifactLocation(
-                provider=source_config.location.provider,
-                path=source_config.location.path / build.path,
-            ),
+            build.location,
         )
         published = artifact_location_adapter(
             repo_root,

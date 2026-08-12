@@ -18,6 +18,7 @@ from docs_builder.source import DocRecord  # noqa: E402
 from docs_artifact_locations import ArtifactLocation, EXTERNAL_LOCAL_PROVIDER  # noqa: E402
 from docs_scope_config import (  # noqa: E402
     LOCAL_EXTERNAL_SCOPE_TYPE,
+    DocsMediaConfig,
     DocsPublishedArtifactConfig,
     DocsPublishedConfig,
     DocsScopeConfig,
@@ -109,8 +110,15 @@ def synthetic_review_config(
         source=DocsSourceConfig(
             location=ArtifactLocation(provider=EXTERNAL_LOCAL_PROVIDER, path=source_dir),
             documents_path=Path("."),
-            build_media={},
             sub_scopes_path=Path("."),
+        ),
+        media=DocsMediaConfig(
+            location=ArtifactLocation(
+                provider=EXTERNAL_LOCAL_PROVIDER,
+                path=generated_dir / "media",
+            ),
+            types={},
+            build_sources={},
         ),
         published=DocsPublishedConfig(
             documents=DocsPublishedArtifactConfig(
@@ -122,7 +130,6 @@ def synthetic_review_config(
                     path=generated_dir / "search" / "index.json",
                 )
             ),
-            media={},
         ),
         public_projection=None,
         viewer_base_url="/docs-review/",

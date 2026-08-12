@@ -18,7 +18,7 @@ from docs_import_common import (
     slugify,
     source_format_for_path,
 )
-from docs_scope_config import DOCS_SCOPE_CONFIGS, load_docs_scope_configs, published_media_config
+from docs_scope_config import DOCS_SCOPE_CONFIGS, load_docs_scope_configs, managed_media_config
 from docs_media_storage import (
     docs_media_file,
     docs_publish_succeeded,
@@ -48,7 +48,7 @@ def normalize_media_scope(scope: str, repo_root: Path | None = None) -> str:
 
 def media_config_for(scope: str, media_class: str, repo_root: Path | None = None):
     normalized_scope = normalize_media_scope(scope, repo_root)
-    return published_media_config(scope_configs_for(repo_root)[normalized_scope], media_class)
+    return managed_media_config(scope_configs_for(repo_root)[normalized_scope], media_class)
 
 def next_inline_media_filename(staging_root: Path, doc_id: str, extension: str, used_filenames: set[str]) -> str:
     safe_doc_id = slugify(doc_id or "imported-doc")

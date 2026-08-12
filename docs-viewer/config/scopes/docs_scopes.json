@@ -1,40 +1,39 @@
 {
-  "schema_version": "docs_scopes_v3",
+  "schema_version": "docs_scopes_v4",
+  "media_workspace": {
+    "location": {
+      "provider": "external_local",
+      "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/media"
+    }
+  },
   "scopes": [
     {
       "scope_id": "studio",
       "scope_type": "local",
       "meta": "local management",
-      "source": {
-        "build_media": {
-          "mermaid": {
-            "path": "media/mermaid",
-            "producer": "mermaid",
-            "publishes_to": "svg"
-          }
-        }
-      },
-      "published": {
-        "media": {
+      "source": {},
+      "media": {
+        "types": {
           "img": {
-            "reference_prefix": "docs/studio/img",
-            "served_path_prefix": "/docs/media/studio/img",
             "build_inputs": []
           },
           "svg": {
-            "reference_prefix": "docs/studio/svg",
-            "served_path_prefix": "/docs/media/studio/svg",
             "build_inputs": [
               "mermaid"
             ]
           },
           "files": {
-            "reference_prefix": "docs/studio/files",
-            "served_path_prefix": "/docs/media/studio/files",
             "build_inputs": []
+          }
+        },
+        "build_sources": {
+          "mermaid": {
+            "producer": "mermaid",
+            "publishes_to": "svg"
           }
         }
       },
+      "published": {},
       "public_projection": null,
       "viewer_base_url": "/docs/",
       "include_scope_param": true,
@@ -63,57 +62,32 @@
       "scope_type": "public",
       "meta": "public scope",
       "media_source_root": "analysis",
-      "source": {
-        "build_media": {
-          "mermaid": {
-            "path": "media/mermaid",
-            "producer": "mermaid",
-            "publishes_to": "svg"
-          }
-        }
-      },
-      "published": {
-        "media": {
+      "source": {},
+      "media": {
+        "types": {
           "img": {
-            "reference_prefix": "docs/analysis/img",
-            "location": {
-              "provider": "repository",
-              "path": "site/assets/data/docs/scopes/analysis/media/img"
-            },
-            "served_path_prefix": "/assets/data/docs/scopes/analysis/media/img",
             "build_inputs": []
           },
           "svg": {
-            "reference_prefix": "docs/analysis/svg",
-            "location": {
-              "provider": "repository",
-              "path": "site/assets/data/docs/scopes/analysis/media/svg"
-            },
-            "served_path_prefix": "/assets/data/docs/scopes/analysis/media/svg",
             "build_inputs": [
               "mermaid"
             ]
           },
           "files": {
-            "reference_prefix": "docs/analysis/files",
-            "location": {
-              "provider": "r2",
-              "path": "docs/analysis/files"
-            },
-            "served_path_prefix": "https://media.dotlineform.com/docs/analysis/files",
             "build_inputs": []
           },
           "html": {
-            "reference_prefix": "docs/analysis/html",
-            "location": {
-              "provider": "repository",
-              "path": "site/assets/data/docs/scopes/analysis/media/html"
-            },
-            "served_path_prefix": "/assets/data/docs/scopes/analysis/media/html",
             "build_inputs": []
+          }
+        },
+        "build_sources": {
+          "mermaid": {
+            "producer": "mermaid",
+            "publishes_to": "svg"
           }
         }
       },
+      "published": {},
       "public_projection": {
         "documents": {
           "location": {
@@ -125,6 +99,36 @@
           "location": {
             "provider": "repository",
             "path": "site/assets/data/search/analysis/index.json"
+          }
+        },
+        "media": {
+          "img": {
+            "location": {
+              "provider": "repository",
+              "path": "site/assets/data/docs/scopes/analysis/media/img"
+            },
+            "served_path_prefix": "/assets/data/docs/scopes/analysis/media/img"
+          },
+          "svg": {
+            "location": {
+              "provider": "repository",
+              "path": "site/assets/data/docs/scopes/analysis/media/svg"
+            },
+            "served_path_prefix": "/assets/data/docs/scopes/analysis/media/svg"
+          },
+          "files": {
+            "location": {
+              "provider": "r2",
+              "path": "docs/analysis/files"
+            },
+            "served_path_prefix": "https://media.dotlineform.com/docs/analysis/files"
+          },
+          "html": {
+            "location": {
+              "provider": "repository",
+              "path": "site/assets/data/docs/scopes/analysis/media/html"
+            },
+            "served_path_prefix": "/assets/data/docs/scopes/analysis/media/html"
           }
         }
       },
@@ -217,36 +221,29 @@
       "scope_id": "notes",
       "scope_type": "local_external",
       "meta": "external local",
-      "source": {
-        "build_media": {
-          "mermaid": {
-            "path": "media/mermaid",
-            "producer": "mermaid",
-            "publishes_to": "svg"
-          }
-        }
-      },
-      "published": {
-        "media": {
+      "source": {},
+      "media": {
+        "types": {
           "img": {
-            "reference_prefix": "docs/notes/img",
-            "served_path_prefix": "/docs/media/notes/img",
             "build_inputs": []
           },
           "svg": {
-            "reference_prefix": "docs/notes/svg",
-            "served_path_prefix": "/docs/media/notes/svg",
             "build_inputs": [
               "mermaid"
             ]
           },
           "files": {
-            "reference_prefix": "docs/notes/files",
-            "served_path_prefix": "/docs/media/notes/files",
             "build_inputs": []
+          }
+        },
+        "build_sources": {
+          "mermaid": {
+            "producer": "mermaid",
+            "publishes_to": "svg"
           }
         }
       },
+      "published": {},
       "public_projection": null,
       "viewer_base_url": "/docs/",
       "include_scope_param": true,
@@ -265,28 +262,22 @@
       "scope_type": "local",
       "meta": "local management",
       "media_source_root": "processing",
-      "source": {
-        "build_media": {}
-      },
-      "published": {
-        "media": {
+      "source": {},
+      "media": {
+        "types": {
           "img": {
-            "reference_prefix": "docs/processing/img",
-            "served_path_prefix": "/docs/media/processing/img",
             "build_inputs": []
           },
           "svg": {
-            "reference_prefix": "docs/processing/svg",
-            "served_path_prefix": "/docs/media/processing/svg",
             "build_inputs": []
           },
           "files": {
-            "reference_prefix": "docs/processing/files",
-            "served_path_prefix": "/docs/media/processing/files",
             "build_inputs": []
           }
-        }
+        },
+        "build_sources": {}
       },
+      "published": {},
       "public_projection": null,
       "viewer_base_url": "/docs/",
       "include_scope_param": true,
@@ -309,28 +300,22 @@
         "provider": "external_local",
         "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/dotlineform"
       },
-      "source": {
-        "build_media": {}
-      },
-      "published": {
-        "media": {
+      "source": {},
+      "media": {
+        "types": {
           "img": {
-            "reference_prefix": "docs/dotlineform/img",
-            "served_path_prefix": "/docs/media/dotlineform/img",
             "build_inputs": []
           },
           "svg": {
-            "reference_prefix": "docs/dotlineform/svg",
-            "served_path_prefix": "/docs/media/dotlineform/svg",
             "build_inputs": []
           },
           "files": {
-            "reference_prefix": "docs/dotlineform/files",
-            "served_path_prefix": "/docs/media/dotlineform/files",
             "build_inputs": []
           }
-        }
+        },
+        "build_sources": {}
       },
+      "published": {},
       "public_projection": null,
       "viewer_base_url": "/docs/",
       "include_scope_param": true,

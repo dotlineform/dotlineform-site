@@ -15,12 +15,18 @@ from repo_factory import docs_scope_record, docs_sub_scope_record
 
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
+MEDIA_WORKSPACE = {
+    "location": {
+        "provider": "external_local",
+        "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/media",
+    }
+}
 
 
 def write_scope_record(repo_root: Path, record: dict[str, object]) -> None:
     write_json(
         repo_root / "docs-viewer/config/scopes/docs_scopes.json",
-        {"schema_version": "docs_scopes_v3", "scopes": [record]},
+        {"schema_version": "docs_scopes_v4", "media_workspace": MEDIA_WORKSPACE, "scopes": [record]},
     )
 
 
@@ -59,7 +65,8 @@ def test_docs_scope_config_selected_local_scope_does_not_resolve_external_worksp
         write_json(
             repo_root / "docs-viewer/config/scopes/docs_scopes.json",
             {
-                "schema_version": "docs_scopes_v3",
+                "schema_version": "docs_scopes_v4",
+                "media_workspace": MEDIA_WORKSPACE,
                 "scopes": [
                     docs_scope_record("studio", default_doc_id="studio"),
                     docs_scope_record(
@@ -99,7 +106,8 @@ def test_docs_scope_config_public_only_does_not_resolve_external_workspace() -> 
         write_json(
             repo_root / "docs-viewer/config/scopes/docs_scopes.json",
             {
-                "schema_version": "docs_scopes_v3",
+                "schema_version": "docs_scopes_v4",
+                "media_workspace": MEDIA_WORKSPACE,
                 "scopes": [
                     docs_scope_record(
                         "analysis",
@@ -639,33 +647,28 @@ def test_docs_scope_config_accepts_explicit_mermaid_to_svg_build_contract() -> N
     with make_repo() as temp_path:
         repo_root = Path(temp_path)
         record = docs_scope_record("studio", default_doc_id="child")
-        record["source"]["build_media"] = {  # type: ignore[index]
+        record["media"]["build_sources"] = {  # type: ignore[index]
             "mermaid": {
-                "path": "media/mermaid",
                 "producer": "mermaid",
                 "publishes_to": "svg",
             }
         }
-        record["published"]["media"]["svg"]["build_inputs"] = ["mermaid"]  # type: ignore[index]
+        record["media"]["types"]["svg"]["build_inputs"] = ["mermaid"]  # type: ignore[index]
         write_scope_record(repo_root, record)
 
         config = docs_scope_config.load_docs_scope_configs(repo_root)["studio"]
 
-    assert config.source.build_media["mermaid"].path == Path("media/mermaid")
-    assert config.published.media["svg"].build_inputs == ("mermaid",)
+    assert config.media.build_sources["mermaid"].location.path == Path(
+        "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/media/studio/build-source/mermaid"
+    )
+    assert config.media.types["svg"].build_inputs == ("mermaid",)
 
 
 def test_docs_scope_config_rejects_unhandled_media_types() -> None:
     with make_repo() as temp_path:
         repo_root = Path(temp_path)
         record = docs_scope_record("studio", default_doc_id="child")
-        record["published"]["media"]["video"] = {  # type: ignore[index]
-            "reference_prefix": "docs/studio/video",
-            "location": {
-                "provider": "repository",
-                "path": "docs-viewer/scopes/studio/published/documents/media/video",
-            },
-            "served_path_prefix": "/docs/media/studio/video",
+        record["media"]["types"]["video"] = {  # type: ignore[index]
             "build_inputs": [],
         }
         write_scope_record(repo_root, record)
@@ -673,7 +676,7 @@ def test_docs_scope_config_rejects_unhandled_media_types() -> None:
         try:
             docs_scope_config.load_docs_scope_configs(repo_root)
         except ValueError as exc:
-            assert "unsupported published media type" in str(exc)
+            assert "unsupported managed media type" in str(exc)
         else:
             raise AssertionError("Expected unhandled published media type to require an explicit contract")
 
@@ -687,22 +690,27 @@ def test_docs_scope_policy_rejects_competing_producers_for_one_published_type() 
 
     builds = {
         "mermaid": docs_scope_config.DocsBuildMediaConfig(
-            path=Path("media/mermaid"),
+            location=docs_scope_config.location_child(
+                config.media.location,
+                Path("build-source/mermaid"),
+            ),
             producer="first",
             publishes_to="img",
         ),
         "other": docs_scope_config.DocsBuildMediaConfig(
-            path=Path("media/other"),
+            location=docs_scope_config.location_child(
+                config.media.location,
+                Path("build-source/other"),
+            ),
             producer="second",
             publishes_to="img",
         ),
     }
-    media = dict(config.published.media)
+    media = dict(config.media.types)
     media["img"] = replace(media["img"], build_inputs=("mermaid", "other"))
     competing = replace(
         config,
-        source=replace(config.source, build_media=builds),
-        published=replace(config.published, media=media),
+        media=replace(config.media, build_sources=builds, types=media),
     )
 
     try:

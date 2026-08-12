@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 from http import HTTPStatus
+import os
 from pathlib import Path
 from types import SimpleNamespace
 
@@ -20,6 +21,17 @@ from repo_factory import (
 )
 
 
+@pytest.fixture(autouse=True)
+def isolated_media_workspace(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    projects = tmp_path / "projects"
+    (projects / "docs-viewer/media").mkdir(parents=True)
+    monkeypatch.setenv("DOTLINEFORM_PROJECTS_BASE_DIR", str(projects))
+
+
+def managed_media_path(scope: str, *parts: str) -> Path:
+    return Path(os.environ["DOTLINEFORM_PROJECTS_BASE_DIR"]) / "docs-viewer/media" / scope / Path(*parts)
+
+
 def _configure_mermaid_fixture(root: Path) -> None:
     record = docs_scope_record(
         "library",
@@ -33,14 +45,13 @@ def _configure_mermaid_fixture(root: Path) -> None:
         media_served_root="/assets/data/docs/scopes/library/media",
         media_types=("img", "svg", "files", "html"),
     )
-    record["source"]["build_media"] = {  # type: ignore[index]
+    record["media"]["build_sources"] = {  # type: ignore[index]
         "mermaid": {
-            "path": "media/mermaid",
             "producer": "mermaid",
             "publishes_to": "svg",
         }
     }
-    record["published"]["media"]["svg"]["build_inputs"] = ["mermaid"]  # type: ignore[index]
+    record["media"]["types"]["svg"]["build_inputs"] = ["mermaid"]  # type: ignore[index]
     record["sub_scopes"] = [
         docs_sub_scope_record("library", "tags", scope_type="public")
     ]
@@ -67,10 +78,10 @@ def _configure_mermaid_fixture(root: Path) -> None:
         "![Architecture]([[media:docs/library/svg/architecture.svg]])\n",
         encoding="utf-8",
     )
-    source = root / "docs-viewer/scopes/library/source/media/mermaid/architecture.mmd"
+    source = managed_media_path("library", "build-source", "mermaid", "architecture.mmd")
     source.parent.mkdir(parents=True)
     source.write_text("flowchart LR\nA --> B\n", encoding="utf-8")
-    published = root / "site/assets/data/docs/scopes/library/media/svg/architecture.svg"
+    published = managed_media_path("library", "svg", "architecture.svg")
     published.parent.mkdir(parents=True)
     published.write_text("<svg xmlns='http://www.w3.org/2000/svg'><rect width='1'/></svg>", encoding="utf-8")
 
@@ -128,7 +139,9 @@ def test_open_diagram_source_rederives_registered_local_source_without_returning
 
     assert status == HTTPStatus.OK
     assert calls[0][:3] == ["open", "-a", "Visual Studio Code"]
-    assert Path(calls[0][3]) == (root / "docs-viewer/scopes/library/source/media/mermaid/architecture.mmd").resolve()
+    assert Path(calls[0][3]) == managed_media_path(
+        "library", "build-source", "mermaid", "architecture.mmd"
+    ).resolve()
     assert payload["source_identity"] == "architecture.mmd"
     assert "path" not in payload
     assert str(root) not in str(payload)
@@ -202,7 +215,7 @@ def test_open_diagram_source_failure_does_not_expose_the_physical_path(
             lambda *_args, **_kwargs: SimpleNamespace(
                 returncode=1,
                 stdout="",
-                stderr=f"could not open {root}/docs-viewer/scopes/library/source/media/mermaid/architecture.mmd",
+                stderr=f"could not open {managed_media_path('library', 'build-source', 'mermaid', 'architecture.mmd')}",
             ),
         )
 

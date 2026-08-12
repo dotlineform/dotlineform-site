@@ -21,7 +21,6 @@ from docs_artifact_locations import (
     STAT_CAPABILITY,
     VERIFY_BYTES_CAPABILITY,
     WRITE_CAPABILITY,
-    ArtifactLocation,
     ArtifactLocationAdapter,
     artifact_location_adapter,
     authenticated_remote_client_for_locations,
@@ -825,9 +824,9 @@ def published_transfer_adapters(
     environ: Mapping[str, str] | None,
 ) -> dict[str, ArtifactLocationAdapter]:
     selected = {
-        media_type: config.published.media[media_type]
+        media_type: config.media.types[media_type]
         for media_type in sorted(set(media_types))
-        if media_type in config.published.media
+        if media_type in config.media.types
     }
     remote_client = authenticated_remote_client_for_locations(
         repo_root,
@@ -852,13 +851,10 @@ def transfer_build_source_adapter(
     config: DocsScopeConfig,
     build_type: str,
 ) -> ArtifactLocationAdapter:
-    build = config.source.build_media[build_type]
+    build = config.media.build_sources[build_type]
     return artifact_location_adapter(
         repo_root,
-        ArtifactLocation(
-            provider=config.source.location.provider,
-            path=config.source.location.path / build.path,
-        ),
+        build.location,
     )
 
 
@@ -904,7 +900,7 @@ def _retained_dependencies(
             if parts[1] != config.scope_id:
                 references.setdefault(("other_scope_media", reference), set()).add(doc.doc_id)
                 continue
-            if parts[2] not in config.published.media:
+            if parts[2] not in config.media.types:
                 blockers.append(
                     TransferBlocker(
                         code="unsupported_source_media_role",
@@ -942,8 +938,8 @@ def _build_source_plan(
     mode: str,
     blockers: list[TransferBlocker],
 ) -> TransferBuildSourcePlan | None:
-    source_build = source_config.source.build_media[build_type]
-    target_build = target_config.source.build_media.get(build_type)
+    source_build = source_config.media.build_sources[build_type]
+    target_build = target_config.media.build_sources.get(build_type)
     source_identity = ""
     try:
         source_identity = _build_source_identity(
@@ -1183,8 +1179,8 @@ def _media_plans(
     plans: list[TransferMediaPlan] = []
     for (media_type, identity), references in sorted(references_by_identity.items()):
         document_ids = tuple(sorted({reference.doc_id for reference in references}))
-        source_media = source_config.published.media[media_type]
-        target_media = target_config.published.media.get(media_type)
+        source_media = source_config.media.types[media_type]
+        target_media = target_config.media.types.get(media_type)
         source_adapter = source_adapters.get(media_type)
         target_adapter = target_adapters.get(media_type)
         source_bytes = b""

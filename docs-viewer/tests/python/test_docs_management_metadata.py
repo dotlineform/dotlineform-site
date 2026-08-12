@@ -1074,7 +1074,13 @@ def test_external_scope_default_doc_delete_uses_workspace_relative_path(tmp_path
     config_path.write_text(
         json.dumps(
             {
-                "schema_version": "docs_scopes_v3",
+                "schema_version": "docs_scopes_v4",
+                "media_workspace": {
+                    "location": {
+                        "provider": "external_local",
+                        "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/media",
+                    }
+                },
                 "scopes": [
                     docs_scope_record("dlf", scope_type="local_external", default_doc_id="dlf")
                 ],

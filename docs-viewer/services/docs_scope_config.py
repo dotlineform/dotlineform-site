@@ -26,6 +26,7 @@ from docs_artifact_locations import (  # noqa: E402
     READ_CAPABILITY,
     REPLACE_CAPABILITY,
     REPOSITORY_PROVIDER,
+    R2_PROVIDER,
     SERVED_REFERENCE_CAPABILITY,
     STAT_CAPABILITY,
     SUPPORTED_LOCATION_PROVIDERS,
@@ -52,7 +53,7 @@ from studio.shared.python.projects_directories import (  # noqa: E402
 
 
 CONFIG_REL_PATH = Path("docs-viewer/config/scopes/docs_scopes.json")
-SCHEMA_VERSION = "docs_scopes_v3"
+SCHEMA_VERSION = "docs_scopes_v4"
 DOCS_VIEWER_MANAGE_ROUTE_BASE_URL = "/docs/"
 PUBLIC_DOCS_OUTPUT_ROOT = Path("site/assets/data/docs/scopes")
 PUBLIC_SEARCH_OUTPUT_ROOT = Path("site/assets/data/search")
@@ -61,7 +62,6 @@ SCOPE_SOURCE_PATH = Path("source")
 SCOPE_PUBLISHED_PATH = Path("published")
 PUBLISHED_DOCUMENTS_PATH = SCOPE_PUBLISHED_PATH / "documents"
 PUBLISHED_SEARCH_PATH = SCOPE_PUBLISHED_PATH / "search" / "index.json"
-PUBLISHED_MEDIA_PATH = SCOPE_PUBLISHED_PATH / "media"
 SOURCE_DOCUMENTS_PATH = Path("documents")
 SOURCE_SUB_SCOPES_PATH = Path("sub-scopes")
 PUBLIC_SCOPE_TYPE = "public"
@@ -70,11 +70,12 @@ LOCAL_EXTERNAL_SCOPE_TYPE = "local_external"
 SUPPORTED_SCOPE_TYPES = {PUBLIC_SCOPE_TYPE, LOCAL_SCOPE_TYPE, LOCAL_EXTERNAL_SCOPE_TYPE}
 DOTLINEFORM_PROJECTS_BASE_DIR_ENV = "DOTLINEFORM_PROJECTS_BASE_DIR"
 EXTERNAL_DATA_ROOT_MARKER = f"${DOTLINEFORM_PROJECTS_BASE_DIR_ENV}/docs-viewer"
+MEDIA_WORKSPACE_ROOT_MARKER = f"{EXTERNAL_DATA_ROOT_MARKER}/media"
 SUB_SCOPE_ID_PATTERN = re.compile(r"\A[a-z0-9][a-z0-9_-]*\Z")
 SOURCE_REVISION_PATTERN = re.compile(r"\Asha256:[0-9a-f]{64}\Z")
 SCOPE_LIFECYCLE_TOOL_ID = "docs-viewer-scope-lifecycle"
 MEDIA_TYPE_PATTERN = re.compile(r"\A[a-z][a-z0-9_-]*\Z")
-PUBLISHED_MEDIA_TYPES = frozenset({"files", "html", "img", "svg"})
+MANAGED_MEDIA_TYPES = frozenset({"files", "html", "img", "svg"})
 BUILD_MEDIA_TYPES = frozenset({"mermaid"})
 
 SOURCE_CAPABILITIES = frozenset(
@@ -107,7 +108,7 @@ PUBLISHED_MEDIA_CAPABILITIES = frozenset(
 
 @dataclass(frozen=True)
 class DocsBuildMediaConfig:
-    path: Path
+    location: ArtifactLocation
     producer: str
     publishes_to: str
 
@@ -116,7 +117,6 @@ class DocsBuildMediaConfig:
 class DocsSourceConfig:
     location: ArtifactLocation
     documents_path: Path
-    build_media: Mapping[str, DocsBuildMediaConfig]
     sub_scopes_path: Path
 
 
@@ -126,26 +126,40 @@ class DocsPublishedArtifactConfig:
 
 
 @dataclass(frozen=True)
-class DocsPublishedMediaConfig:
+class DocsManagedMediaConfig:
     media_type: str
     reference_prefix: Path
     location: ArtifactLocation
     served_path_prefix: str
     build_inputs: tuple[str, ...]
-    scope_local: bool
+
+
+@dataclass(frozen=True)
+class DocsMediaConfig:
+    location: ArtifactLocation
+    types: Mapping[str, DocsManagedMediaConfig]
+    build_sources: Mapping[str, DocsBuildMediaConfig]
 
 
 @dataclass(frozen=True)
 class DocsPublishedConfig:
     documents: DocsPublishedArtifactConfig
     search: DocsPublishedArtifactConfig
-    media: Mapping[str, DocsPublishedMediaConfig]
+
+
+@dataclass(frozen=True)
+class DocsPublicMediaConfig:
+    media_type: str
+    reference_prefix: Path
+    location: ArtifactLocation
+    served_path_prefix: str
 
 
 @dataclass(frozen=True)
 class DocsPublicProjectionConfig:
     documents: DocsPublishedArtifactConfig
     search: DocsPublishedArtifactConfig | None
+    media: Mapping[str, DocsPublicMediaConfig]
 
 
 @dataclass(frozen=True)
@@ -154,6 +168,7 @@ class DocsScopeConfig:
     scope_type: str
     scope_root: ArtifactLocation
     source: DocsSourceConfig
+    media: DocsMediaConfig
     published: DocsPublishedConfig
     public_projection: DocsPublicProjectionConfig | None
     viewer_base_url: str
@@ -406,7 +421,28 @@ def normalize_artifact(raw: Any, *, field: str) -> DocsPublishedArtifactConfig:
     return DocsPublishedArtifactConfig(location=normalize_location(raw.get("location"), field=f"{field}.location"))
 
 
-def normalize_build_media(raw: Any, *, field: str) -> dict[str, DocsBuildMediaConfig]:
+def normalize_media_workspace(raw: Any) -> ArtifactLocation:
+    field = "media_workspace"
+    if not isinstance(raw, dict) or set(raw) != {"location"}:
+        raise ValueError(f"docs scope config field {field} must contain only location")
+    location = raw.get("location")
+    if not isinstance(location, dict) or set(location) != {"provider", "path"}:
+        raise ValueError(f"docs scope config field {field}.location must contain only provider and path")
+    if str(location.get("provider") or "").strip().lower() != EXTERNAL_LOCAL_PROVIDER:
+        raise ValueError(f"docs scope config field {field}.location.provider must be external_local")
+    if str(location.get("path") or "").strip() != MEDIA_WORKSPACE_ROOT_MARKER:
+        raise ValueError(
+            f"docs scope config field {field}.location.path must be {MEDIA_WORKSPACE_ROOT_MARKER}"
+        )
+    return ArtifactLocation(provider=EXTERNAL_LOCAL_PROVIDER, path=Path(MEDIA_WORKSPACE_ROOT_MARKER))
+
+
+def normalize_build_media(
+    raw: Any,
+    *,
+    media_root: ArtifactLocation,
+    field: str,
+) -> dict[str, DocsBuildMediaConfig]:
     if raw is None:
         return {}
     if not isinstance(raw, dict):
@@ -427,14 +463,13 @@ def normalize_build_media(raw: Any, *, field: str) -> dict[str, DocsBuildMediaCo
         publishes_to = str(item.get("publishes_to") or "").strip().lower()
         if not producer or not publishes_to:
             raise ValueError(f"docs scope config field {item_field} requires producer and publishes_to")
-        path = safe_relative_path(item.get("path"), field=f"{item_field}.path")
-        expected_path = Path("media") / normalized_type
-        if path != expected_path:
+        unknown_fields = sorted(set(item) - {"producer", "publishes_to"})
+        if unknown_fields:
             raise ValueError(
-                f"docs scope config field {item_field}.path must be {expected_path.as_posix()}"
+                f"docs scope config field {item_field} contains unknown fields: {', '.join(unknown_fields)}"
             )
         result[normalized_type] = DocsBuildMediaConfig(
-            path=path,
+            location=location_child(media_root, Path("build-source") / normalized_type),
             producer=producer,
             publishes_to=publishes_to,
         )
@@ -444,7 +479,7 @@ def normalize_build_media(raw: Any, *, field: str) -> dict[str, DocsBuildMediaCo
 def normalize_source(raw: Any, *, scope_root: ArtifactLocation, field: str) -> DocsSourceConfig:
     if not isinstance(raw, dict):
         raise ValueError(f"docs scope config field {field} must be an object")
-    retired_fields = sorted(set(raw) & {"location", "documents_path", "sub_scopes_path"})
+    retired_fields = sorted(set(raw) & {"build_media", "location", "documents_path", "sub_scopes_path"})
     if retired_fields:
         raise ValueError(
             f"docs scope config field {field} must not repeat scope-root paths: {', '.join(retired_fields)}"
@@ -452,63 +487,79 @@ def normalize_source(raw: Any, *, scope_root: ArtifactLocation, field: str) -> D
     source = DocsSourceConfig(
         location=location_child(scope_root, SCOPE_SOURCE_PATH),
         documents_path=SOURCE_DOCUMENTS_PATH,
-        build_media=normalize_build_media(raw.get("build_media"), field=f"{field}.build_media"),
         sub_scopes_path=SOURCE_SUB_SCOPES_PATH,
     )
     require_location_capabilities(source.location, SOURCE_CAPABILITIES, role=f"{field}.documents")
     return source
 
 
-def normalize_published_media(
+def normalize_managed_media_types(
     raw: Any,
     *,
     scope_id: str,
-    scope_root: ArtifactLocation,
+    media_root: ArtifactLocation,
     field: str,
-) -> dict[str, DocsPublishedMediaConfig]:
+) -> dict[str, DocsManagedMediaConfig]:
     if not isinstance(raw, dict) or not raw:
         raise ValueError(f"docs scope config field {field} must be a non-empty object")
-    result: dict[str, DocsPublishedMediaConfig] = {}
+    result: dict[str, DocsManagedMediaConfig] = {}
     for media_type, item in raw.items():
         normalized_type = str(media_type or "").strip().lower()
         item_field = f"{field}.{normalized_type}"
         if not MEDIA_TYPE_PATTERN.fullmatch(normalized_type) or not isinstance(item, dict):
             raise ValueError(f"docs scope config field {item_field} must be a named media object")
-        if normalized_type not in PUBLISHED_MEDIA_TYPES:
-            supported = ", ".join(sorted(PUBLISHED_MEDIA_TYPES))
+        if normalized_type not in MANAGED_MEDIA_TYPES:
+            supported = ", ".join(sorted(MANAGED_MEDIA_TYPES))
             raise ValueError(
-                f"docs scope config field {item_field} uses an unsupported published media type; "
+                f"docs scope config field {item_field} uses an unsupported managed media type; "
                 f"supported: {supported}"
             )
-        reference_prefix = safe_relative_path(item.get("reference_prefix"), field=f"{item_field}.reference_prefix")
-        expected_reference = Path("docs") / scope_id / normalized_type
-        if reference_prefix != expected_reference:
+        unknown_fields = sorted(set(item) - {"build_inputs"})
+        if unknown_fields:
             raise ValueError(
-                f"docs scope config field {item_field}.reference_prefix must be {expected_reference.as_posix()}"
+                f"docs scope config field {item_field} contains unknown fields: {', '.join(unknown_fields)}"
             )
-        local_location = location_child(scope_root, PUBLISHED_MEDIA_PATH / normalized_type)
-        raw_location = item.get("location")
-        scope_local = raw_location is None
-        location = local_location if scope_local else normalize_location(raw_location, field=f"{item_field}.location")
-        if not scope_local and location == local_location:
-            raise ValueError(
-                f"docs scope config field {item_field}.location must be omitted for scope-local media"
-            )
-        served_path_prefix = normalize_served_path_prefix(
-            item.get("served_path_prefix"),
-            field=f"{item_field}.served_path_prefix",
-        )
+        reference_prefix = Path("docs") / scope_id / normalized_type
+        location = location_child(media_root, normalized_type)
+        served_path_prefix = f"/docs/media/{scope_id}/{normalized_type}"
         build_inputs = string_tuple(item.get("build_inputs"), field=f"{item_field}.build_inputs")
         require_location_capabilities(location, PUBLISHED_MEDIA_CAPABILITIES, role=item_field)
-        result[normalized_type] = DocsPublishedMediaConfig(
+        result[normalized_type] = DocsManagedMediaConfig(
             media_type=normalized_type,
             reference_prefix=reference_prefix,
             location=location,
             served_path_prefix=served_path_prefix,
             build_inputs=build_inputs,
-            scope_local=scope_local,
         )
     return result
+
+
+def normalize_media(
+    raw: Any,
+    *,
+    scope_id: str,
+    workspace: ArtifactLocation,
+    field: str,
+) -> DocsMediaConfig:
+    if not isinstance(raw, dict) or set(raw) != {"types", "build_sources"}:
+        raise ValueError(f"docs scope config field {field} must contain only types and build_sources")
+    media_root = location_child(workspace, Path(scope_id))
+    types = normalize_managed_media_types(
+        raw.get("types"),
+        scope_id=scope_id,
+        media_root=media_root,
+        field=f"{field}.types",
+    )
+    build_sources = normalize_build_media(
+        raw.get("build_sources"),
+        media_root=media_root,
+        field=f"{field}.build_sources",
+    )
+    return DocsMediaConfig(
+        location=media_root,
+        types=types,
+        build_sources=build_sources,
+    )
 
 
 def normalize_published(
@@ -529,20 +580,28 @@ def normalize_published(
     search = DocsPublishedArtifactConfig(location=location_child(scope_root, PUBLISHED_SEARCH_PATH))
     require_location_capabilities(documents.location, PAYLOAD_CAPABILITIES, role=f"{field}.documents")
     require_location_capabilities(search.location, PAYLOAD_CAPABILITIES, role=f"{field}.search")
-    media = normalize_published_media(
-        raw.get("media"),
-        scope_id=scope_id,
-        scope_root=scope_root,
-        field=f"{field}.media",
-    )
-    return DocsPublishedConfig(documents=documents, search=search, media=media)
+    if raw:
+        unknown_fields = ", ".join(sorted(raw))
+        raise ValueError(f"docs scope config field {field} contains retired fields: {unknown_fields}")
+    return DocsPublishedConfig(documents=documents, search=search)
 
 
-def normalize_public_projection(raw: Any, *, field: str, search_required: bool = True) -> DocsPublicProjectionConfig | None:
+def normalize_public_projection(
+    raw: Any,
+    *,
+    field: str,
+    scope_id: str = "",
+    media_types: Mapping[str, DocsManagedMediaConfig] | None = None,
+    search_required: bool = True,
+) -> DocsPublicProjectionConfig | None:
     if raw is None:
         return None
     if not isinstance(raw, dict):
         raise ValueError(f"docs scope config field {field} must be an object or null")
+    allowed_fields = {"documents", "search"} | ({"media"} if media_types is not None else set())
+    unknown_fields = sorted(set(raw) - allowed_fields)
+    if unknown_fields:
+        raise ValueError(f"docs scope config field {field} contains unknown fields: {', '.join(unknown_fields)}")
     documents = normalize_artifact(raw.get("documents"), field=f"{field}.documents")
     search = normalize_artifact(raw.get("search"), field=f"{field}.search") if raw.get("search") is not None else None
     if search_required and search is None:
@@ -550,7 +609,46 @@ def normalize_public_projection(raw: Any, *, field: str, search_required: bool =
     for name, artifact in (("documents", documents), ("search", search)):
         if artifact is not None and artifact.location.provider != REPOSITORY_PROVIDER:
             raise ValueError(f"docs scope config field {field}.{name} must use provider 'repository'")
-    return DocsPublicProjectionConfig(documents=documents, search=search)
+    public_media: dict[str, DocsPublicMediaConfig] = {}
+    if media_types is not None:
+        raw_media = raw.get("media")
+        if not isinstance(raw_media, dict):
+            raise ValueError(f"docs scope config field {field}.media must be an object")
+        if set(raw_media) != set(media_types):
+            raise ValueError(
+                f"docs scope config field {field}.media must configure exactly: "
+                f"{', '.join(sorted(media_types))}"
+            )
+        for media_type, item in raw_media.items():
+            item_field = f"{field}.media.{media_type}"
+            if not isinstance(item, dict) or set(item) != {"location", "served_path_prefix"}:
+                raise ValueError(
+                    f"docs scope config field {item_field} must contain only location and served_path_prefix"
+                )
+            location = normalize_location(item.get("location"), field=f"{item_field}.location")
+            if location.provider not in {REPOSITORY_PROVIDER, R2_PROVIDER}:
+                raise ValueError(
+                    f"docs scope config field {item_field}.location must use provider 'repository' or 'r2'"
+                )
+            expected_path = (
+                PUBLIC_DOCS_OUTPUT_ROOT / scope_id / "media" / media_type
+                if location.provider == REPOSITORY_PROVIDER
+                else Path("docs") / scope_id / media_type
+            )
+            if location.path != expected_path:
+                raise ValueError(
+                    f"docs scope config field {item_field}.location.path must be {expected_path.as_posix()}"
+                )
+            public_media[media_type] = DocsPublicMediaConfig(
+                media_type=media_type,
+                reference_prefix=Path("docs") / scope_id / media_type,
+                location=location,
+                served_path_prefix=normalize_served_path_prefix(
+                    item.get("served_path_prefix"),
+                    field=f"{item_field}.served_path_prefix",
+                ),
+            )
+    return DocsPublicProjectionConfig(documents=documents, search=search, media=public_media)
 
 
 def location_child_path(location: ArtifactLocation, relative: Path) -> Path:
@@ -594,20 +692,21 @@ def scope_media_reference_root(config: DocsScopeConfig) -> Path:
     return Path("docs") / config.scope_id
 
 
-def published_media_config(config: DocsScopeConfig, media_type: str) -> DocsPublishedMediaConfig:
+def managed_media_config(config: DocsScopeConfig, media_type: str) -> DocsManagedMediaConfig:
     normalized = str(media_type or "").strip().lower()
     try:
-        return config.published.media[normalized]
+        return config.media.types[normalized]
     except KeyError as exc:
-        supported = ", ".join(sorted(config.published.media))
+        supported = ", ".join(sorted(config.media.types))
         raise ValueError(
-            f"Docs scope {config.scope_id!r} has no published media role {normalized!r}; configured: {supported}"
+            f"Docs scope {config.scope_id!r} has no managed media role {normalized!r}; configured: {supported}"
         ) from exc
 
 
 def scope_uses_external_data(config: DocsScopeConfig) -> bool:
-    locations = [config.scope_root, *(media.location for media in config.published.media.values())]
-    return any(location.provider == EXTERNAL_LOCAL_PROVIDER for location in locations)
+    """Return whether canonical document data, not managed media, is external."""
+
+    return config.scope_root.provider == EXTERNAL_LOCAL_PROVIDER
 
 
 def validate_scope_policy(config: DocsScopeConfig, *, field: str) -> None:
@@ -645,37 +744,42 @@ def validate_scope_policy(config: DocsScopeConfig, *, field: str) -> None:
                 f"docs scope config {field}.public_projection.search must remain under "
                 f"{PUBLIC_SEARCH_OUTPUT_ROOT.as_posix()}"
             )
+    if config.media.location != ArtifactLocation(
+        provider=EXTERNAL_LOCAL_PROVIDER,
+        path=Path(MEDIA_WORKSPACE_ROOT_MARKER) / config.scope_id,
+    ):
+        raise ValueError(
+            f"docs scope config {field}.media must derive from {MEDIA_WORKSPACE_ROOT_MARKER}/{config.scope_id}"
+        )
+    for media_type, media in config.media.types.items():
+        expected_location = location_child(config.media.location, Path(media_type))
+        if media.location != expected_location:
+            raise ValueError(
+                f"docs scope config {field}.media.types.{media_type} must use the derived external location"
+            )
     if config.scope_type == LOCAL_EXTERNAL_SCOPE_TYPE:
         external_root = resolve_external_data_root()
         if not config.scope_root.path.is_relative_to(external_root):
             raise ValueError(f"docs scope config {field}.scope_root must remain under {EXTERNAL_DATA_ROOT_MARKER}")
-        for media_type, media in config.published.media.items():
-            if not media.scope_local or media.location.provider != EXTERNAL_LOCAL_PROVIDER:
-                raise ValueError(
-                    f"docs scope config {field}.published.media.{media_type} for external local scope "
-                    "must omit location and use the scope-local published media root"
-                )
-    else:
-        for media_type, media in config.published.media.items():
-            if media.location.provider == EXTERNAL_LOCAL_PROVIDER:
-                raise ValueError(
-                    f"docs scope config {field}.published.media.{media_type} for repository-backed scope "
-                    "must use provider 'repository' or 'r2'"
-                )
-    for build_type, build in config.source.build_media.items():
-        if build.publishes_to not in config.published.media:
+    for build_type, build in config.media.build_sources.items():
+        expected_location = location_child(config.media.location, Path("build-source") / build_type)
+        if build.location != expected_location:
             raise ValueError(
-                f"docs scope config {field}.source.build_media.{build_type}.publishes_to "
+                f"docs scope config {field}.media.build_sources.{build_type} must use the derived external location"
+            )
+        if build.publishes_to not in config.media.types:
+            raise ValueError(
+                f"docs scope config {field}.media.build_sources.{build_type}.publishes_to "
                 f"references unconfigured media type {build.publishes_to!r}"
             )
-        declared_inputs = config.published.media[build.publishes_to].build_inputs
+        declared_inputs = config.media.types[build.publishes_to].build_inputs
         if build_type not in declared_inputs:
             raise ValueError(
-                f"docs scope config {field}.published.media.{build.publishes_to}.build_inputs "
+                f"docs scope config {field}.media.types.{build.publishes_to}.build_inputs "
                 f"must include {build_type!r}"
             )
     producer_targets: dict[str, str] = {}
-    for build_type, build in config.source.build_media.items():
+    for build_type, build in config.media.build_sources.items():
         competing = producer_targets.get(build.publishes_to)
         if competing is not None:
             raise ValueError(
@@ -683,18 +787,22 @@ def validate_scope_policy(config: DocsScopeConfig, *, field: str) -> None:
                 f"compete for published media {build.publishes_to!r}"
             )
         producer_targets[build.publishes_to] = build_type
-    for media_type, media in config.published.media.items():
+    for media_type, media in config.media.types.items():
         if len(set(media.build_inputs)) != len(media.build_inputs):
             raise ValueError(
-                f"docs scope config {field}.published.media.{media_type}.build_inputs must not contain duplicates"
+                f"docs scope config {field}.media.types.{media_type}.build_inputs must not contain duplicates"
             )
         for build_type in media.build_inputs:
-            build = config.source.build_media.get(build_type)
+            build = config.media.build_sources.get(build_type)
             if build is None or build.publishes_to != media_type:
                 raise ValueError(
-                    f"docs scope config {field}.published.media.{media_type}.build_inputs references "
+                    f"docs scope config {field}.media.types.{media_type}.build_inputs references "
                     f"unconfigured build media {build_type!r}"
                 )
+    if config.public_projection is not None and set(config.public_projection.media) != set(config.media.types):
+        raise ValueError(
+            f"docs scope config {field}.public_projection.media must match managed media types"
+        )
 
 
 def normalize_ordered_sub_scope_values(
@@ -828,7 +936,6 @@ def normalize_sub_scope_configs(
         source = DocsSourceConfig(
             location=location_child(parent.source.location, SOURCE_SUB_SCOPES_PATH / sub_scope),
             documents_path=SOURCE_DOCUMENTS_PATH,
-            build_media={},
             sub_scopes_path=SOURCE_SUB_SCOPES_PATH,
         )
         published = DocsPublishedConfig(
@@ -844,7 +951,6 @@ def normalize_sub_scope_configs(
                     SCOPE_PUBLISHED_PATH / "search" / SOURCE_SUB_SCOPES_PATH / sub_scope / "index.json",
                 )
             ),
-            media={},
         )
         projection = normalize_public_projection(
             item.get("public_projection"),
@@ -919,6 +1025,7 @@ def load_docs_scope_configs(
         raise ValueError("docs scope config must be a JSON object")
     if payload.get("schema_version") != SCHEMA_VERSION:
         raise ValueError(f"docs scope config schema_version must be {SCHEMA_VERSION}")
+    media_workspace = normalize_media_workspace(payload.get("media_workspace"))
     raw_scopes = payload.get("scopes")
     if not isinstance(raw_scopes, list):
         raise ValueError("docs scope config scopes must be an array")
@@ -970,21 +1077,33 @@ def load_docs_scope_configs(
         if root_identity in scope_roots:
             raise ValueError(f"docs scope config scope_root is duplicated for scope {scope_id!r}")
         scope_roots.add(root_identity)
+        source = normalize_source(item.get("source"), scope_root=scope_root, field=f"{field}.source")
+        media = normalize_media(
+            item.get("media"),
+            scope_id=scope_id,
+            workspace=media_workspace,
+            field=f"{field}.media",
+        )
+        published = normalize_published(
+            item.get("published"),
+            scope_id=scope_id,
+            scope_root=scope_root,
+            field=f"{field}.published",
+        )
+        public_projection = normalize_public_projection(
+            item.get("public_projection"),
+            field=f"{field}.public_projection",
+            scope_id=scope_id,
+            media_types=media.types if item.get("public_projection") is not None else None,
+        )
         preliminary = DocsScopeConfig(
             scope_id=scope_id,
             scope_type=scope_type,
             scope_root=scope_root,
-            source=normalize_source(item.get("source"), scope_root=scope_root, field=f"{field}.source"),
-            published=normalize_published(
-                item.get("published"),
-                scope_id=scope_id,
-                scope_root=scope_root,
-                field=f"{field}.published",
-            ),
-            public_projection=normalize_public_projection(
-                item.get("public_projection"),
-                field=f"{field}.public_projection",
-            ),
+            source=source,
+            media=media,
+            published=published,
+            public_projection=public_projection,
             viewer_base_url=viewer_base_url,
             include_scope_param=include_scope_param,
             default_doc_id=str(item.get("default_doc_id") or "").strip(),
@@ -1126,7 +1245,9 @@ __all__ = [
     "DocsPublicProjectionConfig",
     "DocsPublishedArtifactConfig",
     "DocsPublishedConfig",
-    "DocsPublishedMediaConfig",
+    "DocsManagedMediaConfig",
+    "DocsMediaConfig",
+    "DocsPublicMediaConfig",
     "DocsScopeConfig",
     "DocsSourceConfig",
     "DocsSubScopeConfig",
@@ -1135,8 +1256,8 @@ __all__ = [
     "LOCAL_EXTERNAL_SCOPE_TYPE",
     "LOCAL_SCOPE_TYPE",
     "PUBLISHED_DOCUMENTS_PATH",
-    "PUBLISHED_MEDIA_PATH",
-    "PUBLISHED_MEDIA_TYPES",
+    "MANAGED_MEDIA_TYPES",
+    "MEDIA_WORKSPACE_ROOT_MARKER",
     "PUBLISHED_SEARCH_PATH",
     "PUBLIC_DOCS_OUTPUT_ROOT",
     "PUBLIC_SCOPE_TYPE",
@@ -1164,7 +1285,7 @@ __all__ = [
     "publication_documents_path",
     "publication_search_path",
     "published_documents_path",
-    "published_media_config",
+    "managed_media_config",
     "published_search_path",
     "resolve_external_data_marker_path",
     "resolve_external_data_root",

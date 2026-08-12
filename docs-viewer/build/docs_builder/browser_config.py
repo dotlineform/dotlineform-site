@@ -133,6 +133,11 @@ def browser_scope_record(
     *,
     published: bool = False,
 ) -> dict[str, Any]:
+    media_config = (
+        config.public_projection.media
+        if published and config.public_projection is not None
+        else config.media.types
+    )
     record = {
         "scope_id": config.scope_id,
         "scope_type": config.scope_type,
@@ -145,7 +150,7 @@ def browser_scope_record(
                 "reference_prefix": media.reference_prefix.as_posix(),
                 "served_path_prefix": media.served_path_prefix,
             }
-            for media_type, media in sorted(config.published.media.items())
+            for media_type, media in sorted(media_config.items())
         },
         "index_tree_url": browser_docs_index_tree_url(config, published=published),
         "recent_url": browser_docs_recent_url(config, published=published),

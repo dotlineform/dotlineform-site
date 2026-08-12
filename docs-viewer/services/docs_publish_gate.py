@@ -45,6 +45,14 @@ from docs_report_source import REPORT_HOST_HTML
 PUBLISH_SCHEMA_VERSION = "docs_publish_gate_v2"
 MANAGE_MANIFEST_PATH = Path("manage-manifest.json")
 LOCAL_FOLDER_ANCHOR_PATTERN = re.compile(r"<a\b(?P<attrs>(?:[^>\"']|\"[^\"]*\"|'[^']*')*)>(?P<label>.*?)</a\s*>", re.IGNORECASE | re.DOTALL)
+HTML_START_TAG_PATTERN = re.compile(
+    r"<(?P<body>[A-Za-z][A-Za-z0-9:-]*(?:[^>\"']|\"[^\"]*\"|'[^']*')*)>",
+    re.DOTALL,
+)
+MEDIA_URL_ATTRIBUTE_PATTERN = re.compile(
+    r"(?P<prefix>(?<![\w:-])(?:src|href)\s*=\s*)(?P<quote>[\"'])(?P<value>.*?)(?P=quote)",
+    re.IGNORECASE,
+)
 
 
 def repo_relative(repo_root: Path, path: Path) -> str:
@@ -250,6 +258,39 @@ def project_public_local_folder_links(content_html: str) -> str:
     return LOCAL_FOLDER_ANCHOR_PATTERN.sub(replace, content_html)
 
 
+def public_media_url_projection(config: DocsScopeConfig) -> dict[str, str]:
+    projection = config.public_projection
+    if projection is None:
+        return {}
+    return {
+        managed.served_path_prefix.rstrip("/"): projection.media[media_type].served_path_prefix.rstrip("/")
+        for media_type, managed in config.media.types.items()
+    }
+
+
+def project_public_media_urls(content_html: str, projection: dict[str, str]) -> str:
+    """Project exact managed ``src`` and ``href`` URLs without rewriting prose."""
+
+    def replace_attribute(match: re.Match[str]) -> str:
+        value = match.group("value")
+        projected = value
+        for managed_prefix, public_prefix in projection.items():
+            if value == managed_prefix:
+                projected = public_prefix
+                break
+            if value.startswith(f"{managed_prefix}/"):
+                identity = value.removeprefix(f"{managed_prefix}/")
+                projected = f"{public_prefix}/{identity}"
+                break
+        return f"{match.group('prefix')}{match.group('quote')}{projected}{match.group('quote')}"
+
+    def replace_tag(match: re.Match[str]) -> str:
+        body = MEDIA_URL_ATTRIBUTE_PATTERN.sub(replace_attribute, match.group("body"))
+        return f"<{body}>"
+
+    return HTML_START_TAG_PATTERN.sub(replace_tag, content_html)
+
+
 def project_public_report_payload(payload: dict[str, Any]) -> bool:
     """Keep public report intent and remove local-only report configuration."""
 
@@ -277,6 +318,7 @@ def publishable_docs_files(
     *,
     projection_scope: str = "",
     require_publication_recent: bool = False,
+    media_url_projection: dict[str, str] | None = None,
 ) -> dict[Path, bytes]:
     index_tree_path = working_root / "index-tree.json"
     hidden_doc_ids: set[str] = set()
@@ -329,7 +371,11 @@ def publishable_docs_files(
             content_html = payload.get("content_html") if isinstance(payload, dict) else None
             if isinstance(content_html, str):
                 projected_html = project_public_local_folder_links(content_html)
-                payload_changed = projected_html != content_html
+                projected_html = project_public_media_urls(
+                    projected_html,
+                    media_url_projection or {},
+                )
+                payload_changed = payload_changed or projected_html != content_html
                 payload["content_html"] = projected_html
             records = mermaid_projection.records_by_doc_id.get(by_id_doc_id, ())
             if records or public_mermaid_payload_requires_projection(payload):
@@ -361,7 +407,7 @@ def publishable_docs_files(
 def media_relative_prefixes(repo_root: Path, config: DocsScopeConfig, root: Path) -> tuple[Path, ...]:
     resolved_root = root.resolve()
     prefixes: list[Path] = []
-    for media in config.published.media.values():
+    for media in config.media.types.values():
         try:
             media_root = resolve_location_path(repo_root, media.location).resolve()
         except ValueError:
@@ -400,6 +446,7 @@ def publishable_parent_docs_files(
         published_root,
         projection_scope=config.scope_id,
         require_publication_recent=True,
+        media_url_projection=public_media_url_projection(config),
     )
     excluded_prefixes = sub_scope_relative_prefixes(repo_root, config, working_root) + media_relative_prefixes(
         repo_root,
@@ -536,7 +583,7 @@ def parent_docs_diff(repo_root: Path, config: DocsScopeConfig, working_root: Pat
 
 def sub_scope_docs_diff(
     repo_root: Path,
-    scope: str,
+    config: DocsScopeConfig,
     sub_scope: DocsSubScopeConfig,
     paths: dict[str, Path],
 ) -> dict[str, Any]:
@@ -547,7 +594,8 @@ def sub_scope_docs_diff(
         publishable_files=publishable_docs_files(
             paths["working_docs_root"],
             paths["published_docs_root"].relative_to(repo_root.resolve()),
-            projection_scope=f"{scope}/{sub_scope.sub_scope}",
+            projection_scope=f"{config.scope_id}/{sub_scope.sub_scope}",
+            media_url_projection=public_media_url_projection(config),
         ),
         excluded_relative_paths=sub_scope_explicit_exclusion_relative_paths(
             paths["working_docs_root"],
@@ -614,6 +662,7 @@ def prospective_document_location_projection(
             sub_paths["working_docs_root"],
             sub_paths["published_docs_root"].relative_to(repo_root.resolve()),
             projection_scope=f"{config.scope_id}/{sub_scope.sub_scope}",
+            media_url_projection=public_media_url_projection(config),
         )
         manifest_bytes = public_files.get(Path("manifest.json"))
         if manifest_bytes is None:
@@ -655,7 +704,7 @@ def publish_status(repo_root: Path, body: dict[str, Any]) -> dict[str, Any]:
     sub_scope_paths = validate_sub_scope_publish_paths(repo_root, config)
     docs = parent_docs_diff(repo_root, config, paths["working_docs_root"], paths["published_docs_root"])
     sub_scopes = [
-        sub_scope_docs_diff(repo_root, scope, sub_scope, sub_scope_paths[sub_scope.sub_scope])
+        sub_scope_docs_diff(repo_root, config, sub_scope, sub_scope_paths[sub_scope.sub_scope])
         for sub_scope in config.sub_scopes
     ]
     search = search_diff(repo_root, paths["working_search_index"], paths["published_search_index"])
@@ -885,6 +934,7 @@ def publish_apply(repo_root: Path, body: dict[str, Any]) -> dict[str, Any]:
                 sub_paths["working_docs_root"],
                 sub_paths["published_docs_root"].relative_to(repo_root.resolve()),
                 projection_scope=f"{config.scope_id}/{sub_scope.sub_scope}",
+                media_url_projection=public_media_url_projection(config),
             ),
             excluded_relative_paths=sub_scope_explicit_exclusion_relative_paths(
                 sub_paths["working_docs_root"],

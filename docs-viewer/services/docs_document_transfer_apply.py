@@ -280,8 +280,8 @@ def _media_reference_replacements(
 ) -> tuple[tuple[str, str], ...]:
     replacements: set[tuple[str, str]] = set()
     for item in plan.media:
-        source_media = plan.source_config.published.media[item.media_type]
-        target_media = plan.target_config.published.media[item.media_type]
+        source_media = plan.source_config.media.types[item.media_type]
+        target_media = plan.target_config.media.types[item.media_type]
         for source_prefix, target_prefix in (
             (
                 source_media.reference_prefix.as_posix().rstrip("/"),

@@ -3,10 +3,10 @@
 
 from __future__ import annotations
 
-import hashlib
 from pathlib import Path
 import sys
-from types import SimpleNamespace
+
+import pytest
 
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
@@ -23,48 +23,28 @@ from docs_scope_config import load_docs_scope_configs
 from repo_factory import docs_scope_record, read_json, write_docs_scope_config, write_json, write_site_tools_config
 
 
-class FakeR2Client:
-    def __init__(self, objects: dict[str, bytes]) -> None:
-        self.objects = objects
-
-    def list_objects(self, prefix: str):
-        return [
-            SimpleNamespace(key=key, size=len(value), etag=hashlib.md5(value).hexdigest())
-            for key, value in self.objects.items()
-            if key.startswith(prefix)
-        ]
-
-    def get_object(self, key: str) -> bytes:
-        return self.objects[key]
-
-    def head_object(self, key: str):
-        value = self.objects.get(key)
-        return None if value is None else SimpleNamespace(size=len(value), etag=hashlib.md5(value).hexdigest())
-
-    def put_object(self, key: str, path: Path, content_type: str) -> None:
-        del content_type
-        self.objects[key] = path.read_bytes()
-
-    def delete_object(self, key: str) -> None:
-        del self.objects[key]
-
-
 def write_config(repo_root: Path, record: dict[str, object]) -> None:
     write_docs_scope_config(repo_root, [record])
+
+
+@pytest.fixture(autouse=True)
+def isolated_media_workspace(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    projects_base = tmp_path / "projects"
+    (projects_base / "docs-viewer/media").mkdir(parents=True)
+    monkeypatch.setenv("DOTLINEFORM_PROJECTS_BASE_DIR", str(projects_base))
 
 
 def configure_mermaid_build(repo_root: Path) -> None:
     config_path = repo_root / "docs-viewer/config/scopes/docs_scopes.json"
     payload = read_json(config_path)
     studio = payload["scopes"][0]  # type: ignore[index]
-    studio["source"]["build_media"] = {  # type: ignore[index]
+    studio["media"]["build_sources"] = {  # type: ignore[index]
         "mermaid": {
-            "path": "media/mermaid",
             "producer": "mermaid",
             "publishes_to": "svg",
         }
     }
-    studio["published"]["media"]["svg"]["build_inputs"] = ["mermaid"]  # type: ignore[index]
+    studio["media"]["types"]["svg"]["build_inputs"] = ["mermaid"]  # type: ignore[index]
     write_json(config_path, payload, indent=2)
 
 
@@ -76,16 +56,8 @@ def test_inventory_lists_unreferenced_owned_media_and_reports_missing_references
         viewer_base_url="/library/",
         include_scope_param=False,
         default_doc_id="library",
+        media_types=("img", "svg", "files", "html"),
     )
-    record["published"]["media"]["html"] = {  # type: ignore[index]
-        "reference_prefix": "docs/library/html",
-        "location": {
-            "provider": "repository",
-            "path": "site/assets/data/docs/scopes/library/media/html",
-        },
-        "served_path_prefix": "/assets/data/docs/scopes/library/media/html",
-        "build_inputs": [],
-    }
     write_config(tmp_path, record)
     source = tmp_path / "docs-viewer/scopes/library/source/documents/library.md"
     source.parent.mkdir(parents=True)
@@ -101,20 +73,17 @@ title: Library
 """,
         encoding="utf-8",
     )
-    html = tmp_path / "site/assets/data/docs/scopes/library/media/html/widget.html"
+    media_root = tmp_path / "projects/docs-viewer/media/library"
+    html = media_root / "html/widget.html"
     html.parent.mkdir(parents=True)
     html.write_text("<!doctype html><title>Widget</title>", encoding="utf-8")
-    client = FakeR2Client(
-        {
-            "docs/library/img/used.png": b"used",
-            "docs/library/img/unreferenced.png": b"owned but unreferenced",
-        }
-    )
+    (media_root / "img").mkdir(parents=True)
+    (media_root / "img/used.png").write_bytes(b"used")
+    (media_root / "img/unreferenced.png").write_bytes(b"owned but unreferenced")
 
     inventory = inventory_scope_media(
         tmp_path,
         load_docs_scope_configs(tmp_path)["library"],
-        client=client,
     )
 
     by_identity = {(item.media_type, item.identity): item for item in inventory.items}
@@ -129,16 +98,16 @@ title: Library
 def test_registered_producer_writes_only_to_configured_published_adapter(tmp_path: Path) -> None:
     write_site_tools_config(tmp_path)
     record = docs_scope_record("studio", default_doc_id="studio")
-    record["source"]["build_media"] = {  # type: ignore[index]
+    record["media"]["build_sources"] = {  # type: ignore[index]
         "mermaid": {
-            "path": "media/mermaid",
             "producer": "fixture-mermaid",
             "publishes_to": "svg",
         }
     }
-    record["published"]["media"]["svg"]["build_inputs"] = ["mermaid"]  # type: ignore[index]
+    record["media"]["types"]["svg"]["build_inputs"] = ["mermaid"]  # type: ignore[index]
     write_config(tmp_path, record)
-    source = tmp_path / "docs-viewer/scopes/studio/source/media/mermaid/diagram.mmd"
+    media_root = tmp_path / "projects/docs-viewer/media/studio"
+    source = media_root / "build-source/mermaid/diagram.mmd"
     source.parent.mkdir(parents=True)
     source.write_text("graph TD; A-->B", encoding="utf-8")
     config = load_docs_scope_configs(tmp_path)["studio"]
@@ -165,7 +134,7 @@ def test_registered_producer_writes_only_to_configured_published_adapter(tmp_pat
 
     assert dry_run[0]["output_identities"] == ["diagram.svg"]
     assert written[0]["source_count"] == 1
-    assert (tmp_path / "docs-viewer/scopes/studio/published/media/svg/diagram.svg").read_bytes() == b"<svg></svg>"
+    assert (media_root / "svg/diagram.svg").read_bytes() == b"<svg></svg>"
     assert not (source.parent / "diagram.svg").exists()
 
 
@@ -174,14 +143,13 @@ def test_registered_producer_receives_create_only_publication_policy(
 ) -> None:
     write_site_tools_config(tmp_path)
     record = docs_scope_record("studio", default_doc_id="studio")
-    record["source"]["build_media"] = {  # type: ignore[index]
+    record["media"]["build_sources"] = {  # type: ignore[index]
         "mermaid": {
-            "path": "media/mermaid",
             "producer": "fixture-mermaid",
             "publishes_to": "svg",
         }
     }
-    record["published"]["media"]["svg"]["build_inputs"] = ["mermaid"]  # type: ignore[index]
+    record["media"]["types"]["svg"]["build_inputs"] = ["mermaid"]  # type: ignore[index]
     write_config(tmp_path, record)
     config = load_docs_scope_configs(tmp_path)["studio"]
     policies: list[bool] = []
@@ -204,14 +172,13 @@ def test_registered_producer_receives_create_only_publication_policy(
 def test_referenced_build_media_identities_select_only_configured_same_scope_outputs(tmp_path: Path) -> None:
     write_site_tools_config(tmp_path)
     record = docs_scope_record("studio", default_doc_id="studio")
-    record["source"]["build_media"] = {  # type: ignore[index]
+    record["media"]["build_sources"] = {  # type: ignore[index]
         "mermaid": {
-            "path": "media/mermaid",
             "producer": "mermaid",
             "publishes_to": "svg",
         }
     }
-    record["published"]["media"]["svg"]["build_inputs"] = ["mermaid"]  # type: ignore[index]
+    record["media"]["types"]["svg"]["build_inputs"] = ["mermaid"]  # type: ignore[index]
     write_config(tmp_path, record)
     config = load_docs_scope_configs(tmp_path)["studio"]
 

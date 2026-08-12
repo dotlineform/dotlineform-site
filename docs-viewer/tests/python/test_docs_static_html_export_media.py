@@ -57,7 +57,7 @@ def configured_scope(
 ) -> tuple[Path, object]:
     repo_root = tmp_path / "repo"
     projects_root = tmp_path / "projects"
-    (projects_root / "docs-viewer").mkdir(parents=True)
+    (projects_root / "docs-viewer/media").mkdir(parents=True)
     monkeypatch.setenv("DOTLINEFORM_PROJECTS_BASE_DIR", str(projects_root))
     write_docs_scope_config(repo_root, [record])
     scope_id = str(record["scope_id"])
@@ -90,22 +90,22 @@ def test_owned_reference_requires_exact_prefix_authority_and_confined_identity(
         docs_scope_record("example", media_served_root="https://media.example.test/docs/example"),
     )
     owned = media_export.owned_media_reference(
-        "https://media.example.test/docs/example/img/nested/photo%20one.png?cache=1#view",
-        config.published.media,
+        "/docs/media/example/img/nested/photo%20one.png?cache=1#view",
+        config.media.types,
     )
     assert owned == media_export.OwnedMediaReference("img", "nested/photo one.png", "view")
     assert media_export.owned_media_reference(
-        "https://other.example.test/docs/example/img/photo.png",
-        config.published.media,
+        "/docs/media/other/img/photo.png",
+        config.media.types,
     ) is None
     assert media_export.owned_media_reference(
-        "https://media.example.test/docs/example/image/photo.png",
-        config.published.media,
+        "/docs/media/example/image/photo.png",
+        config.media.types,
     ) is None
     with pytest.raises(ValueError, match="confined relative path"):
         media_export.owned_media_reference(
-            "https://media.example.test/docs/example/img/%2e%2e/escape.png",
-            config.published.media,
+            "/docs/media/example/img/%2e%2e/escape.png",
+            config.media.types,
         )
 
 
@@ -118,7 +118,7 @@ def test_repository_plan_reads_deduplicates_rewrites_and_records_dependencies(
         monkeypatch,
         docs_scope_record("example", media_provider="repository"),
     )
-    media_root = repo_root / "docs-viewer/scopes/example/published/media"
+    media_root = tmp_path / "projects/docs-viewer/media/example"
     (media_root / "img").mkdir(parents=True)
     (media_root / "files").mkdir(parents=True)
     (media_root / "img/photo one.png").write_bytes(b"photo")
@@ -170,7 +170,7 @@ def test_external_local_plan_uses_scope_location_without_provider_search(
         monkeypatch,
         docs_scope_record("external", scope_type="local_external"),
     )
-    media_path = config.published.media["svg"].location.path / "diagram.svg"
+    media_path = tmp_path / "projects/docs-viewer/media/external/svg/diagram.svg"
     media_path.parent.mkdir(parents=True)
     media_path.write_bytes(b"<svg/>")
 
@@ -185,7 +185,7 @@ def test_external_local_plan_uses_scope_location_without_provider_search(
     ]
 
 
-def test_r2_plan_reads_exact_key_through_supplied_client(
+def test_public_scope_plan_reads_managed_media_instead_of_public_projection(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
@@ -199,21 +199,22 @@ def test_r2_plan_reads_exact_key_through_supplied_client(
             include_scope_param=False,
         ),
     )
-    client = FakeRemoteClient({"docs/public/img/photo.webp": b"remote-photo"})
+    media_path = tmp_path / "projects/docs-viewer/media/public/img/photo.webp"
+    media_path.parent.mkdir(parents=True)
+    media_path.write_bytes(b"managed-photo")
 
     plan = media_export.plan_snapshot_media(
         repo_root,
         config,
         {
             "doc": {
-                "content_html": '<img src="https://media.example.test/docs/public/img/photo.webp?v=2">'
+                "content_html": '<img src="/docs/media/public/img/photo.webp?v=2">'
             }
         },
-        remote_client=client,
     )
 
     assert [(item.provider, item.identity, item.data) for item in plan.items] == [
-        ("r2", "photo.webp", b"remote-photo"),
+        ("external_local", "photo.webp", b"managed-photo"),
     ]
     assert 'src="../media/img/photo.webp"' in plan.rewritten_html_by_doc["doc"]
 
@@ -231,7 +232,7 @@ def test_plan_rewrites_srcset_iframe_and_link_but_does_not_recurse(
             media_types=("img", "html"),
         ),
     )
-    media_root = repo_root / "docs-viewer/scopes/example/published/media"
+    media_root = tmp_path / "projects/docs-viewer/media/example"
     for relative, content in (
         ("img/one.png", b"one"),
         ("img/two.png", b"two"),

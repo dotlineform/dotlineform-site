@@ -151,7 +151,7 @@ def build_source_config_report(repo_root: Path) -> dict[str, Any]:
                             "reference_prefix": media.reference_prefix.as_posix(),
                             "served_path_prefix": media.served_path_prefix,
                         }
-                        for media_type, media in sorted(config.published.media.items())
+                        for media_type, media in sorted(config.media.types.items())
                     },
                 },
                 "paths": {

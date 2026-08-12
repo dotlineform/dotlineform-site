@@ -5,7 +5,6 @@ from pathlib import Path
 from typing import Callable, Iterable, Mapping
 
 from docs_artifact_locations import (
-    ArtifactLocation,
     ArtifactLocationAdapter,
     artifact_location_adapter,
     authenticated_remote_client_for_locations,
@@ -40,8 +39,8 @@ def referenced_build_media_identities(
     """Collect configured build-media outputs referenced by selected Markdown sources."""
 
     build_prefixes = {
-        build_type: config.published.media[build.publishes_to].reference_prefix.as_posix().strip("/")
-        for build_type, build in config.source.build_media.items()
+        build_type: config.media.types[build.publishes_to].reference_prefix.as_posix().strip("/")
+        for build_type, build in config.media.build_sources.items()
     }
     requested: dict[str, set[str]] = {build_type: set() for build_type in build_prefixes}
     for markdown in markdown_sources:
@@ -71,11 +70,11 @@ def run_registered_media_builds(
 ) -> list[dict[str, object]]:
     """Run explicitly configured media producers directly into published locations."""
 
-    if not config.source.build_media:
+    if not config.media.build_sources:
         return []
     if requested_published_identities is not None:
         unknown_build_types = sorted(
-            set(requested_published_identities) - set(config.source.build_media)
+            set(requested_published_identities) - set(config.media.build_sources)
         )
         if unknown_build_types:
             raise ValueError(
@@ -84,8 +83,8 @@ def run_registered_media_builds(
             )
     available = producers if producers is not None else REGISTERED_MEDIA_PRODUCERS
     target_locations = [
-        config.published.media[build.publishes_to].location
-        for build in config.source.build_media.values()
+        config.media.types[build.publishes_to].location
+        for build in config.media.build_sources.values()
     ]
     remote_client = authenticated_remote_client_for_locations(
         repo_root,
@@ -93,19 +92,16 @@ def run_registered_media_builds(
         client=client,  # type: ignore[arg-type]
     )
     results: list[dict[str, object]] = []
-    for build_type, build in sorted(config.source.build_media.items()):
+    for build_type, build in sorted(config.media.build_sources.items()):
         producer = available.get(build.producer)
         if producer is None:
             raise RuntimeError(
                 f"Docs media producer {build.producer!r} is not registered for {config.scope_id}/{build_type}"
             )
-        published_media = config.published.media[build.publishes_to]
+        published_media = config.media.types[build.publishes_to]
         source = artifact_location_adapter(
             repo_root,
-            ArtifactLocation(
-                provider=config.source.location.provider,
-                path=config.source.location.path / build.path,
-            ),
+            build.location,
         )
         published = artifact_location_adapter(
             repo_root,

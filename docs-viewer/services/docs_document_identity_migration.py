@@ -32,7 +32,7 @@ from docs_document_identity import (  # noqa: E402
 PLAN_SCHEMA = "docs_document_identity_migration_v1"
 SOURCE_CONFIG_PATH = Path("docs-viewer/config/scopes/docs_scopes.json")
 SCOPE_MANIFEST_PATH = Path("docs-viewer/config/scopes/docs_scope_manifest.json")
-SOURCE_CONFIG_SCHEMA = "docs_scopes_v3"
+SOURCE_CONFIG_SCHEMA = "docs_scopes_v4"
 SCOPE_SOURCE_PATH = "source"
 SOURCE_DOCUMENTS_PATH = "documents"
 SOURCE_SUB_SCOPES_PATH = "sub-scopes"

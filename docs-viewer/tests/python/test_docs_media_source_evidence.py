@@ -18,7 +18,17 @@ from docs_media_source_evidence import (
 from repo_factory import docs_scope_record, write_docs_scope_config
 
 
-def test_records_sorted_scope_owned_evidence_without_a_public_projection() -> None:
+@pytest.fixture(autouse=True)
+def isolated_media_workspace(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
+    projects = tmp_path / "projects"
+    (projects / "docs-viewer/media").mkdir(parents=True)
+    monkeypatch.setenv("DOTLINEFORM_PROJECTS_BASE_DIR", str(projects))
+    return projects
+
+
+def test_records_sorted_scope_owned_evidence_without_a_public_projection(
+    isolated_media_workspace: Path,
+) -> None:
     with make_repo() as temp:
         root = Path(temp)
         write_docs_scope_config(
@@ -43,7 +53,11 @@ def test_records_sorted_scope_owned_evidence_without_a_public_projection() -> No
             source_path="analysis/images/alpha.png",
         )
 
-        table_path = root / "docs-viewer/scopes/analysis/source" / TABLE_IDENTITY
+        table_path = (
+            isolated_media_workspace
+            / "docs-viewer/media/analysis"
+            / TABLE_IDENTITY
+        )
         payload = json.loads(table_path.read_text(encoding="utf-8"))
         records = load_media_source_evidence(root, "analysis")
 
@@ -107,7 +121,7 @@ def test_external_scope_keeps_evidence_in_its_external_source_root(
     root = tmp_path / "repo"
     projects = tmp_path / "Projects"
     root.mkdir()
-    (projects / "docs-viewer").mkdir(parents=True)
+    (projects / "docs-viewer").mkdir(parents=True, exist_ok=True)
     monkeypatch.setenv("DOTLINEFORM_PROJECTS_BASE_DIR", str(projects))
     write_docs_scope_config(
         root,
@@ -131,7 +145,7 @@ def test_external_scope_keeps_evidence_in_its_external_source_root(
 
     assert (
         projects
-        / "docs-viewer/scopes/dotlineform/source"
+        / "docs-viewer/media/dotlineform"
         / TABLE_IDENTITY
     ).is_file()
 
