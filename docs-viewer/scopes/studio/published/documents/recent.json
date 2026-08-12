@@ -7,9 +7,33 @@
       "doc_id": "d-20260812-102047-a3c9e7",
       "title": "Media Sources",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260812-102047-a3c9e7.json",
-      "timestamp": "2026-08-12 14:38:48",
+      "timestamp": "2026-08-12 14:57:00",
       "parent_id": "d-20260428-000000-f5ff18",
       "parent_title": "Roadmap"
+    },
+    {
+      "doc_id": "d-20260514-184303-7914e2",
+      "title": "Media And Asset Handling",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260514-184303-7914e2.json",
+      "timestamp": "2026-08-12 14:47:13",
+      "parent_id": "d-20260424-000000-50b63f",
+      "parent_title": "Docs Viewer"
+    },
+    {
+      "doc_id": "d-20260423-000000-8fd731",
+      "title": "Source Organisation",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260423-000000-8fd731.json",
+      "timestamp": "2026-08-12 14:47:13",
+      "parent_id": "d-20260424-000000-50b63f",
+      "parent_title": "Docs Viewer"
+    },
+    {
+      "doc_id": "d-20260731-155053-3929e2",
+      "title": "Sub-Scope Customisation Architecture",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260731-155053-3929e2.json",
+      "timestamp": "2026-08-12 14:47:13",
+      "parent_id": "d-20260801-084127-752d7e",
+      "parent_title": "Sub-Scopes"
     },
     {
       "doc_id": "d-20260607-222033-78a47c",
@@ -58,31 +82,7 @@
       "timestamp": "2026-08-12 11:46:03",
       "parent_id": "d-20260720-100017-9855dd",
       "parent_title": "Scope Media Management"
-    },
-    {
-      "doc_id": "d-20260804-160200-fa7bb7",
-      "title": "Tag Document Linking",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260804-160200-fa7bb7.json",
-      "timestamp": "2026-08-11 22:30:20",
-      "parent_id": "d-20260428-000000-f5ff18",
-      "parent_title": "Roadmap"
-    },
-    {
-      "doc_id": "d-20260802-002213-b7d4e2",
-      "title": "TDL-2 — Tag Primary Document And Semantic Token Delivery",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-002213-b7d4e2.json",
-      "timestamp": "2026-08-11 22:30:20",
-      "parent_id": "d-20260804-160200-fa7bb7",
-      "parent_title": "Tag Document Linking"
-    },
-    {
-      "doc_id": "d-20260725-153656-516b61",
-      "title": "Semantic Tokens",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260725-153656-516b61.json",
-      "timestamp": "2026-08-11 22:26:08",
-      "parent_id": "d-20260424-000000-50b63f",
-      "parent_title": "Docs Viewer"
     }
   ],
-  "generated_at": "2026-08-12T13:39:12Z"
+  "generated_at": "2026-08-12T13:55:36Z"
 }
