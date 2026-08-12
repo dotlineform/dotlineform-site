@@ -954,7 +954,7 @@
               "doc_id": "d-20260720-100017-7e52de",
               "title": "Docs Media Report Delivery",
               "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260720-100017-7e52de.json",
-              "ui_status": "proposed"
+              "ui_status": "in-progress"
             }
           ]
         },
@@ -1363,5 +1363,5 @@
       ]
     }
   ],
-  "generated_at": "2026-08-12T19:12:12Z"
+  "generated_at": "2026-08-12T20:05:03Z"
 }

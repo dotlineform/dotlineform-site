@@ -154,15 +154,20 @@ def inventory_scope_media(
     repo_root: Path,
     config: DocsScopeConfig,
     *,
+    references: Iterable[DocsMediaReference] | None = None,
     client: object | None = None,
     env_files: Iterable[Path] | None = None,
     environ: Mapping[str, str] | None = None,
 ) -> DocsMediaInventory:
     """List every owned object and associate, but do not require, document references."""
 
-    references = document_media_references(repo_root, config)
+    reference_items = (
+        tuple(references)
+        if references is not None
+        else document_media_references(repo_root, config)
+    )
     references_by_identity: dict[tuple[str, str], set[str]] = {}
-    for reference in references:
+    for reference in reference_items:
         references_by_identity.setdefault((reference.media_type, reference.identity), set()).add(reference.doc_id)
     published_adapters, build_adapters = _location_adapters(
         repo_root,
@@ -216,7 +221,7 @@ def inventory_scope_media(
             )
     missing = tuple(
         reference
-        for reference in references
+        for reference in reference_items
         if (reference.media_type, reference.identity) not in published_identities
     )
     return DocsMediaInventory(
