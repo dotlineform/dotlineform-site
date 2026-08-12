@@ -819,32 +819,6 @@
           "ui_status": "proposed"
         },
         {
-          "doc_id": "d-20260810-181816-dc9891",
-          "title": "Catalogue Works Report Migration",
-          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260810-181816-dc9891.json",
-          "ui_status": "done",
-          "children": [
-            {
-              "doc_id": "d-20260810-214708-b96106",
-              "title": "CWR-1 — Catalogue Works Report Migration Delivery",
-              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260810-214708-b96106.json",
-              "ui_status": "done"
-            }
-          ]
-        },
-        {
-          "doc_id": "d-20260809-155631-ab527b",
-          "title": "CII-1 — Catalogue Image Source Insertion Delivery",
-          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260809-155631-ab527b.json",
-          "ui_status": "done"
-        },
-        {
-          "doc_id": "d-20260809-201029-0f7596",
-          "title": "CPB-1 — Catalogue Projection Boundary Cutover Delivery",
-          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260809-201029-0f7596.json",
-          "ui_status": "done"
-        },
-        {
           "doc_id": "d-20260802-123450-f7493d",
           "title": "Data Model Maps",
           "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-123450-f7493d.json",
@@ -861,86 +835,6 @@
               "title": "DMM-2 — Mermaid And D2 Evaluation",
               "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-223430-cf2abe.json",
               "ui_status": "proposed"
-            }
-          ]
-        },
-        {
-          "doc_id": "d-20260808-222435-e0d29a",
-          "title": "Docs Viewer External Scope Availability",
-          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260808-222435-e0d29a.json",
-          "ui_status": "done",
-          "children": [
-            {
-              "doc_id": "d-20260808-222436-4f7c81",
-              "title": "ESA-1 — Graceful Per-Scope Availability Delivery",
-              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260808-222436-4f7c81.json",
-              "ui_status": "done"
-            }
-          ]
-        },
-        {
-          "doc_id": "d-20260808-225257-c06ae2",
-          "title": "Docs Viewer Scope Type Migration",
-          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260808-225257-c06ae2.json",
-          "ui_status": "proposed",
-          "children": [
-            {
-              "doc_id": "d-20260808-225258-245f13",
-              "title": "Docs Viewer Scope Type Migration Concept",
-              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260808-225258-245f13.json",
-              "ui_status": "proposed"
-            }
-          ]
-        },
-        {
-          "doc_id": "d-20260808-165751-1f159a",
-          "title": "DPD-1 — Immediate Public Projection Cleanup On Document Delete",
-          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260808-165751-1f159a.json",
-          "ui_status": "done",
-          "children": [
-            {
-              "doc_id": "d-20260808-172131-7d4af6",
-              "title": "DPD-1.0 — Delete And Public-Projection Ownership Sanity Note",
-              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260808-172131-7d4af6.json",
-              "ui_status": "done"
-            },
-            {
-              "doc_id": "d-20260808-182844-3e9b7c",
-              "title": "DPD-1.1 — Shared Server Cleanup Evidence",
-              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260808-182844-3e9b7c.json",
-              "ui_status": "done"
-            },
-            {
-              "doc_id": "d-20260808-184353-0f9c24",
-              "title": "DPD-1.2 — Browser And Refresh Follow-Through Evidence",
-              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260808-184353-0f9c24.json",
-              "ui_status": "done"
-            },
-            {
-              "doc_id": "d-20260808-185725-9520b6",
-              "title": "DPD-1.3 — Verification And Contract Transfer Evidence",
-              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260808-185725-9520b6.json",
-              "ui_status": "done"
-            }
-          ]
-        },
-        {
-          "doc_id": "d-20260809-103047-b7d8c8",
-          "title": "DXM-1 — Packaged Media In Dated Export Delivery",
-          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260809-103047-b7d8c8.json",
-          "ui_status": "done"
-        },
-        {
-          "doc_id": "d-20260810-165949-ee4d35",
-          "title": "Expanded Report View",
-          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260810-165949-ee4d35.json",
-          "ui_status": "done",
-          "children": [
-            {
-              "doc_id": "d-20260811-090239-12f6d6",
-              "title": "ERV-1 — Expanded Report View Delivery",
-              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260811-090239-12f6d6.json",
-              "ui_status": "done"
             }
           ]
         },
@@ -985,6 +879,24 @@
           ]
         },
         {
+          "doc_id": "d-20260812-095531-6fd2b1",
+          "title": "Media Locations",
+          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260812-095531-6fd2b1.json",
+          "ui_status": "proposed"
+        },
+        {
+          "doc_id": "d-20260812-114603-9706aa",
+          "title": "Media Publication Check",
+          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260812-114603-9706aa.json",
+          "ui_status": "proposed"
+        },
+        {
+          "doc_id": "d-20260812-102047-a3c9e7",
+          "title": "Media Sources",
+          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260812-102047-a3c9e7.json",
+          "ui_status": "proposed"
+        },
+        {
           "doc_id": "d-20260723-191039-f8cb88",
           "title": "Public Docs Viewer Mobile Experience",
           "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260723-191039-f8cb88.json"
@@ -1014,29 +926,15 @@
           "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260720-100017-9855dd.json",
           "children": [
             {
-              "doc_id": "d-20260720-100017-7e52de",
-              "title": "Scope Media Inventory Surface Delivery",
-              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260720-100017-7e52de.json",
-              "ui_status": "proposed"
-            },
-            {
               "doc_id": "d-20260720-100017-e094d8",
               "title": "Scope Media Management Concept",
               "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260720-100017-e094d8.json",
               "ui_status": "proposed"
-            }
-          ]
-        },
-        {
-          "doc_id": "d-20260808-231126-6a5d72",
-          "title": "Scope Media Storage Locations",
-          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260808-231126-6a5d72.json",
-          "ui_status": "proposed",
-          "children": [
+            },
             {
-              "doc_id": "d-20260808-231127-db19cc",
-              "title": "Scope Media Storage Locations Concept",
-              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260808-231127-db19cc.json",
+              "doc_id": "d-20260720-100017-7e52de",
+              "title": "Scope Media Report Delivery",
+              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260720-100017-7e52de.json",
               "ui_status": "proposed"
             }
           ]
@@ -1081,348 +979,6 @@
           ]
         },
         {
-          "doc_id": "d-20260804-172011-a4c8e1",
-          "title": "Sub-Scope Customisation",
-          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260804-172011-a4c8e1.json",
-          "ui_status": "done",
-          "children": [
-            {
-              "doc_id": "d-20260804-172012-5d91bf",
-              "title": "SSC-1 — Unified Sub-Scope Customisation Contract Delivery",
-              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260804-172012-5d91bf.json",
-              "ui_status": "done",
-              "children": [
-                {
-                  "doc_id": "d-20260804-182355-7ac901",
-                  "title": "SSC-1.0 — Contract And Cutover Sanity Note",
-                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260804-182355-7ac901.json",
-                  "ui_status": "done"
-                },
-                {
-                  "doc_id": "d-20260804-183554-0c4be2",
-                  "title": "SSC-1.1 — Contract Rename Checkpoint Evidence",
-                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260804-183554-0c4be2.json",
-                  "ui_status": "done"
-                },
-                {
-                  "doc_id": "d-20260804-185224-72b1e9",
-                  "title": "SSC-1.2 — Explicit Aspect Checkpoint Evidence",
-                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260804-185224-72b1e9.json",
-                  "ui_status": "done"
-                },
-                {
-                  "doc_id": "d-20260804-190426-6b11c9",
-                  "title": "SSC-1.3 — Registration And Architecture Closeout Evidence",
-                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260804-190426-6b11c9.json",
-                  "ui_status": "done"
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "doc_id": "d-20260802-194357-4d857b",
-          "title": "Sub-Scope Publishing",
-          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-194357-4d857b.json",
-          "ui_status": "done",
-          "children": [
-            {
-              "doc_id": "d-20260802-121105-c574f9",
-              "title": "Project State Concept And Architecture",
-              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-121105-c574f9.json",
-              "ui_status": "stable"
-            },
-            {
-              "doc_id": "d-20260802-174339-53877d",
-              "title": "Resolver Tokens Architecture (Retired)",
-              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-174339-53877d.json",
-              "ui_status": "stopped"
-            },
-            {
-              "doc_id": "d-20260804-164519-c7ad4e",
-              "title": "SSP-0 — Projects Subject Assignment Foundation Delivery",
-              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260804-164519-c7ad4e.json",
-              "ui_status": "done",
-              "children": [
-                {
-                  "doc_id": "d-20260804-192419-9c2f64",
-                  "title": "SSP-0.0 — Projects Subject Assignment Sanity Note",
-                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260804-192419-9c2f64.json",
-                  "ui_status": "done"
-                },
-                {
-                  "doc_id": "d-20260804-194710-24329a",
-                  "title": "SSP-0.1 — Exact Subject Info Checkpoint Evidence",
-                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260804-194710-24329a.json",
-                  "ui_status": "done"
-                },
-                {
-                  "doc_id": "d-20260804-201111-a7646e",
-                  "title": "SSP-0.2 — Focused Projects Subject Assignment Checkpoint Evidence",
-                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260804-201111-a7646e.json",
-                  "ui_status": "done"
-                },
-                {
-                  "doc_id": "d-20260804-202806-e31b72",
-                  "title": "SSP-0.3 — Projects Subject Foundation Closeout Evidence",
-                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260804-202806-e31b72.json",
-                  "ui_status": "done"
-                }
-              ]
-            },
-            {
-              "doc_id": "d-20260802-194426-087cfe",
-              "title": "SSP-1 — Document Subject And Association Delivery",
-              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-194426-087cfe.json",
-              "ui_status": "done",
-              "children": [
-                {
-                  "doc_id": "d-20260804-204535-6c8f2a",
-                  "title": "SSP-1.0 — Document Subject And Association Sanity Note",
-                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260804-204535-6c8f2a.json",
-                  "ui_status": "done"
-                },
-                {
-                  "doc_id": "d-20260804-211353-669844",
-                  "title": "SSP-1.1 — Authoring Subject And Manage Cue Evidence",
-                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260804-211353-669844.json",
-                  "ui_status": "done"
-                },
-                {
-                  "doc_id": "d-20260804-220243-b5d7c1",
-                  "title": "SSP-1.2 — Verification And Transfer Evidence",
-                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260804-220243-b5d7c1.json",
-                  "ui_status": "done"
-                }
-              ]
-            },
-            {
-              "doc_id": "d-20260801-133318-15e8fa",
-              "title": "SSP-2 — Docs Viewer Project State Delivery",
-              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260801-133318-15e8fa.json",
-              "ui_status": "done",
-              "children": [
-                {
-                  "doc_id": "d-20260805-141842-8115c8",
-                  "title": "SSP-2.0 — Project State Sanity Note",
-                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260805-141842-8115c8.json",
-                  "ui_status": "done"
-                },
-                {
-                  "doc_id": "d-20260805-153653-597788",
-                  "title": "SSP-2.1 — Project State Producer Evidence",
-                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260805-153653-597788.json",
-                  "ui_status": "done"
-                },
-                {
-                  "doc_id": "d-20260805-155935-66b9d4",
-                  "title": "SSP-2.2 — Basic Project State Report Evidence",
-                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260805-155935-66b9d4.json",
-                  "ui_status": "done"
-                },
-                {
-                  "doc_id": "d-20260805-172714-9c2a6e",
-                  "title": "SSP-2.3 — Project State Interaction Evidence",
-                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260805-172714-9c2a6e.json",
-                  "ui_status": "done"
-                },
-                {
-                  "doc_id": "d-20260805-202742-c6e13d",
-                  "title": "SSP-2.5 — Project State Document Tracing Evidence",
-                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260805-202742-c6e13d.json",
-                  "ui_status": "done"
-                },
-                {
-                  "doc_id": "d-20260806-073328-5c55a3",
-                  "title": "SSP-2.6 — Project State Lookup Retirement Evidence",
-                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260806-073328-5c55a3.json",
-                  "ui_status": "done"
-                }
-              ]
-            },
-            {
-              "doc_id": "d-20260802-174340-2fe9f4",
-              "title": "SSP-3 — Insert Subject Link Delivery",
-              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-174340-2fe9f4.json",
-              "ui_status": "done",
-              "children": [
-                {
-                  "doc_id": "d-20260806-075026-50978e",
-                  "title": "SSP-3.0 — Insert Subject Link Sanity Note",
-                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260806-075026-50978e.json",
-                  "ui_status": "done"
-                },
-                {
-                  "doc_id": "d-20260806-082057-355d34",
-                  "title": "SSP-3.1 — Insert Subject Link Evidence",
-                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260806-082057-355d34.json",
-                  "ui_status": "done"
-                },
-                {
-                  "doc_id": "d-20260806-224924-7a3c91",
-                  "title": "SSP-3.2 — Verification And Owner Transfer Evidence",
-                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260806-224924-7a3c91.json",
-                  "ui_status": "done"
-                }
-              ]
-            },
-            {
-              "doc_id": "d-20260801-233534-239eab",
-              "title": "SSP-4 — Collection-Aware Document Copy Delivery",
-              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260801-233534-239eab.json",
-              "ui_status": "done",
-              "children": [
-                {
-                  "doc_id": "d-20260806-225724-aa5e6a",
-                  "title": "SSP-4.0 — Collection-Aware Copy Sanity Note",
-                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260806-225724-aa5e6a.json",
-                  "ui_status": "done"
-                },
-                {
-                  "doc_id": "d-20260807-083338-7e4a91",
-                  "title": "SSP-4.1 — Exact Collection Planner And Receipt Evidence",
-                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260807-083338-7e4a91.json",
-                  "ui_status": "done"
-                },
-                {
-                  "doc_id": "d-20260807-085247-4c2a9e",
-                  "title": "SSP-4.2 — Exact Collection Copy Apply Evidence",
-                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260807-085247-4c2a9e.json",
-                  "ui_status": "done"
-                },
-                {
-                  "doc_id": "d-20260807-093311-8f2c4a",
-                  "title": "SSP-4.3 — Main And Sub-Scope Copy Surface Evidence",
-                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260807-093311-8f2c4a.json",
-                  "ui_status": "done"
-                },
-                {
-                  "doc_id": "d-20260807-095855-6c52de",
-                  "title": "SSP-4.4 — Regression, Publication, And Closeout Evidence",
-                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260807-095855-6c52de.json",
-                  "ui_status": "done"
-                }
-              ]
-            },
-            {
-              "doc_id": "d-20260802-195805-94a5be",
-              "title": "SSP-5 — Work And Series Document Metadata Publication Delivery",
-              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-195805-94a5be.json",
-              "ui_status": "done",
-              "children": [
-                {
-                  "doc_id": "d-20260807-132505-d0570b",
-                  "title": "SSP-5.0 — Public Work And Series Metadata Sanity Note",
-                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260807-132505-d0570b.json",
-                  "ui_status": "done"
-                }
-              ]
-            },
-            {
-              "doc_id": "d-20260802-121106-15ea55",
-              "title": "SSP-6 — Uncataloged And Missing Source Files Reports Delivery",
-              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-121106-15ea55.json",
-              "ui_status": "done",
-              "children": [
-                {
-                  "doc_id": "d-20260807-161305-326ba1",
-                  "title": "SSP-6.0 — Uncataloged And Missing Source Files Sanity Note",
-                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260807-161305-326ba1.json",
-                  "ui_status": "done"
-                },
-                {
-                  "doc_id": "d-20260807-163925-a460e9",
-                  "title": "SSP-6.1 — Uncataloged Files Report Evidence",
-                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260807-163925-a460e9.json",
-                  "ui_status": "done"
-                },
-                {
-                  "doc_id": "d-20260807-175827-3229db",
-                  "title": "SSP-6.2 — Missing Source Files Report Evidence",
-                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260807-175827-3229db.json",
-                  "ui_status": "done"
-                },
-                {
-                  "doc_id": "d-20260807-184959-09e16f",
-                  "title": "SSP-6.3 — Studio Project State Workflow Retirement Evidence",
-                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260807-184959-09e16f.json",
-                  "ui_status": "done"
-                }
-              ]
-            },
-            {
-              "doc_id": "d-20260805-231829-947705",
-              "title": "SSP-7 — Document Lineage And Publication State Delivery",
-              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260805-231829-947705.json",
-              "ui_status": "done",
-              "children": [
-                {
-                  "doc_id": "d-20260807-210803-ad1f6f",
-                  "title": "SSP-7.0 — Document Lineage And Publication State Sanity Note",
-                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260807-210803-ad1f6f.json",
-                  "ui_status": "done"
-                },
-                {
-                  "doc_id": "d-20260807-224018-4c1687",
-                  "title": "SSP-7.1a — Publishable Contract Cutover Evidence",
-                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260807-224018-4c1687.json",
-                  "ui_status": "done"
-                },
-                {
-                  "doc_id": "d-20260807-235046-5c0d8a",
-                  "title": "SSP-7.1b — Set Publishable Evidence",
-                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260807-235046-5c0d8a.json",
-                  "ui_status": "done"
-                },
-                {
-                  "doc_id": "d-20260808-110434-7b4c2d",
-                  "title": "SSP-7.2 — Lineage And New/Replace Copy Evidence",
-                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260808-110434-7b4c2d.json",
-                  "ui_status": "done"
-                },
-                {
-                  "doc_id": "d-20260808-131132-c93e41",
-                  "title": "SSP-7.3 — Successful Publish Reconciliation Evidence",
-                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260808-131132-c93e41.json",
-                  "ui_status": "done"
-                },
-                {
-                  "doc_id": "d-20260808-134503-a4caeb",
-                  "title": "SSP-7.4 — Projects Publication Stage Evidence",
-                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260808-134503-a4caeb.json",
-                  "ui_status": "done"
-                }
-              ]
-            },
-            {
-              "doc_id": "d-20260808-153226-a067d9",
-              "title": "SSP-8 — Revised Model",
-              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260808-153226-a067d9.json",
-              "ui_status": "done",
-              "children": [
-                {
-                  "doc_id": "d-20260808-154427-50f717",
-                  "title": "SSP-8.0 — Superseded Independent-State Sanity Note",
-                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260808-154427-50f717.json",
-                  "ui_status": "stopped"
-                },
-                {
-                  "doc_id": "d-20260808-160019-084f3d",
-                  "title": "SSP-8.1 — Superseded Nullable-State Cutover Evidence",
-                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260808-160019-084f3d.json",
-                  "ui_status": "stopped"
-                }
-              ]
-            },
-            {
-              "doc_id": "d-20260802-194358-7717ee",
-              "title": "Sub-Scope Publishing Concept And Architecture",
-              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-194358-7717ee.json",
-              "ui_status": "stable"
-            }
-          ]
-        },
-        {
           "doc_id": "d-20260804-160200-fa7bb7",
           "title": "Tag Document Linking",
           "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260804-160200-fa7bb7.json",
@@ -1447,12 +1003,6 @@
               "ui_status": "done"
             }
           ]
-        },
-        {
-          "doc_id": "d-20260810-115737-901d0f",
-          "title": "Works Report",
-          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260810-115737-901d0f.json",
-          "ui_status": "done"
         },
         {
           "doc_id": "d-20260712-213026-ee0f22",
@@ -1794,5 +1344,5 @@
       ]
     }
   ],
-  "generated_at": "2026-08-12T07:20:53Z"
+  "generated_at": "2026-08-12T11:01:02Z"
 }
