@@ -14,6 +14,7 @@ from urllib.parse import parse_qs, urlsplit
 
 import docs_source_model as source_model
 import docs_document_publication_lineage as publication_lineage
+import docs_media_source_evidence as media_source_evidence
 from docs_artifact_locations import (
     DELETE_CAPABILITY,
     READ_CAPABILITY,
@@ -47,14 +48,17 @@ from docs_subscope_customisations import (
 )
 
 
-TRANSFER_PREVIEW_SCHEMA_VERSION = "docs_document_transfer_preview_v3"
-TRANSFER_APPLY_PLAN_SCHEMA_VERSION = "docs_document_transfer_apply_plan_v3"
+TRANSFER_PREVIEW_SCHEMA_VERSION = "docs_document_transfer_preview_v4"
+TRANSFER_APPLY_PLAN_SCHEMA_VERSION = "docs_document_transfer_apply_plan_v4"
 COPY_MODE = "copy"
 MOVE_MODE = "move"
 SUPPORTED_TRANSFER_MODES = frozenset({COPY_MODE, MOVE_MODE})
 COPY_ACTION_NEW = "new"
 COPY_ACTION_REPLACE = "replace"
 SUPPORTED_COPY_ACTIONS = frozenset({COPY_ACTION_NEW, COPY_ACTION_REPLACE})
+MEDIA_SOURCE_EVIDENCE_COPY = "copy"
+MEDIA_SOURCE_EVIDENCE_RETAIN = "retain"
+MEDIA_SOURCE_EVIDENCE_UNRECORDED = "unrecorded"
 IdentityTokenFactory = Callable[[int], str]
 BuildSourceIdentityResolver = Callable[[str], str]
 
@@ -145,6 +149,13 @@ class TransferBuildSourcePlan:
 
 
 @dataclass(frozen=True)
+class TransferMediaSourceEvidencePlan:
+    status: str
+    source_root: str = ""
+    source_path: str = ""
+
+
+@dataclass(frozen=True)
 class TransferMediaPlan:
     media_type: str
     identity: str
@@ -158,6 +169,7 @@ class TransferMediaPlan:
     document_ids: tuple[str, ...]
     shared_outside_document_ids: tuple[str, ...]
     build_sources: tuple[TransferBuildSourcePlan, ...]
+    source_evidence: TransferMediaSourceEvidencePlan | None
 
 
 @dataclass(frozen=True)
@@ -355,6 +367,11 @@ class DocumentTransferPlan:
                     "source_sha256": item.source_sha256,
                     "target_status": item.target_status,
                     "shared_outside_document_ids": list(item.shared_outside_document_ids),
+                    "source_evidence": (
+                        asdict(item.source_evidence)
+                        if item.source_evidence is not None
+                        else None
+                    ),
                     "build_sources": [
                         {
                             "build_type": build.build_type,
@@ -1034,6 +1051,54 @@ def _build_source_plan(
     )
 
 
+def _media_source_evidence_plans(
+    repo_root: Path,
+    source_config: DocsScopeConfig,
+    target_config: DocsScopeConfig,
+    identities: Iterable[tuple[str, str]],
+    *,
+    mode: str,
+) -> dict[tuple[str, str], TransferMediaSourceEvidencePlan]:
+    if mode != COPY_MODE:
+        return {}
+    source_records = {
+        (record.media_type, record.identity): record
+        for record in media_source_evidence.load_media_source_evidence(
+            repo_root,
+            source_config.scope_id,
+        )
+    }
+    target_records = {
+        (record.media_type, record.identity): record
+        for record in media_source_evidence.load_media_source_evidence(
+            repo_root,
+            target_config.scope_id,
+        )
+    }
+    plans: dict[tuple[str, str], TransferMediaSourceEvidencePlan] = {}
+    for key in sorted(set(identities)):
+        record = target_records.get(key)
+        if record is not None:
+            plans[key] = TransferMediaSourceEvidencePlan(
+                status=MEDIA_SOURCE_EVIDENCE_RETAIN,
+                source_root=record.source_root,
+                source_path=record.source_path,
+            )
+            continue
+        record = source_records.get(key)
+        if record is not None:
+            plans[key] = TransferMediaSourceEvidencePlan(
+                status=MEDIA_SOURCE_EVIDENCE_COPY,
+                source_root=record.source_root,
+                source_path=record.source_path,
+            )
+            continue
+        plans[key] = TransferMediaSourceEvidencePlan(
+            status=MEDIA_SOURCE_EVIDENCE_UNRECORDED,
+        )
+    return plans
+
+
 def _media_plans(
     repo_root: Path,
     source_config: DocsScopeConfig,
@@ -1060,6 +1125,14 @@ def _media_plans(
             ).append(reference)
     if not references_by_identity:
         return ()
+
+    source_evidence_plans = _media_source_evidence_plans(
+        repo_root,
+        source_config,
+        target_config,
+        references_by_identity,
+        mode=mode,
+    )
 
     media_types = {media_type for media_type, _identity in references_by_identity}
     try:
@@ -1234,6 +1307,7 @@ def _media_plans(
                     sorted(outside_references.get((media_type, identity), set()))
                 ),
                 build_sources=tuple(build_sources),
+                source_evidence=source_evidence_plans.get((media_type, identity)),
             )
         )
     return tuple(plans)
@@ -2064,11 +2138,15 @@ __all__ = [
     "COPY_ACTION_NEW",
     "COPY_ACTION_REPLACE",
     "COPY_MODE",
+    "MEDIA_SOURCE_EVIDENCE_COPY",
+    "MEDIA_SOURCE_EVIDENCE_RETAIN",
+    "MEDIA_SOURCE_EVIDENCE_UNRECORDED",
     "MOVE_MODE",
     "REGISTERED_BUILD_SOURCE_IDENTITY_RESOLVERS",
     "SUPPORTED_TRANSFER_MODES",
     "TRANSFER_APPLY_PLAN_SCHEMA_VERSION",
     "TRANSFER_PREVIEW_SCHEMA_VERSION",
+    "TransferMediaSourceEvidencePlan",
     "DocumentTransferPlan",
     "DocumentLineageTransferPlan",
     "BuildSourceIdentityResolver",

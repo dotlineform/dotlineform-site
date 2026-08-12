@@ -68,7 +68,7 @@ def assert_transfer_workflow(page: Page) -> None:
                 requests.push({ url, method: options.method, body });
                 if (url.endsWith('/docs/document-transfer-preview')) {
                     return response({
-                        schema_version: 'docs_document_transfer_preview_v3',
+                        schema_version: 'docs_document_transfer_preview_v4',
                         ok: true,
                         mode: body.transfer_mode,
                         source: { scope: body.scope },
@@ -99,7 +99,7 @@ def assert_transfer_workflow(page: Page) -> None:
                         ],
                         blockers: [],
                         apply_plan: {
-                            schema_version: 'docs_document_transfer_apply_plan_v3',
+                            schema_version: 'docs_document_transfer_apply_plan_v4',
                             mode: body.transfer_mode,
                             source: { scope: body.scope },
                             target: {
@@ -265,7 +265,7 @@ def assert_transfer_workflow(page: Page) -> None:
                 }
                 const decided = Array.isArray(body.copy_lineage_actions);
                 return response({
-                    schema_version: 'docs_document_transfer_preview_v3',
+                    schema_version: 'docs_document_transfer_preview_v4',
                     ok: decided,
                     mode: 'copy',
                     source: { scope: 'dotlineform', sub_scope: 'projects' },
@@ -309,7 +309,7 @@ def assert_transfer_workflow(page: Page) -> None:
                         }]
                     },
                     apply_plan: decided ? {
-                        schema_version: 'docs_document_transfer_apply_plan_v3',
+                        schema_version: 'docs_document_transfer_apply_plan_v4',
                         mode: 'copy',
                         source: { scope: 'dotlineform', sub_scope: 'projects' },
                         target: { scope: 'analysis', sub_scope: 'works' }
@@ -424,7 +424,7 @@ def assert_transfer_workflow(page: Page) -> None:
                     code: 'retained_dependency',
                     message: 'An unrelated dependency will remain unchanged.'
                 }],
-                apply_plan: { schema_version: 'docs_document_transfer_apply_plan_v3' }
+                apply_plan: { schema_version: 'docs_document_transfer_apply_plan_v4' }
             };
             return {
                 optionsState,
@@ -525,7 +525,7 @@ def assert_transfer_workflow(page: Page) -> None:
             "body": {
                 "scope": "studio",
                 "apply_plan": {
-                    "schema_version": "docs_document_transfer_apply_plan_v3",
+                    "schema_version": "docs_document_transfer_apply_plan_v4",
                     "mode": "copy",
                     "source": {"scope": "studio"},
                     "target": {"scope": "analysis", "sub_scope": "works"},

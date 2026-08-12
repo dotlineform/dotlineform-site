@@ -20,6 +20,7 @@ if str(DOCS_SERVICES_DIR) not in sys.path:
     sys.path.insert(0, str(DOCS_SERVICES_DIR))
 
 import docs_document_transfer as transfer  # noqa: E402
+import docs_media_source_evidence as media_source_evidence  # noqa: E402
 import docs_source_model as source_model  # noqa: E402
 
 
@@ -622,7 +623,7 @@ def test_copy_selection_is_deterministic_deduplicated_and_write_free(tmp_path: P
     assert exact.preview_payload()["effective_root_count"] == 2
     assert exact.preview_payload()["descendant_count"] == 0
     assert exact.preview_payload()["apply_plan"]["schema_version"] == (
-            "docs_document_transfer_apply_plan_v3"
+            "docs_document_transfer_apply_plan_v4"
     )
     serialized = json.dumps(exact.preview_payload()["apply_plan"])
     assert str(repo_root) not in serialized
@@ -1005,6 +1006,91 @@ def test_media_is_deduplicated_and_exact_target_bytes_are_reused(tmp_path: Path)
     assert plan.media[0].source_reference == "docs/source/files/guide.pdf"
     assert plan.media[0].target_reference == "docs/target/files/guide.pdf"
     assert plan.media[0].target_status == "reuse"
+
+
+def test_copy_plans_exact_media_source_evidence_without_inference(
+    tmp_path: Path,
+) -> None:
+    repo_root = make_repo(tmp_path)
+    write_doc(
+        local_documents_root(repo_root, "source"),
+        doc_id="root",
+        title="Root",
+        body=(
+            "# Root\n\n"
+            "[[media:docs/source/files/guide.pdf Guide]]\n"
+            "[[media:docs/source/img/photo.png Photo]]\n"
+        ),
+    )
+    write_bytes(media_path(repo_root, "source", "files", "guide.pdf"), b"guide")
+    write_bytes(media_path(repo_root, "source", "img", "photo.png"), b"photo")
+    media_source_evidence.record_media_source_evidence(
+        repo_root,
+        "source",
+        media_type="files",
+        identity="guide.pdf",
+        source_root="analysis",
+        source_path="analysis/guides/guide.pdf",
+    )
+
+    plan = transfer.plan_document_transfer(
+        repo_root,
+        source_scope="source",
+        requested_doc_ids=["root"],
+        target_scope="target",
+        transfer_mode="copy",
+        operation_timestamp="2026-07-24 09:10:11",
+        token_factory=sequential_tokens("aaaaaa"),
+    )
+    receipt = plan.apply_plan_payload()
+    planned = {
+        (item.media_type, item.identity): item.source_evidence
+        for item in plan.media
+    }
+
+    assert planned[("files", "guide.pdf")] == (
+        transfer.TransferMediaSourceEvidencePlan(
+            status="copy",
+            source_root="analysis",
+            source_path="analysis/guides/guide.pdf",
+        )
+    )
+    assert planned[("img", "photo.png")] == (
+        transfer.TransferMediaSourceEvidencePlan(status="unrecorded")
+    )
+
+    media_source_evidence.record_media_source_evidence(
+        repo_root,
+        "target",
+        media_type="files",
+        identity="guide.pdf",
+        source_root="analysis",
+        source_path="analysis/target-owned/guide.pdf",
+    )
+    with pytest.raises(ValueError, match="document transfer preview is stale"):
+        transfer.restore_document_transfer_apply_plan(repo_root, receipt)
+
+    retained = transfer.plan_document_transfer(
+        repo_root,
+        source_scope="source",
+        requested_doc_ids=["root"],
+        target_scope="target",
+        transfer_mode="copy",
+        operation_timestamp="2026-07-24 09:10:11",
+        token_factory=sequential_tokens("aaaaaa"),
+    )
+    retained_guide = next(
+        item
+        for item in retained.media
+        if (item.media_type, item.identity) == ("files", "guide.pdf")
+    )
+    assert retained_guide.source_evidence == (
+        transfer.TransferMediaSourceEvidencePlan(
+            status="retain",
+            source_root="analysis",
+            source_path="analysis/target-owned/guide.pdf",
+        )
+    )
 
 
 @pytest.mark.parametrize(

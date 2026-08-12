@@ -14,6 +14,7 @@ from urllib.parse import quote, unquote_plus
 import docs_document_transfer as transfer
 import docs_document_publication_lineage as publication_lineage
 import docs_document_location as document_location
+import docs_media_source_evidence as media_source_evidence
 import docs_source_model as source_model
 from docs_artifact_locations import ArtifactLocationAdapter
 
@@ -728,6 +729,56 @@ def apply_target_media_transfer(
     )
 
 
+def apply_target_media_source_evidence(
+    repo_root: Path,
+    plan: transfer.DocumentTransferPlan,
+) -> tuple[dict[str, str], ...]:
+    """Apply the frozen Copy evidence decisions without replacing target truth."""
+
+    actions: list[dict[str, str]] = []
+    for item in plan.media:
+        evidence = item.source_evidence
+        if evidence is None:
+            raise DocumentTransferPlanStaleError(
+                "document transfer plan is stale: media source evidence is missing"
+            )
+        if evidence.status == transfer.MEDIA_SOURCE_EVIDENCE_COPY:
+            existing = media_source_evidence.media_source_evidence_for(
+                repo_root,
+                plan.target_scope,
+                item.media_type,
+                item.identity,
+            )
+            if existing is None:
+                media_source_evidence.record_media_source_evidence(
+                    repo_root,
+                    plan.target_scope,
+                    media_type=item.media_type,
+                    identity=item.identity,
+                    source_root=evidence.source_root,
+                    source_path=evidence.source_path,
+                )
+                status = "copied"
+            else:
+                status = "retained"
+        elif evidence.status == transfer.MEDIA_SOURCE_EVIDENCE_RETAIN:
+            status = "retained"
+        elif evidence.status == transfer.MEDIA_SOURCE_EVIDENCE_UNRECORDED:
+            status = "unrecorded"
+        else:
+            raise DocumentTransferPlanStaleError(
+                "document transfer plan is stale: media source evidence status is invalid"
+            )
+        actions.append(
+            {
+                "media_type": item.media_type,
+                "identity": item.identity,
+                "status": status,
+            }
+        )
+    return tuple(actions)
+
+
 def _artifact_observation(
     adapter: ArtifactLocationAdapter | None,
     identity: str,
@@ -904,6 +955,7 @@ def apply_document_copy(
     target_media_adapters: dict[str, ArtifactLocationAdapter] = {}
     media_actions: list[dict[str, str]] = []
     build_source_actions: list[dict[str, str]] = []
+    media_source_evidence_actions: list[dict[str, str]] = []
     phase = "media"
     media_complete = False
     rebuild_complete = False
@@ -949,6 +1001,11 @@ def apply_document_copy(
         media_actions = list(target_media.media_actions)
         build_source_actions = list(target_media.build_source_actions)
         media_complete = True
+
+        phase = "media_source_evidence"
+        media_source_evidence_actions = list(
+            apply_target_media_source_evidence(repo_root, current_plan)
+        )
 
         phase = "documents_and_rebuild"
         target_paths = [item.target_path for item in transformation.documents]
@@ -1083,6 +1140,13 @@ def apply_document_copy(
         status: sum(item["status"] == status for item in build_source_actions)
         for status in ("created", "reused")
     }
+    media_source_evidence_counts = {
+        status: sum(
+            item["status"] == status
+            for item in media_source_evidence_actions
+        )
+        for status in ("copied", "retained", "unrecorded")
+    }
     return {
         "schema_version": DOCUMENT_COPY_APPLY_SCHEMA_VERSION,
         "ok": True,
@@ -1103,6 +1167,8 @@ def apply_document_copy(
         "media": media_actions,
         "build_source_counts": build_source_counts,
         "build_sources": build_source_actions,
+        "media_source_evidence_counts": media_source_evidence_counts,
+        "media_source_evidence": media_source_evidence_actions,
         "retained_external_dependencies": [
             asdict(item)
             for item in current_plan.retained_external_dependencies
@@ -1131,6 +1197,7 @@ __all__ = [
     "DocumentTransferPlanStaleError",
     "TargetMediaTransferResult",
     "apply_document_copy",
+    "apply_target_media_source_evidence",
     "apply_target_media_transfer",
     "management_collection_document_url",
     "management_viewer_url",

@@ -23,6 +23,7 @@ for _path in (DOCS_SERVICES_DIR, DOCS_BUILD_DIR):
 import docs_document_transfer as transfer  # noqa: E402
 import docs_document_transfer_apply as transfer_apply  # noqa: E402
 import docs_artifact_locations as artifact_locations  # noqa: E402
+import docs_media_source_evidence as media_source_evidence  # noqa: E402
 import docs_source_model as source_model  # noqa: E402
 import docs_scope_config  # noqa: E402
 import build_docs  # noqa: E402
@@ -507,12 +508,16 @@ def test_apply_copy_transfers_shared_media_once_and_repeated_copy_reuses_it(
     repo_root = make_repo(tmp_path)
     source_root = local_documents_root(repo_root, "source")
     media_token = "[[media:docs/source/img/shared.png Shared]]"
+    unrecorded_token = "[[media:docs/source/img/unrecorded.png Unrecorded]]"
     write_doc(
         source_root,
         doc_id="alpha",
         title="Alpha",
         parent_id="root",
-        body=f"# Alpha\n\n{media_token}\n[Beta](/docs/?scope=source&doc=beta)\n",
+        body=(
+            f"# Alpha\n\n{media_token}\n{unrecorded_token}\n"
+            "[Beta](/docs/?scope=source&doc=beta)\n"
+        ),
     )
     write_doc(
         source_root,
@@ -522,6 +527,18 @@ def test_apply_copy_transfers_shared_media_once_and_repeated_copy_reuses_it(
         body=f"# Beta\n\n{media_token}\n",
     )
     write_bytes(media_path(repo_root, "source", "img", "shared.png"), b"shared")
+    write_bytes(
+        media_path(repo_root, "source", "img", "unrecorded.png"),
+        b"unrecorded",
+    )
+    media_source_evidence.record_media_source_evidence(
+        repo_root,
+        "source",
+        media_type="img",
+        identity="shared.png",
+        source_root="analysis",
+        source_path="analysis/source/shared.png",
+    )
     source_before = snapshot(repo_root / "docs-viewer/scopes/source")
     rebuild_calls: list[dict[str, object]] = []
 
@@ -542,6 +559,14 @@ def test_apply_copy_transfers_shared_media_once_and_repeated_copy_reuses_it(
             "img",
             "shared.png",
         ).read_bytes() == b"shared"
+        copied = media_source_evidence.media_source_evidence_for(
+            repo_root,
+            "target",
+            "img",
+            "shared.png",
+        )
+        assert copied is not None
+        assert copied.source_path == "analysis/source/shared.png"
         assert not any(local_documents_root(repo_root, "target").glob("*.md"))
 
     result = transfer_apply.apply_document_copy(
@@ -560,10 +585,15 @@ def test_apply_copy_transfers_shared_media_once_and_repeated_copy_reuses_it(
         "d-20260724-140000-bbbbbb",
     ]
     assert result["document_count"] == 2
-    assert result["unique_media_count"] == 1
-    assert result["media_counts"] == {"created": 1, "reused": 0, "produced": 0}
+    assert result["unique_media_count"] == 2
+    assert result["media_counts"] == {"created": 2, "reused": 0, "produced": 0}
+    assert result["media_source_evidence_counts"] == {
+        "copied": 1,
+        "retained": 0,
+        "unrecorded": 1,
+    }
     assert result["viewer_link_rewrites"] == 1
-    assert result["media_link_rewrites"] == 2
+    assert result["media_link_rewrites"] == 3
     assert len(result["effective_roots"]) == 2
     assert rebuild_calls[0]["scope"] == "target"
     assert rebuild_calls[0]["kwargs"]["skip_media_builds"] is True
@@ -587,7 +617,12 @@ def test_apply_copy_transfers_shared_media_once_and_repeated_copy_reuses_it(
         activity_logger=lambda *_args, **_kwargs: None,
     )
 
-    assert second["media_counts"] == {"created": 0, "reused": 1, "produced": 0}
+    assert second["media_counts"] == {"created": 0, "reused": 2, "produced": 0}
+    assert second["media_source_evidence_counts"] == {
+        "copied": 0,
+        "retained": 1,
+        "unrecorded": 1,
+    }
     assert len(list(local_documents_root(repo_root, "target").glob("*.md"))) == 4
     assert media_path(
         repo_root,
