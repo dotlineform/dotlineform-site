@@ -73,12 +73,31 @@ def projects_path_marker(path: Path, projects_base: Path) -> str:
     return resolved.relative_to(root).as_posix()
 
 
+def _normalized_lower_root(value: Any | None) -> str | None:
+    return None if value is None else normalize_projects_directory_marker(value)
+
+
+def _marker_is_within(marker: str, lower_root: str) -> bool:
+    return (
+        lower_root == PROJECTS_ROOT_MARKER
+        or marker == lower_root
+        or marker.startswith(f"{lower_root}/")
+    )
+
+
 def resolve_projects_directory(
     marker: Any,
     *,
     environ: Mapping[str, str] | None = None,
+    lower_root: Any | None = None,
 ) -> ProjectsDirectory:
     normalized = normalize_projects_directory_marker(marker)
+    normalized_lower_root = _normalized_lower_root(lower_root)
+    if normalized_lower_root is not None and not _marker_is_within(
+        normalized,
+        normalized_lower_root,
+    ):
+        raise ValueError("source_directory must remain within the configured media source root")
     base = configured_projects_base(environ=environ)
     current = base
     if normalized != PROJECTS_ROOT_MARKER:
@@ -129,8 +148,14 @@ def list_projects_directory(
     marker: Any,
     *,
     environ: Mapping[str, str] | None = None,
+    lower_root: Any | None = None,
 ) -> dict[str, object]:
-    current = resolve_projects_directory(marker, environ=environ)
+    normalized_lower_root = _normalized_lower_root(lower_root)
+    current = resolve_projects_directory(
+        marker,
+        environ=environ,
+        lower_root=normalized_lower_root,
+    )
     try:
         children = sorted(
             current.path.iterdir(),
@@ -143,7 +168,7 @@ def list_projects_directory(
         for child in children
         if (record := _listed_child(child, current.projects_base)) is not None
     ]
-    if current.marker == PROJECTS_ROOT_MARKER:
+    if current.marker == PROJECTS_ROOT_MARKER or current.marker == normalized_lower_root:
         parent_directory = None
     else:
         parent = Path(current.marker).parent.as_posix()
@@ -151,7 +176,10 @@ def list_projects_directory(
     return {
         "ok": True,
         "current_directory": current.marker,
-        "current_selectable": current.marker != PROJECTS_ROOT_MARKER,
+        "current_selectable": (
+            current.marker != PROJECTS_ROOT_MARKER
+            or normalized_lower_root == current.marker
+        ),
         "parent_directory": parent_directory,
         "directories": directories,
     }

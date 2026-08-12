@@ -359,7 +359,7 @@ function addStagedMedia(context, state, mediaKind) {
   if (state.busy || !state.loaded) return Promise.resolve(null);
   var provider = context.collectionProvider || {};
   setBusy(state, true);
-  setStatus(state, mediaKind === "file" ? "Loading staged files..." : "Loading staged images...", false);
+  setStatus(state, mediaKind === "file" ? "Loading files..." : "Loading images...", false);
   return import("./source-editor-media.js")
     .then(function (module) {
       return module.publishAndInsertStagedMedia({

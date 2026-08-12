@@ -87,6 +87,7 @@ def docs_scope_record(
     public_docs_path: str | None = None,
     public_search_path: str | None = None,
     sub_scopes: list[dict[str, object]] | None = None,
+    media_source_root: str | None = None,
     meta: str = "",
 ) -> dict[str, object]:
     external = scope_type == "local_external"
@@ -138,7 +139,7 @@ def docs_scope_record(
                 }
             },
         }
-    return {
+    record: dict[str, object] = {
         "scope_id": scope_id,
         "scope_type": scope_type,
         "meta": meta or scope_type.replace("_", " "),
@@ -158,6 +159,9 @@ def docs_scope_record(
         "allow_unresolved_parent_ids": allow_unresolved_parent_ids,
         "sub_scopes": sub_scopes or [],
     }
+    if media_source_root is not None:
+        record["media_source_root"] = media_source_root
+    return record
 
 
 def docs_sub_scope_record(

@@ -62,6 +62,7 @@
       "scope_id": "analysis",
       "scope_type": "public",
       "meta": "public scope",
+      "media_source_root": "analysis",
       "source": {
         "build_media": {
           "mermaid": {
@@ -263,6 +264,7 @@
       "scope_id": "processing",
       "scope_type": "local",
       "meta": "local management",
+      "media_source_root": "processing",
       "source": {
         "build_media": {}
       },
@@ -302,6 +304,7 @@
       "scope_id": "dotlineform",
       "scope_type": "local_external",
       "meta": "external local",
+      "media_source_root": "analysis",
       "scope_root": {
         "provider": "external_local",
         "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/dotlineform"

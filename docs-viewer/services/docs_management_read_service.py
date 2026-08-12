@@ -97,7 +97,9 @@ def docs_management_get_payload(repo_root: Path, path: str, params: dict[str, li
     if path == routes.STAGED_MEDIA_FILES_PATH:
         return docs_staged_media_service.list_staged_media_files(
             repo_root,
+            docs_api_query_value(params, "scope"),
             docs_api_query_value(params, "media_kind"),
+            docs_api_query_value(params, "source_directory"),
         )
     if path == routes.DIAGRAM_SOURCES_PATH:
         return docs_diagram_source_service.list_diagram_sources(repo_root, params)

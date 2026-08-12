@@ -13,31 +13,75 @@ function escapeHtml(value) {
     .replace(/'/g, "&#39;");
 }
 
-function listing(payload, requested) {
-  if (!payload || text(payload.current_directory) !== requested) {
+function directoryMarker(value) {
+  const marker = text(value);
+  if (marker === ".") return marker;
+  if (!marker || marker.startsWith("/") || marker.endsWith("/") || marker.includes("\\")) {
+    throw new Error("Folder marker is not canonical.");
+  }
+  const parts = marker.split("/");
+  if (parts.some((part) => !part || part === "." || part === "..")) {
+    throw new Error("Folder marker is not canonical.");
+  }
+  return parts.join("/");
+}
+
+function isWithin(directory, rootDirectory) {
+  return rootDirectory === "."
+    || directory === rootDirectory
+    || directory.startsWith(`${rootDirectory}/`);
+}
+
+function parentMarker(directory) {
+  if (directory === ".") return null;
+  const parts = directory.split("/");
+  return parts.length === 1 ? "." : parts.slice(0, -1).join("/");
+}
+
+function listing(payload, requested, rootDirectory) {
+  if (!payload || directoryMarker(payload.current_directory) !== requested) {
     throw new Error("Folder listing did not match the requested directory.");
+  }
+  if (!isWithin(requested, rootDirectory)) {
+    throw new Error("Folder listing escaped its configured root.");
   }
   if (payload.current_selectable !== true && payload.current_selectable !== false) {
     throw new Error("Folder listing has an invalid selection state.");
   }
-  const parent = payload.parent_directory == null ? null : text(payload.parent_directory);
-  if (payload.parent_directory != null && !parent) {
+  const parent = payload.parent_directory == null ? null : directoryMarker(payload.parent_directory);
+  const expectedParent = requested === rootDirectory ? null : parentMarker(requested);
+  if (parent !== expectedParent || (parent !== null && !isWithin(parent, rootDirectory))) {
     throw new Error("Folder listing has an invalid parent directory.");
   }
   const directories = (Array.isArray(payload.directories) ? payload.directories : []).map((item) => {
-    const directory = text(item && item.source_directory);
+    const directory = directoryMarker(item && item.source_directory);
     const label = text(item && item.label);
-    if (!directory || !label) throw new Error("Folder listing contains an invalid directory.");
+    if (
+      !label
+      || !isWithin(directory, rootDirectory)
+      || parentMarker(directory) !== requested
+    ) {
+      throw new Error("Folder listing contains an invalid directory.");
+    }
     return { directory, label };
   });
   return { directory: requested, selectable: payload.current_selectable === true, parent, directories };
 }
 
-function breadcrumbMarkup(directory) {
-  const segments = directory === "." ? [] : directory.split("/");
-  const locations = [{ directory: ".", label: "Projects" }];
+function breadcrumbMarkup(directory, rootDirectory, rootLabel) {
+  const rootSegments = rootDirectory === "." ? [] : rootDirectory.split("/");
+  const segments = directory === rootDirectory
+    ? []
+    : directory.split("/").slice(rootSegments.length);
+  const locations = [{ directory: rootDirectory, label: rootLabel }];
   segments.forEach((label, index) => {
-    locations.push({ directory: segments.slice(0, index + 1).join("/"), label });
+    const relative = segments.slice(0, index + 1);
+    locations.push({
+      directory: rootDirectory === "."
+        ? relative.join("/")
+        : rootSegments.concat(relative).join("/"),
+      label
+    });
   });
   return locations.map((location, index) => {
     const separator = index
@@ -51,9 +95,15 @@ function breadcrumbMarkup(directory) {
 }
 
 export function createFolderPicker(root, options = {}) {
-  const initialDirectory = text(options.initialDirectory);
+  const rootDirectory = directoryMarker(options.rootDirectory || ".");
+  const initialDirectory = directoryMarker(options.initialDirectory);
+  const rootLabel = text(options.rootLabel)
+    || (rootDirectory === "." ? "Projects" : rootDirectory.split("/").slice(-1)[0]);
   if (!root || !initialDirectory || typeof options.loadDirectory !== "function" || typeof options.onSubmit !== "function") {
     throw new Error("Folder picker configuration is incomplete.");
+  }
+  if (!isWithin(initialDirectory, rootDirectory)) {
+    throw new Error("Initial folder is outside the configured root.");
   }
   const id = `sharedFolderPicker-${++pickerSequence}`;
   root.innerHTML = [
@@ -86,7 +136,7 @@ export function createFolderPicker(root, options = {}) {
 
   function render(record) {
     current = record;
-    breadcrumbs.innerHTML = breadcrumbMarkup(record.directory);
+    breadcrumbs.innerHTML = breadcrumbMarkup(record.directory, rootDirectory, rootLabel);
     list.innerHTML = record.directories.length
       ? record.directories.map((item, index) => (
         `<div class="sharedFolderPicker__option" id="${id}-option-${index + 1}" role="option" aria-selected="false" data-directory="${escapeHtml(item.directory)}">${escapeHtml(item.label)}</div>`
@@ -98,11 +148,18 @@ export function createFolderPicker(root, options = {}) {
   }
 
   async function load(directory, focus = false) {
-    const requested = text(directory);
+    const requested = directoryMarker(directory);
+    if (!isWithin(requested, rootDirectory)) {
+      throw new Error("Folder navigation escaped its configured root.");
+    }
     const activeRequest = ++requestId;
     list.setAttribute("aria-busy", "true");
     try {
-      const record = listing(await options.loadDirectory({ directory: requested }), requested);
+      const record = listing(
+        await options.loadDirectory({ directory: requested }),
+        requested,
+        rootDirectory
+      );
       if (destroyed || activeRequest !== requestId) return null;
       render(record);
       if (focus) focusPreferred();
@@ -147,7 +204,11 @@ export function createFolderPicker(root, options = {}) {
 
   async function submit() {
     if (!current || !current.selectable) {
-      throw new Error("Choose a folder below the Projects root.");
+      throw new Error(
+        rootDirectory === "."
+          ? "Choose a folder below the Projects root."
+          : "Choose an available folder."
+      );
     }
     return options.onSubmit({ directory: current.directory });
   }

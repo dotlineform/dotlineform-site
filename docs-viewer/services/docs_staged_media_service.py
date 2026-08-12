@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import datetime as dt
+import os
 import re
 import shutil
 import tempfile
@@ -33,6 +34,7 @@ from docs_media_storage import (
     publish_docs_media_files,
     validate_media_filename,
 )
+from docs_media_source_evidence import record_media_source_evidence
 from docs_mermaid_media import produce_mermaid_svg
 from docs_scope_config import load_docs_scope_configs
 from docs_staged_media_fragments import (
@@ -42,6 +44,11 @@ from docs_staged_media_fragments import (
 )
 from docs_svg_sanitizer import SanitizedSvg, sanitize_svg_bytes
 from docs_document_packages.workspace import configured_workspace_paths, marker_path, workspace_status
+from studio.shared.python.projects_directories import (
+    list_projects_directory,
+    projects_path_marker,
+    resolve_projects_directory,
+)
 
 
 STAGED_MEDIA_IMAGE = "image"
@@ -63,6 +70,20 @@ class PreparedMermaidMedia:
     collision: str
     published_status: str
     source_status: str
+
+
+@dataclass(frozen=True)
+class StagedMediaContract:
+    scope: str
+    kind: str
+    source_path: Path
+    label: str
+    media_class: str
+    media_filename: str
+    source_kind: str
+    source_root: str
+    source_directory: str
+    source_path_marker: str
 
 
 def normalize_media_kind(value: Any) -> str:
@@ -110,33 +131,27 @@ def _resolve_staged_media(staging_root: Path, filename: str, kind: str) -> Path:
     return source_path
 
 
-def list_staged_media_files(repo_root: Path, kind: str) -> dict[str, Any]:
+def _listed_media_files(
+    directory: Path,
+    *,
+    kind: str,
+    path_marker,
+) -> list[dict[str, Any]]:
     normalized_kind = normalize_media_kind(kind)
-    status = workspace_status(repo_root, required_paths=("import_staging",))
-    if not status["available"]:
-        return {
-            "ok": True,
-            "available": False,
-            "staging_root": status["root"],
-            "message": status["message"],
-            "media_kind": normalized_kind,
-            "files": [],
-        }
-    workspace = configured_workspace_paths(repo_root)
-    staging_root = workspace.import_staging.resolve()
     suffixes = media_suffixes(normalized_kind)
     files: list[dict[str, Any]] = []
-    for path in sorted(staging_root.iterdir(), key=lambda candidate: candidate.name.lower()):
+    for path in sorted(directory.iterdir(), key=lambda candidate: (candidate.name.casefold(), candidate.name)):
         if (
             not path.is_file()
             or path.is_symlink()
+            or not os.access(path, os.R_OK)
             or path.suffix.lower() not in suffixes
         ):
             continue
         stat = path.stat()
         files.append({
             "filename": path.name,
-            "path": marker_path(path, workspace_root=workspace.root),
+            "path": path_marker(path),
             "media_kind": normalized_kind,
             "media_format": (
                 "mermaid"
@@ -149,15 +164,86 @@ def list_staged_media_files(repo_root: Path, kind: str) -> dict[str, Any]:
             ),
             "suggested_label": humanize(path.stem),
             "size_bytes": stat.st_size,
-            "modified_utc": dt.datetime.fromtimestamp(stat.st_mtime, tz=dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+            "modified_utc": dt.datetime.fromtimestamp(
+                stat.st_mtime,
+                tz=dt.timezone.utc,
+            ).strftime("%Y-%m-%dT%H:%M:%SZ"),
         })
+    return files
+
+
+def list_staged_media_files(
+    repo_root: Path,
+    scope: str,
+    kind: str,
+    source_directory: str = "",
+) -> dict[str, Any]:
+    normalized_scope = str(scope or "").strip().lower()
+    configs = load_docs_scope_configs(repo_root, scope_ids=(normalized_scope,))
+    if normalized_scope not in configs:
+        raise ValueError(f"unknown Docs scope: {normalized_scope}")
+    config = configs[normalized_scope]
+    normalized_kind = normalize_media_kind(kind)
+    if config.media_source_root:
+        requested_directory = source_directory or config.media_source_root
+        listing = list_projects_directory(
+            requested_directory,
+            lower_root=config.media_source_root,
+        )
+        current = resolve_projects_directory(
+            listing["current_directory"],
+            lower_root=config.media_source_root,
+        )
+        return {
+            **listing,
+            "available": True,
+            "message": "",
+            "media_kind": normalized_kind,
+            "source_kind": "media_source",
+            "source_root": config.media_source_root,
+            "files": _listed_media_files(
+                current.path,
+                kind=normalized_kind,
+                path_marker=lambda path: projects_path_marker(path, current.projects_base),
+            ),
+        }
+
+    status = workspace_status(repo_root, required_paths=("import_staging",))
+    if not status["available"]:
+        return {
+            "ok": True,
+            "available": False,
+            "staging_root": status["root"],
+            "message": status["message"],
+            "media_kind": normalized_kind,
+            "source_kind": "import_staging",
+            "source_root": status["root"],
+            "current_directory": status["root"],
+            "current_selectable": False,
+            "parent_directory": None,
+            "directories": [],
+            "files": [],
+        }
+    workspace = configured_workspace_paths(repo_root)
+    staging_root = workspace.import_staging.resolve()
+    staging_marker = marker_path(staging_root, workspace_root=workspace.root)
     return {
         "ok": True,
         "available": True,
-        "staging_root": marker_path(staging_root, workspace_root=workspace.root),
+        "staging_root": staging_marker,
         "message": "",
         "media_kind": normalized_kind,
-        "files": files,
+        "source_kind": "import_staging",
+        "source_root": staging_marker,
+        "current_directory": staging_marker,
+        "current_selectable": False,
+        "parent_directory": None,
+        "directories": [],
+        "files": _listed_media_files(
+            staging_root,
+            kind=normalized_kind,
+            path_marker=lambda path: marker_path(path, workspace_root=workspace.root),
+        ),
     }
 
 
@@ -182,14 +268,33 @@ def _prepared_media_source(
         yield prepared_path, temp_root, sanitized
 
 
-def _staged_media_contract(repo_root: Path, body: dict[str, Any]) -> tuple[str, str, Path, str, str, str]:
+def _staged_media_request_contract(repo_root: Path, body: dict[str, Any]) -> StagedMediaContract:
     kind = normalize_media_kind(body.get("media_kind"))
     scope = str(body.get("scope") or "").strip().lower()
-    configs = load_docs_scope_configs(repo_root)
+    configs = load_docs_scope_configs(repo_root, scope_ids=(scope,))
     if scope not in configs:
-        raise ValueError(f"scope must be one of: {', '.join(sorted(configs))}")
-    workspace = configured_workspace_paths(repo_root)
-    source_path = _resolve_staged_media(workspace.import_staging, body.get("staged_filename"), kind)
+        raise ValueError(f"unknown Docs scope: {scope}")
+    config = configs[scope]
+    if config.media_source_root:
+        source_directory = str(body.get("source_directory") or "")
+        if not source_directory:
+            raise ValueError("source_directory is required for this scope's configured media source")
+        source = resolve_projects_directory(
+            source_directory,
+            lower_root=config.media_source_root,
+        )
+        source_path = _resolve_staged_media(source.path, body.get("staged_filename"), kind)
+        source_kind = "media_source"
+        source_root = config.media_source_root
+        source_directory = source.marker
+        source_path_marker = projects_path_marker(source_path, source.projects_base)
+    else:
+        workspace = configured_workspace_paths(repo_root)
+        source_path = _resolve_staged_media(workspace.import_staging, body.get("staged_filename"), kind)
+        source_kind = "import_staging"
+        source_root = marker_path(workspace.import_staging, workspace_root=workspace.root)
+        source_directory = source_root
+        source_path_marker = marker_path(source_path, workspace_root=workspace.root)
     fallback = humanize(source_path.stem) or ("Image" if kind == STAGED_MEDIA_IMAGE else "File")
     label = normalize_label_text(body.get("label"), fallback=fallback)
     media_class = (
@@ -204,7 +309,30 @@ def _staged_media_contract(repo_root: Path, body: dict[str, Any]) -> tuple[str, 
     media_filename = published_media_filename(source_path)
     if media_class == "mermaid":
         media_filename = Path(media_filename).with_suffix(".mmd").name
-    return scope, kind, source_path, label, media_class, media_filename
+    return StagedMediaContract(
+        scope=scope,
+        kind=kind,
+        source_path=source_path,
+        label=label,
+        media_class=media_class,
+        media_filename=media_filename,
+        source_kind=source_kind,
+        source_root=source_root,
+        source_directory=source_directory,
+        source_path_marker=source_path_marker,
+    )
+
+
+def _staged_media_contract(repo_root: Path, body: dict[str, Any]) -> tuple[str, str, Path, str, str, str]:
+    contract = _staged_media_request_contract(repo_root, body)
+    return (
+        contract.scope,
+        contract.kind,
+        contract.source_path,
+        contract.label,
+        contract.media_class,
+        contract.media_filename,
+    )
 
 
 def _source_fragment(
@@ -241,7 +369,7 @@ def _prepared_mermaid_media(
     source_path: Path,
     source_filename: str,
 ) -> PreparedMermaidMedia:
-    config = load_docs_scope_configs(repo_root)[scope]
+    config = load_docs_scope_configs(repo_root, scope_ids=(scope,))[scope]
     build = config.source.build_media.get("mermaid")
     if build is None or build.producer != "mermaid" or build.publishes_to != "svg":
         raise ValueError(f"scope {scope!r} does not configure Mermaid source media")
@@ -313,34 +441,40 @@ def _prepared_mermaid_media(
 
 def _mermaid_preview_payload(
     repo_root: Path,
-    scope: str,
-    kind: str,
-    source_path: Path,
-    label: str,
+    contract: StagedMediaContract,
     prepared: PreparedMermaidMedia,
     *,
     body: dict[str, Any],
 ) -> dict[str, Any]:
     plan = build_media_plan(
-        scope,
+        contract.scope,
         "svg",
         Path(prepared.published_identity),
-        label,
+        contract.label,
         repo_root=repo_root,
     )
     return {
         "ok": True,
-        "scope": scope,
-        "media_kind": kind,
+        "scope": contract.scope,
+        "media_kind": contract.kind,
         "media_format": "mermaid",
-        "staged_filename": source_path.name,
+        "staged_filename": contract.source_path.name,
+        "source_kind": contract.source_kind,
+        "source_root": contract.source_root,
+        "source_directory": contract.source_directory,
+        "source_path": contract.source_path_marker,
         "source_identity": prepared.source_identity,
         "published_filename": Path(prepared.published_identity).name,
-        "label": label,
-        "add_caption": kind == STAGED_MEDIA_IMAGE and body.get("add_caption") is True,
+        "label": contract.label,
+        "add_caption": contract.kind == STAGED_MEDIA_IMAGE and body.get("add_caption") is True,
         "media_identity": plan["media_path"],
         "media_token": plan["media_token"],
-        "markdown": _source_fragment(kind, label, plan["media_token"], body=body),
+        "markdown": _source_fragment(
+            contract.kind,
+            contract.label,
+            plan["media_token"],
+            body=body,
+        ),
         "collision": prepared.collision,
         "requires_replace_confirmation": prepared.collision == "replace",
         "size_bytes": len(prepared.published_bytes),
@@ -352,41 +486,62 @@ def _mermaid_preview_payload(
 
 
 def preview_staged_media(repo_root: Path, body: dict[str, Any]) -> dict[str, Any]:
-    scope, kind, source_path, label, media_class, media_filename = _staged_media_contract(repo_root, body)
-    if media_class == "mermaid":
-        prepared = _prepared_mermaid_media(repo_root, scope, source_path, media_filename)
+    contract = _staged_media_request_contract(repo_root, body)
+    if contract.media_class == "mermaid":
+        prepared = _prepared_mermaid_media(
+            repo_root,
+            contract.scope,
+            contract.source_path,
+            contract.media_filename,
+        )
         return _mermaid_preview_payload(
             repo_root,
-            scope,
-            kind,
-            source_path,
-            label,
+            contract,
             prepared,
             body=body,
         )
-    config = load_docs_scope_configs(repo_root)[scope]
-    with _prepared_media_source(source_path, kind, media_filename) as (prepared_path, source_root, sanitized):
+    config = load_docs_scope_configs(repo_root, scope_ids=(contract.scope,))[contract.scope]
+    with _prepared_media_source(
+        contract.source_path,
+        contract.kind,
+        contract.media_filename,
+    ) as (prepared_path, source_root, sanitized):
         item = docs_media_file(
             config,
-            media_class=media_class,
+            media_class=contract.media_class,
             local_path=prepared_path,
             source_root=source_root,
-            filename=media_filename,
+            filename=contract.media_filename,
         )
         result = publish_docs_media_files(repo_root, [item], write=False, force=True)[0]
-        plan = build_media_plan(scope, media_class, Path(media_filename), label, repo_root=repo_root)
+        plan = build_media_plan(
+            contract.scope,
+            contract.media_class,
+            Path(contract.media_filename),
+            contract.label,
+            repo_root=repo_root,
+        )
         collision = "unchanged" if result.status == "unchanged" else "replace" if result.status == "would_overwrite" else "new"
         return {
             "ok": True,
-            "scope": scope,
-            "media_kind": kind,
-            "staged_filename": source_path.name,
-            "published_filename": media_filename,
-            "label": label,
-            "add_caption": kind == STAGED_MEDIA_IMAGE and body.get("add_caption") is True,
+            "scope": contract.scope,
+            "media_kind": contract.kind,
+            "staged_filename": contract.source_path.name,
+            "source_kind": contract.source_kind,
+            "source_root": contract.source_root,
+            "source_directory": contract.source_directory,
+            "source_path": contract.source_path_marker,
+            "published_filename": contract.media_filename,
+            "label": contract.label,
+            "add_caption": contract.kind == STAGED_MEDIA_IMAGE and body.get("add_caption") is True,
             "media_identity": plan["media_path"],
             "media_token": plan["media_token"],
-            "markdown": _source_fragment(kind, label, plan["media_token"], body=body),
+            "markdown": _source_fragment(
+                contract.kind,
+                contract.label,
+                plan["media_token"],
+                body=body,
+            ),
             "collision": collision,
             "requires_replace_confirmation": collision == "replace",
             "size_bytes": item.size,
@@ -398,15 +553,17 @@ def preview_staged_media(repo_root: Path, body: dict[str, Any]) -> dict[str, Any
 
 
 def apply_staged_media(repo_root: Path, body: dict[str, Any], *, write: bool = True) -> dict[str, Any]:
-    scope, kind, source_path, label, media_class, media_filename = _staged_media_contract(repo_root, body)
-    if media_class == "mermaid":
-        prepared = _prepared_mermaid_media(repo_root, scope, source_path, media_filename)
+    contract = _staged_media_request_contract(repo_root, body)
+    if contract.media_class == "mermaid":
+        prepared = _prepared_mermaid_media(
+            repo_root,
+            contract.scope,
+            contract.source_path,
+            contract.media_filename,
+        )
         preview = _mermaid_preview_payload(
             repo_root,
-            scope,
-            kind,
-            source_path,
-            label,
+            contract,
             prepared,
             body=body,
         )
@@ -428,6 +585,15 @@ def apply_staged_media(repo_root: Path, body: dict[str, Any], *, write: bool = T
             )
             if not prepared.published_adapter.verify_bytes(prepared.published_identity, prepared.published_bytes):
                 raise RuntimeError("Mermaid SVG publication verification failed")
+            if contract.source_kind == "media_source":
+                record_media_source_evidence(
+                    repo_root,
+                    contract.scope,
+                    media_type="svg",
+                    identity=prepared.published_identity,
+                    source_root=contract.source_root,
+                    source_path=contract.source_path_marker,
+                )
         published_status = (
             "unchanged"
             if prepared.published_status == "unchanged"
@@ -448,7 +614,7 @@ def apply_staged_media(repo_root: Path, body: dict[str, Any], *, write: bool = T
                 "size": len(prepared.source_bytes),
             },
             "publish": {
-                "scope": scope,
+                "scope": contract.scope,
                 "media_class": "svg",
                 "filename": prepared.published_identity,
                 "size": len(prepared.published_bytes),
@@ -456,11 +622,11 @@ def apply_staged_media(repo_root: Path, body: dict[str, Any], *, write: bool = T
                 "reason": "",
             },
             "summary_text": (
-                f"Published {source_path.name} and rendered Mermaid SVG."
+                f"Published {contract.source_path.name} and rendered Mermaid SVG."
                 if write and prepared.collision != "unchanged"
-                else f"Verified {source_path.name} and rendered Mermaid SVG."
+                else f"Verified {contract.source_path.name} and rendered Mermaid SVG."
                 if write
-                else f"Prepared Mermaid publication preview for {source_path.name}."
+                else f"Prepared Mermaid publication preview for {contract.source_path.name}."
             ),
         }
 
@@ -469,14 +635,18 @@ def apply_staged_media(repo_root: Path, body: dict[str, Any], *, write: bool = T
     if preview["requires_replace_confirmation"] and not confirm_replace:
         raise ValueError("published media bytes differ; confirm replacement or cancel")
 
-    config = load_docs_scope_configs(repo_root)[scope]
-    with _prepared_media_source(source_path, kind, media_filename) as (prepared_path, source_root, _sanitized):
+    config = load_docs_scope_configs(repo_root, scope_ids=(contract.scope,))[contract.scope]
+    with _prepared_media_source(
+        contract.source_path,
+        contract.kind,
+        contract.media_filename,
+    ) as (prepared_path, source_root, _sanitized):
         item = docs_media_file(
             config,
-            media_class=media_class,
+            media_class=contract.media_class,
             local_path=prepared_path,
             source_root=source_root,
-            filename=media_filename,
+            filename=contract.media_filename,
         )
         results = publish_docs_media_files(
             repo_root,
@@ -486,16 +656,25 @@ def apply_staged_media(repo_root: Path, body: dict[str, Any], *, write: bool = T
         )
     if write and not docs_publish_succeeded(results):
         raise RuntimeError(f"Docs media publication did not complete: {results[0].status}")
+    if write and contract.source_kind == "media_source":
+        record_media_source_evidence(
+            repo_root,
+            contract.scope,
+            media_type=contract.media_class,
+            identity=contract.media_filename,
+            source_root=contract.source_root,
+            source_path=contract.source_path_marker,
+        )
     return {
         **preview,
         "preview_only": not write,
         "publish": asdict(results[0]),
         "summary_text": (
-            f"Published {source_path.name}."
+            f"Published {contract.source_path.name}."
             if write and results[0].status != "unchanged"
-            else f"Verified {source_path.name}."
+            else f"Verified {contract.source_path.name}."
             if write
-            else f"Prepared publication preview for {source_path.name}."
+            else f"Prepared publication preview for {contract.source_path.name}."
         ),
     }
 

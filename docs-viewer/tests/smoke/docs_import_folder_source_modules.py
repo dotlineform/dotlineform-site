@@ -172,6 +172,50 @@ def assert_shared_folder_picker(page: Page) -> None:
     ) == ["projects"]
 
 
+def assert_shared_folder_picker_lower_root(page: Page) -> None:
+    result = page.evaluate(
+        """async () => {
+          const module = await import(
+            '/docs-viewer/runtime/js/shared-frontend/folder-picker.js'
+          );
+          document.body.innerHTML = '<div id="picker"></div>';
+          const submitted = [];
+          const controller = module.createFolderPicker(
+            document.getElementById('picker'),
+            {
+              rootDirectory: 'analysis',
+              rootLabel: 'Analysis',
+              initialDirectory: 'analysis',
+              loadDirectory: async ({ directory }) => ({
+                current_directory: directory,
+                current_selectable: true,
+                parent_directory: null,
+                directories: [
+                  { label: 'images', source_directory: 'analysis/images' }
+                ]
+              }),
+              onSubmit: async ({ directory }) => {
+                submitted.push(directory);
+                return directory;
+              }
+            }
+          );
+          await controller.ready;
+          await controller.submit();
+          return {
+            breadcrumbs: document.querySelector('[data-breadcrumbs]').textContent,
+            projectLink: Boolean(document.querySelector('[data-nav="."]')),
+            submitted
+          };
+        }"""
+    )
+    assert result == {
+        "breadcrumbs": "Analysis",
+        "projectLink": False,
+        "submitted": ["analysis"],
+    }
+
+
 def assert_import_source_preference(page: Page) -> None:
     result = page.evaluate(
         """async () => {
@@ -268,6 +312,7 @@ def main(argv: list[str] | None = None) -> int:
                 page = browser.new_page()
                 page.goto(base_url, wait_until="domcontentloaded")
                 assert_shared_folder_picker(page)
+                assert_shared_folder_picker_lower_root(page)
                 assert_import_source_preference(page)
             finally:
                 browser.close()

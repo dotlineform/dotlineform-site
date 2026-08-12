@@ -216,8 +216,20 @@ export function openManagedDiagramSource(target, payload, options) {
 }
 
 export function listStagedMedia(mediaKind, options) {
+  var settings = options || {};
   var kind = encodeURIComponent(String(mediaKind || "").trim());
-  return fetchManagementJson("/docs/staged-media-files?media_kind=" + kind, "GET", undefined, options);
+  var scope = encodeURIComponent(String(settings.scope || "").trim());
+  var query = ["scope=" + scope, "media_kind=" + kind];
+  var sourceDirectory = String(settings.sourceDirectory || "").trim();
+  if (sourceDirectory) {
+    query.push("source_directory=" + encodeURIComponent(sourceDirectory));
+  }
+  return fetchManagementJson(
+    "/docs/staged-media-files?" + query.join("&"),
+    "GET",
+    undefined,
+    options
+  );
 }
 
 export function previewStagedMedia(payload, options) {

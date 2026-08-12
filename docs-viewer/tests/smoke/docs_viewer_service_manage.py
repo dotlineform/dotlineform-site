@@ -2334,6 +2334,11 @@ def assert_source_editor_media_presentation(page: Page) -> None:
                 });
                 await new Promise(resolve => setTimeout(resolve, 0));
                 const host = root.querySelector('[data-docs-viewer-management-modal-host="true"]');
+                const sourceFile = host?.querySelector('[data-role="staged-media-file"]') || null;
+                if (sourceFile) {
+                    sourceFile.checked = true;
+                    sourceFile.dispatchEvent(new Event('change', { bubbles: true }));
+                }
                 const checkbox = host?.querySelector('[data-role="staged-media-caption"]') || null;
                 const caption = host?.querySelector('[data-role="staged-media-caption-text"]') || null;
                 const labelInput = host?.querySelector('[data-role="staged-media-label"]') || null;

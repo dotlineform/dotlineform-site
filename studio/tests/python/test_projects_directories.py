@@ -56,6 +56,42 @@ def test_lists_root_and_nested_directories_with_canonical_markers(tmp_path: Path
     )
 
 
+def test_lower_root_is_selectable_and_navigation_cannot_escape_it(tmp_path: Path) -> None:
+    projects_base = tmp_path / "Projects"
+    (projects_base / "analysis/references/images").mkdir(parents=True)
+    (projects_base / "processing").mkdir()
+    environ = {"DOTLINEFORM_PROJECTS_BASE_DIR": str(projects_base)}
+
+    root = list_projects_directory(
+        "analysis",
+        environ=environ,
+        lower_root="analysis",
+    )
+    nested = list_projects_directory(
+        "analysis/references",
+        environ=environ,
+        lower_root="analysis",
+    )
+
+    assert root == {
+        "ok": True,
+        "current_directory": "analysis",
+        "current_selectable": True,
+        "parent_directory": None,
+        "directories": [
+            {
+                "label": "references",
+                "source_directory": "analysis/references",
+            },
+        ],
+    }
+    assert nested["parent_directory"] == "analysis"
+    with pytest.raises(ValueError, match="configured media source root"):
+        resolve_projects_directory(".", environ=environ, lower_root="analysis")
+    with pytest.raises(ValueError, match="configured media source root"):
+        list_projects_directory("processing", environ=environ, lower_root="analysis")
+
+
 @pytest.mark.parametrize(
     "marker",
     [

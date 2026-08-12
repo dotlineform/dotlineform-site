@@ -24,6 +24,35 @@ def write_scope_record(repo_root: Path, record: dict[str, object]) -> None:
     )
 
 
+def test_docs_scope_config_normalizes_optional_media_source_root() -> None:
+    with make_repo() as temp_path:
+        repo_root = Path(temp_path)
+        write_scope_record(
+            repo_root,
+            docs_scope_record("analysis", media_source_root="analysis"),
+        )
+
+        config = docs_scope_config.load_docs_scope_configs(repo_root)["analysis"]
+
+    assert config.media_source_root == "analysis"
+
+
+@pytest.mark.parametrize(
+    "value",
+    [".", " analysis", "analysis/", "/analysis", "analysis/../processing"],
+)
+def test_docs_scope_config_rejects_invalid_media_source_root(value: str) -> None:
+    with make_repo() as temp_path:
+        repo_root = Path(temp_path)
+        write_scope_record(
+            repo_root,
+            docs_scope_record("analysis", media_source_root=value),
+        )
+
+        with pytest.raises(ValueError, match="media_source_root"):
+            docs_scope_config.load_docs_scope_configs(repo_root)
+
+
 def test_docs_scope_config_selected_local_scope_does_not_resolve_external_workspace() -> None:
     with make_repo() as temp_path:
         repo_root = Path(temp_path)
