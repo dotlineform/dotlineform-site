@@ -4,6 +4,22 @@
   "limit": 10,
   "docs": [
     {
+      "doc_id": "d-20260808-222435-e0d29a",
+      "title": "Docs Viewer External Scope Availability",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260808-222435-e0d29a.json",
+      "timestamp": "2026-08-12 08:20:20",
+      "parent_id": "d-20260428-000000-f5ff18",
+      "parent_title": "Roadmap"
+    },
+    {
+      "doc_id": "d-20260808-222436-4f7c81",
+      "title": "ESA-1 — Graceful Per-Scope Availability Delivery",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260808-222436-4f7c81.json",
+      "timestamp": "2026-08-12 08:20:20",
+      "parent_id": "d-20260808-222435-e0d29a",
+      "parent_title": "Docs Viewer External Scope Availability"
+    },
+    {
       "doc_id": "d-20260804-160200-fa7bb7",
       "title": "Tag Document Linking",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260804-160200-fa7bb7.json",
@@ -66,23 +82,7 @@
       "timestamp": "2026-08-11 22:03:14",
       "parent_id": "d-20260419-000000-86255c",
       "parent_title": "Tag Source Data"
-    },
-    {
-      "doc_id": "d-20260726-185814-c5e581",
-      "title": "Target Lookup",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260726-185814-c5e581.json",
-      "timestamp": "2026-08-11 22:03:14",
-      "parent_id": "d-20260725-153656-516b61",
-      "parent_title": "Semantic Tokens"
-    },
-    {
-      "doc_id": "d-20260726-191340-d00c52",
-      "title": "Usage Index",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260726-191340-d00c52.json",
-      "timestamp": "2026-08-11 22:03:14",
-      "parent_id": "d-20260725-153656-516b61",
-      "parent_title": "Semantic Tokens"
     }
   ],
-  "generated_at": "2026-08-11T21:30:47Z"
+  "generated_at": "2026-08-12T07:20:53Z"
 }

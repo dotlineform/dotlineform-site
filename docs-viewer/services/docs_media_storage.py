@@ -365,6 +365,11 @@ def ensure_configured_scope_owned_media_directories(
     configured_scopes = configs if configs is not None else load_docs_scope_configs(repo_root)
     materialized: dict[str, tuple[Path, ...]] = {}
     for scope_id, config in configured_scopes.items():
+        if (
+            config.scope_root.provider == EXTERNAL_LOCAL_PROVIDER
+            and not resolve_location_path(repo_root, config.scope_root).is_dir()
+        ):
+            continue
         directories: list[Path] = []
         for media in config.published.media.values():
             if media.location.provider not in {REPOSITORY_PROVIDER, EXTERNAL_LOCAL_PROVIDER}:

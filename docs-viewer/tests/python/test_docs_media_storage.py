@@ -380,10 +380,11 @@ def test_local_media_route_confines_repo_and_external_scope_assets(tmp_path: Pat
     assert media_class == "files"
 
 
-def test_configured_local_media_directories_are_materialized(tmp_path: Path) -> None:
+def test_configured_local_media_directories_skip_missing_external_scope(tmp_path: Path) -> None:
     repo_media = tmp_path / "docs-viewer/scopes/studio/published/media"
     external_source = tmp_path / "external/docs-viewer/scopes/notes/source"
     external_media = tmp_path / "external/docs-viewer/scopes/notes/published/media"
+    missing_external_root = tmp_path / "external/docs-viewer/scopes/missing"
     external_source.mkdir(parents=True)
     configs = {
         "studio": scope_config("studio", scope_type="local", media_provider=REPOSITORY_PROVIDER),
@@ -392,6 +393,12 @@ def test_configured_local_media_directories_are_materialized(tmp_path: Path) -> 
             scope_type="local_external",
             media_provider=EXTERNAL_LOCAL_PROVIDER,
             source=external_source,
+        ),
+        "missing": scope_config(
+            "missing",
+            scope_type="local_external",
+            media_provider=EXTERNAL_LOCAL_PROVIDER,
+            source=missing_external_root / "source",
         ),
         "library": scope_config("library", scope_type="public", media_provider=R2_PROVIDER),
     }
@@ -407,4 +414,5 @@ def test_configured_local_media_directories_are_materialized(tmp_path: Path) -> 
         (external_media / media_class / ".gitkeep").exists()
         for media_class in ("files", "img", "svg")
     )
+    assert not missing_external_root.exists()
     assert not (tmp_path / "docs-viewer/scopes/library/source/documents/media").exists()

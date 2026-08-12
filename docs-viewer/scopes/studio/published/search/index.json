@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-c2d58c102a7a3a719f19a539cf8de6ad",
-    "generated_at_utc": "2026-08-11T21:30:47Z",
+    "version": "blake2b-e30133ac61843550a0ef5a0b722db83c",
+    "generated_at_utc": "2026-08-12T07:20:53Z",
     "count": 309
   },
   "entries": [
@@ -4032,10 +4032,10 @@
       "kind": "doc",
       "title": "Docs Viewer External Scope Availability",
       "href": "/docs/?scope=studio&doc=d-20260808-222435-e0d29a",
-      "last_updated": "2026-08-08 22:24:35",
+      "last_updated": "2026-08-12 08:20:20",
       "parent_id": "d-20260428-000000-f5ff18",
       "parent_title": "Roadmap",
-      "display_meta": "2026-08-08 22:24:35 • Roadmap",
+      "display_meta": "2026-08-12 08:20:20 • Roadmap",
       "search_terms": [
         "docs viewer external scope availability",
         "docs",
@@ -4044,25 +4044,24 @@
         "scope",
         "availability",
         "roadmap",
-        "2026-08-08 22:24:35",
+        "2026-08-12 08:20:20",
         "2026",
         "08",
-        "22",
-        "24",
-        "35",
+        "12",
+        "20",
         "d-20260808-222435-e0d29a"
       ],
-      "search_text": "docs viewer external scope availability docs viewer external scope availability roadmap 2026-08-08 22:24:35 2026 08 22 24 35 d-20260808-222435-e0d29a"
+      "search_text": "docs viewer external scope availability docs viewer external scope availability roadmap 2026-08-12 08:20:20 2026 08 12 20 d-20260808-222435-e0d29a"
     },
     {
       "id": "d-20260808-222436-4f7c81",
       "kind": "doc",
       "title": "ESA-1 — Graceful Per-Scope Availability Delivery",
       "href": "/docs/?scope=studio&doc=d-20260808-222436-4f7c81",
-      "last_updated": "2026-08-08 22:24:36",
+      "last_updated": "2026-08-12 08:20:20",
       "parent_id": "d-20260808-222435-e0d29a",
       "parent_title": "Docs Viewer External Scope Availability",
-      "display_meta": "2026-08-08 22:24:36 • Docs Viewer External Scope Availability",
+      "display_meta": "2026-08-12 08:20:20 • Docs Viewer External Scope Availability",
       "search_terms": [
         "esa-1 — graceful per-scope availability delivery",
         "esa",
@@ -4076,15 +4075,14 @@
         "docs",
         "viewer",
         "external",
-        "2026-08-08 22:24:36",
+        "2026-08-12 08:20:20",
         "2026",
         "08",
-        "22",
-        "24",
-        "36",
+        "12",
+        "20",
         "d-20260808-222436-4f7c81"
       ],
-      "search_text": "esa-1 — graceful per-scope availability delivery esa 1 graceful per scope availability delivery docs viewer external scope availability docs viewer external 2026-08-08 22:24:36 2026 08 22 24 36 d-20260808-222436-4f7c81"
+      "search_text": "esa-1 — graceful per-scope availability delivery esa 1 graceful per scope availability delivery docs viewer external scope availability docs viewer external 2026-08-12 08:20:20 2026 08 12 20 d-20260808-222436-4f7c81"
     },
     {
       "id": "d-20260808-225257-c06ae2",
