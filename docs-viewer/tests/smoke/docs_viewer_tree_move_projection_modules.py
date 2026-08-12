@@ -39,9 +39,15 @@ def assert_model_and_dom_projection(page: Page) -> None:
             const stateModule = await import('/site/docs-viewer/runtime/js/shared/docs-viewer-document-index-state.js');
             const sidebarModule = await import('/site/docs-viewer/runtime/js/shared/docs-viewer-sidebar.js');
             const projectionModule = await import('/site/docs-viewer/runtime/js/shared/docs-viewer-tree-move-projection.js');
+            const treeAdapter = await import('/site/docs-viewer/runtime/js/shared/docs-viewer-tree-payload-adapter.js');
 
             const oldParent = { doc_id: 'old-parent', title: 'Old parent', parent_id: '' };
-            const moving = { doc_id: 'moving', title: 'Middle', parent_id: 'old-parent' };
+            const moving = {
+                doc_id: 'moving',
+                title: 'Middle',
+                parent_id: 'old-parent',
+                report_id: 'docs_subscope'
+            };
             const movingChild = { doc_id: 'moving-child', title: 'Moving child', parent_id: 'moving' };
             const target = { doc_id: 'target', title: 'Target', parent_id: '' };
             const alpha = { doc_id: 'alpha', title: 'Alpha', parent_id: 'target' };
@@ -99,6 +105,9 @@ def assert_model_and_dom_projection(page: Page) -> None:
             });
             const projection = projectionOwner.project({ doc_id: 'moving', parent_id: 'target' });
             const movedItemAfter = nav.querySelector('[data-doc-row-id="moving"]').closest('li');
+            const movedLinkAfter = movedItemAfter.querySelector('.docsViewer__navLink');
+            const reportIcon = movedLinkAfter.querySelector('.docsViewer__navReportIcon');
+            const reportLabel = movedLinkAfter.querySelector('.visually-hidden');
             const targetList = targetItemBefore.querySelector(':scope > .docsViewer__navList--child');
             const targetOrder = Array.from(targetList.children).map((item) => {
                 return item.querySelector(':scope > [data-doc-row-id]').dataset.docRowId;
@@ -117,6 +126,13 @@ def assert_model_and_dom_projection(page: Page) -> None:
             } catch (error) {
                 reconciliationError = error.message;
             }
+            const adaptedDocs = treeAdapter.normalizeDocsIndexTreePayload({
+                schema: 'docs_index_tree_v1',
+                docs: [
+                    { doc_id: 'report', title: 'Report', content_url: '/report.json', report_id: 'docs_subscope' },
+                    { doc_id: 'ordinary', title: 'Ordinary', content_url: '/ordinary.json' }
+                ]
+            }).docs;
 
             return {
                 affectsMovedChild: projectionModule.treeMoveAffectsDoc(state.docsById, 'moving', 'moving-child'),
@@ -134,7 +150,11 @@ def assert_model_and_dom_projection(page: Page) -> None:
                 unrelatedExpanded: state.expandedDocIds.has('other'),
                 metaDocIds,
                 infoUpdateCount,
-                reconciliationError
+                reconciliationError,
+                reportIcon: reportIcon && reportIcon.textContent,
+                reportIconHidden: reportIcon && reportIcon.getAttribute('aria-hidden'),
+                reportLabel: reportLabel && reportLabel.textContent,
+                adaptedReportIds: adaptedDocs.map((doc) => doc.report_id || '')
             };
         }"""
     )
@@ -163,6 +183,12 @@ def assert_model_and_dom_projection(page: Page) -> None:
         raise AssertionError(f"displayed descendant ancestry was not re-projected: {result!r}")
     if "exactly one current child collection" not in result["reconciliationError"]:
         raise AssertionError(f"stale model did not fail reconciliation explicitly: {result!r}")
+    if result["reportIcon"] != "≡" or result["reportIconHidden"] != "true":
+        raise AssertionError(f"sub-scope report icon is not decorative and exact: {result!r}")
+    if result["reportLabel"] != "Sub-scope report: ":
+        raise AssertionError(f"sub-scope report marker lacks an accessible label: {result!r}")
+    if result["adaptedReportIds"] != ["docs_subscope", ""]:
+        raise AssertionError(f"index-tree report identity was not preserved exactly: {result!r}")
 
 
 def assert_action_workflow_projection_and_recovery(page: Page) -> None:

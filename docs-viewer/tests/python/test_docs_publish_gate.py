@@ -101,6 +101,7 @@ def prepare_publish_repo(root: Path) -> None:
                     "doc_id": LIBRARY_DOC_ID,
                     "title": "Library",
                     "content_url": f"/assets/data/docs/scopes/library/by-id/{LIBRARY_DOC_ID}.json",
+                    "report_id": "docs_subscope",
                     "children": [
                         {
                             "doc_id": "hidden",
@@ -314,6 +315,7 @@ def test_publish_confirm_applies_explicit_exclusions_and_retains_unrelated_files
         )
 
         assert public_tree["docs"][0]["doc_id"] == LIBRARY_DOC_ID
+        assert public_tree["docs"][0]["report_id"] == "docs_subscope"
         assert "children" not in public_tree["docs"][0]
         assert recent["docs"][0]["doc_id"] == LIBRARY_DOC_ID
         assert public_doc["content_html"] == (

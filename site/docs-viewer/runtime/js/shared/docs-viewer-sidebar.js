@@ -113,6 +113,17 @@ export function initDocsViewerSidebarRenderer(context) {
         draftIcon.textContent = nonPublishableEmoji;
         link.appendChild(draftIcon);
       }
+      if (doc.report_id === "docs_subscope") {
+        var reportIcon = document.createElement("span");
+        reportIcon.className = "docsViewer__navReportIcon";
+        reportIcon.setAttribute("aria-hidden", "true");
+        reportIcon.textContent = "≡";
+        link.appendChild(reportIcon);
+        var reportLabel = document.createElement("span");
+        reportLabel.className = "visually-hidden";
+        reportLabel.textContent = "Sub-scope report: ";
+        link.appendChild(reportLabel);
+      }
       link.appendChild(document.createTextNode(doc.title));
       row.appendChild(link);
       var selectionGutter = typeof context.renderIndexSelectionGutter === "function"

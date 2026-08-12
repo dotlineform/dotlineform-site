@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-04d692249016e2b6d3277ea8b3fa19d7",
-    "generated_at_utc": "2026-08-12T20:45:39Z",
+    "version": "blake2b-e51317f50629c2d25b601d2a36d7a494",
+    "generated_at_utc": "2026-08-12T21:24:00Z",
     "count": 242
   },
   "entries": [
@@ -2597,26 +2597,26 @@
       "kind": "doc",
       "title": "Generated Data Contracts",
       "href": "/docs/?scope=studio&doc=d-20260605-125108-c68916",
-      "last_updated": "2026-08-09 13:25:06",
+      "last_updated": "2026-08-12 22:23:53",
       "parent_id": "d-20260331-000000-c313fd",
       "parent_title": "Runtime",
-      "display_meta": "2026-08-09 13:25:06 • Runtime",
+      "display_meta": "2026-08-12 22:23:53 • Runtime",
       "search_terms": [
         "generated data contracts",
         "generated",
         "data",
         "contracts",
         "runtime",
-        "2026-08-09 13:25:06",
+        "2026-08-12 22:23:53",
         "2026",
         "08",
-        "09",
-        "13",
-        "25",
-        "06",
+        "12",
+        "22",
+        "23",
+        "53",
         "d-20260605-125108-c68916"
       ],
-      "search_text": "generated data contracts generated data contracts runtime 2026-08-09 13:25:06 2026 08 09 13 25 06 d-20260605-125108-c68916"
+      "search_text": "generated data contracts generated data contracts runtime 2026-08-12 22:23:53 2026 08 12 22 23 53 d-20260605-125108-c68916"
     },
     {
       "id": "d-20260605-125108-1d1ef3",

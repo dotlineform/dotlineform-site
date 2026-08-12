@@ -457,6 +457,13 @@ body.docs-viewer-service{
   line-height: 1;
 }
 
+.docsViewer__navReportIcon{
+  display: inline-block;
+  margin-right: 0.35rem;
+  color: var(--docs-viewer-muted);
+  line-height: 1;
+}
+
 .docsViewer__main{
   grid-column: 1 / -1;
   grid-row: 2;

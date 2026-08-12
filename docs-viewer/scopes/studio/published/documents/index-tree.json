@@ -236,13 +236,15 @@
           "doc_id": "d-20260507-123607-fd7cff",
           "title": "Analysis Documents",
           "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260507-123607-fd7cff.json",
-          "ui_status": "report"
+          "ui_status": "report",
+          "report_id": "docs_index_table"
         },
         {
           "doc_id": "d-20260423-165116-e7f7e9",
           "title": "Broken Links",
           "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260423-165116-e7f7e9.json",
-          "ui_status": "report"
+          "ui_status": "report",
+          "report_id": "docs_broken_links"
         },
         {
           "doc_id": "d-20260423-165116-c83a81",
@@ -532,6 +534,7 @@
           "doc_id": "d-20260513-105343-6de36b",
           "title": "Reports",
           "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260513-105343-6de36b.json",
+          "report_id": "reports_list",
           "children": [
             {
               "doc_id": "d-20260810-173738-703ecd",
@@ -598,13 +601,15 @@
           "doc_id": "d-20260726-181045-a7c2e1",
           "title": "Semantic Tokens Report",
           "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260726-181045-a7c2e1.json",
-          "ui_status": "report"
+          "ui_status": "report",
+          "report_id": "semantic_tokens"
         },
         {
           "doc_id": "d-20260514-123140-83239c",
           "title": "Source Config Report",
           "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260514-123140-83239c.json",
-          "ui_status": "report"
+          "ui_status": "report",
+          "report_id": "source_config"
         },
         {
           "doc_id": "d-20260423-000000-8fd731",
@@ -625,7 +630,8 @@
               "doc_id": "d-20260731-185207-2dbb6f",
               "title": "Sub-Scope Default Report",
               "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260731-185207-2dbb6f.json",
-              "ui_status": "report"
+              "ui_status": "report",
+              "report_id": "docs_subscope"
             },
             {
               "doc_id": "d-20260728-113139-763354",
@@ -1358,5 +1364,5 @@
       ]
     }
   ],
-  "generated_at": "2026-08-12T20:45:39Z"
+  "generated_at": "2026-08-12T21:23:12Z"
 }

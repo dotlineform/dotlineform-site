@@ -241,4 +241,5 @@ sub_scope: tags
     )
     report_row = index_tree["docs"][1]["children"][2]
     assert report_row["doc_id"] == REPORT_DOC_ID
+    assert report_row["report_id"] == "docs_subscope"
     assert "report" not in report_row

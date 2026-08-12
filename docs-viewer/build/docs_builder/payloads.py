@@ -90,6 +90,8 @@ class PayloadBuilderMixin:
             entry["publishable"] = False
         if doc.ui_status:
             entry["ui_status"] = doc.ui_status
+        if doc.report is not None:
+            entry["report_id"] = doc.report.id
         return entry
 
     def index_tree_payload(self, docs: list[DocRecord], viewer_options: dict[str, Any]) -> dict[str, Any]:
