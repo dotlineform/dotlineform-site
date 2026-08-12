@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-c9a91fce0a28c40be18df42ed9fa6a0d",
-    "generated_at_utc": "2026-08-12T11:01:03Z",
+    "version": "blake2b-c64093be726903ad3c7690303cb67ba4",
+    "generated_at_utc": "2026-08-12T12:13:01Z",
     "count": 240
   },
   "entries": [
@@ -4137,25 +4137,23 @@
       "kind": "doc",
       "title": "Media Sources",
       "href": "/docs/?scope=studio&doc=d-20260812-102047-a3c9e7",
-      "last_updated": "2026-08-12 11:50:34",
+      "last_updated": "2026-08-12 13:12:12",
       "parent_id": "d-20260428-000000-f5ff18",
       "parent_title": "Roadmap",
-      "display_meta": "2026-08-12 11:50:34 • Roadmap",
+      "display_meta": "2026-08-12 13:12:12 • Roadmap",
       "search_terms": [
         "media sources",
         "media",
         "sources",
         "roadmap",
-        "2026-08-12 11:50:34",
+        "2026-08-12 13:12:12",
         "2026",
         "08",
         "12",
-        "11",
-        "50",
-        "34",
+        "13",
         "d-20260812-102047-a3c9e7"
       ],
-      "search_text": "media sources media sources roadmap 2026-08-12 11:50:34 2026 08 12 11 50 34 d-20260812-102047-a3c9e7"
+      "search_text": "media sources media sources roadmap 2026-08-12 13:12:12 2026 08 12 13 d-20260812-102047-a3c9e7"
     },
     {
       "id": "d-20260723-191039-f8cb88",
