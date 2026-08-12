@@ -52,6 +52,13 @@ const REPORT_LOADERS = {
       });
     }
   },
+  docs_media: {
+    load: function () {
+      return import("./docs-media-report.js").then(function (module) {
+        return module.mountDocsMediaReport;
+      });
+    }
+  },
   works: {
     load: function () {
       return import("./works-report.js").then(function (module) {

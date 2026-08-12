@@ -29,6 +29,7 @@ import docs_management_document_target  # noqa: E402
 import docs_management_publishable  # noqa: E402
 import docs_import_source_service as import_source_service  # noqa: E402
 import docs_local_links  # noqa: E402
+import docs_media_report  # noqa: E402
 import docs_management_mutations as mutations  # noqa: E402
 import docs_management_routes as routes  # noqa: E402
 import docs_publish_gate  # noqa: E402
@@ -138,6 +139,20 @@ def docs_management_post_response(
         payload["dry_run"] = dry_run
         payload["summary_text"] = "Project State refreshed."
         return HTTPStatus.OK, payload
+    if path == routes.DOCS_MEDIA_REPORT_PATH:
+        if set(body) != {"scope"}:
+            raise ValueError("Docs Media request must contain only scope")
+        scope = source_model.normalize_scope(body.get("scope"))
+        report = docs_media_report.build_docs_media_report(
+            repo_root,
+            source_model.DOCS_SCOPE_CONFIGS[scope],
+        )
+        return HTTPStatus.OK, {
+            "ok": True,
+            "dry_run": dry_run,
+            "summary_text": "Docs Media refreshed.",
+            "report": report,
+        }
     if path == routes.UNCATALOGED_FILES_PATH:
         if body:
             raise ValueError("Uncataloged Files request must be empty")

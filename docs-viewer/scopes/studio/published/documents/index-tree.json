@@ -943,18 +943,19 @@
           "doc_id": "d-20260720-100017-9855dd",
           "title": "Scope Media Management",
           "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260720-100017-9855dd.json",
+          "ui_status": "done",
           "children": [
             {
               "doc_id": "d-20260720-100017-e094d8",
               "title": "Docs Media Report Concept",
               "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260720-100017-e094d8.json",
-              "ui_status": "proposed"
+              "ui_status": "done"
             },
             {
               "doc_id": "d-20260720-100017-7e52de",
               "title": "Docs Media Report Delivery",
               "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260720-100017-7e52de.json",
-              "ui_status": "in-progress"
+              "ui_status": "done"
             }
           ]
         },
@@ -1363,5 +1364,5 @@
       ]
     }
   ],
-  "generated_at": "2026-08-12T20:05:03Z"
+  "generated_at": "2026-08-12T20:40:18Z"
 }

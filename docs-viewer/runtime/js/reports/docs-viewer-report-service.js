@@ -87,6 +87,15 @@ export function createDocsViewerReportService(options) {
         requireOkEnvelope: true
       }));
     },
+    runDocsMedia: function (request) {
+      return fetchReportJson("/docs/media-report", Object.assign({}, serviceOptions, {
+        method: "POST",
+        payload: {
+          scope: cleanString(request && request.scope).toLowerCase()
+        },
+        requireOkEnvelope: true
+      }));
+    },
     runUncatalogedFiles: function () {
       return fetchReportJson("/docs/uncataloged-files", Object.assign({}, serviceOptions, {
         method: "POST",

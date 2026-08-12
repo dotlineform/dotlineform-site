@@ -76,6 +76,14 @@
       "presets": []
     },
     {
+      "report_id": "docs_media",
+      "title": "Docs Media",
+      "description": "Lists each live ready-media and build-source file with its exact referencing documents.",
+      "default_access": "local",
+      "loader_id": "docs_media",
+      "presets": []
+    },
+    {
       "report_id": "works",
       "title": "Works",
       "description": "Shows documentation coverage for every published Series.",

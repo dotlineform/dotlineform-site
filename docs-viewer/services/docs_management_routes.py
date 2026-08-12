@@ -25,6 +25,7 @@ OPEN_LOCAL_TARGET_PATH = "/docs/open-local-target"
 VALIDATE_LOCAL_TARGET_PATH = "/docs/validate-local-target"
 BROKEN_LINKS_PATH = "/docs/broken-links"
 PROJECT_STATE_PATH = "/docs/project-state"
+DOCS_MEDIA_REPORT_PATH = "/docs/media-report"
 UNCATALOGED_FILES_PATH = "/docs/uncataloged-files"
 MISSING_SOURCE_FILES_PATH = "/docs/missing-source-files"
 IMPORT_SOURCE_PATH = "/docs/import-source"
@@ -83,6 +84,7 @@ POST_PATHS = (
     VALIDATE_LOCAL_TARGET_PATH,
     BROKEN_LINKS_PATH,
     PROJECT_STATE_PATH,
+    DOCS_MEDIA_REPORT_PATH,
     UNCATALOGED_FILES_PATH,
     MISSING_SOURCE_FILES_PATH,
     SOURCE_CONFIG_SETTINGS_PATH,
