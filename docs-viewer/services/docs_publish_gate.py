@@ -619,6 +619,18 @@ def sub_scope_docs_diff(
     }
 
 
+def changed_document_payload_count(*diffs: dict[str, Any]) -> int:
+    """Count changed public by-ID payloads without counting derived indexes."""
+
+    return sum(
+        1
+        for diff in diffs
+        for value in diff.get("changed", [])
+        for path in [Path(str(value))]
+        if path.parent.name == "by-id" and path.suffix == ".json"
+    )
+
+
 def prospective_public_media_references(
     repo_root: Path,
     config: DocsScopeConfig,
@@ -770,6 +782,7 @@ def publish_status(repo_root: Path, body: dict[str, Any]) -> dict[str, Any]:
         + len(document_locations["excluded"])
         + sum(item["excluded_count"] for item in sub_scopes)
     )
+    document_publish_count = changed_document_payload_count(docs, *sub_scopes)
     try:
         media_references = prospective_public_media_references(
             repo_root,
@@ -794,6 +807,7 @@ def publish_status(repo_root: Path, body: dict[str, Any]) -> dict[str, Any]:
         "scope": scope,
         "changed_count": changed,
         "excluded_count": excluded,
+        "document_publish_count": document_publish_count,
         "document_changed_count": document_changed,
         "document_excluded_count": document_excluded,
         "up_to_date": changed == 0 and excluded == 0,

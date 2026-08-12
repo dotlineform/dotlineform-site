@@ -263,23 +263,35 @@ export function firstRemainingRootDocId(docs, deletedDocIds, resolveLoadableDocI
 }
 
 export function docsViewerPublishConfirmBody(preview) {
-  var changed = Number(preview && preview.document_changed_count || 0);
+  var documentCount = Number(preview && preview.document_publish_count || 0);
   var excluded = Number(preview && preview.document_excluded_count || 0);
   var media = preview && preview.media ? preview.media : {};
   var paths = preview && preview.paths ? preview.paths : {};
-  return [
+  var mediaErrorCount = Number(media.error_count || 0);
+  var lines = [
     "Publish reviewed documents and their referenced media for this public route?",
     "",
-    "Document/search files changed: " + changed,
+    "Documents to publish: " + documentCount,
     "Document files removed by current Publish exclusions: " + excluded,
     "Media copied or replaced: " + Number(media.copy_count || 0),
     "Stale public media removed: " + Number(media.remove_count || 0),
-    "Referenced managed media missing: " + Number(media.missing_count || 0),
-    "Media planning errors: " + Number(media.error_count || 0),
+    "Referenced managed media missing: " + Number(media.missing_count || 0)
+  ];
+  if (mediaErrorCount > 0) {
+    lines.push("Media issues (documents still publish): " + mediaErrorCount);
+    if (Array.isArray(media.errors)) {
+      media.errors.forEach(function (error) {
+        var detail = String(error || "").trim();
+        if (detail) lines.push("- " + detail);
+      });
+    }
+  }
+  lines.push(
     "",
     "From: " + String(paths.working_docs_root || ""),
     "To: " + String(paths.published_docs_root || "")
-  ].join("\n");
+  );
+  return lines.join("\n");
 }
 
 export function docsViewerPublishHasChanges(preview) {

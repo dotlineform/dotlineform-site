@@ -286,6 +286,8 @@ def test_publish_confirm_applies_explicit_exclusions_and_retains_unrelated_files
         assert preview["operation"] == "confirm"
         assert preview["schema_version"] == "docs_publish_gate_v3"
         assert preview["changed_count"] >= 3
+        assert preview["document_publish_count"] == 2
+        assert preview["document_changed_count"] > preview["document_publish_count"]
         assert preview["docs"]["excluded"] == [
             "site/assets/data/docs/scopes/library/by-id/hidden.json",
             "site/assets/data/docs/scopes/library/by-id/hidden-child.json",
