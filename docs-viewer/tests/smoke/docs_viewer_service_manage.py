@@ -1190,7 +1190,15 @@ def assert_delete_uses_first_remaining_root(page: Page) -> None:
                 publishBody: module.docsViewerPublishConfirmBody({
                     changed_count: 0,
                     excluded_count: 2,
+                    document_changed_count: 0,
+                    document_excluded_count: 2,
                     removed_count: 99,
+                    media: {
+                        copy_count: 3,
+                        remove_count: 4,
+                        missing_count: 5,
+                        error_count: 1
+                    },
                     paths: {
                         working_docs_root: '/working',
                         published_docs_root: '/public'
@@ -1226,9 +1234,13 @@ def assert_delete_uses_first_remaining_root(page: Page) -> None:
         ),
         "localCompletionMessage": "",
         "publishBody": (
-            "Copy reviewed working docs to the site assets for this public route?\n\n"
-            "Changed files: 0\n"
-            "Files removed by current Publish exclusions: 2\n\n"
+            "Publish reviewed documents and their referenced media for this public route?\n\n"
+            "Document/search files changed: 0\n"
+            "Document files removed by current Publish exclusions: 2\n"
+            "Media copied or replaced: 3\n"
+            "Stale public media removed: 4\n"
+            "Referenced managed media missing: 5\n"
+            "Media planning errors: 1\n\n"
             "From: /working\n"
             "To: /public"
         ),

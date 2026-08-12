@@ -4,9 +4,11 @@
 from __future__ import annotations
 
 import json
+import os
 import sys
 import tempfile
 from pathlib import Path
+from types import SimpleNamespace
 
 import pytest
 
@@ -19,6 +21,7 @@ if str(DOCS_SERVICES_DIR) not in sys.path:
     sys.path.insert(0, str(DOCS_SERVICES_DIR))
 
 import docs_publish_gate  # noqa: E402
+import docs_public_media_reconciliation  # noqa: E402
 from catalogue import catalogue_document_url_refresh  # noqa: E402
 
 
@@ -26,6 +29,32 @@ LIBRARY_DOC_ID = "d-20260330-172255-8399b7"
 LINEAGE_SOURCE_ID = "d-20260801-100000-aaaaaa"
 LINEAGE_EDITORIAL_ID = "d-20260802-110000-bbbbbb"
 LINEAGE_REPORT_HOST_ID = "d-20260807-082735-54d9d5"
+
+
+class FakeR2Client:
+    def __init__(self, objects: dict[str, bytes] | None = None) -> None:
+        self.objects = dict(objects or {})
+
+    def list_objects(self, prefix: str):
+        return [
+            SimpleNamespace(key=key, size=len(data), etag=f"etag-{len(data)}")
+            for key, data in sorted(self.objects.items())
+            if key.startswith(prefix)
+        ]
+
+    def get_object(self, key: str) -> bytes:
+        return self.objects[key]
+
+    def head_object(self, key: str):
+        data = self.objects.get(key)
+        return None if data is None else SimpleNamespace(size=len(data), etag=f"etag-{len(data)}")
+
+    def put_object(self, key: str, path: Path, content_type: str) -> None:
+        del content_type
+        self.objects[key] = path.read_bytes()
+
+    def delete_object(self, key: str) -> None:
+        self.objects.pop(key, None)
 
 
 def write_json(path: Path, payload: dict[str, object]) -> None:
@@ -255,7 +284,7 @@ def test_publish_confirm_applies_explicit_exclusions_and_retains_unrelated_files
         applied = docs_publish_gate.publish_apply(repo_root, {"scope": "library", "confirm": True})
 
         assert preview["operation"] == "confirm"
-        assert preview["schema_version"] == "docs_publish_gate_v2"
+        assert preview["schema_version"] == "docs_publish_gate_v3"
         assert preview["changed_count"] >= 3
         assert preview["docs"]["excluded"] == [
             "site/assets/data/docs/scopes/library/by-id/hidden.json",
@@ -322,6 +351,80 @@ def test_publish_confirm_applies_explicit_exclusions_and_retains_unrelated_files
         assert not (
             repo_root / "site/assets/data/search/library/document-locations.json"
         ).exists()
+
+
+def test_one_publish_action_reconciles_repository_and_r2_media_without_blocking_missing(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    with tempfile.TemporaryDirectory() as temp_path:
+        repo_root = Path(temp_path)
+        prepare_publish_repo(repo_root)
+        config_path = repo_root / "docs-viewer/config/scopes/docs_scopes.json"
+        config = json.loads(config_path.read_text(encoding="utf-8"))
+        public_files = config["scopes"][1]["public_projection"]["media"]["files"]
+        public_files["location"] = {
+            "provider": "r2",
+            "path": "docs/library/files",
+        }
+        public_files["served_path_prefix"] = "https://media.example.test/docs/library/files"
+        write_json(config_path, config)
+        working_doc_path = (
+            repo_root
+            / f"docs-viewer/scopes/library/published/documents/by-id/{LIBRARY_DOC_ID}.json"
+        )
+        working_doc = json.loads(working_doc_path.read_text(encoding="utf-8"))
+        working_doc["content_html"] = working_doc["content_html"].replace(
+            "</p>",
+            '<a href="/docs/media/library/files/download.pdf">Download</a></p>',
+        )
+        write_json(working_doc_path, working_doc)
+        managed_root = (
+            Path(os.environ["DOTLINEFORM_PROJECTS_BASE_DIR"])
+            / "docs-viewer/media/library"
+        )
+        (managed_root / "img").mkdir(parents=True, exist_ok=True)
+        (managed_root / "files").mkdir(parents=True, exist_ok=True)
+        (managed_root / "img/diagram.png").write_bytes(b"managed image")
+        (managed_root / "files/download.pdf").write_bytes(b"managed pdf")
+        public_img = repo_root / "site/assets/data/docs/scopes/library/media/img"
+        (public_img / "stale.png").write_bytes(b"stale")
+        client = FakeR2Client(
+            {
+                "docs/library/files/": b"",
+                "docs/library/files/stale.pdf": b"stale",
+            }
+        )
+        monkeypatch.setattr(
+            docs_public_media_reconciliation,
+            "authenticated_remote_client_for_locations",
+            lambda *_args, **_kwargs: client,
+        )
+
+        preview = docs_publish_gate.publish_confirm(repo_root, {"scope": "library"})
+        applied = docs_publish_gate.publish_apply(
+            repo_root,
+            {"scope": "library", "confirm": True},
+        )
+
+        assert preview["media"]["copy_count"] == 2
+        assert preview["media"]["remove_count"] == 2
+        assert preview["media"]["retained_count"] == 1
+        assert preview["media"]["missing_count"] == 1
+        assert preview["media"]["error_count"] == 0
+        assert applied["applied"] is True
+        assert applied["media"]["copied_count"] == 2
+        assert applied["media"]["removed_count"] == 2
+        assert applied["media"]["retained_count"] == 1
+        assert applied["media"]["missing_count"] == 0
+        assert applied["media"]["error_count"] == 0
+        assert (public_img / "diagram.png").read_bytes() == b"managed image"
+        assert not (public_img / "stale.png").exists()
+        assert (
+            repo_root / "site/assets/data/docs/scopes/library/media/html/widget.html"
+        ).is_file()
+        assert client.objects["docs/library/files/download.pdf"] == b"managed pdf"
+        assert "docs/library/files/stale.pdf" not in client.objects
+        assert "docs/library/files/" in client.objects
 
 
 def test_publish_follow_through_adds_reassigns_and_removes_exact_catalogue_urls() -> None:
@@ -428,6 +531,38 @@ def test_publish_remains_applied_when_catalogue_follow_through_fails(
             / f"site/assets/data/docs/scopes/library/by-id/{LIBRARY_DOC_ID}.json"
         ).is_file()
         assert work_path.read_bytes() == work_before
+
+
+def test_document_publish_remains_applied_when_media_reconciliation_fails(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    with tempfile.TemporaryDirectory() as temp_path:
+        repo_root = Path(temp_path)
+        prepare_publish_repo(repo_root)
+
+        def fail_media(*_args: object, **_kwargs: object) -> object:
+            raise OSError("simulated media reconciliation failure")
+
+        monkeypatch.setattr(
+            docs_publish_gate,
+            "apply_public_media_reconciliation",
+            fail_media,
+        )
+
+        applied = docs_publish_gate.publish_apply(
+            repo_root,
+            {"scope": "library", "confirm": True},
+        )
+
+        assert applied["applied"] is True
+        assert applied["media"]["error_count"] == 1
+        assert applied["media"]["errors"] == [
+            "simulated media reconciliation failure"
+        ]
+        assert (
+            repo_root
+            / f"site/assets/data/docs/scopes/library/by-id/{LIBRARY_DOC_ID}.json"
+        ).is_file()
 
 
 def test_publish_confirm_and_apply_include_configured_sub_scope_payloads() -> None:
@@ -546,6 +681,28 @@ def test_public_projection_keeps_public_reports_and_strips_local_reports() -> No
     assert docs_publish_gate.project_public_report_payload(local_payload) is True
     assert "report" not in local_payload
     assert "data-docs-viewer-report-host" not in local_payload["content_html"]
+
+
+def test_public_media_url_projection_handles_quoted_and_unquoted_exact_attributes() -> None:
+    projected = docs_publish_gate.project_public_media_urls(
+        (
+            '<img src="/docs/media/library/img/quoted.png">'
+            "<a href=/docs/media/library/files/unquoted.pdf>Download</a>"
+            '<span data-src="/docs/media/library/img/ignored.png">'
+            'src="/docs/media/library/img/prose.png"</span>'
+        ),
+        {
+            "/docs/media/library/img": "/public/img",
+            "/docs/media/library/files": "https://media.example.test/files",
+        },
+    )
+
+    assert projected == (
+        '<img src="/public/img/quoted.png">'
+        "<a href=https://media.example.test/files/unquoted.pdf>Download</a>"
+        '<span data-src="/docs/media/library/img/ignored.png">'
+        'src="/docs/media/library/img/prose.png"</span>'
+    )
 
 
 def test_successful_publish_sets_retains_and_clears_lineage_publication(

@@ -7,15 +7,39 @@
       "doc_id": "d-20260812-153836-5ec0bb",
       "title": "EMW-1 — External Media Workspace And Public Projection Delivery",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260812-153836-5ec0bb.json",
-      "timestamp": "2026-08-12 18:03:13",
+      "timestamp": "2026-08-12 18:20:47",
       "parent_id": "d-20260812-153836-b38d98",
       "parent_title": "External Media Workspace"
+    },
+    {
+      "doc_id": "d-20260812-164353-9e3115",
+      "title": "EMW-1.0 Inventory And Implementation-Fit Record",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260812-164353-9e3115.json",
+      "timestamp": "2026-08-12 18:20:47",
+      "parent_id": "d-20260812-153836-b38d98",
+      "parent_title": "External Media Workspace"
+    },
+    {
+      "doc_id": "d-20260812-153836-b38d98",
+      "title": "External Media Workspace",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260812-153836-b38d98.json",
+      "timestamp": "2026-08-12 18:20:47",
+      "parent_id": "d-20260428-000000-f5ff18",
+      "parent_title": "Roadmap"
     },
     {
       "doc_id": "d-20260514-184303-7914e2",
       "title": "Media And Asset Handling",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260514-184303-7914e2.json",
-      "timestamp": "2026-08-12 17:59:17",
+      "timestamp": "2026-08-12 18:20:47",
+      "parent_id": "d-20260424-000000-50b63f",
+      "parent_title": "Docs Viewer"
+    },
+    {
+      "doc_id": "d-20260331-000000-f992b9",
+      "title": "Public Scopes",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260331-000000-f992b9.json",
+      "timestamp": "2026-08-12 18:20:47",
       "parent_id": "d-20260424-000000-50b63f",
       "parent_title": "Docs Viewer"
     },
@@ -23,7 +47,7 @@
       "doc_id": "d-20260423-000000-8fd731",
       "title": "Source Organisation",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260423-000000-8fd731.json",
-      "timestamp": "2026-08-12 17:57:54",
+      "timestamp": "2026-08-12 18:20:47",
       "parent_id": "d-20260424-000000-50b63f",
       "parent_title": "Docs Viewer"
     },
@@ -58,31 +82,7 @@
       "timestamp": "2026-08-12 17:51:20",
       "parent_id": "d-20260718-114645-7b9d24",
       "parent_title": "Docs Viewer Core Refactor"
-    },
-    {
-      "doc_id": "d-20260719-123719-fb7565",
-      "title": "Document Diagrams",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260719-123719-fb7565.json",
-      "timestamp": "2026-08-12 17:51:20",
-      "parent_id": "d-20260424-000000-50b63f",
-      "parent_title": "Docs Viewer"
-    },
-    {
-      "doc_id": "d-20260812-164353-9e3115",
-      "title": "EMW-1.0 Inventory And Implementation-Fit Record",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260812-164353-9e3115.json",
-      "timestamp": "2026-08-12 17:51:20",
-      "parent_id": "d-20260812-153836-b38d98",
-      "parent_title": "External Media Workspace"
-    },
-    {
-      "doc_id": "d-20260812-153836-b38d98",
-      "title": "External Media Workspace",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260812-153836-b38d98.json",
-      "timestamp": "2026-08-12 17:51:20",
-      "parent_id": "d-20260428-000000-f5ff18",
-      "parent_title": "Roadmap"
     }
   ],
-  "generated_at": "2026-08-12T17:03:14Z"
+  "generated_at": "2026-08-12T17:22:08Z"
 }

@@ -263,14 +263,19 @@ export function firstRemainingRootDocId(docs, deletedDocIds, resolveLoadableDocI
 }
 
 export function docsViewerPublishConfirmBody(preview) {
-  var changed = Number(preview && preview.changed_count || 0);
-  var excluded = Number(preview && preview.excluded_count || 0);
+  var changed = Number(preview && preview.document_changed_count || 0);
+  var excluded = Number(preview && preview.document_excluded_count || 0);
+  var media = preview && preview.media ? preview.media : {};
   var paths = preview && preview.paths ? preview.paths : {};
   return [
-    "Copy reviewed working docs to the site assets for this public route?",
+    "Publish reviewed documents and their referenced media for this public route?",
     "",
-    "Changed files: " + changed,
-    "Files removed by current Publish exclusions: " + excluded,
+    "Document/search files changed: " + changed,
+    "Document files removed by current Publish exclusions: " + excluded,
+    "Media copied or replaced: " + Number(media.copy_count || 0),
+    "Stale public media removed: " + Number(media.remove_count || 0),
+    "Referenced managed media missing: " + Number(media.missing_count || 0),
+    "Media planning errors: " + Number(media.error_count || 0),
     "",
     "From: " + String(paths.working_docs_root || ""),
     "To: " + String(paths.published_docs_root || "")

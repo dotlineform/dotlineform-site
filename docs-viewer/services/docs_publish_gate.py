@@ -32,6 +32,12 @@ from docs_public_mermaid_payload import (
     public_mermaid_payload_requires_projection,
     public_mermaid_variant_files,
 )
+from docs_public_media_reconciliation import (
+    apply_public_media_reconciliation,
+    failed_public_media_reconciliation,
+    plan_public_media_reconciliation,
+    referenced_public_media,
+)
 from docs_document_location_projection import (
     SUPPORTED_DOCUMENT_LOCATION_SCOPE_IDS,
     build_document_location_payload,
@@ -42,7 +48,7 @@ from docs_write_rebuild import rebuild_sub_scope_outputs
 from docs_report_source import REPORT_HOST_HTML
 
 
-PUBLISH_SCHEMA_VERSION = "docs_publish_gate_v2"
+PUBLISH_SCHEMA_VERSION = "docs_publish_gate_v3"
 MANAGE_MANIFEST_PATH = Path("manage-manifest.json")
 LOCAL_FOLDER_ANCHOR_PATTERN = re.compile(r"<a\b(?P<attrs>(?:[^>\"']|\"[^\"]*\"|'[^']*')*)>(?P<label>.*?)</a\s*>", re.IGNORECASE | re.DOTALL)
 HTML_START_TAG_PATTERN = re.compile(
@@ -50,7 +56,8 @@ HTML_START_TAG_PATTERN = re.compile(
     re.DOTALL,
 )
 MEDIA_URL_ATTRIBUTE_PATTERN = re.compile(
-    r"(?P<prefix>(?<![\w:-])(?:src|href)\s*=\s*)(?P<quote>[\"'])(?P<value>.*?)(?P=quote)",
+    r"(?P<prefix>(?<![\w:-])(?:src|href)\s*=\s*)"
+    r"(?:(?P<quote>[\"'])(?P<quoted_value>.*?)(?P=quote)|(?P<unquoted_value>[^\s\"'=<>`]+))",
     re.IGNORECASE,
 )
 
@@ -272,7 +279,8 @@ def project_public_media_urls(content_html: str, projection: dict[str, str]) -> 
     """Project exact managed ``src`` and ``href`` URLs without rewriting prose."""
 
     def replace_attribute(match: re.Match[str]) -> str:
-        value = match.group("value")
+        quote = match.group("quote") or ""
+        value = match.group("quoted_value") if quote else match.group("unquoted_value")
         projected = value
         for managed_prefix, public_prefix in projection.items():
             if value == managed_prefix:
@@ -282,7 +290,7 @@ def project_public_media_urls(content_html: str, projection: dict[str, str]) -> 
                 identity = value.removeprefix(f"{managed_prefix}/")
                 projected = f"{public_prefix}/{identity}"
                 break
-        return f"{match.group('prefix')}{match.group('quote')}{projected}{match.group('quote')}"
+        return f"{match.group('prefix')}{quote}{projected}{quote}"
 
     def replace_tag(match: re.Match[str]) -> str:
         body = MEDIA_URL_ATTRIBUTE_PATTERN.sub(replace_attribute, match.group("body"))
@@ -611,6 +619,39 @@ def sub_scope_docs_diff(
     }
 
 
+def prospective_public_media_references(
+    repo_root: Path,
+    config: DocsScopeConfig,
+    paths: dict[str, Path],
+    sub_scope_paths: dict[str, dict[str, Path]],
+) -> dict[tuple[str, str], tuple[str, ...]]:
+    collections: list[tuple[str, dict[Path, bytes]]] = [
+        (
+            config.scope_id,
+            publishable_parent_docs_files(
+                repo_root,
+                config,
+                paths["working_docs_root"],
+                paths["published_docs_root"].relative_to(repo_root.resolve()),
+            ),
+        )
+    ]
+    for sub_scope in config.sub_scopes:
+        sub_paths = sub_scope_paths[sub_scope.sub_scope]
+        collections.append(
+            (
+                f"{config.scope_id}/{sub_scope.sub_scope}",
+                publishable_docs_files(
+                    sub_paths["working_docs_root"],
+                    sub_paths["published_docs_root"].relative_to(repo_root.resolve()),
+                    projection_scope=f"{config.scope_id}/{sub_scope.sub_scope}",
+                    media_url_projection=public_media_url_projection(config),
+                ),
+            )
+        )
+    return referenced_public_media(config, collections)
+
+
 def search_diff(repo_root: Path, working_index: Path, published_index: Path) -> dict[str, list[str]]:
     if not published_index.exists() or not filecmp.cmp(working_index, published_index, shallow=False):
         return {"changed": [repo_relative(repo_root, published_index)], "excluded": []}
@@ -717,18 +758,34 @@ def publish_status(repo_root: Path, body: dict[str, Any]) -> dict[str, Any]:
             sub_scope_paths,
         ),
     )
-    changed = (
+    document_changed = (
         len(docs["changed"])
         + len(search["changed"])
         + len(document_locations["changed"])
         + sum(item["changed_count"] for item in sub_scopes)
     )
-    excluded = (
+    document_excluded = (
         len(docs["excluded"])
         + len(search["excluded"])
         + len(document_locations["excluded"])
         + sum(item["excluded_count"] for item in sub_scopes)
     )
+    try:
+        media_references = prospective_public_media_references(
+            repo_root,
+            config,
+            paths,
+            sub_scope_paths,
+        )
+        media = plan_public_media_reconciliation(
+            repo_root,
+            config,
+            media_references,
+        )
+    except Exception as exc:  # Media status must not block document publication.
+        media = failed_public_media_reconciliation(scope, "status", exc)
+    changed = document_changed + int(media.get("copy_count") or 0)
+    excluded = document_excluded + int(media.get("remove_count") or 0)
     return {
         "ok": True,
         "schema_version": PUBLISH_SCHEMA_VERSION,
@@ -737,22 +794,35 @@ def publish_status(repo_root: Path, body: dict[str, Any]) -> dict[str, Any]:
         "scope": scope,
         "changed_count": changed,
         "excluded_count": excluded,
+        "document_changed_count": document_changed,
+        "document_excluded_count": document_excluded,
         "up_to_date": changed == 0 and excluded == 0,
         "paths": {key: repo_relative(repo_root, value) for key, value in paths.items()},
         "docs": docs,
         "sub_scopes": sub_scopes,
         "search": search,
         "document_locations": document_locations,
-        "summary_text": f"Publish status for {scope}: {changed} changed, {excluded} excluded.",
+        "media": media,
+        "summary_text": (
+            f"Publish status for {scope}: {document_changed} document/search changed, "
+            f"{document_excluded} excluded; {media.get('copy_count', 0)} media to copy, "
+            f"{media.get('remove_count', 0)} stale media to remove, "
+            f"{media.get('missing_count', 0)} managed media missing, "
+            f"{media.get('error_count', 0)} media errors."
+        ),
     }
 
 
 def publish_confirm(repo_root: Path, body: dict[str, Any]) -> dict[str, Any]:
     payload = publish_status(repo_root, body)
     payload["operation"] = "confirm"
+    payload["media"]["operation"] = "confirm"
     payload["summary_text"] = (
         f"Publish confirmation for {payload['scope']}: "
-        f"{payload['changed_count']} changed, {payload['excluded_count']} excluded."
+        f"{payload['document_changed_count']} document/search changed, "
+        f"{payload['document_excluded_count']} excluded; "
+        f"{payload['media'].get('copy_count', 0)} media to copy, "
+        f"{payload['media'].get('remove_count', 0)} stale media to remove."
     )
     return payload
 
@@ -909,16 +979,26 @@ def publish_apply(repo_root: Path, body: dict[str, Any]) -> dict[str, Any]:
         paths,
         sub_scope_paths,
     )
+    parent_publishable_files = publishable_parent_docs_files(
+        repo_root,
+        config,
+        paths["working_docs_root"],
+        paths["published_docs_root"].relative_to(repo_root.resolve()),
+    )
+    sub_scope_publishable_files: dict[str, dict[Path, bytes]] = {}
+    for sub_scope in config.sub_scopes:
+        sub_paths = sub_scope_paths[sub_scope.sub_scope]
+        sub_scope_publishable_files[sub_scope.sub_scope] = publishable_docs_files(
+            sub_paths["working_docs_root"],
+            sub_paths["published_docs_root"].relative_to(repo_root.resolve()),
+            projection_scope=f"{config.scope_id}/{sub_scope.sub_scope}",
+            media_url_projection=public_media_url_projection(config),
+        )
     copy_tree(
         repo_root,
         paths["working_docs_root"],
         paths["published_docs_root"],
-        publishable_files=publishable_parent_docs_files(
-            repo_root,
-            config,
-            paths["working_docs_root"],
-            paths["published_docs_root"].relative_to(repo_root.resolve()),
-        ),
+        publishable_files=parent_publishable_files,
         excluded_relative_paths=parent_explicit_exclusion_relative_paths(
             paths["working_docs_root"],
             paths["published_docs_root"],
@@ -930,12 +1010,7 @@ def publish_apply(repo_root: Path, body: dict[str, Any]) -> dict[str, Any]:
             repo_root,
             sub_paths["working_docs_root"],
             sub_paths["published_docs_root"],
-            publishable_files=publishable_docs_files(
-                sub_paths["working_docs_root"],
-                sub_paths["published_docs_root"].relative_to(repo_root.resolve()),
-                projection_scope=f"{config.scope_id}/{sub_scope.sub_scope}",
-                media_url_projection=public_media_url_projection(config),
-            ),
+            publishable_files=sub_scope_publishable_files[sub_scope.sub_scope],
             excluded_relative_paths=sub_scope_explicit_exclusion_relative_paths(
                 sub_paths["working_docs_root"],
                 sub_paths["published_docs_root"],
@@ -945,12 +1020,39 @@ def publish_apply(repo_root: Path, body: dict[str, Any]) -> dict[str, Any]:
     if document_location_projection is not None:
         output_path, output_bytes = document_location_projection
         write_bytes_atomic(output_path, output_bytes)
+    try:
+        media_references = referenced_public_media(
+            config,
+            [
+                (config.scope_id, parent_publishable_files),
+                *[
+                    (
+                        f"{config.scope_id}/{sub_scope.sub_scope}",
+                        sub_scope_publishable_files[sub_scope.sub_scope],
+                    )
+                    for sub_scope in config.sub_scopes
+                ],
+            ],
+        )
+        media = apply_public_media_reconciliation(
+            repo_root,
+            config,
+            media_references,
+        )
+    except Exception as exc:  # Documents remain published when media reconciliation fails.
+        media = failed_public_media_reconciliation(config.scope_id, "apply", exc)
     reconcile_document_publication_lineage(repo_root, config, sub_scope_paths)
     payload["operation"] = "apply"
     payload["applied"] = True
+    payload["media"] = media
     payload["summary_text"] = (
         f"Published docs for {payload['scope']}: "
-        f"{payload['changed_count']} changed, {payload['excluded_count']} excluded."
+        f"{payload['document_changed_count']} document/search changed, "
+        f"{payload['document_excluded_count']} excluded. "
+        f"Media: {media.get('copied_count', 0)} copied, "
+        f"{media.get('removed_count', 0)} removed, "
+        f"{media.get('missing_count', 0)} missing, "
+        f"{media.get('error_count', 0)} errors."
     )
     try:
         catalogue_document_urls = catalogue_document_url_follow_through(repo_root)
