@@ -3,14 +3,29 @@
 from __future__ import annotations
 
 from collections.abc import Iterator
+import os
 from pathlib import Path
 import sys
+import tempfile
 
 import pytest
 
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 FIXTURES_DIR = Path(__file__).resolve().parent / "fixtures"
+PROJECTS_BASE_ENV = "DOTLINEFORM_PROJECTS_BASE_DIR"
+
+
+_ORIGINAL_PROJECTS_BASE = os.environ.get(PROJECTS_BASE_ENV)
+_COLLECTION_PROJECTS_WORKSPACE = tempfile.TemporaryDirectory(
+    prefix="docs-viewer-pytest-projects-"
+)
+_COLLECTION_PROJECTS_BASE = Path(_COLLECTION_PROJECTS_WORKSPACE.name)
+(_COLLECTION_PROJECTS_BASE / "data-sharing").mkdir()
+(_COLLECTION_PROJECTS_BASE / "docs-viewer/media").mkdir(parents=True)
+os.environ[PROJECTS_BASE_ENV] = str(_COLLECTION_PROJECTS_BASE)
+
+
 for path in (FIXTURES_DIR, REPO_ROOT):
     text = str(path)
     if text not in sys.path:
@@ -20,6 +35,16 @@ from studio.shared.python.studio_python_paths import ensure_studio_python_paths 
 
 
 ensure_studio_python_paths(__file__)
+
+
+def pytest_unconfigure() -> None:
+    """Restore the invoking environment after collection-safe test isolation."""
+
+    if _ORIGINAL_PROJECTS_BASE is None:
+        os.environ.pop(PROJECTS_BASE_ENV, None)
+    else:
+        os.environ[PROJECTS_BASE_ENV] = _ORIGINAL_PROJECTS_BASE
+    _COLLECTION_PROJECTS_WORKSPACE.cleanup()
 
 
 @pytest.fixture(autouse=True)

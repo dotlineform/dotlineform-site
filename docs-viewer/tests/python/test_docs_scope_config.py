@@ -4,8 +4,12 @@
 from __future__ import annotations
 
 import json
+import os
 from dataclasses import replace
 from pathlib import Path
+import subprocess
+import sys
+import tempfile
 from unittest.mock import patch
 
 import pytest
@@ -28,6 +32,46 @@ def write_scope_record(repo_root: Path, record: dict[str, object]) -> None:
         repo_root / "docs-viewer/config/scopes/docs_scopes.json",
         {"schema_version": "docs_scopes_v4", "media_workspace": MEDIA_WORKSPACE, "scopes": [record]},
     )
+
+
+def test_docs_viewer_pytest_collection_ignores_unavailable_external_workspace(tmp_path: Path) -> None:
+    tests_root = REPO_ROOT / "docs-viewer/tests"
+    hostile_projects_base = tmp_path / "unavailable-projects"
+    environment = dict(os.environ)
+    environment["DOTLINEFORM_PROJECTS_BASE_DIR"] = str(hostile_projects_base)
+    environment["HOSTILE_PROJECTS_BASE"] = str(hostile_projects_base)
+
+    with tempfile.TemporaryDirectory(prefix=".collection-bootstrap-", dir=tests_root) as temp_path_text:
+        probe_path = Path(temp_path_text) / "test_collection_probe.py"
+        probe_path.write_text(
+            """from pathlib import Path
+import os
+
+from docs_scope_config import DOCS_SCOPE_CONFIGS
+
+
+collection_projects_base = Path(os.environ["DOTLINEFORM_PROJECTS_BASE_DIR"])
+assert collection_projects_base != Path(os.environ["HOSTILE_PROJECTS_BASE"])
+assert (collection_projects_base / "docs-viewer").is_dir()
+assert list(DOCS_SCOPE_CONFIGS)
+
+
+def test_collection_completed_with_isolated_projects_base() -> None:
+    pass
+""",
+            encoding="utf-8",
+        )
+        completed = subprocess.run(
+            [sys.executable, "-m", "pytest", "-q", str(probe_path)],
+            cwd=REPO_ROOT,
+            env=environment,
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+
+    assert completed.returncode == 0, completed.stdout + completed.stderr
+    assert "1 passed" in completed.stdout
 
 
 def test_docs_scope_config_normalizes_optional_media_source_root() -> None:

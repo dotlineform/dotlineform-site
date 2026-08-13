@@ -4,6 +4,14 @@
   "limit": 10,
   "docs": [
     {
+      "doc_id": "d-20260514-135716-c70591",
+      "title": "Pytest",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260514-135716-c70591.json",
+      "timestamp": "2026-08-13 15:58:44",
+      "parent_id": "d-20260501-174746-efd581",
+      "parent_title": "Testing"
+    },
+    {
       "doc_id": "d-20260813-114338-95ca80",
       "title": "SDM-2 — Documents Linking Here Report",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260813-114338-95ca80.json",
@@ -74,15 +82,7 @@
       "timestamp": "2026-08-13 12:01:22",
       "parent_id": "d-20260602-234732-8a5aae",
       "parent_title": "Studio Domain Config"
-    },
-    {
-      "doc_id": "d-20260519-202931-b05d27",
-      "title": "Catalogue Indexes And Payloads",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260519-202931-b05d27.json",
-      "timestamp": "2026-08-13 12:01:22",
-      "parent_id": "d-20260401-000000-a11bf3",
-      "parent_title": "Catalogue Architecture"
     }
   ],
-  "generated_at": "2026-08-13T14:35:10Z"
+  "generated_at": "2026-08-13T14:58:53Z"
 }
