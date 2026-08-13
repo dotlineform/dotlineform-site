@@ -37,10 +37,28 @@ def load_docs_broken_links_module():
 
 
 docs_broken_links = load_docs_broken_links_module()
+import docs_rendered_links  # noqa: E402
+
+
 FIXTURE_SCOPE_OUTPUT_DIRS = {
     scope: Path("docs-viewer/scopes") / scope / "published/documents"
     for scope in docs_broken_links.SCOPE_OUTPUT_DIRS
 }
+
+
+def test_broken_links_reuses_the_pure_rendered_link_owner() -> None:
+    assert docs_broken_links.collect_anchors is docs_rendered_links.collect_anchors
+    assert docs_broken_links.resolve_href is docs_rendered_links.resolve_href
+    assert docs_broken_links.parse_docs_target is docs_rendered_links.parse_docs_target
+    assert docs_broken_links.is_same_doc_fragment_link is (
+        docs_rendered_links.is_same_doc_fragment_link
+    )
+    assert docs_rendered_links.collect_anchors(
+        '<a href="/docs/?scope=studio&doc=live">Live</a>'
+        '<pre><code><a href="/docs/?scope=studio&doc=code">Code</a></code></pre>'
+    ) == [
+        {"href": "/docs/?scope=studio&doc=live", "text": "Live"}
+    ]
 
 
 def write_json(path: Path, payload: dict[str, object]) -> None:

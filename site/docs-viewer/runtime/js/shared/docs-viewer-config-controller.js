@@ -169,6 +169,7 @@ export function initDocsViewerConfigController(context) {
       defaultDocId: String(rawScope.default_doc_id || "").trim(),
       indexTreeUrl: String(rawScope.index_tree_url || "").trim(),
       recentUrl: String(rawScope.recent_url || "").trim(),
+      backlinksUrl: String(rawScope.backlinks_url || "").trim(),
       searchIndexUrl: String(rawScope.search_index_url || "").trim(),
       subScopes: subScopes,
       subScopesById: new Map(subScopes.map(function (config) {

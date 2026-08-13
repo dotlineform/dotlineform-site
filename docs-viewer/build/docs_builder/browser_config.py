@@ -52,6 +52,19 @@ def browser_docs_recent_url(config: DocsScopeConfig, *, published: bool = False)
     return f"{browser_path_for_repo_relative(output)}/recent.json"
 
 
+def browser_docs_backlinks_url(
+    config: DocsScopeConfig,
+    *,
+    published: bool = False,
+) -> str:
+    if published or scope_uses_external_data(config):
+        return ""
+    return (
+        f"{browser_path_for_repo_relative(published_documents_path(config))}"
+        "/backlinks.json"
+    )
+
+
 def browser_search_index_url(config: DocsScopeConfig, *, published: bool = False) -> str:
     if scope_uses_external_data(config):
         return f"/docs/search?scope={quote(config.scope_id)}"
@@ -158,6 +171,9 @@ def browser_scope_record(
         "search": browser_search_policy_payload(config, published=published),
     }
     sub_scopes = browser_sub_scope_records(config, published=published)
+    backlinks_url = browser_docs_backlinks_url(config, published=published)
+    if backlinks_url:
+        record["backlinks_url"] = backlinks_url
     if sub_scopes:
         record["sub_scopes"] = sub_scopes
     return record

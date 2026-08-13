@@ -10,15 +10,20 @@ from __future__ import annotations
 
 import argparse
 import json
-import re
 import sys
 from dataclasses import dataclass
-from html.parser import HTMLParser
 from pathlib import Path
 from typing import Any
-from urllib.parse import parse_qs, quote, urljoin, urlparse
+from urllib.parse import quote
 
 from docs_scope_config import DOCS_SCOPE_CONFIGS, published_documents_path
+from docs_rendered_links import (
+    collect_anchors,
+    is_same_doc_fragment_link,
+    normalize_text,
+    parse_docs_target,
+    resolve_href,
+)
 
 
 BUILD_DIR = Path(__file__).resolve().parents[1] / "build"
@@ -36,8 +41,10 @@ from docs_source_model import load_scope_docs_for_config  # noqa: E402
 
 
 SCOPE_OUTPUT_DIRS = {scope: published_documents_path(config) for scope, config in DOCS_SCOPE_CONFIGS.items()}
-TEMP_BASE_URL = "https://dotlineform.local"
-WHITESPACE_PATTERN = re.compile(r"\s+")
+VIEWER_ROUTES = tuple(
+    (scope, config.viewer_base_url)
+    for scope, config in DOCS_SCOPE_CONFIGS.items()
+)
 
 
 @dataclass(frozen=True)
@@ -54,58 +61,11 @@ class DocPayload:
     content_html: str
 
 
-class AnchorCollector(HTMLParser):
-    def __init__(self) -> None:
-        super().__init__(convert_charrefs=True)
-        self.anchors: list[dict[str, str]] = []
-        self._current_href: str | None = None
-        self._current_parts: list[str] = []
-        self._code_depth = 0
-
-    def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
-        normalized_tag = tag.lower()
-        if normalized_tag in {"code", "pre"}:
-            self._code_depth += 1
-        if normalized_tag != "a" or self._code_depth > 0:
-            return
-        href = ""
-        for key, value in attrs:
-            if key.lower() == "href":
-                href = str(value or "").strip()
-                break
-        self._current_href = href
-        self._current_parts = []
-
-    def handle_endtag(self, tag: str) -> None:
-        normalized_tag = tag.lower()
-        if normalized_tag in {"code", "pre"}:
-            self._code_depth = max(0, self._code_depth - 1)
-        if normalized_tag != "a" or self._current_href is None:
-            return
-        self.anchors.append(
-            {
-                "href": self._current_href,
-                "text": normalize_text("".join(self._current_parts)),
-            }
-        )
-        self._current_href = None
-        self._current_parts = []
-
-    def handle_data(self, data: str) -> None:
-        if self._current_href is None:
-            return
-        self._current_parts.append(data)
-
-
 def normalize_scope(scope: Any) -> str:
     value = str(scope or "").strip().lower()
     if value not in SCOPE_OUTPUT_DIRS:
         raise ValueError(f"scope must be one of: {', '.join(sorted(SCOPE_OUTPUT_DIRS))}")
     return value
-
-
-def normalize_text(value: Any) -> str:
-    return WHITESPACE_PATTERN.sub(" ", str(value or "")).strip()
 
 
 def viewer_url_for(scope: str, doc_id: str) -> str:
@@ -194,76 +154,6 @@ def load_doc_payload(repo_root: Path, meta: DocMeta) -> DocPayload:
     )
 
 
-def collect_anchors(html_text: str) -> list[dict[str, str]]:
-    parser = AnchorCollector()
-    parser.feed(html_text)
-    parser.close()
-    return parser.anchors
-
-
-def resolve_href(href: str, from_page_url: str) -> str:
-    raw = normalize_text(href)
-    if not raw:
-        return ""
-    absolute = urljoin(f"{TEMP_BASE_URL}{from_page_url}", raw)
-    parsed = urlparse(absolute)
-    if parsed.netloc != urlparse(TEMP_BASE_URL).netloc:
-        return absolute
-    path = parsed.path or "/"
-    if parsed.query:
-        path = f"{path}?{parsed.query}"
-    if parsed.fragment:
-        path = f"{path}#{parsed.fragment}"
-    return path
-
-
-def parse_docs_target(resolved_href: str) -> dict[str, str] | None:
-    raw = normalize_text(resolved_href)
-    if not raw or raw.startswith("#"):
-        return None
-
-    parsed = urlparse(raw)
-    if parsed.scheme and parsed.scheme not in {"http", "https"}:
-        return None
-    if parsed.scheme in {"http", "https"} and parsed.netloc != urlparse(TEMP_BASE_URL).netloc:
-        return None
-
-    path = parsed.path or ""
-    query = parse_qs(parsed.query)
-    trimmed_path = path.rstrip("/")
-    fragment = normalize_text(parsed.fragment)
-
-    for scope, config in DOCS_SCOPE_CONFIGS.items():
-        viewer_path = config.viewer_base_url.rstrip("/")
-        if trimmed_path != viewer_path.rstrip("/"):
-            continue
-        doc_id = normalize_text(query.get("doc", [""])[0])
-        if not doc_id:
-            return None
-        explicit_scope = normalize_text(query.get("scope", [""])[0])
-        target_scope = explicit_scope if explicit_scope in DOCS_SCOPE_CONFIGS else scope
-        return {"kind": "viewer", "scope": target_scope, "doc_id": doc_id, "fragment": fragment}
-
-    if path.endswith(".md"):
-        return {"kind": "source_markdown", "path": path, "fragment": fragment}
-
-    return None
-
-
-def is_same_doc_fragment_link(current_doc: DocMeta, target: dict[str, str]) -> bool:
-    fragment = normalize_text(target.get("fragment"))
-    if not fragment:
-        return False
-
-    if target.get("kind") == "viewer":
-        return (
-            normalize_text(target.get("scope")) == current_doc.scope
-            and normalize_text(target.get("doc_id")) == current_doc.doc_id
-        )
-
-    return False
-
-
 def semantic_token_broken_entries(repo_root: Path, scope: str) -> list[dict[str, Any]]:
     registry = load_semantic_token_registry(repo_root)
     if registry is None:
@@ -342,10 +232,18 @@ def audit_docs_broken_links(repo_root: Path, scope: str) -> dict[str, Any]:
                 continue
 
             resolved_href = resolve_href(raw_href, doc.meta.viewer_url)
-            target = parse_docs_target(resolved_href)
+            target = parse_docs_target(
+                resolved_href,
+                viewer_routes=VIEWER_ROUTES,
+                known_scopes=set(DOCS_SCOPE_CONFIGS),
+            )
             if target is None:
                 continue
-            if is_same_doc_fragment_link(doc.meta, target):
+            if is_same_doc_fragment_link(
+                current_scope=doc.meta.scope,
+                current_doc_id=doc.meta.doc_id,
+                target=target,
+            ):
                 continue
 
             link_text = normalize_text(anchor.get("text")) or normalize_text(raw_href) or normalize_text(resolved_href)

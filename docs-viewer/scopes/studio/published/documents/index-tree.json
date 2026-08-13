@@ -173,7 +173,8 @@
         {
           "doc_id": "d-20260523-190651-7157ec",
           "title": "Development Checklist",
-          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260523-190651-7157ec.json"
+          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260523-190651-7157ec.json",
+          "report_id": "docs_backlinks"
         },
         {
           "doc_id": "d-20260523-000000-bf7161",
@@ -279,7 +280,8 @@
         {
           "doc_id": "d-20260419-000000-0516ab",
           "title": "Docs Data",
-          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260419-000000-0516ab.json"
+          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260419-000000-0516ab.json",
+          "report_id": "docs_backlinks"
         },
         {
           "doc_id": "d-20260423-155039-e36925",
@@ -533,7 +535,8 @@
         {
           "doc_id": "d-20260810-211748-1f8b6f",
           "title": "Report Block Tokens",
-          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260810-211748-1f8b6f.json"
+          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260810-211748-1f8b6f.json",
+          "report_id": "reports_list"
         },
         {
           "doc_id": "d-20260513-105343-6de36b",
@@ -1008,6 +1011,7 @@
           "title": "Studio Documentation Maintenance",
           "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260813-114338-c6b682.json",
           "ui_status": "in-progress",
+          "report_id": "docs_backlinks",
           "children": [
             {
               "doc_id": "d-20260813-114338-0e7cb9",
@@ -1019,7 +1023,7 @@
               "doc_id": "d-20260813-114338-95ca80",
               "title": "SDM-2 — Documents Linking Here Report",
               "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260813-114338-95ca80.json",
-              "ui_status": "planned"
+              "ui_status": "done"
             }
           ]
         },
@@ -1352,5 +1356,5 @@
       ]
     }
   ],
-  "generated_at": "2026-08-13T13:43:29Z"
+  "generated_at": "2026-08-13T14:32:32Z"
 }

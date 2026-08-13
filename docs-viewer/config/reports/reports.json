@@ -60,6 +60,14 @@
       "presets": []
     },
     {
+      "report_id": "docs_backlinks",
+      "title": "Documents Linking Here",
+      "description": "Lists current same-scope documents linking to the exact report host document.",
+      "default_access": "local",
+      "loader_id": "docs_backlinks",
+      "presets": []
+    },
+    {
       "report_id": "semantic_tokens",
       "title": "Semantic Tokens",
       "description": "Lists resolved semantic-token occurrences for a selected docs scope.",

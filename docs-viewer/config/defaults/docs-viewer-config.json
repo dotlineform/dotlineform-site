@@ -37,6 +37,7 @@
           "delete"
         ]
       },
+      "backlinks_url": "/docs-viewer/scopes/studio/published/documents/backlinks.json",
       "sub_scopes": [
         {
           "sub_scope": "default",

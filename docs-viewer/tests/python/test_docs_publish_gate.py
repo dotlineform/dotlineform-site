@@ -176,6 +176,14 @@ def prepare_publish_repo(root: Path) -> None:
         },
     )
     write_json(
+        root / "docs-viewer/scopes/library/published/documents/backlinks.json",
+        {
+            "schema": "docs_backlinks_v1",
+            "scope": "library",
+            "by_target": {LIBRARY_DOC_ID: []},
+        },
+    )
+    write_json(
         root / "docs-viewer/scopes/library/published/search/index.json",
         {
             "header": {
@@ -342,6 +350,9 @@ def test_publish_confirm_applies_explicit_exclusions_and_retains_unrelated_files
         assert (repo_root / "site/assets/data/docs/scopes/library/by-id/manage-root.json").is_file()
         assert (repo_root / "site/assets/data/docs/scopes/library/references").is_dir()
         assert (repo_root / "site/assets/data/docs/scopes/library/semantic-tokens").is_dir()
+        assert not (
+            repo_root / "site/assets/data/docs/scopes/library/backlinks.json"
+        ).exists()
         assert json.loads(
             (
                 repo_root

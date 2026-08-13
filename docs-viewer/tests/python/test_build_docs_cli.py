@@ -169,6 +169,9 @@ def test_python_docs_builder_writes_browser_configs_on_cli_write() -> None:
     assert browser_config["scopes"][0]["scope_id"] == "studio"
     assert browser_config["scopes"][0]["index_tree_url"] == "/docs-viewer/scopes/studio/published/documents/index-tree.json"
     assert browser_config["scopes"][0]["recent_url"] == "/docs-viewer/scopes/studio/published/documents/recent.json"
+    assert browser_config["scopes"][0]["backlinks_url"] == (
+        "/docs-viewer/scopes/studio/published/documents/backlinks.json"
+    )
     assert browser_config["docs_viewer"] == {"recent_limit": 10}
     assert public_config["scopes"] == []
     assert site_public_config == public_config

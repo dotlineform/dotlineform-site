@@ -38,6 +38,13 @@ const REPORT_LOADERS = {
       });
     }
   },
+  docs_backlinks: {
+    load: function () {
+      return import("./docs-backlinks-report.js").then(function (module) {
+        return module.mountDocsBacklinksReport;
+      });
+    }
+  },
   semantic_tokens: {
     load: function () {
       return import("./semantic-tokens-report.js").then(function (module) {

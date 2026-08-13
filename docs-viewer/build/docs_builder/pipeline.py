@@ -3,6 +3,7 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any
 
+from .backlinks import BacklinksMixin
 from .common import (
     DocsScopeConfig,
     document_source_path,
@@ -33,6 +34,7 @@ class DocsDataBuilder(
     SemanticTokensMixin,
     SemanticTokenArtifactsMixin,
     WritePlanMixin,
+    BacklinksMixin,
 ):
     def __init__(
         self,
@@ -141,12 +143,14 @@ class DocsDataBuilder(
             else None
         )
         semantic_token_payloads = self.build_semantic_token_payloads(docs, semantic_tokens_by_doc)
+        backlinks_payload = self.backlinks_payload(docs, item_payloads)
         write_plan = self.build_write_plan(
             index_tree_payload,
             recent_payload,
             publication_recent_payload,
             item_payloads,
             semantic_token_payloads,
+            backlinks_payload=backlinks_payload,
             target_doc_ids=target_doc_ids if self.targeted_build else None,
         )
         diagnostics = self.diagnostics_payload(
@@ -180,6 +184,7 @@ class DocsDataBuilder(
             "publication_recent_payload": publication_recent_payload,
             "item_payloads": item_payloads,
             "semantic_token_payloads": semantic_token_payloads,
+            "backlinks_payload": backlinks_payload,
             "write_plan": write_plan,
             "diagnostics": diagnostics,
             "media_builds": media_builds,

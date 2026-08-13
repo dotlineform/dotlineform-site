@@ -182,12 +182,16 @@ def test_python_docs_builder_public_generated_payloads_include_manage_rows() -> 
     assert hidden_payload["title"] == "Hidden"
     assert manage_browser_config["scopes"][0]["index_tree_url"] == "/docs-viewer/scopes/library/published/documents/index-tree.json"
     assert manage_browser_config["scopes"][0]["recent_url"] == "/docs-viewer/scopes/library/published/documents/recent.json"
+    assert manage_browser_config["scopes"][0]["backlinks_url"] == (
+        "/docs-viewer/scopes/library/published/documents/backlinks.json"
+    )
     assert manage_browser_config["scopes"][0]["scope_type"] == "public"
     assert manage_browser_config["scopes"][0]["media"]["img"]["served_path_prefix"] == (
         "/docs/media/library/img"
     )
     assert public_browser_config["scopes"][0]["index_tree_url"] == "/assets/data/docs/scopes/library/index-tree.json"
     assert public_browser_config["scopes"][0]["recent_url"] == "/assets/data/docs/scopes/library/recent.json"
+    assert "backlinks_url" not in public_browser_config["scopes"][0]
     assert public_browser_config["scopes"][0]["search"]["index_url"] == "/assets/data/search/library/index.json"
     assert public_browser_config["scopes"][0]["scope_type"] == "public"
     assert public_browser_config["scopes"][0]["media"]["img"]["served_path_prefix"] == (

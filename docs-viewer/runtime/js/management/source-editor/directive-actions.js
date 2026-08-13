@@ -6,6 +6,12 @@ export const DIRECTIVE_ACTIONS = Object.freeze([
     id: "table-detail",
     label: "Table detail",
     source: "<!-- dotlineform:table-detail -->"
+  }),
+  Object.freeze({
+    emoji: "↩",
+    id: "docs-backlinks",
+    label: "Documents linking here",
+    source: ":::report\nid: docs_backlinks\naccess: local\n:::"
   })
 ]);
 
@@ -36,6 +42,7 @@ function validCapturedRange(source, snapshot, capture) {
 }
 
 function trailingNewlines(source, insertionPoint) {
+  if (/^\n+$/.test(source.slice(insertionPoint))) return "";
   if (insertionPoint === source.length) return "\n";
   var count = 0;
   while (count < 2 && source.charAt(insertionPoint + count) === "\n") count += 1;

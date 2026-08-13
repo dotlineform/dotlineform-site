@@ -25,6 +25,9 @@ def test_python_docs_builder_writes_docs_payloads_and_semantic_token_usage() -> 
         index_tree = read_json(root / "docs-viewer/scopes/studio/published/documents/index-tree.json")
         recent = read_json(root / "docs-viewer/scopes/studio/published/documents/recent.json")
         child = read_json(root / f"docs-viewer/scopes/studio/published/documents/by-id/{CHILD_DOC_ID}.json")
+        backlinks = read_json(
+            root / "docs-viewer/scopes/studio/published/documents/backlinks.json"
+        )
         semantic_tokens_dir = (
             root / "docs-viewer/scopes/studio/published/documents/semantic-tokens"
         )
@@ -97,6 +100,94 @@ def test_python_docs_builder_writes_docs_payloads_and_semantic_token_usage() -> 
     assert result["diagnostics"]["docs_emitted"] == 2
     assert result["diagnostics"]["index_tree_changed"] == 1
     assert result["diagnostics"]["recent_changed"] == 1
+    assert result["diagnostics"]["backlinks_changed"] == 1
+    assert backlinks["schema"] == "docs_backlinks_v1"
+    assert backlinks["scope"] == "studio"
+    assert backlinks["by_target"][PARENT_DOC_ID] == [
+        {
+            "doc_id": CHILD_DOC_ID,
+            "title": "Child",
+            "viewer_url": f"/docs/?scope=studio&doc={CHILD_DOC_ID}",
+        }
+    ]
+
+
+def test_python_docs_builder_backlinks_deduplicate_and_replace_targeted_contributions() -> None:
+    alternate_target_id = "d-20260601-000000-000008"
+    alpha_source_id = "d-20260601-000000-000009"
+    with tempfile.TemporaryDirectory() as temp_path:
+        root = Path(temp_path)
+        prepare_repo(root)
+        write_source_docs(
+            root,
+            child_body_suffix=f"""
+[Parent again](/docs/?scope=studio&doc={PARENT_DOC_ID})
+[Cross scope](/docs/?scope=library&doc={PARENT_DOC_ID})
+[External](https://example.com/docs/?scope=studio&doc={PARENT_DOC_ID})
+[Self fragment](/docs/?scope=studio&doc={CHILD_DOC_ID}#section)
+
+```html
+<a href="/docs/?scope=studio&doc={PARENT_DOC_ID}">Code link</a>
+```
+""",
+        )
+        write_text(
+            root / f"docs-viewer/scopes/studio/source/documents/{alternate_target_id}.md",
+            f"""---
+doc_id: {alternate_target_id}
+title: Retarget
+added_date: 2026-06-01
+last_updated: 2026-06-01 10:00:00
+---
+# Retarget
+""",
+        )
+        write_text(
+            root / f"docs-viewer/scopes/studio/source/documents/{alpha_source_id}.md",
+            f"""---
+doc_id: {alpha_source_id}
+title: Alpha Source
+added_date: 2026-06-01
+last_updated: 2026-06-01 10:00:00
+---
+# Alpha Source
+
+[Parent](/docs/?scope=studio&doc={PARENT_DOC_ID})
+""",
+        )
+        run_builder(root)
+        before = read_json(
+            root / "docs-viewer/scopes/studio/published/documents/backlinks.json"
+        )
+
+        child_source = (
+            root / f"docs-viewer/scopes/studio/source/documents/{CHILD_DOC_ID}.md"
+        )
+        write_text(
+            child_source,
+            child_source.read_text(encoding="utf-8").replace(
+                f"scope=studio&doc={PARENT_DOC_ID}",
+                f"scope=studio&doc={alternate_target_id}",
+            ),
+        )
+        result = run_builder(root, only_doc_ids=[CHILD_DOC_ID])
+        after = read_json(
+            root / "docs-viewer/scopes/studio/published/documents/backlinks.json"
+        )
+
+    assert [row["doc_id"] for row in before["by_target"][PARENT_DOC_ID]] == [
+        alpha_source_id,
+        CHILD_DOC_ID,
+    ]
+    assert [row["doc_id"] for row in after["by_target"][PARENT_DOC_ID]] == [
+        alpha_source_id
+    ]
+    assert [row["doc_id"] for row in after["by_target"][alternate_target_id]] == [
+        CHILD_DOC_ID
+    ]
+    assert CHILD_DOC_ID not in after["by_target"]
+    assert result["diagnostics"]["build_mode"] == "targeted"
+    assert result["diagnostics"]["backlinks_changed"] == 1
 
 def test_python_docs_builder_preserves_existing_payloads_for_targeted_builds() -> None:
     with tempfile.TemporaryDirectory() as temp_path:
@@ -113,6 +204,7 @@ def test_python_docs_builder_preserves_existing_payloads_for_targeted_builds() -
     assert "Updated targeted body." in child_after["content_html"]
     assert result["diagnostics"]["build_mode"] == "targeted"
     assert result["diagnostics"]["only_doc_ids"] == [CHILD_DOC_ID]
+    assert result["diagnostics"]["backlinks_changed"] == 0
     assert PARENT_DOC_ID not in result["write_plan"]["changed_item_ids"]
 
 def test_python_docs_builder_targeted_build_preserves_usage_from_scope_index() -> None:

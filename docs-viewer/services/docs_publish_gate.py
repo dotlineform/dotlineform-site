@@ -351,6 +351,8 @@ def publishable_docs_files(
         relative_path = source_path.relative_to(working_root)
         if relative_path == MANAGE_MANIFEST_PATH:
             continue
+        if relative_path == Path("backlinks.json"):
+            continue
         if relative_path.parts and relative_path.parts[0] == ".publish":
             continue
         if relative_path.parts and relative_path.parts[0] in {"references", "semantic-tokens"}:
