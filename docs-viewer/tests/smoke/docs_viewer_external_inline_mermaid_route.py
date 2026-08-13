@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Smoke-check inline Mermaid on an isolated external-local manage route."""
+"""Smoke-check external-local route loading and lazy Mermaid rendering."""
 
 from __future__ import annotations
 
@@ -14,8 +14,8 @@ from playwright.sync_api import Page, sync_playwright
 
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
-NOTES_DIAGRAM_DOC_ID = "d-20260724-131900-a1b2c3"
-NOTES_PLAIN_DOC_ID = "d-20260724-131901-d4e5f6"
+DIAGRAM_DOC_ID = "d-20260724-131900-a1b2c3"
+PLAIN_DOC_ID = "d-20260724-131901-d4e5f6"
 MERMAID_ASSET_PATH = "/docs-viewer/runtime/vendor/mermaid/11.16.0/mermaid.min.js"
 
 
@@ -32,43 +32,40 @@ parent_id: ""
 """
 
 
-def prepare_notes_scope(projects_base: Path) -> Path:
-    notes_root = projects_base / "docs-viewer/scopes/notes"
-    documents_root = notes_root / "source/documents"
+def prepare_external_scope(projects_base: Path) -> None:
+    documents_root = projects_base / "docs-viewer/scopes/notes/source/documents"
     documents_root.mkdir(parents=True, exist_ok=True)
-    (documents_root / f"{NOTES_PLAIN_DOC_ID}.md").write_text(
+    (projects_base / "docs-viewer/media").mkdir(parents=True, exist_ok=True)
+    (documents_root / f"{PLAIN_DOC_ID}.md").write_text(
         source_text(
-            doc_id=NOTES_PLAIN_DOC_ID,
+            doc_id=PLAIN_DOC_ID,
             title="External Notes Without Diagram",
             body="# External Notes Without Diagram\n\nThis document has no Mermaid fence.",
         ),
         encoding="utf-8",
     )
-    (documents_root / f"{NOTES_DIAGRAM_DOC_ID}.md").write_text(
+    (documents_root / f"{DIAGRAM_DOC_ID}.md").write_text(
         source_text(
-            doc_id=NOTES_DIAGRAM_DOC_ID,
+            doc_id=DIAGRAM_DOC_ID,
             title="External Notes Mermaid Proof",
             body="""# External Notes Mermaid Proof
-
-Before the diagram.
 
 ```mermaid
 flowchart LR
   Source --> Target
 ```
-
-After the diagram.
 """,
         ),
         encoding="utf-8",
     )
-    return notes_root
 
 
-def build_notes_scope() -> None:
-    build_root = REPO_ROOT / "docs-viewer/build"
-    services_root = REPO_ROOT / "docs-viewer/services"
-    for path in (REPO_ROOT, build_root, services_root):
+def build_external_scope() -> None:
+    for path in (
+        REPO_ROOT,
+        REPO_ROOT / "docs-viewer/build",
+        REPO_ROOT / "docs-viewer/services",
+    ):
         if str(path) not in sys.path:
             sys.path.insert(0, str(path))
 
@@ -79,152 +76,59 @@ def build_notes_scope() -> None:
     DocsDataBuilder(repo_root=REPO_ROOT, config=config).run(write=True)
 
 
-def assert_diagram_free_external_route(
+def assert_plain_route(
     page: Page,
     base_url: str,
     timeout_ms: int,
     mermaid_requests: list[str],
-    wait_for_manage_doc,
-    *,
-    expected_mermaid_requests: int,
+    wait_for_document,
 ) -> None:
     page.goto(
-        f"{base_url}/docs/?scope=notes&doc={NOTES_PLAIN_DOC_ID}",
+        f"{base_url}/docs/?scope=notes&doc={PLAIN_DOC_ID}",
         wait_until="domcontentloaded",
     )
-    wait_for_manage_doc(page, "External Notes Without Diagram", timeout_ms)
+    wait_for_document(page, "External Notes Without Diagram", timeout_ms)
+    if page.locator(".docsViewer__diagram[data-docs-viewer-diagram-kind='inline-mermaid']").count():
+        raise AssertionError("plain external-local document rendered an inline Mermaid host")
+    if mermaid_requests:
+        raise AssertionError(f"plain external-local document loaded Mermaid: {mermaid_requests!r}")
+
+
+def assert_mermaid_route(
+    page: Page,
+    base_url: str,
+    timeout_ms: int,
+    mermaid_requests: list[str],
+    wait_for_document,
+) -> None:
+    page.goto(
+        f"{base_url}/docs/?scope=notes&doc={DIAGRAM_DOC_ID}",
+        wait_until="domcontentloaded",
+    )
+    wait_for_document(page, "External Notes Mermaid Proof", timeout_ms)
+    page.wait_for_function(
+        """() => document.querySelector(
+            '.docsViewer__diagram[data-docs-viewer-diagram-kind="inline-mermaid"] > svg'
+        )""",
+        timeout=timeout_ms,
+    )
     state = page.locator("#docsViewerContent").evaluate(
         """content => ({
             diagrams: content.querySelectorAll(
                 '.docsViewer__diagram[data-docs-viewer-diagram-kind="inline-mermaid"]'
             ).length,
-            fences: content.querySelectorAll('pre > code.language-mermaid').length
+            errors: content.querySelectorAll('.docsViewer__diagramError').length,
+            fences: content.querySelectorAll('pre > code.language-mermaid').length,
+            svgs: content.querySelectorAll(
+                '.docsViewer__diagram[data-docs-viewer-diagram-kind="inline-mermaid"] > svg'
+            ).length
         })"""
     )
-    if state != {"diagrams": 0, "fences": 0}:
-        raise AssertionError(f"diagram-free external-local document changed: {state!r}")
-    if len(mermaid_requests) != expected_mermaid_requests:
-        raise AssertionError(
-            f"diagram-free external-local document loaded Mermaid: {mermaid_requests!r}"
-        )
-
-
-def assert_external_mermaid_route(
-    page: Page,
-    base_url: str,
-    timeout_ms: int,
-    mermaid_requests: list[str],
-    wait_for_manage_doc,
-) -> None:
-    page.goto(
-        f"{base_url}/docs/?scope=notes&doc={NOTES_DIAGRAM_DOC_ID}",
-        wait_until="domcontentloaded",
-    )
-    wait_for_manage_doc(page, "External Notes Mermaid Proof", timeout_ms)
-    page.wait_for_function(
-        """() => {
-            const content = document.querySelector('#docsViewerContent');
-            const host = content?.querySelector(
-                '.docsViewer__diagram[data-docs-viewer-diagram-kind="inline-mermaid"]'
-            );
-            return host?.querySelector(':scope > svg')
-                && host.closest('.docsViewer__diagramFrame')
-                    ?.querySelector('.docsViewer__diagramDetailControl');
-        }""",
-        timeout=timeout_ms,
-    )
-    state = page.locator("#docsViewerContent").evaluate(
-        """content => {
-            const host = content.querySelector(
-                '.docsViewer__diagram[data-docs-viewer-diagram-kind="inline-mermaid"]'
-            );
-            const svg = host?.querySelector(':scope > svg');
-            const frame = host?.closest('.docsViewer__diagramFrame');
-            const control = frame?.querySelector('.docsViewer__diagramDetailControl');
-            return {
-                diagrams: content.querySelectorAll(
-                    '.docsViewer__diagram[data-docs-viewer-diagram-kind="inline-mermaid"]'
-                ).length,
-                fences: content.querySelectorAll('pre > code.language-mermaid').length,
-                failures: content.querySelectorAll('.docsViewer__diagramError').length,
-                title: svg?.querySelector('title')?.textContent.trim() || '',
-                description: svg?.querySelector('desc')?.textContent.trim() || '',
-                frameKind: frame?.dataset.docsViewerDiagramFrame || '',
-                controlKind: control?.dataset.docsViewerDiagramDetailKind || '',
-                controlLabel: control?.getAttribute('aria-label') || '',
-                controlTag: control?.tagName || '',
-                controlTarget: control?.getAttribute('target') || '',
-                controlHref: control?.getAttribute('href') || ''
-            };
-        }"""
-    )
-    if (
-        state["diagrams"] != 1
-        or state["fences"] != 0
-        or state["failures"] != 0
-        or state["title"] != "Diagram 1 — External Notes Mermaid Proof"
-        or state["description"]
-        != (
-            "Inline Mermaid diagram 1 in External Notes Mermaid Proof. "
-            "No authored description was provided."
-        )
-        or state["frameKind"] != "inline-mermaid"
-        or state["controlKind"] != "inline-mermaid"
-        or state["controlLabel"] != "Open diagram"
-        or state["controlTag"] != "BUTTON"
-        or state["controlTarget"] != ""
-        or state["controlHref"] != ""
-    ):
-        raise AssertionError(
-            f"external-local Mermaid did not receive the managed reader contract: {state!r}"
-        )
+    if state != {"diagrams": 1, "errors": 0, "fences": 0, "svgs": 1}:
+        raise AssertionError(f"external-local Mermaid did not render: {state!r}")
     paths = [urlparse(url).path for url in mermaid_requests]
     if paths != [MERMAID_ASSET_PATH]:
-        raise AssertionError(
-            f"external-local Mermaid did not load exactly one checked asset: {paths!r}"
-        )
-
-
-def run_route_smoke(
-    page: Page,
-    base_url: str,
-    timeout_ms: int,
-    wait_for_manage_doc,
-) -> None:
-    mermaid_requests: list[str] = []
-    page.on(
-        "request",
-        lambda request: mermaid_requests.append(request.url)
-        if "/docs-viewer/runtime/vendor/mermaid/" in request.url
-        else None,
-    )
-    assert_diagram_free_external_route(
-        page,
-        base_url,
-        timeout_ms,
-        mermaid_requests,
-        wait_for_manage_doc,
-        expected_mermaid_requests=0,
-    )
-    assert_external_mermaid_route(
-        page,
-        base_url,
-        timeout_ms,
-        mermaid_requests,
-        wait_for_manage_doc,
-    )
-    assert_diagram_free_external_route(
-        page,
-        base_url,
-        timeout_ms,
-        mermaid_requests,
-        wait_for_manage_doc,
-        expected_mermaid_requests=1,
-    )
-    if [urlparse(url).path for url in mermaid_requests] != [MERMAID_ASSET_PATH]:
-        raise AssertionError(
-            f"external-local navigation did not reuse the Mermaid session: {mermaid_requests!r}"
-        )
+        raise AssertionError(f"external-local Mermaid asset requests changed: {paths!r}")
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -236,15 +140,15 @@ def main(argv: list[str] | None = None) -> int:
     with TemporaryDirectory(prefix="docs-viewer-external-mermaid-") as temporary_directory:
         projects_base = Path(temporary_directory) / "Projects"
         os.environ["DOTLINEFORM_PROJECTS_BASE_DIR"] = str(projects_base)
-        notes_root = prepare_notes_scope(projects_base)
+        prepare_external_scope(projects_base)
         try:
-            build_notes_scope()
-            from docs_viewer_service_manage import (  # noqa: PLC0415
-                start_server,
-                wait_for_manage_doc,
+            build_external_scope()
+            from docs_viewer_route_smoke_support import (  # noqa: PLC0415
+                start_docs_viewer_server,
+                wait_for_document,
             )
 
-            server, base_url = start_server()
+            server, base_url = start_docs_viewer_server()
             try:
                 with sync_playwright() as playwright:
                     browser = playwright.chromium.launch(headless=True)
@@ -252,38 +156,41 @@ def main(argv: list[str] | None = None) -> int:
                     try:
                         page = browser.new_page(viewport={"width": 1280, "height": 900})
                         page.on("pageerror", lambda error: errors.append(error.stack or str(error)))
-                        run_route_smoke(
+                        mermaid_requests: list[str] = []
+                        page.on(
+                            "request",
+                            lambda request: mermaid_requests.append(request.url)
+                            if "/docs-viewer/runtime/vendor/mermaid/" in request.url
+                            else None,
+                        )
+                        assert_plain_route(
                             page,
                             base_url,
                             args.timeout_ms,
-                            wait_for_manage_doc,
+                            mermaid_requests,
+                            wait_for_document,
+                        )
+                        assert_mermaid_route(
+                            page,
+                            base_url,
+                            args.timeout_ms,
+                            mermaid_requests,
+                            wait_for_document,
                         )
                     finally:
                         browser.close()
                 if errors:
-                    raise AssertionError(
-                        f"page errors during external-local inline Mermaid smoke: {errors!r}"
-                    )
+                    raise AssertionError(f"page errors during external-local route smoke: {errors!r}")
             finally:
                 server.shutdown()
                 server.server_close()
-
-            persistent_derivatives = [
-                path.relative_to(notes_root).as_posix()
-                for suffix in ("*.mmd", "*.svg")
-                for path in notes_root.rglob(suffix)
-            ]
-            if persistent_derivatives:
-                raise AssertionError(
-                    f"inline Mermaid created persistent media: {persistent_derivatives!r}"
-                )
         finally:
             if previous_projects_base is None:
                 os.environ.pop("DOTLINEFORM_PROJECTS_BASE_DIR", None)
             else:
                 os.environ["DOTLINEFORM_PROJECTS_BASE_DIR"] = previous_projects_base
 
-    print("Docs Viewer external-local inline Mermaid route smoke OK")
+    print("Docs Viewer external-local Mermaid boundary OK")
     return 0
 
 

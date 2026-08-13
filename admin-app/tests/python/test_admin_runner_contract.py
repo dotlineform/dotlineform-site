@@ -58,6 +58,28 @@ def test_admin_runner_docs_profile_isolates_only_full_registry_pytest() -> None:
     assert commands[1].projects_base_argument is False
     assert all(command.isolated_projects_base is False for command in (commands[0], *commands[2:]))
     assert all(command.projects_base_argument is False for command in commands)
+    assert all("/tests/smoke/" not in argument for argument in commands[1].argv)
+    assert all(
+        (REPO_ROOT / argument).is_file()
+        for command in commands
+        for argument in command.argv
+        if argument.endswith(".py")
+    )
+
+
+def test_admin_runner_docs_viewer_smoke_profile_is_the_retained_boundary_set() -> None:
+    runner = load_runner_module()
+
+    commands = runner.expand_profiles(["docs-viewer-smoke"])
+
+    assert [command.name for command in commands] == [
+        "docs-viewer-source-lint",
+        "site-validate",
+        "docs-viewer-external-inline-mermaid-route-smoke",
+        "docs-viewer-service-manage-smoke",
+        "docs-viewer-service-review-smoke",
+        "public-docs-viewer-readonly-smoke",
+    ]
     assert all(
         (REPO_ROOT / argument).is_file()
         for command in commands

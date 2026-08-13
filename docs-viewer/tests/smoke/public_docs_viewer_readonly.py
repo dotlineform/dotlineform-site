@@ -1,35 +1,26 @@
 #!/usr/bin/env python3
-"""Smoke-check public Docs Viewer routes boot read-only on compact payloads."""
+"""Smoke-check that the public Docs Viewer boots without local capability."""
 
 from __future__ import annotations
 
 import argparse
 from functools import partial
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
-import json
 from pathlib import Path
 import sys
 from threading import Thread
-from urllib.parse import parse_qs, urlparse
+from urllib.parse import urlparse
 
-from playwright.sync_api import Page, sync_playwright
+from playwright.sync_api import sync_playwright
+
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(REPO_ROOT))
 
-from tests.smoke.route_ready_helpers import wait_for_route_ready
-from docs_viewer_theme_smoke_helpers import (
-    assert_docs_viewer_theme_pair,
-    assert_docs_viewer_theme_state,
-    read_docs_viewer_theme_state,
-)
+from tests.smoke.route_ready_helpers import wait_for_route_ready  # noqa: E402
 
 
-ANALYSIS_DOC_ID = "d-20260426-164043-e14f49"
-TAGS_DOC_ID = "d-20260624-213316-478639"
-BIRD_SUBDOC_ID = "d-20260624-204534-0d6ae2"
-NERVE_SUBDOC_ID = "d-20260624-204534-ecfc12"
-ORDERED_SUBDOC_ID = "d-20260624-204534-e3de0b"
+DOC_ID = "d-20260426-164043-e14f49"
 
 
 class QuietStaticHandler(SimpleHTTPRequestHandler):
@@ -38,671 +29,121 @@ class QuietStaticHandler(SimpleHTTPRequestHandler):
 
 
 def start_static_server(site_root: Path) -> tuple[ThreadingHTTPServer, str]:
-    resolved_root = site_root.expanduser().resolve()
-    if not resolved_root.exists():
-        raise FileNotFoundError(f"site root does not exist: {resolved_root}")
-    handler = partial(QuietStaticHandler, directory=str(resolved_root))
+    root = site_root.expanduser().resolve()
+    if not root.is_dir():
+        raise FileNotFoundError(f"site root does not exist: {root}")
+    handler = partial(QuietStaticHandler, directory=str(root))
     server = ThreadingHTTPServer(("127.0.0.1", 0), handler)
-    thread = Thread(target=server.serve_forever, daemon=True)
-    thread.start()
+    Thread(target=server.serve_forever, daemon=True).start()
     return server, f"http://127.0.0.1:{server.server_address[1]}"
 
 
-def route_url(base_url: str, path: str) -> str:
-    return f"{base_url.rstrip('/')}{path}"
-
-
-def request_paths(urls: list[str]) -> set[str]:
-    return {urlparse(url).path for url in urls}
-
-
-def query_value(url: str, key: str) -> str:
-    return (parse_qs(urlparse(url).query).get(key) or [""])[0]
-
-
-def wait_for_rendered_doc(page: Page, doc_id: str, title: str, timeout_ms: int) -> None:
-    wait_for_route_ready(
-        page,
-        "#docsViewerRoot",
-        "data-docs-viewer-ready",
-        "data-docs-viewer-busy",
-        timeout_ms,
-    )
-    page.wait_for_function(
-        """([docId, expectedTitle]) => {
-            const heading = document.querySelector("#docsViewerContent h1");
-            const active = document.querySelector(".docsViewer__navLink.is-active");
-            return heading &&
-                heading.textContent.trim() === expectedTitle &&
-                active &&
-                active.dataset.docId === docId;
-        }""",
-        arg=[doc_id, title],
-        timeout=timeout_ms,
-    )
-
-
-def public_route_state(page: Page) -> dict[str, object]:
+def public_route_state(page) -> dict[str, object]:
     return page.locator("#docsViewerRoot").evaluate(
         """async root => {
-            const routeConfigUrl = root.dataset.routeConfigUrl || "";
-            const payload = await fetch(routeConfigUrl).then(response => response.json());
-            const routeConfig = (payload.routes || []).find(record => record.route_id === root.dataset.routeId) || {};
-            const docsViewerConfigUrl = routeConfig.config_urls?.docs_viewer || "";
-            const docsViewerConfig = docsViewerConfigUrl
-                ? await fetch(docsViewerConfigUrl).then(response => response.json())
-                : {};
-            const scopeConfig = (docsViewerConfig.scopes || []).find(record => record.scope_id === root.dataset.viewerScope) || {};
+            const configUrl = root.dataset.routeConfigUrl || '';
+            const payload = await fetch(configUrl).then(response => response.json());
+            const route = (payload.routes || []).find(record => (
+                record.route_id === root.dataset.routeId
+            )) || {};
             return {
-                appKind: root.dataset.docsViewerAppKind || "",
-                managementUi: root.dataset.managementUi || "",
-                sourceService: root.dataset.sourceService || "",
-                ready: root.dataset.docsViewerReady || "",
-                busy: root.dataset.docsViewerBusy || "",
-                routeId: root.dataset.routeId || "",
-                routeConfigUrl,
-                docsPaths: routeConfig.docs_paths || {},
-                services: routeConfig.services || {},
-                scopeConfig,
-                viewerBaseUrl: routeConfig.viewer_base_url || "",
+                appKind: root.dataset.docsViewerAppKind || '',
+                managementUi: root.dataset.managementUi || '',
+                sourceService: root.dataset.sourceService || '',
+                ready: root.dataset.docsViewerReady || '',
+                busy: root.dataset.docsViewerBusy || '',
+                routeId: root.dataset.routeId || '',
+                routeConfigUrl: configUrl,
+                services: route.services || {},
                 managementControls: document.querySelectorAll(
-                    ".docsViewer__manageActions, #docsViewerManageActionsButton, #docsViewerManageEditButton, #docsViewerStatusPills"
+                    '.docsViewer__manageActions, #docsViewerManageActionsButton, '
+                    + '#docsViewerManageEditButton, #docsViewerStatusPills'
                 ).length
             };
         }"""
     )
 
 
-def assert_public_route_contract(route: str, state: dict[str, object]) -> None:
-    route_id = route.strip("/").split("/", 1)[0] or route.strip("/?")
-    docs_paths = state.get("docsPaths") if isinstance(state.get("docsPaths"), dict) else {}
-    services = state.get("services") if isinstance(state.get("services"), dict) else {}
-    if state["appKind"] != "public" or state["managementUi"] != "false" or state["sourceService"] != "false":
-        raise AssertionError(f"{route} exposed the wrong app/service context: {state!r}")
-    if any(str(surface.get("base_url") or "") for surface in services.values() if isinstance(surface, dict)):
-        raise AssertionError(f"{route} exposed local service URLs: {state!r}")
-    if state["ready"] != "true" or state["busy"] == "true":
-        raise AssertionError(f"{route} did not expose ready route state: {state!r}")
-    if state["viewerBaseUrl"] == "/docs/":
-        raise AssertionError(f"{route} used management route base: {state!r}")
-    if state["managementControls"]:
-        raise AssertionError(f"{route} rendered management controls: {state!r}")
-    if state["routeConfigUrl"] != "/docs-viewer/config/routes/docs-viewer-public-routes.json":
-        raise AssertionError(f"{route} used unexpected route config: {state!r}")
-    if state["routeId"] != route_id:
-        raise AssertionError(f"{route} used unexpected route id: {state!r}")
-    if not str(docs_paths.get("index_tree_url") or "").endswith("/index-tree.json"):
-        raise AssertionError(f"{route} route config missing index_tree_url: {state!r}")
-    if not str(docs_paths.get("recent_url") or "").endswith("/recent.json"):
-        raise AssertionError(f"{route} route config missing recent_url: {state!r}")
-    if not str(docs_paths.get("search_index_url") or "").endswith("/index.json"):
-        raise AssertionError(f"{route} route config missing search_index_url: {state!r}")
-
-
-def assert_payload_requests(route: str, paths: set[str], scope: str, doc_id: str) -> None:
-    expected_tree = f"/assets/data/docs/scopes/{scope}/index-tree.json"
-    expected_recent = f"/assets/data/docs/scopes/{scope}/recent.json"
-    expected_doc = f"/assets/data/docs/scopes/{scope}/by-id/{doc_id}.json"
-    expected_search = f"/assets/data/search/{scope}/index.json"
-    missing = [path for path in [expected_tree, expected_recent, expected_doc, expected_search] if path not in paths]
-    if missing:
-        raise AssertionError(f"{route} missed expected compact payload requests {missing!r}; saw {sorted(paths)!r}")
-
-
-def set_public_theme(page: Page, theme: str, timeout_ms: int) -> None:
-    toggle = page.locator("#themeToggle")
-    if toggle.count() != 1 or toggle.is_hidden():
-        raise AssertionError("public route did not render one visible theme toggle")
-    current = page.locator("html").get_attribute("data-theme")
-    if current != theme:
-        toggle.click()
-    page.wait_for_function(
-        """expected => {
-            const toggle = document.querySelector('#themeToggle');
-            const isDark = expected === 'dark';
-            const visibleIcons = Array.from(
-                toggle?.querySelectorAll('[data-theme-icon]') || []
-            ).filter(icon => !icon.hasAttribute('hidden'));
-            return document.documentElement.getAttribute('data-theme') === expected &&
-                toggle?.getAttribute('aria-pressed') === (isDark ? 'true' : 'false') &&
-                toggle?.getAttribute('aria-label') === (
-                    isDark ? 'Switch to light mode' : 'Switch to dark mode'
-                ) &&
-                visibleIcons.length === 1 &&
-                visibleIcons[0].dataset.themeIcon === expected;
-        }""",
-        arg=theme,
-        timeout=timeout_ms,
-    )
-
-
-def assert_public_theme_contract(
-    page: Page,
-    doc_id: str,
-    title: str,
-    timeout_ms: int,
-) -> None:
-    set_public_theme(page, "light", timeout_ms)
-    light = read_docs_viewer_theme_state(page)
-    assert_docs_viewer_theme_state(
-        light,
-        theme="light",
-        management_ui=False,
-        body_uses_viewer_palette=False,
-    )
-
-    set_public_theme(page, "dark", timeout_ms)
-    dark = read_docs_viewer_theme_state(page)
-    assert_docs_viewer_theme_state(
-        dark,
-        theme="dark",
-        management_ui=False,
-        body_uses_viewer_palette=False,
-    )
-    assert_docs_viewer_theme_pair(light, dark)
-
-    page.reload(wait_until="domcontentloaded")
-    wait_for_rendered_doc(page, doc_id, title, timeout_ms)
-    persisted_dark = read_docs_viewer_theme_state(page)
-    assert_docs_viewer_theme_state(
-        persisted_dark,
-        theme="dark",
-        management_ui=False,
-        body_uses_viewer_palette=False,
-    )
-    if persisted_dark.get("tokens") != dark.get("tokens"):
-        raise AssertionError(
-            f"reloaded public dark theme did not retain the shared palette: {persisted_dark!r}"
-        )
-
-    set_public_theme(page, "light", timeout_ms)
-
-
-def assert_no_inline_mermaid_asset_request(route: str, paths: set[str]) -> None:
-    mermaid_requests = sorted(
-        path for path in paths
-        if path.startswith("/docs-viewer/runtime/vendor/mermaid/")
-        or path == "/docs-viewer/runtime/js/management/docs-viewer-inline-mermaid.js"
-    )
-    if mermaid_requests:
-        raise AssertionError(f"{route} loaded the local-only Mermaid runtime: {mermaid_requests!r}")
-
-
-def exercise_public_inline_mermaid_exclusion(page: Page, base_url: str, timeout_ms: int) -> None:
-    request_urls: list[str] = []
-    page.on("request", lambda request: request_urls.append(request.url))
-    payload_path = f"/assets/data/docs/scopes/analysis/by-id/{ANALYSIS_DOC_ID}.json"
-    payload_pattern = f"**{payload_path}*"
-    diagram_path = "/assets/data/docs/scopes/analysis/media/svg/detail-proof.svg"
-    diagram_pattern = f"**{diagram_path}*"
-
-    def add_inline_mermaid_fence(route) -> None:
-        response = route.fetch()
-        payload = response.json()
-        payload["content_html"] = str(payload.get("content_html") or "") + (
-            f'<p><img data-docs-viewer-diagram-kind="persistent-svg" src="{diagram_path}" '
-            'alt="Persistent public detail proof"></p>'
-            '<pre><code class="language-mermaid">flowchart LR\n'
-            "  Public --&gt; Source\n"
-            "</code></pre>"
-        )
-        route.fulfill(status=200, content_type="application/json", body=json.dumps(payload))
-
-    def serve_detail_proof(route) -> None:
-        route.fulfill(
-            status=200,
-            content_type="image/svg+xml",
-            body='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2 1"></svg>',
-        )
-
-    page.route(payload_pattern, add_inline_mermaid_fence)
-    page.route(diagram_pattern, serve_detail_proof)
-    try:
-        page.goto(
-            route_url(base_url, f"/analysis/?doc={ANALYSIS_DOC_ID}"),
-            wait_until="domcontentloaded",
-        )
-        wait_for_rendered_doc(page, ANALYSIS_DOC_ID, "Analysis", timeout_ms)
-        state = page.locator("#docsViewerContent").evaluate(
-            """content => ({
-                diagrams: content.querySelectorAll('.docsViewer__diagram').length,
-                fences: content.querySelectorAll('pre > code.language-mermaid').length,
-                failures: content.querySelectorAll('.docsViewer__diagramError').length,
-                mermaidGlobal: Boolean(window.mermaid),
-                detailFrames: content.querySelectorAll('.docsViewer__diagramFrame').length,
-                detailControls: content.querySelectorAll('.docsViewer__diagramDetailControl').length,
-                detailKind: content.querySelector('.docsViewer__diagramDetailControl')?.dataset.docsViewerDiagramDetailKind || '',
-                detailHref: content.querySelector('.docsViewer__diagramDetailControl')?.getAttribute('href') || '',
-                detailLabel: content.querySelector('.docsViewer__diagramDetailControl')?.getAttribute('aria-label') || '',
-                detailTag: content.querySelector('.docsViewer__diagramDetailControl')?.tagName || ''
-            })"""
-        )
-    finally:
-        page.unroute(payload_pattern, add_inline_mermaid_fence)
-        page.unroute(diagram_pattern, serve_detail_proof)
+def assert_public_boundary(state: dict[str, object], request_paths: set[str]) -> None:
+    if (
+        state["appKind"] != "public"
+        or state["managementUi"] != "false"
+        or state["sourceService"] != "false"
+        or state["ready"] != "true"
+        or state["busy"] == "true"
+        or state["routeId"] != "analysis"
+        or state["routeConfigUrl"]
+        != "/docs-viewer/config/routes/docs-viewer-public-routes.json"
+        or state["managementControls"] != 0
+    ):
+        raise AssertionError(f"public Docs Viewer capability boundary changed: {state!r}")
+    services = state["services"] if isinstance(state["services"], dict) else {}
+    if any(
+        str(surface.get("base_url") or "")
+        for surface in services.values()
+        if isinstance(surface, dict)
+    ):
+        raise AssertionError(f"public Docs Viewer exposed local service URLs: {state!r}")
 
     expected = {
-        "diagrams": 0,
-        "fences": 1,
-        "failures": 0,
-        "mermaidGlobal": False,
-        "detailFrames": 1,
-        "detailControls": 1,
-        "detailKind": "persistent-svg",
-        "detailHref": "",
-        "detailLabel": "Open diagram",
-        "detailTag": "BUTTON",
+        "/assets/data/docs/scopes/analysis/index-tree.json",
+        f"/assets/data/docs/scopes/analysis/by-id/{DOC_ID}.json",
     }
-    if state != expected:
+    if not expected.issubset(request_paths):
         raise AssertionError(
-            f"public Mermaid fence did not remain readable source: {state!r}; "
-            f"requests={sorted(request_paths(request_urls))!r}"
+            f"public Docs Viewer missed compact payloads: {sorted(expected - request_paths)!r}"
         )
-    assert_no_inline_mermaid_asset_request("/analysis/ injected Mermaid fence", request_paths(request_urls))
-
-
-def assert_public_info_panel(page: Page, route: str, title: str, timeout_ms: int) -> None:
-    page.locator("#docsViewerInfoToggle").click()
-    page.wait_for_function(
-        """expectedTitle => {
-            const root = document.querySelector("#docsViewerRoot");
-            const panel = document.querySelector("#docsViewerInfoPanel");
-            const title = panel?.querySelector(".docsViewer__metadataInfoTitle");
-            return root?.dataset.infoPanelState === "open" &&
-                panel &&
-                !panel.hidden &&
-                title &&
-                title.textContent.trim() === expectedTitle;
-        }""",
-        arg=title,
-        timeout=timeout_ms,
+    blocked = sorted(
+        path
+        for path in request_paths
+        if path.startswith("/docs-viewer/runtime/js/management/")
+        or path.startswith("/docs/")
     )
-    info_state = page.locator("#docsViewerInfoPanel").evaluate(
-        """panel => ({
-            terms: Array.from(panel.querySelectorAll("dt")).map((node) => node.textContent.trim()),
-            text: panel.textContent || ""
-        })"""
-    )
-    if info_state["terms"] != ["Summary", "Updated"]:
-        raise AssertionError(f"{route} public info panel did not render public metadata terms: {info_state!r}")
-    blocked = ["Doc ID", "Date", "Added", "Scope", "Parent path", "UI status", "Visibility", "Route"]
-    leaked = [item for item in blocked if item in str(info_state["text"])]
-    if leaked:
-        raise AssertionError(f"{route} public info panel leaked management metadata {leaked!r}: {info_state!r}")
-
-
-def exercise_search(page: Page, route: str, query: str, timeout_ms: int) -> None:
-    page.locator("#docsViewerSearchInput").fill(query)
-    page.wait_for_function(
-        """query => {
-            const input = document.querySelector("#docsViewerSearchInput");
-            const status = document.querySelector("#docsViewerResultsStatus");
-            return input &&
-                input.value === query &&
-                status &&
-                !status.hidden &&
-                /results?|No results/.test(status.textContent);
-        }""",
-        arg=query,
-        timeout=timeout_ms,
-    )
-
-
-def exercise_public_route(
-    page: Page,
-    base_url: str,
-    route: str,
-    doc_id: str,
-    title: str,
-    timeout_ms: int,
-    *,
-    expect_document_controls: bool = True,
-    verify_theme: bool = False,
-) -> None:
-    request_urls: list[str] = []
-    page.on("request", lambda request: request_urls.append(request.url))
-    page.goto(route_url(base_url, route), wait_until="domcontentloaded")
-    wait_for_rendered_doc(page, doc_id, title, timeout_ms)
-    if query_value(page.url, "mode"):
-        raise AssertionError(f"{route} should remove mode query state, got {page.url}")
-    assert_public_route_contract(route, public_route_state(page))
-    if verify_theme:
-        assert_public_theme_contract(page, doc_id, title, timeout_ms)
-    if expect_document_controls:
-        assert_public_info_panel(page, route, title, timeout_ms)
-    else:
-        document_control_state = page.locator("#docsViewerRoot").evaluate(
-            """root => {
-                const toolbar = root.querySelector('#docsViewerMainViewToolbar');
-                const path = root.querySelector('#docsViewerPath');
-                const controls = Array.from(
-                    toolbar?.querySelectorAll('[data-docs-viewer-control]') || []
-                );
-                return {
-                    bookmarkToggle: Boolean(root.querySelector('#docsViewerBookmarkToggle')),
-                    contentDetailControlIds: controls.map(control => (
-                        control.dataset.docsViewerControl || ''
-                    )).sort(),
-                    hiddenContentDetailControlIds: controls.filter(control => control.hidden)
-                        .map(control => control.dataset.docsViewerControl || '').sort(),
-                    infoToggle: Boolean(root.querySelector('#docsViewerInfoToggle')),
-                    pathHidden: Boolean(path?.hidden),
-                    pathPresent: Boolean(path),
-                    toolbarHidden: Boolean(toolbar?.hidden),
-                    toolbarPresent: Boolean(toolbar)
-                };
-            }"""
-        )
-        expected_document_control_state = {
-            "bookmarkToggle": False,
-            "contentDetailControlIds": [],
-            "hiddenContentDetailControlIds": [],
-            "infoToggle": False,
-            "pathHidden": True,
-            "pathPresent": True,
-            "toolbarHidden": False,
-            "toolbarPresent": True,
-        }
-        if document_control_state != expected_document_control_state:
-            raise AssertionError(
-                f"{route} document-control policy changed: {document_control_state!r}"
-            )
-    page.locator("#docsViewerRecentButton").click()
-    page.wait_for_function(
-        """(recentAdjective) => {
-            const status = document.querySelector("#docsViewerResultsStatus");
-            return status && !status.hidden && status.textContent.includes(recentAdjective);
-        }""",
-        arg="recently edited",
-        timeout=timeout_ms,
-    )
-    exercise_search(page, route, title, timeout_ms)
-    route_scope = urlparse(route).path.strip("/").split("/", 1)[0]
-    paths = request_paths(request_urls)
-    assert_payload_requests(route, paths, route_scope, doc_id)
-    assert_no_inline_mermaid_asset_request(route, paths)
-
-
-def exercise_public_subscope_report(page: Page, base_url: str, timeout_ms: int) -> None:
-    request_urls: list[str] = []
-    page.on("request", lambda request: request_urls.append(request.url))
-    page.goto(route_url(base_url, f"/analysis/?doc={TAGS_DOC_ID}"), wait_until="domcontentloaded")
-    wait_for_rendered_doc(page, TAGS_DOC_ID, "Concepts", timeout_ms)
-    page.wait_for_function(
-        f"""() => {{
-            const report = document.querySelector(".docsViewerReport");
-            const rows = Array.from(document.querySelectorAll(".docsViewerReport__row"));
-            const expectedRows = new Map([
-                ["{BIRD_SUBDOC_ID}", "bird"],
-                ["{NERVE_SUBDOC_ID}", "nerve"],
-                ["{ORDERED_SUBDOC_ID}", "ordered"]
-            ]);
-            return report &&
-                report.dataset.reportId === "docs_subscope" &&
-                report.dataset.reportSubscope === "tags" &&
-                rows.length >= expectedRows.size &&
-                Array.from(expectedRows).every(([docId, title]) => {{
-                    const row = rows.find(candidate => candidate.dataset.reportSubdocId === docId);
-                    return (row?.textContent || "").trim() === title;
-                }});
-        }}""",
-        timeout=timeout_ms,
-    )
-    management_projection = page.locator(".docsViewerReport").evaluate(
-        """report => ({
-            managementIcons: report.querySelectorAll(
-                '.docsViewer__navStatus, .docsViewer__publishableExclusion'
-            ).length,
-            sourceControls: document.querySelectorAll(
-                '[data-docs-viewer-control="markdown-source"], '
-                + '[data-docs-viewer-control="subdoc-source"], '
-                + '[data-docs-viewer-control="return-to-doc"]'
-            ).length
-        })"""
-    )
-    if management_projection != {"managementIcons": 0, "sourceControls": 0}:
-        raise AssertionError(
-            "public sub-scope report exposed manage-only icons or source controls: "
-            f"{management_projection!r}"
-        )
-    public_filter_projection = page.locator(".docsViewerReport").evaluate(
-        """report => {
-            const input = report.querySelector(".docsViewerReport__searchInput");
-            const label = input ? report.querySelector(`label[for="${input.id}"]`) : null;
-            return {
-                filterLabel: label?.textContent || "",
-                filterLabelHidden: label?.classList.contains("visually-hidden") || false,
-                groupControls: report.querySelectorAll("[data-docs-subscope-group]").length,
-                listLabel: report.querySelector(".docsViewerReport__rows")
-                    ?.getAttribute("aria-label") || ""
-            };
-        }"""
-    )
-    if public_filter_projection != {
-        "filterLabel": "Filter Concepts by title",
-        "filterLabelHidden": True,
-        "groupControls": 0,
-        "listLabel": "Concepts",
-    }:
-        raise AssertionError(
-            "public sub-scope filter exposed the wrong presentation or group controls: "
-            f"{public_filter_projection!r}"
-        )
-    requests_before_filter = len(request_urls)
-    filter_input = page.locator(".docsViewerReport__searchInput")
-    filter_input.fill("ordere")
-    page.wait_for_function(
-        f"""() => {{
-            const rows = Array.from(document.querySelectorAll(
-                ".docsViewerReport__row[data-report-subdoc-id]"
-            ));
-            return rows.length === 1 &&
-                rows[0].dataset.reportSubdocId === "{ORDERED_SUBDOC_ID}";
-        }}""",
-        timeout=timeout_ms,
-    )
-    filter_input.fill("no-public-concept-matches")
-    page.wait_for_function(
-        """() => document.querySelector(".docsViewerReport__empty")?.textContent ===
-            "No concepts match the current filters." """,
-        timeout=timeout_ms,
-    )
-    page.locator(".docsViewerReport__searchClear").click()
-    page.wait_for_function(
-        f"""() => {{
-            const ids = Array.from(document.querySelectorAll(
-                ".docsViewerReport__row[data-report-subdoc-id]"
-            )).map(row => row.dataset.reportSubdocId);
-            return ["{BIRD_SUBDOC_ID}", "{NERVE_SUBDOC_ID}", "{ORDERED_SUBDOC_ID}"]
-                .every(docId => ids.includes(docId));
-        }}""",
-        timeout=timeout_ms,
-    )
-    if len(request_urls) != requests_before_filter:
-        raise AssertionError(
-            "public title filtering should not issue additional requests; "
-            f"saw {request_urls[requests_before_filter:]!r}"
-        )
-    if query_value(page.url, "doc") != TAGS_DOC_ID:
-        raise AssertionError(f"public report parent doc should remain selected, got {page.url}")
-    paths = request_paths(request_urls)
-    assert_no_inline_mermaid_asset_request("/analysis/ sub-scope report", paths)
-    if "/assets/data/docs/public-reports.json" not in paths:
-        raise AssertionError(f"public report did not read public report registry; saw {sorted(paths)!r}")
-    if "/assets/data/docs/scopes/analysis/tags/manifest.json" not in paths:
-        raise AssertionError(f"public report did not read sub-scope manifest; saw {sorted(paths)!r}")
-    if "/docs/sub-scope-documents" in paths:
-        raise AssertionError(f"public report requested management inventory; saw {sorted(paths)!r}")
-    page.locator(
-        f".docsViewerReport__row[data-report-subdoc-id='{ORDERED_SUBDOC_ID}'] .docsViewerReport__subscopeButton"
-    ).click()
-    page.wait_for_function(
-        f"""() => {{
-            const report = document.querySelector(".docsViewerReport");
-            const active = document.querySelector(".docsViewer__navLink.is-active");
-            const detail = document.querySelector(".docsReportDetail__body");
-            return report &&
-                report.dataset.reportState === "detail" &&
-                active &&
-                active.dataset.docId === "{TAGS_DOC_ID}" &&
-                detail &&
-                /form:ordered/.test(detail.textContent || "") &&
-                new URL(location.href).searchParams.get("doc") === "{TAGS_DOC_ID}" &&
-                new URL(location.href).searchParams.get("subdoc") === "{ORDERED_SUBDOC_ID}";
-        }}""",
-        timeout=timeout_ms,
-    )
-    detail_management_projection = page.locator(".docsViewerReport").evaluate(
-        """report => ({
-            managementIcons: report.querySelectorAll(
-                '.docsViewer__navStatus, .docsViewer__publishableExclusion'
-            ).length,
-            sourceControls: document.querySelectorAll(
-                '[data-docs-viewer-control="markdown-source"], '
-                + '[data-docs-viewer-control="subdoc-source"], '
-                + '[data-docs-viewer-control="return-to-doc"]'
-            ).length
-        })"""
-    )
-    if detail_management_projection != {"managementIcons": 0, "sourceControls": 0}:
-        raise AssertionError(
-            "public sub-scope detail exposed manage-only icons or source controls: "
-            f"{detail_management_projection!r}"
-        )
-    page.go_back(wait_until="domcontentloaded")
-    page.wait_for_function(
-        f"""() => {{
-            const report = document.querySelector(".docsViewerReport");
-            return report &&
-                report.dataset.reportState === "list" &&
-                !new URL(location.href).searchParams.has("subdoc") &&
-                document.querySelector(
-                    ".docsViewerReport__row[data-report-subdoc-id='{ORDERED_SUBDOC_ID}']"
-                );
-        }}""",
-        timeout=timeout_ms,
-    )
-    page.go_forward(wait_until="domcontentloaded")
-    page.wait_for_function(
-        f"""() => {{
-            const detail = document.querySelector(".docsReportDetail__body");
-            return document.querySelector(".docsViewerReport")?.dataset.reportState === "detail" &&
-                /form:ordered/.test(detail?.textContent || "") &&
-                new URL(location.href).searchParams.get("subdoc") === "{ORDERED_SUBDOC_ID}";
-        }}""",
-        timeout=timeout_ms,
-    )
-    page.locator(".docsReportDetail__back").click()
-    page.wait_for_function(
-        """() => document.querySelector(".docsViewerReport")?.dataset.reportState === "list" &&
-            !new URL(location.href).searchParams.has("subdoc")""",
-        timeout=timeout_ms,
-    )
-    page.goto(
-        route_url(base_url, f"/analysis/?doc={TAGS_DOC_ID}&subdoc={BIRD_SUBDOC_ID}"),
-        wait_until="domcontentloaded",
-    )
-    wait_for_rendered_doc(page, TAGS_DOC_ID, "Concepts", timeout_ms)
-    page.wait_for_function(
-        f"""() => {{
-            const active = document.querySelector(".docsViewer__navLink.is-active");
-            const detail = document.querySelector(".docsReportDetail__body");
-            return active &&
-                active.dataset.docId === "{TAGS_DOC_ID}" &&
-                document.querySelector(".docsViewerReport")?.dataset.reportState === "detail" &&
-                /subject:bird/.test(detail?.textContent || "") &&
-                new URL(location.href).searchParams.get("doc") === "{TAGS_DOC_ID}" &&
-                new URL(location.href).searchParams.get("subdoc") === "{BIRD_SUBDOC_ID}";
-        }}""",
-        timeout=timeout_ms,
-    )
-    page.goto(
-        route_url(base_url, f"/analysis/?doc={TAGS_DOC_ID}&subdoc=missing-detail"),
-        wait_until="domcontentloaded",
-    )
-    wait_for_rendered_doc(page, TAGS_DOC_ID, "Concepts", timeout_ms)
-    page.wait_for_function(
-        f"""() => document.querySelector(".docsViewerReport")?.dataset.reportState === "error" &&
-            /missing-detail/.test(document.querySelector(".docsViewerReport")?.textContent || "") &&
-            document.querySelector(".docsViewer__navLink.is-active")?.dataset.docId === "{TAGS_DOC_ID}" """,
-        timeout=timeout_ms,
-    )
-    paths = request_paths(request_urls)
-    blocked = [
-        path for path in paths
-        if path in {
-            "/docs-viewer/runtime/js/reports/docs-viewer-reports.js",
-            "/docs-viewer/runtime/js/reports/docs-viewer-report-service.js",
-        }
-    ]
     if blocked:
-        raise AssertionError(f"public report loaded manage/local report runtime paths: {blocked!r}")
+        raise AssertionError(f"public Docs Viewer requested local capability: {blocked!r}")
 
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--site-root", required=True, help="Built public site root to serve.")
+    parser.add_argument("--site-root", required=True)
     parser.add_argument("--timeout-ms", type=int, default=15000)
     args = parser.parse_args()
 
-    static_server, base_url = start_static_server(Path(args.site_root))
+    server, base_url = start_static_server(Path(args.site_root))
     errors: list[str] = []
-    request_failures: list[str] = []
-    http_failures: list[str] = []
+    request_urls: list[str] = []
     try:
         with sync_playwright() as playwright:
             browser = playwright.chromium.launch(headless=True)
             try:
-                fence_context = browser.new_context()
-                try:
-                    fence_page = fence_context.new_page()
-                    fence_page.on("pageerror", lambda exc: errors.append(str(exc)))
-                    fence_page.on(
-                        "requestfailed",
-                        lambda request: request_failures.append(f"{request.url}: {request.failure}"),
-                    )
-                    fence_page.on(
-                        "response",
-                        lambda response: http_failures.append(f"{response.status}: {response.url}")
-                        if response.status >= 400
-                        else None,
-                    )
-                    exercise_public_inline_mermaid_exclusion(fence_page, base_url, args.timeout_ms)
-                finally:
-                    fence_context.close()
-
-                page = browser.new_page()
-                page.on("pageerror", lambda exc: errors.append(str(exc)))
-                page.on("requestfailed", lambda request: request_failures.append(f"{request.url}: {request.failure}"))
-                page.on(
-                    "response",
-                    lambda response: http_failures.append(f"{response.status}: {response.url}") if response.status >= 400 else None,
+                page = browser.new_page(viewport={"width": 1280, "height": 900})
+                page.on("pageerror", lambda error: errors.append(str(error)))
+                page.on("request", lambda request: request_urls.append(request.url))
+                page.goto(
+                    f"{base_url}/analysis/?doc={DOC_ID}",
+                    wait_until="domcontentloaded",
                 )
-                legacy_mode = "manage"
-                exercise_public_route(
+                wait_for_route_ready(
                     page,
-                    base_url,
-                    f"/analysis/?doc={ANALYSIS_DOC_ID}&mode={legacy_mode}",
-                    ANALYSIS_DOC_ID,
-                    "Analysis",
+                    "#docsViewerRoot",
+                    "data-docs-viewer-ready",
+                    "data-docs-viewer-busy",
                     args.timeout_ms,
-                    verify_theme=True,
                 )
-                exercise_public_subscope_report(page, base_url, args.timeout_ms)
+                assert_public_boundary(
+                    public_route_state(page),
+                    {urlparse(url).path for url in request_urls},
+                )
             finally:
                 browser.close()
-
         if errors:
-            raise AssertionError(f"page errors during public Docs Viewer read-only smoke: {errors!r}")
-        if request_failures:
-            raise AssertionError(f"request failures during public Docs Viewer read-only smoke: {request_failures!r}")
-        if http_failures:
-            raise AssertionError(f"HTTP failures during public Docs Viewer read-only smoke: {http_failures!r}")
-        print(f"public Docs Viewer read-only OK: {base_url}/analysis/")
-        return 0
+            raise AssertionError(f"page errors during public Docs Viewer boot: {errors!r}")
     finally:
-        static_server.shutdown()
-        static_server.server_close()
+        server.shutdown()
+        server.server_close()
+
+    print(f"public Docs Viewer boundary OK: {base_url}/analysis/")
+    return 0
 
 
 if __name__ == "__main__":

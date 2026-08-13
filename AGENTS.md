@@ -46,6 +46,11 @@
 - `docs-viewer/scopes/studio/source/documents/d-20260627-212121-7cf7de.md` determines approach for subsequent testing and review of existing tests.
 - Choose the smallest check that proves the changed contract. Do not run broad profiles just to produce more evidence.
 - Leave UI design testing to the user unless specifically requested; browser probes are brittle.
+- A UI change does not create an automatic requirement to add, update, or run a permanent browser test. Recorded manual confirmation is sufficient for ordinary interaction, presentation, copy, focus, modal, filtering, and navigation behavior when no durable browser integration boundary changed.
+- Before adding or expanding a browser test, name the unique regression it could catch, why a pure/service/API/generator check cannot catch it, and why repeated manual confirmation would be materially costly or risky. If those answers are not concrete, do not change the browser suite.
+- Do not use an executable smoke as a shared fixture library. Put genuinely shared route startup/readiness code in a small non-test support module; keep each retained smoke to one integration boundary.
+- Treat a browser script over 500 lines or covering more than one route/workflow owner as a mandatory deletion/split review, not a file to extend. Existing profile membership is not evidence that the script remains worthwhile.
+- Do not include smoke scripts in broad pytest collection. Smoke profiles are explicit boundary audits, not ordinary closeout gates.
 - Before adding or expanding a permanent test, apply the review gate:
   - Can this be tested as pure function or service behavior?
   - Can this be tested by direct HTTP/API request?
@@ -54,6 +59,7 @@
 - Permanent tests should protect data flows, server responses, generated contracts, parser behavior, ownership boundaries, and route/module integration. They should not police ordinary UI choreography, modal lifecycle feel, focus timing, copy, hover styling, or layout.
 - Browser smokes are only for durable browser boundaries: route boot, module wiring, public/private asset boundaries, local API reachability, request/response agreement, or shared ready/busy state.
 - Human manual checks are used for tactile interaction, visual fit, copy tone, modal feel, and mobile ergonomics.
+- The retained Docs Viewer browser profile is intentionally limited to Manage route/service boot, Docs Review authority, public read-only isolation, and external-local Mermaid loading. Additions require an explicit policy change, not routine feature follow-through.
 - Default focused checks:
   - Python/service changes: `$HOME/miniconda3/bin/python3 -m pytest <test-path>`
   - Script changes: syntax check with `$HOME/miniconda3/bin/python3 -m py_compile <files>`
