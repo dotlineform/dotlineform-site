@@ -41,6 +41,9 @@ import {
   createDocsViewerManagementSourceAdapter
 } from "./docs-viewer-management-source-adapter.js";
 import {
+  mountManagedConfiguredSiteLinks
+} from "./docs-viewer-management-configured-site-links.js";
+import {
   mountManagedDocsViewerDocumentLinks
 } from "./docs-viewer-management-document-links.js";
 import {
@@ -80,6 +83,12 @@ function mountDocsViewerManageExtras(context) {
   var settings = context || {};
   var routeContext = settings.routeContext || {};
   var scopeConfigState = settings.scopeConfigState || {};
+  mountManagedConfiguredSiteLinks(settings.content, [
+    {
+      pathPrefix: "/studio/",
+      baseUrl: routeContext.studioBaseUrl
+    }
+  ]);
   mountManagedDocsViewerDocumentLinks(settings.content, {
     currentHref: window.location.href,
     scopeConfigsById: scopeConfigState.scopeConfigsById,

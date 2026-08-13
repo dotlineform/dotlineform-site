@@ -61,6 +61,7 @@ def smoke_document_payloads(
             "content_html": (
                 f"<h1>{DOCS_VIEWER_DOC_TITLE}</h1>"
                 "<p>Test-owned content exercises the managed document route.</p>"
+                '<p><a data-smoke-studio-link href="/studio/catalogue-work/">Works</a></p>'
             ),
         },
         INLINE_MERMAID_DOC_ID: {
@@ -2266,16 +2267,26 @@ def assert_public_docs_links_activate_in_manage(page: Page) -> None:
                 '/docs-viewer/runtime/js/management/'
                 + 'docs-viewer-management-document-links.js'
             );
+            const configuredSiteLinks = await import(
+                '/docs-viewer/runtime/js/management/'
+                + 'docs-viewer-management-configured-site-links.js'
+            );
             const root = document.createElement('div');
             root.innerHTML = `
               <a data-case="document" href="/analysis/?doc=analysis-doc#section">Document</a>
               <a data-case="subdoc" href="/analysis/?doc=report&subdoc=child">Subdoc</a>
               <a data-case="manage" href="/docs/?scope=analysis&doc=managed">Manage</a>
+              <a data-case="studio" href="/studio/catalogue-work/?work=00635#media">Studio</a>
+              <a data-case="studio-root" href="/studio/">Studio root</a>
+              <a data-case="studio-absolute" href="http://127.0.0.1:8776/studio/catalogue-work/">Absolute</a>
+              <a data-case="studio-protocol-relative" href="//example.com/studio/catalogue-work/">Protocol relative</a>
+              <a data-case="studio-lookalike" href="/studio-tools/">Lookalike</a>
+              <a data-case="studio-traversal" href="/studio/../docs/">Traversal</a>
               <a data-case="external" href="https://example.com/analysis/?doc=external">External</a>
               <a data-case="missing" href="/analysis/">Missing</a>
             `;
             const calls = [];
-            const mounted = links.mountManagedDocsViewerDocumentLinks(root, {
+            const mountedDocs = links.mountManagedDocsViewerDocumentLinks(root, {
                 currentHref: 'http://127.0.0.1:8776/docs/?scope=analysis&doc=current',
                 scopeConfigsById: new Map([
                     ['analysis', {
@@ -2292,8 +2303,23 @@ def assert_public_docs_links_activate_in_manage(page: Page) -> None:
                     return '/docs/?scope=' + scope + '&doc=' + docId;
                 }
             });
+            const mountedSites = configuredSiteLinks.mountManagedConfiguredSiteLinks(root, [
+                {
+                    pathPrefix: '/studio/',
+                    baseUrl: 'http://127.0.0.1:8765'
+                }
+            ]);
             return {
-                mounted,
+                mountedDocs,
+                mountedSites,
+                alternatePort: configuredSiteLinks.resolveManagedConfiguredSiteHref(
+                    '/studio/catalogue-work/',
+                    [{ pathPrefix: '/studio/', baseUrl: 'http://127.0.0.1:49152' }]
+                ),
+                missingBase: configuredSiteLinks.resolveManagedConfiguredSiteHref(
+                    '/studio/catalogue-work/',
+                    [{ pathPrefix: '/studio/', baseUrl: '' }]
+                ),
                 calls,
                 hrefs: Object.fromEntries(
                     [...root.querySelectorAll('a')].map((link) => [
@@ -2305,7 +2331,10 @@ def assert_public_docs_links_activate_in_manage(page: Page) -> None:
         }"""
     )
     expected = {
-        "mounted": 2,
+        "mountedDocs": 2,
+        "mountedSites": 2,
+        "alternatePort": "http://127.0.0.1:49152/studio/catalogue-work/",
+        "missingBase": "",
         "calls": [
             {"scope": "analysis", "docId": "analysis-doc", "manage": True},
             {"scope": "analysis", "docId": "report", "manage": True},
@@ -2314,6 +2343,12 @@ def assert_public_docs_links_activate_in_manage(page: Page) -> None:
             "document": "/docs/?scope=analysis&doc=analysis-doc#section",
             "subdoc": "/docs/?scope=analysis&doc=report&subdoc=child",
             "manage": "/docs/?scope=analysis&doc=managed",
+            "studio": "http://127.0.0.1:8765/studio/catalogue-work/?work=00635#media",
+            "studio-root": "http://127.0.0.1:8765/studio/",
+            "studio-absolute": "http://127.0.0.1:8776/studio/catalogue-work/",
+            "studio-protocol-relative": "//example.com/studio/catalogue-work/",
+            "studio-lookalike": "/studio-tools/",
+            "studio-traversal": "/studio/../docs/",
             "external": "https://example.com/analysis/?doc=external",
             "missing": "/analysis/",
         },
@@ -3270,6 +3305,9 @@ def exercise_manage_route(
 
     page.goto(f"{base_url}/docs/?scope=studio&doc={DOCS_VIEWER_DOC_ID}", wait_until="domcontentloaded")
     wait_for_manage_doc(page, DOCS_VIEWER_DOC_TITLE, timeout_ms)
+    studio_link_href = page.locator("[data-smoke-studio-link]").get_attribute("href")
+    if studio_link_href != "http://127.0.0.1:8765/studio/catalogue-work/":
+        raise AssertionError(f"configured Studio document link did not resolve: {studio_link_href!r}")
     assert_action_target_definitions(page)
     assert_metadata_hydration_failure_is_safe(page)
     assert_metadata_workflow_uses_exact_sub_scope_target(page)
