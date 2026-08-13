@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+import hashlib
 import json
 import re
 from dataclasses import dataclass
@@ -27,6 +28,7 @@ from docs_scope_config import (
 MERMAID_PROJECTION_DIRECTORY_PATTERN = re.compile(
     r"^(?P<doc_id>.+)--mermaid-[0-9]{4}$"
 )
+SEARCH_INDEX_SCHEMA = "docs_viewer_search_index_v2"
 
 
 class PublicDeleteCleanupApplyError(RuntimeError):
@@ -111,6 +113,20 @@ def repo_relative(repo_root: Path, path: Path) -> str:
 
 def json_bytes(payload: Any) -> bytes:
     return (json.dumps(payload, ensure_ascii=False, indent=2) + "\n").encode("utf-8")
+
+
+def search_payload_version(payload: Mapping[str, Any]) -> str:
+    header = payload.get("header")
+    version_payload = {
+        "schema": header.get("schema") if isinstance(header, dict) else "",
+        "scope": header.get("scope") if isinstance(header, dict) else "",
+        "fields": payload.get("fields"),
+        "docs": payload.get("docs"),
+        "terms": payload.get("terms"),
+    }
+    canonical = json.dumps(version_payload, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
+    digest = hashlib.blake2b(canonical.encode("utf-8"), digest_size=64).digest()[:16].hex()
+    return f"blake2b-{digest}"
 
 
 def read_json_object(path: Path, *, field: str) -> dict[str, Any]:
@@ -243,18 +259,49 @@ def filtered_recent_payload(payload: Mapping[str, Any], doc_ids: set[str]) -> di
 
 
 def filtered_search_payload(payload: Mapping[str, Any], doc_ids: set[str]) -> dict[str, Any]:
-    rows = payload.get("entries")
+    rows = payload.get("docs")
     header = payload.get("header")
-    if not isinstance(rows, list) or not isinstance(header, dict):
-        raise ValueError("public search requires header and entries")
+    fields = payload.get("fields")
+    terms = payload.get("terms")
+    if (
+        not isinstance(rows, list)
+        or not isinstance(header, dict)
+        or header.get("schema") != SEARCH_INDEX_SCHEMA
+        or not isinstance(fields, list)
+        or not isinstance(terms, dict)
+    ):
+        raise ValueError("public search requires a v2 header, fields, docs, and terms")
     if any(not isinstance(row, dict) for row in rows):
-        raise ValueError("public search entry must be an object")
-    entries = [
-        row
-        for row in rows
+        raise ValueError("public search document must be an object")
+
+    kept = [
+        (position, row)
+        for position, row in enumerate(rows)
         if str(row.get("id") or "").strip() not in doc_ids
     ]
-    return {**payload, "header": {**header, "count": len(entries)}, "entries": entries}
+    positions = {old: new for new, (old, _row) in enumerate(kept)}
+    next_terms: dict[str, dict[str, list[int]]] = {}
+    for term, raw_postings in terms.items():
+        if not isinstance(raw_postings, dict):
+            raise ValueError("public search term postings must be an object")
+        next_postings: dict[str, list[int]] = {}
+        for field, raw_positions in raw_postings.items():
+            if not isinstance(raw_positions, list) or any(not isinstance(item, int) for item in raw_positions):
+                raise ValueError("public search field postings must be integer arrays")
+            remapped = [positions[item] for item in raw_positions if item in positions]
+            if remapped:
+                next_postings[field] = remapped
+        if next_postings:
+            next_terms[term] = next_postings
+
+    result = {
+        **payload,
+        "header": {**header, "count": len(kept)},
+        "docs": [row for _position, row in kept],
+        "terms": next_terms,
+    }
+    result["header"]["version"] = search_payload_version(result)
+    return result
 
 
 def filtered_manifest_payload(payload: Mapping[str, Any], doc_ids: set[str]) -> dict[str, Any]:
@@ -386,7 +433,7 @@ def plan_public_document_delete_cleanup(
         if isinstance(row, dict)
     ).union(
         str(row.get("id") or "").strip()
-        for row in state.search.get("entries", [])
+        for row in state.search.get("docs", [])
         if isinstance(row, dict)
     )
     next_tree = state.index_tree
@@ -514,11 +561,11 @@ def plan_public_scope_delete_cleanup(
             catalogue_targets=(),
         )
     state = load_public_scope_state(repo_root, config)
-    search_entries = state.search.get("entries") if state is not None else None
+    search_docs = state.search.get("docs") if state is not None else None
     if (
         state is None
         or not state.parent_documents
-        or (isinstance(search_entries, list) and not search_entries)
+        or (isinstance(search_docs, list) and not search_docs)
     ):
         removed_urls: tuple[str, ...] = ()
     else:

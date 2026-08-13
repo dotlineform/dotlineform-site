@@ -183,23 +183,9 @@ def extract_search_step_diagnostics(stdout: str, search: Dict[str, Any]) -> Dict
     if diagnostics["mode"] == "none":
         return diagnostics
 
-    changed_match = re.search(
-        r"Changed:\s*(\d+)\.\s*Removed:\s*(\d+)\.\s*Unchanged:\s*(\d+)\.\s*Full fallback:\s*(\d+)",
-        stdout,
-    )
-    if changed_match:
-        diagnostics.update(
-            {
-                "changed": int(changed_match.group(1)),
-                "removed": int(changed_match.group(2)),
-                "unchanged": int(changed_match.group(3)),
-                "full_fallback": bool(int(changed_match.group(4))),
-            }
-        )
-
-    count_match = re.search(r"\bwith\s+(\d+)\s+\S+\s+search entries\b", stdout)
+    count_match = re.search(r"\bwith\s+(\d+)\s+\S+\s+search docs\b", stdout)
     if count_match:
-        diagnostics["entries"] = int(count_match.group(1))
+        diagnostics["docs"] = int(count_match.group(1))
 
     skipped_match = re.search(r"\bSkipped:\s*(\d+)\b", stdout)
     if skipped_match:
@@ -271,7 +257,7 @@ def rebuild_scope_outputs(
             commands.append(("search", python_builder_command(SEARCH_BUILDER_SCRIPT, "--scope", scope, "--write")))
         else:
             target_doc_ids = ordered_search_doc_ids(search_doc_ids)
-            search = {"mode": "targeted" if target_doc_ids else "none", "doc_ids": target_doc_ids}
+            search = {"mode": "full" if target_doc_ids else "none", "doc_ids": target_doc_ids}
             if target_doc_ids:
                 commands.append(
                     (
@@ -281,9 +267,6 @@ def rebuild_scope_outputs(
                             "--scope",
                             scope,
                             "--write",
-                            "--only-doc-ids",
-                            ",".join(target_doc_ids),
-                            "--remove-missing",
                         ),
                     )
                 )

@@ -437,7 +437,17 @@ def test_generated_reads_support_external_local_scope_payloads() -> None:
         )
         write_json(
             external_root / "scopes/private/published/search/index.json",
-            {"entries": [{"id": PRIVATE_DOC_ID}]},
+            {
+                "header": {
+                    "schema": "docs_viewer_search_index_v2",
+                    "scope": "private",
+                    "version": "fixture",
+                    "count": 1,
+                },
+                "fields": ["title", "parent_title", "identity", "last_updated"],
+                "docs": [{"id": PRIVATE_DOC_ID}],
+                "terms": {PRIVATE_DOC_ID: {"identity": [0]}},
+            },
         )
 
         try:
@@ -455,7 +465,7 @@ def test_generated_reads_support_external_local_scope_payloads() -> None:
                 os.environ["DOTLINEFORM_PROJECTS_BASE_DIR"] = old_projects_base
 
     assert payload == {"doc_id": PRIVATE_DOC_ID}
-    assert search["entries"] == [{"id": PRIVATE_DOC_ID}]
+    assert search["docs"] == [{"id": PRIVATE_DOC_ID}]
     assert backlinks["by_target"] == {PRIVATE_DOC_ID: []}
 
 

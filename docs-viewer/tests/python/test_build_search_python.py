@@ -135,30 +135,25 @@ def test_python_docs_search_builder_writes_current_schema_and_hash() -> None:
 
     assert exit_code == 0
     assert stderr == ""
-    assert "Wrote docs-viewer/scopes/studio/published/search/index.json with 4 studio search entries" in stdout
+    assert "Wrote docs-viewer/scopes/studio/published/search/index.json with 4 studio search docs" in stdout
     header = payload["header"]
-    entries = payload["entries"]
-    assert header["schema"] == "search_index_studio_v1"
+    docs = payload["docs"]
+    assert header["schema"] == "docs_viewer_search_index_v2"
     assert header["scope"] == "studio"
     assert header["version"].startswith("blake2b-")
     assert header["count"] == 4
-    assert [entry["id"] for entry in entries] == ["draft", "draft-child", "parent", "child"]
-    child = entries[3]
-    assert child["kind"] == "doc"
+    assert payload["fields"] == ["title", "parent_title", "identity", "last_updated"]
+    assert [document["id"] for document in docs] == ["child", "draft", "draft-child", "parent"]
+    child = docs[0]
     assert child["href"] == "/docs/?scope=studio&doc=child"
     assert child["parent_title"] == "Parent Page"
     assert child["display_meta"] == "2026-06-02 • Parent Page"
-    assert child["search_terms"] == [
-        "child",
-        "parent page",
-        "parent",
-        "page",
-        "2026-06-02",
-        "2026",
-        "06",
-        "02",
-    ]
-    assert child["search_text"] == " ".join(child["search_terms"])
+    assert payload["terms"]["child"] == {"title": [0, 2], "identity": [0]}
+    assert payload["terms"]["parent"] == {
+        "title": [3],
+        "parent_title": [0],
+        "identity": [3],
+    }
 
 
 def test_v2_tokenizer_and_index_match_shared_contract_fixture() -> None:
@@ -187,7 +182,7 @@ def test_v2_tokenizer_and_index_match_shared_contract_fixture() -> None:
         assert payload["terms"][term] == postings
 
 
-def test_inactive_v2_builder_rebuilds_whole_index_and_skips_identical_output() -> None:
+def test_builder_rebuilds_whole_index_and_skips_identical_output() -> None:
     with tempfile.TemporaryDirectory() as temp_path:
         root = Path(temp_path)
         prepare_repo(root)
@@ -197,7 +192,7 @@ def test_inactive_v2_builder_rebuilds_whole_index_and_skips_identical_output() -
             changed_doc_ids=["child"],
             generated_at_utc="2026-08-13T00:00:00Z",
         )
-        builder.write_payload(initial, write=True, force=False, diagnostics=None)
+        builder.write_payload(initial, write=True, force=False)
 
         write_source_docs(root, child_title="Child Updated")
         write_text(
@@ -209,13 +204,13 @@ def test_inactive_v2_builder_rebuilds_whole_index_and_skips_identical_output() -
             changed_doc_ids=["child", "created", "parent"],
             generated_at_utc="2026-08-13T00:01:00Z",
         )
-        builder.write_payload(changed, write=True, force=False, diagnostics=None)
+        builder.write_payload(changed, write=True, force=False)
         written = output_path.read_text(encoding="utf-8")
         unchanged, _unchanged_diagnostics = builder.build_docs_v2_payload(
             changed_doc_ids=["child"],
             generated_at_utc="2026-08-13T00:02:00Z",
         )
-        builder.write_payload(unchanged, write=True, force=False, diagnostics=None)
+        builder.write_payload(unchanged, write=True, force=False)
         after_skip = output_path.read_text(encoding="utf-8")
 
     changed_by_id = {document["id"]: document for document in changed["docs"]}
@@ -280,16 +275,17 @@ def test_targeted_local_search_build_does_not_resolve_unselected_external_scope(
 
 
 def test_doc_search_keeps_exact_opaque_id_without_fragment_tokens() -> None:
-    terms = build_search.build_doc_search_tokens(
-        "d-20260715-094411-2b6e65",
-        "Document Identity",
-        "Docs Viewer",
+    doc_id = "d-20260715-094411-2b6e65"
+    terms = build_search.tokenize_search_value_v2(doc_id)
+    payload = build_search.build_search_index_v2(
+        scope="studio",
+        documents=[{"id": doc_id, "title": "Document Identity", "href": f"/docs/?scope=studio&doc={doc_id}"}],
+        search_fields=("title", "identity"),
+        generated_at_utc="2026-08-13T00:00:00Z",
     )
 
-    assert "d-20260715-094411-2b6e65" in terms
-    assert "20260715" not in terms
-    assert "094411" not in terms
-    assert "2b6e65" not in terms
+    assert terms == []
+    assert payload["terms"][doc_id] == {"identity": [0]}
 
 
 def test_python_docs_search_builder_excludes_configured_sub_scope_sources() -> None:
@@ -319,8 +315,8 @@ Sub-scope detail body.
 
     assert exit_code == 0
     assert stderr == ""
-    assert "Wrote docs-viewer/scopes/studio/published/search/index.json with 4 studio search entries" in stdout
-    assert "detail" not in {entry["id"] for entry in payload["entries"]}
+    assert "Wrote docs-viewer/scopes/studio/published/search/index.json with 4 studio search docs" in stdout
+    assert "detail" not in {document["id"] for document in payload["docs"]}
 
 
 def test_python_docs_search_builder_dry_run_does_not_write() -> None:
@@ -331,7 +327,7 @@ def test_python_docs_search_builder_dry_run_does_not_write() -> None:
 
         assert exit_code == 0
         assert stderr == ""
-        assert "Dry run: 4 studio search entries" in stdout
+        assert "Dry run: 4 studio search docs" in stdout
         assert "Would write: docs-viewer/scopes/studio/published/search/index.json" in stdout
         assert not (root / "docs-viewer/scopes/studio/published/search/index.json").exists()
 
@@ -351,62 +347,8 @@ def test_python_docs_search_builder_skips_unchanged_second_write_and_force_rewri
     assert "Search index JSON done. Wrote: 0. Skipped: 1." in second_stdout
     assert force_exit == 0
     assert force_stderr == ""
-    assert "Wrote docs-viewer/scopes/studio/published/search/index.json with 4 studio search entries" in force_stdout
+    assert "Wrote docs-viewer/scopes/studio/published/search/index.json with 4 studio search docs" in force_stdout
     assert force_payload["header"]["version"] == first_payload["header"]["version"]
-
-
-def test_python_docs_search_builder_targeted_update_patches_existing_entry() -> None:
-    with tempfile.TemporaryDirectory() as temp_path:
-        root = Path(temp_path)
-        prepare_repo(root)
-        run_cli(root, ["--scope", "studio", "--write"])
-        write_source_docs(root, child_title="Child Updated")
-
-        exit_code, stdout, stderr = run_cli(root, ["--scope", "studio", "--write", "--only-doc-ids", "child", "--remove-missing"])
-        payload = read_json(root / "docs-viewer/scopes/studio/published/search/index.json")
-
-    assert exit_code == 0
-    assert stderr == ""
-    assert "Targeted search index JSON done. Wrote: 1. Skipped: 0. Changed: 1. Removed: 0. Unchanged: 0. Full fallback: 0." in stdout
-    assert [entry["id"] for entry in payload["entries"]] == ["draft", "draft-child", "parent", "child"]
-    assert payload["entries"][3]["title"] == "Child Updated"
-
-
-def test_python_docs_search_builder_targeted_remove_requires_remove_missing() -> None:
-    with tempfile.TemporaryDirectory() as temp_path:
-        root = Path(temp_path)
-        prepare_repo(root)
-        run_cli(root, ["--scope", "studio", "--write"])
-        (root / "docs-viewer/scopes/studio/source/documents/child.md").unlink()
-
-        try:
-            run_cli(root, ["--scope", "studio", "--write", "--only-doc-ids", "child"])
-        except SystemExit as exc:
-            error = str(exc)
-        else:
-            raise AssertionError("targeted removal without --remove-missing should fail")
-
-        exit_code, stdout, stderr = run_cli(root, ["--scope", "studio", "--write", "--only-doc-ids", "child", "--remove-missing"])
-        payload = read_json(root / "docs-viewer/scopes/studio/published/search/index.json")
-
-    assert "requires --remove-missing" in error
-    assert exit_code == 0
-    assert stderr == ""
-    assert "Changed: 0. Removed: 1. Unchanged: 0. Full fallback: 0." in stdout
-    assert [entry["id"] for entry in payload["entries"]] == ["draft", "draft-child", "parent"]
-
-
-def test_python_docs_search_builder_targeted_without_existing_index_falls_back_full() -> None:
-    with tempfile.TemporaryDirectory() as temp_path:
-        root = Path(temp_path)
-        prepare_repo(root)
-        exit_code, stdout, stderr = run_cli(root, ["--scope", "studio", "--write", "--only-doc-ids", "child", "--remove-missing"])
-        payload = read_json(root / "docs-viewer/scopes/studio/published/search/index.json")
-
-    assert exit_code == 0
-    assert stderr == ""
-    assert "Changed: 4. Removed: 0. Unchanged: 0. Full fallback: 1." in stdout
-    assert [entry["id"] for entry in payload["entries"]] == ["draft", "draft-child", "parent", "child"]
 
 
 def test_python_docs_search_builder_rejects_catalogue_targeted_records_flag() -> None:
@@ -455,18 +397,15 @@ External search body.
 
     assert exit_code == 0
     assert stderr == ""
-    assert "with 1 private search entries" in stdout
+    assert "with 1 private search docs" in stdout
     assert payload["header"]["scope"] == "private"
-    assert payload["entries"][0]["href"] == "/docs/?scope=private&doc=private"
+    assert payload["docs"][0]["href"] == "/docs/?scope=private&doc=private"
 
 
 def main() -> None:
     test_python_docs_search_builder_writes_current_schema_and_hash()
     test_python_docs_search_builder_dry_run_does_not_write()
     test_python_docs_search_builder_skips_unchanged_second_write_and_force_rewrites()
-    test_python_docs_search_builder_targeted_update_patches_existing_entry()
-    test_python_docs_search_builder_targeted_remove_requires_remove_missing()
-    test_python_docs_search_builder_targeted_without_existing_index_falls_back_full()
     test_python_docs_search_builder_rejects_catalogue_targeted_records_flag()
     test_python_docs_search_builder_writes_external_local_scope_index()
     print("Python Docs Viewer search builder tests OK")

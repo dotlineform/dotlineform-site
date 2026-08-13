@@ -1,441 +1,529 @@
 {
   "header": {
-    "schema": "search_index_analysis_v1",
+    "schema": "docs_viewer_search_index_v2",
     "scope": "analysis",
-    "version": "blake2b-fd038768bb6dfb21825523a7ba32f986",
-    "generated_at_utc": "2026-08-12T21:01:59Z",
+    "version": "blake2b-7b24574a90f8f032587844faa68dc544",
+    "generated_at_utc": "2026-08-13T18:46:32Z",
     "count": 17
   },
-  "entries": [
+  "fields": [
+    "title",
+    "parent_title",
+    "identity",
+    "last_updated"
+  ],
+  "docs": [
     {
       "id": "d-20260426-164043-e14f49",
-      "kind": "doc",
       "title": "Analysis",
       "href": "/analysis/?doc=d-20260426-164043-e14f49",
       "last_updated": "2026-05-11 19:17:51",
-      "display_meta": "2026-05-11 19:17:51",
-      "search_terms": [
-        "analysis",
-        "2026-05-11 19:17:51",
-        "2026",
-        "05",
-        "11",
-        "19",
-        "17",
-        "51",
-        "d-20260426-164043-e14f49"
-      ],
-      "search_text": "analysis 2026-05-11 19:17:51 2026 05 11 19 17 51 d-20260426-164043-e14f49"
+      "display_meta": "2026-05-11 19:17:51"
     },
     {
       "id": "d-20260624-213316-478639",
-      "kind": "doc",
       "title": "Concepts",
       "href": "/analysis/?doc=d-20260624-213316-478639",
       "last_updated": "2026-07-29 11:30:02",
       "parent_id": "d-20260426-164043-e14f49",
       "parent_title": "Analysis",
-      "display_meta": "2026-07-29 11:30:02 • Analysis",
-      "search_terms": [
-        "concepts",
-        "analysis",
-        "2026-07-29 11:30:02",
-        "2026",
-        "07",
-        "29",
-        "11",
-        "30",
-        "02",
-        "d-20260624-213316-478639"
-      ],
-      "search_text": "concepts analysis 2026-07-29 11:30:02 2026 07 29 11 30 02 d-20260624-213316-478639"
+      "display_meta": "2026-07-29 11:30:02 • Analysis"
     },
     {
-      "id": "d-20260809-130120-870cc2",
-      "kind": "doc",
-      "title": "Library",
-      "href": "/analysis/?doc=d-20260809-130120-870cc2",
-      "last_updated": "2026-08-09 13:01:20",
-      "display_meta": "2026-08-09 13:01:20",
-      "search_terms": [
-        "library",
-        "2026-08-09 13:01:20",
-        "2026",
-        "08",
-        "09",
-        "13",
-        "01",
-        "20",
-        "d-20260809-130120-870cc2"
-      ],
-      "search_text": "library 2026-08-09 13:01:20 2026 08 09 13 01 20 d-20260809-130120-870cc2"
-    },
-    {
-      "id": "d-20260809-130120-461754",
-      "kind": "doc",
-      "title": "Abstract Thought and Physical Processes",
-      "href": "/analysis/?doc=d-20260809-130120-461754",
-      "last_updated": "2026-08-09 13:01:20",
-      "parent_id": "d-20260809-130120-870cc2",
-      "parent_title": "Library",
-      "display_meta": "2026-08-09 13:01:20 • Library",
-      "search_terms": [
-        "abstract thought and physical processes",
-        "abstract",
-        "thought",
-        "and",
-        "physical",
-        "processes",
-        "library",
-        "2026-08-09 13:01:20",
-        "2026",
-        "08",
-        "09",
-        "13",
-        "01",
-        "20",
-        "d-20260809-130120-461754"
-      ],
-      "search_text": "abstract thought and physical processes abstract thought and physical processes library 2026-08-09 13:01:20 2026 08 09 13 01 20 d-20260809-130120-461754"
-    },
-    {
-      "id": "d-20260809-130120-91c97f",
-      "kind": "doc",
-      "title": "Bayesian Reasoning",
-      "href": "/analysis/?doc=d-20260809-130120-91c97f",
-      "last_updated": "2026-08-09 13:01:20",
-      "parent_id": "d-20260809-130120-870cc2",
-      "parent_title": "Library",
-      "display_meta": "2026-08-09 13:01:20 • Library",
-      "search_terms": [
-        "bayesian reasoning",
-        "bayesian",
-        "reasoning",
-        "library",
-        "2026-08-09 13:01:20",
-        "2026",
-        "08",
-        "09",
-        "13",
-        "01",
-        "20",
-        "d-20260809-130120-91c97f"
-      ],
-      "search_text": "bayesian reasoning bayesian reasoning library 2026-08-09 13:01:20 2026 08 09 13 01 20 d-20260809-130120-91c97f"
-    },
-    {
-      "id": "d-20260809-130120-837891",
-      "kind": "doc",
-      "title": "Beauty",
-      "href": "/analysis/?doc=d-20260809-130120-837891",
-      "last_updated": "2026-08-11 22:18:57",
-      "parent_id": "d-20260809-130120-870cc2",
-      "parent_title": "Library",
-      "display_meta": "2026-08-11 22:18:57 • Library",
-      "search_terms": [
-        "beauty",
-        "library",
-        "2026-08-11 22:18:57",
-        "2026",
-        "08",
-        "11",
-        "22",
-        "18",
-        "57",
-        "d-20260809-130120-837891"
-      ],
-      "search_text": "beauty library 2026-08-11 22:18:57 2026 08 11 22 18 57 d-20260809-130120-837891"
+      "id": "d-20260807-082735-54d9d5",
+      "title": "Works",
+      "href": "/analysis/?doc=d-20260807-082735-54d9d5",
+      "last_updated": "2026-08-07 08:27:35",
+      "display_meta": "2026-08-07 08:27:35"
     },
     {
       "id": "d-20260809-130120-28fb85",
-      "kind": "doc",
       "title": "Beauty × Memory × Meaning",
       "href": "/analysis/?doc=d-20260809-130120-28fb85",
       "last_updated": "2026-08-09 13:01:20",
       "parent_id": "d-20260809-130120-870cc2",
       "parent_title": "Library",
-      "display_meta": "2026-08-09 13:01:20 • Library",
-      "search_terms": [
-        "beauty × memory × meaning",
-        "beauty",
-        "memory",
-        "meaning",
-        "library",
-        "2026-08-09 13:01:20",
-        "2026",
-        "08",
-        "09",
-        "13",
-        "01",
-        "20",
-        "d-20260809-130120-28fb85"
-      ],
-      "search_text": "beauty × memory × meaning beauty memory meaning library 2026-08-09 13:01:20 2026 08 09 13 01 20 d-20260809-130120-28fb85"
-    },
-    {
-      "id": "d-20260809-130120-44384d",
-      "kind": "doc",
-      "title": "Beyond Conscious vs. Subconscious",
-      "href": "/analysis/?doc=d-20260809-130120-44384d",
-      "last_updated": "2026-08-09 13:01:20",
-      "parent_id": "d-20260809-130120-870cc2",
-      "parent_title": "Library",
-      "display_meta": "2026-08-09 13:01:20 • Library",
-      "search_terms": [
-        "beyond conscious vs. subconscious",
-        "beyond",
-        "conscious",
-        "vs",
-        "subconscious",
-        "library",
-        "2026-08-09 13:01:20",
-        "2026",
-        "08",
-        "09",
-        "13",
-        "01",
-        "20",
-        "d-20260809-130120-44384d"
-      ],
-      "search_text": "beyond conscious vs. subconscious beyond conscious vs subconscious library 2026-08-09 13:01:20 2026 08 09 13 01 20 d-20260809-130120-44384d"
-    },
-    {
-      "id": "d-20260809-130120-d66e0b",
-      "kind": "doc",
-      "title": "Can the Brain Comprehend How It Works?",
-      "href": "/analysis/?doc=d-20260809-130120-d66e0b",
-      "last_updated": "2026-08-09 13:01:20",
-      "parent_id": "d-20260809-130120-870cc2",
-      "parent_title": "Library",
-      "display_meta": "2026-08-09 13:01:20 • Library",
-      "search_terms": [
-        "can the brain comprehend how it works?",
-        "can",
-        "the",
-        "brain",
-        "comprehend",
-        "how",
-        "it",
-        "works",
-        "library",
-        "2026-08-09 13:01:20",
-        "2026",
-        "08",
-        "09",
-        "13",
-        "01",
-        "20",
-        "d-20260809-130120-d66e0b"
-      ],
-      "search_text": "can the brain comprehend how it works? can the brain comprehend how it works library 2026-08-09 13:01:20 2026 08 09 13 01 20 d-20260809-130120-d66e0b"
-    },
-    {
-      "id": "d-20260809-130120-c5c511",
-      "kind": "doc",
-      "title": "Coincidence Inevitability",
-      "href": "/analysis/?doc=d-20260809-130120-c5c511",
-      "last_updated": "2026-08-09 13:01:20",
-      "parent_id": "d-20260809-130120-870cc2",
-      "parent_title": "Library",
-      "display_meta": "2026-08-09 13:01:20 • Library",
-      "search_terms": [
-        "coincidence inevitability",
-        "coincidence",
-        "inevitability",
-        "library",
-        "2026-08-09 13:01:20",
-        "2026",
-        "08",
-        "09",
-        "13",
-        "01",
-        "20",
-        "d-20260809-130120-c5c511"
-      ],
-      "search_text": "coincidence inevitability coincidence inevitability library 2026-08-09 13:01:20 2026 08 09 13 01 20 d-20260809-130120-c5c511"
-    },
-    {
-      "id": "d-20260809-130120-ed5b30",
-      "kind": "doc",
-      "title": "Coincidence Salience Worksheet",
-      "href": "/analysis/?doc=d-20260809-130120-ed5b30",
-      "last_updated": "2026-08-09 13:01:20",
-      "parent_id": "d-20260809-130120-870cc2",
-      "parent_title": "Library",
-      "display_meta": "2026-08-09 13:01:20 • Library",
-      "search_terms": [
-        "coincidence salience worksheet",
-        "coincidence",
-        "salience",
-        "worksheet",
-        "library",
-        "2026-08-09 13:01:20",
-        "2026",
-        "08",
-        "09",
-        "13",
-        "01",
-        "20",
-        "d-20260809-130120-ed5b30"
-      ],
-      "search_text": "coincidence salience worksheet coincidence salience worksheet library 2026-08-09 13:01:20 2026 08 09 13 01 20 d-20260809-130120-ed5b30"
-    },
-    {
-      "id": "d-20260809-130120-e6793d",
-      "kind": "doc",
-      "title": "Defining \"Information\" for Cross‑Boundary Comparisons",
-      "href": "/analysis/?doc=d-20260809-130120-e6793d",
-      "last_updated": "2026-08-09 13:01:20",
-      "parent_id": "d-20260809-130120-870cc2",
-      "parent_title": "Library",
-      "display_meta": "2026-08-09 13:01:20 • Library",
-      "search_terms": [
-        "defining \"information\" for cross‑boundary comparisons",
-        "defining",
-        "information",
-        "for",
-        "cross",
-        "boundary",
-        "comparisons",
-        "library",
-        "2026-08-09 13:01:20",
-        "2026",
-        "08",
-        "09",
-        "13",
-        "01",
-        "20",
-        "d-20260809-130120-e6793d"
-      ],
-      "search_text": "defining \"information\" for cross‑boundary comparisons defining information for cross boundary comparisons library 2026-08-09 13:01:20 2026 08 09 13 01 20 d-20260809-130120-e6793d"
-    },
-    {
-      "id": "d-20260809-130120-afeb4d",
-      "kind": "doc",
-      "title": "Dreaming is Active",
-      "href": "/analysis/?doc=d-20260809-130120-afeb4d",
-      "last_updated": "2026-08-09 13:01:20",
-      "parent_id": "d-20260809-130120-870cc2",
-      "parent_title": "Library",
-      "display_meta": "2026-08-09 13:01:20 • Library",
-      "search_terms": [
-        "dreaming is active",
-        "dreaming",
-        "is",
-        "active",
-        "library",
-        "2026-08-09 13:01:20",
-        "2026",
-        "08",
-        "09",
-        "13",
-        "01",
-        "20",
-        "d-20260809-130120-afeb4d"
-      ],
-      "search_text": "dreaming is active dreaming is active library 2026-08-09 13:01:20 2026 08 09 13 01 20 d-20260809-130120-afeb4d"
+      "display_meta": "2026-08-09 13:01:20 • Library"
     },
     {
       "id": "d-20260809-130120-3054b0",
-      "kind": "doc",
       "title": "Entropy & Evolution Under Two Cosmologies",
       "href": "/analysis/?doc=d-20260809-130120-3054b0",
       "last_updated": "2026-08-09 13:01:20",
       "parent_id": "d-20260809-130120-870cc2",
       "parent_title": "Library",
-      "display_meta": "2026-08-09 13:01:20 • Library",
-      "search_terms": [
-        "entropy & evolution under two cosmologies",
-        "entropy",
-        "evolution",
-        "under",
-        "two",
-        "cosmologies",
-        "library",
-        "2026-08-09 13:01:20",
-        "2026",
-        "08",
-        "09",
-        "13",
-        "01",
-        "20",
-        "d-20260809-130120-3054b0"
-      ],
-      "search_text": "entropy & evolution under two cosmologies entropy evolution under two cosmologies library 2026-08-09 13:01:20 2026 08 09 13 01 20 d-20260809-130120-3054b0"
+      "display_meta": "2026-08-09 13:01:20 • Library"
+    },
+    {
+      "id": "d-20260809-130120-44384d",
+      "title": "Beyond Conscious vs. Subconscious",
+      "href": "/analysis/?doc=d-20260809-130120-44384d",
+      "last_updated": "2026-08-09 13:01:20",
+      "parent_id": "d-20260809-130120-870cc2",
+      "parent_title": "Library",
+      "display_meta": "2026-08-09 13:01:20 • Library"
+    },
+    {
+      "id": "d-20260809-130120-461754",
+      "title": "Abstract Thought and Physical Processes",
+      "href": "/analysis/?doc=d-20260809-130120-461754",
+      "last_updated": "2026-08-09 13:01:20",
+      "parent_id": "d-20260809-130120-870cc2",
+      "parent_title": "Library",
+      "display_meta": "2026-08-09 13:01:20 • Library"
+    },
+    {
+      "id": "d-20260809-130120-837891",
+      "title": "Beauty",
+      "href": "/analysis/?doc=d-20260809-130120-837891",
+      "last_updated": "2026-08-11 22:18:57",
+      "parent_id": "d-20260809-130120-870cc2",
+      "parent_title": "Library",
+      "display_meta": "2026-08-11 22:18:57 • Library"
+    },
+    {
+      "id": "d-20260809-130120-870cc2",
+      "title": "Library",
+      "href": "/analysis/?doc=d-20260809-130120-870cc2",
+      "last_updated": "2026-08-09 13:01:20",
+      "display_meta": "2026-08-09 13:01:20"
+    },
+    {
+      "id": "d-20260809-130120-91c97f",
+      "title": "Bayesian Reasoning",
+      "href": "/analysis/?doc=d-20260809-130120-91c97f",
+      "last_updated": "2026-08-09 13:01:20",
+      "parent_id": "d-20260809-130120-870cc2",
+      "parent_title": "Library",
+      "display_meta": "2026-08-09 13:01:20 • Library"
     },
     {
       "id": "d-20260809-130120-a7bc91",
-      "kind": "doc",
       "title": "Evolutionary Psychology — Overview",
       "href": "/analysis/?doc=d-20260809-130120-a7bc91",
       "last_updated": "2026-08-09 13:01:20",
       "parent_id": "d-20260809-130120-870cc2",
       "parent_title": "Library",
-      "display_meta": "2026-08-09 13:01:20 • Library",
-      "search_terms": [
-        "evolutionary psychology — overview",
-        "evolutionary",
-        "psychology",
-        "overview",
-        "library",
-        "2026-08-09 13:01:20",
-        "2026",
-        "08",
-        "09",
-        "13",
-        "01",
-        "20",
-        "d-20260809-130120-a7bc91"
-      ],
-      "search_text": "evolutionary psychology — overview evolutionary psychology overview library 2026-08-09 13:01:20 2026 08 09 13 01 20 d-20260809-130120-a7bc91"
+      "display_meta": "2026-08-09 13:01:20 • Library"
+    },
+    {
+      "id": "d-20260809-130120-afeb4d",
+      "title": "Dreaming is Active",
+      "href": "/analysis/?doc=d-20260809-130120-afeb4d",
+      "last_updated": "2026-08-09 13:01:20",
+      "parent_id": "d-20260809-130120-870cc2",
+      "parent_title": "Library",
+      "display_meta": "2026-08-09 13:01:20 • Library"
     },
     {
       "id": "d-20260809-130120-b96ba9",
-      "kind": "doc",
       "title": "From 3D Space to Many Dimensions",
       "href": "/analysis/?doc=d-20260809-130120-b96ba9",
       "last_updated": "2026-08-09 13:01:20",
       "parent_id": "d-20260809-130120-870cc2",
       "parent_title": "Library",
-      "display_meta": "2026-08-09 13:01:20 • Library",
-      "search_terms": [
-        "from 3d space to many dimensions",
-        "from",
-        "3d",
-        "space",
-        "to",
-        "many",
-        "dimensions",
-        "library",
-        "2026-08-09 13:01:20",
-        "2026",
-        "08",
-        "09",
-        "13",
-        "01",
-        "20",
-        "d-20260809-130120-b96ba9"
-      ],
-      "search_text": "from 3d space to many dimensions from 3d space to many dimensions library 2026-08-09 13:01:20 2026 08 09 13 01 20 d-20260809-130120-b96ba9"
+      "display_meta": "2026-08-09 13:01:20 • Library"
     },
     {
-      "id": "d-20260807-082735-54d9d5",
-      "kind": "doc",
-      "title": "Works",
-      "href": "/analysis/?doc=d-20260807-082735-54d9d5",
-      "last_updated": "2026-08-07 08:27:35",
-      "display_meta": "2026-08-07 08:27:35",
-      "search_terms": [
-        "works",
-        "2026-08-07 08:27:35",
-        "2026",
-        "08",
-        "07",
-        "27",
-        "35",
-        "d-20260807-082735-54d9d5"
-      ],
-      "search_text": "works 2026-08-07 08:27:35 2026 08 07 27 35 d-20260807-082735-54d9d5"
+      "id": "d-20260809-130120-c5c511",
+      "title": "Coincidence Inevitability",
+      "href": "/analysis/?doc=d-20260809-130120-c5c511",
+      "last_updated": "2026-08-09 13:01:20",
+      "parent_id": "d-20260809-130120-870cc2",
+      "parent_title": "Library",
+      "display_meta": "2026-08-09 13:01:20 • Library"
+    },
+    {
+      "id": "d-20260809-130120-d66e0b",
+      "title": "Can the Brain Comprehend How It Works?",
+      "href": "/analysis/?doc=d-20260809-130120-d66e0b",
+      "last_updated": "2026-08-09 13:01:20",
+      "parent_id": "d-20260809-130120-870cc2",
+      "parent_title": "Library",
+      "display_meta": "2026-08-09 13:01:20 • Library"
+    },
+    {
+      "id": "d-20260809-130120-e6793d",
+      "title": "Defining \"Information\" for Cross‑Boundary Comparisons",
+      "href": "/analysis/?doc=d-20260809-130120-e6793d",
+      "last_updated": "2026-08-09 13:01:20",
+      "parent_id": "d-20260809-130120-870cc2",
+      "parent_title": "Library",
+      "display_meta": "2026-08-09 13:01:20 • Library"
+    },
+    {
+      "id": "d-20260809-130120-ed5b30",
+      "title": "Coincidence Salience Worksheet",
+      "href": "/analysis/?doc=d-20260809-130120-ed5b30",
+      "last_updated": "2026-08-09 13:01:20",
+      "parent_id": "d-20260809-130120-870cc2",
+      "parent_title": "Library",
+      "display_meta": "2026-08-09 13:01:20 • Library"
     }
-  ]
+  ],
+  "terms": {
+    "2026-05-11 19:17:51": {
+      "last_updated": [
+        0
+      ]
+    },
+    "2026-07-29 11:30:02": {
+      "last_updated": [
+        1
+      ]
+    },
+    "2026-08-07 08:27:35": {
+      "last_updated": [
+        2
+      ]
+    },
+    "2026-08-09 13:01:20": {
+      "last_updated": [
+        3,
+        4,
+        5,
+        6,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16
+      ]
+    },
+    "2026-08-11 22:18:57": {
+      "last_updated": [
+        7
+      ]
+    },
+    "3d": {
+      "title": [
+        12
+      ]
+    },
+    "abstract": {
+      "title": [
+        6
+      ]
+    },
+    "active": {
+      "title": [
+        11
+      ]
+    },
+    "analysis": {
+      "title": [
+        0
+      ],
+      "parent_title": [
+        1
+      ]
+    },
+    "bayesian": {
+      "title": [
+        9
+      ]
+    },
+    "beauty": {
+      "title": [
+        3,
+        7
+      ]
+    },
+    "beyond": {
+      "title": [
+        5
+      ]
+    },
+    "boundary": {
+      "title": [
+        15
+      ]
+    },
+    "brain": {
+      "title": [
+        14
+      ]
+    },
+    "can": {
+      "title": [
+        14
+      ]
+    },
+    "coincidence": {
+      "title": [
+        13,
+        16
+      ]
+    },
+    "comparisons": {
+      "title": [
+        15
+      ]
+    },
+    "comprehend": {
+      "title": [
+        14
+      ]
+    },
+    "concepts": {
+      "title": [
+        1
+      ]
+    },
+    "conscious": {
+      "title": [
+        5
+      ]
+    },
+    "cosmologies": {
+      "title": [
+        4
+      ]
+    },
+    "cross": {
+      "title": [
+        15
+      ]
+    },
+    "d-20260426-164043-e14f49": {
+      "identity": [
+        0
+      ]
+    },
+    "d-20260624-213316-478639": {
+      "identity": [
+        1
+      ]
+    },
+    "d-20260807-082735-54d9d5": {
+      "identity": [
+        2
+      ]
+    },
+    "d-20260809-130120-28fb85": {
+      "identity": [
+        3
+      ]
+    },
+    "d-20260809-130120-3054b0": {
+      "identity": [
+        4
+      ]
+    },
+    "d-20260809-130120-44384d": {
+      "identity": [
+        5
+      ]
+    },
+    "d-20260809-130120-461754": {
+      "identity": [
+        6
+      ]
+    },
+    "d-20260809-130120-837891": {
+      "identity": [
+        7
+      ]
+    },
+    "d-20260809-130120-870cc2": {
+      "identity": [
+        8
+      ]
+    },
+    "d-20260809-130120-91c97f": {
+      "identity": [
+        9
+      ]
+    },
+    "d-20260809-130120-a7bc91": {
+      "identity": [
+        10
+      ]
+    },
+    "d-20260809-130120-afeb4d": {
+      "identity": [
+        11
+      ]
+    },
+    "d-20260809-130120-b96ba9": {
+      "identity": [
+        12
+      ]
+    },
+    "d-20260809-130120-c5c511": {
+      "identity": [
+        13
+      ]
+    },
+    "d-20260809-130120-d66e0b": {
+      "identity": [
+        14
+      ]
+    },
+    "d-20260809-130120-e6793d": {
+      "identity": [
+        15
+      ]
+    },
+    "d-20260809-130120-ed5b30": {
+      "identity": [
+        16
+      ]
+    },
+    "defining": {
+      "title": [
+        15
+      ]
+    },
+    "dimensions": {
+      "title": [
+        12
+      ]
+    },
+    "dreaming": {
+      "title": [
+        11
+      ]
+    },
+    "entropy": {
+      "title": [
+        4
+      ]
+    },
+    "evolution": {
+      "title": [
+        4
+      ]
+    },
+    "evolutionary": {
+      "title": [
+        10
+      ]
+    },
+    "how": {
+      "title": [
+        14
+      ]
+    },
+    "inevitability": {
+      "title": [
+        13
+      ]
+    },
+    "information": {
+      "title": [
+        15
+      ]
+    },
+    "library": {
+      "title": [
+        8
+      ],
+      "parent_title": [
+        3,
+        4,
+        5,
+        6,
+        7,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16
+      ]
+    },
+    "many": {
+      "title": [
+        12
+      ]
+    },
+    "meaning": {
+      "title": [
+        3
+      ]
+    },
+    "memory": {
+      "title": [
+        3
+      ]
+    },
+    "overview": {
+      "title": [
+        10
+      ]
+    },
+    "physical": {
+      "title": [
+        6
+      ]
+    },
+    "processes": {
+      "title": [
+        6
+      ]
+    },
+    "psychology": {
+      "title": [
+        10
+      ]
+    },
+    "reasoning": {
+      "title": [
+        9
+      ]
+    },
+    "salience": {
+      "title": [
+        16
+      ]
+    },
+    "space": {
+      "title": [
+        12
+      ]
+    },
+    "subconscious": {
+      "title": [
+        5
+      ]
+    },
+    "thought": {
+      "title": [
+        6
+      ]
+    },
+    "two": {
+      "title": [
+        4
+      ]
+    },
+    "under": {
+      "title": [
+        4
+      ]
+    },
+    "vs": {
+      "title": [
+        5
+      ]
+    },
+    "works": {
+      "title": [
+        2,
+        14
+      ]
+    },
+    "worksheet": {
+      "title": [
+        16
+      ]
+    }
+  }
 }

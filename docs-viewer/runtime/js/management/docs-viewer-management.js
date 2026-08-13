@@ -740,7 +740,7 @@ export function initDocsViewerManagement(context) {
 
   function reloadDocsIndex(targetDocId, _summaryText) {
     selectedDocument.payloadCache.clear();
-    searchRecent.searchEntries = [];
+    searchRecent.searchIndex = null;
     searchRecent.searchLoaded = false;
     searchRecent.searchRequestPromise = null;
     searchRecent.recentEntries = [];

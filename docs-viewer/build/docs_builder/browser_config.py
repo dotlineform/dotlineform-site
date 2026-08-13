@@ -78,10 +78,9 @@ def browser_search_index_url(config: DocsScopeConfig, *, published: bool = False
 def browser_search_policy_payload(config: DocsScopeConfig, *, published: bool = False) -> dict[str, Any]:
     return {
         "domain": "docs_viewer",
-        "schema": f"search_index_{config.scope_id}_v1",
+        "schema": "docs_viewer_search_index_v2",
         "index_url": browser_search_index_url(config, published=published),
-        "targeted_policy": "record_update",
-        "targeted_operations": ["create", "update", "delete"],
+        "rebuild_policy": "whole_index",
     }
 
 

@@ -159,37 +159,32 @@
   "docs_search": {
     "index_json": {
       "path_pattern": "<docs_scope.search_output>",
-      "required_top_level_keys": ["header", "entries"],
+      "required_top_level_keys": ["header", "fields", "docs", "terms"],
       "header": {
-        "schema": "search_index_studio_v1",
+        "schema": "docs_viewer_search_index_v2",
         "scope": "studio",
         "version_pattern": "^blake2b-[0-9a-f]{32}$",
         "generated_at_utc": "timestamp",
         "count": 1
       },
-      "entry": {
+      "fields": ["title", "parent_title", "identity", "last_updated"],
+      "doc": {
         "id": "contract-fixture",
-        "kind": "doc",
         "title": "Contract Fixture",
         "href": "/docs/?scope=studio&doc=contract-fixture",
         "last_updated": "2026-06-01",
         "parent_id": "sample-roadmap-feature",
         "parent_title": "Sample Roadmap Feature",
-        "display_meta": "2026-06-01 - Sample Roadmap Feature",
-        "search_terms": [
-          "contract-fixture",
-          "contract",
-          "fixture",
-          "sample roadmap feature",
-          "sample",
-          "roadmap",
-          "feature",
-          "2026-06-01",
-          "2026",
-          "06",
-          "01"
-        ],
-        "search_text": "contract-fixture contract fixture sample roadmap feature sample roadmap feature 2026-06-01 2026 06 01"
+        "display_meta": "2026-06-01 • Sample Roadmap Feature"
+      },
+      "terms": {
+        "contract": {"title": [0]},
+        "contract-fixture": {"identity": [0]},
+        "feature": {"parent_title": [0]},
+        "fixture": {"title": [0]},
+        "sample": {"parent_title": [0]},
+        "roadmap": {"parent_title": [0]},
+        "2026-06-01": {"last_updated": [0]}
       }
     }
   },

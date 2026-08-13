@@ -28,14 +28,9 @@
       "search_index_url": "/docs-viewer/scopes/studio/published/search/index.json",
       "search": {
         "domain": "docs_viewer",
-        "schema": "search_index_studio_v1",
+        "schema": "docs_viewer_search_index_v2",
         "index_url": "/docs-viewer/scopes/studio/published/search/index.json",
-        "targeted_policy": "record_update",
-        "targeted_operations": [
-          "create",
-          "update",
-          "delete"
-        ]
+        "rebuild_policy": "whole_index"
       },
       "backlinks_url": "/docs-viewer/scopes/studio/published/documents/backlinks.json",
       "sub_scopes": [
@@ -77,14 +72,9 @@
       "search_index_url": "/docs-viewer/scopes/analysis/published/search/index.json",
       "search": {
         "domain": "docs_viewer",
-        "schema": "search_index_analysis_v1",
+        "schema": "docs_viewer_search_index_v2",
         "index_url": "/docs-viewer/scopes/analysis/published/search/index.json",
-        "targeted_policy": "record_update",
-        "targeted_operations": [
-          "create",
-          "update",
-          "delete"
-        ]
+        "rebuild_policy": "whole_index"
       },
       "sub_scopes": [
         {
@@ -135,14 +125,9 @@
       "search_index_url": "/docs/search?scope=notes",
       "search": {
         "domain": "docs_viewer",
-        "schema": "search_index_notes_v1",
+        "schema": "docs_viewer_search_index_v2",
         "index_url": "/docs/search?scope=notes",
-        "targeted_policy": "record_update",
-        "targeted_operations": [
-          "create",
-          "update",
-          "delete"
-        ]
+        "rebuild_policy": "whole_index"
       },
       "backlinks_url": "/docs/backlinks?scope=notes"
     },
@@ -172,14 +157,9 @@
       "search_index_url": "/docs-viewer/scopes/processing/published/search/index.json",
       "search": {
         "domain": "docs_viewer",
-        "schema": "search_index_processing_v1",
+        "schema": "docs_viewer_search_index_v2",
         "index_url": "/docs-viewer/scopes/processing/published/search/index.json",
-        "targeted_policy": "record_update",
-        "targeted_operations": [
-          "create",
-          "update",
-          "delete"
-        ]
+        "rebuild_policy": "whole_index"
       }
     },
     {
@@ -208,14 +188,9 @@
       "search_index_url": "/docs/search?scope=dotlineform",
       "search": {
         "domain": "docs_viewer",
-        "schema": "search_index_dotlineform_v1",
+        "schema": "docs_viewer_search_index_v2",
         "index_url": "/docs/search?scope=dotlineform",
-        "targeted_policy": "record_update",
-        "targeted_operations": [
-          "create",
-          "update",
-          "delete"
-        ]
+        "rebuild_policy": "whole_index"
       },
       "sub_scopes": [
         {

@@ -38,20 +38,18 @@ def document_location_projection_path(config: DocsScopeConfig) -> Path:
     return search_path.with_name("document-locations.json")
 
 
-def canonical_search_entry(
+def canonical_search_document(
     config: DocsScopeConfig,
-    raw_entry: Any,
+    raw_document: Any,
     *,
     field: str,
 ) -> tuple[str, str, str]:
-    if not isinstance(raw_entry, dict):
+    if not isinstance(raw_document, dict):
         raise ValueError(f"{field} must be an object")
-    if clean_text(raw_entry.get("kind")) != "doc":
-        raise ValueError(f"{field}.kind must be doc")
 
-    doc_id = clean_text(raw_entry.get("id"))
-    title = clean_text(raw_entry.get("title"))
-    href = clean_text(raw_entry.get("href"))
+    doc_id = clean_text(raw_document.get("id"))
+    title = clean_text(raw_document.get("title"))
+    href = clean_text(raw_document.get("href"))
     if not is_immutable_doc_id(doc_id):
         raise ValueError(f"{field}.id must use immutable document identity")
     if not title:
@@ -148,11 +146,15 @@ def build_exact_document_location_records(
     intentionally continues to omit source identity.
     """
 
-    if not isinstance(search_payload, dict) or not isinstance(search_payload.get("entries"), list):
-        raise ValueError("public search entries must be an array")
+    if not isinstance(search_payload, dict) or not isinstance(search_payload.get("docs"), list):
+        raise ValueError("public search docs must be an array")
 
     header = search_payload.get("header")
-    if not isinstance(header, dict) or clean_text(header.get("scope")) != config.scope_id:
+    if (
+        not isinstance(header, dict)
+        or clean_text(header.get("schema")) != "docs_viewer_search_index_v2"
+        or clean_text(header.get("scope")) != config.scope_id
+    ):
         raise ValueError("public search header scope does not match the requested scope")
 
     configured_sub_scopes = {sub_scope.sub_scope for sub_scope in config.sub_scopes}
@@ -183,11 +185,11 @@ def build_exact_document_location_records(
             }
         )
 
-    for index, raw_entry in enumerate(search_payload["entries"]):
-        doc_id, title, href = canonical_search_entry(
+    for index, raw_document in enumerate(search_payload["docs"]):
+        doc_id, title, href = canonical_search_document(
             config,
-            raw_entry,
-            field=f"search.entries[{index}]",
+            raw_document,
+            field=f"search.docs[{index}]",
         )
         append_record(
             doc_id=doc_id,
@@ -243,13 +245,13 @@ def load_public_document_location_inputs(
     resolved_documents_path = resolve_scope_path(repo_root, documents_path)
     search_payload = json.loads(resolved_search_path.read_text(encoding="utf-8"))
     search_doc_ids = {
-        clean_text(entry.get("id"))
-        for entry in (
-            search_payload.get("entries", [])
+        clean_text(document.get("id"))
+        for document in (
+            search_payload.get("docs", [])
             if isinstance(search_payload, dict)
             else []
         )
-        if isinstance(entry, dict)
+        if isinstance(document, dict)
     }
     parent_documents = {
         path.stem: json.loads(path.read_text(encoding="utf-8"))
@@ -326,7 +328,7 @@ __all__ = [
     "SUPPORTED_DOCUMENT_LOCATION_SCOPE_IDS",
     "build_document_location_payload",
     "build_exact_document_location_records",
-    "canonical_search_entry",
+    "canonical_search_document",
     "canonical_sub_scope_url",
     "document_location_projection_path",
     "json_bytes",

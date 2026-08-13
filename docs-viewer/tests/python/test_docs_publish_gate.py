@@ -187,19 +187,23 @@ def prepare_publish_repo(root: Path) -> None:
         root / "docs-viewer/scopes/library/published/search/index.json",
         {
             "header": {
-                "schema": "search_index_library_v1",
+                "schema": "docs_viewer_search_index_v2",
                 "scope": "library",
                 "version": "fixture",
                 "count": 1,
             },
-            "entries": [
+            "fields": ["title", "parent_title", "identity", "last_updated"],
+            "docs": [
                 {
                     "id": LIBRARY_DOC_ID,
-                    "kind": "doc",
                     "title": "Library",
                     "href": f"/library/?doc={LIBRARY_DOC_ID}",
                 }
             ],
+            "terms": {
+                "library": {"title": [0]},
+                LIBRARY_DOC_ID: {"identity": [0]},
+            },
         },
     )
     write_json(root / "site/assets/data/docs/scopes/library/index-tree.json", {"docs": []})
@@ -234,7 +238,20 @@ def prepare_publish_repo(root: Path) -> None:
         "<!doctype html><title>Widget</title>",
     )
     write_text(root / "site/assets/data/docs/scopes/library/media/img/diagram.png", "image bytes")
-    write_json(root / "site/assets/data/search/library/index.json", {"entries": []})
+    write_json(
+        root / "site/assets/data/search/library/index.json",
+        {
+            "header": {
+                "schema": "docs_viewer_search_index_v2",
+                "scope": "library",
+                "version": "stale",
+                "count": 0,
+            },
+            "fields": ["title", "parent_title", "identity", "last_updated"],
+            "docs": [],
+            "terms": {},
+        },
+    )
 
 
 def write_library_subject_source(root: Path, field_name: str, value: str) -> None:
@@ -362,7 +379,7 @@ def test_publish_confirm_applies_explicit_exclusions_and_retains_unrelated_files
         assert (repo_root / "site/assets/data/docs/scopes/library/by-id/stale.json").is_file()
         assert (repo_root / "site/assets/data/docs/scopes/library/media/html/widget.html").is_file()
         assert (repo_root / "site/assets/data/docs/scopes/library/media/img/diagram.png").is_file()
-        assert json.loads((repo_root / "site/assets/data/search/library/index.json").read_text(encoding="utf-8"))["entries"][0]["id"] == LIBRARY_DOC_ID
+        assert json.loads((repo_root / "site/assets/data/search/library/index.json").read_text(encoding="utf-8"))["docs"][0]["id"] == LIBRARY_DOC_ID
         assert not (
             repo_root / "site/assets/data/search/library/document-locations.json"
         ).exists()
@@ -494,7 +511,8 @@ def test_publish_follow_through_adds_reassigns_and_removes_exact_catalogue_urls(
         write_json(working_tree_path, working_tree)
         working_search_path = repo_root / "docs-viewer/scopes/library/published/search/index.json"
         working_search = json.loads(working_search_path.read_text(encoding="utf-8"))
-        working_search["entries"] = []
+        working_search["docs"] = []
+        working_search["terms"] = {}
         working_search["header"]["count"] = 0
         write_json(working_search_path, working_search)
         unpublished = docs_publish_gate.publish_apply(

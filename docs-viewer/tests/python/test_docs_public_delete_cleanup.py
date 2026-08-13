@@ -40,6 +40,36 @@ def read_json(path: Path) -> dict[str, object]:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
+def search_payload(docs: list[dict[str, str]]) -> dict[str, object]:
+    title_postings: dict[str, list[int]] = {}
+    identity_postings: dict[str, list[int]] = {}
+    for position, document in enumerate(docs):
+        identity_postings[document["id"]] = [position]
+        for term in document["title"].lower().split():
+            title_postings.setdefault(term, []).append(position)
+    terms = {
+        term: {"title": positions}
+        for term, positions in title_postings.items()
+    }
+    terms.update(
+        {
+            term: {"identity": positions}
+            for term, positions in identity_postings.items()
+        }
+    )
+    return {
+        "header": {
+            "schema": "docs_viewer_search_index_v2",
+            "scope": "analysis",
+            "version": "fixture",
+            "count": len(docs),
+        },
+        "fields": ["title", "parent_title", "identity", "last_updated"],
+        "docs": docs,
+        "terms": terms,
+    }
+
+
 def write_source(
     path: Path,
     doc_id: str,
@@ -143,23 +173,20 @@ def prepare_parent_repo(repo_root: Path) -> dict[str, Path]:
             {"doc_id": SIBLING_ID, "title": "Retained"},
         ],
     }
-    search = {
-        "header": {"scope": "analysis", "count": 2},
-        "entries": [
+    search = search_payload(
+        [
             {
                 "id": PARENT_ID,
-                "kind": "doc",
                 "title": "Delete me",
                 "href": f"/analysis/?doc={PARENT_ID}",
             },
             {
                 "id": SIBLING_ID,
-                "kind": "doc",
                 "title": "Retained",
                 "href": f"/analysis/?doc={SIBLING_ID}",
             },
         ],
-    }
+    )
     parent_payload = {"doc_id": PARENT_ID, "title": "Delete me"}
     sibling_payload = {"doc_id": SIBLING_ID, "title": "Retained", "content_html": "retained"}
     write_json(docs_root / "index-tree.json", tree)
@@ -249,17 +276,15 @@ def prepare_child_repo(repo_root: Path) -> dict[str, Path]:
     search_path = repo_root / "site/assets/data/search/analysis/index.json"
     tree = {"docs": [{"doc_id": HOST_ID, "title": "Works"}]}
     recent = {"docs": [{"doc_id": HOST_ID, "title": "Works"}]}
-    search = {
-        "header": {"scope": "analysis", "count": 1},
-        "entries": [
+    search = search_payload(
+        [
             {
                 "id": HOST_ID,
-                "kind": "doc",
                 "title": "Works",
                 "href": f"/analysis/?doc={HOST_ID}",
             }
         ],
-    }
+    )
     host_payload = {
         "doc_id": HOST_ID,
         "title": "Works",
@@ -333,7 +358,10 @@ def test_parent_cleanup_removes_exact_projection_and_updates_inventories_and_cat
     assert stale_path.read_bytes() == stale_before
     assert [row["doc_id"] for row in read_json(paths["docs_root"] / "index-tree.json")["docs"]] == [SIBLING_ID]
     assert [row["doc_id"] for row in read_json(paths["docs_root"] / "recent.json")["docs"]] == [SIBLING_ID]
-    assert [row["id"] for row in read_json(paths["search"])["entries"]] == [SIBLING_ID]
+    next_search = read_json(paths["search"])
+    assert [row["id"] for row in next_search["docs"]] == [SIBLING_ID]
+    assert next_search["terms"][SIBLING_ID]["identity"] == [0]
+    assert PARENT_ID not in next_search["terms"]
     assert [row["url"] for row in read_json(paths["locations"])["records"]] == [
         f"/analysis/?doc={SIBLING_ID}"
     ]
@@ -357,11 +385,10 @@ def test_parent_preview_expands_descendant_public_cleanup(tmp_path: Path) -> Non
     recent["docs"].insert(1, {"doc_id": DESCENDANT_ID, "title": "Delete descendant"})
     write_json(paths["docs_root"] / "recent.json", recent)
     search = read_json(paths["search"])
-    search["entries"].insert(
+    search["docs"].insert(
         1,
         {
             "id": DESCENDANT_ID,
-            "kind": "doc",
             "title": "Delete descendant",
             "href": f"/analysis/?doc={DESCENDANT_ID}",
         },

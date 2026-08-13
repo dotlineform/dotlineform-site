@@ -13,7 +13,7 @@ const search = await import(pathToFileURL(
 ));
 
 fixture.tokenizer_cases.forEach((testCase) => {
-  assert.deepEqual(search.tokenizeSearchValueV2(testCase.value), testCase.terms);
+  assert.deepEqual(search.tokenizeSearchValue(testCase.value), testCase.terms);
 });
 
 const documentsById = new Map(fixture.documents.map((document) => [document.id, document]));
@@ -25,7 +25,7 @@ const index = {
 };
 fixture.queries.forEach((testCase) => {
   assert.deepEqual(
-    search.collectSearchMatchesV2(index, testCase.value).map((match) => match.entry.id),
+    search.collectSearchMatches(index, testCase.value).map((match) => match.entry.id),
     testCase.document_ids,
     testCase.value
   );

@@ -830,7 +830,7 @@ export function startDocsViewerRuntime(options) {
     var selectedDocument = appSession.domains.selectedDocument;
     var searchRecent = appSession.domains.searchRecent;
     selectedDocument.payloadCache.clear();
-    searchRecent.searchEntries = [];
+    searchRecent.searchIndex = null;
     searchRecent.searchLoaded = false;
     searchRecent.searchRequestPromise = null;
     selectedDocument.reloadNonce = String(Date.now());

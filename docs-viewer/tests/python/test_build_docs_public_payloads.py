@@ -186,6 +186,12 @@ def test_python_docs_builder_public_generated_payloads_include_manage_rows() -> 
         "/docs-viewer/scopes/library/published/documents/backlinks.json"
     )
     assert manage_browser_config["scopes"][0]["scope_type"] == "public"
+    assert manage_browser_config["scopes"][0]["search"] == {
+        "domain": "docs_viewer",
+        "schema": "docs_viewer_search_index_v2",
+        "index_url": "/docs-viewer/scopes/library/published/search/index.json",
+        "rebuild_policy": "whole_index",
+    }
     assert manage_browser_config["scopes"][0]["media"]["img"]["served_path_prefix"] == (
         "/docs/media/library/img"
     )
@@ -193,6 +199,8 @@ def test_python_docs_builder_public_generated_payloads_include_manage_rows() -> 
     assert public_browser_config["scopes"][0]["recent_url"] == "/assets/data/docs/scopes/library/recent.json"
     assert "backlinks_url" not in public_browser_config["scopes"][0]
     assert public_browser_config["scopes"][0]["search"]["index_url"] == "/assets/data/search/library/index.json"
+    assert public_browser_config["scopes"][0]["search"]["schema"] == "docs_viewer_search_index_v2"
+    assert public_browser_config["scopes"][0]["search"]["rebuild_policy"] == "whole_index"
     assert public_browser_config["scopes"][0]["scope_type"] == "public"
     assert public_browser_config["scopes"][0]["media"]["img"]["served_path_prefix"] == (
         "https://media.example.test/docs/library/img"

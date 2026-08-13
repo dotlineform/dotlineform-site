@@ -75,9 +75,22 @@ def analysis_scope() -> dict[str, object]:
 def search_entry(doc_id: str, title: str) -> dict[str, str]:
     return {
         "id": doc_id,
-        "kind": "doc",
         "title": title,
         "href": f"/analysis/?doc={doc_id}",
+    }
+
+
+def search_payload(scope: str, docs: list[dict[str, str]]) -> dict[str, object]:
+    return {
+        "header": {
+            "schema": "docs_viewer_search_index_v2",
+            "scope": scope,
+            "version": "fixture",
+            "count": len(docs),
+        },
+        "fields": ["title", "parent_title", "identity", "last_updated"],
+        "docs": docs,
+        "terms": {},
     }
 
 
@@ -89,14 +102,14 @@ def test_projection_emits_only_actual_public_report_placements() -> None:
 
         payload = projection.build_document_location_payload(
             config,
-            search_payload={
-                "header": {"scope": "analysis"},
-                "entries": [
+            search_payload=search_payload(
+                "analysis",
+                [
                     search_entry(ROOT_ID, "Analysis"),
                     search_entry(REPORT_ONE_ID, "All Tags"),
                     search_entry(REPORT_TWO_ID, "Made-up Tags"),
                 ],
-            },
+            ),
             parent_documents={
                 ROOT_ID: {"title": "Analysis"},
                 REPORT_ONE_ID: {
@@ -169,15 +182,15 @@ def test_projection_rejects_noncanonical_search_location() -> None:
         try:
             projection.build_document_location_payload(
                 config,
-                search_payload={
-                    "header": {"scope": "analysis"},
-                    "entries": [
+                search_payload=search_payload(
+                    "analysis",
+                    [
                         {
                             **search_entry(ROOT_ID, "Analysis"),
                             "href": f"https://example.test/analysis/?doc={ROOT_ID}",
                         }
                     ],
-                },
+                ),
                 parent_documents={ROOT_ID: {"title": "Analysis"}},
                 sub_scope_manifests={},
             )
@@ -204,20 +217,19 @@ def test_exact_internal_projection_supports_any_public_scope_without_expanding_p
             ],
         )
         config = load_docs_scope_configs(root, scope_ids=["moments"])["moments"]
-        search_payload = {
-            "header": {"scope": "moments"},
-            "entries": [
+        moments_search_payload = search_payload(
+            "moments",
+            [
                 {
                     "id": moments_id,
-                    "kind": "doc",
                     "title": "Moment",
                     "href": f"/moments/?doc={moments_id}",
                 }
             ],
-        }
+        )
         exact_records = projection.build_exact_document_location_records(
             config,
-            search_payload=search_payload,
+            search_payload=moments_search_payload,
             parent_documents={moments_id: {"title": "Moment"}},
             sub_scope_manifests={},
         )
@@ -225,7 +237,7 @@ def test_exact_internal_projection_supports_any_public_scope_without_expanding_p
         try:
             projection.build_document_location_payload(
                 config,
-                search_payload=search_payload,
+                search_payload=moments_search_payload,
                 parent_documents={moments_id: {"title": "Moment"}},
                 sub_scope_manifests={},
             )
@@ -253,13 +265,13 @@ def test_public_projection_loader_does_not_read_source_or_manage_manifest() -> N
         write_docs_scope_config(root, [analysis_scope()])
         write_json(
             root / "site/assets/data/search/analysis/index.json",
-            {
-                "header": {"scope": "analysis"},
-                "entries": [
+            search_payload(
+                "analysis",
+                [
                     search_entry(ROOT_ID, "Analysis"),
                     search_entry(REPORT_ONE_ID, "Concepts"),
                 ],
-            },
+            ),
         )
         write_json(
             root / f"site/assets/data/docs/scopes/analysis/by-id/{ROOT_ID}.json",
@@ -317,10 +329,7 @@ def test_builder_writes_analysis_index_from_public_data() -> None:
         write_docs_scope_config(root, [analysis_scope()])
         write_json(
             root / "site/assets/data/search/analysis/index.json",
-            {
-                "header": {"scope": "analysis"},
-                "entries": [search_entry(ROOT_ID, "Analysis")],
-            },
+            search_payload("analysis", [search_entry(ROOT_ID, "Analysis")]),
         )
         write_json(
             root / f"site/assets/data/docs/scopes/analysis/by-id/{ROOT_ID}.json",

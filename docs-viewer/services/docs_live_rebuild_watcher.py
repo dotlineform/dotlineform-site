@@ -764,13 +764,10 @@ def rebuild_scope(
                         "--scope",
                         scope,
                         "--write",
-                        "--only-doc-ids",
-                        ",".join(target_doc_ids),
-                        "--remove-missing",
                     ),
                 )
             )
-            log(f"Rebuilding {scope} docs and targeted docs search: {', '.join(target_doc_ids)}.")
+            log(f"Rebuilding {scope} docs and whole docs search after changes to: {', '.join(target_doc_ids)}.")
         else:
             log(f"Rebuilding {scope} docs; no docs-search ids were affected.")
 
@@ -836,13 +833,13 @@ def process_document_collection_changes(
         )
         if fallback_reason:
             log(
-                f"{scope} targeted search fallback; affected ids unavailable: "
+                f"{scope} search relevance fallback; affected ids unavailable: "
                 f"{fallback_reason}"
             )
         else:
             docs_doc_ids = search_doc_ids
             log(
-                f"{scope} affected docs for targeted search: "
+                f"{scope} docs affecting whole-index search: "
                 f"{affected_doc_ids_log_text(search_doc_ids)}."
             )
 

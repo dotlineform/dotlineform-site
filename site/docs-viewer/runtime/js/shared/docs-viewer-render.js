@@ -44,7 +44,7 @@ export function renderResultEntry(docId, title, metaText, href) {
 }
 
 export function renderSearchEntry(entry, href) {
-  var metaText = entry.displayMeta || [entry.lastUpdated, entry.parentTitle].filter(Boolean).join(" • ");
+  var metaText = entry.display_meta || [entry.last_updated, entry.parent_title].filter(Boolean).join(" • ");
   return renderResultEntry(entry.id, entry.title, metaText, href);
 }
 

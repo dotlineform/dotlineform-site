@@ -1405,9 +1405,6 @@ def test_watcher_falls_back_to_full_docs_build_when_targeted_payloads_are_missin
             "--scope",
             "tmp",
             "--write",
-            "--only-doc-ids",
-            "tmp",
-            "--remove-missing",
         ],
     ]
 

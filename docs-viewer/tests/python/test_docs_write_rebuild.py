@@ -108,9 +108,8 @@ def test_rebuild_scope_outputs_extracts_docs_and_search_diagnostics() -> None:
             return Completed(stdout=DOCS_DIAGNOSTICS_STDOUT)
         return Completed(
             stdout=(
-                "Targeted search index JSON done. Wrote: 1. Skipped: 0. "
-                "Changed: 2. Removed: 1. Unchanged: 3. Full fallback: 0. "
-                "Path: docs-viewer/scopes/studio/published/search/index.json\n"
+                "Wrote docs-viewer/scopes/studio/published/search/index.json "
+                "with 10 studio search docs\n"
             )
         )
 
@@ -125,14 +124,9 @@ def test_rebuild_scope_outputs_extracts_docs_and_search_diagnostics() -> None:
     assert result["diagnostics"]["docs"]["scope"] == "studio"
     assert result["diagnostics"]["docs"]["source_files_scanned"] == 10
     assert result["diagnostics"]["search"] == {
-        "mode": "targeted",
+        "mode": "full",
         "doc_ids": ["a", "b"],
-        "changed": 2,
-        "removed": 1,
-        "unchanged": 3,
-        "full_fallback": False,
-        "skipped": 0,
-        "wrote": 1,
+        "docs": 10,
         "elapsed_seconds": result["diagnostics"]["search"]["elapsed_seconds"],
     }
 
@@ -182,7 +176,7 @@ def test_rebuild_sub_scope_outputs_runs_only_confined_docs_builder() -> None:
     assert result["diagnostics"]["search"] == {"mode": "none", "doc_ids": []}
 
 
-def test_rebuild_scope_outputs_preserves_targeted_search_command() -> None:
+def test_rebuild_scope_outputs_turns_affected_ids_into_whole_search_command() -> None:
     calls: list[list[str]] = []
     original_python = with_fake_python()
     original_run = write_rebuild.subprocess.run
@@ -203,16 +197,13 @@ def test_rebuild_scope_outputs_preserves_targeted_search_command() -> None:
         write_rebuild.subprocess.run = original_run
         write_rebuild.PYTHON_EXECUTABLE = original_python
 
-    assert result["search"] == {"mode": "targeted", "doc_ids": ["child", "parent"]}
+    assert result["search"] == {"mode": "full", "doc_ids": ["child", "parent"]}
     assert calls[1] == [
         "/tmp/python",
         "docs-viewer/build/build_search.py",
         "--scope",
         "library",
         "--write",
-        "--only-doc-ids",
-        "child,parent",
-        "--remove-missing",
     ]
 
 
@@ -753,7 +744,7 @@ def test_rebuild_all_docs_outputs_rejects_local_assets_outputs() -> None:
 def main() -> None:
     test_rebuild_scope_outputs_preserves_full_command_shapes()
     test_rebuild_scope_outputs_extracts_docs_and_search_diagnostics()
-    test_rebuild_scope_outputs_preserves_targeted_search_command()
+    test_rebuild_scope_outputs_turns_affected_ids_into_whole_search_command()
     test_rebuild_scope_outputs_passes_targeted_docs_command()
     test_rebuild_scope_outputs_falls_back_when_targeted_docs_outputs_are_missing()
     test_targeted_docs_build_uses_index_tree_without_flat_index()

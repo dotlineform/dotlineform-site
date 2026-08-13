@@ -171,17 +171,19 @@ def test_docs_viewer_public_by_id_contract_fixture() -> None:
 def test_docs_search_payload_contract_fixture() -> None:
     fixture = load_fixture()["docs_search"]["index_json"]
     header = fixture["header"]
-    entry = fixture["entry"]
+    doc = fixture["doc"]
 
     assert_equal(fixture["path_pattern"], "<docs_scope.search_output>", "docs search path pattern")
-    assert_equal(header["schema"], "search_index_studio_v1", "docs search schema")
+    assert_equal(header["schema"], "docs_viewer_search_index_v2", "docs search schema")
     assert_equal(header["scope"], "studio", "docs search scope")
     assert_true(re.fullmatch(header["version_pattern"], "blake2b-0123456789abcdef0123456789abcdef"), "docs version pattern")
     assert_equal(header["count"], 1, "docs search count")
-    assert_search_entry(entry, "docs search entry")
-    assert_equal(entry["kind"], "doc", "docs search kind")
-    assert_contains(entry["href"], "/docs/?scope=studio&doc=", "docs search href")
-    assert_true("parent_title" in entry, "docs search includes parent title when available")
+    assert_equal(fixture["fields"], ["title", "parent_title", "identity", "last_updated"], "docs search fields")
+    assert_required_keys(doc, ["id", "title", "href"], "docs search document")
+    assert_contains(doc["href"], "/docs/?scope=studio&doc=", "docs search href")
+    assert_true("parent_title" in doc, "docs search includes parent title when available")
+    assert_equal(fixture["terms"]["contract"]["title"], [0], "docs search title posting")
+    assert_equal(fixture["terms"][doc["id"]]["identity"], [0], "docs search identity posting")
 
 
 def test_catalogue_search_payload_contract_fixture() -> None:

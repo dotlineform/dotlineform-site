@@ -6,7 +6,6 @@ import {
   collectRecentDocs,
   collectSearchMatches,
   normalizeRecentEntries,
-  normalizeSearchEntries,
   normalizeSearchText
 } from "./docs-viewer-search.js";
 
@@ -109,12 +108,12 @@ export function initDocsViewerSearchController(context) {
     return typeof callback === "function" ? callback(docId, hash, query) : "#";
   }
 
-  function loadSearchEntries() {
+  function loadSearchIndex() {
     if (!searchIsEnabled()) {
       return Promise.reject(new Error("Search unavailable."));
     }
     if (searchRecent.searchLoaded) {
-      return Promise.resolve(searchRecent.searchEntries);
+      return Promise.resolve(searchRecent.searchIndex);
     }
     if (searchRecent.searchRequestPromise) {
       return searchRecent.searchRequestPromise;
@@ -124,9 +123,12 @@ export function initDocsViewerSearchController(context) {
 
     searchRecent.searchRequestPromise = context.collectionProvider.readSearch()
       .then(function (payload) {
-        searchRecent.searchEntries = normalizeSearchEntries(payload && Array.isArray(payload.entries) ? payload.entries : []);
+        if (!payload || !payload.header || payload.header.schema !== "docs_viewer_search_index_v2") {
+          throw new Error("Docs Viewer search index has an unsupported schema.");
+        }
+        searchRecent.searchIndex = payload;
         searchRecent.searchLoaded = true;
-        return searchRecent.searchEntries;
+        return searchRecent.searchIndex;
       })
       .catch(function (error) {
         searchRecent.searchLoaded = false;
@@ -298,7 +300,7 @@ export function initDocsViewerSearchController(context) {
 
     if (!searchRecent.searchLoaded) {
       renderSearchPendingState();
-      loadSearchEntries()
+      loadSearchIndex()
         .then(function () {
           if (context.hasActiveQuery()) {
             renderSearchMode();
@@ -314,7 +316,7 @@ export function initDocsViewerSearchController(context) {
       return;
     }
 
-    var matches = collectSearchMatches(searchRecent.searchEntries, query);
+    var matches = collectSearchMatches(searchRecent.searchIndex, query);
     if (!matches.length) {
       setResultsStatus("No results.", false);
       results.innerHTML = "";

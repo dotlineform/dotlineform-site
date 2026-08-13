@@ -1503,90 +1503,6 @@
       "report_title": "Concepts"
     },
     {
-      "url": "/analysis/?doc=d-20260809-130120-870cc2",
-      "scope_id": "analysis",
-      "document_title": "Library",
-      "report_title": ""
-    },
-    {
-      "url": "/analysis/?doc=d-20260809-130120-461754",
-      "scope_id": "analysis",
-      "document_title": "Abstract Thought and Physical Processes",
-      "report_title": ""
-    },
-    {
-      "url": "/analysis/?doc=d-20260809-130120-91c97f",
-      "scope_id": "analysis",
-      "document_title": "Bayesian Reasoning",
-      "report_title": ""
-    },
-    {
-      "url": "/analysis/?doc=d-20260809-130120-837891",
-      "scope_id": "analysis",
-      "document_title": "Beauty",
-      "report_title": ""
-    },
-    {
-      "url": "/analysis/?doc=d-20260809-130120-28fb85",
-      "scope_id": "analysis",
-      "document_title": "Beauty × Memory × Meaning",
-      "report_title": ""
-    },
-    {
-      "url": "/analysis/?doc=d-20260809-130120-44384d",
-      "scope_id": "analysis",
-      "document_title": "Beyond Conscious vs. Subconscious",
-      "report_title": ""
-    },
-    {
-      "url": "/analysis/?doc=d-20260809-130120-d66e0b",
-      "scope_id": "analysis",
-      "document_title": "Can the Brain Comprehend How It Works?",
-      "report_title": ""
-    },
-    {
-      "url": "/analysis/?doc=d-20260809-130120-c5c511",
-      "scope_id": "analysis",
-      "document_title": "Coincidence Inevitability",
-      "report_title": ""
-    },
-    {
-      "url": "/analysis/?doc=d-20260809-130120-ed5b30",
-      "scope_id": "analysis",
-      "document_title": "Coincidence Salience Worksheet",
-      "report_title": ""
-    },
-    {
-      "url": "/analysis/?doc=d-20260809-130120-e6793d",
-      "scope_id": "analysis",
-      "document_title": "Defining \"Information\" for Cross‑Boundary Comparisons",
-      "report_title": ""
-    },
-    {
-      "url": "/analysis/?doc=d-20260809-130120-afeb4d",
-      "scope_id": "analysis",
-      "document_title": "Dreaming is Active",
-      "report_title": ""
-    },
-    {
-      "url": "/analysis/?doc=d-20260809-130120-3054b0",
-      "scope_id": "analysis",
-      "document_title": "Entropy & Evolution Under Two Cosmologies",
-      "report_title": ""
-    },
-    {
-      "url": "/analysis/?doc=d-20260809-130120-a7bc91",
-      "scope_id": "analysis",
-      "document_title": "Evolutionary Psychology — Overview",
-      "report_title": ""
-    },
-    {
-      "url": "/analysis/?doc=d-20260809-130120-b96ba9",
-      "scope_id": "analysis",
-      "document_title": "From 3D Space to Many Dimensions",
-      "report_title": ""
-    },
-    {
       "url": "/analysis/?doc=d-20260807-082735-54d9d5",
       "scope_id": "analysis",
       "document_title": "Works",
@@ -1597,6 +1513,90 @@
       "scope_id": "analysis",
       "document_title": "3 symbols",
       "report_title": "Works"
+    },
+    {
+      "url": "/analysis/?doc=d-20260809-130120-28fb85",
+      "scope_id": "analysis",
+      "document_title": "Beauty × Memory × Meaning",
+      "report_title": ""
+    },
+    {
+      "url": "/analysis/?doc=d-20260809-130120-3054b0",
+      "scope_id": "analysis",
+      "document_title": "Entropy & Evolution Under Two Cosmologies",
+      "report_title": ""
+    },
+    {
+      "url": "/analysis/?doc=d-20260809-130120-44384d",
+      "scope_id": "analysis",
+      "document_title": "Beyond Conscious vs. Subconscious",
+      "report_title": ""
+    },
+    {
+      "url": "/analysis/?doc=d-20260809-130120-461754",
+      "scope_id": "analysis",
+      "document_title": "Abstract Thought and Physical Processes",
+      "report_title": ""
+    },
+    {
+      "url": "/analysis/?doc=d-20260809-130120-837891",
+      "scope_id": "analysis",
+      "document_title": "Beauty",
+      "report_title": ""
+    },
+    {
+      "url": "/analysis/?doc=d-20260809-130120-870cc2",
+      "scope_id": "analysis",
+      "document_title": "Library",
+      "report_title": ""
+    },
+    {
+      "url": "/analysis/?doc=d-20260809-130120-91c97f",
+      "scope_id": "analysis",
+      "document_title": "Bayesian Reasoning",
+      "report_title": ""
+    },
+    {
+      "url": "/analysis/?doc=d-20260809-130120-a7bc91",
+      "scope_id": "analysis",
+      "document_title": "Evolutionary Psychology — Overview",
+      "report_title": ""
+    },
+    {
+      "url": "/analysis/?doc=d-20260809-130120-afeb4d",
+      "scope_id": "analysis",
+      "document_title": "Dreaming is Active",
+      "report_title": ""
+    },
+    {
+      "url": "/analysis/?doc=d-20260809-130120-b96ba9",
+      "scope_id": "analysis",
+      "document_title": "From 3D Space to Many Dimensions",
+      "report_title": ""
+    },
+    {
+      "url": "/analysis/?doc=d-20260809-130120-c5c511",
+      "scope_id": "analysis",
+      "document_title": "Coincidence Inevitability",
+      "report_title": ""
+    },
+    {
+      "url": "/analysis/?doc=d-20260809-130120-d66e0b",
+      "scope_id": "analysis",
+      "document_title": "Can the Brain Comprehend How It Works?",
+      "report_title": ""
+    },
+    {
+      "url": "/analysis/?doc=d-20260809-130120-e6793d",
+      "scope_id": "analysis",
+      "document_title": "Defining \"Information\" for Cross‑Boundary Comparisons",
+      "report_title": ""
+    },
+    {
+      "url": "/analysis/?doc=d-20260809-130120-ed5b30",
+      "scope_id": "analysis",
+      "document_title": "Coincidence Salience Worksheet",
+      "report_title": ""
     }
   ]
 }

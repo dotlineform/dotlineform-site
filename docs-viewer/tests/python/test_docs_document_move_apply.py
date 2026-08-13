@@ -658,10 +658,10 @@ def test_apply_move_rebuilds_loadable_target_and_removes_source_outputs(
         for doc_id in moved_ids
     )
     assert moved_ids <= {
-        str(entry["id"]) for entry in target_search["entries"]
+        str(document["id"]) for document in target_search["docs"]
     }
     assert moved_ids.isdisjoint(
-        {str(entry["id"]) for entry in source_search["entries"]}
+        {str(document["id"]) for document in source_search["docs"]}
     )
 
 

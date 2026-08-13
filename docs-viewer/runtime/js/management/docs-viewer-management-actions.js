@@ -430,7 +430,7 @@ export function createDocsViewerManagementActionController(options) {
     if (docId && selectedDocument.payloadCache && typeof selectedDocument.payloadCache.delete === "function") {
       selectedDocument.payloadCache.delete(docId);
     }
-    searchRecent.searchEntries = [];
+    searchRecent.searchIndex = null;
     searchRecent.searchLoaded = false;
     searchRecent.searchRequestPromise = null;
     searchRecent.recentEntries = [];

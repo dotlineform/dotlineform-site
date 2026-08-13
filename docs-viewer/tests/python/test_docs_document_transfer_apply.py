@@ -728,7 +728,7 @@ def test_apply_copy_builds_loadable_target_documents_and_search_once(
     assert rebuild_calls == 1
     assert created_ids <= tree_ids(tree_payload["docs"])
     assert created_ids <= {
-        str(entry["id"]) for entry in search_payload["entries"]
+        str(document["id"]) for document in search_payload["docs"]
     }
     assert all(
         (output_root / f"by-id/{doc_id}.json").is_file()
