@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-bc43e8fb67425f0b38c92c70828f3fe1",
-    "generated_at_utc": "2026-08-13T17:30:11Z",
+    "version": "blake2b-fb55ffd2db3cd73fa20eb47c9d9746de",
+    "generated_at_utc": "2026-08-13T17:55:08Z",
     "count": 236
   },
   "entries": [
@@ -4440,10 +4440,10 @@
       "kind": "doc",
       "title": "Docs Viewer Search Tokenizer",
       "href": "/docs/?scope=studio&doc=d-20260813-163802-5ca41f",
-      "last_updated": "2026-08-13 17:13:41",
+      "last_updated": "2026-08-13 18:52:38",
       "parent_id": "d-20260715-092247-6bbb5e",
       "parent_title": "Search Mechanics",
-      "display_meta": "2026-08-13 17:13:41 • Search Mechanics",
+      "display_meta": "2026-08-13 18:52:38 • Search Mechanics",
       "search_terms": [
         "docs viewer search tokenizer",
         "docs",
@@ -4452,15 +4452,16 @@
         "tokenizer",
         "search mechanics",
         "mechanics",
-        "2026-08-13 17:13:41",
+        "2026-08-13 18:52:38",
         "2026",
         "08",
         "13",
-        "17",
-        "41",
+        "18",
+        "52",
+        "38",
         "d-20260813-163802-5ca41f"
       ],
-      "search_text": "docs viewer search tokenizer docs viewer search tokenizer search mechanics mechanics 2026-08-13 17:13:41 2026 08 13 17 41 d-20260813-163802-5ca41f"
+      "search_text": "docs viewer search tokenizer docs viewer search tokenizer search mechanics mechanics 2026-08-13 18:52:38 2026 08 13 18 52 38 d-20260813-163802-5ca41f"
     },
     {
       "id": "d-20260813-171341-8bfa80",
@@ -4530,10 +4531,10 @@
       "kind": "doc",
       "title": "Studio Full-Text Search Index",
       "href": "/docs/?scope=studio&doc=d-20260813-161942-b1e9e1",
-      "last_updated": "2026-08-13 17:13:41",
+      "last_updated": "2026-08-13 18:55:07",
       "parent_id": "d-20260715-092247-6bbb5e",
       "parent_title": "Search Mechanics",
-      "display_meta": "2026-08-13 17:13:41 • Search Mechanics",
+      "display_meta": "2026-08-13 18:55:07 • Search Mechanics",
       "search_terms": [
         "studio full-text search index",
         "studio",
@@ -4543,15 +4544,16 @@
         "index",
         "search mechanics",
         "mechanics",
-        "2026-08-13 17:13:41",
+        "2026-08-13 18:55:07",
         "2026",
         "08",
         "13",
-        "17",
-        "41",
+        "18",
+        "55",
+        "07",
         "d-20260813-161942-b1e9e1"
       ],
-      "search_text": "studio full-text search index studio full text search index search mechanics mechanics 2026-08-13 17:13:41 2026 08 13 17 41 d-20260813-161942-b1e9e1"
+      "search_text": "studio full-text search index studio full text search index search mechanics mechanics 2026-08-13 18:55:07 2026 08 13 18 55 07 d-20260813-161942-b1e9e1"
     },
     {
       "id": "d-20260720-170418-a7c93d",
