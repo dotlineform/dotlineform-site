@@ -975,10 +975,22 @@
               "ui_status": "done"
             },
             {
+              "doc_id": "d-20260813-225547-cd82d8",
+              "title": "DSI-2 — Scope-Level Sub-Scope Search Delivery",
+              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260813-225547-cd82d8.json",
+              "ui_status": "proposed"
+            },
+            {
               "doc_id": "d-20260715-084611-c2fa6f",
               "title": "SM-1 — Studio Full-Text Search Delivery",
               "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260715-084611-c2fa6f.json",
               "ui_status": "done"
+            },
+            {
+              "doc_id": "d-20260813-222008-35fcfa",
+              "title": "SM-2 — Docs Viewer Search Relevance Delivery",
+              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260813-222008-35fcfa.json",
+              "ui_status": "proposed"
             },
             {
               "doc_id": "d-20260813-161942-b1e9e1",
@@ -1085,6 +1097,11 @@
               "doc_id": "d-20260813-214350-4c7a21",
               "title": "Docs Viewer Search Index",
               "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260813-214350-4c7a21.json"
+            },
+            {
+              "doc_id": "d-20260813-223337-e6c261",
+              "title": "Docs Viewer Search Relevance",
+              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260813-223337-e6c261.json"
             },
             {
               "doc_id": "d-20260813-214351-98d3f0",
@@ -1354,5 +1371,5 @@
       ]
     }
   ],
-  "generated_at": "2026-08-13T20:47:03Z"
+  "generated_at": "2026-08-13T21:57:51Z"
 }
