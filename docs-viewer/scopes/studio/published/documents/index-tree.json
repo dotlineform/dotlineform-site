@@ -1013,7 +1013,7 @@
               "doc_id": "d-20260813-114338-0e7cb9",
               "title": "SDM-1 — Studio Documentation Rationalisation",
               "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260813-114338-0e7cb9.json",
-              "ui_status": "in-progress"
+              "ui_status": "done"
             },
             {
               "doc_id": "d-20260813-114338-95ca80",
@@ -1352,5 +1352,5 @@
       ]
     }
   ],
-  "generated_at": "2026-08-13T11:04:07Z"
+  "generated_at": "2026-08-13T13:43:29Z"
 }

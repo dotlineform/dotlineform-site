@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-8657378980b29729c4ca16437e89ef30",
-    "generated_at_utc": "2026-08-13T11:07:16Z",
+    "version": "blake2b-cd5b20b810399dfc9208e580924e1009",
+    "generated_at_utc": "2026-08-13T13:50:58Z",
     "count": 237
   },
   "entries": [
@@ -4657,10 +4657,10 @@
       "kind": "doc",
       "title": "SDM-2 — Documents Linking Here Report",
       "href": "/docs/?scope=studio&doc=d-20260813-114338-95ca80",
-      "last_updated": "2026-08-13 11:43:38",
+      "last_updated": "2026-08-13 14:50:57",
       "parent_id": "d-20260813-114338-c6b682",
       "parent_title": "Studio Documentation Maintenance",
-      "display_meta": "2026-08-13 11:43:38 • Studio Documentation Maintenance",
+      "display_meta": "2026-08-13 14:50:57 • Studio Documentation Maintenance",
       "search_terms": [
         "sdm-2 — documents linking here report",
         "sdm",
@@ -4673,16 +4673,16 @@
         "studio",
         "documentation",
         "maintenance",
-        "2026-08-13 11:43:38",
+        "2026-08-13 14:50:57",
         "2026",
         "08",
         "13",
-        "11",
-        "43",
-        "38",
+        "14",
+        "50",
+        "57",
         "d-20260813-114338-95ca80"
       ],
-      "search_text": "sdm-2 — documents linking here report sdm 2 documents linking here report studio documentation maintenance studio documentation maintenance 2026-08-13 11:43:38 2026 08 13 11 43 38 d-20260813-114338-95ca80"
+      "search_text": "sdm-2 — documents linking here report sdm 2 documents linking here report studio documentation maintenance studio documentation maintenance 2026-08-13 14:50:57 2026 08 13 14 50 57 d-20260813-114338-95ca80"
     },
     {
       "id": "d-20260804-160200-fa7bb7",
