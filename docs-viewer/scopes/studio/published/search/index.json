@@ -2,8 +2,8 @@
   "header": {
     "schema": "docs_viewer_search_index_v2",
     "scope": "studio",
-    "version": "blake2b-78e9587680bae4fe51bb86846692e38e",
-    "generated_at_utc": "2026-08-13T18:52:36Z",
+    "version": "blake2b-7f0ec93ddf547c480ea6b219bad7a467",
+    "generated_at_utc": "2026-08-13T19:17:16Z",
     "count": 236
   },
   "fields": [
@@ -392,10 +392,10 @@
       "id": "d-20260424-000000-5b64f6",
       "title": "Live Rebuild Watcher",
       "href": "/docs/?scope=studio&doc=d-20260424-000000-5b64f6",
-      "last_updated": "2026-08-12 17:51:20",
+      "last_updated": "2026-08-13 20:12:49",
       "parent_id": "d-20260424-000000-50b63f",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-08-12 17:51:20 • Docs Viewer"
+      "display_meta": "2026-08-13 20:12:49 • Docs Viewer"
     },
     {
       "id": "d-20260424-000000-e2408a",
@@ -487,10 +487,10 @@
       "id": "d-20260503-202500-316d29",
       "title": "Package Return Parser",
       "href": "/docs/?scope=studio&doc=d-20260503-202500-316d29",
-      "last_updated": "2026-08-09 13:25:06",
+      "last_updated": "2026-08-13 20:12:49",
       "parent_id": "d-20260424-000000-50b63f",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-08-09 13:25:06 • Docs Viewer"
+      "display_meta": "2026-08-13 20:12:49 • Docs Viewer"
     },
     {
       "id": "d-20260505-181739-bb5223",
@@ -1014,10 +1014,10 @@
       "id": "d-20260607-222033-704641",
       "title": "Source Editor Scripts",
       "href": "/docs/?scope=studio&doc=d-20260607-222033-704641",
-      "last_updated": "2026-08-06 22:47:23",
+      "last_updated": "2026-08-13 20:12:49",
       "parent_id": "d-20260607-222033-2a494e",
       "parent_title": "Scripts Overview",
-      "display_meta": "2026-08-06 22:47:23 • Scripts Overview"
+      "display_meta": "2026-08-13 20:12:49 • Scripts Overview"
     },
     {
       "id": "d-20260607-222033-71d1be",
@@ -1068,10 +1068,10 @@
       "id": "d-20260607-222033-ce5515",
       "title": "Source Mutation Endpoints",
       "href": "/docs/?scope=studio&doc=d-20260607-222033-ce5515",
-      "last_updated": "2026-08-08 20:14:48",
+      "last_updated": "2026-08-13 20:12:49",
       "parent_id": "d-20260607-222033-647b52",
       "parent_title": "Endpoint Overview",
-      "display_meta": "2026-08-08 20:14:48 • Endpoint Overview"
+      "display_meta": "2026-08-13 20:12:49 • Endpoint Overview"
     },
     {
       "id": "d-20260607-222033-d06f35",
@@ -1095,10 +1095,10 @@
       "id": "d-20260607-222033-dd2265",
       "title": "Rebuild Follow-Through Scripts",
       "href": "/docs/?scope=studio&doc=d-20260607-222033-dd2265",
-      "last_updated": "2026-08-07 22:25:51",
+      "last_updated": "2026-08-13 20:12:49",
       "parent_id": "d-20260607-222033-2a494e",
       "parent_title": "Scripts Overview",
-      "display_meta": "2026-08-07 22:25:51 • Scripts Overview"
+      "display_meta": "2026-08-13 20:12:49 • Scripts Overview"
     },
     {
       "id": "d-20260607-222033-f2a546",
@@ -1872,10 +1872,10 @@
       "id": "d-20260802-205911-bec41f",
       "title": "Docs Viewer Projection Map",
       "href": "/docs/?scope=studio&doc=d-20260802-205911-bec41f",
-      "last_updated": "2026-08-08 20:12:23",
+      "last_updated": "2026-08-13 20:12:49",
       "parent_id": "d-20260802-123451-d0e52e",
       "parent_title": "Data Models Diagrams",
-      "display_meta": "2026-08-08 20:12:23 • Data Models Diagrams"
+      "display_meta": "2026-08-13 20:12:49 • Data Models Diagrams"
     },
     {
       "id": "d-20260802-205912-16bc10",
@@ -2106,10 +2106,10 @@
       "id": "d-20260813-171341-8bfa80",
       "title": "DSI-1 — Docs Viewer Search Index v2 Delivery",
       "href": "/docs/?scope=studio&doc=d-20260813-171341-8bfa80",
-      "last_updated": "2026-08-13 19:52:25",
+      "last_updated": "2026-08-13 20:17:09",
       "parent_id": "d-20260715-092247-6bbb5e",
       "parent_title": "Search Mechanics",
-      "display_meta": "2026-08-13 19:52:25 • Search Mechanics"
+      "display_meta": "2026-08-13 20:17:09 • Search Mechanics"
     }
   ],
   "terms": {
@@ -2417,8 +2417,7 @@
     },
     "2026-08-06 22:47:23": {
       "last_updated": [
-        109,
-        113
+        109
       ]
     },
     "2026-08-07 22:25:51": {
@@ -2426,8 +2425,7 @@
         31,
         75,
         93,
-        120,
-        122
+        120
       ]
     },
     "2026-08-07 22:27:41": {
@@ -2462,13 +2460,11 @@
     },
     "2026-08-08 20:12:23": {
       "last_updated": [
-        112,
-        209
+        112
       ]
     },
     "2026-08-08 20:14:48": {
       "last_updated": [
-        119,
         210
       ]
     },
@@ -2515,7 +2511,6 @@
         35,
         40,
         53,
-        54,
         141
       ]
     },
@@ -2622,7 +2617,6 @@
     "2026-08-12 17:51:20": {
       "last_updated": [
         34,
-        43,
         61,
         66,
         69,
@@ -2776,7 +2770,17 @@
         232
       ]
     },
-    "2026-08-13 19:52:25": {
+    "2026-08-13 20:12:49": {
+      "last_updated": [
+        43,
+        54,
+        113,
+        119,
+        122,
+        209
+      ]
+    },
+    "2026-08-13 20:17:09": {
       "last_updated": [
         235
       ]

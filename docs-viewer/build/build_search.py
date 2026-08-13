@@ -73,7 +73,6 @@ class SearchDocRecord:
     last_updated: str
     parent_id: str
     viewer_url: str
-    publishable: bool
 
 
 def utc_timestamp() -> str:
@@ -86,18 +85,6 @@ def normalize_text(value: Any) -> str:
 
 def normalize(value: Any) -> str:
     return normalize_text(value).lower()
-
-
-def normalize_target_doc_ids(values: list[str] | tuple[str, ...] | None) -> list[str]:
-    seen: set[str] = set()
-    result: list[str] = []
-    for value in values or []:
-        for item in normalize_text(value).split(","):
-            doc_id = normalize_text(item)
-            if doc_id and doc_id not in seen:
-                seen.add(doc_id)
-                result.append(doc_id)
-    return result
 
 
 def boolean_field(row: dict[str, Any], key: str, default: bool) -> bool:
@@ -220,13 +207,6 @@ def json_text(payload: Any) -> str:
     return json.dumps(payload, ensure_ascii=False, indent=2) + "\n"
 
 
-def read_json(path: Path) -> Any:
-    try:
-        return json.loads(path.read_text(encoding="utf-8"))
-    except json.JSONDecodeError as exc:
-        raise SystemExit(f"Failed to parse JSON: {relative_path(path, REPO_ROOT)} ({exc})") from exc
-
-
 def canonicalize_for_hash(value: Any) -> Any:
     if isinstance(value, dict):
         return {key: canonicalize_for_hash(value[key]) for key in sorted(value)}
@@ -268,7 +248,7 @@ class DocsViewerSearchDataBuilder:
         write: bool,
         force: bool,
     ) -> dict[str, Any]:
-        payload, _diagnostics = self.build_docs_v2_payload()
+        payload = self.build_docs_v2_payload()
         return self.write_payload(payload, write=write, force=force)
 
     def docs_scope_config(self, scope: str) -> DocsScopeConfig:
@@ -327,7 +307,7 @@ class DocsViewerSearchDataBuilder:
                     "publishable": front_matter_boolean(front_matter, "publishable", True),
                 }
             )
-        return self.search_records_from_source_rows(self.ordered_source_rows(raw_records))
+        return self.search_records_from_source_rows(raw_records)
 
     def viewer_url_for(self, doc_id: str) -> str:
         pairs: list[str] = []
@@ -360,40 +340,9 @@ class DocsViewerSearchDataBuilder:
                     last_updated=normalize_text(row.get("last_updated")),
                     parent_id=parent_id,
                     viewer_url=viewer_url,
-                    publishable=True,
                 )
             )
         return records
-
-    def ordered_source_rows(self, rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
-        by_parent: dict[str, list[dict[str, Any]]] = {}
-        ids = {normalize_text(row.get("doc_id")) for row in rows if isinstance(row, dict)}
-        for row in rows:
-            parent_id = normalize_text(row.get("parent_id"))
-            if parent_id not in ids:
-                parent_id = ""
-            by_parent.setdefault(parent_id, []).append(row)
-        for children in by_parent.values():
-            children.sort(key=lambda row: (normalize(row.get("title")), normalize(row.get("doc_id"))))
-        ordered: list[dict[str, Any]] = []
-        seen: set[str] = set()
-
-        def append_children(parent_id: str) -> None:
-            for child in by_parent.get(parent_id, []):
-                doc_id = normalize_text(child.get("doc_id"))
-                if not doc_id or doc_id in seen:
-                    continue
-                seen.add(doc_id)
-                ordered.append(child)
-                append_children(doc_id)
-
-        append_children("")
-        for row in sorted(rows, key=lambda row: (normalize(row.get("title")), normalize(row.get("doc_id")))):
-            doc_id = normalize_text(row.get("doc_id"))
-            if doc_id and doc_id not in seen:
-                seen.add(doc_id)
-                ordered.append(row)
-        return ordered
 
     def hidden_doc_ids(self, docs: list[Any]) -> set[str]:
         roots = [
@@ -430,9 +379,8 @@ class DocsViewerSearchDataBuilder:
     def build_docs_v2_payload(
         self,
         *,
-        changed_doc_ids: list[str] | None = None,
         generated_at_utc: str | None = None,
-    ) -> tuple[dict[str, Any], dict[str, Any]]:
+    ) -> dict[str, Any]:
         docs = self.load_source_docs()
         title_by_id = {doc.doc_id: doc.title for doc in docs}
         records: list[dict[str, Any]] = []
@@ -449,19 +397,11 @@ class DocsViewerSearchDataBuilder:
                     "display_meta": compact_join(doc.last_updated, parent_title),
                 }
             )
-        requested_doc_ids = normalize_target_doc_ids(changed_doc_ids)
-        return (
-            build_search_index_v2(
-                scope=self.scope,
-                documents=records,
-                search_fields=self.scope_config.search_fields,
-                generated_at_utc=generated_at_utc,
-            ),
-            {
-                "mode": "full",
-                "requested_doc_ids": requested_doc_ids,
-                "reason": "v2 postings are rebuilt as one whole index",
-            },
+        return build_search_index_v2(
+            scope=self.scope,
+            documents=records,
+            search_fields=self.scope_config.search_fields,
+            generated_at_utc=generated_at_utc,
         )
 
     def write_payload(

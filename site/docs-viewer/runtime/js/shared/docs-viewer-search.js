@@ -71,14 +71,12 @@ function searchScoreV2(index, position, query, matchedFields) {
   var id = normalizeSearchText(document.id);
   var title = normalizeSearchText(document.title);
   if (id === query) return 1000;
-  if (query.length >= 3 && id.indexOf(query) === 0) return 950;
   if (title === query) return 900;
   if (matchedFields.has("title")) return 800;
   if (matchedFields.has("heading")) return 700;
   if (matchedFields.has("parent_title")) return 500;
   if (matchedFields.has("body") || matchedFields.has("code")) return 400;
   if (matchedFields.has("last_updated")) return 300;
-  if (matchedFields.has("identity")) return 950;
   return 100;
 }
 

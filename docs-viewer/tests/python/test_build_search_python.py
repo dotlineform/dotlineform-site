@@ -188,8 +188,7 @@ def test_builder_rebuilds_whole_index_and_skips_identical_output() -> None:
         prepare_repo(root)
         output_path = root / "docs-viewer/scopes/studio/published/search/index.json"
         builder = build_search.DocsViewerSearchDataBuilder(repo_root=root, scope="studio")
-        initial, _initial_diagnostics = builder.build_docs_v2_payload(
-            changed_doc_ids=["child"],
+        initial = builder.build_docs_v2_payload(
             generated_at_utc="2026-08-13T00:00:00Z",
         )
         builder.write_payload(initial, write=True, force=False)
@@ -200,22 +199,18 @@ def test_builder_rebuilds_whole_index_and_skips_identical_output() -> None:
             "---\ndoc_id: created\ntitle: Created\nlast_updated: 2026-08-13\n---\n# Created\n",
         )
         (root / "docs-viewer/scopes/studio/source/documents/parent.md").unlink()
-        changed, diagnostics = builder.build_docs_v2_payload(
-            changed_doc_ids=["child", "created", "parent"],
+        changed = builder.build_docs_v2_payload(
             generated_at_utc="2026-08-13T00:01:00Z",
         )
         builder.write_payload(changed, write=True, force=False)
         written = output_path.read_text(encoding="utf-8")
-        unchanged, _unchanged_diagnostics = builder.build_docs_v2_payload(
-            changed_doc_ids=["child"],
+        unchanged = builder.build_docs_v2_payload(
             generated_at_utc="2026-08-13T00:02:00Z",
         )
         builder.write_payload(unchanged, write=True, force=False)
         after_skip = output_path.read_text(encoding="utf-8")
 
     changed_by_id = {document["id"]: document for document in changed["docs"]}
-    assert diagnostics["mode"] == "full"
-    assert diagnostics["requested_doc_ids"] == ["child", "created", "parent"]
     assert changed_by_id["child"]["title"] == "Child Updated"
     assert "created" in changed_by_id
     assert "parent" not in changed_by_id
@@ -224,7 +219,7 @@ def test_builder_rebuilds_whole_index_and_skips_identical_output() -> None:
     assert written == json.dumps(changed, ensure_ascii=False, indent=2) + "\n"
 
 
-def test_targeted_local_search_build_does_not_resolve_unselected_external_scope() -> None:
+def test_selected_scope_search_build_does_not_resolve_unselected_external_scope() -> None:
     with tempfile.TemporaryDirectory() as temp_path:
         root = Path(temp_path)
         write_json(

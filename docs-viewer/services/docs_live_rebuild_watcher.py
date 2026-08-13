@@ -411,7 +411,7 @@ def direct_child_doc_ids(snapshot: Dict[str, Dict[str, Any]], parent_doc_id: str
     return [str(row.get("doc_id") or "").strip() for row in children]
 
 
-def affected_search_doc_ids(
+def affected_doc_ids(
     previous_docs: Optional[Dict[str, Dict[str, Any]]],
     current_docs: Dict[str, Dict[str, Any]],
     changed_files: list[str],
@@ -801,7 +801,7 @@ def process_document_collection_changes(
     state: Dict[str, Any],
     changed_files: list[str],
     *,
-    targeted_search_threshold: int,
+    targeted_docs_threshold: int,
 ) -> tuple[bool, Optional[Dict[str, Dict[str, Any]]]]:
     """Capture eligible timestamps, then run one exact collection rebuild."""
 
@@ -825,11 +825,11 @@ def process_document_collection_changes(
     search_doc_ids: Optional[list[str]] = None
     docs_doc_ids = None
     if not sub_scope:
-        search_doc_ids, fallback_reason = affected_search_doc_ids(
+        search_doc_ids, fallback_reason = affected_doc_ids(
             state["doc_snapshot"],
             current_docs,
             changed_files,
-            targeted_search_threshold,
+            targeted_docs_threshold,
         )
         if fallback_reason:
             log(
@@ -1020,10 +1020,10 @@ def parse_args() -> argparse.Namespace:
         help="Debounce window in seconds before rebuild.",
     )
     parser.add_argument(
-        "--targeted-search-threshold",
+        "--targeted-docs-threshold",
         type=int,
-        default=int(env.get("DOCS_WATCH_TARGETED_SEARCH_THRESHOLD", "5")),
-        help="Maximum changed file count for targeted docs-search updates; use -1 to always target when safe.",
+        default=int(env.get("DOCS_WATCH_TARGETED_DOCS_THRESHOLD", "5")),
+        help="Maximum changed file count for targeted docs payload builds; use -1 to always target when safe.",
     )
     return parser.parse_args()
 
@@ -1166,8 +1166,8 @@ def main() -> int:
                             repo_root,
                             state,
                             changed_files,
-                            targeted_search_threshold=(
-                                args.targeted_search_threshold
+                            targeted_docs_threshold=(
+                                args.targeted_docs_threshold
                             ),
                         )
                     )

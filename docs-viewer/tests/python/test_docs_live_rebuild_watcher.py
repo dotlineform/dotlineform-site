@@ -780,7 +780,7 @@ def test_parent_watcher_capture_runs_one_existing_rebuild() -> None:
                 repo_root,
                 state,
                 ["doc.md"],
-                targeted_search_threshold=5,
+                targeted_docs_threshold=5,
             )
         finally:
             module.try_parsed_doc_snapshot = original_snapshot
@@ -927,7 +927,7 @@ def test_sub_scope_watcher_captures_preserves_and_rebuilds_exact_collection_once
                     repo_root,
                     state,
                     list(current_sources),
-                    targeted_search_threshold=5,
+                    targeted_docs_threshold=5,
                 )
             )
             fresh_docs = module.parsed_doc_snapshot(
@@ -1035,7 +1035,7 @@ def test_sub_scope_watcher_timestamp_failure_keeps_source_and_rebuilds_once() ->
                     repo_root,
                     state,
                     ["failure.md"],
-                    targeted_search_threshold=5,
+                    targeted_docs_threshold=5,
                 )
             )
         finally:
