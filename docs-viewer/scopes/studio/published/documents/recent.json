@@ -4,6 +4,14 @@
   "limit": 10,
   "docs": [
     {
+      "doc_id": "d-20260813-171341-8bfa80",
+      "title": "DSI-1 — Docs Viewer Search Index v2 Delivery",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260813-171341-8bfa80.json",
+      "timestamp": "2026-08-13 19:03:49",
+      "parent_id": "d-20260715-092247-6bbb5e",
+      "parent_title": "Search Mechanics"
+    },
+    {
       "doc_id": "d-20260813-161942-b1e9e1",
       "title": "Studio Full-Text Search Index",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260813-161942-b1e9e1.json",
@@ -26,14 +34,6 @@
       "timestamp": "2026-08-13 18:30:10",
       "parent_id": "d-20260424-000000-50b63f",
       "parent_title": "Docs Viewer"
-    },
-    {
-      "doc_id": "d-20260813-171341-8bfa80",
-      "title": "DSI-1 — Docs Viewer Search Index v2 Delivery",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260813-171341-8bfa80.json",
-      "timestamp": "2026-08-13 17:40:58",
-      "parent_id": "d-20260715-092247-6bbb5e",
-      "parent_title": "Search Mechanics"
     },
     {
       "doc_id": "d-20260715-084611-c2fa6f",
@@ -82,5 +82,5 @@
       "parent_title": "Testing"
     }
   ],
-  "generated_at": "2026-08-13T17:55:08Z"
+  "generated_at": "2026-08-13T18:03:50Z"
 }
