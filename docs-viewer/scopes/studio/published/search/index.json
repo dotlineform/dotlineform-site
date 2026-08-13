@@ -2,8 +2,8 @@
   "header": {
     "schema": "docs_viewer_search_index_v2",
     "scope": "studio",
-    "version": "blake2b-6dec34d5cbc33d69fe5b5bbe0c2e1c04",
-    "generated_at_utc": "2026-08-13T19:26:03Z",
+    "version": "blake2b-11b8e35ce515e456cbcfcbb80385dd4d",
+    "generated_at_utc": "2026-08-13T19:43:53Z",
     "count": 236
   },
   "fields": [
@@ -1509,10 +1509,10 @@
       "id": "d-20260715-084611-c2fa6f",
       "title": "SM-1 — Studio Full-Text Search Delivery",
       "href": "/docs/?scope=studio&doc=d-20260715-084611-c2fa6f",
-      "last_updated": "2026-08-13 20:23:57",
+      "last_updated": "2026-08-13 20:42:16",
       "parent_id": "d-20260715-092247-6bbb5e",
       "parent_title": "Search Mechanics",
-      "display_meta": "2026-08-13 20:23:57 • Search Mechanics"
+      "display_meta": "2026-08-13 20:42:16 • Search Mechanics"
     },
     {
       "id": "d-20260715-092247-6bbb5e",
@@ -2079,10 +2079,10 @@
       "id": "d-20260813-161942-b1e9e1",
       "title": "Studio Full-Text Search Index",
       "href": "/docs/?scope=studio&doc=d-20260813-161942-b1e9e1",
-      "last_updated": "2026-08-13 18:55:07",
+      "last_updated": "2026-08-13 20:43:35",
       "parent_id": "d-20260715-092247-6bbb5e",
       "parent_title": "Search Mechanics",
-      "display_meta": "2026-08-13 18:55:07 • Search Mechanics"
+      "display_meta": "2026-08-13 20:43:35 • Search Mechanics"
     },
     {
       "id": "d-20260813-163802-5ca41f",
@@ -2753,11 +2753,6 @@
         233
       ]
     },
-    "2026-08-13 18:55:07": {
-      "last_updated": [
-        232
-      ]
-    },
     "2026-08-13 20:12:49": {
       "last_updated": [
         43,
@@ -2771,7 +2766,6 @@
     "2026-08-13 20:23:57": {
       "last_updated": [
         93,
-        168,
         169,
         234
       ]
@@ -2779,6 +2773,16 @@
     "2026-08-13 20:25:26": {
       "last_updated": [
         235
+      ]
+    },
+    "2026-08-13 20:42:16": {
+      "last_updated": [
+        168
+      ]
+    },
+    "2026-08-13 20:43:35": {
+      "last_updated": [
+        232
       ]
     },
     "actions": {
