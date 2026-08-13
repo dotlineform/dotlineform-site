@@ -4,6 +4,7 @@
   "tokenizer_cases": [
     {"value": "Full-text search", "terms": ["full-text", "full", "text", "search"]},
     {"value": "docs_subscope", "terms": ["docs_subscope", "docs", "subscope"]},
+    {"value": "DOCS_VIEWER_BASE_URL", "terms": ["docs_viewer_base_url", "docs", "viewer", "base", "url"]},
     {"value": "handleEditMetadataSave", "terms": ["handleeditmetadatasave", "handle", "edit", "metadata", "save"]},
     {"value": "build_search.py", "terms": ["build_search.py", "build", "search"]},
     {"value": "SM-1.0", "terms": ["sm-1.0", "sm"]},

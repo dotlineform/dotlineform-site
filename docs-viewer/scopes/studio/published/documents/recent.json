@@ -4,18 +4,18 @@
   "limit": 10,
   "docs": [
     {
-      "doc_id": "d-20260813-161942-b1e9e1",
-      "title": "Studio Full-Text Search Index",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260813-161942-b1e9e1.json",
-      "timestamp": "2026-08-13 20:43:35",
+      "doc_id": "d-20260715-084611-c2fa6f",
+      "title": "SM-1 — Studio Full-Text Search Delivery",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260715-084611-c2fa6f.json",
+      "timestamp": "2026-08-13 20:56:12",
       "parent_id": "d-20260715-092247-6bbb5e",
       "parent_title": "Search Mechanics"
     },
     {
-      "doc_id": "d-20260715-084611-c2fa6f",
-      "title": "SM-1 — Studio Full-Text Search Delivery",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260715-084611-c2fa6f.json",
-      "timestamp": "2026-08-13 20:42:16",
+      "doc_id": "d-20260813-161942-b1e9e1",
+      "title": "Studio Full-Text Search Index",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260813-161942-b1e9e1.json",
+      "timestamp": "2026-08-13 20:43:35",
       "parent_id": "d-20260715-092247-6bbb5e",
       "parent_title": "Search Mechanics"
     },
@@ -84,5 +84,5 @@
       "parent_title": "Scripts Overview"
     }
   ],
-  "generated_at": "2026-08-13T19:43:53Z"
+  "generated_at": "2026-08-13T19:56:13Z"
 }

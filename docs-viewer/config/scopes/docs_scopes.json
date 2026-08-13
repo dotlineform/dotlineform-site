@@ -12,7 +12,7 @@
       "scope_type": "local",
       "meta": "local management",
       "source": {},
-      "search_fields": ["title", "parent_title", "identity", "last_updated"],
+      "search_fields": ["title", "heading", "body", "code"],
       "media": {
         "types": {
           "img": {

@@ -268,6 +268,88 @@ class MarkdownRenderResult:
     plain_text: str
 
 
+@dataclass(frozen=True)
+class MarkdownSearchFields:
+    headings: tuple[str, ...]
+    body: str
+    code: str
+
+
+class MarkdownSearchFieldRenderer(HTMLParser):
+    HEADING_TAGS = {"h1", "h2", "h3", "h4", "h5", "h6"}
+    SKIPPED_TAGS = {"script", "style"}
+
+    def __init__(self, *, title: str = "") -> None:
+        super().__init__(convert_charrefs=True)
+        self.title_key = normalize_plain_text(title).casefold()
+        self.in_heading = False
+        self.literal_depth = 0
+        self.skip_depth = 0
+        self.heading_parts: List[str] = []
+        self.headings: List[str] = []
+        self.heading_keys: set[str] = set()
+        self.body_parts: List[str] = []
+        self.code_parts: List[str] = []
+
+    def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
+        tag_name = tag.lower()
+        if tag_name in self.SKIPPED_TAGS:
+            self.skip_depth += 1
+        elif self.skip_depth:
+            return
+        elif tag_name in self.HEADING_TAGS:
+            self.flush_heading()
+            self.in_heading = True
+        elif tag_name in {"pre", "code"}:
+            self.literal_depth += 1
+        elif tag_name == "img":
+            attrs_by_name = {key.lower(): str(value or "") for key, value in attrs}
+            self.append_text(attrs_by_name.get("alt", ""))
+
+    def handle_endtag(self, tag: str) -> None:
+        tag_name = tag.lower()
+        if tag_name in self.SKIPPED_TAGS:
+            self.skip_depth = max(0, self.skip_depth - 1)
+        elif self.skip_depth:
+            return
+        elif tag_name in self.HEADING_TAGS:
+            self.in_heading = False
+            self.flush_heading()
+        elif tag_name in {"pre", "code"}:
+            self.literal_depth = max(0, self.literal_depth - 1)
+
+    def handle_data(self, data: str) -> None:
+        self.append_text(data)
+
+    def append_text(self, value: str) -> None:
+        if self.skip_depth:
+            return
+        text = normalize_plain_text(value)
+        if not text:
+            return
+        parts = self.heading_parts if self.in_heading else (
+            self.code_parts if self.literal_depth else self.body_parts
+        )
+        parts.append(text)
+
+    def flush_heading(self) -> None:
+        heading = normalize_plain_text(" ".join(self.heading_parts))
+        self.heading_parts = []
+        key = heading.casefold()
+        if not heading or key == self.title_key or key in self.heading_keys:
+            return
+        self.heading_keys.add(key)
+        self.headings.append(heading)
+
+    def fields(self) -> MarkdownSearchFields:
+        self.flush_heading()
+        return MarkdownSearchFields(
+            headings=tuple(self.headings),
+            body=normalize_plain_text(" ".join(self.body_parts)),
+            code=normalize_plain_text(" ".join(self.code_parts)),
+        )
+
+
 def trim_blank_lines(lines: List[str]) -> List[str]:
     result = list(lines)
     while result and result[0] == "":
@@ -323,6 +405,18 @@ def render_markdown_document(
 ) -> MarkdownRenderResult:
     html = render_markdown_to_html(markdown, options)
     return MarkdownRenderResult(html=html, plain_text=plain_text_from_html(html, title=title))
+
+
+def extract_markdown_search_fields(
+    markdown: str | None,
+    *,
+    title: str = "",
+    options: MarkdownRenderOptions | None = None,
+) -> MarkdownSearchFields:
+    parser = MarkdownSearchFieldRenderer(title=title)
+    parser.feed(render_markdown_to_html(markdown, options))
+    parser.close()
+    return parser.fields()
 
 
 def markdown_renderer_contract(options: MarkdownRenderOptions | None = None) -> Dict[str, Any]:

@@ -38,7 +38,18 @@ def read_json(path: Path) -> dict[str, Any]:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
-def write_scope_config(root: Path) -> None:
+def write_scope_config(
+    root: Path,
+    *,
+    search_fields: list[str] | None = None,
+) -> None:
+    scope = docs_scope_record(
+        "studio",
+        default_doc_id="parent",
+        manage_only_tree_root_ids=["manage-root"],
+    )
+    if search_fields is not None:
+        scope["search_fields"] = search_fields
     write_json(
         root / "docs-viewer/config/scopes/docs_scopes.json",
         {
@@ -49,13 +60,7 @@ def write_scope_config(root: Path) -> None:
                     "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/media",
                 }
             },
-            "scopes": [
-                docs_scope_record(
-                    "studio",
-                    default_doc_id="parent",
-                    manage_only_tree_root_ids=["manage-root"],
-                )
-            ],
+            "scopes": [scope],
         },
     )
 
@@ -180,6 +185,93 @@ def test_v2_tokenizer_and_index_match_shared_contract_fixture() -> None:
     assert [document["id"] for document in payload["docs"]] == fixture["expected_document_ids"]
     for term, postings in fixture["expected_postings"].items():
         assert payload["terms"][term] == postings
+
+
+def test_studio_full_text_extracts_visible_fields_without_configuration_leaks() -> None:
+    with tempfile.TemporaryDirectory() as temp_path:
+        root = Path(temp_path)
+        write_scope_config(
+            root,
+            search_fields=["title", "heading", "body", "code"],
+        )
+        write_source_docs(root)
+        write_text(
+            root / "docs-viewer/config/reports/reports.json",
+            (REPO_ROOT / "docs-viewer/config/reports/reports.json").read_text(encoding="utf-8"),
+        )
+        write_text(
+            root / "docs-viewer/scopes/studio/source/documents/child.md",
+            """---
+doc_id: d-20260813-000001-aaaaaa
+title: "Representative Search"
+summary: FrontMatterLeak
+last_updated: 2026-06-02
+parent_id: parent
+---
+# Representative Search
+
+## Known `weak` spots
+
+Readable prose with a [compatibility key](https://leak.example/secret-destination) and `DOCS_VIEWER_BASE_URL`.
+
+```python
+docs_subscope = handleEditMetadataSave()
+```
+
+<section><h3>Raw Visible Heading</h3><p>Visible raw prose <code>raw_html_code</code></p><script>private_script()</script><style>.private_style { color: red; }</style></section>
+
+![Accessible diagram]([[media:docs/studio/img/private-media.png]])
+
+[[html-media:docs/studio/html/private-demo.html]]
+
+[[catalogue:work:01942|Linked Artwork]]
+
+:::report
+id: docs_backlinks
+access: local
+:::
+""",
+        )
+
+        payload = build_search.DocsViewerSearchDataBuilder(
+            repo_root=root,
+            scope="studio",
+        ).build_docs_v2_payload(generated_at_utc="2026-08-13T00:00:00Z")
+
+    assert payload["fields"] == ["title", "heading", "body", "code"]
+    child = payload["docs"][0]
+    assert child["id"] == "d-20260813-000001-aaaaaa"
+    assert child["parent_title"] == "Parent Page"
+    assert child["display_meta"] == "2026-06-02 • Parent Page"
+    assert payload["terms"]["representative"] == {"title": [0]}
+    assert payload["terms"]["known"] == {"heading": [0]}
+    assert payload["terms"]["weak"] == {"heading": [0]}
+    assert payload["terms"]["spots"] == {"heading": [0]}
+    assert payload["terms"]["compatibility"] == {"body": [0]}
+    assert payload["terms"]["visible"] == {"heading": [0], "body": [0]}
+    assert payload["terms"]["docs_viewer_base_url"] == {"code": [0]}
+    assert payload["terms"]["docs_subscope"] == {"code": [0]}
+    assert payload["terms"]["raw_html_code"] == {"code": [0]}
+    assert payload["terms"]["accessible"] == {"body": [0]}
+    assert payload["terms"]["linked"] == {"body": [0]}
+    assert all(
+        set(field_postings).issubset({"title", "heading", "body", "code"})
+        for field_postings in payload["terms"].values()
+    )
+    for excluded in (
+        "frontmatterleak",
+        "secret-destination",
+        "private_script",
+        "private_style",
+        "private-media",
+        "private-demo",
+        "docs_backlinks",
+        "backlinks",
+        "catalogue",
+        "d-20260813-000001-aaaaaa",
+        "2026-06-02",
+    ):
+        assert excluded not in payload["terms"]
 
 
 def test_builder_rebuilds_whole_index_and_skips_identical_output() -> None:

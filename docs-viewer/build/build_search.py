@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import html
 import json
 import re
 import sys
@@ -28,17 +29,21 @@ if __name__ == "__main__":
 REPO_ROOT = Path(__file__).resolve().parents[2]
 BUILD_DIR = REPO_ROOT / "docs-viewer" / "build"
 DOCS_SERVICES_DIR = REPO_ROOT / "docs-viewer" / "services"
-for path in (BUILD_DIR, DOCS_SERVICES_DIR):
+SHARED_PYTHON_DIR = REPO_ROOT / "studio" / "shared" / "python"
+for path in (BUILD_DIR, DOCS_SERVICES_DIR, SHARED_PYTHON_DIR):
     if str(path) not in sys.path:
         sys.path.insert(0, str(path))
 
 from build_docs import (  # noqa: E402
     FrontMatterSyntaxError,
+    HTML_MEDIA_TOKEN_PATTERN,
+    MEDIA_TOKEN_PATTERN,
     extract_title,
     front_matter_boolean,
     humanize,
-    parse_source,
 )
+from docs_builder.semantic_tokens import replace_semantic_tokens  # noqa: E402
+from docs_builder.source import parse_source_text  # noqa: E402
 from docs_scope_config import (  # noqa: E402
     DocsScopeConfig,
     document_source_path,
@@ -47,7 +52,16 @@ from docs_scope_config import (  # noqa: E402
     resolve_scope_path,
 )
 from docs_document_identity import is_immutable_doc_id  # noqa: E402
-from docs_source_model import validate_publishable_front_matter  # noqa: E402
+from docs_report_source import (  # noqa: E402
+    ReportDescriptor,
+    project_report_markdown,
+)
+from docs_source_model import (  # noqa: E402
+    parse_document_report,
+    report_source_contract_for_collection,
+    validate_publishable_front_matter,
+)
+from markdown_renderer import extract_markdown_search_fields  # noqa: E402
 
 
 DEFAULT_SCOPE = "studio"
@@ -61,6 +75,7 @@ SEARCH_V2_FILE_EXTENSIONS = frozenset({
     "mjs", "pdf", "png", "py", "svg", "ts", "txt", "webp", "yaml", "yml",
 })
 SEARCH_V2_EXACT_FIELDS = frozenset({"identity", "last_updated"})
+SEARCH_V2_CONTENT_FIELDS = frozenset({"heading", "body", "code"})
 SEARCH_V2_EXCLUDED_SPANS = re.compile(r"(?:https?://|www\.)\S+|(?:[/\\][^\s]+)+|<[^>]+>", re.IGNORECASE)
 SEARCH_V2_TOKEN = re.compile(r"[^\W_]+(?:[._-][^\W_]+)*", re.UNICODE)
 SEARCH_V2_CAMEL_BOUNDARY = re.compile(r"(?<=[a-z0-9])(?=[A-Z])|(?<=[A-Z])(?=[A-Z][a-z])")
@@ -73,6 +88,8 @@ class SearchDocRecord:
     last_updated: str
     parent_id: str
     viewer_url: str
+    body_markdown: str = ""
+    report: ReportDescriptor | None = None
 
 
 def utc_timestamp() -> str:
@@ -240,6 +257,21 @@ class DocsViewerSearchDataBuilder:
         self.repo_root = repo_root.resolve()
         self.scope = normalize(scope)
         self.scope_config = self.docs_scope_config(self.scope)
+        self.content_search_enabled = bool(
+            SEARCH_V2_CONTENT_FIELDS.intersection(self.scope_config.search_fields)
+        )
+        try:
+            self.report_source_contract = (
+                report_source_contract_for_collection(
+                    self.repo_root,
+                    self.scope_config,
+                    self.scope_config,
+                )
+                if self.content_search_enabled
+                else None
+            )
+        except ValueError as exc:
+            raise SystemExit(str(exc)) from exc
         self.output_path = self.resolve_path(output_path or published_search_path(self.scope_config))
 
     def run(
@@ -280,8 +312,13 @@ class DocsViewerSearchDataBuilder:
 
         raw_records: list[dict[str, Any]] = []
         for path in paths:
+            source_text = path.read_text(encoding="utf-8")
+            source_name = path.relative_to(source_dir).as_posix()
             try:
-                front_matter, body_markdown = parse_source(path)
+                front_matter, body_markdown = parse_source_text(
+                    source_text,
+                    source_name=source_name,
+                )
             except FrontMatterSyntaxError as exc:
                 raise SystemExit(str(exc)) from exc
             stem = path.stem
@@ -293,7 +330,21 @@ class DocsViewerSearchDataBuilder:
                 validate_publishable_front_matter(
                     front_matter,
                     collection_config=self.scope_config,
-                    source_name=path.relative_to(source_dir).as_posix(),
+                    source_name=source_name,
+                )
+            except ValueError as exc:
+                raise SystemExit(str(exc)) from exc
+            try:
+                report = (
+                    parse_document_report(
+                        source_text,
+                        front_matter,
+                        body_markdown,
+                        source_name=source_name,
+                        contract=self.report_source_contract,
+                    )
+                    if self.content_search_enabled
+                    else None
                 )
             except ValueError as exc:
                 raise SystemExit(str(exc)) from exc
@@ -305,6 +356,8 @@ class DocsViewerSearchDataBuilder:
                     "parent_id": normalize_text(front_matter.get("parent_id") if "parent_id" in front_matter else ""),
                     "viewer_url": self.viewer_url_for(doc_id),
                     "publishable": front_matter_boolean(front_matter, "publishable", True),
+                    "body_markdown": body_markdown,
+                    "report": report,
                 }
             )
         return self.search_records_from_source_rows(raw_records)
@@ -340,6 +393,8 @@ class DocsViewerSearchDataBuilder:
                     last_updated=normalize_text(row.get("last_updated")),
                     parent_id=parent_id,
                     viewer_url=viewer_url,
+                    body_markdown=str(row.get("body_markdown") or ""),
+                    report=row.get("report") if isinstance(row.get("report"), ReportDescriptor) else None,
                 )
             )
         return records
@@ -386,23 +441,48 @@ class DocsViewerSearchDataBuilder:
         records: list[dict[str, Any]] = []
         for doc in docs:
             parent_title = "" if not doc.parent_id else normalize_text(title_by_id.get(doc.parent_id))
-            records.append(
-                {
-                    "id": doc.doc_id,
-                    "title": doc.title,
-                    "href": doc.viewer_url,
-                    "last_updated": doc.last_updated,
-                    "parent_id": doc.parent_id,
-                    "parent_title": parent_title,
-                    "display_meta": compact_join(doc.last_updated, parent_title),
-                }
-            )
+            record: dict[str, Any] = {
+                "id": doc.doc_id,
+                "title": doc.title,
+                "href": doc.viewer_url,
+                "last_updated": doc.last_updated,
+                "parent_id": doc.parent_id,
+                "parent_title": parent_title,
+                "display_meta": compact_join(doc.last_updated, parent_title),
+            }
+            if self.content_search_enabled:
+                fields = extract_markdown_search_fields(
+                    self.searchable_markdown(doc),
+                    title=doc.title,
+                )
+                record.update(
+                    {
+                        "heading": fields.headings,
+                        "body": fields.body,
+                        "code": fields.code,
+                    }
+                )
+            records.append(record)
         return build_search_index_v2(
             scope=self.scope,
             documents=records,
             search_fields=self.scope_config.search_fields,
             generated_at_utc=generated_at_utc,
         )
+
+    def searchable_markdown(self, doc: SearchDocRecord) -> str:
+        markdown = project_report_markdown(
+            doc.body_markdown,
+            doc.report,
+            include_host=False,
+        )
+        markdown = replace_semantic_tokens(
+            markdown,
+            registry=None,
+            replacer=lambda token: html.escape(token.title),
+        )
+        markdown = HTML_MEDIA_TOKEN_PATTERN.sub("", markdown)
+        return MEDIA_TOKEN_PATTERN.sub("", markdown)
 
     def write_payload(
         self,
