@@ -1,12 +1,12 @@
-# Smoke Checks
+# Studio Smoke Boundaries
 
-Put focused browser smoke scripts here when a Studio or site UI change needs repeatable Codex-run coverage.
+This directory contains three retained browser entrypoints plus one small server harness:
 
-Smoke checks should stay small and route-specific. Use `docs-viewer/scopes/studio/source/documents/d-20260501-000000-49b626.md` for readiness, hit-testing, and setup-action rules.
+- `studio_catalogue_route.py`: local Catalogue route boot and same-origin service isolation.
+- `studio_tag_route.py`: local Tag route boot and same-origin service isolation.
+- `public_catalogue_route.py`: one checked public Work route without local Studio capability.
+- `studio_route_smoke_support.py`: server startup and route-ready waiting only.
 
-Prefer naming scripts by the route or workflow they cover, for example:
+Do not recreate browser module-contract suites, API mutation scripts, multi-route product-data matrices, theme interaction tests, or UI workflow narratives here. Deterministic behavior belongs under `studio/tests/python/`; normal UI behavior is accepted manually.
 
-```text
-catalogue_field_registry_review.py
-work_editor_build_preview.py
-```
+Use [Browser Smoke Testing](/docs/?scope=studio&doc=d-20260501-000000-49b626) before proposing another retained boundary.

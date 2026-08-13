@@ -28,9 +28,12 @@ def test_catalogue_write_service_routes_are_registered() -> None:
         "/build-apply",
     } <= service_paths
 
-def test_catalogue_delete_preview_uses_callable_service_route() -> None:
+def test_catalogue_delete_preview_uses_callable_service_route(monkeypatch) -> None:
     with tempfile.TemporaryDirectory() as tmp_dir:
         repo_root = Path(tmp_dir) / "repo"
+        projects_base = Path(tmp_dir) / "Projects"
+        projects_base.mkdir()
+        monkeypatch.setenv("DOTLINEFORM_PROJECTS_BASE_DIR", str(projects_base))
         source_dir = repo_root / "studio" / "data" / "canonical" / "catalogue"
         source_dir.mkdir(parents=True)
         write_repo_marker(repo_root)

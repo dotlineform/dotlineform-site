@@ -4,6 +4,70 @@
   "limit": 10,
   "docs": [
     {
+      "doc_id": "d-20260422-000000-fb2894",
+      "title": "Catalogue Services",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260422-000000-fb2894.json",
+      "timestamp": "2026-08-13 11:26:33",
+      "parent_id": "d-20260423-000000-d015e6",
+      "parent_title": "Studio"
+    },
+    {
+      "doc_id": "d-20260608-225607-77fc13",
+      "title": "Files Report",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260608-225607-77fc13.json",
+      "timestamp": "2026-08-13 11:26:33",
+      "parent_id": "d-20260609-190605-cc1e45",
+      "parent_title": "Reports"
+    },
+    {
+      "doc_id": "d-20260715-084611-ae9636",
+      "title": "Studio Overview",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260715-084611-ae9636.json",
+      "timestamp": "2026-08-13 11:26:33",
+      "parent_id": "d-20260423-000000-d015e6",
+      "parent_title": "Studio"
+    },
+    {
+      "doc_id": "d-20260501-174746-f92667",
+      "title": "Run Checks",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260501-174746-f92667.json",
+      "timestamp": "2026-08-13 11:23:15",
+      "parent_id": "d-20260419-000000-d2e47b",
+      "parent_title": "Dev Home"
+    },
+    {
+      "doc_id": "d-20260802-002213-b7d4e2",
+      "title": "TDL-2 — Tag Primary Document And Semantic Token Delivery",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-002213-b7d4e2.json",
+      "timestamp": "2026-08-13 11:21:52",
+      "parent_id": "d-20260804-160200-fa7bb7",
+      "parent_title": "Tag Document Linking"
+    },
+    {
+      "doc_id": "d-20260501-000000-49b626",
+      "title": "Browser Smoke Testing",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260501-000000-49b626.json",
+      "timestamp": "2026-08-13 11:21:19",
+      "parent_id": "d-20260501-174746-efd581",
+      "parent_title": "Testing"
+    },
+    {
+      "doc_id": "d-20260422-000000-ec1a69",
+      "title": "Catalogue Series Editor",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260422-000000-ec1a69.json",
+      "timestamp": "2026-08-13 11:21:19",
+      "parent_id": "d-20260423-000000-d015e6",
+      "parent_title": "Studio"
+    },
+    {
+      "doc_id": "d-20260422-000000-45a776",
+      "title": "Catalogue Work Editor",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260422-000000-45a776.json",
+      "timestamp": "2026-08-13 11:21:19",
+      "parent_id": "d-20260423-000000-d015e6",
+      "parent_title": "Studio"
+    },
+    {
       "doc_id": "d-20260627-212121-7cf7de",
       "title": "Test Contract Discipline",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260627-212121-7cf7de.json",
@@ -16,71 +80,7 @@
       "title": "Roadmap",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260428-000000-f5ff18.json",
       "timestamp": "2026-08-13 10:08:18"
-    },
-    {
-      "doc_id": "d-20260501-000000-49b626",
-      "title": "Browser Smoke Testing",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260501-000000-49b626.json",
-      "timestamp": "2026-08-13 00:00:00",
-      "parent_id": "d-20260501-174746-efd581",
-      "parent_title": "Testing"
-    },
-    {
-      "doc_id": "d-20260711-214307-b4c800",
-      "title": "Docs Review",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260711-214307-b4c800.json",
-      "timestamp": "2026-08-13 00:00:00",
-      "parent_id": "d-20260424-000000-50b63f",
-      "parent_title": "Docs Viewer"
-    },
-    {
-      "doc_id": "d-20260719-123719-fb7565",
-      "title": "Document Diagrams",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260719-123719-fb7565.json",
-      "timestamp": "2026-08-13 00:00:00",
-      "parent_id": "d-20260424-000000-50b63f",
-      "parent_title": "Docs Viewer"
-    },
-    {
-      "doc_id": "d-20260629-152159-ac1af9",
-      "title": "Export",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260629-152159-ac1af9.json",
-      "timestamp": "2026-08-13 00:00:00",
-      "parent_id": "d-20260424-000000-50b63f",
-      "parent_title": "Docs Viewer"
-    },
-    {
-      "doc_id": "d-20260519-202931-66c794",
-      "title": "Management Operations",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260519-202931-66c794.json",
-      "timestamp": "2026-08-13 00:00:00",
-      "parent_id": "d-20260424-000000-04d75e",
-      "parent_title": "Management Services"
-    },
-    {
-      "doc_id": "d-20260810-182610-c274f0",
-      "title": "RB-1 — Report Blocks Cutover Delivery",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260810-182610-c274f0.json",
-      "timestamp": "2026-08-13 00:00:00",
-      "parent_id": "d-20260810-180114-003d2a",
-      "parent_title": "Report Blocks"
-    },
-    {
-      "doc_id": "d-20260331-000000-c313fd",
-      "title": "Runtime",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260331-000000-c313fd.json",
-      "timestamp": "2026-08-13 00:00:00",
-      "parent_id": "d-20260424-000000-50b63f",
-      "parent_title": "Docs Viewer"
-    },
-    {
-      "doc_id": "d-20260731-155053-3929e2",
-      "title": "Sub-Scope Customisation Architecture",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260731-155053-3929e2.json",
-      "timestamp": "2026-08-13 00:00:00",
-      "parent_id": "d-20260801-084127-752d7e",
-      "parent_title": "Sub-Scopes"
     }
   ],
-  "generated_at": "2026-08-13T09:59:10Z"
+  "generated_at": "2026-08-13T10:26:34Z"
 }

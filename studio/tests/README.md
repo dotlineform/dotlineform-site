@@ -1,13 +1,18 @@
 # Tests
 
-This directory holds lightweight, opt-in repo checks.
+This directory holds Studio-owned deterministic tests and three retained browser boundaries.
 
-Use these checks when a change has enough blast radius that manual review alone is likely to miss regressions. Do not treat this as a mandatory enterprise-style suite for every small edit.
+- `python/` owns service, API, planner, generator, configuration, and data contracts.
+- `smoke/` owns local Catalogue boot, local Tag boot, and representative public Catalogue boot only.
+
+UI interaction, layout, copy, filtering, and modal behavior are accepted manually unless one of those integration boundaries is the actual risk.
 
 Run checks through:
 
 ```bash
 $HOME/miniconda3/bin/python3 admin-app/commands/run_checks.py --profile quick
+$HOME/miniconda3/bin/python3 admin-app/commands/run_checks.py --profile studio
+$HOME/miniconda3/bin/python3 admin-app/commands/run_checks.py --profile studio-smoke
 ```
 
 Local run logs are written under `var/admin/test-runs/` and are not committed.

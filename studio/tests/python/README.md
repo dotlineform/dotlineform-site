@@ -1,6 +1,6 @@
 # Python Checks
 
-Put deterministic Python checks here when they verify repo behavior better than a manual checklist.
+Put deterministic pytest checks here when they verify repo behavior better than a manual checklist.
 
 Good candidates:
 
@@ -9,4 +9,4 @@ Good candidates:
 - generated-data invariants
 - focused regression checks for script behavior
 
-Keep tests executable as plain Python scripts so Codex can run them without a larger framework.
+Keep each file aligned to one service, model, planner, generator, or configuration owner. Browser route boot belongs in the deliberately small `studio/tests/smoke/` suite.

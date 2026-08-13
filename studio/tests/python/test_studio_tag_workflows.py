@@ -70,7 +70,13 @@ sub_scope: tags
     config_path.write_text(
         json.dumps(
             {
-                "schema_version": "docs_scopes_v3",
+                "schema_version": "docs_scopes_v4",
+                "media_workspace": {
+                    "location": {
+                        "provider": "external_local",
+                        "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/media",
+                    }
+                },
                 "scopes": [
                     {
                         "scope_id": "analysis",
@@ -80,16 +86,16 @@ sub_scope: tags
                             "provider": "repository",
                             "path": "docs-viewer/scopes/analysis",
                         },
-                        "source": {"build_media": {}},
-                        "published": {
-                            "media": {
-                                "img": {
-                                    "reference_prefix": "docs/analysis/img",
-                                    "served_path_prefix": "/docs/media/analysis/img",
-                                    "build_inputs": [],
-                                }
-                            }
+                        "source": {},
+                        "media": {
+                            "types": {
+                                "img": {"build_inputs": []},
+                                "svg": {"build_inputs": []},
+                                "files": {"build_inputs": []},
+                            },
+                            "build_sources": {},
                         },
+                        "published": {},
                         "public_projection": {
                             "documents": {
                                 "location": {
@@ -102,6 +108,29 @@ sub_scope: tags
                                     "provider": "repository",
                                     "path": "site/assets/data/search/analysis/index.json",
                                 }
+                            },
+                            "media": {
+                                "img": {
+                                    "location": {
+                                        "provider": "repository",
+                                        "path": "site/assets/data/docs/scopes/analysis/media/img",
+                                    },
+                                    "served_path_prefix": "/assets/data/docs/scopes/analysis/media/img",
+                                },
+                                "svg": {
+                                    "location": {
+                                        "provider": "repository",
+                                        "path": "site/assets/data/docs/scopes/analysis/media/svg",
+                                    },
+                                    "served_path_prefix": "/assets/data/docs/scopes/analysis/media/svg",
+                                },
+                                "files": {
+                                    "location": {
+                                        "provider": "repository",
+                                        "path": "site/assets/data/docs/scopes/analysis/media/files",
+                                    },
+                                    "served_path_prefix": "/assets/data/docs/scopes/analysis/media/files",
+                                },
                             },
                         },
                         "viewer_base_url": "/analysis/",

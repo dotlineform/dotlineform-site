@@ -20,7 +20,6 @@ from typing import Iterable
 REPO_ROOT = Path(__file__).resolve().parents[2]
 RUNS_DIR = REPO_ROOT / "var" / "admin" / "test-runs"
 PUBLIC_SITE_ROOT = REPO_ROOT / "site"
-SOURCE_MODULE_SITE_ROOT = Path(".")
 
 
 @dataclass(frozen=True)
@@ -348,6 +347,14 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
             "Preview a narrow field-aware catalogue build plan.",
         ),
     ),
+    "studio": (
+        LINT_SCOPE_COMMANDS["studio"],
+        CheckCommand(
+            "studio-python-pytest",
+            pytest_argv("studio/tests/python"),
+            "Run the complete Studio deterministic Python test directory.",
+        ),
+    ),
     "docs": (
         LINT_SCOPE_COMMANDS["docs-viewer"],
         CheckCommand(
@@ -496,121 +503,32 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
             "Validate the checked-in static site root before browser smoke tests.",
         ),
         CheckCommand(
-            "public-site-theme-toggle-smoke",
+            "studio-catalogue-route-smoke",
             (
                 sys.executable,
-                "studio/tests/smoke/public_site_theme_toggle.py",
+                "studio/tests/smoke/studio_catalogue_route.py",
+            ),
+            "Smoke-check local Studio Catalogue route boot and service isolation.",
+            isolated_projects_base=True,
+        ),
+        CheckCommand(
+            "studio-tag-route-smoke",
+            (
+                sys.executable,
+                "studio/tests/smoke/studio_tag_route.py",
+            ),
+            "Smoke-check local Studio Tag route boot and service isolation.",
+            isolated_projects_base=True,
+        ),
+        CheckCommand(
+            "public-catalogue-route-smoke",
+            (
+                sys.executable,
+                "studio/tests/smoke/public_catalogue_route.py",
                 "--site-root",
                 str(PUBLIC_SITE_ROOT),
             ),
-            "Smoke-check the public /series/ header theme toggle.",
-        ),
-        CheckCommand(
-            "public-route-simplification-smoke",
-            (
-                sys.executable,
-                "studio/tests/smoke/public_route_simplification.py",
-                "--site-root",
-                str(PUBLIC_SITE_ROOT),
-            ),
-            "Smoke-check the simplified public route contract for series, works, details, search, and 404 recovery.",
-        ),
-        CheckCommand(
-            "catalogue-editor-route-boot-module-smoke",
-            (
-                sys.executable,
-                "studio/tests/smoke/catalogue_editor_route_boot_modules.py",
-                "--site-root",
-                str(SOURCE_MODULE_SITE_ROOT),
-            ),
-            "Smoke-check shared Catalogue editor route boot, readiness boundary, and lookup helpers.",
-        ),
-    ),
-    "studio-tag-smoke": (
-        LINT_SCOPE_COMMANDS["studio"],
-        CheckCommand(
-            "studio-tag-registry-api-smoke",
-            (
-                sys.executable,
-                "studio/tests/smoke/local_studio_tag_registry_apis.py",
-            ),
-            "Smoke-check Studio tag registry write APIs against a fixture repo.",
-        ),
-        CheckCommand(
-            "studio-tag-alias-api-smoke",
-            (
-                sys.executable,
-                "studio/tests/smoke/local_studio_tag_alias_apis.py",
-            ),
-            "Smoke-check Studio tag alias write APIs against a fixture repo.",
-        ),
-        CheckCommand(
-            "studio-tag-assignment-api-smoke",
-            (
-                sys.executable,
-                "studio/tests/smoke/local_studio_tag_assignment_apis.py",
-            ),
-            "Smoke-check Studio tag assignment write APIs against a fixture repo.",
-        ),
-        CheckCommand(
-            "studio-tag-promotion-api-smoke",
-            (
-                sys.executable,
-                "studio/tests/smoke/local_studio_tag_promotion_apis.py",
-            ),
-            "Smoke-check Studio tag promote/demote APIs against a fixture repo.",
-        ),
-        CheckCommand(
-            "local-studio-tag-routes-smoke",
-            (
-                sys.executable,
-                "studio/tests/smoke/local_studio_tag_routes.py",
-            ),
-            "Smoke-check the local Studio tag route boundaries and API reads.",
-        ),
-        CheckCommand(
-            "local-studio-tag-groups-smoke",
-            (
-                sys.executable,
-                "studio/tests/smoke/local_studio_tag_groups.py",
-            ),
-            "Smoke-check the local Studio Tag Groups route boundary and API read path.",
-        ),
-        CheckCommand(
-            "studio-series-tags-render-smoke",
-            (
-                sys.executable,
-                "studio/tests/smoke/series_tags_render.py",
-                "--site-root",
-                str(SOURCE_MODULE_SITE_ROOT),
-            ),
-            "Smoke-check Studio series tags render boundary contracts.",
-        ),
-        CheckCommand(
-            "studio-tag-route-shell-module-smoke",
-            (
-                sys.executable,
-                "studio/tests/smoke/tag_route_shell_modules.py",
-                "--site-root",
-                str(SOURCE_MODULE_SITE_ROOT),
-            ),
-            "Smoke-check Studio shared tag route shell module boundaries.",
-        ),
-        CheckCommand(
-            "studio-tag-aliases-ready-state-smoke",
-            (
-                sys.executable,
-                "studio/tests/smoke/tag_aliases_ready_state.py",
-            ),
-            "Smoke-check Studio tag aliases route readiness boundary.",
-        ),
-        CheckCommand(
-            "studio-series-tag-editor-ready-state-smoke",
-            (
-                sys.executable,
-                "studio/tests/smoke/series_tag_editor_ready_state.py",
-            ),
-            "Smoke-check Studio series tag editor route readiness boundary.",
+            "Smoke-check one representative public Catalogue route without local Studio capability.",
         ),
     ),
 }

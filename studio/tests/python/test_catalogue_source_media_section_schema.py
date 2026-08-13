@@ -49,7 +49,7 @@ def source_records_with_detail(detail_record: dict, section_record: dict | None 
     )
 
 
-def assert_target_detail_schema_accepts_new_fields() -> None:
+def test_target_detail_schema_accepts_new_fields() -> None:
     detail = {
         "detail_uid": "00001-001",
         "work_id": "00001",
@@ -66,7 +66,7 @@ def assert_target_detail_schema_accepts_new_fields() -> None:
     assert not errors, errors
 
 
-def assert_detail_schema_rejects_retired_detail_section_fields() -> None:
+def test_detail_schema_rejects_retired_detail_section_fields() -> None:
     detail = {
         "detail_uid": "00001-001",
         "work_id": "00001",
@@ -84,7 +84,7 @@ def assert_detail_schema_rejects_retired_detail_section_fields() -> None:
     assert any("sort_order is section metadata" in error for error in errors), errors
 
 
-def assert_target_detail_schema_rejects_compat_subfolder_field() -> None:
+def test_target_detail_schema_rejects_compat_subfolder_field() -> None:
     detail = {
         "detail_uid": "00001-001",
         "work_id": "00001",
@@ -98,7 +98,7 @@ def assert_target_detail_schema_rejects_compat_subfolder_field() -> None:
     assert any("missing section_id" in error for error in errors), errors
 
 
-def assert_target_section_schema_rejects_bad_section_order() -> None:
+def test_target_section_schema_rejects_bad_section_order() -> None:
     section = {
         "section_id": "00001-1",
         "work_id": "00001",
@@ -109,7 +109,7 @@ def assert_target_section_schema_rejects_bad_section_order() -> None:
     assert any("section_order must be a whole number" in error for error in errors), errors
 
 
-def assert_next_detail_section_id_uses_hyphen_suffix() -> None:
+def test_next_detail_section_id_uses_hyphen_suffix() -> None:
     next_id = next_detail_section_id(
         "00001",
         [
@@ -121,7 +121,7 @@ def assert_next_detail_section_id_uses_hyphen_suffix() -> None:
     assert next_id == "00001-3"
 
 
-def assert_media_version_is_required_for_media_records() -> None:
+def test_media_version_is_required_for_media_records() -> None:
     records = source_records_with_detail(
         {
             "detail_uid": "00001-001",
@@ -139,7 +139,7 @@ def assert_media_version_is_required_for_media_records() -> None:
     assert any("work_details 00001-001: media_version is required" in error for error in errors), errors
 
 
-def assert_detail_section_id_must_match_section_work() -> None:
+def test_detail_section_id_must_match_section_work() -> None:
     detail = {
         "detail_uid": "00001-001",
         "work_id": "00001",
@@ -156,19 +156,3 @@ def assert_detail_section_id_must_match_section_work() -> None:
     }
     errors = validate_source_records(source_records_with_detail(detail, section))
     assert any("belongs to work_id '00002'" in error for error in errors), errors
-
-
-def main() -> int:
-    assert_target_detail_schema_accepts_new_fields()
-    assert_detail_schema_rejects_retired_detail_section_fields()
-    assert_target_detail_schema_rejects_compat_subfolder_field()
-    assert_target_section_schema_rejects_bad_section_order()
-    assert_next_detail_section_id_uses_hyphen_suffix()
-    assert_media_version_is_required_for_media_records()
-    assert_detail_section_id_must_match_section_work()
-    print("catalogue source media section schema checks passed")
-    return 0
-
-
-if __name__ == "__main__":
-    raise SystemExit(main())

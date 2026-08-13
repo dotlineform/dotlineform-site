@@ -60,6 +60,7 @@
 - Browser smokes are only for durable browser boundaries: route boot, module wiring, public/private asset boundaries, local API reachability, request/response agreement, or shared ready/busy state.
 - Human manual checks are used for tactile interaction, visual fit, copy tone, modal feel, and mobile ergonomics.
 - The retained Docs Viewer browser profile is intentionally limited to Manage route/service boot, Docs Review authority, public read-only isolation, and external-local Mermaid loading. Additions require an explicit policy change, not routine feature follow-through.
+- The retained Studio browser profile is intentionally limited to local Catalogue route/service boot, local Tag route/service boot, and one representative public Catalogue route without local capability. Deterministic Catalogue/Tag behavior belongs in Python tests; UI behavior remains manual.
 - Default focused checks:
   - Python/service changes: `$HOME/miniconda3/bin/python3 -m pytest <test-path>`
   - Script changes: syntax check with `$HOME/miniconda3/bin/python3 -m py_compile <files>`
@@ -72,7 +73,7 @@
 ## Important testing factors
 - Before running Python tests that import Docs Viewer services, export `.env.local` in the same shell (`set -a; source .env.local; set +a`). Scope configuration is loaded during test collection, and configured external-local scopes require `DOTLINEFORM_PROJECTS_BASE_DIR`; a test run without it can fail during collection before any tests execute.
 - `admin-app/commands/run_checks.py --profile docs` is self-contained: its broad Python step receives a run-owned writable Projects base, while its targeted Studio builders load only Studio and do not resolve the configured external-local workspace. Direct external-scope or all-scope commands still need an explicit suitable environment or `--projects-base-dir <absolute-writable-path>`.
-- Use the smallest relevant `run_checks.py` profile, such as `source-lint`, `quick`, `catalogue`, `docs`, `admin-smoke`, `studio-tag-smoke`, `docs-viewer-smoke`, or `studio-smoke`.
+- Use the smallest relevant `run_checks.py` profile, such as `source-lint`, `quick`, `studio`, `catalogue`, `docs`, `admin-smoke`, `docs-viewer-smoke`, or `studio-smoke`.
 - When `admin-app/commands/run_checks.py` is used, report the profile, pass/fail result, and `var/admin/test-runs/.../summary.md` path.
 - For commands that bind loopback ports or launch browser smokes, run them with elevated localhost/browser permissions in the Codex sandbox. Keep pure syntax checks, `git diff --check`, JSON parsing, and non-network pytest runs sandboxed.
 - If a local route is expected to be running but the sandbox cannot reach localhost, use an isolated temporary build/server if automated verification needs it.

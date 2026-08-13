@@ -88,6 +88,41 @@ def test_admin_runner_docs_viewer_smoke_profile_is_the_retained_boundary_set() -
     )
 
 
+def test_admin_runner_studio_smoke_profile_is_the_retained_boundary_set() -> None:
+    runner = load_runner_module()
+
+    commands = runner.expand_profiles(["studio-smoke"])
+
+    assert [command.name for command in commands] == [
+        "studio-source-lint",
+        "public-site-source-lint",
+        "site-validate",
+        "studio-catalogue-route-smoke",
+        "studio-tag-route-smoke",
+        "public-catalogue-route-smoke",
+    ]
+    assert all(command.isolated_projects_base for command in commands[3:5])
+    assert commands[5].isolated_projects_base is False
+    assert all(
+        (REPO_ROOT / argument).is_file()
+        for command in commands
+        for argument in command.argv
+        if argument.endswith(".py")
+    )
+
+
+def test_admin_runner_studio_profile_collects_the_complete_python_directory() -> None:
+    runner = load_runner_module()
+
+    commands = runner.expand_profiles(["studio"])
+
+    assert [command.name for command in commands] == [
+        "studio-source-lint",
+        "studio-python-pytest",
+    ]
+    assert commands[1].argv[-1] == "studio/tests/python"
+
+
 def test_admin_runner_writes_summary_paths_under_admin_root(tmp_path, monkeypatch) -> None:
     runner = load_runner_module()
     runs_dir = REPO_ROOT / "var" / "admin" / "test-runs" / "pytest-runner-contract"
