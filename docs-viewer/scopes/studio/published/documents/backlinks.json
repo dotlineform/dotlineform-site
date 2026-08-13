@@ -2613,6 +2613,11 @@
         "doc_id": "d-20260424-000000-50b63f",
         "title": "Docs Viewer",
         "viewer_url": "/docs/?scope=studio&doc=d-20260424-000000-50b63f"
+      },
+      {
+        "doc_id": "d-20260715-084611-c2fa6f",
+        "title": "SM-1 — Studio Full-Text Search Delivery",
+        "viewer_url": "/docs/?scope=studio&doc=d-20260715-084611-c2fa6f"
       }
     ],
     "d-20260716-204013-3be4e1": [
@@ -3403,5 +3408,5 @@
       }
     ]
   },
-  "generated_at": "2026-08-13T14:35:10Z"
+  "generated_at": "2026-08-13T15:09:25Z"
 }

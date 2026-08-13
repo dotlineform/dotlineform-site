@@ -4,6 +4,14 @@
   "limit": 10,
   "docs": [
     {
+      "doc_id": "d-20260715-084611-c2fa6f",
+      "title": "SM-1 — Studio Full-Text Search Delivery",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260715-084611-c2fa6f.json",
+      "timestamp": "2026-08-13 16:08:56",
+      "parent_id": "d-20260715-092247-6bbb5e",
+      "parent_title": "Search Mechanics"
+    },
+    {
       "doc_id": "d-20260514-135716-c70591",
       "title": "Pytest",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260514-135716-c70591.json",
@@ -74,15 +82,7 @@
       "timestamp": "2026-08-13 12:01:22",
       "parent_id": "d-20260422-000000-fb2894",
       "parent_title": "Catalogue Services"
-    },
-    {
-      "doc_id": "d-20260501-172902-96e85d",
-      "title": "Catalogue Field Registry",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260501-172902-96e85d.json",
-      "timestamp": "2026-08-13 12:01:22",
-      "parent_id": "d-20260602-234732-8a5aae",
-      "parent_title": "Studio Domain Config"
     }
   ],
-  "generated_at": "2026-08-13T14:58:53Z"
+  "generated_at": "2026-08-13T15:09:24Z"
 }

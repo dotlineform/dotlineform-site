@@ -1010,7 +1010,7 @@
           "doc_id": "d-20260813-114338-c6b682",
           "title": "Studio Documentation Maintenance",
           "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260813-114338-c6b682.json",
-          "ui_status": "in-progress",
+          "ui_status": "done",
           "report_id": "docs_backlinks",
           "children": [
             {
@@ -1356,5 +1356,5 @@
       ]
     }
   ],
-  "generated_at": "2026-08-13T14:32:32Z"
+  "generated_at": "2026-08-13T15:02:32Z"
 }

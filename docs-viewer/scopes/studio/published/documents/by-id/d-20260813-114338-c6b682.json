@@ -6,7 +6,7 @@
   "viewer_url": "/docs/?scope=studio&doc=d-20260813-114338-c6b682",
   "parent_id": "d-20260428-000000-f5ff18",
   "summary": "rationalise the Studio documentation baseline, then add generated same-scope backlink visibility before improving Studio search",
-  "ui_status": "in-progress",
+  "ui_status": "done",
   "report": {
     "id": "docs_backlinks",
     "access": "local",

@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-b07d006ef42bc2e9cdd12876996f9ca2",
-    "generated_at_utc": "2026-08-13T14:58:53Z",
+    "version": "blake2b-e74dac79e4cb32891c224c202bef8aaf",
+    "generated_at_utc": "2026-08-13T15:09:25Z",
     "count": 237
   },
   "entries": [
@@ -4463,10 +4463,10 @@
       "kind": "doc",
       "title": "SM-1 — Studio Full-Text Search Delivery",
       "href": "/docs/?scope=studio&doc=d-20260715-084611-c2fa6f",
-      "last_updated": "2026-08-13 11:43:38",
+      "last_updated": "2026-08-13 16:08:56",
       "parent_id": "d-20260715-092247-6bbb5e",
       "parent_title": "Search Mechanics",
-      "display_meta": "2026-08-13 11:43:38 • Search Mechanics",
+      "display_meta": "2026-08-13 16:08:56 • Search Mechanics",
       "search_terms": [
         "sm-1 — studio full-text search delivery",
         "sm",
@@ -4478,16 +4478,15 @@
         "delivery",
         "search mechanics",
         "mechanics",
-        "2026-08-13 11:43:38",
+        "2026-08-13 16:08:56",
         "2026",
         "08",
         "13",
-        "11",
-        "43",
-        "38",
+        "16",
+        "56",
         "d-20260715-084611-c2fa6f"
       ],
-      "search_text": "sm-1 — studio full-text search delivery sm 1 studio full text search delivery search mechanics mechanics 2026-08-13 11:43:38 2026 08 13 11 43 38 d-20260715-084611-c2fa6f"
+      "search_text": "sm-1 — studio full-text search delivery sm 1 studio full text search delivery search mechanics mechanics 2026-08-13 16:08:56 2026 08 13 16 56 d-20260715-084611-c2fa6f"
     },
     {
       "id": "d-20260720-170418-a7c93d",
