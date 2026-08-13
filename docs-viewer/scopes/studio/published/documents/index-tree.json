@@ -166,6 +166,11 @@
           "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260414-000000-f22e3e.json"
         },
         {
+          "doc_id": "d-20260602-234732-ea94b3",
+          "title": "Configuration Map",
+          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260602-234732-ea94b3.json"
+        },
+        {
           "doc_id": "d-20260523-190651-7157ec",
           "title": "Development Checklist",
           "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260523-190651-7157ec.json"
@@ -1171,7 +1176,26 @@
         {
           "doc_id": "d-20260401-000000-a11bf3",
           "title": "Catalogue Architecture",
-          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260401-000000-a11bf3.json"
+          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260401-000000-a11bf3.json",
+          "children": [
+            {
+              "doc_id": "d-20260519-202931-b05d27",
+              "title": "Catalogue Indexes And Payloads",
+              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260519-202931-b05d27.json"
+            },
+            {
+              "doc_id": "d-20260519-000000-a0da45",
+              "title": "Catalogue Source Model",
+              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260519-000000-a0da45.json",
+              "children": [
+                {
+                  "doc_id": "d-20260622-160612-b986f3",
+                  "title": "Catalogue Per-Work Detail Source",
+                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260622-160612-b986f3.json"
+                }
+              ]
+            }
+          ]
         },
         {
           "doc_id": "d-20260418-000000-16bf7e",
@@ -1179,34 +1203,9 @@
           "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260418-000000-16bf7e.json"
         },
         {
-          "doc_id": "d-20260501-172902-96e85d",
-          "title": "Catalogue Field Registry",
-          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260501-172902-96e85d.json"
-        },
-        {
-          "doc_id": "d-20260501-161457-55c016",
-          "title": "Catalogue Field Registry Verification",
-          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260501-161457-55c016.json"
-        },
-        {
-          "doc_id": "d-20260519-202931-b05d27",
-          "title": "Catalogue Indexes And Payloads",
-          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260519-202931-b05d27.json"
-        },
-        {
-          "doc_id": "d-20260417-225554-85387d",
-          "title": "Catalogue Lookup Export",
-          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260417-225554-85387d.json"
-        },
-        {
           "doc_id": "d-20260331-154730-b019e0",
           "title": "Catalogue Media Pipeline Config",
           "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260331-154730-b019e0.json"
-        },
-        {
-          "doc_id": "d-20260622-160612-b986f3",
-          "title": "Catalogue Per-Work Detail Source",
-          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260622-160612-b986f3.json"
         },
         {
           "doc_id": "d-20260422-000000-ec1a69",
@@ -1226,16 +1225,6 @@
           ]
         },
         {
-          "doc_id": "d-20260519-000000-a0da45",
-          "title": "Catalogue Source Model",
-          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260519-000000-a0da45.json"
-        },
-        {
-          "doc_id": "d-20260418-000000-2f2773",
-          "title": "Catalogue Source Validation",
-          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260418-000000-2f2773.json"
-        },
-        {
           "doc_id": "d-20260422-000000-45a776",
           "title": "Catalogue Work Editor",
           "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260422-000000-45a776.json"
@@ -1246,30 +1235,16 @@
           "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260401-000000-ebf14a.json"
         },
         {
-          "doc_id": "d-20260602-234732-ea94b3",
-          "title": "Configuration Map",
-          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260602-234732-ea94b3.json"
-        },
-        {
-          "doc_id": "d-20260602-111803-019594",
-          "title": "Local Studio APIs",
-          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260602-111803-019594.json"
-        },
-        {
           "doc_id": "d-20260522-080600-a2b102",
           "title": "Local Studio App",
-          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260522-080600-a2b102.json"
-        },
-        {
-          "doc_id": "d-20260602-111803-6d22ef",
-          "title": "Local Studio Routes",
-          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260602-111803-6d22ef.json"
-        },
-        {
-          "doc_id": "d-20260427-223830-e0b422",
-          "title": "Project State Report",
-          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260427-223830-e0b422.json",
-          "ui_status": "done"
+          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260522-080600-a2b102.json",
+          "children": [
+            {
+              "doc_id": "d-20260602-111803-019594",
+              "title": "Local Studio APIs",
+              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260602-111803-019594.json"
+            }
+          ]
         },
         {
           "doc_id": "d-20260508-093841-3e27b1",
@@ -1277,40 +1252,21 @@
           "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260508-093841-3e27b1.json"
         },
         {
-          "doc_id": "d-20260418-000000-4ec702",
-          "title": "Scoped JSON Catalogue Build",
-          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260418-000000-4ec702.json"
-        },
-        {
-          "doc_id": "d-20260331-000000-f43340",
-          "title": "Series Sorting",
-          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260331-000000-f43340.json"
-        },
-        {
-          "doc_id": "d-20260331-000000-0a1f71",
-          "title": "Srcset Builder",
-          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260331-000000-0a1f71.json"
-        },
-        {
-          "doc_id": "d-20260424-000000-315c1c",
-          "title": "Studio Config JSON",
-          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260424-000000-315c1c.json"
-        },
-        {
           "doc_id": "d-20260602-234732-8a5aae",
           "title": "Studio Domain Config",
-          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260602-234732-8a5aae.json"
+          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260602-234732-8a5aae.json",
+          "children": [
+            {
+              "doc_id": "d-20260501-172902-96e85d",
+              "title": "Catalogue Field Registry",
+              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260501-172902-96e85d.json"
+            }
+          ]
         },
         {
           "doc_id": "d-20260715-084611-ae9636",
           "title": "Studio Overview",
           "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260715-084611-ae9636.json"
-        },
-        {
-          "doc_id": "d-20260427-223830-ad1ab0",
-          "title": "Studio Project State",
-          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260427-223830-ad1ab0.json",
-          "ui_status": "done"
         },
         {
           "doc_id": "d-20260422-000000-c3135c",
@@ -1320,7 +1276,19 @@
         {
           "doc_id": "d-20260424-000000-15b6f2",
           "title": "Studio Runtime",
-          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260424-000000-15b6f2.json"
+          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260424-000000-15b6f2.json",
+          "children": [
+            {
+              "doc_id": "d-20260602-111803-6d22ef",
+              "title": "Local Studio Routes",
+              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260602-111803-6d22ef.json"
+            },
+            {
+              "doc_id": "d-20260424-000000-315c1c",
+              "title": "Studio Config JSON",
+              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260424-000000-315c1c.json"
+            }
+          ]
         },
         {
           "doc_id": "d-20260419-000000-86255c",
@@ -1384,5 +1352,5 @@
       ]
     }
   ],
-  "generated_at": "2026-08-13T10:45:34Z"
+  "generated_at": "2026-08-13T11:04:07Z"
 }
