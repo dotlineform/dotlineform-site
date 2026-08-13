@@ -16,6 +16,7 @@ const SEARCH_V2_FILE_EXTENSIONS = new Set([
   "mjs", "pdf", "png", "py", "svg", "ts", "txt", "webp", "yaml", "yml"
 ]);
 const SEARCH_V2_EXACT_FIELDS = new Set(["identity", "last_updated"]);
+const SEARCH_V2_CONTENT_HASH = /^[0-9a-f]{64}$/;
 
 export function tokenizeSearchValue(value) {
   var terms = [];
@@ -25,7 +26,8 @@ export function tokenizeSearchValue(value) {
     .replace(/(?:https?:\/\/|www\.)\S+|(?:[\\/][^\s]+)+|<[^>]+>/giu, " ");
   (text.match(/[\p{L}\p{N}]+(?:[._-][\p{L}\p{N}]+)*/gu) || []).forEach(function (token) {
     var normalizedToken = normalizeSearchText(token);
-    if (/^d-\d{8}-\d{6}-[0-9a-f]{6}$/.test(normalizedToken)) return;
+    if (/^d-\d{8}-\d{6}-[0-9a-f]{6}$/.test(normalizedToken)
+      || SEARCH_V2_CONTENT_HASH.test(normalizedToken)) return;
     var derived = [normalizedToken];
     var segments = token.split(/[._-]+/);
     var hasFileExtension = token.includes(".")
@@ -41,7 +43,8 @@ export function tokenizeSearchValue(value) {
       var useful = term.length >= 2
         && !SEARCH_V2_STOP_WORDS.has(term)
         && /[\p{L}]/u.test(term)
-        && !/^d-\d{8}-\d{6}-[0-9a-f]{6}$/.test(term);
+        && !/^d-\d{8}-\d{6}-[0-9a-f]{6}$/.test(term)
+        && !SEARCH_V2_CONTENT_HASH.test(term);
       if (!useful || seen.has(term)) return;
       seen.add(term);
       terms.push(term);

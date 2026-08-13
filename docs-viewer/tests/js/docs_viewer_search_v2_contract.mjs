@@ -31,4 +31,40 @@ fixture.queries.forEach((testCase) => {
   );
 });
 
+const fullTextIndex = {
+  header: { schema: "docs_viewer_search_index_v2", scope: "studio" },
+  fields: ["title", "heading", "body", "code"],
+  docs: [
+    { id: "doc-a", title: "Search Mechanics", href: "/docs/?doc=doc-a" },
+    { id: "doc-b", title: "Runtime Notes", href: "/docs/?doc=doc-b" },
+    { id: "doc-c", title: "Other", href: "/docs/?doc=doc-c" }
+  ],
+  terms: {
+    search: { title: [0], heading: [1], body: [2] },
+    compatibility: { body: [0, 1] },
+    key: { body: [0] },
+    known: { heading: [0] },
+    weak: { heading: [0] },
+    spots: { heading: [0] },
+    docs_viewer_base_url: { code: [0] },
+    docs: { code: [0] },
+    viewer: { code: [0] },
+    base: { code: [0] },
+    url: { code: [0] },
+    docs_subscope: { code: [0] },
+    subscope: { code: [0] }
+  }
+};
+function matchIds(query) {
+  return search.collectSearchMatches(fullTextIndex, query).map((match) => match.entry.id);
+}
+assert.deepEqual(matchIds("search"), ["doc-a", "doc-b", "doc-c"]);
+assert.deepEqual(matchIds("search compatibility"), ["doc-a", "doc-b"]);
+assert.deepEqual(matchIds("known weak spots"), ["doc-a"]);
+assert.deepEqual(matchIds("compatibility key"), ["doc-a"]);
+assert.deepEqual(matchIds("DOCS_VIEWER_BASE_URL"), ["doc-a"]);
+assert.deepEqual(matchIds("docs_subscope"), ["doc-a"]);
+assert.deepEqual(matchIds("d-20260813-000001-aaaaaa"), []);
+assert.deepEqual(matchIds("2026"), []);
+
 console.log("Docs Viewer search v2 JavaScript contract OK");

@@ -79,6 +79,7 @@ SEARCH_V2_CONTENT_FIELDS = frozenset({"heading", "body", "code"})
 SEARCH_V2_EXCLUDED_SPANS = re.compile(r"(?:https?://|www\.)\S+|(?:[/\\][^\s]+)+|<[^>]+>", re.IGNORECASE)
 SEARCH_V2_TOKEN = re.compile(r"[^\W_]+(?:[._-][^\W_]+)*", re.UNICODE)
 SEARCH_V2_CAMEL_BOUNDARY = re.compile(r"(?<=[a-z0-9])(?=[A-Z])|(?<=[A-Z])(?=[A-Z][a-z])")
+SEARCH_V2_CONTENT_HASH = re.compile(r"^[0-9a-f]{64}$")
 
 
 @dataclass(frozen=True)
@@ -128,7 +129,7 @@ def tokenize_search_value_v2(value: Any) -> list[str]:
     text = SEARCH_V2_EXCLUDED_SPANS.sub(" ", unicodedata.normalize("NFKC", str(value or "")))
     for token in SEARCH_V2_TOKEN.findall(text):
         normalized_token = normalize_search_value_v2(token)
-        if is_immutable_doc_id(normalized_token):
+        if is_immutable_doc_id(normalized_token) or SEARCH_V2_CONTENT_HASH.fullmatch(normalized_token):
             continue
         derived = [normalized_token]
         segments = re.split(r"[._-]+", token)
@@ -144,6 +145,7 @@ def tokenize_search_value_v2(value: Any) -> list[str]:
                 and term not in SEARCH_V2_STOP_WORDS
                 and any(character.isalpha() for character in term)
                 and not is_immutable_doc_id(term)
+                and not SEARCH_V2_CONTENT_HASH.fullmatch(term)
             )
             if useful and term not in seen:
                 seen.add(term)
