@@ -413,8 +413,15 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
         ),
         CheckCommand(
             "studio-docs-build",
-            (sys.executable, "docs-viewer/build/build_docs.py", "--scope", "studio", "--write"),
-            "Regenerate Studio docs-viewer payloads.",
+            (
+                sys.executable,
+                "docs-viewer/build/build_docs.py",
+                "--scope",
+                "studio",
+                "--write",
+                "--skip-media-builds",
+            ),
+            "Regenerate Studio document payloads without invoking registered media producers.",
         ),
         CheckCommand(
             "studio-search-build",

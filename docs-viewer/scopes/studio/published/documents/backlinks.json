@@ -1761,13 +1761,18 @@
         "viewer_url": "/docs/?scope=studio&doc=d-20260331-000000-5dcf32"
       },
       {
+        "doc_id": "d-20260715-092247-6bbb5e",
+        "title": "Search Mechanics",
+        "viewer_url": "/docs/?scope=studio&doc=d-20260715-092247-6bbb5e"
+      },
+      {
         "doc_id": "d-20260715-084611-c2fa6f",
         "title": "SM-1 — Studio Full-Text Search Delivery",
         "viewer_url": "/docs/?scope=studio&doc=d-20260715-084611-c2fa6f"
       },
       {
         "doc_id": "d-20260813-161942-b1e9e1",
-        "title": "Studio Full-Text Search Index",
+        "title": "Studio Full-Text Search Index Concept",
         "viewer_url": "/docs/?scope=studio&doc=d-20260813-161942-b1e9e1"
       }
     ],
@@ -2559,13 +2564,18 @@
         "viewer_url": "/docs/?scope=studio&doc=d-20260813-165124-16b0ab"
       },
       {
-        "doc_id": "d-20260602-160839-6d3cbb",
-        "title": "Docs Viewer Search",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260602-160839-6d3cbb"
+        "doc_id": "d-20260813-214350-4c7a21",
+        "title": "Docs Viewer Search Index",
+        "viewer_url": "/docs/?scope=studio&doc=d-20260813-214350-4c7a21"
+      },
+      {
+        "doc_id": "d-20260813-214351-98d3f0",
+        "title": "Docs Viewer Search Tokenizer",
+        "viewer_url": "/docs/?scope=studio&doc=d-20260813-214351-98d3f0"
       },
       {
         "doc_id": "d-20260813-163802-5ca41f",
-        "title": "Docs Viewer Search Tokenizer",
+        "title": "Docs Viewer Search Tokenizer Concept",
         "viewer_url": "/docs/?scope=studio&doc=d-20260813-163802-5ca41f"
       },
       {
@@ -2580,7 +2590,7 @@
       },
       {
         "doc_id": "d-20260813-161942-b1e9e1",
-        "title": "Studio Full-Text Search Index",
+        "title": "Studio Full-Text Search Index Concept",
         "viewer_url": "/docs/?scope=studio&doc=d-20260813-161942-b1e9e1"
       }
     ],
@@ -2594,6 +2604,11 @@
         "doc_id": "d-20260331-000000-5dcf32",
         "title": "Search",
         "viewer_url": "/docs/?scope=studio&doc=d-20260331-000000-5dcf32"
+      },
+      {
+        "doc_id": "d-20260715-084611-c2fa6f",
+        "title": "SM-1 — Studio Full-Text Search Delivery",
+        "viewer_url": "/docs/?scope=studio&doc=d-20260715-084611-c2fa6f"
       }
     ],
     "d-20260715-094411-2b6e65": [
@@ -2609,7 +2624,7 @@
       },
       {
         "doc_id": "d-20260813-161942-b1e9e1",
-        "title": "Studio Full-Text Search Index",
+        "title": "Studio Full-Text Search Index Concept",
         "viewer_url": "/docs/?scope=studio&doc=d-20260813-161942-b1e9e1"
       }
     ],
@@ -3328,13 +3343,18 @@
       },
       {
         "doc_id": "d-20260813-163802-5ca41f",
-        "title": "Docs Viewer Search Tokenizer",
+        "title": "Docs Viewer Search Tokenizer Concept",
         "viewer_url": "/docs/?scope=studio&doc=d-20260813-163802-5ca41f"
       },
       {
         "doc_id": "d-20260813-171341-8bfa80",
         "title": "DSI-1 — Docs Viewer Search Index v2 Delivery",
         "viewer_url": "/docs/?scope=studio&doc=d-20260813-171341-8bfa80"
+      },
+      {
+        "doc_id": "d-20260715-092247-6bbb5e",
+        "title": "Search Mechanics",
+        "viewer_url": "/docs/?scope=studio&doc=d-20260715-092247-6bbb5e"
       },
       {
         "doc_id": "d-20260715-084611-c2fa6f",
@@ -3354,13 +3374,18 @@
         "viewer_url": "/docs/?scope=studio&doc=d-20260813-171341-8bfa80"
       },
       {
+        "doc_id": "d-20260715-092247-6bbb5e",
+        "title": "Search Mechanics",
+        "viewer_url": "/docs/?scope=studio&doc=d-20260715-092247-6bbb5e"
+      },
+      {
         "doc_id": "d-20260715-084611-c2fa6f",
         "title": "SM-1 — Studio Full-Text Search Delivery",
         "viewer_url": "/docs/?scope=studio&doc=d-20260715-084611-c2fa6f"
       },
       {
         "doc_id": "d-20260813-161942-b1e9e1",
-        "title": "Studio Full-Text Search Index",
+        "title": "Studio Full-Text Search Index Concept",
         "viewer_url": "/docs/?scope=studio&doc=d-20260813-161942-b1e9e1"
       }
     ],
@@ -3377,7 +3402,7 @@
       },
       {
         "doc_id": "d-20260813-161942-b1e9e1",
-        "title": "Studio Full-Text Search Index",
+        "title": "Studio Full-Text Search Index Concept",
         "viewer_url": "/docs/?scope=studio&doc=d-20260813-161942-b1e9e1"
       }
     ],
@@ -3388,8 +3413,13 @@
         "viewer_url": "/docs/?scope=studio&doc=d-20260813-165124-16b0ab"
       },
       {
-        "doc_id": "d-20260813-163802-5ca41f",
+        "doc_id": "d-20260813-214351-98d3f0",
         "title": "Docs Viewer Search Tokenizer",
+        "viewer_url": "/docs/?scope=studio&doc=d-20260813-214351-98d3f0"
+      },
+      {
+        "doc_id": "d-20260813-163802-5ca41f",
+        "title": "Docs Viewer Search Tokenizer Concept",
         "viewer_url": "/docs/?scope=studio&doc=d-20260813-163802-5ca41f"
       },
       {
@@ -3399,10 +3429,74 @@
       },
       {
         "doc_id": "d-20260813-161942-b1e9e1",
-        "title": "Studio Full-Text Search Index",
+        "title": "Studio Full-Text Search Index Concept",
+        "viewer_url": "/docs/?scope=studio&doc=d-20260813-161942-b1e9e1"
+      }
+    ],
+    "d-20260813-214350-4c7a21": [
+      {
+        "doc_id": "d-20260602-160839-6d3cbb",
+        "title": "Docs Viewer Search",
+        "viewer_url": "/docs/?scope=studio&doc=d-20260602-160839-6d3cbb"
+      },
+      {
+        "doc_id": "d-20260813-214351-98d3f0",
+        "title": "Docs Viewer Search Tokenizer",
+        "viewer_url": "/docs/?scope=studio&doc=d-20260813-214351-98d3f0"
+      },
+      {
+        "doc_id": "d-20260813-163802-5ca41f",
+        "title": "Docs Viewer Search Tokenizer Concept",
+        "viewer_url": "/docs/?scope=studio&doc=d-20260813-163802-5ca41f"
+      },
+      {
+        "doc_id": "d-20260715-092247-6bbb5e",
+        "title": "Search Mechanics",
+        "viewer_url": "/docs/?scope=studio&doc=d-20260715-092247-6bbb5e"
+      },
+      {
+        "doc_id": "d-20260715-084611-c2fa6f",
+        "title": "SM-1 — Studio Full-Text Search Delivery",
+        "viewer_url": "/docs/?scope=studio&doc=d-20260715-084611-c2fa6f"
+      },
+      {
+        "doc_id": "d-20260813-161942-b1e9e1",
+        "title": "Studio Full-Text Search Index Concept",
+        "viewer_url": "/docs/?scope=studio&doc=d-20260813-161942-b1e9e1"
+      }
+    ],
+    "d-20260813-214351-98d3f0": [
+      {
+        "doc_id": "d-20260602-160839-6d3cbb",
+        "title": "Docs Viewer Search",
+        "viewer_url": "/docs/?scope=studio&doc=d-20260602-160839-6d3cbb"
+      },
+      {
+        "doc_id": "d-20260813-214350-4c7a21",
+        "title": "Docs Viewer Search Index",
+        "viewer_url": "/docs/?scope=studio&doc=d-20260813-214350-4c7a21"
+      },
+      {
+        "doc_id": "d-20260813-163802-5ca41f",
+        "title": "Docs Viewer Search Tokenizer Concept",
+        "viewer_url": "/docs/?scope=studio&doc=d-20260813-163802-5ca41f"
+      },
+      {
+        "doc_id": "d-20260715-092247-6bbb5e",
+        "title": "Search Mechanics",
+        "viewer_url": "/docs/?scope=studio&doc=d-20260715-092247-6bbb5e"
+      },
+      {
+        "doc_id": "d-20260715-084611-c2fa6f",
+        "title": "SM-1 — Studio Full-Text Search Delivery",
+        "viewer_url": "/docs/?scope=studio&doc=d-20260715-084611-c2fa6f"
+      },
+      {
+        "doc_id": "d-20260813-161942-b1e9e1",
+        "title": "Studio Full-Text Search Index Concept",
         "viewer_url": "/docs/?scope=studio&doc=d-20260813-161942-b1e9e1"
       }
     ]
   },
-  "generated_at": "2026-08-13T19:54:55Z"
+  "generated_at": "2026-08-13T20:47:03Z"
 }

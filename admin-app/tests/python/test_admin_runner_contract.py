@@ -58,6 +58,7 @@ def test_admin_runner_docs_profile_isolates_only_full_registry_pytest() -> None:
     assert commands[1].projects_base_argument is False
     assert all(command.isolated_projects_base is False for command in (commands[0], *commands[2:]))
     assert all(command.projects_base_argument is False for command in commands)
+    assert commands[2].argv[-1] == "--skip-media-builds"
     assert all("/tests/smoke/" not in argument for argument in commands[1].argv)
     assert all(
         (REPO_ROOT / argument).is_file()

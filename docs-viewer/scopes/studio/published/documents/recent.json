@@ -4,18 +4,74 @@
   "limit": 10,
   "docs": [
     {
+      "doc_id": "d-20260523-190651-7157ec",
+      "title": "Development Checklist",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260523-190651-7157ec.json",
+      "timestamp": "2026-08-13 21:58:53",
+      "parent_id": "d-20260419-000000-d2e47b",
+      "parent_title": "Dev Home"
+    },
+    {
       "doc_id": "d-20260715-084611-c2fa6f",
       "title": "SM-1 — Studio Full-Text Search Delivery",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260715-084611-c2fa6f.json",
-      "timestamp": "2026-08-13 21:30:14",
+      "timestamp": "2026-08-13 21:48:18",
       "parent_id": "d-20260715-092247-6bbb5e",
       "parent_title": "Search Mechanics"
     },
     {
+      "doc_id": "d-20260813-214351-98d3f0",
+      "title": "Docs Viewer Search Tokenizer",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260813-214351-98d3f0.json",
+      "timestamp": "2026-08-13 21:43:51",
+      "parent_id": "d-20260602-160839-6d3cbb",
+      "parent_title": "Docs Viewer Search"
+    },
+    {
+      "doc_id": "d-20260602-160839-6d3cbb",
+      "title": "Docs Viewer Search",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260602-160839-6d3cbb.json",
+      "timestamp": "2026-08-13 21:43:50",
+      "parent_id": "d-20260331-000000-5dcf32",
+      "parent_title": "Search"
+    },
+    {
+      "doc_id": "d-20260813-214350-4c7a21",
+      "title": "Docs Viewer Search Index",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260813-214350-4c7a21.json",
+      "timestamp": "2026-08-13 21:43:50",
+      "parent_id": "d-20260602-160839-6d3cbb",
+      "parent_title": "Docs Viewer Search"
+    },
+    {
+      "doc_id": "d-20260813-163802-5ca41f",
+      "title": "Docs Viewer Search Tokenizer Concept",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260813-163802-5ca41f.json",
+      "timestamp": "2026-08-13 21:43:50",
+      "parent_id": "d-20260715-092247-6bbb5e",
+      "parent_title": "Search Mechanics"
+    },
+    {
+      "doc_id": "d-20260715-094411-2b6e65",
+      "title": "Document Identity",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260715-094411-2b6e65.json",
+      "timestamp": "2026-08-13 21:43:50",
+      "parent_id": "d-20260424-000000-50b63f",
+      "parent_title": "Docs Viewer"
+    },
+    {
+      "doc_id": "d-20260715-092247-6bbb5e",
+      "title": "Search Mechanics",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260715-092247-6bbb5e.json",
+      "timestamp": "2026-08-13 21:43:50",
+      "parent_id": "d-20260428-000000-f5ff18",
+      "parent_title": "Roadmap"
+    },
+    {
       "doc_id": "d-20260813-161942-b1e9e1",
-      "title": "Studio Full-Text Search Index",
+      "title": "Studio Full-Text Search Index Concept",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260813-161942-b1e9e1.json",
-      "timestamp": "2026-08-13 20:43:35",
+      "timestamp": "2026-08-13 21:43:50",
       "parent_id": "d-20260715-092247-6bbb5e",
       "parent_title": "Search Mechanics"
     },
@@ -26,63 +82,7 @@
       "timestamp": "2026-08-13 20:25:26",
       "parent_id": "d-20260715-092247-6bbb5e",
       "parent_title": "Search Mechanics"
-    },
-    {
-      "doc_id": "d-20260813-165124-16b0ab",
-      "title": "Analysis Full-Text Search Extension",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260813-165124-16b0ab.json",
-      "timestamp": "2026-08-13 20:23:57",
-      "parent_id": "d-20260715-092247-6bbb5e",
-      "parent_title": "Search Mechanics"
-    },
-    {
-      "doc_id": "d-20260602-160839-6d3cbb",
-      "title": "Docs Viewer Search",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260602-160839-6d3cbb.json",
-      "timestamp": "2026-08-13 20:23:57",
-      "parent_id": "d-20260331-000000-5dcf32",
-      "parent_title": "Search"
-    },
-    {
-      "doc_id": "d-20260715-092247-6bbb5e",
-      "title": "Search Mechanics",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260715-092247-6bbb5e.json",
-      "timestamp": "2026-08-13 20:23:57",
-      "parent_id": "d-20260428-000000-f5ff18",
-      "parent_title": "Roadmap"
-    },
-    {
-      "doc_id": "d-20260802-205911-bec41f",
-      "title": "Docs Viewer Projection Map",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-205911-bec41f.json",
-      "timestamp": "2026-08-13 20:12:49",
-      "parent_id": "d-20260802-123451-d0e52e",
-      "parent_title": "Data Models Diagrams"
-    },
-    {
-      "doc_id": "d-20260424-000000-5b64f6",
-      "title": "Live Rebuild Watcher",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260424-000000-5b64f6.json",
-      "timestamp": "2026-08-13 20:12:49",
-      "parent_id": "d-20260424-000000-50b63f",
-      "parent_title": "Docs Viewer"
-    },
-    {
-      "doc_id": "d-20260503-202500-316d29",
-      "title": "Package Return Parser",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260503-202500-316d29.json",
-      "timestamp": "2026-08-13 20:12:49",
-      "parent_id": "d-20260424-000000-50b63f",
-      "parent_title": "Docs Viewer"
-    },
-    {
-      "doc_id": "d-20260607-222033-dd2265",
-      "title": "Rebuild Follow-Through Scripts",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260607-222033-dd2265.json",
-      "timestamp": "2026-08-13 20:12:49",
-      "parent_id": "d-20260607-222033-2a494e",
-      "parent_title": "Scripts Overview"
     }
   ],
-  "generated_at": "2026-08-13T20:30:15Z"
+  "generated_at": "2026-08-13T20:59:28Z"
 }

@@ -965,7 +965,7 @@
             },
             {
               "doc_id": "d-20260813-163802-5ca41f",
-              "title": "Docs Viewer Search Tokenizer",
+              "title": "Docs Viewer Search Tokenizer Concept",
               "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260813-163802-5ca41f.json"
             },
             {
@@ -978,11 +978,11 @@
               "doc_id": "d-20260715-084611-c2fa6f",
               "title": "SM-1 — Studio Full-Text Search Delivery",
               "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260715-084611-c2fa6f.json",
-              "ui_status": "proposed"
+              "ui_status": "done"
             },
             {
               "doc_id": "d-20260813-161942-b1e9e1",
-              "title": "Studio Full-Text Search Index",
+              "title": "Studio Full-Text Search Index Concept",
               "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260813-161942-b1e9e1.json"
             }
           ]
@@ -1079,7 +1079,19 @@
         {
           "doc_id": "d-20260602-160839-6d3cbb",
           "title": "Docs Viewer Search",
-          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260602-160839-6d3cbb.json"
+          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260602-160839-6d3cbb.json",
+          "children": [
+            {
+              "doc_id": "d-20260813-214350-4c7a21",
+              "title": "Docs Viewer Search Index",
+              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260813-214350-4c7a21.json"
+            },
+            {
+              "doc_id": "d-20260813-214351-98d3f0",
+              "title": "Docs Viewer Search Tokenizer",
+              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260813-214351-98d3f0.json"
+            }
+          ]
         },
         {
           "doc_id": "d-20260519-210908-69d0e9",
@@ -1342,5 +1354,5 @@
       ]
     }
   ],
-  "generated_at": "2026-08-13T19:26:02Z"
+  "generated_at": "2026-08-13T20:47:03Z"
 }
