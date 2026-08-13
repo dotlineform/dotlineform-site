@@ -2,8 +2,8 @@
   "header": {
     "schema": "docs_viewer_search_index_v2",
     "scope": "studio",
-    "version": "blake2b-7f0ec93ddf547c480ea6b219bad7a467",
-    "generated_at_utc": "2026-08-13T19:17:16Z",
+    "version": "blake2b-6dec34d5cbc33d69fe5b5bbe0c2e1c04",
+    "generated_at_utc": "2026-08-13T19:26:03Z",
     "count": 236
   },
   "fields": [
@@ -836,10 +836,10 @@
       "id": "d-20260602-160839-6d3cbb",
       "title": "Docs Viewer Search",
       "href": "/docs/?scope=studio&doc=d-20260602-160839-6d3cbb",
-      "last_updated": "2026-08-07 22:25:51",
+      "last_updated": "2026-08-13 20:23:57",
       "parent_id": "d-20260331-000000-5dcf32",
       "parent_title": "Search",
-      "display_meta": "2026-08-07 22:25:51 • Search"
+      "display_meta": "2026-08-13 20:23:57 • Search"
     },
     {
       "id": "d-20260602-192905-260208",
@@ -1509,19 +1509,19 @@
       "id": "d-20260715-084611-c2fa6f",
       "title": "SM-1 — Studio Full-Text Search Delivery",
       "href": "/docs/?scope=studio&doc=d-20260715-084611-c2fa6f",
-      "last_updated": "2026-08-13 17:40:58",
+      "last_updated": "2026-08-13 20:23:57",
       "parent_id": "d-20260715-092247-6bbb5e",
       "parent_title": "Search Mechanics",
-      "display_meta": "2026-08-13 17:40:58 • Search Mechanics"
+      "display_meta": "2026-08-13 20:23:57 • Search Mechanics"
     },
     {
       "id": "d-20260715-092247-6bbb5e",
       "title": "Search Mechanics",
       "href": "/docs/?scope=studio&doc=d-20260715-092247-6bbb5e",
-      "last_updated": "2026-08-13 17:13:41",
+      "last_updated": "2026-08-13 20:23:57",
       "parent_id": "d-20260428-000000-f5ff18",
       "parent_title": "Roadmap",
-      "display_meta": "2026-08-13 17:13:41 • Roadmap"
+      "display_meta": "2026-08-13 20:23:57 • Roadmap"
     },
     {
       "id": "d-20260715-094411-2b6e65",
@@ -2097,19 +2097,19 @@
       "id": "d-20260813-165124-16b0ab",
       "title": "Analysis Full-Text Search Extension",
       "href": "/docs/?scope=studio&doc=d-20260813-165124-16b0ab",
-      "last_updated": "2026-08-13 17:13:41",
+      "last_updated": "2026-08-13 20:23:57",
       "parent_id": "d-20260715-092247-6bbb5e",
       "parent_title": "Search Mechanics",
-      "display_meta": "2026-08-13 17:13:41 • Search Mechanics"
+      "display_meta": "2026-08-13 20:23:57 • Search Mechanics"
     },
     {
       "id": "d-20260813-171341-8bfa80",
       "title": "DSI-1 — Docs Viewer Search Index v2 Delivery",
       "href": "/docs/?scope=studio&doc=d-20260813-171341-8bfa80",
-      "last_updated": "2026-08-13 20:17:09",
+      "last_updated": "2026-08-13 20:25:26",
       "parent_id": "d-20260715-092247-6bbb5e",
       "parent_title": "Search Mechanics",
-      "display_meta": "2026-08-13 20:17:09 • Search Mechanics"
+      "display_meta": "2026-08-13 20:25:26 • Search Mechanics"
     }
   ],
   "terms": {
@@ -2424,7 +2424,6 @@
       "last_updated": [
         31,
         75,
-        93,
         120
       ]
     },
@@ -2738,21 +2737,10 @@
         65
       ]
     },
-    "2026-08-13 17:13:41": {
-      "last_updated": [
-        169,
-        234
-      ]
-    },
     "2026-08-13 17:36:22": {
       "last_updated": [
         47,
         81
-      ]
-    },
-    "2026-08-13 17:40:58": {
-      "last_updated": [
-        168
       ]
     },
     "2026-08-13 18:30:10": {
@@ -2780,7 +2768,15 @@
         209
       ]
     },
-    "2026-08-13 20:17:09": {
+    "2026-08-13 20:23:57": {
+      "last_updated": [
+        93,
+        168,
+        169,
+        234
+      ]
+    },
+    "2026-08-13 20:25:26": {
       "last_updated": [
         235
       ]
