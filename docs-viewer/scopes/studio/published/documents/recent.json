@@ -4,6 +4,46 @@
   "limit": 10,
   "docs": [
     {
+      "doc_id": "d-20260813-114338-0e7cb9",
+      "title": "SDM-1 — Studio Documentation Rationalisation",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260813-114338-0e7cb9.json",
+      "timestamp": "2026-08-13 11:54:12",
+      "parent_id": "d-20260813-114338-c6b682",
+      "parent_title": "Studio Documentation Maintenance"
+    },
+    {
+      "doc_id": "d-20260813-114338-95ca80",
+      "title": "SDM-2 — Documents Linking Here Report",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260813-114338-95ca80.json",
+      "timestamp": "2026-08-13 11:43:38",
+      "parent_id": "d-20260813-114338-c6b682",
+      "parent_title": "Studio Documentation Maintenance"
+    },
+    {
+      "doc_id": "d-20260715-092247-6bbb5e",
+      "title": "Search Mechanics",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260715-092247-6bbb5e.json",
+      "timestamp": "2026-08-13 11:43:38",
+      "parent_id": "d-20260428-000000-f5ff18",
+      "parent_title": "Roadmap"
+    },
+    {
+      "doc_id": "d-20260715-084611-c2fa6f",
+      "title": "SM-1 — Studio Full-Text Search Delivery",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260715-084611-c2fa6f.json",
+      "timestamp": "2026-08-13 11:43:38",
+      "parent_id": "d-20260715-092247-6bbb5e",
+      "parent_title": "Search Mechanics"
+    },
+    {
+      "doc_id": "d-20260813-114338-c6b682",
+      "title": "Studio Documentation Maintenance",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260813-114338-c6b682.json",
+      "timestamp": "2026-08-13 11:43:38",
+      "parent_id": "d-20260428-000000-f5ff18",
+      "parent_title": "Roadmap"
+    },
+    {
       "doc_id": "d-20260422-000000-fb2894",
       "title": "Catalogue Services",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260422-000000-fb2894.json",
@@ -42,45 +82,7 @@
       "timestamp": "2026-08-13 11:21:52",
       "parent_id": "d-20260804-160200-fa7bb7",
       "parent_title": "Tag Document Linking"
-    },
-    {
-      "doc_id": "d-20260501-000000-49b626",
-      "title": "Browser Smoke Testing",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260501-000000-49b626.json",
-      "timestamp": "2026-08-13 11:21:19",
-      "parent_id": "d-20260501-174746-efd581",
-      "parent_title": "Testing"
-    },
-    {
-      "doc_id": "d-20260422-000000-ec1a69",
-      "title": "Catalogue Series Editor",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260422-000000-ec1a69.json",
-      "timestamp": "2026-08-13 11:21:19",
-      "parent_id": "d-20260423-000000-d015e6",
-      "parent_title": "Studio"
-    },
-    {
-      "doc_id": "d-20260422-000000-45a776",
-      "title": "Catalogue Work Editor",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260422-000000-45a776.json",
-      "timestamp": "2026-08-13 11:21:19",
-      "parent_id": "d-20260423-000000-d015e6",
-      "parent_title": "Studio"
-    },
-    {
-      "doc_id": "d-20260627-212121-7cf7de",
-      "title": "Test Contract Discipline",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260627-212121-7cf7de.json",
-      "timestamp": "2026-08-13 10:57:15",
-      "parent_id": "d-20260501-174746-efd581",
-      "parent_title": "Testing"
-    },
-    {
-      "doc_id": "d-20260428-000000-f5ff18",
-      "title": "Roadmap",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260428-000000-f5ff18.json",
-      "timestamp": "2026-08-13 10:08:18"
     }
   ],
-  "generated_at": "2026-08-13T10:26:34Z"
+  "generated_at": "2026-08-13T10:54:13Z"
 }
