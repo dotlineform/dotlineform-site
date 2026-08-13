@@ -57,8 +57,10 @@ def browser_docs_backlinks_url(
     *,
     published: bool = False,
 ) -> str:
-    if published or scope_uses_external_data(config):
+    if published:
         return ""
+    if scope_uses_external_data(config):
+        return f"/docs/backlinks?scope={quote(config.scope_id)}"
     return (
         f"{browser_path_for_repo_relative(published_documents_path(config))}"
         "/backlinks.json"

@@ -88,6 +88,10 @@ def generated_recent_path(repo_root: Path, scope: str) -> Path:
     return generated_docs_output_root(repo_root, scope) / "recent.json"
 
 
+def generated_backlinks_path(repo_root: Path, scope: str) -> Path:
+    return generated_docs_output_root(repo_root, scope) / "backlinks.json"
+
+
 def generated_semantic_tokens_index_path(repo_root: Path, scope: str) -> Path:
     return generated_docs_output_root(repo_root, scope) / "semantic-tokens" / "index.json"
 
@@ -131,6 +135,13 @@ def read_generated_recent(repo_root: Path, scope: str) -> Dict[str, Any]:
     return read_generated_json(
         generated_recent_path(repo_root, scope),
         f"generated Recent docs for {scope}",
+    )
+
+
+def read_generated_backlinks(repo_root: Path, scope: str) -> Dict[str, Any]:
+    return read_generated_json(
+        generated_backlinks_path(repo_root, scope),
+        f"generated backlinks for {scope}",
     )
 
 

@@ -412,9 +412,11 @@ def blocker_codes(plan: transfer.DocumentTransferPlan) -> set[str]:
     return {blocker.code for blocker in plan.blockers}
 
 
-def test_report_host_document_is_not_transferable(tmp_path: Path) -> None:
+def test_report_host_document_is_transferable_unchanged(tmp_path: Path) -> None:
     repo_root = make_collection_repo(tmp_path)
     report_id = "d-20260701-100000-aaaaaa"
+    source_path = local_documents_root(repo_root, "source") / f"{report_id}.md"
+    source_text = source_path.read_text(encoding="utf-8")
 
     plan = transfer.plan_document_transfer(
         repo_root,
@@ -426,9 +428,9 @@ def test_report_host_document_is_not_transferable(tmp_path: Path) -> None:
         token_factory=sequential_tokens("ffffff"),
     )
 
-    assert not plan.ok
-    assert blocker_codes(plan) == {"source_report_host_forbidden"}
-    assert plan.blockers[0].document_ids == (report_id,)
+    assert plan.ok
+    assert plan.blockers == ()
+    assert plan.documents[0].source_doc.source_text == source_text
 
 
 def warning_codes(plan: transfer.DocumentTransferPlan) -> set[str]:

@@ -59,6 +59,11 @@
     ],
     "d-20260331-000000-5dcf32": [
       {
+        "doc_id": "d-20260813-171341-8bfa80",
+        "title": "DSI-1 — Docs Viewer Search Index v2 Delivery",
+        "viewer_url": "/docs/?scope=studio&doc=d-20260813-171341-8bfa80"
+      },
+      {
         "doc_id": "d-20260715-084611-7c7c8d",
         "title": "Repository Maintenance",
         "viewer_url": "/docs/?scope=studio&doc=d-20260715-084611-7c7c8d"
@@ -67,11 +72,6 @@
         "doc_id": "d-20260715-092247-6bbb5e",
         "title": "Search Mechanics",
         "viewer_url": "/docs/?scope=studio&doc=d-20260715-092247-6bbb5e"
-      },
-      {
-        "doc_id": "d-20260715-084611-c2fa6f",
-        "title": "SM-1 — Studio Full-Text Search Delivery",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260715-084611-c2fa6f"
       }
     ],
     "d-20260331-000000-643429": [
@@ -337,13 +337,6 @@
         "viewer_url": "/docs/?scope=studio&doc=d-20260423-000000-d015e6"
       }
     ],
-    "d-20260419-000000-0516ab": [
-      {
-        "doc_id": "d-20260813-114338-95ca80",
-        "title": "SDM-2 — Documents Linking Here Report",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260813-114338-95ca80"
-      }
-    ],
     "d-20260419-000000-86255c": [
       {
         "doc_id": "d-20260602-234732-ea94b3",
@@ -541,19 +534,9 @@
         "viewer_url": "/docs/?scope=studio&doc=d-20260419-000000-d2e47b"
       },
       {
-        "doc_id": "d-20260813-114338-0e7cb9",
-        "title": "SDM-1 — Studio Documentation Rationalisation",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260813-114338-0e7cb9"
-      },
-      {
         "doc_id": "d-20260720-161656-1357d0",
         "title": "Site",
         "viewer_url": "/docs/?scope=studio&doc=d-20260720-161656-1357d0"
-      },
-      {
-        "doc_id": "d-20260813-114338-c6b682",
-        "title": "Studio Documentation Maintenance",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260813-114338-c6b682"
       }
     ],
     "d-20260423-000000-d274d3": [
@@ -1122,16 +1105,6 @@
         "viewer_url": "/docs/?scope=studio&doc=d-20260514-184303-7914e2"
       },
       {
-        "doc_id": "d-20260810-182610-c274f0",
-        "title": "RB-1 — Report Blocks Cutover Delivery",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260810-182610-c274f0"
-      },
-      {
-        "doc_id": "d-20260810-180114-003d2a",
-        "title": "Report Blocks",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260810-180114-003d2a"
-      },
-      {
         "doc_id": "d-20260810-173738-703ecd",
         "title": "Report Capability and Composition",
         "viewer_url": "/docs/?scope=studio&doc=d-20260810-173738-703ecd"
@@ -1140,11 +1113,6 @@
         "doc_id": "d-20260720-100017-9855dd",
         "title": "Scope Media Management",
         "viewer_url": "/docs/?scope=studio&doc=d-20260720-100017-9855dd"
-      },
-      {
-        "doc_id": "d-20260813-114338-95ca80",
-        "title": "SDM-2 — Documents Linking Here Report",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260813-114338-95ca80"
       }
     ],
     "d-20260514-123140-83239c": [
@@ -1497,11 +1465,6 @@
         "doc_id": "d-20260428-000000-f5ff18",
         "title": "Roadmap",
         "viewer_url": "/docs/?scope=studio&doc=d-20260428-000000-f5ff18"
-      },
-      {
-        "doc_id": "d-20260813-114338-95ca80",
-        "title": "SDM-2 — Documents Linking Here Report",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260813-114338-95ca80"
       }
     ],
     "d-20260523-203756-b41c00": [
@@ -1766,6 +1729,11 @@
     ],
     "d-20260602-160839-4ebe27": [
       {
+        "doc_id": "d-20260813-165124-16b0ab",
+        "title": "Analysis Full-Text Search Extension",
+        "viewer_url": "/docs/?scope=studio&doc=d-20260813-165124-16b0ab"
+      },
+      {
         "doc_id": "d-20260331-000000-5dcf32",
         "title": "Search",
         "viewer_url": "/docs/?scope=studio&doc=d-20260331-000000-5dcf32"
@@ -1778,6 +1746,16 @@
     ],
     "d-20260602-160839-6d3cbb": [
       {
+        "doc_id": "d-20260813-165124-16b0ab",
+        "title": "Analysis Full-Text Search Extension",
+        "viewer_url": "/docs/?scope=studio&doc=d-20260813-165124-16b0ab"
+      },
+      {
+        "doc_id": "d-20260813-171341-8bfa80",
+        "title": "DSI-1 — Docs Viewer Search Index v2 Delivery",
+        "viewer_url": "/docs/?scope=studio&doc=d-20260813-171341-8bfa80"
+      },
+      {
         "doc_id": "d-20260331-000000-5dcf32",
         "title": "Search",
         "viewer_url": "/docs/?scope=studio&doc=d-20260331-000000-5dcf32"
@@ -1786,6 +1764,11 @@
         "doc_id": "d-20260715-084611-c2fa6f",
         "title": "SM-1 — Studio Full-Text Search Delivery",
         "viewer_url": "/docs/?scope=studio&doc=d-20260715-084611-c2fa6f"
+      },
+      {
+        "doc_id": "d-20260813-161942-b1e9e1",
+        "title": "Studio Full-Text Search Index",
+        "viewer_url": "/docs/?scope=studio&doc=d-20260813-161942-b1e9e1"
       }
     ],
     "d-20260602-192905-260208": [
@@ -2564,11 +2547,6 @@
         "viewer_url": "/docs/?scope=studio&doc=d-20260523-222005-1085b2"
       },
       {
-        "doc_id": "d-20260813-114338-0e7cb9",
-        "title": "SDM-1 — Studio Documentation Rationalisation",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260813-114338-0e7cb9"
-      },
-      {
         "doc_id": "d-20260423-000000-d015e6",
         "title": "Studio",
         "viewer_url": "/docs/?scope=studio&doc=d-20260423-000000-d015e6"
@@ -2576,36 +2554,36 @@
     ],
     "d-20260715-084611-c2fa6f": [
       {
-        "doc_id": "d-20260813-114338-95ca80",
-        "title": "SDM-2 — Documents Linking Here Report",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260813-114338-95ca80"
+        "doc_id": "d-20260813-165124-16b0ab",
+        "title": "Analysis Full-Text Search Extension",
+        "viewer_url": "/docs/?scope=studio&doc=d-20260813-165124-16b0ab"
+      },
+      {
+        "doc_id": "d-20260813-163802-5ca41f",
+        "title": "Docs Viewer Search Tokenizer",
+        "viewer_url": "/docs/?scope=studio&doc=d-20260813-163802-5ca41f"
+      },
+      {
+        "doc_id": "d-20260813-171341-8bfa80",
+        "title": "DSI-1 — Docs Viewer Search Index v2 Delivery",
+        "viewer_url": "/docs/?scope=studio&doc=d-20260813-171341-8bfa80"
       },
       {
         "doc_id": "d-20260715-092247-6bbb5e",
         "title": "Search Mechanics",
         "viewer_url": "/docs/?scope=studio&doc=d-20260715-092247-6bbb5e"
+      },
+      {
+        "doc_id": "d-20260813-161942-b1e9e1",
+        "title": "Studio Full-Text Search Index",
+        "viewer_url": "/docs/?scope=studio&doc=d-20260813-161942-b1e9e1"
       }
     ],
     "d-20260715-092247-6bbb5e": [
       {
-        "doc_id": "d-20260813-114338-95ca80",
-        "title": "SDM-2 — Documents Linking Here Report",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260813-114338-95ca80"
-      },
-      {
         "doc_id": "d-20260331-000000-5dcf32",
         "title": "Search",
         "viewer_url": "/docs/?scope=studio&doc=d-20260331-000000-5dcf32"
-      },
-      {
-        "doc_id": "d-20260715-084611-c2fa6f",
-        "title": "SM-1 — Studio Full-Text Search Delivery",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260715-084611-c2fa6f"
-      },
-      {
-        "doc_id": "d-20260813-114338-c6b682",
-        "title": "Studio Documentation Maintenance",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260813-114338-c6b682"
       }
     ],
     "d-20260715-094411-2b6e65": [
@@ -2618,6 +2596,11 @@
         "doc_id": "d-20260715-084611-c2fa6f",
         "title": "SM-1 — Studio Full-Text Search Delivery",
         "viewer_url": "/docs/?scope=studio&doc=d-20260715-084611-c2fa6f"
+      },
+      {
+        "doc_id": "d-20260813-161942-b1e9e1",
+        "title": "Studio Full-Text Search Index",
+        "viewer_url": "/docs/?scope=studio&doc=d-20260813-161942-b1e9e1"
       }
     ],
     "d-20260716-204013-3be4e1": [
@@ -3073,11 +3056,6 @@
         "viewer_url": "/docs/?scope=studio&doc=d-20260812-102047-a3c9e7"
       },
       {
-        "doc_id": "d-20260810-182610-c274f0",
-        "title": "RB-1 — Report Blocks Cutover Delivery",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260810-182610-c274f0"
-      },
-      {
         "doc_id": "d-20260804-170901-b2e74c",
         "title": "TDL-0 — Tag Document Metadata Authoring Refactor Delivery",
         "viewer_url": "/docs/?scope=studio&doc=d-20260804-170901-b2e74c"
@@ -3258,33 +3236,9 @@
         "viewer_url": "/docs/?scope=studio&doc=d-20260811-112331-1f131b"
       },
       {
-        "doc_id": "d-20260810-182610-c274f0",
-        "title": "RB-1 — Report Blocks Cutover Delivery",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260810-182610-c274f0"
-      },
-      {
-        "doc_id": "d-20260810-180114-003d2a",
-        "title": "Report Blocks",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260810-180114-003d2a"
-      },
-      {
         "doc_id": "d-20260513-105343-6de36b",
         "title": "Reports",
         "viewer_url": "/docs/?scope=studio&doc=d-20260513-105343-6de36b"
-      }
-    ],
-    "d-20260810-180114-003d2a": [
-      {
-        "doc_id": "d-20260810-182610-c274f0",
-        "title": "RB-1 — Report Blocks Cutover Delivery",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260810-182610-c274f0"
-      }
-    ],
-    "d-20260810-182610-c274f0": [
-      {
-        "doc_id": "d-20260810-180114-003d2a",
-        "title": "Report Blocks",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260810-180114-003d2a"
       }
     ],
     "d-20260810-211748-1f8b6f": [
@@ -3294,29 +3248,9 @@
         "viewer_url": "/docs/?scope=studio&doc=d-20260424-000000-50b63f"
       },
       {
-        "doc_id": "d-20260810-182610-c274f0",
-        "title": "RB-1 — Report Blocks Cutover Delivery",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260810-182610-c274f0"
-      },
-      {
         "doc_id": "d-20260513-105343-6de36b",
         "title": "Reports",
         "viewer_url": "/docs/?scope=studio&doc=d-20260513-105343-6de36b"
-      },
-      {
-        "doc_id": "d-20260813-114338-0e7cb9",
-        "title": "SDM-1 — Studio Documentation Rationalisation",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260813-114338-0e7cb9"
-      },
-      {
-        "doc_id": "d-20260813-114338-95ca80",
-        "title": "SDM-2 — Documents Linking Here Report",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260813-114338-95ca80"
-      },
-      {
-        "doc_id": "d-20260813-114338-c6b682",
-        "title": "Studio Documentation Maintenance",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260813-114338-c6b682"
       }
     ],
     "d-20260811-112331-1f131b": [
@@ -3376,25 +3310,72 @@
         "viewer_url": "/docs/?scope=studio&doc=d-20260812-153836-b38d98"
       }
     ],
-    "d-20260813-114338-0e7cb9": [
+    "d-20260813-161942-b1e9e1": [
       {
-        "doc_id": "d-20260813-114338-c6b682",
-        "title": "Studio Documentation Maintenance",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260813-114338-c6b682"
+        "doc_id": "d-20260813-165124-16b0ab",
+        "title": "Analysis Full-Text Search Extension",
+        "viewer_url": "/docs/?scope=studio&doc=d-20260813-165124-16b0ab"
+      },
+      {
+        "doc_id": "d-20260813-163802-5ca41f",
+        "title": "Docs Viewer Search Tokenizer",
+        "viewer_url": "/docs/?scope=studio&doc=d-20260813-163802-5ca41f"
+      },
+      {
+        "doc_id": "d-20260813-171341-8bfa80",
+        "title": "DSI-1 — Docs Viewer Search Index v2 Delivery",
+        "viewer_url": "/docs/?scope=studio&doc=d-20260813-171341-8bfa80"
+      },
+      {
+        "doc_id": "d-20260715-084611-c2fa6f",
+        "title": "SM-1 — Studio Full-Text Search Delivery",
+        "viewer_url": "/docs/?scope=studio&doc=d-20260715-084611-c2fa6f"
       }
     ],
-    "d-20260813-114338-95ca80": [
+    "d-20260813-163802-5ca41f": [
       {
-        "doc_id": "d-20260813-114338-c6b682",
-        "title": "Studio Documentation Maintenance",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260813-114338-c6b682"
+        "doc_id": "d-20260813-165124-16b0ab",
+        "title": "Analysis Full-Text Search Extension",
+        "viewer_url": "/docs/?scope=studio&doc=d-20260813-165124-16b0ab"
+      },
+      {
+        "doc_id": "d-20260813-171341-8bfa80",
+        "title": "DSI-1 — Docs Viewer Search Index v2 Delivery",
+        "viewer_url": "/docs/?scope=studio&doc=d-20260813-171341-8bfa80"
+      },
+      {
+        "doc_id": "d-20260715-084611-c2fa6f",
+        "title": "SM-1 — Studio Full-Text Search Delivery",
+        "viewer_url": "/docs/?scope=studio&doc=d-20260715-084611-c2fa6f"
+      },
+      {
+        "doc_id": "d-20260813-161942-b1e9e1",
+        "title": "Studio Full-Text Search Index",
+        "viewer_url": "/docs/?scope=studio&doc=d-20260813-161942-b1e9e1"
       }
     ],
-    "d-20260813-114338-c6b682": [
+    "d-20260813-165124-16b0ab": [
       {
-        "doc_id": "d-20260813-114338-95ca80",
-        "title": "SDM-2 — Documents Linking Here Report",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260813-114338-95ca80"
+        "doc_id": "d-20260813-171341-8bfa80",
+        "title": "DSI-1 — Docs Viewer Search Index v2 Delivery",
+        "viewer_url": "/docs/?scope=studio&doc=d-20260813-171341-8bfa80"
+      },
+      {
+        "doc_id": "d-20260813-161942-b1e9e1",
+        "title": "Studio Full-Text Search Index",
+        "viewer_url": "/docs/?scope=studio&doc=d-20260813-161942-b1e9e1"
+      }
+    ],
+    "d-20260813-171341-8bfa80": [
+      {
+        "doc_id": "d-20260813-165124-16b0ab",
+        "title": "Analysis Full-Text Search Extension",
+        "viewer_url": "/docs/?scope=studio&doc=d-20260813-165124-16b0ab"
+      },
+      {
+        "doc_id": "d-20260813-163802-5ca41f",
+        "title": "Docs Viewer Search Tokenizer",
+        "viewer_url": "/docs/?scope=studio&doc=d-20260813-163802-5ca41f"
       },
       {
         "doc_id": "d-20260715-092247-6bbb5e",
@@ -3405,8 +3386,13 @@
         "doc_id": "d-20260715-084611-c2fa6f",
         "title": "SM-1 — Studio Full-Text Search Delivery",
         "viewer_url": "/docs/?scope=studio&doc=d-20260715-084611-c2fa6f"
+      },
+      {
+        "doc_id": "d-20260813-161942-b1e9e1",
+        "title": "Studio Full-Text Search Index",
+        "viewer_url": "/docs/?scope=studio&doc=d-20260813-161942-b1e9e1"
       }
     ]
   },
-  "generated_at": "2026-08-13T15:09:25Z"
+  "generated_at": "2026-08-13T17:22:20Z"
 }

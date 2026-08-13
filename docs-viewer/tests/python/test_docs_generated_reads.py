@@ -428,6 +428,14 @@ def test_generated_reads_support_external_local_scope_payloads() -> None:
         )
         write_json(docs_root / f"by-id/{PRIVATE_DOC_ID}.json", {"doc_id": PRIVATE_DOC_ID})
         write_json(
+            docs_root / "backlinks.json",
+            {
+                "schema": "docs_backlinks_v1",
+                "scope": "private",
+                "by_target": {PRIVATE_DOC_ID: []},
+            },
+        )
+        write_json(
             external_root / "scopes/private/published/search/index.json",
             {"entries": [{"id": PRIVATE_DOC_ID}]},
         )
@@ -435,6 +443,11 @@ def test_generated_reads_support_external_local_scope_payloads() -> None:
         try:
             payload = generated_reads.read_generated_doc_payload(repo_root, "private", PRIVATE_DOC_ID)
             search = generated_reads.read_generated_search_index(repo_root, "private")
+            backlinks = management_reads.docs_generated_read_payload(
+                repo_root,
+                routes.GENERATED_BACKLINKS_PATH,
+                {"scope": ["private"]},
+            )
         finally:
             if old_projects_base is None:
                 os.environ.pop("DOTLINEFORM_PROJECTS_BASE_DIR", None)
@@ -443,6 +456,7 @@ def test_generated_reads_support_external_local_scope_payloads() -> None:
 
     assert payload == {"doc_id": PRIVATE_DOC_ID}
     assert search["entries"] == [{"id": PRIVATE_DOC_ID}]
+    assert backlinks["by_target"] == {PRIVATE_DOC_ID: []}
 
 
 def test_external_sub_scope_payload_route_resolves_only_configured_json() -> None:

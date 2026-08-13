@@ -56,7 +56,7 @@ def test_directives_menu_owns_the_exact_local_backlinks_insertion() -> None:
     assert 'if (/^\\n+$/.test(source.slice(insertionPoint))) return "";' in source
 
 
-def test_report_binds_only_the_exact_loaded_host_target_and_static_scope_url() -> None:
+def test_report_binds_only_the_exact_loaded_host_target_and_scope_owned_url() -> None:
     source = (
         REPO_ROOT / "docs-viewer/runtime/js/reports/docs-backlinks-report.js"
     ).read_text(encoding="utf-8")
@@ -66,6 +66,9 @@ def test_report_binds_only_the_exact_loaded_host_target_and_static_scope_url() -
     ).read_text(encoding="utf-8")
     browser_config_builder = (
         REPO_ROOT / "docs-viewer/build/docs_builder/browser_config.py"
+    ).read_text(encoding="utf-8")
+    backlinks_builder = (
+        REPO_ROOT / "docs-viewer/build/docs_builder/backlinks.py"
     ).read_text(encoding="utf-8")
 
     for required in (
@@ -90,9 +93,11 @@ def test_report_binds_only_the_exact_loaded_host_target_and_static_scope_url() -
     assert 'backlinksUrl: String(rawScope.backlinks_url || "").trim()' in (
         config_controller
     )
-    assert "if published or scope_uses_external_data(config):" in (
+    assert "if published:" in browser_config_builder
+    assert 'return f"/docs/backlinks?scope={quote(config.scope_id)}"' in (
         browser_config_builder
     )
+    assert "scope_uses_external_data" not in backlinks_builder
 
 
 def test_first_adopter_and_registry_reference_project_one_inert_host_each() -> None:

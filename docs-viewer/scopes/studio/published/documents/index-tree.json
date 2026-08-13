@@ -929,20 +929,6 @@
           "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260723-191039-f8cb88.json"
         },
         {
-          "doc_id": "d-20260810-180114-003d2a",
-          "title": "Report Blocks",
-          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260810-180114-003d2a.json",
-          "ui_status": "done",
-          "children": [
-            {
-              "doc_id": "d-20260810-182610-c274f0",
-              "title": "RB-1 — Report Blocks Cutover Delivery",
-              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260810-182610-c274f0.json",
-              "ui_status": "done"
-            }
-          ]
-        },
-        {
           "doc_id": "d-20260715-084611-7c7c8d",
           "title": "Repository Maintenance",
           "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260715-084611-7c7c8d.json"
@@ -973,10 +959,31 @@
           "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260715-092247-6bbb5e.json",
           "children": [
             {
+              "doc_id": "d-20260813-165124-16b0ab",
+              "title": "Analysis Full-Text Search Extension",
+              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260813-165124-16b0ab.json"
+            },
+            {
+              "doc_id": "d-20260813-163802-5ca41f",
+              "title": "Docs Viewer Search Tokenizer",
+              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260813-163802-5ca41f.json"
+            },
+            {
+              "doc_id": "d-20260813-171341-8bfa80",
+              "title": "DSI-1 — Docs Viewer Search Index v2 Delivery",
+              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260813-171341-8bfa80.json",
+              "ui_status": "planned"
+            },
+            {
               "doc_id": "d-20260715-084611-c2fa6f",
               "title": "SM-1 — Studio Full-Text Search Delivery",
               "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260715-084611-c2fa6f.json",
-              "ui_status": "planned"
+              "ui_status": "proposed"
+            },
+            {
+              "doc_id": "d-20260813-161942-b1e9e1",
+              "title": "Studio Full-Text Search Index",
+              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260813-161942-b1e9e1.json"
             }
           ]
         },
@@ -1003,27 +1010,6 @@
               "title": "Standalone Docs Viewer Concept",
               "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260718-105957-c72b2a.json",
               "ui_status": "proposed"
-            }
-          ]
-        },
-        {
-          "doc_id": "d-20260813-114338-c6b682",
-          "title": "Studio Documentation Maintenance",
-          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260813-114338-c6b682.json",
-          "ui_status": "done",
-          "report_id": "docs_backlinks",
-          "children": [
-            {
-              "doc_id": "d-20260813-114338-0e7cb9",
-              "title": "SDM-1 — Studio Documentation Rationalisation",
-              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260813-114338-0e7cb9.json",
-              "ui_status": "done"
-            },
-            {
-              "doc_id": "d-20260813-114338-95ca80",
-              "title": "SDM-2 — Documents Linking Here Report",
-              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260813-114338-95ca80.json",
-              "ui_status": "done"
             }
           ]
         },
@@ -1356,5 +1342,5 @@
       ]
     }
   ],
-  "generated_at": "2026-08-13T15:02:32Z"
+  "generated_at": "2026-08-13T17:22:20Z"
 }

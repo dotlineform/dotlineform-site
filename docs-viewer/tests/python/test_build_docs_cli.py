@@ -176,6 +176,7 @@ def test_python_docs_builder_writes_browser_configs_on_cli_write() -> None:
     assert public_config["scopes"] == []
     assert site_public_config == public_config
 
+
 def test_python_docs_builder_writes_site_public_browser_config_on_cli_write() -> None:
     with tempfile.TemporaryDirectory() as temp_path:
         root = Path(temp_path)

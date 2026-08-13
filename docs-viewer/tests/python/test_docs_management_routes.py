@@ -126,6 +126,11 @@ def test_semantic_token_usage_route_is_management_owned() -> None:
     assert routes.GENERATED_SEMANTIC_TOKENS_PATH in routes.GET_PATHS
 
 
+def test_backlinks_route_is_generated_read_owned() -> None:
+    assert routes.GENERATED_BACKLINKS_PATH == "/docs/backlinks"
+    assert routes.GENERATED_BACKLINKS_PATH in routes.GET_PATHS
+
+
 def test_project_state_route_is_management_owned() -> None:
     assert routes.PROJECT_STATE_PATH == "/docs/project-state"
     assert routes.PROJECT_STATE_PATH in routes.POST_PATHS
@@ -170,6 +175,7 @@ def main() -> None:
     test_diagram_source_routes_are_management_owned()
     test_local_target_route_is_management_owned()
     test_semantic_token_usage_route_is_management_owned()
+    test_backlinks_route_is_generated_read_owned()
     test_project_state_route_is_management_owned()
     test_uncataloged_files_route_is_management_owned()
     test_missing_source_files_route_is_management_owned()

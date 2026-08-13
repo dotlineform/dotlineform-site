@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from .common import read_json, scope_uses_external_data
+from .common import read_json
 from .source import DocRecord
 from docs_rendered_links import collect_anchors, parse_docs_target, resolve_href
 
@@ -11,18 +11,11 @@ DOCS_BACKLINKS_SCHEMA_VERSION = "docs_backlinks_v1"
 
 
 class BacklinksMixin:
-    @property
-    def backlinks_supported(self) -> bool:
-        return not scope_uses_external_data(self.config)
-
     def backlinks_payload(
         self,
         docs: list[DocRecord],
         item_payloads: dict[str, dict[str, Any]],
-    ) -> dict[str, Any] | None:
-        if not self.backlinks_supported:
-            return None
-
+    ) -> dict[str, Any]:
         current_ids = {doc.doc_id for doc in docs}
         docs_by_id = {doc.doc_id: doc for doc in docs}
         payloads_by_id: dict[str, dict[str, Any]] = {}
