@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-34589bd20e94b498598f54b2e4dbe998",
-    "generated_at_utc": "2026-08-13T18:03:50Z",
+    "version": "blake2b-cf059c8023c4250bcbf1d6e411ddb423",
+    "generated_at_utc": "2026-08-13T18:31:51Z",
     "count": 236
   },
   "entries": [
@@ -4468,10 +4468,10 @@
       "kind": "doc",
       "title": "DSI-1 — Docs Viewer Search Index v2 Delivery",
       "href": "/docs/?scope=studio&doc=d-20260813-171341-8bfa80",
-      "last_updated": "2026-08-13 19:03:49",
+      "last_updated": "2026-08-13 19:31:28",
       "parent_id": "d-20260715-092247-6bbb5e",
       "parent_title": "Search Mechanics",
-      "display_meta": "2026-08-13 19:03:49 • Search Mechanics",
+      "display_meta": "2026-08-13 19:31:28 • Search Mechanics",
       "search_terms": [
         "dsi-1 — docs viewer search index v2 delivery",
         "dsi",
@@ -4484,16 +4484,16 @@
         "delivery",
         "search mechanics",
         "mechanics",
-        "2026-08-13 19:03:49",
+        "2026-08-13 19:31:28",
         "2026",
         "08",
         "13",
         "19",
-        "03",
-        "49",
+        "31",
+        "28",
         "d-20260813-171341-8bfa80"
       ],
-      "search_text": "dsi-1 — docs viewer search index v2 delivery dsi 1 docs viewer search index v2 delivery search mechanics mechanics 2026-08-13 19:03:49 2026 08 13 19 03 49 d-20260813-171341-8bfa80"
+      "search_text": "dsi-1 — docs viewer search index v2 delivery dsi 1 docs viewer search index v2 delivery search mechanics mechanics 2026-08-13 19:31:28 2026 08 13 19 31 28 d-20260813-171341-8bfa80"
     },
     {
       "id": "d-20260715-084611-c2fa6f",

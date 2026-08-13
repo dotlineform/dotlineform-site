@@ -12,6 +12,7 @@
       "scope_type": "local",
       "meta": "local management",
       "source": {},
+      "search_fields": ["title", "parent_title", "identity", "last_updated"],
       "media": {
         "types": {
           "img": {
@@ -63,6 +64,7 @@
       "meta": "public scope",
       "media_source_root": "analysis",
       "source": {},
+      "search_fields": ["title", "parent_title", "identity", "last_updated"],
       "media": {
         "types": {
           "img": {
@@ -222,6 +224,7 @@
       "scope_type": "local_external",
       "meta": "external local",
       "source": {},
+      "search_fields": ["title", "parent_title", "identity", "last_updated"],
       "media": {
         "types": {
           "img": {
@@ -263,6 +266,7 @@
       "meta": "local management",
       "media_source_root": "processing",
       "source": {},
+      "search_fields": ["title", "parent_title", "identity", "last_updated"],
       "media": {
         "types": {
           "img": {
@@ -301,6 +305,7 @@
         "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/dotlineform"
       },
       "source": {},
+      "search_fields": ["title", "parent_title", "identity", "last_updated"],
       "media": {
         "types": {
           "img": {

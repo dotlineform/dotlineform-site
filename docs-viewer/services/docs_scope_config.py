@@ -77,6 +77,8 @@ SCOPE_LIFECYCLE_TOOL_ID = "docs-viewer-scope-lifecycle"
 MEDIA_TYPE_PATTERN = re.compile(r"\A[a-z][a-z0-9_-]*\Z")
 MANAGED_MEDIA_TYPES = frozenset({"files", "html", "img", "svg"})
 BUILD_MEDIA_TYPES = frozenset({"mermaid"})
+SEARCH_FIELDS = frozenset({"body", "code", "heading", "identity", "last_updated", "parent_title", "title"})
+DEFAULT_DOCS_SEARCH_FIELDS = ("title", "parent_title", "identity", "last_updated")
 
 SOURCE_CAPABILITIES = frozenset(
     {
@@ -178,6 +180,7 @@ class DocsScopeConfig:
     manage_only_tree_root_ids: tuple[str, ...]
     allow_unresolved_parent_ids: bool
     sub_scopes: tuple["DocsSubScopeConfig", ...]
+    search_fields: tuple[str, ...] = DEFAULT_DOCS_SEARCH_FIELDS
     media_source_root: str = ""
 
 
@@ -491,6 +494,22 @@ def normalize_source(raw: Any, *, scope_root: ArtifactLocation, field: str) -> D
     )
     require_location_capabilities(source.location, SOURCE_CAPABILITIES, role=f"{field}.documents")
     return source
+
+
+def normalize_search_fields(raw: Any, *, field: str) -> tuple[str, ...]:
+    if raw is None:
+        return DEFAULT_DOCS_SEARCH_FIELDS
+    fields = string_tuple(raw, field=field)
+    if not fields:
+        raise ValueError(f"docs scope config field {field} must enable at least one search field")
+    if len(fields) != len(set(fields)):
+        raise ValueError(f"docs scope config field {field} must not contain duplicates")
+    unknown = sorted(set(fields) - SEARCH_FIELDS)
+    if unknown:
+        raise ValueError(
+            f"docs scope config field {field} contains unsupported fields: {', '.join(unknown)}"
+        )
+    return fields
 
 
 def normalize_managed_media_types(
@@ -1078,6 +1097,10 @@ def load_docs_scope_configs(
             raise ValueError(f"docs scope config scope_root is duplicated for scope {scope_id!r}")
         scope_roots.add(root_identity)
         source = normalize_source(item.get("source"), scope_root=scope_root, field=f"{field}.source")
+        search_fields = normalize_search_fields(
+            item.get("search_fields"),
+            field=f"{field}.search_fields",
+        )
         media = normalize_media(
             item.get("media"),
             scope_id=scope_id,
@@ -1117,6 +1140,7 @@ def load_docs_scope_configs(
             ),
             allow_unresolved_parent_ids=item.get("allow_unresolved_parent_ids") is True,
             sub_scopes=(),
+            search_fields=search_fields,
             media_source_root=normalize_media_source_root(
                 item.get("media_source_root"),
                 field=f"{field}.media_source_root",
@@ -1263,6 +1287,8 @@ __all__ = [
     "PUBLIC_SCOPE_TYPE",
     "PUBLIC_SEARCH_OUTPUT_ROOT",
     "BUILD_MEDIA_TYPES",
+    "DEFAULT_DOCS_SEARCH_FIELDS",
+    "SEARCH_FIELDS",
     "SCHEMA_VERSION",
     "SCOPE_PUBLISHED_PATH",
     "SCOPE_ROOTS_PATH",

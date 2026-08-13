@@ -1,0 +1,77 @@
+{
+  "schema": "docs_viewer_search_v2_contract_fixture_v1",
+  "fields": ["title", "parent_title", "identity", "last_updated"],
+  "tokenizer_cases": [
+    {"value": "Full-text search", "terms": ["full-text", "full", "text", "search"]},
+    {"value": "docs_subscope", "terms": ["docs_subscope", "docs", "subscope"]},
+    {"value": "handleEditMetadataSave", "terms": ["handleeditmetadatasave", "handle", "edit", "metadata", "save"]},
+    {"value": "build_search.py", "terms": ["build_search.py", "build", "search"]},
+    {"value": "SM-1.0", "terms": ["sm-1.0", "sm"]},
+    {"value": "2026", "terms": []},
+    {"value": "d-20260813-000003-cccccc", "terms": []},
+    {"value": "the before and after while", "terms": ["before", "after", "while"]},
+    {"value": "Café", "terms": ["café"]},
+    {"value": "https://example.test/search /docs/path build_search.py", "terms": ["build_search.py", "build", "search"]}
+  ],
+  "documents": [
+    {
+      "id": "d-20260813-000004-dddddd",
+      "title": "Search Plans",
+      "href": "/docs/?scope=studio&doc=d-20260813-000004-dddddd",
+      "last_updated": "2026-08-11",
+      "parent_title": "Core Docs",
+      "display_meta": "2026-08-11 • Core Docs"
+    },
+    {
+      "id": "d-20260813-000002-bbbbbb",
+      "title": "Studio Reports",
+      "href": "/docs/?scope=studio&doc=d-20260813-000002-bbbbbb",
+      "last_updated": "2026-08-12",
+      "parent_title": "Search Mechanics",
+      "display_meta": "2026-08-12 • Search Mechanics"
+    },
+    {
+      "id": "d-20260813-000003-cccccc",
+      "title": "docs_subscope Ownership",
+      "href": "/docs/?scope=studio&doc=d-20260813-000003-cccccc",
+      "last_updated": "2026-08-10",
+      "parent_title": "Stable Targets",
+      "display_meta": "2026-08-10 • Stable Targets"
+    },
+    {
+      "id": "d-20260813-000001-aaaaaa",
+      "title": "Search Mechanics",
+      "href": "/docs/?scope=studio&doc=d-20260813-000001-aaaaaa",
+      "last_updated": "2026-08-13",
+      "parent_title": "Core Docs",
+      "display_meta": "2026-08-13 • Core Docs"
+    }
+  ],
+  "expected_document_ids": [
+    "d-20260813-000001-aaaaaa",
+    "d-20260813-000002-bbbbbb",
+    "d-20260813-000003-cccccc",
+    "d-20260813-000004-dddddd"
+  ],
+  "expected_postings": {
+    "search": {"title": [0, 3], "parent_title": [1]},
+    "mechanics": {"title": [0], "parent_title": [1]},
+    "studio": {"title": [1]},
+    "reports": {"title": [1]},
+    "docs_subscope": {"title": [2]},
+    "docs": {"title": [2], "parent_title": [0, 3]},
+    "subscope": {"title": [2]},
+    "plans": {"title": [3]},
+    "d-20260813-000003-cccccc": {"identity": [2]},
+    "2026-08-12": {"last_updated": [1]}
+  },
+  "queries": [
+    {"value": "search mechanics", "document_ids": ["d-20260813-000001-aaaaaa", "d-20260813-000002-bbbbbb"]},
+    {"value": "studio rep", "document_ids": ["d-20260813-000002-bbbbbb"]},
+    {"value": "docs_subscope", "document_ids": ["d-20260813-000003-cccccc"]},
+    {"value": "d-20260813-000003-cccccc", "document_ids": ["d-20260813-000003-cccccc"]},
+    {"value": "2026-08-12", "document_ids": ["d-20260813-000002-bbbbbb"]},
+    {"value": "the and", "document_ids": []},
+    {"value": "search", "document_ids": ["d-20260813-000001-aaaaaa", "d-20260813-000004-dddddd", "d-20260813-000002-bbbbbb"]}
+  ]
+}

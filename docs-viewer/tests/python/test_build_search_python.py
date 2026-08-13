@@ -18,6 +18,7 @@ from repo_factory import docs_scope_record, docs_sub_scope_record
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 BUILD_DIR = REPO_ROOT / "docs-viewer" / "build"
+V2_CONTRACT_FIXTURE = REPO_ROOT / "docs-viewer/tests/fixtures/docs_viewer_search_v2_contract.json"
 if str(BUILD_DIR) not in sys.path:
     sys.path.insert(0, str(BUILD_DIR))
 
@@ -158,6 +159,74 @@ def test_python_docs_search_builder_writes_current_schema_and_hash() -> None:
         "02",
     ]
     assert child["search_text"] == " ".join(child["search_terms"])
+
+
+def test_v2_tokenizer_and_index_match_shared_contract_fixture() -> None:
+    fixture = read_json(V2_CONTRACT_FIXTURE)
+    for case in fixture["tokenizer_cases"]:
+        assert build_search.tokenize_search_value_v2(case["value"]) == case["terms"]
+
+    payload = build_search.build_search_index_v2(
+        scope="studio",
+        documents=fixture["documents"],
+        search_fields=tuple(fixture["fields"]),
+        generated_at_utc="2026-08-13T00:00:00Z",
+    )
+    reversed_payload = build_search.build_search_index_v2(
+        scope="studio",
+        documents=list(reversed(fixture["documents"])),
+        search_fields=tuple(fixture["fields"]),
+        generated_at_utc="2026-08-13T00:00:00Z",
+    )
+
+    assert payload == reversed_payload
+    assert payload["header"]["schema"] == "docs_viewer_search_index_v2"
+    assert payload["fields"] == fixture["fields"]
+    assert [document["id"] for document in payload["docs"]] == fixture["expected_document_ids"]
+    for term, postings in fixture["expected_postings"].items():
+        assert payload["terms"][term] == postings
+
+
+def test_inactive_v2_builder_rebuilds_whole_index_and_skips_identical_output() -> None:
+    with tempfile.TemporaryDirectory() as temp_path:
+        root = Path(temp_path)
+        prepare_repo(root)
+        output_path = root / "docs-viewer/scopes/studio/published/search/index.json"
+        builder = build_search.DocsViewerSearchDataBuilder(repo_root=root, scope="studio")
+        initial, _initial_diagnostics = builder.build_docs_v2_payload(
+            changed_doc_ids=["child"],
+            generated_at_utc="2026-08-13T00:00:00Z",
+        )
+        builder.write_payload(initial, write=True, force=False, diagnostics=None)
+
+        write_source_docs(root, child_title="Child Updated")
+        write_text(
+            root / "docs-viewer/scopes/studio/source/documents/created.md",
+            "---\ndoc_id: created\ntitle: Created\nlast_updated: 2026-08-13\n---\n# Created\n",
+        )
+        (root / "docs-viewer/scopes/studio/source/documents/parent.md").unlink()
+        changed, diagnostics = builder.build_docs_v2_payload(
+            changed_doc_ids=["child", "created", "parent"],
+            generated_at_utc="2026-08-13T00:01:00Z",
+        )
+        builder.write_payload(changed, write=True, force=False, diagnostics=None)
+        written = output_path.read_text(encoding="utf-8")
+        unchanged, _unchanged_diagnostics = builder.build_docs_v2_payload(
+            changed_doc_ids=["child"],
+            generated_at_utc="2026-08-13T00:02:00Z",
+        )
+        builder.write_payload(unchanged, write=True, force=False, diagnostics=None)
+        after_skip = output_path.read_text(encoding="utf-8")
+
+    changed_by_id = {document["id"]: document for document in changed["docs"]}
+    assert diagnostics["mode"] == "full"
+    assert diagnostics["requested_doc_ids"] == ["child", "created", "parent"]
+    assert changed_by_id["child"]["title"] == "Child Updated"
+    assert "created" in changed_by_id
+    assert "parent" not in changed_by_id
+    assert "page" not in changed["terms"]
+    assert after_skip == written
+    assert written == json.dumps(changed, ensure_ascii=False, indent=2) + "\n"
 
 
 def test_targeted_local_search_build_does_not_resolve_unselected_external_scope() -> None:

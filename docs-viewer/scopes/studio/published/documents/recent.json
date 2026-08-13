@@ -7,7 +7,7 @@
       "doc_id": "d-20260813-171341-8bfa80",
       "title": "DSI-1 — Docs Viewer Search Index v2 Delivery",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260813-171341-8bfa80.json",
-      "timestamp": "2026-08-13 19:03:49",
+      "timestamp": "2026-08-13 19:31:28",
       "parent_id": "d-20260715-092247-6bbb5e",
       "parent_title": "Search Mechanics"
     },
@@ -82,5 +82,5 @@
       "parent_title": "Testing"
     }
   ],
-  "generated_at": "2026-08-13T18:03:50Z"
+  "generated_at": "2026-08-13T18:31:50Z"
 }

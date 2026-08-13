@@ -87,6 +87,41 @@ def test_docs_scope_config_normalizes_optional_media_source_root() -> None:
     assert config.media_source_root == "analysis"
 
 
+def test_docs_scope_config_normalizes_search_fields() -> None:
+    with make_repo() as temp_path:
+        repo_root = Path(temp_path)
+        record = docs_scope_record("studio")
+        record["search_fields"] = ["title", "identity"]
+        write_scope_record(repo_root, record)
+        explicit = docs_scope_config.load_docs_scope_configs(repo_root)["studio"]
+
+        record.pop("search_fields")
+        write_scope_record(repo_root, record)
+        defaulted = docs_scope_config.load_docs_scope_configs(repo_root)["studio"]
+
+    assert explicit.search_fields == ("title", "identity")
+    assert defaulted.search_fields == docs_scope_config.DEFAULT_DOCS_SEARCH_FIELDS
+
+
+@pytest.mark.parametrize(
+    ("fields", "message"),
+    [
+        ([], "at least one"),
+        (["title", "title"], "duplicates"),
+        (["title", "filename"], "unsupported fields: filename"),
+    ],
+)
+def test_docs_scope_config_rejects_invalid_search_fields(fields: list[str], message: str) -> None:
+    with make_repo() as temp_path:
+        repo_root = Path(temp_path)
+        record = docs_scope_record("studio")
+        record["search_fields"] = fields
+        write_scope_record(repo_root, record)
+
+        with pytest.raises(ValueError, match=message):
+            docs_scope_config.load_docs_scope_configs(repo_root)
+
+
 @pytest.mark.parametrize(
     "value",
     [".", " analysis", "analysis/", "/analysis", "analysis/../processing"],

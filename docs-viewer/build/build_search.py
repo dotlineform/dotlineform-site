@@ -9,9 +9,10 @@ import json
 import re
 import sys
 import time
+import unicodedata
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any
+from typing import Any, Mapping
 from urllib.parse import quote
 
 from docs_builder.runtime_bootstrap import (
@@ -45,10 +46,24 @@ from docs_scope_config import (  # noqa: E402
     published_search_path,
     resolve_scope_path,
 )
+from docs_document_identity import is_immutable_doc_id  # noqa: E402
 from docs_source_model import validate_publishable_front_matter  # noqa: E402
 
 
 DEFAULT_SCOPE = "studio"
+SEARCH_INDEX_V2_SCHEMA = "docs_viewer_search_index_v2"
+SEARCH_V2_STOP_WORDS = frozenset({
+    "a", "an", "and", "are", "as", "at", "be", "by", "for", "from",
+    "in", "is", "it", "of", "on", "or", "that", "the", "to", "with",
+})
+SEARCH_V2_FILE_EXTENSIONS = frozenset({
+    "css", "gif", "htm", "html", "jpeg", "jpg", "js", "json", "md",
+    "mjs", "pdf", "png", "py", "svg", "ts", "txt", "webp", "yaml", "yml",
+})
+SEARCH_V2_EXACT_FIELDS = frozenset({"identity", "last_updated"})
+SEARCH_V2_EXCLUDED_SPANS = re.compile(r"(?:https?://|www\.)\S+|(?:[/\\][^\s]+)+|<[^>]+>", re.IGNORECASE)
+SEARCH_V2_TOKEN = re.compile(r"[^\W_]+(?:[._-][^\W_]+)*", re.UNICODE)
+SEARCH_V2_CAMEL_BOUNDARY = re.compile(r"(?<=[a-z0-9])(?=[A-Z])|(?<=[A-Z])(?=[A-Z][a-z])")
 
 
 @dataclass(frozen=True)
@@ -128,6 +143,109 @@ def build_doc_search_tokens(doc_id: str, *display_values: Any) -> list[str]:
     if exact_id and exact_id not in tokens:
         tokens.append(exact_id)
     return tokens
+
+
+def normalize_search_value_v2(value: Any) -> str:
+    normalized = unicodedata.normalize("NFKC", str(value or "")).lower()
+    return re.sub(r"\s+", " ", normalized).strip()
+
+
+def tokenize_search_value_v2(value: Any) -> list[str]:
+    terms: list[str] = []
+    seen: set[str] = set()
+    text = SEARCH_V2_EXCLUDED_SPANS.sub(" ", unicodedata.normalize("NFKC", str(value or "")))
+    for token in SEARCH_V2_TOKEN.findall(text):
+        normalized_token = normalize_search_value_v2(token)
+        if is_immutable_doc_id(normalized_token):
+            continue
+        derived = [normalized_token]
+        segments = re.split(r"[._-]+", token)
+        has_file_extension = "." in token and normalize_search_value_v2(segments[-1]) in SEARCH_V2_FILE_EXTENSIONS
+        for index, segment in enumerate(segments):
+            if has_file_extension and index == len(segments) - 1:
+                continue
+            derived.extend(SEARCH_V2_CAMEL_BOUNDARY.sub(" ", segment).split())
+        for candidate in derived:
+            term = normalize_search_value_v2(candidate).strip("._-")
+            useful = (
+                len(term) >= 2
+                and term not in SEARCH_V2_STOP_WORDS
+                and any(character.isalpha() for character in term)
+                and not is_immutable_doc_id(term)
+            )
+            if useful and term not in seen:
+                seen.add(term)
+                terms.append(term)
+    return terms
+
+
+def search_field_values_v2(document: Mapping[str, Any], field: str) -> list[Any]:
+    value = document.get("id") if field == "identity" else document.get(field)
+    return list(value) if isinstance(value, (list, tuple)) else [value]
+
+
+def build_search_index_v2(
+    *,
+    scope: str,
+    documents: list[Mapping[str, Any]],
+    search_fields: tuple[str, ...],
+    generated_at_utc: str | None = None,
+) -> dict[str, Any]:
+    doc_fields = ("id", "title", "href", "last_updated", "parent_id", "parent_title", "display_meta")
+    ordered_documents = sorted(documents, key=lambda document: normalize(document.get("id")))
+    docs = [
+        {
+            key: normalize_text(document.get(key))
+            for key in doc_fields
+            if normalize_text(document.get(key))
+        }
+        for document in ordered_documents
+    ]
+    doc_ids = [normalize_text(document.get("id")) for document in docs]
+    if any(not doc_id for doc_id in doc_ids) or len(doc_ids) != len(set(doc_ids)):
+        raise ValueError("v2 search documents require unique non-empty ids")
+    if any(not normalize_text(document.get("title")) or not normalize_text(document.get("href")) for document in docs):
+        raise ValueError("v2 search documents require title and href")
+
+    postings: dict[str, dict[str, set[int]]] = {}
+    for position, document in enumerate(ordered_documents):
+        for field in search_fields:
+            for value in search_field_values_v2(document, field):
+                terms = (
+                    [normalize_search_value_v2(value)]
+                    if field in SEARCH_V2_EXACT_FIELDS
+                    else tokenize_search_value_v2(value)
+                )
+                for term in set(filter(None, terms)):
+                    postings.setdefault(term, {}).setdefault(field, set()).add(position)
+
+    terms = {
+        term: {
+            field: sorted(postings[term][field])
+            for field in search_fields
+            if field in postings[term]
+        }
+        for term in sorted(postings)
+    }
+    version_payload = {
+        "schema": SEARCH_INDEX_V2_SCHEMA,
+        "scope": normalize(scope),
+        "fields": list(search_fields),
+        "docs": docs,
+        "terms": terms,
+    }
+    return {
+        "header": {
+            "schema": SEARCH_INDEX_V2_SCHEMA,
+            "scope": normalize(scope),
+            "version": f"blake2b-{blake2b_payload_hash(version_payload)}",
+            "generated_at_utc": generated_at_utc or utc_timestamp(),
+            "count": len(docs),
+        },
+        "fields": list(search_fields),
+        "docs": docs,
+        "terms": terms,
+    }
 
 
 def json_text(payload: Any) -> str:
@@ -379,6 +497,43 @@ class DocsViewerSearchDataBuilder:
             }
             entries.append({key: value for key, value in entry.items() if not self.empty_scalar(value)})
         return entries
+
+    def build_docs_v2_payload(
+        self,
+        *,
+        changed_doc_ids: list[str] | None = None,
+        generated_at_utc: str | None = None,
+    ) -> tuple[dict[str, Any], dict[str, Any]]:
+        docs = self.load_source_docs()
+        title_by_id = {doc.doc_id: doc.title for doc in docs}
+        records: list[dict[str, Any]] = []
+        for doc in docs:
+            parent_title = "" if not doc.parent_id else normalize_text(title_by_id.get(doc.parent_id))
+            records.append(
+                {
+                    "id": doc.doc_id,
+                    "title": doc.title,
+                    "href": doc.viewer_url,
+                    "last_updated": doc.last_updated,
+                    "parent_id": doc.parent_id,
+                    "parent_title": parent_title,
+                    "display_meta": compact_join(doc.last_updated, parent_title),
+                }
+            )
+        requested_doc_ids = normalize_target_doc_ids(changed_doc_ids)
+        return (
+            build_search_index_v2(
+                scope=self.scope,
+                documents=records,
+                search_fields=self.scope_config.search_fields,
+                generated_at_utc=generated_at_utc,
+            ),
+            {
+                "mode": "full",
+                "requested_doc_ids": requested_doc_ids,
+                "reason": "v2 postings are rebuilt as one whole index",
+            },
+        )
 
     def build_targeted_docs_payload(
         self,
