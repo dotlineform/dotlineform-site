@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-e51317f50629c2d25b601d2a36d7a494",
-    "generated_at_utc": "2026-08-12T21:24:00Z",
+    "version": "blake2b-27c68cf62498da456466a75dba9e5c26",
+    "generated_at_utc": "2026-08-13T09:08:19Z",
     "count": 242
   },
   "entries": [
@@ -3544,20 +3544,19 @@
       "kind": "doc",
       "title": "Roadmap",
       "href": "/docs/?scope=studio&doc=d-20260428-000000-f5ff18",
-      "last_updated": "2026-08-03 19:48:25",
-      "display_meta": "2026-08-03 19:48:25",
+      "last_updated": "2026-08-13 10:08:18",
+      "display_meta": "2026-08-13 10:08:18",
       "search_terms": [
         "roadmap",
-        "2026-08-03 19:48:25",
+        "2026-08-13 10:08:18",
         "2026",
         "08",
-        "03",
-        "19",
-        "48",
-        "25",
+        "13",
+        "10",
+        "18",
         "d-20260428-000000-f5ff18"
       ],
-      "search_text": "roadmap 2026-08-03 19:48:25 2026 08 03 19 48 25 d-20260428-000000-f5ff18"
+      "search_text": "roadmap 2026-08-13 10:08:18 2026 08 13 10 18 d-20260428-000000-f5ff18"
     },
     {
       "id": "d-20260610-225919-188d54",

@@ -5,19 +5,22 @@
 - Use `docs-viewer/scopes/studio/source/documents/d-20260523-190651-7157ec.md` as the project implementation checklist. Keep durable repo guardrails there.
 - Use `docs-viewer/scopes/studio/source/documents/d-20260523-000000-bf7161.md` when lifecycle decisions, roadmap deliveries, task trackers, or closeout state need more context.
 - Compatibility aliases are prohibited unless justified before implementation with removal criteria.
-- If you find compatibility layers during new feature development, report and fix them immediately when non-trivial.
+- If you find compatibility layers during new feature development, report. Fix them immediately when non-trivial.
 - Tests and documents are not contracts for deciding how to implement code. They should follow current development objectives unless a constraint has been called out and agreed.
 - Answer questions based on domain best practice, suggest ways to reduce maintenance risk and improve performance, and raise likely side effects or missing requirements.
 - When discussing options, explain tradeoffs in a way that helps the user decide and iterate requirements.
 - Prefer targeted file reads, scoped diffs, and concise command output over broad searches or full diffs.
+
+## Key development factors
 - The public site has no deploy-time build or copy step: `site/` is the tracked GitHub Pages artifact. Local apps and `/docs/` may share site-owned config, CSS, and runtime files through explicit service route mapping, especially Docs Viewer public/shared assets.
-- For long multi-batch work, or before a long thread reaches context limits, produce a handoff with changed files, decisions made, remaining tasks, commands run, and known risks. Keep the delivery document to current/next state, checkboxes, decisions, and completion gates. When detailed working notes, scan inventories, or reusable verification history must survive between sessions, put them in temporary sibling documents, link them from the active delivery, and retire them at closeout as defined in `docs-viewer/scopes/studio/source/documents/d-20260523-000000-bf7161.md`.
-- For material new changes, requirements, or refactors, state the main benefits and risks. For trivial or mechanical edits, a short summary is enough.
+- For long multi-batch work, or before a long thread reaches context limits, produce a handoff with changed files, decisions made, remaining tasks, commands run, and known risks. Keep the delivery document to current/next state, checkboxes, decisions, and completion gates.
+- Non-trivial new features, requirements, or refactors are generally documentedd and parented to [Roadmap](/docs/?scope=studio&doc=d-20260428-000000-f5ff18), which contains delivery planning guidance.
 - Local servers do not need to support multiple concurrent users. Modal workflows always complete before another one starts.
 
 ## Processing Project Boundary
 
-`processing/` is tracked in this Git repository but is currently a separate Java/Processing project, not a module of the website or the deployed `site/` artifact. Its documentation belongs to the `processing` Docs Viewer scope, and it is expected to acquire its own build, test, and development lifecycle. Until that lifecycle is defined, do not apply website runtime, build, test, or release assumptions to it implicitly; treat any integration with the website as an explicit cross-project change.
+- `processing/` is tracked in this Git repository but is currently a separate Java/Processing project, not a module of the website or the deployed `site/` artifact.
+- Its documentation belongs to the `processing` Docs Viewer scope, and it is expected to acquire its own build, test, and development lifecycle. Until that lifecycle is defined, do not apply website runtime, build, test, or release assumptions to it implicitly; treat any integration with the website as an explicit cross-project change.
 
 ## Documentation And Generated Payloads
 
@@ -49,7 +52,8 @@
   - Is a browser required to verify a product contract, or only to mimic user clicks?
   - Will this fail because copy, layout, focus, hover state, or modal timing changed?
 - Permanent tests should protect data flows, server responses, generated contracts, parser behavior, ownership boundaries, and route/module integration. They should not police ordinary UI choreography, modal lifecycle feel, focus timing, copy, hover styling, or layout.
-- Browser smokes are only for durable browser boundaries: route boot, module wiring, public/private asset boundaries, local API reachability, request/response agreement, or shared ready/busy state. Use manual or temporary browser checks for tactile interaction, visual fit, copy tone, modal feel, and mobile ergonomics.
+- Browser smokes are only for durable browser boundaries: route boot, module wiring, public/private asset boundaries, local API reachability, request/response agreement, or shared ready/busy state.
+- Human manual checks are used for tactile interaction, visual fit, copy tone, modal feel, and mobile ergonomics.
 - Default focused checks:
   - Python/service changes: `$HOME/miniconda3/bin/python3 -m pytest <test-path>`
   - Script changes: syntax check with `$HOME/miniconda3/bin/python3 -m py_compile <files>`
@@ -58,13 +62,15 @@
   - Complete adopted source boundary: `bin/lint --scope <scope-id>`
   - Repo whitespace: `git diff --check`
   - Broader blast radius: `$HOME/miniconda3/bin/python3 admin-app/commands/run_checks.py --profile <profile>`
+
+## Important testing factors
 - Before running Python tests that import Docs Viewer services, export `.env.local` in the same shell (`set -a; source .env.local; set +a`). Scope configuration is loaded during test collection, and configured external-local scopes require `DOTLINEFORM_PROJECTS_BASE_DIR`; a test run without it can fail during collection before any tests execute.
 - `admin-app/commands/run_checks.py --profile docs` is self-contained: its broad Python step receives a run-owned writable Projects base, while its targeted Studio builders load only Studio and do not resolve the configured external-local workspace. Direct external-scope or all-scope commands still need an explicit suitable environment or `--projects-base-dir <absolute-writable-path>`.
 - Use the smallest relevant `run_checks.py` profile, such as `source-lint`, `quick`, `catalogue`, `docs`, `admin-smoke`, `studio-tag-smoke`, `docs-viewer-smoke`, or `studio-smoke`.
 - When `admin-app/commands/run_checks.py` is used, report the profile, pass/fail result, and `var/admin/test-runs/.../summary.md` path.
 - For commands that bind loopback ports or launch browser smokes, run them with elevated localhost/browser permissions in the Codex sandbox. Keep pure syntax checks, `git diff --check`, JSON parsing, and non-network pytest runs sandboxed.
-- If a local route is expected to be running but the sandbox cannot reach localhost, say that the sandbox cannot reach it and use an isolated temporary build/server only if automated verification needs it.
-- For Codex-run browser checks, use Playwright from the Miniconda environment when needed:
+- If a local route is expected to be running but the sandbox cannot reach localhost, use an isolated temporary build/server if automated verification needs it.
+- When explicitly agreed as needed, Codex-run browser checks should use Playwright from the Miniconda environment:
   - Playwright CLI: `$HOME/miniconda3/bin/playwright`
   - Python entrypoint: `$HOME/miniconda3/bin/python -m playwright`
 
