@@ -28,8 +28,10 @@ export function createDocsViewerSearchRouteCommands(context) {
     viewerTargetDocId: function (docId) {
       return typeof settings.viewerTargetDocId === "function" ? settings.viewerTargetDocId(docId) : docId;
     },
-    viewerUrl: function (docId, hash, query) {
-      return typeof routeCommands.viewerUrl === "function" ? routeCommands.viewerUrl(docId, hash, query) : "#";
+    viewerUrl: function (docId, hash, query, reportParams) {
+      return typeof routeCommands.viewerUrl === "function"
+        ? routeCommands.viewerUrl(docId, hash, query, reportParams)
+        : "#";
     }
   };
 }
@@ -103,9 +105,9 @@ export function initDocsViewerSearchController(context) {
     return typeof callback === "function" ? callback(docId) : docId;
   }
 
-  function viewerUrl(docId, hash, query) {
+  function viewerUrl(docId, hash, query, reportParams) {
     var callback = routeCommands.viewerUrl;
-    return typeof callback === "function" ? callback(docId, hash, query) : "#";
+    return typeof callback === "function" ? callback(docId, hash, query, reportParams) : "#";
   }
 
   function loadSearchIndex() {
@@ -213,7 +215,17 @@ export function initDocsViewerSearchController(context) {
   }
 
   function renderSearchResultEntry(entry) {
-    return renderSearchEntry(entry, viewerUrl(viewerTargetDocId(entry.id), "", ""));
+    var subScopeId = String(entry.sub_scope || "").trim();
+    if (!subScopeId) {
+      return renderSearchEntry(entry, viewerUrl(viewerTargetDocId(entry.id), "", ""));
+    }
+
+    var reportDocId = String(entry.report_doc_id || "").trim();
+    var childDocId = String(entry.id || "").trim();
+    var href = reportDocId && childDocId
+      ? viewerUrl(reportDocId, "", "", { subdoc: childDocId })
+      : "#";
+    return renderSearchEntry(entry, href);
   }
 
   function renderRecentResultEntry(doc) {

@@ -163,7 +163,7 @@ export function initDocsViewerRouteWorkflow(context) {
     return !allowScopeQuery() && new URLSearchParams(window.location.search).has("scope");
   }
 
-  function viewerUrl(docId, hash, query) {
+  function viewerUrl(docId, hash, query, reportParams) {
     return buildViewerUrl({
       docId: docId,
       hash: hash,
@@ -171,6 +171,7 @@ export function initDocsViewerRouteWorkflow(context) {
       origin: window.location.origin,
       preservedQueryParams: preservedQueryParams(),
       query: query,
+      reportParams: reportParams,
       viewerBaseUrl: viewerBaseUrl(),
       viewerScope: viewerScope()
     });

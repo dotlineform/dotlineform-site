@@ -11,6 +11,12 @@ const fixture = JSON.parse(fs.readFileSync(
 const search = await import(pathToFileURL(
   path.join(repoRoot, "site/docs-viewer/runtime/js/shared/docs-viewer-search.js")
 ));
+const searchController = await import(pathToFileURL(
+  path.join(repoRoot, "site/docs-viewer/runtime/js/shared/docs-viewer-search-controller.js")
+));
+const routeWorkflow = await import(pathToFileURL(
+  path.join(repoRoot, "site/docs-viewer/runtime/js/shared/docs-viewer-route-workflow.js")
+));
 
 fixture.tokenizer_cases.forEach((testCase) => {
   assert.deepEqual(search.tokenizeSearchValue(testCase.value), testCase.terms);
@@ -79,7 +85,8 @@ const mixedTargetIndex = {
       href: `/analysis/?doc=report&subdoc=${sharedDocId}`,
       sub_scope: "tags",
       report_doc_id: "report",
-      collection_title: "Concepts"
+      collection_title: "Concepts",
+      display_meta: "2026-08-14 • Concepts"
     }
   ],
   terms: {
@@ -99,5 +106,98 @@ assert.equal(
   search.collectSearchMatches(mixedTargetIndex, "child")[0].entry.report_doc_id,
   "report"
 );
+
+function viewerRouteCommands(viewerBaseUrl, includeScopeParam) {
+  return routeWorkflow.initDocsViewerRouteWorkflow({
+    content: {},
+    documentIndex: {},
+    includeScopeParam,
+    preserveQueryParams: [],
+    root: {},
+    routeSession: {},
+    scopeConfig: {},
+    searchRecent: {},
+    selectedDocument: {},
+    viewerBaseUrl,
+    viewerScope: "analysis",
+    window: {
+      location: {
+        hash: "",
+        href: "http://localhost/docs/",
+        origin: "http://localhost",
+        search: ""
+      }
+    }
+  }).commands;
+}
+
+const manageRouteCommands = searchController.createDocsViewerSearchRouteCommands({
+  routeCommands: viewerRouteCommands("/docs/", true),
+  viewerTargetDocId: (docId) => docId
+});
+const publicRouteCommands = searchController.createDocsViewerSearchRouteCommands({
+  routeCommands: viewerRouteCommands("/analysis/", false),
+  viewerTargetDocId: (docId) => docId
+});
+assert.equal(
+  manageRouteCommands.viewerUrl("report", "", "", { subdoc: sharedDocId }),
+  `/docs/?scope=analysis&doc=report&subdoc=${sharedDocId}`
+);
+assert.equal(
+  publicRouteCommands.viewerUrl("report", "", "", { subdoc: sharedDocId }),
+  `/analysis/?doc=report&subdoc=${sharedDocId}`
+);
+assert.equal(
+  manageRouteCommands.viewerUrl(sharedDocId, "", ""),
+  `/docs/?scope=analysis&doc=${sharedDocId}`
+);
+
+const renderedRouteCalls = [];
+const results = { innerHTML: "" };
+const more = { hidden: true, innerHTML: "" };
+const resultsStatus = {
+  classList: { toggle() {} },
+  hidden: true,
+  textContent: ""
+};
+const priorDocument = globalThis.document;
+globalThis.document = { title: "" };
+try {
+  const controller = searchController.initDocsViewerSearchController({
+    documentIndex: { docsById: new Map() },
+    hasActiveQuery: () => true,
+    more,
+    paneCommands: { showSearchPane() {} },
+    recentEnabled: false,
+    results,
+    resultsStatus,
+    routeCommands: {
+      viewerTargetDocId: (docId) => docId === "report" ? "inferred-report" : docId,
+      viewerUrl(docId, hash, query, reportParams) {
+        renderedRouteCalls.push({ docId, hash, query, reportParams });
+        return publicRouteCommands.viewerUrl(docId, hash, query, reportParams);
+      }
+    },
+    searchBatchSize: 20,
+    searchEnabled: true,
+    searchRecent: {
+      searchIndex: mixedTargetIndex,
+      searchLoaded: true,
+      searchQuery: "target",
+      searchVisibleCount: 20
+    },
+    selectedDocument: {},
+    setRecentModeActive() {}
+  });
+  controller.renderSearchMode();
+} finally {
+  globalThis.document = priorDocument;
+}
+assert.deepEqual(renderedRouteCalls, [
+  { docId: "report", hash: "", query: "", reportParams: { subdoc: sharedDocId } },
+  { docId: sharedDocId, hash: "", query: "", reportParams: undefined }
+]);
+assert.match(results.innerHTML, new RegExp(`/analysis/\\?doc=report&amp;subdoc=${sharedDocId}`));
+assert.match(results.innerHTML, /2026-08-14 • Concepts/);
 
 console.log("Docs Viewer search v2 JavaScript contract OK");
