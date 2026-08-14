@@ -4,23 +4,11 @@
 from __future__ import annotations
 
 from pathlib import Path
-import sys
 from types import SimpleNamespace
 
 import pytest
 
-
-REPO_ROOT = Path(__file__).resolve().parents[3]
-for path in (
-    REPO_ROOT / "studio" / "services",
-    REPO_ROOT / "docs-viewer" / "services",
-):
-    text = str(path)
-    if text not in sys.path:
-        sys.path.insert(0, text)
-
 from tags import tag_document_declarations as declarations
-
 
 def document(doc_id: str, title: str, tag_value=...) -> SimpleNamespace:
     front_matter = {} if tag_value is ... else {"tag_id": tag_value}

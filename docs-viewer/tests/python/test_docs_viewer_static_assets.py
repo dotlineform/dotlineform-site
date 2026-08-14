@@ -211,8 +211,11 @@ def test_document_package_prepare_and_import_review_own_browser_assets() -> None
     assert 'PREPARE_DOCUMENT_PACKAGE: "prepare-document-package"' in action_definitions
     assert 'id: "docsViewerIndexPreparePackageButton"' in control_renderers
     assert 'actionId: "prepare-document-package"' in control_renderers
-    assert 'page_id: "docs-manage"' in index_controller
-    assert 'control_id: "docsViewerIndexPreparePackageButton"' in index_controller
+    assert (
+        "[DOCS_VIEWER_ACTION_IDS.PREPARE_DOCUMENT_PACKAGE]: preparePackageActionControlState()"
+        in index_controller
+    )
+    assert "return module.openDocumentPackagePrepareWorkflow({" in index_controller
     assert "prepareDocumentPackage" in package_client
     assert "openDocsImportCandidateInReview" in import_entrypoint
     assert '"/docs/packages/returned/review"' in import_entrypoint

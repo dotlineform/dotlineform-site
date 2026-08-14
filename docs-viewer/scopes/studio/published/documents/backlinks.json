@@ -147,11 +147,6 @@
     ],
     "d-20260331-000000-cdc571": [
       {
-        "doc_id": "d-20260814-194856-a7c3e1",
-        "title": "Admin Retirement",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260814-194856-a7c3e1"
-      },
-      {
         "doc_id": "d-20260423-000000-d274d3",
         "title": "Scripts",
         "viewer_url": "/docs/?scope=studio&doc=d-20260423-000000-d274d3"
@@ -786,11 +781,6 @@
     ],
     "d-20260501-174746-efd581": [
       {
-        "doc_id": "d-20260814-194856-a7c3e1",
-        "title": "Admin Retirement",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260814-194856-a7c3e1"
-      },
-      {
         "doc_id": "d-20260419-000000-d2e47b",
         "title": "Dev Home",
         "viewer_url": "/docs/?scope=studio&doc=d-20260419-000000-d2e47b"
@@ -847,11 +837,6 @@
       }
     ],
     "d-20260501-174746-f92667": [
-      {
-        "doc_id": "d-20260814-194856-a7c3e1",
-        "title": "Admin Retirement",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260814-194856-a7c3e1"
-      },
       {
         "doc_id": "d-20260419-000000-d2e47b",
         "title": "Dev Home",
@@ -2014,11 +1999,6 @@
     ],
     "d-20260625-174523-74cf61": [
       {
-        "doc_id": "d-20260814-194856-a7c3e1",
-        "title": "Admin Retirement",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260814-194856-a7c3e1"
-      },
-      {
         "doc_id": "d-20260625-162242-b0b6c7",
         "title": "Route Ready State",
         "viewer_url": "/docs/?scope=studio&doc=d-20260625-162242-b0b6c7"
@@ -2802,5 +2782,5 @@
       }
     ]
   },
-  "generated_at": "2026-08-14T20:35:16Z"
+  "generated_at": "2026-08-14T21:00:34Z"
 }
