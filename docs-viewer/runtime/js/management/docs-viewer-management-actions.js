@@ -265,14 +265,17 @@ export function firstRemainingRootDocId(docs, deletedDocIds, resolveLoadableDocI
 export function docsViewerPublishConfirmBody(preview) {
   var documentCount = Number(preview && preview.document_publish_count || 0);
   var excluded = Number(preview && preview.document_excluded_count || 0);
+  var search = preview && preview.search ? preview.search : {};
+  var searchWillUpdate = Array.isArray(search.changed) && search.changed.length > 0;
   var media = preview && preview.media ? preview.media : {};
   var paths = preview && preview.paths ? preview.paths : {};
   var mediaErrorCount = Number(media.error_count || 0);
   var lines = [
-    "Publish reviewed documents and their referenced media for this public route?",
+    "Publish reviewed documents, Search, and referenced media for this public route?",
     "",
-    "Documents to publish: " + documentCount,
+    "Document payloads changed: " + documentCount,
     "Document files removed by current Publish exclusions: " + excluded,
+    "Search index: " + (searchWillUpdate ? "Will update" : "No change"),
     "Media copied or replaced: " + Number(media.copy_count || 0),
     "Stale public media removed: " + Number(media.remove_count || 0),
     "Referenced managed media missing: " + Number(media.missing_count || 0)
