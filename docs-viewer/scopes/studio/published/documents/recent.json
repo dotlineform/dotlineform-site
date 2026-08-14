@@ -4,6 +4,46 @@
   "limit": 10,
   "docs": [
     {
+      "doc_id": "d-20260602-160839-6d3cbb",
+      "title": "Docs Viewer Search",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260602-160839-6d3cbb.json",
+      "timestamp": "2026-08-14 15:21:54",
+      "parent_id": "d-20260331-000000-5dcf32",
+      "parent_title": "Search"
+    },
+    {
+      "doc_id": "d-20260813-214350-4c7a21",
+      "title": "Docs Viewer Search Index",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260813-214350-4c7a21.json",
+      "timestamp": "2026-08-14 15:21:54",
+      "parent_id": "d-20260602-160839-6d3cbb",
+      "parent_title": "Docs Viewer Search"
+    },
+    {
+      "doc_id": "d-20260813-171341-8bfa80",
+      "title": "DSI-1 — Docs Viewer Search Index v2 Delivery",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260813-171341-8bfa80.json",
+      "timestamp": "2026-08-14 15:20:41",
+      "parent_id": "d-20260715-092247-6bbb5e",
+      "parent_title": "Search Mechanics"
+    },
+    {
+      "doc_id": "d-20260813-161942-b1e9e1",
+      "title": "Studio Full-Text Search Index Concept",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260813-161942-b1e9e1.json",
+      "timestamp": "2026-08-14 15:20:41",
+      "parent_id": "d-20260715-092247-6bbb5e",
+      "parent_title": "Search Mechanics"
+    },
+    {
+      "doc_id": "d-20260813-165124-16b0ab",
+      "title": "All-Scope Full-Text Search Baseline",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260813-165124-16b0ab.json",
+      "timestamp": "2026-08-14 15:19:32",
+      "parent_id": "d-20260715-092247-6bbb5e",
+      "parent_title": "Search Mechanics"
+    },
+    {
       "doc_id": "d-20260503-202500-316d29",
       "title": "Package Return Parser",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260503-202500-316d29.json",
@@ -42,47 +82,7 @@
       "timestamp": "2026-08-14 14:49:06",
       "parent_id": "d-20260419-000000-d2e47b",
       "parent_title": "Dev Home"
-    },
-    {
-      "doc_id": "d-20260602-160839-6d3cbb",
-      "title": "Docs Viewer Search",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260602-160839-6d3cbb.json",
-      "timestamp": "2026-08-14 14:49:06",
-      "parent_id": "d-20260331-000000-5dcf32",
-      "parent_title": "Search"
-    },
-    {
-      "doc_id": "d-20260813-214350-4c7a21",
-      "title": "Docs Viewer Search Index",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260813-214350-4c7a21.json",
-      "timestamp": "2026-08-14 14:49:06",
-      "parent_id": "d-20260602-160839-6d3cbb",
-      "parent_title": "Docs Viewer Search"
-    },
-    {
-      "doc_id": "d-20260813-165124-16b0ab",
-      "title": "Analysis Full-Text Search Extension",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260813-165124-16b0ab.json",
-      "timestamp": "2026-08-14 14:31:59",
-      "parent_id": "d-20260715-092247-6bbb5e",
-      "parent_title": "Search Mechanics"
-    },
-    {
-      "doc_id": "d-20260813-225547-cd82d8",
-      "title": "DSI-2 — Scope-Level Sub-Scope Search Delivery",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260813-225547-cd82d8.json",
-      "timestamp": "2026-08-14 13:09:25",
-      "parent_id": "d-20260715-092247-6bbb5e",
-      "parent_title": "Search Mechanics"
-    },
-    {
-      "doc_id": "d-20260813-223337-e6c261",
-      "title": "Docs Viewer Search Relevance",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260813-223337-e6c261.json",
-      "timestamp": "2026-08-14 13:03:37",
-      "parent_id": "d-20260602-160839-6d3cbb",
-      "parent_title": "Docs Viewer Search"
     }
   ],
-  "generated_at": "2026-08-14T14:09:03Z"
+  "generated_at": "2026-08-14T14:21:55Z"
 }

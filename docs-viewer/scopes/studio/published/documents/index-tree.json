@@ -960,7 +960,7 @@
           "children": [
             {
               "doc_id": "d-20260813-165124-16b0ab",
-              "title": "Analysis Full-Text Search Extension",
+              "title": "All-Scope Full-Text Search Baseline",
               "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260813-165124-16b0ab.json"
             },
             {
@@ -1371,5 +1371,5 @@
       ]
     }
   ],
-  "generated_at": "2026-08-14T12:08:47Z"
+  "generated_at": "2026-08-14T14:19:17Z"
 }

@@ -1730,7 +1730,7 @@
     "d-20260602-160839-4ebe27": [
       {
         "doc_id": "d-20260813-165124-16b0ab",
-        "title": "Analysis Full-Text Search Extension",
+        "title": "All-Scope Full-Text Search Baseline",
         "viewer_url": "/docs/?scope=studio&doc=d-20260813-165124-16b0ab"
       },
       {
@@ -1747,7 +1747,7 @@
     "d-20260602-160839-6d3cbb": [
       {
         "doc_id": "d-20260813-165124-16b0ab",
-        "title": "Analysis Full-Text Search Extension",
+        "title": "All-Scope Full-Text Search Baseline",
         "viewer_url": "/docs/?scope=studio&doc=d-20260813-165124-16b0ab"
       },
       {
@@ -2565,7 +2565,7 @@
     "d-20260715-084611-c2fa6f": [
       {
         "doc_id": "d-20260813-165124-16b0ab",
-        "title": "Analysis Full-Text Search Extension",
+        "title": "All-Scope Full-Text Search Baseline",
         "viewer_url": "/docs/?scope=studio&doc=d-20260813-165124-16b0ab"
       },
       {
@@ -3347,11 +3347,6 @@
     ],
     "d-20260813-161942-b1e9e1": [
       {
-        "doc_id": "d-20260813-165124-16b0ab",
-        "title": "Analysis Full-Text Search Extension",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260813-165124-16b0ab"
-      },
-      {
         "doc_id": "d-20260813-163802-5ca41f",
         "title": "Docs Viewer Search Tokenizer Concept",
         "viewer_url": "/docs/?scope=studio&doc=d-20260813-163802-5ca41f"
@@ -3401,6 +3396,11 @@
         "viewer_url": "/docs/?scope=studio&doc=d-20260602-160839-6d3cbb"
       },
       {
+        "doc_id": "d-20260813-214350-4c7a21",
+        "title": "Docs Viewer Search Index",
+        "viewer_url": "/docs/?scope=studio&doc=d-20260813-214350-4c7a21"
+      },
+      {
         "doc_id": "d-20260813-171341-8bfa80",
         "title": "DSI-1 — Docs Viewer Search Index v2 Delivery",
         "viewer_url": "/docs/?scope=studio&doc=d-20260813-171341-8bfa80"
@@ -3412,11 +3412,6 @@
       }
     ],
     "d-20260813-171341-8bfa80": [
-      {
-        "doc_id": "d-20260813-165124-16b0ab",
-        "title": "Analysis Full-Text Search Extension",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260813-165124-16b0ab"
-      },
       {
         "doc_id": "d-20260813-214351-98d3f0",
         "title": "Docs Viewer Search Tokenizer",
@@ -3439,6 +3434,11 @@
       }
     ],
     "d-20260813-214350-4c7a21": [
+      {
+        "doc_id": "d-20260813-165124-16b0ab",
+        "title": "All-Scope Full-Text Search Baseline",
+        "viewer_url": "/docs/?scope=studio&doc=d-20260813-165124-16b0ab"
+      },
       {
         "doc_id": "d-20260602-160839-6d3cbb",
         "title": "Docs Viewer Search",
@@ -3531,11 +3531,6 @@
     ],
     "d-20260813-223337-e6c261": [
       {
-        "doc_id": "d-20260813-165124-16b0ab",
-        "title": "Analysis Full-Text Search Extension",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260813-165124-16b0ab"
-      },
-      {
         "doc_id": "d-20260602-160839-6d3cbb",
         "title": "Docs Viewer Search",
         "viewer_url": "/docs/?scope=studio&doc=d-20260602-160839-6d3cbb"
@@ -3569,7 +3564,7 @@
     "d-20260813-225547-cd82d8": [
       {
         "doc_id": "d-20260813-165124-16b0ab",
-        "title": "Analysis Full-Text Search Extension",
+        "title": "All-Scope Full-Text Search Baseline",
         "viewer_url": "/docs/?scope=studio&doc=d-20260813-165124-16b0ab"
       },
       {
@@ -3589,5 +3584,5 @@
       }
     ]
   },
-  "generated_at": "2026-08-14T12:08:47Z"
+  "generated_at": "2026-08-14T14:21:55Z"
 }
