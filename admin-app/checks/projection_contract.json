@@ -353,7 +353,6 @@
   "public_docs_viewer": {
     "config_path": "docs-viewer/config/defaults/docs-viewer-public-config.json",
     "allowed_scope_ids": [
-      "library",
       "analysis"
     ]
   },

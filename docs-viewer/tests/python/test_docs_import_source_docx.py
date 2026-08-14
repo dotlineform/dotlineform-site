@@ -18,8 +18,9 @@ from docs_import_docx_test_support import embedded_image_docx_bytes, semantic_do
 from docs_import_test_support import (
     handle_import_source,
     make_repo,
+    managed_media_path,
     stub_rebuild,
-    write_library_doc,
+    write_example_doc,
     write_staged_bytes,
 )
 from docs_media_storage import DocsMediaPublishResult
@@ -34,7 +35,7 @@ def _preview(root: Path, filename: str) -> dict[str, object]:
         staging_root=paths.import_staging,
         workspace_root=paths.root.parent,
         source_path=source_path,
-        scope="library",
+        scope="example",
         include_prompt_meta=False,
     )
 
@@ -149,7 +150,7 @@ def test_docx_uses_existing_ordinary_source_service_preview() -> None:
         payload = handle_import_source(
             root,
             {
-                "scope": "library",
+                "scope": "example",
                 "staged_filename": "service-preview.docx",
                 "preview_only": True,
             },
@@ -171,7 +172,7 @@ def test_docx_preview_plans_supported_images_without_returning_conversion_bodies
         payload = handle_import_source(
             root,
             {
-                "scope": "library",
+                "scope": "example",
                 "staged_filename": "word-images.docx",
                 "preview_only": True,
             },
@@ -199,7 +200,7 @@ def test_docx_preview_plans_supported_images_without_returning_conversion_bodies
 def test_docx_import_materializes_supported_image_before_source_write() -> None:
     with make_repo() as temp:
         root = Path(temp)
-        write_library_doc(root, "library.md", {"doc_id": "library", "title": "Library", "parent_id": ""})
+        write_example_doc(root, "example.md", {"doc_id": "example", "title": "Example", "parent_id": ""})
         write_staged_bytes(root, "word-images.docx", embedded_image_docx_bytes())
         original_rebuild = stub_rebuild()
         original_validation = docs_import_preview.validate_markdown_preview
@@ -211,7 +212,7 @@ def test_docx_import_materializes_supported_image_before_source_write() -> None:
         try:
             payload = handle_import_source(
                 root,
-                {"scope": "library", "staged_filename": "word-images.docx"},
+                {"scope": "example", "staged_filename": "word-images.docx"},
                 dry_run=False,
             )
         finally:
@@ -220,7 +221,7 @@ def test_docx_import_materializes_supported_image_before_source_write() -> None:
 
         source_text = (root / payload["path"]).read_text(encoding="utf-8")
         media_filename = f"{payload['doc_id']}-image-01.png"
-        media_path = root / "site/assets/data/docs/scopes/library/media/img" / media_filename
+        media_path = managed_media_path("example", "img", media_filename)
         media_bytes = media_path.read_bytes()
         response_text = json.dumps(payload)
 
@@ -229,7 +230,7 @@ def test_docx_import_materializes_supported_image_before_source_write() -> None:
     assert payload["rebuild"]["docs"]["doc_ids"] == [payload["doc_id"]]
     assert media_bytes == b"word-png-bytes"
     assert payload["inline_media_written"][0]["artifact_identity"] == media_filename
-    assert f"[[media:docs/library/img/{media_filename}]]" in source_text
+    assert f"[[media:docs/example/img/{media_filename}]]" in source_text
     assert "data:image/" not in source_text
     assert "data:image/" not in response_text
     assert "_inline_media_source_markdown" not in response_text
@@ -249,12 +250,12 @@ def test_docx_reimport_creates_independent_documents() -> None:
         try:
             first_payload = handle_import_source(
                 root,
-                {"scope": "library", "staged_filename": "word-images.docx"},
+                {"scope": "example", "staged_filename": "word-images.docx"},
                 dry_run=False,
             )
             second_payload = handle_import_source(
                 root,
-                {"scope": "library", "staged_filename": "word-images.docx"},
+                {"scope": "example", "staged_filename": "word-images.docx"},
                 dry_run=False,
             )
         finally:
@@ -271,8 +272,8 @@ def test_docx_reimport_creates_independent_documents() -> None:
     assert first_payload["doc_id"] != second_payload["doc_id"]
     assert "collision" not in first_payload
     assert "requires_doc_overwrite_confirmation" not in first_payload
-    assert f"[[media:docs/library/img/{first_payload['doc_id']}-image-01.png]]" in first_source
-    assert f"[[media:docs/library/img/{second_payload['doc_id']}-image-01.png]]" in second_source
+    assert f"[[media:docs/example/img/{first_payload['doc_id']}-image-01.png]]" in first_source
+    assert f"[[media:docs/example/img/{second_payload['doc_id']}-image-01.png]]" in second_source
 
 
 def test_docx_media_publication_failure_does_not_write_document_source(
@@ -280,9 +281,9 @@ def test_docx_media_publication_failure_does_not_write_document_source(
 ) -> None:
     with make_repo() as temp:
         root = Path(temp)
-        write_library_doc(root, "library.md", {"doc_id": "library", "title": "Library", "parent_id": ""})
+        write_example_doc(root, "example.md", {"doc_id": "example", "title": "Example", "parent_id": ""})
         write_staged_bytes(root, "blocked-word.docx", embedded_image_docx_bytes())
-        documents_root = root / "docs-viewer/scopes/library/source/documents"
+        documents_root = root / "docs-viewer/scopes/example/source/documents"
         before = sorted(documents_root.glob("*.md"))
         original_rebuild = stub_rebuild()
         original_validation = docs_import_preview.validate_markdown_preview
@@ -296,7 +297,7 @@ def test_docx_media_publication_failure_does_not_write_document_source(
             "publish_docs_media_files",
             lambda *_args, **_kwargs: [
                 DocsMediaPublishResult(
-                    scope="library",
+                    scope="example",
                     media_class="img",
                     filename="blocked.png",
                     size=0,
@@ -309,7 +310,7 @@ def test_docx_media_publication_failure_does_not_write_document_source(
             with pytest.raises(RuntimeError, match="publication did not complete"):
                 handle_import_source(
                     root,
-                    {"scope": "library", "staged_filename": "blocked-word.docx"},
+                    {"scope": "example", "staged_filename": "blocked-word.docx"},
                     dry_run=False,
                 )
         finally:
@@ -332,13 +333,13 @@ def test_docx_preview_rejects_malformed_and_unsafe_sources() -> None:
         nested = paths.import_staging / "nested/source.docx"
         nested.parent.mkdir()
         nested.write_bytes(semantic_docx_bytes())
-        documents_root = root / "docs-viewer/scopes/library/source/documents"
+        documents_root = root / "docs-viewer/scopes/example/source/documents"
         before = sorted(documents_root.glob("*.md"))
 
         with pytest.raises(ValueError, match=r"malformed\.docx: BadZipFile"):
             handle_import_source(
                 root,
-                {"scope": "library", "staged_filename": "malformed.docx"},
+                {"scope": "example", "staged_filename": "malformed.docx"},
                 dry_run=False,
             )
         with pytest.raises(ValueError, match="must not be symlinks"):

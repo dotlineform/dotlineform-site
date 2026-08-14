@@ -3,7 +3,7 @@
 
 Run:
   ./docs-viewer/services/docs_broken_links.py --scope studio
-  ./docs-viewer/services/docs_broken_links.py --scope library --json
+  ./docs-viewer/services/docs_broken_links.py --scope analysis --json
 """
 
 from __future__ import annotations

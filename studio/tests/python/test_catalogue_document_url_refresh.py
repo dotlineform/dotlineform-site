@@ -68,7 +68,7 @@ def series_payload(series_id: str, urls: list[str]) -> dict[str, object]:
 
 
 def test_refresh_reassigns_removes_and_adds_only_exact_affected_payloads(tmp_path: Path) -> None:
-    old_url = "/library/?doc=d-old"
+    old_url = "/example/?doc=d-old"
     new_url = "/analysis/?doc=d-new"
     work_one = tmp_path / "site/assets/works/index/00001.json"
     work_two = tmp_path / "site/assets/works/index/00002.json"
@@ -107,7 +107,7 @@ def test_refresh_reassigns_removes_and_adds_only_exact_affected_payloads(tmp_pat
 
 
 def test_refresh_plan_is_empty_when_generated_payloads_match_projection(tmp_path: Path) -> None:
-    url = "/library/?doc=d-current"
+    url = "/example/?doc=d-current"
     path = tmp_path / "site/assets/works/index/00001.json"
     write_json(path, work_payload("00001", [url]))
     before = path.read_bytes()
@@ -131,7 +131,7 @@ def test_refresh_plan_rejects_missing_exact_generated_target_without_writes(tmp_
     with pytest.raises(ValueError, match="generated Catalogue payload is missing"):
         build_catalogue_document_url_refresh_plan(
             tmp_path,
-            {"work": {"99999": ["/library/?doc=d-missing"]}, "series": {}},
+            {"work": {"99999": ["/example/?doc=d-missing"]}, "series": {}},
         )
 
     assert existing.read_bytes() == before
@@ -143,7 +143,7 @@ def test_refresh_atomic_failure_restores_all_previous_payloads(
 ) -> None:
     first = tmp_path / "site/assets/works/index/00001.json"
     second = tmp_path / "site/assets/series/index/009.json"
-    write_json(first, work_payload("00001", ["/library/?doc=d-old"]))
+    write_json(first, work_payload("00001", ["/example/?doc=d-old"]))
     write_json(second, series_payload("009", []))
     first_before = first.read_bytes()
     second_before = second.read_bytes()
@@ -151,7 +151,7 @@ def test_refresh_atomic_failure_restores_all_previous_payloads(
         tmp_path,
         {
             "work": {},
-            "series": {"009": ["/library/?doc=d-old"]},
+            "series": {"009": ["/example/?doc=d-old"]},
         },
     )
     original_replace = transactions.os.replace

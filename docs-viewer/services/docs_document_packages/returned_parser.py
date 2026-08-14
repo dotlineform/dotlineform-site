@@ -18,7 +18,7 @@ from docs_document_packages.returned_common import (
     relative_path,
     resolve_staged_path,
 )
-from docs_document_packages.returned_context import add_current_library_report, current_report_context, load_current_docs_context
+from docs_document_packages.returned_context import add_current_source_report, current_report_context, load_current_docs_context
 from docs_document_packages.returned_files import (
     export_id_from_json_payload,
     export_id_from_jsonl_header,
@@ -188,8 +188,8 @@ def parse_staged_import(
     report["unknown_file_metadata"] = unknown_file_metadata
     report["records"] = records
     report["detected_import_type"] = detect_import_type(package_metadata)
-    report["current_library"] = current_report_context(current_context)
-    report["issues"].extend(add_current_library_report(records, current=current_context, scope=normalized_scope))
+    report["current_source"] = current_report_context(current_context)
+    report["issues"].extend(add_current_source_report(records, current=current_context, scope=normalized_scope))
 
     supports_return_import = package_metadata.get("supports_return_import") is True
     issue_codes = {

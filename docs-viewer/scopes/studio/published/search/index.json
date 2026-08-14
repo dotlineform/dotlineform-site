@@ -2,8 +2,8 @@
   "header": {
     "schema": "docs_viewer_search_index_v2",
     "scope": "studio",
-    "version": "blake2b-e59c7532ec5fe7bdf164d0e54e192789",
-    "generated_at_utc": "2026-08-14T15:36:54Z",
+    "version": "blake2b-de3cd2d558f596e717a20e51f815879c",
+    "generated_at_utc": "2026-08-14T16:28:02Z",
     "count": 230
   },
   "fields": [
@@ -487,10 +487,10 @@
       "id": "d-20260503-202500-316d29",
       "title": "Package Return Parser",
       "href": "/docs/?scope=studio&doc=d-20260503-202500-316d29",
-      "last_updated": "2026-08-14 15:09:03",
+      "last_updated": "2026-08-14 17:21:58",
       "parent_id": "d-20260424-000000-50b63f",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-08-14 15:09:03 • Docs Viewer"
+      "display_meta": "2026-08-14 17:21:58 • Docs Viewer"
     },
     {
       "id": "d-20260505-181739-bb5223",
@@ -987,10 +987,10 @@
       "id": "d-20260607-222033-5d82a6",
       "title": "Health And Capabilities Endpoints",
       "href": "/docs/?scope=studio&doc=d-20260607-222033-5d82a6",
-      "last_updated": "2026-07-19 22:33:42",
+      "last_updated": "2026-08-14 17:21:58",
       "parent_id": "d-20260607-222033-647b52",
       "parent_title": "Endpoint Overview",
-      "display_meta": "2026-07-19 22:33:42 • Endpoint Overview"
+      "display_meta": "2026-08-14 17:21:58 • Endpoint Overview"
     },
     {
       "id": "d-20260607-222033-6331b3",
@@ -1392,10 +1392,10 @@
       "id": "d-20260711-012238-814555",
       "title": "Knowledge System Vision",
       "href": "/docs/?scope=studio&doc=d-20260711-012238-814555",
-      "last_updated": "2026-08-01 08:51:37",
+      "last_updated": "2026-08-14 17:06:50",
       "parent_id": "d-20260331-000000-4a16b0",
       "parent_title": "Architecture",
-      "display_meta": "2026-08-01 08:51:37 • Architecture"
+      "display_meta": "2026-08-14 17:06:50 • Architecture"
     },
     {
       "id": "d-20260711-214307-6d6d46",
@@ -1509,10 +1509,10 @@
       "id": "d-20260715-094411-2b6e65",
       "title": "Document Identity",
       "href": "/docs/?scope=studio&doc=d-20260715-094411-2b6e65",
-      "last_updated": "2026-08-13 21:43:50",
+      "last_updated": "2026-08-14 17:21:58",
       "parent_id": "d-20260424-000000-50b63f",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-08-13 21:43:50 • Docs Viewer"
+      "display_meta": "2026-08-14 17:21:58 • Docs Viewer"
     },
     {
       "id": "d-20260716-204013-3be4e1",
@@ -1829,10 +1829,10 @@
       "id": "d-20260802-123452-6a2fd3",
       "title": "DMM-1 — Data Model Maps Foundation Delivery",
       "href": "/docs/?scope=studio&doc=d-20260802-123452-6a2fd3",
-      "last_updated": "2026-08-14 16:36:14",
+      "last_updated": "2026-08-14 17:26:27",
       "parent_id": "d-20260802-123450-f7493d",
       "parent_title": "Data Model Maps",
-      "display_meta": "2026-08-14 16:36:14 • Data Model Maps"
+      "display_meta": "2026-08-14 17:26:27 • Data Model Maps"
     },
     {
       "id": "d-20260802-205910-533be0",
@@ -7207,8 +7207,7 @@
       "body": [
         66,
         123,
-        167,
-        168
+        167
       ]
     },
     "appropriate": {
@@ -25260,14 +25259,14 @@
         202
       ]
     },
-    "current_library": {
-      "code": [
-        54
-      ]
-    },
     "current_selectable": {
       "code": [
         210
+      ]
+    },
+    "current_source": {
+      "code": [
+        54
       ]
     },
     "current_summary": {
@@ -48243,7 +48242,6 @@
         127,
         160,
         161,
-        168,
         177,
         216,
         217
@@ -54812,23 +54810,13 @@
       "body": [
         37,
         67,
-        155,
         180,
         211
-      ],
-      "code": [
-        54,
-        110
       ]
     },
     "library-owned": {
       "body": [
         67
-      ]
-    },
-    "library_import": {
-      "code": [
-        110
       ]
     },
     "licence": {
@@ -55362,7 +55350,6 @@
         115,
         132,
         147,
-        204,
         207
       ]
     },
@@ -61379,9 +61366,6 @@
         220,
         224,
         225
-      ],
-      "code": [
-        204
       ]
     },
     "migrations": {
@@ -66160,7 +66144,6 @@
         108,
         152,
         160,
-        168,
         169,
         173,
         175,
@@ -70765,7 +70748,6 @@
         157,
         160,
         167,
-        168,
         170,
         180,
         186,
@@ -79832,7 +79814,6 @@
         163,
         166,
         167,
-        168,
         170,
         171,
         172,
@@ -88415,7 +88396,6 @@
         146,
         157,
         160,
-        168,
         170,
         174,
         188,
@@ -88565,7 +88545,6 @@
         141,
         152,
         161,
-        168,
         170,
         175,
         179,
@@ -105935,11 +105914,6 @@
       ]
     },
     "test_semantic_target_lookup.py": {
-      "code": [
-        204
-      ]
-    },
-    "test_tag_document_link_migration.py": {
       "code": [
         204
       ]

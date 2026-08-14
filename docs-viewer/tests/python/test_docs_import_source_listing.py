@@ -55,7 +55,7 @@ def review_source_text(
     *,
     folder_id: str = REVIEW_FOLDER_ID,
     export_id: str = REVIEW_EXPORT_ID,
-    scope: str = "library",
+    scope: str = "example",
     sub_scope: str = "",
 ) -> str:
     sub_scope_line = (
@@ -86,7 +86,7 @@ def write_review_source_fixture(
     supports_return_import: bool = True,
     folder_id: str = REVIEW_FOLDER_ID,
     export_id: str = REVIEW_EXPORT_ID,
-    scope: str = "library",
+    scope: str = "example",
     sub_scope: str = "",
     records: list[tuple[str, str]] | None = None,
     source_last_updated: dict[str, str] | None = None,
@@ -182,27 +182,27 @@ def configure_review_sub_scope_targets(root: Path) -> dict[str, Path]:
     config = json.loads(config_path.read_text(encoding="utf-8"))
     config["scopes"][0]["sub_scopes"] = [
         docs_sub_scope_record(
-            "library",
+            "example",
             "tags",
             title="Tags",
             supports_return_import=True,
             scope_type="public",
-            public_docs_path="site/assets/data/docs/scopes/library/tags",
+            public_docs_path="site/assets/data/docs/scopes/example/tags",
             ui_statuses=["draft", "done"],
             analysis_tag_groups=["theme"],
         ),
         docs_sub_scope_record(
-            "library",
+            "example",
             "notes",
             title="Notes",
             supports_return_import=True,
             scope_type="public",
-            public_docs_path="site/assets/data/docs/scopes/library/notes",
+            public_docs_path="site/assets/data/docs/scopes/example/notes",
             ui_statuses=["draft", "done"],
         ),
     ]
     config_path.write_text(json.dumps(config, indent=2) + "\n", encoding="utf-8")
-    parent_root = root / "docs-viewer/scopes/library/source/documents"
+    parent_root = root / "docs-viewer/scopes/example/source/documents"
     parent_root.mkdir(parents=True, exist_ok=True)
     (parent_root / f"{LIBRARY_TAGS_REPORT_DOC_ID}.md").write_text(
         docs_source_model.format_source(
@@ -223,11 +223,11 @@ def configure_review_sub_scope_targets(root: Path) -> dict[str, Path]:
     )
     tags_root = (
         root
-        / "docs-viewer/scopes/library/source/sub-scopes/tags/documents"
+        / "docs-viewer/scopes/example/source/sub-scopes/tags/documents"
     )
     notes_root = (
         root
-        / "docs-viewer/scopes/library/source/sub-scopes/notes/documents"
+        / "docs-viewer/scopes/example/source/sub-scopes/notes/documents"
     )
     tags_root.mkdir(parents=True, exist_ok=True)
     notes_root.mkdir(parents=True, exist_ok=True)
@@ -238,7 +238,7 @@ def configure_review_sub_scope_targets(root: Path) -> dict[str, Path]:
         "notes-tag-a": notes_root / "tag-a.md",
         "parent-tag-a": (
             root
-            / "docs-viewer/scopes/library/source/documents/parent-tag-a.md"
+            / "docs-viewer/scopes/example/source/documents/parent-tag-a.md"
         ),
     }
     records = {
@@ -293,7 +293,7 @@ def configure_review_sub_scope_targets(root: Path) -> dict[str, Path]:
                 "title": "Parent Tag A",
                 "added_date": "2026-07-05 10:00:00",
                 "last_updated": "2026-07-29 14:00:00",
-                "parent_id": "library",
+                "parent_id": "example",
             },
             "# Parent Tag A\n",
         ),
@@ -313,7 +313,7 @@ def write_review_sub_scope_fixture(root: Path) -> Path:
         staged_folder="edited-tags-review",
         folder_id=SUB_REVIEW_FOLDER_ID,
         export_id=SUB_REVIEW_EXPORT_ID,
-        scope="library",
+        scope="example",
         sub_scope="tags",
         records=[("tag-a", "Tag A"), ("tag-b", "Tag B")],
         source_last_updated={
@@ -386,7 +386,7 @@ def test_edited_review_source_outside_staging_remains_blocked() -> None:
             docs_management_import_service.handle_import_source(
                 root,
                 {
-                    "scope": "library",
+                    "scope": "example",
                     "source_directory": "projects/review-source",
                     "staged_filename": moved.name,
                 },
@@ -466,8 +466,8 @@ def test_app_level_candidate_projection_is_global_body_free_and_recognizer_first
     returned = candidates["returned-documents.jsonl"]
     assert returned["candidate_kind"] == "returned_package"
     assert returned["target_mode"] == "manifest_collection"
-    assert returned["target"] == {"scope": "library"}
-    assert returned["target_label"] == "Library"
+    assert returned["target"] == {"scope": "example"}
+    assert returned["target_label"] == "Example"
     assert returned["docs_review_enabled"] is True
     assert returned["import_enabled"] is True
     assert returned["document_count"] == 1
@@ -476,10 +476,10 @@ def test_app_level_candidate_projection_is_global_body_free_and_recognizer_first
     reviewed = candidates["edited-tags-review"]
     assert reviewed["candidate_kind"] == "edited_review_source"
     assert reviewed["target"] == {
-        "scope": "library",
+        "scope": "example",
         "sub_scope": "tags",
     }
-    assert reviewed["target_label"] == "Library / Tags"
+    assert reviewed["target_label"] == "Example / Tags"
     assert reviewed["docs_review_enabled"] is False
     assert reviewed["import_enabled"] is True
     assert "records" not in reviewed

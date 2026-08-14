@@ -2,8 +2,8 @@
 """Export Docs Viewer source data through document-package profiles.
 
 Run:
-  ./docs-viewer/services/docs_document_packages/export.py --config-id document-content --scope library
-  ./docs-viewer/services/docs_document_packages/export.py --config-id document-content --scope library --write
+  ./docs-viewer/services/docs_document_packages/export.py --config-id document-content --scope analysis
+  ./docs-viewer/services/docs_document_packages/export.py --config-id document-content --scope analysis --write
 """
 
 from __future__ import annotations
@@ -550,7 +550,7 @@ def build_export(
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Export Docs Viewer data through a configured export pattern.")
     parser.add_argument("--config-id", required=True, help="Export config id to run")
-    parser.add_argument("--scope", default="library", help="Docs Viewer scope to export")
+    parser.add_argument("--scope", required=True, help="Docs Viewer scope to export")
     parser.add_argument("--doc-id", action="append", default=[], help="Document id to include; repeatable")
     parser.add_argument("--doc-ids", action="append", default=[], help="Comma-separated document ids to include")
     parser.add_argument("--all", action="store_true", help="Export all docs matching the selected config filters")

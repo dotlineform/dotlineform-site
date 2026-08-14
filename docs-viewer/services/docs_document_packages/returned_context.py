@@ -65,11 +65,11 @@ def current_report_context(current: dict[str, Any]) -> dict[str, Any]:
     }
 
 
-def add_current_library_report(
+def add_current_source_report(
     records: list[dict[str, Any]],
     *,
     current: dict[str, Any],
-    scope: str = "library",
+    scope: str,
 ) -> list[dict[str, Any]]:
     if not current.get("source_loaded"):
         return []
@@ -108,7 +108,7 @@ def add_current_library_report(
             current_state["current_summary"] = current_doc.summary
             if "current_summary" in metadata:
                 current_state["staged_current_summary_matches"] = str(metadata.get("current_summary") or "") == current_doc.summary
-        record["current_library"] = current_state
+        record["current_source"] = current_state
 
         if not doc_id:
             continue

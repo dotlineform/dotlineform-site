@@ -364,7 +364,6 @@ def apply_capability_flags(payload: dict[str, object], config: DocsViewerService
             "source_config_settings_writes",
             "html_import",
             "docs_export",
-            "library_import",
         ):
             capabilities[key] = False
         document_packages = capabilities.get("document_packages")

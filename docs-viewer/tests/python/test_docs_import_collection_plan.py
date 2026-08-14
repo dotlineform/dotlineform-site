@@ -31,7 +31,7 @@ def write_collection_metadata(
                 "app": "docs-viewer",
                 "adapter_id": "documents",
                 "data_domain": "documents",
-                "scope": "library",
+                "scope": "example",
                 "profile_id": profile_id,
                 "config_id": profile_id,
                 "target_format": "jsonl",
@@ -74,7 +74,7 @@ def plan_package(root: Path, filename: str):
     paths = configured_workspace_paths(root)
     return plan_document_package_collection(
         root,
-        scope="library",
+        scope="example",
         staged_filename=filename,
         staging_root=paths.import_staging,
         workspace_root=paths.root,
@@ -120,7 +120,7 @@ def test_collection_preview_dispatches_through_existing_import_post(monkeypatch)
         payload = handle_import_source(
             root,
             {
-                "scope": "library",
+                "scope": "example",
                 "staged_filename": "post-preview.jsonl",
                 "preview_only": True,
             },
@@ -130,7 +130,7 @@ def test_collection_preview_dispatches_through_existing_import_post(monkeypatch)
             handle_import_source(
                 root,
                 {
-                    "scope": "library",
+                    "scope": "example",
                     "staged_filename": "post-preview.jsonl",
                 },
                 False,
@@ -172,7 +172,7 @@ def test_collection_plan_covers_every_record_collision_parent_and_media_without_
                             "asset_id": "asset-1",
                             "kind": "image",
                             "package_path": "assets/media/diagram.webp",
-                            "source_token": "[[media:docs/library/img/diagram.webp]]",
+                            "source_token": "[[media:docs/example/img/diagram.webp]]",
                         }
                     ],
                 },
@@ -181,14 +181,14 @@ def test_collection_plan_covers_every_record_collision_parent_and_media_without_
         )
         paths = configured_workspace_paths(root)
         before = files_snapshot(
-            root / "docs-viewer/scopes/library/source",
+            root / "docs-viewer/scopes/example/source",
             paths.import_staging,
         )
 
         plan = plan_package(root, "collection.jsonl")
         payload = plan.as_dict()
         after = files_snapshot(
-            root / "docs-viewer/scopes/library/source",
+            root / "docs-viewer/scopes/example/source",
             paths.import_staging,
         )
 
@@ -388,7 +388,7 @@ def test_collection_plan_preserves_existing_parent_when_parent_is_omitted() -> N
     assert payload["ok"] is True
     assert payload["records"][0]["content_intent"] == "preserve-existing"
     assert payload["records"][0]["parent"] == {
-        "parent_id": "library",
+        "parent_id": "example",
         "resolution": "existing",
         "record_index": None,
     }
@@ -443,7 +443,7 @@ def test_collection_plan_accepts_full_source_title_from_canonical_front_matter(m
                         "---\n"
                         "doc_id: full-source-doc\n"
                         "title: Full Source Doc\n"
-                        "parent_id: library\n"
+                        "parent_id: example\n"
                         "---\n"
                         "# Full Source Doc\n\nBody.\n"
                     ),

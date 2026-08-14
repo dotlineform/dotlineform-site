@@ -192,11 +192,11 @@ def write_scope_config(repo_root: Path, record: dict[str, object]) -> None:
 
 def public_scope_record(*, media_provider: str = R2_PROVIDER) -> dict[str, object]:
     return docs_scope_record(
-        "library",
+        "example",
         scope_type="public",
-        viewer_base_url="/library/",
+        viewer_base_url="/example/",
         include_scope_param=False,
-        default_doc_id="library",
+        default_doc_id="example",
         media_provider=media_provider,
     )
 
@@ -228,28 +228,28 @@ def publish_with_config(
 
 
 def test_docs_upload_preflights_complete_set_and_keeps_remote_details_private(tmp_path: Path) -> None:
-    config = scope_config("library", scope_type="public", media_provider=R2_PROVIDER)
+    config = scope_config("example", scope_type="public", media_provider=R2_PROVIDER)
     first = tmp_path / "first.png"
     second = tmp_path / "second.png"
     first.write_bytes(b"first")
     second.write_bytes(b"second")
     files = [docs_media_file(config, media_class="img", local_path=path, source_root=tmp_path) for path in (first, second)]
-    client = FakeR2Client({"docs/library/img/first.png": b"different"})
+    client = FakeR2Client({"docs/example/img/first.png": b"different"})
 
     results = publish_with_config(tmp_path, config, files, client=client, write=True, force=False)
-    report = docs_publish_report(scope="library", results=results, write=True, force=False)
+    report = docs_publish_report(scope="example", results=results, write=True, force=False)
 
     assert [result.status for result in results] == ["blocked_changed", "not_attempted"]
     assert client.puts == []
     assert report["counts"] == {"blocked_changed": 1, "not_attempted": 1}
     serialized = json.dumps(report)
-    assert "docs/library" not in serialized
+    assert "docs/example" not in serialized
     assert "md5" not in serialized
     assert "etag" not in serialized.lower()
 
 
 def test_docs_upload_writes_missing_objects_after_complete_preflight(tmp_path: Path) -> None:
-    config = scope_config("library", scope_type="public", media_provider=R2_PROVIDER)
+    config = scope_config("example", scope_type="public", media_provider=R2_PROVIDER)
     image = tmp_path / "diagram.png"
     attachment = tmp_path / "notes.pdf"
     image.write_bytes(b"image")
@@ -264,14 +264,14 @@ def test_docs_upload_writes_missing_objects_after_complete_preflight(tmp_path: P
 
     assert [result.status for result in results] == ["uploaded", "uploaded"]
     assert client.puts == [
-        ("docs/library/img/diagram.png", "artifact.png"),
-        ("docs/library/files/notes.pdf", "artifact.pdf"),
+        ("docs/example/img/diagram.png", "artifact.png"),
+        ("docs/example/files/notes.pdf", "artifact.pdf"),
     ]
 
 
 def test_exact_scope_staged_file_runner_uses_safe_docs_report(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     projects_base = tmp_path / "projects"
-    (projects_base / "docs-viewer/media/library/img").mkdir(parents=True)
+    (projects_base / "docs-viewer/media/example/img").mkdir(parents=True)
     monkeypatch.setenv("DOTLINEFORM_PROJECTS_BASE_DIR", str(projects_base))
     write_scope_config(tmp_path, public_scope_record())
     staging_root = tmp_path / "import-staging"
@@ -284,7 +284,7 @@ def test_exact_scope_staged_file_runner_uses_safe_docs_report(tmp_path: Path, mo
 
     report = run_docs_staged_media_publish(
         tmp_path,
-        scope="library",
+        scope="example",
         media_class="img",
         staged_filename="diagram.png",
         write=False,
@@ -292,7 +292,7 @@ def test_exact_scope_staged_file_runner_uses_safe_docs_report(tmp_path: Path, mo
         client=FakeR2Client(),
     )
 
-    assert report["docs_scope"] == "library"
+    assert report["docs_scope"] == "example"
     assert report["counts"] == {"would_upload": 1}
     assert report["objects"][0]["filename"] == "diagram.png"  # type: ignore[index]
 
@@ -419,7 +419,7 @@ def test_configured_local_media_directories_skip_missing_external_scope(tmp_path
             media_provider=EXTERNAL_LOCAL_PROVIDER,
             source=missing_external_root / "source",
         ),
-        "library": scope_config("library", scope_type="public", media_provider=R2_PROVIDER),
+        "example": scope_config("example", scope_type="public", media_provider=R2_PROVIDER),
     }
 
     materialized = ensure_configured_scope_owned_media_directories(tmp_path, configs)
@@ -437,4 +437,4 @@ def test_configured_local_media_directories_skip_missing_external_scope(tmp_path
         for media_class in ("files", "img", "svg")
     )
     assert not missing_external_root.exists()
-    assert not (tmp_path / "docs-viewer/scopes/library/source/documents/media").exists()
+    assert not (tmp_path / "docs-viewer/scopes/example/source/documents/media").exists()

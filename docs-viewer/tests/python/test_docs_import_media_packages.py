@@ -16,8 +16,9 @@ from docs_media_storage import DocsMediaPublishResult
 from docs_import_test_support import (
     handle_import_source,
     make_repo,
+    managed_media_path,
     stub_rebuild,
-    write_library_doc,
+    write_example_doc,
     write_staged_bytes,
     write_staged_html,
     write_staged_markdown,
@@ -75,7 +76,7 @@ def test_package_rewrite_recognizes_existing_media_token_as_special() -> None:
 def test_html_import_extracts_inline_png_to_staged_media_plan() -> None:
     with make_repo() as temp:
         root = Path(temp)
-        write_library_doc(root, "library.md", {"doc_id": "library", "title": "Library", "parent_id": ""})
+        write_example_doc(root, "example.md", {"doc_id": "example", "title": "Example", "parent_id": ""})
         write_staged_html(
             root,
             "inline-diagram.html",
@@ -99,7 +100,7 @@ def test_html_import_extracts_inline_png_to_staged_media_plan() -> None:
         try:
             payload = handle_import_source(
                 root,
-                {"scope": "library", "staged_filename": "inline-diagram.html"},
+                {"scope": "example", "staged_filename": "inline-diagram.html"},
                 dry_run=False,
             )
         finally:
@@ -108,24 +109,24 @@ def test_html_import_extracts_inline_png_to_staged_media_plan() -> None:
 
         source_text = (root / payload["path"]).read_text(encoding="utf-8")
         media_filename = f"{payload['doc_id']}-image-01.png"
-        media_path = root / "site/assets/data/docs/scopes/library/media/img" / media_filename
+        media_path = managed_media_path("example", "img", media_filename)
         media_bytes = media_path.read_bytes()
 
     assert payload["ok"] is True
     assert payload["import_preview"]["media_plans"][0]["source_path"] == media_filename
-    assert payload["import_preview"]["media_plans"][0]["media_path"] == f"docs/library/img/{media_filename}"
-    assert payload["inline_media_written"][0]["location_provider"] == "repository"
+    assert payload["import_preview"]["media_plans"][0]["media_path"] == f"docs/example/img/{media_filename}"
+    assert payload["inline_media_written"][0]["location_provider"] == "external_local"
     assert payload["inline_media_written"][0]["artifact_identity"] == media_filename
     assert payload["inline_media_written"][0]["publish_status"] == "uploaded"
     assert media_bytes == b"inline-png"
     assert "data:image/png;base64" not in source_text
-    assert f"![Layered diagram]([[media:docs/library/img/{media_filename}]])" in source_text
+    assert f"![Layered diagram]([[media:docs/example/img/{media_filename}]])" in source_text
 
 
 def test_html_import_extracts_sanitized_inline_svg_before_source_write() -> None:
     with make_repo() as temp:
         root = Path(temp)
-        write_library_doc(root, "library.md", {"doc_id": "library", "title": "Library", "parent_id": ""})
+        write_example_doc(root, "example.md", {"doc_id": "example", "title": "Example", "parent_id": ""})
         write_staged_html(
             root,
             "energy-wells.html",
@@ -153,7 +154,7 @@ def test_html_import_extracts_sanitized_inline_svg_before_source_write() -> None
         try:
             payload = handle_import_source(
                 root,
-                {"scope": "library", "staged_filename": "energy-wells.html"},
+                {"scope": "example", "staged_filename": "energy-wells.html"},
                 dry_run=False,
             )
         finally:
@@ -162,13 +163,13 @@ def test_html_import_extracts_sanitized_inline_svg_before_source_write() -> None
 
         source_text = (root / payload["path"]).read_text(encoding="utf-8")
         media_filename = f"{payload['doc_id']}-image-01.svg"
-        media_path = root / "site/assets/data/docs/scopes/library/media/svg" / media_filename
+        media_path = managed_media_path("example", "svg", media_filename)
         svg_text = media_path.read_text(encoding="utf-8")
 
     assert payload["import_preview"]["media_plans"][0]["source"] == "inline_svg"
     assert payload["inline_media_written"][0]["artifact_identity"] == media_filename
     assert payload["import_preview"]["media_plans"][0]["media_class"] == "svg"
-    assert f"![Potential field]([[media:docs/library/svg/{media_filename}]])" in source_text
+    assert f"![Potential field]([[media:docs/example/svg/{media_filename}]])" in source_text
     assert "<svg" not in source_text
     assert "onclick" not in svg_text
     assert "https://example.com" not in svg_text
@@ -185,13 +186,13 @@ def test_html_inline_svg_publication_failure_does_not_write_document_source(
 ) -> None:
     with make_repo() as temp:
         root = Path(temp)
-        write_library_doc(root, "library.md", {"doc_id": "library", "title": "Library", "parent_id": ""})
+        write_example_doc(root, "example.md", {"doc_id": "example", "title": "Example", "parent_id": ""})
         write_staged_html(
             root,
             "energy-wells.html",
             "<html><body><h1>Energy Wells</h1><svg><title>Potential field</title></svg></body></html>",
         )
-        documents_root = root / "docs-viewer/scopes/library/source/documents"
+        documents_root = root / "docs-viewer/scopes/example/source/documents"
         before = sorted(documents_root.glob("*.md"))
         original_rebuild = stub_rebuild()
         original_validation = docs_import_preview.validate_markdown_preview
@@ -205,7 +206,7 @@ def test_html_inline_svg_publication_failure_does_not_write_document_source(
             "publish_docs_media_files",
             lambda *_args, **_kwargs: [
                 DocsMediaPublishResult(
-                    scope="library",
+                    scope="example",
                     media_class="svg",
                     filename="blocked.svg",
                     size=0,
@@ -218,7 +219,7 @@ def test_html_inline_svg_publication_failure_does_not_write_document_source(
             with pytest.raises(RuntimeError, match="publication did not complete"):
                 handle_import_source(
                     root,
-                    {"scope": "library", "staged_filename": "energy-wells.html"},
+                    {"scope": "example", "staged_filename": "energy-wells.html"},
                     dry_run=False,
                 )
         finally:
@@ -232,7 +233,7 @@ def test_html_inline_svg_publication_failure_does_not_write_document_source(
 def test_markdown_import_extracts_inline_png_with_canonical_doc_identity() -> None:
     with make_repo() as temp:
         root = Path(temp)
-        write_library_doc(root, "library.md", {"doc_id": "library", "title": "Library", "parent_id": ""})
+        write_example_doc(root, "example.md", {"doc_id": "example", "title": "Example", "parent_id": ""})
         write_staged_bytes(root, "inline-note-image-01.png", b"existing")
         write_staged_markdown(
             root,
@@ -249,7 +250,7 @@ def test_markdown_import_extracts_inline_png_with_canonical_doc_identity() -> No
         try:
             payload = handle_import_source(
                 root,
-                {"scope": "library", "staged_filename": "inline-note.md"},
+                {"scope": "example", "staged_filename": "inline-note.md"},
                 dry_run=False,
             )
         finally:
@@ -258,7 +259,7 @@ def test_markdown_import_extracts_inline_png_with_canonical_doc_identity() -> No
 
         source_text = (root / payload["path"]).read_text(encoding="utf-8")
         media_filename = f"{payload['doc_id']}-image-01.png"
-        media_path = root / "site/assets/data/docs/scopes/library/media/img" / media_filename
+        media_path = managed_media_path("example", "img", media_filename)
         media_bytes = media_path.read_bytes()
 
     assert payload["ok"] is True
@@ -266,12 +267,12 @@ def test_markdown_import_extracts_inline_png_with_canonical_doc_identity() -> No
     assert payload["import_preview"]["media_plans"][0]["source_path"] == media_filename
     assert media_bytes == b"markdown-png"
     assert "data:image/png;base64" not in source_text
-    assert f"[[media:docs/library/img/{media_filename}]]" in source_text
+    assert f"[[media:docs/example/img/{media_filename}]]" in source_text
 
 def test_inline_media_write_skips_invalid_data_urls_before_valid_images() -> None:
     with make_repo() as temp:
         root = Path(temp)
-        write_library_doc(root, "library.md", {"doc_id": "library", "title": "Library", "parent_id": ""})
+        write_example_doc(root, "example.md", {"doc_id": "example", "title": "Example", "parent_id": ""})
         write_staged_markdown(
             root,
             "mixed-inline.md",
@@ -287,7 +288,7 @@ def test_inline_media_write_skips_invalid_data_urls_before_valid_images() -> Non
         try:
             payload = handle_import_source(
                 root,
-                {"scope": "library", "staged_filename": "mixed-inline.md"},
+                {"scope": "example", "staged_filename": "mixed-inline.md"},
                 dry_run=False,
             )
         finally:
@@ -296,19 +297,19 @@ def test_inline_media_write_skips_invalid_data_urls_before_valid_images() -> Non
 
         source_text = (root / payload["path"]).read_text(encoding="utf-8")
         media_filename = f"{payload['doc_id']}-image-01.png"
-        media_path = root / "site/assets/data/docs/scopes/library/media/img" / media_filename
+        media_path = managed_media_path("example", "img", media_filename)
         media_bytes = media_path.read_bytes()
 
     assert payload["ok"] is True
     assert len(payload["import_preview"]["media_plans"]) == 1
     assert media_bytes == b"valid-png"
     assert "![Broken](data:image/png;base64,abc)" in source_text
-    assert f"[[media:docs/library/img/{media_filename}]]" in source_text
+    assert f"[[media:docs/example/img/{media_filename}]]" in source_text
 
 def test_markdown_package_import_rewrites_media_and_materializes_outputs() -> None:
     with make_repo() as temp:
         root = Path(temp)
-        write_library_doc(root, "library.md", {"doc_id": "library", "title": "Library", "parent_id": ""})
+        write_example_doc(root, "example.md", {"doc_id": "example", "title": "Example", "parent_id": ""})
         image_path = write_staged_package_file(root, "my-note", "images/opaque-name.png", b"")
         write_test_image(image_path, (1000, 500))
         write_staged_package_file(root, "my-note", "attachments/report.pdf", b"%PDF-1.4 fake\n")
@@ -338,7 +339,7 @@ Some text.
         try:
             payload = handle_import_source(
                 root,
-                {"scope": "library", "staged_filename": "my-note"},
+                {"scope": "example", "staged_filename": "my-note"},
                 dry_run=False,
             )
         finally:
@@ -348,8 +349,8 @@ Some text.
         source_text = (root / payload["path"]).read_text(encoding="utf-8")
         image_filename = f"{payload['doc_id']}-image-01.webp"
         attachment_filename = f"{payload['doc_id']}-attachment-01.pdf"
-        webp_path = root / "site/assets/data/docs/scopes/library/media/img" / image_filename
-        attachment_path = root / "site/assets/data/docs/scopes/library/media/files" / attachment_filename
+        webp_path = managed_media_path("example", "img", image_filename)
+        attachment_path = managed_media_path("example", "files", attachment_filename)
         from PIL import Image
 
         with Image.open(webp_path) as converted:
@@ -367,8 +368,8 @@ Some text.
     assert payload["inline_media_written"][0]["conversion"]["output_width"] == 800
     assert output_size == (800, 400)
     assert attachment_bytes == b"%PDF-1.4 fake\n"
-    assert f'![my note image 01]([[media:docs/library/img/{image_filename}]] "my note image 01")' in source_text
-    assert f"[Research PDF]([[media:docs/library/files/{attachment_filename}]])" in source_text
+    assert f'![my note image 01]([[media:docs/example/img/{image_filename}]] "my note image 01")' in source_text
+    assert f"[Research PDF]([[media:docs/example/files/{attachment_filename}]])" in source_text
     assert "font-size: var(--docs-viewer-font-caption)" in source_text
 
 def test_markdown_package_image_conversion_does_not_upscale() -> None:
@@ -389,7 +390,7 @@ def test_markdown_package_image_conversion_does_not_upscale() -> None:
 def test_markdown_package_import_reports_unresolved_and_unsupported_links() -> None:
     with make_repo() as temp:
         root = Path(temp)
-        write_library_doc(root, "library.md", {"doc_id": "library", "title": "Library", "parent_id": ""})
+        write_example_doc(root, "example.md", {"doc_id": "example", "title": "Example", "parent_id": ""})
         write_staged_package_file(root, "broken-note", "attachments/sample-binary.exe", b"fake exe")
         write_staged_package_file(
             root,
@@ -407,7 +408,7 @@ def test_markdown_package_import_reports_unresolved_and_unsupported_links() -> N
         try:
             payload = handle_import_source(
                 root,
-                {"scope": "library", "staged_filename": "broken-note", "preview_only": True},
+                {"scope": "example", "staged_filename": "broken-note", "preview_only": True},
                 dry_run=False,
             )
         finally:

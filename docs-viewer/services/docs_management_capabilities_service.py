@@ -143,7 +143,6 @@ def capabilities_payload(repo_root: Path) -> Dict[str, Any]:
                 "apply": True,
                 "sub_scope_detail": True,
             },
-            "library_import": docs_import_workspace["available"],
             "docs_import": {
                 "available": docs_import_workspace["available"],
                 "message": docs_import_workspace["message"],

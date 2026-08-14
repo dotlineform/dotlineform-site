@@ -372,21 +372,21 @@ def test_builder_writes_analysis_index_from_public_data() -> None:
                 / "site/assets/data/search/analysis/document-locations.json"
             ).read_text(encoding="utf-8")
         )
-        library_output_exists = (
-            root / "site/assets/data/search/library/document-locations.json"
+        example_output_exists = (
+            root / "site/assets/data/search/example/document-locations.json"
         ).exists()
 
     assert exit_code == 0
     assert len(analysis_payload["records"]) == 1
     assert "scope=analysis: wrote" in stdout.getvalue()
-    assert not library_output_exists
+    assert not example_output_exists
 
 
 def test_builder_requires_supported_explicit_scopes() -> None:
     assert build_document_locations.selected_scope_ids([]) == ["analysis"]
     try:
-        build_document_locations.selected_scope_ids(["library"])
+        build_document_locations.selected_scope_ids(["example"])
     except ValueError as exc:
-        assert "unsupported document-location scope: library" in str(exc)
+        assert "unsupported document-location scope: example" in str(exc)
     else:
         raise AssertionError("builder should reject unsupported scopes")

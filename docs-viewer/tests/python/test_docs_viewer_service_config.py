@@ -257,7 +257,6 @@ def test_apply_capability_flags_respects_local_service_flags() -> None:
             "source_config_settings_writes": True,
             "html_import": True,
             "docs_export": True,
-            "library_import": True,
             "document_packages": {
                 "available": True,
                 "prepare": True,

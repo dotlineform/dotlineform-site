@@ -117,11 +117,11 @@ def write_scope_config(root: Path) -> None:
             },
             "scopes": [
                 docs_scope_record(
-                    "library",
+                    "example",
                     scope_type="public",
-                    viewer_base_url="/library/",
+                    viewer_base_url="/example/",
                     include_scope_param=False,
-                    default_doc_id="library",
+                    default_doc_id="example",
                     allow_unresolved_parent_ids=True,
                 )
             ],
@@ -155,7 +155,7 @@ def write_doc(
     if not publishable:
         lines.append("publishable: false")
     lines.extend(["---", "", body])
-    path = root / "docs-viewer/scopes/library/source/documents" / filename
+    path = root / "docs-viewer/scopes/example/source/documents" / filename
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text("\n".join(lines), encoding="utf-8")
 
@@ -170,13 +170,13 @@ def make_repo(config: dict | None = None) -> tempfile.TemporaryDirectory:
     )
     write_json(root / "docs-viewer/config/document-packages/profiles.json", config or BASE_CONFIG)
     write_scope_config(root)
-    write_doc(root, "library.md", doc_id="library", title="Library", body="# Library\n\nBody text.")
+    write_doc(root, "example.md", doc_id="example", title="Example", body="# Example\n\nBody text.")
     write_doc(
         root,
         "child-with-summary.md",
         doc_id="child-with-summary",
         title="Child With Summary",
-        parent_id="library",
+        parent_id="example",
         summary="Existing summary.",
         last_updated="2026-05-03 10:01",
         body="# Child With Summary\n\nBody text.",
@@ -188,8 +188,8 @@ def run_export(root: Path, **overrides):
     args = {
         "repo_root": root,
         "config_id": "document-content",
-        "scope": "library",
-        "selected_doc_ids": ["library"],
+        "scope": "example",
+        "selected_doc_ids": ["example"],
         "select_all": False,
         "missing_summary_only": None,
         "write": False,
@@ -202,12 +202,12 @@ def test_missing_summary_filter_reports_expected_skips() -> None:
     with make_repo() as temp:
         report = run_export(
             Path(temp),
-            selected_doc_ids=["library", "child-with-summary"],
+            selected_doc_ids=["example", "child-with-summary"],
             missing_summary_only=True,
         )
     assert report["ok"] is True
     assert report["counts"] == {"selected": 2, "exported": 1, "skipped": 1, "failed": 0, "truncated": 0}
-    assert report["selected_doc_ids"] == ["library"]
+    assert report["selected_doc_ids"] == ["example"]
     assert report["skipped_summary"] == {"has_summary": 1}
     assert report["warnings"] == [
         "selection: 1 document(s) skipped because they already have summaries"
@@ -222,20 +222,20 @@ def test_non_publishable_override_is_revalidated_inside_submitted_target() -> No
             "child-with-summary.md",
             doc_id="child-with-summary",
             title="Child With Summary",
-            parent_id="library",
+            parent_id="example",
             summary="Existing summary.",
             publishable=False,
         )
         report = run_export(
             root,
-            selected_doc_ids=["library", "child-with-summary"],
+            selected_doc_ids=["example", "child-with-summary"],
             missing_summary_only=False,
             include_non_publishable=False,
         )
 
     assert report["ok"] is True
     assert report["counts"] == {"selected": 2, "exported": 1, "skipped": 1, "failed": 0, "truncated": 0}
-    assert report["selected_doc_ids"] == ["library"]
+    assert report["selected_doc_ids"] == ["example"]
     assert report["skipped_summary"] == {"non_publishable": 1}
     assert report["counts"]["selected"] == sum(
         report["counts"][key] for key in ("exported", "failed", "skipped")
@@ -279,8 +279,8 @@ def test_selected_doc_resolution_uses_explicit_ids_only() -> None:
     with make_repo() as temp:
         report = run_export(Path(temp), missing_summary_only=False)
     assert report["ok"] is True
-    assert report["selected_doc_ids"] == ["library"]
-    assert report["exported_doc_ids"] == ["library"]
+    assert report["selected_doc_ids"] == ["example"]
+    assert report["exported_doc_ids"] == ["example"]
     assert report["skipped"] == []
 
 
@@ -288,12 +288,12 @@ def test_selected_docs_are_exported_in_source_order() -> None:
     with make_repo() as temp:
         report = run_export(
             Path(temp),
-            selected_doc_ids=["child-with-summary", "library"],
+            selected_doc_ids=["child-with-summary", "example"],
             missing_summary_only=False,
         )
     assert report["ok"] is True
-    assert report["selected_doc_ids"] == ["library", "child-with-summary"]
-    assert report["exported_doc_ids"] == ["library", "child-with-summary"]
+    assert report["selected_doc_ids"] == ["example", "child-with-summary"]
+    assert report["exported_doc_ids"] == ["example", "child-with-summary"]
 
 
 def test_unknown_selected_doc_blocks_export() -> None:
@@ -367,7 +367,7 @@ def test_written_jsonl_output_is_deterministic_for_fixed_run_time() -> None:
     try:
         with make_repo() as temp:
             root = Path(temp)
-            selected_doc_ids = ["library", "child-with-summary"]
+            selected_doc_ids = ["example", "child-with-summary"]
             first_report = run_export(root, selected_doc_ids=selected_doc_ids, missing_summary_only=False, write=True)
             first_output = artifact_path(first_report["output_file"])
             first_metadata_output = artifact_path(first_report["metadata_file"])
@@ -404,7 +404,7 @@ def test_written_jsonl_output_is_deterministic_for_fixed_run_time() -> None:
         "record_type": "data_sharing_header",
         "schema_version": "data_sharing_returned_package_v1",
     }
-    assert [row["doc_id"] for row in rows[1:]] == ["library", "child-with-summary"]
+    assert [row["doc_id"] for row in rows[1:]] == ["example", "child-with-summary"]
     assert "_export" not in rows[1]
     assert "last_updated" not in rows[1]
     assert metadata["schema_version"] == "data_sharing_export_meta_v1"
@@ -417,8 +417,8 @@ def test_written_jsonl_output_is_deterministic_for_fixed_run_time() -> None:
     assert metadata["target_format"] == "jsonl"
     assert metadata["record_shape"] == "document_rows"
     assert metadata["generated_at"] == fixed_generated_at
-    assert metadata["scope"] == "library"
-    assert metadata["selected_doc_ids"] == ["library", "child-with-summary"]
+    assert metadata["scope"] == "example"
+    assert metadata["selected_doc_ids"] == ["example", "child-with-summary"]
     assert "context_file" not in first_report
 
 
@@ -432,7 +432,7 @@ def test_document_rows_json_format_override_writes_json_array() -> None:
             root = Path(temp)
             report = run_export(
                 root,
-                selected_doc_ids=["library", "child-with-summary"],
+                selected_doc_ids=["example", "child-with-summary"],
                 missing_summary_only=False,
                 write=True,
                 target_format="json",
@@ -450,12 +450,12 @@ def test_document_rows_json_format_override_writes_json_array() -> None:
     )
     assert payload["schema_version"] == "data_sharing_returned_package_v1"
     assert payload["export_id"] == "ds_20260503T151507Z"
-    assert [row["doc_id"] for row in payload["records"]] == ["library", "child-with-summary"]
+    assert [row["doc_id"] for row in payload["records"]] == ["example", "child-with-summary"]
     assert "_export" not in payload["records"][0]
     assert "last_updated" not in payload["records"][0]
     assert metadata["export_id"] == "ds_20260503T151507Z"
     assert metadata["generated_at"] == fixed_generated_at
-    assert metadata["scope"] == "library"
+    assert metadata["scope"] == "example"
     assert "context_file" not in report
 
 
@@ -474,7 +474,7 @@ def test_export_only_profile_writes_provenance_metadata_without_import_support()
             root = Path(temp)
             report = run_export(
                 root,
-                selected_doc_ids=["library"],
+                selected_doc_ids=["example"],
                 missing_summary_only=False,
                 write=True,
             )
@@ -548,7 +548,7 @@ def test_document_tree_profile_exports_selected_subtree() -> None:
     try:
         with make_repo(config) as temp:
             root = Path(temp)
-            report = run_export(root, config_id="document-tree", selected_doc_ids=["library"], write=True)
+            report = run_export(root, config_id="document-tree", selected_doc_ids=["example"], write=True)
             payload = json.loads(artifact_path(report["output_file"]).read_text(encoding="utf-8"))
             metadata = json.loads(artifact_path(report["metadata_file"]).read_text(encoding="utf-8"))
     finally:
@@ -557,14 +557,14 @@ def test_document_tree_profile_exports_selected_subtree() -> None:
     assert report["ok"] is True, report
     assert report["target_format"] == "json"
     assert report["counts"]["exported"] == 2
-    assert report["exported_doc_ids"] == ["library", "child-with-summary"]
+    assert report["exported_doc_ids"] == ["example", "child-with-summary"]
     assert payload == {
         "schema": "docs_data_sharing_document_tree_v1",
         "export_id": "ds_20260503T151507Z",
         "docs": [
             {
-                "doc_id": "library",
-                "title": "Library",
+                "doc_id": "example",
+                "title": "Example",
                 "children": [
                     {
                         "doc_id": "child-with-summary",
@@ -608,8 +608,8 @@ def test_existing_export_metadata_blocks_same_export_id_write() -> None:
     try:
         with make_repo() as temp:
             root = Path(temp)
-            first = run_export(root, selected_doc_ids=["library"], missing_summary_only=False, write=True)
-            second = run_export(root, selected_doc_ids=["library"], missing_summary_only=False, write=True)
+            first = run_export(root, selected_doc_ids=["example"], missing_summary_only=False, write=True)
+            second = run_export(root, selected_doc_ids=["example"], missing_summary_only=False, write=True)
     finally:
         docs_export.export_run_times = original_export_run_times
 
@@ -707,8 +707,8 @@ def test_repo_full_document_content_exports_relationship_fields() -> None:
             report = docs_export.build_export(
                 repo_root=root,
                 config_id="document-content",
-                scope="library",
-                selected_doc_ids=["library", "child-with-summary"],
+                scope="example",
+                selected_doc_ids=["example", "child-with-summary"],
                 select_all=False,
                 missing_summary_only=None,
                 write=True,
@@ -726,20 +726,20 @@ def test_repo_full_document_content_exports_relationship_fields() -> None:
     assert rows[0]["export_id"] == "ds_20260504T120000Z"
     assert rows[0]["profile_id"] == "document-content"
     assert rows[0]["content_format"] == "markdown"
-    assert [row["doc_id"] for row in rows[1:]] == ["library", "child-with-summary"]
+    assert [row["doc_id"] for row in rows[1:]] == ["example", "child-with-summary"]
     assert "last_updated" not in rows[1]
     rows_by_doc_id = {row["doc_id"]: row for row in rows[1:]}
-    library_row = rows_by_doc_id["library"]
+    example_row = rows_by_doc_id["example"]
     child_row = rows_by_doc_id["child-with-summary"]
-    assert library_row["parent_id"] == ""
-    assert library_row["parent_title"] == ""
-    assert library_row["ancestors"] == []
-    assert library_row["children"] == [{"id": "child-with-summary", "title": "Child With Summary"}]
-    assert child_row["parent_id"] == "library"
-    assert child_row["parent_title"] == "Library"
-    assert child_row["ancestors"] == [{"id": "library", "title": "Library"}]
+    assert example_row["parent_id"] == ""
+    assert example_row["parent_title"] == ""
+    assert example_row["ancestors"] == []
+    assert example_row["children"] == [{"id": "child-with-summary", "title": "Child With Summary"}]
+    assert child_row["parent_id"] == "example"
+    assert child_row["parent_title"] == "Example"
+    assert child_row["ancestors"] == [{"id": "example", "title": "Example"}]
     assert child_row["children"] == []
-    assert "sort_order" not in library_row
+    assert "sort_order" not in example_row
     assert "sort_order" not in child_row
 
 
@@ -751,8 +751,8 @@ def test_export_uses_source_context_for_markdown_document_content() -> None:
         report = docs_export.build_export(
             repo_root=root,
             config_id="document-content",
-            scope="library",
-            selected_doc_ids=["library", "child-with-summary"],
+            scope="example",
+            selected_doc_ids=["example", "child-with-summary"],
             select_all=False,
             missing_summary_only=None,
             write=True,
@@ -761,17 +761,17 @@ def test_export_uses_source_context_for_markdown_document_content() -> None:
 
     assert report["ok"] is True, report
     assert report["content_format"] == "markdown"
-    assert report["exported_doc_ids"] == ["library", "child-with-summary"]
+    assert report["exported_doc_ids"] == ["example", "child-with-summary"]
     assert rows[0]["record_type"] == "data_sharing_header"
     assert rows[0]["content_format"] == "markdown"
     rows_by_doc_id = {row["doc_id"]: row for row in rows[1:]}
-    assert rows_by_doc_id["library"]["content"] == "# Library\n\nBody text."
+    assert rows_by_doc_id["example"]["content"] == "# Example\n\nBody text."
 
 
 def test_markdown_document_content_export_preserves_inline_mermaid_source() -> None:
     mermaid_markdown = "\n".join(
         [
-            "# Library",
+            "# Example",
             "",
             "Before diagram.",
             "",
@@ -790,17 +790,17 @@ def test_markdown_document_content_export_preserves_inline_mermaid_source() -> N
         root = Path(temp)
         write_doc(
             root,
-            "library.md",
-            doc_id="library",
-            title="Library",
+            "example.md",
+            doc_id="example",
+            title="Example",
             body=mermaid_markdown,
         )
 
         report = docs_export.build_export(
             repo_root=root,
             config_id="document-content",
-            scope="library",
-            selected_doc_ids=["library"],
+            scope="example",
+            selected_doc_ids=["example"],
             select_all=False,
             missing_summary_only=None,
             write=True,
@@ -819,8 +819,8 @@ def test_document_content_plain_text_override_preserves_existing_content_behavio
         report = docs_export.build_export(
             repo_root=root,
             config_id="document-content",
-            scope="library",
-            selected_doc_ids=["library"],
+            scope="example",
+            selected_doc_ids=["example"],
             select_all=False,
             missing_summary_only=None,
             write=True,
@@ -844,8 +844,8 @@ def test_document_content_json_output_declares_content_format() -> None:
         report = docs_export.build_export(
             repo_root=root,
             config_id="document-content",
-            scope="library",
-            selected_doc_ids=["library"],
+            scope="example",
+            selected_doc_ids=["example"],
             select_all=False,
             missing_summary_only=None,
             write=True,
@@ -856,14 +856,14 @@ def test_document_content_json_output_declares_content_format() -> None:
 
     assert report["ok"] is True, report
     assert payload["content_format"] == "markdown"
-    assert payload["records"][0]["content"] == "# Library\n\nBody text."
+    assert payload["records"][0]["content"] == "# Example\n\nBody text."
     assert "context_file" not in report
 
 
 def test_missing_source_context_returns_structured_export_error() -> None:
     with make_repo() as temp:
         root = Path(temp)
-        shutil.rmtree(root / "docs-viewer/scopes/library/source")
+        shutil.rmtree(root / "docs-viewer/scopes/example/source")
         write_json(
             root / "docs-viewer/config/scopes/docs_scopes.json",
             {
@@ -876,11 +876,11 @@ def test_missing_source_context_returns_structured_export_error() -> None:
                 },
                 "scopes": [
                     docs_scope_record(
-                        "library",
+                        "example",
                         scope_type="public",
-                        viewer_base_url="/library/",
+                        viewer_base_url="/example/",
                         include_scope_param=False,
-                        default_doc_id="library",
+                        default_doc_id="example",
                         allow_unresolved_parent_ids=True,
                     )
                 ],
@@ -891,49 +891,7 @@ def test_missing_source_context_returns_structured_export_error() -> None:
     assert report["ok"] is False
     assert report["counts"] == {"selected": 0, "exported": 0, "skipped": 0, "failed": 0, "truncated": 0}
     assert report["output_written"] is False
-    assert "source context: missing source root for scope library: docs-viewer/scopes/library/source/documents" in report["errors"]
-
-
-def test_repo_representative_library_exports_dry_run_successfully() -> None:
-    cases = [
-        {
-            "config_id": "document-content",
-            "selected_doc_ids": ["d-20260423-214445-aa9f19"],
-            "select_all": False,
-            "missing_summary_only": None,
-            "target_format": "jsonl",
-        },
-        {
-            "config_id": "document-tree",
-            "selected_doc_ids": ["d-20260330-172255-8399b7"],
-            "select_all": False,
-            "missing_summary_only": None,
-            "target_format": "json",
-        },
-    ]
-    for case in cases:
-        report = docs_export.build_export(
-            repo_root=REPO_ROOT,
-            config_id=case["config_id"],
-            scope="library",
-            selected_doc_ids=case["selected_doc_ids"],
-            select_all=case["select_all"],
-            missing_summary_only=case["missing_summary_only"],
-            write=False,
-        )
-        assert report["ok"] is True, report
-        assert report["dry_run"] is True
-        assert report["target_format"] == case["target_format"]
-        assert report["counts"]["exported"] > 0
-        assert report["counts"]["failed"] == 0
-        assert report["output_written"] is False
-        assert report["export_id"].startswith("ds_")
-        assert report["output_file"].startswith("$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/exports/")
-        assert f"-{case['config_id']}" in report["output_file"]
-        assert report["output_file"].endswith(f".{case['target_format']}")
-        assert report["metadata_file"].startswith("$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/meta/ds_")
-        assert report["metadata_file"].endswith(".meta.json")
-        assert "context_file" not in report
+    assert "source context: missing source root for scope example: docs-viewer/scopes/example/source/documents" in report["errors"]
 
 
 def main() -> None:
@@ -960,7 +918,6 @@ def main() -> None:
         test_document_content_plain_text_override_preserves_existing_content_behavior,
         test_document_content_json_output_declares_content_format,
         test_missing_source_context_returns_structured_export_error,
-        test_repo_representative_library_exports_dry_run_successfully,
     ]
     for test in tests:
         test()

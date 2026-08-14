@@ -76,9 +76,9 @@ def test_inventory_and_plan_use_document_ordinals_and_explicit_theme_records() -
         ]
     )
     plan = plan_public_mermaid_projection(
-        scope="library",
+        scope="example",
         documents=[(PARENT_DOC_ID, parent_markdown), (OTHER_DOC_ID, "# Other\n")],
-        public_url_prefix="/assets/data/docs/scopes/library",
+        public_url_prefix="/assets/data/docs/scopes/example",
     )
 
     assert failures == ()
@@ -107,7 +107,7 @@ def test_inventory_and_plan_use_document_ordinals_and_explicit_theme_records() -
                 f"projection-assets/mermaid/{PARENT_DOC_ID}--mermaid-0001/light.svg"
             ),
             "url": (
-                "/assets/data/docs/scopes/library/projection-assets/mermaid/"
+                "/assets/data/docs/scopes/example/projection-assets/mermaid/"
                 f"{PARENT_DOC_ID}--mermaid-0001/light.svg"
             ),
         },
@@ -116,7 +116,7 @@ def test_inventory_and_plan_use_document_ordinals_and_explicit_theme_records() -
                 f"projection-assets/mermaid/{PARENT_DOC_ID}--mermaid-0001/dark.svg"
             ),
             "url": (
-                "/assets/data/docs/scopes/library/projection-assets/mermaid/"
+                "/assets/data/docs/scopes/example/projection-assets/mermaid/"
                 f"{PARENT_DOC_ID}--mermaid-0001/dark.svg"
             ),
         },
@@ -127,12 +127,12 @@ def test_inventory_and_plan_use_document_ordinals_and_explicit_theme_records() -
 
 def test_changed_source_replaces_same_pair_and_invalid_or_deleted_fences_remove_whole_families() -> None:
     initial = plan_public_mermaid_projection(
-        scope="library",
+        scope="example",
         documents=[
             (PARENT_DOC_ID, fenced_mermaid("Parent flow", "Initial parent description.")),
             (OTHER_DOC_ID, fenced_mermaid("Other flow", "Initial other description.")),
         ],
-        public_url_prefix="/assets/data/docs/scopes/library",
+        public_url_prefix="/assets/data/docs/scopes/example",
     )
     changed_parent = fenced_mermaid(
         "Parent flow",
@@ -142,12 +142,12 @@ def test_changed_source_replaces_same_pair_and_invalid_or_deleted_fences_remove_
     invalid_other = "```mermaid\nflowchart LR\n  accTitle: Other flow\n  A --> B\n```\n"
 
     next_plan = plan_public_mermaid_projection(
-        scope="library",
+        scope="example",
         documents=[
             (PARENT_DOC_ID, changed_parent),
             (OTHER_DOC_ID, invalid_other),
         ],
-        public_url_prefix="/assets/data/docs/scopes/library",
+        public_url_prefix="/assets/data/docs/scopes/example",
         previous_manifest=initial["manifest"],
     )
 
@@ -181,18 +181,18 @@ def test_changed_source_replaces_same_pair_and_invalid_or_deleted_fences_remove_
 
 def test_previous_manifest_cannot_claim_authored_or_unowned_svg() -> None:
     plan = plan_public_mermaid_projection(
-        scope="library",
+        scope="example",
         documents=[(PARENT_DOC_ID, fenced_mermaid("Flow", "A useful description."))],
-        public_url_prefix="/assets/data/docs/scopes/library",
+        public_url_prefix="/assets/data/docs/scopes/example",
     )
     manifest = json.loads(json.dumps(plan["manifest"]))
     manifest["diagrams"][0]["variants"]["light"]["artifact_identity"] = "media/svg/authored.svg"
 
     with pytest.raises(ValueError, match="outside manifest ownership"):
         plan_public_mermaid_projection(
-            scope="library",
+            scope="example",
             documents=[(PARENT_DOC_ID, fenced_mermaid("Flow", "A useful description."))],
-            public_url_prefix="/assets/data/docs/scopes/library",
+            public_url_prefix="/assets/data/docs/scopes/example",
             previous_manifest=manifest,
         )
 
@@ -207,7 +207,7 @@ def test_cli_reports_both_variants_failures_and_no_writes(
     write_public_source_docs(tmp_path)
     child_path = (
         tmp_path
-        / f"docs-viewer/scopes/library/source/documents/{CHILD_DOC_ID}.md"
+        / f"docs-viewer/scopes/example/source/documents/{CHILD_DOC_ID}.md"
     )
     write_text(
         child_path,
@@ -236,7 +236,7 @@ flowchart LR
     )
     monkeypatch.chdir(tmp_path)
 
-    exit_code = projection_cli.main(["--scope", "library", "--diagnostics"])
+    exit_code = projection_cli.main(["--scope", "example", "--diagnostics"])
     output = capsys.readouterr()
     after_files = sorted(
         path.relative_to(tmp_path).as_posix()
@@ -246,7 +246,7 @@ flowchart LR
 
     assert exit_code == 0
     assert output.err == ""
-    assert "Public Mermaid projection plan (dry-run) scope=library" in output.out
+    assert "Public Mermaid projection plan (dry-run) scope=example" in output.out
     assert "variants total: 2" in output.out
     assert "failures: 1" in output.out
     assert "light=projection-assets/mermaid/" in output.out
@@ -264,6 +264,6 @@ flowchart LR
     assert before_files == after_files
     assert not (
         tmp_path
-        / "docs-viewer/scopes/library/published/documents/.publish"
+        / "docs-viewer/scopes/example/published/documents/.publish"
         / projection_cli.MANIFEST_FILENAME
     ).exists()

@@ -50,13 +50,13 @@ def fake_config() -> dict[str, object]:
                 "label": "Search",
                 "include": ["site/docs-viewer/runtime/js/shared/docs-viewer-search.js"],
                 "shared": ["site/docs-viewer/runtime/js/shared/docs-viewer-shared.js"],
-                "routes": ["/library/"],
+                "routes": ["/example/"],
             }
         },
         "routes": {
-            "/library/": {
-                "label": "Library",
-                "path": "/library/",
+            "/example/": {
+                "label": "Example",
+                "path": "/example/",
                 "status": "mapped",
                 "include": ["site/docs-viewer/runtime/js/shared/docs-viewer-search.js"],
                 "shared": ["site/docs-viewer/runtime/js/shared/docs-viewer-shared.js"],
@@ -85,7 +85,7 @@ def fake_manifest(*, limit: int = 20, sort: str = "lines_desc") -> dict[str, obj
             "scope": "docs-viewer",
             "families": ["runtime-js"],
             "areas": ["search"],
-            "routes": ["/library/"],
+            "routes": ["/example/"],
         },
         "reports": [
             {

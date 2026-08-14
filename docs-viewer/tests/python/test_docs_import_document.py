@@ -21,7 +21,7 @@ from docs_management_document_target import resolve_managed_document_collection
 from docs_scope_config import load_docs_scope_configs
 import docs_source_model as source_model
 
-from docs_import_test_support import make_repo, write_library_doc
+from docs_import_test_support import make_repo, write_example_doc
 from repo_factory import docs_scope_record, docs_sub_scope_record, write_docs_scope_config
 
 
@@ -42,7 +42,7 @@ def import_content(**changes: object) -> ImportContent:
 
 def normalized_preview(record: ImportContent) -> dict[str, object]:
     return {
-        "scope": "library",
+        "scope": "example",
         "source_format": "markdown",
         "title": record.title,
         "proposed_doc_id": record.doc_id,
@@ -130,7 +130,7 @@ def test_import_rejects_report_host_targets_and_incoming_report_blocks(
 ) -> None:
     with make_repo() as temp:
         root = Path(temp)
-        write_library_doc(
+        write_example_doc(
             root,
             "alpha.md",
             {"doc_id": "alpha", "title": "Alpha", "parent_id": ""},
@@ -142,12 +142,12 @@ def test_import_rejects_report_host_targets_and_incoming_report_blocks(
                 ":::\n"
             ),
         )
-        config = load_docs_scope_configs(root)["library"]
-        monkeypatch.setitem(source_model.DOCS_SCOPE_CONFIGS, "library", config)
+        config = load_docs_scope_configs(root)["example"]
+        monkeypatch.setitem(source_model.DOCS_SCOPE_CONFIGS, "example", config)
         monkeypatch.setitem(
             source_model.DOCUMENT_SOURCE_ROOTS,
-            "library",
-            root / "docs-viewer/scopes/library/source/documents",
+            "example",
+            root / "docs-viewer/scopes/example/source/documents",
         )
         docs = source_model.load_scope_docs_for_config(root, config)
         target = next(doc for doc in docs if doc.doc_id == "alpha")
@@ -166,7 +166,7 @@ def test_import_rejects_report_host_targets_and_incoming_report_blocks(
         with pytest.raises(ValueError, match="cannot replace a report-host"):
             plan_import_document(
                 root,
-                "library",
+                "example",
                 overwrite,
                 operation=IMPORT_DOCUMENT_OVERWRITE,
                 docs=docs,
@@ -176,7 +176,7 @@ def test_import_rejects_report_host_targets_and_incoming_report_blocks(
         with pytest.raises(ValueError, match="cannot create report-host"):
             plan_import_document(
                 root,
-                "library",
+                "example",
                 incoming,
                 operation=IMPORT_DOCUMENT_CREATE,
                 docs=docs,

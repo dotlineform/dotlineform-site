@@ -17,7 +17,7 @@ from docs_import_test_support import (
     handle_import_source,
     make_repo,
     stub_rebuild,
-    write_library_doc,
+    write_example_doc,
     write_staged_bytes,
     write_staged_markdown,
     write_staged_text,
@@ -26,7 +26,7 @@ from docs_import_test_support import (
 def test_markdown_import_create_wraps_body_with_generated_front_matter() -> None:
     with make_repo() as temp:
         root = Path(temp)
-        write_library_doc(root, "library.md", {"doc_id": "library", "title": "Library", "parent_id": ""})
+        write_example_doc(root, "example.md", {"doc_id": "example", "title": "Example", "parent_id": ""})
         write_staged_markdown(
             root,
             "markdown-note.md",
@@ -42,7 +42,7 @@ def test_markdown_import_create_wraps_body_with_generated_front_matter() -> None
         try:
             payload = handle_import_source(
                 root,
-                {"scope": "library", "staged_filename": "markdown-note.md"},
+                {"scope": "example", "staged_filename": "markdown-note.md"},
                 dry_run=False,
             )
         finally:
@@ -68,7 +68,7 @@ def test_markdown_import_create_wraps_body_with_generated_front_matter() -> None
 def test_markdown_import_cleans_unicode_only_blank_lines_outside_literal_blocks() -> None:
     with make_repo() as temp:
         root = Path(temp)
-        write_library_doc(root, "library.md", {"doc_id": "library", "title": "Library", "parent_id": ""})
+        write_example_doc(root, "example.md", {"doc_id": "example", "title": "Example", "parent_id": ""})
         write_staged_markdown(
             root,
             "exported-note.md",
@@ -95,7 +95,7 @@ def test_markdown_import_cleans_unicode_only_blank_lines_outside_literal_blocks(
         try:
             payload = handle_import_source(
                 root,
-                {"scope": "library", "staged_filename": "exported-note.md"},
+                {"scope": "example", "staged_filename": "exported-note.md"},
                 dry_run=False,
             )
         finally:
@@ -112,10 +112,10 @@ def test_markdown_import_cleans_unicode_only_blank_lines_outside_literal_blocks(
 def test_parent_markdown_front_matter_is_hygiene_not_canonical_identity() -> None:
     with make_repo() as temp:
         root = Path(temp)
-        write_library_doc(
+        write_example_doc(
             root,
-            "library.md",
-            {"doc_id": "library", "title": "Library", "parent_id": ""},
+            "example.md",
+            {"doc_id": "example", "title": "Example", "parent_id": ""},
         )
         write_staged_markdown(
             root,
@@ -143,7 +143,7 @@ Body without a heading.
             payload = handle_import_source(
                 root,
                 {
-                    "scope": "library",
+                    "scope": "example",
                     "staged_filename": "front-matter-note.md",
                 },
                 dry_run=False,
@@ -156,7 +156,7 @@ Body without a heading.
         front_matter, body = source_model.parse_source(source_path)
 
     assert payload["target"] == {
-        "scope": "library",
+        "scope": "example",
         "doc_id": payload["doc_id"],
     }
     assert payload["doc_id"] != "supplied-overwrite-id"
@@ -214,7 +214,7 @@ def test_markdown_import_create_returns_external_workspace_relative_path(tmp_pat
 def test_text_import_autolinks_plain_urls() -> None:
     with make_repo() as temp:
         root = Path(temp)
-        write_library_doc(root, "library.md", {"doc_id": "library", "title": "Library", "parent_id": ""})
+        write_example_doc(root, "example.md", {"doc_id": "example", "title": "Example", "parent_id": ""})
         write_staged_text(root, "plain-note.txt", "Plain Note\n\nSee https://example.com/path.\n")
         original_rebuild = stub_rebuild()
         original_validation = docs_import_preview.validate_markdown_preview
@@ -226,7 +226,7 @@ def test_text_import_autolinks_plain_urls() -> None:
         try:
             payload = handle_import_source(
                 root,
-                {"scope": "library", "staged_filename": "plain-note.txt"},
+                {"scope": "example", "staged_filename": "plain-note.txt"},
                 dry_run=False,
             )
         finally:
@@ -255,6 +255,6 @@ def test_docs_import_rejects_standalone_media(filename: str, content: bytes) -> 
         with pytest.raises(ValueError, match="staged file must use one of these extensions"):
             handle_import_source(
                 root,
-                {"scope": "library", "staged_filename": filename},
+                {"scope": "example", "staged_filename": filename},
                 dry_run=False,
             )

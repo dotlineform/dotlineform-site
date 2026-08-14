@@ -2,7 +2,7 @@
 """Command-line parser for staged Docs Viewer returned-package data.
 
 Run:
-  ./docs-viewer/services/docs_import.py --scope library --file document-content.jsonl
+  ./docs-viewer/services/docs_import.py --scope analysis --file document-content.jsonl
 """
 
 from __future__ import annotations
@@ -37,7 +37,7 @@ def detect_repo_root(explicit_root: str | None = None) -> Path:
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Parse staged Docs Viewer import data.")
-    parser.add_argument("--scope", default="library", help="Docs Viewer scope to import")
+    parser.add_argument("--scope", required=True, help="Docs Viewer scope to import")
     parser.add_argument(
         "--file",
         required=True,

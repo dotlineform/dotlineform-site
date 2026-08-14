@@ -122,7 +122,7 @@ def test_python_docs_builder_backlinks_deduplicate_and_replace_targeted_contribu
             root,
             child_body_suffix=f"""
 [Parent again](/docs/?scope=studio&doc={PARENT_DOC_ID})
-[Cross scope](/docs/?scope=library&doc={PARENT_DOC_ID})
+[Cross scope](/docs/?scope=example&doc={PARENT_DOC_ID})
 [External](https://example.com/docs/?scope=studio&doc={PARENT_DOC_ID})
 [Self fragment](/docs/?scope=studio&doc={CHILD_DOC_ID}#section)
 

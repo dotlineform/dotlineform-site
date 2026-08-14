@@ -64,7 +64,7 @@ def write_sub_scope_source_doc(
     lines.extend(["---", "", f"# {title}", "", f"{title} body.", ""])
     path = (
         repo_root
-        / "docs-viewer/scopes/library/source/sub-scopes"
+        / "docs-viewer/scopes/example/source/sub-scopes"
         / sub_scope
         / "documents"
         / f"{doc_id}.md"
@@ -83,19 +83,19 @@ def add_sub_scope_package_fixture(
     config["scopes"][0]["default_doc_id"] = PARENT_ROOT_ID
     config["scopes"][0]["sub_scopes"] = [
         docs_sub_scope_record(
-            "library",
+            "example",
             "tags",
             title="Tags",
             supports_return_import=tags_return_import_enabled,
             scope_type="public",
-            public_docs_path="site/assets/data/docs/scopes/library/tags",
+            public_docs_path="site/assets/data/docs/scopes/example/tags",
         ),
         docs_sub_scope_record(
-            "library",
+            "example",
             "notes",
             title="Notes",
             scope_type="public",
-            public_docs_path="site/assets/data/docs/scopes/library/notes",
+            public_docs_path="site/assets/data/docs/scopes/example/notes",
         ),
     ]
     config_path.write_text(json.dumps(config, indent=2) + "\n", encoding="utf-8")
@@ -118,19 +118,19 @@ def add_sub_scope_package_fixture(
         }
     )
     profiles_path.write_text(json.dumps(profiles, indent=2) + "\n", encoding="utf-8")
-    library_path = repo_root / "docs-viewer/scopes/library/source/documents/library.md"
-    library_path.write_text(
-        library_path.read_text(encoding="utf-8").replace(
-            "doc_id: library",
+    example_path = repo_root / "docs-viewer/scopes/example/source/documents/example.md"
+    example_path.write_text(
+        example_path.read_text(encoding="utf-8").replace(
+            "doc_id: example",
             f"doc_id: {PARENT_ROOT_ID}",
         ),
         encoding="utf-8",
     )
-    alpha_path = repo_root / "docs-viewer/scopes/library/source/documents/alpha.md"
+    alpha_path = repo_root / "docs-viewer/scopes/example/source/documents/alpha.md"
     alpha_path.write_text(
         alpha_path.read_text(encoding="utf-8")
         .replace("doc_id: alpha", f"doc_id: {PARENT_CHILD_ID}")
-        .replace("parent_id: library", f"parent_id: {PARENT_ROOT_ID}"),
+        .replace("parent_id: example", f"parent_id: {PARENT_ROOT_ID}"),
         encoding="utf-8",
     )
     write_sub_scope_source_doc(
@@ -191,7 +191,7 @@ def write_returned_package(
     selected_doc_ids: list[str],
     rows: list[dict[str, object]],
     filename: str = "returned.jsonl",
-    scope: str = "library",
+    scope: str = "example",
     sub_scope: str = "",
     supports_docs_review: bool = True,
     supports_return_import: bool = True,
@@ -267,7 +267,7 @@ def test_fixed_routes_and_config_contract() -> None:
     assert "document_fields" not in payload["profiles"][0]
     assert "review_actions" not in payload
     assert "apply_actions" not in payload
-    assert payload["scopes"] == [{"scope": "library", "label": "Library"}]
+    assert payload["scopes"] == [{"scope": "example", "label": "Example"}]
     assert payload["workspace"].keys() == {"available", "message"}
 
 
@@ -278,7 +278,7 @@ def test_prepare_uses_direct_fields_and_rejects_adapter_contract_fields() -> Non
             repo_root,
             routes.PREPARE_PATH,
             {
-                "scope": "library",
+                "scope": "example",
                 "profile_id": "document-content",
                 "doc_ids": ["alpha"],
                 "select_all": False,
@@ -291,7 +291,7 @@ def test_prepare_uses_direct_fields_and_rejects_adapter_contract_fields() -> Non
                 routes.PREPARE_PATH,
                 {
                     "data_domain": "documents",
-                    "scope": "library",
+                    "scope": "example",
                     "profile_id": "document-content",
                     "doc_ids": ["alpha"],
                 },
@@ -301,7 +301,7 @@ def test_prepare_uses_direct_fields_and_rejects_adapter_contract_fields() -> Non
                 repo_root,
                 routes.RETURNED_REVIEW_PATH,
                 {
-                    "scope": "library",
+                    "scope": "example",
                     "staged_filename": "returned.jsonl",
                     "record_indices": [0],
                 },
@@ -332,7 +332,7 @@ def test_prepare_type_checks_filter_choices(field: str, value: object) -> None:
             service.prepare_package(
                 Path(temp),
                 {
-                    "scope": "library",
+                    "scope": "example",
                     "profile_id": "document-content",
                     "doc_ids": ["alpha"],
                     field: value,
@@ -344,7 +344,7 @@ def test_prepare_type_checks_filter_choices(field: str, value: object) -> None:
 def test_prepare_revalidates_stale_summary_without_broadening_target() -> None:
     with make_docs_import_repo() as temp:
         repo_root = Path(temp)
-        source_path = repo_root / "docs-viewer/scopes/library/source/documents/alpha.md"
+        source_path = repo_root / "docs-viewer/scopes/example/source/documents/alpha.md"
         source_path.write_text(
             source_path.read_text(encoding="utf-8").replace(
                 "---\n\n# Body",
@@ -356,9 +356,9 @@ def test_prepare_revalidates_stale_summary_without_broadening_target() -> None:
             repo_root,
             routes.PREPARE_PATH,
             {
-                "scope": "library",
+                "scope": "example",
                 "profile_id": "document-content",
-                "doc_ids": ["library", "alpha"],
+                "doc_ids": ["example", "alpha"],
                 "select_all": False,
                 "missing_summary_only": True,
                 "include_non_publishable": True,
@@ -367,8 +367,8 @@ def test_prepare_revalidates_stale_summary_without_broadening_target() -> None:
         )
 
     assert int(status) == 200
-    assert payload["selected_doc_ids"] == ["library"]
-    assert payload["exported_doc_ids"] == ["library"]
+    assert payload["selected_doc_ids"] == ["example"]
+    assert payload["exported_doc_ids"] == ["example"]
     assert payload["skipped"] == [{"doc_id": "alpha", "reason": "has_summary"}]
     assert payload["counts"] == {"selected": 2, "exported": 1, "skipped": 1, "failed": 0, "truncated": 0}
 
@@ -409,9 +409,9 @@ def test_direct_prepare_treats_tree_doc_ids_as_the_final_target() -> None:
             repo_root,
             routes.PREPARE_PATH,
             {
-                "scope": "library",
+                "scope": "example",
                 "profile_id": "document-tree",
-                "doc_ids": ["library"],
+                "doc_ids": ["example"],
                 "select_all": False,
                 "missing_summary_only": False,
                 "include_non_publishable": True,
@@ -422,9 +422,9 @@ def test_direct_prepare_treats_tree_doc_ids_as_the_final_target() -> None:
             repo_root,
             routes.PREPARE_PATH,
             {
-                "scope": "library",
+                "scope": "example",
                 "profile_id": "document-tree",
-                "doc_ids": ["library"],
+                "doc_ids": ["example"],
                 "select_all": False,
                 "missing_summary_only": True,
                 "include_non_publishable": True,
@@ -435,9 +435,9 @@ def test_direct_prepare_treats_tree_doc_ids_as_the_final_target() -> None:
             repo_root,
             routes.PREPARE_PATH,
             {
-                "scope": "library",
+                "scope": "example",
                 "profile_id": "document-tree",
-                "doc_ids": ["library"],
+                "doc_ids": ["example"],
                 "select_all": False,
                 "missing_summary_only": False,
                 "include_non_publishable": False,
@@ -446,8 +446,8 @@ def test_direct_prepare_treats_tree_doc_ids_as_the_final_target() -> None:
         )
 
     assert int(status) == 200
-    assert payload["selected_doc_ids"] == ["library"]
-    assert payload["exported_doc_ids"] == ["library"]
+    assert payload["selected_doc_ids"] == ["example"]
+    assert payload["exported_doc_ids"] == ["example"]
     assert payload["counts"] == {"selected": 1, "exported": 1, "skipped": 0, "failed": 0, "truncated": 0}
     assert int(missing_status) == 400
     assert "config document-tree: missing_summary_only true is not supported" in missing_payload["errors"]
@@ -461,7 +461,7 @@ def test_direct_prepare_treats_tree_doc_ids_as_the_final_target() -> None:
 def test_package_document_feed_keeps_non_publishable_source_selectable() -> None:
     with make_docs_import_repo() as temp:
         repo_root = Path(temp)
-        source_path = repo_root / "docs-viewer/scopes/library/source/documents/alpha.md"
+        source_path = repo_root / "docs-viewer/scopes/example/source/documents/alpha.md"
         source_path.write_text(
             source_path.read_text(encoding="utf-8").replace(
                 "---\n\n# Body",
@@ -469,7 +469,7 @@ def test_package_document_feed_keeps_non_publishable_source_selectable() -> None
             ),
             encoding="utf-8",
         )
-        payload = service.documents_payload(repo_root, {"scope": ["library"]})
+        payload = service.documents_payload(repo_root, {"scope": ["example"]})
 
     alpha = next(record for record in payload["records"] if record["doc_id"] == "alpha")
     assert alpha["publishable"] is False
@@ -489,24 +489,24 @@ def test_sub_scope_config_and_documents_are_flat_export_only() -> None:
         child = service.get_payload(
             repo_root,
             routes.CONFIG_PATH,
-            {"scope": ["library"], "sub_scope": ["tags"]},
+            {"scope": ["example"], "sub_scope": ["tags"]},
         )
         documents = service.get_payload(
             repo_root,
             routes.DOCUMENTS_PATH,
-            {"scope": ["library"], "sub_scope": ["tags"]},
+            {"scope": ["example"], "sub_scope": ["tags"]},
         )
         with pytest.raises(ValueError, match="unknown sub_scope"):
             service.get_payload(
                 repo_root,
                 routes.CONFIG_PATH,
-                {"scope": ["library"], "sub_scope": ["missing"]},
+                {"scope": ["example"], "sub_scope": ["missing"]},
             )
         with pytest.raises(ValueError, match="sub_scope is required"):
             service.get_payload(
                 repo_root,
                 routes.DOCUMENTS_PATH,
-                {"scope": ["library"], "sub_scope": [""]},
+                {"scope": ["example"], "sub_scope": [""]},
             )
         profiles_after = profiles_path.read_text(encoding="utf-8")
 
@@ -514,19 +514,19 @@ def test_sub_scope_config_and_documents_are_flat_export_only() -> None:
     assert "sub_scope" not in top_level
     assert top_level["profiles"][0]["supports_docs_review"] is True
     assert top_level["profiles"][0]["supports_return_import"] is True
-    assert child["scope"] == "library"
+    assert child["scope"] == "example"
     assert child["sub_scope"] == "tags"
     assert child["flat_collection"] is True
     assert child["profiles"][0]["supports_docs_review"] is True
     assert child["profiles"][0]["supports_return_import"] is False
     assert child["profiles"][0]["selection"]["include_descendants"] is False
-    assert documents["scope"] == "library"
+    assert documents["scope"] == "example"
     assert documents["sub_scope"] == "tags"
     assert documents["selection_model"] == "sub_scope_documents"
     assert documents["flat_collection"] is True
     assert documents["source"] == {
         "kind": "docs_sub_scope_source",
-        "scope": "library",
+        "scope": "example",
         "sub_scope": "tags",
     }
     assert [record["doc_id"] for record in documents["records"]] == [TAG_A_ID, TAG_B_ID]
@@ -551,7 +551,7 @@ def test_sub_scope_filters_only_subtract_from_checked_ids(
             repo_root,
             routes.PREPARE_PATH,
             {
-                "scope": "library",
+                "scope": "example",
                 "sub_scope": "tags",
                 "profile_id": "document-content",
                 "doc_ids": [TAG_B_ID, TAG_A_ID],
@@ -565,7 +565,7 @@ def test_sub_scope_filters_only_subtract_from_checked_ids(
             repo_root,
             routes.PREPARE_PATH,
             {
-                "scope": "library",
+                "scope": "example",
                 "sub_scope": "tags",
                 "profile_id": "document-content",
                 "doc_ids": [TAG_B_ID, TAG_A_ID],
@@ -577,7 +577,7 @@ def test_sub_scope_filters_only_subtract_from_checked_ids(
         )
 
     for payload in (missing_summary, publishable_only):
-        assert payload["scope"] == "library"
+        assert payload["scope"] == "example"
         assert payload["sub_scope"] == "tags"
         assert payload["supports_docs_review"] is True
         assert payload["supports_return_import"] is False
@@ -589,7 +589,7 @@ def test_sub_scope_filters_only_subtract_from_checked_ids(
         (
             "document-package-prepare",
             {
-                "scope": "library",
+                "scope": "example",
                 "sub_scope": "tags",
                 "profile_id": "document-content",
                 "dry_run": True,
@@ -601,7 +601,7 @@ def test_sub_scope_filters_only_subtract_from_checked_ids(
         (
             "document-package-prepare",
             {
-                "scope": "library",
+                "scope": "example",
                 "sub_scope": "tags",
                 "profile_id": "document-content",
                 "dry_run": True,
@@ -626,7 +626,7 @@ def test_sub_scope_prepare_rejects_cross_collection_and_stale_ids(
             repo_root,
             routes.PREPARE_PATH,
             {
-                "scope": "library",
+                "scope": "example",
                 "sub_scope": "tags",
                 "profile_id": "document-content",
                 "doc_ids": [TAG_A_ID, invalid_doc_id],
@@ -653,7 +653,7 @@ def test_sub_scope_prepare_rejects_select_all_and_extra_collection_fields() -> N
                 repo_root,
                 routes.PREPARE_PATH,
                 {
-                    "scope": "library",
+                    "scope": "example",
                     "sub_scope": "tags",
                     "profile_id": "document-content",
                     "doc_ids": [TAG_A_ID],
@@ -666,9 +666,9 @@ def test_sub_scope_prepare_rejects_select_all_and_extra_collection_fields() -> N
                 repo_root,
                 routes.PREPARE_PATH,
                 {
-                    "scope": "library",
+                    "scope": "example",
                     "sub_scope": "tags",
-                    "collection": {"scope": "library", "sub_scope": "tags"},
+                    "collection": {"scope": "example", "sub_scope": "tags"},
                     "profile_id": "document-content",
                     "doc_ids": [TAG_A_ID],
                     "dry_run": True,
@@ -685,7 +685,7 @@ def test_sub_scope_tree_profile_keeps_exact_checked_records_as_roots() -> None:
             repo_root,
             routes.PREPARE_PATH,
             {
-                "scope": "library",
+                "scope": "example",
                 "sub_scope": "tags",
                 "profile_id": "document-tree",
                 "doc_ids": [TAG_A_ID],
@@ -718,7 +718,7 @@ def test_sub_scope_written_package_is_reviewable_but_blocked_from_import() -> No
             repo_root,
             routes.PREPARE_PATH,
             {
-                "scope": "library",
+                "scope": "example",
                 "sub_scope": "tags",
                 "profile_id": "document-content",
                 "doc_ids": [TAG_B_ID, TAG_A_ID],
@@ -740,11 +740,11 @@ def test_sub_scope_written_package_is_reviewable_but_blocked_from_import() -> No
         ]
         staged_filename = "returned-tags.jsonl"
         shutil.copy2(output_path, paths.import_staging / staged_filename)
-        returned = service.returned_payload(repo_root, {"scope": ["library"]})
+        returned = service.returned_payload(repo_root, {"scope": ["example"]})
         review = service.review_returned(
             repo_root,
             {
-                "scope": "library",
+                "scope": "example",
                 "staged_filename": staged_filename,
                 "dry_run": False,
             },
@@ -753,7 +753,7 @@ def test_sub_scope_written_package_is_reviewable_but_blocked_from_import() -> No
         reopened_review = service.review_returned(
             repo_root,
             {
-                "scope": "library",
+                "scope": "example",
                 "staged_filename": staged_filename,
                 "dry_run": False,
             },
@@ -774,7 +774,7 @@ def test_sub_scope_written_package_is_reviewable_but_blocked_from_import() -> No
             source_directory="data-sharing/import-staging",
         )
         source_before = (
-            repo_root / "docs-viewer/scopes/library/source/documents/alpha.md"
+            repo_root / "docs-viewer/scopes/example/source/documents/alpha.md"
         ).read_text(encoding="utf-8")
         dependencies = import_source_service.ImportSourceDependencies(
             log_event=lambda *_args, **_kwargs: None,
@@ -788,7 +788,7 @@ def test_sub_scope_written_package_is_reviewable_but_blocked_from_import() -> No
             import_source_service.handle_import_source(
                 repo_root,
                 {
-                    "scope": "library",
+                    "scope": "example",
                     "staged_filename": staged_filename,
                     "preview_only": False,
                 },
@@ -799,18 +799,18 @@ def test_sub_scope_written_package_is_reviewable_but_blocked_from_import() -> No
                 metadata_root=paths.meta,
                 destination=resolve_managed_document_collection(
                     repo_root,
-                    scope="library",
+                    scope="example",
                 ),
                 projects_base=paths.root.parent,
                 source_directory="data-sharing/import-staging",
                 trusted_sources_allowed=True,
             )
         source_after = (
-            repo_root / "docs-viewer/scopes/library/source/documents/alpha.md"
+            repo_root / "docs-viewer/scopes/example/source/documents/alpha.md"
         ).read_text(encoding="utf-8")
 
     assert payload["ok"] is True
-    assert payload["scope"] == "library"
+    assert payload["scope"] == "example"
     assert payload["sub_scope"] == "tags"
     assert payload["supports_docs_review"] is True
     assert payload["supports_return_import"] is False
@@ -823,7 +823,7 @@ def test_sub_scope_written_package_is_reviewable_but_blocked_from_import() -> No
         "skipped": 0,
         "truncated": 0,
     }
-    assert metadata["scope"] == "library"
+    assert metadata["scope"] == "example"
     assert metadata["sub_scope"] == "tags"
     assert metadata["supports_docs_review"] is True
     assert metadata["supports_return_import"] is False
@@ -833,7 +833,7 @@ def test_sub_scope_written_package_is_reviewable_but_blocked_from_import() -> No
     assert len(returned["files"]) == 1
     assert returned["files"][0]["filename"] == staged_filename
     assert returned["files"][0]["sub_scope"] == "tags"
-    assert returned["files"][0]["scope_label"] == "Library"
+    assert returned["files"][0]["scope_label"] == "Example"
     assert returned["files"][0]["sub_scope_label"] == "Tags"
     assert returned["files"][0]["docs_review_supported"] is True
     assert returned["files"][0]["return_import_supported"] is False
@@ -844,7 +844,7 @@ def test_sub_scope_written_package_is_reviewable_but_blocked_from_import() -> No
     assert reopened_review["ok"] is True
     assert reopened_review["review_existing"] is True
     assert reopened_review["review_package_id"] == review["review_package_id"]
-    assert review_manifest["source_scope"] == "library"
+    assert review_manifest["source_scope"] == "example"
     assert review_manifest["source_sub_scope"] == "tags"
     assert review_manifest["supports_docs_review"] is True
     assert review_manifest["supports_return_import"] is False
@@ -860,7 +860,7 @@ def test_sub_scope_written_package_is_reviewable_but_blocked_from_import() -> No
         if record["filename"] == staged_filename
     )
     assert review_only_candidate["target"] == {
-        "scope": "library",
+        "scope": "example",
         "sub_scope": "tags",
     }
     assert review_only_candidate["docs_review_enabled"] is True
@@ -882,18 +882,18 @@ def test_opted_in_sub_scope_projects_importable_package_and_exact_listing() -> N
         child_config = service.get_payload(
             repo_root,
             routes.CONFIG_PATH,
-            {"scope": ["library"], "sub_scope": ["tags"]},
+            {"scope": ["example"], "sub_scope": ["tags"]},
         )
         notes_config = service.get_payload(
             repo_root,
             routes.CONFIG_PATH,
-            {"scope": ["library"], "sub_scope": ["notes"]},
+            {"scope": ["example"], "sub_scope": ["notes"]},
         )
         _, payload = service.post_response(
             repo_root,
             routes.PREPARE_PATH,
             {
-                "scope": "library",
+                "scope": "example",
                 "sub_scope": "tags",
                 "profile_id": "document-content",
                 "doc_ids": [TAG_B_ID, TAG_A_ID],
@@ -933,11 +933,11 @@ def test_opted_in_sub_scope_projects_importable_package_and_exact_listing() -> N
 
         exact = service.returned_payload(
             repo_root,
-            {"scope": ["library"], "sub_scope": ["tags"]},
+            {"scope": ["example"], "sub_scope": ["tags"]},
         )
         exact_validation = parse_staged_import(
             repo_root=repo_root,
-            scope="library",
+            scope="example",
             sub_scope="tags",
             staged_file=staged_filename,
             staging_root=paths.import_staging,
@@ -950,7 +950,7 @@ def test_opted_in_sub_scope_projects_importable_package_and_exact_listing() -> N
         )
         mismatch = parse_staged_import(
             repo_root=repo_root,
-            scope="library",
+            scope="example",
             sub_scope="tags",
             staged_file="returned-notes.jsonl",
             staging_root=paths.import_staging,
@@ -963,17 +963,17 @@ def test_opted_in_sub_scope_projects_importable_package_and_exact_listing() -> N
         ):
             service.returned_payload(
                 repo_root,
-                {"scope": ["library"], "sub_scope": ["notes"]},
+                {"scope": ["example"], "sub_scope": ["notes"]},
             )
         with pytest.raises(ValueError, match="sub_scope is required"):
             service.returned_payload(
                 repo_root,
-                {"scope": ["library"], "sub_scope": [""]},
+                {"scope": ["example"], "sub_scope": [""]},
             )
         with pytest.raises(ValueError, match="unknown sub_scope"):
             service.returned_payload(
                 repo_root,
-                {"scope": ["library"], "sub_scope": ["missing"]},
+                {"scope": ["example"], "sub_scope": ["missing"]},
             )
 
     child_capabilities = {
@@ -1000,22 +1000,22 @@ def test_opted_in_sub_scope_projects_importable_package_and_exact_listing() -> N
     }
     assert payload["supports_docs_review"] is True
     assert payload["supports_return_import"] is True
-    assert metadata["scope"] == "library"
+    assert metadata["scope"] == "example"
     assert metadata["sub_scope"] == "tags"
     assert metadata["supports_docs_review"] is True
     assert metadata["supports_return_import"] is True
     assert "context_file" not in payload
-    assert exact["scope"] == "library"
+    assert exact["scope"] == "example"
     assert exact["sub_scope"] == "tags"
     assert exact["required_capability"] == RETURN_IMPORT_CAPABILITY
     assert [item["filename"] for item in exact["files"]] == [staged_filename]
     assert exact["files"][0]["return_import_supported"] is True
     assert exact_validation["ok"] is True
-    assert exact_validation["current_library"]["source_root"].endswith(
+    assert exact_validation["current_source"]["source_root"].endswith(
         "/source/sub-scopes/tags/documents"
     )
     assert all(
-        record["current_library"]["exists"]
+        record["current_source"]["exists"]
         for record in exact_validation["records"]
     )
     assert {
@@ -1038,7 +1038,7 @@ def test_opted_in_sub_scope_projects_importable_package_and_exact_listing() -> N
         if item["filename"] == staged_filename
     )
     assert importable_candidate["target"] == {
-        "scope": "library",
+        "scope": "example",
         "sub_scope": "tags",
     }
     assert importable_candidate["docs_review_enabled"] is True
@@ -1055,23 +1055,23 @@ def test_atomic_return_uses_order_insensitive_exact_set_equality() -> None:
         export_id = "ds_20260720T120000Z"
         write_returned_package(
             export_id,
-            selected_doc_ids=["library", "alpha"],
+            selected_doc_ids=["example", "alpha"],
             rows=[
                 {"doc_id": "alpha", "title": "Alpha"},
-                {"doc_id": "library", "title": "Library"},
+                {"doc_id": "example", "title": "Example"},
             ],
         )
         complete_review = service.review_returned(
             repo_root,
             {
-                "scope": "library",
+                "scope": "example",
                 "staged_filename": "returned.jsonl",
                 "dry_run": True,
             },
         )
         write_returned_package(
             export_id,
-            selected_doc_ids=["library", "alpha"],
+            selected_doc_ids=["example", "alpha"],
             rows=[
                 {"doc_id": "alpha", "title": "Alpha"},
                 {"doc_id": "outside", "title": "Outside"},
@@ -1081,7 +1081,7 @@ def test_atomic_return_uses_order_insensitive_exact_set_equality() -> None:
             repo_root,
             routes.RETURNED_REVIEW_PATH,
             {
-                "scope": "library",
+                "scope": "example",
                 "staged_filename": "returned.jsonl",
                 "dry_run": True,
             },
@@ -1106,7 +1106,7 @@ def test_content_review_projects_safe_new_or_existing_review_identity() -> None:
             rows=[{"doc_id": "alpha", "title": "Alpha", "content": "Reviewed body."}],
         )
         request = {
-            "scope": "library",
+            "scope": "example",
             "staged_filename": "returned.jsonl",
             "dry_run": False,
         }
@@ -1147,13 +1147,13 @@ def test_invalid_returned_record_blocks_complete_review() -> None:
             selected_doc_ids=["alpha"],
             rows=[{"doc_id": "alpha"}],
         )
-        source_path = repo_root / "docs-viewer/scopes/library/source/documents/alpha.md"
+        source_path = repo_root / "docs-viewer/scopes/example/source/documents/alpha.md"
         source_before = source_path.read_text(encoding="utf-8")
 
         review = service.review_returned(
             repo_root,
             {
-                "scope": "library",
+                "scope": "example",
                 "staged_filename": "returned.jsonl",
                 "dry_run": False,
             },
@@ -1174,7 +1174,7 @@ def test_review_rejects_retired_action_discriminator() -> None:
             service.review_returned(
                 Path(temp),
                 {
-                    "scope": "library",
+                    "scope": "example",
                     "staged_filename": "returned.jsonl",
                     "review_action": "content",
                 },
@@ -1187,7 +1187,7 @@ def test_review_rejects_request_supplied_sub_scope() -> None:
             service.review_returned(
                 Path(temp),
                 {
-                    "scope": "library",
+                    "scope": "example",
                     "sub_scope": "tags",
                     "staged_filename": "returned.jsonl",
                 },
@@ -1208,7 +1208,7 @@ def test_review_rejects_legacy_single_capability_metadata() -> None:
         metadata.pop("supports_docs_review")
         metadata_path.write_text(json.dumps(metadata) + "\n", encoding="utf-8")
 
-        returned = service.returned_payload(repo_root, {"scope": ["library"]})
+        returned = service.returned_payload(repo_root, {"scope": ["example"]})
         import_listing = import_source_service.handle_import_source_files(
             repo_root,
             source_directory="data-sharing/import-staging",
@@ -1216,7 +1216,7 @@ def test_review_rejects_legacy_single_capability_metadata() -> None:
         review = service.review_returned(
             repo_root,
             {
-                "scope": "library",
+                "scope": "example",
                 "staged_filename": "returned.jsonl",
                 "dry_run": False,
             },
@@ -1264,7 +1264,7 @@ def test_sub_scope_review_rejects_cross_collection_selected_ids() -> None:
         review = service.review_returned(
             repo_root,
             {
-                "scope": "library",
+                "scope": "example",
                 "staged_filename": "returned.jsonl",
                 "dry_run": False,
             },
@@ -1285,7 +1285,7 @@ def test_returned_listing_projects_document_fields_without_adapter_identity() ->
             selected_doc_ids=["alpha"],
             rows=[{"doc_id": "alpha", "title": "Alpha"}],
         )
-        payload = service.returned_payload(repo_root, {"scope": ["library"]})
+        payload = service.returned_payload(repo_root, {"scope": ["example"]})
 
     assert payload["ok"] is True
     assert len(payload["files"]) == 1
@@ -1293,7 +1293,7 @@ def test_returned_listing_projects_document_fields_without_adapter_identity() ->
     assert payload["files"][0]["document_count"] == 1
     assert payload["files"][0]["supports_docs_review"] is True
     assert payload["files"][0]["supports_return_import"] is True
-    assert payload["files"][0]["scope_label"] == "Library"
+    assert payload["files"][0]["scope_label"] == "Example"
     assert payload["files"][0]["sub_scope_label"] == ""
     assert {"app", "adapter_id", "config_id", "data_domain"}.isdisjoint(
         payload["files"][0]
@@ -1305,9 +1305,9 @@ def test_returned_listing_excludes_invalid_and_export_only_packages() -> None:
         repo_root = Path(temp)
         write_returned_package(
             "ds_20260720T120000Z",
-            selected_doc_ids=["library", "alpha"],
+            selected_doc_ids=["example", "alpha"],
             rows=[
-                {"doc_id": "library", "title": "Library"},
+                {"doc_id": "example", "title": "Example"},
                 {"doc_id": "alpha", "title": "Alpha"},
             ],
             filename="reviewable.jsonl",
@@ -1336,7 +1336,7 @@ def test_returned_listing_excludes_invalid_and_export_only_packages() -> None:
         )
         tree_metadata_path.write_text(json.dumps(tree_metadata) + "\n", encoding="utf-8")
 
-        payload = service.returned_payload(repo_root, {"scope": ["library"]})
+        payload = service.returned_payload(repo_root, {"scope": ["example"]})
 
     assert [item["filename"] for item in payload["files"]] == ["reviewable.jsonl"]
     assert payload["files"][0]["document_count"] == 2
@@ -1352,7 +1352,7 @@ def test_returned_listing_separates_scope_owned_and_unassigned_files() -> None:
             "ds_20260720T120000Z",
             selected_doc_ids=["alpha"],
             rows=[{"doc_id": "alpha", "title": "Alpha"}],
-            filename="library.jsonl",
+            filename="example.jsonl",
         )
         write_returned_package(
             "ds_20260720T120001Z",
@@ -1384,9 +1384,9 @@ def test_returned_listing_separates_scope_owned_and_unassigned_files() -> None:
             encoding="utf-8",
         )
 
-        payload = service.returned_payload(repo_root, {"scope": ["library"]})
+        payload = service.returned_payload(repo_root, {"scope": ["example"]})
 
-    assert [item["filename"] for item in payload["files"]] == ["library.jsonl"]
+    assert [item["filename"] for item in payload["files"]] == ["example.jsonl"]
     assert payload["blocked_files"] == []
     assert {item["filename"] for item in payload["unassigned_files"]} == {
         "orphan.context.json",
@@ -1428,7 +1428,7 @@ def test_atomic_return_rejects_invalid_trusted_routing_identity(
         payload = service.review_returned(
             repo_root,
             {
-                "scope": "library",
+                "scope": "example",
                 "staged_filename": "returned.jsonl",
                 "dry_run": True,
             },
@@ -1468,7 +1468,7 @@ def test_docs_viewer_http_service_retires_package_pages_and_keeps_package_api() 
             with urllib.request.urlopen(
                 (
                     f"{base_url}{routes.CONFIG_PATH}"
-                    "?scope=library&sub_scope=tags"
+                    "?scope=example&sub_scope=tags"
                 ),
                 timeout=5,
             ) as response:
@@ -1476,7 +1476,7 @@ def test_docs_viewer_http_service_retires_package_pages_and_keeps_package_api() 
             with urllib.request.urlopen(
                 (
                     f"{base_url}{routes.DOCUMENTS_PATH}"
-                    "?scope=library&sub_scope=tags"
+                    "?scope=example&sub_scope=tags"
                 ),
                 timeout=5,
             ) as response:
@@ -1486,14 +1486,14 @@ def test_docs_viewer_http_service_retires_package_pages_and_keeps_package_api() 
             with pytest.raises(urllib.error.HTTPError) as returned_route_error:
                 urllib.request.urlopen(f"{base_url}/docs/packages/returned/", timeout=5)
             with urllib.request.urlopen(
-                f"{base_url}{routes.RETURNED_PATH}?scope=library", timeout=5
+                f"{base_url}{routes.RETURNED_PATH}?scope=example", timeout=5
             ) as response:
                 returned_payload = json.loads(response.read().decode("utf-8"))
             request = urllib.request.Request(
                 f"{base_url}{routes.PREPARE_PATH}",
                 data=json.dumps(
                     {
-                        "scope": "library",
+                        "scope": "example",
                         "profile_id": "document-content",
                         "doc_ids": [PARENT_CHILD_ID],
                         "dry_run": True,
@@ -1508,7 +1508,7 @@ def test_docs_viewer_http_service_retires_package_pages_and_keeps_package_api() 
                 f"{base_url}{routes.PREPARE_PATH}",
                 data=json.dumps(
                     {
-                        "scope": "library",
+                        "scope": "example",
                         "sub_scope": "tags",
                         "profile_id": "document-content",
                         "doc_ids": [TAG_A_ID],
@@ -1525,7 +1525,7 @@ def test_docs_viewer_http_service_retires_package_pages_and_keeps_package_api() 
                 f"{base_url}/docs/packages/returned/inspect",
                 data=json.dumps(
                     {
-                        "scope": "library",
+                        "scope": "example",
                         "staged_filename": "returned.jsonl",
                     }
                 ).encode("utf-8"),
@@ -1546,7 +1546,7 @@ def test_docs_viewer_http_service_retires_package_pages_and_keeps_package_api() 
             thread.join(timeout=5)
 
     assert config_payload["ok"] is True
-    assert child_config_payload["scope"] == "library"
+    assert child_config_payload["scope"] == "example"
     assert child_config_payload["sub_scope"] == "tags"
     assert child_config_payload["profiles"][0]["supports_docs_review"] is True
     assert child_config_payload["profiles"][0]["supports_return_import"] is False
@@ -1561,7 +1561,7 @@ def test_docs_viewer_http_service_retires_package_pages_and_keeps_package_api() 
     assert prepare_payload["ok"] is True
     assert prepare_payload["output_written"] is False
     assert child_prepare_payload["ok"] is True
-    assert child_prepare_payload["scope"] == "library"
+    assert child_prepare_payload["scope"] == "example"
     assert child_prepare_payload["sub_scope"] == "tags"
     assert child_prepare_payload["selected_doc_ids"] == [TAG_A_ID]
     assert child_prepare_payload["output_written"] is False

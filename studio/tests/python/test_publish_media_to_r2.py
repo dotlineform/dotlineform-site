@@ -417,7 +417,7 @@ def test_docs_cli_shape_requires_an_exact_scope_class_and_staged_filename() -> N
             "--scope",
             "docs",
             "--docs-scope",
-            "library",
+            "example",
             "--kind",
             "img",
             "--staged-filename",
@@ -426,7 +426,7 @@ def test_docs_cli_shape_requires_an_exact_scope_class_and_staged_filename() -> N
     )
 
     assert args.scope == "docs"
-    assert args.docs_scope == "library"
+    assert args.docs_scope == "example"
     assert args.kind == "img"
     assert args.staged_filename == "diagram.png"
     assert args.write is False

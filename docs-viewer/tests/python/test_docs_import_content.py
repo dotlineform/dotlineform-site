@@ -88,14 +88,14 @@ def test_file_wrappers_use_the_same_content_entrypoints(
             staging_root=paths.import_staging,
             workspace_root=paths.root,
             source_path=source_path,
-            scope="library",
+            scope="example",
             include_prompt_meta=False,
         )
         content_preview = docs_import_preview.generate_content_import_preview(
             content=content,
             content_format=content_format,
             source_identity="note",
-            scope="library",
+            scope="example",
             staging_root=paths.import_staging,
             workspace_root=paths.root,
         )
@@ -112,7 +112,7 @@ def test_content_entrypoint_honors_record_identity_over_body_heading() -> None:
             content="# Body Heading\n\nBody.\n",
             content_format="markdown",
             source_identity="wrapper-row-1",
-            scope="library",
+            scope="example",
             staging_root=paths.import_staging,
             workspace_root=paths.root,
             title="Trusted Record Title",
@@ -139,7 +139,7 @@ def test_normalized_import_content_dispatches_to_the_content_preview_boundary() 
 
         preview = docs_import_preview.generate_normalized_import_content_preview(
             record,
-            scope="library",
+            scope="example",
             staging_root=paths.import_staging,
             workspace_root=paths.root,
         )
@@ -151,7 +151,7 @@ def test_normalized_import_content_dispatches_to_the_content_preview_boundary() 
     with pytest.raises(ValueError, match="only replace"):
         docs_import_preview.generate_normalized_import_content_preview(
             make_content(content_intent=CONTENT_INTENT_PRESERVE_EXISTING, content=None),
-            scope="library",
+            scope="example",
             staging_root=paths.import_staging,
             workspace_root=paths.root,
         )

@@ -18,7 +18,7 @@ def compact_metadata(**changes: object) -> dict[str, object]:
         "schema_version": "data_sharing_returned_package_v1",
         "export_id": "ds_20260712T120000Z",
         "profile_id": "document-content",
-        "scope": "library",
+        "scope": "example",
         "content_format": "markdown",
     }
     metadata.update(changes)
@@ -30,7 +30,7 @@ def full_source_metadata(**changes: object) -> dict[str, object]:
         "schema_version": "documents_full_package_v1",
         "export_id": "ds_20260712T120000Z",
         "profile_id": "document-full-source",
-        "scope": "library",
+        "scope": "example",
     }
     metadata.update(changes)
     return metadata
@@ -42,7 +42,7 @@ def test_compact_content_uses_only_explicit_profile_mapping() -> None:
             {
                 "doc_id": "alpha",
                 "title": "Alpha",
-                "parent_id": "library",
+                "parent_id": "example",
                 "summary": "Returned summary.",
                 "content": "# Alpha\n\nReturned body.\n",
                 "arbitrary_body": "must not be imported",
@@ -59,7 +59,7 @@ def test_compact_content_uses_only_explicit_profile_mapping() -> None:
     assert record.content == "# Alpha\n\nReturned body.\n"
     assert record.front_matter == {
         "title": "Alpha",
-        "parent_id": "library",
+        "parent_id": "example",
         "summary": "Returned summary.",
     }
     assert record.provenance["export_id"] == "ds_20260712T120000Z"
@@ -80,7 +80,7 @@ def test_full_source_parses_canonical_front_matter_once_and_excludes_it_from_bod
     canonical = """---
 doc_id: alpha
 title: Canonical Alpha
-parent_id: library
+parent_id: example
 summary: Canonical summary.
 added_date: 2026-01-01
 custom_field: not-importable
@@ -106,11 +106,11 @@ Returned body.
     record = batch.records[0]
     assert record.content_intent == CONTENT_INTENT_REPLACE
     assert record.title == "Canonical Alpha"
-    assert record.parent_id == "library"
+    assert record.parent_id == "example"
     assert record.content == "# Canonical Alpha\n\nReturned body.\n"
     assert record.front_matter == {
         "title": "Canonical Alpha",
-        "parent_id": "library",
+        "parent_id": "example",
         "summary": "Canonical summary.",
     }
     assert record.assets == ({"asset_id": "asset-1", "kind": "image"},)
@@ -120,7 +120,7 @@ Returned body.
 def test_omitted_content_retains_preserve_existing_and_empty_new_intent() -> None:
     batch = normalize_documents_import_content(
         [
-            {"doc_id": "alpha", "title": "Existing Alpha", "parent_id": "library"},
+            {"doc_id": "alpha", "title": "Existing Alpha", "parent_id": "example"},
             {"doc_id": "new-parent", "title": "New Parent", "parent_id": ""},
         ],
         package_metadata=compact_metadata(),

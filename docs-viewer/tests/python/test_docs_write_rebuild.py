@@ -244,7 +244,7 @@ def test_rebuild_scope_outputs_turns_affected_ids_into_whole_search_command() ->
         with tempfile.TemporaryDirectory() as temp_path:
             result = write_rebuild.rebuild_scope_outputs(
                 Path(temp_path),
-                "library",
+                "example",
                 include_search=True,
                 search_doc_ids=["child", "", "parent", "child"],
             )
@@ -257,7 +257,7 @@ def test_rebuild_scope_outputs_turns_affected_ids_into_whole_search_command() ->
         "/tmp/python",
         "docs-viewer/build/build_search.py",
         "--scope",
-        "library",
+        "example",
         "--write",
     ]
 
@@ -390,31 +390,31 @@ def test_targeted_docs_build_uses_index_tree_without_flat_index() -> None:
             config_path,
             [
                 docs_scope_record(
-                    "library",
+                    "example",
                     scope_type="public",
-                    viewer_base_url="/library/",
+                    viewer_base_url="/example/",
                     include_scope_param=False,
-                    default_doc_id="library",
+                    default_doc_id="example",
                 )
             ],
         )
-        source_root = repo_root / "docs-viewer/scopes/library/source/documents"
+        source_root = repo_root / "docs-viewer/scopes/example/source/documents"
         source_root.mkdir(parents=True)
-        (source_root / "library.md").write_text("---\ndoc_id: library\ntitle: Library\n---\n# Library\n", encoding="utf-8")
+        (source_root / "example.md").write_text("---\ndoc_id: example\ntitle: Example\n---\n# Example\n", encoding="utf-8")
         (source_root / "child.md").write_text("---\ndoc_id: child\ntitle: Child\n---\n# Child\n", encoding="utf-8")
-        (repo_root / "docs-viewer/scopes/library/published/documents/by-id").mkdir(parents=True)
-        (repo_root / "docs-viewer/scopes/library/published/documents/by-id/library.json").write_text("{}", encoding="utf-8")
-        (repo_root / "docs-viewer/scopes/library/published/documents/index-tree.json").write_text(
-            """{"docs":[{"doc_id":"library","children":[{"doc_id":"child"}]}]}""",
+        (repo_root / "docs-viewer/scopes/example/published/documents/by-id").mkdir(parents=True)
+        (repo_root / "docs-viewer/scopes/example/published/documents/by-id/example.json").write_text("{}", encoding="utf-8")
+        (repo_root / "docs-viewer/scopes/example/published/documents/index-tree.json").write_text(
+            """{"docs":[{"doc_id":"example","children":[{"doc_id":"child"}]}]}""",
             encoding="utf-8",
         )
         semantic_token_index = (
             repo_root
-            / "docs-viewer/scopes/library/published/documents/semantic-tokens/index.json"
+            / "docs-viewer/scopes/example/published/documents/semantic-tokens/index.json"
         )
         semantic_token_index.parent.mkdir(parents=True)
         semantic_token_index.write_text('{"occurrences":[]}', encoding="utf-8")
-        reason = write_rebuild.targeted_docs_build_fallback_reason(repo_root, "library", ["child"])
+        reason = write_rebuild.targeted_docs_build_fallback_reason(repo_root, "example", ["child"])
 
     assert reason == ""
 
@@ -427,32 +427,32 @@ def test_targeted_docs_build_falls_back_for_unindexed_source_without_payload() -
             config_path,
             [
                 docs_scope_record(
-                    "library",
+                    "example",
                     scope_type="public",
-                    viewer_base_url="/library/",
+                    viewer_base_url="/example/",
                     include_scope_param=False,
-                    default_doc_id="library",
+                    default_doc_id="example",
                 )
             ],
         )
-        source_root = repo_root / "docs-viewer/scopes/library/source/documents"
+        source_root = repo_root / "docs-viewer/scopes/example/source/documents"
         source_root.mkdir(parents=True)
-        (source_root / "library.md").write_text("---\ndoc_id: library\ntitle: Library\n---\n# Library\n", encoding="utf-8")
+        (source_root / "example.md").write_text("---\ndoc_id: example\ntitle: Example\n---\n# Example\n", encoding="utf-8")
         (source_root / "child.md").write_text("---\ndoc_id: child\ntitle: Child\n---\n# Child\n", encoding="utf-8")
         (source_root / "new.md").write_text("---\ndoc_id: new\ntitle: New\n---\n# New\n", encoding="utf-8")
-        (repo_root / "docs-viewer/scopes/library/published/documents/by-id").mkdir(parents=True)
-        (repo_root / "docs-viewer/scopes/library/published/documents/by-id/library.json").write_text("{}", encoding="utf-8")
-        (repo_root / "docs-viewer/scopes/library/published/documents/index-tree.json").write_text(
-            """{"docs":[{"doc_id":"library","children":[{"doc_id":"child"}]}]}""",
+        (repo_root / "docs-viewer/scopes/example/published/documents/by-id").mkdir(parents=True)
+        (repo_root / "docs-viewer/scopes/example/published/documents/by-id/example.json").write_text("{}", encoding="utf-8")
+        (repo_root / "docs-viewer/scopes/example/published/documents/index-tree.json").write_text(
+            """{"docs":[{"doc_id":"example","children":[{"doc_id":"child"}]}]}""",
             encoding="utf-8",
         )
         semantic_token_index = (
             repo_root
-            / "docs-viewer/scopes/library/published/documents/semantic-tokens/index.json"
+            / "docs-viewer/scopes/example/published/documents/semantic-tokens/index.json"
         )
         semantic_token_index.parent.mkdir(parents=True)
         semantic_token_index.write_text('{"occurrences":[]}', encoding="utf-8")
-        reason = write_rebuild.targeted_docs_build_fallback_reason(repo_root, "library", ["child"])
+        reason = write_rebuild.targeted_docs_build_fallback_reason(repo_root, "example", ["child"])
 
     assert reason == "full-scope fallback: existing payloads missing for unselected docs"
 

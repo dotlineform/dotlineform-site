@@ -159,7 +159,6 @@ def test_runtime_config_exposes_adapter_contract() -> None:
     assert "tag_assignments" not in runtime["data_paths"]["studio"]
     assert "thumbnail_quality_preview" not in runtime["data_paths"]["studio"]
     assert "data_sharing_adapters" not in runtime["data_paths"]["studio"]
-    assert "library_export_configs" not in runtime["data_paths"]["studio"]
     assert "catalogue_lookup_meta" not in runtime["data_paths"]["studio"]
     assert runtime["media"]["thumbs"]["works"] == "/assets/works/img"
     assert runtime["pipeline"]["variants"]["thumb"]["suffix"] == "thumb"
@@ -261,7 +260,6 @@ def test_static_path_policy_serves_current_studio_allowlists() -> None:
     assert allowed("/studio/data/generated/activity/index.json") is False
     assert allowed("/studio/data/generated/activity/work-storage-index.json") is True
     assert allowed("/studio/data/generated/catalogue-lookup/work-search.json") is True
-    assert allowed("/assets/docs/interactive/library/coincidence-salience.html") is False
     assert allowed("/data-sharing/config/adapters.json") is False
     assert allowed("/docs-viewer/config/document-packages/profiles.json") is False
     assert allowed("/assets/works/img/00001.jpg") is True

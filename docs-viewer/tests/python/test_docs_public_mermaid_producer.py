@@ -89,9 +89,9 @@ def projection_plan(
     previous_manifest: dict[str, object] | None = None,
 ) -> dict[str, object]:
     return plan_public_mermaid_projection(
-        scope="library",
+        scope="example",
         documents=documents,
-        public_url_prefix="/assets/data/docs/scopes/library",
+        public_url_prefix="/assets/data/docs/scopes/example",
         previous_manifest=previous_manifest,
     )
 
@@ -412,7 +412,7 @@ def test_provider_neutral_r2_write_verifies_pair_and_manifest(
     client = FakeR2Client()
     prepared = artifact_location_adapter(
         tmp_path,
-        ArtifactLocation(R2_PROVIDER, Path("prepared/library")),
+        ArtifactLocation(R2_PROVIDER, Path("prepared/example")),
         remote_client=client,
     )
     plan = projection_plan([(DOC_ID, fenced(mermaid_source()))])
@@ -428,13 +428,13 @@ def test_provider_neutral_r2_write_verifies_pair_and_manifest(
 
     assert result["summary"]["published_variant_count"] == 2
     assert sorted(client.objects) == [
-        "prepared/library/manifest.json",
+        "prepared/example/manifest.json",
         (
-            "prepared/library/projection-assets/mermaid/"
+            "prepared/example/projection-assets/mermaid/"
             f"{DOC_ID}--mermaid-0001/dark.svg"
         ),
         (
-            "prepared/library/projection-assets/mermaid/"
+            "prepared/example/projection-assets/mermaid/"
             f"{DOC_ID}--mermaid-0001/light.svg"
         ),
     ]

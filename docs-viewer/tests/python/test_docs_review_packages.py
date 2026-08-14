@@ -31,7 +31,7 @@ def write_package(package_id: str = "fixture-review") -> Path:
             "package_id": package_id,
             "status": "validated",
             "title": "Fixture review",
-            "source_scope": "library",
+            "source_scope": "example",
             "supports_docs_review": True,
             "supports_return_import": True,
             "selected_doc_ids": ["fixture-root"],
@@ -70,7 +70,7 @@ def test_fixture_package_lists_builds_and_reads_generated_payload() -> None:
     edited_source = source_path.read_bytes()
     canonical_path = (
         package.parents[2]
-        / "docs-viewer/scopes/library/source/documents/fixture-root.md"
+        / "docs-viewer/scopes/example/source/documents/fixture-root.md"
     )
     canonical_path.parent.mkdir(parents=True)
     canonical_path.write_text(
@@ -107,7 +107,7 @@ def test_explicit_build_accepts_only_the_exact_package_identity() -> None:
             REPO_ROOT,
             {
                 "package_id": package.name,
-                "scope": "library",
+                "scope": "example",
             },
         )
 
@@ -136,8 +136,8 @@ def test_package_asset_inventory_drives_media_and_sandboxed_interactive_renderin
     source_path = package / "source/fixture-root.md"
     source_path.write_text(
         source_path.read_text(encoding="utf-8")
-        + "\n![Preview]([[media:docs/library/img/preview.png]])\n\n"
-        + "[[html-media:docs/library/html/demo.html height=320]]\n",
+        + "\n![Preview]([[media:docs/example/img/preview.png]])\n\n"
+        + "[[html-media:docs/example/html/demo.html height=320]]\n",
         encoding="utf-8",
     )
     media = package / "assets/media/preview.png"
@@ -153,12 +153,12 @@ def test_package_asset_inventory_drives_media_and_sandboxed_interactive_renderin
             "assets": [
                 {
                     "kind": "media",
-                    "token_path": "docs/library/img/preview.png",
+                    "token_path": "docs/example/img/preview.png",
                     "package_path": "assets/media/preview.png",
                 },
                 {
                     "kind": "interactive",
-                    "token_path": "docs/library/html/demo.html",
+                    "token_path": "docs/example/html/demo.html",
                     "package_path": "assets/interactive/demo.html",
                 },
             ],

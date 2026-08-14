@@ -18,8 +18,9 @@ import docs_write_rebuild
 from docs_import_candidate_projection import TRUSTED_SOURCE_STAGING_CODE
 from docs_import_test_support import (
     make_repo,
+    managed_media_path,
     stub_rebuild,
-    write_library_doc,
+    write_example_doc,
     write_returned_jsonl,
     write_scope_config,
     write_test_image,
@@ -44,7 +45,7 @@ def request_import(repo_root: Path, staged_filename: str, **body: object) -> dic
     return docs_management_import_service.handle_import_source(
         repo_root,
         {
-            "scope": "library",
+            "scope": "example",
             "source_directory": SOURCE_DIRECTORY,
             "staged_filename": staged_filename,
             **body,
@@ -121,10 +122,10 @@ def test_post_binds_preview_and_apply_to_exact_source_pair(
     with make_repo() as temp:
         repo_root = Path(temp)
         write_scope_config(repo_root)
-        write_library_doc(
+        write_example_doc(
             repo_root,
-            "library.md",
-            {"doc_id": "library", "title": "Library", "parent_id": ""},
+            "example.md",
+            {"doc_id": "example", "title": "Example", "parent_id": ""},
         )
         selected = source_root()
         source = selected / "notes.md"
@@ -153,7 +154,7 @@ def test_post_binds_preview_and_apply_to_exact_source_pair(
             request_import(repo_root, "nested/nested.md")
         with pytest.raises(ValueError, match="source_directory is required"):
             docs_management_import_service.handle_import_source(
-                repo_root, {"scope": "library", "staged_filename": "moved.md"}, dry_run=False,
+                repo_root, {"scope": "example", "staged_filename": "moved.md"}, dry_run=False,
             )
 
     assert preview["source_directory"] == SOURCE_DIRECTORY
@@ -173,10 +174,10 @@ def test_non_staging_markdown_package_keeps_its_media_root(
     with make_repo() as temp:
         repo_root = Path(temp)
         write_scope_config(repo_root)
-        write_library_doc(
+        write_example_doc(
             repo_root,
-            "library.md",
-            {"doc_id": "library", "title": "Library", "parent_id": ""},
+            "example.md",
+            {"doc_id": "example", "title": "Example", "parent_id": ""},
         )
         package = source_root() / "package-note"
         package.mkdir()
@@ -198,10 +199,10 @@ def test_non_staging_markdown_package_keeps_its_media_root(
 
         source_text = (repo_root / payload["path"]).read_text(encoding="utf-8")
         media_result = payload["inline_media_written"][0]
-        media_path = (
-            repo_root
-            / "site/assets/data/docs/scopes/library/media/img"
-            / media_result["artifact_identity"]
+        media_path = managed_media_path(
+            "example",
+            "img",
+            media_result["artifact_identity"],
         )
         media_exists = media_path.is_file()
         source_unchanged = source_bytes == (

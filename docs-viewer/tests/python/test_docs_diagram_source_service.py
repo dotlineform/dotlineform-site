@@ -34,15 +34,15 @@ def managed_media_path(scope: str, *parts: str) -> Path:
 
 def _configure_mermaid_fixture(root: Path) -> None:
     record = docs_scope_record(
-        "library",
+        "example",
         scope_type="public",
-        viewer_base_url="/library/",
+        viewer_base_url="/example/",
         include_scope_param=False,
-        default_doc_id="library",
+        default_doc_id="example",
         allow_unresolved_parent_ids=True,
         media_provider="repository",
-        media_location_root="site/assets/data/docs/scopes/library/media",
-        media_served_root="/assets/data/docs/scopes/library/media",
+        media_location_root="site/assets/data/docs/scopes/example/media",
+        media_served_root="/assets/data/docs/scopes/example/media",
         media_types=("img", "svg", "files", "html"),
     )
     record["media"]["build_sources"] = {  # type: ignore[index]
@@ -53,20 +53,20 @@ def _configure_mermaid_fixture(root: Path) -> None:
     }
     record["media"]["types"]["svg"]["build_inputs"] = ["mermaid"]  # type: ignore[index]
     record["sub_scopes"] = [
-        docs_sub_scope_record("library", "tags", scope_type="public")
+        docs_sub_scope_record("example", "tags", scope_type="public")
     ]
     write_docs_scope_config(root, [record])
 
-    doc_path = root / "docs-viewer/scopes/library/source/documents/library.md"
+    doc_path = root / "docs-viewer/scopes/example/source/documents/example.md"
     doc_path.write_text(
         doc_path.read_text(encoding="utf-8")
-        + "\n![Architecture]([[media:docs/library/svg/architecture.svg]])\n"
-        + "![Missing]([[media:docs/library/svg/missing.svg]])\n",
+        + "\n![Architecture]([[media:docs/example/svg/architecture.svg]])\n"
+        + "![Missing]([[media:docs/example/svg/missing.svg]])\n",
         encoding="utf-8",
     )
     detail_path = (
         root
-        / "docs-viewer/scopes/library/source/sub-scopes/tags/documents/detail.md"
+        / "docs-viewer/scopes/example/source/sub-scopes/tags/documents/detail.md"
     )
     detail_path.parent.mkdir(parents=True)
     detail_path.write_text(
@@ -75,13 +75,13 @@ def _configure_mermaid_fixture(root: Path) -> None:
         "title: Detail\n"
         "---\n"
         "# Detail\n\n"
-        "![Architecture]([[media:docs/library/svg/architecture.svg]])\n",
+        "![Architecture]([[media:docs/example/svg/architecture.svg]])\n",
         encoding="utf-8",
     )
-    source = managed_media_path("library", "build-source", "mermaid", "architecture.mmd")
+    source = managed_media_path("example", "build-source", "mermaid", "architecture.mmd")
     source.parent.mkdir(parents=True)
     source.write_text("flowchart LR\nA --> B\n", encoding="utf-8")
-    published = managed_media_path("library", "svg", "architecture.svg")
+    published = managed_media_path("example", "svg", "architecture.svg")
     published.parent.mkdir(parents=True)
     published.write_text("<svg xmlns='http://www.w3.org/2000/svg'><rect width='1'/></svg>", encoding="utf-8")
 
@@ -94,17 +94,17 @@ def test_manage_diagram_sources_lists_only_verified_same_basename_pairs() -> Non
         payload = docs_management_service.docs_management_get_payload(
             root,
             routes.DIAGRAM_SOURCES_PATH,
-            {"scope": ["library"], "doc_id": ["library"]},
+            {"scope": ["example"], "doc_id": ["example"]},
         )
 
     assert payload == {
         "ok": True,
-        "scope": "library",
-        "doc_id": "library",
+        "scope": "example",
+        "doc_id": "example",
         "sources": [
             {
                 "label": "Architecture",
-                "media_identity": "docs/library/svg/architecture.svg",
+                "media_identity": "docs/example/svg/architecture.svg",
                 "source_identity": "architecture.mmd",
             }
         ],
@@ -130,9 +130,9 @@ def test_open_diagram_source_rederives_registered_local_source_without_returning
             root,
             routes.OPEN_DIAGRAM_SOURCE_PATH,
             {
-                "scope": "library",
-                "doc_id": "library",
-                "media_identity": "docs/library/svg/architecture.svg",
+                "scope": "example",
+                "doc_id": "example",
+                "media_identity": "docs/example/svg/architecture.svg",
                 "editor": "vscode",
             },
         )
@@ -140,7 +140,7 @@ def test_open_diagram_source_rederives_registered_local_source_without_returning
     assert status == HTTPStatus.OK
     assert calls[0][:3] == ["open", "-a", "Visual Studio Code"]
     assert Path(calls[0][3]) == managed_media_path(
-        "library", "build-source", "mermaid", "architecture.mmd"
+        "example", "build-source", "mermaid", "architecture.mmd"
     ).resolve()
     assert payload["source_identity"] == "architecture.mmd"
     assert "path" not in payload
@@ -156,7 +156,7 @@ def test_manage_diagram_sources_use_explicit_sub_scope_target() -> None:
             root,
             routes.DIAGRAM_SOURCES_PATH,
             {
-                "scope": ["library"],
+                "scope": ["example"],
                 "sub_scope": ["tags"],
                 "doc_id": ["detail"],
             },
@@ -165,16 +165,16 @@ def test_manage_diagram_sources_use_explicit_sub_scope_target() -> None:
             root,
             routes.OPEN_DIAGRAM_SOURCE_PATH,
             {
-                "scope": "library",
+                "scope": "example",
                 "sub_scope": "tags",
                 "doc_id": "detail",
-                "media_identity": "docs/library/svg/architecture.svg",
+                "media_identity": "docs/example/svg/architecture.svg",
                 "editor": "vscode",
             },
             dry_run=True,
         )
 
-    assert payload["scope"] == "library"
+    assert payload["scope"] == "example"
     assert payload["sub_scope"] == "tags"
     assert payload["doc_id"] == "detail"
     assert [record["source_identity"] for record in payload["sources"]] == [
@@ -194,9 +194,9 @@ def test_open_diagram_source_rejects_media_not_registered_by_selected_document()
                 root,
                 routes.OPEN_DIAGRAM_SOURCE_PATH,
                 {
-                    "scope": "library",
+                    "scope": "example",
                     "doc_id": "alpha",
-                    "media_identity": "docs/library/svg/architecture.svg",
+                    "media_identity": "docs/example/svg/architecture.svg",
                     "editor": "vscode",
                 },
                 dry_run=True,
@@ -215,7 +215,7 @@ def test_open_diagram_source_failure_does_not_expose_the_physical_path(
             lambda *_args, **_kwargs: SimpleNamespace(
                 returncode=1,
                 stdout="",
-                stderr=f"could not open {managed_media_path('library', 'build-source', 'mermaid', 'architecture.mmd')}",
+                stderr=f"could not open {managed_media_path('example', 'build-source', 'mermaid', 'architecture.mmd')}",
             ),
         )
 
@@ -224,9 +224,9 @@ def test_open_diagram_source_failure_does_not_expose_the_physical_path(
                 root,
                 routes.OPEN_DIAGRAM_SOURCE_PATH,
                 {
-                    "scope": "library",
-                    "doc_id": "library",
-                    "media_identity": "docs/library/svg/architecture.svg",
+                    "scope": "example",
+                    "doc_id": "example",
+                    "media_identity": "docs/example/svg/architecture.svg",
                     "editor": "vscode",
                 },
             )

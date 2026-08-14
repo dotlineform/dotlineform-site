@@ -27,7 +27,7 @@ def write_fixture_package(projects_base: Path) -> None:
             "package_id": "fixture-review",
             "status": "validated",
             "title": "Fixture review",
-            "source_scope": "library",
+            "source_scope": "example",
             "supports_docs_review": True,
             "supports_return_import": True,
             "selected_doc_ids": ["fixture-root"],

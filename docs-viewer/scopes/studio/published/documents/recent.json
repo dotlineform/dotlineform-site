@@ -4,6 +4,38 @@
   "limit": 10,
   "docs": [
     {
+      "doc_id": "d-20260802-123452-6a2fd3",
+      "title": "DMM-1 — Data Model Maps Foundation Delivery",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-123452-6a2fd3.json",
+      "timestamp": "2026-08-14 17:26:27",
+      "parent_id": "d-20260802-123450-f7493d",
+      "parent_title": "Data Model Maps"
+    },
+    {
+      "doc_id": "d-20260715-094411-2b6e65",
+      "title": "Document Identity",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260715-094411-2b6e65.json",
+      "timestamp": "2026-08-14 17:21:58",
+      "parent_id": "d-20260424-000000-50b63f",
+      "parent_title": "Docs Viewer"
+    },
+    {
+      "doc_id": "d-20260607-222033-5d82a6",
+      "title": "Health And Capabilities Endpoints",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260607-222033-5d82a6.json",
+      "timestamp": "2026-08-14 17:21:58",
+      "parent_id": "d-20260607-222033-647b52",
+      "parent_title": "Endpoint Overview"
+    },
+    {
+      "doc_id": "d-20260503-202500-316d29",
+      "title": "Package Return Parser",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260503-202500-316d29.json",
+      "timestamp": "2026-08-14 17:21:58",
+      "parent_id": "d-20260424-000000-50b63f",
+      "parent_title": "Docs Viewer"
+    },
+    {
       "doc_id": "d-20260711-012238-814555",
       "title": "Knowledge System Vision",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260711-012238-814555.json",
@@ -50,39 +82,7 @@
       "timestamp": "2026-08-14 16:36:14",
       "parent_id": "d-20260423-000000-d015e6",
       "parent_title": "Studio"
-    },
-    {
-      "doc_id": "d-20260514-180120-b23811",
-      "title": "Dependencies",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260514-180120-b23811.json",
-      "timestamp": "2026-08-14 16:36:14",
-      "parent_id": "d-20260424-000000-50b63f",
-      "parent_title": "Docs Viewer"
-    },
-    {
-      "doc_id": "d-20260802-123452-6a2fd3",
-      "title": "DMM-1 — Data Model Maps Foundation Delivery",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-123452-6a2fd3.json",
-      "timestamp": "2026-08-14 16:36:14",
-      "parent_id": "d-20260802-123450-f7493d",
-      "parent_title": "Data Model Maps"
-    },
-    {
-      "doc_id": "d-20260523-222005-1085b2",
-      "title": "Projection Contract",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260523-222005-1085b2.json",
-      "timestamp": "2026-08-14 16:36:14",
-      "parent_id": "d-20260331-000000-4a16b0",
-      "parent_title": "Architecture"
-    },
-    {
-      "doc_id": "d-20260423-204839-111501",
-      "title": "Runtime Dependencies",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260423-204839-111501.json",
-      "timestamp": "2026-08-14 16:36:14",
-      "parent_id": "d-20260419-000000-d2e47b",
-      "parent_title": "Dev Home"
     }
   ],
-  "generated_at": "2026-08-14T16:06:50Z"
+  "generated_at": "2026-08-14T16:26:28Z"
 }

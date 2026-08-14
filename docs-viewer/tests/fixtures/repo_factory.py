@@ -248,7 +248,7 @@ def write_doc(
     path.write_text("\n".join(lines), encoding="utf-8")
 
 
-def write_library_doc(
+def write_example_doc(
     root: Path,
     filename: str,
     front_matter: dict[str, object],
@@ -256,7 +256,7 @@ def write_library_doc(
     body: str = "# Body\n",
     format_value: Callable[[object], str] = str,
 ) -> None:
-    write_doc(root, filename, front_matter, body=body, scope="library", format_value=format_value)
+    write_doc(root, filename, front_matter, body=body, scope="example", format_value=format_value)
 
 
 def write_staged_data_file(root: Path, filename: str, payload: object) -> Path:
@@ -293,20 +293,20 @@ def write_staged_package_file(root: Path, package: str, filename: str, payload: 
     return path
 
 
-def write_library_scope_config(root: Path, *, allow_unresolved_parent_ids: bool = True) -> None:
+def write_example_scope_config(root: Path, *, allow_unresolved_parent_ids: bool = True) -> None:
     write_docs_scope_config(
         root,
         [
             docs_scope_record(
-                "library",
+                "example",
                 scope_type="public",
-                viewer_base_url="/library/",
+                viewer_base_url="/example/",
                 include_scope_param=False,
-                default_doc_id="library",
+                default_doc_id="example",
                 allow_unresolved_parent_ids=allow_unresolved_parent_ids,
                 media_provider="repository",
-                media_location_root="site/assets/data/docs/scopes/library/media",
-                media_served_root="/assets/data/docs/scopes/library/media",
+                media_location_root="site/assets/data/docs/scopes/example/media",
+                media_served_root="/assets/data/docs/scopes/example/media",
                 media_types=("img", "svg", "files", "html"),
             )
         ],
@@ -390,8 +390,8 @@ def make_docs_import_repo(format_value: Callable[[object], str] = str) -> tempfi
         indent=2,
     )
     (data_sharing_workspace_root() / "import-staging").mkdir(parents=True, exist_ok=True)
-    write_library_scope_config(root)
-    write_library_doc(root, "library.md", {"doc_id": "library", "title": "Library", "parent_id": ""}, format_value=format_value)
-    write_library_doc(root, "alpha.md", {"doc_id": "alpha", "title": "Alpha", "parent_id": "library"}, format_value=format_value)
+    write_example_scope_config(root)
+    write_example_doc(root, "example.md", {"doc_id": "example", "title": "Example", "parent_id": ""}, format_value=format_value)
+    write_example_doc(root, "alpha.md", {"doc_id": "alpha", "title": "Alpha", "parent_id": "example"}, format_value=format_value)
     write_documents_prepare_profiles(root)
     return temp_dir

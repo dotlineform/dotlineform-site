@@ -65,11 +65,11 @@ def write_scope_config(root: Path) -> None:
                     media_types=("img", "svg", "files", "html"),
                 ),
                 docs_scope_record(
-                    "library",
+                    "example",
                     scope_type="public",
-                    viewer_base_url="/library/",
+                    viewer_base_url="/example/",
                     include_scope_param=False,
-                    default_doc_id="library",
+                    default_doc_id="example",
                 ),
                 docs_scope_record("external", scope_type="local_external", default_doc_id="external"),
             ],
@@ -150,13 +150,13 @@ def prepare_repo(root: Path, projects_root: Path) -> None:
         ],
     )
     write_generated_scope(
-        root / "docs-viewer/scopes/library/published/documents",
-        [{"doc_id": "library", "title": "Library"}],
-        [{"doc_id": "library", "title": "Library", "content_html": "<p>Library body</p>"}],
+        root / "docs-viewer/scopes/example/published/documents",
+        [{"doc_id": "example", "title": "Example"}],
+        [{"doc_id": "example", "title": "Example", "content_html": "<p>Example body</p>"}],
     )
     write_json(
-        root / "docs-viewer/scopes/library/published/documents/by-id/library.json",
-        {"title": "Library", "content_html": "<p>Library body</p>"},
+        root / "docs-viewer/scopes/example/published/documents/by-id/example.json",
+        {"title": "Example", "content_html": "<p>Example body</p>"},
     )
     write_generated_scope(
         projects_root / "docs-viewer/scopes/external/published/documents",
@@ -233,7 +233,7 @@ def test_snapshot_preview_rejects_invalid_or_inferred_selection_fields() -> None
             ({"scope": "studio"}, "non-empty array"),
             ({"scope": "studio", "doc_ids": []}, "non-empty array"),
             ({"scope": "studio", "doc_ids": ["parent", "parent"]}, "duplicate doc_id"),
-            ({"scope": "studio", "doc_ids": ["library"]}, "active generated scope"),
+            ({"scope": "studio", "doc_ids": ["example"]}, "active generated scope"),
             ({"scope": "studio", "doc_ids": ["../escape"]}, "safe HTML filename"),
             ({"scope": "studio", "doc_ids": ["parent"], "action": "export"}, "action is not supported"),
             ({"scope": "studio", "doc_ids": ["parent"], "mode": "complete"}, "mode is not supported"),
@@ -259,7 +259,7 @@ def test_snapshot_plans_and_renders_repo_public_and_external_local_generated_pay
 
         for scope, doc_id, folder_name in (
             ("studio", "parent", "studio selection - 2026-07-31"),
-            ("library", "library", "library - 2026-07-31"),
+            ("example", "example", "example - 2026-07-31"),
             ("external", "external", "external - 2026-07-31"),
         ):
             plan = exporter.plan_static_html_snapshot(
@@ -286,7 +286,7 @@ def test_snapshot_capability_accepts_readable_repo_public_and_external_generated
         workspace = exporter.static_html_export_capability()
 
         assert workspace == {"preview": True, "apply": True, "error": ""}
-        for scope, document_count in (("studio", 3), ("library", 1), ("external", 1)):
+        for scope, document_count in (("studio", 3), ("example", 1), ("external", 1)):
             capability = exporter.scope_static_html_export_capability(
                 repo_root,
                 scope,
@@ -556,14 +556,14 @@ def test_index_page_renders_tree_links() -> None:
 def test_rewrite_internal_docs_viewer_links_leaves_other_links() -> None:
     html = (
         '<a href="/docs/?scope=studio&amp;doc=child#section">Child</a>'
-        '<a href="/docs/?scope=library&amp;doc=library">Library</a>'
+        '<a href="/docs/?scope=example&amp;doc=example">Example</a>'
         '<a href="https://example.com/">External</a>'
     )
 
     rewritten = exporter.rewrite_internal_docs_viewer_links(html, scope="studio", link_prefix="")
 
     assert 'href="child.html#section"' in rewritten
-    assert 'href="/docs/?scope=library&amp;doc=library"' in rewritten
+    assert 'href="/docs/?scope=example&amp;doc=example"' in rewritten
     assert 'href="https://example.com/"' in rewritten
 
 
@@ -788,7 +788,7 @@ def test_snapshot_apply_reads_public_and_external_local_generated_scopes() -> No
         external_svg.parent.mkdir(parents=True)
         external_svg.write_bytes(b"<svg>external</svg>")
 
-        for scope in ("library", "external"):
+        for scope in ("example", "external"):
             preview = exporter.preview_static_html_export(
                 repo_root,
                 {"scope": scope, "doc_ids": [scope]},
@@ -812,13 +812,13 @@ def test_snapshot_apply_packages_public_scope_managed_media_without_fetching_ser
         repo_root = Path(repo_path)
         projects_root = Path(projects_path)
         prepare_repo(repo_root, projects_root)
-        library_payload_path = repo_root / "docs-viewer/scopes/library/published/documents/by-id/library.json"
-        library_payload = json.loads(library_payload_path.read_text(encoding="utf-8"))
-        library_payload["content_html"] = (
-            '<img src="/docs/media/library/img/photo.webp?cache=1">'
+        example_payload_path = repo_root / "docs-viewer/scopes/example/published/documents/by-id/example.json"
+        example_payload = json.loads(example_payload_path.read_text(encoding="utf-8"))
+        example_payload["content_html"] = (
+            '<img src="/docs/media/example/img/photo.webp?cache=1">'
         )
-        write_json(library_payload_path, library_payload)
-        managed_photo = projects_root / "docs-viewer/media/library/img/photo.webp"
+        write_json(example_payload_path, example_payload)
+        managed_photo = projects_root / "docs-viewer/media/example/img/photo.webp"
         managed_photo.parent.mkdir(parents=True)
         managed_photo.write_bytes(b"managed-photo")
 
@@ -827,16 +827,16 @@ def test_snapshot_apply_packages_public_scope_managed_media_without_fetching_ser
         ):
             preview = exporter.preview_static_html_export(
                 repo_root,
-                {"scope": "library", "doc_ids": ["library"]},
+                {"scope": "example", "doc_ids": ["example"]},
                 export_date=FIXED_EXPORT_DATE,
             )
             payload = exporter.apply_static_html_snapshot(repo_root, snapshot_apply_body(preview))
 
-        destination = projects_root / "docs-export/library - 2026-07-31"
+        destination = projects_root / "docs-export/example - 2026-07-31"
         assert payload["media_count"] == 1
         assert (destination / "media/img/photo.webp").read_bytes() == b"managed-photo"
         assert 'src="../media/img/photo.webp"' in (
-            destination / "docs/library.html"
+            destination / "docs/example.html"
         ).read_text(encoding="utf-8")
 
 

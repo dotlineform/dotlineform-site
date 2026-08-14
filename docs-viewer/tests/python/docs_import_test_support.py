@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import os
 import sys
 import tempfile
 from pathlib import Path
@@ -12,7 +13,7 @@ from repo_factory import (
     docs_scope_record,
     make_docs_import_repo,
     write_docs_scope_config,
-    write_library_doc as write_fixture_library_doc,
+    write_example_doc as write_fixture_example_doc,
     write_staged_data_file,
     write_staged_import_file,
     write_staged_package_file as write_fixture_staged_package_file,
@@ -32,6 +33,7 @@ for path in (DOCS_DIR,):
 import docs_import_source_service as import_source_service  # noqa: E402
 import docs_source_model as source_model  # noqa: E402
 import docs_write_rebuild as write_rebuild  # noqa: E402
+from docs_scope_config import DOCS_SCOPE_CONFIGS, DOCUMENT_SOURCE_ROOTS, document_source_path, load_docs_scope_configs  # noqa: E402
 from docs_management_import_service import handle_import_source as handle_managed_import_source  # noqa: E402
 from docs_document_packages import service as document_package_service  # noqa: E402
 
@@ -40,7 +42,15 @@ def handle_documents_import_preview(root: Path, body: dict[str, object], dry_run
     return document_package_service.review_returned(root, {**body, "dry_run": dry_run})
 
 def make_repo() -> tempfile.TemporaryDirectory:
-    return make_docs_import_repo(source_model.format_front_matter_value)
+    temp_dir = make_docs_import_repo(source_model.format_front_matter_value)
+    config = load_docs_scope_configs(Path(temp_dir.name))["example"]
+    DOCS_SCOPE_CONFIGS["example"] = config
+    DOCUMENT_SOURCE_ROOTS["example"] = document_source_path(config)
+    return temp_dir
+
+
+def managed_media_path(scope: str, *parts: str) -> Path:
+    return Path(os.environ["DOTLINEFORM_PROJECTS_BASE_DIR"]) / "docs-viewer/media" / scope / Path(*parts)
 
 
 def write_scope_config(root: Path) -> None:
@@ -48,22 +58,22 @@ def write_scope_config(root: Path) -> None:
         root,
         [
             docs_scope_record(
-                "library",
+                "example",
                 scope_type="public",
-                viewer_base_url="/library/",
+                viewer_base_url="/example/",
                 include_scope_param=False,
-                default_doc_id="library",
+                default_doc_id="example",
                 allow_unresolved_parent_ids=True,
                 media_provider="repository",
-                media_location_root="site/assets/data/docs/scopes/library/media",
-                media_served_root="/assets/data/docs/scopes/library/media",
+                media_location_root="site/assets/data/docs/scopes/example/media",
+                media_served_root="/assets/data/docs/scopes/example/media",
                 media_types=("img", "svg", "files", "html"),
             )
         ],
     )
 
 
-def write_staged(root: Path, filename: str, payload: object, scope: str = "library") -> None:
+def write_staged(root: Path, filename: str, payload: object, scope: str = "example") -> None:
     del scope
     write_staged_data_file(root, filename, payload)
 
@@ -75,7 +85,7 @@ def write_returned_jsonl(
     *,
     export_id: str = "ds_20260627T120000Z",
     profile_id: str = "document-content",
-    scope: str = "library",
+    scope: str = "example",
 ) -> None:
     meta_path = data_sharing_workspace_root() / "meta" / f"{export_id}.meta.json"
     meta_path.parent.mkdir(parents=True, exist_ok=True)
@@ -146,8 +156,8 @@ def write_test_image(path: Path, size: tuple[int, int]) -> None:
     Image.new("RGB", size, (180, 40, 30)).save(path)
 
 
-def write_library_doc(root: Path, filename: str, front_matter: dict[str, object], body: str = "# Body\n") -> None:
-    write_fixture_library_doc(root, filename, front_matter, body=body, format_value=source_model.format_front_matter_value)
+def write_example_doc(root: Path, filename: str, front_matter: dict[str, object], body: str = "# Body\n") -> None:
+    write_fixture_example_doc(root, filename, front_matter, body=body, format_value=source_model.format_front_matter_value)
 
 
 def stub_rebuild():

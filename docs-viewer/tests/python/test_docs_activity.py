@@ -99,14 +99,14 @@ def activity_entries(repo_root: Path) -> list[dict[str, object]]:
 def export_body() -> dict[str, object]:
     return {
         "profile_id": "document-content",
-        "doc_ids": ["library", "longform", "notes"],
+        "doc_ids": ["example", "longform", "notes"],
         "activity_context": {
             "page_id": "docs-manage",
             "action_id": "prepare-document-package",
             "route": "/docs/",
             "control_id": "docsViewerManagePreparePackageButton",
             "control_selector": "#docsViewerManagePreparePackageButton",
-            "correlation_id": "export:library",
+            "correlation_id": "export:example",
         },
     }
 
@@ -155,7 +155,7 @@ def test_docs_export_activity_writes_compact_doc_ids() -> None:
         assert entry["status"] == "completed"
         assert entry["page_id"] == "docs-manage"
         assert entry["user_action_id"] == "prepare-document-package"
-        assert entry["record_groups"]["docs"]["sample_ids"] == ["library", "longform", "notes"]
+        assert entry["record_groups"]["docs"]["sample_ids"] == ["example", "longform", "notes"]
         assert entry["source_refs"] == docs_activity.DOCS_ACTIVITY_SOURCE_REFS
         assert payload["activity_context"]["control_id"] == "docsViewerManagePreparePackageButton"
 

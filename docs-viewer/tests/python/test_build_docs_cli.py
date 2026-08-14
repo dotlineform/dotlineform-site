@@ -183,15 +183,15 @@ def test_python_docs_builder_writes_site_public_browser_config_on_cli_write() ->
         write_site_tools_config(root, media_base="")
         write_public_scope_config(root)
         write_public_source_docs(root)
-        exit_code, _, _ = run_cli(root, ["--scope", "library", "--write"])
+        exit_code, _, _ = run_cli(root, ["--scope", "example", "--write"])
 
         assert exit_code == 0
         public_config = read_json(root / "docs-viewer/config/defaults/docs-viewer-public-config.json")
         site_public_config = read_json(root / "site/docs-viewer/config/defaults/docs-viewer-public-config.json")
 
     assert site_public_config == public_config
-    assert [scope["scope_id"] for scope in site_public_config["scopes"]] == ["library"]
-    assert site_public_config["scopes"][0]["viewer_base_url"] == "/library/"
+    assert [scope["scope_id"] for scope in site_public_config["scopes"]] == ["example"]
+    assert site_public_config["scopes"][0]["viewer_base_url"] == "/example/"
 
 def test_python_docs_builder_cli_dry_run_does_not_write_outputs() -> None:
     with tempfile.TemporaryDirectory() as temp_path:

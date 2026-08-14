@@ -167,22 +167,22 @@ def write_external_scope_config(root: Path, external_root: Path) -> None:
 
 def write_public_scope_config(root: Path) -> None:
     write_report_registry(root)
-    write_route_config(root, public_scope="library", public_basis="edited")
-    library = docs_scope_record(
-        "library",
+    write_route_config(root, public_scope="example", public_basis="edited")
+    example = docs_scope_record(
+        "example",
         scope_type="public",
         meta="public scope",
-        viewer_base_url="/library/",
+        viewer_base_url="/example/",
         include_scope_param=False,
         default_doc_id=PARENT_DOC_ID,
         manage_only_tree_root_ids=[MANAGE_ROOT_DOC_ID],
     )
-    library["sub_scopes"] = [
-        docs_sub_scope_record("library", "tags", title="Tags", scope_type="public")
+    example["sub_scopes"] = [
+        docs_sub_scope_record("example", "tags", title="Tags", scope_type="public")
     ]
     write_docs_scope_config(
         root,
-        [library],
+        [example],
         {"recent_limit": 2},
     )
 
@@ -281,7 +281,7 @@ def write_public_source_docs(root: Path) -> None:
         parent_line = f"parent_id: {parent_id}\n" if parent_id else ""
         date_lines = "date: 2026-06-02\ndate_display: June 2026\n" if doc_id == CHILD_DOC_ID else ""
         write_text(
-            root / f"docs-viewer/scopes/library/source/documents/{doc_id}.md",
+            root / f"docs-viewer/scopes/example/source/documents/{doc_id}.md",
             f"""---
 doc_id: {doc_id}
 title: {json.dumps(title)}

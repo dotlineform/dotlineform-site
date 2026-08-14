@@ -51,29 +51,29 @@ def configure_mermaid_build(repo_root: Path) -> None:
 def test_inventory_lists_unreferenced_owned_media_and_reports_missing_references(tmp_path: Path) -> None:
     write_site_tools_config(tmp_path, media_base="https://media.example.test")
     record = docs_scope_record(
-        "library",
+        "example",
         scope_type="public",
-        viewer_base_url="/library/",
+        viewer_base_url="/example/",
         include_scope_param=False,
-        default_doc_id="library",
+        default_doc_id="example",
         media_types=("img", "svg", "files", "html"),
     )
     write_config(tmp_path, record)
-    source = tmp_path / "docs-viewer/scopes/library/source/documents/library.md"
+    source = tmp_path / "docs-viewer/scopes/example/source/documents/example.md"
     source.parent.mkdir(parents=True)
     source.write_text(
         """---
-doc_id: library
-title: Library
+doc_id: example
+title: Example
 ---
-![Used]([[media:docs/library/img/used.png]])
-[[html-media:docs/library/html/widget.html height=320]]
-[Missing]([[media:docs/library/files/missing.pdf]])
-[Direct route](/assets/data/docs/scopes/library/media/html/widget.html)
+![Used]([[media:docs/example/img/used.png]])
+[[html-media:docs/example/html/widget.html height=320]]
+[Missing]([[media:docs/example/files/missing.pdf]])
+[Direct route](/assets/data/docs/scopes/example/media/html/widget.html)
 """,
         encoding="utf-8",
     )
-    media_root = tmp_path / "projects/docs-viewer/media/library"
+    media_root = tmp_path / "projects/docs-viewer/media/example"
     html = media_root / "html/widget.html"
     html.parent.mkdir(parents=True)
     html.write_text("<!doctype html><title>Widget</title>", encoding="utf-8")
@@ -83,11 +83,11 @@ title: Library
 
     inventory = inventory_scope_media(
         tmp_path,
-        load_docs_scope_configs(tmp_path)["library"],
+        load_docs_scope_configs(tmp_path)["example"],
     )
 
     by_identity = {(item.media_type, item.identity): item for item in inventory.items}
-    assert by_identity[("img", "used.png")].document_ids == ("library",)
+    assert by_identity[("img", "used.png")].document_ids == ("example",)
     assert by_identity[("img", "unreferenced.png")].document_ids == ()
     assert by_identity[("html", "widget.html")].served_path.endswith("/html/widget.html")
     assert [(item.media_type, item.identity) for item in inventory.missing_references] == [
@@ -189,7 +189,7 @@ def test_referenced_build_media_identities_select_only_configured_same_scope_out
 ![Measured]([[media:docs/studio/svg/alpha.svg width=800]])
 ![Duplicate]([[media:docs/studio/svg/zeta.svg]])
 ![Raster]([[media:docs/studio/img/raster.png]])
-![Other scope]([[media:docs/library/svg/other.svg]])
+![Other scope]([[media:docs/example/svg/other.svg]])
 """
         ],
     )

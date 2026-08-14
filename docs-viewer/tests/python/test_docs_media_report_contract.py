@@ -91,7 +91,7 @@ def test_management_service_returns_selected_scope_docs_media_report(
     calls: list[tuple[Path, object]] = []
     report = {
         "schema_version": "docs_media_report_v1",
-        "scope": "library",
+        "scope": "example",
         "rows": [],
     }
 
@@ -103,11 +103,11 @@ def test_management_service_returns_selected_scope_docs_media_report(
     monkeypatch.setattr(
         management_service.source_model,
         "normalize_scope",
-        lambda value: "library" if value == "library" else (_ for _ in ()).throw(ValueError()),
+        lambda value: "example" if value == "example" else (_ for _ in ()).throw(ValueError()),
     )
     monkeypatch.setitem(
         management_service.source_model.DOCS_SCOPE_CONFIGS,
-        "library",
+        "example",
         config,
     )
     monkeypatch.setattr(
@@ -119,7 +119,7 @@ def test_management_service_returns_selected_scope_docs_media_report(
     status, payload = management_service.docs_management_post_response(
         tmp_path,
         routes.DOCS_MEDIA_REPORT_PATH,
-        {"scope": "library"},
+        {"scope": "example"},
     )
 
     assert status == HTTPStatus.OK
@@ -150,5 +150,5 @@ def test_docs_media_route_is_management_owned_and_rejects_extra_options(
         management_service.docs_management_post_response(
             tmp_path,
             routes.DOCS_MEDIA_REPORT_PATH,
-            {"scope": "library", "include_missing": True},
+            {"scope": "example", "include_missing": True},
         )

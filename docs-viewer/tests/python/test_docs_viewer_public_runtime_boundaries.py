@@ -231,7 +231,7 @@ def test_public_route_config_uses_public_report_registry_projection() -> None:
 
     for payload in (public_payload, manage_payload):
         for route in payload["routes"]:
-            if route["route_id"] in {"library", "analysis"}:
+            if route["route_id"] in {"example", "analysis"}:
                 assert route["config_urls"]["report_registry"] == "/assets/data/docs/public-reports.json"
 
 def test_route_configs_separate_app_kind_from_service_presence() -> None:

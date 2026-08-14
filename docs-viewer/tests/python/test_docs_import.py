@@ -43,11 +43,11 @@ def make_repo() -> tempfile.TemporaryDirectory:
                 },
                 "scopes": [
                     docs_scope_record(
-                        "library",
+                        "example",
                         scope_type="public",
-                        viewer_base_url="/library/",
+                        viewer_base_url="/example/",
                         include_scope_param=False,
-                        default_doc_id="library",
+                        default_doc_id="example",
                         allow_unresolved_parent_ids=True,
                     )
                 ],
@@ -55,8 +55,8 @@ def make_repo() -> tempfile.TemporaryDirectory:
         )
         + "\n",
     )
-    write_source_doc(root, "library", "Library")
-    write_source_doc(root, "alpha", "Alpha", parent_id="library")
+    write_source_doc(root, "example", "Example")
+    write_source_doc(root, "alpha", "Alpha", parent_id="example")
     return temp_dir
 
 
@@ -71,7 +71,7 @@ def write_source_doc(root: Path, doc_id: str, title: str, *, parent_id: str = ""
     if parent_id:
         lines.append(f"parent_id: {parent_id}")
     lines.extend(["---", "", f"# {title}", "", "Body text."])
-    write_text(root / f"docs-viewer/scopes/library/source/documents/{doc_id}.md", "\n".join(lines))
+    write_text(root / f"docs-viewer/scopes/example/source/documents/{doc_id}.md", "\n".join(lines))
 
 
 def write_staged(root: Path, filename: str, payload: object | str) -> None:
@@ -95,7 +95,7 @@ def write_sidecar_meta(root: Path, filename: str, profile_id: str, *, export_id:
             "export_id": export_id,
             "config_id": profile_id,
             "profile_id": profile_id,
-            "scope": "library",
+            "scope": "example",
         },
     )
 
@@ -116,7 +116,7 @@ def write_internal_meta(
         "data_domain": "documents",
         "config_id": profile_id,
         "profile_id": profile_id,
-        "scope": "library",
+        "scope": "example",
         "target_format": "jsonl",
         "record_shape": "document_rows",
         "selected_doc_ids": ["alpha"],
@@ -134,7 +134,7 @@ def parse(root: Path, filename: str) -> dict:
     paths = workspace_paths()
     return docs_document_packages.returned_parser.parse_staged_import(
         repo_root=root,
-        scope="library",
+        scope="example",
         staged_file=filename,
         staging_root=paths.import_staging,
         metadata_root=paths.meta,
@@ -192,7 +192,7 @@ def test_config_id_is_not_a_profile_id_fallback() -> None:
                     "adapter_id": "documents",
                     "data_domain": "documents",
                     "config_id": "document-content",
-                    "scope": "library",
+                    "scope": "example",
                     "target_format": "jsonl",
                     "record_shape": "document_rows",
                     "supports_docs_review": True,
@@ -240,7 +240,7 @@ def test_document_content_profile_is_sparse_document_changes() -> None:
                     "doc_id": "alpha",
                     "title": "Alpha",
                     "summary": "New summary.",
-                    "ancestors": [{"id": "library", "title": "Library"}],
+                    "ancestors": [{"id": "example", "title": "Example"}],
                     "children": [{"id": "alpha-child", "title": "Alpha Child"}],
                     "content": "Export context that should not determine import type.",
                 }
@@ -409,7 +409,7 @@ def test_parser_rejects_paths_outside_staging_root() -> None:
         paths = workspace_paths()
         report = docs_document_packages.returned_parser.parse_staged_import(
             repo_root=root,
-            scope="library",
+            scope="example",
             staged_file=str(outside),
             staging_root=paths.import_staging,
             metadata_root=paths.meta,

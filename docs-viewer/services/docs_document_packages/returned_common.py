@@ -76,7 +76,6 @@ def scope_title(scope: str) -> str:
     labels = {
         "analytics": "Analytics",
         "catalogue": "Catalogue",
-        "library": "Library",
     }
     return labels.get(normalized, normalized.title() if normalized else "Docs")
 

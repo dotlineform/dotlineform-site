@@ -185,7 +185,7 @@ def test_editorials_for_working_requires_the_exact_configured_collections() -> N
             table,
             working_scope="dotlineform",
             working_sub_scope="projects",
-            editorial_scope="library",
+            editorial_scope="example",
             editorial_sub_scope="works",
             working_doc_id=SOURCE_ID,
         )
@@ -340,7 +340,7 @@ def test_working_delete_removes_the_record_and_unrelated_delete_is_neutral(
 
     unrelated = lineage.apply_document_deletes(
         repo_root,
-        scope="library",
+        scope="example",
         sub_scope="works",
         doc_ids=[EDITORIAL_ID],
     )

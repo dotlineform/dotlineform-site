@@ -64,7 +64,7 @@ def fake_config() -> dict[str, object]:
                 "label": "Search",
                 "include": ["site/docs-viewer/runtime/js/shared/docs-viewer-search.js", "docs-viewer/services/docs_management_search.py"],
                 "shared": ["site/docs-viewer/runtime/js/shared/docs-viewer-shared.js"],
-                "routes": ["/library/"],
+                "routes": ["/example/"],
             },
             "management": {
                 "label": "Management",
@@ -84,9 +84,9 @@ def fake_config() -> dict[str, object]:
             },
         },
         "routes": {
-            "/library/": {
-                "label": "Library",
-                "path": "/library/",
+            "/example/": {
+                "label": "Example",
+                "path": "/example/",
                 "status": "mapped",
                 "include": ["site/docs-viewer/runtime/js/shared/docs-viewer-search.js", "docs-viewer/services/docs_management_search.py"],
                 "shared": ["site/docs-viewer/runtime/js/shared/docs-viewer-shared.js"],

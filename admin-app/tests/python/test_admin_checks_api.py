@@ -40,12 +40,12 @@ def write_minimal_config(repo_root: Path) -> None:
             "source-docs": {"label": "Source Docs", "include": ["docs-viewer/scopes/*/source/"]},
         },
         "areas": {
-            "search": {"label": "Search", "include": ["site/docs-viewer/runtime/js/**/*search*"], "shared": [], "routes": ["/library/"]}
+            "search": {"label": "Search", "include": ["site/docs-viewer/runtime/js/**/*search*"], "shared": [], "routes": ["/example/"]}
         },
         "routes": {
-            "/library/": {
-                "label": "Library",
-                "path": "/library/",
+            "/example/": {
+                "label": "Example",
+                "path": "/example/",
                 "status": "mapped",
                 "include": ["site/docs-viewer/runtime/js/shared/docs-viewer-search.js"],
                 "shared": [],
@@ -203,7 +203,7 @@ def test_checks_api_creates_write_run_with_files_report_artifacts(tmp_path: Path
             "scope": "docs-viewer",
             "families": ["runtime-js"],
             "areas": ["search"],
-            "routes": ["/library/"],
+            "routes": ["/example/"],
             "reports": ["files"],
             "write": True,
         },

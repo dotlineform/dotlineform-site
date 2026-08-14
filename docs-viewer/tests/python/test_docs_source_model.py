@@ -405,22 +405,6 @@ def test_load_scope_docs_rejects_unknown_studio_parent() -> None:
     assert f"Unknown parent_id 'missing' for doc '{FIXTURE_DOC_ID}'" in message
 
 
-def test_load_scope_docs_allows_unknown_library_parent() -> None:
-    with tempfile.TemporaryDirectory() as temp:
-        root = Path(temp)
-        write_doc(
-            root,
-            "docs-viewer/scopes/library/source/documents",
-            "child.md",
-            {"doc_id": FIXTURE_DOC_ID, "title": "Child", "parent_id": "external-parent"},
-        )
-
-        docs = source_model.load_scope_docs(root, "library")
-
-    assert [doc.doc_id for doc in docs] == [FIXTURE_DOC_ID]
-    assert docs[0].parent_id == "external-parent"
-
-
 def test_title_order_and_child_helpers_are_stable() -> None:
     parent = make_doc("parent", title="Parent")
     first = make_doc("first", title="bravo", parent_id="parent")
@@ -606,7 +590,6 @@ def main() -> None:
         test_atomic_source_write_failure_preserves_existing_file,
         test_load_scope_docs_rejects_duplicate_doc_ids,
         test_load_scope_docs_rejects_unknown_studio_parent,
-        test_load_scope_docs_allows_unknown_library_parent,
         test_title_order_and_child_helpers_are_stable,
         test_descendant_helper_handles_cycles_without_looping,
         test_source_rewrite_advances_only_for_recent_edit_content,

@@ -74,10 +74,10 @@ def write_scope_config(root: Path) -> None:
             encoding="utf-8"
         ),
     )
-    library = docs_scope_record(
-        "library",
+    example = docs_scope_record(
+        "example",
         scope_type="public",
-        viewer_base_url="/library/",
+        viewer_base_url="/example/",
         include_scope_param=False,
         default_doc_id=LIBRARY_DOC_ID,
         media_provider="repository",
@@ -85,34 +85,34 @@ def write_scope_config(root: Path) -> None:
     )
     write_docs_scope_config(
         root,
-        [docs_scope_record("studio", default_doc_id="studio"), library],
+        [docs_scope_record("studio", default_doc_id="studio"), example],
     )
 
 
 def prepare_publish_repo(root: Path) -> None:
     write_scope_config(root)
     write_json(
-        root / "docs-viewer/scopes/library/published/documents/index-tree.json",
+        root / "docs-viewer/scopes/example/published/documents/index-tree.json",
         {
             "schema": "docs_index_tree_v1",
             "viewer_options": {"manage_only_tree_root_ids": ["manage-root"]},
             "docs": [
                 {
                     "doc_id": LIBRARY_DOC_ID,
-                    "title": "Library",
-                    "content_url": f"/assets/data/docs/scopes/library/by-id/{LIBRARY_DOC_ID}.json",
+                    "title": "Example",
+                    "content_url": f"/assets/data/docs/scopes/example/by-id/{LIBRARY_DOC_ID}.json",
                     "report_id": "docs_subscope",
                     "children": [
                         {
                             "doc_id": "hidden",
                             "title": "Hidden",
-                            "content_url": "/assets/data/docs/scopes/library/by-id/hidden.json",
+                            "content_url": "/assets/data/docs/scopes/example/by-id/hidden.json",
                             "publishable": False,
                             "children": [
                                 {
                                     "doc_id": "hidden-child",
                                     "title": "Hidden Child",
-                                    "content_url": "/assets/data/docs/scopes/library/by-id/hidden-child.json",
+                                    "content_url": "/assets/data/docs/scopes/example/by-id/hidden-child.json",
                                 }
                             ],
                         }
@@ -121,74 +121,74 @@ def prepare_publish_repo(root: Path) -> None:
                 {
                     "doc_id": "manage-root",
                     "title": "Manage Root",
-                    "content_url": "/assets/data/docs/scopes/library/by-id/manage-root.json",
+                    "content_url": "/assets/data/docs/scopes/example/by-id/manage-root.json",
                 },
             ],
         },
     )
     write_json(
-        root / "docs-viewer/scopes/library/published/documents/recent.json",
+        root / "docs-viewer/scopes/example/published/documents/recent.json",
         {
             "schema": "docs_recent_v1",
             "basis": "edited",
             "docs": [
-                {"doc_id": "hidden", "title": "Hidden", "content_url": "/assets/data/docs/scopes/library/by-id/hidden.json", "timestamp": "2026-06-02 10:00:00"},
-                {"doc_id": LIBRARY_DOC_ID, "title": "Library", "content_url": f"/assets/data/docs/scopes/library/by-id/{LIBRARY_DOC_ID}.json", "timestamp": "2026-06-01 10:00:00"},
+                {"doc_id": "hidden", "title": "Hidden", "content_url": "/assets/data/docs/scopes/example/by-id/hidden.json", "timestamp": "2026-06-02 10:00:00"},
+                {"doc_id": LIBRARY_DOC_ID, "title": "Example", "content_url": f"/assets/data/docs/scopes/example/by-id/{LIBRARY_DOC_ID}.json", "timestamp": "2026-06-01 10:00:00"},
             ],
         },
     )
     write_json(
-        root / "docs-viewer/scopes/library/published/documents/.publish/recent.json",
+        root / "docs-viewer/scopes/example/published/documents/.publish/recent.json",
         {
             "schema": "docs_recent_v1",
             "basis": "edited",
             "docs": [
-                {"doc_id": LIBRARY_DOC_ID, "title": "Library", "content_url": f"/assets/data/docs/scopes/library/by-id/{LIBRARY_DOC_ID}.json", "timestamp": "2026-06-01 10:00:00"},
+                {"doc_id": LIBRARY_DOC_ID, "title": "Example", "content_url": f"/assets/data/docs/scopes/example/by-id/{LIBRARY_DOC_ID}.json", "timestamp": "2026-06-01 10:00:00"},
             ],
         },
     )
     write_json(
-        root / f"docs-viewer/scopes/library/published/documents/by-id/{LIBRARY_DOC_ID}.json",
+        root / f"docs-viewer/scopes/example/published/documents/by-id/{LIBRARY_DOC_ID}.json",
         {
-            "title": "Library",
+            "title": "Example",
             "content_html": (
                 '<p><a href="#" title=">" DATA-DOCS-VIEWER-LOCAL-TARGET="projects/3%20symbols">3 <em>symbols</em></a> '
                 '<a href=dlf-local:bad%ZZ>/Users/private</a> '
                 '<a href="#" data-docs-viewer-local-target=""></a> '
                 '<a href="https://example.com">ordinary</a> '
-                '<img src="/docs/media/library/img/diagram.png?size=2#view"> '
-                "<iframe src='/docs/media/library/html/widget.html'></iframe> "
-                '<span data-src="/docs/media/library/img/data.png" '
-                'data-path="/docs/media/library/img/prose.png">'
-                'src="/docs/media/library/img/text.png"</span></p>'
+                '<img src="/docs/media/example/img/diagram.png?size=2#view"> '
+                "<iframe src='/docs/media/example/html/widget.html'></iframe> "
+                '<span data-src="/docs/media/example/img/data.png" '
+                'data-path="/docs/media/example/img/prose.png">'
+                'src="/docs/media/example/img/text.png"</span></p>'
             ),
         },
     )
-    write_json(root / "docs-viewer/scopes/library/published/documents/by-id/hidden.json", {"title": "Hidden"})
-    write_json(root / "docs-viewer/scopes/library/published/documents/by-id/hidden-child.json", {"title": "Hidden Child"})
-    write_json(root / "docs-viewer/scopes/library/published/documents/by-id/manage-root.json", {"title": "Manage Root"})
+    write_json(root / "docs-viewer/scopes/example/published/documents/by-id/hidden.json", {"title": "Hidden"})
+    write_json(root / "docs-viewer/scopes/example/published/documents/by-id/hidden-child.json", {"title": "Hidden Child"})
+    write_json(root / "docs-viewer/scopes/example/published/documents/by-id/manage-root.json", {"title": "Manage Root"})
     write_json(
-        root / "docs-viewer/scopes/library/published/documents/semantic-tokens/index.json",
+        root / "docs-viewer/scopes/example/published/documents/semantic-tokens/index.json",
         {
             "schema_version": "docs_semantic_token_usage_index_v1",
-            "scope": "library",
+            "scope": "example",
             "occurrences": [],
         },
     )
     write_json(
-        root / "docs-viewer/scopes/library/published/documents/backlinks.json",
+        root / "docs-viewer/scopes/example/published/documents/backlinks.json",
         {
             "schema": "docs_backlinks_v1",
-            "scope": "library",
+            "scope": "example",
             "by_target": {LIBRARY_DOC_ID: []},
         },
     )
     write_json(
-        root / "docs-viewer/scopes/library/published/search/index.json",
+        root / "docs-viewer/scopes/example/published/search/index.json",
         {
             "header": {
                 "schema": "docs_viewer_search_index_v2",
-                "scope": "library",
+                "scope": "example",
                 "version": "fixture",
                 "count": 1,
             },
@@ -196,54 +196,54 @@ def prepare_publish_repo(root: Path) -> None:
             "docs": [
                 {
                     "id": LIBRARY_DOC_ID,
-                    "title": "Library",
-                    "href": f"/library/?doc={LIBRARY_DOC_ID}",
+                    "title": "Example",
+                    "href": f"/example/?doc={LIBRARY_DOC_ID}",
                 }
             ],
             "terms": {
-                "library": {"title": [0]},
+                "example": {"title": [0]},
                 LIBRARY_DOC_ID: {"identity": [0]},
             },
         },
     )
-    write_json(root / "site/assets/data/docs/scopes/library/index-tree.json", {"docs": []})
-    write_json(root / "site/assets/data/docs/scopes/library/by-id/stale.json", {"title": "Stale"})
-    write_json(root / "site/assets/data/docs/scopes/library/by-id/hidden.json", {"title": "Old Hidden"})
+    write_json(root / "site/assets/data/docs/scopes/example/index-tree.json", {"docs": []})
+    write_json(root / "site/assets/data/docs/scopes/example/by-id/stale.json", {"title": "Stale"})
+    write_json(root / "site/assets/data/docs/scopes/example/by-id/hidden.json", {"title": "Old Hidden"})
     write_json(
-        root / "site/assets/data/docs/scopes/library/by-id/hidden-child.json",
+        root / "site/assets/data/docs/scopes/example/by-id/hidden-child.json",
         {"title": "Old Hidden Child"},
     )
     write_text(
         root
-        / "site/assets/data/docs/scopes/library/projection-assets/mermaid"
+        / "site/assets/data/docs/scopes/example/projection-assets/mermaid"
         / "hidden--mermaid-0001/dark.svg",
         "<svg>old hidden dark</svg>",
     )
     write_text(
         root
-        / "site/assets/data/docs/scopes/library/projection-assets/mermaid"
+        / "site/assets/data/docs/scopes/example/projection-assets/mermaid"
         / "hidden--mermaid-0001/light.svg",
         "<svg>old hidden light</svg>",
     )
     write_json(
-        root / "site/assets/data/docs/scopes/library/semantic-tokens/index.json",
+        root / "site/assets/data/docs/scopes/example/semantic-tokens/index.json",
         {"schema_version": "stale"},
     )
     write_json(
-        root / "site/assets/data/docs/scopes/library/references/index.json",
+        root / "site/assets/data/docs/scopes/example/references/index.json",
         {"schema_version": "stale-pilot"},
     )
     write_text(
-        root / "site/assets/data/docs/scopes/library/media/html/widget.html",
+        root / "site/assets/data/docs/scopes/example/media/html/widget.html",
         "<!doctype html><title>Widget</title>",
     )
-    write_text(root / "site/assets/data/docs/scopes/library/media/img/diagram.png", "image bytes")
+    write_text(root / "site/assets/data/docs/scopes/example/media/img/diagram.png", "image bytes")
     write_json(
-        root / "site/assets/data/search/library/index.json",
+        root / "site/assets/data/search/example/index.json",
         {
             "header": {
                 "schema": "docs_viewer_search_index_v2",
-                "scope": "library",
+                "scope": "example",
                 "version": "stale",
                 "count": 0,
             },
@@ -254,19 +254,19 @@ def prepare_publish_repo(root: Path) -> None:
     )
 
 
-def write_library_subject_source(root: Path, field_name: str, value: str) -> None:
+def write_example_subject_source(root: Path, field_name: str, value: str) -> None:
     write_text(
-        root / f"docs-viewer/scopes/library/source/documents/{LIBRARY_DOC_ID}.md",
+        root / f"docs-viewer/scopes/example/source/documents/{LIBRARY_DOC_ID}.md",
         "\n".join(
             [
                 "---",
                 f'doc_id: "{LIBRARY_DOC_ID}"',
-                'title: "Library"',
+                'title: "Example"',
                 "publishable: true",
                 f'{field_name}: "{value}"',
                 "---",
                 "",
-                "# Library",
+                "# Example",
                 "",
             ]
         ),
@@ -306,8 +306,8 @@ def test_publish_confirm_applies_explicit_exclusions_and_retains_unrelated_files
         repo_root = Path(temp_path)
         prepare_publish_repo(repo_root)
 
-        preview = docs_publish_gate.publish_confirm(repo_root, {"scope": "library"})
-        applied = docs_publish_gate.publish_apply(repo_root, {"scope": "library", "confirm": True})
+        preview = docs_publish_gate.publish_confirm(repo_root, {"scope": "example"})
+        applied = docs_publish_gate.publish_apply(repo_root, {"scope": "example", "confirm": True})
 
         assert preview["operation"] == "confirm"
         assert preview["schema_version"] == "docs_publish_gate_v3"
@@ -315,28 +315,28 @@ def test_publish_confirm_applies_explicit_exclusions_and_retains_unrelated_files
         assert preview["document_publish_count"] == 2
         assert preview["document_changed_count"] > preview["document_publish_count"]
         assert preview["docs"]["excluded"] == [
-            "site/assets/data/docs/scopes/library/by-id/hidden.json",
-            "site/assets/data/docs/scopes/library/by-id/hidden-child.json",
+            "site/assets/data/docs/scopes/example/by-id/hidden.json",
+            "site/assets/data/docs/scopes/example/by-id/hidden-child.json",
             (
-                "site/assets/data/docs/scopes/library/projection-assets/mermaid/"
+                "site/assets/data/docs/scopes/example/projection-assets/mermaid/"
                 "hidden--mermaid-0001/dark.svg"
             ),
             (
-                "site/assets/data/docs/scopes/library/projection-assets/mermaid/"
+                "site/assets/data/docs/scopes/example/projection-assets/mermaid/"
                 "hidden--mermaid-0001/light.svg"
             ),
         ]
         assert "removed" not in preview["docs"]
         assert "removed_count" not in preview
-        assert "site/assets/data/docs/scopes/library/by-id/stale.json" not in preview["docs"]["excluded"]
-        assert "site/assets/data/docs/scopes/library/media/html/widget.html" not in preview["docs"]["excluded"]
-        assert "site/assets/data/docs/scopes/library/media/img/diagram.png" not in preview["docs"]["excluded"]
+        assert "site/assets/data/docs/scopes/example/by-id/stale.json" not in preview["docs"]["excluded"]
+        assert "site/assets/data/docs/scopes/example/media/html/widget.html" not in preview["docs"]["excluded"]
+        assert "site/assets/data/docs/scopes/example/media/img/diagram.png" not in preview["docs"]["excluded"]
         assert preview["document_locations"] == {"changed": [], "excluded": []}
         assert applied["operation"] == "apply"
-        public_tree = json.loads((repo_root / "site/assets/data/docs/scopes/library/index-tree.json").read_text(encoding="utf-8"))
-        recent = json.loads((repo_root / "site/assets/data/docs/scopes/library/recent.json").read_text(encoding="utf-8"))
+        public_tree = json.loads((repo_root / "site/assets/data/docs/scopes/example/index-tree.json").read_text(encoding="utf-8"))
+        recent = json.loads((repo_root / "site/assets/data/docs/scopes/example/recent.json").read_text(encoding="utf-8"))
         public_doc = json.loads(
-            (repo_root / f"site/assets/data/docs/scopes/library/by-id/{LIBRARY_DOC_ID}.json").read_text(encoding="utf-8")
+            (repo_root / f"site/assets/data/docs/scopes/example/by-id/{LIBRARY_DOC_ID}.json").read_text(encoding="utf-8")
         )
 
         assert public_tree["docs"][0]["doc_id"] == LIBRARY_DOC_ID
@@ -346,42 +346,42 @@ def test_publish_confirm_applies_explicit_exclusions_and_retains_unrelated_files
         assert public_doc["content_html"] == (
             '<p>3 symbols [local file or folder] [local file or folder] '
             '<a href="https://example.com">ordinary</a> '
-            '<img src="/assets/data/docs/scopes/library/media/img/diagram.png?size=2#view"> '
-            "<iframe src='/assets/data/docs/scopes/library/media/html/widget.html'></iframe> "
-            '<span data-src="/docs/media/library/img/data.png" '
-            'data-path="/docs/media/library/img/prose.png">'
-            'src="/docs/media/library/img/text.png"</span></p>'
+            '<img src="/assets/data/docs/scopes/example/media/img/diagram.png?size=2#view"> '
+            "<iframe src='/assets/data/docs/scopes/example/media/html/widget.html'></iframe> "
+            '<span data-src="/docs/media/example/img/data.png" '
+            'data-path="/docs/media/example/img/prose.png">'
+            'src="/docs/media/example/img/text.png"</span></p>'
         )
         assert "dlf-local:" not in json.dumps(public_doc)
         assert "data-docs-viewer-local-target" not in json.dumps(public_doc)
         assert (
             repo_root
-            / f"site/assets/data/docs/scopes/library/by-id/{LIBRARY_DOC_ID}.json"
+            / f"site/assets/data/docs/scopes/example/by-id/{LIBRARY_DOC_ID}.json"
         ).exists()
-        assert not (repo_root / "site/assets/data/docs/scopes/library/by-id/hidden.json").exists()
-        assert not (repo_root / "site/assets/data/docs/scopes/library/by-id/hidden-child.json").exists()
+        assert not (repo_root / "site/assets/data/docs/scopes/example/by-id/hidden.json").exists()
+        assert not (repo_root / "site/assets/data/docs/scopes/example/by-id/hidden-child.json").exists()
         assert not (
             repo_root
-            / "site/assets/data/docs/scopes/library/projection-assets/mermaid/hidden--mermaid-0001"
+            / "site/assets/data/docs/scopes/example/projection-assets/mermaid/hidden--mermaid-0001"
         ).exists()
-        assert (repo_root / "site/assets/data/docs/scopes/library/by-id/manage-root.json").is_file()
-        assert (repo_root / "site/assets/data/docs/scopes/library/references").is_dir()
-        assert (repo_root / "site/assets/data/docs/scopes/library/semantic-tokens").is_dir()
+        assert (repo_root / "site/assets/data/docs/scopes/example/by-id/manage-root.json").is_file()
+        assert (repo_root / "site/assets/data/docs/scopes/example/references").is_dir()
+        assert (repo_root / "site/assets/data/docs/scopes/example/semantic-tokens").is_dir()
         assert not (
-            repo_root / "site/assets/data/docs/scopes/library/backlinks.json"
+            repo_root / "site/assets/data/docs/scopes/example/backlinks.json"
         ).exists()
         assert json.loads(
             (
                 repo_root
-                / "site/assets/data/docs/scopes/library/semantic-tokens/index.json"
+                / "site/assets/data/docs/scopes/example/semantic-tokens/index.json"
             ).read_text(encoding="utf-8")
         ) == {"schema_version": "stale"}
-        assert (repo_root / "site/assets/data/docs/scopes/library/by-id/stale.json").is_file()
-        assert (repo_root / "site/assets/data/docs/scopes/library/media/html/widget.html").is_file()
-        assert (repo_root / "site/assets/data/docs/scopes/library/media/img/diagram.png").is_file()
-        assert json.loads((repo_root / "site/assets/data/search/library/index.json").read_text(encoding="utf-8"))["docs"][0]["id"] == LIBRARY_DOC_ID
+        assert (repo_root / "site/assets/data/docs/scopes/example/by-id/stale.json").is_file()
+        assert (repo_root / "site/assets/data/docs/scopes/example/media/html/widget.html").is_file()
+        assert (repo_root / "site/assets/data/docs/scopes/example/media/img/diagram.png").is_file()
+        assert json.loads((repo_root / "site/assets/data/search/example/index.json").read_text(encoding="utf-8"))["docs"][0]["id"] == LIBRARY_DOC_ID
         assert not (
-            repo_root / "site/assets/data/search/library/document-locations.json"
+            repo_root / "site/assets/data/search/example/document-locations.json"
         ).exists()
 
 
@@ -396,34 +396,34 @@ def test_one_publish_action_reconciles_repository_and_r2_media_without_blocking_
         public_files = config["scopes"][1]["public_projection"]["media"]["files"]
         public_files["location"] = {
             "provider": "r2",
-            "path": "docs/library/files",
+            "path": "docs/example/files",
         }
-        public_files["served_path_prefix"] = "https://media.example.test/docs/library/files"
+        public_files["served_path_prefix"] = "https://media.example.test/docs/example/files"
         write_json(config_path, config)
         working_doc_path = (
             repo_root
-            / f"docs-viewer/scopes/library/published/documents/by-id/{LIBRARY_DOC_ID}.json"
+            / f"docs-viewer/scopes/example/published/documents/by-id/{LIBRARY_DOC_ID}.json"
         )
         working_doc = json.loads(working_doc_path.read_text(encoding="utf-8"))
         working_doc["content_html"] = working_doc["content_html"].replace(
             "</p>",
-            '<a href="/docs/media/library/files/download.pdf">Download</a></p>',
+            '<a href="/docs/media/example/files/download.pdf">Download</a></p>',
         )
         write_json(working_doc_path, working_doc)
         managed_root = (
             Path(os.environ["DOTLINEFORM_PROJECTS_BASE_DIR"])
-            / "docs-viewer/media/library"
+            / "docs-viewer/media/example"
         )
         (managed_root / "img").mkdir(parents=True, exist_ok=True)
         (managed_root / "files").mkdir(parents=True, exist_ok=True)
         (managed_root / "img/diagram.png").write_bytes(b"managed image")
         (managed_root / "files/download.pdf").write_bytes(b"managed pdf")
-        public_img = repo_root / "site/assets/data/docs/scopes/library/media/img"
+        public_img = repo_root / "site/assets/data/docs/scopes/example/media/img"
         (public_img / "stale.png").write_bytes(b"stale")
         client = FakeR2Client(
             {
-                "docs/library/files/": b"",
-                "docs/library/files/stale.pdf": b"stale",
+                "docs/example/files/": b"",
+                "docs/example/files/stale.pdf": b"stale",
             }
         )
         monkeypatch.setattr(
@@ -432,10 +432,10 @@ def test_one_publish_action_reconciles_repository_and_r2_media_without_blocking_
             lambda *_args, **_kwargs: client,
         )
 
-        preview = docs_publish_gate.publish_confirm(repo_root, {"scope": "library"})
+        preview = docs_publish_gate.publish_confirm(repo_root, {"scope": "example"})
         applied = docs_publish_gate.publish_apply(
             repo_root,
-            {"scope": "library", "confirm": True},
+            {"scope": "example", "confirm": True},
         )
 
         assert preview["media"]["copy_count"] == 2
@@ -452,11 +452,11 @@ def test_one_publish_action_reconciles_repository_and_r2_media_without_blocking_
         assert (public_img / "diagram.png").read_bytes() == b"managed image"
         assert not (public_img / "stale.png").exists()
         assert (
-            repo_root / "site/assets/data/docs/scopes/library/media/html/widget.html"
+            repo_root / "site/assets/data/docs/scopes/example/media/html/widget.html"
         ).is_file()
-        assert client.objects["docs/library/files/download.pdf"] == b"managed pdf"
-        assert "docs/library/files/stale.pdf" not in client.objects
-        assert "docs/library/files/" in client.objects
+        assert client.objects["docs/example/files/download.pdf"] == b"managed pdf"
+        assert "docs/example/files/stale.pdf" not in client.objects
+        assert "docs/example/files/" in client.objects
 
 
 def test_publish_follow_through_adds_reassigns_and_removes_exact_catalogue_urls() -> None:
@@ -467,12 +467,12 @@ def test_publish_follow_through_adds_reassigns_and_removes_exact_catalogue_urls(
         series_path = repo_root / "site/assets/series/index/009.json"
         write_json(work_path, catalogue_work_payload("00042", []))
         write_json(series_path, catalogue_series_payload("009", []))
-        write_library_subject_source(repo_root, "work_id", "00042")
-        public_url = f"/library/?doc={LIBRARY_DOC_ID}"
+        write_example_subject_source(repo_root, "work_id", "00042")
+        public_url = f"/example/?doc={LIBRARY_DOC_ID}"
 
         first = docs_publish_gate.publish_apply(
             repo_root,
-            {"scope": "library", "confirm": True},
+            {"scope": "example", "confirm": True},
         )
 
         assert first["catalogue_document_urls"] == {
@@ -483,10 +483,10 @@ def test_publish_follow_through_adds_reassigns_and_removes_exact_catalogue_urls(
         }
         assert json.loads(work_path.read_text(encoding="utf-8"))["work"]["doc_url"] == [public_url]
 
-        write_library_subject_source(repo_root, "series_id", "009")
+        write_example_subject_source(repo_root, "series_id", "009")
         reassigned = docs_publish_gate.publish_apply(
             repo_root,
-            {"scope": "library", "confirm": True},
+            {"scope": "example", "confirm": True},
         )
 
         assert reassigned["catalogue_document_urls"]["affected_targets"] == [
@@ -496,20 +496,20 @@ def test_publish_follow_through_adds_reassigns_and_removes_exact_catalogue_urls(
         assert json.loads(work_path.read_text(encoding="utf-8"))["work"]["doc_url"] == []
         assert json.loads(series_path.read_text(encoding="utf-8"))["series"]["doc_url"] == [public_url]
 
-        working_tree_path = repo_root / "docs-viewer/scopes/library/published/documents/index-tree.json"
+        working_tree_path = repo_root / "docs-viewer/scopes/example/published/documents/index-tree.json"
         working_tree = json.loads(working_tree_path.read_text(encoding="utf-8"))
         working_tree["docs"] = [
             {
                 "doc_id": LIBRARY_DOC_ID,
-                "title": "Library",
+                "title": "Example",
                 "content_url": (
-                    f"/assets/data/docs/scopes/library/by-id/{LIBRARY_DOC_ID}.json"
+                    f"/assets/data/docs/scopes/example/by-id/{LIBRARY_DOC_ID}.json"
                 ),
                 "publishable": False,
             }
         ]
         write_json(working_tree_path, working_tree)
-        working_search_path = repo_root / "docs-viewer/scopes/library/published/search/index.json"
+        working_search_path = repo_root / "docs-viewer/scopes/example/published/search/index.json"
         working_search = json.loads(working_search_path.read_text(encoding="utf-8"))
         working_search["docs"] = []
         working_search["terms"] = {}
@@ -517,7 +517,7 @@ def test_publish_follow_through_adds_reassigns_and_removes_exact_catalogue_urls(
         write_json(working_search_path, working_search)
         unpublished = docs_publish_gate.publish_apply(
             repo_root,
-            {"scope": "library", "confirm": True},
+            {"scope": "example", "confirm": True},
         )
 
         assert unpublished["catalogue_document_urls"]["affected_targets"] == [
@@ -535,7 +535,7 @@ def test_publish_remains_applied_when_catalogue_follow_through_fails(
         work_path = repo_root / "site/assets/works/index/00042.json"
         write_json(work_path, catalogue_work_payload("00042", []))
         work_before = work_path.read_bytes()
-        write_library_subject_source(repo_root, "work_id", "00042")
+        write_example_subject_source(repo_root, "work_id", "00042")
 
         def fail_follow_through(_plan: object) -> object:
             raise OSError("simulated post-publication Catalogue failure")
@@ -548,7 +548,7 @@ def test_publish_remains_applied_when_catalogue_follow_through_fails(
 
         applied = docs_publish_gate.publish_apply(
             repo_root,
-            {"scope": "library", "confirm": True},
+            {"scope": "example", "confirm": True},
         )
 
         assert applied["applied"] is True
@@ -561,7 +561,7 @@ def test_publish_remains_applied_when_catalogue_follow_through_fails(
         }
         assert (
             repo_root
-            / f"site/assets/data/docs/scopes/library/by-id/{LIBRARY_DOC_ID}.json"
+            / f"site/assets/data/docs/scopes/example/by-id/{LIBRARY_DOC_ID}.json"
         ).is_file()
         assert work_path.read_bytes() == work_before
 
@@ -584,7 +584,7 @@ def test_document_publish_remains_applied_when_media_reconciliation_fails(
 
         applied = docs_publish_gate.publish_apply(
             repo_root,
-            {"scope": "library", "confirm": True},
+            {"scope": "example", "confirm": True},
         )
 
         assert applied["applied"] is True
@@ -594,7 +594,7 @@ def test_document_publish_remains_applied_when_media_reconciliation_fails(
         ]
         assert (
             repo_root
-            / f"site/assets/data/docs/scopes/library/by-id/{LIBRARY_DOC_ID}.json"
+            / f"site/assets/data/docs/scopes/example/by-id/{LIBRARY_DOC_ID}.json"
         ).is_file()
 
 
@@ -605,16 +605,16 @@ def test_publish_confirm_and_apply_include_configured_sub_scope_payloads() -> No
         config_path = repo_root / "docs-viewer/config/scopes/docs_scopes.json"
         config = json.loads(config_path.read_text(encoding="utf-8"))
         config["scopes"][1]["sub_scopes"] = [
-            docs_sub_scope_record("library", "tags", title="Tags", scope_type="public")
+            docs_sub_scope_record("example", "tags", title="Tags", scope_type="public")
         ]
         write_json(config_path, config)
         write_json(
-            repo_root / "docs-viewer/scopes/library/published/documents/sub-scopes/tags/manifest.json",
+            repo_root / "docs-viewer/scopes/example/published/documents/sub-scopes/tags/manifest.json",
             {"docs": [{"doc_id": "scale", "title": "Scale"}]},
         )
         write_json(
             repo_root
-            / "docs-viewer/scopes/library/published/documents/sub-scopes/tags/manage-manifest.json",
+            / "docs-viewer/scopes/example/published/documents/sub-scopes/tags/manage-manifest.json",
             {
                 "docs": [
                     {
@@ -631,56 +631,56 @@ def test_publish_confirm_and_apply_include_configured_sub_scope_payloads() -> No
                 ]
             },
         )
-        write_json(repo_root / "docs-viewer/scopes/library/published/documents/sub-scopes/tags/by-id/scale.json", {"doc_id": "scale", "title": "Scale"})
-        write_json(repo_root / "docs-viewer/scopes/library/published/documents/sub-scopes/tags/by-id/hidden.json", {"doc_id": "hidden", "title": "Hidden"})
-        write_json(repo_root / "site/assets/data/docs/scopes/library/tags/manifest.json", {"doc_ids": "old"})
+        write_json(repo_root / "docs-viewer/scopes/example/published/documents/sub-scopes/tags/by-id/scale.json", {"doc_id": "scale", "title": "Scale"})
+        write_json(repo_root / "docs-viewer/scopes/example/published/documents/sub-scopes/tags/by-id/hidden.json", {"doc_id": "hidden", "title": "Hidden"})
+        write_json(repo_root / "site/assets/data/docs/scopes/example/tags/manifest.json", {"doc_ids": "old"})
         write_json(
-            repo_root / "site/assets/data/docs/scopes/library/tags/manage-manifest.json",
+            repo_root / "site/assets/data/docs/scopes/example/tags/manage-manifest.json",
             {"docs": [{"doc_id": "leaked"}]},
         )
-        write_json(repo_root / "site/assets/data/docs/scopes/library/tags/by-id/old.json", {"doc_id": "old"})
-        write_json(repo_root / "site/assets/data/docs/scopes/library/tags/by-id/hidden.json", {"doc_id": "hidden", "title": "Old Hidden"})
+        write_json(repo_root / "site/assets/data/docs/scopes/example/tags/by-id/old.json", {"doc_id": "old"})
+        write_json(repo_root / "site/assets/data/docs/scopes/example/tags/by-id/hidden.json", {"doc_id": "hidden", "title": "Old Hidden"})
         working_scale_bytes = (
             repo_root
-            / "docs-viewer/scopes/library/published/documents/sub-scopes/tags/by-id/scale.json"
+            / "docs-viewer/scopes/example/published/documents/sub-scopes/tags/by-id/scale.json"
         ).read_bytes()
 
-        preview = docs_publish_gate.publish_confirm(repo_root, {"scope": "library"})
-        applied = docs_publish_gate.publish_apply(repo_root, {"scope": "library", "confirm": True})
+        preview = docs_publish_gate.publish_confirm(repo_root, {"scope": "example"})
+        applied = docs_publish_gate.publish_apply(repo_root, {"scope": "example", "confirm": True})
 
         assert preview["operation"] == "confirm"
         assert preview["sub_scopes"] == [
             {
                 "sub_scope": "tags",
                 "changed": [
-                    "site/assets/data/docs/scopes/library/tags/by-id/scale.json",
-                    "site/assets/data/docs/scopes/library/tags/manifest.json",
+                    "site/assets/data/docs/scopes/example/tags/by-id/scale.json",
+                    "site/assets/data/docs/scopes/example/tags/manifest.json",
                 ],
                 "excluded": [
-                    "site/assets/data/docs/scopes/library/tags/by-id/hidden.json",
+                    "site/assets/data/docs/scopes/example/tags/by-id/hidden.json",
                 ],
                 "changed_count": 2,
                 "excluded_count": 1,
             }
         ]
-        assert "site/assets/data/docs/scopes/library/tags/by-id/old.json" not in preview["docs"]["excluded"]
+        assert "site/assets/data/docs/scopes/example/tags/by-id/old.json" not in preview["docs"]["excluded"]
         assert not any("/sub-scopes/tags/" in path for path in preview["docs"]["changed"])
         assert applied["operation"] == "apply"
-        public_manifest = json.loads((repo_root / "site/assets/data/docs/scopes/library/tags/manifest.json").read_text(encoding="utf-8"))
-        public_scale = json.loads((repo_root / "site/assets/data/docs/scopes/library/tags/by-id/scale.json").read_text(encoding="utf-8"))
+        public_manifest = json.loads((repo_root / "site/assets/data/docs/scopes/example/tags/manifest.json").read_text(encoding="utf-8"))
+        public_scale = json.loads((repo_root / "site/assets/data/docs/scopes/example/tags/by-id/scale.json").read_text(encoding="utf-8"))
 
         assert public_manifest == {"docs": [{"doc_id": "scale", "title": "Scale"}]}
         assert public_scale["title"] == "Scale"
         assert (
-            repo_root / "site/assets/data/docs/scopes/library/tags/by-id/scale.json"
+            repo_root / "site/assets/data/docs/scopes/example/tags/by-id/scale.json"
         ).read_bytes() == working_scale_bytes
-        assert not (repo_root / "site/assets/data/docs/scopes/library/tags/by-id/hidden.json").exists()
-        assert (repo_root / "site/assets/data/docs/scopes/library/tags/by-id/old.json").is_file()
+        assert not (repo_root / "site/assets/data/docs/scopes/example/tags/by-id/hidden.json").exists()
+        assert (repo_root / "site/assets/data/docs/scopes/example/tags/by-id/old.json").is_file()
         assert (
             repo_root
-            / "site/assets/data/docs/scopes/library/tags/manage-manifest.json"
+            / "site/assets/data/docs/scopes/example/tags/manage-manifest.json"
         ).is_file()
-        assert not (repo_root / "site/assets/data/docs/scopes/library/sub-scopes/tags").exists()
+        assert not (repo_root / "site/assets/data/docs/scopes/example/sub-scopes/tags").exists()
 
 
 def test_public_projection_keeps_public_reports_and_strips_local_reports() -> None:
@@ -719,22 +719,22 @@ def test_public_projection_keeps_public_reports_and_strips_local_reports() -> No
 def test_public_media_url_projection_handles_quoted_and_unquoted_exact_attributes() -> None:
     projected = docs_publish_gate.project_public_media_urls(
         (
-            '<img src="/docs/media/library/img/quoted.png">'
-            "<a href=/docs/media/library/files/unquoted.pdf>Download</a>"
-            '<span data-src="/docs/media/library/img/ignored.png">'
-            'src="/docs/media/library/img/prose.png"</span>'
+            '<img src="/docs/media/example/img/quoted.png">'
+            "<a href=/docs/media/example/files/unquoted.pdf>Download</a>"
+            '<span data-src="/docs/media/example/img/ignored.png">'
+            'src="/docs/media/example/img/prose.png"</span>'
         ),
         {
-            "/docs/media/library/img": "/public/img",
-            "/docs/media/library/files": "https://media.example.test/files",
+            "/docs/media/example/img": "/public/img",
+            "/docs/media/example/files": "https://media.example.test/files",
         },
     )
 
     assert projected == (
         '<img src="/public/img/quoted.png">'
         "<a href=https://media.example.test/files/unquoted.pdf>Download</a>"
-        '<span data-src="/docs/media/library/img/ignored.png">'
-        'src="/docs/media/library/img/prose.png"</span>'
+        '<span data-src="/docs/media/example/img/ignored.png">'
+        'src="/docs/media/example/img/prose.png"</span>'
     )
 
 
@@ -756,7 +756,7 @@ def test_successful_publish_sets_retains_and_clears_lineage_publication(
         config = json.loads(config_path.read_text(encoding="utf-8"))
         config["scopes"][1]["sub_scopes"] = [
             docs_sub_scope_record(
-                "library",
+                "example",
                 "works",
                 title="Works",
                 scope_type="public",
@@ -771,7 +771,7 @@ def test_successful_publish_sets_retains_and_clears_lineage_publication(
         write_json(config_path, config)
         working_root = (
             repo_root
-            / "docs-viewer/scopes/library/published/documents/sub-scopes/works"
+            / "docs-viewer/scopes/example/published/documents/sub-scopes/works"
         )
         write_json(
             working_root / "manifest.json",
@@ -798,7 +798,7 @@ def test_successful_publish_sets_retains_and_clears_lineage_publication(
                     "sub_scope": "projects",
                 },
                 "editorial_collection": {
-                    "scope": "library",
+                    "scope": "example",
                     "sub_scope": "works",
                 },
                 "records": [
@@ -819,12 +819,12 @@ def test_successful_publish_sets_retains_and_clears_lineage_publication(
 
         docs_publish_gate.publish_apply(
             repo_root,
-            {"scope": "library", "confirm": True},
+            {"scope": "example", "confirm": True},
         )
 
         table = json.loads(lineage_path.read_text(encoding="utf-8"))
         assert table["records"][0]["editorials"][0]["published_url"] == (
-            f"/library/?doc={LINEAGE_REPORT_HOST_ID}"
+            f"/example/?doc={LINEAGE_REPORT_HOST_ID}"
             f"&subdoc={LINEAGE_EDITORIAL_ID}"
         )
         assert rebuilds == [("dotlineform", "projects")]
@@ -835,14 +835,14 @@ def test_successful_publish_sets_retains_and_clears_lineage_publication(
         )
         docs_publish_gate.publish_apply(
             repo_root,
-            {"scope": "library", "confirm": True},
+            {"scope": "example", "confirm": True},
         )
         assert lineage_path.read_bytes() == published_bytes
         assert rebuilds == [("dotlineform", "projects")]
         assert json.loads(
             (
                 repo_root
-                / f"site/assets/data/docs/scopes/library/works/by-id/{LINEAGE_EDITORIAL_ID}.json"
+                / f"site/assets/data/docs/scopes/example/works/by-id/{LINEAGE_EDITORIAL_ID}.json"
             ).read_text(encoding="utf-8")
         )["title"] == "Editorial B updated"
 
@@ -861,7 +861,7 @@ def test_successful_publish_sets_retains_and_clears_lineage_publication(
         )
         docs_publish_gate.publish_apply(
             repo_root,
-            {"scope": "library", "confirm": True},
+            {"scope": "example", "confirm": True},
         )
 
         table = json.loads(lineage_path.read_text(encoding="utf-8"))
@@ -872,7 +872,7 @@ def test_successful_publish_sets_retains_and_clears_lineage_publication(
         ]
         assert not (
             repo_root
-            / f"site/assets/data/docs/scopes/library/works/by-id/{LINEAGE_EDITORIAL_ID}.json"
+            / f"site/assets/data/docs/scopes/example/works/by-id/{LINEAGE_EDITORIAL_ID}.json"
         ).exists()
 
 
@@ -883,13 +883,13 @@ def test_publish_rejects_configured_sub_scope_without_manifest() -> None:
         config_path = repo_root / "docs-viewer/config/scopes/docs_scopes.json"
         config = json.loads(config_path.read_text(encoding="utf-8"))
         config["scopes"][1]["sub_scopes"] = [
-            docs_sub_scope_record("library", "tags", title="Tags", scope_type="public")
+            docs_sub_scope_record("example", "tags", title="Tags", scope_type="public")
         ]
         write_json(config_path, config)
-        (repo_root / "docs-viewer/scopes/library/published/documents/sub-scopes/tags").mkdir(parents=True)
+        (repo_root / "docs-viewer/scopes/example/published/documents/sub-scopes/tags").mkdir(parents=True)
 
         try:
-            docs_publish_gate.publish_confirm(repo_root, {"scope": "library"})
+            docs_publish_gate.publish_confirm(repo_root, {"scope": "example"})
         except FileNotFoundError as exc:
             assert "sub-scope tags manifest not found" in str(exc)
         else:
@@ -902,7 +902,7 @@ def test_publish_apply_requires_confirmation() -> None:
         prepare_publish_repo(repo_root)
 
         try:
-            docs_publish_gate.publish_apply(repo_root, {"scope": "library"})
+            docs_publish_gate.publish_apply(repo_root, {"scope": "example"})
         except ValueError as exc:
             assert "confirm must be true" in str(exc)
         else:

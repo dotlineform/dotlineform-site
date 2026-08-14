@@ -28,16 +28,16 @@ from docs_scope_config import load_docs_scope_configs  # noqa: E402
 
 def public_config(repo_root: Path, *, media_type: str, provider: str = "repository"):
     record = docs_scope_record(
-        "library",
+        "example",
         scope_type="public",
-        viewer_base_url="/library/",
+        viewer_base_url="/example/",
         include_scope_param=False,
-        default_doc_id="library",
+        default_doc_id="example",
         media_provider=provider,
         media_types=(media_type,),
     )
     write_docs_scope_config(repo_root, [record])
-    return load_docs_scope_configs(repo_root)["library"]
+    return load_docs_scope_configs(repo_root)["example"]
 
 
 def payload_files(doc_id: str, content_html: str) -> dict[Path, bytes]:
@@ -90,7 +90,7 @@ def test_referenced_public_media_uses_exact_attributes_and_unions_collections() 
     with tempfile.TemporaryDirectory() as temp_path:
         repo_root = Path(temp_path)
         config = public_config(repo_root, media_type="img")
-        prefix = "/assets/data/docs/scopes/library/media/img"
+        prefix = "/assets/data/docs/scopes/example/media/img"
         parent = payload_files(
             "parent",
             (
@@ -103,11 +103,11 @@ def test_referenced_public_media_uses_exact_attributes_and_unions_collections() 
 
         references = referenced_public_media(
             config,
-            [("library", parent), ("library/tags", child)],
+            [("example", parent), ("example/tags", child)],
         )
 
     assert references == {
-        ("img", "shared.png"): ("library/tags:child", "library:parent")
+        ("img", "shared.png"): ("example/tags:child", "example:parent")
     }
 
 
@@ -115,11 +115,11 @@ def test_repository_plan_and_apply_copy_retain_missing_and_remove_only_stale_pub
     with tempfile.TemporaryDirectory() as temp_path:
         repo_root = Path(temp_path)
         config = public_config(repo_root, media_type="img")
-        managed = managed_root("library", "img")
+        managed = managed_root("example", "img")
         managed.mkdir(parents=True)
         (managed / "shared.png").write_bytes(b"new shared")
         (managed / "current.png").write_bytes(b"current")
-        public = repo_root / "site/assets/data/docs/scopes/library/media/img"
+        public = repo_root / "site/assets/data/docs/scopes/example/media/img"
         public.mkdir(parents=True)
         (public / "shared.png").write_bytes(b"old shared")
         (public / "current.png").write_bytes(b"current")
@@ -127,10 +127,10 @@ def test_repository_plan_and_apply_copy_retain_missing_and_remove_only_stale_pub
         (public / "stale.png").write_bytes(b"stale")
         (public / ".gitkeep").write_bytes(b"")
         references = {
-            ("img", "shared.png"): ("library:parent", "library/tags:child"),
-            ("img", "current.png"): ("library:parent",),
-            ("img", "retained.png"): ("library:parent",),
-            ("img", "missing.png"): ("library:parent",),
+            ("img", "shared.png"): ("example:parent", "example/tags:child"),
+            ("img", "current.png"): ("example:parent",),
+            ("img", "retained.png"): ("example:parent",),
+            ("img", "missing.png"): ("example:parent",),
         }
 
         plan = plan_public_media_reconciliation(repo_root, config, references)
@@ -162,17 +162,17 @@ def test_r2_apply_verifies_copy_removes_stale_and_preserves_prefix_marker() -> N
     with tempfile.TemporaryDirectory() as temp_path:
         repo_root = Path(temp_path)
         config = public_config(repo_root, media_type="files", provider="r2")
-        managed = managed_root("library", "files")
+        managed = managed_root("example", "files")
         managed.mkdir(parents=True)
         (managed / "download.pdf").write_bytes(b"managed pdf")
         client = FakeR2Client(
             {
-                "docs/library/files/": b"",
-                "docs/library/files/stale.pdf": b"stale",
+                "docs/example/files/": b"",
+                "docs/example/files/stale.pdf": b"stale",
             }
         )
         references = {
-            ("files", "download.pdf"): ("library:parent",),
+            ("files", "download.pdf"): ("example:parent",),
         }
 
         plan = plan_public_media_reconciliation(
@@ -193,24 +193,24 @@ def test_r2_apply_verifies_copy_removes_stale_and_preserves_prefix_marker() -> N
         assert applied["copied_count"] == 1
         assert applied["removed_count"] == 1
         assert applied["error_count"] == 0
-        assert client.objects["docs/library/files/download.pdf"] == b"managed pdf"
-        assert "docs/library/files/stale.pdf" not in client.objects
-        assert "docs/library/files/" in client.objects
+        assert client.objects["docs/example/files/download.pdf"] == b"managed pdf"
+        assert "docs/example/files/stale.pdf" not in client.objects
+        assert "docs/example/files/" in client.objects
 
 
 def test_r2_copy_failure_is_reported_without_stopping_other_reconciliation() -> None:
     with tempfile.TemporaryDirectory() as temp_path:
         repo_root = Path(temp_path)
         config = public_config(repo_root, media_type="files", provider="r2")
-        managed = managed_root("library", "files")
+        managed = managed_root("example", "files")
         managed.mkdir(parents=True)
         (managed / "download.pdf").write_bytes(b"managed pdf")
         client = FakeR2Client(
-            {"docs/library/files/stale.pdf": b"stale"},
+            {"docs/example/files/stale.pdf": b"stale"},
             fail_put=True,
         )
         references = {
-            ("files", "download.pdf"): ("library:parent",),
+            ("files", "download.pdf"): ("example:parent",),
         }
 
         applied = apply_public_media_reconciliation(
@@ -224,5 +224,5 @@ def test_r2_copy_failure_is_reported_without_stopping_other_reconciliation() -> 
         assert applied["removed_count"] == 1
         assert applied["error_count"] == 1
         assert applied["errors"] == ["files: simulated R2 write failure"]
-        assert "docs/library/files/download.pdf" not in client.objects
-        assert "docs/library/files/stale.pdf" not in client.objects
+        assert "docs/example/files/download.pdf" not in client.objects
+        assert "docs/example/files/stale.pdf" not in client.objects

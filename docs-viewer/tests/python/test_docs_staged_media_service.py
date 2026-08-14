@@ -39,8 +39,8 @@ def test_staged_media_listing_separates_images_and_files() -> None:
         write_staged_bytes(root, "notes.pdf", b"pdf")
         write_staged_text(root, "document.md", "# Document\n")
 
-        images = staged_media.list_staged_media_files(root, "library", "image")["files"]
-        files = staged_media.list_staged_media_files(root, "library", "file")["files"]
+        images = staged_media.list_staged_media_files(root, "example", "image")["files"]
+        files = staged_media.list_staged_media_files(root, "example", "file")["files"]
 
     assert [item["filename"] for item in images] == ["architecture.mmd", "diagram.svg", "photo.png"]
     assert [item["media_format"] for item in images] == ["mermaid", "svg", "raster"]
@@ -53,21 +53,21 @@ def test_staged_media_accepts_safe_spaces_and_unicode_in_media_identity() -> Non
         root = Path(temp)
         write_staged_text(root, filename, "<svg xmlns='http://www.w3.org/2000/svg'><title>Energy wells</title></svg>")
 
-        listing = staged_media.list_staged_media_files(root, "library", "image")
+        listing = staged_media.list_staged_media_files(root, "example", "image")
         payload = staged_media.apply_staged_media(root, {
-            "scope": "library",
+            "scope": "example",
             "media_kind": "image",
             "staged_filename": filename,
             "label": "Energy wells",
         })
-        published = managed_media_path("library", "svg", "energy-wells-memory-attractor-basins.svg")
+        published = managed_media_path("example", "svg", "energy-wells-memory-attractor-basins.svg")
 
         assert published.exists()
 
     assert [item["filename"] for item in listing["files"]] == [filename]
     assert payload["staged_filename"] == filename
     assert payload["published_filename"] == "energy-wells-memory-attractor-basins.svg"
-    assert payload["media_identity"] == "docs/library/svg/energy-wells-memory-attractor-basins.svg"
+    assert payload["media_identity"] == "docs/example/svg/energy-wells-memory-attractor-basins.svg"
 
 
 def test_management_routes_expose_staged_media_listing_and_write_free_preview() -> None:
@@ -78,19 +78,19 @@ def test_management_routes_expose_staged_media_listing_and_write_free_preview() 
         listing = docs_management_read_service.docs_management_get_payload(
             root,
             routes.STAGED_MEDIA_FILES_PATH,
-            {"scope": ["library"], "media_kind": ["image"]},
+            {"scope": ["example"], "media_kind": ["image"]},
         )
         status, preview = docs_management_service.docs_management_post_response(
             root,
             routes.STAGED_MEDIA_PREVIEW_PATH,
             {
-                "scope": "library",
+                "scope": "example",
                 "media_kind": "image",
                 "staged_filename": "photo.png",
                 "label": "Photo",
             },
         )
-        published = managed_media_path("library", "img", "photo.png")
+        published = managed_media_path("example", "img", "photo.png")
 
         assert not published.exists()
 
@@ -116,20 +116,20 @@ def test_configured_media_source_lists_only_the_selected_lower_root(
         monkeypatch.setenv("DOTLINEFORM_PROJECTS_BASE_DIR", str(projects))
         write_docs_scope_config(
             root,
-            [docs_scope_record("library", media_source_root="analysis")],
+            [docs_scope_record("example", media_source_root="analysis")],
         )
 
-        listing = staged_media.list_staged_media_files(root, "library", "image")
+        listing = staged_media.list_staged_media_files(root, "example", "image")
         nested = staged_media.list_staged_media_files(
             root,
-            "library",
+            "example",
             "image",
             "analysis/diagrams",
         )
         with pytest.raises(ValueError, match="configured media source root"):
             staged_media.list_staged_media_files(
                 root,
-                "library",
+                "example",
                 "image",
                 "processing",
             )
@@ -157,10 +157,10 @@ def test_add_from_configured_media_source_records_private_evidence_after_publish
         monkeypatch.setenv("DOTLINEFORM_PROJECTS_BASE_DIR", str(projects))
         write_docs_scope_config(
             root,
-            [docs_scope_record("library", media_source_root="analysis")],
+            [docs_scope_record("example", media_source_root="analysis")],
         )
         request = {
-            "scope": "library",
+            "scope": "example",
             "media_kind": "image",
             "source_directory": "analysis/images",
             "staged_filename": "photo.png",
@@ -168,10 +168,10 @@ def test_add_from_configured_media_source_records_private_evidence_after_publish
         }
 
         preview = staged_media.preview_staged_media(root, request)
-        assert media_source_evidence_for(root, "library", "img", "photo.png") is None
+        assert media_source_evidence_for(root, "example", "img", "photo.png") is None
         payload = staged_media.apply_staged_media(root, request)
-        evidence = media_source_evidence_for(root, "library", "img", "photo.png")
-        published = managed_media_path("library", "img", "photo.png")
+        evidence = media_source_evidence_for(root, "example", "img", "photo.png")
+        published = managed_media_path("example", "img", "photo.png")
 
         assert source.read_bytes() == b"source photo"
         assert published.read_bytes() == b"source photo"
@@ -193,14 +193,14 @@ def test_configured_media_source_requires_the_exact_selected_directory(
         monkeypatch.setenv("DOTLINEFORM_PROJECTS_BASE_DIR", str(projects))
         write_docs_scope_config(
             root,
-            [docs_scope_record("library", media_source_root="analysis")],
+            [docs_scope_record("example", media_source_root="analysis")],
         )
 
         with pytest.raises(ValueError, match="source_directory is required"):
             staged_media.preview_staged_media(
                 root,
                 {
-                    "scope": "library",
+                    "scope": "example",
                     "media_kind": "image",
                     "staged_filename": "photo.png",
                     "label": "Photo",
@@ -212,23 +212,23 @@ def test_add_image_publishes_then_returns_markdown_without_creating_a_doc() -> N
     with make_repo() as temp:
         root = Path(temp)
         write_staged_bytes(root, "photo.png", b"png bytes")
-        documents_root = root / "docs-viewer/scopes/library/source/documents"
+        documents_root = root / "docs-viewer/scopes/example/source/documents"
         before = sorted(documents_root.glob("*.md"))
 
         preview = staged_media.preview_staged_media(root, {
-            "scope": "library",
+            "scope": "example",
             "media_kind": "image",
             "staged_filename": "photo.png",
             "label": "A quiet field",
         })
         payload = staged_media.apply_staged_media(root, {
-            "scope": "library",
+            "scope": "example",
             "media_kind": "image",
             "staged_filename": "photo.png",
             "label": "A quiet field",
         })
         after = sorted(documents_root.glob("*.md"))
-        published = managed_media_path("library", "img", "photo.png")
+        published = managed_media_path("example", "img", "photo.png")
         published_bytes = published.read_bytes()
 
     assert preview["collision"] == "new"
@@ -236,7 +236,7 @@ def test_add_image_publishes_then_returns_markdown_without_creating_a_doc() -> N
     assert payload["publish"]["status"] == "uploaded"
     assert payload["add_caption"] is False
     assert published_bytes == b"png bytes"
-    assert payload["markdown"] == "![A quiet field]([[media:docs/library/img/photo.png]])"
+    assert payload["markdown"] == "![A quiet field]([[media:docs/example/img/photo.png]])"
     assert before == after
 
 
@@ -245,7 +245,7 @@ def test_add_image_caption_uses_explicit_full_figure_contract() -> None:
         root = Path(temp)
         write_staged_bytes(root, "photo.png", b"png bytes")
         request = {
-            "scope": "library",
+            "scope": "example",
             "media_kind": "image",
             "staged_filename": "photo.png",
             "label": "A [quiet] field & <stream>",
@@ -260,7 +260,7 @@ def test_add_image_caption_uses_explicit_full_figure_contract() -> None:
 
     expected = (
         '<figure class="docsViewerFigure docsViewerFigure--full-column">\n'
-        '  <img src="[[media:docs/library/img/photo.png]]" '
+        '  <img src="[[media:docs/example/img/photo.png]]" '
         'alt="A [quiet] field &amp; &lt;stream&gt;">\n'
         "  <figcaption>\n"
         '    <span class="docsViewerFigure__caption">'
@@ -279,7 +279,7 @@ def test_add_image_preview_and_apply_share_explicit_figure_fragment() -> None:
         root = Path(temp)
         write_staged_bytes(root, "photo.png", b"png bytes")
         request = {
-            "scope": "library",
+            "scope": "example",
             "media_kind": "image",
             "staged_filename": "photo.png",
             "label": "Alternative text",
@@ -296,7 +296,7 @@ def test_add_image_preview_and_apply_share_explicit_figure_fragment() -> None:
     expected = (
         '<figure class="docsViewerFigure docsViewerFigure--image-left '
         'docsViewerFigure--natural-width">\n'
-        '  <img src="[[media:docs/library/img/photo.png]]" alt="Alternative text">\n'
+        '  <img src="[[media:docs/example/img/photo.png]]" alt="Alternative text">\n'
         "  <figcaption>\n"
         '    <span class="docsViewerFigure__caption">Visible caption</span>\n'
         '    <span class="docsViewerFigure__summary">Supporting copy\nSecond line</span>\n'
@@ -312,7 +312,7 @@ def test_add_image_rejects_explicit_empty_caption_and_invalid_placement() -> Non
         root = Path(temp)
         write_staged_bytes(root, "photo.png", b"png bytes")
         request = {
-            "scope": "library",
+            "scope": "example",
             "media_kind": "image",
             "staged_filename": "photo.png",
             "label": "Alternative text",
@@ -336,7 +336,7 @@ def test_add_image_caption_requires_explicit_caption_and_placement() -> None:
         root = Path(temp)
         write_staged_bytes(root, "photo.png", b"png bytes")
         request = {
-            "scope": "library",
+            "scope": "example",
             "media_kind": "image",
             "staged_filename": "photo.png",
             "label": "Alternative text",
@@ -363,18 +363,18 @@ def test_add_file_publishes_to_file_media_role() -> None:
         write_staged_bytes(root, "notes.pdf", b"%PDF")
 
         payload = staged_media.apply_staged_media(root, {
-            "scope": "library",
+            "scope": "example",
             "media_kind": "file",
             "staged_filename": "notes.pdf",
             "label": "Research notes",
             "add_caption": True,
         })
-        published = managed_media_path("library", "files", "notes.pdf")
+        published = managed_media_path("example", "files", "notes.pdf")
 
         assert published.read_bytes() == b"%PDF"
 
     assert payload["add_caption"] is False
-    assert payload["markdown"] == "[Research notes]([[media:docs/library/files/notes.pdf]])"
+    assert payload["markdown"] == "[Research notes]([[media:docs/example/files/notes.pdf]])"
 
 
 def test_add_image_uses_external_scope_owned_media_root(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -421,13 +421,13 @@ def test_add_svg_uses_shared_sanitizer_and_requires_confirmed_replacement() -> N
             </svg>""",
         )
         request = {
-            "scope": "library",
+            "scope": "example",
             "media_kind": "image",
             "staged_filename": "diagram.svg",
             "label": "Energy wells",
         }
         first = staged_media.apply_staged_media(root, request)
-        published = managed_media_path("library", "svg", "diagram.svg")
+        published = managed_media_path("example", "svg", "diagram.svg")
         sanitized = published.read_text(encoding="utf-8")
 
         write_staged_text(root, "diagram.svg", "<svg xmlns='http://www.w3.org/2000/svg'><circle r='4'/></svg>")
@@ -438,7 +438,7 @@ def test_add_svg_uses_shared_sanitizer_and_requires_confirmed_replacement() -> N
         replaced_bytes = published.read_bytes()
 
     assert first["svg"]["title"] == "Energy wells"
-    assert first["markdown"] == "![Energy wells]([[media:docs/library/svg/diagram.svg]])"
+    assert first["markdown"] == "![Energy wells]([[media:docs/example/svg/diagram.svg]])"
     assert "<script" not in sanitized
     assert "onclick" not in sanitized
     assert "https://example.com" not in sanitized
@@ -449,17 +449,17 @@ def test_add_svg_uses_shared_sanitizer_and_requires_confirmed_replacement() -> N
     assert b"<circle" in replaced_bytes
 
 
-def _configure_library_mermaid(root: Path) -> None:
+def _configure_example_mermaid(root: Path) -> None:
     record = docs_scope_record(
-        "library",
+        "example",
         scope_type="public",
-        viewer_base_url="/library/",
+        viewer_base_url="/example/",
         include_scope_param=False,
-        default_doc_id="library",
+        default_doc_id="example",
         allow_unresolved_parent_ids=True,
         media_provider="repository",
-        media_location_root="site/assets/data/docs/scopes/library/media",
-        media_served_root="/assets/data/docs/scopes/library/media",
+        media_location_root="site/assets/data/docs/scopes/example/media",
+        media_served_root="/assets/data/docs/scopes/example/media",
         media_types=("img", "svg", "files", "html"),
     )
     record["media"]["build_sources"] = {  # type: ignore[index]
@@ -489,7 +489,7 @@ def test_add_mermaid_copies_canonical_source_renders_svg_and_returns_token(
 ) -> None:
     with make_repo() as temp:
         root = Path(temp)
-        _configure_library_mermaid(root)
+        _configure_example_mermaid(root)
         write_staged_text(
             root,
             "architecture.mmd",
@@ -501,18 +501,18 @@ def test_add_mermaid_copies_canonical_source_renders_svg_and_returns_token(
         )
         staged = staged_media.configured_workspace_paths(root).import_staging / "architecture.mmd"
         monkeypatch.setattr(staged_media, "produce_mermaid_svg", _fake_mermaid_producer)
-        documents_root = root / "docs-viewer/scopes/library/source/documents"
+        documents_root = root / "docs-viewer/scopes/example/source/documents"
         before = sorted(documents_root.glob("*.md"))
 
         payload = staged_media.apply_staged_media(root, {
-            "scope": "library",
+            "scope": "example",
             "media_kind": "image",
             "staged_filename": "architecture.mmd",
             "label": "Architecture",
         })
         after = sorted(documents_root.glob("*.md"))
-        canonical = managed_media_path("library", "build-source", "mermaid", "architecture.mmd")
-        published = managed_media_path("library", "svg", "architecture.svg")
+        canonical = managed_media_path("example", "build-source", "mermaid", "architecture.mmd")
+        published = managed_media_path("example", "svg", "architecture.svg")
 
         assert staged.is_file()
         assert canonical.read_bytes() == staged.read_bytes()
@@ -520,21 +520,21 @@ def test_add_mermaid_copies_canonical_source_renders_svg_and_returns_token(
 
     assert payload["media_format"] == "mermaid"
     assert payload["source_identity"] == "architecture.mmd"
-    assert payload["media_identity"] == "docs/library/svg/architecture.svg"
-    assert payload["markdown"] == "![Architecture]([[media:docs/library/svg/architecture.svg]])"
+    assert payload["media_identity"] == "docs/example/svg/architecture.svg"
+    assert payload["markdown"] == "![Architecture]([[media:docs/example/svg/architecture.svg]])"
     assert before == after
 
 
 def test_add_mermaid_normalizes_the_canonical_extension() -> None:
     with make_repo() as temp:
         root = Path(temp)
-        _configure_library_mermaid(root)
+        _configure_example_mermaid(root)
         write_staged_text(root, "Architecture.MMD", "flowchart LR\nA --> B\n")
 
         _scope, _kind, _source, _label, media_class, media_filename = staged_media._staged_media_contract(
             root,
             {
-                "scope": "library",
+                "scope": "example",
                 "media_kind": "image",
                 "staged_filename": "Architecture.MMD",
                 "label": "Architecture",
@@ -550,20 +550,20 @@ def test_add_mermaid_renders_before_configured_source_or_svg_publication(
 ) -> None:
     with make_repo() as temp:
         root = Path(temp)
-        _configure_library_mermaid(root)
+        _configure_example_mermaid(root)
         write_staged_text(root, "architecture.mmd", "FAIL\n")
         monkeypatch.setattr(staged_media, "produce_mermaid_svg", _fake_mermaid_producer)
 
         with pytest.raises(RuntimeError, match="fixture renderer failed"):
             staged_media.apply_staged_media(root, {
-                "scope": "library",
+                "scope": "example",
                 "media_kind": "image",
                 "staged_filename": "architecture.mmd",
                 "label": "Architecture",
             })
 
-        assert not managed_media_path("library", "build-source", "mermaid", "architecture.mmd").exists()
-        assert not managed_media_path("library", "svg", "architecture.svg").exists()
+        assert not managed_media_path("example", "build-source", "mermaid", "architecture.mmd").exists()
+        assert not managed_media_path("example", "svg", "architecture.svg").exists()
 
 
 def test_add_mermaid_requires_confirmation_when_canonical_or_rendered_bytes_change(
@@ -571,10 +571,10 @@ def test_add_mermaid_requires_confirmation_when_canonical_or_rendered_bytes_chan
 ) -> None:
     with make_repo() as temp:
         root = Path(temp)
-        _configure_library_mermaid(root)
+        _configure_example_mermaid(root)
         monkeypatch.setattr(staged_media, "produce_mermaid_svg", _fake_mermaid_producer)
         request = {
-            "scope": "library",
+            "scope": "example",
             "media_kind": "image",
             "staged_filename": "architecture.mmd",
             "label": "Architecture",
@@ -604,7 +604,7 @@ def test_add_media_publication_failure_returns_no_insertable_payload(
             "publish_docs_media_files",
             lambda *_args, **_kwargs: [
                 DocsMediaPublishResult(
-                    scope="library",
+                    scope="example",
                     media_class="img",
                     filename="photo.png",
                     size=7,
@@ -616,7 +616,7 @@ def test_add_media_publication_failure_returns_no_insertable_payload(
 
         with pytest.raises(RuntimeError, match="publication did not complete"):
             staged_media.apply_staged_media(root, {
-                "scope": "library",
+                "scope": "example",
                 "media_kind": "image",
                 "staged_filename": "photo.png",
                 "label": "Photo",
@@ -639,7 +639,7 @@ def test_add_svg_rejects_malformed_or_non_self_contained_xml(svg_source: str) ->
 
         with pytest.raises(ValueError):
             staged_media.preview_staged_media(root, {
-                "scope": "library",
+                "scope": "example",
                 "media_kind": "image",
                 "staged_filename": "diagram.svg",
                 "label": "Diagram",

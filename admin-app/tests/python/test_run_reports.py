@@ -86,13 +86,13 @@ def make_fake_repo(tmp_path: Path) -> Path:
                 "label": "Search",
                 "include": ["**/*search*"],
                 "shared": [],
-                "routes": ["/library/"],
+                "routes": ["/example/"],
             }
         },
         "routes": {
-            "/library/": {
-                "label": "Library",
-                "path": "/library/",
+            "/example/": {
+                "label": "Example",
+                "path": "/example/",
                 "status": "mapped",
                 "include": ["site/docs-viewer/runtime/js/shared/docs-viewer-search.js"],
                 "shared": [],
@@ -133,7 +133,7 @@ def valid_request(*, write: bool = False, reports: list[str] | None = None) -> d
         "scope": "docs-viewer",
         "families": ["runtime-js"],
         "areas": ["search"],
-        "routes": ["/library/"],
+        "routes": ["/example/"],
         "reports": reports or ["success"],
         "options": {"success": {"limit": 5}},
         "write": write,

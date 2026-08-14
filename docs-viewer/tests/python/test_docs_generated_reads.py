@@ -40,7 +40,7 @@ def write_json(path: Path, payload: dict[str, object]) -> None:
 
 
 def scope_config(scope_id: str, output: str, search_output: str) -> dict[str, object]:
-    public_scope = scope_id in {"library", "analysis"}
+    public_scope = scope_id in {"example", "analysis"}
     expected_output = f"docs-viewer/scopes/{scope_id}/published/documents"
     expected_search = f"docs-viewer/scopes/{scope_id}/published/search/index.json"
     if output != expected_output or search_output != expected_search:
@@ -66,7 +66,7 @@ def external_scope_config(scope_id: str, external_root: Path) -> dict[str, objec
 def write_scope_config(root: Path, extra_scopes: list[dict[str, object]] | None = None) -> None:
     scopes = [
         scope_config("studio", "docs-viewer/scopes/studio/published/documents", "docs-viewer/scopes/studio/published/search/index.json"),
-        scope_config("library", "docs-viewer/scopes/library/published/documents", "docs-viewer/scopes/library/published/search/index.json"),
+        scope_config("example", "docs-viewer/scopes/example/published/documents", "docs-viewer/scopes/example/published/search/index.json"),
         scope_config("analysis", "docs-viewer/scopes/analysis/published/documents", "docs-viewer/scopes/analysis/published/search/index.json"),
     ]
     scopes.extend(extra_scopes or [])
@@ -139,31 +139,31 @@ def write_public_generated_docs(root: Path) -> None:
     docs = [
         {
             "doc_id": LIBRARY_DOC_ID,
-            "title": "Library",
-            "content_url": f"/assets/data/docs/scopes/library/by-id/{LIBRARY_DOC_ID}.json",
+            "title": "Example",
+            "content_url": f"/assets/data/docs/scopes/example/by-id/{LIBRARY_DOC_ID}.json",
             "children": [
                 {
                     "doc_id": LIBRARY_CHILD_DOC_ID,
                     "title": "Child",
-                    "content_url": f"/assets/data/docs/scopes/library/by-id/{LIBRARY_CHILD_DOC_ID}.json",
+                    "content_url": f"/assets/data/docs/scopes/example/by-id/{LIBRARY_CHILD_DOC_ID}.json",
                 }
             ],
         }
     ]
     write_json(
-        root / "docs-viewer/scopes/library/published/documents/index-tree.json",
+        root / "docs-viewer/scopes/example/published/documents/index-tree.json",
         {"schema": "docs_index_tree_v1", "viewer_options": {}, "docs": docs},
     )
     write_json(
-        root / "docs-viewer/scopes/library/published/documents/recent.json",
+        root / "docs-viewer/scopes/example/published/documents/recent.json",
         {"schema": "docs_recent_v1", "basis": "edited", "limit": 10, "docs": docs},
     )
     write_json(
-        root / f"docs-viewer/scopes/library/published/documents/by-id/{LIBRARY_DOC_ID}.json",
-        {"title": "Library", "content_html": "<h1>Library</h1>"},
+        root / f"docs-viewer/scopes/example/published/documents/by-id/{LIBRARY_DOC_ID}.json",
+        {"title": "Example", "content_html": "<h1>Example</h1>"},
     )
     write_json(
-        root / f"docs-viewer/scopes/library/published/documents/by-id/{LIBRARY_CHILD_DOC_ID}.json",
+        root / f"docs-viewer/scopes/example/published/documents/by-id/{LIBRARY_CHILD_DOC_ID}.json",
         {"title": "Child", "content_html": "<h1>Child</h1>"},
     )
 
@@ -175,8 +175,8 @@ def test_generated_data_availability_checks_scope_files() -> None:
 
         assert generated_reads.generated_scope_data_available(repo_root, "studio") is True
         assert generated_reads.generated_search_data_available(repo_root, "studio") is True
-        assert generated_reads.generated_scope_data_available(repo_root, "library") is False
-        assert generated_reads.generated_search_data_available(repo_root, "library") is False
+        assert generated_reads.generated_scope_data_available(repo_root, "example") is False
+        assert generated_reads.generated_search_data_available(repo_root, "example") is False
 
 
 def test_docs_scope_config_default_doc_id_is_optional() -> None:
@@ -251,7 +251,7 @@ def test_generated_doc_payload_rejects_unexpected_content_url() -> None:
                 "docs": [
                     {
                         "doc_id": CHILD_DOC_ID,
-                        "content_url": f"/assets/data/docs/scopes/library/by-id/{CHILD_DOC_ID}.json",
+                        "content_url": f"/assets/data/docs/scopes/example/by-id/{CHILD_DOC_ID}.json",
                     }
                 ]
             },
@@ -331,12 +331,12 @@ def test_public_generated_doc_payload_uses_tree_without_flat_index() -> None:
     with tempfile.TemporaryDirectory() as temp_path:
         repo_root = Path(temp_path)
         write_public_generated_docs(repo_root)
-        payload = generated_reads.read_generated_doc_payload(repo_root, "library", LIBRARY_DOC_ID)
-        child_payload = generated_reads.read_generated_doc_payload(repo_root, "library", LIBRARY_CHILD_DOC_ID)
+        payload = generated_reads.read_generated_doc_payload(repo_root, "example", LIBRARY_DOC_ID)
+        child_payload = generated_reads.read_generated_doc_payload(repo_root, "example", LIBRARY_CHILD_DOC_ID)
 
-        assert payload["title"] == "Library"
+        assert payload["title"] == "Example"
         assert child_payload["title"] == "Child"
-        assert generated_reads.generated_scope_data_available(repo_root, "library") is True
+        assert generated_reads.generated_scope_data_available(repo_root, "example") is True
 
 
 def test_generated_doc_paths_use_derived_scope_output() -> None:

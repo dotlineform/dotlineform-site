@@ -251,7 +251,6 @@ def test_missing_external_workspace_disables_only_import_and_review_capabilities
         "base_path": "",
     }
     assert capabilities["html_import"] is False
-    assert capabilities["library_import"] is False
     assert capabilities["docs_import"]["available"] is False
     assert capabilities["docs_review"]["available"] is False
     assert capabilities["scopes"]["studio"]["available"] is True

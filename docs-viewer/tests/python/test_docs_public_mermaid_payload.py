@@ -41,7 +41,7 @@ def mermaid_source(*, edge: str = "A --> B") -> str:
 def markdown(source: str) -> str:
     return (
         '<img data-docs-viewer-diagram-kind="persistent-svg" '
-        'src="/assets/data/docs/scopes/library/media/svg/fixed.svg" alt="Fixed diagram">\n\n'
+        'src="/assets/data/docs/scopes/example/media/svg/fixed.svg" alt="Fixed diagram">\n\n'
         f"```mermaid\n{source}```\n"
     )
 
@@ -68,9 +68,9 @@ def prepare_projection(
     include_dark: bool = True,
 ) -> dict[str, object]:
     plan = plan_public_mermaid_projection(
-        scope="library",
+        scope="example",
         documents=[(DOC_ID, markdown(source))],
-        public_url_prefix="/assets/data/docs/scopes/library",
+        public_url_prefix="/assets/data/docs/scopes/example",
     )
     record = plan["manifest"]["diagrams"][0]
     write_json(working_root / PREPARED_ROOT / "manifest.json", plan["manifest"])
@@ -112,8 +112,8 @@ def test_public_assembly_replaces_verified_fence_and_preserves_working_payload(
 
     files = publishable_docs_files(
         working_root,
-        Path("site/assets/data/docs/scopes/library"),
-        projection_scope="library",
+        Path("site/assets/data/docs/scopes/example"),
+        projection_scope="example",
     )
 
     public_payload = json.loads(files[Path(f"by-id/{DOC_ID}.json")])
@@ -155,16 +155,16 @@ def test_public_assembly_blocks_fence_without_complete_prepared_pair(
     with pytest.raises(RuntimeError, match="incomplete or stale"):
         publishable_docs_files(
             working_root,
-            Path("site/assets/data/docs/scopes/library"),
-            projection_scope="library",
+            Path("site/assets/data/docs/scopes/example"),
+            projection_scope="example",
         )
 
     prepare_projection(working_root, source=source, include_dark=False)
     with pytest.raises(FileNotFoundError, match="dark variant not found"):
         publishable_docs_files(
             working_root,
-            Path("site/assets/data/docs/scopes/library"),
-            projection_scope="library",
+            Path("site/assets/data/docs/scopes/example"),
+            projection_scope="example",
         )
 
 
@@ -179,8 +179,8 @@ def test_public_assembly_rejects_stale_source_and_tampered_variant(
     with pytest.raises(RuntimeError, match="source digest is stale"):
         publishable_docs_files(
             working_root,
-            Path("site/assets/data/docs/scopes/library"),
-            projection_scope="library",
+            Path("site/assets/data/docs/scopes/example"),
+            projection_scope="example",
         )
 
     write_payload(working_root, source)
@@ -193,6 +193,6 @@ def test_public_assembly_rejects_stale_source_and_tampered_variant(
     with pytest.raises(RuntimeError, match="not the verified sanitized bytes"):
         publishable_docs_files(
             working_root,
-            Path("site/assets/data/docs/scopes/library"),
-            projection_scope="library",
+            Path("site/assets/data/docs/scopes/example"),
+            projection_scope="example",
         )

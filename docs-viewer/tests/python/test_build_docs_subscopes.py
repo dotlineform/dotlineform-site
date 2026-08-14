@@ -1283,7 +1283,7 @@ def test_python_docs_builder_public_sub_scope_separates_manage_and_public_url_ba
         payload = read_json(config_path)
         payload["scopes"][0]["sub_scopes"] = [
             docs_sub_scope_record(
-                "library",
+                "example",
                 "tags",
                 title="Tags",
                 public_title="Concepts",
@@ -1292,7 +1292,7 @@ def test_python_docs_builder_public_sub_scope_separates_manage_and_public_url_ba
         ]
         write_json(config_path, payload)
         write_text(
-            root / f"docs-viewer/scopes/library/source/sub-scopes/tags/documents/{DETAIL_DOC_ID}.md",
+            root / f"docs-viewer/scopes/example/source/sub-scopes/tags/documents/{DETAIL_DOC_ID}.md",
             f"""---
 doc_id: {DETAIL_DOC_ID}
 title: Detail
@@ -1304,13 +1304,13 @@ work_id: "00123"
 """,
         )
 
-        exit_code, _stdout, stderr = run_cli(root, ["--scope", "library", "--sub-scope", "tags", "--write"])
-        detail = read_json(root / f"docs-viewer/scopes/library/published/documents/sub-scopes/tags/by-id/{DETAIL_DOC_ID}.json")
-        output_root = root / "docs-viewer/scopes/library/published/documents/sub-scopes/tags"
+        exit_code, _stdout, stderr = run_cli(root, ["--scope", "example", "--sub-scope", "tags", "--write"])
+        detail = read_json(root / f"docs-viewer/scopes/example/published/documents/sub-scopes/tags/by-id/{DETAIL_DOC_ID}.json")
+        output_root = root / "docs-viewer/scopes/example/published/documents/sub-scopes/tags"
         manifest = read_json(output_root / "manifest.json")
         manage_manifest = read_json(output_root / "manage-manifest.json")
         output_names = sorted(path.name for path in output_root.iterdir())
-        config = load_docs_scope_configs(root)["library"]
+        config = load_docs_scope_configs(root)["example"]
         browser_config = build_docs.browser_scope_config_payload(root, [config])
         public_browser_config = build_docs.browser_scope_config_payload(
             root,
@@ -1337,15 +1337,15 @@ work_id: "00123"
         {
             "sub_scope": "tags",
             "title": "Tags",
-            "manifest_url": "/docs-viewer/scopes/library/published/documents/sub-scopes/tags/manage-manifest.json",
-            "by_id_url_base": "/docs-viewer/scopes/library/published/documents/sub-scopes/tags/by-id",
+            "manifest_url": "/docs-viewer/scopes/example/published/documents/sub-scopes/tags/manage-manifest.json",
+            "by_id_url_base": "/docs-viewer/scopes/example/published/documents/sub-scopes/tags/by-id",
         }
     ]
     assert public_browser_config["scopes"][0]["sub_scopes"] == [
         {
             "sub_scope": "tags",
             "title": "Concepts",
-            "manifest_url": "/assets/data/docs/scopes/library/tags/manifest.json",
-            "by_id_url_base": "/assets/data/docs/scopes/library/tags/by-id",
+            "manifest_url": "/assets/data/docs/scopes/example/tags/manifest.json",
+            "by_id_url_base": "/assets/data/docs/scopes/example/tags/by-id",
         }
     ]
