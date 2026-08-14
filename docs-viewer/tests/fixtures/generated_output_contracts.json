@@ -259,49 +259,5 @@
         }
       ]
     }
-  },
-  "catalogue_prose": {
-    "content_html_cases": [
-      {
-        "kind": "work",
-        "id": "00638",
-        "source_markdown": "# 3 symbols\n\nWork prose with **emphasis** and [series link](/series/026/).",
-        "content_html": "<h1>3 symbols</h1>\n<p>Work prose with <strong>emphasis</strong> and <a href=\"/series/026/\">series link</a>.</p>\n",
-        "html_semantics_contains": [
-          "<h1>3 symbols</h1>",
-          "<strong>emphasis</strong>",
-          "<a href=\"/series/026/\">series link</a>"
-        ]
-      },
-      {
-        "kind": "series",
-        "id": "026",
-        "source_markdown": "Series prose\n\n- item one",
-        "content_html": "<p>Series prose</p>\n<ul>\n<li>item one</li>\n</ul>\n",
-        "html_semantics_contains": [
-          "<p>Series prose</p>",
-          "<ul>",
-          "<li>item one</li>"
-        ]
-      },
-      {
-        "kind": "moment",
-        "id": "contract-moment",
-        "source_markdown": "<aside data-kind=\"note\">Moment note</aside>\n\n| Name | Value |\n| --- | --- |\n| Alpha | 1 |",
-        "content_html": "<aside data-kind=\"note\">Moment note</aside>\n<table><thead><tr><th>Name</th><th>Value</th></tr></thead><tbody><tr><td>Alpha</td><td>1</td></tr></tbody></table>\n",
-        "html_semantics_contains": [
-          "<aside data-kind=\"note\">Moment note</aside>",
-          "<table>",
-          "<th>Name</th>",
-          "<td>Alpha</td>"
-        ]
-      }
-    ],
-    "non_contract_fragments": [
-      "highlighter-rouge",
-      "language-plaintext",
-      "<div class=\"highlight\">",
-      "<span class=\""
-    ]
   }
 }

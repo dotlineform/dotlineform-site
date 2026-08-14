@@ -142,11 +142,19 @@ def test_public_document_urls_are_sorted_deduped_and_versioned() -> None:
     with pytest.raises(ValueError, match="doc_url must be an array"):
         records.normalize_document_urls("/not-an-array")
 
+    work_payload = records.build_work_json_payload(
+        work_id="00042",
+        work_record=work,
+        sections=[],
+        generated_at_utc="2026-08-09T20:00:00Z",
+        count=0,
+    )
+    assert "content_html" not in work_payload
+
     series_payload = records.build_series_json_payload(
         series_id="009",
         series_record=series,
         member_works=[{"work_id": "00001", "title": "Only", "year": 2026, "year_display": "2026"}],
-        content_html="<p>Series prose</p>",
         generated_at_utc="2026-08-09T20:00:00Z",
     )
     assert series_payload["header"]["schema"] == "series_record_v3"
@@ -154,12 +162,12 @@ def test_public_document_urls_are_sorted_deduped_and_versioned() -> None:
     assert series_payload["member_works"] == [
         {"work_id": "00001", "title": "Only", "year": 2026, "year_display": "2026"}
     ]
+    assert "content_html" not in series_payload
     with pytest.raises(ValueError, match="must match exact payload target 010"):
         records.build_series_json_payload(
             series_id="010",
             series_record=series,
             member_works=[],
-            content_html=None,
             generated_at_utc="2026-08-09T20:00:00Z",
         )
 

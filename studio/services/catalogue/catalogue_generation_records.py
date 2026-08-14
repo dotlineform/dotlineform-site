@@ -229,7 +229,6 @@ def build_work_json_payload(
     work_id: str,
     work_record: Mapping[str, Any],
     sections: Sequence[Mapping[str, Any]],
-    content_html: str | None,
     generated_at_utc: str,
     count: int,
 ) -> Dict[str, Any]:
@@ -241,13 +240,7 @@ def build_work_json_payload(
         raise ValueError("work.doc_url must be an array")
     public_record["doc_url"] = normalize_document_urls(raw_doc_urls)
     public_sections = [dict(section) for section in sections]
-    version_input = compact_json_object(
-        {
-            "work": public_record,
-            "sections": public_sections,
-            "content_html": content_html,
-        }
-    )
+    version_input = {"work": public_record, "sections": public_sections}
     return compact_json_object(
         {
             "header": {
@@ -259,7 +252,6 @@ def build_work_json_payload(
             },
             "work": public_record,
             "sections": public_sections,
-            "content_html": content_html,
         }
     )
 
@@ -269,7 +261,6 @@ def build_series_json_payload(
     series_id: str,
     series_record: Mapping[str, Any],
     member_works: Sequence[Mapping[str, Any]],
-    content_html: str | None,
     generated_at_utc: str,
 ) -> Dict[str, Any]:
     """Finalize one complete public Series by-ID payload."""
@@ -282,13 +273,7 @@ def build_series_json_payload(
         raise ValueError(f"series.series_id must match exact payload target {series_id}")
     public_record["doc_url"] = normalize_document_urls(raw_doc_urls)
     public_member_works = [compact_json_object(dict(work)) for work in member_works]
-    version_input = compact_json_object(
-        {
-            "series": public_record,
-            "member_works": public_member_works,
-            "content_html": content_html,
-        }
-    )
+    version_input = {"series": public_record, "member_works": public_member_works}
     return compact_json_object(
         {
             "header": {
@@ -300,7 +285,6 @@ def build_series_json_payload(
             },
             "series": public_record,
             "member_works": public_member_works,
-            "content_html": content_html,
         }
     )
 

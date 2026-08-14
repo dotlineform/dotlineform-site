@@ -101,13 +101,7 @@ def test_refresh_reassigns_removes_and_adds_only_exact_affected_payloads(tmp_pat
     series_after = read_json(series)
     assert series_after["series"]["doc_url"] == [old_url]  # type: ignore[index]
     assert series_after["header"]["version"] == compute_payload_version(  # type: ignore[index]
-        compact_json_object(
-                {
-                    "series": series_after["series"],
-                    "member_works": series_after["member_works"],
-                    "content_html": None,
-                }
-        )
+        compact_json_object({"series": series_after["series"], "member_works": series_after["member_works"]})
     )
     assert unaffected.read_bytes() == unaffected_before
 

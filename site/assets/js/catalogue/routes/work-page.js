@@ -1,6 +1,5 @@
 import { renderMetadataPanel } from '../components/metadata-panel.js';
 import { renderPrimaryMedia } from '../components/primary-media.js';
-import { renderProseContent } from '../components/prose-content.js';
 import { createThumbnailGridList } from '../components/thumbnail-grid-list.js';
 import { bindArrowNavigation } from '../navigation/keyboard-navigation.js';
 import { createSelectedWorkSeriesNavigation } from '../navigation/work-series-navigation.js';
@@ -420,17 +419,6 @@ function bootSelectedWorkRoute(rootNode, routeState, workId) {
     }));
   }
 
-  function renderProse(payload) {
-    var proseSection = document.getElementById('selectedWorkProseSection');
-    var prose = document.getElementById('selectedWorkProseContent');
-    renderProseContent({
-      rootElement: proseSection,
-      contentElement: prose,
-      html: payload && typeof payload.content_html === 'string' ? payload.content_html : '',
-      hideRootWhenEmpty: true
-    });
-  }
-
   fetchJson(workPayloadUrl(workId, baseurl))
     .then(function (payload) {
       var work = payload && payload.work && typeof payload.work === 'object' ? payload.work : { work_id: workId, title: unavailableText };
@@ -442,7 +430,6 @@ function bootSelectedWorkRoute(rootNode, routeState, workId) {
       renderMedia(work);
       updateBackLink();
       dispatchMetadata(work);
-      renderProse(payload);
       renderDetails(payload);
     })
     .catch(function () {

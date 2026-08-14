@@ -106,12 +106,10 @@ def finalize_work_record_payload(payload: Dict[str, Any], work_id: str) -> Dict[
     sections = payload.get("sections")
     if not isinstance(sections, list):
         sections = []
-    content_html = payload.get("content_html")
     return generation_records.build_work_json_payload(
         work_id=work_id,
         work_record=work_record,
         sections=sections,
-        content_html=content_html if isinstance(content_html, str) else None,
         generated_at_utc=activity.utc_now(),
         count=work_record_detail_count(payload),
     )
@@ -130,12 +128,10 @@ def finalize_series_record_payload(payload: Dict[str, Any], series_id: str) -> D
     member_works = payload.get("member_works")
     if not isinstance(member_works, list):
         raise ValueError("series record payload must include a member_works array")
-    content_html = payload.get("content_html")
     return generation_records.build_series_json_payload(
         series_id=series_id,
         series_record=series_record,
         member_works=member_works,
-        content_html=content_html if isinstance(content_html, str) else None,
         generated_at_utc=activity.utc_now(),
     )
 

@@ -17,9 +17,7 @@ REQUIRED_TOP_LEVEL_SECTIONS = {
     "docs_viewer",
     "docs_search",
     "catalogue_search",
-    "catalogue_prose",
 }
-REQUIRED_CATALOGUE_PROSE_KINDS = {"work", "series", "moment"}
 REQUIRED_CATALOGUE_SEARCH_KINDS = {"work", "series", "moment"}
 
 
@@ -205,20 +203,6 @@ def test_catalogue_search_payload_contract_fixture() -> None:
     assert_true(isinstance(work_entry["series_titles"], list), "work series titles")
 
 
-def test_catalogue_prose_content_html_contract_fixtures() -> None:
-    fixture = load_fixture()["catalogue_prose"]
-    cases = fixture["content_html_cases"]
-
-    assert_equal({case["kind"] for case in cases}, REQUIRED_CATALOGUE_PROSE_KINDS, "catalogue prose kinds")
-    for case in cases:
-        assert_true(case.get("id"), f"{case['kind']} case id")
-        assert_true(case.get("source_markdown"), f"{case['kind']} source markdown")
-        assert_true(case.get("content_html"), f"{case['kind']} content_html")
-        for snippet in case["html_semantics_contains"]:
-            assert_contains(case["content_html"], snippet, f"{case['kind']} content HTML semantics")
-        assert_no_non_contract_fragments(case["content_html"], fixture["non_contract_fragments"], f"{case['kind']} content_html")
-
-
 def main() -> None:
     test_fixture_declares_contract_policy()
     test_docs_viewer_index_contract_fixture()
@@ -228,7 +212,6 @@ def main() -> None:
     test_docs_viewer_public_by_id_contract_fixture()
     test_docs_search_payload_contract_fixture()
     test_catalogue_search_payload_contract_fixture()
-    test_catalogue_prose_content_html_contract_fixtures()
     print("Generated-output contract fixture tests OK")
 
 

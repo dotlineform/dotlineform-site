@@ -150,27 +150,23 @@
   overflow-wrap: anywhere;
 }
 
-.catalogueMetadata__row a:link,
-.catalogueProse a:link{
+.catalogueMetadata__row a:link{
   color: var(--content-link);
   text-decoration: none;
 }
 
-.catalogueMetadata__row a:visited,
-.catalogueProse a:visited{
+.catalogueMetadata__row a:visited{
   color: var(--content-link-visited);
   text-decoration: none;
 }
 
-.catalogueMetadata__row a:link:hover,
-.catalogueProse a:link:hover{
+.catalogueMetadata__row a:link:hover{
   color: var(--content-link);
   text-decoration: underline;
   text-underline-offset: 2px;
 }
 
-.catalogueMetadata__row a:visited:hover,
-.catalogueProse a:visited:hover{
+.catalogueMetadata__row a:visited:hover{
   color: var(--content-link-visited);
   text-decoration: underline;
   text-underline-offset: 2px;
@@ -191,17 +187,6 @@
   align-items: baseline;
   min-width: 0;
   font-weight: 600;
-}
-
-.catalogueProse{
-  max-width: var(--content-measure);
-  margin-left: auto;
-  margin-right: auto;
-  white-space: normal;
-}
-
-.catalogueProse--work{
-  margin-top: var(--space-6);
 }
 
 .catalogueGridList__pager{

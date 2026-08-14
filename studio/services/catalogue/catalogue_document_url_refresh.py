@@ -160,9 +160,6 @@ def updated_payload(
     result = copy.deepcopy(dict(payload))
     record, count = validate_payload_identity(result, path=path, kind=kind, key=key)
     record["doc_url"] = normalize_document_urls(urls)
-    content_html = result.get("content_html")
-    if content_html is not None and not isinstance(content_html, str):
-        raise ValueError(f"generated Catalogue {kind} payload has invalid content_html: {path.name}")
 
     if kind == "work":
         sections = result.get("sections")
@@ -172,7 +169,6 @@ def updated_payload(
             work_id=key,
             work_record=record,
             sections=sections,
-            content_html=content_html,
             generated_at_utc=generated_at_utc,
             count=count,
         )
@@ -183,7 +179,6 @@ def updated_payload(
         series_id=key,
         series_record=record,
         member_works=member_works,
-        content_html=content_html,
         generated_at_utc=generated_at_utc,
     )
 

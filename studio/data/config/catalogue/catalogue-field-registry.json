@@ -718,7 +718,7 @@
       "record_family": "work",
       "field": "work_prose_file",
       "removed_in": "Task 1A",
-      "replacement": "studio/data/canonical/catalogue-markdown/works/<work_id>.md"
+      "replacement": "none; Catalogue prose is retired"
     },
     {
       "record_family": "work",
@@ -730,7 +730,7 @@
       "record_family": "series",
       "field": "series_prose_file",
       "removed_in": "Task 1A",
-      "replacement": "studio/data/canonical/catalogue-markdown/series/<series_id>.md"
+      "replacement": "none; Catalogue prose is retired"
     },
     {
       "record_family": "work_detail",

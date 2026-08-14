@@ -5,14 +5,12 @@
       "id": "catalogue_canonical_source",
       "classification": "canonical_source",
       "repo_paths": [
-        "studio/data/canonical/catalogue/*.json",
-        "studio/data/canonical/catalogue-markdown/**"
+        "studio/data/canonical/catalogue/*.json"
       ],
       "public_output": {
         "policy": "forbidden",
         "paths": [
-          "studio/data/canonical/catalogue",
-          "studio/data/canonical/catalogue-markdown"
+          "studio/data/canonical/catalogue"
         ]
       },
       "owner_doc": "data-models-catalogue-source"

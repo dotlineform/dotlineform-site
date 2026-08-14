@@ -55,7 +55,6 @@
       "assets/js/catalogue/components/catalogue-image.js",
       "assets/js/catalogue/components/metadata-panel.js",
       "assets/js/catalogue/components/primary-media.js",
-      "assets/js/catalogue/components/prose-content.js",
       "assets/js/catalogue/components/thumbnail-grid-list.js",
       "assets/js/catalogue/navigation/keyboard-navigation.js",
       "assets/js/catalogue/navigation/swipe-navigation.js",

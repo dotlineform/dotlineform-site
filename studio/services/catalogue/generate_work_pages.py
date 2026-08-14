@@ -70,7 +70,6 @@ from studio.shared.python.studio_python_paths import ensure_studio_python_paths
 REPO_ROOT = ensure_studio_python_paths(__file__)
 SCRIPTS_DIR = REPO_ROOT / "scripts"
 
-from markdown_renderer import render_markdown_to_html  # noqa: E402
 from docs_catalogue_document_urls import load_public_catalogue_document_urls  # noqa: E402
 
 try:
@@ -165,7 +164,6 @@ except ModuleNotFoundError:  # pragma: no cover - package import fallback
 
 PIPELINE_CONFIG = load_pipeline_config(Path(__file__))
 PROJECTS_BASE_DIR_ENV_NAME = env_var_name(PIPELINE_CONFIG, "projects_base_dir")
-CATALOGUE_PROSE_SOURCE_REL_DIR = Path("studio/data/canonical/catalogue-markdown")
 
 
 # ----------------------------
@@ -273,18 +271,6 @@ def write_index_json_payload(
     else:
         print(f"{label} done. Would write: 1. Skipped: 0. Path: {display_path(path)} (overwrite={exists})")
     return True
-
-
-def render_catalogue_prose_markdown(markdown_path: Path) -> str:
-    """Render trusted catalogue prose Markdown with the shared Python renderer."""
-    try:
-        markdown = markdown_path.read_text(encoding="utf-8")
-    except OSError as exc:
-        raise SystemExit(f"Failed to read catalogue prose markdown: {markdown_path} ({exc})") from exc
-    try:
-        return render_markdown_to_html(markdown)
-    except Exception as exc:  # noqa: BLE001
-        raise SystemExit(f"Failed to render catalogue prose markdown: {markdown_path}\n{exc}") from exc
 
 
 def parse_sips_pixel_dims(output: str) -> tuple[Optional[int], Optional[int]]:
@@ -458,7 +444,6 @@ def main() -> None:
         return
 
     repo_root = REPO_ROOT
-    catalogue_prose_source_root = repo_root / CATALOGUE_PROSE_SOURCE_REL_DIR
     projects_base_dir_display = Path(args.projects_base_dir).expanduser() if normalize_text(args.projects_base_dir) else None
 
     def display_path(path: Path | str) -> str:
@@ -609,12 +594,6 @@ def main() -> None:
         wid = slug_id(wid_raw)
         work_project_folder_by_id[wid] = normalize_text(pf_raw)
         work_project_subfolder_by_id[wid] = normalize_text(work_record.get("project_subfolder"))
-
-    def resolve_work_prose_source_path(wid: str) -> Path:
-        return catalogue_prose_source_root / "works" / f"{wid}.md"
-
-    def resolve_series_prose_source_path(series_id: str) -> Path:
-        return catalogue_prose_source_root / "series" / f"{series_id}.md"
 
     run_work_processing = run_work_pages
     run_work_selection_scope = run_work_processing or run_work_json
@@ -893,16 +872,10 @@ def main() -> None:
                     series_output_record,
                     doc_urls=catalogue_document_urls["series"].get(series_id, []),
                 )
-                source_prose_path = resolve_series_prose_source_path(series_id)
-                content_html: Optional[str] = None
-                if source_prose_path.exists():
-                    content_html = render_catalogue_prose_markdown(source_prose_path)
-
                 payload = records.build_series_json_payload(
                     series_id=series_id,
                     series_record=public_series_record,
                     member_works=member_works,
-                    content_html=content_html,
                     generated_at_utc=utc_timestamp_now(),
                 )
                 payload_version = payload["header"]["version"]
@@ -1085,8 +1058,6 @@ def main() -> None:
                 wj_processed += 1
                 prefix_wj = f"[Work JSON {wj_processed}/{wj_total}] "
 
-                source_prose_path = resolve_work_prose_source_path(wid)
-
                 source_sections = []
                 detail_payloads_by_uid = detail_records_by_work.get(wid, {})
                 for section in ordered_work_detail_sections(source_records, wid):
@@ -1106,14 +1077,10 @@ def main() -> None:
                     canonical_work_record_by_id.get(wid, {"work_id": wid}),
                     doc_urls=catalogue_document_urls["work"].get(wid, []),
                 )
-                content_html: Optional[str] = None
-                if source_prose_path.exists():
-                    content_html = render_catalogue_prose_markdown(source_prose_path)
                 payload = records.build_work_json_payload(
                     work_id=wid,
                     work_record=work_record,
                     sections=sections,
-                    content_html=content_html,
                     generated_at_utc=generated_at_utc,
                     count=details_total,
                 )

@@ -26,7 +26,6 @@ from pipeline_config import (
 
 PIPELINE_CONFIG = load_pipeline_config(Path(__file__))
 PROJECTS_BASE_DIR_ENV_NAME = env_var_name(PIPELINE_CONFIG, "projects_base_dir")
-CATALOGUE_PROSE_STAGING_REL_DIR = Path("var/docs/catalogue/import-staging")
 
 THUMB_SIZES = sorted({int(value) for value in PIPELINE_CONFIG["variants"]["thumb"]["sizes"]})
 THUMB_SUFFIX = str(PIPELINE_CONFIG["variants"]["thumb"]["suffix"])
@@ -998,14 +997,6 @@ def build_readiness_item(
         status = "missing_metadata"
         summary = "Project folder is missing, so the source path cannot be resolved."
         next_step = next_step_missing_metadata or "Set project_folder and save the source record before checking readiness again."
-    elif missing_reason == "missing_primary_work_id":
-        status = "missing_metadata"
-        summary = "Primary work is missing, so the series prose path cannot be resolved."
-        next_step = next_step_missing_metadata or "Set primary_work_id and save the source record before checking readiness again."
-    elif missing_reason == "primary_work_missing":
-        status = "missing_metadata"
-        summary = "Primary work does not exist in the current source records."
-        next_step = next_step_missing_metadata or "Fix primary_work_id before checking readiness again."
     elif missing_reason:
         status = "not_configured"
         summary = "No source file is configured yet."
