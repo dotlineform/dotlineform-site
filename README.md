@@ -6,7 +6,4 @@ The repo also contains locally run web apps:
 
 - **Studio**: manage portfolio catalogue and tag data for the site.
 - **Admin**: run local checks, audits, activity, and operational reports.
-- **Docs Viewer**: manage and publish documents, including the *analysis*,
-  *library* site pages.
-
-These apps are being developed to enable a publishing workflow that supports data and AI-driven document authoring.
+- **Docs Viewer**: manage and publish documents, including the *analysis* site page.

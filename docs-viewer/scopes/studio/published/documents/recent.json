@@ -4,6 +4,14 @@
   "limit": 10,
   "docs": [
     {
+      "doc_id": "d-20260711-012238-814555",
+      "title": "Knowledge System Vision",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260711-012238-814555.json",
+      "timestamp": "2026-08-14 17:06:50",
+      "parent_id": "d-20260331-000000-4a16b0",
+      "parent_title": "Architecture"
+    },
+    {
       "doc_id": "d-20260401-000000-a11bf3",
       "title": "Catalogue Architecture",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260401-000000-a11bf3.json",
@@ -74,15 +82,7 @@
       "timestamp": "2026-08-14 16:36:14",
       "parent_id": "d-20260419-000000-d2e47b",
       "parent_title": "Dev Home"
-    },
-    {
-      "doc_id": "d-20260804-170901-b2e74c",
-      "title": "TDL-0 — Tag Document Metadata Authoring Refactor Delivery",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260804-170901-b2e74c.json",
-      "timestamp": "2026-08-14 16:17:28",
-      "parent_id": "d-20260804-160200-fa7bb7",
-      "parent_title": "Tag Document Linking"
     }
   ],
-  "generated_at": "2026-08-14T15:36:36Z"
+  "generated_at": "2026-08-14T16:06:50Z"
 }
