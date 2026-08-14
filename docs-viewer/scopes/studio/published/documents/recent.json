@@ -4,6 +4,22 @@
   "limit": 10,
   "docs": [
     {
+      "doc_id": "d-20260814-232812-4a0c9e",
+      "title": "Clone-Ready Docs Viewer",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260814-232812-4a0c9e.json",
+      "timestamp": "2026-08-14 23:28:12",
+      "parent_id": "d-20260814-225646-8f7d2a",
+      "parent_title": "Docs Viewer Core and Integration Architecture"
+    },
+    {
+      "doc_id": "d-20260814-225646-8f7d2a",
+      "title": "Docs Viewer Core and Integration Architecture",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260814-225646-8f7d2a.json",
+      "timestamp": "2026-08-14 23:28:12",
+      "parent_id": "d-20260428-000000-f5ff18",
+      "parent_title": "Roadmap"
+    },
+    {
       "doc_id": "d-20260811-113809-ad8110",
       "title": "Implementation Review",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260811-113809-ad8110.json",
@@ -66,21 +82,7 @@
       "timestamp": "2026-08-14 21:18:02",
       "parent_id": "d-20260607-222033-647b52",
       "parent_title": "Endpoint Overview"
-    },
-    {
-      "doc_id": "d-20260419-000000-d2e47b",
-      "title": "Dev Home",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260419-000000-d2e47b.json",
-      "timestamp": "2026-08-14 21:18:02"
-    },
-    {
-      "doc_id": "d-20260523-190651-7157ec",
-      "title": "Development Checklist",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260523-190651-7157ec.json",
-      "timestamp": "2026-08-14 21:18:02",
-      "parent_id": "d-20260419-000000-d2e47b",
-      "parent_title": "Dev Home"
     }
   ],
-  "generated_at": "2026-08-14T21:00:34Z"
+  "generated_at": "2026-08-14T22:29:16Z"
 }

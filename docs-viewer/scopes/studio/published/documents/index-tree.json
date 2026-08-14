@@ -701,10 +701,24 @@
           ]
         },
         {
+          "doc_id": "d-20260814-225646-8f7d2a",
+          "title": "Docs Viewer Core and Integration Architecture",
+          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260814-225646-8f7d2a.json",
+          "ui_status": "proposed",
+          "children": [
+            {
+              "doc_id": "d-20260814-232812-4a0c9e",
+              "title": "Clone-Ready Docs Viewer",
+              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260814-232812-4a0c9e.json",
+              "ui_status": "proposed"
+            }
+          ]
+        },
+        {
           "doc_id": "d-20260811-113809-ad8110",
           "title": "Implementation Review",
           "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260811-113809-ad8110.json",
-          "ui_status": "draft",
+          "ui_status": "stopped",
           "children": [
             {
               "doc_id": "d-20260811-112331-1f131b",
@@ -779,6 +793,7 @@
           "doc_id": "d-20260511-120352-90ffa6",
           "title": "Standalone Docs Viewer",
           "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260511-120352-90ffa6.json",
+          "ui_status": "stopped",
           "children": [
             {
               "doc_id": "d-20260718-105957-c72b2a",
@@ -1139,5 +1154,5 @@
       ]
     }
   ],
-  "generated_at": "2026-08-14T21:00:34Z"
+  "generated_at": "2026-08-14T22:35:30Z"
 }

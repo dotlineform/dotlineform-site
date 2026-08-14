@@ -110,6 +110,11 @@
         "viewer_url": "/docs/?scope=studio&doc=d-20260424-000000-50b63f"
       },
       {
+        "doc_id": "d-20260814-225646-8f7d2a",
+        "title": "Docs Viewer Core and Integration Architecture",
+        "viewer_url": "/docs/?scope=studio&doc=d-20260814-225646-8f7d2a"
+      },
+      {
         "doc_id": "d-20260605-125108-c68916",
         "title": "Generated Data Contracts",
         "viewer_url": "/docs/?scope=studio&doc=d-20260605-125108-c68916"
@@ -995,6 +1000,11 @@
         "doc_id": "d-20260424-000000-50b63f",
         "title": "Docs Viewer",
         "viewer_url": "/docs/?scope=studio&doc=d-20260424-000000-50b63f"
+      },
+      {
+        "doc_id": "d-20260814-225646-8f7d2a",
+        "title": "Docs Viewer Core and Integration Architecture",
+        "viewer_url": "/docs/?scope=studio&doc=d-20260814-225646-8f7d2a"
       },
       {
         "doc_id": "d-20260719-123719-fb7565",
@@ -2462,6 +2472,11 @@
     ],
     "d-20260724-213457-6e1cf7": [
       {
+        "doc_id": "d-20260814-225646-8f7d2a",
+        "title": "Docs Viewer Core and Integration Architecture",
+        "viewer_url": "/docs/?scope=studio&doc=d-20260814-225646-8f7d2a"
+      },
+      {
         "doc_id": "d-20260718-121833-9fa2d4",
         "title": "Docs Viewer Core Definition Analysis Delivery",
         "viewer_url": "/docs/?scope=studio&doc=d-20260718-121833-9fa2d4"
@@ -2780,7 +2795,21 @@
         "title": "Search Improvements",
         "viewer_url": "/docs/?scope=studio&doc=d-20260814-155129-c2a782"
       }
+    ],
+    "d-20260814-225646-8f7d2a": [
+      {
+        "doc_id": "d-20260814-232812-4a0c9e",
+        "title": "Clone-Ready Docs Viewer",
+        "viewer_url": "/docs/?scope=studio&doc=d-20260814-232812-4a0c9e"
+      }
+    ],
+    "d-20260814-232812-4a0c9e": [
+      {
+        "doc_id": "d-20260814-225646-8f7d2a",
+        "title": "Docs Viewer Core and Integration Architecture",
+        "viewer_url": "/docs/?scope=studio&doc=d-20260814-225646-8f7d2a"
+      }
     ]
   },
-  "generated_at": "2026-08-14T21:00:34Z"
+  "generated_at": "2026-08-14T22:29:16Z"
 }
