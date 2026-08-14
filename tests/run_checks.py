@@ -17,8 +17,8 @@ from pathlib import Path
 from typing import Iterable
 
 
-REPO_ROOT = Path(__file__).resolve().parents[2]
-RUNS_DIR = REPO_ROOT / "var" / "admin" / "test-runs"
+REPO_ROOT = Path(__file__).resolve().parents[1]
+RUNS_DIR = REPO_ROOT / "var" / "test-runs"
 PUBLIC_SITE_ROOT = REPO_ROOT / "site"
 
 
@@ -84,7 +84,7 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
                 sys.executable,
                 "-m",
                 "py_compile",
-                "admin-app/commands/run_checks.py",
+                "tests/run_checks.py",
                 "studio/shared/python/local_env.py",
                 "studio/shared/python/external_workspace_paths.py",
                 "studio/shared/python/catalogue_media_paths.py",
@@ -92,10 +92,8 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
                 "studio/shared/python/studio_python_paths.py",
                 "studio/shared/python/display_paths.py",
                 "studio/shared/python/script_logging.py",
-                "studio/shared/python/studio_activity.py",
-                "admin-app/checks/audit_site_consistency.py",
-                "admin-app/checks/audit_projection_contract.py",
-                "admin-app/checks/audit_public_build_surface.py",
+                "studio/tests/audits/catalogue_site_consistency.py",
+                "tests/audits/projection_contract.py",
                 "admin-app/checks/css_token_audit.py",
                 "studio/services/media/publish_media_to_r2.py",
                 "studio/services/catalogue/catalogue_json_build.py",
@@ -132,9 +130,7 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
                 "admin-app/app/server/admin_app/admin_app_config.py",
                 "admin-app/app/server/admin_app/admin_app_server.py",
                 "admin-app/app/server/admin_app/admin_testing_api.py",
-                "admin-app/checks/audit_route_ready_state.py",
-                "admin-app/checks/verify_activity_contract.py",
-                "docs-viewer/services/docs_activity.py",
+                "tests/audits/route_ready_state.py",
                 "docs-viewer/services/docs_document_transfer.py",
                 "docs-viewer/services/docs_document_transfer_apply.py",
                 "docs-viewer/services/docs_document_move_apply.py",
@@ -147,7 +143,6 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
                 "docs-viewer/build/docs_builder/cli.py",
                 "docs-viewer/build/docs_builder/media_builds.py",
                 "docs-viewer/build/docs_builder/pipeline.py",
-                "studio/services/tags/tag_activity.py",
                 "studio/services/tags/tag_alias_mutations.py",
                 "studio/services/tags/tag_assignment_service.py",
                 "studio/services/tags/tag_management_config.py",
@@ -198,13 +193,10 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
                 "studio/tests/python/test_studio_catalogue_write_routes.py",
                 "studio/tests/python/test_studio_tag_workflows.py",
                 "admin-app/tests/python/test_admin_app_server.py",
-                "admin-app/tests/python/test_admin_runner_contract.py",
-                "admin-app/tests/python/test_activity_contract.py",
+                "tests/test_run_checks.py",
                 "studio/tests/python/test_local_env.py",
                 "studio/tests/python/test_external_workspace_paths.py",
                 "studio/tests/python/test_publish_media_to_r2.py",
-                "docs-viewer/tests/python/test_docs_activity.py",
-                "studio/tests/python/test_tag_activity.py",
                 "studio/tests/python/test_tag_alias_mutations.py",
                 "studio/tests/python/test_tag_assignment_service.py",
                 "studio/tests/python/test_tag_promotion_mutations.py",
@@ -228,8 +220,6 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
                 "studio/tests/python/test_catalogue_save_build.py",
                 "studio/tests/python/test_catalogue_source_mutation.py",
                 "studio/tests/python/test_catalogue_transactions.py",
-                "studio/tests/python/test_studio_activity_context.py",
-                "studio/tests/python/test_studio_activity_feed.py",
                 "studio/tests/python/test_catalogue_field_registry.py",
                 "studio/tests/python/test_catalogue_build_commands.py",
                 "studio/tests/python/test_catalogue_build_field_plan.py",
@@ -246,7 +236,6 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
         CheckCommand(
             "quick-python-pytest",
             pytest_argv(
-                "admin-app/tests/python/test_activity_contract.py",
                 "studio/tests/python/test_local_env.py",
                 "studio/tests/python/test_external_workspace_paths.py",
                 "studio/tests/python/test_publish_media_to_r2.py",
@@ -257,7 +246,6 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
                 "studio/tests/python/test_catalogue_transactions.py",
                 "studio/tests/python/test_catalogue_routes.py",
                 "studio/tests/python/test_tag_routes.py",
-                "studio/tests/python/test_tag_activity.py",
                 "studio/tests/python/test_tag_alias_mutations.py",
                 "studio/tests/python/test_tag_assignment_service.py",
                 "studio/tests/python/test_tag_promotion_mutations.py",
@@ -269,8 +257,6 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
                 "studio/tests/python/test_local_studio_runner_contract.py",
                 "studio/tests/python/test_catalogue_save_build.py",
                 "studio/tests/python/test_catalogue_source_mutation.py",
-                "studio/tests/python/test_studio_activity_context.py",
-                "studio/tests/python/test_studio_activity_feed.py",
                 "studio/tests/python/test_catalogue_build_commands.py",
                 "studio/tests/python/test_catalogue_build_scopes.py",
                 "studio/tests/python/test_catalogue_build_field_plan.py",
@@ -283,12 +269,12 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
         ),
         CheckCommand(
             "projection-contract",
-            (sys.executable, "admin-app/checks/audit_projection_contract.py"),
+            (sys.executable, "tests/audits/projection_contract.py"),
             "Validate the projection contract manifest and checked-in public projections.",
         ),
         CheckCommand(
             "route-ready-state-audit",
-            (sys.executable, "admin-app/checks/audit_route_ready_state.py", "--strict"),
+            (sys.executable, "tests/audits/route_ready_state.py", "--strict"),
             "Audit route-ready template contracts across local apps.",
         ),
         CheckCommand(
@@ -296,18 +282,12 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
             (sys.executable, "-m", "json.tool", "studio/app/frontend/config/studio-config.json"),
             "Parse Studio config JSON.",
         ),
-        CheckCommand(
-            "activity-contract-json",
-            (sys.executable, "-m", "json.tool", "studio/data/config/runtime/activity-contract.json"),
-            "Parse Studio activity contract JSON.",
-        ),
     ),
     "admin-checks": (
         LINT_SCOPE_COMMANDS["admin"],
         CheckCommand(
             "admin-checks-python-pytest",
             pytest_argv(
-                "admin-app/tests/python/test_audit_site_consistency.py",
                 "admin-app/tests/python/test_target_map_resolver.py",
                 "admin-app/tests/python/test_admin_checks_config.py",
                 "admin-app/tests/python/test_run_reports.py",
@@ -325,6 +305,7 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
             pytest_argv(
                 "studio/tests/python/test_catalogue_field_registry.py",
                 "studio/tests/python/test_catalogue_media_cleanup.py",
+                "studio/tests/python/test_catalogue_site_consistency_audit.py",
             ),
             "Run catalogue-profile Python tests through pytest collection.",
         ),
@@ -365,7 +346,6 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
                 "docs-viewer/tests/python/test_build_search_python.py",
                 "docs-viewer/tests/python/test_build_document_locations.py",
                 "docs-viewer/tests/python/test_docs_generated_reads.py",
-                "docs-viewer/tests/python/test_docs_activity.py",
                 "docs-viewer/tests/python/test_docs_live_rebuild_watcher.py",
                 "docs-viewer/tests/python/test_docs_write_rebuild.py",
                 "docs-viewer/tests/python/test_docs_management_mutations.py",
@@ -482,7 +462,7 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
                 sys.executable,
                 "admin-app/tests/smoke/admin_operations_routes.py",
             ),
-            "Smoke-check Admin audits, risk, and activity route boundaries.",
+            "Smoke-check Admin audits and checks route boundaries.",
         ),
     ),
     "studio-smoke": (
@@ -677,7 +657,7 @@ def parse_args() -> argparse.Namespace:
         default=[],
         help="Check profile to run. Repeat to combine profiles. Defaults to quick.",
     )
-    parser.add_argument("--run-id", help="Optional local run id for var/admin/test-runs/.")
+    parser.add_argument("--run-id", help="Optional local run id for var/test-runs/.")
     parser.add_argument("--list", action="store_true", help="List available profiles and exit.")
     return parser.parse_args()
 

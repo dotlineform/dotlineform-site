@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Focused checks for Admin site-consistency source resolution."""
+"""Focused checks for Catalogue site-consistency source resolution."""
 
 from __future__ import annotations
 
@@ -9,8 +9,8 @@ from pathlib import Path
 
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
-MODULE_PATH = REPO_ROOT / "admin-app" / "checks" / "audit_site_consistency.py"
-SPEC = importlib.util.spec_from_file_location("audit_site_consistency", MODULE_PATH)
+MODULE_PATH = REPO_ROOT / "studio" / "tests" / "audits" / "catalogue_site_consistency.py"
+SPEC = importlib.util.spec_from_file_location("catalogue_site_consistency", MODULE_PATH)
 assert SPEC is not None and SPEC.loader is not None
 audit = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(audit)

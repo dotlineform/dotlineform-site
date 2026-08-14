@@ -60,7 +60,6 @@ def test_work_delete_cleanup_preview_counts_generated_and_media_paths() -> None:
         touch(root / "site/assets/data/series_index.json")
         touch(root / "site/assets/data/recent_index.json")
         touch(root / "site/assets/series/index/009.json")
-        touch(root / "studio/data/generated/activity/work-storage-index.json")
         touch(root / TAG_ASSIGNMENTS_PATH)
 
         preview = catalogue_cleanup.catalogue_delete_preview_cleanup(
@@ -80,7 +79,6 @@ def test_work_delete_cleanup_preview_counts_generated_and_media_paths() -> None:
         "site/assets/series/index/009.json",
     ]
     assert preview["studio_json_updates"] == [
-        "studio/data/generated/activity/work-storage-index.json",
         TAG_ASSIGNMENTS_PATH.as_posix(),
     ]
     assert "site/assets/works/img/00001-thumb-800.jpg" in preview["delete_paths"]
@@ -131,7 +129,6 @@ def test_stale_public_record_cleanup_keeps_only_published_exact_payloads() -> No
 def test_work_delete_generated_payloads_remove_generated_records() -> None:
     with tempfile.TemporaryDirectory() as tmp:
         root = Path(tmp)
-        write_json(root / "studio/data/generated/activity/work-storage-index.json", {"header": {"schema": "work_storage_index_v1"}, "works": {"00001": {}, "00002": {}}})
         write_json(
             root / "site/assets/data/series_index.json",
             {
@@ -178,7 +175,6 @@ def test_work_delete_generated_payloads_remove_generated_records() -> None:
         "site/assets/data/series_index.json",
         "site/assets/series/index/009.json",
         TAG_ASSIGNMENTS_PATH.as_posix(),
-        "studio/data/generated/activity/work-storage-index.json",
     ]
     assert payloads[(root / "site/assets/data/series_index.json").resolve()]["series"]["009"]["single_work_id"] == "00002"
     assert payloads[(root / "site/assets/data/recent_index.json").resolve()]["entries"] == [

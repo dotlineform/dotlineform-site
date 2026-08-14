@@ -78,7 +78,6 @@ def test_module_uses_only_existing_studio_inputs_and_exact_catalogue_targets() -
         "site/assets/data",
         "catalogue_lookup_work_search",
         "docsViewerReportService",
-        "work-storage-index.json",
     ):
         assert forbidden not in source
 

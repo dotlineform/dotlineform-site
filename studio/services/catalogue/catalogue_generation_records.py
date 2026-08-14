@@ -44,7 +44,6 @@ WORKS_SCHEMA: List[tuple[str, str, Any]] = [
     ("title", "title", coerce_string),
     ("year", "year", coerce_int),
     ("year_display", "year_display", coerce_string),
-    ("storage", "storage_location", coerce_string),
     ("medium_type", "medium_type", coerce_string),
     ("medium_caption", "medium_caption", coerce_string),
     ("duration", "duration", coerce_string),
@@ -67,7 +66,6 @@ WORKS_FIELD_ORDER = [
     "series_ids",
     "series_title",
     "series_sort",
-    "storage",
     "medium_type",
     "medium_caption",
     "duration",
@@ -202,7 +200,6 @@ def build_work_json_record(
     public_record.pop("series_id", None)
     public_record.pop("series_title", None)
     public_record.pop("series_sort", None)
-    public_record.pop("storage", None)
     public_record.pop("title_sort", None)
     public_record.pop("checksum", None)
     public_record["doc_url"] = normalize_document_urls(doc_urls)

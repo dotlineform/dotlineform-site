@@ -2,20 +2,23 @@
 
 from __future__ import annotations
 
+import datetime as dt
 from dataclasses import dataclass
 from pathlib import Path
 import sys
 from typing import Any, Mapping
 
-from catalogue import catalogue_activity as activity
 from catalogue.catalogue_lookup import DEFAULT_LOOKUP_DIR
 from catalogue import catalogue_lookup_refresh as lookup_refresh
 from catalogue.catalogue_source import DEFAULT_SOURCE_DIR, SOURCE_FILES, load_json_file
 from script_logging import append_script_log
-from studio_activity import append_studio_activity
 
 
 LOGS_REL_DIR = Path("var/studio/catalogue/logs")
+
+
+def utc_now() -> str:
+    return dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
 
 
 @dataclass(frozen=True)
@@ -251,13 +254,3 @@ def log_event(repo_root: Path, event: str, details: Mapping[str, Any] | None = N
         )
     except Exception:
         pass
-
-
-def append_activity_rows(repo_root: Path, response_payload: dict[str, Any], rows: list[dict[str, Any]]) -> None:
-    if not rows:
-        return
-    try:
-        append_studio_activity(repo_root, rows)
-    except Exception:
-        pass
-    activity.increment_studio_activity_count(response_payload, len(rows))

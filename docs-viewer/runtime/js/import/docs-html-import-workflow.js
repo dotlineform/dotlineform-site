@@ -29,32 +29,6 @@ function setStatus(node, state, message) {
   }
 }
 
-export function buildDocsImportActivityContext({
-  pageId,
-  actionId,
-  route,
-  controlId,
-  controlSelector,
-  recordIdField,
-  recordId
-}) {
-  const normalizedActionId = normalizeText(actionId);
-  const normalizedRecordId = normalizeText(recordId);
-  const fallback = `${Date.now()}-${Math.random().toString(16).slice(2)}`;
-  const randomId = window.crypto && typeof window.crypto.randomUUID === "function"
-    ? window.crypto.randomUUID()
-    : fallback;
-  return {
-    page_id: pageId,
-    action_id: normalizedActionId,
-    route,
-    control_id: controlId,
-    control_selector: controlSelector,
-    correlation_id: `${normalizedActionId}:${normalizedRecordId}:${randomId}`,
-    [recordIdField]: normalizedRecordId
-  };
-}
-
 export function docsHtmlImportManagementOptions({
   managementBaseUrl = ""
 } = {}) {
@@ -107,16 +81,7 @@ async function requestImport(
     staged_filename: stagedFilename,
     include_prompt_meta: docsHtmlImportSourceFormatForRecord(file) === "html" ? Boolean(context.includePromptMeta) : false,
     confirm_interactive_html_overwrite: confirmInteractiveHtmlOverwrite,
-    preview_only: false,
-    activity_context: buildDocsImportActivityContext({
-      pageId: "docs-import",
-      actionId: "import-docs-source",
-      route: context.routePath || "/docs/",
-      controlId: "docsHtmlImportRun",
-      controlSelector: "#docsHtmlImportRun",
-      recordIdField: "staged_filename",
-      recordId: stagedFilename
-    })
+    preview_only: false
   };
   if (context.subScope) requestBody.sub_scope = context.subScope;
   return fetchManagementJson(

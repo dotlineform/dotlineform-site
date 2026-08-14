@@ -12,7 +12,6 @@
     "work-details-page": "Metadata-free public work-detail route shell.",
     "series-page": "Metadata-free public series route shell.",
     "work-json": "Focused public work JSON.",
-    "work-storage-index-json": "Studio storage lookup derived from work storage metadata.",
     "series-json": "Focused public series JSON.",
     "series-index-json": "Aggregate public series index JSON.",
     "recent-index-json": "Public recent-publications index.",
@@ -309,12 +308,10 @@
       "target": {
         "artifacts": [
           "source-json",
-          "studio-lookup",
-          "work-json",
-          "work-storage-index-json"
+          "studio-lookup"
         ],
         "fallback": false,
-        "reason": "Storage metadata is serialized to focused work runtime data and the Studio storage lookup only."
+        "reason": "Storage metadata remains in canonical source and the Studio lookup; the local Catalogue Works report reads canonical source through the Studio API."
       }
     },
     {

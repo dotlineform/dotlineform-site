@@ -155,7 +155,7 @@ def test_apply_move_finishes_target_before_source_rebuild_and_exclusive_cleanup(
     write_bytes(media_path(repo_root, "source", "img", "photo.png"), b"photo")
     plan = plan_move(repo_root, ["alpha"])
     calls: list[dict[str, object]] = []
-    activity_calls: list[tuple[object, ...]] = []
+    event_calls: list[tuple[object, ...]] = []
 
     def before_write(scope: str) -> None:
         if scope == "target":
@@ -180,7 +180,7 @@ def test_apply_move_finishes_target_before_source_rebuild_and_exclusive_cleanup(
             calls,
             before_write=before_write,
         ),
-        activity_logger=lambda *args, **_kwargs: activity_calls.append(args),
+        event_logger=lambda *args, **_kwargs: event_calls.append(args),
     )
 
     assert [call["scope"] for call in calls] == ["target", "source"]
@@ -204,7 +204,7 @@ def test_apply_move_finishes_target_before_source_rebuild_and_exclusive_cleanup(
     assert not (source_root / "grand.md").exists()
     assert not media_path(repo_root, "source", "img", "photo.png").exists()
     assert media_path(repo_root, "target", "img", "photo.png").is_file()
-    assert len(activity_calls) == 1
+    assert len(event_calls) == 1
 
 
 def test_apply_move_retains_source_media_referenced_outside_moved_set(
@@ -235,7 +235,7 @@ def test_apply_move_retains_source_media_referenced_outside_moved_set(
         plan,
         confirm=True,
         perform_source_write_and_rebuild=recording_rebuild([]),
-        activity_logger=lambda *_args, **_kwargs: None,
+        event_logger=lambda *_args, **_kwargs: None,
     )
 
     assert media_path(repo_root, "source", "img", "shared.png").is_file()
@@ -289,7 +289,7 @@ def test_apply_move_rechecks_remaining_references_before_media_cleanup(
         plan,
         confirm=True,
         perform_source_write_and_rebuild=rebuild_with_concurrent_reference,
-        activity_logger=lambda *_args, **_kwargs: None,
+        event_logger=lambda *_args, **_kwargs: None,
     )
 
     assert media_path(repo_root, "source", "img", "shared.png").is_file()
@@ -316,7 +316,7 @@ def test_apply_move_target_rebuild_failure_leaves_source_complete(
     )
     write_bytes(media_path(repo_root, "source", "img", "photo.png"), b"photo")
     plan = plan_move(repo_root, ["alpha"])
-    activity_calls: list[tuple[object, ...]] = []
+    event_calls: list[tuple[object, ...]] = []
 
     def fail_target_rebuild(
         _repo_root: Path,
@@ -337,7 +337,7 @@ def test_apply_move_target_rebuild_failure_leaves_source_complete(
             plan,
             confirm=True,
             perform_source_write_and_rebuild=fail_target_rebuild,
-            activity_logger=lambda *args, **_kwargs: activity_calls.append(args),
+            event_logger=lambda *args, **_kwargs: event_calls.append(args),
         )
 
     failure = captured.value.result
@@ -353,7 +353,7 @@ def test_apply_move_target_rebuild_failure_leaves_source_complete(
         "exact",
     ]
     assert failure["source_state"]["media"][0]["state"] == "exact"
-    assert activity_calls == []
+    assert event_calls == []
 
 
 def test_apply_move_source_rebuild_failure_reports_both_canonical_copies(
@@ -395,7 +395,7 @@ def test_apply_move_source_rebuild_failure_reports_both_canonical_copies(
             plan,
             confirm=True,
             perform_source_write_and_rebuild=fail_source_rebuild,
-            activity_logger=lambda *_args, **_kwargs: None,
+            event_logger=lambda *_args, **_kwargs: None,
         )
 
     failure = captured.value.result
@@ -454,7 +454,7 @@ def test_apply_move_media_cleanup_failure_reports_partial_source_cleanup(
             plan,
             confirm=True,
             perform_source_write_and_rebuild=recording_rebuild([]),
-            activity_logger=lambda *_args, **_kwargs: None,
+            event_logger=lambda *_args, **_kwargs: None,
         )
 
     failure = captured.value.result
@@ -530,7 +530,7 @@ flowchart LR
         confirm=True,
         media_builder=media_builder,
         perform_source_write_and_rebuild=recording_rebuild([]),
-        activity_logger=lambda *_args, **_kwargs: None,
+        event_logger=lambda *_args, **_kwargs: None,
     )
 
     target_doc = local_documents_root(repo_root, "target") / "alpha.md"
@@ -630,7 +630,7 @@ def test_apply_move_rebuilds_loadable_target_and_removes_source_outputs(
         plan,
         confirm=True,
         perform_source_write_and_rebuild=build_scope,
-        activity_logger=lambda *_args, **_kwargs: None,
+        event_logger=lambda *_args, **_kwargs: None,
     )
 
     moved_ids = set(result["moved_doc_ids"])
@@ -696,7 +696,7 @@ def test_apply_move_writes_external_local_target_then_cleans_repository_source(
         plan,
         confirm=True,
         perform_source_write_and_rebuild=recording_rebuild([]),
-        activity_logger=lambda *_args, **_kwargs: None,
+        event_logger=lambda *_args, **_kwargs: None,
     )
 
     assert result["moved_doc_ids"] == ["alpha", "grand"]

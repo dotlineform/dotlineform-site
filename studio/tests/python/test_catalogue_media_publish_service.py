@@ -176,15 +176,6 @@ def test_apply_returns_promoted_record_and_activity(tmp_path: Path) -> None:
             "preview_fingerprint": preview_payload["preview"]["preview_fingerprint"],
             "force": True,
             "confirm_overwrite": True,
-            "activity_context": {
-                "page_id": "catalogue-work",
-                "action_id": "publish-work-media",
-                "route": "/studio/catalogue-work/",
-                "control_id": "catalogueWorkSave",
-                "control_selector": "#catalogueWorkSave",
-                "work_id": "00042",
-                "correlation_id": "publish-media-test",
-            },
         },
         publisher_runner=runner,
     )
@@ -195,7 +186,6 @@ def test_apply_returns_promoted_record_and_activity(tmp_path: Path) -> None:
     assert payload["media_version"] == 4
     assert payload["record"]["media_version"] == 4
     assert payload["result"]["counts"] == {"overwritten": 3}
-    assert payload["activity_log"]["written_count"] == 1
 
 
 def test_version_conflict_stops_before_remote_work(tmp_path: Path) -> None:

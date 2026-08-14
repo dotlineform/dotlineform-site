@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Focused tests for the Admin-owned check runner."""
+"""Focused tests for the repository-owned check runner."""
 
 from __future__ import annotations
 
@@ -10,27 +10,27 @@ import sys
 from pathlib import Path
 
 
-REPO_ROOT = Path(__file__).resolve().parents[3]
-RUNNER_PATH = REPO_ROOT / "admin-app" / "commands" / "run_checks.py"
+REPO_ROOT = Path(__file__).resolve().parents[1]
+RUNNER_PATH = REPO_ROOT / "tests" / "run_checks.py"
 
 
 def load_runner_module():
-    spec = importlib.util.spec_from_file_location("admin_run_checks", RUNNER_PATH)
+    spec = importlib.util.spec_from_file_location("repository_run_checks", RUNNER_PATH)
     if spec is None or spec.loader is None:
-        raise RuntimeError("Could not load Admin run_checks.py")
+        raise RuntimeError("Could not load repository run_checks.py")
     module = importlib.util.module_from_spec(spec)
     sys.modules[spec.name] = module
     spec.loader.exec_module(module)
     return module
 
 
-def test_admin_runner_uses_admin_output_root() -> None:
+def test_runner_uses_repository_test_output_root() -> None:
     runner = load_runner_module()
 
-    assert runner.RUNS_DIR == REPO_ROOT / "var" / "admin" / "test-runs"
+    assert runner.RUNS_DIR == REPO_ROOT / "var" / "test-runs"
 
 
-def test_admin_runner_expands_admin_smoke_profile_without_studio_risk_route() -> None:
+def test_runner_expands_admin_smoke_profile_without_studio_risk_route() -> None:
     runner = load_runner_module()
 
     commands = runner.expand_profiles(["admin-smoke", "studio-smoke"])
@@ -43,7 +43,7 @@ def test_admin_runner_expands_admin_smoke_profile_without_studio_risk_route() ->
     assert "studio/tests/smoke/local_studio_app_risk_route.py" not in argv_text
 
 
-def test_admin_runner_docs_profile_isolates_only_full_registry_pytest() -> None:
+def test_runner_docs_profile_isolates_only_full_registry_pytest() -> None:
     runner = load_runner_module()
 
     commands = runner.expand_profiles(["docs"])
@@ -68,7 +68,7 @@ def test_admin_runner_docs_profile_isolates_only_full_registry_pytest() -> None:
     )
 
 
-def test_admin_runner_docs_viewer_smoke_profile_is_the_retained_boundary_set() -> None:
+def test_runner_docs_viewer_smoke_profile_is_the_retained_boundary_set() -> None:
     runner = load_runner_module()
 
     commands = runner.expand_profiles(["docs-viewer-smoke"])
@@ -89,7 +89,7 @@ def test_admin_runner_docs_viewer_smoke_profile_is_the_retained_boundary_set() -
     )
 
 
-def test_admin_runner_studio_smoke_profile_is_the_retained_boundary_set() -> None:
+def test_runner_studio_smoke_profile_is_the_retained_boundary_set() -> None:
     runner = load_runner_module()
 
     commands = runner.expand_profiles(["studio-smoke"])
@@ -112,7 +112,7 @@ def test_admin_runner_studio_smoke_profile_is_the_retained_boundary_set() -> Non
     )
 
 
-def test_admin_runner_studio_profile_collects_the_complete_python_directory() -> None:
+def test_runner_studio_profile_collects_the_complete_python_directory() -> None:
     runner = load_runner_module()
 
     commands = runner.expand_profiles(["studio"])
@@ -124,9 +124,9 @@ def test_admin_runner_studio_profile_collects_the_complete_python_directory() ->
     assert commands[1].argv[-1] == "studio/tests/python"
 
 
-def test_admin_runner_writes_summary_paths_under_admin_root(tmp_path, monkeypatch) -> None:
+def test_runner_writes_summary_paths_under_test_root(tmp_path, monkeypatch) -> None:
     runner = load_runner_module()
-    runs_dir = REPO_ROOT / "var" / "admin" / "test-runs" / "pytest-runner-contract"
+    runs_dir = REPO_ROOT / "var" / "test-runs" / "pytest-runner-contract"
     if runs_dir.exists():
         shutil.rmtree(runs_dir)
     monkeypatch.setattr(runner, "RUNS_DIR", runs_dir)
@@ -140,20 +140,20 @@ def test_admin_runner_writes_summary_paths_under_admin_root(tmp_path, monkeypatc
             "command": [sys.executable, "-c", "pass"],
             "exit_code": 0,
             "duration_seconds": 0.0,
-            "log": "var/admin/test-runs/pytest-runner-contract/runner-contract/001-sample.log",
+            "log": "var/test-runs/pytest-runner-contract/runner-contract/001-sample.log",
         }
         runner.write_summaries(run_dir, ["quick"], [result])
 
         payload = json.loads((run_dir / "summary.json").read_text(encoding="utf-8"))
         assert payload["status"] == "passed"
-        assert payload["run_dir"] == "var/admin/test-runs/pytest-runner-contract/runner-contract"
-        assert "var/admin/test-runs/pytest-runner-contract/runner-contract/001-sample.log" in (run_dir / "summary.md").read_text(encoding="utf-8")
+        assert payload["run_dir"] == "var/test-runs/pytest-runner-contract/runner-contract"
+        assert "var/test-runs/pytest-runner-contract/runner-contract/001-sample.log" in (run_dir / "summary.md").read_text(encoding="utf-8")
     finally:
         if runs_dir.exists():
             shutil.rmtree(runs_dir)
 
 
-def test_admin_runner_source_lint_profile_covers_every_maintained_scope() -> None:
+def test_runner_source_lint_profile_covers_every_maintained_scope() -> None:
     runner = load_runner_module()
 
     commands = runner.expand_profiles(["source-lint"])
@@ -167,7 +167,7 @@ def test_admin_runner_source_lint_profile_covers_every_maintained_scope() -> Non
     assert all("tooling/lint/eslint.config.mjs" in command.coverage for command in commands)
 
 
-def test_admin_runner_full_profile_includes_source_lint_once() -> None:
+def test_runner_full_profile_includes_source_lint_once() -> None:
     runner = load_runner_module()
 
     commands = runner.expand_profiles(["full"])
@@ -177,30 +177,30 @@ def test_admin_runner_full_profile_includes_source_lint_once() -> None:
         assert names.count(f"{scope_id}-source-lint") == 1
 
 
-def test_admin_runner_executes_representative_app_local_pytest(tmp_path) -> None:
+def test_runner_executes_representative_app_local_pytest(tmp_path) -> None:
     runner = load_runner_module()
-    log_dir = REPO_ROOT / "var" / "admin" / "test-runs" / "pytest-runner-command"
+    log_dir = REPO_ROOT / "var" / "test-runs" / "pytest-runner-command"
     if log_dir.exists():
         shutil.rmtree(log_dir)
     log_dir.mkdir(parents=True)
-    log_path = log_dir / "admin-pytest.log"
+    log_path = log_dir / "app-pytest.log"
     command = runner.CheckCommand(
-        "representative-admin-pytest",
-        runner.pytest_argv("admin-app/tests/python/test_admin_app_server.py"),
-        "Run one Admin app-local pytest target.",
+        "representative-site-tools-pytest",
+        runner.pytest_argv("site-tools/tests/test_site_validate.py"),
+        "Run one app-local pytest target.",
     )
 
     try:
         result = runner.run_command(command, log_path)
 
         assert result["exit_code"] == 0
-        assert "admin-app/tests/python/test_admin_app_server.py" in log_path.read_text(encoding="utf-8")
+        assert "site-tools/tests/test_site_validate.py" in log_path.read_text(encoding="utf-8")
     finally:
         if log_dir.exists():
             shutil.rmtree(log_dir)
 
 
-def test_admin_runner_materializes_isolated_projects_base_for_opted_in_command(tmp_path, monkeypatch) -> None:
+def test_runner_materializes_isolated_projects_base_for_opted_in_command(tmp_path, monkeypatch) -> None:
     runner = load_runner_module()
     monkeypatch.setattr(runner, "REPO_ROOT", tmp_path)
     log_path = tmp_path / "run" / "isolated-command.log"

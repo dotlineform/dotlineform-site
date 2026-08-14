@@ -6,11 +6,9 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any
 
-from tags import tag_activity
 from tags import tag_alias_mutations as tag_aliases
 from tags import tag_document_declarations
 from tags import tag_registry_mutations as tag_registry
-from tags import tag_routes
 from tags import tag_source_model as tag_source
 from tags import tag_write_transactions as tag_transactions
 from studio_tag_api import common
@@ -57,20 +55,6 @@ def create_tag_response(repo_root: Path, body: dict[str, Any], *, dry_run: bool 
             "dry_run": dry_run,
             **stats,
         },
-    )
-    common.attach_tag_activity(
-        repo_root=repo_root,
-        endpoint=tag_routes.CREATE_TAG_PATH,
-        dry_run=dry_run,
-        body=body,
-        response_payload=response_payload,
-        record_id=str(stats["tag_id"]),
-        detail_items=[
-            summary_text,
-            f"Created canonical tag: {stats['tag_id']}.",
-            "No document association was created.",
-        ],
-        status=tag_activity.tag_activity_status(stats),
     )
     return response_payload
 
@@ -274,17 +258,4 @@ def mutate_tag_response(
                 **stats,
             },
         )
-        if tag_activity.tag_activity_changed(stats):
-            common.attach_tag_activity(
-                repo_root=repo_root,
-                endpoint=tag_routes.MUTATE_TAG_APPLY_PATH,
-                dry_run=dry_run,
-                body=body,
-                response_payload=response_payload,
-                detail_items=[
-                    summary_text,
-                    f"Action: {action}; tag: {old_tag_id}.",
-                ],
-                status=tag_activity.tag_activity_status(stats),
-            )
     return response_payload

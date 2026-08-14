@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Focused checks for Admin audit and activity ownership."""
+"""Focused checks for Admin audit ownership."""
 
 from __future__ import annotations
 

@@ -17,7 +17,6 @@ REGISTRY_ARTIFACT_TO_GENERATE_ONLY = {
     "work-details-page": "work-details-pages",
     "series-page": "series-pages",
     "work-json": "work-json",
-    "work-storage-index-json": "work-json",
     "series-json": "series-pages",
     "series-index-json": "series-index-json",
     "recent-index-json": "recent-index-json",

@@ -3,7 +3,7 @@ import {
   postJson
 } from "./studio-transport.js";
 
-export async function postTags(seriesId, workId, tags, keepWork, utcTimestampFn = utcTimestamp, signal, activityContext = null, config = null) {
+export async function postTags(seriesId, workId, tags, keepWork, utcTimestampFn = utcTimestamp, signal, config = null) {
   const payload = {
     series_id: seriesId,
     tags,
@@ -12,9 +12,6 @@ export async function postTags(seriesId, workId, tags, keepWork, utcTimestampFn 
   if (workId != null && workId !== "") {
     payload.work_id = workId;
     payload.keep_work = Boolean(keepWork);
-  }
-  if (activityContext) {
-    payload.activity_context = activityContext;
   }
   return postJson(getStudioTagWriteEndpoint("saveTags", config), payload, { signal });
 }

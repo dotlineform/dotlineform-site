@@ -5,12 +5,11 @@ from __future__ import annotations
 from http import HTTPStatus
 from typing import Any, Callable, Mapping, Sequence
 
-from catalogue import catalogue_activity as activity
 from catalogue import catalogue_delete_plans
 from catalogue import catalogue_transactions as transactions
 from catalogue.catalogue_build_service import run_catalogue_search_rebuild
 from catalogue.catalogue_source import normalize_detail_uid_value, normalize_text, slug_id
-from catalogue.catalogue_service_context import CatalogueWriteContext, append_activity_rows, refresh_lookup_payloads
+from catalogue.catalogue_service_context import CatalogueWriteContext, refresh_lookup_payloads, utc_now
 from catalogue.series_ids import normalize_series_id
 from studio.services.media.publish_media_to_r2 import run_catalogue_remote_delete
 
@@ -145,12 +144,6 @@ def delete_apply_response(
             "preview": preview,
         }
 
-    activity_profile = activity.activity_profile_for_delete(kind)
-    activity_context = activity.normalize_activity_context_for_profile(
-        body.get("activity_context"),
-        activity_profile,
-        record_id=record_id,
-    )
     plan = catalogue_delete_plans.build_delete_apply_plan(context.source_dir, context.repo_root, kind, record_id, preview)
     transaction_result = transactions.execute_catalogue_cleanup_transaction(
         repo_root=context.repo_root,
@@ -164,7 +157,7 @@ def delete_apply_response(
     cleanup_result = transaction_result.payload
     remote_cleanup = None
     if not context.dry_run:
-        remote_targets = catalogue_delete_remote_media_targets(kind, record_id, plan.activity_affected)
+        remote_targets = catalogue_delete_remote_media_targets(kind, record_id, plan.affected)
         if remote_targets:
             remote_cleanup = _delete_remote_media(context, remote_targets, remote_delete_runner)
             cleanup_result["r2_media"] = remote_cleanup
@@ -180,41 +173,9 @@ def delete_apply_response(
         payload["dry_run"] = True
         payload["would_write"] = True
     else:
-        payload["saved_at_utc"] = activity.utc_now()
+        payload["saved_at_utc"] = utc_now()
     if remote_cleanup and remote_cleanup["status"] == "warning":
         payload["warning"] = "Catalogue data was deleted, but R2 media cleanup did not complete."
-    if activity_context:
-        payload["activity_context"] = activity_context
-    if activity_context and not context.dry_run:
-        now_utc = activity.utc_now()
-        cleanup_payload = payload.get("cleanup") if isinstance(payload.get("cleanup"), Mapping) else {}
-        updated_json_files = cleanup_payload.get("updated_json_files")
-        record_groups = activity.activity_record_groups_from_affected(plan.activity_affected)
-        cleanup_detail_items = [
-            f"Cleaned generated artifacts for deleted {kind.replace('_', ' ')} {record_id}",
-            f"Deleted {cleanup_payload.get('deleted_files', 0)} generated/local file(s)",
-            f"Updated {updated_json_files or 0} generated JSON file(s)",
-        ]
-        if remote_cleanup:
-            cleanup_detail_items.append(
-                "R2 media cleanup "
-                f"{remote_cleanup['status']}: {remote_cleanup['deleted']} deleted, "
-                f"{remote_cleanup['missing']} already absent, {remote_cleanup['failed']} failed"
-            )
-        activity_rows = activity.catalogue_delete_activity_rows(
-            activity_profile,
-            activity_context,
-            cleanup_payload,
-            now_utc=now_utc,
-            record_groups=record_groups,
-            source_detail_items=[f"Deleted canonical {kind.replace('_', ' ')} source record {record_id}"],
-            cleanup_detail_items=cleanup_detail_items,
-        )
-        if remote_cleanup and remote_cleanup["status"] == "warning":
-            for row in activity_rows:
-                if row.get("script_purpose_id") == "clean-generated-artifacts":
-                    row["status"] = "warning"
-        append_activity_rows(context.repo_root, payload, activity_rows)
     return HTTPStatus.OK, payload
 
 

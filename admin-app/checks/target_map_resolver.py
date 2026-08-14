@@ -171,7 +171,6 @@ def likely_unmapped_area(path: str, area_ids: Iterable[str]) -> list[str]:
         "management": ("management", "manage"),
         "import-export": ("import", "export", "sharing"),
         "config": ("config", "settings"),
-        "activity": ("activity", "log"),
         "catalogue": ("catalogue",),
         "docs-build": ("build_docs", "build_search", "rebuild", "generated_reads"),
     }

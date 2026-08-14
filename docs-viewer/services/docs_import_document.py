@@ -466,14 +466,14 @@ def apply_import_document_source(plan: ImportDocumentPlan) -> None:
         write_text_atomic(plan.target_path, plan.source_text)
 
 
-def import_document_activity(
+def import_document_event(
     repo_root: Path,
     plan: ImportDocumentPlan,
     source_label: str,
     *,
     include_prompt_meta: bool,
 ) -> tuple[str, dict[str, Any]]:
-    """Return the current per-document activity event name and details."""
+    """Return the current per-document operation event name and details."""
 
     return (
         plan.suppression_reason,
@@ -552,7 +552,7 @@ __all__ = [
     "ImportDocumentPlan",
     "apply_import_document",
     "apply_import_document_source",
-    "import_document_activity",
+    "import_document_event",
     "import_document_result",
     "materialize_import_document_media",
     "plan_import_document",

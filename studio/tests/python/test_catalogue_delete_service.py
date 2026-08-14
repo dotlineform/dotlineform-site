@@ -23,7 +23,7 @@ from catalogue.catalogue_service_context import build_catalogue_write_context  #
 
 def stub_local_delete(monkeypatch, *, affected: dict, order: list[str]) -> None:
     preview = {"blocked": False, "affected": affected}
-    plan = SimpleNamespace(payloads={}, cleanup={}, activity_affected=affected)
+    plan = SimpleNamespace(payloads={}, cleanup={}, affected=affected)
     monkeypatch.setattr(
         delete_service.catalogue_delete_plans,
         "build_delete_preview",

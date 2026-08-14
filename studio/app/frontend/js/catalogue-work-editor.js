@@ -55,9 +55,6 @@ import {
   getCataloguePreviewBlocker
 } from "./catalogue-editor-action-workflow.js";
 import {
-  buildStudioActivityContext
-} from "./studio-activity-context.js";
-import {
   renderWorkCurrentPreview,
   renderWorkReadiness,
   updateWorkSummary
@@ -325,18 +322,6 @@ async function editDetailSection(state, row, rows = []) {
   }
 }
 
-function buildDetailSectionActivityContext(sectionId) {
-  return buildStudioActivityContext({
-    pageId: "catalogue-work",
-    actionId: "delete-work-detail-section",
-    route: "/studio/catalogue-work/",
-    controlId: "catalogueWorkDetailBrowserSectionActions",
-    controlSelector: "#catalogueWorkDetailBrowserSectionActions",
-    recordIdField: "section_id",
-    recordId: sectionId
-  });
-}
-
 async function deleteDetailSection(state, row) {
   if (!state.currentRecord || state.mode === "bulk" || !state.serverAvailable) return;
   const sectionId = normalizeText(row && row.id);
@@ -355,8 +340,7 @@ async function deleteDetailSection(state, row) {
   state.messageController.setActionTextWithState(state.resultNode, "");
   const request = {
     kind: "work_detail_section",
-    section_id: sectionId,
-    activity_context: buildDetailSectionActivityContext(sectionId)
+    section_id: sectionId
   };
   try {
     const previewResponse = await previewCatalogueDelete(request);

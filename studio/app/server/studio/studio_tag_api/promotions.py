@@ -6,10 +6,8 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any
 
-from tags import tag_activity
 from tags import tag_document_declarations
 from tags import tag_promotion_mutations as tag_promotions
-from tags import tag_routes
 from tags import tag_source_model as tag_source
 from tags import tag_write_transactions as tag_transactions
 from studio_tag_api import common
@@ -86,19 +84,6 @@ def promote_tag_alias_response(
                 **stats,
             },
         )
-        if tag_activity.tag_activity_changed(stats):
-            common.attach_tag_activity(
-                repo_root=repo_root,
-                endpoint=tag_routes.PROMOTE_ALIAS_APPLY_PATH,
-                dry_run=dry_run,
-                body=body,
-                response_payload=response_payload,
-                detail_items=[
-                    summary_text,
-                    f"Promoted alias {stats.get('alias')} to {stats.get('new_tag_id')}.",
-                ],
-                status=tag_activity.tag_activity_status(stats),
-            )
     return response_payload
 
 
@@ -192,17 +177,4 @@ def demote_tag_response(
                 **stats,
             },
         )
-        if tag_activity.tag_activity_changed(stats):
-            common.attach_tag_activity(
-                repo_root=repo_root,
-                endpoint=tag_routes.DEMOTE_TAG_APPLY_PATH,
-                dry_run=dry_run,
-                body=body,
-                response_payload=response_payload,
-                detail_items=[
-                    summary_text,
-                    f"Demoted {stats.get('old_tag_id')} to alias {stats.get('alias_key')}.",
-                ],
-                status=tag_activity.tag_activity_status(stats),
-            )
     return response_payload

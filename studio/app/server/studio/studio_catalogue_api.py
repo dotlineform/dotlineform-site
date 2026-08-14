@@ -24,7 +24,6 @@ for candidate in (SCRIPTS_DIR, STUDIO_DIR):
     if str(candidate) not in sys.path:
         sys.path.insert(0, str(candidate))
 
-from catalogue import catalogue_activity as activity  # noqa: E402
 from catalogue import catalogue_lookup_refresh as lookup_refresh  # noqa: E402
 from catalogue import catalogue_write_service  # noqa: E402
 from catalogue.catalogue_build_media import PIPELINE_CONFIG, detect_projects_base_dir  # noqa: E402
@@ -37,6 +36,7 @@ from catalogue.catalogue_lookup import (  # noqa: E402
     build_work_search_payload,
 )
 from catalogue.catalogue_media_files import IMAGE_EXTENSIONS  # noqa: E402
+from catalogue.catalogue_service_context import utc_now  # noqa: E402
 from catalogue.catalogue_source import (  # noqa: E402
     DEFAULT_SOURCE_DIR,
     SOURCE_FILES,
@@ -51,7 +51,6 @@ from catalogue.catalogue_source import (  # noqa: E402
 from catalogue.catalogue_transactions import execute_source_json_write  # noqa: E402
 from catalogue.catalogue_workbook_import import (  # noqa: E402
     DEFAULT_IMPORT_WORKBOOK_PATH,
-    IMPORT_MODE_WORKS,
     apply_workbook_import_plan,
     build_workbook_import_plan,
     normalize_import_mode,
@@ -61,7 +60,6 @@ from pipeline_config import source_works_root_subdir  # noqa: E402
 from catalogue.series_ids import normalize_series_id  # noqa: E402
 from local_env import runtime_env  # noqa: E402
 from script_logging import append_script_log  # noqa: E402
-from studio_activity import append_studio_activity  # noqa: E402
 
 
 LOGS_REL_DIR = Path("var/studio/catalogue/logs")
@@ -273,11 +271,6 @@ def import_preview_payload(repo_root: Path, body: Mapping[str, Any]) -> dict[str
 
 def import_apply_response(repo_root: Path, body: Mapping[str, Any], *, dry_run: bool = False) -> tuple[HTTPStatus, dict[str, Any]]:
     mode = normalize_import_mode(body.get("mode"))
-    activity_context = activity.normalize_activity_context_for_profile(
-        body.get("activity_context"),
-        activity.ACTIVITY_PROFILE_IMPORT_WORKBOOK_RECORDS,
-        record_id=mode,
-    )
     paths = catalogue_paths(repo_root)
     plan = build_workbook_import_plan(paths["source_dir"], (repo_root / DEFAULT_IMPORT_WORKBOOK_PATH).resolve(), mode)
     preview_payload = plan_to_response(plan, repo_root=repo_root)
@@ -317,13 +310,11 @@ def import_apply_response(repo_root: Path, body: Mapping[str, Any], *, dry_run: 
         "target_kind": target_kind,
         "preview": preview_payload,
     }
-    if activity_context:
-        response_payload["activity_context"] = activity_context
     if dry_run:
         response_payload["dry_run"] = True
         response_payload["would_write"] = changed
     elif changed:
-        response_payload["saved_at_utc"] = activity.utc_now()
+        response_payload["saved_at_utc"] = utc_now()
 
     log_event(
         repo_root,
@@ -336,42 +327,6 @@ def import_apply_response(repo_root: Path, body: Mapping[str, Any], *, dry_run: 
             "dry_run": dry_run,
         },
     )
-    if not dry_run and activity_context:
-        imported_ids = sorted(plan.importable_records.keys())
-        record_groups = activity.activity_record_groups(
-            works=imported_ids if mode == IMPORT_MODE_WORKS else [],
-            work_details=imported_ids if mode != IMPORT_MODE_WORKS else [],
-        )
-        detail_label = "work" if mode == IMPORT_MODE_WORKS else "work detail"
-        now_utc = activity.utc_now()
-        append_studio_activity(
-            repo_root,
-            [
-                activity.studio_activity_entry(
-                    activity_context,
-                    now_utc=now_utc,
-                    script_purpose_id="import-source-data",
-                    status="completed",
-                    record_groups=record_groups,
-                    detail_items=[
-                        f"Imported {plan.importable_count} {detail_label} record(s) from workbook",
-                        f"{plan.duplicate_count} duplicate record(s) already existed",
-                        f"Candidate rows reviewed: {plan.total_candidate_rows}",
-                    ],
-                    source_refs=[
-                        {"kind": "source", "path": str(DEFAULT_IMPORT_WORKBOOK_PATH)},
-                        {"kind": "log", "path": str(LOGS_REL_DIR / "studio_catalogue_api.log")},
-                    ],
-                ),
-                activity.catalogue_lookup_activity_row(
-                    activity_context,
-                    now_utc=now_utc,
-                    record_groups=record_groups,
-                    detail_items=[f"Refreshed catalogue lookup data after workbook {detail_label} import"],
-                ),
-            ],
-        )
-        activity.increment_studio_activity_count(response_payload, 2)
     return HTTPStatus.OK, response_payload
 
 

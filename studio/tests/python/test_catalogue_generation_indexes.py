@@ -186,64 +186,9 @@ def test_series_index_payload_is_published_only_and_validates_primary_work() -> 
         raise AssertionError("expected missing primary-work validation failure")
 
 
-def test_storage_index_payload_is_studio_only() -> None:
-    work_records = {
-        "00001": {"work_id": "1", "status": "published"},
-        "00002": {"work_id": "2", "status": "draft"},
-        "00003": {"work_id": "3", "status": "archived"},
-        "00004": {"work_id": "4", "status": "published"},
-    }
-    canonical = {
-        "00001": {
-            "work_id": "00001",
-            "title": "Stored Work",
-            "year": 2024,
-            "series_ids": ["009"],
-            "storage": "Shelf A",
-        },
-        "00002": {
-            "work_id": "00002",
-            "title": "Draft Work",
-            "year_display": "ongoing",
-            "series_ids": [],
-            "storage": "Shelf D",
-        },
-        "00003": {
-            "work_id": "00003",
-            "title": "Archived Work",
-            "year": 2020,
-            "series_ids": ["010"],
-            "storage": "Shelf Z",
-        },
-    }
-
-    storage_eligible_works = {
-        work_id: canonical[work_id]
-        for work_id, work_record in work_records.items()
-        if work_record["status"] in {"draft", "published"} and work_id in canonical
-    }
-    storage = indexes.build_work_storage_index_records(
-        works=storage_eligible_works,
-        canonical_work_record_by_id=canonical,
-    )
-    assert storage == {
-        "00001": {"storage": "Shelf A"},
-        "00002": {"storage": "Shelf D"},
-    }
-
-    storage_payload = indexes.build_work_storage_index_payload(
-        works=storage,
-        generated_at_utc="2026-05-09T12:30:00Z",
-    )
-    assert storage_payload["header"]["schema"] == "work_storage_index_v1"
-    assert storage_payload["header"]["count"] == 2
-    assert storage_payload["works"] == storage
-
-
 def main() -> None:
     test_series_context_sorts_title_aliases_and_numeric_values()
     test_series_index_payload_is_published_only_and_validates_primary_work()
-    test_storage_index_payload_is_studio_only()
     print("Catalogue generation index tests OK")
 
 

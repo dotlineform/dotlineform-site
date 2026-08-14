@@ -7,8 +7,7 @@ import json
 from http import HTTPStatus
 from typing import Any, Callable, Mapping
 
-from catalogue import catalogue_activity as activity
-from catalogue.catalogue_service_context import CatalogueWriteContext, append_activity_rows, load_works_payload
+from catalogue.catalogue_service_context import CatalogueWriteContext, load_works_payload
 from catalogue.catalogue_source import normalize_optional_int, normalize_status, slug_id
 from studio.services.media.publish_media_to_r2 import run_catalogue_upload
 
@@ -269,11 +268,6 @@ def media_publish_apply_response(
     requested_fingerprint = str(body.get("preview_fingerprint") or "").strip()
     if len(requested_fingerprint) != 64 or any(ch not in "0123456789abcdef" for ch in requested_fingerprint):
         raise ValueError("preview_fingerprint must be the value returned by media publish preview")
-    activity_context = activity.normalize_activity_context_for_profile(
-        body.get("activity_context"),
-        activity.ACTIVITY_PROFILE_PUBLISH_WORK_MEDIA,
-        record_id=work_id,
-    )
     current_preview_report = _run(
         context,
         work_id=work_id,
@@ -335,24 +329,4 @@ def media_publish_apply_response(
     if context.dry_run:
         payload["dry_run"] = True
         return HTTPStatus.OK, payload
-    if activity_context:
-        payload["activity_context"] = activity_context
-        append_activity_rows(
-            context.repo_root,
-            payload,
-            [
-                activity.studio_activity_entry(
-                    activity_context,
-                    now_utc=activity.utc_now(),
-                    script_purpose_id="publish-media-to-r2",
-                    status="completed",
-                    record_groups=activity.activity_record_groups(works=[work_id]),
-                    detail_items=[
-                        result["summary"],
-                        f"Confirmed work media version {confirmed_version}",
-                    ],
-                    source_refs=activity.catalogue_log_source_ref(),
-                )
-            ],
-        )
     return HTTPStatus.OK, payload

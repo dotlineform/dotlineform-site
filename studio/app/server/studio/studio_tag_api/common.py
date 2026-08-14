@@ -21,8 +21,6 @@ from studio.shared.python.studio_python_paths import ensure_studio_python_paths
 REPO_ROOT = ensure_studio_python_paths(__file__)
 
 import script_logging  # noqa: E402
-import studio_activity as admin_activity_log  # noqa: E402
-from tags import tag_activity  # noqa: E402
 
 
 LOGS_REL_DIR = Path("var/studio/logs")
@@ -45,11 +43,3 @@ def log_event(repo_root: Path, event: str, details: dict[str, Any]) -> None:
     except Exception:
         # Logging should not block local API requests.
         pass
-
-
-def attach_tag_activity(repo_root: Path, **kwargs: Any) -> None:
-    tag_activity.attach_tag_activity(
-        repo_root=repo_root,
-        append_activity=lambda entry: admin_activity_log.append_studio_activity(repo_root, entry),
-        **kwargs,
-    )

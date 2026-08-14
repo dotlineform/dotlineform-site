@@ -44,27 +44,12 @@ function reportService(context) {
     : null;
 }
 
-function reportActivityContext(scope) {
-  return {
-    page_id: "docs-broken-links",
-    action_id: "run-broken-links-audit",
-    route: "/docs/?scope=studio&doc=docs-broken-links",
-    control_id: "docsBrokenLinksReportRun",
-    control_selector: "#docsBrokenLinksReportRun",
-    correlation_id: "broken-links:" + scope + ":" + Date.now(),
-    scope
-  };
-}
-
-function postBrokenLinks(context, scope, includeActivity) {
+function postBrokenLinks(context, scope) {
   const service = reportService(context);
   if (!service) {
     return Promise.reject(new Error("Local docs-management server is not configured."));
   }
-  return service.runBrokenLinksAudit({
-    scope,
-    activityContext: includeActivity ? reportActivityContext(scope) : null
-  });
+  return service.runBrokenLinksAudit({ scope });
 }
 
 function viewerBaseMatches(pathname, scopes) {
@@ -208,13 +193,13 @@ function setBusy(state, busy) {
   state.runButton.textContent = state.isBusy ? "Running..." : "Run audit";
 }
 
-function runAudit(state, includeActivity) {
+function runAudit(state) {
   if (!state.selectedScope) return Promise.resolve();
   setBusy(state, true);
   state.statusNode.textContent = "Running broken-links audit...";
   clearNode(state.rowsNode);
   state.emptyNode.hidden = true;
-  return postBrokenLinks(state.context, state.selectedScope, includeActivity)
+  return postBrokenLinks(state.context, state.selectedScope)
     .then((payload) => {
       state.entries = Array.isArray(payload && payload.entries) ? payload.entries : [];
       state.sortKey = DEFAULT_SORT_KEY;
@@ -238,10 +223,10 @@ function attachEvents(state) {
   state.scopeSelectNode.addEventListener("change", () => {
     state.selectedScope = cleanString(state.scopeSelectNode.value).toLowerCase();
     persistSelectedScope(state.selectedScope);
-    runAudit(state, false);
+    runAudit(state);
   });
   state.runButton.addEventListener("click", () => {
-    runAudit(state, true);
+    runAudit(state);
   });
   state.headNode.addEventListener("click", (event) => {
     const button = event.target instanceof Element ? event.target.closest("[data-report-sort]") : null;
@@ -342,5 +327,5 @@ export function mountDocsBrokenLinksReport(context) {
     setBusy(state, false);
     return Promise.resolve();
   }
-  return runAudit(state, false);
+  return runAudit(state);
 }

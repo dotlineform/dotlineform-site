@@ -137,11 +137,6 @@ def test_registry_edit_preserves_source_and_omitted_primary(
     )
     monkeypatch.setattr(registry.common, "utc_now", lambda: "2026-07-29T12:00:00Z")
     monkeypatch.setattr(registry.common, "log_event", lambda *_args, **_kwargs: None)
-    monkeypatch.setattr(
-        registry.common,
-        "attach_tag_activity",
-        lambda *_args, **_kwargs: None,
-    )
 
     result = registry.mutate_tag_response(
         tmp_path,
@@ -200,11 +195,6 @@ def test_registry_primary_replacement_requires_current_association(
         lambda payloads: writes.update(payloads),
     )
     monkeypatch.setattr(registry.common, "log_event", lambda *_args, **_kwargs: None)
-    monkeypatch.setattr(
-        registry.common,
-        "attach_tag_activity",
-        lambda *_args, **_kwargs: None,
-    )
 
     result = registry.mutate_tag_response(
         tmp_path,

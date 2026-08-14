@@ -378,16 +378,16 @@ def open_source_document(repo_root: Path, body: dict[str, Any]) -> dict[str, Any
         editor="vscode",
         dry_run=False,
     )
-    activity = {
+    event_details = {
         "package_id": package_path.name,
         "doc_id": doc_id,
         "editor": "vscode",
         "path": _package_marker(repo_root, source_path),
     }
-    log_event(repo_root, "docs-review-open-source", activity)
+    log_event(repo_root, "docs-review-open-source", event_details)
     return {
         "ok": True,
-        **activity,
+        **event_details,
         "summary_text": f"Opened {doc_id} source.",
     }
 

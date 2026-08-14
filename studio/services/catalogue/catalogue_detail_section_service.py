@@ -5,7 +5,6 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any, Callable, Iterable, Mapping, Sequence
 
-from catalogue import catalogue_activity as activity
 from catalogue import catalogue_transactions as transactions
 from catalogue.catalogue_build_media import PIPELINE_CONFIG, detect_projects_base_dir, read_image_dims_px
 from catalogue.catalogue_build_service import run_build_operation
@@ -15,6 +14,7 @@ from catalogue.catalogue_service_context import (
     CatalogueWriteContext,
     log_event,
     refresh_lookup_payloads,
+    utc_now,
 )
 from catalogue.catalogue_source import (
     DETAIL_FIELDS,
@@ -275,7 +275,7 @@ def create_detail_section_payload(
         payload["dry_run"] = True
         payload["would_write"] = changed
     else:
-        payload["saved_at_utc"] = activity.utc_now()
+        payload["saved_at_utc"] = utc_now()
         payload["build_requested"] = True
         build_result = build_created_details(context, work_id, sorted(created_details))
         payload["build"] = build_result
@@ -390,7 +390,7 @@ def save_detail_section_payload(context: CatalogueWriteContext, body: Mapping[st
         payload["dry_run"] = True
         payload["would_write"] = changed
     elif changed:
-        payload["saved_at_utc"] = activity.utc_now()
+        payload["saved_at_utc"] = utc_now()
         payload["lookup_refresh"] = refresh_lookup_payloads(context)
         payload["build_requested"] = True
         success, build_payload = run_build_operation(
@@ -456,7 +456,7 @@ def build_created_details(context: CatalogueWriteContext, work_id: str, detail_u
         "completed_count": len(detail_uids),
         "details": results,
         "remaining_detail_uids": [],
-        "completed_at_utc": activity.utc_now(),
+        "completed_at_utc": utc_now(),
     }
 
 

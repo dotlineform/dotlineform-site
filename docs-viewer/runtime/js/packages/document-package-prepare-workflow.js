@@ -349,8 +349,7 @@ function openPrepareOptions(options) {
           missingSummaryOnly: state.projection.missingSummaryOnly,
           includeNonPublishable: state.projection.includeNonPublishable,
           targetFormat: state.choices.targetFormat,
-          contentFormat: state.choices.contentFormat,
-          activityContext: options.activityContext
+          contentFormat: state.choices.contentFormat
         });
         return {
           confirmed: true,
@@ -486,8 +485,7 @@ export async function openDocumentPackagePrepareWorkflow(options = {}) {
       checkedDocIds,
       profiles,
       documents,
-      flatCollection: Boolean(subScope),
-      activityContext: options.activityContext
+      flatCollection: Boolean(subScope)
     });
     if (!result || !result.confirmed) return { confirmed: false };
 

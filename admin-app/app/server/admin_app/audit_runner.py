@@ -29,7 +29,6 @@ from script_logging import append_script_log  # noqa: E402
 
 
 LOGS_REL_DIR = Path("var/admin/audits/logs")
-RUN_AUDIT_PATH = "/admin/api/audits/audits/run"
 
 
 @dataclass(frozen=True)
@@ -82,7 +81,7 @@ def build_audit_registry(repo_root: Path) -> dict[str, AuditDefinition]:
             description="Checks route-ready template contracts across local apps.",
             argv=(
                 sys.executable,
-                str(repo_root / "admin-app" / "checks" / "audit_route_ready_state.py"),
+                str(repo_root / "tests" / "audits" / "route_ready_state.py"),
                 "--strict",
                 "--json",
             ),
@@ -114,11 +113,7 @@ def run_audit_payload(
     body: dict[str, Any],
     audits: dict[str, AuditDefinition] | None = None,
     *,
-    activity_endpoint: str = RUN_AUDIT_PATH,
     log_event: Callable[[str, dict[str, Any] | None], None] | None = None,
-    append_activity: Callable[[dict[str, Any]], None] | None = None,
-    normalize_activity_context: Callable[..., dict[str, Any] | None] | None = None,
-    build_activity_entry: Callable[..., dict[str, Any]] | None = None,
 ) -> dict[str, Any]:
     audit_registry = audits or build_audit_registry(repo_root)
     audit_id = str(body.get("audit_id") or "").strip()
@@ -167,38 +162,6 @@ def run_audit_payload(
         "stdout": result.stdout,
         "stderr": result.stderr,
     }
-
-    if append_activity and normalize_activity_context and build_activity_entry:
-        try:
-            activity_context = normalize_activity_context(
-                repo_root,
-                body.get("activity_context"),
-                endpoint=activity_endpoint,
-                record_id=audit.audit_id,
-            )
-            if activity_context:
-                errors = response_payload["summary"]["errors"]
-                warnings = response_payload["summary"]["warnings"]
-                status = "failed" if response_payload["status"] == "failed" or errors else ("warning" if warnings else "completed")
-                response_payload["activity_context"] = activity_context
-                append_activity(
-                    build_activity_entry(
-                        activity_context,
-                        script_purpose_id="run-audit",
-                        now_utc=finished_at,
-                        status=status,
-                        record_groups={"docs": [audit.audit_id]},
-                        detail_items=[
-                            f"Ran Admin audit: {audit.label}.",
-                            f"Status: {response_payload['status']}; errors: {errors}; warnings: {warnings}.",
-                            f"Duration: {response_payload['duration_seconds']} seconds.",
-                        ],
-                        source_refs=[{"kind": "log", "path": str(LOGS_REL_DIR / "admin_audit_runner.log")}],
-                    )
-                )
-                response_payload["activity_log"] = {"written_count": 1}
-        except Exception as exc:  # noqa: BLE001
-            response_payload["activity_log"] = {"written_count": 0, "error": str(exc)}
 
     if log_event:
         log_event(

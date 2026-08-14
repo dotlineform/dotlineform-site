@@ -7,7 +7,6 @@ from http import HTTPStatus
 from pathlib import Path
 from typing import Any
 
-import docs_activity
 import docs_document_package_routes as routes
 from docs_document_packages.export_config import (
     default_content_format,
@@ -347,7 +346,6 @@ def prepare_package(repo_root: Path, body: dict[str, Any]) -> dict[str, Any]:
             ),
         },
     )
-    docs_activity.maybe_attach_docs_export_activity(repo_root, body, payload, dry_run)
     return payload
 
 

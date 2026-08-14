@@ -71,9 +71,6 @@ export function createDocsViewerReportService(options) {
       var payload = {
         scope: cleanString(request && request.scope).toLowerCase()
       };
-      if (request && request.activityContext) {
-        payload.activity_context = request.activityContext;
-      }
       return fetchReportJson("/docs/broken-links", Object.assign({}, serviceOptions, {
         method: "POST",
         payload: payload,

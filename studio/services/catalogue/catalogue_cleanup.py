@@ -10,12 +10,12 @@ from typing import Any, Dict, Iterable, Mapping
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 
-from catalogue import catalogue_activity as activity
 from catalogue.catalogue_build_media import PIPELINE_CONFIG, detect_projects_base_dir
 from catalogue import catalogue_generation_recent as recent
 from catalogue import catalogue_generation_records as generation_records
 from catalogue import catalogue_public_paths as public_paths
 from catalogue.catalogue_source import load_json_file, normalize_detail_uid_value, normalize_series_ids_value, slug_id
+from catalogue.catalogue_service_context import utc_now
 from catalogue.series_ids import normalize_series_id
 from catalogue_media_paths import (
     catalogue_media_display_path,
@@ -66,7 +66,7 @@ def finalize_object_map_payload(payload: Dict[str, Any], map_key: str, default_s
     payload["header"] = {
         "schema": schema,
         "version": compute_payload_version({"schema": schema, map_key: sorted_map}),
-        "generated_at_utc": activity.utc_now(),
+        "generated_at_utc": utc_now(),
         "count": len(sorted_map),
     }
     payload[map_key] = sorted_map
@@ -75,10 +75,6 @@ def finalize_object_map_payload(payload: Dict[str, Any], map_key: str, default_s
 
 def finalize_series_index_payload(payload: Dict[str, Any]) -> Dict[str, Any]:
     return finalize_object_map_payload(payload, "series", "series_index_v3")
-
-
-def finalize_work_storage_index_payload(payload: Dict[str, Any]) -> Dict[str, Any]:
-    return finalize_object_map_payload(payload, "works", "work_storage_index_v1")
 
 
 def work_record_detail_count(payload: Mapping[str, Any]) -> int:
@@ -110,7 +106,7 @@ def finalize_work_record_payload(payload: Dict[str, Any], work_id: str) -> Dict[
         work_id=work_id,
         work_record=work_record,
         sections=sections,
-        generated_at_utc=activity.utc_now(),
+        generated_at_utc=utc_now(),
         count=work_record_detail_count(payload),
     )
 
@@ -132,7 +128,7 @@ def finalize_series_record_payload(payload: Dict[str, Any], series_id: str) -> D
         series_id=series_id,
         series_record=series_record,
         member_works=member_works,
-        generated_at_utc=activity.utc_now(),
+        generated_at_utc=utc_now(),
     )
 
 
@@ -142,7 +138,7 @@ def finalize_recent_index_payload(payload: Dict[str, Any]) -> Dict[str, Any]:
         raise ValueError("recent_index.json must include an entries array")
     return recent.build_recent_index_payload(
         entries=entries,
-        generated_at_utc=activity.utc_now(),
+        generated_at_utc=utc_now(),
         limit=len(entries),
     )
 
@@ -312,7 +308,6 @@ def collect_catalogue_delete_cleanup(
             existing_repo_paths(
                 repo_root,
                 [
-                    Path("studio/data/generated/activity/work-storage-index.json"),
                     tag_source_paths.TAG_ASSIGNMENTS_REL_PATH,
                 ],
             )
@@ -536,7 +531,7 @@ def remove_work_overrides_from_tag_assignments(payload: Dict[str, Any], work_id:
     if not isinstance(series_map, dict):
         raise ValueError("tag_assignments.json must include a series object")
     changed = False
-    now_utc = activity.utc_now()
+    now_utc = utc_now()
     for row in series_map.values():
         if not isinstance(row, dict):
             continue
@@ -560,7 +555,7 @@ def remove_series_from_tag_assignments(payload: Dict[str, Any], series_id: str) 
     if series_id not in series_map:
         return False
     del series_map[series_id]
-    payload["updated_at_utc"] = activity.utc_now()
+    payload["updated_at_utc"] = utc_now()
     if "tag_assignments_version" not in payload:
         payload["tag_assignments_version"] = "tag_assignments_v2"
     return True
@@ -581,14 +576,6 @@ def build_catalogue_delete_generated_payloads(
         return path, load_json_file(path)
 
     if kind == "work":
-        work_storage = load_existing(Path("studio/data/generated/activity/work-storage-index.json"))
-        if work_storage is not None:
-            path, payload = work_storage
-            works = payload.get("works")
-            if isinstance(works, dict) and record_id in works:
-                del works[record_id]
-                payloads[path] = finalize_work_storage_index_payload(payload)
-
         member_work_ids_by_series: Dict[str, list[str]] = {}
         for series_id in affected.get("series") or []:
             normalized_series_id = str(series_id)

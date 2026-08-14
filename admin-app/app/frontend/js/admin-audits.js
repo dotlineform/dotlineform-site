@@ -14,7 +14,6 @@ import {
   projectOperationalRunButtonState,
   syncOperationalRouteBusyState
 } from "./admin-operational-route.js";
-import { buildAdminActivityContext } from "./admin-activity-context.js";
 
 const FALLBACK_AUDITS = Object.freeze([
   {
@@ -194,16 +193,7 @@ async function runAudit(state, auditId) {
 
   try {
     const result = await postJson(AUDIT_API_ENDPOINTS.run, {
-      audit_id: auditId,
-      activity_context: buildAdminActivityContext({
-        pageId: "admin-audits",
-        actionId: "run-studio-audit",
-        route: "/admin/audits/",
-        controlId: "runAudit",
-        controlSelector: "[data-run-audit]",
-        recordIdField: "audit_id",
-        recordId: auditId
-      })
+      audit_id: auditId
     });
     state.lastResults.set(auditId, result);
     const stateName = resultState(result);

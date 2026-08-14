@@ -9,7 +9,7 @@ from pathlib import Path
 from typing import Any
 
 
-TEST_RUNS_REL_DIR = Path("var/admin/test-runs")
+TEST_RUNS_REL_DIR = Path("var/test-runs")
 VALID_SLUG = re.compile(r"^[A-Za-z0-9_.-]+$")
 
 

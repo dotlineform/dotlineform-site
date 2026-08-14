@@ -7,7 +7,6 @@ This repo stores public catalogue runtime metadata in generated JSON artifacts.
 Series index JSON is written to site/assets/data/series_index.json.
 Work-details JSON index files are written to site/assets/works/index/<work_id>.json (work-driven; one per selected work).
 Recent publications JSON is written to site/assets/data/recent_index.json.
-Studio-only work storage index JSON is written to studio/data/generated/activity/work-storage-index.json (object keyed by work_id).
 
 - Works: base work metadata (1 row per work)
 - Series: series master data (1 row per series_id)
@@ -379,7 +378,6 @@ def main() -> None:
     ap.add_argument("--work-details-output-dir", default="_work_details", help="Retired compatibility option; work detail route stubs are no longer written")
     ap.add_argument("--works-json-dir", default=public_paths.WORKS_JSON_DIR.as_posix(), help="Output folder for generated per-work detail JSON index files")
     ap.add_argument("--recent-index-json-path", default=public_paths.RECENT_INDEX_JSON_PATH.as_posix(), help="Output path for generated recent publications index JSON")
-    ap.add_argument("--work-storage-index-json-path", default="studio/data/generated/activity/work-storage-index.json", help="Output path for generated Studio-only work storage index JSON")
     ap.add_argument(
         "--projects-base-dir",
         default=env_var_value(PIPELINE_CONFIG, "projects_base_dir"),
@@ -543,8 +541,6 @@ def main() -> None:
     works_json_dir.mkdir(parents=True, exist_ok=True)
     recent_index_json_path = Path(args.recent_index_json_path).expanduser()
     recent_index_json_path.parent.mkdir(parents=True, exist_ok=True)
-    work_storage_index_json_path = Path(args.work_storage_index_json_path).expanduser()
-    work_storage_index_json_path.parent.mkdir(parents=True, exist_ok=True)
     projects_base_dir = Path(args.projects_base_dir).expanduser() if normalize_text(args.projects_base_dir) != "" else Path(".")
     projects_root = projects_base_dir / source_works_root_subdir(PIPELINE_CONFIG)
 
@@ -1150,16 +1146,6 @@ def main() -> None:
         for work_id, status in work_status_by_id.items()
         if status == "published" and work_id in canonical_work_record_by_id
     }
-    storage_eligible_works = {
-        work_id: canonical_work_record_by_id[work_id]
-        for work_id, status in work_status_by_id.items()
-        if status in {"draft", "published"} and work_id in canonical_work_record_by_id
-    }
-    work_storage_payload = indexes.build_work_storage_index_records(
-        works=storage_eligible_works,
-        canonical_work_record_by_id=canonical_work_record_by_id,
-    )
-
     recent_entries = recent.build_recent_publication_entries(
         existing_entries=load_recent_entries(recent_index_json_path),
         series_publish_transitions=series_publish_transitions,
@@ -1184,21 +1170,6 @@ def main() -> None:
         path=recent_index_json_path,
         payload=recent_index_payload,
         payload_version=recent_payload_version,
-        write=args.write,
-        force=args.force,
-        display_path=display_path,
-    )
-
-    work_storage_payload_out = indexes.build_work_storage_index_payload(
-        works=work_storage_payload,
-        generated_at_utc=utc_timestamp_now(),
-    )
-    work_storage_payload_version = work_storage_payload_out["header"]["version"]
-    write_index_json_payload(
-        label="Work storage index JSON",
-        path=work_storage_index_json_path,
-        payload=work_storage_payload_out,
-        payload_version=work_storage_payload_version,
         write=args.write,
         force=args.force,
         display_path=display_path,

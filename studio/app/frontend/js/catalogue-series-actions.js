@@ -22,7 +22,6 @@ import {
   projectCatalogueSaveOutcomePresentation,
   resolveCatalogueSaveBuildOutcome
 } from "./catalogue-editor-action-workflow.js";
-import { buildStudioActivityContext } from "./studio-activity-context.js";
 import { utcTimestamp } from "./studio-save-utils.js";
 import {
   buildCreateSeriesPayload,
@@ -50,23 +49,10 @@ function applyActionPresentation(context, state, presentation) {
   setTextWithState(context, state.statusNode, presentation.statusText, presentation.statusTone);
 }
 
-function buildSeriesActivityContext(actionId, controlId, controlSelector, seriesId) {
-  return buildStudioActivityContext({
-    pageId: "catalogue-series",
-    actionId,
-    route: "/studio/catalogue-series/",
-    controlId,
-    controlSelector,
-    recordIdField: "series_id",
-    recordId: seriesId
-  });
-}
-
 function buildPayload(state, workUpdates) {
   return {
     ...buildSaveSeriesPayload(state, workUpdates),
-    apply_build: currentSeriesIsPublished(state),
-    activity_context: buildSeriesActivityContext("save-series", "catalogueSeriesSave", "#catalogueSeriesSave", state.currentSeriesId)
+    apply_build: currentSeriesIsPublished(state)
   };
 }
 
@@ -316,10 +302,7 @@ export async function createCurrentSeries(state, context) {
   setTextWithState(context, state.resultNode, "");
 
   try {
-    const response = await createCatalogueSeries({
-      ...buildCreateSeriesPayload(state.draft),
-      activity_context: buildSeriesActivityContext("create-series", "catalogueSeriesSave", "#catalogueSeriesSave", state.draft.series_id)
-    });
+    const response = await createCatalogueSeries(buildCreateSeriesPayload(state.draft));
     const seriesId = normalizeSeriesId(response && response.series_id);
     const record = response && response.record && typeof response.record === "object" ? response.record : null;
     if (!seriesId) {
@@ -413,8 +396,7 @@ export async function applyPublicationChange(state, context) {
       kind: "series",
       action,
       series_id: state.currentSeriesId,
-      expected_record_hash: state.currentRecordHash,
-      activity_context: buildSeriesActivityContext(`${action}-series`, "catalogueSeriesPublication", "#catalogueSeriesPublication", state.currentSeriesId)
+      expected_record_hash: state.currentRecordHash
     };
     const previewResponse = await previewCataloguePublication(request);
     const preview = extractCatalogueActionPreview(previewResponse);
@@ -503,8 +485,7 @@ export async function deleteCurrentSeries(state, context) {
     const request = {
       kind: "series",
       series_id: state.currentSeriesId,
-      expected_record_hash: state.currentRecordHash,
-      activity_context: buildSeriesActivityContext("delete-series", "catalogueSeriesDelete", "#catalogueSeriesDelete", state.currentSeriesId)
+      expected_record_hash: state.currentRecordHash
     };
     const previewResponse = await previewCatalogueDelete(request);
     const preview = extractCatalogueActionPreview(previewResponse);

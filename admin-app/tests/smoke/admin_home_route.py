@@ -77,7 +77,7 @@ def main() -> int:
             if page.locator("[data-admin-route-outlet]").count() != 1:
                 raise AssertionError("Admin home did not render the static Admin shell outlet")
             wait_for_route_ready(page, "[data-admin-home]", "data-admin-ready", "data-admin-busy")
-            for href in ["/admin/audits/", "/admin/checks/", "/admin/activity/", "/admin/testing/"]:
+            for href in ["/admin/audits/", "/admin/checks/", "/admin/testing/"]:
                 expect(page.locator(f'a.studioHomeLinks__pill[href="{href}"]')).to_be_visible(timeout=10_000)
             theme_toggle = page.locator("[data-admin-theme-toggle]")
             if theme_toggle.count() != 1:
@@ -93,7 +93,7 @@ def main() -> int:
         if "data-admin-route-outlet" not in testing_html or "/admin/app/frontend/js/admin-app.js" not in testing_html:
             raise AssertionError("Admin testing route did not render the static Admin shell")
         testing_runs = json.loads(read_text(f"{base_url}/admin/api/testing/runs"))
-        if testing_runs.get("runs_root") != "var/admin/test-runs":
+        if testing_runs.get("runs_root") != "var/test-runs":
             raise AssertionError(f"unexpected Admin testing runs payload: {testing_runs!r}")
     finally:
         server.shutdown()

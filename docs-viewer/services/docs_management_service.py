@@ -20,7 +20,6 @@ from studio.shared.python.studio_python_paths import ensure_studio_python_paths
 REPO_ROOT = ensure_studio_python_paths(__file__)
 SCRIPTS_DIR = REPO_ROOT / "scripts"
 
-import docs_activity  # noqa: E402
 import docs_diagram_source_service  # noqa: E402
 import docs_document_move_apply  # noqa: E402
 import docs_document_transfer  # noqa: E402
@@ -131,7 +130,6 @@ def docs_management_post_response(
         return docs_local_links.validate_local_target_response(repo_root, body)
     if path == routes.BROKEN_LINKS_PATH:
         payload = handle_broken_links(repo_root, body)
-        docs_activity.maybe_attach_broken_links_activity(repo_root, body, payload)
         return HTTPStatus.OK, payload
     if path == routes.PROJECT_STATE_PATH:
         payload = docs_project_state.ProjectStateProducer(repo_root=repo_root).run()
@@ -196,7 +194,6 @@ def docs_management_post_response(
         return HTTPStatus.OK, payload
     if path == routes.IMPORT_SOURCE_PATH:
         payload = handle_import_source(repo_root, body, dry_run)
-        docs_activity.maybe_attach_import_source_activity(repo_root, body, payload, dry_run)
         return HTTPStatus.OK, payload
     if path == routes.STAGED_MEDIA_PREVIEW_PATH:
         return HTTPStatus.OK, docs_staged_media_service.preview_staged_media(repo_root, body)

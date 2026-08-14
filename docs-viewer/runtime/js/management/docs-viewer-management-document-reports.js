@@ -428,14 +428,6 @@ function openSubScopePreparePackage(settings, request, context) {
         ? request.doc_ids.slice()
         : [],
       restoreFocus: actionContext.restoreFocus,
-      activityContext: {
-        page_id: "docs-manage",
-        action_id: "prepare-document-package",
-        route: "/docs/",
-        control_id: "docsViewerSubscopePreparePackageButton",
-        control_selector: "#docsViewerSubscopePreparePackageButton",
-        correlation_id: "prepare-document-package:" + String(Date.now())
-      },
       callbacks: {
         setMessage: settings.setStatus
       }

@@ -125,7 +125,6 @@
       "label": "Build scripts",
       "include": [
         "admin-app/checks/",
-        "admin-app/commands/",
         "bin/",
         "docs-viewer/bin/",
         "docs-viewer/build/",
@@ -226,15 +225,6 @@
         "studio/data/config/"
       ]
     },
-    "activity": {
-      "label": "Activity",
-      "include": [
-        "**/*activity*",
-        "admin-app/app/frontend/js/admin-ui-text.js",
-        "admin-app/app/server/admin_app/admin_activity_api.py",
-        "docs-viewer/services/docs_activity.py"
-      ]
-    },
     "catalogue": {
       "label": "Catalogue",
       "include": [
@@ -321,25 +311,6 @@
         "admin-app/app/server/admin_app/admin_app_server.py"
       ],
       "areas": []
-    },
-    "/admin/activity/": {
-      "label": "Admin Activity",
-      "path": "/admin/activity/",
-      "status": "inventory-only",
-      "include": [
-        "admin-app/app/frontend/routes/admin-activity.html",
-        "admin-app/app/frontend/js/admin-activity*",
-        "admin-app/app/frontend/js/admin-ui-text.js",
-        "admin-app/app/server/admin_app/admin_activity_api.py"
-      ],
-      "shared": [
-        "admin-app/app/frontend/admin-shell.html",
-        "admin-app/app/frontend/js/admin-app.js",
-        "admin-app/app/server/admin_app/admin_app_server.py"
-      ],
-      "areas": [
-        "activity"
-      ]
     },
     "/admin/testing/": {
       "label": "Admin Testing",

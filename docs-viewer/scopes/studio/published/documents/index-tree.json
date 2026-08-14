@@ -11,11 +11,6 @@
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260606-212412-01ed44.json",
       "children": [
         {
-          "doc_id": "d-20260508-171312-725e00",
-          "title": "Activity",
-          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260508-171312-725e00.json"
-        },
-        {
           "doc_id": "d-20260715-084611-56645e",
           "title": "Admin Config JSON",
           "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260715-084611-56645e.json"
@@ -832,6 +827,12 @@
           ]
         },
         {
+          "doc_id": "d-20260814-194856-a7c3e1",
+          "title": "Admin Retirement",
+          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260814-194856-a7c3e1.json",
+          "ui_status": "in-progress"
+        },
+        {
           "doc_id": "d-20260802-225626-b123fa",
           "title": "Catalogue Data Visualisation",
           "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260802-225626-b123fa.json",
@@ -1286,5 +1287,5 @@
       ]
     }
   ],
-  "generated_at": "2026-08-14T16:55:12Z"
+  "generated_at": "2026-08-14T19:56:25Z"
 }

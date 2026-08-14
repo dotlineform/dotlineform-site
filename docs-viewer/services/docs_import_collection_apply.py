@@ -19,7 +19,7 @@ from docs_import_document import (
     ImportDocumentApplyResult,
     ImportDocumentMediaContext,
     apply_import_document_source,
-    import_document_activity,
+    import_document_event,
     materialize_import_document_media,
 )
 from docs_management_document_target import ManagedDocumentCollection
@@ -52,7 +52,6 @@ COLLECTION_APPLY_BODY_FIELDS = {
     "trusted_metadata_sha256",
     "planned_identities",
     "planned_actions",
-    "activity_context",
 }
 PLANNED_ACTION_FIELDS = {"record_index", "action", "doc_id", "target_doc_id"}
 
@@ -284,7 +283,7 @@ def apply_import_content_collection(
             )
             docs_doc_ids.extend(document_plan.docs_doc_ids)
             written_paths.extend(document_plan.changed_paths)
-            event_name, event_details = import_document_activity(
+            event_name, event_details = import_document_event(
                 repo_root,
                 document_plan,
                 plan.response["staged_filename"],
@@ -553,7 +552,7 @@ def _apply_import_content_collection_atomic(
 
     for document_plan in document_plans:
         assert document_plan is not None
-        event_name, event_details = import_document_activity(
+        event_name, event_details = import_document_event(
             repo_root,
             document_plan,
             plan.response["staged_filename"],

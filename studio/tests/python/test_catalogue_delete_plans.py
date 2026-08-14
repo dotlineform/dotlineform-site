@@ -184,7 +184,7 @@ def test_draft_series_primary_reference_is_cleared_for_work_delete_validation() 
     assert_equal(preview["affected"]["series"], ["010"], "draft primary affected series")
 
 
-def test_delete_apply_plan_builds_source_payloads_and_activity_affected() -> None:
+def test_delete_apply_plan_builds_source_payloads_and_affected_records() -> None:
     with tempfile.TemporaryDirectory() as tmp:
         root = Path(tmp)
         source_dir = root / "studio/data/canonical/catalogue"
@@ -196,7 +196,7 @@ def test_delete_apply_plan_builds_source_payloads_and_activity_affected() -> Non
     assert_equal(sorted(path.name for path in plan.payloads), ["series.json", "work_details", "works.json"], "payload files")
     assert_equal(plan.payloads[(source_dir / "works.json").resolve()]["works"].get("00002"), None, "deleted work payload")
     assert_equal(plan.payloads[(source_dir / "series.json").resolve()]["series"]["010"].get("primary_work_id"), None, "draft primary cleared")
-    assert_equal(plan.activity_affected["series"], ["010"], "activity affected series")
+    assert_equal(plan.affected["series"], ["010"], "affected series")
 
 
 def test_section_delete_apply_plan_removes_section_and_details() -> None:
@@ -227,14 +227,14 @@ def test_section_delete_apply_plan_removes_section_and_details() -> None:
     details_payload = plan.payloads[(source_dir / "work_details").resolve()]
     assert_equal(sorted(details_payload["work_detail_sections"]), ["00001-2"], "remaining sections")
     assert_equal(sorted(details_payload["work_details"]), ["00001-002"], "remaining details")
-    assert_equal(plan.activity_affected["work_details"], ["00001-001"], "section activity affected details")
+    assert_equal(plan.affected["work_details"], ["00001-001"], "section affected details")
 
 
 def main() -> None:
     test_work_delete_preview_reports_dependents_and_primary_blocker()
     test_detail_and_series_delete_preview_shapes()
     test_draft_series_primary_reference_is_cleared_for_work_delete_validation()
-    test_delete_apply_plan_builds_source_payloads_and_activity_affected()
+    test_delete_apply_plan_builds_source_payloads_and_affected_records()
     test_section_delete_apply_plan_removes_section_and_details()
     print("Catalogue delete plan tests OK")
 

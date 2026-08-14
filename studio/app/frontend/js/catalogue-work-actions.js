@@ -33,7 +33,6 @@ import {
   WORK_DOWNLOAD_FIELDS as DOWNLOAD_FIELDS,
   WORK_LINK_FIELDS as LINK_FIELDS
 } from "./catalogue-editor-embedded-items.js";
-import { buildStudioActivityContext } from "./studio-activity-context.js";
 import {
   utcTimestamp
 } from "./studio-save-utils.js";
@@ -64,22 +63,6 @@ function setTextWithState(context, node, text, state = "") {
 function applyActionPresentation(context, state, presentation) {
   setTextWithState(context, state.resultNode, presentation.resultText, presentation.resultTone);
   setTextWithState(context, state.statusNode, presentation.statusText, presentation.statusTone);
-}
-
-function buildWorkSaveActivityContext(state) {
-  return buildWorkActivityContext("save-work", "catalogueWorkSave", "#catalogueWorkSave", state.currentWorkId);
-}
-
-function buildWorkActivityContext(actionId, controlId, controlSelector, workId) {
-  return buildStudioActivityContext({
-    pageId: "catalogue-work",
-    actionId,
-    route: "/studio/catalogue-work/",
-    controlId,
-    controlSelector,
-    recordIdField: "work_id",
-    recordId: workId
-  });
 }
 
 export function parseBulkSeriesOperation(value) {
@@ -158,7 +141,6 @@ function buildPayload(state) {
     expected_record_hash: state.currentRecordHash,
     apply_build: currentWorkIsPublished(state),
     extra_series_ids: state.pendingBuildExtraSeriesIds.slice(),
-    activity_context: buildWorkSaveActivityContext(state),
     record: buildWorkRecordFromDraft(draft, {
       downloadFields: DOWNLOAD_FIELDS,
       linkFields: LINK_FIELDS
@@ -487,10 +469,7 @@ export async function createCurrentWork(state, context) {
   setTextWithState(context, state.resultNode, "");
 
   try {
-    const createPayload = {
-      ...buildCreateWorkPayload(state.draft),
-      activity_context: buildWorkActivityContext("create-work", "catalogueWorkSave", "#catalogueWorkSave", normalizeWorkId(state.draft.work_id))
-    };
+    const createPayload = buildCreateWorkPayload(state.draft);
     const response = await createCatalogueWork(createPayload);
     const workId = normalizeWorkId(response && response.work_id);
     const record = response && response.record && typeof response.record === "object" ? response.record : null;
@@ -670,8 +649,7 @@ export async function applyPublicationChange(state, context) {
       kind: "work",
       action,
       work_id: state.currentWorkId,
-      expected_record_hash: state.currentRecordHash,
-      activity_context: buildWorkActivityContext(`${action}-work`, "catalogueWorkPublication", "#catalogueWorkPublication", state.currentWorkId)
+      expected_record_hash: state.currentRecordHash
     };
     const previewResponse = await previewCataloguePublication(request);
     const preview = extractCatalogueActionPreview(previewResponse);
@@ -828,8 +806,7 @@ export async function deleteCurrentWork(state, context) {
     const request = {
       kind: "work",
       work_id: state.currentWorkId,
-      expected_record_hash: state.currentRecordHash,
-      activity_context: buildWorkActivityContext("delete-work", "catalogueWorkDelete", "#catalogueWorkDelete", state.currentWorkId)
+      expected_record_hash: state.currentRecordHash
     };
     const previewResponse = await previewCatalogueDelete(request);
     const preview = extractCatalogueActionPreview(previewResponse);

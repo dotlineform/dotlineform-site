@@ -102,7 +102,7 @@ def test_catalogue_read_route_returns_source_payloads() -> None:
                 {"key": ["catalogue_lookup_series_base"], "record_id": ["999"]},
             )
         with pytest.raises(ValueError, match="unsupported catalogue read key"):
-            catalogue_get_payload(repo_root, "/read", {"key": ["activity_log"]})
+            catalogue_get_payload(repo_root, "/read", {"key": ["unknown_key"]})
 
 def test_catalogue_project_media_route_lists_allowed_project_images(monkeypatch) -> None:
     with tempfile.TemporaryDirectory() as tmp_dir:

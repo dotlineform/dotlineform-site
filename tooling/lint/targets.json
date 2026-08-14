@@ -48,8 +48,7 @@
     "admin": {
       "python": [
         "admin-app/app/server",
-        "admin-app/checks",
-        "admin-app/commands"
+        "admin-app/checks"
       ],
       "javascript": [
         "admin-app/app/frontend/js"

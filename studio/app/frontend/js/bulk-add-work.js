@@ -28,7 +28,6 @@ import {
   projectBulkAddWorkPreviewSuccess,
   renderBulkAddWorkPreviewState
 } from "./bulk-add-work-workflow.js";
-import { buildStudioActivityContext } from "./studio-activity-context.js";
 
 function normalizeText(value) {
   return normalizeBulkAddWorkText(value);
@@ -114,16 +113,7 @@ async function applyImport(state) {
   applyBulkAddWorkStatusProjection(state, projectBulkAddWorkApplyStart(workflowTextOptions(state)));
   try {
     const response = await postJson(BULK_ADD_WORK_ENDPOINTS.importApply, {
-      mode: state.mode,
-      activity_context: buildStudioActivityContext({
-        pageId: "bulk-add-work",
-        actionId: "import-workbook-records",
-        route: "/studio/bulk-add-work/",
-        controlId: "bulkAddWorkApply",
-        controlSelector: "#bulkAddWorkApply",
-        recordIdField: "import_mode",
-        recordId: state.mode
-      })
+      mode: state.mode
     });
     state.preview = response && response.preview ? response.preview : state.preview;
     applyBulkAddWorkStatusProjection(state, projectBulkAddWorkApplySuccess(state, response, workflowTextOptions(state)));

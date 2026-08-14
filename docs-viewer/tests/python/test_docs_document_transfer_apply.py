@@ -308,7 +308,7 @@ def test_lineage_new_and_replace_commit_exact_rows_and_preserve_editorial_gate(
         perform_sub_scope_source_write_and_rebuild=fake_sub_scope_rebuild(
             rebuild_calls
         ),
-        activity_logger=lambda *_args: None,
+        event_logger=lambda *_args: None,
     )
     new_target_id = "d-20260808-100000-eeeeee"
     assert new_result["created_doc_ids"] == [new_target_id]
@@ -363,7 +363,7 @@ def test_lineage_new_and_replace_commit_exact_rows_and_preserve_editorial_gate(
         perform_sub_scope_source_write_and_rebuild=fake_sub_scope_rebuild(
             rebuild_calls
         ),
-        activity_logger=lambda *_args: None,
+        event_logger=lambda *_args: None,
     )
 
     replaced_front_matter, replaced_body = source_model.parse_source(target_path)
@@ -588,7 +588,7 @@ def test_apply_copy_transfers_shared_media_once_and_repeated_copy_reuses_it(
             rebuild_calls,
             before_first_write,
         ),
-        activity_logger=lambda *_args, **_kwargs: None,
+        event_logger=lambda *_args, **_kwargs: None,
     )
 
     assert result["created_doc_ids"] == [
@@ -625,7 +625,7 @@ def test_apply_copy_transfers_shared_media_once_and_repeated_copy_reuses_it(
         second_plan,
         confirm=True,
         perform_source_write_and_rebuild=fake_rebuild(rebuild_calls),
-        activity_logger=lambda *_args, **_kwargs: None,
+        event_logger=lambda *_args, **_kwargs: None,
     )
 
     assert second["media_counts"] == {"created": 0, "reused": 2, "produced": 0}
@@ -701,7 +701,7 @@ def test_apply_copy_builds_loadable_target_documents_and_search_once(
         plan,
         confirm=True,
         perform_source_write_and_rebuild=build_target,
-        activity_logger=lambda *_args, **_kwargs: None,
+        event_logger=lambda *_args, **_kwargs: None,
     )
 
     output_root = repo_root / "docs-viewer/scopes/target/published/documents"
@@ -836,7 +836,7 @@ flowchart LR
             rebuild_calls,
             before_document_write,
         ),
-        activity_logger=lambda *_args, **_kwargs: None,
+        event_logger=lambda *_args, **_kwargs: None,
     )
 
     assert len(media_builder_calls) == 1
@@ -897,7 +897,7 @@ def test_apply_copy_reports_exact_partial_target_after_document_write_failure(
         "write_text_atomic_new",
         fail_second_write,
     )
-    activity_calls: list[object] = []
+    event_calls: list[object] = []
 
     with pytest.raises(
         transfer_apply.DocumentTransferApplyError,
@@ -908,7 +908,7 @@ def test_apply_copy_reports_exact_partial_target_after_document_write_failure(
             plan,
             confirm=True,
             perform_source_write_and_rebuild=fake_rebuild([]),
-            activity_logger=lambda *args, **_kwargs: activity_calls.append(args),
+            event_logger=lambda *args, **_kwargs: event_calls.append(args),
         )
 
     failure = captured.value.result
@@ -929,7 +929,7 @@ def test_apply_copy_reports_exact_partial_target_after_document_write_failure(
     assert [
         item["state"] for item in failure["target_state"]["documents"]
     ] == ["exact", "missing"]
-    assert activity_calls == []
+    assert event_calls == []
 
 
 def test_apply_copy_reports_exact_partial_target_after_media_write_failure(
@@ -981,7 +981,7 @@ def test_apply_copy_reports_exact_partial_target_after_media_write_failure(
             plan,
             confirm=True,
             perform_source_write_and_rebuild=fake_rebuild([]),
-            activity_logger=lambda *_args, **_kwargs: None,
+            event_logger=lambda *_args, **_kwargs: None,
         )
 
     failure = captured.value.result
@@ -1035,7 +1035,7 @@ def test_apply_copy_writes_external_local_target_documents_and_media(
         plan,
         confirm=True,
         perform_source_write_and_rebuild=fake_rebuild([]),
-        activity_logger=lambda *_args, **_kwargs: None,
+        event_logger=lambda *_args, **_kwargs: None,
     )
 
     copied_path = external_documents / f"{result['created_doc_ids'][0]}.md"
@@ -1052,7 +1052,7 @@ def test_apply_child_to_child_copy_uses_exact_transform_rebuild_and_result(
     repo_root = make_collection_repo(tmp_path)
     source_before = snapshot(repo_root / "docs-viewer/scopes/source")
     rebuild_calls: list[dict[str, object]] = []
-    activity_calls: list[tuple[Path, str, dict[str, object]]] = []
+    event_calls: list[tuple[Path, str, dict[str, object]]] = []
     plan = transfer.plan_document_transfer(
         repo_root,
         source_scope="source",
@@ -1076,7 +1076,7 @@ def test_apply_child_to_child_copy_uses_exact_transform_rebuild_and_result(
         perform_sub_scope_source_write_and_rebuild=fake_sub_scope_rebuild(
             rebuild_calls
         ),
-        activity_logger=lambda root, event, payload: activity_calls.append(
+        event_logger=lambda root, event, payload: event_calls.append(
             (root, event, payload)
         ),
     )
@@ -1138,8 +1138,8 @@ def test_apply_child_to_child_copy_uses_exact_transform_rebuild_and_result(
             ),
         },
     ]
-    assert activity_calls[0][1:] == (
-        transfer_apply.DOCUMENT_COPY_ACTIVITY_EVENT,
+    assert event_calls[0][1:] == (
+        transfer_apply.DOCUMENT_COPY_EVENT,
         {
             "source": {"scope": "source", "sub_scope": "tags"},
             "requested_doc_ids": ["tag-a", "tag-b"],
@@ -1173,7 +1173,7 @@ def test_apply_child_to_parent_copy_rewrites_subdoc_as_doc(
         plan,
         confirm=True,
         perform_source_write_and_rebuild=fake_rebuild(rebuild_calls),
-        activity_logger=lambda *_args, **_kwargs: None,
+        event_logger=lambda *_args, **_kwargs: None,
     )
 
     target_ids = result["created_doc_ids"]
@@ -1256,7 +1256,7 @@ def test_apply_parent_to_public_child_uses_omitted_true_default_and_subdoc_links
         plan,
         confirm=True,
         perform_sub_scope_source_write_and_rebuild=fake_sub_scope_rebuild([]),
-        activity_logger=lambda *_args, **_kwargs: None,
+        event_logger=lambda *_args, **_kwargs: None,
     )
 
     target_ids = result["created_doc_ids"]
@@ -1316,7 +1316,7 @@ def test_apply_public_parent_to_public_parent_uses_working_projection_without_pu
         plan,
         confirm=True,
         perform_source_write_and_rebuild=fake_rebuild([]),
-        activity_logger=lambda *_args, **_kwargs: None,
+        event_logger=lambda *_args, **_kwargs: None,
     )
 
     target_ids = result["created_doc_ids"]
@@ -1369,7 +1369,7 @@ def test_child_copy_stale_target_fails_before_media_or_document_writes(
             plan,
             confirm=True,
             perform_sub_scope_source_write_and_rebuild=fake_sub_scope_rebuild([]),
-            activity_logger=lambda *_args, **_kwargs: None,
+            event_logger=lambda *_args, **_kwargs: None,
         )
 
     assert target_path.read_text(encoding="utf-8").find("Concurrent target") >= 0
@@ -1397,7 +1397,7 @@ def test_apply_child_copy_retains_matching_custom_metadata(
         plan,
         confirm=True,
         perform_sub_scope_source_write_and_rebuild=fake_sub_scope_rebuild([]),
-        activity_logger=lambda *_args, **_kwargs: None,
+        event_logger=lambda *_args, **_kwargs: None,
     )
 
     front_matter, body = source_model.parse_source(
@@ -1454,7 +1454,7 @@ def test_child_copy_revalidates_complete_collection_receipt_before_writes(
             plan,
             confirm=True,
             perform_sub_scope_source_write_and_rebuild=fake_sub_scope_rebuild([]),
-            activity_logger=lambda *_args, **_kwargs: None,
+            event_logger=lambda *_args, **_kwargs: None,
         )
 
     assert not any(
@@ -1510,7 +1510,7 @@ def test_copy_revalidates_registered_build_source_before_writes(
             plan,
             confirm=True,
             perform_source_write_and_rebuild=fake_rebuild([]),
-            activity_logger=lambda *_args, **_kwargs: None,
+            event_logger=lambda *_args, **_kwargs: None,
         )
 
     assert not any(local_documents_root(repo_root, "target").glob("*.md"))
@@ -1566,7 +1566,7 @@ def test_child_copy_failure_reports_only_the_exact_target_collection(
             plan,
             confirm=True,
             perform_sub_scope_source_write_and_rebuild=fake_sub_scope_rebuild([]),
-            activity_logger=lambda *_args, **_kwargs: None,
+            event_logger=lambda *_args, **_kwargs: None,
         )
 
     failure = captured.value.result

@@ -216,10 +216,7 @@ export function createDocumentPackagePrepareRequest(options = {}) {
     include_non_publishable: options.includeNonPublishable !== false,
     target_format: requestedTargetFormat,
     content_format: requestedContentFormat,
-    dry_run: false,
-    activity_context: options.activityContext && typeof options.activityContext === "object"
-      ? { ...options.activityContext }
-      : {}
+    dry_run: false
   };
   if (subScope) request.sub_scope = subScope;
   return request;

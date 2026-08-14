@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Audit route-ready template contracts across local apps."""
+"""Audit route-ready template contracts across local applications."""
 
 from __future__ import annotations
 

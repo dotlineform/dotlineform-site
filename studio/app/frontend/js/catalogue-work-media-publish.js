@@ -9,7 +9,6 @@ import {
   getCataloguePreviewBlocker
 } from "./catalogue-editor-action-workflow.js";
 import { setLoadedWorkRecord } from "./catalogue-work-route-state.js";
-import { buildStudioActivityContext } from "./studio-activity-context.js";
 import { normalizeText } from "./catalogue-work-fields.js";
 import { applyWorkRecordMutation } from "./catalogue-work-action-records.js";
 import { catalogueReadinessItem } from "./catalogue-editor-readiness.js";
@@ -24,18 +23,6 @@ function text(state, context, key, fallback, tokens = null) {
 
 function setTextWithState(context, node, value, tone = "") {
   context.setTextWithState(node, value, tone);
-}
-
-function buildMediaPublishActivityContext(workId) {
-  return buildStudioActivityContext({
-    pageId: "catalogue-work",
-    actionId: "publish-work-media",
-    route: "/studio/catalogue-work/",
-    controlId: "catalogueWorkSave",
-    controlSelector: "#catalogueWorkSave",
-    recordIdField: "work_id",
-    recordId: workId
-  });
 }
 
 export function workMediaPublishEnabled(state, context) {
@@ -116,8 +103,7 @@ export async function publishWorkMedia(state, context) {
       ...request,
       preview_fingerprint: previewFingerprint,
       force: Boolean(preview.requires_force),
-      confirm_overwrite: Boolean(preview.requires_force),
-      activity_context: buildMediaPublishActivityContext(state.currentWorkId)
+      confirm_overwrite: Boolean(preview.requires_force)
     });
     const record = response && response.record && typeof response.record === "object" ? response.record : null;
     if (!record) throw new Error("media publish response missing work record");

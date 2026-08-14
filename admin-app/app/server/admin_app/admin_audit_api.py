@@ -31,15 +31,9 @@ from audit_runner import (
     run_audit_payload,
 )
 from script_logging import append_script_log
-from studio_activity import (
-    append_studio_activity,
-    normalize_activity_context_from_contract,
-    studio_activity_entry,
-)
 
 
 LOGS_REL_DIR = Path("var/admin/audits/logs")
-RUN_AUDIT_API_PATH = "/admin/api/audits/audits/run"
 
 
 def audit_get_payload(repo_root: Path, api_path: str) -> dict[str, Any]:
@@ -69,16 +63,9 @@ def audit_post_response(
             log_dir_rel=LOGS_REL_DIR,
         )
 
-    def append_activity(entry: dict[str, Any]) -> None:
-        append_studio_activity(repo_root, entry)
-
     return HTTPStatus.OK, run_audit_payload(
         repo_root,
         body,
         audits,
-        activity_endpoint=RUN_AUDIT_API_PATH,
         log_event=log_event,
-        append_activity=append_activity,
-        normalize_activity_context=normalize_activity_context_from_contract,
-        build_activity_entry=studio_activity_entry,
     )

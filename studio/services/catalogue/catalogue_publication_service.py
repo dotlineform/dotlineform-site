@@ -5,11 +5,10 @@ from __future__ import annotations
 from http import HTTPStatus
 from typing import Any, Mapping
 
-from catalogue import catalogue_activity as activity
 from catalogue import catalogue_publication
 from catalogue import catalogue_transactions as transactions
 from catalogue.catalogue_build_service import run_build_operation, run_catalogue_search_rebuild
-from catalogue.catalogue_service_context import CatalogueWriteContext, append_activity_rows, refresh_lookup_payloads
+from catalogue.catalogue_service_context import CatalogueWriteContext, refresh_lookup_payloads
 from catalogue.catalogue_source import normalize_series_ids_value, slug_id
 from catalogue.catalogue_work_service import extract_work_update
 from catalogue.catalogue_series_service import extract_series_update
@@ -35,16 +34,6 @@ def publication_apply_response(context: CatalogueWriteContext, body: Mapping[str
     kind = str(request["kind"])
     action = str(request["action"])
     record_id = str(request["id"])
-    activity_profile = activity.activity_profile_for_publication(kind, action) if action in {"publish", "unpublish"} else None
-    activity_context = (
-        activity.normalize_activity_context_for_profile(
-            body.get("activity_context"),
-            activity_profile,
-            record_id=record_id,
-        )
-        if activity_profile is not None
-        else {}
-    )
     target_record = dict(preview["target_record"])
     changed = bool(preview.get("changed"))
     source_changed = bool(preview.get("source_changed", changed))
@@ -106,64 +95,9 @@ def publication_apply_response(context: CatalogueWriteContext, body: Mapping[str
         "source_saved": bool(source_changed and not context.dry_run) or bool(action == "unpublish" and not context.dry_run),
         "public_update": public_update,
     }
-    if activity_context:
-        payload["activity_context"] = activity_context
     if context.dry_run:
         payload["dry_run"] = True
         payload["would_write"] = source_changed or action == "unpublish"
-    if not context.dry_run and activity_context and activity_profile is not None:
-        now_utc = activity.utc_now()
-        record_groups = activity.activity_record_groups_from_affected(preview.get("affected"))
-        rows: list[dict[str, Any]] = []
-        if payload["source_saved"]:
-            rows.extend(
-                activity.catalogue_source_write_activity_rows(
-                    activity_profile,
-                    activity_context,
-                    now_utc=now_utc,
-                    script_purpose_id="save-canonical-data",
-                    record_groups=record_groups,
-                    detail_items=[
-                        f"{action.replace('_', ' ').title()} {kind.replace('_', ' ')} {record_id}",
-                        f"Changed fields: {', '.join(preview.get('changed_fields') or [])}",
-                    ],
-                )
-            )
-        if activity_profile.lookup_script_purpose_id and payload["source_saved"]:
-            rows.append(
-                activity.catalogue_lookup_activity_row(
-                    activity_context,
-                    now_utc=now_utc,
-                    record_groups=record_groups,
-                    detail_items=[f"Refreshed catalogue lookup data after {action.replace('_', ' ')} {kind.replace('_', ' ')} {record_id}"],
-                )
-            )
-        if action == "publish":
-            rows.extend(
-                activity.catalogue_build_studio_activity_rows(
-                    activity_profile,
-                    activity_context,
-                    public_update,
-                    published_detail=f"Updated published {kind.replace('_', ' ')} data for {record_id}",
-                    search_detail=f"Rebuilt catalogue search for {kind.replace('_', ' ')} {record_id}",
-                    fallback_record_groups=record_groups,
-                )
-            )
-        elif action == "unpublish":
-            rows.extend(
-                activity.catalogue_cleanup_activity_rows(
-                    activity_context,
-                    public_update,
-                    now_utc=now_utc,
-                    record_groups=record_groups,
-                    detail_items=[
-                        f"Cleaned generated artifacts for {kind.replace('_', ' ')} {record_id}",
-                        f"Deleted {public_update.get('deleted_files', 0)} generated/local file(s)",
-                        f"Updated {public_update.get('updated_json_files', 0)} generated JSON file(s)",
-                    ],
-                )
-            )
-        append_activity_rows(context.repo_root, payload, rows)
     return HTTPStatus.OK if public_update_ok else HTTPStatus.INTERNAL_SERVER_ERROR, payload
 
 

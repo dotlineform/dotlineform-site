@@ -13,7 +13,6 @@ import {
   applyPersistedBaseline,
   buildStateDiff
 } from "./analytics-tag-editor-state.js";
-import { buildStudioActivityContext } from "./studio-activity-context.js";
 
 export async function probeAnalyticsTagEditorService(state, callbacks = {}) {
   if (state.serviceProbePending) return;
@@ -46,22 +45,13 @@ async function handleAnalyticsTagEditorSaveInner(state, callbacks) {
   try {
     const results = [];
     const saveTags = typeof callbacks.postTags === "function" ? callbacks.postTags : postTags;
-    const activityContext = buildStudioActivityContext({
-      pageId: "series-tag-editor",
-      actionId: "save-series-tags",
-      route: "/studio/series-tag-editor/",
-      controlId: "save",
-      controlSelector: "[data-role=\"save\"]",
-      recordIdField: "series_id",
-      recordId: state.seriesId
-    });
     if (diff.seriesChanged) {
-      results.push(await saveTags(state.seriesId, null, diff.nextSeriesRows, false, utcTimestamp, undefined, activityContext, state.config));
+      results.push(await saveTags(state.seriesId, null, diff.nextSeriesRows, false, utcTimestamp, undefined, state.config));
     }
     for (const workId of diff.changedWorkIds) {
       const nextTags = diff.nextWorkStateById.get(workId) || [];
       const keepWork = diff.nextWorkStateById.has(workId);
-      results.push(await saveTags(state.seriesId, workId, nextTags, keepWork, utcTimestamp, undefined, activityContext, state.config));
+      results.push(await saveTags(state.seriesId, workId, nextTags, keepWork, utcTimestamp, undefined, state.config));
     }
     const lastResult = results[results.length - 1] || {};
     const savedAt = String(lastResult.updated_at_utc || utcTimestamp());

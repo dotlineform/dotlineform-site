@@ -13,12 +13,7 @@ const CHECKS_API_ENDPOINTS = Object.freeze({
   report: (runId, reportId) => `${CHECKS_API_ENDPOINTS.run(runId)}/reports/${encodeURIComponent(String(reportId || ""))}`
 });
 
-const ACTIVITY_API_ENDPOINTS = Object.freeze({
-  feed: "/admin/api/activity/feed"
-});
-
 export {
-  ACTIVITY_API_ENDPOINTS,
   AUDIT_API_ENDPOINTS,
   CHECKS_API_ENDPOINTS
 };

@@ -5,7 +5,6 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any, Mapping
 
-from catalogue import catalogue_activity as activity
 from catalogue import catalogue_source_mutation as source_mutation
 from catalogue import catalogue_transactions as transactions
 from catalogue.catalogue_build_service import run_build_targets
@@ -16,6 +15,7 @@ from catalogue.catalogue_service_context import (
     load_works_payload,
     log_event,
     refresh_lookup_payloads,
+    utc_now,
 )
 from catalogue.catalogue_source import (
     CatalogueSourceRecords,
@@ -250,7 +250,7 @@ def _finish_bulk_payload(
         payload["dry_run"] = True
         payload["would_write"] = changed
     elif changed:
-        payload["saved_at_utc"] = activity.utc_now()
+        payload["saved_at_utc"] = utc_now()
 
     log_event(
         context.repo_root,

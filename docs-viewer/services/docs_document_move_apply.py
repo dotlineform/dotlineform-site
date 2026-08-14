@@ -16,11 +16,11 @@ from docs_media_inventory import document_media_references
 
 
 DOCUMENT_MOVE_APPLY_SCHEMA_VERSION = "docs_document_move_apply_v1"
-DOCUMENT_MOVE_ACTIVITY_EVENT = "docs-document-move"
+DOCUMENT_MOVE_EVENT = "docs-document-move"
 DOCUMENT_MOVE_SUPPRESSION_REASON = "docs-document-move"
 PerformSourceWriteAndRebuild = Callable[..., dict[str, Any]]
 MediaBuilder = Callable[..., list[dict[str, object]]]
-ActivityLogger = Callable[[Path, str, dict[str, Any]], None]
+EventLogger = Callable[[Path, str, dict[str, Any]], None]
 
 
 class DocumentMoveApplyError(RuntimeError):
@@ -498,7 +498,7 @@ def apply_document_move(
     environ: Mapping[str, str] | None = None,
     media_builder: MediaBuilder | None = None,
     perform_source_write_and_rebuild: PerformSourceWriteAndRebuild | None = None,
-    activity_logger: ActivityLogger | None = None,
+    event_logger: EventLogger | None = None,
 ) -> dict[str, Any]:
     """Apply one confirmed Move plan, completing the target before source cleanup."""
 
@@ -603,14 +603,14 @@ def apply_document_move(
             for item in current_plan.documents
             if item.effective_root
         ]
-        phase = "activity"
-        if activity_logger is None:
+        phase = "logging"
+        if event_logger is None:
             from docs_management_context import log_event
 
-            activity_logger = log_event
-        activity_logger(
+            event_logger = log_event
+        event_logger(
             repo_root,
-            DOCUMENT_MOVE_ACTIVITY_EVENT,
+            DOCUMENT_MOVE_EVENT,
             {
                 "source_scope": current_plan.source_scope,
                 "requested_doc_ids": list(current_plan.requested_doc_ids),
@@ -689,7 +689,7 @@ def apply_document_move(
 
 
 __all__ = [
-    "DOCUMENT_MOVE_ACTIVITY_EVENT",
+    "DOCUMENT_MOVE_EVENT",
     "DOCUMENT_MOVE_APPLY_SCHEMA_VERSION",
     "DOCUMENT_MOVE_SUPPRESSION_REASON",
     "DocumentMoveApplyError",

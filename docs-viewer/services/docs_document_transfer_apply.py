@@ -20,12 +20,12 @@ from docs_artifact_locations import ArtifactLocationAdapter
 
 
 DOCUMENT_COPY_APPLY_SCHEMA_VERSION = "docs_document_copy_apply_v3"
-DOCUMENT_COPY_ACTIVITY_EVENT = "docs-document-copy"
+DOCUMENT_COPY_EVENT = "docs-document-copy"
 DOCUMENT_COPY_SUPPRESSION_REASON = "docs-document-copy"
 PerformSourceWriteAndRebuild = Callable[..., dict[str, Any]]
 PerformSubScopeSourceWriteAndRebuild = Callable[..., dict[str, Any]]
 MediaBuilder = Callable[..., list[dict[str, object]]]
-ActivityLogger = Callable[[Path, str, dict[str, Any]], None]
+EventLogger = Callable[[Path, str, dict[str, Any]], None]
 
 
 class DocumentTransferPlanStaleError(ValueError):
@@ -937,7 +937,7 @@ def apply_document_copy(
     perform_sub_scope_source_write_and_rebuild: (
         PerformSubScopeSourceWriteAndRebuild | None
     ) = None,
-    activity_logger: ActivityLogger | None = None,
+    event_logger: EventLogger | None = None,
 ) -> dict[str, Any]:
     """Apply one confirmed New/Replace Copy plan at its exact target boundary."""
 
@@ -1081,11 +1081,11 @@ def apply_document_copy(
                 suppression_reason=DOCUMENT_COPY_SUPPRESSION_REASON,
             )
 
-        phase = "activity"
-        if activity_logger is None:
+        phase = "logging"
+        if event_logger is None:
             from docs_management_context import log_event
 
-            activity_logger = log_event
+            event_logger = log_event
         effective_roots = [
             {
                 "source_doc_id": item.source_doc.doc_id,
@@ -1099,7 +1099,7 @@ def apply_document_copy(
             for item in current_plan.documents
             if item.effective_root
         ]
-        activity_payload = {
+        event_payload = {
             "source": current_plan.source_collection.request_target(),
             "requested_doc_ids": list(current_plan.requested_doc_ids),
             "target": current_plan.target_collection.request_target(),
@@ -1108,12 +1108,12 @@ def apply_document_copy(
             "unique_media_count": len(current_plan.media),
         }
         if current_plan.lineage is not None:
-            activity_payload["replaced_count"] = len(replaced_doc_ids)
-            activity_payload["copy_results"] = copy_results
-        activity_logger(
+            event_payload["replaced_count"] = len(replaced_doc_ids)
+            event_payload["copy_results"] = copy_results
+        event_logger(
             repo_root,
-            DOCUMENT_COPY_ACTIVITY_EVENT,
-            activity_payload,
+            DOCUMENT_COPY_EVENT,
+            event_payload,
         )
     except Exception as exc:
         result = _failure_result(
@@ -1186,7 +1186,7 @@ def apply_document_copy(
 
 
 __all__ = [
-    "DOCUMENT_COPY_ACTIVITY_EVENT",
+    "DOCUMENT_COPY_EVENT",
     "DOCUMENT_COPY_APPLY_SCHEMA_VERSION",
     "DOCUMENT_COPY_SUPPRESSION_REASON",
     "DocumentCopySourceTransform",

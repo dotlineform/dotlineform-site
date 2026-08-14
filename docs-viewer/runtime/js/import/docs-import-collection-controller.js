@@ -8,9 +8,6 @@ import {
   importText
 } from "./docs-html-import-text.js";
 import {
-  buildDocsImportActivityContext
-} from "./docs-html-import-workflow.js";
-import {
   docsImportResultDestination
 } from "../management/docs-viewer-management-import-result.js";
 
@@ -309,16 +306,7 @@ export function createDocsImportCollectionController(options = {}) {
           : [],
         planned_actions: Array.isArray(state.plan.planned_actions)
           ? state.plan.planned_actions
-          : [],
-        activity_context: buildDocsImportActivityContext({
-          pageId: "docs-import",
-          actionId: "import-docs-collection",
-          route: normalizeText(options.routePath) || "/docs/",
-          controlId: "docsImportCollectionConfirm",
-          controlSelector: "[data-collection-command=confirm]",
-          recordIdField: "staged_filename",
-          recordId: state.stagedFilename
-        })
+          : []
       }, managementOptions(state.managementBaseUrl));
       if (payload && payload.preview_only === true) {
         if (normalizeText(payload.source_format) !== state.sourceFormat) {

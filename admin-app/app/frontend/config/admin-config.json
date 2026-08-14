@@ -40,15 +40,6 @@
         "shell_type": "html-template",
         "nav": true
       },
-      "admin_activity": {
-        "label": "activity",
-        "title": "Activity",
-        "path": "/admin/activity/",
-        "template": "/admin/app/frontend/routes/admin-activity.html",
-        "script": "/admin/app/frontend/js/admin-activity.js",
-        "shell_type": "html-template",
-        "nav": true
-      },
       "admin_testing": {
         "label": "testing",
         "title": "Testing",

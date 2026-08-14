@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Smoke-check Admin audits, checks, and activity routes."""
+"""Smoke-check Admin audits and checks routes."""
 
 from __future__ import annotations
 
@@ -29,30 +29,6 @@ def start_server() -> tuple[AdminAppServer, str]:
     return server, f"http://127.0.0.1:{server.server_address[1]}"
 
 
-def activity_feed() -> dict[str, object]:
-    return {
-        "ok": True,
-        "header": {
-            "schema": "admin_activity_log_v1",
-            "count": 1,
-        },
-        "entries": [
-            {
-                "id": "admin-activity-smoke",
-                "activity_id": "admin-activity-smoke",
-                "time_utc": "2026-05-15T10:00:00Z",
-                "timestamp": "2026-05-15T10:00:00Z",
-                "status": "completed",
-                "page_label": "Catalogue Work",
-                "user_action_label": "Save work",
-                "script_purpose_label": "Save catalogue source",
-                "detail_items": ["Wrote source JSON", "Updated Admin activity feed"],
-                "record_groups": {"works": {"count": 1}},
-            }
-        ],
-    }
-
-
 def assert_runtime(base_url: str) -> None:
     with urllib.request.urlopen(f"{base_url}/admin/runtime-config.json", timeout=10) as response:
         runtime_config = json.loads(response.read().decode("utf-8"))
@@ -62,7 +38,6 @@ def assert_runtime(base_url: str) -> None:
     expected = {
         "admin_audits": "/admin/audits/",
         "admin_checks": "/admin/checks/",
-        "admin_activity": "/admin/activity/",
     }
     for route_id, path in expected.items():
         runtime_view = runtime_by_id.get(route_id)
@@ -76,8 +51,6 @@ def assert_runtime(base_url: str) -> None:
         raise AssertionError("runtime config missing Admin audit API")
     if runtime.get("services", {}).get("checks", {}).get("runs") != "/admin/api/checks/runs":
         raise AssertionError("runtime config missing Admin checks API")
-    if runtime.get("services", {}).get("activity", {}).get("feed") != "/admin/api/activity/feed":
-        raise AssertionError("runtime config missing Admin activity API")
     if "admin_risk" in runtime_by_id or "risk" in runtime.get("services", {}):
         raise AssertionError(f"runtime config still exposes retired Admin risk route/API: {runtime!r}")
 
@@ -128,18 +101,6 @@ def run_browser_smoke(base_url: str) -> None:
         expect(checks_root).to_have_attribute("data-admin-service", "available", timeout=10_000)
         expect(page.locator("#studioChecksRun")).to_be_enabled(timeout=10_000)
         expect(page.locator("#studioChecksReport")).to_have_value("files")
-
-        page.route(
-            "**/admin/api/activity/feed",
-            lambda route: route.fulfill(status=200, content_type="application/json", body=json.dumps(activity_feed())),
-        )
-        page.goto(f"{base_url}/admin/activity/", wait_until="domcontentloaded")
-        if page.locator("[data-admin-route-outlet]").count() != 1:
-            raise AssertionError("Admin activity did not render the static Admin shell outlet")
-        activity_root = page.locator("#studioActivityRoot")
-        wait_for_route_ready(page, "#studioActivityRoot", "data-admin-ready", "data-admin-busy")
-        expect(activity_root).to_have_attribute("data-admin-mode", "list", timeout=10_000)
-        expect(page.locator("[data-activity-id='admin-activity-smoke']")).to_be_visible(timeout=10_000)
 
         page.close()
         browser.close()

@@ -244,11 +244,6 @@
     ],
     "d-20260401-000000-ebf14a": [
       {
-        "doc_id": "d-20260523-222005-1085b2",
-        "title": "Projection Contract",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260523-222005-1085b2"
-      },
-      {
         "doc_id": "d-20260513-105343-6de36b",
         "title": "Reports",
         "viewer_url": "/docs/?scope=studio&doc=d-20260513-105343-6de36b"
@@ -988,18 +983,6 @@
         "doc_id": "d-20260423-000000-d015e6",
         "title": "Studio",
         "viewer_url": "/docs/?scope=studio&doc=d-20260423-000000-d015e6"
-      }
-    ],
-    "d-20260508-171312-725e00": [
-      {
-        "doc_id": "d-20260606-212412-01ed44",
-        "title": "Admin",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260606-212412-01ed44"
-      },
-      {
-        "doc_id": "d-20260523-222005-1085b2",
-        "title": "Projection Contract",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260523-222005-1085b2"
       }
     ],
     "d-20260511-120352-90ffa6": [
@@ -3052,5 +3035,5 @@
       }
     ]
   },
-  "generated_at": "2026-08-14T16:55:12Z"
+  "generated_at": "2026-08-14T19:56:25Z"
 }

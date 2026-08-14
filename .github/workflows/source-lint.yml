@@ -13,7 +13,6 @@ on:
       - "admin-app/app/frontend/js/**"
       - "admin-app/app/server/**"
       - "admin-app/checks/**"
-      - "admin-app/commands/**"
       - "admin-app/tests/**"
       - "docs-viewer/build/**"
       - "docs-viewer/migrations/**"

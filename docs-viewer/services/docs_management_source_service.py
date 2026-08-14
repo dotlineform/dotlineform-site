@@ -158,14 +158,14 @@ def rebuild_source_body(repo_root: Path, body: Dict[str, Any], dry_run: bool) ->
                 suppression_reason="docs-source-editor",
                 docs_doc_ids=[target.doc_id],
             )
-        activity = {
+        event_details = {
             "scope": resolved.scope,
             "doc_id": target.doc_id,
             "path": path_label(repo_root, target.path),
         }
         if resolved.sub_scope:
-            activity["sub_scope"] = resolved.sub_scope
-        log_event(repo_root, "docs-source-editor-rebuild", activity)
+            event_details["sub_scope"] = resolved.sub_scope
+        log_event(repo_root, "docs-source-editor-rebuild", event_details)
 
     next_revision = source_revision_for_text(next_source_text)
 
@@ -248,7 +248,7 @@ def open_source_doc(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dic
     )
 
     if not dry_run:
-        activity = {
+        event_details = {
             "scope": resolved.scope,
             "doc_id": target.doc_id,
             "editor": editor,
@@ -256,8 +256,8 @@ def open_source_doc(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dic
             "path": path_label(repo_root, target.path),
         }
         if resolved.sub_scope:
-            activity["sub_scope"] = resolved.sub_scope
-        log_event(repo_root, "docs-open-source", activity)
+            event_details["sub_scope"] = resolved.sub_scope
+        log_event(repo_root, "docs-open-source", event_details)
 
     payload = {
         "ok": True,

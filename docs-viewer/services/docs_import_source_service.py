@@ -22,7 +22,7 @@ from docs_import_document import (
     ImportDocumentApplyResult,
     ImportDocumentMediaContext,
     apply_import_document,
-    import_document_activity,
+    import_document_event,
     import_document_result,
     plan_import_document,
 )
@@ -577,7 +577,7 @@ def handle_import_source(
             suppression_reason=plan.suppression_reason,
             docs_doc_ids=plan.docs_doc_ids,
         )
-    event_name, event_details = import_document_activity(
+    event_name, event_details = import_document_event(
         repo_root,
         plan,
         staged_filename,

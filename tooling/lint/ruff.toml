@@ -27,7 +27,7 @@ fixable = []
 # The checks adapter also intentionally re-exports its configuration error to the server route handler.
 "admin-app/app/server/admin_app/admin_checks_api.py" = ["E402", "F401"]
 "admin-app/app/server/admin_app/audit_runner.py" = ["E402"]
-"admin-app/checks/audit_site_consistency.py" = ["E402"]
+"studio/tests/audits/catalogue_site_consistency.py" = ["E402"]
 # These active facade entrypoints intentionally expose imported public names
 # used by sibling builders, route dispatch, and focused contract tests.
 "docs-viewer/build/build_docs.py" = ["E402", "F401"]

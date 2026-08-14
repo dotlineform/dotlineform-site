@@ -28,7 +28,7 @@ class DeleteApplyPlan:
     record_id: str
     payloads: Dict[Path, Dict[str, Any]]
     cleanup: Dict[str, Any]
-    activity_affected: Dict[str, list[str]]
+    affected: Dict[str, list[str]]
 
 
 def preview_work_delete(source_dir: Path, work_id: str, *, repo_root: Path | None = None) -> Dict[str, Any]:
@@ -335,7 +335,7 @@ def build_delete_apply_plan(source_dir: Path, repo_root: Path, kind: str, record
             record_id=record_id,
             payloads=payloads,
             cleanup=cleanup,
-            activity_affected={
+            affected={
                 **affected,
                 "series": sorted(set([*affected.get("series", []), *changed_series_ids])),
             },
@@ -362,7 +362,7 @@ def build_delete_apply_plan(source_dir: Path, repo_root: Path, kind: str, record
                 **generated_payloads,
             },
             cleanup=cleanup,
-            activity_affected=affected,
+            affected=affected,
         )
 
     if kind == "work_detail_section":
@@ -391,7 +391,7 @@ def build_delete_apply_plan(source_dir: Path, repo_root: Path, kind: str, record
                 **generated_payloads,
             },
             cleanup=cleanup,
-            activity_affected=affected,
+            affected=affected,
         )
 
     if kind == "series":
@@ -422,7 +422,7 @@ def build_delete_apply_plan(source_dir: Path, repo_root: Path, kind: str, record
                 **generated_payloads,
             },
             cleanup=cleanup,
-            activity_affected=affected,
+            affected=affected,
         )
 
     raise ValueError("delete kind must be work, work_detail, work_detail_section, or series")

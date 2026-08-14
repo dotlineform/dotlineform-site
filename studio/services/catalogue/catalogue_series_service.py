@@ -5,7 +5,6 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any, Mapping
 
-from catalogue import catalogue_activity as activity
 from catalogue import catalogue_lookup_refresh as lookup_refresh
 from catalogue import catalogue_save_build as save_build
 from catalogue import catalogue_source_mutation as source_mutation
@@ -14,7 +13,6 @@ from catalogue.catalogue_build_service import run_build_operation
 from catalogue.catalogue_field_registry import field_aware_build_plan, full_fallback_build_plan, load_catalogue_field_registry
 from catalogue.catalogue_service_context import (
     CatalogueWriteContext,
-    append_activity_rows,
     extract_apply_build,
     focused_lookup_refresh_response,
     load_series_payload,
@@ -23,6 +21,7 @@ from catalogue.catalogue_service_context import (
     lookup_refresh_response_for_plan,
     refresh_lookup_payloads,
     refresh_lookup_payloads_for_series_change,
+    utc_now,
 )
 from catalogue.catalogue_source import SERIES_FIELDS, normalize_series_ids_value, normalize_status, records_from_json_source, slug_id
 from catalogue.series_ids import normalize_series_id
@@ -34,11 +33,6 @@ def series_create_payload(context: CatalogueWriteContext, body: Mapping[str, Any
     if requested_series_id is None:
         requested_series_id = series_update.get("series_id")
     series_id = normalize_series_id(requested_series_id)
-    activity_context = activity.normalize_activity_context_for_profile(
-        body.get("activity_context"),
-        activity.ACTIVITY_PROFILE_CREATE_SERIES,
-        record_id=series_id,
-    )
     work_updates_request = extract_series_work_updates(body)
 
     series_payload = load_series_payload(context.series_path)
@@ -84,13 +78,11 @@ def series_create_payload(context: CatalogueWriteContext, body: Mapping[str, Any
         "record": mutation_plan.updated_record,
         "work_records": mutation_plan.work_records,
     }
-    if activity_context:
-        payload["activity_context"] = activity_context
     if context.dry_run:
         payload["dry_run"] = True
         payload["would_write"] = True
     else:
-        payload["saved_at_utc"] = activity.utc_now()
+        payload["saved_at_utc"] = utc_now()
 
     log_event(
         context.repo_root,
@@ -105,38 +97,6 @@ def series_create_payload(context: CatalogueWriteContext, body: Mapping[str, Any
     if not context.dry_run:
         refresh_result = refresh_lookup_payloads(context)
         payload["lookup_refresh"] = refresh_result
-        if activity_context:
-            now_utc = activity.utc_now()
-            record_groups = activity.activity_record_groups(works=changed_work_ids, series=[series_id])
-            detail_items = [
-                f"Created canonical draft series record {series_id}",
-                f"Changed fields: {', '.join(payload['changed_fields'])}",
-            ]
-            if changed_work_ids:
-                detail_items.append(f"Saved {len(changed_work_ids)} member work record(s)")
-            append_activity_rows(
-                context.repo_root,
-                payload,
-                [
-                    *activity.catalogue_source_write_activity_rows(
-                        activity.ACTIVITY_PROFILE_CREATE_SERIES,
-                        activity_context,
-                        now_utc=now_utc,
-                        script_purpose_id="save-canonical-data",
-                        record_groups=record_groups,
-                        detail_items=detail_items,
-                    ),
-                    activity.catalogue_lookup_activity_row(
-                        activity_context,
-                        now_utc=now_utc,
-                        record_groups=record_groups,
-                        detail_items=[
-                            f"Refreshed catalogue lookup data after creating series {series_id}",
-                            f"Wrote {refresh_result['written_count']} lookup file(s)",
-                        ],
-                    ),
-                ],
-            )
     return payload
 
 
@@ -147,11 +107,6 @@ def series_save_payload(context: CatalogueWriteContext, body: Mapping[str, Any])
     if requested_series_id is None:
         requested_series_id = series_update.get("series_id")
     series_id = normalize_series_id(requested_series_id)
-    activity_context = activity.normalize_activity_context_for_profile(
-        body.get("activity_context"),
-        activity.ACTIVITY_PROFILE_SAVE_SERIES,
-        record_id=series_id,
-    )
     work_updates_request = extract_series_work_updates(body)
     extra_work_ids = [slug_id(raw) for raw in body.get("extra_work_ids") or []]
 
@@ -205,8 +160,6 @@ def series_save_payload(context: CatalogueWriteContext, body: Mapping[str, Any])
         "record": updated_series_record,
         "work_records": mutation_plan.work_records,
     }
-    if activity_context:
-        payload["activity_context"] = activity_context
     build_plan: dict[str, Any] = {}
     lookup_refresh_payload: dict[str, Any] = {}
     if changed:
@@ -243,7 +196,7 @@ def series_save_payload(context: CatalogueWriteContext, body: Mapping[str, Any])
         payload["dry_run"] = True
         payload["would_write"] = changed
     elif changed:
-        payload["saved_at_utc"] = activity.utc_now()
+        payload["saved_at_utc"] = utc_now()
 
     log_event(
         context.repo_root,
@@ -255,9 +208,6 @@ def series_save_payload(context: CatalogueWriteContext, body: Mapping[str, Any])
             "changed_work_ids": changed_work_ids,
             "lookup_refresh_mode": lookup_refresh_payload.get("mode") if changed else "none",
             "lookup_refresh_artifacts": lookup_refresh_payload.get("artifacts") if changed else [],
-            "activity_correlation_id": activity_context.get("correlation_id") if activity_context else "",
-            "activity_page_id": activity_context.get("page_id") if activity_context else "",
-            "activity_action_id": activity_context.get("action_id") if activity_context else "",
             "dry_run": context.dry_run,
         },
     )
@@ -269,41 +219,7 @@ def series_save_payload(context: CatalogueWriteContext, body: Mapping[str, Any])
             build_plan,
         )
         payload["lookup_refresh"] = focused_lookup_refresh_response(refresh_result)
-        if activity_context:
-            now_utc = activity.utc_now()
-            canonical_detail_items = [f"Saved canonical series record {series_id}"]
-            if series_changed_fields:
-                canonical_detail_items.append(f"Changed series fields: {', '.join(series_changed_fields)}")
-            if changed_work_ids:
-                canonical_detail_items.append(f"Saved {len(changed_work_ids)} member work record(s)")
-            append_activity_rows(
-                context.repo_root,
-                payload,
-                [
-                    activity.studio_activity_entry(
-                        activity_context,
-                        now_utc=now_utc,
-                        script_purpose_id="save-canonical-data",
-                        status="completed",
-                        record_groups={"works": changed_work_ids, "series": [series_id], "work_details": []},
-                        detail_items=canonical_detail_items,
-                        source_refs=activity.catalogue_log_source_ref(),
-                    ),
-                    activity.studio_activity_entry(
-                        activity_context,
-                        now_utc=now_utc,
-                        script_purpose_id="rebuild-lookups",
-                        status="completed",
-                        record_groups={"works": changed_work_ids, "series": [series_id], "work_details": []},
-                        detail_items=[
-                            f"Refreshed catalogue lookup data for series {series_id}",
-                            f"Wrote {refresh_result['written_count']} lookup file(s)",
-                        ],
-                        source_refs=activity.catalogue_log_source_ref(),
-                    ),
-                ],
-            )
-    build_payload = save_build.apply_save_build_follow_through(
+    save_build.apply_save_build_follow_through(
         payload,
         requested_apply_build=requested_apply_build,
         apply_build=apply_build,
@@ -322,19 +238,6 @@ def series_save_payload(context: CatalogueWriteContext, body: Mapping[str, Any])
             build_plan=build_plan,
         ),
     )
-    if build_payload is not None and activity_context:
-        append_activity_rows(
-            context.repo_root,
-            payload,
-            activity.catalogue_build_studio_activity_rows(
-                activity.ACTIVITY_PROFILE_SAVE_SERIES,
-                activity_context,
-                build_payload,
-                published_detail=f"Updated published series/work JSON for series {series_id}",
-                search_detail=f"Rebuilt catalogue search for series {series_id}",
-                fallback_record_groups={"works": changed_work_ids, "series": [series_id], "work_details": []},
-            ),
-        )
     return payload
 
 

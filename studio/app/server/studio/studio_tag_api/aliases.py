@@ -6,9 +6,7 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any
 
-from tags import tag_activity
 from tags import tag_alias_mutations as tag_aliases
-from tags import tag_routes
 from tags import tag_source_model as tag_source
 from tags import tag_write_transactions as tag_transactions
 from studio_tag_api import common
@@ -62,19 +60,6 @@ def create_tag_alias_response(repo_root: Path, body: dict[str, Any], *, dry_run:
             **stats,
         },
     )
-    common.attach_tag_activity(
-        repo_root=repo_root,
-        endpoint=tag_routes.CREATE_ALIAS_PATH,
-        dry_run=dry_run,
-        body=body,
-        response_payload=response_payload,
-        record_id=str(stats["alias"]),
-        detail_items=[
-            summary_text,
-            f"Created alias: {stats['alias']}.",
-        ],
-        status=tag_activity.tag_activity_status(stats),
-    )
     return response_payload
 
 
@@ -115,15 +100,6 @@ def delete_tag_alias_response(repo_root: Path, body: dict[str, Any], *, dry_run:
             "dry_run": dry_run,
             **stats,
         },
-    )
-    common.attach_tag_activity(
-        repo_root=repo_root,
-        endpoint=tag_routes.DELETE_ALIAS_PATH,
-        dry_run=dry_run,
-        body=body,
-        response_payload=response_payload,
-        detail_items=[summary_text],
-        status=tag_activity.tag_activity_status(stats),
     )
     return response_payload
 
@@ -194,17 +170,4 @@ def mutate_tag_alias_response(
                 **stats,
             },
         )
-        if tag_activity.tag_activity_changed(stats):
-            common.attach_tag_activity(
-                repo_root=repo_root,
-                endpoint=tag_routes.MUTATE_ALIAS_APPLY_PATH,
-                dry_run=dry_run,
-                body=body,
-                response_payload=response_payload,
-                detail_items=[
-                    summary_text,
-                    f"Alias: {stats.get('alias')}; new alias: {stats.get('new_alias')}.",
-                ],
-                status=tag_activity.tag_activity_status(stats),
-            )
     return response_payload

@@ -41,7 +41,6 @@ from admin_app_config import (  # noqa: E402
     normalize_route_path,
     runtime_config,
 )
-from admin_activity_api import activity_get_payload  # noqa: E402
 from admin_audit_api import audit_get_payload, audit_post_response  # noqa: E402
 from admin_checks_api import ChecksConfigError, checks_delete_response, checks_get_payload, checks_post_response  # noqa: E402
 from admin_testing_api import testing_get_payload  # noqa: E402
@@ -110,9 +109,6 @@ class AdminAppRequestHandler(QuietErrorLoggingMixin, BaseHTTPRequestHandler):
             return
         if path == "/admin/runtime-config.json":
             self.send_json(runtime_config(self.repo_root, self.version))
-            return
-        if path.startswith("/admin/api/activity/"):
-            self.send_activity_api_json(path.removeprefix("/admin/api/activity"))
             return
         if path.startswith("/admin/api/audits/"):
             self.send_audit_api_json(path.removeprefix("/admin/api/audits"))
@@ -224,14 +220,6 @@ class AdminAppRequestHandler(QuietErrorLoggingMixin, BaseHTTPRequestHandler):
         self.send_header("Content-Length", str(len(body)))
         self.end_headers()
         self.wfile.write(body)
-
-    def send_activity_api_json(self, api_path: str) -> None:
-        try:
-            self.send_json(activity_get_payload(self.repo_root, api_path))
-        except FileNotFoundError as error:
-            self.send_json({"ok": False, "error": str(error)}, HTTPStatus.NOT_FOUND)
-        except RuntimeError as error:
-            self.send_json({"ok": False, "error": str(error)}, HTTPStatus.INTERNAL_SERVER_ERROR)
 
     def send_audit_api_json(self, api_path: str) -> None:
         try:

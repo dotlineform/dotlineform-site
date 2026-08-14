@@ -10,9 +10,9 @@ UI interaction, layout, copy, filtering, and modal behavior are accepted manuall
 Run checks through:
 
 ```bash
-$HOME/miniconda3/bin/python3 admin-app/commands/run_checks.py --profile quick
-$HOME/miniconda3/bin/python3 admin-app/commands/run_checks.py --profile studio
-$HOME/miniconda3/bin/python3 admin-app/commands/run_checks.py --profile studio-smoke
+$HOME/miniconda3/bin/python3 tests/run_checks.py --profile quick
+$HOME/miniconda3/bin/python3 tests/run_checks.py --profile studio
+$HOME/miniconda3/bin/python3 tests/run_checks.py --profile studio-smoke
 ```
 
-Local run logs are written under `var/admin/test-runs/` and are not committed.
+Local run logs are written under `var/test-runs/` and are not committed.

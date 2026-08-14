@@ -66,15 +66,13 @@
       "classification": "studio_projection",
       "repo_paths": [
         "studio/data/generated/catalogue-lookup/**",
-        "studio/data/config/catalogue/catalogue-field-registry.json",
-        "studio/data/generated/activity/work-storage-index.json"
+        "studio/data/config/catalogue/catalogue-field-registry.json"
       ],
       "public_output": {
         "policy": "forbidden",
         "paths": [
           "studio/data/generated/catalogue-lookup",
-          "studio/data/config/catalogue/catalogue-field-registry.json",
-          "studio/data/generated/activity/work-storage-index.json"
+          "studio/data/config/catalogue/catalogue-field-registry.json"
         ]
       },
       "owner_doc": "data-models-catalogue"
@@ -106,15 +104,13 @@
       "classification": "studio_projection",
       "repo_paths": [
         "studio/app/frontend/config/studio-config.json",
-        "studio/app/frontend/js/studio-ui-text.js",
-        "studio/data/config/runtime/activity-contract.json"
+        "studio/app/frontend/js/studio-ui-text.js"
       ],
       "public_output": {
         "policy": "forbidden",
         "paths": [
           "studio/app/frontend/config/studio-config.json",
-          "studio/app/frontend/js/studio-ui-text.js",
-          "studio/data/config/runtime/activity-contract.json"
+          "studio/app/frontend/js/studio-ui-text.js"
         ]
       },
       "owner_doc": "config-studio-config-json"

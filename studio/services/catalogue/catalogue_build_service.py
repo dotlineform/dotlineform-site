@@ -6,14 +6,13 @@ import subprocess
 from pathlib import Path
 from typing import Any, Mapping
 
-from catalogue import catalogue_activity as activity
 from catalogue.catalogue_build_commands import build_search_command
 from catalogue.catalogue_build_field_plan import apply_field_build_plan_to_scope, build_field_plan_for_scope
 from catalogue.catalogue_build_media import build_local_media_plan
 from catalogue.catalogue_build_scopes import build_scope_for_series, build_scope_for_work
 from catalogue.catalogue_json_build import run_scoped_build_scope
 from catalogue.catalogue_source import normalize_detail_uid_value, normalize_series_ids_value, slug_id
-from catalogue.catalogue_service_context import CatalogueWriteContext
+from catalogue.catalogue_service_context import CatalogueWriteContext, utc_now
 from catalogue.series_ids import normalize_series_id
 from local_env import runtime_env
 
@@ -137,7 +136,7 @@ def run_build_operation(
         payload["failed_step"] = result.get("failed_step")
         return False, payload
     if not context.dry_run:
-        payload["completed_at_utc"] = activity.utc_now()
+        payload["completed_at_utc"] = utc_now()
     return True, payload
 
 
@@ -210,7 +209,7 @@ def run_build_targets(context: CatalogueWriteContext, build_targets: list[dict[s
         "completed_count": len(build_targets),
         "targets": target_results,
         "remaining_targets": [],
-        "completed_at_utc": activity.utc_now(),
+        "completed_at_utc": utc_now(),
     }
 
 

@@ -10,7 +10,7 @@ from pathlib import Path, PurePosixPath
 from typing import Any, Iterable, Mapping
 
 
-DEFAULT_CONTRACT_PATH = Path("admin-app/checks/projection_contract.json")
+DEFAULT_CONTRACT_PATH = Path("tests/contracts/projection_contract.json")
 VALID_CLASSIFICATIONS = {
     "canonical_source",
     "public_projection",
@@ -231,75 +231,6 @@ def audit_public_source_references(repo_root: Path, contract: Mapping[str, Any])
     return failures
 
 
-def audit_public_docs_viewer_config(site_root: Path, contract: Mapping[str, Any]) -> list[str]:
-    failures: list[str] = []
-    config_spec = contract["public_docs_viewer"]
-    config_path = site_root / config_spec["config_path"]
-    if not config_path.exists():
-        return [f"public Docs Viewer config missing: {config_spec['config_path']}"]
-    try:
-        config = load_json(config_path)
-    except json.JSONDecodeError as exc:
-        return [f"public Docs Viewer config is invalid JSON: {exc}"]
-    scopes = config.get("scopes")
-    scope_ids = {
-        str(scope.get("scope_id", "")).strip().lower()
-        for scope in scopes
-        if isinstance(scope, dict)
-    } if isinstance(scopes, list) else set()
-    allowed_scope_ids = {str(scope_id).strip().lower() for scope_id in config_spec["allowed_scope_ids"]}
-    if scope_ids != allowed_scope_ids:
-        failures.append(
-            "public Docs Viewer config scopes must be "
-            f"{sorted(allowed_scope_ids)}, got {sorted(scope_ids)}"
-        )
-    return failures
-
-
-def audit_public_html_hrefs(site_root: Path, contract: Mapping[str, Any]) -> list[str]:
-    failures: list[str] = []
-    forbidden_hrefs = list(contract.get("public_html_forbidden_hrefs", []))
-    if not forbidden_hrefs:
-        return failures
-    for html_path in sorted(site_root.rglob("*.html")):
-        if not html_path.exists():
-            continue
-        text = read_text(html_path)
-        for forbidden in forbidden_hrefs:
-            if forbidden in text:
-                failures.append(f"forbidden public link {forbidden!r} in {relative(html_path, site_root)}")
-    return failures
-
-
-def audit_public_build(site_root: Path, contract: Mapping[str, Any]) -> list[str]:
-    failures: list[str] = []
-    root = site_root.resolve()
-    if not root.exists():
-        return [f"site root does not exist: {site_root}"]
-    if not root.is_dir():
-        return [f"site root is not a directory: {site_root}"]
-
-    for family in contract["artifact_families"]:
-        family_id = family["id"]
-        public_output = family["public_output"]
-        policy = public_output["policy"]
-        paths = public_output.get("paths", [])
-        if policy == "required":
-            for path_pattern in paths:
-                if not glob_matches(root, path_pattern):
-                    failures.append(f"{family_id}: required public output missing: {path_pattern}")
-        elif policy == "forbidden":
-            for path_pattern in paths:
-                matches = glob_matches(root, path_pattern)
-                if matches:
-                    samples = ", ".join(relative(path, root) for path in matches[:5])
-                    failures.append(f"{family_id}: forbidden public output present: {samples}")
-
-    failures.extend(audit_public_docs_viewer_config(root, contract))
-    failures.extend(audit_public_html_hrefs(root, contract))
-    return failures
-
-
 def print_failures(failures: list[str]) -> None:
     for failure in failures:
         print(f"FAIL: {failure}", file=sys.stderr)
@@ -309,7 +240,6 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--repo-root", default=Path.cwd(), type=Path)
     parser.add_argument("--contract", default=DEFAULT_CONTRACT_PATH, type=Path)
-    parser.add_argument("--site-root", type=Path, help="Optional built public site root to audit.")
     parser.add_argument(
         "--skip-field-leaks",
         action="store_true",
@@ -329,9 +259,6 @@ def main(argv: list[str] | None = None) -> int:
     failures.extend(audit_public_source_references(repo_root, contract))
     if not args.skip_field_leaks:
         failures.extend(audit_field_leaks(repo_root, contract))
-    if args.site_root:
-        failures.extend(audit_public_build(args.site_root, contract))
-
     if failures:
         print_failures(failures)
         return 1

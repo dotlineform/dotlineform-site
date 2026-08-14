@@ -14,9 +14,7 @@ for path in (SCRIPTS_DIR, STUDIO_SCRIPTS_DIR):
     if str(path) not in sys.path:
         sys.path.insert(0, str(path))
 
-from catalogue import catalogue_activity as activity  # noqa: E402
 from catalogue import catalogue_routes as routes  # noqa: E402
-from studio.app.server.studio import studio_catalogue_api  # noqa: E402
 
 
 def assert_equal(actual, expected, label: str) -> None:
@@ -42,30 +40,9 @@ def test_options_routes_are_post_routes_plus_catalogue_read() -> None:
     assert "/catalogue/project-state-report" not in routes.POST_PATHS
 
 
-def test_activity_profile_endpoints_are_known_post_routes() -> None:
-    local_app_post_routes = {
-        f"/studio/api/catalogue{api_path}"
-        for api_path in {
-            "/import-preview",
-            "/import-apply",
-            *studio_catalogue_api.catalogue_write_service.SERVICE_POST_PATHS,
-        }
-    }
-    known_endpoints = {*routes.POST_PATHS, *local_app_post_routes}
-    unknown_endpoints = sorted(
-        {
-            profile.endpoint
-            for profile in activity.ACTIVITY_ACTION_PROFILES
-            if profile.endpoint not in known_endpoints
-        }
-    )
-    assert_equal(unknown_endpoints, [], "activity profile endpoints")
-
-
 def main() -> None:
     test_post_routes_are_unique()
     test_options_routes_are_post_routes_plus_catalogue_read()
-    test_activity_profile_endpoints_are_known_post_routes()
     print("Catalogue route tests OK")
 
 

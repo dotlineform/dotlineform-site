@@ -7,7 +7,6 @@ from pathlib import Path
 from typing import Any
 
 from tags import tag_assignment_service as tag_assignments
-from tags import tag_routes
 from tags import tag_source_model as tag_source
 from tags import tag_write_transactions as tag_transactions
 from studio_tag_api import common
@@ -56,23 +55,5 @@ def save_tags_response(repo_root: Path, body: dict[str, Any], *, dry_run: bool =
             "deleted": deleted,
             "dry_run": dry_run,
         },
-    )
-    common.attach_tag_activity(
-        repo_root=repo_root,
-        endpoint=tag_routes.SAVE_TAGS_PATH,
-        dry_run=dry_run,
-        body=body,
-        response_payload=response_payload,
-        record_id=normalized_series_id,
-        record_groups={
-            "series": [normalized_series_id],
-            "works": [normalized_work_id] if normalized_work_id else [],
-        },
-        detail_items=[
-            f"Saved tag assignments for series {normalized_series_id}.",
-            f"Updated work {normalized_work_id}." if normalized_work_id else "",
-            f"Tag count: {response_payload['tag_count']}.",
-        ],
-        activity_id_suffix=f"work:{normalized_work_id}" if normalized_work_id else f"series:{normalized_series_id}",
     )
     return response_payload

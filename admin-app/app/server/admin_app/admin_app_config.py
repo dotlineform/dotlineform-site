@@ -22,11 +22,6 @@ ADMIN_ROUTE_REGISTRY_PATH = ("app", "routes")
 ADMIN_HTML_TEMPLATE_SHELL_TYPE = "html-template"
 
 ADMIN_SERVICE_ENDPOINTS: dict[str, object] = {
-    "activity": {
-        "base": "/admin/api/activity",
-        "health": "/admin/api/activity/health",
-        "feed": "/admin/api/activity/feed",
-    },
     "audits": {
         "base": "/admin/api/audits",
         "health": "/admin/api/audits/health",
@@ -169,9 +164,6 @@ def asset_version(repo_root: Path) -> str:
         repo_root / "admin-app" / "app" / "frontend" / "js" / "admin-route-templates.js",
         repo_root / "admin-app" / "app" / "assets" / "css" / "admin.css",
         repo_root / "admin-app" / "app" / "frontend" / "config" / "admin-config.json",
-        repo_root / "admin-app" / "app" / "frontend" / "js" / "admin-activity.js",
-        repo_root / "admin-app" / "app" / "frontend" / "js" / "admin-activity-context.js",
-        repo_root / "admin-app" / "app" / "frontend" / "js" / "admin-activity-modals.js",
         repo_root / "admin-app" / "app" / "frontend" / "js" / "admin-audits.js",
         repo_root / "admin-app" / "app" / "frontend" / "js" / "admin-checks.js",
         repo_root / "admin-app" / "app" / "frontend" / "js" / "admin-config.js",
@@ -221,15 +213,11 @@ def runtime_config(repo_root: Path, version: str) -> dict[str, object]:
             for route_id, route in admin_views(repo_root, payload).items()
         ],
         "data_paths": {
-            "activity": {
-                "feed": "var/admin/activity/activity_log.json",
-                "journal": "var/admin/activity/activity_log.jsonl",
-            },
             "checks": {
                 "runs": "var/admin/checks",
             },
             "testing": {
-                "runs": "var/admin/test-runs",
+                "runs": "var/test-runs",
             },
         },
     }

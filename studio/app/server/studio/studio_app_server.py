@@ -63,7 +63,6 @@ STATIC_PREFIXES = (
 )
 STATIC_FILES = {
     *LOCAL_BROWSER_ASSET_PATHS,
-    "/studio/data/generated/activity/work-storage-index.json",
 }
 MAX_BODY_BYTES = 1024 * 1024
 ENABLED_VALUES = {"1", "on", "true", "yes"}

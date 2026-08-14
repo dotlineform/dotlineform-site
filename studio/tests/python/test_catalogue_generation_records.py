@@ -24,7 +24,6 @@ def test_work_projection_order_and_coercion() -> None:
             "artist": "'Artist",
             "title": "  Work 2  ",
             "year": "2024",
-            "storage_location": "",
             "height_cm": "12.5",
             "width_px": "800",
             "media_version": "2",
@@ -35,7 +34,6 @@ def test_work_projection_order_and_coercion() -> None:
     assert projected["artist"] == "Artist"
     assert projected["title"] == "Work 2"
     assert projected["year"] == 2024
-    assert projected["storage"] is None
     assert projected["height_cm"] == 12.5
     assert projected["width_px"] == 800
     assert projected["media_version"] == 2
@@ -55,7 +53,6 @@ def test_canonical_work_record_orders_fields_and_prunes_public_record() -> None:
             "title": "Controlled Field",
             "year": "2026",
             "year_display": "",
-            "storage_location": "Rack A",
         }
     )
     meta.update(
@@ -90,7 +87,6 @@ def test_canonical_work_record_orders_fields_and_prunes_public_record() -> None:
     ]
     assert canonical["series_title"] == "Primary Series"
     assert canonical["series_sort"] == "001-00042"
-    assert canonical["storage"] == "Rack A"
     assert canonical["links"] == [{"url": "https://example.test", "label": "Example"}]
     assert canonical["media_version"] == 3
     assert "checksum" in canonical
@@ -99,7 +95,6 @@ def test_canonical_work_record_orders_fields_and_prunes_public_record() -> None:
     assert "series_id" not in public_record
     assert "series_title" not in public_record
     assert "series_sort" not in public_record
-    assert "storage" not in public_record
     assert "title_sort" not in public_record
     assert "checksum" not in public_record
     assert "year_display" not in public_record

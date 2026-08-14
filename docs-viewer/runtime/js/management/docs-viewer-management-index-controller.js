@@ -432,14 +432,6 @@ export function createDocsViewerManagementIndexController(options = {}) {
           scope: viewerScope(),
           checkedDocIds: checkedDocIds,
           restoreFocus: restoreFocus,
-          activityContext: {
-            page_id: "docs-manage",
-            action_id: "prepare-document-package",
-            route: "/docs/",
-            control_id: "docsViewerIndexPreparePackageButton",
-            control_selector: "#docsViewerIndexPreparePackageButton",
-            correlation_id: "prepare-document-package:" + String(Date.now())
-          },
           callbacks: {
             hideManageActionsMenu: hideIndexActionsMenu,
             setBusy: function (busy) {
