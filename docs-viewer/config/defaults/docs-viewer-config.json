@@ -76,6 +76,7 @@
         "index_url": "/docs-viewer/scopes/analysis/published/search/index.json",
         "rebuild_policy": "whole_index"
       },
+      "backlinks_url": "/docs-viewer/scopes/analysis/published/documents/backlinks.json",
       "sub_scopes": [
         {
           "sub_scope": "tags",
@@ -160,7 +161,8 @@
         "schema": "docs_viewer_search_index_v2",
         "index_url": "/docs-viewer/scopes/processing/published/search/index.json",
         "rebuild_policy": "whole_index"
-      }
+      },
+      "backlinks_url": "/docs-viewer/scopes/processing/published/documents/backlinks.json"
     },
     {
       "scope_id": "dotlineform",
@@ -192,6 +194,7 @@
         "index_url": "/docs/search?scope=dotlineform",
         "rebuild_policy": "whole_index"
       },
+      "backlinks_url": "/docs/backlinks?scope=dotlineform",
       "sub_scopes": [
         {
           "sub_scope": "projects",

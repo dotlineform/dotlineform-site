@@ -78,7 +78,7 @@ MEDIA_TYPE_PATTERN = re.compile(r"\A[a-z][a-z0-9_-]*\Z")
 MANAGED_MEDIA_TYPES = frozenset({"files", "html", "img", "svg"})
 BUILD_MEDIA_TYPES = frozenset({"mermaid"})
 SEARCH_FIELDS = frozenset({"body", "code", "heading", "identity", "last_updated", "parent_title", "title"})
-DEFAULT_DOCS_SEARCH_FIELDS = ("title", "parent_title", "identity", "last_updated")
+DEFAULT_DOCS_SEARCH_FIELDS = ("title", "heading", "body", "code")
 
 SOURCE_CAPABILITIES = frozenset(
     {

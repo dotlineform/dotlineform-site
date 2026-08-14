@@ -2594,11 +2594,6 @@
         "viewer_url": "/docs/?scope=studio&doc=d-20260715-092247-6bbb5e"
       },
       {
-        "doc_id": "d-20260813-222008-35fcfa",
-        "title": "SM-2 — Docs Viewer Search Relevance Delivery",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260813-222008-35fcfa"
-      },
-      {
         "doc_id": "d-20260813-161942-b1e9e1",
         "title": "Studio Full-Text Search Index Concept",
         "viewer_url": "/docs/?scope=studio&doc=d-20260813-161942-b1e9e1"
@@ -3406,6 +3401,21 @@
         "viewer_url": "/docs/?scope=studio&doc=d-20260813-171341-8bfa80"
       },
       {
+        "doc_id": "d-20260813-225547-cd82d8",
+        "title": "DSI-2 — Scope-Level Sub-Scope Search Delivery",
+        "viewer_url": "/docs/?scope=studio&doc=d-20260813-225547-cd82d8"
+      },
+      {
+        "doc_id": "d-20260715-092247-6bbb5e",
+        "title": "Search Mechanics",
+        "viewer_url": "/docs/?scope=studio&doc=d-20260715-092247-6bbb5e"
+      },
+      {
+        "doc_id": "d-20260813-222008-35fcfa",
+        "title": "SM-2 — Docs Viewer Search Relevance Delivery",
+        "viewer_url": "/docs/?scope=studio&doc=d-20260813-222008-35fcfa"
+      },
+      {
         "doc_id": "d-20260813-161942-b1e9e1",
         "title": "Studio Full-Text Search Index Concept",
         "viewer_url": "/docs/?scope=studio&doc=d-20260813-161942-b1e9e1"
@@ -3519,6 +3529,11 @@
     ],
     "d-20260813-222008-35fcfa": [
       {
+        "doc_id": "d-20260813-165124-16b0ab",
+        "title": "All-Scope Full-Text Search Baseline",
+        "viewer_url": "/docs/?scope=studio&doc=d-20260813-165124-16b0ab"
+      },
+      {
         "doc_id": "d-20260813-223337-e6c261",
         "title": "Docs Viewer Search Relevance",
         "viewer_url": "/docs/?scope=studio&doc=d-20260813-223337-e6c261"
@@ -3584,5 +3599,5 @@
       }
     ]
   },
-  "generated_at": "2026-08-14T14:21:55Z"
+  "generated_at": "2026-08-14T14:44:33Z"
 }

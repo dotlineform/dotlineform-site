@@ -961,7 +961,8 @@
             {
               "doc_id": "d-20260813-165124-16b0ab",
               "title": "All-Scope Full-Text Search Baseline",
-              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260813-165124-16b0ab.json"
+              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260813-165124-16b0ab.json",
+              "ui_status": "done"
             },
             {
               "doc_id": "d-20260813-163802-5ca41f",
@@ -1371,5 +1372,5 @@
       ]
     }
   ],
-  "generated_at": "2026-08-14T14:19:17Z"
+  "generated_at": "2026-08-14T14:44:33Z"
 }

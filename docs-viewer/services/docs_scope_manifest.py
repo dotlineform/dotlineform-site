@@ -12,6 +12,7 @@ from typing import Any
 
 from docs_scope_config import (
     CONFIG_REL_PATH,
+    DEFAULT_DOCS_SEARCH_FIELDS,
     EXTERNAL_DATA_ROOT_MARKER,
     LOCAL_EXTERNAL_SCOPE_TYPE,
     MEDIA_WORKSPACE_ROOT_MARKER,
@@ -436,6 +437,7 @@ def planned_scope_config_record(
         "meta": planned_scope_meta(publishing_mode),
         "scope_root": {"provider": local_provider, "path": scope_root_path},
         "source": {},
+        "search_fields": list(DEFAULT_DOCS_SEARCH_FIELDS),
         "media": {
             "types": media_types,
             "build_sources": {},

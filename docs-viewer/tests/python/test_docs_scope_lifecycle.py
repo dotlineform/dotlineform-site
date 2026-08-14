@@ -141,6 +141,12 @@ def test_scope_create_preview_reports_public_readonly_site_route_and_payloads() 
         planned_identity["added_date"],
     )
     assert payload["planned_scope_config"]["default_doc_id"] == planned_identity["doc_id"]
+    assert payload["planned_scope_config"]["search_fields"] == [
+        "title",
+        "heading",
+        "body",
+        "code",
+    ]
     assert any(
         file["path"] == f"docs-viewer/scopes/research/source/documents/{planned_identity['doc_id']}.md"
         for file in payload["created_files"]

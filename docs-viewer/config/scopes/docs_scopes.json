@@ -64,7 +64,7 @@
       "meta": "public scope",
       "media_source_root": "analysis",
       "source": {},
-      "search_fields": ["title", "parent_title", "identity", "last_updated"],
+      "search_fields": ["title", "heading", "body", "code"],
       "media": {
         "types": {
           "img": {
@@ -224,7 +224,7 @@
       "scope_type": "local_external",
       "meta": "external local",
       "source": {},
-      "search_fields": ["title", "parent_title", "identity", "last_updated"],
+      "search_fields": ["title", "heading", "body", "code"],
       "media": {
         "types": {
           "img": {
@@ -266,7 +266,7 @@
       "meta": "local management",
       "media_source_root": "processing",
       "source": {},
-      "search_fields": ["title", "parent_title", "identity", "last_updated"],
+      "search_fields": ["title", "heading", "body", "code"],
       "media": {
         "types": {
           "img": {
@@ -305,7 +305,7 @@
         "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/dotlineform"
       },
       "source": {},
-      "search_fields": ["title", "parent_title", "identity", "last_updated"],
+      "search_fields": ["title", "heading", "body", "code"],
       "media": {
         "types": {
           "img": {

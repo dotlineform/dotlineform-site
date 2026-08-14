@@ -48,8 +48,12 @@ def write_scope_config(
         default_doc_id="parent",
         manage_only_tree_root_ids=["manage-root"],
     )
-    if search_fields is not None:
-        scope["search_fields"] = search_fields
+    scope["search_fields"] = search_fields or [
+        "title",
+        "parent_title",
+        "identity",
+        "last_updated",
+    ]
     write_json(
         root / "docs-viewer/config/scopes/docs_scopes.json",
         {
@@ -67,6 +71,17 @@ def write_scope_config(
 
 def write_external_scope_config(root: Path, external_root: Path) -> None:
     del external_root
+    scope = docs_scope_record(
+        "private",
+        scope_type="local_external",
+        default_doc_id="private",
+    )
+    scope["search_fields"] = [
+        "title",
+        "parent_title",
+        "identity",
+        "last_updated",
+    ]
     write_json(
         root / "docs-viewer/config/scopes/docs_scopes.json",
         {
@@ -77,13 +92,7 @@ def write_external_scope_config(root: Path, external_root: Path) -> None:
                     "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/media",
                 }
             },
-            "scopes": [
-                docs_scope_record(
-                    "private",
-                    scope_type="local_external",
-                    default_doc_id="private",
-                )
-            ],
+            "scopes": [scope],
         },
     )
 

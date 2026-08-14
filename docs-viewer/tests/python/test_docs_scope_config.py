@@ -100,7 +100,17 @@ def test_docs_scope_config_normalizes_search_fields() -> None:
         defaulted = docs_scope_config.load_docs_scope_configs(repo_root)["studio"]
 
     assert explicit.search_fields == ("title", "identity")
-    assert defaulted.search_fields == docs_scope_config.DEFAULT_DOCS_SEARCH_FIELDS
+    assert defaulted.search_fields == ("title", "heading", "body", "code")
+
+
+def test_configured_scopes_share_full_text_search_baseline() -> None:
+    configs = docs_scope_config.load_docs_scope_configs(REPO_ROOT)
+
+    assert configs
+    assert {
+        config.search_fields
+        for config in configs.values()
+    } == {("title", "heading", "body", "code")}
 
 
 @pytest.mark.parametrize(

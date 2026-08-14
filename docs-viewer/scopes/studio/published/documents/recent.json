@@ -4,10 +4,58 @@
   "limit": 10,
   "docs": [
     {
+      "doc_id": "d-20260813-225547-cd82d8",
+      "title": "DSI-2 — Scope-Level Sub-Scope Search Delivery",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260813-225547-cd82d8.json",
+      "timestamp": "2026-08-14 15:46:02",
+      "parent_id": "d-20260715-092247-6bbb5e",
+      "parent_title": "Search Mechanics"
+    },
+    {
+      "doc_id": "d-20260813-165124-16b0ab",
+      "title": "All-Scope Full-Text Search Baseline",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260813-165124-16b0ab.json",
+      "timestamp": "2026-08-14 15:45:31",
+      "parent_id": "d-20260715-092247-6bbb5e",
+      "parent_title": "Search Mechanics"
+    },
+    {
+      "doc_id": "d-20260813-223337-e6c261",
+      "title": "Docs Viewer Search Relevance",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260813-223337-e6c261.json",
+      "timestamp": "2026-08-14 15:43:14",
+      "parent_id": "d-20260602-160839-6d3cbb",
+      "parent_title": "Docs Viewer Search"
+    },
+    {
+      "doc_id": "d-20260715-092247-6bbb5e",
+      "title": "Search Mechanics",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260715-092247-6bbb5e.json",
+      "timestamp": "2026-08-14 15:43:14",
+      "parent_id": "d-20260428-000000-f5ff18",
+      "parent_title": "Roadmap"
+    },
+    {
+      "doc_id": "d-20260813-222008-35fcfa",
+      "title": "SM-2 — Docs Viewer Search Relevance Delivery",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260813-222008-35fcfa.json",
+      "timestamp": "2026-08-14 15:43:14",
+      "parent_id": "d-20260715-092247-6bbb5e",
+      "parent_title": "Search Mechanics"
+    },
+    {
+      "doc_id": "d-20260813-161942-b1e9e1",
+      "title": "Studio Full-Text Search Index Concept",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260813-161942-b1e9e1.json",
+      "timestamp": "2026-08-14 15:43:14",
+      "parent_id": "d-20260715-092247-6bbb5e",
+      "parent_title": "Search Mechanics"
+    },
+    {
       "doc_id": "d-20260602-160839-6d3cbb",
       "title": "Docs Viewer Search",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260602-160839-6d3cbb.json",
-      "timestamp": "2026-08-14 15:21:54",
+      "timestamp": "2026-08-14 15:39:28",
       "parent_id": "d-20260331-000000-5dcf32",
       "parent_title": "Search"
     },
@@ -15,7 +63,7 @@
       "doc_id": "d-20260813-214350-4c7a21",
       "title": "Docs Viewer Search Index",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260813-214350-4c7a21.json",
-      "timestamp": "2026-08-14 15:21:54",
+      "timestamp": "2026-08-14 15:39:28",
       "parent_id": "d-20260602-160839-6d3cbb",
       "parent_title": "Docs Viewer Search"
     },
@@ -28,61 +76,13 @@
       "parent_title": "Search Mechanics"
     },
     {
-      "doc_id": "d-20260813-161942-b1e9e1",
-      "title": "Studio Full-Text Search Index Concept",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260813-161942-b1e9e1.json",
-      "timestamp": "2026-08-14 15:20:41",
-      "parent_id": "d-20260715-092247-6bbb5e",
-      "parent_title": "Search Mechanics"
-    },
-    {
-      "doc_id": "d-20260813-165124-16b0ab",
-      "title": "All-Scope Full-Text Search Baseline",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260813-165124-16b0ab.json",
-      "timestamp": "2026-08-14 15:19:32",
-      "parent_id": "d-20260715-092247-6bbb5e",
-      "parent_title": "Search Mechanics"
-    },
-    {
       "doc_id": "d-20260503-202500-316d29",
       "title": "Package Return Parser",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260503-202500-316d29.json",
       "timestamp": "2026-08-14 15:09:03",
       "parent_id": "d-20260424-000000-50b63f",
       "parent_title": "Docs Viewer"
-    },
-    {
-      "doc_id": "d-20260423-000000-c9f3ea",
-      "title": "Docs Viewer Builder",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260423-000000-c9f3ea.json",
-      "timestamp": "2026-08-14 14:49:45",
-      "parent_id": "d-20260424-000000-50b63f",
-      "parent_title": "Docs Viewer"
-    },
-    {
-      "doc_id": "d-20260422-174736-9bd0fc",
-      "title": "Local Runners",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260422-174736-9bd0fc.json",
-      "timestamp": "2026-08-14 14:49:45",
-      "parent_id": "d-20260413-000000-d314b7",
-      "parent_title": "Local Setup"
-    },
-    {
-      "doc_id": "d-20260607-222033-dd2265",
-      "title": "Rebuild Follow-Through Scripts",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260607-222033-dd2265.json",
-      "timestamp": "2026-08-14 14:49:45",
-      "parent_id": "d-20260607-222033-2a494e",
-      "parent_title": "Scripts Overview"
-    },
-    {
-      "doc_id": "d-20260523-190651-7157ec",
-      "title": "Development Checklist",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260523-190651-7157ec.json",
-      "timestamp": "2026-08-14 14:49:06",
-      "parent_id": "d-20260419-000000-d2e47b",
-      "parent_title": "Dev Home"
     }
   ],
-  "generated_at": "2026-08-14T14:21:55Z"
+  "generated_at": "2026-08-14T14:46:03Z"
 }
