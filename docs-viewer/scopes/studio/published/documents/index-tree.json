@@ -675,74 +675,10 @@
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260428-000000-f5ff18.json",
       "children": [
         {
-          "doc_id": "d-20260610-225919-188d54",
-          "title": "Admin Checks Operational Reports",
-          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260610-225919-188d54.json",
-          "ui_status": "deferred",
-          "children": [
-            {
-              "doc_id": "d-20260610-114020-8e5197",
-              "title": "Generated Payloads Report",
-              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260610-114020-8e5197.json",
-              "ui_status": "draft"
-            },
-            {
-              "doc_id": "d-20260610-114020-b56fed",
-              "title": "Runtime Checks Report",
-              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260610-114020-b56fed.json",
-              "ui_status": "draft"
-            }
-          ]
-        },
-        {
-          "doc_id": "d-20260531-000000-6679ea",
-          "title": "Admin Checks Responsibility Reports",
-          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260531-000000-6679ea.json",
-          "ui_status": "in-progress",
-          "children": [
-            {
-              "doc_id": "d-20260610-225919-78b56a",
-              "title": "Code Surface Report",
-              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260610-225919-78b56a.json",
-              "ui_status": "draft"
-            },
-            {
-              "doc_id": "d-20260609-212515-e7f0ac",
-              "title": "Git History Report",
-              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260609-212515-e7f0ac.json",
-              "ui_status": "draft"
-            },
-            {
-              "doc_id": "d-20260609-212515-520398",
-              "title": "Imports Report",
-              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260609-212515-520398.json",
-              "ui_status": "draft"
-            },
-            {
-              "doc_id": "d-20260609-212515-238344",
-              "title": "Report Dependencies",
-              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260609-212515-238344.json",
-              "ui_status": "draft"
-            },
-            {
-              "doc_id": "d-20260610-114020-544e51",
-              "title": "Static Searches Report",
-              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260610-114020-544e51.json",
-              "ui_status": "draft"
-            },
-            {
-              "doc_id": "d-20260609-212515-6d8aa2",
-              "title": "Tests Report",
-              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260609-212515-6d8aa2.json",
-              "ui_status": "draft"
-            }
-          ]
-        },
-        {
           "doc_id": "d-20260814-194856-a7c3e1",
           "title": "Admin Retirement",
           "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260814-194856-a7c3e1.json",
-          "ui_status": "in-progress"
+          "ui_status": "done"
         },
         {
           "doc_id": "d-20260802-225626-b123fa",
@@ -1209,5 +1145,5 @@
       ]
     }
   ],
-  "generated_at": "2026-08-14T20:08:10Z"
+  "generated_at": "2026-08-14T20:50:16Z"
 }
