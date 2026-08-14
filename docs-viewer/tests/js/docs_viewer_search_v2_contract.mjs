@@ -67,4 +67,37 @@ assert.deepEqual(matchIds("docs_subscope"), ["doc-a"]);
 assert.deepEqual(matchIds("d-20260813-000001-aaaaaa"), []);
 assert.deepEqual(matchIds("2026"), []);
 
+const sharedDocId = "d-20260814-120000-abcdef";
+const mixedTargetIndex = {
+  header: { schema: "docs_viewer_search_index_v2", scope: "analysis" },
+  fields: ["title", "identity"],
+  docs: [
+    { id: sharedDocId, title: "Parent target", href: `/analysis/?doc=${sharedDocId}` },
+    {
+      id: sharedDocId,
+      title: "Child target",
+      href: `/analysis/?doc=report&subdoc=${sharedDocId}`,
+      sub_scope: "tags",
+      report_doc_id: "report",
+      collection_title: "Concepts"
+    }
+  ],
+  terms: {
+    [sharedDocId]: { identity: [0, 1] },
+    parent: { title: [0] },
+    child: { title: [1] },
+    target: { title: [0, 1] }
+  }
+};
+assert.deepEqual(
+  search.collectSearchMatches(mixedTargetIndex, sharedDocId).map((match) => (
+    [match.entry.id, match.entry.sub_scope || ""]
+  )),
+  [[sharedDocId, "tags"], [sharedDocId, ""]]
+);
+assert.equal(
+  search.collectSearchMatches(mixedTargetIndex, "child")[0].entry.report_doc_id,
+  "report"
+);
+
 console.log("Docs Viewer search v2 JavaScript contract OK");

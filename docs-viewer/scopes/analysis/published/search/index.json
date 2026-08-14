@@ -2,9 +2,9 @@
   "header": {
     "schema": "docs_viewer_search_index_v2",
     "scope": "analysis",
-    "version": "blake2b-7b24574a90f8f032587844faa68dc544",
-    "generated_at_utc": "2026-08-13T18:46:32Z",
-    "count": 17
+    "version": "blake2b-fa21e8cc285562bf90308f392bd98905",
+    "generated_at_utc": "2026-08-14T10:26:36Z",
+    "count": 266
   },
   "fields": [
     "title",
@@ -21,6 +21,36 @@
       "display_meta": "2026-05-11 19:17:51"
     },
     {
+      "id": "d-20260624-204534-0d6ae2",
+      "title": "bird",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260624-204534-0d6ae2",
+      "last_updated": "2026-06-24",
+      "display_meta": "2026-06-24 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260624-204534-e3de0b",
+      "title": "ordered",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260624-204534-e3de0b",
+      "last_updated": "2026-06-24",
+      "display_meta": "2026-06-24 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260624-204534-ecfc12",
+      "title": "nerve",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260624-204534-ecfc12",
+      "last_updated": "2026-07-27 21:46:03",
+      "display_meta": "2026-07-27 21:46:03 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
       "id": "d-20260624-213316-478639",
       "title": "Concepts",
       "href": "/analysis/?doc=d-20260624-213316-478639",
@@ -28,6 +58,2456 @@
       "parent_id": "d-20260426-164043-e14f49",
       "parent_title": "Analysis",
       "display_meta": "2026-07-29 11:30:02 • Analysis"
+    },
+    {
+      "id": "d-20260727-225608-0066f5",
+      "title": "fragility",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-0066f5",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-012951",
+      "title": "margin",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-012951",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-03e966",
+      "title": "nature",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-03e966",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-04889f",
+      "title": "eye",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-04889f",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-07e0eb",
+      "title": "materiality",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-07e0eb",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-0813e3",
+      "title": "smooth",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-0813e3",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-085a6c",
+      "title": "rain",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-085a6c",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-0b3df4",
+      "title": "photography",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-0b3df4",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-0ccf1f",
+      "title": "emptiness",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-0ccf1f",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-0d540d",
+      "title": "clarity",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-0d540d",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-0d87ce",
+      "title": "embodiment",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-0d87ce",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-0e1745",
+      "title": "open",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-0e1745",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-0fa362",
+      "title": "cloudlike",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-0fa362",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-107781",
+      "title": "joy",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-107781",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-1091be",
+      "title": "i-ching",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-1091be",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-10fc9c",
+      "title": "biology",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-10fc9c",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-11de40",
+      "title": "encoding",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-11de40",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-124217",
+      "title": "surface",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-124217",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-12c5ee",
+      "title": "transformation",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-12c5ee",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-13749a",
+      "title": "identity",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-13749a",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-169780",
+      "title": "memory",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-169780",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-16b7b8",
+      "title": "perception",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-16b7b8",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-1864ea",
+      "title": "wall",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-1864ea",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-1bf2c3",
+      "title": "number",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-1bf2c3",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-1e1df9",
+      "title": "calm",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-1e1df9",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-1ee86d",
+      "title": "diagram",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-1ee86d",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-200179",
+      "title": "light",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-200179",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-208450",
+      "title": "architecture",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-208450",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-20f785",
+      "title": "map",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-20f785",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-21836e",
+      "title": "curve",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-21836e",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-22f690",
+      "title": "drawing",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-22f690",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-23cb8e",
+      "title": "object",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-23cb8e",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-2497a8",
+      "title": "continuous",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-2497a8",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-24dfb5",
+      "title": "astronomy",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-24dfb5",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-24efce",
+      "title": "sparse",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-24efce",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-2517eb",
+      "title": "nerve",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-2517eb",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-25c814",
+      "title": "splash",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-25c814",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-2617b3",
+      "title": "wire",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-2617b3",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-27bc3b",
+      "title": "polychrome",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-27bc3b",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-295b0c",
+      "title": "entanglement",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-295b0c",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-2a27c8",
+      "title": "window",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-2a27c8",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-2a8ef3",
+      "title": "resistance",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-2a8ef3",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-2af018",
+      "title": "dense",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-2af018",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-2c1750",
+      "title": "tension",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-2c1750",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-2c1b7a",
+      "title": "letter",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-2c1b7a",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-2d38a1",
+      "title": "hard",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-2d38a1",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-2dd29d",
+      "title": "scale",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-2dd29d",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-2ded48",
+      "title": "seed",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-2ded48",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-2f1649",
+      "title": "presence",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-2f1649",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-2fffa8",
+      "title": "weed",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-2fffa8",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-30dfef",
+      "title": "change",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-30dfef",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-31a370",
+      "title": "hope",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-31a370",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-3239cc",
+      "title": "slaughter",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-3239cc",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-32e172",
+      "title": "awe",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-32e172",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-32eda3",
+      "title": "fear",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-32eda3",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-330a89",
+      "title": "contour",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-330a89",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-3374bd",
+      "title": "contemplation",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-3374bd",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-34d9fb",
+      "title": "grainy",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-34d9fb",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-36c93d",
+      "title": "rock",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-36c93d",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-37bb5c",
+      "title": "interpretation",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-37bb5c",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-381c61",
+      "title": "botany",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-381c61",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-388a29",
+      "title": "shadow",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-388a29",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-3899cc",
+      "title": "flat",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-3899cc",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-38c206",
+      "title": "memory-trace",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-38c206",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-391f5b",
+      "title": "spiralling",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-391f5b",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-3a5f20",
+      "title": "geology",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-3a5f20",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-3bf2bc",
+      "title": "fragment",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-3bf2bc",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-3ccb9e",
+      "title": "system",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-3ccb9e",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-3cd1dd",
+      "title": "face",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-3cd1dd",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-3eabe1",
+      "title": "renewal",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-3eabe1",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-422df7",
+      "title": "movement",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-422df7",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-42c9e0",
+      "title": "science",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-42c9e0",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-438fab",
+      "title": "net",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-438fab",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-43e86d",
+      "title": "symbol",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-43e86d",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-440ecd",
+      "title": "boundary",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-440ecd",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-44902d",
+      "title": "droplet",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-44902d",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-44c370",
+      "title": "overwhelm",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-44c370",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-452c13",
+      "title": "mark",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-452c13",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-45ac22",
+      "title": "connection",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-45ac22",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-476c0b",
+      "title": "low-contrast",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-476c0b",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-482c64",
+      "title": "sorrow",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-482c64",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-49e2d4",
+      "title": "sun",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-49e2d4",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-4ab240",
+      "title": "figure",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-4ab240",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-4c0762",
+      "title": "water",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-4c0762",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-4c4195",
+      "title": "technology",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-4c4195",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-4c56a9",
+      "title": "overlay",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-4c56a9",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-4e62cb",
+      "title": "porous",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-4e62cb",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-51df31",
+      "title": "ambiguity",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-51df31",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-520788",
+      "title": "repair",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-520788",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-5296a2",
+      "title": "root",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-5296a2",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-52dcb3",
+      "title": "road",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-52dcb3",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-531c17",
+      "title": "fiber",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-531c17",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-557834",
+      "title": "symmetric",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-557834",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-55e44d",
+      "title": "emergence",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-55e44d",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-579c27",
+      "title": "absence",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-579c27",
+      "last_updated": "2026-07-31 07:02:25",
+      "display_meta": "2026-07-31 07:02:25 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-57a4c7",
+      "title": "edge",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-57a4c7",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-58741a",
+      "title": "physics",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-58741a",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-591e49",
+      "title": "branching",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-591e49",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-5b31e2",
+      "title": "rhythmic",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-5b31e2",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-5cb64c",
+      "title": "melancholy",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-5cb64c",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-603ccd",
+      "title": "loop",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-603ccd",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-60991f",
+      "title": "recurrence",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-60991f",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-616fda",
+      "title": "confusion",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-616fda",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-6250bf",
+      "title": "peripheral",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-6250bf",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-626b4c",
+      "title": "myth",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-626b4c",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-63967a",
+      "title": "flower",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-63967a",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-651586",
+      "title": "anxiety",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-651586",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-6555f7",
+      "title": "restlessness",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-6555f7",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-6796ef",
+      "title": "noise",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-6796ef",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-686651",
+      "title": "containment",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-686651",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-6b3825",
+      "title": "netted",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-6b3825",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-6bdf47",
+      "title": "sharp",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-6bdf47",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-6c146c",
+      "title": "fieldlike",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-6c146c",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-6c7384",
+      "title": "text",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-6c7384",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-6c8101",
+      "title": "door",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-6c8101",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-6cac49",
+      "title": "moon",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-6cac49",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-6d8930",
+      "title": "craft",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-6d8930",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-6e036f",
+      "title": "path",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-6e036f",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-6e75fd",
+      "title": "linear",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-6e75fd",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-6f0bef",
+      "title": "fog",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-6f0bef",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-6f785e",
+      "title": "stone",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-6f785e",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-708a9e",
+      "title": "repetition",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-708a9e",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-723889",
+      "title": "grid",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-723889",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-753567",
+      "title": "mirror",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-753567",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-759902",
+      "title": "print",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-759902",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-75f272",
+      "title": "central",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-75f272",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-761a32",
+      "title": "quiet",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-761a32",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-7893a2",
+      "title": "trace",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-7893a2",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-78ee39",
+      "title": "decay",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-78ee39",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-7927df",
+      "title": "knotted",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-7927df",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-79f04e",
+      "title": "angular",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-79f04e",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-7abff3",
+      "title": "layered",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-7abff3",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-7be84b",
+      "title": "stroke",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-7be84b",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-7d2c08",
+      "title": "moss",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-7d2c08",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-7fbfa5",
+      "title": "body",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-7fbfa5",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-7fe018",
+      "title": "micro-macro",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-7fe018",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-80e8b0",
+      "title": "volumetric",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-80e8b0",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-8104f2",
+      "title": "networks",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-8104f2",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-812ad8",
+      "title": "radial",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-812ad8",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-8258a1",
+      "title": "reconstruction",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-8258a1",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-82cce1",
+      "title": "enclosed",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-82cce1",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-833b94",
+      "title": "braided",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-833b94",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-84860c",
+      "title": "music",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-84860c",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-84a22b",
+      "title": "branch",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-84a22b",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-84a2a1",
+      "title": "animal",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-84a2a1",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-85a70e",
+      "title": "line",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-85a70e",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-87a3e0",
+      "title": "becoming",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-87a3e0",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-8a0601",
+      "title": "filament",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-8a0601",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-8a8d26",
+      "title": "violent",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-8a8d26",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-8b320d",
+      "title": "communication",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-8b320d",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-8be4b8",
+      "title": "translation",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-8be4b8",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-8d3c1d",
+      "title": "screen",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-8d3c1d",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-8d753d",
+      "title": "chance",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-8d753d",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-8dc973",
+      "title": "control",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-8dc973",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-8fec97",
+      "title": "sand",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-8fec97",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-90eabc",
+      "title": "dot",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-90eabc",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-932f79",
+      "title": "blurred",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-932f79",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-933750",
+      "title": "stairs",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-933750",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-93f7d5",
+      "title": "grass",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-93f7d5",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-955195",
+      "title": "monochrome",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-955195",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-96dc3a",
+      "title": "minimal",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-96dc3a",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-99c3be",
+      "title": "skin",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-99c3be",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-9b8192",
+      "title": "silhouette",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-9b8192",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-9c842f",
+      "title": "release",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-9c842f",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-9e62b8",
+      "title": "point",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-9e62b8",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-9eb839",
+      "title": "language",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-9eb839",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-a05992",
+      "title": "wave",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-a05992",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-a34891",
+      "title": "curvilinear",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-a34891",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-a45198",
+      "title": "dispersed",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-a45198",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-a4d142",
+      "title": "reflection",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-a4d142",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-a607e0",
+      "title": "fence",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-a607e0",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-a60c24",
+      "title": "dark",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-a60c24",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-aa54c9",
+      "title": "grief",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-aa54c9",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-ab4327",
+      "title": "wonder",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-ab4327",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-ac0827",
+      "title": "asymmetric",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-ac0827",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-ae606d",
+      "title": "threadlike",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-ae606d",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-afb0a7",
+      "title": "chaotic",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-afb0a7",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-b10f2d",
+      "title": "random",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-b10f2d",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-b235c6",
+      "title": "weather",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-b235c6",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-b2a6f0",
+      "title": "looped",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-b2a6f0",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-b2d217",
+      "title": "shape",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-b2d217",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-b5542c",
+      "title": "drift",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-b5542c",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-b5e4f7",
+      "title": "alienation",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-b5e4f7",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-b61c55",
+      "title": "landscape",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-b61c55",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-b7eb37",
+      "title": "maximal",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-b7eb37",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-b84d7e",
+      "title": "play",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-b84d7e",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-b85e09",
+      "title": "broken",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-b85e09",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-ba99c7",
+      "title": "gesture",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-ba99c7",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-bd3137",
+      "title": "leaf",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-bd3137",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-be5e27",
+      "title": "digital",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-be5e27",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-bed170",
+      "title": "consciousness",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-bed170",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-c04eca",
+      "title": "cycle",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-c04eca",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-c11b96",
+      "title": "signal",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-c11b96",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-c21bf0",
+      "title": "flow",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-c21bf0",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-c474d0",
+      "title": "granular",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-c474d0",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-c4b45c",
+      "title": "balanced",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-c4b45c",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-c7b1f6",
+      "title": "unbalanced",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-c7b1f6",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-c844db",
+      "title": "uncertainty",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-c844db",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-c88144",
+      "title": "depth",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-c88144",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-c913bf",
+      "title": "field",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-c913bf",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-ca7056",
+      "title": "decoding",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-ca7056",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-cbb3d7",
+      "title": "threshold",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-cbb3d7",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-ce80bb",
+      "title": "insect",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-ce80bb",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-cfc88e",
+      "title": "compressed",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-cfc88e",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-d0194d",
+      "title": "woven",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-d0194d",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-d2e201",
+      "title": "quantum",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-d2e201",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-d39666",
+      "title": "mathematics",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-d39666",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-d41939",
+      "title": "ruin",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-d41939",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-d6cc89",
+      "title": "ritual",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-d6cc89",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-d81ffc",
+      "title": "urban",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-d81ffc",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-d9afd4",
+      "title": "glitch",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-d9afd4",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-db297c",
+      "title": "cutoff",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-db297c",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-dbeb69",
+      "title": "order",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-dbeb69",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-dc0028",
+      "title": "soft",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-dc0028",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-dc2548",
+      "title": "hand",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-dc2548",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-dd62ff",
+      "title": "information",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-dd62ff",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-defa99",
+      "title": "writing",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-defa99",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-e0e993",
+      "title": "tree",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-e0e993",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-e124eb",
+      "title": "fragmentation",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-e124eb",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-e18b6c",
+      "title": "shallow",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-e18b6c",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-e3851f",
+      "title": "stacked",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-e3851f",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-e546d0",
+      "title": "cloud",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-e546d0",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-e8d7a7",
+      "title": "fragmented",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-e8d7a7",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-e943ff",
+      "title": "lichen",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-e943ff",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-e97d11",
+      "title": "resilience",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-e97d11",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-ecb267",
+      "title": "cellular",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-ecb267",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-ecb7a9",
+      "title": "attention",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-ecb7a9",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-ecf994",
+      "title": "building",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-ecf994",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-ed1025",
+      "title": "sky",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-ed1025",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-edadc1",
+      "title": "time",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-edadc1",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-ef31f9",
+      "title": "freedom",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-ef31f9",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-ef7408",
+      "title": "intimacy",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-ef7408",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-f16645",
+      "title": "tangled",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-f16645",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-f1e271",
+      "title": "duration",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-f1e271",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-f3f980",
+      "title": "form",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-f3f980",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-f543c8",
+      "title": "stain",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-f543c8",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-f5791d",
+      "title": "pattern",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-f5791d",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-f589fc",
+      "title": "return",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-f589fc",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-f5ddde",
+      "title": "stillness",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-f5ddde",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-f7402d",
+      "title": "bird",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-f7402d",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-f8abb3",
+      "title": "contoured",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-f8abb3",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-f9d97a",
+      "title": "frame",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-f9d97a",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-fb0e11",
+      "title": "textured",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-fb0e11",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-fb78ac",
+      "title": "ecology",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-fb78ac",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
+    },
+    {
+      "id": "d-20260727-225608-fd71ef",
+      "title": "growth",
+      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-fd71ef",
+      "last_updated": "2026-07-27",
+      "display_meta": "2026-07-27 • Concepts",
+      "sub_scope": "tags",
+      "report_doc_id": "d-20260624-213316-478639",
+      "collection_title": "Concepts"
     },
     {
       "id": "d-20260807-082735-54d9d5",
@@ -159,6 +2639,16 @@
       "parent_id": "d-20260809-130120-870cc2",
       "parent_title": "Library",
       "display_meta": "2026-08-09 13:01:20 • Library"
+    },
+    {
+      "id": "d-20260812-215843-fc4ef9",
+      "title": "3 symbols",
+      "href": "/analysis/?doc=d-20260807-082735-54d9d5&subdoc=d-20260812-215843-fc4ef9",
+      "last_updated": "2026-08-12 21:58:43",
+      "display_meta": "2026-08-12 21:58:43 • Works",
+      "sub_scope": "works",
+      "report_doc_id": "d-20260807-082735-54d9d5",
+      "collection_title": "Works"
     }
   ],
   "terms": {
@@ -167,22 +2657,17 @@
         0
       ]
     },
-    "2026-07-29 11:30:02": {
+    "2026-06-24": {
       "last_updated": [
-        1
-      ]
-    },
-    "2026-08-07 08:27:35": {
-      "last_updated": [
+        1,
         2
       ]
     },
-    "2026-08-09 13:01:20": {
+    "2026-07-27": {
       "last_updated": [
-        3,
-        4,
         5,
         6,
+        7,
         8,
         9,
         10,
@@ -191,27 +2676,316 @@
         13,
         14,
         15,
-        16
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41,
+        42,
+        43,
+        44,
+        45,
+        46,
+        47,
+        48,
+        49,
+        50,
+        51,
+        52,
+        53,
+        54,
+        55,
+        56,
+        57,
+        58,
+        59,
+        60,
+        61,
+        62,
+        63,
+        64,
+        65,
+        66,
+        67,
+        68,
+        69,
+        70,
+        71,
+        72,
+        73,
+        74,
+        75,
+        76,
+        77,
+        78,
+        79,
+        80,
+        81,
+        82,
+        83,
+        84,
+        85,
+        86,
+        87,
+        88,
+        89,
+        90,
+        91,
+        92,
+        93,
+        94,
+        95,
+        96,
+        97,
+        98,
+        100,
+        101,
+        102,
+        103,
+        104,
+        105,
+        106,
+        107,
+        108,
+        109,
+        110,
+        111,
+        112,
+        113,
+        114,
+        115,
+        116,
+        117,
+        118,
+        119,
+        120,
+        121,
+        122,
+        123,
+        124,
+        125,
+        126,
+        127,
+        128,
+        129,
+        130,
+        131,
+        132,
+        133,
+        134,
+        135,
+        136,
+        137,
+        138,
+        139,
+        140,
+        141,
+        142,
+        143,
+        144,
+        145,
+        146,
+        147,
+        148,
+        149,
+        150,
+        151,
+        152,
+        153,
+        154,
+        155,
+        156,
+        157,
+        158,
+        159,
+        160,
+        161,
+        162,
+        163,
+        164,
+        165,
+        166,
+        167,
+        168,
+        169,
+        170,
+        171,
+        172,
+        173,
+        174,
+        175,
+        176,
+        177,
+        178,
+        179,
+        180,
+        181,
+        182,
+        183,
+        184,
+        185,
+        186,
+        187,
+        188,
+        189,
+        190,
+        191,
+        192,
+        193,
+        194,
+        195,
+        196,
+        197,
+        198,
+        199,
+        200,
+        201,
+        202,
+        203,
+        204,
+        205,
+        206,
+        207,
+        208,
+        209,
+        210,
+        211,
+        212,
+        213,
+        214,
+        215,
+        216,
+        217,
+        218,
+        219,
+        220,
+        221,
+        222,
+        223,
+        224,
+        225,
+        226,
+        227,
+        228,
+        229,
+        230,
+        231,
+        232,
+        233,
+        234,
+        235,
+        236,
+        237,
+        238,
+        239,
+        240,
+        241,
+        242,
+        243,
+        244,
+        245,
+        246,
+        247,
+        248,
+        249
+      ]
+    },
+    "2026-07-27 21:46:03": {
+      "last_updated": [
+        3
+      ]
+    },
+    "2026-07-29 11:30:02": {
+      "last_updated": [
+        4
+      ]
+    },
+    "2026-07-31 07:02:25": {
+      "last_updated": [
+        99
+      ]
+    },
+    "2026-08-07 08:27:35": {
+      "last_updated": [
+        250
+      ]
+    },
+    "2026-08-09 13:01:20": {
+      "last_updated": [
+        251,
+        252,
+        253,
+        254,
+        256,
+        257,
+        258,
+        259,
+        260,
+        261,
+        262,
+        263,
+        264
       ]
     },
     "2026-08-11 22:18:57": {
       "last_updated": [
-        7
+        255
+      ]
+    },
+    "2026-08-12 21:58:43": {
+      "last_updated": [
+        265
       ]
     },
     "3d": {
       "title": [
-        12
+        260
+      ]
+    },
+    "absence": {
+      "title": [
+        99
       ]
     },
     "abstract": {
       "title": [
-        6
+        254
       ]
     },
     "active": {
       "title": [
-        11
+        259
+      ]
+    },
+    "alienation": {
+      "title": [
+        187
+      ]
+    },
+    "ambiguity": {
+      "title": [
+        92
       ]
     },
     "analysis": {
@@ -219,74 +2993,311 @@
         0
       ],
       "parent_title": [
-        1
+        4
+      ]
+    },
+    "angular": {
+      "title": [
+        135
+      ]
+    },
+    "animal": {
+      "title": [
+        149
+      ]
+    },
+    "anxiety": {
+      "title": [
+        111
+      ]
+    },
+    "architecture": {
+      "title": [
+        32
+      ]
+    },
+    "astronomy": {
+      "title": [
+        38
+      ]
+    },
+    "asymmetric": {
+      "title": [
+        179
+      ]
+    },
+    "attention": {
+      "title": [
+        231
+      ]
+    },
+    "awe": {
+      "title": [
+        58
+      ]
+    },
+    "balanced": {
+      "title": [
+        200
       ]
     },
     "bayesian": {
       "title": [
-        9
+        257
       ]
     },
     "beauty": {
       "title": [
-        3,
-        7
+        251,
+        255
+      ]
+    },
+    "becoming": {
+      "title": [
+        151
       ]
     },
     "beyond": {
       "title": [
-        5
+        253
+      ]
+    },
+    "biology": {
+      "title": [
+        20
+      ]
+    },
+    "bird": {
+      "title": [
+        1,
+        244
+      ]
+    },
+    "blurred": {
+      "title": [
+        161
+      ]
+    },
+    "body": {
+      "title": [
+        139
+      ]
+    },
+    "botany": {
+      "title": [
+        65
       ]
     },
     "boundary": {
       "title": [
-        15
+        79,
+        263
+      ]
+    },
+    "braided": {
+      "title": [
+        146
       ]
     },
     "brain": {
       "title": [
-        14
+        262
+      ]
+    },
+    "branch": {
+      "title": [
+        148
+      ]
+    },
+    "branching": {
+      "title": [
+        102
+      ]
+    },
+    "broken": {
+      "title": [
+        191
+      ]
+    },
+    "building": {
+      "title": [
+        232
+      ]
+    },
+    "calm": {
+      "title": [
+        29
       ]
     },
     "can": {
       "title": [
+        262
+      ]
+    },
+    "cellular": {
+      "title": [
+        230
+      ]
+    },
+    "central": {
+      "title": [
+        130
+      ]
+    },
+    "chance": {
+      "title": [
+        157
+      ]
+    },
+    "change": {
+      "title": [
+        55
+      ]
+    },
+    "chaotic": {
+      "title": [
+        181
+      ]
+    },
+    "ching": {
+      "title": [
+        19
+      ]
+    },
+    "clarity": {
+      "title": [
         14
+      ]
+    },
+    "cloud": {
+      "title": [
+        226
+      ]
+    },
+    "cloudlike": {
+      "title": [
+        17
       ]
     },
     "coincidence": {
       "title": [
-        13,
-        16
+        261,
+        264
+      ]
+    },
+    "communication": {
+      "title": [
+        154
       ]
     },
     "comparisons": {
       "title": [
-        15
+        263
       ]
     },
     "comprehend": {
       "title": [
-        14
+        262
+      ]
+    },
+    "compressed": {
+      "title": [
+        208
       ]
     },
     "concepts": {
       "title": [
-        1
+        4
+      ]
+    },
+    "confusion": {
+      "title": [
+        107
+      ]
+    },
+    "connection": {
+      "title": [
+        83
       ]
     },
     "conscious": {
       "title": [
-        5
+        253
+      ]
+    },
+    "consciousness": {
+      "title": [
+        195
+      ]
+    },
+    "containment": {
+      "title": [
+        114
+      ]
+    },
+    "contemplation": {
+      "title": [
+        61
+      ]
+    },
+    "continuous": {
+      "title": [
+        37
+      ]
+    },
+    "contour": {
+      "title": [
+        60
+      ]
+    },
+    "contoured": {
+      "title": [
+        245
+      ]
+    },
+    "contrast": {
+      "title": [
+        84
+      ]
+    },
+    "control": {
+      "title": [
+        158
       ]
     },
     "cosmologies": {
       "title": [
-        4
+        252
+      ]
+    },
+    "craft": {
+      "title": [
+        121
       ]
     },
     "cross": {
       "title": [
-        15
+        263
+      ]
+    },
+    "curve": {
+      "title": [
+        34
+      ]
+    },
+    "curvilinear": {
+      "title": [
+        172
+      ]
+    },
+    "cutoff": {
+      "title": [
+        216
+      ]
+    },
+    "cycle": {
+      "title": [
+        196
       ]
     },
     "d-20260426-164043-e14f49": {
@@ -294,235 +3305,2480 @@
         0
       ]
     },
-    "d-20260624-213316-478639": {
+    "d-20260624-204534-0d6ae2": {
       "identity": [
         1
       ]
     },
-    "d-20260807-082735-54d9d5": {
+    "d-20260624-204534-e3de0b": {
       "identity": [
         2
       ]
     },
-    "d-20260809-130120-28fb85": {
+    "d-20260624-204534-ecfc12": {
       "identity": [
         3
       ]
     },
-    "d-20260809-130120-3054b0": {
+    "d-20260624-213316-478639": {
       "identity": [
         4
       ]
     },
-    "d-20260809-130120-44384d": {
+    "d-20260727-225608-0066f5": {
       "identity": [
         5
       ]
     },
-    "d-20260809-130120-461754": {
+    "d-20260727-225608-012951": {
       "identity": [
         6
       ]
     },
-    "d-20260809-130120-837891": {
+    "d-20260727-225608-03e966": {
       "identity": [
         7
       ]
     },
-    "d-20260809-130120-870cc2": {
+    "d-20260727-225608-04889f": {
       "identity": [
         8
+      ]
+    },
+    "d-20260727-225608-07e0eb": {
+      "identity": [
+        9
+      ]
+    },
+    "d-20260727-225608-0813e3": {
+      "identity": [
+        10
+      ]
+    },
+    "d-20260727-225608-085a6c": {
+      "identity": [
+        11
+      ]
+    },
+    "d-20260727-225608-0b3df4": {
+      "identity": [
+        12
+      ]
+    },
+    "d-20260727-225608-0ccf1f": {
+      "identity": [
+        13
+      ]
+    },
+    "d-20260727-225608-0d540d": {
+      "identity": [
+        14
+      ]
+    },
+    "d-20260727-225608-0d87ce": {
+      "identity": [
+        15
+      ]
+    },
+    "d-20260727-225608-0e1745": {
+      "identity": [
+        16
+      ]
+    },
+    "d-20260727-225608-0fa362": {
+      "identity": [
+        17
+      ]
+    },
+    "d-20260727-225608-107781": {
+      "identity": [
+        18
+      ]
+    },
+    "d-20260727-225608-1091be": {
+      "identity": [
+        19
+      ]
+    },
+    "d-20260727-225608-10fc9c": {
+      "identity": [
+        20
+      ]
+    },
+    "d-20260727-225608-11de40": {
+      "identity": [
+        21
+      ]
+    },
+    "d-20260727-225608-124217": {
+      "identity": [
+        22
+      ]
+    },
+    "d-20260727-225608-12c5ee": {
+      "identity": [
+        23
+      ]
+    },
+    "d-20260727-225608-13749a": {
+      "identity": [
+        24
+      ]
+    },
+    "d-20260727-225608-169780": {
+      "identity": [
+        25
+      ]
+    },
+    "d-20260727-225608-16b7b8": {
+      "identity": [
+        26
+      ]
+    },
+    "d-20260727-225608-1864ea": {
+      "identity": [
+        27
+      ]
+    },
+    "d-20260727-225608-1bf2c3": {
+      "identity": [
+        28
+      ]
+    },
+    "d-20260727-225608-1e1df9": {
+      "identity": [
+        29
+      ]
+    },
+    "d-20260727-225608-1ee86d": {
+      "identity": [
+        30
+      ]
+    },
+    "d-20260727-225608-200179": {
+      "identity": [
+        31
+      ]
+    },
+    "d-20260727-225608-208450": {
+      "identity": [
+        32
+      ]
+    },
+    "d-20260727-225608-20f785": {
+      "identity": [
+        33
+      ]
+    },
+    "d-20260727-225608-21836e": {
+      "identity": [
+        34
+      ]
+    },
+    "d-20260727-225608-22f690": {
+      "identity": [
+        35
+      ]
+    },
+    "d-20260727-225608-23cb8e": {
+      "identity": [
+        36
+      ]
+    },
+    "d-20260727-225608-2497a8": {
+      "identity": [
+        37
+      ]
+    },
+    "d-20260727-225608-24dfb5": {
+      "identity": [
+        38
+      ]
+    },
+    "d-20260727-225608-24efce": {
+      "identity": [
+        39
+      ]
+    },
+    "d-20260727-225608-2517eb": {
+      "identity": [
+        40
+      ]
+    },
+    "d-20260727-225608-25c814": {
+      "identity": [
+        41
+      ]
+    },
+    "d-20260727-225608-2617b3": {
+      "identity": [
+        42
+      ]
+    },
+    "d-20260727-225608-27bc3b": {
+      "identity": [
+        43
+      ]
+    },
+    "d-20260727-225608-295b0c": {
+      "identity": [
+        44
+      ]
+    },
+    "d-20260727-225608-2a27c8": {
+      "identity": [
+        45
+      ]
+    },
+    "d-20260727-225608-2a8ef3": {
+      "identity": [
+        46
+      ]
+    },
+    "d-20260727-225608-2af018": {
+      "identity": [
+        47
+      ]
+    },
+    "d-20260727-225608-2c1750": {
+      "identity": [
+        48
+      ]
+    },
+    "d-20260727-225608-2c1b7a": {
+      "identity": [
+        49
+      ]
+    },
+    "d-20260727-225608-2d38a1": {
+      "identity": [
+        50
+      ]
+    },
+    "d-20260727-225608-2dd29d": {
+      "identity": [
+        51
+      ]
+    },
+    "d-20260727-225608-2ded48": {
+      "identity": [
+        52
+      ]
+    },
+    "d-20260727-225608-2f1649": {
+      "identity": [
+        53
+      ]
+    },
+    "d-20260727-225608-2fffa8": {
+      "identity": [
+        54
+      ]
+    },
+    "d-20260727-225608-30dfef": {
+      "identity": [
+        55
+      ]
+    },
+    "d-20260727-225608-31a370": {
+      "identity": [
+        56
+      ]
+    },
+    "d-20260727-225608-3239cc": {
+      "identity": [
+        57
+      ]
+    },
+    "d-20260727-225608-32e172": {
+      "identity": [
+        58
+      ]
+    },
+    "d-20260727-225608-32eda3": {
+      "identity": [
+        59
+      ]
+    },
+    "d-20260727-225608-330a89": {
+      "identity": [
+        60
+      ]
+    },
+    "d-20260727-225608-3374bd": {
+      "identity": [
+        61
+      ]
+    },
+    "d-20260727-225608-34d9fb": {
+      "identity": [
+        62
+      ]
+    },
+    "d-20260727-225608-36c93d": {
+      "identity": [
+        63
+      ]
+    },
+    "d-20260727-225608-37bb5c": {
+      "identity": [
+        64
+      ]
+    },
+    "d-20260727-225608-381c61": {
+      "identity": [
+        65
+      ]
+    },
+    "d-20260727-225608-388a29": {
+      "identity": [
+        66
+      ]
+    },
+    "d-20260727-225608-3899cc": {
+      "identity": [
+        67
+      ]
+    },
+    "d-20260727-225608-38c206": {
+      "identity": [
+        68
+      ]
+    },
+    "d-20260727-225608-391f5b": {
+      "identity": [
+        69
+      ]
+    },
+    "d-20260727-225608-3a5f20": {
+      "identity": [
+        70
+      ]
+    },
+    "d-20260727-225608-3bf2bc": {
+      "identity": [
+        71
+      ]
+    },
+    "d-20260727-225608-3ccb9e": {
+      "identity": [
+        72
+      ]
+    },
+    "d-20260727-225608-3cd1dd": {
+      "identity": [
+        73
+      ]
+    },
+    "d-20260727-225608-3eabe1": {
+      "identity": [
+        74
+      ]
+    },
+    "d-20260727-225608-422df7": {
+      "identity": [
+        75
+      ]
+    },
+    "d-20260727-225608-42c9e0": {
+      "identity": [
+        76
+      ]
+    },
+    "d-20260727-225608-438fab": {
+      "identity": [
+        77
+      ]
+    },
+    "d-20260727-225608-43e86d": {
+      "identity": [
+        78
+      ]
+    },
+    "d-20260727-225608-440ecd": {
+      "identity": [
+        79
+      ]
+    },
+    "d-20260727-225608-44902d": {
+      "identity": [
+        80
+      ]
+    },
+    "d-20260727-225608-44c370": {
+      "identity": [
+        81
+      ]
+    },
+    "d-20260727-225608-452c13": {
+      "identity": [
+        82
+      ]
+    },
+    "d-20260727-225608-45ac22": {
+      "identity": [
+        83
+      ]
+    },
+    "d-20260727-225608-476c0b": {
+      "identity": [
+        84
+      ]
+    },
+    "d-20260727-225608-482c64": {
+      "identity": [
+        85
+      ]
+    },
+    "d-20260727-225608-49e2d4": {
+      "identity": [
+        86
+      ]
+    },
+    "d-20260727-225608-4ab240": {
+      "identity": [
+        87
+      ]
+    },
+    "d-20260727-225608-4c0762": {
+      "identity": [
+        88
+      ]
+    },
+    "d-20260727-225608-4c4195": {
+      "identity": [
+        89
+      ]
+    },
+    "d-20260727-225608-4c56a9": {
+      "identity": [
+        90
+      ]
+    },
+    "d-20260727-225608-4e62cb": {
+      "identity": [
+        91
+      ]
+    },
+    "d-20260727-225608-51df31": {
+      "identity": [
+        92
+      ]
+    },
+    "d-20260727-225608-520788": {
+      "identity": [
+        93
+      ]
+    },
+    "d-20260727-225608-5296a2": {
+      "identity": [
+        94
+      ]
+    },
+    "d-20260727-225608-52dcb3": {
+      "identity": [
+        95
+      ]
+    },
+    "d-20260727-225608-531c17": {
+      "identity": [
+        96
+      ]
+    },
+    "d-20260727-225608-557834": {
+      "identity": [
+        97
+      ]
+    },
+    "d-20260727-225608-55e44d": {
+      "identity": [
+        98
+      ]
+    },
+    "d-20260727-225608-579c27": {
+      "identity": [
+        99
+      ]
+    },
+    "d-20260727-225608-57a4c7": {
+      "identity": [
+        100
+      ]
+    },
+    "d-20260727-225608-58741a": {
+      "identity": [
+        101
+      ]
+    },
+    "d-20260727-225608-591e49": {
+      "identity": [
+        102
+      ]
+    },
+    "d-20260727-225608-5b31e2": {
+      "identity": [
+        103
+      ]
+    },
+    "d-20260727-225608-5cb64c": {
+      "identity": [
+        104
+      ]
+    },
+    "d-20260727-225608-603ccd": {
+      "identity": [
+        105
+      ]
+    },
+    "d-20260727-225608-60991f": {
+      "identity": [
+        106
+      ]
+    },
+    "d-20260727-225608-616fda": {
+      "identity": [
+        107
+      ]
+    },
+    "d-20260727-225608-6250bf": {
+      "identity": [
+        108
+      ]
+    },
+    "d-20260727-225608-626b4c": {
+      "identity": [
+        109
+      ]
+    },
+    "d-20260727-225608-63967a": {
+      "identity": [
+        110
+      ]
+    },
+    "d-20260727-225608-651586": {
+      "identity": [
+        111
+      ]
+    },
+    "d-20260727-225608-6555f7": {
+      "identity": [
+        112
+      ]
+    },
+    "d-20260727-225608-6796ef": {
+      "identity": [
+        113
+      ]
+    },
+    "d-20260727-225608-686651": {
+      "identity": [
+        114
+      ]
+    },
+    "d-20260727-225608-6b3825": {
+      "identity": [
+        115
+      ]
+    },
+    "d-20260727-225608-6bdf47": {
+      "identity": [
+        116
+      ]
+    },
+    "d-20260727-225608-6c146c": {
+      "identity": [
+        117
+      ]
+    },
+    "d-20260727-225608-6c7384": {
+      "identity": [
+        118
+      ]
+    },
+    "d-20260727-225608-6c8101": {
+      "identity": [
+        119
+      ]
+    },
+    "d-20260727-225608-6cac49": {
+      "identity": [
+        120
+      ]
+    },
+    "d-20260727-225608-6d8930": {
+      "identity": [
+        121
+      ]
+    },
+    "d-20260727-225608-6e036f": {
+      "identity": [
+        122
+      ]
+    },
+    "d-20260727-225608-6e75fd": {
+      "identity": [
+        123
+      ]
+    },
+    "d-20260727-225608-6f0bef": {
+      "identity": [
+        124
+      ]
+    },
+    "d-20260727-225608-6f785e": {
+      "identity": [
+        125
+      ]
+    },
+    "d-20260727-225608-708a9e": {
+      "identity": [
+        126
+      ]
+    },
+    "d-20260727-225608-723889": {
+      "identity": [
+        127
+      ]
+    },
+    "d-20260727-225608-753567": {
+      "identity": [
+        128
+      ]
+    },
+    "d-20260727-225608-759902": {
+      "identity": [
+        129
+      ]
+    },
+    "d-20260727-225608-75f272": {
+      "identity": [
+        130
+      ]
+    },
+    "d-20260727-225608-761a32": {
+      "identity": [
+        131
+      ]
+    },
+    "d-20260727-225608-7893a2": {
+      "identity": [
+        132
+      ]
+    },
+    "d-20260727-225608-78ee39": {
+      "identity": [
+        133
+      ]
+    },
+    "d-20260727-225608-7927df": {
+      "identity": [
+        134
+      ]
+    },
+    "d-20260727-225608-79f04e": {
+      "identity": [
+        135
+      ]
+    },
+    "d-20260727-225608-7abff3": {
+      "identity": [
+        136
+      ]
+    },
+    "d-20260727-225608-7be84b": {
+      "identity": [
+        137
+      ]
+    },
+    "d-20260727-225608-7d2c08": {
+      "identity": [
+        138
+      ]
+    },
+    "d-20260727-225608-7fbfa5": {
+      "identity": [
+        139
+      ]
+    },
+    "d-20260727-225608-7fe018": {
+      "identity": [
+        140
+      ]
+    },
+    "d-20260727-225608-80e8b0": {
+      "identity": [
+        141
+      ]
+    },
+    "d-20260727-225608-8104f2": {
+      "identity": [
+        142
+      ]
+    },
+    "d-20260727-225608-812ad8": {
+      "identity": [
+        143
+      ]
+    },
+    "d-20260727-225608-8258a1": {
+      "identity": [
+        144
+      ]
+    },
+    "d-20260727-225608-82cce1": {
+      "identity": [
+        145
+      ]
+    },
+    "d-20260727-225608-833b94": {
+      "identity": [
+        146
+      ]
+    },
+    "d-20260727-225608-84860c": {
+      "identity": [
+        147
+      ]
+    },
+    "d-20260727-225608-84a22b": {
+      "identity": [
+        148
+      ]
+    },
+    "d-20260727-225608-84a2a1": {
+      "identity": [
+        149
+      ]
+    },
+    "d-20260727-225608-85a70e": {
+      "identity": [
+        150
+      ]
+    },
+    "d-20260727-225608-87a3e0": {
+      "identity": [
+        151
+      ]
+    },
+    "d-20260727-225608-8a0601": {
+      "identity": [
+        152
+      ]
+    },
+    "d-20260727-225608-8a8d26": {
+      "identity": [
+        153
+      ]
+    },
+    "d-20260727-225608-8b320d": {
+      "identity": [
+        154
+      ]
+    },
+    "d-20260727-225608-8be4b8": {
+      "identity": [
+        155
+      ]
+    },
+    "d-20260727-225608-8d3c1d": {
+      "identity": [
+        156
+      ]
+    },
+    "d-20260727-225608-8d753d": {
+      "identity": [
+        157
+      ]
+    },
+    "d-20260727-225608-8dc973": {
+      "identity": [
+        158
+      ]
+    },
+    "d-20260727-225608-8fec97": {
+      "identity": [
+        159
+      ]
+    },
+    "d-20260727-225608-90eabc": {
+      "identity": [
+        160
+      ]
+    },
+    "d-20260727-225608-932f79": {
+      "identity": [
+        161
+      ]
+    },
+    "d-20260727-225608-933750": {
+      "identity": [
+        162
+      ]
+    },
+    "d-20260727-225608-93f7d5": {
+      "identity": [
+        163
+      ]
+    },
+    "d-20260727-225608-955195": {
+      "identity": [
+        164
+      ]
+    },
+    "d-20260727-225608-96dc3a": {
+      "identity": [
+        165
+      ]
+    },
+    "d-20260727-225608-99c3be": {
+      "identity": [
+        166
+      ]
+    },
+    "d-20260727-225608-9b8192": {
+      "identity": [
+        167
+      ]
+    },
+    "d-20260727-225608-9c842f": {
+      "identity": [
+        168
+      ]
+    },
+    "d-20260727-225608-9e62b8": {
+      "identity": [
+        169
+      ]
+    },
+    "d-20260727-225608-9eb839": {
+      "identity": [
+        170
+      ]
+    },
+    "d-20260727-225608-a05992": {
+      "identity": [
+        171
+      ]
+    },
+    "d-20260727-225608-a34891": {
+      "identity": [
+        172
+      ]
+    },
+    "d-20260727-225608-a45198": {
+      "identity": [
+        173
+      ]
+    },
+    "d-20260727-225608-a4d142": {
+      "identity": [
+        174
+      ]
+    },
+    "d-20260727-225608-a607e0": {
+      "identity": [
+        175
+      ]
+    },
+    "d-20260727-225608-a60c24": {
+      "identity": [
+        176
+      ]
+    },
+    "d-20260727-225608-aa54c9": {
+      "identity": [
+        177
+      ]
+    },
+    "d-20260727-225608-ab4327": {
+      "identity": [
+        178
+      ]
+    },
+    "d-20260727-225608-ac0827": {
+      "identity": [
+        179
+      ]
+    },
+    "d-20260727-225608-ae606d": {
+      "identity": [
+        180
+      ]
+    },
+    "d-20260727-225608-afb0a7": {
+      "identity": [
+        181
+      ]
+    },
+    "d-20260727-225608-b10f2d": {
+      "identity": [
+        182
+      ]
+    },
+    "d-20260727-225608-b235c6": {
+      "identity": [
+        183
+      ]
+    },
+    "d-20260727-225608-b2a6f0": {
+      "identity": [
+        184
+      ]
+    },
+    "d-20260727-225608-b2d217": {
+      "identity": [
+        185
+      ]
+    },
+    "d-20260727-225608-b5542c": {
+      "identity": [
+        186
+      ]
+    },
+    "d-20260727-225608-b5e4f7": {
+      "identity": [
+        187
+      ]
+    },
+    "d-20260727-225608-b61c55": {
+      "identity": [
+        188
+      ]
+    },
+    "d-20260727-225608-b7eb37": {
+      "identity": [
+        189
+      ]
+    },
+    "d-20260727-225608-b84d7e": {
+      "identity": [
+        190
+      ]
+    },
+    "d-20260727-225608-b85e09": {
+      "identity": [
+        191
+      ]
+    },
+    "d-20260727-225608-ba99c7": {
+      "identity": [
+        192
+      ]
+    },
+    "d-20260727-225608-bd3137": {
+      "identity": [
+        193
+      ]
+    },
+    "d-20260727-225608-be5e27": {
+      "identity": [
+        194
+      ]
+    },
+    "d-20260727-225608-bed170": {
+      "identity": [
+        195
+      ]
+    },
+    "d-20260727-225608-c04eca": {
+      "identity": [
+        196
+      ]
+    },
+    "d-20260727-225608-c11b96": {
+      "identity": [
+        197
+      ]
+    },
+    "d-20260727-225608-c21bf0": {
+      "identity": [
+        198
+      ]
+    },
+    "d-20260727-225608-c474d0": {
+      "identity": [
+        199
+      ]
+    },
+    "d-20260727-225608-c4b45c": {
+      "identity": [
+        200
+      ]
+    },
+    "d-20260727-225608-c7b1f6": {
+      "identity": [
+        201
+      ]
+    },
+    "d-20260727-225608-c844db": {
+      "identity": [
+        202
+      ]
+    },
+    "d-20260727-225608-c88144": {
+      "identity": [
+        203
+      ]
+    },
+    "d-20260727-225608-c913bf": {
+      "identity": [
+        204
+      ]
+    },
+    "d-20260727-225608-ca7056": {
+      "identity": [
+        205
+      ]
+    },
+    "d-20260727-225608-cbb3d7": {
+      "identity": [
+        206
+      ]
+    },
+    "d-20260727-225608-ce80bb": {
+      "identity": [
+        207
+      ]
+    },
+    "d-20260727-225608-cfc88e": {
+      "identity": [
+        208
+      ]
+    },
+    "d-20260727-225608-d0194d": {
+      "identity": [
+        209
+      ]
+    },
+    "d-20260727-225608-d2e201": {
+      "identity": [
+        210
+      ]
+    },
+    "d-20260727-225608-d39666": {
+      "identity": [
+        211
+      ]
+    },
+    "d-20260727-225608-d41939": {
+      "identity": [
+        212
+      ]
+    },
+    "d-20260727-225608-d6cc89": {
+      "identity": [
+        213
+      ]
+    },
+    "d-20260727-225608-d81ffc": {
+      "identity": [
+        214
+      ]
+    },
+    "d-20260727-225608-d9afd4": {
+      "identity": [
+        215
+      ]
+    },
+    "d-20260727-225608-db297c": {
+      "identity": [
+        216
+      ]
+    },
+    "d-20260727-225608-dbeb69": {
+      "identity": [
+        217
+      ]
+    },
+    "d-20260727-225608-dc0028": {
+      "identity": [
+        218
+      ]
+    },
+    "d-20260727-225608-dc2548": {
+      "identity": [
+        219
+      ]
+    },
+    "d-20260727-225608-dd62ff": {
+      "identity": [
+        220
+      ]
+    },
+    "d-20260727-225608-defa99": {
+      "identity": [
+        221
+      ]
+    },
+    "d-20260727-225608-e0e993": {
+      "identity": [
+        222
+      ]
+    },
+    "d-20260727-225608-e124eb": {
+      "identity": [
+        223
+      ]
+    },
+    "d-20260727-225608-e18b6c": {
+      "identity": [
+        224
+      ]
+    },
+    "d-20260727-225608-e3851f": {
+      "identity": [
+        225
+      ]
+    },
+    "d-20260727-225608-e546d0": {
+      "identity": [
+        226
+      ]
+    },
+    "d-20260727-225608-e8d7a7": {
+      "identity": [
+        227
+      ]
+    },
+    "d-20260727-225608-e943ff": {
+      "identity": [
+        228
+      ]
+    },
+    "d-20260727-225608-e97d11": {
+      "identity": [
+        229
+      ]
+    },
+    "d-20260727-225608-ecb267": {
+      "identity": [
+        230
+      ]
+    },
+    "d-20260727-225608-ecb7a9": {
+      "identity": [
+        231
+      ]
+    },
+    "d-20260727-225608-ecf994": {
+      "identity": [
+        232
+      ]
+    },
+    "d-20260727-225608-ed1025": {
+      "identity": [
+        233
+      ]
+    },
+    "d-20260727-225608-edadc1": {
+      "identity": [
+        234
+      ]
+    },
+    "d-20260727-225608-ef31f9": {
+      "identity": [
+        235
+      ]
+    },
+    "d-20260727-225608-ef7408": {
+      "identity": [
+        236
+      ]
+    },
+    "d-20260727-225608-f16645": {
+      "identity": [
+        237
+      ]
+    },
+    "d-20260727-225608-f1e271": {
+      "identity": [
+        238
+      ]
+    },
+    "d-20260727-225608-f3f980": {
+      "identity": [
+        239
+      ]
+    },
+    "d-20260727-225608-f543c8": {
+      "identity": [
+        240
+      ]
+    },
+    "d-20260727-225608-f5791d": {
+      "identity": [
+        241
+      ]
+    },
+    "d-20260727-225608-f589fc": {
+      "identity": [
+        242
+      ]
+    },
+    "d-20260727-225608-f5ddde": {
+      "identity": [
+        243
+      ]
+    },
+    "d-20260727-225608-f7402d": {
+      "identity": [
+        244
+      ]
+    },
+    "d-20260727-225608-f8abb3": {
+      "identity": [
+        245
+      ]
+    },
+    "d-20260727-225608-f9d97a": {
+      "identity": [
+        246
+      ]
+    },
+    "d-20260727-225608-fb0e11": {
+      "identity": [
+        247
+      ]
+    },
+    "d-20260727-225608-fb78ac": {
+      "identity": [
+        248
+      ]
+    },
+    "d-20260727-225608-fd71ef": {
+      "identity": [
+        249
+      ]
+    },
+    "d-20260807-082735-54d9d5": {
+      "identity": [
+        250
+      ]
+    },
+    "d-20260809-130120-28fb85": {
+      "identity": [
+        251
+      ]
+    },
+    "d-20260809-130120-3054b0": {
+      "identity": [
+        252
+      ]
+    },
+    "d-20260809-130120-44384d": {
+      "identity": [
+        253
+      ]
+    },
+    "d-20260809-130120-461754": {
+      "identity": [
+        254
+      ]
+    },
+    "d-20260809-130120-837891": {
+      "identity": [
+        255
+      ]
+    },
+    "d-20260809-130120-870cc2": {
+      "identity": [
+        256
       ]
     },
     "d-20260809-130120-91c97f": {
       "identity": [
-        9
+        257
       ]
     },
     "d-20260809-130120-a7bc91": {
       "identity": [
-        10
+        258
       ]
     },
     "d-20260809-130120-afeb4d": {
       "identity": [
-        11
+        259
       ]
     },
     "d-20260809-130120-b96ba9": {
       "identity": [
-        12
+        260
       ]
     },
     "d-20260809-130120-c5c511": {
       "identity": [
-        13
+        261
       ]
     },
     "d-20260809-130120-d66e0b": {
       "identity": [
-        14
+        262
       ]
     },
     "d-20260809-130120-e6793d": {
       "identity": [
-        15
+        263
       ]
     },
     "d-20260809-130120-ed5b30": {
       "identity": [
-        16
+        264
+      ]
+    },
+    "d-20260812-215843-fc4ef9": {
+      "identity": [
+        265
+      ]
+    },
+    "dark": {
+      "title": [
+        176
+      ]
+    },
+    "decay": {
+      "title": [
+        133
+      ]
+    },
+    "decoding": {
+      "title": [
+        205
       ]
     },
     "defining": {
       "title": [
-        15
+        263
+      ]
+    },
+    "dense": {
+      "title": [
+        47
+      ]
+    },
+    "depth": {
+      "title": [
+        203
+      ]
+    },
+    "diagram": {
+      "title": [
+        30
+      ]
+    },
+    "digital": {
+      "title": [
+        194
       ]
     },
     "dimensions": {
       "title": [
-        12
+        260
+      ]
+    },
+    "dispersed": {
+      "title": [
+        173
+      ]
+    },
+    "door": {
+      "title": [
+        119
+      ]
+    },
+    "dot": {
+      "title": [
+        160
+      ]
+    },
+    "drawing": {
+      "title": [
+        35
       ]
     },
     "dreaming": {
       "title": [
-        11
+        259
       ]
     },
-    "entropy": {
+    "drift": {
       "title": [
-        4
+        186
       ]
     },
-    "evolution": {
+    "droplet": {
       "title": [
-        4
+        80
       ]
     },
-    "evolutionary": {
+    "duration": {
       "title": [
-        10
+        238
       ]
     },
-    "how": {
+    "ecology": {
       "title": [
-        14
+        248
       ]
     },
-    "inevitability": {
+    "edge": {
       "title": [
-        13
+        100
       ]
     },
-    "information": {
+    "embodiment": {
       "title": [
         15
       ]
     },
-    "library": {
+    "emergence": {
+      "title": [
+        98
+      ]
+    },
+    "emptiness": {
+      "title": [
+        13
+      ]
+    },
+    "enclosed": {
+      "title": [
+        145
+      ]
+    },
+    "encoding": {
+      "title": [
+        21
+      ]
+    },
+    "entanglement": {
+      "title": [
+        44
+      ]
+    },
+    "entropy": {
+      "title": [
+        252
+      ]
+    },
+    "evolution": {
+      "title": [
+        252
+      ]
+    },
+    "evolutionary": {
+      "title": [
+        258
+      ]
+    },
+    "eye": {
       "title": [
         8
+      ]
+    },
+    "face": {
+      "title": [
+        73
+      ]
+    },
+    "fear": {
+      "title": [
+        59
+      ]
+    },
+    "fence": {
+      "title": [
+        175
+      ]
+    },
+    "fiber": {
+      "title": [
+        96
+      ]
+    },
+    "field": {
+      "title": [
+        204
+      ]
+    },
+    "fieldlike": {
+      "title": [
+        117
+      ]
+    },
+    "figure": {
+      "title": [
+        87
+      ]
+    },
+    "filament": {
+      "title": [
+        152
+      ]
+    },
+    "flat": {
+      "title": [
+        67
+      ]
+    },
+    "flow": {
+      "title": [
+        198
+      ]
+    },
+    "flower": {
+      "title": [
+        110
+      ]
+    },
+    "fog": {
+      "title": [
+        124
+      ]
+    },
+    "form": {
+      "title": [
+        239
+      ]
+    },
+    "fragility": {
+      "title": [
+        5
+      ]
+    },
+    "fragment": {
+      "title": [
+        71
+      ]
+    },
+    "fragmentation": {
+      "title": [
+        223
+      ]
+    },
+    "fragmented": {
+      "title": [
+        227
+      ]
+    },
+    "frame": {
+      "title": [
+        246
+      ]
+    },
+    "freedom": {
+      "title": [
+        235
+      ]
+    },
+    "geology": {
+      "title": [
+        70
+      ]
+    },
+    "gesture": {
+      "title": [
+        192
+      ]
+    },
+    "glitch": {
+      "title": [
+        215
+      ]
+    },
+    "grainy": {
+      "title": [
+        62
+      ]
+    },
+    "granular": {
+      "title": [
+        199
+      ]
+    },
+    "grass": {
+      "title": [
+        163
+      ]
+    },
+    "grid": {
+      "title": [
+        127
+      ]
+    },
+    "grief": {
+      "title": [
+        177
+      ]
+    },
+    "growth": {
+      "title": [
+        249
+      ]
+    },
+    "hand": {
+      "title": [
+        219
+      ]
+    },
+    "hard": {
+      "title": [
+        50
+      ]
+    },
+    "hope": {
+      "title": [
+        56
+      ]
+    },
+    "how": {
+      "title": [
+        262
+      ]
+    },
+    "i-ching": {
+      "title": [
+        19
+      ]
+    },
+    "identity": {
+      "title": [
+        24
+      ]
+    },
+    "inevitability": {
+      "title": [
+        261
+      ]
+    },
+    "information": {
+      "title": [
+        220,
+        263
+      ]
+    },
+    "insect": {
+      "title": [
+        207
+      ]
+    },
+    "interpretation": {
+      "title": [
+        64
+      ]
+    },
+    "intimacy": {
+      "title": [
+        236
+      ]
+    },
+    "joy": {
+      "title": [
+        18
+      ]
+    },
+    "knotted": {
+      "title": [
+        134
+      ]
+    },
+    "landscape": {
+      "title": [
+        188
+      ]
+    },
+    "language": {
+      "title": [
+        170
+      ]
+    },
+    "layered": {
+      "title": [
+        136
+      ]
+    },
+    "leaf": {
+      "title": [
+        193
+      ]
+    },
+    "letter": {
+      "title": [
+        49
+      ]
+    },
+    "library": {
+      "title": [
+        256
       ],
       "parent_title": [
-        3,
-        4,
-        5,
-        6,
-        7,
-        9,
-        10,
-        11,
-        12,
-        13,
-        14,
-        15,
-        16
+        251,
+        252,
+        253,
+        254,
+        255,
+        257,
+        258,
+        259,
+        260,
+        261,
+        262,
+        263,
+        264
+      ]
+    },
+    "lichen": {
+      "title": [
+        228
+      ]
+    },
+    "light": {
+      "title": [
+        31
+      ]
+    },
+    "line": {
+      "title": [
+        150
+      ]
+    },
+    "linear": {
+      "title": [
+        123
+      ]
+    },
+    "loop": {
+      "title": [
+        105
+      ]
+    },
+    "looped": {
+      "title": [
+        184
+      ]
+    },
+    "low": {
+      "title": [
+        84
+      ]
+    },
+    "low-contrast": {
+      "title": [
+        84
+      ]
+    },
+    "macro": {
+      "title": [
+        140
       ]
     },
     "many": {
       "title": [
-        12
+        260
       ]
     },
-    "meaning": {
+    "map": {
       "title": [
-        3
+        33
       ]
     },
-    "memory": {
-      "title": [
-        3
-      ]
-    },
-    "overview": {
-      "title": [
-        10
-      ]
-    },
-    "physical": {
+    "margin": {
       "title": [
         6
       ]
     },
-    "processes": {
+    "mark": {
       "title": [
-        6
+        82
       ]
     },
-    "psychology": {
-      "title": [
-        10
-      ]
-    },
-    "reasoning": {
+    "materiality": {
       "title": [
         9
       ]
     },
-    "salience": {
+    "mathematics": {
+      "title": [
+        211
+      ]
+    },
+    "maximal": {
+      "title": [
+        189
+      ]
+    },
+    "meaning": {
+      "title": [
+        251
+      ]
+    },
+    "melancholy": {
+      "title": [
+        104
+      ]
+    },
+    "memory": {
+      "title": [
+        25,
+        68,
+        251
+      ]
+    },
+    "memory-trace": {
+      "title": [
+        68
+      ]
+    },
+    "micro": {
+      "title": [
+        140
+      ]
+    },
+    "micro-macro": {
+      "title": [
+        140
+      ]
+    },
+    "minimal": {
+      "title": [
+        165
+      ]
+    },
+    "mirror": {
+      "title": [
+        128
+      ]
+    },
+    "monochrome": {
+      "title": [
+        164
+      ]
+    },
+    "moon": {
+      "title": [
+        120
+      ]
+    },
+    "moss": {
+      "title": [
+        138
+      ]
+    },
+    "movement": {
+      "title": [
+        75
+      ]
+    },
+    "music": {
+      "title": [
+        147
+      ]
+    },
+    "myth": {
+      "title": [
+        109
+      ]
+    },
+    "nature": {
+      "title": [
+        7
+      ]
+    },
+    "nerve": {
+      "title": [
+        3,
+        40
+      ]
+    },
+    "net": {
+      "title": [
+        77
+      ]
+    },
+    "netted": {
+      "title": [
+        115
+      ]
+    },
+    "networks": {
+      "title": [
+        142
+      ]
+    },
+    "noise": {
+      "title": [
+        113
+      ]
+    },
+    "number": {
+      "title": [
+        28
+      ]
+    },
+    "object": {
+      "title": [
+        36
+      ]
+    },
+    "open": {
       "title": [
         16
       ]
     },
-    "space": {
+    "order": {
+      "title": [
+        217
+      ]
+    },
+    "ordered": {
+      "title": [
+        2
+      ]
+    },
+    "overlay": {
+      "title": [
+        90
+      ]
+    },
+    "overview": {
+      "title": [
+        258
+      ]
+    },
+    "overwhelm": {
+      "title": [
+        81
+      ]
+    },
+    "path": {
+      "title": [
+        122
+      ]
+    },
+    "pattern": {
+      "title": [
+        241
+      ]
+    },
+    "perception": {
+      "title": [
+        26
+      ]
+    },
+    "peripheral": {
+      "title": [
+        108
+      ]
+    },
+    "photography": {
       "title": [
         12
       ]
     },
+    "physical": {
+      "title": [
+        254
+      ]
+    },
+    "physics": {
+      "title": [
+        101
+      ]
+    },
+    "play": {
+      "title": [
+        190
+      ]
+    },
+    "point": {
+      "title": [
+        169
+      ]
+    },
+    "polychrome": {
+      "title": [
+        43
+      ]
+    },
+    "porous": {
+      "title": [
+        91
+      ]
+    },
+    "presence": {
+      "title": [
+        53
+      ]
+    },
+    "print": {
+      "title": [
+        129
+      ]
+    },
+    "processes": {
+      "title": [
+        254
+      ]
+    },
+    "psychology": {
+      "title": [
+        258
+      ]
+    },
+    "quantum": {
+      "title": [
+        210
+      ]
+    },
+    "quiet": {
+      "title": [
+        131
+      ]
+    },
+    "radial": {
+      "title": [
+        143
+      ]
+    },
+    "rain": {
+      "title": [
+        11
+      ]
+    },
+    "random": {
+      "title": [
+        182
+      ]
+    },
+    "reasoning": {
+      "title": [
+        257
+      ]
+    },
+    "reconstruction": {
+      "title": [
+        144
+      ]
+    },
+    "recurrence": {
+      "title": [
+        106
+      ]
+    },
+    "reflection": {
+      "title": [
+        174
+      ]
+    },
+    "release": {
+      "title": [
+        168
+      ]
+    },
+    "renewal": {
+      "title": [
+        74
+      ]
+    },
+    "repair": {
+      "title": [
+        93
+      ]
+    },
+    "repetition": {
+      "title": [
+        126
+      ]
+    },
+    "resilience": {
+      "title": [
+        229
+      ]
+    },
+    "resistance": {
+      "title": [
+        46
+      ]
+    },
+    "restlessness": {
+      "title": [
+        112
+      ]
+    },
+    "return": {
+      "title": [
+        242
+      ]
+    },
+    "rhythmic": {
+      "title": [
+        103
+      ]
+    },
+    "ritual": {
+      "title": [
+        213
+      ]
+    },
+    "road": {
+      "title": [
+        95
+      ]
+    },
+    "rock": {
+      "title": [
+        63
+      ]
+    },
+    "root": {
+      "title": [
+        94
+      ]
+    },
+    "ruin": {
+      "title": [
+        212
+      ]
+    },
+    "salience": {
+      "title": [
+        264
+      ]
+    },
+    "sand": {
+      "title": [
+        159
+      ]
+    },
+    "scale": {
+      "title": [
+        51
+      ]
+    },
+    "science": {
+      "title": [
+        76
+      ]
+    },
+    "screen": {
+      "title": [
+        156
+      ]
+    },
+    "seed": {
+      "title": [
+        52
+      ]
+    },
+    "shadow": {
+      "title": [
+        66
+      ]
+    },
+    "shallow": {
+      "title": [
+        224
+      ]
+    },
+    "shape": {
+      "title": [
+        185
+      ]
+    },
+    "sharp": {
+      "title": [
+        116
+      ]
+    },
+    "signal": {
+      "title": [
+        197
+      ]
+    },
+    "silhouette": {
+      "title": [
+        167
+      ]
+    },
+    "skin": {
+      "title": [
+        166
+      ]
+    },
+    "sky": {
+      "title": [
+        233
+      ]
+    },
+    "slaughter": {
+      "title": [
+        57
+      ]
+    },
+    "smooth": {
+      "title": [
+        10
+      ]
+    },
+    "soft": {
+      "title": [
+        218
+      ]
+    },
+    "sorrow": {
+      "title": [
+        85
+      ]
+    },
+    "space": {
+      "title": [
+        260
+      ]
+    },
+    "sparse": {
+      "title": [
+        39
+      ]
+    },
+    "spiralling": {
+      "title": [
+        69
+      ]
+    },
+    "splash": {
+      "title": [
+        41
+      ]
+    },
+    "stacked": {
+      "title": [
+        225
+      ]
+    },
+    "stain": {
+      "title": [
+        240
+      ]
+    },
+    "stairs": {
+      "title": [
+        162
+      ]
+    },
+    "stillness": {
+      "title": [
+        243
+      ]
+    },
+    "stone": {
+      "title": [
+        125
+      ]
+    },
+    "stroke": {
+      "title": [
+        137
+      ]
+    },
     "subconscious": {
       "title": [
-        5
+        253
+      ]
+    },
+    "sun": {
+      "title": [
+        86
+      ]
+    },
+    "surface": {
+      "title": [
+        22
+      ]
+    },
+    "symbol": {
+      "title": [
+        78
+      ]
+    },
+    "symbols": {
+      "title": [
+        265
+      ]
+    },
+    "symmetric": {
+      "title": [
+        97
+      ]
+    },
+    "system": {
+      "title": [
+        72
+      ]
+    },
+    "tangled": {
+      "title": [
+        237
+      ]
+    },
+    "technology": {
+      "title": [
+        89
+      ]
+    },
+    "tension": {
+      "title": [
+        48
+      ]
+    },
+    "text": {
+      "title": [
+        118
+      ]
+    },
+    "textured": {
+      "title": [
+        247
       ]
     },
     "thought": {
       "title": [
-        6
+        254
+      ]
+    },
+    "threadlike": {
+      "title": [
+        180
+      ]
+    },
+    "threshold": {
+      "title": [
+        206
+      ]
+    },
+    "time": {
+      "title": [
+        234
+      ]
+    },
+    "trace": {
+      "title": [
+        68,
+        132
+      ]
+    },
+    "transformation": {
+      "title": [
+        23
+      ]
+    },
+    "translation": {
+      "title": [
+        155
+      ]
+    },
+    "tree": {
+      "title": [
+        222
       ]
     },
     "two": {
       "title": [
-        4
+        252
+      ]
+    },
+    "unbalanced": {
+      "title": [
+        201
+      ]
+    },
+    "uncertainty": {
+      "title": [
+        202
       ]
     },
     "under": {
       "title": [
-        4
+        252
+      ]
+    },
+    "urban": {
+      "title": [
+        214
+      ]
+    },
+    "violent": {
+      "title": [
+        153
+      ]
+    },
+    "volumetric": {
+      "title": [
+        141
       ]
     },
     "vs": {
       "title": [
-        5
+        253
+      ]
+    },
+    "wall": {
+      "title": [
+        27
+      ]
+    },
+    "water": {
+      "title": [
+        88
+      ]
+    },
+    "wave": {
+      "title": [
+        171
+      ]
+    },
+    "weather": {
+      "title": [
+        183
+      ]
+    },
+    "weed": {
+      "title": [
+        54
+      ]
+    },
+    "window": {
+      "title": [
+        45
+      ]
+    },
+    "wire": {
+      "title": [
+        42
+      ]
+    },
+    "wonder": {
+      "title": [
+        178
       ]
     },
     "works": {
       "title": [
-        2,
-        14
+        250,
+        262
       ]
     },
     "worksheet": {
       "title": [
-        16
+        264
+      ]
+    },
+    "woven": {
+      "title": [
+        209
+      ]
+    },
+    "writing": {
+      "title": [
+        221
       ]
     }
   }

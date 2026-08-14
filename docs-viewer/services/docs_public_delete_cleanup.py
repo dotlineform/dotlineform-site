@@ -258,7 +258,13 @@ def filtered_recent_payload(payload: Mapping[str, Any], doc_ids: set[str]) -> di
     }
 
 
-def filtered_search_payload(payload: Mapping[str, Any], doc_ids: set[str]) -> dict[str, Any]:
+def filtered_search_payload(
+    payload: Mapping[str, Any],
+    doc_ids: set[str],
+    *,
+    sub_scope: str = "",
+    removed_sub_scopes: set[str] | None = None,
+) -> dict[str, Any]:
     rows = payload.get("docs")
     header = payload.get("header")
     fields = payload.get("fields")
@@ -274,10 +280,17 @@ def filtered_search_payload(payload: Mapping[str, Any], doc_ids: set[str]) -> di
     if any(not isinstance(row, dict) for row in rows):
         raise ValueError("public search document must be an object")
 
+    removed_collections = removed_sub_scopes or set()
     kept = [
         (position, row)
         for position, row in enumerate(rows)
-        if str(row.get("id") or "").strip() not in doc_ids
+        if not (
+            (
+                str(row.get("id") or "").strip() in doc_ids
+                and str(row.get("sub_scope") or "").strip().lower() == sub_scope
+            )
+            or str(row.get("sub_scope") or "").strip().lower() in removed_collections
+        )
     ]
     positions = {old: new for new, (old, _row) in enumerate(kept)}
     next_terms: dict[str, dict[str, list[int]]] = {}
@@ -424,6 +437,15 @@ def plan_public_document_delete_cleanup(
         )
 
     delete_ids = set(normalized_doc_ids)
+    removed_report_sub_scopes = {
+        str(payload["report"].get("sub_scope") or "").strip().lower()
+        for doc_id, payload in state.parent_documents.items()
+        if doc_id in delete_ids
+        if isinstance(payload, dict)
+        and isinstance(payload.get("report"), dict)
+        and str(payload["report"].get("id") or "").strip() == "docs_subscope"
+    }
+    removed_report_sub_scopes.discard("")
     public_parent_doc_ids = set(state.parent_documents).union(
         str(row.get("doc_id") or "").strip()
         for row in flatten_public_tree_rows(state.index_tree.get("docs"))
@@ -435,6 +457,7 @@ def plan_public_document_delete_cleanup(
         str(row.get("id") or "").strip()
         for row in state.search.get("docs", [])
         if isinstance(row, dict)
+        and not str(row.get("sub_scope") or "").strip()
     )
     next_tree = state.index_tree
     next_recent = state.recent
@@ -464,10 +487,23 @@ def plan_public_document_delete_cleanup(
                 manifest_path = collection_root / "manifest.json"
                 writes_by_path[manifest_path] = json_bytes(next_manifest)
                 next_sub_scope_manifests[normalized_sub_scope] = next_manifest
+        next_search = filtered_search_payload(
+            state.search,
+            delete_ids,
+            sub_scope=normalized_sub_scope,
+        )
+        if next_search != state.search:
+            writes_by_path[state.search_path] = json_bytes(next_search)
+            impacted_ids.update(delete_ids)
     else:
         next_tree = filtered_tree_payload(state.index_tree, delete_ids)
         next_recent = filtered_recent_payload(state.recent, delete_ids)
-        next_search = filtered_search_payload(state.search, delete_ids)
+        next_search = filtered_search_payload(
+            state.search,
+            delete_ids,
+            sub_scope="",
+            removed_sub_scopes=removed_report_sub_scopes,
+        )
         next_parent_documents = {
             doc_id: payload
             for doc_id, payload in state.parent_documents.items()

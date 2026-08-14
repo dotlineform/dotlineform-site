@@ -140,6 +140,54 @@ def write_location_projection(
     return path
 
 
+def test_search_cleanup_removes_only_one_exact_same_id_target() -> None:
+    doc_id = "d-20260814-120000-abcdef"
+    payload = {
+        "header": {
+            "schema": "docs_viewer_search_index_v2",
+            "scope": "analysis",
+            "version": "fixture",
+            "count": 3,
+        },
+        "fields": ["title", "identity"],
+        "docs": [
+            {"id": doc_id, "title": "Parent", "href": f"/analysis/?doc={doc_id}"},
+            {
+                "id": doc_id,
+                "title": "Works child",
+                "href": f"/analysis/?doc={HOST_ID}&subdoc={doc_id}",
+                "sub_scope": "works",
+                "report_doc_id": HOST_ID,
+                "collection_title": "Works",
+            },
+            {
+                "id": doc_id,
+                "title": "Tags child",
+                "href": f"/analysis/?doc={PARENT_ID}&subdoc={doc_id}",
+                "sub_scope": "tags",
+                "report_doc_id": PARENT_ID,
+                "collection_title": "Concepts",
+            },
+        ],
+        "terms": {
+            doc_id: {"identity": [0, 1, 2]},
+            "parent": {"title": [0]},
+            "works": {"title": [1]},
+            "tags": {"title": [2]},
+        },
+    }
+
+    result = cleanup.filtered_search_payload(
+        payload,
+        {doc_id},
+        sub_scope="works",
+    )
+
+    assert [row.get("sub_scope", "") for row in result["docs"]] == ["", "tags"]
+    assert result["terms"][doc_id] == {"identity": [0, 1]}
+    assert "works" not in result["terms"]
+
+
 def prepare_parent_repo(repo_root: Path) -> dict[str, Path]:
     write_docs_scope_config(
         repo_root,
@@ -282,7 +330,23 @@ def prepare_child_repo(repo_root: Path) -> dict[str, Path]:
                 "id": HOST_ID,
                 "title": "Works",
                 "href": f"/analysis/?doc={HOST_ID}",
-            }
+            },
+            {
+                "id": CHILD_ID,
+                "title": "Delete child",
+                "href": f"/analysis/?doc={HOST_ID}&subdoc={CHILD_ID}",
+                "sub_scope": "works",
+                "report_doc_id": HOST_ID,
+                "collection_title": "Works",
+            },
+            {
+                "id": CHILD_SIBLING_ID,
+                "title": "Retained child",
+                "href": f"/analysis/?doc={HOST_ID}&subdoc={CHILD_SIBLING_ID}",
+                "sub_scope": "works",
+                "report_doc_id": HOST_ID,
+                "collection_title": "Works",
+            },
         ],
     )
     host_payload = {
@@ -473,7 +537,6 @@ def test_child_cleanup_leaves_host_and_sibling_bytes_unchanged(tmp_path: Path) -
         paths["docs_root"] / "index-tree.json",
         paths["docs_root"] / "recent.json",
         paths["docs_root"] / f"by-id/{HOST_ID}.json",
-        paths["search"],
     ]
     host_before = {path: path.read_bytes() for path in host_paths}
     sibling_path = paths["child_root"] / f"by-id/{CHILD_SIBLING_ID}.json"
@@ -495,6 +558,17 @@ def test_child_cleanup_leaves_host_and_sibling_bytes_unchanged(tmp_path: Path) -
     ]
     assert sibling_path.read_bytes() == sibling_before
     assert {path: path.read_bytes() for path in host_paths} == host_before
+    search = read_json(paths["search"])
+    assert [
+        (row["id"], row.get("sub_scope", ""))
+        for row in search["docs"]
+    ] == [
+        (HOST_ID, ""),
+        (CHILD_SIBLING_ID, "works"),
+    ]
+    assert search["header"]["count"] == 2
+    assert search["terms"][CHILD_SIBLING_ID] == {"identity": [1]}
+    assert CHILD_ID not in search["terms"]
     assert [row["url"] for row in read_json(paths["locations"])["records"]] == [
         f"/analysis/?doc={HOST_ID}",
         f"/analysis/?doc={HOST_ID}&subdoc={CHILD_SIBLING_ID}",
@@ -526,6 +600,7 @@ def test_report_host_cleanup_removes_routes_but_retains_child_files(tmp_path: Pa
     )
     assert {path: path.read_bytes() for path in child_files} == child_before
     assert not (paths["docs_root"] / f"by-id/{HOST_ID}.json").exists()
+    assert read_json(paths["search"])["docs"] == []
     assert read_json(paths["locations"])["records"] == []
     assert read_json(paths["series"])["series"]["doc_url"] == []
 

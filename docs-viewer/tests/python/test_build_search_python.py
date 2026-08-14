@@ -375,35 +375,221 @@ def test_doc_search_keeps_exact_opaque_id_without_fragment_tokens() -> None:
     assert payload["terms"][doc_id] == {"identity": [0]}
 
 
-def test_python_docs_search_builder_excludes_configured_sub_scope_sources() -> None:
+def test_v2_index_keeps_same_doc_id_for_distinct_exact_targets() -> None:
+    doc_id = "d-20260814-000001-aaaaaa"
+    documents = [
+        {
+            "id": doc_id,
+            "title": "Parent",
+            "href": f"/docs/?scope=studio&doc={doc_id}",
+        },
+        {
+            "id": doc_id,
+            "title": "Child",
+            "href": f"/docs/?scope=studio&doc=d-20260814-000002-bbbbbb&subdoc={doc_id}",
+            "sub_scope": "tags",
+            "report_doc_id": "d-20260814-000002-bbbbbb",
+            "collection_title": "Tags",
+        },
+    ]
+
+    payload = build_search.build_search_index_v2(
+        scope="studio",
+        documents=documents,
+        search_fields=("title", "identity"),
+        generated_at_utc="2026-08-14T00:00:00Z",
+    )
+
+    assert payload["header"]["count"] == 2
+    assert [row.get("sub_scope", "") for row in payload["docs"]] == ["", "tags"]
+    assert payload["terms"][doc_id] == {"identity": [0, 1]}
+
+
+def test_python_docs_search_builder_includes_only_manifest_owned_sub_scope_docs() -> None:
     with tempfile.TemporaryDirectory() as temp_path:
         root = Path(temp_path)
-        prepare_repo(root)
-        config_path = root / "docs-viewer/config/scopes/docs_scopes.json"
-        payload = read_json(config_path)
-        payload["scopes"][0]["sub_scopes"] = [
-            docs_sub_scope_record("studio", "tags")
-        ]
-        write_json(config_path, payload)
+        host_id = "d-20260814-000001-aaaaaa"
+        child_id = "d-20260814-000002-bbbbbb"
+        excluded_id = "d-20260814-000003-cccccc"
+        sub_scope = docs_sub_scope_record(
+            "analysis",
+            "tags",
+            title="Tags",
+            public_title="Concepts",
+            scope_type="public",
+        )
+        scope = docs_scope_record(
+            "analysis",
+            scope_type="public",
+            viewer_base_url="/analysis/",
+            include_scope_param=False,
+            default_doc_id=host_id,
+            sub_scopes=[sub_scope],
+        )
+        scope["search_fields"] = ["title", "heading", "body", "code"]
+        write_json(
+            root / "docs-viewer/config/scopes/docs_scopes.json",
+            {
+                "schema_version": "docs_scopes_v4",
+                "media_workspace": {
+                    "location": {
+                        "provider": "external_local",
+                        "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/media",
+                    }
+                },
+                "scopes": [scope],
+            },
+        )
         write_text(
-            root / "docs-viewer/scopes/studio/source/sub-scopes/tags/documents/detail.md",
-            """---
-doc_id: detail
-title: Detail
+            root / "docs-viewer/config/reports/reports.json",
+            (REPO_ROOT / "docs-viewer/config/reports/reports.json").read_text(
+                encoding="utf-8"
+            ),
+        )
+        write_text(
+            root / f"docs-viewer/scopes/analysis/source/documents/{host_id}.md",
+            f"""---
+doc_id: {host_id}
+title: Concepts
+last_updated: 2026-08-14 09:00:00
 ---
-# Detail
+# Concepts
 
-Sub-scope detail body.
+:::report
+id: docs_subscope
+access: public
+sub_scope: tags
+:::
 """,
         )
+        source_root = root / "docs-viewer/scopes/analysis/source/sub-scopes/tags/documents"
+        write_text(
+            source_root / f"{child_id}.md",
+            f"""---
+doc_id: {child_id}
+title: Visible Child
+added_date: 2026-08-14 09:01:00
+last_updated: 2026-08-14 09:02:00
+ui_status: done
+---
+# Visible Child
 
-        exit_code, stdout, stderr = run_cli(root, ["--scope", "studio", "--write"])
-        payload = read_json(root / "docs-viewer/scopes/studio/published/search/index.json")
+## Searchable Heading
+
+EligibleVocabulary appears once.
+""",
+        )
+        write_text(
+            source_root / f"{excluded_id}.md",
+            f"""---
+doc_id: {excluded_id}
+title: Hidden Child
+added_date: 2026-08-14 09:03:00
+last_updated: 2026-08-14 09:04:00
+ui_status: draft
+publishable: false
+---
+# Hidden Child
+
+ExcludedVocabulary must not leak.
+""",
+        )
+        output_root = root / "docs-viewer/scopes/analysis/published/documents/sub-scopes/tags"
+        write_json(
+            output_root / "manifest.json",
+            {"docs": [{"doc_id": child_id, "title": "Visible Child"}]},
+        )
+        write_json(
+            output_root / "by-id" / f"{child_id}.json",
+            {
+                "doc_id": child_id,
+                "title": "Visible Child",
+                "last_updated": "2026-08-14 09:02:00",
+                "viewer_url": f"/analysis/?doc={host_id}&subdoc={child_id}",
+                "content_html": "<h1>Visible Child</h1><p>EligibleVocabulary appears once.</p>",
+            },
+        )
+
+        exit_code, stdout, stderr = run_cli(root, ["--scope", "analysis", "--write"])
+        payload = read_json(root / "docs-viewer/scopes/analysis/published/search/index.json")
 
     assert exit_code == 0
     assert stderr == ""
-    assert "Wrote docs-viewer/scopes/studio/published/search/index.json with 4 studio search docs" in stdout
-    assert "detail" not in {document["id"] for document in payload["docs"]}
+    assert "with 2 analysis search docs" in stdout
+    child = next(row for row in payload["docs"] if row.get("sub_scope") == "tags")
+    assert child == {
+        "id": child_id,
+        "title": "Visible Child",
+        "href": f"/analysis/?doc={host_id}&subdoc={child_id}",
+        "last_updated": "2026-08-14 09:02:00",
+        "display_meta": "2026-08-14 09:02:00 • Concepts",
+        "sub_scope": "tags",
+        "report_doc_id": host_id,
+        "collection_title": "Concepts",
+    }
+    assert "eligiblevocabulary" in payload["terms"]
+    assert excluded_id not in {document["id"] for document in payload["docs"]}
+    assert "excludedvocabulary" not in payload["terms"]
+
+
+def test_python_docs_search_builder_rejects_ambiguous_sub_scope_placement() -> None:
+    with tempfile.TemporaryDirectory() as temp_path:
+        root = Path(temp_path)
+        first_host_id = "d-20260814-000011-aaaaaa"
+        second_host_id = "d-20260814-000012-bbbbbb"
+        scope = docs_scope_record(
+            "studio",
+            default_doc_id=first_host_id,
+            sub_scopes=[docs_sub_scope_record("studio", "tags", title="Tags")],
+        )
+        write_json(
+            root / "docs-viewer/config/scopes/docs_scopes.json",
+            {
+                "schema_version": "docs_scopes_v4",
+                "media_workspace": {
+                    "location": {
+                        "provider": "external_local",
+                        "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/media",
+                    }
+                },
+                "scopes": [scope],
+            },
+        )
+        write_text(
+            root / "docs-viewer/config/reports/reports.json",
+            (REPO_ROOT / "docs-viewer/config/reports/reports.json").read_text(
+                encoding="utf-8"
+            ),
+        )
+        for host_id in (first_host_id, second_host_id):
+            write_text(
+                root / f"docs-viewer/scopes/studio/source/documents/{host_id}.md",
+                f"""---
+doc_id: {host_id}
+title: Tags
+last_updated: 2026-08-14 10:00:00
+---
+# Tags
+
+:::report
+id: docs_subscope
+access: local
+sub_scope: tags
+:::
+""",
+            )
+
+        try:
+            build_search.DocsViewerSearchDataBuilder(
+                repo_root=root,
+                scope="studio",
+            ).build_docs_v2_payload()
+        except SystemExit as exc:
+            error = str(exc)
+        else:
+            raise AssertionError("ambiguous sub-scope placement should fail")
+
+    assert "studio/tags; found 2" in error
 
 
 def test_python_docs_search_builder_dry_run_does_not_write() -> None:

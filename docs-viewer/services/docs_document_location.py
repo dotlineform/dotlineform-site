@@ -3,19 +3,29 @@
 
 from __future__ import annotations
 
+from collections.abc import Collection
 from pathlib import Path
 from urllib.parse import quote
 
 import docs_source_model as source_model
 from docs_document_identity import is_immutable_doc_id
-from docs_scope_config import load_docs_scope_configs
+from docs_scope_config import (
+    DocsScopeConfig,
+    DocsSubScopeConfig,
+    load_docs_scope_configs,
+)
 
 
-def _sub_scope_report_doc_id(
+def sub_scope_report_placement(
     repo_root: Path,
     scope_id: str,
     sub_scope_id: str,
-) -> tuple[object, str]:
+    *,
+    eligible_parent_doc_ids: Collection[str] | None = None,
+    require_public: bool = False,
+) -> tuple[DocsScopeConfig, DocsSubScopeConfig, str]:
+    """Resolve one configured child collection to its exact eligible report host."""
+
     configs = load_docs_scope_configs(repo_root, scope_ids=[scope_id])
     config = configs.get(scope_id)
     if config is None:
@@ -30,6 +40,12 @@ def _sub_scope_report_doc_id(
             f"Docs Viewer sub-scope must resolve exactly once: "
             f"{scope_id}/{sub_scope_id}"
         )
+    sub_scope = matching_sub_scopes[0]
+    eligible_ids = (
+        {str(doc_id or "").strip() for doc_id in eligible_parent_doc_ids}
+        if eligible_parent_doc_ids is not None
+        else None
+    )
 
     matching_reports: list[str] = []
     for document in source_model.load_scope_docs_for_config(repo_root, config):
@@ -38,6 +54,8 @@ def _sub_scope_report_doc_id(
             report is not None
             and report.id == "docs_subscope"
             and report.sub_scope == sub_scope_id
+            and (eligible_ids is None or document.doc_id in eligible_ids)
+            and (not require_public or report.access == "public")
         ):
             parent_doc_id = document.doc_id
             if not is_immutable_doc_id(parent_doc_id):
@@ -50,7 +68,7 @@ def _sub_scope_report_doc_id(
             f"Docs Viewer sub-scope report must resolve exactly once for "
             f"{scope_id}/{sub_scope_id}; found {len(matching_reports)}"
         )
-    return config, matching_reports[0]
+    return config, sub_scope, matching_reports[0]
 
 
 def canonical_sub_scope_document_url(
@@ -65,7 +83,7 @@ def canonical_sub_scope_document_url(
     if not is_immutable_doc_id(normalized_doc_id):
         raise ValueError("doc_id must use immutable document identity")
 
-    config, parent_doc_id = _sub_scope_report_doc_id(
+    config, _sub_scope, parent_doc_id = sub_scope_report_placement(
         repo_root,
         scope_id,
         sub_scope_id,
@@ -94,7 +112,7 @@ def management_collection_viewer_url(
     url = f"/docs/?scope={quote(normalized_scope)}"
     if not normalized_sub_scope:
         return url
-    _config, parent_doc_id = _sub_scope_report_doc_id(
+    _config, _sub_scope, parent_doc_id = sub_scope_report_placement(
         repo_root,
         normalized_scope,
         normalized_sub_scope,
@@ -122,4 +140,5 @@ __all__ = [
     "canonical_sub_scope_document_url",
     "management_collection_viewer_url",
     "management_document_viewer_url",
+    "sub_scope_report_placement",
 ]

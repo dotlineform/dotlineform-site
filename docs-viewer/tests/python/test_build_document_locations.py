@@ -108,6 +108,13 @@ def test_projection_emits_only_actual_public_report_placements() -> None:
                     search_entry(ROOT_ID, "Analysis"),
                     search_entry(REPORT_ONE_ID, "All Tags"),
                     search_entry(REPORT_TWO_ID, "Made-up Tags"),
+                    {
+                        **search_entry(TAG_ONE_ID, "bird-nerve"),
+                        "href": f"/analysis/?doc={REPORT_ONE_ID}&subdoc={TAG_ONE_ID}",
+                        "sub_scope": "tags",
+                        "report_doc_id": REPORT_ONE_ID,
+                        "collection_title": "Concepts",
+                    },
                 ],
             ),
             parent_documents={
@@ -270,6 +277,13 @@ def test_public_projection_loader_does_not_read_source_or_manage_manifest() -> N
                 [
                     search_entry(ROOT_ID, "Analysis"),
                     search_entry(REPORT_ONE_ID, "Concepts"),
+                    {
+                        **search_entry(TAG_ONE_ID, "Published tag"),
+                        "href": f"/analysis/?doc={REPORT_ONE_ID}&subdoc={TAG_ONE_ID}",
+                        "sub_scope": "tags",
+                        "report_doc_id": REPORT_ONE_ID,
+                        "collection_title": "Concepts",
+                    },
                 ],
             ),
         )

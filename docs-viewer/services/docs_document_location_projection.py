@@ -186,6 +186,8 @@ def build_exact_document_location_records(
         )
 
     for index, raw_document in enumerate(search_payload["docs"]):
+        if isinstance(raw_document, dict) and clean_text(raw_document.get("sub_scope")):
+            continue
         doc_id, title, href = canonical_search_document(
             config,
             raw_document,
@@ -252,6 +254,7 @@ def load_public_document_location_inputs(
             else []
         )
         if isinstance(document, dict)
+        and not clean_text(document.get("sub_scope"))
     }
     parent_documents = {
         path.stem: json.loads(path.read_text(encoding="utf-8"))

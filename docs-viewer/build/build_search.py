@@ -46,17 +46,23 @@ from docs_builder.semantic_tokens import replace_semantic_tokens  # noqa: E402
 from docs_builder.source import parse_source_text  # noqa: E402
 from docs_scope_config import (  # noqa: E402
     DocsScopeConfig,
+    DocsSubScopeConfig,
+    PUBLIC_SCOPE_TYPE,
     document_source_path,
     load_docs_scope_configs,
+    published_documents_path,
     published_search_path,
     resolve_scope_path,
 )
+from docs_document_location import sub_scope_report_placement  # noqa: E402
 from docs_document_identity import is_immutable_doc_id  # noqa: E402
 from docs_report_source import (  # noqa: E402
     ReportDescriptor,
+    ReportSourceContractRequired,
     project_report_markdown,
 )
 from docs_source_model import (  # noqa: E402
+    load_document_collection_docs_for_config,
     parse_document_report,
     report_source_contract_for_collection,
     validate_publishable_front_matter,
@@ -91,6 +97,9 @@ class SearchDocRecord:
     viewer_url: str
     body_markdown: str = ""
     report: ReportDescriptor | None = None
+    sub_scope: str = ""
+    report_doc_id: str = ""
+    collection_title: str = ""
 
 
 def utc_timestamp() -> str:
@@ -165,8 +174,26 @@ def build_search_index_v2(
     search_fields: tuple[str, ...],
     generated_at_utc: str | None = None,
 ) -> dict[str, Any]:
-    doc_fields = ("id", "title", "href", "last_updated", "parent_id", "parent_title", "display_meta")
-    ordered_documents = sorted(documents, key=lambda document: normalize(document.get("id")))
+    doc_fields = (
+        "id",
+        "title",
+        "href",
+        "last_updated",
+        "parent_id",
+        "parent_title",
+        "display_meta",
+        "sub_scope",
+        "report_doc_id",
+        "collection_title",
+    )
+    ordered_documents = sorted(
+        documents,
+        key=lambda document: (
+            normalize(document.get("id")),
+            normalize(document.get("sub_scope")),
+            normalize(document.get("report_doc_id")),
+        ),
+    )
     docs = [
         {
             key: normalize_text(document.get(key))
@@ -175,11 +202,29 @@ def build_search_index_v2(
         }
         for document in ordered_documents
     ]
-    doc_ids = [normalize_text(document.get("id")) for document in docs]
-    if any(not doc_id for doc_id in doc_ids) or len(doc_ids) != len(set(doc_ids)):
-        raise ValueError("v2 search documents require unique non-empty ids")
+    document_targets = [
+        (
+            normalize_text(document.get("sub_scope")),
+            normalize_text(document.get("id")),
+        )
+        for document in docs
+    ]
+    if (
+        any(not doc_id for _sub_scope, doc_id in document_targets)
+        or len(document_targets) != len(set(document_targets))
+    ):
+        raise ValueError("v2 search documents require unique non-empty exact targets")
     if any(not normalize_text(document.get("title")) or not normalize_text(document.get("href")) for document in docs):
         raise ValueError("v2 search documents require title and href")
+    for document in docs:
+        sub_scope = normalize_text(document.get("sub_scope"))
+        if sub_scope and (
+            not normalize_text(document.get("report_doc_id"))
+            or not normalize_text(document.get("collection_title"))
+        ):
+            raise ValueError(
+                "v2 sub-scope search documents require report_doc_id and collection_title"
+            )
 
     postings: dict[str, dict[str, set[int]]] = {}
     for position, document in enumerate(ordered_documents):
@@ -262,18 +307,7 @@ class DocsViewerSearchDataBuilder:
         self.content_search_enabled = bool(
             SEARCH_V2_CONTENT_FIELDS.intersection(self.scope_config.search_fields)
         )
-        try:
-            self.report_source_contract = (
-                report_source_contract_for_collection(
-                    self.repo_root,
-                    self.scope_config,
-                    self.scope_config,
-                )
-                if self.content_search_enabled
-                else None
-            )
-        except ValueError as exc:
-            raise SystemExit(str(exc)) from exc
+        self.report_source_contract = None
         self.output_path = self.resolve_path(output_path or published_search_path(self.scope_config))
 
     def run(
@@ -337,17 +371,27 @@ class DocsViewerSearchDataBuilder:
             except ValueError as exc:
                 raise SystemExit(str(exc)) from exc
             try:
-                report = (
-                    parse_document_report(
+                try:
+                    report = parse_document_report(
                         source_text,
                         front_matter,
                         body_markdown,
                         source_name=source_name,
                         contract=self.report_source_contract,
                     )
-                    if self.content_search_enabled
-                    else None
-                )
+                except ReportSourceContractRequired:
+                    self.report_source_contract = report_source_contract_for_collection(
+                        self.repo_root,
+                        self.scope_config,
+                        self.scope_config,
+                    )
+                    report = parse_document_report(
+                        source_text,
+                        front_matter,
+                        body_markdown,
+                        source_name=source_name,
+                        contract=self.report_source_contract,
+                    )
             except ValueError as exc:
                 raise SystemExit(str(exc)) from exc
             raw_records.append(
@@ -440,8 +484,9 @@ class DocsViewerSearchDataBuilder:
     ) -> dict[str, Any]:
         docs = self.load_source_docs()
         title_by_id = {doc.doc_id: doc.title for doc in docs}
+        combined_docs = [*docs, *self.load_sub_scope_docs(docs)]
         records: list[dict[str, Any]] = []
-        for doc in docs:
+        for doc in combined_docs:
             parent_title = "" if not doc.parent_id else normalize_text(title_by_id.get(doc.parent_id))
             record: dict[str, Any] = {
                 "id": doc.doc_id,
@@ -450,8 +495,19 @@ class DocsViewerSearchDataBuilder:
                 "last_updated": doc.last_updated,
                 "parent_id": doc.parent_id,
                 "parent_title": parent_title,
-                "display_meta": compact_join(doc.last_updated, parent_title),
+                "display_meta": compact_join(
+                    doc.last_updated,
+                    doc.collection_title or parent_title,
+                ),
             }
+            if doc.sub_scope:
+                record.update(
+                    {
+                        "sub_scope": doc.sub_scope,
+                        "report_doc_id": doc.report_doc_id,
+                        "collection_title": doc.collection_title,
+                    }
+                )
             if self.content_search_enabled:
                 fields = extract_markdown_search_fields(
                     self.searchable_markdown(doc),
@@ -471,6 +527,136 @@ class DocsViewerSearchDataBuilder:
             search_fields=self.scope_config.search_fields,
             generated_at_utc=generated_at_utc,
         )
+
+    def load_sub_scope_docs(
+        self,
+        parent_docs: list[SearchDocRecord],
+    ) -> list[SearchDocRecord]:
+        """Load the manifest-owned child corpus for every exact visible placement."""
+
+        eligible_parent_doc_ids = {document.doc_id for document in parent_docs}
+        records: list[SearchDocRecord] = []
+        for sub_scope in sorted(
+            self.scope_config.sub_scopes,
+            key=lambda item: item.sub_scope,
+        ):
+            try:
+                _config, _sub_scope, report_doc_id = sub_scope_report_placement(
+                    self.repo_root,
+                    self.scope,
+                    sub_scope.sub_scope,
+                    eligible_parent_doc_ids=eligible_parent_doc_ids,
+                    require_public=self.scope_config.scope_type == PUBLIC_SCOPE_TYPE,
+                )
+                records.extend(
+                    self.load_sub_scope_collection_docs(
+                        sub_scope,
+                        report_doc_id=report_doc_id,
+                    )
+                )
+            except (OSError, ValueError) as exc:
+                raise SystemExit(str(exc)) from exc
+        return records
+
+    def load_sub_scope_collection_docs(
+        self,
+        sub_scope: DocsSubScopeConfig,
+        *,
+        report_doc_id: str,
+    ) -> list[SearchDocRecord]:
+        output_root = resolve_scope_path(
+            self.repo_root,
+            published_documents_path(sub_scope),
+        )
+        manifest_path = output_root / "manifest.json"
+        try:
+            manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError) as exc:
+            raise ValueError(
+                f"Docs Viewer search requires readable sub-scope manifest: {manifest_path}"
+            ) from exc
+        manifest_rows = manifest.get("docs") if isinstance(manifest, dict) else None
+        if not isinstance(manifest_rows, list):
+            raise ValueError(
+                f"Docs Viewer search sub-scope manifest docs must be an array: {manifest_path}"
+            )
+
+        source_docs = load_document_collection_docs_for_config(
+            self.repo_root,
+            self.scope_config,
+            sub_scope,
+        )
+        source_by_id = {document.doc_id: document for document in source_docs}
+        seen_doc_ids: set[str] = set()
+        collection_title = normalize_text(sub_scope.public_title or sub_scope.title)
+        records: list[SearchDocRecord] = []
+        for index, raw_row in enumerate(manifest_rows):
+            field = f"{manifest_path}.docs[{index}]"
+            if not isinstance(raw_row, dict):
+                raise ValueError(f"{field} must be an object")
+            doc_id = normalize_text(raw_row.get("doc_id"))
+            title = normalize_text(raw_row.get("title"))
+            if not is_immutable_doc_id(doc_id):
+                raise ValueError(f"{field}.doc_id must use immutable document identity")
+            if not title:
+                raise ValueError(f"{field}.title must not be empty")
+            if doc_id in seen_doc_ids:
+                raise ValueError(f"{manifest_path} contains duplicate doc_id {doc_id!r}")
+            seen_doc_ids.add(doc_id)
+
+            source_doc = source_by_id.get(doc_id)
+            if source_doc is None or not source_doc.publishable:
+                raise ValueError(
+                    f"sub-scope manifest document {self.scope}/{sub_scope.sub_scope}/{doc_id} "
+                    "has no eligible source document"
+                )
+            by_id_path = output_root / "by-id" / f"{doc_id}.json"
+            try:
+                by_id = json.loads(by_id_path.read_text(encoding="utf-8"))
+            except (OSError, json.JSONDecodeError) as exc:
+                raise ValueError(
+                    f"Docs Viewer search requires readable sub-scope by-id payload: {by_id_path}"
+                ) from exc
+            if not isinstance(by_id, dict):
+                raise ValueError(f"sub-scope by-id payload must be an object: {by_id_path}")
+
+            expected_url = f"{self.viewer_url_for(report_doc_id)}&subdoc={quote(doc_id)}"
+            source_title = normalize_text(source_doc.title)
+            by_id_title = normalize_text(by_id.get("title"))
+            if title != source_title or title != by_id_title:
+                raise ValueError(
+                    f"sub-scope manifest, source, and by-id titles must match for "
+                    f"{self.scope}/{sub_scope.sub_scope}/{doc_id}"
+                )
+            if (
+                normalize_text(by_id.get("doc_id")) != doc_id
+                or normalize_text(by_id.get("viewer_url")) != expected_url
+            ):
+                raise ValueError(
+                    f"sub-scope by-id identity or viewer_url is stale for "
+                    f"{self.scope}/{sub_scope.sub_scope}/{doc_id}"
+                )
+            last_updated = normalize_text(by_id.get("last_updated"))
+            if last_updated != normalize_text(source_doc.front_matter.get("last_updated")):
+                raise ValueError(
+                    f"sub-scope source and by-id last_updated must match for "
+                    f"{self.scope}/{sub_scope.sub_scope}/{doc_id}"
+                )
+            records.append(
+                SearchDocRecord(
+                    doc_id=doc_id,
+                    title=title,
+                    last_updated=last_updated,
+                    parent_id="",
+                    viewer_url=expected_url,
+                    body_markdown=source_doc.body,
+                    report=source_doc.report,
+                    sub_scope=sub_scope.sub_scope,
+                    report_doc_id=report_doc_id,
+                    collection_title=collection_title,
+                )
+            )
+        return records
 
     def searchable_markdown(self, doc: SearchDocRecord) -> str:
         markdown = project_report_markdown(

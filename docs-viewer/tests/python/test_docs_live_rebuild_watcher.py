@@ -1367,6 +1367,50 @@ def test_watcher_formats_docs_builder_diagnostics_on_separate_lines() -> None:
     ]
 
 
+def test_sub_scope_rebuild_runs_child_docs_then_full_parent_search() -> None:
+    module = load_docs_live_rebuild_watcher_module()
+    calls: list[list[str]] = []
+    original_run = module.subprocess.run
+    original_log = module.log
+
+    class Completed:
+        returncode = 0
+        stdout = "done\n"
+        stderr = ""
+
+    def fake_run(command, **_kwargs):
+        calls.append(list(command))
+        return Completed()
+
+    module.subprocess.run = fake_run
+    module.log = lambda _message: None
+    try:
+        assert module.rebuild_sub_scope(Path("/repo"), "analysis", "tags")
+    finally:
+        module.subprocess.run = original_run
+        module.log = original_log
+
+    assert calls == [
+        [
+            module.PYTHON_EXECUTABLE,
+            "docs-viewer/build/build_docs.py",
+            "--scope",
+            "analysis",
+            "--sub-scope",
+            "tags",
+            "--write",
+            "--diagnostics",
+        ],
+        [
+            module.PYTHON_EXECUTABLE,
+            "docs-viewer/build/build_search.py",
+            "--scope",
+            "analysis",
+            "--write",
+        ],
+    ]
+
+
 def test_watcher_falls_back_to_full_docs_build_when_targeted_payloads_are_missing() -> None:
     module = load_docs_live_rebuild_watcher_module()
     calls: list[list[str]] = []

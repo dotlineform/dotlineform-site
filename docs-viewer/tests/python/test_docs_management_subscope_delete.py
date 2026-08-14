@@ -94,15 +94,17 @@ def prepare_delete_repo(repo_root: Path, *, build_outputs: bool = False) -> dict
         "# Sibling\n\nRetained sibling body.\n",
     )
 
+    parent_search_path = (
+        repo_root / "docs-viewer/scopes/studio/published/search/index.json"
+    )
     parent_sentinels = (
         repo_root / "docs-viewer/scopes/studio/published/documents/index-tree.json",
         repo_root / "docs-viewer/scopes/studio/published/documents/recent.json",
-        repo_root / "docs-viewer/scopes/studio/published/search/index.json",
         repo_root / "docs-viewer/config/defaults/docs-viewer-config.json",
         repo_root / "docs-viewer/config/defaults/docs-viewer-public-config.json",
         repo_root / "site/docs-viewer/config/defaults/docs-viewer-public-config.json",
     )
-    for index, path in enumerate(parent_sentinels):
+    for index, path in enumerate((*parent_sentinels, parent_search_path)):
         write_text(path, f"parent-sentinel-{index}\n")
 
     if build_outputs:
@@ -130,6 +132,7 @@ def prepare_delete_repo(repo_root: Path, *, build_outputs: bool = False) -> dict
             / f"docs-viewer/scopes/studio/published/documents/sub-scopes/tags/by-id/{SIBLING_DOC_ID}.json"
         ),
         "parent_sentinels": parent_sentinels,
+        "parent_search_path": parent_search_path,
     }
 
 
@@ -195,9 +198,12 @@ def test_sub_scope_delete_service_removes_only_exact_child_outputs(
     assert applied["target"] == preview_body()
     assert applied["deleted_doc_ids"] == [TARGET_DOC_ID]
     assert applied["delete_count"] == 1
-    assert applied["rebuild"]["search"] == {"mode": "none", "doc_ids": []}
+    assert applied["rebuild"]["search"] == {"mode": "full", "doc_ids": []}
     assert "--skip-browser-config" in applied["rebuild"]["steps"][0]["command"]
-    assert len(applied["rebuild"]["steps"]) == 1
+    assert applied["rebuild"]["steps"][1]["command"].endswith(
+        "docs-viewer/build/build_search.py --scope studio --write"
+    )
+    assert len(applied["rebuild"]["steps"]) == 2
     assert not paths["target_path"].exists()
     assert not paths["target_payload_path"].exists()
     assert paths["sibling_path"].read_bytes() == sibling_source_before
@@ -209,6 +215,14 @@ def test_sub_scope_delete_service_removes_only_exact_child_outputs(
         path: path.read_bytes()
         for path in paths["parent_sentinels"]
     } == parent_before
+    search_docs = read_json(paths["parent_search_path"])["docs"]
+    assert [
+        (row["id"], row.get("sub_scope", ""))
+        for row in search_docs
+    ] == [
+        (SIBLING_DOC_ID, "tags"),
+        (REPORT_DOC_ID, ""),
+    ]
     assert activity == [
         (
             "docs-delete",

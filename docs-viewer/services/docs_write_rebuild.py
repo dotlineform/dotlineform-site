@@ -343,6 +343,44 @@ def rebuild_sub_scope_outputs(
     }
 
 
+def rebuild_parent_search_after_sub_scope(
+    repo_root: Path,
+    scope: str,
+    rebuild: Mapping[str, Any],
+) -> Dict[str, Any]:
+    """Append one atomic parent-scope Search rebuild after child Docs output."""
+
+    search = {"mode": "full", "doc_ids": []}
+    step = run_rebuild_command(
+        python_builder_command(
+            SEARCH_BUILDER_SCRIPT,
+            "--scope",
+            scope,
+            "--write",
+        ),
+        repo_root,
+    )
+    if step["returncode"] != 0:
+        detail = step["stderr"] or step["stdout"] or f"exit {step['returncode']}"
+        raise RuntimeError(
+            rebuild_failure_message(
+                f"search rebuild failed for parent scope {scope}",
+                detail,
+            )
+        )
+    search_diagnostics = extract_search_step_diagnostics(step["stdout"], search)
+    search_diagnostics["elapsed_seconds"] = step["elapsed_seconds"]
+    diagnostics = rebuild.get("diagnostics")
+    next_diagnostics = dict(diagnostics) if isinstance(diagnostics, Mapping) else {}
+    next_diagnostics["search"] = search_diagnostics
+    return {
+        **rebuild,
+        "steps": [*list(rebuild.get("steps", [])), step],
+        "search": search,
+        "diagnostics": next_diagnostics,
+    }
+
+
 def perform_source_write_and_rebuild(
     repo_root: Path,
     scope: str,
@@ -617,7 +655,11 @@ def perform_sub_scope_source_write_and_rebuild(
                     + ", ".join(sorted(changed_before_write))
                 )
         write_operation()
-        rebuild = rebuild_sub_scope_outputs(repo_root, scope, sub_scope)
+        rebuild = rebuild_parent_search_after_sub_scope(
+            repo_root,
+            scope,
+            rebuild_sub_scope_outputs(repo_root, scope, sub_scope),
+        )
     except SubScopeSourceSnapshotChanged:
         if filenames:
             clear_watch_suppressions(repo_root, suppression_owner, filenames)
@@ -637,7 +679,11 @@ def perform_sub_scope_source_write_and_rebuild(
         recovery_error = ""
         if not restoration_errors:
             try:
-                recovery_rebuild = rebuild_sub_scope_outputs(repo_root, scope, sub_scope)
+                recovery_rebuild = rebuild_parent_search_after_sub_scope(
+                    repo_root,
+                    scope,
+                    rebuild_sub_scope_outputs(repo_root, scope, sub_scope),
+                )
             except Exception as recovery_exc:
                 recovery_error = str(recovery_exc).strip() or recovery_exc.__class__.__name__
         rollback_status = "failed" if restoration_errors or recovery_error else "completed"

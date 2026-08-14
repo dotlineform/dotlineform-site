@@ -917,37 +917,56 @@ def process_document_collection_changes(
 
 
 def rebuild_sub_scope(repo_root: Path, scope: str, sub_scope: str) -> bool:
-    command = python_builder_command(
-        DOCS_BUILDER_SCRIPT,
-        "--scope",
-        scope,
-        "--sub-scope",
-        sub_scope,
-        "--write",
-        "--diagnostics",
-    )
+    commands = [
+        (
+            "sub-scope docs",
+            python_builder_command(
+                DOCS_BUILDER_SCRIPT,
+                "--scope",
+                scope,
+                "--sub-scope",
+                sub_scope,
+                "--write",
+                "--diagnostics",
+            ),
+        ),
+        (
+            "parent search",
+            python_builder_command(
+                SEARCH_BUILDER_SCRIPT,
+                "--scope",
+                scope,
+                "--write",
+            ),
+        ),
+    ]
     label = f"{scope}/{sub_scope}"
-    log(f"Rebuilding {label} sub-scope docs.")
-    completed = subprocess.run(
-        command,
-        cwd=str(repo_root),
-        capture_output=True,
-        text=True,
-        check=False,
-    )
-    stdout = completed.stdout.strip()
-    stderr = completed.stderr.strip()
-    if completed.returncode != 0:
-        detail = stderr or stdout or f"exit {completed.returncode}"
-        log(f"{label} sub-scope rebuild failed: {detail}")
-        return False
-    diagnostics = formatted_docs_builder_diagnostics(stdout)
-    if diagnostics:
-        log(f"{label} sub-scope diagnostics:")
-        for line in diagnostics:
-            log(f"  {line}")
-    else:
-        log(f"{label} sub-scope docs: {summarize_output(stdout, 'done')}")
+    log(f"Rebuilding {label} sub-scope docs and full parent search.")
+    for step_label, command in commands:
+        completed = subprocess.run(
+            command,
+            cwd=str(repo_root),
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        stdout = completed.stdout.strip()
+        stderr = completed.stderr.strip()
+        if completed.returncode != 0:
+            detail = stderr or stdout or f"exit {completed.returncode}"
+            log(f"{label} {step_label} rebuild failed: {detail}")
+            return False
+        diagnostics = (
+            formatted_docs_builder_diagnostics(stdout)
+            if step_label == "sub-scope docs"
+            else []
+        )
+        if diagnostics:
+            log(f"{label} sub-scope diagnostics:")
+            for line in diagnostics:
+                log(f"  {line}")
+        else:
+            log(f"{label} {step_label}: {summarize_output(stdout, 'done')}")
     return True
 
 
