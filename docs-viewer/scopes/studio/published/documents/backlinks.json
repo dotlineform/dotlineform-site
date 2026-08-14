@@ -28,11 +28,6 @@
     ],
     "d-20260331-000000-4519a5": [
       {
-        "doc_id": "d-20260802-205912-16bc10",
-        "title": "Cross-System Relationship Map",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260802-205912-16bc10"
-      },
-      {
         "doc_id": "d-20260419-000000-86255c",
         "title": "Tag Source Data",
         "viewer_url": "/docs/?scope=studio&doc=d-20260419-000000-86255c"
@@ -59,19 +54,9 @@
     ],
     "d-20260331-000000-5dcf32": [
       {
-        "doc_id": "d-20260813-171341-8bfa80",
-        "title": "DSI-1 — Docs Viewer Search Index v2 Delivery",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260813-171341-8bfa80"
-      },
-      {
         "doc_id": "d-20260715-084611-7c7c8d",
         "title": "Repository Maintenance",
         "viewer_url": "/docs/?scope=studio&doc=d-20260715-084611-7c7c8d"
-      },
-      {
-        "doc_id": "d-20260715-092247-6bbb5e",
-        "title": "Search Mechanics",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260715-092247-6bbb5e"
       }
     ],
     "d-20260331-000000-643429": [
@@ -185,11 +170,6 @@
       }
     ],
     "d-20260331-000000-f992b9": [
-      {
-        "doc_id": "d-20260802-205912-16bc10",
-        "title": "Cross-System Relationship Map",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260802-205912-16bc10"
-      },
       {
         "doc_id": "d-20260607-222033-647b52",
         "title": "Endpoint Overview",
@@ -483,11 +463,6 @@
         "doc_id": "d-20260808-215338-6b1e8c",
         "title": "Local Authoring Service And Publication Boundaries",
         "viewer_url": "/docs/?scope=studio&doc=d-20260808-215338-6b1e8c"
-      },
-      {
-        "doc_id": "d-20260812-102047-a3c9e7",
-        "title": "Media Sources",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260812-102047-a3c9e7"
       },
       {
         "doc_id": "d-20260424-000000-291cc8",
@@ -856,7 +831,7 @@
       },
       {
         "doc_id": "d-20260811-113809-ad8110",
-        "title": "Implementation Review and Architectural Conformance",
+        "title": "Implementation Review",
         "viewer_url": "/docs/?scope=studio&doc=d-20260811-113809-ad8110"
       },
       {
@@ -928,7 +903,7 @@
       },
       {
         "doc_id": "d-20260811-113809-ad8110",
-        "title": "Implementation Review and Architectural Conformance",
+        "title": "Implementation Review",
         "viewer_url": "/docs/?scope=studio&doc=d-20260811-113809-ad8110"
       },
       {
@@ -1085,16 +1060,6 @@
     ],
     "d-20260513-105343-6de36b": [
       {
-        "doc_id": "d-20260720-100017-e094d8",
-        "title": "Docs Media Report Concept",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260720-100017-e094d8"
-      },
-      {
-        "doc_id": "d-20260720-100017-7e52de",
-        "title": "Docs Media Report Delivery",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260720-100017-7e52de"
-      },
-      {
         "doc_id": "d-20260424-000000-50b63f",
         "title": "Docs Viewer",
         "viewer_url": "/docs/?scope=studio&doc=d-20260424-000000-50b63f"
@@ -1108,11 +1073,6 @@
         "doc_id": "d-20260810-173738-703ecd",
         "title": "Report Capability and Composition",
         "viewer_url": "/docs/?scope=studio&doc=d-20260810-173738-703ecd"
-      },
-      {
-        "doc_id": "d-20260720-100017-9855dd",
-        "title": "Scope Media Management",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260720-100017-9855dd"
       }
     ],
     "d-20260514-123140-83239c": [
@@ -1166,16 +1126,6 @@
         "viewer_url": "/docs/?scope=studio&doc=d-20260514-164722-3de65e"
       },
       {
-        "doc_id": "d-20260720-100017-e094d8",
-        "title": "Docs Media Report Concept",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260720-100017-e094d8"
-      },
-      {
-        "doc_id": "d-20260720-100017-7e52de",
-        "title": "Docs Media Report Delivery",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260720-100017-7e52de"
-      },
-      {
         "doc_id": "d-20260424-000000-50b63f",
         "title": "Docs Viewer",
         "viewer_url": "/docs/?scope=studio&doc=d-20260424-000000-50b63f"
@@ -1191,19 +1141,9 @@
         "viewer_url": "/docs/?scope=studio&doc=d-20260719-182348-492a48"
       },
       {
-        "doc_id": "d-20260812-102047-a3c9e7",
-        "title": "Media Sources",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260812-102047-a3c9e7"
-      },
-      {
         "doc_id": "d-20260513-105343-6de36b",
         "title": "Reports",
         "viewer_url": "/docs/?scope=studio&doc=d-20260513-105343-6de36b"
-      },
-      {
-        "doc_id": "d-20260720-100017-9855dd",
-        "title": "Scope Media Management",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260720-100017-9855dd"
       },
       {
         "doc_id": "d-20260423-000000-8fd731",
@@ -1233,11 +1173,6 @@
         "doc_id": "d-20260401-000000-a11bf3",
         "title": "Catalogue Architecture",
         "viewer_url": "/docs/?scope=studio&doc=d-20260401-000000-a11bf3"
-      },
-      {
-        "doc_id": "d-20260802-205910-533be0",
-        "title": "Catalogue Data Model Map",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260802-205910-533be0"
       },
       {
         "doc_id": "d-20260802-225626-b123fa",
@@ -1299,11 +1234,6 @@
         "doc_id": "d-20260401-000000-a11bf3",
         "title": "Catalogue Architecture",
         "viewer_url": "/docs/?scope=studio&doc=d-20260401-000000-a11bf3"
-      },
-      {
-        "doc_id": "d-20260802-205910-533be0",
-        "title": "Catalogue Data Model Map",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260802-205910-533be0"
       },
       {
         "doc_id": "d-20260802-225626-b123fa",
@@ -1458,7 +1388,7 @@
       },
       {
         "doc_id": "d-20260811-113809-ad8110",
-        "title": "Implementation Review and Architectural Conformance",
+        "title": "Implementation Review",
         "viewer_url": "/docs/?scope=studio&doc=d-20260811-113809-ad8110"
       },
       {
@@ -1504,11 +1434,6 @@
         "doc_id": "d-20260802-123452-6a2fd3",
         "title": "DMM-1 — Data Model Maps Foundation Delivery",
         "viewer_url": "/docs/?scope=studio&doc=d-20260802-123452-6a2fd3"
-      },
-      {
-        "doc_id": "d-20260802-205911-bec41f",
-        "title": "Docs Viewer Projection Map",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260802-205911-bec41f"
       },
       {
         "doc_id": "d-20260808-215338-6b1e8c",
@@ -1625,7 +1550,7 @@
       },
       {
         "doc_id": "d-20260811-113809-ad8110",
-        "title": "Implementation Review and Architectural Conformance",
+        "title": "Implementation Review",
         "viewer_url": "/docs/?scope=studio&doc=d-20260811-113809-ad8110"
       },
       {
@@ -1729,11 +1654,6 @@
     ],
     "d-20260602-160839-4ebe27": [
       {
-        "doc_id": "d-20260813-165124-16b0ab",
-        "title": "All-Scope Full-Text Search Baseline",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260813-165124-16b0ab"
-      },
-      {
         "doc_id": "d-20260331-000000-5dcf32",
         "title": "Search",
         "viewer_url": "/docs/?scope=studio&doc=d-20260331-000000-5dcf32"
@@ -1746,39 +1666,9 @@
     ],
     "d-20260602-160839-6d3cbb": [
       {
-        "doc_id": "d-20260813-165124-16b0ab",
-        "title": "All-Scope Full-Text Search Baseline",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260813-165124-16b0ab"
-      },
-      {
-        "doc_id": "d-20260813-171341-8bfa80",
-        "title": "DSI-1 — Docs Viewer Search Index v2 Delivery",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260813-171341-8bfa80"
-      },
-      {
-        "doc_id": "d-20260813-225547-cd82d8",
-        "title": "DSI-2 — Scope-Level Sub-Scope Search Delivery",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260813-225547-cd82d8"
-      },
-      {
         "doc_id": "d-20260331-000000-5dcf32",
         "title": "Search",
         "viewer_url": "/docs/?scope=studio&doc=d-20260331-000000-5dcf32"
-      },
-      {
-        "doc_id": "d-20260715-092247-6bbb5e",
-        "title": "Search Mechanics",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260715-092247-6bbb5e"
-      },
-      {
-        "doc_id": "d-20260715-084611-c2fa6f",
-        "title": "SM-1 — Studio Full-Text Search Delivery",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260715-084611-c2fa6f"
-      },
-      {
-        "doc_id": "d-20260813-161942-b1e9e1",
-        "title": "Studio Full-Text Search Index Concept",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260813-161942-b1e9e1"
       }
     ],
     "d-20260602-192905-260208": [
@@ -1876,11 +1766,6 @@
         "viewer_url": "/docs/?scope=studio&doc=d-20260424-000000-50b63f"
       },
       {
-        "doc_id": "d-20260802-205911-bec41f",
-        "title": "Docs Viewer Projection Map",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260802-205911-bec41f"
-      },
-      {
         "doc_id": "d-20260424-000000-291cc8",
         "title": "Overview",
         "viewer_url": "/docs/?scope=studio&doc=d-20260424-000000-291cc8"
@@ -1948,7 +1833,7 @@
       },
       {
         "doc_id": "d-20260811-113809-ad8110",
-        "title": "Implementation Review and Architectural Conformance",
+        "title": "Implementation Review",
         "viewer_url": "/docs/?scope=studio&doc=d-20260811-113809-ad8110"
       }
     ],
@@ -2497,11 +2382,6 @@
     ],
     "d-20260714-234030-434069": [
       {
-        "doc_id": "d-20260802-205912-16bc10",
-        "title": "Cross-System Relationship Map",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260802-205912-16bc10"
-      },
-      {
         "doc_id": "d-20260725-153656-516b61",
         "title": "Semantic Tokens",
         "viewer_url": "/docs/?scope=studio&doc=d-20260725-153656-516b61"
@@ -2562,75 +2442,11 @@
         "viewer_url": "/docs/?scope=studio&doc=d-20260423-000000-d015e6"
       }
     ],
-    "d-20260715-084611-c2fa6f": [
-      {
-        "doc_id": "d-20260813-165124-16b0ab",
-        "title": "All-Scope Full-Text Search Baseline",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260813-165124-16b0ab"
-      },
-      {
-        "doc_id": "d-20260813-214350-4c7a21",
-        "title": "Docs Viewer Search Index",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260813-214350-4c7a21"
-      },
-      {
-        "doc_id": "d-20260813-214351-98d3f0",
-        "title": "Docs Viewer Search Tokenizer",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260813-214351-98d3f0"
-      },
-      {
-        "doc_id": "d-20260813-163802-5ca41f",
-        "title": "Docs Viewer Search Tokenizer Concept",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260813-163802-5ca41f"
-      },
-      {
-        "doc_id": "d-20260813-171341-8bfa80",
-        "title": "DSI-1 — Docs Viewer Search Index v2 Delivery",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260813-171341-8bfa80"
-      },
-      {
-        "doc_id": "d-20260715-092247-6bbb5e",
-        "title": "Search Mechanics",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260715-092247-6bbb5e"
-      },
-      {
-        "doc_id": "d-20260813-161942-b1e9e1",
-        "title": "Studio Full-Text Search Index Concept",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260813-161942-b1e9e1"
-      }
-    ],
-    "d-20260715-092247-6bbb5e": [
-      {
-        "doc_id": "d-20260813-171341-8bfa80",
-        "title": "DSI-1 — Docs Viewer Search Index v2 Delivery",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260813-171341-8bfa80"
-      },
-      {
-        "doc_id": "d-20260331-000000-5dcf32",
-        "title": "Search",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260331-000000-5dcf32"
-      },
-      {
-        "doc_id": "d-20260715-084611-c2fa6f",
-        "title": "SM-1 — Studio Full-Text Search Delivery",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260715-084611-c2fa6f"
-      }
-    ],
     "d-20260715-094411-2b6e65": [
       {
         "doc_id": "d-20260424-000000-50b63f",
         "title": "Docs Viewer",
         "viewer_url": "/docs/?scope=studio&doc=d-20260424-000000-50b63f"
-      },
-      {
-        "doc_id": "d-20260715-084611-c2fa6f",
-        "title": "SM-1 — Studio Full-Text Search Delivery",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260715-084611-c2fa6f"
-      },
-      {
-        "doc_id": "d-20260813-161942-b1e9e1",
-        "title": "Studio Full-Text Search Index Concept",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260813-161942-b1e9e1"
       }
     ],
     "d-20260716-204013-3be4e1": [
@@ -2835,67 +2651,6 @@
         "viewer_url": "/docs/?scope=studio&doc=d-20260514-164722-3de65e"
       }
     ],
-    "d-20260720-100017-7e52de": [
-      {
-        "doc_id": "d-20260720-100017-e094d8",
-        "title": "Docs Media Report Concept",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260720-100017-e094d8"
-      },
-      {
-        "doc_id": "d-20260720-100017-9855dd",
-        "title": "Scope Media Management",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260720-100017-9855dd"
-      }
-    ],
-    "d-20260720-100017-9855dd": [
-      {
-        "doc_id": "d-20260720-100017-e094d8",
-        "title": "Docs Media Report Concept",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260720-100017-e094d8"
-      },
-      {
-        "doc_id": "d-20260812-153836-b38d98",
-        "title": "External Media Workspace Feature",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260812-153836-b38d98"
-      },
-      {
-        "doc_id": "d-20260514-184303-7914e2",
-        "title": "Media And Asset Handling",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260514-184303-7914e2"
-      },
-      {
-        "doc_id": "d-20260812-102047-a3c9e7",
-        "title": "Media Sources",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260812-102047-a3c9e7"
-      },
-      {
-        "doc_id": "d-20260720-101826-994dd0",
-        "title": "Processing",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260720-101826-994dd0"
-      },
-      {
-        "doc_id": "d-20260714-164200-381988",
-        "title": "Processing Project Setup",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260714-164200-381988"
-      },
-      {
-        "doc_id": "d-20260423-000000-8fd731",
-        "title": "Source Organisation",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260423-000000-8fd731"
-      }
-    ],
-    "d-20260720-100017-e094d8": [
-      {
-        "doc_id": "d-20260719-123719-fb7565",
-        "title": "Document Diagrams",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260719-123719-fb7565"
-      },
-      {
-        "doc_id": "d-20260720-100017-9855dd",
-        "title": "Scope Media Management",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260720-100017-9855dd"
-      }
-    ],
     "d-20260720-101826-994dd0": [
       {
         "doc_id": "d-20260419-000000-d2e47b",
@@ -3076,16 +2831,6 @@
     ],
     "d-20260731-155053-3929e2": [
       {
-        "doc_id": "d-20260802-205912-16bc10",
-        "title": "Cross-System Relationship Map",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260802-205912-16bc10"
-      },
-      {
-        "doc_id": "d-20260812-102047-a3c9e7",
-        "title": "Media Sources",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260812-102047-a3c9e7"
-      },
-      {
         "doc_id": "d-20260804-170901-b2e74c",
         "title": "TDL-0 — Tag Document Metadata Authoring Refactor Delivery",
         "viewer_url": "/docs/?scope=studio&doc=d-20260804-170901-b2e74c"
@@ -3190,11 +2935,6 @@
         "doc_id": "d-20260804-160200-fa7bb7",
         "title": "Tag Document Linking",
         "viewer_url": "/docs/?scope=studio&doc=d-20260804-160200-fa7bb7"
-      },
-      {
-        "doc_id": "d-20260804-170901-b2e74c",
-        "title": "TDL-0 — Tag Document Metadata Authoring Refactor Delivery",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260804-170901-b2e74c"
       }
     ],
     "d-20260804-170901-b2e74c": [
@@ -3286,7 +3026,7 @@
     "d-20260811-112331-1f131b": [
       {
         "doc_id": "d-20260811-113809-ad8110",
-        "title": "Implementation Review and Architectural Conformance",
+        "title": "Implementation Review",
         "viewer_url": "/docs/?scope=studio&doc=d-20260811-113809-ad8110"
       }
     ],
@@ -3297,197 +3037,11 @@
         "viewer_url": "/docs/?scope=studio&doc=d-20260811-112331-1f131b"
       }
     ],
-    "d-20260812-102047-a3c9e7": [
-      {
-        "doc_id": "d-20260812-153836-b38d98",
-        "title": "External Media Workspace Feature",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260812-153836-b38d98"
-      }
-    ],
-    "d-20260812-153836-02802c": [
-      {
-        "doc_id": "d-20260812-153836-5ec0bb",
-        "title": "EMW-1 — External Media Workspace And Public Projection Delivery",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260812-153836-5ec0bb"
-      },
-      {
-        "doc_id": "d-20260812-153836-b38d98",
-        "title": "External Media Workspace Feature",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260812-153836-b38d98"
-      }
-    ],
-    "d-20260812-153836-5ec0bb": [
-      {
-        "doc_id": "d-20260812-164353-9e3115",
-        "title": "EMW-1.0 Inventory And Implementation-Fit Record",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260812-164353-9e3115"
-      },
-      {
-        "doc_id": "d-20260812-153836-b38d98",
-        "title": "External Media Workspace Feature",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260812-153836-b38d98"
-      }
-    ],
-    "d-20260812-164353-9e3115": [
-      {
-        "doc_id": "d-20260812-153836-5ec0bb",
-        "title": "EMW-1 — External Media Workspace And Public Projection Delivery",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260812-153836-5ec0bb"
-      },
-      {
-        "doc_id": "d-20260812-153836-b38d98",
-        "title": "External Media Workspace Feature",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260812-153836-b38d98"
-      }
-    ],
-    "d-20260813-161942-b1e9e1": [
-      {
-        "doc_id": "d-20260813-163802-5ca41f",
-        "title": "Docs Viewer Search Tokenizer Concept",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260813-163802-5ca41f"
-      },
-      {
-        "doc_id": "d-20260813-171341-8bfa80",
-        "title": "DSI-1 — Docs Viewer Search Index v2 Delivery",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260813-171341-8bfa80"
-      },
-      {
-        "doc_id": "d-20260715-092247-6bbb5e",
-        "title": "Search Mechanics",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260715-092247-6bbb5e"
-      },
-      {
-        "doc_id": "d-20260715-084611-c2fa6f",
-        "title": "SM-1 — Studio Full-Text Search Delivery",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260715-084611-c2fa6f"
-      }
-    ],
-    "d-20260813-163802-5ca41f": [
-      {
-        "doc_id": "d-20260813-171341-8bfa80",
-        "title": "DSI-1 — Docs Viewer Search Index v2 Delivery",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260813-171341-8bfa80"
-      },
-      {
-        "doc_id": "d-20260715-092247-6bbb5e",
-        "title": "Search Mechanics",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260715-092247-6bbb5e"
-      },
-      {
-        "doc_id": "d-20260715-084611-c2fa6f",
-        "title": "SM-1 — Studio Full-Text Search Delivery",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260715-084611-c2fa6f"
-      },
-      {
-        "doc_id": "d-20260813-161942-b1e9e1",
-        "title": "Studio Full-Text Search Index Concept",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260813-161942-b1e9e1"
-      }
-    ],
-    "d-20260813-165124-16b0ab": [
-      {
-        "doc_id": "d-20260602-160839-6d3cbb",
-        "title": "Docs Viewer Search",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260602-160839-6d3cbb"
-      },
-      {
-        "doc_id": "d-20260813-214350-4c7a21",
-        "title": "Docs Viewer Search Index",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260813-214350-4c7a21"
-      },
-      {
-        "doc_id": "d-20260813-171341-8bfa80",
-        "title": "DSI-1 — Docs Viewer Search Index v2 Delivery",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260813-171341-8bfa80"
-      },
-      {
-        "doc_id": "d-20260813-225547-cd82d8",
-        "title": "DSI-2 — Scope-Level Sub-Scope Search Delivery",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260813-225547-cd82d8"
-      },
-      {
-        "doc_id": "d-20260715-092247-6bbb5e",
-        "title": "Search Mechanics",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260715-092247-6bbb5e"
-      },
-      {
-        "doc_id": "d-20260813-222008-35fcfa",
-        "title": "SM-2 — Docs Viewer Search Relevance Delivery",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260813-222008-35fcfa"
-      },
-      {
-        "doc_id": "d-20260813-161942-b1e9e1",
-        "title": "Studio Full-Text Search Index Concept",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260813-161942-b1e9e1"
-      }
-    ],
-    "d-20260813-171341-8bfa80": [
-      {
-        "doc_id": "d-20260813-214351-98d3f0",
-        "title": "Docs Viewer Search Tokenizer",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260813-214351-98d3f0"
-      },
-      {
-        "doc_id": "d-20260813-163802-5ca41f",
-        "title": "Docs Viewer Search Tokenizer Concept",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260813-163802-5ca41f"
-      },
-      {
-        "doc_id": "d-20260715-092247-6bbb5e",
-        "title": "Search Mechanics",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260715-092247-6bbb5e"
-      },
-      {
-        "doc_id": "d-20260813-161942-b1e9e1",
-        "title": "Studio Full-Text Search Index Concept",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260813-161942-b1e9e1"
-      }
-    ],
     "d-20260813-214350-4c7a21": [
       {
-        "doc_id": "d-20260813-165124-16b0ab",
-        "title": "All-Scope Full-Text Search Baseline",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260813-165124-16b0ab"
-      },
-      {
         "doc_id": "d-20260602-160839-6d3cbb",
         "title": "Docs Viewer Search",
         "viewer_url": "/docs/?scope=studio&doc=d-20260602-160839-6d3cbb"
-      },
-      {
-        "doc_id": "d-20260813-223337-e6c261",
-        "title": "Docs Viewer Search Relevance",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260813-223337-e6c261"
-      },
-      {
-        "doc_id": "d-20260813-214351-98d3f0",
-        "title": "Docs Viewer Search Tokenizer",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260813-214351-98d3f0"
-      },
-      {
-        "doc_id": "d-20260813-163802-5ca41f",
-        "title": "Docs Viewer Search Tokenizer Concept",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260813-163802-5ca41f"
-      },
-      {
-        "doc_id": "d-20260813-225547-cd82d8",
-        "title": "DSI-2 — Scope-Level Sub-Scope Search Delivery",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260813-225547-cd82d8"
-      },
-      {
-        "doc_id": "d-20260715-092247-6bbb5e",
-        "title": "Search Mechanics",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260715-092247-6bbb5e"
-      },
-      {
-        "doc_id": "d-20260715-084611-c2fa6f",
-        "title": "SM-1 — Studio Full-Text Search Delivery",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260715-084611-c2fa6f"
-      },
-      {
-        "doc_id": "d-20260813-161942-b1e9e1",
-        "title": "Studio Full-Text Search Index Concept",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260813-161942-b1e9e1"
       }
     ],
     "d-20260813-214351-98d3f0": [
@@ -3495,109 +3049,20 @@
         "doc_id": "d-20260602-160839-6d3cbb",
         "title": "Docs Viewer Search",
         "viewer_url": "/docs/?scope=studio&doc=d-20260602-160839-6d3cbb"
-      },
-      {
-        "doc_id": "d-20260813-214350-4c7a21",
-        "title": "Docs Viewer Search Index",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260813-214350-4c7a21"
-      },
-      {
-        "doc_id": "d-20260813-223337-e6c261",
-        "title": "Docs Viewer Search Relevance",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260813-223337-e6c261"
-      },
-      {
-        "doc_id": "d-20260813-163802-5ca41f",
-        "title": "Docs Viewer Search Tokenizer Concept",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260813-163802-5ca41f"
-      },
-      {
-        "doc_id": "d-20260715-092247-6bbb5e",
-        "title": "Search Mechanics",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260715-092247-6bbb5e"
-      },
-      {
-        "doc_id": "d-20260715-084611-c2fa6f",
-        "title": "SM-1 — Studio Full-Text Search Delivery",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260715-084611-c2fa6f"
-      },
-      {
-        "doc_id": "d-20260813-161942-b1e9e1",
-        "title": "Studio Full-Text Search Index Concept",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260813-161942-b1e9e1"
-      }
-    ],
-    "d-20260813-222008-35fcfa": [
-      {
-        "doc_id": "d-20260813-165124-16b0ab",
-        "title": "All-Scope Full-Text Search Baseline",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260813-165124-16b0ab"
-      },
-      {
-        "doc_id": "d-20260813-223337-e6c261",
-        "title": "Docs Viewer Search Relevance",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260813-223337-e6c261"
-      },
-      {
-        "doc_id": "d-20260715-092247-6bbb5e",
-        "title": "Search Mechanics",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260715-092247-6bbb5e"
       }
     ],
     "d-20260813-223337-e6c261": [
       {
-        "doc_id": "d-20260602-160839-6d3cbb",
-        "title": "Docs Viewer Search",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260602-160839-6d3cbb"
-      },
-      {
-        "doc_id": "d-20260813-214350-4c7a21",
-        "title": "Docs Viewer Search Index",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260813-214350-4c7a21"
-      },
-      {
-        "doc_id": "d-20260813-214351-98d3f0",
-        "title": "Docs Viewer Search Tokenizer",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260813-214351-98d3f0"
-      },
-      {
-        "doc_id": "d-20260813-225547-cd82d8",
-        "title": "DSI-2 — Scope-Level Sub-Scope Search Delivery",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260813-225547-cd82d8"
-      },
-      {
-        "doc_id": "d-20260715-092247-6bbb5e",
-        "title": "Search Mechanics",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260715-092247-6bbb5e"
-      },
-      {
         "doc_id": "d-20260813-222008-35fcfa",
-        "title": "SM-2 — Docs Viewer Search Relevance Delivery",
+        "title": "Docs Viewer Search Relevance Delivery",
         "viewer_url": "/docs/?scope=studio&doc=d-20260813-222008-35fcfa"
-      }
-    ],
-    "d-20260813-225547-cd82d8": [
-      {
-        "doc_id": "d-20260813-165124-16b0ab",
-        "title": "All-Scope Full-Text Search Baseline",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260813-165124-16b0ab"
       },
       {
-        "doc_id": "d-20260813-214350-4c7a21",
-        "title": "Docs Viewer Search Index",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260813-214350-4c7a21"
-      },
-      {
-        "doc_id": "d-20260813-223337-e6c261",
-        "title": "Docs Viewer Search Relevance",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260813-223337-e6c261"
-      },
-      {
-        "doc_id": "d-20260715-092247-6bbb5e",
-        "title": "Search Mechanics",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260715-092247-6bbb5e"
+        "doc_id": "d-20260814-155129-c2a782",
+        "title": "Search Improvements",
+        "viewer_url": "/docs/?scope=studio&doc=d-20260814-155129-c2a782"
       }
     ]
   },
-  "generated_at": "2026-08-14T14:44:33Z"
+  "generated_at": "2026-08-14T15:17:28Z"
 }

@@ -4,85 +4,81 @@
   "limit": 10,
   "docs": [
     {
-      "doc_id": "d-20260813-225547-cd82d8",
-      "title": "DSI-2 — Scope-Level Sub-Scope Search Delivery",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260813-225547-cd82d8.json",
-      "timestamp": "2026-08-14 15:46:02",
-      "parent_id": "d-20260715-092247-6bbb5e",
-      "parent_title": "Search Mechanics"
+      "doc_id": "d-20260804-170901-b2e74c",
+      "title": "TDL-0 — Tag Document Metadata Authoring Refactor Delivery",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260804-170901-b2e74c.json",
+      "timestamp": "2026-08-14 16:17:28",
+      "parent_id": "d-20260804-160200-fa7bb7",
+      "parent_title": "Tag Document Linking"
     },
     {
-      "doc_id": "d-20260813-165124-16b0ab",
-      "title": "All-Scope Full-Text Search Baseline",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260813-165124-16b0ab.json",
-      "timestamp": "2026-08-14 15:45:31",
-      "parent_id": "d-20260715-092247-6bbb5e",
-      "parent_title": "Search Mechanics"
-    },
-    {
-      "doc_id": "d-20260813-223337-e6c261",
-      "title": "Docs Viewer Search Relevance",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260813-223337-e6c261.json",
-      "timestamp": "2026-08-14 15:43:14",
-      "parent_id": "d-20260602-160839-6d3cbb",
-      "parent_title": "Docs Viewer Search"
-    },
-    {
-      "doc_id": "d-20260715-092247-6bbb5e",
-      "title": "Search Mechanics",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260715-092247-6bbb5e.json",
-      "timestamp": "2026-08-14 15:43:14",
+      "doc_id": "d-20260804-160200-fa7bb7",
+      "title": "Tag Document Linking",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260804-160200-fa7bb7.json",
+      "timestamp": "2026-08-14 16:16:41",
       "parent_id": "d-20260428-000000-f5ff18",
       "parent_title": "Roadmap"
     },
     {
-      "doc_id": "d-20260813-222008-35fcfa",
-      "title": "SM-2 — Docs Viewer Search Relevance Delivery",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260813-222008-35fcfa.json",
-      "timestamp": "2026-08-14 15:43:14",
-      "parent_id": "d-20260715-092247-6bbb5e",
-      "parent_title": "Search Mechanics"
-    },
-    {
-      "doc_id": "d-20260813-161942-b1e9e1",
-      "title": "Studio Full-Text Search Index Concept",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260813-161942-b1e9e1.json",
-      "timestamp": "2026-08-14 15:43:14",
-      "parent_id": "d-20260715-092247-6bbb5e",
-      "parent_title": "Search Mechanics"
-    },
-    {
-      "doc_id": "d-20260602-160839-6d3cbb",
-      "title": "Docs Viewer Search",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260602-160839-6d3cbb.json",
-      "timestamp": "2026-08-14 15:39:28",
-      "parent_id": "d-20260331-000000-5dcf32",
-      "parent_title": "Search"
-    },
-    {
-      "doc_id": "d-20260813-214350-4c7a21",
-      "title": "Docs Viewer Search Index",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260813-214350-4c7a21.json",
-      "timestamp": "2026-08-14 15:39:28",
-      "parent_id": "d-20260602-160839-6d3cbb",
-      "parent_title": "Docs Viewer Search"
-    },
-    {
-      "doc_id": "d-20260813-171341-8bfa80",
-      "title": "DSI-1 — Docs Viewer Search Index v2 Delivery",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260813-171341-8bfa80.json",
-      "timestamp": "2026-08-14 15:20:41",
-      "parent_id": "d-20260715-092247-6bbb5e",
-      "parent_title": "Search Mechanics"
-    },
-    {
-      "doc_id": "d-20260503-202500-316d29",
-      "title": "Package Return Parser",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260503-202500-316d29.json",
-      "timestamp": "2026-08-14 15:09:03",
+      "doc_id": "d-20260423-000000-8fd731",
+      "title": "Source Organisation",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260423-000000-8fd731.json",
+      "timestamp": "2026-08-14 16:15:48",
       "parent_id": "d-20260424-000000-50b63f",
       "parent_title": "Docs Viewer"
+    },
+    {
+      "doc_id": "d-20260714-234030-434069",
+      "title": "Semantic Tokens Architecture",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260714-234030-434069.json",
+      "timestamp": "2026-08-14 16:15:11",
+      "parent_id": "d-20260725-153656-516b61",
+      "parent_title": "Semantic Tokens"
+    },
+    {
+      "doc_id": "d-20260331-000000-5dcf32",
+      "title": "Search",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260331-000000-5dcf32.json",
+      "timestamp": "2026-08-14 16:14:33"
+    },
+    {
+      "doc_id": "d-20260714-164200-381988",
+      "title": "Processing Project Setup",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260714-164200-381988.json",
+      "timestamp": "2026-08-14 16:14:07",
+      "parent_id": "d-20260720-101826-994dd0",
+      "parent_title": "Processing"
+    },
+    {
+      "doc_id": "d-20260720-101826-994dd0",
+      "title": "Processing",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260720-101826-994dd0.json",
+      "timestamp": "2026-08-14 16:13:17"
+    },
+    {
+      "doc_id": "d-20260514-184303-7914e2",
+      "title": "Media And Asset Handling",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260514-184303-7914e2.json",
+      "timestamp": "2026-08-14 16:11:55",
+      "parent_id": "d-20260424-000000-50b63f",
+      "parent_title": "Docs Viewer"
+    },
+    {
+      "doc_id": "d-20260719-123719-fb7565",
+      "title": "Document Diagrams",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260719-123719-fb7565.json",
+      "timestamp": "2026-08-14 16:10:33",
+      "parent_id": "d-20260424-000000-50b63f",
+      "parent_title": "Docs Viewer"
+    },
+    {
+      "doc_id": "d-20260813-214351-98d3f0",
+      "title": "Docs Viewer Search Tokenizer",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260813-214351-98d3f0.json",
+      "timestamp": "2026-08-14 16:09:56",
+      "parent_id": "d-20260602-160839-6d3cbb",
+      "parent_title": "Docs Viewer Search"
     }
   ],
-  "generated_at": "2026-08-14T14:46:03Z"
+  "generated_at": "2026-08-14T15:17:28Z"
 }
