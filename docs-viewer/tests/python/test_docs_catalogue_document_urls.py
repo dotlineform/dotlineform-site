@@ -26,7 +26,7 @@ import docs_catalogue_document_urls as projection  # noqa: E402
 REPORT_ID = "d-20260807-141500-a1b2c3"
 PUBLIC_CHILD_ID = "d-20260807-141501-b2c3d4"
 PRIVATE_CHILD_ID = "d-20260807-141502-c3d4e5"
-MOMENT_ID = "d-20260807-141503-d4e5f6"
+EXAMPLE_ID = "d-20260807-141503-d4e5f6"
 
 
 def write_json(path: Path, payload: object) -> None:
@@ -35,6 +35,20 @@ def write_json(path: Path, payload: object) -> None:
         json.dumps(payload, ensure_ascii=False, indent=2) + "\n",
         encoding="utf-8",
     )
+
+
+def search_payload(scope: str, docs: list[dict[str, str]]) -> dict[str, object]:
+    return {
+        "header": {
+            "schema": "docs_viewer_search_index_v2",
+            "scope": scope,
+            "version": "fixture",
+            "count": len(docs),
+        },
+        "fields": ["title", "parent_title", "identity", "last_updated"],
+        "docs": docs,
+        "terms": {},
+    }
 
 
 def write_source(path: Path, front_matter: dict[str, object], body: str = "# Body\n") -> None:
@@ -131,11 +145,11 @@ def test_loader_joins_public_parent_and_sub_scope_sources_across_configured_scop
                     ],
                 ),
                 docs_scope_record(
-                    "moments",
+                    "example",
                     scope_type="public",
-                    viewer_base_url="/moments/",
+                    viewer_base_url="/example/",
                     include_scope_param=False,
-                    default_doc_id=MOMENT_ID,
+                    default_doc_id=EXAMPLE_ID,
                 ),
                 docs_scope_record("studio", default_doc_id=""),
             ],
@@ -143,9 +157,9 @@ def test_loader_joins_public_parent_and_sub_scope_sources_across_configured_scop
 
         write_json(
             root / "site/assets/data/search/analysis/index.json",
-            {
-                "header": {"scope": "analysis"},
-                "entries": [
+            search_payload(
+                "analysis",
+                [
                     {
                         "id": REPORT_ID,
                         "kind": "doc",
@@ -153,7 +167,7 @@ def test_loader_joins_public_parent_and_sub_scope_sources_across_configured_scop
                         "href": f"/analysis/?doc={REPORT_ID}",
                     }
                 ],
-            },
+            ),
         )
         write_json(
             root / f"site/assets/data/docs/scopes/analysis/by-id/{REPORT_ID}.json",
@@ -172,22 +186,22 @@ def test_loader_joins_public_parent_and_sub_scope_sources_across_configured_scop
             {"docs": [{"doc_id": PUBLIC_CHILD_ID, "title": "Public Series Note"}]},
         )
         write_json(
-            root / "site/assets/data/search/moments/index.json",
-            {
-                "header": {"scope": "moments"},
-                "entries": [
+            root / "site/assets/data/search/example/index.json",
+            search_payload(
+                "example",
+                [
                     {
-                        "id": MOMENT_ID,
+                        "id": EXAMPLE_ID,
                         "kind": "doc",
-                        "title": "Public Work Moment",
-                        "href": f"/moments/?doc={MOMENT_ID}",
+                        "title": "Public Work Example",
+                        "href": f"/example/?doc={EXAMPLE_ID}",
                     }
                 ],
-            },
+            ),
         )
         write_json(
-            root / f"site/assets/data/docs/scopes/moments/by-id/{MOMENT_ID}.json",
-            {"title": "Public Work Moment"},
+            root / f"site/assets/data/docs/scopes/example/by-id/{EXAMPLE_ID}.json",
+            {"title": "Public Work Example"},
         )
 
         write_source(
@@ -217,10 +231,10 @@ def test_loader_joins_public_parent_and_sub_scope_sources_across_configured_scop
             },
         )
         write_source(
-            root / f"docs-viewer/scopes/moments/source/documents/{MOMENT_ID}.md",
+            root / f"docs-viewer/scopes/example/source/documents/{EXAMPLE_ID}.md",
             {
-                "doc_id": MOMENT_ID,
-                "title": "Public Work Moment",
+                "doc_id": EXAMPLE_ID,
+                "title": "Public Work Example",
                 "work_id": "00002",
                 "publishable": True,
             },
@@ -230,7 +244,7 @@ def test_loader_joins_public_parent_and_sub_scope_sources_across_configured_scop
         result = projection.load_public_catalogue_document_urls(root)
 
     assert result == {
-        "work": {"00002": [f"/moments/?doc={MOMENT_ID}"]},
+        "work": {"00002": [f"/example/?doc={EXAMPLE_ID}"]},
         "series": {
             "001": [
                 f"/analysis/?doc={REPORT_ID}&subdoc={PUBLIC_CHILD_ID}"

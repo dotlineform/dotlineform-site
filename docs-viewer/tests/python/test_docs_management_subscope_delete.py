@@ -161,6 +161,7 @@ def test_sub_scope_delete_service_removes_only_exact_child_outputs(
         path: path.read_bytes()
         for path in paths["parent_sentinels"]
     }
+    parent_search_before = paths["parent_search_path"].read_bytes()
     sibling_source_before = paths["sibling_path"].read_bytes()
     sibling_payload_before = paths["sibling_payload_path"].read_bytes()
     preview_source_before = paths["target_path"].read_bytes()
@@ -198,12 +199,9 @@ def test_sub_scope_delete_service_removes_only_exact_child_outputs(
     assert applied["target"] == preview_body()
     assert applied["deleted_doc_ids"] == [TARGET_DOC_ID]
     assert applied["delete_count"] == 1
-    assert applied["rebuild"]["search"] == {"mode": "full", "doc_ids": []}
+    assert applied["rebuild"]["search"] == {"mode": "none", "doc_ids": []}
     assert "--skip-browser-config" in applied["rebuild"]["steps"][0]["command"]
-    assert applied["rebuild"]["steps"][1]["command"].endswith(
-        "docs-viewer/build/build_search.py --scope studio --write"
-    )
-    assert len(applied["rebuild"]["steps"]) == 2
+    assert len(applied["rebuild"]["steps"]) == 1
     assert not paths["target_path"].exists()
     assert not paths["target_payload_path"].exists()
     assert paths["sibling_path"].read_bytes() == sibling_source_before
@@ -215,14 +213,7 @@ def test_sub_scope_delete_service_removes_only_exact_child_outputs(
         path: path.read_bytes()
         for path in paths["parent_sentinels"]
     } == parent_before
-    search_docs = read_json(paths["parent_search_path"])["docs"]
-    assert [
-        (row["id"], row.get("sub_scope", ""))
-        for row in search_docs
-    ] == [
-        (SIBLING_DOC_ID, "tags"),
-        (REPORT_DOC_ID, ""),
-    ]
+    assert paths["parent_search_path"].read_bytes() == parent_search_before
     assert activity == [
         (
             "docs-delete",

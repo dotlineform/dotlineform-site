@@ -8,7 +8,7 @@ from pathlib import Path
 
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
-FEATURE_DOC_ID = "d-20260813-114338-c6b682"
+BACKLINKS_HOST_DOC_ID = "d-20260419-000000-0516ab"
 TOKENS_DOC_ID = "d-20260810-211748-1f8b6f"
 
 
@@ -100,14 +100,14 @@ def test_report_binds_only_the_exact_loaded_host_target_and_scope_owned_url() ->
     assert "scope_uses_external_data" not in backlinks_builder
 
 
-def test_first_adopter_and_registry_reference_project_one_inert_host_each() -> None:
-    feature_source = (
+def test_durable_backlinks_host_and_registry_reference_project_one_inert_host_each() -> None:
+    backlinks_source = (
         REPO_ROOT
-        / f"docs-viewer/scopes/studio/source/documents/{FEATURE_DOC_ID}.md"
+        / f"docs-viewer/scopes/studio/source/documents/{BACKLINKS_HOST_DOC_ID}.md"
     ).read_text(encoding="utf-8")
-    feature_payload = read_json(
+    backlinks_payload = read_json(
         REPO_ROOT
-        / f"docs-viewer/scopes/studio/published/documents/by-id/{FEATURE_DOC_ID}.json"
+        / f"docs-viewer/scopes/studio/published/documents/by-id/{BACKLINKS_HOST_DOC_ID}.json"
     )
     tokens_source = (
         REPO_ROOT
@@ -118,17 +118,17 @@ def test_first_adopter_and_registry_reference_project_one_inert_host_each() -> N
         / f"docs-viewer/scopes/studio/published/documents/by-id/{TOKENS_DOC_ID}.json"
     )
 
-    assert feature_source.count(
+    assert backlinks_source.count(
         ":::report\nid: docs_backlinks\naccess: local\n:::"
     ) == 1
-    assert feature_payload["report"] == {
+    assert backlinks_payload["report"] == {
         "id": "docs_backlinks",
         "access": "local",
         "scope": None,
         "preset": None,
         "sub_scope": None,
     }
-    assert str(feature_payload["content_html"]).count(
+    assert str(backlinks_payload["content_html"]).count(
         "data-docs-viewer-report-host"
     ) == 1
 

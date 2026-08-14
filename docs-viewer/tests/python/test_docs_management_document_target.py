@@ -435,7 +435,7 @@ parent_id: retained-sub-scope-parent
             "date": "2026-07-27",
             "date_display": "July 2026",
             "ui_status": "draft",
-            "customisation": {"group": "theme"},
+            "customisation": {"group": "theme", "tag_id": ""},
         },
     }
 
