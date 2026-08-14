@@ -314,15 +314,31 @@ def test_apply_recovers_receipt_lag_and_retries_only_failed_rebuild(
         _write_generated_manifests(paths, plan)
         return {"ok": True}
 
+    parent_search_rebuilds: list[tuple[str, dict[str, object]]] = []
+
+    def parent_search_stub(
+        _repo_root: Path,
+        scope: str,
+        rebuild: dict[str, object],
+    ) -> dict[str, object]:
+        parent_search_rebuilds.append((scope, rebuild))
+        return {**rebuild, "search": {"mode": "full", "doc_ids": []}}
+
     monkeypatch.setattr(
         migration.write_rebuild,
         "rebuild_sub_scope_outputs",
         rebuild_stub,
     )
+    monkeypatch.setattr(
+        migration.write_rebuild,
+        "rebuild_parent_search_after_sub_scope",
+        parent_search_stub,
+    )
     result = migration.apply_migration(paths)
     validation = migration.validate_migration(paths)
 
     assert result["rebuild"] == "complete"
+    assert parent_search_rebuilds == [("dotlineform", {"ok": True})]
     assert validation["status"] == "validated"
     assert "Explicit no-current-folder imports" in paths.result_report_path.read_text(
         encoding="utf-8"

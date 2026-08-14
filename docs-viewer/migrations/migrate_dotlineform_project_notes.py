@@ -1069,7 +1069,15 @@ def apply_migration(paths: MigrationPaths) -> dict[str, Any]:
                 _write_receipt(paths, receipt)
 
         try:
-            write_rebuild.rebuild_sub_scope_outputs(paths.repo_root, SCOPE, SUB_SCOPE)
+            write_rebuild.rebuild_parent_search_after_sub_scope(
+                paths.repo_root,
+                SCOPE,
+                write_rebuild.rebuild_sub_scope_outputs(
+                    paths.repo_root,
+                    SCOPE,
+                    SUB_SCOPE,
+                ),
+            )
         except Exception as exc:
             receipt["rebuild"] = {"status": "failed", "error": str(exc)}
             _write_receipt(paths, receipt)
