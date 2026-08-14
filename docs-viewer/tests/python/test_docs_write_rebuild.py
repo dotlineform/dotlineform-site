@@ -76,7 +76,11 @@ def test_rebuild_scope_outputs_preserves_full_command_shapes() -> None:
     write_rebuild.subprocess.run = fake_run
     try:
         with tempfile.TemporaryDirectory() as temp_path:
-            result = write_rebuild.rebuild_scope_outputs(Path(temp_path), "studio")
+            result = write_rebuild.rebuild_scope_outputs(
+                Path(temp_path),
+                "studio",
+                include_search=True,
+            )
     finally:
         write_rebuild.subprocess.run = original_run
         write_rebuild.PYTHON_EXECUTABLE = original_python
@@ -116,7 +120,12 @@ def test_rebuild_scope_outputs_extracts_docs_and_search_diagnostics() -> None:
     write_rebuild.subprocess.run = fake_run
     try:
         with tempfile.TemporaryDirectory() as temp_path:
-            result = write_rebuild.rebuild_scope_outputs(Path(temp_path), "studio", search_doc_ids=["a", "b"])
+            result = write_rebuild.rebuild_scope_outputs(
+                Path(temp_path),
+                "studio",
+                include_search=True,
+                search_doc_ids=["a", "b"],
+            )
     finally:
         write_rebuild.subprocess.run = original_run
         write_rebuild.PYTHON_EXECUTABLE = original_python
@@ -236,6 +245,7 @@ def test_rebuild_scope_outputs_turns_affected_ids_into_whole_search_command() ->
             result = write_rebuild.rebuild_scope_outputs(
                 Path(temp_path),
                 "library",
+                include_search=True,
                 search_doc_ids=["child", "", "parent", "child"],
             )
     finally:
@@ -459,7 +469,12 @@ def test_rebuild_scope_outputs_skips_empty_targeted_search() -> None:
     write_rebuild.subprocess.run = fake_run
     try:
         with tempfile.TemporaryDirectory() as temp_path:
-            result = write_rebuild.rebuild_scope_outputs(Path(temp_path), "studio", search_doc_ids=["", " "])
+            result = write_rebuild.rebuild_scope_outputs(
+                Path(temp_path),
+                "studio",
+                include_search=True,
+                search_doc_ids=["", " "],
+            )
     finally:
         write_rebuild.subprocess.run = original_run
         write_rebuild.PYTHON_EXECUTABLE = original_python
@@ -542,7 +557,6 @@ def test_perform_sub_scope_source_write_marks_owned_suppression() -> None:
     original_set = write_rebuild.set_watch_suppressions
     original_clear = write_rebuild.clear_watch_suppressions
     original_rebuild = write_rebuild.rebuild_sub_scope_outputs
-    original_parent_search = write_rebuild.rebuild_parent_search_after_sub_scope
 
     def fake_set(_repo_root, owner, filenames, *, status, **_kwargs):
         events.append(("set:" + owner, status, list(filenames)))
@@ -559,11 +573,6 @@ def test_perform_sub_scope_source_write_marks_owned_suppression() -> None:
             "scope": scope,
             "sub_scope": sub_scope,
         }
-    )
-    write_rebuild.rebuild_parent_search_after_sub_scope = (
-        lambda _repo_root, scope, rebuild: (
-            events.append(("search", scope, [])) or rebuild
-        )
     )
     try:
         with tempfile.TemporaryDirectory() as temp_path:
@@ -595,25 +604,21 @@ def test_perform_sub_scope_source_write_marks_owned_suppression() -> None:
         write_rebuild.set_watch_suppressions = original_set
         write_rebuild.clear_watch_suppressions = original_clear
         write_rebuild.rebuild_sub_scope_outputs = original_rebuild
-        write_rebuild.rebuild_parent_search_after_sub_scope = original_parent_search
 
     assert result == {"ok": True, "scope": "studio", "sub_scope": "tags"}
     owner = "studio__sub_scope__tags"
     assert events == [
         ("set:" + owner, write_rebuild.SUPPRESSION_PENDING, ["detail.md"]),
         ("write", "studio/tags", []),
-        ("search", "studio", []),
         ("set:" + owner, write_rebuild.SUPPRESSION_COMPLETE, ["detail.md"]),
     ]
 
 
-def test_sub_scope_parent_search_failure_restores_source_and_rebuilds_search() -> None:
+def test_sub_scope_docs_failure_restores_source_and_rebuilds_docs() -> None:
     original_set = write_rebuild.set_watch_suppressions
     original_clear = write_rebuild.clear_watch_suppressions
     original_child_rebuild = write_rebuild.rebuild_sub_scope_outputs
-    original_parent_search = write_rebuild.rebuild_parent_search_after_sub_scope
     child_rebuilds = 0
-    parent_searches = 0
 
     with tempfile.TemporaryDirectory() as temp_path:
         repo_root = Path(temp_path)
@@ -636,21 +641,20 @@ def test_sub_scope_parent_search_failure_restores_source_and_rebuilds_search() -
         def fake_child_rebuild(_repo_root, _scope, _sub_scope):
             nonlocal child_rebuilds
             child_rebuilds += 1
+            if child_rebuilds == 1:
+                raise RuntimeError("child docs failed")
             if child_rebuilds == 2:
                 assert source_path.read_bytes() == b"before"
-            return {"ok": True, "steps": [], "diagnostics": {}}
-
-        def fake_parent_search(_repo_root, _scope, rebuild):
-            nonlocal parent_searches
-            parent_searches += 1
-            if parent_searches == 1:
-                raise RuntimeError("parent search failed")
-            return {**rebuild, "search": {"mode": "full", "doc_ids": []}}
+            return {
+                "ok": True,
+                "steps": [],
+                "search": {"mode": "none", "doc_ids": []},
+                "diagnostics": {},
+            }
 
         write_rebuild.set_watch_suppressions = lambda *_args, **_kwargs: None
         write_rebuild.clear_watch_suppressions = lambda *_args, **_kwargs: None
         write_rebuild.rebuild_sub_scope_outputs = fake_child_rebuild
-        write_rebuild.rebuild_parent_search_after_sub_scope = fake_parent_search
         try:
             try:
                 write_rebuild.perform_sub_scope_source_write_and_rebuild(
@@ -665,20 +669,18 @@ def test_sub_scope_parent_search_failure_restores_source_and_rebuilds_search() -
             except write_rebuild.SubScopeWriteRebuildFailure as exc:
                 rollback = exc.rollback
             else:
-                raise AssertionError("parent Search failure should trigger rollback")
+                raise AssertionError("child Docs failure should trigger rollback")
         finally:
             write_rebuild.set_watch_suppressions = original_set
             write_rebuild.clear_watch_suppressions = original_clear
             write_rebuild.rebuild_sub_scope_outputs = original_child_rebuild
-            write_rebuild.rebuild_parent_search_after_sub_scope = original_parent_search
 
         assert source_path.read_bytes() == b"before"
 
     assert child_rebuilds == 2
-    assert parent_searches == 2
     assert rollback["status"] == "completed"
     assert rollback["sources_restored"] is True
-    assert rollback["rebuild"]["search"] == {"mode": "full", "doc_ids": []}
+    assert rollback["rebuild"]["search"] == {"mode": "none", "doc_ids": []}
 
 
 def test_current_scope_source_root_uses_fresh_repo_config() -> None:

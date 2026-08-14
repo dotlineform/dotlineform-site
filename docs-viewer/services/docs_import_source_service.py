@@ -576,7 +576,6 @@ def handle_import_source(
             write_import_document,
             suppression_reason=plan.suppression_reason,
             docs_doc_ids=plan.docs_doc_ids,
-            search_doc_ids=list(plan.search_doc_ids),
         )
     event_name, event_details = import_document_activity(
         repo_root,

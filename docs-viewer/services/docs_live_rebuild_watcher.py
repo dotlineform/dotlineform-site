@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Watch docs source roots and rebuild same-scope docs payloads plus docs search.
+Watch docs source roots and rebuild same-collection docs payloads.
 
 Run:
   ./docs-viewer/services/docs_live_rebuild_watcher.py
@@ -73,7 +73,6 @@ from local_env import runtime_env
 DOCS_BUILDER_DIAGNOSTICS_PREFIX = "Docs builder diagnostics: "
 PYTHON_EXECUTABLE = sys.executable
 DOCS_BUILDER_SCRIPT = "docs-viewer/build/build_docs.py"
-SEARCH_BUILDER_SCRIPT = "docs-viewer/build/build_search.py"
 
 
 def log(message: str) -> None:
@@ -342,7 +341,7 @@ def ordered_unique(values: list[str]) -> list[str]:
 
 def affected_doc_ids_log_text(doc_ids: Optional[list[str]]) -> str:
     if doc_ids is None:
-        return "full-search fallback"
+        return "full-docs fallback"
     if not doc_ids:
         return "none"
     return ", ".join(doc_ids)
@@ -739,7 +738,6 @@ def rebuild_scope(
     repo_root: Path,
     scope: str,
     docs_doc_ids: Optional[list[str]] = None,
-    search_doc_ids: Optional[list[str]] = None,
 ) -> bool:
     docs_command = python_builder_command(DOCS_BUILDER_SCRIPT, "--scope", scope, "--write", "--diagnostics")
     docs_target_doc_ids = ordered_unique(docs_doc_ids or [])
@@ -750,26 +748,7 @@ def rebuild_scope(
         else:
             docs_command.extend(["--only-doc-ids", ",".join(docs_target_doc_ids)])
     commands = [("docs", docs_command)]
-    if search_doc_ids is None:
-        commands.append(("search", python_builder_command(SEARCH_BUILDER_SCRIPT, "--scope", scope, "--write")))
-        log(f"Rebuilding {scope} docs and full docs search.")
-    else:
-        target_doc_ids = ordered_unique(search_doc_ids)
-        if target_doc_ids:
-            commands.append(
-                (
-                    "search",
-                    python_builder_command(
-                        SEARCH_BUILDER_SCRIPT,
-                        "--scope",
-                        scope,
-                        "--write",
-                    ),
-                )
-            )
-            log(f"Rebuilding {scope} docs and whole docs search after changes to: {', '.join(target_doc_ids)}.")
-        else:
-            log(f"Rebuilding {scope} docs; no docs-search ids were affected.")
+    log(f"Rebuilding {scope} docs. Search remains explicit via Rebuild.")
 
     for label, command in commands:
         completed = subprocess.run(
@@ -822,10 +801,9 @@ def process_document_collection_changes(
             return rebuild_sub_scope(repo_root, scope, sub_scope), None
         return rebuild_scope(repo_root, scope), None
 
-    search_doc_ids: Optional[list[str]] = None
-    docs_doc_ids = None
+    docs_doc_ids: Optional[list[str]] = None
     if not sub_scope:
-        search_doc_ids, fallback_reason = affected_doc_ids(
+        docs_doc_ids, fallback_reason = affected_doc_ids(
             state["doc_snapshot"],
             current_docs,
             changed_files,
@@ -833,14 +811,13 @@ def process_document_collection_changes(
         )
         if fallback_reason:
             log(
-                f"{scope} search relevance fallback; affected ids unavailable: "
+                f"{scope} targeted docs fallback; affected ids unavailable: "
                 f"{fallback_reason}"
             )
         else:
-            docs_doc_ids = search_doc_ids
             log(
-                f"{scope} docs affecting whole-index search: "
-                f"{affected_doc_ids_log_text(search_doc_ids)}."
+                f"{scope} affected docs: "
+                f"{affected_doc_ids_log_text(docs_doc_ids)}."
             )
 
     timestamp_plans = direct_edit_timestamp_plan(
@@ -910,7 +887,6 @@ def process_document_collection_changes(
             repo_root,
             scope,
             docs_doc_ids=docs_doc_ids,
-            search_doc_ids=search_doc_ids,
         ),
         current_docs,
     )
@@ -930,18 +906,9 @@ def rebuild_sub_scope(repo_root: Path, scope: str, sub_scope: str) -> bool:
                 "--diagnostics",
             ),
         ),
-        (
-            "parent search",
-            python_builder_command(
-                SEARCH_BUILDER_SCRIPT,
-                "--scope",
-                scope,
-                "--write",
-            ),
-        ),
     ]
     label = f"{scope}/{sub_scope}"
-    log(f"Rebuilding {label} sub-scope docs and full parent search.")
+    log(f"Rebuilding {label} sub-scope docs. Parent Search remains explicit via Rebuild.")
     for step_label, command in commands:
         completed = subprocess.run(
             command,

@@ -494,6 +494,7 @@ export function initDocsViewerManagement(context) {
     [
       "manage-import",
       "manage-actions",
+      "manage-rebuild",
       "manage-publish",
       "manage-scope",
       "manage-theme"
@@ -667,6 +668,10 @@ export function initDocsViewerManagement(context) {
       disabled: management.managementBusy || !management.managementAvailable
     });
     projectAppControl("manage-actions", {
+      hidden: managementActionsHidden,
+      disabled: management.managementBusy || !management.managementAvailable
+    });
+    projectAppControl("manage-rebuild", {
       hidden: managementActionsHidden,
       disabled: management.managementBusy || !management.managementAvailable
     });

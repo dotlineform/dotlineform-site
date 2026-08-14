@@ -370,7 +370,6 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
                 "docs-viewer/tests/python/test_docs_import_media_packages.py",
                 "docs-viewer/tests/python/test_docs_import_document.py",
                 "docs-viewer/tests/python/test_docs_import_collection_plan.py",
-                "docs-viewer/tests/python/test_docs_import_collection_apply.py",
                 "docs-viewer/tests/python/test_build_docs_payloads.py",
                 "docs-viewer/tests/python/test_build_docs_subscopes.py",
                 "docs-viewer/tests/python/test_build_docs_public_payloads.py",

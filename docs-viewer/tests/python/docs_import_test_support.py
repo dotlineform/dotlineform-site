@@ -156,7 +156,6 @@ def stub_rebuild():
     def fake_rebuild(repo_root, scope, changed_paths, write_operation, **kwargs):
         write_operation()
         docs_doc_ids = list(kwargs.get("docs_doc_ids") or [])
-        search_doc_ids = list(kwargs.get("search_doc_ids") or [])
         return {
             "ok": True,
             "steps": [],
@@ -165,10 +164,10 @@ def stub_rebuild():
                 "doc_ids": docs_doc_ids,
                 "reason": "targeted docs payload ids provided" if docs_doc_ids else "full-scope fallback",
             },
-            "search": {"mode": "targeted" if search_doc_ids else "none", "doc_ids": search_doc_ids},
+            "search": {"mode": "none", "doc_ids": []},
             "diagnostics": {
                 "docs": {"scope": scope, "build_mode": "targeted" if docs_doc_ids else "full"},
-                "search": {"mode": "targeted" if search_doc_ids else "none", "doc_ids": search_doc_ids},
+                "search": {"mode": "none", "doc_ids": []},
             },
         }
 

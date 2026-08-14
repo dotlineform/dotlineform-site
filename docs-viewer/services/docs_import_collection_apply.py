@@ -238,7 +238,6 @@ def apply_import_content_collection(
         if document_plan is not None
     ]
     docs_doc_ids: list[str] = []
-    search_doc_ids: list[str] = []
     written_paths: list[Path] = []
     source_failed = False
     def write_collection_documents() -> None:
@@ -284,7 +283,6 @@ def apply_import_content_collection(
                 "created" if document_plan.operation == IMPORT_DOCUMENT_CREATE else "overwritten"
             )
             docs_doc_ids.extend(document_plan.docs_doc_ids)
-            search_doc_ids.extend(document_plan.search_doc_ids)
             written_paths.extend(document_plan.changed_paths)
             event_name, event_details = import_document_activity(
                 repo_root,
@@ -318,7 +316,6 @@ def apply_import_content_collection(
                 write_collection_documents,
                 suppression_reason="docs-import-collection-apply",
                 docs_doc_ids=docs_doc_ids,
-                search_doc_ids=search_doc_ids,
                 written_paths=written_paths,
             )
             generation = {"status": "completed", "rebuild": rebuild, "error": ""}
@@ -647,15 +644,6 @@ def apply_import_content_collection_scope_atomic(
             for doc_id in document_plan.docs_doc_ids
         )
     )
-    search_doc_ids = list(
-        dict.fromkeys(
-            doc_id
-            for document_plan in plan.document_plans
-            if document_plan is not None
-            for doc_id in document_plan.search_doc_ids
-        )
-    )
-
     def perform_boundary(
         changed_paths: list[Path],
         write_operation: Callable[[], None],
@@ -669,7 +657,6 @@ def apply_import_content_collection_scope_atomic(
             suppression_reason="docs-import-reviewed-scope-collection-apply",
             source_snapshots=snapshots,
             docs_doc_ids=docs_doc_ids,
-            search_doc_ids=search_doc_ids,
         )
 
     return _apply_import_content_collection_atomic(

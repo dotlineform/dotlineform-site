@@ -120,6 +120,50 @@ def capture_activity(
     return events
 
 
+def test_rebuild_route_explicitly_rebuilds_docs_and_search(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    prepare_repo(tmp_path)
+    rebuild_calls: list[dict[str, object]] = []
+
+    def fake_rebuild(
+        repo_root: Path,
+        scope: str,
+        **kwargs,
+    ) -> dict[str, object]:
+        rebuild_calls.append(
+            {
+                "repo_root": repo_root,
+                "scope": scope,
+                **kwargs,
+            }
+        )
+        return {"ok": True, "docs": {"mode": "full"}, "search": {"mode": "full"}}
+
+    monkeypatch.setattr(
+        management_service.write_rebuild,
+        "rebuild_scope_outputs",
+        fake_rebuild,
+    )
+
+    status, payload = management_service.docs_management_post_response(
+        tmp_path,
+        routes.REBUILD_PATH,
+        {"scope": "analysis"},
+    )
+
+    assert status == HTTPStatus.OK
+    assert rebuild_calls == [
+        {
+            "repo_root": tmp_path,
+            "scope": "analysis",
+            "include_search": True,
+        }
+    ]
+    assert payload["summary_text"] == "Docs and docs search rebuilt for analysis."
+
+
 def test_parent_create_keeps_response_and_rebuild_contract_with_exact_target(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
@@ -196,7 +240,6 @@ def test_parent_create_keeps_response_and_rebuild_contract_with_exact_target(
             "changed_paths": [expected_path],
             "suppression_reason": "docs-create",
             "docs_doc_ids": [FIXED_DOC_ID],
-            "search_doc_ids": [FIXED_DOC_ID],
         }
     ]
     assert events == [

@@ -882,7 +882,6 @@ def _stored_document_plan(
         title=str(document["title"]),
         parent_id="",
         publishable=None,
-        search_doc_ids=(),
         import_preview=copy.deepcopy(document["import_preview"]),
     )
 

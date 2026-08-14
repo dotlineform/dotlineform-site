@@ -133,7 +133,6 @@ def test_parent_selection_prevalidates_and_rebuilds_once(
                 "scope": scope,
                 "paths": [path.name for path in changed_paths],
                 "docs": kwargs["docs_doc_ids"],
-                "search": kwargs["search_doc_ids"],
                 "snapshots": sorted(path.name for path in kwargs["source_snapshots"]),
             }
         )
@@ -167,7 +166,6 @@ def test_parent_selection_prevalidates_and_rebuilds_once(
             "scope": "analysis",
             "paths": ["a.md"],
             "docs": ["a"],
-            "search": ["a"],
             "snapshots": ["a.md"],
         }
     ]

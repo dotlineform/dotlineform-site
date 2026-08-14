@@ -24,7 +24,6 @@ from docs_import_media import materialize_import_media  # noqa: E402
 from docs_import_source_helpers import import_summary_text, relative_path, viewer_url_for  # noqa: E402
 from docs_import_source_interactive import materialize_interactive_html_assets  # noqa: E402
 from docs_management_document_target import ManagedDocumentCollection  # noqa: E402
-from docs_management_mutations import metadata_search_doc_ids  # noqa: E402
 from docs_subscope_customisations import (  # noqa: E402
     normalize_sub_scope_customisation_import_front_matter,
 )
@@ -83,7 +82,6 @@ class ImportDocumentPlan:
     title: str
     parent_id: str
     publishable: bool | None
-    search_doc_ids: tuple[str, ...]
     import_preview: dict[str, Any]
     sub_scope: str = ""
     target: ScopeDoc | None = None
@@ -382,7 +380,6 @@ def plan_import_document(
             added_date,
             publishable_supported=publishable_supported,
         )
-        search_doc_ids = () if sub_scope else (record.doc_id,)
     else:
         assert target is not None
         target_path = target.path
@@ -394,17 +391,6 @@ def plan_import_document(
             preserve_collection_metadata=preserve_collection_metadata,
             publishable_supported=publishable_supported,
         )
-        search_doc_ids = (
-            ()
-            if sub_scope
-            else tuple(
-                metadata_search_doc_ids(
-                    docs,
-                    target.doc_id,
-                    title_changed=title != target.title,
-                )
-            )
-        )
 
     return ImportDocumentPlan(
         scope=normalized_scope,
@@ -415,7 +401,6 @@ def plan_import_document(
         title=title,
         parent_id=parent_id,
         publishable=publishable,
-        search_doc_ids=search_doc_ids,
         import_preview=preview,
         sub_scope=sub_scope,
         target=target,

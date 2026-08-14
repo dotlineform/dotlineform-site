@@ -157,7 +157,6 @@ def rebuild_source_body(repo_root: Path, body: Dict[str, Any], dry_run: bool) ->
                 write_operation,
                 suppression_reason="docs-source-editor",
                 docs_doc_ids=[target.doc_id],
-                search_doc_ids=[target.doc_id],
             )
         activity = {
             "scope": resolved.scope,

@@ -226,7 +226,7 @@ def rebuild_failure_message(prefix: str, detail: str) -> str:
 def rebuild_scope_outputs(
     repo_root: Path,
     scope: str,
-    include_search: bool = True,
+    include_search: bool = False,
     search_doc_ids: Optional[list[str]] = None,
     docs_doc_ids: Optional[list[str]] = None,
     skip_media_builds: bool = False,
@@ -388,8 +388,6 @@ def perform_source_write_and_rebuild(
     write_operation: Callable[[], Any],
     *,
     suppression_reason: str,
-    include_search: bool = True,
-    search_doc_ids: Optional[list[str]] = None,
     docs_doc_ids: Optional[list[str]] = None,
     written_paths: Optional[list[Path]] = None,
     skip_media_builds: bool = False,
@@ -416,8 +414,7 @@ def perform_source_write_and_rebuild(
         rebuild = rebuild_scope_outputs(
             repo_root,
             scope,
-            include_search=include_search,
-            search_doc_ids=search_doc_ids,
+            include_search=False,
             docs_doc_ids=docs_doc_ids,
             skip_media_builds=skip_media_builds,
         )
@@ -456,7 +453,6 @@ def perform_scope_source_write_and_rebuild_atomic(
     *,
     suppression_reason: str,
     source_snapshots: Mapping[Path, bytes],
-    search_doc_ids: Optional[list[str]] = None,
     docs_doc_ids: Optional[list[str]] = None,
 ) -> Dict[str, Any]:
     """Write/rebuild one parent scope or restore its complete source snapshot."""
@@ -515,8 +511,7 @@ def perform_scope_source_write_and_rebuild_atomic(
         rebuild = rebuild_scope_outputs(
             repo_root,
             scope,
-            include_search=True,
-            search_doc_ids=search_doc_ids,
+            include_search=False,
             docs_doc_ids=docs_doc_ids,
             skip_media_builds=True,
         )
@@ -540,8 +535,7 @@ def perform_scope_source_write_and_rebuild_atomic(
                 recovery_rebuild = rebuild_scope_outputs(
                     repo_root,
                     scope,
-                    include_search=True,
-                    search_doc_ids=search_doc_ids,
+                    include_search=False,
                     docs_doc_ids=docs_doc_ids,
                     skip_media_builds=True,
                 )
@@ -655,11 +649,7 @@ def perform_sub_scope_source_write_and_rebuild(
                     + ", ".join(sorted(changed_before_write))
                 )
         write_operation()
-        rebuild = rebuild_parent_search_after_sub_scope(
-            repo_root,
-            scope,
-            rebuild_sub_scope_outputs(repo_root, scope, sub_scope),
-        )
+        rebuild = rebuild_sub_scope_outputs(repo_root, scope, sub_scope)
     except SubScopeSourceSnapshotChanged:
         if filenames:
             clear_watch_suppressions(repo_root, suppression_owner, filenames)
@@ -679,10 +669,10 @@ def perform_sub_scope_source_write_and_rebuild(
         recovery_error = ""
         if not restoration_errors:
             try:
-                recovery_rebuild = rebuild_parent_search_after_sub_scope(
+                recovery_rebuild = rebuild_sub_scope_outputs(
                     repo_root,
                     scope,
-                    rebuild_sub_scope_outputs(repo_root, scope, sub_scope),
+                    sub_scope,
                 )
             except Exception as recovery_exc:
                 recovery_error = str(recovery_exc).strip() or recovery_exc.__class__.__name__
@@ -756,8 +746,7 @@ def perform_multi_scope_source_write_and_rebuild(
             rebuilds[scope] = rebuild_scope_outputs(
                 repo_root,
                 scope,
-                include_search=plan.get("include_search") is not False,
-                search_doc_ids=plan.get("search_doc_ids"),
+                include_search=False,
                 docs_doc_ids=plan.get("docs_doc_ids"),
             )
     except Exception:

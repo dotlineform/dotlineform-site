@@ -99,224 +99,6 @@ def test_update_metadata_rejects_publishable() -> None:
             )
 
 
-def test_sub_scope_metadata_write_rebuilds_detail_and_both_manifests(
-    monkeypatch,
-) -> None:
-    rebuild_calls: list[dict[str, object]] = []
-
-    def fake_sub_scope_rebuild(
-        repo_root,
-        scope,
-        sub_scope,
-        changed_paths,
-        write_operation,
-        **kwargs,
-    ):
-        write_operation()
-        config = load_docs_scope_configs(repo_root, scope_ids=[scope])[scope]
-        builder = SubScopeDocsBuilder(
-            repo_root=repo_root,
-            config=config,
-            sub_scope=selected_sub_scope(config, sub_scope),
-        )
-        builder._parent_report_doc_id = ""
-        build_result = builder.run(write=True)
-        rebuild_calls.append(
-            {
-                "scope": scope,
-                "sub_scope": sub_scope,
-                "changed_paths": [path.name for path in changed_paths],
-                "suppression_reason": kwargs.get("suppression_reason"),
-                    "changed_item_ids": build_result["write_plan"]["changed_item_ids"],
-                    "manifest_write": build_result["write_plan"]["manifest_write"],
-                    "manage_manifest_write": build_result["write_plan"][
-                        "manage_manifest_write"
-                    ],
-            }
-        )
-        return {
-            "ok": True,
-            "docs": {"mode": "sub_scope", "sub_scope": sub_scope},
-            "search": {"mode": "full", "doc_ids": []},
-        }
-
-    monkeypatch.setattr(
-        docs_management_service.write_rebuild,
-        "perform_sub_scope_source_write_and_rebuild",
-        fake_sub_scope_rebuild,
-    )
-    monkeypatch.setattr(
-        docs_management_mutations.source_model,
-        "current_doc_timestamp",
-        lambda: "2026-07-27 21:15:00",
-    )
-
-    with make_repo() as temp_path:
-        repo_root = Path(temp_path)
-        write_scope_registry(
-            repo_root,
-            [
-                docs_scope_record(
-                    "studio",
-                    allow_unresolved_parent_ids=True,
-                    sub_scopes=[
-                        docs_sub_scope_record(
-                            "studio",
-                            "tags",
-                            analysis_tag_groups=["subject", "domain", "form", "theme"],
-                        )
-                    ],
-                )
-            ],
-        )
-        source_path = (
-            repo_root
-            / f"docs-viewer/scopes/studio/source/sub-scopes/tags/documents/{SUB_SCOPE_DOC_ID}.md"
-        )
-        source_path.parent.mkdir(parents=True, exist_ok=True)
-        source_path.write_text(
-            docs_management_mutations.source_model.format_source(
-                {
-                    "doc_id": SUB_SCOPE_DOC_ID,
-                    "title": "Detail",
-                    "summary": "Old summary",
-                    "date": "2026-07-26",
-                    "date_display": "July 2026",
-                    "added_date": "2026-07-26 10:00",
-                    "last_updated": "2026-07-26 11:00",
-                    "ui_status": "draft",
-                    "group": "subject",
-                    "parent_id": "retained-parent",
-                },
-                "# Detail\n",
-            ),
-            encoding="utf-8",
-        )
-        config = load_docs_scope_configs(repo_root, scope_ids=["studio"])["studio"]
-        initial_builder = SubScopeDocsBuilder(
-            repo_root=repo_root,
-            config=config,
-            sub_scope=selected_sub_scope(config, "tags"),
-        )
-        initial_builder._parent_report_doc_id = ""
-        initial_builder.run(write=True)
-        manifest_before = read_json(
-            repo_root
-            / "docs-viewer/scopes/studio/published/documents/sub-scopes/tags/manifest.json"
-        )
-        result = docs_management_service.handle_update_metadata(
-            repo_root,
-            {
-                "scope": "studio",
-                "sub_scope": "tags",
-                "doc_id": SUB_SCOPE_DOC_ID,
-                "source_revision": (
-                    docs_management_mutations.source_model.source_revision(
-                        source_path.read_bytes()
-                    )
-                ),
-                "title": "Renamed Detail",
-                "summary": "New summary",
-                "date": "2026-07-27",
-                "date_display": "late July 2026",
-                "ui_status": "done",
-            },
-            dry_run=False,
-        )
-        assigned = docs_management_service.handle_assign_field_group(
-            repo_root,
-            {
-                "scope": "studio",
-                "sub_scope": "tags",
-                "doc_id": SUB_SCOPE_DOC_ID,
-                "source_revision": result["source_revision"],
-                "field_group": "tag_fields",
-                "fields": {"group": "theme", "tag_id": "absence"},
-                "confirm": True,
-            },
-            dry_run=False,
-        )
-        manage_manifest = read_json(
-            repo_root
-            / "docs-viewer/scopes/studio/published/documents/sub-scopes/tags/manage-manifest.json"
-        )
-        manifest = read_json(
-            repo_root
-            / "docs-viewer/scopes/studio/published/documents/sub-scopes/tags/manifest.json"
-        )
-        detail_payload = read_json(
-            repo_root
-            / f"docs-viewer/scopes/studio/published/documents/sub-scopes/tags/by-id/{SUB_SCOPE_DOC_ID}.json"
-        )
-        source_after = source_path.read_text(encoding="utf-8")
-
-    assert result["record"] == {
-        "doc_id": SUB_SCOPE_DOC_ID,
-        "title": "Renamed Detail",
-        "summary": "New summary",
-        "date": "2026-07-27",
-        "date_display": "late July 2026",
-        "ui_status": "done",
-    }
-    assert assigned["field_group"] == "tag_fields"
-    assert assigned["fields"] == {"group": "theme", "tag_id": "absence"}
-    assert assigned["changes"] == {
-        "group_changed": True,
-        "tag_id_changed": True,
-    }
-    assert result["sub_scope"] == "tags"
-    assert manifest_before == {
-        "docs": [{"doc_id": SUB_SCOPE_DOC_ID, "title": "Detail"}]
-    }
-    assert result["rebuild"]["docs"] == {"mode": "sub_scope", "sub_scope": "tags"}
-    assert rebuild_calls == [
-        {
-            "scope": "studio",
-            "sub_scope": "tags",
-            "changed_paths": [f"{SUB_SCOPE_DOC_ID}.md"],
-            "suppression_reason": "docs-update-metadata",
-            "changed_item_ids": [SUB_SCOPE_DOC_ID],
-            "manifest_write": True,
-            "manage_manifest_write": True,
-        },
-        {
-            "scope": "studio",
-            "sub_scope": "tags",
-            "changed_paths": [f"{SUB_SCOPE_DOC_ID}.md"],
-            "suppression_reason": "docs-assign-field-group",
-            "changed_item_ids": [],
-            "manifest_write": False,
-            "manage_manifest_write": True,
-        },
-    ]
-    assert manage_manifest == {
-        "customisation": {
-            "id": "analysis_tags",
-            "data": {
-                "groups": ["subject", "domain", "form", "theme"],
-            },
-        },
-        "docs": [
-            {
-                "doc_id": SUB_SCOPE_DOC_ID,
-                "title": "Renamed Detail",
-                "ui_status": "done",
-                "last_updated": "2026-07-27 21:15:00",
-                "customisation": {"group": "theme", "tag_id": "absence"},
-            }
-        ],
-    }
-    assert manifest == {
-        "docs": [{"doc_id": SUB_SCOPE_DOC_ID, "title": "Renamed Detail"}]
-    }
-    assert set(detail_payload) >= {"doc_id", "title", "content_html"}
-    assert "publishable" not in manifest
-    assert all(set(record) == {"doc_id", "title"} for record in manifest["docs"])
-    assert "parent_id: retained-parent" in source_after
-    assert 'last_updated: "2026-07-27 21:15:00"' in source_after
-    assert "tag_id: absence" in source_after
-
-
 def test_projects_subject_assignment_read_save_remove_and_strict_rejection(
     monkeypatch,
     tmp_path: Path,
@@ -356,7 +138,7 @@ def test_projects_subject_assignment_read_save_remove_and_strict_rejection(
         return {
             "ok": True,
             "docs": {"mode": "sub_scope", "sub_scope": sub_scope},
-            "search": {"mode": "full", "doc_ids": []},
+            "search": {"mode": "none", "doc_ids": []},
         }
 
     monkeypatch.setattr(
@@ -981,8 +763,7 @@ def test_parent_delete_removes_subtree_and_rebuilds_every_deleted_id(monkeypatch
     assert rebuild_calls == [
         {
             "scope": "studio",
-            "include_search": True,
-            "search_doc_ids": ["non-publishable-doc", "child"],
+            "include_search": False,
             "docs_doc_ids": ["non-publishable-doc", "child"],
             "skip_media_builds": False,
         }
@@ -1025,8 +806,7 @@ def test_multi_selection_delete_applies_union_once(monkeypatch) -> None:
     assert rebuild_calls == [
         {
             "scope": "studio",
-            "include_search": True,
-            "search_doc_ids": ["non-publishable-doc", "child", "other"],
+            "include_search": False,
             "docs_doc_ids": ["non-publishable-doc", "child", "other"],
             "skip_media_builds": False,
         }

@@ -188,7 +188,6 @@ def test_apply_move_finishes_target_before_source_rebuild_and_exclusive_cleanup(
     assert result["moved_doc_ids"] == ["alpha", "grand"]
     assert all(
         call["kwargs"]["docs_doc_ids"] == result["moved_doc_ids"]
-        and call["kwargs"]["search_doc_ids"] == result["moved_doc_ids"]
         for call in calls
     )
     assert calls[1]["kwargs"]["written_paths"] == []

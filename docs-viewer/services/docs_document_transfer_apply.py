@@ -1049,9 +1049,7 @@ def apply_document_copy(
                 target_paths,
                 write_operation,
                 suppression_reason=DOCUMENT_COPY_SUPPRESSION_REASON,
-                include_search=True,
                 docs_doc_ids=created_doc_ids,
-                search_doc_ids=created_doc_ids,
                 written_paths=written_paths,
                 skip_media_builds=True,
             )

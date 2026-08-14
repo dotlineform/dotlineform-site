@@ -174,18 +174,6 @@ def delete_selection_warning(requested_count: int, additional_descendant_count: 
     return f"This permanently deletes {selected_text}."
 
 
-def metadata_search_doc_ids(
-    docs: list[source_model.ScopeDoc],
-    doc_id: str,
-    *,
-    title_changed: bool,
-) -> list[str]:
-    doc_ids = [doc_id]
-    if title_changed:
-        doc_ids.extend(source_model.direct_child_doc_ids(docs, doc_id))
-    return ordered_doc_ids(doc_ids)
-
-
 @dataclass(frozen=True)
 class SourceWrite:
     path: Path
@@ -205,8 +193,6 @@ class ScopeRebuild:
     scope: str
     changed_paths: tuple[Path, ...]
     build_doc_ids: Optional[list[str]] = None
-    search_doc_ids: Optional[list[str]] = None
-    include_search: bool = True
 
 
 @dataclass(frozen=True)
@@ -218,7 +204,6 @@ class ManagementMutationPlan:
     source_deletes: tuple[SourceDelete, ...] = ()
     suppression_reason: Optional[str] = None
     build_doc_ids: Optional[list[str]] = None
-    search_doc_ids: Optional[list[str]] = None
     rebuilds: tuple[ScopeRebuild, ...] = ()
     public_delete_cleanup: Optional[
         public_delete_cleanup.PublicDeleteCleanupPlan
@@ -362,7 +347,6 @@ def plan_create(repo_root: Path, body: Dict[str, Any]) -> ManagementMutationPlan
         ),
         suppression_reason="docs-create",
         build_doc_ids=[] if sub_scope else [doc_id],
-        search_doc_ids=[] if sub_scope else [doc_id],
         log_event_name="docs-create",
         log_details=log_details,
         include_write_result_keys=True,
@@ -743,18 +727,6 @@ def plan_update_metadata(repo_root: Path, body: Dict[str, Any]) -> ManagementMut
         target.body,
     )
 
-    search_doc_ids: list[str] = []
-    if not resolved.sub_scope:
-        search_doc_ids = metadata_search_doc_ids(
-            docs,
-            target.doc_id,
-            title_changed=title_changed,
-        )
-        if status_changed and not (
-            title_changed or parent_changed or summary_changed
-        ):
-            search_doc_ids = []
-
     record = {
         "doc_id": target.doc_id,
         "title": title,
@@ -820,7 +792,6 @@ def plan_update_metadata(repo_root: Path, body: Dict[str, Any]) -> ManagementMut
         ),
         suppression_reason="docs-update-metadata",
         build_doc_ids=[] if resolved.sub_scope else [target.doc_id],
-        search_doc_ids=search_doc_ids,
         log_event_name="docs-update-metadata",
         log_details=log_details,
         include_write_result_keys=True,
@@ -847,10 +818,6 @@ def plan_move(repo_root: Path, body: Dict[str, Any]) -> ManagementMutationPlan:
         raise ValueError("parent_id cannot be a child or descendant of the current doc")
 
     changed = moving_doc.parent_id != parent_id
-    search_doc_ids = [moving_doc.doc_id]
-    if changed:
-        search_doc_ids.extend(sorted(source_model.descendant_doc_ids(docs, moving_doc.doc_id)))
-
     return ManagementMutationPlan(
         scope=scope,
         response={
@@ -867,7 +834,6 @@ def plan_move(repo_root: Path, body: Dict[str, Any]) -> ManagementMutationPlan:
         source_writes=(SourceWrite(moving_doc.path, source_model.rewrite_doc_placement_source(moving_doc, parent_id)),) if changed else (),
         suppression_reason="docs-move",
         build_doc_ids=[moving_doc.doc_id] if changed else [],
-        search_doc_ids=search_doc_ids if changed else [],
         log_event_name="docs-move" if changed else None,
         log_details={
             "scope": scope,
@@ -977,7 +943,6 @@ def plan_delete_apply(repo_root: Path, body: Dict[str, Any]) -> ManagementMutati
         source_deletes=tuple(SourceDelete(doc.path) for doc in delete_docs),
         suppression_reason="docs-delete",
         build_doc_ids=delete_doc_ids,
-        search_doc_ids=delete_doc_ids,
         public_delete_cleanup=cleanup_plan,
         log_event_name="docs-delete",
         log_details={

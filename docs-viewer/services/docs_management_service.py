@@ -246,7 +246,11 @@ def docs_management_post_response(
             return HTTPStatus.INTERNAL_SERVER_ERROR, error.payload
     if path == routes.REBUILD_PATH:
         scope = source_model.normalize_scope(body.get("scope"))
-        payload = write_rebuild.rebuild_scope_outputs(repo_root, scope)
+        payload = write_rebuild.rebuild_scope_outputs(
+            repo_root,
+            scope,
+            include_search=True,
+        )
         payload["summary_text"] = f"Docs and docs search rebuilt for {scope}."
         return HTTPStatus.OK, payload
     if path == routes.MOVE_PATH:

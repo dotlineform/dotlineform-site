@@ -557,9 +557,7 @@ def apply_document_move(
             target_paths,
             write_target_documents,
             suppression_reason=DOCUMENT_MOVE_SUPPRESSION_REASON,
-            include_search=True,
             docs_doc_ids=moved_doc_ids,
-            search_doc_ids=moved_doc_ids,
             written_paths=target_written_paths,
             skip_media_builds=True,
         )
@@ -573,9 +571,7 @@ def apply_document_move(
             source_paths,
             lambda: _delete_source_documents(transformation),
             suppression_reason=DOCUMENT_MOVE_SUPPRESSION_REASON,
-            include_search=True,
             docs_doc_ids=moved_doc_ids,
-            search_doc_ids=moved_doc_ids,
             written_paths=[],
             skip_media_builds=True,
         )

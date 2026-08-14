@@ -306,7 +306,7 @@ def test_watcher_registers_configured_mermaid_root_and_renders_only_changed_iden
 def test_watcher_formats_affected_doc_ids_for_logs() -> None:
     module = load_docs_live_rebuild_watcher_module()
 
-    assert module.affected_doc_ids_log_text(None) == "full-search fallback"
+    assert module.affected_doc_ids_log_text(None) == "full-docs fallback"
     assert module.affected_doc_ids_log_text([]) == "none"
     assert module.affected_doc_ids_log_text(["parent", "child"]) == "parent, child"
 
@@ -797,7 +797,6 @@ def test_parent_watcher_capture_runs_one_existing_rebuild() -> None:
                 (repo_root, "studio"),
                 {
                     "docs_doc_ids": ["doc"],
-                    "search_doc_ids": ["doc"],
                 },
             )
         ]
@@ -1367,7 +1366,7 @@ def test_watcher_formats_docs_builder_diagnostics_on_separate_lines() -> None:
     ]
 
 
-def test_sub_scope_rebuild_runs_child_docs_then_full_parent_search() -> None:
+def test_sub_scope_rebuild_runs_child_docs_only() -> None:
     module = load_docs_live_rebuild_watcher_module()
     calls: list[list[str]] = []
     original_run = module.subprocess.run
@@ -1401,13 +1400,6 @@ def test_sub_scope_rebuild_runs_child_docs_then_full_parent_search() -> None:
             "--write",
             "--diagnostics",
         ],
-        [
-            module.PYTHON_EXECUTABLE,
-            "docs-viewer/build/build_search.py",
-            "--scope",
-            "analysis",
-            "--write",
-        ],
     ]
 
 
@@ -1435,7 +1427,6 @@ def test_watcher_falls_back_to_full_docs_build_when_targeted_payloads_are_missin
             Path("/repo"),
             "tmp",
             docs_doc_ids=["tmp"],
-            search_doc_ids=["tmp"],
         )
     finally:
         module.subprocess.run = original_run
@@ -1443,13 +1434,6 @@ def test_watcher_falls_back_to_full_docs_build_when_targeted_payloads_are_missin
 
     assert calls == [
         [module.PYTHON_EXECUTABLE, "docs-viewer/build/build_docs.py", "--scope", "tmp", "--write", "--diagnostics"],
-        [
-            module.PYTHON_EXECUTABLE,
-            "docs-viewer/build/build_search.py",
-            "--scope",
-            "tmp",
-            "--write",
-        ],
     ]
 
 

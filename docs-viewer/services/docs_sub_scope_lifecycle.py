@@ -425,8 +425,10 @@ def apply_create_sub_scope(
         result["rebuild"]["sub_scope"] = rebuild_sub_scope_outputs(repo_root, scope, sub_scope)
         stage = "parent_rebuild"
         result["rebuild"]["parent"] = rebuild_scope_outputs(
-            repo_root, scope, include_search=True,
-            docs_doc_ids=[identity["doc_id"]], search_doc_ids=[identity["doc_id"]],
+            repo_root,
+            scope,
+            include_search=False,
+            docs_doc_ids=[identity["doc_id"]],
         )
     except Exception as error:
         raise apply_error(result, error, committed=True, stage=stage) from error
@@ -621,8 +623,10 @@ def apply_delete_sub_scope(
     try:
         delete_manifest_paths(repo_root, preview["delete_files"])
         result["rebuild"]["parent"] = rebuild_scope_outputs(
-            repo_root, scope, include_search=True,
-            docs_doc_ids=[host_id], search_doc_ids=[host_id],
+            repo_root,
+            scope,
+            include_search=False,
+            docs_doc_ids=[host_id],
         )
         try:
             result["public_cleanup"] = (

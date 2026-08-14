@@ -53,22 +53,10 @@ var MANAGEMENT_ACTION_MENU_ITEMS = [
     hidden: true
   },
   {
-    id: "docsViewerManagePublishButton",
-    actionId: ACTION_IDS.PUBLISH_DOCS,
-    emoji: "🌍",
-    label: "Publish"
-  },
-  {
     id: "docsViewerManageSettingsButton",
     actionId: ACTION_IDS.SETTINGS,
     emoji: "⚙️",
     label: "Settings"
-  },
-  {
-    id: "docsViewerManageRebuildButton",
-    actionId: ACTION_IDS.REBUILD_DOCS,
-    emoji: "🔄",
-    label: "Rebuild docs"
   }
 ];
 
@@ -126,10 +114,10 @@ function renderActionButton(context, options) {
   var button = context.existingRoot;
   if (!button || button.tagName !== "BUTTON") {
     button = context.document.createElement("button");
-    button.className = settings.className || "docsViewer__actionButton";
-    button.id = settings.id || "";
-    button.type = "button";
   }
+  button.className = settings.className || "docsViewer__actionButton";
+  button.id = settings.id || "";
+  button.type = "button";
   button.textContent = "";
   if (settings.iconOnly) {
     var icon = context.document.createElement("span");
@@ -195,8 +183,21 @@ export function createDocsViewerManagementAppControlRenderers() {
       });
     },
     "manage-actions-menu": renderManagementActionsMenu,
+    "manage-toolbar-rebuild": function (context) {
+      return renderActionButton(context, {
+        className: "docsViewer__actionButton docsViewer__actionButton--iconOnly",
+        id: "docsViewerManageRebuildButton",
+        iconOnly: true,
+        text: "🔄"
+      });
+    },
     "manage-toolbar-publish": function (context) {
-      return renderActionButton(context, { id: "docsViewerManageToolbarPublishButton", text: "Publish" });
+      return renderActionButton(context, {
+        className: "docsViewer__actionButton docsViewer__actionButton--iconOnly",
+        id: "docsViewerManageToolbarPublishButton",
+        iconOnly: true,
+        text: "🌍"
+      });
     },
     "manage-scope-select": renderScopeControl,
     "manage-theme-toggle": renderThemeToggle

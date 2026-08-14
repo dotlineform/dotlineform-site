@@ -248,7 +248,6 @@ def test_rebuild_source_body_preserves_front_matter_exactly_and_targets_selected
                 "scope": scope,
                 "changed_paths": [path.name for path in changed_paths],
                 "docs_doc_ids": kwargs.get("docs_doc_ids"),
-                "search_doc_ids": kwargs.get("search_doc_ids"),
                 "suppression_reason": kwargs.get("suppression_reason"),
             }
         )
@@ -256,7 +255,7 @@ def test_rebuild_source_body_preserves_front_matter_exactly_and_targets_selected
         return {
             "ok": True,
             "docs": {"mode": "targeted", "doc_ids": kwargs.get("docs_doc_ids")},
-            "search": {"mode": "targeted", "doc_ids": kwargs.get("search_doc_ids")},
+            "search": {"mode": "none", "doc_ids": []},
         }
 
     monkeypatch.setattr(source_service.write_rebuild, "perform_source_write_and_rebuild", fake_rebuild)
@@ -293,7 +292,6 @@ def test_rebuild_source_body_preserves_front_matter_exactly_and_targets_selected
             "scope": "studio",
             "changed_paths": ["target.md"],
             "docs_doc_ids": ["target"],
-            "search_doc_ids": ["target"],
             "suppression_reason": "docs-source-editor",
         }
     ]

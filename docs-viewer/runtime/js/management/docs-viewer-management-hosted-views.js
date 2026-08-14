@@ -92,6 +92,16 @@ export function createDocsViewerManagementViewDefinitions() {
         renderer: "manage-actions-menu"
       },
       {
+        id: "manage-rebuild",
+        actionId: DOCS_VIEWER_ACTION_IDS.REBUILD_DOCS,
+        label: "Rebuild docs and Search",
+        ownerType: "app",
+        surfaceId: "app-management",
+        appKinds: ["manage"],
+        features: ["management"],
+        renderer: "manage-toolbar-rebuild"
+      },
+      {
         id: "manage-publish",
         actionId: DOCS_VIEWER_ACTION_IDS.PUBLISH_DOCS,
         label: "Publish",

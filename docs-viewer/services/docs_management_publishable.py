@@ -277,7 +277,6 @@ def apply_set_publishable_plan(
                 suppression_reason="docs-set-publishable",
                 source_snapshots=snapshots,
                 docs_doc_ids=updated_doc_ids,
-                search_doc_ids=updated_doc_ids,
             )
     except (
         write_rebuild.ScopeSourceSnapshotChanged,

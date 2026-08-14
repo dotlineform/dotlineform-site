@@ -598,7 +598,7 @@ export function createDocsViewerManagementActionController(options) {
 
   function handleRebuildDocs() {
     setManagementBusy(true);
-    setManagementMessage("Rebuilding docs...", false);
+    setManagementMessage("Rebuilding docs and Search...", false);
 
     rebuildManagedDocs(managementClientOptions())
       .then(function () {
@@ -607,7 +607,7 @@ export function createDocsViewerManagementActionController(options) {
         return reloadDocsIndex(targetDocId, "");
       })
       .catch(function (error) {
-        setManagementMessage(error.message || "Docs rebuild failed.", true);
+        setManagementMessage(error.message || "Docs and Search rebuild failed.", true);
       })
       .finally(function () {
         setManagementBusy(false);
