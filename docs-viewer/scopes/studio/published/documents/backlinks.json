@@ -52,13 +52,6 @@
         "viewer_url": "/docs/?scope=studio&doc=d-20260419-000000-86255c"
       }
     ],
-    "d-20260331-000000-5dcf32": [
-      {
-        "doc_id": "d-20260715-084611-7c7c8d",
-        "title": "Repository Maintenance",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260715-084611-7c7c8d"
-      }
-    ],
     "d-20260331-000000-643429": [
       {
         "doc_id": "d-20260331-000000-974bf0",
@@ -2129,11 +2122,6 @@
         "viewer_url": "/docs/?scope=studio&doc=d-20260523-203756-b41c00"
       },
       {
-        "doc_id": "d-20260715-084611-7c7c8d",
-        "title": "Repository Maintenance",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260715-084611-7c7c8d"
-      },
-      {
         "doc_id": "d-20260720-161656-1357d0",
         "title": "Site",
         "viewer_url": "/docs/?scope=studio&doc=d-20260720-161656-1357d0"
@@ -3064,5 +3052,5 @@
       }
     ]
   },
-  "generated_at": "2026-08-14T15:17:28Z"
+  "generated_at": "2026-08-14T16:55:12Z"
 }

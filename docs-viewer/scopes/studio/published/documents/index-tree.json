@@ -903,11 +903,6 @@
           "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260723-191039-f8cb88.json"
         },
         {
-          "doc_id": "d-20260715-084611-7c7c8d",
-          "title": "Repository Maintenance",
-          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260715-084611-7c7c8d.json"
-        },
-        {
           "doc_id": "d-20260814-155129-c2a782",
           "title": "Search Improvements",
           "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260814-155129-c2a782.json",
@@ -1291,5 +1286,5 @@
       ]
     }
   ],
-  "generated_at": "2026-08-14T15:12:44Z"
+  "generated_at": "2026-08-14T16:55:12Z"
 }
