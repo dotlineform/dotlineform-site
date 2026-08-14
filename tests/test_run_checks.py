@@ -30,16 +30,12 @@ def test_runner_uses_repository_test_output_root() -> None:
     assert runner.RUNS_DIR == REPO_ROOT / "var" / "test-runs"
 
 
-def test_runner_expands_admin_smoke_profile_without_studio_risk_route() -> None:
+def test_runner_expands_studio_smoke_without_retired_risk_route() -> None:
     runner = load_runner_module()
 
-    commands = runner.expand_profiles(["admin-smoke", "studio-smoke"])
-    names = [command.name for command in commands]
+    commands = runner.expand_profiles(["studio-smoke"])
     argv_text = "\n".join(" ".join(command.argv) for command in commands)
 
-    assert "admin-home-route-smoke" in names
-    assert "admin-operations-routes-smoke" in names
-    assert "local-studio-risk-route-smoke" not in names
     assert "studio/tests/smoke/local_studio_app_risk_route.py" not in argv_text
 
 

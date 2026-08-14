@@ -184,13 +184,6 @@
         "viewer_url": "/docs/?scope=studio&doc=d-20260515-000000-f43740"
       }
     ],
-    "d-20260331-000000-faddd2": [
-      {
-        "doc_id": "d-20260423-000000-d274d3",
-        "title": "Scripts",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260423-000000-d274d3"
-      }
-    ],
     "d-20260331-154730-885d0f": [
       {
         "doc_id": "d-20260602-160839-4ebe27",
@@ -410,11 +403,6 @@
       }
     ],
     "d-20260422-174736-9bd0fc": [
-      {
-        "doc_id": "d-20260606-212412-01ed44",
-        "title": "Admin",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260606-212412-01ed44"
-      },
       {
         "doc_id": "d-20260424-000000-5b64f6",
         "title": "Live Rebuild Watcher",
@@ -792,11 +780,6 @@
       }
     ],
     "d-20260501-174746-efd581": [
-      {
-        "doc_id": "d-20260606-212412-01ed44",
-        "title": "Admin",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260606-212412-01ed44"
-      },
       {
         "doc_id": "d-20260419-000000-d2e47b",
         "title": "Dev Home",
@@ -1540,11 +1523,6 @@
         "viewer_url": "/docs/?scope=studio&doc=d-20260609-212515-238344"
       },
       {
-        "doc_id": "d-20260609-190605-cc1e45",
-        "title": "Reports",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260609-190605-cc1e45"
-      },
-      {
         "doc_id": "d-20260610-114020-544e51",
         "title": "Static Searches Report",
         "viewer_url": "/docs/?scope=studio&doc=d-20260610-114020-544e51"
@@ -1762,76 +1740,6 @@
         "viewer_url": "/docs/?scope=studio&doc=d-20260423-000000-8fd731"
       }
     ],
-    "d-20260606-202710-81c53a": [
-      {
-        "doc_id": "d-20260606-212412-01ed44",
-        "title": "Admin",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260606-212412-01ed44"
-      },
-      {
-        "doc_id": "d-20260715-084611-56645e",
-        "title": "Admin Config JSON",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260715-084611-56645e"
-      },
-      {
-        "doc_id": "d-20260413-000000-d314b7",
-        "title": "Local Setup",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260413-000000-d314b7"
-      },
-      {
-        "doc_id": "d-20260423-000000-d274d3",
-        "title": "Scripts",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260423-000000-d274d3"
-      }
-    ],
-    "d-20260606-212412-01ed44": [
-      {
-        "doc_id": "d-20260419-000000-d2e47b",
-        "title": "Dev Home",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260419-000000-d2e47b"
-      },
-      {
-        "doc_id": "d-20260715-084611-ae9636",
-        "title": "Studio Overview",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260715-084611-ae9636"
-      }
-    ],
-    "d-20260607-000000-15afd8": [
-      {
-        "doc_id": "d-20260606-212412-01ed44",
-        "title": "Admin",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260606-212412-01ed44"
-      },
-      {
-        "doc_id": "d-20260531-000000-6679ea",
-        "title": "Admin Checks Responsibility Reports",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260531-000000-6679ea"
-      },
-      {
-        "doc_id": "d-20260811-113809-ad8110",
-        "title": "Implementation Review",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260811-113809-ad8110"
-      }
-    ],
-    "d-20260607-000000-c36c22": [
-      {
-        "doc_id": "d-20260606-212412-01ed44",
-        "title": "Admin",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260606-212412-01ed44"
-      }
-    ],
-    "d-20260607-000000-fc2912": [
-      {
-        "doc_id": "d-20260625-174523-74cf61",
-        "title": "Route Ready-State Audit",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260625-174523-74cf61"
-      },
-      {
-        "doc_id": "d-20260423-000000-d274d3",
-        "title": "Scripts",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260423-000000-d274d3"
-      }
-    ],
     "d-20260607-222033-2a494e": [
       {
         "doc_id": "d-20260519-202931-66c794",
@@ -1998,49 +1906,6 @@
         "viewer_url": "/docs/?scope=studio&doc=d-20260607-222033-647b52"
       }
     ],
-    "d-20260608-000000-828192": [
-      {
-        "doc_id": "d-20260608-225607-868570",
-        "title": "Checks",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260608-225607-868570"
-      }
-    ],
-    "d-20260608-225607-77fc13": [
-      {
-        "doc_id": "d-20260608-225607-868570",
-        "title": "Checks",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260608-225607-868570"
-      }
-    ],
-    "d-20260608-225607-868570": [
-      {
-        "doc_id": "d-20260606-212412-01ed44",
-        "title": "Admin",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260606-212412-01ed44"
-      },
-      {
-        "doc_id": "d-20260531-000000-6679ea",
-        "title": "Admin Checks Responsibility Reports",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260531-000000-6679ea"
-      },
-      {
-        "doc_id": "d-20260607-000000-15afd8",
-        "title": "Risk Review Method",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260607-000000-15afd8"
-      }
-    ],
-    "d-20260609-125123-5a23f5": [
-      {
-        "doc_id": "d-20260608-225607-868570",
-        "title": "Checks",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260608-225607-868570"
-      },
-      {
-        "doc_id": "d-20260610-194253-551bea",
-        "title": "Target Map Report",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260610-194253-551bea"
-      }
-    ],
     "d-20260609-212515-520398": [
       {
         "doc_id": "d-20260609-212515-238344",
@@ -2060,13 +1925,6 @@
         "doc_id": "d-20260609-212515-238344",
         "title": "Report Dependencies",
         "viewer_url": "/docs/?scope=studio&doc=d-20260609-212515-238344"
-      }
-    ],
-    "d-20260610-194253-551bea": [
-      {
-        "doc_id": "d-20260608-225607-868570",
-        "title": "Checks",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260608-225607-868570"
       }
     ],
     "d-20260610-225919-188d54": [
@@ -2195,11 +2053,6 @@
       }
     ],
     "d-20260625-162242-b0b6c7": [
-      {
-        "doc_id": "d-20260715-084611-2d223d",
-        "title": "Admin Overview",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260715-084611-2d223d"
-      },
       {
         "doc_id": "d-20260419-000000-cb98dd",
         "title": "Bulk Add Work",
@@ -2373,25 +2226,6 @@
         "doc_id": "d-20260725-153656-516b61",
         "title": "Semantic Tokens",
         "viewer_url": "/docs/?scope=studio&doc=d-20260725-153656-516b61"
-      }
-    ],
-    "d-20260715-084611-2d223d": [
-      {
-        "doc_id": "d-20260606-212412-01ed44",
-        "title": "Admin",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260606-212412-01ed44"
-      }
-    ],
-    "d-20260715-084611-56645e": [
-      {
-        "doc_id": "d-20260606-212412-01ed44",
-        "title": "Admin",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260606-212412-01ed44"
-      },
-      {
-        "doc_id": "d-20260602-234732-ea94b3",
-        "title": "Configuration Map",
-        "viewer_url": "/docs/?scope=studio&doc=d-20260602-234732-ea94b3"
       }
     ],
     "d-20260715-084611-99ee19": [
@@ -3035,5 +2869,5 @@
       }
     ]
   },
-  "generated_at": "2026-08-14T19:56:25Z"
+  "generated_at": "2026-08-14T20:08:10Z"
 }

@@ -15,7 +15,6 @@ from studio.shared.python.local_browser_assets import (
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 LOCAL_SHELLS = (
-    "admin-app/app/frontend/admin-shell.html",
     "studio/app/frontend/studio-shell.html",
     "docs-viewer/shell/docs-viewer-manage.html",
     "docs-viewer/shell/docs-viewer-review.html",

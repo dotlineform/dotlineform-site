@@ -6,87 +6,6 @@
   },
   "docs": [
     {
-      "doc_id": "d-20260606-212412-01ed44",
-      "title": "Admin",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260606-212412-01ed44.json",
-      "children": [
-        {
-          "doc_id": "d-20260715-084611-56645e",
-          "title": "Admin Config JSON",
-          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260715-084611-56645e.json"
-        },
-        {
-          "doc_id": "d-20260715-084611-2d223d",
-          "title": "Admin Overview",
-          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260715-084611-2d223d.json"
-        },
-        {
-          "doc_id": "d-20260607-000000-fc2912",
-          "title": "Audit Runner",
-          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260607-000000-fc2912.json"
-        },
-        {
-          "doc_id": "d-20260607-000000-c36c22",
-          "title": "Audits",
-          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260607-000000-c36c22.json"
-        },
-        {
-          "doc_id": "d-20260608-225607-868570",
-          "title": "Checks",
-          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260608-225607-868570.json",
-          "children": [
-            {
-              "doc_id": "d-20260608-000000-828192",
-              "title": "Checks Config And Targeting",
-              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260608-000000-828192.json"
-            },
-            {
-              "doc_id": "d-20260609-190605-cc1e45",
-              "title": "Reports",
-              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260609-190605-cc1e45.json",
-              "children": [
-                {
-                  "doc_id": "d-20260608-225607-77fc13",
-                  "title": "Files Report",
-                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260608-225607-77fc13.json"
-                },
-                {
-                  "doc_id": "d-20260610-194253-551bea",
-                  "title": "Target Map Report",
-                  "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260610-194253-551bea.json"
-                }
-              ]
-            },
-            {
-              "doc_id": "d-20260609-125123-5a23f5",
-              "title": "Target Map Architecture",
-              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260609-125123-5a23f5.json"
-            }
-          ]
-        },
-        {
-          "doc_id": "d-20260606-202710-81c53a",
-          "title": "Local Admin App",
-          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260606-202710-81c53a.json"
-        },
-        {
-          "doc_id": "d-20260607-000000-15afd8",
-          "title": "Risk Review Method",
-          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260607-000000-15afd8.json"
-        },
-        {
-          "doc_id": "d-20260625-174523-74cf61",
-          "title": "Route Ready-State Audit",
-          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260625-174523-74cf61.json"
-        },
-        {
-          "doc_id": "d-20260331-000000-cdc571",
-          "title": "Site Consistency Audit",
-          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260331-000000-cdc571.json"
-        }
-      ]
-    },
-    {
       "doc_id": "d-20260331-000000-4a16b0",
       "title": "Architecture",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260331-000000-4a16b0.json",
@@ -199,14 +118,7 @@
         {
           "doc_id": "d-20260423-000000-d274d3",
           "title": "Scripts",
-          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260423-000000-d274d3.json",
-          "children": [
-            {
-              "doc_id": "d-20260331-000000-faddd2",
-              "title": "CSS Token Audit",
-              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260331-000000-faddd2.json"
-            }
-          ]
+          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260423-000000-d274d3.json"
         },
         {
           "doc_id": "d-20260605-103600-2dc18d",
@@ -1280,6 +1192,16 @@
           "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260514-135716-c70591.json"
         },
         {
+          "doc_id": "d-20260625-174523-74cf61",
+          "title": "Route Ready-State Audit",
+          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260625-174523-74cf61.json"
+        },
+        {
+          "doc_id": "d-20260331-000000-cdc571",
+          "title": "Site Consistency Audit",
+          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260331-000000-cdc571.json"
+        },
+        {
           "doc_id": "d-20260627-212121-7cf7de",
           "title": "Test Contract Discipline",
           "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260627-212121-7cf7de.json"
@@ -1287,5 +1209,5 @@
       ]
     }
   ],
-  "generated_at": "2026-08-14T19:56:25Z"
+  "generated_at": "2026-08-14T20:08:10Z"
 }

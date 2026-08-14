@@ -10,10 +10,6 @@ on:
       - "bin/lint-js"
       - "bin/lint-python"
       - "tooling/lint/**"
-      - "admin-app/app/frontend/js/**"
-      - "admin-app/app/server/**"
-      - "admin-app/checks/**"
-      - "admin-app/tests/**"
       - "docs-viewer/build/**"
       - "docs-viewer/migrations/**"
       - "docs-viewer/runtime/js/**"
@@ -73,7 +69,6 @@ jobs:
           bin/lint --scope shared
           bin/lint --scope site-tools
           bin/lint --scope studio
-          bin/lint --scope admin
           bin/lint --scope public-site
           bin/lint --scope docs-viewer
           bin/lint --scope tests

@@ -26,9 +26,6 @@ SITE_PORT="${SITE_PORT:-4000}"
 STUDIO_APP_ENABLED="${STUDIO_APP_ENABLED:-1}"
 STUDIO_APP_HOST="${STUDIO_APP_HOST:-127.0.0.1}"
 STUDIO_APP_PORT="${STUDIO_APP_PORT:-8765}"
-ADMIN_APP_ENABLED="${ADMIN_APP_ENABLED:-1}"
-ADMIN_APP_HOST="${ADMIN_APP_HOST:-127.0.0.1}"
-ADMIN_APP_PORT="${ADMIN_APP_PORT:-8768}"
 DOCS_VIEWER_HOST="${DOCS_VIEWER_HOST:-127.0.0.1}"
 DOCS_VIEWER_PORT="${DOCS_VIEWER_PORT:-8776}"
 DOCS_VIEWER_BASE_URL="${DOCS_VIEWER_BASE_URL:-http://$DOCS_VIEWER_HOST:$DOCS_VIEWER_PORT}"
@@ -220,11 +217,6 @@ if [ "$STUDIO_APP_ENABLED" != "0" ]; then
 else
   echo "Local Studio app: disabled by STUDIO_APP_ENABLED=0"
 fi
-if [ "$ADMIN_APP_ENABLED" != "0" ]; then
-  echo "Local Admin app: http://$ADMIN_APP_HOST:$ADMIN_APP_PORT/admin/"
-else
-  echo "Local Admin app: disabled by ADMIN_APP_ENABLED=0"
-fi
 echo "Docs Viewer: $DOCS_VIEWER_BASE_URL/docs/"
 if [ "$DOCS_VIEWER_REVIEW_ENABLED" != "0" ]; then
   echo "Docs Review: $DOCS_VIEWER_BASE_URL/docs-review/"
@@ -239,9 +231,6 @@ fi
 if [ "$STUDIO_APP_ENABLED" != "0" ]; then
   remember_binding "Local Studio" "$STUDIO_APP_HOST" "$STUDIO_APP_PORT"
 fi
-if [ "$ADMIN_APP_ENABLED" != "0" ]; then
-  remember_binding "Local Admin" "$ADMIN_APP_HOST" "$ADMIN_APP_PORT"
-fi
 remember_binding "Docs Viewer" "$DOCS_VIEWER_HOST" "$DOCS_VIEWER_PORT"
 
 if [ "$SITE_ENABLED" != "0" ]; then
@@ -249,9 +238,6 @@ if [ "$SITE_ENABLED" != "0" ]; then
 fi
 if [ "$STUDIO_APP_ENABLED" != "0" ]; then
   require_open_port "Local Studio" "$STUDIO_APP_HOST" "$STUDIO_APP_PORT" "STUDIO_APP_PORT"
-fi
-if [ "$ADMIN_APP_ENABLED" != "0" ]; then
-  require_open_port "Local Admin" "$ADMIN_APP_HOST" "$ADMIN_APP_PORT" "ADMIN_APP_PORT"
 fi
 require_open_port "Docs Viewer" "$DOCS_VIEWER_HOST" "$DOCS_VIEWER_PORT" "DOCS_VIEWER_PORT"
 
@@ -262,9 +248,6 @@ if [ "$SITE_ENABLED" != "0" ]; then
   start_child "Public site preview" "$ROOT_DIR/bin/site-preview"
 fi
 start_child "Local Studio runner" "$ROOT_DIR/bin/local-studio"
-if [ "$ADMIN_APP_ENABLED" != "0" ]; then
-  start_child "Local Admin runner" "$ROOT_DIR/bin/local-admin"
-fi
 start_child "Docs Viewer" "$ROOT_DIR/docs-viewer/bin/docs-viewer"
 
 while true; do

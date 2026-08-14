@@ -73,16 +73,6 @@ APP_CONFIGS = (
         allow_initial_ready_true=frozenset({"studio/app/frontend/routes/studio-home.html"}),
     ),
     AppConfig(
-        app_id="admin",
-        label="Admin",
-        path_patterns=("admin-app/app/frontend/routes/*.html",),
-        ready_attr="data-admin-ready",
-        busy_attr="data-admin-busy",
-        excluded_paths=frozenset(
-            {"admin-app/app/frontend/routes/admin-ui-workbench-frame.html"}
-        ),
-    ),
-    AppConfig(
         app_id="docs-viewer",
         label="Docs Viewer",
         path_patterns=(

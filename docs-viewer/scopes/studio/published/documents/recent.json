@@ -7,9 +7,25 @@
       "doc_id": "d-20260814-194856-a7c3e1",
       "title": "Admin Retirement",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260814-194856-a7c3e1.json",
-      "timestamp": "2026-08-14 20:47:32",
+      "timestamp": "2026-08-14 21:09:53",
       "parent_id": "d-20260428-000000-f5ff18",
       "parent_title": "Roadmap"
+    },
+    {
+      "doc_id": "d-20260625-174523-74cf61",
+      "title": "Route Ready-State Audit",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260625-174523-74cf61.json",
+      "timestamp": "2026-08-14 21:07:57",
+      "parent_id": "d-20260501-174746-efd581",
+      "parent_title": "Testing"
+    },
+    {
+      "doc_id": "d-20260331-000000-cdc571",
+      "title": "Site Consistency Audit",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260331-000000-cdc571.json",
+      "timestamp": "2026-08-14 21:07:57",
+      "parent_id": "d-20260501-174746-efd581",
+      "parent_title": "Testing"
     },
     {
       "doc_id": "d-20260523-222005-1085b2",
@@ -18,28 +34,6 @@
       "timestamp": "2026-08-14 20:47:32",
       "parent_id": "d-20260331-000000-4a16b0",
       "parent_title": "Architecture"
-    },
-    {
-      "doc_id": "d-20260606-212412-01ed44",
-      "title": "Admin",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260606-212412-01ed44.json",
-      "timestamp": "2026-08-14 20:31:55"
-    },
-    {
-      "doc_id": "d-20260607-000000-fc2912",
-      "title": "Audit Runner",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260607-000000-fc2912.json",
-      "timestamp": "2026-08-14 20:31:55",
-      "parent_id": "d-20260606-212412-01ed44",
-      "parent_title": "Admin"
-    },
-    {
-      "doc_id": "d-20260607-000000-c36c22",
-      "title": "Audits",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260607-000000-c36c22.json",
-      "timestamp": "2026-08-14 20:31:55",
-      "parent_id": "d-20260606-212412-01ed44",
-      "parent_title": "Admin"
     },
     {
       "doc_id": "d-20260419-000000-cb98dd",
@@ -66,21 +60,29 @@
       "parent_title": "Scripts Overview"
     },
     {
-      "doc_id": "d-20260715-084611-2d223d",
-      "title": "Admin Overview",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260715-084611-2d223d.json",
-      "timestamp": "2026-08-14 20:31:29",
-      "parent_id": "d-20260606-212412-01ed44",
-      "parent_title": "Admin"
-    },
-    {
       "doc_id": "d-20260607-222033-6331b3",
       "title": "Audit Scripts",
       "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260607-222033-6331b3.json",
       "timestamp": "2026-08-14 20:31:29",
       "parent_id": "d-20260607-222033-2a494e",
       "parent_title": "Scripts Overview"
+    },
+    {
+      "doc_id": "d-20260422-000000-fb2894",
+      "title": "Catalogue Services",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260422-000000-fb2894.json",
+      "timestamp": "2026-08-14 20:31:29",
+      "parent_id": "d-20260423-000000-d015e6",
+      "parent_title": "Studio"
+    },
+    {
+      "doc_id": "d-20260602-234732-ea94b3",
+      "title": "Configuration Map",
+      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260602-234732-ea94b3.json",
+      "timestamp": "2026-08-14 20:31:29",
+      "parent_id": "d-20260419-000000-d2e47b",
+      "parent_title": "Dev Home"
     }
   ],
-  "generated_at": "2026-08-14T19:56:25Z"
+  "generated_at": "2026-08-14T20:10:21Z"
 }

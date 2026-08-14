@@ -24,7 +24,6 @@ export default [
   {
     name: "Repository direct-browser modules",
     files: [
-      "admin-app/app/frontend/js/**/*.js",
       "docs-viewer/runtime/js/**/*.js",
       "shared/frontend/js/**/*.js",
       "site/assets/js/**/*.js",

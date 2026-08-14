@@ -139,17 +139,6 @@ def test_docs_viewer_shells_load_shared_theme_before_base_css() -> None:
         assert "data-allow-management" not in shell
 
 
-def test_docs_viewer_does_not_own_a_ui_workbench_route_or_protocol() -> None:
-    assert not (REPO_ROOT / "docs-viewer/shell/docs-viewer-workbench.html").exists()
-    assert not (
-        REPO_ROOT / "docs-viewer/tests/workbench/docs-viewer-workbench.js"
-    ).exists()
-    assert not (
-        REPO_ROOT / "docs-viewer/tests/workbench/docs-viewer-workbench.css"
-    ).exists()
-    assert not (REPO_ROOT / "shared/ui-workbench/workbench-channel.js").exists()
-
-
 def test_manage_shell_loads_shared_local_and_feature_css_in_order() -> None:
     shell = (REPO_ROOT / "docs-viewer/shell/docs-viewer-manage.html").read_text(encoding="utf-8")
     stylesheets = [
@@ -248,8 +237,6 @@ def test_static_path_policy_is_docs_viewer_scoped() -> None:
     ) is True
     assert allowed("/docs-viewer/runtime/js/packages/document-package-client.js") is True
     assert allowed("/docs-viewer/runtime/js/reports/docs-viewer-reports.js") is True
-    assert allowed("/docs-viewer/tests/workbench/docs-viewer-workbench-registry.js") is False
-    assert allowed("/shared/ui-workbench/workbench-channel.js") is False
     assert allowed("/docs-viewer/runtime/js/docs-viewer-public.js") is False
     assert allowed("/docs-viewer/runtime/js/docs-viewer-manage.js") is False
     assert allowed("/docs-viewer/runtime/js/docs-viewer.js") is False
@@ -301,12 +288,6 @@ def test_runtime_static_route_prefixes_resolve_to_owning_roots() -> None:
     assert docs_viewer_service.runtime_static_relative_path(
         "/docs-viewer/runtime/js/reports/docs-viewer-reports.js"
     ) == Path("docs-viewer/runtime/js/reports/docs-viewer-reports.js")
-    assert docs_viewer_service.runtime_static_relative_path(
-        "/docs-viewer/tests/workbench/docs-viewer-workbench-registry.js"
-    ) is None
-    assert docs_viewer_service.runtime_static_relative_path(
-        "/shared/ui-workbench/workbench-channel.js"
-    ) is None
     assert docs_viewer_service.runtime_static_relative_path(
         "/docs-viewer/runtime/js/docs-viewer-public.js"
     ) is None

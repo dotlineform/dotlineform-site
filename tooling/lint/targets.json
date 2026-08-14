@@ -45,15 +45,6 @@
         "studio/app/frontend/js"
       ]
     },
-    "admin": {
-      "python": [
-        "admin-app/app/server",
-        "admin-app/checks"
-      ],
-      "javascript": [
-        "admin-app/app/frontend/js"
-      ]
-    },
     "public-site": {
       "python": [],
       "javascript": [
@@ -73,7 +64,6 @@
     },
     "tests": {
       "python": [
-        "admin-app/tests",
         "docs-viewer/tests",
         "site-tools/tests",
         "studio/tests",

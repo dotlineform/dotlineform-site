@@ -147,13 +147,9 @@ def test_retired_studio_works_route_and_dedicated_owners_are_absent() -> None:
     studio_config = read_json(
         REPO_ROOT / "studio/app/frontend/config/studio-config.json"
     )
-    admin_checks = read_json(
-        REPO_ROOT / "admin-app/checks/config/admin-checks.json"
-    )
     routes = studio_config["app"]["routes"]
 
     assert "studio_works" not in routes
-    assert "/studio/studio-works/" not in admin_checks["routes"]
     for relative_path in (
         "studio/app/frontend/routes/studio-works.html",
         "studio/app/frontend/js/studio-works.js",

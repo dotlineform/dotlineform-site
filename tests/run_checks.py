@@ -60,7 +60,6 @@ LINT_SCOPE_ORDER = (
     "shared",
     "site-tools",
     "studio",
-    "admin",
     "public-site",
     "docs-viewer",
     "tests",
@@ -94,7 +93,6 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
                 "studio/shared/python/script_logging.py",
                 "studio/tests/audits/catalogue_site_consistency.py",
                 "tests/audits/projection_contract.py",
-                "admin-app/checks/css_token_audit.py",
                 "studio/services/media/publish_media_to_r2.py",
                 "studio/services/catalogue/catalogue_json_build.py",
                 "studio/services/catalogue/catalogue_build_commands.py",
@@ -127,9 +125,6 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
                 "studio/app/server/studio/studio_tag_api/common.py",
                 "studio/app/server/studio/studio_tag_api/promotions.py",
                 "studio/app/server/studio/studio_tag_api/registry.py",
-                "admin-app/app/server/admin_app/admin_app_config.py",
-                "admin-app/app/server/admin_app/admin_app_server.py",
-                "admin-app/app/server/admin_app/admin_testing_api.py",
                 "tests/audits/route_ready_state.py",
                 "docs-viewer/services/docs_document_transfer.py",
                 "docs-viewer/services/docs_document_transfer_apply.py",
@@ -176,9 +171,6 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
                 "studio/services/catalogue/catalogue_save_build.py",
                 "studio/services/catalogue/catalogue_source_mutation.py",
                 "studio/services/catalogue/catalogue_transactions.py",
-                "admin-app/app/server/admin_app/audit_runner.py",
-                "admin-app/tests/conftest.py",
-                "admin-app/tests/fixtures/admin_factory.py",
                 "studio/tests/fixtures/tag_factory.py",
                 "docs-viewer/tests/conftest.py",
                 "docs-viewer/tests/fixtures/repo_factory.py",
@@ -192,7 +184,6 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
                 "studio/tests/python/test_studio_catalogue_import_routes.py",
                 "studio/tests/python/test_studio_catalogue_write_routes.py",
                 "studio/tests/python/test_studio_tag_workflows.py",
-                "admin-app/tests/python/test_admin_app_server.py",
                 "tests/test_run_checks.py",
                 "studio/tests/python/test_local_env.py",
                 "studio/tests/python/test_external_workspace_paths.py",
@@ -281,21 +272,6 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
             "studio-config-json",
             (sys.executable, "-m", "json.tool", "studio/app/frontend/config/studio-config.json"),
             "Parse Studio config JSON.",
-        ),
-    ),
-    "admin-checks": (
-        LINT_SCOPE_COMMANDS["admin"],
-        CheckCommand(
-            "admin-checks-python-pytest",
-            pytest_argv(
-                "admin-app/tests/python/test_target_map_resolver.py",
-                "admin-app/tests/python/test_admin_checks_config.py",
-                "admin-app/tests/python/test_run_reports.py",
-                "admin-app/tests/python/test_files_report.py",
-                "admin-app/tests/python/test_target_map_report.py",
-                "admin-app/tests/python/test_admin_checks_api.py",
-            ),
-            "Run focused Admin checks config, resolver, orchestrator, producer, and API tests.",
         ),
     ),
     "catalogue": (
@@ -438,33 +414,6 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
             "Smoke-check the public Analysis route reads compact payloads without local capability.",
         ),
     ),
-    "admin-smoke": (
-        LINT_SCOPE_COMMANDS["admin"],
-        CheckCommand(
-            "admin-home-route-smoke",
-            (
-                sys.executable,
-                "admin-app/tests/smoke/admin_home_route.py",
-            ),
-            "Smoke-check the local Admin home route boundary and runtime config.",
-        ),
-        CheckCommand(
-            "admin-testing-route-smoke",
-            (
-                sys.executable,
-                "admin-app/tests/smoke/admin_testing_route.py",
-            ),
-            "Smoke-check the local Admin Testing route ready-state boundary.",
-        ),
-        CheckCommand(
-            "admin-operations-routes-smoke",
-            (
-                sys.executable,
-                "admin-app/tests/smoke/admin_operations_routes.py",
-            ),
-            "Smoke-check Admin audits and checks route boundaries.",
-        ),
-    ),
     "studio-smoke": (
         LINT_SCOPE_COMMANDS["studio"],
         LINT_SCOPE_COMMANDS["public-site"],
@@ -504,7 +453,7 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
     ),
 }
 
-FULL_PROFILE_ORDER = ("source-lint", "quick", "catalogue", "docs", "admin-smoke", "studio-smoke")
+FULL_PROFILE_ORDER = ("source-lint", "quick", "catalogue", "docs", "studio-smoke")
 
 
 def slugify(value: str) -> str:

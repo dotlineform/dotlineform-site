@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import importlib.util
-import json
 import subprocess
 import sys
 import tempfile
@@ -14,7 +13,6 @@ import pytest
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 RUNNER_PATH = REPO_ROOT / "tooling" / "lint" / "run_lint.py"
-ADMIN_TARGET_MAP_PATH = REPO_ROOT / "admin-app" / "checks" / "config" / "admin-checks.json"
 
 
 def load_runner():
@@ -31,7 +29,6 @@ def test_target_configuration_exposes_application_boundaries() -> None:
     config = runner.load_targets()
 
     assert set(config["scopes"]) == {
-        "admin",
         "docs-viewer",
         "public-site",
         "shared",
@@ -42,39 +39,6 @@ def test_target_configuration_exposes_application_boundaries() -> None:
     assert config["scopes"]["studio"]["python"]
     assert config["scopes"]["studio"]["javascript"]
     assert config["scopes"]["shared"]["javascript"] == ["shared/frontend/js"]
-
-
-def test_application_lint_roots_remain_visible_to_the_admin_target_map() -> None:
-    """Keep inventory ownership aligned without deriving lint runtime settings."""
-    runner = load_runner()
-    lint_scopes = runner.load_targets()["scopes"]
-    admin_scopes = json.loads(ADMIN_TARGET_MAP_PATH.read_text(encoding="utf-8"))["scopes"]
-    ownership = {
-        "admin": "admin",
-        "docs-viewer": "docs-viewer",
-        "public-site": "public-site",
-        "site-tools": "public-site",
-        "studio": "studio",
-    }
-
-    for lint_scope_id, admin_scope_id in ownership.items():
-        includes = tuple(admin_scopes[admin_scope_id]["include"])
-        roots = (
-            *lint_scopes[lint_scope_id]["python"],
-            *lint_scopes[lint_scope_id]["javascript"],
-        )
-        assert roots
-        assert all(
-            any(root.startswith(include) or include.startswith(f"{root}/") for include in includes)
-            for root in roots
-        )
-
-    all_admin_includes = {
-        include
-        for scope in admin_scopes.values()
-        for include in scope["include"]
-    }
-    assert not any("shared/frontend/js".startswith(include) for include in all_admin_includes)
 
 
 def test_explicit_target_resolution_rejects_missing_and_excluded_source() -> None:

@@ -42,7 +42,6 @@ def test_local_all_runner_starts_current_service_owners() -> None:
 
     assert '"$ROOT_DIR/bin/site-preview"' in text
     assert '"$ROOT_DIR/bin/local-studio"' in text
-    assert '"$ROOT_DIR/bin/local-admin"' in text
     assert '"$ROOT_DIR/docs-viewer/bin/docs-viewer"' in text
 
 

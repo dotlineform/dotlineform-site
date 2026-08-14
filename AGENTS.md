@@ -73,7 +73,7 @@
 ## Important testing factors
 - Before running Python tests that import Docs Viewer services, export `.env.local` in the same shell (`set -a; source .env.local; set +a`). Scope configuration is loaded during test collection, and configured external-local scopes require `DOTLINEFORM_PROJECTS_BASE_DIR`; a test run without it can fail during collection before any tests execute.
 - `tests/run_checks.py --profile docs` is self-contained: its broad Python step receives a run-owned writable Projects base, its Studio document build explicitly skips registered media producers, and its Studio search build does not resolve media storage. Checks that exercise managed media or registered media producers still need the real external workspace or an explicit suitable `--projects-base-dir <absolute-writable-path>`.
-- Use the smallest relevant `run_checks.py` profile, such as `source-lint`, `quick`, `studio`, `catalogue`, `docs`, `admin-smoke`, `docs-viewer-smoke`, or `studio-smoke`.
+- Use the smallest relevant `run_checks.py` profile, such as `source-lint`, `quick`, `studio`, `catalogue`, `docs`, `docs-viewer-smoke`, or `studio-smoke`.
 - When `tests/run_checks.py` is used, report the profile, pass/fail result, and `var/test-runs/.../summary.md` path.
 - For commands that bind loopback ports or launch browser smokes, run them with elevated localhost/browser permissions in the Codex sandbox. Keep pure syntax checks, `git diff --check`, JSON parsing, and non-network pytest runs sandboxed.
 - If a local route is expected to be running but the sandbox cannot reach localhost, use an isolated temporary build/server if automated verification needs it.
