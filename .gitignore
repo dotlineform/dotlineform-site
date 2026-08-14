@@ -28,10 +28,7 @@ var/test-runs/
 var/local/
 
 # local output
-var/studio/activity/
 var/studio/reports/
-var/studio/risk/
-var/admin/
 var/docs/
 
 # staging
