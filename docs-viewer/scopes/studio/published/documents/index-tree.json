@@ -744,15 +744,35 @@
               "doc_id": "d-20260808-205416-9f6d6c",
               "title": "iPad Docs Viewer Installation And Proof",
               "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260808-205416-9f6d6c.json",
-              "ui_status": "proposed"
+              "ui_status": "in-progress"
+            },
+            {
+              "doc_id": "d-20260821-150212-ccfca0",
+              "title": "iPad Docs Viewer — Installation Proof Results",
+              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260821-150212-ccfca0.json"
+            },
+            {
+              "doc_id": "d-20260821-154219-cb076c",
+              "title": "iPad Lightweight Workflow",
+              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260821-154219-cb076c.json"
             },
             {
               "doc_id": "d-20260808-212749-af71c2",
               "title": "iPad Studio Working Slice And Proof",
               "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260808-212749-af71c2.json",
               "ui_status": "proposed"
+            },
+            {
+              "doc_id": "d-20260821-180459-852999",
+              "title": "iSH Docs Viewer Startup Script",
+              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260821-180459-852999.json"
             }
           ]
+        },
+        {
+          "doc_id": "d-20260821-162454-96e752",
+          "title": "Pandoc EPUB Export from Docs Viewer HTML",
+          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260821-162454-96e752.json"
         },
         {
           "doc_id": "d-20260723-191039-f8cb88",
@@ -775,6 +795,11 @@
               "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260813-222008-35fcfa.json"
             }
           ]
+        },
+        {
+          "doc_id": "d-20260821-163139-fec422",
+          "title": "Single-HTML Snapshot: Document Tree vs Internal Heading Hierarchy",
+          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260821-163139-fec422.json"
         },
         {
           "doc_id": "d-20260720-170418-a7c93d",
@@ -1154,5 +1179,5 @@
       ]
     }
   ],
-  "generated_at": "2026-08-14T22:35:30Z"
+  "generated_at": "2026-08-21T18:08:13Z"
 }
