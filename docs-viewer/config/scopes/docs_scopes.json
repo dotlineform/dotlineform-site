@@ -12,7 +12,12 @@
       "scope_type": "local",
       "meta": "local management",
       "source": {},
-      "search_fields": ["title", "heading", "body", "code"],
+      "search_fields": [
+        "title",
+        "heading",
+        "body",
+        "code"
+      ],
       "media": {
         "types": {
           "img": {
@@ -64,7 +69,12 @@
       "meta": "public scope",
       "media_source_root": "analysis",
       "source": {},
-      "search_fields": ["title", "heading", "body", "code"],
+      "search_fields": [
+        "title",
+        "heading",
+        "body",
+        "code"
+      ],
       "media": {
         "types": {
           "img": {
@@ -224,7 +234,12 @@
       "scope_type": "local_external",
       "meta": "external local",
       "source": {},
-      "search_fields": ["title", "heading", "body", "code"],
+      "search_fields": [
+        "title",
+        "heading",
+        "body",
+        "code"
+      ],
       "media": {
         "types": {
           "img": {
@@ -266,7 +281,12 @@
       "meta": "local management",
       "media_source_root": "processing",
       "source": {},
-      "search_fields": ["title", "heading", "body", "code"],
+      "search_fields": [
+        "title",
+        "heading",
+        "body",
+        "code"
+      ],
       "media": {
         "types": {
           "img": {
@@ -305,7 +325,12 @@
         "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/dotlineform"
       },
       "source": {},
-      "search_fields": ["title", "heading", "body", "code"],
+      "search_fields": [
+        "title",
+        "heading",
+        "body",
+        "code"
+      ],
       "media": {
         "types": {
           "img": {
@@ -344,6 +369,45 @@
           }
         }
       ]
+    },
+    {
+      "scope_id": "app",
+      "scope_type": "local_external",
+      "meta": "external local",
+      "scope_root": {
+        "provider": "external_local",
+        "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/app"
+      },
+      "source": {},
+      "search_fields": [
+        "title",
+        "heading",
+        "body",
+        "code"
+      ],
+      "media": {
+        "types": {
+          "img": {
+            "build_inputs": []
+          },
+          "svg": {
+            "build_inputs": []
+          },
+          "files": {
+            "build_inputs": []
+          }
+        },
+        "build_sources": {}
+      },
+      "published": {},
+      "public_projection": null,
+      "viewer_base_url": "/docs/",
+      "include_scope_param": true,
+      "default_doc_id": "d-20260829-205140-9386fc",
+      "non_loadable_doc_ids": [],
+      "manage_only_tree_root_ids": [],
+      "allow_unresolved_parent_ids": false,
+      "sub_scopes": []
     }
   ],
   "docs_viewer": {

@@ -211,6 +211,38 @@
           }
         }
       ]
+    },
+    {
+      "scope_id": "app",
+      "scope_type": "local_external",
+      "meta": "external local",
+      "viewer_base_url": "/docs/",
+      "include_scope_param": true,
+      "default_doc_id": "d-20260829-205140-9386fc",
+      "media": {
+        "files": {
+          "reference_prefix": "docs/app/files",
+          "served_path_prefix": "/docs/media/app/files"
+        },
+        "img": {
+          "reference_prefix": "docs/app/img",
+          "served_path_prefix": "/docs/media/app/img"
+        },
+        "svg": {
+          "reference_prefix": "docs/app/svg",
+          "served_path_prefix": "/docs/media/app/svg"
+        }
+      },
+      "index_tree_url": "/docs/index-tree?scope=app",
+      "recent_url": "/docs/recent?scope=app",
+      "search_index_url": "/docs/search?scope=app",
+      "search": {
+        "domain": "docs_viewer",
+        "schema": "docs_viewer_search_index_v2",
+        "index_url": "/docs/search?scope=app",
+        "rebuild_policy": "whole_index"
+      },
+      "backlinks_url": "/docs/backlinks?scope=app"
     }
   ],
   "docs_viewer": {
