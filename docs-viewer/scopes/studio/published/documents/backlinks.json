@@ -853,6 +853,11 @@
         "viewer_url": "/docs/?scope=studio&doc=d-20260523-000000-bf7161"
       },
       {
+        "doc_id": "d-20260424-000000-50b63f",
+        "title": "Docs Viewer",
+        "viewer_url": "/docs/?scope=studio&doc=d-20260424-000000-50b63f"
+      },
+      {
         "doc_id": "d-20260811-112331-1f131b",
         "title": "Docs Viewer Capability Composition Audit",
         "viewer_url": "/docs/?scope=studio&doc=d-20260811-112331-1f131b"
@@ -2842,5 +2847,5 @@
       }
     ]
   },
-  "generated_at": "2026-08-30T09:04:26Z"
+  "generated_at": "2026-08-30T13:40:31Z"
 }
