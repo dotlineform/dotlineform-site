@@ -300,9 +300,54 @@ def _copy_file_atomic(repo_root: Path, item: PlannedCopy) -> None:
         temp_path.unlink(missing_ok=True)
 
 
-def apply_site_code_update(repo_root: Path, plan: SiteCodeUpdatePlan) -> None:
+def _validate_apply_plan(
+    projections: Sequence[Projection],
+    plan: SiteCodeUpdatePlan,
+) -> None:
+    expected_copies: dict[str, str] = {}
+    owned_destination_roots: set[PurePosixPath] = set()
+    for projection in projections:
+        destination_root = PurePosixPath(projection.destination_root)
+        owned_destination_roots.add(destination_root)
+        for filename in projection.files:
+            target = f"{projection.destination_root}/{filename}"
+            expected_copies[target] = f"{projection.source_root}/{filename}"
+
+    seen_targets: set[str] = set()
+    for item in (*plan.added, *plan.changed):
+        source = _relative_path(item.source, "planned projection source")
+        target = _relative_path(item.target, "planned projection target")
+        if expected_copies.get(target) != source:
+            raise SiteCodeUpdateError(
+                f"planned copy is outside the manifest projection: {source} -> {target}"
+            )
+        if target in seen_targets:
+            raise SiteCodeUpdateError(f"duplicate planned projection target: {target}")
+        seen_targets.add(target)
+
+    for value in plan.removed:
+        target = _relative_path(value, "stale projection target")
+        target_path = PurePosixPath(target)
+        if (
+            target_path.parent not in owned_destination_roots
+            or target in expected_copies
+        ):
+            raise SiteCodeUpdateError(
+                f"planned removal is outside stale manifest-owned targets: {target}"
+            )
+        if target in seen_targets:
+            raise SiteCodeUpdateError(f"duplicate planned projection target: {target}")
+        seen_targets.add(target)
+
+
+def apply_site_code_update(
+    repo_root: Path,
+    projections: Sequence[Projection],
+    plan: SiteCodeUpdatePlan,
+) -> None:
     """Apply one planned projection with atomic file replacement and bounded deletes."""
 
+    _validate_apply_plan(projections, plan)
     for item in (*plan.added, *plan.changed):
         _copy_file_atomic(repo_root, item)
     for relative in plan.removed:
@@ -352,7 +397,7 @@ def main(argv: Sequence[str] | None = None) -> int:
                 return 1
             print(f"Site code projection is current: {_summary(plan)}")
             return 0
-        apply_site_code_update(repo_root, plan)
+        apply_site_code_update(repo_root, projections, plan)
         print(f"Site code update complete: {_summary(plan)}")
         return 0
     except (OSError, SiteCodeUpdateError) as exc:

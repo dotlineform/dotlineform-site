@@ -35,7 +35,7 @@ def test_complete_projection_copies_only_public_and_shared_files(tmp_path: Path)
     assert not plan.changed
     assert not plan.removed
 
-    site_code.apply_site_code_update(tmp_path, plan)
+    site_code.apply_site_code_update(tmp_path, projections, plan)
 
     for projection in projections:
         for filename in projection.files:
@@ -54,6 +54,7 @@ def test_check_detects_drift_without_writing(tmp_path: Path) -> None:
     projections = site_code.load_manifest(tmp_path, manifest_path)
     site_code.apply_site_code_update(
         tmp_path,
+        projections,
         site_code.plan_site_code_update(tmp_path, projections),
     )
     target = tmp_path / "site/docs-viewer/runtime/js/public/public.js"
@@ -78,6 +79,7 @@ def test_write_removes_only_stale_files_in_owned_destinations(tmp_path: Path) ->
     projections = site_code.load_manifest(tmp_path, manifest_path)
     site_code.apply_site_code_update(
         tmp_path,
+        projections,
         site_code.plan_site_code_update(tmp_path, projections),
     )
     stale = tmp_path / "site/docs-viewer/runtime/js/shared/retired.js"
@@ -89,7 +91,7 @@ def test_write_removes_only_stale_files_in_owned_destinations(tmp_path: Path) ->
     plan = site_code.plan_site_code_update(tmp_path, projections)
     assert plan.removed == ("site/docs-viewer/runtime/js/shared/retired.js",)
 
-    site_code.apply_site_code_update(tmp_path, plan)
+    site_code.apply_site_code_update(tmp_path, projections, plan)
 
     assert not stale.exists()
     assert unrelated.read_bytes() == b"unrelated\n"
@@ -100,6 +102,7 @@ def test_second_write_is_a_no_op(tmp_path: Path) -> None:
     projections = site_code.load_manifest(tmp_path, manifest_path)
     site_code.apply_site_code_update(
         tmp_path,
+        projections,
         site_code.plan_site_code_update(tmp_path, projections),
     )
 
@@ -107,8 +110,29 @@ def test_second_write_is_a_no_op(tmp_path: Path) -> None:
     assert plan.drift_count == 0
     assert len(plan.unchanged) == 6
 
-    site_code.apply_site_code_update(tmp_path, plan)
+    site_code.apply_site_code_update(tmp_path, projections, plan)
     assert site_code.plan_site_code_update(tmp_path, projections).drift_count == 0
+
+
+def test_apply_rejects_removal_outside_manifest_owned_destinations(
+    tmp_path: Path,
+) -> None:
+    manifest_path = _create_test_repository(tmp_path)
+    projections = site_code.load_manifest(tmp_path, manifest_path)
+    unrelated = tmp_path / "site/assets/js/unrelated.js"
+    unrelated.parent.mkdir(parents=True)
+    unrelated.write_bytes(b"unrelated\n")
+    plan = site_code.SiteCodeUpdatePlan(
+        added=(),
+        changed=(),
+        removed=("site/assets/js/unrelated.js",),
+        unchanged=(),
+    )
+
+    with pytest.raises(site_code.SiteCodeUpdateError, match="planned removal"):
+        site_code.apply_site_code_update(tmp_path, projections, plan)
+
+    assert unrelated.read_bytes() == b"unrelated\n"
 
 
 def test_manifest_rejects_private_runtime_assets(tmp_path: Path) -> None:
