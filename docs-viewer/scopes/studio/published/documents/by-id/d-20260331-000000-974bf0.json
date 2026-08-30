@@ -1,9 +1,0 @@
-{
-  "doc_id": "d-20260331-000000-974bf0",
-  "title": "Series Tags",
-  "added_date": "2026-03-31 00:00:00",
-  "last_updated": "2026-07-27 17:33:57",
-  "viewer_url": "/docs/?scope=studio&doc=d-20260331-000000-974bf0",
-  "parent_id": "d-20260419-000000-86255c",
-  "content_html": "<h1>Series Tags</h1>\n<h2>Capability</h2>\n<p><code>/studio/series-tags/</code> is the cross-series assignment review. It shows\ncanonical coverage/status and links into the one-series editor.</p>\n<p>The page does not directly edit table rows. Editing happens in\n<a href=\"/docs/?scope=studio&amp;doc=d-20260331-000000-643429\">Series Tag Editor</a>.</p>\n<h2>Data Path</h2>\n<pre><code class=\"language-text\">public series index\n  + canonical assignments\n  + registry/group config\n  -&gt; coverage/status table\n  -&gt; selected series editor link\n</code></pre>\n<p>Coverage scoring is implemented by <code>analysis-tag-scoring.js</code> using\n<code>analysis.groups</code> and <code>analysis.rag</code> projected from Studio tag policy.\nAssignments carry flat tag IDs. The report displays each <code>tag_id</code> and resolves\nits group, filtering, and chip styling from the registry; it never derives\ngroup from the ID.</p>\n<h2>Code Map</h2>\n<ul>\n<li>template/controller: <code>series-tags.html</code>, <code>series-tags.js</code></li>\n<li>report/table: <code>series-tags-render.js</code>, <code>analysis-tag-scoring.js</code></li>\n</ul>\n<p>The route uses Studio ready/busy state and remains in list mode.</p>\n<h2>Weak Spots</h2>\n<ul>\n<li>Coverage status combines canonical assignment data with generated catalogue indexes; either side can be stale.</li>\n</ul>\n"
-}
