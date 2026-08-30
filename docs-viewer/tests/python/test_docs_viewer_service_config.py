@@ -269,6 +269,10 @@ def test_apply_capability_flags_respects_local_service_flags() -> None:
                 "apply": True,
                 "sub_scope_detail": True,
             },
+            "deploy_repo": {
+                "preview": True,
+                "apply": True,
+            },
             "scope_lifecycle": {
                 "create_apply": True,
                 "rename_apply": True,
@@ -280,6 +284,12 @@ def test_apply_capability_flags_respects_local_service_flags() -> None:
                 "studio": {
                     "generated_data_reads": True,
                     "generated_search_reads": True,
+                    "deploy_repo": {
+                        "available": True,
+                        "preview": True,
+                        "apply": True,
+                        "reason": "",
+                    },
                 },
             },
         },
@@ -312,12 +322,22 @@ def test_apply_capability_flags_respects_local_service_flags() -> None:
         "apply": False,
         "sub_scope_detail": False,
     }
+    assert capabilities["deploy_repo"] == {
+        "preview": False,
+        "apply": False,
+    }
     assert capabilities["scope_lifecycle"]["create_apply"] is False
     assert capabilities["scope_lifecycle"]["rename_apply"] is False
     assert capabilities["scope_lifecycle"]["sub_scope_create_apply"] is False
     assert capabilities["scope_lifecycle"]["sub_scope_delete_apply"] is False
     assert capabilities["scopes"]["studio"]["generated_data_reads"] is False
     assert capabilities["scopes"]["studio"]["generated_search_reads"] is False
+    assert capabilities["scopes"]["studio"]["deploy_repo"] == {
+        "available": False,
+        "preview": False,
+        "apply": False,
+        "reason": "Deploy Repo requires local management.",
+    }
 
 def test_capabilities_endpoint_returns_json_error_for_source_validation(monkeypatch: pytest.MonkeyPatch) -> None:
     handler = object.__new__(docs_viewer_service.DocsViewerRequestHandler)

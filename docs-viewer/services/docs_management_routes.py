@@ -61,6 +61,8 @@ SUB_SCOPE_DELETE_APPLY_PATH = "/docs/scopes/sub-scopes/delete-apply"
 PUBLISH_STATUS_PATH = "/docs/publish/status"
 PUBLISH_CONFIRM_PATH = "/docs/publish/confirm"
 PUBLISH_APPLY_PATH = "/docs/publish/apply"
+DEPLOY_REPO_PREVIEW_PATH = "/docs/deploy-repo/preview"
+DEPLOY_REPO_APPLY_PATH = "/docs/deploy-repo/apply"
 STATIC_HTML_EXPORT_PREVIEW_PATH = "/docs/export/static-html/preview"
 STATIC_HTML_EXPORT_APPLY_PATH = "/docs/export/static-html/apply"
 
@@ -127,6 +129,8 @@ POST_PATHS = (
     SUB_SCOPE_DELETE_APPLY_PATH,
     PUBLISH_CONFIRM_PATH,
     PUBLISH_APPLY_PATH,
+    DEPLOY_REPO_PREVIEW_PATH,
+    DEPLOY_REPO_APPLY_PATH,
     STATIC_HTML_EXPORT_PREVIEW_PATH,
     STATIC_HTML_EXPORT_APPLY_PATH,
 )

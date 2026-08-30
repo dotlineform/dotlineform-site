@@ -380,6 +380,89 @@ def _filter_semantic_tokens(
     }
 
 
+def _filter_subject_associations(
+    payload: dict[str, Any],
+    *,
+    scope: str,
+    sub_scope: str,
+    eligible_ids: set[str],
+) -> dict[str, Any]:
+    if payload.get("schema_version") != "docs_subject_associations_v1":
+        raise RuntimeError(
+            f"generated subject associations for {scope}/{sub_scope} have an unsupported schema"
+        )
+    if payload.get("scope") != scope or payload.get("sub_scope") != sub_scope:
+        raise RuntimeError(
+            f"generated subject associations for {scope}/{sub_scope} have the wrong collection identity"
+        )
+    raw_associations = payload.get("associations")
+    if not isinstance(raw_associations, list):
+        raise RuntimeError(
+            f"generated subject associations for {scope}/{sub_scope} are missing associations"
+        )
+
+    associations: list[dict[str, Any]] = []
+    seen_doc_ids: set[str] = set()
+    for raw_association in raw_associations:
+        if not isinstance(raw_association, dict):
+            raise RuntimeError(
+                f"generated subject associations for {scope}/{sub_scope} contain an invalid association"
+            )
+        raw_documents = raw_association.get("documents")
+        if not isinstance(raw_documents, list):
+            raise RuntimeError(
+                f"generated subject associations for {scope}/{sub_scope} contain invalid documents"
+            )
+        documents: list[dict[str, Any]] = []
+        for raw_document in raw_documents:
+            if not isinstance(raw_document, dict):
+                raise RuntimeError(
+                    f"generated subject associations for {scope}/{sub_scope} contain an invalid document"
+                )
+            target = raw_document.get("target")
+            if not isinstance(target, dict):
+                raise RuntimeError(
+                    f"generated subject associations for {scope}/{sub_scope} contain a document without a target"
+                )
+            doc_id = str(target.get("doc_id") or "").strip()
+            if (
+                target.get("scope") != scope
+                or target.get("sub_scope") != sub_scope
+                or not doc_id
+            ):
+                raise RuntimeError(
+                    f"generated subject associations for {scope}/{sub_scope} contain the wrong target identity"
+                )
+            if doc_id in seen_doc_ids:
+                raise RuntimeError(
+                    f"generated subject associations for {scope}/{sub_scope} duplicate {doc_id}"
+                )
+            seen_doc_ids.add(doc_id)
+            if doc_id in eligible_ids:
+                documents.append(raw_document)
+        if documents:
+            associations.append({**raw_association, "documents": documents})
+
+    generation_payload = {
+        "scope": scope,
+        "sub_scope": sub_scope,
+        "associations": associations,
+    }
+    generation = hashlib.sha256(
+        json.dumps(
+            generation_payload,
+            ensure_ascii=False,
+            sort_keys=True,
+            separators=(",", ":"),
+        ).encode("utf-8")
+    ).hexdigest()
+    return {
+        **payload,
+        "subject_generation": f"sha256:{generation}",
+        "associations": associations,
+    }
+
+
 def _media_identity_from_url(value: str, prefix: str) -> str:
     candidate = html.unescape(str(value or "").strip())
     normalized_prefix = prefix.rstrip("/")
@@ -540,6 +623,24 @@ def _published_files(
                 _filter_semantic_tokens(
                     _read_json_bytes(data, "generated semantic-token payload"),
                     eligible_ids,
+                )
+            )
+            continue
+        if (
+            len(relative_path.parts) == 4
+            and relative_path.parts[:2] == ("documents", "sub-scopes")
+            and relative_path.name == "subject-associations.json"
+        ):
+            sub_scope = relative_path.parts[2]
+            files[relative_path] = json_bytes(
+                _filter_subject_associations(
+                    _read_json_bytes(
+                        data,
+                        f"generated subject associations {sub_scope}",
+                    ),
+                    scope=config.scope_id,
+                    sub_scope=sub_scope,
+                    eligible_ids=sub_scope_eligible.get(sub_scope, set()),
                 )
             )
             continue

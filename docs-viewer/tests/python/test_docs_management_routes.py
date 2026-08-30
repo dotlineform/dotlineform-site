@@ -81,6 +81,13 @@ def test_static_html_export_routes_are_management_owned() -> None:
     assert "/docs/export/static-html/delete" not in routes.POST_PATHS
 
 
+def test_deploy_repo_routes_are_management_owned() -> None:
+    assert routes.DEPLOY_REPO_PREVIEW_PATH == "/docs/deploy-repo/preview"
+    assert routes.DEPLOY_REPO_APPLY_PATH == "/docs/deploy-repo/apply"
+    assert routes.DEPLOY_REPO_PREVIEW_PATH in routes.POST_PATHS
+    assert routes.DEPLOY_REPO_APPLY_PATH in routes.POST_PATHS
+
+
 def test_document_transfer_routes_are_management_owned_and_singular_copy_is_retired() -> None:
     assert routes.DOCUMENT_TRANSFER_PREVIEW_PATH in routes.POST_PATHS
     assert routes.DOCUMENT_TRANSFER_APPLY_PATH in routes.POST_PATHS

@@ -1,6 +1,6 @@
 import {
   createDocsViewerManagementCapabilityController,
-  scopePublishSupported
+  scopePublishWorkflowSupported
 } from "./docs-viewer-management-capabilities.js";
 import {
   applyDocsViewerManagementConfig
@@ -661,7 +661,10 @@ export function initDocsViewerManagement(context) {
       !editAction.enabled ||
       searchRecent.searchRouteActive
     );
-    var publishAvailable = management.managementAvailable && scopePublishSupported(management.managementCapabilities, viewerScope());
+    var publishAvailable = management.managementAvailable && scopePublishWorkflowSupported(
+      management.managementCapabilities,
+      viewerScope()
+    );
     var themeIsDark = document.documentElement && document.documentElement.getAttribute("data-theme") === "dark";
 
     projectAppControl("manage-import", {

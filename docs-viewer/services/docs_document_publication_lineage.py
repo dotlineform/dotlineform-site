@@ -10,10 +10,20 @@ from pathlib import Path
 from typing import Any, Iterable, Mapping
 
 import docs_source_model as source_model
+from docs_scope_config import (
+    document_source_path,
+    load_docs_scope_configs,
+    resolve_scope_path,
+)
+from docs_subscope_customisations import (
+    LINEAGE_SOURCE_ROLE,
+    sub_scope_customisation_document_lineage_contract,
+)
 
 
 LINEAGE_SCHEMA_VERSION = "docs_document_publication_lineage_v3"
-LINEAGE_PATH = Path("docs-viewer/data/canonical/document-publication-lineage.json")
+LINEAGE_FILENAME = "document-publication-lineage.json"
+LINEAGE_RELATIVE_PATH = Path("data") / LINEAGE_FILENAME
 UTC_TIMESTAMP_FORMAT = "%Y-%m-%dT%H:%M:%SZ"
 
 
@@ -293,12 +303,40 @@ def render_table(table: DocumentLineageTable) -> bytes:
     ).encode("utf-8")
 
 
+def configured_table_path(repo_root: Path) -> Path | None:
+    candidates: list[Path] = []
+    for config in load_docs_scope_configs(repo_root).values():
+        for sub_scope in config.sub_scopes:
+            contract = sub_scope_customisation_document_lineage_contract(
+                sub_scope.sub_scope_customisation
+            )
+            if contract is None or contract.role != LINEAGE_SOURCE_ROLE:
+                continue
+            documents_root = resolve_scope_path(
+                repo_root,
+                document_source_path(sub_scope),
+            )
+            candidates.append(documents_root.parent / LINEAGE_RELATIVE_PATH)
+    if len(candidates) > 1:
+        raise ValueError(
+            "multiple Working-owned document publication lineage locations are configured"
+        )
+    return candidates[0] if candidates else None
+
+
 def table_path(repo_root: Path) -> Path:
-    return repo_root / LINEAGE_PATH
+    path = configured_table_path(repo_root)
+    if path is None:
+        raise ValueError(
+            "Working-owned document publication lineage location is not configured"
+        )
+    return path
 
 
 def load_table(repo_root: Path) -> DocumentLineageTable | None:
-    path = table_path(repo_root)
+    path = configured_table_path(repo_root)
+    if path is None:
+        return None
     if not path.is_file():
         return None
     try:
@@ -525,14 +563,13 @@ def apply_document_deletes(
     )
 
 
-def reconcile_publications(
-    repo_root: Path,
+def project_publications(
+    table: DocumentLineageTable | None,
     *,
     editorial_scope: str,
     editorial_sub_scope: str,
     publication_urls: Mapping[str, str],
 ) -> DocumentLineageTable | None:
-    table = load_table(repo_root)
     if table is None or table.editorial_collection != DocumentLineageCollection(
         editorial_scope,
         editorial_sub_scope,
@@ -550,11 +587,7 @@ def reconcile_publications(
         )
         changed = changed or editorials != record.editorials
         records.append(replace(record, editorials=editorials))
-    return (
-        write_table_atomic(repo_root, replace(table, records=tuple(records)))
-        if changed
-        else table
-    )
+    return replace(table, records=tuple(records)) if changed else table
 
 
 __all__ = [
@@ -563,15 +596,17 @@ __all__ = [
     "DocumentLineageDeleteResult",
     "DocumentLineageRecord",
     "DocumentLineageTable",
-    "LINEAGE_PATH",
+    "LINEAGE_FILENAME",
+    "LINEAGE_RELATIVE_PATH",
     "LINEAGE_SCHEMA_VERSION",
     "apply_copy_results",
     "apply_document_deletes",
+    "configured_table_path",
     "current_timestamp",
     "editorials_for_working",
     "empty_table",
     "load_table",
-    "reconcile_publications",
+    "project_publications",
     "render_table",
     "table_path",
     "write_table_atomic",

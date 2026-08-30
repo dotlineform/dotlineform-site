@@ -394,6 +394,25 @@ def apply_capability_flags(payload: dict[str, object], config: DocsViewerService
         if isinstance(publishing, dict):
             publishing["apply"] = False
             publishing["confirm"] = False
+        deploy_repo = capabilities.get("deploy_repo")
+        if isinstance(deploy_repo, dict):
+            deploy_repo["preview"] = False
+            deploy_repo["apply"] = False
+        scopes = capabilities.get("scopes")
+        if isinstance(scopes, dict):
+            for scope_caps in scopes.values():
+                if not isinstance(scope_caps, dict):
+                    continue
+                scope_deploy_repo = scope_caps.get("deploy_repo")
+                if isinstance(scope_deploy_repo, dict):
+                    scope_deploy_repo.update(
+                        {
+                            "available": False,
+                            "preview": False,
+                            "apply": False,
+                            "reason": "Deploy Repo requires local management.",
+                        }
+                    )
     if not config.generated_reads_enabled:
         scopes = capabilities.get("scopes")
         if isinstance(scopes, dict):

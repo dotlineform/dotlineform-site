@@ -632,9 +632,11 @@ def write_bytes_atomic(path: Path, content: bytes) -> None:
 
 
 def refresh_catalogue_document_urls_strict(repo_root: Path) -> dict[str, Any]:
-    from docs_publish_gate import catalogue_document_url_follow_through
+    from docs_catalogue_document_url_follow_through import (
+        refresh_from_current_public_state,
+    )
 
-    result = catalogue_document_url_follow_through(repo_root)
+    result = refresh_from_current_public_state(repo_root)
     if result.get("status") == "stale":
         raise PublicDeleteCleanupApplyError(
             {

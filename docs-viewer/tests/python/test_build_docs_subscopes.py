@@ -239,7 +239,8 @@ sub_scope: works
             },
         )
         write_json(
-            root / "docs-viewer/data/canonical/document-publication-lineage.json",
+            root
+            / "docs-viewer/scopes/dotlineform/source/sub-scopes/projects/data/document-publication-lineage.json",
             {
                 "schema_version": "docs_document_publication_lineage_v3",
                 "working_collection": {
@@ -1343,3 +1344,57 @@ work_id: "00123"
             "by_id_url_base": "/assets/data/docs/scopes/example/tags/by-id",
         }
     ]
+
+
+def test_public_authoring_subject_collection_emits_deployment_metadata() -> None:
+    with tempfile.TemporaryDirectory() as temp_path:
+        root = Path(temp_path)
+        write_site_tools_config(root, media_base="")
+        write_public_scope_config(root)
+        write_public_source_docs(root)
+        config_path = root / "docs-viewer/config/scopes/docs_scopes.json"
+        payload = read_json(config_path)
+        payload["scopes"][0]["sub_scopes"] = [
+            docs_sub_scope_record(
+                "example",
+                "works",
+                title="Works",
+                scope_type="public",
+                sub_scope_customisation={"id": "analysis_works", "settings": {}},
+            )
+        ]
+        write_json(config_path, payload)
+        write_text(
+            root
+            / f"docs-viewer/scopes/example/source/sub-scopes/works/documents/{DETAIL_DOC_ID}.md",
+            f"""---
+doc_id: {DETAIL_DOC_ID}
+title: Work note
+work_id: "00123"
+---
+# Work note
+""",
+        )
+
+        exit_code, _stdout, stderr = run_cli(
+            root,
+            ["--scope", "example", "--sub-scope", "works", "--write"],
+        )
+        associations = read_json(
+            root
+            / "docs-viewer/scopes/example/generated/documents/sub-scopes/works/subject-associations.json"
+        )
+
+    assert exit_code == 0
+    assert stderr == ""
+    assert associations["scope"] == "example"
+    assert associations["sub_scope"] == "works"
+    assert associations["associations"][0]["subject"] == {
+        "kind": "work",
+        "key": "00123",
+    }
+    assert associations["associations"][0]["documents"][0]["target"] == {
+        "scope": "example",
+        "sub_scope": "works",
+        "doc_id": DETAIL_DOC_ID,
+    }

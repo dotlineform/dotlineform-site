@@ -21,6 +21,7 @@ for _path in (DOCS_SERVICES_DIR, DOCS_BUILD_DIR):
         sys.path.insert(0, str(_path))
 
 import docs_document_transfer as transfer  # noqa: E402
+import docs_document_publication_lineage as publication_lineage  # noqa: E402
 import docs_document_transfer_apply as transfer_apply  # noqa: E402
 import docs_artifact_locations as artifact_locations  # noqa: E402
 import docs_media_source_evidence as media_source_evidence  # noqa: E402
@@ -372,10 +373,7 @@ def test_lineage_new_and_replace_commit_exact_rows_and_preserve_editorial_gate(
     assert "Replacement body from A." in replaced_body
 
     table = json.loads(
-        (
-            repo_root
-            / "docs-viewer/data/canonical/document-publication-lineage.json"
-        ).read_text(encoding="utf-8")
+        publication_lineage.table_path(repo_root).read_text(encoding="utf-8")
     )
     exact_child = next(
         editorial

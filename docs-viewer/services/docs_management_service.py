@@ -21,6 +21,7 @@ REPO_ROOT = ensure_studio_python_paths(__file__)
 SCRIPTS_DIR = REPO_ROOT / "scripts"
 
 import docs_diagram_source_service  # noqa: E402
+import docs_deploy_repo  # noqa: E402
 import docs_document_move_apply  # noqa: E402
 import docs_document_transfer  # noqa: E402
 import docs_document_transfer_apply  # noqa: E402
@@ -376,6 +377,12 @@ def docs_management_post_response(
         return HTTPStatus.OK, docs_scope_publish.preview_scope_publish(repo_root, body)
     if path == routes.PUBLISH_APPLY_PATH:
         return HTTPStatus.OK, docs_scope_publish.apply_scope_publish(repo_root, body)
+    if path == routes.DEPLOY_REPO_PREVIEW_PATH:
+        return HTTPStatus.OK, docs_deploy_repo.preview_deploy_repo(repo_root, body)
+    if path == routes.DEPLOY_REPO_APPLY_PATH:
+        if dry_run:
+            raise ValueError("Deploy Repo apply does not support dry_run")
+        return HTTPStatus.OK, docs_deploy_repo.apply_deploy_repo(repo_root, body)
     if path == routes.STATIC_HTML_EXPORT_PREVIEW_PATH:
         return HTTPStatus.OK, docs_static_html_export.preview_static_html_export(repo_root, body)
     if path == routes.STATIC_HTML_EXPORT_APPLY_PATH:

@@ -115,6 +115,44 @@ export function scopePublishSupported(capabilities, scope) {
   );
 }
 
+export function scopeDeployRepoCapability(capabilities, scope) {
+  var scopeCaps = scopeManagementCapabilities(capabilities, scope);
+  var service = capabilities && capabilities.deploy_repo && typeof capabilities.deploy_repo === "object"
+    ? capabilities.deploy_repo
+    : null;
+  var scopeCapability = scopeCaps && scopeCaps.deploy_repo && typeof scopeCaps.deploy_repo === "object"
+    ? scopeCaps.deploy_repo
+    : null;
+  if (!service || service.preview !== true || service.apply !== true) {
+    return {
+      available: false,
+      reason: "Deploy Repo requires a writable local management service."
+    };
+  }
+  if (
+    !scopeCaps
+    || scopeCaps.available !== true
+    || !scopeCapability
+    || scopeCapability.available !== true
+    || scopeCapability.preview !== true
+    || scopeCapability.apply !== true
+  ) {
+    return {
+      available: false,
+      reason: String(
+        scopeCapability && scopeCapability.reason
+        || "Deploy Repo is unavailable for this scope."
+      ).trim()
+    };
+  }
+  return { available: true, reason: "" };
+}
+
+export function scopePublishWorkflowSupported(capabilities, scope) {
+  return scopePublishSupported(capabilities, scope)
+    || scopeDeployRepoCapability(capabilities, scope).available;
+}
+
 export function scopeStaticHtmlExportCapability(capabilities, scope) {
   var scopeCaps = scopeManagementCapabilities(capabilities, scope);
   var exportCapabilities = capabilities && capabilities.static_html_export && typeof capabilities.static_html_export === "object"

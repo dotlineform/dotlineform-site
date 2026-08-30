@@ -86,7 +86,12 @@ def prepare_repo(root: Path) -> None:
         media_types=("img", "svg", "files", "html"),
     )
     scope["sub_scopes"] = [
-        docs_sub_scope_record("example", "items", title="Items")
+        docs_sub_scope_record(
+            "example",
+            "items",
+            title="Items",
+            sub_scope_customisation={"id": "analysis_works", "settings": {}},
+        )
     ]
     write_docs_scope_config(root, [scope])
     write_text(root / "docs-viewer/config/reports/reports.json", '{"reports": []}\n')
@@ -221,6 +226,37 @@ def prepare_repo(root: Path) -> None:
         sub_scope / f"by-id/{HIDDEN_SUB_ID}.json",
         {"doc_id": HIDDEN_SUB_ID, "title": "Hidden sub doc"},
     )
+    write_json(
+        sub_scope / "subject-associations.json",
+        {
+            "schema_version": "docs_subject_associations_v1",
+            "scope": "example",
+            "sub_scope": "items",
+            "subject_generation": "sha256:" + "0" * 64,
+            "associations": [
+                {
+                    "subject": {"kind": "work", "key": "00123"},
+                    "documents": [
+                        {
+                            "target": {"scope": "example", "sub_scope": "items", "doc_id": SUB_ID},
+                            "title": "Sub doc",
+                            "locations": [],
+                        }
+                    ],
+                },
+                {
+                    "subject": {"kind": "series", "key": "001"},
+                    "documents": [
+                        {
+                            "target": {"scope": "example", "sub_scope": "items", "doc_id": HIDDEN_SUB_ID},
+                            "title": "Hidden sub doc",
+                            "locations": [],
+                        }
+                    ],
+                },
+            ],
+        },
+    )
     write_json(scope_root / "generated/search/index.json", search_payload())
     write_text(scope_root / "generated/media/img/keep.png", "kept image")
     write_text(scope_root / "generated/media/img/hidden.png", "hidden image")
@@ -255,6 +291,23 @@ def test_scope_publish_is_exact_rerunnable_and_does_not_touch_site(tmp_path: Pat
     assert not (published / "documents/stale.json").exists()
     assert not (published / f"documents/by-id/{HIDDEN_ID}.json").exists()
     assert not (published / f"documents/sub-scopes/items/by-id/{HIDDEN_SUB_ID}.json").exists()
+    subjects = json.loads(
+        (published / "documents/sub-scopes/items/subject-associations.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    assert subjects["associations"] == [
+        {
+            "subject": {"kind": "work", "key": "00123"},
+            "documents": [
+                {
+                    "target": {"scope": "example", "sub_scope": "items", "doc_id": SUB_ID},
+                    "title": "Sub doc",
+                    "locations": [],
+                }
+            ],
+        }
+    ]
     assert not (published / "media/img/hidden.png").exists()
     assert (published / "media/img/keep.png").read_text(encoding="utf-8") == "kept image"
     assert (published / "reports/intentionally-empty").is_dir()

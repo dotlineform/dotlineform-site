@@ -47,12 +47,12 @@ def payload_files(doc_id: str, content_html: str) -> dict[Path, bytes]:
     }
 
 
-def managed_root(repo_root: Path, scope: str, media_type: str) -> Path:
+def published_root(repo_root: Path, scope: str, media_type: str) -> Path:
     return (
         repo_root
         / "docs-viewer/scopes"
         / scope
-        / "generated/media"
+        / "published/media"
         / media_type
     )
 
@@ -120,10 +120,10 @@ def test_repository_plan_and_apply_copy_retain_missing_and_remove_only_stale_pub
     with tempfile.TemporaryDirectory() as temp_path:
         repo_root = Path(temp_path)
         config = public_config(repo_root, media_type="img")
-        managed = managed_root(repo_root, "example", "img")
-        managed.mkdir(parents=True)
-        (managed / "shared.png").write_bytes(b"new shared")
-        (managed / "current.png").write_bytes(b"current")
+        published = published_root(repo_root, "example", "img")
+        published.mkdir(parents=True)
+        (published / "shared.png").write_bytes(b"new shared")
+        (published / "current.png").write_bytes(b"current")
         public = repo_root / "site/assets/data/docs/scopes/example/media/img"
         public.mkdir(parents=True)
         (public / "shared.png").write_bytes(b"old shared")
@@ -167,9 +167,9 @@ def test_r2_apply_verifies_copy_removes_stale_and_preserves_prefix_marker() -> N
     with tempfile.TemporaryDirectory() as temp_path:
         repo_root = Path(temp_path)
         config = public_config(repo_root, media_type="files", provider="r2")
-        managed = managed_root(repo_root, "example", "files")
-        managed.mkdir(parents=True)
-        (managed / "download.pdf").write_bytes(b"managed pdf")
+        published = published_root(repo_root, "example", "files")
+        published.mkdir(parents=True)
+        (published / "download.pdf").write_bytes(b"published pdf")
         client = FakeR2Client(
             {
                 "docs/example/files/": b"",
@@ -198,7 +198,7 @@ def test_r2_apply_verifies_copy_removes_stale_and_preserves_prefix_marker() -> N
         assert applied["copied_count"] == 1
         assert applied["removed_count"] == 1
         assert applied["error_count"] == 0
-        assert client.objects["docs/example/files/download.pdf"] == b"managed pdf"
+        assert client.objects["docs/example/files/download.pdf"] == b"published pdf"
         assert "docs/example/files/stale.pdf" not in client.objects
         assert "docs/example/files/" in client.objects
 
@@ -207,9 +207,9 @@ def test_r2_copy_failure_is_reported_without_stopping_other_reconciliation() -> 
     with tempfile.TemporaryDirectory() as temp_path:
         repo_root = Path(temp_path)
         config = public_config(repo_root, media_type="files", provider="r2")
-        managed = managed_root(repo_root, "example", "files")
-        managed.mkdir(parents=True)
-        (managed / "download.pdf").write_bytes(b"managed pdf")
+        published = published_root(repo_root, "example", "files")
+        published.mkdir(parents=True)
+        (published / "download.pdf").write_bytes(b"published pdf")
         client = FakeR2Client(
             {"docs/example/files/stale.pdf": b"stale"},
             fail_put=True,

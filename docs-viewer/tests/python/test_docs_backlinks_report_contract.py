@@ -114,10 +114,6 @@ def test_backlinks_report_and_payload_are_absent_from_public_owners() -> None:
     public_browser_config = read_json(
         REPO_ROOT / "docs-viewer/config/defaults/docs-viewer-public-config.json"
     )
-    publish_gate = (
-        REPO_ROOT / "docs-viewer/services/docs_publish_gate.py"
-    ).read_text(encoding="utf-8")
-
     assert "docs_backlinks" not in public_report_ids
     assert "docs-backlinks-report.js" not in public_loader
     assert all(
@@ -125,4 +121,3 @@ def test_backlinks_report_and_payload_are_absent_from_public_owners() -> None:
         for scope in public_browser_config["scopes"]
         if isinstance(scope, dict)
     )
-    assert 'relative_path == Path("backlinks.json")' in publish_gate

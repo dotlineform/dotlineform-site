@@ -24,6 +24,7 @@ if str(SERVICES_DIR) not in sys.path:
     sys.path.insert(0, str(SERVICES_DIR))
 
 import docs_management_publishable as publishable_service  # noqa: E402
+import docs_document_publication_lineage as publication_lineage  # noqa: E402
 import docs_management_routes as routes  # noqa: E402
 import docs_management_service as management_service  # noqa: E402
 import docs_source_model as source_model  # noqa: E402
@@ -243,9 +244,7 @@ def test_set_publishable_is_lineage_neutral(
 ) -> None:
     repo_root = make_lineage_repo(tmp_path)
     editorial_id = "d-20260802-120000-cccccc"
-    lineage_path = (
-        repo_root / "docs-viewer/data/canonical/document-publication-lineage.json"
-    )
+    lineage_path = publication_lineage.table_path(repo_root)
     lineage_before = lineage_path.read_bytes()
 
     def atomic_child_rebuild(

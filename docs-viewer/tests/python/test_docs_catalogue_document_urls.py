@@ -119,6 +119,41 @@ def test_projection_rejects_public_location_without_exact_source() -> None:
         raise AssertionError("missing canonical public source should fail closed")
 
 
+def test_accepted_subject_associations_replace_source_front_matter_join() -> None:
+    location = {
+        "scope_id": "analysis",
+        "sub_scope": "works",
+        "doc_id": PUBLIC_CHILD_ID,
+        "url": f"/analysis/?doc={REPORT_ID}&subdoc={PUBLIC_CHILD_ID}",
+    }
+    result = projection.project_catalogue_document_urls_from_subject_associations(
+        exact_locations=[location],
+        subject_associations_by_collection={
+            ("analysis", "works"): {
+                "schema_version": "docs_subject_associations_v1",
+                "scope": "analysis",
+                "sub_scope": "works",
+                "associations": [
+                    {
+                        "subject": {"kind": "series", "key": "001"},
+                        "documents": [
+                            {
+                                "target": {
+                                    "scope": "analysis",
+                                    "sub_scope": "works",
+                                    "doc_id": PUBLIC_CHILD_ID,
+                                }
+                            }
+                        ],
+                    }
+                ],
+            }
+        },
+    )
+
+    assert result == {"work": {}, "series": {"001": [location["url"]]}}
+
+
 def test_loader_joins_public_parent_and_sub_scope_sources_across_configured_scopes() -> None:
     with tempfile.TemporaryDirectory() as temp_path:
         root = Path(temp_path)

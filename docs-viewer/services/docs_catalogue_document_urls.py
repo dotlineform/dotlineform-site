@@ -65,6 +65,77 @@ def project_catalogue_document_urls(
     return projection
 
 
+def project_catalogue_document_urls_from_subject_associations(
+    *,
+    exact_locations: Sequence[Mapping[str, Any]],
+    subject_associations_by_collection: Mapping[
+        tuple[str, str], Mapping[str, Any]
+    ],
+) -> CatalogueDocumentUrls:
+    """Join accepted public locations to accepted exact authoring subjects."""
+
+    location_targets = {exact_location_target(record) for record in exact_locations}
+    front_matter_by_target: dict[CatalogueTarget, Mapping[str, Any]] = {
+        target: {} for target in location_targets
+    }
+    seen_targets: set[CatalogueTarget] = set()
+    for (scope, sub_scope), payload in sorted(subject_associations_by_collection.items()):
+        if payload.get("schema_version") != "docs_subject_associations_v1":
+            raise ValueError(
+                f"accepted subject associations for {scope}/{sub_scope} have an unsupported schema"
+            )
+        if payload.get("scope") != scope or payload.get("sub_scope") != sub_scope:
+            raise ValueError(
+                f"accepted subject associations for {scope}/{sub_scope} have the wrong collection identity"
+            )
+        raw_associations = payload.get("associations")
+        if not isinstance(raw_associations, list):
+            raise ValueError(
+                f"accepted subject associations for {scope}/{sub_scope} are missing associations"
+            )
+        for raw_association in raw_associations:
+            if not isinstance(raw_association, Mapping):
+                raise ValueError("accepted subject association must be an object")
+            subject = raw_association.get("subject")
+            documents = raw_association.get("documents")
+            if not isinstance(subject, Mapping) or not isinstance(documents, list):
+                raise ValueError("accepted subject association must contain subject and documents")
+            kind = str(subject.get("kind") or "").strip()
+            key = str(subject.get("key") or "").strip()
+            if kind not in {"work", "series"} or not key:
+                raise ValueError("accepted deployment subject must be an exact Work or Series")
+            field_name = "work_id" if kind == "work" else "series_id"
+            for raw_document in documents:
+                if not isinstance(raw_document, Mapping):
+                    raise ValueError("accepted subject document must be an object")
+                raw_target = raw_document.get("target")
+                if not isinstance(raw_target, Mapping):
+                    raise ValueError("accepted subject document must contain an exact target")
+                target = (
+                    str(raw_target.get("scope") or "").strip(),
+                    str(raw_target.get("sub_scope") or "").strip().lower(),
+                    str(raw_target.get("doc_id") or "").strip(),
+                )
+                if not target[0] or not target[2]:
+                    raise ValueError("accepted subject document target is incomplete")
+                if target[:2] != (scope, sub_scope):
+                    raise ValueError("accepted subject document has the wrong collection identity")
+                if target not in location_targets:
+                    raise ValueError(
+                        "accepted subject document has no accepted public location: "
+                        + "/".join(part for part in target if part)
+                    )
+                if target in seen_targets:
+                    raise ValueError("accepted document has more than one authoring subject")
+                seen_targets.add(target)
+                front_matter_by_target[target] = {field_name: key}
+
+    return project_catalogue_document_urls(
+        exact_locations=exact_locations,
+        front_matter_by_target=front_matter_by_target,
+    )
+
+
 def load_public_catalogue_document_urls(repo_root: Path) -> CatalogueDocumentUrls:
     """Join current public locations to exact canonical source front matter."""
 
@@ -125,4 +196,5 @@ __all__ = [
     "exact_location_target",
     "load_public_catalogue_document_urls",
     "project_catalogue_document_urls",
+    "project_catalogue_document_urls_from_subject_associations",
 ]

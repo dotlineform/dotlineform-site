@@ -116,6 +116,25 @@ export function applyManagedDocsPublish(preview, options) {
   }, options), options);
 }
 
+export function previewManagedDocsDeployRepo(options) {
+  return fetchManagementJson(
+    "/docs/deploy-repo/preview",
+    "POST",
+    scopedPayload({}, options),
+    options
+  );
+}
+
+export function applyManagedDocsDeployRepo(preview, options) {
+  var plan = preview && typeof preview === "object" ? preview : {};
+  return fetchManagementJson("/docs/deploy-repo/apply", "POST", scopedPayload({
+    confirm: true,
+    published_revision: String(plan.published_revision || "").trim(),
+    deployment_timestamp: String(plan.deployment_timestamp || "").trim(),
+    plan_revision: String(plan.plan_revision || "").trim()
+  }, options), options);
+}
+
 export function previewManagedDocsStaticHtmlExport(docIds, options) {
   return fetchManagementJson("/docs/export/static-html/preview", "POST", scopedPayload({
     doc_ids: Array.isArray(docIds) ? docIds.slice() : []

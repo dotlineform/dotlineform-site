@@ -10,7 +10,7 @@ import pytest
 
 import docs_management_mutation_service as mutation_service
 import docs_management_mutations as mutations
-import docs_publish_gate
+import docs_document_publication_lineage as publication_lineage
 import docs_public_delete_cleanup as cleanup
 import docs_source_model as source_model
 from docs_document_location_projection import build_document_location_payload
@@ -496,41 +496,6 @@ def test_already_unprojected_cleanup_is_unchanged(tmp_path: Path) -> None:
     assert result["status"] == "unchanged"
 
 
-def test_next_publish_is_idempotent_after_immediate_cleanup(tmp_path: Path) -> None:
-    paths = prepare_parent_repo(tmp_path)
-    cleanup_plan = cleanup.plan_public_document_delete_cleanup(
-        tmp_path,
-        scope="analysis",
-        doc_ids=[PARENT_ID],
-    )
-    cleanup.apply_public_document_delete_cleanup(tmp_path, cleanup_plan)
-
-    working_docs = tmp_path / "docs-viewer/scopes/analysis/generated/documents"
-    for relative_path in (
-        Path("index-tree.json"),
-        Path("recent.json"),
-        Path(f"by-id/{SIBLING_ID}.json"),
-    ):
-        target = working_docs / relative_path
-        target.parent.mkdir(parents=True, exist_ok=True)
-        target.write_bytes((paths["docs_root"] / relative_path).read_bytes())
-    publication_recent = working_docs / ".publish/recent.json"
-    publication_recent.parent.mkdir(parents=True, exist_ok=True)
-    publication_recent.write_bytes((paths["docs_root"] / "recent.json").read_bytes())
-    working_search = tmp_path / "docs-viewer/scopes/analysis/generated/search/index.json"
-    working_search.parent.mkdir(parents=True, exist_ok=True)
-    working_search.write_bytes(paths["search"].read_bytes())
-
-    preview = docs_publish_gate.publish_confirm(tmp_path, {"scope": "analysis"})
-
-    assert preview["changed_count"] == 0
-    assert preview["excluded_count"] == 0
-    assert preview["up_to_date"] is True
-    assert (
-        paths["docs_root"] / "by-id/out-of-workflow.json"
-    ).is_file()
-
-
 def test_child_cleanup_leaves_host_and_sibling_bytes_unchanged(tmp_path: Path) -> None:
     paths = prepare_child_repo(tmp_path)
     host_paths = [
@@ -708,9 +673,7 @@ def test_delete_applies_lineage_after_public_cleanup_and_rebuilds_projects_only(
         f"docs-viewer/scopes/{scope}/source/sub-scopes/{sub_scope}/"
         f"documents/{doc_id}.md"
     )
-    lineage_path = (
-        repo_root / "docs-viewer/data/canonical/document-publication-lineage.json"
-    )
+    lineage_path = publication_lineage.table_path(repo_root)
     lineage_before = lineage_path.read_bytes()
     working_path = repo_root / (
         "docs-viewer/scopes/dotlineform/source/sub-scopes/projects/documents/"
@@ -841,9 +804,7 @@ def test_failed_public_cleanup_leaves_lineage_unchanged(
         "docs-viewer/scopes/analysis/source/sub-scopes/works/documents/"
         f"{doc_id}.md"
     )
-    lineage_path = (
-        repo_root / "docs-viewer/data/canonical/document-publication-lineage.json"
-    )
+    lineage_path = publication_lineage.table_path(repo_root)
     lineage_before = lineage_path.read_bytes()
     lineage_rebuilds: list[object] = []
 
@@ -921,7 +882,7 @@ def test_catalogue_failure_returns_committed_non_success(
         doc_ids=[PARENT_ID],
     )
     monkeypatch.setattr(
-        "docs_publish_gate.catalogue_document_url_follow_through",
+        "docs_catalogue_document_url_follow_through.refresh_from_current_public_state",
         lambda _repo_root: {
             "status": "stale",
             "stale": True,
@@ -963,7 +924,7 @@ def test_delete_executor_reports_committed_when_catalogue_cleanup_fails(
     )
     monkeypatch.setattr(mutation_service, "log_event", lambda *_args: None)
     monkeypatch.setattr(
-        "docs_publish_gate.catalogue_document_url_follow_through",
+        "docs_catalogue_document_url_follow_through.refresh_from_current_public_state",
         lambda _repo_root: {
             "status": "stale",
             "stale": True,

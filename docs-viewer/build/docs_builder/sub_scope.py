@@ -199,10 +199,13 @@ class SubScopeDocsBuilder(DocsDataBuilder):
         self,
         ordered_docs: list[DocRecord],
     ) -> dict[str, dict[str, Any]] | None:
-        if self.public_readonly_scope:
-            return None
         folder_supported = self.folder_subject_supported()
-        if not folder_supported and not any(
+        configured_fields = sub_scope_customisation_authoring_subject_fields(
+            self.sub_scope_config.sub_scope_customisation
+        )
+        if self.public_readonly_scope and not configured_fields:
+            return None
+        if not configured_fields and not any(
             any(field_name in doc.front_matter for field_name in AUTHORING_SUBJECT_FIELDS)
             for doc in ordered_docs
         ) and not (self.output_dir / "subject-associations.json").is_file():

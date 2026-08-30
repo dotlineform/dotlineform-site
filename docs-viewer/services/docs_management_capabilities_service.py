@@ -7,6 +7,7 @@ from typing import Any, Dict
 
 import docs_scope_manifest
 import docs_scope_rename
+import docs_deploy_repo
 import docs_local_links
 import docs_source_config_settings
 import docs_static_html_export
@@ -53,6 +54,14 @@ def capabilities_payload(repo_root: Path) -> Dict[str, Any]:
         published_root = resolve_scope_path(repo_root, published_documents_path(config)).parent
         published_manifest_path = published_root / PUBLISH_MANIFEST_FILENAME
         published_available = published_manifest_path.is_file() and not published_manifest_path.is_symlink()
+        deploy_repo = docs_deploy_repo.deploy_repo_capability(repo_root, config)
+        if config.scope_id == docs_deploy_repo.DEPLOYABLE_SCOPE and not root.exists():
+            deploy_repo = {
+                "available": False,
+                "preview": False,
+                "apply": False,
+                "reason": "The Analysis scope is unavailable.",
+            }
         publishable = is_public_readonly_scope(
             viewer_base_url=config.viewer_base_url,
             include_scope_param=config.include_scope_param,
@@ -118,6 +127,7 @@ def capabilities_payload(repo_root: Path) -> Dict[str, Any]:
                     published_search_path(config),
                 ),
             },
+            "deploy_repo": deploy_repo,
             "static_html_export": docs_static_html_export.scope_static_html_export_capability(
                 repo_root,
                 scope,
@@ -186,6 +196,10 @@ def capabilities_payload(repo_root: Path) -> Dict[str, Any]:
             "publishing": {
                 "status": True,
                 "confirm": True,
+                "apply": True,
+            },
+            "deploy_repo": {
+                "preview": True,
                 "apply": True,
             },
             "static_html_export": static_html_export,

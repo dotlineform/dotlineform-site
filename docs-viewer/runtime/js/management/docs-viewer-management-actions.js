@@ -1,7 +1,5 @@
 import {
   applyManagedDocDelete,
-  applyManagedDocsPublish,
-  confirmManagedDocsPublish,
   createManagedDoc,
   moveManagedDoc,
   openManagedDocSource,
@@ -22,6 +20,11 @@ import {
   openDocsViewerConfirmModal,
   openDocsViewerTextInputModal
 } from "./docs-viewer-management-modals.js";
+import {
+  docsViewerPublishWorkflowHasFailure,
+  docsViewerPublishWorkflowMessage,
+  runManagedDocsPublishWorkflow
+} from "./docs-viewer-management-publish-workflow.js";
 
 var ACTION_TEXT = {
   cancelButton: "Cancel",
@@ -37,11 +40,6 @@ var ACTION_TEXT = {
   settingsSaving: "Saving settings...",
   settingsSaved: "Settings saved.",
   settingsSaveFailed: "Settings save failed.",
-  publishChecking: "Checking accepted-snapshot changes...",
-  publishConfirmTitle: "Publish accepted scope snapshot",
-  publishConfirmButton: "Publish",
-  publishApplying: "Updating the accepted scope snapshot...",
-  publishApplied: "Accepted scope snapshot updated.",
   publishFailed: "Publish failed.",
   copyLinkFailed: "Copy link failed."
 };
@@ -262,42 +260,6 @@ export function firstRemainingRootDocId(docs, deletedDocIds, resolveLoadableDocI
   return "";
 }
 
-export function docsViewerPublishConfirmBody(preview) {
-  var lines = [
-    "Replace this scope's accepted snapshot with the reviewed generated output?",
-    "",
-    "Documents accepted: " + Number(preview && preview.document_count || 0),
-    "Documents excluded: " + Number(preview && preview.excluded_document_count || 0),
-    "Files added: " + Number(preview && preview.added_count || 0),
-    "Files changed: " + Number(preview && preview.changed_count || 0),
-    "Stale files removed: " + Number(preview && preview.removed_count || 0),
-    "Byte-identical files left alone: " + Number(preview && preview.unchanged_count || 0),
-    "",
-    "Generated revision: " + String(preview && preview.generated_revision || ""),
-    "Published revision after apply: " + String(preview && preview.target_published_revision || "")
-  ];
-  [
-    ["Add", preview && preview.added],
-    ["Change", preview && preview.changed],
-    ["Remove", preview && preview.removed]
-  ].forEach(function (group) {
-    var paths = Array.isArray(group[1]) ? group[1] : [];
-    if (!paths.length) return;
-    lines.push("", group[0] + " paths:");
-    paths.forEach(function (path) {
-      lines.push("- " + String(path || ""));
-    });
-  });
-  return lines.join("\n");
-}
-
-export function docsViewerPublishHasChanges(preview) {
-  var added = Number(preview && preview.added_count || 0);
-  var changed = Number(preview && preview.changed_count || 0);
-  var removed = Number(preview && preview.removed_count || 0);
-  return added + changed + removed > 0;
-}
-
 export function createDocsViewerManagementActionController(options) {
   var root = options.root;
   var documentIndex = options.documentIndex || {};
@@ -317,6 +279,10 @@ export function createDocsViewerManagementActionController(options) {
 
   function currentContextMenuDoc() {
     return callbacks.currentContextMenuDoc ? callbacks.currentContextMenuDoc() : null;
+  }
+
+  function viewerScope() {
+    return callbacks.viewerScope ? callbacks.viewerScope() : "";
   }
 
   function actionTargetDoc(actionId, targetDocId) {
@@ -611,40 +577,42 @@ export function createDocsViewerManagementActionController(options) {
   }
 
   function handlePublishDocs() {
-    var confirmedPreview = null;
-    setManagementBusy(true);
-    setManagementMessage(ACTION_TEXT.publishChecking, false);
-
-    confirmManagedDocsPublish(managementClientOptions())
-      .then(function (preview) {
-        confirmedPreview = preview;
-        setManagementBusy(false);
-        return openDocsViewerConfirmModal({
-          root: root,
-          title: ACTION_TEXT.publishConfirmTitle,
-          body: docsViewerPublishConfirmBody(preview),
-          size: "wide",
-          primaryLabel: ACTION_TEXT.publishConfirmButton,
-          cancelLabel: ACTION_TEXT.cancelButton,
-          primaryDisabled: !docsViewerPublishHasChanges(preview)
-        });
-      })
-      .then(function (confirmed) {
-        if (!confirmed) {
+    return runManagedDocsPublishWorkflow({
+      root: root,
+      scope: viewerScope(),
+      capabilities: management.managementCapabilities,
+      clientOptions: managementClientOptions(),
+      onPhase: function (phase) {
+        setManagementBusy(phase.busy === true);
+        setManagementMessage(phase.message || "", false);
+        renderManagementUi();
+      }
+    })
+      .then(function (result) {
+        if (
+          !result
+          || (result.cancelled === true && !docsViewerPublishWorkflowMessage(result))
+        ) {
           setManagementMessage("", false);
-          return null;
+          return result;
         }
-        setManagementBusy(true);
-        setManagementMessage(ACTION_TEXT.publishApplying, false);
-        return applyManagedDocsPublish(confirmedPreview, managementClientOptions());
-      })
-      .then(function (payload) {
-        if (!payload) return;
-        setManagementMessage(payload.summary_text || ACTION_TEXT.publishApplied, false);
-        if (callbacks.refreshManagementCapabilities) callbacks.refreshManagementCapabilities();
+        setManagementMessage(
+          docsViewerPublishWorkflowMessage(result),
+          docsViewerPublishWorkflowHasFailure(result)
+        );
+        if (
+          callbacks.refreshManagementCapabilities
+          && [result.publish, result.deploy_repo].some(function (outcome) {
+            return outcome && (outcome.status === "applied" || outcome.status === "partial");
+          })
+        ) {
+          callbacks.refreshManagementCapabilities();
+        }
+        return result;
       })
       .catch(function (error) {
         setManagementMessage(error.message || ACTION_TEXT.publishFailed, true);
+        return null;
       })
       .finally(function () {
         setManagementBusy(false);

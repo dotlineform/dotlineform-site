@@ -20,6 +20,7 @@ if str(DOCS_SERVICES_DIR) not in sys.path:
     sys.path.insert(0, str(DOCS_SERVICES_DIR))
 
 import docs_document_transfer as transfer  # noqa: E402
+import docs_document_publication_lineage as publication_lineage  # noqa: E402
 import docs_media_source_evidence as media_source_evidence  # noqa: E402
 import docs_scope_config  # noqa: E402
 import docs_source_model as source_model  # noqa: E402
@@ -350,7 +351,7 @@ def make_lineage_repo(tmp_path: Path) -> Path:
         body="# Editorial B Two\n\nEditorial body two.\n",
     )
     write_json(
-        repo_root / "docs-viewer/data/canonical/document-publication-lineage.json",
+        publication_lineage.table_path(repo_root),
         {
             "schema_version": "docs_document_publication_lineage_v3",
             "working_collection": {

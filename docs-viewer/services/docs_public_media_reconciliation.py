@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Plan and apply public media projection from exact publishable payloads."""
+"""Plan and apply public media deployment from one accepted Published snapshot."""
 
 from __future__ import annotations
 
@@ -106,13 +106,13 @@ def _type_adapters(
     projection = config.public_projection
     if projection is None:
         raise ValueError(f"scope {config.scope_id!r} has no public media projection")
-    managed = config.media.types[media_type]
+    published = config.media.types[media_type]
     public = projection.media[media_type]
     return (
         artifact_location_adapter(
             repo_root,
-            managed.generated_location,
-            served_path_prefix=managed.served_path_prefix,
+            published.published_location,
+            served_path_prefix=published.served_path_prefix,
         ),
         artifact_location_adapter(
             repo_root,
@@ -204,10 +204,10 @@ def plan_public_media_reconciliation(
         items: list[dict[str, Any]] = []
         if public.location.provider == R2_PROVIDER and remote_error:
             type_errors.append(remote_error)
-            managed_adapter = public_adapter = None
+            published_adapter = public_adapter = None
         else:
             try:
-                managed_adapter, public_adapter = _type_adapters(
+                published_adapter, public_adapter = _type_adapters(
                     repo_root,
                     config,
                     media_type,
@@ -215,7 +215,7 @@ def plan_public_media_reconciliation(
                 )
             except Exception as exc:
                 type_errors.append(str(exc))
-                managed_adapter = public_adapter = None
+                published_adapter = public_adapter = None
         public_stats: dict[str, Any] = {}
         public_list_error = ""
         if public_adapter is not None:
@@ -224,29 +224,29 @@ def plan_public_media_reconciliation(
                 type_errors.append(public_list_error)
 
         for identity, referenced_by in rows:
-            managed_status = "unavailable"
+            source_status = "unavailable"
             public_status = "unavailable" if public_adapter is None else "missing"
             action = "unavailable"
             size = 0
             error = ""
-            managed_bytes: bytes | None = None
-            if managed_adapter is not None:
+            published_bytes: bytes | None = None
+            if published_adapter is not None:
                 try:
-                    managed_stat = managed_adapter.stat(identity)
-                    if managed_stat is None:
-                        managed_status = "missing"
+                    published_stat = published_adapter.stat(identity)
+                    if published_stat is None:
+                        source_status = "missing"
                     else:
-                        managed_bytes = managed_adapter.read(identity)
-                        managed_status = "available"
-                        size = len(managed_bytes)
+                        published_bytes = published_adapter.read(identity)
+                        source_status = "available"
+                        size = len(published_bytes)
                 except Exception as exc:
-                    managed_status = "unavailable"
+                    source_status = "unavailable"
                     error = str(exc)
                     type_errors.append(error)
             public_present = identity in public_stats
             if public_adapter is not None and not public_list_error:
                 public_status = "present" if public_present else "missing"
-            if managed_bytes is None:
+            if published_bytes is None:
                 if public_adapter is not None and public_list_error:
                     try:
                         public_present = public_adapter.stat(identity) is not None
@@ -262,7 +262,7 @@ def plan_public_media_reconciliation(
                     public_stat = public_adapter.stat(identity)
                     public_present = public_stat is not None
                     public_status = "present" if public_present else "missing"
-                    if public_present and public_adapter.read(identity) == managed_bytes:
+                    if public_present and public_adapter.read(identity) == published_bytes:
                         action = "unchanged"
                         public_status = "current"
                     else:
@@ -279,7 +279,7 @@ def plan_public_media_reconciliation(
                     "identity": identity,
                     "provider": public.location.provider,
                     "referenced_by": list(referenced_by),
-                    "managed_status": managed_status,
+                    "source_status": source_status,
                     "public_status": public_status,
                     "action": action,
                     "size": size,
@@ -296,7 +296,7 @@ def plan_public_media_reconciliation(
                         "identity": identity,
                         "provider": public.location.provider,
                         "referenced_by": [],
-                        "managed_status": "not_checked",
+                        "source_status": "not_checked",
                         "public_status": "stale",
                         "action": "remove",
                         "size": int(public_stats[identity].size),
@@ -310,12 +310,12 @@ def plan_public_media_reconciliation(
                 "media_type": media_type,
                 "provider": public.location.provider,
                 "referenced_count": len(rows),
-                "available_count": sum(item["managed_status"] == "available" for item in items),
+                "available_count": sum(item["source_status"] == "available" for item in items),
                 "copy_count": sum(item["action"] == "copy" for item in items),
                 "unchanged_count": sum(item["action"] == "unchanged" for item in items),
                 "retained_count": sum(item["action"] == "retain" for item in items),
                 "missing_count": sum(
-                    item["managed_status"] in {"missing", "unavailable"}
+                    item["source_status"] in {"missing", "unavailable"}
                     for item in items
                     if item["action"] != "remove"
                 ),
@@ -357,7 +357,7 @@ def _apply_type(
     results: list[dict[str, Any]] = []
     errors: list[str] = []
     try:
-        managed_adapter, public_adapter = _type_adapters(
+        published_adapter, public_adapter = _type_adapters(
             repo_root,
             config,
             media_type,
@@ -388,7 +388,7 @@ def _apply_type(
             "error": "",
         }
         try:
-            managed_bytes = managed_adapter.read(identity)
+            published_bytes = published_adapter.read(identity)
         except FileNotFoundError:
             try:
                 result["status"] = "retained" if public_adapter.stat(identity) is not None else "missing"
@@ -405,12 +405,12 @@ def _apply_type(
             results.append(result)
             continue
         try:
-            if public_adapter.stat(identity) is not None and public_adapter.read(identity) == managed_bytes:
+            if public_adapter.stat(identity) is not None and public_adapter.read(identity) == published_bytes:
                 result["status"] = "unchanged"
             else:
                 content_type = mimetypes.guess_type(identity)[0] or "application/octet-stream"
-                public_adapter.replace(identity, managed_bytes, content_type=content_type)
-                if not public_adapter.verify_bytes(identity, managed_bytes):
+                public_adapter.replace(identity, published_bytes, content_type=content_type)
+                if not public_adapter.verify_bytes(identity, published_bytes):
                     raise RuntimeError("public media bytes did not verify")
                 result["status"] = "copied"
         except Exception as exc:

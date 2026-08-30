@@ -10,6 +10,8 @@ from pathlib import Path
 
 import pytest
 
+from repo_factory import docs_scope_record, docs_sub_scope_record, write_docs_scope_config
+
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 DOCS_SERVICES_DIR = REPO_ROOT / "docs-viewer" / "services"
@@ -23,6 +25,53 @@ SOURCE_ID = "d-20260801-100000-aaaaaa"
 SECOND_SOURCE_ID = "d-20260801-101000-bbbbbb"
 EDITORIAL_ID = "d-20260802-110000-cccccc"
 SECOND_EDITORIAL_ID = "d-20260802-120000-dddddd"
+
+
+@pytest.fixture(autouse=True)
+def configured_lineage_authority(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    projects_base = tmp_path / "projects"
+    (projects_base / "docs-viewer").mkdir(parents=True)
+    monkeypatch.setenv("DOTLINEFORM_PROJECTS_BASE_DIR", str(projects_base))
+    write_docs_scope_config(
+        tmp_path / "repo",
+        [
+            docs_scope_record(
+                "dotlineform",
+                scope_root_provider="external_local",
+                sub_scopes=[
+                    docs_sub_scope_record(
+                        "dotlineform",
+                        "projects",
+                        sub_scope_customisation={
+                            "id": "dotlineform_projects",
+                            "settings": {},
+                        },
+                    )
+                ],
+            ),
+            docs_scope_record(
+                "analysis",
+                scope_type="public",
+                scope_root_provider="external_local",
+                viewer_base_url="/analysis/",
+                include_scope_param=False,
+                sub_scopes=[
+                    docs_sub_scope_record(
+                        "analysis",
+                        "works",
+                        scope_type="public",
+                        sub_scope_customisation={
+                            "id": "analysis_works",
+                            "settings": {},
+                        },
+                    )
+                ],
+            ),
+        ],
+    )
 
 
 def empty_table() -> lineage.DocumentLineageTable:
@@ -79,6 +128,19 @@ def test_empty_table_freezes_the_exact_v3_envelope(tmp_path: Path) -> None:
     assert not hasattr(lineage, "lineage_id_for_copy")
     assert not hasattr(lineage, "load_rows")
     assert not hasattr(lineage, "write_rows_atomic")
+    assert lineage.table_path(repo_root) == (
+        tmp_path
+        / "projects/docs-viewer/scopes/dotlineform/source/sub-scopes/projects/data/document-publication-lineage.json"
+    )
+
+
+def test_repository_canonical_path_is_not_a_fallback(tmp_path: Path) -> None:
+    repo_root = tmp_path / "repo"
+    old_path = repo_root / "docs-viewer/data/canonical/document-publication-lineage.json"
+    old_path.parent.mkdir(parents=True, exist_ok=True)
+    old_path.write_bytes(lineage.render_table(empty_table()))
+
+    assert lineage.load_table(repo_root) is None
 
 
 def test_new_creates_ordered_children_and_replace_updates_one_exact_child(
@@ -368,33 +430,3 @@ def test_working_delete_removes_the_record_and_unrelated_delete_is_neutral(
     assert deleted.affected_working_doc_ids == (SOURCE_ID,)
     assert deleted.table is not None
     assert deleted.table.records == ()
-
-
-def test_reconcile_publications_updates_urls_on_current_children_only(
-    tmp_path: Path,
-) -> None:
-    repo_root = tmp_path / "repo"
-    table = replace(
-        empty_table(),
-        records=(
-            record(
-                SOURCE_ID,
-                editorial(EDITORIAL_ID),
-                editorial(SECOND_EDITORIAL_ID, published_url="/analysis/old"),
-            ),
-        ),
-    )
-    lineage.write_table_atomic(repo_root, table)
-
-    reconciled = lineage.reconcile_publications(
-        repo_root,
-        editorial_scope="analysis",
-        editorial_sub_scope="works",
-        publication_urls={EDITORIAL_ID: "/analysis/current"},
-    )
-
-    assert reconciled is not None
-    assert reconciled.records[0].editorials == (
-        editorial(EDITORIAL_ID, published_url="/analysis/current"),
-        editorial(SECOND_EDITORIAL_ID),
-    )
