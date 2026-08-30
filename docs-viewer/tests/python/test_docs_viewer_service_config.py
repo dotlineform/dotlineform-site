@@ -383,3 +383,42 @@ def test_external_sub_scope_payload_route_dispatches_as_generated_read(
     handler.do_GET()
 
     assert called == [handler.path]
+
+
+def test_published_media_route_respects_generated_read_capability(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    handler = object.__new__(docs_viewer_service.DocsViewerRequestHandler)
+    handler.server = type(
+        "Server",
+        (),
+        {
+            "repo_root": REPO_ROOT,
+            "docs_viewer_config": docs_viewer_service.DocsViewerServiceConfig(
+                host="127.0.0.1",
+                port=8776,
+                base_url="http://127.0.0.1:8776",
+                management_enabled=True,
+                generated_reads_enabled=False,
+                watch_enabled=True,
+            ),
+        },
+    )()
+    handler.path = "/docs/published/media/studio/img/example.png"
+    sent: dict[str, object] = {}
+    published_calls: list[str] = []
+
+    def fake_send_json(payload: object, status: object = docs_viewer_service.HTTPStatus.OK) -> None:
+        sent["payload"] = payload
+        sent["status"] = status
+
+    monkeypatch.setattr(handler, "send_json", fake_send_json)
+    monkeypatch.setattr(handler, "send_published_docs_media", published_calls.append)
+
+    handler.do_GET()
+
+    assert sent == {
+        "payload": {"ok": False, "error": "Published reads are disabled"},
+        "status": docs_viewer_service.HTTPStatus.FORBIDDEN,
+    }
+    assert published_calls == []

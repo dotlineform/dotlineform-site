@@ -489,6 +489,9 @@ class DocsViewerRequestHandler(QuietErrorLoggingMixin, BaseHTTPRequestHandler):
             self.send_docs_media(path)
             return
         if path.startswith(published_reads.PUBLISHED_MEDIA_PREFIX):
+            if not self.config.generated_reads_enabled:
+                self.send_json({"ok": False, "error": "Published reads are disabled"}, HTTPStatus.FORBIDDEN)
+                return
             self.send_published_docs_media(path)
             return
         if path.startswith(generated_reads.EXTERNAL_SUB_SCOPE_GENERATED_PREFIX):

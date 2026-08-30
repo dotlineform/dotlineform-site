@@ -799,9 +799,13 @@ def perform_multi_scope_source_write_and_rebuild(
 
 def rebuild_all_docs_outputs(repo_root: Path) -> Dict[str, Any]:
     try:
-        scope_ids = list(load_docs_scope_configs(repo_root).keys())
+        configs = load_docs_scope_configs(repo_root)
     except FileNotFoundError:
-        scope_ids = list(DOCS_SCOPE_CONFIGS.keys())
+        configs = dict(DOCS_SCOPE_CONFIGS)
+    scope_ids = list(configs)
+
+    for config in configs.values():
+        remove_build_manifest(repo_root, config)
 
     commands = [
         ("docs", python_builder_command(DOCS_BUILDER_SCRIPT, "--write", "--diagnostics")),
@@ -826,12 +830,17 @@ def rebuild_all_docs_outputs(repo_root: Path) -> Dict[str, Any]:
         if step["returncode"] != 0:
             detail = step["stderr"] or step["stdout"] or f"exit {step['returncode']}"
             raise RuntimeError(rebuild_failure_message("docs rebuild failed", detail))
+    build_manifests = {
+        scope_id: write_build_manifest(repo_root, config)
+        for scope_id, config in configs.items()
+    }
     return {
         "ok": True,
         "steps": steps,
+        "build_manifests": build_manifests,
         "diagnostics": {
             "docs": docs_diagnostics,
             "search": search_diagnostics,
         },
-        "summary_text": f"Docs and docs search rebuilt for {', '.join(DOCS_SCOPE_CONFIGS)}.",
+        "summary_text": f"Docs and docs search rebuilt for {', '.join(scope_ids)}.",
     }

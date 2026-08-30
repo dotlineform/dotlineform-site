@@ -393,6 +393,7 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
             ),
             "Smoke-check standalone Docs Viewer Manage route boot and configured service projection.",
             isolated_projects_base=True,
+            projects_base_argument=True,
         ),
         CheckCommand(
             "docs-viewer-service-review-smoke",

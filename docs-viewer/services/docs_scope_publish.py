@@ -132,6 +132,7 @@ def _read_json_bytes(data: bytes, label: str) -> dict[str, Any]:
 
 def _validate_generated_manifest(
     generated_root: Path,
+    expected_scope: str,
 ) -> tuple[dict[str, Any], dict[Path, bytes]]:
     manifest_path = generated_root / BUILD_MANIFEST_FILENAME
     if not manifest_path.is_file() or manifest_path.is_symlink():
@@ -139,6 +140,8 @@ def _validate_generated_manifest(
     manifest = _read_json_bytes(manifest_path.read_bytes(), "generated build manifest")
     if manifest.get("schema_version") != BUILD_MANIFEST_SCHEMA_VERSION:
         raise RuntimeError("generated build manifest has an unsupported schema")
+    if manifest.get("scope") != expected_scope:
+        raise RuntimeError("generated build manifest has the wrong scope identity")
     generated_files = _files_from_root(
         generated_root,
         excluded=(BUILD_MANIFEST_FILENAME,),
@@ -614,7 +617,10 @@ def preview_scope_publish(repo_root: Path, body: dict[str, Any]) -> dict[str, An
     config = _scope_config(repo_root, body.get("scope"))
     generated_root = _lifecycle_root(repo_root, config, "generated")
     published_root = _lifecycle_root(repo_root, config, "published")
-    build_manifest, generated_files = _validate_generated_manifest(generated_root)
+    build_manifest, generated_files = _validate_generated_manifest(
+        generated_root,
+        config.scope_id,
+    )
     desired_files, eligibility = _published_files(config, generated_files)
     current_files = _files_from_root(
         published_root,
@@ -748,7 +754,10 @@ def apply_scope_publish(repo_root: Path, body: dict[str, Any]) -> dict[str, Any]
     config = _scope_config(repo_root, preview["scope"])
     generated_root = _lifecycle_root(repo_root, config, "generated")
     published_root = _lifecycle_root(repo_root, config, "published")
-    build_manifest, generated_files = _validate_generated_manifest(generated_root)
+    build_manifest, generated_files = _validate_generated_manifest(
+        generated_root,
+        config.scope_id,
+    )
     desired_files, _eligibility = _published_files(config, generated_files)
     if files_revision(desired_files) != preview["target_published_revision"]:
         raise ValueError("generated output changed after Publish confirmation")

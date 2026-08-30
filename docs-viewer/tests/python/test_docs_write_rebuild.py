@@ -803,19 +803,31 @@ def test_perform_source_write_and_rebuild_completes_only_reported_written_paths(
 
 def test_rebuild_all_docs_outputs_preserves_command_sequence() -> None:
     calls: list[list[str]] = []
+    manifest_events: list[tuple[str, str]] = []
     original_python = with_fake_python()
     original_run = write_rebuild.subprocess.run
+    original_remove = write_rebuild.remove_build_manifest
+    original_write = write_rebuild.write_build_manifest
 
     def fake_run(command, **_kwargs):
         calls.append(list(command))
         return Completed()
 
     write_rebuild.subprocess.run = fake_run
+    write_rebuild.remove_build_manifest = lambda _repo, config: manifest_events.append(
+        ("remove", config.scope_id)
+    )
+    write_rebuild.write_build_manifest = lambda _repo, config: (
+        manifest_events.append(("write", config.scope_id))
+        or {"scope": config.scope_id}
+    )
     try:
         with tempfile.TemporaryDirectory() as temp_path:
             result = write_rebuild.rebuild_all_docs_outputs(Path(temp_path))
     finally:
         write_rebuild.subprocess.run = original_run
+        write_rebuild.remove_build_manifest = original_remove
+        write_rebuild.write_build_manifest = original_write
         write_rebuild.PYTHON_EXECUTABLE = original_python
 
     assert result["ok"] is True
@@ -825,18 +837,33 @@ def test_rebuild_all_docs_outputs_preserves_command_sequence() -> None:
         for scope in result["diagnostics"]["search"]
         if scope["mode"] == "full"
     ]
+    scope_ids = [scope["scope"] for scope in result["diagnostics"]["search"]]
+    assert manifest_events == [
+        *[("remove", scope_id) for scope_id in scope_ids],
+        *[("write", scope_id) for scope_id in scope_ids],
+    ]
 
 
 def test_rebuild_all_docs_outputs_uses_current_scope_config() -> None:
     calls: list[list[str]] = []
+    manifest_events: list[tuple[str, str]] = []
     original_python = with_fake_python()
     original_run = write_rebuild.subprocess.run
+    original_remove = write_rebuild.remove_build_manifest
+    original_write = write_rebuild.write_build_manifest
 
     def fake_run(command, **_kwargs):
         calls.append(list(command))
         return Completed()
 
     write_rebuild.subprocess.run = fake_run
+    write_rebuild.remove_build_manifest = lambda _repo, config: manifest_events.append(
+        ("remove", config.scope_id)
+    )
+    write_rebuild.write_build_manifest = lambda _repo, config: (
+        manifest_events.append(("write", config.scope_id))
+        or {"scope": config.scope_id}
+    )
     try:
         with tempfile.TemporaryDirectory() as temp_path:
             repo_root = Path(temp_path)
@@ -845,6 +872,8 @@ def test_rebuild_all_docs_outputs_uses_current_scope_config() -> None:
             result = write_rebuild.rebuild_all_docs_outputs(repo_root)
     finally:
         write_rebuild.subprocess.run = original_run
+        write_rebuild.remove_build_manifest = original_remove
+        write_rebuild.write_build_manifest = original_write
         write_rebuild.PYTHON_EXECUTABLE = original_python
 
     assert result["ok"] is True
@@ -852,6 +881,48 @@ def test_rebuild_all_docs_outputs_uses_current_scope_config() -> None:
         ["/tmp/python", "docs-viewer/build/build_docs.py", "--write", "--diagnostics"],
         ["/tmp/python", "docs-viewer/build/build_search.py", "--scope", "studio", "--write"],
     ]
+    assert manifest_events == [("remove", "studio"), ("write", "studio")]
+    assert result["build_manifests"] == {"studio": {"scope": "studio"}}
+
+
+def test_rebuild_all_docs_outputs_leaves_manifests_incomplete_on_failure() -> None:
+    manifest_events: list[tuple[str, str]] = []
+    original_python = with_fake_python()
+    original_run = write_rebuild.subprocess.run
+    original_remove = write_rebuild.remove_build_manifest
+    original_write = write_rebuild.write_build_manifest
+
+    def fake_run(command, **_kwargs):
+        if command[1] == write_rebuild.SEARCH_BUILDER_SCRIPT:
+            return Completed(returncode=1, stderr="search failed")
+        return Completed()
+
+    write_rebuild.subprocess.run = fake_run
+    write_rebuild.remove_build_manifest = lambda _repo, config: manifest_events.append(
+        ("remove", config.scope_id)
+    )
+    write_rebuild.write_build_manifest = lambda _repo, config: (
+        manifest_events.append(("write", config.scope_id))
+        or {"scope": config.scope_id}
+    )
+    try:
+        with tempfile.TemporaryDirectory() as temp_path:
+            repo_root = Path(temp_path)
+            config_path = repo_root / "docs-viewer/config/scopes/docs_scopes.json"
+            write_scope_config(config_path, [docs_scope_record("studio", default_doc_id="dev-home")])
+            try:
+                write_rebuild.rebuild_all_docs_outputs(repo_root)
+            except RuntimeError as exc:
+                assert "search failed" in str(exc)
+            else:
+                raise AssertionError("Expected failed all-scope rebuild to remain incomplete")
+    finally:
+        write_rebuild.subprocess.run = original_run
+        write_rebuild.remove_build_manifest = original_remove
+        write_rebuild.write_build_manifest = original_write
+        write_rebuild.PYTHON_EXECUTABLE = original_python
+
+    assert manifest_events == [("remove", "studio")]
 
 
 def test_rebuild_all_docs_outputs_rejects_local_assets_outputs() -> None:
@@ -897,6 +968,7 @@ def main() -> None:
     test_perform_source_write_and_rebuild_clears_pending_on_exception()
     test_rebuild_all_docs_outputs_preserves_command_sequence()
     test_rebuild_all_docs_outputs_uses_current_scope_config()
+    test_rebuild_all_docs_outputs_leaves_manifests_incomplete_on_failure()
     test_rebuild_all_docs_outputs_rejects_local_assets_outputs()
     print("Docs write/rebuild tests OK")
 

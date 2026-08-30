@@ -19,6 +19,7 @@ from docs_route_lifecycle import (
 from docs_scope_config import (
     CONFIG_REL_PATH,
     EXTERNAL_DATA_ROOT_MARKER,
+    MANAGED_MEDIA_TYPES,
     SCOPE_SOURCE_PATH,
     SOURCE_DOCUMENTS_PATH,
     load_docs_scope_configs,
@@ -220,7 +221,12 @@ def plan_create_scope_preview(repo_root: Path, body: dict[str, Any]) -> dict[str
         created_files.append(
             path_record(repo_root, f"{role}_media_root", media_root, action="create")
         )
-        for media_type in planned_scope_config["media"]["types"]:
+        media_types = (
+            sorted(MANAGED_MEDIA_TYPES)
+            if role == "source"
+            else planned_scope_config["media"]["types"]
+        )
+        for media_type in media_types:
             created_files.append(
                 path_record(
                     repo_root,

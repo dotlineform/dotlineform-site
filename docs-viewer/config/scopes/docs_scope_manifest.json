@@ -1,7 +1,7 @@
 {
   "schema_version": "docs_scope_manifest_v1",
   "tool_id": "docs-viewer-scope-lifecycle",
-  "updated_at": "2026-08-30T19:58:31Z",
+  "updated_at": "2026-08-30T20:39:41Z",
   "scopes": [
     {
       "scope_id": "analysis",
@@ -12,39 +12,39 @@
       "tool_id": "",
       "repo_status_at_creation": "tracked",
       "created_at": "",
-      "updated_at": "2026-08-30T19:58:31Z",
+      "updated_at": "2026-08-30T20:39:41Z",
       "files": [
         {
           "kind": "scope_root",
-          "path": "/Users/dlf/Library/Mobile Documents/com~apple~CloudDocs/dotlineform/docs-viewer/scopes/analysis",
+          "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/analysis",
           "location": "external",
           "action": "track",
           "exists": true
         },
         {
           "kind": "source_root",
-          "path": "/Users/dlf/Library/Mobile Documents/com~apple~CloudDocs/dotlineform/docs-viewer/scopes/analysis/source",
+          "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/analysis/source",
           "location": "external",
           "action": "track",
           "exists": true
         },
         {
           "kind": "source_documents_root",
-          "path": "/Users/dlf/Library/Mobile Documents/com~apple~CloudDocs/dotlineform/docs-viewer/scopes/analysis/source/documents",
+          "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/analysis/source/documents",
           "location": "external",
           "action": "track",
           "exists": true
         },
         {
           "kind": "source_sub_scopes_root",
-          "path": "/Users/dlf/Library/Mobile Documents/com~apple~CloudDocs/dotlineform/docs-viewer/scopes/analysis/source/sub-scopes",
+          "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/analysis/source/sub-scopes",
           "location": "external",
           "action": "track",
           "exists": true
         },
         {
           "kind": "source_media_root",
-          "path": "/Users/dlf/Library/Mobile Documents/com~apple~CloudDocs/dotlineform/docs-viewer/scopes/analysis/source/media",
+          "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/analysis/source/media",
           "location": "external",
           "action": "track",
           "exists": true
@@ -58,7 +58,7 @@
         },
         {
           "kind": "default_source_doc",
-          "path": "/Users/dlf/Library/Mobile Documents/com~apple~CloudDocs/dotlineform/docs-viewer/scopes/analysis/source/documents/d-20260426-164043-e14f49.md",
+          "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/analysis/source/documents/d-20260426-164043-e14f49.md",
           "location": "external",
           "action": "track",
           "exists": true
@@ -72,49 +72,49 @@
         },
         {
           "kind": "generated_docs_root",
-          "path": "/Users/dlf/Library/Mobile Documents/com~apple~CloudDocs/dotlineform/docs-viewer/scopes/analysis/generated/documents",
+          "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/analysis/generated/documents",
           "location": "external",
           "action": "track",
           "exists": true
         },
         {
           "kind": "generated_docs_index_tree",
-          "path": "/Users/dlf/Library/Mobile Documents/com~apple~CloudDocs/dotlineform/docs-viewer/scopes/analysis/generated/documents/index-tree.json",
+          "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/analysis/generated/documents/index-tree.json",
           "location": "external",
           "action": "track",
           "exists": true
         },
         {
           "kind": "generated_docs_recent",
-          "path": "/Users/dlf/Library/Mobile Documents/com~apple~CloudDocs/dotlineform/docs-viewer/scopes/analysis/generated/documents/recent.json",
+          "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/analysis/generated/documents/recent.json",
           "location": "external",
           "action": "track",
           "exists": true
         },
         {
           "kind": "generated_docs_payload_root",
-          "path": "/Users/dlf/Library/Mobile Documents/com~apple~CloudDocs/dotlineform/docs-viewer/scopes/analysis/generated/documents/by-id",
+          "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/analysis/generated/documents/by-id",
           "location": "external",
           "action": "track",
           "exists": true
         },
         {
           "kind": "generated_search_index",
-          "path": "/Users/dlf/Library/Mobile Documents/com~apple~CloudDocs/dotlineform/docs-viewer/scopes/analysis/generated/search/index.json",
+          "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/analysis/generated/search/index.json",
           "location": "external",
           "action": "track",
           "exists": true
         },
         {
           "kind": "published_docs_root",
-          "path": "/Users/dlf/Library/Mobile Documents/com~apple~CloudDocs/dotlineform/docs-viewer/scopes/analysis/published/documents",
+          "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/analysis/published/documents",
           "location": "external",
           "action": "track",
           "exists": true
         },
         {
           "kind": "published_search_index",
-          "path": "/Users/dlf/Library/Mobile Documents/com~apple~CloudDocs/dotlineform/docs-viewer/scopes/analysis/published/search/index.json",
+          "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/analysis/published/search/index.json",
           "location": "external",
           "action": "track",
           "exists": true
@@ -172,39 +172,39 @@
       "tool_id": "docs-viewer-scope-lifecycle",
       "repo_status_at_creation": "external",
       "created_at": "2026-08-29T19:50:32Z",
-      "updated_at": "2026-08-30T19:58:31Z",
+      "updated_at": "2026-08-30T20:39:41Z",
       "files": [
         {
           "kind": "scope_root",
-          "path": "/Users/dlf/Library/Mobile Documents/com~apple~CloudDocs/dotlineform/docs-viewer/scopes/app",
+          "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/app",
           "location": "external",
           "action": "track",
           "exists": true
         },
         {
           "kind": "source_root",
-          "path": "/Users/dlf/Library/Mobile Documents/com~apple~CloudDocs/dotlineform/docs-viewer/scopes/app/source",
+          "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/app/source",
           "location": "external",
           "action": "track",
           "exists": true
         },
         {
           "kind": "source_documents_root",
-          "path": "/Users/dlf/Library/Mobile Documents/com~apple~CloudDocs/dotlineform/docs-viewer/scopes/app/source/documents",
+          "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/app/source/documents",
           "location": "external",
           "action": "track",
           "exists": true
         },
         {
           "kind": "source_sub_scopes_root",
-          "path": "/Users/dlf/Library/Mobile Documents/com~apple~CloudDocs/dotlineform/docs-viewer/scopes/app/source/sub-scopes",
+          "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/app/source/sub-scopes",
           "location": "external",
           "action": "track",
           "exists": false
         },
         {
           "kind": "source_media_root",
-          "path": "/Users/dlf/Library/Mobile Documents/com~apple~CloudDocs/dotlineform/docs-viewer/scopes/app/source/media",
+          "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/app/source/media",
           "location": "external",
           "action": "track",
           "exists": true
@@ -218,56 +218,56 @@
         },
         {
           "kind": "default_source_doc",
-          "path": "/Users/dlf/Library/Mobile Documents/com~apple~CloudDocs/dotlineform/docs-viewer/scopes/app/source/documents/d-20260829-205140-9386fc.md",
+          "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/app/source/documents/d-20260829-205140-9386fc.md",
           "location": "external",
           "action": "track",
           "exists": true
         },
         {
           "kind": "generated_docs_root",
-          "path": "/Users/dlf/Library/Mobile Documents/com~apple~CloudDocs/dotlineform/docs-viewer/scopes/app/generated/documents",
+          "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/app/generated/documents",
           "location": "external",
           "action": "track",
           "exists": true
         },
         {
           "kind": "generated_docs_index_tree",
-          "path": "/Users/dlf/Library/Mobile Documents/com~apple~CloudDocs/dotlineform/docs-viewer/scopes/app/generated/documents/index-tree.json",
+          "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/app/generated/documents/index-tree.json",
           "location": "external",
           "action": "track",
           "exists": true
         },
         {
           "kind": "generated_docs_recent",
-          "path": "/Users/dlf/Library/Mobile Documents/com~apple~CloudDocs/dotlineform/docs-viewer/scopes/app/generated/documents/recent.json",
+          "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/app/generated/documents/recent.json",
           "location": "external",
           "action": "track",
           "exists": true
         },
         {
           "kind": "generated_docs_payload_root",
-          "path": "/Users/dlf/Library/Mobile Documents/com~apple~CloudDocs/dotlineform/docs-viewer/scopes/app/generated/documents/by-id",
+          "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/app/generated/documents/by-id",
           "location": "external",
           "action": "track",
           "exists": true
         },
         {
           "kind": "generated_search_index",
-          "path": "/Users/dlf/Library/Mobile Documents/com~apple~CloudDocs/dotlineform/docs-viewer/scopes/app/generated/search/index.json",
+          "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/app/generated/search/index.json",
           "location": "external",
           "action": "track",
           "exists": true
         },
         {
           "kind": "published_docs_root",
-          "path": "/Users/dlf/Library/Mobile Documents/com~apple~CloudDocs/dotlineform/docs-viewer/scopes/app/published/documents",
+          "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/app/published/documents",
           "location": "external",
           "action": "track",
           "exists": true
         },
         {
           "kind": "published_search_index",
-          "path": "/Users/dlf/Library/Mobile Documents/com~apple~CloudDocs/dotlineform/docs-viewer/scopes/app/published/search/index.json",
+          "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/app/published/search/index.json",
           "location": "external",
           "action": "track",
           "exists": true
@@ -290,39 +290,39 @@
       "tool_id": "docs-viewer-scope-lifecycle",
       "repo_status_at_creation": "external",
       "created_at": "2026-07-31T13:47:51Z",
-      "updated_at": "2026-08-30T19:58:31Z",
+      "updated_at": "2026-08-30T20:39:41Z",
       "files": [
         {
           "kind": "scope_root",
-          "path": "/Users/dlf/Library/Mobile Documents/com~apple~CloudDocs/dotlineform/docs-viewer/scopes/dotlineform",
+          "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/dotlineform",
           "location": "external",
           "action": "track",
           "exists": true
         },
         {
           "kind": "source_root",
-          "path": "/Users/dlf/Library/Mobile Documents/com~apple~CloudDocs/dotlineform/docs-viewer/scopes/dotlineform/source",
+          "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/dotlineform/source",
           "location": "external",
           "action": "track",
           "exists": true
         },
         {
           "kind": "source_documents_root",
-          "path": "/Users/dlf/Library/Mobile Documents/com~apple~CloudDocs/dotlineform/docs-viewer/scopes/dotlineform/source/documents",
+          "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/dotlineform/source/documents",
           "location": "external",
           "action": "track",
           "exists": true
         },
         {
           "kind": "source_sub_scopes_root",
-          "path": "/Users/dlf/Library/Mobile Documents/com~apple~CloudDocs/dotlineform/docs-viewer/scopes/dotlineform/source/sub-scopes",
+          "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/dotlineform/source/sub-scopes",
           "location": "external",
           "action": "track",
           "exists": true
         },
         {
           "kind": "source_media_root",
-          "path": "/Users/dlf/Library/Mobile Documents/com~apple~CloudDocs/dotlineform/docs-viewer/scopes/dotlineform/source/media",
+          "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/dotlineform/source/media",
           "location": "external",
           "action": "track",
           "exists": true
@@ -336,56 +336,56 @@
         },
         {
           "kind": "default_source_doc",
-          "path": "/Users/dlf/Library/Mobile Documents/com~apple~CloudDocs/dotlineform/docs-viewer/scopes/dotlineform/source/documents/d-20260801-073826-8865a8.md",
+          "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/dotlineform/source/documents/d-20260801-073826-8865a8.md",
           "location": "external",
           "action": "track",
           "exists": true
         },
         {
           "kind": "generated_docs_root",
-          "path": "/Users/dlf/Library/Mobile Documents/com~apple~CloudDocs/dotlineform/docs-viewer/scopes/dotlineform/generated/documents",
+          "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/dotlineform/generated/documents",
           "location": "external",
           "action": "track",
           "exists": true
         },
         {
           "kind": "generated_docs_index_tree",
-          "path": "/Users/dlf/Library/Mobile Documents/com~apple~CloudDocs/dotlineform/docs-viewer/scopes/dotlineform/generated/documents/index-tree.json",
+          "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/dotlineform/generated/documents/index-tree.json",
           "location": "external",
           "action": "track",
           "exists": true
         },
         {
           "kind": "generated_docs_recent",
-          "path": "/Users/dlf/Library/Mobile Documents/com~apple~CloudDocs/dotlineform/docs-viewer/scopes/dotlineform/generated/documents/recent.json",
+          "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/dotlineform/generated/documents/recent.json",
           "location": "external",
           "action": "track",
           "exists": true
         },
         {
           "kind": "generated_docs_payload_root",
-          "path": "/Users/dlf/Library/Mobile Documents/com~apple~CloudDocs/dotlineform/docs-viewer/scopes/dotlineform/generated/documents/by-id",
+          "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/dotlineform/generated/documents/by-id",
           "location": "external",
           "action": "track",
           "exists": true
         },
         {
           "kind": "generated_search_index",
-          "path": "/Users/dlf/Library/Mobile Documents/com~apple~CloudDocs/dotlineform/docs-viewer/scopes/dotlineform/generated/search/index.json",
+          "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/dotlineform/generated/search/index.json",
           "location": "external",
           "action": "track",
           "exists": true
         },
         {
           "kind": "published_docs_root",
-          "path": "/Users/dlf/Library/Mobile Documents/com~apple~CloudDocs/dotlineform/docs-viewer/scopes/dotlineform/published/documents",
+          "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/dotlineform/published/documents",
           "location": "external",
           "action": "track",
           "exists": true
         },
         {
           "kind": "published_search_index",
-          "path": "/Users/dlf/Library/Mobile Documents/com~apple~CloudDocs/dotlineform/docs-viewer/scopes/dotlineform/published/search/index.json",
+          "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/dotlineform/published/search/index.json",
           "location": "external",
           "action": "track",
           "exists": true
@@ -408,39 +408,39 @@
       "tool_id": "docs-viewer-scope-lifecycle",
       "repo_status_at_creation": "external",
       "created_at": "2026-07-13T21:21:25Z",
-      "updated_at": "2026-08-30T19:58:31Z",
+      "updated_at": "2026-08-30T20:39:41Z",
       "files": [
         {
           "kind": "scope_root",
-          "path": "/Users/dlf/Library/Mobile Documents/com~apple~CloudDocs/dotlineform/docs-viewer/scopes/notes",
+          "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/notes",
           "location": "external",
           "action": "track",
           "exists": true
         },
         {
           "kind": "source_root",
-          "path": "/Users/dlf/Library/Mobile Documents/com~apple~CloudDocs/dotlineform/docs-viewer/scopes/notes/source",
+          "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/notes/source",
           "location": "external",
           "action": "track",
           "exists": true
         },
         {
           "kind": "source_documents_root",
-          "path": "/Users/dlf/Library/Mobile Documents/com~apple~CloudDocs/dotlineform/docs-viewer/scopes/notes/source/documents",
+          "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/notes/source/documents",
           "location": "external",
           "action": "track",
           "exists": true
         },
         {
           "kind": "source_sub_scopes_root",
-          "path": "/Users/dlf/Library/Mobile Documents/com~apple~CloudDocs/dotlineform/docs-viewer/scopes/notes/source/sub-scopes",
+          "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/notes/source/sub-scopes",
           "location": "external",
           "action": "track",
           "exists": false
         },
         {
           "kind": "source_media_root",
-          "path": "/Users/dlf/Library/Mobile Documents/com~apple~CloudDocs/dotlineform/docs-viewer/scopes/notes/source/media",
+          "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/notes/source/media",
           "location": "external",
           "action": "track",
           "exists": true
@@ -454,56 +454,56 @@
         },
         {
           "kind": "default_source_doc",
-          "path": "/Users/dlf/Library/Mobile Documents/com~apple~CloudDocs/dotlineform/docs-viewer/scopes/notes/source/documents/d-20260526-000000-04ce37.md",
+          "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/notes/source/documents/d-20260526-000000-04ce37.md",
           "location": "external",
           "action": "track",
           "exists": true
         },
         {
           "kind": "generated_docs_root",
-          "path": "/Users/dlf/Library/Mobile Documents/com~apple~CloudDocs/dotlineform/docs-viewer/scopes/notes/generated/documents",
+          "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/notes/generated/documents",
           "location": "external",
           "action": "track",
           "exists": true
         },
         {
           "kind": "generated_docs_index_tree",
-          "path": "/Users/dlf/Library/Mobile Documents/com~apple~CloudDocs/dotlineform/docs-viewer/scopes/notes/generated/documents/index-tree.json",
+          "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/notes/generated/documents/index-tree.json",
           "location": "external",
           "action": "track",
           "exists": true
         },
         {
           "kind": "generated_docs_recent",
-          "path": "/Users/dlf/Library/Mobile Documents/com~apple~CloudDocs/dotlineform/docs-viewer/scopes/notes/generated/documents/recent.json",
+          "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/notes/generated/documents/recent.json",
           "location": "external",
           "action": "track",
           "exists": true
         },
         {
           "kind": "generated_docs_payload_root",
-          "path": "/Users/dlf/Library/Mobile Documents/com~apple~CloudDocs/dotlineform/docs-viewer/scopes/notes/generated/documents/by-id",
+          "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/notes/generated/documents/by-id",
           "location": "external",
           "action": "track",
           "exists": true
         },
         {
           "kind": "generated_search_index",
-          "path": "/Users/dlf/Library/Mobile Documents/com~apple~CloudDocs/dotlineform/docs-viewer/scopes/notes/generated/search/index.json",
+          "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/notes/generated/search/index.json",
           "location": "external",
           "action": "track",
           "exists": true
         },
         {
           "kind": "published_docs_root",
-          "path": "/Users/dlf/Library/Mobile Documents/com~apple~CloudDocs/dotlineform/docs-viewer/scopes/notes/published/documents",
+          "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/notes/published/documents",
           "location": "external",
           "action": "track",
           "exists": true
         },
         {
           "kind": "published_search_index",
-          "path": "/Users/dlf/Library/Mobile Documents/com~apple~CloudDocs/dotlineform/docs-viewer/scopes/notes/published/search/index.json",
+          "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/notes/published/search/index.json",
           "location": "external",
           "action": "track",
           "exists": true
@@ -526,39 +526,39 @@
       "tool_id": "docs-viewer-scope-lifecycle",
       "repo_status_at_creation": "tracked",
       "created_at": "2026-07-14T08:09:45Z",
-      "updated_at": "2026-08-30T19:58:31Z",
+      "updated_at": "2026-08-30T20:39:41Z",
       "files": [
         {
           "kind": "scope_root",
-          "path": "/Users/dlf/Library/Mobile Documents/com~apple~CloudDocs/dotlineform/docs-viewer/scopes/processing",
+          "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/processing",
           "location": "external",
           "action": "track",
           "exists": true
         },
         {
           "kind": "source_root",
-          "path": "/Users/dlf/Library/Mobile Documents/com~apple~CloudDocs/dotlineform/docs-viewer/scopes/processing/source",
+          "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/processing/source",
           "location": "external",
           "action": "track",
           "exists": true
         },
         {
           "kind": "source_documents_root",
-          "path": "/Users/dlf/Library/Mobile Documents/com~apple~CloudDocs/dotlineform/docs-viewer/scopes/processing/source/documents",
+          "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/processing/source/documents",
           "location": "external",
           "action": "track",
           "exists": true
         },
         {
           "kind": "source_sub_scopes_root",
-          "path": "/Users/dlf/Library/Mobile Documents/com~apple~CloudDocs/dotlineform/docs-viewer/scopes/processing/source/sub-scopes",
+          "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/processing/source/sub-scopes",
           "location": "external",
           "action": "track",
           "exists": false
         },
         {
           "kind": "source_media_root",
-          "path": "/Users/dlf/Library/Mobile Documents/com~apple~CloudDocs/dotlineform/docs-viewer/scopes/processing/source/media",
+          "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/processing/source/media",
           "location": "external",
           "action": "track",
           "exists": true
@@ -572,56 +572,56 @@
         },
         {
           "kind": "default_source_doc",
-          "path": "/Users/dlf/Library/Mobile Documents/com~apple~CloudDocs/dotlineform/docs-viewer/scopes/processing/source/documents/d-20260714-092047-06a5db.md",
+          "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/processing/source/documents/d-20260714-092047-06a5db.md",
           "location": "external",
           "action": "track",
           "exists": true
         },
         {
           "kind": "generated_docs_root",
-          "path": "/Users/dlf/Library/Mobile Documents/com~apple~CloudDocs/dotlineform/docs-viewer/scopes/processing/generated/documents",
+          "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/processing/generated/documents",
           "location": "external",
           "action": "track",
           "exists": true
         },
         {
           "kind": "generated_docs_index_tree",
-          "path": "/Users/dlf/Library/Mobile Documents/com~apple~CloudDocs/dotlineform/docs-viewer/scopes/processing/generated/documents/index-tree.json",
+          "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/processing/generated/documents/index-tree.json",
           "location": "external",
           "action": "track",
           "exists": true
         },
         {
           "kind": "generated_docs_recent",
-          "path": "/Users/dlf/Library/Mobile Documents/com~apple~CloudDocs/dotlineform/docs-viewer/scopes/processing/generated/documents/recent.json",
+          "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/processing/generated/documents/recent.json",
           "location": "external",
           "action": "track",
           "exists": true
         },
         {
           "kind": "generated_docs_payload_root",
-          "path": "/Users/dlf/Library/Mobile Documents/com~apple~CloudDocs/dotlineform/docs-viewer/scopes/processing/generated/documents/by-id",
+          "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/processing/generated/documents/by-id",
           "location": "external",
           "action": "track",
           "exists": true
         },
         {
           "kind": "generated_search_index",
-          "path": "/Users/dlf/Library/Mobile Documents/com~apple~CloudDocs/dotlineform/docs-viewer/scopes/processing/generated/search/index.json",
+          "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/processing/generated/search/index.json",
           "location": "external",
           "action": "track",
           "exists": true
         },
         {
           "kind": "published_docs_root",
-          "path": "/Users/dlf/Library/Mobile Documents/com~apple~CloudDocs/dotlineform/docs-viewer/scopes/processing/published/documents",
+          "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/processing/published/documents",
           "location": "external",
           "action": "track",
           "exists": true
         },
         {
           "kind": "published_search_index",
-          "path": "/Users/dlf/Library/Mobile Documents/com~apple~CloudDocs/dotlineform/docs-viewer/scopes/processing/published/search/index.json",
+          "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/processing/published/search/index.json",
           "location": "external",
           "action": "track",
           "exists": true
@@ -644,39 +644,39 @@
       "tool_id": "",
       "repo_status_at_creation": "tracked",
       "created_at": "",
-      "updated_at": "2026-08-30T19:58:31Z",
+      "updated_at": "2026-08-30T20:39:41Z",
       "files": [
         {
           "kind": "scope_root",
-          "path": "/Users/dlf/Library/Mobile Documents/com~apple~CloudDocs/dotlineform/docs-viewer/scopes/studio",
+          "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/studio",
           "location": "external",
           "action": "track",
           "exists": true
         },
         {
           "kind": "source_root",
-          "path": "/Users/dlf/Library/Mobile Documents/com~apple~CloudDocs/dotlineform/docs-viewer/scopes/studio/source",
+          "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/studio/source",
           "location": "external",
           "action": "track",
           "exists": true
         },
         {
           "kind": "source_documents_root",
-          "path": "/Users/dlf/Library/Mobile Documents/com~apple~CloudDocs/dotlineform/docs-viewer/scopes/studio/source/documents",
+          "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/studio/source/documents",
           "location": "external",
           "action": "track",
           "exists": true
         },
         {
           "kind": "source_sub_scopes_root",
-          "path": "/Users/dlf/Library/Mobile Documents/com~apple~CloudDocs/dotlineform/docs-viewer/scopes/studio/source/sub-scopes",
+          "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/studio/source/sub-scopes",
           "location": "external",
           "action": "track",
           "exists": true
         },
         {
           "kind": "source_media_root",
-          "path": "/Users/dlf/Library/Mobile Documents/com~apple~CloudDocs/dotlineform/docs-viewer/scopes/studio/source/media",
+          "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/studio/source/media",
           "location": "external",
           "action": "track",
           "exists": true
@@ -690,56 +690,56 @@
         },
         {
           "kind": "default_source_doc",
-          "path": "/Users/dlf/Library/Mobile Documents/com~apple~CloudDocs/dotlineform/docs-viewer/scopes/studio/source/documents/d-20260428-000000-f5ff18.md",
+          "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/studio/source/documents/d-20260428-000000-f5ff18.md",
           "location": "external",
           "action": "track",
           "exists": true
         },
         {
           "kind": "generated_docs_root",
-          "path": "/Users/dlf/Library/Mobile Documents/com~apple~CloudDocs/dotlineform/docs-viewer/scopes/studio/generated/documents",
+          "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/studio/generated/documents",
           "location": "external",
           "action": "track",
           "exists": true
         },
         {
           "kind": "generated_docs_index_tree",
-          "path": "/Users/dlf/Library/Mobile Documents/com~apple~CloudDocs/dotlineform/docs-viewer/scopes/studio/generated/documents/index-tree.json",
+          "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/studio/generated/documents/index-tree.json",
           "location": "external",
           "action": "track",
           "exists": true
         },
         {
           "kind": "generated_docs_recent",
-          "path": "/Users/dlf/Library/Mobile Documents/com~apple~CloudDocs/dotlineform/docs-viewer/scopes/studio/generated/documents/recent.json",
+          "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/studio/generated/documents/recent.json",
           "location": "external",
           "action": "track",
           "exists": true
         },
         {
           "kind": "generated_docs_payload_root",
-          "path": "/Users/dlf/Library/Mobile Documents/com~apple~CloudDocs/dotlineform/docs-viewer/scopes/studio/generated/documents/by-id",
+          "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/studio/generated/documents/by-id",
           "location": "external",
           "action": "track",
           "exists": true
         },
         {
           "kind": "generated_search_index",
-          "path": "/Users/dlf/Library/Mobile Documents/com~apple~CloudDocs/dotlineform/docs-viewer/scopes/studio/generated/search/index.json",
+          "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/studio/generated/search/index.json",
           "location": "external",
           "action": "track",
           "exists": true
         },
         {
           "kind": "published_docs_root",
-          "path": "/Users/dlf/Library/Mobile Documents/com~apple~CloudDocs/dotlineform/docs-viewer/scopes/studio/published/documents",
+          "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/studio/published/documents",
           "location": "external",
           "action": "track",
           "exists": true
         },
         {
           "kind": "published_search_index",
-          "path": "/Users/dlf/Library/Mobile Documents/com~apple~CloudDocs/dotlineform/docs-viewer/scopes/studio/published/search/index.json",
+          "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/studio/published/search/index.json",
           "location": "external",
           "action": "track",
           "exists": true

@@ -19,6 +19,7 @@ from docs_scope_config import (
     EXTERNAL_LOCAL_PROVIDER,
     load_docs_scope_configs,
     path_label,
+    resolve_external_data_marker_path,
     resolve_external_data_root,
 )
 from docs_scope_external_validation import external_scope_id_sync_blocker
@@ -233,7 +234,14 @@ def _renamed_external_path(
     root_pairs: list[tuple[Path, Path]],
 ) -> str:
     text = str(value or "").strip()
-    path = Path(text)
+    marker_path = text == EXTERNAL_DATA_ROOT_MARKER or text.startswith(
+        f"{EXTERNAL_DATA_ROOT_MARKER}/"
+    )
+    path = (
+        resolve_external_data_marker_path(text, field="scope manifest file path")
+        if marker_path
+        else Path(text)
+    )
     if not text or not path.is_absolute():
         return text
     for old_root, new_root in root_pairs:
@@ -241,7 +249,11 @@ def _renamed_external_path(
             relative = path.relative_to(old_root)
         except ValueError:
             continue
-        return (new_root / relative).as_posix()
+        renamed = new_root / relative
+        if marker_path:
+            external_relative = renamed.relative_to(resolve_external_data_root())
+            return f"{EXTERNAL_DATA_ROOT_MARKER}/{external_relative.as_posix()}"
+        return renamed.as_posix()
     return text
 
 

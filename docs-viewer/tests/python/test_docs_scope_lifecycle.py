@@ -31,6 +31,11 @@ def external_scope_root(scope: str) -> Path:
     return Path(os.environ["DOTLINEFORM_PROJECTS_BASE_DIR"]) / "docs-viewer/scopes" / scope
 
 
+def external_scope_label(scope: str, relative: str = "") -> str:
+    root = f"{EXTERNAL_DATA_ROOT_MARKER}/scopes/{scope}"
+    return f"{root}/{relative}" if relative else root
+
+
 def external_source_media_root(scope: str) -> Path:
     return external_scope_root(scope) / "source/media"
 
@@ -212,7 +217,10 @@ def test_scope_create_preview_reports_public_readonly_site_route_and_payloads() 
         "code",
     ]
     assert any(
-        file["path"] == (external_scope_root("research") / f"source/documents/{planned_identity['doc_id']}.md").as_posix()
+        file["path"] == external_scope_label(
+            "research",
+            f"source/documents/{planned_identity['doc_id']}.md",
+        )
         for file in payload["created_files"]
     )
     assert payload["planned_scope_config"]["viewer_base_url"] == "/research/"
@@ -229,7 +237,11 @@ def test_scope_create_preview_reports_public_readonly_site_route_and_payloads() 
     assert payload["storage_contract"]["publish_output"].endswith("/scopes/research/published/documents")
     assert payload["storage_contract"]["deploy_output"] == "site/assets/data/docs/scopes/research"
     assert any(
-        file["path"] == (external_scope_root("research") / "source/media/svg").as_posix()
+        file["path"] == external_scope_label("research", "source/media/svg")
+        for file in payload["created_files"]
+    )
+    assert any(
+        file["path"] == external_scope_label("research", "source/media/html")
         for file in payload["created_files"]
     )
     assert not any(file["path"].endswith("/.gitkeep") for file in payload["created_files"])
@@ -263,10 +275,10 @@ def test_scope_create_preview_reports_local_tracked_outputs() -> None:
     assert payload["urls"]["public"] == ""
     assert not any(file["kind"] == "route_file" for file in payload["created_files"])
     created_paths = {file["path"] for file in payload["created_files"]}
-    assert (external_scope_root("notes") / "generated/documents").as_posix() in created_paths
-    assert (external_scope_root("notes") / "generated/documents/index-tree.json").as_posix() in created_paths
-    assert (external_scope_root("notes") / "generated/documents/recent.json").as_posix() in created_paths
-    assert (external_scope_root("notes") / "generated/search/index.json").as_posix() in created_paths
+    assert external_scope_label("notes", "generated/documents") in created_paths
+    assert external_scope_label("notes", "generated/documents/index-tree.json") in created_paths
+    assert external_scope_label("notes", "generated/documents/recent.json") in created_paths
+    assert external_scope_label("notes", "generated/search/index.json") in created_paths
     assert not any(file["path"].startswith("site/assets/data/docs/scopes/notes") for file in payload["created_files"])
     assert not any(file["path"].startswith("site/assets/data/search/notes") for file in payload["created_files"])
 
@@ -661,6 +673,9 @@ def test_scope_create_apply_writes_allowlisted_files_and_runs_rebuild() -> None:
                 for role in ("source", "generated", "published")
                 for media_class in ("files", "img", "svg")
             )
+            source_html_directory_exists = (
+                external_root / "scopes/research/source/media/html"
+            ).is_dir()
             route_exists = (repo_root / "research/index.md").exists()
     finally:
         docs_management_service.write_rebuild.rebuild_scope_outputs = original_rebuild
@@ -677,7 +692,9 @@ def test_scope_create_apply_writes_allowlisted_files_and_runs_rebuild() -> None:
     assert default_doc_exists is True
     assert source_sub_scopes_exists is False
     assert media_directories_exist is True
+    assert source_html_directory_exists is True
     assert any(file["kind"] == "scope_media_source_img_root" for file in payload["created_files"])
+    assert any(file["kind"] == "scope_media_source_html_root" for file in payload["created_files"])
     assert any(file["kind"] == "scope_media_generated_svg_root" for file in payload["created_files"])
     assert any(file["kind"] == "scope_media_published_files_root" for file in payload["created_files"])
     assert not any(file["kind"] == "source_sub_scopes_root" for file in payload["created_files"])
@@ -704,8 +721,8 @@ def test_scope_create_apply_writes_allowlisted_files_and_runs_rebuild() -> None:
     assert records["research"]["repo_status_at_creation"] == "external"
     assert records["research"]["metadata"]["external_data_root"] == EXTERNAL_DATA_ROOT_MARKER
     recorded_paths = {file["path"] for file in records["research"]["files"]}
-    assert (external_root / "scopes/research/generated/documents/index-tree.json").as_posix() in recorded_paths
-    assert (external_root / "scopes/research/generated/documents/recent.json").as_posix() in recorded_paths
+    assert external_scope_label("research", "generated/documents/index-tree.json") in recorded_paths
+    assert external_scope_label("research", "generated/documents/recent.json") in recorded_paths
     assert any(file["path"] == "docs-viewer/config/scopes/docs_scopes.json" for file in records["research"]["files"])
     assert not any(file["kind"] == "route_file" for file in records["research"]["files"])
     assert "docs-viewer/runtime/js/docs-viewer-public.js" not in recorded_paths
@@ -894,7 +911,10 @@ def test_scope_rename_apply_moves_external_roots_and_preserves_links_and_doc_ids
     assert "ui_statuses_by_scope" not in final_config["docs_viewer"]
     assert "research" not in {scope["scope_id"] for scope in final_manifest["scopes"]}
     assert any(
-        record["path"] == (external_root / f"scopes/field-notes/source/documents/{default_doc_id}.md").as_posix()
+        record["path"] == external_scope_label(
+            "field-notes",
+            f"source/documents/{default_doc_id}.md",
+        )
         for record in renamed_manifest["files"]
     )
     assert "scope=research" in renamed_source_text
@@ -1004,6 +1024,9 @@ def test_scope_create_apply_skips_public_route_for_local_scopes() -> None:
                 for role in ("source", "generated", "published")
                 for media_class in ("files", "img", "svg")
             )
+            source_html_directory_exists = (
+                external_scope_root("notes") / "source/media/html"
+            ).is_dir()
             media_markers_exist = bool(
                 list(external_scope_root("notes").rglob(".gitkeep"))
             )
@@ -1015,6 +1038,7 @@ def test_scope_create_apply_skips_public_route_for_local_scopes() -> None:
     assert payload["urls"]["public"] == ""
     assert route_exists is False
     assert media_directories_exist is True
+    assert source_html_directory_exists is True
     assert media_markers_exist is False
     assert "publishable:" not in default_doc_text
     assert "published:" not in default_doc_text
@@ -1028,12 +1052,12 @@ def test_scope_create_apply_skips_public_route_for_local_scopes() -> None:
     records = {record["scope_id"]: record for record in manifest_payload["scopes"]}
     assert records["notes"]["scope_type"] == "local"
     assert any(
-        file["path"] == (external_scope_root("notes") / "generated/documents").as_posix()
+        file["path"] == external_scope_label("notes", "generated/documents")
         for file in records["notes"]["files"]
     )
-    assert any(file["path"] == (external_scope_root("notes") / "generated/documents/index-tree.json").as_posix() for file in records["notes"]["files"])
-    assert any(file["path"] == (external_scope_root("notes") / "generated/documents/recent.json").as_posix() for file in records["notes"]["files"])
-    assert any(file["path"] == (external_scope_root("notes") / "generated/search/index.json").as_posix() for file in records["notes"]["files"])
+    assert any(file["path"] == external_scope_label("notes", "generated/documents/index-tree.json") for file in records["notes"]["files"])
+    assert any(file["path"] == external_scope_label("notes", "generated/documents/recent.json") for file in records["notes"]["files"])
+    assert any(file["path"] == external_scope_label("notes", "generated/search/index.json") for file in records["notes"]["files"])
     assert not any(file["kind"] == "route_file" for file in records["notes"]["files"])
 
 def test_scope_delete_preview_blocks_system_scopes() -> None:
@@ -1175,7 +1199,7 @@ def test_scope_delete_preview_keeps_config_as_changed_file() -> None:
     assert payload["allowed"] is True
     assert not any(file["kind"] == "scope_config" for file in payload["delete_files"])
     assert any(file["kind"] == "scope_config" for file in payload["changed_files"])
-    assert any(file["path"] == (external_scope_root("notes") / "source").as_posix() for file in payload["delete_files"])
+    assert any(file["path"] == external_scope_label("notes", "source") for file in payload["delete_files"])
 
 def test_scope_delete_apply_requires_confirmation() -> None:
     with make_repo() as temp_path:
@@ -1266,15 +1290,15 @@ def test_scope_delete_apply_removes_manifest_scope_and_runs_rebuild() -> None:
     assert route_exists is False
     assert generated_docs_exists is False
     assert generated_search_root_exists is False
-    assert any(file["path"] == (external_scope_root("research") / "source").as_posix() for file in payload["deleted_files"])
+    assert any(file["path"] == external_scope_label("research", "source") for file in payload["deleted_files"])
     assert any(
         file["kind"] == "generated_search_root"
-        and file["path"] == (external_scope_root("research") / "generated/search").as_posix()
+        and file["path"] == external_scope_label("research", "generated/search")
         for file in payload["deleted_files"]
     )
     assert any(
         file["kind"] == "generated_search_index"
-        and file["path"] == (external_scope_root("research") / "generated/search/index.json").as_posix()
+        and file["path"] == external_scope_label("research", "generated/search/index.json")
         for file in payload["missing_files"]
     )
 
@@ -1340,12 +1364,12 @@ def test_scope_delete_apply_removes_external_scope_owned_media_with_published_do
     assert preview["allowed"] is True
     assert any(
         file["kind"] == "scope_root"
-        and file["path"] == (external_root / "scopes/research").as_posix()
+        and file["path"] == external_scope_label("research")
         for file in preview["delete_files"]
     )
     assert any(
         file["kind"] == "scope_media_source_img_root"
-        and file["path"] == (external_root / "scopes/research/source/media/img").as_posix()
+        and file["path"] == external_scope_label("research", "source/media/img")
         for file in preview["delete_files"]
     )
     assert payload["ok"] is True

@@ -438,14 +438,20 @@ def test_configured_local_media_directories_skip_missing_external_scope(tmp_path
         external_scope,
         tmp_path / "docs-viewer/scopes/example",
     ):
-        for lifecycle in ("source", "generated", "published"):
+        assert all(
+            (scope_root / "source/media" / media_class).is_dir()
+            for media_class in ("files", "html", "img", "svg")
+        )
+        assert (scope_root / "source/media/build-source/mermaid").is_dir()
+        for lifecycle in ("generated", "published"):
             assert all(
                 (scope_root / lifecycle / "media" / media_class).is_dir()
                 for media_class in ("files", "img", "svg")
             )
+        for lifecycle in ("source", "generated", "published"):
             assert not any(
                 (scope_root / lifecycle / "media" / media_class / ".gitkeep").exists()
-                for media_class in ("files", "img", "svg")
+                for media_class in ("files", "html", "img", "svg")
             )
     assert not missing_external_root.exists()
     assert not (tmp_path / "docs-viewer/scopes/example/source/documents/media").exists()

@@ -8,7 +8,13 @@ import shutil
 from pathlib import Path
 from typing import Any
 
-from docs_scope_config import path_label, safe_relative_path, safe_scope_data_path
+from docs_scope_config import (
+    EXTERNAL_DATA_ROOT_MARKER,
+    path_label,
+    resolve_external_data_root,
+    safe_relative_path,
+    safe_scope_data_path,
+)
 
 
 def repo_relative(repo_root: Path, path: Path) -> str:
@@ -28,11 +34,24 @@ def path_location(repo_root: Path, path: Path) -> str:
         return "external"
 
 
+def lifecycle_path_label(repo_root: Path, path: Path) -> str:
+    label = path_label(repo_root, path)
+    if path_location(repo_root, path) != "external":
+        return label
+    try:
+        relative = path.resolve().relative_to(resolve_external_data_root().resolve())
+    except (ValueError, OSError):
+        return label
+    if relative == Path("."):
+        return EXTERNAL_DATA_ROOT_MARKER
+    return f"{EXTERNAL_DATA_ROOT_MARKER}/{relative.as_posix()}"
+
+
 def path_record(repo_root: Path, kind: str, path: Path, *, action: str = "track") -> dict[str, Any]:
     location = path_location(repo_root, path)
     return {
         "kind": kind,
-        "path": path_label(repo_root, path),
+        "path": lifecycle_path_label(repo_root, path),
         "location": location,
         "action": action,
         "exists": path.exists(),
@@ -76,6 +95,11 @@ def resolve_manifest_path(
     external_data_root: Path | None = None,
 ) -> Path:
     text = str(value or "").strip()
+    if text == EXTERNAL_DATA_ROOT_MARKER or text.startswith(f"{EXTERNAL_DATA_ROOT_MARKER}/"):
+        path = safe_scope_data_path(text, field=field, allow_external=True).resolve()
+        if external_data_root is None or not path_is_relative_to_path(path, external_data_root):
+            raise ValueError(f"{field} external path must stay under external_data_root")
+        return path
     if Path(text).is_absolute():
         path = safe_scope_data_path(text, field=field, allow_external=True).resolve()
         if external_data_root is None or not path_is_relative_to_path(path, external_data_root):
@@ -86,21 +110,25 @@ def resolve_manifest_path(
 
 def resolve_lifecycle_record_path(repo_root: Path, value: Any, *, field: str) -> Path:
     text = str(value or "").strip()
-    if Path(text).is_absolute():
+    if (
+        text == EXTERNAL_DATA_ROOT_MARKER
+        or text.startswith(f"{EXTERNAL_DATA_ROOT_MARKER}/")
+        or Path(text).is_absolute()
+    ):
         return safe_scope_data_path(text, field=field, allow_external=True)
     return repo_root / safe_relative_path(text, field=field)
 
 
 def delete_path_sort_key(repo_root: Path, record: dict[str, Any]) -> tuple[int, str]:
     path_text = str(record.get("path") or "")
-    path = Path(path_text) if Path(path_text).is_absolute() else repo_root / safe_relative_path(path_text, field="delete file path")
+    path = resolve_lifecycle_record_path(repo_root, path_text, field="delete file path")
     return (-len(path.parts), path.as_posix())
 
 
 def delete_manifest_paths(repo_root: Path, delete_files: list[dict[str, Any]]) -> None:
     for record in sorted(delete_files, key=lambda item: delete_path_sort_key(repo_root, item)):
         path_text = str(record.get("path") or "")
-        path = Path(path_text) if Path(path_text).is_absolute() else repo_root / safe_relative_path(path_text, field="delete file path")
+        path = resolve_lifecycle_record_path(repo_root, path_text, field="delete file path")
         if not path.exists():
             continue
         if path.is_dir():

@@ -395,6 +395,10 @@ def ensure_configured_scope_owned_media_directories(
             / "build-source"
             / "mermaid"
         )
+        media_paths.extend(
+            resolve_location_path(repo_root, config.media.source_location) / media_type
+            for media_type in sorted(MANAGED_MEDIA_TYPES)
+        )
         for media_root in media_paths:
             unresolved_root = media_root
             if unresolved_root.is_symlink():

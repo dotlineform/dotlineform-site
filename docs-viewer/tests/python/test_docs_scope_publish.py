@@ -273,6 +273,21 @@ def test_scope_publish_is_exact_rerunnable_and_does_not_touch_site(tmp_path: Pat
     )["up_to_date"] is True
 
 
+def test_scope_publish_rejects_build_manifest_for_another_scope(tmp_path: Path) -> None:
+    prepare_repo(tmp_path)
+    manifest_path = (
+        tmp_path
+        / "docs-viewer/scopes/example/generated"
+        / docs_scope_build_manifest.BUILD_MANIFEST_FILENAME
+    )
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    manifest["scope"] = "another-scope"
+    write_json(manifest_path, manifest)
+
+    with pytest.raises(RuntimeError, match="wrong scope identity"):
+        docs_scope_publish.preview_scope_publish(tmp_path, {"scope": "example"})
+
+
 def test_published_reads_require_current_completion_manifest(tmp_path: Path) -> None:
     prepare_repo(tmp_path)
     preview = docs_scope_publish.preview_scope_publish(tmp_path, {"scope": "example"})
