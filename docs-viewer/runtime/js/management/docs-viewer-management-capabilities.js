@@ -109,7 +109,6 @@ export function scopePublishSupported(capabilities, scope) {
     publishing.apply &&
     scopeCaps &&
     scopeCaps.available &&
-    scopeCaps.publishable &&
     scopePublishing &&
     scopePublishing.confirm &&
     scopePublishing.apply

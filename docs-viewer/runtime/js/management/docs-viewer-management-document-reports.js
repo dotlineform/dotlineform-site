@@ -18,6 +18,23 @@ function cleanString(value) {
   return String(value || "").trim();
 }
 
+function requestedSnapshotRole() {
+  try {
+    return new URL(window.location.href).searchParams.get("snapshot") === "published"
+      ? "published"
+      : "generated";
+  } catch (_error) {
+    return "generated";
+  }
+}
+
+function reportServiceOptions(baseUrl) {
+  return {
+    baseUrl: baseUrl,
+    snapshotRole: requestedSnapshotRole()
+  };
+}
+
 function currentViewerScope(context) {
   return cleanString(context && context.viewerScope);
 }
@@ -482,7 +499,7 @@ export function mountDocsViewerManageDocumentExtras(context) {
       studioBaseUrl: cleanString(routeContext.studioBaseUrl),
       reportRegistryUrl: cleanString(routeContext.reportRegistryUrl),
       reportService: reportManagementBaseUrl
-        ? createDocsViewerReportService({ baseUrl: reportManagementBaseUrl })
+        ? createDocsViewerReportService(reportServiceOptions(reportManagementBaseUrl))
         : null,
       requestContentDetail: settings.requestContentDetail,
       setStatus: settings.setStatus,
@@ -574,7 +591,7 @@ export function mountDocsViewerManageDocumentExtras(context) {
     studioBaseUrl: cleanString(routeContext.studioBaseUrl),
     reportRegistryUrl: cleanString(routeContext.reportRegistryUrl),
     reportService: reportManagementBaseUrl
-      ? createDocsViewerReportService({ baseUrl: reportManagementBaseUrl })
+      ? createDocsViewerReportService(reportServiceOptions(reportManagementBaseUrl))
       : null,
     requestContentDetail: settings.requestContentDetail,
     setStatus: settings.setStatus,

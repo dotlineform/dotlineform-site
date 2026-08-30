@@ -121,6 +121,15 @@ export function createDocsViewerManagementViewDefinitions() {
         renderer: "manage-scope-select"
       },
       {
+        id: "manage-snapshot",
+        label: "Snapshot",
+        ownerType: "app",
+        surfaceId: "app-management",
+        appKinds: ["manage"],
+        features: ["management"],
+        renderer: "manage-snapshot-select"
+      },
+      {
         id: "manage-theme",
         label: "Switch to dark mode",
         ownerType: "app",

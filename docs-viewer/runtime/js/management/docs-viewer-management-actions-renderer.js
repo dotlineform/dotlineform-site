@@ -153,6 +153,36 @@ function renderScopeControl(context) {
   return { root: root, interactive: root.querySelector("#docsViewerScopeSelect") };
 }
 
+function renderSnapshotControl(context) {
+  var select = context.existingRoot;
+  if (!select || select.tagName !== "SELECT") {
+    select = context.document.createElement("select");
+    select.className = "docsViewer__actionButton docsViewer__snapshotSelect";
+    select.id = "docsViewerSnapshotSelect";
+    select.setAttribute("aria-label", "Docs snapshot");
+    var generatedOption = context.document.createElement("option");
+    generatedOption.value = "generated";
+    generatedOption.textContent = "Generated";
+    var publishedOption = context.document.createElement("option");
+    publishedOption.value = "published";
+    publishedOption.textContent = "Published";
+    select.append(generatedOption, publishedOption);
+  }
+  var value;
+  try {
+    value = new URL(context.document.defaultView.location.href).searchParams.get("snapshot") === "published"
+      ? "published"
+      : "generated";
+  } catch (_error) {
+    value = "generated";
+  }
+  select.value = value === "published" ? "published" : "generated";
+  select.title = select.value === "published"
+    ? "Viewing the last accepted published snapshot"
+    : "Viewing current generated output";
+  return select;
+}
+
 function renderThemeToggle(context) {
   var button = context.existingRoot;
   if (!button || button.tagName !== "BUTTON") {
@@ -200,6 +230,7 @@ export function createDocsViewerManagementAppControlRenderers() {
       });
     },
     "manage-scope-select": renderScopeControl,
+    "manage-snapshot-select": renderSnapshotControl,
     "manage-theme-toggle": renderThemeToggle
   };
 }

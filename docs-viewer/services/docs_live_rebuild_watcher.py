@@ -61,6 +61,7 @@ from docs_scope_config import (
     load_docs_scope_configs,
     resolve_scope_path,
 )
+from docs_scope_build_manifest import remove_build_manifest
 from docs_write_rebuild import targeted_docs_build_fallback_reason
 from docs_watch_suppression import (
     SUPPRESSION_COMPLETE,
@@ -739,6 +740,11 @@ def rebuild_scope(
     scope: str,
     docs_doc_ids: Optional[list[str]] = None,
 ) -> bool:
+    try:
+        remove_build_manifest(repo_root, DOCS_SCOPE_CONFIGS[scope])
+    except (KeyError, FileNotFoundError, ValueError) as exc:
+        log(f"{scope} docs rebuild failed before writing: {exc}")
+        return False
     docs_command = python_builder_command(DOCS_BUILDER_SCRIPT, "--scope", scope, "--write", "--diagnostics")
     docs_target_doc_ids = ordered_unique(docs_doc_ids or [])
     if docs_doc_ids is not None and docs_target_doc_ids:
@@ -893,6 +899,12 @@ def process_document_collection_changes(
 
 
 def rebuild_sub_scope(repo_root: Path, scope: str, sub_scope: str) -> bool:
+    label = f"{scope}/{sub_scope}"
+    try:
+        remove_build_manifest(repo_root, DOCS_SCOPE_CONFIGS[scope])
+    except (KeyError, FileNotFoundError, ValueError) as exc:
+        log(f"{label} sub-scope docs rebuild failed before writing: {exc}")
+        return False
     commands = [
         (
             "sub-scope docs",
@@ -907,7 +919,6 @@ def rebuild_sub_scope(repo_root: Path, scope: str, sub_scope: str) -> bool:
             ),
         ),
     ]
-    label = f"{scope}/{sub_scope}"
     log(f"Rebuilding {label} sub-scope docs. Parent Search remains explicit via Rebuild.")
     for step_label, command in commands:
         completed = subprocess.run(
@@ -959,6 +970,7 @@ def rebuild_build_media(
         return True
 
     try:
+        remove_build_manifest(repo_root, config)
         remote_client = authenticated_remote_client_for_locations(
             repo_root,
             [generated_media.generated_location],

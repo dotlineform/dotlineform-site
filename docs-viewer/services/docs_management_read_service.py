@@ -9,7 +9,8 @@ import docs_generated_reads
 import docs_diagram_source_service
 import docs_import_source_service as import_source_service
 import docs_management_routes as routes
-import docs_publish_gate
+import docs_published_reads
+import docs_scope_publish
 from docs_scope_config import load_docs_scope_configs
 import docs_source_config_report
 import docs_source_config_settings
@@ -53,6 +54,34 @@ def docs_generated_read_payload(repo_root: Path, path: str, params: dict[str, li
     raise FileNotFoundError("Not found")
 
 
+def docs_published_read_payload(
+    repo_root: Path,
+    path: str,
+    params: dict[str, list[str]],
+) -> dict[str, object]:
+    scope = normalize_scope(repo_root, docs_api_query_value(params, "scope"))
+    if path == routes.PUBLISHED_INDEX_TREE_PATH:
+        return docs_published_reads.read_published_docs_index_tree(repo_root, scope)
+    if path == routes.PUBLISHED_RECENT_PATH:
+        return docs_published_reads.read_published_recent(repo_root, scope)
+    if path == routes.PUBLISHED_BACKLINKS_PATH:
+        return docs_published_reads.read_published_backlinks(repo_root, scope)
+    if path == routes.PUBLISHED_SEARCH_PATH:
+        return docs_published_reads.read_published_search_index(repo_root, scope)
+    if path == routes.PUBLISHED_SEMANTIC_TOKENS_PATH:
+        return docs_published_reads.read_published_semantic_tokens_index(repo_root, scope)
+    if path == routes.PUBLISHED_PAYLOAD_PATH:
+        doc_id = docs_api_query_value(params, "doc_id") or docs_api_query_value(params, "doc")
+        if not doc_id:
+            raise ValueError("doc_id is required")
+        return docs_published_reads.read_published_doc_payload(
+            repo_root,
+            scope,
+            doc_id,
+        )
+    raise FileNotFoundError("Not found")
+
+
 def docs_management_get_payload(repo_root: Path, path: str, params: dict[str, list[str]], *, dry_run: bool = False) -> dict[str, object]:
     if path == routes.HEALTH_PATH:
         return {"ok": True, "service": "docs_management", "dry_run": dry_run}
@@ -67,6 +96,15 @@ def docs_management_get_payload(repo_root: Path, path: str, params: dict[str, li
         routes.GENERATED_SEMANTIC_TOKENS_PATH,
     }:
         return docs_generated_read_payload(repo_root, path, params)
+    if path in {
+        routes.PUBLISHED_INDEX_TREE_PATH,
+        routes.PUBLISHED_RECENT_PATH,
+        routes.PUBLISHED_BACKLINKS_PATH,
+        routes.PUBLISHED_PAYLOAD_PATH,
+        routes.PUBLISHED_SEARCH_PATH,
+        routes.PUBLISHED_SEMANTIC_TOKENS_PATH,
+    }:
+        return docs_published_read_payload(repo_root, path, params)
     if path == routes.SOURCE_CONFIG_PATH:
         return docs_source_config_report.build_source_config_report(repo_root)
     if path == routes.SOURCE_CONFIG_SETTINGS_PATH:
@@ -107,7 +145,7 @@ def docs_management_get_payload(repo_root: Path, path: str, params: dict[str, li
     if path == routes.DIAGRAM_SOURCES_PATH:
         return docs_diagram_source_service.list_diagram_sources(repo_root, params)
     if path == routes.PUBLISH_STATUS_PATH:
-        return docs_publish_gate.publish_status(
+        return docs_scope_publish.preview_scope_publish(
             repo_root,
             {"scope": docs_api_query_value(params, "scope")},
         )

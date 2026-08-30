@@ -80,6 +80,9 @@
         "allow_scope_query": true,
         "management_ui": true
       },
+      "preserve_query_params": [
+        "snapshot"
+      ],
       "services": {
         "generated_data": {
           "base_url": ""

@@ -107,9 +107,12 @@ export function confirmManagedDocsPublish(options) {
   return fetchManagementJson("/docs/publish/confirm", "POST", scopedPayload({}, options), options);
 }
 
-export function applyManagedDocsPublish(options) {
+export function applyManagedDocsPublish(preview, options) {
+  var plan = preview && typeof preview === "object" ? preview : {};
   return fetchManagementJson("/docs/publish/apply", "POST", scopedPayload({
-    confirm: true
+    confirm: true,
+    plan_revision: String(plan.plan_revision || "").trim(),
+    target_published_revision: String(plan.target_published_revision || "").trim()
   }, options), options);
 }
 

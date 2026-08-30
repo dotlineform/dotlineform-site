@@ -37,11 +37,11 @@ var ACTION_TEXT = {
   settingsSaving: "Saving settings...",
   settingsSaved: "Settings saved.",
   settingsSaveFailed: "Settings save failed.",
-  publishChecking: "Checking publish changes...",
-  publishConfirmTitle: "Publish to site assets",
+  publishChecking: "Checking accepted-snapshot changes...",
+  publishConfirmTitle: "Publish accepted scope snapshot",
   publishConfirmButton: "Publish",
-  publishApplying: "Copying docs to site assets...",
-  publishApplied: "Docs copied to site assets.",
+  publishApplying: "Updating the accepted scope snapshot...",
+  publishApplied: "Accepted scope snapshot updated.",
   publishFailed: "Publish failed.",
   copyLinkFailed: "Copy link failed."
 };
@@ -263,44 +263,39 @@ export function firstRemainingRootDocId(docs, deletedDocIds, resolveLoadableDocI
 }
 
 export function docsViewerPublishConfirmBody(preview) {
-  var documentCount = Number(preview && preview.document_publish_count || 0);
-  var excluded = Number(preview && preview.document_excluded_count || 0);
-  var search = preview && preview.search ? preview.search : {};
-  var searchWillUpdate = Array.isArray(search.changed) && search.changed.length > 0;
-  var media = preview && preview.media ? preview.media : {};
-  var paths = preview && preview.paths ? preview.paths : {};
-  var mediaErrorCount = Number(media.error_count || 0);
   var lines = [
-    "Publish reviewed documents, Search, and referenced media for this public route?",
+    "Replace this scope's accepted snapshot with the reviewed generated output?",
     "",
-    "Document payloads changed: " + documentCount,
-    "Document files removed by current Publish exclusions: " + excluded,
-    "Search index: " + (searchWillUpdate ? "Will update" : "No change"),
-    "Media copied or replaced: " + Number(media.copy_count || 0),
-    "Stale public media removed: " + Number(media.remove_count || 0),
-    "Referenced managed media missing: " + Number(media.missing_count || 0)
+    "Documents accepted: " + Number(preview && preview.document_count || 0),
+    "Documents excluded: " + Number(preview && preview.excluded_document_count || 0),
+    "Files added: " + Number(preview && preview.added_count || 0),
+    "Files changed: " + Number(preview && preview.changed_count || 0),
+    "Stale files removed: " + Number(preview && preview.removed_count || 0),
+    "Byte-identical files left alone: " + Number(preview && preview.unchanged_count || 0),
+    "",
+    "Generated revision: " + String(preview && preview.generated_revision || ""),
+    "Published revision after apply: " + String(preview && preview.target_published_revision || "")
   ];
-  if (mediaErrorCount > 0) {
-    lines.push("Media issues (documents still publish): " + mediaErrorCount);
-    if (Array.isArray(media.errors)) {
-      media.errors.forEach(function (error) {
-        var detail = String(error || "").trim();
-        if (detail) lines.push("- " + detail);
-      });
-    }
-  }
-  lines.push(
-    "",
-    "From: " + String(paths.working_docs_root || ""),
-    "To: " + String(paths.published_docs_root || "")
-  );
+  [
+    ["Add", preview && preview.added],
+    ["Change", preview && preview.changed],
+    ["Remove", preview && preview.removed]
+  ].forEach(function (group) {
+    var paths = Array.isArray(group[1]) ? group[1] : [];
+    if (!paths.length) return;
+    lines.push("", group[0] + " paths:");
+    paths.forEach(function (path) {
+      lines.push("- " + String(path || ""));
+    });
+  });
   return lines.join("\n");
 }
 
 export function docsViewerPublishHasChanges(preview) {
+  var added = Number(preview && preview.added_count || 0);
   var changed = Number(preview && preview.changed_count || 0);
-  var excluded = Number(preview && preview.excluded_count || 0);
-  return changed + excluded > 0;
+  var removed = Number(preview && preview.removed_count || 0);
+  return added + changed + removed > 0;
 }
 
 export function createDocsViewerManagementActionController(options) {
@@ -616,16 +611,19 @@ export function createDocsViewerManagementActionController(options) {
   }
 
   function handlePublishDocs() {
+    var confirmedPreview = null;
     setManagementBusy(true);
     setManagementMessage(ACTION_TEXT.publishChecking, false);
 
     confirmManagedDocsPublish(managementClientOptions())
       .then(function (preview) {
+        confirmedPreview = preview;
         setManagementBusy(false);
         return openDocsViewerConfirmModal({
           root: root,
           title: ACTION_TEXT.publishConfirmTitle,
           body: docsViewerPublishConfirmBody(preview),
+          size: "wide",
           primaryLabel: ACTION_TEXT.publishConfirmButton,
           cancelLabel: ACTION_TEXT.cancelButton,
           primaryDisabled: !docsViewerPublishHasChanges(preview)
@@ -638,7 +636,7 @@ export function createDocsViewerManagementActionController(options) {
         }
         setManagementBusy(true);
         setManagementMessage(ACTION_TEXT.publishApplying, false);
-        return applyManagedDocsPublish(managementClientOptions());
+        return applyManagedDocsPublish(confirmedPreview, managementClientOptions());
       })
       .then(function (payload) {
         if (!payload) return;

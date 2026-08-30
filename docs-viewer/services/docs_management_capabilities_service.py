@@ -11,6 +11,7 @@ import docs_local_links
 import docs_source_config_settings
 import docs_static_html_export
 import docs_document_transfer
+from docs_scope_publish import PUBLISH_MANIFEST_FILENAME
 from docs_scope_config import (
     DOCS_SCOPE_CONFIGS,
     LOCAL_EXTERNAL_SCOPE_TYPE,
@@ -51,6 +52,9 @@ def capabilities_payload(repo_root: Path) -> Dict[str, Any]:
         root = resolve_scope_path(repo_root, document_source_path(config))
         manifest_record = manifest_scopes.get(scope)
         generated_data_path = resolve_scope_path(repo_root, generated_documents_path(config)) / "index-tree.json"
+        published_root = resolve_scope_path(repo_root, publication_documents_path(config)).parent
+        published_manifest_path = published_root / PUBLISH_MANIFEST_FILENAME
+        published_available = published_manifest_path.is_file() and not published_manifest_path.is_symlink()
         publishable = is_public_readonly_scope(
             viewer_base_url=config.viewer_base_url,
             include_scope_param=config.include_scope_param,
@@ -73,6 +77,8 @@ def capabilities_payload(repo_root: Path) -> Dict[str, Any]:
             "root": capability_scope_root_label(repo_root, scope, config),
             "generated_data_reads": generated_data_path.exists(),
             "generated_search_reads": resolve_scope_path(repo_root, generated_search_path(config)).exists(),
+            "published_data_reads": published_available,
+            "published_search_reads": published_available,
             "publishable": publishable,
             "document_transfer": transfer_capabilities,
             "scope_lifecycle": {
@@ -101,11 +107,18 @@ def capabilities_payload(repo_root: Path) -> Dict[str, Any]:
                 ],
             },
             "publishing": {
-                "status": publishable,
-                "confirm": publishable,
-                "apply": publishable,
-                "published_docs_root": publication_documents_path(config).as_posix(),
-                "published_search_index": publication_search_path(config).as_posix(),
+                "status": True,
+                "confirm": True,
+                "apply": True,
+                "published_available": published_available,
+                "published_docs_root": path_label(
+                    repo_root,
+                    publication_documents_path(config),
+                ),
+                "published_search_index": path_label(
+                    repo_root,
+                    publication_search_path(config),
+                ),
             },
             "static_html_export": docs_static_html_export.scope_static_html_export_capability(
                 repo_root,

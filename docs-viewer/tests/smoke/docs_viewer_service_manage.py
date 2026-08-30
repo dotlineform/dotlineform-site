@@ -36,7 +36,11 @@ def manage_route_state(page) -> dict[str, object]:
                 viewerBaseUrl: route.viewer_base_url || '',
                 generatedBaseUrl: route.services?.generated_data?.base_url || '',
                 sourceBaseUrl: route.services?.source?.base_url || '',
-                managementBaseUrl: route.services?.management?.base_url || ''
+                managementBaseUrl: route.services?.management?.base_url || '',
+                snapshotValue: root.querySelector('#docsViewerSnapshotSelect')?.value || '',
+                snapshotOptions: Array.from(
+                    root.querySelector('#docsViewerSnapshotSelect')?.options || []
+                ).map(option => option.value)
             };
         }"""
     )
@@ -55,9 +59,37 @@ def assert_manage_route_boundary(state: dict[str, object], base_url: str) -> Non
         "generatedBaseUrl": base_url,
         "sourceBaseUrl": base_url,
         "managementBaseUrl": base_url,
+        "snapshotValue": "generated",
+        "snapshotOptions": ["generated", "published"],
     }
     if state != expected:
         raise AssertionError(f"Docs Viewer Manage route boundary changed: {state!r}")
+
+
+def assert_available_published_snapshot(page, timeout_ms: int) -> None:
+    with page.expect_response(
+        lambda response: "/docs/published/index-tree?" in response.url,
+        timeout=timeout_ms,
+    ) as response_info:
+        page.locator("#docsViewerSnapshotSelect").select_option("published")
+    if response_info.value.status != 200:
+        raise AssertionError(
+            f"Published snapshot index returned HTTP {response_info.value.status}."
+        )
+    page.wait_for_url("**snapshot=published**", timeout=timeout_ms)
+    wait_for_document(page, DOC_TITLE, timeout_ms)
+    state = page.locator("#docsViewerRoot").evaluate(
+        """root => ({
+            snapshot: root.querySelector('#docsViewerSnapshotSelect')?.value || '',
+            status: root.querySelector('#docsViewerStatus')?.textContent || '',
+            nav: root.querySelector('#docsViewerNav')?.textContent || '',
+            content: root.querySelector('#docsViewerContent')?.textContent || ''
+        })"""
+    )
+    if state["snapshot"] != "published":
+        raise AssertionError(f"Published snapshot selector is mislabeled: {state!r}")
+    if DOC_TITLE not in state["nav"] and DOC_TITLE not in state["content"]:
+        raise AssertionError(f"Published snapshot did not render the requested document: {state!r}")
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -79,6 +111,7 @@ def main(argv: list[str] | None = None) -> int:
                 )
                 wait_for_document(page, DOC_TITLE, args.timeout_ms)
                 assert_manage_route_boundary(manage_route_state(page), base_url)
+                assert_available_published_snapshot(page, args.timeout_ms)
             finally:
                 browser.close()
         if errors:

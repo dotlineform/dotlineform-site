@@ -31,7 +31,7 @@ import docs_local_links  # noqa: E402
 import docs_media_report  # noqa: E402
 import docs_management_mutations as mutations  # noqa: E402
 import docs_management_routes as routes  # noqa: E402
-import docs_publish_gate  # noqa: E402
+import docs_scope_publish  # noqa: E402
 import docs_project_state  # noqa: E402
 import docs_missing_source_files  # noqa: E402
 import docs_uncataloged_files  # noqa: E402
@@ -373,9 +373,9 @@ def docs_management_post_response(
         except docs_sub_scope_lifecycle.SubScopeLifecycleApplyError as error:
             return HTTPStatus.INTERNAL_SERVER_ERROR, error.payload
     if path == routes.PUBLISH_CONFIRM_PATH:
-        return HTTPStatus.OK, docs_publish_gate.publish_confirm(repo_root, body)
+        return HTTPStatus.OK, docs_scope_publish.preview_scope_publish(repo_root, body)
     if path == routes.PUBLISH_APPLY_PATH:
-        return HTTPStatus.OK, docs_publish_gate.publish_apply(repo_root, body)
+        return HTTPStatus.OK, docs_scope_publish.apply_scope_publish(repo_root, body)
     if path == routes.STATIC_HTML_EXPORT_PREVIEW_PATH:
         return HTTPStatus.OK, docs_static_html_export.preview_static_html_export(repo_root, body)
     if path == routes.STATIC_HTML_EXPORT_APPLY_PATH:

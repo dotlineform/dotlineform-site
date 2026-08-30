@@ -50,7 +50,10 @@ export function createDocsViewerReportService(options) {
   var settings = options || {};
   var serviceOptions = {
     baseUrl: cleanBaseUrl(settings.baseUrl),
-    fetch: settings.fetch
+    fetch: settings.fetch,
+    snapshotRole: cleanString(settings.snapshotRole).toLowerCase() === "published"
+      ? "published"
+      : "generated"
   };
 
   return {
@@ -62,8 +65,11 @@ export function createDocsViewerReportService(options) {
     },
     readSemanticTokens: function (request) {
       var scope = cleanString(request && request.scope).toLowerCase();
+      var path = serviceOptions.snapshotRole === "published"
+        ? "/docs/published/semantic-tokens"
+        : "/docs/semantic-tokens";
       return fetchReportJson(
-        "/docs/semantic-tokens?scope=" + encodeURIComponent(scope),
+        path + "?scope=" + encodeURIComponent(scope),
         serviceOptions
       );
     },

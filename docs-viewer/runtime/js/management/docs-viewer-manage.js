@@ -41,6 +41,9 @@ import {
   createDocsViewerManagementSourceAdapter
 } from "./docs-viewer-management-source-adapter.js";
 import {
+  createDocsViewerManagementSnapshotProvider
+} from "./docs-viewer-management-snapshot-provider.js";
+import {
   mountManagedConfiguredSiteLinks
 } from "./docs-viewer-management-configured-site-links.js";
 import {
@@ -128,6 +131,7 @@ startDocsViewerManageApp({
     }
   ),
   createSourceAdapter: createDocsViewerManagementSourceAdapter,
+  createCollectionProvider: createDocsViewerManagementSnapshotProvider,
   diagramDetailAdapter: docsViewerDiagramDetailAdapter,
   viewRegistryContributions: withDocsViewerManagedTableToolDefinitions(
     withDocsViewerContentDetailDefinitions(

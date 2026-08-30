@@ -270,13 +270,16 @@ def test_watcher_registers_configured_mermaid_root_and_renders_only_changed_iden
         sub_scopes=(),
     )
     calls: list[tuple[str, ...]] = []
+    invalidations: list[tuple[Path, object]] = []
 
     def fake_producer(context):
         calls.append(context.requested_generated_identities)
         return context.requested_generated_identities
 
     original_producer = module.produce_mermaid_svg
+    original_remove_manifest = module.remove_build_manifest
     module.produce_mermaid_svg = fake_producer
+    module.remove_build_manifest = lambda root, scope_config: invalidations.append((root, scope_config))
     states: dict[str, dict[str, object]] = {}
     try:
         changes = module.reconcile_watch_states(
@@ -295,12 +298,14 @@ def test_watcher_registers_configured_mermaid_root_and_renders_only_changed_iden
         )
     finally:
         module.produce_mermaid_svg = original_producer
+        module.remove_build_manifest = original_remove_manifest
         module.DOCS_SCOPE_CONFIGS.clear()
         module.DOCS_SCOPE_CONFIGS.update(original_configs)
         module.DOCUMENT_SOURCE_ROOTS.clear()
         module.DOCUMENT_SOURCE_ROOTS.update(original_roots)
 
     assert calls == [("architecture.svg",)]
+    assert invalidations == [(tmp_path, config)]
 
 
 def test_watcher_formats_affected_doc_ids_for_logs() -> None:
@@ -1371,6 +1376,10 @@ def test_sub_scope_rebuild_runs_child_docs_only() -> None:
     calls: list[list[str]] = []
     original_run = module.subprocess.run
     original_log = module.log
+    original_configs = dict(module.DOCS_SCOPE_CONFIGS)
+    original_remove_manifest = module.remove_build_manifest
+    scope_config = object()
+    invalidations: list[tuple[Path, object]] = []
 
     class Completed:
         returncode = 0
@@ -1383,11 +1392,16 @@ def test_sub_scope_rebuild_runs_child_docs_only() -> None:
 
     module.subprocess.run = fake_run
     module.log = lambda _message: None
+    module.DOCS_SCOPE_CONFIGS["analysis"] = scope_config
+    module.remove_build_manifest = lambda root, config: invalidations.append((root, config))
     try:
         assert module.rebuild_sub_scope(Path("/repo"), "analysis", "tags")
     finally:
         module.subprocess.run = original_run
         module.log = original_log
+        module.remove_build_manifest = original_remove_manifest
+        module.DOCS_SCOPE_CONFIGS.clear()
+        module.DOCS_SCOPE_CONFIGS.update(original_configs)
 
     assert calls == [
         [
@@ -1401,6 +1415,7 @@ def test_sub_scope_rebuild_runs_child_docs_only() -> None:
             "--diagnostics",
         ],
     ]
+    assert invalidations == [(Path("/repo"), scope_config)]
 
 
 def test_watcher_falls_back_to_full_docs_build_when_targeted_payloads_are_missing() -> None:
@@ -1408,6 +1423,10 @@ def test_watcher_falls_back_to_full_docs_build_when_targeted_payloads_are_missin
     calls: list[list[str]] = []
     original_run = module.subprocess.run
     original_fallback = module.targeted_docs_build_fallback_reason
+    original_configs = dict(module.DOCS_SCOPE_CONFIGS)
+    original_remove_manifest = module.remove_build_manifest
+    scope_config = object()
+    invalidations: list[tuple[Path, object]] = []
 
     class Completed:
         returncode = 0
@@ -1422,6 +1441,8 @@ def test_watcher_falls_back_to_full_docs_build_when_targeted_payloads_are_missin
     module.targeted_docs_build_fallback_reason = lambda *_args, **_kwargs: (
         "full-scope fallback: existing payloads missing for unselected docs"
     )
+    module.DOCS_SCOPE_CONFIGS["tmp"] = scope_config
+    module.remove_build_manifest = lambda root, config: invalidations.append((root, config))
     try:
         assert module.rebuild_scope(
             Path("/repo"),
@@ -1431,10 +1452,14 @@ def test_watcher_falls_back_to_full_docs_build_when_targeted_payloads_are_missin
     finally:
         module.subprocess.run = original_run
         module.targeted_docs_build_fallback_reason = original_fallback
+        module.remove_build_manifest = original_remove_manifest
+        module.DOCS_SCOPE_CONFIGS.clear()
+        module.DOCS_SCOPE_CONFIGS.update(original_configs)
 
     assert calls == [
         [module.PYTHON_EXECUTABLE, "docs-viewer/build/build_docs.py", "--scope", "tmp", "--write", "--diagnostics"],
     ]
+    assert invalidations == [(Path("/repo"), scope_config)]
 
 
 def main() -> None:

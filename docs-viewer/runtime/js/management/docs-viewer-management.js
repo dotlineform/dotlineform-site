@@ -497,6 +497,7 @@ export function initDocsViewerManagement(context) {
       "manage-rebuild",
       "manage-publish",
       "manage-scope",
+      "manage-snapshot",
       "manage-theme"
     ].forEach(function (controlId) {
       projectAppControl(controlId, { hidden: true, disabled: true });
@@ -680,6 +681,10 @@ export function initDocsViewerManagement(context) {
       disabled: management.managementBusy || !publishAvailable
     });
     projectAppControl("manage-scope", { hidden: managementActionsHidden });
+    projectAppControl("manage-snapshot", {
+      hidden: managementActionsHidden,
+      disabled: management.managementBusy
+    });
     projectAppControl("manage-theme", {
       hidden: false,
       pressed: themeIsDark,
@@ -931,7 +936,16 @@ export function initDocsViewerManagement(context) {
       openSettings: function () { settingsWorkflow.open(); },
       publish: function () { actionController.handlePublishDocs(); },
       renameScope: function () { scopeLifecycleController.renameScope(); },
-      rebuild: function () { actionController.handleRebuildDocs(); }
+      rebuild: function () { actionController.handleRebuildDocs(); },
+      selectSnapshot: function (detail) {
+        var select = detail && detail.event ? detail.event.target : null;
+        var role = String(select && select.value || "").trim().toLowerCase();
+        if (role !== "generated" && role !== "published") return;
+        var url = new URL(window.location.href);
+        if (role === "published") url.searchParams.set("snapshot", "published");
+        else url.searchParams.delete("snapshot");
+        window.location.assign(url.toString());
+      }
     },
     controllers: {
       interaction: function () { return interactionController; },
