@@ -168,7 +168,11 @@ def test_external_local_plan_uses_scope_location_without_provider_search(
     repo_root, config = configured_scope(
         tmp_path,
         monkeypatch,
-        docs_scope_record("external", scope_type="local_external"),
+        docs_scope_record(
+            "external",
+            scope_type="local_external",
+            scope_root_provider="external_local",
+        ),
     )
     media_path = tmp_path / "projects/docs-viewer/scopes/external/generated/media/svg/diagram.svg"
     media_path.parent.mkdir(parents=True)

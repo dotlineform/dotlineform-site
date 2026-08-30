@@ -16,7 +16,7 @@ from docs_lifecycle_paths import (
 from docs_scope_config import (
     CONFIG_REL_PATH,
     EXTERNAL_DATA_ROOT_MARKER,
-    LOCAL_EXTERNAL_SCOPE_TYPE,
+    EXTERNAL_LOCAL_PROVIDER,
     load_docs_scope_configs,
     path_label,
     resolve_external_data_root,
@@ -44,9 +44,9 @@ LINK_REWRITE_WARNING = (
 def scope_rename_eligible(config: Any, manifest_record: dict[str, Any] | None) -> bool:
     return bool(
         config
-        and config.scope_type == LOCAL_EXTERNAL_SCOPE_TYPE
+        and config.scope_root.provider == EXTERNAL_LOCAL_PROVIDER
+        and config.public_projection is None
         and scope_delete_eligible(manifest_record)
-        and str((manifest_record or {}).get("repo_status_at_creation") or "") == "external"
     )
 
 
@@ -144,14 +144,14 @@ def plan_rename_scope_preview(repo_root: Path, body: dict[str, Any]) -> dict[str
     if config is None:
         blockers.append("scope is not present in the Docs Viewer scope config")
     elif not scope_rename_eligible(config, manifest_record):
-        blockers.append("only user-created external-local scopes can be renamed")
+        blockers.append("only user-created local Manage scopes can be renamed")
     if new_scope_id in configs:
         blockers.append(f"scope_id {new_scope_id!r} already exists")
     if new_scope_id in manifest_records:
         blockers.append(f"scope_id {new_scope_id!r} already exists in the docs scope manifest")
     old_roots: dict[str, Path] = {}
     new_roots: dict[str, Path] = {}
-    if config is not None and config.scope_type == LOCAL_EXTERNAL_SCOPE_TYPE:
+    if config is not None and config.scope_root.provider == EXTERNAL_LOCAL_PROVIDER:
         external_root = resolve_external_data_root()
         sync_blocker = external_scope_id_sync_blocker(new_scope_id, external_root)
         if sync_blocker:
@@ -176,7 +176,7 @@ def plan_rename_scope_preview(repo_root: Path, body: dict[str, Any]) -> dict[str
         "operation": "preview",
         "scope_id": old_scope_id,
         "new_scope_id": new_scope_id,
-        "scope_type": LOCAL_EXTERNAL_SCOPE_TYPE,
+        "scope_type": config.scope_type if config is not None else "",
         "allowed": not blockers,
         "blockers": blockers,
         "warnings": [LINK_REWRITE_WARNING],

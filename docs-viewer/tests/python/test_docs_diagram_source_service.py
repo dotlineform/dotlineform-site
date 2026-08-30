@@ -23,7 +23,7 @@ from repo_factory import (
 @pytest.fixture(autouse=True)
 def isolated_media_workspace(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     projects = tmp_path / "projects"
-    (projects / "docs-viewer/media").mkdir(parents=True)
+    projects.mkdir()
     monkeypatch.setenv("DOTLINEFORM_PROJECTS_BASE_DIR", str(projects))
 
 

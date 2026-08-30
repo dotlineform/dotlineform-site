@@ -123,11 +123,13 @@ def base_scope(
     scope: str,
     *,
     scope_type: str = "local",
+    scope_root_provider: str = "repository",
     media_types: tuple[str, ...] = ("img", "svg", "files"),
 ) -> dict[str, object]:
     return docs_scope_record(
         scope,
         scope_type=scope_type,
+        scope_root_provider=scope_root_provider,
         viewer_base_url="/docs/",
         include_scope_param=True,
         media_types=media_types,
@@ -153,7 +155,7 @@ def add_mermaid_build(scope: dict[str, object]) -> None:
 @pytest.fixture(autouse=True)
 def isolated_media_workspace(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     projects = tmp_path / "projects"
-    (projects / "docs-viewer/media").mkdir(parents=True)
+    (projects / "docs-viewer").mkdir(parents=True)
     monkeypatch.setenv("DOTLINEFORM_PROJECTS_BASE_DIR", str(projects))
 
 
@@ -990,6 +992,7 @@ def test_apply_copy_writes_external_local_target_documents_and_media(
     target_scope = base_scope(
         "target",
         scope_type="local_external",
+        scope_root_provider="external_local",
         media_types=("img",),
     )
     repo_root = make_repo(

@@ -22,7 +22,7 @@ _COLLECTION_PROJECTS_WORKSPACE = tempfile.TemporaryDirectory(
 )
 _COLLECTION_PROJECTS_BASE = Path(_COLLECTION_PROJECTS_WORKSPACE.name)
 (_COLLECTION_PROJECTS_BASE / "data-sharing").mkdir()
-(_COLLECTION_PROJECTS_BASE / "docs-viewer/media").mkdir(parents=True)
+(_COLLECTION_PROJECTS_BASE / "docs-viewer").mkdir()
 os.environ[PROJECTS_BASE_ENV] = str(_COLLECTION_PROJECTS_BASE)
 
 
@@ -52,7 +52,7 @@ def external_data_sharing_workspace(tmp_path: Path, monkeypatch: pytest.MonkeyPa
     projects_base = tmp_path / "projects-base"
     workspace = projects_base / "data-sharing"
     workspace.mkdir(parents=True)
-    (projects_base / "docs-viewer/media").mkdir(parents=True)
+    (projects_base / "docs-viewer").mkdir()
     monkeypatch.setenv("DOTLINEFORM_PROJECTS_BASE_DIR", str(projects_base))
     from docs_scope_config import DOCS_SCOPE_CONFIGS, DOCUMENT_SOURCE_ROOTS
 

@@ -17,6 +17,7 @@ if str(DOCS_SERVICES_DIR) not in sys.path:
     sys.path.insert(0, str(DOCS_SERVICES_DIR))
 
 import docs_source_model as source_model  # noqa: E402
+from repo_factory import docs_scope_record, write_docs_scope_config  # noqa: E402
 
 
 FIXTURE_DOC_ID = "d-20260101-000000-000001"
@@ -26,6 +27,10 @@ def write_doc(root: Path, scope_root: str, filename: str, front_matter: dict[str
     path = root / scope_root / filename
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(source_model.format_source(front_matter, body), encoding="utf-8")
+
+
+def configure_repository_scope(root: Path) -> None:
+    write_docs_scope_config(root, [docs_scope_record("studio")])
 
 
 def make_doc(
@@ -159,6 +164,7 @@ def test_scope_loader_preserves_exact_source_bytes_and_newlines() -> None:
         )
         path.parent.mkdir(parents=True)
         path.write_bytes(raw_source)
+        configure_repository_scope(root)
 
         docs = source_model.load_scope_docs(root, "studio")
 
@@ -168,6 +174,36 @@ def test_scope_loader_preserves_exact_source_bytes_and_newlines() -> None:
     assert source_model.source_revision(
         docs[0].source_text.encode("utf-8")
     ) == source_model.source_revision(raw_source)
+
+
+def test_scope_loader_does_not_fallback_to_repository_scope_copy(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    write_doc(
+        tmp_path,
+        "docs-viewer/scopes/studio/source/documents",
+        "retired-copy.md",
+        {"doc_id": FIXTURE_DOC_ID, "title": "Retired copy"},
+    )
+    projects_root = tmp_path / "projects"
+    (projects_root / "docs-viewer").mkdir(parents=True)
+    monkeypatch.setenv("DOTLINEFORM_PROJECTS_BASE_DIR", str(projects_root))
+    config = docs_scope_record(
+        "studio",
+        scope_root_path="$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/studio",
+    )
+    config["scope_root"] = {
+        "provider": "external_local",
+        "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/studio",
+    }
+    write_docs_scope_config(tmp_path, [config])
+
+    with pytest.raises(ValueError, match="missing source root for scope studio") as error:
+        source_model.load_scope_docs(tmp_path, "studio")
+
+    assert str(projects_root / "docs-viewer/scopes/studio") in str(error.value)
+    assert "retired-copy.md" not in str(error.value)
 
 
 def test_document_collection_loader_selects_exact_configured_sub_scope() -> None:
@@ -359,6 +395,7 @@ def test_load_scope_docs_rejects_duplicate_doc_ids() -> None:
         root = Path(temp)
         write_doc(root, "docs-viewer/scopes/studio/source/documents", "first.md", {"doc_id": FIXTURE_DOC_ID, "title": "First"})
         write_doc(root, "docs-viewer/scopes/studio/source/documents", "second.md", {"doc_id": FIXTURE_DOC_ID, "title": "Second"})
+        configure_repository_scope(root)
 
         try:
             source_model.load_scope_docs(root, "studio")
@@ -374,6 +411,7 @@ def test_load_scope_docs_rejects_missing_doc_id() -> None:
     with tempfile.TemporaryDirectory() as temp:
         root = Path(temp)
         write_doc(root, "docs-viewer/scopes/studio/source/documents", "missing.md", {"title": "Missing"})
+        configure_repository_scope(root)
 
         try:
             source_model.load_scope_docs(root, "studio")
@@ -394,6 +432,7 @@ def test_load_scope_docs_rejects_unknown_studio_parent() -> None:
             "child.md",
             {"doc_id": FIXTURE_DOC_ID, "title": "Child", "parent_id": "missing"},
         )
+        configure_repository_scope(root)
 
         try:
             source_model.load_scope_docs(root, "studio")

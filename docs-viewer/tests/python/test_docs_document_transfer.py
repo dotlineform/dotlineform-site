@@ -128,7 +128,7 @@ def add_mermaid_build(scope: dict[str, object]) -> None:
 @pytest.fixture(autouse=True)
 def isolated_media_workspace(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     projects = tmp_path / "projects"
-    (projects / "docs-viewer/media").mkdir(parents=True)
+    (projects / "docs-viewer").mkdir(parents=True)
     monkeypatch.setenv("DOTLINEFORM_PROJECTS_BASE_DIR", str(projects))
 
 
@@ -1359,7 +1359,7 @@ def test_public_scope_managed_source_to_external_local_target_is_provider_neutra
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     projects_base = tmp_path / "Projects"
-    (projects_base / "docs-viewer/media").mkdir(parents=True, exist_ok=True)
+    (projects_base / "docs-viewer").mkdir(parents=True, exist_ok=True)
     monkeypatch.setenv("DOTLINEFORM_PROJECTS_BASE_DIR", str(projects_base))
     source_scope = docs_scope_record(
         "source",
@@ -1371,6 +1371,7 @@ def test_public_scope_managed_source_to_external_local_target_is_provider_neutra
     target_scope = docs_scope_record(
         "target",
         scope_type="local_external",
+        scope_root_provider="external_local",
         viewer_base_url="/docs/",
         include_scope_param=True,
         media_types=("img",),
@@ -1416,11 +1417,12 @@ def test_external_local_source_can_plan_move_to_local_target(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     projects_base = tmp_path / "Projects"
-    (projects_base / "docs-viewer/media").mkdir(parents=True, exist_ok=True)
+    (projects_base / "docs-viewer").mkdir(parents=True, exist_ok=True)
     monkeypatch.setenv("DOTLINEFORM_PROJECTS_BASE_DIR", str(projects_base))
     source_scope = docs_scope_record(
         "source",
         scope_type="local_external",
+        scope_root_provider="external_local",
         viewer_base_url="/docs/",
         include_scope_param=True,
         media_types=("img",),

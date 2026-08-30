@@ -35,7 +35,6 @@ parent_id: ""
 def prepare_external_scope(projects_base: Path) -> None:
     documents_root = projects_base / "docs-viewer/scopes/notes/source/documents"
     documents_root.mkdir(parents=True, exist_ok=True)
-    (projects_base / "docs-viewer/media").mkdir(parents=True, exist_ok=True)
     (documents_root / f"{PLAIN_DOC_ID}.md").write_text(
         source_text(
             doc_id=PLAIN_DOC_ID,

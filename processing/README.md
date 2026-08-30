@@ -20,7 +20,8 @@ repeated renders, and print masters belong outside Git under
 should be copied back into this directory.
 
 Docs Viewer source and its managed attachments are separate from this
-sketchbook. They live under `docs-viewer/scopes/processing/source/documents/`.
+sketchbook. They live under
+`$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/processing/source/`.
 
 ## Projects
 

@@ -124,8 +124,7 @@ def test_capabilities_advertise_source_config_reads() -> None:
     assert payload["capabilities"]["scope_lifecycle"]["sub_scope_delete_apply"] is True
     assert payload["capabilities"]["scope_lifecycle"]["publishing_modes"] == [
         "public_readonly",
-        "local_external",
-        "local_committed",
+        "local_manage",
     ]
     assert payload["capabilities"]["scopes"]["studio"]["sub_scope_lifecycle"]["create_eligible"] is True
     assert payload["capabilities"]["scopes"]["studio"]["sub_scope_lifecycle"]["sub_scopes"] == []
@@ -225,13 +224,13 @@ def test_capabilities_list_exact_parent_and_child_transfer_collections() -> None
 
 def test_external_scope_capability_uses_portable_root_label() -> None:
     config = SimpleNamespace(
-        scope_type="local_external",
+        scope_type="local",
         scope_root=SimpleNamespace(path=Path("/Users/example/external/docs-viewer/scopes/research")),
     )
 
     label = capability_scope_root_label(Path("/repo"), "research", config)
 
-    assert label == "scopes/research"
+    assert label == "docs-viewer/scopes/research"
 
 
 def test_missing_external_workspace_disables_only_import_and_review_capabilities(

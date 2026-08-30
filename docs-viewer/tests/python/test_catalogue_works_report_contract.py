@@ -6,24 +6,11 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from studio.shared.python import local_env
-
-
 REPO_ROOT = Path(__file__).resolve().parents[3]
-STUDIO_DOC_ID = "d-20260401-000000-ebf14a"
-REPORT_DOC_ID = "d-20260810-222148-99daec"
 
 
 def read_json(path: Path) -> dict[str, object]:
     return json.loads(path.read_text(encoding="utf-8"))
-
-
-def dotlineform_scope_root() -> Path:
-    projects_base = Path(
-        local_env.runtime_env(repo_root=REPO_ROOT)["DOTLINEFORM_PROJECTS_BASE_DIR"]
-    )
-    assert projects_base.is_absolute()
-    return projects_base / "docs-viewer/scopes/dotlineform"
 
 
 def test_manage_registry_and_loader_own_one_local_catalogue_works_report() -> None:
@@ -89,39 +76,6 @@ def test_module_uses_only_existing_studio_inputs_and_exact_catalogue_targets() -
         ".docsViewerReport__expandedViewport .catalogueWorksReport__table "
         '[data-report-column-visibility="expanded"]'
     ) in local_css
-
-
-def test_exact_dotlineform_report_host_projects_one_inert_host() -> None:
-    studio_source = (
-        REPO_ROOT
-        / f"docs-viewer/scopes/studio/source/documents/{STUDIO_DOC_ID}.md"
-    ).read_text(encoding="utf-8")
-    studio_payload = read_json(
-        REPO_ROOT
-        / f"docs-viewer/scopes/studio/published/documents/by-id/{STUDIO_DOC_ID}.json"
-    )
-    scope_root = dotlineform_scope_root()
-    source = (scope_root / f"source/documents/{REPORT_DOC_ID}.md").read_text(
-        encoding="utf-8"
-    )
-    payload = read_json(
-        scope_root / f"published/documents/by-id/{REPORT_DOC_ID}.json"
-    )
-
-    assert ":::report" not in studio_source
-    assert "data-docs-viewer-report-host" not in str(studio_payload["content_html"])
-    assert (
-        f"/docs/?scope=dotlineform&doc={REPORT_DOC_ID}" in studio_source
-    )
-    assert source.count(":::report\nid: catalogue_works\naccess: local\n:::") == 1
-    assert payload["report"] == {
-        "id": "catalogue_works",
-        "access": "local",
-        "scope": None,
-        "preset": None,
-        "sub_scope": None,
-    }
-    assert str(payload["content_html"]).count("data-docs-viewer-report-host") == 1
 
 
 def test_public_registry_loader_and_data_do_not_expose_catalogue_works() -> None:

@@ -62,7 +62,6 @@
       "scope_id": "analysis",
       "scope_type": "public",
       "meta": "public scope",
-      "media_source_root": "analysis",
       "source": {},
       "search_fields": [
         "title",
@@ -227,7 +226,7 @@
     },
     {
       "scope_id": "notes",
-      "scope_type": "local_external",
+      "scope_type": "local",
       "meta": "external local",
       "source": {},
       "search_fields": [
@@ -276,7 +275,6 @@
       "scope_id": "processing",
       "scope_type": "local",
       "meta": "local management",
-      "media_source_root": "processing",
       "source": {},
       "search_fields": [
         "title",
@@ -315,9 +313,8 @@
     },
     {
       "scope_id": "dotlineform",
-      "scope_type": "local_external",
+      "scope_type": "local",
       "meta": "external local",
-      "media_source_root": "analysis",
       "scope_root": {
         "provider": "external_local",
         "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/dotlineform"
@@ -371,7 +368,7 @@
     },
     {
       "scope_id": "app",
-      "scope_type": "local_external",
+      "scope_type": "local",
       "meta": "external local",
       "scope_root": {
         "provider": "external_local",

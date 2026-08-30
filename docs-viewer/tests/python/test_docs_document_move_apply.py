@@ -676,6 +676,7 @@ def test_apply_move_writes_external_local_target_then_cleans_repository_source(
         target_scope=base_scope(
             "target",
             scope_type="local_external",
+            scope_root_provider="external_local",
             media_types=("img",),
         ),
     )

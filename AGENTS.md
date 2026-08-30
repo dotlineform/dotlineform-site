@@ -2,8 +2,8 @@
 
 - Ask for confirmation before edits unless the request is trivial or the user has explicitly asked for the edit.
 - For code changes, summarize the intended change set and ask for confirmation before editing unless the request is trivial.
-- Use `docs-viewer/scopes/studio/source/documents/d-20260523-190651-7157ec.md` as the project implementation checklist. Keep durable repo guardrails there.
-- Use `docs-viewer/scopes/studio/source/documents/d-20260523-000000-bf7161.md` when lifecycle decisions, roadmap deliveries, task trackers, or closeout state need more context.
+- Use `$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/studio/source/documents/d-20260523-190651-7157ec.md` as the project implementation checklist. Keep durable repo guardrails there.
+- Use `$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/studio/source/documents/d-20260523-000000-bf7161.md` when lifecycle decisions, roadmap deliveries, task trackers, or closeout state need more context.
 - Compatibility aliases are prohibited unless justified before implementation with removal criteria.
 - If you find compatibility layers during new feature development, report. Fix them immediately when non-trivial.
 - Tests and documents are not contracts for deciding how to implement code. They should follow current development objectives unless a constraint has been called out and agreed.
@@ -25,13 +25,19 @@
 ## Documentation And Generated Payloads
 
 - When writing or updating Markdown source documents, do not apply a fixed-column source wrap. Each paragraph is one source line, each list item is one source line. Code blocks, tables, headings, and front matter retain their required structure.
-- For an ordinary Markdown create or edit in any configured scope, including an external-local scope, write valid canonical Markdown to that scope's configured `source/documents/` location through the normal source/mutation boundary and let the docs watcher running under `bin/local-studio` rebuild the document projections. Do not run a manual Docs or Search rebuild merely to finish the source change.
+- Every configured Docs Viewer scope stores its lifecycle beneath `$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/<scope-id>/`: canonical input in `source/`, replaceable Build output in `generated/`, and the accepted local snapshot in `published/`. The repository `docs-viewer/scopes/` tree is retired and must not be recreated or used as a fallback.
+- Scope configuration is the authority for storage resolution. If a configured external root is unavailable, report the scope as unavailable; do not create a replacement root, infer a repository path, or manufacture a second copy.
+- Keep the same media skeleton in every scope: `source/media/{img,svg,files,html,build-source/mermaid}`. Empty directories are intentional and may be retained.
+- For an ordinary Markdown create or edit in any configured scope, write valid canonical Markdown to that scope's configured `source/documents/` location through the normal source/mutation boundary and let the docs watcher running under `bin/local-studio` rebuild the document projections. Do not run a manual Docs or Search rebuild merely to finish the source change.
 - The watcher rebuilds document projections only; inspect those outputs and do not rerun the builder solely for idempotence evidence.
 - The `studio` scope is the reference scope for live development and maintenance documents.
 - If the watcher is unavailable, regenerate an ordinary doc-only source change with `$HOME/miniconda3/bin/python3 docs-viewer/build/build_docs.py --scope <scope-id> --write --only-doc-ids <comma-separated-doc-ids> --skip-media-builds`. The targeted build still recomputes the collection indexes while preserving unaffected by-ID payloads.
 - Use a full-scope document build only when targeted prerequisites are missing, a global builder/config/renderer contract changed, generated state needs complete reconciliation, or registered media output is actually under review. Add `--skip-media-builds` for a docs-only full reconciliation; omit it only when the registered media producers and real external workspace are part of the evidence.
 - Docs search has no targeted-postings mode and intentionally does not follow ordinary watcher or management writes automatically. A stale Search index after an ordinary document edit is not unfinished document work. Rebuild Search only when the user explicitly requests it or Search itself is the task, using the Manage Rebuild control or `$HOME/miniconda3/bin/python3 docs-viewer/build/build_search.py --scope <scope-id> --write`.
 - `build_docs.py` prints a compact human summary by default. Automation that needs the machine-readable diagnostics line should pass `--diagnostics`.
+- A complete Build replaces that scope's `generated/` files and records the completed generated snapshot. Review Generated before Publish. Publish deletes the old generated files under `published/`, writes the accepted generated snapshot there, and records the completed published snapshot. Empty directories may remain.
+- Publish changes only the scope's external `published/` snapshot. Public `site/` and remote deployment are separate actions and must stay explicit.
+- Recovery uses ordinary sources and Git history: fix the source or builder and rerun Build and Publish. The clean Git commit immediately before the Stage 2.3 repository-copy removal remains the recovery point for the retired tracked tree; do not add aliases, shadow copies, transactional swaps, or automatic backup directories.
 
 ## Runtime And Paths
 
@@ -43,8 +49,8 @@
 
 ## Checks And Test Policy
 
-- Use `docs-viewer/scopes/studio/source/documents/d-20260501-174746-efd581.md`, `docs-viewer/scopes/studio/source/documents/d-20260514-135716-c70591.md`, and `docs-viewer/scopes/studio/source/documents/d-20260501-000000-49b626.md` as the maintained test policy.
-- `docs-viewer/scopes/studio/source/documents/d-20260627-212121-7cf7de.md` determines approach for subsequent testing and review of existing tests.
+- Use `$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/studio/source/documents/d-20260501-174746-efd581.md`, `$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/studio/source/documents/d-20260514-135716-c70591.md`, and `$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/studio/source/documents/d-20260501-000000-49b626.md` as the maintained test policy.
+- `$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/studio/source/documents/d-20260627-212121-7cf7de.md` determines approach for subsequent testing and review of existing tests.
 - Choose the smallest check that proves the changed contract. Do not run broad profiles just to produce more evidence.
 - Leave UI design testing to the user unless specifically requested; browser probes are brittle.
 - A UI change does not create an automatic requirement to add, update, or run a permanent browser test. Recorded manual confirmation is sufficient for ordinary interaction, presentation, copy, focus, modal, filtering, and navigation behavior when no durable browser integration boundary changed.
@@ -93,7 +99,7 @@
 
 ## Security And Sanitization
 
-- Use `docs-viewer/scopes/studio/source/documents/d-20260523-190651-7157ec.md` for sanitization triggers and local write-service safety.
+- Use `$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/studio/source/documents/d-20260523-190651-7157ec.md` for sanitization triggers and local write-service safety.
 - When a focused scan is needed for changed files, use:
   - `rg -n "/Users/|/home/|C:\\\\|miniconda|rbenv|api[_-]?key|token|secret|password|PRIVATE KEY" <changed-files>`
 

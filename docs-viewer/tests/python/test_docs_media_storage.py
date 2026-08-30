@@ -40,8 +40,7 @@ from docs_scope_config import (
     load_docs_scope_configs,
 )
 from docs_scope_manifest import (
-    LOCAL_COMMITTED_MODE,
-    LOCAL_EXTERNAL_MODE,
+    LOCAL_MANAGE_MODE,
     PUBLIC_MODE,
     planned_scope_config_record,
 )
@@ -83,12 +82,12 @@ def scope_config(
     scope: str,
     *,
     scope_type: str,
+    scope_root_provider: str = REPOSITORY_PROVIDER,
     media_provider: str,
     source: Path | None = None,
     media_location_root: Path | None = None,
 ) -> DocsScopeConfig:
-    external = scope_type == "local_external"
-    local_provider = EXTERNAL_LOCAL_PROVIDER if external else REPOSITORY_PROVIDER
+    local_provider = scope_root_provider
     scope_root = source.parent if source is not None else Path(f"docs-viewer/scopes/{scope}")
     source_path = scope_root / "source"
     generated_docs = scope_root / "generated/documents"
@@ -217,6 +216,7 @@ def external_scope_record(scope: str = "private") -> dict[str, object]:
     return docs_scope_record(
         scope,
         scope_type="local_external",
+        scope_root_provider="external_local",
         default_doc_id=scope,
     )
 
@@ -285,7 +285,7 @@ def test_docs_source_import_writes_missing_objects_after_complete_preflight(tmp_
 
 def test_exact_scope_staged_file_runner_uses_safe_docs_report(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     projects_base = tmp_path / "projects"
-    (projects_base / "docs-viewer/media/example/img").mkdir(parents=True)
+    (projects_base / "docs-viewer").mkdir(parents=True)
     monkeypatch.setenv("DOTLINEFORM_PROJECTS_BASE_DIR", str(projects_base))
     write_scope_config(tmp_path, public_scope_record())
     staging_root = tmp_path / "import-staging"
@@ -328,7 +328,7 @@ def test_scope_config_derives_media_lifecycle_from_external_scope_root(
 
     external["media"]["types"]["img"]["location"] = {  # type: ignore[index]
         "provider": EXTERNAL_LOCAL_PROVIDER,
-        "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/media/elsewhere/img",
+        "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/elsewhere/source/media/img",
     }
     write_scope_config(tmp_path, external)
     with pytest.raises(ValueError, match="unknown fields: location"):
@@ -344,15 +344,7 @@ def test_scope_config_derives_media_lifecycle_from_external_scope_root(
 
 def test_new_scope_defaults_follow_scope_owned_media_policy(tmp_path: Path) -> None:
     public = planned_scope_config_record("research", Path("docs-viewer/scopes/research"), "/research/", "research", PUBLIC_MODE)
-    local = planned_scope_config_record("notes", Path("docs-viewer/scopes/notes"), "", "notes", LOCAL_COMMITTED_MODE)
-    external = planned_scope_config_record(
-        "private",
-        Path("unused"),
-        "",
-        "private",
-        LOCAL_EXTERNAL_MODE,
-        external_data_root=Path("/tmp/external-docs"),
-    )
+    local = planned_scope_config_record("notes", Path("unused"), "", "notes", LOCAL_MANAGE_MODE)
 
     assert public["media"]["types"]["img"] == {"build_inputs": []}  # type: ignore[index]
     assert public["public_projection"]["media"]["img"]["location"]["provider"] == R2_PROVIDER  # type: ignore[index]
@@ -361,9 +353,7 @@ def test_new_scope_defaults_follow_scope_owned_media_policy(tmp_path: Path) -> N
         "path": "site/assets/data/docs/scopes/research/media/svg",
     }
     assert local["media"] == public["media"]
-    assert external["media"] == public["media"]
     assert local["public_projection"] is None
-    assert external["public_projection"] is None
 
 
 def test_local_media_route_confines_repo_and_external_scope_assets(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
@@ -400,6 +390,7 @@ def test_local_media_route_confines_repo_and_external_scope_assets(tmp_path: Pat
     external_config = scope_config(
         "private",
         scope_type="local_external",
+        scope_root_provider=EXTERNAL_LOCAL_PROVIDER,
         media_provider=EXTERNAL_LOCAL_PROVIDER,
         source=external_source,
     )
@@ -424,12 +415,14 @@ def test_configured_local_media_directories_skip_missing_external_scope(tmp_path
         "notes": scope_config(
             "notes",
             scope_type="local_external",
+            scope_root_provider=EXTERNAL_LOCAL_PROVIDER,
             media_provider=EXTERNAL_LOCAL_PROVIDER,
             source=external_source,
         ),
         "missing": scope_config(
             "missing",
             scope_type="local_external",
+            scope_root_provider=EXTERNAL_LOCAL_PROVIDER,
             media_provider=EXTERNAL_LOCAL_PROVIDER,
             source=missing_external_root / "source",
         ),

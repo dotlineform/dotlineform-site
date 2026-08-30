@@ -132,7 +132,7 @@ function normalizeRow(value, reportScope) {
     || !mediaType
     || !identity
     || identity.startsWith("/")
-    || !localTarget.startsWith("docs-viewer/media/" + scope + "/")
+    || !localTarget.startsWith("docs-viewer/scopes/" + scope + "/source/media/")
     || !Array.isArray(documents)
   ) {
     throw new Error("Docs Media row is invalid.");

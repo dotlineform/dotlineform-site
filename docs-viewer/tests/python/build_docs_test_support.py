@@ -158,6 +158,7 @@ def write_external_scope_config(root: Path, external_root: Path) -> None:
             docs_scope_record(
                 "private",
                 scope_type="local_external",
+                scope_root_provider="external_local",
                 meta="external local",
                 default_doc_id=PRIVATE_DOC_ID,
             )

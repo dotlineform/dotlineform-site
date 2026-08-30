@@ -8,8 +8,6 @@ from pathlib import Path
 
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
-BACKLINKS_HOST_DOC_ID = "d-20260419-000000-0516ab"
-TOKENS_DOC_ID = "d-20260810-211748-1f8b6f"
 
 
 def read_json(path: Path) -> dict[str, object]:
@@ -98,48 +96,6 @@ def test_report_binds_only_the_exact_loaded_host_target_and_scope_owned_url() ->
         browser_config_builder
     )
     assert "scope_uses_external_data" not in backlinks_builder
-
-
-def test_durable_backlinks_host_and_registry_reference_project_one_inert_host_each() -> None:
-    backlinks_source = (
-        REPO_ROOT
-        / f"docs-viewer/scopes/studio/source/documents/{BACKLINKS_HOST_DOC_ID}.md"
-    ).read_text(encoding="utf-8")
-    backlinks_payload = read_json(
-        REPO_ROOT
-        / f"docs-viewer/scopes/studio/published/documents/by-id/{BACKLINKS_HOST_DOC_ID}.json"
-    )
-    tokens_source = (
-        REPO_ROOT
-        / f"docs-viewer/scopes/studio/source/documents/{TOKENS_DOC_ID}.md"
-    ).read_text(encoding="utf-8")
-    tokens_payload = read_json(
-        REPO_ROOT
-        / f"docs-viewer/scopes/studio/published/documents/by-id/{TOKENS_DOC_ID}.json"
-    )
-
-    assert backlinks_source.count(
-        ":::report\nid: docs_backlinks\naccess: local\n:::"
-    ) == 1
-    assert backlinks_payload["report"] == {
-        "id": "docs_backlinks",
-        "access": "local",
-        "scope": None,
-        "preset": None,
-        "sub_scope": None,
-    }
-    assert str(backlinks_payload["content_html"]).count(
-        "data-docs-viewer-report-host"
-    ) == 1
-
-    assert "| Token | Report |" not in tokens_source
-    assert tokens_source.count(
-        ":::report\nid: reports_list\naccess: local\n:::"
-    ) == 1
-    assert tokens_payload["report"]["id"] == "reports_list"
-    assert str(tokens_payload["content_html"]).count(
-        "data-docs-viewer-report-host"
-    ) == 1
 
 
 def test_backlinks_report_and_payload_are_absent_from_public_owners() -> None:

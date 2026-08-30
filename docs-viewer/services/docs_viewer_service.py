@@ -8,7 +8,6 @@ from dataclasses import dataclass
 import json
 import mimetypes
 import os
-import re
 import shlex
 import sys
 from http import HTTPStatus
@@ -61,9 +60,6 @@ STATIC_PREFIXES = (
     "/docs-viewer/config/",
     "/docs-viewer/data/generated/",
     "/docs-viewer/static/",
-)
-SCOPE_PUBLISHED_STATIC_PATTERN = re.compile(
-    r"\A/docs-viewer/scopes/[a-z][a-z0-9-]*/published/(?:documents|media|search)(?:/|\Z)"
 )
 RUNTIME_STATIC_ROUTES = (
     ("/docs-viewer/runtime/vendor/", Path("docs-viewer/runtime/vendor")),
@@ -567,7 +563,6 @@ class DocsViewerRequestHandler(QuietErrorLoggingMixin, BaseHTTPRequestHandler):
             path in STATIC_FILES
             or runtime_static_relative_path(path) is not None
             or shared_static_relative_path(path) is not None
-            or bool(SCOPE_PUBLISHED_STATIC_PATTERN.match(path))
             or any(path.startswith(prefix) for prefix in STATIC_PREFIXES)
         )
 

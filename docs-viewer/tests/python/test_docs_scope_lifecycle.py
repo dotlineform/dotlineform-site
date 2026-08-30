@@ -23,12 +23,16 @@ from repo_factory import docs_scope_record
 @pytest.fixture(autouse=True)
 def isolated_media_workspace(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     projects = tmp_path / "projects"
-    projects.mkdir(parents=True)
+    (projects / "docs-viewer").mkdir(parents=True)
     monkeypatch.setenv("DOTLINEFORM_PROJECTS_BASE_DIR", str(projects))
 
 
-def repository_source_media_root(repo_root: Path, scope: str) -> Path:
-    return repo_root / "docs-viewer/scopes" / scope / "source/media"
+def external_scope_root(scope: str) -> Path:
+    return Path(os.environ["DOTLINEFORM_PROJECTS_BASE_DIR"]) / "docs-viewer/scopes" / scope
+
+
+def external_source_media_root(scope: str) -> Path:
+    return external_scope_root(scope) / "source/media"
 
 
 def rebuild_sub_scope_fixture(repo_root: Path, scope: str, sub_scope: str):
@@ -144,7 +148,7 @@ def test_scope_manifest_reconciliation_preserves_ownership_and_refreshes_roles()
                         "files": [{"kind": "old", "path": "old"}],
                         "metadata": {
                             "backfilled": False,
-                            "publishing_mode": "local_committed",
+                            "publishing_mode": "local_manage",
                         },
                     }
                 ],
@@ -170,7 +174,7 @@ def test_scope_manifest_reconciliation_preserves_ownership_and_refreshes_roles()
     assert record["tool_id"] == "fixture-tool"
     assert record["created_at"] == "2026-01-01T00:00:00Z"
     assert record["metadata"]["backfilled"] is False
-    assert record["metadata"]["publishing_mode"] == "local_committed"
+    assert record["metadata"]["publishing_mode"] == "local_manage"
     assert {file["kind"] for file in record["files"]} >= {
         "source_media_root",
         "generated_docs_root",
@@ -188,7 +192,6 @@ def test_scope_create_preview_reports_public_readonly_site_route_and_payloads() 
             {
                 "scope_id": "research",
                 "title": "Research",
-                "scope_root": "docs-viewer/scopes/research",
                 "publishing_mode": "public_readonly",
                 "public_route_path": "/research/",
             },
@@ -209,7 +212,7 @@ def test_scope_create_preview_reports_public_readonly_site_route_and_payloads() 
         "code",
     ]
     assert any(
-        file["path"] == f"docs-viewer/scopes/research/source/documents/{planned_identity['doc_id']}.md"
+        file["path"] == (external_scope_root("research") / f"source/documents/{planned_identity['doc_id']}.md").as_posix()
         for file in payload["created_files"]
     )
     assert payload["planned_scope_config"]["viewer_base_url"] == "/research/"
@@ -222,11 +225,11 @@ def test_scope_create_preview_reports_public_readonly_site_route_and_payloads() 
     )
     assert payload["urls"]["public"] == "/research/"
     assert any(file["path"] == "site/research/index.html" for file in payload["created_files"])
-    assert any(file["path"] == "site/assets/data/docs/scopes/research" for file in payload["publish_files"])
-    assert any(file["path"] == "site/assets/data/docs/scopes/research/by-id" for file in payload["publish_files"])
-    assert any(file["path"] == "site/assets/data/search/research/index.json" for file in payload["publish_files"])
+    assert payload["publish_files"] == []
+    assert payload["storage_contract"]["publish_output"].endswith("/scopes/research/published/documents")
+    assert payload["storage_contract"]["deploy_output"] == "site/assets/data/docs/scopes/research"
     assert any(
-        file["path"] == "docs-viewer/scopes/research/source/media/svg"
+        file["path"] == (external_scope_root("research") / "source/media/svg").as_posix()
         for file in payload["created_files"]
     )
     assert not any(file["path"].endswith("/.gitkeep") for file in payload["created_files"])
@@ -243,9 +246,8 @@ def test_scope_create_preview_reports_local_tracked_outputs() -> None:
             {
                 "scope_id": "notes",
                 "title": "Notes",
-                "scope_root": "docs-viewer/scopes/notes",
                 "default_doc_id": "notes",
-                "publishing_mode": "local_committed",
+                "publishing_mode": "local_manage",
                 "public_route_path": "/notes/",
             },
         )
@@ -253,17 +255,18 @@ def test_scope_create_preview_reports_local_tracked_outputs() -> None:
     assert payload["ok"] is True
     assert payload["planned_scope_config"]["viewer_base_url"] == "/docs/"
     assert payload["planned_scope_config"]["include_scope_param"] is True
-    assert payload["planned_scope_config"]["scope_root"]["path"] == "docs-viewer/scopes/notes"
+    assert payload["planned_scope_config"]["scope_root"]["path"] == f"{EXTERNAL_DATA_ROOT_MARKER}/scopes/notes"
     assert "documents" not in payload["planned_scope_config"]["published"]
     assert "search" not in payload["planned_scope_config"]["published"]
     assert payload["storage_contract"]["public_static_assets"] is False
     assert "source, generated, and published lifecycle folders" in payload["storage_contract"]["summary"]
     assert payload["urls"]["public"] == ""
     assert not any(file["kind"] == "route_file" for file in payload["created_files"])
-    assert any(file["path"] == "docs-viewer/scopes/notes/generated/documents" for file in payload["created_files"])
-    assert any(file["path"] == "docs-viewer/scopes/notes/generated/documents/index-tree.json" for file in payload["created_files"])
-    assert any(file["path"] == "docs-viewer/scopes/notes/generated/documents/recent.json" for file in payload["created_files"])
-    assert any(file["path"] == "docs-viewer/scopes/notes/generated/search/index.json" for file in payload["created_files"])
+    created_paths = {file["path"] for file in payload["created_files"]}
+    assert (external_scope_root("notes") / "generated/documents").as_posix() in created_paths
+    assert (external_scope_root("notes") / "generated/documents/index-tree.json").as_posix() in created_paths
+    assert (external_scope_root("notes") / "generated/documents/recent.json").as_posix() in created_paths
+    assert (external_scope_root("notes") / "generated/search/index.json").as_posix() in created_paths
     assert not any(file["path"].startswith("site/assets/data/docs/scopes/notes") for file in payload["created_files"])
     assert not any(file["path"].startswith("site/assets/data/search/notes") for file in payload["created_files"])
 
@@ -278,8 +281,7 @@ def test_scope_create_preview_rejects_a_changed_planned_document_identity() -> N
                 {
                     "scope_id": "notes",
                     "title": "Notes",
-                    "scope_root": "docs-viewer/scopes/notes",
-                    "publishing_mode": "local_committed",
+                    "publishing_mode": "local_manage",
                     "planned_document_identity": {
                         "doc_id": "d-20260715-120001-a1b2c3",
                         "added_date": "2026-07-15 12:00:00",
@@ -306,7 +308,7 @@ def test_scope_create_preview_blocks_tmp_for_icloud_external_workspace() -> None
                 / "com~apple~CloudDocs"
                 / "dotlineform"
             )
-            (projects_root / "docs-viewer/media").mkdir(parents=True)
+            (projects_root / "docs-viewer").mkdir(parents=True)
             os.environ["DOTLINEFORM_PROJECTS_BASE_DIR"] = projects_root.as_posix()
             write_docs_scope_config(repo_root)
 
@@ -317,7 +319,7 @@ def test_scope_create_preview_blocks_tmp_for_icloud_external_workspace() -> None
                         "scope_id": "tmp",
                         "title": "Temporary",
                         "default_doc_id": "tmp",
-                        "publishing_mode": "local_external",
+                        "publishing_mode": "local_manage",
                     },
                 )
             except ValueError as exc:
@@ -523,11 +525,11 @@ def test_scope_create_preview_blocks_local_tracked_assets_regression() -> None:
                     "title": "Notes",
                     "scope_root": "site/assets/data/docs/scopes/notes",
                     "default_doc_id": "notes",
-                    "publishing_mode": "local_committed",
+                    "publishing_mode": "local_manage",
                 },
             )
         except ValueError as exc:
-            assert "scope_root must be docs-viewer/scopes/notes" in str(exc)
+            assert "scope_root is derived from scope_id" in str(exc)
         else:
             raise AssertionError("Expected local tracked preview to reject a public-assets scope root")
 
@@ -543,13 +545,13 @@ def test_scope_create_apply_blocks_local_tracked_assets_regression() -> None:
                     "title": "Notes",
                     "scope_root": "site/assets/data/docs/scopes/notes",
                     "default_doc_id": "notes",
-                    "publishing_mode": "local_committed",
+                    "publishing_mode": "local_manage",
                     "confirm": True,
                 },
                 dry_run=True,
             )
         except ValueError as exc:
-            assert "scope_root must be docs-viewer/scopes/notes" in str(exc)
+            assert "scope_root is derived from scope_id" in str(exc)
         else:
             raise AssertionError("Expected local tracked apply to reject a public-assets scope root")
 
@@ -563,7 +565,6 @@ def test_scope_create_apply_requires_confirmation() -> None:
                 {
                     "scope_id": "research",
                     "title": "Research",
-                    "scope_root": "docs-viewer/scopes/research",
                     "default_doc_id": "research",
                     "publishing_mode": "public_readonly",
                     "public_route_path": "/research/",
@@ -591,7 +592,7 @@ def test_scope_create_preview_requires_existing_external_docs_viewer_root() -> N
                         "scope_id": "research",
                         "title": "Research",
                         "default_doc_id": "research",
-                        "publishing_mode": "local_external",
+                        "publishing_mode": "local_manage",
                     },
                 )
             except ValueError as exc:
@@ -634,7 +635,7 @@ def test_scope_create_apply_writes_allowlisted_files_and_runs_rebuild() -> None:
                 {
                     "scope_id": "research",
                     "title": "Research",
-                    "publishing_mode": "local_external",
+                    "publishing_mode": "local_manage",
                 },
             )
             payload = docs_management_service.handle_scope_create_apply(
@@ -642,7 +643,7 @@ def test_scope_create_apply_writes_allowlisted_files_and_runs_rebuild() -> None:
                 {
                     "scope_id": "research",
                     "title": "Research",
-                    "publishing_mode": "local_external",
+                    "publishing_mode": "local_manage",
                     "planned_document_identity": preview["planned_document_identity"],
                     "confirm": True,
                 },
@@ -685,7 +686,7 @@ def test_scope_create_apply_writes_allowlisted_files_and_runs_rebuild() -> None:
     assert "hidden:" not in default_doc_text
     assert route_exists is False
     assert source_payload["scopes"][1]["scope_id"] == "research"
-    assert source_payload["scopes"][1]["scope_type"] == "local_external"
+    assert source_payload["scopes"][1]["scope_type"] == "local"
     assert source_payload["scopes"][1]["viewer_base_url"] == "/docs/"
     assert source_payload["scopes"][1]["scope_root"] == {
         "provider": "external_local",
@@ -730,7 +731,7 @@ def test_scope_rename_preview_blocks_system_scopes() -> None:
     assert payload["ok"] is True
     assert payload["allowed"] is False
     assert payload["move_paths"] == []
-    assert "only user-created external-local scopes" in payload["blockers"][0]
+    assert "only user-created local Manage scopes" in payload["blockers"][0]
 
 def test_scope_rename_preview_blocks_tmp_for_icloud_external_workspace() -> None:
     original_projects_base = os.environ.get("DOTLINEFORM_PROJECTS_BASE_DIR")
@@ -745,7 +746,7 @@ def test_scope_rename_preview_blocks_tmp_for_icloud_external_workspace() -> None
                 / "com~apple~CloudDocs"
                 / "dotlineform"
             )
-            (projects_root / "docs-viewer/media").mkdir(parents=True)
+            (projects_root / "docs-viewer").mkdir(parents=True)
             os.environ["DOTLINEFORM_PROJECTS_BASE_DIR"] = projects_root.as_posix()
             write_docs_scope_config(repo_root)
             docs_management_service.docs_scope_create.apply_create_scope(
@@ -754,7 +755,7 @@ def test_scope_rename_preview_blocks_tmp_for_icloud_external_workspace() -> None
                     "scope_id": "research",
                     "title": "Research",
                     "default_doc_id": "research",
-                    "publishing_mode": "local_external",
+                    "publishing_mode": "local_manage",
                     "confirm": True,
                 },
                 dry_run=False,
@@ -798,7 +799,7 @@ def test_scope_rename_apply_moves_external_roots_and_preserves_links_and_doc_ids
                     "scope_id": "research",
                     "title": "Research",
                     "default_doc_id": "research",
-                    "publishing_mode": "local_external",
+                    "publishing_mode": "local_manage",
                     "confirm": True,
                 },
                 dry_run=False,
@@ -904,14 +905,14 @@ def test_scope_create_apply_writes_public_site_route_config_and_payloads() -> No
 
     def fake_rebuild(repo_root: Path, scope: str, **kwargs):
         calls.append((repo_root, scope, kwargs))
-        docs_output = repo_root / "docs-viewer/scopes" / scope / "generated/documents"
+        docs_output = external_scope_root(scope) / "generated/documents"
         (docs_output / "by-id").mkdir(parents=True)
         (docs_output / "index-tree.json").write_text("{}", encoding="utf-8")
         (docs_output / "recent.json").write_text("{}", encoding="utf-8")
         (docs_output / ".publish").mkdir()
         (docs_output / ".publish/recent.json").write_text("{}", encoding="utf-8")
         (docs_output / f"by-id/{scope}.json").write_text(json.dumps({"doc_id": scope}), encoding="utf-8")
-        search_output = repo_root / "docs-viewer/scopes" / scope / "generated/search"
+        search_output = external_scope_root(scope) / "generated/search"
         search_output.mkdir(parents=True)
         (search_output / "index.json").write_text(json.dumps({"entries": []}), encoding="utf-8")
         return {"ok": True}
@@ -926,7 +927,6 @@ def test_scope_create_apply_writes_public_site_route_config_and_payloads() -> No
                 {
                     "scope_id": "research",
                     "title": "Research",
-                    "scope_root": "docs-viewer/scopes/research",
                     "default_doc_id": "research",
                     "publishing_mode": "public_readonly",
                     "public_route_path": "/research/",
@@ -967,8 +967,8 @@ def test_scope_create_apply_writes_public_site_route_config_and_payloads() -> No
     assert public_routes["routes"][0]["recent_basis"] == "edited"
     assert public_routes["routes"][0]["docs_paths"]["index_tree_url"] == "/assets/data/docs/scopes/research/index-tree.json"
     assert any(route["route_id"] == "research" for route in all_routes["routes"])
-    assert public_doc_exists is True
-    assert public_search_exists is True
+    assert public_doc_exists is False
+    assert public_search_exists is False
     assert public_svg_marker_exists is False
     records = {record["scope_id"]: record for record in manifest_payload["scopes"]}
     assert records["research"]["scope_type"] == "public"
@@ -988,9 +988,8 @@ def test_scope_create_apply_skips_public_route_for_local_scopes() -> None:
                 {
                     "scope_id": "notes",
                     "title": "Notes",
-                    "scope_root": "docs-viewer/scopes/notes",
                     "default_doc_id": "notes",
-                    "publishing_mode": "local_committed",
+                    "publishing_mode": "local_manage",
                     "public_route_path": "/notes/",
                     "confirm": True,
                 },
@@ -999,14 +998,14 @@ def test_scope_create_apply_skips_public_route_for_local_scopes() -> None:
             source_payload = json.loads((repo_root / "docs-viewer/config/scopes/docs_scopes.json").read_text(encoding="utf-8"))
             manifest_payload = json.loads((repo_root / "docs-viewer/config/scopes/docs_scope_manifest.json").read_text(encoding="utf-8"))
             default_doc_id = source_payload["scopes"][1]["default_doc_id"]
-            default_doc_text = (repo_root / f"docs-viewer/scopes/notes/source/documents/{default_doc_id}.md").read_text(encoding="utf-8")
+            default_doc_text = (external_scope_root("notes") / f"source/documents/{default_doc_id}.md").read_text(encoding="utf-8")
             media_directories_exist = all(
-                (repository_source_media_root(repo_root, "notes").parents[1] / role / "media" / media_class).is_dir()
+                (external_scope_root("notes") / role / "media" / media_class).is_dir()
                 for role in ("source", "generated", "published")
                 for media_class in ("files", "img", "svg")
             )
             media_markers_exist = bool(
-                list((repo_root / "docs-viewer/scopes/notes").rglob(".gitkeep"))
+                list(external_scope_root("notes").rglob(".gitkeep"))
             )
             route_exists = (repo_root / "notes/index.md").exists()
     finally:
@@ -1022,16 +1021,19 @@ def test_scope_create_apply_skips_public_route_for_local_scopes() -> None:
     assert "hidden:" not in default_doc_text
     assert source_payload["scopes"][1]["viewer_base_url"] == "/docs/"
     assert source_payload["scopes"][1]["include_scope_param"] is True
-    assert source_payload["scopes"][1]["scope_root"]["path"] == "docs-viewer/scopes/notes"
+    assert source_payload["scopes"][1]["scope_root"]["path"] == f"{EXTERNAL_DATA_ROOT_MARKER}/scopes/notes"
     assert "documents" not in source_payload["scopes"][1]["published"]
     assert "search" not in source_payload["scopes"][1]["published"]
     assert payload["storage_contract"]["public_static_assets"] is False
     records = {record["scope_id"]: record for record in manifest_payload["scopes"]}
     assert records["notes"]["scope_type"] == "local"
-    assert any(file["path"] == "docs-viewer/scopes/notes/generated/documents" for file in records["notes"]["files"])
-    assert any(file["path"] == "docs-viewer/scopes/notes/generated/documents/index-tree.json" for file in records["notes"]["files"])
-    assert any(file["path"] == "docs-viewer/scopes/notes/generated/documents/recent.json" for file in records["notes"]["files"])
-    assert any(file["path"] == "docs-viewer/scopes/notes/generated/search/index.json" for file in records["notes"]["files"])
+    assert any(
+        file["path"] == (external_scope_root("notes") / "generated/documents").as_posix()
+        for file in records["notes"]["files"]
+    )
+    assert any(file["path"] == (external_scope_root("notes") / "generated/documents/index-tree.json").as_posix() for file in records["notes"]["files"])
+    assert any(file["path"] == (external_scope_root("notes") / "generated/documents/recent.json").as_posix() for file in records["notes"]["files"])
+    assert any(file["path"] == (external_scope_root("notes") / "generated/search/index.json").as_posix() for file in records["notes"]["files"])
     assert not any(file["kind"] == "route_file" for file in records["notes"]["files"])
 
 def test_scope_delete_preview_blocks_system_scopes() -> None:
@@ -1110,7 +1112,7 @@ def test_scope_delete_preview_blocks_manage_route_default_scope() -> None:
                         "created_at": "2026-06-13T00:00:00Z",
                         "updated_at": "2026-06-13T00:00:00Z",
                         "files": [],
-                        "metadata": {"publishing_mode": "local_committed"},
+                        "metadata": {"publishing_mode": "local_manage"},
                     }
                 ],
             },
@@ -1154,9 +1156,8 @@ def test_scope_delete_preview_keeps_config_as_changed_file() -> None:
                 {
                     "scope_id": "notes",
                     "title": "Notes",
-                    "scope_root": "docs-viewer/scopes/notes",
                     "default_doc_id": "notes",
-                    "publishing_mode": "local_committed",
+                    "publishing_mode": "local_manage",
                     "confirm": True,
                 },
                 dry_run=False,
@@ -1174,7 +1175,7 @@ def test_scope_delete_preview_keeps_config_as_changed_file() -> None:
     assert payload["allowed"] is True
     assert not any(file["kind"] == "scope_config" for file in payload["delete_files"])
     assert any(file["kind"] == "scope_config" for file in payload["changed_files"])
-    assert any(file["path"] == "docs-viewer/scopes/notes/source" for file in payload["delete_files"])
+    assert any(file["path"] == (external_scope_root("notes") / "source").as_posix() for file in payload["delete_files"])
 
 def test_scope_delete_apply_requires_confirmation() -> None:
     with make_repo() as temp_path:
@@ -1201,12 +1202,12 @@ def test_scope_delete_apply_removes_manifest_scope_and_runs_rebuild() -> None:
 
     def fake_create_rebuild(repo_root: Path, scope: str, **kwargs):
         create_calls.append((repo_root, scope, kwargs))
-        docs_output = repo_root / "docs-viewer/scopes" / scope / "generated/documents"
+        docs_output = external_scope_root(scope) / "generated/documents"
         (docs_output / "by-id").mkdir(parents=True)
         (docs_output / "index-tree.json").write_text("{}", encoding="utf-8")
         (docs_output / "recent.json").write_text("{}", encoding="utf-8")
         (docs_output / "by-id/research.json").write_text("{}", encoding="utf-8")
-        search_output = repo_root / "docs-viewer/scopes" / scope / "generated/search"
+        search_output = external_scope_root(scope) / "generated/search"
         search_output.mkdir(parents=True)
         (search_output / "index.json").write_text("{}", encoding="utf-8")
         return {"ok": True}
@@ -1226,14 +1227,13 @@ def test_scope_delete_apply_removes_manifest_scope_and_runs_rebuild() -> None:
                 {
                     "scope_id": "research",
                     "title": "Research",
-                    "scope_root": "docs-viewer/scopes/research",
                     "default_doc_id": "research",
-                    "publishing_mode": "local_committed",
+                    "publishing_mode": "local_manage",
                     "confirm": True,
                 },
                 dry_run=False,
             )
-            search_index_path = repo_root / "docs-viewer/scopes/research/generated/search/index.json"
+            search_index_path = external_scope_root("research") / "generated/search/index.json"
             search_index_path.unlink()
             payload = docs_management_service.handle_scope_delete_apply(
                 repo_root,
@@ -1245,10 +1245,10 @@ def test_scope_delete_apply_removes_manifest_scope_and_runs_rebuild() -> None:
             )
             source_payload = json.loads((repo_root / "docs-viewer/config/scopes/docs_scopes.json").read_text(encoding="utf-8"))
             manifest_payload = json.loads((repo_root / "docs-viewer/config/scopes/docs_scope_manifest.json").read_text(encoding="utf-8"))
-            source_root_exists = (repo_root / "docs-viewer/scopes/research/source").exists()
+            source_root_exists = (external_scope_root("research") / "source").exists()
             route_exists = (repo_root / "research/index.md").exists()
-            generated_docs_exists = (repo_root / "docs-viewer/scopes/research/generated/documents").exists()
-            generated_search_root_exists = (repo_root / "docs-viewer/scopes/research/generated/search").exists()
+            generated_docs_exists = (external_scope_root("research") / "generated/documents").exists()
+            generated_search_root_exists = (external_scope_root("research") / "generated/search").exists()
     finally:
         docs_management_service.write_rebuild.rebuild_scope_outputs = original_create_rebuild
         docs_management_service.write_rebuild.rebuild_all_docs_outputs = original_delete_rebuild
@@ -1266,15 +1266,15 @@ def test_scope_delete_apply_removes_manifest_scope_and_runs_rebuild() -> None:
     assert route_exists is False
     assert generated_docs_exists is False
     assert generated_search_root_exists is False
-    assert any(file["path"] == "docs-viewer/scopes/research/source" for file in payload["deleted_files"])
+    assert any(file["path"] == (external_scope_root("research") / "source").as_posix() for file in payload["deleted_files"])
     assert any(
         file["kind"] == "generated_search_root"
-        and file["path"] == "docs-viewer/scopes/research/generated/search"
+        and file["path"] == (external_scope_root("research") / "generated/search").as_posix()
         for file in payload["deleted_files"]
     )
     assert any(
         file["kind"] == "generated_search_index"
-        and file["path"] == "docs-viewer/scopes/research/generated/search/index.json"
+        and file["path"] == (external_scope_root("research") / "generated/search/index.json").as_posix()
         for file in payload["missing_files"]
     )
 
@@ -1302,7 +1302,7 @@ def test_scope_delete_apply_removes_external_scope_owned_media_with_published_do
                 {
                     "scope_id": "research",
                     "title": "Research",
-                    "publishing_mode": "local_external",
+                    "publishing_mode": "local_manage",
                     "confirm": True,
                 },
                 dry_run=False,

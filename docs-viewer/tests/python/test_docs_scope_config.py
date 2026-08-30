@@ -68,7 +68,7 @@ def test_collection_completed_with_isolated_projects_base() -> None:
     assert "1 passed" in completed.stdout
 
 
-def test_docs_scope_config_normalizes_optional_media_source_root() -> None:
+def test_docs_scope_config_rejects_retired_media_source_root() -> None:
     with make_repo() as temp_path:
         repo_root = Path(temp_path)
         write_scope_record(
@@ -76,9 +76,8 @@ def test_docs_scope_config_normalizes_optional_media_source_root() -> None:
             docs_scope_record("analysis", media_source_root="analysis"),
         )
 
-        config = docs_scope_config.load_docs_scope_configs(repo_root)["analysis"]
-
-    assert config.media_source_root == "analysis"
+        with pytest.raises(ValueError, match="media_source_root is retired"):
+            docs_scope_config.load_docs_scope_configs(repo_root)
 
 
 def test_docs_scope_config_normalizes_search_fields() -> None:
@@ -126,22 +125,6 @@ def test_docs_scope_config_rejects_invalid_search_fields(fields: list[str], mess
             docs_scope_config.load_docs_scope_configs(repo_root)
 
 
-@pytest.mark.parametrize(
-    "value",
-    [".", " analysis", "analysis/", "/analysis", "analysis/../processing"],
-)
-def test_docs_scope_config_rejects_invalid_media_source_root(value: str) -> None:
-    with make_repo() as temp_path:
-        repo_root = Path(temp_path)
-        write_scope_record(
-            repo_root,
-            docs_scope_record("analysis", media_source_root=value),
-        )
-
-        with pytest.raises(ValueError, match="media_source_root"):
-            docs_scope_config.load_docs_scope_configs(repo_root)
-
-
 def test_docs_scope_config_selected_local_scope_does_not_resolve_external_workspace() -> None:
     with make_repo() as temp_path:
         repo_root = Path(temp_path)
@@ -154,6 +137,7 @@ def test_docs_scope_config_selected_local_scope_does_not_resolve_external_worksp
                     docs_scope_record(
                         "private",
                         scope_type="local_external",
+                        scope_root_provider="external_local",
                         default_doc_id="private",
                     ),
                 ],
@@ -199,6 +183,7 @@ def test_docs_scope_config_public_only_does_not_resolve_external_workspace() -> 
                     docs_scope_record(
                         "private",
                         scope_type="local_external",
+                        scope_root_provider="external_local",
                         default_doc_id="private",
                     ),
                 ],
@@ -583,33 +568,6 @@ def test_checked_scope_config_opts_only_analysis_tags_into_return_import() -> No
     assert analysis_works.lifecycle.report_host_doc_id == (
         "d-20260807-082735-54d9d5"
     )
-    report_host_source = (
-        REPO_ROOT
-        / "docs-viewer/scopes/analysis/source/documents"
-        / "d-20260807-082735-54d9d5.md"
-    ).read_text(encoding="utf-8")
-    assert "viewer_report" not in report_host_source.split("---", 2)[1]
-    assert (
-        ":::report\nid: docs_subscope\naccess: public\nsub_scope: works\n:::"
-        in report_host_source
-    )
-    report_host_payload = json.loads(
-        (
-            REPO_ROOT
-            / "docs-viewer/scopes/analysis/published/documents/by-id"
-            / "d-20260807-082735-54d9d5.json"
-        ).read_text(encoding="utf-8")
-    )
-    assert report_host_payload["report"] == {
-        "id": "docs_subscope",
-        "access": "public",
-        "scope": None,
-        "preset": None,
-        "sub_scope": "works",
-    }
-    assert report_host_payload["content_html"].count(
-        "data-docs-viewer-report-host"
-    ) == 1
     assert analysis_works.public_projection is not None
     assert analysis_works.public_projection.documents.location.path.as_posix() == (
         "site/assets/data/docs/scopes/analysis/works"

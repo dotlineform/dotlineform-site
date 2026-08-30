@@ -34,7 +34,6 @@ from docs_media_storage import (
     publish_docs_media_files,
     validate_media_filename,
 )
-from docs_media_source_evidence import record_media_source_evidence
 from docs_mermaid_media import produce_mermaid_svg
 from docs_scope_config import load_docs_scope_configs
 from docs_staged_media_fragments import (
@@ -44,11 +43,6 @@ from docs_staged_media_fragments import (
 )
 from docs_svg_sanitizer import SanitizedSvg, sanitize_svg_bytes
 from docs_document_packages.workspace import configured_workspace_paths, marker_path, workspace_status
-from studio.shared.python.projects_directories import (
-    list_projects_directory,
-    projects_path_marker,
-    resolve_projects_directory,
-)
 
 
 STAGED_MEDIA_IMAGE = "image"
@@ -182,31 +176,8 @@ def list_staged_media_files(
     configs = load_docs_scope_configs(repo_root, scope_ids=(normalized_scope,))
     if normalized_scope not in configs:
         raise ValueError(f"unknown Docs scope: {normalized_scope}")
-    config = configs[normalized_scope]
     normalized_kind = normalize_media_kind(kind)
-    if config.media_source_root:
-        requested_directory = source_directory or config.media_source_root
-        listing = list_projects_directory(
-            requested_directory,
-            lower_root=config.media_source_root,
-        )
-        current = resolve_projects_directory(
-            listing["current_directory"],
-            lower_root=config.media_source_root,
-        )
-        return {
-            **listing,
-            "available": True,
-            "message": "",
-            "media_kind": normalized_kind,
-            "source_kind": "media_source",
-            "source_root": config.media_source_root,
-            "files": _listed_media_files(
-                current.path,
-                kind=normalized_kind,
-                path_marker=lambda path: projects_path_marker(path, current.projects_base),
-            ),
-        }
+    del source_directory
 
     status = workspace_status(repo_root, required_paths=("import_staging",))
     if not status["available"]:
@@ -274,27 +245,12 @@ def _staged_media_request_contract(repo_root: Path, body: dict[str, Any]) -> Sta
     configs = load_docs_scope_configs(repo_root, scope_ids=(scope,))
     if scope not in configs:
         raise ValueError(f"unknown Docs scope: {scope}")
-    config = configs[scope]
-    if config.media_source_root:
-        source_directory = str(body.get("source_directory") or "")
-        if not source_directory:
-            raise ValueError("source_directory is required for this scope's configured media source")
-        source = resolve_projects_directory(
-            source_directory,
-            lower_root=config.media_source_root,
-        )
-        source_path = _resolve_staged_media(source.path, body.get("staged_filename"), kind)
-        source_kind = "media_source"
-        source_root = config.media_source_root
-        source_directory = source.marker
-        source_path_marker = projects_path_marker(source_path, source.projects_base)
-    else:
-        workspace = configured_workspace_paths(repo_root)
-        source_path = _resolve_staged_media(workspace.import_staging, body.get("staged_filename"), kind)
-        source_kind = "import_staging"
-        source_root = marker_path(workspace.import_staging, workspace_root=workspace.root)
-        source_directory = source_root
-        source_path_marker = marker_path(source_path, workspace_root=workspace.root)
+    workspace = configured_workspace_paths(repo_root)
+    source_path = _resolve_staged_media(workspace.import_staging, body.get("staged_filename"), kind)
+    source_kind = "import_staging"
+    source_root = marker_path(workspace.import_staging, workspace_root=workspace.root)
+    source_directory = source_root
+    source_path_marker = marker_path(source_path, workspace_root=workspace.root)
     fallback = humanize(source_path.stem) or ("Image" if kind == STAGED_MEDIA_IMAGE else "File")
     label = normalize_label_text(body.get("label"), fallback=fallback)
     media_class = (
@@ -582,15 +538,6 @@ def apply_staged_media(repo_root: Path, body: dict[str, Any], *, write: bool = T
             )
             if not prepared.published_adapter.verify_bytes(prepared.published_identity, prepared.published_bytes):
                 raise RuntimeError("Mermaid SVG publication verification failed")
-            if contract.source_kind == "media_source":
-                record_media_source_evidence(
-                    repo_root,
-                    contract.scope,
-                    media_type="svg",
-                    identity=prepared.published_identity,
-                    source_root=contract.source_root,
-                    source_path=contract.source_path_marker,
-                )
         published_status = (
             "unchanged"
             if prepared.published_status == "unchanged"
@@ -653,15 +600,6 @@ def apply_staged_media(repo_root: Path, body: dict[str, Any], *, write: bool = T
         )
     if write and not docs_publish_succeeded(results):
         raise RuntimeError(f"Docs media publication did not complete: {results[0].status}")
-    if write and contract.source_kind == "media_source":
-        record_media_source_evidence(
-            repo_root,
-            contract.scope,
-            media_type=contract.media_class,
-            identity=contract.media_filename,
-            source_root=contract.source_root,
-            source_path=contract.source_path_marker,
-        )
     return {
         **preview,
         "preview_only": not write,

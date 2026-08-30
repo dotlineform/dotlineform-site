@@ -13,7 +13,6 @@ import docs_management_read_service
 import docs_management_routes as routes
 import docs_management_service
 from docs_import_test_support import make_repo, write_staged_bytes, write_staged_text
-from docs_media_source_evidence import media_source_evidence_for
 from docs_media_storage import DocsMediaPublishResult
 from docs_scope_config import load_docs_scope_configs, resolve_location_path
 from repo_factory import docs_scope_record, write_docs_scope_config
@@ -104,115 +103,6 @@ def test_management_routes_expose_staged_media_listing_and_write_free_preview() 
     assert status == HTTPStatus.OK
     assert [item["filename"] for item in listing["files"]] == ["photo.png"]
     assert preview["collision"] == "new"
-
-
-def test_configured_media_source_lists_only_the_selected_lower_root(
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    with make_repo() as temp:
-        root = Path(temp)
-        projects = root / "Projects"
-        (projects / "analysis/diagrams").mkdir(parents=True)
-        (projects / "processing").mkdir()
-        (projects / "analysis/photo.png").write_bytes(b"photo")
-        (projects / "analysis/notes.md").write_text("notes\n", encoding="utf-8")
-        (projects / "analysis/diagrams/flow.svg").write_text(
-            "<svg xmlns='http://www.w3.org/2000/svg'/>",
-            encoding="utf-8",
-        )
-        monkeypatch.setenv("DOTLINEFORM_PROJECTS_BASE_DIR", str(projects))
-        write_docs_scope_config(
-            root,
-            [docs_scope_record("example", media_source_root="analysis")],
-        )
-
-        listing = staged_media.list_staged_media_files(root, "example", "image")
-        nested = staged_media.list_staged_media_files(
-            root,
-            "example",
-            "image",
-            "analysis/diagrams",
-        )
-        with pytest.raises(ValueError, match="configured media source root"):
-            staged_media.list_staged_media_files(
-                root,
-                "example",
-                "image",
-                "processing",
-            )
-
-    assert listing["source_kind"] == "media_source"
-    assert listing["source_root"] == "analysis"
-    assert listing["current_directory"] == "analysis"
-    assert listing["parent_directory"] is None
-    assert [item["filename"] for item in listing["files"]] == ["photo.png"]
-    assert nested["parent_directory"] == "analysis"
-    assert nested["files"][0]["path"] == "analysis/diagrams/flow.svg"
-    assert str(projects) not in repr(listing)
-
-
-def test_add_from_configured_media_source_records_private_evidence_after_publish(
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    with make_repo() as temp:
-        root = Path(temp)
-        projects = root / "Projects"
-        source = projects / "analysis/images/photo.png"
-        source.parent.mkdir(parents=True)
-        source.write_bytes(b"source photo")
-        (projects / "docs-viewer").mkdir(parents=True)
-        monkeypatch.setenv("DOTLINEFORM_PROJECTS_BASE_DIR", str(projects))
-        write_docs_scope_config(
-            root,
-            [docs_scope_record("example", media_source_root="analysis")],
-        )
-        request = {
-            "scope": "example",
-            "media_kind": "image",
-            "source_directory": "analysis/images",
-            "staged_filename": "photo.png",
-            "label": "Photo",
-        }
-
-        preview = staged_media.preview_staged_media(root, request)
-        assert media_source_evidence_for(root, "example", "img", "photo.png") is None
-        payload = staged_media.apply_staged_media(root, request)
-        evidence = media_source_evidence_for(root, "example", "img", "photo.png")
-        published = managed_media_path(root, "example", "img", "photo.png")
-
-        assert source.read_bytes() == b"source photo"
-        assert published.read_bytes() == b"source photo"
-
-    assert preview["source_path"] == "analysis/images/photo.png"
-    assert payload["source_kind"] == "media_source"
-    assert evidence is not None
-    assert evidence.source_root == "analysis"
-    assert evidence.source_path == "analysis/images/photo.png"
-
-
-def test_configured_media_source_requires_the_exact_selected_directory(
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    with make_repo() as temp:
-        root = Path(temp)
-        projects = root / "Projects"
-        (projects / "analysis").mkdir(parents=True)
-        monkeypatch.setenv("DOTLINEFORM_PROJECTS_BASE_DIR", str(projects))
-        write_docs_scope_config(
-            root,
-            [docs_scope_record("example", media_source_root="analysis")],
-        )
-
-        with pytest.raises(ValueError, match="source_directory is required"):
-            staged_media.preview_staged_media(
-                root,
-                {
-                    "scope": "example",
-                    "media_kind": "image",
-                    "staged_filename": "photo.png",
-                    "label": "Photo",
-                },
-            )
 
 
 def test_add_image_publishes_then_returns_markdown_without_creating_a_doc() -> None:
@@ -394,7 +284,14 @@ def test_add_image_uses_external_scope_owned_media_root(monkeypatch: pytest.Monk
         monkeypatch.setenv("DOTLINEFORM_PROJECTS_BASE_DIR", str(projects_root))
         write_docs_scope_config(
             root,
-            [docs_scope_record("notes", scope_type="local_external", default_doc_id="notes")],
+            [
+                docs_scope_record(
+                    "notes",
+                    scope_type="local_external",
+                    scope_root_provider="external_local",
+                    default_doc_id="notes",
+                )
+            ],
         )
         (staging_root / "diagram.png").write_bytes(b"diagram")
 

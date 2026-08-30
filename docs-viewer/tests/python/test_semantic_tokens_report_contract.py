@@ -7,7 +7,6 @@ from pathlib import Path
 
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
-REPORT_DOC_ID = "d-20260726-181045-a7c2e1"
 
 
 def read_json(path: Path) -> dict[str, object]:
@@ -30,19 +29,6 @@ def test_manage_registry_declares_semantic_tokens_report() -> None:
         "loader_id": "semantic_tokens",
         "presets": [],
     }
-
-
-def test_report_document_selects_analysis_and_local_access() -> None:
-    source = (
-        REPO_ROOT
-        / f"docs-viewer/scopes/studio/source/documents/{REPORT_DOC_ID}.md"
-    ).read_text(encoding="utf-8")
-
-    assert "viewer_report" not in source.split("---", 2)[1]
-    assert (
-        ":::report\nid: semantic_tokens\naccess: local\nscope: analysis\n:::"
-        in source
-    )
 
 
 def test_public_registry_does_not_expose_semantic_tokens_report() -> None:

@@ -41,12 +41,11 @@ export {
 };
 
 var DEFAULT_PUBLISHING_MODES = [
-  "local_external",
-  "local_committed"
+  "local_manage",
+  "public_readonly"
 ];
 var PUBLISHING_MODE_ORDER = [
-  "local_external",
-  "local_committed",
+  "local_manage",
   "public_readonly"
 ];
 
@@ -55,11 +54,9 @@ var SCOPE_LIFECYCLE_TEXT = {
   scopeCreateTitle: "New scope",
   scopeIdLabel: "scope id",
   scopeTitleLabel: "title",
-  scopePublishingModeLabel: "scope type",
+  scopePublishingModeLabel: "access",
   scopePublicReadonlyMode: "public",
-  scopeLocalCommittedMode: "local tracked",
-  scopeLocalExternalMode: "external local",
-  scopeRootLabel: "scope root",
+  scopeLocalManageMode: "local Manage",
   scopePublicRoutePathLabel: "public route path",
   scopePreviewButton: "Preview",
   scopeSaveButton: "Save",
@@ -74,13 +71,13 @@ var SCOPE_LIFECYCLE_TEXT = {
   scopeCreateFailed: "New scope failed.",
   scopeCreateResultTitle: "Scope created",
   scopeRenameTitle: "Rename scope",
-  scopeRenameIntro: "Rename a user-created external-local scope.",
+  scopeRenameIntro: "Rename a user-created local Manage scope.",
   scopeRenameTargetLabel: "scope",
   scopeRenameNewIdLabel: "new scope id",
   scopeRenameWarning: "Links containing the old scope id are not rewritten.",
   scopeRenameRequiredMessage: "Select a scope and enter its new id.",
   scopeRenameSameIdMessage: "Enter a different scope id.",
-  scopeRenameNoTargets: "No user-created external-local scopes are eligible for renaming.",
+  scopeRenameNoTargets: "No user-created local Manage scopes are eligible for renaming.",
   scopeRenameSaving: "Renaming scope...",
   scopeRenameFailed: "Rename scope failed.",
   scopeRenameBlocked: "Rename scope is blocked.",
@@ -145,8 +142,7 @@ function publishingModes(capabilities) {
 function modeLabel(mode) {
   var labels = {
     public_readonly: SCOPE_LIFECYCLE_TEXT.scopePublicReadonlyMode,
-    local_committed: SCOPE_LIFECYCLE_TEXT.scopeLocalCommittedMode,
-    local_external: SCOPE_LIFECYCLE_TEXT.scopeLocalExternalMode
+    local_manage: SCOPE_LIFECYCLE_TEXT.scopeLocalManageMode
   };
   return labels[mode] || mode;
 }
@@ -186,10 +182,6 @@ function renderCreateFormHtml(capabilities) {
         '<span class="docsViewer__fieldLabel">' + escapeHtml(SCOPE_LIFECYCLE_TEXT.scopePublishingModeLabel) + '</span>' +
         '<select class="docsViewer__fieldInput" data-role="scope-publishing-mode">' + renderModeOptions(modes) + '</select>' +
       '</label>' +
-      '<label class="docsViewer__field" data-role="scope-root-field">' +
-        '<span class="docsViewer__fieldLabel">' + escapeHtml(SCOPE_LIFECYCLE_TEXT.scopeRootLabel) + '</span>' +
-        '<input class="docsViewer__fieldInput" data-role="scope-root" type="text" autocomplete="off" spellcheck="false" required>' +
-      '</label>' +
       '<label class="docsViewer__field" data-role="scope-route-field">' +
         '<span class="docsViewer__fieldLabel">' + escapeHtml(SCOPE_LIFECYCLE_TEXT.scopePublicRoutePathLabel) + '</span>' +
         '<input class="docsViewer__fieldInput" data-role="scope-public-route-path" type="text" autocomplete="off" spellcheck="false">' +
@@ -203,18 +195,11 @@ function wireCreateForm(api) {
   var scopeInput = host.querySelector('[data-role="scope-id"]');
   var titleInput = host.querySelector('[data-role="scope-title"]');
   var modeInput = host.querySelector('[data-role="scope-publishing-mode"]');
-  var scopeRootField = host.querySelector('[data-role="scope-root-field"]');
-  var scopeRootInput = host.querySelector('[data-role="scope-root"]');
   var routeField = host.querySelector('[data-role="scope-route-field"]');
   var routeInput = host.querySelector('[data-role="scope-public-route-path"]');
 
   function expectedTitle() {
     return slugFromScopeInput(scopeInput && scopeInput.value);
-  }
-
-  function expectedScopeRoot() {
-    var slug = slugFromScopeInput(scopeInput && scopeInput.value);
-    return slug ? "docs-viewer/scopes/" + slug : "";
   }
 
   function expectedRoutePath() {
@@ -227,10 +212,6 @@ function wireCreateForm(api) {
       titleInput.value = expectedTitle();
       titleInput.dataset.auto = "true";
     }
-    if (scopeRootInput && (!scopeRootInput.value || scopeRootInput.dataset.auto === "true")) {
-      scopeRootInput.value = expectedScopeRoot();
-      scopeRootInput.dataset.auto = "true";
-    }
     if (routeInput && (!routeInput.value || routeInput.dataset.auto === "true")) {
       routeInput.value = expectedRoutePath();
       routeInput.dataset.auto = "true";
@@ -238,26 +219,15 @@ function wireCreateForm(api) {
   }
 
   function syncMode() {
-    var mode = normalizeText(modeInput && modeInput.value) || "local_external";
+    var mode = normalizeText(modeInput && modeInput.value) || "local_manage";
     if (routeField) routeField.hidden = mode !== "public_readonly";
     if (routeInput) routeInput.required = mode === "public_readonly";
-    if (scopeRootField) scopeRootField.hidden = mode === "local_external";
-    if (scopeRootInput) {
-      scopeRootInput.readOnly = mode === "local_external";
-      scopeRootInput.required = mode !== "local_external";
-      if (mode === "local_external") {
-        scopeRootInput.value = "";
-      } else if (!scopeRootInput.value || scopeRootInput.dataset.auto === "true") {
-        scopeRootInput.value = expectedScopeRoot();
-        scopeRootInput.dataset.auto = "true";
-      }
-    }
   }
 
   if (scopeInput) {
     scopeInput.addEventListener("input", applyScopeDefaults);
   }
-  [titleInput, scopeRootInput, routeInput].forEach(function (input) {
+  [titleInput, routeInput].forEach(function (input) {
     if (!input) return;
     input.dataset.auto = "true";
     input.addEventListener("input", function () {
@@ -274,11 +244,10 @@ function collectCreatePayload(api) {
   var host = api.host;
   var scopeId = normalizeText(host.querySelector('[data-role="scope-id"]')?.value).toLowerCase();
   var title = normalizeText(host.querySelector('[data-role="scope-title"]')?.value);
-  var publishingMode = normalizeText(host.querySelector('[data-role="scope-publishing-mode"]')?.value) || "local_external";
-  var scopeRoot = normalizeText(host.querySelector('[data-role="scope-root"]')?.value);
+  var publishingMode = normalizeText(host.querySelector('[data-role="scope-publishing-mode"]')?.value) || "local_manage";
   var publicRoutePath = normalizeText(host.querySelector('[data-role="scope-public-route-path"]')?.value);
 
-  if (!scopeId || !title || (publishingMode !== "local_external" && !scopeRoot)) {
+  if (!scopeId || !title) {
     api.setStatus(SCOPE_LIFECYCLE_TEXT.scopeCreateRequiredMessage);
     return null;
   }
@@ -290,7 +259,6 @@ function collectCreatePayload(api) {
   return {
     scope_id: scopeId,
     title: title,
-    scope_root: publishingMode === "local_external" ? "" : scopeRoot,
     publishing_mode: publishingMode,
     public_route_path: publishingMode === "public_readonly" ? publicRoutePath : ""
   };
@@ -496,10 +464,10 @@ function lifecycleFileRows(payload, records) {
 function lifecycleTypeLabel(payload, root) {
   var publishingMode = normalizeText(payload && payload.publishing_mode);
   if (publishingMode) return modeLabel(publishingMode);
-  if (root) return SCOPE_LIFECYCLE_TEXT.scopeLocalExternalMode;
+  if (root) return SCOPE_LIFECYCLE_TEXT.scopeLocalManageMode;
   var scopeType = normalizeText(payload && payload.scope_type);
   if (scopeType === "public") return SCOPE_LIFECYCLE_TEXT.scopePublicReadonlyMode;
-  if (scopeType === "local") return SCOPE_LIFECYCLE_TEXT.scopeLocalCommittedMode;
+  if (scopeType === "local") return SCOPE_LIFECYCLE_TEXT.scopeLocalManageMode;
   return scopeType;
 }
 
@@ -530,16 +498,16 @@ function lifecycleStorageRows(payload, root) {
   var publishOutput = normalizeText(contract.publish_output);
   var searchOutput = normalizeText(contract.search_output);
   var publishSearchOutput = normalizeText(contract.publish_search_output);
+  var deployOutput = normalizeText(contract.deploy_output);
+  var deploySearchOutput = normalizeText(contract.deploy_search_output);
   return [
     ["source", lifecycleRelativePath(contract.source_root || (sourceRecord && sourceRecord.path), root)],
-    ["published", lifecycleRelativePath(docsOutput || (publishedRecord && publishedRecord.path), root)],
-    ["search", lifecycleRelativePath(searchOutput || (publishedSearchRecord && publishedSearchRecord.path), root)],
-    ["public", publishOutput && publishOutput !== docsOutput
-      ? lifecycleRelativePath(publishOutput, root)
-      : lifecycleRelativePath(publicRecord && publicRecord.path, root)],
-    ["public search", publishSearchOutput && publishSearchOutput !== searchOutput
-      ? lifecycleRelativePath(publishSearchOutput, root)
-      : lifecycleRelativePath(publicSearchRecord && publicSearchRecord.path, root)]
+    ["generated documents", lifecycleRelativePath(docsOutput, root)],
+    ["generated search", lifecycleRelativePath(searchOutput, root)],
+    ["published documents", lifecycleRelativePath(publishOutput || (publishedRecord && publishedRecord.path), root)],
+    ["published search", lifecycleRelativePath(publishSearchOutput || (publishedSearchRecord && publishedSearchRecord.path), root)],
+    ["deployment documents", lifecycleRelativePath(deployOutput || (publicRecord && publicRecord.path), root)],
+    ["deployment search", lifecycleRelativePath(deploySearchOutput || (publicSearchRecord && publicSearchRecord.path), root)]
   ];
 }
 

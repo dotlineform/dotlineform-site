@@ -178,7 +178,13 @@ def test_markdown_import_create_returns_external_workspace_relative_path(tmp_pat
         root = Path(temp)
         write_docs_scope_config(
             root,
-            [docs_scope_record("notes", scope_type="local_external")],
+            [
+                docs_scope_record(
+                    "notes",
+                    scope_type="local_external",
+                    scope_root_provider="external_local",
+                )
+            ],
         )
         external_documents = tmp_path / "projects-base/docs-viewer/scopes/notes/source/documents"
         external_documents.mkdir(parents=True)

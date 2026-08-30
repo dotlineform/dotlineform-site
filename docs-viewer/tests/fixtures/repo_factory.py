@@ -74,6 +74,7 @@ def docs_scope_record(
     *,
     scope_type: str = "local",
     scope_root_path: str | None = None,
+    scope_root_provider: str = "repository",
     viewer_base_url: str = "/docs/",
     include_scope_param: bool = True,
     default_doc_id: str = "",
@@ -90,8 +91,9 @@ def docs_scope_record(
     media_source_root: str | None = None,
     meta: str = "",
 ) -> dict[str, object]:
-    external = scope_type == "local_external"
-    local_provider = "external_local" if external else "repository"
+    if scope_root_provider not in {"repository", "external_local"}:
+        raise ValueError("scope_root_provider must be repository or external_local")
+    external = scope_root_provider == "external_local"
     scope_root = scope_root_path or (
         f"$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/{scope_id}"
         if external
@@ -151,7 +153,7 @@ def docs_scope_record(
         "scope_id": scope_id,
         "scope_type": scope_type,
         "meta": meta or scope_type.replace("_", " "),
-        "scope_root": {"provider": local_provider, "path": scope_root},
+        "scope_root": {"provider": scope_root_provider, "path": scope_root},
         "source": {},
         "generated": {},
         "media": {

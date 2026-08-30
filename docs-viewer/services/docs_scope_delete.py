@@ -130,12 +130,13 @@ def apply_delete_scope(
         raise ValueError("; ".join(str(blocker) for blocker in blockers) or "scope delete is not allowed")
 
     scope_id = str(preview["scope_id"])
+    public_projection_configured = preview.get("public_projection_configured") is True
     public_cleanup_plan = (
         public_delete_cleanup.plan_public_scope_delete_cleanup(
             repo_root,
             scope=scope_id,
         )
-        if str(preview.get("scope_type") or "").strip() == "public"
+        if public_projection_configured
         else None
     )
     fallback_scope_id = next(
@@ -148,7 +149,7 @@ def apply_delete_scope(
     if not dry_run:
         delete_manifest_paths(repo_root, preview["delete_files"])
         remove_scope_config(repo_root, scope_id)
-        if str(preview.get("scope_type") or "").strip() == "public":
+        if public_projection_configured:
             remove_public_route_record(repo_root, scope_id)
         remove_scope_manifest_record(repo_root, scope_id, manifest)
         rebuild = rebuild_all_docs_outputs(repo_root)
@@ -264,16 +265,18 @@ def plan_delete_scope_preview(repo_root: Path, body: dict[str, Any]) -> dict[str
         }
 
     delete_files, missing_files = manifest_delete_path_records(repo_root, record)
+    config = load_docs_scope_configs(repo_root).get(scope_id)
+    public_projection_configured = bool(config and config.public_projection is not None)
 
     changed_files = [
         path_record(repo_root, "scope_config", repo_root / CONFIG_REL_PATH, action="change"),
         path_record(repo_root, "scope_manifest", repo_root / MANIFEST_REL_PATH, action="change"),
     ]
-    if str(record.get("scope_type") or "").strip() == "public":
+    if public_projection_configured:
         changed_files.extend(route_registry_path_records(repo_root, action="change"))
 
     public_cleanup = None
-    if str(record.get("scope_type") or "").strip() == "public":
+    if public_projection_configured:
         public_cleanup = public_delete_cleanup.plan_public_scope_delete_cleanup(
             repo_root,
             scope=scope_id,
@@ -290,6 +293,7 @@ def plan_delete_scope_preview(repo_root: Path, body: dict[str, Any]) -> dict[str
         "delete_files": delete_files,
         "missing_files": missing_files,
         "scope_type": str(record.get("scope_type") or "").strip(),
+        "public_projection_configured": public_projection_configured,
         "changed_files": changed_files,
         "build_commands": apply_delete_build_commands(repo_root, scope_id, dry_run=True),
         "public_cleanup": public_cleanup,

@@ -70,13 +70,7 @@ sub_scope: tags
     config_path.write_text(
         json.dumps(
             {
-                "schema_version": "docs_scopes_v4",
-                "media_workspace": {
-                    "location": {
-                        "provider": "external_local",
-                        "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/media",
-                    }
-                },
+                "schema_version": "docs_scopes_v5",
                 "scopes": [
                     {
                         "scope_id": "analysis",
@@ -87,6 +81,7 @@ sub_scope: tags
                             "path": "docs-viewer/scopes/analysis",
                         },
                         "source": {},
+                        "generated": {},
                         "media": {
                             "types": {
                                 "img": {"build_inputs": []},

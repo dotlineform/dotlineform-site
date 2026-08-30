@@ -3,7 +3,6 @@
 
 from __future__ import annotations
 
-import shutil
 from pathlib import Path
 from typing import Any, Callable
 
@@ -35,7 +34,6 @@ from docs_document_identity import (
 from docs_scope_manifest import (
     LIFECYCLE_APPLY_SCHEMA_VERSION,
     LIFECYCLE_PREVIEW_SCHEMA_VERSION,
-    LOCAL_EXTERNAL_MODE,
     MANIFEST_REL_PATH,
     PUBLIC_MODE,
     append_scope_config,
@@ -50,13 +48,10 @@ from docs_scope_manifest import (
     manifest_scopes_by_id,
     normalize_publishing_mode,
     normalize_scope_id,
-    normalize_scope_root,
     normalize_title,
     planned_external_scope_root,
     planned_scope_config_record,
     planned_storage_contract,
-    public_projection_docs_output_path,
-    public_projection_search_index_path,
     require_confirmed,
     validate_planned_storage_paths,
 )
@@ -71,19 +66,6 @@ def apply_build_commands(preview: dict[str, Any], *, dry_run: bool) -> list[dict
         for command in preview.get("build_commands", [])
         if isinstance(command, dict)
     ]
-
-
-def sync_public_publish_outputs(repo_root: Path, config: dict[str, Any], *, include_search: bool) -> None:
-    docs_source = local_generated_docs_output_path(repo_root, config)
-    docs_target = public_projection_docs_output_path(repo_root, config)
-    if docs_source.exists():
-        shutil.copytree(docs_source, docs_target, dirs_exist_ok=True)
-    if include_search:
-        search_source = local_generated_search_index_path(repo_root, config)
-        search_target = public_projection_search_index_path(repo_root, config)
-        if search_source.exists():
-            search_target.parent.mkdir(parents=True, exist_ok=True)
-            shutil.copy2(search_source, search_target)
 
 
 def apply_create_scope(
@@ -145,12 +127,6 @@ def apply_create_scope(
             scope_id,
             include_search=True,
         )
-        if preview["publishing_mode"] == PUBLIC_MODE:
-            sync_public_publish_outputs(
-                repo_root,
-                preview["planned_scope_config"],
-                include_search=True,
-            )
 
     return {
         "ok": True,
@@ -180,6 +156,8 @@ def apply_create_scope(
 
 
 def plan_create_scope_preview(repo_root: Path, body: dict[str, Any]) -> dict[str, Any]:
+    if "scope_root" in body:
+        raise ValueError("scope_root is derived from scope_id and cannot be supplied")
     scope_id = normalize_scope_id(body.get("scope_id"))
     title = normalize_title(body.get("title"))
     publishing_mode = normalize_publishing_mode(body.get("publishing_mode"))
@@ -196,20 +174,11 @@ def plan_create_scope_preview(repo_root: Path, body: dict[str, Any]) -> dict[str
             raise ValueError("planned_document_identity.doc_id must be an immutable document ID")
         if not doc_id_matches_added_date(default_doc_id, added_date):
             raise ValueError("planned_document_identity added_date must match its document ID timestamp")
-    external_data_root = (
-        resolve_external_data_root()
-        if publishing_mode == LOCAL_EXTERNAL_MODE
-        else None
-    )
-    if external_data_root is not None:
-        sync_blocker = external_scope_id_sync_blocker(scope_id, external_data_root)
-        if sync_blocker:
-            raise ValueError(sync_blocker)
-    scope_root = (
-        planned_external_scope_root(scope_id, external_data_root)
-        if external_data_root is not None
-        else normalize_scope_root(body.get("scope_root"), scope_id)
-    )
+    external_data_root = resolve_external_data_root()
+    sync_blocker = external_scope_id_sync_blocker(scope_id, external_data_root)
+    if sync_blocker:
+        raise ValueError(sync_blocker)
+    scope_root = planned_external_scope_root(scope_id, external_data_root)
     public_route_path = normalize_route_path(body.get("public_route_path")) if publishing_mode == PUBLIC_MODE else ""
     planned_scope_config = planned_scope_config_record(
         scope_id,
@@ -300,24 +269,6 @@ def plan_create_scope_preview(repo_root: Path, body: dict[str, Any]) -> dict[str
     )
 
     publish_files: list[dict[str, Any]] = []
-    if publishing_mode == PUBLIC_MODE:
-        public_output = public_projection_docs_output_path(repo_root, planned_scope_config)
-        publish_files.append(path_record(repo_root, "public_docs_root", public_output, action="publish"))
-        publish_files.extend(
-            [
-                path_record(repo_root, "public_docs_index_tree", public_output / "index-tree.json", action="publish"),
-                path_record(repo_root, "public_docs_recent", public_output / "recent.json", action="publish"),
-                path_record(repo_root, "public_docs_payload_root", public_output / "by-id", action="publish"),
-            ]
-        )
-        publish_files.append(
-            path_record(
-                repo_root,
-                "public_search_index",
-                public_projection_search_index_path(repo_root, planned_scope_config),
-                action="publish",
-            )
-        )
 
     conflicts = [
         record["path"]
@@ -342,8 +293,6 @@ def plan_create_scope_preview(repo_root: Path, body: dict[str, Any]) -> dict[str
         "publishing_mode": publishing_mode,
         "external_data_root": (
             EXTERNAL_DATA_ROOT_MARKER
-            if publishing_mode == LOCAL_EXTERNAL_MODE
-            else ""
         ),
         "planned_document_identity": {
             "doc_id": default_doc_id,
@@ -356,8 +305,6 @@ def plan_create_scope_preview(repo_root: Path, body: dict[str, Any]) -> dict[str
                 "planned_scope_config": planned_scope_config,
                 "external_data_root": (
                     EXTERNAL_DATA_ROOT_MARKER
-                    if publishing_mode == LOCAL_EXTERNAL_MODE
-                    else ""
                 ),
             }
         ),

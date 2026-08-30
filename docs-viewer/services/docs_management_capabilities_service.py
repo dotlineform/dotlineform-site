@@ -14,23 +14,21 @@ import docs_document_transfer
 from docs_scope_publish import PUBLISH_MANIFEST_FILENAME
 from docs_scope_config import (
     DOCS_SCOPE_CONFIGS,
-    LOCAL_EXTERNAL_SCOPE_TYPE,
     document_source_path,
     is_public_readonly_scope,
     path_label,
-    publication_documents_path,
-    publication_search_path,
     generated_documents_path,
     generated_search_path,
+    published_documents_path,
+    published_search_path,
     resolve_scope_path,
 )
 from docs_document_packages.workspace import workspace_status
 
 
 def capability_scope_root_label(repo_root: Path, scope: str, config: Any) -> str:
-    if config.scope_type == LOCAL_EXTERNAL_SCOPE_TYPE:
-        return (Path("scopes") / scope).as_posix()
-    return path_label(repo_root, config.scope_root.path)
+    del repo_root, config
+    return (Path("docs-viewer/scopes") / scope).as_posix()
 
 
 def capabilities_payload(repo_root: Path) -> Dict[str, Any]:
@@ -52,7 +50,7 @@ def capabilities_payload(repo_root: Path) -> Dict[str, Any]:
         root = resolve_scope_path(repo_root, document_source_path(config))
         manifest_record = manifest_scopes.get(scope)
         generated_data_path = resolve_scope_path(repo_root, generated_documents_path(config)) / "index-tree.json"
-        published_root = resolve_scope_path(repo_root, publication_documents_path(config)).parent
+        published_root = resolve_scope_path(repo_root, published_documents_path(config)).parent
         published_manifest_path = published_root / PUBLISH_MANIFEST_FILENAME
         published_available = published_manifest_path.is_file() and not published_manifest_path.is_symlink()
         publishable = is_public_readonly_scope(
@@ -100,7 +98,7 @@ def capabilities_payload(repo_root: Path) -> Dict[str, Any]:
                         "title": sub_scope.title,
                         "source": path_label(repo_root, document_source_path(sub_scope)),
                         "output": path_label(repo_root, generated_documents_path(sub_scope)),
-                        "publish_output": path_label(repo_root, publication_documents_path(sub_scope)),
+                        "publish_output": path_label(repo_root, published_documents_path(sub_scope)),
                     }
                     for sub_scope in config.sub_scopes
                     if sub_scope.lifecycle is not None
@@ -113,11 +111,11 @@ def capabilities_payload(repo_root: Path) -> Dict[str, Any]:
                 "published_available": published_available,
                 "published_docs_root": path_label(
                     repo_root,
-                    publication_documents_path(config),
+                    published_documents_path(config),
                 ),
                 "published_search_index": path_label(
                     repo_root,
-                    publication_search_path(config),
+                    published_search_path(config),
                 ),
             },
             "static_html_export": docs_static_html_export.scope_static_html_export_capability(

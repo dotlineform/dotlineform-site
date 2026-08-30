@@ -65,7 +65,12 @@ def write_scope_config(root: Path) -> None:
                     include_scope_param=False,
                     default_doc_id="example",
                 ),
-                docs_scope_record("external", scope_type="local_external", default_doc_id="external"),
+                docs_scope_record(
+                    "external",
+                    scope_type="local_external",
+                    scope_root_provider="external_local",
+                    default_doc_id="external",
+                ),
             ],
         },
     )

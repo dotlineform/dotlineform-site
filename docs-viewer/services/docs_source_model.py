@@ -9,11 +9,9 @@ import hashlib
 import os
 import re
 import tempfile
-from dataclasses import dataclass, replace
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Dict, Mapping, Optional
-
-from docs_artifact_locations import ArtifactLocation, REPOSITORY_PROVIDER
 
 from docs_document_identity import (
     DOC_TIMESTAMP_FORMAT,
@@ -646,18 +644,6 @@ def _scope_configs_for_repo(repo_root: Path, scope: str) -> Mapping[str, Any]:
     if (repo_root / "docs-viewer/config/scopes/docs_scopes.json").is_file():
         return load_docs_scope_configs(repo_root, scope_ids=(scope,))
     config = DOCS_SCOPE_CONFIGS.get(scope)
-    fallback_source = Path("docs-viewer/scopes") / scope / "source"
-    if (
-        isinstance(config, DocsScopeConfig)
-        and (repo_root / fallback_source).is_dir()
-    ):
-        config = replace(
-            config,
-            source=replace(
-                config.source,
-                location=ArtifactLocation(REPOSITORY_PROVIDER, fallback_source),
-            ),
-        )
     return {scope: config} if config is not None else {}
 
 

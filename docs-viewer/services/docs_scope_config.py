@@ -46,12 +46,6 @@ from studio.shared.python.external_workspace_paths import (  # noqa: E402
     resolve_external_workspace_root,
     resolve_workspace_path,
 )
-from studio.shared.python.projects_directories import (  # noqa: E402
-    PROJECTS_ROOT_MARKER,
-    normalize_projects_directory_marker,
-)
-
-
 CONFIG_REL_PATH = Path("docs-viewer/config/scopes/docs_scopes.json")
 SCHEMA_VERSION = "docs_scopes_v5"
 DOCS_VIEWER_MANAGE_ROUTE_BASE_URL = "/docs/"
@@ -194,7 +188,6 @@ class DocsScopeConfig:
     allow_unresolved_parent_ids: bool
     sub_scopes: tuple["DocsSubScopeConfig", ...]
     search_fields: tuple[str, ...] = DEFAULT_DOCS_SEARCH_FIELDS
-    media_source_root: str = ""
 
 
 @dataclass(frozen=True)
@@ -331,22 +324,6 @@ def normalize_viewer_base_url(value: Any) -> str:
     if not text.startswith("/"):
         text = f"/{text}"
     return text if text.endswith("/") else f"{text}/"
-
-
-def normalize_media_source_root(value: Any, *, field: str) -> str:
-    if value is None:
-        return ""
-    if not isinstance(value, str):
-        raise ValueError(f"docs scope config field {field} must be a string")
-    try:
-        marker = normalize_projects_directory_marker(value)
-    except ValueError as exc:
-        raise ValueError(f"docs scope config field {field} is invalid: {exc}") from exc
-    if marker == PROJECTS_ROOT_MARKER:
-        raise ValueError(
-            f"docs scope config field {field} must identify a directory below Projects"
-        )
-    return marker
 
 
 def normalize_sub_scope_id(value: Any, *, field: str) -> str:
@@ -1135,6 +1112,11 @@ def load_docs_scope_configs(
         if requested_scope_ids is not None and scope_id not in requested_scope_ids:
             continue
         field = f"scopes[{index}]"
+        if "media_source_root" in item:
+            raise ValueError(
+                f"docs scope config {field}.media_source_root is retired; "
+                "stage media through the shared import workspace"
+            )
         scope_type = str(item.get("scope_type") or "").strip().lower()
         if public_only and item.get("public_projection") is None:
             continue
@@ -1203,10 +1185,6 @@ def load_docs_scope_configs(
             allow_unresolved_parent_ids=item.get("allow_unresolved_parent_ids") is True,
             sub_scopes=(),
             search_fields=search_fields,
-            media_source_root=normalize_media_source_root(
-                item.get("media_source_root"),
-                field=f"{field}.media_source_root",
-            ),
         )
         validate_scope_policy(preliminary, field=field)
         config = replace(
@@ -1367,7 +1345,6 @@ __all__ = [
     "is_public_readonly_scope",
     "load_docs_scope_configs",
     "location_child_path",
-    "normalize_media_source_root",
     "normalize_viewer_base_url",
     "normalize_sub_scope_id",
     "path_is_relative_to",

@@ -68,6 +68,7 @@ def prepare_repo(
     repo_root: Path,
     *,
     scope_type: str = "local",
+    scope_root_provider: str = "repository",
     projects_base: Path | None = None,
 ) -> Path:
     write_site_tools_config(repo_root)
@@ -77,6 +78,7 @@ def prepare_repo(
             docs_scope_record(
                 "analysis",
                 scope_type=scope_type,
+                scope_root_provider=scope_root_provider,
                 sub_scopes=[
                     docs_sub_scope_record(
                         "analysis",
@@ -88,9 +90,9 @@ def prepare_repo(
             )
         ],
     )
-    if scope_type == "local_external":
+    if scope_root_provider == "external_local":
         if projects_base is None:
-            raise AssertionError("projects_base is required for an external-local fixture")
+            raise AssertionError("projects_base is required for an external fixture")
         scope_root = projects_base / "docs-viewer/scopes/analysis"
     else:
         scope_root = repo_root / "docs-viewer/scopes/analysis"
@@ -474,6 +476,7 @@ def test_external_local_target_uses_configured_workspace(
     scope_root = prepare_repo(
         repo_root,
         scope_type="local_external",
+        scope_root_provider="external_local",
         projects_base=projects_base,
     )
 

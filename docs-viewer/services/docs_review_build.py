@@ -17,7 +17,7 @@ from docs_builder.pipeline import DocsDataBuilder  # noqa: E402
 from docs_builder.source import DocRecord  # noqa: E402
 from docs_artifact_locations import ArtifactLocation, EXTERNAL_LOCAL_PROVIDER  # noqa: E402
 from docs_scope_config import (  # noqa: E402
-    LOCAL_EXTERNAL_SCOPE_TYPE,
+    LOCAL_SCOPE_TYPE,
     DocsGeneratedConfig,
     DocsMediaConfig,
     DocsPublishedArtifactConfig,
@@ -106,7 +106,7 @@ def synthetic_review_config(
 ) -> DocsScopeConfig:
     return DocsScopeConfig(
         scope_id=package_id,
-        scope_type=LOCAL_EXTERNAL_SCOPE_TYPE,
+        scope_type=LOCAL_SCOPE_TYPE,
         scope_root=ArtifactLocation(provider=EXTERNAL_LOCAL_PROVIDER, path=source_dir.parent),
         source=DocsSourceConfig(
             location=ArtifactLocation(provider=EXTERNAL_LOCAL_PROVIDER, path=source_dir),

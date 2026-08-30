@@ -33,7 +33,7 @@ def test_records_sorted_scope_owned_evidence_without_a_public_projection(
         root = Path(temp)
         write_docs_scope_config(
             root,
-            [docs_scope_record("analysis", media_source_root="analysis")],
+            [docs_scope_record("analysis")],
         )
 
         record_media_source_evidence(
@@ -89,7 +89,7 @@ def test_same_media_identity_is_replaced_by_the_latest_explicit_source() -> None
         root = Path(temp)
         write_docs_scope_config(
             root,
-            [docs_scope_record("analysis", media_source_root="analysis")],
+            [docs_scope_record("analysis")],
         )
         record_media_source_evidence(
             root,
@@ -129,7 +129,7 @@ def test_external_scope_keeps_evidence_in_its_external_source_root(
             docs_scope_record(
                 "dotlineform",
                 scope_type="local_external",
-                media_source_root="analysis",
+                scope_root_provider="external_local",
             )
         ],
     )
@@ -167,7 +167,7 @@ def test_rejects_noncanonical_or_out_of_root_source_evidence(
         root = Path(temp)
         write_docs_scope_config(
             root,
-            [docs_scope_record("analysis", media_source_root="analysis")],
+            [docs_scope_record("analysis")],
         )
 
         with pytest.raises(ValueError):

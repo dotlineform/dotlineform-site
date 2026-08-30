@@ -75,7 +75,7 @@ def load_projection_planning_context(
     config = configs.get(normalized_scope)
     if config is None:
         raise ValueError(f"unsupported docs scope: {normalized_scope}")
-    if config.scope_type != "public" or not is_public_readonly_scope(
+    if config.public_projection is None or not is_public_readonly_scope(
         viewer_base_url=config.viewer_base_url,
         include_scope_param=config.include_scope_param,
     ):

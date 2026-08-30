@@ -1,7 +1,7 @@
 {
   "schema_version": "docs_scope_manifest_v1",
   "tool_id": "docs-viewer-scope-lifecycle",
-  "updated_at": "2026-08-30T18:27:20Z",
+  "updated_at": "2026-08-30T19:58:31Z",
   "scopes": [
     {
       "scope_id": "analysis",
@@ -12,7 +12,7 @@
       "tool_id": "",
       "repo_status_at_creation": "tracked",
       "created_at": "",
-      "updated_at": "2026-08-30T18:27:20Z",
+      "updated_at": "2026-08-30T19:58:31Z",
       "files": [
         {
           "kind": "scope_root",
@@ -117,7 +117,7 @@
           "path": "/Users/dlf/Library/Mobile Documents/com~apple~CloudDocs/dotlineform/docs-viewer/scopes/analysis/published/search/index.json",
           "location": "external",
           "action": "track",
-          "exists": false
+          "exists": true
         },
         {
           "kind": "public_docs_root",
@@ -159,7 +159,8 @@
         "backfilled": true,
         "viewer_base_url": "/analysis/",
         "default_doc_id": "d-20260426-164043-e14f49",
-        "external_data_root": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer"
+        "external_data_root": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer",
+        "publishing_mode": "public_readonly"
       }
     },
     {
@@ -171,7 +172,7 @@
       "tool_id": "docs-viewer-scope-lifecycle",
       "repo_status_at_creation": "external",
       "created_at": "2026-08-29T19:50:32Z",
-      "updated_at": "2026-08-30T18:27:20Z",
+      "updated_at": "2026-08-30T19:58:31Z",
       "files": [
         {
           "kind": "scope_root",
@@ -276,7 +277,7 @@
         "backfilled": false,
         "viewer_base_url": "/docs/",
         "default_doc_id": "d-20260829-205140-9386fc",
-        "publishing_mode": "local_external",
+        "publishing_mode": "local_manage",
         "external_data_root": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer"
       }
     },
@@ -289,7 +290,7 @@
       "tool_id": "docs-viewer-scope-lifecycle",
       "repo_status_at_creation": "external",
       "created_at": "2026-07-31T13:47:51Z",
-      "updated_at": "2026-08-30T18:27:20Z",
+      "updated_at": "2026-08-30T19:58:31Z",
       "files": [
         {
           "kind": "scope_root",
@@ -394,7 +395,7 @@
         "backfilled": false,
         "viewer_base_url": "/docs/",
         "default_doc_id": "d-20260801-073826-8865a8",
-        "publishing_mode": "local_external",
+        "publishing_mode": "local_manage",
         "external_data_root": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer"
       }
     },
@@ -407,7 +408,7 @@
       "tool_id": "docs-viewer-scope-lifecycle",
       "repo_status_at_creation": "external",
       "created_at": "2026-07-13T21:21:25Z",
-      "updated_at": "2026-08-30T18:27:20Z",
+      "updated_at": "2026-08-30T19:58:31Z",
       "files": [
         {
           "kind": "scope_root",
@@ -512,7 +513,7 @@
         "backfilled": false,
         "viewer_base_url": "/docs/",
         "default_doc_id": "d-20260526-000000-04ce37",
-        "publishing_mode": "local_external",
+        "publishing_mode": "local_manage",
         "external_data_root": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer"
       }
     },
@@ -525,7 +526,7 @@
       "tool_id": "docs-viewer-scope-lifecycle",
       "repo_status_at_creation": "tracked",
       "created_at": "2026-07-14T08:09:45Z",
-      "updated_at": "2026-08-30T18:27:20Z",
+      "updated_at": "2026-08-30T19:58:31Z",
       "files": [
         {
           "kind": "scope_root",
@@ -623,14 +624,14 @@
           "path": "/Users/dlf/Library/Mobile Documents/com~apple~CloudDocs/dotlineform/docs-viewer/scopes/processing/published/search/index.json",
           "location": "external",
           "action": "track",
-          "exists": false
+          "exists": true
         }
       ],
       "metadata": {
         "backfilled": false,
         "viewer_base_url": "/docs/",
         "default_doc_id": "d-20260714-092047-06a5db",
-        "publishing_mode": "local_committed",
+        "publishing_mode": "local_manage",
         "external_data_root": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer"
       }
     },
@@ -643,7 +644,7 @@
       "tool_id": "",
       "repo_status_at_creation": "tracked",
       "created_at": "",
-      "updated_at": "2026-08-30T18:27:20Z",
+      "updated_at": "2026-08-30T19:58:31Z",
       "files": [
         {
           "kind": "scope_root",
@@ -741,14 +742,15 @@
           "path": "/Users/dlf/Library/Mobile Documents/com~apple~CloudDocs/dotlineform/docs-viewer/scopes/studio/published/search/index.json",
           "location": "external",
           "action": "track",
-          "exists": false
+          "exists": true
         }
       ],
       "metadata": {
         "backfilled": true,
         "viewer_base_url": "/docs/",
         "default_doc_id": "d-20260428-000000-f5ff18",
-        "external_data_root": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer"
+        "external_data_root": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer",
+        "publishing_mode": "local_manage"
       }
     }
   ]

@@ -38,7 +38,7 @@ def normalize_route_path(value: Any) -> str:
 
 def route_file_for_config(repo_root: Path, config: DocsScopeConfig) -> Path:
     route_base = config.viewer_base_url.strip("/")
-    if config.scope_type == "public" or (not config.include_scope_param and route_base and config.viewer_base_url != "/docs/"):
+    if not config.include_scope_param and route_base and config.viewer_base_url != "/docs/":
         return repo_root / "site" / route_base / "index.html"
     route_rel = Path(route_base) / "index.md" if route_base else Path("index.md")
     return repo_root / route_rel

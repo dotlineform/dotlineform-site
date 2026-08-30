@@ -95,9 +95,9 @@
         }
       },
       "docs_paths": {
-        "index_tree_url": "/docs-viewer/scopes/studio/published/documents/index-tree.json",
-        "recent_url": "/docs-viewer/scopes/studio/published/documents/recent.json",
-        "search_index_url": "/docs-viewer/scopes/studio/published/search/index.json"
+        "index_tree_url": "/docs/index-tree?scope=studio",
+        "recent_url": "/docs/recent?scope=studio",
+        "search_index_url": "/docs/search?scope=studio"
       },
       "config_urls": {
         "docs_viewer": "/docs-viewer/config/defaults/docs-viewer-config.json",
