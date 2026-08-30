@@ -10,6 +10,8 @@ from .common import (
     DOCS_VIEWER_BROWSER_CONFIG_SCHEMA_VERSION,
     DocsScopeConfig,
     browser_path_for_repo_relative,
+    generated_documents_path,
+    generated_search_path,
     is_public_readonly_scope,
     json_text,
     normalize_viewer_base_url,
@@ -37,17 +39,17 @@ def raw_scope_items(repo_root: Path) -> dict[str, dict[str, Any]]:
 
 
 def browser_docs_index_tree_url(config: DocsScopeConfig, *, published: bool = False) -> str:
-    if scope_uses_external_data(config):
+    if not published and scope_uses_external_data(config):
         return f"/docs/index-tree?scope={quote(config.scope_id)}"
-    output = public_documents_path(config) if published else published_documents_path(config)
+    output = public_documents_path(config) if published else generated_documents_path(config)
     output = output or published_documents_path(config)
     return f"{browser_path_for_repo_relative(output)}/index-tree.json"
 
 
 def browser_docs_recent_url(config: DocsScopeConfig, *, published: bool = False) -> str:
-    if scope_uses_external_data(config):
+    if not published and scope_uses_external_data(config):
         return f"/docs/recent?scope={quote(config.scope_id)}"
-    output = public_documents_path(config) if published else published_documents_path(config)
+    output = public_documents_path(config) if published else generated_documents_path(config)
     output = output or published_documents_path(config)
     return f"{browser_path_for_repo_relative(output)}/recent.json"
 
@@ -59,18 +61,18 @@ def browser_docs_backlinks_url(
 ) -> str:
     if published:
         return ""
-    if scope_uses_external_data(config):
+    if not published and scope_uses_external_data(config):
         return f"/docs/backlinks?scope={quote(config.scope_id)}"
     return (
-        f"{browser_path_for_repo_relative(published_documents_path(config))}"
+        f"{browser_path_for_repo_relative(generated_documents_path(config))}"
         "/backlinks.json"
     )
 
 
 def browser_search_index_url(config: DocsScopeConfig, *, published: bool = False) -> str:
-    if scope_uses_external_data(config):
+    if not published and scope_uses_external_data(config):
         return f"/docs/search?scope={quote(config.scope_id)}"
-    output = public_search_path(config) if published else published_search_path(config)
+    output = public_search_path(config) if published else generated_search_path(config)
     output = output or published_search_path(config)
     return browser_path_for_repo_relative(output)
 
@@ -90,9 +92,9 @@ def browser_sub_scope_output_url_base(
     *,
     published: bool = False,
 ) -> str:
-    if scope_uses_external_data(config):
-        return f"/docs/published/external/{quote(config.scope_id)}/{quote(sub_scope.sub_scope)}"
-    output = public_documents_path(sub_scope) if published else published_documents_path(sub_scope)
+    if not published and scope_uses_external_data(config):
+        return f"/docs/generated/external/{quote(config.scope_id)}/{quote(sub_scope.sub_scope)}"
+    output = public_documents_path(sub_scope) if published else generated_documents_path(sub_scope)
     output = output or published_documents_path(sub_scope)
     return browser_path_for_repo_relative(output)
 

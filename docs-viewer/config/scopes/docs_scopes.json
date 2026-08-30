@@ -1,11 +1,5 @@
 {
-  "schema_version": "docs_scopes_v4",
-  "media_workspace": {
-    "location": {
-      "provider": "external_local",
-      "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/media"
-    }
-  },
+  "schema_version": "docs_scopes_v5",
   "scopes": [
     {
       "scope_id": "studio",
@@ -39,6 +33,7 @@
           }
         }
       },
+      "generated": {},
       "published": {},
       "public_projection": null,
       "viewer_base_url": "/docs/",
@@ -59,8 +54,8 @@
         }
       ],
       "scope_root": {
-        "provider": "repository",
-        "path": "docs-viewer/scopes/studio"
+        "provider": "external_local",
+        "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/studio"
       }
     },
     {
@@ -99,6 +94,7 @@
           }
         }
       },
+      "generated": {},
       "published": {},
       "public_projection": {
         "documents": {
@@ -225,8 +221,8 @@
         }
       ],
       "scope_root": {
-        "provider": "repository",
-        "path": "docs-viewer/scopes/analysis"
+        "provider": "external_local",
+        "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/analysis"
       }
     },
     {
@@ -261,6 +257,7 @@
           }
         }
       },
+      "generated": {},
       "published": {},
       "public_projection": null,
       "viewer_base_url": "/docs/",
@@ -301,6 +298,7 @@
         },
         "build_sources": {}
       },
+      "generated": {},
       "published": {},
       "public_projection": null,
       "viewer_base_url": "/docs/",
@@ -311,8 +309,8 @@
       "allow_unresolved_parent_ids": false,
       "sub_scopes": [],
       "scope_root": {
-        "provider": "repository",
-        "path": "docs-viewer/scopes/processing"
+        "provider": "external_local",
+        "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/processing"
       }
     },
     {
@@ -345,6 +343,7 @@
         },
         "build_sources": {}
       },
+      "generated": {},
       "published": {},
       "public_projection": null,
       "viewer_base_url": "/docs/",
@@ -399,6 +398,7 @@
         },
         "build_sources": {}
       },
+      "generated": {},
       "published": {},
       "public_projection": null,
       "viewer_base_url": "/docs/",

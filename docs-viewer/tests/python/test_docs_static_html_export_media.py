@@ -57,7 +57,7 @@ def configured_scope(
 ) -> tuple[Path, object]:
     repo_root = tmp_path / "repo"
     projects_root = tmp_path / "projects"
-    (projects_root / "docs-viewer/media").mkdir(parents=True)
+    (projects_root / "docs-viewer").mkdir(parents=True)
     monkeypatch.setenv("DOTLINEFORM_PROJECTS_BASE_DIR", str(projects_root))
     write_docs_scope_config(repo_root, [record])
     scope_id = str(record["scope_id"])
@@ -118,7 +118,7 @@ def test_repository_plan_reads_deduplicates_rewrites_and_records_dependencies(
         monkeypatch,
         docs_scope_record("example", media_provider="repository"),
     )
-    media_root = tmp_path / "projects/docs-viewer/media/example"
+    media_root = repo_root / "docs-viewer/scopes/example/generated/media"
     (media_root / "img").mkdir(parents=True)
     (media_root / "files").mkdir(parents=True)
     (media_root / "img/photo one.png").write_bytes(b"photo")
@@ -170,7 +170,7 @@ def test_external_local_plan_uses_scope_location_without_provider_search(
         monkeypatch,
         docs_scope_record("external", scope_type="local_external"),
     )
-    media_path = tmp_path / "projects/docs-viewer/media/external/svg/diagram.svg"
+    media_path = tmp_path / "projects/docs-viewer/scopes/external/generated/media/svg/diagram.svg"
     media_path.parent.mkdir(parents=True)
     media_path.write_bytes(b"<svg/>")
 
@@ -199,7 +199,7 @@ def test_public_scope_plan_reads_managed_media_instead_of_public_projection(
             include_scope_param=False,
         ),
     )
-    media_path = tmp_path / "projects/docs-viewer/media/public/img/photo.webp"
+    media_path = repo_root / "docs-viewer/scopes/public/generated/media/img/photo.webp"
     media_path.parent.mkdir(parents=True)
     media_path.write_bytes(b"managed-photo")
 
@@ -214,7 +214,7 @@ def test_public_scope_plan_reads_managed_media_instead_of_public_projection(
     )
 
     assert [(item.provider, item.identity, item.data) for item in plan.items] == [
-        ("external_local", "photo.webp", b"managed-photo"),
+        ("repository", "photo.webp", b"managed-photo"),
     ]
     assert 'src="../media/img/photo.webp"' in plan.rewritten_html_by_doc["doc"]
 
@@ -232,7 +232,7 @@ def test_plan_rewrites_srcset_iframe_and_link_but_does_not_recurse(
             media_types=("img", "html"),
         ),
     )
-    media_root = tmp_path / "projects/docs-viewer/media/example"
+    media_root = repo_root / "docs-viewer/scopes/example/generated/media"
     for relative, content in (
         ("img/one.png", b"one"),
         ("img/two.png", b"two"),

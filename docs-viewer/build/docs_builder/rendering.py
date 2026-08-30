@@ -216,7 +216,7 @@ class ContentRenderingMixin:
             raise RuntimeError(
                 f"HTML media token must use the configured same-scope prefix {expected_prefix}/"
             )
-        asset_path = local_artifact_path(self.repo_root, media.location, identity)
+        asset_path = local_artifact_path(self.repo_root, media.source_location, identity)
         if asset_path is not None and not asset_path.is_file():
             raise RuntimeError(f"HTML media not found for scope {self.scope_id}: {media_path}")
         public_path = self.resolve_media_url(media_path)

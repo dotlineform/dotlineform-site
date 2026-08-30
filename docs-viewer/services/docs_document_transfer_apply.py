@@ -703,7 +703,7 @@ def apply_target_media_transfer(
             plan.target_config,
             write=True,
             client=target_media_client,
-            requested_published_identities=requested_build_outputs,
+            requested_generated_identities=requested_build_outputs,
             replace_existing=False,
         )
         for item in plan.media:

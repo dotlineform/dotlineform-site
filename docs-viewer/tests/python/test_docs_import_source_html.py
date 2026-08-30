@@ -212,9 +212,9 @@ def test_html_import_copies_role_marked_interactive_assets() -> None:
             docs_import_preview.validate_markdown_preview = original_validation
 
         source_text = (root / payload["path"]).read_text(encoding="utf-8")
-        asset_path = managed_media_path("example", "html", "worksheet-widget.html")
+        asset_path = managed_media_path(root, "example", "html", "worksheet-widget.html")
         asset_text = asset_path.read_text(encoding="utf-8")
-        second_asset_path = managed_media_path("example", "html", "second-widget.html")
+        second_asset_path = managed_media_path(root, "example", "html", "second-widget.html")
         second_asset_text = second_asset_path.read_text(encoding="utf-8")
 
     assert payload["ok"] is True
@@ -268,7 +268,7 @@ def test_html_import_reports_role_marked_interactive_assets_in_preview_only() ->
             write_rebuild.perform_source_write_and_rebuild = original_rebuild
             docs_import_preview.validate_markdown_preview = original_validation
 
-        asset_exists = managed_media_path("example", "html", "worksheet-widget.html").exists()
+        asset_exists = managed_media_path(root, "example", "html", "worksheet-widget.html").exists()
 
     assert payload["ok"] is True
     assert payload["preview_only"] is True
@@ -292,7 +292,7 @@ def test_html_import_confirms_existing_role_marked_interactive_asset_target() ->
             </html>
             """,
         )
-        existing_asset = managed_media_path("example", "html", "worksheet-widget.html")
+        existing_asset = managed_media_path(root, "example", "html", "worksheet-widget.html")
         existing_asset.parent.mkdir(parents=True, exist_ok=True)
         existing_asset.write_text("existing\n", encoding="utf-8")
         original_rebuild = stub_rebuild()

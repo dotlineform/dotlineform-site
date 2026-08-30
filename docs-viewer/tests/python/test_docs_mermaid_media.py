@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+import os
 from pathlib import Path
 import subprocess
 import sys
@@ -59,18 +60,18 @@ def _context(
     tmp_path: Path,
     *,
     write: bool,
-    requested_published_identities: tuple[str, ...] | None = None,
+    requested_generated_identities: tuple[str, ...] | None = None,
 ) -> MediaBuildContext:
     source_location = ArtifactLocation(REPOSITORY_PROVIDER, Path("source"))
-    published_location = ArtifactLocation(REPOSITORY_PROVIDER, Path("published"))
+    generated_location = ArtifactLocation(REPOSITORY_PROVIDER, Path("generated"))
     return MediaBuildContext(
         scope="studio",
         build_type="mermaid",
         publishes_to="svg",
         source=artifact_location_adapter(tmp_path, source_location),
-        published=artifact_location_adapter(tmp_path, published_location),
+        generated=artifact_location_adapter(tmp_path, generated_location),
         write=write,
-        requested_published_identities=requested_published_identities,
+        requested_generated_identities=requested_generated_identities,
     )
 
 
@@ -114,8 +115,9 @@ def test_checked_studio_config_registers_and_materializes_mermaid_source() -> No
     config = load_docs_scope_configs(REPO_ROOT)["studio"]
     build = config.media.build_sources["mermaid"]
 
-    assert build.location.path == Path(
-        "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/media/studio/build-source/mermaid"
+    assert build.location.path == (
+        Path(os.environ["DOTLINEFORM_PROJECTS_BASE_DIR"])
+        / "docs-viewer/scopes/studio/source/media/build-source/mermaid"
     )
     assert build.producer == "mermaid"
     assert build.publishes_to == "svg"
@@ -134,7 +136,7 @@ def test_dry_run_plans_sorted_same_basename_outputs_without_toolchain_or_writes(
         "alpha.svg",
         "zeta.svg",
     )
-    assert not (tmp_path / "published").exists()
+    assert not (tmp_path / "generated").exists()
 
 
 def test_plan_preserves_confined_subdirectories_and_ignores_non_mermaid_files() -> None:
@@ -173,7 +175,7 @@ def test_requested_outputs_render_only_matching_mermaid_sources(tmp_path: Path) 
         _context(
             tmp_path,
             write=True,
-            requested_published_identities=("standalone.svg", "other.svg"),
+            requested_generated_identities=("standalone.svg", "other.svg"),
         ),
         toolchain_root=_write_toolchain(tmp_path),
         run_command=render,
@@ -181,8 +183,8 @@ def test_requested_outputs_render_only_matching_mermaid_sources(tmp_path: Path) 
 
     assert outputs == ("other.svg",)
     assert rendered_inputs == ["other.mmd"]
-    assert (tmp_path / "published/other.svg").is_file()
-    assert not (tmp_path / "published/architecture.svg").exists()
+    assert (tmp_path / "generated/other.svg").is_file()
+    assert not (tmp_path / "generated/architecture.svg").exists()
 
 
 def test_write_invokes_local_cli_sanitizes_publishes_and_verifies(tmp_path: Path) -> None:
@@ -196,7 +198,7 @@ def test_write_invokes_local_cli_sanitizes_publishes_and_verifies(tmp_path: Path
         build_type="mermaid",
         publishes_to="svg",
         source=filesystem_context.source,
-        published=artifact_location_adapter(
+        generated=artifact_location_adapter(
             tmp_path,
             ArtifactLocation(R2_PROVIDER, Path("docs/studio/svg")),
             remote_client=remote_client,
@@ -224,11 +226,11 @@ def test_write_invokes_local_cli_sanitizes_publishes_and_verifies(tmp_path: Path
     assert command[command.index("--backgroundColor") + 1] == "white"
     assert command[command.index("--width") + 1] == "1200"
     assert command[command.index("--height") + 1] == "800"
-    published = remote_client.objects["docs/studio/svg/architecture.svg"].decode("utf-8")
-    assert "<script" not in published
-    assert "viewBox=\"0 0 1200 800\"" in published
-    assert "<title>Architecture flow</title>" in published
-    assert "<desc>Source flows through the build into published media.</desc>" in published
+    generated = remote_client.objects["docs/studio/svg/architecture.svg"].decode("utf-8")
+    assert "<script" not in generated
+    assert "viewBox=\"0 0 1200 800\"" in generated
+    assert "<title>Architecture flow</title>" in generated
+    assert "<desc>Source flows through the build into published media.</desc>" in generated
 
 
 def test_write_fails_explicitly_when_local_cli_is_not_installed(tmp_path: Path) -> None:
@@ -273,7 +275,7 @@ def test_write_reports_renderer_failure_without_publishing(tmp_path: Path) -> No
             toolchain_root=_write_toolchain(tmp_path),
             run_command=failed,
         )
-    assert not (tmp_path / "published").exists()
+    assert not (tmp_path / "generated").exists()
 
 
 def test_write_rejects_sanitized_output_that_loses_diagram_content(tmp_path: Path) -> None:
@@ -294,13 +296,13 @@ def test_write_rejects_sanitized_output_that_loses_diagram_content(tmp_path: Pat
             toolchain_root=_write_toolchain(tmp_path),
             run_command=unsafe_only,
         )
-    assert not (tmp_path / "published").exists()
+    assert not (tmp_path / "generated").exists()
 
 
 def test_write_reports_failed_publication_verification(tmp_path: Path, monkeypatch) -> None:
     _write_source(tmp_path)
     context = _context(tmp_path, write=True)
-    monkeypatch.setattr(context.published, "verify_bytes", lambda *_args, **_kwargs: False)
+    monkeypatch.setattr(context.generated, "verify_bytes", lambda *_args, **_kwargs: False)
 
     def render(command: list[str], **_options) -> subprocess.CompletedProcess[str]:
         output = Path(command[command.index("--output") + 1])
@@ -320,7 +322,7 @@ def test_create_only_write_refuses_existing_output_without_overwrite(
 ) -> None:
     _write_source(tmp_path)
     context = _context(tmp_path, write=True)
-    existing = tmp_path / "published/architecture.svg"
+    existing = tmp_path / "generated/architecture.svg"
     existing.parent.mkdir(parents=True)
     existing.write_bytes(b"existing")
     create_only = MediaBuildContext(
@@ -328,7 +330,7 @@ def test_create_only_write_refuses_existing_output_without_overwrite(
         build_type=context.build_type,
         publishes_to=context.publishes_to,
         source=context.source,
-        published=context.published,
+        generated=context.generated,
         write=True,
         replace_existing=False,
     )

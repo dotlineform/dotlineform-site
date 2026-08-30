@@ -22,14 +22,14 @@ def test_python_docs_builder_writes_docs_payloads_and_semantic_token_usage() -> 
         prepare_repo(root)
         result = run_builder(root)
 
-        index_tree = read_json(root / "docs-viewer/scopes/studio/published/documents/index-tree.json")
-        recent = read_json(root / "docs-viewer/scopes/studio/published/documents/recent.json")
-        child = read_json(root / f"docs-viewer/scopes/studio/published/documents/by-id/{CHILD_DOC_ID}.json")
+        index_tree = read_json(root / "docs-viewer/scopes/studio/generated/documents/index-tree.json")
+        recent = read_json(root / "docs-viewer/scopes/studio/generated/documents/recent.json")
+        child = read_json(root / f"docs-viewer/scopes/studio/generated/documents/by-id/{CHILD_DOC_ID}.json")
         backlinks = read_json(
-            root / "docs-viewer/scopes/studio/published/documents/backlinks.json"
+            root / "docs-viewer/scopes/studio/generated/documents/backlinks.json"
         )
         semantic_tokens_dir = (
-            root / "docs-viewer/scopes/studio/published/documents/semantic-tokens"
+            root / "docs-viewer/scopes/studio/generated/documents/semantic-tokens"
         )
         usage_index = read_json(semantic_tokens_dir / "index.json")
         by_document_exists = (semantic_tokens_dir / "by-document").exists()
@@ -41,7 +41,7 @@ def test_python_docs_builder_writes_docs_payloads_and_semantic_token_usage() -> 
     assert docs[1]["date"] == "2026-06-02"
     assert docs[1]["date_display"] == "June 2026"
     assert docs[1]["ui_status"] == "done"
-    assert docs[1]["content_url"] == f"/docs-viewer/scopes/studio/published/documents/by-id/{CHILD_DOC_ID}.json"
+    assert docs[1]["content_url"] == f"/docs-viewer/scopes/studio/generated/documents/by-id/{CHILD_DOC_ID}.json"
     assert isinstance(docs[1]["content_text_length"], int)
 
     assert index_tree["schema"] == "docs_index_tree_v1"
@@ -51,7 +51,7 @@ def test_python_docs_builder_writes_docs_payloads_and_semantic_token_usage() -> 
     assert tree_child == {
         "doc_id": CHILD_DOC_ID,
         "title": "Child",
-        "content_url": f"/docs-viewer/scopes/studio/published/documents/by-id/{CHILD_DOC_ID}.json",
+        "content_url": f"/docs-viewer/scopes/studio/generated/documents/by-id/{CHILD_DOC_ID}.json",
         "ui_status": "done",
     }
     assert "parent_id" not in tree_child
@@ -157,7 +157,7 @@ last_updated: 2026-06-01 10:00:00
         )
         run_builder(root)
         before = read_json(
-            root / "docs-viewer/scopes/studio/published/documents/backlinks.json"
+            root / "docs-viewer/scopes/studio/generated/documents/backlinks.json"
         )
 
         child_source = (
@@ -172,7 +172,7 @@ last_updated: 2026-06-01 10:00:00
         )
         result = run_builder(root, only_doc_ids=[CHILD_DOC_ID])
         after = read_json(
-            root / "docs-viewer/scopes/studio/published/documents/backlinks.json"
+            root / "docs-viewer/scopes/studio/generated/documents/backlinks.json"
         )
 
     assert [row["doc_id"] for row in before["by_target"][PARENT_DOC_ID]] == [
@@ -194,11 +194,11 @@ def test_python_docs_builder_preserves_existing_payloads_for_targeted_builds() -
         root = Path(temp_path)
         prepare_repo(root)
         run_builder(root)
-        parent_before = read_json(root / f"docs-viewer/scopes/studio/published/documents/by-id/{PARENT_DOC_ID}.json")
+        parent_before = read_json(root / f"docs-viewer/scopes/studio/generated/documents/by-id/{PARENT_DOC_ID}.json")
         write_source_docs(root, child_body_suffix="Updated targeted body.")
         result = run_builder(root, only_doc_ids=[CHILD_DOC_ID])
-        parent_after = read_json(root / f"docs-viewer/scopes/studio/published/documents/by-id/{PARENT_DOC_ID}.json")
-        child_after = read_json(root / f"docs-viewer/scopes/studio/published/documents/by-id/{CHILD_DOC_ID}.json")
+        parent_after = read_json(root / f"docs-viewer/scopes/studio/generated/documents/by-id/{PARENT_DOC_ID}.json")
+        child_after = read_json(root / f"docs-viewer/scopes/studio/generated/documents/by-id/{CHILD_DOC_ID}.json")
 
     assert parent_after == parent_before
     assert "Updated targeted body." in child_after["content_html"]
@@ -213,15 +213,15 @@ def test_python_docs_builder_targeted_build_preserves_usage_from_scope_index() -
         prepare_repo(root)
         run_builder(root)
         child_before = read_json(
-            root / f"docs-viewer/scopes/studio/published/documents/by-id/{CHILD_DOC_ID}.json"
+            root / f"docs-viewer/scopes/studio/generated/documents/by-id/{CHILD_DOC_ID}.json"
         )
         write_source_docs(root, parent_body_suffix="Updated targeted parent.")
         result = run_builder(root, only_doc_ids=[PARENT_DOC_ID])
         child_after = read_json(
-            root / f"docs-viewer/scopes/studio/published/documents/by-id/{CHILD_DOC_ID}.json"
+            root / f"docs-viewer/scopes/studio/generated/documents/by-id/{CHILD_DOC_ID}.json"
         )
         usage_index = read_json(
-            root / "docs-viewer/scopes/studio/published/documents/semantic-tokens/index.json"
+            root / "docs-viewer/scopes/studio/generated/documents/semantic-tokens/index.json"
         )
 
     assert child_after == child_before
@@ -247,7 +247,7 @@ def test_python_docs_builder_targeted_build_removes_selected_doc_usage_from_scop
         )
         result = run_builder(root, only_doc_ids=[CHILD_DOC_ID])
         usage_index = read_json(
-            root / "docs-viewer/scopes/studio/published/documents/semantic-tokens/index.json"
+            root / "docs-viewer/scopes/studio/generated/documents/semantic-tokens/index.json"
         )
 
     assert result["diagnostics"]["build_mode"] == "targeted"
@@ -265,9 +265,9 @@ def test_python_docs_builder_leaves_unresolved_catalogue_tokens_literal() -> Non
             child_body_suffix="Missing target [[catalogue:work:99999|still literal]].",
         )
         result = run_builder(root)
-        child = read_json(root / f"docs-viewer/scopes/studio/published/documents/by-id/{CHILD_DOC_ID}.json")
+        child = read_json(root / f"docs-viewer/scopes/studio/generated/documents/by-id/{CHILD_DOC_ID}.json")
         usage_index = read_json(
-            root / "docs-viewer/scopes/studio/published/documents/semantic-tokens/index.json"
+            root / "docs-viewer/scopes/studio/generated/documents/semantic-tokens/index.json"
         )
 
     assert result["diagnostics"]["warning_count"] == 0
@@ -299,7 +299,7 @@ def test_python_docs_builder_projects_exact_table_detail_eligibility() -> None:
             root / f"docs-viewer/scopes/studio/source/documents/{CHILD_DOC_ID}.md"
         ).read_text(encoding="utf-8")
         child = read_json(
-            root / f"docs-viewer/scopes/studio/published/documents/by-id/{CHILD_DOC_ID}.json"
+            root / f"docs-viewer/scopes/studio/generated/documents/by-id/{CHILD_DOC_ID}.json"
         )
 
     content_html = child["content_html"]
@@ -330,7 +330,7 @@ def test_python_docs_builder_projects_only_valid_local_folder_links() -> None:
 """,
         )
         run_builder(root)
-        child = read_json(root / f"docs-viewer/scopes/studio/published/documents/by-id/{CHILD_DOC_ID}.json")
+        child = read_json(root / f"docs-viewer/scopes/studio/generated/documents/by-id/{CHILD_DOC_ID}.json")
 
     content_html = child["content_html"]
     assert '<a href="#" data-docs-viewer-local-target="projects/3%20symbols">Folder</a>' in content_html

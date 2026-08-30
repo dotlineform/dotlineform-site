@@ -94,7 +94,7 @@ def load_projection_planning_context(
             sub_scope=sub_scope,
         )
         manifest_scope = f"{normalized_scope}/{normalized_sub_scope}"
-        published_documents_location = sub_scope.published.documents.location
+        published_documents_location = sub_scope.generated.documents.location
     else:
         if config.public_projection is None:
             raise ValueError(f"scope {normalized_scope!r} has no public projection")
@@ -104,7 +104,7 @@ def load_projection_planning_context(
             skip_media_builds=True,
         )
         manifest_scope = normalized_scope
-        published_documents_location = config.published.documents.location
+        published_documents_location = config.generated.documents.location
 
     docs = builder.load_docs()
     builder.validate_canonical_doc_ids(docs)

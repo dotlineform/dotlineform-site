@@ -21,7 +21,7 @@ from repo_factory import docs_scope_record, write_docs_scope_config
 @pytest.fixture(autouse=True)
 def isolated_media_workspace(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
     projects = tmp_path / "projects"
-    (projects / "docs-viewer/media").mkdir(parents=True)
+    projects.mkdir(parents=True)
     monkeypatch.setenv("DOTLINEFORM_PROJECTS_BASE_DIR", str(projects))
     return projects
 
@@ -54,8 +54,8 @@ def test_records_sorted_scope_owned_evidence_without_a_public_projection(
         )
 
         table_path = (
-            isolated_media_workspace
-            / "docs-viewer/media/analysis"
+            root
+            / "docs-viewer/scopes/analysis/source/media"
             / TABLE_IDENTITY
         )
         payload = json.loads(table_path.read_text(encoding="utf-8"))
@@ -145,7 +145,7 @@ def test_external_scope_keeps_evidence_in_its_external_source_root(
 
     assert (
         projects
-        / "docs-viewer/media/dotlineform"
+        / "docs-viewer/scopes/dotlineform/source/media"
         / TABLE_IDENTITY
     ).is_file()
 

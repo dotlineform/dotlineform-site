@@ -221,7 +221,7 @@ def test_docx_import_materializes_supported_image_before_source_write() -> None:
 
         source_text = (root / payload["path"]).read_text(encoding="utf-8")
         media_filename = f"{payload['doc_id']}-image-01.png"
-        media_path = managed_media_path("example", "img", media_filename)
+        media_path = managed_media_path(root, "example", "img", media_filename)
         media_bytes = media_path.read_bytes()
         response_text = json.dumps(payload)
 

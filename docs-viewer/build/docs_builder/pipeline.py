@@ -7,16 +7,16 @@ from .backlinks import BacklinksMixin
 from .common import (
     DocsScopeConfig,
     document_source_path,
+    generated_documents_path,
     is_public_readonly_scope,
     load_site_tools_config,
     monotonic_time,
     normalize_doc_ids,
     normalize_viewer_base_url,
-    published_documents_path,
     resolve_scope_path,
     utc_timestamp,
 )
-from .media_builds import referenced_build_media_identities, run_registered_media_builds
+from .media_builds import build_scope_media_snapshot
 from .payloads import PayloadBuilderMixin
 from .recent_policy import recent_basis_for_route
 from .rendering import ContentRenderingMixin
@@ -52,7 +52,7 @@ class DocsDataBuilder(
         self.scope_id = config.scope_id
         self.report_source_contract = None
         self.source_dir = resolve_scope_path(self.repo_root, source_dir or document_source_path(config))
-        self.output_dir = resolve_scope_path(self.repo_root, output_dir or published_documents_path(config))
+        self.output_dir = resolve_scope_path(self.repo_root, output_dir or generated_documents_path(config))
         self.items_dir = self.output_dir / "by-id"
         self.viewer_base_url = normalize_viewer_base_url(viewer_base_url or config.viewer_base_url)
         self.include_scope_param = config.include_scope_param
@@ -71,14 +71,15 @@ class DocsDataBuilder(
 
     def run(self, *, write: bool, emit_diagnostics: bool = False) -> dict[str, Any]:
         started_at = monotonic_time()
-        media_builds = (
-            []
-            if self.targeted_build or self.skip_media_builds
-            else run_registered_media_builds(self.repo_root, self.config, write=write)
-        )
         docs = self.load_docs()
         self.validate_canonical_doc_ids(docs)
         self.validate_docs(docs)
+        media_snapshot = (
+            None
+            if self.skip_media_builds
+            else build_scope_media_snapshot(self.repo_root, self.config, write=write)
+        )
+        media_builds = [] if media_snapshot is None else media_snapshot["producer_builds"]
         target_doc_ids = self.only_doc_ids if self.only_doc_ids is not None else [doc.doc_id for doc in docs]
         if self.targeted_build:
             self.validate_targeted_build_prerequisites(docs, target_doc_ids)
@@ -90,17 +91,6 @@ class DocsDataBuilder(
             semantic_tokens_by_doc: dict[str, list[dict[str, Any]]] = {}
 
         docs_for_item_build = [doc for doc in docs if doc.doc_id in target_doc_ids]
-        if self.targeted_build and not self.skip_media_builds:
-            requested_media = referenced_build_media_identities(
-                self.config,
-                (doc.body_markdown for doc in docs_for_item_build),
-            )
-            media_builds = run_registered_media_builds(
-                self.repo_root,
-                self.config,
-                write=write,
-                requested_published_identities=requested_media,
-            )
         item_payloads = {
             doc.doc_id: self.item_entry(
                 doc,
@@ -188,6 +178,7 @@ class DocsDataBuilder(
             "write_plan": write_plan,
             "diagnostics": diagnostics,
             "media_builds": media_builds,
+            "media_snapshot": media_snapshot,
         }
 
     @property

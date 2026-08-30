@@ -303,8 +303,7 @@ def prepare_repo(root: Path) -> None:
     write_semantic_token_contract(root)
     write_catalogue_records(root)
     write_text(
-        Path(os.environ["DOTLINEFORM_PROJECTS_BASE_DIR"])
-        / "docs-viewer/media/studio/html/chart.html",
+        root / "docs-viewer/scopes/studio/source/media/html/chart.html",
         "<!doctype html><title>Chart</title>",
     )
     write_source_docs(root)

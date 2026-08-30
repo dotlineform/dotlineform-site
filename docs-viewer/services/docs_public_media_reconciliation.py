@@ -111,7 +111,7 @@ def _type_adapters(
     return (
         artifact_location_adapter(
             repo_root,
-            managed.location,
+            managed.generated_location,
             served_path_prefix=managed.served_path_prefix,
         ),
         artifact_location_adapter(

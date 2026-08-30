@@ -95,11 +95,11 @@ def prepare_delete_repo(repo_root: Path, *, build_outputs: bool = False) -> dict
     )
 
     parent_search_path = (
-        repo_root / "docs-viewer/scopes/studio/published/search/index.json"
+        repo_root / "docs-viewer/scopes/studio/generated/search/index.json"
     )
     parent_sentinels = (
-        repo_root / "docs-viewer/scopes/studio/published/documents/index-tree.json",
-        repo_root / "docs-viewer/scopes/studio/published/documents/recent.json",
+        repo_root / "docs-viewer/scopes/studio/generated/documents/index-tree.json",
+        repo_root / "docs-viewer/scopes/studio/generated/documents/recent.json",
         repo_root / "docs-viewer/config/defaults/docs-viewer-config.json",
         repo_root / "docs-viewer/config/defaults/docs-viewer-public-config.json",
         repo_root / "site/docs-viewer/config/defaults/docs-viewer-public-config.json",
@@ -121,15 +121,15 @@ def prepare_delete_repo(repo_root: Path, *, build_outputs: bool = False) -> dict
         "sibling_path": sibling_path,
         "manifest_path": (
             repo_root
-            / "docs-viewer/scopes/studio/published/documents/sub-scopes/tags/manifest.json"
+            / "docs-viewer/scopes/studio/generated/documents/sub-scopes/tags/manifest.json"
         ),
         "target_payload_path": (
             repo_root
-            / f"docs-viewer/scopes/studio/published/documents/sub-scopes/tags/by-id/{TARGET_DOC_ID}.json"
+            / f"docs-viewer/scopes/studio/generated/documents/sub-scopes/tags/by-id/{TARGET_DOC_ID}.json"
         ),
         "sibling_payload_path": (
             repo_root
-            / f"docs-viewer/scopes/studio/published/documents/sub-scopes/tags/by-id/{SIBLING_DOC_ID}.json"
+            / f"docs-viewer/scopes/studio/generated/documents/sub-scopes/tags/by-id/{SIBLING_DOC_ID}.json"
         ),
         "parent_sentinels": parent_sentinels,
         "parent_search_path": parent_search_path,

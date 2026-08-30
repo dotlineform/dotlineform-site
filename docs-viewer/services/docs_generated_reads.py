@@ -11,16 +11,16 @@ from urllib.parse import urlparse
 from docs_document_identity import is_immutable_doc_id
 from docs_scope_config import (
     DocsScopeConfig,
+    generated_documents_path,
+    generated_search_path,
     load_docs_scope_configs,
     publication_documents_path,
-    published_documents_path,
-    published_search_path,
     resolve_scope_path,
     scope_uses_external_data,
 )
 
 
-EXTERNAL_SUB_SCOPE_PUBLISHED_PREFIX = "/docs/published/external/"
+EXTERNAL_SUB_SCOPE_GENERATED_PREFIX = "/docs/generated/external/"
 
 
 def browser_path_for_repo_relative(path: Path) -> str:
@@ -39,13 +39,13 @@ def generated_scope_config(repo_root: Path, scope: str) -> DocsScopeConfig:
 
 def generated_docs_output_root(repo_root: Path, scope: str) -> Path:
     config = generated_scope_config(repo_root, scope)
-    return resolve_scope_path(repo_root, published_documents_path(config))
+    return resolve_scope_path(repo_root, generated_documents_path(config))
 
 
 def external_sub_scope_payload_path(repo_root: Path, request_path: str) -> Path:
-    if not request_path.startswith(EXTERNAL_SUB_SCOPE_PUBLISHED_PREFIX):
+    if not request_path.startswith(EXTERNAL_SUB_SCOPE_GENERATED_PREFIX):
         raise ValueError("Invalid external Docs sub-scope payload route")
-    parts = request_path.removeprefix(EXTERNAL_SUB_SCOPE_PUBLISHED_PREFIX).split("/")
+    parts = request_path.removeprefix(EXTERNAL_SUB_SCOPE_GENERATED_PREFIX).split("/")
     if len(parts) == 3 and parts[2] in {
         "manifest.json",
         "manage-manifest.json",
@@ -69,7 +69,7 @@ def external_sub_scope_payload_path(repo_root: Path, request_path: str) -> Path:
     if selected is None:
         raise FileNotFoundError(f"Docs sub-scope not found: {scope}/{sub_scope}")
 
-    output_root = resolve_scope_path(repo_root, published_documents_path(selected)).resolve()
+    output_root = resolve_scope_path(repo_root, generated_documents_path(selected)).resolve()
     path = (output_root / relative_path).resolve()
     try:
         path.relative_to(output_root)
@@ -104,7 +104,7 @@ def generated_doc_payload_path(repo_root: Path, scope: str, doc_id: str) -> Path
 
 def generated_search_index_path(repo_root: Path, scope: str) -> Path:
     config = generated_scope_config(repo_root, scope)
-    return resolve_scope_path(repo_root, published_search_path(config))
+    return resolve_scope_path(repo_root, generated_search_path(config))
 
 
 def read_generated_json(path: Path, label: str) -> Dict[str, Any]:
@@ -177,7 +177,7 @@ def read_generated_doc_payload(repo_root: Path, scope: str, doc_id: str) -> Dict
     if not scope_uses_external_data(config):
         expected_paths.update(
             {
-                browser_path_for_repo_relative(published_documents_path(config) / "by-id" / f"{doc_id}.json"),
+                browser_path_for_repo_relative(generated_documents_path(config) / "by-id" / f"{doc_id}.json"),
                 browser_path_for_repo_relative(publication_documents_path(config) / "by-id" / f"{doc_id}.json"),
             }
         )

@@ -240,7 +240,7 @@ def media_adapters_for_scope(
         media = managed_media_config(config, media_class)
         adapters[media_class] = artifact_location_adapter(
             repo_root,
-            media.location,
+            media.source_location,
             served_path_prefix=media.served_path_prefix,
             remote_client=remote_client,  # type: ignore[arg-type]
         )
@@ -268,7 +268,7 @@ def publish_docs_media_files(
         raise ValueError(f"Unknown Docs media scope: {scope!r}")
 
     media_classes = {item.media_class for item in files}
-    locations = [managed_media_config(config, media_class).location for media_class in media_classes]
+    locations = [managed_media_config(config, media_class).source_location for media_class in media_classes]
     remote_client = authenticated_remote_client_for_locations(
         repo_root,
         locations,
@@ -351,7 +351,7 @@ def run_docs_staged_media_publish(
 
 def local_media_config(config: DocsScopeConfig, media_class: str) -> DocsManagedMediaConfig:
     media = managed_media_config(config, validate_media_class(media_class))
-    if media.location.provider not in {REPOSITORY_PROVIDER, EXTERNAL_LOCAL_PROVIDER}:
+    if media.generated_location.provider not in {REPOSITORY_PROVIDER, EXTERNAL_LOCAL_PROVIDER}:
         raise ValueError(
             f"Docs scope {config.scope_id!r} media role {media_class!r} is not locally served"
         )
@@ -371,10 +371,31 @@ def ensure_configured_scope_owned_media_directories(
         ):
             continue
         directories: list[Path] = []
+        media_locations = [
+            config.media.source_location,
+            config.media.generated_location,
+            config.media.published_location,
+        ]
         for media in config.media.types.values():
-            if media.location.provider not in {REPOSITORY_PROVIDER, EXTERNAL_LOCAL_PROVIDER}:
-                continue
-            media_root = resolve_location_path(repo_root, media.location)
+            media_locations.extend(
+                (
+                    media.source_location,
+                    media.generated_location,
+                    media.published_location,
+                )
+            )
+        media_locations.extend(build.location for build in config.media.build_sources.values())
+        media_paths = [
+            resolve_location_path(repo_root, location)
+            for location in media_locations
+            if location.provider in {REPOSITORY_PROVIDER, EXTERNAL_LOCAL_PROVIDER}
+        ]
+        media_paths.append(
+            resolve_location_path(repo_root, config.media.source_location)
+            / "build-source"
+            / "mermaid"
+        )
+        for media_root in media_paths:
             unresolved_root = media_root
             if unresolved_root.is_symlink():
                 raise ValueError(f"Configured Docs media directory must not be a symlink: {unresolved_root}")
@@ -410,7 +431,7 @@ def local_media_path_from_route(repo_root: Path, request_path: str) -> tuple[Pat
     if config is None:
         raise FileNotFoundError(f"Docs media scope not found: {scope!r}")
     media = local_media_config(config, normalized_class)
-    adapter = artifact_location_adapter(repo_root, media.location, served_path_prefix=media.served_path_prefix)
+    adapter = artifact_location_adapter(repo_root, media.generated_location, served_path_prefix=media.served_path_prefix)
     path = adapter.resolve(normalized_filename)  # type: ignore[attr-defined]
     if not path.is_file():
         raise FileNotFoundError(f"Docs media file not found: {scope}/{normalized_class}/{normalized_filename}")

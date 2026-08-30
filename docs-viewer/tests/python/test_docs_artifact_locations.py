@@ -81,6 +81,19 @@ def test_filesystem_adapters_share_the_complete_artifact_workflow(tmp_path: Path
     assert adapter.stat("nested/example.png") is None
 
 
+def test_external_local_adapter_rejects_retired_relative_workspace_paths(
+    tmp_path: Path,
+) -> None:
+    with pytest.raises(ValueError, match="must be absolute"):
+        artifact_location_adapter(
+            tmp_path,
+            ArtifactLocation(
+                provider=EXTERNAL_LOCAL_PROVIDER,
+                path=Path("docs-viewer/media/example/img"),
+            ),
+        )
+
+
 def test_r2_adapter_confines_keys_and_uses_the_same_artifact_workflow(tmp_path: Path) -> None:
     client = FakeRemoteClient()
     location = ArtifactLocation(provider=R2_PROVIDER, path=Path("docs/example/img"))

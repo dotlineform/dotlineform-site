@@ -345,23 +345,23 @@ def test_builder_projects_only_resolved_lookup_rows_and_writes_usage() -> None:
         resolved_payload = json.loads(
             (
                 root
-                / f"docs-viewer/scopes/analysis/published/documents/by-id/{resolved_doc_id}.json"
+                / f"docs-viewer/scopes/analysis/generated/documents/by-id/{resolved_doc_id}.json"
             ).read_text(encoding="utf-8")
         )
         broken_payload = json.loads(
             (
                 root
-                / f"docs-viewer/scopes/analysis/published/documents/by-id/{broken_doc_id}.json"
+                / f"docs-viewer/scopes/analysis/generated/documents/by-id/{broken_doc_id}.json"
             ).read_text(encoding="utf-8")
         )
         usage_index = json.loads(
             (
                 root
-                / "docs-viewer/scopes/analysis/published/documents/semantic-tokens/index.json"
+                / "docs-viewer/scopes/analysis/generated/documents/semantic-tokens/index.json"
             ).read_text(encoding="utf-8")
         )
         semantic_tokens_dir = (
-            root / "docs-viewer/scopes/analysis/published/documents/semantic-tokens"
+            root / "docs-viewer/scopes/analysis/generated/documents/semantic-tokens"
         )
         by_document_exists = (semantic_tokens_dir / "by-document").exists()
         by_target_exists = (semantic_tokens_dir / "by-target").exists()
@@ -410,13 +410,13 @@ def test_builder_projects_linked_visual_occurrences_and_preserves_missing_images
         payload = json.loads(
             (
                 root
-                / f"docs-viewer/scopes/analysis/published/documents/by-id/{doc_id}.json"
+                / f"docs-viewer/scopes/analysis/generated/documents/by-id/{doc_id}.json"
             ).read_text(encoding="utf-8")
         )
         usage = json.loads(
             (
                 root
-                / "docs-viewer/scopes/analysis/published/documents/semantic-tokens/index.json"
+                / "docs-viewer/scopes/analysis/generated/documents/semantic-tokens/index.json"
             ).read_text(encoding="utf-8")
         )
 

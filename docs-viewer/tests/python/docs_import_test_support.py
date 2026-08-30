@@ -33,7 +33,14 @@ for path in (DOCS_DIR,):
 import docs_import_source_service as import_source_service  # noqa: E402
 import docs_source_model as source_model  # noqa: E402
 import docs_write_rebuild as write_rebuild  # noqa: E402
-from docs_scope_config import DOCS_SCOPE_CONFIGS, DOCUMENT_SOURCE_ROOTS, document_source_path, load_docs_scope_configs  # noqa: E402
+from docs_scope_config import (  # noqa: E402
+    DOCS_SCOPE_CONFIGS,
+    DOCUMENT_SOURCE_ROOTS,
+    document_source_path,
+    load_docs_scope_configs,
+    managed_media_config,
+    resolve_location_path,
+)
 from docs_management_import_service import handle_import_source as handle_managed_import_source  # noqa: E402
 from docs_document_packages import service as document_package_service  # noqa: E402
 
@@ -49,8 +56,10 @@ def make_repo() -> tempfile.TemporaryDirectory:
     return temp_dir
 
 
-def managed_media_path(scope: str, *parts: str) -> Path:
-    return Path(os.environ["DOTLINEFORM_PROJECTS_BASE_DIR"]) / "docs-viewer/media" / scope / Path(*parts)
+def managed_media_path(root: Path, scope: str, media_type: str, *parts: str) -> Path:
+    config = load_docs_scope_configs(root, scope_ids=(scope,))[scope]
+    location = managed_media_config(config, media_type).source_location
+    return resolve_location_path(root, location) / Path(*parts)
 
 
 def write_scope_config(root: Path) -> None:

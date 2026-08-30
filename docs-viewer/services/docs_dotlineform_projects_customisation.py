@@ -122,7 +122,7 @@ def _publication_target(
     import docs_document_location as document_location
     from docs_scope_config import (
         load_docs_scope_configs,
-        published_documents_path,
+        generated_documents_path,
         resolve_scope_path,
     )
 
@@ -153,7 +153,7 @@ def _publication_target(
         if len(sub_scopes) == 1:
             output_root = resolve_scope_path(
                 repo_root,
-                published_documents_path(sub_scopes[0]),
+                generated_documents_path(sub_scopes[0]),
             )
             try:
                 collection_url = document_location.management_collection_viewer_url(

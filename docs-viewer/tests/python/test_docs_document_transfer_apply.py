@@ -4,7 +4,6 @@
 from __future__ import annotations
 
 import json
-import os
 import sys
 from collections.abc import Iterator
 from pathlib import Path
@@ -48,13 +47,7 @@ def write_json(path: Path, payload: object) -> None:
     if path.name == "docs_scopes.json" and isinstance(payload, dict):
         payload = {
             **payload,
-            "schema_version": "docs_scopes_v4",
-            "media_workspace": {
-                "location": {
-                    "provider": "external_local",
-                    "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/media",
-                }
-            },
+            "schema_version": "docs_scopes_v5",
         }
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
@@ -105,8 +98,9 @@ def media_path(
     media_type: str,
     identity: str,
 ) -> Path:
-    del repo_root
-    return Path(os.environ["DOTLINEFORM_PROJECTS_BASE_DIR"]) / "docs-viewer/media" / scope / media_type / identity
+    config = docs_scope_config.load_docs_scope_configs(repo_root)[scope]
+    location = docs_scope_config.managed_media_config(config, media_type).source_location
+    return docs_scope_config.resolve_location_path(repo_root, location) / identity
 
 
 def build_source_path(
@@ -115,15 +109,9 @@ def build_source_path(
     build_type: str,
     identity: str,
 ) -> Path:
-    del repo_root
-    return (
-        Path(os.environ["DOTLINEFORM_PROJECTS_BASE_DIR"])
-        / "docs-viewer/media"
-        / scope
-        / "build-source"
-        / build_type
-        / identity
-    )
+    config = docs_scope_config.load_docs_scope_configs(repo_root)[scope]
+    location = config.media.build_sources[build_type].location
+    return docs_scope_config.resolve_location_path(repo_root, location) / identity
 
 
 def write_bytes(path: Path, data: bytes) -> None:
@@ -179,7 +167,7 @@ def make_repo(
     write_json(
         repo_root / "docs-viewer/config/scopes/docs_scopes.json",
         {
-            "schema_version": "docs_scopes_v4",
+            "schema_version": "docs_scopes_v5",
             "scopes": [
                 source_scope or base_scope("source"),
                 target_scope or base_scope("target"),
@@ -704,14 +692,14 @@ def test_apply_copy_builds_loadable_target_documents_and_search_once(
         event_logger=lambda *_args, **_kwargs: None,
     )
 
-    output_root = repo_root / "docs-viewer/scopes/target/published/documents"
+    output_root = repo_root / "docs-viewer/scopes/target/generated/documents"
     tree_payload = json.loads(
         (output_root / "index-tree.json").read_text(encoding="utf-8")
     )
     search_payload = json.loads(
         (
             repo_root
-            / "docs-viewer/scopes/target/published/search/index.json"
+            / "docs-viewer/scopes/target/generated/search/index.json"
         ).read_text(encoding="utf-8")
     )
 
@@ -802,7 +790,7 @@ flowchart LR
     ) -> list[dict[str, object]]:
         assert config.scope_id == "target"
         assert kwargs["replace_existing"] is False
-        assert kwargs["requested_published_identities"] == {
+        assert kwargs["requested_generated_identities"] == {
             "mermaid": {"diagram.svg"}
         }
         assert build_source_path(
@@ -1041,7 +1029,7 @@ def test_apply_copy_writes_external_local_target_documents_and_media(
     copied_path = external_documents / f"{result['created_doc_ids'][0]}.md"
     assert copied_path.is_file()
     assert (
-        projects_base / "docs-viewer/media/target/img/photo.png"
+        projects_base / "docs-viewer/scopes/target/source/media/img/photo.png"
     ).read_bytes() == b"photo"
     assert "docs/target/img/photo.png" in copied_path.read_text(encoding="utf-8")
 
@@ -1358,7 +1346,7 @@ def test_child_copy_stale_target_fails_before_media_or_document_writes(
         doc_id=plan.documents[0].target_doc_id,
         title="Concurrent target",
     )
-    media_before = snapshot(repo_root / "docs-viewer/scopes/target/published")
+    media_before = snapshot(repo_root / "docs-viewer/scopes/target/source/media")
 
     with pytest.raises(
         transfer_apply.DocumentTransferPlanStaleError,
@@ -1373,7 +1361,7 @@ def test_child_copy_stale_target_fails_before_media_or_document_writes(
         )
 
     assert target_path.read_text(encoding="utf-8").find("Concurrent target") >= 0
-    assert snapshot(repo_root / "docs-viewer/scopes/target/published") == media_before
+    assert snapshot(repo_root / "docs-viewer/scopes/target/source/media") == media_before
 
 
 def test_apply_child_copy_retains_matching_custom_metadata(

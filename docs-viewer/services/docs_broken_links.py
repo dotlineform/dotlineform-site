@@ -16,7 +16,12 @@ from pathlib import Path
 from typing import Any
 from urllib.parse import quote
 
-from docs_scope_config import DOCS_SCOPE_CONFIGS, published_documents_path
+from docs_scope_config import (
+    DOCS_SCOPE_CONFIGS,
+    DocsScopeConfig,
+    generated_documents_path,
+    load_docs_scope_configs,
+)
 from docs_rendered_links import (
     collect_anchors,
     is_same_doc_fragment_link,
@@ -40,11 +45,12 @@ from docs_builder.semantic_tokens import (  # noqa: E402
 from docs_source_model import load_scope_docs_for_config  # noqa: E402
 
 
-SCOPE_OUTPUT_DIRS = {scope: published_documents_path(config) for scope, config in DOCS_SCOPE_CONFIGS.items()}
-VIEWER_ROUTES = tuple(
-    (scope, config.viewer_base_url)
+# Retained for callers that present the configured scope list. Audit reads
+# always reload the selected repository's current config.
+SCOPE_OUTPUT_DIRS = {
+    scope: generated_documents_path(config)
     for scope, config in DOCS_SCOPE_CONFIGS.items()
-)
+}
 
 
 @dataclass(frozen=True)
@@ -61,15 +67,15 @@ class DocPayload:
     content_html: str
 
 
-def normalize_scope(scope: Any) -> str:
+def normalize_scope(scope: Any, configs: dict[str, DocsScopeConfig]) -> str:
     value = str(scope or "").strip().lower()
-    if value not in SCOPE_OUTPUT_DIRS:
-        raise ValueError(f"scope must be one of: {', '.join(sorted(SCOPE_OUTPUT_DIRS))}")
+    if value not in configs:
+        raise ValueError(f"scope must be one of: {', '.join(sorted(configs))}")
     return value
 
 
-def viewer_url_for(scope: str, doc_id: str) -> str:
-    config = DOCS_SCOPE_CONFIGS[scope]
+def viewer_url_for(configs: dict[str, DocsScopeConfig], scope: str, doc_id: str) -> str:
+    config = configs[scope]
     pairs: list[str] = []
     if config.include_scope_param:
         pairs.append(f"scope={quote(scope)}")
@@ -106,7 +112,11 @@ def read_json(path: Path, label: str) -> dict[str, Any]:
     return payload
 
 
-def flatten_index_tree(scope: str, docs: list[Any]) -> list[DocMeta]:
+def flatten_index_tree(
+    scope: str,
+    docs: list[Any],
+    configs: dict[str, DocsScopeConfig],
+) -> list[DocMeta]:
     items: list[DocMeta] = []
     for item in docs:
         if not isinstance(item, dict):
@@ -119,26 +129,34 @@ def flatten_index_tree(scope: str, docs: list[Any]) -> list[DocMeta]:
                     scope=scope,
                     doc_id=doc_id,
                     title=title,
-                    viewer_url=viewer_url_for(scope, doc_id),
+                    viewer_url=viewer_url_for(configs, scope, doc_id),
                 )
             )
         children = item.get("children")
         if isinstance(children, list):
-            items.extend(flatten_index_tree(scope, children))
+            items.extend(flatten_index_tree(scope, children, configs))
     return items
 
 
-def load_index_tree(repo_root: Path, scope: str) -> list[DocMeta]:
-    index_path = repo_root / SCOPE_OUTPUT_DIRS[scope] / "index-tree.json"
+def load_index_tree(
+    repo_root: Path,
+    scope: str,
+    configs: dict[str, DocsScopeConfig],
+) -> list[DocMeta]:
+    index_path = repo_root / generated_documents_path(configs[scope]) / "index-tree.json"
     payload = read_json(index_path, f"{scope} docs index tree")
     docs = payload.get("docs")
     if not isinstance(docs, list):
         raise ValueError(f"Expected docs array in {index_path}")
-    return flatten_index_tree(scope, docs)
+    return flatten_index_tree(scope, docs, configs)
 
 
-def load_doc_payload(repo_root: Path, meta: DocMeta) -> DocPayload:
-    payload_path = repo_root / SCOPE_OUTPUT_DIRS[meta.scope] / "by-id" / f"{meta.doc_id}.json"
+def load_doc_payload(
+    repo_root: Path,
+    meta: DocMeta,
+    configs: dict[str, DocsScopeConfig],
+) -> DocPayload:
+    payload_path = repo_root / generated_documents_path(configs[meta.scope]) / "by-id" / f"{meta.doc_id}.json"
     payload = read_json(payload_path, f"{meta.scope} doc payload for {meta.doc_id}")
     hydrated_meta = DocMeta(
         scope=meta.scope,
@@ -154,14 +172,18 @@ def load_doc_payload(repo_root: Path, meta: DocMeta) -> DocPayload:
     )
 
 
-def semantic_token_broken_entries(repo_root: Path, scope: str) -> list[dict[str, Any]]:
+def semantic_token_broken_entries(
+    repo_root: Path,
+    scope: str,
+    configs: dict[str, DocsScopeConfig],
+) -> list[dict[str, Any]]:
     registry = load_semantic_token_registry(repo_root)
     if registry is None:
         raise ValueError("Semantic-token registry is unavailable.")
     targets_by_key = load_semantic_token_target_records(repo_root)
     entries: list[dict[str, Any]] = []
     tag_states: dict[str, str] | None = None
-    for doc in load_scope_docs_for_config(repo_root, DOCS_SCOPE_CONFIGS[scope]):
+    for doc in load_scope_docs_for_config(repo_root, configs[scope]):
         for token in parse_semantic_tokens(doc.body, registry=registry):
             target = targets_by_key.get((token.family, token.target_type, token.target_id))
             reason = ""
@@ -204,7 +226,7 @@ def semantic_token_broken_entries(repo_root: Path, scope: str) -> list[dict[str,
                     "link_text": token.title,
                     "link_url": link_url,
                     "from_page_text": doc.title,
-                    "from_page_url": viewer_url_for(scope, doc.doc_id),
+                    "from_page_url": viewer_url_for(configs, scope, doc.doc_id),
                     "from_page_scope": scope,
                     "from_page_doc_id": doc.doc_id,
                 }
@@ -213,16 +235,25 @@ def semantic_token_broken_entries(repo_root: Path, scope: str) -> list[dict[str,
 
 
 def audit_docs_broken_links(repo_root: Path, scope: str) -> dict[str, Any]:
-    normalized_scope = normalize_scope(scope)
+    configs = load_docs_scope_configs(repo_root)
+    normalized_scope = normalize_scope(scope, configs)
+    viewer_routes = tuple(
+        (scope_id, config.viewer_base_url)
+        for scope_id, config in configs.items()
+    )
     docs_by_key: dict[tuple[str, str], DocMeta] = {}
-    for known_scope in sorted(SCOPE_OUTPUT_DIRS.keys()):
-        for meta in load_index_tree(repo_root, known_scope):
+    for known_scope in sorted(configs):
+        for meta in load_index_tree(repo_root, known_scope, configs):
             docs_by_key[(meta.scope, meta.doc_id)] = meta
 
-    audited_docs = [load_doc_payload(repo_root, meta) for meta in load_index_tree(repo_root, normalized_scope)]
+    audited_docs = [
+        load_doc_payload(repo_root, meta, configs)
+        for meta in load_index_tree(repo_root, normalized_scope, configs)
+    ]
     entries: list[dict[str, Any]] = semantic_token_broken_entries(
         repo_root,
         normalized_scope,
+        configs,
     )
 
     for doc in audited_docs:
@@ -234,8 +265,8 @@ def audit_docs_broken_links(repo_root: Path, scope: str) -> dict[str, Any]:
             resolved_href = resolve_href(raw_href, doc.meta.viewer_url)
             target = parse_docs_target(
                 resolved_href,
-                viewer_routes=VIEWER_ROUTES,
-                known_scopes=set(DOCS_SCOPE_CONFIGS),
+                viewer_routes=viewer_routes,
+                known_scopes=set(configs),
             )
             if target is None:
                 continue

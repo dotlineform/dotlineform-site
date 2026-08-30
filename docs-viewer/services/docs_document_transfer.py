@@ -32,7 +32,6 @@ from docs_media_inventory import (
     source_media_references,
 )
 from docs_scope_config import (
-    PUBLIC_SCOPE_TYPE,
     DocsScopeConfig,
 )
 from docs_management_document_target import (
@@ -527,7 +526,7 @@ def _require_collection_root(
 ) -> Path:
     if (
         writable
-        and collection.parent_config.scope_type == PUBLIC_SCOPE_TYPE
+        and collection.parent_config.public_projection is not None
         and mode != COPY_MODE
     ):
         raise ValueError(f"public {role} scope {collection.scope!r} is not writable")
@@ -830,7 +829,7 @@ def published_transfer_adapters(
     }
     remote_client = authenticated_remote_client_for_locations(
         repo_root,
-        [media.location for media in selected.values()],
+        [media.source_location for media in selected.values()],
         client=client,  # type: ignore[arg-type]
         env_files=env_files,
         environ=environ,
@@ -838,7 +837,7 @@ def published_transfer_adapters(
     return {
         media_type: artifact_location_adapter(
             repo_root,
-            media.location,
+            media.source_location,
             served_path_prefix=media.served_path_prefix,
             remote_client=remote_client,
         )
@@ -1287,8 +1286,8 @@ def _media_plans(
             TransferMediaPlan(
                 media_type=media_type,
                 identity=identity,
-                source_provider=source_media.location.provider,
-                target_provider=target_media.location.provider if target_media else "",
+                source_provider=source_media.source_location.provider,
+                target_provider=target_media.source_location.provider if target_media else "",
                 source_reference=f"{source_media.reference_prefix.as_posix()}/{identity}",
                 target_reference=(
                     f"{target_media.reference_prefix.as_posix()}/{identity}"
@@ -1795,7 +1794,7 @@ def plan_document_transfer(
         raise ValueError("Move supports parent-scope collections only")
     source_config = source_collection.parent_config
     target_config = target_collection.parent_config
-    if mode == MOVE_MODE and source_config.scope_type == PUBLIC_SCOPE_TYPE:
+    if mode == MOVE_MODE and source_config.public_projection is not None:
         raise ValueError("public source scopes cannot be moved")
     if source_collection.sub_scope and include_descendants:
         raise ValueError("sub-scope Copy does not support descendant inclusion")

@@ -34,13 +34,7 @@ def make_repo() -> tempfile.TemporaryDirectory:
         root / "docs-viewer/config/scopes/docs_scopes.json",
         json.dumps(
             {
-                "schema_version": "docs_scopes_v4",
-                "media_workspace": {
-                    "location": {
-                        "provider": "external_local",
-                        "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/media",
-                    }
-                },
+                "schema_version": "docs_scopes_v5",
                 "scopes": [
                     docs_scope_record(
                         "example",

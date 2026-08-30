@@ -167,10 +167,10 @@ def test_python_docs_builder_writes_browser_configs_on_cli_write() -> None:
 
     assert browser_config["schema_version"] == "docs_viewer_config_v1"
     assert browser_config["scopes"][0]["scope_id"] == "studio"
-    assert browser_config["scopes"][0]["index_tree_url"] == "/docs-viewer/scopes/studio/published/documents/index-tree.json"
-    assert browser_config["scopes"][0]["recent_url"] == "/docs-viewer/scopes/studio/published/documents/recent.json"
+    assert browser_config["scopes"][0]["index_tree_url"] == "/docs-viewer/scopes/studio/generated/documents/index-tree.json"
+    assert browser_config["scopes"][0]["recent_url"] == "/docs-viewer/scopes/studio/generated/documents/recent.json"
     assert browser_config["scopes"][0]["backlinks_url"] == (
-        "/docs-viewer/scopes/studio/published/documents/backlinks.json"
+        "/docs-viewer/scopes/studio/generated/documents/backlinks.json"
     )
     assert browser_config["docs_viewer"] == {"recent_limit": 10}
     assert public_config["scopes"] == []
@@ -208,7 +208,7 @@ def test_python_docs_builder_cli_dry_run_does_not_write_outputs() -> None:
         assert diagnostics_from_stdout(stdout)["doc_payloads_changed"] == 2
         assert not (
             root
-            / "docs-viewer/scopes/studio/published/documents/semantic-tokens/index.json"
+            / "docs-viewer/scopes/studio/generated/documents/semantic-tokens/index.json"
         ).exists()
         assert not (root / "docs-viewer/config/defaults/docs-viewer-config.json").exists()
         assert not (root / "docs-viewer/config/defaults/docs-viewer-public-config.json").exists()
@@ -250,15 +250,15 @@ def test_python_docs_builder_cli_targeted_write_updates_selected_doc_only() -> N
         root = Path(temp_path)
         prepare_repo(root)
         run_cli(root, ["--scope", "studio", "--write"])
-        parent_before = read_json(root / f"docs-viewer/scopes/studio/published/documents/by-id/{PARENT_DOC_ID}.json")
+        parent_before = read_json(root / f"docs-viewer/scopes/studio/generated/documents/by-id/{PARENT_DOC_ID}.json")
         write_source_docs(root, child_body_suffix="CLI targeted update.")
 
         exit_code, stdout, stderr = run_cli(
             root,
             ["--scope", "studio", "--only-doc-ids", CHILD_DOC_ID, "--write", "--diagnostics"],
         )
-        parent_after = read_json(root / f"docs-viewer/scopes/studio/published/documents/by-id/{PARENT_DOC_ID}.json")
-        child_after = read_json(root / f"docs-viewer/scopes/studio/published/documents/by-id/{CHILD_DOC_ID}.json")
+        parent_after = read_json(root / f"docs-viewer/scopes/studio/generated/documents/by-id/{PARENT_DOC_ID}.json")
+        child_after = read_json(root / f"docs-viewer/scopes/studio/generated/documents/by-id/{CHILD_DOC_ID}.json")
         diagnostics = diagnostics_from_stdout(stdout)
 
     assert exit_code == 0

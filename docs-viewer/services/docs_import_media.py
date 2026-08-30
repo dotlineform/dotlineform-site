@@ -554,7 +554,7 @@ def build_media_plan(
     link = media_link_for(normalized_scope, media_class, source_path.name, repo_root=repo_root)
     media_path = media_path_for(normalized_scope, media_class, source_path.name, repo_root=repo_root)
     return {
-        "location_provider": config.location.provider,
+        "location_provider": config.source_location.provider,
         "artifact_identity": source_path.name,
         "media_class": media_class,
         "source_path": source_path.name,

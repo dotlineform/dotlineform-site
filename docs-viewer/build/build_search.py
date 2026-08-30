@@ -47,11 +47,10 @@ from docs_builder.source import parse_source_text  # noqa: E402
 from docs_scope_config import (  # noqa: E402
     DocsScopeConfig,
     DocsSubScopeConfig,
-    PUBLIC_SCOPE_TYPE,
     document_source_path,
     load_docs_scope_configs,
-    published_documents_path,
-    published_search_path,
+    generated_documents_path,
+    generated_search_path,
     resolve_scope_path,
 )
 from docs_document_location import sub_scope_report_placement  # noqa: E402
@@ -308,7 +307,7 @@ class DocsViewerSearchDataBuilder:
             SEARCH_V2_CONTENT_FIELDS.intersection(self.scope_config.search_fields)
         )
         self.report_source_contract = None
-        self.output_path = self.resolve_path(output_path or published_search_path(self.scope_config))
+        self.output_path = self.resolve_path(output_path or generated_search_path(self.scope_config))
 
     def run(
         self,
@@ -416,7 +415,6 @@ class DocsViewerSearchDataBuilder:
         return f"{self.scope_config.viewer_base_url}?{'&'.join(pairs)}"
 
     def search_records_from_source_rows(self, rows: list[dict[str, Any]]) -> list[SearchDocRecord]:
-        hidden_ids = self.hidden_doc_ids(rows)
         all_doc_ids = {normalize_text(row.get("doc_id")) for row in rows if isinstance(row, dict)}
         records: list[SearchDocRecord] = []
         for row in rows:
@@ -426,8 +424,6 @@ class DocsViewerSearchDataBuilder:
             title = normalize_text(row.get("title"))
             viewer_url = normalize_text(row.get("viewer_url"))
             if not doc_id or not title or not viewer_url:
-                continue
-            if doc_id in hidden_ids or not boolean_field(row, "publishable", True):
                 continue
             parent_id = normalize_text(row.get("parent_id"))
             if parent_id and parent_id not in all_doc_ids:
@@ -546,7 +542,7 @@ class DocsViewerSearchDataBuilder:
                     self.scope,
                     sub_scope.sub_scope,
                     eligible_parent_doc_ids=eligible_parent_doc_ids,
-                    require_public=self.scope_config.scope_type == PUBLIC_SCOPE_TYPE,
+                    require_public=False,
                 )
                 records.extend(
                     self.load_sub_scope_collection_docs(
@@ -566,9 +562,9 @@ class DocsViewerSearchDataBuilder:
     ) -> list[SearchDocRecord]:
         output_root = resolve_scope_path(
             self.repo_root,
-            published_documents_path(sub_scope),
+            generated_documents_path(sub_scope),
         )
-        manifest_path = output_root / "manifest.json"
+        manifest_path = output_root / "manage-manifest.json"
         try:
             manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
         except (OSError, json.JSONDecodeError) as exc:
@@ -588,7 +584,7 @@ class DocsViewerSearchDataBuilder:
         )
         source_by_id = {document.doc_id: document for document in source_docs}
         seen_doc_ids: set[str] = set()
-        collection_title = normalize_text(sub_scope.public_title or sub_scope.title)
+        collection_title = normalize_text(sub_scope.title)
         records: list[SearchDocRecord] = []
         for index, raw_row in enumerate(manifest_rows):
             field = f"{manifest_path}.docs[{index}]"
@@ -605,10 +601,10 @@ class DocsViewerSearchDataBuilder:
             seen_doc_ids.add(doc_id)
 
             source_doc = source_by_id.get(doc_id)
-            if source_doc is None or not source_doc.publishable:
+            if source_doc is None:
                 raise ValueError(
                     f"sub-scope manifest document {self.scope}/{sub_scope.sub_scope}/{doc_id} "
-                    "has no eligible source document"
+                    "has no source document"
                 )
             by_id_path = output_root / "by-id" / f"{doc_id}.json"
             try:

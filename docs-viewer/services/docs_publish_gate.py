@@ -21,8 +21,8 @@ from docs_scope_config import (
     load_docs_scope_configs,
     public_documents_path,
     public_search_path,
-    published_documents_path,
-    published_search_path,
+    generated_documents_path,
+    generated_search_path,
     resolve_location_path,
     resolve_scope_path,
 )
@@ -87,8 +87,8 @@ def normalize_scope(repo_root: Path, value: Any) -> tuple[str, DocsScopeConfig]:
 
 def validate_publish_paths(repo_root: Path, config: DocsScopeConfig) -> dict[str, Path]:
     paths = {
-        "working_docs_root": resolve_scope_path(repo_root, published_documents_path(config)),
-        "working_search_index": resolve_scope_path(repo_root, published_search_path(config)),
+        "working_docs_root": resolve_scope_path(repo_root, generated_documents_path(config)),
+        "working_search_index": resolve_scope_path(repo_root, generated_search_path(config)),
         "published_docs_root": (repo_root / (public_documents_path(config) or Path("."))).resolve(),
         "published_search_index": (repo_root / (public_search_path(config) or Path("."))).resolve(),
     }
@@ -111,7 +111,7 @@ def validate_sub_scope_publish_paths(repo_root: Path, config: DocsScopeConfig) -
     paths_by_sub_scope: dict[str, dict[str, Path]] = {}
     for sub_scope in config.sub_scopes:
         paths = {
-            "working_docs_root": resolve_scope_path(repo_root, published_documents_path(sub_scope)),
+            "working_docs_root": resolve_scope_path(repo_root, generated_documents_path(sub_scope)),
             "published_docs_root": (
                 repo_root / (public_documents_path(sub_scope) or Path("."))
             ).resolve(),
@@ -419,7 +419,7 @@ def media_relative_prefixes(repo_root: Path, config: DocsScopeConfig, root: Path
     prefixes: list[Path] = []
     for media in config.media.types.values():
         try:
-            media_root = resolve_location_path(repo_root, media.location).resolve()
+            media_root = resolve_location_path(repo_root, media.generated_location).resolve()
         except ValueError:
             continue
         if media_root != resolved_root and path_is_relative_to(media_root, resolved_root):
@@ -435,7 +435,7 @@ def sub_scope_relative_prefixes(
     resolved_root = root.resolve()
     prefixes: list[Path] = []
     for sub_scope in config.sub_scopes:
-        locations = [sub_scope.published.documents.location]
+        locations = [sub_scope.generated.documents.location]
         if sub_scope.public_projection is not None:
             locations.append(sub_scope.public_projection.documents.location)
         for location in locations:

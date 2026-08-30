@@ -7,11 +7,11 @@ from urllib.parse import quote
 from .common import (
     DocsScopeConfig,
     document_source_path,
+    generated_documents_path,
     json_text,
     monotonic_time,
     read_text,
     publication_documents_path,
-    published_documents_path,
     resolve_scope_path,
     write_text,
 )
@@ -49,13 +49,15 @@ class SubScopeDocsBuilder(DocsDataBuilder):
         repo_root: Path,
         config: DocsScopeConfig,
         sub_scope: Any,
+        skip_media_builds: bool = False,
     ) -> None:
         self.sub_scope_config = sub_scope
         super().__init__(
             repo_root=repo_root,
             config=config,
             source_dir=document_source_path(sub_scope),
-            output_dir=published_documents_path(sub_scope),
+            output_dir=generated_documents_path(sub_scope),
+            skip_media_builds=skip_media_builds,
         )
         self.sub_scope_id = sub_scope.sub_scope
         self.output_url_base = self.output_url_base_for(self.output_url_dir())
@@ -65,7 +67,7 @@ class SubScopeDocsBuilder(DocsDataBuilder):
         output = (
             publication_documents_path(self.sub_scope_config)
             if self.public_readonly_scope
-            else published_documents_path(self.sub_scope_config)
+            else generated_documents_path(self.sub_scope_config)
         )
         return resolve_scope_path(self.repo_root, output)
 

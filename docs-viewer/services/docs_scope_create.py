@@ -42,6 +42,8 @@ from docs_scope_manifest import (
     append_scope_manifest_record,
     default_source_doc_text,
     load_manifest,
+    local_generated_docs_output_path,
+    local_generated_search_index_path,
     local_scope_root_path,
     local_published_docs_output_path,
     local_published_search_index_path,
@@ -72,12 +74,12 @@ def apply_build_commands(preview: dict[str, Any], *, dry_run: bool) -> list[dict
 
 
 def sync_public_publish_outputs(repo_root: Path, config: dict[str, Any], *, include_search: bool) -> None:
-    docs_source = local_published_docs_output_path(repo_root, config)
+    docs_source = local_generated_docs_output_path(repo_root, config)
     docs_target = public_projection_docs_output_path(repo_root, config)
     if docs_source.exists():
         shutil.copytree(docs_source, docs_target, dirs_exist_ok=True)
     if include_search:
-        search_source = local_published_search_index_path(repo_root, config)
+        search_source = local_generated_search_index_path(repo_root, config)
         search_target = public_projection_search_index_path(repo_root, config)
         if search_source.exists():
             search_target.parent.mkdir(parents=True, exist_ok=True)
@@ -194,8 +196,11 @@ def plan_create_scope_preview(repo_root: Path, body: dict[str, Any]) -> dict[str
             raise ValueError("planned_document_identity.doc_id must be an immutable document ID")
         if not doc_id_matches_added_date(default_doc_id, added_date):
             raise ValueError("planned_document_identity added_date must match its document ID timestamp")
-    managed_workspace_root = resolve_external_data_root()
-    external_data_root = managed_workspace_root if publishing_mode == LOCAL_EXTERNAL_MODE else None
+    external_data_root = (
+        resolve_external_data_root()
+        if publishing_mode == LOCAL_EXTERNAL_MODE
+        else None
+    )
     if external_data_root is not None:
         sync_blocker = external_scope_id_sync_blocker(scope_id, external_data_root)
         if sync_blocker:
@@ -233,13 +238,36 @@ def plan_create_scope_preview(repo_root: Path, body: dict[str, Any]) -> dict[str
         path_record(repo_root, "source_documents_root", created_documents_root, action="create"),
         path_record(repo_root, "default_source_doc", created_documents_root / f"{default_doc_id}.md", action="create"),
     ]
-    docs_output = local_published_docs_output_path(repo_root, planned_scope_config)
-    media_scope_root = managed_workspace_root / "media" / scope_id
-    for media_type in planned_scope_config["media"]["types"]:
-        media_path = media_scope_root / media_type
+    generated_docs_output = local_generated_docs_output_path(repo_root, planned_scope_config)
+    published_docs_output = local_published_docs_output_path(repo_root, planned_scope_config)
+    source_media_root = created_scope_root / "source/media"
+    generated_media_root = created_scope_root / "generated/media"
+    published_media_root = created_scope_root / "published/media"
+    for role, media_root in (
+        ("source", source_media_root),
+        ("generated", generated_media_root),
+        ("published", published_media_root),
+    ):
         created_files.append(
-            path_record(repo_root, f"scope_media_{media_type}_root", media_path, action="create")
+            path_record(repo_root, f"{role}_media_root", media_root, action="create")
         )
+        for media_type in planned_scope_config["media"]["types"]:
+            created_files.append(
+                path_record(
+                    repo_root,
+                    f"scope_media_{role}_{media_type}_root",
+                    media_root / media_type,
+                    action="create",
+                )
+            )
+    created_files.append(
+        path_record(
+            repo_root,
+            "source_media_mermaid_build_root",
+            source_media_root / "build-source/mermaid",
+            action="create",
+        )
+    )
     changed_files = [
         path_record(repo_root, "scope_config", repo_root / CONFIG_REL_PATH, action="change"),
         path_record(repo_root, "scope_manifest", repo_root / MANIFEST_REL_PATH, action="change"),
@@ -247,12 +275,21 @@ def plan_create_scope_preview(repo_root: Path, body: dict[str, Any]) -> dict[str
     if public_route_path:
         created_files.append(path_record(repo_root, "route_file", route_file_for_public_path(repo_root, public_route_path), action="create"))
         changed_files.extend(route_registry_path_records(repo_root, action="change"))
-    created_files.append(path_record(repo_root, "published_docs_root", docs_output, action="create"))
+    created_files.append(
+        path_record(repo_root, "generated_docs_root", generated_docs_output, action="create")
+    )
     created_files.extend(
         [
-            path_record(repo_root, "published_docs_index_tree", docs_output / "index-tree.json", action="create"),
-            path_record(repo_root, "published_docs_recent", docs_output / "recent.json", action="create"),
-            path_record(repo_root, "published_docs_payload_root", docs_output / "by-id", action="create"),
+            path_record(repo_root, "generated_docs_index_tree", generated_docs_output / "index-tree.json", action="create"),
+            path_record(repo_root, "generated_docs_recent", generated_docs_output / "recent.json", action="create"),
+            path_record(repo_root, "generated_docs_payload_root", generated_docs_output / "by-id", action="create"),
+            path_record(
+                repo_root,
+                "generated_search_index",
+                local_generated_search_index_path(repo_root, planned_scope_config),
+                action="create",
+            ),
+            path_record(repo_root, "published_docs_root", published_docs_output, action="create"),
             path_record(
                 repo_root,
                 "published_search_index",
@@ -303,7 +340,11 @@ def plan_create_scope_preview(repo_root: Path, body: dict[str, Any]) -> dict[str
         "scope_id": scope_id,
         "title": title,
         "publishing_mode": publishing_mode,
-        "external_data_root": EXTERNAL_DATA_ROOT_MARKER,
+        "external_data_root": (
+            EXTERNAL_DATA_ROOT_MARKER
+            if publishing_mode == LOCAL_EXTERNAL_MODE
+            else ""
+        ),
         "planned_document_identity": {
             "doc_id": default_doc_id,
             "added_date": added_date,
@@ -313,7 +354,11 @@ def plan_create_scope_preview(repo_root: Path, body: dict[str, Any]) -> dict[str
             {
                 "publishing_mode": publishing_mode,
                 "planned_scope_config": planned_scope_config,
-                "external_data_root": EXTERNAL_DATA_ROOT_MARKER,
+                "external_data_root": (
+                    EXTERNAL_DATA_ROOT_MARKER
+                    if publishing_mode == LOCAL_EXTERNAL_MODE
+                    else ""
+                ),
             }
         ),
         "created_files": created_files,

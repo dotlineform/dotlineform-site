@@ -75,11 +75,10 @@ def main(argv: list[str] | None = None) -> int:
         or args.output
         or args.viewer_base_url
         or args.only_doc_ids
-        or args.skip_media_builds
     ):
         raise RuntimeError(
             "--sub-scope cannot be combined with --source, --output, "
-            "--viewer-base-url, --only-doc-ids, or --skip-media-builds"
+            "--viewer-base-url, or --only-doc-ids"
         )
 
     replace_scope_ids = requested_scopes or None
@@ -116,6 +115,7 @@ def main(argv: list[str] | None = None) -> int:
                 repo_root=repo_root,
                 config=config,
                 sub_scope=sub_scope,
+                skip_media_builds=args.skip_media_builds,
             )
             builder.run(write=args.write, emit_diagnostics=args.diagnostics)
             return 0

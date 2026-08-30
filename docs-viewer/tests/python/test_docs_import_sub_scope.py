@@ -3,7 +3,6 @@
 
 from __future__ import annotations
 
-import os
 from pathlib import Path
 
 import pytest
@@ -269,8 +268,7 @@ Package body.
     source_text = target_path.read_text(encoding="utf-8")
     media_result = payload["inline_media_written"][0]
     media_path = (
-        Path(os.environ["DOTLINEFORM_PROJECTS_BASE_DIR"])
-        / "docs-viewer/media/analysis/img"
+        tmp_path / "docs-viewer/scopes/analysis/source/media/img"
         / media_result["artifact_identity"]
     )
 

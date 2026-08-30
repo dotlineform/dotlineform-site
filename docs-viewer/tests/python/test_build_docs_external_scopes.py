@@ -43,9 +43,9 @@ External body.
         )
         try:
             exit_code, stdout, stderr = run_cli(root, ["--scope", "private", "--write"])
-            index_tree = read_json(external_root / "scopes/private/published/documents/index-tree.json")
+            index_tree = read_json(external_root / "scopes/private/generated/documents/index-tree.json")
             payload = read_json(
-                external_root / f"scopes/private/published/documents/by-id/{PRIVATE_DOC_ID}.json"
+                external_root / f"scopes/private/generated/documents/by-id/{PRIVATE_DOC_ID}.json"
             )
         finally:
             if old_projects_base is None:

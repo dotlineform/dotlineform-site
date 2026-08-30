@@ -30,6 +30,7 @@ from docs_media_storage import (
 from docs_scope_config import (
     DocsManagedMediaConfig,
     DocsMediaConfig,
+    DocsGeneratedConfig,
     DocsPublicProjectionConfig,
     DocsPublicMediaConfig,
     DocsPublishedArtifactConfig,
@@ -90,12 +91,17 @@ def scope_config(
     local_provider = EXTERNAL_LOCAL_PROVIDER if external else REPOSITORY_PROVIDER
     scope_root = source.parent if source is not None else Path(f"docs-viewer/scopes/{scope}")
     source_path = scope_root / "source"
+    generated_docs = scope_root / "generated/documents"
+    generated_search = scope_root / "generated/search/index.json"
     published_docs = scope_root / "published/documents"
     published_search = scope_root / "published/search/index.json"
-    media_root = media_location_root or (
+    source_media_root = scope_root / "source/media"
+    generated_media_root = scope_root / "generated/media"
+    published_media_root = scope_root / "published/media"
+    public_media_root = media_location_root or (
         Path(f"docs/{scope}")
         if media_provider == R2_PROVIDER
-        else scope_root / "published/media"
+        else Path(f"site/assets/data/docs/scopes/{scope}/media")
     )
     served_root = (
         f"https://media.example.test/docs/{scope}"
@@ -106,8 +112,10 @@ def scope_config(
         media_type: DocsManagedMediaConfig(
             media_type=media_type,
             reference_prefix=Path(f"docs/{scope}/{media_type}"),
-            location=ArtifactLocation(provider=media_provider, path=media_root / media_type),
-            served_path_prefix=f"{served_root}/{media_type}",
+            source_location=ArtifactLocation(provider=local_provider, path=source_media_root / media_type),
+            generated_location=ArtifactLocation(provider=local_provider, path=generated_media_root / media_type),
+            published_location=ArtifactLocation(provider=local_provider, path=published_media_root / media_type),
+            served_path_prefix=f"/docs/media/{scope}/{media_type}",
             build_inputs=(),
         )
         for media_type in ("img", "svg", "files")
@@ -131,8 +139,8 @@ def scope_config(
                 media_type: DocsPublicMediaConfig(
                     media_type=media_type,
                     reference_prefix=Path(f"docs/{scope}/{media_type}"),
-                    location=item.location,
-                    served_path_prefix=item.served_path_prefix,
+                    location=ArtifactLocation(provider=media_provider, path=public_media_root / media_type),
+                    served_path_prefix=f"{served_root}/{media_type}",
                 )
                 for media_type, item in media.items()
             },
@@ -147,9 +155,19 @@ def scope_config(
             sub_scopes_path=Path("."),
         ),
         media=DocsMediaConfig(
-            location=ArtifactLocation(provider=media_provider, path=media_root),
+            source_location=ArtifactLocation(provider=local_provider, path=source_media_root),
+            generated_location=ArtifactLocation(provider=local_provider, path=generated_media_root),
+            published_location=ArtifactLocation(provider=local_provider, path=published_media_root),
             types=media,
             build_sources={},
+        ),
+        generated=DocsGeneratedConfig(
+            documents=DocsPublishedArtifactConfig(
+                location=ArtifactLocation(provider=local_provider, path=generated_docs)
+            ),
+            search=DocsPublishedArtifactConfig(
+                location=ArtifactLocation(provider=local_provider, path=generated_search)
+            ),
         ),
         published=DocsPublishedConfig(
             documents=DocsPublishedArtifactConfig(
@@ -176,13 +194,7 @@ def write_scope_config(repo_root: Path, record: dict[str, object]) -> None:
     path.write_text(
         json.dumps(
             {
-                "schema_version": "docs_scopes_v4",
-                "media_workspace": {
-                    "location": {
-                        "provider": "external_local",
-                        "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/media",
-                    }
-                },
+                "schema_version": "docs_scopes_v5",
                 "scopes": [record],
             }
         ) + "\n",
@@ -227,14 +239,17 @@ def publish_with_config(
     return plan_and_publish_docs_media(files, adapters=adapters, write=write, force=force)
 
 
-def test_docs_upload_preflights_complete_set_and_keeps_remote_details_private(tmp_path: Path) -> None:
+def test_docs_source_import_preflights_complete_set_and_keeps_storage_details_private(tmp_path: Path) -> None:
     config = scope_config("example", scope_type="public", media_provider=R2_PROVIDER)
     first = tmp_path / "first.png"
     second = tmp_path / "second.png"
     first.write_bytes(b"first")
     second.write_bytes(b"second")
     files = [docs_media_file(config, media_class="img", local_path=path, source_root=tmp_path) for path in (first, second)]
-    client = FakeR2Client({"docs/example/img/first.png": b"different"})
+    existing = tmp_path / "docs-viewer/scopes/example/source/media/img/first.png"
+    existing.parent.mkdir(parents=True)
+    existing.write_bytes(b"different")
+    client = FakeR2Client()
 
     results = publish_with_config(tmp_path, config, files, client=client, write=True, force=False)
     report = docs_publish_report(scope="example", results=results, write=True, force=False)
@@ -248,7 +263,7 @@ def test_docs_upload_preflights_complete_set_and_keeps_remote_details_private(tm
     assert "etag" not in serialized.lower()
 
 
-def test_docs_upload_writes_missing_objects_after_complete_preflight(tmp_path: Path) -> None:
+def test_docs_source_import_writes_missing_objects_after_complete_preflight(tmp_path: Path) -> None:
     config = scope_config("example", scope_type="public", media_provider=R2_PROVIDER)
     image = tmp_path / "diagram.png"
     attachment = tmp_path / "notes.pdf"
@@ -263,10 +278,9 @@ def test_docs_upload_writes_missing_objects_after_complete_preflight(tmp_path: P
     results = publish_with_config(tmp_path, config, files, client=client, write=True, force=False)
 
     assert [result.status for result in results] == ["uploaded", "uploaded"]
-    assert client.puts == [
-        ("docs/example/img/diagram.png", "artifact.png"),
-        ("docs/example/files/notes.pdf", "artifact.pdf"),
-    ]
+    assert client.puts == []
+    assert (tmp_path / "docs-viewer/scopes/example/source/media/img/diagram.png").read_bytes() == b"image"
+    assert (tmp_path / "docs-viewer/scopes/example/source/media/files/notes.pdf").read_bytes() == b"pdf"
 
 
 def test_exact_scope_staged_file_runner_uses_safe_docs_report(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
@@ -297,7 +311,7 @@ def test_exact_scope_staged_file_runner_uses_safe_docs_report(tmp_path: Path, mo
     assert report["objects"][0]["filename"] == "diagram.png"  # type: ignore[index]
 
 
-def test_scope_config_enforces_one_derived_external_media_workspace(
+def test_scope_config_derives_media_lifecycle_from_external_scope_root(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
@@ -307,9 +321,9 @@ def test_scope_config_enforces_one_derived_external_media_workspace(
     external = external_scope_record()
     write_scope_config(tmp_path, external)
     loaded = load_docs_scope_configs(tmp_path)["private"]
-    assert {item.location.provider for item in loaded.media.types.values()} == {EXTERNAL_LOCAL_PROVIDER}
-    assert loaded.media.location.path == Path(
-        "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/media/private"
+    assert {item.source_location.provider for item in loaded.media.types.values()} == {EXTERNAL_LOCAL_PROVIDER}
+    assert loaded.media.source_location.path == (
+        projects_base / "docs-viewer/scopes/private/source/media"
     )
 
     external["media"]["types"]["img"]["location"] = {  # type: ignore[index]
@@ -322,9 +336,9 @@ def test_scope_config_enforces_one_derived_external_media_workspace(
 
     path = tmp_path / "docs-viewer/config/scopes/docs_scopes.json"
     payload = json.loads(path.read_text(encoding="utf-8"))
-    payload["media_workspace"]["location"]["path"] = "$DOTLINEFORM_PROJECTS_BASE_DIR/elsewhere"
+    payload["media_workspace"] = {"location": {"provider": "external_local", "path": "elsewhere"}}
     path.write_text(json.dumps(payload) + "\n", encoding="utf-8")
-    with pytest.raises(ValueError, match="media_workspace.location.path"):
+    with pytest.raises(ValueError, match="media_workspace is retired"):
         load_docs_scope_configs(tmp_path)
 
 
@@ -354,7 +368,7 @@ def test_new_scope_defaults_follow_scope_owned_media_policy(tmp_path: Path) -> N
 
 def test_local_media_route_confines_repo_and_external_scope_assets(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     repo_config = scope_config("studio", scope_type="local", media_provider=REPOSITORY_PROVIDER)
-    repo_file = tmp_path / "docs-viewer/scopes/studio/published/media/img/diagram.png"
+    repo_file = tmp_path / "docs-viewer/scopes/studio/generated/media/img/diagram.png"
     repo_file.parent.mkdir(parents=True)
     repo_file.write_bytes(b"diagram")
     monkeypatch.setattr("docs_media_storage.load_docs_scope_configs", lambda _repo_root: {"studio": repo_config})
@@ -362,7 +376,7 @@ def test_local_media_route_confines_repo_and_external_scope_assets(tmp_path: Pat
     resolved, media_class = local_media_path_from_route(tmp_path, "/docs/media/studio/img/diagram.png")
     assert resolved == repo_file.resolve()
     assert media_class == "img"
-    repo_svg = tmp_path / "docs-viewer/scopes/studio/published/media/svg/diagram.svg"
+    repo_svg = tmp_path / "docs-viewer/scopes/studio/generated/media/svg/diagram.svg"
     repo_svg.parent.mkdir(parents=True)
     repo_svg.write_text("<svg xmlns='http://www.w3.org/2000/svg'></svg>\n", encoding="utf-8")
     resolved, media_class = local_media_path_from_route(tmp_path, "/docs/media/studio/svg/diagram.svg")
@@ -389,7 +403,7 @@ def test_local_media_route_confines_repo_and_external_scope_assets(tmp_path: Pat
         media_provider=EXTERNAL_LOCAL_PROVIDER,
         source=external_source,
     )
-    external_file = external_root / "scopes/private/published/media/files/notes.pdf"
+    external_file = external_root / "scopes/private/generated/media/files/notes.pdf"
     external_file.parent.mkdir(parents=True)
     external_file.write_bytes(b"pdf")
     monkeypatch.setattr("docs_media_storage.load_docs_scope_configs", lambda _repo_root: {"private": external_config})
@@ -400,9 +414,9 @@ def test_local_media_route_confines_repo_and_external_scope_assets(tmp_path: Pat
 
 
 def test_configured_local_media_directories_skip_missing_external_scope(tmp_path: Path) -> None:
-    repo_media = tmp_path / "docs-viewer/scopes/studio/published/media"
+    repo_scope = tmp_path / "docs-viewer/scopes/studio"
     external_source = tmp_path / "external/docs-viewer/scopes/notes/source"
-    external_media = tmp_path / "external/docs-viewer/scopes/notes/published/media"
+    external_scope = tmp_path / "external/docs-viewer/scopes/notes"
     missing_external_root = tmp_path / "external/docs-viewer/scopes/missing"
     external_source.mkdir(parents=True)
     configs = {
@@ -425,16 +439,20 @@ def test_configured_local_media_directories_skip_missing_external_scope(tmp_path
     materialized = ensure_configured_scope_owned_media_directories(tmp_path, configs)
     ensure_configured_scope_owned_media_directories(tmp_path, configs)
 
-    assert set(materialized) == {"notes", "studio"}
-    assert all((repo_media / media_class).is_dir() for media_class in ("files", "img", "svg"))
-    assert not any(
-        (repo_media / media_class / ".gitkeep").exists()
-        for media_class in ("files", "img", "svg")
-    )
-    assert all((external_media / media_class).is_dir() for media_class in ("files", "img", "svg"))
-    assert not any(
-        (external_media / media_class / ".gitkeep").exists()
-        for media_class in ("files", "img", "svg")
-    )
+    assert set(materialized) == {"example", "notes", "studio"}
+    for scope_root in (
+        repo_scope,
+        external_scope,
+        tmp_path / "docs-viewer/scopes/example",
+    ):
+        for lifecycle in ("source", "generated", "published"):
+            assert all(
+                (scope_root / lifecycle / "media" / media_class).is_dir()
+                for media_class in ("files", "img", "svg")
+            )
+            assert not any(
+                (scope_root / lifecycle / "media" / media_class / ".gitkeep").exists()
+                for media_class in ("files", "img", "svg")
+            )
     assert not missing_external_root.exists()
     assert not (tmp_path / "docs-viewer/scopes/example/source/documents/media").exists()

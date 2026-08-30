@@ -19,18 +19,12 @@ from repo_factory import docs_scope_record, docs_sub_scope_record
 
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
-MEDIA_WORKSPACE = {
-    "location": {
-        "provider": "external_local",
-        "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/media",
-    }
-}
 
 
 def write_scope_record(repo_root: Path, record: dict[str, object]) -> None:
     write_json(
         repo_root / "docs-viewer/config/scopes/docs_scopes.json",
-        {"schema_version": "docs_scopes_v4", "media_workspace": MEDIA_WORKSPACE, "scopes": [record]},
+        {"schema_version": "docs_scopes_v5", "scopes": [record]},
     )
 
 
@@ -154,8 +148,7 @@ def test_docs_scope_config_selected_local_scope_does_not_resolve_external_worksp
         write_json(
             repo_root / "docs-viewer/config/scopes/docs_scopes.json",
             {
-                "schema_version": "docs_scopes_v4",
-                "media_workspace": MEDIA_WORKSPACE,
+                "schema_version": "docs_scopes_v5",
                 "scopes": [
                     docs_scope_record("studio", default_doc_id="studio"),
                     docs_scope_record(
@@ -195,8 +188,7 @@ def test_docs_scope_config_public_only_does_not_resolve_external_workspace() -> 
         write_json(
             repo_root / "docs-viewer/config/scopes/docs_scopes.json",
             {
-                "schema_version": "docs_scopes_v4",
-                "media_workspace": MEDIA_WORKSPACE,
+                "schema_version": "docs_scopes_v5",
                 "scopes": [
                     docs_scope_record(
                         "analysis",
@@ -748,7 +740,7 @@ def test_docs_scope_config_accepts_explicit_mermaid_to_svg_build_contract() -> N
         config = docs_scope_config.load_docs_scope_configs(repo_root)["studio"]
 
     assert config.media.build_sources["mermaid"].location.path == Path(
-        "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/media/studio/build-source/mermaid"
+        "docs-viewer/scopes/studio/source/media/build-source/mermaid"
     )
     assert config.media.types["svg"].build_inputs == ("mermaid",)
 
@@ -780,7 +772,7 @@ def test_docs_scope_policy_rejects_competing_producers_for_one_published_type() 
     builds = {
         "mermaid": docs_scope_config.DocsBuildMediaConfig(
             location=docs_scope_config.location_child(
-                config.media.location,
+                config.media.source_location,
                 Path("build-source/mermaid"),
             ),
             producer="first",
@@ -788,7 +780,7 @@ def test_docs_scope_policy_rejects_competing_producers_for_one_published_type() 
         ),
         "other": docs_scope_config.DocsBuildMediaConfig(
             location=docs_scope_config.location_child(
-                config.media.location,
+                config.media.source_location,
                 Path("build-source/other"),
             ),
             producer="second",

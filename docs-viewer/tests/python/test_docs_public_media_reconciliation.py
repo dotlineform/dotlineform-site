@@ -4,7 +4,6 @@
 from __future__ import annotations
 
 import json
-import os
 import sys
 import tempfile
 from pathlib import Path
@@ -48,8 +47,14 @@ def payload_files(doc_id: str, content_html: str) -> dict[Path, bytes]:
     }
 
 
-def managed_root(scope: str, media_type: str) -> Path:
-    return Path(os.environ["DOTLINEFORM_PROJECTS_BASE_DIR"]) / "docs-viewer/media" / scope / media_type
+def managed_root(repo_root: Path, scope: str, media_type: str) -> Path:
+    return (
+        repo_root
+        / "docs-viewer/scopes"
+        / scope
+        / "generated/media"
+        / media_type
+    )
 
 
 class FakeR2Client:
@@ -115,7 +120,7 @@ def test_repository_plan_and_apply_copy_retain_missing_and_remove_only_stale_pub
     with tempfile.TemporaryDirectory() as temp_path:
         repo_root = Path(temp_path)
         config = public_config(repo_root, media_type="img")
-        managed = managed_root("example", "img")
+        managed = managed_root(repo_root, "example", "img")
         managed.mkdir(parents=True)
         (managed / "shared.png").write_bytes(b"new shared")
         (managed / "current.png").write_bytes(b"current")
@@ -162,7 +167,7 @@ def test_r2_apply_verifies_copy_removes_stale_and_preserves_prefix_marker() -> N
     with tempfile.TemporaryDirectory() as temp_path:
         repo_root = Path(temp_path)
         config = public_config(repo_root, media_type="files", provider="r2")
-        managed = managed_root("example", "files")
+        managed = managed_root(repo_root, "example", "files")
         managed.mkdir(parents=True)
         (managed / "download.pdf").write_bytes(b"managed pdf")
         client = FakeR2Client(
@@ -202,7 +207,7 @@ def test_r2_copy_failure_is_reported_without_stopping_other_reconciliation() -> 
     with tempfile.TemporaryDirectory() as temp_path:
         repo_root = Path(temp_path)
         config = public_config(repo_root, media_type="files", provider="r2")
-        managed = managed_root("example", "files")
+        managed = managed_root(repo_root, "example", "files")
         managed.mkdir(parents=True)
         (managed / "download.pdf").write_bytes(b"managed pdf")
         client = FakeR2Client(

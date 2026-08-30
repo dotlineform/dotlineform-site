@@ -123,7 +123,7 @@ def _location_adapters(
     env_files: Iterable[Path] | None,
     environ: Mapping[str, str] | None,
 ) -> tuple[dict[str, ArtifactLocationAdapter], dict[str, ArtifactLocationAdapter]]:
-    published_locations = [media.location for media in config.media.types.values()]
+    published_locations = [media.source_location for media in config.media.types.values()]
     remote_client = authenticated_remote_client_for_locations(
         repo_root,
         published_locations,
@@ -134,7 +134,7 @@ def _location_adapters(
     published = {
         media_type: artifact_location_adapter(
             repo_root,
-            media.location,
+            media.source_location,
             served_path_prefix=media.served_path_prefix,
             remote_client=remote_client,
         )
@@ -189,8 +189,8 @@ def inventory_scope_media(
                     scope=config.scope_id,
                     media_type=media_type,
                     identity=artifact.identity,
-                    role="published",
-                    provider=media.location.provider,
+                    role="source",
+                    provider=media.source_location.provider,
                     size=artifact.size,
                     etag=artifact.etag,
                     served_path=adapter.served_reference(artifact.identity),
@@ -209,7 +209,7 @@ def inventory_scope_media(
                     scope=config.scope_id,
                     media_type=build_type,
                     identity=artifact.identity,
-                    role="source",
+                    role="build-source",
                     provider=build.location.provider,
                     size=artifact.size,
                     etag=artifact.etag,

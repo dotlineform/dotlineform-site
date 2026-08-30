@@ -206,7 +206,7 @@ def next_package_media_filename(
     index = 1
     while True:
         filename = f"{safe_doc_id}-{suffix}-{index:02d}.{safe_extension}"
-        local_asset_path = local_artifact_path(repo_root, media.location, filename)
+        local_asset_path = local_artifact_path(repo_root, media.source_location, filename)
         if (
             filename not in used_filenames
             and not (staging_root / filename).exists()

@@ -4,7 +4,6 @@
 from __future__ import annotations
 
 from http import HTTPStatus
-import os
 from pathlib import Path
 from types import SimpleNamespace
 
@@ -28,8 +27,8 @@ def isolated_media_workspace(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) ->
     monkeypatch.setenv("DOTLINEFORM_PROJECTS_BASE_DIR", str(projects))
 
 
-def managed_media_path(scope: str, *parts: str) -> Path:
-    return Path(os.environ["DOTLINEFORM_PROJECTS_BASE_DIR"]) / "docs-viewer/media" / scope / Path(*parts)
+def managed_media_path(root: Path, scope: str, lifecycle: str, *parts: str) -> Path:
+    return root / "docs-viewer/scopes" / scope / lifecycle / "media" / Path(*parts)
 
 
 def _configure_mermaid_fixture(root: Path) -> None:
@@ -78,12 +77,12 @@ def _configure_mermaid_fixture(root: Path) -> None:
         "![Architecture]([[media:docs/example/svg/architecture.svg]])\n",
         encoding="utf-8",
     )
-    source = managed_media_path("example", "build-source", "mermaid", "architecture.mmd")
+    source = managed_media_path(root, "example", "source", "build-source", "mermaid", "architecture.mmd")
     source.parent.mkdir(parents=True)
     source.write_text("flowchart LR\nA --> B\n", encoding="utf-8")
-    published = managed_media_path("example", "svg", "architecture.svg")
-    published.parent.mkdir(parents=True)
-    published.write_text("<svg xmlns='http://www.w3.org/2000/svg'><rect width='1'/></svg>", encoding="utf-8")
+    generated = managed_media_path(root, "example", "generated", "svg", "architecture.svg")
+    generated.parent.mkdir(parents=True)
+    generated.write_text("<svg xmlns='http://www.w3.org/2000/svg'><rect width='1'/></svg>", encoding="utf-8")
 
 
 def test_manage_diagram_sources_lists_only_verified_same_basename_pairs() -> None:
@@ -140,7 +139,7 @@ def test_open_diagram_source_rederives_registered_local_source_without_returning
     assert status == HTTPStatus.OK
     assert calls[0][:3] == ["open", "-a", "Visual Studio Code"]
     assert Path(calls[0][3]) == managed_media_path(
-        "example", "build-source", "mermaid", "architecture.mmd"
+        root, "example", "source", "build-source", "mermaid", "architecture.mmd"
     ).resolve()
     assert payload["source_identity"] == "architecture.mmd"
     assert "path" not in payload
@@ -215,7 +214,7 @@ def test_open_diagram_source_failure_does_not_expose_the_physical_path(
             lambda *_args, **_kwargs: SimpleNamespace(
                 returncode=1,
                 stdout="",
-                stderr=f"could not open {managed_media_path('example', 'build-source', 'mermaid', 'architecture.mmd')}",
+                stderr=f"could not open {managed_media_path(root, 'example', 'source', 'build-source', 'mermaid', 'architecture.mmd')}",
             ),
         )
 

@@ -107,17 +107,17 @@ def write_generated_docs(root: Path) -> None:
             "scope": "studio",
             "doc_id": "non-publishable-doc",
             "title": "Non-publishable Doc",
-            "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/non-publishable-doc.json",
+            "content_url": "/docs-viewer/scopes/studio/generated/documents/by-id/non-publishable-doc.json",
         },
         {
             "scope": "studio",
             "doc_id": "child",
             "title": "Child",
-            "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/child.json",
+            "content_url": "/docs-viewer/scopes/studio/generated/documents/by-id/child.json",
         },
     ]
     write_json(
-        root / "docs-viewer/scopes/studio/published/documents/index-tree.json",
+        root / "docs-viewer/scopes/studio/generated/documents/index-tree.json",
         {
             "schema": "docs_index_tree_v1",
             "viewer_options": {
@@ -128,7 +128,7 @@ def write_generated_docs(root: Path) -> None:
         },
     )
     write_json(
-        root / "docs-viewer/scopes/studio/published/documents/recent.json",
+        root / "docs-viewer/scopes/studio/generated/documents/recent.json",
         {
             "schema": "docs_recent_v1",
             "basis": "edited",
@@ -136,22 +136,16 @@ def write_generated_docs(root: Path) -> None:
             "docs": [docs[1]],
         },
     )
-    write_json(root / "docs-viewer/scopes/studio/published/documents/by-id/non-publishable-doc.json", {"doc_id": "non-publishable-doc"})
-    write_json(root / "docs-viewer/scopes/studio/published/documents/by-id/child.json", {"doc_id": "child"})
-    write_json(root / "docs-viewer/scopes/studio/published/search/index.json", {"entries": [{"doc_id": "child"}]})
+    write_json(root / "docs-viewer/scopes/studio/generated/documents/by-id/non-publishable-doc.json", {"doc_id": "non-publishable-doc"})
+    write_json(root / "docs-viewer/scopes/studio/generated/documents/by-id/child.json", {"doc_id": "child"})
+    write_json(root / "docs-viewer/scopes/studio/generated/search/index.json", {"entries": [{"doc_id": "child"}]})
 
 
 def write_docs_scope_config(root: Path) -> None:
     write_json(
         root / "docs-viewer/config/scopes/docs_scopes.json",
         {
-            "schema_version": "docs_scopes_v4",
-            "media_workspace": {
-                "location": {
-                    "provider": "external_local",
-                    "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/media",
-                }
-            },
+            "schema_version": "docs_scopes_v5",
             "scopes": [
                 docs_scope_record("studio", default_doc_id="child")
             ],
@@ -194,9 +188,9 @@ def write_docs_viewer_browser_config(root: Path) -> None:
                             "served_path_prefix": "/docs/media/studio/files",
                         },
                     },
-                    "index_tree_url": "/docs-viewer/scopes/studio/published/documents/index-tree.json",
-                    "recent_url": "/docs-viewer/scopes/studio/published/documents/recent.json",
-                    "search_index_url": "/docs-viewer/scopes/studio/published/search/index.json",
+                    "index_tree_url": "/docs-viewer/scopes/studio/generated/documents/index-tree.json",
+                    "recent_url": "/docs-viewer/scopes/studio/generated/documents/recent.json",
+                    "search_index_url": "/docs-viewer/scopes/studio/generated/search/index.json",
                 }
             ],
             "docs_viewer": {

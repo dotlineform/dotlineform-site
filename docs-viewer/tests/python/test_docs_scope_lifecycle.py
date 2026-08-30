@@ -23,12 +23,12 @@ from repo_factory import docs_scope_record
 @pytest.fixture(autouse=True)
 def isolated_media_workspace(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     projects = tmp_path / "projects"
-    (projects / "docs-viewer/media").mkdir(parents=True)
+    projects.mkdir(parents=True)
     monkeypatch.setenv("DOTLINEFORM_PROJECTS_BASE_DIR", str(projects))
 
 
-def managed_media_root(scope: str) -> Path:
-    return Path(os.environ["DOTLINEFORM_PROJECTS_BASE_DIR"]) / "docs-viewer/media" / scope
+def repository_source_media_root(repo_root: Path, scope: str) -> Path:
+    return repo_root / "docs-viewer/scopes" / scope / "source/media"
 
 
 def rebuild_sub_scope_fixture(repo_root: Path, scope: str, sub_scope: str):
@@ -36,7 +36,7 @@ def rebuild_sub_scope_fixture(repo_root: Path, scope: str, sub_scope: str):
     parent = lifecycle.load_docs_scope_configs(repo_root)[scope]
     output = lifecycle.resolve_scope_path(
         repo_root,
-        lifecycle.published_documents_path(parent)
+        lifecycle.generated_documents_path(parent)
         / lifecycle.SOURCE_SUB_SCOPES_PATH
         / sub_scope,
     )
@@ -54,7 +54,7 @@ def rebuild_parent_fixture(repo_root: Path, scope: str, **_kwargs):
     )
     output = lifecycle.resolve_scope_path(
         repo_root,
-        lifecycle.published_documents_path(parent),
+        lifecycle.generated_documents_path(parent),
     )
     rows = []
     for path in sorted(source.glob("*.md")):
@@ -118,6 +118,67 @@ def test_scope_manifest_backfills_existing_scopes_as_system_owned() -> None:
     assert records["studio"]["created_by_tool"] is False
     assert any(file["path"] == "docs-viewer/scopes/studio/source/documents/child.md" for file in records["studio"]["files"])
 
+
+def test_scope_manifest_reconciliation_preserves_ownership_and_refreshes_roles() -> None:
+    with make_repo() as temp_path:
+        repo_root = Path(temp_path)
+        write_docs_scope_config(repo_root)
+        manifest_path = repo_root / "docs-viewer/config/scopes/docs_scope_manifest.json"
+        write_json(
+            manifest_path,
+            {
+                "schema_version": "docs_scope_manifest_v1",
+                "tool_id": "docs-viewer-scope-lifecycle",
+                "updated_at": "2026-01-01T00:00:00Z",
+                "scopes": [
+                    {
+                        "scope_id": "studio",
+                        "scope_type": "local",
+                        "owner": "user",
+                        "user_created": True,
+                        "created_by_tool": True,
+                        "tool_id": "fixture-tool",
+                        "repo_status_at_creation": "tracked",
+                        "created_at": "2026-01-01T00:00:00Z",
+                        "updated_at": "2026-01-01T00:00:00Z",
+                        "files": [{"kind": "old", "path": "old"}],
+                        "metadata": {
+                            "backfilled": False,
+                            "publishing_mode": "local_committed",
+                        },
+                    }
+                ],
+            },
+        )
+
+        preview = docs_management_service.docs_scope_manifest.reconcile_scope_manifest(
+            repo_root,
+        )
+        assert json.loads(manifest_path.read_text(encoding="utf-8"))["updated_at"] == (
+            "2026-01-01T00:00:00Z"
+        )
+        written = docs_management_service.docs_scope_manifest.reconcile_scope_manifest(
+            repo_root,
+            write=True,
+        )
+
+    record = written["scopes"][0]
+    assert preview["scopes"][0]["owner"] == "user"
+    assert record["owner"] == "user"
+    assert record["user_created"] is True
+    assert record["created_by_tool"] is True
+    assert record["tool_id"] == "fixture-tool"
+    assert record["created_at"] == "2026-01-01T00:00:00Z"
+    assert record["metadata"]["backfilled"] is False
+    assert record["metadata"]["publishing_mode"] == "local_committed"
+    assert {file["kind"] for file in record["files"]} >= {
+        "source_media_root",
+        "generated_docs_root",
+        "generated_search_index",
+        "published_docs_root",
+        "published_search_index",
+    }
+
 def test_scope_create_preview_reports_public_readonly_site_route_and_payloads() -> None:
     with make_repo() as temp_path:
         repo_root = Path(temp_path)
@@ -165,7 +226,7 @@ def test_scope_create_preview_reports_public_readonly_site_route_and_payloads() 
     assert any(file["path"] == "site/assets/data/docs/scopes/research/by-id" for file in payload["publish_files"])
     assert any(file["path"] == "site/assets/data/search/research/index.json" for file in payload["publish_files"])
     assert any(
-        file["path"] == (managed_media_root("research") / "svg").as_posix()
+        file["path"] == "docs-viewer/scopes/research/source/media/svg"
         for file in payload["created_files"]
     )
     assert not any(file["path"].endswith("/.gitkeep") for file in payload["created_files"])
@@ -196,13 +257,13 @@ def test_scope_create_preview_reports_local_tracked_outputs() -> None:
     assert "documents" not in payload["planned_scope_config"]["published"]
     assert "search" not in payload["planned_scope_config"]["published"]
     assert payload["storage_contract"]["public_static_assets"] is False
-    assert "non-public published payloads" in payload["storage_contract"]["summary"]
+    assert "source, generated, and published lifecycle folders" in payload["storage_contract"]["summary"]
     assert payload["urls"]["public"] == ""
     assert not any(file["kind"] == "route_file" for file in payload["created_files"])
-    assert any(file["path"] == "docs-viewer/scopes/notes/published/documents" for file in payload["created_files"])
-    assert any(file["path"] == "docs-viewer/scopes/notes/published/documents/index-tree.json" for file in payload["created_files"])
-    assert any(file["path"] == "docs-viewer/scopes/notes/published/documents/recent.json" for file in payload["created_files"])
-    assert any(file["path"] == "docs-viewer/scopes/notes/published/search/index.json" for file in payload["created_files"])
+    assert any(file["path"] == "docs-viewer/scopes/notes/generated/documents" for file in payload["created_files"])
+    assert any(file["path"] == "docs-viewer/scopes/notes/generated/documents/index-tree.json" for file in payload["created_files"])
+    assert any(file["path"] == "docs-viewer/scopes/notes/generated/documents/recent.json" for file in payload["created_files"])
+    assert any(file["path"] == "docs-viewer/scopes/notes/generated/search/index.json" for file in payload["created_files"])
     assert not any(file["path"].startswith("site/assets/data/docs/scopes/notes") for file in payload["created_files"])
     assert not any(file["path"].startswith("site/assets/data/search/notes") for file in payload["created_files"])
 
@@ -281,14 +342,14 @@ def test_sub_scope_create_apply_updates_parent_config_and_creates_nested_roots()
         source_payload = json.loads((repo_root / "docs-viewer/config/scopes/docs_scopes.json").read_text(encoding="utf-8"))
         source_root_exists = (repo_root / "docs-viewer/scopes/studio/source/sub-scopes/tags").is_dir()
         recursive_source_root_exists = (repo_root / "docs-viewer/scopes/studio/source/sub-scopes/tags/sub-scopes").exists()
-        generated_payload_root_exists = (repo_root / "docs-viewer/scopes/studio/published/documents/sub-scopes/tags/by-id").is_dir()
+        generated_payload_root_exists = (repo_root / "docs-viewer/scopes/studio/generated/documents/sub-scopes/tags/by-id").is_dir()
         top_level_source_exists = (repo_root / "docs-viewer/scopes/tags/source").exists()
         default_doc_exists = (repo_root / "docs-viewer/scopes/studio/source/sub-scopes/tags/documents/tags.md").exists()
         host_id = preview["planned_report_host_identity"]["doc_id"]
         host_path = repo_root / f"docs-viewer/scopes/studio/source/documents/{host_id}.md"
         host_front_matter, host_body = docs_management_service.docs_sub_scope_lifecycle.source_model.parse_source(host_path)
-        manifest = json.loads((repo_root / "docs-viewer/scopes/studio/published/documents/sub-scopes/tags/manifest.json").read_text())
-        index = json.loads((repo_root / "docs-viewer/scopes/studio/published/documents/index-tree.json").read_text())
+        manifest = json.loads((repo_root / "docs-viewer/scopes/studio/generated/documents/sub-scopes/tags/manifest.json").read_text())
+        index = json.loads((repo_root / "docs-viewer/scopes/studio/generated/documents/index-tree.json").read_text())
 
     assert payload["ok"] is True
     assert payload["action"] == "create_sub_scope"
@@ -317,7 +378,7 @@ def test_sub_scope_create_apply_updates_parent_config_and_creates_nested_roots()
     assert any(row["doc_id"] == host_id for row in index["docs"])
     assert any(file["path"] == "docs-viewer/scopes/studio/source/sub-scopes/tags" for file in payload["created_files"])
     assert not any(file["kind"] == "sub_scope_source_sub_scopes_root" for file in payload["created_files"])
-    assert any(file["path"] == "docs-viewer/scopes/studio/published/documents/sub-scopes/tags/by-id" for file in payload["created_files"])
+    assert any(file["path"] == "docs-viewer/scopes/studio/generated/documents/sub-scopes/tags/by-id" for file in payload["created_files"])
     assert payload["publish_files"] == []
 
 
@@ -394,8 +455,8 @@ def test_sub_scope_delete_apply_removes_config_source_generated_and_published_pa
         host_front_matter, _body = docs_management_service.docs_sub_scope_lifecycle.source_model.parse_source(host_path)
         public_manifest_after_create = (repo_root / "site/assets/data/docs/scopes/studio/tags/manifest.json").exists()
         (repo_root / "docs-viewer/scopes/studio/source/sub-scopes/tags/documents/scale.md").write_text("# Scale\n", encoding="utf-8")
-        write_json(repo_root / "docs-viewer/scopes/studio/published/documents/sub-scopes/tags/manifest.json", {"doc_ids": "scale"})
-        write_json(repo_root / "docs-viewer/scopes/studio/published/documents/sub-scopes/tags/by-id/scale.json", {"doc_id": "scale"})
+        write_json(repo_root / "docs-viewer/scopes/studio/generated/documents/sub-scopes/tags/manifest.json", {"doc_ids": "scale"})
+        write_json(repo_root / "docs-viewer/scopes/studio/generated/documents/sub-scopes/tags/by-id/scale.json", {"doc_id": "scale"})
         write_json(repo_root / "site/assets/data/docs/scopes/studio/tags/manifest.json", {"doc_ids": "scale"})
         write_json(repo_root / "site/assets/data/docs/scopes/studio/tags/by-id/scale.json", {"doc_id": "scale"})
         preview = docs_management_service.docs_sub_scope_lifecycle.plan_delete_sub_scope_preview(
@@ -410,14 +471,14 @@ def test_sub_scope_delete_apply_removes_config_source_generated_and_published_pa
         )
         final_config = json.loads(config_path.read_text(encoding="utf-8"))
         source_root_exists = (repo_root / "docs-viewer/scopes/studio/source/sub-scopes/tags").exists()
-        generated_root_exists = (repo_root / "docs-viewer/scopes/studio/published/documents/sub-scopes/tags").exists()
+        generated_root_exists = (repo_root / "docs-viewer/scopes/studio/generated/documents/sub-scopes/tags").exists()
         published_root_exists = (repo_root / "site/assets/data/docs/scopes/studio/tags").exists()
         host_exists = (repo_root / f"docs-viewer/scopes/studio/source/documents/{host_id}.md").exists()
 
     assert preview["ok"] is True
     assert preview["allowed"] is True
     assert any(file["path"] == "docs-viewer/scopes/studio/source/sub-scopes/tags" for file in preview["delete_files"])
-    assert any(file["path"] == "docs-viewer/scopes/studio/published/documents/sub-scopes/tags" for file in preview["delete_files"])
+    assert any(file["path"] == "docs-viewer/scopes/studio/generated/documents/sub-scopes/tags" for file in preview["delete_files"])
     assert any(file["path"] == "site/assets/data/docs/scopes/studio/tags" for file in preview["delete_files"])
     assert payload["ok"] is True
     assert payload["action"] == "delete_sub_scope"
@@ -595,7 +656,8 @@ def test_scope_create_apply_writes_allowlisted_files_and_runs_rebuild() -> None:
             default_doc_text = default_doc_path.read_text(encoding="utf-8")
             source_sub_scopes_exists = (external_root / "scopes/research/source/sub-scopes").exists()
             media_directories_exist = all(
-                (external_root / "media/research" / media_class).is_dir()
+                (external_root / f"scopes/research/{role}/media" / media_class).is_dir()
+                for role in ("source", "generated", "published")
                 for media_class in ("files", "img", "svg")
             )
             route_exists = (repo_root / "research/index.md").exists()
@@ -614,9 +676,9 @@ def test_scope_create_apply_writes_allowlisted_files_and_runs_rebuild() -> None:
     assert default_doc_exists is True
     assert source_sub_scopes_exists is False
     assert media_directories_exist is True
-    assert any(file["kind"] == "scope_media_img_root" for file in payload["created_files"])
-    assert any(file["kind"] == "scope_media_svg_root" for file in payload["created_files"])
-    assert any(file["kind"] == "scope_media_files_root" for file in payload["created_files"])
+    assert any(file["kind"] == "scope_media_source_img_root" for file in payload["created_files"])
+    assert any(file["kind"] == "scope_media_generated_svg_root" for file in payload["created_files"])
+    assert any(file["kind"] == "scope_media_published_files_root" for file in payload["created_files"])
     assert not any(file["kind"] == "source_sub_scopes_root" for file in payload["created_files"])
     assert "publishable:" not in default_doc_text
     assert "published:" not in default_doc_text
@@ -641,8 +703,8 @@ def test_scope_create_apply_writes_allowlisted_files_and_runs_rebuild() -> None:
     assert records["research"]["repo_status_at_creation"] == "external"
     assert records["research"]["metadata"]["external_data_root"] == EXTERNAL_DATA_ROOT_MARKER
     recorded_paths = {file["path"] for file in records["research"]["files"]}
-    assert (external_root / "scopes/research/published/documents/index-tree.json").as_posix() in recorded_paths
-    assert (external_root / "scopes/research/published/documents/recent.json").as_posix() in recorded_paths
+    assert (external_root / "scopes/research/generated/documents/index-tree.json").as_posix() in recorded_paths
+    assert (external_root / "scopes/research/generated/documents/recent.json").as_posix() in recorded_paths
     assert any(file["path"] == "docs-viewer/config/scopes/docs_scopes.json" for file in records["research"]["files"])
     assert not any(file["kind"] == "route_file" for file in records["research"]["files"])
     assert "docs-viewer/runtime/js/docs-viewer-public.js" not in recorded_paths
@@ -754,11 +816,11 @@ def test_scope_rename_apply_moves_external_roots_and_preserves_links_and_doc_ids
                 + f"\n[Old scope link](/docs/?scope=research&doc={default_doc_id})\n",
                 encoding="utf-8",
             )
-            media_path = external_root / "media/research/img/example.png"
+            media_path = external_root / "scopes/research/source/media/img/example.png"
             media_path.parent.mkdir(parents=True, exist_ok=True)
             media_path.write_bytes(b"image")
-            write_json(external_root / "scopes/research/published/documents/index-tree.json", {"docs": []})
-            write_json(external_root / "scopes/research/published/search/index.json", {"entries": []})
+            write_json(external_root / "scopes/research/generated/documents/index-tree.json", {"docs": []})
+            write_json(external_root / "scopes/research/generated/search/index.json", {"entries": []})
             config_path = repo_root / "docs-viewer/config/scopes/docs_scopes.json"
 
             try:
@@ -816,12 +878,12 @@ def test_scope_rename_apply_moves_external_roots_and_preserves_links_and_doc_ids
         (repo_root, "field-notes", {"include_search": True}),
     ]
     assert not (external_root / "scopes/research/source").exists()
-    assert not (external_root / "scopes/research/published/documents").exists()
-    assert not (external_root / "scopes/research/published/search").exists()
+    assert not (external_root / "scopes/research/generated/documents").exists()
+    assert not (external_root / "scopes/research/generated/search").exists()
     assert (external_root / "scopes/field-notes/source/sub-scopes/notes").is_dir()
-    assert (external_root / "media/field-notes/img/example.png").read_bytes() == b"image"
-    assert (external_root / "scopes/field-notes/published/documents/index-tree.json").exists()
-    assert (external_root / "scopes/field-notes/published/search/index.json").exists()
+    assert (external_root / "scopes/field-notes/source/media/img/example.png").read_bytes() == b"image"
+    assert (external_root / "scopes/field-notes/generated/documents/index-tree.json").exists()
+    assert (external_root / "scopes/field-notes/generated/search/index.json").exists()
     assert renamed_scope["default_doc_id"] == default_doc_id
     assert renamed_scope["scope_root"]["path"] == f"{EXTERNAL_DATA_ROOT_MARKER}/scopes/field-notes"
     assert renamed_scope["media"]["types"]["img"]["build_inputs"] == []
@@ -842,14 +904,14 @@ def test_scope_create_apply_writes_public_site_route_config_and_payloads() -> No
 
     def fake_rebuild(repo_root: Path, scope: str, **kwargs):
         calls.append((repo_root, scope, kwargs))
-        docs_output = repo_root / "docs-viewer/scopes" / scope / "published/documents"
+        docs_output = repo_root / "docs-viewer/scopes" / scope / "generated/documents"
         (docs_output / "by-id").mkdir(parents=True)
         (docs_output / "index-tree.json").write_text("{}", encoding="utf-8")
         (docs_output / "recent.json").write_text("{}", encoding="utf-8")
         (docs_output / ".publish").mkdir()
         (docs_output / ".publish/recent.json").write_text("{}", encoding="utf-8")
         (docs_output / f"by-id/{scope}.json").write_text(json.dumps({"doc_id": scope}), encoding="utf-8")
-        search_output = repo_root / "docs-viewer/scopes" / scope / "published/search"
+        search_output = repo_root / "docs-viewer/scopes" / scope / "generated/search"
         search_output.mkdir(parents=True)
         (search_output / "index.json").write_text(json.dumps({"entries": []}), encoding="utf-8")
         return {"ok": True}
@@ -939,10 +1001,13 @@ def test_scope_create_apply_skips_public_route_for_local_scopes() -> None:
             default_doc_id = source_payload["scopes"][1]["default_doc_id"]
             default_doc_text = (repo_root / f"docs-viewer/scopes/notes/source/documents/{default_doc_id}.md").read_text(encoding="utf-8")
             media_directories_exist = all(
-                (managed_media_root("notes") / media_class).is_dir()
+                (repository_source_media_root(repo_root, "notes").parents[1] / role / "media" / media_class).is_dir()
+                for role in ("source", "generated", "published")
                 for media_class in ("files", "img", "svg")
             )
-            media_markers_exist = bool(list(managed_media_root("notes").rglob(".gitkeep")))
+            media_markers_exist = bool(
+                list((repo_root / "docs-viewer/scopes/notes").rglob(".gitkeep"))
+            )
             route_exists = (repo_root / "notes/index.md").exists()
     finally:
         docs_management_service.write_rebuild.rebuild_scope_outputs = original_rebuild
@@ -963,10 +1028,10 @@ def test_scope_create_apply_skips_public_route_for_local_scopes() -> None:
     assert payload["storage_contract"]["public_static_assets"] is False
     records = {record["scope_id"]: record for record in manifest_payload["scopes"]}
     assert records["notes"]["scope_type"] == "local"
-    assert any(file["path"] == "docs-viewer/scopes/notes/published/documents" for file in records["notes"]["files"])
-    assert any(file["path"] == "docs-viewer/scopes/notes/published/documents/index-tree.json" for file in records["notes"]["files"])
-    assert any(file["path"] == "docs-viewer/scopes/notes/published/documents/recent.json" for file in records["notes"]["files"])
-    assert any(file["path"] == "docs-viewer/scopes/notes/published/search/index.json" for file in records["notes"]["files"])
+    assert any(file["path"] == "docs-viewer/scopes/notes/generated/documents" for file in records["notes"]["files"])
+    assert any(file["path"] == "docs-viewer/scopes/notes/generated/documents/index-tree.json" for file in records["notes"]["files"])
+    assert any(file["path"] == "docs-viewer/scopes/notes/generated/documents/recent.json" for file in records["notes"]["files"])
+    assert any(file["path"] == "docs-viewer/scopes/notes/generated/search/index.json" for file in records["notes"]["files"])
     assert not any(file["kind"] == "route_file" for file in records["notes"]["files"])
 
 def test_scope_delete_preview_blocks_system_scopes() -> None:
@@ -1136,12 +1201,12 @@ def test_scope_delete_apply_removes_manifest_scope_and_runs_rebuild() -> None:
 
     def fake_create_rebuild(repo_root: Path, scope: str, **kwargs):
         create_calls.append((repo_root, scope, kwargs))
-        docs_output = repo_root / "docs-viewer/scopes" / scope / "published/documents"
+        docs_output = repo_root / "docs-viewer/scopes" / scope / "generated/documents"
         (docs_output / "by-id").mkdir(parents=True)
         (docs_output / "index-tree.json").write_text("{}", encoding="utf-8")
         (docs_output / "recent.json").write_text("{}", encoding="utf-8")
         (docs_output / "by-id/research.json").write_text("{}", encoding="utf-8")
-        search_output = repo_root / "docs-viewer/scopes" / scope / "published/search"
+        search_output = repo_root / "docs-viewer/scopes" / scope / "generated/search"
         search_output.mkdir(parents=True)
         (search_output / "index.json").write_text("{}", encoding="utf-8")
         return {"ok": True}
@@ -1168,7 +1233,7 @@ def test_scope_delete_apply_removes_manifest_scope_and_runs_rebuild() -> None:
                 },
                 dry_run=False,
             )
-            search_index_path = repo_root / "docs-viewer/scopes/research/published/search/index.json"
+            search_index_path = repo_root / "docs-viewer/scopes/research/generated/search/index.json"
             search_index_path.unlink()
             payload = docs_management_service.handle_scope_delete_apply(
                 repo_root,
@@ -1182,8 +1247,8 @@ def test_scope_delete_apply_removes_manifest_scope_and_runs_rebuild() -> None:
             manifest_payload = json.loads((repo_root / "docs-viewer/config/scopes/docs_scope_manifest.json").read_text(encoding="utf-8"))
             source_root_exists = (repo_root / "docs-viewer/scopes/research/source").exists()
             route_exists = (repo_root / "research/index.md").exists()
-            generated_docs_exists = (repo_root / "docs-viewer/scopes/research/published/documents").exists()
-            generated_search_root_exists = (repo_root / "docs-viewer/scopes/research/published/search").exists()
+            generated_docs_exists = (repo_root / "docs-viewer/scopes/research/generated/documents").exists()
+            generated_search_root_exists = (repo_root / "docs-viewer/scopes/research/generated/search").exists()
     finally:
         docs_management_service.write_rebuild.rebuild_scope_outputs = original_create_rebuild
         docs_management_service.write_rebuild.rebuild_all_docs_outputs = original_delete_rebuild
@@ -1203,13 +1268,13 @@ def test_scope_delete_apply_removes_manifest_scope_and_runs_rebuild() -> None:
     assert generated_search_root_exists is False
     assert any(file["path"] == "docs-viewer/scopes/research/source" for file in payload["deleted_files"])
     assert any(
-        file["kind"] == "published_search_root"
-        and file["path"] == "docs-viewer/scopes/research/published/search"
+        file["kind"] == "generated_search_root"
+        and file["path"] == "docs-viewer/scopes/research/generated/search"
         for file in payload["deleted_files"]
     )
     assert any(
-        file["kind"] == "published_search_index"
-        and file["path"] == "docs-viewer/scopes/research/published/search/index.json"
+        file["kind"] == "generated_search_index"
+        and file["path"] == "docs-viewer/scopes/research/generated/search/index.json"
         for file in payload["missing_files"]
     )
 
@@ -1242,7 +1307,7 @@ def test_scope_delete_apply_removes_external_scope_owned_media_with_published_do
                 },
                 dry_run=False,
             )
-            media_path = external_root / "media/research/img/diagram.svg"
+            media_path = external_root / "scopes/research/source/media/img/diagram.svg"
             media_path.parent.mkdir(parents=True, exist_ok=True)
             media_path.write_text("<svg/>", encoding="utf-8")
             preview = docs_management_service.docs_scope_delete.plan_delete_scope_preview(
@@ -1279,8 +1344,8 @@ def test_scope_delete_apply_removes_external_scope_owned_media_with_published_do
         for file in preview["delete_files"]
     )
     assert any(
-        file["kind"] == "scope_media_img_root"
-        and file["path"] == (external_root / "media/research/img").as_posix()
+        file["kind"] == "scope_media_source_img_root"
+        and file["path"] == (external_root / "scopes/research/source/media/img").as_posix()
         for file in preview["delete_files"]
     )
     assert payload["ok"] is True

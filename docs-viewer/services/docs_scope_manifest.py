@@ -14,8 +14,9 @@ from docs_scope_config import (
     CONFIG_REL_PATH,
     DEFAULT_DOCS_SEARCH_FIELDS,
     EXTERNAL_DATA_ROOT_MARKER,
-    LOCAL_EXTERNAL_SCOPE_TYPE,
-    MEDIA_WORKSPACE_ROOT_MARKER,
+    GENERATED_DOCUMENTS_PATH,
+    GENERATED_SEARCH_PATH,
+    EXTERNAL_LOCAL_PROVIDER,
     PUBLISHED_DOCUMENTS_PATH,
     PUBLISHED_SEARCH_PATH,
     PUBLIC_DOCS_OUTPUT_ROOT,
@@ -26,6 +27,8 @@ from docs_scope_config import (
     SCOPE_LIFECYCLE_TOOL_ID,
     DocsScopeConfig,
     document_source_path,
+    generated_documents_path,
+    generated_search_path,
     load_docs_scope_configs,
     public_documents_path,
     public_search_path,
@@ -114,6 +117,18 @@ def local_published_docs_output_path(repo_root: Path, config: DocsScopeConfig | 
     return resolve_scope_path(repo_root, planned_scope_root_path(config) / PUBLISHED_DOCUMENTS_PATH)
 
 
+def local_generated_search_index_path(repo_root: Path, config: DocsScopeConfig | dict[str, Any]) -> Path:
+    if isinstance(config, DocsScopeConfig):
+        return resolve_scope_path(repo_root, generated_search_path(config))
+    return resolve_scope_path(repo_root, planned_scope_root_path(config) / GENERATED_SEARCH_PATH)
+
+
+def local_generated_docs_output_path(repo_root: Path, config: DocsScopeConfig | dict[str, Any]) -> Path:
+    if isinstance(config, DocsScopeConfig):
+        return resolve_scope_path(repo_root, generated_documents_path(config))
+    return resolve_scope_path(repo_root, planned_scope_root_path(config) / GENERATED_DOCUMENTS_PATH)
+
+
 def planned_source_output_path(repo_root: Path, config: dict[str, Any]) -> Path:
     return resolve_scope_path(repo_root, planned_scope_root_path(config) / SCOPE_SOURCE_PATH)
 
@@ -180,7 +195,7 @@ def backfilled_scope_record(repo_root: Path, config: DocsScopeConfig) -> dict[st
     scope_type = "public" if readonly_route else "local"
     repo_status = (
         "external"
-        if config.scope_type == LOCAL_EXTERNAL_SCOPE_TYPE
+        if config.scope_root.provider == EXTERNAL_LOCAL_PROVIDER
         else "tracked"
         if scope_type == "public"
         else git_path_status(repo_root, source_root)
@@ -190,7 +205,7 @@ def backfilled_scope_record(repo_root: Path, config: DocsScopeConfig) -> dict[st
         path_record(repo_root, "source_root", source_root),
         path_record(repo_root, "source_documents_root", source_documents_root),
         path_record(repo_root, "source_sub_scopes_root", source_sub_scopes_root),
-        path_record(repo_root, "managed_media_root", resolve_location_path(repo_root, config.media.location)),
+        path_record(repo_root, "source_media_root", resolve_location_path(repo_root, config.media.source_location)),
         path_record(repo_root, "scope_config", repo_root / CONFIG_REL_PATH),
     ]
     default_doc = default_source_doc_record(repo_root, config)
@@ -198,13 +213,15 @@ def backfilled_scope_record(repo_root: Path, config: DocsScopeConfig) -> dict[st
         files.append(default_doc)
     if route_path.exists():
         files.append(path_record(repo_root, "route_file", route_path))
-    docs_output = resolve_scope_path(repo_root, published_documents_path(config))
-    files.append(path_record(repo_root, "published_docs_root", docs_output))
+    docs_output = resolve_scope_path(repo_root, generated_documents_path(config))
+    files.append(path_record(repo_root, "generated_docs_root", docs_output))
     files.extend(
         [
-            path_record(repo_root, "published_docs_index_tree", docs_output / "index-tree.json"),
-            path_record(repo_root, "published_docs_recent", docs_output / "recent.json"),
-            path_record(repo_root, "published_docs_payload_root", docs_output / "by-id"),
+            path_record(repo_root, "generated_docs_index_tree", docs_output / "index-tree.json"),
+            path_record(repo_root, "generated_docs_recent", docs_output / "recent.json"),
+            path_record(repo_root, "generated_docs_payload_root", docs_output / "by-id"),
+            path_record(repo_root, "generated_search_index", local_generated_search_index_path(repo_root, config)),
+            path_record(repo_root, "published_docs_root", local_published_docs_output_path(repo_root, config)),
             path_record(repo_root, "published_search_index", local_published_search_index_path(repo_root, config)),
         ]
     )
@@ -274,6 +291,60 @@ def manifest_scopes_by_id(manifest: dict[str, Any]) -> dict[str, dict[str, Any]]
         if scope_id:
             scopes[scope_id] = item
     return scopes
+
+
+def reconcile_scope_manifest(
+    repo_root: Path,
+    *,
+    write: bool = False,
+) -> dict[str, Any]:
+    """Refresh config-derived scope paths without replacing lifecycle ownership."""
+
+    current = load_manifest(repo_root)
+    current_by_id = manifest_scopes_by_id(current)
+    configs = load_docs_scope_configs(repo_root)
+    reconciled_at = utc_now()
+    records: list[dict[str, Any]] = []
+    for scope_id in sorted(configs):
+        fresh = backfilled_scope_record(repo_root, configs[scope_id])
+        existing = current_by_id.get(scope_id)
+        if existing is None:
+            records.append(fresh)
+            continue
+        metadata = dict(existing.get("metadata") or {})
+        metadata.update(fresh["metadata"])
+        metadata["backfilled"] = bool(
+            (existing.get("metadata") or {}).get("backfilled", True)
+        )
+        if configs[scope_id].scope_root.provider == EXTERNAL_LOCAL_PROVIDER:
+            metadata["external_data_root"] = EXTERNAL_DATA_ROOT_MARKER
+        else:
+            metadata.pop("external_data_root", None)
+        records.append(
+            {
+                **fresh,
+                "owner": existing.get("owner", fresh["owner"]),
+                "user_created": existing.get("user_created", fresh["user_created"]),
+                "created_by_tool": existing.get("created_by_tool", fresh["created_by_tool"]),
+                "tool_id": existing.get("tool_id", fresh["tool_id"]),
+                "repo_status_at_creation": existing.get(
+                    "repo_status_at_creation",
+                    fresh["repo_status_at_creation"],
+                ),
+                "created_at": existing.get("created_at", fresh["created_at"]),
+                "updated_at": reconciled_at,
+                "metadata": metadata,
+            }
+        )
+    payload = {
+        "schema_version": SCHEMA_VERSION,
+        "tool_id": str(current.get("tool_id") or TOOL_ID),
+        "updated_at": reconciled_at,
+        "scopes": records,
+    }
+    if write:
+        write_text_atomic(repo_root / MANIFEST_REL_PATH, render_json(payload))
+    return payload
 
 
 def scope_delete_eligible(record: dict[str, Any] | None) -> bool:
@@ -442,6 +513,7 @@ def planned_scope_config_record(
             "types": media_types,
             "build_sources": {},
         },
+        "generated": {},
         "published": {},
         "public_projection": (
             {
@@ -478,9 +550,9 @@ def planned_storage_contract(preview: dict[str, Any]) -> dict[str, Any]:
     config = preview["planned_scope_config"]
     scope_root = str(_planned_role_location(config, "scope_root", "path") or "")
     source_root = (Path(scope_root) / SCOPE_SOURCE_PATH).as_posix()
-    docs_output = (Path(scope_root) / PUBLISHED_DOCUMENTS_PATH).as_posix()
-    search_output = (Path(scope_root) / PUBLISHED_SEARCH_PATH).as_posix()
-    media_root = f"{MEDIA_WORKSPACE_ROOT_MARKER}/{config['scope_id']}"
+    docs_output = (Path(scope_root) / GENERATED_DOCUMENTS_PATH).as_posix()
+    search_output = (Path(scope_root) / GENERATED_SEARCH_PATH).as_posix()
+    media_root = (Path(scope_root) / SCOPE_SOURCE_PATH / "media").as_posix()
     publish_output = str(
         _planned_role_location(config, "public_projection", "documents", "location", "path") or docs_output
     )
@@ -489,15 +561,15 @@ def planned_storage_contract(preview: dict[str, Any]) -> dict[str, Any]:
     )
     if publishing_mode == PUBLIC_MODE:
         summary = (
-            "Public read-only scope: source and local published payloads share one scope root until "
-            "Publish docs syncs the public projection to static assets under assets/."
+            "Public read-only scope: source, generated, and published lifecycle folders share one "
+            "scope root; Publish copies generated output into the public projection."
         )
         access = "public_readonly_route_and_local_manage"
         public_static_assets = True
     elif publishing_mode == LOCAL_COMMITTED_MODE:
         summary = (
-            "Local tracked scope: source and non-public published payloads are tracked beneath one "
-            "Docs Viewer scope root and no public route is created."
+            "Local tracked scope: source, generated, and published lifecycle folders are tracked "
+            "beneath one Docs Viewer scope root and no public route is created."
         )
         access = "local_manage_only"
         public_static_assets = False
@@ -619,7 +691,11 @@ def created_scope_manifest_record(repo_root: Path, preview: dict[str, Any]) -> d
             "viewer_base_url": preview["planned_scope_config"]["viewer_base_url"],
             "default_doc_id": preview["planned_scope_config"]["default_doc_id"],
             "publishing_mode": publishing_mode,
-            "external_data_root": EXTERNAL_DATA_ROOT_MARKER,
+            "external_data_root": (
+                EXTERNAL_DATA_ROOT_MARKER
+                if publishing_mode == LOCAL_EXTERNAL_MODE
+                else ""
+            ),
         },
     }
 

@@ -505,7 +505,7 @@ def test_next_publish_is_idempotent_after_immediate_cleanup(tmp_path: Path) -> N
     )
     cleanup.apply_public_document_delete_cleanup(tmp_path, cleanup_plan)
 
-    working_docs = tmp_path / "docs-viewer/scopes/analysis/published/documents"
+    working_docs = tmp_path / "docs-viewer/scopes/analysis/generated/documents"
     for relative_path in (
         Path("index-tree.json"),
         Path("recent.json"),
@@ -517,7 +517,7 @@ def test_next_publish_is_idempotent_after_immediate_cleanup(tmp_path: Path) -> N
     publication_recent = working_docs / ".publish/recent.json"
     publication_recent.parent.mkdir(parents=True, exist_ok=True)
     publication_recent.write_bytes((paths["docs_root"] / "recent.json").read_bytes())
-    working_search = tmp_path / "docs-viewer/scopes/analysis/published/search/index.json"
+    working_search = tmp_path / "docs-viewer/scopes/analysis/generated/search/index.json"
     working_search.parent.mkdir(parents=True, exist_ok=True)
     working_search.write_bytes(paths["search"].read_bytes())
 

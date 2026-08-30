@@ -18,6 +18,7 @@ from docs_builder.source import DocRecord  # noqa: E402
 from docs_artifact_locations import ArtifactLocation, EXTERNAL_LOCAL_PROVIDER  # noqa: E402
 from docs_scope_config import (  # noqa: E402
     LOCAL_EXTERNAL_SCOPE_TYPE,
+    DocsGeneratedConfig,
     DocsMediaConfig,
     DocsPublishedArtifactConfig,
     DocsPublishedConfig,
@@ -113,14 +114,22 @@ def synthetic_review_config(
             sub_scopes_path=Path("."),
         ),
         media=DocsMediaConfig(
-            location=ArtifactLocation(
+            source_location=ArtifactLocation(
+                provider=EXTERNAL_LOCAL_PROVIDER,
+                path=source_dir / "media",
+            ),
+            generated_location=ArtifactLocation(
                 provider=EXTERNAL_LOCAL_PROVIDER,
                 path=generated_dir / "media",
+            ),
+            published_location=ArtifactLocation(
+                provider=EXTERNAL_LOCAL_PROVIDER,
+                path=generated_dir.parent / "published" / "media",
             ),
             types={},
             build_sources={},
         ),
-        published=DocsPublishedConfig(
+        generated=DocsGeneratedConfig(
             documents=DocsPublishedArtifactConfig(
                 location=ArtifactLocation(provider=EXTERNAL_LOCAL_PROVIDER, path=generated_dir)
             ),
@@ -128,6 +137,17 @@ def synthetic_review_config(
                 location=ArtifactLocation(
                     provider=EXTERNAL_LOCAL_PROVIDER,
                     path=generated_dir / "search" / "index.json",
+                )
+            ),
+        ),
+        published=DocsPublishedConfig(
+            documents=DocsPublishedArtifactConfig(
+                location=ArtifactLocation(provider=EXTERNAL_LOCAL_PROVIDER, path=generated_dir.parent / "published")
+            ),
+            search=DocsPublishedArtifactConfig(
+                location=ArtifactLocation(
+                    provider=EXTERNAL_LOCAL_PROVIDER,
+                    path=generated_dir.parent / "published" / "search" / "index.json",
                 )
             ),
         ),

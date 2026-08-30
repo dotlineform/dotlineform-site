@@ -200,6 +200,7 @@ def test_non_staging_markdown_package_keeps_its_media_root(
         source_text = (repo_root / payload["path"]).read_text(encoding="utf-8")
         media_result = payload["inline_media_written"][0]
         media_path = managed_media_path(
+            repo_root,
             "example",
             "img",
             media_result["artifact_identity"],

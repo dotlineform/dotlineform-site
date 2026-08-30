@@ -51,13 +51,7 @@ def write_scope_config(root: Path) -> None:
     write_json(
         root / "docs-viewer/config/scopes/docs_scopes.json",
         {
-            "schema_version": "docs_scopes_v4",
-            "media_workspace": {
-                "location": {
-                    "provider": "external_local",
-                    "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/media",
-                }
-            },
+            "schema_version": "docs_scopes_v5",
             "scopes": [
                 docs_scope_record(
                     "studio",
@@ -96,27 +90,27 @@ def write_generated_scope(
 
 def prepare_repo(root: Path, projects_root: Path) -> None:
     os.environ["DOTLINEFORM_PROJECTS_BASE_DIR"] = str(projects_root)
-    (projects_root / "docs-viewer/media").mkdir(parents=True, exist_ok=True)
+    (projects_root / "docs-viewer").mkdir(parents=True, exist_ok=True)
     write_scope_config(root)
     write_generated_scope(
-        root / "docs-viewer/scopes/studio/published/documents",
+        root / "docs-viewer/scopes/studio/generated/documents",
         [
             {
                 "doc_id": "parent",
                 "title": "Parent & Root",
-                "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/parent.json",
+                "content_url": "/docs-viewer/scopes/studio/generated/documents/by-id/parent.json",
                 "children": [
                     {
                         "doc_id": "child",
                         "title": "Child",
-                        "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/child.json",
+                        "content_url": "/docs-viewer/scopes/studio/generated/documents/by-id/child.json",
                     }
                 ],
             },
             {
                 "doc_id": "sibling",
                 "title": "Sibling",
-                "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/sibling.json",
+                "content_url": "/docs-viewer/scopes/studio/generated/documents/by-id/sibling.json",
             },
         ],
         [
@@ -150,16 +144,16 @@ def prepare_repo(root: Path, projects_root: Path) -> None:
         ],
     )
     write_generated_scope(
-        root / "docs-viewer/scopes/example/published/documents",
+        root / "docs-viewer/scopes/example/generated/documents",
         [{"doc_id": "example", "title": "Example"}],
         [{"doc_id": "example", "title": "Example", "content_html": "<p>Example body</p>"}],
     )
     write_json(
-        root / "docs-viewer/scopes/example/published/documents/by-id/example.json",
+        root / "docs-viewer/scopes/example/generated/documents/by-id/example.json",
         {"title": "Example", "content_html": "<p>Example body</p>"},
     )
     write_generated_scope(
-        projects_root / "docs-viewer/scopes/external/published/documents",
+        projects_root / "docs-viewer/scopes/external/generated/documents",
         [{"doc_id": "external", "title": "External"}],
         [{"doc_id": "external", "title": "External", "content_html": "<p>External body</p>"}],
     )
@@ -189,7 +183,7 @@ def test_snapshot_preview_plans_exact_single_partial_and_complete_sets_without_w
             {
                 "doc_id": "parent",
                 "title": "Parent & Root",
-                "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/parent.json",
+                "content_url": "/docs-viewer/scopes/studio/generated/documents/by-id/parent.json",
             }
         ]
 
@@ -457,7 +451,7 @@ def test_snapshot_preview_missing_payload_error_omits_filesystem_path() -> None:
     with tempfile.TemporaryDirectory() as repo_path, tempfile.TemporaryDirectory() as projects_path:
         repo_root = Path(repo_path)
         prepare_repo(repo_root, Path(projects_path))
-        (repo_root / "docs-viewer/scopes/studio/published/documents/by-id/sibling.json").unlink()
+        (repo_root / "docs-viewer/scopes/studio/generated/documents/by-id/sibling.json").unlink()
 
         try:
             exporter.preview_static_html_export(
@@ -618,7 +612,7 @@ def test_snapshot_packages_only_selected_owned_media_and_records_external_depend
         repo_root = Path(repo_path)
         projects_root = Path(projects_path)
         prepare_repo(repo_root, projects_root)
-        media_root = projects_root / "docs-viewer/media/studio"
+        media_root = repo_root / "docs-viewer/scopes/studio/generated/media"
         media_objects = {
             "img/photo one.png": b"photo",
             "svg/diagram.svg": b"<svg/>",
@@ -630,7 +624,7 @@ def test_snapshot_packages_only_selected_owned_media_and_records_external_depend
             path = media_root / relative_path
             path.parent.mkdir(parents=True, exist_ok=True)
             path.write_bytes(content)
-        parent_payload_path = repo_root / "docs-viewer/scopes/studio/published/documents/by-id/parent.json"
+        parent_payload_path = repo_root / "docs-viewer/scopes/studio/generated/documents/by-id/parent.json"
         parent_payload = json.loads(parent_payload_path.read_text(encoding="utf-8"))
         parent_payload["content_html"] = (
             '<p><img src="/docs/media/studio/img/photo%20one.png?cache=1#view">'
@@ -640,7 +634,7 @@ def test_snapshot_packages_only_selected_owned_media_and_records_external_depend
             '<img src="images/external.png?cache=2"></p>'
         )
         write_json(parent_payload_path, parent_payload)
-        sibling_payload_path = repo_root / "docs-viewer/scopes/studio/published/documents/by-id/sibling.json"
+        sibling_payload_path = repo_root / "docs-viewer/scopes/studio/generated/documents/by-id/sibling.json"
         sibling_payload = json.loads(sibling_payload_path.read_text(encoding="utf-8"))
         sibling_payload["content_html"] = '<img src="/docs/media/studio/img/unchecked.png">'
         write_json(sibling_payload_path, sibling_payload)
@@ -685,28 +679,28 @@ def test_snapshot_packages_only_selected_owned_media_and_records_external_depend
             for item in provenance["media"]
         } == {
             ("files", "manual.pdf"): (
-                    "external_local",
+                    "repository",
                 "media/files/manual.pdf",
                 6,
                 hashlib.sha256(b"manual").hexdigest(),
                 ["parent"],
             ),
             ("html", "widget.html"): (
-                    "external_local",
+                    "repository",
                 "media/html/widget.html",
                 13,
                 hashlib.sha256(b"<p>widget</p>").hexdigest(),
                 ["parent"],
             ),
             ("img", "photo one.png"): (
-                    "external_local",
+                    "repository",
                 "media/img/photo one.png",
                 5,
                 hashlib.sha256(b"photo").hexdigest(),
                 ["parent"],
             ),
             ("svg", "diagram.svg"): (
-                    "external_local",
+                    "repository",
                 "media/svg/diagram.svg",
                 6,
                 hashlib.sha256(b"<svg/>").hexdigest(),
@@ -727,7 +721,7 @@ def test_snapshot_plan_revision_detects_body_and_media_byte_changes() -> None:
     with tempfile.TemporaryDirectory() as repo_path, tempfile.TemporaryDirectory() as projects_path:
         repo_root = Path(repo_path)
         prepare_repo(repo_root, Path(projects_path))
-        payload_path = repo_root / "docs-viewer/scopes/studio/published/documents/by-id/parent.json"
+        payload_path = repo_root / "docs-viewer/scopes/studio/generated/documents/by-id/parent.json"
         first = exporter.preview_static_html_export(
             repo_root,
             {"scope": "studio", "doc_ids": ["parent"]},
@@ -743,7 +737,7 @@ def test_snapshot_plan_revision_detects_body_and_media_byte_changes() -> None:
         )
         assert body_changed["plan_revision"] != first["plan_revision"]
 
-        media_path = Path(projects_path) / "docs-viewer/media/studio/img/photo.png"
+        media_path = repo_root / "docs-viewer/scopes/studio/generated/media/img/photo.png"
         media_path.parent.mkdir(parents=True)
         media_path.write_bytes(b"first")
         payload["content_html"] = '<img src="/docs/media/studio/img/photo.png">'
@@ -780,11 +774,11 @@ def test_snapshot_apply_reads_public_and_external_local_generated_scopes() -> No
         repo_root = Path(repo_path)
         projects_root = Path(projects_path)
         prepare_repo(repo_root, projects_root)
-        external_payload_path = projects_root / "docs-viewer/scopes/external/published/documents/by-id/external.json"
+        external_payload_path = projects_root / "docs-viewer/scopes/external/generated/documents/by-id/external.json"
         external_payload = json.loads(external_payload_path.read_text(encoding="utf-8"))
         external_payload["content_html"] = '<img src="/docs/media/external/svg/diagram.svg">'
         write_json(external_payload_path, external_payload)
-        external_svg = projects_root / "docs-viewer/media/external/svg/diagram.svg"
+        external_svg = projects_root / "docs-viewer/scopes/external/generated/media/svg/diagram.svg"
         external_svg.parent.mkdir(parents=True)
         external_svg.write_bytes(b"<svg>external</svg>")
 
@@ -812,13 +806,13 @@ def test_snapshot_apply_packages_public_scope_managed_media_without_fetching_ser
         repo_root = Path(repo_path)
         projects_root = Path(projects_path)
         prepare_repo(repo_root, projects_root)
-        example_payload_path = repo_root / "docs-viewer/scopes/example/published/documents/by-id/example.json"
+        example_payload_path = repo_root / "docs-viewer/scopes/example/generated/documents/by-id/example.json"
         example_payload = json.loads(example_payload_path.read_text(encoding="utf-8"))
         example_payload["content_html"] = (
             '<img src="/docs/media/example/img/photo.webp?cache=1">'
         )
         write_json(example_payload_path, example_payload)
-        managed_photo = projects_root / "docs-viewer/media/example/img/photo.webp"
+        managed_photo = repo_root / "docs-viewer/scopes/example/generated/media/img/photo.webp"
         managed_photo.parent.mkdir(parents=True)
         managed_photo.write_bytes(b"managed-photo")
 
@@ -957,7 +951,7 @@ def test_snapshot_apply_rejects_stale_plan_and_target_while_preserving_existing_
             {"scope": "studio", "doc_ids": ["parent"]},
             export_date=FIXED_EXPORT_DATE,
         )
-        parent_payload_path = repo_root / "docs-viewer/scopes/studio/published/documents/by-id/parent.json"
+        parent_payload_path = repo_root / "docs-viewer/scopes/studio/generated/documents/by-id/parent.json"
         parent_payload = json.loads(parent_payload_path.read_text(encoding="utf-8"))
         parent_payload["title"] = "Changed title"
         write_json(parent_payload_path, parent_payload)

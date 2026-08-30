@@ -9,9 +9,11 @@ import hashlib
 import os
 import re
 import tempfile
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from pathlib import Path
 from typing import Any, Dict, Mapping, Optional
+
+from docs_artifact_locations import ArtifactLocation, REPOSITORY_PROVIDER
 
 from docs_document_identity import (
     DOC_TIMESTAMP_FORMAT,
@@ -29,6 +31,7 @@ from docs_scope_config import (
     DocsScopeConfig,
     DocsSubScopeConfig,
     document_source_path,
+    load_docs_scope_configs,
     path_label,
     resolve_scope_path,
 )
@@ -639,8 +642,31 @@ def load_scope_docs_for_config(repo_root: Path, config: DocsScopeConfig) -> list
     return load_document_collection_docs_for_config(repo_root, config, config)
 
 
+def _scope_configs_for_repo(repo_root: Path, scope: str) -> Mapping[str, Any]:
+    if (repo_root / "docs-viewer/config/scopes/docs_scopes.json").is_file():
+        return load_docs_scope_configs(repo_root, scope_ids=(scope,))
+    config = DOCS_SCOPE_CONFIGS.get(scope)
+    fallback_source = Path("docs-viewer/scopes") / scope / "source"
+    if (
+        isinstance(config, DocsScopeConfig)
+        and (repo_root / fallback_source).is_dir()
+    ):
+        config = replace(
+            config,
+            source=replace(
+                config.source,
+                location=ArtifactLocation(REPOSITORY_PROVIDER, fallback_source),
+            ),
+        )
+    return {scope: config} if config is not None else {}
+
+
 def load_scope_docs(repo_root: Path, scope: str) -> list[ScopeDoc]:
-    return load_scope_docs_for_config(repo_root, DOCS_SCOPE_CONFIGS[scope])
+    configs = _scope_configs_for_repo(repo_root, scope)
+    config = configs.get(scope)
+    if config is None:
+        raise ValueError(f"unknown Docs Viewer scope: {scope}")
+    return load_scope_docs_for_config(repo_root, config)
 
 
 def load_document_collection_docs(
@@ -650,7 +676,8 @@ def load_document_collection_docs(
 ) -> list[ScopeDoc]:
     """Load exactly the configured parent or named sub-scope collection."""
 
-    parent_config = DOCS_SCOPE_CONFIGS.get(scope)
+    configs = _scope_configs_for_repo(repo_root, scope)
+    parent_config = configs.get(scope)
     if parent_config is None:
         raise ValueError(f"unknown Docs Viewer scope: {scope}")
     normalized_sub_scope = str(sub_scope or "").strip().lower()

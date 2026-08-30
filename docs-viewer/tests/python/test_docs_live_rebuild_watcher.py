@@ -246,7 +246,7 @@ def test_watcher_registers_configured_mermaid_root_and_renders_only_changed_iden
     build = SimpleNamespace(
         location=SimpleNamespace(
             provider="repository",
-            path=Path("docs-viewer/media/studio/build-source/mermaid"),
+            path=Path("docs-viewer/scopes/studio/source/media/build-source/mermaid"),
         ),
         producer="mermaid",
         publishes_to="svg",
@@ -256,8 +256,8 @@ def test_watcher_registers_configured_mermaid_root_and_renders_only_changed_iden
         documents_path=Path("documents"),
         build_media={"mermaid": build},
     )
-    published_media = SimpleNamespace(
-        location=SimpleNamespace(provider="repository", path=Path("published/svg")),
+    generated_media = SimpleNamespace(
+        generated_location=SimpleNamespace(provider="repository", path=Path("generated/svg")),
         served_path_prefix="/docs/media/studio/svg",
     )
     config = SimpleNamespace(
@@ -265,15 +265,15 @@ def test_watcher_registers_configured_mermaid_root_and_renders_only_changed_iden
         source=source,
         media=SimpleNamespace(
             build_sources={"mermaid": build},
-            types={"svg": published_media},
+            types={"svg": generated_media},
         ),
         sub_scopes=(),
     )
     calls: list[tuple[str, ...]] = []
 
     def fake_producer(context):
-        calls.append(context.requested_published_identities)
-        return context.requested_published_identities
+        calls.append(context.requested_generated_identities)
+        return context.requested_generated_identities
 
     original_producer = module.produce_mermaid_svg
     module.produce_mermaid_svg = fake_producer
@@ -286,7 +286,7 @@ def test_watcher_registers_configured_mermaid_root_and_renders_only_changed_iden
             baseline=False,
         )
         media_state = states["studio/media/mermaid"]
-        assert media_state["root"] == tmp_path / "docs-viewer/media/studio/build-source/mermaid"
+        assert media_state["root"] == tmp_path / "docs-viewer/scopes/studio/source/media/build-source/mermaid"
         assert changes["added"] == ["studio", "studio/media/mermaid"]
         assert module.rebuild_build_media(
             tmp_path,

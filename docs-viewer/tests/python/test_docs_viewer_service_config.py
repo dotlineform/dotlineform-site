@@ -376,7 +376,7 @@ def test_external_sub_scope_payload_route_dispatches_as_generated_read(
             ),
         },
     )()
-    handler.path = "/docs/published/external/private/projects/manage-manifest.json"
+    handler.path = "/docs/generated/external/private/projects/manage-manifest.json"
     called: list[str] = []
     monkeypatch.setattr(handler, "send_external_sub_scope_payload", called.append)
 

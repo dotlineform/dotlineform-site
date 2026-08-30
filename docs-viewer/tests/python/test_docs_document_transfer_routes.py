@@ -26,13 +26,7 @@ def write_json(path: Path, payload: object) -> None:
     if path.name == "docs_scopes.json" and isinstance(payload, dict):
         payload = {
             **payload,
-            "schema_version": "docs_scopes_v4",
-            "media_workspace": {
-                "location": {
-                    "provider": "external_local",
-                    "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/media",
-                }
-            },
+            "schema_version": "docs_scopes_v5",
         }
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
@@ -85,7 +79,7 @@ def make_repo(tmp_path: Path) -> Path:
     write_json(
         repo_root / "docs-viewer/config/scopes/docs_scopes.json",
         {
-            "schema_version": "docs_scopes_v4",
+            "schema_version": "docs_scopes_v5",
             "scopes": [
                 docs_scope_record(
                     "source",

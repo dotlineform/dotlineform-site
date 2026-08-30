@@ -634,16 +634,16 @@ def test_apply_move_rebuilds_loadable_target_and_removes_source_outputs(
     )
 
     moved_ids = set(result["moved_doc_ids"])
-    target_output = repo_root / "docs-viewer/scopes/target/published/documents"
-    source_output = repo_root / "docs-viewer/scopes/source/published/documents"
+    target_output = repo_root / "docs-viewer/scopes/target/generated/documents"
+    source_output = repo_root / "docs-viewer/scopes/source/generated/documents"
     target_search = json.loads(
         (
-            repo_root / "docs-viewer/scopes/target/published/search/index.json"
+            repo_root / "docs-viewer/scopes/target/generated/search/index.json"
         ).read_text(encoding="utf-8")
     )
     source_search = json.loads(
         (
-            repo_root / "docs-viewer/scopes/source/published/search/index.json"
+            repo_root / "docs-viewer/scopes/source/generated/search/index.json"
         ).read_text(encoding="utf-8")
     )
 
@@ -703,7 +703,7 @@ def test_apply_move_writes_external_local_target_then_cleans_repository_source(
     assert (external_root / "source/documents/alpha.md").is_file()
     assert (external_root / "source/documents/grand.md").is_file()
     assert (
-        projects_base / "docs-viewer/media/target/img/photo.png"
+        projects_base / "docs-viewer/scopes/target/source/media/img/photo.png"
     ).read_bytes() == b"photo"
     assert not (
         local_documents_root(repo_root, "source") / "alpha.md"

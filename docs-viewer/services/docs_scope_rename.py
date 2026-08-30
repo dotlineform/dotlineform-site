@@ -53,7 +53,6 @@ def scope_rename_eligible(config: Any, manifest_record: dict[str, Any] | None) -
 def external_scope_roots(external_root: Path, scope_id: str) -> dict[str, Path]:
     return {
         "scope_root": external_root / "scopes" / scope_id,
-        "media_root": external_root / "media" / scope_id,
     }
 
 
@@ -273,7 +272,7 @@ def _move_external_roots(
     new_roots: dict[str, Path],
 ) -> list[dict[str, str]]:
     moved: list[dict[str, str]] = []
-    for kind in ("scope_root", "media_root"):
+    for kind in ("scope_root",):
         source = old_roots[kind]
         target = new_roots[kind]
         if not _path_present(source):

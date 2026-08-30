@@ -53,13 +53,16 @@ from studio.shared.python.projects_directories import (  # noqa: E402
 
 
 CONFIG_REL_PATH = Path("docs-viewer/config/scopes/docs_scopes.json")
-SCHEMA_VERSION = "docs_scopes_v4"
+SCHEMA_VERSION = "docs_scopes_v5"
 DOCS_VIEWER_MANAGE_ROUTE_BASE_URL = "/docs/"
 PUBLIC_DOCS_OUTPUT_ROOT = Path("site/assets/data/docs/scopes")
 PUBLIC_SEARCH_OUTPUT_ROOT = Path("site/assets/data/search")
 SCOPE_ROOTS_PATH = Path("docs-viewer/scopes")
 SCOPE_SOURCE_PATH = Path("source")
+SCOPE_GENERATED_PATH = Path("generated")
 SCOPE_PUBLISHED_PATH = Path("published")
+GENERATED_DOCUMENTS_PATH = SCOPE_GENERATED_PATH / "documents"
+GENERATED_SEARCH_PATH = SCOPE_GENERATED_PATH / "search" / "index.json"
 PUBLISHED_DOCUMENTS_PATH = SCOPE_PUBLISHED_PATH / "documents"
 PUBLISHED_SEARCH_PATH = SCOPE_PUBLISHED_PATH / "search" / "index.json"
 SOURCE_DOCUMENTS_PATH = Path("documents")
@@ -70,7 +73,6 @@ LOCAL_EXTERNAL_SCOPE_TYPE = "local_external"
 SUPPORTED_SCOPE_TYPES = {PUBLIC_SCOPE_TYPE, LOCAL_SCOPE_TYPE, LOCAL_EXTERNAL_SCOPE_TYPE}
 DOTLINEFORM_PROJECTS_BASE_DIR_ENV = "DOTLINEFORM_PROJECTS_BASE_DIR"
 EXTERNAL_DATA_ROOT_MARKER = f"${DOTLINEFORM_PROJECTS_BASE_DIR_ENV}/docs-viewer"
-MEDIA_WORKSPACE_ROOT_MARKER = f"{EXTERNAL_DATA_ROOT_MARKER}/media"
 SUB_SCOPE_ID_PATTERN = re.compile(r"\A[a-z0-9][a-z0-9_-]*\Z")
 SOURCE_REVISION_PATTERN = re.compile(r"\Asha256:[0-9a-f]{64}\Z")
 SCOPE_LIFECYCLE_TOOL_ID = "docs-viewer-scope-lifecycle"
@@ -131,20 +133,30 @@ class DocsPublishedArtifactConfig:
 class DocsManagedMediaConfig:
     media_type: str
     reference_prefix: Path
-    location: ArtifactLocation
+    source_location: ArtifactLocation
+    generated_location: ArtifactLocation
+    published_location: ArtifactLocation
     served_path_prefix: str
     build_inputs: tuple[str, ...]
 
 
 @dataclass(frozen=True)
 class DocsMediaConfig:
-    location: ArtifactLocation
+    source_location: ArtifactLocation
+    generated_location: ArtifactLocation
+    published_location: ArtifactLocation
     types: Mapping[str, DocsManagedMediaConfig]
     build_sources: Mapping[str, DocsBuildMediaConfig]
 
 
 @dataclass(frozen=True)
 class DocsPublishedConfig:
+    documents: DocsPublishedArtifactConfig
+    search: DocsPublishedArtifactConfig
+
+
+@dataclass(frozen=True)
+class DocsGeneratedConfig:
     documents: DocsPublishedArtifactConfig
     search: DocsPublishedArtifactConfig
 
@@ -171,6 +183,7 @@ class DocsScopeConfig:
     scope_root: ArtifactLocation
     source: DocsSourceConfig
     media: DocsMediaConfig
+    generated: DocsGeneratedConfig
     published: DocsPublishedConfig
     public_projection: DocsPublicProjectionConfig | None
     viewer_base_url: str
@@ -201,6 +214,7 @@ class DocsSubScopeConfig:
     sub_scope_customisation: DocsSubScopeCustomisationConfig | None
     lifecycle: DocsSubScopeLifecycleConfig | None
     source: DocsSourceConfig
+    generated: DocsGeneratedConfig
     published: DocsPublishedConfig
     public_projection: DocsPublicProjectionConfig | None
 
@@ -395,22 +409,19 @@ def location_child(location: ArtifactLocation, relative: Path) -> ArtifactLocati
     return ArtifactLocation(provider=location.provider, path=location.path / relative)
 
 
-def normalize_scope_root(raw: Any, *, scope_id: str, scope_type: str, field: str) -> ArtifactLocation:
+def normalize_scope_root(raw: Any, *, scope_id: str, field: str) -> ArtifactLocation:
     location = normalize_location(raw, field=field)
-    expected_provider = EXTERNAL_LOCAL_PROVIDER if scope_type == LOCAL_EXTERNAL_SCOPE_TYPE else REPOSITORY_PROVIDER
-    if location.provider != expected_provider:
-        raise ValueError(
-            f"docs scope config {field} for {scope_type!r} scope must use provider {expected_provider!r}"
-        )
+    if location.provider not in {REPOSITORY_PROVIDER, EXTERNAL_LOCAL_PROVIDER}:
+        raise ValueError(f"docs scope config {field}.provider must be repository or external_local")
     expected_path = (
         resolve_external_data_root() / "scopes" / scope_id
-        if expected_provider == EXTERNAL_LOCAL_PROVIDER
+        if location.provider == EXTERNAL_LOCAL_PROVIDER
         else SCOPE_ROOTS_PATH / scope_id
     )
     if location.path != expected_path:
         expected_label = (
             f"{EXTERNAL_DATA_ROOT_MARKER}/scopes/{scope_id}"
-            if expected_provider == EXTERNAL_LOCAL_PROVIDER
+            if location.provider == EXTERNAL_LOCAL_PROVIDER
             else expected_path.as_posix()
         )
         raise ValueError(f"docs scope config {field}.path must be {expected_label}")
@@ -422,22 +433,6 @@ def normalize_artifact(raw: Any, *, field: str) -> DocsPublishedArtifactConfig:
     if not isinstance(raw, dict):
         raise ValueError(f"docs scope config field {field} must be an object")
     return DocsPublishedArtifactConfig(location=normalize_location(raw.get("location"), field=f"{field}.location"))
-
-
-def normalize_media_workspace(raw: Any) -> ArtifactLocation:
-    field = "media_workspace"
-    if not isinstance(raw, dict) or set(raw) != {"location"}:
-        raise ValueError(f"docs scope config field {field} must contain only location")
-    location = raw.get("location")
-    if not isinstance(location, dict) or set(location) != {"provider", "path"}:
-        raise ValueError(f"docs scope config field {field}.location must contain only provider and path")
-    if str(location.get("provider") or "").strip().lower() != EXTERNAL_LOCAL_PROVIDER:
-        raise ValueError(f"docs scope config field {field}.location.provider must be external_local")
-    if str(location.get("path") or "").strip() != MEDIA_WORKSPACE_ROOT_MARKER:
-        raise ValueError(
-            f"docs scope config field {field}.location.path must be {MEDIA_WORKSPACE_ROOT_MARKER}"
-        )
-    return ArtifactLocation(provider=EXTERNAL_LOCAL_PROVIDER, path=Path(MEDIA_WORKSPACE_ROOT_MARKER))
 
 
 def normalize_build_media(
@@ -516,7 +511,9 @@ def normalize_managed_media_types(
     raw: Any,
     *,
     scope_id: str,
-    media_root: ArtifactLocation,
+    source_media_root: ArtifactLocation,
+    generated_media_root: ArtifactLocation,
+    published_media_root: ArtifactLocation,
     field: str,
 ) -> dict[str, DocsManagedMediaConfig]:
     if not isinstance(raw, dict) or not raw:
@@ -539,14 +536,20 @@ def normalize_managed_media_types(
                 f"docs scope config field {item_field} contains unknown fields: {', '.join(unknown_fields)}"
             )
         reference_prefix = Path("docs") / scope_id / normalized_type
-        location = location_child(media_root, normalized_type)
+        source_location = location_child(source_media_root, normalized_type)
+        generated_location = location_child(generated_media_root, normalized_type)
+        published_location = location_child(published_media_root, normalized_type)
         served_path_prefix = f"/docs/media/{scope_id}/{normalized_type}"
         build_inputs = string_tuple(item.get("build_inputs"), field=f"{item_field}.build_inputs")
-        require_location_capabilities(location, PUBLISHED_MEDIA_CAPABILITIES, role=item_field)
+        require_location_capabilities(source_location, SOURCE_CAPABILITIES, role=f"{item_field}.source")
+        require_location_capabilities(generated_location, PUBLISHED_MEDIA_CAPABILITIES, role=f"{item_field}.generated")
+        require_location_capabilities(published_location, PUBLISHED_MEDIA_CAPABILITIES, role=f"{item_field}.published")
         result[normalized_type] = DocsManagedMediaConfig(
             media_type=normalized_type,
             reference_prefix=reference_prefix,
-            location=location,
+            source_location=source_location,
+            generated_location=generated_location,
+            published_location=published_location,
             served_path_prefix=served_path_prefix,
             build_inputs=build_inputs,
         )
@@ -557,28 +560,52 @@ def normalize_media(
     raw: Any,
     *,
     scope_id: str,
-    workspace: ArtifactLocation,
+    scope_root: ArtifactLocation,
     field: str,
 ) -> DocsMediaConfig:
     if not isinstance(raw, dict) or set(raw) != {"types", "build_sources"}:
         raise ValueError(f"docs scope config field {field} must contain only types and build_sources")
-    media_root = location_child(workspace, Path(scope_id))
+    source_media_root = location_child(scope_root, SCOPE_SOURCE_PATH / "media")
+    generated_media_root = location_child(scope_root, SCOPE_GENERATED_PATH / "media")
+    published_media_root = location_child(scope_root, SCOPE_PUBLISHED_PATH / "media")
     types = normalize_managed_media_types(
         raw.get("types"),
         scope_id=scope_id,
-        media_root=media_root,
+        source_media_root=source_media_root,
+        generated_media_root=generated_media_root,
+        published_media_root=published_media_root,
         field=f"{field}.types",
     )
     build_sources = normalize_build_media(
         raw.get("build_sources"),
-        media_root=media_root,
+        media_root=source_media_root,
         field=f"{field}.build_sources",
     )
     return DocsMediaConfig(
-        location=media_root,
+        source_location=source_media_root,
+        generated_location=generated_media_root,
+        published_location=published_media_root,
         types=types,
         build_sources=build_sources,
     )
+
+
+def normalize_generated(
+    raw: Any,
+    *,
+    scope_root: ArtifactLocation,
+    field: str,
+) -> DocsGeneratedConfig:
+    if not isinstance(raw, dict):
+        raise ValueError(f"docs scope config field {field} must be an object")
+    if raw:
+        unknown_fields = ", ".join(sorted(raw))
+        raise ValueError(f"docs scope config field {field} contains retired fields: {unknown_fields}")
+    documents = DocsPublishedArtifactConfig(location=location_child(scope_root, GENERATED_DOCUMENTS_PATH))
+    search = DocsPublishedArtifactConfig(location=location_child(scope_root, GENERATED_SEARCH_PATH))
+    require_location_capabilities(documents.location, PAYLOAD_CAPABILITIES, role=f"{field}.documents")
+    require_location_capabilities(search.location, PAYLOAD_CAPABILITIES, role=f"{field}.search")
+    return DocsGeneratedConfig(documents=documents, search=search)
 
 
 def normalize_published(
@@ -682,6 +709,14 @@ def document_source_path(config: DocsScopeConfig | DocsSubScopeConfig) -> Path:
     return location_child_path(config.source.location, config.source.documents_path)
 
 
+def generated_documents_path(config: DocsScopeConfig | DocsSubScopeConfig) -> Path:
+    return config.generated.documents.location.path
+
+
+def generated_search_path(config: DocsScopeConfig | DocsSubScopeConfig) -> Path:
+    return config.generated.search.location.path
+
+
 def published_documents_path(config: DocsScopeConfig | DocsSubScopeConfig) -> Path:
     return config.published.documents.location.path
 
@@ -729,13 +764,12 @@ def scope_uses_external_data(config: DocsScopeConfig) -> bool:
 
 
 def validate_scope_policy(config: DocsScopeConfig, *, field: str) -> None:
-    expected_provider = EXTERNAL_LOCAL_PROVIDER if config.scope_type == LOCAL_EXTERNAL_SCOPE_TYPE else REPOSITORY_PROVIDER
-    if config.scope_root.provider != expected_provider:
-        raise ValueError(
-            f"docs scope config {field}.scope_root for {config.scope_type!r} scope must use provider {expected_provider!r}"
-        )
     if config.source.location != location_child(config.scope_root, SCOPE_SOURCE_PATH):
         raise ValueError(f"docs scope config {field}.source must resolve beneath scope_root/source")
+    if config.generated.documents.location != location_child(config.scope_root, GENERATED_DOCUMENTS_PATH):
+        raise ValueError(f"docs scope config {field}.generated.documents must resolve beneath scope_root")
+    if config.generated.search.location != location_child(config.scope_root, GENERATED_SEARCH_PATH):
+        raise ValueError(f"docs scope config {field}.generated.search must resolve beneath scope_root")
     if config.published.documents.location != location_child(config.scope_root, PUBLISHED_DOCUMENTS_PATH):
         raise ValueError(f"docs scope config {field}.published.documents must resolve beneath scope_root")
     if config.published.search.location != location_child(config.scope_root, PUBLISHED_SEARCH_PATH):
@@ -744,8 +778,6 @@ def validate_scope_policy(config: DocsScopeConfig, *, field: str) -> None:
         viewer_base_url=config.viewer_base_url,
         include_scope_param=config.include_scope_param,
     )
-    if config.scope_type == LOCAL_EXTERNAL_SCOPE_TYPE and public_readonly:
-        raise ValueError(f"docs scope config {field} external local scopes must use the management route")
     if public_readonly != (config.public_projection is not None):
         requirement = "configure" if public_readonly else "not configure"
         raise ValueError(f"docs scope config {field} must {requirement} public_projection")
@@ -763,25 +795,34 @@ def validate_scope_policy(config: DocsScopeConfig, *, field: str) -> None:
                 f"docs scope config {field}.public_projection.search must remain under "
                 f"{PUBLIC_SEARCH_OUTPUT_ROOT.as_posix()}"
             )
-    if config.media.location != ArtifactLocation(
-        provider=EXTERNAL_LOCAL_PROVIDER,
-        path=Path(MEDIA_WORKSPACE_ROOT_MARKER) / config.scope_id,
-    ):
-        raise ValueError(
-            f"docs scope config {field}.media must derive from {MEDIA_WORKSPACE_ROOT_MARKER}/{config.scope_id}"
-        )
+    expected_source_media = location_child(config.scope_root, SCOPE_SOURCE_PATH / "media")
+    expected_generated_media = location_child(config.scope_root, SCOPE_GENERATED_PATH / "media")
+    expected_published_media = location_child(config.scope_root, SCOPE_PUBLISHED_PATH / "media")
+    if config.media.source_location != expected_source_media:
+        raise ValueError(f"docs scope config {field}.media source must derive beneath scope_root/source")
+    if config.media.generated_location != expected_generated_media:
+        raise ValueError(f"docs scope config {field}.media generated must derive beneath scope_root/generated")
+    if config.media.published_location != expected_published_media:
+        raise ValueError(f"docs scope config {field}.media published must derive beneath scope_root/published")
     for media_type, media in config.media.types.items():
-        expected_location = location_child(config.media.location, Path(media_type))
-        if media.location != expected_location:
-            raise ValueError(
-                f"docs scope config {field}.media.types.{media_type} must use the derived external location"
-            )
-    if config.scope_type == LOCAL_EXTERNAL_SCOPE_TYPE:
+        expected_locations = {
+            "source": location_child(config.media.source_location, Path(media_type)),
+            "generated": location_child(config.media.generated_location, Path(media_type)),
+            "published": location_child(config.media.published_location, Path(media_type)),
+        }
+        actual_locations = {
+            "source": media.source_location,
+            "generated": media.generated_location,
+            "published": media.published_location,
+        }
+        if actual_locations != expected_locations:
+            raise ValueError(f"docs scope config {field}.media.types.{media_type} must use the derived lifecycle locations")
+    if config.scope_root.provider == EXTERNAL_LOCAL_PROVIDER:
         external_root = resolve_external_data_root()
         if not config.scope_root.path.is_relative_to(external_root):
             raise ValueError(f"docs scope config {field}.scope_root must remain under {EXTERNAL_DATA_ROOT_MARKER}")
     for build_type, build in config.media.build_sources.items():
-        expected_location = location_child(config.media.location, Path("build-source") / build_type)
+        expected_location = location_child(config.media.source_location, Path("build-source") / build_type)
         if build.location != expected_location:
             raise ValueError(
                 f"docs scope config {field}.media.build_sources.{build_type} must use the derived external location"
@@ -971,6 +1012,20 @@ def normalize_sub_scope_configs(
                 )
             ),
         )
+        generated = DocsGeneratedConfig(
+            documents=DocsPublishedArtifactConfig(
+                location=location_child(
+                    parent.scope_root,
+                    GENERATED_DOCUMENTS_PATH / SOURCE_SUB_SCOPES_PATH / sub_scope,
+                )
+            ),
+            search=DocsPublishedArtifactConfig(
+                location=location_child(
+                    parent.scope_root,
+                    SCOPE_GENERATED_PATH / "search" / SOURCE_SUB_SCOPES_PATH / sub_scope / "index.json",
+                )
+            ),
+        )
         projection = normalize_public_projection(
             item.get("public_projection"),
             field=f"{item_field}.public_projection",
@@ -1021,6 +1076,7 @@ def normalize_sub_scope_configs(
                 sub_scope_customisation=sub_scope_customisation,
                 lifecycle=lifecycle,
                 source=source,
+                generated=generated,
                 published=published,
                 public_projection=projection,
             )
@@ -1044,7 +1100,8 @@ def load_docs_scope_configs(
         raise ValueError("docs scope config must be a JSON object")
     if payload.get("schema_version") != SCHEMA_VERSION:
         raise ValueError(f"docs scope config schema_version must be {SCHEMA_VERSION}")
-    media_workspace = normalize_media_workspace(payload.get("media_workspace"))
+    if "media_workspace" in payload:
+        raise ValueError("docs scope config media_workspace is retired; media derives from each scope_root")
     raw_scopes = payload.get("scopes")
     if not isinstance(raw_scopes, list):
         raise ValueError("docs scope config scopes must be an array")
@@ -1079,7 +1136,7 @@ def load_docs_scope_configs(
             continue
         field = f"scopes[{index}]"
         scope_type = str(item.get("scope_type") or "").strip().lower()
-        if public_only and scope_type != PUBLIC_SCOPE_TYPE:
+        if public_only and item.get("public_projection") is None:
             continue
         if scope_type not in SUPPORTED_SCOPE_TYPES:
             supported = ", ".join(sorted(SUPPORTED_SCOPE_TYPES))
@@ -1089,7 +1146,6 @@ def load_docs_scope_configs(
         scope_root = normalize_scope_root(
             item.get("scope_root"),
             scope_id=scope_id,
-            scope_type=scope_type,
             field=f"{field}.scope_root",
         )
         root_identity = (scope_root.provider, scope_root.path)
@@ -1104,8 +1160,13 @@ def load_docs_scope_configs(
         media = normalize_media(
             item.get("media"),
             scope_id=scope_id,
-            workspace=media_workspace,
+            scope_root=scope_root,
             field=f"{field}.media",
+        )
+        generated = normalize_generated(
+            item.get("generated"),
+            scope_root=scope_root,
+            field=f"{field}.generated",
         )
         published = normalize_published(
             item.get("published"),
@@ -1125,6 +1186,7 @@ def load_docs_scope_configs(
             scope_root=scope_root,
             source=source,
             media=media,
+            generated=generated,
             published=published,
             public_projection=public_projection,
             viewer_base_url=viewer_base_url,
@@ -1266,6 +1328,7 @@ __all__ = [
     "DOCS_VIEWER_MANAGE_ROUTE_BASE_URL",
     "DOTLINEFORM_PROJECTS_BASE_DIR_ENV",
     "DocsBuildMediaConfig",
+    "DocsGeneratedConfig",
     "DocsPublicProjectionConfig",
     "DocsPublishedArtifactConfig",
     "DocsPublishedConfig",
@@ -1279,9 +1342,10 @@ __all__ = [
     "EXTERNAL_DATA_ROOT_MARKER",
     "LOCAL_EXTERNAL_SCOPE_TYPE",
     "LOCAL_SCOPE_TYPE",
+    "GENERATED_DOCUMENTS_PATH",
+    "GENERATED_SEARCH_PATH",
     "PUBLISHED_DOCUMENTS_PATH",
     "MANAGED_MEDIA_TYPES",
-    "MEDIA_WORKSPACE_ROOT_MARKER",
     "PUBLISHED_SEARCH_PATH",
     "PUBLIC_DOCS_OUTPUT_ROOT",
     "PUBLIC_SCOPE_TYPE",
@@ -1290,6 +1354,7 @@ __all__ = [
     "DEFAULT_DOCS_SEARCH_FIELDS",
     "SEARCH_FIELDS",
     "SCHEMA_VERSION",
+    "SCOPE_GENERATED_PATH",
     "SCOPE_PUBLISHED_PATH",
     "SCOPE_ROOTS_PATH",
     "SCOPE_SOURCE_PATH",
@@ -1297,6 +1362,8 @@ __all__ = [
     "SOURCE_SUB_SCOPES_PATH",
     "default_repo_root",
     "document_source_path",
+    "generated_documents_path",
+    "generated_search_path",
     "is_public_readonly_scope",
     "load_docs_scope_configs",
     "location_child_path",

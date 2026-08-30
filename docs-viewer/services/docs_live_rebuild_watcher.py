@@ -949,7 +949,7 @@ def rebuild_build_media(
 
     config = state["config"]
     build = config.media.build_sources[build_type]
-    published_media = config.media.types[build.publishes_to]
+    generated_media = config.media.types[build.publishes_to]
     requested_outputs = tuple(
         Path(filename).with_suffix(".svg").as_posix()
         for filename in ordered_unique(changed_files)
@@ -961,24 +961,24 @@ def rebuild_build_media(
     try:
         remote_client = authenticated_remote_client_for_locations(
             repo_root,
-            [published_media.location],
+            [generated_media.generated_location],
         )
         source = artifact_location_adapter(
             repo_root,
             build.location,
         )
-        published = artifact_location_adapter(
+        generated = artifact_location_adapter(
             repo_root,
-            published_media.location,
-            served_path_prefix=published_media.served_path_prefix,
+            generated_media.generated_location,
+            served_path_prefix=generated_media.served_path_prefix,
             remote_client=remote_client,
         )
         outputs = produce_mermaid_svg(
             SimpleNamespace(
                 source=source,
-                published=published,
+                generated=generated,
                 write=True,
-                requested_published_identities=requested_outputs,
+                requested_generated_identities=requested_outputs,
             )
         )
     except Exception as exc:  # noqa: BLE001 - watcher reports and retries on the next source change.

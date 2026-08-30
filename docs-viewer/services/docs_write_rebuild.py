@@ -14,10 +14,11 @@ from typing import Any, Callable, Dict, Mapping, Optional
 from docs_scope_config import (
     DOCS_SCOPE_CONFIGS,
     document_source_path,
+    generated_documents_path,
     load_docs_scope_configs,
-    published_documents_path,
     resolve_scope_path,
 )
+from docs_scope_build_manifest import remove_build_manifest, write_build_manifest
 from docs_source_model import load_scope_docs_for_config, scope_root, write_bytes_atomic
 from docs_watch_suppression import (
     DEFAULT_COMPLETE_TTL_SECONDS,
@@ -127,7 +128,7 @@ def targeted_docs_build_fallback_reason(repo_root: Path, scope: str, target_doc_
     except (KeyError, FileNotFoundError, ValueError) as exc:
         return f"full-scope fallback: docs scope config unavailable: {exc}"
 
-    output_dir = resolve_scope_path(repo_root, published_documents_path(config))
+    output_dir = resolve_scope_path(repo_root, generated_documents_path(config))
     index_tree_path = output_dir / "index-tree.json"
     semantic_token_index_path = output_dir / "semantic-tokens" / "index.json"
     if not index_tree_path.exists():
@@ -231,6 +232,11 @@ def rebuild_scope_outputs(
     docs_doc_ids: Optional[list[str]] = None,
     skip_media_builds: bool = False,
 ) -> Dict[str, Any]:
+    try:
+        scope_config = load_docs_scope_configs(repo_root, scope_ids=(scope,))[scope]
+    except KeyError as exc:
+        raise ValueError(f"scope {scope!r} is not configured") from exc
+    remove_build_manifest(repo_root, scope_config)
     docs_mode = "full"
     docs_target_doc_ids: list[str] = []
     docs_reason = "full-scope fallback: no targeted docs payload ids provided"
@@ -252,6 +258,23 @@ def rebuild_scope_outputs(
     commands = [("docs", docs_command)]
     search = {"mode": "none", "doc_ids": []}
     if include_search:
+        commands.extend(
+            (
+                "sub_scope_docs",
+                python_builder_command(
+                    DOCS_BUILDER_SCRIPT,
+                    "--scope",
+                    scope,
+                    "--sub-scope",
+                    sub_scope.sub_scope,
+                    "--write",
+                    "--diagnostics",
+                    "--skip-browser-config",
+                    "--skip-media-builds",
+                ),
+            )
+            for sub_scope in scope_config.sub_scopes
+        )
         if search_doc_ids is None:
             search = {"mode": "full", "doc_ids": []}
             commands.append(("search", python_builder_command(SEARCH_BUILDER_SCRIPT, "--scope", scope, "--write")))
@@ -285,6 +308,11 @@ def rebuild_scope_outputs(
         if step["returncode"] != 0:
             detail = step["stderr"] or step["stdout"] or f"exit {step['returncode']}"
             raise RuntimeError(rebuild_failure_message(f"rebuild failed for {scope}", detail))
+    build_manifest = (
+        write_build_manifest(repo_root, scope_config)
+        if include_search and search["mode"] == "full"
+        else None
+    )
     return {
         "ok": True,
         "steps": steps,
@@ -294,6 +322,7 @@ def rebuild_scope_outputs(
             "docs": docs_diagnostics,
             "search": search_diagnostics,
         },
+        "build_manifest": build_manifest,
     }
 
 

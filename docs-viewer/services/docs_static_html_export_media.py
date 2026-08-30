@@ -301,7 +301,7 @@ def _media_adapters(
     }
     client = authenticated_remote_client_for_locations(
         repo_root,
-        [media.location for media in selected.values()],
+        [media.generated_location for media in selected.values()],
         client=remote_client,
         env_files=env_files,
         environ=environ,
@@ -309,7 +309,7 @@ def _media_adapters(
     return {
         media_type: artifact_location_adapter(
             repo_root,
-            media.location,
+            media.generated_location,
             served_path_prefix=media.served_path_prefix,
             remote_client=client,
         )
@@ -367,7 +367,7 @@ def plan_snapshot_media(
             SnapshotMediaItem(
                 media_type=media_type,
                 identity=identity,
-                provider=config.media.types[media_type].location.provider,
+                provider=config.media.types[media_type].generated_location.provider,
                 packaged_path=packaged_path,
                 size=len(data),
                 sha256=hashlib.sha256(data).hexdigest(),

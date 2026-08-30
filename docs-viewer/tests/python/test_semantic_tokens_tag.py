@@ -249,11 +249,11 @@ def test_tag_builder_renders_one_link_and_records_only_resolved_usage() -> None:
         result = builder(root).run(write=True)
         first = read_json(
             root
-            / f"docs-viewer/scopes/analysis/published/documents/by-id/{FIRST_DOC_ID}.json"
+            / f"docs-viewer/scopes/analysis/generated/documents/by-id/{FIRST_DOC_ID}.json"
         )
         usage = read_json(
             root
-            / "docs-viewer/scopes/analysis/published/documents/semantic-tokens/index.json"
+            / "docs-viewer/scopes/analysis/generated/documents/semantic-tokens/index.json"
         )
 
     content = first["content_html"]
@@ -299,7 +299,7 @@ def test_targeted_build_preserves_untouched_tag_usage_and_payload() -> None:
         builder(root).run(write=True)
         second_path = (
             root
-            / f"docs-viewer/scopes/analysis/published/documents/by-id/{SECOND_DOC_ID}.json"
+            / f"docs-viewer/scopes/analysis/generated/documents/by-id/{SECOND_DOC_ID}.json"
         )
         second_before = read_json(second_path)
         first_source = (
@@ -318,7 +318,7 @@ def test_targeted_build_preserves_untouched_tag_usage_and_payload() -> None:
         second_after = read_json(second_path)
         usage = read_json(
             root
-            / "docs-viewer/scopes/analysis/published/documents/semantic-tokens/index.json"
+            / "docs-viewer/scopes/analysis/generated/documents/semantic-tokens/index.json"
         )
 
     assert result["diagnostics"]["build_mode"] == "targeted"

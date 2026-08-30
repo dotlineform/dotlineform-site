@@ -55,13 +55,7 @@ def write_site_tools_config(root: Path, *, media_base: str = "https://media.exam
 
 def write_docs_scope_config(root: Path, scopes: list[dict[str, object]], docs_viewer: dict[str, object] | None = None) -> None:
     payload: dict[str, object] = {
-        "schema_version": "docs_scopes_v4",
-        "media_workspace": {
-            "location": {
-                "provider": "external_local",
-                "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/media",
-            }
-        },
+        "schema_version": "docs_scopes_v5",
         "scopes": scopes,
     }
     if docs_viewer is not None:
@@ -159,6 +153,7 @@ def docs_scope_record(
         "meta": meta or scope_type.replace("_", " "),
         "scope_root": {"provider": local_provider, "path": scope_root},
         "source": {},
+        "generated": {},
         "media": {
             "types": managed_media,
             "build_sources": {},

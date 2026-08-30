@@ -279,7 +279,7 @@ class SourceLoadingMixin:
 
     def output_url_base_for(self, output_dir: Path) -> str:
         if scope_uses_external_data(self.config):
-            return f"/docs/published/external/{quote(self.scope_id)}"
+            return f"/docs/generated/external/{quote(self.scope_id)}"
         try:
             relative = output_dir.resolve().relative_to(self.repo_root)
         except ValueError as exc:

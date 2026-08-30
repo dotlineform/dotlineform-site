@@ -20,7 +20,7 @@ from docs_management_capabilities_service import (
     capability_scope_root_label,
 )
 import docs_local_links
-from repo_factory import docs_sub_scope_record
+from repo_factory import docs_scope_record, docs_sub_scope_record
 
 def test_capabilities_advertise_generated_data_reads() -> None:
     with make_repo() as temp_path:
@@ -153,12 +153,15 @@ def test_public_scope_is_copy_source_and_target_but_not_move_source_or_target() 
         repo_root = Path(temp_path)
         write_docs_scope_config(repo_root)
         config_path = repo_root / "docs-viewer/config/scopes/docs_scopes.json"
-        config = config_path.read_text(encoding="utf-8").replace(
-            '"scope_type": "local"',
-            '"scope_type": "public"',
-            1,
+        config = json.loads(config_path.read_text(encoding="utf-8"))
+        config["scopes"][0] = docs_scope_record(
+            "studio",
+            scope_type="public",
+            viewer_base_url="/studio/",
+            include_scope_param=False,
+            default_doc_id="child",
         )
-        config_path.write_text(config, encoding="utf-8")
+        config_path.write_text(json.dumps(config, indent=2) + "\n", encoding="utf-8")
         payload = docs_management_service.capabilities_payload(repo_root)
 
     assert payload["capabilities"]["scopes"]["studio"]["document_transfer"] == {
@@ -273,11 +276,11 @@ def test_source_config_report_reads_known_config_files() -> None:
     assert payload["scopes"][0]["scope_id"] == "studio"
     assert payload["scopes"][0]["source_config"]["scope_type"] == "local"
     assert payload["scopes"][0]["roles"]["source"]["provider"] == "repository"
-    assert payload["scopes"][0]["roles"]["published_documents"]["provider"] == "repository"
-    assert payload["scopes"][0]["browser_config"]["index_tree_url"] == "/docs-viewer/scopes/studio/published/documents/index-tree.json"
-    assert payload["scopes"][0]["browser_config"]["recent_url"] == "/docs-viewer/scopes/studio/published/documents/recent.json"
+    assert payload["scopes"][0]["roles"]["generated_documents"]["provider"] == "repository"
+    assert payload["scopes"][0]["browser_config"]["index_tree_url"] == "/docs-viewer/scopes/studio/generated/documents/index-tree.json"
+    assert payload["scopes"][0]["browser_config"]["recent_url"] == "/docs-viewer/scopes/studio/generated/documents/recent.json"
     assert payload["scopes"][0]["artifacts"] == {
-        "published_documents_available": True,
-        "published_search_available": True,
+        "generated_documents_available": True,
+        "generated_search_available": True,
     }
     assert payload["scopes"][0]["warnings"] == []

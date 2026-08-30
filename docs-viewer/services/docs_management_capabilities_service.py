@@ -19,8 +19,8 @@ from docs_scope_config import (
     path_label,
     publication_documents_path,
     publication_search_path,
-    published_documents_path,
-    published_search_path,
+    generated_documents_path,
+    generated_search_path,
     resolve_scope_path,
 )
 from docs_document_packages.workspace import workspace_status
@@ -50,7 +50,7 @@ def capabilities_payload(repo_root: Path) -> Dict[str, Any]:
         config = scope_configs[scope]
         root = resolve_scope_path(repo_root, document_source_path(config))
         manifest_record = manifest_scopes.get(scope)
-        generated_data_path = resolve_scope_path(repo_root, published_documents_path(config)) / "index-tree.json"
+        generated_data_path = resolve_scope_path(repo_root, generated_documents_path(config)) / "index-tree.json"
         publishable = is_public_readonly_scope(
             viewer_base_url=config.viewer_base_url,
             include_scope_param=config.include_scope_param,
@@ -72,7 +72,7 @@ def capabilities_payload(repo_root: Path) -> Dict[str, Any]:
             "scope_type": config.scope_type,
             "root": capability_scope_root_label(repo_root, scope, config),
             "generated_data_reads": generated_data_path.exists(),
-            "generated_search_reads": resolve_scope_path(repo_root, published_search_path(config)).exists(),
+            "generated_search_reads": resolve_scope_path(repo_root, generated_search_path(config)).exists(),
             "publishable": publishable,
             "document_transfer": transfer_capabilities,
             "scope_lifecycle": {
@@ -93,7 +93,7 @@ def capabilities_payload(repo_root: Path) -> Dict[str, Any]:
                         "sub_scope": sub_scope.sub_scope,
                         "title": sub_scope.title,
                         "source": path_label(repo_root, document_source_path(sub_scope)),
-                        "output": path_label(repo_root, published_documents_path(sub_scope)),
+                        "output": path_label(repo_root, generated_documents_path(sub_scope)),
                         "publish_output": path_label(repo_root, publication_documents_path(sub_scope)),
                     }
                     for sub_scope in config.sub_scopes

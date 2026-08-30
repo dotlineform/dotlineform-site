@@ -21,7 +21,7 @@ from docs_management_document_target import (
 )
 from docs_scope_config import (
     load_docs_scope_configs,
-    published_documents_path,
+    generated_documents_path,
     resolve_external_data_root,
     resolve_scope_path,
 )
@@ -984,7 +984,7 @@ def sub_scope_delete_generated_outputs(
 ) -> list[dict[str, str]]:
     output_root = resolve_scope_path(
         repo_root,
-        published_documents_path(resolved.document_config),
+        generated_documents_path(resolved.document_config),
     )
     return [
         {

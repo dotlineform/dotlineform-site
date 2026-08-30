@@ -373,8 +373,8 @@ def _prepared_mermaid_media(
     build = config.media.build_sources.get("mermaid")
     if build is None or build.producer != "mermaid" or build.publishes_to != "svg":
         raise ValueError(f"scope {scope!r} does not configure Mermaid source media")
-    published_media = config.media.types.get("svg")
-    if published_media is None or "mermaid" not in published_media.build_inputs:
+    generated_media = config.media.types.get("svg")
+    if generated_media is None or "mermaid" not in generated_media.build_inputs:
         raise ValueError(f"scope {scope!r} does not register Mermaid as an SVG build input")
 
     source_identity = source_filename
@@ -382,7 +382,7 @@ def _prepared_mermaid_media(
     source_bytes = source_path.read_bytes()
     remote_client = authenticated_remote_client_for_locations(
         repo_root,
-        [published_media.location],
+        [generated_media.generated_location],
     )
     source_adapter = artifact_location_adapter(
         repo_root,
@@ -390,8 +390,8 @@ def _prepared_mermaid_media(
     )
     published_adapter = artifact_location_adapter(
         repo_root,
-        published_media.location,
-        served_path_prefix=published_media.served_path_prefix,
+        generated_media.generated_location,
+        served_path_prefix=generated_media.served_path_prefix,
         remote_client=remote_client,
     )
 
@@ -408,9 +408,9 @@ def _prepared_mermaid_media(
         temporary_source.replace(source_identity, source_bytes, content_type="text/plain")
         context = SimpleNamespace(
             source=temporary_source,
-            published=temporary_published,
+            generated=temporary_published,
             write=True,
-            requested_published_identities=(published_identity,),
+            requested_generated_identities=(published_identity,),
         )
         outputs = produce_mermaid_svg(context)
         if outputs != (published_identity,):

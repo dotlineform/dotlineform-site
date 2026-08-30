@@ -4,7 +4,6 @@
 from __future__ import annotations
 
 import json
-import os
 import sys
 from collections.abc import Iterator
 from dataclasses import dataclass
@@ -22,6 +21,7 @@ if str(DOCS_SERVICES_DIR) not in sys.path:
 
 import docs_document_transfer as transfer  # noqa: E402
 import docs_media_source_evidence as media_source_evidence  # noqa: E402
+import docs_scope_config  # noqa: E402
 import docs_source_model as source_model  # noqa: E402
 
 
@@ -29,13 +29,7 @@ def write_json(path: Path, payload: object) -> None:
     if path.name == "docs_scopes.json" and isinstance(payload, dict):
         payload = {
             **payload,
-            "schema_version": "docs_scopes_v4",
-            "media_workspace": {
-                "location": {
-                    "provider": "external_local",
-                    "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/media",
-                }
-            },
+            "schema_version": "docs_scopes_v5",
         }
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
@@ -90,20 +84,15 @@ def local_documents_root(repo_root: Path, scope: str) -> Path:
 
 
 def media_path(repo_root: Path, scope: str, media_type: str, identity: str) -> Path:
-    del repo_root
-    return Path(os.environ["DOTLINEFORM_PROJECTS_BASE_DIR"]) / "docs-viewer/media" / scope / media_type / identity
+    config = docs_scope_config.load_docs_scope_configs(repo_root)[scope]
+    location = docs_scope_config.managed_media_config(config, media_type).source_location
+    return docs_scope_config.resolve_location_path(repo_root, location) / identity
 
 
 def build_source_path(repo_root: Path, scope: str, build_type: str, identity: str) -> Path:
-    del repo_root
-    return (
-        Path(os.environ["DOTLINEFORM_PROJECTS_BASE_DIR"])
-        / "docs-viewer/media"
-        / scope
-        / "build-source"
-        / build_type
-        / identity
-    )
+    config = docs_scope_config.load_docs_scope_configs(repo_root)[scope]
+    location = config.media.build_sources[build_type].location
+    return docs_scope_config.resolve_location_path(repo_root, location) / identity
 
 
 def write_bytes(path: Path, data: bytes) -> None:
@@ -153,7 +142,7 @@ def make_repo(
     write_json(
         repo_root / "docs-viewer/config/scopes/docs_scopes.json",
         {
-            "schema_version": "docs_scopes_v4",
+            "schema_version": "docs_scopes_v5",
             "scopes": [
                 source_scope or base_scope("source"),
                 target_scope or base_scope("target"),
@@ -215,7 +204,7 @@ def make_collection_repo(tmp_path: Path) -> Path:
     write_json(
         repo_root / "docs-viewer/config/scopes/docs_scopes.json",
         {
-            "schema_version": "docs_scopes_v4",
+            "schema_version": "docs_scopes_v5",
             "scopes": [
                 base_scope("source", sub_scopes=source_sub_scopes),
                 base_scope("target", sub_scopes=target_sub_scopes),
@@ -304,7 +293,7 @@ def make_lineage_repo(tmp_path: Path) -> Path:
     write_json(
         repo_root / "docs-viewer/config/scopes/docs_scopes.json",
         {
-            "schema_version": "docs_scopes_v4",
+            "schema_version": "docs_scopes_v5",
             "scopes": [
                 base_scope("dotlineform", sub_scopes=[source_sub_scope]),
                 docs_scope_record(
@@ -1390,7 +1379,7 @@ def test_public_scope_managed_source_to_external_local_target_is_provider_neutra
     write_json(
         repo_root / "docs-viewer/config/scopes/docs_scopes.json",
         {
-            "schema_version": "docs_scopes_v4",
+            "schema_version": "docs_scopes_v5",
             "scopes": [source_scope, target_scope],
         },
     )
@@ -1417,7 +1406,7 @@ def test_public_scope_managed_source_to_external_local_target_is_provider_neutra
     )
 
     assert plan.ok
-    assert plan.media[0].source_provider == "external_local"
+    assert plan.media[0].source_provider == "repository"
     assert plan.media[0].target_provider == "external_local"
     assert plan.media[0].target_status == "create"
 
@@ -1441,7 +1430,7 @@ def test_external_local_source_can_plan_move_to_local_target(
     write_json(
         repo_root / "docs-viewer/config/scopes/docs_scopes.json",
         {
-            "schema_version": "docs_scopes_v4",
+            "schema_version": "docs_scopes_v5",
             "scopes": [source_scope, target_scope],
         },
     )
@@ -1469,7 +1458,7 @@ def test_external_local_source_can_plan_move_to_local_target(
 
     assert plan.ok
     assert plan.media[0].source_provider == "external_local"
-    assert plan.media[0].target_provider == "external_local"
+    assert plan.media[0].target_provider == "repository"
     assert plan.media[0].target_status == "create"
 
 

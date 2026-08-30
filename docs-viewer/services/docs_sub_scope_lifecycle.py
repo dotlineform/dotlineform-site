@@ -27,7 +27,7 @@ from docs_scope_config import (
     load_docs_scope_configs,
     normalize_sub_scope_id,
     public_documents_path,
-    published_documents_path,
+    generated_documents_path,
     resolve_scope_path,
     source_container_path,
 )
@@ -137,24 +137,24 @@ def sub_scope_storage_contract(
     source_root = (
         parent_config.source.location.path / SOURCE_SUB_SCOPES_PATH / sub_scope
     ).as_posix()
-    published_docs = (
-        parent_config.published.documents.location.path / SOURCE_SUB_SCOPES_PATH / sub_scope
+    generated_docs = (
+        parent_config.generated.documents.location.path / SOURCE_SUB_SCOPES_PATH / sub_scope
     ).as_posix()
     public_docs = (
         str(projection["documents"]["location"]["path"])
         if isinstance(projection, dict)
-        else published_docs
+        else generated_docs
     )
     return {
         "publishing_mode": "parent_scope",
         "public_static_assets": public_static_assets,
         "access": "embedded_detail_documents",
         "source_root": source_root,
-        "docs_output": published_docs,
+        "docs_output": generated_docs,
         "publish_output": public_docs,
         "search_output": "",
         "summary": (
-            f"Sub-scope under {parent_scope}: creates nested source and published payload roots "
+            f"Sub-scope under {parent_scope}: creates nested source and generated payload roots "
             "plus one parent report host. It does not create a top-level scope, route, or scope "
             "selector entry."
         ),
@@ -169,13 +169,13 @@ def sub_scope_path_records(repo_root: Path, parent_config: DocsScopeConfig, sub_
     source_documents_root = source_root / SOURCE_DOCUMENTS_PATH
     docs_output = resolve_scope_path(
         repo_root,
-        published_documents_path(parent_config) / SOURCE_SUB_SCOPES_PATH / sub_scope,
+        generated_documents_path(parent_config) / SOURCE_SUB_SCOPES_PATH / sub_scope,
     )
     records = [
         path_record(repo_root, "sub_scope_source_root", source_root, action="create"),
         path_record(repo_root, "sub_scope_source_documents_root", source_documents_root, action="create"),
-        path_record(repo_root, "sub_scope_published_docs_root", docs_output, action="create"),
-        path_record(repo_root, "sub_scope_published_docs_payload_root", docs_output / "by-id", action="create"),
+        path_record(repo_root, "sub_scope_generated_docs_root", docs_output, action="create"),
+        path_record(repo_root, "sub_scope_generated_docs_payload_root", docs_output / "by-id", action="create"),
         path_record(repo_root, "sub_scope_manifest", docs_output / "manifest.json", action="generate"),
         path_record(repo_root, "sub_scope_manage_manifest", docs_output / "manage-manifest.json", action="generate"),
     ]
@@ -412,7 +412,7 @@ def apply_create_sub_scope(
     )
     docs_output = resolve_scope_path(
         repo_root,
-        published_documents_path(parent_config) / SOURCE_SUB_SCOPES_PATH / sub_scope,
+        generated_documents_path(parent_config) / SOURCE_SUB_SCOPES_PATH / sub_scope,
     )
     public_root = public_documents_path(parent_config)
     stage = "roots"
@@ -439,7 +439,7 @@ def apply_create_sub_scope(
 def sub_scope_delete_path_records(repo_root: Path, sub_scope_config: Any, parent_config: DocsScopeConfig) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
     candidate_paths = [
         ("sub_scope_source_root", resolve_scope_path(repo_root, source_container_path(sub_scope_config))),
-        ("sub_scope_published_docs_root", resolve_scope_path(repo_root, published_documents_path(sub_scope_config))),
+        ("sub_scope_generated_docs_root", resolve_scope_path(repo_root, generated_documents_path(sub_scope_config))),
     ]
     public_output = public_documents_path(sub_scope_config)
     if public_output is not None:

@@ -312,13 +312,13 @@ def test_projects_subject_assignment_read_save_remove_and_strict_rejection(
         linked_source = source_path.read_text(encoding="utf-8")
         linked_manifest = read_json(
             repo_root / (
-                "docs-viewer/scopes/dotlineform/published/documents/"
+                "docs-viewer/scopes/dotlineform/generated/documents/"
                 "sub-scopes/projects/manage-manifest.json"
             )
         )
         linked_associations = read_json(
             repo_root / (
-                "docs-viewer/scopes/dotlineform/published/documents/"
+                "docs-viewer/scopes/dotlineform/generated/documents/"
                 "sub-scopes/projects/subject-associations.json"
             )
         )
@@ -370,13 +370,13 @@ def test_projects_subject_assignment_read_save_remove_and_strict_rejection(
         removed_source = source_path.read_text(encoding="utf-8")
         removed_manifest = read_json(
             repo_root / (
-                "docs-viewer/scopes/dotlineform/published/documents/"
+                "docs-viewer/scopes/dotlineform/generated/documents/"
                 "sub-scopes/projects/manage-manifest.json"
             )
         )
         removed_associations = read_json(
             repo_root / (
-                "docs-viewer/scopes/dotlineform/published/documents/"
+                "docs-viewer/scopes/dotlineform/generated/documents/"
                 "sub-scopes/projects/subject-associations.json"
             )
         )
@@ -399,13 +399,13 @@ def test_projects_subject_assignment_read_save_remove_and_strict_rejection(
         work_source = source_path.read_text(encoding="utf-8")
         work_manifest = read_json(
             repo_root / (
-                "docs-viewer/scopes/dotlineform/published/documents/"
+                "docs-viewer/scopes/dotlineform/generated/documents/"
                 "sub-scopes/projects/manage-manifest.json"
             )
         )
         work_associations = read_json(
             repo_root / (
-                "docs-viewer/scopes/dotlineform/published/documents/"
+                "docs-viewer/scopes/dotlineform/generated/documents/"
                 "sub-scopes/projects/subject-associations.json"
             )
         )
@@ -854,13 +854,7 @@ def test_external_scope_default_doc_delete_uses_workspace_relative_path(tmp_path
     config_path.write_text(
         json.dumps(
             {
-                "schema_version": "docs_scopes_v4",
-                "media_workspace": {
-                    "location": {
-                        "provider": "external_local",
-                        "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/media",
-                    }
-                },
+                "schema_version": "docs_scopes_v5",
                 "scopes": [
                     docs_scope_record("dlf", scope_type="local_external", default_doc_id="dlf")
                 ],

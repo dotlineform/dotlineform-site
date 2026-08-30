@@ -27,7 +27,7 @@ ensure_studio_python_paths(__file__)
 
 from docs_document_identity import is_immutable_doc_id  # noqa: E402
 from docs_local_links import encode_relative_target  # noqa: E402
-from docs_scope_config import load_docs_scope_configs, published_documents_path, resolve_scope_path  # noqa: E402
+from docs_scope_config import generated_documents_path, load_docs_scope_configs, resolve_scope_path  # noqa: E402
 from catalogue.catalogue_source import (  # noqa: E402
     DEFAULT_SOURCE_DIR,
     normalize_text,
@@ -69,7 +69,7 @@ def default_project_state_paths(repo_root: Path) -> ProjectStatePaths:
     sub_scope = next((item for item in scope.sub_scopes if item.sub_scope == PROJECTS_SUB_SCOPE), None)
     if sub_scope is None:
         raise ValueError(f"Docs Viewer sub-scope is not configured: {PROJECTS_SCOPE}/{PROJECTS_SUB_SCOPE}")
-    published_root = resolve_scope_path(root, published_documents_path(sub_scope))
+    published_root = resolve_scope_path(root, generated_documents_path(sub_scope))
     return ProjectStatePaths(
         projects_base_dir=configured_projects_base(),
         manage_manifest_path=published_root / "manage-manifest.json",

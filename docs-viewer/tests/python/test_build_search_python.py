@@ -57,13 +57,7 @@ def write_scope_config(
     write_json(
         root / "docs-viewer/config/scopes/docs_scopes.json",
         {
-            "schema_version": "docs_scopes_v4",
-            "media_workspace": {
-                "location": {
-                    "provider": "external_local",
-                    "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/media",
-                }
-            },
+            "schema_version": "docs_scopes_v5",
             "scopes": [scope],
         },
     )
@@ -85,13 +79,7 @@ def write_external_scope_config(root: Path, external_root: Path) -> None:
     write_json(
         root / "docs-viewer/config/scopes/docs_scopes.json",
         {
-            "schema_version": "docs_scopes_v4",
-            "media_workspace": {
-                "location": {
-                    "provider": "external_local",
-                    "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/media",
-                }
-            },
+            "schema_version": "docs_scopes_v5",
             "scopes": [scope],
         },
     )
@@ -145,28 +133,35 @@ def test_python_docs_search_builder_writes_current_schema_and_hash() -> None:
         root = Path(temp_path)
         prepare_repo(root)
         exit_code, stdout, stderr = run_cli(root, ["--scope", "studio", "--write"])
-        payload = read_json(root / "docs-viewer/scopes/studio/published/search/index.json")
+        payload = read_json(root / "docs-viewer/scopes/studio/generated/search/index.json")
 
     assert exit_code == 0
     assert stderr == ""
-    assert "Wrote docs-viewer/scopes/studio/published/search/index.json with 4 studio search docs" in stdout
+    assert "Wrote docs-viewer/scopes/studio/generated/search/index.json with 6 studio search docs" in stdout
     header = payload["header"]
     docs = payload["docs"]
     assert header["schema"] == "docs_viewer_search_index_v2"
     assert header["scope"] == "studio"
     assert header["version"].startswith("blake2b-")
-    assert header["count"] == 4
+    assert header["count"] == 6
     assert payload["fields"] == ["title", "parent_title", "identity", "last_updated"]
-    assert [document["id"] for document in docs] == ["child", "draft", "draft-child", "parent"]
+    assert [document["id"] for document in docs] == [
+        "child",
+        "draft",
+        "draft-child",
+        "manage-child",
+        "manage-root",
+        "parent",
+    ]
     child = docs[0]
     assert child["href"] == "/docs/?scope=studio&doc=child"
     assert child["parent_title"] == "Parent Page"
     assert child["display_meta"] == "2026-06-02 • Parent Page"
-    assert payload["terms"]["child"] == {"title": [0, 2], "identity": [0]}
+    assert payload["terms"]["child"] == {"title": [0, 2, 3], "identity": [0]}
     assert payload["terms"]["parent"] == {
-        "title": [3],
+        "title": [5],
         "parent_title": [0],
-        "identity": [3],
+        "identity": [5],
     }
 
 
@@ -287,7 +282,7 @@ def test_builder_rebuilds_whole_index_and_skips_identical_output() -> None:
     with tempfile.TemporaryDirectory() as temp_path:
         root = Path(temp_path)
         prepare_repo(root)
-        output_path = root / "docs-viewer/scopes/studio/published/search/index.json"
+        output_path = root / "docs-viewer/scopes/studio/generated/search/index.json"
         builder = build_search.DocsViewerSearchDataBuilder(repo_root=root, scope="studio")
         initial = builder.build_docs_v2_payload(
             generated_at_utc="2026-08-13T00:00:00Z",
@@ -326,13 +321,7 @@ def test_selected_scope_search_build_does_not_resolve_unselected_external_scope(
         write_json(
             root / "docs-viewer/config/scopes/docs_scopes.json",
             {
-                "schema_version": "docs_scopes_v4",
-                "media_workspace": {
-                    "location": {
-                        "provider": "external_local",
-                        "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/media",
-                    }
-                },
+                "schema_version": "docs_scopes_v5",
                 "scopes": [
                     docs_scope_record(
                         "studio",
@@ -367,7 +356,7 @@ def test_selected_scope_search_build_does_not_resolve_unselected_external_scope(
 
     assert result.returncode == 0
     assert result.stderr == ""
-    assert "Would write: docs-viewer/scopes/studio/published/search/index.json" in result.stdout
+    assert "Would write: docs-viewer/scopes/studio/generated/search/index.json" in result.stdout
 
 
 def test_doc_search_keeps_exact_opaque_id_without_fragment_tokens() -> None:
@@ -414,7 +403,7 @@ def test_v2_index_keeps_same_doc_id_for_distinct_exact_targets() -> None:
     assert payload["terms"][doc_id] == {"identity": [0, 1]}
 
 
-def test_python_docs_search_builder_includes_only_manifest_owned_sub_scope_docs() -> None:
+def test_python_docs_search_builder_includes_manage_owned_sub_scope_docs() -> None:
     with tempfile.TemporaryDirectory() as temp_path:
         root = Path(temp_path)
         host_id = "d-20260814-000001-aaaaaa"
@@ -439,13 +428,7 @@ def test_python_docs_search_builder_includes_only_manifest_owned_sub_scope_docs(
         write_json(
             root / "docs-viewer/config/scopes/docs_scopes.json",
             {
-                "schema_version": "docs_scopes_v4",
-                "media_workspace": {
-                    "location": {
-                        "provider": "external_local",
-                        "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/media",
-                    }
-                },
+                "schema_version": "docs_scopes_v5",
                 "scopes": [scope],
             },
         )
@@ -503,10 +486,15 @@ publishable: false
 ExcludedVocabulary must not leak.
 """,
         )
-        output_root = root / "docs-viewer/scopes/analysis/published/documents/sub-scopes/tags"
+        output_root = root / "docs-viewer/scopes/analysis/generated/documents/sub-scopes/tags"
         write_json(
-            output_root / "manifest.json",
-            {"docs": [{"doc_id": child_id, "title": "Visible Child"}]},
+            output_root / "manage-manifest.json",
+            {
+                "docs": [
+                    {"doc_id": child_id, "title": "Visible Child"},
+                    {"doc_id": excluded_id, "title": "Hidden Child"},
+                ]
+            },
         )
         write_json(
             output_root / "by-id" / f"{child_id}.json",
@@ -518,27 +506,38 @@ ExcludedVocabulary must not leak.
                 "content_html": "<h1>Visible Child</h1><p>EligibleVocabulary appears once.</p>",
             },
         )
+        write_json(
+            output_root / "by-id" / f"{excluded_id}.json",
+            {
+                "doc_id": excluded_id,
+                "title": "Hidden Child",
+                "last_updated": "2026-08-14 09:04:00",
+                "viewer_url": f"/analysis/?doc={host_id}&subdoc={excluded_id}",
+                "content_html": "<h1>Hidden Child</h1><p>ExcludedVocabulary remains manageable.</p>",
+            },
+        )
 
         exit_code, stdout, stderr = run_cli(root, ["--scope", "analysis", "--write"])
-        payload = read_json(root / "docs-viewer/scopes/analysis/published/search/index.json")
+        payload = read_json(root / "docs-viewer/scopes/analysis/generated/search/index.json")
 
     assert exit_code == 0
     assert stderr == ""
-    assert "with 2 analysis search docs" in stdout
-    child = next(row for row in payload["docs"] if row.get("sub_scope") == "tags")
+    assert "with 3 analysis search docs" in stdout
+    sub_scope_docs = [row for row in payload["docs"] if row.get("sub_scope") == "tags"]
+    child = next(row for row in sub_scope_docs if row["id"] == child_id)
     assert child == {
         "id": child_id,
         "title": "Visible Child",
         "href": f"/analysis/?doc={host_id}&subdoc={child_id}",
         "last_updated": "2026-08-14 09:02:00",
-        "display_meta": "2026-08-14 09:02:00 • Concepts",
+        "display_meta": "2026-08-14 09:02:00 • Tags",
         "sub_scope": "tags",
         "report_doc_id": host_id,
-        "collection_title": "Concepts",
+        "collection_title": "Tags",
     }
     assert "eligiblevocabulary" in payload["terms"]
-    assert excluded_id not in {document["id"] for document in payload["docs"]}
-    assert "excludedvocabulary" not in payload["terms"]
+    assert {document["id"] for document in sub_scope_docs} == {child_id, excluded_id}
+    assert "excludedvocabulary" in payload["terms"]
 
 
 def test_python_docs_search_builder_rejects_ambiguous_sub_scope_placement() -> None:
@@ -554,13 +553,7 @@ def test_python_docs_search_builder_rejects_ambiguous_sub_scope_placement() -> N
         write_json(
             root / "docs-viewer/config/scopes/docs_scopes.json",
             {
-                "schema_version": "docs_scopes_v4",
-                "media_workspace": {
-                    "location": {
-                        "provider": "external_local",
-                        "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/media",
-                    }
-                },
+                "schema_version": "docs_scopes_v5",
                 "scopes": [scope],
             },
         )
@@ -609,9 +602,9 @@ def test_python_docs_search_builder_dry_run_does_not_write() -> None:
 
         assert exit_code == 0
         assert stderr == ""
-        assert "Dry run: 4 studio search docs" in stdout
-        assert "Would write: docs-viewer/scopes/studio/published/search/index.json" in stdout
-        assert not (root / "docs-viewer/scopes/studio/published/search/index.json").exists()
+        assert "Dry run: 6 studio search docs" in stdout
+        assert "Would write: docs-viewer/scopes/studio/generated/search/index.json" in stdout
+        assert not (root / "docs-viewer/scopes/studio/generated/search/index.json").exists()
 
 
 def test_python_docs_search_builder_skips_unchanged_second_write_and_force_rewrites() -> None:
@@ -619,17 +612,17 @@ def test_python_docs_search_builder_skips_unchanged_second_write_and_force_rewri
         root = Path(temp_path)
         prepare_repo(root)
         run_cli(root, ["--scope", "studio", "--write"])
-        first_payload = read_json(root / "docs-viewer/scopes/studio/published/search/index.json")
+        first_payload = read_json(root / "docs-viewer/scopes/studio/generated/search/index.json")
         second_exit, second_stdout, second_stderr = run_cli(root, ["--scope", "studio", "--write"])
         force_exit, force_stdout, force_stderr = run_cli(root, ["--scope", "studio", "--write", "--force"])
-        force_payload = read_json(root / "docs-viewer/scopes/studio/published/search/index.json")
+        force_payload = read_json(root / "docs-viewer/scopes/studio/generated/search/index.json")
 
     assert second_exit == 0
     assert second_stderr == ""
     assert "Search index JSON done. Wrote: 0. Skipped: 1." in second_stdout
     assert force_exit == 0
     assert force_stderr == ""
-    assert "Wrote docs-viewer/scopes/studio/published/search/index.json with 4 studio search docs" in force_stdout
+    assert "Wrote docs-viewer/scopes/studio/generated/search/index.json with 6 studio search docs" in force_stdout
     assert force_payload["header"]["version"] == first_payload["header"]["version"]
 
 
@@ -670,7 +663,7 @@ External search body.
         )
         try:
             exit_code, stdout, stderr = run_cli(root, ["--scope", "private", "--write"])
-            payload = read_json(external_root / "scopes/private/published/search/index.json")
+            payload = read_json(external_root / "scopes/private/generated/search/index.json")
         finally:
             if old_projects_base is None:
                 os.environ.pop("DOTLINEFORM_PROJECTS_BASE_DIR", None)

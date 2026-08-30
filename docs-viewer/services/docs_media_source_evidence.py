@@ -71,7 +71,7 @@ def _normalize_record(raw: Any, *, config: DocsScopeConfig, field: str) -> DocsM
 
 
 def _adapter(repo_root: Path, config: DocsScopeConfig):
-    return artifact_location_adapter(repo_root, config.media.location)
+    return artifact_location_adapter(repo_root, config.media.source_location)
 
 
 def load_media_source_evidence(

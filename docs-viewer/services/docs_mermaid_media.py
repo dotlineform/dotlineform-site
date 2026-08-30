@@ -24,9 +24,9 @@ MERMAID_BACKGROUND = "white"
 
 class MermaidBuildContext(Protocol):
     source: ArtifactLocationAdapter
-    published: ArtifactLocationAdapter
+    generated: ArtifactLocationAdapter
     write: bool
-    requested_published_identities: tuple[str, ...] | None
+    requested_generated_identities: tuple[str, ...] | None
     replace_existing: bool
 
 
@@ -78,24 +78,24 @@ def _render_one(
 def _publish_outputs(
     rendered: Sequence[tuple[MermaidMediaPlan, bytes]],
     *,
-    published: ArtifactLocationAdapter,
+    generated: ArtifactLocationAdapter,
     replace_existing: bool,
 ) -> None:
     for plan, data in rendered:
         try:
             if replace_existing:
-                published.replace(
+                generated.replace(
                     plan.published_identity,
                     data,
                     content_type="image/svg+xml",
                 )
             else:
-                published.write(
+                generated.write(
                     plan.published_identity,
                     data,
                     content_type="image/svg+xml",
                 )
-            verified = published.verify_bytes(plan.published_identity, data)
+            verified = generated.verify_bytes(plan.published_identity, data)
         except Exception as exc:
             raise RuntimeError(
                 f"Mermaid SVG publication failed for {plan.published_identity!r}"
@@ -115,10 +115,10 @@ def produce_mermaid_svg(
     """Render, sanitize, publish, and verify configured Mermaid source media."""
 
     plans = plan_mermaid_media(context.source.list())
-    if context.requested_published_identities is not None:
+    if context.requested_generated_identities is not None:
         requested = {
             normalize_artifact_identity(identity)
-            for identity in context.requested_published_identities
+            for identity in context.requested_generated_identities
         }
         plans = tuple(plan for plan in plans if plan.published_identity in requested)
     output_identities = tuple(plan.published_identity for plan in plans)
@@ -144,7 +144,7 @@ def produce_mermaid_svg(
         ]
         _publish_outputs(
             rendered,
-            published=context.published,
+            generated=context.generated,
             replace_existing=getattr(context, "replace_existing", True),
         )
     return output_identities

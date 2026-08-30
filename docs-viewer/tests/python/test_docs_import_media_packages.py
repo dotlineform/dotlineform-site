@@ -109,13 +109,13 @@ def test_html_import_extracts_inline_png_to_staged_media_plan() -> None:
 
         source_text = (root / payload["path"]).read_text(encoding="utf-8")
         media_filename = f"{payload['doc_id']}-image-01.png"
-        media_path = managed_media_path("example", "img", media_filename)
+        media_path = managed_media_path(root, "example", "img", media_filename)
         media_bytes = media_path.read_bytes()
 
     assert payload["ok"] is True
     assert payload["import_preview"]["media_plans"][0]["source_path"] == media_filename
     assert payload["import_preview"]["media_plans"][0]["media_path"] == f"docs/example/img/{media_filename}"
-    assert payload["inline_media_written"][0]["location_provider"] == "external_local"
+    assert payload["inline_media_written"][0]["location_provider"] == "repository"
     assert payload["inline_media_written"][0]["artifact_identity"] == media_filename
     assert payload["inline_media_written"][0]["publish_status"] == "uploaded"
     assert media_bytes == b"inline-png"
@@ -163,7 +163,7 @@ def test_html_import_extracts_sanitized_inline_svg_before_source_write() -> None
 
         source_text = (root / payload["path"]).read_text(encoding="utf-8")
         media_filename = f"{payload['doc_id']}-image-01.svg"
-        media_path = managed_media_path("example", "svg", media_filename)
+        media_path = managed_media_path(root, "example", "svg", media_filename)
         svg_text = media_path.read_text(encoding="utf-8")
 
     assert payload["import_preview"]["media_plans"][0]["source"] == "inline_svg"
@@ -259,7 +259,7 @@ def test_markdown_import_extracts_inline_png_with_canonical_doc_identity() -> No
 
         source_text = (root / payload["path"]).read_text(encoding="utf-8")
         media_filename = f"{payload['doc_id']}-image-01.png"
-        media_path = managed_media_path("example", "img", media_filename)
+        media_path = managed_media_path(root, "example", "img", media_filename)
         media_bytes = media_path.read_bytes()
 
     assert payload["ok"] is True
@@ -297,7 +297,7 @@ def test_inline_media_write_skips_invalid_data_urls_before_valid_images() -> Non
 
         source_text = (root / payload["path"]).read_text(encoding="utf-8")
         media_filename = f"{payload['doc_id']}-image-01.png"
-        media_path = managed_media_path("example", "img", media_filename)
+        media_path = managed_media_path(root, "example", "img", media_filename)
         media_bytes = media_path.read_bytes()
 
     assert payload["ok"] is True
@@ -349,8 +349,8 @@ Some text.
         source_text = (root / payload["path"]).read_text(encoding="utf-8")
         image_filename = f"{payload['doc_id']}-image-01.webp"
         attachment_filename = f"{payload['doc_id']}-attachment-01.pdf"
-        webp_path = managed_media_path("example", "img", image_filename)
-        attachment_path = managed_media_path("example", "files", attachment_filename)
+        webp_path = managed_media_path(root, "example", "img", image_filename)
+        attachment_path = managed_media_path(root, "example", "files", attachment_filename)
         from PIL import Image
 
         with Image.open(webp_path) as converted:

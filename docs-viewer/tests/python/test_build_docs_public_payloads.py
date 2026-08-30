@@ -69,17 +69,17 @@ def test_python_docs_builder_public_generated_payloads_include_manage_rows() -> 
         )
         config = load_docs_scope_configs(root)["example"]
         result = build_docs.DocsDataBuilder(repo_root=root, config=config).run(write=True)
-        index_tree = read_json(root / "docs-viewer/scopes/example/published/documents/index-tree.json")
-        recent = read_json(root / "docs-viewer/scopes/example/published/documents/recent.json")
-        publication_recent = read_json(root / "docs-viewer/scopes/example/published/documents/.publish/recent.json")
-        child_payload = read_json(root / f"docs-viewer/scopes/example/published/documents/by-id/{CHILD_DOC_ID}.json")
-        hidden_payload = read_json(root / f"docs-viewer/scopes/example/published/documents/by-id/{HIDDEN_DOC_ID}.json")
+        index_tree = read_json(root / "docs-viewer/scopes/example/generated/documents/index-tree.json")
+        recent = read_json(root / "docs-viewer/scopes/example/generated/documents/recent.json")
+        publication_recent = read_json(root / "docs-viewer/scopes/example/generated/documents/.publish/recent.json")
+        child_payload = read_json(root / f"docs-viewer/scopes/example/generated/documents/by-id/{CHILD_DOC_ID}.json")
+        hidden_payload = read_json(root / f"docs-viewer/scopes/example/generated/documents/by-id/{HIDDEN_DOC_ID}.json")
         semantic_tokens_generated = (
-            root / "docs-viewer/scopes/example/published/documents/semantic-tokens"
+            root / "docs-viewer/scopes/example/generated/documents/semantic-tokens"
         ).exists()
         semantic_tokens_index = read_json(
             root
-            / "docs-viewer/scopes/example/published/documents/semantic-tokens/index.json"
+            / "docs-viewer/scopes/example/generated/documents/semantic-tokens/index.json"
         )
         manage_browser_config = build_docs.browser_scope_config_payload(root, [config])
         public_browser_config = build_docs.browser_scope_config_payload(root, [config], published=True)
@@ -180,16 +180,16 @@ def test_python_docs_builder_public_generated_payloads_include_manage_rows() -> 
     assert 'data-semantic-token-family="catalogue"' in child_payload["content_html"]
     assert public_by_id_forbidden_keys.isdisjoint(child_payload)
     assert hidden_payload["title"] == "Hidden"
-    assert manage_browser_config["scopes"][0]["index_tree_url"] == "/docs-viewer/scopes/example/published/documents/index-tree.json"
-    assert manage_browser_config["scopes"][0]["recent_url"] == "/docs-viewer/scopes/example/published/documents/recent.json"
+    assert manage_browser_config["scopes"][0]["index_tree_url"] == "/docs-viewer/scopes/example/generated/documents/index-tree.json"
+    assert manage_browser_config["scopes"][0]["recent_url"] == "/docs-viewer/scopes/example/generated/documents/recent.json"
     assert manage_browser_config["scopes"][0]["backlinks_url"] == (
-        "/docs-viewer/scopes/example/published/documents/backlinks.json"
+        "/docs-viewer/scopes/example/generated/documents/backlinks.json"
     )
     assert manage_browser_config["scopes"][0]["scope_type"] == "public"
     assert manage_browser_config["scopes"][0]["search"] == {
         "domain": "docs_viewer",
         "schema": "docs_viewer_search_index_v2",
-        "index_url": "/docs-viewer/scopes/example/published/search/index.json",
+        "index_url": "/docs-viewer/scopes/example/generated/search/index.json",
         "rebuild_policy": "whole_index",
     }
     assert manage_browser_config["scopes"][0]["media"]["img"]["served_path_prefix"] == (
@@ -237,8 +237,8 @@ sub_scope: tags
         config = load_docs_scope_configs(root)["example"]
 
         build_docs.DocsDataBuilder(repo_root=root, config=config).run(write=True)
-        report_payload = read_json(root / f"docs-viewer/scopes/example/published/documents/by-id/{REPORT_DOC_ID}.json")
-        index_tree = read_json(root / "docs-viewer/scopes/example/published/documents/index-tree.json")
+        report_payload = read_json(root / f"docs-viewer/scopes/example/generated/documents/by-id/{REPORT_DOC_ID}.json")
+        index_tree = read_json(root / "docs-viewer/scopes/example/generated/documents/index-tree.json")
 
     assert report_payload["report"] == {
         "id": "docs_subscope",

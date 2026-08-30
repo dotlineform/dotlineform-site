@@ -23,10 +23,10 @@ def _html_media_adapter(repo_root: Path, scope: str):
     if config is None:
         raise ValueError(f"Unknown Docs media scope: {scope!r}")
     media = managed_media_config(config, "html")
-    remote_client = authenticated_remote_client_for_locations(repo_root, [media.location])
+    remote_client = authenticated_remote_client_for_locations(repo_root, [media.source_location])
     return config, media, artifact_location_adapter(
         repo_root,
-        media.location,
+        media.source_location,
         served_path_prefix=media.served_path_prefix,
         remote_client=remote_client,
     )

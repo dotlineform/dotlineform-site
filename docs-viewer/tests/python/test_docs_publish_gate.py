@@ -4,7 +4,6 @@
 from __future__ import annotations
 
 import json
-import os
 import sys
 import tempfile
 from pathlib import Path
@@ -92,7 +91,7 @@ def write_scope_config(root: Path) -> None:
 def prepare_publish_repo(root: Path) -> None:
     write_scope_config(root)
     write_json(
-        root / "docs-viewer/scopes/example/published/documents/index-tree.json",
+        root / "docs-viewer/scopes/example/generated/documents/index-tree.json",
         {
             "schema": "docs_index_tree_v1",
             "viewer_options": {"manage_only_tree_root_ids": ["manage-root"]},
@@ -127,7 +126,7 @@ def prepare_publish_repo(root: Path) -> None:
         },
     )
     write_json(
-        root / "docs-viewer/scopes/example/published/documents/recent.json",
+        root / "docs-viewer/scopes/example/generated/documents/recent.json",
         {
             "schema": "docs_recent_v1",
             "basis": "edited",
@@ -138,7 +137,7 @@ def prepare_publish_repo(root: Path) -> None:
         },
     )
     write_json(
-        root / "docs-viewer/scopes/example/published/documents/.publish/recent.json",
+        root / "docs-viewer/scopes/example/generated/documents/.publish/recent.json",
         {
             "schema": "docs_recent_v1",
             "basis": "edited",
@@ -148,7 +147,7 @@ def prepare_publish_repo(root: Path) -> None:
         },
     )
     write_json(
-        root / f"docs-viewer/scopes/example/published/documents/by-id/{LIBRARY_DOC_ID}.json",
+        root / f"docs-viewer/scopes/example/generated/documents/by-id/{LIBRARY_DOC_ID}.json",
         {
             "title": "Example",
             "content_html": (
@@ -164,11 +163,11 @@ def prepare_publish_repo(root: Path) -> None:
             ),
         },
     )
-    write_json(root / "docs-viewer/scopes/example/published/documents/by-id/hidden.json", {"title": "Hidden"})
-    write_json(root / "docs-viewer/scopes/example/published/documents/by-id/hidden-child.json", {"title": "Hidden Child"})
-    write_json(root / "docs-viewer/scopes/example/published/documents/by-id/manage-root.json", {"title": "Manage Root"})
+    write_json(root / "docs-viewer/scopes/example/generated/documents/by-id/hidden.json", {"title": "Hidden"})
+    write_json(root / "docs-viewer/scopes/example/generated/documents/by-id/hidden-child.json", {"title": "Hidden Child"})
+    write_json(root / "docs-viewer/scopes/example/generated/documents/by-id/manage-root.json", {"title": "Manage Root"})
     write_json(
-        root / "docs-viewer/scopes/example/published/documents/semantic-tokens/index.json",
+        root / "docs-viewer/scopes/example/generated/documents/semantic-tokens/index.json",
         {
             "schema_version": "docs_semantic_token_usage_index_v1",
             "scope": "example",
@@ -176,7 +175,7 @@ def prepare_publish_repo(root: Path) -> None:
         },
     )
     write_json(
-        root / "docs-viewer/scopes/example/published/documents/backlinks.json",
+        root / "docs-viewer/scopes/example/generated/documents/backlinks.json",
         {
             "schema": "docs_backlinks_v1",
             "scope": "example",
@@ -184,7 +183,7 @@ def prepare_publish_repo(root: Path) -> None:
         },
     )
     write_json(
-        root / "docs-viewer/scopes/example/published/search/index.json",
+        root / "docs-viewer/scopes/example/generated/search/index.json",
         {
             "header": {
                 "schema": "docs_viewer_search_index_v2",
@@ -402,7 +401,7 @@ def test_one_publish_action_reconciles_repository_and_r2_media_without_blocking_
         write_json(config_path, config)
         working_doc_path = (
             repo_root
-            / f"docs-viewer/scopes/example/published/documents/by-id/{LIBRARY_DOC_ID}.json"
+            / f"docs-viewer/scopes/example/generated/documents/by-id/{LIBRARY_DOC_ID}.json"
         )
         working_doc = json.loads(working_doc_path.read_text(encoding="utf-8"))
         working_doc["content_html"] = working_doc["content_html"].replace(
@@ -410,10 +409,7 @@ def test_one_publish_action_reconciles_repository_and_r2_media_without_blocking_
             '<a href="/docs/media/example/files/download.pdf">Download</a></p>',
         )
         write_json(working_doc_path, working_doc)
-        managed_root = (
-            Path(os.environ["DOTLINEFORM_PROJECTS_BASE_DIR"])
-            / "docs-viewer/media/example"
-        )
+        managed_root = repo_root / "docs-viewer/scopes/example/generated/media"
         (managed_root / "img").mkdir(parents=True, exist_ok=True)
         (managed_root / "files").mkdir(parents=True, exist_ok=True)
         (managed_root / "img/diagram.png").write_bytes(b"managed image")
@@ -496,7 +492,7 @@ def test_publish_follow_through_adds_reassigns_and_removes_exact_catalogue_urls(
         assert json.loads(work_path.read_text(encoding="utf-8"))["work"]["doc_url"] == []
         assert json.loads(series_path.read_text(encoding="utf-8"))["series"]["doc_url"] == [public_url]
 
-        working_tree_path = repo_root / "docs-viewer/scopes/example/published/documents/index-tree.json"
+        working_tree_path = repo_root / "docs-viewer/scopes/example/generated/documents/index-tree.json"
         working_tree = json.loads(working_tree_path.read_text(encoding="utf-8"))
         working_tree["docs"] = [
             {
@@ -509,7 +505,7 @@ def test_publish_follow_through_adds_reassigns_and_removes_exact_catalogue_urls(
             }
         ]
         write_json(working_tree_path, working_tree)
-        working_search_path = repo_root / "docs-viewer/scopes/example/published/search/index.json"
+        working_search_path = repo_root / "docs-viewer/scopes/example/generated/search/index.json"
         working_search = json.loads(working_search_path.read_text(encoding="utf-8"))
         working_search["docs"] = []
         working_search["terms"] = {}
@@ -609,12 +605,12 @@ def test_publish_confirm_and_apply_include_configured_sub_scope_payloads() -> No
         ]
         write_json(config_path, config)
         write_json(
-            repo_root / "docs-viewer/scopes/example/published/documents/sub-scopes/tags/manifest.json",
+            repo_root / "docs-viewer/scopes/example/generated/documents/sub-scopes/tags/manifest.json",
             {"docs": [{"doc_id": "scale", "title": "Scale"}]},
         )
         write_json(
             repo_root
-            / "docs-viewer/scopes/example/published/documents/sub-scopes/tags/manage-manifest.json",
+            / "docs-viewer/scopes/example/generated/documents/sub-scopes/tags/manage-manifest.json",
             {
                 "docs": [
                     {
@@ -631,8 +627,8 @@ def test_publish_confirm_and_apply_include_configured_sub_scope_payloads() -> No
                 ]
             },
         )
-        write_json(repo_root / "docs-viewer/scopes/example/published/documents/sub-scopes/tags/by-id/scale.json", {"doc_id": "scale", "title": "Scale"})
-        write_json(repo_root / "docs-viewer/scopes/example/published/documents/sub-scopes/tags/by-id/hidden.json", {"doc_id": "hidden", "title": "Hidden"})
+        write_json(repo_root / "docs-viewer/scopes/example/generated/documents/sub-scopes/tags/by-id/scale.json", {"doc_id": "scale", "title": "Scale"})
+        write_json(repo_root / "docs-viewer/scopes/example/generated/documents/sub-scopes/tags/by-id/hidden.json", {"doc_id": "hidden", "title": "Hidden"})
         write_json(repo_root / "site/assets/data/docs/scopes/example/tags/manifest.json", {"doc_ids": "old"})
         write_json(
             repo_root / "site/assets/data/docs/scopes/example/tags/manage-manifest.json",
@@ -642,7 +638,7 @@ def test_publish_confirm_and_apply_include_configured_sub_scope_payloads() -> No
         write_json(repo_root / "site/assets/data/docs/scopes/example/tags/by-id/hidden.json", {"doc_id": "hidden", "title": "Old Hidden"})
         working_scale_bytes = (
             repo_root
-            / "docs-viewer/scopes/example/published/documents/sub-scopes/tags/by-id/scale.json"
+            / "docs-viewer/scopes/example/generated/documents/sub-scopes/tags/by-id/scale.json"
         ).read_bytes()
 
         preview = docs_publish_gate.publish_confirm(repo_root, {"scope": "example"})
@@ -771,7 +767,7 @@ def test_successful_publish_sets_retains_and_clears_lineage_publication(
         write_json(config_path, config)
         working_root = (
             repo_root
-            / "docs-viewer/scopes/example/published/documents/sub-scopes/works"
+            / "docs-viewer/scopes/example/generated/documents/sub-scopes/works"
         )
         write_json(
             working_root / "manifest.json",
@@ -886,7 +882,7 @@ def test_publish_rejects_configured_sub_scope_without_manifest() -> None:
             docs_sub_scope_record("example", "tags", title="Tags", scope_type="public")
         ]
         write_json(config_path, config)
-        (repo_root / "docs-viewer/scopes/example/published/documents/sub-scopes/tags").mkdir(parents=True)
+        (repo_root / "docs-viewer/scopes/example/generated/documents/sub-scopes/tags").mkdir(parents=True)
 
         try:
             docs_publish_gate.publish_confirm(repo_root, {"scope": "example"})

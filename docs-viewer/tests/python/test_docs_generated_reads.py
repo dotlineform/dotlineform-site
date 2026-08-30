@@ -41,8 +41,8 @@ def write_json(path: Path, payload: dict[str, object]) -> None:
 
 def scope_config(scope_id: str, output: str, search_output: str) -> dict[str, object]:
     public_scope = scope_id in {"example", "analysis"}
-    expected_output = f"docs-viewer/scopes/{scope_id}/published/documents"
-    expected_search = f"docs-viewer/scopes/{scope_id}/published/search/index.json"
+    expected_output = f"docs-viewer/scopes/{scope_id}/generated/documents"
+    expected_search = f"docs-viewer/scopes/{scope_id}/generated/search/index.json"
     if output != expected_output or search_output != expected_search:
         raise ValueError("fixture outputs must be derived from scope_root")
     return docs_scope_record(
@@ -65,21 +65,15 @@ def external_scope_config(scope_id: str, external_root: Path) -> dict[str, objec
 
 def write_scope_config(root: Path, extra_scopes: list[dict[str, object]] | None = None) -> None:
     scopes = [
-        scope_config("studio", "docs-viewer/scopes/studio/published/documents", "docs-viewer/scopes/studio/published/search/index.json"),
-        scope_config("example", "docs-viewer/scopes/example/published/documents", "docs-viewer/scopes/example/published/search/index.json"),
-        scope_config("analysis", "docs-viewer/scopes/analysis/published/documents", "docs-viewer/scopes/analysis/published/search/index.json"),
+        scope_config("studio", "docs-viewer/scopes/studio/generated/documents", "docs-viewer/scopes/studio/generated/search/index.json"),
+        scope_config("example", "docs-viewer/scopes/example/generated/documents", "docs-viewer/scopes/example/generated/search/index.json"),
+        scope_config("analysis", "docs-viewer/scopes/analysis/generated/documents", "docs-viewer/scopes/analysis/generated/search/index.json"),
     ]
     scopes.extend(extra_scopes or [])
     write_json(
         root / "docs-viewer/config/scopes/docs_scopes.json",
         {
-            "schema_version": "docs_scopes_v4",
-            "media_workspace": {
-                "location": {
-                    "provider": "external_local",
-                    "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/media",
-                }
-            },
+            "schema_version": "docs_scopes_v5",
             "scopes": scopes,
         },
     )
@@ -93,28 +87,28 @@ def write_generated_docs(root: Path) -> None:
             "doc_id": NON_VIEWABLE_DOC_ID,
             "title": "Non-publishable Doc",
             "publishable": False,
-            "content_url": f"/docs-viewer/scopes/studio/published/documents/by-id/{NON_VIEWABLE_DOC_ID}.json",
+            "content_url": f"/docs-viewer/scopes/studio/generated/documents/by-id/{NON_VIEWABLE_DOC_ID}.json",
         },
         {
             "scope": "studio",
             "doc_id": CHILD_DOC_ID,
             "title": "Child",
             "publishable": True,
-            "content_url": f"/docs-viewer/scopes/studio/published/documents/by-id/{CHILD_DOC_ID}.json",
+            "content_url": f"/docs-viewer/scopes/studio/generated/documents/by-id/{CHILD_DOC_ID}.json",
         },
     ]
     write_json(
-        root / "docs-viewer/scopes/studio/published/documents/index-tree.json",
+        root / "docs-viewer/scopes/studio/generated/documents/index-tree.json",
         {"schema": "docs_index_tree_v1", "viewer_options": {}, "docs": docs},
     )
     write_json(
-        root / "docs-viewer/scopes/studio/published/documents/recent.json",
+        root / "docs-viewer/scopes/studio/generated/documents/recent.json",
         {"schema": "docs_recent_v1", "basis": "edited", "limit": 10, "docs": [docs[1]]},
     )
-    write_json(root / f"docs-viewer/scopes/studio/published/documents/by-id/{NON_VIEWABLE_DOC_ID}.json", {"doc_id": NON_VIEWABLE_DOC_ID})
-    write_json(root / f"docs-viewer/scopes/studio/published/documents/by-id/{CHILD_DOC_ID}.json", {"doc_id": CHILD_DOC_ID})
+    write_json(root / f"docs-viewer/scopes/studio/generated/documents/by-id/{NON_VIEWABLE_DOC_ID}.json", {"doc_id": NON_VIEWABLE_DOC_ID})
+    write_json(root / f"docs-viewer/scopes/studio/generated/documents/by-id/{CHILD_DOC_ID}.json", {"doc_id": CHILD_DOC_ID})
     write_json(
-        root / "docs-viewer/scopes/studio/published/documents/semantic-tokens/index.json",
+        root / "docs-viewer/scopes/studio/generated/documents/semantic-tokens/index.json",
         {
             "schema_version": "docs_semantic_token_usage_index_v1",
             "scope": "studio",
@@ -131,7 +125,7 @@ def write_generated_docs(root: Path) -> None:
             ],
         },
     )
-    write_json(root / "docs-viewer/scopes/studio/published/search/index.json", {"entries": [{"doc_id": CHILD_DOC_ID}]})
+    write_json(root / "docs-viewer/scopes/studio/generated/search/index.json", {"entries": [{"doc_id": CHILD_DOC_ID}]})
 
 
 def write_public_generated_docs(root: Path) -> None:
@@ -151,19 +145,19 @@ def write_public_generated_docs(root: Path) -> None:
         }
     ]
     write_json(
-        root / "docs-viewer/scopes/example/published/documents/index-tree.json",
+        root / "docs-viewer/scopes/example/generated/documents/index-tree.json",
         {"schema": "docs_index_tree_v1", "viewer_options": {}, "docs": docs},
     )
     write_json(
-        root / "docs-viewer/scopes/example/published/documents/recent.json",
+        root / "docs-viewer/scopes/example/generated/documents/recent.json",
         {"schema": "docs_recent_v1", "basis": "edited", "limit": 10, "docs": docs},
     )
     write_json(
-        root / f"docs-viewer/scopes/example/published/documents/by-id/{LIBRARY_DOC_ID}.json",
+        root / f"docs-viewer/scopes/example/generated/documents/by-id/{LIBRARY_DOC_ID}.json",
         {"title": "Example", "content_html": "<h1>Example</h1>"},
     )
     write_json(
-        root / f"docs-viewer/scopes/example/published/documents/by-id/{LIBRARY_CHILD_DOC_ID}.json",
+        root / f"docs-viewer/scopes/example/generated/documents/by-id/{LIBRARY_CHILD_DOC_ID}.json",
         {"title": "Child", "content_html": "<h1>Child</h1>"},
     )
 
@@ -182,7 +176,7 @@ def test_generated_data_availability_checks_scope_files() -> None:
 def test_docs_scope_config_default_doc_id_is_optional() -> None:
     with tempfile.TemporaryDirectory() as temp_path:
         repo_root = Path(temp_path)
-        config = scope_config("moments", "docs-viewer/scopes/moments/published/documents", "docs-viewer/scopes/moments/published/search/index.json")
+        config = scope_config("moments", "docs-viewer/scopes/moments/generated/documents", "docs-viewer/scopes/moments/generated/search/index.json")
         config["default_doc_id"] = ""
         write_scope_config(repo_root, extra_scopes=[config])
 
@@ -229,7 +223,7 @@ def test_generated_doc_payload_requires_tree_record() -> None:
         repo_root = Path(temp_path)
         write_generated_docs(repo_root)
         write_json(
-            repo_root / f"docs-viewer/scopes/studio/published/documents/by-id/{UNLISTED_DOC_ID}.json",
+            repo_root / f"docs-viewer/scopes/studio/generated/documents/by-id/{UNLISTED_DOC_ID}.json",
             {"doc_id": UNLISTED_DOC_ID},
         )
         try:
@@ -245,7 +239,7 @@ def test_generated_doc_payload_rejects_unexpected_content_url() -> None:
         repo_root = Path(temp_path)
         write_generated_docs(repo_root)
         write_json(
-            repo_root / "docs-viewer/scopes/studio/published/documents/index-tree.json",
+            repo_root / "docs-viewer/scopes/studio/generated/documents/index-tree.json",
             {
                 "schema": "docs_index_tree_v1",
                 "docs": [
@@ -269,13 +263,13 @@ def test_generated_doc_payload_allows_external_content_url_with_expected_path() 
         repo_root = Path(temp_path)
         write_generated_docs(repo_root)
         write_json(
-            repo_root / "docs-viewer/scopes/studio/published/documents/index-tree.json",
+            repo_root / "docs-viewer/scopes/studio/generated/documents/index-tree.json",
             {
                 "schema": "docs_index_tree_v1",
                 "docs": [
                     {
                         "doc_id": CHILD_DOC_ID,
-                        "content_url": f"https://example.com/docs-viewer/scopes/studio/published/documents/by-id/{CHILD_DOC_ID}.json",
+                        "content_url": f"https://example.com/docs-viewer/scopes/studio/generated/documents/by-id/{CHILD_DOC_ID}.json",
                     }
                 ]
             },
@@ -307,7 +301,7 @@ def test_generated_semantic_token_usage_read_uses_scope_output() -> None:
 
         expected_path = (
             repo_root
-            / "docs-viewer/scopes/studio/published/documents/semantic-tokens/index.json"
+            / "docs-viewer/scopes/studio/generated/documents/semantic-tokens/index.json"
         )
         assert (
             generated_reads.generated_semantic_tokens_index_path(repo_root, "studio")
@@ -347,30 +341,30 @@ def test_generated_doc_paths_use_derived_scope_output() -> None:
             [
                 scope_config(
                     "research",
-                    "docs-viewer/scopes/research/published/documents",
-                    "docs-viewer/scopes/research/published/search/index.json",
+                    "docs-viewer/scopes/research/generated/documents",
+                    "docs-viewer/scopes/research/generated/search/index.json",
                 )
             ],
         )
         docs = [
             {
                 "doc_id": RESEARCH_DOC_ID,
-                "content_url": f"/docs-viewer/scopes/research/published/documents/by-id/{RESEARCH_DOC_ID}.json",
+                "content_url": f"/docs-viewer/scopes/research/generated/documents/by-id/{RESEARCH_DOC_ID}.json",
                 "children": [
                     {
                         "doc_id": FINDING_DOC_ID,
-                        "content_url": f"/docs-viewer/scopes/research/published/documents/by-id/{FINDING_DOC_ID}.json",
+                        "content_url": f"/docs-viewer/scopes/research/generated/documents/by-id/{FINDING_DOC_ID}.json",
                     }
                 ],
             }
         ]
-        write_json(repo_root / "docs-viewer/scopes/research/published/documents/index-tree.json", {"schema": "docs_index_tree_v1", "docs": docs})
-        write_json(repo_root / f"docs-viewer/scopes/research/published/documents/by-id/{RESEARCH_DOC_ID}.json", {"doc_id": RESEARCH_DOC_ID})
-        write_json(repo_root / f"docs-viewer/scopes/research/published/documents/by-id/{FINDING_DOC_ID}.json", {"doc_id": FINDING_DOC_ID})
+        write_json(repo_root / "docs-viewer/scopes/research/generated/documents/index-tree.json", {"schema": "docs_index_tree_v1", "docs": docs})
+        write_json(repo_root / f"docs-viewer/scopes/research/generated/documents/by-id/{RESEARCH_DOC_ID}.json", {"doc_id": RESEARCH_DOC_ID})
+        write_json(repo_root / f"docs-viewer/scopes/research/generated/documents/by-id/{FINDING_DOC_ID}.json", {"doc_id": FINDING_DOC_ID})
 
         assert (
             generated_reads.generated_docs_index_tree_path(repo_root, "research")
-            == repo_root / "docs-viewer/scopes/research/published/documents/index-tree.json"
+            == repo_root / "docs-viewer/scopes/research/generated/documents/index-tree.json"
         )
         payload = generated_reads.read_generated_doc_payload(repo_root, "research", FINDING_DOC_ID)
 
@@ -385,19 +379,19 @@ def test_generated_search_path_uses_derived_scope_output() -> None:
             [
                 scope_config(
                     "research",
-                    "docs-viewer/scopes/research/published/documents",
-                    "docs-viewer/scopes/research/published/search/index.json",
+                    "docs-viewer/scopes/research/generated/documents",
+                    "docs-viewer/scopes/research/generated/search/index.json",
                 )
             ],
         )
         write_json(
-            repo_root / "docs-viewer/scopes/research/published/search/index.json",
+            repo_root / "docs-viewer/scopes/research/generated/search/index.json",
             {"entries": [{"doc_id": RESEARCH_DOC_ID}]},
         )
 
         assert (
             generated_reads.generated_search_index_path(repo_root, "research")
-            == repo_root / "docs-viewer/scopes/research/published/search/index.json"
+            == repo_root / "docs-viewer/scopes/research/generated/search/index.json"
         )
         payload = generated_reads.read_generated_search_index(repo_root, "research")
 
@@ -413,7 +407,7 @@ def test_generated_reads_support_external_local_scope_payloads() -> None:
         old_projects_base = os.environ.get("DOTLINEFORM_PROJECTS_BASE_DIR")
         os.environ["DOTLINEFORM_PROJECTS_BASE_DIR"] = projects_root.as_posix()
         write_scope_config(repo_root, [external_scope_config("private", external_root)])
-        docs_root = external_root / "scopes/private/published/documents"
+        docs_root = external_root / "scopes/private/generated/documents"
         write_json(
             docs_root / "index-tree.json",
             {
@@ -436,7 +430,7 @@ def test_generated_reads_support_external_local_scope_payloads() -> None:
             },
         )
         write_json(
-            external_root / "scopes/private/published/search/index.json",
+            external_root / "scopes/private/generated/search/index.json",
             {
                 "header": {
                     "schema": "docs_viewer_search_index_v2",
@@ -480,7 +474,7 @@ def test_external_sub_scope_payload_route_resolves_only_configured_json() -> Non
         scope = external_scope_config("private", external_root)
         scope["sub_scopes"] = [docs_sub_scope_record("private", "projects")]
         write_scope_config(repo_root, [scope])
-        output = external_root / "scopes/private/published/documents/sub-scopes/projects"
+        output = external_root / "scopes/private/generated/documents/sub-scopes/projects"
         write_json(output / "manage-manifest.json", {"docs": [{"doc_id": PRIVATE_DOC_ID}]})
         write_json(
             output / "subject-associations.json",
@@ -491,25 +485,25 @@ def test_external_sub_scope_payload_route_resolves_only_configured_json() -> Non
         try:
             assert generated_reads.external_sub_scope_payload_path(
                 repo_root,
-                "/docs/published/external/private/projects/manage-manifest.json",
+                "/docs/generated/external/private/projects/manage-manifest.json",
             ) == output / "manage-manifest.json"
             assert generated_reads.external_sub_scope_payload_path(
                 repo_root,
-                "/docs/published/external/private/projects/subject-associations.json",
+                "/docs/generated/external/private/projects/subject-associations.json",
             ) == output / "subject-associations.json"
             assert generated_reads.external_sub_scope_payload_path(
                 repo_root,
-                f"/docs/published/external/private/projects/by-id/{PRIVATE_DOC_ID}.json",
+                f"/docs/generated/external/private/projects/by-id/{PRIVATE_DOC_ID}.json",
             ) == output / f"by-id/{PRIVATE_DOC_ID}.json"
             with pytest.raises(ValueError, match="immutable identity"):
                 generated_reads.external_sub_scope_payload_path(
                     repo_root,
-                    "/docs/published/external/private/projects/by-id/not-a-doc.json",
+                    "/docs/generated/external/private/projects/by-id/not-a-doc.json",
                 )
             with pytest.raises(FileNotFoundError, match="sub-scope not found"):
                 generated_reads.external_sub_scope_payload_path(
                     repo_root,
-                    "/docs/published/external/private/missing/manage-manifest.json",
+                    "/docs/generated/external/private/missing/manage-manifest.json",
                 )
         finally:
             if old_projects_base is None:

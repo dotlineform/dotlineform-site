@@ -23,22 +23,22 @@
           "served_path_prefix": "/docs/media/studio/svg"
         }
       },
-      "index_tree_url": "/docs-viewer/scopes/studio/published/documents/index-tree.json",
-      "recent_url": "/docs-viewer/scopes/studio/published/documents/recent.json",
-      "search_index_url": "/docs-viewer/scopes/studio/published/search/index.json",
+      "index_tree_url": "/docs/index-tree?scope=studio",
+      "recent_url": "/docs/recent?scope=studio",
+      "search_index_url": "/docs/search?scope=studio",
       "search": {
         "domain": "docs_viewer",
         "schema": "docs_viewer_search_index_v2",
-        "index_url": "/docs-viewer/scopes/studio/published/search/index.json",
+        "index_url": "/docs/search?scope=studio",
         "rebuild_policy": "whole_index"
       },
-      "backlinks_url": "/docs-viewer/scopes/studio/published/documents/backlinks.json",
+      "backlinks_url": "/docs/backlinks?scope=studio",
       "sub_scopes": [
         {
           "sub_scope": "default",
           "title": "Default",
-          "manifest_url": "/docs-viewer/scopes/studio/published/documents/sub-scopes/default/manage-manifest.json",
-          "by_id_url_base": "/docs-viewer/scopes/studio/published/documents/sub-scopes/default/by-id"
+          "manifest_url": "/docs/generated/external/studio/default/manage-manifest.json",
+          "by_id_url_base": "/docs/generated/external/studio/default/by-id"
         }
       ]
     },
@@ -67,22 +67,22 @@
           "served_path_prefix": "/docs/media/analysis/svg"
         }
       },
-      "index_tree_url": "/docs-viewer/scopes/analysis/published/documents/index-tree.json",
-      "recent_url": "/docs-viewer/scopes/analysis/published/documents/recent.json",
-      "search_index_url": "/docs-viewer/scopes/analysis/published/search/index.json",
+      "index_tree_url": "/docs/index-tree?scope=analysis",
+      "recent_url": "/docs/recent?scope=analysis",
+      "search_index_url": "/docs/search?scope=analysis",
       "search": {
         "domain": "docs_viewer",
         "schema": "docs_viewer_search_index_v2",
-        "index_url": "/docs-viewer/scopes/analysis/published/search/index.json",
+        "index_url": "/docs/search?scope=analysis",
         "rebuild_policy": "whole_index"
       },
-      "backlinks_url": "/docs-viewer/scopes/analysis/published/documents/backlinks.json",
+      "backlinks_url": "/docs/backlinks?scope=analysis",
       "sub_scopes": [
         {
           "sub_scope": "tags",
           "title": "Tags",
-          "manifest_url": "/docs-viewer/scopes/analysis/published/documents/sub-scopes/tags/manage-manifest.json",
-          "by_id_url_base": "/docs-viewer/scopes/analysis/published/documents/sub-scopes/tags/by-id",
+          "manifest_url": "/docs/generated/external/analysis/tags/manage-manifest.json",
+          "by_id_url_base": "/docs/generated/external/analysis/tags/by-id",
           "sub_scope_customisation": {
             "id": "analysis_tags",
             "capabilities": {
@@ -95,8 +95,8 @@
         {
           "sub_scope": "works",
           "title": "Works",
-          "manifest_url": "/docs-viewer/scopes/analysis/published/documents/sub-scopes/works/manage-manifest.json",
-          "by_id_url_base": "/docs-viewer/scopes/analysis/published/documents/sub-scopes/works/by-id"
+          "manifest_url": "/docs/generated/external/analysis/works/manage-manifest.json",
+          "by_id_url_base": "/docs/generated/external/analysis/works/by-id"
         }
       ]
     },
@@ -153,16 +153,16 @@
           "served_path_prefix": "/docs/media/processing/svg"
         }
       },
-      "index_tree_url": "/docs-viewer/scopes/processing/published/documents/index-tree.json",
-      "recent_url": "/docs-viewer/scopes/processing/published/documents/recent.json",
-      "search_index_url": "/docs-viewer/scopes/processing/published/search/index.json",
+      "index_tree_url": "/docs/index-tree?scope=processing",
+      "recent_url": "/docs/recent?scope=processing",
+      "search_index_url": "/docs/search?scope=processing",
       "search": {
         "domain": "docs_viewer",
         "schema": "docs_viewer_search_index_v2",
-        "index_url": "/docs-viewer/scopes/processing/published/search/index.json",
+        "index_url": "/docs/search?scope=processing",
         "rebuild_policy": "whole_index"
       },
-      "backlinks_url": "/docs-viewer/scopes/processing/published/documents/backlinks.json"
+      "backlinks_url": "/docs/backlinks?scope=processing"
     },
     {
       "scope_id": "dotlineform",
@@ -199,8 +199,8 @@
         {
           "sub_scope": "projects",
           "title": "Projects",
-          "manifest_url": "/docs/published/external/dotlineform/projects/manage-manifest.json",
-          "by_id_url_base": "/docs/published/external/dotlineform/projects/by-id",
+          "manifest_url": "/docs/generated/external/dotlineform/projects/manage-manifest.json",
+          "by_id_url_base": "/docs/generated/external/dotlineform/projects/by-id",
           "sub_scope_customisation": {
             "id": "dotlineform_projects",
             "capabilities": {

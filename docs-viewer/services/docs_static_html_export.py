@@ -129,7 +129,7 @@ def resolve_snapshot_input_paths(
 ) -> StaticHtmlSnapshotInputPaths:
     """Resolve readable generated inputs for any configured filesystem scope."""
 
-    generated_root = resolve_location_path(repo_root, config.published.documents.location)
+    generated_root = resolve_location_path(repo_root, config.generated.documents.location)
     index_tree_path = generated_root / "index-tree.json"
     payload_root = generated_root / "by-id"
     if not index_tree_path.is_file():

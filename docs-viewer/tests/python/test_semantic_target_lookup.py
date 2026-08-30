@@ -310,7 +310,7 @@ def write_tags(root: Path) -> None:
     )
     write_json(
         root
-        / "docs-viewer/scopes/analysis/published/documents/sub-scopes/tags/tag-associations.json",
+        / "docs-viewer/scopes/analysis/generated/documents/sub-scopes/tags/tag-associations.json",
         {
             "schema_version": "docs_tag_associations_v1",
             "scope": "analysis",

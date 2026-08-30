@@ -12,7 +12,7 @@ from docs_document_identity import is_immutable_doc_id
 import docs_source_model as source_model
 from docs_scope_config import (
     load_docs_scope_configs,
-    published_documents_path,
+    generated_documents_path,
     resolve_scope_path,
 )
 from docs_tag_documents import (
@@ -46,7 +46,7 @@ def load_tag_document_association_payload(repo_root: Path) -> dict[str, Any]:
 
     _parent_config, tags_config = _analysis_tags_config(repo_root)
     path = (
-        resolve_scope_path(repo_root, published_documents_path(tags_config))
+        resolve_scope_path(repo_root, generated_documents_path(tags_config))
         / "tag-associations.json"
     )
     try:

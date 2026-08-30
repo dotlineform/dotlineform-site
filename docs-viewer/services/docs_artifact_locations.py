@@ -16,14 +16,6 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Iterable, Iterator, Mapping, Protocol
 
-from studio.shared.python.external_workspace_paths import (
-    PROJECTS_BASE_DIR_MARKER,
-    resolve_external_workspace_root,
-    resolve_workspace_path,
-    workspace_marker,
-)
-
-
 REPOSITORY_PROVIDER = "repository"
 EXTERNAL_LOCAL_PROVIDER = "external_local"
 R2_PROVIDER = "r2"
@@ -32,9 +24,6 @@ SUPPORTED_LOCATION_PROVIDERS = {
     EXTERNAL_LOCAL_PROVIDER,
     R2_PROVIDER,
 }
-MEDIA_WORKSPACE_SUBDIR = Path("docs-viewer/media")
-MEDIA_WORKSPACE_MARKER = workspace_marker(MEDIA_WORKSPACE_SUBDIR)
-
 LIST_CAPABILITY = "list"
 READ_CAPABILITY = "read"
 WRITE_CAPABILITY = "write"
@@ -392,38 +381,11 @@ def filesystem_location_root(repo_root: Path, location: ArtifactLocation) -> Pat
             raise ValueError("repository artifact location escapes the repository root")
         return root
     if location.provider == EXTERNAL_LOCAL_PROVIDER:
-        if location.path.is_absolute():
-            return location.path.resolve()
-        path_text = location.path.as_posix()
-        if path_text == MEDIA_WORKSPACE_MARKER:
-            relative = None
-        elif path_text.startswith(f"{MEDIA_WORKSPACE_MARKER}/"):
-            relative = Path(path_text.removeprefix(f"{MEDIA_WORKSPACE_MARKER}/"))
-        else:
-            raise ValueError(
-                "external_local artifact locations must be absolute or use the configured media workspace marker"
-            )
-        workspace = resolve_external_workspace_root(
-            MEDIA_WORKSPACE_SUBDIR,
-            require_exists=True,
-        )
-        root = workspace.root if relative is None else resolve_workspace_path(workspace, relative)
-        unresolved_root = workspace.projects_base / MEDIA_WORKSPACE_SUBDIR
-        if unresolved_root.is_symlink():
-            raise ValueError(
-                f"external media workspace root must not be a symlink: {MEDIA_WORKSPACE_MARKER}"
-            )
-        target = unresolved_root if relative is None else unresolved_root / relative
-        current = unresolved_root
-        for part in (() if relative is None else relative.parts):
-            current = current / part
-            if current.is_symlink():
-                raise ValueError(
-                    f"external media workspace paths must not use symlinks beneath {PROJECTS_BASE_DIR_MARKER}"
-                )
-        if target.exists() and not target.is_dir():
-            raise ValueError(f"external media artifact location must be a directory: {path_text}")
-        return root
+        if not location.path.is_absolute():
+            raise ValueError("external_local artifact locations must be absolute")
+        if location.path.is_symlink():
+            raise ValueError("external_local artifact locations must not be symlinks")
+        return location.path.resolve()
     raise ValueError("filesystem location root requires repository or external_local provider")
 
 

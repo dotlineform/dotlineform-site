@@ -39,7 +39,7 @@ SUBDOC_ID = "d-20260101-000000-000004"
 @pytest.fixture(autouse=True)
 def isolated_media_workspace(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     projects_base = tmp_path / "projects"
-    (projects_base / "docs-viewer/media").mkdir(parents=True)
+    projects_base.mkdir(parents=True)
     monkeypatch.setenv("DOTLINEFORM_PROJECTS_BASE_DIR", str(projects_base))
 
 
@@ -124,7 +124,7 @@ def _build_fixture(root: Path) -> None:
         sub_scope="tags",
     )
 
-    media_root = root / "projects/docs-viewer/media/example"
+    media_root = root / "docs-viewer/scopes/example/source/media"
     files = {
         "img/nested/used.png": b"used",
         "img/unreferenced.png": b"unreferenced",
@@ -162,7 +162,7 @@ def test_report_rows_join_exact_parent_and_sub_scope_documents(tmp_path: Path) -
         for row in report["rows"]
     }
     used = rows[("img", "nested/used.png")]
-    assert used["local_target"] == "docs-viewer/media/example/img/nested/used.png"
+    assert used["local_target"] == "docs-viewer/scopes/example/source/media/img/nested/used.png"
     assert used["documents"] == [
         {
             "target": {
@@ -191,7 +191,7 @@ def test_report_rows_join_exact_parent_and_sub_scope_documents(tmp_path: Path) -
         "scope": "example",
         "media_type": "mermaid",
         "identity": "diagram.mmd",
-        "local_target": "docs-viewer/media/example/build-source/mermaid/diagram.mmd",
+        "local_target": "docs-viewer/scopes/example/source/media/build-source/mermaid/diagram.mmd",
         "documents": [],
     }
     assert rows[("svg", "diagram.svg")]["documents"][0]["target"]["doc_id"] == OTHER_DOC_ID

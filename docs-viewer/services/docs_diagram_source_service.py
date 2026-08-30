@@ -54,10 +54,10 @@ def _verified_diagram_sources(
         repo_root,
         build.location,
     )
-    remote_client = authenticated_remote_client_for_locations(repo_root, [published_media.location])
+    remote_client = authenticated_remote_client_for_locations(repo_root, [published_media.generated_location])
     published_adapter = artifact_location_adapter(
         repo_root,
-        published_media.location,
+        published_media.generated_location,
         served_path_prefix=published_media.served_path_prefix,
         remote_client=remote_client,
     )

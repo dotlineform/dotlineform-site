@@ -30,7 +30,7 @@ def write_config(repo_root: Path, record: dict[str, object]) -> None:
 @pytest.fixture(autouse=True)
 def isolated_media_workspace(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     projects_base = tmp_path / "projects"
-    (projects_base / "docs-viewer/media").mkdir(parents=True)
+    projects_base.mkdir(parents=True)
     monkeypatch.setenv("DOTLINEFORM_PROJECTS_BASE_DIR", str(projects_base))
 
 
@@ -73,7 +73,7 @@ title: Example
 """,
         encoding="utf-8",
     )
-    media_root = tmp_path / "projects/docs-viewer/media/example"
+    media_root = tmp_path / "docs-viewer/scopes/example/source/media"
     html = media_root / "html/widget.html"
     html.parent.mkdir(parents=True)
     html.write_text("<!doctype html><title>Widget</title>", encoding="utf-8")
@@ -95,7 +95,7 @@ title: Example
     ]
 
 
-def test_registered_producer_writes_only_to_configured_published_adapter(tmp_path: Path) -> None:
+def test_registered_producer_writes_only_to_configured_generated_adapter(tmp_path: Path) -> None:
     write_site_tools_config(tmp_path)
     record = docs_scope_record("studio", default_doc_id="studio")
     record["media"]["build_sources"] = {  # type: ignore[index]
@@ -106,7 +106,7 @@ def test_registered_producer_writes_only_to_configured_published_adapter(tmp_pat
     }
     record["media"]["types"]["svg"]["build_inputs"] = ["mermaid"]  # type: ignore[index]
     write_config(tmp_path, record)
-    media_root = tmp_path / "projects/docs-viewer/media/studio"
+    media_root = tmp_path / "docs-viewer/scopes/studio/source/media"
     source = media_root / "build-source/mermaid/diagram.mmd"
     source.parent.mkdir(parents=True)
     source.write_text("graph TD; A-->B", encoding="utf-8")
@@ -114,9 +114,9 @@ def test_registered_producer_writes_only_to_configured_published_adapter(tmp_pat
 
     def producer(context):
         assert [item.identity for item in context.source.list()] == ["diagram.mmd"]
-        assert context.requested_published_identities is None
+        assert context.requested_generated_identities is None
         if context.write:
-            context.published.replace("diagram.svg", b"<svg></svg>", content_type="image/svg+xml")
+            context.generated.replace("diagram.svg", b"<svg></svg>", content_type="image/svg+xml")
         return ["diagram.svg"]
 
     dry_run = run_registered_media_builds(
@@ -134,7 +134,9 @@ def test_registered_producer_writes_only_to_configured_published_adapter(tmp_pat
 
     assert dry_run[0]["output_identities"] == ["diagram.svg"]
     assert written[0]["source_count"] == 1
-    assert (media_root / "svg/diagram.svg").read_bytes() == b"<svg></svg>"
+    assert (
+        tmp_path / "docs-viewer/scopes/studio/generated/media/svg/diagram.svg"
+    ).read_bytes() == b"<svg></svg>"
     assert not (source.parent / "diagram.svg").exists()
 
 
@@ -207,19 +209,18 @@ def test_full_and_targeted_builds_invoke_media_stage_with_expected_selection(
         tmp_path,
         child_body_suffix="![Referenced diagram]([[media:docs/studio/svg/referenced.svg]])",
     )
-    calls: list[tuple[str, bool, object]] = []
+    calls: list[tuple[str, bool]] = []
 
     def record_media_build(
         _root,
         config,
         *,
         write,
-        requested_published_identities=None,
     ):
-        calls.append((config.scope_id, write, requested_published_identities))
-        return []
+        calls.append((config.scope_id, write))
+        return {"producer_builds": []}
 
-    monkeypatch.setattr(pipeline, "run_registered_media_builds", record_media_build)
+    monkeypatch.setattr(pipeline, "build_scope_media_snapshot", record_media_build)
 
     run_builder(tmp_path, write=True)
     run_builder(tmp_path, only_doc_ids=[CHILD_DOC_ID], write=True)
@@ -231,10 +232,6 @@ def test_full_and_targeted_builds_invoke_media_stage_with_expected_selection(
     ).run(write=True)
 
     assert calls == [
-        ("studio", True, None),
-        (
-            "studio",
-            True,
-            {"mermaid": ("persistent-diagram.svg", "referenced.svg")},
-        ),
+        ("studio", True),
+        ("studio", True),
     ]

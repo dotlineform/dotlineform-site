@@ -48,13 +48,7 @@ def write_scope_config(path: Path, scopes: list[dict[str, object]]) -> None:
     path.write_text(
         json.dumps(
             {
-                "schema_version": "docs_scopes_v4",
-                "media_workspace": {
-                    "location": {
-                        "provider": "external_local",
-                        "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/media",
-                    }
-                },
+                "schema_version": "docs_scopes_v5",
                 "scopes": scopes,
             },
             indent=2,
@@ -62,6 +56,15 @@ def write_scope_config(path: Path, scopes: list[dict[str, object]]) -> None:
         + "\n",
         encoding="utf-8",
     )
+
+
+def prepare_scope(repo_root: Path, scope: str = "studio") -> None:
+    write_scope_config(
+        repo_root / "docs-viewer/config/scopes/docs_scopes.json",
+        [docs_scope_record(scope)],
+    )
+    (repo_root / f"docs-viewer/scopes/{scope}/source").mkdir(parents=True)
+    (repo_root / f"docs-viewer/scopes/{scope}/generated").mkdir(parents=True)
 
 
 def test_rebuild_scope_outputs_preserves_full_command_shapes() -> None:
@@ -76,6 +79,7 @@ def test_rebuild_scope_outputs_preserves_full_command_shapes() -> None:
     write_rebuild.subprocess.run = fake_run
     try:
         with tempfile.TemporaryDirectory() as temp_path:
+            prepare_scope(Path(temp_path))
             result = write_rebuild.rebuild_scope_outputs(
                 Path(temp_path),
                 "studio",
@@ -112,7 +116,7 @@ def test_rebuild_scope_outputs_extracts_docs_and_search_diagnostics() -> None:
             return Completed(stdout=DOCS_DIAGNOSTICS_STDOUT)
         return Completed(
             stdout=(
-                "Wrote docs-viewer/scopes/studio/published/search/index.json "
+                "Wrote docs-viewer/scopes/studio/generated/search/index.json "
                 "with 10 studio search docs\n"
             )
         )
@@ -120,6 +124,7 @@ def test_rebuild_scope_outputs_extracts_docs_and_search_diagnostics() -> None:
     write_rebuild.subprocess.run = fake_run
     try:
         with tempfile.TemporaryDirectory() as temp_path:
+            prepare_scope(Path(temp_path))
             result = write_rebuild.rebuild_scope_outputs(
                 Path(temp_path),
                 "studio",
@@ -194,7 +199,7 @@ def test_parent_search_rebuild_follows_confined_sub_scope_docs() -> None:
         calls.append(list(command))
         return Completed(
             stdout=(
-                "Wrote docs-viewer/scopes/studio/published/search/index.json "
+                "Wrote docs-viewer/scopes/studio/generated/search/index.json "
                 "with 12 studio search docs\n"
             )
         )
@@ -242,6 +247,7 @@ def test_rebuild_scope_outputs_turns_affected_ids_into_whole_search_command() ->
     write_rebuild.subprocess.run = fake_run
     try:
         with tempfile.TemporaryDirectory() as temp_path:
+            prepare_scope(Path(temp_path), "example")
             result = write_rebuild.rebuild_scope_outputs(
                 Path(temp_path),
                 "example",
@@ -276,6 +282,7 @@ def test_rebuild_scope_outputs_passes_targeted_docs_command() -> None:
     write_rebuild.targeted_docs_build_fallback_reason = lambda *_args, **_kwargs: ""
     try:
         with tempfile.TemporaryDirectory() as temp_path:
+            prepare_scope(Path(temp_path))
             result = write_rebuild.rebuild_scope_outputs(
                 Path(temp_path),
                 "studio",
@@ -321,6 +328,7 @@ def test_rebuild_scope_outputs_can_skip_media_after_controlled_transfer() -> Non
     write_rebuild.targeted_docs_build_fallback_reason = lambda *_args, **_kwargs: ""
     try:
         with tempfile.TemporaryDirectory() as temp_path:
+            prepare_scope(Path(temp_path))
             result = write_rebuild.rebuild_scope_outputs(
                 Path(temp_path),
                 "studio",
@@ -363,6 +371,7 @@ def test_rebuild_scope_outputs_falls_back_when_targeted_docs_outputs_are_missing
     write_rebuild.targeted_docs_build_fallback_reason = lambda *_args, **_kwargs: "full-scope fallback: existing docs index tree missing"
     try:
         with tempfile.TemporaryDirectory() as temp_path:
+            prepare_scope(Path(temp_path))
             result = write_rebuild.rebuild_scope_outputs(
                 Path(temp_path),
                 "studio",
@@ -402,15 +411,15 @@ def test_targeted_docs_build_uses_index_tree_without_flat_index() -> None:
         source_root.mkdir(parents=True)
         (source_root / "example.md").write_text("---\ndoc_id: example\ntitle: Example\n---\n# Example\n", encoding="utf-8")
         (source_root / "child.md").write_text("---\ndoc_id: child\ntitle: Child\n---\n# Child\n", encoding="utf-8")
-        (repo_root / "docs-viewer/scopes/example/published/documents/by-id").mkdir(parents=True)
-        (repo_root / "docs-viewer/scopes/example/published/documents/by-id/example.json").write_text("{}", encoding="utf-8")
-        (repo_root / "docs-viewer/scopes/example/published/documents/index-tree.json").write_text(
+        (repo_root / "docs-viewer/scopes/example/generated/documents/by-id").mkdir(parents=True)
+        (repo_root / "docs-viewer/scopes/example/generated/documents/by-id/example.json").write_text("{}", encoding="utf-8")
+        (repo_root / "docs-viewer/scopes/example/generated/documents/index-tree.json").write_text(
             """{"docs":[{"doc_id":"example","children":[{"doc_id":"child"}]}]}""",
             encoding="utf-8",
         )
         semantic_token_index = (
             repo_root
-            / "docs-viewer/scopes/example/published/documents/semantic-tokens/index.json"
+            / "docs-viewer/scopes/example/generated/documents/semantic-tokens/index.json"
         )
         semantic_token_index.parent.mkdir(parents=True)
         semantic_token_index.write_text('{"occurrences":[]}', encoding="utf-8")
@@ -440,15 +449,15 @@ def test_targeted_docs_build_falls_back_for_unindexed_source_without_payload() -
         (source_root / "example.md").write_text("---\ndoc_id: example\ntitle: Example\n---\n# Example\n", encoding="utf-8")
         (source_root / "child.md").write_text("---\ndoc_id: child\ntitle: Child\n---\n# Child\n", encoding="utf-8")
         (source_root / "new.md").write_text("---\ndoc_id: new\ntitle: New\n---\n# New\n", encoding="utf-8")
-        (repo_root / "docs-viewer/scopes/example/published/documents/by-id").mkdir(parents=True)
-        (repo_root / "docs-viewer/scopes/example/published/documents/by-id/example.json").write_text("{}", encoding="utf-8")
-        (repo_root / "docs-viewer/scopes/example/published/documents/index-tree.json").write_text(
+        (repo_root / "docs-viewer/scopes/example/generated/documents/by-id").mkdir(parents=True)
+        (repo_root / "docs-viewer/scopes/example/generated/documents/by-id/example.json").write_text("{}", encoding="utf-8")
+        (repo_root / "docs-viewer/scopes/example/generated/documents/index-tree.json").write_text(
             """{"docs":[{"doc_id":"example","children":[{"doc_id":"child"}]}]}""",
             encoding="utf-8",
         )
         semantic_token_index = (
             repo_root
-            / "docs-viewer/scopes/example/published/documents/semantic-tokens/index.json"
+            / "docs-viewer/scopes/example/generated/documents/semantic-tokens/index.json"
         )
         semantic_token_index.parent.mkdir(parents=True)
         semantic_token_index.write_text('{"occurrences":[]}', encoding="utf-8")
@@ -469,6 +478,7 @@ def test_rebuild_scope_outputs_skips_empty_targeted_search() -> None:
     write_rebuild.subprocess.run = fake_run
     try:
         with tempfile.TemporaryDirectory() as temp_path:
+            prepare_scope(Path(temp_path))
             result = write_rebuild.rebuild_scope_outputs(
                 Path(temp_path),
                 "studio",
@@ -493,6 +503,7 @@ def test_rebuild_scope_outputs_preserves_front_matter_failure_message() -> None:
     write_rebuild.subprocess.run = fake_run
     try:
         with tempfile.TemporaryDirectory() as temp_path:
+            prepare_scope(Path(temp_path))
             try:
                 write_rebuild.rebuild_scope_outputs(Path(temp_path), "studio")
             except RuntimeError as exc:
@@ -528,6 +539,7 @@ def test_perform_source_write_and_rebuild_marks_pending_then_complete() -> None:
     try:
         with tempfile.TemporaryDirectory() as temp_path:
             repo_root = Path(temp_path)
+            prepare_scope(repo_root)
             source_path = repo_root / "docs-viewer/scopes/studio/source/documents" / "child.md"
             source_path.parent.mkdir(parents=True)
             source_path.write_text("# Child\n", encoding="utf-8")
@@ -712,6 +724,7 @@ def test_perform_source_write_and_rebuild_clears_pending_on_exception() -> None:
     try:
         with tempfile.TemporaryDirectory() as temp_path:
             repo_root = Path(temp_path)
+            prepare_scope(repo_root)
             source_path = repo_root / "docs-viewer/scopes/studio/source/documents" / "child.md"
             source_path.parent.mkdir(parents=True)
             source_path.write_text("# Child\n", encoding="utf-8")
@@ -756,6 +769,7 @@ def test_perform_source_write_and_rebuild_completes_only_reported_written_paths(
     try:
         with tempfile.TemporaryDirectory() as temp_path:
             repo_root = Path(temp_path)
+            prepare_scope(repo_root)
             source_root = repo_root / "docs-viewer/scopes/studio/source/documents"
             source_root.mkdir(parents=True)
             first = source_root / "first.md"

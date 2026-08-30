@@ -41,9 +41,25 @@ import docs_rendered_links  # noqa: E402
 
 
 FIXTURE_SCOPE_OUTPUT_DIRS = {
-    scope: Path("docs-viewer/scopes") / scope / "published/documents"
-    for scope in docs_broken_links.SCOPE_OUTPUT_DIRS
+    scope: Path("docs-viewer/scopes") / scope / "generated/documents"
+    for scope in ("analysis", "studio")
 }
+
+
+def write_scope_contract(repo_root: Path) -> None:
+    write_docs_scope_config(
+        repo_root,
+        [
+            docs_scope_record("studio", default_doc_id="source"),
+            docs_scope_record(
+                "analysis",
+                scope_type="public",
+                viewer_base_url="/analysis/",
+                include_scope_param=False,
+                default_doc_id="source",
+            ),
+        ],
+    )
 
 
 def test_broken_links_reuses_the_pure_rendered_link_owner() -> None:
@@ -68,7 +84,7 @@ def write_json(path: Path, payload: dict[str, object]) -> None:
 
 def write_doc_payload(repo_root: Path, scope: str, doc_id: str, content_html: str) -> None:
     write_json(
-        repo_root / "docs-viewer/scopes" / scope / "published/documents/by-id" / f"{doc_id}.json",
+        repo_root / "docs-viewer/scopes" / scope / "generated/documents/by-id" / f"{doc_id}.json",
         {
             "doc_id": doc_id,
             "title": "Source",
@@ -80,7 +96,7 @@ def write_doc_payload(repo_root: Path, scope: str, doc_id: str, content_html: st
 
 def write_public_reader_doc_payload(repo_root: Path, scope: str, doc_id: str, title: str, content_html: str) -> None:
     write_json(
-        repo_root / "docs-viewer/scopes" / scope / "published/documents/by-id" / f"{doc_id}.json",
+        repo_root / "docs-viewer/scopes" / scope / "generated/documents/by-id" / f"{doc_id}.json",
         {
             "title": title,
             "last_updated": "2026-06-10",
@@ -206,6 +222,7 @@ def write_tag_diagnosis_contract(repo_root: Path) -> None:
     write_docs_scope_config(
         repo_root,
         [
+            docs_scope_record("studio", default_doc_id="source"),
             docs_scope_record(
                 "analysis",
                 scope_type="public",
@@ -268,7 +285,7 @@ def write_tag_diagnosis_contract(repo_root: Path) -> None:
 
     write_json(
         repo_root
-        / "docs-viewer/scopes/analysis/published/documents/sub-scopes/tags/tag-associations.json",
+        / "docs-viewer/scopes/analysis/generated/documents/sub-scopes/tags/tag-associations.json",
         {
             "schema_version": "docs_tag_associations_v1",
             "scope": "analysis",
@@ -374,15 +391,16 @@ def make_repo(content_html: str, *, source_body: str = "") -> Iterator[str]:
                 },
             )
             write_semantic_token_contract(repo_root)
+            write_scope_contract(repo_root)
             write_json(
-                repo_root / "docs-viewer/scopes/studio/published/documents/index-tree.json",
+                repo_root / "docs-viewer/scopes/studio/generated/documents/index-tree.json",
                 {
                     "schema": "docs_index_tree_v1",
                     "docs": [
                         {
                             "doc_id": "source",
                             "title": "Source",
-                            "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/source.json",
+                            "content_url": "/docs-viewer/scopes/studio/generated/documents/by-id/source.json",
                         }
                     ],
                 },
@@ -410,6 +428,7 @@ def make_public_repo(scope: str, content_html: str) -> Iterator[str]:
                 encoding="utf-8",
             )
             write_semantic_token_contract(repo_root)
+            write_scope_contract(repo_root)
             for known_scope, output_dir in FIXTURE_SCOPE_OUTPUT_DIRS.items():
                 docs = []
                 if known_scope == scope:

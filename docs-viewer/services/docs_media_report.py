@@ -76,10 +76,10 @@ def _document_references(
 
 
 def _local_target(scope: str, role: str, media_type: str, identity: str) -> str:
-    parts = ["docs-viewer", "media", scope]
-    if role == "source":
+    parts = ["docs-viewer", "scopes", scope, "source", "media"]
+    if role == "build-source":
         parts.append("build-source")
-    elif role != "published":
+    elif role != "source":
         raise ValueError(f"unsupported Docs media inventory role: {role}")
     parts.extend((media_type, identity))
     return encode_relative_target(PurePosixPath(*parts).as_posix())
