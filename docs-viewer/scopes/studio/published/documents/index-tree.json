@@ -772,6 +772,12 @@
               "ui_status": "done"
             },
             {
+              "doc_id": "d-20260830-151155-8eadce",
+              "title": "External Scope Build And Publish Delivery",
+              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260830-151155-8eadce.json",
+              "ui_status": "planned"
+            },
+            {
               "doc_id": "d-20260830-092438-f0c9d2",
               "title": "Publish And Deploy Model",
               "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260830-092438-f0c9d2.json",
@@ -1174,5 +1180,5 @@
       ]
     }
   ],
-  "generated_at": "2026-08-30T13:52:22Z"
+  "generated_at": "2026-08-30T14:14:08Z"
 }
