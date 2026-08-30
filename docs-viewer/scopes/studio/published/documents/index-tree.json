@@ -760,6 +760,26 @@
           "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260723-191039-f8cb88.json"
         },
         {
+          "doc_id": "d-20260830-074605-dc4f11",
+          "title": "Scope, Data, And Site Foundations",
+          "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260830-074605-dc4f11.json",
+          "ui_status": "in-progress",
+          "children": [
+            {
+              "doc_id": "d-20260830-074606-881007",
+              "title": "Docs Viewer Runtime Ownership And Site Projection Delivery",
+              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260830-074606-881007.json",
+              "ui_status": "proposed"
+            },
+            {
+              "doc_id": "d-20260830-092438-f0c9d2",
+              "title": "Publish And Deploy Model",
+              "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260830-092438-f0c9d2.json",
+              "ui_status": "proposed"
+            }
+          ]
+        },
+        {
           "doc_id": "d-20260814-155129-c2a782",
           "title": "Search Improvements",
           "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/d-20260814-155129-c2a782.json",
@@ -1154,5 +1174,5 @@
       ]
     }
   ],
-  "generated_at": "2026-08-14T22:35:30Z"
+  "generated_at": "2026-08-30T08:25:23Z"
 }

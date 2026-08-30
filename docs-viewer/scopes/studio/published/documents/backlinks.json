@@ -2809,7 +2809,38 @@
         "title": "Docs Viewer Core and Integration Architecture",
         "viewer_url": "/docs/?scope=studio&doc=d-20260814-225646-8f7d2a"
       }
+    ],
+    "d-20260830-074605-dc4f11": [
+      {
+        "doc_id": "d-20260830-074606-881007",
+        "title": "Docs Viewer Runtime Ownership And Site Projection Delivery",
+        "viewer_url": "/docs/?scope=studio&doc=d-20260830-074606-881007"
+      },
+      {
+        "doc_id": "d-20260830-092438-f0c9d2",
+        "title": "Publish And Deploy Model",
+        "viewer_url": "/docs/?scope=studio&doc=d-20260830-092438-f0c9d2"
+      }
+    ],
+    "d-20260830-074606-881007": [
+      {
+        "doc_id": "d-20260830-092438-f0c9d2",
+        "title": "Publish And Deploy Model",
+        "viewer_url": "/docs/?scope=studio&doc=d-20260830-092438-f0c9d2"
+      },
+      {
+        "doc_id": "d-20260830-074605-dc4f11",
+        "title": "Scope, Data, And Site Foundations",
+        "viewer_url": "/docs/?scope=studio&doc=d-20260830-074605-dc4f11"
+      }
+    ],
+    "d-20260830-092438-f0c9d2": [
+      {
+        "doc_id": "d-20260830-074605-dc4f11",
+        "title": "Scope, Data, And Site Foundations",
+        "viewer_url": "/docs/?scope=studio&doc=d-20260830-074605-dc4f11"
+      }
     ]
   },
-  "generated_at": "2026-08-14T22:29:16Z"
+  "generated_at": "2026-08-30T09:04:26Z"
 }
