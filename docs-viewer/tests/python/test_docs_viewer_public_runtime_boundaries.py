@@ -10,11 +10,23 @@ from docs_subscope_customisations import registered_sub_scope_customisation_acce
 from docs_viewer_service_test_support import REPO_ROOT, public_entry_static_import_graph
 
 
-def test_inline_mermaid_module_is_manage_owned_and_absent_from_public_runtime() -> None:
-    site_tools = json.loads(
-        (REPO_ROOT / "site-tools/config/site-tools.json").read_text(encoding="utf-8")
+def _public_runtime_manifest() -> list[str]:
+    payload = json.loads(
+        (REPO_ROOT / "site-tools/config/site-code-update.json").read_text(
+            encoding="utf-8"
+        )
     )
-    runtime_manifest = site_tools["validation"]["docs_viewer_runtime"]["manifest"]
+    runtime_prefix = "site/docs-viewer/runtime/js/"
+    return sorted(
+        f"{projection['destination_root'].removeprefix(runtime_prefix)}/{filename}"
+        for projection in payload["projections"]
+        if projection["destination_root"].startswith(runtime_prefix)
+        for filename in projection["files"]
+    )
+
+
+def test_inline_mermaid_module_is_manage_owned_and_absent_from_public_runtime() -> None:
+    runtime_manifest = _public_runtime_manifest()
     entry = REPO_ROOT / "docs-viewer/runtime/js/public/docs-viewer-public.js"
     graph_paths = {
         path.relative_to(REPO_ROOT).as_posix()
@@ -58,10 +70,7 @@ def test_persistent_diagram_detail_is_shared_by_public_and_manage_but_not_review
 
 
 def test_expanded_report_adapter_is_local_owned_and_only_manage_composed() -> None:
-    site_tools = json.loads(
-        (REPO_ROOT / "site-tools/config/site-tools.json").read_text(encoding="utf-8")
-    )
-    runtime_manifest = site_tools["validation"]["docs_viewer_runtime"]["manifest"]
+    runtime_manifest = _public_runtime_manifest()
     public_entry = REPO_ROOT / "docs-viewer/runtime/js/public/docs-viewer-public.js"
     public_graph = {
         path.relative_to(REPO_ROOT).as_posix()

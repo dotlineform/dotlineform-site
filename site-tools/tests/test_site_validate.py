@@ -12,19 +12,25 @@ TOOL_ROOT = REPO_ROOT / "site-tools"
 if str(TOOL_ROOT) not in sys.path:
     sys.path.insert(0, str(TOOL_ROOT))
 
+import site_code_update as site_code
+from site_tools import validation as site_validation
 from site_tools.config import load_config
 from site_tools.validation import resolve_site_root, validate_site
 
 
 CONFIG_PATH = REPO_ROOT / "site-tools" / "config" / "site-tools.json"
+SITE_CODE_CONFIG_PATH = REPO_ROOT / "site-tools" / "config" / "site-code-update.json"
 
 
 def test_site_validation_accepts_tracked_site_root() -> None:
     config = load_config(CONFIG_PATH)
-    result = validate_site(resolve_site_root(REPO_ROOT, config), config)
+    result = validate_site(resolve_site_root(REPO_ROOT, config), config, repo_root=REPO_ROOT)
+    raw_config = json.loads(CONFIG_PATH.read_text(encoding="utf-8"))
 
+    assert "docs_viewer_runtime" not in raw_config["validation"]
     assert result.required_file_count == len(config.validation.required_files)
-    assert result.docs_viewer_runtime_count == len(config.validation.docs_viewer_runtime.manifest)
+    assert result.site_code_projection_count == 65
+    assert result.docs_viewer_runtime_count == 62
     assert result.docs_viewer_route_count == 1
     assert result.docs_viewer_route_file_count >= result.docs_viewer_route_count
 
@@ -33,7 +39,7 @@ def test_site_validation_rejects_missing_required_file(tmp_path: Path) -> None:
     config = load_config(CONFIG_PATH)
 
     with pytest.raises(RuntimeError, match="site root is missing required files"):
-        validate_site(tmp_path, config)
+        validate_site(tmp_path, config, repo_root=REPO_ROOT)
 
 
 def test_site_validation_rejects_extra_docs_viewer_runtime_file(tmp_path: Path) -> None:
@@ -45,7 +51,43 @@ def test_site_validation_rejects_extra_docs_viewer_runtime_file(tmp_path: Path) 
     extra.write_text("export {};\n", encoding="utf-8")
 
     with pytest.raises(RuntimeError, match="outside manifest"):
-        validate_site(tmp_path, config)
+        validate_site(tmp_path, config, repo_root=REPO_ROOT)
+
+
+def test_site_validation_rejects_stale_projected_bytes(tmp_path: Path) -> None:
+    config = load_config(CONFIG_PATH)
+    site_root = resolve_site_root(REPO_ROOT, config)
+    _copy_validation_site(site_root, tmp_path, config)
+    target = tmp_path / "docs-viewer/runtime/js/public/docs-viewer-public.js"
+    target.write_text("export const stale = true;\n", encoding="utf-8")
+
+    with pytest.raises(RuntimeError, match="differs from canonical source"):
+        validate_site(tmp_path, config, repo_root=REPO_ROOT)
+
+
+def test_site_validation_rejects_missing_projected_stylesheet(tmp_path: Path) -> None:
+    config = load_config(CONFIG_PATH)
+    site_root = resolve_site_root(REPO_ROOT, config)
+    _copy_validation_site(site_root, tmp_path, config)
+    (tmp_path / "docs-viewer/static/css/docs-viewer-theme.css").unlink()
+
+    with pytest.raises(RuntimeError, match="site code projection is missing files"):
+        validate_site(tmp_path, config, repo_root=REPO_ROOT)
+
+
+def test_site_validation_rejects_incomplete_canonical_inventory(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    config = load_config(CONFIG_PATH)
+    payload = json.loads(SITE_CODE_CONFIG_PATH.read_text(encoding="utf-8"))
+    payload["projections"][0]["files"].pop()
+    invalid_manifest = tmp_path / "site-code-update.json"
+    invalid_manifest.write_text(json.dumps(payload), encoding="utf-8")
+    monkeypatch.setattr(site_validation, "SITE_CODE_MANIFEST", invalid_manifest)
+
+    with pytest.raises(RuntimeError, match="manifest is invalid.*complete source inventory"):
+        validate_site(resolve_site_root(REPO_ROOT, config), config, repo_root=REPO_ROOT)
 
 
 def test_site_validation_rejects_missing_docs_viewer_route_file(tmp_path: Path) -> None:
@@ -58,7 +100,7 @@ def test_site_validation_rejects_missing_docs_viewer_route_file(tmp_path: Path) 
     route_config_path.write_text(json.dumps(route_config), encoding="utf-8")
 
     with pytest.raises(RuntimeError, match="analysis route_path"):
-        validate_site(tmp_path, config)
+        validate_site(tmp_path, config, repo_root=REPO_ROOT)
 
 
 def test_site_validation_rejects_missing_docs_viewer_route_payload(tmp_path: Path) -> None:
@@ -73,7 +115,7 @@ def test_site_validation_rejects_missing_docs_viewer_route_payload(tmp_path: Pat
     route_config_path.write_text(json.dumps(route_config), encoding="utf-8")
 
     with pytest.raises(RuntimeError, match="analysis docs_paths.search_index_url"):
-        validate_site(tmp_path, config)
+        validate_site(tmp_path, config, repo_root=REPO_ROOT)
 
 
 def test_site_validation_rejects_missing_configured_default_doc_payload(tmp_path: Path) -> None:
@@ -93,22 +135,24 @@ def test_site_validation_rejects_missing_configured_default_doc_payload(tmp_path
     ).unlink()
 
     with pytest.raises(RuntimeError, match="analysis default document"):
-        validate_site(tmp_path, config)
+        validate_site(tmp_path, config, repo_root=REPO_ROOT)
 
 
 def _copy_validation_site(site_root: Path, target_root: Path, config) -> str:
     for required in config.validation.required_files:
         _copy_file(site_root, target_root, required)
 
-    runtime_root = config.validation.docs_viewer_runtime.root
-    for required in config.validation.docs_viewer_runtime.manifest:
-        _copy_file(site_root, target_root, f"{runtime_root}/{required}")
+    projections = site_code.load_manifest(REPO_ROOT, SITE_CODE_CONFIG_PATH)
+    for projection in projections:
+        for filename in projection.files:
+            target = Path(projection.destination_root).relative_to("site") / filename
+            _copy_file(site_root, target_root, target.as_posix())
 
     for required in config.validation.required_directories:
         (target_root / required).mkdir(parents=True, exist_ok=True)
 
     _copy_docs_viewer_route_files(site_root, target_root, config)
-    return runtime_root
+    return "docs-viewer/runtime/js"
 
 
 def _copy_docs_viewer_route_files(site_root: Path, target_root: Path, config) -> None:

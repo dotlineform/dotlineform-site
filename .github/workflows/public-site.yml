@@ -4,7 +4,14 @@ on:
   pull_request:
     paths:
       - ".github/workflows/public-site.yml"
+      - "bin/site-code-update"
       - "bin/site-validate"
+      - "docs-viewer/runtime/js/public/**"
+      - "docs-viewer/runtime/js/shared/**"
+      - "docs-viewer/runtime/js/reports/docs-viewer-public-reports.js"
+      - "docs-viewer/static/css/docs-viewer-reports.css"
+      - "docs-viewer/static/css/docs-viewer-theme.css"
+      - "docs-viewer/static/css/docs-viewer.css"
       - "site/**"
       - "site-tools/**"
   workflow_dispatch:
@@ -31,7 +38,7 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Validate static site
+      - name: Validate tracked projection and static site
         run: python site-tools/site_validate.py
 
       - name: Configure GitHub Pages

@@ -49,6 +49,36 @@ def test_target_configuration_exposes_application_boundaries() -> None:
     assert "site/docs-viewer/runtime/js/**" in config["exclude"]
 
 
+def test_workflows_cover_canonical_docs_viewer_projection_sources() -> None:
+    source_lint = (REPO_ROOT / ".github/workflows/source-lint.yml").read_text(
+        encoding="utf-8"
+    )
+    public_site = (REPO_ROOT / ".github/workflows/public-site.yml").read_text(
+        encoding="utf-8"
+    )
+
+    assert '"docs-viewer/runtime/js/**"' in source_lint
+    for stylesheet in (
+        "docs-viewer/static/css/docs-viewer-reports.css",
+        "docs-viewer/static/css/docs-viewer-theme.css",
+        "docs-viewer/static/css/docs-viewer.css",
+    ):
+        assert f'"{stylesheet}"' in source_lint
+        assert f'"{stylesheet}"' in public_site
+    for path in (
+        "docs-viewer/runtime/js/public/**",
+        "docs-viewer/runtime/js/shared/**",
+        "docs-viewer/runtime/js/reports/docs-viewer-public-reports.js",
+    ):
+        assert f'"{path}"' in public_site
+    assert "run: python site-tools/site_validate.py" in public_site
+    assert not [
+        line
+        for line in public_site.splitlines()
+        if line.strip().startswith("run:") and "site-code-update" in line
+    ]
+
+
 def test_explicit_target_resolution_rejects_missing_and_excluded_source() -> None:
     runner = load_runner()
     exclusions = tuple(runner.load_targets()["exclude"])

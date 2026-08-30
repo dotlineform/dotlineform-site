@@ -12,7 +12,7 @@
 - Prefer targeted file reads, scoped diffs, and concise command output over broad searches or full diffs.
 
 ## Key development factors
-- The public site has no deploy-time build or copy step: `site/` is the tracked GitHub Pages artifact. Local apps and `/docs/` may share site-owned config, CSS, and runtime files through explicit service route mapping, especially Docs Viewer public/shared assets.
+- The public site has no deploy-time build step: `site/` is the tracked GitHub Pages artifact. Shared/public Docs Viewer JavaScript and stylesheets are canonical under `docs-viewer/` and have an explicit tracked projection under `site/docs-viewer/`; local apps serve the canonical files while public preview and GitHub Pages serve the projection.
 - For long multi-batch work, or before a long thread reaches context limits, produce a handoff with changed files, decisions made, remaining tasks, commands run, and known risks. Keep the delivery document to current/next state, checkboxes, decisions, and completion gates.
 - Non-trivial new features, requirements, or refactors are generally documentedd and parented to [Roadmap](/docs/?scope=studio&doc=d-20260428-000000-f5ff18), which contains delivery planning guidance.
 - Local servers do not need to support multiple concurrent users. Modal workflows always complete before another one starts.
@@ -86,6 +86,7 @@
 
 - `site/` is the tracked static site root and the GitHub Pages upload root.
 - `site-tools/config/site-tools.json` owns static-site validation config and site-level media settings used by local Python tooling.
+- `site-tools/config/site-code-update.json` is the sole canonical-to-site inventory for shared/public Docs Viewer runtime code. When a change touches a canonical file represented there, run `bin/site-code-update`, inspect the exact tracked `site/` delta, then run `bin/site-code-update --check` and `bin/site-validate` before presenting the work for commit. Adding, removing, or changing the public status of a runtime file requires an explicit manifest update; local-only files in mixed source directories remain excluded.
 - Use `bin/site-validate` to validate the deploy root.
 - Use `bin/site-preview` for local public-site preview; it serves `site/` directly with Python's HTTP server.
 - Local Studio is served by `bin/local-studio`, not by the public-site preview server.

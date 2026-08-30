@@ -2,8 +2,10 @@ from __future__ import annotations
 
 import json
 from dataclasses import dataclass
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 from urllib.parse import urlparse
+
+from site_code_update import Projection, SiteCodeUpdateError, load_manifest
 
 from .config import SiteToolsConfig
 
@@ -18,6 +20,8 @@ DOCS_VIEWER_ROUTE_FEATURE_IDS = {
     "source-editing",
     "management",
 }
+SITE_CODE_MANIFEST = Path("site-tools/config/site-code-update.json")
+DOCS_VIEWER_RUNTIME_ROOT = Path("docs-viewer/runtime/js")
 
 
 @dataclass(frozen=True)
@@ -25,6 +29,7 @@ class ValidationResult:
     site_root: Path
     required_file_count: int
     required_directory_count: int
+    site_code_projection_count: int
     docs_viewer_runtime_count: int
     docs_viewer_route_count: int
     docs_viewer_route_file_count: int
@@ -38,7 +43,12 @@ def resolve_site_root(repo_root: Path, config: SiteToolsConfig, site_root: str |
     return path.resolve()
 
 
-def validate_site(site_root: Path, config: SiteToolsConfig) -> ValidationResult:
+def validate_site(
+    site_root: Path,
+    config: SiteToolsConfig,
+    *,
+    repo_root: Path,
+) -> ValidationResult:
     if not site_root.is_dir():
         raise FileNotFoundError(f"site root does not exist: {site_root}")
 
@@ -58,21 +68,10 @@ def validate_site(site_root: Path, config: SiteToolsConfig) -> ValidationResult:
     if missing_directories:
         raise RuntimeError("site root is missing required directories: " + ", ".join(missing_directories))
 
-    runtime_root = site_root / config.validation.docs_viewer_runtime.root
-    runtime_modules = sorted(path.relative_to(runtime_root).as_posix() for path in runtime_root.rglob("*.js"))
-    manifest_modules = sorted(config.validation.docs_viewer_runtime.manifest)
-    missing_runtime_modules = sorted(set(manifest_modules) - set(runtime_modules))
-    extra_runtime_modules = sorted(set(runtime_modules) - set(manifest_modules))
-    if missing_runtime_modules:
-        raise RuntimeError(
-            "public Docs Viewer runtime manifest is missing files: "
-            + ", ".join(missing_runtime_modules)
-        )
-    if extra_runtime_modules:
-        raise RuntimeError(
-            "public Docs Viewer runtime contains files outside manifest: "
-            + ", ".join(extra_runtime_modules)
-        )
+    projection_count, runtime_count = _validate_site_code_projection(
+        repo_root.resolve(),
+        site_root,
+    )
 
     route_count, route_file_count = _validate_docs_viewer_routes(site_root, config)
 
@@ -80,10 +79,106 @@ def validate_site(site_root: Path, config: SiteToolsConfig) -> ValidationResult:
         site_root=site_root,
         required_file_count=len(config.validation.required_files),
         required_directory_count=len(config.validation.required_directories),
-        docs_viewer_runtime_count=len(runtime_modules),
+        site_code_projection_count=projection_count,
+        docs_viewer_runtime_count=runtime_count,
         docs_viewer_route_count=route_count,
         docs_viewer_route_file_count=route_file_count,
     )
+
+
+def _validate_site_code_projection(repo_root: Path, site_root: Path) -> tuple[int, int]:
+    try:
+        projections = load_manifest(repo_root, repo_root / SITE_CODE_MANIFEST)
+    except SiteCodeUpdateError as exc:
+        raise RuntimeError(f"site code projection manifest is invalid: {exc}") from exc
+    expected_runtime: set[str] = set()
+    missing: list[str] = []
+    extra: list[str] = []
+    changed: list[str] = []
+    unsafe: list[str] = []
+
+    for projection in projections:
+        destination_root = _site_relative_projection_root(projection)
+        source_root = repo_root / projection.source_root
+        target_root = site_root / destination_root
+        expected_names = set(projection.files)
+        actual_names: set[str] = set()
+        if target_root.is_symlink():
+            unsafe.append(destination_root.as_posix())
+        elif target_root.is_dir():
+            for target in sorted(target_root.iterdir(), key=lambda path: path.name):
+                relative = (destination_root / target.name).as_posix()
+                if target.is_symlink() or not target.is_file():
+                    unsafe.append(relative)
+                    continue
+                actual_names.add(target.name)
+        elif target_root.exists():
+            unsafe.append(destination_root.as_posix())
+
+        missing.extend(
+            (destination_root / filename).as_posix()
+            for filename in sorted(expected_names - actual_names)
+        )
+        extra.extend(
+            (destination_root / filename).as_posix()
+            for filename in sorted(actual_names - expected_names)
+        )
+        for filename in sorted(expected_names & actual_names):
+            target_relative = destination_root / filename
+            if (source_root / filename).read_bytes() != (site_root / target_relative).read_bytes():
+                changed.append(target_relative.as_posix())
+        if destination_root.is_relative_to(DOCS_VIEWER_RUNTIME_ROOT):
+            expected_runtime.update(
+                (destination_root / filename)
+                .relative_to(DOCS_VIEWER_RUNTIME_ROOT)
+                .as_posix()
+                for filename in projection.files
+            )
+
+    runtime_root = site_root / DOCS_VIEWER_RUNTIME_ROOT
+    actual_runtime: set[str] = set()
+    if runtime_root.is_symlink():
+        unsafe.append(DOCS_VIEWER_RUNTIME_ROOT.as_posix())
+    elif runtime_root.is_dir():
+        for target in runtime_root.rglob("*"):
+            relative = target.relative_to(runtime_root).as_posix()
+            if target.is_symlink():
+                unsafe.append((DOCS_VIEWER_RUNTIME_ROOT / relative).as_posix())
+            elif target.is_file():
+                actual_runtime.add(relative)
+    extra.extend(
+        (DOCS_VIEWER_RUNTIME_ROOT / relative).as_posix()
+        for relative in sorted(actual_runtime - expected_runtime)
+    )
+
+    if unsafe:
+        raise RuntimeError(
+            "site code projection contains unsafe entries: " + ", ".join(sorted(set(unsafe)))
+        )
+    if missing:
+        raise RuntimeError(
+            "site code projection is missing files: " + ", ".join(sorted(set(missing)))
+        )
+    if extra:
+        raise RuntimeError(
+            "public Docs Viewer runtime contains files outside manifest: "
+            + ", ".join(sorted(set(extra)))
+        )
+    if changed:
+        raise RuntimeError(
+            "site code projection differs from canonical source: "
+            + ", ".join(sorted(set(changed)))
+        )
+    return sum(len(projection.files) for projection in projections), len(expected_runtime)
+
+
+def _site_relative_projection_root(projection: Projection) -> Path:
+    destination = PurePosixPath(projection.destination_root)
+    if not destination.parts or destination.parts[0] != "site":
+        raise RuntimeError(
+            f"site code projection destination must be under site/: {projection.destination_root}"
+        )
+    return Path(*destination.parts[1:])
 
 
 def _validate_docs_viewer_routes(site_root: Path, config: SiteToolsConfig) -> tuple[int, int]:

@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+cd "$ROOT_DIR"
+
+if [ -z "${SITE_PYTHON:-}" ]; then
+  if [ -x "$HOME/miniconda3/bin/python3" ]; then
+    SITE_PYTHON="$HOME/miniconda3/bin/python3"
+  else
+    SITE_PYTHON="python3"
+  fi
+fi
+
+exec "$SITE_PYTHON" site-tools/site_code_update.py "$@"

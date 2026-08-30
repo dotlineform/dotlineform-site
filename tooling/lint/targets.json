@@ -30,6 +30,7 @@
     "site-tools": {
       "python": [
         "site-tools/site_tools",
+        "site-tools/site_code_update.py",
         "site-tools/site_validate.py"
       ],
       "javascript": []

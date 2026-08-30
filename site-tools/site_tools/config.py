@@ -10,17 +10,10 @@ SCHEMA_VERSION = "site_tools_config_v1"
 
 
 @dataclass(frozen=True)
-class DocsViewerRuntimeValidation:
-    root: str
-    manifest: tuple[str, ...]
-
-
-@dataclass(frozen=True)
 class SiteValidationConfig:
     site_root: str
     required_files: tuple[str, ...]
     required_directories: tuple[str, ...]
-    docs_viewer_runtime: DocsViewerRuntimeValidation
 
 
 @dataclass(frozen=True)
@@ -43,7 +36,6 @@ def load_config(path: Path) -> SiteToolsConfig:
         raise RuntimeError(f"unsupported site-tools config schema: {schema_version!r}")
 
     validation = _dict_value(data, "validation")
-    docs_viewer_runtime = _dict_value(validation, "docs_viewer_runtime")
     return SiteToolsConfig(
         schema_version=schema_version,
         site=_dict_value(data, "site"),
@@ -55,10 +47,6 @@ def load_config(path: Path) -> SiteToolsConfig:
             site_root=_str_value(validation, "site_root"),
             required_files=_str_tuple(validation, "required_files"),
             required_directories=_str_tuple(validation, "required_directories"),
-            docs_viewer_runtime=DocsViewerRuntimeValidation(
-                root=_str_value(docs_viewer_runtime, "root"),
-                manifest=_str_tuple(docs_viewer_runtime, "manifest"),
-            ),
         ),
     )
 

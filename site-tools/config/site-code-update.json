@@ -1,0 +1,98 @@
+{
+  "schema_version": "site_code_update_v1",
+  "projections": [
+    {
+      "id": "docs-viewer-public-js",
+      "source_root": "docs-viewer/runtime/js/public",
+      "destination_root": "site/docs-viewer/runtime/js/public",
+      "files": [
+        "docs-viewer-public-document-reports.js",
+        "docs-viewer-public-themed-diagrams.js",
+        "docs-viewer-public.js"
+      ]
+    },
+    {
+      "id": "docs-viewer-shared-js",
+      "source_root": "docs-viewer/runtime/js/shared",
+      "destination_root": "site/docs-viewer/runtime/js/shared",
+      "files": [
+        "docs-subscope-customisation-registry.js",
+        "docs-subscope-report-filter.js",
+        "docs-subscope-report.js",
+        "docs-viewer-access.js",
+        "docs-viewer-app-boot.js",
+        "docs-viewer-app-composition.js",
+        "docs-viewer-app-context.js",
+        "docs-viewer-app-control-renderers.js",
+        "docs-viewer-app-runtime.js",
+        "docs-viewer-app-session.js",
+        "docs-viewer-app-shell.js",
+        "docs-viewer-asset-url.js",
+        "docs-viewer-bookmarks.js",
+        "docs-viewer-code-config.js",
+        "docs-viewer-config-controller.js",
+        "docs-viewer-config-service.js",
+        "docs-viewer-configured-scope-provider.js",
+        "docs-viewer-content-detail-view.js",
+        "docs-viewer-control-surface-host.js",
+        "docs-viewer-data.js",
+        "docs-viewer-diagram-detail.js",
+        "docs-viewer-document-controller.js",
+        "docs-viewer-document-display-mode-host.js",
+        "docs-viewer-document-index-state.js",
+        "docs-viewer-document-view-coordinator.js",
+        "docs-viewer-favourites.js",
+        "docs-viewer-generated-data-runtime.js",
+        "docs-viewer-hosted-view-capabilities.js",
+        "docs-viewer-index-panel-renderer.js",
+        "docs-viewer-index-panel.js",
+        "docs-viewer-info-panel-controller.js",
+        "docs-viewer-info-panel-host.js",
+        "docs-viewer-info-panel-renderer.js",
+        "docs-viewer-main-view-host.js",
+        "docs-viewer-main-view-renderer.js",
+        "docs-viewer-metadata-info-view.js",
+        "docs-viewer-panel-layout.js",
+        "docs-viewer-render.js",
+        "docs-viewer-route-config.js",
+        "docs-viewer-route-features.js",
+        "docs-viewer-route-workflow.js",
+        "docs-viewer-router.js",
+        "docs-viewer-runtime-lazy-controller.js",
+        "docs-viewer-scope-select-menu.js",
+        "docs-viewer-search-controller.js",
+        "docs-viewer-search.js",
+        "docs-viewer-service-context.js",
+        "docs-viewer-sidebar.js",
+        "docs-viewer-status-controller.js",
+        "docs-viewer-table-detail.js",
+        "docs-viewer-top-bar-renderer.js",
+        "docs-viewer-tree-move-projection.js",
+        "docs-viewer-tree-payload-adapter.js",
+        "docs-viewer-tree.js",
+        "docs-viewer-view-context.js",
+        "docs-viewer-view-registry.js",
+        "docs-viewer-view-state.js",
+        "docs-viewer-viewer-toolbar-renderer.js"
+      ]
+    },
+    {
+      "id": "docs-viewer-public-report-js",
+      "source_root": "docs-viewer/runtime/js/reports",
+      "destination_root": "site/docs-viewer/runtime/js/reports",
+      "files": [
+        "docs-viewer-public-reports.js"
+      ]
+    },
+    {
+      "id": "docs-viewer-shared-css",
+      "source_root": "docs-viewer/static/css",
+      "destination_root": "site/docs-viewer/static/css",
+      "files": [
+        "docs-viewer-reports.css",
+        "docs-viewer-theme.css",
+        "docs-viewer.css"
+      ]
+    }
+  ]
+}
