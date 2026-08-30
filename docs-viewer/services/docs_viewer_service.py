@@ -66,8 +66,8 @@ SCOPE_PUBLISHED_STATIC_PATTERN = re.compile(
 )
 RUNTIME_STATIC_ROUTES = (
     ("/docs-viewer/runtime/vendor/", Path("docs-viewer/runtime/vendor")),
-    ("/docs-viewer/runtime/js/public/", Path("site/docs-viewer/runtime/js/public")),
-    ("/docs-viewer/runtime/js/shared/", Path("site/docs-viewer/runtime/js/shared")),
+    ("/docs-viewer/runtime/js/public/", Path("docs-viewer/runtime/js/public")),
+    ("/docs-viewer/runtime/js/shared/", Path("docs-viewer/runtime/js/shared")),
     ("/docs-viewer/runtime/js/management/", Path("docs-viewer/runtime/js/management")),
     ("/docs-viewer/runtime/js/review/", Path("docs-viewer/runtime/js/review")),
     ("/docs-viewer/runtime/js/import/", Path("docs-viewer/runtime/js/import")),
@@ -83,11 +83,11 @@ SHARED_STATIC_ROUTES = {
         "shared/frontend/css/folder-picker.css"
     ),
     "/docs-viewer/static/css/docs-viewer-theme.css": Path(
-        "site/docs-viewer/static/css/docs-viewer-theme.css"
+        "docs-viewer/static/css/docs-viewer-theme.css"
     ),
-    "/docs-viewer/static/css/docs-viewer.css": Path("site/docs-viewer/static/css/docs-viewer.css"),
+    "/docs-viewer/static/css/docs-viewer.css": Path("docs-viewer/static/css/docs-viewer.css"),
     "/docs-viewer/static/css/docs-viewer-reports.css": Path(
-        "site/docs-viewer/static/css/docs-viewer-reports.css"
+        "docs-viewer/static/css/docs-viewer-reports.css"
     ),
     "/docs-viewer/config/routes/docs-viewer-public-routes.json": Path(
         "site/docs-viewer/config/routes/docs-viewer-public-routes.json"
@@ -276,14 +276,13 @@ def validate_service_config(config: DocsViewerServiceConfig) -> None:
 
 
 def asset_version(repo_root: Path) -> str:
-    runtime_candidates = list((repo_root / "site/docs-viewer/runtime/js").rglob("*.js"))
-    runtime_candidates.extend((repo_root / "docs-viewer/runtime/js").rglob("*.js"))
+    runtime_candidates = list((repo_root / "docs-viewer/runtime/js").rglob("*.js"))
     candidates = [
         repo_root / "docs-viewer" / "shell" / "docs-viewer-manage.html",
         repo_root / "docs-viewer" / "shell" / "docs-viewer-review.html",
-        repo_root / "site" / "docs-viewer" / "static" / "css" / "docs-viewer-theme.css",
-        repo_root / "site" / "docs-viewer" / "static" / "css" / "docs-viewer.css",
-        repo_root / "site" / "docs-viewer" / "static" / "css" / "docs-viewer-reports.css",
+        repo_root / "docs-viewer" / "static" / "css" / "docs-viewer-theme.css",
+        repo_root / "docs-viewer" / "static" / "css" / "docs-viewer.css",
+        repo_root / "docs-viewer" / "static" / "css" / "docs-viewer-reports.css",
         repo_root / "docs-viewer" / "static" / "css" / "docs-viewer-local-reports.css",
         repo_root / "docs-viewer" / "static" / "css" / "docs-viewer-manage.css",
         repo_root / "docs-viewer" / "static" / "css" / "docs-viewer-source-editor.css",

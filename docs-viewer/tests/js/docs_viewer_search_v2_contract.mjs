@@ -9,13 +9,13 @@ const fixture = JSON.parse(fs.readFileSync(
   "utf8"
 ));
 const search = await import(pathToFileURL(
-  path.join(repoRoot, "site/docs-viewer/runtime/js/shared/docs-viewer-search.js")
+  path.join(repoRoot, "docs-viewer/runtime/js/shared/docs-viewer-search.js")
 ));
 const searchController = await import(pathToFileURL(
-  path.join(repoRoot, "site/docs-viewer/runtime/js/shared/docs-viewer-search-controller.js")
+  path.join(repoRoot, "docs-viewer/runtime/js/shared/docs-viewer-search-controller.js")
 ));
 const routeWorkflow = await import(pathToFileURL(
-  path.join(repoRoot, "site/docs-viewer/runtime/js/shared/docs-viewer-route-workflow.js")
+  path.join(repoRoot, "docs-viewer/runtime/js/shared/docs-viewer-route-workflow.js")
 ));
 
 fixture.tokenizer_cases.forEach((testCase) => {

@@ -62,7 +62,7 @@ def test_report_binds_only_the_exact_loaded_host_target_and_scope_owned_url() ->
     ).read_text(encoding="utf-8")
     config_controller = (
         REPO_ROOT
-        / "site/docs-viewer/runtime/js/shared/docs-viewer-config-controller.js"
+        / "docs-viewer/runtime/js/shared/docs-viewer-config-controller.js"
     ).read_text(encoding="utf-8")
     browser_config_builder = (
         REPO_ROOT / "docs-viewer/build/docs_builder/browser_config.py"
@@ -153,7 +153,7 @@ def test_backlinks_report_and_payload_are_absent_from_public_owners() -> None:
     }
     public_loader = (
         REPO_ROOT
-        / "site/docs-viewer/runtime/js/reports/docs-viewer-public-reports.js"
+        / "docs-viewer/runtime/js/reports/docs-viewer-public-reports.js"
     ).read_text(encoding="utf-8")
     public_browser_config = read_json(
         REPO_ROOT / "docs-viewer/config/defaults/docs-viewer-public-config.json"

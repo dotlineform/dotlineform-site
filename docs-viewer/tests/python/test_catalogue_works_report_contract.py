@@ -132,10 +132,10 @@ def test_public_registry_loader_and_data_do_not_expose_catalogue_works() -> None
         if isinstance(record, dict)
     }
     public_loader = (
-        REPO_ROOT / "site/docs-viewer/runtime/js/reports/docs-viewer-public-reports.js"
+        REPO_ROOT / "docs-viewer/runtime/js/reports/docs-viewer-public-reports.js"
     ).read_text(encoding="utf-8")
     public_css = (
-        REPO_ROOT / "site/docs-viewer/static/css/docs-viewer-reports.css"
+        REPO_ROOT / "docs-viewer/static/css/docs-viewer-reports.css"
     ).read_text(encoding="utf-8")
 
     assert "catalogue_works" not in public_report_ids

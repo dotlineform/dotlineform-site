@@ -30,7 +30,7 @@ from docs_public_mermaid_projection import (
 
 PUBLIC_MERMAID_BUILD_SCHEMA_VERSION = "docs_public_mermaid_projection_build_v1"
 PUBLIC_MERMAID_MANIFEST_IDENTITY = "manifest.json"
-DOCS_VIEWER_THEME_CSS_REL_PATH = Path("site/docs-viewer/static/css/docs-viewer-theme.css")
+DOCS_VIEWER_THEME_CSS_REL_PATH = Path("docs-viewer/static/css/docs-viewer-theme.css")
 PUBLIC_MERMAID_FONT_FAMILY = (
     '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif'
 )

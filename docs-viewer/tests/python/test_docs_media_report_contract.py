@@ -73,7 +73,7 @@ def test_manage_loader_service_and_css_own_focused_docs_media_paths() -> None:
         REPO_ROOT / "docs-viewer/runtime/js/reports/docs-viewer-report-service.js"
     ).read_text(encoding="utf-8")
     css_source = (
-        REPO_ROOT / "site/docs-viewer/static/css/docs-viewer-reports.css"
+        REPO_ROOT / "docs-viewer/static/css/docs-viewer-reports.css"
     ).read_text(encoding="utf-8")
 
     assert 'import("./docs-media-report.js")' in loader_source

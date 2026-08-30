@@ -67,7 +67,7 @@ def test_public_and_server_surfaces_do_not_expose_works() -> None:
         if isinstance(record, dict)
     }
     public_loader = (
-        REPO_ROOT / "site/docs-viewer/runtime/js/reports/docs-viewer-public-reports.js"
+        REPO_ROOT / "docs-viewer/runtime/js/reports/docs-viewer-public-reports.js"
     ).read_text(encoding="utf-8")
     report_service = (
         REPO_ROOT / "docs-viewer/runtime/js/reports/docs-viewer-report-service.js"

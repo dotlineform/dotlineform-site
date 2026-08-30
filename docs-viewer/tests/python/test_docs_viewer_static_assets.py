@@ -8,7 +8,8 @@ from pathlib import Path
 
 from docs_viewer_service_test_support import REPO_ROOT, docs_viewer_service
 
-def test_asset_version_uses_canonical_site_css() -> None:
+
+def test_asset_version_uses_canonical_docs_viewer_css() -> None:
     for filename in (
         "docs-viewer-theme.css",
         "docs-viewer.css",
@@ -16,11 +17,24 @@ def test_asset_version_uses_canonical_site_css() -> None:
     ):
         with tempfile.TemporaryDirectory() as temp_dir:
             repo_root = Path(temp_dir)
-            shared_css = repo_root / "site/docs-viewer/static/css" / filename
+            shared_css = repo_root / "docs-viewer/static/css" / filename
             shared_css.parent.mkdir(parents=True)
             shared_css.write_text("/* shared css */\n", encoding="utf-8")
 
             assert docs_viewer_service.asset_version(repo_root) != "1"
+
+
+def test_asset_version_ignores_projected_site_runtime() -> None:
+    with tempfile.TemporaryDirectory() as temp_dir:
+        repo_root = Path(temp_dir)
+        projected_js = repo_root / "site/docs-viewer/runtime/js/shared/example.js"
+        projected_css = repo_root / "site/docs-viewer/static/css/docs-viewer.css"
+        projected_js.parent.mkdir(parents=True)
+        projected_css.parent.mkdir(parents=True)
+        projected_js.write_text("export {};\n", encoding="utf-8")
+        projected_css.write_text("/* projected css */\n", encoding="utf-8")
+
+        assert docs_viewer_service.asset_version(repo_root) == "1"
 
 
 def test_asset_version_uses_local_report_css() -> None:
@@ -37,9 +51,9 @@ def test_asset_version_uses_local_report_css() -> None:
 
 def test_docs_viewer_theme_has_one_shared_palette_owner() -> None:
     theme_css = (
-        REPO_ROOT / "site/docs-viewer/static/css/docs-viewer-theme.css"
+        REPO_ROOT / "docs-viewer/static/css/docs-viewer-theme.css"
     ).read_text(encoding="utf-8")
-    base_css = (REPO_ROOT / "site/docs-viewer/static/css/docs-viewer.css").read_text(
+    base_css = (REPO_ROOT / "docs-viewer/static/css/docs-viewer.css").read_text(
         encoding="utf-8"
     )
     manage_css = (
@@ -157,7 +171,7 @@ def test_manage_shell_loads_shared_local_and_feature_css_in_order() -> None:
 
 def test_report_css_separates_shared_and_local_owners() -> None:
     shared = (
-        REPO_ROOT / "site/docs-viewer/static/css/docs-viewer-reports.css"
+        REPO_ROOT / "docs-viewer/static/css/docs-viewer-reports.css"
     ).read_text(encoding="utf-8")
     local = (
         REPO_ROOT / "docs-viewer/static/css/docs-viewer-local-reports.css"
@@ -275,10 +289,10 @@ def test_runtime_static_route_prefixes_resolve_to_owning_roots() -> None:
     ) == Path("docs-viewer/runtime/vendor/mermaid/11.16.0/mermaid.min.js")
     assert docs_viewer_service.runtime_static_relative_path(
         "/docs-viewer/runtime/js/public/docs-viewer-public.js"
-    ) == Path("site/docs-viewer/runtime/js/public/docs-viewer-public.js")
+    ) == Path("docs-viewer/runtime/js/public/docs-viewer-public.js")
     assert docs_viewer_service.runtime_static_relative_path(
         "/docs-viewer/runtime/js/shared/docs-viewer-app-boot.js"
-    ) == Path("site/docs-viewer/runtime/js/shared/docs-viewer-app-boot.js")
+    ) == Path("docs-viewer/runtime/js/shared/docs-viewer-app-boot.js")
     assert docs_viewer_service.runtime_static_relative_path(
         "/docs-viewer/runtime/js/management/docs-viewer-manage.js"
     ) == Path("docs-viewer/runtime/js/management/docs-viewer-manage.js")
@@ -304,13 +318,13 @@ def test_shared_static_routes_resolve_to_owning_roots() -> None:
     ) == Path("shared/frontend/css/folder-picker.css")
     assert docs_viewer_service.shared_static_relative_path(
         "/docs-viewer/static/css/docs-viewer-theme.css"
-    ) == Path("site/docs-viewer/static/css/docs-viewer-theme.css")
+    ) == Path("docs-viewer/static/css/docs-viewer-theme.css")
     assert docs_viewer_service.shared_static_relative_path(
         "/docs-viewer/static/css/docs-viewer.css"
-    ) == Path("site/docs-viewer/static/css/docs-viewer.css")
+    ) == Path("docs-viewer/static/css/docs-viewer.css")
     assert docs_viewer_service.shared_static_relative_path(
         "/docs-viewer/static/css/docs-viewer-reports.css"
-    ) == Path("site/docs-viewer/static/css/docs-viewer-reports.css")
+    ) == Path("docs-viewer/static/css/docs-viewer-reports.css")
     assert docs_viewer_service.shared_static_relative_path(
         "/docs-viewer/static/css/docs-viewer-local-reports.css"
     ) is None

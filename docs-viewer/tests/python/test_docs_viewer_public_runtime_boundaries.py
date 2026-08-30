@@ -15,7 +15,7 @@ def test_inline_mermaid_module_is_manage_owned_and_absent_from_public_runtime() 
         (REPO_ROOT / "site-tools/config/site-tools.json").read_text(encoding="utf-8")
     )
     runtime_manifest = site_tools["validation"]["docs_viewer_runtime"]["manifest"]
-    entry = REPO_ROOT / "site/docs-viewer/runtime/js/public/docs-viewer-public.js"
+    entry = REPO_ROOT / "docs-viewer/runtime/js/public/docs-viewer-public.js"
     graph_paths = {
         path.relative_to(REPO_ROOT).as_posix()
         for path in public_entry_static_import_graph(REPO_ROOT, entry)
@@ -28,7 +28,7 @@ def test_inline_mermaid_module_is_manage_owned_and_absent_from_public_runtime() 
 
 
 def test_public_docs_viewer_entry_static_imports_only_public_runtime_modules() -> None:
-    entry = REPO_ROOT / "site/docs-viewer/runtime/js/public/docs-viewer-public.js"
+    entry = REPO_ROOT / "docs-viewer/runtime/js/public/docs-viewer-public.js"
     graph = public_entry_static_import_graph(REPO_ROOT, entry)
     blocked = sorted(
         path.relative_to(REPO_ROOT).as_posix()
@@ -40,7 +40,7 @@ def test_public_docs_viewer_entry_static_imports_only_public_runtime_modules() -
 
 
 def test_persistent_diagram_detail_is_shared_by_public_and_manage_but_not_review() -> None:
-    public_entry = REPO_ROOT / "site/docs-viewer/runtime/js/public/docs-viewer-public.js"
+    public_entry = REPO_ROOT / "docs-viewer/runtime/js/public/docs-viewer-public.js"
     public_graph = {
         path.relative_to(REPO_ROOT).as_posix()
         for path in public_entry_static_import_graph(REPO_ROOT, public_entry)
@@ -52,7 +52,7 @@ def test_persistent_diagram_detail_is_shared_by_public_and_manage_but_not_review
         encoding="utf-8"
     )
 
-    assert "site/docs-viewer/runtime/js/shared/docs-viewer-diagram-detail.js" in public_graph
+    assert "docs-viewer/runtime/js/shared/docs-viewer-diagram-detail.js" in public_graph
     assert "docs-viewer-diagram-detail.js" in manage_entry
     assert "docs-viewer-diagram-detail.js" not in review_entry
 
@@ -62,7 +62,7 @@ def test_expanded_report_adapter_is_local_owned_and_only_manage_composed() -> No
         (REPO_ROOT / "site-tools/config/site-tools.json").read_text(encoding="utf-8")
     )
     runtime_manifest = site_tools["validation"]["docs_viewer_runtime"]["manifest"]
-    public_entry = REPO_ROOT / "site/docs-viewer/runtime/js/public/docs-viewer-public.js"
+    public_entry = REPO_ROOT / "docs-viewer/runtime/js/public/docs-viewer-public.js"
     public_graph = {
         path.relative_to(REPO_ROOT).as_posix()
         for path in public_entry_static_import_graph(REPO_ROOT, public_entry)
@@ -81,14 +81,14 @@ def test_expanded_report_adapter_is_local_owned_and_only_manage_composed() -> No
     assert not (
         REPO_ROOT / "site/docs-viewer/runtime/js/shared/docs-viewer-report-presentation.js"
     ).exists()
-    assert "site/docs-viewer/runtime/js/shared/docs-viewer-report-presentation.js" not in public_graph
+    assert "docs-viewer/runtime/js/shared/docs-viewer-report-presentation.js" not in public_graph
     assert "docs-viewer/runtime/js/reports/docs-viewer-report-presentation.js" not in public_graph
     assert '../reports/docs-viewer-report-presentation.js' in manage_entry
     assert "docs-viewer-report-presentation.js" not in review_entry
 
 
 def test_public_docs_viewer_entry_static_graph_excludes_manage_document_actions() -> None:
-    entry = REPO_ROOT / "site/docs-viewer/runtime/js/public/docs-viewer-public.js"
+    entry = REPO_ROOT / "docs-viewer/runtime/js/public/docs-viewer-public.js"
     graph = public_entry_static_import_graph(REPO_ROOT, entry)
     graph_paths = {
         path.relative_to(REPO_ROOT).as_posix()
@@ -109,13 +109,13 @@ def test_public_docs_viewer_entry_static_graph_excludes_manage_document_actions(
     assert "docs-viewer/runtime/js/management/docs-viewer-inline-mermaid.js" not in graph_paths
     assert "docs-viewer/runtime/js/reports/docs-viewer-report-service.js" not in graph_paths
     assert "docs-viewer/runtime/js/reports/docs-viewer-reports.js" not in graph_paths
-    assert "site/docs-viewer/runtime/js/public/docs-viewer-public-document-reports.js" in graph_paths
-    assert "site/docs-viewer/runtime/js/reports/docs-viewer-public-reports.js" in graph_paths
-    assert not [
+    assert "docs-viewer/runtime/js/public/docs-viewer-public-document-reports.js" in graph_paths
+    assert "docs-viewer/runtime/js/reports/docs-viewer-public-reports.js" in graph_paths
+    assert sorted(
         path
         for path in graph_paths
         if path.startswith("docs-viewer/runtime/js/reports/")
-    ]
+    ) == ["docs-viewer/runtime/js/reports/docs-viewer-public-reports.js"]
 
 
 def test_subscope_manage_customisations_are_publicly_isolated() -> None:
@@ -125,12 +125,12 @@ def test_subscope_manage_customisations_are_publicly_isolated() -> None:
         )
     )
     public_loader = (
-        REPO_ROOT / "site/docs-viewer/runtime/js/reports/docs-viewer-public-reports.js"
+        REPO_ROOT / "docs-viewer/runtime/js/reports/docs-viewer-public-reports.js"
     ).read_text(encoding="utf-8")
     canonical_report = (
-        REPO_ROOT / "site/docs-viewer/runtime/js/shared/docs-subscope-report.js"
+        REPO_ROOT / "docs-viewer/runtime/js/shared/docs-subscope-report.js"
     ).read_text(encoding="utf-8")
-    entry = REPO_ROOT / "site/docs-viewer/runtime/js/public/docs-viewer-public.js"
+    entry = REPO_ROOT / "docs-viewer/runtime/js/public/docs-viewer-public.js"
     graph_paths = {
         path.relative_to(REPO_ROOT).as_posix()
         for path in public_entry_static_import_graph(REPO_ROOT, entry)
@@ -158,7 +158,7 @@ def test_subscope_customisation_registry_access_agrees_across_runtimes() -> None
     ).read_text(encoding="utf-8")
     public_source = (
         REPO_ROOT
-        / "site/docs-viewer/runtime/js/shared/"
+        / "docs-viewer/runtime/js/shared/"
         "docs-subscope-customisation-registry.js"
     ).read_text(encoding="utf-8")
     manage_ids = set(re.findall(r"^  ([a-z][a-z0-9_]*): function", manage_source, re.MULTILINE))
@@ -191,7 +191,7 @@ def test_projects_metadata_contribution_does_not_intercept_native_paste_or_undo(
     assert 'addEventListener("beforeinput"' not in source
 
 def test_public_docs_viewer_entry_static_graph_excludes_manage_owned_modules() -> None:
-    entry = REPO_ROOT / "site/docs-viewer/runtime/js/public/docs-viewer-public.js"
+    entry = REPO_ROOT / "docs-viewer/runtime/js/public/docs-viewer-public.js"
     graph = public_entry_static_import_graph(REPO_ROOT, entry)
     graph_paths = {
         path.relative_to(REPO_ROOT).as_posix()
@@ -210,7 +210,6 @@ def test_public_docs_viewer_entry_static_graph_excludes_manage_owned_modules() -
     }
     blocked_prefixes = (
         "docs-viewer/runtime/js/management/docs-viewer-management-",
-        "docs-viewer/runtime/js/reports/",
         "docs-viewer/runtime/js/review/",
     )
 
@@ -220,6 +219,11 @@ def test_public_docs_viewer_entry_static_graph_excludes_manage_owned_modules() -
         for path in graph_paths
         if path.startswith(blocked_prefixes)
     ) == []
+    assert sorted(
+        path
+        for path in graph_paths
+        if path.startswith("docs-viewer/runtime/js/reports/")
+    ) == ["docs-viewer/runtime/js/reports/docs-viewer-public-reports.js"]
 
 def test_public_route_config_uses_public_report_registry_projection() -> None:
     public_payload = json.loads(

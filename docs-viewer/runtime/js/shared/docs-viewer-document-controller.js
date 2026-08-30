@@ -1,0 +1,383 @@
+export function initDocsViewerDocumentController(context) {
+  var routeSession = context.routeSession;
+  var scopeConfigState = context.scopeConfig;
+  var selectedDocument = context.selectedDocument;
+  var statusCommands = context.statusCommands || {};
+  var content = context.content;
+  var toolbar = context.toolbar;
+  var results = context.results;
+  var more = context.more;
+  var documentMountGeneration = 0;
+
+  function currentViewerScope() {
+    return typeof context.viewerScope === "function" ? context.viewerScope() : context.viewerScope;
+  }
+
+  function managementContextActive() {
+    return Boolean(routeSession && routeSession.managementContext);
+  }
+
+  function nextDocumentMountGeneration() {
+    documentMountGeneration += 1;
+    return documentMountGeneration;
+  }
+
+  function clearSubscopeReportState(reason, mountGeneration) {
+    if (typeof context.publishSubscopeReportState !== "function") return;
+    context.publishSubscopeReportState({
+      state: "inactive",
+      reason: String(reason || "document-navigation"),
+      documentMountGeneration: mountGeneration,
+      parentTarget: null,
+      subdocTarget: null
+    });
+  }
+
+  function currentScopeType() {
+    var configsById = scopeConfigState && scopeConfigState.scopeConfigsById;
+    var scopeConfig = configsById && typeof configsById.get === "function"
+      ? configsById.get(currentViewerScope())
+      : null;
+    return scopeConfig ? String(scopeConfig.scopeType || "").trim().toLowerCase() : "";
+  }
+
+  function setStatus(message, isError) {
+    if (typeof statusCommands.setStatus === "function") {
+      statusCommands.setStatus(message, isError);
+    } else if (typeof context.setStatus === "function") {
+      context.setStatus(message, isError);
+    }
+  }
+
+  function mountDocumentExtras(doc, payload, mountGeneration) {
+    if (typeof context.mountDocumentExtras !== "function") return;
+    Promise.resolve(context.mountDocumentExtras({
+      appContext: context.appContext || {},
+      checkGeneratedDataReadCapability: context.checkGeneratedDataReadCapability,
+      content: content,
+      doc: doc,
+      collectionProvider: context.collectionProvider,
+      managementDocumentActions: context.managementDocumentActions || null,
+      managementService: context.managementService || null,
+      managementContext: managementContextActive(),
+      payload: payload,
+      documentMountGeneration: mountGeneration,
+      reportPresentationAdapter: context.reportPresentationAdapter,
+      requestContentDetail: context.requestContentDetail,
+      publishSubscopeReportState: context.publishSubscopeReportState,
+      routeContext: typeof context.routeContext === "function" ? context.routeContext() : context.routeContext,
+      scopeConfigState: scopeConfigState,
+      setStatus: setStatus,
+      viewerScope: currentViewerScope(),
+      viewerUrlForScope: context.viewerUrlForScope
+    })).catch(function (error) {
+      console.warn("docs_viewer: document extras unavailable", error);
+    });
+  }
+
+  function mountDiagramDetails(doc, payload, mountGeneration) {
+    var adapter = context.diagramDetailAdapter;
+    if (!adapter || typeof adapter.mountDocument !== "function") return;
+    try {
+      adapter.mountDocument({
+        content: content,
+        doc: doc,
+        document: content ? content.ownerDocument : null,
+        documentMountGeneration: mountGeneration,
+        payload: payload,
+        requestContentDetail: context.requestContentDetail,
+        scopeType: currentScopeType(),
+        viewerScope: currentViewerScope(),
+        window: content && content.ownerDocument ? content.ownerDocument.defaultView : null
+      });
+    } catch (error) {
+      console.warn("docs_viewer: diagram detail adapter unavailable", error);
+    }
+  }
+
+  function mountTableDetails(doc, payload, mountGeneration) {
+    var adapter = context.tableDetailAdapter;
+    if (!adapter || typeof adapter.mountDocument !== "function") return;
+    try {
+      adapter.mountDocument({
+        content: content,
+        doc: doc,
+        document: content ? content.ownerDocument : null,
+        documentMountGeneration: mountGeneration,
+        payload: payload,
+        requestContentDetail: context.requestContentDetail,
+        viewerScope: currentViewerScope(),
+        window: content && content.ownerDocument ? content.ownerDocument.defaultView : null
+      });
+    } catch (error) {
+      console.warn("docs_viewer: table detail adapter unavailable", error);
+    }
+  }
+
+  function releaseTableDetails() {
+    var adapter = context.tableDetailAdapter;
+    if (!adapter || typeof adapter.releaseDocument !== "function") return;
+    try {
+      adapter.releaseDocument({
+        content: content,
+        document: content ? content.ownerDocument : null,
+        window: content && content.ownerDocument ? content.ownerDocument.defaultView : null
+      });
+    } catch (error) {
+      console.warn("docs_viewer: table detail cleanup unavailable", error);
+    }
+  }
+
+  function releaseReportPresentation() {
+    var adapter = context.reportPresentationAdapter;
+    if (!adapter || typeof adapter.releaseDocument !== "function") return;
+    try {
+      adapter.releaseDocument({
+        content: content,
+        document: content ? content.ownerDocument : null,
+        window: content && content.ownerDocument ? content.ownerDocument.defaultView : null
+      });
+    } catch (error) {
+      console.warn("docs_viewer: report presentation cleanup unavailable", error);
+    }
+  }
+
+  function releaseDiagramDetails() {
+    var inlineAdapter = context.inlineMermaidAdapter;
+    if (inlineAdapter && typeof inlineAdapter.releaseDocument === "function") {
+      try {
+        inlineAdapter.releaseDocument({
+          content: content,
+          document: content ? content.ownerDocument : null,
+          window: content && content.ownerDocument ? content.ownerDocument.defaultView : null
+        });
+      } catch (error) {
+        console.warn("docs_viewer: inline Mermaid registry cleanup unavailable", error);
+      }
+    }
+    var themedAdapter = context.themedDiagramAdapter;
+    if (themedAdapter && typeof themedAdapter.releaseDocument === "function") {
+      try {
+        themedAdapter.releaseDocument({
+          content: content,
+          document: content ? content.ownerDocument : null,
+          window: content && content.ownerDocument ? content.ownerDocument.defaultView : null
+        });
+      } catch (error) {
+        console.warn("docs_viewer: themed diagram registry cleanup unavailable", error);
+      }
+    }
+    var adapter = context.diagramDetailAdapter;
+    if (!adapter || typeof adapter.releaseDocument !== "function") return;
+    try {
+      adapter.releaseDocument({
+        content: content,
+        document: content ? content.ownerDocument : null,
+        window: content && content.ownerDocument ? content.ownerDocument.defaultView : null
+      });
+    } catch (error) {
+      console.warn("docs_viewer: diagram detail resource cleanup unavailable", error);
+    }
+  }
+
+  function mountThemedDiagrams(doc, payload) {
+    var adapter = context.themedDiagramAdapter;
+    if (!adapter || typeof adapter.mountDocument !== "function") return;
+    try {
+      adapter.mountDocument({
+        content: content,
+        doc: doc,
+        document: content ? content.ownerDocument : null,
+        payload: payload,
+        scopeType: currentScopeType(),
+        viewerScope: currentViewerScope(),
+        window: content && content.ownerDocument ? content.ownerDocument.defaultView : null
+      });
+    } catch (error) {
+      console.warn("docs_viewer: themed diagram adapter unavailable", error);
+    }
+  }
+
+  function mountInlineMermaid(doc, payload, mountGeneration) {
+    var adapter = context.inlineMermaidAdapter;
+    var scopeType = currentScopeType();
+    var managedLocalScope = scopeType === "local" || scopeType === "local_external";
+    if (!managedLocalScope || !adapter || typeof adapter.mountDocument !== "function") return;
+    Promise.resolve(adapter.mountDocument({
+      content: content,
+      diagramDetailAdapter: context.diagramDetailAdapter,
+      doc: doc,
+      document: content ? content.ownerDocument : null,
+      isCurrentMount: function () {
+        return mountGeneration === documentMountGeneration;
+      },
+      mountGeneration: mountGeneration,
+      payload: payload,
+      scopeType: scopeType,
+      viewerScope: currentViewerScope(),
+      window: content && content.ownerDocument ? content.ownerDocument.defaultView : null
+    })).catch(function (error) {
+      console.warn("docs_viewer: inline Mermaid adapter unavailable", error);
+    });
+  }
+
+  function scrollToHash(hash) {
+    if (!hash) {
+      window.scrollTo({ top: 0, behavior: "auto" });
+      return;
+    }
+
+    var target = document.getElementById(hash);
+    if (!target) return;
+
+    target.scrollIntoView({ block: "start", behavior: "auto" });
+  }
+
+  function hideDocPane() {
+    var mountGeneration = nextDocumentMountGeneration();
+    clearSubscopeReportState("document-pane-hidden", mountGeneration);
+    releaseReportPresentation();
+    releaseTableDetails();
+    projectDocumentShell({
+      toolbarHidden: true,
+      contentHidden: true
+    });
+    context.renderBookmarkToggle();
+  }
+
+  function showDocPane() {
+    if (typeof context.clearResultsStatus === "function") context.clearResultsStatus();
+    context.setRecentModeActive(false);
+    projectDocumentShell({
+      toolbarHidden: false,
+      contentHidden: false,
+      resultsHidden: true,
+      moreHidden: true,
+      clearMore: true
+    });
+  }
+
+  function renderDocumentStatus(message, isError, options) {
+    var settings = options || {};
+    var mountGeneration = nextDocumentMountGeneration();
+    clearSubscopeReportState("document-status", mountGeneration);
+    showDocPane();
+    if (settings.hideMeta) {
+      projectDocumentShell({
+        toolbarHidden: true
+      });
+    }
+    if (!content) return;
+    releaseReportPresentation();
+    releaseTableDetails();
+    releaseDiagramDetails();
+    content.textContent = "";
+    var status = document.createElement("p");
+    status.className = "docsViewer__panelStatus muted small";
+    status.classList.toggle("is-error", Boolean(isError));
+    status.textContent = String(message || "");
+    content.appendChild(status);
+  }
+
+  function showSearchPane() {
+    hideDocPane();
+    projectDocumentShell({ resultsHidden: false });
+  }
+
+  function showRecentPane() {
+    hideDocPane();
+    context.setRecentModeActive(true);
+    projectDocumentShell({ resultsHidden: false });
+  }
+
+  function renderPayload(doc, payload, hash) {
+    var mountGeneration = nextDocumentMountGeneration();
+    clearSubscopeReportState("document-mount", mountGeneration);
+    selectedDocument.selectedDocId = doc.doc_id;
+    context.renderSidebar();
+    context.renderBookmarkUi();
+    context.renderManagementUi();
+
+    if (context.hasActiveQuery()) {
+      context.setRecentModeActive(false);
+      context.renderSearchMode();
+      return;
+    }
+
+    showDocPane();
+    context.renderMeta(doc);
+    releaseReportPresentation();
+    releaseTableDetails();
+    releaseDiagramDetails();
+    content.innerHTML = payload.content_html || "";
+    mountTableDetails(doc, payload, mountGeneration);
+    mountThemedDiagrams(doc, payload);
+    mountDiagramDetails(doc, payload, mountGeneration);
+    mountInlineMermaid(doc, payload, mountGeneration);
+    mountDocumentExtras(doc, payload, mountGeneration);
+    document.title = doc.title + " | dotlineform";
+    setStatus("", false);
+    context.renderManagementUi();
+
+    window.requestAnimationFrame(function () {
+      scrollToHash(hash);
+    });
+  }
+
+  function handleMissingDoc() {
+    renderDocumentStatus("Document not found.", true, { hideMeta: true });
+    results.innerHTML = "";
+    more.innerHTML = "";
+    more.hidden = true;
+    context.renderManagementUi();
+  }
+
+  function renderDocLoadingState(doc) {
+    var mountGeneration = nextDocumentMountGeneration();
+    clearSubscopeReportState("navigation-start", mountGeneration);
+    context.renderSidebar();
+    showDocPane();
+    context.renderMeta(doc);
+    releaseReportPresentation();
+    releaseTableDetails();
+    releaseDiagramDetails();
+    content.textContent = "";
+  }
+
+  function handlePayloadError(error) {
+    renderDocumentStatus(error.message || "Failed to load document.", true);
+  }
+
+  function projectDocumentShell(projection) {
+    if (typeof context.projectDocumentShell === "function") {
+      context.projectDocumentShell(projection || {});
+      return;
+    }
+    if (toolbar && Object.prototype.hasOwnProperty.call(projection || {}, "toolbarHidden")) {
+      toolbar.hidden = Boolean(projection.toolbarHidden);
+    }
+    if (content && Object.prototype.hasOwnProperty.call(projection || {}, "contentHidden")) {
+      content.hidden = Boolean(projection.contentHidden);
+    }
+    if (results && Object.prototype.hasOwnProperty.call(projection || {}, "resultsHidden")) {
+      results.hidden = Boolean(projection.resultsHidden);
+    }
+    if (more && Object.prototype.hasOwnProperty.call(projection || {}, "moreHidden")) {
+      more.hidden = Boolean(projection.moreHidden);
+    }
+    if (more && projection && projection.clearMore) {
+      more.innerHTML = "";
+    }
+  }
+
+  return {
+    handleMissingDoc: handleMissingDoc,
+    handlePayloadError: handlePayloadError,
+    hideDocPane: hideDocPane,
+    renderDocLoadingState: renderDocLoadingState,
+    renderPayload: renderPayload,
+    showDocPane: showDocPane,
+    showRecentPane: showRecentPane,
+    showSearchPane: showSearchPane
+  };
+}

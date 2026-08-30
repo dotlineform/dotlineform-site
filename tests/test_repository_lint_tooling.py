@@ -39,6 +39,14 @@ def test_target_configuration_exposes_application_boundaries() -> None:
     assert config["scopes"]["studio"]["python"]
     assert config["scopes"]["studio"]["javascript"]
     assert config["scopes"]["shared"]["javascript"] == ["shared/frontend/js"]
+    assert config["scopes"]["docs-viewer"]["python"] == [
+        "docs-viewer/build",
+        "docs-viewer/services",
+    ]
+    assert config["scopes"]["docs-viewer"]["javascript"] == [
+        "docs-viewer/runtime/js"
+    ]
+    assert "site/docs-viewer/runtime/js/**" in config["exclude"]
 
 
 def test_explicit_target_resolution_rejects_missing_and_excluded_source() -> None:
@@ -55,6 +63,12 @@ def test_explicit_target_resolution_rejects_missing_and_excluded_source() -> Non
         runner.candidate_files(
             ["processing"],
             language="python",
+            exclusions=exclusions,
+        )
+    with pytest.raises(runner.LintTargetError, match="No eligible javascript source"):
+        runner.candidate_files(
+            ["site/docs-viewer/runtime/js"],
+            language="javascript",
             exclusions=exclusions,
         )
 
