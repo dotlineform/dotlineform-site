@@ -6,19 +6,17 @@ from __future__ import annotations
 import hashlib
 import hmac
 import html
+from html.parser import HTMLParser
 import json
 import os
 import re
-import shutil
 import stat as stat_module
-import tempfile
 import unicodedata
-import uuid
 from dataclasses import dataclass
 from datetime import date, datetime
 from pathlib import Path
 from typing import Any
-from urllib.parse import parse_qs, urlsplit
+from urllib.parse import parse_qs, urlencode, urlsplit
 
 from docs_static_html_export_media import SnapshotMediaPlan, plan_snapshot_media
 from docs_scope_config import (
@@ -47,6 +45,7 @@ WINDOWS_RESERVED_FOLDER_NAMES = frozenset(
 )
 MAX_SNAPSHOT_LABEL_BYTES = 180
 DOCS_EXPORT_WORKSPACE_SUBDIR = "docs-export"
+IGNORED_HOST_METADATA_FILENAMES = frozenset({".DS_Store"})
 
 
 @dataclass(frozen=True)
@@ -73,7 +72,6 @@ class StaticHtmlSnapshotPlan:
     plan_revision: str
     target_state: str
     target_revision: str
-    target_content_revision: str
     existing_snapshot: dict[str, Any] | None
 
 
@@ -309,6 +307,14 @@ def _stat_identity(path_stat: os.stat_result) -> tuple[int, int, int, int, int, 
     )
 
 
+def is_ignored_host_metadata(path: Path) -> bool:
+    return (
+        path.name in IGNORED_HOST_METADATA_FILENAMES
+        and not path.is_symlink()
+        and path.is_file()
+    )
+
+
 def _target_entry_state(path: Path, relative_path: Path) -> list[dict[str, Any]]:
     path_stat = path.lstat()
     common = {
@@ -328,6 +334,8 @@ def _target_entry_state(path: Path, relative_path: Path) -> list[dict[str, Any]]
     if stat_module.S_ISDIR(path_stat.st_mode):
         entries = [{**common, "kind": "directory"}]
         for child in sorted(path.iterdir(), key=lambda item: item.name):
+            if is_ignored_host_metadata(child):
+                continue
             entries.extend(_target_entry_state(child, relative_path / child.name))
         if _stat_identity(path.lstat()) != _stat_identity(path_stat):
             raise ValueError("export destination changed during preview; preview again")
@@ -337,33 +345,22 @@ def _target_entry_state(path: Path, relative_path: Path) -> list[dict[str, Any]]
     return [{**common, "kind": "special"}]
 
 
-def snapshot_target_revisions(path: Path, state: str) -> tuple[str, str]:
+def snapshot_target_revision(path: Path, state: str) -> str:
     if state == "absent":
-        revision = _revision({"state": state})
-        return revision, revision
+        return _revision({"state": state})
     try:
         entries = _target_entry_state(path, Path())
     except OSError as exc:
         raise ValueError("could not inspect export destination; resolve filesystem permissions and preview again") from exc
-    full_revision = _revision({"state": state, "entries": entries})
-    content_entries = [dict(entry) for entry in entries]
-    if content_entries and content_entries[0].get("path") == ".":
-        content_entries[0] = {
+    normalized_entries = [
+        {
             key: value
-            for key, value in content_entries[0].items()
-            if key not in {"mtime_ns", "ctime_ns"}
+            for key, value in entry.items()
+            if key not in {"size", "mtime_ns", "ctime_ns"} or entry.get("kind") != "directory"
         }
-    return full_revision, _revision({"state": state, "entries": content_entries})
-
-
-def snapshot_target_revision(path: Path, state: str) -> str:
-    return snapshot_target_revisions(path, state)[0]
-
-
-def snapshot_target_content_revision(path: Path, state: str) -> str:
-    """Fingerprint target contents while ignoring root metadata changed by rename."""
-
-    return snapshot_target_revisions(path, state)[1]
+        for entry in entries
+    ]
+    return _revision({"state": state, "entries": normalized_entries})
 
 
 def load_existing_snapshot_summary(destination_root: Path) -> dict[str, Any] | None:
@@ -460,28 +457,16 @@ def load_existing_snapshot_summary(destination_root: Path) -> dict[str, Any] | N
     }
 
 
-def inspect_snapshot_destination_details(
-    destination_root: Path,
-) -> tuple[str, str, str, dict[str, Any] | None]:
+def inspect_snapshot_destination(destination_root: Path) -> tuple[str, str, dict[str, Any] | None]:
     if not os.path.lexists(destination_root):
         state = "absent"
-        target_revision, target_content_revision = snapshot_target_revisions(destination_root, state)
-        return state, target_revision, target_content_revision, None
+        return state, snapshot_target_revision(destination_root, state), None
     if destination_root.is_symlink() or not destination_root.is_dir():
         state = "non_directory"
-        target_revision, target_content_revision = snapshot_target_revisions(destination_root, state)
-        return state, target_revision, target_content_revision, None
+        return state, snapshot_target_revision(destination_root, state), None
     existing_snapshot = load_existing_snapshot_summary(destination_root)
     state = "recognized" if existing_snapshot is not None else "unrecognized"
-    target_revision, target_content_revision = snapshot_target_revisions(destination_root, state)
-    return state, target_revision, target_content_revision, existing_snapshot
-
-
-def inspect_snapshot_destination(destination_root: Path) -> tuple[str, str, dict[str, Any] | None]:
-    state, target_revision, _target_content_revision, existing_snapshot = inspect_snapshot_destination_details(
-        destination_root
-    )
-    return state, target_revision, existing_snapshot
+    return state, snapshot_target_revision(destination_root, state), existing_snapshot
 
 
 def _snapshot_plan_revision(
@@ -552,9 +537,7 @@ def plan_static_html_snapshot(
     validate_destination_path(destination_root)
     default_doc_id = config.default_doc_id if config.default_doc_id in included_doc_ids else doc_ids[0]
     destination_label_value = f"/docs-export/{folder_name}/"
-    target_state, target_revision, target_content_revision, existing_snapshot = inspect_snapshot_destination_details(
-        destination_root
-    )
+    target_state, target_revision, existing_snapshot = inspect_snapshot_destination(destination_root)
     plan_revision = _snapshot_plan_revision(
         scope=scope,
         doc_ids=doc_ids,
@@ -580,7 +563,6 @@ def plan_static_html_snapshot(
         plan_revision=plan_revision,
         target_state=target_state,
         target_revision=target_revision,
-        target_content_revision=target_content_revision,
         existing_snapshot=existing_snapshot,
     )
 
@@ -622,7 +604,9 @@ def rewrite_internal_docs_viewer_links(
     *,
     scope: str,
     link_prefix: str,
+    link_suffix: str = ".html",
     included_doc_ids: set[str] | None = None,
+    preserve_fragment: bool = True,
 ) -> str:
     def replacement(match: re.Match[str]) -> str:
         raw_url = html.unescape(match.group("url"))
@@ -638,13 +622,79 @@ def rewrite_internal_docs_viewer_links(
         validate_doc_id_for_html_filename(doc_id)
         if included_doc_ids is not None and doc_id not in included_doc_ids:
             return match.group(0)
-        rewritten = f"{link_prefix}{doc_id}.html"
-        if split.fragment:
+        rewritten = f"{link_prefix}{doc_id}{link_suffix}"
+        if split.fragment and preserve_fragment:
             rewritten += f"#{split.fragment}"
         quote = match.group("quote")
         return f"{match.group('prefix')}{quote}{html.escape(rewritten, quote=True)}{quote}"
 
     return HREF_PATTERN.sub(replacement, html_text)
+
+
+class _PortableHtmlImageRewriter(HTMLParser):
+    """Replace images while preserving every other rendered HTML event."""
+
+    def __init__(self) -> None:
+        super().__init__(convert_charrefs=False)
+        self.parts: list[str] = []
+
+    def image_placeholder(self, attrs: list[tuple[str, str | None]]) -> str:
+        attrs_by_name = {name.lower(): str(value or "") for name, value in attrs}
+        alt = " ".join(html.unescape(attrs_by_name.get("alt", "")).split())
+        label = f"[image: {alt}]" if alt else "[image]"
+        return f'<span class="docsExport__mediaPlaceholder">{html.escape(label)}</span>'
+
+    def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
+        if tag.lower() == "img":
+            self.parts.append(self.image_placeholder(attrs))
+            return
+        self.parts.append(self.get_starttag_text())
+
+    def handle_startendtag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
+        if tag.lower() == "img":
+            self.parts.append(self.image_placeholder(attrs))
+            return
+        self.parts.append(self.get_starttag_text())
+
+    def handle_endtag(self, tag: str) -> None:
+        if tag.lower() != "img":
+            self.parts.append(f"</{tag}>")
+
+    def handle_data(self, data: str) -> None:
+        self.parts.append(data)
+
+    def handle_entityref(self, name: str) -> None:
+        self.parts.append(f"&{name};")
+
+    def handle_charref(self, name: str) -> None:
+        self.parts.append(f"&#{name};")
+
+    def handle_comment(self, data: str) -> None:
+        self.parts.append(f"<!--{data}-->")
+
+    def handle_decl(self, decl: str) -> None:
+        self.parts.append(f"<!{decl}>")
+
+    def handle_pi(self, data: str) -> None:
+        self.parts.append(f"<?{data}>")
+
+    def unknown_decl(self, data: str) -> None:
+        self.parts.append(f"<![{data}]>")
+
+
+def replace_images_with_placeholders(html_text: str) -> str:
+    parser = _PortableHtmlImageRewriter()
+    parser.feed(html_text)
+    parser.close()
+    return "".join(parser.parts)
+
+
+def markdown_document_link(payload: dict[str, Any], *, scope: str) -> str:
+    doc_id = validate_doc_id_for_html_filename(str(payload.get("doc_id") or ""))
+    title = str(payload.get("title") or doc_id).strip() or doc_id
+    escaped_title = title.replace("\\", "\\\\").replace("[", "\\[").replace("]", "\\]")
+    query = urlencode((("scope", scope), ("doc", doc_id)))
+    return f"[{escaped_title}](/docs/?{query})"
 
 
 def render_styles_css() -> str:
@@ -721,7 +771,44 @@ pre code {
 """
 
 
-def render_tree_rows(rows: Any) -> str:
+def render_portable_styles_css() -> str:
+    return render_styles_css() + """\
+
+.docsExport__portableIndex {
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.docsExport__portableDocument {
+  padding-top: 1.5rem;
+  scroll-margin-top: 1rem;
+}
+
+.docsExport__portableDocument + .docsExport__portableDocument {
+  margin-top: 2rem;
+  border-top: 1px solid var(--border);
+}
+
+.docsExport__mediaPlaceholder {
+  color: var(--muted);
+  font-style: italic;
+}
+
+.docsExport__referenceToken {
+  margin-top: 0.35rem;
+  color: var(--muted);
+  font-size: 0.8rem;
+  overflow-wrap: anywhere;
+}
+"""
+
+
+def render_tree_rows(
+    rows: Any,
+    *,
+    link_prefix: str = "docs/",
+    link_suffix: str = ".html",
+) -> str:
     if not isinstance(rows, list) or not rows:
         return ""
     parts = ['<ul class="docsExport__tree">']
@@ -730,10 +817,15 @@ def render_tree_rows(rows: Any) -> str:
             continue
         doc_id = validate_doc_id_for_html_filename(str(row.get("doc_id") or ""))
         title = str(row.get("title") or doc_id).strip() or doc_id
+        target = f"{link_prefix}{doc_id}{link_suffix}"
         parts.append(
-            f'<li><a href="docs/{html.escape(doc_id, quote=True)}.html">{html.escape(title)}</a>'
+            f'<li><a href="{html.escape(target, quote=True)}">{html.escape(title)}</a>'
         )
-        child_html = render_tree_rows(row.get("children"))
+        child_html = render_tree_rows(
+            row.get("children"),
+            link_prefix=link_prefix,
+            link_suffix=link_suffix,
+        )
         if child_html:
             parts.append(child_html)
         parts.append("</li>")
@@ -817,6 +909,62 @@ def render_doc_html(
     )
 
 
+def render_portable_html(plan: StaticHtmlSnapshotPlan) -> str:
+    included_doc_ids = set(plan.doc_ids)
+    tree_html = render_tree_rows(
+        plan.index_tree.get("docs"),
+        link_prefix="#doc-",
+        link_suffix="",
+    )
+    document_html: list[str] = []
+    for doc_id in plan.doc_ids:
+        payload = plan.doc_payloads[doc_id]
+        content_html = rewrite_internal_docs_viewer_links(
+            str(payload.get("content_html") or ""),
+            scope=plan.scope,
+            link_prefix="#doc-",
+            link_suffix="",
+            included_doc_ids=included_doc_ids,
+            preserve_fragment=False,
+        )
+        document_html.extend(
+            [
+                f'    <article class="docsExport__portableDocument" id="doc-{html.escape(doc_id, quote=True)}">',
+                f"      {replace_images_with_placeholders(content_html)}",
+                '      <p class="docsExport__meta"><a href="#index">Back to index</a></p>',
+                f'      <p class="docsExport__referenceToken"><code>{html.escape(markdown_document_link(payload, scope=plan.scope))}</code></p>',
+                "    </article>",
+            ]
+        )
+    document_label = "document" if len(plan.doc_ids) == 1 else "documents"
+    return "\n".join(
+        [
+            "<!doctype html>",
+            '<html lang="en">',
+            "<head>",
+            '  <meta charset="utf-8">',
+            '  <meta name="viewport" content="width=device-width, initial-scale=1">',
+            f"  <title>{html.escape(plan.scope)} docs</title>",
+            "  <style>",
+            render_portable_styles_css(),
+            "  </style>",
+            "</head>",
+            "<body>",
+            '  <main id="index">',
+            '    <section class="docsExport__portableIndex">',
+            f"      <h1>{html.escape(plan.scope)} docs</h1>",
+            f'      <p class="docsExport__meta">{len(plan.doc_ids)} {document_label} exported from generated Docs Viewer payloads.</p>',
+            f"      {tree_html}",
+            "    </section>",
+            *document_html,
+            "  </main>",
+            "</body>",
+            "</html>",
+            "",
+        ]
+    )
+
+
 def snapshot_provenance(plan: StaticHtmlSnapshotPlan, *, generated_at: str) -> dict[str, Any]:
     return {
         "schema_version": SNAPSHOT_SCHEMA_VERSION,
@@ -846,6 +994,7 @@ def compute_snapshot_files(plan: StaticHtmlSnapshotPlan, *, generated_at: str) -
             document_count=len(plan.doc_ids),
         ).encode("utf-8"),
         Path("styles.css"): render_styles_css().encode("utf-8"),
+        Path("portable.html"): render_portable_html(plan).encode("utf-8"),
         Path(SNAPSHOT_PROVENANCE_FILENAME): (
             json.dumps(snapshot_provenance(plan, generated_at=generated_at), ensure_ascii=False, indent=2) + "\n"
         ).encode("utf-8"),
@@ -862,42 +1011,96 @@ def compute_snapshot_files(plan: StaticHtmlSnapshotPlan, *, generated_at: str) -
     return files
 
 
-def write_snapshot_staging_files(staging_root: Path, files: dict[Path, bytes]) -> None:
-    for relative_path, content in files.items():
+def snapshot_output_directories(files: dict[Path, bytes]) -> set[Path]:
+    return {
+        parent
+        for relative_path in files
+        for parent in relative_path.parents
+        if parent.parts
+    }
+
+
+def clear_snapshot_output_files(
+    destination_root: Path,
+    retained_directories: set[Path],
+) -> None:
+    paths = sorted(
+        destination_root.rglob("*"),
+        key=lambda path: (len(path.relative_to(destination_root).parts), path.as_posix()),
+        reverse=True,
+    )
+    for path in paths:
+        relative_path = path.relative_to(destination_root)
+        if is_ignored_host_metadata(path):
+            continue
+        if path.is_symlink() or not path.is_dir():
+            path.unlink(missing_ok=True)
+        elif relative_path not in retained_directories:
+            path.rmdir()
+
+
+def write_snapshot_files(destination_root: Path, files: dict[Path, bytes]) -> None:
+    completion_path = Path(SNAPSHOT_PROVENANCE_FILENAME)
+    if completion_path not in files:
+        raise ValueError("snapshot output is missing its completion manifest")
+    ordered_paths = sorted(
+        (relative_path for relative_path in files if relative_path != completion_path),
+        key=lambda path: path.as_posix(),
+    )
+    ordered_paths.append(completion_path)
+    for relative_path in ordered_paths:
+        content = files[relative_path]
         if relative_path.is_absolute() or ".." in relative_path.parts:
             raise ValueError(f"unsafe snapshot output path: {relative_path}")
-        target_path = staging_root / relative_path
+        target_path = destination_root / relative_path
         target_path.parent.mkdir(parents=True, exist_ok=True)
         target_path.write_bytes(content)
 
 
-def validate_staged_snapshot(
+def validate_snapshot_files(
     plan: StaticHtmlSnapshotPlan,
-    staging_root: Path,
+    destination_root: Path,
     expected_files: dict[Path, bytes],
 ) -> None:
     expected_paths = set(expected_files)
     expected_dirs = {parent for path in expected_paths for parent in path.parents if parent.parts}
     actual_files: set[Path] = set()
     actual_dirs: set[Path] = set()
-    for path in staging_root.rglob("*"):
-        relative_path = path.relative_to(staging_root)
+    for path in destination_root.rglob("*"):
+        relative_path = path.relative_to(destination_root)
+        if is_ignored_host_metadata(path):
+            continue
         if path.is_symlink():
-            raise ValueError(f"staged snapshot contains a symlink: {relative_path.as_posix()}")
+            raise ValueError(f"snapshot contains a symlink: {relative_path.as_posix()}")
         if path.is_dir():
             actual_dirs.add(relative_path)
         elif path.is_file():
             actual_files.add(relative_path)
         else:
-            raise ValueError(f"staged snapshot contains a special entry: {relative_path.as_posix()}")
+            raise ValueError(f"snapshot contains a special entry: {relative_path.as_posix()}")
     if actual_files != expected_paths or actual_dirs != expected_dirs:
-        raise ValueError("staged snapshot file set does not match the planned artifact")
+        differences: list[str] = []
+        for label, paths in (
+            ("missing files", expected_paths - actual_files),
+            ("unexpected files", actual_files - expected_paths),
+            ("missing directories", expected_dirs - actual_dirs),
+            ("unexpected directories", actual_dirs - expected_dirs),
+        ):
+            ordered = sorted(path.as_posix() for path in paths)
+            if ordered:
+                shown = ", ".join(ordered[:5])
+                suffix = f" (+{len(ordered) - 5} more)" if len(ordered) > 5 else ""
+                differences.append(f"{label}: {shown}{suffix}")
+        raise ValueError(
+            "snapshot file set does not match the planned artifact: "
+            + "; ".join(differences)
+        )
     for relative_path, expected_content in expected_files.items():
-        if (staging_root / relative_path).read_bytes() != expected_content:
-            raise ValueError(f"staged snapshot content validation failed: {relative_path.as_posix()}")
-    summary = load_existing_snapshot_summary(staging_root)
+        if (destination_root / relative_path).read_bytes() != expected_content:
+            raise ValueError(f"snapshot content validation failed: {relative_path.as_posix()}")
+    summary = load_existing_snapshot_summary(destination_root)
     if summary is None:
-        raise ValueError("staged snapshot provenance validation failed")
+        raise ValueError("snapshot provenance validation failed")
     expected_selection_revision = _revision({"scope": plan.scope, "doc_ids": plan.doc_ids})
     if (
         summary["scope"] != plan.scope
@@ -905,7 +1108,7 @@ def validate_staged_snapshot(
         or summary["document_count"] != len(plan.doc_ids)
         or summary["selection_revision"] != expected_selection_revision
     ):
-        raise ValueError("staged snapshot provenance does not match the planned selection")
+        raise ValueError("snapshot provenance does not match the planned selection")
 
 
 def normalize_snapshot_apply_revision(value: Any, *, field: str) -> str:
@@ -937,47 +1140,41 @@ def ensure_snapshot_target_unchanged(plan: StaticHtmlSnapshotPlan) -> None:
         )
 
 
-def install_staged_snapshot(plan: StaticHtmlSnapshotPlan, staging_root: Path) -> bool:
-    """Install validated staging, restoring an existing target if the switch fails."""
-
+def install_snapshot_in_place(plan: StaticHtmlSnapshotPlan, files: dict[Path, bytes]) -> bool:
     ensure_snapshot_target_unchanged(plan)
+    replaced = plan.target_state != "absent"
     if plan.target_state == "absent":
         try:
-            staging_root.rename(plan.destination_root)
+            plan.destination_root.mkdir()
         except OSError as exc:
             raise StaticHtmlSnapshotApplyConflict(
                 "Snapshot destination changed during apply; preview and confirm again.",
                 plan=plan,
             ) from exc
-        return False
 
-    backup_root = plan.destination_root.parent / f".{plan.folder_name}.{uuid.uuid4().hex}.backup"
+    expected_directories = snapshot_output_directories(files)
+    completion_path = plan.destination_root / SNAPSHOT_PROVENANCE_FILENAME
     try:
-        plan.destination_root.rename(backup_root)
-    except OSError as exc:
-        raise StaticHtmlSnapshotApplyConflict(
-            "Snapshot destination changed during apply; preview and confirm again.",
-            plan=plan,
-        ) from exc
-    try:
-        backup_state, _backup_revision, backup_content_revision, _summary = inspect_snapshot_destination_details(
-            backup_root
-        )
-        if backup_state != plan.target_state or not hmac.compare_digest(
-            backup_content_revision,
-            plan.target_content_revision,
-        ):
+        if plan.destination_root.is_symlink() or not plan.destination_root.is_dir():
             raise StaticHtmlSnapshotApplyConflict(
                 "Snapshot destination changed during apply; preview and confirm again.",
                 plan=plan,
             )
-        staging_root.rename(plan.destination_root)
+        if completion_path.is_symlink() or completion_path.is_file():
+            completion_path.unlink(missing_ok=True)
+        clear_snapshot_output_files(plan.destination_root, expected_directories)
+        for relative_path in sorted(
+            expected_directories,
+            key=lambda path: (len(path.parts), path.as_posix()),
+        ):
+            (plan.destination_root / relative_path).mkdir(parents=True, exist_ok=True)
+        write_snapshot_files(plan.destination_root, files)
+        validate_snapshot_files(plan, plan.destination_root, files)
     except Exception:
-        if not os.path.lexists(plan.destination_root) and os.path.lexists(backup_root):
-            backup_root.rename(plan.destination_root)
+        if completion_path.is_symlink() or completion_path.is_file():
+            completion_path.unlink(missing_ok=True)
         raise
-    shutil.rmtree(backup_root)
-    return True
+    return replaced
 
 
 def apply_static_html_snapshot(repo_root: Path, body: dict[str, Any]) -> dict[str, Any]:
@@ -1012,20 +1209,7 @@ def apply_static_html_snapshot(repo_root: Path, body: dict[str, Any]) -> dict[st
     files = compute_snapshot_files(plan, generated_at=generated_at)
     workspace = resolve_docs_export_workspace()
     workspace.root.mkdir(exist_ok=True)
-    staging_root = Path(
-        tempfile.mkdtemp(
-            prefix=f".{plan.folder_name}.",
-            suffix=".staging",
-            dir=workspace.root,
-        )
-    )
-    try:
-        write_snapshot_staging_files(staging_root, files)
-        validate_staged_snapshot(plan, staging_root, files)
-        replaced = install_staged_snapshot(plan, staging_root)
-    finally:
-        if os.path.lexists(staging_root):
-            shutil.rmtree(staging_root, ignore_errors=True)
+    replaced = install_snapshot_in_place(plan, files)
 
     target_state, target_revision, existing_snapshot = inspect_snapshot_destination(plan.destination_root)
     if target_state != "recognized" or existing_snapshot is None:

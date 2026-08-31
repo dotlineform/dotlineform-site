@@ -552,6 +552,56 @@ def test_index_page_renders_tree_links() -> None:
     )
 
 
+def test_portable_page_inlines_selected_documents_css_and_image_placeholders() -> None:
+    with tempfile.TemporaryDirectory() as repo_path, tempfile.TemporaryDirectory() as projects_path:
+        repo_root = Path(repo_path)
+        prepare_repo(repo_root, Path(projects_path))
+        parent_path = repo_root / "docs-viewer/scopes/studio/generated/documents/by-id/parent.json"
+        parent = json.loads(parent_path.read_text(encoding="utf-8"))
+        parent["title"] = "Parent [draft]"
+        parent["content_html"] = (
+            '<h1 id="top">Parent</h1>'
+            '<p><a href="/docs/?scope=studio&amp;doc=child#details">Child details</a> '
+            '<a href="https://example.com/">External</a></p>'
+            '<img src="https://example.com/diagram.png" alt="Diagram &amp; map">'
+            '<img src="data:image/png;base64,eA==" alt="">'
+        )
+        write_json(parent_path, parent)
+        child_path = repo_root / "docs-viewer/scopes/studio/generated/documents/by-id/child.json"
+        child = json.loads(child_path.read_text(encoding="utf-8"))
+        child["content_html"] = '<h1>Child</h1><p>Child body</p>'
+        write_json(child_path, child)
+
+        plan = exporter.plan_static_html_snapshot(
+            repo_root,
+            {"scope": "studio", "doc_ids": ["parent", "child"]},
+            export_date=FIXED_EXPORT_DATE,
+        )
+        portable = exporter.render_portable_html(plan)
+        files = exporter.compute_snapshot_files(
+            plan,
+            generated_at="2026-07-31T12:00:00+01:00",
+        )
+
+        assert portable.count("<!doctype html>") == 1
+        assert "<style>" in portable
+        assert 'rel="stylesheet"' not in portable
+        assert 'href="#doc-parent"' in portable
+        assert 'href="#doc-child"' in portable
+        assert 'id="doc-parent"' in portable
+        assert 'id="doc-child"' in portable
+        assert 'href="https://example.com/"' in portable
+        parent_reference = '<code>[Parent \\[draft\\]](/docs/?scope=studio&amp;doc=parent)</code>'
+        child_reference = '<code>[Child](/docs/?scope=studio&amp;doc=child)</code>'
+        assert parent_reference in portable
+        assert child_reference in portable
+        assert portable.index("Back to index") < portable.index(parent_reference)
+        assert "[image: Diagram &amp; map]" in portable
+        assert "[image]" in portable
+        assert "<img" not in portable
+        assert files[Path("portable.html")] == portable.encode("utf-8")
+
+
 def test_rewrite_internal_docs_viewer_links_leaves_other_links() -> None:
     html = (
         '<a href="/docs/?scope=studio&amp;doc=child#section">Child</a>'
@@ -584,11 +634,12 @@ def test_snapshot_apply_creates_exact_partial_artifact_with_provenance() -> None
         assert payload["schema_version"] == exporter.SNAPSHOT_APPLY_SCHEMA_VERSION
         assert payload["doc_ids"] == ["child", "sibling"]
         assert payload["document_count"] == 2
-        assert payload["file_count"] == 5
+        assert payload["file_count"] == 6
         assert payload["replaced"] is False
         assert payload["destination_label"] == "/docs-export/studio selection - 2026-07-31/"
         assert "destination" not in payload
         assert (destination / "index.html").exists()
+        assert (destination / "portable.html").exists()
         assert (destination / "styles.css").exists()
         assert not (destination / "docs/parent.html").exists()
         child_html = (destination / "docs/child.html").read_text(encoding="utf-8")
@@ -660,7 +711,7 @@ def test_snapshot_packages_only_selected_owned_media_and_records_external_depend
         assert payload["media_count"] == 4
         assert payload["media_bytes"] == 30
         assert payload["external_dependency_count"] == 1
-        assert payload["file_count"] == 8
+        assert payload["file_count"] == 9
         assert (destination / "media/img/photo one.png").read_bytes() == b"photo"
         assert (destination / "media/svg/diagram.svg").read_bytes() == b"<svg/>"
         assert (destination / "media/files/manual.pdf").read_bytes() == b"manual"
@@ -851,8 +902,12 @@ def test_snapshot_apply_replaces_only_explicitly_confirmed_existing_target() -> 
         )
         exporter.apply_static_html_snapshot(repo_root, snapshot_apply_body(first_preview))
         destination = projects_root / "docs-export/studio selection - 2026-07-31"
+        destination_inode = destination.stat().st_ino
+        docs_inode = (destination / "docs").stat().st_ino
         stale_path = destination / "stale.txt"
         stale_path.write_text("stale", encoding="utf-8")
+        duplicate_docs_path = destination / "docs 2"
+        duplicate_docs_path.mkdir()
         replacement_preview = exporter.preview_static_html_export(
             repo_root,
             {"scope": "studio", "doc_ids": ["parent"]},
@@ -874,9 +929,55 @@ def test_snapshot_apply_replaces_only_explicitly_confirmed_existing_target() -> 
 
         assert payload["replaced"] is True
         assert not stale_path.exists()
+        assert not duplicate_docs_path.exists()
         assert (destination / "docs/parent.html").is_file()
+        assert destination.stat().st_ino == destination_inode
+        assert (destination / "docs").stat().st_ino == docs_inode
         assert not list(destination.parent.glob(".*.backup"))
         assert not list(destination.parent.glob(".*.staging"))
+
+
+def test_snapshot_apply_ignores_finder_metadata_created_during_direct_write() -> None:
+    with tempfile.TemporaryDirectory() as repo_path, tempfile.TemporaryDirectory() as projects_path:
+        repo_root = Path(repo_path)
+        projects_root = Path(projects_path)
+        prepare_repo(repo_root, projects_root)
+        preview = exporter.preview_static_html_export(
+            repo_root,
+            {"scope": "studio", "doc_ids": ["parent"]},
+            export_date=FIXED_EXPORT_DATE,
+        )
+        real_writer = exporter.write_snapshot_files
+
+        def write_with_finder_metadata(output_root: Path, files: dict[Path, bytes]) -> None:
+            real_writer(output_root, files)
+            (output_root / ".DS_Store").write_bytes(b"finder metadata")
+
+        with patch.object(exporter, "write_snapshot_files", side_effect=write_with_finder_metadata):
+            payload = exporter.apply_static_html_snapshot(repo_root, snapshot_apply_body(preview))
+
+        destination = projects_root / "docs-export/studio selection - 2026-07-31"
+        finder_metadata = destination / ".DS_Store"
+        assert payload["ok"] is True
+        assert finder_metadata.read_bytes() == b"finder metadata"
+        assert (destination / exporter.SNAPSHOT_PROVENANCE_FILENAME).is_file()
+
+        replacement_preview = exporter.preview_static_html_export(
+            repo_root,
+            {"scope": "studio", "doc_ids": ["parent"]},
+            export_date=FIXED_EXPORT_DATE,
+        )
+        nested_finder_metadata = destination / "docs/.DS_Store"
+        nested_finder_metadata.write_bytes(b"nested finder metadata")
+        exporter.apply_static_html_snapshot(
+            repo_root,
+            snapshot_apply_body(replacement_preview, replace_existing=True),
+        )
+
+        assert finder_metadata.read_bytes() == b"finder metadata"
+        assert nested_finder_metadata.read_bytes() == b"nested finder metadata"
+        target_state, _target_revision, _summary = exporter.inspect_snapshot_destination(destination)
+        assert target_state == "recognized"
 
 
 def test_snapshot_apply_can_replace_an_explicitly_confirmed_unrecognized_directory() -> None:
@@ -1004,7 +1105,7 @@ def test_snapshot_apply_rejects_stale_plan_and_target_while_preserving_existing_
         assert changed_path.read_text(encoding="utf-8") == "preserve me"
 
 
-def test_snapshot_render_staging_and_validation_failures_preserve_existing_target() -> None:
+def test_snapshot_render_failure_preserves_existing_target_before_direct_write() -> None:
     with tempfile.TemporaryDirectory() as repo_path, tempfile.TemporaryDirectory() as projects_path:
         repo_root = Path(repo_path)
         projects_root = Path(projects_path)
@@ -1023,8 +1124,6 @@ def test_snapshot_render_staging_and_validation_failures_preserve_existing_targe
             {"scope": "studio", "doc_ids": ["parent"]},
             export_date=FIXED_EXPORT_DATE,
         )
-        real_writer = exporter.write_snapshot_staging_files
-
         with patch.object(exporter, "compute_snapshot_files", side_effect=RuntimeError("simulated render failure")):
             try:
                 exporter.apply_static_html_snapshot(
@@ -1037,42 +1136,8 @@ def test_snapshot_render_staging_and_validation_failures_preserve_existing_targe
                 raise AssertionError("simulated render failure should escape")
         assert marker.read_text(encoding="utf-8") == "original"
 
-        def fail_after_write(staging_root: Path, files: dict[Path, bytes]) -> None:
-            real_writer(staging_root, files)
-            raise RuntimeError("simulated staging failure")
 
-        with patch.object(exporter, "write_snapshot_staging_files", side_effect=fail_after_write):
-            try:
-                exporter.apply_static_html_snapshot(
-                    repo_root,
-                    snapshot_apply_body(replacement_preview, replace_existing=True),
-                )
-            except RuntimeError as exc:
-                assert str(exc) == "simulated staging failure"
-            else:
-                raise AssertionError("simulated staging failure should escape")
-        assert marker.read_text(encoding="utf-8") == "original"
-
-        def corrupt_after_write(staging_root: Path, files: dict[Path, bytes]) -> None:
-            real_writer(staging_root, files)
-            (staging_root / "index.html").write_text("corrupt", encoding="utf-8")
-
-        with patch.object(exporter, "write_snapshot_staging_files", side_effect=corrupt_after_write):
-            try:
-                exporter.apply_static_html_snapshot(
-                    repo_root,
-                    snapshot_apply_body(replacement_preview, replace_existing=True),
-                )
-            except ValueError as exc:
-                assert "content validation failed" in str(exc)
-            else:
-                raise AssertionError("simulated validation failure should escape")
-
-        assert marker.read_text(encoding="utf-8") == "original"
-        assert not list(destination.parent.glob(".*.staging"))
-
-
-def test_snapshot_final_switch_failure_restores_existing_target() -> None:
+def test_snapshot_direct_write_failure_leaves_rerunnable_unrecognized_target() -> None:
     with tempfile.TemporaryDirectory() as repo_path, tempfile.TemporaryDirectory() as projects_path:
         repo_root = Path(repo_path)
         projects_root = Path(projects_path)
@@ -1084,33 +1149,68 @@ def test_snapshot_final_switch_failure_restores_existing_target() -> None:
         )
         exporter.apply_static_html_snapshot(repo_root, snapshot_apply_body(first_preview))
         destination = projects_root / "docs-export/studio selection - 2026-07-31"
-        marker = destination / "preserved.txt"
-        marker.write_text("original", encoding="utf-8")
+        destination_inode = destination.stat().st_ino
+        docs_inode = (destination / "docs").stat().st_ino
         replacement_preview = exporter.preview_static_html_export(
             repo_root,
             {"scope": "studio", "doc_ids": ["parent"]},
             export_date=FIXED_EXPORT_DATE,
         )
-        path_type = type(destination)
-        real_rename = path_type.rename
+        real_writer = exporter.write_snapshot_files
 
-        def fail_staging_install(source: Path, target: Path) -> Path:
-            if source.name.endswith(".staging"):
-                raise OSError("simulated final switch failure")
-            return real_rename(source, target)
+        def fail_after_write(output_root: Path, files: dict[Path, bytes]) -> None:
+            real_writer(output_root, files)
+            raise RuntimeError("simulated direct write failure")
 
-        with patch.object(path_type, "rename", new=fail_staging_install):
+        with patch.object(exporter, "write_snapshot_files", side_effect=fail_after_write):
             try:
                 exporter.apply_static_html_snapshot(
                     repo_root,
                     snapshot_apply_body(replacement_preview, replace_existing=True),
                 )
-            except OSError as exc:
-                assert str(exc) == "simulated final switch failure"
+            except RuntimeError as exc:
+                assert str(exc) == "simulated direct write failure"
             else:
-                raise AssertionError("simulated final switch failure should escape")
+                raise AssertionError("simulated direct write failure should escape")
 
-        assert marker.read_text(encoding="utf-8") == "original"
+        assert destination.stat().st_ino == destination_inode
+        assert (destination / "docs").stat().st_ino == docs_inode
+        assert not (destination / exporter.SNAPSHOT_PROVENANCE_FILENAME).exists()
+        retry_preview = exporter.preview_static_html_export(
+            repo_root,
+            {"scope": "studio", "doc_ids": ["parent"]},
+            export_date=FIXED_EXPORT_DATE,
+        )
+        assert retry_preview["target_state"] == "unrecognized"
+        exporter.apply_static_html_snapshot(
+            repo_root,
+            snapshot_apply_body(retry_preview, replace_existing=True),
+        )
+        assert (destination / exporter.SNAPSHOT_PROVENANCE_FILENAME).is_file()
+
+        validation_preview = exporter.preview_static_html_export(
+            repo_root,
+            {"scope": "studio", "doc_ids": ["parent"]},
+            export_date=FIXED_EXPORT_DATE,
+        )
+
+        def corrupt_after_write(output_root: Path, files: dict[Path, bytes]) -> None:
+            real_writer(output_root, files)
+            (output_root / "index.html").write_text("corrupt", encoding="utf-8")
+
+        with patch.object(exporter, "write_snapshot_files", side_effect=corrupt_after_write):
+            with pytest.raises(ValueError, match="content validation failed"):
+                exporter.apply_static_html_snapshot(
+                    repo_root,
+                    snapshot_apply_body(validation_preview, replace_existing=True),
+                )
+        assert not (destination / exporter.SNAPSHOT_PROVENANCE_FILENAME).exists()
+        incomplete_preview = exporter.preview_static_html_export(
+            repo_root,
+            {"scope": "studio", "doc_ids": ["parent"]},
+            export_date=FIXED_EXPORT_DATE,
+        )
+        assert incomplete_preview["target_state"] == "unrecognized"
         assert not list(destination.parent.glob(".*.backup"))
         assert not list(destination.parent.glob(".*.staging"))
 
