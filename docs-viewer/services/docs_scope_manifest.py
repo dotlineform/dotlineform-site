@@ -412,9 +412,7 @@ def planned_scope_type(publishing_mode: str) -> str:
 
 
 def planned_scope_meta(publishing_mode: str) -> str:
-    if publishing_mode == PUBLIC_MODE:
-        return "public scope"
-    return "local management"
+    return planned_scope_type(publishing_mode)
 
 
 def path_is_relative_to(path: Path, parent: Path) -> bool:

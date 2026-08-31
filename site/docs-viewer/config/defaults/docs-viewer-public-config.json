@@ -5,7 +5,7 @@
     {
       "scope_id": "analysis",
       "scope_type": "public",
-      "meta": "public scope",
+      "meta": "public",
       "viewer_base_url": "/analysis/",
       "include_scope_param": false,
       "default_doc_id": "d-20260426-164043-e14f49",
