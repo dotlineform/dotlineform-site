@@ -162,6 +162,7 @@
         "index_url": "/docs/search?scope=processing",
         "rebuild_policy": "whole_index"
       },
+      "emoji": "䷑",
       "backlinks_url": "/docs/backlinks?scope=processing"
     },
     {
@@ -194,6 +195,7 @@
         "index_url": "/docs/search?scope=dotlineform",
         "rebuild_policy": "whole_index"
       },
+      "emoji": "䷑",
       "backlinks_url": "/docs/backlinks?scope=dotlineform",
       "sub_scopes": [
         {

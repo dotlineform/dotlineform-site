@@ -149,6 +149,7 @@ def browser_scope_record(
     *,
     published: bool = False,
 ) -> dict[str, Any]:
+    raw_scope = raw_by_scope.get(config.scope_id, {})
     media_config = (
         config.public_projection.media
         if published and config.public_projection is not None
@@ -157,7 +158,7 @@ def browser_scope_record(
     record = {
         "scope_id": config.scope_id,
         "scope_type": config.scope_type,
-        "meta": str(raw_by_scope.get(config.scope_id, {}).get("meta") or "").strip(),
+        "meta": str(raw_scope.get("meta") or "").strip(),
         "viewer_base_url": normalize_viewer_base_url(config.viewer_base_url),
         "include_scope_param": config.include_scope_param is True,
         "default_doc_id": config.default_doc_id,
@@ -173,6 +174,9 @@ def browser_scope_record(
         "search_index_url": browser_search_index_url(config, published=published),
         "search": browser_search_policy_payload(config, published=published),
     }
+    emoji = str(raw_scope.get("emoji") or "").strip()
+    if emoji:
+        record["emoji"] = emoji
     sub_scopes = browser_sub_scope_records(config, published=published)
     backlinks_url = browser_docs_backlinks_url(config, published=published)
     if backlinks_url:

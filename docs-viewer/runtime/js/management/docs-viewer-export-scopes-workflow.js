@@ -51,6 +51,7 @@ export function docsViewerExportScopeRecords(options = {}) {
     return {
       scope: scope,
       label: cleanString(config && (config.label || config.scopeId || config.scope_id)) || scope,
+      emoji: cleanString(config && config.emoji),
       available: capability.available === true,
       reason: cleanString(capability.reason),
       selected: capability.available === true && scope === currentScope
@@ -70,10 +71,11 @@ function scopeChoiceMarkup(record) {
   var title = !record.available && record.reason
     ? ' title="' + escapeHtml(record.reason) + '"'
     : "";
+  var label = (record.emoji ? record.emoji + " " : "") + record.label;
   return "" +
     '<label class="docsViewer__field docsViewer__field--checkbox"' + title + ">" +
       '<input class="docsViewer__checkboxInput" type="checkbox" data-role="export-scope-choice" value="' + escapeHtml(record.scope) + '"' + checked + disabled + ">" +
-      '<span class="docsViewer__fieldLabel">' + escapeHtml(record.label) + "</span>" +
+      '<span class="docsViewer__fieldLabel">' + escapeHtml(label) + "</span>" +
     "</label>";
 }
 

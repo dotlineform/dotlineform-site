@@ -57,9 +57,9 @@ const capabilities = {
   }
 };
 const scopeConfigs = [
-  { scopeId: "analysis", meta: "Public" },
-  { scopeId: "notes", meta: "External local" },
-  { scopeId: "studio", meta: "Local" }
+  { scopeId: "analysis", meta: "Public", emoji: "🌐" },
+  { scopeId: "notes", meta: "External local", emoji: "💻" },
+  { scopeId: "studio", meta: "Local", emoji: "䷑" }
 ];
 
 assert.deepEqual(
@@ -72,6 +72,7 @@ assert.deepEqual(
     {
       scope: "analysis",
       label: "analysis",
+      emoji: "🌐",
       available: true,
       reason: "",
       selected: false
@@ -79,6 +80,7 @@ assert.deepEqual(
     {
       scope: "notes",
       label: "notes",
+      emoji: "💻",
       available: false,
       reason: "The Notes generated snapshot is unavailable.",
       selected: false
@@ -86,6 +88,7 @@ assert.deepEqual(
     {
       scope: "studio",
       label: "studio",
+      emoji: "䷑",
       available: true,
       reason: "",
       selected: true

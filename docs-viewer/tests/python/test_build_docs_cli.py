@@ -155,6 +155,10 @@ def test_python_docs_builder_writes_browser_configs_on_cli_write() -> None:
     with tempfile.TemporaryDirectory() as temp_path:
         root = Path(temp_path)
         prepare_repo(root)
+        config_path = root / "docs-viewer/config/scopes/docs_scopes.json"
+        scope_payload = read_json(config_path)
+        scope_payload["scopes"][0]["emoji"] = "䷑"  # type: ignore[index]
+        write_json(config_path, scope_payload)
         exit_code, _, _ = run_cli(root, ["--scope", "studio", "--write"])
 
         assert exit_code == 0
@@ -164,6 +168,7 @@ def test_python_docs_builder_writes_browser_configs_on_cli_write() -> None:
 
     assert browser_config["schema_version"] == "docs_viewer_config_v1"
     assert browser_config["scopes"][0]["scope_id"] == "studio"
+    assert browser_config["scopes"][0]["emoji"] == "䷑"
     assert browser_config["scopes"][0]["index_tree_url"] == "/docs-viewer/scopes/studio/generated/documents/index-tree.json"
     assert browser_config["scopes"][0]["recent_url"] == "/docs-viewer/scopes/studio/generated/documents/recent.json"
     assert browser_config["scopes"][0]["backlinks_url"] == (

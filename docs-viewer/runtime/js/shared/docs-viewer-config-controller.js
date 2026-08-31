@@ -160,10 +160,11 @@ export function initDocsViewerConfigController(context) {
     var subScopes = Array.isArray(rawScope.sub_scopes)
       ? rawScope.sub_scopes.map(normalizeSubScopeConfig).filter(Boolean)
       : [];
-    return {
+    var config = {
       scopeId: scopeId,
       scopeType: String(rawScope.scope_type || "").trim().toLowerCase(),
       meta: String(rawScope.meta || "").trim(),
+      emoji: String(rawScope.emoji || "").trim(),
       viewerBaseUrl: viewerBase,
       includeScopeParam: rawScope.include_scope_param === true,
       defaultDocId: String(rawScope.default_doc_id || "").trim(),
@@ -176,6 +177,9 @@ export function initDocsViewerConfigController(context) {
         return [config.subScope, config];
       }))
     };
+    var badge = scopeTypeBadge(config);
+    if (!config.emoji && badge) config.emoji = String(badge.emoji || "").trim();
+    return config;
   }
 
   function normalizeConfigEnvelope(payload) {
@@ -272,7 +276,8 @@ export function initDocsViewerConfigController(context) {
 
   function scopeOptionRecord(config) {
     var badge = scopeTypeBadge(config);
-    var emoji = badge ? String(badge.emoji || "").trim() : "";
+    var emoji = String(config.emoji || "").trim();
+    if (!emoji && badge) emoji = String(badge.emoji || "").trim();
     var meta = config.meta || (badge ? String(badge.label || "").trim() : "");
     return {
       value: config.scopeId,
