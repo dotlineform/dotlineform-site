@@ -16,7 +16,7 @@ import {
 
 var WORKFLOW_TEXT = {
   cancelButton: "Cancel",
-  selectionTitle: "Publish changes",
+  selectionTitle: "Publish",
   publishChecking: "Checking accepted-snapshot changes...",
   publishApplying: "Updating the accepted scope snapshot...",
   deployChecking: "Checking repository deployment changes...",
@@ -44,7 +44,7 @@ export function docsViewerPublishWorkflowLabel(selection) {
   var deployRepo = selection && selection.deploy_repo === true;
   if (publish && deployRepo) return "Publish And Deploy";
   if (publish) return "Publish";
-  if (deployRepo) return "Deploy Repo";
+  if (deployRepo) return "Copy to local repo";
   return "Select an operation";
 }
 
@@ -52,15 +52,11 @@ function operationChoiceMarkup(role, label, capability) {
   var available = capability && capability.available === true;
   var checked = available ? " checked" : "";
   var disabled = available ? "" : " disabled";
-  var reason = available ? "" : cleanString(capability && capability.reason);
   return "" +
-    '<label class="docsViewer__field docsViewer__field--checkbox">' +
+    '<label class="docsViewer__field docsViewer__field--checkbox docsViewer__publishOperationChoice">' +
       '<input class="docsViewer__checkboxInput" type="checkbox" data-role="' + escapeHtml(role) + '"' + checked + disabled + '>' +
       '<span class="docsViewer__fieldLabel">' + escapeHtml(label) + '</span>' +
-    '</label>' +
-    (reason
-      ? '<p class="docsViewer__modalNote muted small">' + escapeHtml(reason) + '</p>'
-      : "");
+    '</label>';
 }
 
 export function openDocsViewerPublishWorkflowSelection(options = {}) {
@@ -75,9 +71,8 @@ export function openDocsViewerPublishWorkflowSelection(options = {}) {
     deploy_repo: deployRepo.available === true
   };
   var bodyHtml =
-    '<p class="docsViewer__modalNote muted small">Choose the scope operation or operations to review.</p>' +
     operationChoiceMarkup("publish-operation", "Publish", publish) +
-    operationChoiceMarkup("deploy-repo-operation", "Deploy Repo", deployRepo);
+    operationChoiceMarkup("deploy-repo-operation", "Copy to local repo", deployRepo);
 
   return openDocsViewerManagementModal({
     root: options.root,
@@ -119,7 +114,7 @@ export function openDocsViewerPublishWorkflowSelection(options = {}) {
         deploy_repo: Boolean(deployInput && deployInput.checked && !deployInput.disabled)
       };
       if (!selection.publish && !selection.deploy_repo) {
-        api.setStatus("Select Publish, Deploy Repo, or both.");
+        api.setStatus("Select Publish, Copy to local repo, or both.");
         return false;
       }
       return { confirmed: true, selection: selection };

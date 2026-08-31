@@ -669,6 +669,14 @@
   gap: 0.45rem;
 }
 
+.docsViewer__publishOperationChoice{
+  padding-left: 0.25rem;
+}
+
+.docsViewer__publishOperationChoice > .docsViewer__checkboxInput:disabled + .docsViewer__fieldLabel{
+  color: var(--docs-viewer-disabled);
+}
+
 .docsViewer__fieldLabel{
   min-width: 0;
   font-size: var(--docs-viewer-font-small, var(--font-small, 0.875rem));

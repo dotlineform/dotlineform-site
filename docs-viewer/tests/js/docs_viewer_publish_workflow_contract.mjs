@@ -55,7 +55,7 @@ assert.equal(
 );
 assert.equal(
   workflow.docsViewerPublishWorkflowLabel({ publish: false, deploy_repo: true }),
-  "Deploy Repo"
+  "Copy to local repo"
 );
 
 const revision = "sha256:" + "a".repeat(64);
