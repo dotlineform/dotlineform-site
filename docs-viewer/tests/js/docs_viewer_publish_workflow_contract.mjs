@@ -113,10 +113,6 @@ const partial = await workflow.runManagedDocsPublishWorkflow({
         target_published_revision: revision
       };
     },
-    async confirmPublish() {
-      calls.push("publish-confirm");
-      return true;
-    },
     async applyPublish() {
       calls.push("publish-apply");
       return {
@@ -149,7 +145,6 @@ const partial = await workflow.runManagedDocsPublishWorkflow({
 
 assert.deepEqual(calls, [
   "publish-preview",
-  "publish-confirm",
   "publish-apply",
   "deploy-preview",
   "deploy-confirm",
@@ -204,9 +199,6 @@ const publishFailure = await workflow.runManagedDocsPublishWorkflow({
         removed_count: 0,
         target_published_revision: revision
       };
-    },
-    async confirmPublish() {
-      return true;
     },
     async applyPublish() {
       throw new Error("simulated Publish failure");

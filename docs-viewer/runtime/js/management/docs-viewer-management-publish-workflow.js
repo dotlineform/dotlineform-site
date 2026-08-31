@@ -126,33 +126,6 @@ export function openDocsViewerPublishWorkflowSelection(options = {}) {
   });
 }
 
-export function docsViewerPublishConfirmBody(preview) {
-  var lines = [
-    "Replace this scope's accepted snapshot with the reviewed generated output?",
-    "Documents accepted: " + Number(preview && preview.document_count || 0),
-    "Documents excluded: " + Number(preview && preview.excluded_document_count || 0),
-    "Files added: " + Number(preview && preview.added_count || 0),
-    "Files changed: " + Number(preview && preview.changed_count || 0),
-    "Stale files removed: " + Number(preview && preview.removed_count || 0),
-    "Byte-identical files left alone: " + Number(preview && preview.unchanged_count || 0),
-    "Generated revision: " + cleanString(preview && preview.generated_revision),
-    "Published revision after apply: " + cleanString(preview && preview.target_published_revision)
-  ];
-  [
-    ["Add", preview && preview.added],
-    ["Change", preview && preview.changed],
-    ["Remove", preview && preview.removed]
-  ].forEach(function (group) {
-    var paths = Array.isArray(group[1]) ? group[1] : [];
-    if (!paths.length) return;
-    lines.push(group[0] + " paths:");
-    paths.forEach(function (path) {
-      lines.push("- " + cleanString(path));
-    });
-  });
-  return lines.join("\n");
-}
-
 export function docsViewerPublishHasChanges(preview) {
   return Number(preview && preview.added_count || 0)
     + Number(preview && preview.changed_count || 0)
@@ -253,17 +226,6 @@ function acceptedPublishRevision(preview, payload) {
   return actual;
 }
 
-function defaultConfirmPublish(root, preview) {
-  return openDocsViewerConfirmModal({
-    root: root,
-    title: "Publish accepted scope snapshot",
-    body: docsViewerPublishConfirmBody(preview),
-    size: "wide",
-    primaryLabel: "Publish",
-    cancelLabel: WORKFLOW_TEXT.cancelButton
-  });
-}
-
 function defaultConfirmDeployRepo(root, preview) {
   return openDocsViewerConfirmModal({
     root: root,
@@ -305,9 +267,6 @@ export async function runManagedDocsPublishWorkflow(options = {}) {
   var applyPublish = operations.applyPublish || applyManagedDocsPublish;
   var previewDeployRepo = operations.previewDeployRepo || previewManagedDocsDeployRepo;
   var applyDeployRepo = operations.applyDeployRepo || applyManagedDocsDeployRepo;
-  var confirmPublish = operations.confirmPublish || function (preview) {
-    return defaultConfirmPublish(options.root, preview);
-  };
   var confirmDeployRepo = operations.confirmDeployRepo || function (preview) {
     return defaultConfirmDeployRepo(options.root, preview);
   };
@@ -323,13 +282,6 @@ export async function runManagedDocsPublishWorkflow(options = {}) {
       if (!docsViewerPublishHasChanges(publishPreview)) {
         result.publish.status = "unchanged";
       } else {
-        notifyPhase(options, "publish_confirm", false, "");
-        if (!await confirmPublish(publishPreview)) {
-          result.publish.status = "cancelled";
-          markDeployRepoNotRun(result);
-          result.cancelled = true;
-          return result;
-        }
         notifyPhase(options, "publish_apply", true, WORKFLOW_TEXT.publishApplying);
         var publishPayload = await applyPublish(publishPreview, clientOptions);
         result.publish.payload = publishPayload;
