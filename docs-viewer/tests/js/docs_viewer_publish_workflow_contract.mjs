@@ -157,6 +157,13 @@ assert.match(
   workflow.docsViewerPublishWorkflowMessage(partial),
   /^Publish: complete\. Deploy Repo: incomplete\./
 );
+assert.equal(
+  workflow.docsViewerPublishWorkflowMessage({
+    publish: { status: "cancelled" },
+    deploy_repo: { status: "unselected" }
+  }),
+  ""
+);
 
 const retryCalls = [];
 const retry = await workflow.runManagedDocsPublishWorkflow({

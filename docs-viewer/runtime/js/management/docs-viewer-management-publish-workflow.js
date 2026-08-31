@@ -345,10 +345,9 @@ export async function runManagedDocsPublishWorkflow(options = {}) {
 
 function operationMessage(label, outcome) {
   var status = cleanString(outcome && outcome.status);
-  if (status === "unselected" || status === "pending") return "";
+  if (status === "unselected" || status === "pending" || status === "cancelled") return "";
   if (status === "applied") return label + ": complete.";
   if (status === "unchanged") return label + ": already current.";
-  if (status === "cancelled") return label + ": cancelled.";
   if (status === "not_run") return label + ": not run.";
   if (status === "partial") {
     return label + ": incomplete. " + cleanString(outcome.error);
