@@ -67,7 +67,7 @@ def write_scope_config(root: Path) -> None:
                 ),
                 docs_scope_record(
                     "external",
-                    scope_type="local_external",
+                    scope_type="local",
                     scope_root_provider="external_local",
                     default_doc_id="external",
                 ),
@@ -506,6 +506,9 @@ def test_render_doc_page_and_rewrite_internal_links() -> None:
     assert "<h1>Source Heading</h1>" in html
     assert 'href="child.html"' in html
     assert 'href="../styles.css"' in html
+    reference = '<code>[Parent &amp; Root](/docs/?scope=studio&amp;doc=parent)</code>'
+    assert html.index("Back to index") < html.index(reference)
+    assert html.index(reference) < html.index('<hr class="docsExport__documentFooterRule">')
 
 
 def test_render_doc_page_preserves_inline_mermaid_code_without_runtime() -> None:
@@ -537,17 +540,16 @@ def test_index_page_renders_tree_links() -> None:
     html = exporter.render_index_html(
         {"docs": [{"doc_id": "parent", "title": "Parent", "children": [{"doc_id": "child", "title": "Child"}]}]},
         scope="studio",
-        default_doc_id="parent",
         document_count=2,
     )
 
     assert 'href="docs/parent.html"' in html
     assert 'href="docs/child.html"' in html
     assert "2 documents exported" in html
+    assert "Default document:" not in html
     assert "1 document exported" in exporter.render_index_html(
         {"docs": [{"doc_id": "parent", "title": "Parent"}]},
         scope="studio",
-        default_doc_id="parent",
         document_count=1,
     )
 

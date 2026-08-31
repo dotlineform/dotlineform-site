@@ -181,7 +181,7 @@ def test_markdown_import_create_returns_external_workspace_relative_path(tmp_pat
             [
                 docs_scope_record(
                     "notes",
-                    scope_type="local_external",
+                    scope_type="local",
                     scope_root_provider="external_local",
                 )
             ],

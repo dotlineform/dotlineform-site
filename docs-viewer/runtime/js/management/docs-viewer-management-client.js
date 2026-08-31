@@ -58,6 +58,17 @@ export function readManagementCapabilities(options) {
   return fetchManagementJson("/capabilities", "GET", undefined, options);
 }
 
+export function readManagedDocsIndex(scope, options) {
+  var scopeId = String(scope || "").trim().toLowerCase();
+  if (!scopeId) return Promise.reject(new Error("Docs scope is required."));
+  return fetchManagementJson(
+    "/docs/index-tree?scope=" + encodeURIComponent(scopeId),
+    "GET",
+    undefined,
+    options
+  );
+}
+
 export function encodeDecodedLocalTarget(target) {
   if (
     typeof target !== "string"

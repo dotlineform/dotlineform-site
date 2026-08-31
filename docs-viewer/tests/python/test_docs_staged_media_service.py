@@ -287,7 +287,7 @@ def test_add_image_uses_external_scope_owned_media_root(monkeypatch: pytest.Monk
             [
                 docs_scope_record(
                     "notes",
-                    scope_type="local_external",
+                    scope_type="local",
                     scope_root_provider="external_local",
                     default_doc_id="notes",
                 )

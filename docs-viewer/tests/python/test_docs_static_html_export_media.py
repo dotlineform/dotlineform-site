@@ -170,7 +170,7 @@ def test_external_local_plan_uses_scope_location_without_provider_search(
         monkeypatch,
         docs_scope_record(
             "external",
-            scope_type="local_external",
+            scope_type="local",
             scope_root_provider="external_local",
         ),
     )

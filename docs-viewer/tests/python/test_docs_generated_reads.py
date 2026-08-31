@@ -58,7 +58,7 @@ def external_scope_config(scope_id: str, external_root: Path) -> dict[str, objec
     del external_root
     return docs_scope_record(
         scope_id,
-        scope_type="local_external",
+        scope_type="local",
         scope_root_provider="external_local",
         default_doc_id=scope_id,
     )

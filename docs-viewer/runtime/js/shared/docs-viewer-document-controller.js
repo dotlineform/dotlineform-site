@@ -201,7 +201,7 @@ export function initDocsViewerDocumentController(context) {
   function mountInlineMermaid(doc, payload, mountGeneration) {
     var adapter = context.inlineMermaidAdapter;
     var scopeType = currentScopeType();
-    var managedLocalScope = scopeType === "local" || scopeType === "local_external";
+    var managedLocalScope = scopeType === "local";
     if (!managedLocalScope || !adapter || typeof adapter.mountDocument !== "function") return;
     Promise.resolve(adapter.mountDocument({
       content: content,

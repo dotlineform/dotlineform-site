@@ -989,7 +989,7 @@ def test_apply_copy_writes_external_local_target_documents_and_media(
     monkeypatch.setenv("DOTLINEFORM_PROJECTS_BASE_DIR", str(projects_base))
     target_scope = base_scope(
         "target",
-        scope_type="local_external",
+        scope_type="local",
         scope_root_provider="external_local",
         media_types=("img",),
     )

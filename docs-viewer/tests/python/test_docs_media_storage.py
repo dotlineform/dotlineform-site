@@ -215,7 +215,7 @@ def public_scope_record(*, media_provider: str = R2_PROVIDER) -> dict[str, objec
 def external_scope_record(scope: str = "private") -> dict[str, object]:
     return docs_scope_record(
         scope,
-        scope_type="local_external",
+        scope_type="local",
         scope_root_provider="external_local",
         default_doc_id=scope,
     )
@@ -389,7 +389,7 @@ def test_local_media_route_confines_repo_and_external_scope_assets(tmp_path: Pat
     external_source = external_root / "scopes/private/source"
     external_config = scope_config(
         "private",
-        scope_type="local_external",
+        scope_type="local",
         scope_root_provider=EXTERNAL_LOCAL_PROVIDER,
         media_provider=EXTERNAL_LOCAL_PROVIDER,
         source=external_source,
@@ -414,14 +414,14 @@ def test_configured_local_media_directories_skip_missing_external_scope(tmp_path
         "studio": scope_config("studio", scope_type="local", media_provider=REPOSITORY_PROVIDER),
         "notes": scope_config(
             "notes",
-            scope_type="local_external",
+            scope_type="local",
             scope_root_provider=EXTERNAL_LOCAL_PROVIDER,
             media_provider=EXTERNAL_LOCAL_PROVIDER,
             source=external_source,
         ),
         "missing": scope_config(
             "missing",
-            scope_type="local_external",
+            scope_type="local",
             scope_root_provider=EXTERNAL_LOCAL_PROVIDER,
             media_provider=EXTERNAL_LOCAL_PROVIDER,
             source=missing_external_root / "source",

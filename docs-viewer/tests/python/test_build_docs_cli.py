@@ -105,7 +105,7 @@ def test_targeted_local_docs_build_does_not_resolve_unselected_external_scope() 
         scope_payload["scopes"].append(  # type: ignore[union-attr]
             docs_scope_record(
                 "private",
-                scope_type="local_external",
+                scope_type="local",
                 scope_root_provider="external_local",
                 default_doc_id="private",
             )
@@ -113,7 +113,7 @@ def test_targeted_local_docs_build_does_not_resolve_unselected_external_scope() 
         write_json(config_path, scope_payload)
         retained_private_record = {
             "scope_id": "private",
-            "scope_type": "local_external",
+            "scope_type": "local",
             "meta": "retained external browser record",
         }
         write_json(

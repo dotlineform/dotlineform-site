@@ -858,7 +858,7 @@ def test_external_scope_default_doc_delete_uses_workspace_relative_path(tmp_path
                 "scopes": [
                     docs_scope_record(
                         "dlf",
-                        scope_type="local_external",
+                        scope_type="local",
                         scope_root_provider="external_local",
                         default_doc_id="dlf",
                     )

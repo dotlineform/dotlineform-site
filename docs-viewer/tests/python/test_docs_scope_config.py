@@ -80,6 +80,18 @@ def test_docs_scope_config_rejects_retired_media_source_root() -> None:
             docs_scope_config.load_docs_scope_configs(repo_root)
 
 
+def test_docs_scope_config_rejects_retired_local_external_scope_type() -> None:
+    with make_repo() as temp_path:
+        repo_root = Path(temp_path)
+        write_scope_record(
+            repo_root,
+            docs_scope_record("studio", scope_type="local_external"),
+        )
+
+        with pytest.raises(ValueError, match="scope_type must be one of: local, public"):
+            docs_scope_config.load_docs_scope_configs(repo_root)
+
+
 def test_docs_scope_config_normalizes_search_fields() -> None:
     with make_repo() as temp_path:
         repo_root = Path(temp_path)
@@ -136,7 +148,7 @@ def test_docs_scope_config_selected_local_scope_does_not_resolve_external_worksp
                     docs_scope_record("studio", default_doc_id="studio"),
                     docs_scope_record(
                         "private",
-                        scope_type="local_external",
+                        scope_type="local",
                         scope_root_provider="external_local",
                         default_doc_id="private",
                     ),
@@ -182,7 +194,7 @@ def test_docs_scope_config_public_only_does_not_resolve_external_workspace() -> 
                     ),
                     docs_scope_record(
                         "private",
-                        scope_type="local_external",
+                        scope_type="local",
                         scope_root_provider="external_local",
                         default_doc_id="private",
                     ),

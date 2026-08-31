@@ -67,7 +67,7 @@ def write_external_scope_config(root: Path, external_root: Path) -> None:
     del external_root
     scope = docs_scope_record(
         "private",
-        scope_type="local_external",
+        scope_type="local",
         scope_root_provider="external_local",
         default_doc_id="private",
     )
@@ -331,7 +331,7 @@ def test_selected_scope_search_build_does_not_resolve_unselected_external_scope(
                     ),
                     docs_scope_record(
                         "private",
-                        scope_type="local_external",
+                        scope_type="local",
                         scope_root_provider="external_local",
                         default_doc_id="private",
                     ),

@@ -768,6 +768,19 @@ pre code {
 .docsExport__meta {
   color: var(--muted);
 }
+
+.docsExport__referenceToken {
+  margin-top: 0.35rem;
+  color: var(--muted);
+  font-size: 0.8rem;
+  overflow-wrap: anywhere;
+}
+
+.docsExport__documentFooterRule {
+  margin-top: 1.5rem;
+  border: 0;
+  border-top: 1px solid var(--border);
+}
 """
 
 
@@ -794,12 +807,6 @@ def render_portable_styles_css() -> str:
   font-style: italic;
 }
 
-.docsExport__referenceToken {
-  margin-top: 0.35rem;
-  color: var(--muted);
-  font-size: 0.8rem;
-  overflow-wrap: anywhere;
-}
 """
 
 
@@ -833,16 +840,9 @@ def render_tree_rows(
     return "".join(parts)
 
 
-def render_index_html(index_tree: dict[str, Any], *, scope: str, default_doc_id: str, document_count: int) -> str:
+def render_index_html(index_tree: dict[str, Any], *, scope: str, document_count: int) -> str:
     title = f"{scope} docs"
     document_label = "document" if document_count == 1 else "documents"
-    default_html = ""
-    if default_doc_id:
-        safe_default = validate_doc_id_for_html_filename(default_doc_id)
-        default_html = (
-            f'<p class="docsExport__meta">Default document: '
-            f'<a href="docs/{html.escape(safe_default, quote=True)}.html">{html.escape(safe_default)}</a></p>'
-        )
     return "\n".join(
         [
             "<!doctype html>",
@@ -857,7 +857,6 @@ def render_index_html(index_tree: dict[str, Any], *, scope: str, default_doc_id:
             "  <main>",
             f"    <h1>{html.escape(title)}</h1>",
             f'    <p class="docsExport__meta">{document_count} {document_label} exported from generated Docs Viewer payloads.</p>',
-            f"    {default_html}",
             f"    {render_tree_rows(index_tree.get('docs'))}",
             "  </main>",
             "</body>",
@@ -901,6 +900,9 @@ def render_doc_html(
             '  <nav><a href="../index.html">Index</a></nav>',
             "  <main>",
             f"    {content_html}",
+            '    <p class="docsExport__meta"><a href="../index.html">Back to index</a></p>',
+            f'    <p class="docsExport__referenceToken"><code>{html.escape(markdown_document_link(payload, scope=scope))}</code></p>',
+            '    <hr class="docsExport__documentFooterRule">',
             "  </main>",
             "</body>",
             "</html>",
@@ -990,7 +992,6 @@ def compute_snapshot_files(plan: StaticHtmlSnapshotPlan, *, generated_at: str) -
         Path("index.html"): render_index_html(
             plan.index_tree,
             scope=plan.scope,
-            default_doc_id=plan.default_doc_id,
             document_count=len(plan.doc_ids),
         ).encode("utf-8"),
         Path("styles.css"): render_styles_css().encode("utf-8"),

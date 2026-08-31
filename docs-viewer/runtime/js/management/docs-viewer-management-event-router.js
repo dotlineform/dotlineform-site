@@ -108,6 +108,7 @@ export function createDocsViewerManagementEventRouter(options = {}) {
     var commandsByAction = new Map([
       ["rebuild-docs", ["rebuild", { hideContextMenu: true, hideManageActionsMenu: true }]],
       ["import", ["openImport", {}]],
+      ["export-scopes", ["exportScopes", { hideContextMenu: true, hideManageActionsMenu: true }]],
       ["settings", ["openSettings", {}]],
       ["publish-docs", ["publish", { hideContextMenu: true, hideManageActionsMenu: true }]],
       ["new", ["createDoc", { hideContextMenu: true, hideManageActionsMenu: true }]],

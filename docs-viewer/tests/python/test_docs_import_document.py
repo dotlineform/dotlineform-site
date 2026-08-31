@@ -61,7 +61,7 @@ def test_projects_create_plan_accepts_only_custom_folder_path(
             [
                 docs_scope_record(
                     "dotlineform",
-                    scope_type="local_external",
+                    scope_type="local",
                     scope_root_provider="external_local",
                     sub_scopes=[
                         docs_sub_scope_record(

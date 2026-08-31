@@ -7,10 +7,6 @@ export var DOCS_VIEWER_CODE_CONFIG = {
     local: {
       label: "Local",
       emoji: "💻"
-    },
-    local_external: {
-      label: "External local",
-      emoji: "🧪"
     }
   },
   uiStatuses: [

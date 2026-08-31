@@ -9,6 +9,10 @@ import {
   createDocsViewerManagementEventRouter
 } from "./docs-viewer-management-event-router.js";
 import {
+  docsViewerExportScopesAvailable,
+  runManagedDocsExportScopesWorkflow
+} from "./docs-viewer-export-scopes-workflow.js";
+import {
   createDocsViewerManagementInteractionController
 } from "./docs-viewer-management-interactions.js";
 import {
@@ -176,6 +180,7 @@ export function initDocsViewerManagement(context) {
   var manageImportButton = document.getElementById("docsViewerManageImportButton");
   var manageToolbarImportButton = document.getElementById("docsViewerManageToolbarImportButton");
   var manageImportButtons = [manageImportButton, manageToolbarImportButton].filter(Boolean);
+  var manageExportScopesButton = document.getElementById("docsViewerManageExportScopesButton");
   var manageNewButton = document.getElementById("docsViewerManageNewButton");
   var importRoot = shellRef("importRoot", "docsHtmlImportRoot");
   var importBootStatus = shellRef("importBootStatus", "docsHtmlImportBootStatus");
@@ -192,6 +197,7 @@ export function initDocsViewerManagement(context) {
   var projectedReportControls = null;
   var sourceSessionReportActive = false;
   var subscopeReportState = null;
+  var exportScopesWorkflowActive = false;
   var indexController = createDocsViewerManagementIndexController({
     root: root,
     nav: nav,
@@ -275,6 +281,45 @@ export function initDocsViewerManagement(context) {
       destination: currentImportDisplayContext(),
       destinationLabel: currentImportDisplayContextLabel(),
       restoreFocus: eventDetail.actionTarget || eventDetail.target || null
+    });
+  }
+
+  function exportScopesAvailable() {
+    return docsViewerExportScopesAvailable({
+      capabilities: management.managementCapabilities,
+      currentScope: viewerScope(),
+      scopeConfigs: scopeConfig.scopeConfigs
+    });
+  }
+
+  function openExportScopes() {
+    if (exportScopesWorkflowActive || management.managementBusy) {
+      return Promise.resolve(null);
+    }
+    exportScopesWorkflowActive = true;
+    renderManagementUi();
+    return runManagedDocsExportScopesWorkflow({
+      root: root,
+      restoreFocus: manageActionsButton,
+      capabilities: management.managementCapabilities,
+      clientOptions: managementClientOptions(),
+      currentScope: viewerScope(),
+      scopeConfigs: scopeConfig.scopeConfigs,
+      callbacks: {
+        render: renderManagementUi,
+        setBusy: setManagementBusy,
+        setMessage: setManagementMessage
+      }
+    }).catch(function (error) {
+      setManagementMessage(
+        error && error.message ? error.message : "Export Scopes failed.",
+        true
+      );
+      return null;
+    }).finally(function () {
+      exportScopesWorkflowActive = false;
+      setManagementBusy(false);
+      renderManagementUi();
     });
   }
 
@@ -664,6 +709,7 @@ export function initDocsViewerManagement(context) {
       management.managementCapabilities,
       viewerScope()
     );
+    var exportScopesActionAvailable = exportScopesAvailable();
     var themeIsDark = document.documentElement && document.documentElement.getAttribute("data-theme") === "dark";
 
     projectAppControl("manage-import", {
@@ -704,6 +750,17 @@ export function initDocsViewerManagement(context) {
     manageImportButtons.forEach(function (button) {
       button.disabled = management.managementBusy || !management.managementAvailable;
     });
+    if (manageExportScopesButton) {
+      var exportScopesDisabled = management.managementBusy
+        || exportScopesWorkflowActive
+        || !exportScopesActionAvailable;
+      var exportScopesLabel = exportScopesActionAvailable
+        ? "Export"
+        : "Export is unavailable for registered scopes.";
+      manageExportScopesButton.disabled = exportScopesDisabled;
+      manageExportScopesButton.title = exportScopesLabel;
+      manageExportScopesButton.setAttribute("aria-label", exportScopesLabel);
+    }
     if (manageSettingsButton) {
       manageSettingsButton.disabled = management.managementBusy || !management.managementAvailable;
     }
@@ -930,6 +987,7 @@ export function initDocsViewerManagement(context) {
       deleteDoc: function () { actionController.handleDeleteDoc(); },
       deleteScope: function () { scopeLifecycleController.deleteScope(); },
       deleteSubScope: function () { scopeLifecycleController.deleteSubScope(); },
+      exportScopes: openExportScopes,
       openImport: openAppImport,
       openSettings: function () { settingsWorkflow.open(); },
       publish: function () { actionController.handlePublishDocs(); },

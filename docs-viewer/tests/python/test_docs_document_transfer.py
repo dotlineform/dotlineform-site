@@ -1371,7 +1371,7 @@ def test_public_scope_managed_source_to_external_local_target_is_provider_neutra
     )
     target_scope = docs_scope_record(
         "target",
-        scope_type="local_external",
+        scope_type="local",
         scope_root_provider="external_local",
         viewer_base_url="/docs/",
         include_scope_param=True,
@@ -1422,7 +1422,7 @@ def test_external_local_source_can_plan_move_to_local_target(
     monkeypatch.setenv("DOTLINEFORM_PROJECTS_BASE_DIR", str(projects_base))
     source_scope = docs_scope_record(
         "source",
-        scope_type="local_external",
+        scope_type="local",
         scope_root_provider="external_local",
         viewer_base_url="/docs/",
         include_scope_param=True,

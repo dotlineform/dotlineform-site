@@ -18,6 +18,12 @@ var MANAGEMENT_ACTION_MENU_ITEMS = [
     label: "Import"
   },
   {
+    id: "docsViewerManageExportScopesButton",
+    actionId: ACTION_IDS.EXPORT_SCOPES,
+    emoji: "⬇️",
+    label: "Export"
+  },
+  {
     id: "docsViewerManageNewScopeButton",
     actionId: ACTION_IDS.NEW_SCOPE,
     emoji: "🗂️",

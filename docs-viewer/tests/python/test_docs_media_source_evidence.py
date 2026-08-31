@@ -128,7 +128,7 @@ def test_external_scope_keeps_evidence_in_its_external_source_root(
         [
             docs_scope_record(
                 "dotlineform",
-                scope_type="local_external",
+                scope_type="local",
                 scope_root_provider="external_local",
             )
         ],
