@@ -18,20 +18,9 @@ function cleanString(value) {
   return String(value || "").trim();
 }
 
-function requestedSnapshotRole() {
-  try {
-    return new URL(window.location.href).searchParams.get("snapshot") === "published"
-      ? "published"
-      : "generated";
-  } catch (_error) {
-    return "generated";
-  }
-}
-
 function reportServiceOptions(baseUrl) {
   return {
-    baseUrl: baseUrl,
-    snapshotRole: requestedSnapshotRole()
+    baseUrl: baseUrl
   };
 }
 

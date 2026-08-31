@@ -105,10 +105,6 @@ export function createDocsViewerManagementEventRouter(options = {}) {
       toggleManageActionsMenu();
       return true;
     }
-    if (controlId === "manage-snapshot" && detail.eventType === "change") {
-      invoke("selectSnapshot", {}, detail);
-      return true;
-    }
     var commandsByAction = new Map([
       ["rebuild-docs", ["rebuild", { hideContextMenu: true, hideManageActionsMenu: true }]],
       ["import", ["openImport", {}]],

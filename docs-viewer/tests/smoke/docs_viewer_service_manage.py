@@ -32,7 +32,7 @@ Isolated Docs Viewer Manage route fixture.
 """
 
 
-def prepare_external_studio_snapshot() -> None:
+def prepare_external_studio_generated_data() -> None:
     projects_base = Path(os.environ["DOTLINEFORM_PROJECTS_BASE_DIR"])
     scope_root = projects_base / "docs-viewer/scopes/studio"
     documents_root = scope_root / "source/documents"
@@ -51,13 +51,6 @@ def prepare_external_studio_snapshot() -> None:
 
     from docs_scope_build_manifest import write_build_manifest  # noqa: PLC0415
     from docs_scope_config import load_docs_scope_configs  # noqa: PLC0415
-    from docs_scope_publish import (  # noqa: PLC0415
-        PUBLISH_MANIFEST_FILENAME,
-        PUBLISH_MANIFEST_SCHEMA_VERSION,
-        file_record,
-        files_revision,
-        utc_now,
-    )
 
     tree = {
         "schema": "docs_index_tree_v1",
@@ -104,37 +97,13 @@ def prepare_external_studio_snapshot() -> None:
             encoding="utf-8",
         )
 
-    for role in ("generated", "published"):
-        role_root = scope_root / role
-        write_json(role_root / "documents/index-tree.json", tree)
-        write_json(role_root / f"documents/by-id/{DOC_ID}.json", document)
-        write_json(role_root / "documents/recent.json", recent)
-        write_json(role_root / "search/index.json", search)
+    generated_root = scope_root / "generated"
+    write_json(generated_root / "documents/index-tree.json", tree)
+    write_json(generated_root / f"documents/by-id/{DOC_ID}.json", document)
+    write_json(generated_root / "documents/recent.json", recent)
+    write_json(generated_root / "search/index.json", search)
     config = load_docs_scope_configs(repo_root, scope_ids=("studio",))["studio"]
     write_build_manifest(repo_root, config)
-
-    published_root = scope_root / "published"
-    published_files = {
-        path.relative_to(published_root): path.read_bytes()
-        for path in sorted(published_root.rglob("*"))
-        if path.is_file() and path.name != PUBLISH_MANIFEST_FILENAME
-    }
-    records = [
-        file_record(path.as_posix(), data)
-        for path, data in sorted(published_files.items(), key=lambda item: item[0].as_posix())
-    ]
-    write_json(
-        published_root / PUBLISH_MANIFEST_FILENAME,
-        {
-            "schema_version": PUBLISH_MANIFEST_SCHEMA_VERSION,
-            "scope": "studio",
-            "completed_at": utc_now(),
-            "generated_revision": "manage-smoke",
-            "published_revision": files_revision(published_files),
-            "file_count": len(records),
-            "files": records,
-        },
-    )
 
 
 def manage_route_state(page) -> dict[str, object]:
@@ -157,10 +126,7 @@ def manage_route_state(page) -> dict[str, object]:
                 generatedBaseUrl: route.services?.generated_data?.base_url || '',
                 sourceBaseUrl: route.services?.source?.base_url || '',
                 managementBaseUrl: route.services?.management?.base_url || '',
-                snapshotValue: root.querySelector('#docsViewerSnapshotSelect')?.value || '',
-                snapshotOptions: Array.from(
-                    root.querySelector('#docsViewerSnapshotSelect')?.options || []
-                ).map(option => option.value)
+                snapshotSelectPresent: Boolean(root.querySelector('#docsViewerSnapshotSelect'))
             };
         }"""
     )
@@ -179,37 +145,10 @@ def assert_manage_route_boundary(state: dict[str, object], base_url: str) -> Non
         "generatedBaseUrl": base_url,
         "sourceBaseUrl": base_url,
         "managementBaseUrl": base_url,
-        "snapshotValue": "generated",
-        "snapshotOptions": ["generated", "published"],
+        "snapshotSelectPresent": False,
     }
     if state != expected:
         raise AssertionError(f"Docs Viewer Manage route boundary changed: {state!r}")
-
-
-def assert_available_published_snapshot(page, timeout_ms: int, wait_for_document) -> None:
-    with page.expect_response(
-        lambda response: "/docs/published/index-tree?" in response.url,
-        timeout=timeout_ms,
-    ) as response_info:
-        page.locator("#docsViewerSnapshotSelect").select_option("published")
-    if response_info.value.status != 200:
-        raise AssertionError(
-            f"Published snapshot index returned HTTP {response_info.value.status}."
-        )
-    page.wait_for_url("**snapshot=published**", timeout=timeout_ms)
-    wait_for_document(page, DOC_TITLE, timeout_ms)
-    state = page.locator("#docsViewerRoot").evaluate(
-        """root => ({
-            snapshot: root.querySelector('#docsViewerSnapshotSelect')?.value || '',
-            status: root.querySelector('#docsViewerStatus')?.textContent || '',
-            nav: root.querySelector('#docsViewerNav')?.textContent || '',
-            content: root.querySelector('#docsViewerContent')?.textContent || ''
-        })"""
-    )
-    if state["snapshot"] != "published":
-        raise AssertionError(f"Published snapshot selector is mislabeled: {state!r}")
-    if DOC_TITLE not in state["nav"] and DOC_TITLE not in state["content"]:
-        raise AssertionError(f"Published snapshot did not render the requested document: {state!r}")
 
 
 def run_manage_smoke(projects_base: Path, *, timeout_ms: int) -> None:
@@ -220,7 +159,7 @@ def run_manage_smoke(projects_base: Path, *, timeout_ms: int) -> None:
     base_url = ""
     errors: list[str] = []
     try:
-        prepare_external_studio_snapshot()
+        prepare_external_studio_generated_data()
         from docs_viewer_route_smoke_support import (  # noqa: PLC0415
             start_docs_viewer_server,
             wait_for_document,
@@ -238,7 +177,6 @@ def run_manage_smoke(projects_base: Path, *, timeout_ms: int) -> None:
                 )
                 wait_for_document(page, DOC_TITLE, timeout_ms)
                 assert_manage_route_boundary(manage_route_state(page), base_url)
-                assert_available_published_snapshot(page, timeout_ms, wait_for_document)
             finally:
                 browser.close()
         if errors:
