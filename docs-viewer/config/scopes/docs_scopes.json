@@ -275,7 +275,6 @@
       "scope_id": "processing",
       "scope_type": "local",
       "meta": "local management",
-      "emoji": "䷑",
       "source": {},
       "search_fields": [
         "title",
