@@ -21,6 +21,7 @@
 
 - `processing/` is tracked in this Git repository but is currently a separate Java/Processing project, not a module of the website or the deployed `site/` artifact.
 - Its documentation belongs to the `processing` Docs Viewer scope, and it is expected to acquire its own build, test, and development lifecycle. Until that lifecycle is defined, do not apply website runtime, build, test, or release assumptions to it implicitly; treat any integration with the website as an explicit cross-project change.
+- Processing work media belongs under the explicitly configured `$DOTLINEFORM_PROJECTS_BASE_DIR/processing/<project-id>/` boundary. A GUI-launched sketch must use its project-local portable configuration, validate the exact project identity, and fail visibly without falling back to the sketch or repository.
 
 ## Documentation And Generated Payloads
 

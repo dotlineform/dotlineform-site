@@ -4,6 +4,9 @@
 # Processing compiler output
 processing/projects/**/out/
 
+# Processing project-local output configuration
+processing/projects/InkEngine/data/output-config.local.json
+
 # Python
 .venv/
 

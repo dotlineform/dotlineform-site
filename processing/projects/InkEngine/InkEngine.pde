@@ -3,13 +3,26 @@ import java.util.Collections;
 import java.util.Comparator;
 import controlP5.*;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.Set;
 import java.lang.reflect.Field;
 
 ControlP5 cp5;
 
 PFont normalFont;
 PFont boldFont;
+PFont outputEvidenceFont;
+
+final String OUTPUT_CONFIG_FILENAME = "output-config.local.json";
+final int OUTPUT_EVIDENCE_GLYPH = 0x4DD1;
+final Set<String> OUTPUT_CONFIG_KEYS = new HashSet<String>(
+  Arrays.asList("projects_base_dir", "project_id")
+);
+
+OutputWorkspace outputWorkspace;
+String outputStatusMessage = "Output configuration has not been loaded.";
+boolean outputStatusError = true;
 
 int controlPoints;     // Number of control points
 boolean debug_showGeometry = false;   // draw any control points or boundaries. note: they will get cleared anyway unless drawn in draw()
@@ -224,6 +237,8 @@ void setup() {
   background(255);
   randomSeed(millis());
 
+  loadOutputConfiguration();
+
   // comment out depending upon whether design or create artwork
   setupDesign();
 
@@ -238,6 +253,7 @@ void draw() {
     needsRedraw = false;   // reset the flag after updating the drawing
   }
 
+  drawOutputStatus();
 }
 
 // Check if a file exists in the data folder.
@@ -246,9 +262,120 @@ boolean fileExists(String filename) {
 }
 
 void exportDrawing() {
-  // Save the current canvas as a JPEG file named "exportedDrawing.jpg" in the sketch folder
-  //key press handler calls this function when you press the s key:
-  saveFrame("exportedDrawing.jpg");
+  if (outputWorkspace == null) {
+    reportOutputError("Export unavailable: " + outputStatusMessage);
+    return;
+  }
+
+  try {
+    String exportPath = outputWorkspace.nextExportPath().toString();
+    saveFrame(exportPath);
+    reportOutputStatus("Exported " + exportPath);
+  } catch (Exception error) {
+    reportOutputError("Export failed: " + error.getMessage());
+  }
+}
+
+void keyPressed() {
+  if (keyCode == java.awt.event.KeyEvent.VK_F8) {
+    renderOutputConfigurationEvidence();
+    exportDrawing();
+  }
+}
+
+void loadOutputConfiguration() {
+  try {
+    String configPath = dataPath(OUTPUT_CONFIG_FILENAME);
+    java.io.File configFile = new java.io.File(configPath);
+    if (!configFile.isFile()) {
+      throw new IllegalArgumentException(
+        "Create data/" + OUTPUT_CONFIG_FILENAME + " from output-config.example.json."
+      );
+    }
+
+    JSONObject configJson = loadJSONObject(configPath);
+    if (configJson == null) {
+      throw new IllegalArgumentException("Output configuration is not valid JSON.");
+    }
+
+    HashMap<String, String> configuration = new HashMap<String, String>();
+    for (Object rawKey : configJson.keys()) {
+      String key = rawKey.toString();
+      if (!OUTPUT_CONFIG_KEYS.contains(key)) {
+        throw new IllegalArgumentException("Unknown output configuration key: " + key);
+      }
+      configuration.put(key, configJson.getString(key));
+    }
+
+    outputWorkspace = OutputWorkspace.fromConfiguration(configuration);
+    outputEvidenceFont = loadOutputEvidenceFont();
+    reportOutputStatus("Output ready: " + outputWorkspace.projectDirectory());
+  } catch (Exception error) {
+    outputWorkspace = null;
+    outputEvidenceFont = null;
+    reportOutputError("Output configuration error: " + error.getMessage());
+  }
+}
+
+PFont loadOutputEvidenceFont() {
+  String[] installedFonts = PFont.list();
+  String[] preferredFonts = {"Apple Symbols", "Noto Sans Symbols 2", "Noto Sans Symbols"};
+
+  for (String preferredFont : preferredFonts) {
+    if (Arrays.asList(installedFonts).contains(preferredFont)
+        && new java.awt.Font(preferredFont, java.awt.Font.PLAIN, 240)
+          .canDisplay(OUTPUT_EVIDENCE_GLYPH)) {
+      println("Output evidence font: " + preferredFont);
+      return createFont(preferredFont, 240, true);
+    }
+  }
+
+  for (String installedFont : installedFonts) {
+    if (new java.awt.Font(installedFont, java.awt.Font.PLAIN, 240)
+        .canDisplay(OUTPUT_EVIDENCE_GLYPH)) {
+      println("Output evidence font: " + installedFont);
+      return createFont(installedFont, 240, true);
+    }
+  }
+
+  throw new IllegalStateException("No installed font contains U+4DD1.");
+}
+
+void renderOutputConfigurationEvidence() {
+  if (outputWorkspace == null || outputEvidenceFont == null) {
+    reportOutputError("Cannot render output evidence until output configuration is valid.");
+    return;
+  }
+
+  background(245);
+  pushStyle();
+  fill(0);
+  textAlign(CENTER, CENTER);
+  textFont(outputEvidenceFont);
+  text(new String(Character.toChars(OUTPUT_EVIDENCE_GLYPH)), width / 2, height / 2);
+  popStyle();
+}
+
+void drawOutputStatus() {
+  pushStyle();
+  fill(outputStatusError ? color(160, 0, 0) : color(0, 90, 35));
+  textAlign(LEFT, BOTTOM);
+  textFont(normalFont);
+  textSize(14);
+  text(outputStatusMessage, margin, height - margin);
+  popStyle();
+}
+
+void reportOutputStatus(String message) {
+  outputStatusMessage = message;
+  outputStatusError = false;
+  println(message);
+}
+
+void reportOutputError(String message) {
+  outputStatusMessage = message;
+  outputStatusError = true;
+  System.err.println(message);
 }
 
 // Computes a scaling factor for 'pt' so that if it's out of bounds,
@@ -1654,7 +1781,5 @@ void drawCurve_VectorField(InkParameters inkParams, CurvePoints cp) {
     line(distortedPoints[i].x, distortedPoints[i].y, distortedPoints[i+1].x, distortedPoints[i+1].y);
   }
 }
-
-
 
 
