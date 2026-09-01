@@ -210,6 +210,20 @@
               ]
             }
           }
+        },
+        {
+          "sub_scope": "processing",
+          "title": "Processing",
+          "manifest_url": "/docs/generated/external/dotlineform/processing/manage-manifest.json",
+          "by_id_url_base": "/docs/generated/external/dotlineform/processing/by-id",
+          "sub_scope_customisation": {
+            "id": "dotlineform_processing",
+            "capabilities": {
+              "assignable_field_groups": [
+                "authoring_subject"
+              ]
+            }
+          }
         }
       ]
     },

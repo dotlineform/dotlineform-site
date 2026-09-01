@@ -35,6 +35,9 @@ def test_current_customisations_declare_explicit_aspects() -> None:
     projects = customisations.SUB_SCOPE_CUSTOMISATION_DEFINITIONS[
         "dotlineform_projects"
     ]
+    processing = customisations.SUB_SCOPE_CUSTOMISATION_DEFINITIONS[
+        "dotlineform_processing"
+    ]
 
     assert isinstance(
         analysis.manifest_projection,
@@ -113,6 +116,31 @@ def test_current_customisations_declare_explicit_aspects() -> None:
         )
     )
 
+    assert isinstance(
+        processing.manifest_projection,
+        customisations.DocsSubScopeManifestProjectionAspect,
+    )
+    assert processing.document_groups is None
+    assert processing.source_validation is None
+    assert isinstance(processing.metadata, customisations.DocsSubScopeMetadataAspect)
+    assert isinstance(
+        processing.import_front_matter,
+        customisations.DocsSubScopeImportFrontMatterAspect,
+    )
+    assert processing.browser_composition == (
+        customisations.DocsSubScopeBrowserCompositionAspect(
+            accesses=frozenset({"manage"}),
+        )
+    )
+    assert processing.assignable_field_groups == (
+        customisations.DocsSubScopeAssignableFieldGroup(
+            group_id="authoring_subject",
+            field_names=("folder_path", "work_id", "series_id"),
+        ),
+    )
+    assert processing.transfer is None
+    assert processing.document_lineage is None
+
     projects_config = customisations.normalize_docs_subscope_customisation(
         {"id": "dotlineform_projects", "settings": {}},
         field="sub_scope_customisation",
@@ -129,6 +157,27 @@ def test_current_customisations_declare_explicit_aspects() -> None:
     assert customisations.browser_sub_scope_customisation_payload(
         projects_config,
         published=True,
+    ) is None
+
+    processing_config = customisations.normalize_docs_subscope_customisation(
+        {"id": "dotlineform_processing", "settings": {}},
+        field="sub_scope_customisation",
+    )
+    assert customisations.browser_sub_scope_customisation_payload(
+        processing_config,
+        published=False,
+    ) == {
+        "id": "dotlineform_processing",
+        "capabilities": {
+            "assignable_field_groups": ["authoring_subject"],
+        },
+    }
+    assert customisations.browser_sub_scope_customisation_payload(
+        processing_config,
+        published=True,
+    ) is None
+    assert customisations.sub_scope_customisation_document_lineage_contract(
+        processing_config
     ) is None
 
     analysis_config = customisations.normalize_docs_subscope_customisation(

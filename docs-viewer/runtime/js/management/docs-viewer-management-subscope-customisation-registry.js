@@ -12,6 +12,11 @@ const MANAGEMENT_CUSTOMISATION_LOADERS = Object.freeze({
     return import("./docs-viewer-management-subscope-dotlineform-projects.js").then(function (module) {
       return module.createDocsViewerManagementSubscopeDotlineformProjects;
     });
+  },
+  dotlineform_processing: function () {
+    return import("./docs-viewer-management-subscope-dotlineform-projects.js").then(function (module) {
+      return module.createDocsViewerManagementSubscopeDotlineformProcessing;
+    });
   }
 });
 

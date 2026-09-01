@@ -178,88 +178,111 @@
   text-decoration: none;
 }
 
-.docsViewerReport[data-report-subscope="projects"] .docsViewerReport__head,
-.docsViewerReport[data-report-subscope="projects"] .docsViewerReport__row{
+.docsViewerReport[data-working-subject-columns="publication"] .docsViewerReport__head,
+.docsViewerReport[data-working-subject-columns="publication"] .docsViewerReport__row{
   align-items: center;
   grid-template-areas: "publication title subject";
   grid-template-columns: 1rem repeat(2, minmax(0, 1fr));
 }
 
-.docsViewerReport[data-report-subscope="projects"][data-report-leading-column="true"]
+.docsViewerReport[data-working-subject-columns="subject"] .docsViewerReport__head,
+.docsViewerReport[data-working-subject-columns="subject"] .docsViewerReport__row{
+  align-items: center;
+  grid-template-areas: "title subject";
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.docsViewerReport[data-working-subject-columns="publication"][data-report-leading-column="true"]
   .docsViewerReport__head,
-.docsViewerReport[data-report-subscope="projects"][data-report-leading-column="true"]
+.docsViewerReport[data-working-subject-columns="publication"][data-report-leading-column="true"]
   .docsViewerReport__row{
   grid-template-areas: "selection publication title subject";
   grid-template-columns: max-content 1rem repeat(2, minmax(0, 1fr));
 }
 
-.docsViewerReport[data-report-subscope="projects"][data-report-subscope-selection="inactive"]
+.docsViewerReport[data-working-subject-columns="subject"][data-report-leading-column="true"]
   .docsViewerReport__head,
-.docsViewerReport[data-report-subscope="projects"][data-report-subscope-selection="inactive"]
+.docsViewerReport[data-working-subject-columns="subject"][data-report-leading-column="true"]
+  .docsViewerReport__row{
+  grid-template-areas: "selection title subject";
+  grid-template-columns: max-content repeat(2, minmax(0, 1fr));
+}
+
+.docsViewerReport[data-working-subject-columns="publication"][data-report-subscope-selection="inactive"]
+  .docsViewerReport__head,
+.docsViewerReport[data-working-subject-columns="publication"][data-report-subscope-selection="inactive"]
   .docsViewerReport__row{
   grid-template-areas: "publication title subject";
   grid-template-columns: 1rem repeat(2, minmax(0, 1fr));
 }
 
-.docsViewerReport[data-report-subscope="projects"]
+.docsViewerReport[data-working-subject-columns="subject"][data-report-subscope-selection="inactive"]
+  .docsViewerReport__head,
+.docsViewerReport[data-working-subject-columns="subject"][data-report-subscope-selection="inactive"]
+  .docsViewerReport__row{
+  grid-template-areas: "title subject";
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.docsViewerReport[data-working-subject-columns]
   [data-report-contribution-host="row-leading"]{
   grid-area: selection;
 }
 
-.docsViewerReport[data-report-subscope="projects"]
+.docsViewerReport[data-working-subject-columns]
   [data-report-contribution-position="list-head"],
-.docsViewerReport[data-report-subscope="projects"]
+.docsViewerReport[data-working-subject-columns]
   [data-report-contribution-host="row-trailing"],
-.docsViewerReport[data-report-subscope="projects"]
+.docsViewerReport[data-working-subject-columns]
   [data-report-contribution-position="row-trailing"]{
   display: contents;
 }
 
-.docsViewerReport[data-report-subscope="projects"][data-report-subscope-selection="inactive"]
+.docsViewerReport[data-working-subject-columns][data-report-subscope-selection="inactive"]
   [data-report-contribution-host="row-leading"],
-.docsViewerReport[data-report-subscope="projects"][data-report-subscope-selection="inactive"]
+.docsViewerReport[data-working-subject-columns][data-report-subscope-selection="inactive"]
   .docsViewerReport__projectSelectionHead{
   display: none;
 }
 
-.docsViewerReport[data-report-subscope="projects"] .docsViewerReport__subscopeButton{
+.docsViewerReport[data-working-subject-columns] .docsViewerReport__subscopeButton{
   display: inline-flex;
   grid-area: title;
   align-items: center;
   min-width: 0;
 }
 
-.docsViewerReport[data-report-subscope="projects"] .docsViewerReport__projectSelectionHead{
+.docsViewerReport[data-working-subject-columns] .docsViewerReport__projectSelectionHead{
   grid-area: selection;
 }
 
-.docsViewerReport[data-report-subscope="projects"] [data-project-sort="title"]{
+.docsViewerReport[data-working-subject-columns] [data-project-sort="title"]{
   grid-area: title;
 }
 
-.docsViewerReport[data-report-subscope="projects"] [data-project-sort="subject"]{
+.docsViewerReport[data-working-subject-columns] [data-project-sort="subject"]{
   grid-area: subject;
 }
 
-.docsViewerReport[data-report-subscope="projects"] .docsViewerReport__projectSubjectCell{
+.docsViewerReport[data-working-subject-columns] .docsViewerReport__projectSubjectCell{
   grid-area: subject;
   min-width: 0;
   color: var(--docs-viewer-muted);
   overflow-wrap: anywhere;
 }
 
-.docsViewerReport[data-report-subscope="projects"] .docsViewerReport__projectSubjectLink{
+.docsViewerReport[data-working-subject-columns] .docsViewerReport__projectSubjectLink{
   display: inline-flex;
   align-items: center;
   max-width: 100%;
 }
 
-.docsViewerReport[data-report-subscope="projects"] .docsViewerReport__projectPublicationHead,
-.docsViewerReport[data-report-subscope="projects"] .docsViewerReport__projectPublicationCues{
+.docsViewerReport[data-working-subject-columns="publication"] .docsViewerReport__projectPublicationHead,
+.docsViewerReport[data-working-subject-columns="publication"] .docsViewerReport__projectPublicationCues{
   grid-area: publication;
 }
 
-.docsViewerReport[data-report-subscope="projects"] .docsViewerReport__sortButton{
+.docsViewerReport[data-working-subject-columns] .docsViewerReport__sortButton{
   text-transform: none;
 }
 

@@ -458,6 +458,34 @@ def test_docs_scope_config_selects_projects_customisation_from_configured_collec
     assert customisation.settings == {}
 
 
+def test_docs_scope_config_selects_processing_customisation_from_configured_collection() -> None:
+    processing_customisation = {
+        "id": "dotlineform_processing",
+        "settings": {},
+    }
+    with make_repo() as temp_path:
+        repo_root = Path(temp_path)
+        write_scope_record(
+            repo_root,
+            docs_scope_record(
+                "dotlineform",
+                sub_scopes=[
+                    docs_sub_scope_record(
+                        "dotlineform",
+                        "processing",
+                        sub_scope_customisation=processing_customisation,
+                    )
+                ],
+            ),
+        )
+        config = docs_scope_config.load_docs_scope_configs(repo_root)["dotlineform"]
+
+    customisation = config.sub_scopes[0].sub_scope_customisation
+    assert customisation is not None
+    assert customisation.customisation_id == "dotlineform_processing"
+    assert customisation.settings == {}
+
+
 @pytest.mark.parametrize(
     ("sub_scope_customisation", "error"),
     [
@@ -477,6 +505,10 @@ def test_docs_scope_config_selects_projects_customisation_from_configured_collec
         ),
         (
             {"id": "dotlineform_projects", "settings": {"extra": True}},
+            "unknown fields: extra",
+        ),
+        (
+            {"id": "dotlineform_processing", "settings": {"extra": True}},
             "unknown fields: extra",
         ),
     ],

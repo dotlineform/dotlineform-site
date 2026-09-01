@@ -364,6 +364,20 @@
             "report_host_doc_id": "d-20260801-073826-8865a8",
             "report_host_source_revision": "sha256:593939012219207e056b0af2a135de905d5a0d4b31d4919e88131dcc177d3506"
           }
+        },
+        {
+          "sub_scope": "processing",
+          "title": "Processing",
+          "sub_scope_customisation": {
+            "id": "dotlineform_processing",
+            "settings": {}
+          },
+          "public_projection": null,
+          "lifecycle": {
+            "tool_id": "docs-viewer-scope-lifecycle",
+            "report_host_doc_id": "d-20260901-103244-09e720",
+            "report_host_source_revision": "sha256:9c89b65c8f3e1823e56818d748b76e32291b27a31de8ec4fc4391bd720d213d0"
+          }
         }
       ]
     },

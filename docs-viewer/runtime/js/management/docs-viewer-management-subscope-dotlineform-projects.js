@@ -17,7 +17,8 @@ import {
   loadCatalogueTargetSupport
 } from "./source-editor/catalogue-token-targets.js";
 
-const CUSTOMISATION_ID = "dotlineform_projects";
+const PROJECTS_CUSTOMISATION_ID = "dotlineform_projects";
+const PROCESSING_CUSTOMISATION_ID = "dotlineform_processing";
 const AUTHORING_SUBJECT_GROUP_ID = "authoring_subject";
 const PROJECT_SORT_MODES = Object.freeze([
   "title-asc",
@@ -35,7 +36,7 @@ function exactCollection(value) {
   var scope = cleanString(value && value.scope).toLowerCase();
   var subScope = cleanString(value && value.sub_scope).toLowerCase();
   if (keys.length !== 2 || keys[0] !== "scope" || keys[1] !== "sub_scope" || !scope || !subScope) {
-    throw new Error("Projects customisation collection target is invalid.");
+    throw new Error("Working subject customisation collection target is invalid.");
   }
   return Object.freeze({ scope: scope, sub_scope: subScope });
 }
@@ -44,7 +45,7 @@ function authoringSubject(documentRecord) {
   return normalizeDocsViewerAuthoringSubject(
     documentRecord && documentRecord.authoring_subject,
     {
-      errorMessage: "Projects document authoring_subject must be a normalized object."
+      errorMessage: "Working document authoring_subject must be a normalized object."
     }
   );
 }
@@ -109,7 +110,7 @@ function subjectProjection(documentRecord, targetTitles) {
 
 function previewSubjectHref(options, subject) {
   var base = cleanString(options.publicPreviewBase).replace(/\/+$/, "");
-  if (!base) throw new Error("Projects subject preview is not configured.");
+  if (!base) throw new Error("Working subject preview is not configured.");
   var path = subject.kind === "work"
     ? "/works/?work=" + encodeURIComponent(subject.key)
     : "/series/?series=" + encodeURIComponent(subject.key);
@@ -155,7 +156,7 @@ function renderSubjectCell(context, options, targetTitles) {
   link.setAttribute("aria-label", subjectAccessibleLabel(subject));
   if (subject.kind === "folder") {
     var encodedPath = encodeDecodedLocalTarget(subject.key);
-    if (!encodedPath) throw new Error("Projects document Folder subject is invalid.");
+    if (!encodedPath) throw new Error("Working document Folder subject is invalid.");
     link.href = "#";
     link.dataset.docsViewerLocalTarget = encodedPath;
     link.title = "Open " + subject.key + " in Finder";
@@ -228,20 +229,22 @@ function listSortButton(context, key, label) {
   return button;
 }
 
-function renderListHead(context) {
+function renderListHead(context, includePublicationCues) {
   var settings = context || {};
   var host = settings.host;
   if (!host || !settings.sort || typeof settings.sort.setMode !== "function") return;
   var selection = host.ownerDocument.createElement("span");
   selection.className = "docsViewerReport__projectSelectionHead";
   selection.setAttribute("aria-hidden", "true");
-  var publication = host.ownerDocument.createElement("span");
-  publication.className = "docsViewerReport__projectPublicationHead";
-  publication.setAttribute("aria-hidden", "true");
   host.appendChild(selection);
   host.appendChild(listSortButton(settings, "title", "Doc title"));
   host.appendChild(listSortButton(settings, "subject", "Subject"));
-  host.appendChild(publication);
+  if (includePublicationCues) {
+    var publication = host.ownerDocument.createElement("span");
+    publication.className = "docsViewerReport__projectPublicationHead";
+    publication.setAttribute("aria-hidden", "true");
+    host.appendChild(publication);
+  }
 }
 
 function folderPath(documentRecord) {
@@ -318,9 +321,11 @@ function renderPublicationCues(context) {
   return { accessibleLabels: [label] };
 }
 
-function renderProjectRow(context, options, targetTitles) {
+function renderWorkingSubjectRow(context, options, targetTitles, includePublicationCues) {
   renderSubjectCell(context, options, targetTitles);
-  return renderPublicationCues(context);
+  return includePublicationCues
+    ? renderPublicationCues(context)
+    : { accessibleLabels: [] };
 }
 
 function renderOpenInFinder(context, options) {
@@ -458,7 +463,7 @@ function subjectInfoField(subject) {
   };
 }
 
-function projectDetailInfo(context, assignSubjectAvailable) {
+function workingSubjectDetailInfo(context, assignSubjectAvailable, includePublicationCues) {
   var settings = context || {};
   var collection = exactCollection(settings.collection);
   var target = settings.target || {};
@@ -467,9 +472,11 @@ function projectDetailInfo(context, assignSubjectAvailable) {
     || cleanString(target.sub_scope).toLowerCase() !== collection.sub_scope
     || cleanString(target.doc_id) !== cleanString(settings.document && settings.document.doc_id)
   ) {
-    throw new Error("Projects subject information target is invalid.");
+    throw new Error("Working subject information target is invalid.");
   }
-  var publicationFields = publicationTargets(settings.document).map(function (publication, index) {
+  var publicationFields = (includePublicationCues
+    ? publicationTargets(settings.document)
+    : []).map(function (publication, index) {
     var stage = publicationStage(publication);
     return Object.freeze({
       detail: publicationIdentity(publication),
@@ -491,31 +498,67 @@ function projectDetailInfo(context, assignSubjectAvailable) {
   });
 }
 
-export function createDocsViewerManagementSubscopeDotlineformProjects(options = {}) {
+function createDocsViewerManagementWorkingSubjects(options, definition) {
   var descriptorId = cleanString(options.descriptor && options.descriptor.id);
-  if (descriptorId !== CUSTOMISATION_ID) {
-    throw new Error("Projects customisation identity did not match its registry entry.");
+  if (descriptorId !== definition.customisationId) {
+    throw new Error("Working subject customisation identity did not match its registry entry.");
   }
   exactCollection(options.collection);
   var assignSubjectAvailable = hasDocsViewerAssignableFieldGroup(options.descriptor, AUTHORING_SUBJECT_GROUP_ID);
   var collator = new Intl.Collator(undefined, { numeric: true, sensitivity: "base" });
   return loadSubjectTargetTitles(options).then(function (targetTitles) {
-    return {
-      id: CUSTOMISATION_ID,
+    var contribution = {
+      id: definition.customisationId,
+      notify: function (event) {
+        if (!event || event.type !== "mount") return;
+        var reportRoot = event.root;
+        if (!reportRoot || !reportRoot.dataset) {
+          throw new Error("Working subject report mount root is invalid.");
+        }
+        reportRoot.dataset.workingSubjectColumns = definition.includePublicationCues
+          ? "publication"
+          : "subject";
+      },
       compareListDocuments: function (context) {
         return compareProjectDocuments(context, targetTitles, collator);
       },
       projectDetailInfo: function (context) {
-        return projectDetailInfo(context, assignSubjectAvailable);
+        return workingSubjectDetailInfo(
+          context,
+          assignSubjectAvailable,
+          definition.includePublicationCues
+        );
       },
       renderDetailToolbar: function (context) {
         renderAssignSubject(context, options, assignSubjectAvailable);
         renderOpenInFinder(context, options);
       },
-      renderListHead: renderListHead,
+      renderListHead: function (context) {
+        renderListHead(context, definition.includePublicationCues);
+      },
       renderRow: function (context) {
-        return renderProjectRow(context, options, targetTitles);
+        return renderWorkingSubjectRow(
+          context,
+          options,
+          targetTitles,
+          definition.includePublicationCues
+        );
       }
     };
+    return contribution;
+  });
+}
+
+export function createDocsViewerManagementSubscopeDotlineformProjects(options = {}) {
+  return createDocsViewerManagementWorkingSubjects(options, {
+    customisationId: PROJECTS_CUSTOMISATION_ID,
+    includePublicationCues: true
+  });
+}
+
+export function createDocsViewerManagementSubscopeDotlineformProcessing(options = {}) {
+  return createDocsViewerManagementWorkingSubjects(options, {
+    customisationId: PROCESSING_CUSTOMISATION_ID,
+    includePublicationCues: false
   });
 }

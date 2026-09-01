@@ -8,6 +8,7 @@ import re
 from typing import Any, Callable, Mapping, Sequence
 
 import docs_dotlineform_projects_customisation as dotlineform_projects
+import docs_dotlineform_processing_customisation as dotlineform_processing
 from docs_document_subjects import AUTHORING_SUBJECT_FIELDS
 from docs_tag_documents import TAG_ID_FIELD, normalize_tag_declaration
 
@@ -17,6 +18,7 @@ VALUE_ID_PATTERN = re.compile(r"\A[a-z0-9][a-z0-9_-]*\Z")
 ANALYSIS_TAGS_CUSTOMISATION_ID = "analysis_tags"
 ANALYSIS_WORKS_CUSTOMISATION_ID = "analysis_works"
 DOTLINEFORM_PROJECTS_CUSTOMISATION_ID = dotlineform_projects.CUSTOMISATION_ID
+DOTLINEFORM_PROCESSING_CUSTOMISATION_ID = dotlineform_processing.CUSTOMISATION_ID
 PUBLIC_ACCESS = "public"
 MANAGE_ACCESS = "manage"
 SUPPORTED_BROWSER_ACCESSES = frozenset({PUBLIC_ACCESS, MANAGE_ACCESS})
@@ -416,6 +418,36 @@ SUB_SCOPE_CUSTOMISATION_DEFINITIONS = {
         document_lineage=DocsSubScopeDocumentLineageAspect(
             contract_id=PROJECTS_TO_ANALYSIS_WORKS_LINEAGE_CONTRACT,
             role=LINEAGE_SOURCE_ROLE,
+        ),
+    ),
+    DOTLINEFORM_PROCESSING_CUSTOMISATION_ID: DocsSubScopeCustomisationDefinition(
+        customisation_id=DOTLINEFORM_PROCESSING_CUSTOMISATION_ID,
+        normalize_settings=dotlineform_processing.normalize_settings,
+        manifest_projection=DocsSubScopeManifestProjectionAspect(
+            project=dotlineform_processing.project_manifest,
+        ),
+        metadata=DocsSubScopeMetadataAspect(
+            read_record=dotlineform_processing.metadata_record,
+            normalize_update=dotlineform_processing.normalize_metadata_update,
+        ),
+        import_front_matter=DocsSubScopeImportFrontMatterAspect(
+            normalize=dotlineform_processing.normalize_import_front_matter,
+        ),
+        browser_composition=DocsSubScopeBrowserCompositionAspect(
+            accesses=frozenset({MANAGE_ACCESS}),
+        ),
+        assignable_field_groups=(
+            DocsSubScopeAssignableFieldGroup(
+                group_id="authoring_subject",
+                field_names=(
+                    dotlineform_processing.FOLDER_PATH_FIELD,
+                    dotlineform_processing.WORK_ID_FIELD,
+                    dotlineform_processing.SERIES_ID_FIELD,
+                ),
+            ),
+        ),
+        authoring_subject=DocsSubScopeAuthoringSubjectAspect(
+            field_names=AUTHORING_SUBJECT_FIELDS,
         ),
     ),
 }
@@ -868,6 +900,7 @@ __all__ = [
     "ANALYSIS_TAGS_CUSTOMISATION_ID",
     "ANALYSIS_WORKS_CUSTOMISATION_ID",
     "DOTLINEFORM_PROJECTS_CUSTOMISATION_ID",
+    "DOTLINEFORM_PROCESSING_CUSTOMISATION_ID",
     "DocsSubScopeAssignableFieldGroup",
     "DocsSubScopeAuthoringSubjectAspect",
     "DocsSubScopeBrowserCompositionAspect",

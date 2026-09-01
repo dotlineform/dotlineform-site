@@ -108,6 +108,74 @@ def test_python_docs_builder_writes_empty_sub_scope_manifest_pair() -> None:
     assert manage_manifest == {"docs": []}
 
 
+def test_python_docs_builder_projects_empty_processing_collection_report(
+    tmp_path: Path,
+) -> None:
+    root = tmp_path / "repo"
+    prepare_repo(root)
+    config_path = root / "docs-viewer/config/scopes/docs_scopes.json"
+    payload = read_json(config_path)
+    payload["scopes"][0]["sub_scopes"] = [
+        docs_sub_scope_record(
+            "studio",
+            "processing",
+            title="Processing",
+            sub_scope_customisation={
+                "id": "dotlineform_processing",
+                "settings": {},
+            },
+        )
+    ]
+    write_json(config_path, payload)
+    (
+        root
+        / "docs-viewer/scopes/studio/source/sub-scopes/processing/documents"
+    ).mkdir(parents=True)
+
+    exit_code, _stdout, stderr = run_cli(
+        root,
+        ["--scope", "studio", "--sub-scope", "processing", "--write"],
+    )
+    manifest = read_json(
+        root
+        / "docs-viewer/scopes/studio/generated/documents/sub-scopes/processing/manifest.json"
+    )
+    manage_manifest = read_json(
+        root
+        / "docs-viewer/scopes/studio/generated/documents/sub-scopes/processing/manage-manifest.json"
+    )
+    config = load_docs_scope_configs(root)["studio"]
+    browser_config = build_docs.browser_scope_config_payload(root, [config])
+    public_browser_config = build_docs.browser_scope_config_payload(
+        root,
+        [config],
+        published=True,
+    )
+
+    assert exit_code == 0
+    assert stderr == ""
+    assert manifest == {"docs": []}
+    assert manage_manifest == {
+        "customisation": {
+            "id": "dotlineform_processing",
+            "data": {},
+        },
+        "subject_generation": manage_manifest["subject_generation"],
+        "docs": [],
+    }
+    assert browser_config["scopes"][0]["sub_scopes"][0][
+        "sub_scope_customisation"
+    ] == {
+        "id": "dotlineform_processing",
+        "capabilities": {
+            "assignable_field_groups": ["authoring_subject"],
+        },
+    }
+    assert "sub_scope_customisation" not in public_browser_config["scopes"][0][
+        "sub_scopes"
+    ][0]
+
+
 def test_python_docs_builder_projects_subjects_into_private_products() -> None:
     first_doc_id = "d-20260801-101500-a1b2c3"
     second_doc_id = "d-20260801-101501-b2c3d4"
