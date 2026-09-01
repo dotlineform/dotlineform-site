@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "series_record_v3",
-    "version": "blake2b-fcce54dec4477d268b8ce458d7b52574",
-    "generated_at_utc": "2026-08-09T20:15:25Z",
+    "schema": "series_record_v4",
+    "version": "blake2b-56ebd7206e77471a9f109957b03ce829",
+    "generated_at_utc": "2026-09-01T17:13:41Z",
     "series_id": "017",
     "count": 1
   },
@@ -18,7 +18,7 @@
     "project_folders": [
       "birth of healing forms"
     ],
-    "doc_url": []
+    "documents": []
   },
   "member_works": [
     {

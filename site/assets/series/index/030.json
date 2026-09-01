@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "series_record_v3",
-    "version": "blake2b-ce10df821a9eff5780dea07ac2a004aa",
-    "generated_at_utc": "2026-08-09T20:15:25Z",
+    "schema": "series_record_v4",
+    "version": "blake2b-ac82396d193380acdc5920695dc07d85",
+    "generated_at_utc": "2026-09-01T17:13:41Z",
     "series_id": "030",
     "count": 3
   },
@@ -18,7 +18,7 @@
     "project_folders": [
       "composite (blue red smoke)"
     ],
-    "doc_url": []
+    "documents": []
   },
   "member_works": [
     {

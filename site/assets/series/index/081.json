@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "series_record_v3",
-    "version": "blake2b-3289eaea6d474b4e803510255c5d0cde",
-    "generated_at_utc": "2026-08-09T20:15:25Z",
+    "schema": "series_record_v4",
+    "version": "blake2b-1eb7d6c47a885541b1f3627233128bc1",
+    "generated_at_utc": "2026-09-01T17:13:41Z",
     "series_id": "081",
     "count": 1
   },
@@ -18,7 +18,7 @@
     "project_folders": [
       "intuition (2020)"
     ],
-    "doc_url": []
+    "documents": []
   },
   "member_works": [
     {

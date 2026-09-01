@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "series_record_v3",
-    "version": "blake2b-5a4db4737f1b9c1389ebc35934470f69",
-    "generated_at_utc": "2026-08-09T20:15:25Z",
+    "schema": "series_record_v4",
+    "version": "blake2b-d7cf80817107c1c95d36049c2730134e",
+    "generated_at_utc": "2026-09-01T17:13:41Z",
     "series_id": "041",
     "count": 12
   },
@@ -18,7 +18,7 @@
     "project_folders": [
       "dot theory"
     ],
-    "doc_url": []
+    "documents": []
   },
   "member_works": [
     {

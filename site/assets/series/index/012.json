@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "series_record_v3",
-    "version": "blake2b-22b10cce86dea5c1cb0b9bf677aedd82",
-    "generated_at_utc": "2026-08-09T20:15:25Z",
+    "schema": "series_record_v4",
+    "version": "blake2b-0f50505f4c620c4a1fce5da3c538a424",
+    "generated_at_utc": "2026-09-01T17:13:41Z",
     "series_id": "012",
     "count": 2
   },
@@ -18,7 +18,7 @@
     "project_folders": [
       "all the little cracks"
     ],
-    "doc_url": []
+    "documents": []
   },
   "member_works": [
     {

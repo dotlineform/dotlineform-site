@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "series_record_v3",
-    "version": "blake2b-c16772e8be0e2f4997f73506062a3729",
-    "generated_at_utc": "2026-08-09T20:15:25Z",
+    "schema": "series_record_v4",
+    "version": "blake2b-917be10c52b0ed295803e9079bb8c177",
+    "generated_at_utc": "2026-09-01T17:13:42Z",
     "series_id": "112",
     "count": 22
   },
@@ -18,7 +18,7 @@
     "project_folders": [
       "petri"
     ],
-    "doc_url": []
+    "documents": []
   },
   "member_works": [
     {

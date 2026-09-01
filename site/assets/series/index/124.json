@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "series_record_v3",
-    "version": "blake2b-940d363f6edafcb00740a3dcd4f4d8bf",
-    "generated_at_utc": "2026-08-09T20:15:25Z",
+    "schema": "series_record_v4",
+    "version": "blake2b-9cb18e8c36cba38e8a676d2b787e3c61",
+    "generated_at_utc": "2026-09-01T17:13:42Z",
     "series_id": "124",
     "count": 45
   },
@@ -18,7 +18,7 @@
     "project_folders": [
       "spider webs"
     ],
-    "doc_url": []
+    "documents": []
   },
   "member_works": [
     {

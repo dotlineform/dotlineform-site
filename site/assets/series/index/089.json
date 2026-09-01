@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "series_record_v3",
-    "version": "blake2b-6ebb00c84c857aac0baab8e37bba15dd",
-    "generated_at_utc": "2026-08-09T20:15:25Z",
+    "schema": "series_record_v4",
+    "version": "blake2b-117fd32f8e0e0a89cc77b4d65a6160c0",
+    "generated_at_utc": "2026-09-01T17:13:41Z",
     "series_id": "089",
     "count": 17
   },
@@ -18,7 +18,7 @@
     "project_folders": [
       "learning to draw landscapes"
     ],
-    "doc_url": []
+    "documents": []
   },
   "member_works": [
     {

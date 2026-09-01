@@ -1,8 +1,8 @@
 {
   "header": {
     "schema": "series_record_v3",
-    "version": "blake2b-00b5858ccc3c7cb96a2b0fecfe6a9244",
-    "generated_at_utc": "2026-08-09T20:15:25Z",
+    "version": "blake2b-6bf17b31008c16404bcc70d4e231da76",
+    "generated_at_utc": "2026-09-01T17:23:40Z",
     "series_id": "105",
     "count": 3
   },
@@ -16,10 +16,12 @@
     "year": 1995,
     "year_display": "1990-95",
     "project_folders": [
+      "ink-engine",
       "nerve",
       "nerve (abattoir)",
       "nerve (formaldehyde form)"
     ],
+    "documents": [],
     "doc_url": []
   },
   "member_works": [

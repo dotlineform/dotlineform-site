@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "series_record_v3",
-    "version": "blake2b-3b52771c0c53692cc48b22d1653350e3",
-    "generated_at_utc": "2026-08-09T20:15:25Z",
+    "schema": "series_record_v4",
+    "version": "blake2b-7c95caa9b82db6634aa72b982faee250",
+    "generated_at_utc": "2026-09-01T17:13:42Z",
     "series_id": "109",
     "count": 11
   },
@@ -18,7 +18,7 @@
     "project_folders": [
       "particle machine"
     ],
-    "doc_url": []
+    "documents": []
   },
   "member_works": [
     {

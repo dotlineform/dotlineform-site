@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v4",
-    "version": "blake2b-bef6c9b2aa19f9e47122b97569c277ee",
-    "generated_at_utc": "2026-08-07T13:20:27Z",
+    "schema": "work_record_v5",
+    "version": "blake2b-f9782e4d870823a5b8db01cd95ecc61d",
+    "generated_at_utc": "2026-09-01T17:13:42Z",
     "work_id": "00163",
     "count": 10
   },
@@ -27,7 +27,7 @@
         "label": "nerve (abattoir).pdf"
       }
     ],
-    "doc_url": []
+    "documents": []
   },
   "sections": [
     {

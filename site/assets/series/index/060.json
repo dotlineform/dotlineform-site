@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "series_record_v3",
-    "version": "blake2b-cd397fc425f521a16c8835f0bb9f7e79",
-    "generated_at_utc": "2026-08-09T20:15:25Z",
+    "schema": "series_record_v4",
+    "version": "blake2b-b1478a261dc289fc46f2d19e95b273ca",
+    "generated_at_utc": "2026-09-01T17:13:41Z",
     "series_id": "060",
     "count": 1
   },
@@ -18,7 +18,7 @@
     "project_folders": [
       "forest (2024)"
     ],
-    "doc_url": []
+    "documents": []
   },
   "member_works": [
     {

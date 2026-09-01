@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "series_record_v3",
-    "version": "blake2b-0803e8c467434da3026a596ecc48c6fa",
-    "generated_at_utc": "2026-08-09T20:15:25Z",
+    "schema": "series_record_v4",
+    "version": "blake2b-160cd96ebccdd150a35b1ffa433f17a2",
+    "generated_at_utc": "2026-09-01T17:13:42Z",
     "series_id": "127",
     "count": 1
   },
@@ -18,7 +18,7 @@
     "project_folders": [
       "state of mind"
     ],
-    "doc_url": []
+    "documents": []
   },
   "member_works": [
     {

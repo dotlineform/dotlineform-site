@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "series_record_v3",
-    "version": "blake2b-57eb64119e72d01d73bbe7c9956a8215",
-    "generated_at_utc": "2026-08-09T20:15:25Z",
+    "schema": "series_record_v4",
+    "version": "blake2b-6120044b1bf108846737560c2079ecca",
+    "generated_at_utc": "2026-09-01T17:13:42Z",
     "series_id": "121",
     "count": 23
   },
@@ -18,7 +18,7 @@
     "project_folders": [
       "residues"
     ],
-    "doc_url": []
+    "documents": []
   },
   "member_works": [
     {

@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "series_record_v3",
-    "version": "blake2b-5ee20357302c35e812680acae73422ba",
-    "generated_at_utc": "2026-08-09T20:15:25Z",
+    "schema": "series_record_v4",
+    "version": "blake2b-4af7cf5ace545617a4091965436975dc",
+    "generated_at_utc": "2026-09-01T17:13:42Z",
     "series_id": "141",
     "count": 28
   },
@@ -18,7 +18,7 @@
     "project_folders": [
       "water"
     ],
-    "doc_url": []
+    "documents": []
   },
   "member_works": [
     {

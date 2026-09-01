@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "series_record_v3",
-    "version": "blake2b-03dd7404ae60c98683926f5afaace864",
-    "generated_at_utc": "2026-08-09T20:15:25Z",
+    "schema": "series_record_v4",
+    "version": "blake2b-f2beb910b1203b8aec1ee1472b1297db",
+    "generated_at_utc": "2026-09-01T17:13:41Z",
     "series_id": "070",
     "count": 1
   },
@@ -18,7 +18,7 @@
     "project_folders": [
       "glass forms"
     ],
-    "doc_url": []
+    "documents": []
   },
   "member_works": [
     {

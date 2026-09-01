@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "series_record_v3",
-    "version": "blake2b-eab2dac87871a9ddb2f61047aa790d40",
-    "generated_at_utc": "2026-08-09T20:15:25Z",
+    "schema": "series_record_v4",
+    "version": "blake2b-eadcc70802491128a16390a419db3f99",
+    "generated_at_utc": "2026-09-01T17:13:42Z",
     "series_id": "118",
     "count": 7
   },
@@ -19,7 +19,7 @@
       "qrnt",
       "qrnt (bits symbols)"
     ],
-    "doc_url": []
+    "documents": []
   },
   "member_works": [
     {

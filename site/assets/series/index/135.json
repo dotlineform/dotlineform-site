@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "series_record_v3",
-    "version": "blake2b-a65cac31b33cfcd87b2f6208dac1ade7",
-    "generated_at_utc": "2026-08-09T20:15:25Z",
+    "schema": "series_record_v4",
+    "version": "blake2b-cef6d7cd24425c72bfe67fa9d60c299a",
+    "generated_at_utc": "2026-09-01T17:13:42Z",
     "series_id": "135",
     "count": 99
   },
@@ -18,7 +18,7 @@
     "project_folders": [
       "train moments"
     ],
-    "doc_url": []
+    "documents": []
   },
   "member_works": [
     {

@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "series_record_v3",
-    "version": "blake2b-060433b77ab1ed8d5fc5032c9af271b6",
-    "generated_at_utc": "2026-08-09T20:15:25Z",
+    "schema": "series_record_v4",
+    "version": "blake2b-6c6cb92636a295e5dc8f9ea7484d307d",
+    "generated_at_utc": "2026-09-01T17:13:41Z",
     "series_id": "032",
     "count": 6
   },
@@ -18,7 +18,7 @@
     "project_folders": [
       "creases"
     ],
-    "doc_url": []
+    "documents": []
   },
   "member_works": [
     {

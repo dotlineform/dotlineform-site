@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "series_record_v3",
-    "version": "blake2b-5b7086fb696ea7ad0129c8891238bbfd",
-    "generated_at_utc": "2026-08-09T20:15:25Z",
+    "schema": "series_record_v4",
+    "version": "blake2b-4cf138aed033b8e6f690c4d6a3089561",
+    "generated_at_utc": "2026-09-01T17:13:42Z",
     "series_id": "130",
     "count": 3
   },
@@ -18,7 +18,7 @@
     "project_folders": [
       "sunflower"
     ],
-    "doc_url": []
+    "documents": []
   },
   "member_works": [
     {

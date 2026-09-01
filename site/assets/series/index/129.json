@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "series_record_v3",
-    "version": "blake2b-3253a8e695580d5b98f72c2730d7d70e",
-    "generated_at_utc": "2026-08-09T20:15:25Z",
+    "schema": "series_record_v4",
+    "version": "blake2b-e462ebca7d21805348dbc0bc3645cb96",
+    "generated_at_utc": "2026-09-01T17:13:42Z",
     "series_id": "129",
     "count": 27
   },
@@ -18,7 +18,7 @@
     "project_folders": [
       "string theory"
     ],
-    "doc_url": []
+    "documents": []
   },
   "member_works": [
     {

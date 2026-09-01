@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "series_record_v3",
-    "version": "blake2b-2558fb0760726212336bdc87040505d6",
-    "generated_at_utc": "2026-08-09T20:15:25Z",
+    "schema": "series_record_v4",
+    "version": "blake2b-c9ca11d2df905ccbb946229c19f0fd1f",
+    "generated_at_utc": "2026-09-01T17:13:42Z",
     "series_id": "131",
     "count": 6
   },
@@ -18,7 +18,7 @@
     "project_folders": [
       "surface history"
     ],
-    "doc_url": []
+    "documents": []
   },
   "member_works": [
     {

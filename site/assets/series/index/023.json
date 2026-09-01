@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "series_record_v3",
-    "version": "blake2b-3ad81ca4cb726b6f033c0950aac5a6dd",
-    "generated_at_utc": "2026-08-09T20:15:25Z",
+    "schema": "series_record_v4",
+    "version": "blake2b-51772103c1e0b50faecc4a2aaf4b5e5f",
+    "generated_at_utc": "2026-09-01T17:13:41Z",
     "series_id": "023",
     "count": 1
   },
@@ -18,7 +18,7 @@
     "project_folders": [
       "certainty"
     ],
-    "doc_url": []
+    "documents": []
   },
   "member_works": [
     {

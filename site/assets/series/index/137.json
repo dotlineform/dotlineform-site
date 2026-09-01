@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "series_record_v3",
-    "version": "blake2b-728709a3bbea8a669e8bd1f4586d0671",
-    "generated_at_utc": "2026-08-09T20:15:25Z",
+    "schema": "series_record_v4",
+    "version": "blake2b-e7c3363e45aed20a98acc481c5bd72d9",
+    "generated_at_utc": "2026-09-01T17:13:42Z",
     "series_id": "137",
     "count": 5
   },
@@ -18,7 +18,7 @@
     "project_folders": [
       "tulips"
     ],
-    "doc_url": []
+    "documents": []
   },
   "member_works": [
     {

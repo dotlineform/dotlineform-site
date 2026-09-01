@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "series_record_v3",
-    "version": "blake2b-3ec9749f3ac2a0e9586ae9afee932d0b",
-    "generated_at_utc": "2026-08-09T20:15:25Z",
+    "schema": "series_record_v4",
+    "version": "blake2b-b7a6ec9eb1c1e9c942eda6cf5b0254e5",
+    "generated_at_utc": "2026-09-01T17:13:41Z",
     "series_id": "100",
     "count": 1
   },
@@ -18,7 +18,7 @@
     "project_folders": [
       "molecule forms"
     ],
-    "doc_url": []
+    "documents": []
   },
   "member_works": [
     {

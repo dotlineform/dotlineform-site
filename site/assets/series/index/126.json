@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "series_record_v3",
-    "version": "blake2b-e84f74b7792f486e4ce2591d6ac0d4f6",
-    "generated_at_utc": "2026-08-09T20:15:25Z",
+    "schema": "series_record_v4",
+    "version": "blake2b-5e7ea210bbe361f6e88cb589b1eb9f11",
+    "generated_at_utc": "2026-09-01T17:13:42Z",
     "series_id": "126",
     "count": 1
   },
@@ -18,7 +18,7 @@
     "project_folders": [
       "spine symbols"
     ],
-    "doc_url": []
+    "documents": []
   },
   "member_works": [
     {

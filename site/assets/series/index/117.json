@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "series_record_v3",
-    "version": "blake2b-a3fc1dc6e15dbecf122535be8d49fb03",
-    "generated_at_utc": "2026-08-09T20:15:25Z",
+    "schema": "series_record_v4",
+    "version": "blake2b-ee1c78a2977fd0c29a1526e6ab99316a",
+    "generated_at_utc": "2026-09-01T17:13:42Z",
     "series_id": "117",
     "count": 13
   },
@@ -18,7 +18,7 @@
     "project_folders": [
       "porto santo"
     ],
-    "doc_url": []
+    "documents": []
   },
   "member_works": [
     {

@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "series_record_v3",
-    "version": "blake2b-153c044eb89553f7ddc48f7537647807",
-    "generated_at_utc": "2026-08-09T20:15:25Z",
+    "schema": "series_record_v4",
+    "version": "blake2b-1c2644f4768885c14f1bdc2377460d39",
+    "generated_at_utc": "2026-09-01T17:13:41Z",
     "series_id": "037",
     "count": 29
   },
@@ -18,7 +18,7 @@
     "project_folders": [
       "doll"
     ],
-    "doc_url": []
+    "documents": []
   },
   "member_works": [
     {

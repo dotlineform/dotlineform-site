@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "series_record_v3",
-    "version": "blake2b-432aa7dea0458a18fef770d14f81a41f",
-    "generated_at_utc": "2026-08-09T20:15:25Z",
+    "schema": "series_record_v4",
+    "version": "blake2b-10a9441fec72581a10155ec5686c358f",
+    "generated_at_utc": "2026-09-01T17:13:42Z",
     "series_id": "128",
     "count": 13
   },
@@ -18,7 +18,7 @@
     "project_folders": [
       "still life"
     ],
-    "doc_url": []
+    "documents": []
   },
   "member_works": [
     {
