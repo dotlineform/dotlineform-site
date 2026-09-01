@@ -121,7 +121,6 @@ export async function publishWorkMedia(state, context) {
     await refreshBuildPreview(state, context);
 
     const resultSummary = normalizeText(response && response.result && response.result.summary);
-    const confirmedVersion = Math.floor(Number(response.media_version));
     setTextWithState(
       context,
       state.resultNode,
@@ -131,15 +130,13 @@ export async function publishWorkMedia(state, context) {
     setTextWithState(
       context,
       state.statusNode,
-      Number.isFinite(confirmedVersion)
-        ? text(state, context, "media_publish_status_success_version", "Media published. Confirmed URL version: v={media_version}.", { media_version: String(confirmedVersion) })
-        : text(state, context, "media_publish_status_success", "Media published."),
+      text(state, context, "media_publish_status_success", "Media published."),
       "success"
     );
     return true;
   } catch (error) {
     const message = Number(error && error.status) === 409
-      ? text(state, context, "media_publish_status_conflict", "The confirmed media version changed. Reload before publishing media.")
+      ? text(state, context, "media_publish_status_conflict", "Public media changed. Reload before publishing media.")
       : `${text(state, context, "media_publish_status_failed", "Media publishing failed.")} ${normalizeText(error && error.message)}`.trim();
     setTextWithState(context, state.statusNode, message, "error");
     return false;

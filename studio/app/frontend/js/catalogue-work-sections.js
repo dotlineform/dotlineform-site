@@ -110,14 +110,6 @@ export function buildWorkRecordSummary(record) {
   return title || yearDisplay || "—";
 }
 
-export function buildWorkMediaVersionSummary(record, staged) {
-  const confirmed = Math.floor(Number(record && record.media_version));
-  if (!Number.isFinite(confirmed) || confirmed < 1) return "";
-  return staged
-    ? `media version ${confirmed} · staged candidate ${confirmed + 1}`
-    : `media version ${confirmed}`;
-}
-
 function buildWorkImageDimensionSummary(record) {
   const height = normalizeText(record && record.height_px);
   const width = normalizeText(record && record.width_px);
@@ -168,7 +160,6 @@ export function renderWorkCurrentPreview(state, options = {}) {
   });
   const caption = buildWorkRecordSummary(record);
   const dimensionCaption = stagedWorkMediaDimensions(state, record.work_id) || buildWorkImageDimensionSummary(record);
-  const mediaVersionCaption = buildWorkMediaVersionSummary(record, Boolean(normalizeText(state.mediaPreviewVersion)));
   const canShowGenerated = isPublished
     ? !mediaItem || normalizeText(mediaItem.status) === "ready"
     : Boolean(mediaItem && normalizeText(mediaItem.status) === "ready");
@@ -198,7 +189,6 @@ export function renderWorkCurrentPreview(state, options = {}) {
       <figcaption class="catalogueRecordPreview__caption">
         <span>${escapeHtml(caption)}</span>
         ${dimensionCaption ? `<span class="catalogueRecordPreview__captionMeta">${escapeHtml(dimensionCaption)}</span>` : ""}
-        ${mediaVersionCaption ? `<span class="catalogueRecordPreview__captionMeta">${escapeHtml(mediaVersionCaption)}</span>` : ""}
       </figcaption>
       <div class="catalogueRecordPreview__actions">
         ${mediaSummaryItem ? `<button type="button" class="studioUi__button studioUi__button--defaultWidth" data-media-refresh="work"${mediaRefreshDisabled ? " disabled" : ""}>${escapeHtml(text(state, options, "media_refresh_button", "Refresh media"))}</button>` : ""}
