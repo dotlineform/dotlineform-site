@@ -30,6 +30,9 @@ var/test-runs/
 .env.local
 var/local/
 
+# Codex local workspace configuration
+.codex/config.toml
+
 # local output
 var/studio/reports/
 var/docs/
