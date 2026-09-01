@@ -16,8 +16,9 @@ from docs_scope_config import (
     resolve_scope_path,
 )
 from docs_subscope_customisations import (
+    LINEAGE_EDITORIAL_ROLE,
     LINEAGE_SOURCE_ROLE,
-    sub_scope_customisation_document_lineage_contract,
+    sub_scope_customisation_document_lineage_contracts,
 )
 
 
@@ -34,6 +35,14 @@ class DocumentLineageCollection:
 
     def payload(self) -> dict[str, str]:
         return {"scope": self.scope, "sub_scope": self.sub_scope}
+
+
+@dataclass(frozen=True, order=True)
+class DocumentLineageWorkflow:
+    contract_id: str
+    working_collection: DocumentLineageCollection
+    editorial_collection: DocumentLineageCollection
+    path: Path
 
 
 @dataclass(frozen=True, order=True)
@@ -80,14 +89,20 @@ class DocumentLineageTable:
 
 
 @dataclass(frozen=True)
-class DocumentLineageDeleteResult:
-    table: DocumentLineageTable | None
-    role: str
+class DocumentLineageDeleteChange:
+    contract_id: str
+    table: DocumentLineageTable
     affected_working_doc_ids: tuple[str, ...]
+
+
+@dataclass(frozen=True)
+class DocumentLineageDeleteResult:
+    role: str
+    workflows: tuple[DocumentLineageDeleteChange, ...]
 
     @property
     def changed(self) -> bool:
-        return bool(self.affected_working_doc_ids)
+        return any(change.affected_working_doc_ids for change in self.workflows)
 
 
 def current_timestamp() -> str:
@@ -303,40 +318,131 @@ def render_table(table: DocumentLineageTable) -> bytes:
     ).encode("utf-8")
 
 
-def configured_table_path(repo_root: Path) -> Path | None:
-    candidates: list[Path] = []
+def configured_workflows(repo_root: Path) -> tuple[DocumentLineageWorkflow, ...]:
+    """Discover every complete exact source-to-Editorial lineage contract."""
+
+    roles_by_contract: dict[
+        str,
+        dict[str, list[tuple[DocumentLineageCollection, Path]]],
+    ] = {}
     for config in load_docs_scope_configs(repo_root).values():
         for sub_scope in config.sub_scopes:
-            contract = sub_scope_customisation_document_lineage_contract(
-                sub_scope.sub_scope_customisation
+            collection = DocumentLineageCollection(
+                scope=config.scope_id,
+                sub_scope=sub_scope.sub_scope,
             )
-            if contract is None or contract.role != LINEAGE_SOURCE_ROLE:
-                continue
             documents_root = resolve_scope_path(
                 repo_root,
                 document_source_path(sub_scope),
             )
-            candidates.append(documents_root.parent / LINEAGE_RELATIVE_PATH)
-    if len(candidates) > 1:
-        raise ValueError(
-            "multiple Working-owned document publication lineage locations are configured"
+            for aspect in sub_scope_customisation_document_lineage_contracts(
+                sub_scope.sub_scope_customisation
+            ):
+                roles = roles_by_contract.setdefault(
+                    aspect.contract_id,
+                    {LINEAGE_SOURCE_ROLE: [], LINEAGE_EDITORIAL_ROLE: []},
+                )
+                roles[aspect.role].append(
+                    (collection, documents_root.parent / LINEAGE_RELATIVE_PATH)
+                )
+
+    workflows: list[DocumentLineageWorkflow] = []
+    for contract_id, roles in sorted(roles_by_contract.items()):
+        sources = roles[LINEAGE_SOURCE_ROLE]
+        editorials = roles[LINEAGE_EDITORIAL_ROLE]
+        if len(sources) != 1 or len(editorials) != 1:
+            raise ValueError(
+                "document publication lineage contract must configure exactly one "
+                f"Working source and one Editorial target: {contract_id}"
+            )
+        working_collection, path = sources[0]
+        editorial_collection, _editorial_path = editorials[0]
+        if working_collection == editorial_collection:
+            raise ValueError(
+                "document publication lineage collections must be distinct"
+            )
+        workflows.append(
+            DocumentLineageWorkflow(
+                contract_id=contract_id,
+                working_collection=working_collection,
+                editorial_collection=editorial_collection,
+                path=path,
+            )
         )
-    return candidates[0] if candidates else None
-
-
-def table_path(repo_root: Path) -> Path:
-    path = configured_table_path(repo_root)
-    if path is None:
+    working_collections = [workflow.working_collection for workflow in workflows]
+    table_paths = [workflow.path for workflow in workflows]
+    if len(set(working_collections)) != len(working_collections):
         raise ValueError(
-            "Working-owned document publication lineage location is not configured"
+            "document publication lineage Working collection is configured for "
+            "multiple workflows"
         )
-    return path
+    if len(set(table_paths)) != len(table_paths):
+        raise ValueError(
+            "document publication lineage table path is configured for multiple workflows"
+        )
+    return tuple(workflows)
 
 
-def load_table(repo_root: Path) -> DocumentLineageTable | None:
-    path = configured_table_path(repo_root)
-    if path is None:
-        return None
+def workflow_for_contract(repo_root: Path, contract_id: str) -> DocumentLineageWorkflow:
+    exact_contract_id = _required_text(contract_id, field="lineage contract_id")
+    matching = [
+        workflow
+        for workflow in configured_workflows(repo_root)
+        if workflow.contract_id == exact_contract_id
+    ]
+    if len(matching) != 1:
+        raise ValueError(
+            f"document publication lineage contract is not configured exactly once: "
+            f"{exact_contract_id}"
+        )
+    return matching[0]
+
+
+def workflow_for_collections(
+    repo_root: Path,
+    *,
+    working_scope: str,
+    working_sub_scope: str,
+    editorial_scope: str,
+    editorial_sub_scope: str,
+) -> DocumentLineageWorkflow:
+    expected_working = DocumentLineageCollection(working_scope, working_sub_scope)
+    expected_editorial = DocumentLineageCollection(editorial_scope, editorial_sub_scope)
+    matching = [
+        workflow
+        for workflow in configured_workflows(repo_root)
+        if workflow.working_collection == expected_working
+        and workflow.editorial_collection == expected_editorial
+    ]
+    if len(matching) != 1:
+        raise ValueError(
+            "document publication lineage workflow does not match one exact Copy"
+        )
+    return matching[0]
+
+
+def workflows_for_collection(
+    repo_root: Path,
+    collection: DocumentLineageCollection,
+) -> tuple[DocumentLineageWorkflow, ...]:
+    return tuple(
+        workflow
+        for workflow in configured_workflows(repo_root)
+        if collection in {
+            workflow.working_collection,
+            workflow.editorial_collection,
+        }
+    )
+
+
+def table_path(repo_root: Path, *, contract_id: str) -> Path:
+    return workflow_for_contract(repo_root, contract_id).path
+
+
+def _load_table_path(
+    path: Path,
+    workflow: DocumentLineageWorkflow,
+) -> DocumentLineageTable | None:
     if not path.is_file():
         return None
     try:
@@ -358,7 +464,7 @@ def load_table(repo_root: Path) -> DocumentLineageTable | None:
     raw_records = payload["records"]
     if not isinstance(raw_records, list):
         raise ValueError("document publication lineage records must be an array")
-    return _validated_table(
+    table = _validated_table(
         DocumentLineageTable(
             working_collection=_collection(
                 payload["working_collection"],
@@ -374,14 +480,88 @@ def load_table(repo_root: Path) -> DocumentLineageTable | None:
             ),
         )
     )
+    if (
+        table.working_collection != workflow.working_collection
+        or table.editorial_collection != workflow.editorial_collection
+    ):
+        raise ValueError(
+            "document publication lineage collections do not match configured workflow"
+        )
+    return table
+
+
+def load_tables(
+    repo_root: Path,
+) -> dict[str, DocumentLineageTable | None]:
+    workflows = configured_workflows(repo_root)
+    tables = {
+        workflow.contract_id: _load_table_path(workflow.path, workflow)
+        for workflow in workflows
+    }
+    editorial_owners: dict[tuple[DocumentLineageCollection, str], str] = {}
+    for workflow in workflows:
+        table = tables[workflow.contract_id]
+        if table is None:
+            continue
+        for record in table.records:
+            for editorial in record.editorials:
+                key = (workflow.editorial_collection, editorial.doc_id)
+                owner = editorial_owners.get(key)
+                if owner is not None and owner != workflow.contract_id:
+                    raise ValueError(
+                        "document publication lineage Editorial doc_id has "
+                        "cross-table ownership"
+                    )
+                editorial_owners[key] = workflow.contract_id
+    return tables
+
+
+def load_table(
+    repo_root: Path,
+    *,
+    contract_id: str,
+) -> DocumentLineageTable | None:
+    workflow = workflow_for_contract(repo_root, contract_id)
+    return load_tables(repo_root)[workflow.contract_id]
 
 
 def write_table_atomic(
     repo_root: Path,
     table: DocumentLineageTable,
+    *,
+    contract_id: str,
 ) -> DocumentLineageTable:
+    workflow = workflow_for_contract(repo_root, contract_id)
     validated = _validated_table(table)
-    source_model.write_bytes_atomic(table_path(repo_root), render_table(validated))
+    if (
+        validated.working_collection != workflow.working_collection
+        or validated.editorial_collection != workflow.editorial_collection
+    ):
+        raise ValueError(
+            "document publication lineage collections do not match configured workflow"
+        )
+    workflows = configured_workflows(repo_root)
+    existing = {
+        configured.contract_id: _load_table_path(configured.path, configured)
+        for configured in workflows
+    }
+    existing[workflow.contract_id] = validated
+    editorial_owners: dict[tuple[DocumentLineageCollection, str], str] = {}
+    for configured in workflows:
+        candidate = existing[configured.contract_id]
+        if candidate is None:
+            continue
+        for record in candidate.records:
+            for editorial in record.editorials:
+                key = (configured.editorial_collection, editorial.doc_id)
+                owner = editorial_owners.get(key)
+                if owner is not None and owner != configured.contract_id:
+                    raise ValueError(
+                        "document publication lineage Editorial doc_id has "
+                        "cross-table ownership"
+                    )
+                editorial_owners[key] = configured.contract_id
+    source_model.write_bytes_atomic(workflow.path, render_table(validated))
     return validated
 
 
@@ -412,20 +592,27 @@ def editorials_for_working(
 def apply_copy_results(
     repo_root: Path,
     *,
+    contract_id: str,
     source_scope: str,
     source_sub_scope: str,
     editorial_scope: str,
     editorial_sub_scope: str,
     results: Iterable[Mapping[str, str]],
 ) -> DocumentLineageTable:
-    table = load_table(repo_root) or empty_table(
+    workflow = workflow_for_contract(repo_root, contract_id)
+    expected_working = DocumentLineageCollection(source_scope, source_sub_scope)
+    expected_editorial = DocumentLineageCollection(editorial_scope, editorial_sub_scope)
+    if (
+        workflow.working_collection != expected_working
+        or workflow.editorial_collection != expected_editorial
+    ):
+        raise ValueError("document publication lineage collections do not match Copy")
+    table = load_table(repo_root, contract_id=contract_id) or empty_table(
         working_scope=source_scope,
         working_sub_scope=source_sub_scope,
         editorial_scope=editorial_scope,
         editorial_sub_scope=editorial_sub_scope,
     )
-    expected_working = DocumentLineageCollection(source_scope, source_sub_scope)
-    expected_editorial = DocumentLineageCollection(editorial_scope, editorial_sub_scope)
     if (
         table.working_collection != expected_working
         or table.editorial_collection != expected_editorial
@@ -485,7 +672,11 @@ def apply_copy_results(
             editorials=tuple(editorials),
         )
 
-    return write_table_atomic(repo_root, replace(table, records=tuple(records.values())))
+    return write_table_atomic(
+        repo_root,
+        replace(table, records=tuple(records.values())),
+        contract_id=contract_id,
+    )
 
 
 def apply_document_deletes(
@@ -496,14 +687,6 @@ def apply_document_deletes(
     doc_ids: Iterable[str],
 ) -> DocumentLineageDeleteResult:
     """Remove exact Working records or Editorial children after confirmed Delete."""
-
-    table = load_table(repo_root)
-    if table is None:
-        return DocumentLineageDeleteResult(
-            table=None,
-            role="",
-            affected_working_doc_ids=(),
-        )
 
     target_collection = DocumentLineageCollection(
         scope=_required_text(scope, field="delete collection.scope"),
@@ -516,51 +699,69 @@ def apply_document_deletes(
         _doc_id(doc_id, field=f"deleted doc_ids[{index}]")
         for index, doc_id in enumerate(doc_ids)
     }
-    if target_collection == table.working_collection:
-        affected = tuple(
-            record.working_doc_id
-            for record in table.records
-            if record.working_doc_id in deleted_doc_ids
+    workflows = workflows_for_collection(repo_root, target_collection)
+    if not workflows:
+        return DocumentLineageDeleteResult(role="", workflows=())
+    tables = load_tables(repo_root)
+    roles = {
+        "working"
+        if workflow.working_collection == target_collection
+        else "editorial"
+        for workflow in workflows
+    }
+    if len(roles) != 1:
+        raise ValueError(
+            "document publication lineage collection has ambiguous source/Editorial roles"
         )
-        records = tuple(
-            record
-            for record in table.records
-            if record.working_doc_id not in deleted_doc_ids
-        )
-        role = "working"
-    elif target_collection == table.editorial_collection:
-        affected_working_ids: list[str] = []
-        retained_records: list[DocumentLineageRecord] = []
-        for record in table.records:
-            editorials = tuple(
-                editorial
-                for editorial in record.editorials
-                if editorial.doc_id not in deleted_doc_ids
+    role = next(iter(roles))
+    changes: list[DocumentLineageDeleteChange] = []
+    for workflow in workflows:
+        table = tables[workflow.contract_id]
+        if table is None:
+            continue
+        if role == "working":
+            affected = tuple(
+                record.working_doc_id
+                for record in table.records
+                if record.working_doc_id in deleted_doc_ids
             )
-            if editorials != record.editorials:
-                affected_working_ids.append(record.working_doc_id)
-            if editorials:
-                retained_records.append(replace(record, editorials=editorials))
-        affected = tuple(affected_working_ids)
-        records = tuple(retained_records)
-        role = "editorial"
-    else:
-        return DocumentLineageDeleteResult(
-            table=table,
-            role="",
-            affected_working_doc_ids=(),
+            records = tuple(
+                record
+                for record in table.records
+                if record.working_doc_id not in deleted_doc_ids
+            )
+        else:
+            affected_working_ids: list[str] = []
+            retained_records: list[DocumentLineageRecord] = []
+            for record in table.records:
+                editorials = tuple(
+                    editorial
+                    for editorial in record.editorials
+                    if editorial.doc_id not in deleted_doc_ids
+                )
+                if editorials != record.editorials:
+                    affected_working_ids.append(record.working_doc_id)
+                if editorials:
+                    retained_records.append(replace(record, editorials=editorials))
+            affected = tuple(affected_working_ids)
+            records = tuple(retained_records)
+        updated = (
+            write_table_atomic(
+                repo_root,
+                replace(table, records=records),
+                contract_id=workflow.contract_id,
+            )
+            if affected
+            else table
         )
-
-    updated = (
-        write_table_atomic(repo_root, replace(table, records=records))
-        if affected
-        else table
-    )
-    return DocumentLineageDeleteResult(
-        table=updated,
-        role=role,
-        affected_working_doc_ids=affected,
-    )
+        changes.append(
+            DocumentLineageDeleteChange(
+                contract_id=workflow.contract_id,
+                table=updated,
+                affected_working_doc_ids=affected,
+            )
+        )
+    return DocumentLineageDeleteResult(role=role, workflows=tuple(changes))
 
 
 def project_publications(
@@ -593,21 +794,27 @@ def project_publications(
 __all__ = [
     "DocumentEditorialChild",
     "DocumentLineageCollection",
+    "DocumentLineageDeleteChange",
     "DocumentLineageDeleteResult",
     "DocumentLineageRecord",
     "DocumentLineageTable",
+    "DocumentLineageWorkflow",
     "LINEAGE_FILENAME",
     "LINEAGE_RELATIVE_PATH",
     "LINEAGE_SCHEMA_VERSION",
     "apply_copy_results",
     "apply_document_deletes",
-    "configured_table_path",
+    "configured_workflows",
     "current_timestamp",
     "editorials_for_working",
     "empty_table",
     "load_table",
+    "load_tables",
     "project_publications",
     "render_table",
     "table_path",
+    "workflow_for_collections",
+    "workflow_for_contract",
+    "workflows_for_collection",
     "write_table_atomic",
 ]

@@ -18,6 +18,7 @@ from docs_management_test_support import (
     write_json,
 )
 from repo_factory import docs_scope_record
+from test_docs_document_transfer import make_lineage_repo
 
 
 @pytest.fixture(autouse=True)
@@ -38,6 +39,21 @@ def external_scope_label(scope: str, relative: str = "") -> str:
 
 def external_source_media_root(scope: str) -> Path:
     return external_scope_root(scope) / "source/media"
+
+
+def test_sub_scope_delete_blocks_a_non_empty_lineage_workflow(tmp_path: Path) -> None:
+    repo_root = make_lineage_repo(tmp_path)
+
+    preview = docs_management_service.docs_sub_scope_lifecycle.plan_delete_sub_scope_preview(
+        repo_root,
+        {"parent_scope": "dotlineform", "sub_scope": "projects"},
+    )
+
+    assert preview["allowed"] is False
+    assert preview["blockers"] == [
+        "sub-scope participates in non-empty document publication lineage: "
+        "dotlineform_projects_to_analysis_works"
+    ]
 
 
 def rebuild_sub_scope_fixture(repo_root: Path, scope: str, sub_scope: str):

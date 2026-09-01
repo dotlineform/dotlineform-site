@@ -26,6 +26,9 @@ import docs_scope_config  # noqa: E402
 import docs_source_model as source_model  # noqa: E402
 
 
+PROJECTS_LINEAGE_CONTRACT = "dotlineform_projects_to_analysis_works"
+
+
 def write_json(path: Path, payload: object) -> None:
     if path.name == "docs_scopes.json" and isinstance(payload, dict):
         payload = {
@@ -279,6 +282,17 @@ def make_lineage_repo(tmp_path: Path) -> Path:
             "report_host_source_revision": "sha256:" + "1" * 64,
         },
     )
+    processing_sub_scope = docs_sub_scope_record(
+        "dotlineform",
+        "processing",
+        title="Processing",
+        sub_scope_customisation={"id": "dotlineform_processing", "settings": {}},
+        lifecycle={
+            "tool_id": "docs-viewer-scope-lifecycle",
+            "report_host_doc_id": "d-20260901-090000-dddddd",
+            "report_host_source_revision": "sha256:" + "3" * 64,
+        },
+    )
     target_sub_scope = docs_sub_scope_record(
         "analysis",
         "works",
@@ -296,7 +310,10 @@ def make_lineage_repo(tmp_path: Path) -> Path:
         {
             "schema_version": "docs_scopes_v5",
             "scopes": [
-                base_scope("dotlineform", sub_scopes=[source_sub_scope]),
+                base_scope(
+                    "dotlineform",
+                    sub_scopes=[source_sub_scope, processing_sub_scope],
+                ),
                 docs_scope_record(
                     "analysis",
                     scope_type="public",
@@ -314,6 +331,12 @@ def make_lineage_repo(tmp_path: Path) -> Path:
         doc_id="d-20260801-090000-eeeeee",
         title="Projects Report",
         body=report_body("Projects Report", "projects"),
+    )
+    write_doc(
+        local_documents_root(repo_root, "dotlineform"),
+        doc_id="d-20260901-090000-dddddd",
+        title="Processing Report",
+        body=report_body("Processing Report", "processing"),
     )
     write_doc(
         local_documents_root(repo_root, "analysis"),
@@ -351,7 +374,10 @@ def make_lineage_repo(tmp_path: Path) -> Path:
         body="# Editorial B Two\n\nEditorial body two.\n",
     )
     write_json(
-        publication_lineage.table_path(repo_root),
+        publication_lineage.table_path(
+            repo_root,
+            contract_id=PROJECTS_LINEAGE_CONTRACT,
+        ),
         {
             "schema_version": "docs_document_publication_lineage_v3",
             "working_collection": {
@@ -591,6 +617,71 @@ def test_lineage_replace_receipt_keeps_exact_target_after_target_edit(tmp_path: 
     )
 
 
+def test_processing_lineage_preview_is_independent_and_write_free(
+    tmp_path: Path,
+) -> None:
+    repo_root = make_lineage_repo(tmp_path)
+    source_id = "d-20260901-120000-abcdef"
+    processing_root = sub_scope_documents_root(
+        repo_root,
+        "dotlineform",
+        "processing",
+    )
+    write_doc(
+        processing_root,
+        doc_id=source_id,
+        title="Impossibility And Incompleteness",
+        body="# Impossibility And Incompleteness\n",
+        extra_front_matter={"folder_path": "processing/ink-engine"},
+    )
+    projects_bytes = publication_lineage.table_path(
+        repo_root,
+        contract_id=PROJECTS_LINEAGE_CONTRACT,
+    ).read_bytes()
+
+    plan = transfer.plan_document_transfer(
+        repo_root,
+        source_scope="dotlineform",
+        source_sub_scope="processing",
+        requested_doc_ids=[source_id],
+        target_scope="analysis",
+        target_sub_scope="works",
+        transfer_mode="copy",
+        operation_timestamp="2026-09-01 12:00:00",
+        token_factory=sequential_tokens("fedcba"),
+    )
+
+    assert plan.ok
+    assert plan.lineage is not None
+    assert plan.lineage.contract_id == "dotlineform_processing_to_analysis_works"
+    assert plan.lineage.decisions[0].action == transfer.COPY_ACTION_NEW
+    assert publication_lineage.load_table(
+        repo_root,
+        contract_id="dotlineform_processing_to_analysis_works",
+    ) is None
+    assert publication_lineage.table_path(
+        repo_root,
+        contract_id=PROJECTS_LINEAGE_CONTRACT,
+    ).read_bytes() == projects_bytes
+
+    with pytest.raises(ValueError, match="not supported for this exact transfer"):
+        transfer.plan_document_transfer(
+            repo_root,
+            source_scope="dotlineform",
+            source_sub_scope="processing",
+            requested_doc_ids=[source_id],
+            target_scope="dotlineform",
+            target_sub_scope="projects",
+            transfer_mode="copy",
+            operation_timestamp="2026-09-01 12:00:00",
+            copy_lineage_actions=[
+                {
+                    "source_doc_id": source_id,
+                    "action": "new",
+                    "replace_target_doc_id": "",
+                }
+            ],
+        )
 def test_copy_selection_is_deterministic_deduplicated_and_write_free(tmp_path: Path) -> None:
     repo_root = make_repo(tmp_path)
     before = snapshot(repo_root)

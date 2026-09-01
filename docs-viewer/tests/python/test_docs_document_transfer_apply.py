@@ -35,6 +35,7 @@ from build_docs_test_support import (  # noqa: E402
     write_site_tools_config,
 )
 from test_docs_document_transfer import (  # noqa: E402
+    PROJECTS_LINEAGE_CONTRACT,
     make_collection_repo,
     make_lineage_repo,
     sub_scope_documents_root,
@@ -42,6 +43,7 @@ from test_docs_document_transfer import (  # noqa: E402
 
 
 COPY_TIMESTAMP = "2026-07-24 14:00:00"
+PROCESSING_LINEAGE_CONTRACT = "dotlineform_processing_to_analysis_works"
 
 
 def write_json(path: Path, payload: object) -> None:
@@ -70,6 +72,7 @@ def write_doc(
     title: str,
     parent_id: str = "",
     body: str = "",
+    extra_front_matter: dict[str, object] | None = None,
 ) -> Path:
     documents_root.mkdir(parents=True, exist_ok=True)
     path = documents_root / f"{doc_id}.md"
@@ -81,6 +84,7 @@ def write_doc(
                 "added_date": "2026-07-01 10:00:00",
                 "last_updated": "2026-07-02 11:00:00",
                 "parent_id": parent_id,
+                **(extra_front_matter or {}),
             },
             body or f"# {title}\n",
         ),
@@ -373,7 +377,10 @@ def test_lineage_new_and_replace_commit_exact_rows_and_preserve_editorial_gate(
     assert "Replacement body from A." in replaced_body
 
     table = json.loads(
-        publication_lineage.table_path(repo_root).read_text(encoding="utf-8")
+        publication_lineage.table_path(
+            repo_root,
+            contract_id=PROJECTS_LINEAGE_CONTRACT,
+        ).read_text(encoding="utf-8")
     )
     exact_child = next(
         editorial
@@ -399,6 +406,79 @@ def test_lineage_new_and_replace_commit_exact_rows_and_preserve_editorial_gate(
     assert source_model.parse_source(source_path)[1].endswith(
         "Replacement body from A.\n"
     )
+
+
+def test_processing_copy_apply_writes_only_its_lineage_and_rebuilds_its_source(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    repo_root = make_lineage_repo(tmp_path)
+    source_id = "d-20260901-120000-abcdef"
+    source_root = sub_scope_documents_root(
+        repo_root,
+        "dotlineform",
+        "processing",
+    )
+    write_doc(
+        source_root,
+        doc_id=source_id,
+        title="Impossibility And Incompleteness",
+        body="# Impossibility And Incompleteness\n",
+        extra_front_matter={"folder_path": "processing/ink-engine"},
+    )
+    projects_path = publication_lineage.table_path(
+        repo_root,
+        contract_id=PROJECTS_LINEAGE_CONTRACT,
+    )
+    projects_before = projects_path.read_bytes()
+    plan = transfer.plan_document_transfer(
+        repo_root,
+        source_scope="dotlineform",
+        source_sub_scope="processing",
+        requested_doc_ids=[source_id],
+        target_scope="analysis",
+        target_sub_scope="works",
+        transfer_mode="copy",
+        operation_timestamp="2026-09-01 12:00:00",
+        token_factory=sequential_tokens("fedcba"),
+    )
+    rebuild_calls: list[dict[str, object]] = []
+    monkeypatch.setattr(
+        transfer_apply.publication_lineage,
+        "current_timestamp",
+        lambda: "2026-09-01T12:00:00Z",
+    )
+
+    result = transfer_apply.apply_document_copy(
+        repo_root,
+        plan,
+        confirm=True,
+        perform_sub_scope_source_write_and_rebuild=fake_sub_scope_rebuild(
+            rebuild_calls
+        ),
+        event_logger=lambda *_args: None,
+    )
+
+    assert result["lineage"] == {
+        "schema_version": "docs_document_publication_lineage_v3",
+        "record_count": 1,
+    }
+    assert projects_path.read_bytes() == projects_before
+    processing = publication_lineage.load_table(
+        repo_root,
+        contract_id=PROCESSING_LINEAGE_CONTRACT,
+    )
+    assert processing is not None
+    assert processing.records[0].working_doc_id == source_id
+    assert [
+        (call["scope"], call["sub_scope"])
+        for call in rebuild_calls
+    ] == [
+        ("analysis", "works"),
+        ("dotlineform", "processing"),
+    ]
+
+
 def test_transform_copy_preserves_selected_hierarchy_and_rewrites_owned_links(
     tmp_path: Path,
 ) -> None:

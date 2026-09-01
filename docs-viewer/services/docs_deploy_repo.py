@@ -70,8 +70,9 @@ class DeployRepoPlan:
     current_repository_files: Mapping[Path, bytes]
     media_references: Mapping[tuple[str, str], tuple[str, ...]]
     catalogue_plan: Any
-    current_lineage: publication_lineage.DocumentLineageTable | None
-    desired_lineage: publication_lineage.DocumentLineageTable | None
+    lineage_workflows: tuple[publication_lineage.DocumentLineageWorkflow, ...]
+    current_lineages: Mapping[str, publication_lineage.DocumentLineageTable | None]
+    desired_lineages: Mapping[str, publication_lineage.DocumentLineageTable | None]
 
 
 def utc_now() -> str:
@@ -746,40 +747,78 @@ def repository_diff(
     }
 
 
-def lineage_projection(
+def lineage_projections(
     exact_locations: Iterable[Mapping[str, Any]],
-    current: publication_lineage.DocumentLineageTable | None,
-) -> publication_lineage.DocumentLineageTable | None:
-    if current is None:
-        return None
-    editorial = current.editorial_collection
-    publication_urls = {
-        str(record.get("doc_id") or "").strip(): str(record.get("url") or "").strip()
-        for record in exact_locations
-        if str(record.get("scope_id") or "").strip() == editorial.scope
-        and str(record.get("sub_scope") or "").strip().lower() == editorial.sub_scope
-        and str(record.get("doc_id") or "").strip()
-        and str(record.get("url") or "").strip()
-    }
-    return publication_lineage.project_publications(
-        current,
-        editorial_scope=editorial.scope,
-        editorial_sub_scope=editorial.sub_scope,
-        publication_urls=publication_urls,
-    )
+    workflows: Iterable[publication_lineage.DocumentLineageWorkflow],
+    current: Mapping[str, publication_lineage.DocumentLineageTable | None],
+) -> dict[str, publication_lineage.DocumentLineageTable | None]:
+    locations = tuple(exact_locations)
+    desired: dict[str, publication_lineage.DocumentLineageTable | None] = {}
+    for workflow in workflows:
+        table = current[workflow.contract_id]
+        if table is None:
+            desired[workflow.contract_id] = None
+            continue
+        editorial = workflow.editorial_collection
+        publication_urls = {
+            str(record.get("doc_id") or "").strip(): str(record.get("url") or "").strip()
+            for record in locations
+            if str(record.get("scope_id") or "").strip() == editorial.scope
+            and str(record.get("sub_scope") or "").strip().lower() == editorial.sub_scope
+            and str(record.get("doc_id") or "").strip()
+            and str(record.get("url") or "").strip()
+        }
+        desired[workflow.contract_id] = publication_lineage.project_publications(
+            table,
+            editorial_scope=editorial.scope,
+            editorial_sub_scope=editorial.sub_scope,
+            publication_urls=publication_urls,
+        )
+    return desired
 
 
 def lineage_preview(
-    current: publication_lineage.DocumentLineageTable | None,
-    desired: publication_lineage.DocumentLineageTable | None,
+    workflows: Iterable[publication_lineage.DocumentLineageWorkflow],
+    current: Mapping[str, publication_lineage.DocumentLineageTable | None],
+    desired: Mapping[str, publication_lineage.DocumentLineageTable | None],
 ) -> dict[str, Any]:
-    current_bytes = publication_lineage.render_table(current) if current is not None else b""
-    desired_bytes = publication_lineage.render_table(desired) if desired is not None else b""
+    records = []
+    for workflow in workflows:
+        current_table = current[workflow.contract_id]
+        desired_table = desired[workflow.contract_id]
+        current_bytes = (
+            publication_lineage.render_table(current_table)
+            if current_table is not None
+            else b""
+        )
+        desired_bytes = (
+            publication_lineage.render_table(desired_table)
+            if desired_table is not None
+            else b""
+        )
+        records.append(
+            {
+                "contract_id": workflow.contract_id,
+                "path": (
+                    f"{workflow.working_collection.scope}/"
+                    f"{workflow.working_collection.sub_scope}/data/"
+                    f"{publication_lineage.LINEAGE_FILENAME}"
+                ),
+                "working_collection": workflow.working_collection.payload(),
+                "editorial_collection": workflow.editorial_collection.payload(),
+                "changed": current_bytes != desired_bytes,
+                "current_sha256": (
+                    sha256_bytes(current_bytes) if current_bytes else ""
+                ),
+                "desired_sha256": (
+                    sha256_bytes(desired_bytes) if desired_bytes else ""
+                ),
+            }
+        )
     return {
-        "path": "dotlineform/projects/data/document-publication-lineage.json",
-        "changed": current_bytes != desired_bytes,
-        "current_sha256": sha256_bytes(current_bytes) if current_bytes else "",
-        "desired_sha256": sha256_bytes(desired_bytes) if desired_bytes else "",
+        "changed": any(record["changed"] for record in records),
+        "changed_count": sum(int(record["changed"]) for record in records),
+        "workflows": records,
     }
 
 
@@ -838,9 +877,22 @@ def build_deploy_repo_plan(
         generated_at_utc=timestamp,
     )
     catalogue = catalogue_preview(repo_root, catalogue_plan)
-    current_lineage = publication_lineage.load_table(repo_root)
-    desired_lineage = lineage_projection(exact_locations, current_lineage)
-    lineage = lineage_preview(current_lineage, desired_lineage)
+    lineage_workflows = tuple(
+        workflow
+        for workflow in publication_lineage.configured_workflows(repo_root)
+        if workflow.editorial_collection.scope == config.scope_id
+    )
+    current_lineages = publication_lineage.load_tables(repo_root)
+    desired_lineages = lineage_projections(
+        exact_locations,
+        lineage_workflows,
+        current_lineages,
+    )
+    lineage = lineage_preview(
+        lineage_workflows,
+        current_lineages,
+        desired_lineages,
+    )
     plan_basis = {
         "scope": config.scope_id,
         "published_revision": manifest["published_revision"],
@@ -858,7 +910,7 @@ def build_deploy_repo_plan(
         + int(media.get("copy_count") or 0)
         + int(media.get("remove_count") or 0)
         + catalogue["changed_count"]
-        + int(lineage["changed"])
+        + int(lineage["changed_count"])
     )
     preview = {
         "ok": True,
@@ -882,7 +934,8 @@ def build_deploy_repo_plan(
             f"{repository['changed_count']} change, {repository['removed_count']} remove; "
             f"{media.get('copy_count', 0)} media copy, {media.get('remove_count', 0)} remove; "
             f"{catalogue['changed_count']} Catalogue change; "
-            f"{'1 lineage change' if lineage['changed'] else 'lineage unchanged'}."
+            f"{lineage['changed_count']} lineage change"
+            f"{'s' if lineage['changed_count'] != 1 else ''}."
         ),
     }
     return DeployRepoPlan(
@@ -892,8 +945,9 @@ def build_deploy_repo_plan(
         current_repository_files=current,
         media_references=media_references,
         catalogue_plan=catalogue_plan,
-        current_lineage=current_lineage,
-        desired_lineage=desired_lineage,
+        lineage_workflows=lineage_workflows,
+        current_lineages=current_lineages,
+        desired_lineages=desired_lineages,
     )
 
 
@@ -988,35 +1042,66 @@ def apply_deploy_repo(
     except Exception as exc:
         catalogue_error = str(exc)
 
-    lineage_status = "unchanged"
-    lineage_error = ""
-    projects_rebuild_status = "not_required"
-    projects_rebuild_error = ""
-    if plan.desired_lineage is not None and plan.desired_lineage != plan.current_lineage:
-        projects_rebuild_status = "not_run"
-        try:
-            publication_lineage.write_table_atomic(repo_root.resolve(), plan.desired_lineage)
-            lineage_status = "updated"
-        except Exception as exc:
-            lineage_status = "stale"
-            lineage_error = str(exc)
-        else:
+    lineage_results = []
+    for workflow in plan.lineage_workflows:
+        current_lineage = plan.current_lineages[workflow.contract_id]
+        desired_lineage = plan.desired_lineages[workflow.contract_id]
+        lineage_status = "unchanged"
+        lineage_error = ""
+        rebuild_status = "not_required"
+        rebuild_error = ""
+        if desired_lineage is not None and desired_lineage != current_lineage:
+            rebuild_status = "not_run"
             try:
-                rebuild_sub_scope_outputs(
+                publication_lineage.write_table_atomic(
                     repo_root.resolve(),
-                    plan.desired_lineage.working_collection.scope,
-                    plan.desired_lineage.working_collection.sub_scope,
+                    desired_lineage,
+                    contract_id=workflow.contract_id,
                 )
-                projects_rebuild_status = "updated"
+                lineage_status = "updated"
             except Exception as exc:
-                projects_rebuild_status = "stale"
-                projects_rebuild_error = str(exc)
+                lineage_status = "stale"
+                lineage_error = str(exc)
+            else:
+                try:
+                    rebuild_sub_scope_outputs(
+                        repo_root.resolve(),
+                        workflow.working_collection.scope,
+                        workflow.working_collection.sub_scope,
+                    )
+                    rebuild_status = "updated"
+                except Exception as exc:
+                    rebuild_status = "stale"
+                    rebuild_error = str(exc)
+        lineage_results.append(
+            {
+                "contract_id": workflow.contract_id,
+                "status": lineage_status,
+                "error": lineage_error,
+                "working_rebuild": {
+                    "status": rebuild_status,
+                    "error": rebuild_error,
+                },
+            }
+        )
+
+    lineage_errors = sum(
+        int(bool(record["error"]))
+        + int(bool(record["working_rebuild"]["error"]))
+        for record in lineage_results
+    )
+    lineage_status = (
+        "stale"
+        if any(record["error"] for record in lineage_results)
+        else "updated"
+        if any(record["status"] == "updated" for record in lineage_results)
+        else "unchanged"
+    )
 
     error_count = (
         int(media.get("error_count") or 0)
         + int(bool(catalogue_error))
-        + int(bool(lineage_error))
-        + int(bool(projects_rebuild_error))
+        + lineage_errors
     )
     result = dict(preview)
     result.update(
@@ -1035,18 +1120,27 @@ def apply_deploy_repo(
             "publication_lineage": {
                 **preview["publication_lineage"],
                 "status": lineage_status,
-                "error": lineage_error,
-                "projects_rebuild": {
-                    "status": projects_rebuild_status,
-                    "error": projects_rebuild_error,
-                },
+                "workflows": [
+                    {
+                        **preview_record,
+                        **next(
+                            record
+                            for record in lineage_results
+                            if record["contract_id"]
+                            == preview_record["contract_id"]
+                        ),
+                    }
+                    for preview_record in preview["publication_lineage"]["workflows"]
+                ],
             },
             "summary_text": (
                 f"Deployed accepted Analysis revision {preview['published_revision']} to the repository projection. "
                 f"Media: {media.get('copied_count', 0)} copied, {media.get('removed_count', 0)} removed, "
                 f"{media.get('error_count', 0)} errors. "
                 f"Catalogue: {'stale' if catalogue_error else 'current'}. "
-                f"Lineage: {lineage_status}; Projects rebuild: {projects_rebuild_status}."
+                f"Lineage: {lineage_status}; "
+                f"{sum(int(record['working_rebuild']['status'] == 'updated') for record in lineage_results)} "
+                "Working rebuilds updated."
             ),
         }
     )

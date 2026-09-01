@@ -15,7 +15,7 @@ from repo_factory import (
     write_docs_scope_config,
     write_site_tools_config,
 )
-from test_docs_document_transfer import make_lineage_repo
+from test_docs_document_transfer import PROJECTS_LINEAGE_CONTRACT, make_lineage_repo
 
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
@@ -244,7 +244,10 @@ def test_set_publishable_is_lineage_neutral(
 ) -> None:
     repo_root = make_lineage_repo(tmp_path)
     editorial_id = "d-20260802-120000-cccccc"
-    lineage_path = publication_lineage.table_path(repo_root)
+    lineage_path = publication_lineage.table_path(
+        repo_root,
+        contract_id=PROJECTS_LINEAGE_CONTRACT,
+    )
     lineage_before = lineage_path.read_bytes()
 
     def atomic_child_rebuild(

@@ -98,6 +98,10 @@ export function createDocsViewerManagementSubscopeDefaultContribution(options = 
   var onCopyDocuments = typeof options.onCopyDocuments === "function"
     ? options.onCopyDocuments
     : null;
+  var lineageCopy = options.lineageCopy && typeof options.lineageCopy === "object"
+    ? options.lineageCopy
+    : null;
+  var copyActionLabel = cleanString(lineageCopy && lineageCopy.actionLabel) || "Copy to…";
   var onSetPublishable = typeof options.onSetPublishable === "function"
     ? options.onSetPublishable
     : null;
@@ -242,7 +246,7 @@ export function createDocsViewerManagementSubscopeDefaultContribution(options = 
               : "Sub-scope Copy is unavailable."
         )
       : copyActionResolution.disabledReason;
-    var copyLabel = "Copy to…";
+    var copyLabel = copyActionLabel;
     var copyAccessibleLabel = copyDisabledReason
       ? copyLabel + " " + copyDisabledReason
       : copyLabel;
@@ -490,7 +494,7 @@ export function createDocsViewerManagementSubscopeDefaultContribution(options = 
     copyEmoji.textContent = "⧉";
     var copyLabel = documentRef.createElement("span");
     copyLabel.className = "docsViewer__actionMenuLabel";
-    copyLabel.textContent = "Copy to…";
+    copyLabel.textContent = copyActionLabel;
     copyButton.replaceChildren(copyEmoji, copyLabel);
     var prepareButton = documentRef.createElement("button");
     prepareButton.className = "docsViewer__actionMenuItem";
@@ -731,7 +735,10 @@ export function createDocsViewerManagementSubscopeDefaultContribution(options = 
           emptyState: "disabled",
           refreshEffect: "none",
           handler: function (target) {
-            return onCopyDocuments(target, { restoreFocus: actionsButton });
+            return onCopyDocuments(target, {
+              restoreFocus: actionsButton,
+              lineageCopy: lineageCopy
+            });
           }
         }, {
           active: selectionOwner.snapshot().selectionModeActive,
@@ -746,7 +753,8 @@ export function createDocsViewerManagementSubscopeDefaultContribution(options = 
             doc_ids: resolution.targetDocIds.slice()
           },
           {
-            restoreFocus: actionsButton
+            restoreFocus: actionsButton,
+            lineageCopy: lineageCopy
           }
         );
       }

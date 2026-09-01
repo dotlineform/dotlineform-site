@@ -79,11 +79,15 @@ def test_current_customisations_declare_explicit_aspects() -> None:
         )
     )
     assert works.transfer is None
-    assert works.document_lineage == (
+    assert works.document_lineages == (
         customisations.DocsSubScopeDocumentLineageAspect(
             contract_id="dotlineform_projects_to_analysis_works",
             role="editorial",
-        )
+        ),
+        customisations.DocsSubScopeDocumentLineageAspect(
+            contract_id="dotlineform_processing_to_analysis_works",
+            role="editorial",
+        ),
     )
 
     assert isinstance(
@@ -109,11 +113,13 @@ def test_current_customisations_declare_explicit_aspects() -> None:
         ),
     )
     assert projects.transfer is None
-    assert projects.document_lineage == (
+    assert projects.document_lineages == (
         customisations.DocsSubScopeDocumentLineageAspect(
             contract_id="dotlineform_projects_to_analysis_works",
             role="source",
-        )
+            copy_action_label="Copy to Analysis",
+            copy_modal_title="Copy to analysis/works",
+        ),
     )
 
     assert isinstance(
@@ -139,7 +145,14 @@ def test_current_customisations_declare_explicit_aspects() -> None:
         ),
     )
     assert processing.transfer is None
-    assert processing.document_lineage is None
+    assert processing.document_lineages == (
+        customisations.DocsSubScopeDocumentLineageAspect(
+            contract_id="dotlineform_processing_to_analysis_works",
+            role="source",
+            copy_action_label="Copy to Analysis",
+            copy_modal_title="Copy to analysis/works",
+        ),
+    )
 
     projects_config = customisations.normalize_docs_subscope_customisation(
         {"id": "dotlineform_projects", "settings": {}},
@@ -176,9 +189,9 @@ def test_current_customisations_declare_explicit_aspects() -> None:
         processing_config,
         published=True,
     ) is None
-    assert customisations.sub_scope_customisation_document_lineage_contract(
+    assert customisations.sub_scope_customisation_document_lineage_contracts(
         processing_config
-    ) is None
+    ) == processing.document_lineages
 
     analysis_config = customisations.normalize_docs_subscope_customisation(
         {
@@ -286,12 +299,12 @@ def test_current_customisations_declare_explicit_aspects() -> None:
     assert customisations.sub_scope_customisation_authoring_subject_fields(
         works_config
     ) == ("folder_path", "work_id", "series_id")
-    assert customisations.sub_scope_customisation_document_lineage_contract(
+    assert customisations.sub_scope_customisation_document_lineage_contracts(
         works_config
-    ) == works.document_lineage
-    assert customisations.sub_scope_customisation_document_lineage_contract(
+    ) == works.document_lineages
+    assert customisations.sub_scope_customisation_document_lineage_contracts(
         projects_config
-    ) == projects.document_lineage
+    ) == projects.document_lineages
 
 
 def test_assignable_and_transfer_seams_are_typed_and_access_safe() -> None:
@@ -420,9 +433,11 @@ def test_document_lineage_contract_requires_a_supported_exact_role() -> None:
     definition = customisations.DocsSubScopeCustomisationDefinition(
         customisation_id="synthetic",
         normalize_settings=_empty_settings,
-        document_lineage=customisations.DocsSubScopeDocumentLineageAspect(
-            contract_id="synthetic_lineage",
-            role="primary",
+        document_lineages=(
+            customisations.DocsSubScopeDocumentLineageAspect(
+                contract_id="synthetic_lineage",
+                role="primary",
+            ),
         ),
     )
     with patch.dict(

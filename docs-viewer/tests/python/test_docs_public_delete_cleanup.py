@@ -20,7 +20,7 @@ from repo_factory import (
     docs_sub_scope_record,
     write_docs_scope_config,
 )
-from test_docs_document_transfer import make_lineage_repo
+from test_docs_document_transfer import PROJECTS_LINEAGE_CONTRACT, make_lineage_repo
 
 
 PARENT_ID = "d-20260808-100000-aaaaaa"
@@ -673,7 +673,10 @@ def test_delete_applies_lineage_after_public_cleanup_and_rebuilds_projects_only(
         f"docs-viewer/scopes/{scope}/source/sub-scopes/{sub_scope}/"
         f"documents/{doc_id}.md"
     )
-    lineage_path = publication_lineage.table_path(repo_root)
+    lineage_path = publication_lineage.table_path(
+        repo_root,
+        contract_id=PROJECTS_LINEAGE_CONTRACT,
+    )
     lineage_before = lineage_path.read_bytes()
     working_path = repo_root / (
         "docs-viewer/scopes/dotlineform/source/sub-scopes/projects/documents/"
@@ -772,9 +775,15 @@ def test_delete_applies_lineage_after_public_cleanup_and_rebuilds_projects_only(
         "schema_version": "docs_document_publication_lineage_v3",
         "status": "updated",
         "role": role,
-        "affected_working_doc_ids": ["d-20260801-100000-aaaaaa"],
-        "record_count": remaining_record_count,
-        "rebuild": {"ok": True, "kind": "lineage"},
+        "workflows": [
+            {
+                "contract_id": PROJECTS_LINEAGE_CONTRACT,
+                "status": "updated",
+                "affected_working_doc_ids": ["d-20260801-100000-aaaaaa"],
+                "record_count": remaining_record_count,
+                "rebuild": {"ok": True, "kind": "lineage"},
+            }
+        ],
     }
     table = read_json(lineage_path)
     assert len(table["records"]) == remaining_record_count
@@ -804,7 +813,10 @@ def test_failed_public_cleanup_leaves_lineage_unchanged(
         "docs-viewer/scopes/analysis/source/sub-scopes/works/documents/"
         f"{doc_id}.md"
     )
-    lineage_path = publication_lineage.table_path(repo_root)
+    lineage_path = publication_lineage.table_path(
+        repo_root,
+        contract_id=PROJECTS_LINEAGE_CONTRACT,
+    )
     lineage_before = lineage_path.read_bytes()
     lineage_rebuilds: list[object] = []
 

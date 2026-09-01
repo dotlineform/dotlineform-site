@@ -559,6 +559,6 @@ export function createDocsViewerManagementSubscopeDotlineformProjects(options = 
 export function createDocsViewerManagementSubscopeDotlineformProcessing(options = {}) {
   return createDocsViewerManagementWorkingSubjects(options, {
     customisationId: PROCESSING_CUSTOMISATION_ID,
-    includePublicationCues: false
+    includePublicationCues: true
   });
 }

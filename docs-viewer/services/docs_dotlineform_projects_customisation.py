@@ -23,6 +23,7 @@ from docs_document_subjects import (
 
 
 CUSTOMISATION_ID = "dotlineform_projects"
+LINEAGE_CONTRACT_ID = "dotlineform_projects_to_analysis_works"
 
 
 def normalize_settings(raw: Any, field: str) -> Mapping[str, Any]:
@@ -59,8 +60,9 @@ def project_manifest(
         )
         if subject["state"] == "valid" and subject["kind"] == "folder":
             rows[doc_id] = {FOLDER_PATH_FIELD: subject["key"]}
-    publication_targets = _publication_targets(
+    publication_targets = publication_targets_for_documents(
         repo_root,
+        contract_id=LINEAGE_CONTRACT_ID,
         source_scope=scope,
         source_sub_scope=sub_scope,
         doc_ids={
@@ -76,16 +78,17 @@ def project_manifest(
     }
 
 
-def _publication_targets(
+def publication_targets_for_documents(
     repo_root: Path,
     *,
+    contract_id: str,
     source_scope: str,
     source_sub_scope: str,
     doc_ids: set[str],
 ) -> dict[str, list[dict[str, Any]]]:
     import docs_document_publication_lineage as publication_lineage
 
-    table = publication_lineage.load_table(repo_root)
+    table = publication_lineage.load_table(repo_root, contract_id=contract_id)
     if table is None or table.working_collection != (
         publication_lineage.DocumentLineageCollection(
             scope=source_scope,
@@ -326,11 +329,13 @@ def normalize_import_front_matter(
 __all__ = [
     "CUSTOMISATION_ID",
     "FOLDER_PATH_FIELD",
+    "LINEAGE_CONTRACT_ID",
     "SERIES_ID_FIELD",
     "WORK_ID_FIELD",
     "metadata_record",
     "normalize_metadata_update",
     "normalize_import_front_matter",
     "normalize_settings",
+    "publication_targets_for_documents",
     "project_manifest",
 ]

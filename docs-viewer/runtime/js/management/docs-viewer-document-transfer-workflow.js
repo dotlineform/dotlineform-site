@@ -368,14 +368,35 @@ export async function openDocumentTransferWorkflow(options = {}) {
   var callbacks = options.callbacks || {};
   if (!checkedDocIds.length) throw new Error("Select one or more documents.");
   if (!targets.length) throw new Error("No other writable Docs Viewer collection is available.");
+  var fixedTarget = options.fixedTarget == null
+    ? null
+    : normalizeManagedDocumentCollectionTarget(options.fixedTarget);
+  var modalTitle = String(options.modalTitle || "").trim();
+  if (fixedTarget && mode !== "copy") {
+    throw new Error("A fixed document transfer target is available only for Copy.");
+  }
+  if (fixedTarget && !modalTitle) {
+    throw new Error("A fixed document Copy requires an exact modal title.");
+  }
+  if (fixedTarget && !targets.some(function (record) {
+    return collectionKey(record.target) === collectionKey(fixedTarget);
+  })) {
+    throw new Error("The fixed document Copy target is unavailable.");
+  }
 
-  var choice = await openTransferOptions({
-    root: options.root,
-    restoreFocus: options.restoreFocus,
-    mode: mode,
-    targets: targets,
-    copyDescendantsAvailable: options.copyDescendantsAvailable === true
-  });
+  var choice = fixedTarget
+    ? {
+        confirmed: true,
+        target: fixedTarget,
+        includeDescendants: false
+      }
+    : await openTransferOptions({
+        root: options.root,
+        restoreFocus: options.restoreFocus,
+        mode: mode,
+        targets: targets,
+        copyDescendantsAvailable: options.copyDescendantsAvailable === true
+      });
   if (!choice || !choice.confirmed) return null;
   if (!targets.some(function (record) {
     return collectionKey(record.target) === collectionKey(choice.target);
@@ -438,7 +459,7 @@ export async function openDocumentTransferWorkflow(options = {}) {
   var confirmed = await openDocsViewerConfirmModal({
     root: options.root,
     restoreFocus: options.restoreFocus,
-    title: TRANSFER_TEXT[mode].confirmTitle,
+    title: modalTitle || TRANSFER_TEXT[mode].confirmTitle,
     bodyHtml: documentTransferConfirmationBodyHtml(preview),
     primaryLabel: hasReplace ? "Replace selected documents" : TRANSFER_TEXT[mode].confirmButton,
     primaryTone: hasReplace ? "danger" : "",

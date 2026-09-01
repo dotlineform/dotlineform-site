@@ -41,7 +41,7 @@ from docs_management_document_target import (
 from docs_subscope_customisations import (
     LINEAGE_EDITORIAL_ROLE,
     LINEAGE_SOURCE_ROLE,
-    sub_scope_customisation_document_lineage_contract,
+    sub_scope_customisation_document_lineage_contracts,
     sub_scope_customisation_transfer_contract,
 )
 
@@ -1423,21 +1423,27 @@ def _document_lineage_plan(
     raw_actions: Any,
     blockers: list[TransferBlocker],
 ) -> DocumentLineageTransferPlan | None:
-    source_aspect = sub_scope_customisation_document_lineage_contract(
+    source_aspects = sub_scope_customisation_document_lineage_contracts(
         _collection_customisation(source_collection)
     )
-    target_aspect = sub_scope_customisation_document_lineage_contract(
+    target_aspects = sub_scope_customisation_document_lineage_contracts(
         _collection_customisation(target_collection)
     )
-    enabled = (
-        mode == COPY_MODE
-        and source_aspect is not None
-        and target_aspect is not None
-        and source_aspect.role == LINEAGE_SOURCE_ROLE
-        and target_aspect.role == LINEAGE_EDITORIAL_ROLE
-        and source_aspect.contract_id == target_aspect.contract_id
-    )
-    if not enabled:
+    matching_contract_ids = sorted(
+        {
+            source_aspect.contract_id
+            for source_aspect in source_aspects
+            if source_aspect.role == LINEAGE_SOURCE_ROLE
+        }
+        & {
+            target_aspect.contract_id
+            for target_aspect in target_aspects
+            if target_aspect.role == LINEAGE_EDITORIAL_ROLE
+        }
+    ) if mode == COPY_MODE else []
+    if len(matching_contract_ids) > 1:
+        raise ValueError("document lineage Copy contract is ambiguous")
+    if not matching_contract_ids:
         if raw_actions is not None:
             raise ValueError(
                 "copy_lineage_actions are not supported for this exact transfer"
@@ -1445,6 +1451,23 @@ def _document_lineage_plan(
         return None
     if not source_collection.sub_scope or not target_collection.sub_scope:
         raise ValueError("document lineage requires exact sub-scope collections")
+    workflow = publication_lineage.workflow_for_contract(
+        repo_root,
+        matching_contract_ids[0],
+    )
+    if (
+        workflow.working_collection
+        != publication_lineage.DocumentLineageCollection(
+            source_collection.scope,
+            source_collection.sub_scope,
+        )
+        or workflow.editorial_collection
+        != publication_lineage.DocumentLineageCollection(
+            target_collection.scope,
+            target_collection.sub_scope,
+        )
+    ):
+        raise ValueError("document lineage workflow does not match exact Copy")
 
     normalized_actions = _normalize_copy_lineage_actions(raw_actions)
     source_documents = tuple(source_docs)
@@ -1463,7 +1486,10 @@ def _document_lineage_plan(
                 + ", ".join(missing_sources)
             )
 
-    lineage_table = publication_lineage.load_table(repo_root)
+    lineage_table = publication_lineage.load_table(
+        repo_root,
+        contract_id=workflow.contract_id,
+    )
     target_by_id = {document.doc_id: document for document in target_docs}
     decisions: list[TransferLineageDecision] = []
     selected_replace_targets: set[str] = set()
@@ -1535,7 +1561,7 @@ def _document_lineage_plan(
             )
         )
     return DocumentLineageTransferPlan(
-        contract_id=source_aspect.contract_id,
+        contract_id=workflow.contract_id,
         decisions=tuple(decisions),
     )
 

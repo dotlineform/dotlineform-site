@@ -482,6 +482,8 @@ export function createDocsViewerManagementIndexController(options = {}) {
           mode: settings.mode,
           checkedDocIds: checkedDocIds,
           targets: settings.targets,
+          fixedTarget: settings.fixedTarget,
+          modalTitle: settings.modalTitle,
           copyDescendantsAvailable: settings.copyDescendantsAvailable === true,
           clientOptions: managementClientOptions(),
           callbacks: {
@@ -586,6 +588,37 @@ export function createDocsViewerManagementIndexController(options = {}) {
       normalized.source,
       "copy"
     );
+    var lineageCopy = options && options.lineageCopy;
+    var fixedTarget = null;
+    var modalTitle = "";
+    if (lineageCopy != null) {
+      if (!lineageCopy || typeof lineageCopy !== "object" || Array.isArray(lineageCopy)) {
+        return Promise.reject(new Error("Lineage Copy configuration is invalid."));
+      }
+      try {
+        fixedTarget = normalizeManagedDocumentCollectionTarget(lineageCopy.target);
+      } catch (error) {
+        return Promise.reject(error);
+      }
+      modalTitle = String(lineageCopy.modalTitle || "").trim();
+      if (!modalTitle) {
+        return Promise.reject(new Error("Lineage Copy modal title is unavailable."));
+      }
+      targets = targets.filter(function (record) {
+        try {
+          var candidate = normalizeManagedDocumentCollectionTarget(record.target);
+          return candidate.scope === fixedTarget.scope
+            && candidate.sub_scope === fixedTarget.sub_scope;
+        } catch (error) {
+          return false;
+        }
+      });
+      if (targets.length !== 1) {
+        return Promise.reject(new Error(
+          "The configured lineage Copy target is not one exact writable collection."
+        ));
+      }
+    }
     var controlState = docsViewerDocumentTransferActionControlState({
       capabilities: management.managementCapabilities,
       managementAvailable: management.managementAvailable,
@@ -605,6 +638,8 @@ export function createDocsViewerManagementIndexController(options = {}) {
       mode: "copy",
       checkedDocIds: normalized.docIds,
       targets: targets,
+      fixedTarget: fixedTarget,
+      modalTitle: modalTitle,
       copyDescendantsAvailable: false,
       restoreFocus: options && options.restoreFocus
     });

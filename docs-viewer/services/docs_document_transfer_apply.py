@@ -1060,6 +1060,7 @@ def apply_document_copy(
         if current_plan.lineage is not None:
             lineage_table = publication_lineage.apply_copy_results(
                 repo_root,
+                contract_id=current_plan.lineage.contract_id,
                 source_scope=current_plan.source_scope,
                 source_sub_scope=current_plan.source_sub_scope,
                 editorial_scope=current_plan.target_scope,

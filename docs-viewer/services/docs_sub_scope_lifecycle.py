@@ -7,6 +7,7 @@ from pathlib import Path
 from typing import Any, Callable
 
 import docs_public_delete_cleanup as public_delete_cleanup
+import docs_document_publication_lineage as publication_lineage
 
 from docs_lifecycle_paths import (
     delete_manifest_paths,
@@ -492,6 +493,32 @@ def plan_delete_sub_scope_preview(repo_root: Path, body: dict[str, Any]) -> dict
         return blocked_delete_preview(parent_scope, sub_scope, [f"sub_scope {sub_scope!r} is not configured in scope {parent_scope!r}"])
 
     sub_scope_config = matching[0]
+    collection = publication_lineage.DocumentLineageCollection(
+        scope=parent_scope,
+        sub_scope=sub_scope,
+    )
+    lineage_workflows = publication_lineage.workflows_for_collection(
+        repo_root,
+        collection,
+    )
+    if lineage_workflows:
+        lineage_tables = publication_lineage.load_tables(repo_root)
+        non_empty_contracts = [
+            workflow.contract_id
+            for workflow in lineage_workflows
+            if lineage_tables[workflow.contract_id] is not None
+            and lineage_tables[workflow.contract_id].records
+        ]
+        if non_empty_contracts:
+            return blocked_delete_preview(
+                parent_scope,
+                sub_scope,
+                [
+                    "sub-scope participates in non-empty document publication "
+                    "lineage: " + ", ".join(non_empty_contracts)
+                ],
+                title=sub_scope_config.title,
+            )
     lifecycle = sub_scope_config.lifecycle
     if lifecycle is None:
         return blocked_delete_preview(

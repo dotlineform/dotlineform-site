@@ -124,8 +124,36 @@ def test_python_docs_builder_projects_empty_processing_collection_report(
                 "id": "dotlineform_processing",
                 "settings": {},
             },
-        )
+        ),
+        docs_sub_scope_record(
+            "studio",
+            "projects",
+            title="Projects",
+            sub_scope_customisation={
+                "id": "dotlineform_projects",
+                "settings": {},
+            },
+        ),
     ]
+    payload["scopes"].append(
+        docs_scope_record(
+            "analysis",
+            scope_type="public",
+            viewer_base_url="/analysis/",
+            include_scope_param=False,
+            sub_scopes=[
+                docs_sub_scope_record(
+                    "analysis",
+                    "works",
+                    scope_type="public",
+                    sub_scope_customisation={
+                        "id": "analysis_works",
+                        "settings": {},
+                    },
+                )
+            ],
+        )
+    )
     write_json(config_path, payload)
     (
         root
@@ -169,6 +197,12 @@ def test_python_docs_builder_projects_empty_processing_collection_report(
         "id": "dotlineform_processing",
         "capabilities": {
             "assignable_field_groups": ["authoring_subject"],
+            "lineage_copy": {
+                "contract_id": "dotlineform_processing_to_analysis_works",
+                "target": {"scope": "analysis", "sub_scope": "works"},
+                "action_label": "Copy to Analysis",
+                "modal_title": "Copy to analysis/works",
+            },
         },
     }
     assert "sub_scope_customisation" not in public_browser_config["scopes"][0][
@@ -203,7 +237,16 @@ def test_python_docs_builder_projects_subjects_into_private_products() -> None:
                                     "id": "dotlineform_projects",
                                     "settings": {},
                                 },
-                            )
+                            ),
+                            docs_sub_scope_record(
+                                "dotlineform",
+                                "processing",
+                                title="Processing",
+                                sub_scope_customisation={
+                                    "id": "dotlineform_processing",
+                                    "settings": {},
+                                },
+                            ),
                         ],
                     ),
                     docs_scope_record(
@@ -524,6 +567,12 @@ sub_scope: works
         "id": "dotlineform_projects",
         "capabilities": {
             "assignable_field_groups": ["authoring_subject"],
+            "lineage_copy": {
+                "contract_id": "dotlineform_projects_to_analysis_works",
+                "target": {"scope": "analysis", "sub_scope": "works"},
+                "action_label": "Copy to Analysis",
+                "modal_title": "Copy to analysis/works",
+            },
         },
     }
     assert "sub_scope_customisation" not in public_browser_config["scopes"][0][
@@ -1431,6 +1480,29 @@ def test_public_authoring_subject_collection_emits_deployment_metadata() -> None
                 sub_scope_customisation={"id": "analysis_works", "settings": {}},
             )
         ]
+        payload["scopes"].append(
+            docs_scope_record(
+                "dotlineform",
+                sub_scopes=[
+                    docs_sub_scope_record(
+                        "dotlineform",
+                        "projects",
+                        sub_scope_customisation={
+                            "id": "dotlineform_projects",
+                            "settings": {},
+                        },
+                    ),
+                    docs_sub_scope_record(
+                        "dotlineform",
+                        "processing",
+                        sub_scope_customisation={
+                            "id": "dotlineform_processing",
+                            "settings": {},
+                        },
+                    ),
+                ],
+            )
+        )
         write_json(config_path, payload)
         write_text(
             root

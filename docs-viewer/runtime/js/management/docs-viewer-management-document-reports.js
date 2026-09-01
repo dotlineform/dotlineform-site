@@ -245,6 +245,11 @@ function loadSubscopeContribution(settings, parent, subScope, options) {
     var defaultContribution = modules[0].createDocsViewerManagementSubscopeDefaultContribution({
       clientOptions: clientOptions,
       managementContext: Boolean(settings.managementContext),
+      lineageCopy: (
+        subScopeConfig.subScopeCustomisation
+        && subScopeConfig.subScopeCustomisation.capabilities
+        && subScopeConfig.subScopeCustomisation.capabilities.lineageCopy
+      ) || null,
       markdownLinkForDocument: function (target, documentRecord) {
         return markdownLinkForSubscopeDocument(
           settings,
@@ -361,7 +366,8 @@ function openSubscopeCopy(settings, parent, subScope, request, context) {
       doc_ids: docIds
     },
     {
-      restoreFocus: context && context.restoreFocus
+      restoreFocus: context && context.restoreFocus,
+      lineageCopy: context && context.lineageCopy
     }
   );
 }

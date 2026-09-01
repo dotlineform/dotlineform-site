@@ -71,33 +71,89 @@ export function normalizeDocsViewerSubScopeCustomisation(rawCustomisation) {
     throw new Error("Docs Viewer sub_scope_customisation capabilities must be an object.");
   }
   var capabilityKeys = Object.keys(rawCapabilities).sort();
-  if (capabilityKeys.length !== 1 || capabilityKeys[0] !== "assignable_field_groups") {
+  if (
+    !capabilityKeys.length
+    || capabilityKeys.some(function (key) {
+      return key !== "assignable_field_groups" && key !== "lineage_copy";
+    })
+  ) {
     throw new Error(
-      "Docs Viewer sub_scope_customisation capabilities must contain exactly assignable_field_groups."
+      "Docs Viewer sub_scope_customisation capabilities contains an invalid field."
     );
   }
-  var rawGroups = rawCapabilities.assignable_field_groups;
-  if (!Array.isArray(rawGroups) || !rawGroups.length) {
-    throw new Error(
-      "Docs Viewer sub_scope_customisation assignable_field_groups must be a non-empty array."
-    );
-  }
-  var seen = new Set();
-  var assignableFieldGroups = rawGroups.map(function (rawGroup) {
-    var groupId = String(rawGroup || "").trim();
-    if (!/^[a-z][a-z0-9_]*$/.test(groupId) || seen.has(groupId)) {
+  var capabilities = {};
+  if (Object.prototype.hasOwnProperty.call(rawCapabilities, "assignable_field_groups")) {
+    var rawGroups = rawCapabilities.assignable_field_groups;
+    if (!Array.isArray(rawGroups) || !rawGroups.length) {
       throw new Error(
-        "Docs Viewer sub_scope_customisation assignable_field_groups contains an invalid or duplicate id."
+        "Docs Viewer sub_scope_customisation assignable_field_groups must be a non-empty array."
       );
     }
-    seen.add(groupId);
-    return groupId;
-  });
+    var seen = new Set();
+    capabilities.assignableFieldGroups = Object.freeze(rawGroups.map(function (rawGroup) {
+      var groupId = String(rawGroup || "").trim();
+      if (!/^[a-z][a-z0-9_]*$/.test(groupId) || seen.has(groupId)) {
+        throw new Error(
+          "Docs Viewer sub_scope_customisation assignable_field_groups contains an invalid or duplicate id."
+        );
+      }
+      seen.add(groupId);
+      return groupId;
+    }));
+  }
+
+  if (Object.prototype.hasOwnProperty.call(rawCapabilities, "lineage_copy")) {
+    var rawLineageCopy = rawCapabilities.lineage_copy;
+    if (!rawLineageCopy || typeof rawLineageCopy !== "object" || Array.isArray(rawLineageCopy)) {
+      throw new Error("Docs Viewer sub_scope_customisation lineage_copy must be an object.");
+    }
+    if (Object.keys(rawLineageCopy).sort().join("\u0000") !== [
+      "action_label",
+      "contract_id",
+      "modal_title",
+      "target"
+    ].join("\u0000")) {
+      throw new Error(
+        "Docs Viewer sub_scope_customisation lineage_copy fields are invalid."
+      );
+    }
+    var contractId = String(rawLineageCopy.contract_id || "").trim();
+    var actionLabel = String(rawLineageCopy.action_label || "").trim();
+    var modalTitle = String(rawLineageCopy.modal_title || "").trim();
+    var rawTarget = rawLineageCopy.target;
+    if (!/^[a-z][a-z0-9_]*$/.test(contractId) || !actionLabel || !modalTitle) {
+      throw new Error(
+        "Docs Viewer sub_scope_customisation lineage_copy identity and presentation are required."
+      );
+    }
+    if (
+      !rawTarget
+      || typeof rawTarget !== "object"
+      || Array.isArray(rawTarget)
+      || Object.keys(rawTarget).sort().join("\u0000") !== ["scope", "sub_scope"].join("\u0000")
+    ) {
+      throw new Error("Docs Viewer sub_scope_customisation lineage_copy target is invalid.");
+    }
+    var targetScope = String(rawTarget.scope || "").trim().toLowerCase();
+    var targetSubScope = String(rawTarget.sub_scope || "").trim().toLowerCase();
+    if (
+      !/^[a-z][a-z0-9_-]*$/.test(targetScope)
+      || !/^[a-z][a-z0-9_-]*$/.test(targetSubScope)
+    ) {
+      throw new Error(
+        "Docs Viewer sub_scope_customisation lineage_copy target is invalid."
+      );
+    }
+    capabilities.lineageCopy = Object.freeze({
+      contractId: contractId,
+      target: Object.freeze({ scope: targetScope, sub_scope: targetSubScope }),
+      actionLabel: actionLabel,
+      modalTitle: modalTitle
+    });
+  }
   return Object.freeze({
     id: customisationId,
-    capabilities: Object.freeze({
-      assignableFieldGroups: Object.freeze(assignableFieldGroups)
-    })
+    capabilities: Object.freeze(capabilities)
   });
 }
 

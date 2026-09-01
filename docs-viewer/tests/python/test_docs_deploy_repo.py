@@ -29,6 +29,8 @@ TAG_HOST = "d-20260801-100000-aaaaaa"
 WORK_HOST = "d-20260801-100001-bbbbbb"
 TAG_DOC = "d-20260801-100002-cccccc"
 WORK_DOC = "d-20260801-100003-dddddd"
+PROJECTS_LINEAGE_CONTRACT = "dotlineform_projects_to_analysis_works"
+PROCESSING_LINEAGE_CONTRACT = "dotlineform_processing_to_analysis_works"
 
 
 def write_json(path: Path, payload: object) -> None:
@@ -72,7 +74,15 @@ def write_config(root: Path, *, media_provider: str = "repository") -> None:
                             "id": "dotlineform_projects",
                             "settings": {},
                         },
-                    )
+                    ),
+                    docs_sub_scope_record(
+                        "dotlineform",
+                        "processing",
+                        sub_scope_customisation={
+                            "id": "dotlineform_processing",
+                            "settings": {},
+                        },
+                    ),
                 ],
             ),
             docs_scope_record(
@@ -496,7 +506,11 @@ def test_apply_reconciles_lineage_and_rebuilds_only_working_collection(
             ),
         ),
     )
-    publication_lineage.write_table_atomic(tmp_path, table)
+    publication_lineage.write_table_atomic(
+        tmp_path,
+        table,
+        contract_id=PROJECTS_LINEAGE_CONTRACT,
+    )
     rebuilds: list[tuple[str, str]] = []
     monkeypatch.setattr(
         docs_deploy_repo,
@@ -521,16 +535,115 @@ def test_apply_reconciles_lineage_and_rebuilds_only_working_collection(
 
     assert preview["publication_lineage"]["changed"] is True
     assert result["publication_lineage"]["status"] == "updated"
-    assert result["publication_lineage"]["projects_rebuild"] == {
+    projects_result = next(
+        record
+        for record in result["publication_lineage"]["workflows"]
+        if record["contract_id"] == PROJECTS_LINEAGE_CONTRACT
+    )
+    assert projects_result["working_rebuild"] == {
         "status": "updated",
         "error": "",
     }
     assert rebuilds == [("dotlineform", "projects")]
-    reconciled = publication_lineage.load_table(tmp_path)
+    reconciled = publication_lineage.load_table(
+        tmp_path,
+        contract_id=PROJECTS_LINEAGE_CONTRACT,
+    )
     assert reconciled is not None
     assert reconciled.records[0].editorials[0].published_url == (
         f"/analysis/?doc={WORK_HOST}&subdoc={WORK_DOC}"
     )
+
+
+def test_apply_reconciles_every_lineage_workflow_targeting_analysis_works(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    prepare_repo(tmp_path)
+    processing_editorial_id = "d-20260801-100004-eeeeee"
+    for contract_id, working_sub_scope, working_doc_id, editorial_doc_id, public_url in (
+        (
+            PROJECTS_LINEAGE_CONTRACT,
+            "projects",
+            "d-20260801-100010-eeeeee",
+            WORK_DOC,
+            None,
+        ),
+        (
+            PROCESSING_LINEAGE_CONTRACT,
+            "processing",
+            "d-20260801-100011-ffffff",
+            processing_editorial_id,
+            "/analysis/stale",
+        ),
+    ):
+        table = publication_lineage.empty_table(
+            working_scope="dotlineform",
+            working_sub_scope=working_sub_scope,
+            editorial_scope="analysis",
+            editorial_sub_scope="works",
+        )
+        table = publication_lineage.DocumentLineageTable(
+            working_collection=table.working_collection,
+            editorial_collection=table.editorial_collection,
+            records=(
+                publication_lineage.DocumentLineageRecord(
+                    working_doc_id=working_doc_id,
+                    editorials=(
+                        publication_lineage.DocumentEditorialChild(
+                            doc_id=editorial_doc_id,
+                            created_at="2026-08-08T10:00:00Z",
+                            last_copied_at="2026-08-08T10:00:00Z",
+                            published_url=public_url,
+                        ),
+                    ),
+                ),
+            ),
+        )
+        publication_lineage.write_table_atomic(
+            tmp_path,
+            table,
+            contract_id=contract_id,
+        )
+
+    rebuilds: list[tuple[str, str]] = []
+    monkeypatch.setattr(
+        docs_deploy_repo,
+        "rebuild_sub_scope_outputs",
+        lambda _root, scope, sub_scope: rebuilds.append((scope, sub_scope)),
+    )
+    preview = docs_deploy_repo.preview_deploy_repo(
+        tmp_path,
+        {"scope": "analysis", "deployment_timestamp": "2026-08-30T22:00:00Z"},
+    )
+
+    result = docs_deploy_repo.apply_deploy_repo(
+        tmp_path,
+        {
+            "scope": "analysis",
+            "confirm": True,
+            "published_revision": preview["published_revision"],
+            "plan_revision": preview["plan_revision"],
+            "deployment_timestamp": preview["deployment_timestamp"],
+        },
+    )
+
+    assert preview["publication_lineage"]["changed_count"] == 2
+    assert {
+        record["contract_id"]
+        for record in result["publication_lineage"]["workflows"]
+        if record["status"] == "updated"
+    } == {PROJECTS_LINEAGE_CONTRACT, PROCESSING_LINEAGE_CONTRACT}
+    assert rebuilds == [
+        ("dotlineform", "processing"),
+        ("dotlineform", "projects"),
+    ]
+    processing = publication_lineage.load_table(
+        tmp_path,
+        contract_id=PROCESSING_LINEAGE_CONTRACT,
+    )
+    assert processing is not None
+    assert processing.records[0].editorials[0].published_url is None
 
 
 def test_apply_reports_projects_rebuild_failure_separately_from_updated_lineage(
@@ -561,7 +674,11 @@ def test_apply_reports_projects_rebuild_failure_separately_from_updated_lineage(
             ),
         ),
     )
-    publication_lineage.write_table_atomic(tmp_path, table)
+    publication_lineage.write_table_atomic(
+        tmp_path,
+        table,
+        contract_id=PROJECTS_LINEAGE_CONTRACT,
+    )
     monkeypatch.setattr(
         docs_deploy_repo,
         "rebuild_sub_scope_outputs",
@@ -588,12 +705,20 @@ def test_apply_reports_projects_rebuild_failure_separately_from_updated_lineage(
     assert result["complete"] is False
     assert result["error_count"] == 1
     assert result["publication_lineage"]["status"] == "updated"
-    assert result["publication_lineage"]["error"] == ""
-    assert result["publication_lineage"]["projects_rebuild"] == {
+    projects_result = next(
+        record
+        for record in result["publication_lineage"]["workflows"]
+        if record["contract_id"] == PROJECTS_LINEAGE_CONTRACT
+    )
+    assert projects_result["error"] == ""
+    assert projects_result["working_rebuild"] == {
         "status": "stale",
         "error": "simulated Projects rebuild failure",
     }
-    reconciled = publication_lineage.load_table(tmp_path)
+    reconciled = publication_lineage.load_table(
+        tmp_path,
+        contract_id=PROJECTS_LINEAGE_CONTRACT,
+    )
     assert reconciled is not None
     assert reconciled.records[0].editorials[0].published_url == (
         f"/analysis/?doc={WORK_HOST}&subdoc={WORK_DOC}"

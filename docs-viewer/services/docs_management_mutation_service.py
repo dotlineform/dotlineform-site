@@ -322,31 +322,35 @@ def execute_management_mutation_plan(repo_root: Path, plan: mutations.Management
                 doc_ids=payload.get("deleted_doc_ids", ()),
             )
             if lineage_delete.role:
-                lineage_rebuild = None
-                if lineage_delete.changed:
-                    table = lineage_delete.table
-                    if table is None:
-                        raise RuntimeError(
-                            "document lineage Delete changed an unavailable table"
+                workflow_results = []
+                for change in lineage_delete.workflows:
+                    lineage_rebuild = None
+                    if change.affected_working_doc_ids:
+                        lineage_rebuild = write_rebuild.rebuild_sub_scope_outputs(
+                            repo_root,
+                            change.table.working_collection.scope,
+                            change.table.working_collection.sub_scope,
                         )
-                    lineage_rebuild = write_rebuild.rebuild_sub_scope_outputs(
-                        repo_root,
-                        table.working_collection.scope,
-                        table.working_collection.sub_scope,
+                    workflow_results.append(
+                        {
+                            "contract_id": change.contract_id,
+                            "status": (
+                                "updated"
+                                if change.affected_working_doc_ids
+                                else "unchanged"
+                            ),
+                            "affected_working_doc_ids": list(
+                                change.affected_working_doc_ids
+                            ),
+                            "record_count": len(change.table.records),
+                            "rebuild": lineage_rebuild,
+                        }
                     )
                 payload["lineage"] = {
                     "schema_version": publication_lineage.LINEAGE_SCHEMA_VERSION,
                     "status": "updated" if lineage_delete.changed else "unchanged",
                     "role": lineage_delete.role,
-                    "affected_working_doc_ids": list(
-                        lineage_delete.affected_working_doc_ids
-                    ),
-                    "record_count": (
-                        len(lineage_delete.table.records)
-                        if lineage_delete.table is not None
-                        else 0
-                    ),
-                    "rebuild": lineage_rebuild,
+                    "workflows": workflow_results,
                 }
 
     if not dry_run and plan.log_event_name and plan.has_source_changes:

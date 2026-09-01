@@ -207,7 +207,16 @@
             "capabilities": {
               "assignable_field_groups": [
                 "authoring_subject"
-              ]
+              ],
+              "lineage_copy": {
+                "contract_id": "dotlineform_projects_to_analysis_works",
+                "target": {
+                  "scope": "analysis",
+                  "sub_scope": "works"
+                },
+                "action_label": "Copy to Analysis",
+                "modal_title": "Copy to analysis/works"
+              }
             }
           }
         },
@@ -221,7 +230,16 @@
             "capabilities": {
               "assignable_field_groups": [
                 "authoring_subject"
-              ]
+              ],
+              "lineage_copy": {
+                "contract_id": "dotlineform_processing_to_analysis_works",
+                "target": {
+                  "scope": "analysis",
+                  "sub_scope": "works"
+                },
+                "action_label": "Copy to Analysis",
+                "modal_title": "Copy to analysis/works"
+              }
             }
           }
         }
