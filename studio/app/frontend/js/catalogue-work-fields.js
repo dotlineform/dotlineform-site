@@ -3,6 +3,7 @@ const WORK_FIELD_DEFINITIONS = Object.freeze({
   status: Object.freeze({ key: "status", label: "status", type: "text", readonly: true }),
   published_date: Object.freeze({ key: "published_date", label: "published date", type: "date" }),
   series_ids: Object.freeze({ key: "series_ids", label: "series", type: "text", description: "search by series title" }),
+  media_source_id: Object.freeze({ key: "media_source_id", label: "media source", type: "media-source" }),
   project_folder: Object.freeze({ key: "project_folder", label: "project folder", type: "text" }),
   project_subfolder: Object.freeze({ key: "project_subfolder", label: "project subfolder", type: "text" }),
   project_filename: Object.freeze({ key: "project_filename", label: "project filename", type: "text" }),
@@ -24,6 +25,7 @@ const WORK_EDITABLE_FIELDS = Object.freeze([
   WORK_FIELD_DEFINITIONS.status,
   WORK_FIELD_DEFINITIONS.published_date,
   WORK_FIELD_DEFINITIONS.series_ids,
+  WORK_FIELD_DEFINITIONS.media_source_id,
   WORK_FIELD_DEFINITIONS.project_folder,
   WORK_FIELD_DEFINITIONS.project_subfolder,
   WORK_FIELD_DEFINITIONS.project_filename,
@@ -45,6 +47,7 @@ const NEW_WORK_EDITABLE_FIELDS = Object.freeze([
   WORK_FIELD_DEFINITIONS.work_id,
   WORK_FIELD_DEFINITIONS.title,
   WORK_FIELD_DEFINITIONS.series_ids,
+  WORK_FIELD_DEFINITIONS.media_source_id,
   WORK_FIELD_DEFINITIONS.project_folder,
   WORK_FIELD_DEFINITIONS.project_subfolder,
   WORK_FIELD_DEFINITIONS.project_filename,
@@ -190,6 +193,7 @@ function buildWorkRecordFromDraft(draft, options = {}) {
     ? options.publishedDate
     : normalizeText(draft.published_date) || null;
   record.series_ids = parseSeriesIds(draft.series_ids);
+  record.media_source_id = normalizeText(draft.media_source_id) || null;
   record.project_folder = normalizeText(draft.project_folder) || null;
   record.project_subfolder = normalizeText(draft.project_subfolder) || null;
   record.project_filename = normalizeText(draft.project_filename) || null;

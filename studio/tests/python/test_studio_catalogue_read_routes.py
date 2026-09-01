@@ -112,10 +112,13 @@ def test_catalogue_project_media_route_lists_allowed_project_images(monkeypatch)
         alpha = projects_root / "natural"
         nerve = projects_root / "nerve"
         unnatural = projects_root / "unnatural"
+        processing_root = projects_base / "processing"
+        ink_engine = processing_root / "ink-engine"
         alpha_subfolder = alpha / "install"
         alpha_subfolder.mkdir(parents=True)
         nerve.mkdir(parents=True)
         unnatural.mkdir(parents=True)
+        ink_engine.mkdir(parents=True)
         write_repo_marker(repo_root)
         (alpha / "cover.jpg").write_bytes(b"")
         (alpha / "notes.txt").write_text("not image", encoding="utf-8")
@@ -124,11 +127,23 @@ def test_catalogue_project_media_route_lists_allowed_project_images(monkeypatch)
         (alpha_subfolder / "deep").mkdir()
         (alpha_subfolder / "deep" / "ignored.jpg").write_bytes(b"")
         (nerve / "nerve.webp").write_bytes(b"")
+        (ink_engine / "glyph.jpg").write_bytes(b"")
         monkeypatch.setenv("DOTLINEFORM_PROJECTS_BASE_DIR", str(projects_base))
 
         health_payload = catalogue_get_payload(repo_root, "/health")
 
+        sources_payload = catalogue_get_payload(repo_root, "/project-media", {"mode": ["sources"]})
         folders_payload = catalogue_get_payload(repo_root, "/project-media", {"mode": ["folders"], "q": ["nat"]})
+        processing_folders_payload = catalogue_get_payload(
+            repo_root,
+            "/project-media",
+            {"mode": ["folders"], "media_source_id": ["processing"]},
+        )
+        processing_files_payload = catalogue_get_payload(
+            repo_root,
+            "/project-media",
+            {"mode": ["files"], "media_source_id": ["processing"], "project_folder": ["ink-engine"]},
+        )
         files_payload = catalogue_get_payload(
             repo_root,
             "/project-media",
@@ -140,11 +155,16 @@ def test_catalogue_project_media_route_lists_allowed_project_images(monkeypatch)
             {"mode": ["files"], "project_folder": ["natural"], "project_subfolder": ["install"]},
         )
 
+        assert sources_payload["default_media_source_id"] == "projects"
+        assert sources_payload["media_source_ids"] == ["projects", "processing"]
         assert folders_payload["ok"] is True
+        assert folders_payload["media_source_id"] == "projects"
         assert [item["project_folder"] for item in folders_payload["project_folders"]] == ["natural"]
         assert [item["project_subfolder"] for item in files_payload["subfolders"]] == ["install"]
         assert [item["filename"] for item in files_payload["files"]] == ["cover.jpg"]
         assert [item["filename"] for item in subfolder_payload["files"]] == ["detail.png"]
+        assert [item["project_folder"] for item in processing_folders_payload["project_folders"]] == ["ink-engine"]
+        assert [item["filename"] for item in processing_files_payload["files"]] == ["glyph.jpg"]
         assert "project-media" in health_payload["routes"]
         assert "project-state-report" not in health_payload["routes"]
         assert "project-state-open-report" not in health_payload["routes"]
@@ -154,4 +174,10 @@ def test_catalogue_project_media_route_lists_allowed_project_images(monkeypatch)
                 repo_root,
                 "/project-media",
                 {"mode": ["files"], "project_folder": ["natural"], "project_subfolder": ["install/deep"]},
+            )
+        with pytest.raises(ValueError, match="unknown Work media source identity"):
+            catalogue_get_payload(
+                repo_root,
+                "/project-media",
+                {"mode": ["folders"], "media_source_id": ["unknown"]},
             )

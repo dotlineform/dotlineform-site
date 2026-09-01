@@ -20,6 +20,7 @@ export function bindWorkEditorEvents(state, callbacks = {}) {
   bindCatalogueEditorActionMessageClearer(state.root, state.messageController, {
     ignoreEvent: (event) => Boolean(event.target && event.target.closest && event.target.closest('[data-media-refresh="work"]')),
     isBusy: () => Boolean(state.isSaving || state.isBuilding || state.isDeleting),
+    preserveWithin: state.statusNode,
     renderMessages: () => invoke(callbacks.renderEditorMessage)
   });
 

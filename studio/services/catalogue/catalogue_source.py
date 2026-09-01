@@ -8,6 +8,12 @@ from datetime import date, datetime
 from pathlib import Path
 from typing import Any, Dict, Iterable, Mapping
 
+from catalogue_work_media_sources import (
+    resolve_work_media_source_id,
+    work_media_source_id_for_storage,
+)
+from pipeline_config import load_pipeline_config
+
 try:
     from catalogue.series_ids import normalize_series_id, parse_series_ids
 except ModuleNotFoundError:  # pragma: no cover - package import fallback
@@ -33,12 +39,15 @@ SOURCE_FILES = {
 DETAIL_COMPAT_SUBFOLDER_FIELD = "project_subfolder"
 DETAIL_SECTION_ID_SEPARATOR = "-"
 MEDIA_VERSION_FIELD = "media_version"
+MEDIA_SOURCE_FIELD = "media_source_id"
+PIPELINE_CONFIG = load_pipeline_config(Path(__file__))
 
 WORK_FIELDS = [
     "work_id",
     "status",
     "published_date",
     "series_ids",
+    MEDIA_SOURCE_FIELD,
     "project_folder",
     "project_subfolder",
     "project_filename",
@@ -113,7 +122,13 @@ WORK_TEXT_FIELDS = set(WORK_FIELDS) - {
 }
 SERIES_TEXT_FIELDS = set(SERIES_FIELDS) - {"year"}
 DETAIL_TEXT_FIELDS = set(DETAIL_FIELDS) - {"width_px", "height_px", MEDIA_VERSION_FIELD}
-OMIT_EMPTY_SOURCE_FIELDS = {"project_subfolder", "details_subfolder", "section_order", "detail_sort"}
+OMIT_EMPTY_SOURCE_FIELDS = {
+    MEDIA_SOURCE_FIELD,
+    "project_subfolder",
+    "details_subfolder",
+    "section_order",
+    "detail_sort",
+}
 
 SOURCE_FIELDS_BY_RECORD_FAMILY = {
     "work": tuple(WORK_FIELDS),
@@ -461,7 +476,11 @@ def normalize_source_record(
     out: Dict[str, Any] = {}
     for field in field_order:
         value = record.get(field)
-        if field == "downloads":
+        if field == MEDIA_SOURCE_FIELD:
+            source_id = work_media_source_id_for_storage(PIPELINE_CONFIG, value)
+            if source_id is not None:
+                out[field] = source_id
+        elif field == "downloads":
             entries = normalize_downloads(value)
             if entries:
                 out[field] = entries
@@ -835,6 +854,13 @@ def validate_media_version(errors: list[str], *, kind: str, key: str, record: Ma
         errors.append(f"{kind} {key}: media_version must be a positive whole number")
 
 
+def validate_work_media_source(errors: list[str], *, key: str, record: Mapping[str, Any]) -> None:
+    try:
+        resolve_work_media_source_id(PIPELINE_CONFIG, record.get(MEDIA_SOURCE_FIELD))
+    except ValueError as exc:
+        errors.append(f"works {key}: {exc}")
+
+
 def validate_work_detail_section_record(key: str, record: Mapping[str, Any]) -> list[str]:
     errors: list[str] = []
     raw_work_id = record.get("work_id")
@@ -920,6 +946,7 @@ def validate_source_records(
 
     for key, record in records.works.items():
         validate_record_fields(errors, kind="works", key=key, record=record, allowed_fields=WORK_FIELDS)
+        validate_work_media_source(errors, key=key, record=record)
         validate_media_version(errors, kind="works", key=key, record=record)
         try:
             work_id = slug_id(record.get("work_id") or key)

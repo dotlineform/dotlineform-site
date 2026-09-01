@@ -6,6 +6,7 @@ from __future__ import annotations
 import datetime as dt
 import sys
 from pathlib import Path
+from tempfile import TemporaryDirectory
 
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
@@ -14,6 +15,19 @@ if str(SCRIPTS_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPTS_DIR))
 
 from catalogue import catalogue_generation_source_updates as updates  # noqa: E402
+from catalogue_work_media_sources import WorkMediaSourceRoot  # noqa: E402
+
+
+def source_root(projects_base: Path) -> WorkMediaSourceRoot:
+    root = projects_base / "projects"
+    root.mkdir(parents=True, exist_ok=True)
+    return WorkMediaSourceRoot(
+        source_id="projects",
+        projects_base=projects_base,
+        root_subdir=Path("projects"),
+        root=root,
+        marker="$DOTLINEFORM_PROJECTS_BASE_DIR/projects",
+    )
 
 
 def test_draft_work_publication_update_includes_recent_transition() -> None:
@@ -81,13 +95,13 @@ def test_dimension_update_reports_changed_values_without_mutating_source_record(
     assert source_record == {"width_px": 100, "height_px": 200}
 
 
-def test_work_source_path_warning_is_structured_when_project_folder_is_missing() -> None:
+def test_work_source_path_warning_is_structured_when_project_folder_is_missing(tmp_path: Path) -> None:
     plan = updates.plan_work_image_source_path(
         work_id="00042",
         project_filename="main.jpg",
         project_folder=None,
         project_subfolder=None,
-        projects_root=Path("/projects"),
+        source_root=source_root(tmp_path),
         has_project_folder_column=True,
     )
 
@@ -99,17 +113,18 @@ def test_work_source_path_warning_is_structured_when_project_folder_is_missing()
     assert plan.warning.filename == "main.jpg"
 
 
-def test_detail_source_path_resolution_uses_parent_work_folder() -> None:
+def test_detail_source_path_resolution_uses_parent_work_folder(tmp_path: Path) -> None:
+    configured_root = source_root(tmp_path)
     plan = updates.plan_detail_image_source_path(
         detail_uid="00042-001",
         project_filename="detail.jpg",
         work_project_folder="2026/work",
         details_subfolder="details",
-        projects_root=Path("/projects"),
+        source_root=configured_root,
         has_project_folder_column=True,
     )
 
-    assert plan.source_path == Path("/projects/2026/work/details/detail.jpg")
+    assert plan.source_path == configured_root.root / "2026/work/details/detail.jpg"
     assert plan.warning is None
 
 
@@ -118,8 +133,9 @@ def main() -> None:
     test_published_refresh_and_force_are_actionable_without_mutation_plan()
     test_dimension_update_suppresses_unchanged_values()
     test_dimension_update_reports_changed_values_without_mutating_source_record()
-    test_work_source_path_warning_is_structured_when_project_folder_is_missing()
-    test_detail_source_path_resolution_uses_parent_work_folder()
+    with TemporaryDirectory() as temp_dir:
+        test_work_source_path_warning_is_structured_when_project_folder_is_missing(Path(temp_dir))
+        test_detail_source_path_resolution_uses_parent_work_folder(Path(temp_dir))
     print("Catalogue generation source update tests OK")
 
 

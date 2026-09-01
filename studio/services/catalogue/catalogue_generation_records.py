@@ -33,8 +33,8 @@ except ModuleNotFoundError:  # pragma: no cover - package import fallback
     from catalogue.series_ids import normalize_series_id
 
 
-WORK_RECORD_SCHEMA_VERSION = "work_record_v4"
-SERIES_RECORD_SCHEMA_VERSION = "series_record_v3"
+WORK_RECORD_SCHEMA_VERSION = "work_record_v5"
+SERIES_RECORD_SCHEMA_VERSION = "series_record_v4"
 
 
 # Define the Works source-record projection once so adding a new field is a one-line change.
@@ -180,21 +180,33 @@ def build_canonical_detail_record(
     return compact_json_object(dfm)
 
 
-def normalize_document_urls(values: Sequence[str]) -> List[str]:
+def normalize_catalogue_documents(values: Sequence[Mapping[str, Any]]) -> List[Dict[str, str]]:
     if isinstance(values, (str, bytes)):
-        raise ValueError("doc_url must be an array")
-    urls: set[str] = set()
+        raise ValueError("documents must be an array")
+    documents_by_url: Dict[str, str] = {}
     for index, value in enumerate(values):
-        if not isinstance(value, str) or not value or value != value.strip():
-            raise ValueError(f"doc_url[{index}] must be a non-empty trimmed string")
-        urls.add(value)
-    return sorted(urls)
+        if not isinstance(value, Mapping) or set(value) != {"url", "title"}:
+            raise ValueError(f"documents[{index}] must contain only url and title")
+        url = value.get("url")
+        title = value.get("title")
+        if not isinstance(url, str) or not url or url != url.strip():
+            raise ValueError(f"documents[{index}].url must be a non-empty trimmed string")
+        if not isinstance(title, str) or not title or title != title.strip():
+            raise ValueError(f"documents[{index}].title must be a non-empty trimmed string")
+        existing_title = documents_by_url.get(url)
+        if existing_title is not None and existing_title != title:
+            raise ValueError(f"documents contains conflicting titles for {url!r}")
+        documents_by_url[url] = title
+    return [
+        {"url": url, "title": title}
+        for url, title in sorted(documents_by_url.items())
+    ]
 
 
 def build_work_json_record(
     work_record: Mapping[str, Any],
     *,
-    doc_urls: Sequence[str] = (),
+    documents: Sequence[Mapping[str, Any]] = (),
 ) -> Dict[str, Any]:
     public_record = dict(work_record)
     public_record.pop("series_id", None)
@@ -202,14 +214,14 @@ def build_work_json_record(
     public_record.pop("series_sort", None)
     public_record.pop("title_sort", None)
     public_record.pop("checksum", None)
-    public_record["doc_url"] = normalize_document_urls(doc_urls)
+    public_record["documents"] = normalize_catalogue_documents(documents)
     return compact_json_object(public_record)
 
 
 def build_series_json_record(
     series_record: Mapping[str, Any],
     *,
-    doc_urls: Sequence[str] = (),
+    documents: Sequence[Mapping[str, Any]] = (),
 ) -> Dict[str, Any]:
     public_record = dict(series_record)
     public_record.pop("layout", None)
@@ -217,7 +229,7 @@ def build_series_json_record(
     public_record.pop("works", None)
     public_record.pop("primary_work_id", None)
     public_record.pop("notes", None)
-    public_record["doc_url"] = normalize_document_urls(doc_urls)
+    public_record["documents"] = normalize_catalogue_documents(documents)
     return compact_json_object(public_record)
 
 
@@ -232,10 +244,10 @@ def build_work_json_payload(
     """Finalize one complete public Work by-ID payload."""
 
     public_record = dict(work_record)
-    raw_doc_urls = public_record.get("doc_url", [])
-    if not isinstance(raw_doc_urls, list):
-        raise ValueError("work.doc_url must be an array")
-    public_record["doc_url"] = normalize_document_urls(raw_doc_urls)
+    raw_documents = public_record.get("documents", [])
+    if not isinstance(raw_documents, list):
+        raise ValueError("work.documents must be an array")
+    public_record["documents"] = normalize_catalogue_documents(raw_documents)
     public_sections = [dict(section) for section in sections]
     version_input = {"work": public_record, "sections": public_sections}
     return compact_json_object(
@@ -263,12 +275,12 @@ def build_series_json_payload(
     """Finalize one complete public Series by-ID payload."""
 
     public_record = dict(series_record)
-    raw_doc_urls = public_record.get("doc_url", [])
-    if not isinstance(raw_doc_urls, list):
-        raise ValueError("series.doc_url must be an array")
+    raw_documents = public_record.get("documents", [])
+    if not isinstance(raw_documents, list):
+        raise ValueError("series.documents must be an array")
     if str(public_record.get("series_id") or "") != series_id:
         raise ValueError(f"series.series_id must match exact payload target {series_id}")
-    public_record["doc_url"] = normalize_document_urls(raw_doc_urls)
+    public_record["documents"] = normalize_catalogue_documents(raw_documents)
     public_member_works = [compact_json_object(dict(work)) for work in member_works]
     version_input = {"series": public_record, "member_works": public_member_works}
     return compact_json_object(

@@ -147,6 +147,43 @@ def test_work_create_defaults_draft_and_series_ids() -> None:
     assert_equal(media_plan.updated_record["media_version"], 1, "created work media version")
 
 
+def test_work_media_source_default_is_omitted_and_processing_is_explicit() -> None:
+    records = fixture_records()
+    current = records.works["00001"]
+
+    default_plan = source_mutation.plan_work_save(
+        records,
+        records.works,
+        "00001",
+        current,
+        {"title": "Alpha Updated", "media_source_id": "projects"},
+    )
+    assert "media_source_id" not in default_plan.updated_record
+    assert_equal(default_plan.changed_fields, ["title"], "default source omission changed fields")
+
+    processing_plan = source_mutation.plan_work_save(
+        records,
+        records.works,
+        "00001",
+        current,
+        {"media_source_id": "processing", "project_folder": "ink-engine"},
+    )
+    assert_equal(processing_plan.updated_record["media_source_id"], "processing", "stored Processing source")
+    assert "media_source_id" in processing_plan.changed_fields
+    assert_false(processing_plan.validation_errors, "Processing source validation errors")
+
+    assert_raises(
+        "unknown Work media source identity: unknown",
+        lambda: source_mutation.plan_work_save(
+            records,
+            records.works,
+            "00001",
+            current,
+            {"media_source_id": "unknown"},
+        ),
+    )
+
+
 def test_detail_update_normalizes_detail_owned_fields() -> None:
     records = fixture_records()
 
@@ -204,6 +241,7 @@ def test_series_create_plans_series_and_optional_work_payload() -> None:
 def main() -> None:
     test_work_save_plans_changed_fields_and_payload()
     test_work_create_defaults_draft_and_series_ids()
+    test_work_media_source_default_is_omitted_and_processing_is_explicit()
     test_detail_update_normalizes_detail_owned_fields()
     test_series_save_plans_member_work_updates()
     test_series_create_plans_series_and_optional_work_payload()

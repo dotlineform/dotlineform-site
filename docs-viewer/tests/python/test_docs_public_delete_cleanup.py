@@ -91,30 +91,30 @@ def write_source(
     )
 
 
-def work_payload(urls: list[str]) -> dict[str, object]:
+def work_payload(documents: list[dict[str, str]]) -> dict[str, object]:
     return {
         "header": {
-            "schema": "work_record_v4",
+            "schema": "work_record_v5",
             "version": "fixture",
             "generated_at_utc": "2026-08-08T10:00:00Z",
             "work_id": "00042",
             "count": 0,
         },
-        "work": {"work_id": "00042", "title": "Work", "doc_url": urls},
+        "work": {"work_id": "00042", "title": "Work", "documents": documents},
         "sections": [],
     }
 
 
-def series_payload(urls: list[str]) -> dict[str, object]:
+def series_payload(documents: list[dict[str, str]]) -> dict[str, object]:
     return {
         "header": {
-            "schema": "series_record_v3",
+            "schema": "series_record_v4",
             "version": "fixture",
             "generated_at_utc": "2026-08-08T10:00:00Z",
             "series_id": "001",
             "count": 0,
         },
-        "series": {"series_id": "001", "title": "Series", "doc_url": urls},
+        "series": {"series_id": "001", "title": "Series", "documents": documents},
         "member_works": [],
     }
 
@@ -258,7 +258,10 @@ def prepare_parent_repo(repo_root: Path) -> dict[str, Path]:
         mermaid_path.parent.mkdir(parents=True, exist_ok=True)
         mermaid_path.write_text(f"<{theme}/>", encoding="utf-8")
     work_path = repo_root / "site/assets/works/index/00042.json"
-    write_json(work_path, work_payload([f"/analysis/?doc={PARENT_ID}"]))
+    write_json(
+        work_path,
+        work_payload([{"url": f"/analysis/?doc={PARENT_ID}", "title": "Delete me"}]),
+    )
     return {
         "source": source_root / f"{PARENT_ID}.md",
         "docs_root": docs_root,
@@ -384,7 +387,7 @@ def prepare_child_repo(repo_root: Path) -> dict[str, Path]:
     )
     child_url = f"/analysis/?doc={HOST_ID}&subdoc={CHILD_ID}"
     series_path = repo_root / "site/assets/series/index/001.json"
-    write_json(series_path, series_payload([child_url]))
+    write_json(series_path, series_payload([{"url": child_url, "title": "Delete child"}]))
     return {
         "docs_root": docs_root,
         "child_root": child_root,
@@ -429,7 +432,7 @@ def test_parent_cleanup_removes_exact_projection_and_updates_inventories_and_cat
     assert [row["url"] for row in read_json(paths["locations"])["records"]] == [
         f"/analysis/?doc={SIBLING_ID}"
     ]
-    assert read_json(paths["work"])["work"]["doc_url"] == []
+    assert read_json(paths["work"])["work"]["documents"] == []
 
 
 def test_parent_preview_expands_descendant_public_cleanup(tmp_path: Path) -> None:
@@ -538,7 +541,7 @@ def test_child_cleanup_leaves_host_and_sibling_bytes_unchanged(tmp_path: Path) -
         f"/analysis/?doc={HOST_ID}",
         f"/analysis/?doc={HOST_ID}&subdoc={CHILD_SIBLING_ID}",
     ]
-    assert read_json(paths["series"])["series"]["doc_url"] == []
+    assert read_json(paths["series"])["series"]["documents"] == []
 
 
 def test_report_host_cleanup_removes_routes_but_retains_child_files(tmp_path: Path) -> None:
@@ -567,7 +570,7 @@ def test_report_host_cleanup_removes_routes_but_retains_child_files(tmp_path: Pa
     assert not (paths["docs_root"] / f"by-id/{HOST_ID}.json").exists()
     assert read_json(paths["search"])["docs"] == []
     assert read_json(paths["locations"])["records"] == []
-    assert read_json(paths["series"])["series"]["doc_url"] == []
+    assert read_json(paths["series"])["series"]["documents"] == []
 
 
 def test_local_delete_plan_is_not_applicable(tmp_path: Path) -> None:

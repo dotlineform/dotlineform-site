@@ -277,6 +277,16 @@
   max-width: 100%;
 }
 
+.docsViewerReport[data-working-subject-columns] .docsViewerReport__projectSubjectUnavailable{
+  display: inline-flex;
+  align-items: center;
+  max-width: 100%;
+}
+
+.docsViewerReport[data-working-subject-columns] .docsViewerReport__projectSubjectUnavailableLabel{
+  text-decoration: line-through;
+}
+
 .docsViewerReport[data-working-subject-columns="publication"] .docsViewerReport__projectPublicationHead,
 .docsViewerReport[data-working-subject-columns="publication"] .docsViewerReport__projectPublicationCues{
   grid-area: publication;

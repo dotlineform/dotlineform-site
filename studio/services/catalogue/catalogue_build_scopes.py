@@ -126,6 +126,7 @@ def build_scope_for_work(
     extra_series_ids: Sequence[Any] | None = None,
     *,
     detail_uid: str = "",
+    media_only: bool = False,
     work_media_source: Mapping[str, Any] | None = None,
     env: Dict[str, str] | None = None,
     work_readiness_builder: ReadinessBuilder | None = None,
@@ -136,44 +137,61 @@ def build_scope_for_work(
     work_record = records.works.get(normalized_work_id)
     if not isinstance(work_record, dict):
         raise ValueError(f"work_id not found: {normalized_work_id}")
-    if normalize_status(work_record.get("status")) != "published":
+    work_is_published = normalize_status(work_record.get("status")) == "published"
+    if not work_is_published and not media_only:
         raise ValueError(f"work {normalized_work_id}: status must be published for runtime build")
 
     current_series_ids: list[str] = []
-    for series_id in normalize_series_ids(work_record.get("series_ids", [])):
-        series_record = records.series.get(series_id)
-        if isinstance(series_record, dict) and normalize_status(series_record.get("status")) == "published":
-            current_series_ids.append(series_id)
-    requested_extra_series_ids = normalize_series_ids(extra_series_ids or [])
-    series_ids = normalize_series_ids([*current_series_ids, *requested_extra_series_ids])
-    validate_buildable_series_scope(records, series_ids)
+    requested_extra_series_ids: list[str] = []
+    series_ids: list[str] = []
+    if not media_only:
+        for series_id in normalize_series_ids(work_record.get("series_ids", [])):
+            series_record = records.series.get(series_id)
+            if isinstance(series_record, dict) and normalize_status(series_record.get("status")) == "published":
+                current_series_ids.append(series_id)
+        requested_extra_series_ids = normalize_series_ids(extra_series_ids or [])
+        series_ids = normalize_series_ids([*current_series_ids, *requested_extra_series_ids])
+        validate_buildable_series_scope(records, series_ids)
     scope = {
         "work_ids": [normalized_work_id],
         "series_ids": series_ids,
         "current_series_ids": current_series_ids,
         "extra_series_ids": [series_id for series_id in requested_extra_series_ids if series_id not in current_series_ids],
-        "generate_only": list(DEFAULT_ARTIFACTS),
-        "rebuild_search": True,
+        "generate_only": [] if media_only else list(DEFAULT_ARTIFACTS),
+        "rebuild_search": not media_only,
         "search_scope": "catalogue",
         "source_mode": "json",
         "source_dir": str(source_dir),
-        "refresh_published": True,
+        "refresh_published": not media_only,
+        "public_thumbnail_projection": work_is_published,
         "summary": summarize_scope([normalized_work_id], series_ids),
     }
     readiness_records = records
     if work_media_source is not None:
         media_record = dict(work_record)
-        for field in ("project_folder", "project_subfolder", "project_filename"):
+        for field in ("media_source_id", "project_folder", "project_subfolder", "project_filename"):
             if field in work_media_source:
                 media_record[field] = work_media_source.get(field)
         scope["work_media_sources"] = {normalized_work_id: media_record}
         readiness_records = records_with_work_media_source(records, normalized_work_id, media_record)
     work_readiness = work_readiness_builder or _default_work_readiness_builder()
-    readiness = work_readiness(readiness_records, normalized_work_id, env=env)
+    readiness = work_readiness(
+        readiness_records,
+        normalized_work_id,
+        env=env,
+        public_thumbnail_projection=work_is_published,
+    )
     if detail_uid:
         normalized_detail_uid = str(detail_uid or "").strip()
         detail_readiness = detail_readiness_builder or _default_detail_readiness_builder()
-        readiness["items"].extend(detail_readiness(readiness_records, normalized_detail_uid, env=env).get("items", []))
+        readiness["items"].extend(
+            detail_readiness(
+                readiness_records,
+                normalized_detail_uid,
+                env=env,
+                public_thumbnail_projection=work_is_published,
+            ).get("items", [])
+        )
         scope["detail_uid"] = normalized_detail_uid
     scope["readiness"] = readiness
     return scope
@@ -219,6 +237,7 @@ def build_scope_for_series(
         "source_mode": "json",
         "source_dir": str(source_dir),
         "refresh_published": True,
+        "public_thumbnail_projection": True,
         "summary": summarize_scope(work_ids, [normalized_series_id]),
     }
     readiness = series_readiness_builder or _default_series_readiness_builder()

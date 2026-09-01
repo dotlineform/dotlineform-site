@@ -13,6 +13,7 @@ import { normalizeText } from "./catalogue-work-fields.js";
 import { applyWorkRecordMutation } from "./catalogue-work-action-records.js";
 import { catalogueReadinessItem } from "./catalogue-editor-readiness.js";
 import {
+  applyPublicationChange,
   refreshBuildPreview,
   saveCurrentWork
 } from "./catalogue-work-actions.js";
@@ -157,6 +158,15 @@ export async function runWorkSaveThenMediaPublish(options) {
   return true;
 }
 
+export async function runWorkPublicationThenMediaPublish(options) {
+  const action = await options.changePublication();
+  if (action !== "publish" || !options.mediaPublishEnabled()) return action;
+  options.setMediaPublishPending(true);
+  const completed = await options.publishMedia();
+  if (completed) options.setMediaPublishPending(false);
+  return action;
+}
+
 export async function saveWorkThenPublishMedia(state, context) {
   return runWorkSaveThenMediaPublish({
     save: () => saveCurrentWork(state, context),
@@ -164,6 +174,18 @@ export async function saveWorkThenPublishMedia(state, context) {
     publishMedia: () => publishWorkMedia(state, context),
     setMediaPublishPending: (pending) => {
       state.mediaPublishPending = Boolean(pending);
+    }
+  });
+}
+
+export async function changeWorkPublicationThenPublishMedia(state, context) {
+  return runWorkPublicationThenMediaPublish({
+    changePublication: () => applyPublicationChange(state, context),
+    mediaPublishEnabled: () => workMediaPublishEnabled(state, context),
+    publishMedia: () => publishWorkMedia(state, context),
+    setMediaPublishPending: (pending) => {
+      state.mediaPublishPending = Boolean(pending);
+      context.updateEditorState();
     }
   });
 }

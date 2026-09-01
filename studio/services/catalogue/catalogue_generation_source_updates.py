@@ -8,6 +8,8 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Dict, Mapping, Optional
 
+from catalogue_work_media_sources import WorkMediaSourceRoot, resolve_work_media_path
+
 try:
     from catalogue.catalogue_generation_common import coerce_int, coerce_string, normalize_status
 except ModuleNotFoundError:  # pragma: no cover - package import fallback
@@ -76,20 +78,21 @@ def plan_work_image_source_path(
     project_filename: Any,
     project_folder: Optional[str],
     project_subfolder: Optional[str],
-    projects_root: Path,
+    source_root: WorkMediaSourceRoot,
     has_project_folder_column: bool,
 ) -> SourceImagePathPlan:
     filename = coerce_string(project_filename)
     if not filename:
         return SourceImagePathPlan(source_path=None)
-    filename_path = Path(filename)
-    if filename_path.is_absolute():
-        return SourceImagePathPlan(source_path=filename_path)
     if project_folder:
-        source_path = projects_root / project_folder
-        if project_subfolder:
-            source_path = source_path / project_subfolder
-        return SourceImagePathPlan(source_path=source_path / filename)
+        return SourceImagePathPlan(
+            source_path=resolve_work_media_path(
+                source_root,
+                project_folder,
+                project_subfolder,
+                filename,
+            )
+        )
     code = MISSING_PROJECT_FOLDER if has_project_folder_column else NO_PROJECT_FOLDER_COLUMN
     return SourceImagePathPlan(
         source_path=None,
@@ -103,16 +106,20 @@ def plan_detail_image_source_path(
     project_filename: Any,
     work_project_folder: Optional[str],
     details_subfolder: Optional[str],
-    projects_root: Path,
+    source_root: WorkMediaSourceRoot,
     has_project_folder_column: bool,
 ) -> SourceImagePathPlan:
     filename = coerce_string(project_filename)
     if work_project_folder:
         if filename:
-            source_path = projects_root / work_project_folder
-            if details_subfolder:
-                source_path = source_path / details_subfolder
-            return SourceImagePathPlan(source_path=source_path / filename)
+            return SourceImagePathPlan(
+                source_path=resolve_work_media_path(
+                    source_root,
+                    work_project_folder,
+                    details_subfolder,
+                    filename,
+                )
+            )
     code = MISSING_PROJECT_FOLDER if has_project_folder_column else NO_PROJECT_FOLDER_COLUMN
     return SourceImagePathPlan(
         source_path=None,

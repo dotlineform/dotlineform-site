@@ -1363,11 +1363,16 @@ button.studioList__cellLink {
 }
 
 .catalogueWorkForm__field > .studioUi__input,
+.catalogueWorkForm__field > .catalogueWorkMediaSource__button,
 .catalogueWorkForm__field > .catalogueWorkSeriesPicker__control,
 .catalogueWorkForm__field > .catalogueProjectMediaPicker__displayControl,
 .catalogueWorkForm__field > .studioForm__meta,
 .catalogueWorkForm__field > .catalogueWorkForm__fieldStatus {
   grid-column: 2;
+}
+
+.catalogueWorkMediaSource__button {
+  justify-self: start;
 }
 
 .catalogueWorkSeriesPicker__control {

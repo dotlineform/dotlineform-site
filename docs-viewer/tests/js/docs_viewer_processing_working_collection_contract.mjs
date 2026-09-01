@@ -27,6 +27,49 @@ assert.match(registrySource, /dotlineform_processing: function/);
 assert.match(registrySource, /createDocsViewerManagementSubscopeDotlineformProcessing/);
 assert.doesNotMatch(stylesSource, /data-report-subscope="processing"/);
 assert.match(stylesSource, /data-working-subject-columns="subject"/);
+assert.match(stylesSource, /projectSubjectUnavailableLabel[^{]*\{[^}]*text-decoration:\s*line-through/s);
+
+const deletedWorkDocument = {
+  authoring_subject: {
+    state: "valid",
+    kind: "work",
+    key: "01943",
+    fields: ["work_id"]
+  }
+};
+assert.deepEqual(
+  workingSubjects.projectDocsViewerWorkingSubject(deletedWorkDocument, {
+    available: true,
+    titles: new Map()
+  }),
+  {
+    kind: "work",
+    key: "01943",
+    label: "01943",
+    state: "unavailable",
+    targetTitle: ""
+  }
+);
+assert.equal(
+  workingSubjects.projectDocsViewerWorkingSubject(deletedWorkDocument, {
+    available: false,
+    titles: new Map()
+  }).state,
+  "valid"
+);
+assert.deepEqual(
+  workingSubjects.projectDocsViewerWorkingSubject(deletedWorkDocument, {
+    available: true,
+    titles: new Map([["work:01943", "Impossibility And Incompleteness"]])
+  }),
+  {
+    kind: "work",
+    key: "01943",
+    label: "Impossibility And Incompleteness",
+    state: "valid",
+    targetTitle: "Impossibility And Incompleteness"
+  }
+);
 
 const projectsContribution = await workingSubjects.createDocsViewerManagementSubscopeDotlineformProjects({
   collection: { scope: "dotlineform", sub_scope: "projects" },

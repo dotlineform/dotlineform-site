@@ -169,12 +169,14 @@ export function bindCatalogueEditorActionMessageClearer(root, messageController,
 
   const isBusy = typeof options.isBusy === "function" ? options.isBusy : () => false;
   const ignoreEvent = typeof options.ignoreEvent === "function" ? options.ignoreEvent : () => false;
+  const preserveWithin = options.preserveWithin;
   const renderMessages = typeof options.renderMessages === "function"
     ? options.renderMessages
     : () => messageController.render();
 
   function onRootClick(event) {
     if (ignoreEvent(event)) return;
+    if (preserveWithin && event.target && typeof preserveWithin.contains === "function" && preserveWithin.contains(event.target)) return;
     if (isBusy()) return;
     if (!messageController.hasActionMessages) return;
     messageController.clearActionMessages();

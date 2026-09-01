@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Refresh generated Catalogue document URLs after successful Docs publication."""
+"""Refresh generated Catalogue document metadata after successful Docs publication."""
 
 from __future__ import annotations
 
@@ -17,11 +17,11 @@ from catalogue.catalogue_generation_records import (
     WORK_RECORD_SCHEMA_VERSION,
     build_series_json_payload,
     build_work_json_payload,
-    normalize_document_urls,
+    normalize_catalogue_documents,
 )
 
 
-CatalogueDocumentUrls = Mapping[str, Mapping[str, Sequence[str]]]
+CatalogueDocuments = Mapping[str, Mapping[str, Sequence[Mapping[str, Any]]]]
 CatalogueTarget = tuple[str, str]
 WORK_ID_PATTERN = re.compile(r"\A\d{5}\Z")
 SERIES_ID_PATTERN = re.compile(r"\A[a-z0-9][a-z0-9-]*\Z")
@@ -59,7 +59,7 @@ def validate_target_key(kind: str, key: str) -> None:
         raise ValueError(f"invalid exact {kind} document URL target: {key!r}")
 
 
-def normalize_projection(projection: CatalogueDocumentUrls) -> dict[str, dict[str, list[str]]]:
+def normalize_projection(projection: CatalogueDocuments) -> dict[str, dict[str, list[dict[str, str]]]]:
     if not isinstance(projection, Mapping):
         raise ValueError("Catalogue document URL projection must be an object")
     unsupported = sorted(str(kind) for kind in projection if kind not in {"work", "series"})
@@ -69,18 +69,18 @@ def normalize_projection(projection: CatalogueDocumentUrls) -> dict[str, dict[st
             + ", ".join(unsupported)
         )
 
-    normalized: dict[str, dict[str, list[str]]] = {"work": {}, "series": {}}
+    normalized: dict[str, dict[str, list[dict[str, str]]]] = {"work": {}, "series": {}}
     for kind in ("work", "series"):
         values_by_key = projection.get(kind, {})
         if not isinstance(values_by_key, Mapping):
             raise ValueError(f"Catalogue {kind} document URL projection must be an object")
-        for raw_key, raw_urls in values_by_key.items():
+        for raw_key, raw_documents in values_by_key.items():
             if not isinstance(raw_key, str):
                 raise ValueError(f"Catalogue {kind} document URL target must be a string")
             validate_target_key(kind, raw_key)
-            if not isinstance(raw_urls, Sequence) or isinstance(raw_urls, (str, bytes)):
-                raise ValueError(f"Catalogue {kind} {raw_key} doc_url must be an array")
-            normalized[kind][raw_key] = normalize_document_urls(raw_urls)
+            if not isinstance(raw_documents, Sequence) or isinstance(raw_documents, (str, bytes)):
+                raise ValueError(f"Catalogue {kind} {raw_key} documents must be an array")
+            normalized[kind][raw_key] = normalize_catalogue_documents(raw_documents)
     return normalized
 
 
@@ -118,8 +118,10 @@ def validate_payload_identity(
     return record, count
 
 
-def current_nonempty_targets(repo_root: Path) -> dict[CatalogueTarget, tuple[Path, dict[str, Any], list[str]]]:
-    current: dict[CatalogueTarget, tuple[Path, dict[str, Any], list[str]]] = {}
+def current_nonempty_targets(
+    repo_root: Path,
+) -> dict[CatalogueTarget, tuple[Path, dict[str, Any], list[dict[str, str]]]]:
+    current: dict[CatalogueTarget, tuple[Path, dict[str, Any], list[dict[str, str]]]] = {}
     for kind in ("work", "series"):
         directory, record_key, _id_key, _schema = target_spec(kind)
         root = repo_root / directory
@@ -130,16 +132,16 @@ def current_nonempty_targets(repo_root: Path) -> dict[CatalogueTarget, tuple[Pat
             record = payload.get(record_key)
             if not isinstance(record, dict):
                 raise ValueError(f"generated Catalogue {kind} payload has no {record_key}: {path.name}")
-            raw_urls = record.get("doc_url", [])
-            if not isinstance(raw_urls, list):
-                raise ValueError(f"generated Catalogue {kind} {path.stem} doc_url must be an array")
-            urls = normalize_document_urls(raw_urls)
-            if not urls:
-                continue
             key = path.stem
             validate_target_key(kind, key)
             validate_payload_identity(payload, path=path, kind=kind, key=key)
-            current[(kind, key)] = (path, payload, urls)
+            raw_documents = record.get("documents", [])
+            if not isinstance(raw_documents, list):
+                raise ValueError(f"generated Catalogue {kind} {path.stem} documents must be an array")
+            documents = normalize_catalogue_documents(raw_documents)
+            if not documents:
+                continue
+            current[(kind, key)] = (path, payload, documents)
     return current
 
 
@@ -154,12 +156,12 @@ def updated_payload(
     path: Path,
     kind: str,
     key: str,
-    urls: Sequence[str],
+    documents: Sequence[Mapping[str, Any]],
     generated_at_utc: str,
 ) -> dict[str, Any]:
     result = copy.deepcopy(dict(payload))
     record, count = validate_payload_identity(result, path=path, kind=kind, key=key)
-    record["doc_url"] = normalize_document_urls(urls)
+    record["documents"] = normalize_catalogue_documents(documents)
 
     if kind == "work":
         sections = result.get("sections")
@@ -185,7 +187,7 @@ def updated_payload(
 
 def build_catalogue_document_url_refresh_plan(
     repo_root: Path,
-    projection: CatalogueDocumentUrls,
+    projection: CatalogueDocuments,
     *,
     generated_at_utc: str | None = None,
 ) -> CatalogueDocumentUrlRefreshPlan:
@@ -205,7 +207,7 @@ def build_catalogue_document_url_refresh_plan(
     payloads_by_path: dict[Path, dict[str, Any]] = {}
     timestamp = generated_at_utc or utc_now()
     for kind, key in sorted(candidate_targets):
-        desired_urls = desired[kind].get(key, [])
+        desired_documents = desired[kind].get(key, [])
         current_entry = current.get((kind, key))
         if current_entry is None:
             path = target_payload_path(repo_root, kind, key)
@@ -214,13 +216,13 @@ def build_catalogue_document_url_refresh_plan(
             record = payload.get(record_key)
             if not isinstance(record, dict):
                 raise ValueError(f"generated Catalogue {kind} payload has no {record_key}: {path.name}")
-            raw_current_urls = record.get("doc_url", [])
-            if not isinstance(raw_current_urls, list):
-                raise ValueError(f"generated Catalogue {kind} {key} doc_url must be an array")
-            current_urls = normalize_document_urls(raw_current_urls)
+            raw_current_documents = record.get("documents", [])
+            if not isinstance(raw_current_documents, list):
+                raise ValueError(f"generated Catalogue {kind} {key} documents must be an array")
+            current_documents = normalize_catalogue_documents(raw_current_documents)
         else:
-            path, payload, current_urls = current_entry
-        if current_urls == desired_urls:
+            path, payload, current_documents = current_entry
+        if current_documents == desired_documents:
             continue
         affected_targets.append((kind, key))
         payloads_by_path[path] = updated_payload(
@@ -228,7 +230,7 @@ def build_catalogue_document_url_refresh_plan(
             path=path,
             kind=kind,
             key=key,
-            urls=desired_urls,
+            documents=desired_documents,
             generated_at_utc=timestamp,
         )
 
@@ -254,7 +256,7 @@ def apply_catalogue_document_url_refresh_plan(
 
 def refresh_catalogue_document_urls(
     repo_root: Path,
-    projection: CatalogueDocumentUrls,
+    projection: CatalogueDocuments,
 ) -> CatalogueDocumentUrlRefreshResult:
     plan = build_catalogue_document_url_refresh_plan(repo_root, projection)
     return apply_catalogue_document_url_refresh_plan(plan)

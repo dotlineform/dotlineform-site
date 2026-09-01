@@ -132,6 +132,8 @@ def test_catalogue_editor_create_work_dry_run_uses_callable_service_route() -> N
                     "title": "Draft Work",
                     "status": "draft",
                     "series_ids": [],
+                    "media_source_id": "processing",
+                    "project_folder": "ink-engine",
                 },
             },
             dry_run=True,
@@ -141,6 +143,8 @@ def test_catalogue_editor_create_work_dry_run_uses_callable_service_route() -> N
         assert payload["ok"] is True
         assert payload["work_id"] == "00042"
         assert payload["created"] is True
+        assert payload["record"]["media_source_id"] == "processing"
+        assert payload["record"]["project_folder"] == "ink-engine"
         assert payload["dry_run"] is True
         assert payload["would_write"] is True
         assert json.loads((source_dir / "works.json").read_text(encoding="utf-8"))["works"] == {}
@@ -183,6 +187,7 @@ def test_catalogue_editor_save_work_dry_run_uses_callable_service_route() -> Non
                 "work_id": "42",
                 "record": {
                     "title": "Updated",
+                    "media_source_id": "projects",
                 },
             },
             dry_run=True,
@@ -193,6 +198,7 @@ def test_catalogue_editor_save_work_dry_run_uses_callable_service_route() -> Non
         assert payload["work_id"] == "00042"
         assert payload["changed"] is True
         assert payload["changed_fields"] == ["title"]
+        assert "media_source_id" not in payload["record"]
         assert payload["dry_run"] is True
         assert payload["would_write"] is True
         assert "build_plan" in payload

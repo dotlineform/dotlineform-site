@@ -12,7 +12,8 @@ import {
   seriesIdsToText
 } from "./catalogue-work-fields.js";
 import {
-  openProjectMediaPickerForCurrentDraft
+  openProjectMediaPickerForCurrentDraft,
+  resetProjectMediaFolders
 } from "./catalogue-project-media-picker.js";
 
 function escapeHtml(value) {
@@ -44,6 +45,63 @@ function notifyStateChange(options) {
   if (options && typeof options.onStateChange === "function") {
     options.onStateChange();
   }
+}
+
+function mediaSourceConfig(state) {
+  const config = state.workMediaSourceConfig && typeof state.workMediaSourceConfig === "object"
+    ? state.workMediaSourceConfig
+    : {};
+  const sourceIds = Array.isArray(config.mediaSourceIds)
+    ? config.mediaSourceIds.map(normalizeText).filter(Boolean)
+    : [];
+  const defaultSourceId = normalizeText(config.defaultMediaSourceId);
+  return { sourceIds, defaultSourceId };
+}
+
+export function resolvedWorkMediaSourceId(state) {
+  const config = mediaSourceConfig(state);
+  return normalizeText(state.draft && state.draft.media_source_id) || config.defaultSourceId;
+}
+
+function mediaSourceLabel(sourceId) {
+  const value = normalizeText(sourceId);
+  return value ? `${value.slice(0, 1).toUpperCase()}${value.slice(1)}` : "—";
+}
+
+function updateMediaSourceButton(state) {
+  const button = state.mediaSourceButton;
+  if (!button) return;
+  const config = mediaSourceConfig(state);
+  const currentSourceId = resolvedWorkMediaSourceId(state);
+  const currentIndex = config.sourceIds.indexOf(currentSourceId);
+  const nextSourceId = currentIndex >= 0 && config.sourceIds.length > 1
+    ? config.sourceIds[(currentIndex + 1) % config.sourceIds.length]
+    : "";
+  const currentLabel = mediaSourceLabel(currentSourceId);
+  const nextLabel = mediaSourceLabel(nextSourceId);
+  button.textContent = currentLabel;
+  button.dataset.mediaSourceId = currentSourceId;
+  button.setAttribute(
+    "aria-label",
+    nextSourceId
+      ? `Media source: ${currentLabel}. Select ${nextLabel}.`
+      : `Media source: ${currentLabel}.`
+  );
+}
+
+export function applyWorkMediaSourceConfig(state, payload) {
+  const sourceIds = Array.isArray(payload && payload.media_source_ids)
+    ? payload.media_source_ids.map(normalizeText).filter(Boolean)
+    : [];
+  const defaultSourceId = normalizeText(payload && payload.default_media_source_id);
+  if (!defaultSourceId || sourceIds.length !== 2 || !sourceIds.includes(defaultSourceId)) {
+    throw new Error("Work media source configuration is invalid.");
+  }
+  state.workMediaSourceConfig = {
+    defaultMediaSourceId: defaultSourceId,
+    mediaSourceIds: sourceIds
+  };
+  updateMediaSourceButton(state);
 }
 
 function seriesDisplayTitle(state, seriesId) {
@@ -156,6 +214,10 @@ function renderField(field, fieldsNode, state, options) {
     renderSeriesField(field, fieldsNode, state, options);
     return;
   }
+  if (field.key === "media_source_id") {
+    renderMediaSourceField(field, fieldsNode, state, options);
+    return;
+  }
   if (field.key === "project_folder") {
     renderProjectMediaDisplayField(field, fieldsNode, state, options);
     return;
@@ -232,6 +294,57 @@ function renderField(field, fieldsNode, state, options) {
   fieldsNode.appendChild(wrapper);
   state.fieldNodes.set(field.key, input);
   state.fieldStatusNodes.set(field.key, message);
+}
+
+function renderMediaSourceField(field, fieldsNode, state, options) {
+  const wrapper = document.createElement("div");
+  wrapper.className = "studioForm__field catalogueWorkForm__field catalogueWorkMediaSource";
+
+  const label = document.createElement("span");
+  label.className = "studioForm__label";
+  label.textContent = field.label;
+  wrapper.appendChild(label);
+
+  const input = document.createElement("input");
+  input.id = `catalogueWorkField-${field.key}`;
+  input.dataset.field = field.key;
+  input.type = "hidden";
+  wrapper.appendChild(input);
+
+  const button = document.createElement("button");
+  button.type = "button";
+  button.className = "studioUi__button catalogueWorkMediaSource__button";
+  button.addEventListener("click", () => {
+    const config = mediaSourceConfig(state);
+    const currentSourceId = resolvedWorkMediaSourceId(state);
+    const currentIndex = config.sourceIds.indexOf(currentSourceId);
+    if (currentIndex < 0 || config.sourceIds.length !== 2) return;
+    const nextSourceId = config.sourceIds[(currentIndex + 1) % config.sourceIds.length];
+    const storedSourceId = nextSourceId === config.defaultSourceId ? "" : nextSourceId;
+    state.draft.media_source_id = storedSourceId;
+    input.value = storedSourceId;
+    ["project_folder", "project_subfolder", "project_filename"].forEach((fieldKey) => {
+      state.draft[fieldKey] = "";
+      const fieldNode = state.fieldNodes.get(fieldKey);
+      if (fieldNode) setFieldNodeValue(fieldNode, "");
+    });
+    resetProjectMediaFolders(state);
+    updateMediaSourceButton(state);
+    notifyStateChange(options);
+  });
+  wrapper.appendChild(button);
+
+  const message = document.createElement("span");
+  message.className = "catalogueWorkForm__fieldStatus";
+  message.dataset.fieldStatus = field.key;
+  wrapper.appendChild(message);
+
+  fieldsNode.appendChild(wrapper);
+  state.fieldNodes.set(field.key, input);
+  state.fieldStatusNodes.set(field.key, message);
+  state.mediaSourceWrapper = wrapper;
+  state.mediaSourceButton = button;
+  updateMediaSourceButton(state);
 }
 
 function renderProjectMediaDisplayField(field, fieldsNode, state, options) {
@@ -418,6 +531,7 @@ export function applyWorkFormText(state, options = {}) {
     state.projectMediaChooseButton.title = formText(options, "project_media_choose_button", "Choose image...");
     state.projectMediaChooseButton.setAttribute("aria-label", formText(options, "project_media_choose_button", "Choose image..."));
   }
+  updateMediaSourceButton(state);
 }
 
 export function setFieldNodeValue(node, value) {
@@ -452,6 +566,7 @@ export function applyDraftToInputs(state, options = {}) {
     }
     setFieldNodeValue(node, normalizeText(state.draft[field.key]));
   });
+  updateMediaSourceButton(state);
 }
 
 export function applyReadonly(state) {
@@ -493,6 +608,16 @@ export function setModeFieldAvailability(state) {
   }
   if (state.projectMediaChooseButton) {
     state.projectMediaChooseButton.disabled = state.mode === "bulk" || state.isSaving || state.isBuilding || state.isDeleting;
+  }
+  if (state.mediaSourceButton) {
+    state.mediaSourceButton.disabled = state.mode === "bulk"
+      || state.isSaving
+      || state.isBuilding
+      || state.isDeleting
+      || !state.serverAvailable;
+  }
+  if (state.mediaSourceWrapper) {
+    state.mediaSourceWrapper.hidden = state.mode === "bulk";
   }
 }
 

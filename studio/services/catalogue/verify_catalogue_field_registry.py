@@ -7,10 +7,18 @@ import sys
 from pathlib import Path
 from typing import Any, Mapping, Sequence
 
+_BOOTSTRAP_START = Path(__file__).resolve()
+for _candidate in (_BOOTSTRAP_START.parent, *_BOOTSTRAP_START.parents):
+    if (_candidate / "site-tools" / "config" / "site-tools.json").exists():
+        if str(_candidate) not in sys.path:
+            sys.path.insert(0, str(_candidate))
+        break
+
+from studio.shared.python.studio_python_paths import ensure_studio_python_paths  # noqa: E402
+
+REPO_ROOT = ensure_studio_python_paths(__file__)
 SCRIPT_DIR = Path(__file__).resolve().parent
 SCRIPTS_DIR = SCRIPT_DIR.parent
-REPO_ROOT = SCRIPT_DIR.parents[2]
-sys.path.insert(0, str(SCRIPTS_DIR))
 
 from catalogue.catalogue_field_registry import field_aware_build_plan, full_fallback_build_plan, load_catalogue_field_registry  # noqa: E402
 from catalogue.catalogue_source import (  # noqa: E402
@@ -249,8 +257,27 @@ def assert_field_omitted(label: str, record: Mapping[str, Any], field: str) -> N
 
 
 def verify_optional_source_serialization() -> int:
-    if OMIT_EMPTY_SOURCE_FIELDS != {"project_subfolder", "details_subfolder", "section_order", "detail_sort"}:
+    if OMIT_EMPTY_SOURCE_FIELDS != {
+        "media_source_id",
+        "project_subfolder",
+        "details_subfolder",
+        "section_order",
+        "detail_sort",
+    }:
         fail(f"unexpected omit-empty source fields: {sorted(OMIT_EMPTY_SOURCE_FIELDS)!r}")
+
+    default_media_source = normalize_source_record(
+        {"work_id": "00001", "media_source_id": "projects"},
+        WORK_FIELDS,
+        text_fields=WORK_TEXT_FIELDS,
+    )
+    processing_media_source = normalize_source_record(
+        {"work_id": "00001", "media_source_id": "processing"},
+        WORK_FIELDS,
+        text_fields=WORK_TEXT_FIELDS,
+    )
+    assert_field_omitted("work default media source", default_media_source, "media_source_id")
+    assert_field_present("work Processing media source", processing_media_source, "media_source_id", "processing")
 
     work_with_subfolder = normalize_source_record(
         {"work_id": "00001", "project_subfolder": "prints"},
@@ -323,7 +350,7 @@ def verify_optional_source_serialization() -> int:
         )
         assert_field_present(f"section required {field} non-empty", non_blank_record, field, "value")
 
-    return 14
+    return 16
 
 
 def verify_registry_defaults(registry: Mapping[str, Any]) -> None:

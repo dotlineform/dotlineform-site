@@ -26,7 +26,13 @@ from catalogue.catalogue_source import (  # noqa: E402
     normalize_text,
     records_from_json_source,
 )
-from pipeline_config import load_pipeline_config, source_works_root_subdir  # noqa: E402
+from catalogue_work_media_sources import (  # noqa: E402
+    WorkMediaSourceRoot,
+    resolve_work_media_path,
+    resolve_work_media_source_id,
+    resolve_work_media_source_root,
+)
+from pipeline_config import load_pipeline_config, work_media_source_root_subdir  # noqa: E402
 from studio.shared.python.projects_directories import configured_projects_base  # noqa: E402
 
 
@@ -45,6 +51,8 @@ class MissingSourceFilesPaths:
 class WorkSource:
     work_id: str
     work_title: str
+    media_source_id: str
+    source_relative_path: str
     expected_source_path: str
 
 
@@ -91,48 +99,59 @@ def collect_work_sources(records: Any) -> list[WorkSource]:
         if subfolder:
             path_parts.extend(_canonical_parts(subfolder, f"work {work_id} project_subfolder"))
         path_parts.extend(_canonical_parts(filename, f"work {work_id} project_filename", single=True))
+        media_source_id = resolve_work_media_source_id(PIPELINE_CONFIG, record.get("media_source_id"))
+        source_subdir = work_media_source_root_subdir(PIPELINE_CONFIG, media_source_id)
+        source_relative_path = PurePosixPath(*path_parts).as_posix()
         sources.append(
             WorkSource(
                 work_id=work_id,
                 work_title=work_title,
-                expected_source_path=PurePosixPath(*path_parts).as_posix(),
+                media_source_id=media_source_id,
+                source_relative_path=source_relative_path,
+                expected_source_path=PurePosixPath(source_subdir.as_posix(), source_relative_path).as_posix(),
             )
         )
     return sources
 
 
-def _projects_root(paths: MissingSourceFilesPaths) -> Path:
-    try:
-        base = paths.projects_base_dir.resolve(strict=True)
-        root = (base / source_works_root_subdir(PIPELINE_CONFIG)).resolve(strict=True)
-        root.relative_to(base)
-    except (OSError, RuntimeError, ValueError) as exc:
-        raise ValueError("Projects source root is unavailable or outside the configured base") from exc
-    if not root.is_dir():
-        raise ValueError("Projects source root is not a directory")
-    return root
+def _source_roots(paths: MissingSourceFilesPaths, sources: list[WorkSource]) -> dict[str, WorkMediaSourceRoot]:
+    roots: dict[str, WorkMediaSourceRoot] = {}
+    environ = {"DOTLINEFORM_PROJECTS_BASE_DIR": str(paths.projects_base_dir)}
+    for source_id in sorted({source.media_source_id for source in sources}):
+        roots[source_id] = resolve_work_media_source_root(
+            PIPELINE_CONFIG,
+            source_id,
+            environ=environ,
+            require_exists=True,
+        )
+    return roots
 
 
-def _is_regular_source_file(candidate: Path, projects_root: Path, work_id: str) -> bool:
+def _is_regular_source_file(source: WorkSource, source_root: WorkMediaSourceRoot) -> bool:
     try:
-        resolved = candidate.resolve(strict=False)
-        resolved.relative_to(projects_root)
+        resolved = resolve_work_media_path(
+            source_root,
+            source.source_relative_path,
+            require_exists=False,
+        )
     except (OSError, RuntimeError, ValueError) as exc:
-        raise ValueError(f"work {work_id} source path is outside the Projects source root") from exc
+        raise ValueError(f"work {source.work_id} source path is invalid: {exc}") from exc
     try:
         record = resolved.stat()
     except FileNotFoundError:
         return False
     except OSError as exc:
-        raise ValueError(f"work {work_id} source path could not be inspected") from exc
+        raise ValueError(f"work {source.work_id} source path could not be inspected") from exc
     return stat.S_ISREG(record.st_mode)
 
 
-def missing_source_rows(sources: list[WorkSource], projects_root: Path) -> list[dict[str, str]]:
+def missing_source_rows(
+    sources: list[WorkSource],
+    source_roots: Mapping[str, WorkMediaSourceRoot],
+) -> list[dict[str, str]]:
     rows: list[dict[str, str]] = []
     for source in sources:
-        candidate = projects_root.joinpath(*PurePosixPath(source.expected_source_path).parts)
-        if _is_regular_source_file(candidate, projects_root, source.work_id):
+        if _is_regular_source_file(source, source_roots[source.media_source_id]):
             continue
         rows.append(
             {
@@ -157,7 +176,8 @@ class MissingSourceFilesProducer:
 
     def run(self) -> dict[str, object]:
         records = records_from_json_source(self.paths.catalogue_source_dir)
-        rows = missing_source_rows(collect_work_sources(records), _projects_root(self.paths))
+        sources = collect_work_sources(records)
+        rows = missing_source_rows(sources, _source_roots(self.paths, sources))
         return {
             "report": {
                 "schema_version": REPORT_SCHEMA_VERSION,

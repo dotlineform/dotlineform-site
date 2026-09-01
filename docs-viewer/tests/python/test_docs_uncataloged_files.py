@@ -36,6 +36,7 @@ def work(
     filename: str,
     *,
     subfolder: str = "",
+    media_source_id: str = "",
 ) -> dict[str, object]:
     record: dict[str, object] = {
         "work_id": work_id,
@@ -47,6 +48,8 @@ def work(
     }
     if subfolder:
         record["project_subfolder"] = subfolder
+    if media_source_id:
+        record["media_source_id"] = media_source_id
     return record
 
 
@@ -161,22 +164,22 @@ def test_report_lists_direct_ordinary_uncataloged_files_only(tmp_path: Path) -> 
     assert payload["report"]["schema_version"] == REPORT_SCHEMA_VERSION
     assert payload["report"]["rows"] == [
         {
-            "folder": "alpha",
+            "folder": "projects/alpha",
             "file_name": "notes.pdf",
             "local_target": encode_relative_target("projects/alpha/notes.pdf"),
         },
         {
-            "folder": "alpha",
+            "folder": "projects/alpha",
             "file_name": "README",
             "local_target": encode_relative_target("projects/alpha/README"),
         },
         {
-            "folder": "alpha",
+            "folder": "projects/alpha",
             "file_name": "sound.wav",
             "local_target": encode_relative_target("projects/alpha/sound.wav"),
         },
         {
-            "folder": "alpha/ink",
+            "folder": "projects/alpha/ink",
             "file_name": "working.docx",
             "local_target": encode_relative_target("projects/alpha/ink/working.docx"),
         },
@@ -209,7 +212,7 @@ def test_report_rejects_a_represented_directory_resolving_outside_root(tmp_path:
     (outside / "primary.jpg").write_text("outside", encoding="utf-8")
     (projects_root / "linked").symlink_to(outside, target_is_directory=True)
 
-    with pytest.raises(ValueError, match="outside the Projects source root"):
+    with pytest.raises(ValueError, match="must not contain symlinks"):
         UncatalogedFilesProducer(repo_root=tmp_path, paths=paths).run()
 
 
@@ -223,5 +226,39 @@ def test_report_rejects_a_direct_file_resolving_outside_root(tmp_path: Path) -> 
     outside.write_text("outside", encoding="utf-8")
     (alpha / "linked.txt").symlink_to(outside)
 
-    with pytest.raises(ValueError, match="outside the Projects source root"):
+    with pytest.raises(ValueError, match="must not contain symlinks"):
         UncatalogedFilesProducer(repo_root=tmp_path, paths=paths).run()
+
+
+def test_report_scans_each_represented_configured_source_root(tmp_path: Path) -> None:
+    paths, projects_root, source_dir = fixture_paths(tmp_path)
+    processing_root = paths.projects_base_dir / "processing"
+    project_folder = projects_root / "alpha"
+    processing_folder = processing_root / "ink-engine"
+    project_folder.mkdir()
+    processing_folder.mkdir(parents=True)
+    (project_folder / "primary.jpg").write_text("project primary", encoding="utf-8")
+    (processing_folder / "frame.jpg").write_text("processing primary", encoding="utf-8")
+    (processing_folder / "working.psd").write_text("processing extra", encoding="utf-8")
+    write_catalogue(
+        source_dir,
+        {
+            "00001": work("00001", "alpha", "primary.jpg"),
+            "00002": work(
+                "00002",
+                "ink-engine",
+                "frame.jpg",
+                media_source_id="processing",
+            ),
+        },
+    )
+
+    payload = UncatalogedFilesProducer(repo_root=tmp_path, paths=paths).run()
+
+    assert payload["report"]["rows"] == [
+        {
+            "folder": "processing/ink-engine",
+            "file_name": "working.psd",
+            "local_target": encode_relative_target("processing/ink-engine/working.psd"),
+        }
+    ]

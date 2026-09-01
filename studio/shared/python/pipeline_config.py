@@ -28,7 +28,13 @@ DEFAULT_PIPELINE_CONFIG: Dict[str, Any] = {
             "bulk_import": "data/works_bulk_import.xlsx",
         },
         "source_roots": {
-            "works": "projects",
+            "work_media": {
+                "default": "projects",
+                "roots": {
+                    "projects": "projects",
+                    "processing": "processing",
+                },
+            },
         },
         "source_subdirs": {
             "prose": "site text",
@@ -146,8 +152,59 @@ def media_work_files_subdir(config: Mapping[str, Any]) -> Path:
     return Path(str(config["paths"]["media"]["work_files_subdir"]))
 
 
-def source_works_root_subdir(config: Mapping[str, Any]) -> Path:
-    return Path(str(config["paths"]["source_roots"]["works"]))
+def work_media_source_config(config: Mapping[str, Any]) -> Dict[str, Any]:
+    """Return the checked logical Work-media source map and configured default."""
+
+    raw = config["paths"]["source_roots"]["work_media"]
+    if not isinstance(raw, Mapping):
+        raise ValueError("paths.source_roots.work_media must be an object")
+    default_source_id = str(raw.get("default") or "").strip()
+    raw_roots = raw.get("roots")
+    if not isinstance(raw_roots, Mapping) or not raw_roots:
+        raise ValueError("paths.source_roots.work_media.roots must be a non-empty object")
+
+    roots: Dict[str, str] = {}
+    for raw_source_id, raw_subdir in raw_roots.items():
+        source_id = str(raw_source_id)
+        if not source_id or source_id != source_id.strip() or any(
+            character not in "abcdefghijklmnopqrstuvwxyz0123456789_-" for character in source_id
+        ):
+            raise ValueError(f"invalid Work media source identity: {source_id!r}")
+        subdir_text = str(raw_subdir or "")
+        subdir = Path(subdir_text)
+        if (
+            not subdir_text
+            or subdir_text != subdir_text.strip()
+            or "\\" in subdir_text
+            or not subdir.parts
+            or subdir.is_absolute()
+            or ".." in subdir.parts
+        ):
+            raise ValueError(f"invalid Work media source subdirectory for {source_id!r}")
+        roots[source_id] = subdir.as_posix()
+
+    if default_source_id not in roots:
+        raise ValueError("default Work media source identity must exist in roots")
+    return {
+        "default": default_source_id,
+        "roots": roots,
+    }
+
+
+def work_media_source_ids(config: Mapping[str, Any]) -> tuple[str, ...]:
+    return tuple(work_media_source_config(config)["roots"].keys())
+
+
+def default_work_media_source_id(config: Mapping[str, Any]) -> str:
+    return str(work_media_source_config(config)["default"])
+
+
+def work_media_source_root_subdir(config: Mapping[str, Any], source_id: str) -> Path:
+    source_config = work_media_source_config(config)
+    normalized_source_id = str(source_id or "").strip()
+    if normalized_source_id not in source_config["roots"]:
+        raise ValueError(f"unknown Work media source identity: {normalized_source_id or '(empty)'}")
+    return Path(str(source_config["roots"][normalized_source_id]))
 
 
 def source_works_prose_subdir(config: Mapping[str, Any]) -> Path:

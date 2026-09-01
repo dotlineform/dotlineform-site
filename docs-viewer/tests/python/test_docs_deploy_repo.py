@@ -244,13 +244,13 @@ def prepare_repo(root: Path) -> str:
         root / "site/assets/works/index/00638.json",
         {
             "header": {
-                "schema": "work_record_v4",
+                "schema": "work_record_v5",
                 "version": "fixture",
                 "generated_at_utc": "2026-08-01T00:00:00Z",
                 "work_id": "00638",
                 "count": 0,
             },
-            "work": {"work_id": "00638", "title": "Fixture Work", "doc_url": []},
+            "work": {"work_id": "00638", "title": "Fixture Work", "documents": []},
             "sections": [],
         },
     )
@@ -388,8 +388,11 @@ def test_preview_and_apply_use_only_accepted_published_snapshot(tmp_path: Path) 
     catalogue_payload = json.loads(
         (tmp_path / "site/assets/works/index/00638.json").read_text(encoding="utf-8")
     )
-    assert catalogue_payload["work"]["doc_url"] == [
-        f"/analysis/?doc={WORK_HOST}&subdoc={WORK_DOC}"
+    assert catalogue_payload["work"]["documents"] == [
+        {
+            "url": f"/analysis/?doc={WORK_HOST}&subdoc={WORK_DOC}",
+            "title": "Work note",
+        }
     ]
 
 

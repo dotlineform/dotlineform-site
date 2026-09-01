@@ -10,7 +10,13 @@
       "bulk_import": "data/works_bulk_import.xlsx"
     },
     "source_roots": {
-      "works": "projects"
+      "work_media": {
+        "default": "projects",
+        "roots": {
+          "projects": "projects",
+          "processing": "processing"
+        }
+      }
     },
     "source_subdirs": {
       "prose": "site text"

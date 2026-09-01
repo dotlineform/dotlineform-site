@@ -12,11 +12,16 @@ from catalogue.catalogue_build_media import build_local_media_plan
 from catalogue.catalogue_build_scopes import build_scope_for_series, build_scope_for_work
 from catalogue.catalogue_json_build import run_scoped_build_scope
 from catalogue.catalogue_source import normalize_detail_uid_value, normalize_series_ids_value, slug_id
-from catalogue.catalogue_service_context import CatalogueWriteContext, utc_now
+from catalogue.catalogue_service_context import CatalogueWriteContext, log_event, utc_now
 from catalogue.series_ids import normalize_series_id
 from local_env import runtime_env
 
-WORK_MEDIA_SOURCE_FIELDS = frozenset({"project_folder", "project_subfolder", "project_filename"})
+WORK_MEDIA_SOURCE_FIELDS = frozenset({
+    "media_source_id",
+    "project_folder",
+    "project_subfolder",
+    "project_filename",
+})
 
 
 def build_preview_payload(context: CatalogueWriteContext, body: Mapping[str, Any]) -> dict[str, Any]:
@@ -32,6 +37,7 @@ def build_preview_payload(context: CatalogueWriteContext, body: Mapping[str, Any
             work_id,
             extra_series_ids=extra_series_ids,
             detail_uid=detail_uid,
+            media_only=media_only,
             work_media_source=work_media_source,
         )
     elif series_id:
@@ -101,6 +107,7 @@ def run_build_operation(
             work_id,
             extra_series_ids=extra_series_ids,
             detail_uid=detail_uid,
+            media_only=media_only,
             work_media_source=work_media_source,
         )
     elif series_id:
@@ -155,8 +162,8 @@ def run_catalogue_search_rebuild(repo_root: Path, *, write: bool) -> dict[str, A
         "stderr_tail": "\n".join(proc.stderr.strip().splitlines()[-8:]) if proc.stderr else "",
     }
     if proc.returncode != 0:
-        detail = payload["stderr_tail"] or payload["stdout_tail"] or "catalogue search rebuild failed"
-        raise RuntimeError(str(detail))
+        log_event(repo_root, "catalogue_search_rebuild_failed", payload)
+        raise RuntimeError("Catalogue search rebuild failed.")
     return payload
 
 

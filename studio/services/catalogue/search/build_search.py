@@ -13,18 +13,20 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
-STUDIO_SERVICES_DIR = Path(__file__).resolve().parents[2]
-if str(STUDIO_SERVICES_DIR) not in sys.path:
-    sys.path.insert(0, str(STUDIO_SERVICES_DIR))
+_BOOTSTRAP_START = Path(__file__).resolve()
+for _candidate in (_BOOTSTRAP_START.parent, *_BOOTSTRAP_START.parents):
+    if (_candidate / "site-tools" / "config" / "site-tools.json").exists():
+        if str(_candidate) not in sys.path:
+            sys.path.insert(0, str(_candidate))
+        break
 
-try:
-    from catalogue import catalogue_public_paths as public_paths
-    from catalogue import catalogue_generation_records as generation_records
-    from catalogue.catalogue_source import DEFAULT_SOURCE_DIR, records_from_json_source, slug_id
-except ModuleNotFoundError:  # pragma: no cover - package import fallback
-    import catalogue_public_paths as public_paths
-    import catalogue_generation_records as generation_records
-    from catalogue_source import DEFAULT_SOURCE_DIR, records_from_json_source, slug_id
+from studio.shared.python.studio_python_paths import ensure_studio_python_paths  # noqa: E402
+
+ensure_studio_python_paths(__file__)
+
+from catalogue import catalogue_generation_records as generation_records  # noqa: E402
+from catalogue import catalogue_public_paths as public_paths  # noqa: E402
+from catalogue.catalogue_source import DEFAULT_SOURCE_DIR, records_from_json_source, slug_id  # noqa: E402
 
 
 DEFAULT_SCOPE = "catalogue"

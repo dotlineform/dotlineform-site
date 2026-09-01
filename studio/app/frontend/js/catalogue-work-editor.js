@@ -42,6 +42,7 @@ import {
   previewCatalogueDelete,
   readProjectMediaFiles,
   readProjectMediaFolders,
+  readWorkMediaSources,
   saveCatalogueWorkDetailSection
 } from "./catalogue-editor-service-client.js";
 import {
@@ -64,11 +65,13 @@ import {
 } from "./catalogue-work-detail-browser.js";
 import {
   applyDraftToInputs,
+  applyWorkMediaSourceConfig,
   applyReadonly,
   applyWorkFormText,
   clearReadonlyFields,
   getFieldNodeValue,
   renderWorkEditorFields,
+  resolvedWorkMediaSourceId,
   setFieldNodeValue,
   setModeFieldAvailability,
   updateFieldMessages
@@ -82,7 +85,6 @@ import {
   syncWorkRouteBusyState
 } from "./catalogue-work-route-state.js";
 import {
-  applyPublicationChange,
   bulkPublishedBuildTargets,
   catalogueDeleteRemoteCleanupWarning,
   catalogueRemoteMediaWarning,
@@ -94,6 +96,7 @@ import {
   refreshWorkMedia
 } from "./catalogue-work-actions.js";
 import {
+  changeWorkPublicationThenPublishMedia,
   saveWorkThenPublishMedia,
   workSaveActionRequired
 } from "./catalogue-work-media-publish.js";
@@ -186,13 +189,16 @@ function usedDetailSubfolders(state) {
 async function openDetailSectionPicker(state) {
   if (!state.currentRecord || state.mode === "bulk") return null;
   clearActionMessages(state);
+  const mediaSourceId = normalizeText(state.currentRecord.media_source_id)
+    || normalizeText(state.workMediaSourceConfig && state.workMediaSourceConfig.defaultMediaSourceId);
   const result = await openProjectMediaMultiFileModal(state, {
     text: (key, fallback, tokens) => t(state, key, fallback, tokens),
     initialSelection: {
       project_folder: state.currentRecord.project_folder || state.draft.project_folder || ""
     },
+    mediaSourceId,
     disabledSubfolders: usedDetailSubfolders(state),
-    loadProjectFolders: (query) => readProjectMediaFolders(query),
+    loadProjectFolders: (sourceId, query) => readProjectMediaFolders(sourceId, query),
     loadProjectFiles: (request) => readProjectMediaFiles(request)
   });
   if (!result || !result.confirmed) return result;
@@ -602,6 +608,14 @@ function validateDraft(state) {
     }
   }
 
+  const mediaSourceId = resolvedWorkMediaSourceId(state);
+  const configuredMediaSourceIds = state.workMediaSourceConfig && Array.isArray(state.workMediaSourceConfig.mediaSourceIds)
+    ? state.workMediaSourceConfig.mediaSourceIds
+    : [];
+  if (!configuredMediaSourceIds.includes(mediaSourceId)) {
+    errors.set("media_source_id", t(state, "field_invalid_media_source", "Select a configured media source."));
+  }
+
   validateWorkEmbeddedItems(state.draft, {
     text: (key, fallback, tokens) => t(state, key, fallback, tokens)
   }).forEach((message, key) => {
@@ -618,6 +632,7 @@ function clearActionMessages(state) {
 function firstBulkMixedMessage(state) {
   if (state.mode !== "bulk") return "";
   for (const field of EDITABLE_FIELDS) {
+    if (field.key === "media_source_id") continue;
     if (!state.bulkMixedFields.has(field.key) || state.bulkTouchedFields.has(field.key)) continue;
     return field.key === "series_ids"
       ? t(state, "bulk_field_mixed_series", "Mixed values across selection. Leave untouched to preserve, use plain ids to replace, or +id/-id to add or remove.")
@@ -753,7 +768,8 @@ function workFormOptions(state) {
       updateEditorState(state);
     },
     draftHasChanges: () => draftHasChanges(state),
-    loadProjectFolders: (query) => readProjectMediaFolders(query),
+    getMediaSourceId: () => resolvedWorkMediaSourceId(state),
+    loadProjectFolders: (sourceId, query) => readProjectMediaFolders(sourceId, query),
     loadProjectFiles: (request) => readProjectMediaFiles(request)
   };
 }
@@ -871,7 +887,9 @@ async function configureWorkEditorRuntime(state, elements) {
 }
 
 async function loadInitialWorkEditorData(state) {
-  await loadCatalogueEditorLookupMaps(state, [
+  const [sourcePayload] = await Promise.all([
+    readWorkMediaSources(),
+    loadCatalogueEditorLookupMaps(state, [
     {
       configKey: "catalogue_lookup_work_search",
       target: state.workSearchById,
@@ -885,7 +903,9 @@ async function loadInitialWorkEditorData(state) {
       target: state.seriesById,
       normalizeKey: (record) => normalizeSeriesId(record.series_id)
     }
+    ])
   ]);
+  applyWorkMediaSourceConfig(state, sourcePayload);
 }
 
 function markWorkEditorLoaded(state, elements) {
@@ -925,7 +945,7 @@ async function init() {
       setNewWorkMode: () => setNewWorkMode(state, workRouteStateOptions(state)),
       refreshWorkMedia: () => refreshWorkMedia(state, workActionOptions(state)),
       saveCurrentWork: () => saveWorkThenPublishMedia(state, workActionOptions(state)),
-      applyPublicationChange: () => applyPublicationChange(state, workActionOptions(state)),
+      applyPublicationChange: () => changeWorkPublicationThenPublishMedia(state, workActionOptions(state)),
       deleteCurrentWork: () => deleteCurrentWork(state, workActionOptions(state))
     });
     await applyInitialWorkRouteSelection(state, workSelectionOptions(state));

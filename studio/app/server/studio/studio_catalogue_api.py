@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from http import HTTPStatus
 from pathlib import Path
+import stat
 import sys
 from typing import Any, Mapping
 
@@ -26,7 +27,7 @@ for candidate in (SCRIPTS_DIR, STUDIO_DIR):
 
 from catalogue import catalogue_lookup_refresh as lookup_refresh  # noqa: E402
 from catalogue import catalogue_write_service  # noqa: E402
-from catalogue.catalogue_build_media import PIPELINE_CONFIG, detect_projects_base_dir  # noqa: E402
+from catalogue.catalogue_build_media import PIPELINE_CONFIG  # noqa: E402
 from catalogue.catalogue_lookup import (  # noqa: E402
     DEFAULT_LOOKUP_DIR,
     build_series_lookup_payload,
@@ -56,7 +57,13 @@ from catalogue.catalogue_workbook_import import (  # noqa: E402
     normalize_import_mode,
     plan_to_response,
 )
-from pipeline_config import source_works_root_subdir  # noqa: E402
+from catalogue_work_media_sources import (  # noqa: E402
+    WorkMediaSourceRoot,
+    resolve_work_media_path,
+    resolve_work_media_source_id,
+    resolve_work_media_source_root,
+)
+from pipeline_config import default_work_media_source_id, work_media_source_ids  # noqa: E402
 from catalogue.series_ids import normalize_series_id  # noqa: E402
 from local_env import runtime_env  # noqa: E402
 from script_logging import append_script_log  # noqa: E402
@@ -158,15 +165,29 @@ def catalogue_read_payload(repo_root: Path, query: Mapping[str, list[str]]) -> d
 
 def project_media_payload(repo_root: Path, query: Mapping[str, list[str]]) -> dict[str, Any]:
     mode = str((query.get("mode") or ["folders"])[0] or "folders").strip().lower()
-    projects_base_dir = detect_projects_base_dir(runtime_env(repo_root=repo_root))
-    projects_root = (projects_base_dir / source_works_root_subdir(PIPELINE_CONFIG)).resolve()
-    if not projects_root.exists():
-        raise ValueError(f"Projects source root does not exist: {projects_root}")
+    if mode == "sources":
+        return {
+            "ok": True,
+            "mode": mode,
+            "default_media_source_id": default_work_media_source_id(PIPELINE_CONFIG),
+            "media_source_ids": list(work_media_source_ids(PIPELINE_CONFIG)),
+        }
+    media_source_id = resolve_work_media_source_id(
+        PIPELINE_CONFIG,
+        str((query.get("media_source_id") or [""])[0] or ""),
+    )
+    source_root = resolve_work_media_source_root(
+        PIPELINE_CONFIG,
+        media_source_id,
+        environ=runtime_env(repo_root=repo_root),
+        require_exists=True,
+    )
     if mode == "folders":
         return {
             "ok": True,
             "mode": mode,
-            "project_folders": project_media_folder_records(projects_root, query_text(query)),
+            "media_source_id": media_source_id,
+            "project_folders": project_media_folder_records(source_root.root, query_text(query)),
         }
     if mode == "files":
         project_folder = normalize_project_media_segment(
@@ -179,16 +200,19 @@ def project_media_payload(repo_root: Path, query: Mapping[str, list[str]]) -> di
             field="project_subfolder",
             required=False,
         )
-        folder_path = resolve_project_media_folder(projects_root, project_folder, project_subfolder)
+        folder_path = resolve_project_media_folder(source_root, project_folder, project_subfolder)
         return {
             "ok": True,
             "mode": mode,
+            "media_source_id": media_source_id,
             "project_folder": project_folder,
             "project_subfolder": project_subfolder,
-            "subfolders": project_media_subfolder_records(projects_root / project_folder),
+            "subfolders": project_media_subfolder_records(
+                resolve_project_media_folder(source_root, project_folder)
+            ),
             "files": project_media_file_records(folder_path, query_text(query)),
         }
-    raise ValueError("project-media mode must be folders or files")
+    raise ValueError("project-media mode must be sources, folders or files")
 
 
 def query_text(query: Mapping[str, list[str]]) -> str:
@@ -210,29 +234,40 @@ def normalize_project_media_segment(value: str, *, field: str, required: bool) -
     return part
 
 
-def resolve_project_media_folder(projects_root: Path, project_folder: str, project_subfolder: str = "") -> Path:
-    root = projects_root.resolve()
-    folder = (root / project_folder / project_subfolder).resolve() if project_subfolder else (root / project_folder).resolve()
-    try:
-        folder.relative_to(root)
-    except ValueError as error:
-        raise ValueError("project media path must stay inside the projects root") from error
+def resolve_project_media_folder(
+    source_root: WorkMediaSourceRoot,
+    project_folder: str,
+    project_subfolder: str = "",
+) -> Path:
+    folder = resolve_work_media_path(
+        source_root,
+        project_folder,
+        project_subfolder,
+        require_exists=True,
+    )
     if not folder.is_dir():
         raise ValueError("project media folder does not exist")
     return folder
 
 
 def visible_dir(path: Path) -> bool:
-    return path.is_dir() and not path.name.startswith(".")
+    try:
+        return stat.S_ISDIR(path.lstat().st_mode) and not path.name.startswith(".")
+    except OSError:
+        return False
 
 
 def visible_image_file(path: Path) -> bool:
-    return path.is_file() and not path.name.startswith(".") and path.suffix.lower() in IMAGE_EXTENSIONS
+    try:
+        is_file = stat.S_ISREG(path.lstat().st_mode)
+    except OSError:
+        return False
+    return is_file and not path.name.startswith(".") and path.suffix.lower() in IMAGE_EXTENSIONS
 
 
-def project_media_folder_records(projects_root: Path, query: str) -> list[dict[str, Any]]:
+def project_media_folder_records(source_root: Path, query: str) -> list[dict[str, Any]]:
     records = []
-    for child in sorted(projects_root.iterdir(), key=lambda item: item.name.lower()):
+    for child in sorted(source_root.iterdir(), key=lambda item: item.name.lower()):
         if not visible_dir(child):
             continue
         if query and not child.name.lower().startswith(query):

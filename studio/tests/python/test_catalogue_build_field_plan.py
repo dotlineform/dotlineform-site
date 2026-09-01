@@ -143,7 +143,7 @@ def test_work_media_source_reduces_to_local_media_only() -> None:
         write_source_fixture(source_dir)
         scope = work_scope(source_dir)
 
-        plan = field_plan.build_field_plan_for_scope(REPO_ROOT, source_dir, scope, changed_fields=["project_filename"])
+        plan = field_plan.build_field_plan_for_scope(REPO_ROOT, source_dir, scope, changed_fields=["media_source_id"])
         field_plan.apply_field_build_plan_to_scope(scope, plan)
 
     assert plan["rule_ids"] == ["work_media_source"]

@@ -73,20 +73,37 @@ function loadSubjectTargetTitles(options) {
   return loadCatalogueTargetSupport({
     fetch: options.fetch,
     allowedTargetTypes: ["work", "series"]
-  }).then(subjectTargetTitles).catch(function () {
-    return new Map();
+  }).then(function (support) {
+    return {
+      available: true,
+      titles: subjectTargetTitles(support)
+    };
+  }).catch(function () {
+    return {
+      available: false,
+      titles: new Map()
+    };
   });
 }
 
-function subjectProjection(documentRecord, targetTitles) {
+export function projectDocsViewerWorkingSubject(documentRecord, targetLookup) {
   var subject = authoringSubject(documentRecord);
   if (subject.state === "valid") {
+    var targetTitles = targetLookup && targetLookup.titles instanceof Map
+      ? targetLookup.titles
+      : new Map();
     var targetTitle = targetTitles.get(subjectTargetIdentity(subject.kind, subject.key)) || "";
+    var targetUnavailable = (
+      ["work", "series"].includes(subject.kind)
+      && targetLookup
+      && targetLookup.available === true
+      && !targetTitle
+    );
     return {
       kind: subject.kind,
       key: subject.key,
       label: targetTitle || subject.key,
-      state: "valid",
+      state: targetUnavailable ? "unavailable" : "valid",
       targetTitle: targetTitle
     };
   }
@@ -123,14 +140,15 @@ function subjectAccessibleLabel(subject) {
   if (subject.targetTitle) {
     return kindLabel + " subject " + subject.targetTitle + ", " + subject.key;
   }
-  return kindLabel + " subject " + subject.key;
+  return kindLabel + " subject " + subject.key
+    + (subject.state === "unavailable" ? ", unavailable" : "");
 }
 
-function renderSubjectCell(context, options, targetTitles) {
+function renderSubjectCell(context, options, targetLookup) {
   var settings = context || {};
   var host = settings.trailingHost;
   if (!host) return;
-  var subject = subjectProjection(settings.document, targetTitles);
+  var subject = projectDocsViewerWorkingSubject(settings.document, targetLookup);
   var cell = host.ownerDocument.createElement("span");
   cell.className = "docsViewerReport__projectSubjectCell";
   cell.dataset.projectSubjectState = subject.state;
@@ -142,6 +160,22 @@ function renderSubjectCell(context, options, targetTitles) {
   }
   if (subject.state === "warning") {
     cell.textContent = "⚠️ Subject warning";
+    host.appendChild(cell);
+    return;
+  }
+  if (subject.state === "unavailable") {
+    var unavailable = host.ownerDocument.createElement("span");
+    unavailable.className = "docsViewerReport__projectSubjectUnavailable";
+    unavailable.dataset.projectSubjectKind = subject.kind;
+    unavailable.dataset.projectSubjectKey = subject.key;
+    appendProjectSubjectIcon(unavailable, subject.kind);
+    var unavailableLabel = host.ownerDocument.createElement("span");
+    unavailableLabel.className = "docsViewerReport__projectSubjectUnavailableLabel";
+    unavailableLabel.textContent = subject.label;
+    unavailable.appendChild(unavailableLabel);
+    unavailable.setAttribute("aria-label", subjectAccessibleLabel(subject));
+    unavailable.title = subjectAccessibleLabel(subject);
+    cell.appendChild(unavailable);
     host.appendChild(cell);
     return;
   }
@@ -172,7 +206,7 @@ function compareText(collator, left, right) {
   return collator.compare(cleanString(left), cleanString(right));
 }
 
-function compareProjectDocuments(context, targetTitles, collator) {
+function compareProjectDocuments(context, targetLookup, collator) {
   var settings = context || {};
   var sortMode = cleanString(settings.sortMode);
   if (!PROJECT_SORT_MODES.includes(sortMode)) {
@@ -183,9 +217,9 @@ function compareProjectDocuments(context, targetTitles, collator) {
   var right = settings.right || {};
   var comparison;
   if (sortMode.startsWith("subject-")) {
-    var leftSubject = subjectProjection(left, targetTitles);
-    var rightSubject = subjectProjection(right, targetTitles);
-    var stateOrder = { valid: 0, warning: 1, none: 2 };
+    var leftSubject = projectDocsViewerWorkingSubject(left, targetLookup);
+    var rightSubject = projectDocsViewerWorkingSubject(right, targetLookup);
+    var stateOrder = { valid: 0, unavailable: 1, warning: 2, none: 3 };
     comparison = stateOrder[leftSubject.state] - stateOrder[rightSubject.state];
     if (comparison) return comparison;
     comparison = compareText(collator, leftSubject.label, rightSubject.label) * direction;
@@ -321,8 +355,8 @@ function renderPublicationCues(context) {
   return { accessibleLabels: [label] };
 }
 
-function renderWorkingSubjectRow(context, options, targetTitles, includePublicationCues) {
-  renderSubjectCell(context, options, targetTitles);
+function renderWorkingSubjectRow(context, options, targetLookup, includePublicationCues) {
+  renderSubjectCell(context, options, targetLookup);
   return includePublicationCues
     ? renderPublicationCues(context)
     : { accessibleLabels: [] };
@@ -506,7 +540,7 @@ function createDocsViewerManagementWorkingSubjects(options, definition) {
   exactCollection(options.collection);
   var assignSubjectAvailable = hasDocsViewerAssignableFieldGroup(options.descriptor, AUTHORING_SUBJECT_GROUP_ID);
   var collator = new Intl.Collator(undefined, { numeric: true, sensitivity: "base" });
-  return loadSubjectTargetTitles(options).then(function (targetTitles) {
+  return loadSubjectTargetTitles(options).then(function (targetLookup) {
     var contribution = {
       id: definition.customisationId,
       notify: function (event) {
@@ -520,7 +554,7 @@ function createDocsViewerManagementWorkingSubjects(options, definition) {
           : "subject";
       },
       compareListDocuments: function (context) {
-        return compareProjectDocuments(context, targetTitles, collator);
+        return compareProjectDocuments(context, targetLookup, collator);
       },
       projectDetailInfo: function (context) {
         return workingSubjectDetailInfo(
@@ -540,7 +574,7 @@ function createDocsViewerManagementWorkingSubjects(options, definition) {
         return renderWorkingSubjectRow(
           context,
           options,
-          targetTitles,
+          targetLookup,
           definition.includePublicationCues
         );
       }

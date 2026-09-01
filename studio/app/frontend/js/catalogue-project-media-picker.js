@@ -15,29 +15,52 @@ function projectMediaState(state) {
   if (!state.projectMediaPicker) {
     state.projectMediaPicker = {
       folders: [],
-      folderLoadPromise: null
+      folderLoadPromise: null,
+      mediaSourceId: ""
     };
   }
   return state.projectMediaPicker;
 }
 
+function selectedMediaSourceId(state, options = {}) {
+  if (typeof options.getMediaSourceId === "function") {
+    return normalizeText(options.getMediaSourceId());
+  }
+  return normalizeText(options.mediaSourceId || (state.draft && state.draft.media_source_id));
+}
+
+export function resetProjectMediaFolders(state) {
+  const picker = projectMediaState(state);
+  picker.folders = [];
+  picker.folderLoadPromise = null;
+  picker.mediaSourceId = "";
+}
+
 async function loadProjectFolders(state, options = {}) {
   const picker = projectMediaState(state);
+  const mediaSourceId = selectedMediaSourceId(state, options);
+  if (picker.mediaSourceId !== mediaSourceId) {
+    picker.folders = [];
+    picker.folderLoadPromise = null;
+    picker.mediaSourceId = mediaSourceId;
+  }
   if (picker.folderLoadPromise) return picker.folderLoadPromise;
   if (Array.isArray(picker.folders) && picker.folders.length) return picker.folders;
   if (!options || typeof options.loadProjectFolders !== "function") return [];
-  picker.folderLoadPromise = options.loadProjectFolders("")
+  const loadPromise = options.loadProjectFolders(mediaSourceId, "")
     .then((payload) => {
       const records = Array.isArray(payload && payload.project_folders) ? payload.project_folders : [];
-      picker.folders = records
+      const folders = records
         .map((record) => normalizeText(record && record.project_folder))
         .filter(Boolean);
-      return picker.folders;
+      if (picker.mediaSourceId === mediaSourceId) picker.folders = folders;
+      return folders;
     })
     .finally(() => {
-      picker.folderLoadPromise = null;
+      if (picker.folderLoadPromise === loadPromise) picker.folderLoadPromise = null;
     });
-  return picker.folderLoadPromise;
+  picker.folderLoadPromise = loadPromise;
+  return loadPromise;
 }
 
 function setDraftField(state, fieldKey, value, options = {}) {
@@ -67,6 +90,16 @@ function renderPickerBody() {
   return '<div data-role="catalogue-project-media-picker"></div>';
 }
 
+function createProjectMediaPickerConfig(overrides = {}) {
+  return createFilePickerConfig({
+    ...overrides,
+    search: {
+      ...(overrides && overrides.search ? overrides.search : {}),
+      openFolderSearchOnFocus: true
+    }
+  });
+}
+
 function lookupText(text, key, fallback, tokens = null) {
   if (typeof text === "function") return text(key, fallback, tokens);
   let value = normalizeText(fallback);
@@ -80,7 +113,8 @@ function lookupText(text, key, fallback, tokens = null) {
 export async function openProjectMediaFileModal(state, options = {}) {
   const host = state.modalHost;
   if (!host || typeof options.loadProjectFiles !== "function" || typeof options.loadProjectFolders !== "function") return null;
-  const pickerConfig = createFilePickerConfig(options.filePickerConfig);
+  const pickerConfig = createProjectMediaPickerConfig(options.filePickerConfig);
+  const mediaSourceId = selectedMediaSourceId(state, options);
   host.innerHTML = renderStudioModalFrame({
     hidden: false,
     modalRole: "studio-modal",
@@ -100,7 +134,7 @@ export async function openProjectMediaFileModal(state, options = {}) {
   const primaryNode = host.querySelector('[data-role="modal-primary"]');
   const pickerController = createFilePicker(pickerRoot, {
     id: "catalogueProjectMediaFilePicker",
-    scope: "projects",
+    scope: mediaSourceId,
     primaryNode,
     config: pickerConfig,
     initialSelection: {
@@ -110,6 +144,7 @@ export async function openProjectMediaFileModal(state, options = {}) {
     },
     loadFolders: () => loadProjectFolders(state, options),
     loadFiles: (request) => options.loadProjectFiles({
+      mediaSourceId,
       projectFolder: request.folder,
       projectSubfolder: request.subfolder,
       query: request.query || ""
@@ -151,7 +186,7 @@ export async function openProjectMediaFileModal(state, options = {}) {
 export async function openProjectMediaMultiFileModal(state, options = {}) {
   const host = state.modalHost;
   if (!host || typeof options.loadProjectFiles !== "function" || typeof options.loadProjectFolders !== "function") return null;
-  const pickerConfig = createFilePickerConfig({
+  const pickerConfig = createProjectMediaPickerConfig({
     ...(options.filePickerConfig || {}),
     text: {
       modalTitle: lookupText(options.text, "detail_section_picker_title", "New detail section"),
@@ -159,6 +194,7 @@ export async function openProjectMediaMultiFileModal(state, options = {}) {
       ...(options.filePickerConfig && options.filePickerConfig.text ? options.filePickerConfig.text : {})
     }
   });
+  const mediaSourceId = selectedMediaSourceId(state, options);
   host.innerHTML = renderStudioModalFrame({
     hidden: false,
     modalRole: "studio-modal",
@@ -179,7 +215,7 @@ export async function openProjectMediaMultiFileModal(state, options = {}) {
   const initialSelection = options.initialSelection || {};
   const pickerController = createFilePicker(pickerRoot, {
     id: "catalogueProjectMediaMultiFilePicker",
-    scope: "projects",
+    scope: mediaSourceId,
     selectionMode: "multiple",
     files: {
       selectAll: true,
@@ -195,6 +231,7 @@ export async function openProjectMediaMultiFileModal(state, options = {}) {
     },
     loadFolders: () => loadProjectFolders(state, options),
     loadFiles: (request) => options.loadProjectFiles({
+      mediaSourceId,
       projectFolder: request.folder,
       projectSubfolder: request.subfolder,
       query: request.query || ""

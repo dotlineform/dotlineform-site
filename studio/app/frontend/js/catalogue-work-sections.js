@@ -152,9 +152,11 @@ export function renderWorkCurrentPreview(state, options = {}) {
   }
   const record = state.currentRecord;
   const mediaItem = catalogueReadinessItem(state.buildPreview, "work_media");
+  const isPublished = normalizeText(record && record.status).toLowerCase() === "published";
+  const stagedPreview = !isPublished || Boolean(normalizeText(state.mediaPreviewVersion));
   const preview = buildWorkPrimaryPreview(state.mediaConfig, record.work_id, {
-    staged: Boolean(normalizeText(state.mediaPreviewVersion)),
-    mediaVersion: normalizeText(state.mediaPreviewVersion) ? null : record.media_version
+    staged: stagedPreview,
+    mediaVersion: stagedPreview ? null : record.media_version
   });
   const previewSrc = cacheBustUrl(preview.src, state.mediaPreviewVersion);
   const previewSrcset = cacheBustSrcset(preview.srcset, state.mediaPreviewVersion);
@@ -167,11 +169,12 @@ export function renderWorkCurrentPreview(state, options = {}) {
   const caption = buildWorkRecordSummary(record);
   const dimensionCaption = stagedWorkMediaDimensions(state, record.work_id) || buildWorkImageDimensionSummary(record);
   const mediaVersionCaption = buildWorkMediaVersionSummary(record, Boolean(normalizeText(state.mediaPreviewVersion)));
-  const canShowGenerated = !mediaItem || normalizeText(mediaItem.status) === "ready";
+  const canShowGenerated = isPublished
+    ? !mediaItem || normalizeText(mediaItem.status) === "ready"
+    : Boolean(mediaItem && normalizeText(mediaItem.status) === "ready");
   const previewState = preview.src && canShowGenerated ? "loading" : fallback.fallbackState;
   const publicHref = buildPublicWorkUrl(state.config, record.work_id);
-  const isPublished = normalizeText(record && record.status).toLowerCase() === "published";
-  const previewHref = isPublished ? publicHref : normalizeText(preview.fullSrc);
+  const previewHref = isPublished ? publicHref : canShowGenerated ? normalizeText(preview.fullSrc) : "";
   const previewTarget = isPublished ? "" : "_blank";
   const previewRel = isPublished ? "" : "noopener";
   const mediaSummaryItem = mediaItem ? catalogueReadinessItemSummary(mediaItem, { fallbackSummary: "—" }) : null;

@@ -15,7 +15,7 @@ from typing import Any, Iterable, Mapping
 
 import docs_document_publication_lineage as publication_lineage
 from docs_catalogue_document_urls import (
-    project_catalogue_document_urls_from_subject_associations,
+    project_catalogue_documents_from_subject_associations,
 )
 from docs_document_location_projection import (
     build_document_location_payload,
@@ -649,7 +649,7 @@ def desired_repository_projection(
         ],
     ]
     media_references = referenced_public_media(config, payload_collections)
-    catalogue_projection = project_catalogue_document_urls_from_subject_associations(
+    catalogue_projection = project_catalogue_documents_from_subject_associations(
         exact_locations=exact_locations,
         subject_associations_by_collection=subject_associations,
     )

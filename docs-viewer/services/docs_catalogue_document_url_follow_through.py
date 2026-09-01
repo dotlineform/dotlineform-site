@@ -30,7 +30,7 @@ def stale_result(
 
 def apply_projection(
     repo_root: Path,
-    projection: Mapping[str, Mapping[str, list[str]]],
+    projection: Mapping[str, Mapping[str, list[Mapping[str, str]]]],
 ) -> dict[str, Any]:
     """Apply one already-derived exact Catalogue URL projection."""
 
@@ -63,9 +63,9 @@ def refresh_from_current_public_state(repo_root: Path) -> dict[str, Any]:
     """Refresh after exact Delete cleanup using the surviving public state."""
 
     try:
-        from docs_catalogue_document_urls import load_public_catalogue_document_urls
+        from docs_catalogue_document_urls import load_public_catalogue_documents
 
-        projection = load_public_catalogue_document_urls(repo_root)
+        projection = load_public_catalogue_documents(repo_root)
     except Exception as exc:
         return stale_result(exc)
     return apply_projection(repo_root, projection)

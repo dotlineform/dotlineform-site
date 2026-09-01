@@ -150,6 +150,11 @@ function bootSelectedWorkRoute(rootNode, routeState, workId) {
       arrayFromPayload(payload, work, 'links'),
       function (entry) { return safeHref(entry && entry.url); }
     );
+    var documents = arrayFromPayload(payload, work, 'documents').map(function (entry) {
+      var href = safeHref(entry && entry.url);
+      var documentTitle = text(entry && entry.title);
+      return href && documentTitle ? { href: href, label: documentTitle } : null;
+    }).filter(Boolean);
 
     renderMetadataPanel({
       rootElement: metadata,
@@ -198,7 +203,9 @@ function bootSelectedWorkRoute(rootNode, routeState, workId) {
             { links: links, id: 'selectedWorkLinksLinks' }
           ]
         }
-      ]
+      ].concat(documents.map(function (link) {
+        return { segments: [{ link: link }] };
+      }))
     });
   }
 

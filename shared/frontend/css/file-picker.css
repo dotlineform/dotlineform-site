@@ -88,7 +88,7 @@
 .sharedFilePicker__listbox {
   box-sizing: border-box;
   width: 100%;
-  min-height: min(24rem, 48vh);
+  height: min(24rem, 48vh);
   border: 1px solid var(--studio-line-input, #cfcfcf);
   border-radius: var(--studio-radius-sm, 0.35rem);
   padding: 0.35rem;

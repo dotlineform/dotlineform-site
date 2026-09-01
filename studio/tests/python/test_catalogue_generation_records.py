@@ -99,7 +99,7 @@ def test_canonical_work_record_orders_fields_and_prunes_public_record() -> None:
     assert "checksum" not in public_record
     assert "year_display" not in public_record
     assert public_record["series_ids"] == ["009", "010"]
-    assert public_record["doc_url"] == []
+    assert public_record["documents"] == []
 
 
 def test_public_series_records_prune_internal_fields() -> None:
@@ -114,28 +114,35 @@ def test_public_series_records_prune_internal_fields() -> None:
             "notes": "Retired source note",
         }
     )
-    assert series == {"series_id": "009", "title": "Series", "doc_url": []}
+    assert series == {"series_id": "009", "title": "Series", "documents": []}
 
 
-def test_public_document_urls_are_sorted_deduped_and_versioned() -> None:
+def test_public_documents_are_sorted_deduped_and_versioned() -> None:
+    document_a = {"url": "/a", "title": "A"}
+    document_z = {"url": "/z", "title": "Z"}
+    series_document = {"url": "/series", "title": "Series note"}
     work = records.build_work_json_record(
         {"work_id": "00042", "title": "Work"},
-        doc_urls=["/z", "/a", "/a"],
+        documents=[document_z, document_a, document_a],
     )
     series = records.build_series_json_record(
         {"series_id": "009", "title": "Series"},
-        doc_urls=["/series"],
+        documents=[series_document],
     )
 
-    assert records.WORK_RECORD_SCHEMA_VERSION == "work_record_v4"
-    assert records.SERIES_RECORD_SCHEMA_VERSION == "series_record_v3"
-    assert work["doc_url"] == ["/a", "/z"]
-    assert series["doc_url"] == ["/series"]
+    assert records.WORK_RECORD_SCHEMA_VERSION == "work_record_v5"
+    assert records.SERIES_RECORD_SCHEMA_VERSION == "series_record_v4"
+    assert work["documents"] == [document_a, document_z]
+    assert series["documents"] == [series_document]
     assert compute_payload_version({"work": work}) != compute_payload_version(
-        {"work": {**work, "doc_url": ["/a"]}}
+        {"work": {**work, "documents": [document_a]}}
     )
-    with pytest.raises(ValueError, match="doc_url must be an array"):
-        records.normalize_document_urls("/not-an-array")
+    with pytest.raises(ValueError, match="documents must be an array"):
+        records.normalize_catalogue_documents("/not-an-array")
+    with pytest.raises(ValueError, match="conflicting titles"):
+        records.normalize_catalogue_documents(
+            [document_a, {"url": "/a", "title": "Different"}]
+        )
 
     work_payload = records.build_work_json_payload(
         work_id="00042",
@@ -152,7 +159,7 @@ def test_public_document_urls_are_sorted_deduped_and_versioned() -> None:
         member_works=[{"work_id": "00001", "title": "Only", "year": 2026, "year_display": "2026"}],
         generated_at_utc="2026-08-09T20:00:00Z",
     )
-    assert series_payload["header"]["schema"] == "series_record_v3"
+    assert series_payload["header"]["schema"] == "series_record_v4"
     assert series_payload["header"]["count"] == 1
     assert series_payload["member_works"] == [
         {"work_id": "00001", "title": "Only", "year": 2026, "year_display": "2026"}

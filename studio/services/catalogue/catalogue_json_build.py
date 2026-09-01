@@ -46,7 +46,7 @@ def run_scoped_build_scope(
     media_only: bool = False,
 ) -> Dict[str, Any]:
     env = runtime_env()
-    refresh_published = True
+    refresh_published = not media_only
     effective_force = bool(force)
     generate_local_media = bool(scope.get("generate_local_media", True))
     rebuild_search = bool(scope.get("rebuild_search", True))
@@ -306,7 +306,13 @@ def main() -> None:
     if series_id:
         scope = build_scopes.build_scope_for_series(source_dir, series_id, extra_work_ids=args.extra_work_ids.split(","))
     else:
-        scope = build_scopes.build_scope_for_work(source_dir, work_id, extra_series_ids=args.extra_series_ids.split(","), detail_uid=args.detail_uid)
+        scope = build_scopes.build_scope_for_work(
+            source_dir,
+            work_id,
+            extra_series_ids=args.extra_series_ids.split(","),
+            detail_uid=args.detail_uid,
+            media_only=args.media_only,
+        )
     changed_fields = build_field_plan.parse_csv_tokens(args.changed_fields)
     if changed_fields:
         plan = build_field_plan.build_field_plan_for_scope(

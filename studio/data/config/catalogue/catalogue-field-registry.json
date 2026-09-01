@@ -319,6 +319,7 @@
       "record_family": "work",
       "operation": "metadata_update",
       "fields": [
+        "media_source_id",
         "project_folder",
         "project_subfolder",
         "project_filename"

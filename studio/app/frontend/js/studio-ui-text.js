@@ -237,7 +237,7 @@ export const DEFAULT_STUDIO_UI_TEXT = {
     "build_preview_search_yes": "yes",
     "build_preview_search_no": "no",
     "build_preview_failed": "Public update preview unavailable.",
-    "build_preview_unpublished": "Public update unavailable while the work is not published.",
+    "media_preview_failed": "Media preview unavailable.",
     "build_status_running": "Updating site…",
     "build_status_success": "Site update completed.",
     "build_status_failed": "Site update failed.",

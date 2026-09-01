@@ -520,18 +520,14 @@ export async function refreshBuildPreview(state, context) {
     context.renderReadiness();
     return;
   }
-  if (!currentWorkIsPublished(state)) {
-    setTextWithState(context, state.buildImpactNode, t(state, context, "build_preview_unpublished", "Site update unavailable while the work is not published."));
-    state.buildPreview = null;
-    context.renderCurrentPreview();
-    context.renderReadiness();
-    return;
-  }
   try {
     const request = {
       work_id: state.currentWorkId,
       extra_series_ids: state.pendingBuildExtraSeriesIds
     };
+    if (!currentWorkIsPublished(state)) {
+      request.media_only = true;
+    }
     if (context && typeof context.mediaSource === "function") {
       request.media_source = context.mediaSource();
       request.media_only = true;
@@ -543,10 +539,13 @@ export async function refreshBuildPreview(state, context) {
     context.renderReadiness();
   } catch (error) {
     state.buildPreview = null;
+    const unavailableText = currentWorkIsPublished(state)
+      ? t(state, context, "build_preview_failed", "Public update preview unavailable.")
+      : t(state, context, "media_preview_failed", "Media preview unavailable.");
     setTextWithState(
       context,
       state.buildImpactNode,
-      `${t(state, context, "build_preview_failed", "Public update preview unavailable.")} ${normalizeText(error && error.message)}`.trim(),
+      `${unavailableText} ${normalizeText(error && error.message)}`.trim(),
       "error"
     );
     context.renderCurrentPreview();
@@ -713,6 +712,7 @@ export async function applyPublicationChange(state, context) {
     if (response.status === "public_update_failed") {
       return;
     }
+    return action;
   } catch (error) {
     const message = Number(error && error.status) === 409
       ? t(state, context, "publication_status_conflict", "Source record changed since this page loaded. Reload before changing publication state.")
@@ -731,6 +731,8 @@ function countMediaItems(media, group) {
 
 function workMediaSourceFromDraft(state) {
   return {
+    media_source_id: normalizeText(state.draft && state.draft.media_source_id)
+      || normalizeText(state.workMediaSourceConfig && state.workMediaSourceConfig.defaultMediaSourceId),
     project_folder: normalizeText(state.draft && state.draft.project_folder),
     project_subfolder: normalizeText(state.draft && state.draft.project_subfolder),
     project_filename: normalizeText(state.draft && state.draft.project_filename)

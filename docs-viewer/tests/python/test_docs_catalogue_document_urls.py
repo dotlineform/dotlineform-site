@@ -70,14 +70,14 @@ def write_source(path: Path, front_matter: dict[str, object], body: str = "# Bod
 
 def test_projection_is_exact_deterministic_and_subject_only() -> None:
     locations = [
-        {"scope_id": "analysis", "sub_scope": "works", "doc_id": "work", "url": "/z"},
-        {"scope_id": "analysis", "sub_scope": "works", "doc_id": "work", "url": "/a"},
-        {"scope_id": "analysis", "sub_scope": "works", "doc_id": "work", "url": "/a"},
-        {"scope_id": "analysis", "sub_scope": "works", "doc_id": "series", "url": "/series"},
-        {"scope_id": "analysis", "sub_scope": "works", "doc_id": "none", "url": "/none"},
-        {"scope_id": "analysis", "sub_scope": "works", "doc_id": "malformed", "url": "/malformed"},
-        {"scope_id": "analysis", "sub_scope": "works", "doc_id": "conflict", "url": "/conflict"},
-        {"scope_id": "analysis", "sub_scope": "works", "doc_id": "folder", "url": "/folder"},
+        {"scope_id": "analysis", "sub_scope": "works", "doc_id": "work", "url": "/z", "document_title": "Zed"},
+        {"scope_id": "analysis", "sub_scope": "works", "doc_id": "work", "url": "/a", "document_title": "Aye"},
+        {"scope_id": "analysis", "sub_scope": "works", "doc_id": "work", "url": "/a", "document_title": "Aye"},
+        {"scope_id": "analysis", "sub_scope": "works", "doc_id": "series", "url": "/series", "document_title": "Series note"},
+        {"scope_id": "analysis", "sub_scope": "works", "doc_id": "none", "url": "/none", "document_title": "None"},
+        {"scope_id": "analysis", "sub_scope": "works", "doc_id": "malformed", "url": "/malformed", "document_title": "Malformed"},
+        {"scope_id": "analysis", "sub_scope": "works", "doc_id": "conflict", "url": "/conflict", "document_title": "Conflict"},
+        {"scope_id": "analysis", "sub_scope": "works", "doc_id": "folder", "url": "/folder", "document_title": "Folder"},
     ]
     front_matter = {
         ("analysis", "works", "work"): {"work_id": "00042"},
@@ -89,26 +89,27 @@ def test_projection_is_exact_deterministic_and_subject_only() -> None:
         ("analysis", "works", "private"): {"work_id": "99999"},
     }
 
-    result = projection.project_catalogue_document_urls(
+    result = projection.project_catalogue_documents(
         exact_locations=locations,
         front_matter_by_target=front_matter,
     )
 
     assert result == {
-        "work": {"00042": ["/a", "/z"]},
-        "series": {"009": ["/series"]},
+        "work": {"00042": [{"url": "/a", "title": "Aye"}, {"url": "/z", "title": "Zed"}]},
+        "series": {"009": [{"url": "/series", "title": "Series note"}]},
     }
 
 
 def test_projection_rejects_public_location_without_exact_source() -> None:
     try:
-        projection.project_catalogue_document_urls(
+        projection.project_catalogue_documents(
             exact_locations=[
                 {
                     "scope_id": "analysis",
                     "sub_scope": "works",
                     "doc_id": "missing",
                     "url": "/analysis/?doc=report&subdoc=missing",
+                    "document_title": "Missing",
                 }
             ],
             front_matter_by_target={},
@@ -125,8 +126,9 @@ def test_accepted_subject_associations_replace_source_front_matter_join() -> Non
         "sub_scope": "works",
         "doc_id": PUBLIC_CHILD_ID,
         "url": f"/analysis/?doc={REPORT_ID}&subdoc={PUBLIC_CHILD_ID}",
+        "document_title": "Public Series Note",
     }
-    result = projection.project_catalogue_document_urls_from_subject_associations(
+    result = projection.project_catalogue_documents_from_subject_associations(
         exact_locations=[location],
         subject_associations_by_collection={
             ("analysis", "works"): {
@@ -151,7 +153,12 @@ def test_accepted_subject_associations_replace_source_front_matter_join() -> Non
         },
     )
 
-    assert result == {"work": {}, "series": {"001": [location["url"]]}}
+    assert result == {
+        "work": {},
+        "series": {
+            "001": [{"url": location["url"], "title": "Public Series Note"}]
+        },
+    }
 
 
 def test_loader_joins_public_parent_and_sub_scope_sources_across_configured_scopes() -> None:
@@ -276,13 +283,20 @@ def test_loader_joins_public_parent_and_sub_scope_sources_across_configured_scop
             body="A semantic token mention does not change the declared subject.",
         )
 
-        result = projection.load_public_catalogue_document_urls(root)
+        result = projection.load_public_catalogue_documents(root)
 
     assert result == {
-        "work": {"00002": [f"/example/?doc={EXAMPLE_ID}"]},
+        "work": {
+            "00002": [
+                {"url": f"/example/?doc={EXAMPLE_ID}", "title": "Public Work Example"}
+            ]
+        },
         "series": {
             "001": [
-                f"/analysis/?doc={REPORT_ID}&subdoc={PUBLIC_CHILD_ID}"
+                {
+                    "url": f"/analysis/?doc={REPORT_ID}&subdoc={PUBLIC_CHILD_ID}",
+                    "title": "Public Series Note",
+                }
             ]
         },
     }

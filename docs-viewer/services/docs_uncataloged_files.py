@@ -25,8 +25,14 @@ from catalogue.catalogue_source import (  # noqa: E402
     normalize_text,
     records_from_json_source,
 )
+from catalogue_work_media_sources import (  # noqa: E402
+    WorkMediaSourceRoot,
+    resolve_work_media_path,
+    resolve_work_media_source_id,
+    resolve_work_media_source_root,
+)
 from docs_local_links import encode_relative_target  # noqa: E402
-from pipeline_config import load_pipeline_config, source_works_root_subdir  # noqa: E402
+from pipeline_config import load_pipeline_config  # noqa: E402
 from studio.shared.python.projects_directories import configured_projects_base  # noqa: E402
 
 
@@ -43,6 +49,7 @@ class UncatalogedFilesPaths:
 @dataclass(frozen=True)
 class WorkSource:
     work_id: str
+    media_source_id: str
     directory: str
     filename: str
 
@@ -84,9 +91,11 @@ def collect_work_sources(records: Any) -> list[WorkSource]:
         if subfolder:
             directory_parts.extend(_canonical_parts(subfolder, f"work {work_id} project_subfolder"))
         filename_parts = _canonical_parts(filename, f"work {work_id} project_filename", single=True)
+        media_source_id = resolve_work_media_source_id(PIPELINE_CONFIG, record.get("media_source_id"))
         sources.append(
             WorkSource(
                 work_id=str(work_id),
+                media_source_id=media_source_id,
                 directory=PurePosixPath(*directory_parts).as_posix(),
                 filename=filename_parts[0],
             )
@@ -94,8 +103,8 @@ def collect_work_sources(records: Any) -> list[WorkSource]:
     return sources
 
 
-def collect_detail_directories(records: Any) -> set[str]:
-    directories: set[str] = set()
+def collect_detail_directories(records: Any) -> set[tuple[str, str]]:
+    directories: set[tuple[str, str]] = set()
     for section in records.work_detail_sections.values():
         work_id = normalize_text(section.get("work_id"))
         details_subfolder = normalize_text(section.get("details_subfolder"))
@@ -105,37 +114,33 @@ def collect_detail_directories(records: Any) -> set[str]:
             continue
         parts = [*_canonical_parts(folder, f"work {work_id} project_folder", single=True)]
         parts.extend(_canonical_parts(details_subfolder, f"work {work_id} details_subfolder"))
-        directories.add(PurePosixPath(*parts).as_posix())
+        media_source_id = resolve_work_media_source_id(
+            PIPELINE_CONFIG,
+            work.get("media_source_id") if isinstance(work, dict) else None,
+        )
+        directories.add((media_source_id, PurePosixPath(*parts).as_posix()))
     return directories
 
 
-def _is_detail_directory(directory: str, detail_directories: set[str]) -> bool:
+def _is_detail_directory(source_id: str, directory: str, detail_directories: set[tuple[str, str]]) -> bool:
     return any(
-        directory == detail_directory or directory.startswith(f"{detail_directory}/")
-        for detail_directory in detail_directories
+        source_id == detail_source_id
+        and (directory == detail_directory or directory.startswith(f"{detail_directory}/"))
+        for detail_source_id, detail_directory in detail_directories
     )
 
 
-def _projects_root(paths: UncatalogedFilesPaths) -> tuple[Path, str]:
-    try:
-        base = paths.projects_base_dir.resolve(strict=True)
-        source_root_name = source_works_root_subdir(PIPELINE_CONFIG)
-        root = (base / source_root_name).resolve(strict=True)
-        root.relative_to(base)
-    except (OSError, RuntimeError, ValueError) as exc:
-        raise ValueError("Projects source root is unavailable or outside the configured base") from exc
-    if not root.is_dir():
-        raise ValueError("Projects source root is not a directory")
-    return root, source_root_name
-
-
-def _contained_resolved(path: Path, root: Path, label: str) -> Path:
-    try:
-        resolved = path.resolve(strict=True)
-        resolved.relative_to(root)
-    except (OSError, RuntimeError, ValueError) as exc:
-        raise ValueError(f"{label} is unavailable or outside the Projects source root") from exc
-    return resolved
+def _source_roots(paths: UncatalogedFilesPaths, sources: list[WorkSource]) -> dict[str, WorkMediaSourceRoot]:
+    roots: dict[str, WorkMediaSourceRoot] = {}
+    environ = {"DOTLINEFORM_PROJECTS_BASE_DIR": str(paths.projects_base_dir)}
+    for source_id in sorted({source.media_source_id for source in sources}):
+        roots[source_id] = resolve_work_media_source_root(
+            PIPELINE_CONFIG,
+            source_id,
+            environ=environ,
+            require_exists=True,
+        )
+    return roots
 
 
 def _file_identity(path: Path) -> tuple[int, int] | None:
@@ -150,44 +155,42 @@ def _file_identity(path: Path) -> tuple[int, int] | None:
     return record.st_dev, record.st_ino
 
 
-def _catalogued_file_identities(sources: list[WorkSource], projects_root: Path) -> set[tuple[int, int]]:
-    identities: set[tuple[int, int]] = set()
+def _catalogued_file_identities(
+    sources: list[WorkSource],
+    source_roots: Mapping[str, WorkMediaSourceRoot],
+) -> dict[str, set[tuple[int, int]]]:
+    identities: dict[str, set[tuple[int, int]]] = {}
     for source in sources:
-        candidate = projects_root.joinpath(*PurePosixPath(source.directory).parts, source.filename)
+        source_root = source_roots[source.media_source_id]
+        candidate = resolve_work_media_path(source_root, source.directory, source.filename)
         identity = _file_identity(candidate)
         if identity is None:
             continue
-        _contained_resolved(candidate, projects_root, f"work {source.work_id} source file")
-        identities.add(identity)
+        identities.setdefault(source.media_source_id, set()).add(identity)
     return identities
 
 
 def _uncataloged_rows(
     sources: list[WorkSource],
-    detail_directories: set[str],
-    projects_root: Path,
-    source_root_name: str,
+    detail_directories: set[tuple[str, str]],
+    source_roots: Mapping[str, WorkMediaSourceRoot],
 ) -> list[dict[str, str]]:
-    catalogued_identities = _catalogued_file_identities(sources, projects_root)
+    catalogued_identities = _catalogued_file_identities(sources, source_roots)
     represented_directories = sorted(
-        {source.directory for source in sources},
-        key=lambda value: (value.casefold(), value),
+        {(source.media_source_id, source.directory) for source in sources},
+        key=lambda value: (value[0].casefold(), value[0], value[1].casefold(), value[1]),
     )
     rows: list[dict[str, str]] = []
-    for directory in represented_directories:
-        if _is_detail_directory(directory, detail_directories):
+    for source_id, directory in represented_directories:
+        if _is_detail_directory(source_id, directory, detail_directories):
             continue
-        candidate = projects_root.joinpath(*PurePosixPath(directory).parts)
+        source_root = source_roots[source_id]
         try:
-            resolved_directory = candidate.resolve(strict=True)
+            resolved_directory = resolve_work_media_path(source_root, directory, require_exists=True)
         except FileNotFoundError:
             continue
         except (OSError, RuntimeError) as exc:
             raise ValueError(f"represented directory could not be inspected: {directory}") from exc
-        try:
-            resolved_directory.relative_to(projects_root)
-        except ValueError as exc:
-            raise ValueError(f"represented directory is outside the Projects source root: {directory}") from exc
         if not resolved_directory.is_dir():
             continue
         try:
@@ -203,13 +206,13 @@ def _uncataloged_rows(
             identity = _file_identity(child)
             if identity is None:
                 continue
-            _contained_resolved(child, projects_root, f"source file {directory}/{child.name}")
-            if identity in catalogued_identities:
+            resolve_work_media_path(source_root, directory, child.name, require_exists=True)
+            if identity in catalogued_identities.get(source_id, set()):
                 continue
-            decoded_target = PurePosixPath(source_root_name, directory, child.name).as_posix()
+            decoded_target = PurePosixPath(source_root.root_subdir.as_posix(), directory, child.name).as_posix()
             rows.append(
                 {
-                    "folder": directory,
+                    "folder": PurePosixPath(source_root.root_subdir.as_posix(), directory).as_posix(),
                     "file_name": child.name,
                     "local_target": encode_relative_target(decoded_target),
                 }
@@ -238,13 +241,12 @@ class UncatalogedFilesProducer:
 
     def run(self) -> dict[str, object]:
         records = records_from_json_source(self.paths.catalogue_source_dir)
-        projects_root, source_root_name = _projects_root(self.paths)
         sources = collect_work_sources(records)
+        source_roots = _source_roots(self.paths, sources)
         rows = _uncataloged_rows(
             sources,
             collect_detail_directories(records),
-            projects_root,
-            source_root_name,
+            source_roots,
         )
         return {
             "report": {

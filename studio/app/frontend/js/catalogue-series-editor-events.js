@@ -18,6 +18,7 @@ export function bindSeriesEditorEvents(state, callbacks = {}) {
   invoke(callbacks.bindSelectionControls);
   bindCatalogueEditorActionMessageClearer(state.root, state.messageController, {
     isBusy: () => Boolean(state.isSaving || state.isBuilding || state.isDeleting),
+    preserveWithin: state.statusNode,
     renderMessages: () => invoke(callbacks.updateEditorState)
   });
   state.newButton.addEventListener("click", () => invoke(callbacks.setNewSeriesMode));

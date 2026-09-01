@@ -361,10 +361,13 @@ def catalogue_targets_for_urls(
     return tuple(
         sorted(
             target
-            for target, (_path, _payload, current_urls) in current_nonempty_targets(
+            for target, (_path, _payload, current_documents) in current_nonempty_targets(
                 repo_root.resolve()
             ).items()
-            if urls.intersection(current_urls)
+            if urls.intersection(
+                str(document.get("url") or "")
+                for document in current_documents
+            )
         )
     )
 

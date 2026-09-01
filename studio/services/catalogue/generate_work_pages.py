@@ -40,7 +40,7 @@ Common flags:
 - --projects-base-dir: base path used for work/work_details dimension lookups
 
 Path variables used by the script:
-- projects_root = [projects-base-dir]/projects (work + work_details source lookup)
+- projects_base_dir = configured external workspace containing the logical Work-media source roots
 
 """
 
@@ -69,7 +69,7 @@ from studio.shared.python.studio_python_paths import ensure_studio_python_paths
 REPO_ROOT = ensure_studio_python_paths(__file__)
 SCRIPTS_DIR = REPO_ROOT / "scripts"
 
-from docs_catalogue_document_urls import load_public_catalogue_document_urls  # noqa: E402
+from docs_catalogue_document_urls import load_public_catalogue_documents  # noqa: E402
 
 try:
     from catalogue import catalogue_cleanup
@@ -119,18 +119,21 @@ except ModuleNotFoundError:  # pragma: no cover - package import fallback
     from studio.shared.python.script_logging import append_script_log
 
 try:
+    from catalogue_work_media_sources import resolve_work_media_source_root
+except ModuleNotFoundError:  # pragma: no cover - package import fallback
+    from studio.shared.python.catalogue_work_media_sources import resolve_work_media_source_root
+
+try:
     from pipeline_config import (
         env_var_name,
         env_var_value,
         load_pipeline_config,
-        source_works_root_subdir,
     )
 except ModuleNotFoundError:  # pragma: no cover - package import fallback
     from studio.shared.python.pipeline_config import (
         env_var_name,
         env_var_value,
         load_pipeline_config,
-        source_works_root_subdir,
     )
 
 
@@ -519,13 +522,13 @@ def main() -> None:
             f"Missing projects base directory. Add {PROJECTS_BASE_DIR_ENV_NAME} "
             "to .env.local or pass --projects-base-dir."
         )
-    catalogue_document_urls: Dict[str, Dict[str, List[str]]] = {
+    catalogue_documents: Dict[str, Dict[str, List[Dict[str, str]]]] = {
         "work": {},
         "series": {},
     }
     if run_work_json or run_series_pages:
         try:
-            catalogue_document_urls = load_public_catalogue_document_urls(repo_root)
+            catalogue_documents = load_public_catalogue_documents(repo_root)
         except (OSError, ValueError) as exc:
             raise SystemExit(
                 f"Public Catalogue document URL projection failed: {exc}"
@@ -542,7 +545,6 @@ def main() -> None:
     recent_index_json_path = Path(args.recent_index_json_path).expanduser()
     recent_index_json_path.parent.mkdir(parents=True, exist_ok=True)
     projects_base_dir = Path(args.projects_base_dir).expanduser() if normalize_text(args.projects_base_dir) != "" else Path(".")
-    projects_root = projects_base_dir / source_works_root_subdir(PIPELINE_CONFIG)
 
     def validate_source_records_for_writeback() -> None:
         validation_errors = validate_source_records(source_records)
@@ -651,6 +653,7 @@ def main() -> None:
 
     work_dimensions_updated = 0
     work_project_folder_missing_warned = False
+    work_media_source_errors_warned: set[str] = set()
     if run_work_dimension_refresh:
         for work_record in source_records.works.values():
             raw_work_id = work_record.get("work_id")
@@ -667,14 +670,27 @@ def main() -> None:
             height_px = coerce_int(work_record.get("height_px"))
             project_filename = coerce_string(work_record.get("project_filename"))
 
-            source_path_plan = source_updates.plan_work_image_source_path(
-                work_id=wid,
-                project_filename=project_filename,
-                project_folder=work_project_folder_by_id.get(wid),
-                project_subfolder=work_project_subfolder_by_id.get(wid),
-                projects_root=projects_root,
-                has_project_folder_column=has_project_folder_col,
-            )
+            try:
+                source_root = resolve_work_media_source_root(
+                    PIPELINE_CONFIG,
+                    work_record.get("media_source_id"),
+                    environ={PROJECTS_BASE_DIR_ENV_NAME: str(projects_base_dir)},
+                    require_exists=True,
+                )
+                source_path_plan = source_updates.plan_work_image_source_path(
+                    work_id=wid,
+                    project_filename=project_filename,
+                    project_folder=work_project_folder_by_id.get(wid),
+                    project_subfolder=work_project_subfolder_by_id.get(wid),
+                    source_root=source_root,
+                    has_project_folder_column=has_project_folder_col,
+                )
+            except (OSError, RuntimeError, ValueError) as exc:
+                warning = str(exc)
+                if warning not in work_media_source_errors_warned:
+                    print(f"Warning: Work media source is unavailable: {warning}")
+                    work_media_source_errors_warned.add(warning)
+                source_path_plan = source_updates.SourceImagePathPlan(source_path=None)
             if source_path_plan.warning is not None and not work_project_folder_missing_warned:
                 if source_path_plan.warning.code == source_updates.NO_PROJECT_FOLDER_COLUMN:
                     print("Warning: work source records have no project_folder values; cannot persist work image dimensions.")
@@ -866,7 +882,7 @@ def main() -> None:
 
                 public_series_record = records.build_series_json_record(
                     series_output_record,
-                    doc_urls=catalogue_document_urls["series"].get(series_id, []),
+                    documents=catalogue_documents["series"].get(series_id, []),
                 )
                 payload = records.build_series_json_payload(
                     series_id=series_id,
@@ -983,7 +999,6 @@ def main() -> None:
             print("Work detail pages/JSON skipped: not selected by --only.")
     else:
         projects_base_dir = Path(args.projects_base_dir).expanduser()
-        projects_root = projects_base_dir / source_works_root_subdir(PIPELINE_CONFIG)
 
         # Build known works from source records to validate foreign-key references.
         known_work_ids: set[str] = set()
@@ -1071,7 +1086,7 @@ def main() -> None:
                 details_total = sum(len(s.get("details", [])) for s in sections)
                 work_record = records.build_work_json_record(
                     canonical_work_record_by_id.get(wid, {"work_id": wid}),
-                    doc_urls=catalogue_document_urls["work"].get(wid, []),
+                    documents=catalogue_documents["work"].get(wid, []),
                 )
                 payload = records.build_work_json_payload(
                     work_id=wid,

@@ -738,9 +738,9 @@ def check_json_schema(
         header = payload.get("header") if isinstance(payload, dict) else None
         series_record = payload.get("series") if isinstance(payload, dict) else None
         member_works = payload.get("member_works") if isinstance(payload, dict) else None
-        if not isinstance(header, dict) or normalize_text(header.get("schema")) != "series_record_v3":
+        if not isinstance(header, dict) or normalize_text(header.get("schema")) != "series_record_v4":
             errors += 1
-            add_sample(samples, {"check": "json_schema", "id": series_id, "path": str(path), "message": "exact Series header must use series_record_v3"}, max_samples)
+            add_sample(samples, {"check": "json_schema", "id": series_id, "path": str(path), "message": "exact Series header must use series_record_v4"}, max_samples)
         elif normalize_text(header.get("series_id")) != series_id:
             errors += 1
             add_sample(samples, {"check": "json_schema", "id": series_id, "path": str(path), "message": "exact Series header identity does not match its file target"}, max_samples)
@@ -886,7 +886,7 @@ def check_json_schema(
             if key not in header:
                 errors += 1
                 add_sample(samples, {"check": "json_schema", "id": wid, "path": str(p), "message": f"work header missing '{key}'"}, max_samples)
-        if normalize_text(header.get("schema")) != "work_record_v4" or normalize_text(header.get("work_id")) != wid:
+        if normalize_text(header.get("schema")) != "work_record_v5" or normalize_text(header.get("work_id")) != wid:
             errors += 1
             add_sample(samples, {"check": "json_schema", "id": wid, "path": str(p), "message": "exact Work header schema or identity does not match its file target"}, max_samples)
         work_obj = obj.get("work")

@@ -6,7 +6,12 @@ from pathlib import Path
 from typing import Any, Callable, Iterable, Mapping, Sequence
 
 from catalogue import catalogue_transactions as transactions
-from catalogue.catalogue_build_media import PIPELINE_CONFIG, detect_projects_base_dir, read_image_dims_px
+from catalogue.catalogue_build_media import (
+    PIPELINE_CONFIG,
+    PROJECTS_BASE_DIR_ENV_NAME,
+    detect_projects_base_dir,
+    read_image_dims_px,
+)
 from catalogue.catalogue_build_service import run_build_operation
 from catalogue.catalogue_generation_common import compact_json_object
 from catalogue.catalogue_media_files import IMAGE_EXTENSIONS
@@ -33,8 +38,8 @@ from catalogue.catalogue_source import (
     validate_source_records,
     work_details_payload_for_maps,
 )
+from catalogue_work_media_sources import resolve_work_media_path, resolve_work_media_source_root
 from local_env import runtime_env
-from pipeline_config import source_works_root_subdir
 from studio.services.media.publish_media_to_r2 import run_catalogue_upload_targets
 
 
@@ -180,7 +185,7 @@ def create_detail_section_payload(
             "created_count": 0,
         }
 
-    folder_path = resolve_project_detail_folder(context, project_folder, project_subfolder)
+    folder_path = resolve_project_detail_folder(context, work_record, project_folder, project_subfolder)
     valid_files = visible_image_filenames(folder_path)
     missing_files = [filename for filename in filenames if filename not in valid_files]
     if missing_files:
@@ -547,14 +552,25 @@ def normalize_image_filename(value: Any) -> str:
     return filename
 
 
-def resolve_project_detail_folder(context: CatalogueWriteContext, project_folder: str, project_subfolder: str) -> Path:
+def resolve_project_detail_folder(
+    context: CatalogueWriteContext,
+    work_record: Mapping[str, Any],
+    project_folder: str,
+    project_subfolder: str,
+) -> Path:
     projects_base_dir = detect_projects_base_dir(runtime_env(repo_root=context.repo_root))
-    projects_root = (projects_base_dir / source_works_root_subdir(PIPELINE_CONFIG)).resolve()
-    folder_path = (projects_root / project_folder / project_subfolder).resolve()
-    try:
-        folder_path.relative_to(projects_root)
-    except ValueError as error:
-        raise ValueError("detail media path must stay inside the projects root") from error
+    source_root = resolve_work_media_source_root(
+        PIPELINE_CONFIG,
+        work_record.get("media_source_id"),
+        environ={PROJECTS_BASE_DIR_ENV_NAME: str(projects_base_dir)},
+        require_exists=True,
+    )
+    folder_path = resolve_work_media_path(
+        source_root,
+        project_folder,
+        project_subfolder,
+        require_exists=True,
+    )
     if not folder_path.is_dir():
         raise ValueError("detail media folder does not exist")
     return folder_path

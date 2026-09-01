@@ -16,11 +16,16 @@ from catalogue_media_paths import (
     catalogue_media_root_from_projects_base,
     catalogue_media_workspace_from_projects_base,
 )
+from catalogue_work_media_sources import (
+    WorkMediaSourceRoot,
+    resolve_work_media_path,
+    resolve_work_media_source_id,
+    resolve_work_media_source_root,
+)
 from pipeline_config import (
     env_var_name,
     env_var_value,
     load_pipeline_config,
-    source_works_root_subdir,
 )
 
 
@@ -81,7 +86,33 @@ def display_source_path(path: Path | None, projects_base_dir: Path | None = None
 
 def normalize_filename(value: Any) -> str:
     text = str(value or "").strip()
-    return Path(text).name if text else ""
+    if not text:
+        return ""
+    path = Path(text)
+    if path.is_absolute() or len(path.parts) != 1 or text in {".", ".."} or "\\" in text:
+        raise ValueError("project_filename must be a single safe path segment")
+    return path.name
+
+
+def resolve_record_work_media_root(
+    record: Mapping[str, Any],
+    *,
+    env: Dict[str, str] | None = None,
+) -> tuple[WorkMediaSourceRoot | None, Path | None, str]:
+    projects_base_dir, availability_error = detect_projects_base_dir_optional(env)
+    if projects_base_dir is None:
+        return None, None, availability_error
+    source_id = resolve_work_media_source_id(PIPELINE_CONFIG, record.get("media_source_id"))
+    try:
+        source_root = resolve_work_media_source_root(
+            PIPELINE_CONFIG,
+            source_id,
+            environ={PROJECTS_BASE_DIR_ENV_NAME: str(projects_base_dir)},
+            require_exists=True,
+        )
+    except ValueError as exc:
+        return None, projects_base_dir, str(exc)
+    return source_root, projects_base_dir, ""
 
 
 def parse_sips_pixel_dims(output: str) -> tuple[int | None, int | None]:
@@ -125,20 +156,25 @@ def resolve_work_media_source(
     env: Dict[str, str] | None = None,
     record_override: Mapping[str, Any] | None = None,
 ) -> tuple[Path | None, str, Path | None, str]:
-    projects_base_dir, availability_error = detect_projects_base_dir_optional(env)
     work_record = dict(record_override) if record_override is not None else records.works.get(work_id)
     if not isinstance(work_record, dict):
         raise ValueError(f"work_id not found: {work_id}")
 
-    works_root = (projects_base_dir / source_works_root_subdir(PIPELINE_CONFIG)) if projects_base_dir else None
+    source_root, projects_base_dir, availability_error = resolve_record_work_media_root(work_record, env=env)
     project_folder = str(work_record.get("project_folder") or "").strip()
     project_subfolder = str(work_record.get("project_subfolder") or "").strip()
     project_filename = normalize_filename(work_record.get("project_filename"))
-    if project_folder and project_filename and works_root is not None:
-        media_path = works_root / project_folder
-        if project_subfolder:
-            media_path = media_path / project_subfolder
-        return media_path / project_filename, "", projects_base_dir, availability_error
+    if project_folder and project_filename and source_root is not None:
+        try:
+            media_path = resolve_work_media_path(
+                source_root,
+                project_folder,
+                project_subfolder,
+                project_filename,
+            )
+        except ValueError as exc:
+            return None, "", projects_base_dir, str(exc)
+        return media_path, "", projects_base_dir, availability_error
     if project_filename:
         return None, "missing_project_folder", projects_base_dir, availability_error
     return None, "missing_project_filename", projects_base_dir, availability_error
@@ -150,14 +186,15 @@ def resolve_detail_media_source(
     *,
     env: Dict[str, str] | None = None,
 ) -> tuple[Path | None, str, Path | None, str]:
-    projects_base_dir, availability_error = detect_projects_base_dir_optional(env)
     detail_record = records.work_details.get(detail_uid)
     if not isinstance(detail_record, dict):
         raise ValueError(f"detail_uid not found: {detail_uid}")
 
-    works_root = (projects_base_dir / source_works_root_subdir(PIPELINE_CONFIG)) if projects_base_dir else None
     work_id = slug_id(detail_record.get("work_id"))
     work_record = records.works.get(work_id)
+    if not isinstance(work_record, dict):
+        raise ValueError(f"parent work_id not found: {work_id}")
+    source_root, projects_base_dir, availability_error = resolve_record_work_media_root(work_record, env=env)
     project_folder = str(work_record.get("project_folder") or "").strip() if isinstance(work_record, dict) else ""
     section_id = str(detail_record.get("section_id") or "").strip()
     section_record = records.work_detail_sections.get(section_id) if hasattr(records, "work_detail_sections") else {}
@@ -172,12 +209,18 @@ def resolve_detail_media_source(
         return None, "missing_project_filename", projects_base_dir, availability_error
     if not project_folder:
         return None, "missing_project_folder", projects_base_dir, availability_error
-    if works_root is None:
+    if source_root is None:
         return None, "", projects_base_dir, availability_error
-    media_path = works_root / project_folder
-    if details_subfolder:
-        media_path = media_path / details_subfolder
-    return media_path / project_filename, "", projects_base_dir, availability_error
+    try:
+        media_path = resolve_work_media_path(
+            source_root,
+            project_folder,
+            details_subfolder,
+            project_filename,
+        )
+    except ValueError as exc:
+        return None, "", projects_base_dir, str(exc)
+    return media_path, "", projects_base_dir, availability_error
 
 
 def thumb_output_dir(repo_root: Path, kind: str) -> Path:
@@ -267,10 +310,17 @@ def build_media_readiness_item(
     missing_reason: str,
     projects_base_dir: Path | None,
     availability_error: str,
+    public_thumbnail_projection: bool = True,
 ) -> Dict[str, Any]:
     source_display = display_source_path(source_path, projects_base_dir)
-    outputs = thumb_output_paths_for_kind(repo_root, kind, item_id)
-    output_display = ", ".join(repo_relative_path(path, repo_root) for path in outputs)
+    if public_thumbnail_projection or projects_base_dir is None:
+        outputs = thumb_output_paths_for_kind(repo_root, kind, item_id)
+        output_paths = [repo_relative_path(path, repo_root) for path in outputs]
+    else:
+        outputs = staged_thumb_output_paths(projects_base_dir, kind, item_id)
+        media_workspace = catalogue_media_workspace_from_projects_base(PIPELINE_CONFIG, projects_base_dir)
+        output_paths = [catalogue_media_display_path(path, media_workspace) for path in outputs]
+    output_display = ", ".join(output_paths)
     state = local_thumb_state(source_path, outputs)
 
     if availability_error:
@@ -281,7 +331,7 @@ def build_media_readiness_item(
             "summary": availability_error,
             "next_step": "Start the local Studio service with the projects base directory configured.",
             "source_path": source_display,
-            "generated_paths": [repo_relative_path(path, repo_root) for path in outputs],
+            "generated_paths": output_paths,
             "exists": False,
         }
     if state == "current":
@@ -292,7 +342,7 @@ def build_media_readiness_item(
             "summary": f"Source media is ready and local thumbnails are current in {output_display}.",
             "next_step": "Local thumbnails are current for this record.",
             "source_path": source_display,
-            "generated_paths": [repo_relative_path(path, repo_root) for path in outputs],
+            "generated_paths": output_paths,
             "exists": True,
         }
     if source_path and source_path.exists():
@@ -303,7 +353,7 @@ def build_media_readiness_item(
             "summary": f"Source media is ready at {source_display}, but local thumbnails need generation or refresh.",
             "next_step": "Run Save + Rebuild to generate local thumbnails.",
             "source_path": source_display,
-            "generated_paths": [repo_relative_path(path, repo_root) for path in outputs],
+            "generated_paths": output_paths,
             "exists": True,
         }
     if missing_reason == "missing_project_folder":
@@ -314,7 +364,7 @@ def build_media_readiness_item(
             "summary": "Project folder is missing, so the source path cannot be resolved.",
             "next_step": "Set project folder metadata and save before rebuilding media.",
             "source_path": source_display,
-            "generated_paths": [repo_relative_path(path, repo_root) for path in outputs],
+            "generated_paths": output_paths,
             "exists": False,
         }
     if missing_reason:
@@ -325,7 +375,7 @@ def build_media_readiness_item(
             "summary": "No source file is configured yet.",
             "next_step": "Set the source filename in metadata and save before rebuilding media.",
             "source_path": source_display,
-            "generated_paths": [repo_relative_path(path, repo_root) for path in outputs],
+            "generated_paths": output_paths,
             "exists": False,
         }
     return {
@@ -335,7 +385,7 @@ def build_media_readiness_item(
         "summary": f"Configured source media is missing at {source_display}." if source_display else "Configured source media file is missing.",
         "next_step": "Create or restore the source media file, or update the filename before rebuilding media.",
         "source_path": source_display,
-        "generated_paths": [repo_relative_path(path, repo_root) for path in outputs],
+        "generated_paths": output_paths,
         "exists": False,
     }
 
@@ -358,8 +408,10 @@ def build_local_media_task(
     blocked_reason: str = "",
     projects_base_dir: Path | None = None,
     force: bool = False,
+    public_thumbnail_projection: bool = True,
 ) -> Dict[str, Any]:
     asset_thumb_paths = thumb_output_paths_for_kind(repo_root, kind, item_id)
+    projected_asset_thumb_paths = asset_thumb_paths if public_thumbnail_projection else []
     if projects_base_dir is None:
         return {
             "kind": kind,
@@ -368,10 +420,11 @@ def build_local_media_task(
             "source_abs_path": str(source_path.resolve()) if source_path is not None else "",
             "staged_source_path": "",
             "staged_source_abs_path": "",
-            "output_paths": [repo_relative_path(path, repo_root) for path in asset_thumb_paths],
+            "output_paths": [repo_relative_path(path, repo_root) for path in projected_asset_thumb_paths],
             "staged_thumb_paths": [],
             "staged_primary_paths": [],
-            "asset_thumb_paths": [repo_relative_path(path, repo_root) for path in asset_thumb_paths],
+            "asset_thumb_paths": [repo_relative_path(path, repo_root) for path in projected_asset_thumb_paths],
+            "public_thumbnail_projection": public_thumbnail_projection,
             "status": "unavailable",
             "reason": availability_error or f"{PROJECTS_BASE_DIR_ENV_NAME} is required for catalogue media workflows.",
         }
@@ -389,7 +442,8 @@ def build_local_media_task(
             return repo_relative_path(path, repo_root)
         return catalogue_media_display_path(path, media_workspace)
 
-    output_paths = [*staged_primary_paths, *asset_thumb_paths]
+    completion_thumb_paths = projected_asset_thumb_paths or staged_thumb_paths
+    output_paths = [*staged_primary_paths, *completion_thumb_paths]
     state = local_media_state(source_path, output_paths, staged_source_path)
     force_refresh = bool(force and source_path is not None and source_path.exists())
     if force_refresh and state == "current":
@@ -405,7 +459,8 @@ def build_local_media_task(
         "output_paths": [display_output_path(path) for path in output_paths],
         "staged_thumb_paths": [display_output_path(path) for path in staged_thumb_paths],
         "staged_primary_paths": [display_output_path(path) for path in staged_primary_paths],
-        "asset_thumb_paths": [repo_relative_path(path, repo_root) for path in asset_thumb_paths],
+        "asset_thumb_paths": [repo_relative_path(path, repo_root) for path in projected_asset_thumb_paths],
+        "public_thumbnail_projection": public_thumbnail_projection,
         "status": state,
     }
     if source_width_px is not None and source_height_px is not None:
@@ -425,8 +480,8 @@ def build_local_media_task(
         pending_thumb_outputs: list[Dict[str, Any]] = []
         pending_primary_outputs: list[Dict[str, Any]] = []
         pending_asset_thumbs: list[Dict[str, Any]] = []
-        for size, path, asset_path in zip(THUMB_SIZES, staged_thumb_paths, asset_thumb_paths):
-            if force_refresh or path_needs_refresh(asset_path, source_mtime):
+        for size, path, completion_path in zip(THUMB_SIZES, staged_thumb_paths, completion_thumb_paths):
+            if force_refresh or path_needs_refresh(completion_path, source_mtime):
                 pending_thumb_outputs.append(
                     {
                         "variant": "thumb",
@@ -445,17 +500,18 @@ def build_local_media_task(
                         "absolute_path": str(path.resolve()),
                     }
                 )
-        for size, path, staged_path in zip(THUMB_SIZES, asset_thumb_paths, staged_thumb_paths):
-            if force_refresh or path_needs_refresh(path, source_mtime):
-                pending_asset_thumbs.append(
-                    {
-                        "size": size,
-                        "path": repo_relative_path(path, repo_root),
-                        "absolute_path": str(path.resolve()),
-                        "staged_path": display_output_path(staged_path),
-                        "staged_absolute_path": str(staged_path.resolve()),
-                    }
-                )
+        if public_thumbnail_projection:
+            for size, path, staged_path in zip(THUMB_SIZES, asset_thumb_paths, staged_thumb_paths):
+                if force_refresh or path_needs_refresh(path, source_mtime):
+                    pending_asset_thumbs.append(
+                        {
+                            "size": size,
+                            "path": repo_relative_path(path, repo_root),
+                            "absolute_path": str(path.resolve()),
+                            "staged_path": display_output_path(staged_path),
+                            "staged_absolute_path": str(staged_path.resolve()),
+                        }
+                    )
         task["pending_thumb_outputs"] = pending_thumb_outputs
         task["pending_primary_outputs"] = pending_primary_outputs
         task["pending_asset_thumbs"] = pending_asset_thumbs
@@ -479,6 +535,7 @@ def build_local_media_plan(
     if records is None:
         return {"tasks": [], "counts": {"pending": 0, "current": 0, "blocked": 0, "unavailable": 0}}
     work_media_sources = scope.get("work_media_sources") if isinstance(scope.get("work_media_sources"), dict) else {}
+    public_thumbnail_projection = bool(scope.get("public_thumbnail_projection", True))
     for work_id in scope.get("work_ids", []):
         normalized_work_id = str(work_id)
         record_override = work_media_sources.get(normalized_work_id) if isinstance(work_media_sources.get(normalized_work_id), dict) else None
@@ -498,6 +555,7 @@ def build_local_media_plan(
                 blocked_reason=missing_reason,
                 projects_base_dir=projects_base_dir,
                 force=force,
+                public_thumbnail_projection=public_thumbnail_projection,
             )
         )
     detail_uid = str(scope.get("detail_uid") or "").strip()
@@ -513,6 +571,7 @@ def build_local_media_plan(
                 blocked_reason=missing_reason,
                 projects_base_dir=projects_base_dir,
                 force=force,
+                public_thumbnail_projection=public_thumbnail_projection,
             )
         )
     counts = {
@@ -1020,14 +1079,23 @@ def build_readiness_item(
     return item
 
 
-def build_work_readiness(records: Any, work_id: str, *, env: Dict[str, str] | None = None) -> Dict[str, Any]:
+def build_work_readiness(
+    records: Any,
+    work_id: str,
+    *,
+    env: Dict[str, str] | None = None,
+    public_thumbnail_projection: bool = True,
+) -> Dict[str, Any]:
     repo_root = detect_repo_root()
-    projects_base_dir, availability_error = detect_projects_base_dir_optional(env)
     work_record = records.works.get(work_id)
     if not isinstance(work_record, dict):
         raise ValueError(f"work_id not found: {work_id}")
 
-    media_path, media_missing_reason, _, _ = resolve_work_media_source(records, work_id, env=env)
+    media_path, media_missing_reason, projects_base_dir, availability_error = resolve_work_media_source(
+        records,
+        work_id,
+        env=env,
+    )
     items = [
         build_media_readiness_item(
             repo_root=repo_root,
@@ -1039,6 +1107,7 @@ def build_work_readiness(records: Any, work_id: str, *, env: Dict[str, str] | No
             missing_reason=media_missing_reason,
             projects_base_dir=projects_base_dir,
             availability_error=availability_error,
+            public_thumbnail_projection=public_thumbnail_projection,
         ),
     ]
     return {"items": items}
@@ -1052,13 +1121,22 @@ def build_series_readiness(records: Any, series_id: str, *, env: Dict[str, str] 
     return {"items": []}
 
 
-def build_detail_readiness(records: Any, detail_uid: str, *, env: Dict[str, str] | None = None) -> Dict[str, Any]:
+def build_detail_readiness(
+    records: Any,
+    detail_uid: str,
+    *,
+    env: Dict[str, str] | None = None,
+    public_thumbnail_projection: bool = True,
+) -> Dict[str, Any]:
     repo_root = detect_repo_root()
-    projects_base_dir, availability_error = detect_projects_base_dir_optional(env)
     detail_record = records.work_details.get(detail_uid)
     if not isinstance(detail_record, dict):
         raise ValueError(f"detail_uid not found: {detail_uid}")
-    media_path, media_missing_reason, _, _ = resolve_detail_media_source(records, detail_uid, env=env)
+    media_path, media_missing_reason, projects_base_dir, availability_error = resolve_detail_media_source(
+        records,
+        detail_uid,
+        env=env,
+    )
 
     items = [
         build_media_readiness_item(
@@ -1071,6 +1149,7 @@ def build_detail_readiness(records: Any, detail_uid: str, *, env: Dict[str, str]
             missing_reason=media_missing_reason,
             projects_base_dir=projects_base_dir,
             availability_error=availability_error,
+            public_thumbnail_projection=public_thumbnail_projection,
         ),
     ]
     return {"items": items}

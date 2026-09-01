@@ -73,14 +73,20 @@ function queryString(params = {}) {
   return search.toString();
 }
 
-export function readProjectMediaFolders(query = "") {
-  const qs = queryString({ mode: "folders", q: query });
+export function readWorkMediaSources() {
+  const qs = queryString({ mode: "sources" });
+  return getJson(`${CATALOGUE_WRITE_ENDPOINTS.projectMedia}?${qs}`);
+}
+
+export function readProjectMediaFolders(mediaSourceId = "", query = "") {
+  const qs = queryString({ mode: "folders", media_source_id: mediaSourceId, q: query });
   return getJson(`${CATALOGUE_WRITE_ENDPOINTS.projectMedia}?${qs}`);
 }
 
 export function readProjectMediaFiles(options = {}) {
   const qs = queryString({
     mode: "files",
+    media_source_id: options.mediaSourceId,
     project_folder: options.projectFolder,
     project_subfolder: options.projectSubfolder,
     q: options.query

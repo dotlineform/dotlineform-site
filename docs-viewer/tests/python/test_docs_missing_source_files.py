@@ -36,6 +36,7 @@ def work(
     filename: str,
     *,
     subfolder: str = "",
+    media_source_id: str = "",
 ) -> dict[str, object]:
     record: dict[str, object] = {
         "work_id": work_id,
@@ -47,6 +48,8 @@ def work(
     }
     if subfolder:
         record["project_subfolder"] = subfolder
+    if media_source_id:
+        record["media_source_id"] = media_source_id
     return record
 
 
@@ -119,22 +122,22 @@ def test_report_checks_each_complete_work_path_as_a_file(tmp_path: Path) -> None
         {
             "work_id": "00003",
             "work_title": "Missing",
-            "expected_source_path": "alpha/missing.jpg",
+            "expected_source_path": "projects/alpha/missing.jpg",
         },
         {
             "work_id": "00004",
             "work_title": "Nested missing",
-            "expected_source_path": "wa/ink/missing.jpg",
+            "expected_source_path": "projects/wa/ink/missing.jpg",
         },
         {
             "work_id": "00006",
             "work_title": "Directory is not a file",
-            "expected_source_path": "alpha/directory.jpg",
+            "expected_source_path": "projects/alpha/directory.jpg",
         },
         {
             "work_id": "00008",
             "work_title": "Same missing path",
-            "expected_source_path": "alpha/missing.jpg",
+            "expected_source_path": "projects/alpha/missing.jpg",
         },
     ]
 
@@ -176,7 +179,7 @@ def test_report_rejects_a_source_path_resolving_outside_root(tmp_path: Path) -> 
     outside.mkdir()
     (projects_root / "linked").symlink_to(outside, target_is_directory=True)
 
-    with pytest.raises(ValueError, match="outside the Projects source root"):
+    with pytest.raises(ValueError, match="must not contain symlinks"):
         MissingSourceFilesProducer(repo_root=tmp_path, paths=paths).run()
 
 
@@ -194,5 +197,36 @@ def test_report_rejects_a_source_file_resolving_outside_root(tmp_path: Path) -> 
     outside.write_text("outside", encoding="utf-8")
     (alpha / "linked.jpg").symlink_to(outside)
 
-    with pytest.raises(ValueError, match="outside the Projects source root"):
+    with pytest.raises(ValueError, match="must not contain symlinks"):
         MissingSourceFilesProducer(repo_root=tmp_path, paths=paths).run()
+
+
+def test_processing_source_never_falls_through_to_matching_projects_path(tmp_path: Path) -> None:
+    paths, projects_root, source_dir = fixture_paths(tmp_path)
+    processing_root = paths.projects_base_dir / "processing"
+    processing_root.mkdir()
+    matching_projects_folder = projects_root / "ink-engine"
+    matching_projects_folder.mkdir()
+    (matching_projects_folder / "frame.jpg").write_text("wrong root", encoding="utf-8")
+    write_catalogue(
+        source_dir,
+        {
+            "00001": work(
+                "00001",
+                "Processing frame",
+                "ink-engine",
+                "frame.jpg",
+                media_source_id="processing",
+            )
+        },
+    )
+
+    payload = MissingSourceFilesProducer(repo_root=tmp_path, paths=paths).run()
+
+    assert payload["report"]["rows"] == [
+        {
+            "work_id": "00001",
+            "work_title": "Processing frame",
+            "expected_source_path": "processing/ink-engine/frame.jpg",
+        }
+    ]

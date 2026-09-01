@@ -28,10 +28,14 @@ def read_json(path: Path) -> dict[str, object]:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
-def work_payload(work_id: str, urls: list[str]) -> dict[str, object]:
+def document(url: str) -> dict[str, str]:
+    return {"url": url, "title": f"Document {url}"}
+
+
+def work_payload(work_id: str, documents: list[dict[str, str]]) -> dict[str, object]:
     return {
         "header": {
-            "schema": "work_record_v4",
+            "schema": "work_record_v5",
             "version": f"before-{work_id}",
             "generated_at_utc": "2026-08-01T00:00:00Z",
             "work_id": work_id,
@@ -40,16 +44,16 @@ def work_payload(work_id: str, urls: list[str]) -> dict[str, object]:
         "work": {
             "work_id": work_id,
             "title": f"Work {work_id}",
-            "doc_url": urls,
+            "documents": documents,
         },
         "sections": [],
     }
 
 
-def series_payload(series_id: str, urls: list[str]) -> dict[str, object]:
+def series_payload(series_id: str, documents: list[dict[str, str]]) -> dict[str, object]:
     return {
         "header": {
-            "schema": "series_record_v3",
+            "schema": "series_record_v4",
             "version": f"before-{series_id}",
             "generated_at_utc": "2026-08-01T00:00:00Z",
             "series_id": series_id,
@@ -58,7 +62,7 @@ def series_payload(series_id: str, urls: list[str]) -> dict[str, object]:
         "series": {
             "series_id": series_id,
             "title": f"Series {series_id}",
-            "doc_url": urls,
+            "documents": documents,
         },
         "member_works": [
             {"work_id": "00001", "title": "One"},
@@ -74,7 +78,7 @@ def test_refresh_reassigns_removes_and_adds_only_exact_affected_payloads(tmp_pat
     work_two = tmp_path / "site/assets/works/index/00002.json"
     unaffected = tmp_path / "site/assets/works/index/00003.json"
     series = tmp_path / "site/assets/series/index/009.json"
-    write_json(work_one, work_payload("00001", [old_url]))
+    write_json(work_one, work_payload("00001", [document(old_url)]))
     write_json(work_two, work_payload("00002", []))
     write_json(unaffected, work_payload("00003", []))
     write_json(series, series_payload("009", []))
@@ -83,8 +87,8 @@ def test_refresh_reassigns_removes_and_adds_only_exact_affected_payloads(tmp_pat
     plan = build_catalogue_document_url_refresh_plan(
         tmp_path,
         {
-            "work": {"00002": [new_url]},
-            "series": {"009": [old_url]},
+            "work": {"00002": [document(new_url)]},
+            "series": {"009": [document(old_url)]},
         },
         generated_at_utc="2026-08-07T12:00:00Z",
     )
@@ -96,10 +100,10 @@ def test_refresh_reassigns_removes_and_adds_only_exact_affected_payloads(tmp_pat
         ("work", "00002"),
     )
     assert set(result.written_paths) == {series, work_one, work_two}
-    assert read_json(work_one)["work"]["doc_url"] == []  # type: ignore[index]
-    assert read_json(work_two)["work"]["doc_url"] == [new_url]  # type: ignore[index]
+    assert read_json(work_one)["work"]["documents"] == []  # type: ignore[index]
+    assert read_json(work_two)["work"]["documents"] == [document(new_url)]  # type: ignore[index]
     series_after = read_json(series)
-    assert series_after["series"]["doc_url"] == [old_url]  # type: ignore[index]
+    assert series_after["series"]["documents"] == [document(old_url)]  # type: ignore[index]
     assert series_after["header"]["version"] == compute_payload_version(  # type: ignore[index]
         compact_json_object({"series": series_after["series"], "member_works": series_after["member_works"]})
     )
@@ -109,18 +113,31 @@ def test_refresh_reassigns_removes_and_adds_only_exact_affected_payloads(tmp_pat
 def test_refresh_plan_is_empty_when_generated_payloads_match_projection(tmp_path: Path) -> None:
     url = "/example/?doc=d-current"
     path = tmp_path / "site/assets/works/index/00001.json"
-    write_json(path, work_payload("00001", [url]))
+    write_json(path, work_payload("00001", [document(url)]))
     before = path.read_bytes()
 
     plan = build_catalogue_document_url_refresh_plan(
         tmp_path,
-        {"work": {"00001": [url]}, "series": {}},
+        {"work": {"00001": [document(url)]}, "series": {}},
     )
     result = apply_catalogue_document_url_refresh_plan(plan)
 
     assert plan.affected_targets == ()
     assert result.written_paths == ()
     assert path.read_bytes() == before
+
+
+def test_refresh_plan_rejects_retired_payload_schema_even_without_documents(tmp_path: Path) -> None:
+    path = tmp_path / "site/assets/works/index/00001.json"
+    payload = work_payload("00001", [])
+    payload["header"]["schema"] = "work_record_v4"  # type: ignore[index]
+    write_json(path, payload)
+
+    with pytest.raises(ValueError, match="unsupported schema"):
+        build_catalogue_document_url_refresh_plan(
+            tmp_path,
+            {"work": {}, "series": {}},
+        )
 
 
 def test_refresh_plan_rejects_missing_exact_generated_target_without_writes(tmp_path: Path) -> None:
@@ -131,7 +148,7 @@ def test_refresh_plan_rejects_missing_exact_generated_target_without_writes(tmp_
     with pytest.raises(ValueError, match="generated Catalogue payload is missing"):
         build_catalogue_document_url_refresh_plan(
             tmp_path,
-            {"work": {"99999": ["/example/?doc=d-missing"]}, "series": {}},
+            {"work": {"99999": [document("/example/?doc=d-missing")]}, "series": {}},
         )
 
     assert existing.read_bytes() == before
@@ -143,7 +160,7 @@ def test_refresh_atomic_failure_restores_all_previous_payloads(
 ) -> None:
     first = tmp_path / "site/assets/works/index/00001.json"
     second = tmp_path / "site/assets/series/index/009.json"
-    write_json(first, work_payload("00001", ["/example/?doc=d-old"]))
+    write_json(first, work_payload("00001", [document("/example/?doc=d-old")]))
     write_json(second, series_payload("009", []))
     first_before = first.read_bytes()
     second_before = second.read_bytes()
@@ -151,7 +168,7 @@ def test_refresh_atomic_failure_restores_all_previous_payloads(
         tmp_path,
         {
             "work": {},
-            "series": {"009": ["/example/?doc=d-old"]},
+            "series": {"009": [document("/example/?doc=d-old")]},
         },
     )
     original_replace = transactions.os.replace

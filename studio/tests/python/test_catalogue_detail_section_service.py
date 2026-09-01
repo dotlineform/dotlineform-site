@@ -108,6 +108,28 @@ def stub_lookup_refresh(monkeypatch) -> None:
     monkeypatch.setattr(detail_section_service, "refresh_lookup_payloads", lambda _context: {})
 
 
+def test_detail_folder_inherits_processing_source_from_parent_work(tmp_path: Path) -> None:
+    repo_root, projects_base = prepare_repo(tmp_path)
+    processing_details = projects_base / "processing/ink-engine/details"
+    processing_details.mkdir(parents=True)
+    works_path = repo_root / "studio/data/canonical/catalogue/works.json"
+    works_payload = load_json_file(works_path)
+    work_record = works_payload["works"]["00782"]
+    work_record["media_source_id"] = "processing"
+    work_record["project_folder"] = "ink-engine"
+    write_json(works_path, works_payload)
+    context = build_catalogue_write_context(repo_root)
+
+    resolved = detail_section_service.resolve_project_detail_folder(
+        context,
+        work_record,
+        "ink-engine",
+        "details",
+    )
+
+    assert resolved == processing_details.resolve()
+
+
 def test_create_detail_section_writes_section_and_records(tmp_path: Path, monkeypatch) -> None:
     repo_root, _projects_base = prepare_repo(tmp_path)
     context = build_catalogue_write_context(repo_root)

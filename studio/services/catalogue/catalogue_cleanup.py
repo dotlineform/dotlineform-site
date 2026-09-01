@@ -95,10 +95,10 @@ def finalize_work_record_payload(payload: Dict[str, Any], work_id: str) -> Dict[
     work_record = payload.get("work")
     if not isinstance(work_record, dict):
         raise ValueError("work record payload must include a work object")
-    raw_doc_urls = work_record.get("doc_url", [])
-    if not isinstance(raw_doc_urls, list):
-        raise ValueError("work.doc_url must be an array")
-    work_record["doc_url"] = generation_records.normalize_document_urls(raw_doc_urls)
+    raw_documents = work_record.get("documents", [])
+    if not isinstance(raw_documents, list):
+        raise ValueError("work.documents must be an array")
+    work_record["documents"] = generation_records.normalize_catalogue_documents(raw_documents)
     sections = payload.get("sections")
     if not isinstance(sections, list):
         sections = []
@@ -117,10 +117,10 @@ def finalize_series_record_payload(payload: Dict[str, Any], series_id: str) -> D
         raise ValueError("series record payload must include a series object")
     if str(series_record.get("series_id") or "") != series_id:
         raise ValueError(f"series record payload does not match exact target {series_id}")
-    raw_doc_urls = series_record.get("doc_url", [])
-    if not isinstance(raw_doc_urls, list):
-        raise ValueError("series.doc_url must be an array")
-    series_record["doc_url"] = generation_records.normalize_document_urls(raw_doc_urls)
+    raw_documents = series_record.get("documents", [])
+    if not isinstance(raw_documents, list):
+        raise ValueError("series.documents must be an array")
+    series_record["documents"] = generation_records.normalize_catalogue_documents(raw_documents)
     member_works = payload.get("member_works")
     if not isinstance(member_works, list):
         raise ValueError("series record payload must include a member_works array")

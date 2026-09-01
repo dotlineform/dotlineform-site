@@ -56,6 +56,7 @@ def test_work_delete_cleanup_preview_counts_generated_and_media_paths() -> None:
         touch(root / "site/assets/works/img/00001-thumb-800.jpg")
         touch(root / "site/assets/work_details/img/00001-001-thumb-800.jpg")
         touch(catalogue_media_root() / "works/make_srcset_images/00001.jpg")
+        touch(catalogue_media_root() / "works/srcset_images/thumb/00001-thumb-96.webp")
         touch(catalogue_media_root() / "work_details/srcset_images/thumb/00001-001-thumb-800.webp")
         touch(root / "site/assets/data/series_index.json")
         touch(root / "site/assets/data/recent_index.json")
@@ -71,7 +72,7 @@ def test_work_delete_cleanup_preview_counts_generated_and_media_paths() -> None:
 
     assert preview["repo_artifacts"] == 1
     assert preview["repo_media"] == 2
-    assert preview["staged_media"] == 2
+    assert preview["staged_media"] == 3
     assert preview["catalogue_search"] == "site/assets/data/search/catalogue/index.json"
     assert preview["public_json_updates"] == [
         "site/assets/data/series_index.json",
@@ -82,6 +83,7 @@ def test_work_delete_cleanup_preview_counts_generated_and_media_paths() -> None:
         TAG_ASSIGNMENTS_PATH.as_posix(),
     ]
     assert "site/assets/works/img/00001-thumb-800.jpg" in preview["delete_paths"]
+    assert "$DOTLINEFORM_PROJECTS_BASE_DIR/catalogue/media/works/srcset_images/thumb/00001-thumb-96.webp" in preview["delete_paths"]
     assert "$DOTLINEFORM_PROJECTS_BASE_DIR/catalogue/media/work_details/srcset_images/thumb/00001-001-thumb-800.webp" in preview["delete_paths"]
 
 
@@ -153,7 +155,7 @@ def test_work_delete_generated_payloads_remove_generated_records() -> None:
         write_json(
             root / "site/assets/series/index/009.json",
             {
-                "header": {"schema": "series_record_v3"},
+                "header": {"schema": "series_record_v4"},
                 "series": {"series_id": "009", "title": "Series"},
                 "member_works": [
                     {"work_id": "00001", "title": "One"},
@@ -185,8 +187,8 @@ def test_work_delete_generated_payloads_remove_generated_records() -> None:
     assert payloads[(root / "site/assets/series/index/009.json").resolve()]["member_works"] == [
         {"work_id": "00002", "title": "Two"}
     ]
-    assert payloads[(root / "site/assets/series/index/009.json").resolve()]["series"]["doc_url"] == []
-    assert payloads[(root / "site/assets/series/index/009.json").resolve()]["header"]["schema"] == "series_record_v3"
+    assert payloads[(root / "site/assets/series/index/009.json").resolve()]["series"]["documents"] == []
+    assert payloads[(root / "site/assets/series/index/009.json").resolve()]["header"]["schema"] == "series_record_v4"
     assert "00001" not in payloads[(root / TAG_ASSIGNMENTS_PATH).resolve()]["series"]["009"]["works"]
 
 
@@ -232,8 +234,8 @@ def test_work_detail_generated_payloads_remove_all_affected_details() -> None:
     assert preview["staged_media"] == 2
     work_payload = payloads[(root / "site/assets/works/index/00001.json").resolve()]
     assert work_payload["sections"][0]["details"] == [{"detail_uid": "00001-003"}]
-    assert work_payload["work"]["doc_url"] == []
-    assert work_payload["header"]["schema"] == "work_record_v4"
+    assert work_payload["work"]["documents"] == []
+    assert work_payload["header"]["schema"] == "work_record_v5"
 
 
 def main() -> None:

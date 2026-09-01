@@ -18,7 +18,7 @@ if str(SCRIPTS_DIR) not in sys.path:
 
 from catalogue import catalogue_build_media as media  # noqa: E402
 from catalogue.catalogue_source import payload_for_map, write_work_detail_payloads  # noqa: E402
-from pipeline_config import source_works_root_subdir  # noqa: E402
+from pipeline_config import work_media_source_root_subdir  # noqa: E402
 
 
 def write_json(path: Path, payload: dict[str, Any]) -> None:
@@ -101,6 +101,7 @@ def test_resolves_work_detail_sources_and_missing_metadata_reasons() -> None:
         source_dir = root / "studio/data/canonical/catalogue"
         projects_base = root / "projects"
         projects_base.mkdir(parents=True, exist_ok=True)
+        (projects_base / work_media_source_root_subdir(media.PIPELINE_CONFIG, "projects")).mkdir()
         write_source_fixture(source_dir)
         records = media.records_from_json_source(source_dir)
 
@@ -130,7 +131,7 @@ def test_resolves_work_detail_sources_and_missing_metadata_reasons() -> None:
             },
         )
 
-    works_root = source_works_root_subdir(media.PIPELINE_CONFIG)
+    works_root = work_media_source_root_subdir(media.PIPELINE_CONFIG, "projects")
     assert work_path == (projects_base / works_root / "2026/alpha/alpha.jpg").resolve()
     assert reason == ""
     assert base_dir == projects_base.resolve()
@@ -149,7 +150,7 @@ def test_local_media_plan_reports_pending_current_blocked_and_unavailable_states
         repo_root = root / "repo"
         source_dir = repo_root / "studio/data/canonical/catalogue"
         projects_base = root / "projects"
-        source_image = projects_base / source_works_root_subdir(media.PIPELINE_CONFIG) / "2026/alpha/alpha.jpg"
+        source_image = projects_base / work_media_source_root_subdir(media.PIPELINE_CONFIG, "projects") / "2026/alpha/alpha.jpg"
         source_image.parent.mkdir(parents=True, exist_ok=True)
         source_image.write_bytes(b"source")
         write_source_fixture(source_dir)
@@ -195,7 +196,7 @@ def test_local_media_plan_uses_transient_work_media_source() -> None:
         repo_root = root / "repo"
         source_dir = repo_root / "studio/data/canonical/catalogue"
         projects_base = root / "projects"
-        replacement_image = projects_base / source_works_root_subdir(media.PIPELINE_CONFIG) / "2026/beta/install/replacement.jpg"
+        replacement_image = projects_base / work_media_source_root_subdir(media.PIPELINE_CONFIG, "processing") / "ink-engine/install/replacement.jpg"
         replacement_image.parent.mkdir(parents=True, exist_ok=True)
         replacement_image.write_bytes(b"replacement")
         write_source_fixture(source_dir)
@@ -207,7 +208,8 @@ def test_local_media_plan_uses_transient_work_media_source() -> None:
                 "work_ids": ["00001"],
                 "work_media_sources": {
                     "00001": {
-                        "project_folder": "2026/beta",
+                        "media_source_id": "processing",
+                        "project_folder": "ink-engine",
                         "project_subfolder": "install",
                         "project_filename": "replacement.jpg",
                     }
@@ -218,8 +220,38 @@ def test_local_media_plan_uses_transient_work_media_source() -> None:
         )
 
     assert plan["counts"] == {"pending": 1, "current": 0, "blocked": 0, "unavailable": 0}
-    assert plan["tasks"][0]["source_path"] == "projects/2026/beta/install/replacement.jpg"
+    assert plan["tasks"][0]["source_path"] == "processing/ink-engine/install/replacement.jpg"
     assert plan["tasks"][0]["source_abs_path"] == str(replacement_image.resolve())
+
+
+def test_processing_work_and_detail_resolve_through_parent_source_identity() -> None:
+    with tempfile.TemporaryDirectory() as tmp:
+        root = Path(tmp)
+        source_dir = root / "studio/data/canonical/catalogue"
+        projects_base = root / "projects"
+        processing_folder = projects_base / "processing/ink-engine"
+        detail_folder = processing_folder / "details"
+        detail_folder.mkdir(parents=True)
+        write_source_fixture(source_dir)
+        records = media.records_from_json_source(source_dir)
+        records.works["00001"]["media_source_id"] = "processing"
+        records.works["00001"]["project_folder"] = "ink-engine"
+
+        work_path, work_reason, _, work_availability = media.resolve_work_media_source(
+            records,
+            "00001",
+            env=projects_env(projects_base),
+        )
+        detail_path, detail_reason, _, detail_availability = media.resolve_detail_media_source(
+            records,
+            "00001-001",
+            env=projects_env(projects_base),
+        )
+
+    assert work_path == (processing_folder / "alpha.jpg").resolve()
+    assert detail_path == (detail_folder / "alpha-detail.jpg").resolve()
+    assert work_reason == detail_reason == ""
+    assert work_availability == detail_availability == ""
 
 
 def test_media_readiness_distinguishes_pending_and_missing_metadata() -> None:
@@ -259,6 +291,88 @@ def test_media_readiness_distinguishes_pending_and_missing_metadata() -> None:
     assert pending["exists"] is True
     assert missing_metadata["status"] == "missing_metadata"
     assert missing_metadata["exists"] is False
+
+
+def test_draft_media_plan_retains_staged_thumbnail_without_public_projection() -> None:
+    with tempfile.TemporaryDirectory() as tmp:
+        root = Path(tmp)
+        repo_root = root / "repo"
+        source_dir = repo_root / "studio/data/canonical/catalogue"
+        projects_base = root / "projects"
+        source_image = projects_base / work_media_source_root_subdir(media.PIPELINE_CONFIG, "projects") / "2026/alpha/alpha.jpg"
+        source_image.parent.mkdir(parents=True, exist_ok=True)
+        source_image.write_bytes(b"source")
+        write_source_fixture(source_dir)
+        scope = {
+            "source_dir": str(source_dir),
+            "work_ids": ["00001"],
+            "public_thumbnail_projection": False,
+        }
+
+        plan = media.build_local_media_plan(
+            repo_root,
+            scope=scope,
+            env=projects_env(projects_base),
+            force=True,
+        )
+        task = plan["tasks"][0]
+        staged_thumb = projects_base / "catalogue/media/works/srcset_images/thumb/00001-thumb-96.webp"
+        asset_thumb = repo_root / "site/assets/works/img/00001-thumb-96.webp"
+
+        def fake_thumb(src: Path, size: int, dest: Path) -> tuple[int, str]:
+            dest.parent.mkdir(parents=True, exist_ok=True)
+            dest.write_bytes(f"thumb:{size}".encode("utf-8"))
+            return 0, ""
+
+        def fake_primary(src: Path, width: int, dest: Path) -> tuple[int, str]:
+            dest.parent.mkdir(parents=True, exist_ok=True)
+            dest.write_bytes(f"primary:{width}".encode("utf-8"))
+            return 0, ""
+
+        result = media.execute_local_media_plan(
+            repo_root,
+            scope=scope,
+            write=True,
+            env=projects_env(projects_base),
+            force=True,
+            thumb_runner=fake_thumb,
+            primary_runner=fake_primary,
+        )
+        current_plan = media.build_local_media_plan(
+            repo_root,
+            scope=scope,
+            env=projects_env(projects_base),
+        )
+        readiness = media.build_media_readiness_item(
+            repo_root=repo_root,
+            kind="work",
+            item_id="00001",
+            key="work_media",
+            title="work media",
+            source_path=source_image,
+            missing_reason="",
+            projects_base_dir=projects_base,
+            availability_error="",
+            public_thumbnail_projection=False,
+        )
+        staged_thumb_bytes = staged_thumb.read_bytes()
+        asset_thumb_exists = asset_thumb.exists()
+
+    assert task["public_thumbnail_projection"] is False
+    assert task["asset_thumb_paths"] == []
+    assert task["pending_asset_thumbs"] == []
+    assert task["staged_thumb_paths"] == [
+        "$DOTLINEFORM_PROJECTS_BASE_DIR/catalogue/media/works/srcset_images/thumb/00001-thumb-96.webp"
+    ]
+    assert result["status"] == "completed"
+    assert result["cleaned_staged_thumbs"] == {"work": [], "work_details": []}
+    assert staged_thumb_bytes == b"thumb:96"
+    assert not asset_thumb_exists
+    assert current_plan["counts"] == {"pending": 0, "current": 1, "blocked": 0, "unavailable": 0}
+    assert readiness["status"] == "ready"
+    assert readiness["generated_paths"] == [
+        "$DOTLINEFORM_PROJECTS_BASE_DIR/catalogue/media/works/srcset_images/thumb/00001-thumb-96.webp"
+    ]
 
 
 def test_execute_local_media_plan_dry_run_suppresses_writes() -> None:
@@ -303,7 +417,7 @@ def test_thumbnail_only_plan_skips_missing_sources_without_failing() -> None:
         repo_root = root / "repo"
         source_dir = repo_root / "studio/data/canonical/catalogue"
         projects_base = root / "projects"
-        source_image = projects_base / source_works_root_subdir(media.PIPELINE_CONFIG) / "2026/alpha/alpha.jpg"
+        source_image = projects_base / work_media_source_root_subdir(media.PIPELINE_CONFIG, "projects") / "2026/alpha/alpha.jpg"
         source_image.parent.mkdir(parents=True, exist_ok=True)
         source_image.write_bytes(b"source")
         write_source_fixture(source_dir)
@@ -337,7 +451,7 @@ def test_execute_thumbnail_only_plan_writes_thumbnails_and_reports_skips() -> No
         repo_root = root / "repo"
         source_dir = repo_root / "studio/data/canonical/catalogue"
         projects_base = root / "projects"
-        source_image = projects_base / source_works_root_subdir(media.PIPELINE_CONFIG) / "2026/alpha/alpha.jpg"
+        source_image = projects_base / work_media_source_root_subdir(media.PIPELINE_CONFIG, "projects") / "2026/alpha/alpha.jpg"
         source_image.parent.mkdir(parents=True, exist_ok=True)
         source_image.write_bytes(b"source")
         write_source_fixture(source_dir)
@@ -373,7 +487,9 @@ if __name__ == "__main__":
     test_resolves_work_detail_sources_and_missing_metadata_reasons()
     test_local_media_plan_reports_pending_current_blocked_and_unavailable_states()
     test_local_media_plan_uses_transient_work_media_source()
+    test_processing_work_and_detail_resolve_through_parent_source_identity()
     test_media_readiness_distinguishes_pending_and_missing_metadata()
+    test_draft_media_plan_retains_staged_thumbnail_without_public_projection()
     test_execute_local_media_plan_dry_run_suppresses_writes()
     test_thumbnail_only_plan_skips_missing_sources_without_failing()
     test_execute_thumbnail_only_plan_writes_thumbnails_and_reports_skips()

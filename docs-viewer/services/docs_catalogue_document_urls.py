@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Derive public Catalogue document URLs from exact published Docs identity."""
+"""Derive public Catalogue document metadata from exact published Docs identity."""
 
 from __future__ import annotations
 
@@ -15,7 +15,7 @@ from docs_source_model import load_document_collection_docs_for_config
 
 
 CatalogueTarget = tuple[str, str, str]
-CatalogueDocumentUrls = dict[str, dict[str, list[str]]]
+CatalogueDocuments = dict[str, dict[str, list[dict[str, str]]]]
 
 
 def exact_location_target(record: Mapping[str, Any]) -> CatalogueTarget:
@@ -27,14 +27,14 @@ def exact_location_target(record: Mapping[str, Any]) -> CatalogueTarget:
     return scope_id, sub_scope, doc_id
 
 
-def project_catalogue_document_urls(
+def project_catalogue_documents(
     *,
     exact_locations: Sequence[Mapping[str, Any]],
     front_matter_by_target: Mapping[CatalogueTarget, Mapping[str, Any]],
-) -> CatalogueDocumentUrls:
-    """Group current public URLs by one exact normalized Work or Series subject."""
+) -> CatalogueDocuments:
+    """Group current public document metadata by exact Work or Series subject."""
 
-    urls_by_subject: dict[tuple[str, str], set[str]] = {}
+    documents_by_subject: dict[tuple[str, str], dict[str, str]] = {}
     for location in exact_locations:
         target = exact_location_target(location)
         front_matter = front_matter_by_target.get(target)
@@ -46,6 +46,9 @@ def project_catalogue_document_urls(
         url = str(location.get("url") or "").strip()
         if not url:
             raise ValueError("public document location URL must not be empty")
+        title = str(location.get("document_title") or "").strip()
+        if not title:
+            raise ValueError("public document location title must not be empty")
 
         subject = normalize_authoring_subject(
             front_matter,
@@ -57,21 +60,28 @@ def project_catalogue_document_urls(
         key = str(subject.get("key") or "")
         if kind not in {"work", "series"} or not key:
             continue
-        urls_by_subject.setdefault((kind, key), set()).add(url)
+        documents = documents_by_subject.setdefault((kind, key), {})
+        existing_title = documents.get(url)
+        if existing_title is not None and existing_title != title:
+            raise ValueError(f"public document location {url!r} has conflicting titles")
+        documents[url] = title
 
-    projection: CatalogueDocumentUrls = {"work": {}, "series": {}}
-    for kind, key in sorted(urls_by_subject):
-        projection[kind][key] = sorted(urls_by_subject[(kind, key)])
+    projection: CatalogueDocuments = {"work": {}, "series": {}}
+    for kind, key in sorted(documents_by_subject):
+        projection[kind][key] = [
+            {"url": url, "title": title}
+            for url, title in sorted(documents_by_subject[(kind, key)].items())
+        ]
     return projection
 
 
-def project_catalogue_document_urls_from_subject_associations(
+def project_catalogue_documents_from_subject_associations(
     *,
     exact_locations: Sequence[Mapping[str, Any]],
     subject_associations_by_collection: Mapping[
         tuple[str, str], Mapping[str, Any]
     ],
-) -> CatalogueDocumentUrls:
+) -> CatalogueDocuments:
     """Join accepted public locations to accepted exact authoring subjects."""
 
     location_targets = {exact_location_target(record) for record in exact_locations}
@@ -130,13 +140,13 @@ def project_catalogue_document_urls_from_subject_associations(
                 seen_targets.add(target)
                 front_matter_by_target[target] = {field_name: key}
 
-    return project_catalogue_document_urls(
+    return project_catalogue_documents(
         exact_locations=exact_locations,
         front_matter_by_target=front_matter_by_target,
     )
 
 
-def load_public_catalogue_document_urls(repo_root: Path) -> CatalogueDocumentUrls:
+def load_public_catalogue_documents(repo_root: Path) -> CatalogueDocuments:
     """Join current public locations to exact canonical source front matter."""
 
     configs = load_docs_scope_configs(repo_root, public_only=True)
@@ -184,17 +194,17 @@ def load_public_catalogue_document_urls(repo_root: Path) -> CatalogueDocumentUrl
                     document.front_matter
                 )
 
-    return project_catalogue_document_urls(
+    return project_catalogue_documents(
         exact_locations=exact_locations,
         front_matter_by_target=front_matter_by_target,
     )
 
 
 __all__ = [
-    "CatalogueDocumentUrls",
+    "CatalogueDocuments",
     "CatalogueTarget",
     "exact_location_target",
-    "load_public_catalogue_document_urls",
-    "project_catalogue_document_urls",
-    "project_catalogue_document_urls_from_subject_associations",
+    "load_public_catalogue_documents",
+    "project_catalogue_documents",
+    "project_catalogue_documents_from_subject_associations",
 ]

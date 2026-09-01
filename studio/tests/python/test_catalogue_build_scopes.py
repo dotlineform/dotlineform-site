@@ -138,6 +138,7 @@ def test_work_scope_includes_extra_series_detail_readiness_and_stable_keys() -> 
         "source_mode",
         "source_dir",
         "refresh_published",
+        "public_thumbnail_projection",
         "summary",
         "detail_uid",
         "readiness",
@@ -147,6 +148,7 @@ def test_work_scope_includes_extra_series_detail_readiness_and_stable_keys() -> 
     assert scope["current_series_ids"] == ["009"]
     assert scope["extra_series_ids"] == ["010"]
     assert scope["detail_uid"] == "00001-001"
+    assert scope["public_thumbnail_projection"] is True
     assert [item["key"] for item in scope["readiness"]["items"]] == ["work:00001", "detail:00001-001"]
     assert scope["generate_only"] == scopes.DEFAULT_ARTIFACTS
 
@@ -165,7 +167,8 @@ def test_work_scope_can_carry_transient_media_source() -> None:
             source_dir,
             "00001",
             work_media_source={
-                "project_folder": "2026/beta",
+                "media_source_id": "processing",
+                "project_folder": "ink-engine",
                 "project_subfolder": "install",
                 "project_filename": "replacement.jpg",
             },
@@ -174,10 +177,37 @@ def test_work_scope_can_carry_transient_media_source() -> None:
         saved_payload = json.loads((source_dir / "works.json").read_text(encoding="utf-8"))
 
     assert seen_filenames == ["replacement.jpg"]
-    assert scope["work_media_sources"]["00001"]["project_folder"] == "2026/beta"
+    assert scope["work_media_sources"]["00001"]["media_source_id"] == "processing"
+    assert scope["work_media_sources"]["00001"]["project_folder"] == "ink-engine"
     assert scope["work_media_sources"]["00001"]["project_subfolder"] == "install"
     assert scope["work_media_sources"]["00001"]["project_filename"] == "replacement.jpg"
     assert saved_payload["works"]["00001"]["project_filename"] == "alpha.jpg"
+
+
+def test_draft_work_scope_allows_local_media_only_without_public_targets() -> None:
+    with tempfile.TemporaryDirectory() as tmp:
+        source_dir = Path(tmp) / "studio/data/canonical/catalogue"
+        write_source_fixture(source_dir)
+
+        scope = scopes.build_scope_for_work(
+            source_dir,
+            "00003",
+            media_only=True,
+            work_media_source={
+                "media_source_id": "processing",
+                "project_folder": "ink-engine",
+                "project_filename": "frame.jpg",
+            },
+            work_readiness_builder=lambda records, work_id, **kwargs: readiness_item(f"work:{work_id}"),
+        )
+
+    assert scope["work_ids"] == ["00003"]
+    assert scope["series_ids"] == []
+    assert scope["generate_only"] == []
+    assert scope["rebuild_search"] is False
+    assert scope["refresh_published"] is False
+    assert scope["public_thumbnail_projection"] is False
+    assert scope["work_media_sources"]["00003"]["media_source_id"] == "processing"
 
 
 def test_series_scope_includes_extra_work_ids_and_stable_keys() -> None:
@@ -204,6 +234,7 @@ def test_series_scope_includes_extra_work_ids_and_stable_keys() -> None:
         "source_mode",
         "source_dir",
         "refresh_published",
+        "public_thumbnail_projection",
         "summary",
         "readiness",
     ]
@@ -212,6 +243,7 @@ def test_series_scope_includes_extra_work_ids_and_stable_keys() -> None:
     assert scope["current_work_ids"] == ["00001"]
     assert scope["extra_work_ids"] == ["00002"]
     assert scope["series_ids"] == ["009"]
+    assert scope["public_thumbnail_projection"] is True
     assert scope["readiness"]["items"][0]["key"] == "series:009"
 
 
