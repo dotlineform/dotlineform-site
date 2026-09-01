@@ -112,9 +112,17 @@ def browser_sub_scope_records(
     published: bool = False,
 ) -> list[dict[str, Any]]:
     records: list[dict[str, Any]] = []
+    source_contract_ids = {
+        aspect.contract_id
+        for sub_scope in config.sub_scopes
+        for aspect in sub_scope_customisation_document_lineage_contracts(
+            sub_scope.sub_scope_customisation
+        )
+        if aspect.role == LINEAGE_SOURCE_ROLE
+    }
     lineage_workflows = (
         publication_lineage.configured_workflows(repo_root)
-        if not published
+        if not published and source_contract_ids
         else ()
     )
     for sub_scope in config.sub_scopes:

@@ -146,6 +146,10 @@ def test_projects_subject_assignment_read_save_remove_and_strict_rejection(
         "perform_sub_scope_source_write_and_rebuild",
         fake_sub_scope_rebuild,
     )
+    monkeypatch.setattr(
+        "docs_dotlineform_projects_customisation.publication_targets_for_documents",
+        lambda *_args, **_kwargs: {},
+    )
     projects_base = tmp_path / "Projects Base"
     projects_base.mkdir()
     monkeypatch.setenv("DOTLINEFORM_PROJECTS_BASE_DIR", str(projects_base))

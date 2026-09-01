@@ -51,6 +51,19 @@ class DocumentDeletePublicCleanupError(RuntimeError):
         self.payload = payload
 
 
+class DocumentDeleteLineageFollowThroughError(RuntimeError):
+    """A document Delete and lineage write committed before a Working rebuild failed."""
+
+    def __init__(self, payload: Dict[str, Any]) -> None:
+        super().__init__(
+            str(
+                payload.get("error")
+                or "document Delete lineage follow-through failed"
+            )
+        )
+        self.payload = payload
+
+
 def create_committed_error_payload(
     plan: mutations.ManagementMutationPlan,
     error: Exception,
@@ -323,14 +336,31 @@ def execute_management_mutation_plan(repo_root: Path, plan: mutations.Management
             )
             if lineage_delete.role:
                 workflow_results = []
+                lineage_follow_through_failures = []
                 for change in lineage_delete.workflows:
                     lineage_rebuild = None
                     if change.affected_working_doc_ids:
-                        lineage_rebuild = write_rebuild.rebuild_sub_scope_outputs(
-                            repo_root,
-                            change.table.working_collection.scope,
-                            change.table.working_collection.sub_scope,
-                        )
+                        try:
+                            lineage_rebuild = write_rebuild.rebuild_sub_scope_outputs(
+                                repo_root,
+                                change.table.working_collection.scope,
+                                change.table.working_collection.sub_scope,
+                            )
+                        except Exception as error:
+                            lineage_rebuild = {
+                                "ok": False,
+                                "error": str(error),
+                            }
+                            lineage_follow_through_failures.append(
+                                {
+                                    "contract_id": change.contract_id,
+                                    "scope": change.table.working_collection.scope,
+                                    "sub_scope": (
+                                        change.table.working_collection.sub_scope
+                                    ),
+                                    "error": str(error),
+                                }
+                            )
                     workflow_results.append(
                         {
                             "contract_id": change.contract_id,
@@ -352,6 +382,45 @@ def execute_management_mutation_plan(repo_root: Path, plan: mutations.Management
                     "role": lineage_delete.role,
                     "workflows": workflow_results,
                 }
+                if lineage_follow_through_failures:
+                    failed_targets = ", ".join(
+                        f"{failure['scope']}/{failure['sub_scope']}"
+                        for failure in lineage_follow_through_failures
+                    )
+                    payload.update(
+                        {
+                            "ok": False,
+                            "operation": "apply",
+                            "committed": True,
+                            "retry_delete": False,
+                            "failed_stage": "lineage_follow_through",
+                            "lineage_follow_through_failures": (
+                                lineage_follow_through_failures
+                            ),
+                            "dry_run": False,
+                            "summary_text": (
+                                "Document Delete and lineage update committed, "
+                                "but a Working follow-through Build failed."
+                            ),
+                            "error": (
+                                "document Delete and lineage update committed but "
+                                "Working follow-through Build failed for "
+                                f"{failed_targets}"
+                            ),
+                        }
+                    )
+                    if plan.include_write_result_keys:
+                        payload["rebuild"] = rebuild
+                    if plan.log_event_name:
+                        log_event(
+                            repo_root,
+                            plan.log_event_name,
+                            {
+                                **plan.log_details,
+                                "lineage_follow_through_ok": False,
+                            },
+                        )
+                    raise DocumentDeleteLineageFollowThroughError(payload)
 
     if not dry_run and plan.log_event_name and plan.has_source_changes:
         log_event(repo_root, plan.log_event_name, plan.log_details)

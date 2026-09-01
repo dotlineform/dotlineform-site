@@ -118,10 +118,7 @@ try:
 except ModuleNotFoundError:  # pragma: no cover - package import fallback
     from studio.shared.python.script_logging import append_script_log
 
-try:
-    from catalogue_work_media_sources import resolve_work_media_source_root
-except ModuleNotFoundError:  # pragma: no cover - package import fallback
-    from studio.shared.python.catalogue_work_media_sources import resolve_work_media_source_root
+from catalogue_work_media_sources import resolve_work_media_source_root
 
 try:
     from pipeline_config import (

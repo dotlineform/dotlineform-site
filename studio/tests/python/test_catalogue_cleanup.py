@@ -156,7 +156,11 @@ def test_work_delete_generated_payloads_remove_generated_records() -> None:
             root / "site/assets/series/index/009.json",
             {
                 "header": {"schema": "series_record_v4"},
-                "series": {"series_id": "009", "title": "Series"},
+                "series": {
+                    "series_id": "009",
+                    "title": "Series",
+                    "project_folders": ["deleted-folder", "retained-folder"],
+                },
                 "member_works": [
                     {"work_id": "00001", "title": "One"},
                     {"work_id": "00002", "title": "Two"},
@@ -170,6 +174,7 @@ def test_work_delete_generated_payloads_remove_generated_records() -> None:
             "work",
             "00001",
             {"works": ["00001"], "work_details": [], "series": ["009"]},
+            series_project_folders_by_id={"009": ["retained-folder"]},
         )
 
     assert rel_paths(root, payloads.keys()) == [
@@ -188,6 +193,9 @@ def test_work_delete_generated_payloads_remove_generated_records() -> None:
         {"work_id": "00002", "title": "Two"}
     ]
     assert payloads[(root / "site/assets/series/index/009.json").resolve()]["series"]["documents"] == []
+    assert payloads[(root / "site/assets/series/index/009.json").resolve()]["series"]["project_folders"] == [
+        "retained-folder"
+    ]
     assert payloads[(root / "site/assets/series/index/009.json").resolve()]["header"]["schema"] == "series_record_v4"
     assert "00001" not in payloads[(root / TAG_ASSIGNMENTS_PATH).resolve()]["series"]["009"]["works"]
 

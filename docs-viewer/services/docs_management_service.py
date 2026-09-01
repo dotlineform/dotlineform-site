@@ -64,6 +64,7 @@ from docs_management_context import (  # noqa: E402
 from docs_management_import_service import handle_import_source, import_source_dependencies  # noqa: E402
 from docs_management_mutation_service import (  # noqa: E402
     DocumentCreateCommittedError,
+    DocumentDeleteLineageFollowThroughError,
     DocumentDeletePublicCleanupError,
     SubScopeDocumentDeleteApplyError,
     execute_management_mutation_plan,
@@ -333,6 +334,8 @@ def docs_management_post_response(
         except SubScopeDocumentDeleteApplyError as error:
             return HTTPStatus.INTERNAL_SERVER_ERROR, error.payload
         except DocumentDeletePublicCleanupError as error:
+            return HTTPStatus.INTERNAL_SERVER_ERROR, error.payload
+        except DocumentDeleteLineageFollowThroughError as error:
             return HTTPStatus.INTERNAL_SERVER_ERROR, error.payload
     if path == routes.SCOPE_CREATE_PREVIEW_PATH:
         payload = docs_scope_create.plan_create_scope_preview(repo_root, body)

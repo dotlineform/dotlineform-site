@@ -7,6 +7,7 @@ from pathlib import Path
 from typing import Any, Dict, Mapping
 
 from catalogue import catalogue_cleanup
+from catalogue import catalogue_generation_indexes as generation_indexes
 from catalogue import catalogue_source_mutation as source_mutation
 from catalogue.catalogue_source import (
     CatalogueSourceRecords,
@@ -314,8 +315,20 @@ def build_delete_apply_plan(source_dir: Path, repo_root: Path, kind: str, record
             if str(detail_record.get("work_id") or "") != record_id
         }
         updated_series, changed_series_ids = series_records_with_draft_primary_cleared(series_payload["series"], record_id)
+        series_work_context = generation_indexes.build_series_work_index_context(
+            series_records=updated_series,
+            work_records=updated_works,
+        )
         cleanup = catalogue_cleanup.collect_catalogue_delete_cleanup(repo_root, kind, record_id, affected)
-        generated_payloads = catalogue_cleanup.build_catalogue_delete_generated_payloads(repo_root, kind, record_id, affected)
+        generated_payloads = catalogue_cleanup.build_catalogue_delete_generated_payloads(
+            repo_root,
+            kind,
+            record_id,
+            affected,
+            series_project_folders_by_id=(
+                series_work_context.series_project_folders_by_id
+            ),
+        )
         payloads = {
             works_path: payload_for_map("works", updated_works),
             details_path: work_details_payload_for_maps(

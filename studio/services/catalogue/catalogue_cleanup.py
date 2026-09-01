@@ -566,6 +566,8 @@ def build_catalogue_delete_generated_payloads(
     kind: str,
     record_id: str,
     affected: Mapping[str, Any],
+    *,
+    series_project_folders_by_id: Mapping[str, list[str]] | None = None,
 ) -> Dict[Path, Dict[str, Any]]:
     payloads: Dict[Path, Dict[str, Any]] = {}
 
@@ -584,6 +586,13 @@ def build_catalogue_delete_generated_payloads(
                 continue
             path, payload = series_payload
             if remove_work_from_series_record_payload(payload, normalized_series_id, record_id):
+                if series_project_folders_by_id is not None:
+                    series_record = payload.get("series")
+                    if not isinstance(series_record, dict):
+                        raise ValueError("series record payload must include a series object")
+                    series_record["project_folders"] = list(
+                        series_project_folders_by_id.get(normalized_series_id, [])
+                    )
                 finalized_payload = finalize_series_record_payload(payload, normalized_series_id)
                 payloads[path] = finalized_payload
                 member_work_ids_by_series[normalized_series_id] = [

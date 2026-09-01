@@ -8,28 +8,16 @@ from pathlib import Path
 import stat
 from typing import Any, Mapping
 
-try:
-    from .external_workspace_paths import (
-        PROJECTS_BASE_DIR_MARKER,
-        path_is_relative_to,
-        resolve_external_workspace_root,
-    )
-    from .pipeline_config import (
-        default_work_media_source_id,
-        work_media_source_ids,
-        work_media_source_root_subdir,
-    )
-except ImportError:  # pragma: no cover - direct sys.path import fallback
-    from external_workspace_paths import (
-        PROJECTS_BASE_DIR_MARKER,
-        path_is_relative_to,
-        resolve_external_workspace_root,
-    )
-    from pipeline_config import (
-        default_work_media_source_id,
-        work_media_source_ids,
-        work_media_source_root_subdir,
-    )
+from external_workspace_paths import (
+    PROJECTS_BASE_DIR_MARKER,
+    path_is_relative_to,
+    resolve_external_workspace_root,
+)
+from pipeline_config import (
+    default_work_media_source_id,
+    work_media_source_ids,
+    work_media_source_root_subdir,
+)
 
 
 @dataclass(frozen=True)
