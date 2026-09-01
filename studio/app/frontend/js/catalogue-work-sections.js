@@ -396,7 +396,7 @@ export function updateWorkResourcesSection(state, options = {}) {
 export function updateWorkSummary(state, options = {}) {
   if (state.mode === "new") {
     state.metaNode.hidden = false;
-    state.metaNode.textContent = text(state, options, "new_meta", "Creating a draft work.");
+    state.metaNode.textContent = text(state, options, "new_meta", "New draft work.");
     state.summaryNode.innerHTML = `
       <div class="studioForm__field">
         <span class="studioForm__label">${escapeHtml(text(state, options, "new_summary_status_label", "status"))}</span>
@@ -404,10 +404,10 @@ export function updateWorkSummary(state, options = {}) {
       </div>
       <div class="studioForm__field">
         <span class="studioForm__label">${escapeHtml(text(state, options, "new_summary_next_label", "next step"))}</span>
-        <div class="studioUi__input studioUi__input--readonlyDisplay">${escapeHtml(text(state, options, "new_summary_next", "Create the draft, then continue editing or publish from edit mode."))}</div>
+        <div class="studioUi__input studioUi__input--readonlyDisplay">${escapeHtml(text(state, options, "new_summary_next", "Save the draft, then continue editing or publish."))}</div>
       </div>
     `;
-    state.runtimeStateNode.textContent = text(state, options, "new_runtime_state", "public site update is unavailable until the draft exists");
+    state.runtimeStateNode.textContent = text(state, options, "new_runtime_state", "public site update is unavailable until the draft is saved");
     setTextWithState(options, state.buildImpactNode, "");
     if (state.resourcesPanelNode) state.resourcesPanelNode.hidden = false;
     updateWorkResourcesSection(state, options);

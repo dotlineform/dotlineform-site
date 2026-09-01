@@ -709,9 +709,7 @@ function updateEditorState(state) {
   }
   renderEditorMessage(state, { hasRecord, dirty, errors });
 
-  state.saveButton.textContent = state.mode === "new"
-    ? t(state, "create_button", "Create")
-    : t(state, "save_button", "Save");
+  state.saveButton.textContent = t(state, "save_button", "Save");
   state.saveButton.disabled = catalogueSaveDisabled({
     hasRecord,
     isSaving: state.isSaving || state.isBuilding || state.isDeleting,

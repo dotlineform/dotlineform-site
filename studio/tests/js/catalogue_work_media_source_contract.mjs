@@ -10,6 +10,9 @@ import {
   readProjectMediaFolders,
   readWorkMediaSources
 } from "../../app/frontend/js/catalogue-editor-service-client.js";
+import {
+  workSaveRequiresMediaPreparation
+} from "../../app/frontend/js/catalogue-work-actions.js";
 
 
 const defaultDraft = buildWorkDraftFromRecord({
@@ -32,6 +35,27 @@ const processingDraft = {
 const processingRecord = buildCreateWorkPayload(processingDraft).record;
 assert.equal(processingRecord.media_source_id, "processing");
 assert.equal(processingRecord.project_folder, "ink-engine");
+
+assert.equal(workSaveRequiresMediaPreparation({
+  created: true,
+  record: processingRecord
+}), true);
+assert.equal(workSaveRequiresMediaPreparation({
+  created: true,
+  record: { ...processingRecord, project_filename: null }
+}), false);
+assert.equal(workSaveRequiresMediaPreparation({
+  changed_fields: ["title"],
+  record: processingRecord
+}), false);
+assert.equal(workSaveRequiresMediaPreparation({
+  changed_fields: ["project_filename"],
+  record: processingRecord
+}), true);
+assert.equal(workSaveRequiresMediaPreparation({
+  changed_fields: ["project_filename"],
+  record: { ...processingRecord, project_filename: null }
+}), false);
 
 const requestedUrls = [];
 globalThis.fetch = async (url) => {

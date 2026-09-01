@@ -52,6 +52,13 @@ import {
   applyWorkRecordMutation
 } from "./catalogue-work-action-records.js";
 
+const WORK_MEDIA_SOURCE_FIELDS = new Set([
+  "media_source_id",
+  "project_folder",
+  "project_subfolder",
+  "project_filename"
+]);
+
 function t(state, context, key, fallback, tokens = null) {
   return context.text(key, fallback, tokens);
 }
@@ -63,6 +70,14 @@ function setTextWithState(context, node, text, state = "") {
 function applyActionPresentation(context, state, presentation) {
   setTextWithState(context, state.resultNode, presentation.resultText, presentation.resultTone);
   setTextWithState(context, state.statusNode, presentation.statusText, presentation.statusTone);
+}
+
+export function workSaveRequiresMediaPreparation(response) {
+  const record = response && response.record && typeof response.record === "object" ? response.record : null;
+  if (!record || !normalizeText(record.project_folder) || !normalizeText(record.project_filename)) return false;
+  if (response.created) return true;
+  const changedFields = Array.isArray(response.changed_fields) ? response.changed_fields : [];
+  return changedFields.some((field) => WORK_MEDIA_SOURCE_FIELDS.has(normalizeText(field)));
 }
 
 export function parseBulkSeriesOperation(value) {
@@ -355,7 +370,7 @@ function projectWorkPublicationPresentation(state, context, action, response) {
 
 export async function saveCurrentWork(state, context) {
   if (state.mode === "new") {
-    await createCurrentWork(state, context);
+    await saveNewWork(state, context);
     return;
   }
   if (state.mode === "bulk") {
@@ -418,6 +433,7 @@ export async function saveCurrentWork(state, context) {
       recordHash: response.record_hash
     });
     const outcome = applySingleSaveBuildOutcome(state, response);
+    const prepareMedia = workSaveRequiresMediaPreparation(response);
     if (response.changed && outcome.kind !== "saved_and_updated" && outcome.kind !== "saved_unpublished") {
       state.pendingBuildExtraSeriesIds = dedupeSeriesIds([
         ...state.pendingBuildExtraSeriesIds,
@@ -433,8 +449,9 @@ export async function saveCurrentWork(state, context) {
       lookup
     }));
     state.mediaPreviewVersion = stagedPreviewVersion;
-    await refreshBuildPreview(state, context);
+    if (!prepareMedia) await refreshBuildPreview(state, context);
     applyActionPresentation(context, state, projectSingleWorkSavePresentation(state, context, response, outcome));
+    if (prepareMedia) await prepareSavedWorkMedia(state, context);
   } catch (error) {
     const isConflict = Number(error && error.status) === 409;
     const message = isConflict
@@ -447,7 +464,7 @@ export async function saveCurrentWork(state, context) {
   }
 }
 
-export async function createCurrentWork(state, context) {
+export async function saveNewWork(state, context) {
   if (state.mode !== "new") return;
   const errors = context.validateDraft();
   context.updateFieldMessages(errors);
@@ -456,7 +473,7 @@ export async function createCurrentWork(state, context) {
     setTextWithState(
       context,
       state.statusNode,
-      workIdError || t(state, context, "create_status_validation_error", "Fix validation errors before creating the draft work."),
+      workIdError || t(state, context, "new_save_status_validation_error", "Fix validation errors before saving the draft work."),
       "error"
     );
     context.updateEditorState();
@@ -465,7 +482,7 @@ export async function createCurrentWork(state, context) {
 
   state.isSaving = true;
   context.updateEditorState();
-  setTextWithState(context, state.statusNode, t(state, context, "create_status_saving", "Creating draft work..."));
+  setTextWithState(context, state.statusNode, t(state, context, "new_save_status_saving", "Saving new draft work…"));
   setTextWithState(context, state.resultNode, "");
 
   try {
@@ -483,11 +500,13 @@ export async function createCurrentWork(state, context) {
         recordHash: response.record_hash
       });
     }
+    const prepareMedia = workSaveRequiresMediaPreparation(response);
     await context.openWorkById(workId);
-    setTextWithState(context, state.resultNode, t(state, context, "create_result_success", "Created draft work {work_id}. Opening edit mode...", { work_id: workId }), "success");
-    setTextWithState(context, state.statusNode, t(state, context, "create_status_success", "Created draft work {work_id}.", { work_id: workId }), "success");
+    setTextWithState(context, state.resultNode, t(state, context, "new_save_result_success", "Saved draft work {work_id}.", { work_id: workId }), "success");
+    setTextWithState(context, state.statusNode, t(state, context, "new_save_status_success", "Saved draft work {work_id}.", { work_id: workId }), "success");
+    if (prepareMedia) await prepareSavedWorkMedia(state, context);
   } catch (error) {
-    setTextWithState(context, state.statusNode, `${t(state, context, "create_status_failed", "Draft work create failed.")} ${normalizeText(error && error.message)}`.trim(), "error");
+    setTextWithState(context, state.statusNode, `${t(state, context, "new_save_status_failed", "Draft work save failed.")} ${normalizeText(error && error.message)}`.trim(), "error");
   } finally {
     state.isSaving = false;
     context.updateEditorState();
@@ -739,32 +758,64 @@ function workMediaSourceFromDraft(state) {
   };
 }
 
+async function applyWorkMediaRefresh(state, context) {
+  const mediaSource = workMediaSourceFromDraft(state);
+  const response = await applyCatalogueBuild({
+    work_id: state.currentWorkId,
+    media_only: true,
+    force: true,
+    media_source: mediaSource
+  });
+  const blockedCount = countMediaItems(response && response.media, "blocked");
+  state.mediaPreviewVersion = String(Date.now());
+  await refreshBuildPreview(state, {
+    ...context,
+    mediaSource: () => mediaSource
+  });
+  return {
+    ok: blockedCount === 0,
+    summary: normalizeText(response && response.media && response.media.summary)
+  };
+}
+
+async function prepareSavedWorkMedia(state, context) {
+  state.buildPreview = null;
+  setTextWithState(context, state.statusNode, t(state, context, "save_media_status_running", "Work saved. Preparing media…"));
+  try {
+    const result = await applyWorkMediaRefresh(state, context);
+    if (!result.ok) {
+      setTextWithState(context, state.statusNode, t(state, context, "save_media_status_blocked", "Work saved, but media preparation was blocked."), "error");
+      setTextWithState(context, state.resultNode, result.summary, "error");
+      return false;
+    }
+    setTextWithState(context, state.statusNode, t(state, context, "save_media_status_success", "Work saved and media prepared."), "success");
+    return true;
+  } catch (error) {
+    setTextWithState(
+      context,
+      state.statusNode,
+      `${t(state, context, "save_media_status_failed", "Work saved, but media preparation failed.")} ${normalizeText(error && error.message)}`.trim(),
+      "error"
+    );
+    return false;
+  }
+}
+
 export async function refreshWorkMedia(state, context) {
   if (!state.currentRecord || !state.currentWorkId || !state.serverAvailable) return;
   state.isBuilding = true;
   context.updateEditorState();
   setTextWithState(context, state.statusNode, t(state, context, "media_refresh_status_running", "Refreshing media…"));
   setTextWithState(context, state.resultNode, "");
-  const mediaSource = workMediaSourceFromDraft(state);
   try {
-    const response = await applyCatalogueBuild({
-      work_id: state.currentWorkId,
-      media_only: true,
-      force: true,
-      media_source: mediaSource
-    });
-    const blockedCount = countMediaItems(response && response.media, "blocked");
-    state.mediaPreviewVersion = String(Date.now());
-    await refreshBuildPreview(state, {
-      ...context,
-      mediaSource: () => mediaSource
-    });
-    if (blockedCount > 0) {
+    const result = await applyWorkMediaRefresh(state, context);
+    if (!result.ok) {
       setTextWithState(context, state.statusNode, t(state, context, "media_refresh_status_blocked", "Media refresh blocked."), "error");
-      setTextWithState(context, state.resultNode, normalizeText(response && response.media && response.media.summary), "error");
-      return;
+      setTextWithState(context, state.resultNode, result.summary, "error");
+      return false;
     }
     setTextWithState(context, state.statusNode, t(state, context, "media_refresh_status_success", "Media refresh completed."), "success");
+    return true;
   } catch (error) {
     setTextWithState(
       context,
@@ -772,6 +823,7 @@ export async function refreshWorkMedia(state, context) {
       `${t(state, context, "media_refresh_status_failed", "Media refresh failed.")} ${normalizeText(error && error.message)}`.trim(),
       "error"
     );
+    return false;
   } finally {
     state.isBuilding = false;
     context.updateEditorState();

@@ -215,7 +215,7 @@ export function setNewWorkMode(state, options = {}) {
   callback(options, "clearReadonlyFields");
   callback(options, "setPopupVisibility", false);
   syncUrl("", "new");
-  callback(options, "setTextWithState", state.statusNode, text(options, "new_status_loaded", "Creating a draft work source record."));
+  callback(options, "setTextWithState", state.statusNode, text(options, "new_status_loaded", "New draft work."));
   callback(options, "setTextWithState", state.warningNode, "");
   if (!options.keepResult) {
     callback(options, "setTextWithState", state.resultNode, "");
