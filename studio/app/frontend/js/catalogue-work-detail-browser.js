@@ -191,17 +191,14 @@ function renderSectionActions(state, options, { list = null, hasSections = false
       appearance: "icon",
       tone: "danger"
     }] : []),
-    {
+    ...(createEnabled ? [{
       key: "new",
       label: "📄",
-      title: createEnabled
-        ? text(state, options, "detail_section_new_button", "New")
-        : text(state, options, "details_new_unavailable_draft", "Publish this work before adding work details."),
+      title: text(state, options, "detail_section_new_button", "New"),
       ariaLabel: text(state, options, "detail_section_new_button", "New"),
       appearance: "icon",
-      requiresSelection: false,
-      disabled: () => !createEnabled
-    }
+      requiresSelection: false
+    }] : [])
   ];
   state.detailBrowserSectionActionsController = createRecordListActions(state.detailBrowserSectionActionsNode, {
     id: "catalogueWorkDetailBrowserSectionActionsList",
@@ -309,13 +306,20 @@ function resetDetailBrowser(state) {
 export function updateWorkDetailBrowser(state, options = {}) {
   if (!state.detailBrowserPanelNode || !state.detailBrowserSectionsNode || !state.detailBrowserImagesNode) return;
   clearSectionList(state);
-  state.detailBrowserPanelNode.hidden = state.mode === "bulk";
   if (!state.currentWorkId || state.mode === "bulk") {
+    state.detailBrowserPanelNode.hidden = true;
     resetDetailBrowser(state);
     return;
   }
 
   const rows = sectionRows(state);
+  const createEnabled = canCreateDetail(state, options);
+  if (!createEnabled && !rows.length) {
+    state.detailBrowserPanelNode.hidden = true;
+    resetDetailBrowser(state);
+    return;
+  }
+  state.detailBrowserPanelNode.hidden = false;
   const hasDetails = rows.some((row) => row.count > 0);
   if (!rows.length) {
     state.detailBrowserSelectedSectionId = "";

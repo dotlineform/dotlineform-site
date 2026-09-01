@@ -57,6 +57,11 @@ function setTextWithState(options, node, value, state = "") {
   else delete node.dataset.state;
 }
 
+function setSecondaryPresentationVisible(state, visible) {
+  if (state.summaryPanelNode) state.summaryPanelNode.hidden = !visible;
+  if (state.root) state.root.classList.toggle("catalogueWorkPage--primaryOnly", !visible);
+}
+
 function runMaybeAsync(result, label) {
   if (result && typeof result.catch === "function") {
     result.catch((error) => console.warn(label, error));
@@ -395,21 +400,13 @@ export function updateWorkResourcesSection(state, options = {}) {
 
 export function updateWorkSummary(state, options = {}) {
   if (state.mode === "new") {
-    state.metaNode.hidden = false;
-    state.metaNode.textContent = text(state, options, "new_meta", "New draft work.");
-    state.summaryNode.innerHTML = `
-      <div class="studioForm__field">
-        <span class="studioForm__label">${escapeHtml(text(state, options, "new_summary_status_label", "status"))}</span>
-        <div class="studioUi__input studioUi__input--readonlyDisplay">${escapeHtml(text(state, options, "new_summary_status", "draft source record; not published"))}</div>
-      </div>
-      <div class="studioForm__field">
-        <span class="studioForm__label">${escapeHtml(text(state, options, "new_summary_next_label", "next step"))}</span>
-        <div class="studioUi__input studioUi__input--readonlyDisplay">${escapeHtml(text(state, options, "new_summary_next", "Save the draft, then continue editing or publish."))}</div>
-      </div>
-    `;
-    state.runtimeStateNode.textContent = text(state, options, "new_runtime_state", "public site update is unavailable until the draft is saved");
+    setSecondaryPresentationVisible(state, false);
+    state.metaNode.hidden = true;
+    state.metaNode.textContent = "";
+    state.summaryNode.innerHTML = "";
+    state.runtimeStateNode.textContent = "";
     setTextWithState(options, state.buildImpactNode, "");
-    if (state.resourcesPanelNode) state.resourcesPanelNode.hidden = false;
+    if (state.resourcesPanelNode) state.resourcesPanelNode.hidden = true;
     updateWorkResourcesSection(state, options);
     renderWorkCurrentPreview(state, options);
     renderWorkReadiness(state, options);
@@ -417,6 +414,7 @@ export function updateWorkSummary(state, options = {}) {
   }
 
   if (state.mode === "bulk") {
+    setSecondaryPresentationVisible(state, true);
     const selectedCount = state.bulkWorkIds.length;
     const selectedRecords = state.bulkWorkIds.map((workId) => state.bulkRecords.get(workId)).filter(Boolean);
     const seriesIds = dedupeSeriesIds(
@@ -451,13 +449,14 @@ export function updateWorkSummary(state, options = {}) {
 
   state.metaNode.textContent = "";
   state.metaNode.hidden = true;
+  setSecondaryPresentationVisible(state, Boolean(state.currentRecord));
 
   state.summaryNode.innerHTML = "";
 
   state.runtimeStateNode.textContent = state.rebuildPending
     ? text(state, options, "summary_rebuild_needed", "public update failed in this session")
     : "";
-  if (state.resourcesPanelNode) state.resourcesPanelNode.hidden = false;
+  if (state.resourcesPanelNode) state.resourcesPanelNode.hidden = !state.currentRecord;
   updateWorkResourcesSection(state, options);
   renderWorkCurrentPreview(state, options);
   renderWorkReadiness(state, options);

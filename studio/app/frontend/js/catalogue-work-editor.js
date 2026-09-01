@@ -655,7 +655,7 @@ function renderEditorMessage(state, snapshot = {}) {
     busy: state.isSaving || state.isBuilding || state.isDeleting,
     validationMessage: firstCatalogueValidationMessage(errors),
     mixedMessage: firstBulkMixedMessage(state),
-    dirtyMessage: catalogueDirtyWarningText({
+    dirtyMessage: state.mode === "new" ? "" : catalogueDirtyWarningText({
       dirty,
       mode: state.mode,
       message: t(state, "dirty_warning", "Unsaved source changes.")

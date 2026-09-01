@@ -1271,6 +1271,10 @@ button.studioList__cellLink {
   margin-top: 1rem;
 }
 
+.catalogueWorkPage--primaryOnly .catalogueWorkPage__grid {
+  grid-template-columns: minmax(0, 1fr);
+}
+
 .catalogueWorkPage__searchWrap {
   flex: 0 1 26rem;
   min-width: 0;
