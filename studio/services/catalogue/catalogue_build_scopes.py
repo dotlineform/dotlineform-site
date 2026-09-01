@@ -11,9 +11,8 @@ from catalogue.series_ids import normalize_series_id
 
 
 DEFAULT_ARTIFACTS = [
-    "work-pages",
     "work-json",
-    "series-pages",
+    "series-json",
     "series-index-json",
     "recent-index-json",
 ]

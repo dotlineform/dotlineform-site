@@ -14,6 +14,7 @@ if str(SCRIPTS_DIR) not in sys.path:
 
 from catalogue import catalogue_build_commands as commands  # noqa: E402
 from catalogue import catalogue_public_paths as public_paths  # noqa: E402
+from catalogue import generate_work_pages as generator  # noqa: E402
 
 
 GENERATE_OUTPUT_ARGS = [
@@ -89,6 +90,28 @@ def test_search_command_uses_python_builder_and_catalogue_scope() -> None:
     ]
 
 
+def test_generator_artifact_selection_accepts_only_current_json_identities() -> None:
+    assert generator.parse_selected_artifacts(
+        ["work-json,series-json", "series-index-json", "recent-index-json", "work-json"]
+    ) == {
+        "work-json",
+        "series-json",
+        "series-index-json",
+        "recent-index-json",
+    }
+
+    for retired in ("work-pages", "series-pages", "work-details-pages"):
+        try:
+            generator.parse_selected_artifacts([retired])
+        except ValueError as exc:
+            assert str(exc) == (
+                f"Invalid --only value(s): {retired}. Allowed: "
+                "work-json, series-json, series-index-json, recent-index-json"
+            )
+        else:
+            raise AssertionError(f"expected retired artifact rejection: {retired}")
+
+
 def test_failed_command_step_shape_and_message_without_running_subprocess() -> None:
     step = commands.normalize_subprocess_step(
         "Build Catalogue Search Index",
@@ -111,5 +134,6 @@ def test_failed_command_step_shape_and_message_without_running_subprocess() -> N
 if __name__ == "__main__":
     test_generate_work_command_preserves_scope_and_flags()
     test_search_command_uses_python_builder_and_catalogue_scope()
+    test_generator_artifact_selection_accepts_only_current_json_identities()
     test_failed_command_step_shape_and_message_without_running_subprocess()
     print("Catalogue build command tests OK")

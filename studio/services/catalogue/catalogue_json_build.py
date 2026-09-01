@@ -69,7 +69,7 @@ def run_scoped_build_scope(
     if run_generate:
         commands.append(
             (
-                "Generate Work Pages",
+                "Generate Catalogue JSON",
                 build_commands.build_generate_command(
                     repo_root,
                     Path(scope["source_dir"]),

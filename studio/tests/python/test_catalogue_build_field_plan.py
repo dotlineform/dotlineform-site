@@ -83,7 +83,7 @@ def work_scope(source_dir: Path) -> dict[str, Any]:
     return {
         "work_ids": ["00001"],
         "series_ids": ["009"],
-        "generate_only": ["work-pages", "work-json"],
+        "generate_only": ["work-json"],
         "rebuild_search": True,
         "source_dir": str(source_dir),
         "summary": "Build works [00001].",
@@ -175,7 +175,7 @@ def test_detail_and_series_field_plans_use_inferred_families() -> None:
     assert detail_plan["rebuild_search"] is False
     assert detail_plan["generate_local_media"] is False
     assert series_plan["rule_ids"] == ["series_display_search"]
-    assert series_plan["generate_only"] == ["series-pages", "series-index-json", "recent-index-json"]
+    assert series_plan["generate_only"] == ["series-json", "series-index-json", "recent-index-json"]
     assert series_plan["rebuild_search"] is True
     assert series_plan["generate_local_media"] is False
 

@@ -1,16 +1,13 @@
 {
   "schema": "catalogue_field_registry_v1",
   "status": "active",
-  "last_updated": "2026-08-09",
+  "last_updated": "2026-09-01",
   "source_doc": "/docs/?scope=studio&doc=data-models-catalogue-source",
   "inventory_doc": "/docs/?scope=studio&doc=catalogue-field-registry-review",
   "description": "Field-to-artifact dependency registry for canonical Catalogue source edits and their Studio and public projections.",
   "artifact_families": {
     "source-json": "Canonical Studio catalogue source JSON.",
     "studio-lookup": "Studio read payloads and search/open payloads under studio/data/generated/catalogue-lookup/.",
-    "work-page": "Metadata-free public work route shell.",
-    "work-details-page": "Metadata-free public work-detail route shell.",
-    "series-page": "Metadata-free public series route shell.",
     "work-json": "Focused public work JSON.",
     "series-json": "Focused public series JSON.",
     "series-index-json": "Aggregate public series index JSON.",
@@ -30,9 +27,7 @@
           "work": [
             "source-json",
             "studio-lookup",
-            "work-page",
             "work-json",
-            "series-page",
             "series-json",
             "series-index-json",
             "recent-index-json",
@@ -42,7 +37,6 @@
           "work_detail": [
             "source-json",
             "studio-lookup",
-            "work-details-page",
             "work-json",
             "catalogue-search",
             "local-media"
@@ -50,7 +44,6 @@
           "series": [
             "source-json",
             "studio-lookup",
-            "series-page",
             "series-json",
             "series-index-json",
             "recent-index-json",
@@ -67,9 +60,7 @@
           "work": [
             "source-json",
             "studio-lookup",
-            "work-page",
             "work-json",
-            "series-page",
             "series-json",
             "series-index-json",
             "recent-index-json",
@@ -79,7 +70,6 @@
           "work_detail": [
             "source-json",
             "studio-lookup",
-            "work-details-page",
             "work-json",
             "catalogue-search",
             "local-media"
@@ -87,7 +77,6 @@
           "series": [
             "source-json",
             "studio-lookup",
-            "series-page",
             "series-json",
             "series-index-json",
             "recent-index-json",
@@ -110,9 +99,8 @@
         "artifacts": [
           "source-json",
           "studio-lookup",
-          "work-page",
           "work-json",
-          "series-page",
+          "series-json",
           "series-index-json",
           "recent-index-json",
           "catalogue-search",
@@ -124,7 +112,6 @@
         "artifacts": [
           "source-json",
           "studio-lookup",
-          "work-page",
           "work-json",
           "series-json",
           "series-index-json",
@@ -149,9 +136,8 @@
         "artifacts": [
           "source-json",
           "studio-lookup",
-          "work-page",
           "work-json",
-          "series-page",
+          "series-json",
           "series-index-json",
           "recent-index-json",
           "catalogue-search"
@@ -169,10 +155,6 @@
           "catalogue-search"
         ],
         "conditional_artifacts": [
-          {
-            "artifact": "work-page",
-            "when": "work is created, deleted, or identity changes"
-          },
           {
             "artifact": "series-index-json",
             "when": "old or new related series membership, ordering, or published visibility changes"
@@ -195,9 +177,8 @@
         "artifacts": [
           "source-json",
           "studio-lookup",
-          "work-page",
           "work-json",
-          "series-page",
+          "series-json",
           "series-index-json",
           "recent-index-json",
           "catalogue-search"
@@ -229,9 +210,8 @@
         "artifacts": [
           "source-json",
           "studio-lookup",
-          "work-page",
           "work-json",
-          "series-page",
+          "series-json",
           "series-index-json",
           "recent-index-json",
           "catalogue-search"
@@ -266,9 +246,8 @@
         "artifacts": [
           "source-json",
           "studio-lookup",
-          "work-page",
           "work-json",
-          "series-page",
+          "series-json",
           "series-index-json",
           "recent-index-json",
           "catalogue-search"
@@ -296,9 +275,8 @@
         "artifacts": [
           "source-json",
           "studio-lookup",
-          "work-page",
           "work-json",
-          "series-page",
+          "series-json",
           "series-index-json",
           "recent-index-json",
           "catalogue-search"
@@ -328,9 +306,8 @@
         "artifacts": [
           "source-json",
           "studio-lookup",
-          "work-page",
           "work-json",
-          "series-page",
+          "series-json",
           "series-index-json",
           "recent-index-json",
           "catalogue-search",
@@ -366,9 +343,8 @@
         "artifacts": [
           "source-json",
           "studio-lookup",
-          "work-page",
           "work-json",
-          "series-page",
+          "series-json",
           "series-index-json",
           "recent-index-json",
           "catalogue-search"
@@ -446,7 +422,6 @@
         "artifacts": [
           "source-json",
           "studio-lookup",
-          "work-details-page",
           "work-json",
           "catalogue-search",
           "local-media"
@@ -457,12 +432,11 @@
         "artifacts": [
           "source-json",
           "studio-lookup",
-          "work-details-page",
           "work-json",
           "local-media"
         ],
         "fallback": false,
-        "reason": "Detail identity controls route creation/removal, parent work sections, lookup identity, and media output names."
+        "reason": "Detail identity controls parent Work JSON composition, lookup identity, and media output names."
       }
     },
     {
@@ -476,7 +450,6 @@
         "artifacts": [
           "source-json",
           "studio-lookup",
-          "work-details-page",
           "work-json",
           "catalogue-search",
           "local-media"
@@ -489,14 +462,8 @@
           "studio-lookup",
           "work-json"
         ],
-        "conditional_artifacts": [
-          {
-            "artifact": "work-details-page",
-            "when": "detail is created, deleted, or identity changes"
-          }
-        ],
         "fallback": false,
-        "reason": "Detail metadata affects the parent focused work payload and Studio lookup; route shells are identity-only."
+        "reason": "Detail metadata affects the parent focused Work JSON and Studio lookup."
       }
     },
     {
@@ -510,7 +477,6 @@
         "artifacts": [
           "source-json",
           "studio-lookup",
-          "work-details-page",
           "work-json",
           "catalogue-search",
           "local-media"
@@ -618,7 +584,6 @@
         "artifacts": [
           "source-json",
           "studio-lookup",
-          "series-page",
           "series-json",
           "series-index-json",
           "recent-index-json",
@@ -630,7 +595,6 @@
         "artifacts": [
           "source-json",
           "studio-lookup",
-          "series-page",
           "series-json",
           "series-index-json",
           "recent-index-json",
@@ -654,7 +618,6 @@
         "artifacts": [
           "source-json",
           "studio-lookup",
-          "series-page",
           "series-json",
           "series-index-json",
           "recent-index-json",
@@ -689,7 +652,6 @@
         "artifacts": [
           "source-json",
           "studio-lookup",
-          "series-page",
           "series-json",
           "series-index-json",
           "recent-index-json",

@@ -12,21 +12,9 @@ from catalogue.series_ids import normalize_series_id, parse_series_ids
 STUDIO_CONFIG_REL_PATH = Path("studio/app/frontend/config/studio-config.json")
 FALLBACK_CATALOGUE_FIELD_REGISTRY_REL_PATH = Path("studio/data/config/catalogue/catalogue-field-registry.json")
 
-REGISTRY_ARTIFACT_TO_GENERATE_ONLY = {
-    "work-page": "work-pages",
-    "work-details-page": "work-details-pages",
-    "series-page": "series-pages",
-    "work-json": "work-json",
-    "series-json": "series-pages",
-    "series-index-json": "series-index-json",
-    "recent-index-json": "recent-index-json",
-}
-
 BUILD_ARTIFACT_ORDER = [
-    "work-pages",
     "work-json",
-    "work-details-pages",
-    "series-pages",
+    "series-json",
     "series-index-json",
     "recent-index-json",
 ]
@@ -126,12 +114,7 @@ def ordered_generate_artifacts(artifacts: Iterable[str]) -> list[str]:
 
 
 def registry_artifacts_to_generate_only(artifacts: Iterable[str]) -> list[str]:
-    mapped: set[str] = set()
-    for artifact in artifacts:
-        generate_artifact = REGISTRY_ARTIFACT_TO_GENERATE_ONLY.get(str(artifact))
-        if generate_artifact:
-            mapped.add(generate_artifact)
-    return ordered_generate_artifacts(mapped)
+    return ordered_generate_artifacts(artifacts)
 
 
 def fallback_registry_artifacts_for_record_family(

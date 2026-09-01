@@ -41,6 +41,7 @@ Do not copy `generated/` or `published/` forward as source. They are replaceable
 - Publish removes the previous managed files in `published/`, copies the accepted generated snapshot, then writes the completed published-snapshot manifest. Empty directories may remain.
 - Publish owns document eligibility. Every consumer sees the same accepted Published document set.
 - Deploy Repo is available only for Analysis. Its write-free preview validates one complete Published revision and reports the exact configured repository, media, Catalogue, and lineage changes. Confirmed apply deploys that complete accepted set without reading source or generated output or applying another eligibility rule.
+- Registered Working-to-Editorial workflows remain exact collection configuration. `dotlineform/projects` and `dotlineform/processing` each own an independent lineage table targeting `analysis/works`; the shared Editorial target does not combine the tables or permit source identity to be inferred.
 - The local Publish workflow may run Publish and Deploy Repo together, but they remain independently selectable operations. A successful Publish remains valid if Deploy Repo is incomplete and Deploy Repo can normally be retried on its own.
 - Review the resulting tracked `site/` delta through the separate local site preview. Manage remains the review surface for Generated; Git commit and push remain explicit ordinary repository actions.
 - Deploy Public remains the separate manually triggered GitHub Pages workflow over the committed and pushed `site/` snapshot. It does not Build, Publish, Deploy Repo, or read external scopes.
@@ -49,6 +50,6 @@ The app reports paths and capabilities from the configured external root. It mus
 
 ## Recovery
 
-For a failed Build, Publish, or Deploy Repo, fix the source, configuration, producer, or destination and rerun the owning action. Generated and deployed output does not require transactional swaps, automatic retries, or backup directories. If an external publication-lineage update succeeds but its `dotlineform/projects` follow-through Build fails, fix the cause and run that ordinary Projects Build; Deploy Repo reports the two outcomes separately.
+For a failed Build, Publish, or Deploy Repo, fix the source, configuration, producer, or destination and rerun the owning action. Generated and deployed output does not require transactional swaps, automatic retries, or backup directories. If an external publication-lineage update succeeds but its exact Working follow-through Build fails, fix the cause and run the ordinary Build for that affected collection; Deploy Repo reports the two outcomes separately.
 
 The clean Git commit immediately before the Stage 2.3 removal is the recovery point for the retired repository scope copies. Retained media is recoverable from each active scope's `source/media/`. Restore manually only when necessary, verify the restored source, then Build and Publish again.

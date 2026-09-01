@@ -150,6 +150,12 @@ def test_work_scope_includes_extra_series_detail_readiness_and_stable_keys() -> 
     assert scope["detail_uid"] == "00001-001"
     assert scope["public_thumbnail_projection"] is True
     assert [item["key"] for item in scope["readiness"]["items"]] == ["work:00001", "detail:00001-001"]
+    assert scopes.DEFAULT_ARTIFACTS == [
+        "work-json",
+        "series-json",
+        "series-index-json",
+        "recent-index-json",
+    ]
     assert scope["generate_only"] == scopes.DEFAULT_ARTIFACTS
 
 

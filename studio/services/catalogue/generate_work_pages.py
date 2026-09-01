@@ -5,7 +5,7 @@ Generate public catalogue JSON artifacts.
 This repo stores public catalogue runtime metadata in generated JSON artifacts.
 
 Series index JSON is written to site/assets/data/series_index.json.
-Work-details JSON index files are written to site/assets/works/index/<work_id>.json (work-driven; one per selected work).
+Exact Work JSON files, including nested Work Details, are written to site/assets/works/index/<work_id>.json.
 Recent publications JSON is written to site/assets/data/recent_index.json.
 
 - Works: base work metadata (1 row per work)
@@ -348,6 +348,34 @@ def load_tag_assignments_payload(path: Path) -> Dict[str, Any]:
     return payload
 
 
+GENERATE_ARTIFACT_ORDER = (
+    "work-json",
+    "series-json",
+    "series-index-json",
+    "recent-index-json",
+)
+
+
+def parse_selected_artifacts(values: List[str]) -> Optional[set[str]]:
+    if not values:
+        return None
+    requested: set[str] = set()
+    for raw in values:
+        for part in str(raw).split(","):
+            item = part.strip().lower()
+            if item:
+                requested.add(item)
+    invalid = sorted(item for item in requested if item not in GENERATE_ARTIFACT_ORDER)
+    if invalid:
+        raise ValueError(
+            "Invalid --only value(s): "
+            + ", ".join(invalid)
+            + ". Allowed: "
+            + ", ".join(GENERATE_ARTIFACT_ORDER)
+        )
+    return requested
+
+
 # ----------------------------
 # Main program
 # ----------------------------
@@ -371,17 +399,14 @@ def main() -> None:
     )
 
     # Output
-    ap.add_argument("--output-dir", default="_works", help="Retired compatibility option; work route stubs are no longer written")
-    ap.add_argument("--series-output-dir", default="_series", help="Retired compatibility option; series route stubs are no longer written")
     ap.add_argument("--series-json-dir", default=public_paths.SERIES_JSON_DIR.as_posix(), help="Output folder for generated per-series JSON files")
     ap.add_argument("--series-index-json-path", default=public_paths.SERIES_INDEX_JSON_PATH.as_posix(), help="Output path for generated series index JSON")
-    ap.add_argument("--work-details-output-dir", default="_work_details", help="Retired compatibility option; work detail route stubs are no longer written")
-    ap.add_argument("--works-json-dir", default=public_paths.WORKS_JSON_DIR.as_posix(), help="Output folder for generated per-work detail JSON index files")
+    ap.add_argument("--works-json-dir", default=public_paths.WORKS_JSON_DIR.as_posix(), help="Output folder for generated exact Work JSON files, including nested Work Details")
     ap.add_argument("--recent-index-json-path", default=public_paths.RECENT_INDEX_JSON_PATH.as_posix(), help="Output path for generated recent publications index JSON")
     ap.add_argument(
         "--projects-base-dir",
         default=env_var_value(PIPELINE_CONFIG, "projects_base_dir"),
-        help="Base folder containing the projects directory used to resolve source media files",
+        help="Base folder containing the configured Work-media source roots",
     )
 
     # Write controls
@@ -413,7 +438,7 @@ def main() -> None:
     ap.add_argument(
         "--series-ids",
         default="",
-        help="Comma-separated series_ids to process for series page/index generation.",
+        help="Comma-separated series_ids to process for Series JSON/index generation.",
     )
     ap.add_argument(
         "--series-ids-file",
@@ -426,8 +451,7 @@ def main() -> None:
         default=[],
         help=(
             "Limit run to selected artifacts. Repeat flag and/or pass comma-separated values. "
-            "Allowed: work-pages,series-pages,series-index-json,work-details-pages,work-json,recent-index-json. "
-            "Retired page artifact names are accepted as aliases for the current generated JSON/index contracts. "
+            "Allowed: work-json,series-json,series-index-json,recent-index-json. "
             "List index JSON artifacts are always rebuilt on every run."
         ),
     )
@@ -440,6 +464,10 @@ def main() -> None:
             "Direct generation through this script is disabled."
         )
         return
+    try:
+        selected_artifacts = parse_selected_artifacts(args.only)
+    except ValueError as exc:
+        raise SystemExit(str(exc)) from exc
 
     repo_root = REPO_ROOT
     projects_base_dir_display = Path(args.projects_base_dir).expanduser() if normalize_text(args.projects_base_dir) else None
@@ -474,46 +502,15 @@ def main() -> None:
     )
     refresh_published = bool(args.refresh_published or args.force)
 
-    valid_artifacts = {
-        "work-pages",
-        "series-pages",
-        "series-index-json",
-        "work-details-pages",
-        "work-json",
-        "recent-index-json",
-    }
-    selected_artifacts: Optional[set[str]] = None
-    if args.only:
-        requested: set[str] = set()
-        for raw in args.only:
-            for part in str(raw).split(","):
-                item = part.strip().lower()
-                if item:
-                    requested.add(item)
-        invalid = sorted(item for item in requested if item not in valid_artifacts)
-        if invalid:
-            raise SystemExit(
-                "Invalid --only value(s): "
-                + ", ".join(invalid)
-                + ". Allowed: "
-                + ", ".join(sorted(valid_artifacts))
-            )
-        selected_artifacts = requested
-
     def artifact_enabled(name: str) -> bool:
         if selected_artifacts is None:
             return True
         return name in selected_artifacts
 
-    requested_work_pages = artifact_enabled("work-pages")
-    requested_series_pages = artifact_enabled("series-pages")
-    requested_work_details_pages = artifact_enabled("work-details-pages")
-    run_work_pages = False
-    run_series_pages = requested_series_pages
-    run_work_details_pages = False
-    run_work_json = artifact_enabled("work-json") or requested_work_pages or requested_work_details_pages
+    run_work_json = artifact_enabled("work-json")
+    run_series_json = artifact_enabled("series-json")
 
-    needs_projects_base = run_work_details_pages or run_work_json or run_series_pages
+    needs_projects_base = run_work_json or run_series_json
     if needs_projects_base and normalize_text(args.projects_base_dir) == "":
         raise SystemExit(
             f"Missing projects base directory. Add {PROJECTS_BASE_DIR_ENV_NAME} "
@@ -523,7 +520,7 @@ def main() -> None:
         "work": {},
         "series": {},
     }
-    if run_work_json or run_series_pages:
+    if run_work_json or run_series_json:
         try:
             catalogue_documents = load_public_catalogue_documents(repo_root)
         except (OSError, ValueError) as exc:
@@ -590,8 +587,7 @@ def main() -> None:
         work_project_folder_by_id[wid] = normalize_text(pf_raw)
         work_project_subfolder_by_id[wid] = normalize_text(work_record.get("project_subfolder"))
 
-    run_work_processing = run_work_pages
-    run_work_selection_scope = run_work_processing or run_work_json
+    run_work_selection_scope = run_work_json
     run_work_dimension_refresh = run_work_json and not args.skip_source_dimension_refresh
 
     # Optional filtering: allow a specific list of work_ids (from file or comma-separated arg).
@@ -630,7 +626,7 @@ def main() -> None:
 
     # If caller scopes by series but does not provide an explicit work filter:
     # - when work artifacts are explicitly selected via --only, derive selected work_ids from those series
-    # - otherwise skip work-page processing by default (backward compatible behavior)
+    # - otherwise skip Work JSON processing by default
     if selected_series_ids is not None and not explicit_work_filter:
         if selected_artifacts is not None and run_work_selection_scope:
             selected_ids = set()
@@ -734,53 +730,20 @@ def main() -> None:
         if record is not None:
             canonical_work_record_by_id[wid] = record
 
-    total = 0
-    if run_work_processing:
-        for work_record in source_records.works.values():
-            raw_work_id = work_record.get("work_id")
-            if is_empty(raw_work_id):
-                continue
-            wid = slug_id(raw_work_id)
-            if selected_ids is not None and wid not in selected_ids:
-                continue
-            status = normalize_status(work_record.get("status"))
-            if source_updates.is_actionable_status(status, refresh_published=refresh_published):
-                total += 1
-
-    status_updated = 0
-    published_date_updated = 0
     work_publish_transitions: List[Dict[str, Any]] = []
-
-    if requested_work_pages and selected_artifacts is not None:
-        print("Work route stubs retired: work-pages maps to current work JSON/index generation.")
-
-    if args.write and (
-        status_updated > 0
-        or work_dimensions_updated > 0
-    ):
-        if status_updated > 0:
-            print(f"Updated status to 'published' for {status_updated} row(s).")
-        if published_date_updated > 0:
-            print(f"Set published_date for {published_date_updated} row(s).")
-        if work_dimensions_updated > 0:
-            print(f"Updated work width_px/height_px for {work_dimensions_updated} row(s).")
-    if run_work_processing:
-        print(f"Catalogue source: {display_path(json_source_dir)}")
-        if args.write:
-            print("Canonical source write-back runs after generation completes.")
-    else:
-        print("Work pages skipped: not selected by --only.")
+    if args.write and work_dimensions_updated > 0:
+        print(f"Updated work width_px/height_px for {work_dimensions_updated} row(s).")
 
     # Determine series scope for this run:
     # - If caller explicitly scoped series via --series-ids, honor that.
-    # - If caller scoped only works (--work-ids/--work-ids-file), skip series pages by default.
-    series_page_selected_ids = selected_series_ids
+    # - If caller scoped only works (--work-ids/--work-ids-file), skip Series JSON by default.
+    series_json_selected_ids = selected_series_ids
     if explicit_work_filter and selected_series_ids is None:
         if selected_artifacts is None:
-            run_series_pages = False
+            run_series_json = False
 
     # ----------------------------
-    # Series page generation (Series)
+    # Series JSON generation
     # ----------------------------
     # Series source required fields:
     # - series_id
@@ -792,15 +755,13 @@ def main() -> None:
     series_publish_transitions: List[Dict[str, Any]] = []
 
     if not source_records.series:
-        print("No series pages to generate (series source records empty).")
+        print("No Series JSON to generate (series source records empty).")
     else:
         def is_actionable_series_status(status_value: str) -> bool:
             if status_value == "published" and refresh_published:
                 return True
             return False
 
-        series_written = 0
-        series_skipped = 0
         series_json_written = 0
         series_json_skipped = 0
         tag_assignments_payload = load_tag_assignments_payload(tag_assignments_path)
@@ -813,27 +774,24 @@ def main() -> None:
             if is_empty(sid_raw):
                 continue
             sid = normalize_series_id(sid_raw)
-            if series_page_selected_ids is not None and sid not in series_page_selected_ids:
+            if series_json_selected_ids is not None and sid not in series_json_selected_ids:
                 continue
             status = normalize_status(series_record.get("status"))
             if is_actionable_series_status(status):
                 s_total += 1
         s_processed = 0
 
-        if run_series_pages:
+        if run_series_json:
             for series_record in source_records.series.values():
                 sid_raw = series_record.get("series_id")
                 if is_empty(sid_raw):
-                    series_skipped += 1
                     continue
                 series_id = normalize_series_id(sid_raw)
-                if series_page_selected_ids is not None and series_id not in series_page_selected_ids:
-                    series_skipped += 1
+                if series_json_selected_ids is not None and series_id not in series_json_selected_ids:
                     continue
 
                 status = normalize_status(series_record.get("status"))
                 if not is_actionable_series_status(status):
-                    series_skipped += 1
                     continue
 
                 s_processed += 1
@@ -933,14 +891,13 @@ def main() -> None:
                             assignment_row["works"] = {}
                             tag_assignments_changed = True
         else:
-            if selected_artifacts is not None and not artifact_enabled("series-pages"):
-                print("Series pages skipped: not selected by --only.")
+            if selected_artifacts is not None and not artifact_enabled("series-json"):
+                print("Series JSON skipped: not selected by --only.")
             else:
-                print("Series pages skipped: --work-ids scope active (use --series-ids to include series page rebuild).")
-            print("Studio series pages disabled: skipped.")
-            print("Tag assignments sync skipped: follows series-pages selection.")
+                print("Series JSON skipped: --work-ids scope active (use --series-ids to include Series JSON rebuild).")
+            print("Tag assignments sync skipped: follows series-json selection.")
 
-        if run_series_pages:
+        if run_series_json:
             if tag_assignments_changed:
                 tag_assignments_payload["series"] = tag_assignments_series
                 tag_assignments_payload["updated_at_utc"] = utc_timestamp_now()
@@ -959,12 +916,10 @@ def main() -> None:
             else:
                 print("Tag assignments sync: no missing series entries.")
 
-        print(f"Series pages done. {'Would write' if not args.write else 'Wrote'}: {series_written}. Skipped: {series_skipped}.")
         print(
             f"Series JSON done. {'Would write' if not args.write else 'Wrote'}: "
             f"{series_json_written}. Skipped: {series_json_skipped}."
         )
-        print("Studio series pages disabled: skipped.")
 
     try:
         series_index_payload = indexes.build_series_index_payload(
@@ -987,13 +942,13 @@ def main() -> None:
     )
 
     # ----------------------------
-    # Work detail page generation + per-work detail JSON (WorkDetails)
+    # Work JSON generation, including nested Work Details
     # ----------------------------
     if not source_records.work_details:
-        if run_work_details_pages or run_work_json:
-            print("No work detail pages/JSON found (work detail source records empty or missing).")
+        if run_work_json:
+            print("No Work Detail records found; Work JSON has no detail sections.")
         else:
-            print("Work detail pages/JSON skipped: not selected by --only.")
+            print("Work JSON skipped: not selected by --only.")
     else:
         projects_base_dir = Path(args.projects_base_dir).expanduser()
 
@@ -1004,9 +959,6 @@ def main() -> None:
             if is_empty(wid_raw):
                 continue
             known_work_ids.add(slug_id(wid_raw))
-
-        if requested_work_details_pages and selected_artifacts is not None:
-            print("Work-detail route stubs retired: work-details-pages maps to current work JSON/index generation.")
 
         if run_work_json:
             # Build per-work JSON from Works rows (work-driven).
@@ -1119,7 +1071,7 @@ def main() -> None:
                 f"Work JSON done. {'Would write' if not args.write else 'Wrote'}: {wj_written}. Skipped: {wj_skipped}."
             )
         else:
-            print("Work detail JSON skipped: not selected by --only.")
+            print("Work JSON skipped: not selected by --only.")
 
     published_work_ids = {
         slug_id(work_record.get("work_id"))
@@ -1138,7 +1090,7 @@ def main() -> None:
         stale_record_paths.extend(
             catalogue_cleanup.collect_stale_work_record_artifacts(works_json_dir, published_work_ids)
         )
-    if run_series_pages:
+    if run_series_json:
         stale_record_paths.extend(
             catalogue_cleanup.collect_stale_series_record_artifacts(series_json_dir, published_series_ids)
         )
@@ -1150,7 +1102,7 @@ def main() -> None:
             print(f"Stale public record cleanup: would delete {len(stale_record_paths)} JSON artifact(s).")
         for stale_path in stale_record_paths:
             print(f"  - {display_path(stale_path)}")
-    elif run_work_json or run_series_pages:
+    elif run_work_json or run_series_json:
         print("Stale public record cleanup: no stale JSON artifacts.")
 
     published_work_ids = {
