@@ -17,6 +17,8 @@
 
 ## Build And Test
 
+- In Codex, run every `xcodebuild` command with escalated sandbox permissions from the outset. Xcode 26's Swift preview macro plugin launches its own sandbox, which cannot run inside the Codex workspace sandbox; adding writable roots or first attempting the command sandboxed does not fix that nested-sandbox failure. Keep ordinary non-Xcode checks sandboxed and do not broaden the whole task to full access.
+- Use `bin/app-check` from the repository root for the retained Mac test and generic-iPad build boundary. Use `bin/app-check --signed-mac` when local signing evidence and the required Mac entitlements are part of the checkpoint; keep the direct commands below for diagnosis.
 - Keep command-line products under `var/app/DerivedData/`. The established unsigned checks are:
 
 ```text

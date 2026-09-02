@@ -22,7 +22,7 @@ Rejected requests return a bounded code without user-facing copy:
 {"error":{"code":"invalid-request"}}
 ```
 
-The Swift service boundary will translate the successful result or error code into application state during SAF-1.4.
+The Swift service boundary translates the successful result or error code into application state; page code never receives transport details.
 
 ## Local Development
 
@@ -65,24 +65,57 @@ Cloud Run injects `PORT`; the container listens on `0.0.0.0` at that value and r
 
 ## Deployment Gate
 
-Do not run the following commands until the exact resource preview has been reviewed and deployment has been approved. The service-local `.gcloudignore` excludes tests, development dependencies, environment files, caches, and documentation from source upload. The first source deployment enables paid-capable APIs, runs Cloud Build, uploads the remaining source through Google-managed storage, creates the `cloud-run-source-deploy` Artifact Registry repository when absent, creates a Cloud Run service and immutable revision, and allows public unauthenticated invocation.
+Every deployment creates paid-capable remote state and requires an exact resource review and explicit approval. The service-local `.gcloudignore` excludes tests, development dependencies, environment files, caches, and documentation from source upload. The project inherits domain-restricted sharing, so public invocation uses the service-level `--no-invoker-iam-check` setting rather than a prohibited `allUsers` binding.
 
-The project inherits domain-restricted sharing, which correctly prohibits an `allUsers` IAM binding. Cloud Run's recommended equivalent is to disable its service-level Invoker IAM check with `--no-invoker-iam-check`; the organization policy remains in force. Enabling the Cloud Run API creates the default compute service account used by source builds. Grant that exact identity only the required Cloud Run Builder role and allow a short period for the new binding to propagate before deployment.
+### One-Time Project Setup
 
-The approved command shape is:
+The retained development project is `silent-window-507419-e1` in `europe-west2`. Its APIs and Google-created source-build identity are already configured; these commands are setup and recovery references, not routine deployment steps:
 
 ```text
 gcloud services enable run.googleapis.com cloudbuild.googleapis.com artifactregistry.googleapis.com --project silent-window-507419-e1
 
 gcloud projects add-iam-policy-binding silent-window-507419-e1 --member='serviceAccount:334553986819-compute@developer.gserviceaccount.com' --role='roles/run.builder' --condition=None
+```
 
+### Retained Development Deployment
+
+Before an approved deployment, record the source revision and whether the service boundary is dirty:
+
+```text
+git rev-parse --short=12 HEAD
+git status --short -- app/services/work-on-the-decayed
+```
+
+Deploy the filtered service source with the accepted resource bounds:
+
+```text
 gcloud run deploy work-on-the-decayed --project silent-window-507419-e1 --region europe-west2 --source app/services/work-on-the-decayed --no-invoker-iam-check --ingress all --cpu 1 --memory 512Mi --cpu-throttling --concurrency 8 --min-instances 0 --max-instances 1 --timeout 10s --port 8080 --description 'Dotlineform App development rotation service'
 ```
 
-After deployment, retrieve the assigned HTTPS endpoint without storing credentials in the repository:
+Source deployment remains the deliberate workflow while there is one development environment. It uploads the filtered source, runs the retained Dockerfile once in Cloud Build, stores an immutable image in Artifact Registry, and deploys a Cloud Run revision resolved to that image digest. Introduce a separate build-once/promote-by-digest path only when a second environment, repeat deployment of one exact artifact, or a stronger rollback requirement creates an actual promotion boundary.
+
+### Evidence And Smoke
+
+After deployment, retrieve the endpoint and latest revision without storing credentials in the repository:
 
 ```text
-gcloud run services describe work-on-the-decayed --project silent-window-507419-e1 --region europe-west2 --format 'value(status.url)'
+SERVICE_URL="$(gcloud run services describe work-on-the-decayed --project silent-window-507419-e1 --region europe-west2 --format 'value(status.url)')"
+REVISION="$(gcloud run services describe work-on-the-decayed --project silent-window-507419-e1 --region europe-west2 --format 'value(status.latestReadyRevisionName)')"
+gcloud run revisions describe "$REVISION" --project silent-window-507419-e1 --region europe-west2 --format 'value(status.imageDigest)'
+gcloud builds list --project silent-window-507419-e1 --region europe-west2 --filter 'tags=service_work-on-the-decayed' --sort-by '~createTime' --limit 1 --format 'table(id,status,createTime,results.images[0].digest)'
 ```
 
-Use that returned URL for narrow valid-request and invalid-request deployed contract smokes. The native application is not connected until SAF-1.4.
+Run only the two narrow deployed contract smokes:
+
+```text
+curl --fail-with-body --silent --show-error --header 'Content-Type: application/json' --data '{"action":"rotate-symbol"}' "$SERVICE_URL/v1/rotate-symbol"
+curl --include --silent --show-error --header 'Content-Type: application/json' --data '{"action":"wrong"}' "$SERVICE_URL/v1/rotate-symbol"
+```
+
+Accept only HTTP 200 with `{"quarterTurns":1}` and HTTP 400 with `{"error":{"code":"invalid-request"}}`. Record the Git state, Cloud Build ID and status, Cloud Run revision, immutable image digest, and both smoke outcomes.
+
+### Artifact Retention
+
+Retain the source archive and image digest for the serving revision and the immediately preceding accepted rollback revision. Before deleting anything, list Cloud Run revisions and their image digests, source archives, and Artifact Registry versions; delete only explicitly identified artifacts that are not referenced by either retained revision. Do not delete by the moving `latest` tag alone.
+
+No automatic cleanup policy is justified while the repository holds fewer than five image versions and remains below 250 MB. Review cleanup when either threshold is crossed. The initial state is one serving revision, one 48.9 MB image, and two source archives totalling about 6 KiB; the extra archive is from the stopped first deployment attempt and is harmless. Cleanup is a separately reviewed destructive operation, never part of deployment or smoke testing.
