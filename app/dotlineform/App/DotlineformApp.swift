@@ -11,7 +11,11 @@ import SwiftUI
 struct DotlineformApp: App {
     var body: some Scene {
         WindowGroup {
-            AboutView()
+            AboutView(
+                rotationService: WorkOnTheDecayedClient(
+                    baseURL: AppConfiguration.workOnTheDecayedBaseURL
+                )
+            )
         }
     }
 }

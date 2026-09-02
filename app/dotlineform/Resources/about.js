@@ -59,7 +59,7 @@
       );
       completedQuarterTurns = (completedQuarterTurns + result.quarterTurns) % 4;
       symbol.style.transform = `rotate(${completedQuarterTurns * 90}deg)`;
-      setOperationState("succeeded", "ROTATED BY SWIFT");
+      setOperationState("succeeded", "ROTATED");
     } catch (error) {
       const message = error instanceof Error ? error.message : "The operation failed.";
       setOperationState("failed", message.toUpperCase());

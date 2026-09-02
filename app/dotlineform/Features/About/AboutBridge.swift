@@ -36,17 +36,41 @@ nonisolated struct AboutBridgeResult: Codable, Equatable, Sendable {
     let quarterTurns: Int?
     let message: String?
 
-    static let rotated = Self(
-        state: .succeeded,
-        quarterTurns: 1,
-        message: nil
-    )
+    static func rotated(by rotation: AboutRotation) -> Self {
+        Self(
+            state: .succeeded,
+            quarterTurns: rotation.quarterTurns,
+            message: nil
+        )
+    }
 
     static let invalidRequest = Self(
         state: .failed,
         quarterTurns: nil,
         message: "The page sent an invalid rotate-symbol request."
     )
+
+    static func serviceFailure(_ error: Error) -> Self {
+        let serviceError = error as? AboutRotationServiceError ?? .unavailable
+        let message = switch serviceError {
+        case .cancelled:
+            "The rotation request was cancelled."
+        case .timedOut:
+            "The rotation service took too long to respond."
+        case .rejected:
+            "The rotation service rejected the request."
+        case .invalidResponse:
+            "The rotation service returned an invalid response."
+        case .unavailable:
+            "The rotation service is unavailable."
+        }
+
+        return Self(
+            state: .failed,
+            quarterTurns: nil,
+            message: message
+        )
+    }
 
     func javaScriptObject() throws -> Any {
         let data = try JSONEncoder().encode(self)

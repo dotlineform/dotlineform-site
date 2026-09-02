@@ -8,16 +8,25 @@ import WebKit
 
 struct WebKitHost: View {
     let pageURL: URL
+    let rotationService: any AboutRotationService
 
     var body: some View {
-        PlatformWebView(pageURL: pageURL)
+        PlatformWebView(
+            pageURL: pageURL,
+            rotationService: rotationService
+        )
     }
 }
 
 private final class WebKitHostCoordinator: NSObject, WKScriptMessageHandlerWithReply {
     private static let messageHandlerName = "about"
 
+    private let rotationService: any AboutRotationService
     private var loadedURL: URL?
+
+    init(rotationService: any AboutRotationService) {
+        self.rotationService = rotationService
+    }
 
     func makeWebView() -> WKWebView {
         let configuration = WKWebViewConfiguration()
@@ -46,8 +55,6 @@ private final class WebKitHostCoordinator: NSObject, WKScriptMessageHandlerWithR
         didReceive message: WKScriptMessage,
         replyHandler: @escaping @MainActor @Sendable (Any?, String?) -> Void
     ) {
-        let result: AboutBridgeResult
-
         do {
             guard message.name == Self.messageHandlerName else {
                 throw AboutBridgeContractError.invalidRequest
@@ -56,12 +63,28 @@ private final class WebKitHostCoordinator: NSObject, WKScriptMessageHandlerWithR
             let request = try AboutBridgeRequest.decode(messageBody: message.body)
             switch request.action {
             case .rotateSymbol:
-                result = .rotated
+                Task { @MainActor [rotationService] in
+                    let result: AboutBridgeResult
+
+                    do {
+                        let rotation = try await rotationService.rotateSymbol()
+                        result = .rotated(by: rotation)
+                    } catch {
+                        result = .serviceFailure(error)
+                    }
+
+                    Self.reply(with: result, using: replyHandler)
+                }
             }
         } catch {
-            result = .invalidRequest
+            Self.reply(with: .invalidRequest, using: replyHandler)
         }
+    }
 
+    private static func reply(
+        with result: AboutBridgeResult,
+        using replyHandler: @escaping @MainActor @Sendable (Any?, String?) -> Void
+    ) {
         do {
             replyHandler(try result.javaScriptObject(), nil)
         } catch {
@@ -73,9 +96,10 @@ private final class WebKitHostCoordinator: NSObject, WKScriptMessageHandlerWithR
 #if os(macOS)
 private struct PlatformWebView: NSViewRepresentable {
     let pageURL: URL
+    let rotationService: any AboutRotationService
 
     func makeCoordinator() -> WebKitHostCoordinator {
-        WebKitHostCoordinator()
+        WebKitHostCoordinator(rotationService: rotationService)
     }
 
     func makeNSView(context: Context) -> WKWebView {
@@ -91,9 +115,10 @@ private struct PlatformWebView: NSViewRepresentable {
 #elseif os(iOS)
 private struct PlatformWebView: UIViewRepresentable {
     let pageURL: URL
+    let rotationService: any AboutRotationService
 
     func makeCoordinator() -> WebKitHostCoordinator {
-        WebKitHostCoordinator()
+        WebKitHostCoordinator(rotationService: rotationService)
     }
 
     func makeUIView(context: Context) -> WKWebView {

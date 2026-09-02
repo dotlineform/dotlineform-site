@@ -13,14 +13,22 @@ enum AboutPage {
 
 struct AboutView: View {
     private let pageURL: URL?
+    private let rotationService: any AboutRotationService
 
-    init(bundle: Bundle = .main) {
+    init(
+        bundle: Bundle = .main,
+        rotationService: any AboutRotationService
+    ) {
         pageURL = AboutPage.url(in: bundle)
+        self.rotationService = rotationService
     }
 
     var body: some View {
         if let pageURL {
-            WebKitHost(pageURL: pageURL)
+            WebKitHost(
+                pageURL: pageURL,
+                rotationService: rotationService
+            )
         } else {
             ContentUnavailableView(
                 "About Page Unavailable",
@@ -32,5 +40,5 @@ struct AboutView: View {
 }
 
 #Preview {
-    AboutView()
+    AboutView(rotationService: LocalAboutRotationService())
 }
