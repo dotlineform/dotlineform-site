@@ -6,3 +6,4 @@ Pillow==12.0.0
 pytest==9.0.3
 markdown-it-py==3.0.0
 mammoth==1.12.0
+-r app/services/work-on-the-decayed/requirements-dev.txt
