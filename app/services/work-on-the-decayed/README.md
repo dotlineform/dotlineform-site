@@ -65,14 +65,18 @@ Cloud Run injects `PORT`; the container listens on `0.0.0.0` at that value and r
 
 ## Deployment Gate
 
-Do not run the following commands until the exact resource preview has been reviewed and deployment has been approved. The service-local `.gcloudignore` excludes tests, development dependencies, environment files, caches, and documentation from source upload. The first source deployment enables paid-capable APIs, runs Cloud Build, uploads the remaining source through Google-managed storage, creates the `cloud-run-source-deploy` Artifact Registry repository when absent, creates a Cloud Run service and immutable revision, and grants public unauthenticated invocation.
+Do not run the following commands until the exact resource preview has been reviewed and deployment has been approved. The service-local `.gcloudignore` excludes tests, development dependencies, environment files, caches, and documentation from source upload. The first source deployment enables paid-capable APIs, runs Cloud Build, uploads the remaining source through Google-managed storage, creates the `cloud-run-source-deploy` Artifact Registry repository when absent, creates a Cloud Run service and immutable revision, and allows public unauthenticated invocation.
+
+The project inherits domain-restricted sharing, which correctly prohibits an `allUsers` IAM binding. Cloud Run's recommended equivalent is to disable its service-level Invoker IAM check with `--no-invoker-iam-check`; the organization policy remains in force. Enabling the Cloud Run API creates the default compute service account used by source builds. Grant that exact identity only the required Cloud Run Builder role and allow a short period for the new binding to propagate before deployment.
 
 The approved command shape is:
 
 ```text
 gcloud services enable run.googleapis.com cloudbuild.googleapis.com artifactregistry.googleapis.com --project silent-window-507419-e1
 
-gcloud run deploy work-on-the-decayed --project silent-window-507419-e1 --region europe-west2 --source app/services/work-on-the-decayed --allow-unauthenticated --ingress all --cpu 1 --memory 512Mi --cpu-throttling --concurrency 8 --min-instances 0 --max-instances 1 --timeout 10s --port 8080 --description 'Dotlineform App development rotation service'
+gcloud projects add-iam-policy-binding silent-window-507419-e1 --member='serviceAccount:334553986819-compute@developer.gserviceaccount.com' --role='roles/run.builder' --condition=None
+
+gcloud run deploy work-on-the-decayed --project silent-window-507419-e1 --region europe-west2 --source app/services/work-on-the-decayed --no-invoker-iam-check --ingress all --cpu 1 --memory 512Mi --cpu-throttling --concurrency 8 --min-instances 0 --max-instances 1 --timeout 10s --port 8080 --description 'Dotlineform App development rotation service'
 ```
 
 After deployment, retrieve the assigned HTTPS endpoint without storing credentials in the repository:
@@ -81,4 +85,4 @@ After deployment, retrieve the assigned HTTPS endpoint without storing credentia
 gcloud run services describe work-on-the-decayed --project silent-window-507419-e1 --region europe-west2 --format 'value(status.url)'
 ```
 
-Use that returned URL for one deployed contract smoke. The native application is not connected until SAF-1.4.
+Use that returned URL for narrow valid-request and invalid-request deployed contract smokes. The native application is not connected until SAF-1.4.
