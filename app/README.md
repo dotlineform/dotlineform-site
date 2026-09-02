@@ -9,6 +9,8 @@ This retained SwiftUI application is the native Mac and iPad foundation for Dotl
 - A connected iPad running iPadOS 26 or later for physical-device review.
 - A locally configured Apple development team for signed Mac and iPad runs.
 
+The free Personal Team is the retained development boundary. App Store distribution, TestFlight, archives, and notarization are not planned; consider a paid Apple Developer Program membership only if the current seven-day device provisioning and reinstall cadence becomes a material nuisance.
+
 ## Open And Run
 
 Open `app/dotlineform.xcodeproj` and use the maintained `dotlineform` scheme. Select **My Mac** for native Mac review or the connected iPad for signing, installation, and physical-device review.
@@ -24,6 +26,8 @@ bin/app-check
 ```
 
 This runs the focused Swift tests on Mac and builds the app and test bundle for a generic iPad device without signing. Products remain under ignored `var/app/DerivedData/`.
+
+Routine checks intentionally remain Debug builds. SAF-1.6 review will run one unsigned Release build for native Mac and generic iPad to verify the optimized configurations, without adding Release compilation to every `bin/app-check` run or starting a distribution workflow.
 
 On a Mac with local development signing configured, also verify the signed application and its sandbox capabilities:
 
