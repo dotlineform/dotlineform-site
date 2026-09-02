@@ -23,6 +23,13 @@
 - Its documentation belongs to the `processing` Docs Viewer scope, and it is expected to acquire its own build, test, and development lifecycle. Until that lifecycle is defined, do not apply website runtime, build, test, or release assumptions to it implicitly; treat any integration with the website as an explicit cross-project change.
 - Processing work media belongs under the explicitly configured `$DOTLINEFORM_PROJECTS_BASE_DIR/processing/<project-id>/` boundary. A GUI-launched sketch must use its project-local portable configuration, validate the exact project identity, and fail visibly without falling back to the sketch or repository.
 
+## Native Application Boundary
+
+- `app/` is the tracked Swift native-application project, separate from the website runtime, `site/` deployment artifact, and `processing/` project. Read `app/AGENTS.md` before changing it.
+- The maintained project and scheme are `app/dotlineform.xcodeproj` and `dotlineform`. One Swift 6 app target supports native Mac and iPad destinations only, with minimum macOS and iPadOS 26.0; iPhone and Apple Vision are outside the target boundary.
+- Run App commands from the repository root and place repeatable command-line build products under the ignored `var/app/DerivedData/` boundary. Retain the selected Personal Team identifier in `project.pbxproj`; Apple-account credentials, certificates and private keys, Xcode-managed provisioning artifacts, device state, and `xcuserdata` remain local.
+- Native Mac and physical-iPad presentation remain manual review gates. Signing, device installation, paid cloud activation, deployment, commit, and push require their own explicit action.
+
 ## Documentation And Generated Payloads
 
 - When writing or updating Markdown source documents, do not apply a fixed-column source wrap. Each paragraph is one source line, each list item is one source line. Code blocks, tables, headings, and front matter retain their required structure.
