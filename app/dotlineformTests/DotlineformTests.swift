@@ -87,15 +87,21 @@ struct DotlineformTests {
         )
 
         #expect(rotation == AboutRotation(quarterTurns: 1))
-        #expect(throws: AboutRotationServiceError.self) {
+        #expect(throws: AboutRotationServiceError.invalidResponse) {
             try WorkOnTheDecayedClient.rotation(
                 data: Data(#"{"quarterTurns":1,"unexpected":true}"#.utf8),
                 response: response
             )
         }
-        #expect(throws: AboutRotationServiceError.self) {
+        #expect(throws: AboutRotationServiceError.invalidResponse) {
             try WorkOnTheDecayedClient.rotation(
                 data: Data(#"{"quarterTurns":2}"#.utf8),
+                response: response
+            )
+        }
+        #expect(throws: AboutRotationServiceError.invalidResponse) {
+            try WorkOnTheDecayedClient.rotation(
+                data: Data("{".utf8),
                 response: response
             )
         }
@@ -112,7 +118,7 @@ struct DotlineformTests {
             )
         )
 
-        #expect(throws: AboutRotationServiceError.self) {
+        #expect(throws: AboutRotationServiceError.rejected) {
             try WorkOnTheDecayedClient.rotation(
                 data: Data(#"{"error":{"code":"invalid-request"}}"#.utf8),
                 response: rejection

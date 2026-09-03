@@ -48,3 +48,14 @@ def test_http_boundary_requires_json_content_type(client: FlaskClient) -> None:
 
     assert response.status_code == 415
     assert response.get_json() == {"error": {"code": "unsupported-media-type"}}
+
+
+def test_http_boundary_rejects_an_oversized_request(client: FlaskClient) -> None:
+    response = client.post(
+        "/v1/rotate-symbol",
+        data=b"{" + (b" " * 1_024),
+        content_type="application/json",
+    )
+
+    assert response.status_code == 413
+    assert response.get_json() == {"error": {"code": "request-too-large"}}

@@ -68,8 +68,8 @@ nonisolated struct WorkOnTheDecayedClient: AboutRotationService {
             throw AboutRotationServiceError.unavailable
         }
 
+        let object = try jsonObject(data)
         guard
-            let object = try JSONSerialization.jsonObject(with: data) as? [String: Any],
             object.count == 1,
             object.keys.first == "quarterTurns"
         else {
@@ -110,14 +110,30 @@ nonisolated struct WorkOnTheDecayedClient: AboutRotationService {
     }
 
     private static func validateErrorResponse(_ data: Data) throws {
+        let object = try jsonObject(data)
         guard
-            let object = try JSONSerialization.jsonObject(with: data) as? [String: Any],
             object.count == 1,
             let error = object["error"] as? [String: Any],
             error.count == 1,
             let code = error["code"] as? String,
             acceptedErrorCodes.contains(code)
         else {
+            throw AboutRotationServiceError.invalidResponse
+        }
+    }
+
+    private static func jsonObject(_ data: Data) throws -> [String: Any] {
+        do {
+            guard
+                let object = try JSONSerialization.jsonObject(with: data) as? [String: Any]
+            else {
+                throw AboutRotationServiceError.invalidResponse
+            }
+
+            return object
+        } catch let error as AboutRotationServiceError {
+            throw error
+        } catch {
             throw AboutRotationServiceError.invalidResponse
         }
     }
