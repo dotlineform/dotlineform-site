@@ -14,7 +14,7 @@
 ## Key development factors
 - The public site has no deploy-time build step: `site/` is the tracked GitHub Pages artifact. Shared/public Docs Viewer JavaScript and stylesheets are canonical under `docs-viewer/` and have an explicit tracked projection under `site/docs-viewer/`; local apps serve the canonical files while public preview and GitHub Pages serve the projection.
 - For long multi-batch work, or before a long thread reaches context limits, produce a handoff with changed files, decisions made, remaining tasks, commands run, and known risks. Keep the delivery document to current/next state, checkboxes, decisions, and completion gates.
-- Non-trivial new features, requirements, or refactors are generally documentedd and parented to [Roadmap](/docs/?scope=studio&doc=d-20260428-000000-f5ff18), which contains delivery planning guidance.
+- Non-trivial new features, requirements, or refactors are generally documented and parented to [Planned Features](/docs/?scope=studio&doc=d-20260428-000000-f5ff18), which contains delivery planning guidance.
 - Local servers do not need to support multiple concurrent users. Modal workflows always complete before another one starts.
 
 ## Processing Project Boundary
