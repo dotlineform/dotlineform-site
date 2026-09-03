@@ -17,6 +17,9 @@ const searchController = await import(pathToFileURL(
 const routeWorkflow = await import(pathToFileURL(
   path.join(repoRoot, "docs-viewer/runtime/js/shared/docs-viewer-route-workflow.js")
 ));
+const router = await import(pathToFileURL(
+  path.join(repoRoot, "docs-viewer/runtime/js/shared/docs-viewer-router.js")
+));
 
 fixture.tokenizer_cases.forEach((testCase) => {
   assert.deepEqual(search.tokenizeSearchValue(testCase.value), testCase.terms);
@@ -199,5 +202,36 @@ assert.deepEqual(renderedRouteCalls, [
 ]);
 assert.match(results.innerHTML, new RegExp(`/analysis/\\?doc=report&amp;subdoc=${sharedDocId}`));
 assert.match(results.innerHTML, /2026-08-14 • Concepts/);
+
+// Document navigation must leave Search before any cached or fetched payload renders.
+for (const cached of [true, false]) {
+  const doc = { doc_id: "doc-a" };
+  const payload = { content_html: "<p>Document</p>" };
+  const state = {
+    docsById: new Map([[doc.doc_id, doc]]),
+    payloadCache: new Map(cached ? [[doc.doc_id, payload]] : []),
+    requestId: 0,
+    searchQuery: cached ? "" : "test",
+    searchRouteActive: true
+  };
+  function assertSearchExited() {
+    assert.equal(state.searchQuery, "");
+    assert.equal(state.searchRouteActive, false);
+  }
+  let renderedPayload;
+  const loadedPayload = await router.loadViewerDoc({
+    docId: doc.doc_id,
+    state,
+    fetchPayload: async () => payload,
+    renderBookmarkUi: assertSearchExited,
+    renderLoadingState: assertSearchExited,
+    renderPayload(_doc, value) {
+      assertSearchExited();
+      renderedPayload = value;
+    }
+  });
+  assert.equal(loadedPayload, payload);
+  assert.equal(renderedPayload, payload);
+}
 
 console.log("Docs Viewer search v2 JavaScript contract OK");

@@ -264,6 +264,11 @@ export function loadViewerDoc(options) {
     : (typeof settings.expandTrail === "function" ? settings.expandTrail : null);
   var targetDocId = typeof settings.resolveLoadableDocId === "function" ? settings.resolveLoadableDocId(docId) : "";
 
+  // Opening a document exits Search before any document controls render.
+  if (state) {
+    state.searchQuery = "";
+    state.searchRouteActive = false;
+  }
   if (typeof settings.setRecentModeActive === "function") {
     settings.setRecentModeActive(false);
   }
