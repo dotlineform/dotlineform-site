@@ -9,6 +9,7 @@
       "search_fields": [
         "title",
         "heading",
+        "summary",
         "body",
         "code"
       ],
@@ -66,6 +67,7 @@
       "search_fields": [
         "title",
         "heading",
+        "summary",
         "body",
         "code"
       ],
@@ -232,6 +234,7 @@
       "search_fields": [
         "title",
         "heading",
+        "summary",
         "body",
         "code"
       ],
@@ -279,6 +282,7 @@
       "search_fields": [
         "title",
         "heading",
+        "summary",
         "body",
         "code"
       ],
@@ -324,6 +328,7 @@
       "search_fields": [
         "title",
         "heading",
+        "summary",
         "body",
         "code"
       ],
@@ -393,6 +398,7 @@
       "search_fields": [
         "title",
         "heading",
+        "summary",
         "body",
         "code"
       ],

@@ -77,6 +77,7 @@ function searchScoreV2(index, position, query, matchedFields) {
   if (title === query) return 900;
   if (matchedFields.has("title")) return 800;
   if (matchedFields.has("heading")) return 700;
+  if (matchedFields.has("summary")) return 600;
   if (matchedFields.has("parent_title")) return 500;
   if (matchedFields.has("body") || matchedFields.has("code")) return 400;
   if (matchedFields.has("last_updated")) return 300;

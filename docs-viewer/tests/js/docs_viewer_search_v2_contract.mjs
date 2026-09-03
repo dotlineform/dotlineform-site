@@ -42,14 +42,17 @@ fixture.queries.forEach((testCase) => {
 
 const fullTextIndex = {
   header: { schema: "docs_viewer_search_index_v2", scope: "studio" },
-  fields: ["title", "heading", "body", "code"],
+  fields: ["title", "heading", "summary", "body", "code"],
   docs: [
     { id: "doc-a", title: "Search Mechanics", href: "/docs/?doc=doc-a" },
     { id: "doc-b", title: "Runtime Notes", href: "/docs/?doc=doc-b" },
-    { id: "doc-c", title: "Other", href: "/docs/?doc=doc-c" }
+    { id: "doc-c", title: "Other", href: "/docs/?doc=doc-c" },
+    { id: "doc-d", title: "Synopsis Notes", href: "/docs/?doc=doc-d" }
   ],
   terms: {
-    search: { title: [0], heading: [1], body: [2] },
+    search: { title: [0], heading: [1], summary: [3], body: [2] },
+    overview: { summary: [3] },
+    context: { body: [3] },
     compatibility: { body: [0, 1] },
     key: { body: [0] },
     known: { heading: [0] },
@@ -67,7 +70,9 @@ const fullTextIndex = {
 function matchIds(query) {
   return search.collectSearchMatches(fullTextIndex, query).map((match) => match.entry.id);
 }
-assert.deepEqual(matchIds("search"), ["doc-a", "doc-b", "doc-c"]);
+assert.deepEqual(matchIds("search"), ["doc-a", "doc-b", "doc-d", "doc-c"]);
+assert.deepEqual(matchIds("overv"), ["doc-d"]);
+assert.deepEqual(matchIds("overview context"), ["doc-d"]);
 assert.deepEqual(matchIds("search compatibility"), ["doc-a", "doc-b"]);
 assert.deepEqual(matchIds("known weak spots"), ["doc-a"]);
 assert.deepEqual(matchIds("compatibility key"), ["doc-a"]);

@@ -13,6 +13,8 @@ from io import StringIO
 from pathlib import Path
 from typing import Any
 
+import pytest
+
 from repo_factory import docs_scope_record, docs_sub_scope_record
 
 
@@ -192,12 +194,16 @@ def test_v2_tokenizer_and_index_match_shared_contract_fixture() -> None:
         assert payload["terms"][term] == postings
 
 
-def test_studio_full_text_extracts_visible_fields_without_configuration_leaks() -> None:
+@pytest.mark.parametrize("include_summary", [False, True])
+def test_studio_full_text_extracts_visible_fields_without_configuration_leaks(include_summary: bool) -> None:
+    fields = ["title", "heading", "summary", "body", "code"]
+    if not include_summary:
+        fields.remove("summary")
     with tempfile.TemporaryDirectory() as temp_path:
         root = Path(temp_path)
         write_scope_config(
             root,
-            search_fields=["title", "heading", "body", "code"],
+            search_fields=fields,
         )
         write_source_docs(root)
         write_text(
@@ -209,7 +215,8 @@ def test_studio_full_text_extracts_visible_fields_without_configuration_leaks() 
             """---
 doc_id: d-20260813-000001-aaaaaa
 title: "Representative Search"
-summary: FrontMatterLeak
+summary: SummaryVocabulary
+ui_status: FrontMatterLeak
 last_updated: 2026-06-02
 parent_id: parent
 ---
@@ -243,7 +250,7 @@ access: local
             scope="studio",
         ).build_docs_v2_payload(generated_at_utc="2026-08-13T00:00:00Z")
 
-    assert payload["fields"] == ["title", "heading", "body", "code"]
+    assert payload["fields"] == fields
     child = payload["docs"][0]
     assert child["id"] == "d-20260813-000001-aaaaaa"
     assert child["parent_title"] == "Parent Page"
@@ -259,8 +266,12 @@ access: local
     assert payload["terms"]["raw_html_code"] == {"code": [0]}
     assert payload["terms"]["accessible"] == {"body": [0]}
     assert payload["terms"]["linked"] == {"body": [0]}
+    if include_summary:
+        assert payload["terms"]["summaryvocabulary"] == {"summary": [0]}
+    else:
+        assert "summaryvocabulary" not in payload["terms"]
     assert all(
-        set(field_postings).issubset({"title", "heading", "body", "code"})
+        set(field_postings).issubset(fields)
         for field_postings in payload["terms"].values()
     )
     for excluded in (
@@ -426,7 +437,7 @@ def test_python_docs_search_builder_includes_manage_owned_sub_scope_docs() -> No
             default_doc_id=host_id,
             sub_scopes=[sub_scope],
         )
-        scope["search_fields"] = ["title", "heading", "body", "code"]
+        scope["search_fields"] = ["title", "heading", "summary", "body", "code"]
         write_json(
             root / "docs-viewer/config/scopes/docs_scopes.json",
             {
@@ -462,6 +473,7 @@ sub_scope: tags
             f"""---
 doc_id: {child_id}
 title: Visible Child
+summary: ChildSynopsis
 added_date: 2026-08-14 09:01:00
 last_updated: 2026-08-14 09:02:00
 ui_status: done
@@ -538,6 +550,8 @@ ExcludedVocabulary must not leak.
         "collection_title": "Tags",
     }
     assert "eligiblevocabulary" in payload["terms"]
+    child_position = payload["docs"].index(child)
+    assert payload["terms"]["childsynopsis"] == {"summary": [child_position]}
     assert {document["id"] for document in sub_scope_docs} == {child_id, excluded_id}
     assert "excludedvocabulary" in payload["terms"]
 

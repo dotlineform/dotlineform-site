@@ -72,8 +72,8 @@ SCOPE_LIFECYCLE_TOOL_ID = "docs-viewer-scope-lifecycle"
 MEDIA_TYPE_PATTERN = re.compile(r"\A[a-z][a-z0-9_-]*\Z")
 MANAGED_MEDIA_TYPES = frozenset({"files", "html", "img", "svg"})
 BUILD_MEDIA_TYPES = frozenset({"mermaid"})
-SEARCH_FIELDS = frozenset({"body", "code", "heading", "identity", "last_updated", "parent_title", "title"})
-DEFAULT_DOCS_SEARCH_FIELDS = ("title", "heading", "body", "code")
+SEARCH_FIELDS = frozenset({"body", "code", "heading", "identity", "last_updated", "parent_title", "summary", "title"})
+DEFAULT_DOCS_SEARCH_FIELDS = ("title", "heading", "summary", "body", "code")
 
 SOURCE_CAPABILITIES = frozenset(
     {

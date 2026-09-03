@@ -94,6 +94,7 @@ class SearchDocRecord:
     last_updated: str
     parent_id: str
     viewer_url: str
+    summary: str = ""
     body_markdown: str = ""
     report: ReportDescriptor | None = None
     sub_scope: str = ""
@@ -397,6 +398,7 @@ class DocsViewerSearchDataBuilder:
                 {
                     "doc_id": doc_id,
                     "title": title,
+                    "summary": normalize_text(front_matter.get("summary")),
                     "last_updated": normalize_text(front_matter.get("last_updated")),
                     "parent_id": normalize_text(front_matter.get("parent_id") if "parent_id" in front_matter else ""),
                     "viewer_url": self.viewer_url_for(doc_id),
@@ -435,6 +437,7 @@ class DocsViewerSearchDataBuilder:
                     last_updated=normalize_text(row.get("last_updated")),
                     parent_id=parent_id,
                     viewer_url=viewer_url,
+                    summary=normalize_text(row.get("summary")),
                     body_markdown=str(row.get("body_markdown") or ""),
                     report=row.get("report") if isinstance(row.get("report"), ReportDescriptor) else None,
                 )
@@ -487,6 +490,7 @@ class DocsViewerSearchDataBuilder:
             record: dict[str, Any] = {
                 "id": doc.doc_id,
                 "title": doc.title,
+                "summary": doc.summary,
                 "href": doc.viewer_url,
                 "last_updated": doc.last_updated,
                 "parent_id": doc.parent_id,
@@ -645,6 +649,7 @@ class DocsViewerSearchDataBuilder:
                     last_updated=last_updated,
                     parent_id="",
                     viewer_url=expected_url,
+                    summary=normalize_text(source_doc.front_matter.get("summary")),
                     body_markdown=source_doc.body,
                     report=source_doc.report,
                     sub_scope=sub_scope.sub_scope,

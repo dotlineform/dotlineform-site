@@ -229,6 +229,7 @@ def test_scope_create_preview_reports_public_readonly_site_route_and_payloads() 
     assert payload["planned_scope_config"]["search_fields"] == [
         "title",
         "heading",
+        "summary",
         "body",
         "code",
     ]
