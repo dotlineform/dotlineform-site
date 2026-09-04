@@ -84,7 +84,7 @@ def test_write_removes_only_stale_files_in_owned_destinations(tmp_path: Path) ->
     )
     stale = tmp_path / "site/docs-viewer/runtime/js/shared/retired.js"
     stale.write_bytes(b"retired\n")
-    unrelated = tmp_path / "site/assets/js/unrelated.js"
+    unrelated = tmp_path / "site/archive/assets/js/theme-toggle.js"
     unrelated.parent.mkdir(parents=True)
     unrelated.write_bytes(b"unrelated\n")
 
@@ -114,18 +114,20 @@ def test_second_write_is_a_no_op(tmp_path: Path) -> None:
     assert site_code.plan_site_code_update(tmp_path, projections).drift_count == 0
 
 
+@pytest.mark.parametrize("relative", ["site/assets/js/unrelated.js", "site/archive/assets/js/theme-toggle.js"])
 def test_apply_rejects_removal_outside_manifest_owned_destinations(
     tmp_path: Path,
+    relative: str,
 ) -> None:
     manifest_path = _create_test_repository(tmp_path)
     projections = site_code.load_manifest(tmp_path, manifest_path)
-    unrelated = tmp_path / "site/assets/js/unrelated.js"
+    unrelated = tmp_path / relative
     unrelated.parent.mkdir(parents=True)
     unrelated.write_bytes(b"unrelated\n")
     plan = site_code.SiteCodeUpdatePlan(
         added=(),
         changed=(),
-        removed=("site/assets/js/unrelated.js",),
+        removed=(relative,),
         unchanged=(),
     )
 

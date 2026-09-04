@@ -19,14 +19,14 @@
       "id": "catalogue_public_indexes",
       "classification": "public_projection",
       "repo_paths": [
-        "site/assets/data/series_index.json",
-        "site/assets/data/recent_index.json"
+        "site/archive/assets/data/series_index.json",
+        "site/archive/assets/data/recent_index.json"
       ],
       "public_output": {
         "policy": "required",
         "paths": [
-          "assets/data/series_index.json",
-          "assets/data/recent_index.json"
+          "archive/assets/data/series_index.json",
+          "archive/assets/data/recent_index.json"
         ]
       },
       "owner_doc": "data-models-catalogue-indexes"
@@ -35,14 +35,14 @@
       "id": "catalogue_public_record_payloads",
       "classification": "public_projection",
       "repo_paths": [
-        "site/assets/works/index/*.json",
-        "site/assets/series/index/*.json"
+        "site/archive/assets/works/index/*.json",
+        "site/archive/assets/series/index/*.json"
       ],
       "public_output": {
         "policy": "required",
         "paths": [
-          "assets/works/index/*.json",
-          "assets/series/index/*.json"
+          "archive/assets/works/index/*.json",
+          "archive/assets/series/index/*.json"
         ]
       },
       "owner_doc": "data-models-catalogue-indexes"
@@ -51,12 +51,12 @@
       "id": "catalogue_public_search",
       "classification": "public_projection",
       "repo_paths": [
-        "site/assets/data/search/catalogue/index.json"
+        "site/archive/assets/data/search/catalogue/index.json"
       ],
       "public_output": {
         "policy": "required",
         "paths": [
-          "assets/data/search/catalogue/index.json"
+          "archive/assets/data/search/catalogue/index.json"
         ]
       },
       "owner_doc": "search-build-pipeline-catalogue"
@@ -203,12 +203,12 @@
       "id": "public_search_policy",
       "classification": "public_projection",
       "repo_paths": [
-        "site/assets/data/search/policy.json"
+        "site/archive/assets/data/search/policy.json"
       ],
       "public_output": {
         "policy": "required",
         "paths": [
-          "assets/data/search/policy.json"
+          "archive/assets/data/search/policy.json"
         ]
       },
       "owner_doc": "search-public-ui-contract"
@@ -217,15 +217,15 @@
       "id": "public_media_and_thumbnails",
       "classification": "public_runtime_asset",
       "repo_paths": [
-        "site/assets/works/img/**",
-        "site/assets/work_details/img/**",
+        "site/archive/assets/works/img/**",
+        "site/archive/assets/work_details/img/**",
         "site/assets/docs/**"
       ],
       "public_output": {
         "policy": "allowed",
         "paths": [
-          "assets/works/img/**",
-          "assets/work_details/img/**",
+          "archive/assets/works/img/**",
+          "archive/assets/work_details/img/**",
           "assets/docs/**"
         ]
       },
@@ -279,11 +279,11 @@
         "notes"
       ],
       "public_paths": [
-        "site/assets/data/series_index.json",
-        "site/assets/data/recent_index.json",
-        "site/assets/works/index/*.json",
-        "site/assets/series/index/*.json",
-        "site/assets/data/search/catalogue/index.json"
+        "site/archive/assets/data/series_index.json",
+        "site/archive/assets/data/recent_index.json",
+        "site/archive/assets/works/index/*.json",
+        "site/archive/assets/series/index/*.json",
+        "site/archive/assets/data/search/catalogue/index.json"
       ]
     }
   ],

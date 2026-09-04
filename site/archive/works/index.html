@@ -5,12 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Works | dotlineform</title>
   <meta name="dlf-asset-version" content="static">
-  <link rel="icon" href="/favicon.ico" sizes="any">
-  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-  <link rel="manifest" href="/site.webmanifest">
-  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#111111">
+  <link rel="icon" href="/archive/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="/archive/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/archive/favicon-16x16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/archive/apple-touch-icon.png">
+  <link rel="manifest" href="/archive/site.webmanifest">
+  <link rel="mask-icon" href="/archive/safari-pinned-tab.svg" color="#111111">
   <script>
     (function () {
       try {
@@ -21,8 +21,8 @@
       }
     })();
   </script>
-  <link rel="stylesheet" href="/assets/css/main.css?v=static">
-  <link rel="stylesheet" href="/assets/css/catalogue.css?v=static">
+  <link rel="stylesheet" href="/archive/assets/css/main.css?v=static">
+  <link rel="stylesheet" href="/archive/assets/css/catalogue.css?v=static">
 </head>
 <body class="works">
   <header class="site-header">
@@ -32,8 +32,7 @@
       </div>
       <div class="siteHeader__actions">
         <nav class="site-nav" aria-label="Primary">
-          <a class="nav-item is-active" href="/series/" aria-current="page">works</a>
-          <a class="nav-item" href="/analysis/">analysis</a>
+          <a class="nav-item is-active" href="/archive/" aria-current="page">archive</a>
         </nav>
         <button class="siteThemeToggle" type="button" id="themeToggle" aria-label="Switch to dark mode" title="Switch to dark mode">
           <svg class="siteThemeToggle__icon" data-theme-icon="light" viewBox="0 0 24 24" aria-hidden="true">
@@ -59,10 +58,10 @@
     <article
       class="page work"
       id="selectedWorkRoot"
-      data-baseurl=""
+      data-baseurl="/archive"
       data-works-img-base="https://media.dotlineform.com/works/img/"
       data-works-files-base="https://media.dotlineform.com/works/files/"
-      data-details-thumb-base="/assets/work_details/img/"
+      data-details-thumb-base="/archive/assets/work_details/img/"
       data-primary-render-widths="[800, 1200, 1600]"
       data-primary-display-width="1600"
       data-primary-full-width="1600"
@@ -79,20 +78,20 @@
       <section class="catalogueMetadata page__media" id="selectedWorkMetadata">
         <h2 class="visually-hidden">work details</h2>
         <div class="catalogueMetadata__rows" id="selectedWorkMetadataRows"></div>
-        <nav class="seriesNav seriesNav--title" id="seriesNav" aria-label="Series navigation" data-work-id="" data-series="" data-baseurl="" hidden>
+        <nav class="seriesNav seriesNav--title" id="seriesNav" aria-label="Series navigation" data-work-id="" data-series="" data-baseurl="/archive" hidden>
           <span class="navCounter" id="seriesNavCounter" hidden></span>
           <a class="seriesNav__prev" id="seriesNavPrev" href="#">&larr;</a>
           <a class="seriesNav__next" id="seriesNavNext" href="#">&rarr;</a>
         </nav>
-        <span id="workSeriesLinkWrap" hidden>| <a id="workSeriesLink" class="work__seriesLink" href="/series/"></a></span>
+        <span id="workSeriesLinkWrap" hidden>| <a id="workSeriesLink" class="work__seriesLink" href="/archive/series/"></a></span>
       </section>
       <section class="workDetails" id="selectedWorkDetailsSection" hidden><h2 class="visually-hidden">Additional details</h2><div id="selectedWorkDetailsContent"></div></section>
       <nav class="page__nav">
-        <a id="pageBackLink" class="page__back" href="/series/" data-baseurl="" data-series-label="series">&larr; works</a>
+        <a id="pageBackLink" class="page__back" href="/archive/series/" data-baseurl="/archive" data-series-label="series">&larr; works</a>
       </nav>
     </article>
 
-    <script type="module" src="/assets/js/catalogue/routes/work-page.js?v=static"></script>
+    <script type="module" src="/archive/assets/js/catalogue/routes/work-page.js?v=static"></script>
   </main>
 
   <footer class="site-footer">
@@ -101,7 +100,7 @@
     </div>
   </footer>
 
-<script src="/assets/js/site-nav.js?v=static"></script>
-<script src="/assets/js/theme-toggle.js?v=static"></script>
+<script src="/archive/assets/js/site-nav.js?v=static"></script>
+<script src="/archive/assets/js/theme-toggle.js?v=static"></script>
 </body>
 </html>

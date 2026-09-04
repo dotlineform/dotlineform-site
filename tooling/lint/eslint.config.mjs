@@ -27,6 +27,7 @@ export default [
       "docs-viewer/runtime/js/**/*.js",
       "shared/frontend/js/**/*.js",
       "site/assets/js/**/*.js",
+      "site/archive/assets/js/**/*.js",
       "site/docs-viewer/runtime/js/**/*.js",
       "studio/app/frontend/js/**/*.js"
     ],

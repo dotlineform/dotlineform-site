@@ -57,7 +57,6 @@ async function initSearchPage() {
     status.textContent = searchText(policy, "loading", "loading search index…");
 
     const scope = "catalogue";
-    applyNavScopeState(scope);
     const scopePolicy = getSearchScopePolicyFn(policy, scope);
     if (!scopePolicy) {
       applyScopeText({ backLink, scopeLabel, input, scopePolicy: null, inputEnabled: false });
@@ -339,7 +338,7 @@ function applyScopeText({ backLink, scopeLabel, input, scopePolicy, inputEnabled
     if (scopePolicy && scopePolicy.backLabel && (scopePolicy.backHref || scopePolicy.backRouteKey)) {
       backLink.hidden = false;
       backLink.textContent = scopePolicy.backLabel;
-      backLink.setAttribute("href", scopePolicy.backHref || routePath(scopePolicy.backRouteKey, "/"));
+      backLink.setAttribute("href", resolveSiteAssetPath(scopePolicy.backHref || routePath(scopePolicy.backRouteKey, "/")));
       backLink.removeAttribute("aria-disabled");
       backLink.tabIndex = 0;
     } else {
@@ -368,31 +367,6 @@ function applyScopeText({ backLink, scopeLabel, input, scopePolicy, inputEnabled
 
   input.removeAttribute("placeholder");
   input.setAttribute("aria-label", "Search unavailable");
-}
-
-function applyNavScopeState(scope) {
-  const navItems = Array.from(document.querySelectorAll(".site-nav .nav-item"));
-  if (!navItems.length) return;
-
-  for (const item of navItems) {
-    item.classList.remove("is-active");
-    if (item.tagName === "A") {
-      item.removeAttribute("aria-current");
-    }
-  }
-
-  let activeHref = "";
-  if (scope === "catalogue") activeHref = "/series/";
-  if (!activeHref) return;
-
-  const activeItem = navItems.find((item) => {
-    if (item.tagName !== "A") return false;
-    return item.getAttribute("href") === activeHref;
-  });
-  if (!activeItem) return;
-
-  activeItem.classList.add("is-active");
-  activeItem.setAttribute("aria-current", "page");
 }
 
 function applyPerformanceText({ policy, performanceSummary }) {
