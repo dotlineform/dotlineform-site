@@ -38,6 +38,7 @@ export function createDocsViewerContentDetailView(options) {
   var settings = options || {};
   var tableDetailAdapter = settings.tableDetailAdapter || null;
   var diagramDetailAdapter = settings.diagramDetailAdapter || null;
+  var mediaDetailAdapter = settings.mediaDetailAdapter || null;
   var reportPresentationAdapter = settings.reportPresentationAdapter || null;
   var active = null;
 
@@ -45,6 +46,7 @@ export function createDocsViewerContentDetailView(options) {
     var kind = String(targetContext && targetContext.kind || "").trim();
     if (kind === "table") return tableDetailAdapter;
     if (kind === "diagram") return diagramDetailAdapter;
+    if (kind === "media") return mediaDetailAdapter;
     if (kind === "report") return reportPresentationAdapter;
     return null;
   }
@@ -143,6 +145,7 @@ export function withDocsViewerContentDetailDefinitions(definitions, options) {
       load: function () {
         return createDocsViewerContentDetailView({
           diagramDetailAdapter: settings.diagramDetailAdapter,
+          mediaDetailAdapter: settings.mediaDetailAdapter,
           reportPresentationAdapter: settings.reportPresentationAdapter,
           tableDetailAdapter: settings.tableDetailAdapter
         });

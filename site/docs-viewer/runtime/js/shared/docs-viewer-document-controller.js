@@ -114,6 +114,25 @@ export function initDocsViewerDocumentController(context) {
     }
   }
 
+  function mountMediaDetails(doc, payload, mountGeneration) {
+    var adapter = context.mediaDetailAdapter;
+    if (!adapter || typeof adapter.mountDocument !== "function") return;
+    try {
+      adapter.mountDocument({
+        content: content,
+        doc: doc,
+        document: content ? content.ownerDocument : null,
+        documentMountGeneration: mountGeneration,
+        payload: payload,
+        requestContentDetail: context.requestContentDetail,
+        viewerScope: currentViewerScope(),
+        window: content && content.ownerDocument ? content.ownerDocument.defaultView : null
+      });
+    } catch (error) {
+      console.warn("docs_viewer: media detail adapter unavailable", error);
+    }
+  }
+
   function releaseTableDetails() {
     var adapter = context.tableDetailAdapter;
     if (!adapter || typeof adapter.releaseDocument !== "function") return;
@@ -125,6 +144,20 @@ export function initDocsViewerDocumentController(context) {
       });
     } catch (error) {
       console.warn("docs_viewer: table detail cleanup unavailable", error);
+    }
+  }
+
+  function releaseMediaDetails() {
+    var adapter = context.mediaDetailAdapter;
+    if (!adapter || typeof adapter.releaseDocument !== "function") return;
+    try {
+      adapter.releaseDocument({
+        content: content,
+        document: content ? content.ownerDocument : null,
+        window: content && content.ownerDocument ? content.ownerDocument.defaultView : null
+      });
+    } catch (error) {
+      console.warn("docs_viewer: media detail cleanup unavailable", error);
     }
   }
 
@@ -237,6 +270,7 @@ export function initDocsViewerDocumentController(context) {
     var mountGeneration = nextDocumentMountGeneration();
     clearSubscopeReportState("document-pane-hidden", mountGeneration);
     releaseReportPresentation();
+    releaseMediaDetails();
     releaseTableDetails();
     projectDocumentShell({
       toolbarHidden: true,
@@ -269,6 +303,7 @@ export function initDocsViewerDocumentController(context) {
     }
     if (!content) return;
     releaseReportPresentation();
+    releaseMediaDetails();
     releaseTableDetails();
     releaseDiagramDetails();
     content.textContent = "";
@@ -307,10 +342,12 @@ export function initDocsViewerDocumentController(context) {
     showDocPane();
     context.renderMeta(doc);
     releaseReportPresentation();
+    releaseMediaDetails();
     releaseTableDetails();
     releaseDiagramDetails();
     content.innerHTML = payload.content_html || "";
     mountTableDetails(doc, payload, mountGeneration);
+    mountMediaDetails(doc, payload, mountGeneration);
     mountThemedDiagrams(doc, payload);
     mountDiagramDetails(doc, payload, mountGeneration);
     mountInlineMermaid(doc, payload, mountGeneration);
@@ -339,6 +376,7 @@ export function initDocsViewerDocumentController(context) {
     showDocPane();
     context.renderMeta(doc);
     releaseReportPresentation();
+    releaseMediaDetails();
     releaseTableDetails();
     releaseDiagramDetails();
     content.textContent = "";
