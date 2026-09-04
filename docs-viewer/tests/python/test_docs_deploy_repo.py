@@ -333,8 +333,29 @@ def test_management_capabilities_project_browser_safe_deploy_repo_authority(
     }
 
 
-def test_preview_and_apply_use_only_accepted_published_snapshot(tmp_path: Path) -> None:
+@pytest.mark.parametrize("catalogue_relocated", [False, True])
+def test_preview_and_apply_use_only_accepted_published_snapshot(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    catalogue_relocated: bool,
+) -> None:
     revision = prepare_repo(tmp_path)
+    catalogue_path = tmp_path / "site/assets/works/index/00638.json"
+    catalogue_before = catalogue_path.read_bytes()
+    archive_path = tmp_path / "site/archive/assets/works/index/00638.json"
+    archive_path.parent.mkdir(parents=True)
+    archive_path.write_bytes(catalogue_before)
+    if catalogue_relocated:
+        catalogue_path.unlink()
+
+    def unexpected_catalogue_call(*_args: object, **_kwargs: object) -> None:
+        pytest.fail("Paused Deploy Repo must not plan or apply Catalogue output")
+
+    for name in ("build_catalogue_document_url_refresh_plan", "apply_catalogue_document_url_refresh_plan"):
+        monkeypatch.setattr(
+            f"catalogue.catalogue_document_url_refresh.{name}",
+            unexpected_catalogue_call,
+        )
     preview = docs_deploy_repo.preview_deploy_repo(
         tmp_path,
         {"scope": "analysis", "deployment_timestamp": "2026-08-30T22:00:00Z"},
@@ -347,6 +368,8 @@ def test_preview_and_apply_use_only_accepted_published_snapshot(tmp_path: Path) 
     }
     assert preview["media"]["copy_count"] == 1
     assert preview["media"]["remove_count"] == 1
+    assert preview["catalogue_document_urls"]["status"] == "paused"
+    assert preview["catalogue_document_urls"]["changed_count"] == 0
 
     result = docs_deploy_repo.apply_deploy_repo(
         tmp_path,
@@ -385,15 +408,13 @@ def test_preview_and_apply_use_only_accepted_published_snapshot(tmp_path: Path) 
     assert tag_search["collection_title"] == "Concepts"
     assert tag_search["display_meta"] == "2026-08-01 • Concepts"
     assert deployed_search["terms"] == published_search["terms"]
-    catalogue_payload = json.loads(
-        (tmp_path / "site/assets/works/index/00638.json").read_text(encoding="utf-8")
-    )
-    assert catalogue_payload["work"]["documents"] == [
-        {
-            "url": f"/analysis/?doc={WORK_HOST}&subdoc={WORK_DOC}",
-            "title": "Work note",
-        }
-    ]
+    assert result["catalogue_document_urls"]["status"] == "paused"
+    assert result["catalogue_document_urls"]["updated_paths"] == []
+    assert archive_path.read_bytes() == catalogue_before
+    if catalogue_relocated:
+        assert not catalogue_path.exists()
+    else:
+        assert catalogue_path.read_bytes() == catalogue_before
 
 
 def test_preview_requires_analysis_and_deployment_subject_metadata(tmp_path: Path) -> None:

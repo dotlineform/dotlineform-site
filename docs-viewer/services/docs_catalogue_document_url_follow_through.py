@@ -7,6 +7,24 @@ from pathlib import Path
 from typing import Any, Mapping
 
 
+# UAC 1: retain the machinery, but resume only when the new Catalogue projection
+# destination is implemented. This is not controlled by payload availability.
+CATALOGUE_SITE_PROJECTION_PAUSED = True
+
+
+def paused_result() -> dict[str, Any]:
+    return {
+        "status": "paused",
+        "reason": "Catalogue site projection is paused until the new projection is wired in.",
+        "stale": False,
+        "affected_targets": [],
+        "changed_paths": [],
+        "changed_count": 0,
+        "updated_paths": [],
+        "error": "",
+    }
+
+
 def repo_relative(repo_root: Path, path: Path) -> str:
     try:
         return path.resolve().relative_to(repo_root.resolve()).as_posix()
@@ -33,6 +51,9 @@ def apply_projection(
     projection: Mapping[str, Mapping[str, list[Mapping[str, str]]]],
 ) -> dict[str, Any]:
     """Apply one already-derived exact Catalogue URL projection."""
+
+    if CATALOGUE_SITE_PROJECTION_PAUSED:
+        return paused_result()
 
     affected_targets: list[dict[str, str]] = []
     try:
@@ -62,6 +83,9 @@ def apply_projection(
 def refresh_from_current_public_state(repo_root: Path) -> dict[str, Any]:
     """Refresh after exact Delete cleanup using the surviving public state."""
 
+    if CATALOGUE_SITE_PROJECTION_PAUSED:
+        return paused_result()
+
     try:
         from docs_catalogue_document_urls import load_public_catalogue_documents
 
@@ -72,7 +96,9 @@ def refresh_from_current_public_state(repo_root: Path) -> dict[str, Any]:
 
 
 __all__ = [
+    "CATALOGUE_SITE_PROJECTION_PAUSED",
     "apply_projection",
+    "paused_result",
     "refresh_from_current_public_state",
     "repo_relative",
     "stale_result",

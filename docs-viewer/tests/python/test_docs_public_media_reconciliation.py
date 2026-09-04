@@ -174,6 +174,7 @@ def test_r2_apply_verifies_copy_removes_stale_and_preserves_prefix_marker() -> N
             {
                 "docs/example/files/": b"",
                 "docs/example/files/stale.pdf": b"stale",
+                "archive/catalogue/works/files/frozen.pdf": b"frozen catalogue file",
             }
         )
         references = {
@@ -201,6 +202,7 @@ def test_r2_apply_verifies_copy_removes_stale_and_preserves_prefix_marker() -> N
         assert client.objects["docs/example/files/download.pdf"] == b"published pdf"
         assert "docs/example/files/stale.pdf" not in client.objects
         assert "docs/example/files/" in client.objects
+        assert client.objects["archive/catalogue/works/files/frozen.pdf"] == b"frozen catalogue file"
 
 
 def test_r2_copy_failure_is_reported_without_stopping_other_reconciliation() -> None:

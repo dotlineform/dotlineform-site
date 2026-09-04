@@ -399,10 +399,27 @@ def prepare_child_repo(repo_root: Path) -> dict[str, Path]:
     }
 
 
-def test_parent_cleanup_removes_exact_projection_and_updates_inventories_and_catalogue(
+@pytest.mark.parametrize("catalogue_relocated", [False, True])
+def test_parent_cleanup_updates_docs_and_leaves_catalogue_paused(
     tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    catalogue_relocated: bool,
 ) -> None:
     paths = prepare_parent_repo(tmp_path)
+    catalogue_before = paths["work"].read_bytes()
+    archive_path = tmp_path / "site/archive/assets/works/index/00042.json"
+    archive_path.parent.mkdir(parents=True)
+    archive_path.write_bytes(catalogue_before)
+    if catalogue_relocated:
+        paths["work"].unlink()
+
+    def unexpected_catalogue_read(*_args: object, **_kwargs: object) -> None:
+        pytest.fail("Paused Delete must not read Catalogue payloads")
+
+    monkeypatch.setattr(
+        "catalogue.catalogue_document_url_refresh.current_nonempty_targets",
+        unexpected_catalogue_read,
+    )
     sibling_path = paths["docs_root"] / f"by-id/{SIBLING_ID}.json"
     sibling_before = sibling_path.read_bytes()
     stale_path = paths["docs_root"] / "by-id/out-of-workflow.json"
@@ -416,7 +433,8 @@ def test_parent_cleanup_removes_exact_projection_and_updates_inventories_and_cat
     result = cleanup.apply_public_document_delete_cleanup(tmp_path, plan)
 
     assert plan.projected_doc_ids == (PARENT_ID,)
-    assert plan.catalogue_targets == (("work", "00042"),)
+    assert plan.catalogue_targets == ()
+    assert result["catalogue_document_urls"]["status"] == "paused"
     assert result["status"] == "applied"
     assert not (paths["docs_root"] / f"by-id/{PARENT_ID}.json").exists()
     assert not (
@@ -434,7 +452,11 @@ def test_parent_cleanup_removes_exact_projection_and_updates_inventories_and_cat
     assert [row["url"] for row in read_json(paths["locations"])["records"]] == [
         f"/analysis/?doc={SIBLING_ID}"
     ]
-    assert read_json(paths["work"])["work"]["documents"] == []
+    assert archive_path.read_bytes() == catalogue_before
+    if catalogue_relocated:
+        assert not paths["work"].exists()
+    else:
+        assert paths["work"].read_bytes() == catalogue_before
 
 
 def test_parent_preview_expands_descendant_public_cleanup(tmp_path: Path) -> None:
@@ -499,10 +521,28 @@ def test_already_unprojected_cleanup_is_unchanged(tmp_path: Path) -> None:
     assert repeated.writes_by_path == {}
     assert repeated.removed_urls == ()
     assert result["status"] == "unchanged"
+    assert result["catalogue_document_urls"]["status"] == "paused"
+
+
+def test_scope_cleanup_leaves_catalogue_paused(tmp_path: Path) -> None:
+    paths = prepare_parent_repo(tmp_path)
+    # An unreadable legacy payload must not prevent whole-scope Delete planning.
+    paths["work"].write_bytes(b"unreadable legacy payload")
+
+    plan = cleanup.plan_public_scope_delete_cleanup(tmp_path, scope="analysis")
+    result = cleanup.apply_public_scope_delete_cleanup(tmp_path, plan)
+
+    assert plan.applicable is True
+    assert plan.removed_urls
+    assert plan.catalogue_targets == ()
+    assert result["status"] == "applied"
+    assert result["catalogue_document_urls"]["status"] == "paused"
+    assert paths["work"].read_bytes() == b"unreadable legacy payload"
 
 
 def test_child_cleanup_leaves_host_and_sibling_bytes_unchanged(tmp_path: Path) -> None:
     paths = prepare_child_repo(tmp_path)
+    series_before = paths["series"].read_bytes()
     host_paths = [
         paths["docs_root"] / "index-tree.json",
         paths["docs_root"] / "recent.json",
@@ -543,11 +583,13 @@ def test_child_cleanup_leaves_host_and_sibling_bytes_unchanged(tmp_path: Path) -
         f"/analysis/?doc={HOST_ID}",
         f"/analysis/?doc={HOST_ID}&subdoc={CHILD_SIBLING_ID}",
     ]
-    assert read_json(paths["series"])["series"]["documents"] == []
+    assert result["catalogue_document_urls"]["status"] == "paused"
+    assert paths["series"].read_bytes() == series_before
 
 
 def test_report_host_cleanup_removes_routes_but_retains_child_files(tmp_path: Path) -> None:
     paths = prepare_child_repo(tmp_path)
+    series_before = paths["series"].read_bytes()
     child_files = [
         paths["child_root"] / "manifest.json",
         paths["child_root"] / f"by-id/{CHILD_ID}.json",
@@ -572,7 +614,7 @@ def test_report_host_cleanup_removes_routes_but_retains_child_files(tmp_path: Pa
     assert not (paths["docs_root"] / f"by-id/{HOST_ID}.json").exists()
     assert read_json(paths["search"])["docs"] == []
     assert read_json(paths["locations"])["records"] == []
-    assert read_json(paths["series"])["series"]["documents"] == []
+    assert paths["series"].read_bytes() == series_before
 
 
 def test_local_delete_plan_is_not_applicable(tmp_path: Path) -> None:

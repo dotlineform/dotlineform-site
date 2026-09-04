@@ -10,6 +10,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Mapping
 
+import docs_catalogue_document_url_follow_through as catalogue_follow_through
 from docs_document_location_projection import (
     SUPPORTED_DOCUMENT_LOCATION_SCOPE_IDS,
     build_document_location_payload,
@@ -355,7 +356,7 @@ def catalogue_targets_for_urls(
     repo_root: Path,
     urls: set[str],
 ) -> tuple[tuple[str, str], ...]:
-    if not urls:
+    if catalogue_follow_through.CATALOGUE_SITE_PROJECTION_PAUSED or not urls:
         return ()
     from catalogue.catalogue_document_url_refresh import current_nonempty_targets
     return tuple(
@@ -691,7 +692,7 @@ def apply_public_document_delete_cleanup(
     try:
         catalogue_result = (
             refresh_catalogue_document_urls_strict(repo_root)
-            if plan.removed_urls
+            if plan.removed_urls or catalogue_follow_through.CATALOGUE_SITE_PROJECTION_PAUSED
             else {
                 "status": "unchanged",
                 "stale": False,

@@ -146,7 +146,9 @@ export function docsViewerDeployRepoConfirmBody(preview) {
     "Media copies: " + Number(media.copy_count || 0),
     "Media removals: " + Number(media.remove_count || 0),
     "Media errors: " + Number(media.error_count || 0),
-    "Catalogue paths changed: " + Number(catalogue.changed_count || 0),
+    catalogue.status === "paused"
+      ? cleanString(catalogue.reason)
+      : "Catalogue paths changed: " + Number(catalogue.changed_count || 0),
     "Publication lineage: " + (lineage.changed === true ? "change" : "unchanged"),
     "Accepted Published revision: " + cleanString(preview && preview.published_revision),
     "Deploy Repo plan: " + cleanString(preview && preview.plan_revision)

@@ -13,6 +13,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Iterable, Mapping
 
+import docs_catalogue_document_url_follow_through as catalogue_follow_through
 import docs_document_publication_lineage as publication_lineage
 from docs_catalogue_document_urls import (
     project_catalogue_documents_from_subject_associations,
@@ -867,16 +868,22 @@ def build_deploy_repo_plan(
         env_files=env_files,
         environ=environ,
     )
-    from catalogue.catalogue_document_url_refresh import (
-        build_catalogue_document_url_refresh_plan,
-    )
+    if catalogue_follow_through.CATALOGUE_SITE_PROJECTION_PAUSED:
+        catalogue_plan = None
+        catalogue = catalogue_follow_through.paused_result()
+        catalogue_summary = "Catalogue paused"
+    else:
+        from catalogue.catalogue_document_url_refresh import (
+            build_catalogue_document_url_refresh_plan,
+        )
 
-    catalogue_plan = build_catalogue_document_url_refresh_plan(
-        repo_root,
-        catalogue_projection,
-        generated_at_utc=timestamp,
-    )
-    catalogue = catalogue_preview(repo_root, catalogue_plan)
+        catalogue_plan = build_catalogue_document_url_refresh_plan(
+            repo_root,
+            catalogue_projection,
+            generated_at_utc=timestamp,
+        )
+        catalogue = catalogue_preview(repo_root, catalogue_plan)
+        catalogue_summary = f"{catalogue['changed_count']} Catalogue change"
     lineage_workflows = tuple(
         workflow
         for workflow in publication_lineage.configured_workflows(repo_root)
@@ -933,7 +940,7 @@ def build_deploy_repo_plan(
             f"{repository['added_count']} repository add, "
             f"{repository['changed_count']} change, {repository['removed_count']} remove; "
             f"{media.get('copy_count', 0)} media copy, {media.get('remove_count', 0)} remove; "
-            f"{catalogue['changed_count']} Catalogue change; "
+            f"{catalogue_summary}; "
             f"{lineage['changed_count']} lineage change"
             f"{'s' if lineage['changed_count'] != 1 else ''}."
         ),
@@ -1027,20 +1034,24 @@ def apply_deploy_repo(
         environ=environ,
     )
 
-    from catalogue.catalogue_document_url_refresh import (
-        apply_catalogue_document_url_refresh_plan,
-    )
-
     catalogue_error = ""
     catalogue_written: list[str] = []
-    try:
-        catalogue_result = apply_catalogue_document_url_refresh_plan(plan.catalogue_plan)
-        catalogue_written = [
-            repo_relative(repo_root.resolve(), path)
-            for path in catalogue_result.written_paths
-        ]
-    except Exception as exc:
-        catalogue_error = str(exc)
+    if catalogue_follow_through.CATALOGUE_SITE_PROJECTION_PAUSED:
+        catalogue_status = "paused"
+    else:
+        from catalogue.catalogue_document_url_refresh import (
+            apply_catalogue_document_url_refresh_plan,
+        )
+
+        try:
+            catalogue_result = apply_catalogue_document_url_refresh_plan(plan.catalogue_plan)
+            catalogue_written = [
+                repo_relative(repo_root.resolve(), path)
+                for path in catalogue_result.written_paths
+            ]
+        except Exception as exc:
+            catalogue_error = str(exc)
+        catalogue_status = "stale" if catalogue_error else ("updated" if catalogue_written else "unchanged")
 
     lineage_results = []
     for workflow in plan.lineage_workflows:
@@ -1113,7 +1124,7 @@ def apply_deploy_repo(
             "media": media,
             "catalogue_document_urls": {
                 **preview["catalogue_document_urls"],
-                "status": "stale" if catalogue_error else ("updated" if catalogue_written else "unchanged"),
+                "status": catalogue_status,
                 "updated_paths": catalogue_written,
                 "error": catalogue_error,
             },
@@ -1137,7 +1148,7 @@ def apply_deploy_repo(
                 f"Deployed accepted Analysis revision {preview['published_revision']} to the repository projection. "
                 f"Media: {media.get('copied_count', 0)} copied, {media.get('removed_count', 0)} removed, "
                 f"{media.get('error_count', 0)} errors. "
-                f"Catalogue: {'stale' if catalogue_error else 'current'}. "
+                f"Catalogue: {catalogue_status}. "
                 f"Lineage: {lineage_status}; "
                 f"{sum(int(record['working_rebuild']['status'] == 'updated') for record in lineage_results)} "
                 "Working rebuilds updated."
