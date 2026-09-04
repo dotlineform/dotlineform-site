@@ -14,10 +14,7 @@ from catalogue_work_media_sources import (
 )
 from pipeline_config import load_pipeline_config
 
-try:
-    from catalogue.series_ids import normalize_series_id, parse_series_ids
-except ModuleNotFoundError:  # pragma: no cover - package import fallback
-    from catalogue.series_ids import normalize_series_id, parse_series_ids
+from catalogue.series_ids import normalize_series_id, parse_series_ids
 
 
 DEFAULT_SOURCE_DIR = Path("studio/data/canonical/catalogue")

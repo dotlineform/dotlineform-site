@@ -5,24 +5,14 @@ from __future__ import annotations
 from typing import Any, Dict, Iterable, List, Mapping, Optional
 from urllib.parse import urlencode
 
-try:
-    from catalogue.catalogue_generation_common import (
-        coerce_int,
-        coerce_string,
-        compact_json_object,
-        compute_payload_version,
-        normalize_text,
-        parse_date,
-    )
-except ModuleNotFoundError:  # pragma: no cover - package import fallback
-    from catalogue.catalogue_generation_common import (
-        coerce_int,
-        coerce_string,
-        compact_json_object,
-        compute_payload_version,
-        normalize_text,
-        parse_date,
-    )
+from catalogue.catalogue_generation_common import (
+    coerce_int,
+    coerce_string,
+    compact_json_object,
+    compute_payload_version,
+    normalize_text,
+    parse_date,
+)
 
 
 RECENT_INDEX_SCHEMA = "recent_index_v2"

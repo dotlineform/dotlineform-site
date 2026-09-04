@@ -6,31 +6,17 @@ import hashlib
 import json
 from typing import Any, Dict, List, Mapping, Optional, Sequence
 
-try:
-    from catalogue.catalogue_generation_common import (
-        coerce_int,
-        coerce_numeric,
-        coerce_string,
-        compact_json_object,
-        compute_payload_version,
-        is_empty,
-        parse_list,
-    )
-except ModuleNotFoundError:  # pragma: no cover - package import fallback
-    from catalogue.catalogue_generation_common import (
-        coerce_int,
-        coerce_numeric,
-        coerce_string,
-        compact_json_object,
-        compute_payload_version,
-        is_empty,
-        parse_list,
-    )
+from catalogue.catalogue_generation_common import (
+    coerce_int,
+    coerce_numeric,
+    coerce_string,
+    compact_json_object,
+    compute_payload_version,
+    is_empty,
+    parse_list,
+)
 
-try:
-    from catalogue.series_ids import normalize_series_id
-except ModuleNotFoundError:  # pragma: no cover - package import fallback
-    from catalogue.series_ids import normalize_series_id
+from catalogue.series_ids import normalize_series_id
 
 
 WORK_RECORD_SCHEMA_VERSION = "work_record_v5"

@@ -5,39 +5,21 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Any, Dict, List, Mapping, Optional
 
-try:
-    from catalogue import catalogue_generation_records as records
-    from catalogue.catalogue_generation_common import (
-        coerce_int,
-        coerce_numeric,
-        coerce_string,
-        compact_json_object,
-        compute_payload_version,
-        is_empty,
-        normalize_status,
-        normalize_text,
-        numeric_aware_sort_key,
-        slug_id,
-    )
-except ModuleNotFoundError:  # pragma: no cover - package import fallback
-    from catalogue import catalogue_generation_records as records
-    from catalogue.catalogue_generation_common import (
-        coerce_int,
-        coerce_numeric,
-        coerce_string,
-        compact_json_object,
-        compute_payload_version,
-        is_empty,
-        normalize_status,
-        normalize_text,
-        numeric_aware_sort_key,
-        slug_id,
-    )
+from catalogue import catalogue_generation_records as records
+from catalogue.catalogue_generation_common import (
+    coerce_int,
+    coerce_numeric,
+    coerce_string,
+    compact_json_object,
+    compute_payload_version,
+    is_empty,
+    normalize_status,
+    normalize_text,
+    numeric_aware_sort_key,
+    slug_id,
+)
 
-try:
-    from catalogue.series_ids import normalize_series_id
-except ModuleNotFoundError:  # pragma: no cover - package import fallback
-    from catalogue.series_ids import normalize_series_id
+from catalogue.series_ids import normalize_series_id
 
 
 class CatalogueGenerationIndexError(ValueError):

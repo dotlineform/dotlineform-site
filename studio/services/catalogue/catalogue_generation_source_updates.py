@@ -10,10 +10,7 @@ from typing import Any, Dict, Mapping, Optional
 
 from catalogue_work_media_sources import WorkMediaSourceRoot, resolve_work_media_path
 
-try:
-    from catalogue.catalogue_generation_common import coerce_int, coerce_string, normalize_status
-except ModuleNotFoundError:  # pragma: no cover - package import fallback
-    from catalogue.catalogue_generation_common import coerce_int, coerce_string, normalize_status
+from catalogue.catalogue_generation_common import coerce_int, coerce_string, normalize_status
 
 
 WORK_RECORD = "work"

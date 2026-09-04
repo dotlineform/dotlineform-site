@@ -4,58 +4,30 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Dict, Iterable, Mapping
 
-try:
-    from pipeline_config import bulk_import_workbook_path, load_pipeline_config
-except ModuleNotFoundError:  # pragma: no cover - package import fallback
-    from studio.shared.python.pipeline_config import bulk_import_workbook_path, load_pipeline_config
+from pipeline_config import bulk_import_workbook_path, load_pipeline_config
 
-try:
-    from catalogue.catalogue_source import (
-        CatalogueSourceRecords,
-        DETAIL_FIELDS,
-        DETAIL_SECTION_FIELDS,
-        DETAIL_TEXT_FIELDS,
-        WORK_FIELDS,
-        WORK_TEXT_FIELDS,
-        next_detail_section_id,
-        normalize_json_value,
-        normalize_scalar_text,
-        normalize_source_record,
-        normalize_status,
-        normalize_text,
-        parse_series_ids,
-        records_from_json_source,
-        slug_id,
-        sort_record_map,
-        validate_source_records,
-        validate_work_detail_media_section_record,
-    )
-except ModuleNotFoundError:  # pragma: no cover - package import fallback
-    from catalogue.catalogue_source import (
-        CatalogueSourceRecords,
-        DETAIL_FIELDS,
-        DETAIL_SECTION_FIELDS,
-        DETAIL_TEXT_FIELDS,
-        WORK_FIELDS,
-        WORK_TEXT_FIELDS,
-        next_detail_section_id,
-        normalize_json_value,
-        normalize_scalar_text,
-        normalize_source_record,
-        normalize_status,
-        normalize_text,
-        parse_series_ids,
-        records_from_json_source,
-        slug_id,
-        sort_record_map,
-        validate_source_records,
-        validate_work_detail_media_section_record,
-    )
+from catalogue.catalogue_source import (
+    CatalogueSourceRecords,
+    DETAIL_FIELDS,
+    DETAIL_SECTION_FIELDS,
+    DETAIL_TEXT_FIELDS,
+    WORK_FIELDS,
+    WORK_TEXT_FIELDS,
+    next_detail_section_id,
+    normalize_json_value,
+    normalize_scalar_text,
+    normalize_source_record,
+    normalize_status,
+    normalize_text,
+    parse_series_ids,
+    records_from_json_source,
+    slug_id,
+    sort_record_map,
+    validate_source_records,
+    validate_work_detail_media_section_record,
+)
 
-try:
-    from catalogue.series_ids import normalize_series_id
-except ModuleNotFoundError:  # pragma: no cover - package import fallback
-    from catalogue.series_ids import normalize_series_id
+from catalogue.series_ids import normalize_series_id
 
 
 PIPELINE_CONFIG = load_pipeline_config(Path(__file__))

@@ -30,22 +30,13 @@ from studio.shared.python.studio_python_paths import ensure_studio_python_paths
 REPO_ROOT = ensure_studio_python_paths(__file__)
 SCRIPTS_DIR = REPO_ROOT / "scripts"
 
-try:
-    from catalogue_media_paths import catalogue_media_display_path, configured_catalogue_media_workspace
-    from pipeline_config import (
-        load_pipeline_config,
-        media_mode_output_subdir,
-    )
-    from local_env import SITE_ENV_REL_PATH, runtime_env
-    from catalogue.catalogue_media_version import finalize_catalogue_media_version
-except ModuleNotFoundError:  # pragma: no cover - package import fallback
-    from studio.shared.python.catalogue_media_paths import catalogue_media_display_path, configured_catalogue_media_workspace
-    from studio.shared.python.pipeline_config import (
-        load_pipeline_config,
-        media_mode_output_subdir,
-    )
-    from studio.shared.python.local_env import SITE_ENV_REL_PATH, runtime_env
-    from studio.services.catalogue.catalogue_media_version import finalize_catalogue_media_version
+from catalogue_media_paths import catalogue_media_display_path, configured_catalogue_media_workspace
+from pipeline_config import (
+    load_pipeline_config,
+    media_mode_output_subdir,
+)
+from local_env import SITE_ENV_REL_PATH, runtime_env
+from catalogue.catalogue_media_version import finalize_catalogue_media_version
 
 
 PIPELINE_CONFIG = load_pipeline_config(Path(__file__))

@@ -71,95 +71,48 @@ SCRIPTS_DIR = REPO_ROOT / "scripts"
 
 from docs_catalogue_document_urls import load_public_catalogue_documents  # noqa: E402
 
-try:
-    from catalogue import catalogue_cleanup
-    from catalogue import catalogue_generation_indexes as indexes
-    from catalogue import catalogue_generation_recent as recent
-    from catalogue import catalogue_generation_records as records
-    from catalogue import catalogue_generation_source_updates as source_updates
-    from tags import tag_source_paths
-    from catalogue import catalogue_generation_writes as writes
-    from catalogue.catalogue_generation_common import (
-        coerce_int,
-        coerce_string,
-        compact_json_object,
-        is_empty,
-        normalize_status,
-        normalize_text,
-        slug_id,
-        parse_date,
-    )
-except ModuleNotFoundError:  # pragma: no cover - package import fallback
-    from catalogue import catalogue_cleanup
-    from catalogue import catalogue_generation_indexes as indexes
-    from catalogue import catalogue_generation_recent as recent
-    from catalogue import catalogue_generation_records as records
-    from catalogue import catalogue_generation_source_updates as source_updates
-    from tags import tag_source_paths
-    from catalogue import catalogue_generation_writes as writes
-    from catalogue.catalogue_generation_common import (
-        coerce_int,
-        coerce_string,
-        compact_json_object,
-        is_empty,
-        normalize_status,
-        normalize_text,
-        slug_id,
-        parse_date,
-    )
+from catalogue import catalogue_cleanup
+from catalogue import catalogue_generation_indexes as indexes
+from catalogue import catalogue_generation_recent as recent
+from catalogue import catalogue_generation_records as records
+from catalogue import catalogue_generation_source_updates as source_updates
+from tags import tag_source_paths
+from catalogue import catalogue_generation_writes as writes
+from catalogue.catalogue_generation_common import (
+    coerce_int,
+    coerce_string,
+    compact_json_object,
+    is_empty,
+    normalize_status,
+    normalize_text,
+    slug_id,
+    parse_date,
+)
 
-try:
-    from display_paths import format_display_path
-except ModuleNotFoundError:  # pragma: no cover - package import fallback
-    from studio.shared.python.display_paths import format_display_path
+from display_paths import format_display_path
 
-try:
-    from script_logging import append_script_log
-except ModuleNotFoundError:  # pragma: no cover - package import fallback
-    from studio.shared.python.script_logging import append_script_log
+from script_logging import append_script_log
 
 from catalogue_work_media_sources import resolve_work_media_source_root
 
-try:
-    from pipeline_config import (
-        env_var_name,
-        env_var_value,
-        load_pipeline_config,
-    )
-except ModuleNotFoundError:  # pragma: no cover - package import fallback
-    from studio.shared.python.pipeline_config import (
-        env_var_name,
-        env_var_value,
-        load_pipeline_config,
-    )
+from pipeline_config import (
+    env_var_name,
+    env_var_value,
+    load_pipeline_config,
+)
 
 
-try:
-    from catalogue import catalogue_public_paths as public_paths
-except ModuleNotFoundError:  # pragma: no cover - package import fallback
-    import catalogue_public_paths as public_paths
+from catalogue import catalogue_public_paths as public_paths
 
-try:
-    from catalogue.catalogue_source import (
-        DEFAULT_SOURCE_DIR as DEFAULT_CATALOGUE_SOURCE_DIR,
-        ordered_work_detail_sections,
-        records_from_json_source,
-        validate_source_records,
-        write_source_record_payloads,
-    )
-except ModuleNotFoundError:  # pragma: no cover - package import fallback
-    from catalogue.catalogue_source import (
-        DEFAULT_SOURCE_DIR as DEFAULT_CATALOGUE_SOURCE_DIR,
-        ordered_work_detail_sections,
-        records_from_json_source,
-        validate_source_records,
-        write_source_record_payloads,
-    )
+from catalogue.catalogue_source import (
+    DEFAULT_SOURCE_DIR as DEFAULT_CATALOGUE_SOURCE_DIR,
+    ordered_work_detail_sections,
+    records_from_json_source,
+    validate_source_records,
+    write_source_record_payloads,
+)
 
-try:
-    from catalogue.series_ids import normalize_series_id
-except ModuleNotFoundError:  # pragma: no cover - package import fallback
-    from catalogue.series_ids import normalize_series_id
+from catalogue.series_ids import normalize_series_id
 
 PIPELINE_CONFIG = load_pipeline_config(Path(__file__))
 PROJECTS_BASE_DIR_ENV_NAME = env_var_name(PIPELINE_CONFIG, "projects_base_dir")

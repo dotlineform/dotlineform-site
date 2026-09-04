@@ -26,29 +26,16 @@ from studio.shared.python.studio_python_paths import ensure_studio_python_paths
 REPO_ROOT = ensure_studio_python_paths(__file__)
 SCRIPTS_DIR = REPO_ROOT / "scripts"
 
-try:
-    from display_paths import format_display_command, format_display_path
-except ModuleNotFoundError:  # pragma: no cover - package import fallback
-    from studio.shared.python.display_paths import format_display_command, format_display_path
+from display_paths import format_display_command, format_display_path
 
-try:
-    from catalogue_media_paths import configured_catalogue_media_root
-    from pipeline_config import (
-        env_var_value,
-        env_var_name,
-        load_pipeline_config,
-        media_mode_input_subdir,
-        media_mode_output_subdir,
-    )
-except ModuleNotFoundError:  # pragma: no cover - package import fallback
-    from studio.shared.python.catalogue_media_paths import configured_catalogue_media_root
-    from studio.shared.python.pipeline_config import (
-        env_var_value,
-        env_var_name,
-        load_pipeline_config,
-        media_mode_input_subdir,
-        media_mode_output_subdir,
-    )
+from catalogue_media_paths import configured_catalogue_media_root
+from pipeline_config import (
+    env_var_value,
+    env_var_name,
+    load_pipeline_config,
+    media_mode_input_subdir,
+    media_mode_output_subdir,
+)
 
 
 SUPPORTED_PATTERNS: Sequence[str] = (

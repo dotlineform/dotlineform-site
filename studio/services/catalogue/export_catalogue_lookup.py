@@ -19,12 +19,8 @@ from studio.shared.python.studio_python_paths import ensure_studio_python_paths
 REPO_ROOT = ensure_studio_python_paths(__file__)
 SCRIPTS_DIR = REPO_ROOT / "scripts"
 
-try:
-    from catalogue.catalogue_lookup import DEFAULT_LOOKUP_DIR, build_and_write_catalogue_lookup
-    from catalogue.catalogue_source import DEFAULT_SOURCE_DIR, records_from_json_source
-except ModuleNotFoundError:  # pragma: no cover - package import fallback
-    from catalogue.catalogue_lookup import DEFAULT_LOOKUP_DIR, build_and_write_catalogue_lookup  # type: ignore
-    from catalogue.catalogue_source import DEFAULT_SOURCE_DIR, records_from_json_source  # type: ignore
+from catalogue.catalogue_lookup import DEFAULT_LOOKUP_DIR, build_and_write_catalogue_lookup
+from catalogue.catalogue_source import DEFAULT_SOURCE_DIR, records_from_json_source
 
 
 def main() -> int:

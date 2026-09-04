@@ -19,15 +19,9 @@ from studio.shared.python.studio_python_paths import ensure_studio_python_paths
 REPO_ROOT = ensure_studio_python_paths(__file__)
 SCRIPTS_DIR = REPO_ROOT / "scripts"
 
-try:
-    from catalogue.catalogue_source import DEFAULT_SOURCE_DIR, records_from_json_source, validate_source_records
-except ModuleNotFoundError:  # pragma: no cover - package import fallback
-    from catalogue.catalogue_source import DEFAULT_SOURCE_DIR, records_from_json_source, validate_source_records
+from catalogue.catalogue_source import DEFAULT_SOURCE_DIR, records_from_json_source, validate_source_records
 
-try:
-    from display_paths import format_display_path
-except ModuleNotFoundError:  # pragma: no cover - package import fallback
-    from studio.shared.python.display_paths import format_display_path
+from display_paths import format_display_path
 
 
 def main() -> int:

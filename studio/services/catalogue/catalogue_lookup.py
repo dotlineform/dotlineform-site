@@ -5,24 +5,14 @@ import os
 from pathlib import Path
 from typing import Any, Dict, Mapping
 
-try:
-    from catalogue import catalogue_generation_indexes as generation_indexes
-    from catalogue.catalogue_source import (
-        CatalogueSourceRecords,
-        build_detail_section_resolution_by_uid,
-        normalize_text,
-        ordered_work_detail_sections,
-        records_from_json_source,
-    )
-except ModuleNotFoundError:  # pragma: no cover - package import fallback
-    from catalogue import catalogue_generation_indexes as generation_indexes  # type: ignore
-    from catalogue.catalogue_source import (  # type: ignore
-        CatalogueSourceRecords,
-        build_detail_section_resolution_by_uid,
-        normalize_text,
-        ordered_work_detail_sections,
-        records_from_json_source,
-    )
+from catalogue import catalogue_generation_indexes as generation_indexes
+from catalogue.catalogue_source import (
+    CatalogueSourceRecords,
+    build_detail_section_resolution_by_uid,
+    normalize_text,
+    ordered_work_detail_sections,
+    records_from_json_source,
+)
 
 
 DEFAULT_LOOKUP_DIR = Path("studio/data/generated/catalogue-lookup")
