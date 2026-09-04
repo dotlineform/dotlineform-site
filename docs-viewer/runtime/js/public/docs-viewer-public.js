@@ -9,6 +9,9 @@ import {
   withDocsViewerContentDetailDefinitions
 } from "../shared/docs-viewer-content-detail-view.js";
 import {
+  docsViewerMediaDetailAdapter
+} from "../shared/docs-viewer-media-detail.js";
+import {
   docsViewerTableDetailAdapter
 } from "../shared/docs-viewer-table-detail.js";
 import {
@@ -32,10 +35,12 @@ import(appendAssetVersion("../shared/docs-viewer-app-boot.js"))
     module.startDocsViewerPublicApp({
       contentDetailBackControlId: CONTENT_DETAIL_BACK_CONTROL_ID,
       diagramDetailAdapter: docsViewerDiagramDetailAdapter,
+      mediaDetailAdapter: docsViewerMediaDetailAdapter,
       mountDocumentExtras: mountDocsViewerPublicDocumentExtras,
       tableDetailAdapter: docsViewerTableDetailAdapter,
       viewRegistryContributions: withDocsViewerContentDetailDefinitions(null, {
         diagramDetailAdapter: docsViewerDiagramDetailAdapter,
+        mediaDetailAdapter: docsViewerMediaDetailAdapter,
         tableDetailAdapter: docsViewerTableDetailAdapter
       }),
       themedDiagramAdapter: themedDiagramAdapter

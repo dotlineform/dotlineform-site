@@ -195,6 +195,7 @@ export function resolveDocsViewerAppBootContext(options) {
         contentDetailBackControlId: settings.contentDetailBackControlId,
         controlRendererContributions: settings.controlRendererContributions || {},
         diagramDetailAdapter: settings.diagramDetailAdapter,
+        mediaDetailAdapter: settings.mediaDetailAdapter,
         routeContext: routeContext,
         viewRegistry: viewRegistry,
         infoPanelAutoOpenDocumentModes: settings.infoPanelAutoOpenDocumentModes,

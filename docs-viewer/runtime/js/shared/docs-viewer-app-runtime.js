@@ -378,6 +378,7 @@ export function startDocsViewerRuntime(options) {
     diagramDetailAdapter: settings.diagramDetailAdapter,
     hasActiveQuery: hasActiveQuery,
     inlineMermaidAdapter: settings.inlineMermaidAdapter,
+    mediaDetailAdapter: settings.mediaDetailAdapter,
     managementService: managementService,
     managementDocumentActions: {
       copySubscopeDocuments: function (selection, options) {
