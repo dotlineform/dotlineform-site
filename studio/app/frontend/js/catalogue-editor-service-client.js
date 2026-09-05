@@ -17,14 +17,6 @@ export function applyCatalogueDelete(payload) {
 }
 
 
-export function previewCatalogueMediaPublish(payload) {
-  return postJson(CATALOGUE_WRITE_ENDPOINTS.mediaPublishPreview, payload);
-}
-
-export function applyCatalogueMediaPublish(payload) {
-  return postJson(CATALOGUE_WRITE_ENDPOINTS.mediaPublishApply, payload);
-}
-
 export function createCatalogueWorkDetailSection(payload) {
   return postJson(CATALOGUE_WRITE_ENDPOINTS.createWorkDetailSection, payload);
 }
@@ -47,14 +39,6 @@ export function createCatalogueSeries(payload) {
 
 export function saveCatalogueSeries(payload) {
   return postJson(CATALOGUE_WRITE_ENDPOINTS.saveSeries, payload);
-}
-
-export function previewCatalogueBuild(payload) {
-  return postJson(CATALOGUE_WRITE_ENDPOINTS.buildPreview, payload);
-}
-
-export function applyCatalogueBuild(payload) {
-  return postJson(CATALOGUE_WRITE_ENDPOINTS.buildApply, payload);
 }
 
 function queryString(params = {}) {

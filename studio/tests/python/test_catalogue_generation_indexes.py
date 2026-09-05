@@ -1,196 +1,30 @@
-#!/usr/bin/env python3
-"""Verify generated catalogue index builders."""
+"""Series ordering and independent membership in generated Catalogue indexes."""
 
-from __future__ import annotations
-
-import sys
-from pathlib import Path
+from catalogue import catalogue_generation_indexes as indexes
 
 
-REPO_ROOT = Path(__file__).resolve().parents[3]
-SCRIPTS_DIR = REPO_ROOT / "scripts"
-if str(SCRIPTS_DIR) not in sys.path:
-    sys.path.insert(0, str(SCRIPTS_DIR))
-
-from catalogue import catalogue_generation_indexes as indexes  # noqa: E402
-
-
-def sample_series_records() -> dict[str, dict[str, object]]:
-    return {
-        "009": {
-            "series_id": "009",
-            "status": "published",
-            "title": "Numbered Works",
-            "sort_fields": "title",
-            "primary_work_id": "2",
-            "published_date": "2026-5-1",
-            "notes": "Retired source note",
-        },
-        "010": {
-            "series_id": "010",
-            "status": "published",
-            "title": "Year Works",
-            "sort_fields": "-year,title",
-            "primary_work_id": "4",
-        },
-        "011": {
-            "series_id": "011",
-            "status": "draft",
-            "title": "Draft Series",
-            "primary_work_id": "5",
-        },
+def test_series_ordering_uses_title_numbers_and_explicit_sort_direction():
+    series = {"009": {"series_id": "009", "title": "Numbers", "sort_fields": "title"}}
+    works = {
+        "00001": {"work_id": "00001", "title": "Work 10", "year": 2021, "series_id": "009"},
+        "00002": {"work_id": "00002", "title": "Work 2", "year": 2022, "series_id": "009"},
+        "00003": {"work_id": "00003", "title": "Work 1", "year": 2023, "series_id": "009"},
     }
+    context = indexes.build_series_work_index_context(series_records=series, work_records=works)
+    assert indexes.ordered_work_ids_by_series(context)["009"] == ["00003", "00002", "00001"]
+    series["009"]["sort_fields"] = "year"
+    context = indexes.build_series_work_index_context(series_records=series, work_records=works)
+    assert indexes.ordered_work_ids_by_series(context)["009"] == ["00001", "00002", "00003"]
+    series["009"]["sort_fields"] = "-year"
+    context = indexes.build_series_work_index_context(series_records=series, work_records=works)
+    assert indexes.ordered_work_ids_by_series(context)["009"] == ["00003", "00002", "00001"]
 
 
-def sample_work_records() -> dict[str, dict[str, object]]:
-    return {
-        "00001": {
-            "work_id": "1",
-            "status": "published",
-            "title": "Work 10",
-            "year": "2021",
-            "series_ids": "009",
-            "project_folder": "Beta",
-        },
-        "00002": {
-            "work_id": "2",
-            "status": "published",
-            "title": "Work 2",
-            "year": "2022",
-            "series_ids": "009, 010",
-            "project_folder": "alpha",
-        },
-        "00003": {
-            "work_id": "3",
-            "status": "draft",
-            "title": "Work 1",
-            "year": "2023",
-            "series_ids": "009",
-            "project_folder": "Beta",
-        },
-        "00004": {
-            "work_id": "4",
-            "status": "published",
-            "title": "Work 20",
-            "year": "2024",
-            "series_ids": "010",
-            "project_folder": "Gamma",
-        },
-        "00005": {
-            "work_id": "5",
-            "status": "published",
-            "title": "Draft Series Work",
-            "year": "2020",
-            "series_ids": "011",
-        },
+def test_series_index_includes_empty_series_and_leaves_ungrouped_works_independent():
+    series = {"009": {"series_id": "009", "title": "Empty"}}
+    works = {"00001": {"work_id": "00001", "title": "Independent"}}
+    context = indexes.build_series_work_index_context(series_records=series, work_records=works)
+    assert indexes.build_series_index_records(series_records=series, context=context) == {
+        "009": {"series_id": "009", "title": "Empty", "work_count": 0}
     }
-
-
-def test_series_context_sorts_title_aliases_and_numeric_values() -> None:
-    context = indexes.build_series_work_index_context(
-        series_records=sample_series_records(),
-        work_records=sample_work_records(),
-    )
-
-    assert context.series_title_by_id["009"] == "Numbered Works"
-    assert context.series_status_by_id["011"] == "draft"
-    assert context.series_project_folders_by_id["009"] == ["alpha", "Beta"]
-    assert context.series_sort_fields_by_series_id["009"] == ["title", "work_id"]
-    assert context.series_sort_fields_by_series_id["010"] == ["-year", "title", "work_id"]
-    assert context.series_sort_by_series_id["009"] == {
-        "00003": "001-00003",
-        "00002": "002-00002",
-        "00001": "003-00001",
-    }
-    assert context.series_sort_by_series_id["010"] == {
-        "00004": "001-00004",
-        "00002": "002-00002",
-    }
-
-
-def test_series_index_payload_is_published_only_and_validates_primary_work() -> None:
-    context = indexes.build_series_work_index_context(
-        series_records=sample_series_records(),
-        work_records=sample_work_records(),
-    )
-    payload = indexes.build_series_index_payload(
-        series_records=sample_series_records(),
-        context=context,
-        generated_at_utc="2026-05-09T12:00:00Z",
-    )
-
-    assert payload["header"]["schema"] == "series_index_v3"
-    assert payload["header"]["generated_at_utc"] == "2026-05-09T12:00:00Z"
-    assert payload["header"]["count"] == 2
-    assert list(payload["series"].keys()) == ["009", "010"]
-    assert payload["series"]["009"]["primary_work_id"] == "00002"
-    assert set(payload["series"]["009"]) == {"series_id", "title", "primary_work_id"}
-    assert "single_work_id" not in payload["series"]["010"]
-    assert "011" not in payload["series"]
-
-    members = indexes.build_series_member_work_records(context=context, series_id="009")
-    assert members == [
-        {"work_id": "00002", "title": "Work 2", "year": 2022, "year_display": "2022"},
-        {"work_id": "00001", "title": "Work 10", "year": 2021, "year_display": "2021"},
-    ]
-
-    solo_series = {
-        "012": {"series_id": "012", "status": "published", "title": "Solo", "primary_work_id": "6"}
-    }
-    solo_works = {
-        "00006": {"work_id": "6", "status": "published", "title": "Only", "series_ids": ["012"]}
-    }
-    solo_context = indexes.build_series_work_index_context(
-        series_records=solo_series,
-        work_records=solo_works,
-    )
-    solo_payload = indexes.build_series_index_payload(
-        series_records=solo_series,
-        context=solo_context,
-        generated_at_utc="2026-05-09T12:00:00Z",
-    )
-    assert solo_payload["series"]["012"]["single_work_id"] == "00006"
-
-    broken_records = sample_series_records()
-    broken_records["009"] = dict(broken_records["009"], primary_work_id="3")
-    broken_context = indexes.build_series_work_index_context(
-        series_records=broken_records,
-        work_records=sample_work_records(),
-    )
-    try:
-        indexes.build_series_index_payload(
-            series_records=broken_records,
-            context=broken_context,
-            generated_at_utc="2026-05-09T12:00:00Z",
-        )
-    except indexes.CatalogueGenerationIndexError as exc:
-        assert "primary_work_id '00003' is not in its works list" in str(exc)
-    else:
-        raise AssertionError("expected primary-work validation failure")
-
-    missing_records = sample_series_records()
-    missing_records["009"] = {key: value for key, value in missing_records["009"].items() if key != "primary_work_id"}
-    missing_context = indexes.build_series_work_index_context(
-        series_records=missing_records,
-        work_records=sample_work_records(),
-    )
-    try:
-        indexes.build_series_index_payload(
-            series_records=missing_records,
-            context=missing_context,
-            generated_at_utc="2026-05-09T12:00:00Z",
-        )
-    except indexes.CatalogueGenerationIndexError as exc:
-        assert "missing primary_work_id" in str(exc)
-    else:
-        raise AssertionError("expected missing primary-work validation failure")
-
-
-def main() -> None:
-    test_series_context_sorts_title_aliases_and_numeric_values()
-    test_series_index_payload_is_published_only_and_validates_primary_work()
-    print("Catalogue generation index tests OK")
-
-
-if __name__ == "__main__":
-    main()
+    assert indexes.build_series_member_work_records(context=context, series_id="009") == []

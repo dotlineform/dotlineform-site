@@ -1,4 +1,5 @@
 import { saveCurrentWork } from "./catalogue-work-actions.js";
+import { catalogueOutputError } from "./catalogue-output-result.js";
 import {
   getStudioText
 } from "./studio-config.js";
@@ -181,12 +182,15 @@ async function openDetailSectionPicker(state) {
       project_subfolder: selection.project_subfolder,
       filenames
     });
+    const outputError = catalogueOutputError(payload);
     const sectionId = normalizeText(payload && payload.section_id);
     if (sectionId) state.detailBrowserSelectedSectionId = sectionId;
     state.currentLookup = await loadWorkLookupRecord(state, state.currentWorkId);
     if (sectionId) state.detailBrowserSelectedSectionId = sectionId;
     updateSummary(state);
-    if (payload && payload.reason === "section_exists") {
+    if (outputError) {
+      state.messageController.setActionTextWithState(state.resultNode, outputError, "error");
+    } else if (payload && payload.reason === "section_exists") {
       state.messageController.setActionTextWithState(
         state.resultNode,
         t(state, "detail_section_create_status_exists", "Detail section already exists."),
@@ -242,7 +246,7 @@ async function editDetailSection(state, row, rows = []) {
   );
   state.messageController.setActionTextWithState(state.resultNode, "");
   try {
-    await saveCatalogueWorkDetailSection({
+    const response = await saveCatalogueWorkDetailSection({
       work_id: state.currentWorkId,
       ...(result.payload || {}),
       expected_record_hash: state.currentLookup.detail_sections.find(section => section.section_id === sectionId)?.record_hash
@@ -258,6 +262,8 @@ async function editDetailSection(state, row, rows = []) {
       "success"
     );
     state.messageController.setActionTextWithState(state.statusNode, "");
+    const outputError = catalogueOutputError(response);
+    if (outputError) state.messageController.setActionTextWithState(state.resultNode, outputError, "error");
   } catch (error) {
     state.messageController.setActionTextWithState(
       state.statusNode,
@@ -333,7 +339,7 @@ async function deleteDetailSection(state, row) {
       t(state, "detail_section_delete_status_deleting", "Deleting detail section..."),
       "info"
     );
-    await applyCatalogueDelete(request);
+    const response = await applyCatalogueDelete(request);
     state.currentLookup = await loadWorkLookupRecord(state, state.currentWorkId);
     state.detailBrowserSelectedSectionId = "";
     state.detailBrowserSelectedDetailUid = "";
@@ -347,6 +353,8 @@ async function deleteDetailSection(state, row) {
         "success"
       );
       state.messageController.setActionTextWithState(state.statusNode, "");
+      const outputError = catalogueOutputError(response);
+      if (outputError) state.messageController.setActionTextWithState(state.resultNode, outputError, "error");
     }
   } catch (error) {
     state.messageController.setActionTextWithState(

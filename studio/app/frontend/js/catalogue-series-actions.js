@@ -1,4 +1,5 @@
 import { buildStudioRouteUrl } from "./studio-config.js";
+import { catalogueOutputError } from "./catalogue-output-result.js";
 import { applyCatalogueDelete, createCatalogueSeries, previewCatalogueDelete, saveCatalogueSeries } from "./catalogue-editor-service-client.js";
 
 import { formatCatalogueDeletePreview } from "./catalogue-editor-modal-formatters.js";
@@ -39,13 +40,6 @@ export async function saveCurrentSeries(state, context) {
     context.updateEditorState();
     return;
   }
-  if (!context.draftHasChanges()) {
-    setTextWithState(context, state.statusNode, t(state, context, "save_status_no_changes", "No changes to save."));
-    setTextWithState(context, state.resultNode, t(state, context, "save_result_unchanged", "Source already matches the current form values."));
-    context.updateEditorState();
-    return;
-  }
-
   state.isSaving = true;
   context.updateEditorState();
   setTextWithState(
@@ -84,7 +78,8 @@ export async function saveCurrentSeries(state, context) {
       keepResult: true,
       lookup: buildSavedSeriesMembershipLookup(state, record, recordHash)
     });
-    setTextWithState(context, state.resultNode, "Source saved.", "success");
+    const outputError = catalogueOutputError(response);
+    setTextWithState(context, state.resultNode, outputError || "Saved and output refreshed.", outputError ? "error" : "success");
   } catch (error) {
     const isConflict = Number(error && error.status) === 409;
     const message = isConflict
@@ -138,6 +133,11 @@ export async function createCurrentSeries(state, context) {
     await context.openSeriesById(seriesId);
     setTextWithState(context, state.resultNode, t(state, context, "create_result_success", "Created series {series_id}. Opening edit mode...", { series_id: seriesId }), "success");
     setTextWithState(context, state.statusNode, t(state, context, "create_status_success", "Created series {series_id}.", { series_id: seriesId }), "success");
+    const outputError = catalogueOutputError(response);
+    if (outputError) {
+      setTextWithState(context, state.resultNode, outputError, "error");
+      setTextWithState(context, state.statusNode, "", "");
+    }
   } catch (error) {
     setTextWithState(context, state.statusNode, `${t(state, context, "create_status_failed", "Series create failed.")} ${normalizeText(error && error.message)}`.trim(), "error");
     state.isSaving = false;
@@ -193,7 +193,15 @@ export async function deleteCurrentSeries(state, context) {
     state.isDeleting = true;
     context.updateEditorState();
     setTextWithState(context, state.statusNode, t(state, context, "delete_status_running", "Deleting source record…"));
-    await applyCatalogueDelete(request);
+    const response = await applyCatalogueDelete(request);
+    const outputError = catalogueOutputError(response);
+    if (outputError) {
+      state.currentRecord = null;
+      state.isDeleting = false;
+      context.updateEditorState();
+      setTextWithState(context, state.resultNode, outputError, "error");
+      return;
+    }
     window.location.assign(buildStudioRouteUrl(state.config, "catalogue_series_editor"));
   } catch (error) {
     const message = Number(error && error.status) === 409

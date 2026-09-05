@@ -1,4 +1,5 @@
 import { buildStudioRouteUrl } from "./studio-config.js";
+import { catalogueOutputError } from "./catalogue-output-result.js";
 import { applyCatalogueDelete, createCatalogueWork, previewCatalogueDelete, saveCatalogueBulkRecords, saveCatalogueWork } from "./catalogue-editor-service-client.js";
 
 import { formatCatalogueDeletePreview } from "./catalogue-editor-modal-formatters.js";
@@ -58,13 +59,6 @@ export async function saveCurrentWork(state, context) {
     return;
   }
 
-  if (!context.draftHasChanges()) {
-    setTextWithState(context, state.statusNode, t(state, context, "save_status_no_changes", "No changes to save."));
-    setTextWithState(context, state.resultNode, t(state, context, "save_result_unchanged", "Source already matches the current form values."));
-    context.updateEditorState();
-    return;
-  }
-
   state.isSaving = true;
   state.saveButton.disabled = true;
   setTextWithState(
@@ -80,7 +74,8 @@ export async function saveCurrentWork(state, context) {
       const changedRecords = Array.isArray(response && response.records) ? response.records : [];
       applyBulkWorkRecordMutations(state, changedRecords);
       setLoadedBulkWorks(state, state.bulkWorkIds, state.bulkRecords, state.bulkRecordHashes, context.workRouteStateOptions({keepResult: true}));
-      setTextWithState(context, state.resultNode, "Saved " + (response.changed_count || 0) + " work records.", "success");
+      const outputError = catalogueOutputError(response);
+      setTextWithState(context, state.resultNode, outputError || "Saved " + (response.changed_count || 0) + " work records and refreshed output.", outputError ? "error" : "success");
       return;
     }
 
@@ -103,7 +98,8 @@ export async function saveCurrentWork(state, context) {
       lookup
     }));
     state.mediaPreviewVersion = stagedPreviewVersion;
-    setTextWithState(context, state.resultNode, "Source saved.", "success");
+    const outputError = catalogueOutputError(response);
+    setTextWithState(context, state.resultNode, outputError || "Saved and output refreshed.", outputError ? "error" : "success");
   } catch (error) {
     const isConflict = Number(error && error.status) === 409;
     const message = isConflict
@@ -155,6 +151,11 @@ export async function saveNewWork(state, context) {
     await context.openWorkById(workId);
     setTextWithState(context, state.resultNode, t(state, context, "new_save_result_success", "Saved work {work_id}.", { work_id: workId }), "success");
     setTextWithState(context, state.statusNode, t(state, context, "new_save_status_success", "Saved work {work_id}.", { work_id: workId }), "success");
+    const outputError = catalogueOutputError(response);
+    if (outputError) {
+      setTextWithState(context, state.resultNode, outputError, "error");
+      setTextWithState(context, state.statusNode, "", "");
+    }
   } catch (error) {
     setTextWithState(context, state.statusNode, `${t(state, context, "new_save_status_failed", "Work save failed.")} ${normalizeText(error && error.message)}`.trim(), "error");
   } finally {
@@ -209,7 +210,15 @@ export async function deleteCurrentWork(state, context) {
     state.isDeleting = true;
     context.updateEditorState();
     setTextWithState(context, state.statusNode, t(state, context, "delete_status_running", "Deleting source record…"));
-    await applyCatalogueDelete(request);
+    const response = await applyCatalogueDelete(request);
+    const outputError = catalogueOutputError(response);
+    if (outputError) {
+      state.currentRecord = null;
+      state.isDeleting = false;
+      context.updateEditorState();
+      setTextWithState(context, state.resultNode, outputError, "error");
+      return;
+    }
     window.location.assign(buildStudioRouteUrl(state.config, "catalogue_work_editor"));
   } catch (error) {
     const message = Number(error && error.status) === 409

@@ -37,7 +37,7 @@ export const DEFAULT_STUDIO_UI_TEXT = {
   },
   "catalogue_field_registry_review": {
     "page_heading": "catalogue field registry",
-    "context_hint": "Read-only view of the active field-to-artifact registry used by catalogue build planning.",
+    "context_hint": "Read-only inventory of Catalogue fields and the outputs maintained by Save.",
     "loading": "loading catalogue field registry...",
     "empty_state": "",
     "search_placeholder": "field name",

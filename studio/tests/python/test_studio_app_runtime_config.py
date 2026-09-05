@@ -121,16 +121,12 @@ def test_runtime_config_exposes_adapter_contract() -> None:
     assert runtime["services"]["catalogue"]["delete_apply"] == "/studio/api/catalogue/delete-apply"
     assert "publication_preview" not in runtime["services"]["catalogue"]
     assert "publication_apply" not in runtime["services"]["catalogue"]
-    assert runtime["services"]["catalogue"]["media_publish_preview"] == "/studio/api/catalogue/media-publish-preview"
-    assert runtime["services"]["catalogue"]["media_publish_apply"] == "/studio/api/catalogue/media-publish-apply"
     assert runtime["services"]["catalogue"]["create_work"] == "/studio/api/catalogue/work/create"
     assert runtime["services"]["catalogue"]["save_work"] == "/studio/api/catalogue/work/save"
     assert runtime["services"]["catalogue"]["import_preview"] == "/studio/api/catalogue/import-preview"
     assert runtime["services"]["catalogue"]["import_apply"] == "/studio/api/catalogue/import-apply"
     assert runtime["services"]["catalogue"]["create_series"] == "/studio/api/catalogue/series/create"
     assert runtime["services"]["catalogue"]["save_series"] == "/studio/api/catalogue/series/save"
-    assert runtime["services"]["catalogue"]["build_preview"] == "/studio/api/catalogue/build-preview"
-    assert runtime["services"]["catalogue"]["build_apply"] == "/studio/api/catalogue/build-apply"
     assert "project_state_report" not in runtime["services"]["catalogue"]
     assert "project_state_open_report" not in runtime["services"]["catalogue"]
     assert runtime["services"]["tags"]["base"] == "/studio/api/tags"
@@ -160,7 +156,7 @@ def test_runtime_config_exposes_adapter_contract() -> None:
     assert "thumbnail_quality_preview" not in runtime["data_paths"]["studio"]
     assert "data_sharing_adapters" not in runtime["data_paths"]["studio"]
     assert "catalogue_lookup_meta" not in runtime["data_paths"]["studio"]
-    assert runtime["media"]["thumbs"]["works"] == "/assets/works/img"
+    assert runtime["media"]["thumbs"]["works"] == "/studio/catalogue-output/works/thumbs"
     assert runtime["pipeline"]["variants"]["thumb"]["suffix"] == "thumb"
     assert runtime["pipeline"]["encoding"]["format"] == "webp"
     assert runtime["pipeline"]["workbooks"]["bulk_import"] == "data/works_bulk_import.xlsx"

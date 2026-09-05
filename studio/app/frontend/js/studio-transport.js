@@ -2,8 +2,6 @@ const CATALOGUE_WRITE_ENDPOINTS = Object.freeze({
   bulkSave: "/studio/api/catalogue/bulk-save",
   deletePreview: "/studio/api/catalogue/delete-preview",
   deleteApply: "/studio/api/catalogue/delete-apply",
-  mediaPublishPreview: "/studio/api/catalogue/media-publish-preview",
-  mediaPublishApply: "/studio/api/catalogue/media-publish-apply",
   createWorkDetailSection: "/studio/api/catalogue/work-detail-section/create",
   saveWorkDetailSection: "/studio/api/catalogue/work-detail-section/save",
   createWork: "/studio/api/catalogue/work/create",
@@ -12,8 +10,6 @@ const CATALOGUE_WRITE_ENDPOINTS = Object.freeze({
   importApply: "/studio/api/catalogue/import-apply",
   createSeries: "/studio/api/catalogue/series/create",
   saveSeries: "/studio/api/catalogue/series/save",
-  buildPreview: "/studio/api/catalogue/build-preview",
-  buildApply: "/studio/api/catalogue/build-apply",
   projectMedia: "/studio/api/catalogue/project-media",
   read: "/studio/api/catalogue/read",
   health: "/studio/api/catalogue/health"

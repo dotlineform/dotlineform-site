@@ -119,7 +119,7 @@ async function init() {
     };
 
     headingNode.textContent = t(state, "page_heading", "catalogue field registry");
-    contextNode.textContent = t(state, "context_hint", "Read-only view of the active field-to-artifact registry used by catalogue build planning.");
+    contextNode.textContent = t(state, "context_hint", "Read-only inventory of Catalogue fields and the outputs maintained by Save.");
     loadingNode.textContent = t(state, "loading", "loading catalogue field registry...");
     emptyNode.textContent = t(state, "empty_state", "");
     searchNode.placeholder = t(state, "search_placeholder", "field name");

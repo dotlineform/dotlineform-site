@@ -39,6 +39,8 @@ from catalogue.catalogue_lookup import (  # noqa: E402
 )
 from catalogue.catalogue_media_files import IMAGE_EXTENSIONS  # noqa: E402
 from catalogue.catalogue_service_context import utc_now  # noqa: E402
+from catalogue.catalogue_service_context import build_catalogue_write_context  # noqa: E402
+from catalogue.catalogue_output_service import complete_saved_catalogue_output  # noqa: E402
 from catalogue.catalogue_source import (  # noqa: E402
     DEFAULT_SOURCE_DIR,
     SOURCE_FILES,
@@ -91,14 +93,10 @@ def catalogue_get_payload(repo_root: Path, api_path: str, query: Mapping[str, li
                 "bulk-save",
                 "delete-preview",
                 "delete-apply",
-                "media-publish-preview",
-                "media-publish-apply",
                 "work/create",
                 "work/save",
                 "series/create",
                 "series/save",
-                "build-preview",
-                "build-apply",
                 "import-preview",
                 "import-apply",
                 "project-media",
@@ -309,6 +307,7 @@ def import_preview_payload(repo_root: Path, body: Mapping[str, Any]) -> dict[str
 def import_apply_response(repo_root: Path, body: Mapping[str, Any], *, dry_run: bool = False) -> tuple[HTTPStatus, dict[str, Any]]:
     mode = normalize_import_mode(body.get("mode"))
     paths = catalogue_paths(repo_root)
+    previous = records_from_json_source(paths["source_dir"])
     plan = build_workbook_import_plan(paths["source_dir"], (repo_root / DEFAULT_IMPORT_WORKBOOK_PATH).resolve(), mode)
     preview_payload = plan_to_response(plan, repo_root=repo_root)
     if plan.blocked_count > 0:
@@ -336,7 +335,6 @@ def import_apply_response(repo_root: Path, body: Mapping[str, Any], *, dry_run: 
             dry_run=dry_run,
             repo_root=repo_root,
         )
-        refresh_lookup_payloads(repo_root, paths["source_dir"], paths["lookup_dir"])
 
     response_payload: dict[str, Any] = {
         "ok": True,
@@ -352,6 +350,7 @@ def import_apply_response(repo_root: Path, body: Mapping[str, Any], *, dry_run: 
         response_payload["would_write"] = changed
     elif changed:
         response_payload["saved_at_utc"] = utc_now()
+        complete_saved_catalogue_output(build_catalogue_write_context(repo_root), response_payload, previous)
 
     log_event(
         repo_root,

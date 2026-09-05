@@ -18,45 +18,6 @@ function lookupText(options, key, fallback, tokens = null) {
   return interpolateText(fallback, tokens);
 }
 
-function formatLocalMediaCounts(counts) {
-  if (!counts || typeof counts !== "object") return "";
-  const pending = Number(counts.pending) || 0;
-  const blocked = Number(counts.blocked) || 0;
-  const unavailable = Number(counts.unavailable) || 0;
-  const current = Number(counts.current) || 0;
-  const mediaParts = [];
-  if (pending) mediaParts.push(`local media pending ${pending}`);
-  if (blocked) mediaParts.push(`local media blocked ${blocked}`);
-  if (unavailable) mediaParts.push(`local media unavailable ${unavailable}`);
-  if (!pending && !blocked && !unavailable && current) mediaParts.push(`local media current ${current}`);
-  return mediaParts.length ? `${mediaParts.join("; ")}.` : "";
-}
-
-export function formatCatalogueBuildPreview(build, options = {}) {
-  if (!build || typeof build !== "object") return "";
-  const searchText = build.rebuild_search
-    ? lookupText(options, "build_preview_search_yes", "yes")
-    : lookupText(options, "build_preview_search_no", "no");
-  const workIds = Array.isArray(build.work_ids) ? build.work_ids : [];
-  const seriesIds = Array.isArray(build.series_ids) ? build.series_ids : [];
-  const baseText = lookupText(
-    options,
-    "build_preview_template",
-    options.defaultTemplate || "Build preview: work {work_ids}; series {series_ids}; catalogue search {search_rebuild}.",
-    {
-      work_ids: workIds.length ? workIds.join(", ") : "none",
-      series_ids: seriesIds.length ? seriesIds.join(", ") : "none",
-      search_rebuild: searchText
-    }
-  );
-
-  const localMedia = build.local_media && typeof build.local_media === "object" ? build.local_media : null;
-  const localCounts = localMedia && typeof localMedia.counts === "object" ? localMedia.counts : null;
-  const mediaText = formatLocalMediaCounts(localCounts);
-  return mediaText ? `${baseText} ${mediaText}` : baseText;
-}
-
-
 export function formatCatalogueDeletePreview(preview, options = {}) {
   return normalizeText(preview && preview.summary)
     || lookupText(options, "delete_confirm_default", options.defaultText || "Delete this source record?");

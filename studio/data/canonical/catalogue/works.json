@@ -1,7 +1,7 @@
 {
   "header": {
     "schema": "catalogue_source_works_v2",
-    "count": 1935
+    "count": 1936
   },
   "works": {
     "00001": {
@@ -40686,6 +40686,26 @@
       "depth_cm": null,
       "width_px": 4724,
       "height_px": 3543,
+      "provenance": null,
+      "artist": null
+    },
+    "01943": {
+      "work_id": "01943",
+      "project_folder": "100 grasping hands",
+      "project_filename": "100 grasping hands.jpg",
+      "media_version": 2,
+      "title": "test",
+      "width_cm": null,
+      "height_cm": null,
+      "year": 2026,
+      "year_display": "2026",
+      "medium_type": null,
+      "medium_caption": null,
+      "storage_location": null,
+      "duration": null,
+      "depth_cm": null,
+      "width_px": 2148,
+      "height_px": 2765,
       "provenance": null,
       "artist": null
     }

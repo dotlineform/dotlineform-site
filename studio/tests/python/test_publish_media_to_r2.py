@@ -192,7 +192,7 @@ def test_dry_run_marks_missing_remote_as_would_upload() -> None:
 def test_high_level_catalogue_upload_runner_is_reused_by_studio() -> None:
     with tempfile.TemporaryDirectory() as temp:
         projects_base = Path(temp) / "projects-base"
-        media_root = projects_base / "catalogue/media"
+        media_root = projects_base / "catalogue/media-staging"
         for width in publisher.PRIMARY_WIDTHS:
             write_primary(media_root, "works", f"01007-primary-{width}.webp", f"image-{width}".encode("utf-8"))
 
@@ -215,7 +215,7 @@ def test_high_level_catalogue_upload_runner_is_reused_by_studio() -> None:
 def test_exact_target_upload_runner_reuses_one_client_for_detail_section() -> None:
     with tempfile.TemporaryDirectory() as temp:
         projects_base = Path(temp) / "projects-base"
-        media_root = projects_base / "catalogue/media"
+        media_root = projects_base / "catalogue/media-staging"
         for detail_uid in ("01007-001", "01007-002"):
             for width in publisher.PRIMARY_WIDTHS:
                 write_primary(
@@ -381,16 +381,18 @@ def test_complete_upload_promotes_once_and_incomplete_set_does_not_promote() -> 
         )
     )
     calls = []
-    original = publisher.finalize_catalogue_media_version
-    publisher.finalize_catalogue_media_version = lambda repo_root, **kwargs: (
-        calls.append(kwargs)
-        or SimpleNamespace(
-            advanced=kwargs["advance"],
+    original = publisher.finalize_catalogue_media_versions
+    publisher.finalize_catalogue_media_versions = lambda repo_root, targets, **kwargs: (
+        calls.append(targets)
+        or [SimpleNamespace(
+            kind="works",
+            item_id="01007",
+            advanced=targets[("works", "01007")],
             work_id="01007",
             previous_version=1,
-            media_version=2 if kwargs["advance"] else 1,
-            public_json_path="site/assets/works/index/01007.json",
-        )
+            media_version=2,
+            output_json_path="works/index/01007.json",
+        )]
     )
     try:
         finalized = publisher.finalize_complete_catalogue_uploads(
@@ -398,9 +400,9 @@ def test_complete_upload_promotes_once_and_incomplete_set_does_not_promote() -> 
             results=results,
         )
     finally:
-        publisher.finalize_catalogue_media_version = original
+        publisher.finalize_catalogue_media_versions = original
 
-    assert calls == [{"kind": "works", "item_id": "01007", "advance": True}]
+    assert calls == [{("works", "01007"): True}]
     assert [(item.kind, item.status, item.media_version) for item in finalized] == [
         ("work_details", "not_promoted", None),
         ("works", "promoted", 2),

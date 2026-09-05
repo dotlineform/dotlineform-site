@@ -39,69 +39,6 @@ def test_work_projection_order_and_coercion() -> None:
     assert projected["media_version"] == 2
 
 
-def test_work_series_ids_are_normalized_and_deduped() -> None:
-    assert records.parse_work_record_series_ids({"series_ids": "9, 009, slug-series, bad id"}) == [
-        "009",
-        "slug-series",
-    ]
-    assert records.parse_work_record_series_ids({"series_ids": [9, "009", "010"]}) == ["009", "010"]
-
-
-def test_canonical_work_record_orders_fields_and_prunes_public_record() -> None:
-    meta = records.build_work_record_projection(
-        {
-            "title": "Controlled Field",
-            "year": "2026",
-            "year_display": "",
-        }
-    )
-    meta.update(
-        {
-            "work_id": "00042",
-            "series_ids": ["009", "010"],
-            "series_id": "009",
-            "series_title": "Old title",
-            "title_sort": "controlled field",
-            "media_version": 3,
-        }
-    )
-
-    canonical = records.build_canonical_work_record(
-        "00042",
-        work_meta_by_id={"00042": meta},
-        source_work_record={"links": [{"url": "https://example.test", "label": "Example"}], "downloads": []},
-        series_title_by_id={"009": "Primary Series"},
-        series_sort_by_series_id={"009": {"00042": "001-00042"}},
-    )
-
-    assert canonical is not None
-    assert list(canonical.keys())[:8] == [
-        "work_id",
-        "title",
-        "year",
-        "year_display",
-        "series_id",
-        "series_ids",
-        "series_title",
-        "series_sort",
-    ]
-    assert canonical["series_title"] == "Primary Series"
-    assert canonical["series_sort"] == "001-00042"
-    assert canonical["links"] == [{"url": "https://example.test", "label": "Example"}]
-    assert canonical["media_version"] == 3
-    assert "checksum" in canonical
-
-    public_record = records.build_work_json_record(canonical)
-    assert "series_id" not in public_record
-    assert "series_title" not in public_record
-    assert "series_sort" not in public_record
-    assert "title_sort" not in public_record
-    assert "checksum" not in public_record
-    assert "year_display" not in public_record
-    assert public_record["series_ids"] == ["009", "010"]
-    assert public_record["documents"] == []
-
-
 def test_public_series_records_prune_internal_fields() -> None:
     series = records.build_series_json_record(
         {
@@ -130,8 +67,8 @@ def test_public_documents_are_sorted_deduped_and_versioned() -> None:
         documents=[series_document],
     )
 
-    assert records.WORK_RECORD_SCHEMA_VERSION == "work_record_v5"
-    assert records.SERIES_RECORD_SCHEMA_VERSION == "series_record_v4"
+    assert records.WORK_RECORD_SCHEMA_VERSION == "work_record_v6"
+    assert records.SERIES_RECORD_SCHEMA_VERSION == "series_record_v5"
     assert work["documents"] == [document_a, document_z]
     assert series["documents"] == [series_document]
     assert compute_payload_version({"work": work}) != compute_payload_version(
@@ -159,7 +96,7 @@ def test_public_documents_are_sorted_deduped_and_versioned() -> None:
         member_works=[{"work_id": "00001", "title": "Only", "year": 2026, "year_display": "2026"}],
         generated_at_utc="2026-08-09T20:00:00Z",
     )
-    assert series_payload["header"]["schema"] == "series_record_v4"
+    assert series_payload["header"]["schema"] == "series_record_v5"
     assert series_payload["header"]["count"] == 1
     assert series_payload["member_works"] == [
         {"work_id": "00001", "title": "Only", "year": 2026, "year_display": "2026"}
@@ -219,8 +156,6 @@ def test_detail_record_grouping_is_deterministic() -> None:
 
 def main() -> None:
     test_work_projection_order_and_coercion()
-    test_work_series_ids_are_normalized_and_deduped()
-    test_canonical_work_record_orders_fields_and_prunes_public_record()
     test_public_series_records_prune_internal_fields()
     test_detail_record_grouping_is_deterministic()
     print("Catalogue generation record tests OK")

@@ -11,8 +11,6 @@ from catalogue.catalogue_service_context import (
     CatalogueWriteContext,
     load_works_payload,
     log_event,
-    refresh_lookup_payloads,
-    refresh_lookup_payloads_for_work_change,
     utc_now,
 )
 from catalogue.catalogue_source import WORK_FIELDS, records_from_json_source, slug_id
@@ -71,14 +69,11 @@ def work_create_payload(context: CatalogueWriteContext, body: Mapping[str, Any])
             "dry_run": context.dry_run,
         },
     )
-    if not context.dry_run:
-        refresh_result = refresh_lookup_payloads(context)
-        payload["lookup_refresh"] = refresh_result
     return payload
 
 
 def work_save_payload(context: CatalogueWriteContext, body: Mapping[str, Any]) -> dict[str, Any]:
-    """Save canonical metadata and refresh Studio reads without publishing output."""
+    """Persist validated metadata; the write dispatcher owns output completion."""
     work_update = extract_work_update(body)
     work_id = slug_id(body.get("work_id") or work_update.get("work_id"))
     works = load_works_payload(context.works_path)["works"]
@@ -107,9 +102,6 @@ def work_save_payload(context: CatalogueWriteContext, body: Mapping[str, Any]) -
         payload.update(dry_run=True, would_write=plan.changed)
     elif plan.changed:
         payload["saved_at_utc"] = utc_now()
-        payload["lookup_refresh"] = refresh_lookup_payloads_for_work_change(
-            context, work_id, current_record, plan.updated_record, plan.changed_fields,
-        )
     log_event(context.repo_root, "catalogue_work_save", {
         "work_id": work_id, "changed": plan.changed,
         "changed_fields": plan.changed_fields, "dry_run": context.dry_run,

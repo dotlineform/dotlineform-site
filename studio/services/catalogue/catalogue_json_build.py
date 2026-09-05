@@ -1,347 +1,42 @@
-#!/usr/bin/env python3
-"""Scoped JSON-source catalogue build helper."""
+"""Explicit full Catalogue regeneration for initial population and maintenance."""
 
 from __future__ import annotations
 
 import argparse
-import subprocess
-import sys
+import json
 from pathlib import Path
-from typing import Any, Dict
+import sys
 
-_BOOTSTRAP_START = Path(__file__).resolve()
-for _candidate in (_BOOTSTRAP_START.parent, *_BOOTSTRAP_START.parents):
-    if (_candidate / "site-tools" / "config" / "site-tools.json").exists():
-        if str(_candidate) not in sys.path:
-            sys.path.insert(0, str(_candidate))
-        break
-
+_ROOT = Path(__file__).resolve().parents[3]
+if str(_ROOT) not in sys.path:
+    sys.path.insert(0, str(_ROOT))
 from studio.shared.python.studio_python_paths import ensure_studio_python_paths
 
 REPO_ROOT = ensure_studio_python_paths(__file__)
-SCRIPTS_DIR = REPO_ROOT / "scripts"
 
-from catalogue import catalogue_build_commands as build_commands
-from catalogue import catalogue_build_field_plan as build_field_plan
-from catalogue import catalogue_build_media as build_media
-from catalogue import catalogue_build_scopes as build_scopes
-from catalogue.catalogue_source import DEFAULT_SOURCE_DIR
-from local_env import runtime_env
-
-
-def detect_repo_root(start: Path | None = None) -> Path:
-    current = (start or Path.cwd()).resolve()
-    for candidate in [current, *current.parents]:
-        if (candidate / "site-tools" / "config" / "site-tools.json").exists():
-            return candidate
-    raise ValueError("Could not detect repo root.")
-
-
-def run_scoped_build_scope(
-    repo_root: Path,
-    *,
-    scope: Dict[str, Any],
-    write: bool,
-    force: bool = False,
-    media_only: bool = False,
-) -> Dict[str, Any]:
-    raise ValueError("Catalogue output is paused until the Stage 5 workflow is implemented.")
-    env = runtime_env()
-    refresh_published = not media_only
-    effective_force = bool(force)
-    generate_local_media = bool(scope.get("generate_local_media", True))
-    rebuild_search = bool(scope.get("rebuild_search", True))
-    generate_only = list(scope.get("generate_only") or [])
-    run_generate = bool(generate_only)
-    if generate_local_media:
-        media_step = build_media.execute_local_media_plan(repo_root, scope=scope, write=write, env=env, force=force)
-    else:
-        media_step = {
-            "label": "Generate Local Media Derivatives",
-            "status": "skipped",
-            "summary": "Local media not selected by this field-aware scope.",
-            "generated": {"work": [], "work_details": []},
-            "planned": {"work": [], "work_details": []},
-            "current": {"work": [], "work_details": []},
-            "blocked": {"work": [], "work_details": []},
-            "exit_code": 0,
-        }
-    commands: list[tuple[str, list[str]]] = []
-    if run_generate:
-        commands.append(
-            (
-                "Generate Catalogue JSON",
-                build_commands.build_generate_command(
-                    repo_root,
-                    Path(scope["source_dir"]),
-                    scope,
-                    write=write,
-                    force=effective_force,
-                    refresh_published=refresh_published,
-                ),
-            )
-        )
-    if rebuild_search:
-        commands.append(
-            (
-                "Build Catalogue Search Index",
-                build_commands.build_search_command(repo_root, write=write, force=effective_force, env=env),
-            )
-        )
-    if not media_only:
-        commands.append(
-            (
-                "Build Semantic Target Lookup",
-                build_commands.build_semantic_target_lookup_command(repo_root, write=write),
-            )
-        )
-    steps: list[Dict[str, Any]] = []
-    status = "completed"
-    failed_step = ""
-    failure_message = ""
-
-    steps.append(
-        {
-            "label": media_step.get("label", "Generate Local Media Derivatives"),
-            "command": [],
-            "exit_code": int(media_step.get("exit_code", 0)),
-            "stdout_tail": str(media_step.get("stdout_tail") or media_step.get("summary") or "").strip(),
-            "stderr_tail": str(media_step.get("stderr_tail") or "").strip(),
-            "status": str(media_step.get("status") or "completed"),
-        }
-    )
-    if media_step.get("status") == "failed":
-        status = "failed"
-        failed_step = str(media_step.get("label") or "Generate Local Media Derivatives")
-        failure_message = str(media_step.get("stderr_tail") or media_step.get("summary") or "Local media generation failed.")
-
-    if status != "failed" and not media_only:
-        for label, cmd in commands:
-            proc = subprocess.run(
-                cmd,
-                cwd=str(repo_root),
-                env=env,
-                text=True,
-                capture_output=True,
-            )
-            step = build_commands.normalize_subprocess_step(
-                label,
-                cmd,
-                returncode=proc.returncode,
-                stdout=proc.stdout or "",
-                stderr=proc.stderr or "",
-            )
-            steps.append(step)
-            if int(step.get("exit_code", 0)) != 0:
-                status = "failed"
-                failed_step = label
-                failure_message = build_commands.step_failure_message(label, step)
-                break
-
-    response: Dict[str, Any] = {
-        "scope": scope,
-        "status": status,
-        "write": bool(write),
-        "force": effective_force,
-        "media_only": bool(media_only),
-        "refresh_published": refresh_published,
-        "steps": steps,
-        "media": {
-            "generated": media_step.get("generated", {"work": [], "work_details": []}),
-            "current": media_step.get("current", {"work": [], "work_details": []}),
-            "blocked": media_step.get("blocked", {"work": [], "work_details": []}),
-            "status": media_step.get("status", "completed"),
-            "summary": media_step.get("summary", ""),
-        },
-    }
-    if failed_step:
-        response["failed_step"] = failed_step
-        response["error"] = failure_message
-
-    return response
-
-
-def print_preview(scope: Dict[str, Any], repo_root: Path, source_dir: Path, *, force: bool, media_only: bool) -> None:
-    if media_only:
-        ids = ", ".join(scope.get("work_ids", [])) or "none"
-        detail_uid = str(scope.get("detail_uid") or "").strip()
-        suffix = f", detail {detail_uid}" if detail_uid else ""
-        print(f"Refresh local media derivatives for works [{ids}]{suffix}.")
-    else:
-        print(scope["summary"])
-    print(f"Source mode: {scope['source_mode']}")
-    print(f"Work IDs: {', '.join(scope['work_ids']) if scope['work_ids'] else 'none'}")
-    print(f"Series IDs: {', '.join(scope['series_ids']) if scope['series_ids'] else 'none'}")
-    print(f"Published refresh: {'no' if media_only else 'yes'}")
-    print(f"Search rebuild: {'no' if media_only else 'yes' if scope['rebuild_search'] else 'no'}")
-    print(f"Media only: {'yes' if media_only else 'no'}")
-    field_plan = scope.get("field_plan") if isinstance(scope.get("field_plan"), dict) else {}
-    if field_plan:
-        print(f"Field-aware mode: {field_plan.get('mode') or 'unknown'}")
-        print(f"Field-aware rules: {', '.join(field_plan.get('rule_ids') or []) or 'none'}")
-        print(f"Field-aware artifacts: {', '.join(field_plan.get('artifacts') or []) or 'none'}")
-        explanation_lines = build_field_plan.field_plan_explanation_lines(field_plan)
-        if explanation_lines:
-            print("Field-aware reasons:")
-            for line in explanation_lines:
-                print(f"  - {line}")
-    media_plan = (
-        build_media.build_local_media_plan(repo_root, scope=scope, force=force)
-        if bool(scope.get("generate_local_media", True))
-        else {"counts": {"pending": 0, "current": 0, "blocked": 0, "unavailable": 0}}
-    )
-    media_counts = media_plan.get("counts", {})
-    print(
-        "Local media: "
-        f"pending {int(media_counts.get('pending', 0))}, "
-        f"current {int(media_counts.get('current', 0))}, "
-        f"blocked {int(media_counts.get('blocked', 0))}, "
-        f"unavailable {int(media_counts.get('unavailable', 0))}"
-    )
-    if media_only:
-        print("Commands: media-only internal derivative refresh")
-        return
-    print("Commands:")
-    commands: list[list[str]] = []
-    if scope.get("generate_only"):
-        commands.append(
-            build_commands.build_generate_command(
-                repo_root,
-                source_dir,
-                scope,
-                write=False,
-                force=force,
-                refresh_published=True,
-            )
-        )
-    if bool(scope.get("rebuild_search")):
-        commands.append(build_commands.build_search_command(repo_root, write=False, force=bool(force), env=runtime_env()))
-    commands.append(build_commands.build_semantic_target_lookup_command(repo_root, write=False))
-    if commands:
-        for cmd in commands:
-            print("  + " + " ".join(cmd))
-    else:
-        print("  (none)")
-
-
-def print_thumbnail_only_preview(repo_root: Path, source_dir: Path, *, force: bool) -> None:
-    print("Regenerate catalogue thumbnails for all works and work details.")
-    print("Source mode: canonical JSON")
-    print("Thumbnail only: yes")
-    print("Primary derivatives: no")
-    print("Search rebuild: no")
-    print("Published refresh: no")
-    plan = build_media.build_catalogue_thumbnail_only_plan(
-        repo_root,
-        source_dir=source_dir,
-        env=runtime_env(),
-        force=force,
-    )
-    counts = plan.get("counts", {})
-    print(
-        "Thumbnails: "
-        f"pending {int(counts.get('pending', 0))}, "
-        f"current {int(counts.get('current', 0))}, "
-        f"skipped {int(counts.get('skipped', 0))}"
-    )
-    skipped = [task for task in plan.get("tasks", []) if task.get("status") == "skipped"]
-    if skipped:
-        print("Skipped sources:")
-        for task in skipped[:20]:
-            kind = str(task.get("kind") or "")
-            item_id = str(task.get("id") or "")
-            reason = str(task.get("reason") or "source media is not available")
-            print(f"  - {kind} {item_id}: {reason}")
-        if len(skipped) > 20:
-            print(f"  - ... {len(skipped) - 20} more")
-    print("Commands: thumbnail-only internal regeneration")
-
-
-def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Scoped JSON-source catalogue build helper.")
-    parser.add_argument("--work-id", default="", help="Target work_id")
-    parser.add_argument("--series-id", default="", help="Target series_id")
-    parser.add_argument("--detail-uid", default="", help="Optional work detail uid to include in a work-scoped media plan")
-    parser.add_argument("--extra-series-ids", default="", help="Additional series ids to include")
-    parser.add_argument("--extra-work-ids", default="", help="Additional work ids to include for a series scope")
-    parser.add_argument("--repo-root", default="", help="Repo root (auto-detected when omitted)")
-    parser.add_argument("--source-dir", default=str(DEFAULT_SOURCE_DIR), help="Canonical JSON source dir")
-    parser.add_argument("--write", action="store_true", help="Run generation and search rebuild")
-    parser.add_argument("--force", action="store_true", help="Force generation and search rewrites even when content versions match")
-    parser.add_argument("--media-only", action="store_true", help="Only stage source media and regenerate local image derivatives")
-    parser.add_argument("--thumbnail-only", action="store_true", help="Only regenerate public work and work-detail thumbnails from catalogue JSON sources")
-    parser.add_argument("--changed-fields", action="append", default=[], help="Optional comma-separated source fields for field-aware preview planning")
-    parser.add_argument("--record-family", default="", help="Record family for --changed-fields: work, work_detail, or series")
-    return parser.parse_args()
+from catalogue.catalogue_output_media import complete_catalogue_media
+from catalogue.catalogue_output_paths import catalogue_output_workspace, output_path
+from catalogue.catalogue_service_context import build_catalogue_write_context, refresh_lookup_payloads
+from catalogue.catalogue_source import records_from_json_source
+from catalogue.generate_work_pages import generate_catalogue_json
 
 
 def main() -> None:
-    raise SystemExit("Catalogue output is paused until the Stage 5 workflow is implemented.")
-    args = parse_args()
-    repo_root = Path(args.repo_root).expanduser().resolve() if args.repo_root else detect_repo_root()
-    source_dir = (repo_root / args.source_dir).resolve()
-    work_id = str(args.work_id or "").strip()
-    series_id = str(args.series_id or "").strip()
-    if args.thumbnail_only:
-        if any(value for value in (work_id, series_id, str(args.detail_uid or "").strip())):
-            raise SystemExit("--thumbnail-only scans all works and work details; do not pass scoped record ids.")
-        if args.changed_fields or args.record_family:
-            raise SystemExit("--thumbnail-only does not use field-aware build planning.")
-        if args.media_only:
-            raise SystemExit("Pass either --thumbnail-only or --media-only, not both.")
-        if not args.write:
-            print_thumbnail_only_preview(repo_root, source_dir, force=args.force)
-            return
-        result = build_media.execute_catalogue_thumbnail_only_plan(
-            repo_root,
-            source_dir=source_dir,
-            write=True,
-            env=runtime_env(),
-            force=args.force,
-        )
-        if result["status"] != "completed":
-            raise SystemExit(str(result.get("stderr_tail") or result.get("summary") or "Thumbnail regeneration failed."))
-        print(str(result.get("summary") or "Thumbnail-only regeneration completed."))
-        return
-    if sum(1 for value in (work_id, series_id) if value) != 1:
-        raise SystemExit("Pass exactly one of --work-id or --series-id.")
-    if series_id:
-        scope = build_scopes.build_scope_for_series(source_dir, series_id, extra_work_ids=args.extra_work_ids.split(","))
-    else:
-        scope = build_scopes.build_scope_for_work(
-            source_dir,
-            work_id,
-            extra_series_ids=args.extra_series_ids.split(","),
-            detail_uid=args.detail_uid,
-            media_only=args.media_only,
-        )
-    changed_fields = build_field_plan.parse_csv_tokens(args.changed_fields)
-    if changed_fields:
-        plan = build_field_plan.build_field_plan_for_scope(
-            repo_root,
-            source_dir,
-            scope,
-            changed_fields=changed_fields,
-            record_family=args.record_family,
-        )
-        build_field_plan.apply_field_build_plan_to_scope(scope, plan)
-    if not args.write:
-        print_preview(scope, repo_root, source_dir, force=args.force, media_only=args.media_only)
-        return
-
-    result = run_scoped_build_scope(
-        repo_root,
-        scope=scope,
-        write=True,
-        force=args.force,
-        media_only=args.media_only,
+    """Preview by default; --write explicitly completes media and generated JSON."""
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--write", action="store_true", help="Apply the complete regeneration, including remote media")
+    args = parser.parse_args()
+    context = build_catalogue_write_context(REPO_ROOT)
+    records = records_from_json_source(context.source_dir)
+    workspace = catalogue_output_workspace(REPO_ROOT)
+    work_ids = sorted(set(records.works) | {path.stem for path in output_path(workspace, "works/index").glob("*.json")})
+    media = complete_catalogue_media(
+        REPO_ROOT, context.source_dir, records=records, previous=None, work_ids=work_ids, write=args.write,
     )
-    if result["status"] != "completed":
-        raise SystemExit(str(result.get("error") or "Scoped JSON build failed."))
-    if args.media_only:
-        print("Media-only derivative refresh completed.")
-    else:
-        print(scope["summary"])
+    output = generate_catalogue_json(REPO_ROOT, context.source_dir, write=args.write)
+    if args.write:
+        refresh_lookup_payloads(context)
+    print(json.dumps({"media": media, "output": output}, ensure_ascii=False, indent=2))
 
 
 if __name__ == "__main__":

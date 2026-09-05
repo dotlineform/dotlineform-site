@@ -21,12 +21,12 @@ def test_successful_thumbnail_copy_removes_staged_thumbnail_but_keeps_primary() 
         root = Path(temp)
         projects_base = root / "projects-base"
         projects_base.mkdir()
-        media_root = projects_base / "catalogue/media"
+        media_root = projects_base / "catalogue/media-staging"
         source = root / "source.jpg"
         staged_source = media_root / "works/make_srcset_images/00001.jpg"
         staged_thumb = media_root / "works/srcset_images/thumb/00001-thumb-96.webp"
         staged_primary = media_root / "works/srcset_images/primary/00001-primary-800.webp"
-        asset_thumb = root / "assets/works/img/00001-thumb-96.webp"
+        asset_thumb = projects_base / "catalogue/generated/works/thumbs/00001-thumb-96.webp"
         source.write_bytes(b"source-image")
 
         plan = {
@@ -53,7 +53,7 @@ def test_successful_thumbnail_copy_removes_staged_thumbnail_but_keeps_primary() 
                     "pending_asset_thumbs": [
                         {
                             "absolute_path": str(asset_thumb),
-                            "staged_path": "$DOTLINEFORM_PROJECTS_BASE_DIR/catalogue/media/works/srcset_images/thumb/00001-thumb-96.webp",
+                            "staged_path": "$DOTLINEFORM_PROJECTS_BASE_DIR/catalogue/media-staging/works/srcset_images/thumb/00001-thumb-96.webp",
                             "staged_absolute_path": str(staged_thumb),
                         }
                     ],
@@ -87,7 +87,7 @@ def test_successful_thumbnail_copy_removes_staged_thumbnail_but_keeps_primary() 
         assert staged_primary.read_bytes() == b"primary:800"
         assert not staged_thumb.exists()
         assert result["cleaned_staged_thumbs"] == {
-            "work": ["$DOTLINEFORM_PROJECTS_BASE_DIR/catalogue/media/works/srcset_images/thumb/00001-thumb-96.webp"],
+            "work": ["$DOTLINEFORM_PROJECTS_BASE_DIR/catalogue/media-staging/works/srcset_images/thumb/00001-thumb-96.webp"],
             "work_details": [],
         }
 

@@ -18,7 +18,6 @@ from catalogue.catalogue_media_files import IMAGE_EXTENSIONS
 from catalogue.catalogue_service_context import (
     CatalogueWriteContext,
     log_event,
-    refresh_lookup_payloads,
     utc_now,
 )
 from catalogue.catalogue_source import (
@@ -185,7 +184,6 @@ def create_detail_section_payload(
         payload["would_write"] = changed
     else:
         payload["saved_at_utc"] = utc_now()
-        payload["lookup_refresh"] = refresh_lookup_payloads(context)
 
     log_event(
         context.repo_root,
@@ -284,7 +282,6 @@ def save_detail_section_payload(context: CatalogueWriteContext, body: Mapping[st
         payload["would_write"] = changed
     elif changed:
         payload["saved_at_utc"] = utc_now()
-        payload["lookup_refresh"] = refresh_lookup_payloads(context)
     log_event(
         context.repo_root,
         "catalogue_detail_section_save",

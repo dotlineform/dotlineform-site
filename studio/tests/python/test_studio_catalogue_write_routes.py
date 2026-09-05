@@ -1,4 +1,4 @@
-"""Canonical Catalogue mutations and the paused output boundary through Studio's API."""
+"""Canonical Catalogue mutations and revision boundaries through Studio's API."""
 
 from http import HTTPStatus
 from pathlib import Path
@@ -20,14 +20,6 @@ def catalogue(tmp_path, monkeypatch):
     monkeypatch.setenv("DOTLINEFORM_PROJECTS_BASE_DIR", str(projects))
     source = write_catalogue_source(repo)
     return repo, source
-
-
-@pytest.mark.parametrize("path", ["/build-preview", "/build-apply", "/media-publish-preview", "/media-publish-apply"])
-def test_output_and_media_paused_before_reading_source(tmp_path, path):
-    status, payload = catalogue_post_response(tmp_path, path, {})
-    assert status == HTTPStatus.SERVICE_UNAVAILABLE
-    assert "Stage 5" in payload["error"]
-    assert list(tmp_path.iterdir()) == []
 
 
 @pytest.mark.parametrize("path", ["/publication-preview", "/publication-apply"])

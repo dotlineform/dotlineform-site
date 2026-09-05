@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Any, Dict, List, Mapping, Optional
+from typing import Any, Dict, List, Mapping
 
 from catalogue.catalogue_generation_common import (
     coerce_int,
@@ -12,7 +12,6 @@ from catalogue.catalogue_generation_common import (
     compact_json_object,
     compute_payload_version,
     is_empty,
-    normalize_status,
     normalize_text,
     numeric_aware_sort_key,
     slug_id,
@@ -34,22 +33,6 @@ class SeriesWorkIndexContext:
     work_ids_by_series_all: Dict[str, List[str]]
     series_sort_by_series_id: Dict[str, Dict[str, str]]
     series_sort_fields_by_series_id: Dict[str, List[str]]
-
-
-def require_series_primary_work_id(
-    sid: str,
-    series_record: Mapping[str, Any],
-    *,
-    ordered_work_ids: Optional[List[str]] = None,
-) -> str:
-    """Return a required primary_work_id for a series and validate membership when provided."""
-    raw = series_record.get("primary_work_id")
-    if is_empty(raw):
-        raise CatalogueGenerationIndexError(f"Series '{sid}' missing primary_work_id")
-    wid = slug_id(raw)
-    if ordered_work_ids and wid not in ordered_work_ids:
-        raise CatalogueGenerationIndexError(f"Series '{sid}' primary_work_id '{wid}' is not in its works list")
-    return wid
 
 
 def build_series_work_index_context(
@@ -226,29 +209,18 @@ def build_series_index_records(
         if is_empty(sid_raw):
             continue
         sid = normalize_series_id(sid_raw)
-        status = normalize_status(series_record.get("status"))
-        if status != "published":
-            continue
-
         series_title = coerce_string(series_record.get("title")) or sid
         year = coerce_int(series_record.get("year"))
         year_display = coerce_string(series_record.get("year_display"))
         if year_display is None:
             year_display = str(year) if year is not None else None
         ordered_work_ids = member_ids_by_series.get(sid, [])
-        primary_work_id = require_series_primary_work_id(
-            sid,
-            series_record,
-            ordered_work_ids=ordered_work_ids,
-        )
-
         series_payload_unsorted[sid] = compact_json_object({
             "series_id": sid,
             "title": series_title,
             "year": year,
             "year_display": year_display,
-            "primary_work_id": primary_work_id,
-            "single_work_id": ordered_work_ids[0] if len(ordered_work_ids) == 1 else None,
+            "work_count": len(ordered_work_ids),
         })
 
     return {sid: series_payload_unsorted[sid] for sid in sorted(series_payload_unsorted.keys())}

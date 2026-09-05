@@ -47,8 +47,8 @@ STUDIO_ROUTE_COPY_FIELDS: tuple[str, ...] = (
 STUDIO_MEDIA: dict[str, object] = {
     "thumbs": {
         "base": "",
-        "works": "/assets/works/img",
-        "work_details": "/assets/work_details/img",
+        "works": "/studio/catalogue-output/works/thumbs",
+        "work_details": "/studio/catalogue-output/work_details/thumbs",
     },
     "media": {
         "base": "https://media.dotlineform.com",
@@ -66,8 +66,6 @@ STUDIO_SERVICE_ENDPOINTS: dict[str, object] = {
         "bulk_save": "/studio/api/catalogue/bulk-save",
         "delete_preview": "/studio/api/catalogue/delete-preview",
         "delete_apply": "/studio/api/catalogue/delete-apply",
-        "media_publish_preview": "/studio/api/catalogue/media-publish-preview",
-        "media_publish_apply": "/studio/api/catalogue/media-publish-apply",
         "create_work_detail_section": "/studio/api/catalogue/work-detail-section/create",
         "create_work": "/studio/api/catalogue/work/create",
         "save_work": "/studio/api/catalogue/work/save",
@@ -75,8 +73,6 @@ STUDIO_SERVICE_ENDPOINTS: dict[str, object] = {
         "import_apply": "/studio/api/catalogue/import-apply",
         "create_series": "/studio/api/catalogue/series/create",
         "save_series": "/studio/api/catalogue/series/save",
-        "build_preview": "/studio/api/catalogue/build-preview",
-        "build_apply": "/studio/api/catalogue/build-apply",
     },
     "tags": {
         "base": "/studio/api/tags",
@@ -350,9 +346,8 @@ def series_tag_editor_runtime_settings(
 ) -> dict[str, object]:
     variants = pipeline_payload.get("variants") if isinstance(pipeline_payload.get("variants"), dict) else {}
     primary_variants = variants.get("primary") if isinstance(variants.get("primary"), dict) else {}
-    compatibility_variants = variants.get("compatibility") if isinstance(variants.get("compatibility"), dict) else {}
     encoding = pipeline_payload.get("encoding") if isinstance(pipeline_payload.get("encoding"), dict) else {}
-    render_widths = compatibility_variants.get("render_widths") or primary_variants.get("widths") or [800, 1200, 1600]
+    render_widths = primary_variants.get("widths") or [800, 1200, 1600]
     if not isinstance(render_widths, list):
         render_widths = [800, 1200, 1600]
     render_widths = [

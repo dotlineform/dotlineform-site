@@ -2,8 +2,6 @@
 
 from __future__ import annotations
 
-import hashlib
-import json
 from typing import Any, Dict, List, Mapping, Optional, Sequence
 
 from catalogue.catalogue_generation_common import (
@@ -12,15 +10,12 @@ from catalogue.catalogue_generation_common import (
     coerce_string,
     compact_json_object,
     compute_payload_version,
-    is_empty,
-    parse_list,
 )
 
-from catalogue.series_ids import normalize_series_id
 
 
-WORK_RECORD_SCHEMA_VERSION = "work_record_v5"
-SERIES_RECORD_SCHEMA_VERSION = "series_record_v4"
+WORK_RECORD_SCHEMA_VERSION = "work_record_v6"
+SERIES_RECORD_SCHEMA_VERSION = "series_record_v5"
 
 
 # Define the Works source-record projection once so adding a new field is a one-line change.
@@ -43,30 +38,6 @@ WORKS_SCHEMA: List[tuple[str, str, Any]] = [
 ]
 
 
-WORKS_FIELD_ORDER = [
-    "work_id",
-    "title",
-    "year",
-    "year_display",
-    "series_id",
-    "series_ids",
-    "series_title",
-    "series_sort",
-    "medium_type",
-    "medium_caption",
-    "duration",
-    "links",
-    "height_cm",
-    "width_cm",
-    "depth_cm",
-    "width_px",
-    "height_px",
-    "media_version",
-    "downloads",
-    "artist",
-]
-
-
 def build_work_record_projection(work_record: Mapping[str, Any]) -> Dict[str, Any]:
     """Build the scalar portion of the public work record projection."""
     fm: Dict[str, Any] = {}
@@ -74,75 +45,6 @@ def build_work_record_projection(work_record: Mapping[str, Any]) -> Dict[str, An
         raw = work_record.get(col_name)
         fm[fm_key] = coercer(raw)
     return fm
-
-
-def parse_source_list(raw: Any, sep: str = ",") -> List[str]:
-    if isinstance(raw, list):
-        return [str(item).strip() for item in raw if not is_empty(item)]
-    return parse_list(raw, sep=sep)
-
-
-def parse_work_record_series_ids(work_record: Mapping[str, Any]) -> List[str]:
-    series_ids: List[str] = []
-    seen_series_ids: set[str] = set()
-    for raw_series_id in parse_source_list(work_record.get("series_ids")):
-        try:
-            sid = normalize_series_id(raw_series_id)
-        except ValueError:
-            continue
-        if sid in seen_series_ids:
-            continue
-        seen_series_ids.add(sid)
-        series_ids.append(sid)
-    return series_ids
-
-
-def compute_work_checksum(record: Mapping[str, Any]) -> str:
-    """Compute a deterministic checksum for a generated JSON record."""
-    payload = dict(record)
-    payload.pop("checksum", None)
-
-    canonical = json.dumps(payload, sort_keys=True, ensure_ascii=False, separators=(",", ":")).encode("utf-8")
-    h = hashlib.blake2b(canonical, digest_size=16)
-    return h.hexdigest()
-
-
-def build_canonical_work_record(
-    wid: str,
-    *,
-    work_meta_by_id: Mapping[str, Mapping[str, Any]],
-    source_work_record: Mapping[str, Any],
-    series_title_by_id: Mapping[str, str],
-    series_sort_by_series_id: Mapping[str, Mapping[str, str]],
-    field_order: List[str] | None = None,
-) -> Optional[Dict[str, Any]]:
-    base = work_meta_by_id.get(wid)
-    if base is None:
-        return None
-    fm: Dict[str, Any] = {"work_id": wid}
-    fm.update(dict(base))
-    for key in ["downloads", "links"]:
-        items = source_work_record.get(key)
-        if isinstance(items, list) and items:
-            fm[key] = list(items)
-    raw_series_ids = fm.get("series_ids")
-    series_ids = [coerce_string(item) for item in raw_series_ids] if isinstance(raw_series_ids, list) else []
-    series_ids = [item for item in series_ids if item is not None]
-    sid = series_ids[0] if series_ids else coerce_string(fm.get("series_id"))
-    fm["series_id"] = sid
-    fm["series_ids"] = series_ids
-    fm["series_title"] = series_title_by_id.get(sid) if sid is not None else None
-    fm["series_sort"] = series_sort_by_series_id.get(sid, {}).get(wid, wid) if sid is not None else wid
-
-    ordered: Dict[str, Any] = {}
-    for key in field_order or WORKS_FIELD_ORDER:
-        if key in fm:
-            ordered[key] = fm[key]
-    for key, value in fm.items():
-        if key not in ordered:
-            ordered[key] = value
-    ordered["checksum"] = compute_work_checksum(ordered)
-    return ordered
 
 
 def build_canonical_detail_record(
@@ -195,7 +97,6 @@ def build_work_json_record(
     documents: Sequence[Mapping[str, Any]] = (),
 ) -> Dict[str, Any]:
     public_record = dict(work_record)
-    public_record.pop("series_id", None)
     public_record.pop("series_title", None)
     public_record.pop("series_sort", None)
     public_record.pop("title_sort", None)
@@ -227,7 +128,7 @@ def build_work_json_payload(
     generated_at_utc: str,
     count: int,
 ) -> Dict[str, Any]:
-    """Finalize one complete public Work by-ID payload."""
+    """Finalize one complete generated Work by-ID payload."""
 
     public_record = dict(work_record)
     raw_documents = public_record.get("documents", [])
@@ -235,7 +136,7 @@ def build_work_json_payload(
         raise ValueError("work.documents must be an array")
     public_record["documents"] = normalize_catalogue_documents(raw_documents)
     public_sections = [dict(section) for section in sections]
-    version_input = {"work": public_record, "sections": public_sections}
+    version_input = {"schema": WORK_RECORD_SCHEMA_VERSION, "work": public_record, "sections": public_sections}
     return compact_json_object(
         {
             "header": {
@@ -258,7 +159,7 @@ def build_series_json_payload(
     member_works: Sequence[Mapping[str, Any]],
     generated_at_utc: str,
 ) -> Dict[str, Any]:
-    """Finalize one complete public Series by-ID payload."""
+    """Finalize one complete generated Series by-ID payload."""
 
     public_record = dict(series_record)
     raw_documents = public_record.get("documents", [])
@@ -268,7 +169,7 @@ def build_series_json_payload(
         raise ValueError(f"series.series_id must match exact payload target {series_id}")
     public_record["documents"] = normalize_catalogue_documents(raw_documents)
     public_member_works = [compact_json_object(dict(work)) for work in member_works]
-    version_input = {"series": public_record, "member_works": public_member_works}
+    version_input = {"schema": SERIES_RECORD_SCHEMA_VERSION, "series": public_record, "member_works": public_member_works}
     return compact_json_object(
         {
             "header": {

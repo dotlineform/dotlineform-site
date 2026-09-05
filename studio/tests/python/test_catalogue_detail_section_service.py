@@ -101,10 +101,6 @@ def prepare_repo(tmp_path: Path) -> tuple[Path, Path]:
     return repo_root, projects_base
 
 
-def stub_lookup_refresh(monkeypatch) -> None:
-    monkeypatch.setattr(detail_section_service, "refresh_lookup_payloads", lambda _context: {})
-
-
 def test_detail_folder_inherits_processing_source_from_parent_work(tmp_path: Path) -> None:
     repo_root, projects_base = prepare_repo(tmp_path)
     processing_details = projects_base / "processing/ink-engine/details"
@@ -130,7 +126,6 @@ def test_detail_folder_inherits_processing_source_from_parent_work(tmp_path: Pat
 def test_create_detail_section_writes_section_and_records(tmp_path: Path, monkeypatch) -> None:
     repo_root, _projects_base = prepare_repo(tmp_path)
     context = build_catalogue_write_context(repo_root)
-    stub_lookup_refresh(monkeypatch)
 
     payload = detail_section_service.create_detail_section_payload(
         context,
@@ -268,7 +263,6 @@ def test_save_detail_section_updates_title_sort_and_compact_order(tmp_path: Path
         },
     )
     before_details = read_work_details_source(repo_root)["work_details"]
-    stub_lookup_refresh(monkeypatch)
 
     payload = detail_section_service.save_detail_section_payload(
         build_catalogue_write_context(repo_root),
@@ -327,7 +321,6 @@ def test_save_detail_section_single_section_omits_default_sort_and_keeps_details
         },
     )
     before_details = read_work_details_source(repo_root)["work_details"]
-    stub_lookup_refresh(monkeypatch)
 
     payload = detail_section_service.save_detail_section_payload(
         build_catalogue_write_context(repo_root),

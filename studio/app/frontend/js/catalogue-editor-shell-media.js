@@ -22,10 +22,9 @@ export function readCatalogueEditorMediaAttrs(config) {
   const pipeline = readObject(runtime.pipeline);
   const variants = readObject(pipeline.variants);
   const primary = readObject(variants.primary);
-  const compatibility = readObject(variants.compatibility);
   const thumb = readObject(variants.thumb);
   const encoding = readObject(pipeline.encoding);
-  const renderWidths = readArray(compatibility.render_widths, readArray(primary.widths, [800, 1200, 1600]));
+  const renderWidths = readArray(primary.widths, [800, 1200, 1600]);
   const thumbSizes = readArray(thumb.sizes, [96, 192]);
   const displayWidth = renderWidths.length ? renderWidths[0] : 800;
   const fullWidth = primary.preferred_width || (renderWidths.length ? renderWidths[renderWidths.length - 1] : 1600);
@@ -33,8 +32,8 @@ export function readCatalogueEditorMediaAttrs(config) {
   return {
     worksPrimaryBase: joinBasePath(mediaConfig.base, mediaConfig.works_images || "/works/img"),
     stagedWorksPrimaryBase: "/studio/media/catalogue/works/srcset_images/primary/",
-    thumbWorksBase: joinBasePath(thumbsConfig.base, thumbsConfig.works || "/assets/works/img"),
-    thumbWorkDetailsBase: joinBasePath(thumbsConfig.base, thumbsConfig.work_details || "/assets/work_details/img"),
+    thumbWorksBase: joinBasePath(thumbsConfig.base, thumbsConfig.works),
+    thumbWorkDetailsBase: joinBasePath(thumbsConfig.base, thumbsConfig.work_details),
     primaryDisplayWidth: displayWidth,
     primaryFullWidth: fullWidth,
     primarySuffix: normalizeText(primary.suffix) || "primary",

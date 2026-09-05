@@ -36,14 +36,14 @@ from pipeline_config import (
     media_mode_output_subdir,
 )
 from local_env import SITE_ENV_REL_PATH, runtime_env
-from catalogue.catalogue_media_version import finalize_catalogue_media_version
+from catalogue.catalogue_media_version import finalize_catalogue_media_versions
 
 
 PIPELINE_CONFIG = load_pipeline_config(Path(__file__))
 PRIMARY_SUFFIX = str(PIPELINE_CONFIG["variants"]["primary"]["suffix"])
 PRIMARY_OUTPUT_SUBDIR = str(PIPELINE_CONFIG["variants"]["primary"]["output_subdir"])
 OUTPUT_FORMAT = str(PIPELINE_CONFIG["encoding"]["format"])
-PRIMARY_WIDTHS = [int(v) for v in PIPELINE_CONFIG["variants"]["compatibility"]["generate_widths"]]
+PRIMARY_WIDTHS = [int(v) for v in PIPELINE_CONFIG["variants"]["primary"]["widths"]]
 
 R2_ENV_VARS = (
     "R2_ACCOUNT_ID",
@@ -153,7 +153,7 @@ class MediaVersionResult:
     previous_version: int | None = None
     media_version: int | None = None
     advanced: bool = False
-    public_json_path: str = ""
+    output_json_path: str = ""
     reason: str = ""
 
 
@@ -387,6 +387,7 @@ def run_catalogue_upload_targets(
     client: RemoteClient | None = None,
     env_files: Iterable[Path] | None = None,
     environ: Mapping[str, str] | None = None,
+    refresh_output: bool = True,
 ) -> Dict[str, object]:
     """Publish exact catalogue media targets through one remote client."""
 
@@ -445,7 +446,7 @@ def run_catalogue_upload_targets(
         changed_only=changed_only,
     )
     media_versions = (
-        finalize_complete_catalogue_uploads(repo_root=resolved_root, results=results)
+        finalize_complete_catalogue_uploads(repo_root=resolved_root, results=results, refresh_output=refresh_output)
         if write
         else []
     )
@@ -703,6 +704,8 @@ def normalize_remote_prefix(prefix: str) -> str:
     cleaned = prefix.strip().strip("/")
     if cleaned == "" or "\\" in cleaned or ".." in cleaned.split("/"):
         raise SystemExit(f"Error: invalid media remote prefix: {prefix!r}")
+    if cleaned == "archive" or cleaned.startswith("archive/"):
+        raise SystemExit("Error: active Catalogue media cannot write the frozen archive.")
     return cleaned
 
 
@@ -783,66 +786,34 @@ def plan_and_publish(
 
 
 def finalize_complete_catalogue_uploads(
-    *,
-    repo_root: Path,
-    results: Sequence[PublishResult],
+    *, repo_root: Path, results: Sequence[PublishResult], refresh_output: bool = True,
 ) -> List[MediaVersionResult]:
+    """Promote only complete successful groups through one canonical transaction."""
     grouped: Dict[tuple[str, str], List[PublishResult]] = {}
     for result in results:
         grouped.setdefault((result.kind, result.item_id), []).append(result)
-
     finalizations: List[MediaVersionResult] = []
-    successful_statuses = {"unchanged", "uploaded", "overwritten"}
-    changed_statuses = {"uploaded", "overwritten"}
-    required_widths = set(PRIMARY_WIDTHS)
-    for (kind, item_id), group in sorted(grouped.items()):
-        widths = {item.width for item in group}
-        statuses = {item.status for item in group}
-        if widths != required_widths or not statuses.issubset(successful_statuses):
-            finalizations.append(
-                MediaVersionResult(
-                    kind=kind,
-                    item_id=item_id,
-                    status="not_promoted",
-                    reason="complete successful primary variant set is required",
-                )
-            )
-            continue
-
-        advance = any(item.status in changed_statuses for item in group)
+    eligible: Dict[tuple[str, str], bool] = {}
+    for target, group in sorted(grouped.items()):
+        complete = {item.width for item in group} == set(PRIMARY_WIDTHS)
+        successful = all(item.status in {"unchanged", "uploaded", "overwritten"} for item in group)
+        if complete and successful:
+            eligible[target] = any(item.status in {"uploaded", "overwritten"} for item in group)
+        else:
+            finalizations.append(MediaVersionResult(*target, status="not_promoted", reason="complete successful primary variant set is required"))
+    if eligible:
         try:
-            finalized = finalize_catalogue_media_version(
-                repo_root,
-                kind=kind,
-                item_id=item_id,
-                advance=advance,
-            )
-            finalizations.append(
+            finalized = finalize_catalogue_media_versions(repo_root, eligible, refresh_output=refresh_output)
+            finalizations.extend(
                 MediaVersionResult(
-                    kind=kind,
-                    item_id=item_id,
-                    status="promoted" if finalized.advanced else "current",
-                    work_id=finalized.work_id,
-                    previous_version=finalized.previous_version,
-                    media_version=finalized.media_version,
-                    advanced=finalized.advanced,
-                    public_json_path=finalized.public_json_path,
-                    reason=(
-                        "complete upload promoted the confirmed media version"
-                        if finalized.advanced
-                        else "remote objects already match; rebuilt the current confirmed version"
-                    ),
-                )
+                    kind=item.kind, item_id=item.item_id, status="promoted" if item.advanced else "current",
+                    work_id=item.work_id, previous_version=item.previous_version, media_version=item.media_version,
+                    advanced=item.advanced, output_json_path=item.output_json_path,
+                    reason="complete remote variant set confirmed",
+                ) for item in finalized
             )
-        except Exception as exc:  # pragma: no cover - defensive CLI boundary
-            finalizations.append(
-                MediaVersionResult(
-                    kind=kind,
-                    item_id=item_id,
-                    status="failed",
-                    reason=f"media-version finalization failed: {exc}",
-                )
-            )
+        except Exception as exc:
+            finalizations.extend(MediaVersionResult(*target, status="failed", reason=f"media-version finalization failed: {exc}") for target in eligible)
     return finalizations
 
 

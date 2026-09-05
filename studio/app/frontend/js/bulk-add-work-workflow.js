@@ -101,6 +101,13 @@ export function projectBulkAddWorkApplyStart(options = {}) {
 }
 
 export function projectBulkAddWorkApplySuccess(state, response, options = {}) {
+  if (response?.output?.status === "failed") {
+    return {
+      status: {state: "error", text: response.output.message},
+      result: {state: "error", text: response.output.error},
+      warning: {state: "", text: ""}
+    };
+  }
   return {
     status: {
       state: "success",

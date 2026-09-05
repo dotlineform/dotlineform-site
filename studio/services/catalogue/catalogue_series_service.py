@@ -13,8 +13,6 @@ from catalogue.catalogue_service_context import (
     load_series_payload,
     load_works_payload,
     log_event,
-    refresh_lookup_payloads,
-    refresh_lookup_payloads_for_series_change,
     utc_now,
 )
 from catalogue.catalogue_source import SERIES_FIELDS, records_from_json_source, slug_id
@@ -89,9 +87,6 @@ def series_create_payload(context: CatalogueWriteContext, body: Mapping[str, Any
             "dry_run": context.dry_run,
         },
     )
-    if not context.dry_run:
-        refresh_result = refresh_lookup_payloads(context)
-        payload["lookup_refresh"] = refresh_result
     return payload
 
 
@@ -130,12 +125,6 @@ def series_save_payload(context: CatalogueWriteContext, body: Mapping[str, Any])
         payload.update(dry_run=True, would_write=plan.changed)
     elif plan.changed:
         payload["saved_at_utc"] = utc_now()
-        if plan.changed_work_ids:
-            payload["lookup_refresh"] = refresh_lookup_payloads(context)
-        else:
-            payload["lookup_refresh"] = refresh_lookup_payloads_for_series_change(
-                context, series_id, plan.changed_fields,
-            )
     log_event(context.repo_root, "catalogue_series_save", {
         "series_id": series_id, "changed": plan.changed,
         "changed_fields": plan.changed_fields, "changed_work_ids": plan.changed_work_ids,

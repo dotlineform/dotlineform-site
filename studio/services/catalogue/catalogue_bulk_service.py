@@ -13,7 +13,6 @@ from catalogue.catalogue_service_context import (
     load_work_details_payload,
     load_works_payload,
     log_event,
-    refresh_lookup_payloads,
     utc_now,
 )
 from catalogue.catalogue_source import (
@@ -234,10 +233,6 @@ def _finish_bulk_payload(
             "dry_run": context.dry_run,
         },
     )
-    if changed and not context.dry_run:
-        payload["lookup_refresh"] = refresh_lookup_payloads(context)
-
-
 def extract_bulk_save_request(body: Mapping[str, Any]) -> dict[str, Any]:
     kind = str(body.get("kind") or "").strip().lower()
     if kind not in {"works", "work_details"}:

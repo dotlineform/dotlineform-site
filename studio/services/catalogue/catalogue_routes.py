@@ -15,13 +15,9 @@ IMPORT_PREVIEW_PATH = "/catalogue/import-preview"
 IMPORT_APPLY_PATH = "/catalogue/import-apply"
 SERIES_SAVE_PATH = "/catalogue/series/save"
 SERIES_CREATE_PATH = "/catalogue/series/create"
-BUILD_PREVIEW_PATH = "/catalogue/build-preview"
-BUILD_APPLY_PATH = "/catalogue/build-apply"
 BULK_SAVE_PATH = "/catalogue/bulk-save"
 DELETE_PREVIEW_PATH = "/catalogue/delete-preview"
 DELETE_APPLY_PATH = "/catalogue/delete-apply"
-MEDIA_PUBLISH_PREVIEW_PATH = "/catalogue/media-publish-preview"
-MEDIA_PUBLISH_APPLY_PATH = "/catalogue/media-publish-apply"
 THUMBNAIL_QUALITY_PREVIEW_PATH = "/catalogue/thumbnail-quality-preview"
 
 POST_PATHS = (
@@ -29,8 +25,6 @@ POST_PATHS = (
     BULK_SAVE_PATH,
     DELETE_PREVIEW_PATH,
     DELETE_APPLY_PATH,
-    MEDIA_PUBLISH_PREVIEW_PATH,
-    MEDIA_PUBLISH_APPLY_PATH,
     WORK_SAVE_PATH,
     WORK_FILE_CREATE_PATH,
     WORK_FILE_SAVE_PATH,
@@ -42,8 +36,6 @@ POST_PATHS = (
     IMPORT_APPLY_PATH,
     SERIES_SAVE_PATH,
     SERIES_CREATE_PATH,
-    BUILD_PREVIEW_PATH,
-    BUILD_APPLY_PATH,
     THUMBNAIL_QUALITY_PREVIEW_PATH,
 )
 

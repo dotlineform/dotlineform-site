@@ -40,7 +40,6 @@ export function catalogueSaveDisabled(options = {}) {
   return !options.hasRecord
     || Boolean(options.isSaving)
     || Boolean(options.hasErrors)
-    || !options.dirty
     || !options.serverAvailable;
 }
 
