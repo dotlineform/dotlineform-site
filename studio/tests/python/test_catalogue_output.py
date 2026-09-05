@@ -15,6 +15,7 @@ from catalogue.catalogue_output_paths import catalogue_output_workspace
 from catalogue.catalogue_revisions import record_hash
 from catalogue.catalogue_source import records_from_json_source, write_source_record_payloads
 from catalogue.generate_work_pages import generate_catalogue_json
+from catalogue.catalogue_json_build import populate_catalogue_output
 from catalogue.catalogue_write_service import handle_catalogue_post
 from catalogue import catalogue_build_media as media
 from studio.services.media import publish_media_to_r2 as transport
@@ -103,6 +104,39 @@ def test_output_root_is_required_and_confined(output_catalogue, tmp_path):
     with pytest.raises(ValueError, match="outside"):
         generate_catalogue_json(repo, source, write=True)
     assert list(elsewhere.iterdir()) == []
+
+
+def test_population_preserves_current_media_without_processing_it(output_catalogue):
+    repo, source, root = output_catalogue
+    (root.parent / "media-staging").rmdir()
+    work = "works/thumbs/00001-thumb-96.webp"
+    detail = "work_details/thumbs/00001-001-thumb-96.webp"
+    for relative in (work, work.replace("96", "192"), detail, detail.replace("96", "192")):
+        (root / relative).parent.mkdir(parents=True, exist_ok=True)
+        (root / relative).write_bytes(b"current thumbnail from Save")
+    before_source = {p.relative_to(source): p.read_bytes() for p in source.rglob("*.json")}
+    preview = populate_catalogue_output(repo, write=False)
+    assert preview["thumbnails"] == {"existing_count": 4, "missing": []}
+    assert not list(root.rglob("*.json"))
+    result = populate_catalogue_output(repo, write=True)
+    assert result["status"] == "completed"
+    assert (root / detail).read_bytes() == b"current thumbnail from Save"
+    assert (root / work).read_bytes() == b"current thumbnail from Save"
+    assert before_source == {p.relative_to(source): p.read_bytes() for p in source.rglob("*.json")}
+    assert read_json(root / "works/index/00001.json")["work"]["media_version"] == 1
+
+
+def test_population_reports_exact_missing_thumbnails(output_catalogue):
+    repo, _, root = output_catalogue
+    result = populate_catalogue_output(repo, write=True)
+    assert result["status"] == "incomplete"
+    assert result["thumbnails"]["missing"] == [
+        "works/thumbs/00001-thumb-96.webp",
+        "works/thumbs/00001-thumb-192.webp",
+        "work_details/thumbs/00001-001-thumb-96.webp",
+        "work_details/thumbs/00001-001-thumb-192.webp",
+    ]
+    assert not (root / "works/thumbs").exists()
 
 
 def test_save_keeps_canonical_data_and_revision_on_media_failure(output_catalogue):

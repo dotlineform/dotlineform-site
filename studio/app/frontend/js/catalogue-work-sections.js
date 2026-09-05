@@ -6,7 +6,7 @@ import {
   createRecordListActions
 } from "/shared/frontend/js/record-list.js";
 
-import { cataloguePreviewFallback, catalogueReadinessItems, catalogueReadinessItemSummary, catalogueReadinessTone } from "./catalogue-editor-readiness.js";
+import { catalogueReadinessItems, catalogueReadinessItemSummary, catalogueReadinessTone } from "./catalogue-editor-readiness.js";
 import {
   getWorkEmbeddedItems
 } from "./catalogue-editor-embedded-items.js";
@@ -114,17 +114,16 @@ export function renderWorkCurrentPreview(state, options = {}) {
   }
   const record = state.currentRecord;
   const preview = buildWorkPrimaryPreview(state.mediaConfig, record.work_id, {
-    staged: true,
-    mediaVersion: null
+    mediaVersion: record.media_version
   });
   const previewSrc = cacheBustUrl(preview.src, state.mediaPreviewVersion);
   const previewSrcset = cacheBustSrcset(preview.srcset, state.mediaPreviewVersion);
-  const fallback = cataloguePreviewFallback(null, {
-    missingGeneratedText: text(state, options, "preview_generated_missing", "Generated preview unavailable. Source media exists."),
-    missingSourceText: text(state, options, "preview_source_missing", "Source media missing."),
-    unavailableText: text(state, options, "preview_unavailable", "Preview unavailable."),
-    notConfiguredText: text(state, options, "preview_not_configured", "Preview not configured.")
-  });
+  const fallback = {
+    fallbackState: preview.src ? "unavailable" : "not-configured",
+    fallbackText: preview.src
+      ? text(state, options, "preview_unavailable", "Preview image unavailable.")
+      : text(state, options, "preview_not_configured", "Preview not configured.")
+  };
   const caption = buildWorkRecordSummary(record);
   const dimensionCaption = buildWorkImageDimensionSummary(record);
   const canShowGenerated = Boolean(preview.src);

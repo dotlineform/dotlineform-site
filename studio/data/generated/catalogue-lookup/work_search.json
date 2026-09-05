@@ -1,7 +1,7 @@
 {
   "header": {
     "schema": "studio_catalogue_lookup_work_search_v2",
-    "count": 1936
+    "count": 1935
   },
   "items": [
     {
@@ -13548,13 +13548,6 @@
       "title": "se2",
       "year_display": "2026",
       "series_id": "143"
-    },
-    {
-      "work_id": "01943",
-      "record_hash": "05de8a7f11e318a23a8afce57803aad3cd96badcdde21dfc8cb2ed8e795acd86",
-      "title": "test",
-      "year_display": "2026",
-      "series_id": null
     }
   ]
 }
