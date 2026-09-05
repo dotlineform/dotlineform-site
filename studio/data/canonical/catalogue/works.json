@@ -1,7 +1,7 @@
 {
   "header": {
     "schema": "catalogue_source_works_v1",
-    "count": 1940
+    "count": 1935
   },
   "works": {
     "00001": {
@@ -184,8 +184,7 @@
       "status": "published",
       "published_date": "2026-04-26",
       "series_ids": [
-        "105",
-        "026"
+        "105"
       ],
       "project_folder": "nerve",
       "project_filename": "nerve.jpg",
@@ -5365,8 +5364,7 @@
       "status": "published",
       "published_date": "2026-04-01",
       "series_ids": [
-        "103",
-        "026"
+        "103"
       ],
       "project_folder": "collected 1989-1998",
       "project_filename": "mother and child.jpg",
@@ -9333,131 +9331,6 @@
       "depth_cm": null,
       "width_px": 3508,
       "height_px": 4960,
-      "provenance": null,
-      "artist": null
-    },
-    "00373": {
-      "work_id": "00373",
-      "status": "draft",
-      "published_date": "2026-04-29",
-      "series_ids": [
-        "102"
-      ],
-      "project_folder": "monoprints and residues",
-      "project_filename": "00373 - monoprint.jpg",
-      "media_version": 1,
-      "title": "00373 - monoprint",
-      "width_cm": 25,
-      "height_cm": 25,
-      "year": 2024,
-      "year_display": "2024?",
-      "medium_type": null,
-      "medium_caption": null,
-      "storage_location": "6",
-      "duration": null,
-      "depth_cm": null,
-      "width_px": 2953,
-      "height_px": 2953,
-      "provenance": null,
-      "artist": null
-    },
-    "00374": {
-      "work_id": "00374",
-      "status": "draft",
-      "published_date": "2026-04-29",
-      "series_ids": [
-        "102"
-      ],
-      "project_folder": "monoprints and residues",
-      "project_filename": "00374 - monoprint.jpg",
-      "media_version": 1,
-      "title": "00374 - monoprint",
-      "width_cm": 25,
-      "height_cm": 25,
-      "year": 2024,
-      "year_display": "2024?",
-      "medium_type": null,
-      "medium_caption": null,
-      "storage_location": "6",
-      "duration": null,
-      "depth_cm": null,
-      "width_px": 2953,
-      "height_px": 2953,
-      "provenance": null,
-      "artist": null
-    },
-    "00375": {
-      "work_id": "00375",
-      "status": "draft",
-      "published_date": "2026-04-29",
-      "series_ids": [
-        "011"
-      ],
-      "project_folder": "all the colours",
-      "project_filename": "00375 - colours.jpg",
-      "media_version": 1,
-      "title": "00375 - colours",
-      "width_cm": 40.5,
-      "height_cm": 30.5,
-      "year": 2024,
-      "year_display": "2024",
-      "medium_type": null,
-      "medium_caption": null,
-      "storage_location": "13",
-      "duration": null,
-      "depth_cm": null,
-      "width_px": 4783,
-      "height_px": 3602,
-      "provenance": null,
-      "artist": null
-    },
-    "00376": {
-      "work_id": "00376",
-      "status": "draft",
-      "published_date": null,
-      "series_ids": [
-        "102"
-      ],
-      "project_folder": "monoprints and residues",
-      "project_filename": "00376 - residues.jpg",
-      "media_version": 1,
-      "title": "00376 - residues",
-      "width_cm": 40.5,
-      "height_cm": 30.5,
-      "year": 2024,
-      "year_display": "2024?",
-      "medium_type": null,
-      "medium_caption": null,
-      "storage_location": "13",
-      "duration": null,
-      "depth_cm": null,
-      "width_px": 4783,
-      "height_px": 3602,
-      "provenance": null,
-      "artist": null
-    },
-    "00377": {
-      "work_id": "00377",
-      "status": "draft",
-      "published_date": null,
-      "series_ids": [
-        "102"
-      ],
-      "project_folder": "monoprints and residues",
-      "project_filename": "00377 - residue - monoprint.jpg",
-      "media_version": 1,
-      "title": "00377 - residue - monoprint",
-      "width_cm": 29.4,
-      "height_cm": 21,
-      "year": 2024,
-      "year_display": "2024?",
-      "medium_type": null,
-      "medium_caption": null,
-      "storage_location": "13",
-      "duration": null,
-      "depth_cm": null,
-      "width_px": 3472,
-      "height_px": 2480,
       "provenance": null,
       "artist": null
     },
