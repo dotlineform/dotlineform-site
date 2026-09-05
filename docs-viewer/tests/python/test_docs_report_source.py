@@ -223,10 +223,19 @@ def test_docs_subscope_requires_a_configured_child() -> None:
     assert descriptor.sub_scope == "works"
 
 
-def test_report_block_is_forbidden_in_child_subscope_source() -> None:
+def test_ordinary_report_block_is_allowed_in_child_subscope_source() -> None:
+    descriptor = parse(
+        block("id: reports_list", "access: public"),
+        contract=contract(source_sub_scope_id="works"),
+    )
+    assert descriptor is not None
+    assert descriptor.id == "reports_list"
+
+
+def test_collection_report_is_forbidden_in_child_subscope_source() -> None:
     child_contract = contract(source_sub_scope_id="works")
     assert_error(
-        block("id: reports_list", "access: public"),
+        block("id: docs_subscope", "access: public", "sub_scope: works"),
         "sub_scope_source",
         contract=child_contract,
     )

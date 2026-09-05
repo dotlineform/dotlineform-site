@@ -13,6 +13,7 @@ import docs_published_reads
 import docs_scope_publish
 from docs_scope_config import load_docs_scope_configs
 import docs_source_config_report
+import docs_series_works_report
 import docs_source_config_settings
 import docs_staged_media_service
 from docs_management_capabilities_service import capabilities_payload
@@ -114,13 +115,17 @@ def docs_management_get_payload(repo_root: Path, path: str, params: dict[str, li
         )
     if path == routes.SOURCE_BODY_PATH:
         return read_source_body(repo_root, params)
-    if path == routes.METADATA_PATH:
+    if path in {routes.METADATA_PATH, routes.SERIES_WORKS_REPORT_PATH, routes.SERIES_WORK_MEDIA_PATH}:
         target = {
             "scope": docs_api_query_value(params, "scope"),
             "doc_id": docs_api_query_value(params, "doc_id"),
         }
         if "sub_scope" in params:
             target["sub_scope"] = docs_api_query_value(params, "sub_scope")
+        if path == routes.SERIES_WORKS_REPORT_PATH:
+            return docs_series_works_report.build_series_works_report(repo_root, target)
+        if path == routes.SERIES_WORK_MEDIA_PATH:
+            return docs_series_works_report.build_series_work_media(repo_root, target, docs_api_query_value(params, "work_id"))
         return managed_document_metadata(repo_root, target)
     if path in {
         routes.IMPORT_SOURCE_DIRECTORIES_PATH,

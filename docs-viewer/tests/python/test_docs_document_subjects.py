@@ -7,6 +7,7 @@ import sys
 from pathlib import Path
 from types import SimpleNamespace
 
+import pytest
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 SERVICES_DIR = REPO_ROOT / "docs-viewer" / "services"
@@ -14,6 +15,37 @@ if str(SERVICES_DIR) not in sys.path:
     sys.path.insert(0, str(SERVICES_DIR))
 
 import docs_document_subjects as subjects  # noqa: E402
+
+
+def test_detail_uid_is_exact_identity_without_catalogue_lookup() -> None:
+    assert subjects.parse_detail_uid("00008-001") == ("00008", "001")
+    normalized = subjects.normalize_authoring_subject(
+        {"detail_uid": "00008-001"}, folder_supported=False
+    )
+    assert normalized == {
+        "state": "valid", "kind": "detail", "key": "00008-001",
+        "fields": ["detail_uid"],
+    }
+    document = SimpleNamespace(doc_id="detail-doc", viewer_url="/docs/?doc=detail-doc")
+    payload = subjects.project_subject_associations(
+        scope="analysis", sub_scope="works", documents=[document],
+        subjects_by_doc_id={document.doc_id: normalized}, subject_generation="test",
+    )
+    assert payload["associations"][0]["subject"] == {
+        "kind": "detail", "key": "00008-001",
+    }
+    assert subjects.normalize_authoring_subject(
+        {"detail_uid": "00008-001", "work_id": "00008"}, folder_supported=False
+    )["state"] == "conflicting"
+
+
+@pytest.mark.parametrize("value", ["8-1", "00008-01", "00008-0001", "00008_001", "00008-001\n", "٠٠٠٠٨-001"])
+def test_detail_uid_rejects_noncanonical_identity(value: str) -> None:
+    with pytest.raises(ValueError):
+        subjects.parse_detail_uid(value)
+    assert subjects.normalize_authoring_subject(
+        {"detail_uid": value}, folder_supported=False
+    )["state"] == "malformed"
 
 
 def test_normalized_subject_states_preserve_exact_scalar_identity() -> None:

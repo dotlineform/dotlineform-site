@@ -434,6 +434,8 @@ def plan_assign_field_group(
             "assign field group fields must contain exactly "
             + ", ".join(group.field_names)
         )
+    if group.group_id == "authoring_subject" and resolved.scope != "dotlineform" and raw_fields.get("folder_path"):
+        raise ValueError("Folder subjects are available only in dotlineform")
 
     target = resolved.document
     source_bytes = target.source_text.encode("utf-8")

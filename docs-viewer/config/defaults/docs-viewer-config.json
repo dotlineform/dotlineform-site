@@ -96,7 +96,15 @@
           "sub_scope": "works",
           "title": "Works",
           "manifest_url": "/docs/generated/external/analysis/works/manage-manifest.json",
-          "by_id_url_base": "/docs/generated/external/analysis/works/by-id"
+          "by_id_url_base": "/docs/generated/external/analysis/works/by-id",
+          "sub_scope_customisation": {
+            "id": "analysis_works",
+            "capabilities": {
+              "assignable_field_groups": [
+                "authoring_subject"
+              ]
+            }
+          }
         }
       ]
     },

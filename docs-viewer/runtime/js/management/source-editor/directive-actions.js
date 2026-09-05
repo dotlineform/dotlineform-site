@@ -2,6 +2,12 @@ export const DIRECTIVE_ACTIONS_CONTROL_ID = "source-directives";
 
 export const DIRECTIVE_ACTIONS = Object.freeze([
   Object.freeze({
+    emoji: "≡",
+    id: "series-works",
+    label: "Works in this Series",
+    source: ":::report\nid: series_works\naccess: local\n:::"
+  }),
+  Object.freeze({
     emoji: "⊞",
     id: "table-detail",
     label: "Table detail",

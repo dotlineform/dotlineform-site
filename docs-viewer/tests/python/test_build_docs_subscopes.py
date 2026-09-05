@@ -33,6 +33,43 @@ DETAIL_DOC_ID = "d-20260620-000000-000012"
 RELATED_DOC_ID = "d-20260622-000000-000013"
 HIDDEN_DOC_ID = "d-20260622-000000-000014"
 
+
+def test_child_report_preserves_descriptor_and_authored_host(tmp_path: Path) -> None:
+    prepare_repo(tmp_path)
+    config_path = tmp_path / "docs-viewer/config/scopes/docs_scopes.json"
+    payload = read_json(config_path)
+    payload["scopes"][0]["sub_scopes"] = [docs_sub_scope_record("studio", "works")]
+    write_json(config_path, payload)
+    write_text(
+        tmp_path / f"docs-viewer/scopes/studio/source/sub-scopes/works/documents/{DETAIL_DOC_ID}.md",
+        f'''---
+doc_id: {DETAIL_DOC_ID}
+title: Child report
+---
+Before report.
+
+:::report
+id: reports_list
+access: public
+:::
+
+After report with **formatted text**.
+''',
+    )
+    exit_code, _, stderr = run_cli(
+        tmp_path, ["--scope", "studio", "--sub-scope", "works", "--write", "--skip-media-builds"],
+    )
+    assert exit_code == 0, stderr
+    child = read_json(tmp_path / f"docs-viewer/scopes/studio/generated/documents/sub-scopes/works/by-id/{DETAIL_DOC_ID}.json")
+    assert child["doc_id"] == DETAIL_DOC_ID
+    assert child["report"]["id"] == "reports_list"
+    assert child["report"]["access"] == "public"
+    html = child["content_html"]
+    assert html.count("data-docs-viewer-report-host") == 1
+    assert html.index("Before report") < html.index("data-docs-viewer-report-host") < html.index("After report")
+    assert "<p>After report with <strong>formatted text</strong>.</p>" in html
+
+
 def test_python_docs_builder_excludes_configured_sub_scope_sources() -> None:
     with tempfile.TemporaryDirectory() as temp_path:
         root = Path(temp_path)

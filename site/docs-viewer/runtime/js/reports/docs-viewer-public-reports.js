@@ -141,8 +141,13 @@ export function mountDocsViewerPublicReport(context) {
   }
   root.dataset.reportId = meta.reportId;
 
+  function isCurrent() {
+    return hostIsCurrent(root, context.content)
+      && (typeof context.isCurrentDocument !== "function" || context.isCurrentDocument());
+  }
+
   return loadReportRegistry(context).then(function (registry) {
-    if (!hostIsCurrent(root, context.content)) return false;
+    if (!isCurrent()) return false;
     const reportMeta = registry.reportsById.get(meta.reportId);
     if (!reportMeta) {
       unavailable(root, "This report has not been promoted for public routes.");
@@ -157,19 +162,22 @@ export function mountDocsViewerPublicReport(context) {
 
     root.innerHTML = '<p class="docsViewer__panelStatus muted small">Loading report...</p>';
     return PUBLIC_REPORT_LOADERS[reportMeta.loaderId].load().then(function (mount) {
-      if (!hostIsCurrent(root, context.content)) return false;
+      if (!isCurrent()) return false;
       const resolvedReportMeta = Object.assign({}, meta, { registryEntry: reportMeta });
       return Promise.resolve(mount(Object.assign({}, context, {
         reportRoot: root,
         reportMeta: resolvedReportMeta,
-        reportRegistry: registry
+        reportRegistry: registry,
+        mountSubscopeDocumentReport: function (child) {
+          return mountDocsViewerPublicReport(Object.assign({}, context, child));
+        }
       }))).then(function () {
-        if (!hostIsCurrent(root, context.content)) return false;
+        if (!isCurrent()) return false;
         return true;
       });
     });
   }).catch((error) => {
-    if (hostIsCurrent(root, context.content)) {
+    if (isCurrent()) {
       unavailable(root, error && error.message ? error.message : "Failed to render report.");
     }
     return true;

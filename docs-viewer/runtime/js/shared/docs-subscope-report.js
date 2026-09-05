@@ -931,6 +931,22 @@ function renderDetailPayload(state, docId, payload) {
     info: projectDetailInfo(state, docId, payload, metadata),
     record: metadata
   });
+  if (!payload.report || typeof state.mountDocumentReport !== "function") return Promise.resolve();
+  var content = state.detailBodyNode;
+  var requestVersion = state.detailRequestVersion;
+  return state.mountDocumentReport({
+    content: content,
+    doc: payload,
+    payload: payload,
+    documentTarget: detailTarget(state, docId),
+    isCurrentDocument: function () {
+      return state.mounted
+        && state.root.isConnected !== false
+        && state.validDetailId === docId
+        && state.detailBodyNode === content
+        && state.detailRequestVersion === requestVersion;
+    }
+  });
 }
 
 function renderDetailById(state, docId, options) {
@@ -953,8 +969,7 @@ function renderDetailById(state, docId, options) {
   return fetchJson(url, "Failed to load docs sub-scope detail payload", options)
     .then(function (payload) {
       if (requestVersion !== state.detailRequestVersion) return true;
-      renderDetailPayload(state, docId, payload);
-      return true;
+      return Promise.resolve(renderDetailPayload(state, docId, payload)).then(function () { return true; });
     })
     .catch(function (error) {
       if (requestVersion !== state.detailRequestVersion) return true;
@@ -1242,6 +1257,7 @@ function mountResolvedDocsSubscopeReport(context, contribution) {
   refs.statusNode.textContent = "Loading " + subScopeTitle(subScope, subScopeIdValue) + "...";
   var state = {
     root: root,
+    mountDocumentReport: context.mountSubscopeDocumentReport,
     parentDocId: cleanString(context && context.doc && context.doc.doc_id),
     subScope: subScope,
     subScopeId: subScopeIdValue,

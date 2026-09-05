@@ -71,11 +71,16 @@ def test_current_customisations_declare_explicit_aspects() -> None:
     assert analysis.transfer.contract_id == "analysis_tag_fields"
     assert analysis.transfer.owned_field_names == ("group", "tag_id")
 
-    assert works.browser_composition is None
-    assert works.assignable_field_groups == ()
+    assert works.browser_composition.accesses == frozenset({"manage"})
+    assert works.assignable_field_groups == (
+        customisations.DocsSubScopeAssignableFieldGroup(
+            group_id="authoring_subject",
+            field_names=("folder_path", "work_id", "series_id", "detail_uid"),
+        ),
+    )
     assert works.authoring_subject == (
         customisations.DocsSubScopeAuthoringSubjectAspect(
-            field_names=("folder_path", "work_id", "series_id"),
+            field_names=("work_id", "series_id", "detail_uid"),
         )
     )
     assert works.transfer is None
@@ -109,7 +114,7 @@ def test_current_customisations_declare_explicit_aspects() -> None:
     assert projects.assignable_field_groups == (
         customisations.DocsSubScopeAssignableFieldGroup(
             group_id="authoring_subject",
-            field_names=("folder_path", "work_id", "series_id"),
+            field_names=("folder_path", "work_id", "series_id", "detail_uid"),
         ),
     )
     assert projects.transfer is None
@@ -141,7 +146,7 @@ def test_current_customisations_declare_explicit_aspects() -> None:
     assert processing.assignable_field_groups == (
         customisations.DocsSubScopeAssignableFieldGroup(
             group_id="authoring_subject",
-            field_names=("folder_path", "work_id", "series_id"),
+            field_names=("folder_path", "work_id", "series_id", "detail_uid"),
         ),
     )
     assert processing.transfer is None
@@ -292,13 +297,19 @@ def test_current_customisations_declare_explicit_aspects() -> None:
     assert customisations.browser_sub_scope_customisation_payload(
         works_config,
         published=False,
+    ) == {
+        "id": "analysis_works",
+        "capabilities": {"assignable_field_groups": ["authoring_subject"]},
+    }
+    assert customisations.browser_sub_scope_customisation_payload(
+        works_config, published=True,
     ) is None
     assert customisations.sub_scope_customisation_assignable_field_groups(
         works_config
-    ) == ()
+    ) == works.assignable_field_groups
     assert customisations.sub_scope_customisation_authoring_subject_fields(
         works_config
-    ) == ("folder_path", "work_id", "series_id")
+    ) == ("work_id", "series_id", "detail_uid")
     assert customisations.sub_scope_customisation_document_lineage_contracts(
         works_config
     ) == works.document_lineages

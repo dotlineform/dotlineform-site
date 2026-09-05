@@ -58,6 +58,20 @@ export function createDocsViewerReportService(options) {
 
   return {
     baseUrl: serviceOptions.baseUrl,
+    readSeriesWorkMedia: function (request) {
+      var target = normalizeManagedDocumentTarget(request && request.target);
+      var query = new URLSearchParams(Object.assign({}, target, { work_id: request.workId })).toString();
+      return fetchReportJson("/docs/series-work-media?" + query, Object.assign({}, serviceOptions, {
+        requireOkEnvelope: true
+      }));
+    },
+    readSeriesWorks: function (request) {
+      var target = normalizeManagedDocumentTarget(request && request.target);
+      var query = new URLSearchParams(target).toString();
+      return fetchReportJson("/docs/series-works-report?" + query, Object.assign({}, serviceOptions, {
+        requireOkEnvelope: true
+      }));
+    },
     readSourceConfig: function () {
       return fetchReportJson("/docs/source-config", Object.assign({}, serviceOptions, {
         requireOkEnvelope: true

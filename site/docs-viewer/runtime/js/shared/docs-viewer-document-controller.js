@@ -63,6 +63,14 @@ export function initDocsViewerDocumentController(context) {
       payload: payload,
       documentMountGeneration: mountGeneration,
       reportPresentationAdapter: context.reportPresentationAdapter,
+      openMediaPresentation: function (request) {
+        var adapter = context.mediaDetailAdapter;
+        if (mountGeneration !== documentMountGeneration || !adapter) return false;
+        return adapter.openPresentation(Object.assign({}, request, {
+          content: content,
+          documentMountGeneration: mountGeneration
+        }));
+      },
       requestContentDetail: context.requestContentDetail,
       publishSubscopeReportState: context.publishSubscopeReportState,
       routeContext: typeof context.routeContext === "function" ? context.routeContext() : context.routeContext,

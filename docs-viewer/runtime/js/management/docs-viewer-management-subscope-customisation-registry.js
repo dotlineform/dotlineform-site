@@ -3,6 +3,11 @@ function cleanString(value) {
 }
 
 const MANAGEMENT_CUSTOMISATION_LOADERS = Object.freeze({
+  analysis_works: function () {
+    return import("./docs-viewer-management-subscope-dotlineform-projects.js").then(function (module) {
+      return module.createDocsViewerManagementSubscopeAnalysisWorks;
+    });
+  },
   analysis_tags: function () {
     return import("./docs-viewer-management-subscope-analysis-tags.js").then(function (module) {
       return module.createDocsViewerManagementSubscopeAnalysisTags;

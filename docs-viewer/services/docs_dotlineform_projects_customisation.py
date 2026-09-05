@@ -14,6 +14,7 @@ from docs_local_links import (
 )
 from docs_document_subjects import (
     AUTHORING_SUBJECT_FIELDS,
+    DETAIL_UID_FIELD,
     FOLDER_PATH_FIELD,
     SERIES_ID_FIELD,
     WORK_ID_FIELD,
@@ -204,11 +205,12 @@ def metadata_record(
     front_matter: Mapping[str, Any],
     *,
     doc_id: str,
+    folder_supported: bool = True,
 ) -> dict[str, str]:
     if settings:
         raise ValueError("dotlineform_projects settings must be empty")
     del doc_id
-    subject = normalize_authoring_subject(front_matter, folder_supported=True)
+    subject = normalize_authoring_subject(front_matter, folder_supported=folder_supported)
     record = dict.fromkeys(AUTHORING_SUBJECT_FIELDS, "")
     if subject["state"] == "valid":
         field_name = subject["fields"][0]
@@ -233,7 +235,7 @@ def _strict_scalar_subject_fields(raw: Any, *, field: str) -> dict[str, str]:
         values[field_name] = value
     if sum(bool(value) for value in values.values()) > 1:
         raise ValueError(f"{field} must select at most one authoring subject")
-    for field_name, kind in ((WORK_ID_FIELD, "work"), (SERIES_ID_FIELD, "series")):
+    for field_name, kind in ((WORK_ID_FIELD, "work"), (SERIES_ID_FIELD, "series"), (DETAIL_UID_FIELD, "detail")):
         if values[field_name] and not catalogue_subject_key_is_canonical(
             kind,
             values[field_name],
@@ -249,10 +251,13 @@ def normalize_metadata_update(
     repo_root: Path,
     front_matter: Mapping[str, Any],
     doc_id: str,
+    folder_supported: bool = True,
 ) -> dict[str, Any]:
     if settings:
         raise ValueError("dotlineform_projects settings must be empty")
     values = _strict_scalar_subject_fields(raw, field="customisation")
+    if values[FOLDER_PATH_FIELD] and not folder_supported:
+        raise ValueError("Folder subjects are available only in dotlineform")
     if values[FOLDER_PATH_FIELD]:
         base_path = configured_base_dir(repo_root)
         try:
@@ -262,10 +267,10 @@ def normalize_metadata_update(
             )
         except ValueError as error:
             raise ValueError(f"customisation.folder_path is invalid: {error}") from error
-    current = metadata_record(settings, front_matter, doc_id=doc_id)
+    current = metadata_record(settings, front_matter, doc_id=doc_id, folder_supported=folder_supported)
     changed = values != current or normalize_authoring_subject(
         front_matter,
-        folder_supported=True,
+        folder_supported=folder_supported,
     )["state"] not in {"none", "valid"}
     return {
         "front_matter_updates": {
@@ -302,7 +307,7 @@ def normalize_import_front_matter(
         raise ValueError(
             f"custom import authoring subject is conflicting for {doc_id!r}"
         )
-    for field_name, kind in ((WORK_ID_FIELD, "work"), (SERIES_ID_FIELD, "series")):
+    for field_name, kind in ((WORK_ID_FIELD, "work"), (SERIES_ID_FIELD, "series"), (DETAIL_UID_FIELD, "detail")):
         if values[field_name] and not catalogue_subject_key_is_canonical(
             kind,
             values[field_name],

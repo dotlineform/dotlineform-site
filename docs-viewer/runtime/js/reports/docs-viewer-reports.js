@@ -3,6 +3,13 @@ import {
 } from "../shared/docs-viewer-asset-url.js";
 
 const REPORT_LOADERS = {
+  series_works: {
+    load: function () {
+      return import("./series-works-report.js").then(function (module) {
+        return module.mountSeriesWorksReport;
+      });
+    }
+  },
   docs_index_table: {
     load: function () {
       return import("./docs-index-table-report.js").then(function (module) {
@@ -261,8 +268,13 @@ export function mountDocsViewerReport(context) {
   }
   root.dataset.reportId = meta.reportId;
 
+  function isCurrent() {
+    return hostIsCurrent(root, context.content)
+      && (typeof context.isCurrentDocument !== "function" || context.isCurrentDocument());
+  }
+
   return loadReportRegistry(context).then(function (registry) {
-    if (!hostIsCurrent(root, context.content)) return false;
+    if (!isCurrent()) return false;
     const reportMeta = registry.reportsById.get(meta.reportId);
     const loader = reportMeta ? REPORT_LOADERS[reportMeta.loaderId] : null;
 
@@ -272,28 +284,34 @@ export function mountDocsViewerReport(context) {
     }
 
     return canMountReport(meta, reportMeta, context).then((result) => {
-      if (!hostIsCurrent(root, context.content)) return false;
+      if (!isCurrent()) return false;
       if (!result.ok) {
         unavailable(root, accessMessage(result.access));
         return true;
       }
       root.innerHTML = '<p class="docsViewerReport__status">Loading report...</p>';
       return loader.load().then(function (mount) {
-        if (!hostIsCurrent(root, context.content)) return false;
+        if (!isCurrent()) return false;
         const resolvedReportMeta = Object.assign({}, meta, { registryEntry: reportMeta });
         return Promise.resolve(mount(Object.assign({}, context, {
           reportRoot: root,
           reportMeta: resolvedReportMeta,
-          reportRegistry: registry
+          reportRegistry: registry,
+          mountSubscopeDocumentReport: function (child) {
+            return mountDocsViewerReport(Object.assign({}, context, child, {
+              // Child reports mount inline; the outer document owns Content Detail.
+              reportPresentationAdapter: null
+            }));
+          }
         }))).then(function (mountResult) {
-          if (!hostIsCurrent(root, context.content)) return false;
+          if (!isCurrent()) return false;
           registerExpandedPresentation(context, root, resolvedReportMeta, mountResult);
           return true;
         });
       });
     });
   }).catch((error) => {
-    if (hostIsCurrent(root, context.content)) {
+    if (isCurrent()) {
       unavailable(root, error && error.message ? error.message : "Failed to render report.");
     }
     return true;

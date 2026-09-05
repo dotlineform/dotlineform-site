@@ -3,13 +3,14 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from functools import partial
 from pathlib import Path
 import re
 from typing import Any, Callable, Mapping, Sequence
 
 import docs_dotlineform_projects_customisation as dotlineform_projects
 import docs_dotlineform_processing_customisation as dotlineform_processing
-from docs_document_subjects import AUTHORING_SUBJECT_FIELDS
+from docs_document_subjects import AUTHORING_SUBJECT_FIELDS, FOLDER_PATH_FIELD
 from docs_tag_documents import TAG_ID_FIELD, normalize_tag_declaration
 
 
@@ -311,6 +312,13 @@ def _normalize_analysis_tags_import_front_matter(
     return result
 
 
+def _project_analysis_works_manifest(
+    settings: Mapping[str, Any], documents: Sequence[Any], repo_root: Path, scope: str, sub_scope: str,
+) -> dict[str, Any]:
+    """Identify the Manage subject contribution; shared subject projection owns its rows."""
+    return {"root": {"id": ANALYSIS_WORKS_CUSTOMISATION_ID, "data": {}}, "rows": {}}
+
+
 def _normalize_empty_settings(raw: Any, field: str) -> Mapping[str, Any]:
     settings = _strict_object(raw, field=field, keys=set())
     return settings
@@ -383,8 +391,23 @@ SUB_SCOPE_CUSTOMISATION_DEFINITIONS = {
     ANALYSIS_WORKS_CUSTOMISATION_ID: DocsSubScopeCustomisationDefinition(
         customisation_id=ANALYSIS_WORKS_CUSTOMISATION_ID,
         normalize_settings=_normalize_empty_settings,
+        manifest_projection=DocsSubScopeManifestProjectionAspect(project=_project_analysis_works_manifest),
         authoring_subject=DocsSubScopeAuthoringSubjectAspect(
-            field_names=AUTHORING_SUBJECT_FIELDS,
+            field_names=tuple(field for field in AUTHORING_SUBJECT_FIELDS if field != FOLDER_PATH_FIELD),
+        ),
+        metadata=DocsSubScopeMetadataAspect(
+            read_record=partial(dotlineform_projects.metadata_record, folder_supported=False),
+            normalize_update=partial(dotlineform_projects.normalize_metadata_update, folder_supported=False),
+        ),
+        browser_composition=DocsSubScopeBrowserCompositionAspect(
+            accesses=frozenset({MANAGE_ACCESS}),
+        ),
+        assignable_field_groups=(
+            DocsSubScopeAssignableFieldGroup(
+                group_id="authoring_subject",
+                # Include blank Folder in replacement writes so old declarations can be cleared.
+                field_names=AUTHORING_SUBJECT_FIELDS,
+            ),
         ),
         document_lineages=(
             DocsSubScopeDocumentLineageAspect(
@@ -416,11 +439,7 @@ SUB_SCOPE_CUSTOMISATION_DEFINITIONS = {
         assignable_field_groups=(
             DocsSubScopeAssignableFieldGroup(
                 group_id="authoring_subject",
-                field_names=(
-                    dotlineform_projects.FOLDER_PATH_FIELD,
-                    dotlineform_projects.WORK_ID_FIELD,
-                    dotlineform_projects.SERIES_ID_FIELD,
-                ),
+                field_names=AUTHORING_SUBJECT_FIELDS,
             ),
         ),
         authoring_subject=DocsSubScopeAuthoringSubjectAspect(
@@ -454,11 +473,7 @@ SUB_SCOPE_CUSTOMISATION_DEFINITIONS = {
         assignable_field_groups=(
             DocsSubScopeAssignableFieldGroup(
                 group_id="authoring_subject",
-                field_names=(
-                    dotlineform_processing.FOLDER_PATH_FIELD,
-                    dotlineform_processing.WORK_ID_FIELD,
-                    dotlineform_processing.SERIES_ID_FIELD,
-                ),
+                field_names=AUTHORING_SUBJECT_FIELDS,
             ),
         ),
         authoring_subject=DocsSubScopeAuthoringSubjectAspect(

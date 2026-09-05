@@ -72,7 +72,9 @@ def project_report_markdown(
     if descriptor is None:
         return markdown
     source_range = descriptor.source_range
-    replacement = REPORT_HOST_HTML if include_host else ""
+    # The source range consumes the closing line's newline; preserve it so
+    # following Markdown remains separated from the HTML block.
+    replacement = REPORT_HOST_HTML + "\n" if include_host else ""
     return markdown[: source_range.start] + replacement + markdown[source_range.end :]
 
 
@@ -373,6 +375,6 @@ def parse_report_source(
         raise ReportSourceContractRequired(
             f"{source_name}:{source_range.start_line}: report source contract is required"
         )
-    if contract.source_sub_scope_id:
-        raise _invalid("report blocks are forbidden in sub-scope document source", "sub_scope_source", source_name, source_range)
+    if contract.source_sub_scope_id and attributes.get("id") == "docs_subscope":
+        raise _invalid("sub-scope collection reports cannot be nested in child documents", "sub_scope_source", source_name, source_range)
     return _descriptor(attributes, source_range, contract, source_name)

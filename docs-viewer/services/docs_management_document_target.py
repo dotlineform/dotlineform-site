@@ -375,12 +375,11 @@ def managed_document_metadata(
         "record": record,
     }
     if resolved.sub_scope:
-        folder_supported = FOLDER_PATH_FIELD in (
-            sub_scope_customisation_authoring_subject_fields(
-                resolved.document_config.sub_scope_customisation
-            )
+        subject_fields = sub_scope_customisation_authoring_subject_fields(
+            resolved.document_config.sub_scope_customisation
         )
-        if folder_supported or any(
+        folder_supported = resolved.scope == "dotlineform" and FOLDER_PATH_FIELD in subject_fields
+        if subject_fields or any(
             field_name in front_matter for field_name in AUTHORING_SUBJECT_FIELDS
         ):
             record["authoring_subject"] = normalize_authoring_subject(

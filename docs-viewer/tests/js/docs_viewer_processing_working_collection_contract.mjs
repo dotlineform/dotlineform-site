@@ -13,6 +13,43 @@ const configController = await import(pathToFileURL(path.join(
   repoRoot,
   "docs-viewer/runtime/js/shared/docs-viewer-config-controller.js"
 )));
+const subjects = await import(pathToFileURL(path.join(
+  repoRoot,
+  "docs-viewer/runtime/js/management/docs-viewer-management-document-subject.js"
+)));
+
+assert.deepEqual(subjects.parseDocsViewerDetailUid("00008-001"), { workId: "00008", detailId: "001" });
+for (const invalid of ["8-1", "00008_001", "00008-001\n", "٠٠٠٠٨-001", null]) {
+  assert.equal(subjects.parseDocsViewerDetailUid(invalid), null);
+}
+const detailDocument = {
+  doc_id: "independent-analysis-doc",
+  authoring_subject: { state: "valid", kind: "detail", key: "00008-001", fields: ["detail_uid"] }
+};
+assert.equal(workingSubjects.projectDocsViewerWorkingSubject(detailDocument, {
+  available: true, titles: new Map()
+}).state, "valid");
+const analysisCollection = { scope: "analysis", sub_scope: "works" };
+const analysisContribution = await workingSubjects.createDocsViewerManagementSubscopeAnalysisWorks({
+  collection: analysisCollection,
+  descriptor: configController.normalizeDocsViewerSubScopeCustomisation({
+    id: "analysis_works", capabilities: { assignable_field_groups: ["authoring_subject"] }
+  }),
+  fetch: () => Promise.reject(new Error("No Catalogue required for a Detail subject"))
+});
+const detailInfo = analysisContribution.projectDetailInfo({
+  collection: analysisCollection,
+  target: { ...analysisCollection, doc_id: detailDocument.doc_id },
+  document: detailDocument
+});
+assert.equal(detailInfo.actions.assignSubject, true);
+assert.equal(detailInfo.fields[0].state, "detail");
+assert.equal(detailInfo.fields[0].detail, "00008-001");
+assert.throws(() => analysisContribution.projectDetailInfo({
+  collection: analysisCollection,
+  target: { ...analysisCollection, doc_id: "another-doc" },
+  document: detailDocument
+}), /target is invalid/);
 
 const registrySource = fs.readFileSync(path.join(
   repoRoot,

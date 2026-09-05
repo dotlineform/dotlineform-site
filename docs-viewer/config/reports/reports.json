@@ -2,6 +2,14 @@
   "schema": "docs_viewer_reports_v1",
   "reports": [
     {
+      "report_id": "series_works",
+      "title": "Works in Series",
+      "description": "Lists generated member Works for the containing document's Series subject.",
+      "default_access": "local",
+      "loader_id": "series_works",
+      "presets": []
+    },
+    {
       "report_id": "docs_index_table",
       "title": "Docs Index Table",
       "description": "Displays a sortable Docs Viewer index table for a selected docs scope.",

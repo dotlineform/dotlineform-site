@@ -206,7 +206,7 @@ def test_metadata_uses_the_existing_base_relative_subject_semantics(
 
     result = processing.normalize_metadata_update(
         {},
-        {"folder_path": str(processing_folder), "work_id": "", "series_id": ""},
+        {"folder_path": str(processing_folder), "work_id": "", "series_id": "", "detail_uid": ""},
         repo_root=tmp_path,
         front_matter={"work_id": "00123"},
         doc_id=DOC_ID,
@@ -217,11 +217,13 @@ def test_metadata_uses_the_existing_base_relative_subject_semantics(
             "folder_path": "processing/ink-engine",
             "work_id": None,
             "series_id": None,
+            "detail_uid": None,
         },
         "record": {
             "folder_path": "processing/ink-engine",
             "work_id": "",
             "series_id": "",
+            "detail_uid": "",
         },
         "changes": {"authoring_subject_changed": True},
     }
@@ -255,6 +257,7 @@ def test_subject_assignment_still_rejects_an_unsafe_folder_target(
                 "folder_path": "../processing/ink-engine",
                 "work_id": "",
                 "series_id": "",
+                "detail_uid": "",
             },
             repo_root=tmp_path,
             front_matter={},

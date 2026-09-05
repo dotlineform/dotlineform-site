@@ -88,6 +88,7 @@ export function createSubjectLinkInsertionPlan(options = {}) {
     return ready(localLink.markdown);
   }
   if (subject.kind !== "work" && subject.kind !== "series") {
+    if (subject.kind === "detail") return failure("unsupported-detail-link", "Detail subject links are not available yet.");
     return failure("invalid", "Document subject metadata is invalid.");
   }
   var target = options.catalogueTarget;

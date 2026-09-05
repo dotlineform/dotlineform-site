@@ -109,7 +109,10 @@ class SubScopeDocsBuilder(DocsDataBuilder):
         return f"{url}#{anchor}" if anchor else url
 
     def by_id_metadata_entry(self, doc: DocRecord, docs: list[DocRecord]) -> dict[str, Any]:
-        return self.metadata_entry(doc, docs)
+        entry = self.metadata_entry(doc, docs)
+        if doc.report is not None:
+            entry["report"] = dict(doc.report.as_payload())
+        return entry
 
     def manifest_payload(self, ordered_docs: list[DocRecord]) -> dict[str, Any]:
         visible_docs = [doc for doc in ordered_docs if doc.publishable]
@@ -191,7 +194,7 @@ class SubScopeDocsBuilder(DocsDataBuilder):
         return payload
 
     def folder_subject_supported(self) -> bool:
-        return FOLDER_PATH_FIELD in sub_scope_customisation_authoring_subject_fields(
+        return self.config.scope_id == "dotlineform" and FOLDER_PATH_FIELD in sub_scope_customisation_authoring_subject_fields(
             self.sub_scope_config.sub_scope_customisation
         )
 

@@ -409,4 +409,38 @@ assert.equal(directView.root.getAttribute("data-docs-media-id"), "01942");
 assert.equal(directView.root.querySelector(".docsViewer__mediaDetailGallery"), null);
 adapter.releaseDocument({ content: galleryRoot });
 
+// Runtime reports register one exact child-owned presentation under the outer mount.
+const runtimeControl = documentRef.createElement("button");
+galleryRoot.appendChild(runtimeControl);
+let childCurrent = true;
+adapter.mountDocument({
+  content: galleryRoot, viewerScope: "analysis", doc: { doc_id: "d-parent" },
+  documentMountGeneration: 11,
+  requestContentDetail(target) { galleryInvocation = target; return true; }
+});
+const runtimeRequest = {
+  content: galleryRoot, documentMountGeneration: 11,
+  documentTarget: { scope: "analysis", subScope: "works", docId: "d-child" },
+  invocationControl: runtimeControl, presentation: suppliedPayload,
+  isCurrentDocument: () => childCurrent
+};
+assert.equal(adapter.openPresentation({ ...runtimeRequest, documentMountGeneration: 10 }), false);
+assert.equal(adapter.openPresentation(runtimeRequest), true);
+assert.deepEqual(galleryInvocation.documentTarget, runtimeRequest.documentTarget);
+assert.equal(Object.isFrozen(galleryInvocation.documentTarget), true);
+assert.throws(() => adapter.mountPresentation({
+  content: galleryRoot, targetContext: { ...galleryInvocation, documentTarget: { ...runtimeRequest.documentTarget, docId: "d-other" } }
+}), /stale or unavailable/);
+const runtimeView = adapter.mountPresentation({ content: galleryRoot, targetContext: galleryInvocation });
+assert.equal(runtimeView.invocationControl, runtimeControl);
+assert.equal(runtimeView.root.querySelector(".docsViewer__mediaDetailImage").src, mediaTarget);
+runtimeView.release();
+assert.throws(() => adapter.mountPresentation({ content: galleryRoot, targetContext: galleryInvocation }), /stale or unavailable/);
+assert.equal(adapter.openPresentation(runtimeRequest), true);
+childCurrent = false;
+assert.throws(() => adapter.mountPresentation({ content: galleryRoot, targetContext: galleryInvocation }), /stale or unavailable/);
+assert.equal(adapter.openPresentation(runtimeRequest), false);
+adapter.releaseDocument({ content: galleryRoot });
+assert.equal(adapter.openPresentation({ ...runtimeRequest, isCurrentDocument: () => true }), false);
+
 console.log("Docs Viewer Media View JavaScript contract OK");

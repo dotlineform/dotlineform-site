@@ -8,7 +8,8 @@ import {
 } from "./docs-viewer-management-document-target.js";
 import {
   AUTHORING_SUBJECT_FIELDS,
-  normalizeDocsViewerAuthoringSubject
+  normalizeDocsViewerAuthoringSubject,
+  parseDocsViewerDetailUid
 } from "./docs-viewer-management-document-subject.js";
 import {
   collectCatalogueTargetMatches,
@@ -42,7 +43,7 @@ function normalizedSubject(record) {
   return normalizeDocsViewerAuthoringSubject(
     record && record.authoring_subject,
     {
-      errorMessage: "Loaded Projects subject metadata is invalid."
+      errorMessage: "Loaded Document subject metadata is invalid."
     }
   );
 }
@@ -62,7 +63,7 @@ function exactSubjectFields(fields) {
 
 function loadedSubject(response, target) {
   if (!response || typeof response !== "object" || Array.isArray(response)) {
-    throw new Error("Projects subject metadata could not be loaded.");
+    throw new Error("Document subject metadata could not be loaded.");
   }
   exactResponseTarget(response, target);
   if (
@@ -71,11 +72,11 @@ function loadedSubject(response, target) {
     || Array.isArray(response.record)
     || cleanString(response.record.doc_id) !== target.doc_id
   ) {
-    throw new Error("Loaded Projects subject record did not match its target.");
+    throw new Error("Loaded Document subject record did not match its target.");
   }
   var revision = cleanString(response.source_revision);
   if (!/^sha256:[0-9a-f]{64}$/.test(revision)) {
-    throw new Error("Projects subject source revision could not be loaded.");
+    throw new Error("Document subject source revision could not be loaded.");
   }
   return Object.freeze({
     subject: normalizedSubject(response.record),
@@ -85,10 +86,10 @@ function loadedSubject(response, target) {
 
 function assignedSubject(response, target) {
   if (!response || typeof response !== "object" || Array.isArray(response)) {
-    throw new Error("Projects subject assignment returned an invalid response.");
+    throw new Error("Document subject assignment returned an invalid response.");
   }
   if (!managedDocumentTargetsEqual(response.target, target)) {
-    throw new Error("Projects subject assignment did not match its exact target.");
+    throw new Error("Document subject assignment did not match its exact target.");
   }
   var fields = response.fields;
   if (
@@ -96,7 +97,7 @@ function assignedSubject(response, target) {
     || !exactSubjectFields(fields)
     || !/^sha256:[0-9a-f]{64}$/.test(cleanString(response.source_revision))
   ) {
-    throw new Error("Projects subject assignment response is invalid.");
+    throw new Error("Document subject assignment response is invalid.");
   }
   return response;
 }
@@ -126,7 +127,7 @@ function radio(value, label, selected) {
   "</label>";
 }
 
-function modalBody(subject) {
+function modalBody(subject, target) {
   var selected = selectedKind(subject);
   var folderValue = subject.state === "valid" && subject.kind === "folder" ? subject.key : "";
   var evidence = evidenceText(subject);
@@ -135,9 +136,10 @@ function modalBody(subject) {
     '<fieldset class="docsViewer__fieldGroup" data-project-subject-options>' +
       '<legend class="visually-hidden">Subject</legend>' +
       radio("none", "None", selected) +
-      radio("folder", "Folder", selected) +
+      (target.scope === "dotlineform" ? radio("folder", "Folder", selected) : "") +
       radio("work", "Work", selected) +
       radio("series", "Series", selected) +
+      radio("detail", "Detail", selected) +
     "</fieldset>" +
     '<label class="docsViewer__field" data-project-subject-folder' +
       (selected === "folder" ? "" : " hidden") + ">" +
@@ -145,6 +147,12 @@ function modalBody(subject) {
       '<input class="docsViewer__fieldInput" data-project-subject-folder-input type="text" ' +
         'autocomplete="off" spellcheck="false" value="' + escapeHtml(folderValue) + '">' +
     "</label>" +
+    '<label class="docsViewer__field" data-project-subject-detail' + (selected === "detail" ? "" : " hidden") + '>' +
+      '<span class="docsViewer__fieldLabel">Detail UID</span>' +
+      '<input class="docsViewer__fieldInput" data-project-subject-detail-input type="text" autocomplete="off" spellcheck="false" placeholder="00008-001" value="' +
+        escapeHtml(subject.state === "valid" && subject.kind === "detail" ? subject.key : "") + '">' +
+      '<span class="docsViewer__fieldHint">Five-digit Work ID, a hyphen, then three-digit Detail ID.</span>' +
+    '</label>' +
     '<section class="docsViewerProjectSubjectModal__catalogue" data-project-subject-catalogue' +
       (["work", "series"].includes(selected) ? "" : " hidden") + ">" +
       '<label class="docsViewer__field" for="' + SEARCH_INPUT_ID + '">' +
@@ -169,7 +177,7 @@ function openSubjectModal(options, target, loaded) {
     restoreFocus: options.restoreFocus,
     title: "Assign subject",
     size: "document",
-    bodyHtml: modalBody(loaded.subject),
+    bodyHtml: modalBody(loaded.subject, target),
     focusSelector: 'input[name="docs-project-subject"]:checked, input[name="docs-project-subject"]',
     actions: [
       { role: "modal-primary", label: "OK" },
@@ -178,6 +186,8 @@ function openSubjectModal(options, target, loaded) {
     onOpen: function (api) {
       var folderField = api.host.querySelector("[data-project-subject-folder]");
       var folderInput = api.host.querySelector("[data-project-subject-folder-input]");
+      var detailField = api.host.querySelector("[data-project-subject-detail]");
+      var detailInput = api.host.querySelector("[data-project-subject-detail-input]");
       var catalogue = api.host.querySelector("[data-project-subject-catalogue]");
       var searchInput = api.host.querySelector("#" + SEARCH_INPUT_ID);
       var results = api.host.querySelector("[data-project-subject-results]");
@@ -297,6 +307,8 @@ function openSubjectModal(options, target, loaded) {
         var catalogueSelected = ["work", "series"].includes(kind);
         if (folderField) folderField.hidden = !folderSelected;
         if (folderInput) folderInput.disabled = busy || !folderSelected;
+        if (detailField) detailField.hidden = kind !== "detail";
+        if (detailInput) detailInput.disabled = busy || kind !== "detail";
         if (catalogue) catalogue.hidden = !catalogueSelected;
         if (searchInput) searchInput.disabled = busy || !catalogueSelected || !state.support;
         if (catalogueSelected) {
@@ -345,10 +357,19 @@ function openSubjectModal(options, target, loaded) {
       var selected = api.host.querySelector('input[name="docs-project-subject"]:checked');
       var folderInput = api.host.querySelector("[data-project-subject-folder-input]");
       if (!selected) {
-        api.setStatus("Choose None, Folder, Work, or Series.");
+        api.setStatus("Choose a subject or None.");
         return false;
       }
-      var fields = { folder_path: "", work_id: "", series_id: "" };
+      var fields = Object.fromEntries(AUTHORING_SUBJECT_FIELDS.map(function (field) { return [field, ""]; }));
+      if (selected.value === "detail") {
+        var detailInput = api.host.querySelector("[data-project-subject-detail-input]");
+        fields.detail_uid = detailInput ? detailInput.value.trim() : "";
+        if (!parseDocsViewerDetailUid(fields.detail_uid)) {
+          api.setStatus("Enter a Detail UID such as 00008-001.");
+          if (detailInput) detailInput.focus();
+          return false;
+        }
+      }
       if (selected.value === "folder") {
         fields.folder_path = folderInput ? folderInput.value : "";
         if (!cleanString(fields.folder_path)) {
@@ -384,10 +405,10 @@ function openSubjectModal(options, target, loaded) {
 export function openDocsViewerProjectSubjectModal(options = {}) {
   var target = normalizeManagedDocumentTarget(options.target);
   if (!target.sub_scope) {
-    return Promise.reject(new Error("Projects subject assignment requires a sub-scope document target."));
+    return Promise.reject(new Error("Document subject assignment requires a sub-scope document target."));
   }
   if (typeof options.readMetadata !== "function" || typeof options.assignFieldGroup !== "function") {
-    return Promise.reject(new Error("Projects subject assignment service is unavailable."));
+    return Promise.reject(new Error("Document subject assignment service is unavailable."));
   }
   return Promise.resolve(options.readMetadata(target)).then(function (response) {
     return openSubjectModal(options, target, loadedSubject(response, target));

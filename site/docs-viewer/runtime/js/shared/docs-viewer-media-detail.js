@@ -37,7 +37,7 @@ function sameMediaTarget(left, right) {
 
 function immutableTargetContext(state, record) {
   return Object.freeze({
-    documentTarget: Object.freeze(Object.assign({}, state.documentTarget)),
+    documentTarget: Object.freeze(Object.assign({}, record.documentTarget)),
     documentMountGeneration: state.documentMountGeneration,
     kind: "media",
     adapterTargetId: record.id,
@@ -74,7 +74,7 @@ export function createDocsViewerMediaDetailAdapter() {
       presentation.release();
     });
     state.records.forEach(function (record) {
-      record.openControl.removeEventListener("click", record.handleClick);
+      if (record.handleClick) record.openControl.removeEventListener("click", record.handleClick);
     });
     var released = state.records.size;
     state.records.clear();
@@ -96,13 +96,14 @@ export function createDocsViewerMediaDetailAdapter() {
       !state
       || cleanString(target.kind) !== "media"
       || positiveInteger(target.documentMountGeneration) !== state.documentMountGeneration
-      || !sameDocumentTarget(target.documentTarget, state.documentTarget)
     ) {
       return null;
     }
     var record = state.records.get(cleanString(target.adapterTargetId)) || null;
     if (
       !record
+      || !sameDocumentTarget(target.documentTarget, record.documentTarget)
+      || (record.isCurrentDocument && !record.isCurrentDocument())
       || positiveInteger(target.occurrence) !== record.occurrence
       || !sameMediaTarget(target.mediaTarget, record.presentation.target)
       || !root.contains(record.marker)
@@ -162,6 +163,7 @@ export function createDocsViewerMediaDetailAdapter() {
       documentTarget: documentTarget,
       presentations: new Set(),
       records: new Map(),
+      nextDynamicRecord: 0,
       requestContentDetail: typeof context.requestContentDetail === "function"
         ? context.requestContentDetail
         : function () { return false; }
@@ -169,6 +171,7 @@ export function createDocsViewerMediaDetailAdapter() {
     markers.forEach(function (marker, index) {
       var record = readRecord(marker, index);
       if (!record) return;
+      record.documentTarget = Object.freeze(Object.assign({}, documentTarget));
       record.handleClick = function (event) {
         var targetContext = immutableTargetContext(state, record);
         if (!resolveRecord(root, targetContext)) return;
@@ -183,6 +186,36 @@ export function createDocsViewerMediaDetailAdapter() {
       decorated: state.records.size,
       skipped: markers.length - state.records.size
     };
+  }
+
+  /** Open a supplied runtime presentation within the existing document-owned host. */
+  function openPresentation(context) {
+    var root = context.content;
+    var state = root && stateByRoot.get(root);
+    var control = context.invocationControl;
+    var target = context.documentTarget;
+    if (!state || state.documentMountGeneration !== context.documentMountGeneration
+      || !control || !root.contains(control)
+      || !target || cleanString(target.scope) !== state.documentTarget.scope || !cleanString(target.docId)
+      || (context.isCurrentDocument && !context.isCurrentDocument())) return false;
+
+    var index = ++state.nextDynamicRecord;
+    var record = {
+      id: "runtime-media-" + index,
+      occurrence: index,
+      marker: control,
+      openControl: control,
+      documentTarget: Object.freeze({
+        scope: cleanString(target.scope), subScope: cleanString(target.subScope), docId: cleanString(target.docId)
+      }),
+      isCurrentDocument: context.isCurrentDocument,
+      presentation: normalizeDocsViewerMediaPresentation(context.presentation),
+      dynamic: true
+    };
+    state.records.set(record.id, record);
+    if (state.requestContentDetail(immutableTargetContext(state, record)) === true) return true;
+    state.records.delete(record.id);
+    return false;
   }
 
   function mountPresentation(presentationContext) {
@@ -334,6 +367,7 @@ export function createDocsViewerMediaDetailAdapter() {
         viewport.replaceChildren();
         section.remove();
         state.presentations.delete(presentation);
+        if (record.dynamic) state.records.delete(record.id);
       }
     };
     renderTarget(supplied.target);
@@ -343,6 +377,7 @@ export function createDocsViewerMediaDetailAdapter() {
 
   return {
     mountDocument: mountDocument,
+    openPresentation: openPresentation,
     mountPresentation: mountPresentation,
     releaseDocument: releaseDocument
   };
