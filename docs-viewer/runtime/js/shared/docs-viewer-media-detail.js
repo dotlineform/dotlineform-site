@@ -1,3 +1,9 @@
+import {
+  docsViewerMediaPresentationForTarget,
+  normalizeDocsViewerMediaPresentation
+} from "./docs-viewer-media-presentation.js";
+import { CONTENT_DETAIL_LABEL_CONTROL_ID } from "./docs-viewer-content-detail-view.js";
+
 const MEDIA_DETAIL_SELECTOR = '[data-docs-content-detail="media"]';
 const MEDIA_OPEN_SELECTOR = "[data-docs-media-open]";
 const MEDIA_PRESENTATION_SELECTOR = [
@@ -29,92 +35,6 @@ function sameMediaTarget(left, right) {
     && cleanString(first.id) === cleanString(second.id);
 }
 
-/** Return a supported browser media target without resolving or rewriting it. */
-export function docsViewerSafeMediaTarget(value) {
-  var target = cleanString(value);
-  var unsupportedCharacter = Array.from(target).some(function (character) {
-    var code = character.charCodeAt(0);
-    return character === "\\" || code <= 31 || code === 127;
-  });
-  if (!target || unsupportedCharacter) return "";
-  if (target.startsWith("/") && !target.startsWith("//")) return target;
-  try {
-    var parsed = new URL(target);
-    if (parsed.protocol !== "https:" || !parsed.hostname || parsed.username || parsed.password) {
-      return "";
-    }
-    return target;
-  } catch (_error) {
-    return "";
-  }
-}
-
-function normalizedTextField(value, fieldName) {
-  var normalized = cleanString(value);
-  if (!normalized) throw new Error("Media View requires " + fieldName + ".");
-  return normalized;
-}
-
-/** Validate and freeze one complete browser-ready Media View presentation. */
-export function normalizeDocsViewerMediaPresentation(value) {
-  if (!value || typeof value !== "object" || Array.isArray(value)) {
-    throw new Error("Media View requires an object payload.");
-  }
-  if (cleanString(value.schema_version) !== "docs_media_view_v1") {
-    throw new Error("Media View requires schema docs_media_view_v1.");
-  }
-
-  var targetSource = value.target;
-  if (!targetSource || typeof targetSource !== "object" || Array.isArray(targetSource)) {
-    throw new Error("Media View requires an exact target.");
-  }
-  var targetKind = cleanString(targetSource.kind);
-  var targetId = cleanString(targetSource.id);
-  if (targetKind !== "catalogue-work" || !/^\d{5}$/.test(targetId)) {
-    throw new Error("Media View requires an exact Catalogue Work target.");
-  }
-
-  var imageSource = value.image;
-  if (!imageSource || typeof imageSource !== "object" || Array.isArray(imageSource)) {
-    throw new Error("Media View requires image metadata.");
-  }
-  var imageSrc = docsViewerSafeMediaTarget(imageSource.src);
-  var imageWidth = positiveInteger(imageSource.width_px);
-  var imageHeight = positiveInteger(imageSource.height_px);
-  if (!imageSrc) throw new Error("Media View image target is unsupported.");
-  if (!imageWidth || !imageHeight) throw new Error("Media View image dimensions must be positive integers.");
-
-  if (!Array.isArray(value.metadata)) {
-    throw new Error("Media View requires ordered metadata.");
-  }
-  var metadata = value.metadata.map(function (entry) {
-    if (!entry || typeof entry !== "object" || Array.isArray(entry)) {
-      throw new Error("Media View metadata entries must be objects.");
-    }
-    return Object.freeze({
-      label: normalizedTextField(entry.label, "a metadata label"),
-      value: normalizedTextField(entry.value, "a metadata value")
-    });
-  });
-
-  var newTabTarget = docsViewerSafeMediaTarget(value.new_tab_target);
-  if (!newTabTarget) throw new Error("Media View new-tab target is unsupported.");
-
-  return Object.freeze({
-    schemaVersion: "docs_media_view_v1",
-    target: Object.freeze({ kind: targetKind, id: targetId }),
-    label: normalizedTextField(value.label, "a label"),
-    image: Object.freeze({
-      src: imageSrc,
-      alt: normalizedTextField(imageSource.alt, "image alternative text"),
-      widthPx: imageWidth,
-      heightPx: imageHeight
-    }),
-    metadata: Object.freeze(metadata),
-    newTabTarget: newTabTarget
-  });
-}
-
 function immutableTargetContext(state, record) {
   return Object.freeze({
     documentTarget: Object.freeze(Object.assign({}, state.documentTarget)),
@@ -141,6 +61,7 @@ function appendMetadata(documentRef, parent, metadata) {
     list.appendChild(row);
   });
   parent.appendChild(list);
+  return list;
 }
 
 /** Own exact marked Media View presentations for one rendered-document mount. */
@@ -202,7 +123,11 @@ export function createDocsViewerMediaDetailAdapter() {
     } catch (_error) {
       return null;
     }
-    if (cleanString(openControl.getAttribute("href")) !== presentation.newTabTarget) return null;
+    if (presentation.gallery) {
+      if (openControl.tagName !== "BUTTON" || openControl.getAttribute("type") !== "button") return null;
+    } else if (cleanString(openControl.getAttribute("href")) !== presentation.newTabTarget) {
+      return null;
+    }
     return {
       handleClick: null,
       id: "media-" + index,
@@ -268,7 +193,7 @@ export function createDocsViewerMediaDetailAdapter() {
 
     var record = resolved.record;
     var state = resolved.state;
-    var presentationData = record.presentation;
+    var supplied = record.presentation;
     var documentRef = context.document || root.ownerDocument;
     var section = documentRef.createElement("section");
     section.className = "docsViewer__contentDetail docsViewer__contentDetail--media";
@@ -278,43 +203,140 @@ export function createDocsViewerMediaDetailAdapter() {
     viewport.className = "docsViewer__mediaDetailViewport";
     viewport.tabIndex = 0;
     viewport.setAttribute("role", "region");
-    viewport.setAttribute("aria-label", presentationData.label);
-
-    var figure = documentRef.createElement("figure");
-    figure.className = "docsViewer__mediaDetailFigure";
-    var image = documentRef.createElement("img");
-    image.className = "docsViewer__mediaDetailImage";
-    image.src = presentationData.image.src;
-    image.alt = presentationData.image.alt;
-    image.width = presentationData.image.widthPx;
-    image.height = presentationData.image.heightPx;
-    figure.appendChild(image);
-
-    var caption = documentRef.createElement("figcaption");
-    caption.className = "docsViewer__mediaDetailCaption";
-    var title = documentRef.createElement("h2");
-    title.className = "docsViewer__mediaDetailTitle";
-    title.textContent = presentationData.label;
-    caption.appendChild(title);
-    appendMetadata(documentRef, caption, presentationData.metadata);
-    figure.appendChild(caption);
-    viewport.appendChild(figure);
     section.appendChild(viewport);
 
     var released = false;
+    var controls = null;
+    var current = null;
+
+    function imageElement(data, className) {
+      var image = documentRef.createElement("img");
+      image.className = className;
+      image.src = data.src;
+      image.alt = data.alt;
+      image.width = data.widthPx;
+      image.height = data.heightPx;
+      return image;
+    }
+
+    function titleElement(label) {
+      var title = documentRef.createElement("h2");
+      title.className = "docsViewer__mediaDetailTitle";
+      title.textContent = label;
+      return title;
+    }
+
+    function targetButton(label, className, target) {
+      var button = documentRef.createElement("button");
+      button.type = "button";
+      button.className = className;
+      button.setAttribute("aria-label", label);
+      button.addEventListener("click", function () {
+        if (released || !viewport.contains(button)) return;
+        renderTarget(target);
+        viewport.focus({ preventScroll: true });
+      });
+      return button;
+    }
+
+    function renderWork(work) {
+      var figure = documentRef.createElement("figure");
+      figure.className = "docsViewer__mediaDetailFigure";
+      figure.appendChild(imageElement(work.image, "docsViewer__mediaDetailImage"));
+      var caption = documentRef.createElement("figcaption");
+      caption.className = "docsViewer__mediaDetailCaption";
+      caption.appendChild(titleElement(work.label));
+      var metadata = appendMetadata(documentRef, caption, work.metadata);
+      if (supplied.gallery) {
+        var row = documentRef.createElement("div");
+        row.className = "docsViewer__mediaDetailMetadataRow";
+        var term = documentRef.createElement("dt");
+        term.textContent = "Series";
+        var description = documentRef.createElement("dd");
+        var link = targetButton(
+          "Open gallery: " + supplied.gallery.label,
+          "docsViewer__mediaDetailSeriesLink",
+          supplied.gallery.target
+        );
+        link.textContent = supplied.gallery.label;
+        description.appendChild(link);
+        row.appendChild(term);
+        row.appendChild(description);
+        metadata.appendChild(row);
+      }
+      figure.appendChild(caption);
+      return figure;
+    }
+
+    function renderGallery(gallery) {
+      var container = documentRef.createElement("div");
+      container.appendChild(titleElement(gallery.label));
+      var list = documentRef.createElement("ul");
+      list.className = "docsViewer__mediaDetailGallery";
+      gallery.members.forEach(function (member) {
+        var item = documentRef.createElement("li");
+        var button = targetButton(
+          "Open " + member.work.label + " (" + member.work.target.id + ")",
+          "docsViewer__mediaDetailThumbnail",
+          member.work.target
+        );
+        var image = imageElement(member.thumbnail, "docsViewer__mediaDetailThumbnailImage");
+        image.loading = "lazy";
+        button.appendChild(image);
+        var label = documentRef.createElement("span");
+        label.textContent = member.work.label;
+        button.appendChild(label);
+        item.appendChild(button);
+        list.appendChild(item);
+      });
+      container.appendChild(list);
+      return container;
+    }
+
+    function projectControls() {
+      if (!controls) return;
+      controls.projectControlState(CONTENT_DETAIL_LABEL_CONTROL_ID, {
+        hidden: false,
+        label: current.label
+      });
+      controls.projectNewTabTarget(current.newTabTarget);
+    }
+
+    function renderTarget(target) {
+      current = docsViewerMediaPresentationForTarget(supplied, target);
+      if (!current) throw new Error("Media View target is not in the supplied presentation.");
+      viewport.replaceChildren(current.target.kind === "catalogue-series"
+        ? renderGallery(current)
+        : renderWork(current));
+      viewport.setAttribute("aria-label", current.label);
+      section.setAttribute("data-docs-media-kind", current.target.kind);
+      section.setAttribute("data-docs-media-id", current.target.id);
+      presentation.label = current.label;
+      presentation.newTabTarget = current.newTabTarget;
+      projectControls();
+    }
+
     var presentation = {
       focusTarget: viewport,
       invocationControl: record.openControl,
-      label: presentationData.label,
-      newTabTarget: presentationData.newTabTarget,
+      label: supplied.label,
+      newTabTarget: supplied.newTabTarget,
       root: section,
+      activate: function (activationContext) {
+        if (released) return;
+        controls = activationContext;
+        projectControls();
+      },
       release: function () {
         if (released) return;
         released = true;
+        controls = null;
+        viewport.replaceChildren();
         section.remove();
         state.presentations.delete(presentation);
       }
     };
+    renderTarget(supplied.target);
     state.presentations.add(presentation);
     return presentation;
   }

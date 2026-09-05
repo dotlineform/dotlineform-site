@@ -52,6 +52,7 @@
         "docs-viewer-main-view-host.js",
         "docs-viewer-main-view-renderer.js",
         "docs-viewer-media-detail.js",
+        "docs-viewer-media-presentation.js",
         "docs-viewer-metadata-info-view.js",
         "docs-viewer-panel-layout.js",
         "docs-viewer-render.js",

@@ -1305,6 +1305,60 @@ body.docs-viewer-service{
   overflow-wrap: anywhere;
 }
 
+.docsViewer__mediaDetailSeriesLink{
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--docs-viewer-link);
+  font: inherit;
+  text-align: left;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.docsViewer__content .docsViewer__mediaDetailGallery{
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(8rem, 12rem));
+  gap: var(--docs-viewer-space-4);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.docsViewer__mediaDetailThumbnail{
+  display: grid;
+  justify-items: center;
+  gap: var(--docs-viewer-space-2);
+  box-sizing: border-box;
+  width: 100%;
+  padding: var(--docs-viewer-space-3);
+  border: 1px solid var(--docs-viewer-border);
+  border-radius: var(--docs-viewer-radius);
+  background: var(--docs-viewer-panel);
+  color: var(--docs-viewer-link);
+  font: inherit;
+  cursor: pointer;
+}
+
+.docsViewer__mediaDetailThumbnail:hover{
+  border-color: var(--docs-viewer-link);
+}
+
+.docsViewer__mediaDetailThumbnail:focus-visible,
+.docsViewer__mediaDetailSeriesLink:focus-visible{
+  outline: 2px solid var(--docs-viewer-focus-ring);
+  outline-offset: 2px;
+}
+
+.docsViewer__content .docsViewer__mediaDetailThumbnailImage{
+  display: block;
+  width: 96px;
+  max-width: 100%;
+  height: auto;
+  margin: 0;
+  object-fit: contain;
+}
+
 @media (max-width: 760px){
   .docsViewer__mediaDetailViewport{
     padding: var(--docs-viewer-space-3);
