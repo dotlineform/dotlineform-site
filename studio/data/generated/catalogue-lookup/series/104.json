@@ -1,54 +1,45 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v2"
+    "schema": "studio_catalogue_lookup_series_record_v3"
   },
   "series": {
     "series_id": "104",
     "title": "mouse story",
-    "series_type": "primary",
-    "status": "published",
-    "published_date": "2026-04-01",
     "year": 1993,
     "year_display": "1991-93",
-    "primary_work_id": "00160",
     "sort_fields": "work_id"
   },
+  "record_hash": "24c9bb91b92f1a9f1a95f9f15760bd4cd6d5a74fd0a854ca983443626ea8ce59",
   "member_works": [
     {
       "work_id": "00160",
+      "record_hash": "888bdaebf618a770acd097b7a76466ac0b817a6fee2192b292c195ba5a73c3fb",
       "title": "mouse story",
       "year": 1991,
       "year_display": "1991",
-      "status": "published",
-      "series_ids": [
-        "104"
-      ],
+      "series_id": "104",
       "project_folder": "mouse story"
     },
     {
       "work_id": "00161",
+      "record_hash": "6016c3951469618cc6d73938f52b62853a21c48837cc7c8ea2bedeac5add4ed0",
       "title": "mouse story (extended version)",
       "year": 1993,
       "year_display": "1993",
-      "status": "published",
-      "series_ids": [
-        "104"
-      ],
+      "series_id": "104",
       "project_folder": "mouse story"
     },
     {
       "work_id": "00162",
+      "record_hash": "7bbad3f703700eb477e83ad2e02f6e17aa43c464c463a1e9a20edcbe01976c88",
       "title": "mouse story (fragment)",
       "year": 1993,
       "year_display": "c. 1993?",
-      "status": "published",
-      "series_ids": [
-        "104"
-      ],
+      "series_id": "104",
       "project_folder": "mouse story"
     }
   ],
-  "ordered_published_work_ids": [
+  "ordered_work_ids": [
     "00160",
     "00161",
     "00162"

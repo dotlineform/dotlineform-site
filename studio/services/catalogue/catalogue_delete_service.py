@@ -3,120 +3,19 @@
 from __future__ import annotations
 
 from http import HTTPStatus
-from typing import Any, Callable, Mapping, Sequence
+from typing import Any, Mapping
 
 from catalogue import catalogue_delete_plans
+from catalogue.catalogue_revisions import require_record_revision
 from catalogue import catalogue_transactions as transactions
-from catalogue.catalogue_build_service import run_catalogue_search_rebuild
 from catalogue.catalogue_source import normalize_detail_uid_value, normalize_text, slug_id
 from catalogue.catalogue_service_context import CatalogueWriteContext, refresh_lookup_payloads, utc_now
 from catalogue.series_ids import normalize_series_id
-from studio.services.media.publish_media_to_r2 import run_catalogue_remote_delete
-
-
-RemoteDeleteTarget = tuple[str, str]
-RemoteDeleteRunner = Callable[..., Mapping[str, object]]
-
-
-def _publisher_error(error: BaseException) -> ValueError:
-    message = str(error).strip()
-    if message.startswith("Error:"):
-        message = message.removeprefix("Error:").strip()
-    return ValueError(message or "R2 media cleanup failed")
-
-
-def _default_remote_delete_runner(**kwargs: Any) -> Mapping[str, object]:
-    try:
-        return run_catalogue_remote_delete(**kwargs)
-    except SystemExit as error:
-        raise _publisher_error(error) from error
-
-
-def catalogue_delete_remote_media_targets(
-    kind: str,
-    record_id: str,
-    affected: Mapping[str, Any],
-) -> list[RemoteDeleteTarget]:
-    targets: list[RemoteDeleteTarget] = []
-    if kind == "work":
-        targets.append(("works", record_id))
-    if kind in {"work", "work_detail", "work_detail_section"}:
-        targets.extend(
-            ("work_details", str(detail_uid))
-            for detail_uid in affected.get("work_details") or []
-            if str(detail_uid).strip()
-        )
-    return sorted(set(targets))
-
-
-def _target_payload(target: RemoteDeleteTarget) -> dict[str, str]:
-    return {"kind": target[0], "id": target[1]}
-
-
-def _remote_cleanup_warning(targets: Sequence[RemoteDeleteTarget]) -> dict[str, Any]:
-    return {
-        "status": "warning",
-        "target_count": len(targets),
-        "object_count": len(targets) * 3,
-        "deleted": 0,
-        "missing": 0,
-        "failed": len(targets) * 3,
-        "failed_targets": [_target_payload(target) for target in targets],
-    }
-
-
-def _compact_remote_cleanup(
-    report: Mapping[str, object],
-    targets: Sequence[RemoteDeleteTarget],
-) -> dict[str, Any]:
-    raw_counts = report.get("counts") if isinstance(report.get("counts"), Mapping) else {}
-    counts = {str(key): int(value) for key, value in raw_counts.items() if int(value)}
-    failed_targets = {
-        (str(item.get("kind") or ""), str(item.get("item_id") or ""))
-        for item in report.get("objects") or []
-        if isinstance(item, Mapping) and str(item.get("status") or "") not in {"deleted", "missing"}
-    }
-    unexpected_count = sum(
-        count
-        for status, count in counts.items()
-        if status not in {"deleted", "missing"}
-    )
-    if unexpected_count and not failed_targets:
-        failed_targets = set(targets)
-    return {
-        "status": "warning" if unexpected_count else "completed",
-        "target_count": len(targets),
-        "object_count": sum(counts.values()),
-        "deleted": counts.get("deleted", 0),
-        "missing": counts.get("missing", 0),
-        "failed": unexpected_count,
-        "failed_targets": [
-            _target_payload(target)
-            for target in sorted(failed_targets)
-            if target[0] and target[1]
-        ],
-    }
-
-
-def _delete_remote_media(
-    context: CatalogueWriteContext,
-    targets: Sequence[RemoteDeleteTarget],
-    remote_delete_runner: RemoteDeleteRunner,
-) -> dict[str, Any]:
-    try:
-        report = remote_delete_runner(
-            repo_root=context.repo_root,
-            targets=list(targets),
-            write=True,
-        )
-    except (Exception, SystemExit):
-        return _remote_cleanup_warning(targets)
-    return _compact_remote_cleanup(report, targets)
 
 
 def delete_preview_payload(context: CatalogueWriteContext, body: Mapping[str, Any]) -> dict[str, Any]:
     request = extract_delete_request(body)
-    preview = catalogue_delete_plans.build_delete_preview(context.source_dir, request["kind"], request["id"], repo_root=context.repo_root)
+    preview = catalogue_delete_plans.build_delete_preview(context.source_dir, request["kind"], request["id"])
     return {
         "ok": True,
         "kind": request["kind"],
@@ -126,56 +25,28 @@ def delete_preview_payload(context: CatalogueWriteContext, body: Mapping[str, An
 
 
 def delete_apply_response(
-    context: CatalogueWriteContext,
-    body: Mapping[str, Any],
-    *,
-    remote_delete_runner: RemoteDeleteRunner = _default_remote_delete_runner,
+    context: CatalogueWriteContext, body: Mapping[str, Any],
 ) -> tuple[HTTPStatus, dict[str, Any]]:
+    """Delete canonical records only while Catalogue output and media are paused."""
     request = extract_delete_request(body)
-    kind = request["kind"]
-    record_id = request["id"]
-    preview = catalogue_delete_plans.build_delete_preview(context.source_dir, kind, record_id, repo_root=context.repo_root)
-    if preview.get("blocked"):
-        return HTTPStatus.BAD_REQUEST, {
-            "ok": False,
-            "error": "delete preview contains blockers",
-            "kind": kind,
-            "id": record_id,
-            "preview": preview,
-        }
-
-    plan = catalogue_delete_plans.build_delete_apply_plan(context.source_dir, context.repo_root, kind, record_id, preview)
-    transaction_result = transactions.execute_catalogue_cleanup_transaction(
-        repo_root=context.repo_root,
-        dry_run=context.dry_run,
-        allowed_write_paths=context.allowed_write_paths,
-        payloads=plan.payloads,
-        cleanup=plan.cleanup,
-        rebuild_catalogue_search=lambda repo_root: run_catalogue_search_rebuild(repo_root, write=True),
-        refresh_lookup_payloads=lambda: refresh_lookup_payloads(context),
-    )
-    cleanup_result = transaction_result.payload
-    remote_cleanup = None
-    if not context.dry_run:
-        remote_targets = catalogue_delete_remote_media_targets(kind, record_id, plan.affected)
-        if remote_targets:
-            remote_cleanup = _delete_remote_media(context, remote_targets, remote_delete_runner)
-            cleanup_result["r2_media"] = remote_cleanup
+    kind, record_id = request["kind"], request["id"]
+    preview = catalogue_delete_plans.build_delete_preview(context.source_dir, kind, record_id)
+    require_record_revision(preview["record"], body.get("expected_record_hash"))
+    if preview["blocked"]:
+        return HTTPStatus.BAD_REQUEST, {"ok": False, "error": "delete preview contains blockers", "preview": preview}
+    plan = catalogue_delete_plans.build_delete_apply_plan(context.source_dir, kind, record_id)
+    if any(path not in context.allowed_write_paths for path in plan.payloads):
+        raise ValueError("write target not allowlisted")
+    transactions.execute_source_json_write(plan.payloads, dry_run=context.dry_run, repo_root=context.repo_root)
     payload: dict[str, Any] = {
-        "ok": True,
-        "kind": kind,
-        "id": record_id,
-        "deleted": True,
-        "preview": preview,
-        "cleanup": cleanup_result,
+        "ok": True, "kind": kind, "id": record_id, "deleted": True,
+        "preview": preview, "affected": plan.affected,
     }
     if context.dry_run:
-        payload["dry_run"] = True
-        payload["would_write"] = True
+        payload.update(dry_run=True, would_write=True)
     else:
         payload["saved_at_utc"] = utc_now()
-    if remote_cleanup and remote_cleanup["status"] == "warning":
-        payload["warning"] = "Catalogue data was deleted, but R2 media cleanup did not complete."
+        payload["lookup_refresh"] = refresh_lookup_payloads(context)
     return HTTPStatus.OK, payload
 
 

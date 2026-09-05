@@ -23,48 +23,22 @@ import {
   catalogueDraftHasChanges,
   catalogueSaveDisabled
 } from "./catalogue-editor-dirty-state.js";
-import {
-  SERIES_EDITABLE_FIELDS as EDITABLE_FIELDS,
-  buildSeriesDraftFromRecord,
-  getSeriesTypeOptions,
-  normalizeSeriesId,
-  normalizeText,
-  normalizeWorkId,
-  suggestNextSeriesId,
-  validateCreateSeriesDraft,
-  validateSeriesDraft
-} from "./catalogue-series-fields.js";
-import {
-  applySeriesDraftToInputs,
-  getSeriesFieldNodeValue,
-  refreshSeriesTypeOptions,
-  renderSeriesEditorFields,
-  setSeriesFieldNodeValue,
-  setSeriesModeFieldAvailability
-} from "./catalogue-series-form.js";
+import { SERIES_EDITABLE_FIELDS as EDITABLE_FIELDS, buildSeriesDraftFromRecord, normalizeSeriesId, normalizeText, normalizeWorkId, suggestNextSeriesId, validateCreateSeriesDraft, validateSeriesDraft } from "./catalogue-series-fields.js";
+import { applySeriesDraftToInputs, getSeriesFieldNodeValue, renderSeriesEditorFields, setSeriesFieldNodeValue, setSeriesModeFieldAvailability } from "./catalogue-series-form.js";
 import {
   getCurrentSeriesMemberEntries,
   initializeSeriesMembershipState,
   seriesMembershipHasChanges,
   updateSeriesMemberList
 } from "./catalogue-series-membership.js";
-import {
-  applyPublicationChange,
-  currentSeriesIsDraft,
-  currentSeriesIsPublished,
-  deleteCurrentSeries,
-  refreshBuildPreview as refreshSeriesActionBuildPreview,
-  saveCurrentSeries
-} from "./catalogue-series-actions.js";
+import { deleteCurrentSeries, saveCurrentSeries } from "./catalogue-series-actions.js";
 import {
   applyInitialSeriesRouteSelection,
   bindSeriesSelectionControls,
   openSeriesById as openSeriesSelectionById,
   setSeriesSelectionPopupVisibility
 } from "./catalogue-series-selection.js";
-import {
-  renderSeriesPrimaryWorkPreview
-} from "./catalogue-series-sections.js";
+
 import {
   bindSeriesEditorEvents
 } from "./catalogue-series-editor-events.js";
@@ -134,7 +108,6 @@ function validateDraft(state) {
       { ...state.draft, series_id: state.searchNode.value },
       {
         seriesById: state.seriesById,
-        seriesTypeOptions: state.seriesTypeOptions,
         t: (key, fallback, tokens = null) => t(state, key, fallback, tokens)
       }
     );
@@ -145,22 +118,6 @@ function validateDraft(state) {
   });
 }
 
-function updatePublishControls(state, { hasRecord, dirty, errors }) {
-  const canPublish = hasRecord && state.mode !== "new" && currentSeriesIsDraft(state);
-  const canUnpublish = hasRecord && state.mode !== "new" && currentSeriesIsPublished(state);
-  const label = canUnpublish
-    ? t(state, "unpublish_button", "Unpublish")
-    : t(state, "publish_button", "Publish");
-  state.publicationButton.textContent = label;
-  state.publicationButton.hidden = !(canPublish || canUnpublish);
-  state.publicationButton.disabled = !(canPublish || canUnpublish)
-    || (canPublish && dirty)
-    || (canPublish && errors.size > 0)
-    || state.isSaving
-    || state.isBuilding
-    || state.isDeleting
-    || !state.serverAvailable;
-}
 
 function syncUrl(seriesId, mode = "") {
   const url = new URL(window.location.href);
@@ -177,9 +134,6 @@ function updateEditorState(state) {
   state.validationErrors = errors;
   clearCatalogueFieldStatusMessages(state.fieldStatusNodes, setNodeTextWithState);
   setSeriesModeFieldAvailability(state);
-  renderSeriesPrimaryWorkPreview(state, {
-    text: (key, fallback, tokens = null) => t(state, key, fallback, tokens)
-  });
   updateSeriesMemberList(state, membershipOptions(state));
   const dirty = hasRecord && draftHasChanges(state);
   state.messageController.render({
@@ -210,7 +164,6 @@ function updateEditorState(state) {
     isDeleting: state.isDeleting,
     serverAvailable: state.serverAvailable
   });
-  updatePublishControls(state, { hasRecord, dirty, errors });
   syncRouteBusyState(state);
 }
 
@@ -218,18 +171,6 @@ function onFieldInput(state, fieldKey) {
   const node = state.fieldNodes.get(fieldKey);
   if (!node) return;
   state.messageController.clearActionMessages();
-  if (state.mode === "new" && fieldKey === "status") {
-    state.draft.status = "draft";
-    setSeriesFieldNodeValue(node, "draft");
-    updateEditorState(state);
-    return;
-  }
-  if (state.mode === "new" && (fieldKey === "published_date" || fieldKey === "primary_work_id")) {
-    state.draft[fieldKey] = "";
-    setSeriesFieldNodeValue(node, "");
-    updateEditorState(state);
-    return;
-  }
   state.draft[fieldKey] = getSeriesFieldNodeValue(node);
   updateEditorState(state);
 }
@@ -266,12 +207,8 @@ function setNewSeriesMode(state, options = {}) {
     state.draft[field.key] = "";
   });
   state.draft.series_id = normalizeSeriesId(options.seriesId) || state.nextSuggestedSeriesId || suggestNextSeriesId(Array.from(state.seriesById.values()));
-  state.draft.series_type = state.seriesTypeOptions[0] || "primary";
-  state.draft.status = "draft";
-  state.draft.published_date = "";
-  state.draft.primary_work_id = "";
-  state.memberSeriesIdsByWorkId = new Map();
-  state.baselineMemberSeriesIdsByWorkId = new Map();
+  state.memberSeriesByWorkId = new Map();
+  state.baselineMemberSeriesByWorkId = new Map();
   state.selectedMemberWorkId = "";
   state.pendingBuildExtraWorkIds = [];
   state.rebuildPending = false;
@@ -281,7 +218,7 @@ function setNewSeriesMode(state, options = {}) {
   applySeriesDraftToInputs(state);
   setSeriesSelectionPopupVisibility(state, false);
   syncUrl("", "new");
-  state.messageController.setRouteTextWithState(state.contextNode, t(state, "new_context_loaded", "Creating a draft series source record."));
+  state.messageController.setRouteTextWithState(state.contextNode, t(state, "new_context_loaded", "Creating a series source record."));
   state.messageController.setRouteTextWithState(state.statusNode, "");
   state.messageController.setRouteTextWithState(state.warningNode, "");
   if (!options.keepResult) state.messageController.setRouteTextWithState(state.resultNode, "");
@@ -299,8 +236,8 @@ function setEmptySearchMode(state, options = {}) {
   EDITABLE_FIELDS.forEach((field) => {
     state.draft[field.key] = "";
   });
-  state.memberSeriesIdsByWorkId = new Map();
-  state.baselineMemberSeriesIdsByWorkId = new Map();
+  state.memberSeriesByWorkId = new Map();
+  state.baselineMemberSeriesByWorkId = new Map();
   state.selectedMemberWorkId = "";
   state.pendingBuildExtraWorkIds = [];
   state.rebuildPending = false;
@@ -333,9 +270,6 @@ function buildSeriesActionContext(state) {
   };
 }
 
-function refreshBuildPreview(state) {
-  return refreshSeriesActionBuildPreview(state, buildSeriesActionContext(state));
-}
 
 function buildSeriesSelectionContext(state) {
   return {
@@ -344,7 +278,6 @@ function buildSeriesSelectionContext(state) {
     setLoadedSeries: (seriesId, record, options = {}) => {
       setLoadedSeries(state, seriesId, record, options);
     },
-    refreshBuildPreview: () => refreshBuildPreview(state),
     updateEditorState: () => updateEditorState(state),
     saveCurrentSeries: () => saveCurrentSeries(state, buildSeriesActionContext(state)),
     setEmptySearchMode: (options = {}) => setEmptySearchMode(state, options),
@@ -368,7 +301,6 @@ async function init() {
     openButton,
     newButton,
     saveButton,
-    publicationButton,
     deleteButton,
     membersHeadingNode
   } = elements;
@@ -399,13 +331,10 @@ async function init() {
           "assetFormat"
         ]);
         state.mediaConfig = loadCatalogueMediaConfig(root);
-        state.seriesTypeOptions = getSeriesTypeOptions();
-        refreshSeriesTypeOptions(state);
         searchNode.placeholder = t(state, "search_placeholder", "find series by title");
         openButton.textContent = t(state, "open_button", "Open");
         newButton.textContent = t(state, "new_button", "New");
         saveButton.textContent = t(state, "save_button", "Save");
-        publicationButton.textContent = t(state, "publish_button", "Publish");
         deleteButton.textContent = t(state, "delete_button", "Delete");
         membersHeadingNode.textContent = t(state, "members_heading", "member works");
       }
@@ -438,7 +367,6 @@ async function init() {
       bindSelectionControls: () => bindSeriesSelectionControls(state, buildSeriesSelectionContext(state)),
       setNewSeriesMode: () => setNewSeriesMode(state),
       saveCurrentSeries: () => saveCurrentSeries(state, buildSeriesActionContext(state)),
-      applyPublicationChange: () => applyPublicationChange(state, buildSeriesActionContext(state)),
       deleteCurrentSeries: () => deleteCurrentSeries(state, buildSeriesActionContext(state))
     });
 

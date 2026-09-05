@@ -1,32 +1,27 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v2"
+    "schema": "studio_catalogue_lookup_series_record_v3"
   },
   "series": {
     "series_id": "081",
     "title": "intuition (2020)",
-    "series_type": "primary",
-    "status": "published",
-    "published_date": "2026-04-01",
     "year": 2020,
     "year_display": "c. 2001-11",
-    "primary_work_id": "00457",
     "sort_fields": "work_id"
   },
+  "record_hash": "fbf3cb0457525408d88852e90bd802c093abc5fb8aadfdb150356443542bf468",
   "member_works": [
     {
       "work_id": "00457",
+      "record_hash": "29ea38de25fdfc3181e375f5f2ad17d214a8820a84fc7367abb832e6529cbad8",
       "title": "intuition (2020)",
       "year": 2020,
       "year_display": "c. 2001-11",
-      "status": "published",
-      "series_ids": [
-        "081"
-      ],
+      "series_id": "081",
       "project_folder": "intuition (2020)"
     }
   ],
-  "ordered_published_work_ids": [
+  "ordered_work_ids": [
     "00457"
   ],
   "project_folders": [

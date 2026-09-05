@@ -1,4 +1,4 @@
-import { computeRecordHash } from "./catalogue-editor-records.js";
+
 import {
   buildWorkRecordSummary as buildRecordSummary
 } from "./catalogue-work-sections.js";
@@ -63,13 +63,6 @@ function titleMatches(record, rawQuery) {
   const query = normalizeSearchText(rawQuery);
   if (!query || !/[a-z]/i.test(query)) return false;
   return normalizeSearchText(record && record.title).includes(query);
-}
-
-function getSourceWorkRecord(state, workId, fallbackRecord = null) {
-  const sourceRecord = state.sourceWorkRecordsById.get(workId);
-  if (sourceRecord && typeof sourceRecord === "object") return sourceRecord;
-  if (fallbackRecord && typeof fallbackRecord === "object") return fallbackRecord;
-  return null;
 }
 
 export function parseWorkSelection(rawValue) {
@@ -208,15 +201,14 @@ export async function openWorkSelection(state, requestedValue, context) {
     const workId = workIds[index];
     const lookup = lookups[index];
     const fallbackRecord = lookup && lookup.work && typeof lookup.work === "object" ? lookup.work : null;
-    const record = getSourceWorkRecord(state, workId, fallbackRecord);
+    const record = fallbackRecord;
     if (!record) {
       throw new Error(`work source missing record for ${workId}`);
     }
     recordsById.set(workId, record);
-    recordHashes.set(workId, await computeRecordHash(record));
+    recordHashes.set(workId, normalizeText(lookup.record_hash));
   }
   context.setLoadedBulkWorks(workIds, recordsById, recordHashes);
-  await context.refreshBuildPreview();
 }
 
 export async function openWorkById(state, requestedWorkId, context) {
@@ -244,15 +236,14 @@ export async function openWorkById(state, requestedWorkId, context) {
   state.rebuildPending = false;
   const lookup = await context.loadWorkLookupRecord(workId);
   const fallbackRecord = lookup && lookup.work && typeof lookup.work === "object" ? lookup.work : null;
-  const record = getSourceWorkRecord(state, workId, fallbackRecord);
+  const record = fallbackRecord;
   if (!record) {
     throw new Error(`work source missing record for ${workId}`);
   }
   context.setLoadedWorkRecord(workId, record, {
-    recordHash: await computeRecordHash(record),
+    recordHash: normalizeText(lookup.record_hash),
     lookup
   });
-  await context.refreshBuildPreview();
 }
 
 export function bindWorkSelectionControls(state, context) {

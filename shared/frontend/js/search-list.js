@@ -254,6 +254,8 @@ export function bindSearchList(inputNode, popupNode, options = {}) {
   }
 
   function onKeyDown(event) {
+    // Inputs can be reused for free entry while their search is disabled.
+    if (!shouldOpen(controller, options)) return;
     const matches = controller.matches || [];
     if (event.key === "Tab") {
       if (!options.persistent) {

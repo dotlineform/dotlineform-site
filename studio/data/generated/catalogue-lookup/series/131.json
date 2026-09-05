@@ -1,87 +1,72 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v2"
+    "schema": "studio_catalogue_lookup_series_record_v3"
   },
   "series": {
     "series_id": "131",
     "title": "surface history",
-    "series_type": "primary",
-    "status": "published",
-    "published_date": "2026-04-01",
     "year": 2018,
     "year_display": "2017-18",
-    "primary_work_id": "01739",
     "sort_fields": "work_id"
   },
+  "record_hash": "90bb91123a0baee4d5d8b9bebecc0326314dd77441e06d0983b637c30abc55d0",
   "member_works": [
     {
       "work_id": "01738",
+      "record_hash": "6286078e69c3d8163e638d19611f55b377e3f0b030febfd799344db499e71219",
       "title": "2017-02-11 13꞉01",
       "year": 2017,
       "year_display": "2017",
-      "status": "published",
-      "series_ids": [
-        "131"
-      ],
+      "series_id": "131",
       "project_folder": "surface history"
     },
     {
       "work_id": "01739",
+      "record_hash": "aa4db756ed5e6a3749082d14899e341923767438d0859e95b174339bad5dc667",
       "title": "2017-10-30 21꞉11",
       "year": 2017,
       "year_display": "2017",
-      "status": "published",
-      "series_ids": [
-        "131"
-      ],
+      "series_id": "131",
       "project_folder": "surface history"
     },
     {
       "work_id": "01740",
+      "record_hash": "86c1ec75b9a5d55216321032e87c15ea24c2db6b80d9eac0095d1256767f8d4f",
       "title": "2017-11-04 15꞉42",
       "year": 2017,
       "year_display": "2017",
-      "status": "published",
-      "series_ids": [
-        "131"
-      ],
+      "series_id": "131",
       "project_folder": "surface history"
     },
     {
       "work_id": "01741",
+      "record_hash": "df24b650a0e9eb1321eb4efb3f0df522483561932d7792b2de5842c693b068bc",
       "title": "2018-01-20 15꞉52",
       "year": 2018,
       "year_display": "2018",
-      "status": "published",
-      "series_ids": [
-        "131"
-      ],
+      "series_id": "131",
       "project_folder": "surface history"
     },
     {
       "work_id": "01742",
+      "record_hash": "28ed941b47a2f820c6055a35bac5d9b3a9a52c27a3332a60d1050a8167d2fcb2",
       "title": "2018-01-20 15꞉53",
       "year": 2018,
       "year_display": "2018",
-      "status": "published",
-      "series_ids": [
-        "131"
-      ],
+      "series_id": "131",
       "project_folder": "surface history"
     },
     {
       "work_id": "01743",
+      "record_hash": "d59063d791ce1c6c34a8567f7396e3e66446865633d1886478a207bac6bd76e0",
       "title": "2018-02-10 10꞉35",
       "year": 2018,
       "year_display": "2018",
-      "status": "published",
-      "series_ids": [
-        "131"
-      ],
+      "series_id": "131",
       "project_folder": "surface history"
     }
   ],
-  "ordered_published_work_ids": [
+  "ordered_work_ids": [
     "01738",
     "01739",
     "01740",

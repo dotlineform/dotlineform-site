@@ -6,11 +6,10 @@ from pathlib import Path
 from typing import Any, Mapping
 
 from catalogue import catalogue_source_mutation as source_mutation
+from catalogue.catalogue_revisions import record_hash, require_record_revision
 from catalogue import catalogue_transactions as transactions
-from catalogue.catalogue_build_service import run_build_targets
 from catalogue.catalogue_service_context import (
     CatalogueWriteContext,
-    extract_apply_build,
     load_work_details_payload,
     load_works_payload,
     log_event,
@@ -20,8 +19,6 @@ from catalogue.catalogue_service_context import (
 from catalogue.catalogue_source import (
     CatalogueSourceRecords,
     normalize_detail_uid_value,
-    normalize_series_ids_value,
-    normalize_status,
     payload_for_map,
     records_from_json_source,
     slug_id,
@@ -33,8 +30,7 @@ from catalogue.catalogue_source import (
 
 
 BULK_WORK_EDITABLE_FIELDS = {
-    "status",
-    "published_date",
+    "series_id",
     "project_folder",
     "project_subfolder",
     "project_filename",
@@ -59,18 +55,15 @@ BULK_DETAIL_EDITABLE_FIELDS = {
 
 
 def bulk_save_payload(context: CatalogueWriteContext, body: Mapping[str, Any]) -> dict[str, Any]:
-    apply_build = extract_apply_build(body)
     request = extract_bulk_save_request(body)
     kind = request["kind"]
     selected_ids: list[str] = request["ids"]
     set_fields: dict[str, Any] = request["set_fields"]
-    series_operation = request["series_operation"]
 
     source_records = records_from_json_source(context.source_dir)
     changed_record_payloads: list[dict[str, Any]] = []
     changed_ids: list[str] = []
     changed_field_names: set[str] = set()
-    build_targets: list[dict[str, Any]] = []
     affected_work_ids: list[str] = []
     affected_series_ids: set[str] = set()
 
@@ -82,12 +75,8 @@ def bulk_save_payload(context: CatalogueWriteContext, body: Mapping[str, Any]) -
             current_record = works_map.get(work_id)
             if not isinstance(current_record, dict):
                 raise ValueError(f"work_id not found: {work_id}")
+            require_record_revision(current_record, (body.get("expected_record_hashes") or {}).get(work_id))
             update = dict(set_fields)
-            if series_operation is not None:
-                update["series_ids"] = apply_work_bulk_series_operation(
-                    normalize_series_ids_value(current_record.get("series_ids")),
-                    series_operation,
-                )
             pending_updates[work_id] = source_mutation.normalize_work_update(work_id, current_record, update)
 
         validation_errors = validate_bulk_records(context.source_dir, work_updates=pending_updates)
@@ -103,15 +92,11 @@ def bulk_save_payload(context: CatalogueWriteContext, body: Mapping[str, Any]) -
                 continue
             changed_ids.append(work_id)
             changed_field_names.update(fields_changed)
-            changed_record_payloads.append({"work_id": work_id, "record": updated_record})
-            previous_series_ids = normalize_series_ids_value(current_record.get("series_ids"))
-            next_series_ids = normalize_series_ids_value(updated_record.get("series_ids"))
-            extra_series_ids = [series_id for series_id in previous_series_ids if series_id not in next_series_ids]
-            if normalize_status(updated_record.get("status")) == "published":
-                build_targets.append({"work_id": work_id, "extra_series_ids": extra_series_ids})
+            changed_record_payloads.append({"work_id": work_id, "record": updated_record, "record_hash": record_hash(updated_record)})
             affected_work_ids.append(work_id)
-            affected_series_ids.update(previous_series_ids)
-            affected_series_ids.update(next_series_ids)
+            affected_series_ids.update(
+                str(record["series_id"]) for record in (current_record, updated_record) if record.get("series_id")
+            )
             updated_works[work_id] = updated_record
 
         changed = bool(changed_ids)
@@ -135,7 +120,6 @@ def bulk_save_payload(context: CatalogueWriteContext, body: Mapping[str, Any]) -
             "changed_count": len(changed_ids),
             "changed_fields": sorted(changed_field_names),
             "records": changed_record_payloads,
-            "build_targets": build_targets,
             "affected_work_ids": affected_work_ids,
             "affected_series_ids": sorted(affected_series_ids),
         }
@@ -148,9 +132,6 @@ def bulk_save_payload(context: CatalogueWriteContext, body: Mapping[str, Any]) -
             changed_ids=changed_ids,
             changed_field_names=changed_field_names,
         )
-        payload["build_requested"] = bool(apply_build and changed and build_targets)
-        if apply_build and changed and build_targets:
-            payload["build"] = run_build_targets(context, payload["build_targets"])
         return payload
 
     details_payload = load_work_details_payload(context.work_details_path)
@@ -160,6 +141,7 @@ def bulk_save_payload(context: CatalogueWriteContext, body: Mapping[str, Any]) -
         current_record = detail_map.get(detail_uid)
         if not isinstance(current_record, dict):
             raise ValueError(f"detail_uid not found: {detail_uid}")
+        require_record_revision(current_record, (body.get("expected_record_hashes") or {}).get(detail_uid))
         updated_record = source_mutation.normalize_work_detail_update(detail_uid, current_record, set_fields)
         work_id = str(updated_record.get("work_id") or "")
         if work_id not in source_records.works:
@@ -179,12 +161,9 @@ def bulk_save_payload(context: CatalogueWriteContext, body: Mapping[str, Any]) -
             continue
         changed_ids.append(detail_uid)
         changed_field_names.update(fields_changed)
-        changed_record_payloads.append({"detail_uid": detail_uid, "record": updated_record})
+        changed_record_payloads.append({"detail_uid": detail_uid, "record": updated_record, "record_hash": record_hash(updated_record)})
         work_id = str(updated_record.get("work_id") or "")
         affected_work_ids.append(work_id)
-        parent_work = source_records.works.get(work_id)
-        if normalize_status(parent_work.get("status") if isinstance(parent_work, Mapping) else None) == "published":
-            build_targets.append({"work_id": work_id, "extra_series_ids": []})
         updated_details[detail_uid] = updated_record
 
     changed = bool(changed_ids)
@@ -213,11 +192,6 @@ def bulk_save_payload(context: CatalogueWriteContext, body: Mapping[str, Any]) -
         "changed_count": len(changed_ids),
         "changed_fields": sorted(changed_field_names),
         "records": changed_record_payloads,
-        "build_targets": [{"work_id": work_id, "extra_series_ids": []} for work_id in sorted({
-            str(target.get("work_id") or "")
-            for target in build_targets
-            if str(target.get("work_id") or "")
-        })],
         "affected_work_ids": sorted(set(affected_work_ids)),
         "affected_series_ids": [],
     }
@@ -230,9 +204,6 @@ def bulk_save_payload(context: CatalogueWriteContext, body: Mapping[str, Any]) -
         changed_ids=changed_ids,
         changed_field_names=changed_field_names,
     )
-    payload["build_requested"] = bool(apply_build and changed and payload["build_targets"])
-    if apply_build and changed and payload["build_targets"]:
-        payload["build"] = run_build_targets(context, payload["build_targets"])
     return payload
 
 
@@ -264,7 +235,7 @@ def _finish_bulk_payload(
         },
     )
     if changed and not context.dry_run:
-        refresh_lookup_payloads(context)
+        payload["lookup_refresh"] = refresh_lookup_payloads(context)
 
 
 def extract_bulk_save_request(body: Mapping[str, Any]) -> dict[str, Any]:
@@ -296,30 +267,13 @@ def extract_bulk_save_request(body: Mapping[str, Any]) -> dict[str, Any]:
         raise ValueError(f"bulk save contains unsupported fields: {', '.join(unknown_fields)}")
     set_fields = {str(key): raw_set_fields[key] for key in raw_set_fields.keys()}
 
-    raw_series_operation = body.get("series_operation")
-    if kind != "works" and raw_series_operation not in (None, "", {}):
-        raise ValueError("series_operation is only supported for works bulk save")
-
-    series_operation = None
-    if kind == "works" and raw_series_operation is not None:
-        if not isinstance(raw_series_operation, dict):
-            raise ValueError("series_operation must be an object")
-        mode = str(raw_series_operation.get("mode") or "").strip().lower()
-        if mode not in {"replace", "add_remove"}:
-            raise ValueError("series_operation.mode must be replace or add_remove")
-        operation: dict[str, Any] = {"mode": mode}
-        if mode == "replace":
-            operation["series_ids"] = normalize_series_ids_value(raw_series_operation.get("series_ids"))
-        else:
-            operation["add_series_ids"] = normalize_series_ids_value(raw_series_operation.get("add_series_ids"))
-            operation["remove_series_ids"] = normalize_series_ids_value(raw_series_operation.get("remove_series_ids"))
-        series_operation = operation
+    if "series_operation" in body:
+        raise ValueError("Use set_fields.series_id to assign or clear one Series")
 
     return {
         "kind": kind,
         "ids": ids,
         "set_fields": set_fields,
-        "series_operation": series_operation,
     }
 
 
@@ -346,24 +300,3 @@ def validate_bulk_records(
     )
     errors.extend(validate_source_records(normalized_records))
     return sorted(dict.fromkeys(errors))
-
-
-def apply_work_bulk_series_operation(current_series_ids: list[str], operation: Mapping[str, Any] | None) -> list[str]:
-    if not operation:
-        return current_series_ids
-    mode = str(operation.get("mode") or "").strip().lower()
-    if mode == "replace":
-        return normalize_series_ids_value(operation.get("series_ids"))
-    if mode != "add_remove":
-        raise ValueError("unsupported series bulk operation")
-
-    add_series_ids = normalize_series_ids_value(operation.get("add_series_ids"))
-    remove_series_ids = set(normalize_series_ids_value(operation.get("remove_series_ids")))
-    next_series_ids = [series_id for series_id in current_series_ids if series_id not in remove_series_ids]
-    seen = set(next_series_ids)
-    for series_id in add_series_ids:
-        if series_id in seen:
-            continue
-        seen.add(series_id)
-        next_series_ids.append(series_id)
-    return next_series_ids

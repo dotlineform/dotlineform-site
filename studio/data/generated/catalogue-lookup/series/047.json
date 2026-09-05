@@ -1,87 +1,72 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v2"
+    "schema": "studio_catalogue_lookup_series_record_v3"
   },
   "series": {
     "series_id": "047",
     "title": "egg prints",
-    "series_type": "primary",
-    "status": "published",
-    "published_date": "2026-04-01",
     "year": 2012,
     "year_display": "2012",
-    "primary_work_id": "01038",
     "sort_fields": "work_id"
   },
+  "record_hash": "50cdd7c15a406bc789f815ace335ee6ee6571f3bd421110f4f746031b670518b",
   "member_works": [
     {
       "work_id": "01038",
+      "record_hash": "9aa3b190e81671a2bb30281f44426490eeba792ad6f845e08f829cd1c55ee6a6",
       "title": "egg print 1",
       "year": 2012,
       "year_display": "2012",
-      "status": "published",
-      "series_ids": [
-        "047"
-      ],
+      "series_id": "047",
       "project_folder": "egg prints"
     },
     {
       "work_id": "01039",
+      "record_hash": "08b4edf2d4ea40b9b47956f9bef585b8708f818952e4a4d1902c6ae616df18dd",
       "title": "egg print 2",
       "year": 2012,
       "year_display": "2012",
-      "status": "published",
-      "series_ids": [
-        "047"
-      ],
+      "series_id": "047",
       "project_folder": "egg prints"
     },
     {
       "work_id": "01040",
+      "record_hash": "5e2ddd1eb53fe7225174f4fde4f4b5a161b8a7d16f638d7989a12a6e53f92a3d",
       "title": "egg print 2 (reverse)",
       "year": 2012,
       "year_display": "2012",
-      "status": "published",
-      "series_ids": [
-        "047"
-      ],
+      "series_id": "047",
       "project_folder": "egg prints"
     },
     {
       "work_id": "01041",
+      "record_hash": "7ef34afbacaf36262829f5a72de3dc6caa48c6387c0009f31939ebd8b387fd4f",
       "title": "egg print 3",
       "year": 2012,
       "year_display": "2012",
-      "status": "published",
-      "series_ids": [
-        "047"
-      ],
+      "series_id": "047",
       "project_folder": "egg prints"
     },
     {
       "work_id": "01042",
+      "record_hash": "e62737dba3f1df3036ee7394f4ab61e2fa9a70dde6ea5c603a241d78ea1c46f6",
       "title": "egg print 4",
       "year": 2012,
       "year_display": "2012",
-      "status": "published",
-      "series_ids": [
-        "047"
-      ],
+      "series_id": "047",
       "project_folder": "egg prints"
     },
     {
       "work_id": "01043",
+      "record_hash": "fe44390570ab283c6915422520fa78564acba5ab6ce410de92630ad9655793a9",
       "title": "egg print 5",
       "year": 2012,
       "year_display": "2012",
-      "status": "published",
-      "series_ids": [
-        "047"
-      ],
+      "series_id": "047",
       "project_folder": "egg prints"
     }
   ],
-  "ordered_published_work_ids": [
+  "ordered_work_ids": [
     "01038",
     "01039",
     "01040",

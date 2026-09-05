@@ -35,8 +35,6 @@ def source_records_with_detail(detail_record: dict, section_record: dict | None 
         works={
             "00001": {
                 "work_id": "00001",
-                "status": "published",
-                "series_ids": [],
                 "project_folder": "one",
                 "project_filename": "one.jpg",
                 "media_version": 1,
@@ -60,8 +58,6 @@ def test_target_detail_schema_accepts_new_fields() -> None:
     }
     errors = validate_source_records(
         source_records_with_detail(detail),
-        require_detail_media_sections=True,
-        allow_compat_detail_project_subfolder=False,
     )
     assert not errors, errors
 

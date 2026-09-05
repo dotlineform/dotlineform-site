@@ -15,8 +15,6 @@ from catalogue.catalogue_source import (
     WORK_TEXT_FIELDS,
     CatalogueSourceRecords,
     normalize_source_record,
-    normalize_status,
-    normalize_series_ids_value,
     normalize_text,
     is_empty,
     payload_for_map,
@@ -25,6 +23,7 @@ from catalogue.catalogue_source import (
     validate_source_records,
 )
 from catalogue.series_ids import normalize_series_id
+from catalogue.catalogue_revisions import record_hash, require_record_revision
 
 
 @dataclass(frozen=True)
@@ -59,10 +58,8 @@ def normalize_work_update(work_id: str, current_record: Mapping[str, Any], updat
     if merged["work_id"] != work_id:
         raise ValueError("record.work_id must match work_id")
 
-    if "status" in update:
-        merged["status"] = normalize_status(update.get("status")) or None
-    if "series_ids" in update:
-        merged["series_ids"] = normalize_series_ids_value(update.get("series_ids"))
+    if "series_id" in update:
+        merged["series_id"] = normalize_series_id(update["series_id"]) if not is_empty(update["series_id"]) else None
     if not is_empty(merged.get("project_filename")) and is_empty(merged.get(MEDIA_VERSION_FIELD)):
         merged[MEDIA_VERSION_FIELD] = 1
 
@@ -104,11 +101,6 @@ def normalize_series_update(
     merged["series_id"] = normalize_series_id(merged.get("series_id") or series_id)
     if merged["series_id"] != series_id:
         raise ValueError("record.series_id must match series_id")
-    if "status" in update:
-        merged["status"] = normalize_status(update.get("status")) or None
-    if "primary_work_id" in update:
-        primary_work_id = update.get("primary_work_id")
-        merged["primary_work_id"] = slug_id(primary_work_id) if primary_work_id not in {None, ""} else None
     return normalize_source_record(merged, SERIES_FIELDS, text_fields=SERIES_TEXT_FIELDS)
 
 
@@ -195,10 +187,6 @@ def plan_work_create(
     blank_record = {field: None for field in WORK_FIELDS}
     blank_record["work_id"] = work_id
     normalized_update = dict(update)
-    if not normalize_status(normalized_update.get("status")):
-        normalized_update["status"] = "draft"
-    if "series_ids" not in normalized_update:
-        normalized_update["series_ids"] = []
     created_record = normalize_work_update(work_id, blank_record, normalized_update)
     if not str(created_record.get("title") or "").strip():
         raise ValueError("work title is required")
@@ -225,13 +213,14 @@ def _plan_series_work_updates(
         current_work_record = works.get(work_id)
         if not isinstance(current_work_record, dict):
             raise ValueError(f"work_id not found: {work_id}")
-        updated_work_record = normalize_work_update(work_id, current_work_record, {"series_ids": update["series_ids"]})
+        require_record_revision(current_work_record, update.get("expected_record_hash"))
+        updated_work_record = normalize_work_update(work_id, current_work_record, {"series_id": update["series_id"]})
         pending_updates[work_id] = updated_work_record
         if changed_fields(current_work_record, updated_work_record):
             changed_work_ids.append(work_id)
 
     for work_id in changed_work_ids:
-        work_records.append({"work_id": work_id, "record": pending_updates[work_id]})
+        work_records.append({"work_id": work_id, "record": pending_updates[work_id], "record_hash": record_hash(pending_updates[work_id])})
     return pending_updates, changed_work_ids, work_records
 
 
@@ -287,8 +276,6 @@ def plan_series_create(
     blank_record = {field: None for field in SERIES_FIELDS}
     blank_record["series_id"] = series_id
     normalized_update = dict(update)
-    if not normalize_status(normalized_update.get("status")):
-        normalized_update["status"] = "draft"
     created_record = normalize_series_update(series_id, blank_record, normalized_update)
     if not str(created_record.get("title") or "").strip():
         raise ValueError("series title is required")

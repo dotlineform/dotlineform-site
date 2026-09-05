@@ -1,3 +1,4 @@
+import { saveCurrentWork } from "./catalogue-work-actions.js";
 import {
   getStudioText
 } from "./studio-config.js";
@@ -63,19 +64,7 @@ import {
 import {
   updateWorkDetailBrowser
 } from "./catalogue-work-detail-browser.js";
-import {
-  applyDraftToInputs,
-  applyWorkMediaSourceConfig,
-  applyReadonly,
-  applyWorkFormText,
-  clearReadonlyFields,
-  getFieldNodeValue,
-  renderWorkEditorFields,
-  resolvedWorkMediaSourceId,
-  setFieldNodeValue,
-  setModeFieldAvailability,
-  updateFieldMessages
-} from "./catalogue-work-form.js";
+import { applyDraftToInputs, applyWorkMediaSourceConfig, applyReadonly, applyWorkFormText, clearReadonlyFields, getFieldNodeValue, renderWorkEditorFields, resolvedWorkMediaSourceId, setModeFieldAvailability, updateFieldMessages } from "./catalogue-work-form.js";
 import {
   initializeWorkRouteState,
   setEmptySearchMode,
@@ -84,42 +73,15 @@ import {
   setNewWorkMode,
   syncWorkRouteBusyState
 } from "./catalogue-work-route-state.js";
-import {
-  bulkPublishedBuildTargets,
-  catalogueDeleteRemoteCleanupWarning,
-  catalogueRemoteMediaWarning,
-  currentWorkIsDraft,
-  currentWorkIsPublished,
-  deleteCurrentWork,
-  parseBulkSeriesOperation,
-  refreshBuildPreview,
-  refreshWorkMedia
-} from "./catalogue-work-actions.js";
-import {
-  changeWorkPublicationThenPublishMedia,
-  saveWorkThenPublishMedia,
-  workSaveActionRequired
-} from "./catalogue-work-media-publish.js";
+import { deleteCurrentWork } from "./catalogue-work-actions.js";
+
 import {
   applyInitialWorkRouteSelection,
   bindWorkSelectionControls,
   openWorkById,
   setWorkSelectionPopupVisibility
 } from "./catalogue-work-selection.js";
-import {
-  WORK_DATE_RE as DATE_RE,
-  WORK_DIMENSION_FIELD_KEYS,
-  WORK_EDITABLE_FIELDS as EDITABLE_FIELDS,
-  WORK_SERIES_ID_RE as SERIES_ID_RE,
-  WORK_STATUS_OPTIONS as STATUS_OPTIONS,
-  canonicalizeWorkScalar as canonicalizeScalar,
-  embeddedEntriesEqual,
-  normalizeSeriesId,
-  normalizeText,
-  normalizeWorkId,
-  parseSeriesIds,
-  suggestNextWorkId
-} from "./catalogue-work-fields.js";
+import { WORK_DIMENSION_FIELD_KEYS, WORK_EDITABLE_FIELDS as EDITABLE_FIELDS, WORK_SERIES_ID_RE as SERIES_ID_RE, canonicalizeWorkScalar as canonicalizeScalar, embeddedEntriesEqual, normalizeSeriesId, normalizeText, normalizeWorkId, suggestNextWorkId } from "./catalogue-work-fields.js";
 import {
   bindWorkEditorEvents
 } from "./catalogue-work-editor-events.js";
@@ -134,7 +96,7 @@ import {
   createWorkRouteStateOptions
 } from "./catalogue-work-editor-state.js";
 
-const REQUIRED_WORK_FIELDS = ["title", "year", "year_display", "series_ids"];
+const REQUIRED_WORK_FIELDS = ["title", "year", "year_display"];
 
 function setOpenInputMode(state) {
   state.searchNode.placeholder = t(state, "search_placeholder", "find work id(s): 00001, 00003-00005");
@@ -219,7 +181,6 @@ async function openDetailSectionPicker(state) {
       project_subfolder: selection.project_subfolder,
       filenames
     });
-    const remoteWarning = catalogueRemoteMediaWarning(payload && payload.r2_media);
     const sectionId = normalizeText(payload && payload.section_id);
     if (sectionId) state.detailBrowserSelectedSectionId = sectionId;
     state.currentLookup = await loadWorkLookupRecord(state, state.currentWorkId);
@@ -230,25 +191,6 @@ async function openDetailSectionPicker(state) {
         state.resultNode,
         t(state, "detail_section_create_status_exists", "Detail section already exists."),
         "info"
-      );
-    } else if (remoteWarning) {
-      const targetText = remoteWarning.targets.length
-        ? remoteWarning.targets.join(", ")
-        : (payload.created_detail_uids || []).join(", ");
-      state.messageController.setActionTextWithState(
-        state.statusNode,
-        t(state, "detail_section_create_status_r2_warning", "Detail section created, but R2 media publishing needs attention."),
-        "warn"
-      );
-      state.messageController.setActionTextWithState(
-        state.resultNode,
-        t(
-          state,
-          "detail_section_create_result_r2_warning",
-          "Publish the remaining R2 primary media manually for: {targets}.",
-          { targets: targetText }
-        ),
-        "warn"
       );
     } else {
       state.messageController.setActionTextWithState(
@@ -302,7 +244,8 @@ async function editDetailSection(state, row, rows = []) {
   try {
     await saveCatalogueWorkDetailSection({
       work_id: state.currentWorkId,
-      ...(result.payload || {})
+      ...(result.payload || {}),
+      expected_record_hash: state.currentLookup.detail_sections.find(section => section.section_id === sectionId)?.record_hash
     });
     state.currentLookup = await loadWorkLookupRecord(state, state.currentWorkId);
     state.detailBrowserSelectedSectionId = sectionId;
@@ -346,7 +289,8 @@ async function deleteDetailSection(state, row) {
   state.messageController.setActionTextWithState(state.resultNode, "");
   const request = {
     kind: "work_detail_section",
-    section_id: sectionId
+    section_id: sectionId,
+    expected_record_hash: state.currentLookup.detail_sections.find(section => section.section_id === sectionId)?.record_hash
   };
   try {
     const previewResponse = await previewCatalogueDelete(request);
@@ -389,32 +333,12 @@ async function deleteDetailSection(state, row) {
       t(state, "detail_section_delete_status_deleting", "Deleting detail section..."),
       "info"
     );
-    const response = await applyCatalogueDelete(request);
-    const remoteWarning = catalogueDeleteRemoteCleanupWarning(response);
+    await applyCatalogueDelete(request);
     state.currentLookup = await loadWorkLookupRecord(state, state.currentWorkId);
     state.detailBrowserSelectedSectionId = "";
     state.detailBrowserSelectedDetailUid = "";
     updateSummary(state);
-    if (remoteWarning) {
-      const targetText = remoteWarning.targets.length
-        ? remoteWarning.targets.join(", ")
-        : sectionId;
-      state.messageController.setActionTextWithState(
-        state.statusNode,
-        t(state, "detail_section_delete_status_r2_warning", "Detail section deleted, but R2 media cleanup needs attention."),
-        "warn"
-      );
-      state.messageController.setActionTextWithState(
-        state.resultNode,
-        t(
-          state,
-          "detail_section_delete_result_r2_warning",
-          "Remove the remaining R2 primary media manually for: {targets}.",
-          { targets: targetText }
-        ),
-        "warn"
-      );
-    } else {
+    {
       state.messageController.setActionTextWithState(
         state.resultNode,
         t(state, "detail_section_delete_status_deleted", "Deleted detail section {section_id}.", {
@@ -463,165 +387,26 @@ function draftHasChanges(state) {
 }
 
 function validateDraft(state) {
-  if (state.mode === "new") {
-    const errors = new Map();
-    const workId = normalizeWorkId(state.draft.work_id);
-    if (!workId) {
-      errors.set("work_id", t(state, "field_required_work_id", "Enter a work id."));
-    } else if (state.workSearchById.has(workId) || state.sourceWorkRecordsById.has(workId)) {
-      errors.set("work_id", t(state, "field_duplicate_work_id", "Work id already exists."));
-    }
-
-    REQUIRED_WORK_FIELDS.forEach((fieldKey) => {
-      if (fieldKey === "series_ids") {
-        if (!parseSeriesIds(state.draft.series_ids).length) {
-          errors.set("series_ids", t(state, "field_required_series_ids", "Enter at least one series id."));
-        }
-        return;
-      }
-      if (!normalizeText(state.draft[fieldKey])) {
-        const label = fieldKey.replace(/_/g, " ");
-        errors.set(fieldKey, t(state, `field_required_${fieldKey}`, "Enter {field}.", { field: label }));
-      }
-    });
-
-    const year = normalizeText(state.draft.year);
-    if (year && !/^-?\d+$/.test(year)) {
-      errors.set("year", t(state, "field_invalid_year", "Use a whole year or leave blank."));
-    }
-
-    WORK_DIMENSION_FIELD_KEYS.forEach((fieldKey) => {
-      const value = normalizeText(state.draft[fieldKey]);
-      if (value && !Number.isFinite(Number(value))) {
-        errors.set(fieldKey, t(state, "field_invalid_number", "Use a number or leave blank."));
-      }
-    });
-
-    const seriesText = normalizeText(state.draft.series_ids);
-    if (seriesText) {
-      const parts = seriesText.split(",").map((item) => normalizeText(item)).filter(Boolean);
-      for (const part of parts) {
-        if (!SERIES_ID_RE.test(part)) {
-          errors.set("series_ids", t(state, "field_invalid_series_id", "Use comma-separated numeric series ids."));
-          break;
-        }
-        const normalizedId = normalizeSeriesId(part);
-        if (!state.seriesById.has(normalizedId)) {
-          errors.set("series_ids", t(state, "field_unknown_series_id", "Unknown series id: {series_id}.", { series_id: normalizedId }));
-          break;
-        }
-      }
-    }
-    return errors;
-  }
-
-  if (state.mode === "bulk") {
-    const errors = new Map();
-    if (state.bulkTouchedFields.has("status")) {
-      const status = normalizeText(state.draft.status).toLowerCase();
-      if (!STATUS_OPTIONS.has(status)) {
-        errors.set("status", t(state, "field_invalid_status", "Use blank, draft, or published."));
-      }
-    }
-
-    if (state.bulkTouchedFields.has("published_date")) {
-      const publishedDate = normalizeText(state.draft.published_date);
-      if (publishedDate && !DATE_RE.test(publishedDate)) {
-        errors.set("published_date", t(state, "field_invalid_date", "Use YYYY-MM-DD or leave blank."));
-      }
-    }
-
-    if (state.bulkTouchedFields.has("year")) {
-      const year = normalizeText(state.draft.year);
-      if (year && !/^-?\d+$/.test(year)) {
-        errors.set("year", t(state, "field_invalid_year", "Use a whole year or leave blank."));
-      }
-    }
-
-    WORK_DIMENSION_FIELD_KEYS.forEach((fieldKey) => {
-      if (!state.bulkTouchedFields.has(fieldKey)) return;
-      const value = normalizeText(state.draft[fieldKey]);
-      if (value && !Number.isFinite(Number(value))) {
-        errors.set(fieldKey, t(state, "field_invalid_number", "Use a number or leave blank."));
-      }
-    });
-
-    if (state.bulkTouchedFields.has("series_ids")) {
-      try {
-        const operation = parseBulkSeriesOperation(state.draft.series_ids);
-        const seriesIds = operation.mode === "replace"
-          ? operation.series_ids
-          : [...operation.add_series_ids, ...operation.remove_series_ids];
-        for (const seriesId of seriesIds) {
-          if (!state.seriesById.has(seriesId)) {
-            errors.set("series_ids", t(state, "field_unknown_series_id", "Unknown series id: {series_id}.", { series_id: seriesId }));
-            break;
-          }
-        }
-      } catch (error) {
-        errors.set(
-          "series_ids",
-          normalizeText(error && error.message) || t(state, "field_invalid_series_id", "Use comma-separated numeric series ids.")
-        );
-      }
-    }
-
-    return errors;
-  }
-
   const errors = new Map();
-  const status = normalizeText(state.draft.status).toLowerCase();
-  if (!STATUS_OPTIONS.has(status)) {
-    errors.set("status", t(state, "field_invalid_status", "Use blank, draft, or published."));
+  const active = key => state.mode !== "bulk" || state.bulkTouchedFields.has(key);
+  if (state.mode === "new") {
+    const workId = normalizeWorkId(state.draft.work_id);
+    if (!workId) errors.set("work_id", "Enter a work id.");
+    else if (state.workSearchById.has(workId)) errors.set("work_id", "Work id already exists.");
+    for (const key of REQUIRED_WORK_FIELDS) if (!normalizeText(state.draft[key])) errors.set(key, "Enter " + key.replaceAll("_", " ") + ".");
   }
-
-  const publishedDate = normalizeText(state.draft.published_date);
-  if (publishedDate && !DATE_RE.test(publishedDate)) {
-    errors.set("published_date", t(state, "field_invalid_date", "Use YYYY-MM-DD or leave blank."));
+  if (active("year") && normalizeText(state.draft.year) && !/^-?\d+$/.test(state.draft.year)) errors.set("year", "Use a whole year or leave blank.");
+  for (const key of WORK_DIMENSION_FIELD_KEYS) if (active(key) && normalizeText(state.draft[key]) && !Number.isFinite(Number(state.draft[key]))) errors.set(key, "Use a number or leave blank.");
+  const series = normalizeText(state.draft.series_id);
+  if (active("series_id") && series) {
+    if (!SERIES_ID_RE.test(series)) errors.set("series_id", "Use one numeric Series id or leave blank.");
+    else if (!state.seriesById.has(normalizeSeriesId(series))) errors.set("series_id", "Unknown Series id: " + series + ".");
   }
-
-  const year = normalizeText(state.draft.year);
-  if (year && !/^-?\d+$/.test(year)) {
-    errors.set("year", t(state, "field_invalid_year", "Use a whole year or leave blank."));
+  if (state.mode !== "bulk") {
+    const sources = state.workMediaSourceConfig?.mediaSourceIds || [];
+    if (!sources.includes(resolvedWorkMediaSourceId(state))) errors.set("media_source_id", "Select a configured media source.");
+    validateWorkEmbeddedItems(state.draft, {text: (key, fallback, tokens) => t(state, key, fallback, tokens)}).forEach((message, key) => errors.set(key, message));
   }
-
-  WORK_DIMENSION_FIELD_KEYS.forEach((fieldKey) => {
-    const value = normalizeText(state.draft[fieldKey]);
-    if (value && !Number.isFinite(Number(value))) {
-      errors.set(fieldKey, t(state, "field_invalid_number", "Use a number or leave blank."));
-    }
-  });
-
-  const seriesText = normalizeText(state.draft.series_ids);
-  if (seriesText) {
-    const parts = seriesText.split(",").map((item) => normalizeText(item)).filter(Boolean);
-    for (const part of parts) {
-      if (!SERIES_ID_RE.test(part)) {
-        errors.set("series_ids", t(state, "field_invalid_series_id", "Use comma-separated numeric series ids."));
-        break;
-      }
-      const normalizedId = normalizeSeriesId(part);
-      if (!state.seriesById.has(normalizedId)) {
-        errors.set("series_ids", t(state, "field_unknown_series_id", "Unknown series id: {series_id}.", { series_id: normalizedId }));
-        break;
-      }
-    }
-  }
-
-  const mediaSourceId = resolvedWorkMediaSourceId(state);
-  const configuredMediaSourceIds = state.workMediaSourceConfig && Array.isArray(state.workMediaSourceConfig.mediaSourceIds)
-    ? state.workMediaSourceConfig.mediaSourceIds
-    : [];
-  if (!configuredMediaSourceIds.includes(mediaSourceId)) {
-    errors.set("media_source_id", t(state, "field_invalid_media_source", "Select a configured media source."));
-  }
-
-  validateWorkEmbeddedItems(state.draft, {
-    text: (key, fallback, tokens) => t(state, key, fallback, tokens)
-  }).forEach((message, key) => {
-    errors.set(key, message);
-  });
-
   return errors;
 }
 
@@ -634,8 +419,8 @@ function firstBulkMixedMessage(state) {
   for (const field of EDITABLE_FIELDS) {
     if (field.key === "media_source_id") continue;
     if (!state.bulkMixedFields.has(field.key) || state.bulkTouchedFields.has(field.key)) continue;
-    return field.key === "series_ids"
-      ? t(state, "bulk_field_mixed_series", "Mixed values across selection. Leave untouched to preserve, use plain ids to replace, or +id/-id to add or remove.")
+    return field.key === "series_id"
+      ? t(state, "bulk_field_mixed_series", "Mixed values. Leave untouched to preserve, enter one Series id to reassign, or clear to remove membership.")
       : t(state, "bulk_field_mixed", "Mixed values across selection. Leave untouched to preserve per-record values.");
   }
   return "";
@@ -663,22 +448,6 @@ function renderEditorMessage(state, snapshot = {}) {
   });
 }
 
-function updatePublishControls(state, { hasRecord, dirty, errors }) {
-  const canPublish = state.mode === "single" && hasRecord && currentWorkIsDraft(state);
-  const canUnpublish = state.mode === "single" && hasRecord && currentWorkIsPublished(state);
-  const label = canUnpublish
-    ? t(state, "unpublish_button", "Unpublish")
-    : t(state, "publish_button", "Publish");
-  state.publicationButton.textContent = label;
-  state.publicationButton.hidden = !(canPublish || canUnpublish);
-  state.publicationButton.disabled = !(canPublish || canUnpublish)
-    || (canPublish && dirty)
-    || (canPublish && errors.size > 0)
-    || state.isSaving
-    || state.isBuilding
-    || state.isDeleting
-    || !state.serverAvailable;
-}
 
 function updateEditorState(state) {
   const hasRecord = state.mode === "new" ? true : state.mode === "bulk" ? state.bulkWorkIds.length > 0 : Boolean(state.currentRecord);
@@ -687,19 +456,7 @@ function updateEditorState(state) {
   updateFieldMessages(state, errors, workFormOptions(state));
   setModeFieldAvailability(state);
   updateSummary(state);
-  if (!hasRecord) {
-    setNodeTextWithState(state.buildImpactNode, "");
-  } else if (state.mode === "bulk") {
-    const previewTargets = state.rebuildPending && state.bulkBuildTargets.length
-      ? state.bulkBuildTargets
-      : bulkPublishedBuildTargets(state);
-    setNodeTextWithState(
-      state.buildImpactNode,
-      t(state, "bulk_build_preview", "Public update preview: {count} published work scope(s) will be updated.", {
-        count: String(previewTargets.length)
-      })
-    );
-  }
+  setNodeTextWithState(state.buildImpactNode, "");
 
   const dirty = hasRecord && draftHasChanges(state);
   if (state.mode === "bulk" && hasRecord) {
@@ -714,7 +471,7 @@ function updateEditorState(state) {
     hasRecord,
     isSaving: state.isSaving || state.isBuilding || state.isDeleting,
     hasErrors: errors.size > 0,
-    dirty: workSaveActionRequired(state, dirty),
+    dirty,
     serverAvailable: state.serverAvailable
   });
   state.deleteButton.disabled = catalogueDeleteDisabled({
@@ -725,7 +482,6 @@ function updateEditorState(state) {
     isDeleting: state.isDeleting,
     serverAvailable: state.serverAvailable
   });
-  updatePublishControls(state, { hasRecord, dirty, errors });
   renderReadiness(state);
   syncWorkRouteBusyState(state);
 }
@@ -734,18 +490,6 @@ function onFieldInput(state, fieldKey) {
   const node = state.fieldNodes.get(fieldKey);
   if (!node) return;
   clearActionMessages(state);
-  if (state.mode === "new" && fieldKey === "status") {
-    state.draft.status = "draft";
-    setFieldNodeValue(node, "draft");
-    updateEditorState(state);
-    return;
-  }
-  if (state.mode === "new" && fieldKey === "published_date") {
-    state.draft.published_date = "";
-    setFieldNodeValue(node, "");
-    updateEditorState(state);
-    return;
-  }
   state.draft[fieldKey] = getFieldNodeValue(node);
   if (state.mode === "bulk") {
     state.bulkTouchedFields.add(fieldKey);
@@ -795,9 +539,8 @@ function workSelectionOptions(state) {
     setLoadedWorkRecord: (workId, record, options = {}) => {
       setLoadedWorkRecord(state, workId, record, workRouteStateOptions(state, options));
     },
-    refreshBuildPreview: () => refreshBuildPreview(state, workActionOptions(state)),
     updateEditorState: () => updateEditorState(state),
-    saveCurrentWork: () => saveWorkThenPublishMedia(state, workActionOptions(state)),
+    saveCurrentWork: () => saveCurrentWork(state, workActionOptions(state)),
     setTextWithState: (node, text, tone) => state.messageController.setActionTextWithState(node, text, tone),
     setEmptySearchMode: (overrides = {}) => setEmptySearchMode(state, workRouteStateOptions(state, overrides)),
     setNewWorkMode: (overrides = {}) => setNewWorkMode(state, workRouteStateOptions(state, overrides))
@@ -824,7 +567,6 @@ function workSectionOptions(state) {
   return {
     text: (key, fallback, tokens) => t(state, key, fallback, tokens),
     draftHasChanges,
-    isCurrentWorkPublished: currentWorkIsPublished,
     openDetailSectionPicker: () => openDetailSectionPicker(state),
     editDetailSection: (row, rows) => editDetailSection(state, row, rows),
     deleteDetailSection: (row) => deleteDetailSection(state, row),
@@ -858,7 +600,6 @@ function applyWorkEditorText(state, elements) {
   elements.openButton.textContent = t(state, "open_button", "Open");
   elements.newButton.textContent = t(state, "new_button", "New");
   elements.saveButton.textContent = t(state, "save_button", "Save");
-  elements.publicationButton.textContent = t(state, "publish_button", "Publish");
   elements.deleteButton.textContent = t(state, "delete_button", "Delete");
 }
 
@@ -941,9 +682,7 @@ async function init() {
       openEmbeddedEntryModal: (kind, index) => openEmbeddedEntryModal(state, kind, index),
       deleteEmbeddedEntry: (kind, index) => deleteEmbeddedEntry(state, kind, index),
       setNewWorkMode: () => setNewWorkMode(state, workRouteStateOptions(state)),
-      refreshWorkMedia: () => refreshWorkMedia(state, workActionOptions(state)),
-      saveCurrentWork: () => saveWorkThenPublishMedia(state, workActionOptions(state)),
-      applyPublicationChange: () => changeWorkPublicationThenPublishMedia(state, workActionOptions(state)),
+      saveCurrentWork: () => saveCurrentWork(state, workActionOptions(state)),
       deleteCurrentWork: () => deleteCurrentWork(state, workActionOptions(state))
     });
     await applyInitialWorkRouteSelection(state, workSelectionOptions(state));

@@ -45,6 +45,7 @@ def run_scoped_build_scope(
     force: bool = False,
     media_only: bool = False,
 ) -> Dict[str, Any]:
+    raise ValueError("Catalogue output is paused until the Stage 5 workflow is implemented.")
     env = runtime_env()
     refresh_published = not media_only
     effective_force = bool(force)
@@ -275,6 +276,7 @@ def parse_args() -> argparse.Namespace:
 
 
 def main() -> None:
+    raise SystemExit("Catalogue output is paused until the Stage 5 workflow is implemented.")
     args = parse_args()
     repo_root = Path(args.repo_root).expanduser().resolve() if args.repo_root else detect_repo_root()
     source_dir = (repo_root / args.source_dir).resolve()

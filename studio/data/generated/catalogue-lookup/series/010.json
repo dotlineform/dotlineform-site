@@ -1,43 +1,36 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v2"
+    "schema": "studio_catalogue_lookup_series_record_v3"
   },
   "series": {
     "series_id": "010",
     "title": "a theory of happiness is a theory of everything",
-    "series_type": "primary",
-    "status": "published",
-    "published_date": "2026-04-01",
     "year": 2008,
     "year_display": "2008-10",
-    "primary_work_id": "00734",
     "sort_fields": "work_id"
   },
+  "record_hash": "21296c7eeb44b6728dec3889a01068043f4a028bc96d5b091e190f1db1f447e8",
   "member_works": [
     {
       "work_id": "00734",
+      "record_hash": "a1ff4274b159304410ed41e03f11f50916eacedd22037cdd89b7b018f0ab7e44",
       "title": "a theory of happiness is a theory of everything",
       "year": 2008,
       "year_display": "2008",
-      "status": "published",
-      "series_ids": [
-        "010"
-      ],
+      "series_id": "010",
       "project_folder": "a theory of happiness.._"
     },
     {
       "work_id": "00735",
+      "record_hash": "80c3056225e824816a4f79b9d313befd05d23ef24db45c0a443a8213c34dc371",
       "title": "a theory of happiness is a theory of everything (64°)",
       "year": 2010,
       "year_display": "2010",
-      "status": "published",
-      "series_ids": [
-        "010"
-      ],
+      "series_id": "010",
       "project_folder": "a theory of happiness.._"
     }
   ],
-  "ordered_published_work_ids": [
+  "ordered_work_ids": [
     "00734",
     "00735"
   ],

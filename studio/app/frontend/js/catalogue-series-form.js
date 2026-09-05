@@ -19,21 +19,6 @@ function notifyFieldInput(options, fieldKey) {
   }
 }
 
-export function refreshSeriesTypeOptions(state) {
-  const node = state.fieldNodes.get("series_type");
-  if (!node || node.tagName !== "SELECT") return;
-  const current = normalizeText(node.value || state.draft.series_type).toLowerCase();
-  node.innerHTML = "";
-  const options = state.seriesTypeOptions.slice();
-  if (current && !options.includes(current)) options.push(current);
-  options.forEach((optionValue) => {
-    const option = document.createElement("option");
-    option.value = optionValue;
-    option.textContent = optionValue || "(blank)";
-    node.appendChild(option);
-  });
-  if (current) node.value = current;
-}
 
 function renderField(field, fieldsNode, state, options) {
   const wrapper = document.createElement(field.readonly ? "div" : "label");
@@ -58,7 +43,7 @@ function renderField(field, fieldsNode, state, options) {
   } else if (field.type === "select") {
     input = document.createElement("select");
     input.className = "studioUi__input";
-    const optionsList = field.key === "series_type" ? state.seriesTypeOptions : field.options;
+    const optionsList = field.options;
     optionsList.forEach((optionValue) => {
       const option = document.createElement("option");
       option.value = optionValue;
@@ -111,7 +96,6 @@ export function getSeriesFieldNodeValue(node) {
 }
 
 export function applySeriesDraftToInputs(state) {
-  refreshSeriesTypeOptions(state);
   EDITABLE_FIELDS.forEach((field) => {
     const node = state.fieldNodes.get(field.key);
     if (!node) return;
@@ -124,9 +108,6 @@ export function setSeriesModeFieldAvailability(state) {
     const node = state.fieldNodes.get(field.key);
     if (!node) return;
     let disabled = state.isSaving || state.isBuilding || state.isDeleting;
-    if (state.mode === "new" && (field.key === "status" || field.key === "published_date" || field.key === "primary_work_id")) {
-      disabled = true;
-    }
     if ("disabled" in node) node.disabled = disabled;
     if (field.readonly) {
       if ("disabled" in node) node.disabled = false;

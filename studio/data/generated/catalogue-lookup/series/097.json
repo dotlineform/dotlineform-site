@@ -1,65 +1,54 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v2"
+    "schema": "studio_catalogue_lookup_series_record_v3"
   },
   "series": {
     "series_id": "097",
     "title": "memory loss vessels",
-    "series_type": "primary",
-    "status": "published",
-    "published_date": "2026-04-01",
     "year": 2023,
     "year_display": "2023",
-    "primary_work_id": "01443",
     "sort_fields": "work_id"
   },
+  "record_hash": "382ad6a53d6a8c03d0f302b4815efe70e21e52a464ec36382e33cb8b4a6be43f",
   "member_works": [
     {
       "work_id": "01443",
+      "record_hash": "3370ddef94d743a89a8a8ef5b0eb9f700e018d885bab332cf106204949aaf52b",
       "title": "memory loss vessels I",
       "year": 2023,
       "year_display": "2023",
-      "status": "published",
-      "series_ids": [
-        "097"
-      ],
+      "series_id": "097",
       "project_folder": "memory loss vessels"
     },
     {
       "work_id": "01444",
+      "record_hash": "9d0a3fa99705b6118cc5cb0d2a250ec1536b6d813f578379ba38b78868ab8bff",
       "title": "memory loss vessels II",
       "year": 2023,
       "year_display": "2023",
-      "status": "published",
-      "series_ids": [
-        "097"
-      ],
+      "series_id": "097",
       "project_folder": "memory loss vessels"
     },
     {
       "work_id": "01445",
+      "record_hash": "26b158f0f9d5c9235363df9c34754e5e206da1d36aaf94658c48b55e9b95190e",
       "title": "memory loss vessels III",
       "year": 2023,
       "year_display": "2023",
-      "status": "published",
-      "series_ids": [
-        "097"
-      ],
+      "series_id": "097",
       "project_folder": "memory loss vessels"
     },
     {
       "work_id": "01446",
+      "record_hash": "c69ebd83bbd06d8d98fcc5831063fa36c8e541f42979e614358e854514413644",
       "title": "memory loss",
       "year": 2023,
       "year_display": "2023",
-      "status": "published",
-      "series_ids": [
-        "097"
-      ],
+      "series_id": "097",
       "project_folder": "memory loss vessels"
     }
   ],
-  "ordered_published_work_ids": [
+  "ordered_work_ids": [
     "01443",
     "01444",
     "01445",

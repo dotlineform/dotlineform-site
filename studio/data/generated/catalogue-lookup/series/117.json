@@ -1,164 +1,135 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v2"
+    "schema": "studio_catalogue_lookup_series_record_v3"
   },
   "series": {
     "series_id": "117",
     "title": "porto santo",
-    "series_type": "primary",
-    "status": "published",
-    "published_date": "2026-04-01",
     "year": 2025,
     "year_display": "2025",
-    "primary_work_id": "01593",
     "sort_fields": "work_id"
   },
+  "record_hash": "a60cafba6067d6dc341e88daaf32fba2e00f06dcf53bddbe97ce2e48f839111d",
   "member_works": [
     {
       "work_id": "01583",
+      "record_hash": "55b815c5f6b9ba1ac3c3d418567183fac70a655129a6fc107ffd2819fc77756c",
       "title": "untitled",
       "year": 2025,
       "year_display": "2025",
-      "status": "published",
-      "series_ids": [
-        "117"
-      ],
+      "series_id": "117",
       "project_folder": "porto santo"
     },
     {
       "work_id": "01584",
+      "record_hash": "b37152ce8e3d273b1c354ad17b389fde9beefe943df214bda18401117f00d8d4",
       "title": "untitled",
       "year": 2025,
       "year_display": "2025",
-      "status": "published",
-      "series_ids": [
-        "117"
-      ],
+      "series_id": "117",
       "project_folder": "porto santo"
     },
     {
       "work_id": "01585",
+      "record_hash": "8e65546f14f730212379e616957ccc2d5754f44d529846e92d4351bff2687878",
       "title": "untitled",
       "year": 2025,
       "year_display": "2025",
-      "status": "published",
-      "series_ids": [
-        "117"
-      ],
+      "series_id": "117",
       "project_folder": "porto santo"
     },
     {
       "work_id": "01586",
+      "record_hash": "d340f0cffd5a0bfc2e928a889ee7a493f953362a73448673d9b2d9df6dc1f032",
       "title": "untitled",
       "year": 2025,
       "year_display": "2025",
-      "status": "published",
-      "series_ids": [
-        "117"
-      ],
+      "series_id": "117",
       "project_folder": "porto santo"
     },
     {
       "work_id": "01587",
+      "record_hash": "34e8d97b10e0350d5f1eb7a29c9cac87e21868ac21d002dbb98a8128150cb89b",
       "title": "untitled",
       "year": 2025,
       "year_display": "2025",
-      "status": "published",
-      "series_ids": [
-        "117"
-      ],
+      "series_id": "117",
       "project_folder": "porto santo"
     },
     {
       "work_id": "01588",
+      "record_hash": "63ed3ee979cab94cdd158534dbdab1fd39452a4dae5de62af453c5360a52951f",
       "title": "untitled",
       "year": 2025,
       "year_display": "2025",
-      "status": "published",
-      "series_ids": [
-        "117"
-      ],
+      "series_id": "117",
       "project_folder": "porto santo"
     },
     {
       "work_id": "01589",
+      "record_hash": "3b8ca2b22a9e72d163bf4e29db4a21d24afa7d62f5a06ec6f23d515f293e944b",
       "title": "untitled",
       "year": 2025,
       "year_display": "2025",
-      "status": "published",
-      "series_ids": [
-        "117"
-      ],
+      "series_id": "117",
       "project_folder": "porto santo"
     },
     {
       "work_id": "01590",
+      "record_hash": "c1f3458b620d22cec06ef60824d8dc10b1a43bd1d3f8ea06afd18cfd3c598a0d",
       "title": "untitled",
       "year": 2025,
       "year_display": "2025",
-      "status": "published",
-      "series_ids": [
-        "117"
-      ],
+      "series_id": "117",
       "project_folder": "porto santo"
     },
     {
       "work_id": "01591",
+      "record_hash": "c12757a1e368013e0dfee7b7bbf8ae1741efd158163930fb6ebe808e20e49258",
       "title": "untitled",
       "year": 2025,
       "year_display": "2025",
-      "status": "published",
-      "series_ids": [
-        "117"
-      ],
+      "series_id": "117",
       "project_folder": "porto santo"
     },
     {
       "work_id": "01592",
+      "record_hash": "64f39185b6f4ca07e4ace9392df2dba6dc37a5880efaa3d660d5cd6a09a2bfd6",
       "title": "untitled",
       "year": 2025,
       "year_display": "2025",
-      "status": "published",
-      "series_ids": [
-        "117"
-      ],
+      "series_id": "117",
       "project_folder": "porto santo"
     },
     {
       "work_id": "01593",
+      "record_hash": "c486742d5840aaff318aa987e786f1e3dd70fbd510c16ac921430c497c559da7",
       "title": "untitled",
       "year": 2025,
       "year_display": "2025",
-      "status": "published",
-      "series_ids": [
-        "117"
-      ],
+      "series_id": "117",
       "project_folder": "porto santo"
     },
     {
       "work_id": "01594",
+      "record_hash": "a4ab3e3c00d9ee537a9eb4d8d4b9689dd520b3ab1ae1c2487b1b6b7bdfb6bc1d",
       "title": "untitled",
       "year": 2025,
       "year_display": "2025",
-      "status": "published",
-      "series_ids": [
-        "117"
-      ],
+      "series_id": "117",
       "project_folder": "porto santo"
     },
     {
       "work_id": "01595",
+      "record_hash": "88294e73d39905a75418c605b237a65bf044af820adebd8d87922c7e473d3b75",
       "title": "untitled",
       "year": 2025,
       "year_display": "2025",
-      "status": "published",
-      "series_ids": [
-        "117"
-      ],
+      "series_id": "117",
       "project_folder": "porto santo"
     }
   ],
-  "ordered_published_work_ids": [
+  "ordered_work_ids": [
     "01583",
     "01584",
     "01585",

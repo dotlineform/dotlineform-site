@@ -19,12 +19,10 @@ from catalogue.series_ids import normalize_series_id, parse_series_ids
 
 DEFAULT_SOURCE_DIR = Path("studio/data/canonical/catalogue")
 
-ACTIONABLE_STATUSES = {"draft", "published"}
-
 SCHEMAS = {
-    "works": "catalogue_source_works_v1",
+    "works": "catalogue_source_works_v2",
     "work_details": "catalogue_source_work_detail_record_v1",
-    "series": "catalogue_source_series_v1",
+    "series": "catalogue_source_series_v2",
 }
 
 SOURCE_FILES = {
@@ -33,7 +31,6 @@ SOURCE_FILES = {
     "series": "series.json",
 }
 
-DETAIL_COMPAT_SUBFOLDER_FIELD = "project_subfolder"
 DETAIL_SECTION_ID_SEPARATOR = "-"
 MEDIA_VERSION_FIELD = "media_version"
 MEDIA_SOURCE_FIELD = "media_source_id"
@@ -41,9 +38,7 @@ PIPELINE_CONFIG = load_pipeline_config(Path(__file__))
 
 WORK_FIELDS = [
     "work_id",
-    "status",
-    "published_date",
-    "series_ids",
+    "series_id",
     MEDIA_SOURCE_FIELD,
     "project_folder",
     "project_subfolder",
@@ -70,12 +65,8 @@ WORK_FIELDS = [
 SERIES_FIELDS = [
     "series_id",
     "title",
-    "series_type",
-    "status",
-    "published_date",
     "year",
     "year_display",
-    "primary_work_id",
     "sort_fields",
 ]
 
@@ -106,7 +97,6 @@ DOWNLOAD_FIELDS = ["filename", "label"]
 WORK_LINK_ENTRY_FIELDS = ["url", "label"]
 
 WORK_TEXT_FIELDS = set(WORK_FIELDS) - {
-    "series_ids",
     "downloads",
     "links",
     "width_cm",
@@ -120,6 +110,7 @@ WORK_TEXT_FIELDS = set(WORK_FIELDS) - {
 SERIES_TEXT_FIELDS = set(SERIES_FIELDS) - {"year"}
 DETAIL_TEXT_FIELDS = set(DETAIL_FIELDS) - {"width_px", "height_px", MEDIA_VERSION_FIELD}
 OMIT_EMPTY_SOURCE_FIELDS = {
+    "series_id",
     MEDIA_SOURCE_FIELD,
     "project_subfolder",
     "details_subfolder",
@@ -197,56 +188,19 @@ def detail_record_sort_key(item: tuple[str, Mapping[str, Any]]) -> tuple[str, st
 
 def build_detail_section_resolution_by_uid(
     detail_records: Mapping[str, Mapping[str, Any]],
-    section_records: Mapping[str, Mapping[str, Any]] | None = None,
+    section_records: Mapping[str, Mapping[str, Any]],
 ) -> Dict[str, Dict[str, Any]]:
-    if section_records is not None:
-        resolutions: Dict[str, Dict[str, Any]] = {}
-        for detail_uid, record in sorted(detail_records.items(), key=detail_record_sort_key):
-            section_id = normalize_text(record.get("section_id"))
-            section_record = section_records.get(section_id, {})
-            resolutions[detail_uid] = {
-                "section_id": section_id,
-                "work_id": normalize_text(section_record.get("work_id") or record.get("work_id")),
-                "section_title": normalize_text(section_record.get("section_title")),
-                "details_subfolder": normalize_text(section_record.get("details_subfolder")),
-                "section_order": normalize_optional_int(section_record.get("section_order")),
-                "detail_sort": normalize_detail_sort_value(section_record.get("detail_sort")),
-            }
-        return resolutions
-
-    existing_section_count_by_work: Dict[str, int] = {}
-    for _key, record in sorted(detail_records.items(), key=detail_record_sort_key):
-        work_id = normalize_text(record.get("work_id"))
-        section_number = detail_section_id_number(work_id, record.get("section_id"))
-        if section_number is not None:
-            existing_section_count_by_work[work_id] = max(
-                existing_section_count_by_work.get(work_id, 0),
-                section_number,
-            )
-
-    assignments_by_work: Dict[str, Dict[str, str]] = {}
     resolutions: Dict[str, Dict[str, Any]] = {}
     for detail_uid, record in sorted(detail_records.items(), key=detail_record_sort_key):
-        work_id = normalize_text(record.get("work_id"))
-        compat_section = normalize_text(record.get(DETAIL_COMPAT_SUBFOLDER_FIELD))
         section_id = normalize_text(record.get("section_id"))
-        if detail_section_id_number(work_id, section_id) is None and compat_section:
-            work_assignments = assignments_by_work.setdefault(work_id, {})
-            if compat_section not in work_assignments:
-                existing_count = existing_section_count_by_work.get(work_id, 0)
-                work_assignments[compat_section] = build_detail_section_id(
-                    work_id,
-                    existing_count + len(work_assignments) + 1,
-                )
-            section_id = work_assignments[compat_section]
-        section_title = normalize_text(record.get("section_title")) or compat_section
-        details_subfolder = normalize_text(record.get("details_subfolder")) or compat_section
+        section_record = section_records.get(section_id, {})
         resolutions[detail_uid] = {
             "section_id": section_id,
-            "section_title": section_title,
-            "details_subfolder": details_subfolder,
-            "section_order": normalize_optional_int(record.get("sort_order")),
-            "detail_sort": None,
+            "work_id": normalize_text(section_record.get("work_id") or record.get("work_id")),
+            "section_title": normalize_text(section_record.get("section_title")),
+            "details_subfolder": normalize_text(section_record.get("details_subfolder")),
+            "section_order": normalize_optional_int(section_record.get("section_order")),
+            "detail_sort": normalize_detail_sort_value(section_record.get("detail_sort")),
         }
     return resolutions
 
@@ -808,16 +762,9 @@ def records_from_json_source(source_dir: Path) -> CatalogueSourceRecords:
             for record_id, record in record_map.items()
             if isinstance(record, dict)
         }
-    works = sort_record_map({
-        work_id: normalize_source_record(record, WORK_FIELDS, text_fields=WORK_TEXT_FIELDS)
-        for work_id, record in maps["works"].items()
-    })
     return CatalogueSourceRecords(
-        works=works,
-        work_detail_sections=sort_record_map({
-            section_id: normalize_source_record(record, DETAIL_SECTION_FIELDS, text_fields=DETAIL_TEXT_FIELDS)
-            for section_id, record in section_maps.items()
-        }),
+        works=sort_record_map(maps["works"]),
+        work_detail_sections=sort_record_map(section_maps),
         work_details=sort_record_map(maps["work_details"]),
         series=sort_record_map(maps["series"]),
     )
@@ -830,10 +777,8 @@ def validate_record_fields(
     key: str,
     record: Mapping[str, Any],
     allowed_fields: Iterable[str],
-    allowed_compat_fields: Iterable[str] = (),
 ) -> None:
     allowed = set(allowed_fields)
-    allowed.update(allowed_compat_fields)
     unknown = sorted(str(field) for field in record.keys() if str(field) not in allowed)
     if unknown:
         errors.append(f"{kind} {key}: unsupported field(s): {', '.join(unknown)}")
@@ -893,7 +838,7 @@ def validate_work_detail_media_section_record(key: str, record: Mapping[str, Any
     for field in ("details_subfolder", "section_title", "sort_order"):
         if field in record:
             errors.append(f"work_details {key}: {field} is section metadata; use work_detail_sections")
-    if DETAIL_COMPAT_SUBFOLDER_FIELD in record:
+    if "project_subfolder" in record:
         errors.append(f"work_details {key}: project_subfolder is not supported; use work_detail_sections.details_subfolder")
     raw_work_id = record.get("work_id")
     try:
@@ -932,14 +877,11 @@ def validate_work_detail_section_metadata_consistency(
 
 def validate_source_records(
     records: CatalogueSourceRecords,
-    *,
-    require_detail_media_sections: bool = False,
-    allow_compat_detail_project_subfolder: bool = True,
 ) -> list[str]:
     errors: list[str] = []
     all_work_ids: set[str] = set()
     all_series_ids: set[str] = set()
-    work_series_ids_by_work_id: Dict[str, list[str]] = {}
+    work_series_by_work_id: Dict[str, str] = {}
 
     for key, record in records.works.items():
         validate_record_fields(errors, kind="works", key=key, record=record, allowed_fields=WORK_FIELDS)
@@ -953,17 +895,17 @@ def validate_source_records(
         if key != work_id:
             errors.append(f"works {key}: key does not match normalized work_id {work_id}")
         all_work_ids.add(work_id)
-        series_ids = record.get("series_ids")
-        if not isinstance(series_ids, list):
-            errors.append(f"works {key}: series_ids must be an array")
-            series_ids = []
-        parsed_series_ids: list[str] = []
-        for raw_series_id in series_ids:
+        if "series_id" in record:
+            raw_series_id = record["series_id"]
             try:
-                parsed_series_ids.append(normalize_series_id(raw_series_id))
+                if not isinstance(raw_series_id, str):
+                    raise ValueError("series_id must be a string")
+                series_id = normalize_series_id(raw_series_id)
+                if series_id != raw_series_id:
+                    raise ValueError("series_id must be normalized")
+                work_series_by_work_id[work_id] = series_id
             except ValueError as exc:
                 errors.append(f"works {key}: {exc}")
-        work_series_ids_by_work_id[work_id] = parsed_series_ids
         downloads = record.get("downloads")
         if downloads is not None:
             if not isinstance(downloads, list):
@@ -1001,34 +943,14 @@ def validate_source_records(
         if key != series_id:
             errors.append(f"series {key}: key does not match normalized series_id {series_id}")
         all_series_ids.add(series_id)
+        for token in normalize_text(record.get("sort_fields")).split(","):
+            field = token.strip().removeprefix("-").lower()
+            if field and field not in {*WORK_FIELDS, "title_sort", "series_title"}:
+                errors.append(f"series {key}: unknown sort field {field!r}")
 
-        if normalize_status(record.get("status")) not in ACTIONABLE_STATUSES:
-            continue
-        status = normalize_status(record.get("status"))
-        raw_primary_work_id = record.get("primary_work_id")
-        if is_empty(raw_primary_work_id):
-            if status == "published":
-                errors.append(f"series {series_id}: missing primary_work_id")
-            continue
-        try:
-            primary_work_id = slug_id(raw_primary_work_id)
-        except ValueError as exc:
-            errors.append(f"series {series_id}: invalid primary_work_id {raw_primary_work_id!r} ({exc})")
-            continue
-        if primary_work_id not in all_work_ids:
-            errors.append(f"series {series_id}: primary_work_id {primary_work_id!r} not found in works")
-            continue
-        if series_id not in work_series_ids_by_work_id.get(primary_work_id, []):
-            errors.append(
-                f"series {series_id}: primary_work_id {primary_work_id!r} is not in that work's series_ids"
-            )
-
-    for work_id, series_ids in work_series_ids_by_work_id.items():
-        if normalize_status(records.works.get(work_id, {}).get("status")) not in ACTIONABLE_STATUSES:
-            continue
-        for series_id in series_ids:
-            if series_id not in all_series_ids:
-                errors.append(f"works {work_id}: references unknown series_id {series_id!r}")
+    for work_id, series_id in work_series_by_work_id.items():
+        if series_id not in all_series_ids:
+            errors.append(f"works {work_id}: references unknown series_id {series_id!r}")
 
     section_work_by_id: Dict[str, str] = {}
     for key, record in records.work_detail_sections.items():
@@ -1048,22 +970,14 @@ def validate_source_records(
         section_work_by_id[key] = work_id
 
     for key, record in records.work_details.items():
-        allowed_compat_fields = (
-            [DETAIL_COMPAT_SUBFOLDER_FIELD]
-            if allow_compat_detail_project_subfolder and not require_detail_media_sections
-            else []
-        )
         validate_record_fields(
             errors,
             kind="work_details",
             key=key,
             record=record,
             allowed_fields=DETAIL_FIELDS,
-            allowed_compat_fields=allowed_compat_fields,
         )
         validate_media_version(errors, kind="work_details", key=key, record=record)
-        if DETAIL_COMPAT_SUBFOLDER_FIELD in record and not allow_compat_detail_project_subfolder:
-            errors.append(f"work_details {key}: project_subfolder is not supported; use details_subfolder")
         raw_work_id = record.get("work_id")
         raw_detail_id = record.get("detail_id")
         if is_empty(raw_work_id) or is_empty(raw_detail_id):

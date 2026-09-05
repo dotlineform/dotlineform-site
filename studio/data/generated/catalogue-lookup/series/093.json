@@ -1,76 +1,63 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v2"
+    "schema": "studio_catalogue_lookup_series_record_v3"
   },
   "series": {
     "series_id": "093",
     "title": "maps",
-    "series_type": "primary",
-    "status": "published",
-    "published_date": "2026-04-01",
     "year": 2004,
     "year_display": "2004, 2011",
-    "primary_work_id": "01417",
     "sort_fields": "work_id"
   },
+  "record_hash": "65c16565c2ed5d37da5eb7f8d85d38766dd4c322c23f417f8f42f222579a6a1e",
   "member_works": [
     {
       "work_id": "01417",
+      "record_hash": "21b5b4a39aaf65a2b44f342653e09d188b132809e7193b237eec21ff94f370dc",
       "title": "fur map",
       "year": 2004,
       "year_display": "2004, 2011",
-      "status": "published",
-      "series_ids": [
-        "093"
-      ],
+      "series_id": "093",
       "project_folder": "maps"
     },
     {
       "work_id": "01418",
+      "record_hash": "72bc41a477ee3f4bc71bd8e43e6a59f61810eaf070d63fdbe6da9a48f28736a7",
       "title": "hudf (black)",
       "year": 2004,
       "year_display": "2004, 2011",
-      "status": "published",
-      "series_ids": [
-        "093"
-      ],
+      "series_id": "093",
       "project_folder": "maps"
     },
     {
       "work_id": "01419",
+      "record_hash": "8dcdedecc60ac0829a8d8c21572843a05d7a60fff0a9c5549bc1a3fdceb79f58",
       "title": "hudf (white)",
       "year": 2004,
       "year_display": "2004, 2011",
-      "status": "published",
-      "series_ids": [
-        "093"
-      ],
+      "series_id": "093",
       "project_folder": "maps"
     },
     {
       "work_id": "01420",
+      "record_hash": "34f81205b4751d2ea0d80ad9343a2f7631bc3fc8df5132003a5ee1c84771eca9",
       "title": "kylie grid map",
       "year": 2004,
       "year_display": "2004, 2011",
-      "status": "published",
-      "series_ids": [
-        "093"
-      ],
+      "series_id": "093",
       "project_folder": "maps"
     },
     {
       "work_id": "01421",
+      "record_hash": "494a4ec391a29b6f94c88cfee262ae6553be609da99b5922db53ee250b6b5749",
       "title": "kylie map",
       "year": 2004,
       "year_display": "2004, 2011",
-      "status": "published",
-      "series_ids": [
-        "093"
-      ],
+      "series_id": "093",
       "project_folder": "maps"
     }
   ],
-  "ordered_published_work_ids": [
+  "ordered_work_ids": [
     "01417",
     "01418",
     "01419",

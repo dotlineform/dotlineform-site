@@ -1,32 +1,27 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v2"
+    "schema": "studio_catalogue_lookup_series_record_v3"
   },
   "series": {
     "series_id": "061",
     "title": "forest memories 1-48",
-    "series_type": "primary",
-    "status": "published",
-    "published_date": "2026-04-01",
     "year": 2023,
     "year_display": "2023",
-    "primary_work_id": "00464",
     "sort_fields": "work_id"
   },
+  "record_hash": "f02780d147a169c1240bf4a22ab9e80a9f9a73aee797a6d55f9a5eaa40bdd78f",
   "member_works": [
     {
       "work_id": "00464",
+      "record_hash": "0fd36dc281fe7405c2027c9160a073b8064e5318115c1e26aea7b11437c911c5",
       "title": "forest memories 1-48",
       "year": 2023,
       "year_display": "2023",
-      "status": "published",
-      "series_ids": [
-        "061"
-      ],
+      "series_id": "061",
       "project_folder": "forest memories 1-48"
     }
   ],
-  "ordered_published_work_ids": [
+  "ordered_work_ids": [
     "00464"
   ],
   "project_folders": [

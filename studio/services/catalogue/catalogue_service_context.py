@@ -5,7 +5,6 @@ from __future__ import annotations
 import datetime as dt
 from dataclasses import dataclass
 from pathlib import Path
-import sys
 from typing import Any, Mapping
 
 from catalogue.catalogue_lookup import DEFAULT_LOOKUP_DIR
@@ -86,7 +85,6 @@ def load_series_payload(path: Path) -> dict[str, Any]:
 
 def refresh_lookup_payloads(context: CatalogueWriteContext) -> dict[str, Any]:
     result = lookup_refresh.full_lookup_refresh(context.source_dir, context.lookup_dir, context.repo_root)
-    result["semantic_target_lookup"] = refresh_semantic_target_lookup(context)
     log_event(
         context.repo_root,
         "catalogue_lookup_refresh",
@@ -105,12 +103,11 @@ def refresh_lookup_payloads_for_work_change(
     work_id: str,
     current_record: Mapping[str, Any],
     updated_record: Mapping[str, Any],
-    build_plan: Mapping[str, Any],
+    changed_fields: list[str],
 ) -> dict[str, Any]:
     lookup_plan = lookup_refresh.derive_lookup_refresh_plan(
         record_family="work",
-        changed_field_names=list(build_plan.get("fields") or []),
-        build_plan=build_plan,
+        changed_field_names=changed_fields,
     )
     result = lookup_refresh.work_change_lookup_refresh(
         context.source_dir,
@@ -121,7 +118,6 @@ def refresh_lookup_payloads_for_work_change(
         updated_record=updated_record,
         lookup_plan=lookup_plan,
     )
-    result["semantic_target_lookup"] = refresh_semantic_target_lookup(context)
     log_event(
         context.repo_root,
         "catalogue_lookup_refresh",
@@ -146,7 +142,6 @@ def refresh_lookup_payloads_for_detail_change(
     lookup_plan = lookup_refresh.derive_lookup_refresh_plan(
         record_family="work_detail",
         changed_field_names=list(build_plan.get("fields") or []),
-        build_plan=build_plan,
     )
     result = lookup_refresh.detail_change_lookup_refresh(
         context.source_dir,
@@ -156,7 +151,6 @@ def refresh_lookup_payloads_for_detail_change(
         updated_record=updated_record,
         lookup_plan=lookup_plan,
     )
-    result["semantic_target_lookup"] = refresh_semantic_target_lookup(context)
     log_event(
         context.repo_root,
         "catalogue_lookup_refresh",
@@ -175,12 +169,10 @@ def refresh_lookup_payloads_for_series_change(
     context: CatalogueWriteContext,
     series_id: str,
     fields_changed: list[str],
-    build_plan: Mapping[str, Any],
 ) -> dict[str, Any]:
     lookup_plan = lookup_refresh.derive_lookup_refresh_plan(
         record_family="series",
-        changed_field_names=list(build_plan.get("fields") or fields_changed),
-        build_plan=build_plan,
+        changed_field_names=fields_changed,
     )
     result = lookup_refresh.series_change_lookup_refresh(
         context.source_dir,
@@ -189,7 +181,6 @@ def refresh_lookup_payloads_for_series_change(
         series_id=series_id,
         lookup_plan=lookup_plan,
     )
-    result["semantic_target_lookup"] = refresh_semantic_target_lookup(context)
     log_event(
         context.repo_root,
         "catalogue_lookup_refresh",
@@ -202,22 +193,6 @@ def refresh_lookup_payloads_for_series_change(
         },
     )
     return result
-
-
-def refresh_semantic_target_lookup(context: CatalogueWriteContext) -> dict[str, Any]:
-    build_dir = context.repo_root / "docs-viewer" / "build"
-    if str(build_dir) not in sys.path:
-        sys.path.insert(0, str(build_dir))
-    from docs_builder.semantic_target_lookup import SemanticTargetLookupBuilder  # noqa: PLC0415
-
-    result = SemanticTargetLookupBuilder(repo_root=context.repo_root).run(write=not context.dry_run)
-    diagnostics = dict(result["diagnostics"])
-    log_event(
-        context.repo_root,
-        "semantic_target_lookup_refresh",
-        diagnostics,
-    )
-    return diagnostics
 
 
 def lookup_refresh_response_for_plan(lookup_plan: Mapping[str, Any]) -> dict[str, Any]:

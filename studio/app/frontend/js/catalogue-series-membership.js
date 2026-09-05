@@ -1,27 +1,16 @@
 import {
   buildStudioRouteUrl
 } from "./studio-config.js";
-import {
-  openConfirmModal,
-  openNoticeModal
-} from "./studio-modal.js";
+import { openConfirmModal } from "./studio-modal.js";
 import {
   createRecordList,
   createRecordListActions
 } from "/shared/frontend/js/record-list.js";
-import {
-  computeRecordHash,
-  displayValue,
-  stableStringify
-} from "./catalogue-editor-records.js";
+import { displayValue } from "./catalogue-editor-records.js";
 import {
   buildWorkThumbPreview
 } from "./catalogue-media-preview.js";
-import {
-  normalizeSeriesId,
-  normalizeText,
-  normalizeWorkId
-} from "./catalogue-series-fields.js";
+import { normalizeSeriesId, normalizeWorkId } from "./catalogue-series-fields.js";
 
 function text(options, key, fallback, tokens = null) {
   if (options && typeof options.text === "function") {
@@ -33,86 +22,43 @@ function text(options, key, fallback, tokens = null) {
   }, fallback);
 }
 
-export function getStoredSeriesWorkIds(state, workId) {
-  const record = state.workSearchById.get(workId);
-  const values = record && Array.isArray(record.series_ids) ? record.series_ids : [];
-  return values.map((seriesId) => normalizeSeriesId(seriesId)).filter(Boolean);
-}
+export function getStoredWorkSeriesId(state, workId) { return normalizeSeriesId(state.workSearchById.get(workId)?.series_id); }
 
 export function getEditableSeriesMemberEntries(state) {
-  return Array.from(state.memberSeriesIdsByWorkId.entries())
-    .map(([workId, seriesIds]) => ({ workId, seriesIds: seriesIds.slice() }))
-    .sort((a, b) => a.workId.localeCompare(b.workId, undefined, { numeric: true, sensitivity: "base" }));
+  return Array.from(state.memberSeriesByWorkId, ([workId, seriesId]) => ({workId, seriesId})).sort((a,b) => a.workId.localeCompare(b.workId));
 }
 
 export function getCurrentSeriesMemberEntries(state) {
-  return getEditableSeriesMemberEntries(state)
-    .filter(({ seriesIds }) => seriesIds.includes(state.currentSeriesId))
-    .map(({ workId, seriesIds }) => {
-      const record = state.workSearchById.get(workId) || {};
-      return {
-        workId,
-        seriesIds,
-        record,
-      };
-    });
+  return getEditableSeriesMemberEntries(state).filter(entry => entry.seriesId === state.currentSeriesId).map(entry => ({...entry, record: state.workSearchById.get(entry.workId) || {}}));
 }
 
 export function seriesMembershipHasChanges(state) {
-  const allWorkIds = new Set([
-    ...Array.from(state.memberSeriesIdsByWorkId.keys()),
-    ...Array.from(state.baselineMemberSeriesIdsByWorkId.keys())
-  ]);
-  for (const workId of allWorkIds) {
-    const current = state.memberSeriesIdsByWorkId.get(workId) || [];
-    const baseline = state.baselineMemberSeriesIdsByWorkId.get(workId) || [];
-    if (stableStringify(current) !== stableStringify(baseline)) return true;
-  }
-  return false;
+  return Array.from(state.memberSeriesByWorkId).some(([workId, seriesId]) => seriesId !== state.baselineMemberSeriesByWorkId.get(workId));
 }
 
 export function initializeSeriesMembershipState(state, seriesId) {
-  state.memberSeriesIdsByWorkId = new Map();
-  state.baselineMemberSeriesIdsByWorkId = new Map();
-  const members = state.currentLookup && Array.isArray(state.currentLookup.member_works) ? state.currentLookup.member_works : [];
-  for (const member of members) {
-    const workId = normalizeWorkId(member && member.work_id);
-    if (!workId) continue;
-    const seriesIds = Array.isArray(member && member.series_ids)
-      ? member.series_ids.map((candidateSeriesId) => normalizeSeriesId(candidateSeriesId)).filter(Boolean)
-      : getStoredSeriesWorkIds(state, workId);
-    if (!seriesIds.includes(seriesId)) continue;
-    state.memberSeriesIdsByWorkId.set(workId, seriesIds.slice());
-    state.baselineMemberSeriesIdsByWorkId.set(workId, seriesIds.slice());
+  state.memberSeriesByWorkId = new Map();
+  state.baselineMemberSeriesByWorkId = new Map();
+  for (const member of state.currentLookup?.member_works || []) {
+    const workId = normalizeWorkId(member.work_id);
+    if (!workId || member.series_id !== seriesId) continue;
+    state.workSearchById.set(workId, member);
+    state.memberSeriesByWorkId.set(workId, seriesId);
+    state.baselineMemberSeriesByWorkId.set(workId, seriesId);
   }
 }
 
 export function buildSavedSeriesMembershipLookup(state, record, recordHash) {
-  return {
-    ...(state.currentLookup || {}),
-    series: record,
-    record_hash: recordHash,
-    member_works: getCurrentSeriesMemberEntries(state).map((entry) => ({
-      work_id: entry.workId,
-      series_ids: entry.seriesIds.slice()
-    }))
-  };
+  return {...state.currentLookup, series: record, record_hash: recordHash,
+    member_works: getCurrentSeriesMemberEntries(state).map(entry => ({...entry.record, work_id: entry.workId, series_id: entry.seriesId}))};
 }
 
-export async function buildChangedSeriesWorkUpdates(state) {
-  const updates = [];
-  for (const [workId, seriesIds] of state.memberSeriesIdsByWorkId.entries()) {
-    const baseline = state.baselineMemberSeriesIdsByWorkId.get(workId) || [];
-    if (stableStringify(seriesIds) === stableStringify(baseline)) continue;
-    const currentRecord = state.workSearchById.get(workId);
-    if (!currentRecord) continue;
-    updates.push({
-      work_id: workId,
-      series_ids: seriesIds,
-      expected_record_hash: normalizeText(currentRecord.record_hash) || await computeRecordHash(currentRecord)
-    });
-  }
-  return updates;
+export function buildChangedSeriesWorkUpdates(state) {
+  return Array.from(state.memberSeriesByWorkId).filter(([workId, seriesId]) => seriesId !== state.baselineMemberSeriesByWorkId.get(workId)).map(([workId, seriesId]) => {
+    const hash = state.workSearchById.get(workId)?.record_hash;
+    if (!hash) throw new Error("Reload work " + workId + " before changing its membership.");
+    return {work_id: workId, series_id: seriesId || null, expected_record_hash: hash};
+  });
 }
 
 function clearMemberList(state) {
@@ -154,54 +100,10 @@ function memberRecords(state, options) {
   });
 }
 
-function memberRemoveBlocker(state, workId, seriesIds, options) {
-  const primaryWorkId = normalizeWorkId(state.draft && state.draft.primary_work_id);
-  const isPrimary = Boolean(primaryWorkId && primaryWorkId === workId);
-  const hasOtherSeries = seriesIds.some((seriesId) => seriesId !== state.currentSeriesId);
-  if (isPrimary && !hasOtherSeries) {
-    return text(
-      options,
-      "members_remove_blocked_primary_only",
-      "work {work_id} is the primary work for this series, and it is only associated with this series.",
-      { work_id: workId }
-    );
-  }
-  if (isPrimary) {
-    return text(
-      options,
-      "members_remove_blocked_primary",
-      "work {work_id} is the primary work for this series, please set a different primary work before removing from the series",
-      { work_id: workId }
-    );
-  }
-  if (!hasOtherSeries) {
-    return text(
-      options,
-      "members_remove_blocked_only_series",
-      "work {work_id} is only associated with this series, so use the works editor to unpublish or delete it completely.",
-      { work_id: workId }
-    );
-  }
-  return "";
-}
 
 async function removeSelectedMemberFromSeries(state, selection, options) {
   const workId = normalizeWorkId(selection && selection.record && selection.record.workId);
   if (!workId || !state.currentSeriesId) return;
-  const seriesIds = (state.memberSeriesIdsByWorkId.get(workId) || [])
-    .map((seriesId) => normalizeSeriesId(seriesId))
-    .filter(Boolean);
-  const blocker = memberRemoveBlocker(state, workId, seriesIds, options);
-  if (blocker) {
-    await openNoticeModal({
-      root: state.root,
-      title: text(options, "members_remove_blocked_title", "Cannot remove work"),
-      body: [blocker],
-      closeLabel: text(options, "modal_close_button", "Close"),
-      size: "compact"
-    });
-    return;
-  }
   const result = await openConfirmModal({
     root: state.root,
     title: text(options, "members_remove_confirm_title", "Remove work from series?"),
@@ -215,8 +117,7 @@ async function removeSelectedMemberFromSeries(state, selection, options) {
     size: "compact"
   });
   if (!result || !result.confirmed) return;
-  const nextSeriesIds = seriesIds.filter((seriesId) => seriesId !== state.currentSeriesId);
-  state.memberSeriesIdsByWorkId.set(workId, nextSeriesIds);
+  state.memberSeriesByWorkId.set(workId, "");
   state.selectedMemberWorkId = "";
   if (typeof options.setTextWithState === "function") {
     options.setTextWithState(

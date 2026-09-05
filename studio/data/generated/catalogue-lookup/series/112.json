@@ -1,263 +1,216 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v2"
+    "schema": "studio_catalogue_lookup_series_record_v3"
   },
   "series": {
     "series_id": "112",
     "title": "petri",
-    "series_type": "primary",
-    "status": "published",
-    "published_date": "2026-04-01",
     "year": 2004,
     "year_display": "2004",
-    "primary_work_id": "01501",
     "sort_fields": "work_id"
   },
+  "record_hash": "bff56846a16d5da3de607904d5962023be72edebb8eb44e4530282e0a63525af",
   "member_works": [
     {
       "work_id": "01501",
+      "record_hash": "0f8843642ac6d41334f659aa97fb3e1286ce1fd266d594356d311405aaf3050b",
       "title": "petri 1",
       "year": 2004,
       "year_display": "2004",
-      "status": "published",
-      "series_ids": [
-        "112"
-      ],
+      "series_id": "112",
       "project_folder": "petri"
     },
     {
       "work_id": "01502",
+      "record_hash": "1063a337600919643a4102b9dae22062dc5052860b23e4b034ae9d137922f144",
       "title": "petri 2",
       "year": 2004,
       "year_display": "2004",
-      "status": "published",
-      "series_ids": [
-        "112"
-      ],
+      "series_id": "112",
       "project_folder": "petri"
     },
     {
       "work_id": "01503",
+      "record_hash": "aa2e6ef28553734919bacf86931de51a4629f93fcff2a720086728bebb8b4d01",
       "title": "petri 3",
       "year": 2004,
       "year_display": "2004",
-      "status": "published",
-      "series_ids": [
-        "112"
-      ],
+      "series_id": "112",
       "project_folder": "petri"
     },
     {
       "work_id": "01504",
+      "record_hash": "9c95b18fed8d2f9589b1402cb4ac815eb0d7f355ad359d923f603da3333a7ef5",
       "title": "petri 4",
       "year": 2004,
       "year_display": "2004",
-      "status": "published",
-      "series_ids": [
-        "112"
-      ],
+      "series_id": "112",
       "project_folder": "petri"
     },
     {
       "work_id": "01505",
+      "record_hash": "579ec3cf641cb2f049b4dd4e432ea9a6cf7f6b6fd4f2cecf8ec01c25007ce099",
       "title": "petri 5",
       "year": 2004,
       "year_display": "2004",
-      "status": "published",
-      "series_ids": [
-        "112"
-      ],
+      "series_id": "112",
       "project_folder": "petri"
     },
     {
       "work_id": "01506",
+      "record_hash": "875a9a9c7b8df33f92c66843130850d3dabc24e21bc2867ad1428b5a1a858302",
       "title": "petri 6",
       "year": 2004,
       "year_display": "2004",
-      "status": "published",
-      "series_ids": [
-        "112"
-      ],
+      "series_id": "112",
       "project_folder": "petri"
     },
     {
       "work_id": "01507",
+      "record_hash": "63727aeb821c4a301193e45ea84fcf707de16e81dcd0d7bed8a45552550495c0",
       "title": "petri 7",
       "year": 2004,
       "year_display": "2004",
-      "status": "published",
-      "series_ids": [
-        "112"
-      ],
+      "series_id": "112",
       "project_folder": "petri"
     },
     {
       "work_id": "01508",
+      "record_hash": "62819f9a2ead4f226a83ce1d38051f710e20bbb85c5f4dbfd0b6f7f9e3ff80f3",
       "title": "petri 8",
       "year": 2004,
       "year_display": "2004",
-      "status": "published",
-      "series_ids": [
-        "112"
-      ],
+      "series_id": "112",
       "project_folder": "petri"
     },
     {
       "work_id": "01509",
+      "record_hash": "a2345f113065069daa468b9367d2b96b9face186ddcfda6fb9aa07f314f01075",
       "title": "petri 9",
       "year": 2004,
       "year_display": "2004",
-      "status": "published",
-      "series_ids": [
-        "112"
-      ],
+      "series_id": "112",
       "project_folder": "petri"
     },
     {
       "work_id": "01510",
+      "record_hash": "981dc03ed6b4d1b5d7a9528ecf860c78790c71768371c1d70b36e1245e04a27e",
       "title": "petri 10",
       "year": 2004,
       "year_display": "2004",
-      "status": "published",
-      "series_ids": [
-        "112"
-      ],
+      "series_id": "112",
       "project_folder": "petri"
     },
     {
       "work_id": "01511",
+      "record_hash": "5184cfcdb8211fb159c9ff16b989dbed5b80676c2ad7ac6f3beb1122b7390846",
       "title": "petri 11",
       "year": 2004,
       "year_display": "2004",
-      "status": "published",
-      "series_ids": [
-        "112"
-      ],
+      "series_id": "112",
       "project_folder": "petri"
     },
     {
       "work_id": "01512",
+      "record_hash": "9126b371f7b8d990c004bc7803786f59a8f2d2b2573fa3dfabcd5c6729fdb2c8",
       "title": "petri 12",
       "year": 2004,
       "year_display": "2004",
-      "status": "published",
-      "series_ids": [
-        "112"
-      ],
+      "series_id": "112",
       "project_folder": "petri"
     },
     {
       "work_id": "01513",
+      "record_hash": "1b8c1a653cf3e98b4c01256f5ed01624ecdde9c0e463738131d586ebf8e49c6b",
       "title": "petri 13",
       "year": 2004,
       "year_display": "2004",
-      "status": "published",
-      "series_ids": [
-        "112"
-      ],
+      "series_id": "112",
       "project_folder": "petri"
     },
     {
       "work_id": "01514",
+      "record_hash": "3f850e3bd9ad351775c826964e404e37921f316f31aa4e486f1f7a3dc8a9b2ba",
       "title": "petri 14",
       "year": 2004,
       "year_display": "2004",
-      "status": "published",
-      "series_ids": [
-        "112"
-      ],
+      "series_id": "112",
       "project_folder": "petri"
     },
     {
       "work_id": "01515",
+      "record_hash": "e7caf1211c7babca5ea26e4c7058931b5eb3a2974ce984d506cd30582f7b3543",
       "title": "petri 15",
       "year": 2004,
       "year_display": "2004",
-      "status": "published",
-      "series_ids": [
-        "112"
-      ],
+      "series_id": "112",
       "project_folder": "petri"
     },
     {
       "work_id": "01516",
+      "record_hash": "8b4c8e938c1e1499f13db416c10a91998ad1f95a1b5994e3006a4b9e9e22281b",
       "title": "petri 16",
       "year": 2004,
       "year_display": "2004",
-      "status": "published",
-      "series_ids": [
-        "112"
-      ],
+      "series_id": "112",
       "project_folder": "petri"
     },
     {
       "work_id": "01517",
+      "record_hash": "84b927cb3ae8eaef08232d9fcb21037522c176393e62e853f82b9461a273337f",
       "title": "petri 17",
       "year": 2004,
       "year_display": "2004",
-      "status": "published",
-      "series_ids": [
-        "112"
-      ],
+      "series_id": "112",
       "project_folder": "petri"
     },
     {
       "work_id": "01518",
+      "record_hash": "5851f0866c830189f104ae1719485c2ef7d1c00da0f8db84b96a416b10705f49",
       "title": "petri 18",
       "year": 2004,
       "year_display": "2004",
-      "status": "published",
-      "series_ids": [
-        "112"
-      ],
+      "series_id": "112",
       "project_folder": "petri"
     },
     {
       "work_id": "01519",
+      "record_hash": "1587baacb628cc90eca41d8e9b0bb2bb460d42dbf8b2662853de24dc23e10561",
       "title": "petri 19",
       "year": 2004,
       "year_display": "2004",
-      "status": "published",
-      "series_ids": [
-        "112"
-      ],
+      "series_id": "112",
       "project_folder": "petri"
     },
     {
       "work_id": "01520",
+      "record_hash": "b1a6f4a9186de4a5938d740fe871749c993cf2413075cdd1e53bd1fa03a8d14d",
       "title": "petri 20",
       "year": 2004,
       "year_display": "2004",
-      "status": "published",
-      "series_ids": [
-        "112"
-      ],
+      "series_id": "112",
       "project_folder": "petri"
     },
     {
       "work_id": "01521",
+      "record_hash": "4916c85ac910184c38a5c9ee76061b3061040822fb004b1e501e82e6a3358584",
       "title": "petri 21",
       "year": 2004,
       "year_display": "2004",
-      "status": "published",
-      "series_ids": [
-        "112"
-      ],
+      "series_id": "112",
       "project_folder": "petri"
     },
     {
       "work_id": "01522",
+      "record_hash": "d3b0b3ef1d74a8f82d760349525c774b52c3c97db409954ff66dd0fc6ded9eae",
       "title": "petri 22",
       "year": 2004,
       "year_display": "2004",
-      "status": "published",
-      "series_ids": [
-        "112"
-      ],
+      "series_id": "112",
       "project_folder": "petri"
     }
   ],
-  "ordered_published_work_ids": [
+  "ordered_work_ids": [
     "01501",
     "01502",
     "01503",

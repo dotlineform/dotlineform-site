@@ -1,54 +1,45 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v2"
+    "schema": "studio_catalogue_lookup_series_record_v3"
   },
   "series": {
     "series_id": "030",
     "title": "composite (blue red smoke)",
-    "series_type": "primary",
-    "status": "published",
-    "published_date": "2026-04-01",
     "year": 2004,
     "year_display": "2004",
-    "primary_work_id": "00391",
     "sort_fields": "work_id"
   },
+  "record_hash": "d93211d81e4e7a933ac25526d22468c2a25cba3cb0a932d2d7ebd07e065a2798",
   "member_works": [
     {
       "work_id": "00391",
+      "record_hash": "ea9d7d728eb3179ad836a2056ba81636f796b54a8c199f5903ac13c39c28d456",
       "title": "composite (blue)",
       "year": 2004,
       "year_display": "2004",
-      "status": "published",
-      "series_ids": [
-        "030"
-      ],
+      "series_id": "030",
       "project_folder": "composite (blue red smoke)"
     },
     {
       "work_id": "00616",
+      "record_hash": "7bbd01e62fbbd25d49ccf65a473448f235b965ec6c8ab86b1c4698426bd137ba",
       "title": "composite (smoke)",
       "year": 2004,
       "year_display": "2004",
-      "status": "published",
-      "series_ids": [
-        "030"
-      ],
+      "series_id": "030",
       "project_folder": "composite (blue red smoke)"
     },
     {
       "work_id": "00617",
+      "record_hash": "9d0fd88e773d4f3fca656ed290989e09aa70244bbbd972851503068d81a280a5",
       "title": "composite (red)",
       "year": 2004,
       "year_display": "2004",
-      "status": "published",
-      "series_ids": [
-        "030"
-      ],
+      "series_id": "030",
       "project_folder": "composite (blue red smoke)"
     }
   ],
-  "ordered_published_work_ids": [
+  "ordered_work_ids": [
     "00391",
     "00616",
     "00617"

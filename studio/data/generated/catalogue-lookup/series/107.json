@@ -1,362 +1,297 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v2"
+    "schema": "studio_catalogue_lookup_series_record_v3"
   },
   "series": {
     "series_id": "107",
     "title": "nothing is missing",
-    "series_type": "primary",
-    "status": "published",
-    "published_date": "2026-04-01",
     "year": 2023,
     "year_display": "2023",
-    "primary_work_id": "01448",
     "sort_fields": "work_id"
   },
+  "record_hash": "dc11dc945a620c4ccb3d6c37a2a900a60f365ee95822f379119631c3010da01c",
   "member_works": [
     {
       "work_id": "01448",
+      "record_hash": "39667888c6854366fc37e4049f849b5921983ecc2ab43704dc6d1075030faab2",
       "title": "nothing is missing - I - 1 (2023-10-08 19꞉09)",
       "year": 2023,
       "year_display": "2023",
-      "status": "published",
-      "series_ids": [
-        "107"
-      ],
+      "series_id": "107",
       "project_folder": "nothing is missing"
     },
     {
       "work_id": "01449",
+      "record_hash": "e3aec056a8e33e646fb989ca6d95b2cd21c595176d5a004ab71c69172b1330f4",
       "title": "nothing is missing - I - 2 (2023-10-08 19꞉10)",
       "year": 2023,
       "year_display": "2023",
-      "status": "published",
-      "series_ids": [
-        "107"
-      ],
+      "series_id": "107",
       "project_folder": "nothing is missing"
     },
     {
       "work_id": "01450",
+      "record_hash": "499dee823c01fc2252e289065139eca204bc5673f3324430f3b7a1b0e39c72fb",
       "title": "nothing is missing - I - 3 (2023-10-08 19꞉10)",
       "year": 2023,
       "year_display": "2023",
-      "status": "published",
-      "series_ids": [
-        "107"
-      ],
+      "series_id": "107",
       "project_folder": "nothing is missing"
     },
     {
       "work_id": "01451",
+      "record_hash": "1c3703c08a28f5cd1ffec55c608890adefc952deb2e941a68eb8aba32baba675",
       "title": "nothing is missing - I - 4 (2023-10-08 19꞉11)",
       "year": 2023,
       "year_display": "2023",
-      "status": "published",
-      "series_ids": [
-        "107"
-      ],
+      "series_id": "107",
       "project_folder": "nothing is missing"
     },
     {
       "work_id": "01452",
+      "record_hash": "e694b4dfa4bb1a97f7bcc17a148ca6a2620a0dc6748852f65cc3d8903c309a22",
       "title": "nothing is missing - I - 5 (2023-10-08 19꞉11)",
       "year": 2023,
       "year_display": "2023",
-      "status": "published",
-      "series_ids": [
-        "107"
-      ],
+      "series_id": "107",
       "project_folder": "nothing is missing"
     },
     {
       "work_id": "01453",
+      "record_hash": "8399f4c156fda32d10b6ad3cd62ff3919ea0a8031879bd181ee4455c8adc8327",
       "title": "nothing is missing - I - 6 (2023-10-09 21꞉01)",
       "year": 2023,
       "year_display": "2023",
-      "status": "published",
-      "series_ids": [
-        "107"
-      ],
+      "series_id": "107",
       "project_folder": "nothing is missing"
     },
     {
       "work_id": "01454",
+      "record_hash": "796b3b9a6c1bf1402826c49e42960718edc5dcf7e27e27e15873f41adc93c8f8",
       "title": "nothing is missing - I - 7 (2023-10-09 21꞉03)",
       "year": 2023,
       "year_display": "2023",
-      "status": "published",
-      "series_ids": [
-        "107"
-      ],
+      "series_id": "107",
       "project_folder": "nothing is missing"
     },
     {
       "work_id": "01455",
+      "record_hash": "183099e69c6551ec648363f4dba033e3677ab45f3baf1184b4d7287280b41c0c",
       "title": "nothing is missing - I - 8 (2023-10-11 18꞉43)",
       "year": 2023,
       "year_display": "2023",
-      "status": "published",
-      "series_ids": [
-        "107"
-      ],
+      "series_id": "107",
       "project_folder": "nothing is missing"
     },
     {
       "work_id": "01456",
+      "record_hash": "e35484f343ae77570b5ae28643b74cde0d7046488fd74c6171c566d5f2f62707",
       "title": "nothing is missing - I - 9 (2023-10-11 18꞉45)",
       "year": 2023,
       "year_display": "2023",
-      "status": "published",
-      "series_ids": [
-        "107"
-      ],
+      "series_id": "107",
       "project_folder": "nothing is missing"
     },
     {
       "work_id": "01457",
+      "record_hash": "b3744fa22205f2d5fa2126974e988a3eeaab53ad299a77192814d79b706c7fcf",
       "title": "nothing is missing - I - 10 (2023-10-11 18꞉46)",
       "year": 2023,
       "year_display": "2023",
-      "status": "published",
-      "series_ids": [
-        "107"
-      ],
+      "series_id": "107",
       "project_folder": "nothing is missing"
     },
     {
       "work_id": "01458",
+      "record_hash": "bd17f6a0b96dfa2d75f2d163c330ebd50dc96b9b682cc66e074137c2d0ac85de",
       "title": "nothing is missing - I - 11 (2023-10-11 18꞉46)",
       "year": 2023,
       "year_display": "2023",
-      "status": "published",
-      "series_ids": [
-        "107"
-      ],
+      "series_id": "107",
       "project_folder": "nothing is missing"
     },
     {
       "work_id": "01459",
+      "record_hash": "61722d786cd54609b894b535164791b4f9eeb1e6f13df902090c24f094eb8ff5",
       "title": "nothing is missing - I - 12 (2023-10-11 18꞉47)",
       "year": 2023,
       "year_display": "2023",
-      "status": "published",
-      "series_ids": [
-        "107"
-      ],
+      "series_id": "107",
       "project_folder": "nothing is missing"
     },
     {
       "work_id": "01460",
+      "record_hash": "8a9bec10e9bc74ea5803a364108885ff91a412abb9059a2ef66cf398663645cb",
       "title": "nothing is missing - I - 13 (2023-10-11 18꞉48)",
       "year": 2023,
       "year_display": "2023",
-      "status": "published",
-      "series_ids": [
-        "107"
-      ],
+      "series_id": "107",
       "project_folder": "nothing is missing"
     },
     {
       "work_id": "01461",
+      "record_hash": "6ccd2b75b6f31521bbec95270dc3c67c934d5d6e83cc7a5083e656a24379dc60",
       "title": "nothing is missing - II - 1 - 1 (2023-10-12 19꞉48)",
       "year": 2023,
       "year_display": "2023",
-      "status": "published",
-      "series_ids": [
-        "107"
-      ],
+      "series_id": "107",
       "project_folder": "nothing is missing"
     },
     {
       "work_id": "01462",
+      "record_hash": "578fa179c0f25dba896acaa12bc9a559c48ce54d004dcaa4bd911331dcfd99cd",
       "title": "nothing is missing - II - 1 - 2 (2023-10-12 19꞉48)",
       "year": 2023,
       "year_display": "2023",
-      "status": "published",
-      "series_ids": [
-        "107"
-      ],
+      "series_id": "107",
       "project_folder": "nothing is missing"
     },
     {
       "work_id": "01463",
+      "record_hash": "63e1cca1c28d1a2a8d7eab10c0a38351ff75355e6975e4724ec4deb927deb531",
       "title": "nothing is missing - II - 2 - 1 (2023-10-12 19꞉48)",
       "year": 2023,
       "year_display": "2023",
-      "status": "published",
-      "series_ids": [
-        "107"
-      ],
+      "series_id": "107",
       "project_folder": "nothing is missing"
     },
     {
       "work_id": "01464",
+      "record_hash": "bd03c8f2122fa556fe4a46349400ad6d6ec0fb7526ae22f98e80b01588a7814d",
       "title": "nothing is missing - II - 2 - 2 (2023-10-12 19꞉48)",
       "year": 2023,
       "year_display": "2023",
-      "status": "published",
-      "series_ids": [
-        "107"
-      ],
+      "series_id": "107",
       "project_folder": "nothing is missing"
     },
     {
       "work_id": "01465",
+      "record_hash": "45e8f6d51036437736ce9dfda762b0ca0d82f0d31273d75e7423cc5a64a44da7",
       "title": "nothing is missing - II - 2 - 3 (2023-10-12 19꞉48)",
       "year": 2023,
       "year_display": "2023",
-      "status": "published",
-      "series_ids": [
-        "107"
-      ],
+      "series_id": "107",
       "project_folder": "nothing is missing"
     },
     {
       "work_id": "01466",
+      "record_hash": "d82aefea4664c6f9e05239c2daef0964a14388871038ff6930f415407afceb43",
       "title": "nothing is missing - II - 2 - 4 (2023-10-12 19꞉48)",
       "year": 2023,
       "year_display": "2023",
-      "status": "published",
-      "series_ids": [
-        "107"
-      ],
+      "series_id": "107",
       "project_folder": "nothing is missing"
     },
     {
       "work_id": "01467",
+      "record_hash": "3f72351fc18bda4bc4f56e48c8f4f77e2c848b2bcf21d7fb60b035779e255276",
       "title": "nothing is missing - II - 3 - 1 (2023-10-12 19꞉48)",
       "year": 2023,
       "year_display": "2023",
-      "status": "published",
-      "series_ids": [
-        "107"
-      ],
+      "series_id": "107",
       "project_folder": "nothing is missing"
     },
     {
       "work_id": "01468",
+      "record_hash": "58c7f05372fd9d1d3a5b159ea53afeab6f884664683b11e83928bbaef27cfd9b",
       "title": "nothing is missing - II - 3 - 2 (2023-10-12 19꞉48)",
       "year": 2023,
       "year_display": "2023",
-      "status": "published",
-      "series_ids": [
-        "107"
-      ],
+      "series_id": "107",
       "project_folder": "nothing is missing"
     },
     {
       "work_id": "01469",
+      "record_hash": "e110cf0bc3ce1b32ba92db5457ba9f23b3890fa28977c252dbcb55575d2a9336",
       "title": "nothing is missing - II - 4 - 1 (2023-10-12 19꞉48)",
       "year": 2023,
       "year_display": "2023",
-      "status": "published",
-      "series_ids": [
-        "107"
-      ],
+      "series_id": "107",
       "project_folder": "nothing is missing"
     },
     {
       "work_id": "01470",
+      "record_hash": "e7b603c81d09b8347d1cdb747f01f1d228423dd0b1d1b3086bcdf01ad7a52af4",
       "title": "nothing is missing - II - 4 - 2 (2023-10-12 19꞉48)",
       "year": 2023,
       "year_display": "2023",
-      "status": "published",
-      "series_ids": [
-        "107"
-      ],
+      "series_id": "107",
       "project_folder": "nothing is missing"
     },
     {
       "work_id": "01471",
+      "record_hash": "0591d8911b89d0027fc475352871cd25ff8bc2fe9b99c63d51af7344178d69c4",
       "title": "nothing is missing - II - 4 - 3 (2023-10-12 19꞉48)",
       "year": 2023,
       "year_display": "2023",
-      "status": "published",
-      "series_ids": [
-        "107"
-      ],
+      "series_id": "107",
       "project_folder": "nothing is missing"
     },
     {
       "work_id": "01472",
+      "record_hash": "8c00d5323a3f33246af476632d19f17ea4f885438de82a629851f7614c242279",
       "title": "nothing is missing - II - 5 - 1 (2023-10-12 19꞉48)",
       "year": 2023,
       "year_display": "2023",
-      "status": "published",
-      "series_ids": [
-        "107"
-      ],
+      "series_id": "107",
       "project_folder": "nothing is missing"
     },
     {
       "work_id": "01473",
+      "record_hash": "64dfe5fb3ca9bdfcb8d6e691bb0744bd8a33c9b35905c3f96d4be4861f2d405e",
       "title": "nothing is missing - II - 5 - 2 (2023-10-12 19꞉48)",
       "year": 2023,
       "year_display": "2023",
-      "status": "published",
-      "series_ids": [
-        "107"
-      ],
+      "series_id": "107",
       "project_folder": "nothing is missing"
     },
     {
       "work_id": "01474",
+      "record_hash": "7fa43a58b681573966278ddcdc5b2024b64e0faf3dddc3bdb6fcd2d9e2275660",
       "title": "nothing is missing - II - 6 - 1 (2023-10-12 19꞉48)",
       "year": 2023,
       "year_display": "2023",
-      "status": "published",
-      "series_ids": [
-        "107"
-      ],
+      "series_id": "107",
       "project_folder": "nothing is missing"
     },
     {
       "work_id": "01475",
+      "record_hash": "7e996247e114bf841728fb365a9a5becd20a2baf17f2db0cbceb7a06122b25bc",
       "title": "nothing is missing - II - 6 - 2 (2023-10-12 19꞉48)",
       "year": 2023,
       "year_display": "2023",
-      "status": "published",
-      "series_ids": [
-        "107"
-      ],
+      "series_id": "107",
       "project_folder": "nothing is missing"
     },
     {
       "work_id": "01476",
+      "record_hash": "c4dcc446615d1e0053270e6f94e36b35c1418f92a3143b848df33cb6bf2f2644",
       "title": "nothing is missing - II - 6 - 3 (2023-10-12 19꞉48)",
       "year": 2023,
       "year_display": "2023",
-      "status": "published",
-      "series_ids": [
-        "107"
-      ],
+      "series_id": "107",
       "project_folder": "nothing is missing"
     },
     {
       "work_id": "01477",
+      "record_hash": "7cbaa2ca260bb139dd10d8cc3aeeabc2bed1ed439dd074594c2030ff478fdc2e",
       "title": "nothing is missing - II - 7 - 1 (2023-10-12 19꞉48)",
       "year": 2023,
       "year_display": "2023",
-      "status": "published",
-      "series_ids": [
-        "107"
-      ],
+      "series_id": "107",
       "project_folder": "nothing is missing"
     },
     {
       "work_id": "01478",
+      "record_hash": "ab9fe57be6039f2b2296593fc008ccaf1ef24f8f0a685bcded96afeb01eec681",
       "title": "nothing is missing - II - 7 - 2 (2023-10-12 19꞉48)",
       "year": 2023,
       "year_display": "2023",
-      "status": "published",
-      "series_ids": [
-        "107"
-      ],
+      "series_id": "107",
       "project_folder": "nothing is missing"
     }
   ],
-  "ordered_published_work_ids": [
+  "ordered_work_ids": [
     "01448",
     "01449",
     "01450",

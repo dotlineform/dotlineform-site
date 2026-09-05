@@ -1,219 +1,180 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v2"
+    "schema": "studio_catalogue_lookup_series_record_v3"
   },
   "series": {
     "series_id": "015",
     "title": "base series",
-    "series_type": "primary",
-    "status": "published",
-    "published_date": "2026-04-01",
     "year": 2007,
     "year_display": "2007",
-    "primary_work_id": "00756",
     "sort_fields": "work_id"
   },
+  "record_hash": "2087a1cf630875b936b242b0f183825b0bb4004e30c50e09f5462a5f9a725c2c",
   "member_works": [
     {
       "work_id": "00756",
+      "record_hash": "2bdd613c3de96f3b51aaf209d286a4164eb5c956c3ce8e108217b096f2266ae3",
       "title": "base cs",
       "year": 2007,
       "year_display": "2007",
-      "status": "published",
-      "series_ids": [
-        "015"
-      ],
+      "series_id": "015",
       "project_folder": "base series"
     },
     {
       "work_id": "00757",
+      "record_hash": "94447060074f9e96aee06cba118f47cb3c0bf2fc364ca94f750a1b8e46bca723",
       "title": "base k (1)",
       "year": 2007,
       "year_display": "2007",
-      "status": "published",
-      "series_ids": [
-        "015"
-      ],
+      "series_id": "015",
       "project_folder": "base series"
     },
     {
       "work_id": "00758",
+      "record_hash": "fb158e996de07675216520ef010b7c116078abfd01fc4d1597d23052c4064234",
       "title": "base k (2)",
       "year": 2007,
       "year_display": "2007",
-      "status": "published",
-      "series_ids": [
-        "015"
-      ],
+      "series_id": "015",
       "project_folder": "base series"
     },
     {
       "work_id": "00759",
+      "record_hash": "5db3ff0bf708e94907abc0013fd537005f71c7b1fec5d980877d6fbe31a8ad88",
       "title": "base k (2) dissected 1",
       "year": 2007,
       "year_display": "2007",
-      "status": "published",
-      "series_ids": [
-        "015"
-      ],
+      "series_id": "015",
       "project_folder": "base series"
     },
     {
       "work_id": "00760",
+      "record_hash": "0f6b945bff949ceed8973e97df24e04603f431e58a61b73595a360fcf4328b41",
       "title": "base k (2) dissected 2",
       "year": 2007,
       "year_display": "2007",
-      "status": "published",
-      "series_ids": [
-        "015"
-      ],
+      "series_id": "015",
       "project_folder": "base series"
     },
     {
       "work_id": "00761",
+      "record_hash": "f6d3dd257f0e8b4e0e070c89401c7545cebca1504f5f6c067cf139be41fc3f50",
       "title": "base k (2) edit",
       "year": 2007,
       "year_display": "2007",
-      "status": "published",
-      "series_ids": [
-        "015"
-      ],
+      "series_id": "015",
       "project_folder": "base series"
     },
     {
       "work_id": "00762",
+      "record_hash": "4d29db3faf65600ca82d0d272d6fcdfccecfb30490675f7d4e9ae0c639fc5845",
       "title": "base k (3)",
       "year": 2007,
       "year_display": "2007",
-      "status": "published",
-      "series_ids": [
-        "015"
-      ],
+      "series_id": "015",
       "project_folder": "base series"
     },
     {
       "work_id": "00763",
+      "record_hash": "f2133ffe3cc261323520806dd7681581fd6624bf1476510a89b9e3fd1983b4c0",
       "title": "base m",
       "year": 2007,
       "year_display": "2007",
-      "status": "published",
-      "series_ids": [
-        "015"
-      ],
+      "series_id": "015",
       "project_folder": "base series"
     },
     {
       "work_id": "00764",
+      "record_hash": "df7cc098c86b2136ef022bcc39b3370871e3a1bf66c7dd996e95133d88465ad7",
       "title": "base nerve (1)",
       "year": 2007,
       "year_display": "2007",
-      "status": "published",
-      "series_ids": [
-        "015"
-      ],
+      "series_id": "015",
       "project_folder": "base series"
     },
     {
       "work_id": "00765",
+      "record_hash": "8de008530f3618d3d43cf00fa26a8d05f47731b4c72376551d64e5160b23a2bf",
       "title": "base nerve (2)",
       "year": 2007,
       "year_display": "2007",
-      "status": "published",
-      "series_ids": [
-        "015"
-      ],
+      "series_id": "015",
       "project_folder": "base series"
     },
     {
       "work_id": "00766",
+      "record_hash": "edb410f261e33c6d575b0aa175632c1cb957ce1a24c60e1a91ebd39cf75c1e9e",
       "title": "base nerve (2) edges 1",
       "year": 2007,
       "year_display": "2007",
-      "status": "published",
-      "series_ids": [
-        "015"
-      ],
+      "series_id": "015",
       "project_folder": "base series"
     },
     {
       "work_id": "00767",
+      "record_hash": "9eb1271310ad78d685ed925658c337c58fe6458a161ec6564fb3f1b166ddcd1c",
       "title": "base nerve (2) edges 2",
       "year": 2007,
       "year_display": "2007",
-      "status": "published",
-      "series_ids": [
-        "015"
-      ],
+      "series_id": "015",
       "project_folder": "base series"
     },
     {
       "work_id": "00768",
+      "record_hash": "9865327ccfcc78035a76a2bdd5114d006c66ee6f6cf4ad0c18f7c7ccf2a2f533",
       "title": "base nerve (2) edges 3",
       "year": 2007,
       "year_display": "2007",
-      "status": "published",
-      "series_ids": [
-        "015"
-      ],
+      "series_id": "015",
       "project_folder": "base series"
     },
     {
       "work_id": "00769",
+      "record_hash": "ec57c628f1755957e4ef2a9f52e5139bf14983ecef32ff997d61a4c099a169e3",
       "title": "base nerve (2) edges 4",
       "year": 2007,
       "year_display": "2007",
-      "status": "published",
-      "series_ids": [
-        "015"
-      ],
+      "series_id": "015",
       "project_folder": "base series"
     },
     {
       "work_id": "00770",
+      "record_hash": "ee172462940238e31ef09223891eeade0447c1cac6d7194b48ebedc5f629e3a5",
       "title": "base nerve (3)",
       "year": 2007,
       "year_display": "2007",
-      "status": "published",
-      "series_ids": [
-        "015"
-      ],
+      "series_id": "015",
       "project_folder": "base series"
     },
     {
       "work_id": "00771",
+      "record_hash": "d8d89b0eaec00378ec1d27bb3069dc96f8c6c4031710ae7d192e095533c848cd",
       "title": "base pearls",
       "year": 2007,
       "year_display": "2007",
-      "status": "published",
-      "series_ids": [
-        "015"
-      ],
+      "series_id": "015",
       "project_folder": "base series"
     },
     {
       "work_id": "00772",
+      "record_hash": "8603c6555af92b71905289a2f116afc4e6c1a4adf3ba69c1471c3dac712d15ff",
       "title": "base s",
       "year": 2007,
       "year_display": "2007",
-      "status": "published",
-      "series_ids": [
-        "015"
-      ],
+      "series_id": "015",
       "project_folder": "base series"
     },
     {
       "work_id": "00773",
+      "record_hash": "9423a50ff5040e06eb1a26d1176af6c11386b694408493dff082632a04bee761",
       "title": "base sb",
       "year": 2007,
       "year_display": "2007",
-      "status": "published",
-      "series_ids": [
-        "015"
-      ],
+      "series_id": "015",
       "project_folder": "base series"
     }
   ],
-  "ordered_published_work_ids": [
+  "ordered_work_ids": [
     "00756",
     "00757",
     "00758",

@@ -1,32 +1,27 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v2"
+    "schema": "studio_catalogue_lookup_series_record_v3"
   },
   "series": {
     "series_id": "069",
     "title": "genetic (2020)",
-    "series_type": "primary",
-    "status": "published",
-    "published_date": "2026-04-01",
     "year": 2020,
     "year_display": "c. 2001-11",
-    "primary_work_id": "01250",
     "sort_fields": "work_id"
   },
+  "record_hash": "d0e94181075b4d1ff62e5a7d1d34208f9ca048626cec4d96ebebec43f9d747bf",
   "member_works": [
     {
       "work_id": "01250",
+      "record_hash": "f96a5e46757fe9f4b6cc42d1677167bc714715f92b31caa0f125917a705a9cae",
       "title": "genetic",
       "year": 2020,
       "year_display": "c. 2001-11",
-      "status": "published",
-      "series_ids": [
-        "069"
-      ],
+      "series_id": "069",
       "project_folder": "genetic (2020)"
     }
   ],
-  "ordered_published_work_ids": [
+  "ordered_work_ids": [
     "01250"
   ],
   "project_folders": [

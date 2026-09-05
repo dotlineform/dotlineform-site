@@ -1,98 +1,81 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v2"
+    "schema": "studio_catalogue_lookup_series_record_v3"
   },
   "series": {
     "series_id": "118",
     "title": "quantum random number theory",
-    "series_type": "primary",
-    "status": "published",
-    "published_date": "2026-04-01",
     "year": 2015,
     "year_display": "2009, 2015",
-    "primary_work_id": "00630",
     "sort_fields": "work_id"
   },
+  "record_hash": "aa4c0ba25191ce42e1d252f773a85f84f3263ccd7fd394be9f2be47f44a13062",
   "member_works": [
     {
       "work_id": "00383",
+      "record_hash": "5b9078c23dfd27152ca68cb2016ddf7a6588851170c3966d2b7f34d15bc71715",
       "title": "qrnt",
       "year": 2009,
       "year_display": "2009",
-      "status": "published",
-      "series_ids": [
-        "118"
-      ],
+      "series_id": "118",
       "project_folder": "qrnt"
     },
     {
       "work_id": "00629",
+      "record_hash": "d929b39ae1cc2f3fa593e98fd3389dce618471283a1e54c6c0cc2653fdd72c8c",
       "title": "quantum random number theory",
       "year": 2009,
       "year_display": "2009",
-      "status": "published",
-      "series_ids": [
-        "118"
-      ],
+      "series_id": "118",
       "project_folder": "qrnt"
     },
     {
       "work_id": "00630",
+      "record_hash": "078edfb80d7a6167005706aa96ebf32af02ec58acd3ef7c345123aebaf9c9453",
       "title": "quantum random number theory (version)",
       "year": 2010,
       "year_display": "2010",
-      "status": "published",
-      "series_ids": [
-        "118"
-      ],
+      "series_id": "118",
       "project_folder": "qrnt"
     },
     {
       "work_id": "00631",
+      "record_hash": "fd9bb0721307d7560d3a0ab2014af3a257a4ec2dc6e18bd00fdbde69d3468033",
       "title": "quantum random number theory (form)",
       "year": 2015,
       "year_display": "2015",
-      "status": "published",
-      "series_ids": [
-        "118"
-      ],
+      "series_id": "118",
       "project_folder": "qrnt"
     },
     {
       "work_id": "00632",
+      "record_hash": "fbca5544ac398e73957e8174824be2cd00acdbe2d7f0610c0983ecbc6fe246e0",
       "title": "quantum random number theory (circle)",
       "year": 2009,
       "year_display": "2009",
-      "status": "published",
-      "series_ids": [
-        "118"
-      ],
+      "series_id": "118",
       "project_folder": "qrnt"
     },
     {
       "work_id": "00633",
+      "record_hash": "29ad335ad3b9244c0e02332628c19c23be103c34e467ec97bc6f74869e54f61a",
       "title": "quantum random number theory (4 circles)",
       "year": 2009,
       "year_display": "2009",
-      "status": "published",
-      "series_ids": [
-        "118"
-      ],
+      "series_id": "118",
       "project_folder": "qrnt"
     },
     {
       "work_id": "00634",
+      "record_hash": "d89dd7900f1ca6cf4b15a2641e729e6e8bd55b40010d5c4ffab58f6092140490",
       "title": "bits symbols 1",
       "year": 2009,
       "year_display": "2009",
-      "status": "published",
-      "series_ids": [
-        "118"
-      ],
+      "series_id": "118",
       "project_folder": "qrnt (bits symbols)"
     }
   ],
-  "ordered_published_work_ids": [
+  "ordered_work_ids": [
     "00383",
     "00629",
     "00630",

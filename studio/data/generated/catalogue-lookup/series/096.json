@@ -1,43 +1,36 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v2"
+    "schema": "studio_catalogue_lookup_series_record_v3"
   },
   "series": {
     "series_id": "096",
     "title": "memory loss hope",
-    "series_type": "primary",
-    "status": "published",
-    "published_date": "2026-04-01",
     "year": 2010,
     "year_display": "2010",
-    "primary_work_id": "01441",
     "sort_fields": "work_id"
   },
+  "record_hash": "e482a6e33aeba328e7c3bb0d9743341369f4a219b4e45c0c66876f53736c925e",
   "member_works": [
     {
       "work_id": "01441",
+      "record_hash": "103d022ec871f6e29a456b23a8b75ca9ac128f6e733c0be939a009f8f456803f",
       "title": "memory loss hope",
       "year": 2010,
       "year_display": "2010",
-      "status": "published",
-      "series_ids": [
-        "096"
-      ],
+      "series_id": "096",
       "project_folder": "memory loss hope"
     },
     {
       "work_id": "01442",
+      "record_hash": "4c714679d5d1859573c65d3b3b5640b95d8de7b4488a201451893719a36c032f",
       "title": "memory loss hope (set theory)",
       "year": 2010,
       "year_display": "2010",
-      "status": "published",
-      "series_ids": [
-        "096"
-      ],
+      "series_id": "096",
       "project_folder": "memory loss hope"
     }
   ],
-  "ordered_published_work_ids": [
+  "ordered_work_ids": [
     "01441",
     "01442"
   ],

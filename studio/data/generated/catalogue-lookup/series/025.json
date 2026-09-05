@@ -1,43 +1,36 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v2"
+    "schema": "studio_catalogue_lookup_series_record_v3"
   },
   "series": {
     "series_id": "025",
     "title": "closeness",
-    "series_type": "primary",
-    "status": "published",
-    "published_date": "2026-04-01",
     "year": 2017,
     "year_display": "2017",
-    "primary_work_id": "00811",
     "sort_fields": "work_id"
   },
+  "record_hash": "d0aeb043ad06f99a440a997b7f7eb537161e33f1a19866a4a060e0c7e1d239df",
   "member_works": [
     {
       "work_id": "00811",
+      "record_hash": "18e23ac42c47fc08a90c79332eb341cbb97ae306c82cedfa7120965228cfe8fd",
       "title": "close",
       "year": 2017,
       "year_display": "2017",
-      "status": "published",
-      "series_ids": [
-        "025"
-      ],
+      "series_id": "025",
       "project_folder": "closeness"
     },
     {
       "work_id": "00812",
+      "record_hash": "25320029cb003960f2c70ee882a17bfce91529222c5e7c349bb64ecc2809b46c",
       "title": "closer",
       "year": 2017,
       "year_display": "2017",
-      "status": "published",
-      "series_ids": [
-        "025"
-      ],
+      "series_id": "025",
       "project_folder": "closeness"
     }
   ],
-  "ordered_published_work_ids": [
+  "ordered_work_ids": [
     "00811",
     "00812"
   ],

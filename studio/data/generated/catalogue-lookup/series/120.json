@@ -1,131 +1,108 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v2"
+    "schema": "studio_catalogue_lookup_series_record_v3"
   },
   "series": {
     "series_id": "120",
     "title": "reduce and return",
-    "series_type": "primary",
-    "status": "published",
-    "published_date": "2026-04-01",
     "year": 2005,
     "year_display": "2005-07",
-    "primary_work_id": "01596",
     "sort_fields": "work_id"
   },
+  "record_hash": "6b9d9da8042ebb8c180062b2f4c0bd8fc71fbcf35949b04d3ebd93b3a4388acc",
   "member_works": [
     {
       "work_id": "01596",
+      "record_hash": "a478d4b2c645a3b3aae461ab3df20604d92e3adbb92293ccb5d87076f11ec18c",
       "title": "reduce 1",
       "year": 2005,
       "year_display": "2005-07",
-      "status": "published",
-      "series_ids": [
-        "120"
-      ],
+      "series_id": "120",
       "project_folder": "reduce and return"
     },
     {
       "work_id": "01597",
+      "record_hash": "1d9eea632df43493e235ea1b614d8f0575b434c50ddd0f99414b0226468cf917",
       "title": "reduce 2",
       "year": 2005,
       "year_display": "2005-07",
-      "status": "published",
-      "series_ids": [
-        "120"
-      ],
+      "series_id": "120",
       "project_folder": "reduce and return"
     },
     {
       "work_id": "01598",
+      "record_hash": "cc698b585ce842e2abd28c23da372e5626a8b12cf878b9e786868bad37030dd4",
       "title": "reduce 3",
       "year": 2005,
       "year_display": "2005-07",
-      "status": "published",
-      "series_ids": [
-        "120"
-      ],
+      "series_id": "120",
       "project_folder": "reduce and return"
     },
     {
       "work_id": "01599",
+      "record_hash": "165caa2271b8ccb14ca607933b60722b40037589f6ab6a1f81aea99668368e06",
       "title": "reduce 4",
       "year": 2005,
       "year_display": "2005-07",
-      "status": "published",
-      "series_ids": [
-        "120"
-      ],
+      "series_id": "120",
       "project_folder": "reduce and return"
     },
     {
       "work_id": "01600",
+      "record_hash": "a4e6080a612eafd9ed9c869ddb0d48f7a80a25cc2ab5f75ab3c751800ab650d5",
       "title": "reduce 5",
       "year": 2005,
       "year_display": "2005-07",
-      "status": "published",
-      "series_ids": [
-        "120"
-      ],
+      "series_id": "120",
       "project_folder": "reduce and return"
     },
     {
       "work_id": "01601",
+      "record_hash": "7efe4700d872cf3cfcb31f0553847128829ff6717d9c8f47b540831d48688c48",
       "title": "return 1",
       "year": 2005,
       "year_display": "2005-07",
-      "status": "published",
-      "series_ids": [
-        "120"
-      ],
+      "series_id": "120",
       "project_folder": "reduce and return"
     },
     {
       "work_id": "01602",
+      "record_hash": "ee41e1568be3e74d85e6d90a6b8c04d912a8cefdc53eb0edb7196812eea1322d",
       "title": "return 2",
       "year": 2005,
       "year_display": "2005-07",
-      "status": "published",
-      "series_ids": [
-        "120"
-      ],
+      "series_id": "120",
       "project_folder": "reduce and return"
     },
     {
       "work_id": "01603",
+      "record_hash": "2fd3c4fefaff9e49503a585a335f0bd800e7fe73effde6bb0244551fcd000524",
       "title": "return 3",
       "year": 2005,
       "year_display": "2005-07",
-      "status": "published",
-      "series_ids": [
-        "120"
-      ],
+      "series_id": "120",
       "project_folder": "reduce and return"
     },
     {
       "work_id": "01604",
+      "record_hash": "bae7c32a935822fc98a4933497e5ef1a1abfe9e3f38aaac9890607d1862072ec",
       "title": "return 4",
       "year": 2005,
       "year_display": "2005-07",
-      "status": "published",
-      "series_ids": [
-        "120"
-      ],
+      "series_id": "120",
       "project_folder": "reduce and return"
     },
     {
       "work_id": "01605",
+      "record_hash": "00e39dfd42b0347126b2e4990edd18105fbf2d1fe22421056034b964499777de",
       "title": "return 5",
       "year": 2005,
       "year_display": "2005-07",
-      "status": "published",
-      "series_ids": [
-        "120"
-      ],
+      "series_id": "120",
       "project_folder": "reduce and return"
     }
   ],
-  "ordered_published_work_ids": [
+  "ordered_work_ids": [
     "01596",
     "01597",
     "01598",

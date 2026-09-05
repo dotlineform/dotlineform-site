@@ -1,329 +1,270 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v2"
+    "schema": "studio_catalogue_lookup_series_record_v3"
   },
   "series": {
     "series_id": "141",
     "title": "water",
-    "series_type": "primary",
-    "status": "published",
-    "published_date": "2026-04-01",
     "year": 2013,
     "year_display": "2005-13",
-    "primary_work_id": "01912",
     "sort_fields": "work_id"
   },
+  "record_hash": "3ef190dc3c0d7a6c9da17873ef914d824aacac37c008338f5d4bc3c1d8481116",
   "member_works": [
     {
       "work_id": "01910",
+      "record_hash": "f49fbbe128718e3001ecd52387e04e59f04a8cb2e72a2bf80f807c7369f14044",
       "title": "2005-08-20 - 19-02-53",
       "year": 2005,
       "year_display": "2005",
-      "status": "published",
-      "series_ids": [
-        "141"
-      ],
+      "series_id": "141",
       "project_folder": "water"
     },
     {
       "work_id": "01911",
+      "record_hash": "801c954cb319320f618b82838099fc311082533b1f3000c3d25ecef0ae58a732",
       "title": "2005-08-20 - 19-03-07",
       "year": 2005,
       "year_display": "2005",
-      "status": "published",
-      "series_ids": [
-        "141"
-      ],
+      "series_id": "141",
       "project_folder": "water"
     },
     {
       "work_id": "01912",
+      "record_hash": "6cf5aa6f437768ad14290afbb956fa0864de31350ff0466c535c1eb1322b6909",
       "title": "2005-08-20 - 19-03-19",
       "year": 2005,
       "year_display": "2005",
-      "status": "published",
-      "series_ids": [
-        "141"
-      ],
+      "series_id": "141",
       "project_folder": "water"
     },
     {
       "work_id": "01913",
+      "record_hash": "a4b604d339a57b99b63a24642f37b700ce473a1c4255c465e15a213c5cda114d",
       "title": "2005-08-20 - 19-03-32",
       "year": 2005,
       "year_display": "2005",
-      "status": "published",
-      "series_ids": [
-        "141"
-      ],
+      "series_id": "141",
       "project_folder": "water"
     },
     {
       "work_id": "01914",
+      "record_hash": "bef9a4616d4cb6c2abfb31bd50ad2630c60a50616b90d2522e24cade9debdcf7",
       "title": "2005-08-20 - 19-03-58",
       "year": 2005,
       "year_display": "2005",
-      "status": "published",
-      "series_ids": [
-        "141"
-      ],
+      "series_id": "141",
       "project_folder": "water"
     },
     {
       "work_id": "01915",
+      "record_hash": "3471ed95f1e2ac41f77a208653cc3a54ee3e96c4fd5c3f38649c32ae8c491e42",
       "title": "2005-08-20 - 19-04-09",
       "year": 2005,
       "year_display": "2005",
-      "status": "published",
-      "series_ids": [
-        "141"
-      ],
+      "series_id": "141",
       "project_folder": "water"
     },
     {
       "work_id": "01916",
+      "record_hash": "b757f8d9fd64b50124207b555de81676f63a1b73931a9e35026bb42a2f49ee0c",
       "title": "2005-08-20 - 19-05-22",
       "year": 2005,
       "year_display": "2005",
-      "status": "published",
-      "series_ids": [
-        "141"
-      ],
+      "series_id": "141",
       "project_folder": "water"
     },
     {
       "work_id": "01917",
+      "record_hash": "61d48fdaf3e8bdfccd70cec67aeb619b9a0fd43b3930b0c2c3352ed74206f71b",
       "title": "2005-08-20 - 19-06-16",
       "year": 2005,
       "year_display": "2005",
-      "status": "published",
-      "series_ids": [
-        "141"
-      ],
+      "series_id": "141",
       "project_folder": "water"
     },
     {
       "work_id": "01918",
+      "record_hash": "dcc62e87454c1654566875c8c2173cbc00fb8a820718d07edcf6b83e67f5fc47",
       "title": "2006-05-03 - 18-58-09",
       "year": 2006,
       "year_display": "2006",
-      "status": "published",
-      "series_ids": [
-        "141"
-      ],
+      "series_id": "141",
       "project_folder": "water"
     },
     {
       "work_id": "01919",
+      "record_hash": "1b7dfcfbbc678373e8776261695cfb0d3a398650ae2e867bf8a71a05b8aaad1a",
       "title": "2006-05-03 - 19-00-42",
       "year": 2006,
       "year_display": "2006",
-      "status": "published",
-      "series_ids": [
-        "141"
-      ],
+      "series_id": "141",
       "project_folder": "water"
     },
     {
       "work_id": "01920",
+      "record_hash": "ddbe656032a44330a0c32173ab6169b40ec6784b2de58cccbdc778477774046b",
       "title": "2006-05-03 - 19-00-54",
       "year": 2006,
       "year_display": "2006",
-      "status": "published",
-      "series_ids": [
-        "141"
-      ],
+      "series_id": "141",
       "project_folder": "water"
     },
     {
       "work_id": "01921",
+      "record_hash": "400ef8797521e9ec92d729585dc43f3d85cdf74c93db32d2b47489858660f8e2",
       "title": "2006-05-03 - 19-01-09",
       "year": 2006,
       "year_display": "2006",
-      "status": "published",
-      "series_ids": [
-        "141"
-      ],
+      "series_id": "141",
       "project_folder": "water"
     },
     {
       "work_id": "01922",
+      "record_hash": "af13bef1ad170d4ae697c12e92cf5490b48d91c7f67d4b04863d6d4b3fdffd67",
       "title": "2006-05-04 - 19-05-13",
       "year": 2006,
       "year_display": "2006",
-      "status": "published",
-      "series_ids": [
-        "141"
-      ],
+      "series_id": "141",
       "project_folder": "water"
     },
     {
       "work_id": "01923",
+      "record_hash": "a5f0771dfa388bf34a98d16d5d250f25b99da0ba8ed11784eaa5d87fa4ec2d97",
       "title": "2006-05-04 - 19-05-18",
       "year": 2006,
       "year_display": "2006",
-      "status": "published",
-      "series_ids": [
-        "141"
-      ],
+      "series_id": "141",
       "project_folder": "water"
     },
     {
       "work_id": "01924",
+      "record_hash": "ba41d453f6411d7dcc659800e4fa023c474a187841a423bc752327b1940e78af",
       "title": "2006-05-04 - 19-05-25",
       "year": 2006,
       "year_display": "2006",
-      "status": "published",
-      "series_ids": [
-        "141"
-      ],
+      "series_id": "141",
       "project_folder": "water"
     },
     {
       "work_id": "01925",
+      "record_hash": "3d8685a719a4b3578a889e54988308f83b99ee596a597d13e23447a8b457dc63",
       "title": "2013-03-02 - 14-34-00",
       "year": 2013,
       "year_display": "2013",
-      "status": "published",
-      "series_ids": [
-        "141"
-      ],
+      "series_id": "141",
       "project_folder": "water"
     },
     {
       "work_id": "01926",
+      "record_hash": "fba5cbb23a3e6c72ed2e1d7b9d85dfb2690926be3f5d6c2d5cd84a2a4575eb1d",
       "title": "2013-03-02 - 14-34-57",
       "year": 2013,
       "year_display": "2013",
-      "status": "published",
-      "series_ids": [
-        "141"
-      ],
+      "series_id": "141",
       "project_folder": "water"
     },
     {
       "work_id": "01927",
+      "record_hash": "4c7e8f85b987bcd6195d9bf8df7a9d3954a74a75b3acd311fcc963700675956c",
       "title": "2013-03-02 - 14-43-50",
       "year": 2013,
       "year_display": "2013",
-      "status": "published",
-      "series_ids": [
-        "141"
-      ],
+      "series_id": "141",
       "project_folder": "water"
     },
     {
       "work_id": "01928",
+      "record_hash": "e6006f111b045bbbdaee3efc4fd47a22e3ce013fca8a1d154aa126350058e591",
       "title": "2013-03-02 - 14-44-59",
       "year": 2013,
       "year_display": "2013",
-      "status": "published",
-      "series_ids": [
-        "141"
-      ],
+      "series_id": "141",
       "project_folder": "water"
     },
     {
       "work_id": "01929",
+      "record_hash": "7af9111f06cd131ceadd60de06ae05778cc54ad487873410602d50b8c925d0ef",
       "title": "2013-10-09 - 11-45-57",
       "year": 2013,
       "year_display": "2013",
-      "status": "published",
-      "series_ids": [
-        "141"
-      ],
+      "series_id": "141",
       "project_folder": "water"
     },
     {
       "work_id": "01930",
+      "record_hash": "2d9290e576c5b159c72743adad6f614cc62689174d89406ab6935c07695edcbb",
       "title": "2013-10-09 - 11-46-33",
       "year": 2013,
       "year_display": "2013",
-      "status": "published",
-      "series_ids": [
-        "141"
-      ],
+      "series_id": "141",
       "project_folder": "water"
     },
     {
       "work_id": "01931",
+      "record_hash": "8fd93070d4bff4ec2c80599fdc334691c427832ddfeb2ca76b2cf4690c21ab82",
       "title": "2013-10-09 - 11-48-17",
       "year": 2013,
       "year_display": "2013",
-      "status": "published",
-      "series_ids": [
-        "141"
-      ],
+      "series_id": "141",
       "project_folder": "water"
     },
     {
       "work_id": "01932",
+      "record_hash": "07721cc55b76b968481f485f0cb3f2682dfeba584903af0bff1fa17a465d056c",
       "title": "2013-10-09 - 11-48-27",
       "year": 2013,
       "year_display": "2013",
-      "status": "published",
-      "series_ids": [
-        "141"
-      ],
+      "series_id": "141",
       "project_folder": "water"
     },
     {
       "work_id": "01933",
+      "record_hash": "ba4144b38a5151da8411aada340b3f5304ecb3d79ed4ac0fc0965dcce9f384fb",
       "title": "2013-10-09 - 13-00-28",
       "year": 2013,
       "year_display": "2013",
-      "status": "published",
-      "series_ids": [
-        "141"
-      ],
+      "series_id": "141",
       "project_folder": "water"
     },
     {
       "work_id": "01934",
+      "record_hash": "fc754ad57db958bafeb013b475aa23631ea5b75bb6018e9b2481658a256de939",
       "title": "2013-10-09 - 13-09-12",
       "year": 2013,
       "year_display": "2013",
-      "status": "published",
-      "series_ids": [
-        "141"
-      ],
+      "series_id": "141",
       "project_folder": "water"
     },
     {
       "work_id": "01935",
+      "record_hash": "68197a726db178ae44bdf383b3bcbe46a8cb939c7fcdb22b0ef3948603eaea3b",
       "title": "2013-10-09 - 13-09-38",
       "year": 2013,
       "year_display": "2013",
-      "status": "published",
-      "series_ids": [
-        "141"
-      ],
+      "series_id": "141",
       "project_folder": "water"
     },
     {
       "work_id": "01936",
+      "record_hash": "f59d6ebb9a3c648cf94e1faa510a48dbee8ee8ccdb9e98a943fe20e51cf1ee4f",
       "title": "2013-10-09 - 13-10-07",
       "year": 2013,
       "year_display": "2013",
-      "status": "published",
-      "series_ids": [
-        "141"
-      ],
+      "series_id": "141",
       "project_folder": "water"
     },
     {
       "work_id": "01937",
+      "record_hash": "d5b820a79464ed9f339cc5f2ac440c41ec1b4f3ce26b5571e08b1656c1b37bee",
       "title": "2013-10-09 - 13-10-18",
       "year": 2013,
       "year_display": "2013",
-      "status": "published",
-      "series_ids": [
-        "141"
-      ],
+      "series_id": "141",
       "project_folder": "water"
     }
   ],
-  "ordered_published_work_ids": [
+  "ordered_work_ids": [
     "01910",
     "01911",
     "01912",

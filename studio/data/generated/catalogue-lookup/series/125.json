@@ -1,32 +1,27 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v2"
+    "schema": "studio_catalogue_lookup_series_record_v3"
   },
   "series": {
     "series_id": "125",
     "title": "spiders",
-    "series_type": "primary",
-    "status": "published",
-    "published_date": "2026-04-01",
     "year": 2006,
     "year_display": "2006",
-    "primary_work_id": "00402",
     "sort_fields": "work_id"
   },
+  "record_hash": "f1387ac234af46133d15f63f30ac7b6ba3c3fcc5d587176ded943ea079254cf0",
   "member_works": [
     {
       "work_id": "00402",
+      "record_hash": "45fa7c4424316f6e63f7f57d82ce0995e5365c9e0103d2e7e5b3b15bfe1253b3",
       "title": "spiders",
       "year": 2006,
       "year_display": "2006",
-      "status": "published",
-      "series_ids": [
-        "125"
-      ],
+      "series_id": "125",
       "project_folder": "spiders"
     }
   ],
-  "ordered_published_work_ids": [
+  "ordered_work_ids": [
     "00402"
   ],
   "project_folders": [

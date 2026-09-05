@@ -1,164 +1,135 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v2"
+    "schema": "studio_catalogue_lookup_series_record_v3"
   },
   "series": {
     "series_id": "128",
     "title": "still life",
-    "series_type": "primary",
-    "status": "published",
-    "published_date": "2026-04-01",
     "year": 2014,
     "year_display": "2014",
-    "primary_work_id": "01732",
     "sort_fields": "work_id"
   },
+  "record_hash": "28dd9273bdcc51eb0a574e49f952600d5ee2b373fdadffdf443902e1c53da43e",
   "member_works": [
     {
       "work_id": "01722",
+      "record_hash": "79a64d4dede598af2ff11ee2b665d3b72d25021657334dc1400a80819eb2a9f3",
       "title": "still life",
       "year": 2014,
       "year_display": "2014",
-      "status": "published",
-      "series_ids": [
-        "128"
-      ],
+      "series_id": "128",
       "project_folder": "still life"
     },
     {
       "work_id": "01723",
+      "record_hash": "4b39f0ce91c638dca6d5bd738984af65e13c2f2fabf0befc55b73a0826671ef8",
       "title": "still life",
       "year": 2014,
       "year_display": "2014",
-      "status": "published",
-      "series_ids": [
-        "128"
-      ],
+      "series_id": "128",
       "project_folder": "still life"
     },
     {
       "work_id": "01724",
+      "record_hash": "8176a548760e96a4aaaaf69f020bb3b5e0e5751dde2863fa506405870b91342c",
       "title": "still life",
       "year": 2014,
       "year_display": "2014",
-      "status": "published",
-      "series_ids": [
-        "128"
-      ],
+      "series_id": "128",
       "project_folder": "still life"
     },
     {
       "work_id": "01725",
+      "record_hash": "af2cf6bbfa857150f579003b624dd0b23a845933fc4942e76c0da0d893198da4",
       "title": "still life",
       "year": 2014,
       "year_display": "2014",
-      "status": "published",
-      "series_ids": [
-        "128"
-      ],
+      "series_id": "128",
       "project_folder": "still life"
     },
     {
       "work_id": "01726",
+      "record_hash": "286db63faf11497847332fe5d3ac616e980492d6daca2df35b2baee4ebd89cf8",
       "title": "still life",
       "year": 2014,
       "year_display": "2014",
-      "status": "published",
-      "series_ids": [
-        "128"
-      ],
+      "series_id": "128",
       "project_folder": "still life"
     },
     {
       "work_id": "01727",
+      "record_hash": "e495c2b046015f6a4a0229616f0aa613e77e15ad54496cd0a2a875b752c9f196",
       "title": "still life",
       "year": 2014,
       "year_display": "2014",
-      "status": "published",
-      "series_ids": [
-        "128"
-      ],
+      "series_id": "128",
       "project_folder": "still life"
     },
     {
       "work_id": "01728",
+      "record_hash": "7618565c12f31b312cbb0b610920958a5e8b56638b38ea434669a467ec227fce",
       "title": "still life",
       "year": 2014,
       "year_display": "2014",
-      "status": "published",
-      "series_ids": [
-        "128"
-      ],
+      "series_id": "128",
       "project_folder": "still life"
     },
     {
       "work_id": "01729",
+      "record_hash": "8cbc3768e6c6a413a27955635a67d5b0dda6bb35dcdc93cd10c2d016c4a0a87f",
       "title": "still life",
       "year": 2014,
       "year_display": "2014",
-      "status": "published",
-      "series_ids": [
-        "128"
-      ],
+      "series_id": "128",
       "project_folder": "still life"
     },
     {
       "work_id": "01730",
+      "record_hash": "8858091c38cc6f3d8b7fcd138cd1205d27331fe76146faa47f2c204e1a8d13af",
       "title": "still life",
       "year": 2014,
       "year_display": "2014",
-      "status": "published",
-      "series_ids": [
-        "128"
-      ],
+      "series_id": "128",
       "project_folder": "still life"
     },
     {
       "work_id": "01731",
+      "record_hash": "1bf1c43c54d33adb68980c77d99eb277004365375477580e96a30fc8875933e0",
       "title": "still life",
       "year": 2014,
       "year_display": "2014",
-      "status": "published",
-      "series_ids": [
-        "128"
-      ],
+      "series_id": "128",
       "project_folder": "still life"
     },
     {
       "work_id": "01732",
+      "record_hash": "81c862e567b3297da05168f4832103899301968e466ca11962337e631a177a5c",
       "title": "still life",
       "year": 2014,
       "year_display": "2014",
-      "status": "published",
-      "series_ids": [
-        "128"
-      ],
+      "series_id": "128",
       "project_folder": "still life"
     },
     {
       "work_id": "01733",
+      "record_hash": "f10933035506b5169fb3452d7dbeac93db853618456ef14511f4ec56ca5f5782",
       "title": "still life",
       "year": 2014,
       "year_display": "2014",
-      "status": "published",
-      "series_ids": [
-        "128"
-      ],
+      "series_id": "128",
       "project_folder": "still life"
     },
     {
       "work_id": "01734",
+      "record_hash": "29113f1f83e0cc4b75c2d0df1d69cd89999ca73c7a7bb8f3fcbf8c04a28bca25",
       "title": "still life",
       "year": 2014,
       "year_display": "2014",
-      "status": "published",
-      "series_ids": [
-        "128"
-      ],
+      "series_id": "128",
       "project_folder": "still life"
     }
   ],
-  "ordered_published_work_ids": [
+  "ordered_work_ids": [
     "01722",
     "01723",
     "01724",

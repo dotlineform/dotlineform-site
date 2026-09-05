@@ -1,5 +1,5 @@
-const WORKS_SCHEMA = "catalogue_source_works_v1";
-const SERIES_SCHEMA = "catalogue_source_series_v1";
+const WORKS_SCHEMA = "catalogue_source_works_v2";
+const SERIES_SCHEMA = "catalogue_source_series_v2";
 const WORK_ID_PATTERN = /^[0-9]{5}$/;
 const SERIES_ID_PATTERN = /^[0-9]{3}$/;
 const COLUMN_MODEL = Object.freeze([
@@ -68,10 +68,9 @@ function normalizeObjectMap(payload, options) {
 function normalizeWorkRecord(key, value) {
   const workId = cleanString(value && value.work_id);
   const title = visibleString(value && value.title);
-  const status = cleanString(value && value.status);
   const year = Number(value && value.year);
   const yearDisplay = visibleString(value && value.year_display);
-  const seriesIds = Array.isArray(value && value.series_ids) ? value.series_ids.slice() : [];
+  const seriesIds = value.series_id ? [value.series_id] : [];
   const storage = visibleString(value && value.storage_location);
   const mediumType = visibleString(value && value.medium_type);
   const mediumCaption = visibleString(value && value.medium_caption);
@@ -79,10 +78,9 @@ function normalizeWorkRecord(key, value) {
     !WORK_ID_PATTERN.test(key)
     || workId !== key
     || !title
-    || !["draft", "published"].includes(status)
     || !Number.isInteger(year)
     || !yearDisplay
-    || !Array.isArray(value && value.series_ids)
+    || (Object.prototype.hasOwnProperty.call(value, "series_id") && !SERIES_ID_PATTERN.test(value.series_id))
     || !Object.prototype.hasOwnProperty.call(value, "storage_location")
     || (value.storage_location !== null && typeof value.storage_location !== "string")
     || !Object.prototype.hasOwnProperty.call(value, "medium_type")
@@ -96,18 +94,16 @@ function normalizeWorkRecord(key, value) {
   ) {
     throw new Error("Catalogue Works input is invalid.");
   }
-  return { mediumCaption, mediumType, seriesIds, status, storage, title, workId, year, yearDisplay };
+  return { mediumCaption, mediumType, seriesIds, storage, title, workId, year, yearDisplay };
 }
 
 function normalizeSeriesRecord(key, value) {
   const seriesId = cleanString(value && value.series_id);
   const title = visibleString(value && value.title);
-  const status = cleanString(value && value.status);
   if (
     !SERIES_ID_PATTERN.test(key)
     || seriesId !== key
     || !title
-    || !["draft", "published"].includes(status)
   ) {
     throw new Error("Catalogue Series input is invalid.");
   }
@@ -131,7 +127,7 @@ export function normalizeCatalogueWorksInputs(worksPayload, seriesPayload) {
   });
   const seriesById = new Map(series.map((record) => [record.seriesId, record]));
 
-  return works.filter((work) => work.status === "published").map((work) => {
+  return works.map((work) => {
     const memberships = work.seriesIds.map((seriesId) => {
       const record = seriesById.get(seriesId);
       if (!record) throw new Error("Catalogue Works Series membership is invalid.");
@@ -437,20 +433,20 @@ function renderCurrent(state) {
     state.emptyNode.hidden = false;
     state.emptyNode.textContent = "Search by Work or Series to show Catalogue Works.";
     state.statusNode.textContent = projection.totalCount === 1
-      ? "1 published Work loaded."
-      : projection.totalCount + " published Works loaded.";
+      ? "1 Work loaded."
+      : projection.totalCount + " Works loaded.";
   } else if (!projection.rows.length) {
     state.tableNode.hidden = true;
     state.emptyNode.hidden = false;
     state.emptyNode.textContent = "No Catalogue Works match the current search.";
-    state.statusNode.textContent = "0 of " + projection.totalCount + " published Works";
+    state.statusNode.textContent = "0 of " + projection.totalCount + " Works";
   } else {
     projection.rows.forEach((row) => appendRow(state, row));
     state.tableNode.hidden = false;
     state.emptyNode.hidden = true;
     state.emptyNode.textContent = "";
     state.statusNode.textContent = projection.rows.length + " of "
-      + projection.totalCount + " published Works";
+      + projection.totalCount + " Works";
   }
   updateControls(state);
   state.presentationListeners.forEach((listener) => listener());

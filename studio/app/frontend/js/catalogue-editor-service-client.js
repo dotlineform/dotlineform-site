@@ -16,13 +16,6 @@ export function applyCatalogueDelete(payload) {
   return postJson(CATALOGUE_WRITE_ENDPOINTS.deleteApply, payload);
 }
 
-export function previewCataloguePublication(payload) {
-  return postJson(CATALOGUE_WRITE_ENDPOINTS.publicationPreview, payload);
-}
-
-export function applyCataloguePublication(payload) {
-  return postJson(CATALOGUE_WRITE_ENDPOINTS.publicationApply, payload);
-}
 
 export function previewCatalogueMediaPublish(payload) {
   return postJson(CATALOGUE_WRITE_ENDPOINTS.mediaPublishPreview, payload);

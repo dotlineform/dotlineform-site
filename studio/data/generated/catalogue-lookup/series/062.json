@@ -1,65 +1,54 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v2"
+    "schema": "studio_catalogue_lookup_series_record_v3"
   },
   "series": {
     "series_id": "062",
     "title": "forests (2023)",
-    "series_type": "primary",
-    "status": "published",
-    "published_date": "2026-04-01",
     "year": 2023,
     "year_display": "2023",
-    "primary_work_id": "00468",
     "sort_fields": "work_id"
   },
+  "record_hash": "d8259c57594a8fb9c94c45b097687882956bf04387d055490c050d007736b55b",
   "member_works": [
     {
       "work_id": "00465",
+      "record_hash": "1478d55a96a759ff43b824d8b93dde33a042f536aa125116eacb2d3a02a89031",
       "title": "forest 1",
       "year": 2023,
       "year_display": "2023",
-      "status": "published",
-      "series_ids": [
-        "062"
-      ],
+      "series_id": "062",
       "project_folder": "forests (2023)"
     },
     {
       "work_id": "00466",
+      "record_hash": "19e7d16d60a41d7a044cbfe29fdc26b850432499d3ef17acfd0c2d82ad031ef2",
       "title": "forest 2",
       "year": 2023,
       "year_display": "2023",
-      "status": "published",
-      "series_ids": [
-        "062"
-      ],
+      "series_id": "062",
       "project_folder": "forests (2023)"
     },
     {
       "work_id": "00467",
+      "record_hash": "f7f5829a9bf36bbb875e69423983d2d519f7d82663505d5854bed236772ffa15",
       "title": "forest 3",
       "year": 2023,
       "year_display": "2023",
-      "status": "published",
-      "series_ids": [
-        "062"
-      ],
+      "series_id": "062",
       "project_folder": "forests (2023)"
     },
     {
       "work_id": "00468",
+      "record_hash": "dcb57bbdaa82a6e09de9e0e53c2aaafb753dfd82707ea3189c368d8d14fb726a",
       "title": "forest 4",
       "year": 2023,
       "year_display": "2023",
-      "status": "published",
-      "series_ids": [
-        "062"
-      ],
+      "series_id": "062",
       "project_folder": "forests (2023)"
     }
   ],
-  "ordered_published_work_ids": [
+  "ordered_work_ids": [
     "00465",
     "00466",
     "00467",

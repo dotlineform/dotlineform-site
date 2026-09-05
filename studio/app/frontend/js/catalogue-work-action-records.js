@@ -9,8 +9,7 @@ export function projectWorkSearchRecord(workId, record, recordHash = "") {
     work_id: normalizedWorkId,
     title: normalizeText(record && record.title),
     year_display: normalizeText(record && record.year_display),
-    status: normalizeText(record && record.status),
-    series_ids: Array.isArray(record && record.series_ids) ? record.series_ids.slice() : [],
+    series_id: normalizeText(record?.series_id),
     record_hash: normalizeText(recordHash)
   };
 }

@@ -1,252 +1,207 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v2"
+    "schema": "studio_catalogue_lookup_series_record_v3"
   },
   "series": {
     "series_id": "024",
     "title": "changed photos",
-    "series_type": "primary",
-    "status": "published",
-    "published_date": "2026-04-01",
     "year": 2023,
     "year_display": "2022-23",
-    "primary_work_id": "01634",
     "sort_fields": "work_id"
   },
+  "record_hash": "e47d0b0fc621e7e0cf1974f6b5e03fa43a950bba4f9510855c427917a5e104d3",
   "member_works": [
     {
       "work_id": "01634",
+      "record_hash": "1e0eed7522903f0948dac0e9ba049568edb37d5f33a7ac60a03daf6e66d0698d",
       "title": "changed photo 1",
       "year": 2023,
       "year_display": "2022-23",
-      "status": "published",
-      "series_ids": [
-        "024"
-      ],
+      "series_id": "024",
       "project_folder": "changed photos"
     },
     {
       "work_id": "01635",
+      "record_hash": "73e49a990b0b85518ec332e2de25acb8e1eb36e782279f32cf2d69bcccf8e78c",
       "title": "changed photo 2",
       "year": 2023,
       "year_display": "2022-23",
-      "status": "published",
-      "series_ids": [
-        "024"
-      ],
+      "series_id": "024",
       "project_folder": "changed photos"
     },
     {
       "work_id": "01636",
+      "record_hash": "8a396613b5c99240656c3f573997e0ce5e5549c2230648450e4701b7386d2ece",
       "title": "changed photo 3",
       "year": 2023,
       "year_display": "2022-23",
-      "status": "published",
-      "series_ids": [
-        "024"
-      ],
+      "series_id": "024",
       "project_folder": "changed photos"
     },
     {
       "work_id": "01637",
+      "record_hash": "adc36b1a6cd88be4d5b842e7b3be3f3db1f4985cfa2670dfa241e5fca4d7c24d",
       "title": "changed photo 4",
       "year": 2023,
       "year_display": "2022-23",
-      "status": "published",
-      "series_ids": [
-        "024"
-      ],
+      "series_id": "024",
       "project_folder": "changed photos"
     },
     {
       "work_id": "01638",
+      "record_hash": "1dfcf23d788c5176babe0b22bdb7f3eed5f4c629ea100d61d2328345c745c743",
       "title": "changed photo 5",
       "year": 2023,
       "year_display": "2022-23",
-      "status": "published",
-      "series_ids": [
-        "024"
-      ],
+      "series_id": "024",
       "project_folder": "changed photos"
     },
     {
       "work_id": "01639",
+      "record_hash": "f03370199548f8e92e4faac3289cce6a43639a3ea9502f3886e8e45d48aad6a0",
       "title": "changed photo 6",
       "year": 2023,
       "year_display": "2022-23",
-      "status": "published",
-      "series_ids": [
-        "024"
-      ],
+      "series_id": "024",
       "project_folder": "changed photos"
     },
     {
       "work_id": "01640",
+      "record_hash": "dfd009ec46f66b925eb648d00b1ace6fec47c9a3a4f6a00a56ebdc80dcec2729",
       "title": "changed photo 7",
       "year": 2023,
       "year_display": "2022-23",
-      "status": "published",
-      "series_ids": [
-        "024"
-      ],
+      "series_id": "024",
       "project_folder": "changed photos"
     },
     {
       "work_id": "01641",
+      "record_hash": "0fd67245d5beb15af8e4cda969d61e230ed70392884da362311ff99455d10176",
       "title": "changed photo 8",
       "year": 2023,
       "year_display": "2022-23",
-      "status": "published",
-      "series_ids": [
-        "024"
-      ],
+      "series_id": "024",
       "project_folder": "changed photos"
     },
     {
       "work_id": "01642",
+      "record_hash": "78fca8e089b467bb0a3bfa7fd3fbd0be28c9e4efd6844659a0404ba11de024f1",
       "title": "changed photo 9",
       "year": 2023,
       "year_display": "2022-23",
-      "status": "published",
-      "series_ids": [
-        "024"
-      ],
+      "series_id": "024",
       "project_folder": "changed photos"
     },
     {
       "work_id": "01643",
+      "record_hash": "839bb01796db39c0ec2b742e92adeff01efdb94a9e2264614fd8269e796d5bc1",
       "title": "changed photo 10",
       "year": 2023,
       "year_display": "2022-23",
-      "status": "published",
-      "series_ids": [
-        "024"
-      ],
+      "series_id": "024",
       "project_folder": "changed photos"
     },
     {
       "work_id": "01644",
+      "record_hash": "15ee4ce421feea73dd8d35c895ecb14ded5457ecc6d4c429f093bce8298d99ad",
       "title": "changed photo 11",
       "year": 2023,
       "year_display": "2022-23",
-      "status": "published",
-      "series_ids": [
-        "024"
-      ],
+      "series_id": "024",
       "project_folder": "changed photos"
     },
     {
       "work_id": "01645",
+      "record_hash": "90e69d6460b9d358ac7263e39ee8cf1f69b51afa489ace4087dc8ab0388855f2",
       "title": "changed photo 12",
       "year": 2023,
       "year_display": "2022-23",
-      "status": "published",
-      "series_ids": [
-        "024"
-      ],
+      "series_id": "024",
       "project_folder": "changed photos"
     },
     {
       "work_id": "01646",
+      "record_hash": "221d3267d4f4ffbf56903612b92eefaff2d069770457f2b8e8ce2c98479d2737",
       "title": "changed photo 13",
       "year": 2023,
       "year_display": "2022-23",
-      "status": "published",
-      "series_ids": [
-        "024"
-      ],
+      "series_id": "024",
       "project_folder": "changed photos"
     },
     {
       "work_id": "01647",
+      "record_hash": "0755a9cf1131709ac63bca7410e946ac12389cf1a9573eb4afdc03afcd9d5f62",
       "title": "changed photo 14",
       "year": 2023,
       "year_display": "2022-23",
-      "status": "published",
-      "series_ids": [
-        "024"
-      ],
+      "series_id": "024",
       "project_folder": "changed photos"
     },
     {
       "work_id": "01648",
+      "record_hash": "3aeecf4d69f454265710180e26336f3e8a7d2027ff0a2466d028c9392fbf341a",
       "title": "changed photo 15",
       "year": 2023,
       "year_display": "2022-23",
-      "status": "published",
-      "series_ids": [
-        "024"
-      ],
+      "series_id": "024",
       "project_folder": "changed photos"
     },
     {
       "work_id": "01649",
+      "record_hash": "c0346483e0b9bf141261dda5288ec50d5d7e49326090afa3e310fcf90ad69176",
       "title": "changed photo 16",
       "year": 2023,
       "year_display": "2022-23",
-      "status": "published",
-      "series_ids": [
-        "024"
-      ],
+      "series_id": "024",
       "project_folder": "changed photos"
     },
     {
       "work_id": "01650",
+      "record_hash": "4cce3ea6986dcc2ec339df5d8f2e43bce1af73345b94882592fc23aee5f87381",
       "title": "changed photo 17",
       "year": 2023,
       "year_display": "2022-23",
-      "status": "published",
-      "series_ids": [
-        "024"
-      ],
+      "series_id": "024",
       "project_folder": "changed photos"
     },
     {
       "work_id": "01651",
+      "record_hash": "f57c3b720f5c1e2e3318515373a669fce8184933fc87f41e781350dd76b633de",
       "title": "changed photo 18",
       "year": 2023,
       "year_display": "2022-23",
-      "status": "published",
-      "series_ids": [
-        "024"
-      ],
+      "series_id": "024",
       "project_folder": "changed photos"
     },
     {
       "work_id": "01652",
+      "record_hash": "0de3031ceb55f10ea554db7b5f7b4f2e1876bf82b897dfcd94238ff22b06cc73",
       "title": "changed photo 19",
       "year": 2023,
       "year_display": "2022-23",
-      "status": "published",
-      "series_ids": [
-        "024"
-      ],
+      "series_id": "024",
       "project_folder": "changed photos"
     },
     {
       "work_id": "01653",
+      "record_hash": "5834853128157a8bdddb783cda4ecc9acf6332f60c51cfe99d624f93c293b534",
       "title": "changed photo 20",
       "year": 2023,
       "year_display": "2022-23",
-      "status": "published",
-      "series_ids": [
-        "024"
-      ],
+      "series_id": "024",
       "project_folder": "changed photos"
     },
     {
       "work_id": "01654",
+      "record_hash": "be22410cbfe761a76b42bd9e5d1fc7e00fae73970ba07682334132446e8c9dbb",
       "title": "changed photo 21",
       "year": 2023,
       "year_display": "2022-23",
-      "status": "published",
-      "series_ids": [
-        "024"
-      ],
+      "series_id": "024",
       "project_folder": "changed photos"
     }
   ],
-  "ordered_published_work_ids": [
+  "ordered_work_ids": [
     "01634",
     "01635",
     "01636",

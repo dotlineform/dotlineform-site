@@ -1,54 +1,45 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v2"
+    "schema": "studio_catalogue_lookup_series_record_v3"
   },
   "series": {
     "series_id": "083",
     "title": "k particles",
-    "series_type": "primary",
-    "status": "published",
-    "published_date": "2026-04-01",
     "year": 2008,
     "year_display": "2008",
-    "primary_work_id": "01498",
     "sort_fields": "work_id"
   },
+  "record_hash": "da872a4d5c4f9d567f544eba88898c25a720e672cb9f785888e51771511508ca",
   "member_works": [
     {
       "work_id": "01498",
+      "record_hash": "d216192fa498058d6c5b816e707a0a88f360ee7ec5c96b2d33739ee06935ecdb",
       "title": "k particles",
       "year": 2008,
       "year_display": "2008",
-      "status": "published",
-      "series_ids": [
-        "083"
-      ],
+      "series_id": "083",
       "project_folder": "k particles"
     },
     {
       "work_id": "01499",
+      "record_hash": "d740ea1191922338679f5d09b429c74f125eb70bc5895fefdc4488d0e8bdf89a",
       "title": "k particle",
       "year": 2008,
       "year_display": "2008",
-      "status": "published",
-      "series_ids": [
-        "083"
-      ],
+      "series_id": "083",
       "project_folder": "k particles"
     },
     {
       "work_id": "01500",
+      "record_hash": "8793f36aa60005c0953b2a4393c0720f80e4873395a8c0924f3b4bf560624b6d",
       "title": "k particles grid",
       "year": 2008,
       "year_display": "2008",
-      "status": "published",
-      "series_ids": [
-        "083"
-      ],
+      "series_id": "083",
       "project_folder": "k particles"
     }
   ],
-  "ordered_published_work_ids": [
+  "ordered_work_ids": [
     "01498",
     "01499",
     "01500"

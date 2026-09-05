@@ -1,76 +1,63 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v2"
+    "schema": "studio_catalogue_lookup_series_record_v3"
   },
   "series": {
     "series_id": "075",
     "title": "harmony",
-    "series_type": "primary",
-    "status": "published",
-    "published_date": "2026-04-01",
     "year": 2009,
     "year_display": "2009",
-    "primary_work_id": "00379",
     "sort_fields": "title,work_id"
   },
+  "record_hash": "b2237ae933d4ff22e8f2ebc04dac567625a9291c904ac3f8450d06e18a04dec7",
   "member_works": [
     {
       "work_id": "00379",
+      "record_hash": "055f97f65d06eeb2871a356bc82de9acd50e71758c9597d3f5fac6665801d491",
       "title": "harmony 3",
       "year": 2009,
       "year_display": "2009",
-      "status": "published",
-      "series_ids": [
-        "075"
-      ],
+      "series_id": "075",
       "project_folder": "harmony"
     },
     {
       "work_id": "00380",
+      "record_hash": "925ffad2b7458bab5483240283564c3f810f94bb0c2d1cd3ec0794fdd6fd7354",
       "title": "harmony 1",
       "year": 2009,
       "year_display": "2009",
-      "status": "published",
-      "series_ids": [
-        "075"
-      ],
+      "series_id": "075",
       "project_folder": "harmony"
     },
     {
       "work_id": "00381",
+      "record_hash": "c5ed82ef1b08ee39b5c3fedf354745d9f72882e0e5ccbc7993aeacf864028a71",
       "title": "harmony 2",
       "year": 2009,
       "year_display": "2009",
-      "status": "published",
-      "series_ids": [
-        "075"
-      ],
+      "series_id": "075",
       "project_folder": "harmony"
     },
     {
       "work_id": "00382",
+      "record_hash": "54d920c0fa00c84e10adb42422ab6fbb10262713ff0ca3216ef91400a0c52a50",
       "title": "harmony 2 residue",
       "year": 2009,
       "year_display": "2009",
-      "status": "published",
-      "series_ids": [
-        "075"
-      ],
+      "series_id": "075",
       "project_folder": "harmony"
     },
     {
       "work_id": "00620",
+      "record_hash": "b76e89a7ab017331f420c829ea6c827b68b3154adcef3593742b4c1d8008e27a",
       "title": "harmony 3 (version)",
       "year": 2009,
       "year_display": "2009",
-      "status": "published",
-      "series_ids": [
-        "075"
-      ],
+      "series_id": "075",
       "project_folder": "harmony"
     }
   ],
-  "ordered_published_work_ids": [
+  "ordered_work_ids": [
     "00380",
     "00381",
     "00382",

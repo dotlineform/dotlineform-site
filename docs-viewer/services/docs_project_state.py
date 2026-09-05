@@ -236,26 +236,12 @@ def _catalogue_indexes(source_dir: Path) -> tuple[
             raise ValueError(f"Canonical Work {work_id} has an invalid project_folder") from exc
         if len(folder_key.split("/")) != 2:
             raise ValueError(f"Canonical Work {work_id} project_folder must identify one first-level project")
-        raw_ids = work.get("series_ids")
         series_ids: list[str] = []
-        if not isinstance(raw_ids, list):
-            issues_by_work[work_id].append({"state": "malformed_series_ids", "work_id": work_id})
-        else:
-            for raw_id in raw_ids:
-                try:
-                    series_id = normalize_series_id(raw_id)
-                except ValueError:
-                    issues_by_work[work_id].append({"state": "malformed_series_id", "work_id": work_id})
-                    continue
-                if series_id in series_ids:
-                    issues_by_work[work_id].append(
-                        {"state": "duplicate_series_id", "work_id": work_id, "series_id": series_id}
-                    )
-                else:
-                    series_ids.append(series_id)
-        series_ids.sort()
-        if not series_ids and not issues_by_work[work_id]:
-            issues_by_work[work_id].append({"state": "missing_series", "work_id": work_id})
+        if "series_id" in work:
+            try:
+                series_ids.append(normalize_series_id(work["series_id"]))
+            except ValueError:
+                issues_by_work[work_id].append({"state": "malformed_series_id", "work_id": work_id})
         report_work = {
             "target": {"family": "catalogue", "target_type": "work", "target_id": work_id},
             "series_ids": series_ids,

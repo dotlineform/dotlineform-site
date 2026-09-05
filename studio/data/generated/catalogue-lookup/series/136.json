@@ -1,54 +1,45 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v2"
+    "schema": "studio_catalogue_lookup_series_record_v3"
   },
   "series": {
     "series_id": "136",
     "title": "tree",
-    "series_type": "primary",
-    "status": "published",
-    "published_date": "2026-04-01",
     "year": 2024,
     "year_display": "2024",
-    "primary_work_id": "00546",
     "sort_fields": "work_id"
   },
+  "record_hash": "7180ed8c80f055474859dc227293a6b3745bd9c06af871fdd4c906d9dd8528c7",
   "member_works": [
     {
       "work_id": "00546",
+      "record_hash": "9fc56c6d8e1e213c14691181c4adb43c9ff519c59ef5d9d74a1311de7be63f7f",
       "title": "tree",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "136"
-      ],
+      "series_id": "136",
       "project_folder": "tree"
     },
     {
       "work_id": "00547",
+      "record_hash": "902ddbe1bc1c4261726f02c2fed9754bb44ce6e4e72464c695d315976080ffca",
       "title": "tree (tint)",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "136"
-      ],
+      "series_id": "136",
       "project_folder": "tree"
     },
     {
       "work_id": "00548",
+      "record_hash": "ae3cfe0d87d51ab2b7bbb4e869956cd4850f5b75a10d84f4c3e5691dd01b3d31",
       "title": "tree source",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "136"
-      ],
+      "series_id": "136",
       "project_folder": "tree"
     }
   ],
-  "ordered_published_work_ids": [
+  "ordered_work_ids": [
     "00546",
     "00547",
     "00548"

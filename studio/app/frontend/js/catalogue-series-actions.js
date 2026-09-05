@@ -1,28 +1,10 @@
 import { buildStudioRouteUrl } from "./studio-config.js";
-import {
-  applyCatalogueBuild,
-  applyCatalogueDelete,
-  applyCataloguePublication,
-  createCatalogueSeries,
-  previewCatalogueBuild,
-  previewCatalogueDelete,
-  previewCataloguePublication,
-  saveCatalogueSeries
-} from "./catalogue-editor-service-client.js";
-import { computeRecordHash } from "./catalogue-editor-records.js";
-import {
-  formatCatalogueDeletePreview,
-  formatCataloguePublicationPreview
-} from "./catalogue-editor-modal-formatters.js";
+import { applyCatalogueDelete, createCatalogueSeries, previewCatalogueDelete, saveCatalogueSeries } from "./catalogue-editor-service-client.js";
+
+import { formatCatalogueDeletePreview } from "./catalogue-editor-modal-formatters.js";
 import { confirmCatalogueActionModal } from "./catalogue-editor-action-modals.js";
-import {
-  extractCatalogueActionPreview,
-  getCataloguePreviewBlocker,
-  projectCatalogueActionPresentation,
-  projectCatalogueSaveOutcomePresentation,
-  resolveCatalogueSaveBuildOutcome
-} from "./catalogue-editor-action-workflow.js";
-import { utcTimestamp } from "./studio-save-utils.js";
+import { extractCatalogueActionPreview, getCataloguePreviewBlocker } from "./catalogue-editor-action-workflow.js";
+
 import {
   buildCreateSeriesPayload,
   buildSaveSeriesPayload,
@@ -30,11 +12,7 @@ import {
   normalizeText,
   normalizeWorkId
 } from "./catalogue-series-fields.js";
-import {
-  buildChangedSeriesWorkUpdates,
-  buildSavedSeriesMembershipLookup,
-  getCurrentSeriesMemberEntries
-} from "./catalogue-series-membership.js";
+import { buildChangedSeriesWorkUpdates, buildSavedSeriesMembershipLookup } from "./catalogue-series-membership.js";
 
 function t(state, context, key, fallback, tokens = null) {
   return context.text(key, fallback, tokens);
@@ -44,155 +22,9 @@ function setTextWithState(context, node, text, state = "") {
   context.setTextWithState(node, text, state);
 }
 
-function applyActionPresentation(context, state, presentation) {
-  setTextWithState(context, state.resultNode, presentation.resultText, presentation.resultTone);
-  setTextWithState(context, state.statusNode, presentation.statusText, presentation.statusTone);
-}
 
-function buildPayload(state, workUpdates) {
-  return {
-    ...buildSaveSeriesPayload(state, workUpdates),
-    apply_build: currentSeriesIsPublished(state)
-  };
-}
+function buildPayload(state, workUpdates) { return buildSaveSeriesPayload(state, workUpdates); }
 
-export function currentSeriesIsPublished(state) {
-  return normalizeText(state.draft && state.draft.status).toLowerCase() === "published";
-}
-
-export function currentSeriesIsDraft(state) {
-  return normalizeText(state.draft && state.draft.status).toLowerCase() === "draft";
-}
-
-function applySaveBuildOutcome(state, response) {
-  const outcome = resolveCatalogueSaveBuildOutcome({
-    response,
-    isPublished: currentSeriesIsPublished(state)
-  });
-  if (outcome.kind === "saved_and_updated") {
-    state.rebuildPending = false;
-    state.pendingBuildExtraWorkIds = [];
-  } else {
-    state.rebuildPending = outcome.rebuildPending;
-  }
-  return outcome;
-}
-
-function projectSeriesSavePresentation(state, context, response, outcome) {
-  const savedAt = { saved_at: outcome.stamp };
-  const statusFailed = `${t(state, context, "build_status_failed", "Site update failed.")} ${normalizeText(outcome.error)}`.trim();
-  return projectCatalogueSaveOutcomePresentation({
-    outcome,
-    changed: Boolean(response && response.changed),
-    resultLabels: {
-      savedAndUpdated: {
-        text: t(state, context, "save_result_success_applied", "Saved source changes and updated the public catalogue at {saved_at}.", savedAt),
-        tone: "success"
-      },
-      savedUpdateFailed: {
-        text: t(state, context, "save_result_success_partial", "Source changes were saved at {saved_at}, but the public update failed.", savedAt),
-        tone: "warn"
-      },
-      savedUnpublished: {
-        text: t(state, context, "save_result_success_unpublished", "Source saved at {saved_at}. Public update is unavailable while the series is not published.", savedAt),
-        tone: "success"
-      },
-      saved: {
-        text: t(state, context, "save_result_success", "Source saved at {saved_at}. Public catalogue update still pending.", savedAt),
-        tone: "success"
-      },
-      unchanged: {
-        text: t(state, context, "save_result_unchanged", "Source already matches the current form values.")
-      }
-    },
-    statusLabels: {
-      savedAndUpdated: {
-        text: t(state, context, "build_status_success", "Site update completed."),
-        tone: "success"
-      },
-      savedUpdateFailed: {
-        text: statusFailed,
-        tone: "error"
-      },
-      loaded: {
-        text: "",
-        tone: ""
-      }
-    }
-  });
-}
-
-function projectSeriesBuildPresentation(state, context, completedAt) {
-  return projectCatalogueActionPresentation({
-    resultKey: "success",
-    statusKey: "success",
-    resultLabels: {
-      success: {
-        text: t(state, context, "build_result_success", "Public catalogue updated at {completed_at}. Studio Activity updated.", { completed_at: completedAt }),
-        tone: "success"
-      }
-    },
-    statusLabels: {
-      success: {
-        text: t(state, context, "build_status_success", "Site update completed."),
-        tone: "success"
-      }
-    }
-  });
-}
-
-function projectSeriesPublicationPresentation(state, context, action, response) {
-  const publicUpdateFailed = response && response.status === "public_update_failed";
-  const publicUpdateError = normalizeText(response && response.public_update && response.public_update.error);
-  return projectCatalogueActionPresentation({
-    resultKey: publicUpdateFailed ? "publicFailed" : action === "publish" ? "published" : "unpublished",
-    statusKey: publicUpdateFailed ? "publicFailed" : action === "publish" ? "published" : "unpublished",
-    resultLabels: {
-      publicFailed: {
-        text: t(state, context, "publication_result_public_failed", "Source status changed, but public artifacts did not finish updating."),
-        tone: "warn"
-      },
-      published: {
-        text: t(state, context, "publication_result_published", "Series and attached draft works are published, and public catalogue output has been updated."),
-        tone: "success"
-      },
-      unpublished: {
-        text: t(state, context, "publication_result_unpublished", "Series is draft again and public catalogue output has been cleaned up."),
-        tone: "success"
-      }
-    },
-    statusLabels: {
-      publicFailed: {
-        text: `${t(state, context, "publication_status_public_failed", "Publication state changed, but the public update failed.")} ${publicUpdateError}`.trim(),
-        tone: "error"
-      },
-      published: {
-        text: t(state, context, "publication_status_published", "Series published."),
-        tone: "success"
-      },
-      unpublished: {
-        text: t(state, context, "publication_status_unpublished", "Series unpublished."),
-        tone: "success"
-      }
-    }
-  });
-}
-
-export async function refreshBuildPreview(state, _context) {
-  if (!state.currentSeriesId || !state.serverAvailable || !currentSeriesIsPublished(state)) {
-    state.buildPreview = null;
-    return;
-  }
-  try {
-    const response = await previewCatalogueBuild({
-      series_id: state.currentSeriesId,
-      extra_work_ids: state.pendingBuildExtraWorkIds
-    });
-    state.buildPreview = response && response.build ? response.build : null;
-  } catch (error) {
-    state.buildPreview = null;
-  }
-}
 
 export async function saveCurrentSeries(state, context) {
   if (state.mode === "new") {
@@ -219,23 +51,17 @@ export async function saveCurrentSeries(state, context) {
   setTextWithState(
     context,
     state.statusNode,
-    currentSeriesIsPublished(state)
-      ? t(state, context, "save_status_saving_and_updating", "Saving source record and updating site…")
-      : t(state, context, "save_status_saving", "Saving source record…")
+    t(state, context, "save_status_saving", "Saving source record…")
   );
   setTextWithState(context, state.resultNode, "");
 
   try {
-    const previousMembers = new Set(Array.from(state.baselineMemberSeriesIdsByWorkId.keys()).filter((workId) => (state.baselineMemberSeriesIdsByWorkId.get(workId) || []).includes(state.currentSeriesId)));
-    const currentMembers = new Set(getCurrentSeriesMemberEntries(state).map((entry) => entry.workId));
     const response = await saveCatalogueSeries(buildPayload(state, await buildChangedSeriesWorkUpdates(state)));
     const record = response && response.record && typeof response.record === "object" ? response.record : null;
     if (!record) throw new Error("save response missing record");
     state.seriesById.set(state.currentSeriesId, {
       series_id: state.currentSeriesId,
       title: normalizeText(record.title),
-      status: normalizeText(record.status),
-      primary_work_id: normalizeText(record.primary_work_id),
       record_hash: normalizeText(response.record_hash)
     });
     const workRecords = Array.isArray(response.work_records) ? response.work_records : [];
@@ -248,25 +74,17 @@ export async function saveCurrentSeries(state, context) {
         work_id: workId,
         title: normalizeText(workRecord.title),
         year_display: normalizeText(workRecord.year_display),
-        status: normalizeText(workRecord.status),
-        series_ids: Array.isArray(workRecord.series_ids) ? workRecord.series_ids.slice() : [],
+        series_id: normalizeText(workRecord.series_id),
         record_hash: entry.record_hash || state.workSearchById.get(workId)?.record_hash || ""
       });
     });
-    const outcome = applySaveBuildOutcome(state, response);
-    let pendingBuildExtraWorkIds = [];
-    if (response.changed && currentSeriesIsPublished(state) && outcome.kind !== "saved_and_updated") {
-      pendingBuildExtraWorkIds = Array.from(previousMembers).filter((workId) => !currentMembers.has(workId));
-    }
-    const recordHash = normalizeText(response.record_hash) || await computeRecordHash(record);
+    const recordHash = normalizeText(response.record_hash);
     context.setLoadedSeries(state.currentSeriesId, record, {
       recordHash,
       keepResult: true,
-      lookup: buildSavedSeriesMembershipLookup(state, record, recordHash),
-      pendingBuildExtraWorkIds
+      lookup: buildSavedSeriesMembershipLookup(state, record, recordHash)
     });
-    await refreshBuildPreview(state, context);
-    applyActionPresentation(context, state, projectSeriesSavePresentation(state, context, response, outcome));
+    setTextWithState(context, state.resultNode, "Source saved.", "success");
   } catch (error) {
     const isConflict = Number(error && error.status) === 409;
     const message = isConflict
@@ -289,7 +107,7 @@ export async function createCurrentSeries(state, context) {
     setTextWithState(
       context,
       state.statusNode,
-      seriesIdError || t(state, context, "create_status_validation_error", "Fix validation errors before creating the draft series."),
+      seriesIdError || t(state, context, "create_status_validation_error", "Fix validation errors before creating the series."),
       "error"
     );
     context.updateEditorState();
@@ -298,7 +116,7 @@ export async function createCurrentSeries(state, context) {
 
   state.isSaving = true;
   context.updateEditorState();
-  setTextWithState(context, state.statusNode, t(state, context, "create_status_saving", "Creating draft series..."));
+  setTextWithState(context, state.statusNode, t(state, context, "create_status_saving", "Creating series..."));
   setTextWithState(context, state.resultNode, "");
 
   try {
@@ -312,168 +130,21 @@ export async function createCurrentSeries(state, context) {
       state.seriesById.set(seriesId, {
         series_id: seriesId,
         title: normalizeText(record.title),
-        status: normalizeText(record.status),
-        primary_work_id: normalizeText(record.primary_work_id),
         record_hash: normalizeText(response.record_hash)
       });
     }
     state.isSaving = false;
     context.syncRouteBusyState();
     await context.openSeriesById(seriesId);
-    setTextWithState(context, state.resultNode, t(state, context, "create_result_success", "Created draft series {series_id}. Opening edit mode...", { series_id: seriesId }), "success");
-    setTextWithState(context, state.statusNode, t(state, context, "create_status_success", "Created draft series {series_id}.", { series_id: seriesId }), "success");
+    setTextWithState(context, state.resultNode, t(state, context, "create_result_success", "Created series {series_id}. Opening edit mode...", { series_id: seriesId }), "success");
+    setTextWithState(context, state.statusNode, t(state, context, "create_status_success", "Created series {series_id}.", { series_id: seriesId }), "success");
   } catch (error) {
-    setTextWithState(context, state.statusNode, `${t(state, context, "create_status_failed", "Draft series create failed.")} ${normalizeText(error && error.message)}`.trim(), "error");
+    setTextWithState(context, state.statusNode, `${t(state, context, "create_status_failed", "Series create failed.")} ${normalizeText(error && error.message)}`.trim(), "error");
     state.isSaving = false;
     context.updateEditorState();
   }
 }
 
-export async function buildCurrentSeries(state, context) {
-  if (!state.currentRecord || !state.currentSeriesId || !state.serverAvailable) return;
-  if (!currentSeriesIsPublished(state)) {
-    state.rebuildPending = false;
-    context.updateEditorState();
-    return;
-  }
-  state.isBuilding = true;
-  context.updateEditorState();
-  setTextWithState(context, state.statusNode, t(state, context, "build_status_running", "Updating site…"));
-  setTextWithState(context, state.resultNode, "");
-  try {
-    const response = await applyCatalogueBuild({
-      series_id: state.currentSeriesId,
-      extra_work_ids: state.pendingBuildExtraWorkIds
-    });
-    state.rebuildPending = false;
-    state.pendingBuildExtraWorkIds = [];
-    await refreshBuildPreview(state, context);
-    const completedAt = normalizeText(response.completed_at_utc || utcTimestamp());
-    applyActionPresentation(context, state, projectSeriesBuildPresentation(state, context, completedAt));
-  } catch (error) {
-    setTextWithState(context, state.statusNode, `${t(state, context, "build_status_failed", "Site update failed.")} ${normalizeText(error && error.message)}`.trim(), "error");
-  } finally {
-    state.isBuilding = false;
-    context.updateEditorState();
-  }
-}
-
-export async function applyPublicationChange(state, context) {
-  if (!state.currentRecord || !state.currentSeriesId || !state.serverAvailable) return;
-  const action = currentSeriesIsPublished(state) ? "unpublish" : currentSeriesIsDraft(state) ? "publish" : "";
-  if (!action) {
-    setTextWithState(context, state.statusNode, t(state, context, "publication_status_invalid", "Publication is available only for draft or published series."), "error");
-    return;
-  }
-  if (action === "publish" && context.draftHasChanges()) {
-    setTextWithState(context, state.statusNode, t(state, context, "publication_save_first", "Save source changes before publishing."), "error");
-    return;
-  }
-
-  if (action === "publish") {
-    const errors = context.validateDraft();
-    context.updateFieldMessages(errors);
-    if (errors.size > 0) {
-      setTextWithState(context, state.statusNode, t(state, context, "publication_status_validation_error", "Fix validation errors before changing publication state."), "error");
-      context.updateEditorState();
-      return;
-    }
-  }
-
-  state.isBuilding = true;
-  context.updateEditorState();
-  setTextWithState(
-    context,
-    state.statusNode,
-    action === "publish"
-      ? t(state, context, "publication_preview_publish_running", "Preparing publish preview…")
-      : t(state, context, "publication_preview_unpublish_running", "Preparing unpublish preview…")
-  );
-  setTextWithState(context, state.resultNode, "");
-
-  try {
-    const request = {
-      kind: "series",
-      action,
-      series_id: state.currentSeriesId,
-      expected_record_hash: state.currentRecordHash
-    };
-    const previewResponse = await previewCataloguePublication(request);
-    const preview = extractCatalogueActionPreview(previewResponse);
-    const blocker = getCataloguePreviewBlocker(preview, {
-      fallback: t(state, context, "publication_status_blocked", "Publication change is blocked.")
-    });
-    if (blocker) {
-      setTextWithState(context, state.statusNode, blocker, "error");
-      return;
-    }
-
-    if (action === "unpublish") {
-      state.isBuilding = false;
-      context.updateEditorState();
-      const summary = formatCataloguePublicationPreview(preview, {
-        text: (key, fallback, tokens) => t(state, context, key, fallback, tokens),
-        defaultText: "Unpublish this series?",
-        includeDirtyNote: context.draftHasChanges()
-      });
-      const confirmed = await confirmCatalogueActionModal(state, {
-        title: t(state, context, "publication_unpublish_confirm_title", "Confirm unpublish"),
-        message: summary,
-        primaryLabel: t(state, context, "publication_unpublish_confirm_button", "Unpublish"),
-        cancelLabel: t(state, context, "confirm_cancel_button", "Cancel"),
-        restoreFocus: state.publicationButton
-      });
-      if (!confirmed) {
-        setTextWithState(context, state.statusNode, t(state, context, "publication_status_cancelled", "Publication change cancelled."));
-        return;
-      }
-      state.isBuilding = true;
-      context.updateEditorState();
-    }
-
-    setTextWithState(
-      context,
-      state.statusNode,
-      action === "publish"
-        ? t(state, context, "publication_publish_running", "Publishing series…")
-        : t(state, context, "publication_unpublish_running", "Unpublishing series…")
-    );
-    const response = await applyCataloguePublication(request);
-    const record = response && response.record && typeof response.record === "object" ? response.record : null;
-    if (!record) throw new Error("publication response missing record");
-
-    const recordHash = normalizeText(response.record_hash) || await computeRecordHash(record);
-    state.seriesById.set(state.currentSeriesId, {
-      series_id: state.currentSeriesId,
-      title: normalizeText(record.title),
-      status: normalizeText(record.status),
-      primary_work_id: normalizeText(record.primary_work_id),
-      record_hash: recordHash
-    });
-    state.rebuildPending = response.status === "public_update_failed";
-    state.pendingBuildExtraWorkIds = [];
-    context.setLoadedSeries(state.currentSeriesId, record, {
-      recordHash,
-      keepResult: true,
-      lookup: buildSavedSeriesMembershipLookup(state, record, recordHash)
-    });
-    await refreshBuildPreview(state, context);
-
-    const presentation = projectSeriesPublicationPresentation(state, context, action, response);
-    applyActionPresentation(context, state, presentation);
-    if (response.status === "public_update_failed") {
-      return;
-    }
-  } catch (error) {
-    const message = Number(error && error.status) === 409
-      ? t(state, context, "publication_status_conflict", "Source record changed since this page loaded. Reload before changing publication state.")
-      : `${t(state, context, "publication_status_failed", "Publication change failed.")} ${normalizeText(error && error.message)}`.trim();
-    setTextWithState(context, state.statusNode, message, "error");
-  } finally {
-    state.isBuilding = false;
-    context.updateEditorState();
-  }
-}
 
 export async function deleteCurrentSeries(state, context) {
   if (!state.currentRecord || !state.currentSeriesId || !state.serverAvailable) return;
@@ -523,7 +194,7 @@ export async function deleteCurrentSeries(state, context) {
     context.updateEditorState();
     setTextWithState(context, state.statusNode, t(state, context, "delete_status_running", "Deleting source record…"));
     await applyCatalogueDelete(request);
-    window.location.assign(buildStudioRouteUrl(state.config, "catalogue_status"));
+    window.location.assign(buildStudioRouteUrl(state.config, "catalogue_series_editor"));
   } catch (error) {
     const message = Number(error && error.status) === 409
       ? t(state, context, "delete_status_conflict", "Source record changed since this page loaded. Reload before deleting again.")

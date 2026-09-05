@@ -25,9 +25,6 @@ export function bindSeriesEditorEvents(state, callbacks = {}) {
   state.saveButton.addEventListener("click", () => {
     runAsync(callbacks.saveCurrentSeries, "catalogue_series_editor: unexpected save failure");
   });
-  state.publicationButton.addEventListener("click", () => {
-    runAsync(callbacks.applyPublicationChange, "catalogue_series_editor: unexpected publication failure");
-  });
   state.deleteButton.addEventListener("click", () => {
     runAsync(callbacks.deleteCurrentSeries, "catalogue_series_editor: unexpected delete failure");
   });

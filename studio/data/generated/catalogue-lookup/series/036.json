@@ -1,978 +1,801 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v2"
+    "schema": "studio_catalogue_lookup_series_record_v3"
   },
   "series": {
     "series_id": "036",
     "title": "curve poems",
-    "series_type": "primary",
-    "status": "published",
-    "published_date": "2026-04-01",
     "year": 2025,
     "year_display": "2024-25",
-    "primary_work_id": "00361",
     "sort_fields": "work_id"
   },
+  "record_hash": "9bd0c56224e105a01ab826697132f0b8f388fd8729ae9afff88248c2f659af01",
   "member_works": [
     {
       "work_id": "00286",
+      "record_hash": "f24d57c216577d32dd837cc55b66bfdee0dc305f8460647071de00fcf1dafb16",
       "title": "untitled",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "036"
-      ],
+      "series_id": "036",
       "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00287",
+      "record_hash": "f893d90cdb86f576cf1852a006987f243088edda455f2335140398baa23b22b5",
       "title": "untitled",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "036"
-      ],
+      "series_id": "036",
       "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00288",
+      "record_hash": "edf221d56cf8a1a045cf90c9d751c6446869a70b6874e5c2acd99d6fc668eb05",
       "title": "untitled",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "036"
-      ],
+      "series_id": "036",
       "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00289",
+      "record_hash": "e12e0d840f7010cb3233264b43f9b9c7718a2f278bb3010273a1938a2f41c1e4",
       "title": "untitled",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "036"
-      ],
+      "series_id": "036",
       "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00290",
+      "record_hash": "bf0c03538f5f3336790350318aa359ecb7a30abefa67066bf1553483684009da",
       "title": "untitled",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "036"
-      ],
+      "series_id": "036",
       "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00291",
+      "record_hash": "ab006df1e868c643741acef1a6b6d628cdc8ba0ab076f87218a4a3ad6312ccc0",
       "title": "untitled",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "036"
-      ],
+      "series_id": "036",
       "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00292",
+      "record_hash": "ff0acacdea3a2f8a3bfcf117af2020a05257186be36ebed6417dfd44cae1a67e",
       "title": "untitled",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "036"
-      ],
+      "series_id": "036",
       "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00293",
+      "record_hash": "ffcde6dd46888e878ea6e055ee805e1acfb8b4066fad57a750671128b0e65e2b",
       "title": "untitled",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "036"
-      ],
+      "series_id": "036",
       "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00294",
+      "record_hash": "a46c06ee46e80d3d92618f8aa8f30305b3946fe7a3efa5dafe524f1fdf85ce51",
       "title": "untitled",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "036"
-      ],
+      "series_id": "036",
       "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00295",
+      "record_hash": "d8ed6d7bb2ccce075fc7c96bb5033e7c695c791b76e8a6b1d5313c5eea4a151a",
       "title": "64 symbols",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "036"
-      ],
+      "series_id": "036",
       "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00296",
+      "record_hash": "e6d1ef34504f113ad55c70faf5b4d78f230074e6a4911a1892510172df68faea",
       "title": "4 things that are completely different but at the same time are the same",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "036"
-      ],
+      "series_id": "036",
       "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00297",
+      "record_hash": "066918a651061b9d6b06deb766e5bb951f5db57894704da2e01bf730b6add697",
       "title": "untitled",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "036"
-      ],
+      "series_id": "036",
       "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00298",
+      "record_hash": "6dcff4f818955ec5f4fa1649bf4ebf028a88501225f0ec971bc1e58d060f3107",
       "title": "untitled",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "036"
-      ],
+      "series_id": "036",
       "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00299",
+      "record_hash": "dd84697c46b1b9feb97730b620abfcdfa7b8e5c8ef6aa85143169d3b777cc75e",
       "title": "untitled",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "036"
-      ],
+      "series_id": "036",
       "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00300",
+      "record_hash": "edb92343b69f31b78c2682b941dc368fb8b8639715685304015eebd37f0ff57d",
       "title": "untitled",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "036"
-      ],
+      "series_id": "036",
       "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00301",
+      "record_hash": "327d976f5d944c5ffd991e4749044db8973793d83c693aa88974c81023dd6f16",
       "title": "untitled",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "036"
-      ],
+      "series_id": "036",
       "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00302",
+      "record_hash": "c55b6eb84d384850121293c11564128b5125c853c20935c5ea5cbf0b6570b225",
       "title": "untitled",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "036"
-      ],
+      "series_id": "036",
       "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00303",
+      "record_hash": "ec2e0756c5964b3d1a6cf2e1b04e357dd054b3e2395774040857f345b58ea677",
       "title": "untitled",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "036"
-      ],
+      "series_id": "036",
       "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00304",
+      "record_hash": "3fac4f2cb303ccb76da2f75a6f30cd1faf9bfef241a72b301ff0a78b20f90afe",
       "title": "untitled",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "036"
-      ],
+      "series_id": "036",
       "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00305",
+      "record_hash": "8fa543cea2cd79ffb20249e8dde52192e06b78078704352dd9aa0bb6a06df5fb",
       "title": "untitled",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "036"
-      ],
+      "series_id": "036",
       "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00306",
+      "record_hash": "855c1ef9656544e5a4676be3dbb8bf9f52c17d935ff200c0951d45881bd50243",
       "title": "untitled",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "036"
-      ],
+      "series_id": "036",
       "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00307",
+      "record_hash": "12308028c21e95e2b2432ded4ac60132dfd1139414c466cf6d824da51f17e2fd",
       "title": "untitled",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "036"
-      ],
+      "series_id": "036",
       "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00308",
+      "record_hash": "f44f1d5b5103105fe90b3c52a9265af54c03e22833cd695eb503c9997e64a039",
       "title": "our paths may cross",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "036"
-      ],
+      "series_id": "036",
       "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00309",
+      "record_hash": "5038b0084736b80a14c76a3a72ce6a6cc1786edb28b8cc8bbaae6a72daa533a9",
       "title": "untitled",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "036"
-      ],
+      "series_id": "036",
       "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00310",
+      "record_hash": "5bb3898e02456fec6421a6714e11e4a1e432f9de94e741a30e454536546921bc",
       "title": "untitled",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "036"
-      ],
+      "series_id": "036",
       "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00311",
+      "record_hash": "dbe7ea07bc183b0ce4325b3ae88df723ef83cc28cd1ee8823f88395ab4d38c51",
       "title": "untitled",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "036"
-      ],
+      "series_id": "036",
       "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00312",
+      "record_hash": "b2de8bea338ecde7384bf7d311ce1c1e4fa705006fd6b38404266ecbeec3743c",
       "title": "untitled",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "036"
-      ],
+      "series_id": "036",
       "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00313",
+      "record_hash": "e79a0e4a1d6809ce8bac665e75aac142e958fecdc1146014225a3c729a5dbad0",
       "title": "untitled",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "036"
-      ],
+      "series_id": "036",
       "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00314",
+      "record_hash": "b0586c91a6f75e6d6142b739a3771f5c9897f4f594b2e5771eda55729e19d9e5",
       "title": "untitled",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "036"
-      ],
+      "series_id": "036",
       "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00315",
+      "record_hash": "7ab5e4d533c019b40791f522555783a497aa04f058ede1e7450e38e78ea4a717",
       "title": "untitled",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "036"
-      ],
+      "series_id": "036",
       "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00316",
+      "record_hash": "f2d2f159e88f21e8ed25b71022aec9a740bce76e0a5b2d6770619c8c579336da",
       "title": "untitled",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "036"
-      ],
+      "series_id": "036",
       "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00317",
+      "record_hash": "22c6fc6d1b9a3b393c988a159e085c44c76cf3b453742260e28edc6d38f48bd8",
       "title": "untitled",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "036"
-      ],
+      "series_id": "036",
       "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00318",
+      "record_hash": "8c23d102099c1074d1cfd48aa104835536900966d4052ab915a356619e806774",
       "title": "grid",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "036"
-      ],
+      "series_id": "036",
       "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00319",
+      "record_hash": "1d40d91d045257000705a3330eb74ff879df0adf0c37a216951d1b103226cfe9",
       "title": "it never ends",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "036"
-      ],
+      "series_id": "036",
       "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00320",
+      "record_hash": "65f14778c95e5a7cf1486b9356dec58c1fbb944740edd3c35079a4890c023a86",
       "title": "untitled",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "036"
-      ],
+      "series_id": "036",
       "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00321",
+      "record_hash": "2acc8434f31d6bf3c95c75bb44f0647e207ce2906fc908d7dc751d8aab622846",
       "title": "untitled",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "036"
-      ],
+      "series_id": "036",
       "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00322",
+      "record_hash": "fa5ccaa69a50ed0b8ad5dcbbbdc23c677faa7d9a329e73806c3b44f751bdc18f",
       "title": "untitled",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "036"
-      ],
+      "series_id": "036",
       "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00323",
+      "record_hash": "73b52af02396ba91290f2620f52e3f06b9be3c190e567dbf7fa4c6f1d7b159fd",
       "title": "untitled",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "036"
-      ],
+      "series_id": "036",
       "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00324",
+      "record_hash": "0ac9ee68038105bbb6103411a47055ce4ae2712efe17b4d995e963b662069c1e",
       "title": "untitled",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "036"
-      ],
+      "series_id": "036",
       "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00325",
+      "record_hash": "7770e8f922939a33f114bf4c06a04ce19c74895250fcec4b68386d0500548587",
       "title": "untitled",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "036"
-      ],
+      "series_id": "036",
       "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00326",
+      "record_hash": "f2b121584c57148f12d780ad59e71eabab366025fc430ccbc4ff516f751798fd",
       "title": "untitled",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "036"
-      ],
+      "series_id": "036",
       "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00327",
+      "record_hash": "d44ee7c1eb889f628ba751f7fd8a0cddecd46250fe079d38002f80e0401a2dbf",
       "title": "untitled",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "036"
-      ],
+      "series_id": "036",
       "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00328",
+      "record_hash": "6deeb4336a9e577aa5d0a535abae841e0422e35ff5e73ec05e715515ad7797a9",
       "title": "untitled",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "036"
-      ],
+      "series_id": "036",
       "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00329",
+      "record_hash": "6b59cc7185aa2eb269db17a8821ece1bdb7a351ba19fbdc38132bfad4d1579a6",
       "title": "untitled",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "036"
-      ],
+      "series_id": "036",
       "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00330",
+      "record_hash": "5951de88d9c60e11fbaadc985a4c6e98690c4de524478b239751a6a02e3fb9e5",
       "title": "untitled",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "036"
-      ],
+      "series_id": "036",
       "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00331",
+      "record_hash": "00a1f6f313635d5077ee79f0dfe9f4e31a0c3f827141a1e32516992fd43d597a",
       "title": "untitled",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "036"
-      ],
+      "series_id": "036",
       "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00332",
+      "record_hash": "878b15e5d03f4999f48259fb8893952ac30c35802e72888f217255be98c224d6",
       "title": "untitled",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "036"
-      ],
+      "series_id": "036",
       "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00333",
+      "record_hash": "68c241df204e243e6df5ff356e3b794cb39bdd03766c19eeff737b2b4e2c1d7a",
       "title": "untitled",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "036"
-      ],
+      "series_id": "036",
       "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00334",
+      "record_hash": "83538a852e7e7f9f428e5e142b601abc81a145a265a702d817ac085177209cd6",
       "title": "untitled",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "036"
-      ],
+      "series_id": "036",
       "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00335",
+      "record_hash": "b5ac1abea17d1160955cf58cb44ce0d2d3a59a2c05a057e3d6ba42ea71738892",
       "title": "untitled",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "036"
-      ],
+      "series_id": "036",
       "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00336",
+      "record_hash": "5a4a27c6c5f4ddb5901ae0422850c9f5a09d3ef3d57cad2a0ef5055406d119f6",
       "title": "untitled",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "036"
-      ],
+      "series_id": "036",
       "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00337",
+      "record_hash": "6c78813a2d0d0465de7db9f056f3521cde771f6b2a935e08193306cd398d9937",
       "title": "untitled",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "036"
-      ],
+      "series_id": "036",
       "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00338",
+      "record_hash": "785ffe0e114ac69b46558408c24041412d672aad4c6c4bfa9af5360fe473bfd4",
       "title": "untitled",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "036"
-      ],
+      "series_id": "036",
       "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00339",
+      "record_hash": "6e3aad717600de3ac2a64350a20b21eb7374a53b533d5ad2269e92de0422ee93",
       "title": "untitled",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "036"
-      ],
+      "series_id": "036",
       "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00340",
+      "record_hash": "5dfbfc2372a12de542d1e8c07edee18b8d5eb94e5ee1226b09f9ef90d747d7a7",
       "title": "untitled",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "036"
-      ],
+      "series_id": "036",
       "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00341",
+      "record_hash": "5b60d68310725ccb64eca5e4e6f874405780198c503aeec43bf768aba68ec661",
       "title": "untitled",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "036"
-      ],
+      "series_id": "036",
       "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00342",
+      "record_hash": "57d155ba452eacb7dbf878a8736d160e71929786dd6da2eea57d8c429bd83028",
       "title": "9 moments that are exactly the same but different and unique",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "036"
-      ],
+      "series_id": "036",
       "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00343",
+      "record_hash": "3e745869127d535f82ad23631ac5a86e2291e13e642000d14b8577dbb6cecd7e",
       "title": "untitled",
       "year": 2025,
       "year_display": "2025",
-      "status": "published",
-      "series_ids": [
-        "036"
-      ],
+      "series_id": "036",
       "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00344",
+      "record_hash": "233093f517fa3760bb1d8979822c0b8eb7b70d7744d7926a1fe5062e491db7f8",
       "title": "untitled",
       "year": 2025,
       "year_display": "2025",
-      "status": "published",
-      "series_ids": [
-        "036"
-      ],
+      "series_id": "036",
       "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00345",
+      "record_hash": "bb390fc1f5a68774ce62c667bb52572773e12b8929684b53bec99453b93d80ce",
       "title": "untitled",
       "year": 2025,
       "year_display": "2025",
-      "status": "published",
-      "series_ids": [
-        "036"
-      ],
+      "series_id": "036",
       "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00347",
+      "record_hash": "56cfe74bf9a20000282620db1d6cb360e61576bfe53c976947260f0980c13560",
       "title": "untitled",
       "year": 2025,
       "year_display": "2025",
-      "status": "published",
-      "series_ids": [
-        "036"
-      ],
+      "series_id": "036",
       "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00348",
+      "record_hash": "b72bad12cbd8768427743bcca727160f49184b2436c0ebd3cd2eddcb471ef6f1",
       "title": "untitled",
       "year": 2025,
       "year_display": "2025",
-      "status": "published",
-      "series_ids": [
-        "036"
-      ],
+      "series_id": "036",
       "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00349",
+      "record_hash": "2cfa310b6f0ae327bc55b3890c7f81f1f2a342fd6fc76c7fcfedca14ed80079a",
       "title": "untitled",
       "year": 2025,
       "year_display": "2025",
-      "status": "published",
-      "series_ids": [
-        "036"
-      ],
+      "series_id": "036",
       "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00350",
+      "record_hash": "d9b3a3dd616838fc64679cf19b1d598043e7107708d15b93d6b057efee04cac4",
       "title": "untitled",
       "year": 2025,
       "year_display": "2025",
-      "status": "published",
-      "series_ids": [
-        "036"
-      ],
+      "series_id": "036",
       "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00351",
+      "record_hash": "22dae0f97c8a060c274347e849ba548ee797348fba5a151660e1919b0174749b",
       "title": "untitled",
       "year": 2025,
       "year_display": "2025",
-      "status": "published",
-      "series_ids": [
-        "036"
-      ],
+      "series_id": "036",
       "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00352",
+      "record_hash": "7c0bb8eeb587344695c2c17354de7dcfeb3eea3bcb5e10dbbc91f6af87cdd3c4",
       "title": "untitled",
       "year": 2025,
       "year_display": "2025",
-      "status": "published",
-      "series_ids": [
-        "036"
-      ],
+      "series_id": "036",
       "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00353",
+      "record_hash": "32426e4ea401908a221576d1c918868f44daa3dba77cdb5b8e7de494454ff1b3",
       "title": "untitled",
       "year": 2025,
       "year_display": "2025",
-      "status": "published",
-      "series_ids": [
-        "036"
-      ],
+      "series_id": "036",
       "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00354",
+      "record_hash": "52a5d781171b379aed46b11b7d23594072b644116bbcc7a55b5dd3c920f1e8f4",
       "title": "untitled",
       "year": 2025,
       "year_display": "2025",
-      "status": "published",
-      "series_ids": [
-        "036"
-      ],
+      "series_id": "036",
       "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00355",
+      "record_hash": "7aa9841eff49f21ebca5043c8836f3e0409060977286550aa98b0e0da2bb2100",
       "title": "untitled",
       "year": 2025,
       "year_display": "2025",
-      "status": "published",
-      "series_ids": [
-        "036"
-      ],
+      "series_id": "036",
       "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00356",
+      "record_hash": "bfbdf433f2261ab2d24b3af06a318b320d5685b911ed9ce3ddbe215198647555",
       "title": "untitled",
       "year": 2025,
       "year_display": "2025",
-      "status": "published",
-      "series_ids": [
-        "036"
-      ],
+      "series_id": "036",
       "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00357",
+      "record_hash": "5f830cfe56b4484c6b8d4c7abf3332de6ab0e851e81db94178f35e072ff5cd30",
       "title": "untitled",
       "year": 2025,
       "year_display": "2025",
-      "status": "published",
-      "series_ids": [
-        "036"
-      ],
+      "series_id": "036",
       "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00358",
+      "record_hash": "0f8aa8898de09d93ea965c9a91d53cb4b5f2022463250a74c18e1ab7eaca4187",
       "title": "untitled",
       "year": 2025,
       "year_display": "2025",
-      "status": "published",
-      "series_ids": [
-        "036"
-      ],
+      "series_id": "036",
       "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00359",
+      "record_hash": "1b52638c4191c68a29f3c84be741c0435eba59fc43d0db9b01e182aa0b73d0c7",
       "title": "untitled",
       "year": 2025,
       "year_display": "2025",
-      "status": "published",
-      "series_ids": [
-        "036"
-      ],
+      "series_id": "036",
       "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00360",
+      "record_hash": "6981e480e6a3b093451dd002067e393d2cbe4a5ad0358bd67446bf290857eb13",
       "title": "untitled",
       "year": 2025,
       "year_display": "2025",
-      "status": "published",
-      "series_ids": [
-        "036"
-      ],
+      "series_id": "036",
       "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00361",
+      "record_hash": "10c490c782deb92058272881a17f49114172d9e8089ad9f281638848606c0897",
       "title": "83 particles",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "036"
-      ],
+      "series_id": "036",
       "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00362",
+      "record_hash": "415f21b6a994c2df44a0b57eec5f307ad380ab4614c4ae713ba3676004e73d1c",
       "title": "13 particles",
       "year": 2025,
       "year_display": "2025",
-      "status": "published",
-      "series_ids": [
-        "036"
-      ],
+      "series_id": "036",
       "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00363",
+      "record_hash": "083793e4de7f7722f9efa7e10fb9a95ac349af631fa68770371271e6a7f50dca",
       "title": "7 particles",
       "year": 2025,
       "year_display": "2025",
-      "status": "published",
-      "series_ids": [
-        "036"
-      ],
+      "series_id": "036",
       "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00364",
+      "record_hash": "54cc90cb57d1ed624dce908bff397f00b1620500dd6aead568de748608a9656e",
       "title": "grid",
       "year": 2025,
       "year_display": "2025",
-      "status": "published",
-      "series_ids": [
-        "036"
-      ],
+      "series_id": "036",
       "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00365",
+      "record_hash": "a3d7b21398004536e62218a39c7625f3927f784b36e74825b81bfa2e7bdcf02a",
       "title": "the eye",
       "year": 2025,
       "year_display": "2025",
-      "status": "published",
-      "series_ids": [
-        "036"
-      ],
+      "series_id": "036",
       "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00366",
+      "record_hash": "c56b533b63e4fb2f83aafcf468544a6093a5c9790845ec28c47b02476a46720d",
       "title": "untitled",
       "year": 2025,
       "year_display": "2025",
-      "status": "published",
-      "series_ids": [
-        "036"
-      ],
+      "series_id": "036",
       "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00367",
+      "record_hash": "54d6bde015b7cad39b8b336857f4207e8d155f600821752bcd94da48df8e9782",
       "title": "untitled",
       "year": 2025,
       "year_display": "2025",
-      "status": "published",
-      "series_ids": [
-        "036"
-      ],
+      "series_id": "036",
       "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00368",
+      "record_hash": "88be0b89737c4dceb5a36e5f0780f263343a8f77162da02cf3b3e75f7d94917d",
       "title": "untitled",
       "year": 2025,
       "year_display": "2025",
-      "status": "published",
-      "series_ids": [
-        "036"
-      ],
+      "series_id": "036",
       "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00369",
+      "record_hash": "20db8c2149343802148576dce6b974366c7846d83bf9037ac6feff640d2fda96",
       "title": "untitled",
       "year": 2025,
       "year_display": "2025",
-      "status": "published",
-      "series_ids": [
-        "036"
-      ],
+      "series_id": "036",
       "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00370",
+      "record_hash": "c1870ee1b77f780226e02633143b47a2ca6d928ebf3f9ddb317b65084a049756",
       "title": "untitled",
       "year": 2025,
       "year_display": "2025",
-      "status": "published",
-      "series_ids": [
-        "036"
-      ],
+      "series_id": "036",
       "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00371",
+      "record_hash": "679eb14494ad5e6ca50d9e345f9fe71b4fd50c1990eeb4d57c68efdd404b6bdc",
       "title": "untitled",
       "year": 2025,
       "year_display": "2025",
-      "status": "published",
-      "series_ids": [
-        "036"
-      ],
+      "series_id": "036",
       "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00372",
+      "record_hash": "e12d547a9fb822c05ecd006f6976281f265b26edd65d05b7aba3b45f8ae8d908",
       "title": "untitled",
       "year": 2025,
       "year_display": "2025",
-      "status": "published",
-      "series_ids": [
-        "036"
-      ],
+      "series_id": "036",
       "project_folder": "curve poems (2025)"
     },
     {
       "work_id": "00454",
+      "record_hash": "97371562bbcbeab5c6eb0e485db629e4d5952f0e70335a6c1fd75129704ac19b",
       "title": "I bet you look good on the dancefloor",
       "year": 2025,
       "year_display": "2025",
-      "status": "published",
-      "series_ids": [
-        "036"
-      ],
+      "series_id": "036",
       "project_folder": "curve poems (2025)"
     }
   ],
-  "ordered_published_work_ids": [
+  "ordered_work_ids": [
     "00286",
     "00287",
     "00288",

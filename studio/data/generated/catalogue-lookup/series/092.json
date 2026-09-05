@@ -1,32 +1,27 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v2"
+    "schema": "studio_catalogue_lookup_series_record_v3"
   },
   "series": {
     "series_id": "092",
     "title": "living surface hand form",
-    "series_type": "primary",
-    "status": "published",
-    "published_date": "2026-04-01",
     "year": 2004,
     "year_display": "1989, 2004",
-    "primary_work_id": "00463",
     "sort_fields": "work_id"
   },
+  "record_hash": "4076168a98e97449a13b435a92634861c90c1880eaf152d2013a359794522f72",
   "member_works": [
     {
       "work_id": "00463",
+      "record_hash": "1e8b3214a0f4b6735122a1bfa1311fd4210dab2965d200abbe6f1f05c5d737ba",
       "title": "living surface hand form",
       "year": 2004,
       "year_display": "1989, 2004",
-      "status": "published",
-      "series_ids": [
-        "092"
-      ],
+      "series_id": "092",
       "project_folder": "living surface hand form"
     }
   ],
-  "ordered_published_work_ids": [
+  "ordered_work_ids": [
     "00463"
   ],
   "project_folders": [

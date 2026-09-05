@@ -5,7 +5,6 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Any, Dict, List, Mapping, Optional
 
-from catalogue import catalogue_generation_records as records
 from catalogue.catalogue_generation_common import (
     coerce_int,
     coerce_numeric,
@@ -19,6 +18,7 @@ from catalogue.catalogue_generation_common import (
     slug_id,
 )
 
+from catalogue.catalogue_source import WORK_FIELDS
 from catalogue.series_ids import normalize_series_id
 
 
@@ -29,10 +29,8 @@ class CatalogueGenerationIndexError(ValueError):
 @dataclass(frozen=True)
 class SeriesWorkIndexContext:
     series_title_by_id: Dict[str, str]
-    series_status_by_id: Dict[str, str]
     series_project_folders_by_id: Dict[str, List[str]]
     work_meta_by_id: Dict[str, Dict[str, Any]]
-    work_status_by_id: Dict[str, str]
     work_ids_by_series_all: Dict[str, List[str]]
     series_sort_by_series_id: Dict[str, Dict[str, str]]
     series_sort_fields_by_series_id: Dict[str, List[str]]
@@ -60,7 +58,6 @@ def build_series_work_index_context(
     work_records: Mapping[str, Mapping[str, Any]],
 ) -> SeriesWorkIndexContext:
     series_title_by_id: Dict[str, str] = {}
-    series_status_by_id: Dict[str, str] = {}
     seen_series_ids: set[str] = set()
     for series_record in series_records.values():
         sid_raw = series_record.get("series_id")
@@ -70,7 +67,6 @@ def build_series_work_index_context(
         if sid in seen_series_ids:
             raise CatalogueGenerationIndexError(f"Catalogue source has duplicate series_id: {sid}")
         seen_series_ids.add(sid)
-        series_status_by_id[sid] = normalize_status(series_record.get("status"))
         title = coerce_string(series_record.get("title"))
         if title is not None:
             series_title_by_id[sid] = title
@@ -79,7 +75,7 @@ def build_series_work_index_context(
     project_folder_sets_by_series: Dict[str, set[str]] = {}
     for work_record in work_records.values():
         folder = coerce_string(work_record.get("project_folder"))
-        series_ids = records.parse_work_record_series_ids(work_record)
+        series_ids = [normalize_series_id(work_record["series_id"])] if work_record.get("series_id") else []
         if not series_ids or folder is None:
             continue
         for sid in series_ids:
@@ -87,23 +83,20 @@ def build_series_work_index_context(
     for sid, folder_set in project_folder_sets_by_series.items():
         series_project_folders_by_id[sid] = sorted(folder_set, key=lambda value: value.lower())
 
-    works_sortable_fields = {fm_key for fm_key, _, _ in records.WORKS_SCHEMA}
+    works_sortable_fields = set(WORK_FIELDS)
     works_sortable_fields.update({"work_id", "series_title", "title_sort"})
     numeric_sort_fields = {"year", "height_cm", "width_cm", "depth_cm"}
     work_meta_by_id: Dict[str, Dict[str, Any]] = {}
-    work_status_by_id: Dict[str, str] = {}
     work_ids_by_series_all: Dict[str, List[str]] = {}
     for work_record in work_records.values():
         wid_raw = work_record.get("work_id")
         if is_empty(wid_raw):
             continue
         wid = slug_id(wid_raw)
-        meta = records.build_work_record_projection(work_record)
-        work_status_by_id[wid] = normalize_status(work_record.get("status"))
-        series_ids = records.parse_work_record_series_ids(work_record)
+        meta = dict(work_record)
+        series_ids = [normalize_series_id(work_record["series_id"])] if work_record.get("series_id") else []
         sid = series_ids[0] if series_ids else ""
         meta["work_id"] = wid
-        meta["series_ids"] = series_ids
         meta["series_id"] = sid
         meta["series_title"] = series_title_by_id.get(sid) if sid else None
         work_meta_by_id[wid] = meta
@@ -177,22 +170,18 @@ def build_series_work_index_context(
 
     return SeriesWorkIndexContext(
         series_title_by_id=series_title_by_id,
-        series_status_by_id=series_status_by_id,
         series_project_folders_by_id=series_project_folders_by_id,
         work_meta_by_id=work_meta_by_id,
-        work_status_by_id=work_status_by_id,
         work_ids_by_series_all=work_ids_by_series_all,
         series_sort_by_series_id=series_sort_by_series_id,
         series_sort_fields_by_series_id=series_sort_fields_by_series_id,
     )
 
 
-def ordered_published_work_ids_by_series(context: SeriesWorkIndexContext) -> Dict[str, List[str]]:
+def ordered_work_ids_by_series(context: SeriesWorkIndexContext) -> Dict[str, List[str]]:
     work_rows_by_series: Dict[str, List[tuple[str, str]]] = {}
     for sid, work_ids in context.work_ids_by_series_all.items():
         for wid in work_ids:
-            if context.work_status_by_id.get(wid) != "published":
-                continue
             series_sort = context.series_sort_by_series_id.get(sid, {}).get(wid, wid)
             work_rows_by_series.setdefault(sid, []).append((series_sort, wid))
 
@@ -208,7 +197,7 @@ def build_series_member_work_records(
     context: SeriesWorkIndexContext,
     series_id: str,
 ) -> List[Dict[str, Any]]:
-    ordered_work_ids = ordered_published_work_ids_by_series(context).get(series_id, [])
+    ordered_work_ids = ordered_work_ids_by_series(context).get(series_id, [])
     member_works: List[Dict[str, Any]] = []
     for work_id in ordered_work_ids:
         work_meta = context.work_meta_by_id.get(work_id, {})
@@ -230,7 +219,7 @@ def build_series_index_records(
     series_records: Mapping[str, Mapping[str, Any]],
     context: SeriesWorkIndexContext,
 ) -> Dict[str, Dict[str, Any]]:
-    ordered_work_ids_by_series = ordered_published_work_ids_by_series(context)
+    member_ids_by_series = ordered_work_ids_by_series(context)
     series_payload_unsorted: Dict[str, Dict[str, Any]] = {}
     for series_record in series_records.values():
         sid_raw = series_record.get("series_id")
@@ -246,7 +235,7 @@ def build_series_index_records(
         year_display = coerce_string(series_record.get("year_display"))
         if year_display is None:
             year_display = str(year) if year is not None else None
-        ordered_work_ids = ordered_work_ids_by_series.get(sid, [])
+        ordered_work_ids = member_ids_by_series.get(sid, [])
         primary_work_id = require_series_primary_work_id(
             sid,
             series_record,

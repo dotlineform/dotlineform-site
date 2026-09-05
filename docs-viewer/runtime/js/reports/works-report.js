@@ -1,8 +1,8 @@
 import { normalizeDocsViewerAuthoringSubject } from "../management/docs-viewer-management-document-subject.js";
 import { appendProjectSubjectIcon } from "./project-subject-icons.js";
 
-const SERIES_SCHEMA = "studio_catalogue_lookup_series_search_v1";
-const WORK_SCHEMA = "studio_catalogue_lookup_work_search_v1";
+const SERIES_SCHEMA = "studio_catalogue_lookup_series_search_v2";
+const WORK_SCHEMA = "studio_catalogue_lookup_work_search_v2";
 const PROJECTS_SCOPE = "dotlineform";
 const PROJECTS_SUB_SCOPE = "projects";
 const PROJECTS_CUSTOMISATION = "dotlineform_projects";
@@ -48,46 +48,13 @@ function normalizeLookupPayload(payload, options) {
 }
 
 function normalizeSeriesItem(value) {
-  if (!exactKeys(value, ["primary_work_id", "series_id", "series_type", "status", "title"])) {
-    throw new Error("Works Series lookup is invalid.");
-  }
-  const seriesId = cleanString(value.series_id);
-  const title = cleanString(value.title);
-  const status = cleanString(value.status);
-  if (
-    !SERIES_ID_PATTERN.test(seriesId)
-    || !title
-    || !status
-    || typeof value.primary_work_id !== "string"
-    || typeof value.series_type !== "string"
-  ) {
-    throw new Error("Works Series lookup is invalid.");
-  }
-  return { seriesId, status, title };
+  if (!exactKeys(value, ["record_hash", "series_id", "title"]) || !SERIES_ID_PATTERN.test(value.series_id) || !cleanString(value.title) || !cleanString(value.record_hash)) throw new Error("Works Series lookup is invalid.");
+  return {seriesId: value.series_id, title: value.title};
 }
 
 function normalizeWorkItem(value) {
-  if (!exactKeys(value, ["series_ids", "status", "title", "work_id", "year_display"])) {
-    throw new Error("Works Work lookup is invalid.");
-  }
-  const workId = cleanString(value.work_id);
-  const title = cleanString(value.title);
-  const status = cleanString(value.status);
-  const seriesIds = Array.isArray(value.series_ids) ? value.series_ids.slice() : [];
-  if (
-    !WORK_ID_PATTERN.test(workId)
-    || !title
-    || !status
-    || typeof value.year_display !== "string"
-    || !Array.isArray(value.series_ids)
-    || seriesIds.some((seriesId) => {
-      return typeof seriesId !== "string" || !SERIES_ID_PATTERN.test(seriesId);
-    })
-    || new Set(seriesIds).size !== seriesIds.length
-  ) {
-    throw new Error("Works Work lookup is invalid.");
-  }
-  return { seriesIds, status, title, workId };
+  if (!exactKeys(value, ["record_hash", "series_id", "title", "work_id", "year_display"]) || !WORK_ID_PATTERN.test(value.work_id) || !cleanString(value.title) || (value.series_id !== null && typeof value.series_id !== "string") || (value.series_id && !SERIES_ID_PATTERN.test(value.series_id)) || typeof value.year_display !== "string" || !cleanString(value.record_hash)) throw new Error("Works Work lookup is invalid.");
+  return {seriesId: value.series_id, title: value.title, workId: value.work_id};
 }
 
 export function normalizeWorksSeriesLookup(payload) {
@@ -182,25 +149,25 @@ function compareDocuments(collator, left, right) {
 
 export function composeWorksProjection(seriesRecords, workRecords, projectDocuments) {
   const collator = new Intl.Collator("en", { numeric: true, sensitivity: "base" });
-  const publishedSeries = new Map();
+  const catalogueSeries = new Map();
   seriesRecords.forEach((series) => {
-    if (series.status === "published") publishedSeries.set(series.seriesId, series);
+    catalogueSeries.set(series.seriesId, series);
   });
-  const publishedWorks = new Map();
+  const catalogueWorks = new Map();
   workRecords.forEach((work) => {
-    if (work.status === "published") publishedWorks.set(work.workId, work);
+    catalogueWorks.set(work.workId, work);
   });
   const documentsBySeries = new Map();
-  publishedSeries.forEach((_series, seriesId) => documentsBySeries.set(seriesId, new Map()));
+  catalogueSeries.forEach((_series, seriesId) => documentsBySeries.set(seriesId, new Map()));
   projectDocuments.forEach((documentRecord) => {
     const subject = documentRecord.subject;
     if (subject.state !== "valid") return;
     let seriesIds = [];
-    if (subject.kind === "series" && publishedSeries.has(subject.key)) {
+    if (subject.kind === "series" && catalogueSeries.has(subject.key)) {
       seriesIds = [subject.key];
-    } else if (subject.kind === "work" && publishedWorks.has(subject.key)) {
-      seriesIds = publishedWorks.get(subject.key).seriesIds.filter((seriesId) => {
-        return publishedSeries.has(seriesId);
+    } else if (subject.kind === "work" && catalogueWorks.has(subject.key)) {
+      seriesIds = [catalogueWorks.get(subject.key).seriesId].filter((seriesId) => {
+        return catalogueSeries.has(seriesId);
       });
     }
     seriesIds.forEach((seriesId) => {
@@ -211,7 +178,7 @@ export function composeWorksProjection(seriesRecords, workRecords, projectDocume
       });
     });
   });
-  const rows = Array.from(publishedSeries.values()).map((series) => {
+  const rows = Array.from(catalogueSeries.values()).map((series) => {
     const documents = Array.from(documentsBySeries.get(series.seriesId).values());
     documents.sort((left, right) => compareDocuments(collator, left, right));
     return { documents, seriesId: series.seriesId, title: series.title };

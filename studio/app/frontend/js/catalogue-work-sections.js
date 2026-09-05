@@ -5,16 +5,8 @@ import {
   createRecordList,
   createRecordListActions
 } from "/shared/frontend/js/record-list.js";
-import {
-  buildPublicWorkUrl
-} from "./catalogue-public-links.js";
-import {
-  cataloguePreviewFallback,
-  catalogueReadinessItem,
-  catalogueReadinessItems,
-  catalogueReadinessItemSummary,
-  catalogueReadinessTone
-} from "./catalogue-editor-readiness.js";
+
+import { cataloguePreviewFallback, catalogueReadinessItems, catalogueReadinessItemSummary, catalogueReadinessTone } from "./catalogue-editor-readiness.js";
 import {
   getWorkEmbeddedItems
 } from "./catalogue-editor-embedded-items.js";
@@ -22,11 +14,7 @@ import {
   bindPreviewImages,
   buildWorkPrimaryPreview
 } from "./catalogue-media-preview.js";
-import {
-  dedupeSeriesIds,
-  normalizeText,
-  parseSeriesIds
-} from "./catalogue-work-fields.js";
+import { normalizeText } from "./catalogue-work-fields.js";
 
 const BULK_PREVIEW_LIMIT = 12;
 
@@ -80,16 +68,6 @@ function clearRecordListActions(state, key, rootNode) {
   state[key] = null;
 }
 
-function isCurrentWorkPublished(state, options) {
-  if (options && typeof options.isCurrentWorkPublished === "function") {
-    return Boolean(options.isCurrentWorkPublished(state));
-  }
-  return normalizeText(state.currentRecord && state.currentRecord.status).toLowerCase() === "published";
-}
-
-function draftHasConfiguredMediaSource(state) {
-  return Boolean(normalizeText(state.draft && state.draft.project_folder) && normalizeText(state.draft && state.draft.project_filename));
-}
 
 function cacheBustUrl(url, version) {
   const text = normalizeText(url);
@@ -121,19 +99,6 @@ function buildWorkImageDimensionSummary(record) {
   return height && width ? `${height} x ${width} px` : "";
 }
 
-function stagedWorkMediaDimensions(state, workId) {
-  if (!normalizeText(state && state.mediaPreviewVersion)) return "";
-  const tasks = state && state.buildPreview && state.buildPreview.local_media && Array.isArray(state.buildPreview.local_media.tasks)
-    ? state.buildPreview.local_media.tasks
-    : [];
-  const task = tasks.find((item) => (
-    normalizeText(item && item.kind) === "work" &&
-    normalizeText(item && item.id) === normalizeText(workId)
-  ));
-  const height = normalizeText(task && task.source_height_px);
-  const width = normalizeText(task && task.source_width_px);
-  return height && width ? `${height} x ${width} px` : "";
-}
 
 export function formatWorkSelectionList(ids) {
   const items = Array.isArray(ids) ? ids.slice(0, BULK_PREVIEW_LIMIT) : [];
@@ -148,40 +113,25 @@ export function renderWorkCurrentPreview(state, options = {}) {
     return;
   }
   const record = state.currentRecord;
-  const mediaItem = catalogueReadinessItem(state.buildPreview, "work_media");
-  const isPublished = normalizeText(record && record.status).toLowerCase() === "published";
-  const stagedPreview = !isPublished || Boolean(normalizeText(state.mediaPreviewVersion));
   const preview = buildWorkPrimaryPreview(state.mediaConfig, record.work_id, {
-    staged: stagedPreview,
-    mediaVersion: stagedPreview ? null : record.media_version
+    staged: true,
+    mediaVersion: null
   });
   const previewSrc = cacheBustUrl(preview.src, state.mediaPreviewVersion);
   const previewSrcset = cacheBustSrcset(preview.srcset, state.mediaPreviewVersion);
-  const fallback = cataloguePreviewFallback(mediaItem, {
+  const fallback = cataloguePreviewFallback(null, {
     missingGeneratedText: text(state, options, "preview_generated_missing", "Generated preview unavailable. Source media exists."),
     missingSourceText: text(state, options, "preview_source_missing", "Source media missing."),
     unavailableText: text(state, options, "preview_unavailable", "Preview unavailable."),
     notConfiguredText: text(state, options, "preview_not_configured", "Preview not configured.")
   });
   const caption = buildWorkRecordSummary(record);
-  const dimensionCaption = stagedWorkMediaDimensions(state, record.work_id) || buildWorkImageDimensionSummary(record);
-  const canShowGenerated = isPublished
-    ? !mediaItem || normalizeText(mediaItem.status) === "ready"
-    : Boolean(mediaItem && normalizeText(mediaItem.status) === "ready");
-  const previewState = preview.src && canShowGenerated ? "loading" : fallback.fallbackState;
-  const publicHref = buildPublicWorkUrl(state.config, record.work_id);
-  const previewHref = isPublished ? publicHref : canShowGenerated ? normalizeText(preview.fullSrc) : "";
-  const previewTarget = isPublished ? "" : "_blank";
-  const previewRel = isPublished ? "" : "noopener";
-  const mediaSummaryItem = mediaItem ? catalogueReadinessItemSummary(mediaItem, { fallbackSummary: "—" }) : null;
-  const mediaRefreshDisabled = (
-    !state.serverAvailable ||
-    state.isSaving ||
-    state.isBuilding ||
-    state.isDeleting ||
-    !mediaSummaryItem ||
-    (!mediaSummaryItem.exists && !draftHasConfiguredMediaSource(state))
-  );
+  const dimensionCaption = buildWorkImageDimensionSummary(record);
+  const canShowGenerated = Boolean(preview.src);
+  const previewState = canShowGenerated ? "loading" : fallback.fallbackState;
+  const previewHref = normalizeText(preview.fullSrc);
+  const previewTarget = "_blank";
+  const previewRel = "noopener";
   const frameHtml = `
     <div class="catalogueRecordPreview__frame" data-preview-state="${escapeHtml(previewState)}" data-preview-fallback="${escapeHtml(fallback.fallbackState)}">
       ${preview.src && canShowGenerated ? `<img class="catalogueRecordPreview__media" data-preview-image src="${escapeHtml(previewSrc)}" srcset="${escapeHtml(previewSrcset)}" sizes="180px" width="${escapeHtml(String(preview.width || 180))}" alt="${escapeHtml(caption)}">` : ""}
@@ -195,9 +145,6 @@ export function renderWorkCurrentPreview(state, options = {}) {
         <span>${escapeHtml(caption)}</span>
         ${dimensionCaption ? `<span class="catalogueRecordPreview__captionMeta">${escapeHtml(dimensionCaption)}</span>` : ""}
       </figcaption>
-      <div class="catalogueRecordPreview__actions">
-        ${mediaSummaryItem ? `<button type="button" class="studioUi__button studioUi__button--defaultWidth" data-media-refresh="work"${mediaRefreshDisabled ? " disabled" : ""}>${escapeHtml(text(state, options, "media_refresh_button", "Refresh media"))}</button>` : ""}
-      </div>
     </figure>
   `;
   bindPreviewImages(state.previewNode);
@@ -232,9 +179,8 @@ export function renderWorkReadiness(state, _options = {}) {
   }).join("");
 }
 
-function buildWorkDownloadHref(state, filename, options = {}) {
+function buildWorkDownloadHref(state, filename) {
   if (!normalizeText(filename)) return "";
-  if (!isCurrentWorkPublished(state, options)) return "";
   const runtime = state.config && state.config.app && state.config.app.runtime;
   const mediaConfig = runtime && runtime.media && typeof runtime.media === "object" ? runtime.media : {};
   const media = mediaConfig.media && typeof mediaConfig.media === "object" ? mediaConfig.media : mediaConfig;
@@ -417,9 +363,7 @@ export function updateWorkSummary(state, options = {}) {
     setSecondaryPresentationVisible(state, true);
     const selectedCount = state.bulkWorkIds.length;
     const selectedRecords = state.bulkWorkIds.map((workId) => state.bulkRecords.get(workId)).filter(Boolean);
-    const seriesIds = dedupeSeriesIds(
-      selectedRecords.flatMap((record) => parseSeriesIds(record && record.series_ids))
-    );
+    const seriesIds = Array.from(new Set(selectedRecords.map(record => normalizeText(record.series_id)).filter(Boolean)));
     state.metaNode.hidden = false;
     state.metaNode.textContent = selectedCount
       ? text(state, options, "bulk_meta", "{count} works selected", { count: String(selectedCount) })

@@ -1,65 +1,54 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v2"
+    "schema": "studio_catalogue_lookup_series_record_v3"
   },
   "series": {
     "series_id": "065",
     "title": "forms",
-    "series_type": "primary",
-    "status": "published",
-    "published_date": "2026-04-01",
     "year": 2011,
     "year_display": "2011",
-    "primary_work_id": "01199",
     "sort_fields": "work_id"
   },
+  "record_hash": "c504abb207251604bfa140f4381dc3a36425f3106be9765b86f19d69706c365f",
   "member_works": [
     {
       "work_id": "01196",
+      "record_hash": "c1c00ca88b65131c3e9beb4dff4a7f9e8fd95e388d1175c063a530786324ac00",
       "title": "forms",
       "year": 2011,
       "year_display": "2011",
-      "status": "published",
-      "series_ids": [
-        "065"
-      ],
+      "series_id": "065",
       "project_folder": "forms"
     },
     {
       "work_id": "01197",
+      "record_hash": "4ffb9c14cf58fe00c551624ca0727b265574f719a14021d4f6fed5ccb82e8848",
       "title": "form paths",
       "year": 2011,
       "year_display": "2011",
-      "status": "published",
-      "series_ids": [
-        "065"
-      ],
+      "series_id": "065",
       "project_folder": "forms"
     },
     {
       "work_id": "01198",
+      "record_hash": "d5656c663adae03d34761b576f0fb1ea0800051d11725afb3ed7b78e1ad6f456",
       "title": "4 form paths",
       "year": 2011,
       "year_display": "2011",
-      "status": "published",
-      "series_ids": [
-        "065"
-      ],
+      "series_id": "065",
       "project_folder": "forms"
     },
     {
       "work_id": "01199",
+      "record_hash": "17d2477c0afb1e7e762296c74bc9fb5b32613ddf2b97682948376b2dd03c3e0d",
       "title": "form particles",
       "year": 2011,
       "year_display": "2011",
-      "status": "published",
-      "series_ids": [
-        "065"
-      ],
+      "series_id": "065",
       "project_folder": "forms"
     }
   ],
-  "ordered_published_work_ids": [
+  "ordered_work_ids": [
     "01196",
     "01197",
     "01198",

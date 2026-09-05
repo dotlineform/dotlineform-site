@@ -1,351 +1,288 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v2"
+    "schema": "studio_catalogue_lookup_series_record_v3"
   },
   "series": {
     "series_id": "045",
     "title": "droplets",
-    "series_type": "primary",
-    "status": "published",
-    "published_date": "2026-04-01",
     "year": 2016,
     "year_display": "2014-16",
-    "primary_work_id": "01017",
     "sort_fields": "work_id"
   },
+  "record_hash": "c02841f8e2a9b3c25d9dd9e27ab9d964161d9a32d344a56e99a94fad3a867b7a",
   "member_works": [
     {
       "work_id": "01007",
+      "record_hash": "6bf83cc262d65b9d2bb105b154e924ef38427f9a0dbd5262e88b72a9533e7384",
       "title": "droplets (2014-04-21 - 18-43-56)",
       "year": 2014,
       "year_display": "2014",
-      "status": "published",
-      "series_ids": [
-        "045"
-      ],
+      "series_id": "045",
       "project_folder": "droplets"
     },
     {
       "work_id": "01008",
+      "record_hash": "433633a869d4ad93c118ce00c23a446bdd2f220efdc4c2807735511dca5db214",
       "title": "droplets (2014-04-29 - 10-46-33)",
       "year": 2014,
       "year_display": "2014",
-      "status": "published",
-      "series_ids": [
-        "045"
-      ],
+      "series_id": "045",
       "project_folder": "droplets"
     },
     {
       "work_id": "01009",
+      "record_hash": "af460c0af3c00d1544fa34967924f12026ff1678e49ac2fb72a3e6025ddda520",
       "title": "droplets (2014-06-14 - 21-11-55)",
       "year": 2014,
       "year_display": "2014",
-      "status": "published",
-      "series_ids": [
-        "045"
-      ],
+      "series_id": "045",
       "project_folder": "droplets"
     },
     {
       "work_id": "01010",
+      "record_hash": "70f02aeca834f0f4f80e9bab526822960c217814b4d6ae63f09655a628053153",
       "title": "droplets (2014-06-22 - 11-16-46)",
       "year": 2014,
       "year_display": "2014",
-      "status": "published",
-      "series_ids": [
-        "045"
-      ],
+      "series_id": "045",
       "project_folder": "droplets"
     },
     {
       "work_id": "01011",
+      "record_hash": "239c5a8a1a3d4e85f5b6680471780c870b52992e9afc0b4a0cab2a152fdee144",
       "title": "droplets (2014-06-22 - 13-57-44)",
       "year": 2014,
       "year_display": "2014",
-      "status": "published",
-      "series_ids": [
-        "045"
-      ],
+      "series_id": "045",
       "project_folder": "droplets"
     },
     {
       "work_id": "01012",
+      "record_hash": "e76cec40db233dcb94ea8e40434bcd1727dc3a6cde8f701d0c8ed0b8a850d118",
       "title": "droplets (2014-12-18 - 09-36-41)",
       "year": 2014,
       "year_display": "2014",
-      "status": "published",
-      "series_ids": [
-        "045"
-      ],
+      "series_id": "045",
       "project_folder": "droplets"
     },
     {
       "work_id": "01013",
+      "record_hash": "9a695433d8a3c788da9ef2e33885b94490aa8961564bae4b51e8d71730ad9adf",
       "title": "droplets (2015-02-10 - 14-57-00)",
       "year": 2015,
       "year_display": "2015",
-      "status": "published",
-      "series_ids": [
-        "045"
-      ],
+      "series_id": "045",
       "project_folder": "droplets"
     },
     {
       "work_id": "01014",
+      "record_hash": "600fa0391de0121fb1069d1d150421c88eda510958439b5a2a9c36d0e9ab1388",
       "title": "droplets (2015-06-08 - 10-25-53)",
       "year": 2015,
       "year_display": "2015",
-      "status": "published",
-      "series_ids": [
-        "045"
-      ],
+      "series_id": "045",
       "project_folder": "droplets"
     },
     {
       "work_id": "01015",
+      "record_hash": "af309ee31fd22e3006b1a409b94072a035561ba4e098de5a521a33c8478ae108",
       "title": "droplets (2015-06-11 - 20-28-37)",
       "year": 2015,
       "year_display": "2015",
-      "status": "published",
-      "series_ids": [
-        "045"
-      ],
+      "series_id": "045",
       "project_folder": "droplets"
     },
     {
       "work_id": "01016",
+      "record_hash": "f16ebfb50b3c27a542db95648310034556b67946fc4e1c77e5bb516bcb2449cd",
       "title": "droplets (2015-06-14 - 16-49-51)",
       "year": 2015,
       "year_display": "2015",
-      "status": "published",
-      "series_ids": [
-        "045"
-      ],
+      "series_id": "045",
       "project_folder": "droplets"
     },
     {
       "work_id": "01017",
+      "record_hash": "d8be788637a1b9a46a4b5f37b52e3166ae5a6536b30e7caac324a2df98f50cbe",
       "title": "droplets (2015-06-16 - 11-28-38)",
       "year": 2015,
       "year_display": "2015",
-      "status": "published",
-      "series_ids": [
-        "045"
-      ],
+      "series_id": "045",
       "project_folder": "droplets"
     },
     {
       "work_id": "01018",
+      "record_hash": "cf759104d57f19052356d5ec39485321fa6d729fca345cf4f88c43f987723f8b",
       "title": "droplets (2015-06-21 - 18-03-26)",
       "year": 2015,
       "year_display": "2015",
-      "status": "published",
-      "series_ids": [
-        "045"
-      ],
+      "series_id": "045",
       "project_folder": "droplets"
     },
     {
       "work_id": "01019",
+      "record_hash": "6d052d8fca77ed6bb1bed4e088c19c484bab2004ab03a221d881f0f9ab202baf",
       "title": "droplets (2015-06-25 - 15-54-18)",
       "year": 2015,
       "year_display": "2015",
-      "status": "published",
-      "series_ids": [
-        "045"
-      ],
+      "series_id": "045",
       "project_folder": "droplets"
     },
     {
       "work_id": "01020",
+      "record_hash": "71b1c541a97cc938d453bb3fb788e9daaeda48b8b8202ca19f5371cb4eb6f641",
       "title": "droplets (2015-07-05 - 13-04-54)",
       "year": 2015,
       "year_display": "2015",
-      "status": "published",
-      "series_ids": [
-        "045"
-      ],
+      "series_id": "045",
       "project_folder": "droplets"
     },
     {
       "work_id": "01021",
+      "record_hash": "de58270bccff4a62e2859b60e393d65a8a5a8935b5f6ee48cefe0f1147318832",
       "title": "droplets (2015-07-13 - 09-43-57)",
       "year": 2015,
       "year_display": "2015",
-      "status": "published",
-      "series_ids": [
-        "045"
-      ],
+      "series_id": "045",
       "project_folder": "droplets"
     },
     {
       "work_id": "01022",
+      "record_hash": "21dd20d4506b13d518431ff1a8423d3ad554c6c392b789bd665fd5cb81ad2e20",
       "title": "droplets (2015-07-13 - 09-44-01)",
       "year": 2015,
       "year_display": "2015",
-      "status": "published",
-      "series_ids": [
-        "045"
-      ],
+      "series_id": "045",
       "project_folder": "droplets"
     },
     {
       "work_id": "01023",
+      "record_hash": "dbaaa39f6cc372588d37b93b79b93c0b3dfd6c566764caf6496912665dd5f7b4",
       "title": "droplets (2015-07-13 - 09-44-08)",
       "year": 2015,
       "year_display": "2015",
-      "status": "published",
-      "series_ids": [
-        "045"
-      ],
+      "series_id": "045",
       "project_folder": "droplets"
     },
     {
       "work_id": "01024",
+      "record_hash": "0b81acbfd55c45e3b303620f40c2f78946f58577a7993dc62453034e2572fa6d",
       "title": "droplets (2015-07-13 - 10-41-46)",
       "year": 2015,
       "year_display": "2015",
-      "status": "published",
-      "series_ids": [
-        "045"
-      ],
+      "series_id": "045",
       "project_folder": "droplets"
     },
     {
       "work_id": "01025",
+      "record_hash": "3920411e4fc2d300c2c89269e2d8583dd1882eeac0e1213386ec1a19a7d21ece",
       "title": "droplets (2015-07-13 - 12-45-05)",
       "year": 2015,
       "year_display": "2015",
-      "status": "published",
-      "series_ids": [
-        "045"
-      ],
+      "series_id": "045",
       "project_folder": "droplets"
     },
     {
       "work_id": "01026",
+      "record_hash": "c986b007f2c2f0ead7e7f3de785ff41ff0af6571c3d2fb64668bc26e781981b0",
       "title": "droplets (2015-07-13 - 12-46-24)",
       "year": 2015,
       "year_display": "2015",
-      "status": "published",
-      "series_ids": [
-        "045"
-      ],
+      "series_id": "045",
       "project_folder": "droplets"
     },
     {
       "work_id": "01027",
+      "record_hash": "ba5c233fd916824fca303e107fd0b427b0cbe1dd18ed271b6f012673a9b5d064",
       "title": "droplets (2015-07-15 - 11-11-16)",
       "year": 2015,
       "year_display": "2015",
-      "status": "published",
-      "series_ids": [
-        "045"
-      ],
+      "series_id": "045",
       "project_folder": "droplets"
     },
     {
       "work_id": "01028",
+      "record_hash": "2317439f3f6d9687f3a973becf39c20b7b913f1e4f872ccbb95d427c4a082009",
       "title": "droplets (2015-07-20 - 13-14-34)",
       "year": 2015,
       "year_display": "2015",
-      "status": "published",
-      "series_ids": [
-        "045"
-      ],
+      "series_id": "045",
       "project_folder": "droplets"
     },
     {
       "work_id": "01029",
+      "record_hash": "88c02f9a7e54f2f467b8ec30cab37c53692249cc02f8909c4fc94f5589b94ddc",
       "title": "droplets (2015-07-20 - 17-42-37)",
       "year": 2015,
       "year_display": "2015",
-      "status": "published",
-      "series_ids": [
-        "045"
-      ],
+      "series_id": "045",
       "project_folder": "droplets"
     },
     {
       "work_id": "01030",
+      "record_hash": "e798530438220b70ec6d5f15c4c165ed312c82c889b39cbc28db3f0daaf92b2a",
       "title": "droplets (2015-07-20 - 17-42-49)",
       "year": 2015,
       "year_display": "2015",
-      "status": "published",
-      "series_ids": [
-        "045"
-      ],
+      "series_id": "045",
       "project_folder": "droplets"
     },
     {
       "work_id": "01031",
+      "record_hash": "22b6625b7ed556d0a1352c4dfd980785d986c336366b6606194ce39b673ed69d",
       "title": "droplets (2015-07-27 - 13-27-17)",
       "year": 2015,
       "year_display": "2015",
-      "status": "published",
-      "series_ids": [
-        "045"
-      ],
+      "series_id": "045",
       "project_folder": "droplets"
     },
     {
       "work_id": "01032",
+      "record_hash": "f3a2c740279b418e15bd561b1183f3f1cf20782a601233771d80c533731c937a",
       "title": "droplets (2015-08-03 - 09-31-45)",
       "year": 2015,
       "year_display": "2015",
-      "status": "published",
-      "series_ids": [
-        "045"
-      ],
+      "series_id": "045",
       "project_folder": "droplets"
     },
     {
       "work_id": "01033",
+      "record_hash": "d9219f843c05b44be426c36c8722147bea2c42e13c1b152d16f8d40509a0625c",
       "title": "droplets (2015-08-03 - 10-38-26)",
       "year": 2015,
       "year_display": "2015",
-      "status": "published",
-      "series_ids": [
-        "045"
-      ],
+      "series_id": "045",
       "project_folder": "droplets"
     },
     {
       "work_id": "01034",
+      "record_hash": "99822731c0e0098b4d228a962d9cd6cfa8d5cd9139951513392901fb56dcde2a",
       "title": "droplets (2016-04-02 - 19-17-11)",
       "year": 2016,
       "year_display": "2016",
-      "status": "published",
-      "series_ids": [
-        "045"
-      ],
+      "series_id": "045",
       "project_folder": "droplets"
     },
     {
       "work_id": "01035",
+      "record_hash": "9ed1a99edaba34cddd03e3d1da703d8204af528dd097df0e4aed0651c429ba6e",
       "title": "droplets (2016-05-23 - 17-59-55)",
       "year": 2016,
       "year_display": "2016",
-      "status": "published",
-      "series_ids": [
-        "045"
-      ],
+      "series_id": "045",
       "project_folder": "droplets"
     },
     {
       "work_id": "01036",
+      "record_hash": "f63c00d7e9cb5fe46c831be5a95138a8e862e9184a9714793d590b69e2e39ba6",
       "title": "droplets (2016-05-23 - 17-59-58)",
       "year": 2016,
       "year_display": "2016",
-      "status": "published",
-      "series_ids": [
-        "045"
-      ],
+      "series_id": "045",
       "project_folder": "droplets"
     }
   ],
-  "ordered_published_work_ids": [
+  "ordered_work_ids": [
     "01007",
     "01008",
     "01009",

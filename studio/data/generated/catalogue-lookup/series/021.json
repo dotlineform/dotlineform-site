@@ -1,76 +1,63 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v2"
+    "schema": "studio_catalogue_lookup_series_record_v3"
   },
   "series": {
     "series_id": "021",
     "title": "book dna",
-    "series_type": "primary",
-    "status": "published",
-    "published_date": "2026-04-01",
     "year": 2010,
     "year_display": "2010",
-    "primary_work_id": "00801",
     "sort_fields": "work_id"
   },
+  "record_hash": "e1d54e947ca3e75ae9ca2e726ba3c945f00ef99e16d73ec268963b4ef8066a61",
   "member_works": [
     {
       "work_id": "00801",
+      "record_hash": "23149b0d7ae59eb184a819098dfc377771653255d6c3287a5ef55bd38b2127f5",
       "title": "book dna",
       "year": 2010,
       "year_display": "2010",
-      "status": "published",
-      "series_ids": [
-        "021"
-      ],
+      "series_id": "021",
       "project_folder": "book dna"
     },
     {
       "work_id": "00802",
+      "record_hash": "a9b15d9ce9c4e9d638bff702baf1899793b23788974ec0dddc77a8d4f29655da",
       "title": "book atomic",
       "year": 2010,
       "year_display": "2010",
-      "status": "published",
-      "series_ids": [
-        "021"
-      ],
+      "series_id": "021",
       "project_folder": "book dna"
     },
     {
       "work_id": "00803",
+      "record_hash": "dae52d63494a91f2e79b1478b2e07e7805de82072d7bf1e3bcea22196a853255",
       "title": "book diagrams 1",
       "year": 2010,
       "year_display": "2010",
-      "status": "published",
-      "series_ids": [
-        "021"
-      ],
+      "series_id": "021",
       "project_folder": "book dna"
     },
     {
       "work_id": "00804",
+      "record_hash": "bc3b1275edb46d1f18566912a70287fae286b7d3904dac7c89cad3b4a9ef74b8",
       "title": "book diagrams 2",
       "year": 2010,
       "year_display": "2010",
-      "status": "published",
-      "series_ids": [
-        "021"
-      ],
+      "series_id": "021",
       "project_folder": "book dna"
     },
     {
       "work_id": "00805",
+      "record_hash": "392db6d179ca8aa844d3a9e27ce76380b3bc190f7e11609b5b6c46493df9300d",
       "title": "book dna sequence",
       "year": 2010,
       "year_display": "2010",
-      "status": "published",
-      "series_ids": [
-        "021"
-      ],
+      "series_id": "021",
       "project_folder": "book dna"
     }
   ],
-  "ordered_published_work_ids": [
+  "ordered_work_ids": [
     "00801",
     "00802",
     "00803",

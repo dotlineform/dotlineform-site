@@ -1,208 +1,171 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v2"
+    "schema": "studio_catalogue_lookup_series_record_v3"
   },
   "series": {
     "series_id": "034",
     "title": "curl",
-    "series_type": "primary",
-    "status": "published",
-    "published_date": "2026-04-01",
     "year": 2017,
     "year_display": "2017, 2022",
-    "primary_work_id": "00851",
     "sort_fields": "work_id"
   },
+  "record_hash": "c985b429c43f2bbfa252e076ca3d24fe0e127dce027210a78412fd6554415d6e",
   "member_works": [
     {
       "work_id": "00850",
+      "record_hash": "7f9f4ebeddc73f74d59bba06e0b27239dd2250a712a1b194c68adc5520f249c2",
       "title": "curl",
       "year": 2017,
       "year_display": "2017",
-      "status": "published",
-      "series_ids": [
-        "034"
-      ],
+      "series_id": "034",
       "project_folder": "curl"
     },
     {
       "work_id": "00851",
+      "record_hash": "6f721d5bf5c85aaac256d0a28f42026334e2df806678fe85bc095ea22bf62a39",
       "title": "curl",
       "year": 2017,
       "year_display": "2017",
-      "status": "published",
-      "series_ids": [
-        "034"
-      ],
+      "series_id": "034",
       "project_folder": "curl"
     },
     {
       "work_id": "00852",
+      "record_hash": "a39c63203da9efebba44280dbe2888d5acc6910e1e7c566530fbfb92f7b0e3b8",
       "title": "curl",
       "year": 2017,
       "year_display": "2017",
-      "status": "published",
-      "series_ids": [
-        "034"
-      ],
+      "series_id": "034",
       "project_folder": "curl"
     },
     {
       "work_id": "00853",
+      "record_hash": "e25f9828a7fe983357d9309e9debbe09d3045859aec25e857f61c90f02e14fdf",
       "title": "curl",
       "year": 2017,
       "year_display": "2017",
-      "status": "published",
-      "series_ids": [
-        "034"
-      ],
+      "series_id": "034",
       "project_folder": "curl"
     },
     {
       "work_id": "00854",
+      "record_hash": "0cf0ecacf2700277041adf78fa39dc7fda00981aece925f408b4a0ee804a0903",
       "title": "curl",
       "year": 2017,
       "year_display": "2017",
-      "status": "published",
-      "series_ids": [
-        "034"
-      ],
+      "series_id": "034",
       "project_folder": "curl"
     },
     {
       "work_id": "00855",
+      "record_hash": "5930c4ca4f1ac3872a0b92d1f6c8df8f7dc35bcdce20a323682a186e2ac758b6",
       "title": "curl",
       "year": 2017,
       "year_display": "2017",
-      "status": "published",
-      "series_ids": [
-        "034"
-      ],
+      "series_id": "034",
       "project_folder": "curl"
     },
     {
       "work_id": "00856",
+      "record_hash": "5758b3119eda66455402d1c0f52ae49672dd8a88a0ce03b69785a2fb2099d8e9",
       "title": "curl",
       "year": 2017,
       "year_display": "2017",
-      "status": "published",
-      "series_ids": [
-        "034"
-      ],
+      "series_id": "034",
       "project_folder": "curl"
     },
     {
       "work_id": "00857",
+      "record_hash": "3d0846ecd71c17cb2b568d02d80aea3a09d44393478766cccb7a030e5893e695",
       "title": "curl",
       "year": 2017,
       "year_display": "2017",
-      "status": "published",
-      "series_ids": [
-        "034"
-      ],
+      "series_id": "034",
       "project_folder": "curl"
     },
     {
       "work_id": "00858",
+      "record_hash": "a1f0c7c99d798c6672a960ac1870688148da0fd9a0e6b7f6feaba94e27fd0a9b",
       "title": "curl version",
       "year": 2022,
       "year_display": "2022",
-      "status": "published",
-      "series_ids": [
-        "034"
-      ],
+      "series_id": "034",
       "project_folder": "curl"
     },
     {
       "work_id": "00859",
+      "record_hash": "a24cff3ab9153d2197fc7e6e1d1d1a50078aa158bfd797fc88bb3301df8919e0",
       "title": "curl version",
       "year": 2022,
       "year_display": "2022",
-      "status": "published",
-      "series_ids": [
-        "034"
-      ],
+      "series_id": "034",
       "project_folder": "curl"
     },
     {
       "work_id": "00860",
+      "record_hash": "58f5a51155744b57175dd14a06e8005f8783dc6c799d8009e53ed6030f38b07b",
       "title": "curl version",
       "year": 2022,
       "year_display": "2022",
-      "status": "published",
-      "series_ids": [
-        "034"
-      ],
+      "series_id": "034",
       "project_folder": "curl"
     },
     {
       "work_id": "00861",
+      "record_hash": "d0fbc40f85de77c206a599250454b262c3de55d0619d196acc77adc70a665bb0",
       "title": "curl version",
       "year": 2022,
       "year_display": "2022",
-      "status": "published",
-      "series_ids": [
-        "034"
-      ],
+      "series_id": "034",
       "project_folder": "curl"
     },
     {
       "work_id": "00862",
+      "record_hash": "907b20f9391ae7fd46c72ebf248b766afd09d821d616c46af50e061e556105a7",
       "title": "curl version",
       "year": 2022,
       "year_display": "2022",
-      "status": "published",
-      "series_ids": [
-        "034"
-      ],
+      "series_id": "034",
       "project_folder": "curl"
     },
     {
       "work_id": "00863",
+      "record_hash": "0bb80edf628b6992033314b9f40511f4a93930d9ab30f333c8f4db706d6c2736",
       "title": "curl version",
       "year": 2022,
       "year_display": "2022",
-      "status": "published",
-      "series_ids": [
-        "034"
-      ],
+      "series_id": "034",
       "project_folder": "curl"
     },
     {
       "work_id": "00864",
+      "record_hash": "36e1d8a669a9bbf739521a2c035250647e81725baab45055f27391b561aa3f6c",
       "title": "curl version",
       "year": 2022,
       "year_display": "2022",
-      "status": "published",
-      "series_ids": [
-        "034"
-      ],
+      "series_id": "034",
       "project_folder": "curl"
     },
     {
       "work_id": "00865",
+      "record_hash": "23118d6ecde242de5057cc08d2b46746be8b5c56079c8a38b1d1ab63c4c8a9ee",
       "title": "curl version",
       "year": 2022,
       "year_display": "2022",
-      "status": "published",
-      "series_ids": [
-        "034"
-      ],
+      "series_id": "034",
       "project_folder": "curl"
     },
     {
       "work_id": "00866",
+      "record_hash": "21a2ee14b9ef0f31b68227bddd8e8f0e3e955b83e10091ec49e37b46e9170a25",
       "title": "curl version",
       "year": 2022,
       "year_display": "2022",
-      "status": "published",
-      "series_ids": [
-        "034"
-      ],
+      "series_id": "034",
       "project_folder": "curl"
     }
   ],
-  "ordered_published_work_ids": [
+  "ordered_work_ids": [
     "00850",
     "00851",
     "00852",

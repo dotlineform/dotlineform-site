@@ -1,65 +1,54 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v2"
+    "schema": "studio_catalogue_lookup_series_record_v3"
   },
   "series": {
     "series_id": "122",
     "title": "room",
-    "series_type": "primary",
-    "status": "published",
-    "published_date": "2026-04-01",
     "year": 2007,
     "year_display": "2007-08",
-    "primary_work_id": "01629",
     "sort_fields": "work_id"
   },
+  "record_hash": "752d456bf8aa18585e677e9861aca2be2bc887503e1fbf819632000359fd435d",
   "member_works": [
     {
       "work_id": "01629",
+      "record_hash": "e2492f1564b060a3b92af44c86810e01c1553b41e21853afe47a6f334163dd78",
       "title": "room 1",
       "year": 2007,
       "year_display": "2007",
-      "status": "published",
-      "series_ids": [
-        "122"
-      ],
+      "series_id": "122",
       "project_folder": "room"
     },
     {
       "work_id": "01630",
+      "record_hash": "5c30dcedd6d0079c117103d983dbebe8bd72d3208bcdd5d92ad7699210a25e0d",
       "title": "room 2",
       "year": 2007,
       "year_display": "2007",
-      "status": "published",
-      "series_ids": [
-        "122"
-      ],
+      "series_id": "122",
       "project_folder": "room"
     },
     {
       "work_id": "01631",
+      "record_hash": "5f292f3ba42d3c9dcc07679a7b80246c11fe2c6aff3d263193d654b11b478790",
       "title": "room 3",
       "year": 2008,
       "year_display": "2008",
-      "status": "published",
-      "series_ids": [
-        "122"
-      ],
+      "series_id": "122",
       "project_folder": "room"
     },
     {
       "work_id": "01632",
+      "record_hash": "590d4583c70d1092ab60003a2103957a55f9cb4f8078e641297a1c9566418c07",
       "title": "room 4",
       "year": 2008,
       "year_display": "2008",
-      "status": "published",
-      "series_ids": [
-        "122"
-      ],
+      "series_id": "122",
       "project_folder": "room"
     }
   ],
-  "ordered_published_work_ids": [
+  "ordered_work_ids": [
     "01629",
     "01630",
     "01631",

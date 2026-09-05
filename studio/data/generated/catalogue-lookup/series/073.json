@@ -1,1066 +1,873 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v2"
+    "schema": "studio_catalogue_lookup_series_record_v3"
   },
   "series": {
     "series_id": "073",
     "title": "grid fields",
-    "series_type": "primary",
-    "status": "published",
-    "published_date": "2026-04-01",
     "year": 2018,
     "year_display": "2018",
-    "primary_work_id": "01264",
     "sort_fields": "work_id"
   },
+  "record_hash": "50bf05b429d90408b9eb417e67e7da2f733d3e607f1a29688c9c712da36372ff",
   "member_works": [
     {
       "work_id": "01264",
+      "record_hash": "3fea064a6abe30874b88841cc298269949675f4503415f2fb925922a33091d02",
       "title": "grid field 1",
       "year": 2018,
       "year_display": "2018",
-      "status": "published",
-      "series_ids": [
-        "073"
-      ],
+      "series_id": "073",
       "project_folder": "grid fields"
     },
     {
       "work_id": "01265",
+      "record_hash": "6a7f7288ba70167cbcdc5e1abb911c46e9fb5eee3feb8e5a48005a19580cc2b3",
       "title": "grid field 2",
       "year": 2018,
       "year_display": "2018",
-      "status": "published",
-      "series_ids": [
-        "073"
-      ],
+      "series_id": "073",
       "project_folder": "grid fields"
     },
     {
       "work_id": "01266",
+      "record_hash": "cc622ac58027d2b103d3224736e12fb2e7f7d34e8fefccaaa43e75537b1c93e0",
       "title": "grid field 3",
       "year": 2018,
       "year_display": "2018",
-      "status": "published",
-      "series_ids": [
-        "073"
-      ],
+      "series_id": "073",
       "project_folder": "grid fields"
     },
     {
       "work_id": "01267",
+      "record_hash": "18d885787bb710edb429baa00badf45b4d7e9185dfa3f49becce36d1d82c9b55",
       "title": "grid field 4",
       "year": 2018,
       "year_display": "2018",
-      "status": "published",
-      "series_ids": [
-        "073"
-      ],
+      "series_id": "073",
       "project_folder": "grid fields"
     },
     {
       "work_id": "01268",
+      "record_hash": "e73bf587da7e0b89b4e2cd9c1c9f6e501ce1827bd022478e64eea9b119c0f327",
       "title": "grid field 5",
       "year": 2018,
       "year_display": "2018",
-      "status": "published",
-      "series_ids": [
-        "073"
-      ],
+      "series_id": "073",
       "project_folder": "grid fields"
     },
     {
       "work_id": "01269",
+      "record_hash": "1dfccb5c69cf1dc40d95bbda46ed49bae4b74d5f2f73b2e7ae4bb0fbc629cef4",
       "title": "grid field 6",
       "year": 2018,
       "year_display": "2018",
-      "status": "published",
-      "series_ids": [
-        "073"
-      ],
+      "series_id": "073",
       "project_folder": "grid fields"
     },
     {
       "work_id": "01270",
+      "record_hash": "85cc8fe16964046b3e27a367e3b070d13353f12ae182ae5daa9d781b4154c49a",
       "title": "grid field 7",
       "year": 2018,
       "year_display": "2018",
-      "status": "published",
-      "series_ids": [
-        "073"
-      ],
+      "series_id": "073",
       "project_folder": "grid fields"
     },
     {
       "work_id": "01271",
+      "record_hash": "c041065d9c76438357b178b61f1c0524fed791079944d6a3d3c865b2754b0820",
       "title": "grid field 8",
       "year": 2018,
       "year_display": "2018",
-      "status": "published",
-      "series_ids": [
-        "073"
-      ],
+      "series_id": "073",
       "project_folder": "grid fields"
     },
     {
       "work_id": "01272",
+      "record_hash": "21cd70c625986050d7abf7a0929817f794593227a0318003d35b1506f0e87f34",
       "title": "grid field 9",
       "year": 2018,
       "year_display": "2018",
-      "status": "published",
-      "series_ids": [
-        "073"
-      ],
+      "series_id": "073",
       "project_folder": "grid fields"
     },
     {
       "work_id": "01273",
+      "record_hash": "ff31c7180014ce6512a51418bc36685e1fce9925728aab73e44aaaa8f408e52d",
       "title": "grid field 10",
       "year": 2018,
       "year_display": "2018",
-      "status": "published",
-      "series_ids": [
-        "073"
-      ],
+      "series_id": "073",
       "project_folder": "grid fields"
     },
     {
       "work_id": "01274",
+      "record_hash": "66c39bd8991d0e7bda5b3456734832ad497f9d6382e0738c3b3f1caab317b0a0",
       "title": "grid field 11",
       "year": 2018,
       "year_display": "2018",
-      "status": "published",
-      "series_ids": [
-        "073"
-      ],
+      "series_id": "073",
       "project_folder": "grid fields"
     },
     {
       "work_id": "01275",
+      "record_hash": "9c0db087f16545a6d906a9bf3fc6af93baa364643be4ddb8c87694a3de76a2e4",
       "title": "grid field 12",
       "year": 2018,
       "year_display": "2018",
-      "status": "published",
-      "series_ids": [
-        "073"
-      ],
+      "series_id": "073",
       "project_folder": "grid fields"
     },
     {
       "work_id": "01276",
+      "record_hash": "a2a3a9e457b9f364e3bc1ac4021b53df1c87ec1ae374c181a848cff5fc22edff",
       "title": "grid field 13",
       "year": 2018,
       "year_display": "2018",
-      "status": "published",
-      "series_ids": [
-        "073"
-      ],
+      "series_id": "073",
       "project_folder": "grid fields"
     },
     {
       "work_id": "01277",
+      "record_hash": "28711abc552f1f79773ab00eb7d3b0d15866633a8bc342e953e171d0917b6b2b",
       "title": "grid field 14",
       "year": 2018,
       "year_display": "2018",
-      "status": "published",
-      "series_ids": [
-        "073"
-      ],
+      "series_id": "073",
       "project_folder": "grid fields"
     },
     {
       "work_id": "01278",
+      "record_hash": "225bb09dbe92f533f9fdbb26bf86560ff077241cc6ea5270f05589310f92ca37",
       "title": "grid field 15",
       "year": 2018,
       "year_display": "2018",
-      "status": "published",
-      "series_ids": [
-        "073"
-      ],
+      "series_id": "073",
       "project_folder": "grid fields"
     },
     {
       "work_id": "01279",
+      "record_hash": "286f783d7980197352130e221a306bbe75cb297dc1aa819c72d0f7e292beb42a",
       "title": "grid field 16",
       "year": 2018,
       "year_display": "2018",
-      "status": "published",
-      "series_ids": [
-        "073"
-      ],
+      "series_id": "073",
       "project_folder": "grid fields"
     },
     {
       "work_id": "01280",
+      "record_hash": "a5abb2cc8e800a30d2bed4c8e7b88755656401b9e46c3a4c47468f6dffec16fa",
       "title": "grid field 17",
       "year": 2018,
       "year_display": "2018",
-      "status": "published",
-      "series_ids": [
-        "073"
-      ],
+      "series_id": "073",
       "project_folder": "grid fields"
     },
     {
       "work_id": "01281",
+      "record_hash": "109dbb1929f0bfcb9d5b87a729740052bf4fb287a2f25d2c44c3d10e6d8aa3e9",
       "title": "grid field 18",
       "year": 2018,
       "year_display": "2018",
-      "status": "published",
-      "series_ids": [
-        "073"
-      ],
+      "series_id": "073",
       "project_folder": "grid fields"
     },
     {
       "work_id": "01282",
+      "record_hash": "066c17d316334beee034db217814dfc408f5211a87fd8ef80a34df2487e72a5f",
       "title": "grid field 19",
       "year": 2018,
       "year_display": "2018",
-      "status": "published",
-      "series_ids": [
-        "073"
-      ],
+      "series_id": "073",
       "project_folder": "grid fields"
     },
     {
       "work_id": "01283",
+      "record_hash": "3668fca18dd5cfbb599ba71ebc64ad6726af8a82c5e07e31f1d7dfdacf6f17eb",
       "title": "grid field 20",
       "year": 2018,
       "year_display": "2018",
-      "status": "published",
-      "series_ids": [
-        "073"
-      ],
+      "series_id": "073",
       "project_folder": "grid fields"
     },
     {
       "work_id": "01284",
+      "record_hash": "977561b9c496816ca1877f55d6a1fbb9ab1bcb2c7c7e0b1da566a69cd5e4f436",
       "title": "grid field 21",
       "year": 2018,
       "year_display": "2018",
-      "status": "published",
-      "series_ids": [
-        "073"
-      ],
+      "series_id": "073",
       "project_folder": "grid fields"
     },
     {
       "work_id": "01285",
+      "record_hash": "0f1fe4e6264070d77585d2635641710b3a8ee93ab84e68d93623edffc2cdacdf",
       "title": "grid field 22",
       "year": 2018,
       "year_display": "2018",
-      "status": "published",
-      "series_ids": [
-        "073"
-      ],
+      "series_id": "073",
       "project_folder": "grid fields"
     },
     {
       "work_id": "01286",
+      "record_hash": "1745cf1796598fc6ede701321ae03ee76459163520186bf728329295047085f1",
       "title": "grid field 23",
       "year": 2018,
       "year_display": "2018",
-      "status": "published",
-      "series_ids": [
-        "073"
-      ],
+      "series_id": "073",
       "project_folder": "grid fields"
     },
     {
       "work_id": "01287",
+      "record_hash": "67ceb78687baefbe1d89672f2b7e6599c5fcddadabd8bc722db618d239830249",
       "title": "grid field 24",
       "year": 2018,
       "year_display": "2018",
-      "status": "published",
-      "series_ids": [
-        "073"
-      ],
+      "series_id": "073",
       "project_folder": "grid fields"
     },
     {
       "work_id": "01288",
+      "record_hash": "a79954c99596418c36868c458c629d984681287afb14503f6db264a7692b048d",
       "title": "grid field 25",
       "year": 2018,
       "year_display": "2018",
-      "status": "published",
-      "series_ids": [
-        "073"
-      ],
+      "series_id": "073",
       "project_folder": "grid fields"
     },
     {
       "work_id": "01289",
+      "record_hash": "2350c2e56119b2432774363a312f43952133040ac349eca531fa565ad1c12f08",
       "title": "grid field 26",
       "year": 2018,
       "year_display": "2018",
-      "status": "published",
-      "series_ids": [
-        "073"
-      ],
+      "series_id": "073",
       "project_folder": "grid fields"
     },
     {
       "work_id": "01290",
+      "record_hash": "e0ac12610114958a83c6ed903249e98da3be089fa0fe23a073110a8be4af07d9",
       "title": "grid field 27",
       "year": 2018,
       "year_display": "2018",
-      "status": "published",
-      "series_ids": [
-        "073"
-      ],
+      "series_id": "073",
       "project_folder": "grid fields"
     },
     {
       "work_id": "01291",
+      "record_hash": "cb7fae29f5cf8b4e9be98048666d50e0fb3fefe229b4c5c069932c7db3420c3a",
       "title": "grid field 28",
       "year": 2018,
       "year_display": "2018",
-      "status": "published",
-      "series_ids": [
-        "073"
-      ],
+      "series_id": "073",
       "project_folder": "grid fields"
     },
     {
       "work_id": "01292",
+      "record_hash": "9170e875550b4ec9a8a48f63ba16c3e69a817f1c21b3d1d2a1166643fdcf3944",
       "title": "grid field 29",
       "year": 2018,
       "year_display": "2018",
-      "status": "published",
-      "series_ids": [
-        "073"
-      ],
+      "series_id": "073",
       "project_folder": "grid fields"
     },
     {
       "work_id": "01293",
+      "record_hash": "b081b556b89d416138655ae9cee0e41e8820daff4137af4774b4ffd3b0e69cae",
       "title": "grid field 30",
       "year": 2018,
       "year_display": "2018",
-      "status": "published",
-      "series_ids": [
-        "073"
-      ],
+      "series_id": "073",
       "project_folder": "grid fields"
     },
     {
       "work_id": "01294",
+      "record_hash": "99def4e3b595be9da4e6d35521b7a2b2daae79234a302819f429f081972bc363",
       "title": "grid field 31",
       "year": 2018,
       "year_display": "2018",
-      "status": "published",
-      "series_ids": [
-        "073"
-      ],
+      "series_id": "073",
       "project_folder": "grid fields"
     },
     {
       "work_id": "01295",
+      "record_hash": "0252bc200bd7f94caca2bccd5fb5e6976c29563328c2ae19acc4d10f48790abe",
       "title": "grid field 32",
       "year": 2018,
       "year_display": "2018",
-      "status": "published",
-      "series_ids": [
-        "073"
-      ],
+      "series_id": "073",
       "project_folder": "grid fields"
     },
     {
       "work_id": "01296",
+      "record_hash": "35b6898ae5f52bfd217b7669f401458170f36ad551f5932a1e06af6db3eec7d6",
       "title": "grid field 33",
       "year": 2018,
       "year_display": "2018",
-      "status": "published",
-      "series_ids": [
-        "073"
-      ],
+      "series_id": "073",
       "project_folder": "grid fields"
     },
     {
       "work_id": "01297",
+      "record_hash": "f2ed2d2798e138b875b8920f99d37241aa73067b3ebf3da02428a3776a8edb0b",
       "title": "grid field 34",
       "year": 2018,
       "year_display": "2018",
-      "status": "published",
-      "series_ids": [
-        "073"
-      ],
+      "series_id": "073",
       "project_folder": "grid fields"
     },
     {
       "work_id": "01298",
+      "record_hash": "599082e3bedab101700bad89e3053e7a98eb911961736ccd0defc7ef3a224033",
       "title": "grid field 35",
       "year": 2018,
       "year_display": "2018",
-      "status": "published",
-      "series_ids": [
-        "073"
-      ],
+      "series_id": "073",
       "project_folder": "grid fields"
     },
     {
       "work_id": "01299",
+      "record_hash": "7dda74c9c2802cb9be3498486153ee99d2f2ea31b9ac36d99ba9852b287f3622",
       "title": "grid field 36",
       "year": 2018,
       "year_display": "2018",
-      "status": "published",
-      "series_ids": [
-        "073"
-      ],
+      "series_id": "073",
       "project_folder": "grid fields"
     },
     {
       "work_id": "01300",
+      "record_hash": "b210129acc9de0db5047d3633c5eb55ab218da7d55df25c1dbed114ea07ea3c2",
       "title": "grid field 37",
       "year": 2018,
       "year_display": "2018",
-      "status": "published",
-      "series_ids": [
-        "073"
-      ],
+      "series_id": "073",
       "project_folder": "grid fields"
     },
     {
       "work_id": "01301",
+      "record_hash": "27565329d900803d4ec1cc3ceaf08fe310f8554c3e5a03b6e145918e1790dd89",
       "title": "grid field 38",
       "year": 2018,
       "year_display": "2018",
-      "status": "published",
-      "series_ids": [
-        "073"
-      ],
+      "series_id": "073",
       "project_folder": "grid fields"
     },
     {
       "work_id": "01302",
+      "record_hash": "2c33b2a14dd0fd42f77700329021eb3524d787e6b45bb55b0962f3079fa471d6",
       "title": "grid field 39",
       "year": 2018,
       "year_display": "2018",
-      "status": "published",
-      "series_ids": [
-        "073"
-      ],
+      "series_id": "073",
       "project_folder": "grid fields"
     },
     {
       "work_id": "01303",
+      "record_hash": "d2ac860d866a334cf193cf2bd1bffb80d57e2aeb3a44fe3202491bd76f643614",
       "title": "grid field 40",
       "year": 2018,
       "year_display": "2018",
-      "status": "published",
-      "series_ids": [
-        "073"
-      ],
+      "series_id": "073",
       "project_folder": "grid fields"
     },
     {
       "work_id": "01304",
+      "record_hash": "ac91b776e6556b71c78cc43dd22df123fc51c8cf2e2ac31b9219e48569ec5702",
       "title": "grid field 41",
       "year": 2018,
       "year_display": "2018",
-      "status": "published",
-      "series_ids": [
-        "073"
-      ],
+      "series_id": "073",
       "project_folder": "grid fields"
     },
     {
       "work_id": "01305",
+      "record_hash": "d01a149fc54e3002c75d469c9704f5cf8cb13a0f42a5aebffe450469e5a35e09",
       "title": "grid field 42",
       "year": 2018,
       "year_display": "2018",
-      "status": "published",
-      "series_ids": [
-        "073"
-      ],
+      "series_id": "073",
       "project_folder": "grid fields"
     },
     {
       "work_id": "01306",
+      "record_hash": "7c17ac45abe0b44fbac21646aa5761004aac23b2bdbc3b07318d6c8b7d3e8fec",
       "title": "grid field 43",
       "year": 2018,
       "year_display": "2018",
-      "status": "published",
-      "series_ids": [
-        "073"
-      ],
+      "series_id": "073",
       "project_folder": "grid fields"
     },
     {
       "work_id": "01307",
+      "record_hash": "e3703fb817a603ec74818d6d34eb42eab5a5f49d34934e6a45fe62829943d82e",
       "title": "grid field 44",
       "year": 2018,
       "year_display": "2018",
-      "status": "published",
-      "series_ids": [
-        "073"
-      ],
+      "series_id": "073",
       "project_folder": "grid fields"
     },
     {
       "work_id": "01308",
+      "record_hash": "9e0adb9c110364983ebb98945cd50ffb3e5c8b628533e47238535d75d29dffda",
       "title": "grid field 45",
       "year": 2018,
       "year_display": "2018",
-      "status": "published",
-      "series_ids": [
-        "073"
-      ],
+      "series_id": "073",
       "project_folder": "grid fields"
     },
     {
       "work_id": "01309",
+      "record_hash": "6902a5e3fa6a240b781456d63cfd98391f7bb494f7b5f547c8d98a0a284a748a",
       "title": "grid field 46",
       "year": 2018,
       "year_display": "2018",
-      "status": "published",
-      "series_ids": [
-        "073"
-      ],
+      "series_id": "073",
       "project_folder": "grid fields"
     },
     {
       "work_id": "01310",
+      "record_hash": "9d26d5cbfcfd9634f26b428a19416db4b4e5e65d7dc9ca86bb42d6f3ae7a59df",
       "title": "grid field 47",
       "year": 2018,
       "year_display": "2018",
-      "status": "published",
-      "series_ids": [
-        "073"
-      ],
+      "series_id": "073",
       "project_folder": "grid fields"
     },
     {
       "work_id": "01311",
+      "record_hash": "dd6a48b21579457a3b430b17531ca54c360b97b081b102a0116d51b7d5e9ee85",
       "title": "grid field 48",
       "year": 2018,
       "year_display": "2018",
-      "status": "published",
-      "series_ids": [
-        "073"
-      ],
+      "series_id": "073",
       "project_folder": "grid fields"
     },
     {
       "work_id": "01312",
+      "record_hash": "181d7071322942b05e5360149948a03781a02e509101027c100a2f4581700a2e",
       "title": "grid field 49",
       "year": 2018,
       "year_display": "2018",
-      "status": "published",
-      "series_ids": [
-        "073"
-      ],
+      "series_id": "073",
       "project_folder": "grid fields"
     },
     {
       "work_id": "01313",
+      "record_hash": "2234a98c4e46410ed0db719e7cc13e762cd9d661a72edadd5c70f443d40202f8",
       "title": "grid field 50",
       "year": 2018,
       "year_display": "2018",
-      "status": "published",
-      "series_ids": [
-        "073"
-      ],
+      "series_id": "073",
       "project_folder": "grid fields"
     },
     {
       "work_id": "01314",
+      "record_hash": "14c4e73cdc172dec19d3d20167ec92a1973da557c4bf840b15599ac16f29ce4d",
       "title": "grid field 51",
       "year": 2018,
       "year_display": "2018",
-      "status": "published",
-      "series_ids": [
-        "073"
-      ],
+      "series_id": "073",
       "project_folder": "grid fields"
     },
     {
       "work_id": "01315",
+      "record_hash": "9ad5e4a544af6f43af1207a7faf8483a775442866da8ccb8a1f1d72ae1a57866",
       "title": "grid field 52",
       "year": 2018,
       "year_display": "2018",
-      "status": "published",
-      "series_ids": [
-        "073"
-      ],
+      "series_id": "073",
       "project_folder": "grid fields"
     },
     {
       "work_id": "01316",
+      "record_hash": "3e8bafff2e0b75c8231b0522f549504e00f3e62e7b8d5beeabbdd3884c9a2438",
       "title": "grid field 53",
       "year": 2018,
       "year_display": "2018",
-      "status": "published",
-      "series_ids": [
-        "073"
-      ],
+      "series_id": "073",
       "project_folder": "grid fields"
     },
     {
       "work_id": "01317",
+      "record_hash": "7c3fbec9b4310782e3921a40c20ee326fcd62d12654a8770d99b806dd2f4ecdd",
       "title": "grid field 54",
       "year": 2018,
       "year_display": "2018",
-      "status": "published",
-      "series_ids": [
-        "073"
-      ],
+      "series_id": "073",
       "project_folder": "grid fields"
     },
     {
       "work_id": "01318",
+      "record_hash": "b1a4b61d8cd3112b61da9c60eab3ba3ae19d225d1cdde9c930847b6db69d1e5b",
       "title": "grid field 55",
       "year": 2018,
       "year_display": "2018",
-      "status": "published",
-      "series_ids": [
-        "073"
-      ],
+      "series_id": "073",
       "project_folder": "grid fields"
     },
     {
       "work_id": "01319",
+      "record_hash": "72a742cca53224b62d5048cb9351bf8f5bf5a86e9d0ed21ef75931f1aad1cf61",
       "title": "grid field 56",
       "year": 2018,
       "year_display": "2018",
-      "status": "published",
-      "series_ids": [
-        "073"
-      ],
+      "series_id": "073",
       "project_folder": "grid fields"
     },
     {
       "work_id": "01320",
+      "record_hash": "e18bec86f495cca66412430dd60556311801671496d3558fabca215fd90dd767",
       "title": "grid field 57",
       "year": 2018,
       "year_display": "2018",
-      "status": "published",
-      "series_ids": [
-        "073"
-      ],
+      "series_id": "073",
       "project_folder": "grid fields"
     },
     {
       "work_id": "01321",
+      "record_hash": "3a5e59d9de505710883c3fe0d8b39c443b361558a5445aec451848a9e79b9159",
       "title": "grid field 58",
       "year": 2018,
       "year_display": "2018",
-      "status": "published",
-      "series_ids": [
-        "073"
-      ],
+      "series_id": "073",
       "project_folder": "grid fields"
     },
     {
       "work_id": "01322",
+      "record_hash": "143e7c3e3c5068e0304330cb4a9bf50a1e28bf6323d4132614208dd0bfefa766",
       "title": "grid field 59",
       "year": 2018,
       "year_display": "2018",
-      "status": "published",
-      "series_ids": [
-        "073"
-      ],
+      "series_id": "073",
       "project_folder": "grid fields"
     },
     {
       "work_id": "01323",
+      "record_hash": "2a723db3a8861bccbc6f38d8ad9924e8026a410cbe2365463be85233d05c8d96",
       "title": "grid field 60",
       "year": 2018,
       "year_display": "2018",
-      "status": "published",
-      "series_ids": [
-        "073"
-      ],
+      "series_id": "073",
       "project_folder": "grid fields"
     },
     {
       "work_id": "01324",
+      "record_hash": "aef70f547bc0fe1abe1a3b436e8adda158711e5dade3e94ff19a7dbeaeb44fc5",
       "title": "grid field 61",
       "year": 2018,
       "year_display": "2018",
-      "status": "published",
-      "series_ids": [
-        "073"
-      ],
+      "series_id": "073",
       "project_folder": "grid fields"
     },
     {
       "work_id": "01325",
+      "record_hash": "cfd446285401f5b5c6c3de9f22bbaf3bb734fa65587f97def61a61df45d07f24",
       "title": "grid field 62",
       "year": 2018,
       "year_display": "2018",
-      "status": "published",
-      "series_ids": [
-        "073"
-      ],
+      "series_id": "073",
       "project_folder": "grid fields"
     },
     {
       "work_id": "01326",
+      "record_hash": "96b538278e1a238616600865b0813c5cfc5757ef8a47f16d1762ec08de29d5b9",
       "title": "grid field 63",
       "year": 2018,
       "year_display": "2018",
-      "status": "published",
-      "series_ids": [
-        "073"
-      ],
+      "series_id": "073",
       "project_folder": "grid fields"
     },
     {
       "work_id": "01327",
+      "record_hash": "9f6eb0c96425a833ccb5615832cfabc8f1fc8bcacd99eec8d9028f918cf39746",
       "title": "grid field 64",
       "year": 2018,
       "year_display": "2018",
-      "status": "published",
-      "series_ids": [
-        "073"
-      ],
+      "series_id": "073",
       "project_folder": "grid fields"
     },
     {
       "work_id": "01328",
+      "record_hash": "b4dfacc911387aa77ddb8508c46b0b5ea94b29d3a0d0e8df1121e9fdd747f309",
       "title": "grid field 65",
       "year": 2018,
       "year_display": "2018",
-      "status": "published",
-      "series_ids": [
-        "073"
-      ],
+      "series_id": "073",
       "project_folder": "grid fields"
     },
     {
       "work_id": "01329",
+      "record_hash": "c0ce4bfa2b858fc9aa32312f5eb2fad5b92cc9403ad6a89eae4eb99c73f27130",
       "title": "grid field 66",
       "year": 2018,
       "year_display": "2018",
-      "status": "published",
-      "series_ids": [
-        "073"
-      ],
+      "series_id": "073",
       "project_folder": "grid fields"
     },
     {
       "work_id": "01330",
+      "record_hash": "5422975ae3a49a11741eeead55c8801061f2721efebf582cd0bbc7d2ed6ace29",
       "title": "grid field 67",
       "year": 2018,
       "year_display": "2018",
-      "status": "published",
-      "series_ids": [
-        "073"
-      ],
+      "series_id": "073",
       "project_folder": "grid fields"
     },
     {
       "work_id": "01331",
+      "record_hash": "232bb5aa98c4e24b9b951bcc0848458769676a52bfeb25ea56c43ce96860ae30",
       "title": "grid field 68",
       "year": 2018,
       "year_display": "2018",
-      "status": "published",
-      "series_ids": [
-        "073"
-      ],
+      "series_id": "073",
       "project_folder": "grid fields"
     },
     {
       "work_id": "01332",
+      "record_hash": "280a6170461797e6f9f0daf36f31862475a3e5665c21c86a6dd130f426d28be7",
       "title": "grid field 69",
       "year": 2018,
       "year_display": "2018",
-      "status": "published",
-      "series_ids": [
-        "073"
-      ],
+      "series_id": "073",
       "project_folder": "grid fields"
     },
     {
       "work_id": "01333",
+      "record_hash": "71d0800e56237e11da15de6b2b4df2e94730e21e2341ea3cc930f9f142be5e29",
       "title": "grid field 70",
       "year": 2018,
       "year_display": "2018",
-      "status": "published",
-      "series_ids": [
-        "073"
-      ],
+      "series_id": "073",
       "project_folder": "grid fields"
     },
     {
       "work_id": "01334",
+      "record_hash": "b9f904b300d0de80c2f83ce621eb921608736971a48f9b54cff757c17229936b",
       "title": "grid field 71",
       "year": 2018,
       "year_display": "2018",
-      "status": "published",
-      "series_ids": [
-        "073"
-      ],
+      "series_id": "073",
       "project_folder": "grid fields"
     },
     {
       "work_id": "01335",
+      "record_hash": "23a5f0e89a08bbf248b7ccb794cf51168bc876d687f6a8b6a09bef8c7671451f",
       "title": "grid field 72",
       "year": 2018,
       "year_display": "2018",
-      "status": "published",
-      "series_ids": [
-        "073"
-      ],
+      "series_id": "073",
       "project_folder": "grid fields"
     },
     {
       "work_id": "01336",
+      "record_hash": "c7fb5ed4b858e7946c34239bd15df335ccaac26227175eb452c24f156f7fd79a",
       "title": "grid field 73",
       "year": 2018,
       "year_display": "2018",
-      "status": "published",
-      "series_ids": [
-        "073"
-      ],
+      "series_id": "073",
       "project_folder": "grid fields"
     },
     {
       "work_id": "01337",
+      "record_hash": "220e72dfa026bb12b9ca760a46c1b4fe4eedaed8a67c8bf1ed51c5b81450c47e",
       "title": "grid field 74",
       "year": 2018,
       "year_display": "2018",
-      "status": "published",
-      "series_ids": [
-        "073"
-      ],
+      "series_id": "073",
       "project_folder": "grid fields"
     },
     {
       "work_id": "01338",
+      "record_hash": "816adc67d7828f92a7a6986b09a9e18b4bb2861e9ba66167dacfdca43558380d",
       "title": "grid field 75",
       "year": 2018,
       "year_display": "2018",
-      "status": "published",
-      "series_ids": [
-        "073"
-      ],
+      "series_id": "073",
       "project_folder": "grid fields"
     },
     {
       "work_id": "01339",
+      "record_hash": "a3875fd3d3ade992253a0cc19bb3b8e37bec9f3c996191dd84efa50c8ff2a835",
       "title": "grid field 76",
       "year": 2018,
       "year_display": "2018",
-      "status": "published",
-      "series_ids": [
-        "073"
-      ],
+      "series_id": "073",
       "project_folder": "grid fields"
     },
     {
       "work_id": "01340",
+      "record_hash": "fd3c5d17f7419b10c7b405f65a072bb29e47d65313fa1d2b77f39f34c0727a08",
       "title": "grid field 77",
       "year": 2018,
       "year_display": "2018",
-      "status": "published",
-      "series_ids": [
-        "073"
-      ],
+      "series_id": "073",
       "project_folder": "grid fields"
     },
     {
       "work_id": "01341",
+      "record_hash": "12570d7d2234f649a741cdd74d90dfc38bc5bc3d40dd77c1a299232408252d80",
       "title": "grid field 78",
       "year": 2018,
       "year_display": "2018",
-      "status": "published",
-      "series_ids": [
-        "073"
-      ],
+      "series_id": "073",
       "project_folder": "grid fields"
     },
     {
       "work_id": "01342",
+      "record_hash": "7cabb5ad081edd68e8d4c1378b2c608c17d292df5492a4015cc3a8d6c5922599",
       "title": "grid field 79",
       "year": 2018,
       "year_display": "2018",
-      "status": "published",
-      "series_ids": [
-        "073"
-      ],
+      "series_id": "073",
       "project_folder": "grid fields"
     },
     {
       "work_id": "01343",
+      "record_hash": "34966eb623b6fa0c099c8f44b082115f5673f08069dea1b8ff03da67308f9b78",
       "title": "grid field 80",
       "year": 2018,
       "year_display": "2018",
-      "status": "published",
-      "series_ids": [
-        "073"
-      ],
+      "series_id": "073",
       "project_folder": "grid fields"
     },
     {
       "work_id": "01344",
+      "record_hash": "f31402ecc9dcb69b2a90b5a117064a8dc7b3d3a8f62e499e3e4d42cbbcd75163",
       "title": "grid field 81",
       "year": 2018,
       "year_display": "2018",
-      "status": "published",
-      "series_ids": [
-        "073"
-      ],
+      "series_id": "073",
       "project_folder": "grid fields"
     },
     {
       "work_id": "01345",
+      "record_hash": "56e7cbc86efed97525c71c1fd16b703ffa8c9fe138b28178ab83b10a5a613e56",
       "title": "grid field 82",
       "year": 2018,
       "year_display": "2018",
-      "status": "published",
-      "series_ids": [
-        "073"
-      ],
+      "series_id": "073",
       "project_folder": "grid fields"
     },
     {
       "work_id": "01346",
+      "record_hash": "55ac49bc9cc6246bf06c68a2cdc1eee6ca292581e7c6d57b2a79e8c5558040b3",
       "title": "grid field 83",
       "year": 2018,
       "year_display": "2018",
-      "status": "published",
-      "series_ids": [
-        "073"
-      ],
+      "series_id": "073",
       "project_folder": "grid fields"
     },
     {
       "work_id": "01347",
+      "record_hash": "be76abe5690efbecedf2916141b40484663411dce70ce5a9c1c2d92b63a047bb",
       "title": "grid field 84",
       "year": 2018,
       "year_display": "2018",
-      "status": "published",
-      "series_ids": [
-        "073"
-      ],
+      "series_id": "073",
       "project_folder": "grid fields"
     },
     {
       "work_id": "01348",
+      "record_hash": "6cf79c06d8ae76a60ca40f840ae5b274947b623065ea2734b574185e1d406b40",
       "title": "grid field 85",
       "year": 2018,
       "year_display": "2018",
-      "status": "published",
-      "series_ids": [
-        "073"
-      ],
+      "series_id": "073",
       "project_folder": "grid fields"
     },
     {
       "work_id": "01349",
+      "record_hash": "91df1395efe11578bdf52c585a631fe1065856fc691d2e959b75f495f6bc46bc",
       "title": "grid field 86",
       "year": 2018,
       "year_display": "2018",
-      "status": "published",
-      "series_ids": [
-        "073"
-      ],
+      "series_id": "073",
       "project_folder": "grid fields"
     },
     {
       "work_id": "01350",
+      "record_hash": "16999e6062bf55cc87f7019b99565f023052ed028af5eb34a22c69b57e5a309b",
       "title": "grid field 87",
       "year": 2018,
       "year_display": "2018",
-      "status": "published",
-      "series_ids": [
-        "073"
-      ],
+      "series_id": "073",
       "project_folder": "grid fields"
     },
     {
       "work_id": "01351",
+      "record_hash": "3695a3809b6fc90673cfcec2c3740f285507f3da973c19aaf65596b0e885e72d",
       "title": "grid field 88",
       "year": 2018,
       "year_display": "2018",
-      "status": "published",
-      "series_ids": [
-        "073"
-      ],
+      "series_id": "073",
       "project_folder": "grid fields"
     },
     {
       "work_id": "01352",
+      "record_hash": "de1a4366fe90959968fe6d8eb3aad9a979873e5d42b7e58519a3cefb35830f13",
       "title": "grid field 89",
       "year": 2018,
       "year_display": "2018",
-      "status": "published",
-      "series_ids": [
-        "073"
-      ],
+      "series_id": "073",
       "project_folder": "grid fields"
     },
     {
       "work_id": "01353",
+      "record_hash": "737158dc94af85fea5cb8fd9fa7b1438441cfc236aa3967d62b844beb0cbb010",
       "title": "grid field 90",
       "year": 2018,
       "year_display": "2018",
-      "status": "published",
-      "series_ids": [
-        "073"
-      ],
+      "series_id": "073",
       "project_folder": "grid fields"
     },
     {
       "work_id": "01354",
+      "record_hash": "657747b72a21a30074d50f01428f4e8d8041a1164473095f248aa65f6c3d4ff1",
       "title": "grid field 91",
       "year": 2018,
       "year_display": "2018",
-      "status": "published",
-      "series_ids": [
-        "073"
-      ],
+      "series_id": "073",
       "project_folder": "grid fields"
     },
     {
       "work_id": "01355",
+      "record_hash": "f365bb02093814c5e4542578a78ecf66ff924934c40f4175d1ece59a47320104",
       "title": "grid field 92",
       "year": 2018,
       "year_display": "2018",
-      "status": "published",
-      "series_ids": [
-        "073"
-      ],
+      "series_id": "073",
       "project_folder": "grid fields"
     },
     {
       "work_id": "01356",
+      "record_hash": "924c42b19ea01cdc413801cd5d9a929bd2d69600433b81163dc404ee402df815",
       "title": "grid field 93",
       "year": 2018,
       "year_display": "2018",
-      "status": "published",
-      "series_ids": [
-        "073"
-      ],
+      "series_id": "073",
       "project_folder": "grid fields"
     },
     {
       "work_id": "01357",
+      "record_hash": "076497040097079a9eb43ade6e267992b20a799544052cbcaf439092aab207f6",
       "title": "grid field 94",
       "year": 2018,
       "year_display": "2018",
-      "status": "published",
-      "series_ids": [
-        "073"
-      ],
+      "series_id": "073",
       "project_folder": "grid fields"
     },
     {
       "work_id": "01358",
+      "record_hash": "4ebd6c068353c81a08b89cb5bafb24090b9cd6a2d87d7c81061289ac9176218d",
       "title": "grid field 95",
       "year": 2018,
       "year_display": "2018",
-      "status": "published",
-      "series_ids": [
-        "073"
-      ],
+      "series_id": "073",
       "project_folder": "grid fields"
     }
   ],
-  "ordered_published_work_ids": [
+  "ordered_work_ids": [
     "01264",
     "01265",
     "01266",

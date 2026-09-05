@@ -86,10 +86,6 @@ def load_json(path: Path) -> Any:
         return {}
 
 
-def is_published(record: dict[str, Any]) -> bool:
-    return str(record.get("status") or "").strip().lower() == "published"
-
-
 def positive_integer(value: Any) -> int | None:
     if isinstance(value, bool):
         return None
@@ -311,8 +307,7 @@ def work_primary_image_src(
     settings: dict[str, Any],
 ) -> str:
     if (
-        not is_published(record)
-        or not str(record.get("project_filename") or "").strip()
+        not str(record.get("project_filename") or "").strip()
         or positive_integer(record.get("width_px")) is None
         or positive_integer(record.get("height_px")) is None
     ):
@@ -326,25 +321,6 @@ def work_primary_image_src(
     return browser_safe_image_src(
         f"{settings['base']}{settings['path']}/{quote(filename)}?v={media_version}"
     )
-
-
-def series_primary_image_src(
-    record: dict[str, Any],
-    series_id: str,
-    *,
-    works_by_id: dict[str, dict[str, Any]],
-    settings: dict[str, Any],
-) -> str:
-    primary_work_id = str(record.get("primary_work_id") or "").strip()
-    primary_work = works_by_id.get(primary_work_id)
-    if primary_work is None or not is_published(primary_work):
-        return ""
-    series_ids = primary_work.get("series_ids")
-    if not isinstance(series_ids, list) or series_id not in {
-        str(value or "").strip() for value in series_ids
-    }:
-        return ""
-    return work_primary_image_src(primary_work, primary_work_id, settings)
 
 
 def display_date(record: dict[str, Any]) -> str:
@@ -365,16 +341,8 @@ def series_titles_by_id(series_rows: list[dict[str, Any]]) -> dict[str, str]:
     return out
 
 
-def first_series_title(record: dict[str, Any], series_titles: dict[str, str]) -> str:
-    series_ids = record.get("series_ids")
-    if not isinstance(series_ids, list):
-        return ""
-    for raw_id in series_ids:
-        series_id = str(raw_id or "").strip()
-        title = series_titles.get(series_id)
-        if title:
-            return title
-    return ""
+def work_series_title(record: dict[str, Any], series_titles: dict[str, str]) -> str:
+    return series_titles.get(str(record.get("series_id") or "").strip(), "")
 
 
 def target_meta(kind: str, record: dict[str, Any], *, series_titles: dict[str, str]) -> list[str]:
@@ -383,7 +351,7 @@ def target_meta(kind: str, record: dict[str, Any], *, series_titles: dict[str, s
     if date_value:
         meta.append(date_value)
     if kind == "work":
-        series_title = first_series_title(record, series_titles)
+        series_title = work_series_title(record, series_titles)
         if series_title and series_title not in meta:
             meta.append(series_title)
     return meta
@@ -399,8 +367,6 @@ def target_row(
     image_src: str = "",
     has_details: bool = False,
 ) -> dict[str, Any] | None:
-    if not is_published(record):
-        return None
     id_field = str(source["id_field"])
     normalized_id = normalize_semantic_token_id(str(record.get(id_field) or ""), target_type.id_policy)
     title = str(record.get("title") or "").strip()
@@ -466,11 +432,6 @@ class SemanticTargetLookupBuilder:
             work_source = CATALOGUE_KIND_SOURCES["work"]
             work_payload = load_json(source_root / str(work_source["filename"]))
             work_rows = json_rows(work_payload, str(work_source["root_key"]))
-            works_by_id = {
-                str(row.get("work_id") or "").strip(): row
-                for row in work_rows
-                if str(row.get("work_id") or "").strip()
-            }
             series_source = CATALOGUE_KIND_SOURCES["series"]
             series_payload = load_json(
                 source_root / str(series_source["filename"])
@@ -496,13 +457,6 @@ class SemanticTargetLookupBuilder:
                             record,
                             normalized_id,
                             image_settings,
-                        )
-                    elif target_type.key == "series":
-                        image_src = series_primary_image_src(
-                            record,
-                            normalized_id,
-                            works_by_id=works_by_id,
-                            settings=image_settings,
                         )
                     row = target_row(
                         catalogue_family,

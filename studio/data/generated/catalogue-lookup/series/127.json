@@ -1,32 +1,27 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v2"
+    "schema": "studio_catalogue_lookup_series_record_v3"
   },
   "series": {
     "series_id": "127",
     "title": "state of mind",
-    "series_type": "primary",
-    "status": "published",
-    "published_date": "2026-04-01",
     "year": 2023,
     "year_display": "2023",
-    "primary_work_id": "01721",
     "sort_fields": "work_id"
   },
+  "record_hash": "faa66581f787ca5ac3c65ffa85edaa4ae056a043000d2f96f3a84cf37a4c4d5d",
   "member_works": [
     {
       "work_id": "01721",
+      "record_hash": "eb296e22d11d49d6ff7003c26a3ef8aa3754050fc3ddab952bd906c4338816c9",
       "title": "state of mind",
       "year": 2023,
       "year_display": "2023",
-      "status": "published",
-      "series_ids": [
-        "127"
-      ],
+      "series_id": "127",
       "project_folder": "state of mind"
     }
   ],
-  "ordered_published_work_ids": [
+  "ordered_work_ids": [
     "01721"
   ],
   "project_folders": [

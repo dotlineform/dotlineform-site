@@ -1,175 +1,144 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v2"
+    "schema": "studio_catalogue_lookup_series_record_v3"
   },
   "series": {
     "series_id": "031",
     "title": "concrete",
-    "series_type": "primary",
-    "status": "published",
-    "published_date": "2026-04-01",
     "year": 2012,
     "year_display": "2012",
-    "primary_work_id": "00830",
     "sort_fields": "work_id"
   },
+  "record_hash": "8c412b7406e2cc38434f9fe0ff606e23a4b22865ea4b9047d32aa3939314a712",
   "member_works": [
     {
       "work_id": "00818",
+      "record_hash": "61b51b8fe1ea9e4b014e804e309a7676cce4f64a02aa28129506ba5b03e80cdd",
       "title": "concrete [1]",
       "year": 2012,
       "year_display": "2012",
-      "status": "published",
-      "series_ids": [
-        "031"
-      ],
+      "series_id": "031",
       "project_folder": "concrete"
     },
     {
       "work_id": "00819",
+      "record_hash": "4d52837a4117c00beeeb0b448ecaecbc98ed410fc92739c6b7bdb16b30b02843",
       "title": "concrete [2]",
       "year": 2012,
       "year_display": "2012",
-      "status": "published",
-      "series_ids": [
-        "031"
-      ],
+      "series_id": "031",
       "project_folder": "concrete"
     },
     {
       "work_id": "00820",
+      "record_hash": "9164215080055d41f59b230d2c7a144bc66246fca6b8f4d30d0ed9b2b3fab23a",
       "title": "concrete [3]",
       "year": 2012,
       "year_display": "2012",
-      "status": "published",
-      "series_ids": [
-        "031"
-      ],
+      "series_id": "031",
       "project_folder": "concrete"
     },
     {
       "work_id": "00821",
+      "record_hash": "2abe639ed5743b01b48c2798be3bf2f124647833c6cf871314a3831072a41964",
       "title": "concrete [4]",
       "year": 2012,
       "year_display": "2012",
-      "status": "published",
-      "series_ids": [
-        "031"
-      ],
+      "series_id": "031",
       "project_folder": "concrete"
     },
     {
       "work_id": "00822",
+      "record_hash": "cd4acf25005798a21cc973478781094a069ff958fbc9d594f4c839b39a4e28a4",
       "title": "concrete [5]",
       "year": 2012,
       "year_display": "2012",
-      "status": "published",
-      "series_ids": [
-        "031"
-      ],
+      "series_id": "031",
       "project_folder": "concrete"
     },
     {
       "work_id": "00823",
+      "record_hash": "629d6cee8e74c9eea08c1efe3ca9ab53486dc3033984ab41ee135495e5fd9d50",
       "title": "concrete [6]",
       "year": 2012,
       "year_display": "2012",
-      "status": "published",
-      "series_ids": [
-        "031"
-      ],
+      "series_id": "031",
       "project_folder": "concrete"
     },
     {
       "work_id": "00824",
+      "record_hash": "d767b44148b975b72597c45f887416a992ca2a546ad517b01eb47e8d39c73aa7",
       "title": "concrete [7]",
       "year": 2012,
       "year_display": "2012",
-      "status": "published",
-      "series_ids": [
-        "031"
-      ],
+      "series_id": "031",
       "project_folder": "concrete"
     },
     {
       "work_id": "00825",
+      "record_hash": "756dd4e0e2c8d6e997596fd4d1bc87bb5cea007338219667526620485648dc51",
       "title": "concrete [8]",
       "year": 2012,
       "year_display": "2012",
-      "status": "published",
-      "series_ids": [
-        "031"
-      ],
+      "series_id": "031",
       "project_folder": "concrete"
     },
     {
       "work_id": "00826",
+      "record_hash": "b598463d453770c783721776942eb377c8eb64e9ee39f20a4df66c889b352ef5",
       "title": "concrete [9]",
       "year": 2012,
       "year_display": "2012",
-      "status": "published",
-      "series_ids": [
-        "031"
-      ],
+      "series_id": "031",
       "project_folder": "concrete"
     },
     {
       "work_id": "00827",
+      "record_hash": "3b94d9f5a329e1bb555d2b88653a5873d90db003e5da4a8c6744c99b0fa73e18",
       "title": "concrete [10]",
       "year": 2012,
       "year_display": "2012",
-      "status": "published",
-      "series_ids": [
-        "031"
-      ],
+      "series_id": "031",
       "project_folder": "concrete"
     },
     {
       "work_id": "00828",
+      "record_hash": "173f646cddb97ab59832701f8156a69613120bc59efa6358b5b6e7efddc36201",
       "title": "concrete [11]",
       "year": 2012,
       "year_display": "2012",
-      "status": "published",
-      "series_ids": [
-        "031"
-      ],
+      "series_id": "031",
       "project_folder": "concrete"
     },
     {
       "work_id": "00829",
+      "record_hash": "1d3f1c417e9d9475c7a109ace86bfc1e46a239029c8a0584c1d5b63457433bc7",
       "title": "concrete [12]",
       "year": 2012,
       "year_display": "2012",
-      "status": "published",
-      "series_ids": [
-        "031"
-      ],
+      "series_id": "031",
       "project_folder": "concrete"
     },
     {
       "work_id": "00830",
+      "record_hash": "c2f40a4067366cebde68d9dae6da46df026e69ff1bdd3e183c17e35d11a1b6b2",
       "title": "concrete [13]",
       "year": 2012,
       "year_display": "2012",
-      "status": "published",
-      "series_ids": [
-        "031"
-      ],
+      "series_id": "031",
       "project_folder": "concrete"
     },
     {
       "work_id": "00831",
+      "record_hash": "4d833a257cc45e3539ca5a0974396aa13faa8238c97629a5853e0359a075acfe",
       "title": "concrete [14]",
       "year": 2012,
       "year_display": "2012",
-      "status": "published",
-      "series_ids": [
-        "031"
-      ],
+      "series_id": "031",
       "project_folder": "concrete"
     }
   ],
-  "ordered_published_work_ids": [
+  "ordered_work_ids": [
     "00818",
     "00819",
     "00820",

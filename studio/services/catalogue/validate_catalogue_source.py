@@ -27,21 +27,12 @@ from display_paths import format_display_path
 def main() -> int:
     parser = argparse.ArgumentParser(description="Validate catalogue source JSON files.")
     parser.add_argument("--source-dir", default=str(DEFAULT_SOURCE_DIR), help="Catalogue source JSON directory")
-    parser.add_argument(
-        "--target-media-section-schema",
-        action="store_true",
-        help="Require work-detail media section fields and reject compatibility detail project_subfolder.",
-    )
     args = parser.parse_args()
 
     repo_root = REPO_ROOT
     source_dir = Path(args.source_dir).expanduser()
     records = records_from_json_source(source_dir)
-    errors = validate_source_records(
-        records,
-        require_detail_media_sections=args.target_media_section_schema,
-        allow_compat_detail_project_subfolder=not args.target_media_section_schema,
-    )
+    errors = validate_source_records(records)
     print(f"Catalogue source validation: {format_display_path(source_dir, repo_root=repo_root)}")
     for kind, record_map in records.as_maps().items():
         print(f"- {kind}: {len(record_map)} records")

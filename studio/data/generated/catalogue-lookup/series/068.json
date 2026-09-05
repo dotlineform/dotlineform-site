@@ -1,549 +1,450 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v2"
+    "schema": "studio_catalogue_lookup_series_record_v3"
   },
   "series": {
     "series_id": "068",
     "title": "fragments",
-    "series_type": "primary",
-    "status": "published",
-    "published_date": "2026-04-01",
     "year": 1990,
     "year_display": "1990",
-    "primary_work_id": "01202",
     "sort_fields": "work_id"
   },
+  "record_hash": "018c17a3ad2056e914a9846b90a0e97572e4ae386399d09f326fdfa9d70baaed",
   "member_works": [
     {
       "work_id": "01202",
+      "record_hash": "c349d142c7a2567bcc132bee537c592b1d3a23361095bef05424a5a67e72aa5b",
       "title": "fragment 01",
       "year": 1990,
       "year_display": "1990",
-      "status": "published",
-      "series_ids": [
-        "068"
-      ],
+      "series_id": "068",
       "project_folder": "fragments"
     },
     {
       "work_id": "01203",
+      "record_hash": "26b5457171ed2c66f3bb76c4813aab7e2e65551d423f192741e5578123948e2f",
       "title": "fragment 02",
       "year": 1990,
       "year_display": "1990",
-      "status": "published",
-      "series_ids": [
-        "068"
-      ],
+      "series_id": "068",
       "project_folder": "fragments"
     },
     {
       "work_id": "01204",
+      "record_hash": "c7ab5f1d267c7f45b66d714e9c59966030d5e6eac72ef4e589b0e11e2d36d794",
       "title": "fragment 03",
       "year": 1990,
       "year_display": "1990",
-      "status": "published",
-      "series_ids": [
-        "068"
-      ],
+      "series_id": "068",
       "project_folder": "fragments"
     },
     {
       "work_id": "01205",
+      "record_hash": "895f64898ff8c6e27ad05f4c3d49a392d084ef202aa657a93fdc7cabee32282c",
       "title": "fragment 04",
       "year": 1990,
       "year_display": "1990",
-      "status": "published",
-      "series_ids": [
-        "068"
-      ],
+      "series_id": "068",
       "project_folder": "fragments"
     },
     {
       "work_id": "01206",
+      "record_hash": "2a0324c435df84b3161c4d34f9ae1486531734d969749585045b792685896eca",
       "title": "fragment 05",
       "year": 1990,
       "year_display": "1990",
-      "status": "published",
-      "series_ids": [
-        "068"
-      ],
+      "series_id": "068",
       "project_folder": "fragments"
     },
     {
       "work_id": "01207",
+      "record_hash": "46c78d7f1a342450fbe7c71f1894037871597c162b09c014c6b8a8c2912e9e33",
       "title": "fragment 06",
       "year": 1990,
       "year_display": "1990",
-      "status": "published",
-      "series_ids": [
-        "068"
-      ],
+      "series_id": "068",
       "project_folder": "fragments"
     },
     {
       "work_id": "01208",
+      "record_hash": "6d0bc72edd2cef12388861f65379ab962c6174bc891cf632de93b49273b6f281",
       "title": "fragment 07",
       "year": 1990,
       "year_display": "1990",
-      "status": "published",
-      "series_ids": [
-        "068"
-      ],
+      "series_id": "068",
       "project_folder": "fragments"
     },
     {
       "work_id": "01209",
+      "record_hash": "7df8046bed46064452de3bf54e06b61c4254c0785b0660af11a7e300bd3a4ce2",
       "title": "fragment 08",
       "year": 1990,
       "year_display": "1990",
-      "status": "published",
-      "series_ids": [
-        "068"
-      ],
+      "series_id": "068",
       "project_folder": "fragments"
     },
     {
       "work_id": "01210",
+      "record_hash": "5d5f603bcf599b5085b572e9cd080dffa4cfdf8cc94457f518267a9e72775959",
       "title": "fragment 09",
       "year": 1990,
       "year_display": "1990",
-      "status": "published",
-      "series_ids": [
-        "068"
-      ],
+      "series_id": "068",
       "project_folder": "fragments"
     },
     {
       "work_id": "01211",
+      "record_hash": "dcdbc88c9e39cf1f4e8c17690785449c4510c7246f6d71c1bc5f742e0fdd4aaf",
       "title": "fragment 10",
       "year": 1990,
       "year_display": "1990",
-      "status": "published",
-      "series_ids": [
-        "068"
-      ],
+      "series_id": "068",
       "project_folder": "fragments"
     },
     {
       "work_id": "01212",
+      "record_hash": "11889a36801d7b7db9b33b7f4ae5886d2314d59e6d6aace3a8825a2cd87ad127",
       "title": "fragment 11",
       "year": 1990,
       "year_display": "1990",
-      "status": "published",
-      "series_ids": [
-        "068"
-      ],
+      "series_id": "068",
       "project_folder": "fragments"
     },
     {
       "work_id": "01213",
+      "record_hash": "63ac8e52ca924779b4a83db8dd8fecba2bdd73f43303883b6df527b175bb63e5",
       "title": "fragment 12",
       "year": 1990,
       "year_display": "1990",
-      "status": "published",
-      "series_ids": [
-        "068"
-      ],
+      "series_id": "068",
       "project_folder": "fragments"
     },
     {
       "work_id": "01214",
+      "record_hash": "37dae75293c20303591d55d0999cbf2ad4e6a9ef8ae973ebf7a8119833fce7e2",
       "title": "fragment 13",
       "year": 1990,
       "year_display": "1990",
-      "status": "published",
-      "series_ids": [
-        "068"
-      ],
+      "series_id": "068",
       "project_folder": "fragments"
     },
     {
       "work_id": "01215",
+      "record_hash": "4ed0dea48909c0fd7aa99838438faa20781bb9104e5f9520182f1109d66a6186",
       "title": "fragment 14",
       "year": 1990,
       "year_display": "1990",
-      "status": "published",
-      "series_ids": [
-        "068"
-      ],
+      "series_id": "068",
       "project_folder": "fragments"
     },
     {
       "work_id": "01216",
+      "record_hash": "653312b0f085b70d670db5229d7b1caa00935c62725d526280377d2771244e55",
       "title": "fragment 15",
       "year": 1990,
       "year_display": "1990",
-      "status": "published",
-      "series_ids": [
-        "068"
-      ],
+      "series_id": "068",
       "project_folder": "fragments"
     },
     {
       "work_id": "01217",
+      "record_hash": "c0a88b7ce06392dc847e547170a49cd35ec46f1da84b247a06264514d7535d97",
       "title": "fragment 16",
       "year": 1990,
       "year_display": "1990",
-      "status": "published",
-      "series_ids": [
-        "068"
-      ],
+      "series_id": "068",
       "project_folder": "fragments"
     },
     {
       "work_id": "01218",
+      "record_hash": "2a93b3cd53210d2f7f968da238339dd4c0dc792ba47e1fbcaea174bf0d65cdd9",
       "title": "fragment 17",
       "year": 1990,
       "year_display": "1990",
-      "status": "published",
-      "series_ids": [
-        "068"
-      ],
+      "series_id": "068",
       "project_folder": "fragments"
     },
     {
       "work_id": "01219",
+      "record_hash": "73edbabcd7f6111ac5909037161328e6439460566bdab3f5e457835ff6a2b9c1",
       "title": "fragment 18",
       "year": 1990,
       "year_display": "1990",
-      "status": "published",
-      "series_ids": [
-        "068"
-      ],
+      "series_id": "068",
       "project_folder": "fragments"
     },
     {
       "work_id": "01220",
+      "record_hash": "5daf687eabe8e87ae70a13c8bc9efe08a7393a542bee4d45be7490cce28e8161",
       "title": "fragment 19",
       "year": 1990,
       "year_display": "1990",
-      "status": "published",
-      "series_ids": [
-        "068"
-      ],
+      "series_id": "068",
       "project_folder": "fragments"
     },
     {
       "work_id": "01221",
+      "record_hash": "cea8759bcd72729631dcf126575f0c7e885d1413dd69a1abd44a5a43479b5067",
       "title": "fragment 20",
       "year": 1990,
       "year_display": "1990",
-      "status": "published",
-      "series_ids": [
-        "068"
-      ],
+      "series_id": "068",
       "project_folder": "fragments"
     },
     {
       "work_id": "01222",
+      "record_hash": "3add3d711f1cebc73853a15c2fc3eb3cda6bdba005466f8795ba9ee6e32f2712",
       "title": "fragment 21",
       "year": 1990,
       "year_display": "1990",
-      "status": "published",
-      "series_ids": [
-        "068"
-      ],
+      "series_id": "068",
       "project_folder": "fragments"
     },
     {
       "work_id": "01223",
+      "record_hash": "76dc37e929f8df3d3ff683b0098497269f5ab558c5681fe62a1563000d9ea18d",
       "title": "fragment 22",
       "year": 1990,
       "year_display": "1990",
-      "status": "published",
-      "series_ids": [
-        "068"
-      ],
+      "series_id": "068",
       "project_folder": "fragments"
     },
     {
       "work_id": "01224",
+      "record_hash": "c1552f79cd3f806e8e434e9b3641a2c28408033592d46adc739e074d6dafc372",
       "title": "fragment 23",
       "year": 1990,
       "year_display": "1990",
-      "status": "published",
-      "series_ids": [
-        "068"
-      ],
+      "series_id": "068",
       "project_folder": "fragments"
     },
     {
       "work_id": "01225",
+      "record_hash": "5e5d1f5a08da870c9d4c4cbc6f48e4be78f4dd852a983ebea27a44713c028b4b",
       "title": "fragment 24",
       "year": 1990,
       "year_display": "1990",
-      "status": "published",
-      "series_ids": [
-        "068"
-      ],
+      "series_id": "068",
       "project_folder": "fragments"
     },
     {
       "work_id": "01226",
+      "record_hash": "32a56987f05fbd7bc1f6b2e0e91d867b36e54808a6d929c3af30af85199e7d65",
       "title": "fragment 25",
       "year": 1990,
       "year_display": "1990",
-      "status": "published",
-      "series_ids": [
-        "068"
-      ],
+      "series_id": "068",
       "project_folder": "fragments"
     },
     {
       "work_id": "01227",
+      "record_hash": "76feadce87448a7779a008de8ee331739d5e467b1bb821df857208f8f826aacb",
       "title": "fragment 26",
       "year": 1990,
       "year_display": "1990",
-      "status": "published",
-      "series_ids": [
-        "068"
-      ],
+      "series_id": "068",
       "project_folder": "fragments"
     },
     {
       "work_id": "01228",
+      "record_hash": "ba08ed1049b961e157049c2f7cca5f5e9dc4ee86a0229594576fb6c210beba04",
       "title": "fragment 27",
       "year": 1990,
       "year_display": "1990",
-      "status": "published",
-      "series_ids": [
-        "068"
-      ],
+      "series_id": "068",
       "project_folder": "fragments"
     },
     {
       "work_id": "01229",
+      "record_hash": "bb971bcedc4671e8fb03d4a83bc3fd6f3edc5fda513cbf641b757e4453fdd6fc",
       "title": "fragment 28",
       "year": 1990,
       "year_display": "1990",
-      "status": "published",
-      "series_ids": [
-        "068"
-      ],
+      "series_id": "068",
       "project_folder": "fragments"
     },
     {
       "work_id": "01230",
+      "record_hash": "97d824c3b059dca7d63714000df01bf11d7fad35d147f13a38c291406c061ebe",
       "title": "fragment 29",
       "year": 1990,
       "year_display": "1990",
-      "status": "published",
-      "series_ids": [
-        "068"
-      ],
+      "series_id": "068",
       "project_folder": "fragments"
     },
     {
       "work_id": "01231",
+      "record_hash": "6226e2f4b75a2d2f658081f4fc70226958038ac83c12ffb4b547c02c5dfc265d",
       "title": "fragment 30",
       "year": 1990,
       "year_display": "1990",
-      "status": "published",
-      "series_ids": [
-        "068"
-      ],
+      "series_id": "068",
       "project_folder": "fragments"
     },
     {
       "work_id": "01232",
+      "record_hash": "8289f8025c985ee5069875ce109491630be49de1ca8c90c9672130b7df83ebb5",
       "title": "fragment 31",
       "year": 1990,
       "year_display": "1990",
-      "status": "published",
-      "series_ids": [
-        "068"
-      ],
+      "series_id": "068",
       "project_folder": "fragments"
     },
     {
       "work_id": "01233",
+      "record_hash": "f4677eb836a1e7337d59773b7e3051a45f3f270f82c240c8ea363e896fd8062c",
       "title": "fragment 32",
       "year": 1990,
       "year_display": "1990",
-      "status": "published",
-      "series_ids": [
-        "068"
-      ],
+      "series_id": "068",
       "project_folder": "fragments"
     },
     {
       "work_id": "01234",
+      "record_hash": "8060a58d4a1d6281ab82aebc2c2b2db881e8b3c3123a5903eebf7591147a9b06",
       "title": "fragment 33",
       "year": 1990,
       "year_display": "1990",
-      "status": "published",
-      "series_ids": [
-        "068"
-      ],
+      "series_id": "068",
       "project_folder": "fragments"
     },
     {
       "work_id": "01235",
+      "record_hash": "a1b1a472efb4cb304aa5b12c051c1b29a60e4ee71b4284ca7a016d8d383a7528",
       "title": "fragment 34",
       "year": 1990,
       "year_display": "1990",
-      "status": "published",
-      "series_ids": [
-        "068"
-      ],
+      "series_id": "068",
       "project_folder": "fragments"
     },
     {
       "work_id": "01236",
+      "record_hash": "8cc1962ef81617e47f559ac8604b7c19139115fcd00b21e16401a167c7ec6762",
       "title": "fragment 35",
       "year": 1990,
       "year_display": "1990",
-      "status": "published",
-      "series_ids": [
-        "068"
-      ],
+      "series_id": "068",
       "project_folder": "fragments"
     },
     {
       "work_id": "01237",
+      "record_hash": "b4370e1b001c3faa706b21cb412d51efdccc8a3281b5e557a0eebb4aee21db22",
       "title": "fragment 36",
       "year": 1990,
       "year_display": "1990",
-      "status": "published",
-      "series_ids": [
-        "068"
-      ],
+      "series_id": "068",
       "project_folder": "fragments"
     },
     {
       "work_id": "01238",
+      "record_hash": "81d0b7bcdcb9eb95ab153a9573ec8e5c58dbb83618635dfbf5ce11300d5ce65c",
       "title": "fragment 37",
       "year": 1990,
       "year_display": "1990",
-      "status": "published",
-      "series_ids": [
-        "068"
-      ],
+      "series_id": "068",
       "project_folder": "fragments"
     },
     {
       "work_id": "01239",
+      "record_hash": "4704bd42e8186221017c6ab004d7c9b50774878badd8b3b06e3fa5061fdc1a97",
       "title": "fragment 38",
       "year": 1990,
       "year_display": "1990",
-      "status": "published",
-      "series_ids": [
-        "068"
-      ],
+      "series_id": "068",
       "project_folder": "fragments"
     },
     {
       "work_id": "01240",
+      "record_hash": "6c983f997f9c825781760fb8d57ca18b455ad90783ac13b9e369ad3e443532eb",
       "title": "fragment 39",
       "year": 1990,
       "year_display": "1990",
-      "status": "published",
-      "series_ids": [
-        "068"
-      ],
+      "series_id": "068",
       "project_folder": "fragments"
     },
     {
       "work_id": "01241",
+      "record_hash": "bd6d382701f6cd8785e02ec858b6cf9cf8dfd0e182ed7e563e0337e3cb02996d",
       "title": "fragment 40",
       "year": 1990,
       "year_display": "1990",
-      "status": "published",
-      "series_ids": [
-        "068"
-      ],
+      "series_id": "068",
       "project_folder": "fragments"
     },
     {
       "work_id": "01242",
+      "record_hash": "921369be564578bcbd7cf235bd4d3f2b778cef95bf033cd8c107cd94306485d7",
       "title": "fragment 41",
       "year": 1990,
       "year_display": "1990",
-      "status": "published",
-      "series_ids": [
-        "068"
-      ],
+      "series_id": "068",
       "project_folder": "fragments"
     },
     {
       "work_id": "01243",
+      "record_hash": "722de7163ef62bc20d7ca3f6e9f95cf605368eea5b0532d6e757f137e6a648cb",
       "title": "fragment 42",
       "year": 1990,
       "year_display": "1990",
-      "status": "published",
-      "series_ids": [
-        "068"
-      ],
+      "series_id": "068",
       "project_folder": "fragments"
     },
     {
       "work_id": "01244",
+      "record_hash": "523174a8cda3e0d77d0cdbc24edddac2f48ba0c9ee1b5224a7b45a1ddcc3a8d5",
       "title": "fragment 43",
       "year": 1990,
       "year_display": "1990",
-      "status": "published",
-      "series_ids": [
-        "068"
-      ],
+      "series_id": "068",
       "project_folder": "fragments"
     },
     {
       "work_id": "01245",
+      "record_hash": "73de159e75b82541351789d1803532859a9ab8ede230ffb4693e70a13b5ba0d4",
       "title": "fragment 44",
       "year": 1990,
       "year_display": "1990",
-      "status": "published",
-      "series_ids": [
-        "068"
-      ],
+      "series_id": "068",
       "project_folder": "fragments"
     },
     {
       "work_id": "01246",
+      "record_hash": "bcbfdb7f6a9286384ca823a139dbc4ddff7f1573542f2f0ef9d28753481c4edb",
       "title": "fragment 45",
       "year": 1990,
       "year_display": "1990",
-      "status": "published",
-      "series_ids": [
-        "068"
-      ],
+      "series_id": "068",
       "project_folder": "fragments"
     },
     {
       "work_id": "01247",
+      "record_hash": "2d203fa46bd456180726f7e3708fb97a016aa0237500f934268f748f35734007",
       "title": "fragment 46",
       "year": 1990,
       "year_display": "1990",
-      "status": "published",
-      "series_ids": [
-        "068"
-      ],
+      "series_id": "068",
       "project_folder": "fragments"
     },
     {
       "work_id": "01248",
+      "record_hash": "1f15969c037bf2511cdbf91f8d6904329d76c6219cda940f0d4c1c9b86eafa64",
       "title": "fragment 47",
       "year": 1990,
       "year_display": "1990",
-      "status": "published",
-      "series_ids": [
-        "068"
-      ],
+      "series_id": "068",
       "project_folder": "fragments"
     },
     {
       "work_id": "01249",
+      "record_hash": "79b23bd7d788bb5c525ac2225d9903d3e0be11e9d5c36bfe428a36e81702c5c4",
       "title": "fragment 48",
       "year": 1990,
       "year_display": "1990",
-      "status": "published",
-      "series_ids": [
-        "068"
-      ],
+      "series_id": "068",
       "project_folder": "fragments"
     }
   ],
-  "ordered_published_work_ids": [
+  "ordered_work_ids": [
     "01202",
     "01203",
     "01204",

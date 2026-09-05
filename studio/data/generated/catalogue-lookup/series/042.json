@@ -1,406 +1,333 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v2"
+    "schema": "studio_catalogue_lookup_series_record_v3"
   },
   "series": {
     "series_id": "042",
     "title": "dotlineform (2021)",
-    "series_type": "primary",
-    "status": "published",
-    "published_date": "2026-04-01",
     "year": 2021,
     "year_display": "2021",
-    "primary_work_id": "00949",
     "sort_fields": "work_id"
   },
+  "record_hash": "e5ffcfec909d3251cd69ac675f907adc41aea963ba51820920d84b057b0346ee",
   "member_works": [
     {
       "work_id": "00949",
+      "record_hash": "723ccbd180076202b3a8c2b94849cb58cb069e65110f4ef2854cf3dc93013afe",
       "title": "dotlineform",
       "year": 2021,
       "year_display": "2021",
-      "status": "published",
-      "series_ids": [
-        "042"
-      ],
+      "series_id": "042",
       "project_folder": "dotlineform (2021)"
     },
     {
       "work_id": "00950",
+      "record_hash": "a69506facac362881eff69acd1daac4bb0335a67b6ece0647995af94d4f0628e",
       "title": "dotlineform surface (1)",
       "year": 2021,
       "year_display": "2021",
-      "status": "published",
-      "series_ids": [
-        "042"
-      ],
+      "series_id": "042",
       "project_folder": "dotlineform (2021)"
     },
     {
       "work_id": "00951",
+      "record_hash": "2b7b16d3859588a708837199a499d298635b5c8dd3a1f5a2a35a045d4c5b85f7",
       "title": "dotlineform surface (2)",
       "year": 2021,
       "year_display": "2021",
-      "status": "published",
-      "series_ids": [
-        "042"
-      ],
+      "series_id": "042",
       "project_folder": "dotlineform (2021)"
     },
     {
       "work_id": "00952",
+      "record_hash": "c590464f3c160339e1cfb6418fbb6574628a8163eb78856ea96b2e8282e26c81",
       "title": "dotlineform surface (3)",
       "year": 2021,
       "year_display": "2021",
-      "status": "published",
-      "series_ids": [
-        "042"
-      ],
+      "series_id": "042",
       "project_folder": "dotlineform (2021)"
     },
     {
       "work_id": "00953",
+      "record_hash": "4e8ed7f3ba29643ba73a24319d972b09d2013ff078df750d7df34b83e775a1f2",
       "title": "dotlineform surface (4)",
       "year": 2021,
       "year_display": "2021",
-      "status": "published",
-      "series_ids": [
-        "042"
-      ],
+      "series_id": "042",
       "project_folder": "dotlineform (2021)"
     },
     {
       "work_id": "00954",
+      "record_hash": "3c04d3bbd050788693d6be25f0976f606aa4f2f804eef7c8d930c1440bca6c19",
       "title": "dotlineform surface (5)",
       "year": 2021,
       "year_display": "2021",
-      "status": "published",
-      "series_ids": [
-        "042"
-      ],
+      "series_id": "042",
       "project_folder": "dotlineform (2021)"
     },
     {
       "work_id": "00955",
+      "record_hash": "4dd77b1b9243e2f312a7e4a85d8b4a6500dfd391778b61f2f3b3d837cef0429a",
       "title": "dotlineform surface (6)",
       "year": 2021,
       "year_display": "2021",
-      "status": "published",
-      "series_ids": [
-        "042"
-      ],
+      "series_id": "042",
       "project_folder": "dotlineform (2021)"
     },
     {
       "work_id": "00956",
+      "record_hash": "5dbef08b2048f39ccfccd94fcc76ba281e10c0a286ae68136eefe8a3edf15a23",
       "title": "dotlineform surface (7)",
       "year": 2021,
       "year_display": "2021",
-      "status": "published",
-      "series_ids": [
-        "042"
-      ],
+      "series_id": "042",
       "project_folder": "dotlineform (2021)"
     },
     {
       "work_id": "00957",
+      "record_hash": "b1044118d34317ad89b6e4f9ba5661ad9eb4aec9c5ead9d3abadec86085ae5ce",
       "title": "dotlineform surface (8)",
       "year": 2021,
       "year_display": "2021",
-      "status": "published",
-      "series_ids": [
-        "042"
-      ],
+      "series_id": "042",
       "project_folder": "dotlineform (2021)"
     },
     {
       "work_id": "00958",
+      "record_hash": "7d7147c151da05a8a00394b9c61c16dfb548af955a0c8b1086a46f6156d1aa07",
       "title": "dotlineform surface (9)",
       "year": 2021,
       "year_display": "2021",
-      "status": "published",
-      "series_ids": [
-        "042"
-      ],
+      "series_id": "042",
       "project_folder": "dotlineform (2021)"
     },
     {
       "work_id": "00959",
+      "record_hash": "acb90655e88eb5436d26eca2000a83a296a0eb053737bfba8b2b43d45ce71b64",
       "title": "dotlineform surface (10)",
       "year": 2021,
       "year_display": "2021",
-      "status": "published",
-      "series_ids": [
-        "042"
-      ],
+      "series_id": "042",
       "project_folder": "dotlineform (2021)"
     },
     {
       "work_id": "00960",
+      "record_hash": "a8fa152edb952141b1c3c4d78669cfddee4d98048fd00b811acd196ac6fd6130",
       "title": "dotlineform surface (11)",
       "year": 2021,
       "year_display": "2021",
-      "status": "published",
-      "series_ids": [
-        "042"
-      ],
+      "series_id": "042",
       "project_folder": "dotlineform (2021)"
     },
     {
       "work_id": "00961",
+      "record_hash": "cd1a37422cad134049886009ba5888729e6cb6cac6f44912cd325946a91b762e",
       "title": "dotlineform surface (12)",
       "year": 2021,
       "year_display": "2021",
-      "status": "published",
-      "series_ids": [
-        "042"
-      ],
+      "series_id": "042",
       "project_folder": "dotlineform (2021)"
     },
     {
       "work_id": "00962",
+      "record_hash": "17c740598f1f656fbf5d138ae805a9b68badd6ea9ed1692df6bff1a82d41e1e6",
       "title": "dotlineform surface (13)",
       "year": 2021,
       "year_display": "2021",
-      "status": "published",
-      "series_ids": [
-        "042"
-      ],
+      "series_id": "042",
       "project_folder": "dotlineform (2021)"
     },
     {
       "work_id": "00963",
+      "record_hash": "71d46f3a1ff2dc8d6bfe4f738e41a525f1b6d603ad51786fc3e06a9ae8acf13d",
       "title": "dotlineform surface (14)",
       "year": 2021,
       "year_display": "2021",
-      "status": "published",
-      "series_ids": [
-        "042"
-      ],
+      "series_id": "042",
       "project_folder": "dotlineform (2021)"
     },
     {
       "work_id": "00964",
+      "record_hash": "e4712da4cac2565ab5f8f72981344e9eac4acb2b876e4e0454669d2cdadddd50",
       "title": "dotlineform surface (15)",
       "year": 2021,
       "year_display": "2021",
-      "status": "published",
-      "series_ids": [
-        "042"
-      ],
+      "series_id": "042",
       "project_folder": "dotlineform (2021)"
     },
     {
       "work_id": "00965",
+      "record_hash": "8796c497797ba46fc595191ed33576ef495df0c993de5c1244528fa2b473aa80",
       "title": "dotlineform surface (16)",
       "year": 2021,
       "year_display": "2021",
-      "status": "published",
-      "series_ids": [
-        "042"
-      ],
+      "series_id": "042",
       "project_folder": "dotlineform (2021)"
     },
     {
       "work_id": "00966",
+      "record_hash": "8895f6afa38495eaff25cb912991c708f3b3eb53dfe963eeed1323d86995fc0a",
       "title": "dotlineform surface (17)",
       "year": 2021,
       "year_display": "2021",
-      "status": "published",
-      "series_ids": [
-        "042"
-      ],
+      "series_id": "042",
       "project_folder": "dotlineform (2021)"
     },
     {
       "work_id": "00967",
+      "record_hash": "5e3a81f4ff3bac424599189cbd5b66137366ead714381e64a3270ade7e832f87",
       "title": "dotlineform surface (18)",
       "year": 2021,
       "year_display": "2021",
-      "status": "published",
-      "series_ids": [
-        "042"
-      ],
+      "series_id": "042",
       "project_folder": "dotlineform (2021)"
     },
     {
       "work_id": "00968",
+      "record_hash": "43579846931a397ad6d11026a925870ff297410aed69ab8763790a2f8fcbc241",
       "title": "dotlineform surface (19)",
       "year": 2021,
       "year_display": "2021",
-      "status": "published",
-      "series_ids": [
-        "042"
-      ],
+      "series_id": "042",
       "project_folder": "dotlineform (2021)"
     },
     {
       "work_id": "00969",
+      "record_hash": "c83ec257521afa138e4d81cb61f51838bc863211ad57f9fdb096657c485f754e",
       "title": "dotlineform surface (20)",
       "year": 2021,
       "year_display": "2021",
-      "status": "published",
-      "series_ids": [
-        "042"
-      ],
+      "series_id": "042",
       "project_folder": "dotlineform (2021)"
     },
     {
       "work_id": "00970",
+      "record_hash": "94e1187313888e5fa9231a6f4a895ac2a829c61962c6e3d7db6423af543c58e4",
       "title": "dotlineform surface (21)",
       "year": 2021,
       "year_display": "2021",
-      "status": "published",
-      "series_ids": [
-        "042"
-      ],
+      "series_id": "042",
       "project_folder": "dotlineform (2021)"
     },
     {
       "work_id": "00971",
+      "record_hash": "7f044a037507f1380c562939bc29ff31e7ae3bb53c3c0cd8deebb78c229cac51",
       "title": "dotlineform surface (22)",
       "year": 2021,
       "year_display": "2021",
-      "status": "published",
-      "series_ids": [
-        "042"
-      ],
+      "series_id": "042",
       "project_folder": "dotlineform (2021)"
     },
     {
       "work_id": "00972",
+      "record_hash": "ec8b44188aff0cfbd7caf5560f1efc6b1818dffc359cc48655b847fe38238a86",
       "title": "dotlineform surface (23)",
       "year": 2021,
       "year_display": "2021",
-      "status": "published",
-      "series_ids": [
-        "042"
-      ],
+      "series_id": "042",
       "project_folder": "dotlineform (2021)"
     },
     {
       "work_id": "00973",
+      "record_hash": "dfcd367a2acd79a08c3762a57a823c2773aee1c7e5055b4679a6ab68bd9c2cb8",
       "title": "dotlineform surface (24)",
       "year": 2021,
       "year_display": "2021",
-      "status": "published",
-      "series_ids": [
-        "042"
-      ],
+      "series_id": "042",
       "project_folder": "dotlineform (2021)"
     },
     {
       "work_id": "00974",
+      "record_hash": "43b04bc2d078e374469010a14cb6f9f08220a8715a488128005bf3dd35bf2214",
       "title": "dotlineform surface (25)",
       "year": 2021,
       "year_display": "2021",
-      "status": "published",
-      "series_ids": [
-        "042"
-      ],
+      "series_id": "042",
       "project_folder": "dotlineform (2021)"
     },
     {
       "work_id": "00975",
+      "record_hash": "c8c09e40fa83a149a448cb7d2a7a0f6b85bc9efa266332956b80d15ea0aa0c8c",
       "title": "dotlineform surface (26)",
       "year": 2021,
       "year_display": "2021",
-      "status": "published",
-      "series_ids": [
-        "042"
-      ],
+      "series_id": "042",
       "project_folder": "dotlineform (2021)"
     },
     {
       "work_id": "00976",
+      "record_hash": "3c599bee4e10303fe13e707178867884d3eaded01a7e17b517717c45a580552d",
       "title": "dotlineform surface (27)",
       "year": 2021,
       "year_display": "2021",
-      "status": "published",
-      "series_ids": [
-        "042"
-      ],
+      "series_id": "042",
       "project_folder": "dotlineform (2021)"
     },
     {
       "work_id": "00977",
+      "record_hash": "4318441290155e7ccbfc4870bec4db1eb363ff2d38979a91f23f04ea73ffc39a",
       "title": "dotlineform surface (28)",
       "year": 2021,
       "year_display": "2021",
-      "status": "published",
-      "series_ids": [
-        "042"
-      ],
+      "series_id": "042",
       "project_folder": "dotlineform (2021)"
     },
     {
       "work_id": "00978",
+      "record_hash": "af6895885c2d1b68aa6499452d18c9ad381701f93d4e3cefb8ac571b9b6d74be",
       "title": "dotlineform surface (29)",
       "year": 2021,
       "year_display": "2021",
-      "status": "published",
-      "series_ids": [
-        "042"
-      ],
+      "series_id": "042",
       "project_folder": "dotlineform (2021)"
     },
     {
       "work_id": "00979",
+      "record_hash": "840d4ad7ac3e8f6daf65ffc22522ec633fc93ecc2a584e73c1e2d97907746197",
       "title": "dotlineform surface (30)",
       "year": 2021,
       "year_display": "2021",
-      "status": "published",
-      "series_ids": [
-        "042"
-      ],
+      "series_id": "042",
       "project_folder": "dotlineform (2021)"
     },
     {
       "work_id": "00980",
+      "record_hash": "eab61ab94987b126c0a8cb145d23ee3e8e5fd10bbec4002c1e2377175f9888fa",
       "title": "dotlineform surface (31)",
       "year": 2021,
       "year_display": "2021",
-      "status": "published",
-      "series_ids": [
-        "042"
-      ],
+      "series_id": "042",
       "project_folder": "dotlineform (2021)"
     },
     {
       "work_id": "00981",
+      "record_hash": "cdf8cd012e39b326dd2fc9db9531360210c8f1c7e9f16d51d34774098690339e",
       "title": "dotlineform surface (32)",
       "year": 2021,
       "year_display": "2021",
-      "status": "published",
-      "series_ids": [
-        "042"
-      ],
+      "series_id": "042",
       "project_folder": "dotlineform (2021)"
     },
     {
       "work_id": "00982",
+      "record_hash": "0750bc7fc325cff0a2129d401e6213e80eb81663feb154b4cce1f89f06c105b7",
       "title": "dotlineform surface (33)",
       "year": 2021,
       "year_display": "2021",
-      "status": "published",
-      "series_ids": [
-        "042"
-      ],
+      "series_id": "042",
       "project_folder": "dotlineform (2021)"
     },
     {
       "work_id": "00983",
+      "record_hash": "ffe60ef66e919ee2b1b36196201c1937de3ddc3624c12ec70f3e0e6f529f25ff",
       "title": "dotlineform surface (34)",
       "year": 2021,
       "year_display": "2021",
-      "status": "published",
-      "series_ids": [
-        "042"
-      ],
+      "series_id": "042",
       "project_folder": "dotlineform (2021)"
     }
   ],
-  "ordered_published_work_ids": [
+  "ordered_work_ids": [
     "00949",
     "00950",
     "00951",

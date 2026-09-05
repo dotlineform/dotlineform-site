@@ -1,1009 +1,703 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_search_v1",
-    "count": 143
+    "schema": "studio_catalogue_lookup_series_search_v2",
+    "count": 139
   },
   "items": [
     {
       "series_id": "001",
-      "title": "10,000",
-      "series_type": "primary",
-      "status": "published",
-      "primary_work_id": "00635"
-    },
-    {
-      "series_id": "002",
-      "title": "100 grasping hands",
-      "series_type": "primary",
-      "status": "draft",
-      "primary_work_id": ""
+      "record_hash": "17c704f94fa46c5bf826073c0876014027a74a93855c1c752380fc47d430fc95",
+      "title": "10,000"
     },
     {
       "series_id": "003",
-      "title": "16 forms",
-      "series_type": "primary",
-      "status": "published",
-      "primary_work_id": "00639"
+      "record_hash": "63d997e088e32a4c9b40c1fbb01d7206c4c56e8b2890e76a51f8b3173e1d482f",
+      "title": "16 forms"
     },
     {
       "series_id": "004",
-      "title": "2 bodies",
-      "series_type": "primary",
-      "status": "published",
-      "primary_work_id": "00533"
+      "record_hash": "7d92ec9b6574589fc9a458a2a4bc2bce2b858007c9b77128a6ef66f4be935cbd",
+      "title": "2 bodies"
     },
     {
       "series_id": "005",
-      "title": "3 symbols",
-      "series_type": "primary",
-      "status": "published",
-      "primary_work_id": "00638"
+      "record_hash": "beb8e0c0e458c3a60a7d25ed3448b20b02e8d7672f46182d63324319cce75101",
+      "title": "3 symbols"
     },
     {
       "series_id": "006",
-      "title": "a doll story",
-      "series_type": "primary",
-      "status": "published",
-      "primary_work_id": "00666"
+      "record_hash": "d1a5816bdc99fa51c649ce5186f26c07a50af39f9880773c179fe9388528df7f",
+      "title": "a doll story"
     },
     {
       "series_id": "007",
-      "title": "a feeling that we are part of a structure",
-      "series_type": "primary",
-      "status": "published",
-      "primary_work_id": "00717"
+      "record_hash": "38b8b89df4a4526e44243694c254b4b7aeb20ad8e7130b6fa840480d3dadbfcc",
+      "title": "a feeling that we are part of a structure"
     },
     {
       "series_id": "008",
-      "title": "a humid home full of light",
-      "series_type": "primary",
-      "status": "published",
-      "primary_work_id": "00729"
+      "record_hash": "8ba1ca270c9afcd44dc3f57f630d6216fc67428a8ef18ced2015ef0f47e98d87",
+      "title": "a humid home full of light"
     },
     {
       "series_id": "009",
-      "title": "a poem divided into 4 parts",
-      "series_type": "primary",
-      "status": "published",
-      "primary_work_id": "00001"
+      "record_hash": "d89de19b4d79f4fa2b5db5be7cff555c7ed9b207312cee92fabe175c4bd7b65e",
+      "title": "a poem divided into 4 parts"
     },
     {
       "series_id": "010",
-      "title": "a theory of happiness is a theory of everything",
-      "series_type": "primary",
-      "status": "published",
-      "primary_work_id": "00734"
-    },
-    {
-      "series_id": "011",
-      "title": "all the colours",
-      "series_type": "primary",
-      "status": "draft",
-      "primary_work_id": "00375"
+      "record_hash": "21296c7eeb44b6728dec3889a01068043f4a028bc96d5b091e190f1db1f447e8",
+      "title": "a theory of happiness is a theory of everything"
     },
     {
       "series_id": "012",
-      "title": "all the little cracks",
-      "series_type": "primary",
-      "status": "published",
-      "primary_work_id": "00751"
+      "record_hash": "18b0ac16f7ef52d0e8a016858e892843968ed8d4c2cfe02852e4b64a73fbc4c9",
+      "title": "all the little cracks"
     },
     {
       "series_id": "013",
-      "title": "an act of kindness",
-      "series_type": "primary",
-      "status": "published",
-      "primary_work_id": "00748"
+      "record_hash": "c077e6583e9bcbf3a18c0e394176f4d50e94842465a1276ee5930cb167770ba0",
+      "title": "an act of kindness"
     },
     {
       "series_id": "014",
-      "title": "assembly codes",
-      "series_type": "primary",
-      "status": "published",
-      "primary_work_id": "00753"
+      "record_hash": "173a46010c319926a13ff881d2d4ac0cccf82b36e5417b4ddbc996a0b9c3c226",
+      "title": "assembly codes"
     },
     {
       "series_id": "015",
-      "title": "base series",
-      "series_type": "primary",
-      "status": "published",
-      "primary_work_id": "00756"
+      "record_hash": "2087a1cf630875b936b242b0f183825b0bb4004e30c50e09f5462a5f9a725c2c",
+      "title": "base series"
     },
     {
       "series_id": "016",
-      "title": "birds",
-      "series_type": "primary",
-      "status": "published",
-      "primary_work_id": "00781"
+      "record_hash": "aca1be844006209223657589f8d0ca7fb178b886b8397458a7450194a6e52ea5",
+      "title": "birds"
     },
     {
       "series_id": "017",
-      "title": "birth of healing forms",
-      "series_type": "primary",
-      "status": "published",
-      "primary_work_id": "00782"
+      "record_hash": "9b7b53d36bb6e40ae35672b9ef1db411f1bab704004a5468c7a0512a21e8bd01",
+      "title": "birth of healing forms"
     },
     {
       "series_id": "018",
-      "title": "body form",
-      "series_type": "primary",
-      "status": "published",
-      "primary_work_id": "01633"
+      "record_hash": "4303c4b6c37ba773dc317be44988a22e38df0ee5fd2a31df822b25d5d8d1c6e3",
+      "title": "body form"
     },
     {
       "series_id": "019",
-      "title": "body space",
-      "series_type": "primary",
-      "status": "published",
-      "primary_work_id": "00783"
+      "record_hash": "3fbdd36848ca651a4fe51196c1eaa3c565ba23c6e82486398337203e00f3e580",
+      "title": "body space"
     },
     {
       "series_id": "020",
-      "title": "body space (reclining state)",
-      "series_type": "primary",
-      "status": "published",
-      "primary_work_id": "00792"
+      "record_hash": "cdc645bb3c0b51335bcf91a8f4cfbfa19898b234e09b2e1994c47954e67dd1d2",
+      "title": "body space (reclining state)"
     },
     {
       "series_id": "021",
-      "title": "book dna",
-      "series_type": "primary",
-      "status": "published",
-      "primary_work_id": "00801"
+      "record_hash": "e1d54e947ca3e75ae9ca2e726ba3c945f00ef99e16d73ec268963b4ef8066a61",
+      "title": "book dna"
     },
     {
       "series_id": "022",
-      "title": "book of curves",
-      "series_type": "primary",
-      "status": "published",
-      "primary_work_id": "00806"
+      "record_hash": "40298d4cf2fedf5c8858cb37540fb15fd45452c77253b6d70cb0d4bb8a32ad71",
+      "title": "book of curves"
     },
     {
       "series_id": "023",
-      "title": "certainty",
-      "series_type": "primary",
-      "status": "published",
-      "primary_work_id": "00389"
+      "record_hash": "f1935f9f62fd245808c25b82824726c81c90b2260e42f713051d589cfbea1724",
+      "title": "certainty"
     },
     {
       "series_id": "024",
-      "title": "changed photos",
-      "series_type": "primary",
-      "status": "published",
-      "primary_work_id": "01634"
+      "record_hash": "e47d0b0fc621e7e0cf1974f6b5e03fa43a950bba4f9510855c427917a5e104d3",
+      "title": "changed photos"
     },
     {
       "series_id": "025",
-      "title": "closeness",
-      "series_type": "primary",
-      "status": "published",
-      "primary_work_id": "00811"
+      "record_hash": "d0aeb043ad06f99a440a997b7f7eb537161e33f1a19866a4a060e0c7e1d239df",
+      "title": "closeness"
     },
     {
       "series_id": "026",
-      "title": "collected 1989-1998",
-      "series_type": "holding",
-      "status": "published",
-      "primary_work_id": "00049"
+      "record_hash": "f812ac1a9ca10e6fbe48fe68df61dfe1e6c3a70388ff2cc067e5f977d4a97b9c",
+      "title": "collected 1989-1998"
     },
     {
       "series_id": "027",
-      "title": "collected digital c. 1998",
-      "series_type": "primary",
-      "status": "published",
-      "primary_work_id": "00226"
+      "record_hash": "08b59f23b771de9c2d81942dd622e3e7c408f4ccb027b47a5a6559411ac382a6",
+      "title": "collected digital c. 1998"
     },
     {
       "series_id": "028",
-      "title": "colouring book",
-      "series_type": "primary",
-      "status": "published",
-      "primary_work_id": "00219"
+      "record_hash": "e44610bd7054719df268304a9f1f5b26eb2307df8396c84e78405c00c0837ae2",
+      "title": "colouring book"
     },
     {
       "series_id": "029",
-      "title": "colours",
-      "series_type": "primary",
-      "status": "published",
-      "primary_work_id": "00813"
+      "record_hash": "a5dc4295d1200f795d1b8fab906fb19695e70184986715a6c20d75d550abf87a",
+      "title": "colours"
     },
     {
       "series_id": "030",
-      "title": "composite (blue red smoke)",
-      "series_type": "primary",
-      "status": "published",
-      "primary_work_id": "00391"
+      "record_hash": "d93211d81e4e7a933ac25526d22468c2a25cba3cb0a932d2d7ebd07e065a2798",
+      "title": "composite (blue red smoke)"
     },
     {
       "series_id": "031",
-      "title": "concrete",
-      "series_type": "primary",
-      "status": "published",
-      "primary_work_id": "00830"
+      "record_hash": "8c412b7406e2cc38434f9fe0ff606e23a4b22865ea4b9047d32aa3939314a712",
+      "title": "concrete"
     },
     {
       "series_id": "032",
-      "title": "creases",
-      "series_type": "primary",
-      "status": "published",
-      "primary_work_id": "00833"
+      "record_hash": "94c08b0d89aee618e37f3e90d395b503c4ddf88251907d303a1c5dd33d502570",
+      "title": "creases"
     },
     {
       "series_id": "033",
-      "title": "cube structure",
-      "series_type": "primary",
-      "status": "published",
-      "primary_work_id": "00849"
+      "record_hash": "4e78594ee770b107263b6f9928805ab7c40b974c22c10a6a4261e363d79245bd",
+      "title": "cube structure"
     },
     {
       "series_id": "034",
-      "title": "curl",
-      "series_type": "primary",
-      "status": "published",
-      "primary_work_id": "00851"
+      "record_hash": "c985b429c43f2bbfa252e076ca3d24fe0e127dce027210a78412fd6554415d6e",
+      "title": "curl"
     },
     {
       "series_id": "035",
-      "title": "curve machine",
-      "series_type": "primary",
-      "status": "published",
-      "primary_work_id": "00867"
+      "record_hash": "437157c5afd020341b150fca29db0465bbe45108dcc38e057ea64deccee5ca7b",
+      "title": "curve machine"
     },
     {
       "series_id": "036",
-      "title": "curve poems",
-      "series_type": "primary",
-      "status": "published",
-      "primary_work_id": "00361"
+      "record_hash": "9bd0c56224e105a01ab826697132f0b8f388fd8729ae9afff88248c2f659af01",
+      "title": "curve poems"
     },
     {
       "series_id": "037",
-      "title": "doll",
-      "series_type": "primary",
-      "status": "published",
-      "primary_work_id": "00872"
+      "record_hash": "3c60fdac808378d4b0a1577706ddaf5d75fe2b530655abf2252e423ccee9a120",
+      "title": "doll"
     },
     {
       "series_id": "038",
-      "title": "doll faces",
-      "series_type": "primary",
-      "status": "published",
-      "primary_work_id": "00901"
+      "record_hash": "3408697c68daf37a9286d7d1379bc3ba212e28afbb5104129b8ee8e0a273f6a1",
+      "title": "doll faces"
     },
     {
       "series_id": "039",
-      "title": "doll sees everything",
-      "series_type": "primary",
-      "status": "published",
-      "primary_work_id": "00919"
+      "record_hash": "f55cae30f461377138cf81d497f5b66b9a9025765c42bf3eec27573924880033",
+      "title": "doll sees everything"
     },
     {
       "series_id": "040",
-      "title": "dot",
-      "series_type": "primary",
-      "status": "published",
-      "primary_work_id": "00936"
+      "record_hash": "16dddfc9103bcfd1b9bb8329bf94357e103247fdddd1ab2b6d8669b6052913cb",
+      "title": "dot"
     },
     {
       "series_id": "041",
-      "title": "dot theory",
-      "series_type": "primary",
-      "status": "published",
-      "primary_work_id": "00937"
+      "record_hash": "2abd64ef4982adfae01669ef21cc4f0d8765eb0aef6ff048157649774372f9ab",
+      "title": "dot theory"
     },
     {
       "series_id": "042",
-      "title": "dotlineform (2021)",
-      "series_type": "primary",
-      "status": "published",
-      "primary_work_id": "00949"
+      "record_hash": "e5ffcfec909d3251cd69ac675f907adc41aea963ba51820920d84b057b0346ee",
+      "title": "dotlineform (2021)"
     },
     {
       "series_id": "043",
-      "title": "dotlineform (2023)",
-      "series_type": "primary",
-      "status": "published",
-      "primary_work_id": "00455"
+      "record_hash": "f04dbde62befce29cbd96d43d9f9b7ac99fa7e4ecb50d1b826c48aa80c345611",
+      "title": "dotlineform (2023)"
     },
     {
       "series_id": "044",
-      "title": "dots",
-      "series_type": "primary",
-      "status": "published",
-      "primary_work_id": "00456"
+      "record_hash": "7ccab51fe1fe9d6c3d42f3e0bf997ceb061401e1d9043118690da3c41c6f3953",
+      "title": "dots"
     },
     {
       "series_id": "045",
-      "title": "droplets",
-      "series_type": "primary",
-      "status": "published",
-      "primary_work_id": "01017"
+      "record_hash": "c02841f8e2a9b3c25d9dd9e27ab9d964161d9a32d344a56e99a94fad3a867b7a",
+      "title": "droplets"
     },
     {
       "series_id": "046",
-      "title": "egg forms",
-      "series_type": "primary",
-      "status": "published",
-      "primary_work_id": "01037"
+      "record_hash": "035b8db8bba18557d8330b465333efbc396c0db4be7e28fa860ff79597ede049",
+      "title": "egg forms"
     },
     {
       "series_id": "047",
-      "title": "egg prints",
-      "series_type": "primary",
-      "status": "published",
-      "primary_work_id": "01038"
+      "record_hash": "50cdd7c15a406bc789f815ace335ee6ee6571f3bd421110f4f746031b670518b",
+      "title": "egg prints"
     },
     {
       "series_id": "048",
-      "title": "entangled form",
-      "series_type": "primary",
-      "status": "published",
-      "primary_work_id": "01044"
+      "record_hash": "46a4ab5726f0bbb3547b20918c4f40abe3677730332d56bc91556869a6008aed",
+      "title": "entangled form"
     },
     {
       "series_id": "049",
-      "title": "espresso",
-      "series_type": "primary",
-      "status": "published",
-      "primary_work_id": "01046"
+      "record_hash": "c66533a8ee3a86cb28031ab93d801a25b75bfce7c5a5b6f74b10712bd98d1365",
+      "title": "espresso"
     },
     {
       "series_id": "050",
-      "title": "field",
-      "series_type": "primary",
-      "status": "published",
-      "primary_work_id": "01047"
+      "record_hash": "79841d8e20b16cf073d04b3f57a9d5a44065b21bc889bfbb690a81a9cc510af7",
+      "title": "field"
     },
     {
       "series_id": "051",
-      "title": "fireworks form",
-      "series_type": "primary",
-      "status": "published",
-      "primary_work_id": "01050"
+      "record_hash": "2c66f3e98da00f7bd34aabb31b6b76b5f970dc8281e69c8af487d28cc07ebabe",
+      "title": "fireworks form"
     },
     {
       "series_id": "052",
-      "title": "flowers",
-      "series_type": "primary",
-      "status": "published",
-      "primary_work_id": "01052"
+      "record_hash": "6a7c8238ecdc020bf178314307a15f63dd9ed1901b20c82323c83a6cb5c9b611",
+      "title": "flowers"
     },
     {
       "series_id": "053",
-      "title": "fluid forms",
-      "series_type": "primary",
-      "status": "published",
-      "primary_work_id": "01055"
-    },
-    {
-      "series_id": "054",
-      "title": "fluid forms (2020)",
-      "series_type": "primary",
-      "status": "draft",
-      "primary_work_id": ""
+      "record_hash": "8ab80e0dc6f2542f8524904ce2f84a6c878d76778c3c312634b91f41e0080bcc",
+      "title": "fluid forms"
     },
     {
       "series_id": "055",
-      "title": "fog",
-      "series_type": "primary",
-      "status": "published",
-      "primary_work_id": "01099"
+      "record_hash": "a698802015699adc81e35b355c2bb40219c66991b30a7ae975fe6d0633307322",
+      "title": "fog"
     },
     {
       "series_id": "056",
-      "title": "folding forms",
-      "series_type": "primary",
-      "status": "published",
-      "primary_work_id": "01107"
+      "record_hash": "8ecd44eb939e8480e234e98a2ed187fb76e95d744a60f2c90e37315c00ebf0b0",
+      "title": "folding forms"
     },
     {
       "series_id": "057",
-      "title": "folding structure",
-      "series_type": "primary",
-      "status": "published",
-      "primary_work_id": "01161"
+      "record_hash": "3f95937e30d4cbab494456febb8a6e64d87ebd78769fa8f910f7130dce62bc76",
+      "title": "folding structure"
     },
     {
       "series_id": "058",
-      "title": "for David Lynch (2025)",
-      "series_type": "primary",
-      "status": "published",
-      "primary_work_id": "00346"
+      "record_hash": "80e5394aa8bb559b77c791fb886bb7f61fac72c4204dc6a9d78f74736b68c47b",
+      "title": "for David Lynch (2025)"
     },
     {
       "series_id": "059",
-      "title": "forest",
-      "series_type": "primary",
-      "status": "published",
-      "primary_work_id": "00392"
+      "record_hash": "dff826e79fff819d71cf98bd83ab55b381d009631c470e43351f01fa75a47094",
+      "title": "forest"
     },
     {
       "series_id": "060",
-      "title": "forest (2024)",
-      "series_type": "primary",
-      "status": "published",
-      "primary_work_id": "01175"
+      "record_hash": "3670e46ef8c1b8386d1f8a9d29dc68d3201ac63905adc56d94a678d5daf534e2",
+      "title": "forest (2024)"
     },
     {
       "series_id": "061",
-      "title": "forest memories 1-48",
-      "series_type": "primary",
-      "status": "published",
-      "primary_work_id": "00464"
+      "record_hash": "f02780d147a169c1240bf4a22ab9e80a9f9a73aee797a6d55f9a5eaa40bdd78f",
+      "title": "forest memories 1-48"
     },
     {
       "series_id": "062",
-      "title": "forests (2023)",
-      "series_type": "primary",
-      "status": "published",
-      "primary_work_id": "00468"
+      "record_hash": "d8259c57594a8fb9c94c45b097687882956bf04387d055490c050d007736b55b",
+      "title": "forests (2023)"
     },
     {
       "series_id": "063",
-      "title": "form mobile",
-      "series_type": "primary",
-      "status": "published",
-      "primary_work_id": "00535"
+      "record_hash": "cce8c749d479f8e5d48e92723bc01ef34ce76247a4298027720e4a6b6f32baed",
+      "title": "form mobile"
     },
     {
       "series_id": "064",
-      "title": "form space",
-      "series_type": "primary",
-      "status": "published",
-      "primary_work_id": "01183"
+      "record_hash": "7311287f76be06856b9dc74657a1c487e8f5537868a7993b44922e6b26804800",
+      "title": "form space"
     },
     {
       "series_id": "065",
-      "title": "forms",
-      "series_type": "primary",
-      "status": "published",
-      "primary_work_id": "01199"
+      "record_hash": "c504abb207251604bfa140f4381dc3a36425f3106be9765b86f19d69706c365f",
+      "title": "forms"
     },
     {
       "series_id": "066",
-      "title": "forms painting",
-      "series_type": "primary",
-      "status": "published",
-      "primary_work_id": "01200"
+      "record_hash": "c60be387b5faf40e0a486e6e8a95a045db9fcaaced61d35cb0e60f02ab36d0d1",
+      "title": "forms painting"
     },
     {
       "series_id": "067",
-      "title": "found forms",
-      "series_type": "primary",
-      "status": "published",
-      "primary_work_id": "00403"
+      "record_hash": "b936d4e73ca7da9b54741a113b927095e2b1fc508697733d562e599148dacde0",
+      "title": "found forms"
     },
     {
       "series_id": "068",
-      "title": "fragments",
-      "series_type": "primary",
-      "status": "published",
-      "primary_work_id": "01202"
+      "record_hash": "018c17a3ad2056e914a9846b90a0e97572e4ae386399d09f326fdfa9d70baaed",
+      "title": "fragments"
     },
     {
       "series_id": "069",
-      "title": "genetic (2020)",
-      "series_type": "primary",
-      "status": "published",
-      "primary_work_id": "01250"
+      "record_hash": "d0e94181075b4d1ff62e5a7d1d34208f9ca048626cec4d96ebebec43f9d747bf",
+      "title": "genetic (2020)"
     },
     {
       "series_id": "070",
-      "title": "glass forms",
-      "series_type": "primary",
-      "status": "published",
-      "primary_work_id": "00384"
+      "record_hash": "695c7c118786dcf2af5e440fd19411806b3cdbcc588d127b7e468c2de2b54b38",
+      "title": "glass forms"
     },
     {
       "series_id": "071",
-      "title": "grey series",
-      "series_type": "primary",
-      "status": "published",
-      "primary_work_id": "01258"
+      "record_hash": "91e294ff6cc3a9053d0048f56790fa5fc46eb87ec46fe51745795f80c6347837",
+      "title": "grey series"
     },
     {
       "series_id": "072",
-      "title": "grid cells",
-      "series_type": "primary",
-      "status": "published",
-      "primary_work_id": "01363"
+      "record_hash": "991b1dd4db0b3f8274be9bccfe4d51ab66f79232230ef84598f3471f64144133",
+      "title": "grid cells"
     },
     {
       "series_id": "073",
-      "title": "grid fields",
-      "series_type": "primary",
-      "status": "published",
-      "primary_work_id": "01264"
+      "record_hash": "50bf05b429d90408b9eb417e67e7da2f733d3e607f1a29688c9c712da36372ff",
+      "title": "grid fields"
     },
     {
       "series_id": "074",
-      "title": "grid theory",
-      "series_type": "primary",
-      "status": "published",
-      "primary_work_id": "01359"
+      "record_hash": "5b2d9ab6e4dd53efb8df36faa05de396bf98116cb2ff12b235b52a597dc96c21",
+      "title": "grid theory"
     },
     {
       "series_id": "075",
-      "title": "harmony",
-      "series_type": "primary",
-      "status": "published",
-      "primary_work_id": "00379"
+      "record_hash": "b2237ae933d4ff22e8f2ebc04dac567625a9291c904ac3f8450d06e18a04dec7",
+      "title": "harmony"
     },
     {
       "series_id": "076",
-      "title": "heaven and earth",
-      "series_type": "primary",
-      "status": "published",
-      "primary_work_id": "00469"
+      "record_hash": "22f3e73c980c51a2e54cccd0fb0dd67b4469f9f33d0ee816bc10f87d285d420d",
+      "title": "heaven and earth"
     },
     {
       "series_id": "077",
-      "title": "home",
-      "series_type": "primary",
-      "status": "published",
-      "primary_work_id": "01367"
+      "record_hash": "9f90cd15f7539815bc7e8f64aca10a300378409485b92ab41353ffeaecf63940",
+      "title": "home"
     },
     {
       "series_id": "078",
-      "title": "home land loss",
-      "series_type": "primary",
-      "status": "published",
-      "primary_work_id": "01372"
+      "record_hash": "ed7f14ae8a6332ebc2816181df808d332fe3b426c9c33f93d336c93fa19b073e",
+      "title": "home land loss"
     },
     {
       "series_id": "079",
-      "title": "in the end we'll know",
-      "series_type": "primary",
-      "status": "published",
-      "primary_work_id": "01377"
+      "record_hash": "9a59b65d9316bc372539cf867bb59c7a5375fee31444ebd42e15704a921c62ad",
+      "title": "in the end we'll know"
     },
     {
       "series_id": "080",
-      "title": "interior design",
-      "series_type": "primary",
-      "status": "published",
-      "primary_work_id": "01393"
+      "record_hash": "07c2e6b291d71887acdfba10c985e32fc765d04e5014d43a0aede5a012eaf4fa",
+      "title": "interior design"
     },
     {
       "series_id": "081",
-      "title": "intuition (2020)",
-      "series_type": "primary",
-      "status": "published",
-      "primary_work_id": "00457"
+      "record_hash": "fbf3cb0457525408d88852e90bd802c093abc5fb8aadfdb150356443542bf468",
+      "title": "intuition (2020)"
     },
     {
       "series_id": "082",
-      "title": "k crystals",
-      "series_type": "primary",
-      "status": "published",
-      "primary_work_id": "00625"
+      "record_hash": "1111a7deed83a11ccc33d3e9a77b846798d3a6138d612532a38ab90fe7bdbba8",
+      "title": "k crystals"
     },
     {
       "series_id": "083",
-      "title": "k particles",
-      "series_type": "primary",
-      "status": "published",
-      "primary_work_id": "01498"
+      "record_hash": "da872a4d5c4f9d567f544eba88898c25a720e672cb9f785888e51771511508ca",
+      "title": "k particles"
     },
     {
       "series_id": "084",
-      "title": "kylie structures",
-      "series_type": "primary",
-      "status": "published",
-      "primary_work_id": "00520"
+      "record_hash": "0def42470cebe4d26cc432e37b017e4e3abdf22c5a896862c472d5a25069b3db",
+      "title": "kylie structures"
     },
     {
       "series_id": "085",
-      "title": "kylie wax model",
-      "series_type": "primary",
-      "status": "published",
-      "primary_work_id": "01394"
+      "record_hash": "63ec669725f323b2eed7dd83614d04357d4bd674dc42b5d155745c422e4d1f19",
+      "title": "kylie wax model"
     },
     {
       "series_id": "086",
-      "title": "landscape for symbols",
-      "series_type": "primary",
-      "status": "published",
-      "primary_work_id": "01400"
+      "record_hash": "3074088af277de375f2ed82d042a9f662a070465c143804a72557447d14513d7",
+      "title": "landscape for symbols"
     },
     {
       "series_id": "087",
-      "title": "landscapes",
-      "series_type": "primary",
-      "status": "published",
-      "primary_work_id": "00516"
+      "record_hash": "191a7cefd302730fa4c4b735b97c1286518c51fec0764836a234bbc829fa65e3",
+      "title": "landscapes"
     },
     {
       "series_id": "088",
-      "title": "leaf",
-      "series_type": "primary",
-      "status": "published",
-      "primary_work_id": "00458"
+      "record_hash": "70a987ebc3fdc238f90c7943aedea8daefa6a573dfdf923125371836ac51ef44",
+      "title": "leaf"
     },
     {
       "series_id": "089",
-      "title": "learning to draw landscapes",
-      "series_type": "primary",
-      "status": "published",
-      "primary_work_id": "00127"
+      "record_hash": "c5024be8f65ac93eff262ff6bd6376c4b8c2dcafe245ce01ddd994038fb7aecb",
+      "title": "learning to draw landscapes"
     },
     {
       "series_id": "090",
-      "title": "lights",
-      "series_type": "primary",
-      "status": "published",
-      "primary_work_id": "01401"
+      "record_hash": "adf01e82895d61bf7a0041e3d08479a2483d95a6aba3337d3c3cf19eda29e206",
+      "title": "lights"
     },
     {
       "series_id": "091",
-      "title": "lipseyes",
-      "series_type": "primary",
-      "status": "published",
-      "primary_work_id": "00388"
+      "record_hash": "4d459cec19e89312c11e9af0498a06f8668172ff1eef5b4103a40314c74f27c8",
+      "title": "lipseyes"
     },
     {
       "series_id": "092",
-      "title": "living surface hand form",
-      "series_type": "primary",
-      "status": "published",
-      "primary_work_id": "00463"
+      "record_hash": "4076168a98e97449a13b435a92634861c90c1880eaf152d2013a359794522f72",
+      "title": "living surface hand form"
     },
     {
       "series_id": "093",
-      "title": "maps",
-      "series_type": "primary",
-      "status": "published",
-      "primary_work_id": "01417"
+      "record_hash": "65c16565c2ed5d37da5eb7f8d85d38766dd4c322c23f417f8f42f222579a6a1e",
+      "title": "maps"
     },
     {
       "series_id": "094",
-      "title": "matter",
-      "series_type": "primary",
-      "status": "published",
-      "primary_work_id": "01422"
+      "record_hash": "1b8248c09659a0a57cac2899ee10582b94d83d1e3257b098717781b322817939",
+      "title": "matter"
     },
     {
       "series_id": "095",
-      "title": "melancholy hope cell",
-      "series_type": "primary",
-      "status": "published",
-      "primary_work_id": "01423"
+      "record_hash": "d754fbe071487be0de72dec9a3915d1c914078f66fb5fa1f8280fc1d3c842369",
+      "title": "melancholy hope cell"
     },
     {
       "series_id": "096",
-      "title": "memory loss hope",
-      "series_type": "primary",
-      "status": "published",
-      "primary_work_id": "01441"
+      "record_hash": "e482a6e33aeba328e7c3bb0d9743341369f4a219b4e45c0c66876f53736c925e",
+      "title": "memory loss hope"
     },
     {
       "series_id": "097",
-      "title": "memory loss vessels",
-      "series_type": "primary",
-      "status": "published",
-      "primary_work_id": "01443"
+      "record_hash": "382ad6a53d6a8c03d0f302b4815efe70e21e52a464ec36382e33cb8b4a6be43f",
+      "title": "memory loss vessels"
     },
     {
       "series_id": "098",
-      "title": "mm",
-      "series_type": "primary",
-      "status": "published",
-      "primary_work_id": "00477"
+      "record_hash": "a85b25c0771c60583f9c8174b1f1f3427549c3251bd182776d7ec072f22cb67e",
+      "title": "mm"
     },
     {
       "series_id": "099",
-      "title": "models",
-      "series_type": "primary",
-      "status": "published",
-      "primary_work_id": "00540"
+      "record_hash": "a1c10d93a35a42532d6cb99ea78e015c4a9ed49ec28f88f8bc53c5e33a7f8b14",
+      "title": "models"
     },
     {
       "series_id": "100",
-      "title": "molecule forms",
-      "series_type": "primary",
-      "status": "published",
-      "primary_work_id": "00459"
+      "record_hash": "35b8b2c29907961affd93019e38cd78e5e3c32a076eb1006e855f1cc83d5fd02",
+      "title": "molecule forms"
     },
     {
       "series_id": "101",
-      "title": "molecules",
-      "series_type": "primary",
-      "status": "published",
-      "primary_work_id": "00460"
-    },
-    {
-      "series_id": "102",
-      "title": "monoprints and residues",
-      "series_type": "primary",
-      "status": "draft",
-      "primary_work_id": "00373"
+      "record_hash": "9e272ebf010f0f079b36e0c9b125371f2ac419b7a28233e7f820b04f1224d3fb",
+      "title": "molecules"
     },
     {
       "series_id": "103",
-      "title": "mother and child",
-      "series_type": "primary",
-      "status": "published",
-      "primary_work_id": "01447"
+      "record_hash": "f7832fc7ef4d39267376585a7fa5321212aae47fba79419992a033a8a64c0d55",
+      "title": "mother and child"
     },
     {
       "series_id": "104",
-      "title": "mouse story",
-      "series_type": "primary",
-      "status": "published",
-      "primary_work_id": "00160"
+      "record_hash": "24c9bb91b92f1a9f1a95f9f15760bd4cd6d5a74fd0a854ca983443626ea8ce59",
+      "title": "mouse story"
     },
     {
       "series_id": "105",
-      "title": "nerve",
-      "series_type": "primary",
-      "status": "published",
-      "primary_work_id": "00008"
+      "record_hash": "21bc3ab34c220f99838df8f447beb9af8a3a6c79be2101a8559b344ed48ca37a",
+      "title": "nerve"
     },
     {
       "series_id": "106",
-      "title": "nerve forms",
-      "series_type": "primary",
-      "status": "published",
-      "primary_work_id": "00581"
+      "record_hash": "05515a098ea0f858967023f13d11da8e740048f1f0f5ac69f69e5fd69b21f688",
+      "title": "nerve forms"
     },
     {
       "series_id": "107",
-      "title": "nothing is missing",
-      "series_type": "primary",
-      "status": "published",
-      "primary_work_id": "01448"
+      "record_hash": "dc11dc945a620c4ccb3d6c37a2a900a60f365ee95822f379119631c3010da01c",
+      "title": "nothing is missing"
     },
     {
       "series_id": "108",
-      "title": "olive tree",
-      "series_type": "primary",
-      "status": "published",
-      "primary_work_id": "01479"
+      "record_hash": "3896b9023778670426429e09f83fb6b2c48527faf93765eac7bb4f791758d33a",
+      "title": "olive tree"
     },
     {
       "series_id": "109",
-      "title": "particle machine",
-      "series_type": "primary",
-      "status": "published",
-      "primary_work_id": "01480"
+      "record_hash": "5690bf709e22b2fb463901c9b68d39cc1afef8c76f7c8204797ac9bc474408a8",
+      "title": "particle machine"
     },
     {
       "series_id": "110",
-      "title": "particle theory",
-      "series_type": "primary",
-      "status": "published",
-      "primary_work_id": "00553"
+      "record_hash": "80e0e6aa039acfb96d92d406c9c2fabc6deb9ed14d8a084924e5b285e20625d6",
+      "title": "particle theory"
     },
     {
       "series_id": "111",
-      "title": "particles",
-      "series_type": "primary",
-      "status": "published",
-      "primary_work_id": "01491"
+      "record_hash": "fa93c99bf50efac75696ff3b2991eab78101e78a35bae35d46e288d21dd9b171",
+      "title": "particles"
     },
     {
       "series_id": "112",
-      "title": "petri",
-      "series_type": "primary",
-      "status": "published",
-      "primary_work_id": "01501"
+      "record_hash": "bff56846a16d5da3de607904d5962023be72edebb8eb44e4530282e0a63525af",
+      "title": "petri"
     },
     {
       "series_id": "113",
-      "title": "pi particles",
-      "series_type": "primary",
-      "status": "published",
-      "primary_work_id": "01525"
+      "record_hash": "cb0164b83b3fb133e24fa81ad0498201074658dce64d7343e487a3d9a41eaac4",
+      "title": "pi particles"
     },
     {
       "series_id": "114",
-      "title": "plant forms",
-      "series_type": "primary",
-      "status": "published",
-      "primary_work_id": "01530"
+      "record_hash": "bb796dcb432b88d5ac0bcf0551d9a1e0d7bb13fb185b9f7482b8a040624727a7",
+      "title": "plant forms"
     },
     {
       "series_id": "115",
-      "title": "poa",
-      "series_type": "primary",
-      "status": "published",
-      "primary_work_id": "01538"
+      "record_hash": "8b9b8b73f7425b2e35b84168f32a753390217534dfd69d9c886edda4bed0833d",
+      "title": "poa"
     },
     {
       "series_id": "116",
-      "title": "pole vault",
-      "series_type": "primary",
-      "status": "published",
-      "primary_work_id": "01580"
+      "record_hash": "77656afbc8e8b1e916abdacad8eb3558b94935323fa5f68ad4c16d021a095742",
+      "title": "pole vault"
     },
     {
       "series_id": "117",
-      "title": "porto santo",
-      "series_type": "primary",
-      "status": "published",
-      "primary_work_id": "01593"
+      "record_hash": "a60cafba6067d6dc341e88daaf32fba2e00f06dcf53bddbe97ce2e48f839111d",
+      "title": "porto santo"
     },
     {
       "series_id": "118",
-      "title": "quantum random number theory",
-      "series_type": "primary",
-      "status": "published",
-      "primary_work_id": "00630"
+      "record_hash": "aa4c0ba25191ce42e1d252f773a85f84f3263ccd7fd394be9f2be47f44a13062",
+      "title": "quantum random number theory"
     },
     {
       "series_id": "119",
-      "title": "r",
-      "series_type": "primary",
-      "status": "published",
-      "primary_work_id": "00142"
+      "record_hash": "235e1603313ba9fd63c63f3524a2ac503a7c390f64f7e4689c2546d75c6e3350",
+      "title": "r"
     },
     {
       "series_id": "120",
-      "title": "reduce and return",
-      "series_type": "primary",
-      "status": "published",
-      "primary_work_id": "01596"
+      "record_hash": "6b9d9da8042ebb8c180062b2f4c0bd8fc71fbcf35949b04d3ebd93b3a4388acc",
+      "title": "reduce and return"
     },
     {
       "series_id": "121",
-      "title": "residues",
-      "series_type": "primary",
-      "status": "published",
-      "primary_work_id": "01608"
+      "record_hash": "73ea7637b5c12539953300d7d80e91c745eef12abe5fb014c382b9a904da6f35",
+      "title": "residues"
     },
     {
       "series_id": "122",
-      "title": "room",
-      "series_type": "primary",
-      "status": "published",
-      "primary_work_id": "01629"
+      "record_hash": "752d456bf8aa18585e677e9861aca2be2bc887503e1fbf819632000359fd435d",
+      "title": "room"
     },
     {
       "series_id": "123",
-      "title": "snow",
-      "series_type": "primary",
-      "status": "published",
-      "primary_work_id": "01655"
+      "record_hash": "25d78987f09f4296d662b0899085bcb29d37dbe45654848f8e60ccfe523d2b90",
+      "title": "snow"
     },
     {
       "series_id": "124",
-      "title": "spider webs",
-      "series_type": "primary",
-      "status": "published",
-      "primary_work_id": "01710"
+      "record_hash": "bebf2ed53cc154e6ec6630d6913157bc381823ab2abf15b71bfd822c7ef36c44",
+      "title": "spider webs"
     },
     {
       "series_id": "125",
-      "title": "spiders",
-      "series_type": "primary",
-      "status": "published",
-      "primary_work_id": "00402"
+      "record_hash": "f1387ac234af46133d15f63f30ac7b6ba3c3fcc5d587176ded943ea079254cf0",
+      "title": "spiders"
     },
     {
       "series_id": "126",
-      "title": "spine symbols",
-      "series_type": "primary",
-      "status": "published",
-      "primary_work_id": "01720"
+      "record_hash": "382c0c63f1a5d9b78fbd0ecd36a4dc975f4bf657cd0165e52d1feb6ec87a8986",
+      "title": "spine symbols"
     },
     {
       "series_id": "127",
-      "title": "state of mind",
-      "series_type": "primary",
-      "status": "published",
-      "primary_work_id": "01721"
+      "record_hash": "faa66581f787ca5ac3c65ffa85edaa4ae056a043000d2f96f3a84cf37a4c4d5d",
+      "title": "state of mind"
     },
     {
       "series_id": "128",
-      "title": "still life",
-      "series_type": "primary",
-      "status": "published",
-      "primary_work_id": "01732"
+      "record_hash": "28dd9273bdcc51eb0a574e49f952600d5ee2b373fdadffdf443902e1c53da43e",
+      "title": "still life"
     },
     {
       "series_id": "129",
-      "title": "string theory",
-      "series_type": "primary",
-      "status": "published",
-      "primary_work_id": "00573"
+      "record_hash": "1ee9b18db10807d70376115114f418b3550c48f1f454655c388ca0493725dabf",
+      "title": "string theory"
     },
     {
       "series_id": "130",
-      "title": "sunflower",
-      "series_type": "primary",
-      "status": "published",
-      "primary_work_id": "01735"
+      "record_hash": "8509663df581ab439abeac20eab8af65adcf067f234a38f1114ecd22beb2a708",
+      "title": "sunflower"
     },
     {
       "series_id": "131",
-      "title": "surface history",
-      "series_type": "primary",
-      "status": "published",
-      "primary_work_id": "01739"
+      "record_hash": "90bb91123a0baee4d5d8b9bebecc0326314dd77441e06d0983b637c30abc55d0",
+      "title": "surface history"
     },
     {
       "series_id": "132",
-      "title": "tabula rasa",
-      "series_type": "primary",
-      "status": "published",
-      "primary_work_id": "01744"
+      "record_hash": "772004820b917db515d3d974cf8acaca757419990bef63a1601fb664e98fa7a9",
+      "title": "tabula rasa"
     },
     {
       "series_id": "133",
-      "title": "thorns",
-      "series_type": "primary",
-      "status": "published",
-      "primary_work_id": "01762"
+      "record_hash": "d5d3815233e6606d5dc003d208bdeffbcae9bbaff5cc98663a791e3d1ad43cb8",
+      "title": "thorns"
     },
     {
       "series_id": "134",
-      "title": "through a glass clearly",
-      "series_type": "primary",
-      "status": "published",
-      "primary_work_id": "01768"
+      "record_hash": "f4cfbe2742d7c084bad6d93c1facc30ec517cbe4243481785eb287a1b6b0574e",
+      "title": "through a glass clearly"
     },
     {
       "series_id": "135",
-      "title": "train moments",
-      "series_type": "primary",
-      "status": "published",
-      "primary_work_id": "01868"
+      "record_hash": "29604565fdf624ad223f29b5b8db002913fdd73b094b225abf6f77bf95789c83",
+      "title": "train moments"
     },
     {
       "series_id": "136",
-      "title": "tree",
-      "series_type": "primary",
-      "status": "published",
-      "primary_work_id": "00546"
+      "record_hash": "7180ed8c80f055474859dc227293a6b3745bd9c06af871fdd4c906d9dd8528c7",
+      "title": "tree"
     },
     {
       "series_id": "137",
-      "title": "tulips",
-      "series_type": "primary",
-      "status": "published",
-      "primary_work_id": "01869"
+      "record_hash": "200abef143f29a4cbaf11d398635cb7d0dff4d45b5ba8887cc0e1d0b1e6ecef4",
+      "title": "tulips"
     },
     {
       "series_id": "138",
-      "title": "untitled composites",
-      "series_type": "primary",
-      "status": "published",
-      "primary_work_id": "01874"
+      "record_hash": "f605db64c564f0003ca7a665b5d77c08633648572aa831e2d879735c4dc2c056",
+      "title": "untitled composites"
     },
     {
       "series_id": "139",
-      "title": "untitled (destroyed)",
-      "series_type": "primary",
-      "status": "published",
-      "primary_work_id": "01883"
+      "record_hash": "43d501a54f120dbc788ce14964d46a5810d57f10f12897e193f45a8a7f0eabff",
+      "title": "untitled (destroyed)"
     },
     {
       "series_id": "140",
-      "title": "wa",
-      "series_type": "primary",
-      "status": "published",
-      "primary_work_id": "00615"
+      "record_hash": "9b7f7cbc818d81a6194f8d85feac283b646c36abe53fefa61af9e48e461b4be9",
+      "title": "wa"
     },
     {
       "series_id": "141",
-      "title": "water",
-      "series_type": "primary",
-      "status": "published",
-      "primary_work_id": "01912"
+      "record_hash": "3ef190dc3c0d7a6c9da17873ef914d824aacac37c008338f5d4bc3c1d8481116",
+      "title": "water"
     },
     {
       "series_id": "142",
-      "title": "water sea pond",
-      "series_type": "primary",
-      "status": "published",
-      "primary_work_id": "01938"
+      "record_hash": "52f06c379087bf0997d000f49467ff0cc06a61a53baba9b2fcaa67ba3d84c679",
+      "title": "water sea pond"
     },
     {
       "series_id": "143",
-      "title": "simultaneous equations",
-      "series_type": "primary",
-      "status": "published",
-      "primary_work_id": "01941"
+      "record_hash": "ef6ee8bf4f020036bc9cb8aebaf79ab86814d1bc99fb393902a83965d8f112d3",
+      "title": "simultaneous equations"
     }
   ]
 }

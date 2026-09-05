@@ -1,219 +1,180 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v2"
+    "schema": "studio_catalogue_lookup_series_record_v3"
   },
   "series": {
     "series_id": "095",
     "title": "melancholy hope cell",
-    "series_type": "primary",
-    "status": "published",
-    "published_date": "2026-04-01",
     "year": 2016,
     "year_display": "2016-17",
-    "primary_work_id": "01423",
     "sort_fields": "work_id"
   },
+  "record_hash": "d754fbe071487be0de72dec9a3915d1c914078f66fb5fa1f8280fc1d3c842369",
   "member_works": [
     {
       "work_id": "01423",
+      "record_hash": "b56b8ba97e61671ce66ced01d38f2a3bdb1b10935e783a07c80883aeb11f155d",
       "title": "melancholy hope cell (2016-08-07 10-51-55)",
       "year": 2016,
       "year_display": "2016",
-      "status": "published",
-      "series_ids": [
-        "095"
-      ],
+      "series_id": "095",
       "project_folder": "melancholy hope cell"
     },
     {
       "work_id": "01424",
+      "record_hash": "00bb651d5be89ec61427521af7ae88f20c27675524b7cea409a9783393239f6d",
       "title": "melancholy hope cell (2016-10-01 11-58-15)",
       "year": 2016,
       "year_display": "2016",
-      "status": "published",
-      "series_ids": [
-        "095"
-      ],
+      "series_id": "095",
       "project_folder": "melancholy hope cell"
     },
     {
       "work_id": "01425",
+      "record_hash": "c3ddbcdcf7515e862f3a3312b8f8e09d8b9b13494fc0c1a6058ff4b00006291f",
       "title": "melancholy hope cell (2016-10-01 11-58-31)",
       "year": 2016,
       "year_display": "2016",
-      "status": "published",
-      "series_ids": [
-        "095"
-      ],
+      "series_id": "095",
       "project_folder": "melancholy hope cell"
     },
     {
       "work_id": "01426",
+      "record_hash": "3f2d818c37336ec151bdcaa8821729f1a6ecdc7553063b135ea8d5e831172292",
       "title": "melancholy hope cell (2016-10-30 12-31-48)",
       "year": 2016,
       "year_display": "2016",
-      "status": "published",
-      "series_ids": [
-        "095"
-      ],
+      "series_id": "095",
       "project_folder": "melancholy hope cell"
     },
     {
       "work_id": "01427",
+      "record_hash": "8166891bb0205c640e96979fcd7c2c4817b1294c5acc5d90a97c4a51e3d2b0fa",
       "title": "melancholy hope cell (2017-01-02 12-33-42)",
       "year": 2017,
       "year_display": "2017",
-      "status": "published",
-      "series_ids": [
-        "095"
-      ],
+      "series_id": "095",
       "project_folder": "melancholy hope cell"
     },
     {
       "work_id": "01428",
+      "record_hash": "b8703e0b3cf2e19e291fb89de1cb270ff55ad31e14158cfa173dbd116ff0de14",
       "title": "melancholy hope cell (2017-03-21 23-29-31)",
       "year": 2017,
       "year_display": "2017",
-      "status": "published",
-      "series_ids": [
-        "095"
-      ],
+      "series_id": "095",
       "project_folder": "melancholy hope cell"
     },
     {
       "work_id": "01429",
+      "record_hash": "831bcbd42b7b16a048ff63f5b77700227d662025d6b6e274026bf1973ad0459a",
       "title": "melancholy hope cell (2017-03-21 23-29-44)",
       "year": 2017,
       "year_display": "2017",
-      "status": "published",
-      "series_ids": [
-        "095"
-      ],
+      "series_id": "095",
       "project_folder": "melancholy hope cell"
     },
     {
       "work_id": "01430",
+      "record_hash": "e23a7424146c37a7b72e6a50ae6a1bc656b531574bc3a4cac5ca7ff5a272e592",
       "title": "melancholy hope cell (2017-04-26 17-19-12)",
       "year": 2017,
       "year_display": "2017",
-      "status": "published",
-      "series_ids": [
-        "095"
-      ],
+      "series_id": "095",
       "project_folder": "melancholy hope cell"
     },
     {
       "work_id": "01431",
+      "record_hash": "c18d37c37a0ae4d354ba13e77fa205835675330e12ecb53abd5efb7b51dcd756",
       "title": "melancholy hope cell (2017-06-25 11-13-56)",
       "year": 2017,
       "year_display": "2017",
-      "status": "published",
-      "series_ids": [
-        "095"
-      ],
+      "series_id": "095",
       "project_folder": "melancholy hope cell"
     },
     {
       "work_id": "01432",
+      "record_hash": "249b522267f2b615d439e7810d25641ae6766aa628ec830d0699deae10defaaf",
       "title": "melancholy hope cell (2017-06-25 11-14-09)",
       "year": 2017,
       "year_display": "2017",
-      "status": "published",
-      "series_ids": [
-        "095"
-      ],
+      "series_id": "095",
       "project_folder": "melancholy hope cell"
     },
     {
       "work_id": "01433",
+      "record_hash": "95435699ade0c0898691b5d3c059a81217dc97b78587648283ab83086297b09c",
       "title": "melancholy hope cell (version 2022-10-16 18꞉10꞉34)",
       "year": 2022,
       "year_display": "2022",
-      "status": "published",
-      "series_ids": [
-        "095"
-      ],
+      "series_id": "095",
       "project_folder": "melancholy hope cell"
     },
     {
       "work_id": "01434",
+      "record_hash": "01e2ed691458f07657ea47e07c4f76704504377d01d6d41cacded85522af10ec",
       "title": "melancholy hope cell (version 2022-10-16 18꞉10꞉36)",
       "year": 2022,
       "year_display": "2022",
-      "status": "published",
-      "series_ids": [
-        "095"
-      ],
+      "series_id": "095",
       "project_folder": "melancholy hope cell"
     },
     {
       "work_id": "01435",
+      "record_hash": "cc3db81d5b8556696791ea1590bc7704a86328aba151b4d0bf9b63bef0c052ad",
       "title": "melancholy hope cell (version 2022-10-16 18꞉10꞉39)",
       "year": 2022,
       "year_display": "2022",
-      "status": "published",
-      "series_ids": [
-        "095"
-      ],
+      "series_id": "095",
       "project_folder": "melancholy hope cell"
     },
     {
       "work_id": "01436",
+      "record_hash": "e86a687b85f3ca31d0957bb599f7ca9ab18362fc97c978cbd6a9ede61a6d5d23",
       "title": "melancholy hope cell (version 2022-10-16 18꞉10꞉42)",
       "year": 2022,
       "year_display": "2022",
-      "status": "published",
-      "series_ids": [
-        "095"
-      ],
+      "series_id": "095",
       "project_folder": "melancholy hope cell"
     },
     {
       "work_id": "01437",
+      "record_hash": "355c2c9bfa1796b6669142d6e92e493a868982b26a88c158212a4957fa5bd951",
       "title": "melancholy hope cell (version 2022-10-16 18꞉11꞉04)",
       "year": 2022,
       "year_display": "2022",
-      "status": "published",
-      "series_ids": [
-        "095"
-      ],
+      "series_id": "095",
       "project_folder": "melancholy hope cell"
     },
     {
       "work_id": "01438",
+      "record_hash": "68042e1ae8cd68eb7311f0a4ff48fb80ac98bb9bdc1c71cde0972bfb40bebdd7",
       "title": "melancholy hope cell (version 2022-10-16 18꞉11꞉06)",
       "year": 2022,
       "year_display": "2022",
-      "status": "published",
-      "series_ids": [
-        "095"
-      ],
+      "series_id": "095",
       "project_folder": "melancholy hope cell"
     },
     {
       "work_id": "01439",
+      "record_hash": "c0d24a1bb3be6a47f746d2f5785a98355bc85f4c37d51761d4216b6236e4fe10",
       "title": "melancholy hope cell (version 2022-10-16 18꞉11꞉09)",
       "year": 2022,
       "year_display": "2022",
-      "status": "published",
-      "series_ids": [
-        "095"
-      ],
+      "series_id": "095",
       "project_folder": "melancholy hope cell"
     },
     {
       "work_id": "01440",
+      "record_hash": "d60a963c87b602e23fe0b9d336d09639c501efc7c09987d184bc50eda155ca53",
       "title": "melancholy hope cell (version 2022-10-16 18꞉11꞉11)",
       "year": 2022,
       "year_display": "2022",
-      "status": "published",
-      "series_ids": [
-        "095"
-      ],
+      "series_id": "095",
       "project_folder": "melancholy hope cell"
     }
   ],
-  "ordered_published_work_ids": [
+  "ordered_work_ids": [
     "01423",
     "01424",
     "01425",

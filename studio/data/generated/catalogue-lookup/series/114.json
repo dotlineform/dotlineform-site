@@ -1,98 +1,81 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v2"
+    "schema": "studio_catalogue_lookup_series_record_v3"
   },
   "series": {
     "series_id": "114",
     "title": "plant forms",
-    "series_type": "primary",
-    "status": "published",
-    "published_date": "2026-04-01",
     "year": 2022,
     "year_display": "2022",
-    "primary_work_id": "01530",
     "sort_fields": "work_id"
   },
+  "record_hash": "bb796dcb432b88d5ac0bcf0551d9a1e0d7bb13fb185b9f7482b8a040624727a7",
   "member_works": [
     {
       "work_id": "01527",
+      "record_hash": "eb2501c4be70f3f42be7bacb18a34b04dd13637e4b8209a04ce41b73ecf60b79",
       "title": "plant form 1",
       "year": 2022,
       "year_display": "2022",
-      "status": "published",
-      "series_ids": [
-        "114"
-      ],
+      "series_id": "114",
       "project_folder": "plant forms"
     },
     {
       "work_id": "01528",
+      "record_hash": "3d30ca901230fa12724125644d3bcb94b048420f13f01f54c9d52280d22fdbc9",
       "title": "plant form 2",
       "year": 2022,
       "year_display": "2022",
-      "status": "published",
-      "series_ids": [
-        "114"
-      ],
+      "series_id": "114",
       "project_folder": "plant forms"
     },
     {
       "work_id": "01529",
+      "record_hash": "164a2af980be1f78639af873465d9c0a0781f9601c98b147b0557bd94eb16375",
       "title": "plant form 3",
       "year": 2022,
       "year_display": "2022",
-      "status": "published",
-      "series_ids": [
-        "114"
-      ],
+      "series_id": "114",
       "project_folder": "plant forms"
     },
     {
       "work_id": "01530",
+      "record_hash": "839bb0e5b5eeb4c228a7e4cdfbe8db8026b4e567e25fc23ab6b0e8bf68453bef",
       "title": "plant form 4",
       "year": 2022,
       "year_display": "2022",
-      "status": "published",
-      "series_ids": [
-        "114"
-      ],
+      "series_id": "114",
       "project_folder": "plant forms"
     },
     {
       "work_id": "01531",
+      "record_hash": "beee02109c44467ac0054a5f81c88d380a4fbacdf1db13ac16dc3d5b576a2597",
       "title": "plant form 5",
       "year": 2022,
       "year_display": "2022",
-      "status": "published",
-      "series_ids": [
-        "114"
-      ],
+      "series_id": "114",
       "project_folder": "plant forms"
     },
     {
       "work_id": "01532",
+      "record_hash": "868142e97cf0cf39a92e031fc9c4ee9a4e7e27618eedd2abda3caecfd064339d",
       "title": "plant form 6",
       "year": 2022,
       "year_display": "2022",
-      "status": "published",
-      "series_ids": [
-        "114"
-      ],
+      "series_id": "114",
       "project_folder": "plant forms"
     },
     {
       "work_id": "01533",
+      "record_hash": "c9249ca4d56a4104367006c156aed48aa61ed2bcf52950c9c8926f84f7acc31d",
       "title": "plant form 7",
       "year": 2022,
       "year_display": "2022",
-      "status": "published",
-      "series_ids": [
-        "114"
-      ],
+      "series_id": "114",
       "project_folder": "plant forms"
     }
   ],
-  "ordered_published_work_ids": [
+  "ordered_work_ids": [
     "01527",
     "01528",
     "01529",

@@ -26,27 +26,24 @@ def test_catalogue_read_route_returns_source_payloads() -> None:
         (source_dir / "works.json").write_text(
             json.dumps(
                 {
-                    "catalogue_source_works_version": "catalogue_source_works_v1",
+                    "catalogue_source_works_version": "catalogue_source_works_v2",
                     "works": {
                         "00001": {
                             "work_id": "00001",
                             "title": "Draft One",
-                            "status": "draft",
-                            "series_ids": ["001"],
+                            "series_id": "001",
                             "project_folder": "Alpha",
                         },
                         "00002": {
                             "work_id": "00002",
                             "title": "Published A",
-                            "status": "published",
-                            "series_ids": ["001"],
+                            "series_id": "001",
                             "project_folder": "Beta",
                         },
                         "00003": {
                             "work_id": "00003",
                             "title": "Published B",
-                            "status": "published",
-                            "series_ids": ["001"],
+                            "series_id": "001",
                             "project_folder": "Alpha",
                         },
                     },
@@ -58,14 +55,12 @@ def test_catalogue_read_route_returns_source_payloads() -> None:
         (source_dir / "series.json").write_text(
             json.dumps(
                 {
-                    "catalogue_source_series_version": "catalogue_source_series_v1",
+                    "catalogue_source_series_version": "catalogue_source_series_v2",
                     "series": {
                         "001": {
                             "series_id": "001",
                             "title": "Series",
                             "series_type": "primary",
-                            "status": "published",
-                            "primary_work_id": "00002",
                             "sort_fields": "title,work_id",
                         }
                     },
@@ -89,9 +84,9 @@ def test_catalogue_read_route_returns_source_payloads() -> None:
 
         assert works_payload["works"]["00001"]["title"] == "Draft One"
         assert series_payload["series"]["001"]["title"] == "Series"
-        assert exact_series_payload["header"]["schema"] == "studio_catalogue_lookup_series_record_v2"
+        assert exact_series_payload["header"]["schema"] == "studio_catalogue_lookup_series_record_v3"
         assert exact_series_payload["series"]["series_id"] == "001"
-        assert exact_series_payload["ordered_published_work_ids"] == ["00002", "00003"]
+        assert exact_series_payload["ordered_work_ids"] == ["00001", "00002", "00003"]
         assert exact_series_payload["project_folders"] == ["Alpha", "Beta"]
         assert [row["work_id"] for row in exact_series_payload["member_works"]] == ["00001", "00002", "00003"]
         assert exact_work_payload["work"]["work_id"] == "00002"

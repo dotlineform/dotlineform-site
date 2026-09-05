@@ -138,7 +138,7 @@ def plan_for(
 
 def work_sort_context() -> dict[str, Any]:
     records = CatalogueSourceRecords(
-        works={"00001": {"work_id": "00001", "series_ids": ["009"]}},
+        works={"00001": {"work_id": "00001", "series_id": ["009"]}},
         work_detail_sections={},
         work_details={},
         series={"009": {"series_id": "009", "sort_fields": "title"}},
@@ -258,6 +258,7 @@ def assert_field_omitted(label: str, record: Mapping[str, Any], field: str) -> N
 
 def verify_optional_source_serialization() -> int:
     if OMIT_EMPTY_SOURCE_FIELDS != {
+        "series_id",
         "media_source_id",
         "project_subfolder",
         "details_subfolder",
@@ -443,7 +444,7 @@ def main() -> None:
         ),
         (
             "work publication membership metadata",
-            plan_for(registry, record_family="work", fields=["series_ids"]),
+            plan_for(registry, record_family="work", fields=["series_id"]),
             {
                 "rule_id": "work_publish_membership",
                 "artifacts": [
@@ -498,8 +499,8 @@ def main() -> None:
             },
         ),
         (
-            "series publication metadata",
-            plan_for(registry, record_family="series", fields=["status"]),
+            "series ordering metadata",
+            plan_for(registry, record_family="series", fields=["sort_fields"]),
             {
                 "rule_id": "series_publish_primary_order",
                 "artifacts": [

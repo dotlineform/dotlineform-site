@@ -61,11 +61,10 @@ export function buildExactSeriesWorkOptions(seriesId, seriesRecordJson) {
     ? seriesRecordJson.series
     : null;
   const resolvedSeriesId = normalize(series && series.series_id);
-  const seriesStatus = normalize(series && series.status);
-  if (!normalizedSeriesId || resolvedSeriesId !== normalizedSeriesId || seriesStatus !== "published") return [];
+  if (!normalizedSeriesId || resolvedSeriesId !== normalizedSeriesId) return [];
 
-  const orderedWorkIds = Array.isArray(seriesRecordJson && seriesRecordJson.ordered_published_work_ids)
-    ? seriesRecordJson.ordered_published_work_ids
+  const orderedWorkIds = Array.isArray(seriesRecordJson && seriesRecordJson.ordered_work_ids)
+    ? seriesRecordJson.ordered_work_ids
     : [];
   const memberWorks = Array.isArray(seriesRecordJson && seriesRecordJson.member_works)
     ? seriesRecordJson.member_works
@@ -73,8 +72,7 @@ export function buildExactSeriesWorkOptions(seriesId, seriesRecordJson) {
   const memberById = new Map();
   memberWorks.forEach((work) => {
     const workId = normalizeWorkId(work && work.work_id);
-    const workSeriesIds = Array.isArray(work && work.series_ids) ? work.series_ids.map(normalize) : [];
-    if (!workId || normalize(work && work.status) !== "published" || !workSeriesIds.includes(normalizedSeriesId)) return;
+    if (!workId || normalize(work?.series_id) !== normalizedSeriesId) return;
     memberById.set(workId, work);
   });
   const out = [];

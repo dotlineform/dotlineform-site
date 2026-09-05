@@ -1,76 +1,63 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v2"
+    "schema": "studio_catalogue_lookup_series_record_v3"
   },
   "series": {
     "series_id": "029",
     "title": "colours",
-    "series_type": "primary",
-    "status": "published",
-    "published_date": "2026-04-01",
     "year": 2008,
     "year_display": "2008",
-    "primary_work_id": "00813",
     "sort_fields": "work_id"
   },
+  "record_hash": "a5dc4295d1200f795d1b8fab906fb19695e70184986715a6c20d75d550abf87a",
   "member_works": [
     {
       "work_id": "00813",
+      "record_hash": "bcf4f68a055b2c8e75ab6d706663caf102f06f0986c165fe22b416a2a59fc85b",
       "title": "colours 1958-2001",
       "year": 2008,
       "year_display": "2008",
-      "status": "published",
-      "series_ids": [
-        "029"
-      ],
+      "series_id": "029",
       "project_folder": "colours"
     },
     {
       "work_id": "00814",
+      "record_hash": "a0e8868f3a2c20624b9e464275aa1e98b9e927e217aeef4ce2e79c258ee03f0d",
       "title": "colours belsen",
       "year": 2008,
       "year_display": "2008",
-      "status": "published",
-      "series_ids": [
-        "029"
-      ],
+      "series_id": "029",
       "project_folder": "colours"
     },
     {
       "work_id": "00815",
+      "record_hash": "db95064c0cc5dde2a78834ecb33f249bdf4204269947d629db0006f915bc2da9",
       "title": "colours dachau",
       "year": 2008,
       "year_display": "2008",
-      "status": "published",
-      "series_ids": [
-        "029"
-      ],
+      "series_id": "029",
       "project_folder": "colours"
     },
     {
       "work_id": "00816",
+      "record_hash": "c2e443439f1c59d6917d95f5ee68735637a9f043216366f71323649570b75a5d",
       "title": "colours kylie",
       "year": 2008,
       "year_display": "2008",
-      "status": "published",
-      "series_ids": [
-        "029"
-      ],
+      "series_id": "029",
       "project_folder": "colours"
     },
     {
       "work_id": "00817",
+      "record_hash": "6384bccc214092286a0a7a1ad629b2a428728287c74a8337bd18d0941ad44a91",
       "title": "colours marilyn",
       "year": 2008,
       "year_display": "2008",
-      "status": "published",
-      "series_ids": [
-        "029"
-      ],
+      "series_id": "029",
       "project_folder": "colours"
     }
   ],
-  "ordered_published_work_ids": [
+  "ordered_work_ids": [
     "00813",
     "00814",
     "00815",

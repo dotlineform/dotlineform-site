@@ -1,32 +1,27 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v2"
+    "schema": "studio_catalogue_lookup_series_record_v3"
   },
   "series": {
     "series_id": "070",
     "title": "glass forms",
-    "series_type": "primary",
-    "status": "published",
-    "published_date": "2026-04-01",
     "year": 2010,
     "year_display": "c. 2010?",
-    "primary_work_id": "00384",
     "sort_fields": "work_id"
   },
+  "record_hash": "695c7c118786dcf2af5e440fd19411806b3cdbcc588d127b7e468c2de2b54b38",
   "member_works": [
     {
       "work_id": "00384",
+      "record_hash": "f1dd4d8e1e64d5f48460c435e7a9efb9997b6c12bab68ef8ade1b1971a7e1035",
       "title": "glass forms",
       "year": 2010,
       "year_display": "c. 2010?",
-      "status": "published",
-      "series_ids": [
-        "070"
-      ],
+      "series_id": "070",
       "project_folder": "glass forms"
     }
   ],
-  "ordered_published_work_ids": [
+  "ordered_work_ids": [
     "00384"
   ],
   "project_folders": [

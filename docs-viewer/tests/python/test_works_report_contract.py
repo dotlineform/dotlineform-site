@@ -25,7 +25,7 @@ def test_manage_registry_declares_local_works_report() -> None:
     assert records["works"] == {
         "report_id": "works",
         "title": "Works",
-        "description": "Shows documentation coverage for every published Series.",
+        "description": "Shows documentation coverage for every Series.",
         "default_access": "local",
         "loader_id": "works",
         "presets": [],

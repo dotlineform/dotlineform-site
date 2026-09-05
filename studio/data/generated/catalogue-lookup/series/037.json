@@ -1,340 +1,279 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v2"
+    "schema": "studio_catalogue_lookup_series_record_v3"
   },
   "series": {
     "series_id": "037",
     "title": "doll",
-    "series_type": "primary",
-    "status": "published",
-    "published_date": "2026-04-01",
     "year": 1989,
     "year_display": "1989-2008",
-    "primary_work_id": "00872",
     "sort_fields": "year,work_id"
   },
+  "record_hash": "3c60fdac808378d4b0a1577706ddaf5d75fe2b530655abf2252e423ccee9a120",
   "member_works": [
     {
       "work_id": "00872",
+      "record_hash": "5ef9e704661de32336971a41ee3c79bd00a4e1af992878e0b44a92b954944d5a",
       "title": "doll bandage",
       "year": 1989,
       "year_display": "c. 1989",
-      "status": "published",
-      "series_ids": [
-        "037"
-      ],
+      "series_id": "037",
       "project_folder": "doll"
     },
     {
       "work_id": "00873",
+      "record_hash": "07714bb85bcd610d2fce978f11daa9ac2ed862f8d03992d559d37600e9754276",
       "title": "doll cell [framed version]",
       "year": 2007,
       "year_display": "2007",
-      "status": "published",
-      "series_ids": [
-        "037"
-      ],
+      "series_id": "037",
       "project_folder": "doll"
     },
     {
       "work_id": "00874",
+      "record_hash": "d5e4b2b1b4c7c3031349cee8a323be34a62e629e5ae5b6662b289732c9f7e41a",
       "title": "doll cell (stairs)",
       "year": 2007,
       "year_display": "2007",
-      "status": "published",
-      "series_ids": [
-        "037"
-      ],
+      "series_id": "037",
       "project_folder": "doll"
     },
     {
       "work_id": "00875",
+      "record_hash": "0236afa87b6abc28680481cac8d4cbbbc5360b42a36bd007695272bfed871b6b",
       "title": "doll cell",
       "year": 2007,
       "year_display": "2007",
-      "status": "published",
-      "series_ids": [
-        "037"
-      ],
+      "series_id": "037",
       "project_folder": "doll"
     },
     {
       "work_id": "00876",
+      "record_hash": "59ad5595f1d1a4bac1ddf31bf06b0b6dc64c7eac7cab2d7ff5af5983018db70a",
       "title": "doll components",
       "year": 2005,
       "year_display": "2005",
-      "status": "published",
-      "series_ids": [
-        "037"
-      ],
+      "series_id": "037",
       "project_folder": "doll"
     },
     {
       "work_id": "00877",
+      "record_hash": "292000fc5a8c42bb4f2fd9c6dca4811905be87faf9723ee6420973cf8e5424d6",
       "title": "doll face 1",
       "year": 1989,
       "year_display": "c. 1989",
-      "status": "published",
-      "series_ids": [
-        "037"
-      ],
+      "series_id": "037",
       "project_folder": "doll"
     },
     {
       "work_id": "00878",
+      "record_hash": "b54af420c5a1f1ada740c0ae7680d1d94c202323d4029d9e7e5ea42f5d07a57d",
       "title": "doll face 2",
       "year": 1989,
       "year_display": "c. 1989",
-      "status": "published",
-      "series_ids": [
-        "037"
-      ],
+      "series_id": "037",
       "project_folder": "doll"
     },
     {
       "work_id": "00879",
+      "record_hash": "ee021cb48a2a46e43956731db2c4d891b0144e3e4752768c7ed8dc5c8db66479",
       "title": "doll face 3",
       "year": 1989,
       "year_display": "c. 1989",
-      "status": "published",
-      "series_ids": [
-        "037"
-      ],
+      "series_id": "037",
       "project_folder": "doll"
     },
     {
       "work_id": "00880",
+      "record_hash": "5498ad29350aea878eb81a0f93301423a128925eb0a170da251ea083c2d69990",
       "title": "doll face 4",
       "year": 1989,
       "year_display": "c. 1989",
-      "status": "published",
-      "series_ids": [
-        "037"
-      ],
+      "series_id": "037",
       "project_folder": "doll"
     },
     {
       "work_id": "00881",
+      "record_hash": "6911f7df8bb73f020e30242ed9a8e5276de6ed1601b68ede97f45bfdc38f94b2",
       "title": "doll face and hair",
       "year": 1989,
       "year_display": "c. 1989",
-      "status": "published",
-      "series_ids": [
-        "037"
-      ],
+      "series_id": "037",
       "project_folder": "doll"
     },
     {
       "work_id": "00882",
+      "record_hash": "4432029e74476f3b464fa9a8642b48f11b3a9d2519fb372bc7c5551919986ade",
       "title": "doll forest (cell)",
       "year": 2007,
       "year_display": "2007",
-      "status": "published",
-      "series_ids": [
-        "037"
-      ],
+      "series_id": "037",
       "project_folder": "doll"
     },
     {
       "work_id": "00883",
+      "record_hash": "35599ca11d4c4a7fd5826db23c32e72ebedb4904c3ae762c07985f0c2ff8d01d",
       "title": "doll forest (green)",
       "year": 2007,
       "year_display": "2007",
-      "status": "published",
-      "series_ids": [
-        "037"
-      ],
+      "series_id": "037",
       "project_folder": "doll"
     },
     {
       "work_id": "00884",
+      "record_hash": "d58cf8735c77a6d64e7021195895a48284809600ba055b38f30e1bede7987d5a",
       "title": "doll forest (dissolve)",
       "year": 2007,
       "year_display": "2007",
-      "status": "published",
-      "series_ids": [
-        "037"
-      ],
+      "series_id": "037",
       "project_folder": "doll"
     },
     {
       "work_id": "00885",
+      "record_hash": "a2374f641b1db1fd336136f3f6c958e5acf25b9446dce0de8ca993c0f127a2b1",
       "title": "doll forest (transform)",
       "year": 2007,
       "year_display": "2007",
-      "status": "published",
-      "series_ids": [
-        "037"
-      ],
+      "series_id": "037",
       "project_folder": "doll"
     },
     {
       "work_id": "00886",
+      "record_hash": "536647d707594f009b5b2b3554bdcb43f6f276256f8ed17452badc8f2c46cdc0",
       "title": "doll forest",
       "year": 2007,
       "year_display": "2007",
-      "status": "published",
-      "series_ids": [
-        "037"
-      ],
+      "series_id": "037",
       "project_folder": "doll"
     },
     {
       "work_id": "00887",
+      "record_hash": "00737ba59b26e357fdb30cda0d1d4f27d9a78382051c4584e5635061ea4bc2d5",
       "title": "doll formaldehyde form [1]",
       "year": 1990,
       "year_display": "c. 1990",
-      "status": "published",
-      "series_ids": [
-        "037"
-      ],
+      "series_id": "037",
       "project_folder": "doll"
     },
     {
       "work_id": "00888",
+      "record_hash": "2474fb4a4105602b508c75396c0699c9f312ebe093aebc7b7eaf11a84afab096",
       "title": "doll formaldehyde form [2]",
       "year": 1990,
       "year_display": "c. 1990",
-      "status": "published",
-      "series_ids": [
-        "037"
-      ],
+      "series_id": "037",
       "project_folder": "doll"
     },
     {
       "work_id": "00889",
+      "record_hash": "f1e478546d52df2bb251b4e4c6b9a2340cc96e45fef00962242af59291befff5",
       "title": "doll frame [1]",
       "year": 1990,
       "year_display": "c. 1990",
-      "status": "published",
-      "series_ids": [
-        "037"
-      ],
+      "series_id": "037",
       "project_folder": "doll"
     },
     {
       "work_id": "00890",
+      "record_hash": "8c9bfa1b01a994309de9401a7c363c2bd0c83d4fe6b143bf04d1bd601404611b",
       "title": "doll frame [2]",
       "year": 1990,
       "year_display": "c. 1990",
-      "status": "published",
-      "series_ids": [
-        "037"
-      ],
+      "series_id": "037",
       "project_folder": "doll"
     },
     {
       "work_id": "00891",
+      "record_hash": "621dcd86e8ec98cb13090858e27a20911b07d402b57a79c7f9fbea68b5d7f51f",
       "title": "doll frame [3]",
       "year": 1990,
       "year_display": "c. 1990",
-      "status": "published",
-      "series_ids": [
-        "037"
-      ],
+      "series_id": "037",
       "project_folder": "doll"
     },
     {
       "work_id": "00892",
+      "record_hash": "8607940b32c5f831dff2d37867f515d9ea9d236f183eac8de2caa34b1e40031e",
       "title": "doll hand",
       "year": 1989,
       "year_display": "c. 1989",
-      "status": "published",
-      "series_ids": [
-        "037"
-      ],
+      "series_id": "037",
       "project_folder": "doll"
     },
     {
       "work_id": "00893",
+      "record_hash": "9f7b28f7dd861ed4f55f969da503dba3170712bc8af6875c42dcd8b7118161ec",
       "title": "doll moiré",
       "year": 2008,
       "year_display": "c. 2008",
-      "status": "published",
-      "series_ids": [
-        "037"
-      ],
+      "series_id": "037",
       "project_folder": "doll"
     },
     {
       "work_id": "00894",
+      "record_hash": "22c411e0f4e000c598f2b5cb3cab1059d156c620651c2ad75fa555a4b9c05d0b",
       "title": "doll moiré reduced",
       "year": 2008,
       "year_display": "c. 2008",
-      "status": "published",
-      "series_ids": [
-        "037"
-      ],
+      "series_id": "037",
       "project_folder": "doll"
     },
     {
       "work_id": "00895",
+      "record_hash": "558ee24bf3d1fb1e501fa2bb9f1d3be204ca1e6252132dde34da642d42c777c0",
       "title": "doll moiré structures",
       "year": 2008,
       "year_display": "c. 2008",
-      "status": "published",
-      "series_ids": [
-        "037"
-      ],
+      "series_id": "037",
       "project_folder": "doll"
     },
     {
       "work_id": "00896",
+      "record_hash": "93935567b166b0c3790500cf81402a6c11187385310f80b861e588ba5ff131d2",
       "title": "doll still life 1",
       "year": 2005,
       "year_display": "2005",
-      "status": "published",
-      "series_ids": [
-        "037"
-      ],
+      "series_id": "037",
       "project_folder": "doll"
     },
     {
       "work_id": "00897",
+      "record_hash": "76111cdf3044980449f7e6df2b98ed03df25ce427d89d80c52114216f164cf30",
       "title": "doll still life 2",
       "year": 2005,
       "year_display": "2005",
-      "status": "published",
-      "series_ids": [
-        "037"
-      ],
+      "series_id": "037",
       "project_folder": "doll"
     },
     {
       "work_id": "00898",
+      "record_hash": "bde313708f1bd6ab9c228c78a1d313d499c68815803ff1d6b7508ae96717b088",
       "title": "doll still life 3",
       "year": 2005,
       "year_display": "2005",
-      "status": "published",
-      "series_ids": [
-        "037"
-      ],
+      "series_id": "037",
       "project_folder": "doll"
     },
     {
       "work_id": "00899",
+      "record_hash": "b3a7d846cacc911522e6a4accac95fa2763d68e13989d763e0b041a34dc731eb",
       "title": "doll still life 4",
       "year": 2005,
       "year_display": "2005",
-      "status": "published",
-      "series_ids": [
-        "037"
-      ],
+      "series_id": "037",
       "project_folder": "doll"
     },
     {
       "work_id": "00900",
+      "record_hash": "03da0ce8a6f7626d687cdc510c8766bd8931a7933cdb74d4ec2fb4d4cac97f4d",
       "title": "doll still life 5",
       "year": 2007,
       "year_display": "2007",
-      "status": "published",
-      "series_ids": [
-        "037"
-      ],
+      "series_id": "037",
       "project_folder": "doll"
     }
   ],
-  "ordered_published_work_ids": [
+  "ordered_work_ids": [
     "00872",
     "00877",
     "00878",

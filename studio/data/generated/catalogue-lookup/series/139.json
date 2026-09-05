@@ -1,318 +1,261 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v2"
+    "schema": "studio_catalogue_lookup_series_record_v3"
   },
   "series": {
     "series_id": "139",
     "title": "untitled (destroyed)",
-    "series_type": "primary",
-    "status": "published",
-    "published_date": "2026-04-01",
     "year": 2025,
     "year_display": "2025",
-    "primary_work_id": "01883",
     "sort_fields": "work_id"
   },
+  "record_hash": "43d501a54f120dbc788ce14964d46a5810d57f10f12897e193f45a8a7f0eabff",
   "member_works": [
     {
       "work_id": "01883",
+      "record_hash": "eb7e570bf6acd3bde9b45dc336bc7f62584396e72676f3e041f459a5381cdf72",
       "title": "untitled [destroyed]",
       "year": 2025,
       "year_display": "2025",
-      "status": "published",
-      "series_ids": [
-        "139"
-      ],
+      "series_id": "139",
       "project_folder": "untitled (destroyed)"
     },
     {
       "work_id": "01884",
+      "record_hash": "5171d19b2bcaceb7ab08baa56df8a9cb493df0c5ae62048d05b8f3f241da7bec",
       "title": "untitled [1]",
       "year": 2025,
       "year_display": "2025",
-      "status": "published",
-      "series_ids": [
-        "139"
-      ],
+      "series_id": "139",
       "project_folder": "untitled (destroyed)"
     },
     {
       "work_id": "01885",
+      "record_hash": "86ab743eb39bd6ae016a88ce447b000b0cdeb6e7c82bb59b3c3d56d3435588e1",
       "title": "untitled [2]",
       "year": 2025,
       "year_display": "2025",
-      "status": "published",
-      "series_ids": [
-        "139"
-      ],
+      "series_id": "139",
       "project_folder": "untitled (destroyed)"
     },
     {
       "work_id": "01886",
+      "record_hash": "fe2a95318b7a9c41b656d7d6c1f65de79ca91939098ab13d9e2d145a1c0f040a",
       "title": "untitled [3]",
       "year": 2025,
       "year_display": "2025",
-      "status": "published",
-      "series_ids": [
-        "139"
-      ],
+      "series_id": "139",
       "project_folder": "untitled (destroyed)"
     },
     {
       "work_id": "01887",
+      "record_hash": "0652a42b9b4a3747764b21b2ba4619fe76417f26ca81110735185df95d4956e2",
       "title": "untitled [4]",
       "year": 2025,
       "year_display": "2025",
-      "status": "published",
-      "series_ids": [
-        "139"
-      ],
+      "series_id": "139",
       "project_folder": "untitled (destroyed)"
     },
     {
       "work_id": "01888",
+      "record_hash": "60dfa82d54b71b86893fa5dd0c2a58d32902c6cc574c9100a0c9908c62561af9",
       "title": "untitled [5]",
       "year": 2025,
       "year_display": "2025",
-      "status": "published",
-      "series_ids": [
-        "139"
-      ],
+      "series_id": "139",
       "project_folder": "untitled (destroyed)"
     },
     {
       "work_id": "01889",
+      "record_hash": "36bb4e7134fd2d4d5328ba37efe16c6b1d2ecff50f3caa58fae6c00998daff4c",
       "title": "untitled [6]",
       "year": 2025,
       "year_display": "2025",
-      "status": "published",
-      "series_ids": [
-        "139"
-      ],
+      "series_id": "139",
       "project_folder": "untitled (destroyed)"
     },
     {
       "work_id": "01890",
+      "record_hash": "aa0acab0f9c7a01e2312300b08cbccdacadddde996ec439cb0b8bc30d652a576",
       "title": "untitled [7]",
       "year": 2025,
       "year_display": "2025",
-      "status": "published",
-      "series_ids": [
-        "139"
-      ],
+      "series_id": "139",
       "project_folder": "untitled (destroyed)"
     },
     {
       "work_id": "01891",
+      "record_hash": "616c7ef2189be7b777f4c79f43489597924435b421295817703345b595a0c767",
       "title": "untitled [8]",
       "year": 2025,
       "year_display": "2025",
-      "status": "published",
-      "series_ids": [
-        "139"
-      ],
+      "series_id": "139",
       "project_folder": "untitled (destroyed)"
     },
     {
       "work_id": "01892",
+      "record_hash": "77c2717d3b455b1d46096871515dab3e0a9731dd6abb917eb2f62183e25634c3",
       "title": "untitled [9]",
       "year": 2025,
       "year_display": "2025",
-      "status": "published",
-      "series_ids": [
-        "139"
-      ],
+      "series_id": "139",
       "project_folder": "untitled (destroyed)"
     },
     {
       "work_id": "01893",
+      "record_hash": "f1a0df6aa914050f206d28cc14a96985b85ab7f55549bd0ac30137e665ce230e",
       "title": "untitled [10]",
       "year": 2025,
       "year_display": "2025",
-      "status": "published",
-      "series_ids": [
-        "139"
-      ],
+      "series_id": "139",
       "project_folder": "untitled (destroyed)"
     },
     {
       "work_id": "01894",
+      "record_hash": "7847ad6b4c5410eff7fae2599bfaaf278dd9c0b1a78c7f2fe51f0a10a12ed382",
       "title": "untitled [11]",
       "year": 2025,
       "year_display": "2025",
-      "status": "published",
-      "series_ids": [
-        "139"
-      ],
+      "series_id": "139",
       "project_folder": "untitled (destroyed)"
     },
     {
       "work_id": "01895",
+      "record_hash": "046344d1ac757f2f20bd716b1fc71ee114120f59ebb001c6963de2d0f954b53a",
       "title": "untitled [12]",
       "year": 2025,
       "year_display": "2025",
-      "status": "published",
-      "series_ids": [
-        "139"
-      ],
+      "series_id": "139",
       "project_folder": "untitled (destroyed)"
     },
     {
       "work_id": "01896",
+      "record_hash": "990d7322450ab3beea1de18b240996a1731561e05f143e14c54984801157226f",
       "title": "untitled [13]",
       "year": 2025,
       "year_display": "2025",
-      "status": "published",
-      "series_ids": [
-        "139"
-      ],
+      "series_id": "139",
       "project_folder": "untitled (destroyed)"
     },
     {
       "work_id": "01897",
+      "record_hash": "dcc67004db142d64313be510a041d3a33ad1911ad5ccfdc2cb45492c6a967ab4",
       "title": "untitled [14]",
       "year": 2025,
       "year_display": "2025",
-      "status": "published",
-      "series_ids": [
-        "139"
-      ],
+      "series_id": "139",
       "project_folder": "untitled (destroyed)"
     },
     {
       "work_id": "01898",
+      "record_hash": "ad7406d2302b28991aa1f6ef4eece321a572db0120f8bf2a2a711a4650d0f4f6",
       "title": "untitled [15]",
       "year": 2025,
       "year_display": "2025",
-      "status": "published",
-      "series_ids": [
-        "139"
-      ],
+      "series_id": "139",
       "project_folder": "untitled (destroyed)"
     },
     {
       "work_id": "01899",
+      "record_hash": "c5108503d547272fbdca07eb993b3fd3ebb78328ac8bc4958e05f7bb4152ff74",
       "title": "untitled [16]",
       "year": 2025,
       "year_display": "2025",
-      "status": "published",
-      "series_ids": [
-        "139"
-      ],
+      "series_id": "139",
       "project_folder": "untitled (destroyed)"
     },
     {
       "work_id": "01900",
+      "record_hash": "9f64975ff638bfd00d9f3b7e0a560b1a12cb27cbc5f34b70fe1173eca8fc0a05",
       "title": "untitled [17]",
       "year": 2025,
       "year_display": "2025",
-      "status": "published",
-      "series_ids": [
-        "139"
-      ],
+      "series_id": "139",
       "project_folder": "untitled (destroyed)"
     },
     {
       "work_id": "01901",
+      "record_hash": "567ab490e56539e3472415bb8bd11c626bae65ba1888d2fb969f434c9200628a",
       "title": "untitled [18]",
       "year": 2025,
       "year_display": "2025",
-      "status": "published",
-      "series_ids": [
-        "139"
-      ],
+      "series_id": "139",
       "project_folder": "untitled (destroyed)"
     },
     {
       "work_id": "01902",
+      "record_hash": "85ee580022ef6dbecd20161ea535708fd68de3d20756c6cb46c371d2c9cfa368",
       "title": "untitled [19]",
       "year": 2025,
       "year_display": "2025",
-      "status": "published",
-      "series_ids": [
-        "139"
-      ],
+      "series_id": "139",
       "project_folder": "untitled (destroyed)"
     },
     {
       "work_id": "01903",
+      "record_hash": "842d2cb73f4ff72f2d6828f7ef12ce7b5378b0558a3b426c880ab4b1e715cb53",
       "title": "untitled [20]",
       "year": 2025,
       "year_display": "2025",
-      "status": "published",
-      "series_ids": [
-        "139"
-      ],
+      "series_id": "139",
       "project_folder": "untitled (destroyed)"
     },
     {
       "work_id": "01904",
+      "record_hash": "bd6bdfb4e60141248d9d7e1231788a34171d2dbb9dde95f8b166b4230742fed6",
       "title": "untitled [21]",
       "year": 2025,
       "year_display": "2025",
-      "status": "published",
-      "series_ids": [
-        "139"
-      ],
+      "series_id": "139",
       "project_folder": "untitled (destroyed)"
     },
     {
       "work_id": "01905",
+      "record_hash": "6b46b49a5589f656b5c29dca6146dd71af0b3e41dbf7212a7a20b82b463c08f8",
       "title": "untitled [22]",
       "year": 2025,
       "year_display": "2025",
-      "status": "published",
-      "series_ids": [
-        "139"
-      ],
+      "series_id": "139",
       "project_folder": "untitled (destroyed)"
     },
     {
       "work_id": "01906",
+      "record_hash": "15329991cddac6fe28d6b2b9ba71f2f1ec18397f7291d1e8a02268321db7db9a",
       "title": "untitled [23]",
       "year": 2025,
       "year_display": "2025",
-      "status": "published",
-      "series_ids": [
-        "139"
-      ],
+      "series_id": "139",
       "project_folder": "untitled (destroyed)"
     },
     {
       "work_id": "01907",
+      "record_hash": "1cd3397c63f11fd5586a1f2a4fdac982ec9eabb75ada1159b4d308dd72152a2f",
       "title": "untitled [24]",
       "year": 2025,
       "year_display": "2025",
-      "status": "published",
-      "series_ids": [
-        "139"
-      ],
+      "series_id": "139",
       "project_folder": "untitled (destroyed)"
     },
     {
       "work_id": "01908",
+      "record_hash": "34860ddad838d86167f2de115ab70fc60cd48cdab53b7432ab418d20fafb9422",
       "title": "untitled [25]",
       "year": 2025,
       "year_display": "2025",
-      "status": "published",
-      "series_ids": [
-        "139"
-      ],
+      "series_id": "139",
       "project_folder": "untitled (destroyed)"
     },
     {
       "work_id": "01909",
+      "record_hash": "eb01d901668ff145927b45cc3624e87a5822cd20c9fe98936ed25a47fedab88e",
       "title": "untitled [26]",
       "year": 2025,
       "year_display": "2025",
-      "status": "published",
-      "series_ids": [
-        "139"
-      ],
+      "series_id": "139",
       "project_folder": "untitled (destroyed)"
     }
   ],
-  "ordered_published_work_ids": [
+  "ordered_work_ids": [
     "01883",
     "01884",
     "01885",

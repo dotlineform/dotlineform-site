@@ -1,846 +1,693 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v2"
+    "schema": "studio_catalogue_lookup_series_record_v3"
   },
   "series": {
     "series_id": "006",
     "title": "a doll story",
-    "series_type": "primary",
-    "status": "published",
-    "published_date": "2026-04-01",
     "year": 2024,
     "year_display": "2024",
-    "primary_work_id": "00666",
     "sort_fields": "work_id"
   },
+  "record_hash": "d1a5816bdc99fa51c649ce5186f26c07a50af39f9880773c179fe9388528df7f",
   "member_works": [
     {
       "work_id": "00641",
+      "record_hash": "36f44e18ebe334a0449e49136a8839e2ff7999d6a109e425cf49366ba10e03d6",
       "title": "a doll story - doll 1",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "006"
-      ],
+      "series_id": "006",
       "project_folder": "a doll story"
     },
     {
       "work_id": "00642",
+      "record_hash": "31c52f4cc65ae79510e0258b0b9d6770ad1975c8faa229c753e824e72d25b223",
       "title": "a doll story - doll 2",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "006"
-      ],
+      "series_id": "006",
       "project_folder": "a doll story"
     },
     {
       "work_id": "00643",
+      "record_hash": "8e6320c79f9246447e560143a3fac0310938ba2e0080558a56ec34d0b475414a",
       "title": "a doll story - doll 3",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "006"
-      ],
+      "series_id": "006",
       "project_folder": "a doll story"
     },
     {
       "work_id": "00644",
+      "record_hash": "70f9e1fd7f57a77dca5a6a961180fdbeeccb7e8c1a1e0e62b6ffb1c5e515d005",
       "title": "a doll story - doll 4",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "006"
-      ],
+      "series_id": "006",
       "project_folder": "a doll story"
     },
     {
       "work_id": "00645",
+      "record_hash": "4eb4b851b57f1a22b0db4209ef5f45bd9e98a89f05955a8c38f222d702df1ec3",
       "title": "a doll story - doll 5",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "006"
-      ],
+      "series_id": "006",
       "project_folder": "a doll story"
     },
     {
       "work_id": "00646",
+      "record_hash": "bb7f9b3b84948c3398c623435856379b1b60b642dccfba8fd41ff3a359cfa896",
       "title": "a doll story - doll 6",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "006"
-      ],
+      "series_id": "006",
       "project_folder": "a doll story"
     },
     {
       "work_id": "00647",
+      "record_hash": "a963ad4d05f8b7b343aff4ce49227fd5bba82a843417d28114263c528da488eb",
       "title": "a doll story - doll 7",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "006"
-      ],
+      "series_id": "006",
       "project_folder": "a doll story"
     },
     {
       "work_id": "00648",
+      "record_hash": "aa549763dab7ff269827c960c32871a3eec7bafa0df6eb1a34fc6a23aac0198d",
       "title": "a doll story - doll 8",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "006"
-      ],
+      "series_id": "006",
       "project_folder": "a doll story"
     },
     {
       "work_id": "00649",
+      "record_hash": "72373271ebe92e473ebfef60762330a7ea72c1e0c7dfd2e22ce7824f41eacc4b",
       "title": "a doll story - doll 9",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "006"
-      ],
+      "series_id": "006",
       "project_folder": "a doll story"
     },
     {
       "work_id": "00650",
+      "record_hash": "f3da042a33d6ea806a4cedc10eb064ef8782b197e4db1b0a6fa418ca6d01b539",
       "title": "a doll story - doll 10",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "006"
-      ],
+      "series_id": "006",
       "project_folder": "a doll story"
     },
     {
       "work_id": "00651",
+      "record_hash": "9f13eb2f3fa19a4d6b7783dbdb0615ab7981ff884525125b6fffa9ab25d3f659",
       "title": "a doll story - doll 11",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "006"
-      ],
+      "series_id": "006",
       "project_folder": "a doll story"
     },
     {
       "work_id": "00652",
+      "record_hash": "76e11337359443b27cd2c2f631c23760aa70cf442bc23ad18f100fb5775b389e",
       "title": "a doll story - doll 12",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "006"
-      ],
+      "series_id": "006",
       "project_folder": "a doll story"
     },
     {
       "work_id": "00653",
+      "record_hash": "b43c7be0055952c9a8e99fb87c8942d7103a83087dae7251c3ffcf0f979a0c76",
       "title": "a doll story - doll 13",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "006"
-      ],
+      "series_id": "006",
       "project_folder": "a doll story"
     },
     {
       "work_id": "00654",
+      "record_hash": "00f3a88fa09e0d535196cdae1a2cba4f3797ab998c7e4ae7c23926a9d608a0d7",
       "title": "a doll story - doll 14",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "006"
-      ],
+      "series_id": "006",
       "project_folder": "a doll story"
     },
     {
       "work_id": "00655",
+      "record_hash": "66f3417e9afb3f4d2b1cf9a789f098a4d3d9d9eafa0babde5b78cd2d0837552e",
       "title": "a doll story - doll 15",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "006"
-      ],
+      "series_id": "006",
       "project_folder": "a doll story"
     },
     {
       "work_id": "00656",
+      "record_hash": "17f40c202902f2ad69910876eecde9313f95dca40e210534e16f50f6d57560b8",
       "title": "a doll story - doll 16",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "006"
-      ],
+      "series_id": "006",
       "project_folder": "a doll story"
     },
     {
       "work_id": "00657",
+      "record_hash": "f36991994a9bd2a0bea9f70d653a9b2014a7f6b449c2a8571c9ccbd13187f11a",
       "title": "a doll story - doll 17",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "006"
-      ],
+      "series_id": "006",
       "project_folder": "a doll story"
     },
     {
       "work_id": "00658",
+      "record_hash": "720385d80f1df17c23e88e7920d561d46df10678e10b1a805d41c1c0682e69ea",
       "title": "a doll story - doll 18",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "006"
-      ],
+      "series_id": "006",
       "project_folder": "a doll story"
     },
     {
       "work_id": "00659",
+      "record_hash": "739567db0fd9a4ec378d3752f09104af5e68e29a9bb61bd9193f78984a008099",
       "title": "a doll story - doll 19",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "006"
-      ],
+      "series_id": "006",
       "project_folder": "a doll story"
     },
     {
       "work_id": "00660",
+      "record_hash": "f60293dcaad2239e844765a2f3a8e6a36c562b16b9725b5006ae025f055c5da7",
       "title": "a doll story - doll 20",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "006"
-      ],
+      "series_id": "006",
       "project_folder": "a doll story"
     },
     {
       "work_id": "00661",
+      "record_hash": "a7218760eb5c83ae178a5f550f752188b7aa90c08f9843536cd21e29b40746ea",
       "title": "a doll story - doll 21",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "006"
-      ],
+      "series_id": "006",
       "project_folder": "a doll story"
     },
     {
       "work_id": "00662",
+      "record_hash": "f9151e78aad3702132ff661072814220bfba24f3b41cfc0e3c85fda518b33a4a",
       "title": "a doll story - doll 22",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "006"
-      ],
+      "series_id": "006",
       "project_folder": "a doll story"
     },
     {
       "work_id": "00663",
+      "record_hash": "c6cd23608f86a134d3fc30a2bd1957533b9e9ca9caf2b4c62f412964f76f5204",
       "title": "a doll story - doll 23",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "006"
-      ],
+      "series_id": "006",
       "project_folder": "a doll story"
     },
     {
       "work_id": "00664",
+      "record_hash": "c0c51dea2b71f56949348d7019ba68bcbd0a99188bac9a9a5d9b080f4b18a15a",
       "title": "a doll story - doll 24",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "006"
-      ],
+      "series_id": "006",
       "project_folder": "a doll story"
     },
     {
       "work_id": "00665",
+      "record_hash": "eeef834006bf94722adb24165b303eb95cc38e7a5c77842873058532973cb359",
       "title": "a doll story - doll 25",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "006"
-      ],
+      "series_id": "006",
       "project_folder": "a doll story"
     },
     {
       "work_id": "00666",
+      "record_hash": "53b121b18b6ec11c40fa09653996949bf5db3276ed6fe15d4ab4cbc29d34d6bb",
       "title": "a doll story - doll 26 (2015)",
       "year": 2015,
       "year_display": "2015",
-      "status": "published",
-      "series_ids": [
-        "006"
-      ],
+      "series_id": "006",
       "project_folder": "a doll story"
     },
     {
       "work_id": "00667",
+      "record_hash": "ac369888ede28cb98bca65ba9f252a3f7772fc7e74c4f5471b9d31e731bd9a57",
       "title": "a doll story - doll 27 (2014)",
       "year": 2014,
       "year_display": "2014",
-      "status": "published",
-      "series_ids": [
-        "006"
-      ],
+      "series_id": "006",
       "project_folder": "a doll story"
     },
     {
       "work_id": "00668",
+      "record_hash": "45c7db4b3d25302b9bad6e4670e322abcc20627acd308fca5fb5f8f92d78af15",
       "title": "a doll story - doll glass 1",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "006"
-      ],
+      "series_id": "006",
       "project_folder": "a doll story"
     },
     {
       "work_id": "00669",
+      "record_hash": "9c5bbbe34290fd01cf41a7782505e6ede3160b9a68a8e3303f854dd720354e9c",
       "title": "a doll story - doll glass 2",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "006"
-      ],
+      "series_id": "006",
       "project_folder": "a doll story"
     },
     {
       "work_id": "00670",
+      "record_hash": "757705e3c03ce08ed257cd72321ad7eeebb6f13662423a53080c5c07c8d71f81",
       "title": "a doll story - doll glass 3",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "006"
-      ],
+      "series_id": "006",
       "project_folder": "a doll story"
     },
     {
       "work_id": "00671",
+      "record_hash": "6226746abd6ee3de2202f357b42c6839cf413183846a8b2d4121de741c5215b9",
       "title": "a doll story - doll glass 4",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "006"
-      ],
+      "series_id": "006",
       "project_folder": "a doll story"
     },
     {
       "work_id": "00672",
+      "record_hash": "bfc0d6d4f7eaa9276ddeeb898702ba0c29a58cf85078779e683781ae697fffd9",
       "title": "a doll story - doll glass 5",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "006"
-      ],
+      "series_id": "006",
       "project_folder": "a doll story"
     },
     {
       "work_id": "00673",
+      "record_hash": "a5703c4ff909b6b671f97929fdb6c390ef301c14f5fa568d883d93a5808890b4",
       "title": "a doll story - doll glass 6",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "006"
-      ],
+      "series_id": "006",
       "project_folder": "a doll story"
     },
     {
       "work_id": "00674",
+      "record_hash": "49991e69c13a7fc2845c86b9e63e8a61f334077aa8e44bdf85028382d79ef085",
       "title": "a doll story - doll glass 7",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "006"
-      ],
+      "series_id": "006",
       "project_folder": "a doll story"
     },
     {
       "work_id": "00675",
+      "record_hash": "e660eaade232444ffaa8d694bbf2f95349c42f59d10b00f699bdce4fdea6b367",
       "title": "a doll story - doll glass 8",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "006"
-      ],
+      "series_id": "006",
       "project_folder": "a doll story"
     },
     {
       "work_id": "00676",
+      "record_hash": "db00eb8f581f74bda4daa367d7ef87262feeedc6e9e5c0619aa670d18fa1304d",
       "title": "a doll story - doll glass 9",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "006"
-      ],
+      "series_id": "006",
       "project_folder": "a doll story"
     },
     {
       "work_id": "00677",
+      "record_hash": "b1fc6c4c28b3c2b4a88ca0fcb7ebf856e32c2ff1ed4f70c654f03ce0c3f482b7",
       "title": "a doll story - doll glass 10",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "006"
-      ],
+      "series_id": "006",
       "project_folder": "a doll story"
     },
     {
       "work_id": "00678",
+      "record_hash": "cb78bac12cb4db416ae7791c92e002952e2215a2522570df349137671cf1b6f9",
       "title": "a doll story - doll glass 11",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "006"
-      ],
+      "series_id": "006",
       "project_folder": "a doll story"
     },
     {
       "work_id": "00679",
+      "record_hash": "42f0d31085b57ef1124c7f63002a3b4db2a812202e17b8a49047c538c136c64b",
       "title": "a doll story - doll glass 12",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "006"
-      ],
+      "series_id": "006",
       "project_folder": "a doll story"
     },
     {
       "work_id": "00680",
+      "record_hash": "423ecb9e76cfed61f210eff408f12d1441301b0de2d11fd63f309880b654f0ff",
       "title": "a doll story - doll glass 13",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "006"
-      ],
+      "series_id": "006",
       "project_folder": "a doll story"
     },
     {
       "work_id": "00681",
+      "record_hash": "0e7d6d5f91554fa2f6bff3c05041ba6c2e3701da0cb9db46720424615ddc753c",
       "title": "a doll story - doll glass 14",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "006"
-      ],
+      "series_id": "006",
       "project_folder": "a doll story"
     },
     {
       "work_id": "00682",
+      "record_hash": "46ca2759cb55fd0a92edd679c51c1180585c612cf9625771a486c68a9929a215",
       "title": "a doll story - doll glass 15",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "006"
-      ],
+      "series_id": "006",
       "project_folder": "a doll story"
     },
     {
       "work_id": "00683",
+      "record_hash": "a87e938cfd5b029cb3998fd20a8fdbd30a01a61d28f7ae1f25273c82825dd6be",
       "title": "a doll story - doll glass 16",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "006"
-      ],
+      "series_id": "006",
       "project_folder": "a doll story"
     },
     {
       "work_id": "00684",
+      "record_hash": "b8d18dad97ad55bbaa2c137fba7c713b00aa8c0b10eb39b2255bcdbbe25eb736",
       "title": "a doll story - doll glass 17",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "006"
-      ],
+      "series_id": "006",
       "project_folder": "a doll story"
     },
     {
       "work_id": "00685",
+      "record_hash": "d94f14dc9a06317aca19875badcb87630574e897bba90708853082266e8b032f",
       "title": "a doll story - doll glass 18",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "006"
-      ],
+      "series_id": "006",
       "project_folder": "a doll story"
     },
     {
       "work_id": "00686",
+      "record_hash": "dd73de34a790ab8d61366a6f70074764cab9a0b733d991dc6f0595c60cd7674a",
       "title": "a doll story - doll glass 19",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "006"
-      ],
+      "series_id": "006",
       "project_folder": "a doll story"
     },
     {
       "work_id": "00687",
+      "record_hash": "815c5a8ecb90f24756afd0b7c27b4d7e096653382e9d9fff58cb5fdc94e0ed16",
       "title": "a doll story - doll glass 20",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "006"
-      ],
+      "series_id": "006",
       "project_folder": "a doll story"
     },
     {
       "work_id": "00688",
+      "record_hash": "a23889a6b0af769c7213d2eb9a826d87d12b2966e37b4470d1725e68fbd91fe7",
       "title": "a doll story - doll glass 21",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "006"
-      ],
+      "series_id": "006",
       "project_folder": "a doll story"
     },
     {
       "work_id": "00689",
+      "record_hash": "6a8335a923a5238b5e440ab8f2b897d861aac5deccfddf62c7c6142103aa1ff9",
       "title": "a doll story - doll glass 22",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "006"
-      ],
+      "series_id": "006",
       "project_folder": "a doll story"
     },
     {
       "work_id": "00690",
+      "record_hash": "877f2d2d2b117efce0975258978e85dfb46b3fe0146827c7b72546e7628a88bb",
       "title": "a doll story - doll glass 23",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "006"
-      ],
+      "series_id": "006",
       "project_folder": "a doll story"
     },
     {
       "work_id": "00691",
+      "record_hash": "d572b40d5856044a64824bf9c5d72ef0206b42cc692208e84fa0f87ec7f1a43b",
       "title": "a doll story - doll glass 24",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "006"
-      ],
+      "series_id": "006",
       "project_folder": "a doll story"
     },
     {
       "work_id": "00692",
+      "record_hash": "40e3d26330d92c9c8b71c3333336a6ba2df3973fa09dc607424c6051e43363f9",
       "title": "a doll story - doll glass 25",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "006"
-      ],
+      "series_id": "006",
       "project_folder": "a doll story"
     },
     {
       "work_id": "00693",
+      "record_hash": "89a1db29e48778d8f43a2d19d45eb1ac648e7d246c4a2058527e47fdf209508d",
       "title": "a doll story - doll glass 26",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "006"
-      ],
+      "series_id": "006",
       "project_folder": "a doll story"
     },
     {
       "work_id": "00694",
+      "record_hash": "c5d7ad5f9e455b71e2d708ed62c7fe294e2a007aacf9f4ba57e2a184976d8432",
       "title": "a doll story - doll glass 27",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "006"
-      ],
+      "series_id": "006",
       "project_folder": "a doll story"
     },
     {
       "work_id": "00695",
+      "record_hash": "0ab9631fa04f4dda94fc1b352d29e163ba521c6d06810bc28cb23fc266234edf",
       "title": "a doll story - doll glass 28",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "006"
-      ],
+      "series_id": "006",
       "project_folder": "a doll story"
     },
     {
       "work_id": "00696",
+      "record_hash": "f74f61167b83c5cf2cab7003c5a0a1b114e279a08f59effacaeeaa49eeb50896",
       "title": "a doll story - doll glass 29",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "006"
-      ],
+      "series_id": "006",
       "project_folder": "a doll story"
     },
     {
       "work_id": "00697",
+      "record_hash": "f9db4c8907ca719feaa067f1628bcc80e3b58238f644e5482a5f74836c96f872",
       "title": "a doll story - doll glass 30",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "006"
-      ],
+      "series_id": "006",
       "project_folder": "a doll story"
     },
     {
       "work_id": "00698",
+      "record_hash": "57777b74fbd5558317fe044db97d2c1d9f6adf491b2293f17c88cfe6d48f98f8",
       "title": "a doll story - glass 1",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "006"
-      ],
+      "series_id": "006",
       "project_folder": "a doll story"
     },
     {
       "work_id": "00699",
+      "record_hash": "12e9dfa9dbacb31b14d5abd2a9dbcd77e45f03244345827e3dd235d557d77039",
       "title": "a doll story - glass 2",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "006"
-      ],
+      "series_id": "006",
       "project_folder": "a doll story"
     },
     {
       "work_id": "00700",
+      "record_hash": "ac7f5598a4dc0d848bc1310e03c7fbac8522e4c0833f969bc66cff4139366deb",
       "title": "a doll story - glass 3",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "006"
-      ],
+      "series_id": "006",
       "project_folder": "a doll story"
     },
     {
       "work_id": "00701",
+      "record_hash": "40851419e68fca4bf632dd655637ebada9d0530b7d5e1812355dab1e898418b1",
       "title": "a doll story - glass 4",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "006"
-      ],
+      "series_id": "006",
       "project_folder": "a doll story"
     },
     {
       "work_id": "00702",
+      "record_hash": "88a124cab9a55842c4a9272dbeeb8481209c24b91a7d90420d23c50357c6a9a2",
       "title": "a doll story - glass 5",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "006"
-      ],
+      "series_id": "006",
       "project_folder": "a doll story"
     },
     {
       "work_id": "00703",
+      "record_hash": "a5d5661ebb32e3f70f125f3149f04340a3e088c0c310c815d70f1015400415db",
       "title": "a doll story - glass 6",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "006"
-      ],
+      "series_id": "006",
       "project_folder": "a doll story"
     },
     {
       "work_id": "00704",
+      "record_hash": "71a527d5a490473171ef6a13c22eff833c27cf5c18485878732afe30980037ae",
       "title": "a doll story - glass 7",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "006"
-      ],
+      "series_id": "006",
       "project_folder": "a doll story"
     },
     {
       "work_id": "00705",
+      "record_hash": "40e387fe43730061f261ac62c3393606d1b71807363569da29ee9a245a05117b",
       "title": "a doll story - glass 8",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "006"
-      ],
+      "series_id": "006",
       "project_folder": "a doll story"
     },
     {
       "work_id": "00706",
+      "record_hash": "bce4285e7b5cf8bca0da62f76fe0516105132698d51fd020b0a02c44363963a7",
       "title": "a doll story - glass 9",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "006"
-      ],
+      "series_id": "006",
       "project_folder": "a doll story"
     },
     {
       "work_id": "00707",
+      "record_hash": "0811c2cf5f3c5ab26c8af73623b904cc7eb184c4ef3815125f47ca167e8dfaaf",
       "title": "a doll story - glass 10",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "006"
-      ],
+      "series_id": "006",
       "project_folder": "a doll story"
     },
     {
       "work_id": "00708",
+      "record_hash": "79deb4c739ae9da3a493e4a75d8cd0eec7e6a9fcf2c98d86da315cf13f46d25c",
       "title": "a doll story - glass 11",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "006"
-      ],
+      "series_id": "006",
       "project_folder": "a doll story"
     },
     {
       "work_id": "00709",
+      "record_hash": "3cf59be87a4e78595159259d8fad6683784db93eec2ebd38245bef71002279ab",
       "title": "a doll story - shelf 1",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "006"
-      ],
+      "series_id": "006",
       "project_folder": "a doll story"
     },
     {
       "work_id": "00710",
+      "record_hash": "00f00d4d9900d63e640cd4750a00acc659a5dd6ae1bbb301bb2bb0137bf160f6",
       "title": "a doll story - shelf 2",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "006"
-      ],
+      "series_id": "006",
       "project_folder": "a doll story"
     },
     {
       "work_id": "00711",
+      "record_hash": "bd8897bc6de2a368fc536a981093acfde269312364390828ead6db1b33c495c6",
       "title": "a doll story - shelf 3",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "006"
-      ],
+      "series_id": "006",
       "project_folder": "a doll story"
     },
     {
       "work_id": "00712",
+      "record_hash": "b21d308eabd1631b6a6365ebb7c61377e05d4aabbda19e6f93ae05187940e9f8",
       "title": "a doll story - shelf 4",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "006"
-      ],
+      "series_id": "006",
       "project_folder": "a doll story"
     },
     {
       "work_id": "00713",
+      "record_hash": "fad8db929346b3c6f2696d046df06b84305ed4f3adced289022b15c79f62becf",
       "title": "a doll story - weights 1",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "006"
-      ],
+      "series_id": "006",
       "project_folder": "a doll story"
     },
     {
       "work_id": "00714",
+      "record_hash": "50aa6c1c43c8a309961bd60e4f61ad4236ce4cda51180031355fe3b7cf69b212",
       "title": "a doll story - weights 2",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "006"
-      ],
+      "series_id": "006",
       "project_folder": "a doll story"
     },
     {
       "work_id": "00715",
+      "record_hash": "c0e83d2c09939ee3d9efa7972fefc4edc9144a8a5f4f062a2dd69b2b614a3167",
       "title": "a doll story - weights 3",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "006"
-      ],
+      "series_id": "006",
       "project_folder": "a doll story"
     }
   ],
-  "ordered_published_work_ids": [
+  "ordered_work_ids": [
     "00641",
     "00642",
     "00643",

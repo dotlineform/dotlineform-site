@@ -20,12 +20,12 @@ def test_catalogue_import_preview_and_apply_dry_run_use_fixture_workbook() -> No
         source_dir.mkdir(parents=True)
         write_repo_marker(repo_root)
         (source_dir / "works.json").write_text(
-            json.dumps({"catalogue_source_works_version": "catalogue_source_works_v1", "works": {}}),
+            json.dumps({"catalogue_source_works_version": "catalogue_source_works_v2", "works": {}}),
             encoding="utf-8",
         )
         (source_dir / "work_details").mkdir(parents=True, exist_ok=True)
         (source_dir / "series.json").write_text(
-            json.dumps({"catalogue_source_series_version": "catalogue_source_series_v1", "series": {"001": {"series_id": "001", "title": "Series", "status": "published", "primary_work_id": "00042"}}}),
+            json.dumps({"catalogue_source_series_version": "catalogue_source_series_v2", "series": {"001": {"series_id": "001", "title": "Series"}}}),
             encoding="utf-8",
         )
         workbook_path = repo_root / "data" / "works_bulk_import.xlsx"
@@ -33,7 +33,7 @@ def test_catalogue_import_preview_and_apply_dry_run_use_fixture_workbook() -> No
         workbook = openpyxl.Workbook()
         sheet = workbook.active
         sheet.title = "Works"
-        sheet.append(["work_id", "series_ids", "title"])
+        sheet.append(["work_id", "series_id", "title"])
         sheet.append(["42", "001", "Imported Work"])
         workbook.save(workbook_path)
 

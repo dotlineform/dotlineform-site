@@ -1,98 +1,81 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v2"
+    "schema": "studio_catalogue_lookup_series_record_v3"
   },
   "series": {
     "series_id": "044",
     "title": "dots",
-    "series_type": "primary",
-    "status": "published",
-    "published_date": "2026-04-01",
     "year": 2010,
     "year_display": "2010",
-    "primary_work_id": "00456",
     "sort_fields": "work_id"
   },
+  "record_hash": "7ccab51fe1fe9d6c3d42f3e0bf997ceb061401e1d9043118690da3c41c6f3953",
   "member_works": [
     {
       "work_id": "00456",
+      "record_hash": "07d430d850b2da0de07580fdebe163c0b971af3b7725dcc4ac4aa69b77de6ee7",
       "title": "dots",
       "year": 2010,
       "year_display": "2010",
-      "status": "published",
-      "series_ids": [
-        "044"
-      ],
+      "series_id": "044",
       "project_folder": "dots"
     },
     {
       "work_id": "01001",
+      "record_hash": "1a55291949586e4cb285b4324e2b25164585560583aaf0b9d0efbde3b87e7f92",
       "title": "dots (inside)",
       "year": 2010,
       "year_display": "2010",
-      "status": "published",
-      "series_ids": [
-        "044"
-      ],
+      "series_id": "044",
       "project_folder": "dots"
     },
     {
       "work_id": "01002",
+      "record_hash": "6c214c7244dde89760679e95f8a70fa9b7f5a64ec00cf9b4d63442c74baa0f1d",
       "title": "dots (first normal form)",
       "year": 2010,
       "year_display": "2010",
-      "status": "published",
-      "series_ids": [
-        "044"
-      ],
+      "series_id": "044",
       "project_folder": "dots"
     },
     {
       "work_id": "01003",
+      "record_hash": "5b3c9b6169460e37302742e6a2a8482ec503ec86916a364a6060103161743be0",
       "title": "dots (second normal form)",
       "year": 2010,
       "year_display": "2010",
-      "status": "published",
-      "series_ids": [
-        "044"
-      ],
+      "series_id": "044",
       "project_folder": "dots"
     },
     {
       "work_id": "01004",
+      "record_hash": "1bd5952b66028700b8c83f30a2b333e2e3fe3c020005e0fe13f393efce4cecd2",
       "title": "dots (equations)",
       "year": 2010,
       "year_display": "2010",
-      "status": "published",
-      "series_ids": [
-        "044"
-      ],
+      "series_id": "044",
       "project_folder": "dots"
     },
     {
       "work_id": "01005",
+      "record_hash": "96f6fc9526f27b19b1b6306630eefce80e8ded19570bf1f36985109f4a37b204",
       "title": "dots (equations particles)",
       "year": 2010,
       "year_display": "2010",
-      "status": "published",
-      "series_ids": [
-        "044"
-      ],
+      "series_id": "044",
       "project_folder": "dots"
     },
     {
       "work_id": "01006",
+      "record_hash": "a5c610768a305883d39297e7512e73a1ba715652b90d5c08b273130b42a4c9c4",
       "title": "dots (equations sample grid)",
       "year": 2010,
       "year_display": "2010",
-      "status": "published",
-      "series_ids": [
-        "044"
-      ],
+      "series_id": "044",
       "project_folder": "dots"
     }
   ],
-  "ordered_published_work_ids": [
+  "ordered_work_ids": [
     "00456",
     "01001",
     "01002",

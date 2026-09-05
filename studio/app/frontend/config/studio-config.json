@@ -33,16 +33,6 @@
         "shell_type": "html-template",
         "ready_state_route_id": "catalogue-field-registry"
       },
-      "catalogue_status": {
-        "label": "drafts",
-        "title": "Catalogue Drafts",
-        "path": "/studio/catalogue-status/",
-        "template": "/studio/app/frontend/routes/catalogue-status.html",
-        "script": "/studio/app/frontend/js/catalogue-status.js",
-        "nav": false,
-        "shell_type": "html-template",
-        "ready_state_route_id": "catalogue-status"
-      },
       "catalogue_series_editor": {
         "label": "series editor",
         "title": "Catalogue Series Editor",

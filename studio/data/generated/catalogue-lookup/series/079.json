@@ -1,197 +1,162 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v2"
+    "schema": "studio_catalogue_lookup_series_record_v3"
   },
   "series": {
     "series_id": "079",
     "title": "in the end we'll know",
-    "series_type": "primary",
-    "status": "published",
-    "published_date": "2026-04-01",
     "year": 2024,
     "year_display": "2024",
-    "primary_work_id": "01377",
     "sort_fields": "work_id"
   },
+  "record_hash": "9a59b65d9316bc372539cf867bb59c7a5375fee31444ebd42e15704a921c62ad",
   "member_works": [
     {
       "work_id": "01375",
+      "record_hash": "679e56f11607e53906401c17f53864b0f68571ae90580584d058ccf32aa4d7fe",
       "title": "in the end we'll know [1]",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "079"
-      ],
+      "series_id": "079",
       "project_folder": "in the end we'll know"
     },
     {
       "work_id": "01376",
+      "record_hash": "540b69b55c6c1384db648e3c8b11e478afa23233bf06d2ea52b36bb12f98bbc0",
       "title": "in the end we'll know [2]",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "079"
-      ],
+      "series_id": "079",
       "project_folder": "in the end we'll know"
     },
     {
       "work_id": "01377",
+      "record_hash": "e45d63101ed550f671ca051f1fd75f0afd12332d8caf2730ed3eda16a99f7915",
       "title": "in the end we'll know [3]",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "079"
-      ],
+      "series_id": "079",
       "project_folder": "in the end we'll know"
     },
     {
       "work_id": "01378",
+      "record_hash": "992eaecbbd270e810e9b6545326508137553988f58a7c84123650334afc888f6",
       "title": "in the end we'll know [4]",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "079"
-      ],
+      "series_id": "079",
       "project_folder": "in the end we'll know"
     },
     {
       "work_id": "01379",
+      "record_hash": "3f06cea3520dadf73990a042ea855d64c840131dcc289c9f734025efa1af0e66",
       "title": "in the end we'll know [5]",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "079"
-      ],
+      "series_id": "079",
       "project_folder": "in the end we'll know"
     },
     {
       "work_id": "01380",
+      "record_hash": "83acc5dffd41cad0218670d7511b1d32e8ab575a0b59ffd045ce21ab38e7d6a4",
       "title": "in the end we'll know [6]",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "079"
-      ],
+      "series_id": "079",
       "project_folder": "in the end we'll know"
     },
     {
       "work_id": "01381",
+      "record_hash": "aaa98ac76f9de26da6e4fc386689475f76e9ad57895554ed4575463861b13e9a",
       "title": "in the end we'll know [7]",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "079"
-      ],
+      "series_id": "079",
       "project_folder": "in the end we'll know"
     },
     {
       "work_id": "01382",
+      "record_hash": "845341219c9831985bb535923bd4f6a878aef49698b5552e8a0da90d40999969",
       "title": "in the end we'll know [8]",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "079"
-      ],
+      "series_id": "079",
       "project_folder": "in the end we'll know"
     },
     {
       "work_id": "01383",
+      "record_hash": "dfc0aef186e00c9cfee4760602a2d1ca578969b6a571745fac40f66a3ecf3716",
       "title": "in the end we'll know [9]",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "079"
-      ],
+      "series_id": "079",
       "project_folder": "in the end we'll know"
     },
     {
       "work_id": "01384",
+      "record_hash": "920053ab1bd77786f2894f8e438a069cd4e5eab1658597bfdec6f91744f80949",
       "title": "in the end we'll know [10]",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "079"
-      ],
+      "series_id": "079",
       "project_folder": "in the end we'll know"
     },
     {
       "work_id": "01385",
+      "record_hash": "8bfc76213f67a8c9506b664d69a1554418387df78e67511b7c2ed9abc0c91c6e",
       "title": "in the end we'll know [11]",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "079"
-      ],
+      "series_id": "079",
       "project_folder": "in the end we'll know"
     },
     {
       "work_id": "01386",
+      "record_hash": "faf52d814396416f4f6fd3c5b5d93e5c7061021de80a4e5abe9ff0b6164e0161",
       "title": "in the end we'll know [12]",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "079"
-      ],
+      "series_id": "079",
       "project_folder": "in the end we'll know"
     },
     {
       "work_id": "01387",
+      "record_hash": "6e1c132f3ea96822638209685bf5d8f1c7ea552dc8f286ffc9d488e3f92d505f",
       "title": "in the end we'll know [13]",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "079"
-      ],
+      "series_id": "079",
       "project_folder": "in the end we'll know"
     },
     {
       "work_id": "01388",
+      "record_hash": "e748063ec0eb97f26b7efdacd6307aa12ef57f30141568a62e2643b5e784e526",
       "title": "in the end we'll know [14]",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "079"
-      ],
+      "series_id": "079",
       "project_folder": "in the end we'll know"
     },
     {
       "work_id": "01389",
+      "record_hash": "a3834190f5c69ea7bfb81d6cfce5c1fc70fd931a9fbbb909ab7d924eba2e7944",
       "title": "in the end we'll know [15]",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "079"
-      ],
+      "series_id": "079",
       "project_folder": "in the end we'll know"
     },
     {
       "work_id": "01390",
+      "record_hash": "d8e786d1506bbc9d63e4cc4ccc1cf7d507aa42362ce42e76d14bc807f7e44377",
       "title": "in the end we'll know [16]",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "079"
-      ],
+      "series_id": "079",
       "project_folder": "in the end we'll know"
     }
   ],
-  "ordered_published_work_ids": [
+  "ordered_work_ids": [
     "01375",
     "01376",
     "01377",

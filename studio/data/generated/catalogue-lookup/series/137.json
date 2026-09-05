@@ -1,76 +1,63 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v2"
+    "schema": "studio_catalogue_lookup_series_record_v3"
   },
   "series": {
     "series_id": "137",
     "title": "tulips",
-    "series_type": "primary",
-    "status": "published",
-    "published_date": "2026-04-01",
     "year": 2023,
     "year_display": "2023",
-    "primary_work_id": "01869",
     "sort_fields": "work_id"
   },
+  "record_hash": "200abef143f29a4cbaf11d398635cb7d0dff4d45b5ba8887cc0e1d0b1e6ecef4",
   "member_works": [
     {
       "work_id": "01869",
+      "record_hash": "4112e66b8c1ca9e195a486f4573fe0147cf5e69d8a135613fbe94dcd7c42359e",
       "title": "tulips 1",
       "year": 2023,
       "year_display": "2023",
-      "status": "published",
-      "series_ids": [
-        "137"
-      ],
+      "series_id": "137",
       "project_folder": "tulips"
     },
     {
       "work_id": "01870",
+      "record_hash": "651019e209bcb5d2332e6ea0fd5361801a86de3d284219706dc3936200824fb4",
       "title": "tulips 2",
       "year": 2023,
       "year_display": "2023",
-      "status": "published",
-      "series_ids": [
-        "137"
-      ],
+      "series_id": "137",
       "project_folder": "tulips"
     },
     {
       "work_id": "01871",
+      "record_hash": "d6bfde00e650e75e74c750fa7833e96dbdd70c8e4c72ad13510d4448a61d770e",
       "title": "tulips 3",
       "year": 2023,
       "year_display": "2023",
-      "status": "published",
-      "series_ids": [
-        "137"
-      ],
+      "series_id": "137",
       "project_folder": "tulips"
     },
     {
       "work_id": "01872",
+      "record_hash": "9eb600ce06534135944e23c452f6008aebb9b7bc3d6fa0243c1192ec96876a58",
       "title": "tulips 4",
       "year": 2023,
       "year_display": "2023",
-      "status": "published",
-      "series_ids": [
-        "137"
-      ],
+      "series_id": "137",
       "project_folder": "tulips"
     },
     {
       "work_id": "01873",
+      "record_hash": "163856c13526cf3fea8eaf7291917dd2a30dd78567c790477a418fce53ddf0e4",
       "title": "tulips 5",
       "year": 2023,
       "year_display": "2023",
-      "status": "published",
-      "series_ids": [
-        "137"
-      ],
+      "series_id": "137",
       "project_folder": "tulips"
     }
   ],
-  "ordered_published_work_ids": [
+  "ordered_work_ids": [
     "01869",
     "01870",
     "01871",

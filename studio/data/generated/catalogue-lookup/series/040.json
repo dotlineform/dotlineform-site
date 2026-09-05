@@ -1,142 +1,117 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v2"
+    "schema": "studio_catalogue_lookup_series_record_v3"
   },
   "series": {
     "series_id": "040",
     "title": "dot",
-    "series_type": "primary",
-    "status": "published",
-    "published_date": "2026-04-01",
     "year": 2010,
     "year_display": "2010, 2012",
-    "primary_work_id": "00936",
     "sort_fields": "work_id"
   },
+  "record_hash": "16dddfc9103bcfd1b9bb8329bf94357e103247fdddd1ab2b6d8669b6052913cb",
   "member_works": [
     {
       "work_id": "00926",
+      "record_hash": "d0b9aa463b7fd9af9dae877eb684c940ab29f37584852f5294f72297dada86fa",
       "title": "dot (2010-10-25 - 13-20-30)",
       "year": 2010,
       "year_display": "2010",
-      "status": "published",
-      "series_ids": [
-        "040"
-      ],
+      "series_id": "040",
       "project_folder": "dot"
     },
     {
       "work_id": "00927",
+      "record_hash": "212013439221dff90fc34899a96d6f7901c828e2bdead238024e4e808371789d",
       "title": "dot (2010-10-25 - 13-20-37)",
       "year": 2010,
       "year_display": "2010",
-      "status": "published",
-      "series_ids": [
-        "040"
-      ],
+      "series_id": "040",
       "project_folder": "dot"
     },
     {
       "work_id": "00928",
+      "record_hash": "23bcaac6de11fedc8bb629b76fbfedef77f742239078343186ee447e03be2441",
       "title": "dot (2012-12-03 - 12-53-42)",
       "year": 2012,
       "year_display": "2012",
-      "status": "published",
-      "series_ids": [
-        "040"
-      ],
+      "series_id": "040",
       "project_folder": "dot"
     },
     {
       "work_id": "00929",
+      "record_hash": "3ef0949d1c5883d96a59f5406dc4f29312d5aee9512111c3a9b819c234d3b95b",
       "title": "dot (2012-12-03 - 12-54-08)",
       "year": 2012,
       "year_display": "2012",
-      "status": "published",
-      "series_ids": [
-        "040"
-      ],
+      "series_id": "040",
       "project_folder": "dot"
     },
     {
       "work_id": "00930",
+      "record_hash": "d5e4f9ef5b338bfa94734d87f76cc1dad4d0a0edeb309847a2df96a8a20aa23a",
       "title": "dot (2012-12-03 - 12-54-33)",
       "year": 2012,
       "year_display": "2012",
-      "status": "published",
-      "series_ids": [
-        "040"
-      ],
+      "series_id": "040",
       "project_folder": "dot"
     },
     {
       "work_id": "00931",
+      "record_hash": "3a6792be137ffa3d4429069cefca8afb183aeb6275603458420c7a0433257e8f",
       "title": "dot (2012-12-03 - 12-54-46)",
       "year": 2012,
       "year_display": "2012",
-      "status": "published",
-      "series_ids": [
-        "040"
-      ],
+      "series_id": "040",
       "project_folder": "dot"
     },
     {
       "work_id": "00932",
+      "record_hash": "7ef9abf0c3c29915cc14f8a6603fd2e3e366aa8dd486fe6f8afd035aaa67ee01",
       "title": "dot (2012-12-03 - 13-01-23)",
       "year": 2012,
       "year_display": "2012",
-      "status": "published",
-      "series_ids": [
-        "040"
-      ],
+      "series_id": "040",
       "project_folder": "dot"
     },
     {
       "work_id": "00933",
+      "record_hash": "2b307f4a1d7f37bc8842d60e35d1ad973dadd2a80702bc2ae516f10483706875",
       "title": "dot (2012-12-03 - 13-04-49)",
       "year": 2012,
       "year_display": "2012",
-      "status": "published",
-      "series_ids": [
-        "040"
-      ],
+      "series_id": "040",
       "project_folder": "dot"
     },
     {
       "work_id": "00934",
+      "record_hash": "3b9bd5fded8364b55411b19895b78163299bab89a93064e4d0e330f548c57c5d",
       "title": "dot (2012-12-03 - 13-05-07)",
       "year": 2012,
       "year_display": "2012",
-      "status": "published",
-      "series_ids": [
-        "040"
-      ],
+      "series_id": "040",
       "project_folder": "dot"
     },
     {
       "work_id": "00935",
+      "record_hash": "3e59e0257c5dc9fb771b94837450b17003619db4b70f778531ef5c63d61333b9",
       "title": "dot (2012-12-03 - 13-05-40)",
       "year": 2012,
       "year_display": "2012",
-      "status": "published",
-      "series_ids": [
-        "040"
-      ],
+      "series_id": "040",
       "project_folder": "dot"
     },
     {
       "work_id": "00936",
+      "record_hash": "a8607787bfa1972d1819498f47981ed2db99ff1dce451759aa21a315c5addd55",
       "title": "dot (2012-12-03 - 13-06-14)",
       "year": 2012,
       "year_display": "2012",
-      "status": "published",
-      "series_ids": [
-        "040"
-      ],
+      "series_id": "040",
       "project_folder": "dot"
     }
   ],
-  "ordered_published_work_ids": [
+  "ordered_work_ids": [
     "00926",
     "00927",
     "00928",

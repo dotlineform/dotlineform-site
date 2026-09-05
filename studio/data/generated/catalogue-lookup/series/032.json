@@ -1,87 +1,72 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v2"
+    "schema": "studio_catalogue_lookup_series_record_v3"
   },
   "series": {
     "series_id": "032",
     "title": "creases",
-    "series_type": "primary",
-    "status": "published",
-    "published_date": "2026-04-01",
     "year": 2016,
     "year_display": "2016",
-    "primary_work_id": "00833",
     "sort_fields": "work_id"
   },
+  "record_hash": "94c08b0d89aee618e37f3e90d395b503c4ddf88251907d303a1c5dd33d502570",
   "member_works": [
     {
       "work_id": "00832",
+      "record_hash": "5f69fb88ccae246c8038752d655f2336c676fdbbc08a7def0120c7ed95eeed9e",
       "title": "creases 1",
       "year": 2016,
       "year_display": "2016",
-      "status": "published",
-      "series_ids": [
-        "032"
-      ],
+      "series_id": "032",
       "project_folder": "creases"
     },
     {
       "work_id": "00833",
+      "record_hash": "cd608551ca7d76ac46072a335d0e1a2a4c0a3c936bbc4a1ed9bcb396c248de4a",
       "title": "creases 1 (version)",
       "year": 2016,
       "year_display": "2016",
-      "status": "published",
-      "series_ids": [
-        "032"
-      ],
+      "series_id": "032",
       "project_folder": "creases"
     },
     {
       "work_id": "00834",
+      "record_hash": "b823476d630742fb932d661e4d1684562c3c31eb2355a8b9c135c570acc697d9",
       "title": "creases 2",
       "year": 2016,
       "year_display": "2016",
-      "status": "published",
-      "series_ids": [
-        "032"
-      ],
+      "series_id": "032",
       "project_folder": "creases"
     },
     {
       "work_id": "00835",
+      "record_hash": "01d3d2e4ac8cf8028fad9b77986c9b0645bb0111626a72042dd9422f56c2f43d",
       "title": "creases 2 (version)",
       "year": 2016,
       "year_display": "2016",
-      "status": "published",
-      "series_ids": [
-        "032"
-      ],
+      "series_id": "032",
       "project_folder": "creases"
     },
     {
       "work_id": "00836",
+      "record_hash": "fa59ba1b9bd538a52d5d0dfbabab654eb0013bcacce5a74d6432e44e43ec67c5",
       "title": "creases 3",
       "year": 2016,
       "year_display": "2016",
-      "status": "published",
-      "series_ids": [
-        "032"
-      ],
+      "series_id": "032",
       "project_folder": "creases"
     },
     {
       "work_id": "00837",
+      "record_hash": "d3c0bb0d84bca4accc9f5b0fb3027b315c1f196d6de4826954bd2f4e15294081",
       "title": "creases 3 (version)",
       "year": 2016,
       "year_display": "2016",
-      "status": "published",
-      "series_ids": [
-        "032"
-      ],
+      "series_id": "032",
       "project_folder": "creases"
     }
   ],
-  "ordered_published_work_ids": [
+  "ordered_work_ids": [
     "00832",
     "00833",
     "00834",

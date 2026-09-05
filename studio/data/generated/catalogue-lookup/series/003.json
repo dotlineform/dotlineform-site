@@ -1,32 +1,27 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v2"
+    "schema": "studio_catalogue_lookup_series_record_v3"
   },
   "series": {
     "series_id": "003",
     "title": "16 forms",
-    "series_type": "primary",
-    "status": "published",
-    "published_date": "2026-04-01",
     "year": 2023,
     "year_display": "2023",
-    "primary_work_id": "00639",
     "sort_fields": "work_id"
   },
+  "record_hash": "63d997e088e32a4c9b40c1fbb01d7206c4c56e8b2890e76a51f8b3173e1d482f",
   "member_works": [
     {
       "work_id": "00639",
+      "record_hash": "ad2fb36762181edf8d34522da363b2b79d91b8fa89e8dda73cdcd08780530ee8",
       "title": "16 forms",
       "year": 2023,
       "year_display": "2023",
-      "status": "published",
-      "series_ids": [
-        "003"
-      ],
+      "series_id": "003",
       "project_folder": "16 forms"
     }
   ],
-  "ordered_published_work_ids": [
+  "ordered_work_ids": [
     "00639"
   ],
   "project_folders": [

@@ -1,186 +1,153 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v2"
+    "schema": "studio_catalogue_lookup_series_record_v3"
   },
   "series": {
     "series_id": "013",
     "title": "an act of kindness",
-    "series_type": "primary",
-    "status": "published",
-    "published_date": "2026-04-01",
     "year": 2024,
     "year_display": "2024",
-    "primary_work_id": "00748",
     "sort_fields": "work_id"
   },
+  "record_hash": "c077e6583e9bcbf3a18c0e394176f4d50e94842465a1276ee5930cb167770ba0",
   "member_works": [
     {
       "work_id": "00736",
+      "record_hash": "9e4e42af1d0bb93e4b2ddecfd722474a67fe5a44ec34daf19e2f7d8ca5d9d0b1",
       "title": "an act of kindness [1]",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "013"
-      ],
+      "series_id": "013",
       "project_folder": "an act of kindness"
     },
     {
       "work_id": "00737",
+      "record_hash": "571640752867bf6baaa5754e9b77e7aee86107f0371216ebc0b24ea754ed9d45",
       "title": "an act of kindness [2]",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "013"
-      ],
+      "series_id": "013",
       "project_folder": "an act of kindness"
     },
     {
       "work_id": "00738",
+      "record_hash": "1ad68007bb08e18ce246d393b58e684052f2e2abc9da7912d412794ce9c9c546",
       "title": "an act of kindness [3]",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "013"
-      ],
+      "series_id": "013",
       "project_folder": "an act of kindness"
     },
     {
       "work_id": "00739",
+      "record_hash": "ec1161906a0e110430015593f026f5952c6dfd3c6b5115127b3149f976cb7e95",
       "title": "an act of kindness [4]",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "013"
-      ],
+      "series_id": "013",
       "project_folder": "an act of kindness"
     },
     {
       "work_id": "00740",
+      "record_hash": "906eb09c8aebf875f564335a2e662bea7a986f2f56445a6deb5162c5088530da",
       "title": "an act of kindness [5]",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "013"
-      ],
+      "series_id": "013",
       "project_folder": "an act of kindness"
     },
     {
       "work_id": "00741",
+      "record_hash": "25f5f6801f4c982e5c96ea1979d6825d77d721a5ee9a98f07c12a4096349484b",
       "title": "a partial act of kindness [1.1]",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "013"
-      ],
+      "series_id": "013",
       "project_folder": "an act of kindness"
     },
     {
       "work_id": "00742",
+      "record_hash": "3dad0c4f86fd2f346a8bd84ab019249eea37a61cbf9d59166b7c6d6d2dba3e30",
       "title": "a partial act of kindness [1.2]",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "013"
-      ],
+      "series_id": "013",
       "project_folder": "an act of kindness"
     },
     {
       "work_id": "00743",
+      "record_hash": "c904bb16dd367daba91b89e4883e42e73e3eda1b7090f51cc1bdc8de27ed7277",
       "title": "a partial act of kindness [2.1]",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "013"
-      ],
+      "series_id": "013",
       "project_folder": "an act of kindness"
     },
     {
       "work_id": "00744",
+      "record_hash": "476cba8a3463e7a2d6e017fc0f5c80841396fc5522c1391397f520cfe555a5c6",
       "title": "a partial act of kindness [2.2]",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "013"
-      ],
+      "series_id": "013",
       "project_folder": "an act of kindness"
     },
     {
       "work_id": "00745",
+      "record_hash": "ca514b99e93efa5d05f2397791389ef27f0ecd77b4449625075a3f68c523060f",
       "title": "a partial act of kindness [3.1]",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "013"
-      ],
+      "series_id": "013",
       "project_folder": "an act of kindness"
     },
     {
       "work_id": "00746",
+      "record_hash": "81f92b54eaf58745740af3ea9e57d66d1f0d0c50daaca67b43c969360200d1a3",
       "title": "a partial act of kindness [3.2]",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "013"
-      ],
+      "series_id": "013",
       "project_folder": "an act of kindness"
     },
     {
       "work_id": "00747",
+      "record_hash": "7b05c052039fb12910cf3175cc4811d2781504792bd24e076427f2ae14452fe9",
       "title": "a partial act of kindness [4.1]",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "013"
-      ],
+      "series_id": "013",
       "project_folder": "an act of kindness"
     },
     {
       "work_id": "00748",
+      "record_hash": "bae791b903fddef82034b4bb9a348e7b48fd63e9acb4a2e65ccbe6a994c15662",
       "title": "a partial act of kindness [4.2]",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "013"
-      ],
+      "series_id": "013",
       "project_folder": "an act of kindness"
     },
     {
       "work_id": "00749",
+      "record_hash": "cc39c4b482f9ad4d2c6c54abf613f91cc243ef47c7b6223da95fee84e4a6a50b",
       "title": "a partial act of kindness [5.1]",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "013"
-      ],
+      "series_id": "013",
       "project_folder": "an act of kindness"
     },
     {
       "work_id": "00750",
+      "record_hash": "970d38670bbd377f6c6c80fca5774e64caab6b2e3ff214b022bea57c3436f7ed",
       "title": "a partial act of kindness [5.2]",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "013"
-      ],
+      "series_id": "013",
       "project_folder": "an act of kindness"
     }
   ],
-  "ordered_published_work_ids": [
+  "ordered_work_ids": [
     "00736",
     "00737",
     "00738",

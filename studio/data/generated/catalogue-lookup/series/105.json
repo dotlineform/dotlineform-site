@@ -1,55 +1,45 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v2"
+    "schema": "studio_catalogue_lookup_series_record_v3"
   },
   "series": {
     "series_id": "105",
     "title": "nerve",
-    "series_type": "primary",
-    "status": "published",
-    "published_date": "2026-04-26",
     "year": 1995,
     "year_display": "1990-95",
-    "primary_work_id": "00008",
     "sort_fields": "work_id"
   },
+  "record_hash": "21bc3ab34c220f99838df8f447beb9af8a3a6c79be2101a8559b344ed48ca37a",
   "member_works": [
     {
       "work_id": "00008",
+      "record_hash": "146e7f384ad23f23f2cfe309daf95c2d6bd7f6b02884895d55a470f266fc0b45",
       "title": "nerve",
       "year": 1995,
       "year_display": "July 1990 – January 1995",
-      "status": "published",
-      "series_ids": [
-        "105",
-        "026"
-      ],
+      "series_id": "105",
       "project_folder": "nerve"
     },
     {
       "work_id": "00163",
+      "record_hash": "03103b0ed4183b6d6980fc475f6692b520e4cf5cd2027e0ffebf34f87f66f196",
       "title": "nerve (abattoir)",
       "year": 1995,
       "year_display": "1990-95",
-      "status": "published",
-      "series_ids": [
-        "105"
-      ],
+      "series_id": "105",
       "project_folder": "nerve (abattoir)"
     },
     {
       "work_id": "00166",
+      "record_hash": "15e511b0c976d357f4fa0a4225ea7e5605f77934f42dd40e2f49590ddf1433a1",
       "title": "nerve (formaldehyde form)",
       "year": 1993,
       "year_display": "1993",
-      "status": "published",
-      "series_ids": [
-        "105"
-      ],
+      "series_id": "105",
       "project_folder": "nerve (formaldehyde form)"
     }
   ],
-  "ordered_published_work_ids": [
+  "ordered_work_ids": [
     "00008",
     "00163",
     "00166"

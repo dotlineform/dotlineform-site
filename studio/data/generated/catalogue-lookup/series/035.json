@@ -1,76 +1,63 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v2"
+    "schema": "studio_catalogue_lookup_series_record_v3"
   },
   "series": {
     "series_id": "035",
     "title": "curve machine",
-    "series_type": "primary",
-    "status": "published",
-    "published_date": "2026-04-01",
     "year": 2020,
     "year_display": "2020",
-    "primary_work_id": "00867",
     "sort_fields": "work_id"
   },
+  "record_hash": "437157c5afd020341b150fca29db0465bbe45108dcc38e057ea64deccee5ca7b",
   "member_works": [
     {
       "work_id": "00867",
+      "record_hash": "ed14c55a5b92825372beb210947c688541631ba5a77d7eb952d8d3812839096b",
       "title": "curve machine",
       "year": 2020,
       "year_display": "2020",
-      "status": "published",
-      "series_ids": [
-        "035"
-      ],
+      "series_id": "035",
       "project_folder": "curve machine"
     },
     {
       "work_id": "00868",
+      "record_hash": "b3390b1f6dba741fdd969ee00711776749066cd71a31e8e7137142e16455410a",
       "title": "curve machine (off)",
       "year": 2020,
       "year_display": "2020",
-      "status": "published",
-      "series_ids": [
-        "035"
-      ],
+      "series_id": "035",
       "project_folder": "curve machine"
     },
     {
       "work_id": "00869",
+      "record_hash": "ce7fec482c1a588f21300175437cb09be384835ad8aba8337ca35fd4dce1e2ab",
       "title": "curves",
       "year": 2020,
       "year_display": "2020",
-      "status": "published",
-      "series_ids": [
-        "035"
-      ],
+      "series_id": "035",
       "project_folder": "curve machine"
     },
     {
       "work_id": "00870",
+      "record_hash": "986e8eafa22f96a21b3e65ac92dbd21c0212b178cd9d3ddae406fbf93910191a",
       "title": "holes",
       "year": 2020,
       "year_display": "2020",
-      "status": "published",
-      "series_ids": [
-        "035"
-      ],
+      "series_id": "035",
       "project_folder": "curve machine"
     },
     {
       "work_id": "00871",
+      "record_hash": "5639cebe1a15f893a377101defea153e8016350e7b8b082aaa831c622b9941a5",
       "title": "loops",
       "year": 2020,
       "year_display": "2020",
-      "status": "published",
-      "series_ids": [
-        "035"
-      ],
+      "series_id": "035",
       "project_folder": "curve machine"
     }
   ],
-  "ordered_published_work_ids": [
+  "ordered_work_ids": [
     "00867",
     "00868",
     "00869",

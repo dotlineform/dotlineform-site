@@ -1,65 +1,54 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v2"
+    "schema": "studio_catalogue_lookup_series_record_v3"
   },
   "series": {
     "series_id": "084",
     "title": "kylie structures",
-    "series_type": "primary",
-    "status": "published",
-    "published_date": "2026-04-01",
     "year": 2023,
     "year_display": "2023",
-    "primary_work_id": "00520",
     "sort_fields": "work_id"
   },
+  "record_hash": "0def42470cebe4d26cc432e37b017e4e3abdf22c5a896862c472d5a25069b3db",
   "member_works": [
     {
       "work_id": "00520",
+      "record_hash": "00f6537160672eb993989cd5eb25ffdc1303548682b234d703b705f0631bb7d1",
       "title": "kylie structure 1",
       "year": 2023,
       "year_display": "2023",
-      "status": "published",
-      "series_ids": [
-        "084"
-      ],
+      "series_id": "084",
       "project_folder": "kylie structures"
     },
     {
       "work_id": "00521",
+      "record_hash": "c452a84ee771d2ef67a05c50be39da59b337dee20f998831a0e6a1cd2111e0e7",
       "title": "kylie structure 2",
       "year": 2023,
       "year_display": "2023",
-      "status": "published",
-      "series_ids": [
-        "084"
-      ],
+      "series_id": "084",
       "project_folder": "kylie structures"
     },
     {
       "work_id": "00522",
+      "record_hash": "9ba8826a32f47f5d8994f004a6af95a70fd8121f198c51b58f5385cd96edb538",
       "title": "kylie structure 3",
       "year": 2023,
       "year_display": "2023",
-      "status": "published",
-      "series_ids": [
-        "084"
-      ],
+      "series_id": "084",
       "project_folder": "kylie structures"
     },
     {
       "work_id": "00523",
+      "record_hash": "71d1db2fd05d924ad5201c82967af8e857b4252e12bdfd4de05b073169e0f67b",
       "title": "kylie structure 4",
       "year": 2023,
       "year_display": "2023",
-      "status": "published",
-      "series_ids": [
-        "084"
-      ],
+      "series_id": "084",
       "project_folder": "kylie structures"
     }
   ],
-  "ordered_published_work_ids": [
+  "ordered_work_ids": [
     "00520",
     "00521",
     "00522",

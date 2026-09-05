@@ -1,32 +1,27 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v2"
+    "schema": "studio_catalogue_lookup_series_record_v3"
   },
   "series": {
     "series_id": "046",
     "title": "egg forms",
-    "series_type": "primary",
-    "status": "published",
-    "published_date": "2026-04-01",
     "year": 2024,
     "year_display": "2024",
-    "primary_work_id": "01037",
     "sort_fields": "work_id"
   },
+  "record_hash": "035b8db8bba18557d8330b465333efbc396c0db4be7e28fa860ff79597ede049",
   "member_works": [
     {
       "work_id": "01037",
+      "record_hash": "515c30d7944374b959bac4fdf4867ad5933d3ce76f3622524d0834acf64ba4a8",
       "title": "egg forms",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "046"
-      ],
+      "series_id": "046",
       "project_folder": "egg forms"
     }
   ],
-  "ordered_published_work_ids": [
+  "ordered_work_ids": [
     "01037"
   ],
   "project_folders": [

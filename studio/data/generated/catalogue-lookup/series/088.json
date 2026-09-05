@@ -1,32 +1,27 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v2"
+    "schema": "studio_catalogue_lookup_series_record_v3"
   },
   "series": {
     "series_id": "088",
     "title": "leaf",
-    "series_type": "primary",
-    "status": "published",
-    "published_date": "2026-04-01",
     "year": 2016,
     "year_display": "2016",
-    "primary_work_id": "00458",
     "sort_fields": "work_id"
   },
+  "record_hash": "70a987ebc3fdc238f90c7943aedea8daefa6a573dfdf923125371836ac51ef44",
   "member_works": [
     {
       "work_id": "00458",
+      "record_hash": "dfea119bbc5427fe3a04844cb31b10a6c45b9007e014d91b27339abc0b1f0716",
       "title": "leaf",
       "year": 2016,
       "year_display": "2016",
-      "status": "published",
-      "series_ids": [
-        "088"
-      ],
+      "series_id": "088",
       "project_folder": "leaf"
     }
   ],
-  "ordered_published_work_ids": [
+  "ordered_work_ids": [
     "00458"
   ],
   "project_folders": [

@@ -1,164 +1,135 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v2"
+    "schema": "studio_catalogue_lookup_series_record_v3"
   },
   "series": {
     "series_id": "057",
     "title": "folding structure",
-    "series_type": "primary",
-    "status": "published",
-    "published_date": "2026-04-01",
     "year": 2013,
     "year_display": "2013-20",
-    "primary_work_id": "01161",
     "sort_fields": "work_id"
   },
+  "record_hash": "3f95937e30d4cbab494456febb8a6e64d87ebd78769fa8f910f7130dce62bc76",
   "member_works": [
     {
       "work_id": "01161",
+      "record_hash": "e9db760cfda169cd0743caa0522921f8a74f959d2c3018c281f4fe1236196ab2",
       "title": "folding structure 1",
       "year": 2016,
       "year_display": "2016",
-      "status": "published",
-      "series_ids": [
-        "057"
-      ],
+      "series_id": "057",
       "project_folder": "folding structure"
     },
     {
       "work_id": "01162",
+      "record_hash": "38e43058fbb0bbc0a2b5af0266f7a16f3e40cacb48ddf016f615eac25e7f7ab1",
       "title": "folding structure 2",
       "year": 2016,
       "year_display": "2016",
-      "status": "published",
-      "series_ids": [
-        "057"
-      ],
+      "series_id": "057",
       "project_folder": "folding structure"
     },
     {
       "work_id": "01163",
+      "record_hash": "1722073e244e501c99a36df6ce57c951afd931c12a34ea4cbf0e71bbe7882baf",
       "title": "folding structure 3",
       "year": 2016,
       "year_display": "2016",
-      "status": "published",
-      "series_ids": [
-        "057"
-      ],
+      "series_id": "057",
       "project_folder": "folding structure"
     },
     {
       "work_id": "01164",
+      "record_hash": "18d7723d52e4612fd91dfdb84d1d487e58ef35aa5152e48268086f7f394c775b",
       "title": "folding structure 4",
       "year": 2016,
       "year_display": "2016",
-      "status": "published",
-      "series_ids": [
-        "057"
-      ],
+      "series_id": "057",
       "project_folder": "folding structure"
     },
     {
       "work_id": "01165",
+      "record_hash": "1adfab8469003d1061c2c315a86c2c3977196523568fe7bd2eb074ec5199d989",
       "title": "folding structure 5",
       "year": 2016,
       "year_display": "2016",
-      "status": "published",
-      "series_ids": [
-        "057"
-      ],
+      "series_id": "057",
       "project_folder": "folding structure"
     },
     {
       "work_id": "01166",
+      "record_hash": "ea72bcbcab320e152b9e71cc4d92a93e0b3e612afea13f165a815add60d6d339",
       "title": "folding structure 6",
       "year": 2016,
       "year_display": "2016",
-      "status": "published",
-      "series_ids": [
-        "057"
-      ],
+      "series_id": "057",
       "project_folder": "folding structure"
     },
     {
       "work_id": "01167",
+      "record_hash": "655d1419157d933ee5057eb70c544fb8e901820b478a0ca5f963f2a0d95ee66e",
       "title": "folding structure 7",
       "year": 2016,
       "year_display": "2016",
-      "status": "published",
-      "series_ids": [
-        "057"
-      ],
+      "series_id": "057",
       "project_folder": "folding structure"
     },
     {
       "work_id": "01169",
+      "record_hash": "9fb54f04b3d275a6bf6ad11a9082d45aa709c5f42253741df85b8070d0858ea9",
       "title": "folding structure 8",
       "year": 2013,
       "year_display": "2013",
-      "status": "published",
-      "series_ids": [
-        "057"
-      ],
+      "series_id": "057",
       "project_folder": "folding structure"
     },
     {
       "work_id": "01170",
+      "record_hash": "6362c6a42448c64700dfd8d33e0eb3f1c75db52438b8f4db277b70e134f94809",
       "title": "folding structure 9",
       "year": 2013,
       "year_display": "2013",
-      "status": "published",
-      "series_ids": [
-        "057"
-      ],
+      "series_id": "057",
       "project_folder": "folding structure"
     },
     {
       "work_id": "01171",
+      "record_hash": "5a624435d3041eafbe5e60554fedda6c2fda9aff4d3c5edc96fd5859a2950d5e",
       "title": "folding structure - version 1",
       "year": 2020,
       "year_display": "2020",
-      "status": "published",
-      "series_ids": [
-        "057"
-      ],
+      "series_id": "057",
       "project_folder": "folding structure"
     },
     {
       "work_id": "01172",
+      "record_hash": "edae3b9f7a84e8ba89f29bb853dd23009e97db3471e9616f5acfe014a0d803dd",
       "title": "folding structure - version 2",
       "year": 2020,
       "year_display": "2020",
-      "status": "published",
-      "series_ids": [
-        "057"
-      ],
+      "series_id": "057",
       "project_folder": "folding structure"
     },
     {
       "work_id": "01173",
+      "record_hash": "98018ccad5131e8336a513972ef98527097efa2be4bfc1d46ab7233fc211b80c",
       "title": "folding structure - version 2 (detail)",
       "year": 2020,
       "year_display": "2020",
-      "status": "published",
-      "series_ids": [
-        "057"
-      ],
+      "series_id": "057",
       "project_folder": "folding structure"
     },
     {
       "work_id": "01174",
+      "record_hash": "4acec2729f7dabe1818f8d7db286a83025a482a0b22b4f2e9d5ea26f768215f9",
       "title": "folding structure - version 3",
       "year": 2020,
       "year_display": "2020",
-      "status": "published",
-      "series_ids": [
-        "057"
-      ],
+      "series_id": "057",
       "project_folder": "folding structure"
     }
   ],
-  "ordered_published_work_ids": [
+  "ordered_work_ids": [
     "01161",
     "01162",
     "01163",

@@ -1,417 +1,342 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v2"
+    "schema": "studio_catalogue_lookup_series_record_v3"
   },
   "series": {
     "series_id": "055",
     "title": "fog",
-    "series_type": "primary",
-    "status": "published",
-    "published_date": "2026-04-01",
     "year": 2006,
     "year_display": "2006-19",
-    "primary_work_id": "01099",
     "sort_fields": "work_id"
   },
+  "record_hash": "a698802015699adc81e35b355c2bb40219c66991b30a7ae975fe6d0633307322",
   "member_works": [
     {
       "work_id": "01071",
+      "record_hash": "d901e8268b91df571a67f1fb9d1a83206d0da3e8f978aca28989b936bc11cb0b",
       "title": "fog 1",
       "year": 2006,
       "year_display": "2006",
-      "status": "published",
-      "series_ids": [
-        "055"
-      ],
+      "series_id": "055",
       "project_folder": "fog"
     },
     {
       "work_id": "01072",
+      "record_hash": "5fde556b3ec4a7ddecc5200488a90b07f6ea5c6d5d258c49eb8f87c17d34fda6",
       "title": "fog 2",
       "year": 2010,
       "year_display": "2010",
-      "status": "published",
-      "series_ids": [
-        "055"
-      ],
+      "series_id": "055",
       "project_folder": "fog"
     },
     {
       "work_id": "01073",
+      "record_hash": "ce7660a43da44682b97f8e104f059735e5627b9283f541979132fa06308ea376",
       "title": "fog 3",
       "year": 2010,
       "year_display": "2010",
-      "status": "published",
-      "series_ids": [
-        "055"
-      ],
+      "series_id": "055",
       "project_folder": "fog"
     },
     {
       "work_id": "01074",
+      "record_hash": "255456de2092cbab38aa00384eea0b62f2e72c7896f7da469e8efafbee26fd1b",
       "title": "fog 4",
       "year": 2010,
       "year_display": "2010",
-      "status": "published",
-      "series_ids": [
-        "055"
-      ],
+      "series_id": "055",
       "project_folder": "fog"
     },
     {
       "work_id": "01075",
+      "record_hash": "335b909de1689a9598b49186fc3bff91f3fdeb56ee045a5a11bd72ce5de8a5fd",
       "title": "fog 5",
       "year": 2010,
       "year_display": "2010",
-      "status": "published",
-      "series_ids": [
-        "055"
-      ],
+      "series_id": "055",
       "project_folder": "fog"
     },
     {
       "work_id": "01076",
+      "record_hash": "202c151bf34b8288c273941bfaffcc0d93d3ddc1f04d829c754165b561f7ec7c",
       "title": "fog 6",
       "year": 2010,
       "year_display": "2010",
-      "status": "published",
-      "series_ids": [
-        "055"
-      ],
+      "series_id": "055",
       "project_folder": "fog"
     },
     {
       "work_id": "01077",
+      "record_hash": "b771b6c80bf3dbb218c4cc44a9e047c4d8f33544007ac37611f1a3a3a6de3c8a",
       "title": "fog 7",
       "year": 2011,
       "year_display": "2011",
-      "status": "published",
-      "series_ids": [
-        "055"
-      ],
+      "series_id": "055",
       "project_folder": "fog"
     },
     {
       "work_id": "01078",
+      "record_hash": "c986721895de711cf58289cb3e4d1a8fd0d65021840f31a3e1a58f78fd209a60",
       "title": "fog 8",
       "year": 2012,
       "year_display": "2012",
-      "status": "published",
-      "series_ids": [
-        "055"
-      ],
+      "series_id": "055",
       "project_folder": "fog"
     },
     {
       "work_id": "01079",
+      "record_hash": "a4d85a894e39def4da95539bc73bef806bec6dd0eedef3c9c09a8516812c112d",
       "title": "fog 9",
       "year": 2012,
       "year_display": "2012",
-      "status": "published",
-      "series_ids": [
-        "055"
-      ],
+      "series_id": "055",
       "project_folder": "fog"
     },
     {
       "work_id": "01080",
+      "record_hash": "231ee2ec6774e194d8315e94a9b48b82f9c79d8cb4fe0b62d8ba148ff06ac39b",
       "title": "fog 10",
       "year": 2012,
       "year_display": "2012",
-      "status": "published",
-      "series_ids": [
-        "055"
-      ],
+      "series_id": "055",
       "project_folder": "fog"
     },
     {
       "work_id": "01081",
+      "record_hash": "a53e9ef3b77c689f76fb6555903396eca82e72c3750450e3926e8c684a59dde5",
       "title": "fog 11",
       "year": 2012,
       "year_display": "2012",
-      "status": "published",
-      "series_ids": [
-        "055"
-      ],
+      "series_id": "055",
       "project_folder": "fog"
     },
     {
       "work_id": "01082",
+      "record_hash": "896d3035749254e0ffd3c2a530329472ce23d99147f0000bff15f4d7ce31f3b8",
       "title": "fog 12",
       "year": 2012,
       "year_display": "2012",
-      "status": "published",
-      "series_ids": [
-        "055"
-      ],
+      "series_id": "055",
       "project_folder": "fog"
     },
     {
       "work_id": "01083",
+      "record_hash": "0d8c2d10f9e69f90b23429ccf2de6f442e48c8cc49d95e250319f00537c7c0df",
       "title": "fog 13",
       "year": 2012,
       "year_display": "2012",
-      "status": "published",
-      "series_ids": [
-        "055"
-      ],
+      "series_id": "055",
       "project_folder": "fog"
     },
     {
       "work_id": "01084",
+      "record_hash": "2c0ab23e75af2d843dde504e625563eba0cbb9b5044b41e5caef384acdf88eca",
       "title": "fog 14",
       "year": 2013,
       "year_display": "2013",
-      "status": "published",
-      "series_ids": [
-        "055"
-      ],
+      "series_id": "055",
       "project_folder": "fog"
     },
     {
       "work_id": "01085",
+      "record_hash": "d5783c09f079192f3aafc97b1e2bcc1f8104b77530c5726260b32896832bb544",
       "title": "fog 15",
       "year": 2013,
       "year_display": "2013",
-      "status": "published",
-      "series_ids": [
-        "055"
-      ],
+      "series_id": "055",
       "project_folder": "fog"
     },
     {
       "work_id": "01086",
+      "record_hash": "0041718760f410580c4023fe4220522382cd9ed530f267846a321a7bb3ecfa0c",
       "title": "fog 16",
       "year": 2013,
       "year_display": "2013",
-      "status": "published",
-      "series_ids": [
-        "055"
-      ],
+      "series_id": "055",
       "project_folder": "fog"
     },
     {
       "work_id": "01087",
+      "record_hash": "19cb24e0731fb5abeeeffae4f2920dfd9bc335bb77da7bc499ea950fbead74eb",
       "title": "fog 17",
       "year": 2013,
       "year_display": "2013",
-      "status": "published",
-      "series_ids": [
-        "055"
-      ],
+      "series_id": "055",
       "project_folder": "fog"
     },
     {
       "work_id": "01088",
+      "record_hash": "3969d9bdc932034db3de59c95cd3bfbd8e9d092b6f3b004a7d9e50b022207df9",
       "title": "fog 18",
       "year": 2013,
       "year_display": "2013",
-      "status": "published",
-      "series_ids": [
-        "055"
-      ],
+      "series_id": "055",
       "project_folder": "fog"
     },
     {
       "work_id": "01089",
+      "record_hash": "21a13b779bab4f3e5bed59d01c3beb3f95961e9d30936c924ce80efb9465dd7a",
       "title": "fog 19",
       "year": 2013,
       "year_display": "2013",
-      "status": "published",
-      "series_ids": [
-        "055"
-      ],
+      "series_id": "055",
       "project_folder": "fog"
     },
     {
       "work_id": "01090",
+      "record_hash": "22e7ff9b706663cb3d69eaeb43c00a2f7c7975a8fcf86f0f66ece8898c277e81",
       "title": "fog 20",
       "year": 2014,
       "year_display": "2014",
-      "status": "published",
-      "series_ids": [
-        "055"
-      ],
+      "series_id": "055",
       "project_folder": "fog"
     },
     {
       "work_id": "01091",
+      "record_hash": "a152773a2a49950474bc5cf3014250e12f1bcf075b117cd546e27af16ba5aff9",
       "title": "fog 21",
       "year": 2014,
       "year_display": "2014",
-      "status": "published",
-      "series_ids": [
-        "055"
-      ],
+      "series_id": "055",
       "project_folder": "fog"
     },
     {
       "work_id": "01092",
+      "record_hash": "006a2bd508aacbc6746c068b41751b060691b1e54af01f0d098686c42c778f8a",
       "title": "fog 22",
       "year": 2014,
       "year_display": "2014",
-      "status": "published",
-      "series_ids": [
-        "055"
-      ],
+      "series_id": "055",
       "project_folder": "fog"
     },
     {
       "work_id": "01093",
+      "record_hash": "29eb793a20827584c2294ecb3aceee6bdd4d6eceb9146271f09a9b7688edf601",
       "title": "fog 23",
       "year": 2014,
       "year_display": "2014",
-      "status": "published",
-      "series_ids": [
-        "055"
-      ],
+      "series_id": "055",
       "project_folder": "fog"
     },
     {
       "work_id": "01094",
+      "record_hash": "33f449dddd5bccc9f221c3a45f21c568a6c3e66e077beb75783c083644c4c123",
       "title": "fog 24",
       "year": 2014,
       "year_display": "2014",
-      "status": "published",
-      "series_ids": [
-        "055"
-      ],
+      "series_id": "055",
       "project_folder": "fog"
     },
     {
       "work_id": "01095",
+      "record_hash": "665427ab653804d38456f0340ebea7f46c02a46e722c4110a6c1cbb70d3d1581",
       "title": "fog 25",
       "year": 2014,
       "year_display": "2014",
-      "status": "published",
-      "series_ids": [
-        "055"
-      ],
+      "series_id": "055",
       "project_folder": "fog"
     },
     {
       "work_id": "01096",
+      "record_hash": "9485bc690e7b6b5d76fcde91d8fe4d00342a0ca05f59380b5a577738f2539810",
       "title": "fog 26",
       "year": 2014,
       "year_display": "2014",
-      "status": "published",
-      "series_ids": [
-        "055"
-      ],
+      "series_id": "055",
       "project_folder": "fog"
     },
     {
       "work_id": "01097",
+      "record_hash": "b28da7f59e681cd7a6ac5f1ae0dcb0279026851c9bfcb7321df85fac263f9397",
       "title": "fog 27",
       "year": 2014,
       "year_display": "2014",
-      "status": "published",
-      "series_ids": [
-        "055"
-      ],
+      "series_id": "055",
       "project_folder": "fog"
     },
     {
       "work_id": "01098",
+      "record_hash": "7507ec90ac967880573af1e31da4d1c5532bdcbbad499e0a6570783c65439a04",
       "title": "fog 28",
       "year": 2014,
       "year_display": "2014",
-      "status": "published",
-      "series_ids": [
-        "055"
-      ],
+      "series_id": "055",
       "project_folder": "fog"
     },
     {
       "work_id": "01099",
+      "record_hash": "0e4e587058ffa5a8319340642dff203ae9c92168e4ac57d3aceb4a9992a5b387",
       "title": "fog 29",
       "year": 2014,
       "year_display": "2014",
-      "status": "published",
-      "series_ids": [
-        "055"
-      ],
+      "series_id": "055",
       "project_folder": "fog"
     },
     {
       "work_id": "01100",
+      "record_hash": "bea8c12ae807fb63558a269245a9a4e8484a7667be369a3e97f542a910d3d3f7",
       "title": "fog 30",
       "year": 2015,
       "year_display": "2015",
-      "status": "published",
-      "series_ids": [
-        "055"
-      ],
+      "series_id": "055",
       "project_folder": "fog"
     },
     {
       "work_id": "01101",
+      "record_hash": "eafd88e81e99a4bd6a9ab599784ccd58892628bf23f1bc3a3b4a3b75fc7d0911",
       "title": "fog 31",
       "year": 2015,
       "year_display": "2015",
-      "status": "published",
-      "series_ids": [
-        "055"
-      ],
+      "series_id": "055",
       "project_folder": "fog"
     },
     {
       "work_id": "01102",
+      "record_hash": "1757e10b51c5cdc193b37d82408e6fbd1af5a225a443c3b3975777b1866778a5",
       "title": "fog 32",
       "year": 2015,
       "year_display": "2015",
-      "status": "published",
-      "series_ids": [
-        "055"
-      ],
+      "series_id": "055",
       "project_folder": "fog"
     },
     {
       "work_id": "01103",
+      "record_hash": "5d41a08ec3e86c49b5e6743732e993accf592f01d5b5cf78c387bb8714015e68",
       "title": "fog 33",
       "year": 2015,
       "year_display": "2015",
-      "status": "published",
-      "series_ids": [
-        "055"
-      ],
+      "series_id": "055",
       "project_folder": "fog"
     },
     {
       "work_id": "01104",
+      "record_hash": "c0f309fd9d3fba410ce2190fd8bc6848b99a2e14fb86c03d904cdc7ad18afb2e",
       "title": "fog 34",
       "year": 2015,
       "year_display": "2015",
-      "status": "published",
-      "series_ids": [
-        "055"
-      ],
+      "series_id": "055",
       "project_folder": "fog"
     },
     {
       "work_id": "01105",
+      "record_hash": "d98613aebc075fe7e36840f1aad0f661b444c41ee47bb1f546a6a2bc4b1c467b",
       "title": "fog 35",
       "year": 2019,
       "year_display": "2019",
-      "status": "published",
-      "series_ids": [
-        "055"
-      ],
+      "series_id": "055",
       "project_folder": "fog"
     },
     {
       "work_id": "01106",
+      "record_hash": "a227a394bafa07aad239aeb0b1732b3dbd665cf414f1dab089c7c57edc8ed579",
       "title": "fog 36",
       "year": 2019,
       "year_display": "2019",
-      "status": "published",
-      "series_ids": [
-        "055"
-      ],
+      "series_id": "055",
       "project_folder": "fog"
     }
   ],
-  "ordered_published_work_ids": [
+  "ordered_work_ids": [
     "01071",
     "01072",
     "01073",

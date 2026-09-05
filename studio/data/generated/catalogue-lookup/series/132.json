@@ -1,32 +1,27 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v2"
+    "schema": "studio_catalogue_lookup_series_record_v3"
   },
   "series": {
     "series_id": "132",
     "title": "tabula rasa",
-    "series_type": "primary",
-    "status": "published",
-    "published_date": "2026-04-01",
     "year": 2008,
     "year_display": "2008",
-    "primary_work_id": "01744",
     "sort_fields": "work_id"
   },
+  "record_hash": "772004820b917db515d3d974cf8acaca757419990bef63a1601fb664e98fa7a9",
   "member_works": [
     {
       "work_id": "01744",
+      "record_hash": "d411b80381ba2288228c7ae82cb1a6242be823fdb0c622283e7a82eff87058e9",
       "title": "tabula rasa",
       "year": 2008,
       "year_display": "2008",
-      "status": "published",
-      "series_ids": [
-        "132"
-      ],
+      "series_id": "132",
       "project_folder": "tabula rasa"
     }
   ],
-  "ordered_published_work_ids": [
+  "ordered_work_ids": [
     "01744"
   ],
   "project_folders": [

@@ -1,109 +1,90 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v2"
+    "schema": "studio_catalogue_lookup_series_record_v3"
   },
   "series": {
     "series_id": "016",
     "title": "birds",
-    "series_type": "primary",
-    "status": "published",
-    "published_date": "2026-04-01",
     "year": 2020,
     "year_display": "2020",
-    "primary_work_id": "00781",
     "sort_fields": "work_id"
   },
+  "record_hash": "aca1be844006209223657589f8d0ca7fb178b886b8397458a7450194a6e52ea5",
   "member_works": [
     {
       "work_id": "00774",
+      "record_hash": "010145a48f8c471ac87cfccc300b79d1ccbe8d1e3e332c5e516fdb63d4368386",
       "title": "birds [1]",
       "year": 2020,
       "year_display": "2020",
-      "status": "published",
-      "series_ids": [
-        "016"
-      ],
+      "series_id": "016",
       "project_folder": "birds"
     },
     {
       "work_id": "00775",
+      "record_hash": "06b620e8ef70ac9c2aea4309366b86a092ac863f0a1ce0798f40aa493f2813c4",
       "title": "birds [2]",
       "year": 2020,
       "year_display": "2020",
-      "status": "published",
-      "series_ids": [
-        "016"
-      ],
+      "series_id": "016",
       "project_folder": "birds"
     },
     {
       "work_id": "00776",
+      "record_hash": "5df972a89967bcd988ab7d197b4174866b62eb523bdf29c36270063f5fb0f246",
       "title": "birds [3]",
       "year": 2020,
       "year_display": "2020",
-      "status": "published",
-      "series_ids": [
-        "016"
-      ],
+      "series_id": "016",
       "project_folder": "birds"
     },
     {
       "work_id": "00777",
+      "record_hash": "0db1523a649a4ce5cf245218d635e1c618d2a23332de04e32c51227a148ac927",
       "title": "birds [4]",
       "year": 2020,
       "year_display": "2020",
-      "status": "published",
-      "series_ids": [
-        "016"
-      ],
+      "series_id": "016",
       "project_folder": "birds"
     },
     {
       "work_id": "00778",
+      "record_hash": "904061387639155a8614fde9053cdcf69acb4ee0e794f8af5d0c27d05f2bfd76",
       "title": "birds [5]",
       "year": 2020,
       "year_display": "2020",
-      "status": "published",
-      "series_ids": [
-        "016"
-      ],
+      "series_id": "016",
       "project_folder": "birds"
     },
     {
       "work_id": "00779",
+      "record_hash": "3c82f43d46e2568d6834f498d0b14e76819befc775d36cf16a97018d25de21de",
       "title": "birds [6]",
       "year": 2020,
       "year_display": "2020",
-      "status": "published",
-      "series_ids": [
-        "016"
-      ],
+      "series_id": "016",
       "project_folder": "birds"
     },
     {
       "work_id": "00780",
+      "record_hash": "bc11d49c09b25caf068a5e9d4665903fab1490be247a373cc127b553778b634b",
       "title": "birds [7]",
       "year": 2020,
       "year_display": "2020",
-      "status": "published",
-      "series_ids": [
-        "016"
-      ],
+      "series_id": "016",
       "project_folder": "birds"
     },
     {
       "work_id": "00781",
+      "record_hash": "99b74d24e4fe3ec0229389f73297df97f3f67ae9e7052118b83fb5e5ff7dda84",
       "title": "birds [8]",
       "year": 2020,
       "year_display": "2020",
-      "status": "published",
-      "series_ids": [
-        "016"
-      ],
+      "series_id": "016",
       "project_folder": "birds"
     }
   ],
-  "ordered_published_work_ids": [
+  "ordered_work_ids": [
     "00774",
     "00775",
     "00776",

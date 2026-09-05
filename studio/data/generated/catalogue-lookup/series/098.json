@@ -1,538 +1,441 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v2"
+    "schema": "studio_catalogue_lookup_series_record_v3"
   },
   "series": {
     "series_id": "098",
     "title": "mm",
-    "series_type": "primary",
-    "status": "published",
-    "published_date": "2026-04-01",
     "year": 2009,
     "year_display": "2004-15",
-    "primary_work_id": "00477",
     "sort_fields": "work_id"
   },
+  "record_hash": "a85b25c0771c60583f9c8174b1f1f3427549c3251bd182776d7ec072f22cb67e",
   "member_works": [
     {
       "work_id": "00378",
+      "record_hash": "e8c933787e7da41ab171e8ea3de92db7b38ba77443e29f0efd39bd0fd5d6c34a",
       "title": "mm quantum",
       "year": 2009,
       "year_display": "2009",
-      "status": "published",
-      "series_ids": [
-        "098"
-      ],
+      "series_id": "098",
       "project_folder": "mm"
     },
     {
       "work_id": "00470",
+      "record_hash": "de1940facf119c978aeb27c6b1335b8ade99d89d680974b7b43a87ec633c1b86",
       "title": "mm 2015-08-24 - 16-41-40",
       "year": 2015,
       "year_display": "2015",
-      "status": "published",
-      "series_ids": [
-        "098"
-      ],
+      "series_id": "098",
       "project_folder": "mm"
     },
     {
       "work_id": "00471",
+      "record_hash": "926f61972e47345086a206964bb018187b5d157d15b85f7344134985cb5b257d",
       "title": "mm 2015-08-24 - 17-09-32",
       "year": 2015,
       "year_display": "2015",
-      "status": "published",
-      "series_ids": [
-        "098"
-      ],
+      "series_id": "098",
       "project_folder": "mm"
     },
     {
       "work_id": "00472",
+      "record_hash": "a15262f3ba955e7c03b78c855216e9b57dfa89e8dc125e9a6df41c466e220a49",
       "title": "mm 2015-08-24 - 17-17-30",
       "year": 2015,
       "year_display": "2015",
-      "status": "published",
-      "series_ids": [
-        "098"
-      ],
+      "series_id": "098",
       "project_folder": "mm"
     },
     {
       "work_id": "00473",
+      "record_hash": "ea69bad0ab3f99456965f8cac227689a632da2d89327f2c590b2c274731732c4",
       "title": "mm 2015-08-24 - 19-14-50",
       "year": 2015,
       "year_display": "2015",
-      "status": "published",
-      "series_ids": [
-        "098"
-      ],
+      "series_id": "098",
       "project_folder": "mm"
     },
     {
       "work_id": "00474",
+      "record_hash": "c3cc6e0770c3165bfffaf30bc3f154332dafa1293d83e14c236a126a51ab2518",
       "title": "mm creased 1",
       "year": 2007,
       "year_display": "2007",
-      "status": "published",
-      "series_ids": [
-        "098"
-      ],
+      "series_id": "098",
       "project_folder": "mm"
     },
     {
       "work_id": "00475",
+      "record_hash": "ca85ea8a95c1ae0bd8a7cfec93635bd78ad47b65901a07f8733ed498076d7e07",
       "title": "mm creased 2",
       "year": 2007,
       "year_display": "2007",
-      "status": "published",
-      "series_ids": [
-        "098"
-      ],
+      "series_id": "098",
       "project_folder": "mm"
     },
     {
       "work_id": "00476",
+      "record_hash": "40a09595ea0e596adcaf0270b5498bab25a7c8a638cd373dc5aca5d5f08d0702",
       "title": "mm creased 3",
       "year": 2007,
       "year_display": "2007",
-      "status": "published",
-      "series_ids": [
-        "098"
-      ],
+      "series_id": "098",
       "project_folder": "mm"
     },
     {
       "work_id": "00477",
+      "record_hash": "0ff82b8a5c302f15acada86bd6eaffe6b73a278eeeafd56cc6843bc0b8cbc97e",
       "title": "mm creased 4",
       "year": 2007,
       "year_display": "2007",
-      "status": "published",
-      "series_ids": [
-        "098"
-      ],
+      "series_id": "098",
       "project_folder": "mm"
     },
     {
       "work_id": "00478",
+      "record_hash": "935dca516685d36629f834912a98e5402236d020cac3722692eb7f23c25cfe2f",
       "title": "mm creased 5",
       "year": 2007,
       "year_display": "2007",
-      "status": "published",
-      "series_ids": [
-        "098"
-      ],
+      "series_id": "098",
       "project_folder": "mm"
     },
     {
       "work_id": "00479",
+      "record_hash": "83d7db897eda412654d67a23d28df592d8fe0414592c823783804ea1e641e81b",
       "title": "mm creased 6",
       "year": 2007,
       "year_display": "2007",
-      "status": "published",
-      "series_ids": [
-        "098"
-      ],
+      "series_id": "098",
       "project_folder": "mm"
     },
     {
       "work_id": "00480",
+      "record_hash": "3d4abc24a5f117bde106af100e710e9425e0b6f9b5daad6d7d19511f62c5e596",
       "title": "mm creased 7",
       "year": 2007,
       "year_display": "2007",
-      "status": "published",
-      "series_ids": [
-        "098"
-      ],
+      "series_id": "098",
       "project_folder": "mm"
     },
     {
       "work_id": "00481",
+      "record_hash": "cf5cdc72250fb665f04440f07498068f390bf5b3b9691e382c4beda6a5ba1e2d",
       "title": "mm negative future",
       "year": 2004,
       "year_display": "2004",
-      "status": "published",
-      "series_ids": [
-        "098"
-      ],
+      "series_id": "098",
       "project_folder": "mm"
     },
     {
       "work_id": "00482",
+      "record_hash": "8ab629c1157d1636716f5ca498813428eaea9673bc64919f817780a9711a780a",
       "title": "mm particles 1",
       "year": 2009,
       "year_display": "2009",
-      "status": "published",
-      "series_ids": [
-        "098"
-      ],
+      "series_id": "098",
       "project_folder": "mm"
     },
     {
       "work_id": "00483",
+      "record_hash": "5516466cc65a72697d3edd7179c970c5e974dc511df10ce029b444a4c4f3678d",
       "title": "mm particles 2",
       "year": 2009,
       "year_display": "2009",
-      "status": "published",
-      "series_ids": [
-        "098"
-      ],
+      "series_id": "098",
       "project_folder": "mm"
     },
     {
       "work_id": "00484",
+      "record_hash": "b2c509d24d8a46c5ee6865623d91cc820f1a253bd9123d814fafd553dad1dc42",
       "title": "mm particles 3",
       "year": 2009,
       "year_display": "2009",
-      "status": "published",
-      "series_ids": [
-        "098"
-      ],
+      "series_id": "098",
       "project_folder": "mm"
     },
     {
       "work_id": "00485",
+      "record_hash": "7cc1ebb57ee025ea94b76104ce3ffd540730ac79f7fd96c2a7160eddffa05a04",
       "title": "mm particles 4",
       "year": 2009,
       "year_display": "2009",
-      "status": "published",
-      "series_ids": [
-        "098"
-      ],
+      "series_id": "098",
       "project_folder": "mm"
     },
     {
       "work_id": "00486",
+      "record_hash": "cf37972b3d53a97cf52dccd492fe0e41921f03f24d83bb0faa6619a1556ee630",
       "title": "mm particles 5",
       "year": 2009,
       "year_display": "2009",
-      "status": "published",
-      "series_ids": [
-        "098"
-      ],
+      "series_id": "098",
       "project_folder": "mm"
     },
     {
       "work_id": "00487",
+      "record_hash": "203a5a515791ccc93a6506f2590270927b1c5d986da2f86251ef273e0081608f",
       "title": "mm particles 6",
       "year": 2009,
       "year_display": "2009",
-      "status": "published",
-      "series_ids": [
-        "098"
-      ],
+      "series_id": "098",
       "project_folder": "mm"
     },
     {
       "work_id": "00488",
+      "record_hash": "a4e98adf9da4a9289520ac9c05d739b41c37a748e50cd73040f25106c3c717dd",
       "title": "mm quantum 1",
       "year": 2009,
       "year_display": "2009",
-      "status": "published",
-      "series_ids": [
-        "098"
-      ],
+      "series_id": "098",
       "project_folder": "mm"
     },
     {
       "work_id": "00489",
+      "record_hash": "36a4d63b922663ee8d52274ae1f7126b37bfd3551569db08797c987cf242b218",
       "title": "mm quantum 1.1",
       "year": 2009,
       "year_display": "2009",
-      "status": "published",
-      "series_ids": [
-        "098"
-      ],
+      "series_id": "098",
       "project_folder": "mm"
     },
     {
       "work_id": "00490",
+      "record_hash": "938c681dd1a75f6f713912825600e78eae95c8be8b29581edcc8d322b99b6361",
       "title": "mm quantum 1.2",
       "year": 2009,
       "year_display": "2009",
-      "status": "published",
-      "series_ids": [
-        "098"
-      ],
+      "series_id": "098",
       "project_folder": "mm"
     },
     {
       "work_id": "00491",
+      "record_hash": "3899bc025540d07ab7cd8fb24382911f848251e4b78e27702420bfdcc7ed0360",
       "title": "mm quantum 1.3",
       "year": 2009,
       "year_display": "2009",
-      "status": "published",
-      "series_ids": [
-        "098"
-      ],
+      "series_id": "098",
       "project_folder": "mm"
     },
     {
       "work_id": "00492",
+      "record_hash": "60cdb69f8c3fe2023c994f78d4410445a187ad33b9606ea8eaf706a51e4edb71",
       "title": "mm quantum 1.4",
       "year": 2009,
       "year_display": "2009",
-      "status": "published",
-      "series_ids": [
-        "098"
-      ],
+      "series_id": "098",
       "project_folder": "mm"
     },
     {
       "work_id": "00493",
+      "record_hash": "a9ff20ae4b2754d4b344fc70007e524d73ad4fdf124d1d515f5e8e234ef877dc",
       "title": "mm quantum 1.5",
       "year": 2009,
       "year_display": "2009",
-      "status": "published",
-      "series_ids": [
-        "098"
-      ],
+      "series_id": "098",
       "project_folder": "mm"
     },
     {
       "work_id": "00494",
+      "record_hash": "b9116ea1c9d7f0c989e0076dc4251a570dfa00547ecd0973561c441f50efec71",
       "title": "mm quantum 1.6",
       "year": 2009,
       "year_display": "2009",
-      "status": "published",
-      "series_ids": [
-        "098"
-      ],
+      "series_id": "098",
       "project_folder": "mm"
     },
     {
       "work_id": "00495",
+      "record_hash": "5eb242e88944fb320ba24cf5cdd7b498406b4bfb28d6e08e7834757bb6fb3490",
       "title": "mm quantum 1.7",
       "year": 2009,
       "year_display": "2009",
-      "status": "published",
-      "series_ids": [
-        "098"
-      ],
+      "series_id": "098",
       "project_folder": "mm"
     },
     {
       "work_id": "00496",
+      "record_hash": "207f0993536ba0ebfb5506f0bea2f17ba6f4d2392ea6fbf0937f566966bf6c05",
       "title": "mm quantum 1.8",
       "year": 2009,
       "year_display": "2009",
-      "status": "published",
-      "series_ids": [
-        "098"
-      ],
+      "series_id": "098",
       "project_folder": "mm"
     },
     {
       "work_id": "00497",
+      "record_hash": "e8e3d83c37c2ac55c049dcccbd61aab20acf8234510a6d6af0d7898248d2f2e0",
       "title": "mm quantum 1.9",
       "year": 2009,
       "year_display": "2009",
-      "status": "published",
-      "series_ids": [
-        "098"
-      ],
+      "series_id": "098",
       "project_folder": "mm"
     },
     {
       "work_id": "00498",
+      "record_hash": "70195e6fdcd16cbf065c3b480276a5dbb3bb9382c02d4b311d0cdb49df6d33f3",
       "title": "mm quantum 1.10",
       "year": 2009,
       "year_display": "2009",
-      "status": "published",
-      "series_ids": [
-        "098"
-      ],
+      "series_id": "098",
       "project_folder": "mm"
     },
     {
       "work_id": "00499",
+      "record_hash": "7f470c10d92e94dfa86a4b2429030348a469d246600ad77445480924c3a7b559",
       "title": "mm quantum 1.11",
       "year": 2009,
       "year_display": "2009",
-      "status": "published",
-      "series_ids": [
-        "098"
-      ],
+      "series_id": "098",
       "project_folder": "mm"
     },
     {
       "work_id": "00500",
+      "record_hash": "22cf3e9febbd6b36e923f33ef6ccacaa3f9947de1047de870c73ca0320a70c48",
       "title": "mm quantum 1.12",
       "year": 2009,
       "year_display": "2009",
-      "status": "published",
-      "series_ids": [
-        "098"
-      ],
+      "series_id": "098",
       "project_folder": "mm"
     },
     {
       "work_id": "00501",
+      "record_hash": "245091483fde93f01d5b040088c8066a0d05cfb1145145f02820081765f9bd8a",
       "title": "mm quantum 1.13",
       "year": 2009,
       "year_display": "2009",
-      "status": "published",
-      "series_ids": [
-        "098"
-      ],
+      "series_id": "098",
       "project_folder": "mm"
     },
     {
       "work_id": "00502",
+      "record_hash": "2f78e79c49a52861c94f11f4609ed2aee0b22a7777af12001de4dc32af6697ca",
       "title": "mm quantum 2",
       "year": 2009,
       "year_display": "2009",
-      "status": "published",
-      "series_ids": [
-        "098"
-      ],
+      "series_id": "098",
       "project_folder": "mm"
     },
     {
       "work_id": "00503",
+      "record_hash": "8777e268b92861a48eb58daddcbc8b120bfe7ce4093d941a0f3cc0646d26eae1",
       "title": "mm quantum 2.1",
       "year": 2009,
       "year_display": "2009",
-      "status": "published",
-      "series_ids": [
-        "098"
-      ],
+      "series_id": "098",
       "project_folder": "mm"
     },
     {
       "work_id": "00504",
+      "record_hash": "97ba6f0f8086e37889113ad6f23552b14b8bef6e47bd8f3b91c446d5c5153868",
       "title": "mm quantum 2.2",
       "year": 2009,
       "year_display": "2009",
-      "status": "published",
-      "series_ids": [
-        "098"
-      ],
+      "series_id": "098",
       "project_folder": "mm"
     },
     {
       "work_id": "00505",
+      "record_hash": "bf70fe570c6f8172989dd273fcb94e494b176171bb8c6e68f06123e2de00d346",
       "title": "mm quantum 2.3",
       "year": 2009,
       "year_display": "2009",
-      "status": "published",
-      "series_ids": [
-        "098"
-      ],
+      "series_id": "098",
       "project_folder": "mm"
     },
     {
       "work_id": "00506",
+      "record_hash": "b0a41a3a3b9f7576c2a185a47b269da887562fa23962a6cb13d4b3f60ba4ad1e",
       "title": "mm quantum 2.4",
       "year": 2009,
       "year_display": "2009",
-      "status": "published",
-      "series_ids": [
-        "098"
-      ],
+      "series_id": "098",
       "project_folder": "mm"
     },
     {
       "work_id": "00507",
+      "record_hash": "806e80032c13a68aec582c82721f23ae164010ff85f0b95696988ac8cd5bd477",
       "title": "mm quantum 2.5",
       "year": 2009,
       "year_display": "2009",
-      "status": "published",
-      "series_ids": [
-        "098"
-      ],
+      "series_id": "098",
       "project_folder": "mm"
     },
     {
       "work_id": "00508",
+      "record_hash": "f3e7c45de3b57891e0448c75e83f4fbb31903e4b59e22227ed93a81e833e9e11",
       "title": "mm quantum 2.6",
       "year": 2009,
       "year_display": "2009",
-      "status": "published",
-      "series_ids": [
-        "098"
-      ],
+      "series_id": "098",
       "project_folder": "mm"
     },
     {
       "work_id": "00509",
+      "record_hash": "94f3def4cac287a20a01238ec753e499f6dd337c4135aa655adc04b761909e31",
       "title": "mm quantum 2.7",
       "year": 2009,
       "year_display": "2009",
-      "status": "published",
-      "series_ids": [
-        "098"
-      ],
+      "series_id": "098",
       "project_folder": "mm"
     },
     {
       "work_id": "00510",
+      "record_hash": "80943dbccfc08ceee46e3354fe7bedc0c2c3dcf8c213304d872e2f6da3e488fc",
       "title": "mm quantum 2.8",
       "year": 2009,
       "year_display": "2009",
-      "status": "published",
-      "series_ids": [
-        "098"
-      ],
+      "series_id": "098",
       "project_folder": "mm"
     },
     {
       "work_id": "00511",
+      "record_hash": "d025ef56b8675cf50f7b83297e50f74305add8d22d9e426d3a3f3bee14363b46",
       "title": "mm quantum 2.9",
       "year": 2009,
       "year_display": "2009",
-      "status": "published",
-      "series_ids": [
-        "098"
-      ],
+      "series_id": "098",
       "project_folder": "mm"
     },
     {
       "work_id": "00512",
+      "record_hash": "445fef0915831665c195973963ada3f7ca5188ab17fccb96bbb9a11ab053173d",
       "title": "mm quantum 2.10",
       "year": 2009,
       "year_display": "2009",
-      "status": "published",
-      "series_ids": [
-        "098"
-      ],
+      "series_id": "098",
       "project_folder": "mm"
     },
     {
       "work_id": "00513",
+      "record_hash": "b923a27a790842a9c6a38754f8d87e3e5ea5ee6422a38203f3964bf1fe203bdd",
       "title": "mm quantum 2.11",
       "year": 2009,
       "year_display": "2009",
-      "status": "published",
-      "series_ids": [
-        "098"
-      ],
+      "series_id": "098",
       "project_folder": "mm"
     },
     {
       "work_id": "00514",
+      "record_hash": "7f06b7e4a99620ce877848b11e8aae3e9f1045a5874c01b418b8ff3656adacff",
       "title": "mm quantum 2.12",
       "year": 2009,
       "year_display": "2009",
-      "status": "published",
-      "series_ids": [
-        "098"
-      ],
+      "series_id": "098",
       "project_folder": "mm"
     },
     {
       "work_id": "00515",
+      "record_hash": "10baaf0a2a6038538c3d723bbeaa5c985fcc1f71914041c2fadfab7a7887716c",
       "title": "mm quantum 2.13",
       "year": 2009,
       "year_display": "2009",
-      "status": "published",
-      "series_ids": [
-        "098"
-      ],
+      "series_id": "098",
       "project_folder": "mm"
     }
   ],
-  "ordered_published_work_ids": [
+  "ordered_work_ids": [
     "00378",
     "00470",
     "00471",

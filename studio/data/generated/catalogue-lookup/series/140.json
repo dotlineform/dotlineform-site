@@ -1,285 +1,234 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v2"
+    "schema": "studio_catalogue_lookup_series_record_v3"
   },
   "series": {
     "series_id": "140",
     "title": "wa",
-    "series_type": "primary",
-    "status": "published",
-    "published_date": "2026-04-01",
     "year": 2008,
     "year_display": "2008, 2011",
-    "primary_work_id": "00615",
     "sort_fields": "work_id"
   },
+  "record_hash": "9b7f7cbc818d81a6194f8d85feac283b646c36abe53fefa61af9e48e461b4be9",
   "member_works": [
     {
       "work_id": "00394",
+      "record_hash": "e11a05594624c39e4a7b46fd96664859696c119db8e97bff5789224b5f7907da",
       "title": "wa (yoko takenami)",
       "year": 2008,
       "year_display": "2008",
-      "status": "published",
-      "series_ids": [
-        "140"
-      ],
+      "series_id": "140",
       "project_folder": "wa"
     },
     {
       "work_id": "00395",
+      "record_hash": "83cf8eb6009e6294379c4ea685eb999e69d13411c365f979838d824aa1270f79",
       "title": "wa (6)",
       "year": 2008,
       "year_display": "2008",
-      "status": "published",
-      "series_ids": [
-        "140"
-      ],
+      "series_id": "140",
       "project_folder": "wa"
     },
     {
       "work_id": "00396",
+      "record_hash": "e362604e292ecdba252de91b619b1e6e1ce400a7c0b687e508ec891efb5d8776",
       "title": "wa (5)",
       "year": 2008,
       "year_display": "2008",
-      "status": "published",
-      "series_ids": [
-        "140"
-      ],
+      "series_id": "140",
       "project_folder": "wa"
     },
     {
       "work_id": "00397",
+      "record_hash": "2dcc1e99f60af9e0dd1433671c2e4f212740424f3096b34f146c3a5836b437c5",
       "title": "wa (4)",
       "year": 2008,
       "year_display": "2008",
-      "status": "published",
-      "series_ids": [
-        "140"
-      ],
+      "series_id": "140",
       "project_folder": "wa"
     },
     {
       "work_id": "00398",
+      "record_hash": "4ee7a9203da52cc8be0ac3bb06a90c411cfc8eae585c76dcb64bed92dbcfa5b0",
       "title": "wa (7)",
       "year": 2008,
       "year_display": "2008",
-      "status": "published",
-      "series_ids": [
-        "140"
-      ],
+      "series_id": "140",
       "project_folder": "wa"
     },
     {
       "work_id": "00399",
+      "record_hash": "14bb8a2490357b0eedc864a6ce801f87878c904368ef83735db113f707b6eb56",
       "title": "wa (3)",
       "year": 2008,
       "year_display": "2008",
-      "status": "published",
-      "series_ids": [
-        "140"
-      ],
+      "series_id": "140",
       "project_folder": "wa"
     },
     {
       "work_id": "00400",
+      "record_hash": "dd4f3daa924ecf032361dc10ec16588329959b65f34583da6ca7ea6ceeac2e46",
       "title": "wa (2)",
       "year": 2008,
       "year_display": "2008",
-      "status": "published",
-      "series_ids": [
-        "140"
-      ],
+      "series_id": "140",
       "project_folder": "wa"
     },
     {
       "work_id": "00401",
+      "record_hash": "b78171b861b7ed893ae525029c51d9932525120029b0d7ea98c0886dd59d516d",
       "title": "wa",
       "year": 2008,
       "year_display": "2008",
-      "status": "published",
-      "series_ids": [
-        "140"
-      ],
+      "series_id": "140",
       "project_folder": "wa"
     },
     {
       "work_id": "00600",
+      "record_hash": "3cca01175ab0e0bee876d300f551b9ab5185b9d5dcb2f7dd64cdba05452fdcd8",
       "title": "wa 1",
       "year": 2011,
       "year_display": "2011",
-      "status": "published",
-      "series_ids": [
-        "140"
-      ],
+      "series_id": "140",
       "project_folder": "wa"
     },
     {
       "work_id": "00601",
+      "record_hash": "a19ea0bdf201b6c817cc30316fb6f651b4c021092dd73a8bfc7aa4761bd3875b",
       "title": "wa 2",
       "year": 2011,
       "year_display": "2011",
-      "status": "published",
-      "series_ids": [
-        "140"
-      ],
+      "series_id": "140",
       "project_folder": "wa"
     },
     {
       "work_id": "00602",
+      "record_hash": "12e9a0f922939017635a4ba404de2ac8f92bc63ac9935e538981b2735c86af2a",
       "title": "wa 3",
       "year": 2011,
       "year_display": "2011",
-      "status": "published",
-      "series_ids": [
-        "140"
-      ],
+      "series_id": "140",
       "project_folder": "wa"
     },
     {
       "work_id": "00603",
+      "record_hash": "8e5cc8fb4409637725ff423190d90c06bc81bb66d0073290d2df6ce3fdb045f7",
       "title": "wa 4",
       "year": 2011,
       "year_display": "2011",
-      "status": "published",
-      "series_ids": [
-        "140"
-      ],
+      "series_id": "140",
       "project_folder": "wa"
     },
     {
       "work_id": "00604",
+      "record_hash": "eeff20002b2f822cd2750d67f79fdfc707c911031ff3a7e2eb3f1a661ae827d4",
       "title": "wa 5",
       "year": 2011,
       "year_display": "2011",
-      "status": "published",
-      "series_ids": [
-        "140"
-      ],
+      "series_id": "140",
       "project_folder": "wa"
     },
     {
       "work_id": "00605",
+      "record_hash": "7d120665b1c9f4130e640d80b6eb6e2cdbff62ddc074b14a366f6a168dc0b279",
       "title": "wa 6",
       "year": 2011,
       "year_display": "2011",
-      "status": "published",
-      "series_ids": [
-        "140"
-      ],
+      "series_id": "140",
       "project_folder": "wa"
     },
     {
       "work_id": "00606",
+      "record_hash": "a6e742d7ea9ad4a81254f927946e6d06a42f84c7cb405e29ff08fba82a1453bb",
       "title": "wa 7",
       "year": 2011,
       "year_display": "2011",
-      "status": "published",
-      "series_ids": [
-        "140"
-      ],
+      "series_id": "140",
       "project_folder": "wa"
     },
     {
       "work_id": "00607",
+      "record_hash": "467e724984ba46f7f422f7cbbe7e13c76c07607e871aec3f0f3bd1770a39bb46",
       "title": "wa 8",
       "year": 2011,
       "year_display": "2011",
-      "status": "published",
-      "series_ids": [
-        "140"
-      ],
+      "series_id": "140",
       "project_folder": "wa"
     },
     {
       "work_id": "00608",
+      "record_hash": "e61cd685f23d78a2edf7459c12c290d380aa490dd76b67f24bc66e0d2d269e3b",
       "title": "wa 9",
       "year": 2011,
       "year_display": "2011",
-      "status": "published",
-      "series_ids": [
-        "140"
-      ],
+      "series_id": "140",
       "project_folder": "wa"
     },
     {
       "work_id": "00609",
+      "record_hash": "0a025481d4cb9c20a2a5c3dfec27f6de02462c323671c1e0df0fa2cdabd5ff71",
       "title": "wa 10",
       "year": 2011,
       "year_display": "2011",
-      "status": "published",
-      "series_ids": [
-        "140"
-      ],
+      "series_id": "140",
       "project_folder": "wa"
     },
     {
       "work_id": "00610",
+      "record_hash": "ba00c1b05c86a27327d9c8f8e4420020a7ef6f5139d4f5d15a7a3d7c72be84c7",
       "title": "wa 11",
       "year": 2011,
       "year_display": "2011",
-      "status": "published",
-      "series_ids": [
-        "140"
-      ],
+      "series_id": "140",
       "project_folder": "wa"
     },
     {
       "work_id": "00611",
+      "record_hash": "528e47de64eb2556f9ff48b6e07236449da13eded2ca7a71fe8ed3a58f2c9130",
       "title": "wa 12",
       "year": 2011,
       "year_display": "2011",
-      "status": "published",
-      "series_ids": [
-        "140"
-      ],
+      "series_id": "140",
       "project_folder": "wa"
     },
     {
       "work_id": "00612",
+      "record_hash": "d5106b6b8eac61e89296e03cd78437c57e854fcf4956d486f46b8c5bb4490fa0",
       "title": "wa 13",
       "year": 2011,
       "year_display": "2011",
-      "status": "published",
-      "series_ids": [
-        "140"
-      ],
+      "series_id": "140",
       "project_folder": "wa"
     },
     {
       "work_id": "00613",
+      "record_hash": "1ad284058d78dba35f57c73234504df7ad000c8ffbced7d4e5cf610f8cd877f9",
       "title": "wa 14",
       "year": 2011,
       "year_display": "2011",
-      "status": "published",
-      "series_ids": [
-        "140"
-      ],
+      "series_id": "140",
       "project_folder": "wa"
     },
     {
       "work_id": "00614",
+      "record_hash": "9f2580a90b428e268801cf5ca7989084f4bb567be6f1cb24acf98e741107e264",
       "title": "wa 15",
       "year": 2011,
       "year_display": "2011",
-      "status": "published",
-      "series_ids": [
-        "140"
-      ],
+      "series_id": "140",
       "project_folder": "wa"
     },
     {
       "work_id": "00615",
+      "record_hash": "2010572bd04ef4b3cd2e0e9c7aaed6952893ff28038d3845870f2859f01d00e4",
       "title": "wa 16",
       "year": 2011,
       "year_display": "2011",
-      "status": "published",
-      "series_ids": [
-        "140"
-      ],
+      "series_id": "140",
       "project_folder": "wa"
     }
   ],
-  "ordered_published_work_ids": [
+  "ordered_work_ids": [
     "00394",
     "00395",
     "00396",

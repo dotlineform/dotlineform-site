@@ -1,120 +1,99 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v2"
+    "schema": "studio_catalogue_lookup_series_record_v3"
   },
   "series": {
     "series_id": "020",
     "title": "body space (reclining state)",
-    "series_type": "primary",
-    "status": "published",
-    "published_date": "2026-04-01",
     "year": 2019,
     "year_display": "2019",
-    "primary_work_id": "00792",
     "sort_fields": "work_id"
   },
+  "record_hash": "cdc645bb3c0b51335bcf91a8f4cfbfa19898b234e09b2e1994c47954e67dd1d2",
   "member_works": [
     {
       "work_id": "00792",
+      "record_hash": "1323c9d426e4a7601238b365d43f1960e729967de02b1b09c94de41b0fa0b0e6",
       "title": "body space (reclining state) 1",
       "year": 2019,
       "year_display": "2019",
-      "status": "published",
-      "series_ids": [
-        "020"
-      ],
+      "series_id": "020",
       "project_folder": "body space (reclining state)"
     },
     {
       "work_id": "00793",
+      "record_hash": "896979595266ab8385ff3d097f726f97fdfb8848c9dedb84ab8e973406b96990",
       "title": "body space (reclining state) 2",
       "year": 2019,
       "year_display": "2019",
-      "status": "published",
-      "series_ids": [
-        "020"
-      ],
+      "series_id": "020",
       "project_folder": "body space (reclining state)"
     },
     {
       "work_id": "00794",
+      "record_hash": "1d31d4533f3f39a73d914c9a4e6ebc932e626024c9934356fd18ca64cc27f518",
       "title": "body space (reclining state) 3",
       "year": 2019,
       "year_display": "2019",
-      "status": "published",
-      "series_ids": [
-        "020"
-      ],
+      "series_id": "020",
       "project_folder": "body space (reclining state)"
     },
     {
       "work_id": "00795",
+      "record_hash": "cf08b3797e1535927af6404651c2a710058f295144096d0e011753fe889fb85b",
       "title": "body space (reclining state) 4",
       "year": 2019,
       "year_display": "2019",
-      "status": "published",
-      "series_ids": [
-        "020"
-      ],
+      "series_id": "020",
       "project_folder": "body space (reclining state)"
     },
     {
       "work_id": "00796",
+      "record_hash": "ba4f4a07dc09fbfcd73889e1505113f8717310ca70d34ab42c337e801c2999fa",
       "title": "body space (reclining state) 5",
       "year": 2019,
       "year_display": "2019",
-      "status": "published",
-      "series_ids": [
-        "020"
-      ],
+      "series_id": "020",
       "project_folder": "body space (reclining state)"
     },
     {
       "work_id": "00797",
+      "record_hash": "421e8c43af951f73b64d66721f936b147514d9c2e1ceb613a6d0226691e69c20",
       "title": "body space (reclining state) 6",
       "year": 2019,
       "year_display": "2019",
-      "status": "published",
-      "series_ids": [
-        "020"
-      ],
+      "series_id": "020",
       "project_folder": "body space (reclining state)"
     },
     {
       "work_id": "00798",
+      "record_hash": "eb2ce46028374b986a51f30449fe79824c54c91cdf87c0d6cee274e388869168",
       "title": "body space (reclining state) 7",
       "year": 2019,
       "year_display": "2019",
-      "status": "published",
-      "series_ids": [
-        "020"
-      ],
+      "series_id": "020",
       "project_folder": "body space (reclining state)"
     },
     {
       "work_id": "00799",
+      "record_hash": "514915fb786357f403d58536538652f96c1310ecdd8ba4b7b88df470bd3759cc",
       "title": "body space (reclining state) 8",
       "year": 2019,
       "year_display": "2019",
-      "status": "published",
-      "series_ids": [
-        "020"
-      ],
+      "series_id": "020",
       "project_folder": "body space (reclining state)"
     },
     {
       "work_id": "00800",
+      "record_hash": "eb6f559351b4d40b4f4b0021c45087d58d2c596c15cf429d3145663865b5c82e",
       "title": "body space (reclining state) 9",
       "year": 2019,
       "year_display": "2019",
-      "status": "published",
-      "series_ids": [
-        "020"
-      ],
+      "series_id": "020",
       "project_folder": "body space (reclining state)"
     }
   ],
-  "ordered_published_work_ids": [
+  "ordered_work_ids": [
     "00792",
     "00793",
     "00794",

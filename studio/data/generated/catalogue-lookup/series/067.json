@@ -1,582 +1,477 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v2"
+    "schema": "studio_catalogue_lookup_series_record_v3"
   },
   "series": {
     "series_id": "067",
     "title": "found forms",
-    "series_type": "primary",
-    "status": "published",
-    "published_date": "2026-04-01",
     "year": 2025,
     "year_display": "2017-25",
-    "primary_work_id": "00403",
     "sort_fields": "work_id"
   },
+  "record_hash": "b936d4e73ca7da9b54741a113b927095e2b1fc508697733d562e599148dacde0",
   "member_works": [
     {
       "work_id": "00403",
+      "record_hash": "38c4017b3640d60557f36ebe5e1a70d332884f44531304db1726685287e2dd8c",
       "title": "found form (2017-06-29)",
       "year": 2017,
       "year_display": "2017",
-      "status": "published",
-      "series_ids": [
-        "067"
-      ],
+      "series_id": "067",
       "project_folder": "found forms"
     },
     {
       "work_id": "00404",
+      "record_hash": "d2cd3e645ad833e116c28e288c932c46ae30901650adf408496f51468494176f",
       "title": "found form (2017-07-09)",
       "year": 2017,
       "year_display": "2017",
-      "status": "published",
-      "series_ids": [
-        "067"
-      ],
+      "series_id": "067",
       "project_folder": "found forms"
     },
     {
       "work_id": "00405",
+      "record_hash": "930a99a1620ebc3cb080e75d51699ca43074265ef508034331672d5684c6a16c",
       "title": "found form (2017-07-22)",
       "year": 2017,
       "year_display": "2017",
-      "status": "published",
-      "series_ids": [
-        "067"
-      ],
+      "series_id": "067",
       "project_folder": "found forms"
     },
     {
       "work_id": "00406",
+      "record_hash": "9d400c2adde2f3afdb475c9dcdfe3644f62eb397f70dccdcb4493a3d55c595f5",
       "title": "found form (2017-07-29)",
       "year": 2017,
       "year_display": "2017",
-      "status": "published",
-      "series_ids": [
-        "067"
-      ],
+      "series_id": "067",
       "project_folder": "found forms"
     },
     {
       "work_id": "00407",
+      "record_hash": "bfe2b6a6a64ea8dd7bfffa8b00001b5d0c207ab448ec7f00e3a14398673c4814",
       "title": "found form (2024-11-18 I)",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "067"
-      ],
+      "series_id": "067",
       "project_folder": "found forms"
     },
     {
       "work_id": "00408",
+      "record_hash": "0dbcb561d710d540f213f02d6e7fb128124c76953baffd441003bdc879f6743f",
       "title": "found form (2024-11-18 II)",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "067"
-      ],
+      "series_id": "067",
       "project_folder": "found forms"
     },
     {
       "work_id": "00409",
+      "record_hash": "d373fc3190aab49efb67241a20cd2e19044940d5bf7a39d987730557591d14f0",
       "title": "found form (2024-11-18 III)",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "067"
-      ],
+      "series_id": "067",
       "project_folder": "found forms"
     },
     {
       "work_id": "00410",
+      "record_hash": "ccf9c755db4d8fd4bb73d9ab13f7d7a7f53b4d4ae8e3f385f1920ba521b3b76b",
       "title": "found form (2025-07-02)",
       "year": 2025,
       "year_display": "2025",
-      "status": "published",
-      "series_ids": [
-        "067"
-      ],
+      "series_id": "067",
       "project_folder": "found forms"
     },
     {
       "work_id": "00411",
+      "record_hash": "c5dab3f392cb89d6aea048cac36e31286fc4a2573fba7a9c99897152063099c2",
       "title": "found form (2025-07-15 I)",
       "year": 2025,
       "year_display": "2025",
-      "status": "published",
-      "series_ids": [
-        "067"
-      ],
+      "series_id": "067",
       "project_folder": "found forms"
     },
     {
       "work_id": "00412",
+      "record_hash": "a497c0ec0ff57f6597146e944f899af022e8b0cfd041b9cbb3f1c79ec26c38a4",
       "title": "found form (2025-07-15 II)",
       "year": 2025,
       "year_display": "2025",
-      "status": "published",
-      "series_ids": [
-        "067"
-      ],
+      "series_id": "067",
       "project_folder": "found forms"
     },
     {
       "work_id": "00413",
+      "record_hash": "6fce60d521b01f390190223d83b935f1938ffd7b0fb6bedadad5a1b0c1821ad5",
       "title": "found form (2025-07-26)",
       "year": 2025,
       "year_display": "2025",
-      "status": "published",
-      "series_ids": [
-        "067"
-      ],
+      "series_id": "067",
       "project_folder": "found forms"
     },
     {
       "work_id": "00414",
+      "record_hash": "499cab82eb9386b59364f17b9b0bd7fff111050a965d5a9f4be65d9c8b786d6d",
       "title": "found form (2025-11-01 I)",
       "year": 2025,
       "year_display": "2025",
-      "status": "published",
-      "series_ids": [
-        "067"
-      ],
+      "series_id": "067",
       "project_folder": "found forms"
     },
     {
       "work_id": "00415",
+      "record_hash": "efe52554e9c46a33989c567245a3b96b67fd3823b2fbecf56bf194ec83644e33",
       "title": "found form (2025-11-01 II)",
       "year": 2025,
       "year_display": "2025",
-      "status": "published",
-      "series_ids": [
-        "067"
-      ],
+      "series_id": "067",
       "project_folder": "found forms"
     },
     {
       "work_id": "00416",
+      "record_hash": "43a20ef9b105e347530c874dee08549681e0b85a0e5f1f3bb4e100d493419cf5",
       "title": "found form 01",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "067"
-      ],
+      "series_id": "067",
       "project_folder": "found forms"
     },
     {
       "work_id": "00417",
+      "record_hash": "c496a625161614aecd8ba946bb6745f552a1aa315c4a58f71a6edacda2ad282b",
       "title": "found form 02",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "067"
-      ],
+      "series_id": "067",
       "project_folder": "found forms"
     },
     {
       "work_id": "00418",
+      "record_hash": "26cc2450c9e7705e7e99fb5ac45df0f41ace1ea1babc2aff3d3df4fe11725f50",
       "title": "found form 03",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "067"
-      ],
+      "series_id": "067",
       "project_folder": "found forms"
     },
     {
       "work_id": "00419",
+      "record_hash": "c7f48eea835eef8db3147d95153755bfac855cea3b0eb7520a2554622239f301",
       "title": "found form 04",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "067"
-      ],
+      "series_id": "067",
       "project_folder": "found forms"
     },
     {
       "work_id": "00420",
+      "record_hash": "f2e7acbf13ff0a5e8c5540836045d28fd9473b38340a45ab60e402343fc7a6de",
       "title": "found form 05",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "067"
-      ],
+      "series_id": "067",
       "project_folder": "found forms"
     },
     {
       "work_id": "00421",
+      "record_hash": "9c9938d7ff0d76e721089c7f48241d7e068681cbe2d8a517026284674c06deab",
       "title": "found form 06",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "067"
-      ],
+      "series_id": "067",
       "project_folder": "found forms"
     },
     {
       "work_id": "00422",
+      "record_hash": "e54bd3f35db6cdfbb458dabc0716a148755c4c9a93c221cb0d1881ca6f3d3cbf",
       "title": "found form 07",
       "year": 2023,
       "year_display": "2023",
-      "status": "published",
-      "series_ids": [
-        "067"
-      ],
+      "series_id": "067",
       "project_folder": "found forms"
     },
     {
       "work_id": "00423",
+      "record_hash": "2e591e21db18dad2ae819732ccbb1f3053b86bd7f22685563845ca2332440530",
       "title": "found form 08",
       "year": 2023,
       "year_display": "2023",
-      "status": "published",
-      "series_ids": [
-        "067"
-      ],
+      "series_id": "067",
       "project_folder": "found forms"
     },
     {
       "work_id": "00424",
+      "record_hash": "7d13fb8a2fdaa7e2d8996bc7511b0ae23cedaf2278f7e5096ab738e54eeab811",
       "title": "found form 09",
       "year": 2023,
       "year_display": "2023",
-      "status": "published",
-      "series_ids": [
-        "067"
-      ],
+      "series_id": "067",
       "project_folder": "found forms"
     },
     {
       "work_id": "00425",
+      "record_hash": "80386d7c8293efae5faeb44019c4d75a39c5780910862d9eb60a702a2b075d06",
       "title": "found form 10",
       "year": 2023,
       "year_display": "2023",
-      "status": "published",
-      "series_ids": [
-        "067"
-      ],
+      "series_id": "067",
       "project_folder": "found forms"
     },
     {
       "work_id": "00426",
+      "record_hash": "ea2307963a10623ee67fa80e26e55f62d57139e8b4f25318d6b8cd3f0b868873",
       "title": "found form 11",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "067"
-      ],
+      "series_id": "067",
       "project_folder": "found forms"
     },
     {
       "work_id": "00427",
+      "record_hash": "ffdb07c3aa0c1a9ee1325219ba0e6a006440e4781210357005057b595590e91a",
       "title": "found form 12",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "067"
-      ],
+      "series_id": "067",
       "project_folder": "found forms"
     },
     {
       "work_id": "00428",
+      "record_hash": "043fbebd3c660e3d70ee46972d3b33c3a2ca68b938490b984be646f65a562e1a",
       "title": "found form 13 (mother and child)",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "067"
-      ],
+      "series_id": "067",
       "project_folder": "found forms"
     },
     {
       "work_id": "00429",
+      "record_hash": "e949bb5b9df5bb58227ca81ff51bcbda51d9fca5064080056283822a0903e5bd",
       "title": "found form 14",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "067"
-      ],
+      "series_id": "067",
       "project_folder": "found forms"
     },
     {
       "work_id": "00430",
+      "record_hash": "23434670c5c3aca8038ba9aef1a32178ca0297c23a73023e10a35388e42be633",
       "title": "found form 15",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "067"
-      ],
+      "series_id": "067",
       "project_folder": "found forms"
     },
     {
       "work_id": "00431",
+      "record_hash": "3fc2c9c1680fbb8a015b0d1a0c656655765369c785ac306a75790e3b8529c9a7",
       "title": "found form 16",
       "year": 2021,
       "year_display": "2021",
-      "status": "published",
-      "series_ids": [
-        "067"
-      ],
+      "series_id": "067",
       "project_folder": "found forms"
     },
     {
       "work_id": "00432",
+      "record_hash": "9cea10739c687e3001d825559c441f8363eabdf36f43d3697dfb71e0ddbd42ae",
       "title": "found form 17",
       "year": 2023,
       "year_display": "2023",
-      "status": "published",
-      "series_ids": [
-        "067"
-      ],
+      "series_id": "067",
       "project_folder": "found forms"
     },
     {
       "work_id": "00433",
+      "record_hash": "5b360be48ed16a6a506d231b6bd060f692e78909cd005f7effac2658c5e91e87",
       "title": "found form 18",
       "year": 2023,
       "year_display": "2023",
-      "status": "published",
-      "series_ids": [
-        "067"
-      ],
+      "series_id": "067",
       "project_folder": "found forms"
     },
     {
       "work_id": "00434",
+      "record_hash": "610e857214d1d61f6469f84e5176dcf6141a4eea4688ed1994b7b50707bc8827",
       "title": "found form 19",
       "year": 2023,
       "year_display": "2023",
-      "status": "published",
-      "series_ids": [
-        "067"
-      ],
+      "series_id": "067",
       "project_folder": "found forms"
     },
     {
       "work_id": "00435",
+      "record_hash": "f99638576cf41e813d293ed3ee7f850f76149c52ed81ff552eacf0ce01448baf",
       "title": "found form 20",
       "year": 2023,
       "year_display": "2023",
-      "status": "published",
-      "series_ids": [
-        "067"
-      ],
+      "series_id": "067",
       "project_folder": "found forms"
     },
     {
       "work_id": "00436",
+      "record_hash": "886294b7ab74d76b8b0ef856d5b852ba30e1cc7f1db0f3cac0db269cef4ac7a7",
       "title": "found form 21",
       "year": 2023,
       "year_display": "2023",
-      "status": "published",
-      "series_ids": [
-        "067"
-      ],
+      "series_id": "067",
       "project_folder": "found forms"
     },
     {
       "work_id": "00437",
+      "record_hash": "b327150c24cdf75a4de797fb31de91e077fc83e55418a89a196d59e000a1961a",
       "title": "found form 22",
       "year": 2023,
       "year_display": "2023",
-      "status": "published",
-      "series_ids": [
-        "067"
-      ],
+      "series_id": "067",
       "project_folder": "found forms"
     },
     {
       "work_id": "00438",
+      "record_hash": "aaae4857a76435d253081a7ddaadd1c38d2d9c3ff8965d6f74879fa11c800daa",
       "title": "found form 23",
       "year": 2023,
       "year_display": "2023",
-      "status": "published",
-      "series_ids": [
-        "067"
-      ],
+      "series_id": "067",
       "project_folder": "found forms"
     },
     {
       "work_id": "00439",
+      "record_hash": "44a0b16872994d0f5154f1b1fa01dd2ea0e5ac47afacf0779d71c872b8c8dee6",
       "title": "found form 24",
       "year": 2023,
       "year_display": "2023",
-      "status": "published",
-      "series_ids": [
-        "067"
-      ],
+      "series_id": "067",
       "project_folder": "found forms"
     },
     {
       "work_id": "00440",
+      "record_hash": "580b7fbc939a9d1e332c69cd7bf24778b0a204659622fe0f197c7a5df42479d4",
       "title": "found form 25",
       "year": 2023,
       "year_display": "2023",
-      "status": "published",
-      "series_ids": [
-        "067"
-      ],
+      "series_id": "067",
       "project_folder": "found forms"
     },
     {
       "work_id": "00441",
+      "record_hash": "3e1eb460d2118d12e4bbf02af2433a5409b917e20a0ef77f3c9a8c40e241e129",
       "title": "found form 26",
       "year": 2023,
       "year_display": "2023",
-      "status": "published",
-      "series_ids": [
-        "067"
-      ],
+      "series_id": "067",
       "project_folder": "found forms"
     },
     {
       "work_id": "00442",
+      "record_hash": "74f9642f15a77a6217af5a7bc979140c30d182ffbf9eae5ecddee58c1c7999c6",
       "title": "found form 27",
       "year": 2023,
       "year_display": "2023",
-      "status": "published",
-      "series_ids": [
-        "067"
-      ],
+      "series_id": "067",
       "project_folder": "found forms"
     },
     {
       "work_id": "00443",
+      "record_hash": "1ee9e19e18ff4f1458dfcf1daf26dc658b8eadcca11e48087887b6331e54ba9b",
       "title": "found form 28",
       "year": 2023,
       "year_display": "2023",
-      "status": "published",
-      "series_ids": [
-        "067"
-      ],
+      "series_id": "067",
       "project_folder": "found forms"
     },
     {
       "work_id": "00444",
+      "record_hash": "31d0e9bcad7822b0ca442d2f9f27f47a5cdc42ff9cedd81180a6a137399f9421",
       "title": "found form 29",
       "year": 2023,
       "year_display": "2023",
-      "status": "published",
-      "series_ids": [
-        "067"
-      ],
+      "series_id": "067",
       "project_folder": "found forms"
     },
     {
       "work_id": "00445",
+      "record_hash": "dc0ceeeffec734cd6cec894b845658086ab722d628ab3d955df2e2f35ff704d5",
       "title": "found form 30",
       "year": 2023,
       "year_display": "2023",
-      "status": "published",
-      "series_ids": [
-        "067"
-      ],
+      "series_id": "067",
       "project_folder": "found forms"
     },
     {
       "work_id": "00446",
+      "record_hash": "3efd2454df6a3d79ff0204d83f00c987311e7a331607422d3b1bfa60f8e5e4ae",
       "title": "found form 31",
       "year": 2023,
       "year_display": "2023",
-      "status": "published",
-      "series_ids": [
-        "067"
-      ],
+      "series_id": "067",
       "project_folder": "found forms"
     },
     {
       "work_id": "00447",
+      "record_hash": "904b904a9a458d1d5d862731b1d7685de4385e01bc605e87ed10a8c034269cba",
       "title": "found form 32",
       "year": 2023,
       "year_display": "2023",
-      "status": "published",
-      "series_ids": [
-        "067"
-      ],
+      "series_id": "067",
       "project_folder": "found forms"
     },
     {
       "work_id": "00448",
+      "record_hash": "b3ac7ae7c42650195bee7a3ff27fd04eb858aaf03b112217bc05c0b5a6d436c6",
       "title": "found form 33",
       "year": 2023,
       "year_display": "2023",
-      "status": "published",
-      "series_ids": [
-        "067"
-      ],
+      "series_id": "067",
       "project_folder": "found forms"
     },
     {
       "work_id": "00449",
+      "record_hash": "d92dfa1dd3a37ec9eca8d0754d567ded5b467a24fa9e683acc32560b85cf81a8",
       "title": "found form 34",
       "year": 2023,
       "year_display": "2023",
-      "status": "published",
-      "series_ids": [
-        "067"
-      ],
+      "series_id": "067",
       "project_folder": "found forms"
     },
     {
       "work_id": "00450",
+      "record_hash": "99f40afe7ddd64fb4ec991d8d5ad7bae5bafd4e2a7b0f206958b4cfe8385c72e",
       "title": "found form 35",
       "year": 2023,
       "year_display": "2023",
-      "status": "published",
-      "series_ids": [
-        "067"
-      ],
+      "series_id": "067",
       "project_folder": "found forms"
     },
     {
       "work_id": "00451",
+      "record_hash": "6483bf9e5343c2b8ad415bf556a2937a998bd85085c2d6be35449805de57165c",
       "title": "found form 36",
       "year": 2023,
       "year_display": "2023",
-      "status": "published",
-      "series_ids": [
-        "067"
-      ],
+      "series_id": "067",
       "project_folder": "found forms"
     },
     {
       "work_id": "00452",
+      "record_hash": "e493d9fe2869f1f7fe165627660939ae2aed05f0783e9bb36e0cff977dbb703a",
       "title": "found form 37",
       "year": 2023,
       "year_display": "2023",
-      "status": "published",
-      "series_ids": [
-        "067"
-      ],
+      "series_id": "067",
       "project_folder": "found forms"
     },
     {
       "work_id": "00453",
+      "record_hash": "1850cb981f60c3df647da230813c1640d9fd6f3765d5f0ac987d353ece921ff2",
       "title": "found form 38",
       "year": 2023,
       "year_display": "2023",
-      "status": "published",
-      "series_ids": [
-        "067"
-      ],
+      "series_id": "067",
       "project_folder": "found forms"
     }
   ],
-  "ordered_published_work_ids": [
+  "ordered_work_ids": [
     "00403",
     "00404",
     "00405",

@@ -1,32 +1,27 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v2"
+    "schema": "studio_catalogue_lookup_series_record_v3"
   },
   "series": {
     "series_id": "126",
     "title": "spine symbols",
-    "series_type": "primary",
-    "status": "published",
-    "published_date": "2026-04-01",
     "year": 2008,
     "year_display": "2008",
-    "primary_work_id": "01720",
     "sort_fields": "work_id"
   },
+  "record_hash": "382c0c63f1a5d9b78fbd0ecd36a4dc975f4bf657cd0165e52d1feb6ec87a8986",
   "member_works": [
     {
       "work_id": "01720",
+      "record_hash": "b4963940d38877dff5dcb89717682a47a05a7fb50e638d337d368b64f0f522c5",
       "title": "spine symbols",
       "year": 2008,
       "year_display": "2008",
-      "status": "published",
-      "series_ids": [
-        "126"
-      ],
+      "series_id": "126",
       "project_folder": "spine symbols"
     }
   ],
-  "ordered_published_work_ids": [
+  "ordered_work_ids": [
     "01720"
   ],
   "project_folders": [

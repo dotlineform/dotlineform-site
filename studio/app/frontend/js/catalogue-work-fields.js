@@ -1,8 +1,6 @@
 const WORK_FIELD_DEFINITIONS = Object.freeze({
   work_id: Object.freeze({ key: "work_id", label: "work id", type: "text" }),
-  status: Object.freeze({ key: "status", label: "status", type: "text", readonly: true }),
-  published_date: Object.freeze({ key: "published_date", label: "published date", type: "date" }),
-  series_ids: Object.freeze({ key: "series_ids", label: "series", type: "text", description: "search by series title" }),
+  series_id: Object.freeze({ key: "series_id", label: "series", type: "text", description: "search by series title" }),
   media_source_id: Object.freeze({ key: "media_source_id", label: "media source", type: "media-source" }),
   project_folder: Object.freeze({ key: "project_folder", label: "project folder", type: "text" }),
   project_subfolder: Object.freeze({ key: "project_subfolder", label: "project subfolder", type: "text" }),
@@ -22,9 +20,7 @@ const WORK_FIELD_DEFINITIONS = Object.freeze({
 });
 
 const WORK_EDITABLE_FIELDS = Object.freeze([
-  WORK_FIELD_DEFINITIONS.status,
-  WORK_FIELD_DEFINITIONS.published_date,
-  WORK_FIELD_DEFINITIONS.series_ids,
+  WORK_FIELD_DEFINITIONS.series_id,
   WORK_FIELD_DEFINITIONS.media_source_id,
   WORK_FIELD_DEFINITIONS.project_folder,
   WORK_FIELD_DEFINITIONS.project_subfolder,
@@ -46,7 +42,7 @@ const WORK_EDITABLE_FIELDS = Object.freeze([
 const NEW_WORK_EDITABLE_FIELDS = Object.freeze([
   WORK_FIELD_DEFINITIONS.work_id,
   WORK_FIELD_DEFINITIONS.title,
-  WORK_FIELD_DEFINITIONS.series_ids,
+  WORK_FIELD_DEFINITIONS.series_id,
   WORK_FIELD_DEFINITIONS.media_source_id,
   WORK_FIELD_DEFINITIONS.project_folder,
   WORK_FIELD_DEFINITIONS.project_subfolder,
@@ -66,8 +62,6 @@ const NEW_WORK_EDITABLE_FIELDS = Object.freeze([
 
 const WORK_READONLY_FIELDS = Object.freeze([]);
 
-const WORK_STATUS_OPTIONS = new Set(["", "draft", "published"]);
-const WORK_DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
 const WORK_SERIES_ID_RE = /^\d+$/;
 const WORK_DIMENSION_FIELD_KEYS = Object.freeze(["height_cm", "width_cm", "depth_cm"]);
 
@@ -82,48 +76,13 @@ function normalizeWorkId(value) {
 }
 
 function normalizeSeriesId(value) {
-  const digits = normalizeText(value).replace(/\D/g, "");
-  if (!digits) return "";
-  return digits.padStart(3, "0");
-}
-
-function dedupeSeriesIds(items) {
-  const seen = new Set();
-  const out = [];
-  items.forEach((item) => {
-    if (!item || seen.has(item)) return;
-    seen.add(item);
-    out.push(item);
-  });
-  return out;
-}
-
-function parseSeriesIds(value) {
-  if (Array.isArray(value)) {
-    return dedupeSeriesIds(value.map((item) => normalizeSeriesId(item)).filter(Boolean));
-  }
   const text = normalizeText(value);
-  if (!text) return [];
-  return dedupeSeriesIds(text.split(",").map((item) => normalizeSeriesId(item)).filter(Boolean));
+  return /^\d+$/.test(text) ? text.padStart(3, "0") : "";
 }
 
-function seriesIdsToText(value) {
-  if (!Array.isArray(value)) return "";
-  return value.map((item) => normalizeSeriesId(item)).filter(Boolean).join(", ");
-}
 
 function canonicalizeWorkScalar(field, value) {
-  const text = normalizeText(value);
-  if (field.key === "status") {
-    return text.toLowerCase();
-  }
-  if (field.key === "series_ids") {
-    return seriesIdsToText(parseSeriesIds(value));
-  }
-  if (field.type === "number") {
-    return text;
-  }
-  return text;
+  return field.key === "series_id" ? normalizeSeriesId(value) : normalizeText(value);
 }
 
 function formatNumberText(value) {
@@ -163,20 +122,9 @@ function embeddedEntriesEqual(a, b, fields) {
 
 function buildWorkDraftFromRecord(record, options = {}) {
   const fields = Array.isArray(options.fields) ? options.fields : WORK_EDITABLE_FIELDS;
-  const draft = {};
-  fields.forEach((field) => {
-    if (field.key === "series_ids") {
-      draft[field.key] = seriesIdsToText(record && record[field.key]);
-      return;
-    }
-    draft[field.key] = formatNumberText(record && record[field.key]);
-  });
-  if (options.downloadFields) {
-    draft.downloads = cloneEmbeddedEntries(record && record.downloads, options.downloadFields);
-  }
-  if (options.linkFields) {
-    draft.links = cloneEmbeddedEntries(record && record.links, options.linkFields);
-  }
+  const draft = Object.fromEntries(fields.map(field => [field.key, formatNumberText(record && record[field.key])]));
+  if (options.downloadFields) draft.downloads = cloneEmbeddedEntries(record && record.downloads, options.downloadFields);
+  if (options.linkFields) draft.links = cloneEmbeddedEntries(record && record.links, options.linkFields);
   return draft;
 }
 
@@ -186,13 +134,7 @@ function buildWorkRecordFromDraft(draft, options = {}) {
     record.work_id = normalizeWorkId(options.workId == null ? draft.work_id : options.workId);
   }
 
-  record.status = Object.prototype.hasOwnProperty.call(options, "status")
-    ? options.status
-    : normalizeText(draft.status).toLowerCase() || null;
-  record.published_date = Object.prototype.hasOwnProperty.call(options, "publishedDate")
-    ? options.publishedDate
-    : normalizeText(draft.published_date) || null;
-  record.series_ids = parseSeriesIds(draft.series_ids);
+  record.series_id = normalizeSeriesId(draft.series_id) || null;
   record.media_source_id = normalizeText(draft.media_source_id) || null;
   record.project_folder = normalizeText(draft.project_folder) || null;
   record.project_subfolder = normalizeText(draft.project_subfolder) || null;
@@ -221,15 +163,7 @@ function buildWorkRecordFromDraft(draft, options = {}) {
 
 function buildCreateWorkPayload(draft) {
   const workId = normalizeWorkId(draft.work_id);
-  return {
-    work_id: workId,
-    record: buildWorkRecordFromDraft(draft, {
-      includeWorkId: true,
-      workId,
-      status: "draft",
-      publishedDate: null
-    })
-  };
+  return { work_id: workId, record: buildWorkRecordFromDraft(draft, { includeWorkId: true, workId }) };
 }
 
 function suggestNextWorkId(workItems) {
@@ -243,28 +177,4 @@ function suggestNextWorkId(workItems) {
   return String(maxNumericId + 1).padStart(5, "0");
 }
 
-export {
-  NEW_WORK_EDITABLE_FIELDS,
-  WORK_DATE_RE,
-  WORK_DIMENSION_FIELD_KEYS,
-  WORK_EDITABLE_FIELDS,
-  WORK_FIELD_DEFINITIONS,
-  WORK_READONLY_FIELDS,
-  WORK_SERIES_ID_RE,
-  WORK_STATUS_OPTIONS,
-  buildCreateWorkPayload,
-  buildWorkDraftFromRecord,
-  buildWorkRecordFromDraft,
-  canonicalizeWorkScalar,
-  cloneEmbeddedEntries,
-  dedupeSeriesIds,
-  embeddedEntriesEqual,
-  formatNumberText,
-  normalizeEmbeddedEntries,
-  normalizeSeriesId,
-  normalizeText,
-  normalizeWorkId,
-  parseSeriesIds,
-  seriesIdsToText,
-  suggestNextWorkId
-};
+export { NEW_WORK_EDITABLE_FIELDS, WORK_DIMENSION_FIELD_KEYS, WORK_EDITABLE_FIELDS, WORK_FIELD_DEFINITIONS, WORK_READONLY_FIELDS, WORK_SERIES_ID_RE, buildCreateWorkPayload, buildWorkDraftFromRecord, buildWorkRecordFromDraft, canonicalizeWorkScalar, cloneEmbeddedEntries, embeddedEntriesEqual, formatNumberText, normalizeEmbeddedEntries, normalizeSeriesId, normalizeText, normalizeWorkId, suggestNextWorkId };

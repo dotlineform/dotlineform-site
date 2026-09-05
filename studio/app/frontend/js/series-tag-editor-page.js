@@ -5,10 +5,7 @@ import {
 import {
   loadStudioConfig
 } from "./studio-config.js";
-import {
-  buildPublicSeriesUrl,
-  buildPublicWorkUrl
-} from "./catalogue-public-links.js";
+import { buildPublicSeriesUrl } from "./catalogue-public-links.js";
 import {
   initializeStudioRouteState,
   setStudioRouteReady
@@ -34,7 +31,6 @@ async function initSeriesTagEditorPage() {
   const yearEl = document.getElementById("seriesTagEditorYear");
   const yearDisplayEl = document.getElementById("seriesTagEditorYearDisplay");
   const sortFieldsEl = document.getElementById("seriesTagEditorSortFields");
-  const primaryWorkEl = document.getElementById("seriesTagEditorPrimaryWork");
   const foldersEl = document.getElementById("seriesTagEditorFolders");
   const mediaFigureEl = document.getElementById("seriesTagEditorMedia");
   const mediaLinkEl = document.getElementById("seriesTagEditorMediaLink");
@@ -170,8 +166,7 @@ async function initSeriesTagEditorPage() {
     .then((payload) => {
       const row = payload && payload.series && typeof payload.series === "object" ? payload.series : null;
       const resolvedSeriesId = String(row && row.series_id || "").trim().toLowerCase();
-      const status = String(row && row.status || "").trim().toLowerCase();
-      if (!row || resolvedSeriesId !== seriesIdQuery || status !== "published") {
+      if (!row || resolvedSeriesId !== seriesIdQuery) {
         showError(`Unknown series id: ${seriesIdQuery}`);
         return;
       }
@@ -183,26 +178,12 @@ async function initSeriesTagEditorPage() {
       yearDisplayEl.textContent = textOrDash(row.year_display);
       sortFieldsEl.textContent = textOrDash(row.sort_fields);
 
-      const primaryWorkId = String(row.primary_work_id || "").trim();
-      if (primaryWorkId) {
-        setLinkOrDash(primaryWorkEl, buildPublicWorkUrl(config, primaryWorkId), primaryWorkId);
-      } else {
-        primaryWorkEl.textContent = "—";
-      }
-
       const folders = Array.isArray(payload.project_folders) ? payload.project_folders.filter(Boolean) : [];
       foldersEl.textContent = folders.length ? folders.join(", ") : "—";
-      defaultMediaWorkId = primaryWorkId;
+      defaultMediaWorkId = "";
       defaultMediaTitle = seriesTitle;
       currentMediaWorkId = "";
-      renderPrimaryMedia(primaryWorkId, seriesTitle)
-        .then(() => {
-          currentMediaWorkId = primaryWorkId;
-        })
-        .catch((err) => {
-          console.error("series_tag_editor: failed to render primary media", err);
-          if (mediaFigureEl) mediaFigureEl.hidden = true;
-        });
+      if (mediaFigureEl) mediaFigureEl.hidden = true;
 
       window.addEventListener("series-tag-editor:selected-work-change", (event) => {
         const detail = event && event.detail && typeof event.detail === "object" ? event.detail : {};

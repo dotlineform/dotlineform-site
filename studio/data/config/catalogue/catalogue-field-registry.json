@@ -128,9 +128,7 @@
       "record_family": "work",
       "operation": "metadata_update",
       "fields": [
-        "status",
-        "published_date",
-        "series_ids"
+        "series_id"
       ],
       "current": {
         "artifacts": [
@@ -610,7 +608,6 @@
       "operation": "metadata_update",
       "fields": [
         "title",
-        "series_type",
         "year",
         "year_display"
       ],
@@ -643,9 +640,6 @@
       "record_family": "series",
       "operation": "metadata_update",
       "fields": [
-        "status",
-        "published_date",
-        "primary_work_id",
         "sort_fields"
       ],
       "current": {

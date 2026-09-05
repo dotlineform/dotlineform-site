@@ -1,32 +1,27 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v2"
+    "schema": "studio_catalogue_lookup_series_record_v3"
   },
   "series": {
     "series_id": "005",
     "title": "3 symbols",
-    "series_type": "primary",
-    "status": "published",
-    "published_date": "2026-04-01",
     "year": 2007,
     "year_display": "2007",
-    "primary_work_id": "00638",
     "sort_fields": "work_id"
   },
+  "record_hash": "beb8e0c0e458c3a60a7d25ed3448b20b02e8d7672f46182d63324319cce75101",
   "member_works": [
     {
       "work_id": "00638",
+      "record_hash": "738d33cb09c0ec6a34c0970f2fcbe5a821c95a33cc311b88e6eb379ef797a9c0",
       "title": "3 symbols",
       "year": 2007,
       "year_display": "2007",
-      "status": "published",
-      "series_ids": [
-        "005"
-      ],
+      "series_id": "005",
       "project_folder": "3 symbols"
     }
   ],
-  "ordered_published_work_ids": [
+  "ordered_work_ids": [
     "00638"
   ],
   "project_folders": [

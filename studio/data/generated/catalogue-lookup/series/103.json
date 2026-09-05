@@ -1,44 +1,36 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v2"
+    "schema": "studio_catalogue_lookup_series_record_v3"
   },
   "series": {
     "series_id": "103",
     "title": "mother and child",
-    "series_type": "primary",
-    "status": "published",
-    "published_date": "2026-04-01",
     "year": 1995,
     "year_display": "1995",
-    "primary_work_id": "01447",
     "sort_fields": "work_id"
   },
+  "record_hash": "f7832fc7ef4d39267376585a7fa5321212aae47fba79419992a033a8a64c0d55",
   "member_works": [
     {
       "work_id": "00214",
+      "record_hash": "050ddbf5815b01728c4a3b668b6a4d578f79c7baf8e1665a0378e8fbabeccfda",
       "title": "mother and child",
       "year": 1995,
       "year_display": "c. 1995?",
-      "status": "published",
-      "series_ids": [
-        "103",
-        "026"
-      ],
+      "series_id": "103",
       "project_folder": "collected 1989-1998"
     },
     {
       "work_id": "01447",
+      "record_hash": "8ad673077f325dc5b2f2443d6879fe82f007c93d4e89fac732045c7aa8524004",
       "title": "mother and child",
       "year": 1995,
       "year_display": "1995",
-      "status": "published",
-      "series_ids": [
-        "103"
-      ],
+      "series_id": "103",
       "project_folder": "mother and child"
     }
   ],
-  "ordered_published_work_ids": [
+  "ordered_work_ids": [
     "00214",
     "01447"
   ],

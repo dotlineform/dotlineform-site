@@ -1,98 +1,81 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v2"
+    "schema": "studio_catalogue_lookup_series_record_v3"
   },
   "series": {
     "series_id": "111",
     "title": "particles",
-    "series_type": "primary",
-    "status": "published",
-    "published_date": "2026-04-01",
     "year": 2013,
     "year_display": "2013",
-    "primary_work_id": "01491",
     "sort_fields": "work_id"
   },
+  "record_hash": "fa93c99bf50efac75696ff3b2991eab78101e78a35bae35d46e288d21dd9b171",
   "member_works": [
     {
       "work_id": "01491",
+      "record_hash": "88ef6a1985e63da9e91d67c73d7142098c3f79a871a5ca36c88443ffc086e896",
       "title": "particles 1",
       "year": 2013,
       "year_display": "2013",
-      "status": "published",
-      "series_ids": [
-        "111"
-      ],
+      "series_id": "111",
       "project_folder": "particles"
     },
     {
       "work_id": "01492",
+      "record_hash": "2f8a056072ada0960526f367567b61a31627b0fe4db42b653d5ff75cb4c2d3d7",
       "title": "particles 2",
       "year": 2013,
       "year_display": "2013",
-      "status": "published",
-      "series_ids": [
-        "111"
-      ],
+      "series_id": "111",
       "project_folder": "particles"
     },
     {
       "work_id": "01493",
+      "record_hash": "58c4609292e66e4d851fd8724b3bdc49fd6bc0df483f7ba7591c4388f29bddd4",
       "title": "particles 3",
       "year": 2013,
       "year_display": "2013",
-      "status": "published",
-      "series_ids": [
-        "111"
-      ],
+      "series_id": "111",
       "project_folder": "particles"
     },
     {
       "work_id": "01494",
+      "record_hash": "90b5fd15328abe62fbb3cc9aad1f8106852864414c9ae84f4e9a6f9196c935ef",
       "title": "particles 4",
       "year": 2013,
       "year_display": "2013",
-      "status": "published",
-      "series_ids": [
-        "111"
-      ],
+      "series_id": "111",
       "project_folder": "particles"
     },
     {
       "work_id": "01495",
+      "record_hash": "5c7dc3eb5811f6ae7ac74dbc657da8ca38d5de0f527b0f6ac4e6a6a0facfab5b",
       "title": "particles 5",
       "year": 2013,
       "year_display": "2013",
-      "status": "published",
-      "series_ids": [
-        "111"
-      ],
+      "series_id": "111",
       "project_folder": "particles"
     },
     {
       "work_id": "01496",
+      "record_hash": "7d97e249ec8bcac114cacc013be4b071f15c9dc504fc75ebe6c161b906d1ca94",
       "title": "particles 6",
       "year": 2013,
       "year_display": "2013",
-      "status": "published",
-      "series_ids": [
-        "111"
-      ],
+      "series_id": "111",
       "project_folder": "particles"
     },
     {
       "work_id": "01497",
+      "record_hash": "da841026ee6692fb56a0893c51484b21e958cd06e0da6461f22e7521a2dd7221",
       "title": "particles 7",
       "year": 2013,
       "year_display": "2013",
-      "status": "published",
-      "series_ids": [
-        "111"
-      ],
+      "series_id": "111",
       "project_folder": "particles"
     }
   ],
-  "ordered_published_work_ids": [
+  "ordered_work_ids": [
     "01491",
     "01492",
     "01493",

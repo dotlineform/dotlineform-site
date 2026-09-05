@@ -1,32 +1,27 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v2"
+    "schema": "studio_catalogue_lookup_series_record_v3"
   },
   "series": {
     "series_id": "018",
     "title": "body form",
-    "series_type": "primary",
-    "status": "published",
-    "published_date": "2026-04-01",
     "year": 2008,
     "year_display": "2008",
-    "primary_work_id": "01633",
     "sort_fields": "work_id"
   },
+  "record_hash": "4303c4b6c37ba773dc317be44988a22e38df0ee5fd2a31df822b25d5d8d1c6e3",
   "member_works": [
     {
       "work_id": "01633",
+      "record_hash": "3b5072ee4e791463b9bef61f07b8ecdbc28bddb4900489f9aa08db5e54e04154",
       "title": "body form",
       "year": 2008,
       "year_display": "2008",
-      "status": "published",
-      "series_ids": [
-        "018"
-      ],
+      "series_id": "018",
       "project_folder": "body form"
     }
   ],
-  "ordered_published_work_ids": [
+  "ordered_work_ids": [
     "01633"
   ],
   "project_folders": [

@@ -6,9 +6,6 @@ from pathlib import Path
 from typing import Any, Mapping
 
 from catalogue.catalogue_lookup import (
-    SERIES_MEMBER_WORK_FIELDS,
-    SERIES_SEARCH_FIELDS,
-    WORK_SEARCH_FIELDS,
     build_and_write_catalogue_lookup,
     build_series_lookup_payload,
     build_series_search_payload,
@@ -22,7 +19,6 @@ from catalogue.catalogue_lookup import (
     write_work_lookup_payload,
 )
 from catalogue.catalogue_source import (
-    normalize_series_ids_value,
     records_from_json_source,
 )
 
@@ -51,49 +47,25 @@ def _changed_field_set(changed_field_names: list[str]) -> set[str]:
 
 
 def _lookup_artifacts_for_fields(record_family: str, changed_fields: set[str]) -> set[str]:
-    if record_family == "work":
-        artifacts: set[str] = set()
-        if changed_fields.intersection(WORK_SEARCH_FIELDS):
-            artifacts.add("work_search")
-        if changed_fields.intersection(SERIES_MEMBER_WORK_FIELDS):
-            artifacts.add("related_series_records")
-        return artifacts
-    if record_family == "work_detail":
+    if not changed_fields:
         return set()
+    if record_family == "work":
+        # Every projection carrying a revision must change even for metadata-only edits.
+        return {"work_record", "work_search", "related_series_records", "related_work_detail_records"}
     if record_family == "series":
-        artifacts = {"series_record"}
-        if changed_fields.intersection(SERIES_SEARCH_FIELDS):
-            artifacts.add("series_search")
-        return artifacts
-    return set()
+        return {"series_record", "series_search", "related_work_records"}
+    if record_family == "work_detail":
+        return {"full_lookup_refresh"}
+    raise ValueError(f"unknown Catalogue record family: {record_family}")
 
 
 def derive_lookup_refresh_plan(
     *,
     record_family: str,
     changed_field_names: list[str],
-    build_plan: Mapping[str, Any],
 ) -> dict[str, Any]:
     changed_fields = _changed_field_set(changed_field_names)
-    registry_artifacts = {str(artifact) for artifact in build_plan.get("artifacts") or [] if str(artifact)}
-    unknown_fields = list(build_plan.get("unknown_fields") or [])
-    if not changed_fields or "studio-lookup" not in registry_artifacts:
-        return {
-            "class": LOOKUP_REFRESH_NONE,
-            "mode": LOOKUP_REFRESH_NONE,
-            "artifacts": [],
-            "fields": sorted(changed_fields),
-            "unknown_fields": unknown_fields,
-        }
-    if bool(build_plan.get("fallback")):
-        return {
-            "class": LOOKUP_REFRESH_FULL,
-            "mode": LOOKUP_REFRESH_FULL,
-            "artifacts": ["full_lookup_refresh"],
-            "fields": sorted(changed_fields),
-            "unknown_fields": unknown_fields,
-        }
-
+    unknown_fields: list[str] = []
     artifacts = _lookup_artifacts_for_fields(record_family, changed_fields)
     if not artifacts:
         return {
@@ -196,8 +168,7 @@ def work_change_lookup_refresh(
         )
 
     if "related_series_records" in artifacts:
-        related_series_ids = set(normalize_series_ids_value(current_record.get("series_ids")))
-        related_series_ids.update(normalize_series_ids_value(updated_record.get("series_ids")))
+        related_series_ids = {str(record["series_id"]) for record in (current_record, updated_record) if record.get("series_id")}
         for series_id in sorted(related_series_ids):
             written_paths.append(
                 rel_path(
@@ -330,8 +301,7 @@ def series_change_lookup_refresh(
         )
     if "related_work_records" in artifacts:
         for work_id, work_record in source_records.works.items():
-            series_ids = normalize_series_ids_value(work_record.get("series_ids"))
-            if series_id not in series_ids:
+            if work_record.get("series_id") != series_id:
                 continue
             written_paths.append(
                 rel_path(

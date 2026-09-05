@@ -1,65 +1,54 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v2"
+    "schema": "studio_catalogue_lookup_series_record_v3"
   },
   "series": {
     "series_id": "009",
     "title": "a poem divided into 4 parts",
-    "series_type": "primary",
-    "status": "published",
-    "published_date": "2026-04-01",
     "year": 2025,
     "year_display": "2025",
-    "primary_work_id": "00001",
     "sort_fields": "work_id"
   },
+  "record_hash": "d89de19b4d79f4fa2b5db5be7cff555c7ed9b207312cee92fabe175c4bd7b65e",
   "member_works": [
     {
       "work_id": "00001",
+      "record_hash": "c18e68455aa7b5edbe90d21c4111717ca745befced1e9ead6d5ea504d34eca7f",
       "title": "a poem divided into 4 parts (\"our dreams are real\")",
       "year": 2025,
       "year_display": "2025",
-      "status": "published",
-      "series_ids": [
-        "009"
-      ],
+      "series_id": "009",
       "project_folder": "a poem divided into 4 parts"
     },
     {
       "work_id": "00002",
+      "record_hash": "6a4dee7e4fcce637d58ab8ecf4970925afa006da64b26b1b6908ecc90b63c597",
       "title": "a poem divided into 4 parts (\"there must be hope\")",
       "year": 2025,
       "year_display": "2025",
-      "status": "published",
-      "series_ids": [
-        "009"
-      ],
+      "series_id": "009",
       "project_folder": "a poem divided into 4 parts"
     },
     {
       "work_id": "00003",
+      "record_hash": "1a7851e4f415ec2790131a03ff3b22454481449d67595aeab072beac0598be1a",
       "title": "a poem divided into 4 parts (\"we are not lost\")",
       "year": 2025,
       "year_display": "2025",
-      "status": "published",
-      "series_ids": [
-        "009"
-      ],
+      "series_id": "009",
       "project_folder": "a poem divided into 4 parts"
     },
     {
       "work_id": "00004",
+      "record_hash": "45f6ac46c59f55abf523756f7094cc3b719eb9ad5d92ae2c0e53de1b4775b5bf",
       "title": "a poem divided into 4 parts (\"we only feel love\")",
       "year": 2025,
       "year_display": "2025",
-      "status": "published",
-      "series_ids": [
-        "009"
-      ],
+      "series_id": "009",
       "project_folder": "a poem divided into 4 parts"
     }
   ],
-  "ordered_published_work_ids": [
+  "ordered_work_ids": [
     "00001",
     "00002",
     "00003",

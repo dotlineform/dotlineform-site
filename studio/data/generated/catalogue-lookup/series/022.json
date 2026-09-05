@@ -1,76 +1,63 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v2"
+    "schema": "studio_catalogue_lookup_series_record_v3"
   },
   "series": {
     "series_id": "022",
     "title": "book of curves",
-    "series_type": "primary",
-    "status": "published",
-    "published_date": "2026-04-01",
     "year": 2011,
     "year_display": "2011",
-    "primary_work_id": "00806",
     "sort_fields": "work_id"
   },
+  "record_hash": "40298d4cf2fedf5c8858cb37540fb15fd45452c77253b6d70cb0d4bb8a32ad71",
   "member_works": [
     {
       "work_id": "00806",
+      "record_hash": "6dbc26aa62c12d5235497a15dbf5b1acc39d97c410d66578a397e55c16531042",
       "title": "book of curves 0",
       "year": 2011,
       "year_display": "2011",
-      "status": "published",
-      "series_ids": [
-        "022"
-      ],
+      "series_id": "022",
       "project_folder": "book of curves"
     },
     {
       "work_id": "00807",
+      "record_hash": "55d544d9678b2880353747bface68ec54cdfb1b6955ad467d3eaf0806fc8abb9",
       "title": "book of curves 1 and 10",
       "year": 2011,
       "year_display": "2011",
-      "status": "published",
-      "series_ids": [
-        "022"
-      ],
+      "series_id": "022",
       "project_folder": "book of curves"
     },
     {
       "work_id": "00808",
+      "record_hash": "2ab68f9aeba014a6853c81149cec70d33b8d610bdd46f4784fad6c3d2aa4937c",
       "title": "book of curves 2-6",
       "year": 2011,
       "year_display": "2011",
-      "status": "published",
-      "series_ids": [
-        "022"
-      ],
+      "series_id": "022",
       "project_folder": "book of curves"
     },
     {
       "work_id": "00809",
+      "record_hash": "28e7c060ddc9913a4d3428828e173e4a3eeb5711579f6cc8748a1c323d4ce6e2",
       "title": "book of curves 7 and 8",
       "year": 2011,
       "year_display": "2011",
-      "status": "published",
-      "series_ids": [
-        "022"
-      ],
+      "series_id": "022",
       "project_folder": "book of curves"
     },
     {
       "work_id": "00810",
+      "record_hash": "9bf709e5834cee63f1997a22806504540438c8abd62f34ca62becf32eb35c88c",
       "title": "book of curves 9 and 11",
       "year": 2011,
       "year_display": "2011",
-      "status": "published",
-      "series_ids": [
-        "022"
-      ],
+      "series_id": "022",
       "project_folder": "book of curves"
     }
   ],
-  "ordered_published_work_ids": [
+  "ordered_work_ids": [
     "00806",
     "00807",
     "00808",

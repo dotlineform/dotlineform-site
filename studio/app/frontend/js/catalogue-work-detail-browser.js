@@ -125,12 +125,7 @@ function selectedSection(rows, selectedId) {
   return rows.find((row) => row.id === selectedId) || rows[0];
 }
 
-function canCreateDetail(state, options) {
-  if (options && typeof options.isCurrentWorkPublished === "function") {
-    return Boolean(options.isCurrentWorkPublished(state));
-  }
-  return normalizeText(state.currentRecord && state.currentRecord.status).toLowerCase() === "published";
-}
+function canCreateDetail(state) { return Boolean(state.currentRecord && state.serverAvailable); }
 
 function detailRows(state, options, details) {
   return details.map((detail) => {

@@ -8,9 +8,7 @@ import {
 import {
   loadCatalogueMediaConfig
 } from "./catalogue-media-preview.js";
-import {
-  getSeriesTypeOptions
-} from "./catalogue-series-fields.js";
+
 
 export const SERIES_ROUTE_STATE = createCatalogueEditorRouteStateOptions({
   route: "catalogue-series"
@@ -28,10 +26,8 @@ export function collectSeriesEditorElements() {
     openButton: "catalogueSeriesOpen",
     newButton: "catalogueSeriesNew",
     saveButton: "catalogueSeriesSave",
-    publicationButton: "catalogueSeriesPublication",
     deleteButton: "catalogueSeriesDelete",
     statusNode: "catalogueSeriesStatus",
-    previewNode: "catalogueSeriesSidePanel",
     membersHeadingNode: "catalogueSeriesMembersHeading",
     membersActionsNode: "catalogueSeriesMembersActions",
     membersMetaNode: "catalogueSeriesMembersMeta",
@@ -40,14 +36,12 @@ export function collectSeriesEditorElements() {
 }
 
 export function createSeriesEditorState(elements, options = {}) {
-  const seriesTypeOptions = options.seriesTypeOptions || getSeriesTypeOptions();
   const mediaConfigLoader = options.mediaConfigLoader || loadCatalogueMediaConfig;
   return {
     config: null,
     mode: "single",
     seriesById: new Map(),
     workSearchById: new Map(),
-    seriesTypeOptions,
     nextSuggestedSeriesId: "",
     currentLookup: null,
     currentSeriesId: "",
@@ -68,8 +62,8 @@ export function createSeriesEditorState(elements, options = {}) {
     fieldNodes: new Map(),
     fieldStatusNodes: new Map(),
     messageController: null,
-    memberSeriesIdsByWorkId: new Map(),
-    baselineMemberSeriesIdsByWorkId: new Map(),
+    memberSeriesByWorkId: new Map(),
+    baselineMemberSeriesByWorkId: new Map(),
     membersListController: null,
     membersActionsController: null,
     selectedMemberWorkId: "",
@@ -79,14 +73,12 @@ export function createSeriesEditorState(elements, options = {}) {
     openButton: elements.openButton,
     newButton: elements.newButton,
     saveButton: elements.saveButton,
-    publicationButton: elements.publicationButton,
     deleteButton: elements.deleteButton,
     contextNode: createCatalogueEditorMessageRoleNode("catalogueSeriesContext", "context"),
     statusNode: elements.statusNode,
     warningNode: createCatalogueEditorMessageRoleNode("catalogueSeriesWarning", "warning"),
     resultNode: createCatalogueEditorMessageRoleNode("catalogueSeriesResult", "result"),
     buildImpactNode: null,
-    previewNode: elements.previewNode,
     membersActionsNode: elements.membersActionsNode,
     membersMetaNode: elements.membersMetaNode,
     membersResultsNode: elements.membersResultsNode

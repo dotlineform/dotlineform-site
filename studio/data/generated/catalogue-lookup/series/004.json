@@ -1,120 +1,99 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v2"
+    "schema": "studio_catalogue_lookup_series_record_v3"
   },
   "series": {
     "series_id": "004",
     "title": "2 bodies",
-    "series_type": "primary",
-    "status": "published",
-    "published_date": "2026-04-01",
     "year": 2025,
     "year_display": "2025",
-    "primary_work_id": "00533",
     "sort_fields": "work_id"
   },
+  "record_hash": "7d92ec9b6574589fc9a458a2a4bc2bce2b858007c9b77128a6ef66f4be935cbd",
   "member_works": [
     {
       "work_id": "00526",
+      "record_hash": "c541f40fc7a804c4dd94cbbb17538f5b01337de615fa483920c4cc9b0a3bedf6",
       "title": "body",
       "year": 2025,
       "year_display": "2025",
-      "status": "published",
-      "series_ids": [
-        "004"
-      ],
+      "series_id": "004",
       "project_folder": "2 bodies"
     },
     {
       "work_id": "00527",
+      "record_hash": "0f9d90a410d13d16b9d4b246e8a7ff42873b6b795dfedf0d4fe658eaa3e83582",
       "title": "body",
       "year": 2025,
       "year_display": "2025",
-      "status": "published",
-      "series_ids": [
-        "004"
-      ],
+      "series_id": "004",
       "project_folder": "2 bodies"
     },
     {
       "work_id": "00528",
+      "record_hash": "cf09329156c6b3ee2abbf7614d1ca702cd68dc5c493e4e59c6a769be523d47ce",
       "title": "body",
       "year": 2025,
       "year_display": "2025",
-      "status": "published",
-      "series_ids": [
-        "004"
-      ],
+      "series_id": "004",
       "project_folder": "2 bodies"
     },
     {
       "work_id": "00529",
+      "record_hash": "249cf552a43dab8653dc4a7b63962538d7582ecd39c3850abaf2db8a6c719b11",
       "title": "body residue",
       "year": 2025,
       "year_display": "2025",
-      "status": "published",
-      "series_ids": [
-        "004"
-      ],
+      "series_id": "004",
       "project_folder": "2 bodies"
     },
     {
       "work_id": "00530",
+      "record_hash": "0d313c516787473fa8519d39aac11fb836b05c608aed6f27394b2968661a0eac",
       "title": "body curves",
       "year": 2025,
       "year_display": "2025",
-      "status": "published",
-      "series_ids": [
-        "004"
-      ],
+      "series_id": "004",
       "project_folder": "2 bodies"
     },
     {
       "work_id": "00531",
+      "record_hash": "deeb69362e16a3c195bb9a82f60c8281d4d2b7c4d3b8f747b67884cfd2888b1d",
       "title": "body monoprint",
       "year": 2025,
       "year_display": "2025",
-      "status": "published",
-      "series_ids": [
-        "004"
-      ],
+      "series_id": "004",
       "project_folder": "2 bodies"
     },
     {
       "work_id": "00532",
+      "record_hash": "6ab802ba71484801110828ea4148e19579a4209b3dfcd9114dca392f2e0ae390",
       "title": "body monoprint petals",
       "year": 2025,
       "year_display": "2025",
-      "status": "published",
-      "series_ids": [
-        "004"
-      ],
+      "series_id": "004",
       "project_folder": "2 bodies"
     },
     {
       "work_id": "00533",
+      "record_hash": "55b8e53ed780afd2261ca1daa171425d2616ffaab87fd09aa8e989a99aa62f1b",
       "title": "2 bodies monoprint",
       "year": 2025,
       "year_display": "2025",
-      "status": "published",
-      "series_ids": [
-        "004"
-      ],
+      "series_id": "004",
       "project_folder": "2 bodies"
     },
     {
       "work_id": "00534",
+      "record_hash": "b9bca99e7b5a1e3fd2152679db305cca0f9e466e13586b2fb1cf6bc85444ec83",
       "title": "2 bodies monoprint",
       "year": 2025,
       "year_display": "2025",
-      "status": "published",
-      "series_ids": [
-        "004"
-      ],
+      "series_id": "004",
       "project_folder": "2 bodies"
     }
   ],
-  "ordered_published_work_ids": [
+  "ordered_work_ids": [
     "00526",
     "00527",
     "00528",

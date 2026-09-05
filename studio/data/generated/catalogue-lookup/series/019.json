@@ -1,120 +1,99 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v2"
+    "schema": "studio_catalogue_lookup_series_record_v3"
   },
   "series": {
     "series_id": "019",
     "title": "body space",
-    "series_type": "primary",
-    "status": "published",
-    "published_date": "2026-04-01",
     "year": 2007,
     "year_display": "2007",
-    "primary_work_id": "00783",
     "sort_fields": "work_id"
   },
+  "record_hash": "3fbdd36848ca651a4fe51196c1eaa3c565ba23c6e82486398337203e00f3e580",
   "member_works": [
     {
       "work_id": "00783",
+      "record_hash": "9e3f95a2d1cdb89c1e59918ae4d41b8efd0eb4723d6a4060baa4c33e94adec2f",
       "title": "body space 1",
       "year": 2007,
       "year_display": "2007",
-      "status": "published",
-      "series_ids": [
-        "019"
-      ],
+      "series_id": "019",
       "project_folder": "body space"
     },
     {
       "work_id": "00784",
+      "record_hash": "bffd80c1cca971ff03c22da003206e0cf80b84a2b79256fd2269f508c24e7a48",
       "title": "body space 2",
       "year": 2007,
       "year_display": "2007",
-      "status": "published",
-      "series_ids": [
-        "019"
-      ],
+      "series_id": "019",
       "project_folder": "body space"
     },
     {
       "work_id": "00785",
+      "record_hash": "50427570949e4c657d1715da229643daa030ce4ba6ae6d028f778ddf75df0e26",
       "title": "body space 3",
       "year": 2007,
       "year_display": "2007",
-      "status": "published",
-      "series_ids": [
-        "019"
-      ],
+      "series_id": "019",
       "project_folder": "body space"
     },
     {
       "work_id": "00786",
+      "record_hash": "d86a0c13502620aa4ce09fa7924186d3ee6a1646a1e590e2024326b7832191c1",
       "title": "body space 4",
       "year": 2007,
       "year_display": "2007",
-      "status": "published",
-      "series_ids": [
-        "019"
-      ],
+      "series_id": "019",
       "project_folder": "body space"
     },
     {
       "work_id": "00787",
+      "record_hash": "fb8cc56f909bf3ce50d554d24103866fd64420ea68a9114a237e051b8c26919b",
       "title": "body space 5",
       "year": 2007,
       "year_display": "2007",
-      "status": "published",
-      "series_ids": [
-        "019"
-      ],
+      "series_id": "019",
       "project_folder": "body space"
     },
     {
       "work_id": "00788",
+      "record_hash": "5190aa197ea9b31e253d61c08da130dd84294d5e33a774976a7b5f4bb79478f5",
       "title": "body space (boundary condition 1)",
       "year": 2007,
       "year_display": "2007",
-      "status": "published",
-      "series_ids": [
-        "019"
-      ],
+      "series_id": "019",
       "project_folder": "body space"
     },
     {
       "work_id": "00789",
+      "record_hash": "9fe4bcb1d5836e7b3ef344bf8d142431660489bf5110b0567043435817fc13ab",
       "title": "body space (boundary condition 2)",
       "year": 2007,
       "year_display": "2007",
-      "status": "published",
-      "series_ids": [
-        "019"
-      ],
+      "series_id": "019",
       "project_folder": "body space"
     },
     {
       "work_id": "00790",
+      "record_hash": "4c5ed6801243c49e2c18b4a731b2b7eaf14c265ed3be9ec7e619bab013668ebe",
       "title": "body space (empty cell)",
       "year": 2007,
       "year_display": "2007",
-      "status": "published",
-      "series_ids": [
-        "019"
-      ],
+      "series_id": "019",
       "project_folder": "body space"
     },
     {
       "work_id": "00791",
+      "record_hash": "057f972a55a7ad1e8cd0067d446fe8e8d50b2ffe4c3a9c5f42b63a10a025e920",
       "title": "body space (joined cells)",
       "year": 2007,
       "year_display": "2007",
-      "status": "published",
-      "series_ids": [
-        "019"
-      ],
+      "series_id": "019",
       "project_folder": "body space"
     }
   ],
-  "ordered_published_work_ids": [
+  "ordered_work_ids": [
     "00783",
     "00784",
     "00785",

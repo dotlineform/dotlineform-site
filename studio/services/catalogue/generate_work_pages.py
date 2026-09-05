@@ -338,6 +338,7 @@ def parse_selected_artifacts(values: List[str]) -> Optional[set[str]]:
 # 3) Build generated artifacts from canonical source records
 # 4) Persist mutable source fields directly against canonical source records
 def main() -> None:
+    raise SystemExit("Catalogue output is paused until the Stage 5 workflow is implemented.")
     # CLI arguments define the internal JSON-source run and where output files go.
     ap = argparse.ArgumentParser()
     ap.add_argument(
@@ -1068,7 +1069,7 @@ def main() -> None:
         series_publish_transitions=series_publish_transitions,
         work_publish_transitions=work_publish_transitions,
         series_payload=series_payload,
-        series_work_ids_by_id=indexes.ordered_published_work_ids_by_series(series_work_context),
+        series_work_ids_by_id=indexes.ordered_work_ids_by_series(series_work_context),
         published_work_ids=published_work_ids,
         work_meta_by_id=work_meta_by_id,
         work_status_by_id=work_status_by_id,

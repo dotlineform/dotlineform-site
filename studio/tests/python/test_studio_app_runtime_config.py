@@ -64,7 +64,7 @@ def test_runtime_config_exposes_adapter_contract() -> None:
     assert payload["app"]["routes"]["catalogue_work_editor"]["path"] == "/studio/catalogue-work/"
     assert payload["app"]["routes"]["bulk_add_work"]["shell_type"] == "html-template"
     assert payload["app"]["routes"]["catalogue_field_registry"]["shell_type"] == "html-template"
-    assert payload["app"]["routes"]["catalogue_status"]["shell_type"] == "html-template"
+    assert "catalogue_status" not in payload["app"]["routes"]
     assert payload["app"]["routes"]["catalogue_series_editor"]["shell_type"] == "html-template"
     assert payload["app"]["routes"]["catalogue_work_editor"]["shell_type"] == "html-template"
     assert "catalogue_moment_editor" not in payload["app"]["routes"]
@@ -89,7 +89,7 @@ def test_runtime_config_exposes_adapter_contract() -> None:
     assert not any("docId" in view for view in runtime["views"])
     assert any(view["id"] == "bulk_add_work" and view["path"] == "/studio/bulk-add-work/" for view in runtime["views"])
     assert any(view["id"] == "catalogue_field_registry" and view["path"] == "/studio/catalogue-field-registry/" for view in runtime["views"])
-    assert any(view["id"] == "catalogue_status" and view["path"] == "/studio/catalogue-status/" for view in runtime["views"])
+    assert not any(view["id"] == "catalogue_status" and view["path"] == "/studio/catalogue-status/" for view in runtime["views"])
     assert not any(view["id"] == "studio_works" or view["path"] == "/studio/studio-works/" for view in runtime["views"])
     assert any(view["id"] == "catalogue_series_editor" and view["path"] == "/studio/catalogue-series/" for view in runtime["views"])
     assert any(view["id"] == "catalogue_work_editor" and view["path"] == "/studio/catalogue-work/" for view in runtime["views"])
@@ -119,8 +119,8 @@ def test_runtime_config_exposes_adapter_contract() -> None:
     assert runtime["services"]["catalogue"]["bulk_save"] == "/studio/api/catalogue/bulk-save"
     assert runtime["services"]["catalogue"]["delete_preview"] == "/studio/api/catalogue/delete-preview"
     assert runtime["services"]["catalogue"]["delete_apply"] == "/studio/api/catalogue/delete-apply"
-    assert runtime["services"]["catalogue"]["publication_preview"] == "/studio/api/catalogue/publication-preview"
-    assert runtime["services"]["catalogue"]["publication_apply"] == "/studio/api/catalogue/publication-apply"
+    assert "publication_preview" not in runtime["services"]["catalogue"]
+    assert "publication_apply" not in runtime["services"]["catalogue"]
     assert runtime["services"]["catalogue"]["media_publish_preview"] == "/studio/api/catalogue/media-publish-preview"
     assert runtime["services"]["catalogue"]["media_publish_apply"] == "/studio/api/catalogue/media-publish-apply"
     assert runtime["services"]["catalogue"]["create_work"] == "/studio/api/catalogue/work/create"

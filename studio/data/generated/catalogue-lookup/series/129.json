@@ -1,318 +1,261 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v2"
+    "schema": "studio_catalogue_lookup_series_record_v3"
   },
   "series": {
     "series_id": "129",
     "title": "string theory",
-    "series_type": "primary",
-    "status": "published",
-    "published_date": "2026-04-01",
     "year": 2012,
     "year_display": "2005-12",
-    "primary_work_id": "00573",
     "sort_fields": "work_id"
   },
+  "record_hash": "1ee9b18db10807d70376115114f418b3550c48f1f454655c388ca0493725dabf",
   "member_works": [
     {
       "work_id": "00554",
+      "record_hash": "678ae6f2808332fab3a7fe968ff977a5c635786d231063542f215efe3396a20e",
       "title": "string theory 1",
       "year": 2005,
       "year_display": "2005",
-      "status": "published",
-      "series_ids": [
-        "129"
-      ],
+      "series_id": "129",
       "project_folder": "string theory"
     },
     {
       "work_id": "00555",
+      "record_hash": "2aca65d0d3115cedabff0fabfc337ca4139641c91b1c1dee368af5be06d95d20",
       "title": "string theory 2",
       "year": 2005,
       "year_display": "2005",
-      "status": "published",
-      "series_ids": [
-        "129"
-      ],
+      "series_id": "129",
       "project_folder": "string theory"
     },
     {
       "work_id": "00556",
+      "record_hash": "3597b0fa41aa6e929035323e139a2ac6175955d306916aaf538ebc4f5d4d8923",
       "title": "string theory 3",
       "year": 2005,
       "year_display": "2005",
-      "status": "published",
-      "series_ids": [
-        "129"
-      ],
+      "series_id": "129",
       "project_folder": "string theory"
     },
     {
       "work_id": "00557",
+      "record_hash": "2db439b7fe53cedf4d9557793de1a77b8fda018126680efe9c40962ef72a9d35",
       "title": "string theory 4",
       "year": 2005,
       "year_display": "2005",
-      "status": "published",
-      "series_ids": [
-        "129"
-      ],
+      "series_id": "129",
       "project_folder": "string theory"
     },
     {
       "work_id": "00558",
+      "record_hash": "76b123eaa58cd49f56d1b5d13094246e189ccd0a0e02ac99e308944f6927fa9d",
       "title": "string theory 5",
       "year": 2005,
       "year_display": "2005",
-      "status": "published",
-      "series_ids": [
-        "129"
-      ],
+      "series_id": "129",
       "project_folder": "string theory"
     },
     {
       "work_id": "00559",
+      "record_hash": "9845997edbf42f5336ba1e9d5eefaf8c4629bc7bd5c87580b878e57f4d1a6f49",
       "title": "string theory 6",
       "year": 2005,
       "year_display": "2005",
-      "status": "published",
-      "series_ids": [
-        "129"
-      ],
+      "series_id": "129",
       "project_folder": "string theory"
     },
     {
       "work_id": "00560",
+      "record_hash": "9a9af8d47272c0b60940c64ae2be9c4e2c50b5c3701fae76cabf3313512a0d35",
       "title": "string theory 1 duality",
       "year": 2005,
       "year_display": "2005",
-      "status": "published",
-      "series_ids": [
-        "129"
-      ],
+      "series_id": "129",
       "project_folder": "string theory"
     },
     {
       "work_id": "00561",
+      "record_hash": "dcdbb089fb0aac1cf5766016a89c4a6ddb2ae2701f7d407d23c353fcaa17e064",
       "title": "string theory forms 1",
       "year": 2005,
       "year_display": "2005",
-      "status": "published",
-      "series_ids": [
-        "129"
-      ],
+      "series_id": "129",
       "project_folder": "string theory"
     },
     {
       "work_id": "00562",
+      "record_hash": "7a6fde9d9954e8d860ccf20e4c02052f79cb4b26ef0784fff1e0c8ec482a6036",
       "title": "string theory forms 2",
       "year": 2005,
       "year_display": "2005",
-      "status": "published",
-      "series_ids": [
-        "129"
-      ],
+      "series_id": "129",
       "project_folder": "string theory"
     },
     {
       "work_id": "00563",
+      "record_hash": "3ad660e644a2544091da900722b74f9a436758633498ddc244e1650ab36a8cf5",
       "title": "string theory forms 3",
       "year": 2005,
       "year_display": "2005",
-      "status": "published",
-      "series_ids": [
-        "129"
-      ],
+      "series_id": "129",
       "project_folder": "string theory"
     },
     {
       "work_id": "00564",
+      "record_hash": "e985938aae43a94d79913e4e11e530e8747d17405a9e8c881f578edc1def83af",
       "title": "string theory forms 4",
       "year": 2005,
       "year_display": "2005",
-      "status": "published",
-      "series_ids": [
-        "129"
-      ],
+      "series_id": "129",
       "project_folder": "string theory"
     },
     {
       "work_id": "00565",
+      "record_hash": "337f955a7ef985a032d31b7c21fab090b61ac53b1b9abd7a204d56f5a10a2d5a",
       "title": "string theory forms 5",
       "year": 2005,
       "year_display": "2005",
-      "status": "published",
-      "series_ids": [
-        "129"
-      ],
+      "series_id": "129",
       "project_folder": "string theory"
     },
     {
       "work_id": "00566",
+      "record_hash": "9ae8a4a00a8d162c0d317ea36e578c10e48c82eb62dd9f761ad4aa1e33e7c032",
       "title": "string theory forms 6",
       "year": 2005,
       "year_display": "2005",
-      "status": "published",
-      "series_ids": [
-        "129"
-      ],
+      "series_id": "129",
       "project_folder": "string theory"
     },
     {
       "work_id": "00567",
+      "record_hash": "5fc22d9864df7ece640965d171dafc7ec5e917a3736da1ef708d725af5474cf4",
       "title": "forms scan 1",
       "year": 2005,
       "year_display": "2005",
-      "status": "published",
-      "series_ids": [
-        "129"
-      ],
+      "series_id": "129",
       "project_folder": "string theory"
     },
     {
       "work_id": "00568",
+      "record_hash": "669cd8a98831c775b2b98f5fa48c6dcd4e422203e5aad493a4881f2971ffe4be",
       "title": "forms scan 2",
       "year": 2005,
       "year_display": "2005",
-      "status": "published",
-      "series_ids": [
-        "129"
-      ],
+      "series_id": "129",
       "project_folder": "string theory"
     },
     {
       "work_id": "00569",
+      "record_hash": "bff36326b9683a7dcb8d91a8fdf9e97d1bb8df0e23e120017814ca1b02fb1ba1",
       "title": "forms scan 3",
       "year": 2005,
       "year_display": "2005",
-      "status": "published",
-      "series_ids": [
-        "129"
-      ],
+      "series_id": "129",
       "project_folder": "string theory"
     },
     {
       "work_id": "00570",
+      "record_hash": "f4011224a54a71a612ce734c7900d81ca21e4e98a042f00eaaef27a0b40a6bec",
       "title": "forms scan 4",
       "year": 2005,
       "year_display": "2005",
-      "status": "published",
-      "series_ids": [
-        "129"
-      ],
+      "series_id": "129",
       "project_folder": "string theory"
     },
     {
       "work_id": "00571",
+      "record_hash": "a5f7314a60538f535029197ade6aa663c75325e2136e10dcd70932f64c7bb7ef",
       "title": "forms scan 5",
       "year": 2005,
       "year_display": "2005",
-      "status": "published",
-      "series_ids": [
-        "129"
-      ],
+      "series_id": "129",
       "project_folder": "string theory"
     },
     {
       "work_id": "00572",
+      "record_hash": "a03345d08762751d5f712fe1fb4f4500573fbe247887e9829e626991f2708d49",
       "title": "forms scan 6",
       "year": 2005,
       "year_display": "2005",
-      "status": "published",
-      "series_ids": [
-        "129"
-      ],
+      "series_id": "129",
       "project_folder": "string theory"
     },
     {
       "work_id": "00573",
+      "record_hash": "a7b3dd9fb2b9a6c21bd17fc38ba68c125075e6fa95f2820728f7356f6350836b",
       "title": "path form 1",
       "year": 2012,
       "year_display": "2012",
-      "status": "published",
-      "series_ids": [
-        "129"
-      ],
+      "series_id": "129",
       "project_folder": "string theory"
     },
     {
       "work_id": "00574",
+      "record_hash": "ef32300929d6fe0803dfafc52400f4d8d84e26cc3ea2c79f6da4f6356134f451",
       "title": "path form 2",
       "year": 2012,
       "year_display": "2012",
-      "status": "published",
-      "series_ids": [
-        "129"
-      ],
+      "series_id": "129",
       "project_folder": "string theory"
     },
     {
       "work_id": "00575",
+      "record_hash": "440bc355ef2ce035784a6de87934cfcf30f9d16dc43265bc7b084026802681ce",
       "title": "path form 3",
       "year": 2012,
       "year_display": "2012",
-      "status": "published",
-      "series_ids": [
-        "129"
-      ],
+      "series_id": "129",
       "project_folder": "string theory"
     },
     {
       "work_id": "00576",
+      "record_hash": "68412a2c1d3a8339b49da4f6bef5eebb404a23482afa61b8a6737868d718868c",
       "title": "path form 4",
       "year": 2012,
       "year_display": "2012",
-      "status": "published",
-      "series_ids": [
-        "129"
-      ],
+      "series_id": "129",
       "project_folder": "string theory"
     },
     {
       "work_id": "00577",
+      "record_hash": "f2bc274ebcce6d8a1876c7fd3369a135ba64034c9d40208010b9a76ab1bd03df",
       "title": "path form 5",
       "year": 2012,
       "year_display": "2012",
-      "status": "published",
-      "series_ids": [
-        "129"
-      ],
+      "series_id": "129",
       "project_folder": "string theory"
     },
     {
       "work_id": "00578",
+      "record_hash": "702ae3ec47d50963a2b5279543be7449ff7cbf199ac0a71b3e15090e030e0de9",
       "title": "path form 6",
       "year": 2012,
       "year_display": "2012",
-      "status": "published",
-      "series_ids": [
-        "129"
-      ],
+      "series_id": "129",
       "project_folder": "string theory"
     },
     {
       "work_id": "00579",
+      "record_hash": "e001c1b4e55855359a3421142372582d9744b29295d19afb5f2106cdc8b7586b",
       "title": "path form 7",
       "year": 2012,
       "year_display": "2012",
-      "status": "published",
-      "series_ids": [
-        "129"
-      ],
+      "series_id": "129",
       "project_folder": "string theory"
     },
     {
       "work_id": "00580",
+      "record_hash": "e054e8ec0e641f3bf6135bbe4f37f4906bfb1225b953b53a4603bde73c7deae9",
       "title": "path form 8",
       "year": 2012,
       "year_display": "2012",
-      "status": "published",
-      "series_ids": [
-        "129"
-      ],
+      "series_id": "129",
       "project_folder": "string theory"
     }
   ],
-  "ordered_published_work_ids": [
+  "ordered_work_ids": [
     "00554",
     "00555",
     "00556",

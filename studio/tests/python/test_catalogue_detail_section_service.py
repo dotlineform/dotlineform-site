@@ -3,7 +3,6 @@
 
 from __future__ import annotations
 
-import json
 import sys
 from pathlib import Path
 
@@ -21,6 +20,7 @@ from catalogue.catalogue_build_media import PROJECTS_BASE_DIR_ENV_NAME  # noqa: 
 from catalogue import catalogue_detail_section_service as detail_section_service  # noqa: E402
 from catalogue.catalogue_media_files import IMAGE_EXTENSIONS  # noqa: E402
 from catalogue.catalogue_service_context import build_catalogue_write_context  # noqa: E402
+from catalogue.catalogue_revisions import record_hash  # noqa: E402
 from catalogue.catalogue_source import load_json_file, write_work_detail_payloads  # noqa: E402
 
 
@@ -66,12 +66,11 @@ def prepare_repo(tmp_path: Path) -> tuple[Path, Path]:
     write_json(
         source_dir / "works.json",
         {
-            "header": {"schema": "catalogue_source_works_v1", "count": 1},
+            "header": {"schema": "catalogue_source_works_v2", "count": 1},
             "works": {
                 "00782": {
                     "work_id": "00782",
-                    "status": "published",
-                    "series_ids": ["009"],
+                    "series_id": "009",
                     "project_folder": "birth",
                     "project_filename": "cover.jpg",
                     "media_version": 1,
@@ -86,15 +85,13 @@ def prepare_repo(tmp_path: Path) -> tuple[Path, Path]:
     write_json(
         source_dir / "series.json",
         {
-            "header": {"schema": "catalogue_source_series_v1", "count": 1},
+            "header": {"schema": "catalogue_source_series_v2", "count": 1},
             "series": {
                 "009": {
                     "series_id": "009",
                     "title": "Series",
-                    "status": "published",
                     "year": 2026,
                     "year_display": "2026",
-                    "primary_work_id": "00782",
                 }
             },
         },
@@ -133,42 +130,7 @@ def test_detail_folder_inherits_processing_source_from_parent_work(tmp_path: Pat
 def test_create_detail_section_writes_section_and_records(tmp_path: Path, monkeypatch) -> None:
     repo_root, _projects_base = prepare_repo(tmp_path)
     context = build_catalogue_write_context(repo_root)
-    build_calls: list[dict[str, object]] = []
-    publish_calls: list[dict[str, object]] = []
-
-    def fake_build_operation(_context, **kwargs):
-        build_calls.append(dict(kwargs))
-        return True, {
-            "completed_at_utc": "2026-01-01T00:00:00Z",
-            "media": {"generated": {"work_details": [kwargs["detail_uid"]]}},
-        }
-
-    monkeypatch.setattr(detail_section_service, "run_build_operation", fake_build_operation)
     stub_lookup_refresh(monkeypatch)
-
-    def fake_remote_publish(**kwargs):
-        publish_calls.append(dict(kwargs))
-        detail_uids = [item_id for _kind, item_id in kwargs["targets"]]
-        return {
-            "counts": {"uploaded": len(detail_uids) * 3},
-            "objects": [
-                {
-                    "kind": "work_details",
-                    "item_id": detail_uid,
-                    "status": "uploaded",
-                }
-                for detail_uid in detail_uids
-                for _width in (800, 1200, 1600)
-            ],
-            "media_versions": [
-                {
-                    "kind": "work_details",
-                    "item_id": detail_uid,
-                    "status": "promoted",
-                }
-                for detail_uid in detail_uids
-            ],
-        }
 
     payload = detail_section_service.create_detail_section_payload(
         context,
@@ -178,7 +140,6 @@ def test_create_detail_section_writes_section_and_records(tmp_path: Path, monkey
             "project_subfolder": "details",
             "filenames": ["detail-01.jpg", "detail-02.png"],
         },
-        remote_publish_runner=fake_remote_publish,
     )
 
     assert payload["ok"] is True
@@ -186,19 +147,7 @@ def test_create_detail_section_writes_section_and_records(tmp_path: Path, monkey
     assert payload["section_id"] == "00782-1"
     assert payload["created_detail_uids"] == ["00782-001", "00782-002"]
     assert payload["created_count"] == 2
-    assert payload["build_requested"] is True
-    assert payload["build"]["ok"] is True
-    assert payload["r2_media"]["status"] == "completed"
-    assert payload["r2_media"]["uploaded"] == 6
-    assert [call["detail_uid"] for call in build_calls] == ["00782-001", "00782-002"]
-    assert publish_calls == [{
-        "repo_root": repo_root,
-        "targets": [("work_details", "00782-001"), ("work_details", "00782-002")],
-        "write": True,
-        "force": False,
-        "changed_only": False,
-        "allow_partial": False,
-    }]
+    assert "build" not in payload and "r2_media" not in payload
 
     source = read_work_details_source(repo_root)
     assert source["header"]["section_count"] == 1
@@ -236,48 +185,6 @@ def test_create_detail_section_writes_section_and_records(tmp_path: Path, monkey
     assert duplicate_payload["changed"] is False
     assert duplicate_payload["reason"] == "section_exists"
     assert duplicate_payload["section_id"] == "00782-1"
-    assert len(publish_calls) == 1
-
-
-def test_create_detail_section_keeps_canonical_records_when_r2_publish_fails(tmp_path: Path, monkeypatch) -> None:
-    repo_root, _projects_base = prepare_repo(tmp_path)
-    context = build_catalogue_write_context(repo_root)
-
-    monkeypatch.setattr(
-        detail_section_service,
-        "run_build_operation",
-        lambda _context, **_kwargs: (True, {"completed_at_utc": "2026-01-01T00:00:00Z"}),
-    )
-    stub_lookup_refresh(monkeypatch)
-
-    def failing_remote_publish(**_kwargs):
-        raise RuntimeError("secret remote detail")
-
-    payload = detail_section_service.create_detail_section_payload(
-        context,
-        {
-            "work_id": "00782",
-            "project_folder": "birth",
-            "project_subfolder": "details",
-            "filenames": ["detail-01.jpg"],
-        },
-        remote_publish_runner=failing_remote_publish,
-    )
-
-    assert payload["ok"] is True
-    assert payload["created"] is True
-    assert payload["warning"] == "Detail section was created, but R2 media publishing did not complete."
-    assert payload["r2_media"] == {
-        "status": "warning",
-        "target_count": 1,
-        "object_count": 3,
-        "uploaded": 0,
-        "unchanged": 0,
-        "failed": 3,
-        "failed_targets": [{"kind": "work_details", "id": "00782-001"}],
-    }
-    assert "secret remote detail" not in json.dumps(payload)
-    assert "00782-001" in read_work_details_source(repo_root)["work_details"]
 
 
 def test_create_detail_section_rejects_missing_file(tmp_path: Path) -> None:
@@ -361,13 +268,6 @@ def test_save_detail_section_updates_title_sort_and_compact_order(tmp_path: Path
         },
     )
     before_details = read_work_details_source(repo_root)["work_details"]
-    build_calls: list[dict[str, object]] = []
-
-    def fake_build_operation(_context, **kwargs):
-        build_calls.append(dict(kwargs))
-        return True, {"completed_at_utc": "2026-01-01T00:00:00Z"}
-
-    monkeypatch.setattr(detail_section_service, "run_build_operation", fake_build_operation)
     stub_lookup_refresh(monkeypatch)
 
     payload = detail_section_service.save_detail_section_payload(
@@ -376,6 +276,7 @@ def test_save_detail_section_updates_title_sort_and_compact_order(tmp_path: Path
             "work_id": "00782",
             "section_id": "00782-1",
             "section_title": "omega",
+            "expected_record_hash": record_hash(read_work_details_source(repo_root)["work_detail_sections"]["00782-1"]),
             "section_position": 3,
             "detail_sort": "title",
         },
@@ -385,8 +286,7 @@ def test_save_detail_section_updates_title_sort_and_compact_order(tmp_path: Path
     assert payload["changed"] is True
     assert payload["section"]["section_title"] == "omega"
     assert payload["section"]["detail_sort"] == "title"
-    assert payload["build_requested"] is True
-    assert [call["detail_uid"] for call in build_calls] == [""]
+    assert "build_requested" not in payload
 
     source = read_work_details_source(repo_root)
     sections = source["work_detail_sections"]
@@ -427,13 +327,6 @@ def test_save_detail_section_single_section_omits_default_sort_and_keeps_details
         },
     )
     before_details = read_work_details_source(repo_root)["work_details"]
-    build_calls: list[dict[str, object]] = []
-
-    def fake_build_operation(_context, **kwargs):
-        build_calls.append(dict(kwargs))
-        return True, {"completed_at_utc": "2026-01-01T00:00:00Z"}
-
-    monkeypatch.setattr(detail_section_service, "run_build_operation", fake_build_operation)
     stub_lookup_refresh(monkeypatch)
 
     payload = detail_section_service.save_detail_section_payload(
@@ -442,6 +335,7 @@ def test_save_detail_section_single_section_omits_default_sort_and_keeps_details
             "work_id": "00782",
             "section_id": "00782-1",
             "section_title": "details updated",
+            "expected_record_hash": record_hash(read_work_details_source(repo_root)["work_detail_sections"]["00782-1"]),
             "section_position": 1,
             "detail_sort": "detail_id",
         },
@@ -449,7 +343,6 @@ def test_save_detail_section_single_section_omits_default_sort_and_keeps_details
 
     assert payload["ok"] is True
     assert payload["changed"] is True
-    assert [call["detail_uid"] for call in build_calls] == [""]
 
     source = read_work_details_source(repo_root)
     section = source["work_detail_sections"]["00782-1"]
@@ -488,13 +381,6 @@ def test_save_detail_section_noop_does_not_rebuild(tmp_path: Path, monkeypatch) 
         },
     }
     write_work_details_source(repo_root, source_payload)
-    build_calls: list[dict[str, object]] = []
-
-    def fake_build_operation(_context, **kwargs):
-        build_calls.append(dict(kwargs))
-        return True, {"completed_at_utc": "2026-01-01T00:00:00Z"}
-
-    monkeypatch.setattr(detail_section_service, "run_build_operation", fake_build_operation)
 
     payload = detail_section_service.save_detail_section_payload(
         build_catalogue_write_context(repo_root),
@@ -502,6 +388,7 @@ def test_save_detail_section_noop_does_not_rebuild(tmp_path: Path, monkeypatch) 
             "work_id": "00782",
             "section_id": "00782-1",
             "section_title": "details",
+            "expected_record_hash": record_hash(read_work_details_source(repo_root)["work_detail_sections"]["00782-1"]),
             "section_position": 1,
             "detail_sort": "title",
         },
@@ -510,6 +397,5 @@ def test_save_detail_section_noop_does_not_rebuild(tmp_path: Path, monkeypatch) 
     assert payload["ok"] is True
     assert payload["changed"] is False
     assert "build_requested" not in payload
-    assert build_calls == []
     assert read_work_details_source(repo_root)["work_detail_sections"] == source_payload["work_detail_sections"]
     assert read_work_details_source(repo_root)["work_details"] == source_payload["work_details"]

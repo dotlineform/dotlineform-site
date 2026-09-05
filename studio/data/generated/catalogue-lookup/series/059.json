@@ -1,76 +1,63 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v2"
+    "schema": "studio_catalogue_lookup_series_record_v3"
   },
   "series": {
     "series_id": "059",
     "title": "forest",
-    "series_type": "primary",
-    "status": "published",
-    "published_date": "2026-04-01",
     "year": 2003,
     "year_display": "2003",
-    "primary_work_id": "00392",
     "sort_fields": "title,work_id"
   },
+  "record_hash": "dff826e79fff819d71cf98bd83ab55b381d009631c470e43351f01fa75a47094",
   "member_works": [
     {
       "work_id": "00390",
+      "record_hash": "90ca71a8842a42a0bead000a4452d57356acd3d6990e9ae439cb84f3828c0c3a",
       "title": "forest 3",
       "year": 2003,
       "year_display": "2003",
-      "status": "published",
-      "series_ids": [
-        "059"
-      ],
+      "series_id": "059",
       "project_folder": "forest"
     },
     {
       "work_id": "00392",
+      "record_hash": "8571e891dc39642e47769a475e0a5200570e552bccb2ddcafecce40fc836e2a9",
       "title": "forest 1",
       "year": 2003,
       "year_display": "2003",
-      "status": "published",
-      "series_ids": [
-        "059"
-      ],
+      "series_id": "059",
       "project_folder": "forest"
     },
     {
       "work_id": "00393",
+      "record_hash": "30378433046b60d44939b107f16254b9188ab0c660b540f987bb7b81931c5072",
       "title": "model 500",
       "year": 2003,
       "year_display": "2003",
-      "status": "published",
-      "series_ids": [
-        "059"
-      ],
+      "series_id": "059",
       "project_folder": "forest"
     },
     {
       "work_id": "00618",
+      "record_hash": "a801b2f69190bd8cee1209c0ff7c5f31b0c15345feb93463336f74b873b1490e",
       "title": "forest 2",
       "year": 2003,
       "year_display": "2003",
-      "status": "published",
-      "series_ids": [
-        "059"
-      ],
+      "series_id": "059",
       "project_folder": "forest"
     },
     {
       "work_id": "00619",
+      "record_hash": "a94534a5daea42ecb35e7ff8bc8e232b00e0de7886dad1efe4ef6491a893dcf5",
       "title": "body 1",
       "year": 2003,
       "year_display": "2003",
-      "status": "published",
-      "series_ids": [
-        "059"
-      ],
+      "series_id": "059",
       "project_folder": "forest"
     }
   ],
-  "ordered_published_work_ids": [
+  "ordered_work_ids": [
     "00619",
     "00392",
     "00618",

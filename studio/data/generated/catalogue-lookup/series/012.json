@@ -1,43 +1,36 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v2"
+    "schema": "studio_catalogue_lookup_series_record_v3"
   },
   "series": {
     "series_id": "012",
     "title": "all the little cracks",
-    "series_type": "primary",
-    "status": "published",
-    "published_date": "2026-04-01",
     "year": 2010,
     "year_display": "2010, 2016",
-    "primary_work_id": "00751",
     "sort_fields": "work_id"
   },
+  "record_hash": "18b0ac16f7ef52d0e8a016858e892843968ed8d4c2cfe02852e4b64a73fbc4c9",
   "member_works": [
     {
       "work_id": "00751",
+      "record_hash": "c828220951ccb45207e95cc9d11eb837c18b8c2d02ab54fec524b87307790f7e",
       "title": "all the little cracks",
       "year": 2010,
       "year_display": "2010",
-      "status": "published",
-      "series_ids": [
-        "012"
-      ],
+      "series_id": "012",
       "project_folder": "all the little cracks"
     },
     {
       "work_id": "00752",
+      "record_hash": "58d4db7864644a857d06fab4351b14f8aa74446ea6660f8119c4ee2101d1bc2d",
       "title": "all the little cracks again",
       "year": 2016,
       "year_display": "2016",
-      "status": "published",
-      "series_ids": [
-        "012"
-      ],
+      "series_id": "012",
       "project_folder": "all the little cracks"
     }
   ],
-  "ordered_published_work_ids": [
+  "ordered_work_ids": [
     "00751",
     "00752"
   ],

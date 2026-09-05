@@ -1,32 +1,27 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v2"
+    "schema": "studio_catalogue_lookup_series_record_v3"
   },
   "series": {
     "series_id": "094",
     "title": "matter",
-    "series_type": "primary",
-    "status": "published",
-    "published_date": "2026-04-01",
     "year": 2023,
     "year_display": "2023",
-    "primary_work_id": "01422",
     "sort_fields": "work_id"
   },
+  "record_hash": "1b8248c09659a0a57cac2899ee10582b94d83d1e3257b098717781b322817939",
   "member_works": [
     {
       "work_id": "01422",
+      "record_hash": "d3023e29f66e8d81ebf28a15c3445fb19abe984708a86c65e303d8e5765ecdc3",
       "title": "matter",
       "year": 2023,
       "year_display": "2023",
-      "status": "published",
-      "series_ids": [
-        "094"
-      ],
+      "series_id": "094",
       "project_folder": "matter"
     }
   ],
-  "ordered_published_work_ids": [
+  "ordered_work_ids": [
     "01422"
   ],
   "project_folders": [

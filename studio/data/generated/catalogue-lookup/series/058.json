@@ -1,32 +1,27 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v2"
+    "schema": "studio_catalogue_lookup_series_record_v3"
   },
   "series": {
     "series_id": "058",
     "title": "for David Lynch (2025)",
-    "series_type": "primary",
-    "status": "published",
-    "published_date": "2026-04-01",
     "year": 2025,
     "year_display": "2025",
-    "primary_work_id": "00346",
     "sort_fields": "work_id"
   },
+  "record_hash": "80e5394aa8bb559b77c791fb886bb7f61fac72c4204dc6a9d78f74736b68c47b",
   "member_works": [
     {
       "work_id": "00346",
+      "record_hash": "7781442f510d2f9f2b367288e356a341c5662ff51b762424b61a5e20b6b04c59",
       "title": "for David Lynch",
       "year": 2025,
       "year_display": "2025",
-      "status": "published",
-      "series_ids": [
-        "058"
-      ],
+      "series_id": "058",
       "project_folder": "for David Lynch"
     }
   ],
-  "ordered_published_work_ids": [
+  "ordered_work_ids": [
     "00346"
   ],
   "project_folders": [

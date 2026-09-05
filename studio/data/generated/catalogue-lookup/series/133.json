@@ -1,219 +1,180 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v2"
+    "schema": "studio_catalogue_lookup_series_record_v3"
   },
   "series": {
     "series_id": "133",
     "title": "thorns",
-    "series_type": "primary",
-    "status": "published",
-    "published_date": "2026-04-01",
     "year": 2006,
     "year_display": "2006",
-    "primary_work_id": "01762",
     "sort_fields": "work_id"
   },
+  "record_hash": "d5d3815233e6606d5dc003d208bdeffbcae9bbaff5cc98663a791e3d1ad43cb8",
   "member_works": [
     {
       "work_id": "01745",
+      "record_hash": "1cf9ef4f079b9105487ab1558dff01a1a0da5f09558cbec83f5eb88a562e8452",
       "title": "2006-12-27 - 14-01-14",
       "year": 2006,
       "year_display": "2006",
-      "status": "published",
-      "series_ids": [
-        "133"
-      ],
+      "series_id": "133",
       "project_folder": "thorns"
     },
     {
       "work_id": "01746",
+      "record_hash": "3fd6a68ec9386cdb04e0e3d1e6379155c840fecc3ccb4ba3724cc2d6865b08d3",
       "title": "2006-12-27 - 14-01-26",
       "year": 2006,
       "year_display": "2006",
-      "status": "published",
-      "series_ids": [
-        "133"
-      ],
+      "series_id": "133",
       "project_folder": "thorns"
     },
     {
       "work_id": "01747",
+      "record_hash": "aa59733d297f417cd8fe93880412f9fa2441b29d4686e5103cb044976c7c29ea",
       "title": "2006-12-27 - 14-01-34",
       "year": 2006,
       "year_display": "2006",
-      "status": "published",
-      "series_ids": [
-        "133"
-      ],
+      "series_id": "133",
       "project_folder": "thorns"
     },
     {
       "work_id": "01748",
+      "record_hash": "460e2809c0a08ed3934ebd82315270ad4b0081543feb06497283e58ad1ed543f",
       "title": "2006-12-27 - 14-01-47",
       "year": 2006,
       "year_display": "2006",
-      "status": "published",
-      "series_ids": [
-        "133"
-      ],
+      "series_id": "133",
       "project_folder": "thorns"
     },
     {
       "work_id": "01749",
+      "record_hash": "8b1fc3ecfae99ee3b50eb2c82e18fd0d2b5e5e1b02d213c4ec8ecb3b5c2c5c81",
       "title": "2006-12-27 - 14-01-54",
       "year": 2006,
       "year_display": "2006",
-      "status": "published",
-      "series_ids": [
-        "133"
-      ],
+      "series_id": "133",
       "project_folder": "thorns"
     },
     {
       "work_id": "01750",
+      "record_hash": "046115e477ca48ca987e6faa503f7d85ad8e8210accbeeacede27268bd375121",
       "title": "2006-12-27 - 14-02-04",
       "year": 2006,
       "year_display": "2006",
-      "status": "published",
-      "series_ids": [
-        "133"
-      ],
+      "series_id": "133",
       "project_folder": "thorns"
     },
     {
       "work_id": "01751",
+      "record_hash": "b53f3a97d8135855e23b2f49e8a8b24be7284e9294fd9dbb55ca956ffc221f49",
       "title": "2006-12-27 - 14-02-16",
       "year": 2006,
       "year_display": "2006",
-      "status": "published",
-      "series_ids": [
-        "133"
-      ],
+      "series_id": "133",
       "project_folder": "thorns"
     },
     {
       "work_id": "01752",
+      "record_hash": "d22643116b14bbd38d7dc57c5fcfbe512ad76f6c28f9c4e53482098d5184461b",
       "title": "2006-12-27 - 14-02-21",
       "year": 2006,
       "year_display": "2006",
-      "status": "published",
-      "series_ids": [
-        "133"
-      ],
+      "series_id": "133",
       "project_folder": "thorns"
     },
     {
       "work_id": "01753",
+      "record_hash": "916dbdaa1e578fb7340783a3947120e8edeb46f96ff1a7d2cf06ce0c491ef62f",
       "title": "2006-12-27 - 14-02-24",
       "year": 2006,
       "year_display": "2006",
-      "status": "published",
-      "series_ids": [
-        "133"
-      ],
+      "series_id": "133",
       "project_folder": "thorns"
     },
     {
       "work_id": "01754",
+      "record_hash": "3b79dfa995119cdb498115266605d158036976744db64f3e28ab79e392208bdf",
       "title": "2006-12-27 - 14-02-34",
       "year": 2006,
       "year_display": "2006",
-      "status": "published",
-      "series_ids": [
-        "133"
-      ],
+      "series_id": "133",
       "project_folder": "thorns"
     },
     {
       "work_id": "01755",
+      "record_hash": "9b7f82feaa4e9712a8e8338e858793c044588c070f10ca4724ec6c1e8dc2de98",
       "title": "2006-12-27 - 14-02-59",
       "year": 2006,
       "year_display": "2006",
-      "status": "published",
-      "series_ids": [
-        "133"
-      ],
+      "series_id": "133",
       "project_folder": "thorns"
     },
     {
       "work_id": "01756",
+      "record_hash": "5cfa39239b5d9b363e33c571138d4f7425379bc86a0d66e07075e29a779feece",
       "title": "2006-12-27 - 14-03-09",
       "year": 2006,
       "year_display": "2006",
-      "status": "published",
-      "series_ids": [
-        "133"
-      ],
+      "series_id": "133",
       "project_folder": "thorns"
     },
     {
       "work_id": "01757",
+      "record_hash": "0606780d8c9ec649dc9fadc1e378af8c2706cce6725b67137719e23c7b26d96e",
       "title": "2006-12-27 - 14-03-17",
       "year": 2006,
       "year_display": "2006",
-      "status": "published",
-      "series_ids": [
-        "133"
-      ],
+      "series_id": "133",
       "project_folder": "thorns"
     },
     {
       "work_id": "01758",
+      "record_hash": "415ca94b29c0de17c723083b7a802e487640bd5abbb817ad4f1d9df7d377bd9a",
       "title": "2006-12-27 - 14-03-22",
       "year": 2006,
       "year_display": "2006",
-      "status": "published",
-      "series_ids": [
-        "133"
-      ],
+      "series_id": "133",
       "project_folder": "thorns"
     },
     {
       "work_id": "01759",
+      "record_hash": "60606251612bac26a2b1ce8b62918d7a98b666f0ebf70433faa2897ba0d51543",
       "title": "2006-12-27 - 14-03-31",
       "year": 2006,
       "year_display": "2006",
-      "status": "published",
-      "series_ids": [
-        "133"
-      ],
+      "series_id": "133",
       "project_folder": "thorns"
     },
     {
       "work_id": "01760",
+      "record_hash": "a32319247d4888d99bf9c46b0c9494aa98ca983d07e29eb8bd8e7aa1f1a4dbe1",
       "title": "2006-12-27 - 14-03-40",
       "year": 2006,
       "year_display": "2006",
-      "status": "published",
-      "series_ids": [
-        "133"
-      ],
+      "series_id": "133",
       "project_folder": "thorns"
     },
     {
       "work_id": "01761",
+      "record_hash": "96f0556350f6c41076969ea243d56a1ca134f83f81a4d656df3be0b22f2d018d",
       "title": "2006-12-27 - 14-04-01",
       "year": 2006,
       "year_display": "2006",
-      "status": "published",
-      "series_ids": [
-        "133"
-      ],
+      "series_id": "133",
       "project_folder": "thorns"
     },
     {
       "work_id": "01762",
+      "record_hash": "76c87a1587b0d67515dbd20cfabb95ce0f4f200a27777ee15a0d19b7e6ef02a7",
       "title": "2006-12-27 - 14-04-12",
       "year": 2006,
       "year_display": "2006",
-      "status": "published",
-      "series_ids": [
-        "133"
-      ],
+      "series_id": "133",
       "project_folder": "thorns"
     }
   ],
-  "ordered_published_work_ids": [
+  "ordered_work_ids": [
     "01745",
     "01746",
     "01747",

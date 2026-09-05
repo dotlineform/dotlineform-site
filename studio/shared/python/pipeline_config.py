@@ -40,7 +40,7 @@ DEFAULT_PIPELINE_CONFIG: Dict[str, Any] = {
             "prose": "site text",
         },
         "media": {
-            "root_subdir": "catalogue/media",
+            "root_subdir": "catalogue/media-staging",
             "work": {
                 "input_subdir": "works/make_srcset_images",
                 "output_subdir": "works/srcset_images",

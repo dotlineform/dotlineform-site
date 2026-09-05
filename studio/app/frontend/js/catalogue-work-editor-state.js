@@ -48,7 +48,6 @@ export function collectWorkEditorElements() {
     openButton: "catalogueWorkOpen",
     newButton: "catalogueWorkNew",
     saveButton: "catalogueWorkSave",
-    publicationButton: "catalogueWorkPublication",
     deleteButton: "catalogueWorkDelete",
     statusNode: "catalogueWorkStatus",
     metaNode: "catalogueWorkMeta"
@@ -66,7 +65,6 @@ export function createWorkEditorState(elements, options = {}) {
     openButton,
     newButton,
     saveButton,
-    publicationButton,
     deleteButton,
     statusNode,
     previewNode,
@@ -144,7 +142,6 @@ export function createWorkEditorState(elements, options = {}) {
     openButton,
     newButton,
     saveButton,
-    publicationButton,
     deleteButton,
     statusNode,
     warningNode: createCatalogueEditorMessageRoleNode("catalogueWorkWarning", "warning"),

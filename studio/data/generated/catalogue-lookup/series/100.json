@@ -1,32 +1,27 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v2"
+    "schema": "studio_catalogue_lookup_series_record_v3"
   },
   "series": {
     "series_id": "100",
     "title": "molecule forms",
-    "series_type": "primary",
-    "status": "published",
-    "published_date": "2026-04-01",
     "year": 2013,
     "year_display": "2013",
-    "primary_work_id": "00459",
     "sort_fields": "work_id"
   },
+  "record_hash": "35b8b2c29907961affd93019e38cd78e5e3c32a076eb1006e855f1cc83d5fd02",
   "member_works": [
     {
       "work_id": "00459",
+      "record_hash": "236a8fb60b30410c73598ce031142bd072542a508e287eb07190d284226fb4ba",
       "title": "molecule forms",
       "year": 2013,
       "year_display": "2013",
-      "status": "published",
-      "series_ids": [
-        "100"
-      ],
+      "series_id": "100",
       "project_folder": "molecule forms"
     }
   ],
-  "ordered_published_work_ids": [
+  "ordered_work_ids": [
     "00459"
   ],
   "project_folders": [

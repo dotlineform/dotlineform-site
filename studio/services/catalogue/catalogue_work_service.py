@@ -4,24 +4,18 @@ from __future__ import annotations
 
 from typing import Any, Mapping
 
-from catalogue import catalogue_lookup_refresh as lookup_refresh
-from catalogue import catalogue_save_build as save_build
 from catalogue import catalogue_source_mutation as source_mutation
+from catalogue.catalogue_revisions import record_hash, require_record_revision
 from catalogue import catalogue_transactions as transactions
-from catalogue.catalogue_build_service import run_build_operation
-from catalogue.catalogue_field_registry import field_aware_build_plan, load_catalogue_field_registry
 from catalogue.catalogue_service_context import (
     CatalogueWriteContext,
-    extract_apply_build,
-    focused_lookup_refresh_response,
     load_works_payload,
     log_event,
-    lookup_refresh_response_for_plan,
     refresh_lookup_payloads,
     refresh_lookup_payloads_for_work_change,
     utc_now,
 )
-from catalogue.catalogue_source import WORK_FIELDS, normalize_series_ids_value, normalize_status, records_from_json_source, slug_id
+from catalogue.catalogue_source import WORK_FIELDS, records_from_json_source, slug_id
 
 
 def work_create_payload(context: CatalogueWriteContext, body: Mapping[str, Any]) -> dict[str, Any]:
@@ -56,6 +50,7 @@ def work_create_payload(context: CatalogueWriteContext, body: Mapping[str, Any])
     payload: dict[str, Any] = {
         "ok": True,
         "work_id": work_id,
+        "record_hash": record_hash(mutation_plan.updated_record),
         "created": True,
         "changed": True,
         "changed_fields": mutation_plan.changed_fields,
@@ -83,122 +78,42 @@ def work_create_payload(context: CatalogueWriteContext, body: Mapping[str, Any])
 
 
 def work_save_payload(context: CatalogueWriteContext, body: Mapping[str, Any]) -> dict[str, Any]:
-    requested_apply_build = extract_apply_build(body)
-    requested_work_id = body.get("work_id")
+    """Save canonical metadata and refresh Studio reads without publishing output."""
     work_update = extract_work_update(body)
-    if requested_work_id is None:
-        requested_work_id = work_update.get("work_id")
-    work_id = slug_id(requested_work_id)
-    extra_series_ids = normalize_series_ids_value(body.get("extra_series_ids"))
-    works_payload = load_works_payload(context.works_path)
-    works = works_payload["works"]
+    work_id = slug_id(body.get("work_id") or work_update.get("work_id"))
+    works = load_works_payload(context.works_path)["works"]
     current_record = works.get(work_id)
     if not isinstance(current_record, dict):
         raise ValueError(f"work_id not found: {work_id}")
-
-    source_records = records_from_json_source(context.source_dir)
-    mutation_plan = source_mutation.plan_work_save(
-        source_records,
-        works,
-        work_id,
-        current_record,
-        work_update,
+    require_record_revision(current_record, body.get("expected_record_hash"))
+    plan = source_mutation.plan_work_save(
+        records_from_json_source(context.source_dir), works, work_id, current_record, work_update,
     )
-    updated_record = mutation_plan.updated_record
-    apply_build = requested_apply_build and normalize_status(updated_record.get("status")) == "published"
-    fields_changed = mutation_plan.changed_fields
-    if mutation_plan.validation_errors:
-        raise ValueError("source validation failed: " + "; ".join(mutation_plan.validation_errors[:20]))
-
-    changed = mutation_plan.changed
-    if changed:
+    if plan.validation_errors:
+        raise ValueError("source validation failed: " + "; ".join(plan.validation_errors[:20]))
+    if plan.changed:
         target_path = context.works_path.resolve()
         if target_path not in context.allowed_write_paths:
             raise ValueError("write target not allowlisted")
         transactions.execute_source_json_write(
-            {target_path: mutation_plan.payload},
-            dry_run=context.dry_run,
-            repo_root=context.repo_root,
+            {target_path: plan.payload}, dry_run=context.dry_run, repo_root=context.repo_root,
         )
-
     payload: dict[str, Any] = {
-        "ok": True,
-        "work_id": work_id,
-        "changed": changed,
-        "changed_fields": fields_changed,
-        "record": updated_record,
+        "ok": True, "work_id": work_id, "changed": plan.changed,
+        "changed_fields": plan.changed_fields, "record": plan.updated_record,
+        "record_hash": record_hash(plan.updated_record),
     }
-    build_plan: dict[str, Any] = {}
-    lookup_refresh_payload: dict[str, Any] = {}
-    if changed:
-        build_plan = field_aware_build_plan(
-            load_catalogue_field_registry(context.repo_root),
-            record_family="work",
-            operation="metadata_update",
-            changed_field_names=fields_changed,
-            context={
-                "source_records": source_records,
-                "current_record": current_record,
-                "updated_record": updated_record,
-            },
-        )
-        payload["build_plan"] = build_plan
-        lookup_plan = lookup_refresh.derive_lookup_refresh_plan(
-            record_family="work",
-            changed_field_names=fields_changed,
-            build_plan=build_plan,
-        )
-        lookup_refresh_payload = lookup_refresh_response_for_plan(lookup_plan)
-        payload["lookup_refresh"] = lookup_refresh_payload
     if context.dry_run:
-        payload["dry_run"] = True
-        payload["would_write"] = changed
-    elif changed:
+        payload.update(dry_run=True, would_write=plan.changed)
+    elif plan.changed:
         payload["saved_at_utc"] = utc_now()
-
-    log_event(
-        context.repo_root,
-        "catalogue_work_save",
-        {
-            "work_id": work_id,
-            "changed": changed,
-            "changed_fields": fields_changed,
-            "lookup_refresh_mode": lookup_refresh_payload.get("mode") if changed else "none",
-            "lookup_refresh_artifacts": lookup_refresh_payload.get("artifacts") if changed else [],
-            "dry_run": context.dry_run,
-        },
-    )
-    if changed and not context.dry_run:
-        refresh_result = refresh_lookup_payloads_for_work_change(
-            context,
-            work_id,
-            current_record,
-            updated_record,
-            build_plan,
+        payload["lookup_refresh"] = refresh_lookup_payloads_for_work_change(
+            context, work_id, current_record, plan.updated_record, plan.changed_fields,
         )
-        payload["lookup_refresh"] = focused_lookup_refresh_response(refresh_result)
-    previous_series_ids = normalize_series_ids_value(current_record.get("series_ids"))
-    next_series_ids = normalize_series_ids_value(updated_record.get("series_ids"))
-    removed_series_ids = [series_id for series_id in previous_series_ids if series_id not in next_series_ids]
-    save_build.apply_save_build_follow_through(
-        payload,
-        requested_apply_build=requested_apply_build,
-        apply_build=apply_build,
-        changed=changed,
-        build_plan=build_plan,
-        unpublished_reason="work_not_published",
-        unpublished_message="Work must be published before a public update can run.",
-        run_build=lambda: run_build_operation(
-            context,
-            work_id=work_id,
-            series_id="",
-            extra_series_ids=normalize_series_ids_value([*extra_series_ids, *removed_series_ids]),
-            extra_work_ids=[],
-            detail_uid="",
-            force=False,
-            build_plan=build_plan,
-        ),
-    )
+    log_event(context.repo_root, "catalogue_work_save", {
+        "work_id": work_id, "changed": plan.changed,
+        "changed_fields": plan.changed_fields, "dry_run": context.dry_run,
+    })
     return payload
 
 

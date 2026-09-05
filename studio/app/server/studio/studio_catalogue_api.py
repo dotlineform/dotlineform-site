@@ -27,6 +27,7 @@ for candidate in (SCRIPTS_DIR, STUDIO_DIR):
 
 from catalogue import catalogue_lookup_refresh as lookup_refresh  # noqa: E402
 from catalogue import catalogue_write_service  # noqa: E402
+from catalogue.catalogue_revisions import CatalogueRevisionConflict  # noqa: E402
 from catalogue.catalogue_build_media import PIPELINE_CONFIG  # noqa: E402
 from catalogue.catalogue_lookup import (  # noqa: E402
     DEFAULT_LOOKUP_DIR,
@@ -90,8 +91,6 @@ def catalogue_get_payload(repo_root: Path, api_path: str, query: Mapping[str, li
                 "bulk-save",
                 "delete-preview",
                 "delete-apply",
-                "publication-preview",
-                "publication-apply",
                 "media-publish-preview",
                 "media-publish-apply",
                 "work/create",
@@ -124,7 +123,10 @@ def catalogue_post_response(
     if api_path == "/import-apply":
         return import_apply_response(repo_root, body, dry_run=dry_run)
     if api_path in catalogue_write_service.SERVICE_POST_PATHS:
-        return catalogue_write_service.handle_catalogue_post(repo_root, api_path, body, dry_run=dry_run)
+        try:
+            return catalogue_write_service.handle_catalogue_post(repo_root, api_path, body, dry_run=dry_run)
+        except CatalogueRevisionConflict as exc:
+            return HTTPStatus.CONFLICT, {"ok": False, "error": str(exc)}
     raise FileNotFoundError(f"Unknown catalogue API route: {api_path}")
 
 

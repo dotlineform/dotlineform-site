@@ -1,109 +1,90 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v2"
+    "schema": "studio_catalogue_lookup_series_record_v3"
   },
   "series": {
     "series_id": "038",
     "title": "doll faces",
-    "series_type": "primary",
-    "status": "published",
-    "published_date": "2026-04-01",
     "year": 2024,
     "year_display": "2024",
-    "primary_work_id": "00901",
     "sort_fields": "work_id"
   },
+  "record_hash": "3408697c68daf37a9286d7d1379bc3ba212e28afbb5104129b8ee8e0a273f6a1",
   "member_works": [
     {
       "work_id": "00901",
+      "record_hash": "24c7131f9daadaf1e5491737d302d6ef93eb8c5d2dadfc258e7a7917993537cc",
       "title": "doll face 1",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "038"
-      ],
+      "series_id": "038",
       "project_folder": "doll faces"
     },
     {
       "work_id": "00902",
+      "record_hash": "381d0fab8c3c841c406793df0d97820960ec50aad165c5556e472e03909aa877",
       "title": "doll face 2",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "038"
-      ],
+      "series_id": "038",
       "project_folder": "doll faces"
     },
     {
       "work_id": "00903",
+      "record_hash": "8221d0dd9df43a7706d20d146a8c4a31beb262dbee7b88dfdd3f61f91d5cb1c3",
       "title": "doll face 3",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "038"
-      ],
+      "series_id": "038",
       "project_folder": "doll faces"
     },
     {
       "work_id": "00904",
+      "record_hash": "9f0775853c70fe60af347640b8e0f5d8ac1f74a7856c31243b71487dc5fc3242",
       "title": "doll face 4",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "038"
-      ],
+      "series_id": "038",
       "project_folder": "doll faces"
     },
     {
       "work_id": "00905",
+      "record_hash": "82addd70718ccd5e1d3d2c37f952984505e7cd9e19a3874f4dd25016a0dec39d",
       "title": "doll face 5",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "038"
-      ],
+      "series_id": "038",
       "project_folder": "doll faces"
     },
     {
       "work_id": "00906",
+      "record_hash": "39db5d3d24687ef5ab718789ab292f861509c11c8ca9c818eb1197d0a0e25a24",
       "title": "doll face 6",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "038"
-      ],
+      "series_id": "038",
       "project_folder": "doll faces"
     },
     {
       "work_id": "00907",
+      "record_hash": "5eb25f79d4ab24a0bcd4c69a57cd6b10d3390b6dc3e3ea9d0a136be4c23eb35e",
       "title": "doll face 7",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "038"
-      ],
+      "series_id": "038",
       "project_folder": "doll faces"
     },
     {
       "work_id": "00908",
+      "record_hash": "526850233c2b79c6866080da24c3da3acbad5395dd55072a7c53c724af3804ba",
       "title": "doll face 8",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "038"
-      ],
+      "series_id": "038",
       "project_folder": "doll faces"
     }
   ],
-  "ordered_published_work_ids": [
+  "ordered_work_ids": [
     "00901",
     "00902",
     "00903",

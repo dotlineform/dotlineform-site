@@ -1,87 +1,72 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v2"
+    "schema": "studio_catalogue_lookup_series_record_v3"
   },
   "series": {
     "series_id": "085",
     "title": "kylie wax model",
-    "series_type": "primary",
-    "status": "published",
-    "published_date": "2026-04-01",
     "year": 2024,
     "year_display": "2024",
-    "primary_work_id": "01394",
     "sort_fields": "work_id"
   },
+  "record_hash": "63ec669725f323b2eed7dd83614d04357d4bd674dc42b5d155745c422e4d1f19",
   "member_works": [
     {
       "work_id": "01394",
+      "record_hash": "ad52474d655154ccbb5fa446e284f4eb76c2cfc8331d09ee486754a25b64eb97",
       "title": "kylie wax model 1.0",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "085"
-      ],
+      "series_id": "085",
       "project_folder": "kylie wax model"
     },
     {
       "work_id": "01395",
+      "record_hash": "29e6fbd5e51881714da0b619a914cc2d7ed9c6d1bda9623c2678ef88abf29534",
       "title": "kylie wax model 2.0",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "085"
-      ],
+      "series_id": "085",
       "project_folder": "kylie wax model"
     },
     {
       "work_id": "01396",
+      "record_hash": "1454cd16317be87b8ecbf39dfaf78fc2fe4a6052d3dc95e4b6bb6c75eb3705ec",
       "title": "kylie wax model 3.0",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "085"
-      ],
+      "series_id": "085",
       "project_folder": "kylie wax model"
     },
     {
       "work_id": "01397",
+      "record_hash": "eea155b485aa12d9383ef1c6120df6084c959f932caeb57f8b338a27d27657b9",
       "title": "kylie wax model 4.0",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "085"
-      ],
+      "series_id": "085",
       "project_folder": "kylie wax model"
     },
     {
       "work_id": "01398",
+      "record_hash": "c52fccf201a2d460c5ef5fd61d1e560d871d01c4f35bcdbb1fee21ccce463bf1",
       "title": "kylie wax model 5.0",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "085"
-      ],
+      "series_id": "085",
       "project_folder": "kylie wax model"
     },
     {
       "work_id": "01399",
+      "record_hash": "9a52f9d95c5ebd584e8a3a01b350a67da162657a3068e2088580f652d1755bc6",
       "title": "kylie wax model 6.0",
       "year": 2024,
       "year_display": "2024",
-      "status": "published",
-      "series_ids": [
-        "085"
-      ],
+      "series_id": "085",
       "project_folder": "kylie wax model"
     }
   ],
-  "ordered_published_work_ids": [
+  "ordered_work_ids": [
     "01394",
     "01395",
     "01396",

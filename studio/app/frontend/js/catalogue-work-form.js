@@ -1,16 +1,8 @@
 import { displayValue } from "./catalogue-editor-records.js";
 import {
-  buildPublicSeriesUrl
-} from "./catalogue-public-links.js";
-import {
-  WORK_EDITABLE_FIELDS as EDITABLE_FIELDS,
-  WORK_READONLY_FIELDS as READONLY_FIELDS,
-  dedupeSeriesIds,
-  normalizeSeriesId,
-  normalizeText,
-  parseSeriesIds,
-  seriesIdsToText
-} from "./catalogue-work-fields.js";
+  buildStudioRouteUrl
+} from "./studio-config.js";
+import { WORK_EDITABLE_FIELDS as EDITABLE_FIELDS, WORK_READONLY_FIELDS as READONLY_FIELDS, normalizeSeriesId, normalizeText } from "./catalogue-work-fields.js";
 import {
   openProjectMediaPickerForCurrentDraft,
   resetProjectMediaFolders
@@ -114,9 +106,9 @@ function formatSeriesChoice(state, seriesId) {
   return title === seriesId ? seriesId : `${title} (${seriesId})`;
 }
 
-function publicSeriesHref(state, seriesId) {
+function seriesEditorHref(state, seriesId) {
   try {
-    return buildPublicSeriesUrl(state.config, seriesId);
+    return buildStudioRouteUrl(state.config, "catalogue_series_editor", {series: seriesId});
   } catch (_error) {
     return "";
   }
@@ -124,7 +116,7 @@ function publicSeriesHref(state, seriesId) {
 
 function seriesSearchMatches(state, queryText) {
   const query = normalizeText(queryText).toLowerCase();
-  const selected = new Set(parseSeriesIds(state.draft && state.draft.series_ids));
+  const selected = new Set([normalizeSeriesId(state.draft?.series_id)]);
   if (!query) return [];
   return Array.from(state.seriesById.entries())
     .filter(([seriesId, record]) => {
@@ -140,33 +132,19 @@ function seriesSearchMatches(state, queryText) {
     .slice(0, 12);
 }
 
-function setSeriesDraftIds(state, seriesIds, options) {
-  state.draft.series_ids = seriesIdsToText(dedupeSeriesIds(seriesIds.map((item) => normalizeSeriesId(item)).filter(Boolean)));
-  const node = state.fieldNodes.get("series_ids");
-  if (node) node.value = state.draft.series_ids;
-  if (state.seriesPicker && state.seriesPicker.bulkInput) {
-    state.seriesPicker.bulkInput.value = state.draft.series_ids;
-  }
-  if (state.mode === "bulk") {
-    state.bulkTouchedFields.add("series_ids");
-  }
+function setSeriesDraftId(state, seriesId, options) {
+  state.draft.series_id = normalizeSeriesId(seriesId);
+  const node = state.fieldNodes.get("series_id");
+  if (node) node.value = state.draft.series_id;
+  if (state.seriesPicker) state.seriesPicker.bulkInput.value = state.draft.series_id;
+  if (state.mode === "bulk") state.bulkTouchedFields.add("series_id");
   renderSeriesPicker(state, options);
   notifyStateChange(options);
 }
 
-function addSeriesDraftId(state, seriesId, options) {
-  const normalizedId = normalizeSeriesId(seriesId);
-  if (!normalizedId) return;
-  const seriesIds = parseSeriesIds(state.draft.series_ids);
-  if (!seriesIds.includes(normalizedId)) seriesIds.push(normalizedId);
-  setSeriesDraftIds(state, seriesIds, options);
-}
+function addSeriesDraftId(state, seriesId, options) { setSeriesDraftId(state, seriesId, options); }
 
-function removeSeriesDraftId(state, seriesId, options) {
-  const normalizedId = normalizeSeriesId(seriesId);
-  if (!normalizedId) return;
-  setSeriesDraftIds(state, parseSeriesIds(state.draft.series_ids).filter((item) => item !== normalizedId), options);
-}
+function removeSeriesDraftId(state, seriesId, options) { if (normalizeSeriesId(seriesId) === state.draft.series_id) setSeriesDraftId(state, "", options); }
 
 function renderSeriesPickerMatches(state, _options) {
   if (!state.seriesPicker) return;
@@ -187,12 +165,12 @@ function renderSeriesPickerMatches(state, _options) {
 
 function renderSeriesPicker(state, options = {}) {
   if (!state.seriesPicker) return;
-  const seriesIds = parseSeriesIds(state.draft && state.draft.series_ids);
-  state.seriesPicker.hiddenInput.value = seriesIdsToText(seriesIds);
+  const seriesIds = [normalizeSeriesId(state.draft?.series_id)].filter(Boolean);
+  state.seriesPicker.hiddenInput.value = seriesIds[0] || "";
   state.seriesPicker.chipsNode.innerHTML = seriesIds.length
     ? seriesIds.map((seriesId) => {
       const title = seriesDisplayTitle(state, seriesId);
-      const href = publicSeriesHref(state, seriesId);
+      const href = seriesEditorHref(state, seriesId);
       const labelHtml = `
         <span class="studioUi__chipText">${escapeHtml(title)}</span>
         <span class="catalogueWorkSeriesPicker__chipId">${escapeHtml(seriesId)}</span>
@@ -210,7 +188,7 @@ function renderSeriesPicker(state, options = {}) {
 }
 
 function renderField(field, fieldsNode, state, options) {
-  if (field.key === "series_ids") {
+  if (field.key === "series_id") {
     renderSeriesField(field, fieldsNode, state, options);
     return;
   }
@@ -443,7 +421,7 @@ function renderSeriesField(field, fieldsNode, state, options) {
   bulkInput.className = "studioUi__input catalogueWorkSeriesPicker__bulkInput";
   bulkInput.type = "text";
   bulkInput.autocomplete = "off";
-  bulkInput.placeholder = "+009, -010";
+  bulkInput.placeholder = "Series ID, or blank to clear";
   pickerNode.appendChild(bulkInput);
 
   wrapper.appendChild(pickerNode);
@@ -484,9 +462,9 @@ function renderSeriesField(field, fieldsNode, state, options) {
     removeSeriesDraftId(state, button.getAttribute("data-remove-series-id"), options);
   });
   bulkInput.addEventListener("input", () => {
-    state.draft.series_ids = bulkInput.value;
+    state.draft.series_id = bulkInput.value;
     hiddenInput.value = bulkInput.value;
-    if (state.mode === "bulk") state.bulkTouchedFields.add("series_ids");
+    if (state.mode === "bulk") state.bulkTouchedFields.add("series_id");
     notifyStateChange(options);
   });
 
@@ -556,7 +534,7 @@ export function applyDraftToInputs(state, options = {}) {
   EDITABLE_FIELDS.forEach((field) => {
     const node = state.fieldNodes.get(field.key);
     if (!node) return;
-    if (field.key === "series_ids") {
+    if (field.key === "series_id") {
       node.value = normalizeText(state.draft[field.key]);
       if (state.seriesPicker && state.seriesPicker.bulkInput) {
         state.seriesPicker.bulkInput.value = normalizeText(state.draft[field.key]);
@@ -585,15 +563,6 @@ export function clearReadonlyFields(state) {
 }
 
 export function setModeFieldAvailability(state) {
-  const statusNode = state.fieldNodes.get("status");
-  if (statusNode) {
-    if ("disabled" in statusNode) statusNode.disabled = false;
-    if ("readOnly" in statusNode) statusNode.readOnly = true;
-  }
-  const publishedDateNode = state.fieldNodes.get("published_date");
-  if (publishedDateNode) {
-    publishedDateNode.disabled = state.mode === "new";
-  }
   if (state.seriesPicker) {
     const isBulk = state.mode === "bulk";
     state.seriesPicker.pickerNode.hidden = false;

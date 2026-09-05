@@ -1,54 +1,45 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v2"
+    "schema": "studio_catalogue_lookup_series_record_v3"
   },
   "series": {
     "series_id": "130",
     "title": "sunflower",
-    "series_type": "primary",
-    "status": "published",
-    "published_date": "2026-04-01",
     "year": 2012,
     "year_display": "2012",
-    "primary_work_id": "01735",
     "sort_fields": "work_id"
   },
+  "record_hash": "8509663df581ab439abeac20eab8af65adcf067f234a38f1114ecd22beb2a708",
   "member_works": [
     {
       "work_id": "01735",
+      "record_hash": "72e986ee970b0557e1405507c313e91ce4cef40d7910910ded0ffe0ff174fb2a",
       "title": "sunflower forms",
       "year": 2012,
       "year_display": "2012",
-      "status": "published",
-      "series_ids": [
-        "130"
-      ],
+      "series_id": "130",
       "project_folder": "sunflower"
     },
     {
       "work_id": "01736",
+      "record_hash": "bed811b63d4ee435daf0cb07eabddb3a15442ca48eb12314d0f1152c55ee36bd",
       "title": "sunflower forms grid",
       "year": 2012,
       "year_display": "2012",
-      "status": "published",
-      "series_ids": [
-        "130"
-      ],
+      "series_id": "130",
       "project_folder": "sunflower"
     },
     {
       "work_id": "01737",
+      "record_hash": "e45053353d0e05bfd2d45cac38f7533b532f0417cfdeda033795bf71181e956f",
       "title": "sunflower path",
       "year": 2012,
       "year_display": "2012",
-      "status": "published",
-      "series_ids": [
-        "130"
-      ],
+      "series_id": "130",
       "project_folder": "sunflower"
     }
   ],
-  "ordered_published_work_ids": [
+  "ordered_work_ids": [
     "01735",
     "01736",
     "01737"

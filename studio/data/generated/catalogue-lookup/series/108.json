@@ -1,32 +1,27 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v2"
+    "schema": "studio_catalogue_lookup_series_record_v3"
   },
   "series": {
     "series_id": "108",
     "title": "olive tree",
-    "series_type": "primary",
-    "status": "published",
-    "published_date": "2026-04-01",
     "year": 2012,
     "year_display": "2012",
-    "primary_work_id": "01479",
     "sort_fields": "work_id"
   },
+  "record_hash": "3896b9023778670426429e09f83fb6b2c48527faf93765eac7bb4f791758d33a",
   "member_works": [
     {
       "work_id": "01479",
+      "record_hash": "2c2352194c9daf5e755283ea7a00efea5a8b905d3b1200f7649f55ef6b81a396",
       "title": "olive tree",
       "year": 2012,
       "year_display": "2012",
-      "status": "published",
-      "series_ids": [
-        "108"
-      ],
+      "series_id": "108",
       "project_folder": "olive tree"
     }
   ],
-  "ordered_published_work_ids": [
+  "ordered_work_ids": [
     "01479"
   ],
   "project_folders": [

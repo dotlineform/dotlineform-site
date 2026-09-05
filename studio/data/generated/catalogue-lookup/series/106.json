@@ -1,76 +1,63 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v2"
+    "schema": "studio_catalogue_lookup_series_record_v3"
   },
   "series": {
     "series_id": "106",
     "title": "nerve forms",
-    "series_type": "primary",
-    "status": "published",
-    "published_date": "2026-04-01",
     "year": 2004,
     "year_display": "2004",
-    "primary_work_id": "00581",
     "sort_fields": "work_id"
   },
+  "record_hash": "05515a098ea0f858967023f13d11da8e740048f1f0f5ac69f69e5fd69b21f688",
   "member_works": [
     {
       "work_id": "00385",
+      "record_hash": "98a84f7cdac6e2dbfd7082be85cfb9e690fd6893f92296ee57ea770f51a7759a",
       "title": "nerve 1",
       "year": 2004,
       "year_display": "2004",
-      "status": "published",
-      "series_ids": [
-        "106"
-      ],
+      "series_id": "106",
       "project_folder": "nerve forms"
     },
     {
       "work_id": "00386",
+      "record_hash": "98b0730540795f0417aaee4cdda1d3095f592991385c703154b77c7f415fdbf6",
       "title": "nerve 3",
       "year": 2004,
       "year_display": "2004",
-      "status": "published",
-      "series_ids": [
-        "106"
-      ],
+      "series_id": "106",
       "project_folder": "nerve forms"
     },
     {
       "work_id": "00387",
+      "record_hash": "c43ccf15470569f71013514d55f96fb93ce02ea3aa764abce5f9e37f7d02fd97",
       "title": "nerve 3",
       "year": 2004,
       "year_display": "2004",
-      "status": "published",
-      "series_ids": [
-        "106"
-      ],
+      "series_id": "106",
       "project_folder": "nerve forms"
     },
     {
       "work_id": "00525",
+      "record_hash": "1830f67ad571419d8227bb1eb8889e6b7a4bee05a3a79a55ba1f30480d0b2173",
       "title": "nerve 2",
       "year": 2004,
       "year_display": "2004",
-      "status": "published",
-      "series_ids": [
-        "106"
-      ],
+      "series_id": "106",
       "project_folder": "nerve forms"
     },
     {
       "work_id": "00581",
+      "record_hash": "8ff1b5c2cec811dbf10fda3eb76bf6a3502fe604253062b246e14c7f08b22ff8",
       "title": "nerve forms",
       "year": 2004,
       "year_display": "2004",
-      "status": "published",
-      "series_ids": [
-        "106"
-      ],
+      "series_id": "106",
       "project_folder": "nerve forms"
     }
   ],
-  "ordered_published_work_ids": [
+  "ordered_work_ids": [
     "00385",
     "00386",
     "00387",

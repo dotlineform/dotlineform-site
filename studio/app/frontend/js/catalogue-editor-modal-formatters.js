@@ -56,14 +56,6 @@ export function formatCatalogueBuildPreview(build, options = {}) {
   return mediaText ? `${baseText} ${mediaText}` : baseText;
 }
 
-export function formatCataloguePublicationPreview(preview, options = {}) {
-  const summary = normalizeText(preview && preview.summary)
-    || lookupText(options, "unpublish_confirm_default", options.defaultText || "Unpublish this source record?");
-  const dirtyNote = options.includeDirtyNote
-    ? lookupText(options, "unpublish_confirm_dirty_note", "Unsaved form changes will be discarded.")
-    : "";
-  return dirtyNote ? `${summary}\n\n${dirtyNote}` : summary;
-}
 
 export function formatCatalogueDeletePreview(preview, options = {}) {
   return normalizeText(preview && preview.summary)

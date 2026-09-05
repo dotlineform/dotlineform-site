@@ -1,120 +1,99 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v2"
+    "schema": "studio_catalogue_lookup_series_record_v3"
   },
   "series": {
     "series_id": "028",
     "title": "colouring book",
-    "series_type": "primary",
-    "status": "published",
-    "published_date": "2026-04-01",
     "year": 1996,
     "year_display": "1996",
-    "primary_work_id": "00219",
     "sort_fields": "work_id"
   },
+  "record_hash": "e44610bd7054719df268304a9f1f5b26eb2307df8396c84e78405c00c0837ae2",
   "member_works": [
     {
       "work_id": "00217",
+      "record_hash": "f63cb5bdaa0577ab1b5c579bdf66fd7f820d1f128e5277682da11155ea22b4f0",
       "title": "colouring book 1",
       "year": 1996,
       "year_display": "1996",
-      "status": "published",
-      "series_ids": [
-        "028"
-      ],
+      "series_id": "028",
       "project_folder": "colouring book"
     },
     {
       "work_id": "00218",
+      "record_hash": "01bb1e6c8f8313ede6929d5e8142d4e1fbf26a2622b69a37836fbb46c1f700d9",
       "title": "colouring book 2",
       "year": 1996,
       "year_display": "1996",
-      "status": "published",
-      "series_ids": [
-        "028"
-      ],
+      "series_id": "028",
       "project_folder": "colouring book"
     },
     {
       "work_id": "00219",
+      "record_hash": "6d5afabfff76a6dcdb4c129b678e21dc9b1e0cba89cf54492b0bba98deca0bbe",
       "title": "colouring book 3",
       "year": 1996,
       "year_display": "1996",
-      "status": "published",
-      "series_ids": [
-        "028"
-      ],
+      "series_id": "028",
       "project_folder": "colouring book"
     },
     {
       "work_id": "00220",
+      "record_hash": "eeab3cd7e361247c4131c7274fab0cd2f4c8d263d091370494902ad8cef962b6",
       "title": "colouring book 4",
       "year": 1996,
       "year_display": "1996",
-      "status": "published",
-      "series_ids": [
-        "028"
-      ],
+      "series_id": "028",
       "project_folder": "colouring book"
     },
     {
       "work_id": "00221",
+      "record_hash": "73218e48db59e3d355b51e37bd7bb66affd6d5c8f822eab53aa56d5c645dea09",
       "title": "colouring book 5",
       "year": 1996,
       "year_display": "1996",
-      "status": "published",
-      "series_ids": [
-        "028"
-      ],
+      "series_id": "028",
       "project_folder": "colouring book"
     },
     {
       "work_id": "00222",
+      "record_hash": "baf9addc5ea2e0df2b87a58841f18eb59cfe360cab6e36a1a2216b507b324bc0",
       "title": "colouring book 6",
       "year": 1996,
       "year_display": "1996",
-      "status": "published",
-      "series_ids": [
-        "028"
-      ],
+      "series_id": "028",
       "project_folder": "colouring book"
     },
     {
       "work_id": "00223",
+      "record_hash": "9923e57c8e6a66e56d16ab6ca31699e145758f4d5b9d8db4e072e14e5908fd23",
       "title": "colouring book 7",
       "year": 1996,
       "year_display": "1996",
-      "status": "published",
-      "series_ids": [
-        "028"
-      ],
+      "series_id": "028",
       "project_folder": "colouring book"
     },
     {
       "work_id": "00224",
+      "record_hash": "77aa5880486d61a9565b8b1a38a744942f52338b0dfcf5f6bbcec328213cdb71",
       "title": "colouring book 8",
       "year": 1996,
       "year_display": "1996",
-      "status": "published",
-      "series_ids": [
-        "028"
-      ],
+      "series_id": "028",
       "project_folder": "colouring book"
     },
     {
       "work_id": "00225",
+      "record_hash": "de7bf0097347a3f637f053098e7b0b597c3f9b6a4134df46f640efb40541d318",
       "title": "colouring book 9",
       "year": 1996,
       "year_display": "1996",
-      "status": "published",
-      "series_ids": [
-        "028"
-      ],
+      "series_id": "028",
       "project_folder": "colouring book"
     }
   ],
-  "ordered_published_work_ids": [
+  "ordered_work_ids": [
     "00217",
     "00218",
     "00219",

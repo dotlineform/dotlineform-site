@@ -1,4 +1,4 @@
-import { computeRecordHash } from "./catalogue-editor-records.js";
+
 import {
   normalizeSeriesId,
   normalizeText
@@ -114,10 +114,9 @@ export async function openSeriesById(state, requestedSeriesId, context) {
     throw new Error(`series lookup missing record for ${seriesId}`);
   }
   context.setLoadedSeries(seriesId, record, {
-    recordHash: normalizeText(lookup.record_hash) || normalizeText(searchRecord.record_hash) || await computeRecordHash(record),
+    recordHash: normalizeText(lookup.record_hash),
     lookup
   });
-  await context.refreshBuildPreview();
 }
 
 export function openFirstSeriesSearchMatch(state, context) {

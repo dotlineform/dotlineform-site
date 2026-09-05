@@ -1,43 +1,36 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v2"
+    "schema": "studio_catalogue_lookup_series_record_v3"
   },
   "series": {
     "series_id": "072",
     "title": "grid cells",
-    "series_type": "primary",
-    "status": "published",
-    "published_date": "2026-04-01",
     "year": 2013,
     "year_display": "2013",
-    "primary_work_id": "01363",
     "sort_fields": "work_id"
   },
+  "record_hash": "991b1dd4db0b3f8274be9bccfe4d51ab66f79232230ef84598f3471f64144133",
   "member_works": [
     {
       "work_id": "01363",
+      "record_hash": "e92c38704d3191098d6cef59c49c8317c423be326fe6a42db9f5135b58239191",
       "title": "grid cells",
       "year": 2013,
       "year_display": "2013",
-      "status": "published",
-      "series_ids": [
-        "072"
-      ],
+      "series_id": "072",
       "project_folder": "grid cells"
     },
     {
       "work_id": "01364",
+      "record_hash": "0254437f08ff79960cb6f46fe009876c09faa2ee6228f9e3b008384a1427d7d1",
       "title": "grid",
       "year": 2013,
       "year_display": "2013",
-      "status": "published",
-      "series_ids": [
-        "072"
-      ],
+      "series_id": "072",
       "project_folder": "grid cells"
     }
   ],
-  "ordered_published_work_ids": [
+  "ordered_work_ids": [
     "01363",
     "01364"
   ],

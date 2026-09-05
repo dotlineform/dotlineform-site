@@ -1,54 +1,45 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v2"
+    "schema": "studio_catalogue_lookup_series_record_v3"
   },
   "series": {
     "series_id": "101",
     "title": "molecules",
-    "series_type": "primary",
-    "status": "published",
-    "published_date": "2026-04-01",
     "year": 2013,
     "year_display": "2013",
-    "primary_work_id": "00460",
     "sort_fields": "work_id"
   },
+  "record_hash": "9e272ebf010f0f079b36e0c9b125371f2ac419b7a28233e7f820b04f1224d3fb",
   "member_works": [
     {
       "work_id": "00460",
+      "record_hash": "6297d586d1dd0ee9924d979bd007abe1567345c6f9858d4baefa04f68a0b165a",
       "title": "molecules",
       "year": 2013,
       "year_display": "2013",
-      "status": "published",
-      "series_ids": [
-        "101"
-      ],
+      "series_id": "101",
       "project_folder": "molecules"
     },
     {
       "work_id": "00461",
+      "record_hash": "fadab963cec10fdaf07bc370996d06bb5ec41e683e205cc0d3fda597f46ce496",
       "title": "molecules symbols",
       "year": 2013,
       "year_display": "2013",
-      "status": "published",
-      "series_ids": [
-        "101"
-      ],
+      "series_id": "101",
       "project_folder": "molecules"
     },
     {
       "work_id": "00462",
+      "record_hash": "f0c2eef90e152f55dfea1f4975584b5087c4f0988d70e5e22542bacb2b79c907",
       "title": "equilibrium",
       "year": 2013,
       "year_display": "2013",
-      "status": "published",
-      "series_ids": [
-        "101"
-      ],
+      "series_id": "101",
       "project_folder": "molecules"
     }
   ],
-  "ordered_published_work_ids": [
+  "ordered_work_ids": [
     "00460",
     "00461",
     "00462"

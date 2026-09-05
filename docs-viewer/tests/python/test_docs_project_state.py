@@ -148,9 +148,7 @@ def fixture_works() -> dict[str, object]:
         "works": {
             "00001": {
                 "work_id": "00001",
-                "status": "published",
-                "published_date": "2026-01-01",
-                "series_ids": ["001", "002"],
+                "series_id": "001",
                 "project_folder": "alpha",
                 "project_subfolder": "ink",
                 "project_filename": "alpha-1.jpg",
@@ -158,40 +156,34 @@ def fixture_works() -> dict[str, object]:
             },
             "00002": {
                 "work_id": "00002",
-                "status": "draft",
-                "series_ids": ["001"],
+                "series_id": "002",
                 "project_folder": "alpha",
                 "project_filename": "alpha-2.jpg",
                 "title": "Alpha two",
             },
             "00003": {
                 "work_id": "00003",
-                "status": "published",
-                "series_ids": [],
                 "project_folder": "beta",
                 "project_filename": "beta.jpg",
                 "title": "Beta",
             },
             "00004": {
                 "work_id": "00004",
-                "status": "published",
-                "series_ids": ["999"],
+                "series_id": "999",
                 "project_folder": "gamma",
                 "project_filename": "gamma.jpg",
                 "title": "Gamma",
             },
             "00005": {
                 "work_id": "00005",
-                "status": "published",
-                "series_ids": ["001"],
+                "series_id": "001",
                 "project_folder": "recorded-only",
                 "project_filename": "recorded.jpg",
                 "title": "Recorded only",
             },
             "00006": {
                 "work_id": "00006",
-                "status": "published",
-                "series_ids": ["001"],
+                "series_id": "001",
                 "project_folder": "epsilon",
                 "project_filename": "epsilon.jpg",
                 "title": "Epsilon",
@@ -300,7 +292,7 @@ def test_project_state_builds_only_scanned_folder_rows_and_exact_relationships()
     assert alpha["matched_document_count"] == 4
     assert [work["target"]["target_id"] for work in alpha["works"]] == ["00001", "00002"]
     assert [(series["target"]["target_id"], series["work_count"]) for series in alpha["series"]] == [
-        ("001", 2),
+        ("001", 1),
         ("002", 1),
     ]
     assert [
@@ -314,12 +306,12 @@ def test_project_state_builds_only_scanned_folder_rows_and_exact_relationships()
         (DOC_ALPHA_A, {"kind": "folder", "key": "projects/alpha"}, ["001", "002"]),
         (DOC_ALPHA_B, {"kind": "folder", "key": "projects/alpha"}, ["001", "002"]),
         (DOC_SERIES, {"kind": "series", "key": "001"}, ["001"]),
-        (DOC_WORK, {"kind": "work", "key": "00001"}, ["001", "002"]),
+        (DOC_WORK, {"kind": "work", "key": "00001"}, ["001"]),
     ]
 
     beta = row_by_key(report, "projects/beta")
-    assert beta["states"]["series"] == "incomplete"
-    assert beta["series_issues"] == [{"state": "missing_series", "work_id": "00003"}]
+    assert beta["states"]["series"] == "complete"
+    assert beta["series_issues"] == []
     assert row_by_key(report, "projects/delta")["states"]["reconciliation"] == "documents_only"
     epsilon = row_by_key(report, "projects/epsilon")
     assert epsilon["states"]["reconciliation"] == "reconciled"
@@ -338,7 +330,7 @@ def test_project_state_builds_only_scanned_folder_rows_and_exact_relationships()
     assert report["summary"]["document_placement_count"] == 8
     assert report["summary"]["unmatched_document_count"] == 3
     assert report["summary"]["matched_work_count"] == 5
-    assert report["summary"]["series_membership_count"] == 4
+    assert report["summary"]["series_membership_count"] == 3
 
     beta = row_by_key(report, "projects/beta")
     assert beta["matched_document_count"] == 2
@@ -367,8 +359,6 @@ def test_project_state_ignores_non_relationship_work_fields() -> None:
                 "project_subfolder": "different/nesting",
                 "project_filename": "replacement.png",
                 "title": "Changed presentation",
-                "status": "draft",
-                "published_date": "2026-08-05",
             }
         )
         write_json(paths.catalogue_source_dir / "works.json", works_payload)
@@ -384,15 +374,14 @@ def test_project_state_relationship_changes_replace_the_generation() -> None:
         producer = ProjectStateProducer(repo_root=root, paths=paths, clock=lambda: GENERATED_AT)
         before = producer.run()
         works_payload = read_json(paths.catalogue_source_dir / "works.json")
-        works_payload["works"]["00002"]["series_ids"] = ["002"]
+        works_payload["works"]["00002"]["series_id"] = "001"
         write_json(paths.catalogue_source_dir / "works.json", works_payload)
         after = producer.run()
 
     assert after["report"]["generation"] != before["report"]["generation"]
     alpha = row_by_key(after["report"], "projects/alpha")
     assert [(series["target"]["target_id"], series["work_count"]) for series in alpha["series"]] == [
-        ("001", 1),
-        ("002", 2),
+        ("001", 2),
     ]
 
 

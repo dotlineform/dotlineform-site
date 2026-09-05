@@ -36,16 +36,8 @@ export function bindWorkEditorEvents(state, callbacks = {}) {
   state.newButton.addEventListener("click", () => {
     invoke(callbacks.setNewWorkMode);
   });
-  state.previewNode.addEventListener("click", (event) => {
-    const mediaButton = event.target && event.target.closest ? event.target.closest('[data-media-refresh="work"]') : null;
-    if (!mediaButton) return;
-    runAsync(callbacks.refreshWorkMedia, "catalogue_work_editor: unexpected media refresh failure");
-  });
   state.saveButton.addEventListener("click", () => {
     runAsync(callbacks.saveCurrentWork, "catalogue_work_editor: unexpected save failure");
-  });
-  state.publicationButton.addEventListener("click", () => {
-    runAsync(callbacks.applyPublicationChange, "catalogue_work_editor: unexpected publication failure");
   });
   state.deleteButton.addEventListener("click", () => {
     runAsync(callbacks.deleteCurrentWork, "catalogue_work_editor: unexpected delete failure");

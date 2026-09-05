@@ -13,6 +13,7 @@ if str(SERVICES_DIR) not in sys.path:
     sys.path.insert(0, str(SERVICES_DIR))
 
 from catalogue.catalogue_source import CatalogueSourceRecords  # noqa: E402
+from catalogue.catalogue_revisions import record_hash  # noqa: E402
 from catalogue import catalogue_source_mutation as source_mutation  # noqa: E402
 
 
@@ -40,8 +41,7 @@ def fixture_records() -> CatalogueSourceRecords:
         works={
             "00001": {
                 "work_id": "00001",
-                "status": "published",
-                "series_ids": ["009"],
+                "series_id": "009",
                 "project_folder": "2026/alpha",
                 "project_filename": "alpha.jpg",
                 "media_version": 1,
@@ -51,8 +51,6 @@ def fixture_records() -> CatalogueSourceRecords:
             },
             "00002": {
                 "work_id": "00002",
-                "status": "published",
-                "series_ids": [],
                 "project_folder": "2026/beta",
                 "project_filename": "beta.jpg",
                 "media_version": 1,
@@ -86,10 +84,8 @@ def fixture_records() -> CatalogueSourceRecords:
             "009": {
                 "series_id": "009",
                 "title": "Series",
-                "status": "published",
                 "year": "2026",
                 "year_display": "2026",
-                "primary_work_id": "00001",
             }
         },
     )
@@ -112,7 +108,7 @@ def test_work_save_plans_changed_fields_and_payload() -> None:
     assert_equal(records.works["00001"]["title"], "Alpha", "source fixture not mutated")
 
 
-def test_work_create_defaults_draft_and_series_ids() -> None:
+def test_work_create_is_ungrouped_without_publication_state() -> None:
     records = fixture_records()
 
     plan = source_mutation.plan_work_create(
@@ -122,8 +118,8 @@ def test_work_create_defaults_draft_and_series_ids() -> None:
         {"work_id": "00003", "title": "Gamma", "year": "2026", "year_display": "2026"},
     )
 
-    assert_equal(plan.updated_record["status"], "draft", "created work status")
-    assert_equal(plan.updated_record["series_ids"], [], "created work series ids")
+    assert "status" not in plan.updated_record
+    assert "series_id" not in plan.updated_record
     assert "00003" in plan.payload["works"]
     assert_false(plan.validation_errors, "created work validation errors")
     assert_raises(
@@ -209,13 +205,13 @@ def test_series_save_plans_member_work_updates() -> None:
         "009",
         records.series["009"],
         {"title": "Series Updated"},
-        [{"work_id": "00002", "series_ids": ["009"]}],
+        [{"work_id": "00002", "series_id": "009", "expected_record_hash": record_hash(records.works["00002"])}],
     )
 
     assert_equal(plan.changed_fields, ["title"], "series changed fields")
     assert_equal(plan.changed_work_ids, ["00002"], "changed work ids")
-    assert_equal(plan.work_records, [{"work_id": "00002", "record": plan.work_updates["00002"]}], "work records")
-    assert_equal(plan.works_payload["works"]["00002"]["series_ids"], ["009"], "works payload")
+    assert_equal(plan.work_records, [{"work_id": "00002", "record": plan.work_updates["00002"], "record_hash": record_hash(plan.work_updates["00002"])}], "work records")
+    assert_equal(plan.works_payload["works"]["00002"]["series_id"], "009", "works payload")
     assert_false(plan.validation_errors, "series save validation errors")
 
 
@@ -231,7 +227,7 @@ def test_series_create_plans_series_and_optional_work_payload() -> None:
         [],
     )
 
-    assert_equal(plan.updated_record["status"], "draft", "created series status")
+    assert "status" not in plan.updated_record
     assert_equal(plan.changed_work_ids, [], "created series changed work ids")
     assert_equal(plan.works_payload, None, "created series works payload")
     assert "010" in plan.payload["series"]
@@ -240,7 +236,7 @@ def test_series_create_plans_series_and_optional_work_payload() -> None:
 
 def main() -> None:
     test_work_save_plans_changed_fields_and_payload()
-    test_work_create_defaults_draft_and_series_ids()
+    test_work_create_is_ungrouped_without_publication_state()
     test_work_media_source_default_is_omitted_and_processing_is_explicit()
     test_detail_update_normalizes_detail_owned_fields()
     test_series_save_plans_member_work_updates()

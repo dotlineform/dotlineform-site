@@ -1,43 +1,36 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v2"
+    "schema": "studio_catalogue_lookup_series_record_v3"
   },
   "series": {
     "series_id": "066",
     "title": "forms painting",
-    "series_type": "primary",
-    "status": "published",
-    "published_date": "2026-04-01",
     "year": 1990,
     "year_display": "c. 1990-92?",
-    "primary_work_id": "01200",
     "sort_fields": "work_id"
   },
+  "record_hash": "c60be387b5faf40e0a486e6e8a95a045db9fcaaced61d35cb0e60f02ab36d0d1",
   "member_works": [
     {
       "work_id": "01200",
+      "record_hash": "7c11e68150f629ae1a3c3bda4ce159b9dc84939c91e02c698a34624e24633354",
       "title": "forms painting",
       "year": 1990,
       "year_display": "c. 1990-92?",
-      "status": "published",
-      "series_ids": [
-        "066"
-      ],
+      "series_id": "066",
       "project_folder": "forms painting"
     },
     {
       "work_id": "01201",
+      "record_hash": "9f0df61341050d2cc76e5a89f5f4402dc659029d392b1135e8ef45b956454f36",
       "title": "forms painting (reverse)",
       "year": 1990,
       "year_display": "c. 1990-92?",
-      "status": "published",
-      "series_ids": [
-        "066"
-      ],
+      "series_id": "066",
       "project_folder": "forms painting"
     }
   ],
-  "ordered_published_work_ids": [
+  "ordered_work_ids": [
     "01200",
     "01201"
   ],

@@ -1,76 +1,63 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v2"
+    "schema": "studio_catalogue_lookup_series_record_v3"
   },
   "series": {
     "series_id": "110",
     "title": "particle theory",
-    "series_type": "primary",
-    "status": "published",
-    "published_date": "2026-04-01",
     "year": 2008,
     "year_display": "2008",
-    "primary_work_id": "00553",
     "sort_fields": "work_id"
   },
+  "record_hash": "80e0e6aa039acfb96d92d406c9c2fabc6deb9ed14d8a084924e5b285e20625d6",
   "member_works": [
     {
       "work_id": "00549",
+      "record_hash": "46d83dd963c09c26485ef7d36ee441ada8698fb88419fd3e09342fa8f76c5128",
       "title": "particle theory (1 layer - partial)",
       "year": 2008,
       "year_display": "2008",
-      "status": "published",
-      "series_ids": [
-        "110"
-      ],
+      "series_id": "110",
       "project_folder": "particle theory"
     },
     {
       "work_id": "00550",
+      "record_hash": "e76af1b16ce3df538cc718618942655d70f8675217e239480e0f10edac49207b",
       "title": "particle theory (1 layer)",
       "year": 2008,
       "year_display": "2008",
-      "status": "published",
-      "series_ids": [
-        "110"
-      ],
+      "series_id": "110",
       "project_folder": "particle theory"
     },
     {
       "work_id": "00551",
+      "record_hash": "1e035c4f3fbcb001fc105392c215c161a8eaed6d482e0c68390651b629e83926",
       "title": "particle theory (3 layers)",
       "year": 2008,
       "year_display": "2008",
-      "status": "published",
-      "series_ids": [
-        "110"
-      ],
+      "series_id": "110",
       "project_folder": "particle theory"
     },
     {
       "work_id": "00552",
+      "record_hash": "6e16ac22305c33b9b0e7c1369b1babaff79e9b65022daecec3f2f4d116ca4ad7",
       "title": "particle theory (2 layers)",
       "year": 2008,
       "year_display": "2008",
-      "status": "published",
-      "series_ids": [
-        "110"
-      ],
+      "series_id": "110",
       "project_folder": "particle theory"
     },
     {
       "work_id": "00553",
+      "record_hash": "c1bb241923f1a8840002ebd35c30a9f00553d2aaeb41061d763fea73664b24d6",
       "title": "particle theory (4 layers)",
       "year": 2008,
       "year_display": "2008",
-      "status": "published",
-      "series_ids": [
-        "110"
-      ],
+      "series_id": "110",
       "project_folder": "particle theory"
     }
   ],
-  "ordered_published_work_ids": [
+  "ordered_work_ids": [
     "00549",
     "00550",
     "00551",

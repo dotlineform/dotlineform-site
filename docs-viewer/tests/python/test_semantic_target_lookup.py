@@ -124,11 +124,9 @@ def write_catalogue(root: Path) -> None:
                 "005": {
                     "series_id": "005",
                     "title": "3 symbols",
-                    "status": "published",
                     "year_display": "2007",
-                    "primary_work_id": "00638",
                 },
-                "006": {"series_id": "006", "title": "Draft series", "status": "draft", "year_display": "2026"},
+                "006": {"series_id": "006", "title": "Draft series", "year_display": "2026"},
             }
         },
     )
@@ -139,15 +137,14 @@ def write_catalogue(root: Path) -> None:
                 "00638": {
                     "work_id": "00638",
                     "title": "3 symbols",
-                    "status": "published",
-                    "series_ids": ["005"],
+                    "series_id": "005",
                     "year_display": "2007",
                     "project_filename": "3 symbols.jpg",
                     "media_version": 2,
                     "width_px": 2400,
                     "height_px": 1600,
                 },
-                "00639": {"work_id": "00639", "title": "Draft work", "status": "draft", "year_display": "2026"},
+                "00639": {"work_id": "00639", "title": "Draft work", "year_display": "2026"},
             }
         },
     )
@@ -324,62 +321,22 @@ def write_tags(root: Path) -> None:
     )
 
 
-def test_semantic_target_lookup_builder_writes_compact_published_rows() -> None:
+def test_semantic_target_lookup_keeps_independent_canonical_identities() -> None:
     with tempfile.TemporaryDirectory() as temp_path:
         root = Path(temp_path)
         write_registry(root)
         write_media_config(root)
         write_catalogue(root)
         result = SemanticTargetLookupBuilder(repo_root=root).run(write=True)
-        output_path = root / "docs-viewer/data/generated/semantic-tokens/target-lookup.json"
-        output_text = output_path.read_text(encoding="utf-8")
-        payload = read_json(output_path)
-
-    assert result["diagnostics"]["target_count"] == 2
-    assert payload["schema_version"] == "docs_semantic_token_target_lookup_v2"
-    assert [
-        (row["family"], row["target_type"], row["target_id"])
-        for row in payload["targets"]
-    ] == [
-        ("catalogue", "work", "00638"),
-        ("catalogue", "series", "005"),
-    ]
-    assert payload["targets"][0] == {
-        "family": "catalogue",
-        "target_type": "work",
-        "target_id": "00638",
-        "title": "3 symbols",
-        "href": "/works/?work=00638",
-        "meta": ["2007", "3 symbols"],
-        "has_details": True,
-        "image": {
-            "src": "https://media.dotlineform.test/works/img/00638-primary-1600.webp?v=2"
-        },
-    }
-    assert payload["targets"][1] == {
-        "family": "catalogue",
-        "target_type": "series",
-        "target_id": "005",
-        "title": "3 symbols",
-        "href": "/series/?series=005",
-        "meta": ["2007"],
-        "image": {
-            "src": "https://media.dotlineform.test/works/img/00638-primary-1600.webp?v=2"
-        },
-    }
-    assert output_text.endswith("\n")
-    assert (
-        '    {"family":"catalogue","target_type":"work","target_id":"00638",'
-        '"title":"3 symbols","href":"/works/?work=00638","meta":["2007","3 symbols"],'
-        '"has_details":true,'
-        '"image":{"src":"https://media.dotlineform.test/works/img/00638-primary-1600.webp?v=2"}},\n'
-    ) in output_text
-    assert all("details" not in row for row in payload["targets"])
-    assert (
-        '    {"family":"catalogue","target_type":"series","target_id":"005",'
-        '"title":"3 symbols","href":"/series/?series=005","meta":["2007"],'
-        '"image":{"src":"https://media.dotlineform.test/works/img/00638-primary-1600.webp?v=2"}}\n'
-    ) in output_text
+        output = root / "docs-viewer/data/generated/semantic-tokens/target-lookup.json"
+        payload = read_json(output)
+    assert result["diagnostics"]["target_count"] == 4
+    targets = {(row["target_type"], row["target_id"]): row for row in payload["targets"]}
+    assert set(targets) == {("work", "00638"), ("work", "00639"), ("series", "005"), ("series", "006")}
+    assert targets[("work", "00638")]["image"]["src"] == "https://media.dotlineform.test/works/img/00638-primary-1600.webp?v=2"
+    assert targets[("work", "00638")]["meta"] == ["2007", "3 symbols"]
+    assert targets[("work", "00638")]["has_details"] is True
+    assert all("image" not in row for (kind, _), row in targets.items() if kind == "series")
 
 
 def test_semantic_target_lookup_cli_writes_payload() -> None:
@@ -401,7 +358,7 @@ def test_semantic_target_lookup_cli_writes_payload() -> None:
 
     assert exit_code == 0
     assert "Semantic target lookup (write)" in stdout.getvalue()
-    assert len(payload["targets"]) == 2
+    assert len(payload["targets"]) == 4
 
 
 def test_lookup_retains_text_targets_when_exact_image_projection_is_unavailable() -> None:
@@ -415,8 +372,7 @@ def test_lookup_retains_text_targets_when_exact_image_projection_is_unavailable(
         works["works"]["00008"] = {
             "work_id": "00008",
             "title": "No complete media",
-            "status": "published",
-            "series_ids": ["999"],
+            "series_id": "999",
             "project_filename": "",
             "media_version": 1,
             "width_px": 100,
@@ -428,8 +384,6 @@ def test_lookup_retains_text_targets_when_exact_image_projection_is_unavailable(
         series["series"]["105"] = {
             "series_id": "105",
             "title": "Exact series destination",
-            "status": "published",
-            "primary_work_id": "00008",
         }
         write_json(series_path, series)
         payload = SemanticTargetLookupBuilder(repo_root=root).payload()
@@ -493,7 +447,7 @@ def test_tag_lookup_uses_exact_primary_or_first_without_later_document_scan() ->
 
 
 def main_test() -> None:
-    test_semantic_target_lookup_builder_writes_compact_published_rows()
+    test_semantic_target_lookup_keeps_independent_canonical_identities()
     test_semantic_target_lookup_cli_writes_payload()
     test_lookup_retains_text_targets_when_exact_image_projection_is_unavailable()
     test_tag_lookup_uses_exact_primary_or_first_without_later_document_scan()

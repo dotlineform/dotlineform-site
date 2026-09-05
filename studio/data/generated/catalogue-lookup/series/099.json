@@ -1,142 +1,117 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v2"
+    "schema": "studio_catalogue_lookup_series_record_v3"
   },
   "series": {
     "series_id": "099",
     "title": "models",
-    "series_type": "primary",
-    "status": "published",
-    "published_date": "2026-04-01",
     "year": 1994,
     "year_display": "1994",
-    "primary_work_id": "00540",
     "sort_fields": "work_id"
   },
+  "record_hash": "a1c10d93a35a42532d6cb99ea78e015c4a9ed49ec28f88f8bc53c5e33a7f8b14",
   "member_works": [
     {
       "work_id": "00130",
+      "record_hash": "cae82d0c2c0af95499d643be9ccde4ac17c918c2aa391203df307fcfe6902845",
       "title": "model 1",
       "year": 1994,
       "year_display": "1994",
-      "status": "published",
-      "series_ids": [
-        "099"
-      ],
+      "series_id": "099",
       "project_folder": "models"
     },
     {
       "work_id": "00536",
+      "record_hash": "adcce83604e0ea4192c29047201aeb511890bb37514a9da165f5749c34c53ccb",
       "title": "model 2",
       "year": 1994,
       "year_display": "1994",
-      "status": "published",
-      "series_ids": [
-        "099"
-      ],
+      "series_id": "099",
       "project_folder": "models"
     },
     {
       "work_id": "00537",
+      "record_hash": "60463962830c1a85b77b8555cce7bef5845d8c3aa2c8990f744b9cdb20c02da6",
       "title": "model 3",
       "year": 1994,
       "year_display": "1994",
-      "status": "published",
-      "series_ids": [
-        "099"
-      ],
+      "series_id": "099",
       "project_folder": "models"
     },
     {
       "work_id": "00538",
+      "record_hash": "b660bbdb23b7a91e8e33d367be78a8eee054a413c31c9166a7a6e3c0af0eb87d",
       "title": "model 4",
       "year": 1994,
       "year_display": "1994",
-      "status": "published",
-      "series_ids": [
-        "099"
-      ],
+      "series_id": "099",
       "project_folder": "models"
     },
     {
       "work_id": "00539",
+      "record_hash": "739b3d0e9f1a76462058e5fafec1d13f70f8941ab38124a527944576170a3f12",
       "title": "model 5",
       "year": 1994,
       "year_display": "1994",
-      "status": "published",
-      "series_ids": [
-        "099"
-      ],
+      "series_id": "099",
       "project_folder": "models"
     },
     {
       "work_id": "00540",
+      "record_hash": "764c10f41c9d37ff64859d9cf34298b972818d3e508154aeb12df4c5993ba3c9",
       "title": "model 6",
       "year": 1994,
       "year_display": "1994",
-      "status": "published",
-      "series_ids": [
-        "099"
-      ],
+      "series_id": "099",
       "project_folder": "models"
     },
     {
       "work_id": "00541",
+      "record_hash": "44c9ee5fb0430e0412d37bf4bc7594e3b54c7753773e548b76bacc30c75e3ede",
       "title": "model 7",
       "year": 1994,
       "year_display": "1994",
-      "status": "published",
-      "series_ids": [
-        "099"
-      ],
+      "series_id": "099",
       "project_folder": "models"
     },
     {
       "work_id": "00542",
+      "record_hash": "1c0ed6246ae3ff216c887f8415c7fcd3aa169c830435765175696bffad94b59b",
       "title": "model 8",
       "year": 1994,
       "year_display": "1994",
-      "status": "published",
-      "series_ids": [
-        "099"
-      ],
+      "series_id": "099",
       "project_folder": "models"
     },
     {
       "work_id": "00543",
+      "record_hash": "e2a54dbcffd7d09dd2afd8e970ed4c6e398ec1e744eb81f72e5e2525ceeafd70",
       "title": "model 9",
       "year": 1994,
       "year_display": "1994",
-      "status": "published",
-      "series_ids": [
-        "099"
-      ],
+      "series_id": "099",
       "project_folder": "models"
     },
     {
       "work_id": "00544",
+      "record_hash": "52582b5737c736ba047bed55c4372a4b85e15248e5ce11e23a3c9a5e2686e3d2",
       "title": "model 10",
       "year": 1994,
       "year_display": "1994",
-      "status": "published",
-      "series_ids": [
-        "099"
-      ],
+      "series_id": "099",
       "project_folder": "models"
     },
     {
       "work_id": "00545",
+      "record_hash": "d57befef511246dc2dcb856c34169c041ff3133a4c271af699d0371fb136bd5e",
       "title": "model 11",
       "year": 1994,
       "year_display": "1994",
-      "status": "published",
-      "series_ids": [
-        "099"
-      ],
+      "series_id": "099",
       "project_folder": "models"
     }
   ],
-  "ordered_published_work_ids": [
+  "ordered_work_ids": [
     "00130",
     "00536",
     "00537",

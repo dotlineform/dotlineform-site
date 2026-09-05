@@ -17,9 +17,7 @@ from catalogue.catalogue_source import (
     normalize_json_value,
     normalize_scalar_text,
     normalize_source_record,
-    normalize_status,
     normalize_text,
-    parse_series_ids,
     records_from_json_source,
     slug_id,
     sort_record_map,
@@ -257,7 +255,9 @@ def _append_blocked(
 
 def _build_work_import_plan(source_records: CatalogueSourceRecords, workbook, workbook_path: Path) -> WorkbookImportPlan:
     rows, headers = _require_sheet(workbook, "Works")
-    _require_headers(headers, ["work_id", "series_ids", "title"], sheet_name="Works")
+    _require_headers(headers, ["work_id", "title"], sheet_name="Works")
+    if set(headers) & {"series_ids", "status", "published_date"}:
+        raise ValueError("Works workbook contains removed Catalogue fields; use optional series_id.")
 
     importable: Dict[str, Dict[str, Any]] = {}
     duplicate_ids: list[str] = []
@@ -295,41 +295,17 @@ def _build_work_import_plan(source_records: CatalogueSourceRecords, workbook, wo
             _append_blocked(blocked_rows, blocked_reason_counts, row_number=row_number, record_id=work_id, reason="missing_title", message="title is required")
             continue
 
+        raw_series_id = cell(row, headers, "series_id")
         try:
-            series_ids = parse_series_ids(cell(row, headers, "series_ids"))
+            series_id = normalize_series_id(raw_series_id) if raw_series_id not in {None, ""} else ""
+            if series_id and series_id not in known_series_ids:
+                raise ValueError(f"unknown series id: {series_id}")
         except ValueError as exc:
-            _append_blocked(
-                blocked_rows,
-                blocked_reason_counts,
-                row_number=row_number,
-                record_id=work_id,
-                reason="invalid_series_ids",
-                message=str(exc),
-            )
+            _append_blocked(blocked_rows, blocked_reason_counts, row_number=row_number, record_id=work_id, reason="invalid_series_id", message=str(exc))
             continue
-        if not series_ids:
-            _append_blocked(blocked_rows, blocked_reason_counts, row_number=row_number, record_id=work_id, reason="missing_series_ids", message="series_ids is required")
-            continue
-        missing_series_ids = [series_id for series_id in series_ids if normalize_series_id(series_id) not in known_series_ids]
-        if missing_series_ids:
-            _append_blocked(
-                blocked_rows,
-                blocked_reason_counts,
-                row_number=row_number,
-                record_id=work_id,
-                reason="unknown_series",
-                message=f"unknown series ids: {', '.join(sorted(set(missing_series_ids)))}",
-            )
-            continue
-
-        record = {
-            "work_id": work_id,
-            "status": "draft",
-            "published_date": None,
-            "series_ids": [normalize_series_id(series_id) for series_id in series_ids],
-        }
+        record = {"work_id": work_id, "series_id": series_id or None}
         for field_name in WORK_FIELDS:
-            if field_name in record or field_name in {"status", "published_date"}:
+            if field_name in record:
                 continue
             record[field_name] = normalize_json_value(cell(row, headers, field_name))
         if normalize_text(record.get("project_filename")) and not normalize_text(record.get("media_version")):
@@ -391,9 +367,6 @@ def _build_work_detail_import_plan(source_records: CatalogueSourceRecords, workb
         parent_work = source_records.works.get(work_id)
         if not isinstance(parent_work, dict):
             _append_blocked(blocked_rows, blocked_reason_counts, row_number=row_number, record_id=detail_uid, reason="unknown_work", message=f"parent work_id not found: {work_id}")
-            continue
-        if normalize_status(parent_work.get("status")) != "published":
-            _append_blocked(blocked_rows, blocked_reason_counts, row_number=row_number, record_id=detail_uid, reason="parent_work_unpublished", message=f"parent work {work_id} must be published before adding work details")
             continue
 
         title = normalize_scalar_text(cell(row, headers, "title"))

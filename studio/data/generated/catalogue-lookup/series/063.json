@@ -1,230 +1,189 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v2"
+    "schema": "studio_catalogue_lookup_series_record_v3"
   },
   "series": {
     "series_id": "063",
     "title": "form mobile",
-    "series_type": "primary",
-    "status": "published",
-    "published_date": "2026-04-01",
     "year": 2021,
     "year_display": "2021",
-    "primary_work_id": "00535",
     "sort_fields": "work_id"
   },
+  "record_hash": "cce8c749d479f8e5d48e92723bc01ef34ce76247a4298027720e4a6b6f32baed",
   "member_works": [
     {
       "work_id": "00535",
+      "record_hash": "d1340ba973b51a62b25ee75ac90021e7c5f81210fddc5134177526699cfd0592",
       "title": "form mobile",
       "year": 2021,
       "year_display": "2021",
-      "status": "published",
-      "series_ids": [
-        "063"
-      ],
+      "series_id": "063",
       "project_folder": "form mobile"
     },
     {
       "work_id": "00582",
+      "record_hash": "909aaa3b6658507ed82cbcd3f4dd3436dd8dfff42aad29edb3bba240b5b2a4b1",
       "title": "form mobile 1",
       "year": 2021,
       "year_display": "2021",
-      "status": "published",
-      "series_ids": [
-        "063"
-      ],
+      "series_id": "063",
       "project_folder": "form mobile"
     },
     {
       "work_id": "00583",
+      "record_hash": "2c8702eee737f1e4f88217162606651716f8fa84fc84365701e0862652603d1e",
       "title": "form mobile 2",
       "year": 2021,
       "year_display": "2021",
-      "status": "published",
-      "series_ids": [
-        "063"
-      ],
+      "series_id": "063",
       "project_folder": "form mobile"
     },
     {
       "work_id": "00584",
+      "record_hash": "7ad56e5a9ff35318a13b7e4e045d4729b0303f520281d6a527b8f5074e1f78e5",
       "title": "form mobile 3",
       "year": 2021,
       "year_display": "2021",
-      "status": "published",
-      "series_ids": [
-        "063"
-      ],
+      "series_id": "063",
       "project_folder": "form mobile"
     },
     {
       "work_id": "00585",
+      "record_hash": "d23a306e3e0c3a2eaf4aca195aceebd0f89dcb8318277194bcb826a9f61942b8",
       "title": "form mobile 4",
       "year": 2021,
       "year_display": "2021",
-      "status": "published",
-      "series_ids": [
-        "063"
-      ],
+      "series_id": "063",
       "project_folder": "form mobile"
     },
     {
       "work_id": "00586",
+      "record_hash": "9200af2036b790f94a04a55e5b87575b0ad17542143555e6937e169e09da891e",
       "title": "form mobile 5",
       "year": 2021,
       "year_display": "2021",
-      "status": "published",
-      "series_ids": [
-        "063"
-      ],
+      "series_id": "063",
       "project_folder": "form mobile"
     },
     {
       "work_id": "00587",
+      "record_hash": "3f0c6cc4b33419ba8a93470776b6df3e20caf80b7a374a502034cec141f5ecb9",
       "title": "form mobile 6",
       "year": 2021,
       "year_display": "2021",
-      "status": "published",
-      "series_ids": [
-        "063"
-      ],
+      "series_id": "063",
       "project_folder": "form mobile"
     },
     {
       "work_id": "00588",
+      "record_hash": "2f19117f0bb31f7adb41af7c15200366f88c00fd2e60dac47d37f779f6e8ce8f",
       "title": "form mobile 7",
       "year": 2021,
       "year_display": "2021",
-      "status": "published",
-      "series_ids": [
-        "063"
-      ],
+      "series_id": "063",
       "project_folder": "form mobile"
     },
     {
       "work_id": "00589",
+      "record_hash": "e03c91ad46df0e13e7f07a7146e981ed2f2f7a017fe67ad01f6d596241034da2",
       "title": "form mobile 8",
       "year": 2021,
       "year_display": "2021",
-      "status": "published",
-      "series_ids": [
-        "063"
-      ],
+      "series_id": "063",
       "project_folder": "form mobile"
     },
     {
       "work_id": "00590",
+      "record_hash": "ae74e7b313dd8a75a26eb334b2da8f102416d29336fd54fb4d28bb7fd1337f95",
       "title": "curve 1",
       "year": 2021,
       "year_display": "2021",
-      "status": "published",
-      "series_ids": [
-        "063"
-      ],
+      "series_id": "063",
       "project_folder": "form mobile"
     },
     {
       "work_id": "00591",
+      "record_hash": "6cf33c081fc17f4dc32c8300a795227e430e554c076c2abeb5cde887921c57fd",
       "title": "curve 1'",
       "year": 2021,
       "year_display": "2021",
-      "status": "published",
-      "series_ids": [
-        "063"
-      ],
+      "series_id": "063",
       "project_folder": "form mobile"
     },
     {
       "work_id": "00592",
+      "record_hash": "260ecf19f5582e70c6d0f9ddacfbf2858f59438d4c03a2b5e248aacb7f7cd19c",
       "title": "curve 2",
       "year": 2021,
       "year_display": "2021",
-      "status": "published",
-      "series_ids": [
-        "063"
-      ],
+      "series_id": "063",
       "project_folder": "form mobile"
     },
     {
       "work_id": "00593",
+      "record_hash": "526b02efc40e3cf9d466af53fe884757f296a0a0d9957e4879a32ebbe638c95a",
       "title": "curve 2'",
       "year": 2021,
       "year_display": "2021",
-      "status": "published",
-      "series_ids": [
-        "063"
-      ],
+      "series_id": "063",
       "project_folder": "form mobile"
     },
     {
       "work_id": "00594",
+      "record_hash": "b5eb82ab09dc82c25d2ab6d0d2805a2b92956dd19eeea1b7c40996945405cac9",
       "title": "curve 3",
       "year": 2021,
       "year_display": "2021",
-      "status": "published",
-      "series_ids": [
-        "063"
-      ],
+      "series_id": "063",
       "project_folder": "form mobile"
     },
     {
       "work_id": "00595",
+      "record_hash": "5404198c88dfc27f5c4a687c41646fb5b185149114a93b203357fb384526438e",
       "title": "curve 3'",
       "year": 2021,
       "year_display": "2021",
-      "status": "published",
-      "series_ids": [
-        "063"
-      ],
+      "series_id": "063",
       "project_folder": "form mobile"
     },
     {
       "work_id": "00596",
+      "record_hash": "1e5035da0d5a037f011c29d352b88cf173eac06e93c232972fa0a64eb4c6c710",
       "title": "curve 4",
       "year": 2021,
       "year_display": "2021",
-      "status": "published",
-      "series_ids": [
-        "063"
-      ],
+      "series_id": "063",
       "project_folder": "form mobile"
     },
     {
       "work_id": "00597",
+      "record_hash": "2b277179dcddbb3f2e35dc953f96fe061752daf8cbe82ca9ff35fbbe4438b927",
       "title": "curve 4'",
       "year": 2021,
       "year_display": "2021",
-      "status": "published",
-      "series_ids": [
-        "063"
-      ],
+      "series_id": "063",
       "project_folder": "form mobile"
     },
     {
       "work_id": "00598",
+      "record_hash": "89006eef68a35f85c9871564beaa111d4207f7683d42d670ab68e84ac16486cb",
       "title": "curve 5",
       "year": 2021,
       "year_display": "2021",
-      "status": "published",
-      "series_ids": [
-        "063"
-      ],
+      "series_id": "063",
       "project_folder": "form mobile"
     },
     {
       "work_id": "00599",
+      "record_hash": "fad66f895ce6fb216fc1ad4829b23164bbc147523691e30c8bc3e0799cc06ace",
       "title": "curve 5'",
       "year": 2021,
       "year_display": "2021",
-      "status": "published",
-      "series_ids": [
-        "063"
-      ],
+      "series_id": "063",
       "project_folder": "form mobile"
     }
   ],
-  "ordered_published_work_ids": [
+  "ordered_work_ids": [
     "00535",
     "00582",
     "00583",

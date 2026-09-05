@@ -1,54 +1,45 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v2"
+    "schema": "studio_catalogue_lookup_series_record_v3"
   },
   "series": {
     "series_id": "051",
     "title": "fireworks form",
-    "series_type": "primary",
-    "status": "published",
-    "published_date": "2026-04-01",
     "year": 2023,
     "year_display": "2023",
-    "primary_work_id": "01050",
     "sort_fields": "work_id"
   },
+  "record_hash": "2c66f3e98da00f7bd34aabb31b6b76b5f970dc8281e69c8af487d28cc07ebabe",
   "member_works": [
     {
       "work_id": "01049",
+      "record_hash": "858bd222ed5150d6a34e1f76bf9d1069150145624fa8095419eeb7b635da78b1",
       "title": "fireworks form",
       "year": 2023,
       "year_display": "2023",
-      "status": "published",
-      "series_ids": [
-        "051"
-      ],
+      "series_id": "051",
       "project_folder": "fireworks form"
     },
     {
       "work_id": "01050",
+      "record_hash": "c37ad349ae87c3793ef031aec58014a02b01d756e64d11ed04432fd1ff1344f8",
       "title": "fireworks particles",
       "year": 2023,
       "year_display": "2023",
-      "status": "published",
-      "series_ids": [
-        "051"
-      ],
+      "series_id": "051",
       "project_folder": "fireworks form"
     },
     {
       "work_id": "01051",
+      "record_hash": "eaefc4fd236a894402b3282b8dae6e8c061f13d082c16306f1abfe6ebed7e5f7",
       "title": "fireworks particles version",
       "year": 2023,
       "year_display": "2023",
-      "status": "published",
-      "series_ids": [
-        "051"
-      ],
+      "series_id": "051",
       "project_folder": "fireworks form"
     }
   ],
-  "ordered_published_work_ids": [
+  "ordered_work_ids": [
     "01049",
     "01050",
     "01051"

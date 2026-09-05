@@ -151,7 +151,6 @@ function parseSeriesDataFromInline(config) {
     const parsed = JSON.parse(node.textContent || "[]");
     if (!Array.isArray(parsed)) return [];
     return parsed
-      .filter((entry) => isPrimarySeriesEntry(entry))
       .map((entry) => {
         const seriesId = normalize(entry && entry.series_id);
         const title = String((entry && entry.title) || "").trim();
@@ -172,7 +171,6 @@ async function fetchSeriesDataFromIndex(config) {
   const payload = await loadStudioSeriesSearchJson(config, { cache: "no-store" });
   const items = Array.isArray(payload && payload.items) ? payload.items : [];
   return items
-    .filter((row) => isPrimarySeriesEntry(row) && normalize(row && row.status) === "published")
     .map((row) => {
       const sid = normalize(row && row.series_id);
       const title = String((row && row.title) || sid).trim();
@@ -186,9 +184,6 @@ async function fetchSeriesDataFromIndex(config) {
     .sort((a, b) => a.title.localeCompare(b.title, undefined, { sensitivity: "base" }));
 }
 
-function isPrimarySeriesEntry(entry) {
-  return normalize(entry && entry.series_type) === "primary";
-}
 
 function buildSeriesEditorUrl(config, seriesId) {
   const sid = normalize(seriesId);

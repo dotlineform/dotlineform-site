@@ -1,65 +1,54 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v2"
+    "schema": "studio_catalogue_lookup_series_record_v3"
   },
   "series": {
     "series_id": "113",
     "title": "pi particles",
-    "series_type": "primary",
-    "status": "published",
-    "published_date": "2026-04-01",
     "year": 2012,
     "year_display": "2012",
-    "primary_work_id": "01525",
     "sort_fields": "work_id"
   },
+  "record_hash": "cb0164b83b3fb133e24fa81ad0498201074658dce64d7343e487a3d9a41eaac4",
   "member_works": [
     {
       "work_id": "01523",
+      "record_hash": "9a4d3ff1d99cf31041b0d3009ba7943e3ce50cad02dc19fcb43ab72d190697a5",
       "title": "pi",
       "year": 2012,
       "year_display": "2012",
-      "status": "published",
-      "series_ids": [
-        "113"
-      ],
+      "series_id": "113",
       "project_folder": "pi particles"
     },
     {
       "work_id": "01524",
+      "record_hash": "c35e5e4e4cf6334bfed859b66c946f8e8baf0fcbc5f9f08fd7fd7d954d059f1a",
       "title": "pi molecule grid",
       "year": 2012,
       "year_display": "2012",
-      "status": "published",
-      "series_ids": [
-        "113"
-      ],
+      "series_id": "113",
       "project_folder": "pi particles"
     },
     {
       "work_id": "01525",
+      "record_hash": "45c6799c29ea86960f44151e591dfa0145d54321f6ab82953c514a9f6d9261d2",
       "title": "pi circle",
       "year": 2012,
       "year_display": "2012",
-      "status": "published",
-      "series_ids": [
-        "113"
-      ],
+      "series_id": "113",
       "project_folder": "pi particles"
     },
     {
       "work_id": "01526",
+      "record_hash": "384c1a3e3919b70df5594e7bd56be759565068a5894b5bff12a07e4d2232adb7",
       "title": "all the particles are connected",
       "year": 2012,
       "year_display": "2012",
-      "status": "published",
-      "series_ids": [
-        "113"
-      ],
+      "series_id": "113",
       "project_folder": "pi particles"
     }
   ],
-  "ordered_published_work_ids": [
+  "ordered_work_ids": [
     "01523",
     "01524",
     "01525",

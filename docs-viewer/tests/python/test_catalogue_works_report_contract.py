@@ -25,7 +25,7 @@ def test_manage_registry_and_loader_own_one_local_catalogue_works_report() -> No
         "report_id": "catalogue_works",
         "title": "Catalogue Works",
         "description": (
-            "Searches every published canonical Work with exact Series and "
+            "Searches every canonical Work with exact Series and "
             "storage context."
         ),
         "default_access": "local",
@@ -124,12 +124,12 @@ def test_retired_studio_works_route_and_dedicated_owners_are_absent() -> None:
     assert "studio_works" not in home_source
 
 
-def test_catalogue_drafts_and_exact_editors_remain_registered() -> None:
+def test_catalogue_drafts_removed_and_exact_editors_remain_registered() -> None:
     studio_config = read_json(
         REPO_ROOT / "studio/app/frontend/config/studio-config.json"
     )
     routes = studio_config["app"]["routes"]
 
-    assert routes["catalogue_status"]["path"] == "/studio/catalogue-status/"
+    assert "catalogue_status" not in routes
     assert routes["catalogue_series_editor"]["path"] == "/studio/catalogue-series/"
     assert routes["catalogue_work_editor"]["path"] == "/studio/catalogue-work/"

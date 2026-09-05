@@ -1,54 +1,45 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v2"
+    "schema": "studio_catalogue_lookup_series_record_v3"
   },
   "series": {
     "series_id": "142",
     "title": "water sea pond",
-    "series_type": "primary",
-    "status": "published",
-    "published_date": "2026-04-01",
     "year": 2023,
     "year_display": "2023",
-    "primary_work_id": "01938",
     "sort_fields": "work_id"
   },
+  "record_hash": "52f06c379087bf0997d000f49467ff0cc06a61a53baba9b2fcaa67ba3d84c679",
   "member_works": [
     {
       "work_id": "01938",
+      "record_hash": "cd6bc3ae4f0a0e55ceeb5857cc6022fa15d458895d16d7250246d82c12316acc",
       "title": "water",
       "year": 2023,
       "year_display": "2023",
-      "status": "published",
-      "series_ids": [
-        "142"
-      ],
+      "series_id": "142",
       "project_folder": "water sea pond"
     },
     {
       "work_id": "01939",
+      "record_hash": "91eb7ef4de260d8d958dc3424172c9e315eaff4beb0381f309c1a66570029dcb",
       "title": "sea",
       "year": 2023,
       "year_display": "2023",
-      "status": "published",
-      "series_ids": [
-        "142"
-      ],
+      "series_id": "142",
       "project_folder": "water sea pond"
     },
     {
       "work_id": "01940",
+      "record_hash": "86b16c62757d55562623e1bbeb846b65f76cc63e820efad9f38aabcb9ce853b7",
       "title": "pond",
       "year": 2023,
       "year_display": "2023",
-      "status": "published",
-      "series_ids": [
-        "142"
-      ],
+      "series_id": "142",
       "project_folder": "water sea pond"
     }
   ],
-  "ordered_published_work_ids": [
+  "ordered_work_ids": [
     "01938",
     "01939",
     "01940"

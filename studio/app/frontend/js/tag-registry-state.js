@@ -99,7 +99,6 @@ export function buildTagRegistrySeriesMetaById(config, payload) {
   const items = Array.isArray(payload && payload.items) ? payload.items : [];
   const out = new Map();
   items.forEach((row) => {
-    if (normalize(row && row.status) !== "published") return;
     const seriesId = normalize(row && row.series_id);
     if (!seriesId) return;
     const title = String((row && row.title) || seriesId).trim();

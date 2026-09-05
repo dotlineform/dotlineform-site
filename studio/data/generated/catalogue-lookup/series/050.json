@@ -1,43 +1,36 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v2"
+    "schema": "studio_catalogue_lookup_series_record_v3"
   },
   "series": {
     "series_id": "050",
     "title": "field",
-    "series_type": "primary",
-    "status": "published",
-    "published_date": "2026-04-01",
     "year": 2025,
     "year_display": "2025",
-    "primary_work_id": "01047",
     "sort_fields": "work_id"
   },
+  "record_hash": "79841d8e20b16cf073d04b3f57a9d5a44065b21bc889bfbb690a81a9cc510af7",
   "member_works": [
     {
       "work_id": "01047",
+      "record_hash": "f34123a1723ee4fb2e7f15adab125e971f19b91f24e5c6347474d88480ebbbeb",
       "title": "field I",
       "year": 2025,
       "year_display": "2025",
-      "status": "published",
-      "series_ids": [
-        "050"
-      ],
+      "series_id": "050",
       "project_folder": "field"
     },
     {
       "work_id": "01048",
+      "record_hash": "b0f2b306647c056c6402a2d83deab84105fc48e860e47f4cb923a12310af70af",
       "title": "field II",
       "year": 2025,
       "year_display": "2025",
-      "status": "published",
-      "series_ids": [
-        "050"
-      ],
+      "series_id": "050",
       "project_folder": "field"
     }
   ],
-  "ordered_published_work_ids": [
+  "ordered_work_ids": [
     "01047",
     "01048"
   ],

@@ -1,1110 +1,909 @@
 {
   "header": {
-    "schema": "studio_catalogue_lookup_series_record_v2"
+    "schema": "studio_catalogue_lookup_series_record_v3"
   },
   "series": {
     "series_id": "135",
     "title": "train moments",
-    "series_type": "primary",
-    "status": "published",
-    "published_date": "2026-04-01",
     "year": 2019,
     "year_display": "2006-19",
-    "primary_work_id": "01868",
     "sort_fields": "work_id"
   },
+  "record_hash": "29604565fdf624ad223f29b5b8db002913fdd73b094b225abf6f77bf95789c83",
   "member_works": [
     {
       "work_id": "01770",
+      "record_hash": "e8911b79f4d8a04a46761c4f7895209e62681cc494a451531abf4cf26fe609bd",
       "title": "2006-05-21 21꞉27꞉00",
       "year": 2006,
       "year_display": "2006",
-      "status": "published",
-      "series_ids": [
-        "135"
-      ],
+      "series_id": "135",
       "project_folder": "train moments"
     },
     {
       "work_id": "01771",
+      "record_hash": "de0ee33e204a12fddade6fcc9e983fc1be9a19d498b66becb2df3182e7453acd",
       "title": "2006-05-21 21꞉33꞉39",
       "year": 2006,
       "year_display": "2006",
-      "status": "published",
-      "series_ids": [
-        "135"
-      ],
+      "series_id": "135",
       "project_folder": "train moments"
     },
     {
       "work_id": "01772",
+      "record_hash": "d4b102cffc495f5550db1268a9265d3d70228b339c287ee322308be1f60971db",
       "title": "2006-12-16 15꞉22꞉52",
       "year": 2006,
       "year_display": "2006",
-      "status": "published",
-      "series_ids": [
-        "135"
-      ],
+      "series_id": "135",
       "project_folder": "train moments"
     },
     {
       "work_id": "01773",
+      "record_hash": "4900f7b07da0365d166f242c5b2a92f55f5a3fd5423ae96461ea609a77fc60c0",
       "title": "2007-05-02 14꞉59꞉49",
       "year": 2007,
       "year_display": "2007",
-      "status": "published",
-      "series_ids": [
-        "135"
-      ],
+      "series_id": "135",
       "project_folder": "train moments"
     },
     {
       "work_id": "01774",
+      "record_hash": "851f102cf2477eb1e530ba09b0c6e2343d46ee490e6efe59cbdb63d3fac0310f",
       "title": "2007-09-04 18꞉16꞉23",
       "year": 2007,
       "year_display": "2007",
-      "status": "published",
-      "series_ids": [
-        "135"
-      ],
+      "series_id": "135",
       "project_folder": "train moments"
     },
     {
       "work_id": "01775",
+      "record_hash": "4db61efda6c174402c5b404abdc0187e842a4532b889fdd6a1dc357d5a5cedd9",
       "title": "2008-10-24 12꞉27꞉55",
       "year": 2008,
       "year_display": "2008",
-      "status": "published",
-      "series_ids": [
-        "135"
-      ],
+      "series_id": "135",
       "project_folder": "train moments"
     },
     {
       "work_id": "01776",
+      "record_hash": "c8b4e2eb1df73e11d2a3bc417db07e67b1613870c8f9f86dfec2f347f7c47f27",
       "title": "2008-10-24 12꞉40꞉15",
       "year": 2008,
       "year_display": "2008",
-      "status": "published",
-      "series_ids": [
-        "135"
-      ],
+      "series_id": "135",
       "project_folder": "train moments"
     },
     {
       "work_id": "01777",
+      "record_hash": "8b1c27472a35642c3aca361d2b0a8b276be5ca7928d5d7e573141c0c3a248680",
       "title": "2009-07-06 19꞉53꞉35",
       "year": 2009,
       "year_display": "2009",
-      "status": "published",
-      "series_ids": [
-        "135"
-      ],
+      "series_id": "135",
       "project_folder": "train moments"
     },
     {
       "work_id": "01778",
+      "record_hash": "a7af02601673844a127bdef5f722ee22c295452739550b33d9280921cf3ae1cd",
       "title": "2009-07-06 20꞉24꞉21",
       "year": 2009,
       "year_display": "2009",
-      "status": "published",
-      "series_ids": [
-        "135"
-      ],
+      "series_id": "135",
       "project_folder": "train moments"
     },
     {
       "work_id": "01779",
+      "record_hash": "bd9bc083027983c5a17e1360f42b0536a8db79e2a6fe44dbbe4b4419a0ae5139",
       "title": "2010-02-03 08꞉25꞉09",
       "year": 2010,
       "year_display": "2010",
-      "status": "published",
-      "series_ids": [
-        "135"
-      ],
+      "series_id": "135",
       "project_folder": "train moments"
     },
     {
       "work_id": "01780",
+      "record_hash": "946953c2b1ed294180c6a476ed8f81b627f65ab9b6b0f7764c1650819882afff",
       "title": "2010-02-03 08꞉30꞉52",
       "year": 2010,
       "year_display": "2010",
-      "status": "published",
-      "series_ids": [
-        "135"
-      ],
+      "series_id": "135",
       "project_folder": "train moments"
     },
     {
       "work_id": "01781",
+      "record_hash": "05fcbd80a3b79093690c44575d216b5c0db37a30bf1ee604f252f0ee72ebae8a",
       "title": "2010-02-03 08꞉31꞉36",
       "year": 2010,
       "year_display": "2010",
-      "status": "published",
-      "series_ids": [
-        "135"
-      ],
+      "series_id": "135",
       "project_folder": "train moments"
     },
     {
       "work_id": "01782",
+      "record_hash": "4a561fbf11a6a450d4894b7a9ded464333809c02aec78b9d34ddc196b4b6b4da",
       "title": "2010-02-03 08꞉32꞉05",
       "year": 2010,
       "year_display": "2010",
-      "status": "published",
-      "series_ids": [
-        "135"
-      ],
+      "series_id": "135",
       "project_folder": "train moments"
     },
     {
       "work_id": "01783",
+      "record_hash": "df345e62aeedddb833b9cb1b0b01a4674c449968368f7959d2b578a27a6ccbd4",
       "title": "2010-02-03 08꞉33꞉56",
       "year": 2010,
       "year_display": "2010",
-      "status": "published",
-      "series_ids": [
-        "135"
-      ],
+      "series_id": "135",
       "project_folder": "train moments"
     },
     {
       "work_id": "01784",
+      "record_hash": "4b457ea65457969d0f38f61f344e988113374ca23835556c41d8d04feb42e445",
       "title": "2010-02-03 08꞉34꞉13",
       "year": 2010,
       "year_display": "2010",
-      "status": "published",
-      "series_ids": [
-        "135"
-      ],
+      "series_id": "135",
       "project_folder": "train moments"
     },
     {
       "work_id": "01785",
+      "record_hash": "493ba7c86fee286fa40f9016221582e46097aa72ae3e7bad5961483bba8d4bd1",
       "title": "2010-02-03 08꞉55꞉23",
       "year": 2010,
       "year_display": "2010",
-      "status": "published",
-      "series_ids": [
-        "135"
-      ],
+      "series_id": "135",
       "project_folder": "train moments"
     },
     {
       "work_id": "01786",
+      "record_hash": "079434c45a033c6e589ec04a2b7b06d77e62acee683bd36284e17f7f13adddb6",
       "title": "2010-02-03 08꞉56꞉24",
       "year": 2010,
       "year_display": "2010",
-      "status": "published",
-      "series_ids": [
-        "135"
-      ],
+      "series_id": "135",
       "project_folder": "train moments"
     },
     {
       "work_id": "01787",
+      "record_hash": "67fe38027f27e51ad306f8359fdb1aa635fa6eb40c752b8320e1f1c11f4d8e79",
       "title": "2010-02-03 09꞉55꞉16",
       "year": 2010,
       "year_display": "2010",
-      "status": "published",
-      "series_ids": [
-        "135"
-      ],
+      "series_id": "135",
       "project_folder": "train moments"
     },
     {
       "work_id": "01788",
+      "record_hash": "589844048f131c029d22ae1b0648dc8f7273d33ef0ab5d30219093ca3bca6d5f",
       "title": "2010-02-03 09꞉55꞉30",
       "year": 2010,
       "year_display": "2010",
-      "status": "published",
-      "series_ids": [
-        "135"
-      ],
+      "series_id": "135",
       "project_folder": "train moments"
     },
     {
       "work_id": "01789",
+      "record_hash": "a6c6bfff9805db67819398d55b73fc2b408432a605f94187a67929d6690f9b38",
       "title": "2010-02-03 09꞉55꞉33",
       "year": 2010,
       "year_display": "2010",
-      "status": "published",
-      "series_ids": [
-        "135"
-      ],
+      "series_id": "135",
       "project_folder": "train moments"
     },
     {
       "work_id": "01790",
+      "record_hash": "a9f8b76d231b74edc153e5ee90bdd4838b4b8120815f5bd4532e2bdd7f3fef92",
       "title": "2010-02-03 09꞉55꞉52",
       "year": 2010,
       "year_display": "2010",
-      "status": "published",
-      "series_ids": [
-        "135"
-      ],
+      "series_id": "135",
       "project_folder": "train moments"
     },
     {
       "work_id": "01791",
+      "record_hash": "160da6206a024a7976b71cf437cfc8b6fb869fa94e15544edf19223455f5eee3",
       "title": "2010-02-22 07꞉55꞉44",
       "year": 2010,
       "year_display": "2010",
-      "status": "published",
-      "series_ids": [
-        "135"
-      ],
+      "series_id": "135",
       "project_folder": "train moments"
     },
     {
       "work_id": "01792",
+      "record_hash": "d513dc036e759e2279367f59057d7f969684efdb9f67d764c41058d0e143e8d5",
       "title": "2010-05-01 19꞉13꞉53",
       "year": 2010,
       "year_display": "2010",
-      "status": "published",
-      "series_ids": [
-        "135"
-      ],
+      "series_id": "135",
       "project_folder": "train moments"
     },
     {
       "work_id": "01793",
+      "record_hash": "4de42d9e1a61685ea03ba6c735e454a6233618db69b6b0345fe196af8859bf2e",
       "title": "2010-05-09 15꞉22꞉11",
       "year": 2010,
       "year_display": "2010",
-      "status": "published",
-      "series_ids": [
-        "135"
-      ],
+      "series_id": "135",
       "project_folder": "train moments"
     },
     {
       "work_id": "01794",
+      "record_hash": "82f96b064382e0f20b2a4f100e16ad9d260a6af596a4ca312548e80638cbfd2d",
       "title": "2010-05-27 16꞉41꞉24",
       "year": 2010,
       "year_display": "2010",
-      "status": "published",
-      "series_ids": [
-        "135"
-      ],
+      "series_id": "135",
       "project_folder": "train moments"
     },
     {
       "work_id": "01795",
+      "record_hash": "2d24859e3c7215ef6a471742ff13a4e104bd83f9c91affad04f6de2b65d010e1",
       "title": "2010-08-14 20꞉07꞉12",
       "year": 2010,
       "year_display": "2010",
-      "status": "published",
-      "series_ids": [
-        "135"
-      ],
+      "series_id": "135",
       "project_folder": "train moments"
     },
     {
       "work_id": "01796",
+      "record_hash": "d95952274dadd67c83b07acb836a4da9f66919c78905ea0241738ad005ccb8cb",
       "title": "2010-12-30 13꞉40꞉03",
       "year": 2010,
       "year_display": "2010",
-      "status": "published",
-      "series_ids": [
-        "135"
-      ],
+      "series_id": "135",
       "project_folder": "train moments"
     },
     {
       "work_id": "01797",
+      "record_hash": "63b4396ba8c92f1a961dcc22750246b45f19e488826816a0ad5a48703bb182d0",
       "title": "2010-12-30 13꞉40꞉26",
       "year": 2010,
       "year_display": "2010",
-      "status": "published",
-      "series_ids": [
-        "135"
-      ],
+      "series_id": "135",
       "project_folder": "train moments"
     },
     {
       "work_id": "01798",
+      "record_hash": "5434408bbeb9651ef22afcbec21f27f09e79745054bb05adf18d4d3e27cf3617",
       "title": "2010-12-30 13꞉40꞉35",
       "year": 2010,
       "year_display": "2010",
-      "status": "published",
-      "series_ids": [
-        "135"
-      ],
+      "series_id": "135",
       "project_folder": "train moments"
     },
     {
       "work_id": "01799",
+      "record_hash": "f7ceea793aa2e923842d81ba6638454b5dcddf0c84ea9474aca5b64373499a1a",
       "title": "2010-12-30 13꞉40꞉39",
       "year": 2010,
       "year_display": "2010",
-      "status": "published",
-      "series_ids": [
-        "135"
-      ],
+      "series_id": "135",
       "project_folder": "train moments"
     },
     {
       "work_id": "01800",
+      "record_hash": "3e21e91a1324f1a924a9b6d46d174cb7a60aa54b40c914b91cf81fbd706a7123",
       "title": "2010-12-30 13꞉40꞉44",
       "year": 2010,
       "year_display": "2010",
-      "status": "published",
-      "series_ids": [
-        "135"
-      ],
+      "series_id": "135",
       "project_folder": "train moments"
     },
     {
       "work_id": "01801",
+      "record_hash": "6dabb780ba7b36bc32d99b37adb4c9f49fb93279031f0b0bd212a4d3cfd63535",
       "title": "2012-02-07 08꞉04꞉18",
       "year": 2012,
       "year_display": "2012",
-      "status": "published",
-      "series_ids": [
-        "135"
-      ],
+      "series_id": "135",
       "project_folder": "train moments"
     },
     {
       "work_id": "01802",
+      "record_hash": "0517e727083af19671d1f33d831cdce9f8d24a8c041dd9ecbf4dd90f30d023f9",
       "title": "2012-02-07 08꞉04꞉20",
       "year": 2012,
       "year_display": "2012",
-      "status": "published",
-      "series_ids": [
-        "135"
-      ],
+      "series_id": "135",
       "project_folder": "train moments"
     },
     {
       "work_id": "01803",
+      "record_hash": "1b6419ebc22edd87ce85e360aee404e604ef735ecdc8e98f9b95ec25dd1bcd2c",
       "title": "2012-06-22 18꞉09꞉44",
       "year": 2012,
       "year_display": "2012",
-      "status": "published",
-      "series_ids": [
-        "135"
-      ],
+      "series_id": "135",
       "project_folder": "train moments"
     },
     {
       "work_id": "01804",
+      "record_hash": "57e9fc201dd38b9038ed420b90926e4cad2ffc7fb304b7d5cc35bd7176b52f25",
       "title": "2012-09-11 06꞉50꞉19",
       "year": 2012,
       "year_display": "2012",
-      "status": "published",
-      "series_ids": [
-        "135"
-      ],
+      "series_id": "135",
       "project_folder": "train moments"
     },
     {
       "work_id": "01805",
+      "record_hash": "f1a4593a95d8ad03d0a611fbb979dc4f19dbb08a33e7a8c59d1cd248b6465b04",
       "title": "2012-09-11 07꞉48꞉27",
       "year": 2012,
       "year_display": "2012",
-      "status": "published",
-      "series_ids": [
-        "135"
-      ],
+      "series_id": "135",
       "project_folder": "train moments"
     },
     {
       "work_id": "01806",
+      "record_hash": "390bd857eb35187b486dc2c71840bf08dcb09c239e229c691cebaa9f7b6671ec",
       "title": "2012-09-11 07꞉48꞉37",
       "year": 2012,
       "year_display": "2012",
-      "status": "published",
-      "series_ids": [
-        "135"
-      ],
+      "series_id": "135",
       "project_folder": "train moments"
     },
     {
       "work_id": "01807",
+      "record_hash": "dbc72d76e96a10540d01d5887d0401bf7180ee0edf1eeb01fd20673ae5a6cc89",
       "title": "2012-09-11 07꞉50꞉11",
       "year": 2012,
       "year_display": "2012",
-      "status": "published",
-      "series_ids": [
-        "135"
-      ],
+      "series_id": "135",
       "project_folder": "train moments"
     },
     {
       "work_id": "01808",
+      "record_hash": "e93e7ca8f9040906fd78e832a7f23ef001f4a91615bdc2ddb69b451124d36f43",
       "title": "2012-09-11 07꞉54꞉20",
       "year": 2012,
       "year_display": "2012",
-      "status": "published",
-      "series_ids": [
-        "135"
-      ],
+      "series_id": "135",
       "project_folder": "train moments"
     },
     {
       "work_id": "01809",
+      "record_hash": "46db69e36f3f0ba6220186d62375635b4238b8a105e17b4f885b63bf218c48a5",
       "title": "2012-09-13 16꞉37꞉46",
       "year": 2012,
       "year_display": "2012",
-      "status": "published",
-      "series_ids": [
-        "135"
-      ],
+      "series_id": "135",
       "project_folder": "train moments"
     },
     {
       "work_id": "01810",
+      "record_hash": "5528f77ede73db04b429f95f9808b0b33cdd87afbf74c8fefe9d9f1cad07b3f2",
       "title": "2012-09-13 17꞉01꞉33",
       "year": 2012,
       "year_display": "2012",
-      "status": "published",
-      "series_ids": [
-        "135"
-      ],
+      "series_id": "135",
       "project_folder": "train moments"
     },
     {
       "work_id": "01811",
+      "record_hash": "1bd3ae1df0a1aa6851a52fb8e3625fda054152d126e864b6faa6bc36e227f5db",
       "title": "2012-09-13 18꞉57꞉54",
       "year": 2012,
       "year_display": "2012",
-      "status": "published",
-      "series_ids": [
-        "135"
-      ],
+      "series_id": "135",
       "project_folder": "train moments"
     },
     {
       "work_id": "01812",
+      "record_hash": "e17c8352f9456ca6faeb3fd8e2a5fcbbbf5ca07a0dd5420b1f464bac5de8fd92",
       "title": "2012-09-13 18꞉58꞉02",
       "year": 2012,
       "year_display": "2012",
-      "status": "published",
-      "series_ids": [
-        "135"
-      ],
+      "series_id": "135",
       "project_folder": "train moments"
     },
     {
       "work_id": "01813",
+      "record_hash": "3d846ae30bbcd390b61a217fae4ac5c1d560afcea25da63d3d8090fd153a9deb",
       "title": "2012-09-15 08꞉46꞉21",
       "year": 2012,
       "year_display": "2012",
-      "status": "published",
-      "series_ids": [
-        "135"
-      ],
+      "series_id": "135",
       "project_folder": "train moments"
     },
     {
       "work_id": "01814",
+      "record_hash": "cb841429fda1ffa3e31284b755935335407fe055add3ab19719838145766a74e",
       "title": "2012-09-27 15꞉35꞉15",
       "year": 2012,
       "year_display": "2012",
-      "status": "published",
-      "series_ids": [
-        "135"
-      ],
+      "series_id": "135",
       "project_folder": "train moments"
     },
     {
       "work_id": "01815",
+      "record_hash": "e7c2d7fb68effbf46f4638d74c2093666029497d001fd45ab5d1cbf40f4dbf12",
       "title": "2012-09-27 16꞉02꞉37",
       "year": 2012,
       "year_display": "2012",
-      "status": "published",
-      "series_ids": [
-        "135"
-      ],
+      "series_id": "135",
       "project_folder": "train moments"
     },
     {
       "work_id": "01816",
+      "record_hash": "05f5d54c4daaf77dcc3d9e8dff956056f1766ebdfe15561d958d1d41a3117de9",
       "title": "2012-09-27 16꞉27꞉58",
       "year": 2012,
       "year_display": "2012",
-      "status": "published",
-      "series_ids": [
-        "135"
-      ],
+      "series_id": "135",
       "project_folder": "train moments"
     },
     {
       "work_id": "01817",
+      "record_hash": "4761c4fc8525e7be8f629b58acd4fe86d3feb80a02379024c2faa569082d82e3",
       "title": "2012-09-28 15꞉01꞉09",
       "year": 2012,
       "year_display": "2012",
-      "status": "published",
-      "series_ids": [
-        "135"
-      ],
+      "series_id": "135",
       "project_folder": "train moments"
     },
     {
       "work_id": "01818",
+      "record_hash": "b50822f73e8fa4dae7cfcd4eb31c0f496c22ac426dc5dc3fb44643954d53064a",
       "title": "2012-10-17 18꞉03꞉25",
       "year": 2012,
       "year_display": "2012",
-      "status": "published",
-      "series_ids": [
-        "135"
-      ],
+      "series_id": "135",
       "project_folder": "train moments"
     },
     {
       "work_id": "01819",
+      "record_hash": "871a4ebfcbfd3d76cfdd20cb696eb687ed1f390e010d587290cc285bb562ec72",
       "title": "2012-10-17 18꞉04꞉01",
       "year": 2012,
       "year_display": "2012",
-      "status": "published",
-      "series_ids": [
-        "135"
-      ],
+      "series_id": "135",
       "project_folder": "train moments"
     },
     {
       "work_id": "01820",
+      "record_hash": "2132ed31719b65b4727655ad270dec90a55ce9cd1ed773bbf2d5e143a4d586e9",
       "title": "2012-12-22 15꞉39꞉48",
       "year": 2012,
       "year_display": "2012",
-      "status": "published",
-      "series_ids": [
-        "135"
-      ],
+      "series_id": "135",
       "project_folder": "train moments"
     },
     {
       "work_id": "01821",
+      "record_hash": "084fa6c1f1e93b67abac87aefc4a7139d146eb7313346009d019a2d65876566e",
       "title": "2012-12-22 15꞉40꞉00",
       "year": 2012,
       "year_display": "2012",
-      "status": "published",
-      "series_ids": [
-        "135"
-      ],
+      "series_id": "135",
       "project_folder": "train moments"
     },
     {
       "work_id": "01822",
+      "record_hash": "4fe9c6b5753dc4aa209c92a20850c1f71dadb0ba3847602302d7e22beca99f0f",
       "title": "2012-12-22 15꞉55꞉41",
       "year": 2012,
       "year_display": "2012",
-      "status": "published",
-      "series_ids": [
-        "135"
-      ],
+      "series_id": "135",
       "project_folder": "train moments"
     },
     {
       "work_id": "01823",
+      "record_hash": "a67dc8c25760b6e5e08401eee5a6953e03a66ebc598f3b96aa7905ee095cf13b",
       "title": "2012-12-22 15꞉56꞉09",
       "year": 2012,
       "year_display": "2012",
-      "status": "published",
-      "series_ids": [
-        "135"
-      ],
+      "series_id": "135",
       "project_folder": "train moments"
     },
     {
       "work_id": "01824",
+      "record_hash": "0ab9001ac3e22c623c2998a3c77cb2e96d5120bad459edc4ba6133cd72c7c34a",
       "title": "2012-12-28 15꞉06꞉23",
       "year": 2012,
       "year_display": "2012",
-      "status": "published",
-      "series_ids": [
-        "135"
-      ],
+      "series_id": "135",
       "project_folder": "train moments"
     },
     {
       "work_id": "01825",
+      "record_hash": "96b2ae4dd524891316a6529de8905ab3adc2fa4a572b578cdd2abbfaf1ef49ce",
       "title": "2013-01-29 09꞉59꞉17",
       "year": 2013,
       "year_display": "2013",
-      "status": "published",
-      "series_ids": [
-        "135"
-      ],
+      "series_id": "135",
       "project_folder": "train moments"
     },
     {
       "work_id": "01826",
+      "record_hash": "abe91b939e6af096f0aff7080096892ce4f224151000be8244d9e592676d656e",
       "title": "2013-01-29 09꞉59꞉22",
       "year": 2013,
       "year_display": "2013",
-      "status": "published",
-      "series_ids": [
-        "135"
-      ],
+      "series_id": "135",
       "project_folder": "train moments"
     },
     {
       "work_id": "01827",
+      "record_hash": "fbce94fe8e38c123d685197f7b021fb096dd43ad186b090d7890be7e55468f2b",
       "title": "2013-01-29 09꞉59꞉42",
       "year": 2013,
       "year_display": "2013",
-      "status": "published",
-      "series_ids": [
-        "135"
-      ],
+      "series_id": "135",
       "project_folder": "train moments"
     },
     {
       "work_id": "01828",
+      "record_hash": "57b1b57734e4c8ec31aa0a768bff350e2b9e023d8c2ba9528e0fcfc59e3caae5",
       "title": "2013-01-29 09꞉59꞉45",
       "year": 2013,
       "year_display": "2013",
-      "status": "published",
-      "series_ids": [
-        "135"
-      ],
+      "series_id": "135",
       "project_folder": "train moments"
     },
     {
       "work_id": "01829",
+      "record_hash": "eeed19cdabb1046d3646d8e2b9d43998822350bcb094d51bee39f2f29062ffc5",
       "title": "2013-03-20 11꞉20꞉34",
       "year": 2013,
       "year_display": "2013",
-      "status": "published",
-      "series_ids": [
-        "135"
-      ],
+      "series_id": "135",
       "project_folder": "train moments"
     },
     {
       "work_id": "01830",
+      "record_hash": "2e73434144e66a0dce4220721cc87537ed0aba5ac6c70c64b06f9c5685944295",
       "title": "2013-03-20 11꞉36꞉19",
       "year": 2013,
       "year_display": "2013",
-      "status": "published",
-      "series_ids": [
-        "135"
-      ],
+      "series_id": "135",
       "project_folder": "train moments"
     },
     {
       "work_id": "01831",
+      "record_hash": "74f04778c068d93cf0b621c84168c816e9c24e54208cd91e27e32e8e3d2804f0",
       "title": "2013-05-15 19꞉31꞉20",
       "year": 2013,
       "year_display": "2013",
-      "status": "published",
-      "series_ids": [
-        "135"
-      ],
+      "series_id": "135",
       "project_folder": "train moments"
     },
     {
       "work_id": "01832",
+      "record_hash": "2e09abd34d44c0f2f16e27b5bfa603833260dae25095ff8978eb662e483a8635",
       "title": "2015-05-30 13꞉27꞉54",
       "year": 2015,
       "year_display": "2015",
-      "status": "published",
-      "series_ids": [
-        "135"
-      ],
+      "series_id": "135",
       "project_folder": "train moments"
     },
     {
       "work_id": "01833",
+      "record_hash": "12e40256e9cc22089772d51913d9b148afa954efcb27f156e83caed29d56ee2b",
       "title": "2016-10-07 13꞉06꞉31",
       "year": 2016,
       "year_display": "2016",
-      "status": "published",
-      "series_ids": [
-        "135"
-      ],
+      "series_id": "135",
       "project_folder": "train moments"
     },
     {
       "work_id": "01834",
+      "record_hash": "fc1ce0e318d9bc571f714ac878c510b928e23a87ad98386d30e782ff3ac25fb7",
       "title": "2017-12-23 10꞉08꞉19",
       "year": 2017,
       "year_display": "2017",
-      "status": "published",
-      "series_ids": [
-        "135"
-      ],
+      "series_id": "135",
       "project_folder": "train moments"
     },
     {
       "work_id": "01835",
+      "record_hash": "27d006d3c62f310098bbf43edd4c7bcc7f26e4a1b23846086b2fb50ec62e0392",
       "title": "2017-12-23 10꞉20꞉29",
       "year": 2017,
       "year_display": "2017",
-      "status": "published",
-      "series_ids": [
-        "135"
-      ],
+      "series_id": "135",
       "project_folder": "train moments"
     },
     {
       "work_id": "01836",
+      "record_hash": "c76cd517b064fc15199610221dfb28ced29761ac9f9cccbad2c499a8215208f5",
       "title": "2017-12-23 10꞉26꞉29",
       "year": 2017,
       "year_display": "2017",
-      "status": "published",
-      "series_ids": [
-        "135"
-      ],
+      "series_id": "135",
       "project_folder": "train moments"
     },
     {
       "work_id": "01837",
+      "record_hash": "3a3dbedf80cfd76dacada5342b9f6c8324bb83102bfc4fe6116d312d77adc367",
       "title": "2017-12-23 10꞉29꞉08",
       "year": 2017,
       "year_display": "2017",
-      "status": "published",
-      "series_ids": [
-        "135"
-      ],
+      "series_id": "135",
       "project_folder": "train moments"
     },
     {
       "work_id": "01838",
+      "record_hash": "e590ace2cb001a4ebddc30cd6c355feb3a1c52811b8b3e83109971c174d34af3",
       "title": "2017-12-29 10꞉21꞉54",
       "year": 2017,
       "year_display": "2017",
-      "status": "published",
-      "series_ids": [
-        "135"
-      ],
+      "series_id": "135",
       "project_folder": "train moments"
     },
     {
       "work_id": "01839",
+      "record_hash": "754768ef2acfb354695f8ad9ad0a97dabd415ac63b78f4bc3f15e58ffbcee184",
       "title": "2018-03-18 10꞉46꞉15",
       "year": 2018,
       "year_display": "2018",
-      "status": "published",
-      "series_ids": [
-        "135"
-      ],
+      "series_id": "135",
       "project_folder": "train moments"
     },
     {
       "work_id": "01840",
+      "record_hash": "8b2c96587e5584f3db15ac7349898ac624dd2d0d84addd510bba87b01969aab9",
       "title": "2018-03-18 10꞉46꞉21",
       "year": 2018,
       "year_display": "2018",
-      "status": "published",
-      "series_ids": [
-        "135"
-      ],
+      "series_id": "135",
       "project_folder": "train moments"
     },
     {
       "work_id": "01841",
+      "record_hash": "b7547c819766e9cae0fb47e7969af534f99ab47e4ddd6afdba528c29bc2d3d56",
       "title": "2018-03-18 10꞉47꞉10",
       "year": 2018,
       "year_display": "2018",
-      "status": "published",
-      "series_ids": [
-        "135"
-      ],
+      "series_id": "135",
       "project_folder": "train moments"
     },
     {
       "work_id": "01842",
+      "record_hash": "c18d6c26a0d3d1ed9464c2bad2e879a38952755f0cda5e5be940c44bbdfadc84",
       "title": "2018-03-18 10꞉47꞉20",
       "year": 2018,
       "year_display": "2018",
-      "status": "published",
-      "series_ids": [
-        "135"
-      ],
+      "series_id": "135",
       "project_folder": "train moments"
     },
     {
       "work_id": "01843",
+      "record_hash": "600d63b2dc1927e419e925c0cd4b1e2a5e4f7b0fd438ec21771a4f2985c798ac",
       "title": "2018-03-18 10꞉48꞉26",
       "year": 2018,
       "year_display": "2018",
-      "status": "published",
-      "series_ids": [
-        "135"
-      ],
+      "series_id": "135",
       "project_folder": "train moments"
     },
     {
       "work_id": "01844",
+      "record_hash": "cf35aa3dde6a999a9717f7052724a78f385a3759b02417f2aedd80ff3e263844",
       "title": "2018-03-18 10꞉49꞉18",
       "year": 2018,
       "year_display": "2018",
-      "status": "published",
-      "series_ids": [
-        "135"
-      ],
+      "series_id": "135",
       "project_folder": "train moments"
     },
     {
       "work_id": "01845",
+      "record_hash": "35d7f303f1e43d3a08ac410fdc72e3bdb85dd4c380e0f051a5cd57eb0cd664fb",
       "title": "2018-03-18 11꞉04꞉03",
       "year": 2018,
       "year_display": "2018",
-      "status": "published",
-      "series_ids": [
-        "135"
-      ],
+      "series_id": "135",
       "project_folder": "train moments"
     },
     {
       "work_id": "01846",
+      "record_hash": "20fbc60bd6a6ebabe247633de2cdcbdf2baba20bd198c359e356afb9ffe49358",
       "title": "2018-03-18 11꞉04꞉18",
       "year": 2018,
       "year_display": "2018",
-      "status": "published",
-      "series_ids": [
-        "135"
-      ],
+      "series_id": "135",
       "project_folder": "train moments"
     },
     {
       "work_id": "01847",
+      "record_hash": "82fd4df3cd22d42ff4ecfea8b0964809368977039c423e0c49e857be375c3c2b",
       "title": "2018-03-18 11꞉04꞉21",
       "year": 2018,
       "year_display": "2018",
-      "status": "published",
-      "series_ids": [
-        "135"
-      ],
+      "series_id": "135",
       "project_folder": "train moments"
     },
     {
       "work_id": "01848",
+      "record_hash": "98f3d6a9fae83a783488fc75a638f67924dbdaa478ddc407eb81638247144ba9",
       "title": "2018-03-18 11꞉04꞉35",
       "year": 2018,
       "year_display": "2018",
-      "status": "published",
-      "series_ids": [
-        "135"
-      ],
+      "series_id": "135",
       "project_folder": "train moments"
     },
     {
       "work_id": "01849",
+      "record_hash": "8cf6dc9efb1ff6f8a8e5403dec60f0a39afb9b8a1f194ffda598cc93d289fe75",
       "title": "2018-03-18 11꞉04꞉52",
       "year": 2018,
       "year_display": "2018",
-      "status": "published",
-      "series_ids": [
-        "135"
-      ],
+      "series_id": "135",
       "project_folder": "train moments"
     },
     {
       "work_id": "01850",
+      "record_hash": "b69eb273568a2777595fcfa6d0b65e57c911ed2d6631e5dbfd7410e58166ab51",
       "title": "2018-03-18 11꞉05꞉16",
       "year": 2018,
       "year_display": "2018",
-      "status": "published",
-      "series_ids": [
-        "135"
-      ],
+      "series_id": "135",
       "project_folder": "train moments"
     },
     {
       "work_id": "01851",
+      "record_hash": "f0b59448faedad90d9567c2aaf89a8a0ba8bcc6315c199461251d9c6dfeba93c",
       "title": "2018-03-18 11꞉16꞉39",
       "year": 2018,
       "year_display": "2018",
-      "status": "published",
-      "series_ids": [
-        "135"
-      ],
+      "series_id": "135",
       "project_folder": "train moments"
     },
     {
       "work_id": "01852",
+      "record_hash": "136e3f2d5495a503199b44e3f2e20ad63a7abc12dfb4468ce47b8c0d0e986883",
       "title": "2018-03-18 11꞉17꞉12",
       "year": 2018,
       "year_display": "2018",
-      "status": "published",
-      "series_ids": [
-        "135"
-      ],
+      "series_id": "135",
       "project_folder": "train moments"
     },
     {
       "work_id": "01853",
+      "record_hash": "b675ab3c1efcd2d36c780d2a27cc458edb7c647878fac1a67fbf43e14cc950e6",
       "title": "2018-03-18 11꞉19꞉41",
       "year": 2018,
       "year_display": "2018",
-      "status": "published",
-      "series_ids": [
-        "135"
-      ],
+      "series_id": "135",
       "project_folder": "train moments"
     },
     {
       "work_id": "01854",
+      "record_hash": "ed7101bb4245e60cb21d85d6f5645d4def8a2d913fd39ad4165b1ad02cac9c1f",
       "title": "2018-03-18 11꞉19꞉44",
       "year": 2018,
       "year_display": "2018",
-      "status": "published",
-      "series_ids": [
-        "135"
-      ],
+      "series_id": "135",
       "project_folder": "train moments"
     },
     {
       "work_id": "01855",
+      "record_hash": "a0732b533576a1598763cbad99ceb13371003dc6322d3825a249f5cadb0dfdf9",
       "title": "2018-03-18 11꞉20꞉04",
       "year": 2018,
       "year_display": "2018",
-      "status": "published",
-      "series_ids": [
-        "135"
-      ],
+      "series_id": "135",
       "project_folder": "train moments"
     },
     {
       "work_id": "01856",
+      "record_hash": "71c32b906c29ea4d1c4bbfffabdad96aa2ae6444419c2c52188d7c2152731e9a",
       "title": "2018-03-18 11꞉51꞉58",
       "year": 2018,
       "year_display": "2018",
-      "status": "published",
-      "series_ids": [
-        "135"
-      ],
+      "series_id": "135",
       "project_folder": "train moments"
     },
     {
       "work_id": "01857",
+      "record_hash": "c0bf61cce70b7267bd5ba2cc0c2889850f5a2e2fdc80f3ad88fb725cd9d9b677",
       "title": "2018-03-18 13꞉52꞉27",
       "year": 2018,
       "year_display": "2018",
-      "status": "published",
-      "series_ids": [
-        "135"
-      ],
+      "series_id": "135",
       "project_folder": "train moments"
     },
     {
       "work_id": "01858",
+      "record_hash": "31c55954232a659dd9feb19c335bf3d67e83a0fe105c1e8d90613828639c52cc",
       "title": "2018-03-18 13꞉52꞉28",
       "year": 2018,
       "year_display": "2018",
-      "status": "published",
-      "series_ids": [
-        "135"
-      ],
+      "series_id": "135",
       "project_folder": "train moments"
     },
     {
       "work_id": "01859",
+      "record_hash": "e26878a3514cb8224068015633e0b77d5a7067fd79d089ecec45bf61dd42be5c",
       "title": "2018-03-18 13꞉56꞉57",
       "year": 2018,
       "year_display": "2018",
-      "status": "published",
-      "series_ids": [
-        "135"
-      ],
+      "series_id": "135",
       "project_folder": "train moments"
     },
     {
       "work_id": "01860",
+      "record_hash": "314442a58188f7f03c0df4595e79fb663c3cc9577ec463e2c864041bf729daaa",
       "title": "2018-03-18 14꞉02꞉46",
       "year": 2018,
       "year_display": "2018",
-      "status": "published",
-      "series_ids": [
-        "135"
-      ],
+      "series_id": "135",
       "project_folder": "train moments"
     },
     {
       "work_id": "01861",
+      "record_hash": "1b7ee2661a4ce80b8eecde3e75e103ce57c1d7bedb61bf580e2b222f7df29a36",
       "title": "2018-03-18 14꞉07꞉31",
       "year": 2018,
       "year_display": "2018",
-      "status": "published",
-      "series_ids": [
-        "135"
-      ],
+      "series_id": "135",
       "project_folder": "train moments"
     },
     {
       "work_id": "01862",
+      "record_hash": "fe859ec17fa1a2b3bdd2f2aa2b4f59b22059a6ce89c7d4f6c9f6f1c3bd277380",
       "title": "2018-06-16 13꞉58꞉06",
       "year": 2018,
       "year_display": "2018",
-      "status": "published",
-      "series_ids": [
-        "135"
-      ],
+      "series_id": "135",
       "project_folder": "train moments"
     },
     {
       "work_id": "01863",
+      "record_hash": "21e7f923d5b93ad811dbfe8c535b15045f39d8d25baaa9da473f3a5d8d1aa643",
       "title": "2018-08-20 12꞉21꞉31",
       "year": 2018,
       "year_display": "2018",
-      "status": "published",
-      "series_ids": [
-        "135"
-      ],
+      "series_id": "135",
       "project_folder": "train moments"
     },
     {
       "work_id": "01864",
+      "record_hash": "c7d34c168a1fd0f84f37d3ccf69624bb7172e77d4c27772013b6efb984b39ebc",
       "title": "2018-08-20 12꞉38꞉18",
       "year": 2018,
       "year_display": "2018",
-      "status": "published",
-      "series_ids": [
-        "135"
-      ],
+      "series_id": "135",
       "project_folder": "train moments"
     },
     {
       "work_id": "01865",
+      "record_hash": "932e3090f53d2d9092a71fedb253b93abac5825c85e38c97be21dd50f3a744d1",
       "title": "2018-08-20 14꞉34꞉12",
       "year": 2018,
       "year_display": "2018",
-      "status": "published",
-      "series_ids": [
-        "135"
-      ],
+      "series_id": "135",
       "project_folder": "train moments"
     },
     {
       "work_id": "01866",
+      "record_hash": "866b135cb094a04f3cf7dc541ccb4c3e1619c09e528ae270a486ce156ffd6b76",
       "title": "2018-08-22 11꞉37꞉56",
       "year": 2018,
       "year_display": "2018",
-      "status": "published",
-      "series_ids": [
-        "135"
-      ],
+      "series_id": "135",
       "project_folder": "train moments"
     },
     {
       "work_id": "01867",
+      "record_hash": "4ee3fb3d9035f7361ddf932010df3135b259cc90ec1fa5d7e9761f5341b6235c",
       "title": "2018-08-25 14꞉39꞉37",
       "year": 2018,
       "year_display": "2018",
-      "status": "published",
-      "series_ids": [
-        "135"
-      ],
+      "series_id": "135",
       "project_folder": "train moments"
     },
     {
       "work_id": "01868",
+      "record_hash": "5f0f4e49e1b679a3954d3716a42bd29209c577608d36acda58e1fa5b579b37c5",
       "title": "2019-01-24 07꞉45꞉00",
       "year": 2019,
       "year_display": "2019",
-      "status": "published",
-      "series_ids": [
-        "135"
-      ],
+      "series_id": "135",
       "project_folder": "train moments"
     }
   ],
-  "ordered_published_work_ids": [
+  "ordered_work_ids": [
     "01770",
     "01771",
     "01772",
