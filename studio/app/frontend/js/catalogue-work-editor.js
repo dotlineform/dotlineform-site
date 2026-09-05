@@ -1,5 +1,5 @@
 import { saveCurrentWork } from "./catalogue-work-actions.js";
-import { catalogueOutputError } from "./catalogue-output-result.js";
+import { catalogueOutputError, catalogueSavedActionError } from "./catalogue-output-result.js";
 import {
   getStudioText
 } from "./studio-config.js";
@@ -170,6 +170,7 @@ async function openDetailSectionPicker(state) {
   state.isSaving = true;
   syncWorkRouteBusyState(state);
   renderEditorMessage(state);
+  let savedResponse = null;
   try {
     state.messageController.setActionTextWithState(
       state.statusNode,
@@ -182,6 +183,7 @@ async function openDetailSectionPicker(state) {
       project_subfolder: selection.project_subfolder,
       filenames
     });
+    savedResponse = payload;
     const outputError = catalogueOutputError(payload);
     const sectionId = normalizeText(payload && payload.section_id);
     if (sectionId) state.detailBrowserSelectedSectionId = sectionId;
@@ -208,7 +210,7 @@ async function openDetailSectionPicker(state) {
   } catch (error) {
     state.messageController.setActionTextWithState(
       state.resultNode,
-      normalizeText(error && error.message) || t(state, "detail_section_create_status_failed", "Detail section create failed."),
+      catalogueSavedActionError(savedResponse, error) || normalizeText(error && error.message) || t(state, "detail_section_create_status_failed", "Detail section create failed."),
       "error"
     );
   } finally {
@@ -245,12 +247,14 @@ async function editDetailSection(state, row, rows = []) {
     "info"
   );
   state.messageController.setActionTextWithState(state.resultNode, "");
+  let savedResponse = null;
   try {
     const response = await saveCatalogueWorkDetailSection({
       work_id: state.currentWorkId,
       ...(result.payload || {}),
       expected_record_hash: state.currentLookup.detail_sections.find(section => section.section_id === sectionId)?.record_hash
     });
+    savedResponse = response;
     state.currentLookup = await loadWorkLookupRecord(state, state.currentWorkId);
     state.detailBrowserSelectedSectionId = sectionId;
     updateSummary(state);
@@ -267,7 +271,7 @@ async function editDetailSection(state, row, rows = []) {
   } catch (error) {
     state.messageController.setActionTextWithState(
       state.statusNode,
-      `${t(state, "detail_section_edit_status_failed", "Detail section save failed.")} ${normalizeText(error && error.message)}`.trim(),
+      catalogueSavedActionError(savedResponse, error) || `${t(state, "detail_section_edit_status_failed", "Detail section save failed.")} ${normalizeText(error && error.message)}`.trim(),
       "error"
     );
   } finally {
@@ -298,6 +302,7 @@ async function deleteDetailSection(state, row) {
     section_id: sectionId,
     expected_record_hash: state.currentLookup.detail_sections.find(section => section.section_id === sectionId)?.record_hash
   };
+  let savedResponse = null;
   try {
     const previewResponse = await previewCatalogueDelete(request);
     const preview = extractCatalogueActionPreview(previewResponse);
@@ -340,6 +345,7 @@ async function deleteDetailSection(state, row) {
       "info"
     );
     const response = await applyCatalogueDelete(request);
+    savedResponse = response;
     state.currentLookup = await loadWorkLookupRecord(state, state.currentWorkId);
     state.detailBrowserSelectedSectionId = "";
     state.detailBrowserSelectedDetailUid = "";
@@ -359,7 +365,7 @@ async function deleteDetailSection(state, row) {
   } catch (error) {
     state.messageController.setActionTextWithState(
       state.statusNode,
-      `${t(state, "detail_section_delete_status_failed", "Detail section delete failed.")} ${normalizeText(error && error.message)}`.trim(),
+      catalogueSavedActionError(savedResponse, error) || `${t(state, "detail_section_delete_status_failed", "Detail section delete failed.")} ${normalizeText(error && error.message)}`.trim(),
       "error"
     );
   } finally {
@@ -617,7 +623,6 @@ async function configureWorkEditorRuntime(state, elements) {
     applyText: (config) => {
       applyCatalogueEditorMediaAttrs(elements.root, config, [
         "worksPrimaryBase",
-        "stagedWorksPrimaryBase",
         "thumbWorksBase",
         "thumbWorkDetailsBase",
         "primaryDisplayWidth",

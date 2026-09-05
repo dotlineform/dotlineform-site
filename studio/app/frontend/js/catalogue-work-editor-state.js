@@ -113,8 +113,6 @@ export function createWorkEditorState(elements, options = {}) {
     rebuildPending: false,
     pendingBuildExtraSeriesIds: [],
     buildPreview: null,
-    mediaPreviewVersion: "",
-    mediaPublishPending: false,
     workMediaSourceConfig: null,
     detailBrowserSelectedSectionId: "",
     detailBrowserSelectedDetailUid: "",

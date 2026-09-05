@@ -38,7 +38,6 @@ export function loadCatalogueMediaConfig(root) {
   const thumbSizes = parseSizes(dataset.thumbSizes, [96, 192]);
   return {
     worksPrimaryBase: normalizeText(dataset.worksPrimaryBase),
-    stagedWorksPrimaryBase: normalizeText(dataset.stagedWorksPrimaryBase),
     worksThumbBase: normalizeText(dataset.thumbWorksBase),
     workDetailsThumbBase: normalizeText(dataset.thumbWorkDetailsBase),
     primaryDisplayWidth: Number(dataset.primaryDisplayWidth || 800) || 800,
@@ -56,9 +55,7 @@ export function buildWorkPrimaryPreview(config, workId, options = {}) {
   const fullWidth = Number(config && config.primaryFullWidth) || width;
   const suffix = normalizeText(config && config.primarySuffix) || "primary";
   const format = normalizeText(config && config.assetFormat) || "webp";
-  const base = options.staged
-    ? normalizeText(config && config.stagedWorksPrimaryBase) || normalizeText(config && config.worksPrimaryBase)
-    : normalizeText(config && config.worksPrimaryBase);
+  const base = normalizeText(config && config.worksPrimaryBase);
   const src = appendVersionQuery(joinAssetPath(base, stem, suffix, width, format), options.mediaVersion);
   const fullSrc = appendVersionQuery(joinAssetPath(base, stem, suffix, fullWidth, format), options.mediaVersion);
   return {

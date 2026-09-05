@@ -34,7 +34,6 @@ WORKS_SCHEMA: List[tuple[str, str, Any]] = [
     ("width_px", "width_px", coerce_int),
     ("height_px", "height_px", coerce_int),
     ("media_version", "media_version", coerce_int),
-    # tags handled separately (csv list)
 ]
 
 
@@ -89,35 +88,6 @@ def normalize_catalogue_documents(values: Sequence[Mapping[str, Any]]) -> List[D
         {"url": url, "title": title}
         for url, title in sorted(documents_by_url.items())
     ]
-
-
-def build_work_json_record(
-    work_record: Mapping[str, Any],
-    *,
-    documents: Sequence[Mapping[str, Any]] = (),
-) -> Dict[str, Any]:
-    public_record = dict(work_record)
-    public_record.pop("series_title", None)
-    public_record.pop("series_sort", None)
-    public_record.pop("title_sort", None)
-    public_record.pop("checksum", None)
-    public_record["documents"] = normalize_catalogue_documents(documents)
-    return compact_json_object(public_record)
-
-
-def build_series_json_record(
-    series_record: Mapping[str, Any],
-    *,
-    documents: Sequence[Mapping[str, Any]] = (),
-) -> Dict[str, Any]:
-    public_record = dict(series_record)
-    public_record.pop("layout", None)
-    public_record.pop("checksum", None)
-    public_record.pop("works", None)
-    public_record.pop("primary_work_id", None)
-    public_record.pop("notes", None)
-    public_record["documents"] = normalize_catalogue_documents(documents)
-    return compact_json_object(public_record)
 
 
 def build_work_json_payload(
@@ -183,22 +153,3 @@ def build_series_json_payload(
             "member_works": public_member_works,
         }
     )
-
-
-def build_sections_from_detail_sections(detail_sections: List[Mapping[str, Any]]) -> List[Dict[str, Any]]:
-    sections: List[Dict[str, Any]] = []
-    for section in detail_sections:
-        detail_records = section.get("details")
-        details = [dict(detail) for detail in detail_records] if isinstance(detail_records, list) else []
-        sections.append(
-            compact_json_object(
-                {
-                    "section_id": coerce_string(section.get("section_id")),
-                    "section_title": coerce_string(section.get("section_title")),
-                    "section_order": coerce_int(section.get("section_order")),
-                    "detail_sort": coerce_string(section.get("detail_sort")),
-                    "details": details,
-                }
-            )
-        )
-    return sections

@@ -69,23 +69,6 @@ function clearRecordListActions(state, key, rootNode) {
 }
 
 
-function cacheBustUrl(url, version) {
-  const text = normalizeText(url);
-  const token = normalizeText(version);
-  if (!text || !token) return text;
-  return `${text}${text.includes("?") ? "&" : "?"}v=${encodeURIComponent(token)}`;
-}
-
-function cacheBustSrcset(srcset, version) {
-  const token = normalizeText(version);
-  if (!srcset || !token) return srcset || "";
-  return String(srcset).split(",").map((entry) => {
-    const parts = entry.trim().split(/\s+/);
-    if (!parts[0]) return "";
-    return [cacheBustUrl(parts[0], token), ...parts.slice(1)].join(" ");
-  }).filter(Boolean).join(", ");
-}
-
 export function buildWorkRecordSummary(record) {
   const title = normalizeText(record && record.title);
   const yearDisplay = normalizeText(record && record.year_display);
@@ -116,8 +99,6 @@ export function renderWorkCurrentPreview(state, options = {}) {
   const preview = buildWorkPrimaryPreview(state.mediaConfig, record.work_id, {
     mediaVersion: record.media_version
   });
-  const previewSrc = cacheBustUrl(preview.src, state.mediaPreviewVersion);
-  const previewSrcset = cacheBustSrcset(preview.srcset, state.mediaPreviewVersion);
   const fallback = {
     fallbackState: preview.src ? "unavailable" : "not-configured",
     fallbackText: preview.src
@@ -133,7 +114,7 @@ export function renderWorkCurrentPreview(state, options = {}) {
   const previewRel = "noopener";
   const frameHtml = `
     <div class="catalogueRecordPreview__frame" data-preview-state="${escapeHtml(previewState)}" data-preview-fallback="${escapeHtml(fallback.fallbackState)}">
-      ${preview.src && canShowGenerated ? `<img class="catalogueRecordPreview__media" data-preview-image src="${escapeHtml(previewSrc)}" srcset="${escapeHtml(previewSrcset)}" sizes="180px" width="${escapeHtml(String(preview.width || 180))}" alt="${escapeHtml(caption)}">` : ""}
+      ${preview.src && canShowGenerated ? `<img class="catalogueRecordPreview__media" data-preview-image src="${escapeHtml(preview.src)}" srcset="${escapeHtml(preview.srcset)}" sizes="180px" width="${escapeHtml(String(preview.width || 180))}" alt="${escapeHtml(caption)}">` : ""}
       <div class="catalogueRecordPreview__placeholder">${escapeHtml(fallback.fallbackText)}</div>
     </div>
   `;

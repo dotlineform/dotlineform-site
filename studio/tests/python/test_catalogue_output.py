@@ -169,6 +169,18 @@ def test_create_and_delete_without_media_complete_output(output_catalogue):
     assert not (root / "works/index/00003.json").exists()
 
 
+def test_records_without_media_do_not_require_staging(output_catalogue):
+    repo, _, root = output_catalogue
+    staging = root.parent / "media-staging"
+    staging.rmdir()
+    for kind, record_id in (("work", "00003"), ("series", "011")):
+        _, saved = handle_catalogue_post(repo, f"/{kind}/create", {
+            f"{kind}_id": record_id, "record": {"title": "No media required", "year": 2026, "year_display": "2026"},
+        })
+        assert saved["output"]["status"] == "completed", saved
+    assert not staging.exists()
+
+
 def test_studio_serves_generated_thumbnails_and_rejects_paths_outside_output(output_catalogue, tmp_path):
     repo, _, root = output_catalogue
     thumbnail = root / "works/thumbs/00001-thumb-800.webp"

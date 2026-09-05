@@ -15,7 +15,6 @@ if str(SERVICES_DIR) not in sys.path:
     sys.path.insert(0, str(SERVICES_DIR))
 
 from catalogue import catalogue_generation_records as records  # noqa: E402
-from catalogue.catalogue_generation_common import compute_payload_version  # noqa: E402
 
 
 def test_work_projection_order_and_coercion() -> None:
@@ -39,41 +38,12 @@ def test_work_projection_order_and_coercion() -> None:
     assert projected["media_version"] == 2
 
 
-def test_public_series_records_prune_internal_fields() -> None:
-    series = records.build_series_json_record(
-        {
-            "series_id": "009",
-            "layout": "series",
-            "checksum": "abc",
-            "title": "Series",
-            "works": ["00001"],
-            "primary_work_id": "00001",
-            "notes": "Retired source note",
-        }
-    )
-    assert series == {"series_id": "009", "title": "Series", "documents": []}
-
-
-def test_public_documents_are_sorted_deduped_and_versioned() -> None:
+def test_generated_documents_are_sorted_deduped_and_versioned() -> None:
     document_a = {"url": "/a", "title": "A"}
     document_z = {"url": "/z", "title": "Z"}
     series_document = {"url": "/series", "title": "Series note"}
-    work = records.build_work_json_record(
-        {"work_id": "00042", "title": "Work"},
-        documents=[document_z, document_a, document_a],
-    )
-    series = records.build_series_json_record(
-        {"series_id": "009", "title": "Series"},
-        documents=[series_document],
-    )
-
-    assert records.WORK_RECORD_SCHEMA_VERSION == "work_record_v6"
-    assert records.SERIES_RECORD_SCHEMA_VERSION == "series_record_v5"
-    assert work["documents"] == [document_a, document_z]
-    assert series["documents"] == [series_document]
-    assert compute_payload_version({"work": work}) != compute_payload_version(
-        {"work": {**work, "documents": [document_a]}}
-    )
+    work = {"work_id": "00042", "title": "Work", "documents": [document_z, document_a, document_a]}
+    series = {"series_id": "009", "title": "Series", "documents": [series_document]}
     with pytest.raises(ValueError, match="documents must be an array"):
         records.normalize_catalogue_documents("/not-an-array")
     with pytest.raises(ValueError, match="conflicting titles"):
@@ -88,6 +58,16 @@ def test_public_documents_are_sorted_deduped_and_versioned() -> None:
         generated_at_utc="2026-08-09T20:00:00Z",
         count=0,
     )
+    assert work_payload["header"]["schema"] == "work_record_v6"
+    assert work_payload["work"]["documents"] == [document_a, document_z]
+    changed_work_payload = records.build_work_json_payload(
+        work_id="00042",
+        work_record={**work, "documents": [document_a]},
+        sections=[],
+        generated_at_utc="2026-08-09T20:00:00Z",
+        count=0,
+    )
+    assert work_payload["header"]["version"] != changed_work_payload["header"]["version"]
     assert "content_html" not in work_payload
 
     series_payload = records.build_series_json_payload(
@@ -98,6 +78,7 @@ def test_public_documents_are_sorted_deduped_and_versioned() -> None:
     )
     assert series_payload["header"]["schema"] == "series_record_v5"
     assert series_payload["header"]["count"] == 1
+    assert series_payload["series"]["documents"] == [series_document]
     assert series_payload["member_works"] == [
         {"work_id": "00001", "title": "Only", "year": 2026, "year_display": "2026"}
     ]
@@ -110,7 +91,8 @@ def test_public_documents_are_sorted_deduped_and_versioned() -> None:
             generated_at_utc="2026-08-09T20:00:00Z",
         )
 
-def test_detail_record_grouping_is_deterministic() -> None:
+
+def test_detail_record_preserves_exact_identity_and_media() -> None:
     detail_record = records.build_canonical_detail_record(
         "00042",
         "001",
@@ -127,39 +109,3 @@ def test_detail_record_grouping_is_deterministic() -> None:
         "height_px": 600,
         "media_version": 4,
     }
-
-    sections = records.build_sections_from_detail_sections(
-        [
-            {
-                "section_id": "a",
-                "section_title": "A section",
-                "section_order": 1,
-                "details": [{"detail_id": "004", "title": "First section"}],
-            },
-            {
-                "section_id": "b",
-                "section_title": "B section",
-                "section_order": 2,
-                "details": [
-                    {"detail_id": "001", "title": "First"},
-                    {"detail_id": "002", "title": "Second"},
-                ],
-            },
-        ]
-    )
-
-    assert [section["section_id"] for section in sections] == ["a", "b"]
-    assert [detail["detail_id"] for detail in sections[1]["details"]] == ["001", "002"]
-    assert "section_id" not in sections[1]["details"][0]
-    assert "section_order" not in sections[1]["details"][0]
-
-
-def main() -> None:
-    test_work_projection_order_and_coercion()
-    test_public_series_records_prune_internal_fields()
-    test_detail_record_grouping_is_deterministic()
-    print("Catalogue generation record tests OK")
-
-
-if __name__ == "__main__":
-    main()

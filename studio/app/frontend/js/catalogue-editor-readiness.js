@@ -44,37 +44,3 @@ export function catalogueReadinessItemSummary(item, options = {}) {
     exists: Boolean(item && item.exists)
   };
 }
-
-export function cataloguePreviewFallback(item, options = {}) {
-  const status = normalizeText(item && item.status);
-  const summary = normalizeText(item && item.summary);
-  const missingGeneratedText = normalizeText(options.missingGeneratedText);
-  const missingSourceText = normalizeText(options.missingSourceText);
-  if (status === "ready" || status === "pending_generation") {
-    return {
-      fallbackState: "missing-generated",
-      fallbackText: status === "pending_generation" ? (summary || missingGeneratedText) : missingGeneratedText
-    };
-  }
-  if (status === "missing_file") {
-    return {
-      fallbackState: "missing-source",
-      fallbackText: missingSourceText
-    };
-  }
-  if (status === "unavailable") {
-    return {
-      fallbackState: "unavailable",
-      fallbackText: summary || normalizeText(options.unavailableText)
-    };
-  }
-  return {
-    fallbackState: "not-configured",
-    fallbackText: summary || normalizeText(options.notConfiguredText)
-  };
-}
-
-export function catalogueGeneratedStatusText(preview, options = {}) {
-  if (!preview) return normalizeText(options.missingText) || "-";
-  return preview.generated_json_exists ? "json yes" : "json no";
-}

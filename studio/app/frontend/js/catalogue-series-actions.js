@@ -1,5 +1,5 @@
 import { buildStudioRouteUrl } from "./studio-config.js";
-import { catalogueOutputError } from "./catalogue-output-result.js";
+import { catalogueOutputError, catalogueSavedActionError } from "./catalogue-output-result.js";
 import { applyCatalogueDelete, createCatalogueSeries, previewCatalogueDelete, saveCatalogueSeries } from "./catalogue-editor-service-client.js";
 
 import { formatCatalogueDeletePreview } from "./catalogue-editor-modal-formatters.js";
@@ -49,8 +49,10 @@ export async function saveCurrentSeries(state, context) {
   );
   setTextWithState(context, state.resultNode, "");
 
+  let savedResponse = null;
   try {
     const response = await saveCatalogueSeries(buildPayload(state, await buildChangedSeriesWorkUpdates(state)));
+    savedResponse = response;
     const record = response && response.record && typeof response.record === "object" ? response.record : null;
     if (!record) throw new Error("save response missing record");
     state.seriesById.set(state.currentSeriesId, {
@@ -82,9 +84,9 @@ export async function saveCurrentSeries(state, context) {
     setTextWithState(context, state.resultNode, outputError || "Saved and output refreshed.", outputError ? "error" : "success");
   } catch (error) {
     const isConflict = Number(error && error.status) === 409;
-    const message = isConflict
+    const message = catalogueSavedActionError(savedResponse, error) || (isConflict
       ? t(state, context, "save_status_conflict", "Source record changed since this page loaded. Reload the series before saving again.")
-      : `${t(state, context, "save_status_failed", "Source save failed.")} ${normalizeText(error && error.message)}`.trim();
+      : `${t(state, context, "save_status_failed", "Source save failed.")} ${normalizeText(error && error.message)}`.trim());
     setTextWithState(context, state.statusNode, message, "error");
   } finally {
     state.isSaving = false;
@@ -114,8 +116,10 @@ export async function createCurrentSeries(state, context) {
   setTextWithState(context, state.statusNode, t(state, context, "create_status_saving", "Creating series..."));
   setTextWithState(context, state.resultNode, "");
 
+  let savedResponse = null;
   try {
     const response = await createCatalogueSeries(buildCreateSeriesPayload(state.draft));
+    savedResponse = response;
     const seriesId = normalizeSeriesId(response && response.series_id);
     const record = response && response.record && typeof response.record === "object" ? response.record : null;
     if (!seriesId) {
@@ -139,7 +143,7 @@ export async function createCurrentSeries(state, context) {
       setTextWithState(context, state.statusNode, "", "");
     }
   } catch (error) {
-    setTextWithState(context, state.statusNode, `${t(state, context, "create_status_failed", "Series create failed.")} ${normalizeText(error && error.message)}`.trim(), "error");
+    setTextWithState(context, state.statusNode, catalogueSavedActionError(savedResponse, error) || `${t(state, context, "create_status_failed", "Series create failed.")} ${normalizeText(error && error.message)}`.trim(), "error");
     state.isSaving = false;
     context.updateEditorState();
   }
@@ -152,6 +156,7 @@ export async function deleteCurrentSeries(state, context) {
   context.updateEditorState();
   setTextWithState(context, state.statusNode, t(state, context, "delete_status_running", "Preparing delete preview…"));
   setTextWithState(context, state.resultNode, "");
+  let savedResponse = null;
   try {
     const request = {
       kind: "series",
@@ -194,6 +199,7 @@ export async function deleteCurrentSeries(state, context) {
     context.updateEditorState();
     setTextWithState(context, state.statusNode, t(state, context, "delete_status_running", "Deleting source record…"));
     const response = await applyCatalogueDelete(request);
+    savedResponse = response;
     const outputError = catalogueOutputError(response);
     if (outputError) {
       state.currentRecord = null;
@@ -204,9 +210,9 @@ export async function deleteCurrentSeries(state, context) {
     }
     window.location.assign(buildStudioRouteUrl(state.config, "catalogue_series_editor"));
   } catch (error) {
-    const message = Number(error && error.status) === 409
+    const message = catalogueSavedActionError(savedResponse, error) || (Number(error && error.status) === 409
       ? t(state, context, "delete_status_conflict", "Source record changed since this page loaded. Reload before deleting again.")
-      : `${t(state, context, "delete_status_failed", "Source delete failed.")} ${normalizeText(error && error.message)}`.trim();
+      : `${t(state, context, "delete_status_failed", "Source delete failed.")} ${normalizeText(error && error.message)}`.trim());
     setTextWithState(context, state.statusNode, message, "error");
     state.isDeleting = false;
     context.updateEditorState();

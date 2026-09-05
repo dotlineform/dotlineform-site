@@ -78,8 +78,6 @@ def complete_catalogue_media(
     work_ids = sorted({slug_id(wid) for wid in work_ids})
     workspace = catalogue_output_workspace(repo_root)
     staging = configured_catalogue_media_workspace(repo_root)
-    if not staging.root.is_dir():
-        raise ValueError(f"Catalogue staging is unavailable: {staging.marker}")
     env = runtime_env(repo_root=repo_root)
     targets: list[tuple[str, str]] = []
     removed: list[tuple[str, str]] = []
@@ -102,6 +100,8 @@ def complete_catalogue_media(
                     removed.append(("work_details", uid))
         generated_downloads.update(_download_filename(item["filename"]) for item in payload["work"].get("downloads", []))
     downloads = _downloads(records, work_ids)
+    if downloads and not staging.root.is_dir():
+        raise ValueError(f"Catalogue staging is unavailable: {staging.marker}")
     old_downloads = generated_downloads | (_downloads(previous, work_ids) if previous else set())
     removed_downloads = old_downloads - _downloads(records, list(records.works))
     tasks: list[dict[str, Any]] = []
@@ -119,6 +119,8 @@ def complete_catalogue_media(
                 if old and old.get("project_filename"):
                     removed.append((family, item_id))
                 continue
+            if not staging.root.is_dir():
+                raise ValueError(f"Catalogue staging is unavailable: {staging.marker}")
             resolve = media.resolve_work_media_source if kind == "work" else media.resolve_detail_media_source
             source, reason, base, error = resolve(records, item_id, env=env)
             if error or reason or source is None or not source.is_file():
@@ -145,7 +147,7 @@ def complete_catalogue_media(
     )
     if result["status"] == "failed" or any(result.get("blocked", {}).values()):
         raise RuntimeError(str(result.get("stderr_tail") or result.get("summary")))
-    if write:
+    if write and tasks:
         _save_dimensions(repo_root, source_dir, tasks)
     # A dry run with pending derivatives cannot compare bytes which do not exist yet.
     pending = sum(task["status"] == "pending" for task in tasks)
