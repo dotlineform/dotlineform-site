@@ -13,15 +13,6 @@ export function stableStringify(value) {
   return JSON.stringify(value);
 }
 
-export async function computeRecordHash(record) {
-  const cryptoApi = globalThis.crypto;
-  if (!cryptoApi || !cryptoApi.subtle) return "";
-  const json = stableStringify(record);
-  const bytes = new TextEncoder().encode(json);
-  const digest = await cryptoApi.subtle.digest("SHA-256", bytes);
-  return Array.from(new Uint8Array(digest)).map((value) => value.toString(16).padStart(2, "0")).join("");
-}
-
 export function displayValue(value, options = {}) {
   const emptyText = Object.prototype.hasOwnProperty.call(options, "emptyText") ? options.emptyText : "—";
   const text = normalizeText(value);

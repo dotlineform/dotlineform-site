@@ -138,7 +138,7 @@ def plan_for(
 
 def work_sort_context() -> dict[str, Any]:
     records = CatalogueSourceRecords(
-        works={"00001": {"work_id": "00001", "series_id": ["009"]}},
+        works={"00001": {"work_id": "00001", "series_id": "009"}},
         work_detail_sections={},
         work_details={},
         series={"009": {"series_id": "009", "sort_fields": "title"}},
@@ -573,7 +573,7 @@ def main() -> None:
 
     series_cross_family_fallback = full_fallback_build_plan(
         registry,
-        fields=["sort_fields", "work.series_ids"],
+        fields=["sort_fields", "work.series_id"],
         fallback_reason="series_save_changed_member_works",
         reason="Series save also changed member work records; use conservative fallback until cross-family saves are scoped explicitly.",
         record_family="series",
