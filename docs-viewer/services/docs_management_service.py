@@ -124,6 +124,9 @@ def docs_management_post_response(
         config = configs.get(str(body.get(field) or "").strip().lower())
         if config is None or not config.stages:
             continue
+        if field == "scope" and path == routes.DOCS_MEDIA_REPORT_PATH:
+            select_scope_stage(config, body.get("stage"))
+            continue
         allowed = {
             routes.CREATE_PATH, routes.UPDATE_METADATA_PATH, routes.SOURCE_REBUILD_PATH,
             routes.OPEN_SOURCE_PATH, routes.DELETE_PREVIEW_PATH, routes.DELETE_APPLY_PATH,
@@ -152,12 +155,12 @@ def docs_management_post_response(
         payload["summary_text"] = "Project State refreshed."
         return HTTPStatus.OK, payload
     if path == routes.DOCS_MEDIA_REPORT_PATH:
-        if set(body) != {"scope"}:
-            raise ValueError("Docs Media request must contain only scope")
+        if "scope" not in body or set(body) - {"scope", "stage"}:
+            raise ValueError("Docs Media request must contain only scope and optional stage")
         scope = source_model.normalize_scope(body.get("scope"))
         report = docs_media_report.build_docs_media_report(
             repo_root,
-            source_model.DOCS_SCOPE_CONFIGS[scope],
+            select_scope_stage(configs[scope], body.get("stage")),
         )
         return HTTPStatus.OK, {
             "ok": True,

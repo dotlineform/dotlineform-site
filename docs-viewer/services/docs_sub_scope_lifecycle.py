@@ -202,7 +202,7 @@ def sub_scope_path_records(repo_root: Path, parent_config: DocsScopeConfig, sub_
     )
     if (
         customisation is not None
-        and customisation.customisation_id == "analysis_tags"
+        and customisation.customisation_id == "concepts"
     ):
         records.append(
             path_record(

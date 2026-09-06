@@ -89,7 +89,8 @@ def test_registry_edit_preserves_source_and_omitted_primary(
         path.parent.mkdir(parents=True, exist_ok=True)
     primary = {
         "scope": "analysis",
-        "sub_scope": "tags",
+        "stage": "working",
+        "sub_scope": "concepts",
         "doc_id": "d-20260727-225608-000001",
     }
     registry_path.write_text(
@@ -180,7 +181,8 @@ def test_registry_primary_replacement_requires_current_association(
     assignments_path.write_text(json.dumps({"series": {}}), encoding="utf-8")
     current = {
         "scope": "analysis",
-        "sub_scope": "tags",
+        "stage": "working",
+        "sub_scope": "concepts",
         "doc_id": "d-20260729-111111-abcdef",
     }
     monkeypatch.setattr(

@@ -29,6 +29,8 @@ import docs_management_routes as routes  # noqa: E402
 import docs_management_service as management_service  # noqa: E402
 import docs_source_model as source_model  # noqa: E402
 
+pytestmark = pytest.mark.usefixtures("synthetic_lineage_customisations")
+
 
 def write_source(
     path: Path,

@@ -25,8 +25,10 @@ import docs_media_source_evidence as media_source_evidence  # noqa: E402
 import docs_scope_config  # noqa: E402
 import docs_source_model as source_model  # noqa: E402
 
+pytestmark = pytest.mark.usefixtures("synthetic_lineage_customisations")
 
-PROJECTS_LINEAGE_CONTRACT = "dotlineform_projects_to_analysis_works"
+
+PROJECTS_LINEAGE_CONTRACT = "fixture_works_copy"
 
 
 def write_json(path: Path, payload: object) -> None:
@@ -188,7 +190,7 @@ def make_collection_repo(tmp_path: Path) -> Path:
             "source",
             "works",
             title="Works",
-            sub_scope_customisation={"id": "analysis_works", "settings": {}},
+            sub_scope_customisation={"id": "fixture_editorial_works", "settings": {}},
         ),
     ]
     target_sub_scopes = [
@@ -202,7 +204,7 @@ def make_collection_repo(tmp_path: Path) -> Path:
             "target",
             "works",
             title="Works",
-            sub_scope_customisation={"id": "analysis_works", "settings": {}},
+            sub_scope_customisation={"id": "fixture_editorial_works", "settings": {}},
         ),
     ]
     write_json(
@@ -275,7 +277,7 @@ def make_lineage_repo(tmp_path: Path) -> Path:
         "dotlineform",
         "projects",
         title="Projects",
-        sub_scope_customisation={"id": "dotlineform_projects", "settings": {}},
+        sub_scope_customisation={"id": "fixture_working_works", "settings": {}},
         lifecycle={
             "tool_id": "docs-viewer-scope-lifecycle",
             "report_host_doc_id": "d-20260801-090000-eeeeee",
@@ -286,7 +288,7 @@ def make_lineage_repo(tmp_path: Path) -> Path:
         "dotlineform",
         "processing",
         title="Processing",
-        sub_scope_customisation={"id": "dotlineform_processing", "settings": {}},
+        sub_scope_customisation={"id": "fixture_working_processing", "settings": {}},
         lifecycle={
             "tool_id": "docs-viewer-scope-lifecycle",
             "report_host_doc_id": "d-20260901-090000-dddddd",
@@ -298,7 +300,7 @@ def make_lineage_repo(tmp_path: Path) -> Path:
         "works",
         title="Works",
         scope_type="public",
-        sub_scope_customisation={"id": "analysis_works", "settings": {}},
+        sub_scope_customisation={"id": "fixture_editorial_works", "settings": {}},
         lifecycle={
             "tool_id": "docs-viewer-scope-lifecycle",
             "report_host_doc_id": "d-20260802-090000-ffffff",
@@ -653,11 +655,11 @@ def test_processing_lineage_preview_is_independent_and_write_free(
 
     assert plan.ok
     assert plan.lineage is not None
-    assert plan.lineage.contract_id == "dotlineform_processing_to_analysis_works"
+    assert plan.lineage.contract_id == "fixture_processing_copy"
     assert plan.lineage.decisions[0].action == transfer.COPY_ACTION_NEW
     assert publication_lineage.load_table(
         repo_root,
-        contract_id="dotlineform_processing_to_analysis_works",
+        contract_id="fixture_processing_copy",
     ) is None
     assert publication_lineage.table_path(
         repo_root,
@@ -1627,7 +1629,7 @@ def test_public_parent_and_child_can_accept_copy(
                 title="Works",
                 scope_type="public",
                 sub_scope_customisation={
-                    "id": "analysis_works",
+                    "id": "fixture_editorial_works",
                     "settings": {},
                 },
             )

@@ -92,7 +92,8 @@ export function wireTagRegistryModalEvents(state, callbacks = {}) {
     if (primaryButton && state.editTagId) {
       callbacks.onEditPrimarySelect?.({
         scope: "analysis",
-        sub_scope: "tags",
+        stage: "working",
+        sub_scope: "concepts",
         doc_id: primaryButton.getAttribute("data-select-edit-primary")
       });
       return;

@@ -11,7 +11,7 @@ from typing import Any, Mapping, Sequence
 
 TAG_ID_FIELD = "tag_id"
 TAG_ID_PATTERN = re.compile(r"\A[a-z0-9][a-z0-9-]*\Z")
-TAG_ASSOCIATIONS_SCHEMA_VERSION = "docs_tag_associations_v1"
+TAG_ASSOCIATIONS_SCHEMA_VERSION = "docs_tag_associations_v2"
 
 
 def normalize_tag_declaration(front_matter: Mapping[str, Any]) -> dict[str, Any]:
@@ -37,11 +37,13 @@ def normalize_tag_declaration(front_matter: Mapping[str, Any]) -> dict[str, Any]
 def tag_declaration_generation(
     *,
     scope: str,
+    stage: str = "",
     sub_scope: str,
     declarations_by_doc_id: Mapping[str, Mapping[str, Any]],
 ) -> str:
     source = {
         "scope": scope,
+        "stage": stage,
         "sub_scope": sub_scope,
         "documents": [
             {
@@ -90,6 +92,7 @@ def load_current_public_tag_locations(
 def project_tag_associations(
     *,
     scope: str,
+    stage: str = "",
     sub_scope: str,
     documents: Sequence[Any],
     declarations_by_doc_id: Mapping[str, Mapping[str, Any]],
@@ -153,6 +156,7 @@ def project_tag_associations(
             {
                 "target": {
                     "scope": scope,
+                    "stage": stage,
                     "sub_scope": sub_scope,
                     "doc_id": doc_id,
                 },
@@ -181,6 +185,7 @@ def project_tag_associations(
     return {
         "schema_version": TAG_ASSOCIATIONS_SCHEMA_VERSION,
         "scope": scope,
+        "stage": stage,
         "sub_scope": sub_scope,
         "declaration_generation": declaration_generation,
         "associations": associations,

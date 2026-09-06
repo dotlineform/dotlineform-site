@@ -21,17 +21,17 @@ for path in (REPO_ROOT, STUDIO_SERVER_DIR):
 from studio_tags_api import tags_get_payload, tags_post_response  # noqa: E402
 
 
-ANALYSIS_TAGS_REPORT_ID = "d-20260430-230000-000099"
+CONCEPTS_REPORT_ID = "d-20260430-230000-000099"
 
 
-def analysis_tag_url(doc_id: str) -> str:
+def concept_document_url(doc_id: str) -> str:
     return (
-        f"/docs/?scope=analysis&doc={ANALYSIS_TAGS_REPORT_ID}"
+        f"/docs/?scope=analysis&stage=working&doc={CONCEPTS_REPORT_ID}"
         f"&subdoc={doc_id}"
     )
 
 
-def write_analysis_tags_fixture(
+def write_concepts_fixture(
     repo_root: Path,
     doc_id: str,
     *,
@@ -44,13 +44,13 @@ def write_analysis_tags_fixture(
     )
     report_path = (
         repo_root
-        / "docs-viewer/scopes/analysis/source/documents"
-        / f"{ANALYSIS_TAGS_REPORT_ID}.md"
+        / "docs-viewer/scopes/analysis/working/source/documents"
+        / f"{CONCEPTS_REPORT_ID}.md"
     )
     report_path.parent.mkdir(parents=True, exist_ok=True)
     report_path.write_text(
         f"""---
-doc_id: {ANALYSIS_TAGS_REPORT_ID}
+doc_id: {CONCEPTS_REPORT_ID}
 title: Tags
 added_date: "2026-04-30 23:00:00"
 last_updated: 2026-04-30
@@ -61,7 +61,7 @@ parent_id: ""
 :::report
 id: docs_subscope
 access: public
-sub_scope: tags
+sub_scope: concepts
 :::
 """,
         encoding="utf-8",
@@ -136,11 +136,11 @@ sub_scope: tags
                         "allow_unresolved_parent_ids": False,
                         "sub_scopes": [
                             {
-                                "sub_scope": "tags",
+                                "sub_scope": "concepts",
                                 "title": "Tags",
                                 "ui_statuses": [],
                                 "sub_scope_customisation": {
-                                    "id": "analysis_tags",
+                                    "id": "concepts",
                                     "settings": {
                                         "groups": [
                                             "subject",
@@ -153,7 +153,7 @@ sub_scope: tags
                                         "location": {
                                             "provider": "repository",
                                             "path": (
-                                                "site/assets/data/docs/scopes/analysis/tags"
+                                                "site/assets/data/docs/scopes/analysis/concepts"
                                             ),
                                         }
                                     },
@@ -169,6 +169,18 @@ sub_scope: tags
         + "\n",
         encoding="utf-8",
     )
+    configuration = json.loads(config_path.read_text())
+    analysis = configuration["scopes"][0]
+    analysis["stages"] = {
+        stage: {
+            "media_namespace": namespace,
+            "media": analysis["media"],
+            "sub_scopes": [{**child, "public_projection": None} for child in analysis["sub_scopes"]]
+            if stage == "working" else analysis["sub_scopes"],
+        }
+        for stage, namespace in (("working", "dotlineform"), ("pre-publish", "analysis"))
+    }
+    config_path.write_text(json.dumps(configuration))
     reports_path = repo_root / "docs-viewer/config/reports/reports.json"
     reports_path.parent.mkdir(parents=True, exist_ok=True)
     reports_path.write_text(
@@ -179,7 +191,7 @@ sub_scope: tags
     )
     source_path = (
         repo_root
-        / "docs-viewer/scopes/analysis/source/sub-scopes/tags/documents"
+        / "docs-viewer/scopes/analysis/working/source/documents/sub-scopes/concepts/documents"
         / f"{doc_id}.md"
     )
     source_path.parent.mkdir(parents=True, exist_ok=True)
@@ -217,7 +229,7 @@ def test_studio_tag_reads_return_existing_payloads() -> None:
     assert registry_payload["tag_registry_version"] == "tag_registry_v6"
     assert any(tag["tag_id"] == "flower" for tag in registry_payload["tags"])
     assert associations_payload["ok"] is True
-    assert associations_payload["schema_version"] == "docs_tag_associations_v1"
+    assert associations_payload["schema_version"] == "docs_tag_associations_v2"
     assert any(
         row["tag_id"] == "flower"
         for row in associations_payload["associations"]
@@ -301,7 +313,7 @@ def test_studio_tag_registry_dry_run_uses_registry_contract() -> None:
 """,
             encoding="utf-8",
         )
-        write_analysis_tags_fixture(
+        write_concepts_fixture(
             repo_root,
             "d-20260501-000000-000001",
         )
@@ -328,7 +340,7 @@ def test_tag_delete_blocks_current_declarations_and_revalidates_apply() -> None:
         repo_root = Path(tmp_dir)
         first_doc_id = "d-20260501-000000-000001"
         second_doc_id = "d-20260501-000001-000002"
-        first_path = write_analysis_tags_fixture(
+        first_path = write_concepts_fixture(
             repo_root,
             first_doc_id,
             title="First trees document",
@@ -343,7 +355,7 @@ def test_tag_delete_blocks_current_declarations_and_revalidates_apply() -> None:
   "tag_registry_version": "tag_registry_v6",
   "updated_at_utc": "2026-05-01T00:00:00Z",
   "policy": {"allowed_groups": ["subject", "theme"]},
-  "tags": [{"tag_id": "trees", "group": "subject", "primary_document": {"scope": "analysis", "sub_scope": "tags", "doc_id": "d-20260501-999999-999999"}, "updated_at_utc": "2026-05-01T00:00:00Z"}]
+  "tags": [{"tag_id": "trees", "group": "subject", "primary_document": {"scope": "analysis", "stage": "working", "sub_scope": "concepts", "doc_id": "d-20260501-999999-999999"}, "updated_at_utc": "2026-05-01T00:00:00Z"}]
 }
 """,
             encoding="utf-8",
@@ -401,7 +413,7 @@ def test_tag_delete_blocks_current_declarations_and_revalidates_apply() -> None:
         assert assignments_path.read_bytes() == assignments_before
         assert first_path.read_bytes() == first_associated_source
 
-        second_path = write_analysis_tags_fixture(
+        second_path = write_concepts_fixture(
             repo_root,
             second_doc_id,
             title="Second trees document",
@@ -423,7 +435,7 @@ def test_tag_delete_blocks_current_declarations_and_revalidates_apply() -> None:
             "First trees document"
         )
         assert blocked_preview["document_associations"][1]["url"] == (
-            analysis_tag_url(second_doc_id)
+            concept_document_url(second_doc_id)
         )
 
         for source_path in (first_path, second_path):
@@ -448,7 +460,7 @@ def test_studio_create_tag_dry_run_validates_before_write() -> None:
     with tempfile.TemporaryDirectory() as tmp_dir:
         repo_root = Path(tmp_dir)
         existing_doc_id = "d-20260501-000000-000001"
-        write_analysis_tags_fixture(repo_root, existing_doc_id)
+        write_concepts_fixture(repo_root, existing_doc_id)
         registry_path = repo_root / "studio" / "data" / "canonical" / "tags" / "tag-registry.json"
         registry_path.parent.mkdir(parents=True)
         registry_path.write_text(
@@ -456,7 +468,7 @@ def test_studio_create_tag_dry_run_validates_before_write() -> None:
   "tag_registry_version": "tag_registry_v6",
   "updated_at_utc": "2026-05-01T00:00:00Z",
   "policy": {"allowed_groups": ["subject", "theme"]},
-  "tags": [{"tag_id": "trees", "group": "subject", "primary_document": {"scope": "analysis", "sub_scope": "tags", "doc_id": "d-20260501-000000-000001"}, "updated_at_utc": "2026-05-01T00:00:00Z"}]
+  "tags": [{"tag_id": "trees", "group": "subject", "primary_document": {"scope": "analysis", "stage": "working", "sub_scope": "concepts", "doc_id": "d-20260501-000000-000001"}, "updated_at_utc": "2026-05-01T00:00:00Z"}]
 }
 """,
             encoding="utf-8",
@@ -504,7 +516,7 @@ def test_studio_create_tag_dry_run_validates_before_write() -> None:
 
         documents_root = (
             repo_root
-            / "docs-viewer/scopes/analysis/source/sub-scopes/tags/documents"
+            / "docs-viewer/scopes/analysis/working/source/documents/sub-scopes/concepts/documents"
         )
         document_names_before = sorted(path.name for path in documents_root.glob("*.md"))
         status, applied = tags_post_response(
@@ -661,7 +673,7 @@ def test_studio_promotion_demotion_dry_run_uses_promotion_contract() -> None:
 """,
             encoding="utf-8",
         )
-        write_analysis_tags_fixture(
+        write_concepts_fixture(
             repo_root,
             "d-20260501-000000-000001",
         )
@@ -698,7 +710,7 @@ def test_tag_demote_blocks_current_document_declarations() -> None:
     with tempfile.TemporaryDirectory() as tmp_dir:
         repo_root = Path(tmp_dir)
         doc_id = "d-20260501-000000-000001"
-        source_path = write_analysis_tags_fixture(
+        source_path = write_concepts_fixture(
             repo_root,
             doc_id,
             title="Trees document",

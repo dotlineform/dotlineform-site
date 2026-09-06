@@ -14,7 +14,7 @@ SERVICES_DIR = REPO_ROOT / "docs-viewer" / "services"
 if str(SERVICES_DIR) not in sys.path:
     sys.path.insert(0, str(SERVICES_DIR))
 
-import docs_dotlineform_projects_customisation as projects  # noqa: E402
+import docs_working_works_customisation as projects  # noqa: E402
 
 
 DOC_ID = "d-20260801-000000-000001"

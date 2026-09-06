@@ -24,13 +24,15 @@ import docs_management_routes  # noqa: E402
 import docs_management_service  # noqa: E402
 import docs_scope_publish  # noqa: E402
 
+pytestmark = pytest.mark.usefixtures("synthetic_lineage_customisations")
+
 
 TAG_HOST = "d-20260801-100000-aaaaaa"
 WORK_HOST = "d-20260801-100001-bbbbbb"
 TAG_DOC = "d-20260801-100002-cccccc"
 WORK_DOC = "d-20260801-100003-dddddd"
-PROJECTS_LINEAGE_CONTRACT = "dotlineform_projects_to_analysis_works"
-PROCESSING_LINEAGE_CONTRACT = "dotlineform_processing_to_analysis_works"
+PROJECTS_LINEAGE_CONTRACT = "fixture_works_copy"
+PROCESSING_LINEAGE_CONTRACT = "fixture_processing_copy"
 
 
 def write_json(path: Path, payload: object) -> None:
@@ -53,7 +55,7 @@ def write_config(root: Path, *, media_provider: str = "repository") -> None:
             "works",
             title="Works",
             scope_type="public",
-            sub_scope_customisation={"id": "analysis_works", "settings": {}},
+            sub_scope_customisation={"id": "fixture_editorial_works", "settings": {}},
             lifecycle={
                 "tool_id": "docs-viewer-scope-lifecycle",
                 "report_host_doc_id": WORK_HOST,
@@ -71,7 +73,7 @@ def write_config(root: Path, *, media_provider: str = "repository") -> None:
                         "dotlineform",
                         "projects",
                         sub_scope_customisation={
-                            "id": "dotlineform_projects",
+                            "id": "fixture_working_works",
                             "settings": {},
                         },
                     ),
@@ -79,7 +81,7 @@ def write_config(root: Path, *, media_provider: str = "repository") -> None:
                         "dotlineform",
                         "processing",
                         sub_scope_customisation={
-                            "id": "dotlineform_processing",
+                            "id": "fixture_working_processing",
                             "settings": {},
                         },
                     ),
@@ -579,7 +581,7 @@ def test_apply_reconciles_lineage_and_rebuilds_only_working_collection(
     )
 
 
-def test_apply_reconciles_every_lineage_workflow_targeting_analysis_works(
+def test_apply_reconciles_every_lineage_workflow_targeting_pre_publish_works(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
@@ -753,6 +755,7 @@ def test_management_routes_dispatch_independent_preview_and_apply(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
+    write_docs_scope_config(tmp_path, [docs_scope_record("analysis", scope_type="public", viewer_base_url="/analysis/", include_scope_param=False)])
     monkeypatch.setattr(
         docs_management_service,
         "refresh_source_model_scope_configs",

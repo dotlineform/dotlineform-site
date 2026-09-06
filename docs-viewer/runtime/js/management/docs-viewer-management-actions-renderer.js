@@ -206,6 +206,13 @@ export function createDocsViewerManagementAppControlRenderers() {
       });
     },
     "manage-scope-select": renderScopeControl,
+    "manage-stage-select": function (context) {
+      var root = context.existingRoot || context.document.createElement("div");
+      root.className = "docsViewer__stageButtons";
+      root.dataset.docsViewerStages = "true";
+      root.setAttribute("role", "group");
+      return root;
+    },
     "manage-theme-toggle": renderThemeToggle
   };
 }

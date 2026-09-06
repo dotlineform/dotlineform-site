@@ -128,8 +128,8 @@ def test_public_docs_viewer_entry_static_graph_excludes_manage_document_actions(
     assert "docs-viewer/runtime/js/management/docs-viewer-management-document-reports.js" not in graph_paths
     assert "docs-viewer/runtime/js/management/docs-viewer-management-subscope-default-contribution.js" not in graph_paths
     assert "docs-viewer/runtime/js/management/docs-viewer-management-subscope-composition.js" not in graph_paths
-    assert "docs-viewer/runtime/js/management/docs-viewer-management-subscope-analysis-tags.js" not in graph_paths
-    assert "docs-viewer/runtime/js/management/docs-viewer-management-subscope-dotlineform-projects.js" not in graph_paths
+    assert "docs-viewer/runtime/js/management/docs-viewer-management-subscope-concepts.js" not in graph_paths
+    assert "docs-viewer/runtime/js/management/docs-viewer-management-subscope-working-subjects.js" not in graph_paths
     assert (
         "docs-viewer/runtime/js/management/"
         "docs-viewer-management-subscope-delete-workflow.js"
@@ -210,7 +210,7 @@ def test_projects_metadata_contribution_does_not_intercept_native_paste_or_undo(
     source = (
         REPO_ROOT
         / "docs-viewer/runtime/js/management/"
-        "docs-viewer-management-subscope-dotlineform-projects.js"
+        "docs-viewer-management-subscope-working-subjects.js"
     ).read_text(encoding="utf-8")
 
     assert "execCommand" not in source

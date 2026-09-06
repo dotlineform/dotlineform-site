@@ -166,7 +166,7 @@
             "research"
           ],
           "sub_scope_customisation": {
-            "id": "analysis_tags",
+            "id": "concepts",
             "settings": {
               "groups": [
                 "subject",
@@ -202,7 +202,7 @@
             "research"
           ],
           "sub_scope_customisation": {
-            "id": "analysis_works",
+            "id": "pre_publish_works",
             "settings": {}
           },
           "public_projection": {
@@ -224,7 +224,197 @@
       "scope_root": {
         "provider": "external_local",
         "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/analysis"
-      }
+      },
+      "stages": {
+        "working": {
+          "media_namespace": "dotlineform",
+          "media": {
+            "types": {
+              "img": {
+                "build_inputs": []
+              },
+              "svg": {
+                "build_inputs": []
+              },
+              "files": {
+                "build_inputs": []
+              },
+              "html": {
+                "build_inputs": []
+              }
+            },
+            "build_sources": {}
+          },
+          "default_doc_id": "d-20260801-073826-8865a8",
+          "non_loadable_doc_ids": [],
+          "manage_only_tree_root_ids": [],
+          "allow_unresolved_parent_ids": false,
+          "sub_scopes": [
+            {
+              "sub_scope": "works",
+              "title": "Works",
+              "sub_scope_customisation": {
+                "id": "working_works",
+                "settings": {}
+              },
+              "public_projection": null,
+              "lifecycle": {
+                "tool_id": "docs-viewer-scope-lifecycle",
+                "report_host_doc_id": "d-20260801-073826-8865a8",
+                "report_host_source_revision": "sha256:97a3ee6e3db1ff1a3251ed0a49e7a0c248a8dc9897b3d661abd08630cd94b722"
+              }
+            },
+            {
+              "sub_scope": "concepts",
+              "title": "Concepts",
+              "supports_return_import": true,
+              "ui_statuses": [
+                "draft",
+                "done",
+                "urgent",
+                "review",
+                "in-progress",
+                "planned",
+                "paused",
+                "deferred",
+                "report",
+                "research"
+              ],
+              "sub_scope_customisation": {
+                "id": "concepts",
+                "settings": {
+                  "groups": [
+                    "subject",
+                    "domain",
+                    "form",
+                    "theme"
+                  ]
+                }
+              },
+              "public_projection": null
+            },
+            {
+              "sub_scope": "processing",
+              "title": "Processing",
+              "sub_scope_customisation": {
+                "id": "working_processing",
+                "settings": {}
+              },
+              "public_projection": null,
+              "lifecycle": {
+                "tool_id": "docs-viewer-scope-lifecycle",
+                "report_host_doc_id": "d-20260901-103244-09e720",
+                "report_host_source_revision": "sha256:9c89b65c8f3e1823e56818d748b76e32291b27a31de8ec4fc4391bd720d213d0"
+              }
+            }
+          ]
+        },
+        "pre-publish": {
+          "media_namespace": "analysis",
+          "media": {
+            "types": {
+              "img": {
+                "build_inputs": []
+              },
+              "svg": {
+                "build_inputs": [
+                  "mermaid"
+                ]
+              },
+              "files": {
+                "build_inputs": []
+              },
+              "html": {
+                "build_inputs": []
+              }
+            },
+            "build_sources": {
+              "mermaid": {
+                "producer": "mermaid",
+                "publishes_to": "svg"
+              }
+            }
+          },
+          "default_doc_id": "d-20260426-164043-e14f49",
+          "non_loadable_doc_ids": [],
+          "manage_only_tree_root_ids": [],
+          "allow_unresolved_parent_ids": false,
+          "sub_scopes": [
+            {
+              "sub_scope": "concepts",
+              "title": "Concepts",
+              "supports_return_import": true,
+              "ui_statuses": [
+                "draft",
+                "done",
+                "urgent",
+                "review",
+                "in-progress",
+                "planned",
+                "paused",
+                "deferred",
+                "report",
+                "research"
+              ],
+              "sub_scope_customisation": {
+                "id": "concepts",
+                "settings": {
+                  "groups": [
+                    "subject",
+                    "domain",
+                    "form",
+                    "theme"
+                  ]
+                }
+              },
+              "public_projection": {
+                "documents": {
+                  "location": {
+                    "provider": "repository",
+                    "path": "site/assets/data/docs/scopes/analysis/concepts"
+                  }
+                },
+                "search": null
+              }
+            },
+            {
+              "sub_scope": "works",
+              "title": "Works",
+              "ui_statuses": [
+                "draft",
+                "done",
+                "urgent",
+                "review",
+                "in-progress",
+                "planned",
+                "paused",
+                "deferred",
+                "report",
+                "research"
+              ],
+              "sub_scope_customisation": {
+                "id": "pre_publish_works",
+                "settings": {}
+              },
+              "public_projection": {
+                "documents": {
+                  "location": {
+                    "provider": "repository",
+                    "path": "site/assets/data/docs/scopes/analysis/works"
+                  }
+                },
+                "search": null
+              },
+              "lifecycle": {
+                "tool_id": "docs-viewer-scope-lifecycle",
+                "report_host_doc_id": "d-20260807-082735-54d9d5",
+                "report_host_source_revision": "sha256:55365a090e228af9ddc10a226b8e89ed6826c19f226ad6e289327aba2a94044d"
+              }
+            }
+          ]
+        }
+      },
+      "emoji": "䷑"
     },
     {
       "scope_id": "notes",
@@ -314,77 +504,6 @@
         "provider": "external_local",
         "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/processing"
       }
-    },
-    {
-      "scope_id": "dotlineform",
-      "scope_type": "local",
-      "meta": "local",
-      "emoji": "䷑",
-      "scope_root": {
-        "provider": "external_local",
-        "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/dotlineform"
-      },
-      "source": {},
-      "search_fields": [
-        "title",
-        "heading",
-        "summary",
-        "body",
-        "code"
-      ],
-      "media": {
-        "types": {
-          "img": {
-            "build_inputs": []
-          },
-          "svg": {
-            "build_inputs": []
-          },
-          "files": {
-            "build_inputs": []
-          }
-        },
-        "build_sources": {}
-      },
-      "generated": {},
-      "published": {},
-      "public_projection": null,
-      "viewer_base_url": "/docs/",
-      "include_scope_param": true,
-      "default_doc_id": "d-20260801-073826-8865a8",
-      "non_loadable_doc_ids": [],
-      "manage_only_tree_root_ids": [],
-      "allow_unresolved_parent_ids": false,
-      "sub_scopes": [
-        {
-          "sub_scope": "projects",
-          "title": "Projects",
-          "sub_scope_customisation": {
-            "id": "dotlineform_projects",
-            "settings": {}
-          },
-          "public_projection": null,
-          "lifecycle": {
-            "tool_id": "docs-viewer-scope-lifecycle",
-            "report_host_doc_id": "d-20260801-073826-8865a8",
-            "report_host_source_revision": "sha256:593939012219207e056b0af2a135de905d5a0d4b31d4919e88131dcc177d3506"
-          }
-        },
-        {
-          "sub_scope": "processing",
-          "title": "Processing",
-          "sub_scope_customisation": {
-            "id": "dotlineform_processing",
-            "settings": {}
-          },
-          "public_projection": null,
-          "lifecycle": {
-            "tool_id": "docs-viewer-scope-lifecycle",
-            "report_host_doc_id": "d-20260901-103244-09e720",
-            "report_host_source_revision": "sha256:9c89b65c8f3e1823e56818d748b76e32291b27a31de8ec4fc4391bd720d213d0"
-          }
-        }
-      ]
     },
     {
       "scope_id": "app",

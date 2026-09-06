@@ -49,10 +49,10 @@ def test_works_module_uses_only_the_frozen_local_inputs_and_targets() -> None:
 
     assert '"catalogue_lookup_series_search"' in source
     assert '"catalogue_lookup_work_search"' in source
-    assert 'const PROJECTS_SCOPE = "dotlineform";' in source
-    assert 'const PROJECTS_SUB_SCOPE = "projects";' in source
-    assert 'const PROJECTS_REPORT_DOC_ID = "d-20260801-073826-8865a8";' in source
-    assert "configuredProjectsManifestUrl(context)" in source
+    assert 'const WORKS_SCOPE = "analysis";' in source
+    assert 'const WORKS_SUB_SCOPE = "works";' in source
+    assert 'const WORKS_REPORT_DOC_ID = "d-20260801-073826-8865a8";' in source
+    assert "configuredWorkingWorksManifestUrl(context)" in source
     assert "Promise.all([" in source
     assert "subject-associations" not in source
     assert "analysis/works" not in source

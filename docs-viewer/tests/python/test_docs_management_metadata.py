@@ -36,15 +36,15 @@ SUB_SCOPE_DOC_ID = "d-20260727-211500-a1b2c3"
 
 
 @pytest.mark.parametrize("scope,sub_scope,customisation", [
-    ("dotlineform", "projects", "dotlineform_projects"),
-    ("dotlineform", "processing", "dotlineform_processing"),
-    ("analysis", "works", "analysis_works"),
+    ("dotlineform", "projects", "working_works"),
+    ("dotlineform", "processing", "working_processing"),
+    ("analysis", "works", "pre_publish_works"),
 ])
 def test_detail_subject_assignment_and_projection_without_catalogue(
     scope: str, sub_scope: str, customisation: str, monkeypatch,
 ) -> None:
     monkeypatch.setattr(
-        "docs_dotlineform_projects_customisation.publication_targets_for_documents",
+        "docs_working_works_customisation.publication_targets_for_documents",
         lambda *_args, **_kwargs: {},
     )
     with make_repo() as repo_name:
@@ -236,7 +236,7 @@ def test_projects_subject_assignment_read_save_remove_and_strict_rejection(
         fake_sub_scope_rebuild,
     )
     monkeypatch.setattr(
-        "docs_dotlineform_projects_customisation.publication_targets_for_documents",
+        "docs_working_works_customisation.publication_targets_for_documents",
         lambda *_args, **_kwargs: {},
     )
     projects_base = tmp_path / "Projects Base"
@@ -255,7 +255,7 @@ def test_projects_subject_assignment_read_save_remove_and_strict_rejection(
                             "dotlineform",
                             "projects",
                             sub_scope_customisation={
-                                "id": "dotlineform_projects",
+                                "id": "working_works",
                                 "settings": {},
                             },
                         )
@@ -632,7 +632,7 @@ def test_projects_malformed_subject_remains_ordinary_metadata_saveable() -> None
                             "dotlineform",
                             "projects",
                             sub_scope_customisation={
-                                "id": "dotlineform_projects",
+                                "id": "working_works",
                                 "settings": {},
                             },
                         )

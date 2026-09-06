@@ -18,6 +18,7 @@ if str(SERVICES_DIR) not in sys.path:
     sys.path.insert(0, str(SERVICES_DIR))
 
 import docs_management_routes as routes  # noqa: E402
+from repo_factory import docs_scope_record, write_docs_scope_config  # noqa: E402
 
 
 def read_json(path: Path) -> dict[str, object]:
@@ -26,6 +27,12 @@ def read_json(path: Path) -> dict[str, object]:
 
 def load_management_service(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
     (tmp_path / "docs-viewer").mkdir(exist_ok=True)
+    analysis = docs_scope_record("analysis", scope_type="public", viewer_base_url="/analysis/", include_scope_param=False)
+    analysis["stages"] = {
+        stage: {"media_namespace": namespace, "media": analysis["media"], "sub_scopes": []}
+        for stage, namespace in (("working", "dotlineform"), ("pre-publish", "analysis"))
+    }
+    write_docs_scope_config(tmp_path, [docs_scope_record("example"), analysis])
     monkeypatch.setenv("DOTLINEFORM_PROJECTS_BASE_DIR", str(tmp_path))
     return importlib.import_module("docs_management_service")
 
@@ -82,34 +89,23 @@ def test_manage_loader_service_and_css_own_focused_docs_media_paths() -> None:
     assert '[data-report-id="docs_media"]' in css_source
 
 
+@pytest.mark.parametrize("scope,stage", [("example", None), ("analysis", "working"), ("analysis", "pre-publish")])
 def test_management_service_returns_selected_scope_docs_media_report(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
+    scope: str,
+    stage: str | None,
 ) -> None:
     management_service = load_management_service(tmp_path, monkeypatch)
-    config = object()
+    config = management_service.select_scope_stage(management_service.load_docs_scope_configs(tmp_path)[scope], stage)
     calls: list[tuple[Path, object]] = []
     report = {
-        "schema_version": "docs_media_report_v1",
-        "scope": "example",
+        "schema_version": "docs_media_report_v2",
+        "scope": scope,
+        **({"stage": stage} if stage else {}),
         "rows": [],
     }
 
-    monkeypatch.setattr(
-        management_service,
-        "refresh_source_model_scope_configs",
-        lambda _root: None,
-    )
-    monkeypatch.setattr(
-        management_service.source_model,
-        "normalize_scope",
-        lambda value: "example" if value == "example" else (_ for _ in ()).throw(ValueError()),
-    )
-    monkeypatch.setitem(
-        management_service.source_model.DOCS_SCOPE_CONFIGS,
-        "example",
-        config,
-    )
     monkeypatch.setattr(
         management_service.docs_media_report,
         "build_docs_media_report",
@@ -119,7 +115,7 @@ def test_management_service_returns_selected_scope_docs_media_report(
     status, payload = management_service.docs_management_post_response(
         tmp_path,
         routes.DOCS_MEDIA_REPORT_PATH,
-        {"scope": "example"},
+        {"scope": scope, **({"stage": stage} if stage else {})},
     )
 
     assert status == HTTPStatus.OK
@@ -130,6 +126,13 @@ def test_management_service_returns_selected_scope_docs_media_report(
         "report": report,
     }
     assert calls == [(tmp_path, config)]
+
+
+@pytest.mark.parametrize("stage", [None, "published", ""])
+def test_stage_media_requires_an_exact_configured_stage(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, stage: str | None) -> None:
+    service = load_management_service(tmp_path, monkeypatch)
+    with pytest.raises(ValueError, match="requires stage"):
+        service.docs_management_post_response(tmp_path, routes.DOCS_MEDIA_REPORT_PATH, {"scope": "analysis", "stage": stage})
 
 
 def test_docs_media_route_is_management_owned_and_rejects_extra_options(

@@ -17,7 +17,6 @@ from typing import Any
 from urllib.parse import quote
 
 from docs_scope_config import (
-    DOCS_SCOPE_CONFIGS,
     DocsScopeConfig,
     generated_documents_path,
     load_docs_scope_configs,
@@ -43,14 +42,6 @@ from docs_builder.semantic_tokens import (  # noqa: E402
     resolve_catalogue_image_target,
 )
 from docs_source_model import load_scope_docs_for_config  # noqa: E402
-
-
-# Retained for callers that present the configured scope list. Audit reads
-# always reload the selected repository's current config.
-SCOPE_OUTPUT_DIRS = {
-    scope: generated_documents_path(config)
-    for scope, config in DOCS_SCOPE_CONFIGS.items()
-}
 
 
 @dataclass(frozen=True)
@@ -351,7 +342,7 @@ def print_human_summary(payload: dict[str, Any]) -> None:
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Audit Docs Viewer links for missing targets.")
-    parser.add_argument("--scope", required=True, help=f"Docs scope to audit: {', '.join(sorted(SCOPE_OUTPUT_DIRS))}")
+    parser.add_argument("--scope", required=True, help="Configured Docs scope to audit")
     parser.add_argument("--repo-root", help="Override repo root auto-detection")
     parser.add_argument("--json", action="store_true", help="Print JSON payload")
     args = parser.parse_args(argv)

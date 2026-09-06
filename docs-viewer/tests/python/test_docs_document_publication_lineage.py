@@ -20,13 +20,15 @@ if str(DOCS_SERVICES_DIR) not in sys.path:
 
 import docs_document_publication_lineage as lineage  # noqa: E402
 
+pytestmark = pytest.mark.usefixtures("synthetic_lineage_customisations")
+
 
 SOURCE_ID = "d-20260801-100000-aaaaaa"
 SECOND_SOURCE_ID = "d-20260801-101000-bbbbbb"
 EDITORIAL_ID = "d-20260802-110000-cccccc"
 SECOND_EDITORIAL_ID = "d-20260802-120000-dddddd"
-PROJECTS_CONTRACT = "dotlineform_projects_to_analysis_works"
-PROCESSING_CONTRACT = "dotlineform_processing_to_analysis_works"
+PROJECTS_CONTRACT = "fixture_works_copy"
+PROCESSING_CONTRACT = "fixture_processing_copy"
 
 
 @pytest.fixture(autouse=True)
@@ -48,7 +50,7 @@ def configured_lineage_authority(
                         "dotlineform",
                         "projects",
                         sub_scope_customisation={
-                            "id": "dotlineform_projects",
+                            "id": "fixture_working_works",
                             "settings": {},
                         },
                     ),
@@ -56,7 +58,7 @@ def configured_lineage_authority(
                         "dotlineform",
                         "processing",
                         sub_scope_customisation={
-                            "id": "dotlineform_processing",
+                            "id": "fixture_working_processing",
                             "settings": {},
                         },
                     ),
@@ -74,7 +76,7 @@ def configured_lineage_authority(
                         "works",
                         scope_type="public",
                         sub_scope_customisation={
-                            "id": "analysis_works",
+                            "id": "fixture_editorial_works",
                             "settings": {},
                         },
                     )
@@ -262,7 +264,7 @@ def test_workflow_discovery_rejects_incomplete_and_duplicate_roles(
                 "works",
                 scope_type="public",
                 sub_scope_customisation={
-                    "id": "analysis_works",
+                    "id": "fixture_editorial_works",
                     "settings": {},
                 },
             )
@@ -272,7 +274,7 @@ def test_workflow_discovery_rejects_incomplete_and_duplicate_roles(
         "dotlineform",
         "projects",
         sub_scope_customisation={
-            "id": "dotlineform_projects",
+            "id": "fixture_working_works",
             "settings": {},
         },
     )
@@ -287,7 +289,7 @@ def test_workflow_discovery_rejects_incomplete_and_duplicate_roles(
         "dotlineform",
         "processing",
         sub_scope_customisation={
-            "id": "dotlineform_processing",
+            "id": "fixture_working_processing",
             "settings": {},
         },
     )
@@ -295,7 +297,7 @@ def test_workflow_discovery_rejects_incomplete_and_duplicate_roles(
         "dotlineform",
         "project_archive",
         sub_scope_customisation={
-            "id": "dotlineform_projects",
+            "id": "fixture_working_works",
             "settings": {},
         },
     )

@@ -45,66 +45,157 @@
     {
       "scope_id": "analysis",
       "scope_type": "public",
-      "meta": "public",
-      "viewer_base_url": "/analysis/",
-      "include_scope_param": false,
-      "default_doc_id": "d-20260426-164043-e14f49",
-      "media": {
-        "files": {
-          "reference_prefix": "docs/analysis/files",
-          "served_path_prefix": "/docs/media/analysis/files"
-        },
-        "html": {
-          "reference_prefix": "docs/analysis/html",
-          "served_path_prefix": "/docs/media/analysis/html"
-        },
-        "img": {
-          "reference_prefix": "docs/analysis/img",
-          "served_path_prefix": "/docs/media/analysis/img"
-        },
-        "svg": {
-          "reference_prefix": "docs/analysis/svg",
-          "served_path_prefix": "/docs/media/analysis/svg"
-        }
-      },
-      "index_tree_url": "/docs/index-tree?scope=analysis",
-      "recent_url": "/docs/recent?scope=analysis",
-      "search_index_url": "/docs/search?scope=analysis",
-      "search": {
-        "domain": "docs_viewer",
-        "schema": "docs_viewer_search_index_v2",
-        "index_url": "/docs/search?scope=analysis",
-        "rebuild_policy": "whole_index"
-      },
-      "backlinks_url": "/docs/backlinks?scope=analysis",
-      "sub_scopes": [
+      "emoji": "䷑",
+      "stages": [
         {
-          "sub_scope": "tags",
-          "title": "Tags",
-          "manifest_url": "/docs/generated/external/analysis/tags/manage-manifest.json",
-          "by_id_url_base": "/docs/generated/external/analysis/tags/by-id",
-          "sub_scope_customisation": {
-            "id": "analysis_tags",
-            "capabilities": {
-              "assignable_field_groups": [
-                "tag_fields"
-              ]
+          "scope_id": "analysis",
+          "stage": "working",
+          "scope_type": "public",
+          "meta": "public",
+          "viewer_base_url": "/docs/",
+          "include_scope_param": true,
+          "default_doc_id": "d-20260801-073826-8865a8",
+          "media": {
+            "files": {
+              "reference_prefix": "docs/dotlineform/files",
+              "served_path_prefix": "/docs/media/analysis/working/files"
+            },
+            "html": {
+              "reference_prefix": "docs/dotlineform/html",
+              "served_path_prefix": "/docs/media/analysis/working/html"
+            },
+            "img": {
+              "reference_prefix": "docs/dotlineform/img",
+              "served_path_prefix": "/docs/media/analysis/working/img"
+            },
+            "svg": {
+              "reference_prefix": "docs/dotlineform/svg",
+              "served_path_prefix": "/docs/media/analysis/working/svg"
             }
-          }
+          },
+          "index_tree_url": "/docs/index-tree?scope=analysis&stage=working",
+          "recent_url": "/docs/recent?scope=analysis&stage=working",
+          "search_index_url": "/docs/search?scope=analysis&stage=working",
+          "search": {
+            "domain": "docs_viewer",
+            "schema": "docs_viewer_search_index_v2",
+            "index_url": "/docs/search?scope=analysis&stage=working",
+            "rebuild_policy": "whole_index"
+          },
+          "emoji": "䷑",
+          "backlinks_url": "/docs/backlinks?scope=analysis&stage=working",
+          "sub_scopes": [
+            {
+              "sub_scope": "works",
+              "title": "Works",
+              "manifest_url": "/docs/generated/external/analysis/working/works/manage-manifest.json",
+              "by_id_url_base": "/docs/generated/external/analysis/working/works/by-id",
+              "sub_scope_customisation": {
+                "id": "working_works",
+                "capabilities": {
+                  "assignable_field_groups": [
+                    "authoring_subject"
+                  ]
+                }
+              }
+            },
+            {
+              "sub_scope": "concepts",
+              "title": "Concepts",
+              "manifest_url": "/docs/generated/external/analysis/working/concepts/manage-manifest.json",
+              "by_id_url_base": "/docs/generated/external/analysis/working/concepts/by-id",
+              "sub_scope_customisation": {
+                "id": "concepts",
+                "capabilities": {
+                  "assignable_field_groups": [
+                    "tag_fields"
+                  ]
+                }
+              }
+            },
+            {
+              "sub_scope": "processing",
+              "title": "Processing",
+              "manifest_url": "/docs/generated/external/analysis/working/processing/manage-manifest.json",
+              "by_id_url_base": "/docs/generated/external/analysis/working/processing/by-id",
+              "sub_scope_customisation": {
+                "id": "working_processing",
+                "capabilities": {
+                  "assignable_field_groups": [
+                    "authoring_subject"
+                  ]
+                }
+              }
+            }
+          ]
         },
         {
-          "sub_scope": "works",
-          "title": "Works",
-          "manifest_url": "/docs/generated/external/analysis/works/manage-manifest.json",
-          "by_id_url_base": "/docs/generated/external/analysis/works/by-id",
-          "sub_scope_customisation": {
-            "id": "analysis_works",
-            "capabilities": {
-              "assignable_field_groups": [
-                "authoring_subject"
-              ]
+          "scope_id": "analysis",
+          "stage": "pre-publish",
+          "scope_type": "public",
+          "meta": "public",
+          "viewer_base_url": "/docs/",
+          "include_scope_param": true,
+          "default_doc_id": "d-20260426-164043-e14f49",
+          "media": {
+            "files": {
+              "reference_prefix": "docs/analysis/files",
+              "served_path_prefix": "/docs/media/analysis/pre-publish/files"
+            },
+            "html": {
+              "reference_prefix": "docs/analysis/html",
+              "served_path_prefix": "/docs/media/analysis/pre-publish/html"
+            },
+            "img": {
+              "reference_prefix": "docs/analysis/img",
+              "served_path_prefix": "/docs/media/analysis/pre-publish/img"
+            },
+            "svg": {
+              "reference_prefix": "docs/analysis/svg",
+              "served_path_prefix": "/docs/media/analysis/pre-publish/svg"
             }
-          }
+          },
+          "index_tree_url": "/docs/index-tree?scope=analysis&stage=pre-publish",
+          "recent_url": "/docs/recent?scope=analysis&stage=pre-publish",
+          "search_index_url": "/docs/search?scope=analysis&stage=pre-publish",
+          "search": {
+            "domain": "docs_viewer",
+            "schema": "docs_viewer_search_index_v2",
+            "index_url": "/docs/search?scope=analysis&stage=pre-publish",
+            "rebuild_policy": "whole_index"
+          },
+          "emoji": "䷑",
+          "backlinks_url": "/docs/backlinks?scope=analysis&stage=pre-publish",
+          "sub_scopes": [
+            {
+              "sub_scope": "concepts",
+              "title": "Concepts",
+              "manifest_url": "/docs/generated/external/analysis/pre-publish/concepts/manage-manifest.json",
+              "by_id_url_base": "/docs/generated/external/analysis/pre-publish/concepts/by-id",
+              "sub_scope_customisation": {
+                "id": "concepts",
+                "capabilities": {
+                  "assignable_field_groups": [
+                    "tag_fields"
+                  ]
+                }
+              }
+            },
+            {
+              "sub_scope": "works",
+              "title": "Works",
+              "manifest_url": "/docs/generated/external/analysis/pre-publish/works/manage-manifest.json",
+              "by_id_url_base": "/docs/generated/external/analysis/pre-publish/works/by-id",
+              "sub_scope_customisation": {
+                "id": "pre_publish_works",
+                "capabilities": {
+                  "assignable_field_groups": [
+                    "authoring_subject"
+                  ]
+                }
+              }
+            }
+          ]
         }
       ]
     },
@@ -171,87 +262,6 @@
         "rebuild_policy": "whole_index"
       },
       "backlinks_url": "/docs/backlinks?scope=processing"
-    },
-    {
-      "scope_id": "dotlineform",
-      "scope_type": "local",
-      "meta": "local",
-      "viewer_base_url": "/docs/",
-      "include_scope_param": true,
-      "default_doc_id": "d-20260801-073826-8865a8",
-      "media": {
-        "files": {
-          "reference_prefix": "docs/dotlineform/files",
-          "served_path_prefix": "/docs/media/dotlineform/files"
-        },
-        "img": {
-          "reference_prefix": "docs/dotlineform/img",
-          "served_path_prefix": "/docs/media/dotlineform/img"
-        },
-        "svg": {
-          "reference_prefix": "docs/dotlineform/svg",
-          "served_path_prefix": "/docs/media/dotlineform/svg"
-        }
-      },
-      "index_tree_url": "/docs/index-tree?scope=dotlineform",
-      "recent_url": "/docs/recent?scope=dotlineform",
-      "search_index_url": "/docs/search?scope=dotlineform",
-      "search": {
-        "domain": "docs_viewer",
-        "schema": "docs_viewer_search_index_v2",
-        "index_url": "/docs/search?scope=dotlineform",
-        "rebuild_policy": "whole_index"
-      },
-      "emoji": "䷑",
-      "backlinks_url": "/docs/backlinks?scope=dotlineform",
-      "sub_scopes": [
-        {
-          "sub_scope": "projects",
-          "title": "Projects",
-          "manifest_url": "/docs/generated/external/dotlineform/projects/manage-manifest.json",
-          "by_id_url_base": "/docs/generated/external/dotlineform/projects/by-id",
-          "sub_scope_customisation": {
-            "id": "dotlineform_projects",
-            "capabilities": {
-              "assignable_field_groups": [
-                "authoring_subject"
-              ],
-              "lineage_copy": {
-                "contract_id": "dotlineform_projects_to_analysis_works",
-                "target": {
-                  "scope": "analysis",
-                  "sub_scope": "works"
-                },
-                "action_label": "Copy to Analysis",
-                "modal_title": "Copy to analysis/works"
-              }
-            }
-          }
-        },
-        {
-          "sub_scope": "processing",
-          "title": "Processing",
-          "manifest_url": "/docs/generated/external/dotlineform/processing/manage-manifest.json",
-          "by_id_url_base": "/docs/generated/external/dotlineform/processing/by-id",
-          "sub_scope_customisation": {
-            "id": "dotlineform_processing",
-            "capabilities": {
-              "assignable_field_groups": [
-                "authoring_subject"
-              ],
-              "lineage_copy": {
-                "contract_id": "dotlineform_processing_to_analysis_works",
-                "target": {
-                  "scope": "analysis",
-                  "sub_scope": "works"
-                },
-                "action_label": "Copy to Analysis",
-                "modal_title": "Copy to analysis/works"
-              }
-            }
-          }
-        }
-      ]
     },
     {
       "scope_id": "app",

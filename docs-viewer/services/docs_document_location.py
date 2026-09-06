@@ -13,6 +13,7 @@ from docs_scope_config import (
     DocsScopeConfig,
     DocsSubScopeConfig,
     load_docs_scope_configs,
+    select_scope_stage,
 )
 
 
@@ -23,6 +24,7 @@ def sub_scope_report_placement(
     *,
     eligible_parent_doc_ids: Collection[str] | None = None,
     require_public: bool = False,
+    stage: str = "",
 ) -> tuple[DocsScopeConfig, DocsSubScopeConfig, str]:
     """Resolve one configured child collection to its exact eligible report host."""
 
@@ -30,6 +32,7 @@ def sub_scope_report_placement(
     config = configs.get(scope_id)
     if config is None:
         raise ValueError(f"unknown Docs Viewer scope: {scope_id}")
+    config = select_scope_stage(config, stage or None)
     matching_sub_scopes = [
         sub_scope
         for sub_scope in config.sub_scopes
@@ -101,6 +104,8 @@ def management_collection_viewer_url(
     repo_root: Path,
     scope_id: str,
     sub_scope_id: str = "",
+    *,
+    stage: str = "",
 ) -> str:
     """Return the exact local Manage URL for one configured collection."""
 
@@ -109,13 +114,17 @@ def management_collection_viewer_url(
     configs = load_docs_scope_configs(repo_root, scope_ids=[normalized_scope])
     if normalized_scope not in configs:
         raise ValueError(f"unknown Docs Viewer scope: {normalized_scope}")
+    config = select_scope_stage(configs[normalized_scope], stage or None)
     url = f"/docs/?scope={quote(normalized_scope)}"
+    if config.stage:
+        url += f"&stage={quote(config.stage)}"
     if not normalized_sub_scope:
         return url
     _config, _sub_scope, parent_doc_id = sub_scope_report_placement(
         repo_root,
         normalized_scope,
         normalized_sub_scope,
+        stage=config.stage,
     )
     return f"{url}&doc={quote(parent_doc_id)}"
 

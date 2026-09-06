@@ -341,6 +341,7 @@ function openSubscopeCreate(settings, parent, subScope, request, context) {
   return action(
     {
       scope: parent.scope,
+      ...(parent.stage ? { stage: parent.stage } : {}),
       sub_scope: subScope
     },
     {

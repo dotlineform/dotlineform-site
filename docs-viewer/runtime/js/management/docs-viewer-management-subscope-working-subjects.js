@@ -17,8 +17,8 @@ import {
   loadCatalogueTargetSupport
 } from "./source-editor/catalogue-token-targets.js";
 
-const PROJECTS_CUSTOMISATION_ID = "dotlineform_projects";
-const PROCESSING_CUSTOMISATION_ID = "dotlineform_processing";
+const WORKS_CUSTOMISATION_ID = "working_works";
+const PROCESSING_CUSTOMISATION_ID = "working_processing";
 const AUTHORING_SUBJECT_GROUP_ID = "authoring_subject";
 const PROJECT_SORT_MODES = Object.freeze([
   "title-asc",
@@ -212,7 +212,7 @@ function compareProjectDocuments(context, targetLookup, collator) {
   var settings = context || {};
   var sortMode = cleanString(settings.sortMode);
   if (!PROJECT_SORT_MODES.includes(sortMode)) {
-    throw new Error("Projects list sort mode is invalid: " + sortMode);
+    throw new Error("Works list sort mode is invalid: " + sortMode);
   }
   var direction = sortMode.endsWith("-desc") ? -1 : 1;
   var left = settings.left || {};
@@ -265,7 +265,7 @@ function listSortButton(context, key, label) {
   return button;
 }
 
-function renderListHead(context, includePublicationCues) {
+function renderListHead(context) {
   var settings = context || {};
   var host = settings.host;
   if (!host || !settings.sort || typeof settings.sort.setMode !== "function") return;
@@ -275,12 +275,7 @@ function renderListHead(context, includePublicationCues) {
   host.appendChild(selection);
   host.appendChild(listSortButton(settings, "title", "Doc title"));
   host.appendChild(listSortButton(settings, "subject", "Subject"));
-  if (includePublicationCues) {
-    var publication = host.ownerDocument.createElement("span");
-    publication.className = "docsViewerReport__projectPublicationHead";
-    publication.setAttribute("aria-hidden", "true");
-    host.appendChild(publication);
-  }
+
 }
 
 function folderPath(documentRecord) {
@@ -288,80 +283,9 @@ function folderPath(documentRecord) {
   return subject.state === "valid" && subject.kind === "folder" ? subject.key : "";
 }
 
-function publicationTargets(documentRecord) {
-  var customisation = documentRecord && documentRecord.customisation;
-  var targets = customisation && customisation.publication_targets;
-  return Array.isArray(targets) ? targets.map(function (target) {
-    var editorial = target && target.editorial;
-    return {
-      available: target && target.available === true,
-      docId: cleanString(editorial && editorial.doc_id),
-      publicUrl: cleanString(target && target.publication && target.publication.public_url),
-      scope: cleanString(editorial && editorial.scope).toLowerCase(),
-      subScope: cleanString(editorial && editorial.sub_scope).toLowerCase(),
-      title: cleanString(target && target.title),
-      viewerUrl: cleanString(target && target.viewer_url)
-    };
-  }).filter(function (target) {
-    return target.scope && target.subScope && target.docId;
-  }) : [];
-}
-
-function publicationStage(target) {
-  if (target.publicUrl) return "published";
-  if (!target.available) return "unavailable";
-  return "editorial";
-}
-
-function publicationStageLabel(stage) {
-  return ({
-    editorial: "Editorial",
-    published: "Published",
-    unavailable: "Unavailable"
-  })[stage] || "Editorial";
-}
-
-function publicationIdentity(target) {
-  return target.scope + "/" + target.subScope + "/" + target.docId;
-}
-
-function publicationStatus(targets) {
-  return targets.some(function (target) {
-    return Boolean(target.publicUrl);
-  }) ? "published" : "editorial";
-}
-
-function publicationStatusAccessibleLabel(status, targetCount) {
-  var childLabel = targetCount === 1 ? "1 Editorial child" : targetCount + " Editorial children";
-  return publicationStageLabel(status) + ": " + childLabel;
-}
-
-function renderPublicationCues(context) {
-  var settings = context || {};
-  var host = settings.trailingHost;
-  if (!host) return { accessibleLabels: [] };
-  var targets = publicationTargets(settings.document);
-  if (!targets.length) return { accessibleLabels: [] };
-  var status = publicationStatus(targets);
-  var label = publicationStatusAccessibleLabel(status, targets.length);
-  var group = host.ownerDocument.createElement("span");
-  group.className = "docsViewerReport__projectPublicationCues";
-  var cue = host.ownerDocument.createElement("span");
-  cue.className = "docsViewerReport__projectPublicationCue";
-  cue.dataset.projectPublicationStage = status;
-  cue.textContent = ({ editorial: "🟠", published: "🟢" })[status];
-  cue.title = label;
-  cue.setAttribute("aria-label", label);
-  group.appendChild(cue);
-  host.appendChild(group);
-  return { accessibleLabels: [label] };
-}
-
-function renderWorkingSubjectRow(context, options, targetLookup, includePublicationCues) {
+function renderWorkingSubjectRow(context, options, targetLookup) {
   renderSubjectCell(context, options, targetLookup);
-  return includePublicationCues
-    ? renderPublicationCues(context)
-    : { accessibleLabels: [] };
+  return { accessibleLabels: [] };
 }
 
 function renderOpenInFinder(context, options) {
@@ -499,7 +423,7 @@ function subjectInfoField(subject) {
   };
 }
 
-function workingSubjectDetailInfo(context, assignSubjectAvailable, includePublicationCues) {
+function workingSubjectDetailInfo(context, assignSubjectAvailable) {
   var settings = context || {};
   var collection = exactCollection(settings.collection);
   var target = settings.target || {};
@@ -510,27 +434,11 @@ function workingSubjectDetailInfo(context, assignSubjectAvailable, includePublic
   ) {
     throw new Error("Working subject information target is invalid.");
   }
-  var publicationFields = (includePublicationCues
-    ? publicationTargets(settings.document)
-    : []).map(function (publication, index) {
-    var stage = publicationStage(publication);
-    return Object.freeze({
-      detail: publicationIdentity(publication),
-      id: "publication_" + (index + 1),
-      label: "Publication",
-      state: stage,
-      value: (
-        ({ editorial: "🟠", published: "🟢", unavailable: "⚠️" })[stage]
-        + " " + publicationStageLabel(stage)
-        + (publication.title ? " — " + publication.title : "")
-      )
-    });
-  });
   return Object.freeze({
     actions: Object.freeze({ assignSubject: assignSubjectAvailable }),
     fields: Object.freeze([
       Object.freeze(subjectInfoField(authoringSubject(settings.document)))
-    ].concat(publicationFields))
+    ])
   });
 }
 
@@ -551,9 +459,7 @@ function createDocsViewerManagementWorkingSubjects(options, definition) {
         if (!reportRoot || !reportRoot.dataset) {
           throw new Error("Working subject report mount root is invalid.");
         }
-        reportRoot.dataset.workingSubjectColumns = definition.includePublicationCues
-          ? "publication"
-          : "subject";
+        reportRoot.dataset.workingSubjectColumns = "subject";
       },
       compareListDocuments: function (context) {
         return compareProjectDocuments(context, targetLookup, collator);
@@ -561,8 +467,7 @@ function createDocsViewerManagementWorkingSubjects(options, definition) {
       projectDetailInfo: function (context) {
         return workingSubjectDetailInfo(
           context,
-          assignSubjectAvailable,
-          definition.includePublicationCues
+          assignSubjectAvailable
         );
       },
       renderDetailToolbar: function (context) {
@@ -570,14 +475,13 @@ function createDocsViewerManagementWorkingSubjects(options, definition) {
         renderOpenInFinder(context, options);
       },
       renderListHead: function (context) {
-        renderListHead(context, definition.includePublicationCues);
+        renderListHead(context);
       },
       renderRow: function (context) {
         return renderWorkingSubjectRow(
           context,
           options,
-          targetLookup,
-          definition.includePublicationCues
+          targetLookup
         );
       }
     };
@@ -585,23 +489,20 @@ function createDocsViewerManagementWorkingSubjects(options, definition) {
   });
 }
 
-export function createDocsViewerManagementSubscopeDotlineformProjects(options = {}) {
+export function createDocsViewerManagementSubscopeWorkingWorks(options = {}) {
   return createDocsViewerManagementWorkingSubjects(options, {
-    customisationId: PROJECTS_CUSTOMISATION_ID,
-    includePublicationCues: true
+    customisationId: WORKS_CUSTOMISATION_ID
   });
 }
 
-export function createDocsViewerManagementSubscopeAnalysisWorks(options = {}) {
+export function createDocsViewerManagementSubscopePrePublishWorks(options = {}) {
   return createDocsViewerManagementWorkingSubjects(options, {
-    customisationId: "analysis_works",
-    includePublicationCues: false
+    customisationId: "pre_publish_works"
   });
 }
 
-export function createDocsViewerManagementSubscopeDotlineformProcessing(options = {}) {
+export function createDocsViewerManagementSubscopeWorkingProcessing(options = {}) {
   return createDocsViewerManagementWorkingSubjects(options, {
-    customisationId: PROCESSING_CUSTOMISATION_ID,
-    includePublicationCues: true
+    customisationId: PROCESSING_CUSTOMISATION_ID
   });
 }

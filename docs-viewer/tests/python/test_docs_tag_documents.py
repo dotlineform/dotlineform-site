@@ -56,12 +56,14 @@ def test_tag_associations_are_exact_ordered_and_location_optional() -> None:
     }
     generation = tag_documents.tag_declaration_generation(
         scope="analysis",
-        sub_scope="tags",
+        stage="working",
+        sub_scope="concepts",
         declarations_by_doc_id=declarations,
     )
     payload = tag_documents.project_tag_associations(
         scope="analysis",
-        sub_scope="tags",
+        stage="working",
+        sub_scope="concepts",
         documents=documents,
         declarations_by_doc_id=declarations,
         declaration_generation=generation,
@@ -76,7 +78,7 @@ def test_tag_associations_are_exact_ordered_and_location_optional() -> None:
         public_location_records=[
             {
                 "scope_id": "analysis",
-                "sub_scope": "tags",
+                "sub_scope": "concepts",
                 "doc_id": "d-20260801-000000-000001",
                 "url": "/analysis/?doc=report&subdoc=first-b",
                 "document_title": "First",
@@ -84,7 +86,7 @@ def test_tag_associations_are_exact_ordered_and_location_optional() -> None:
             },
             {
                 "scope_id": "analysis",
-                "sub_scope": "tags",
+                "sub_scope": "concepts",
                 "doc_id": "d-20260801-000000-000001",
                 "url": "/analysis/?doc=report&subdoc=first-a",
                 "document_title": "First",
@@ -103,9 +105,10 @@ def test_tag_associations_are_exact_ordered_and_location_optional() -> None:
 
     assert generation.startswith("sha256:")
     assert payload == {
-        "schema_version": "docs_tag_associations_v1",
+        "schema_version": "docs_tag_associations_v2",
         "scope": "analysis",
-        "sub_scope": "tags",
+        "stage": "working",
+        "sub_scope": "concepts",
         "declaration_generation": generation,
         "associations": [
             {
@@ -114,7 +117,8 @@ def test_tag_associations_are_exact_ordered_and_location_optional() -> None:
                     {
                         "target": {
                             "scope": "analysis",
-                            "sub_scope": "tags",
+                            "stage": "working",
+                            "sub_scope": "concepts",
                             "doc_id": "d-20260801-000000-000001",
                         },
                         "title": "First",
@@ -142,7 +146,8 @@ def test_tag_associations_are_exact_ordered_and_location_optional() -> None:
                     {
                         "target": {
                             "scope": "analysis",
-                            "sub_scope": "tags",
+                            "stage": "working",
+                            "sub_scope": "concepts",
                             "doc_id": "d-20260801-000000-000003",
                         },
                         "title": "Third",
@@ -164,14 +169,16 @@ def test_tag_associations_are_exact_ordered_and_location_optional() -> None:
 def test_generation_changes_for_non_associated_malformed_evidence() -> None:
     first = tag_documents.tag_declaration_generation(
         scope="analysis",
-        sub_scope="tags",
+        stage="working",
+        sub_scope="concepts",
         declarations_by_doc_id={
             "doc": {"state": "malformed", "tag_id": "", "evidence": "bad_slug"}
         },
     )
     second = tag_documents.tag_declaration_generation(
         scope="analysis",
-        sub_scope="tags",
+        stage="working",
+        sub_scope="concepts",
         declarations_by_doc_id={
             "doc": {"state": "malformed", "tag_id": "", "evidence": True}
         },

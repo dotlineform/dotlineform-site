@@ -8,30 +8,24 @@ from pathlib import Path
 import re
 from typing import Any, Callable, Mapping, Sequence
 
-import docs_dotlineform_projects_customisation as dotlineform_projects
-import docs_dotlineform_processing_customisation as dotlineform_processing
+import docs_working_works_customisation as working_works
+import docs_working_processing_customisation as working_processing
 from docs_document_subjects import AUTHORING_SUBJECT_FIELDS, FOLDER_PATH_FIELD
 from docs_tag_documents import TAG_ID_FIELD, normalize_tag_declaration
 
 
 CUSTOMISATION_ID_PATTERN = re.compile(r"\A[a-z][a-z0-9_]*\Z")
 VALUE_ID_PATTERN = re.compile(r"\A[a-z0-9][a-z0-9_-]*\Z")
-ANALYSIS_TAGS_CUSTOMISATION_ID = "analysis_tags"
-ANALYSIS_WORKS_CUSTOMISATION_ID = "analysis_works"
-DOTLINEFORM_PROJECTS_CUSTOMISATION_ID = dotlineform_projects.CUSTOMISATION_ID
-DOTLINEFORM_PROCESSING_CUSTOMISATION_ID = dotlineform_processing.CUSTOMISATION_ID
+CONCEPTS_CUSTOMISATION_ID = "concepts"
+PRE_PUBLISH_WORKS_CUSTOMISATION_ID = "pre_publish_works"
+WORKING_WORKS_CUSTOMISATION_ID = working_works.CUSTOMISATION_ID
+WORKING_PROCESSING_CUSTOMISATION_ID = working_processing.CUSTOMISATION_ID
 PUBLIC_ACCESS = "public"
 MANAGE_ACCESS = "manage"
 SUPPORTED_BROWSER_ACCESSES = frozenset({PUBLIC_ACCESS, MANAGE_ACCESS})
 LINEAGE_SOURCE_ROLE = "source"
 LINEAGE_EDITORIAL_ROLE = "editorial"
 SUPPORTED_LINEAGE_ROLES = frozenset({LINEAGE_SOURCE_ROLE, LINEAGE_EDITORIAL_ROLE})
-PROJECTS_TO_ANALYSIS_WORKS_LINEAGE_CONTRACT = (
-    dotlineform_projects.LINEAGE_CONTRACT_ID
-)
-PROCESSING_TO_ANALYSIS_WORKS_LINEAGE_CONTRACT = (
-    dotlineform_processing.LINEAGE_CONTRACT_ID
-)
 
 
 @dataclass(frozen=True)
@@ -160,7 +154,7 @@ def _normalize_ordered_ids(raw: Any, *, field: str) -> tuple[str, ...]:
     return tuple(values)
 
 
-def _normalize_analysis_tags_settings(raw: Any, field: str) -> Mapping[str, Any]:
+def _normalize_concepts_settings(raw: Any, field: str) -> Mapping[str, Any]:
     settings = _strict_object(raw, field=field, keys={"groups"})
     return {
         "groups": _normalize_ordered_ids(
@@ -170,11 +164,11 @@ def _normalize_analysis_tags_settings(raw: Any, field: str) -> Mapping[str, Any]
     }
 
 
-def _analysis_tags_document_groups(settings: Mapping[str, Any]) -> tuple[str, ...]:
+def _concepts_document_groups(settings: Mapping[str, Any]) -> tuple[str, ...]:
     return tuple(str(value) for value in settings.get("groups", ()))
 
 
-def _analysis_tags_metadata_record(
+def _concepts_metadata_record(
     settings: Mapping[str, Any],
     front_matter: Mapping[str, Any],
     *,
@@ -182,14 +176,14 @@ def _analysis_tags_metadata_record(
 ) -> dict[str, Any]:
     del doc_id
     raw_group = front_matter.get("group")
-    _validate_analysis_tags_transfer_field(settings, "group", raw_group)
+    _validate_concepts_transfer_field(settings, "group", raw_group)
     return {
         "group": str(raw_group or "").strip().lower(),
         TAG_ID_FIELD: front_matter.get(TAG_ID_FIELD, ""),
     }
 
 
-def _normalize_analysis_tags_metadata_update(
+def _normalize_concepts_metadata_update(
     settings: Mapping[str, Any],
     raw: Any,
     *,
@@ -208,8 +202,8 @@ def _normalize_analysis_tags_metadata_update(
     group = raw_group.strip().lower()
     if raw_group != group:
         raise ValueError("customisation.group must be one exact configured group")
-    _validate_analysis_tags_transfer_field(settings, "group", group)
-    current_record = _analysis_tags_metadata_record(
+    _validate_concepts_transfer_field(settings, "group", group)
+    current_record = _concepts_metadata_record(
         settings,
         front_matter,
         doc_id=doc_id,
@@ -252,7 +246,7 @@ def _normalize_analysis_tags_metadata_update(
     }
 
 
-def _validate_analysis_tags_transfer_field(
+def _validate_concepts_transfer_field(
     settings: Mapping[str, Any],
     field_name: str,
     value: Any,
@@ -267,11 +261,11 @@ def _validate_analysis_tags_transfer_field(
     if not isinstance(value, str):
         raise ValueError("group must be a scalar string")
     normalized = value.strip().lower()
-    if normalized and normalized not in _analysis_tags_document_groups(settings):
+    if normalized and normalized not in _concepts_document_groups(settings):
         raise ValueError(f"group {normalized!r} is not configured for the target")
 
 
-def _validate_analysis_tags_source(
+def _validate_concepts_source(
     settings: Mapping[str, Any],
     front_matter: Mapping[str, Any],
     *,
@@ -281,7 +275,7 @@ def _validate_analysis_tags_source(
     normalize_tag_declaration(front_matter)
 
 
-def _normalize_analysis_tags_import_front_matter(
+def _normalize_concepts_import_front_matter(
     settings: Mapping[str, Any],
     raw: Any,
     *,
@@ -297,7 +291,7 @@ def _normalize_analysis_tags_import_front_matter(
         group = raw["group"]
         if not isinstance(group, str) or group != group.strip().lower():
             raise ValueError("custom import group must be one exact configured group")
-        _validate_analysis_tags_transfer_field(settings, "group", group)
+        _validate_concepts_transfer_field(settings, "group", group)
         if group:
             result["group"] = group
     if TAG_ID_FIELD in raw:
@@ -312,11 +306,11 @@ def _normalize_analysis_tags_import_front_matter(
     return result
 
 
-def _project_analysis_works_manifest(
+def _project_pre_publish_works_manifest(
     settings: Mapping[str, Any], documents: Sequence[Any], repo_root: Path, scope: str, sub_scope: str, stage: str = "",
 ) -> dict[str, Any]:
     """Identify the Manage subject contribution; shared subject projection owns its rows."""
-    return {"root": {"id": ANALYSIS_WORKS_CUSTOMISATION_ID, "data": {}}, "rows": {}}
+    return {"root": {"id": PRE_PUBLISH_WORKS_CUSTOMISATION_ID, "data": {}}, "rows": {}}
 
 
 def _normalize_empty_settings(raw: Any, field: str) -> Mapping[str, Any]:
@@ -324,7 +318,7 @@ def _normalize_empty_settings(raw: Any, field: str) -> Mapping[str, Any]:
     return settings
 
 
-def _project_analysis_tags_manifest(
+def _project_concepts_manifest(
     settings: Mapping[str, Any],
     documents: Sequence[Any],
     repo_root: Path,
@@ -333,7 +327,7 @@ def _project_analysis_tags_manifest(
     stage: str = "",
 ) -> dict[str, Any]:
     del repo_root, scope, sub_scope
-    groups = _analysis_tags_document_groups(settings)
+    groups = _concepts_document_groups(settings)
     rows: dict[str, dict[str, Any]] = {}
     for document in documents:
         row: dict[str, Any] = {}
@@ -347,7 +341,7 @@ def _project_analysis_tags_manifest(
             rows[str(document.doc_id)] = row
     return {
         "root": {
-            "id": ANALYSIS_TAGS_CUSTOMISATION_ID,
+            "id": CONCEPTS_CUSTOMISATION_ID,
             "data": {"groups": list(groups)},
         },
         "rows": rows,
@@ -355,24 +349,24 @@ def _project_analysis_tags_manifest(
 
 
 SUB_SCOPE_CUSTOMISATION_DEFINITIONS = {
-    ANALYSIS_TAGS_CUSTOMISATION_ID: DocsSubScopeCustomisationDefinition(
-        customisation_id=ANALYSIS_TAGS_CUSTOMISATION_ID,
-        normalize_settings=_normalize_analysis_tags_settings,
+    CONCEPTS_CUSTOMISATION_ID: DocsSubScopeCustomisationDefinition(
+        customisation_id=CONCEPTS_CUSTOMISATION_ID,
+        normalize_settings=_normalize_concepts_settings,
         manifest_projection=DocsSubScopeManifestProjectionAspect(
-            project=_project_analysis_tags_manifest,
+            project=_project_concepts_manifest,
         ),
         document_groups=DocsSubScopeDocumentGroupsAspect(
-            resolve=_analysis_tags_document_groups,
+            resolve=_concepts_document_groups,
         ),
         source_validation=DocsSubScopeSourceValidationAspect(
-            validate=_validate_analysis_tags_source,
+            validate=_validate_concepts_source,
         ),
         metadata=DocsSubScopeMetadataAspect(
-            read_record=_analysis_tags_metadata_record,
-            normalize_update=_normalize_analysis_tags_metadata_update,
+            read_record=_concepts_metadata_record,
+            normalize_update=_normalize_concepts_metadata_update,
         ),
         import_front_matter=DocsSubScopeImportFrontMatterAspect(
-            normalize=_normalize_analysis_tags_import_front_matter,
+            normalize=_normalize_concepts_import_front_matter,
         ),
         browser_composition=DocsSubScopeBrowserCompositionAspect(
             accesses=frozenset({MANAGE_ACCESS}),
@@ -386,19 +380,19 @@ SUB_SCOPE_CUSTOMISATION_DEFINITIONS = {
         transfer=DocsSubScopeTransferAspect(
             contract_id="analysis_tag_fields",
             owned_field_names=("group", TAG_ID_FIELD),
-            validate_field=_validate_analysis_tags_transfer_field,
+            validate_field=_validate_concepts_transfer_field,
         ),
     ),
-    ANALYSIS_WORKS_CUSTOMISATION_ID: DocsSubScopeCustomisationDefinition(
-        customisation_id=ANALYSIS_WORKS_CUSTOMISATION_ID,
+    PRE_PUBLISH_WORKS_CUSTOMISATION_ID: DocsSubScopeCustomisationDefinition(
+        customisation_id=PRE_PUBLISH_WORKS_CUSTOMISATION_ID,
         normalize_settings=_normalize_empty_settings,
-        manifest_projection=DocsSubScopeManifestProjectionAspect(project=_project_analysis_works_manifest),
+        manifest_projection=DocsSubScopeManifestProjectionAspect(project=_project_pre_publish_works_manifest),
         authoring_subject=DocsSubScopeAuthoringSubjectAspect(
             field_names=tuple(field for field in AUTHORING_SUBJECT_FIELDS if field != FOLDER_PATH_FIELD),
         ),
         metadata=DocsSubScopeMetadataAspect(
-            read_record=partial(dotlineform_projects.metadata_record, folder_supported=False),
-            normalize_update=partial(dotlineform_projects.normalize_metadata_update, folder_supported=False),
+            read_record=partial(working_works.metadata_record, folder_supported=False),
+            normalize_update=partial(working_works.normalize_metadata_update, folder_supported=False),
         ),
         browser_composition=DocsSubScopeBrowserCompositionAspect(
             accesses=frozenset({MANAGE_ACCESS}),
@@ -410,29 +404,19 @@ SUB_SCOPE_CUSTOMISATION_DEFINITIONS = {
                 field_names=AUTHORING_SUBJECT_FIELDS,
             ),
         ),
-        document_lineages=(
-            DocsSubScopeDocumentLineageAspect(
-                contract_id=PROJECTS_TO_ANALYSIS_WORKS_LINEAGE_CONTRACT,
-                role=LINEAGE_EDITORIAL_ROLE,
-            ),
-            DocsSubScopeDocumentLineageAspect(
-                contract_id=PROCESSING_TO_ANALYSIS_WORKS_LINEAGE_CONTRACT,
-                role=LINEAGE_EDITORIAL_ROLE,
-            ),
-        ),
     ),
-    DOTLINEFORM_PROJECTS_CUSTOMISATION_ID: DocsSubScopeCustomisationDefinition(
-        customisation_id=DOTLINEFORM_PROJECTS_CUSTOMISATION_ID,
-        normalize_settings=dotlineform_projects.normalize_settings,
+    WORKING_WORKS_CUSTOMISATION_ID: DocsSubScopeCustomisationDefinition(
+        customisation_id=WORKING_WORKS_CUSTOMISATION_ID,
+        normalize_settings=working_works.normalize_settings,
         manifest_projection=DocsSubScopeManifestProjectionAspect(
-            project=dotlineform_projects.project_manifest,
+            project=working_works.project_manifest,
         ),
         metadata=DocsSubScopeMetadataAspect(
-            read_record=dotlineform_projects.metadata_record,
-            normalize_update=dotlineform_projects.normalize_metadata_update,
+            read_record=working_works.metadata_record,
+            normalize_update=working_works.normalize_metadata_update,
         ),
         import_front_matter=DocsSubScopeImportFrontMatterAspect(
-            normalize=dotlineform_projects.normalize_import_front_matter,
+            normalize=working_works.normalize_import_front_matter,
         ),
         browser_composition=DocsSubScopeBrowserCompositionAspect(
             accesses=frozenset({MANAGE_ACCESS}),
@@ -446,27 +430,19 @@ SUB_SCOPE_CUSTOMISATION_DEFINITIONS = {
         authoring_subject=DocsSubScopeAuthoringSubjectAspect(
             field_names=AUTHORING_SUBJECT_FIELDS,
         ),
-        document_lineages=(
-            DocsSubScopeDocumentLineageAspect(
-                contract_id=PROJECTS_TO_ANALYSIS_WORKS_LINEAGE_CONTRACT,
-                role=LINEAGE_SOURCE_ROLE,
-                copy_action_label="Copy to Analysis",
-                copy_modal_title="Copy to analysis/works",
-            ),
-        ),
     ),
-    DOTLINEFORM_PROCESSING_CUSTOMISATION_ID: DocsSubScopeCustomisationDefinition(
-        customisation_id=DOTLINEFORM_PROCESSING_CUSTOMISATION_ID,
-        normalize_settings=dotlineform_processing.normalize_settings,
+    WORKING_PROCESSING_CUSTOMISATION_ID: DocsSubScopeCustomisationDefinition(
+        customisation_id=WORKING_PROCESSING_CUSTOMISATION_ID,
+        normalize_settings=working_processing.normalize_settings,
         manifest_projection=DocsSubScopeManifestProjectionAspect(
-            project=dotlineform_processing.project_manifest,
+            project=working_processing.project_manifest,
         ),
         metadata=DocsSubScopeMetadataAspect(
-            read_record=dotlineform_processing.metadata_record,
-            normalize_update=dotlineform_processing.normalize_metadata_update,
+            read_record=working_processing.metadata_record,
+            normalize_update=working_processing.normalize_metadata_update,
         ),
         import_front_matter=DocsSubScopeImportFrontMatterAspect(
-            normalize=dotlineform_processing.normalize_import_front_matter,
+            normalize=working_processing.normalize_import_front_matter,
         ),
         browser_composition=DocsSubScopeBrowserCompositionAspect(
             accesses=frozenset({MANAGE_ACCESS}),
@@ -479,14 +455,6 @@ SUB_SCOPE_CUSTOMISATION_DEFINITIONS = {
         ),
         authoring_subject=DocsSubScopeAuthoringSubjectAspect(
             field_names=AUTHORING_SUBJECT_FIELDS,
-        ),
-        document_lineages=(
-            DocsSubScopeDocumentLineageAspect(
-                contract_id=PROCESSING_TO_ANALYSIS_WORKS_LINEAGE_CONTRACT,
-                role=LINEAGE_SOURCE_ROLE,
-                copy_action_label="Copy to Analysis",
-                copy_modal_title="Copy to analysis/works",
-            ),
         ),
     ),
 }
@@ -961,10 +929,10 @@ def registered_sub_scope_customisation_access() -> dict[str, tuple[str, ...]]:
 
 
 __all__ = [
-    "ANALYSIS_TAGS_CUSTOMISATION_ID",
-    "ANALYSIS_WORKS_CUSTOMISATION_ID",
-    "DOTLINEFORM_PROJECTS_CUSTOMISATION_ID",
-    "DOTLINEFORM_PROCESSING_CUSTOMISATION_ID",
+    "CONCEPTS_CUSTOMISATION_ID",
+    "PRE_PUBLISH_WORKS_CUSTOMISATION_ID",
+    "WORKING_WORKS_CUSTOMISATION_ID",
+    "WORKING_PROCESSING_CUSTOMISATION_ID",
     "DocsSubScopeAssignableFieldGroup",
     "DocsSubScopeAuthoringSubjectAspect",
     "DocsSubScopeBrowserCompositionAspect",

@@ -231,9 +231,8 @@ class SubScopeDocsBuilder(DocsDataBuilder):
     ) -> dict[str, dict[str, Any]] | None:
         customisation = self.sub_scope_config.sub_scope_customisation
         if (
-            self.config.stage
-            or customisation is None
-            or customisation.customisation_id != "analysis_tags"
+            customisation is None
+            or customisation.customisation_id != "concepts"
         ):
             return None
         return {
@@ -308,6 +307,7 @@ class SubScopeDocsBuilder(DocsDataBuilder):
         if tag_declarations_by_doc_id is not None:
             declaration_generation = tag_declaration_generation(
                 scope=self.scope_id,
+                stage=self.config.stage,
                 sub_scope=self.sub_scope_id,
                 declarations_by_doc_id=tag_declarations_by_doc_id,
             )
@@ -315,9 +315,11 @@ class SubScopeDocsBuilder(DocsDataBuilder):
                 self.repo_root,
                 self.scope_id,
                 self.sub_scope_id,
+                stage=self.config.stage,
             )
             tag_associations_payload = project_tag_associations(
                 scope=self.scope_id,
+                stage=self.config.stage,
                 sub_scope=self.sub_scope_id,
                 documents=ordered_docs,
                 declarations_by_doc_id=tag_declarations_by_doc_id,
@@ -330,7 +332,7 @@ class SubScopeDocsBuilder(DocsDataBuilder):
                     )
                     for doc in ordered_docs
                 },
-                public_location_records=load_current_public_tag_locations(
+                public_location_records=() if self.config.stage else load_current_public_tag_locations(
                     self.repo_root,
                     scope=self.scope_id,
                     sub_scope=self.sub_scope_id,

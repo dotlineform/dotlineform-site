@@ -496,9 +496,9 @@ def validate_sub_scope_document_metadata(
 def collection_supports_publishable(
     config: DocsScopeConfig | DocsSubScopeConfig,
 ) -> bool:
-    """Return whether one exact collection participates in public Publish."""
+    """Allow eligibility metadata in workflow stages and public collections."""
 
-    return getattr(config, "public_projection", None) is not None
+    return bool(config.stage) or config.public_projection is not None
 
 
 def validate_publishable_front_matter(

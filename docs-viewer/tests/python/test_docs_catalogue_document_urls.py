@@ -180,7 +180,7 @@ def test_loader_joins_public_parent_and_sub_scope_sources_across_configured_scop
                             title="Works",
                             scope_type="public",
                             sub_scope_customisation={
-                                "id": "analysis_works",
+                                "id": "pre_publish_works",
                                 "settings": {},
                             },
                         )

@@ -26,7 +26,7 @@ CANONICAL_DOC_URL_PATTERNS = (
 TAG_REGISTRY_REQUIRED_ROW_KEYS = frozenset(("tag_id", "group", "updated_at_utc"))
 TAG_REGISTRY_OPTIONAL_ROW_KEYS = frozenset(("primary_document",))
 TAG_REGISTRY_ROW_KEYS = TAG_REGISTRY_REQUIRED_ROW_KEYS | TAG_REGISTRY_OPTIONAL_ROW_KEYS
-PRIMARY_DOCUMENT_KEYS = frozenset(("scope", "sub_scope", "doc_id"))
+PRIMARY_DOCUMENT_KEYS = frozenset(("scope", "stage", "sub_scope", "doc_id"))
 
 MAX_TAGS = 50
 MAX_ALIAS_TARGETS = 50
@@ -284,12 +284,14 @@ def sanitize_primary_document(
     scope = str(raw_value.get("scope") or "").strip()
     sub_scope = str(raw_value.get("sub_scope") or "").strip()
     doc_id = str(raw_value.get("doc_id") or "").strip()
-    if scope != "analysis" or sub_scope != "tags":
-        raise ValueError(f"{field_name} must target the Analysis Tags collection")
+    stage = str(raw_value.get("stage") or "").strip()
+    if scope != "analysis" or stage != "working" or sub_scope != "concepts":
+        raise ValueError(f"{field_name} must target the Analysis Working Concepts collection")
     if re.fullmatch(IMMUTABLE_DOC_ID, doc_id) is None:
         raise ValueError(f"{field_name}.doc_id must use immutable document identity")
     return {
         "scope": scope,
+        "stage": stage,
         "sub_scope": sub_scope,
         "doc_id": doc_id,
     }

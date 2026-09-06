@@ -35,7 +35,7 @@ def test_studio_tag_api_reads_each_canonical_payload() -> None:
     assert groups["ok"] is True and groups["groups"]
     assert registry["tag_registry_version"] == "tag_registry_v6"
     assert registry["ok"] is True and registry["tags"]
-    assert associations["schema_version"] == "docs_tag_associations_v1"
+    assert associations["schema_version"] == "docs_tag_associations_v2"
     assert associations["ok"] is True and associations["associations"]
     assert aliases["tag_aliases_version"] == "tag_aliases_v2"
     assert aliases["ok"] is True and aliases["aliases"]

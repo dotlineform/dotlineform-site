@@ -30,15 +30,11 @@ def test_current_associations_are_exact_sorted_and_source_owned(
         document("d-20260811-000005-000005", "Malformed", " Trees "),
     ]
     load_calls: list[tuple[Path, str, str]] = []
-    monkeypatch.setattr(
-        declarations,
-        "load_docs_scope_configs",
-        lambda _repo_root, *, scope_ids: {
-            "analysis": SimpleNamespace(
-                sub_scopes=[SimpleNamespace(sub_scope="tags")]
-            )
-        },
-    )
+    def load_working(_repo_root, scope, stage):
+        assert (scope, stage) == ("analysis", "working")
+        return SimpleNamespace(sub_scopes=[SimpleNamespace(sub_scope="concepts")])
+
+    monkeypatch.setattr(declarations, "load_docs_scope_stage", load_working)
     monkeypatch.setattr(
         declarations.source_model,
         "load_document_collection_docs_for_config",
@@ -56,8 +52,8 @@ def test_current_associations_are_exact_sorted_and_source_owned(
     monkeypatch.setattr(
         declarations.document_location,
         "management_collection_viewer_url",
-        lambda _repo_root, scope, sub_scope: (
-            f"/docs/?scope={scope}&doc=report-{sub_scope}"
+        lambda _repo_root, scope, sub_scope, *, stage: (
+            f"/docs/?scope={scope}&stage={stage}&doc=report-{sub_scope}"
         ),
     )
     monkeypatch.setattr(
@@ -74,29 +70,31 @@ def test_current_associations_are_exact_sorted_and_source_owned(
         "trees",
     )
 
-    assert load_calls == [(repo_root, "analysis", "tags")]
+    assert load_calls == [(repo_root, "analysis", "concepts")]
     assert associations == [
         {
             "target": {
                 "scope": "analysis",
-                "sub_scope": "tags",
+                "stage": "working",
+                "sub_scope": "concepts",
                 "doc_id": "d-20260811-000001-000001",
             },
             "title": "First",
             "url": (
-                "/docs/?scope=analysis&doc=report-tags"
+                "/docs/?scope=analysis&stage=working&doc=report-concepts"
                 "&subdoc=d-20260811-000001-000001"
             ),
         },
         {
             "target": {
                 "scope": "analysis",
-                "sub_scope": "tags",
+                "stage": "working",
+                "sub_scope": "concepts",
                 "doc_id": "d-20260811-000002-000002",
             },
             "title": "Second",
             "url": (
-                "/docs/?scope=analysis&doc=report-tags"
+                "/docs/?scope=analysis&stage=working&doc=report-concepts"
                 "&subdoc=d-20260811-000002-000002"
             ),
         },

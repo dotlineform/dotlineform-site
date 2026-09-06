@@ -3,24 +3,24 @@ function cleanString(value) {
 }
 
 const MANAGEMENT_CUSTOMISATION_LOADERS = Object.freeze({
-  analysis_works: function () {
-    return import("./docs-viewer-management-subscope-dotlineform-projects.js").then(function (module) {
-      return module.createDocsViewerManagementSubscopeAnalysisWorks;
+  pre_publish_works: function () {
+    return import("./docs-viewer-management-subscope-working-subjects.js").then(function (module) {
+      return module.createDocsViewerManagementSubscopePrePublishWorks;
     });
   },
-  analysis_tags: function () {
-    return import("./docs-viewer-management-subscope-analysis-tags.js").then(function (module) {
-      return module.createDocsViewerManagementSubscopeAnalysisTags;
+  concepts: function () {
+    return import("./docs-viewer-management-subscope-concepts.js").then(function (module) {
+      return module.createDocsViewerManagementSubscopeConcepts;
     });
   },
-  dotlineform_projects: function () {
-    return import("./docs-viewer-management-subscope-dotlineform-projects.js").then(function (module) {
-      return module.createDocsViewerManagementSubscopeDotlineformProjects;
+  working_works: function () {
+    return import("./docs-viewer-management-subscope-working-subjects.js").then(function (module) {
+      return module.createDocsViewerManagementSubscopeWorkingWorks;
     });
   },
-  dotlineform_processing: function () {
-    return import("./docs-viewer-management-subscope-dotlineform-projects.js").then(function (module) {
-      return module.createDocsViewerManagementSubscopeDotlineformProcessing;
+  working_processing: function () {
+    return import("./docs-viewer-management-subscope-working-subjects.js").then(function (module) {
+      return module.createDocsViewerManagementSubscopeWorkingProcessing;
     });
   }
 });

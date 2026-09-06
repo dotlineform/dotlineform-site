@@ -2,7 +2,7 @@ import {
   appendProjectSubjectIcon
 } from "./project-subject-icons.js";
 
-const REPORT_SCHEMA = "docs_project_state_report_v2";
+const REPORT_SCHEMA = "docs_project_state_report_v3";
 const LOCAL_TARGET_PREFIX = "dlf-local:";
 const GROUP_KEYS = Object.freeze(["folder", "series"]);
 const COLUMN_KEYS = Object.freeze(["folder", "series", "docs"]);
@@ -83,8 +83,9 @@ function normalizeDocument(value) {
     "document applicable Series"
   ).map(cleanString);
   if (
-    cleanString(target && target.scope) !== "dotlineform"
-    || cleanString(target && target.sub_scope) !== "projects"
+    cleanString(target && target.scope) !== "analysis"
+    || cleanString(target && target.stage) !== "working"
+    || cleanString(target && target.sub_scope) !== "works"
     || !docId
     || !title
     || !href
@@ -162,15 +163,20 @@ function normalizeRow(value) {
   };
 }
 
-function normalizeResponse(payload) {
+/** Accept the live folder report with exact Analysis/Working/Works document targets. */
+export function normalizeProjectStateResponse(payload) {
   const report = payload && payload.report;
   const generation = cleanString(report && report.generation);
   const generatedAt = cleanString(report && report.generated_at);
+  const inputs = report && report.inputs;
   if (
     !payload
     || payload.ok !== true
     || !report
     || report.schema_version !== REPORT_SCHEMA
+    || cleanString(inputs && inputs.scope) !== "analysis"
+    || cleanString(inputs && inputs.stage) !== "working"
+    || cleanString(inputs && inputs.sub_scope) !== "works"
     || !generation
     || !generatedAt
   ) {
@@ -534,7 +540,7 @@ function runReport(state) {
   clearNode(state.rowsNode);
   state.emptyNode.hidden = true;
   return service.runProjectState()
-    .then(normalizeResponse)
+    .then(normalizeProjectStateResponse)
     .then((report) => {
       state.sourceRows = report.rows;
       state.generatedAt = report.generatedAt;

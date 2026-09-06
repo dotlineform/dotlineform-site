@@ -9,6 +9,7 @@ import sys
 import tempfile
 
 import pytest
+from dataclasses import replace
 
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
@@ -35,6 +36,33 @@ from studio.shared.python.studio_python_paths import ensure_studio_python_paths 
 
 
 ensure_studio_python_paths(__file__)
+
+
+@pytest.fixture
+def synthetic_lineage_customisations(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Exercise retained generic transfer primitives without restoring a production workflow."""
+    import docs_subscope_customisations as customisations
+
+    definitions = customisations.SUB_SCOPE_CUSTOMISATION_DEFINITIONS
+    aspect = customisations.DocsSubScopeDocumentLineageAspect
+    for source_id, fixture_id, contract in (
+        ("working_works", "fixture_working_works", "fixture_works_copy"),
+        ("working_processing", "fixture_working_processing", "fixture_processing_copy"),
+    ):
+        monkeypatch.setitem(definitions, fixture_id, replace(
+            definitions[source_id], customisation_id=fixture_id,
+            document_lineages=(aspect(
+                contract_id=contract, role="source",
+                copy_action_label="Copy fixture", copy_modal_title="Copy fixture documents",
+            ),),
+        ))
+    monkeypatch.setitem(definitions, "fixture_editorial_works", replace(
+        definitions["pre_publish_works"], customisation_id="fixture_editorial_works",
+        document_lineages=tuple(
+            aspect(contract_id=contract, role="editorial")
+            for contract in ("fixture_works_copy", "fixture_processing_copy")
+        ),
+    ))
 
 
 def pytest_unconfigure() -> None:

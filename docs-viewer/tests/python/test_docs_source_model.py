@@ -211,7 +211,7 @@ def test_document_collection_loader_selects_exact_configured_sub_scope() -> None
         sub_scope="tags",
         ui_statuses=("draft",),
         sub_scope_customisation=SimpleNamespace(
-            customisation_id="analysis_tags",
+            customisation_id="concepts",
             settings={"groups": ("subject",)},
         ),
         source=SimpleNamespace(
@@ -282,7 +282,7 @@ def test_projects_collection_loader_keeps_malformed_folder_source_loadable() -> 
         sub_scope="projects",
         ui_statuses=("draft", "done"),
         sub_scope_customisation=SimpleNamespace(
-            customisation_id="dotlineform_projects",
+            customisation_id="working_works",
             settings={},
         ),
         source=SimpleNamespace(

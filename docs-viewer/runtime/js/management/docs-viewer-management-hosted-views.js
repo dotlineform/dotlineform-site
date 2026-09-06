@@ -121,6 +121,15 @@ export function createDocsViewerManagementViewDefinitions() {
         renderer: "manage-scope-select"
       },
       {
+        id: "manage-stage",
+        label: "Analysis stage",
+        ownerType: "app",
+        surfaceId: "app-management",
+        appKinds: ["manage"],
+        features: ["scope-selection"],
+        renderer: "manage-stage-select"
+      },
+      {
         id: "manage-theme",
         label: "Switch to dark mode",
         ownerType: "app",

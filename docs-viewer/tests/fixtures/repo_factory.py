@@ -217,7 +217,7 @@ def docs_sub_scope_record(
         record["supports_return_import"] = supports_return_import
     if analysis_tag_groups is not None:
         record["sub_scope_customisation"] = {
-            "id": "analysis_tags",
+            "id": "concepts",
             "settings": {"groups": analysis_tag_groups},
         }
     if sub_scope_customisation is not None:

@@ -30,13 +30,13 @@ def _empty_manifest(
 
 
 def test_current_customisations_declare_explicit_aspects() -> None:
-    analysis = customisations.SUB_SCOPE_CUSTOMISATION_DEFINITIONS["analysis_tags"]
-    works = customisations.SUB_SCOPE_CUSTOMISATION_DEFINITIONS["analysis_works"]
+    analysis = customisations.SUB_SCOPE_CUSTOMISATION_DEFINITIONS["concepts"]
+    works = customisations.SUB_SCOPE_CUSTOMISATION_DEFINITIONS["pre_publish_works"]
     projects = customisations.SUB_SCOPE_CUSTOMISATION_DEFINITIONS[
-        "dotlineform_projects"
+        "working_works"
     ]
     processing = customisations.SUB_SCOPE_CUSTOMISATION_DEFINITIONS[
-        "dotlineform_processing"
+        "working_processing"
     ]
 
     assert isinstance(
@@ -84,16 +84,7 @@ def test_current_customisations_declare_explicit_aspects() -> None:
         )
     )
     assert works.transfer is None
-    assert works.document_lineages == (
-        customisations.DocsSubScopeDocumentLineageAspect(
-            contract_id="dotlineform_projects_to_analysis_works",
-            role="editorial",
-        ),
-        customisations.DocsSubScopeDocumentLineageAspect(
-            contract_id="dotlineform_processing_to_analysis_works",
-            role="editorial",
-        ),
-    )
+    assert works.document_lineages == ()
 
     assert isinstance(
         projects.manifest_projection,
@@ -118,14 +109,7 @@ def test_current_customisations_declare_explicit_aspects() -> None:
         ),
     )
     assert projects.transfer is None
-    assert projects.document_lineages == (
-        customisations.DocsSubScopeDocumentLineageAspect(
-            contract_id="dotlineform_projects_to_analysis_works",
-            role="source",
-            copy_action_label="Copy to Analysis",
-            copy_modal_title="Copy to analysis/works",
-        ),
-    )
+    assert projects.document_lineages == ()
 
     assert isinstance(
         processing.manifest_projection,
@@ -150,24 +134,17 @@ def test_current_customisations_declare_explicit_aspects() -> None:
         ),
     )
     assert processing.transfer is None
-    assert processing.document_lineages == (
-        customisations.DocsSubScopeDocumentLineageAspect(
-            contract_id="dotlineform_processing_to_analysis_works",
-            role="source",
-            copy_action_label="Copy to Analysis",
-            copy_modal_title="Copy to analysis/works",
-        ),
-    )
+    assert processing.document_lineages == ()
 
     projects_config = customisations.normalize_docs_subscope_customisation(
-        {"id": "dotlineform_projects", "settings": {}},
+        {"id": "working_works", "settings": {}},
         field="sub_scope_customisation",
     )
     assert customisations.browser_sub_scope_customisation_payload(
         projects_config,
         published=False,
     ) == {
-        "id": "dotlineform_projects",
+        "id": "working_works",
         "capabilities": {
             "assignable_field_groups": ["authoring_subject"],
         },
@@ -178,14 +155,14 @@ def test_current_customisations_declare_explicit_aspects() -> None:
     ) is None
 
     processing_config = customisations.normalize_docs_subscope_customisation(
-        {"id": "dotlineform_processing", "settings": {}},
+        {"id": "working_processing", "settings": {}},
         field="sub_scope_customisation",
     )
     assert customisations.browser_sub_scope_customisation_payload(
         processing_config,
         published=False,
     ) == {
-        "id": "dotlineform_processing",
+        "id": "working_processing",
         "capabilities": {
             "assignable_field_groups": ["authoring_subject"],
         },
@@ -200,7 +177,7 @@ def test_current_customisations_declare_explicit_aspects() -> None:
 
     analysis_config = customisations.normalize_docs_subscope_customisation(
         {
-            "id": "analysis_tags",
+            "id": "concepts",
             "settings": {"groups": ["subject", "domain", "form", "theme"]},
         },
         field="sub_scope_customisation",
@@ -209,7 +186,7 @@ def test_current_customisations_declare_explicit_aspects() -> None:
         analysis_config,
         published=False,
     ) == {
-        "id": "analysis_tags",
+        "id": "concepts",
         "capabilities": {
             "assignable_field_groups": ["tag_fields"],
         },
@@ -291,14 +268,14 @@ def test_current_customisations_declare_explicit_aspects() -> None:
         )
 
     works_config = customisations.normalize_docs_subscope_customisation(
-        {"id": "analysis_works", "settings": {}},
+        {"id": "pre_publish_works", "settings": {}},
         field="sub_scope_customisation",
     )
     assert customisations.browser_sub_scope_customisation_payload(
         works_config,
         published=False,
     ) == {
-        "id": "analysis_works",
+        "id": "pre_publish_works",
         "capabilities": {"assignable_field_groups": ["authoring_subject"]},
     }
     assert customisations.browser_sub_scope_customisation_payload(

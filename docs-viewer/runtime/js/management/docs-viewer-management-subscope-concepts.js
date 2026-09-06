@@ -5,7 +5,7 @@ import {
   openDocsViewerTagFieldsModal
 } from "./docs-viewer-management-tag-fields-modal.js";
 
-const CUSTOMISATION_ID = "analysis_tags";
+const CUSTOMISATION_ID = "concepts";
 const TAG_FIELDS_GROUP_ID = "tag_fields";
 const TAG_ID_FIELD_ID = "tag_id";
 
@@ -269,7 +269,7 @@ function groupFilter(groups) {
   };
 }
 
-export function createDocsViewerManagementSubscopeAnalysisTags(options = {}) {
+export function createDocsViewerManagementSubscopeConcepts(options = {}) {
   var descriptorId = cleanString(options.descriptor && options.descriptor.id);
   if (descriptorId !== CUSTOMISATION_ID) {
     throw new Error("Analysis/Tags customisation identity did not match its registry entry.");

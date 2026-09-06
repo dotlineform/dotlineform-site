@@ -51,7 +51,8 @@ def assignment_tag(tag_id: str, weight: float = 0.6) -> dict[str, Any]:
 def target(doc_id: str) -> dict[str, str]:
     return {
         "scope": "analysis",
-        "sub_scope": "tags",
+        "stage": "working",
+        "sub_scope": "concepts",
         "doc_id": doc_id,
     }
 
@@ -260,11 +261,12 @@ def test_canonical_mutation_guards() -> None:
             NOW,
             new_primary_document={
                 "scope": "studio",
-                "sub_scope": "tags",
+                "stage": "working",
+                "sub_scope": "concepts",
                 "doc_id": "d-20260729-120000-000002",
             },
         ),
-        "Analysis Tags collection",
+        "Analysis Working Concepts collection",
         "wrong primary collection",
     )
 

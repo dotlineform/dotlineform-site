@@ -382,14 +382,6 @@ export function initDocsViewerConfigController(context) {
     root.dataset.viewerScope = scope;
     root.dataset.viewerStage = config.stage;
     var stageControls = root.querySelector("[data-docs-viewer-stages]");
-    if (!stageControls && config.stages.length && scopeSelect) {
-      stageControls = document.createElement("div");
-      stageControls.className = "docsViewer__stageButtons";
-      stageControls.dataset.docsViewerStages = "true";
-      stageControls.setAttribute("role", "group");
-      stageControls.setAttribute("aria-label", "Analysis stage");
-      scopeSelect.closest(".docsViewer__scopeField").after(stageControls);
-    }
     if (stageControls) {
       stageControls.replaceChildren();
       stageControls.hidden = !config.stages.length;

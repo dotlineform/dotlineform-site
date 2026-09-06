@@ -41,9 +41,11 @@ from test_docs_document_transfer import (  # noqa: E402
     sub_scope_documents_root,
 )
 
+pytestmark = pytest.mark.usefixtures("synthetic_lineage_customisations")
+
 
 COPY_TIMESTAMP = "2026-07-24 14:00:00"
-PROCESSING_LINEAGE_CONTRACT = "dotlineform_processing_to_analysis_works"
+PROCESSING_LINEAGE_CONTRACT = "fixture_processing_copy"
 
 
 def write_json(path: Path, payload: object) -> None:
@@ -1304,7 +1306,7 @@ def test_apply_parent_to_public_child_uses_omitted_true_default_and_subdoc_links
                 title="Works",
                 scope_type="public",
                 sub_scope_customisation={
-                    "id": "analysis_works",
+                    "id": "pre_publish_works",
                     "settings": {},
                 },
             )

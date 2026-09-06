@@ -1,9 +1,8 @@
 #!/usr/bin/env python3
-"""Manage-only Projects report and authoring-subject customisation."""
+"""Manage-only Working Works report and authoring-subject customisation."""
 
 from __future__ import annotations
 
-import json
 from pathlib import Path
 from typing import Any, Mapping, Sequence
 
@@ -23,8 +22,7 @@ from docs_document_subjects import (
 )
 
 
-CUSTOMISATION_ID = "dotlineform_projects"
-LINEAGE_CONTRACT_ID = "dotlineform_projects_to_analysis_works"
+CUSTOMISATION_ID = "working_works"
 
 
 def normalize_settings(raw: Any, field: str) -> Mapping[str, Any]:
@@ -47,14 +45,14 @@ def project_manifest(
     stage: str = "",
 ) -> dict[str, Any]:
     if settings:
-        raise ValueError("dotlineform_projects settings must be empty")
+        raise ValueError("working_works settings must be empty")
     rows: dict[str, dict[str, Any]] = {}
     for document in documents:
         doc_id = str(getattr(document, "doc_id", "") or "").strip()
         front_matter = getattr(document, "front_matter", None)
         if not isinstance(front_matter, Mapping):
             raise ValueError(
-                f"dotlineform_projects source metadata is unavailable for {doc_id!r}"
+                f"working_works source metadata is unavailable for {doc_id!r}"
             )
         subject = normalize_authoring_subject(
             front_matter,
@@ -62,142 +60,9 @@ def project_manifest(
         )
         if subject["state"] == "valid" and subject["kind"] == "folder":
             rows[doc_id] = {FOLDER_PATH_FIELD: subject["key"]}
-    publication_targets = publication_targets_for_documents(
-        repo_root,
-        contract_id=LINEAGE_CONTRACT_ID,
-        source_scope=scope,
-        source_sub_scope=sub_scope,
-        doc_ids={
-            str(getattr(document, "doc_id", "") or "").strip()
-            for document in documents
-        },
-    ) if not stage else {}
-    for doc_id, targets in publication_targets.items():
-        rows.setdefault(doc_id, {})["publication_targets"] = targets
     return {
         "root": {"id": CUSTOMISATION_ID, "data": {}},
         "rows": rows,
-    }
-
-
-def publication_targets_for_documents(
-    repo_root: Path,
-    *,
-    contract_id: str,
-    source_scope: str,
-    source_sub_scope: str,
-    doc_ids: set[str],
-) -> dict[str, list[dict[str, Any]]]:
-    import docs_document_publication_lineage as publication_lineage
-
-    table = publication_lineage.load_table(repo_root, contract_id=contract_id)
-    if table is None or table.working_collection != (
-        publication_lineage.DocumentLineageCollection(
-            scope=source_scope,
-            sub_scope=source_sub_scope,
-        )
-    ):
-        return {}
-    grouped = {
-        record.working_doc_id: record.editorials
-        for record in table.records
-        if record.working_doc_id in doc_ids
-    }
-    collection_cache: dict[tuple[str, str], tuple[Path | None, str]] = {}
-    return {
-        doc_id: [
-            _publication_target(
-                repo_root,
-                editorial,
-                table.editorial_collection,
-                collection_cache,
-            )
-            for editorial in editorials
-        ]
-        for doc_id, editorials in grouped.items()
-    }
-
-
-def _publication_target(
-    repo_root: Path,
-    editorial: Any,
-    editorial_collection: Any,
-    collection_cache: dict[tuple[str, str], tuple[Path | None, str]],
-) -> dict[str, Any]:
-    import docs_document_location as document_location
-    from docs_scope_config import (
-        load_docs_scope_configs,
-        generated_documents_path,
-        resolve_scope_path,
-    )
-
-    target = {
-        "scope": editorial_collection.scope,
-        "sub_scope": editorial_collection.sub_scope,
-        "doc_id": editorial.doc_id,
-    }
-    title = ""
-    viewer_url = ""
-    collection_key = (
-        editorial_collection.scope,
-        editorial_collection.sub_scope,
-    )
-    if collection_key not in collection_cache:
-        output_root: Path | None = None
-        collection_url = ""
-        configs = load_docs_scope_configs(
-            repo_root,
-            scope_ids=[editorial_collection.scope],
-        )
-        config = configs.get(editorial_collection.scope)
-        sub_scopes = [
-            item
-            for item in (config.sub_scopes if config is not None else ())
-            if item.sub_scope == editorial_collection.sub_scope
-        ]
-        if len(sub_scopes) == 1:
-            output_root = resolve_scope_path(
-                repo_root,
-                generated_documents_path(sub_scopes[0]),
-            )
-            try:
-                collection_url = document_location.management_collection_viewer_url(
-                    repo_root,
-                    editorial_collection.scope,
-                    editorial_collection.sub_scope,
-                )
-            except ValueError:
-                collection_url = ""
-        collection_cache[collection_key] = (output_root, collection_url)
-    output_root, collection_url = collection_cache[collection_key]
-    if output_root is not None and collection_url:
-        payload_path = output_root / "by-id" / f"{editorial.doc_id}.json"
-        if payload_path.is_file():
-            try:
-                payload = json.loads(payload_path.read_text(encoding="utf-8"))
-            except (OSError, UnicodeDecodeError, json.JSONDecodeError):
-                payload = None
-            if (
-                isinstance(payload, Mapping)
-                and str(payload.get("doc_id") or "").strip() == editorial.doc_id
-            ):
-                title = str(payload.get("title") or "").strip()
-                if title:
-                    viewer_url = document_location.management_document_viewer_url(
-                        collection_url,
-                        editorial.doc_id,
-                        sub_scope=True,
-                    )
-    return {
-        "editorial": target,
-        "available": bool(title and viewer_url),
-        "title": title,
-        "viewer_url": viewer_url,
-        "publication": (
-            {"public_url": editorial.published_url}
-            if editorial.published_url is not None
-            else None
-        ),
     }
 
 
@@ -209,7 +74,7 @@ def metadata_record(
     folder_supported: bool = True,
 ) -> dict[str, str]:
     if settings:
-        raise ValueError("dotlineform_projects settings must be empty")
+        raise ValueError("working_works settings must be empty")
     del doc_id
     subject = normalize_authoring_subject(front_matter, folder_supported=folder_supported)
     record = dict.fromkeys(AUTHORING_SUBJECT_FIELDS, "")
@@ -255,7 +120,7 @@ def normalize_metadata_update(
     folder_supported: bool = True,
 ) -> dict[str, Any]:
     if settings:
-        raise ValueError("dotlineform_projects settings must be empty")
+        raise ValueError("working_works settings must be empty")
     values = _strict_scalar_subject_fields(raw, field="customisation")
     if values[FOLDER_PATH_FIELD] and not folder_supported:
         raise ValueError("Folder subjects are available only in dotlineform")
@@ -289,10 +154,10 @@ def normalize_import_front_matter(
     *,
     doc_id: str,
 ) -> dict[str, str]:
-    """Validate optional Projects-owned front matter for create-only import."""
+    """Validate optional Works-owned front matter for create-only import."""
 
     if settings:
-        raise ValueError("dotlineform_projects settings must be empty")
+        raise ValueError("working_works settings must be empty")
     if not isinstance(raw, dict):
         raise ValueError("custom import front matter must be an object")
     if set(raw) - set(AUTHORING_SUBJECT_FIELDS):
@@ -335,13 +200,11 @@ def normalize_import_front_matter(
 __all__ = [
     "CUSTOMISATION_ID",
     "FOLDER_PATH_FIELD",
-    "LINEAGE_CONTRACT_ID",
     "SERIES_ID_FIELD",
     "WORK_ID_FIELD",
     "metadata_record",
     "normalize_metadata_update",
     "normalize_import_front_matter",
     "normalize_settings",
-    "publication_targets_for_documents",
     "project_manifest",
 ]

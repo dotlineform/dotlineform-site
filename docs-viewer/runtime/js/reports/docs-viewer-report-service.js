@@ -108,7 +108,8 @@ export function createDocsViewerReportService(options) {
       return fetchReportJson("/docs/media-report", Object.assign({}, serviceOptions, {
         method: "POST",
         payload: {
-          scope: cleanString(request && request.scope).toLowerCase()
+          scope: cleanString(request && request.scope).toLowerCase(),
+          ...(request && request.stage ? { stage: cleanString(request.stage) } : {})
         },
         requireOkEnvelope: true
       }));

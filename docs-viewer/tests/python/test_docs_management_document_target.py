@@ -311,7 +311,7 @@ def test_resolver_rejects_unlisted_mismatched_and_escaping_sources(tmp_path: Pat
         ("series_id", "selected-series", "series"),
     ],
 )
-def test_analysis_works_reads_subjects_without_assignment_capability(
+def test_pre_publish_works_reads_subjects_without_assignment_capability(
     tmp_path: Path,
     field_name: str,
     value: str,
@@ -329,7 +329,7 @@ def test_analysis_works_reads_subjects_without_assignment_capability(
                         "works",
                         title="Works",
                         sub_scope_customisation={
-                            "id": "analysis_works",
+                            "id": "pre_publish_works",
                             "settings": {},
                         },
                     )

@@ -28,16 +28,17 @@ function normalizeRow(value) {
     keys.join(",") !== "file_name,folder,local_target"
     || !folder
     || folder.startsWith("/")
-    || folder.startsWith("projects/")
     || !fileName
     || fileName.includes("/")
-    || !localTarget.startsWith("projects/")
+    || !localTarget
+    || localTarget.startsWith("/")
   ) {
     throw new Error("Uncataloged Files row is invalid.");
   }
   return { fileName, folder, localTarget };
 }
 
+/** Keep service-owned folders and encoded targets relative to the configured media base. */
 export function normalizeUncatalogedFilesResponse(payload) {
   const report = payload && payload.report;
   if (

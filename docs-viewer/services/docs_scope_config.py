@@ -216,6 +216,7 @@ class DocsSubScopeConfig:
     generated: DocsGeneratedConfig
     published: DocsPublishedConfig
     public_projection: DocsPublicProjectionConfig | None
+    stage: str = ""
 
 
 def default_repo_root() -> Path:
@@ -1103,6 +1104,7 @@ def normalize_sub_scope_configs(
                 generated=generated,
                 published=published,
                 public_projection=projection,
+                stage=parent.stage,
             )
         )
     return tuple(configs)

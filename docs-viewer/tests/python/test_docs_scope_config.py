@@ -339,7 +339,7 @@ def test_docs_scope_config_accepts_nested_sub_scopes() -> None:
     assert sub_scope.lifecycle is None
     assert sub_scope.ui_statuses == ("draft", "done")
     assert sub_scope.sub_scope_customisation is not None
-    assert sub_scope.sub_scope_customisation.customisation_id == "analysis_tags"
+    assert sub_scope.sub_scope_customisation.customisation_id == "concepts"
     assert sub_scope.sub_scope_customisation.settings == {
         "groups": ("subject", "theme")
     }
@@ -413,7 +413,7 @@ def test_docs_scope_config_accepts_registered_sub_scope_customisation() -> None:
             "studio",
             "tags",
             sub_scope_customisation={
-                "id": "analysis_tags",
+                "id": "concepts",
                 "settings": {"groups": ["Subject", "theme"]},
             },
         )
@@ -426,13 +426,13 @@ def test_docs_scope_config_accepts_registered_sub_scope_customisation() -> None:
 
     customisation = config.sub_scopes[0].sub_scope_customisation
     assert customisation is not None
-    assert customisation.customisation_id == "analysis_tags"
+    assert customisation.customisation_id == "concepts"
     assert customisation.settings == {"groups": ("subject", "theme")}
 
 
 def test_docs_scope_config_selects_projects_customisation_from_configured_collection() -> None:
     projects_customisation = {
-        "id": "dotlineform_projects",
+        "id": "working_works",
         "settings": {},
     }
     with make_repo() as temp_path:
@@ -454,13 +454,13 @@ def test_docs_scope_config_selects_projects_customisation_from_configured_collec
 
     customisation = config.sub_scopes[0].sub_scope_customisation
     assert customisation is not None
-    assert customisation.customisation_id == "dotlineform_projects"
+    assert customisation.customisation_id == "working_works"
     assert customisation.settings == {}
 
 
 def test_docs_scope_config_selects_processing_customisation_from_configured_collection() -> None:
     processing_customisation = {
-        "id": "dotlineform_processing",
+        "id": "working_processing",
         "settings": {},
     }
     with make_repo() as temp_path:
@@ -482,33 +482,33 @@ def test_docs_scope_config_selects_processing_customisation_from_configured_coll
 
     customisation = config.sub_scopes[0].sub_scope_customisation
     assert customisation is not None
-    assert customisation.customisation_id == "dotlineform_processing"
+    assert customisation.customisation_id == "working_processing"
     assert customisation.settings == {}
 
 
 @pytest.mark.parametrize(
     ("sub_scope_customisation", "error"),
     [
-        ("analysis_tags", "must be an object"),
-        ({"id": "analysis_tags"}, "missing required fields: settings"),
+        ("concepts", "must be an object"),
+        ({"id": "concepts"}, "missing required fields: settings"),
         (
-            {"id": "analysis_tags", "settings": {"groups": ["subject"]}, "module": "bad.js"},
+            {"id": "concepts", "settings": {"groups": ["subject"]}, "module": "bad.js"},
             "unknown fields: module",
         ),
         ({"id": "analysis-tags", "settings": {"groups": ["subject"]}}, "id is invalid"),
         ({"id": "unknown", "settings": {}}, "id is unknown"),
-        ({"id": "analysis_tags", "settings": {}}, "missing required fields: groups"),
-        ({"id": "analysis_tags", "settings": {"groups": []}}, "must not be empty"),
+        ({"id": "concepts", "settings": {}}, "missing required fields: groups"),
+        ({"id": "concepts", "settings": {"groups": []}}, "must not be empty"),
         (
-            {"id": "analysis_tags", "settings": {"groups": ["subject", "subject"]}},
+            {"id": "concepts", "settings": {"groups": ["subject", "subject"]}},
             "must not contain duplicates",
         ),
         (
-            {"id": "dotlineform_projects", "settings": {"extra": True}},
+            {"id": "working_works", "settings": {"extra": True}},
             "unknown fields: extra",
         ),
         (
-            {"id": "dotlineform_processing", "settings": {"extra": True}},
+            {"id": "working_processing", "settings": {"extra": True}},
             "unknown fields: extra",
         ),
     ],
@@ -537,7 +537,7 @@ def test_docs_scope_config_rejects_legacy_document_groups_field() -> None:
             "studio",
             "tags",
             sub_scope_customisation={
-                "id": "analysis_tags",
+                "id": "concepts",
                 "settings": {"groups": ["subject"]},
             },
         )
@@ -587,33 +587,33 @@ def test_docs_scope_config_accepts_explicit_sub_scope_return_import_opt_in() -> 
     assert config.sub_scopes[0].supports_return_import is True
 
 
-def test_checked_scope_config_opts_only_analysis_tags_into_return_import() -> None:
+def test_checked_scope_config_opts_only_concepts_into_return_import() -> None:
     configs = docs_scope_config.load_docs_scope_configs(
         REPO_ROOT,
         scope_ids=["analysis"],
     )
 
-    analysis_tags = configs["analysis"].sub_scopes[0]
-    analysis_works = configs["analysis"].sub_scopes[1]
+    concepts = configs["analysis"].sub_scopes[0]
+    pre_publish_works = configs["analysis"].sub_scopes[1]
     assert [
         (sub_scope.sub_scope, sub_scope.supports_return_import)
         for sub_scope in configs["analysis"].sub_scopes
     ] == [("tags", True), ("works", False)]
-    assert not hasattr(analysis_tags, "document_groups")
-    assert analysis_tags.sub_scope_customisation is not None
-    assert analysis_tags.sub_scope_customisation.customisation_id == "analysis_tags"
-    assert analysis_tags.sub_scope_customisation.settings == {
+    assert not hasattr(concepts, "document_groups")
+    assert concepts.sub_scope_customisation is not None
+    assert concepts.sub_scope_customisation.customisation_id == "concepts"
+    assert concepts.sub_scope_customisation.settings == {
         "groups": ("subject", "domain", "form", "theme")
     }
-    assert analysis_works.sub_scope_customisation is not None
-    assert analysis_works.sub_scope_customisation.customisation_id == "analysis_works"
-    assert analysis_works.sub_scope_customisation.settings == {}
-    assert analysis_works.lifecycle is not None
-    assert analysis_works.lifecycle.report_host_doc_id == (
+    assert pre_publish_works.sub_scope_customisation is not None
+    assert pre_publish_works.sub_scope_customisation.customisation_id == "pre_publish_works"
+    assert pre_publish_works.sub_scope_customisation.settings == {}
+    assert pre_publish_works.lifecycle is not None
+    assert pre_publish_works.lifecycle.report_host_doc_id == (
         "d-20260807-082735-54d9d5"
     )
-    assert analysis_works.public_projection is not None
-    assert analysis_works.public_projection.documents.location.path.as_posix() == (
+    assert pre_publish_works.public_projection is not None
+    assert pre_publish_works.public_projection.documents.location.path.as_posix() == (
         "site/assets/data/docs/scopes/analysis/works"
     )
 

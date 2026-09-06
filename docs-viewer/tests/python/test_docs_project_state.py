@@ -22,7 +22,10 @@ from docs_project_state import (  # noqa: E402
     REPORT_SCHEMA_VERSION,
     ProjectStatePaths,
     ProjectStateProducer,
+    default_project_state_paths,
+    validate_report,
 )
+from repo_factory import docs_scope_record, docs_sub_scope_record, write_docs_scope_config  # noqa: E402
 
 
 SUBJECT_GENERATION = "sha256:" + "1" * 64
@@ -112,15 +115,15 @@ def fixture_associations(manifest: dict[str, object]) -> dict[str, object]:
         grouped[(subject["kind"], subject["key"])].append(
             {
                 "target": {
-                    "scope": "dotlineform",
-                    "sub_scope": "projects",
+                    "scope": "analysis",
+                    "sub_scope": "works",
                     "doc_id": document["doc_id"],
                 },
                 "locations": [
                     {
                         "access": "manage",
                         "url": (
-                            "/docs/?scope=dotlineform&doc=d-20260801-073826-8865a8"
+                            "/docs/?scope=analysis&stage=working&doc=d-20260801-073826-8865a8"
                             f"&subdoc={document['doc_id']}"
                         ),
                     }
@@ -129,8 +132,8 @@ def fixture_associations(manifest: dict[str, object]) -> dict[str, object]:
         )
     return {
         "schema_version": "docs_subject_associations_v1",
-        "scope": "dotlineform",
-        "sub_scope": "projects",
+        "scope": "analysis",
+        "sub_scope": "works",
         "subject_generation": manifest["subject_generation"],
         "associations": [
             {
@@ -233,6 +236,42 @@ def row_by_key(report: dict[str, object], key: str) -> dict[str, object]:
     return next(row for row in report["rows"] if row["folder"]["key"] == key)
 
 
+def test_default_paths_select_working_works(tmp_path: Path) -> None:
+    analysis = docs_scope_record("analysis", scope_type="public", viewer_base_url="/analysis/", include_scope_param=False)
+    analysis["stages"] = {
+        stage: {
+            "media_namespace": namespace,
+            "media": analysis["media"],
+            "sub_scopes": [docs_sub_scope_record(
+                "analysis", "works", scope_type="public" if stage == "pre-publish" else "local"
+            )],
+        }
+        for stage, namespace in (("working", "dotlineform"), ("pre-publish", "analysis"))
+    }
+    write_docs_scope_config(tmp_path, [analysis])
+
+    paths = default_project_state_paths(tmp_path)
+
+    generated = tmp_path / "docs-viewer/scopes/analysis/working/generated/documents/sub-scopes/works"
+    assert paths.manage_manifest_path == generated / "manage-manifest.json"
+    assert paths.subject_associations_path == generated / "subject-associations.json"
+
+
+@pytest.mark.parametrize("stage", [None, "pre-publish"])
+@pytest.mark.parametrize("owner", ["inputs", "document"])
+def test_report_rejects_missing_or_wrong_stage(tmp_path: Path, stage: str | None, owner: str) -> None:
+    paths = build_fixture(tmp_path)
+    report = ProjectStateProducer(repo_root=tmp_path, paths=paths).run()["report"]
+    target = report["inputs"] if owner == "inputs" else report["rows"][0]["documents"][0]["target"]
+    if stage is None:
+        target.pop("stage")
+    else:
+        target["stage"] = stage
+
+    with pytest.raises(ValueError, match="validation"):
+        validate_report(report)
+
+
 def test_project_state_service_import_bootstraps_canonical_readers() -> None:
     completed = subprocess.run(
         [
@@ -265,6 +304,16 @@ def test_project_state_builds_only_scanned_folder_rows_and_exact_relationships()
         report = result["report"]
 
     assert report["schema_version"] == REPORT_SCHEMA_VERSION
+    assert report["inputs"]["scope"] == "analysis"
+    assert report["inputs"]["stage"] == "working"
+    assert report["inputs"]["sub_scope"] == "works"
+    for row in report["rows"]:
+        for document in row["documents"]:
+            assert document["target"] == {
+                "scope": "analysis", "stage": "working", "sub_scope": "works",
+                "doc_id": document["target"]["doc_id"],
+            }
+            assert "scope=analysis&stage=working&" in document["href"]
     assert set(result) == {"report", "diagnostics"}
     assert [row["folder"]["key"] for row in report["rows"]] == [
         "projects/alpha",

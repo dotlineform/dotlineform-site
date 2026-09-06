@@ -1,5 +1,4 @@
-const REPORT_SCHEMA = "docs_media_report_v1";
-const DEFAULT_SCOPE = "dotlineform";
+const REPORT_SCHEMA = "docs_media_report_v2";
 const DEFAULT_SORT_KEY = "type";
 const DEFAULT_SORT_DIR = "asc";
 const SORT_KEYS = Object.freeze(["type", "file", "documents"]);
@@ -38,17 +37,18 @@ function configuredScopes(context) {
     const scopeId = cleanString(config && (config.scope_id || config.scopeId)).toLowerCase();
     return {
       scopeId,
+      stage: cleanString(config && config.stage),
       title: cleanString(config && config.title) || scopeTitle(scopeId)
     };
   }).filter((scope) => scope.scopeId);
 }
 
-function selectedScopeFromRoute(scopes) {
+function selectedScopeFromRoute(scopes, viewerScope) {
   const selected = cleanString(
     new URLSearchParams(window.location.search).get("report_scope")
   ).toLowerCase();
   if (scopes.some((scope) => scope.scopeId === selected)) return selected;
-  if (scopes.some((scope) => scope.scopeId === DEFAULT_SCOPE)) return DEFAULT_SCOPE;
+  if (scopes.some((scope) => scope.scopeId === viewerScope)) return viewerScope;
   return scopes[0] ? scopes[0].scopeId : "";
 }
 
@@ -96,7 +96,7 @@ function reportService(context) {
   ) ? service : null;
 }
 
-function normalizeDocument(value, scope) {
+function normalizeDocument(value, scope, stage) {
   const target = value && value.target;
   const targetScope = cleanString(target && target.scope).toLowerCase();
   const subScope = cleanString(target && target.sub_scope).toLowerCase();
@@ -105,8 +105,9 @@ function normalizeDocument(value, scope) {
   const href = cleanString(value && value.href);
   if (
     !exactKeys(value, ["target", "title", "href"])
-    || !exactKeys(target, ["scope", "sub_scope", "doc_id"])
+    || !exactKeys(target, ["scope", "sub_scope", "doc_id", ...(stage ? ["stage"] : [])])
     || targetScope !== scope
+    || cleanString(target && target.stage) !== stage
     || !docId
     || !title
     || !href.startsWith("/docs/?")
@@ -114,13 +115,13 @@ function normalizeDocument(value, scope) {
     throw new Error("Docs Media document target is invalid.");
   }
   return {
-    target: { scope: targetScope, subScope, docId },
+    target: { scope: targetScope, ...(stage ? { stage } : {}), subScope, docId },
     title,
     href
   };
 }
 
-function normalizeRow(value, reportScope) {
+function normalizeRow(value, reportScope, stage) {
   const scope = cleanString(value && value.scope).toLowerCase();
   const mediaType = cleanString(value && value.media_type).toLowerCase();
   const identity = cleanString(value && value.identity);
@@ -132,7 +133,8 @@ function normalizeRow(value, reportScope) {
     || !mediaType
     || !identity
     || identity.startsWith("/")
-    || !localTarget.startsWith("docs-viewer/scopes/" + scope + "/source/media/")
+    || !localTarget
+    || localTarget.startsWith("/")
     || !Array.isArray(documents)
   ) {
     throw new Error("Docs Media row is invalid.");
@@ -142,26 +144,30 @@ function normalizeRow(value, reportScope) {
     mediaType,
     identity,
     localTarget,
-    documents: documents.map((documentRecord) => normalizeDocument(documentRecord, scope))
+    documents: documents.map((documentRecord) => normalizeDocument(documentRecord, scope, stage))
   };
 }
 
-export function normalizeDocsMediaResponse(payload, requestedScope) {
+/** Require the response and document targets to match the exact requested scope/stage. */
+export function normalizeDocsMediaResponse(payload, requestedCollection) {
   const report = payload && payload.report;
   const scope = cleanString(report && report.scope).toLowerCase();
+  const stage = cleanString(requestedCollection && requestedCollection.stage);
   if (
     !exactKeys(payload, ["ok", "dry_run", "summary_text", "report"])
     || payload.ok !== true
-    || !exactKeys(report, ["schema_version", "scope", "rows"])
+    || !exactKeys(report, ["schema_version", "scope", "rows", ...(stage ? ["stage"] : [])])
     || report.schema_version !== REPORT_SCHEMA
-    || scope !== cleanString(requestedScope).toLowerCase()
+    || scope !== cleanString(requestedCollection && requestedCollection.scope).toLowerCase()
+    || cleanString(report.stage) !== stage
     || !Array.isArray(report.rows)
   ) {
     throw new Error("Docs Media report is invalid.");
   }
   return {
     scope,
-    rows: report.rows.map((row) => normalizeRow(row, scope))
+    ...(stage ? { stage } : {}),
+    rows: report.rows.map((row) => normalizeRow(row, scope, stage))
   };
 }
 
@@ -348,8 +354,13 @@ function loadScope(state) {
   state.sourceRows = [];
   clearNode(state.rowsNode);
   state.emptyNode.hidden = true;
-  return service.runDocsMedia({ scope: state.selectedScope })
-    .then((payload) => normalizeDocsMediaResponse(payload, state.selectedScope))
+  const selected = state.scopes.find((scope) => scope.scopeId === state.selectedScope);
+  const request = {
+    scope: state.selectedScope,
+    ...(selected && selected.stage ? { stage: selected.stage } : {})
+  };
+  return service.runDocsMedia(request)
+    .then((payload) => normalizeDocsMediaResponse(payload, request))
     .then((report) => {
       state.sourceRows = report.rows;
       state.statusNode.textContent = resultStatus(state);
@@ -470,7 +481,7 @@ function renderShell(root) {
 
 export function mountDocsMediaReport(context) {
   const scopes = configuredScopes(context);
-  const selectedScope = selectedScopeFromRoute(scopes);
+  const selectedScope = selectedScopeFromRoute(scopes, cleanString(context.viewerScope));
   const routeSort = readRouteSort();
   const nodes = renderShell(context.reportRoot);
   const state = Object.assign({

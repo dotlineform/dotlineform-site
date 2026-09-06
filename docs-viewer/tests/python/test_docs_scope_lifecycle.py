@@ -20,6 +20,8 @@ from docs_management_test_support import (
 from repo_factory import docs_scope_record
 from test_docs_document_transfer import make_lineage_repo
 
+pytestmark = pytest.mark.usefixtures("synthetic_lineage_customisations")
+
 
 @pytest.fixture(autouse=True)
 def isolated_media_workspace(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
@@ -52,7 +54,7 @@ def test_sub_scope_delete_blocks_a_non_empty_lineage_workflow(tmp_path: Path) ->
     assert preview["allowed"] is False
     assert preview["blockers"] == [
         "sub-scope participates in non-empty document publication lineage: "
-        "dotlineform_projects_to_analysis_works"
+        "fixture_works_copy"
     ]
 
 

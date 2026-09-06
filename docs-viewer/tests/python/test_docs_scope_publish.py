@@ -90,7 +90,7 @@ def prepare_repo(root: Path) -> None:
             "example",
             "items",
             title="Items",
-            sub_scope_customisation={"id": "analysis_works", "settings": {}},
+            sub_scope_customisation={"id": "pre_publish_works", "settings": {}},
         )
     ]
     write_docs_scope_config(root, [scope])

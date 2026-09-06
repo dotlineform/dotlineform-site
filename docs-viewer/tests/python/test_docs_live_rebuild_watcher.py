@@ -59,7 +59,7 @@ def timestamp_snapshot_row(module, source_text: str) -> dict[str, object]:
     }
 
 
-def configured_analysis_tags(
+def configured_concepts(
     *,
     parent_path: str = "analysis-parent",
     child_path: str = "analysis-tags",
@@ -77,7 +77,7 @@ def configured_analysis_tags(
         public_title="Concepts",
         ui_statuses=("draft", "done"),
         sub_scope_customisation=SimpleNamespace(
-            customisation_id="analysis_tags",
+            customisation_id="concepts",
             settings={"groups": ("subject", "domain")},
         ),
         source=source(child_path),
@@ -562,7 +562,7 @@ def test_watcher_invalid_parsed_snapshot_fails_closed() -> None:
 
 def test_watcher_sub_scope_snapshot_and_baseline_are_exact() -> None:
     module = load_docs_live_rebuild_watcher_module()
-    analysis, _tags = configured_analysis_tags()
+    analysis, _tags = configured_concepts()
     original_configs = dict(module.DOCS_SCOPE_CONFIGS)
     original_roots = dict(module.DOCUMENT_SOURCE_ROOTS)
 
@@ -825,7 +825,7 @@ def test_parent_watcher_capture_runs_one_existing_rebuild() -> None:
 
 def test_sub_scope_watcher_captures_preserves_and_rebuilds_exact_collection_once() -> None:
     module = load_docs_live_rebuild_watcher_module()
-    analysis, _tags = configured_analysis_tags()
+    analysis, _tags = configured_concepts()
     original_configs = dict(module.DOCS_SCOPE_CONFIGS)
     original_roots = dict(module.DOCUMENT_SOURCE_ROOTS)
     original_timestamp = module.current_doc_timestamp
@@ -985,7 +985,7 @@ def test_sub_scope_watcher_captures_preserves_and_rebuilds_exact_collection_once
 
 def test_sub_scope_watcher_timestamp_failure_keeps_source_and_rebuilds_once() -> None:
     module = load_docs_live_rebuild_watcher_module()
-    analysis, _tags = configured_analysis_tags()
+    analysis, _tags = configured_concepts()
     original_configs = dict(module.DOCS_SCOPE_CONFIGS)
     original_roots = dict(module.DOCUMENT_SOURCE_ROOTS)
     original_timestamp = module.current_doc_timestamp

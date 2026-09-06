@@ -5,6 +5,8 @@ from __future__ import annotations
 from copy import deepcopy
 from pathlib import Path
 import json
+import subprocess
+import sys
 
 import pytest
 
@@ -30,7 +32,7 @@ def stage_repo(tmp_path: Path) -> Path:
             "sub_scopes": [docs_sub_scope_record("analysis", collection, scope_type="public" if stage == "pre-publish" else "local")],
         }
         for stage, namespace, collection in (
-            ("working", "dotlineform", "projects"),
+            ("working", "dotlineform", "works"),
             ("pre-publish", "analysis", "works"),
         )
     }
@@ -38,7 +40,7 @@ def stage_repo(tmp_path: Path) -> Path:
         "schema_version": scopes.SCHEMA_VERSION,
         "scopes": [analysis, docs_scope_record("studio")],
     })
-    for stage, collection in (("working", "projects"), ("pre-publish", "works")):
+    for stage, collection in (("working", "works"), ("pre-publish", "works")):
         config = scopes.load_docs_scope_stage(tmp_path, "analysis", stage)
         for owner in (config, config.sub_scopes[0]):
             root = tmp_path / scopes.document_source_path(owner)
@@ -53,6 +55,24 @@ def stage_repo(tmp_path: Path) -> Path:
     return tmp_path
 
 
+def test_service_can_import_with_unselected_workflow_parent(stage_repo: Path) -> None:
+    services = Path(scopes.__file__).parent
+    result = subprocess.run(
+        [sys.executable, "-c", "\n".join((
+            "import sys",
+            "from pathlib import Path",
+            f"sys.path.insert(0, {str(services)!r})",
+            "import docs_scope_config as scopes",
+            f"scopes.DOCS_SCOPE_CONFIGS = scopes.load_docs_scope_configs(Path({str(stage_repo)!r}))",
+            "import docs_viewer_service",
+        ))],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    assert result.returncode == 0, result.stderr
+
+
 def test_stage_storage_retains_scope_owned_snapshot_and_media_identity(stage_repo: Path) -> None:
     working = scopes.load_docs_scope_stage(stage_repo, "analysis", "working")
     pre_publish = scopes.load_docs_scope_stage(stage_repo, "analysis", "pre-publish")
@@ -60,7 +80,7 @@ def test_stage_storage_retains_scope_owned_snapshot_and_media_identity(stage_rep
     assert working.published == pre_publish.published
     assert scopes.published_documents_path(working) == Path("docs-viewer/scopes/analysis/published/documents")
     assert scopes.document_source_path(working.sub_scopes[0]) == Path(
-        "docs-viewer/scopes/analysis/working/source/documents/sub-scopes/projects/documents"
+        "docs-viewer/scopes/analysis/working/source/documents/sub-scopes/works/documents"
     )
     assert working.media.types["img"].reference_prefix == Path("docs/dotlineform/img")
     assert working.media.types["img"].served_path_prefix == "/docs/media/analysis/working/img"
@@ -86,6 +106,26 @@ def test_same_document_id_is_read_only_from_requested_stage(stage_repo: Path) ->
         resolve_managed_document_target(stage_repo, {
             "scope": "analysis", "stage": "pre-publish", "sub_scope": "projects", "doc_id": DOC_ID,
         })
+
+
+def test_working_child_preserves_publishability_without_public_projection(stage_repo: Path) -> None:
+    import docs_source_model as source_model
+
+    config = scopes.load_docs_scope_stage(stage_repo, "analysis", "working")
+    child = config.sub_scopes[0]
+    assert child.stage == "working" and child.public_projection is None
+    path = stage_repo / scopes.document_source_path(child) / f"{DOC_ID}.md"
+    path.write_text(f"---\ndoc_id: {DOC_ID}\ntitle: Private work\npublishable: false\n---\n# Private work\n")
+    documents = source_model.load_document_collection_docs_for_config(stage_repo, config, child)
+    assert documents[0].publishable is False
+    code, _stdout, stderr = run_cli(stage_repo, [
+        "--scope", "analysis", "--stage", "working", "--sub-scope", "works",
+        "--write", "--skip-browser-config", "--skip-media-builds",
+    ])
+    assert code == 0, stderr
+    output = stage_repo / scopes.generated_documents_path(child)
+    assert json.loads((output / "manage-manifest.json").read_text())["docs"][0]["publishable"] is False
+    assert json.loads((output / "by-id" / f"{DOC_ID}.json").read_text())["publishable"] is False
 
 
 @pytest.mark.parametrize("sub_scope", [None, "works"])
@@ -116,7 +156,7 @@ def test_working_create_and_delete_plan_keep_exact_owner(stage_repo: Path, monke
 
 
 def test_stage_build_writes_exact_parent_and_report_payloads(stage_repo: Path) -> None:
-    for stage, collection in (("working", "projects"), ("pre-publish", "works")):
+    for stage, collection in (("working", "works"), ("pre-publish", "works")):
         config = scopes.load_docs_scope_stage(stage_repo, "analysis", stage)
         root = stage_repo / scopes.document_source_path(config)
         source = root / f"{DOC_ID}.md"
@@ -167,7 +207,7 @@ def test_working_write_rebuild_and_delete_preserve_other_owners(stage_repo: Path
         sentinel.parent.mkdir(parents=True, exist_ok=True)
         sentinel.write_text("accepted\n")
         before[sentinel] = sentinel.read_bytes()
-    for sub_scope in (None, "projects"):
+    for sub_scope in (None, "works"):
         collection = {"scope": "analysis", "stage": "working"}
         if sub_scope:
             collection["sub_scope"] = sub_scope
@@ -212,7 +252,7 @@ def test_watcher_owns_working_collections_only(stage_repo: Path) -> None:
     configs = scopes.load_docs_scope_configs(stage_repo)
     specs = watcher.desired_watch_state_specs(stage_repo, configs)
     assert "analysis" not in specs
-    assert "analysis/working" in specs and "analysis/working/projects" in specs
+    assert "analysis/working" in specs and "analysis/working/works" in specs
     assert not any("pre-publish" in key for key in specs)
     state = specs["analysis/working"]
     assert list(watcher.state_snapshot(state)) == [f"{DOC_ID}.md"]
@@ -231,7 +271,7 @@ def test_external_stage_urls_and_media_use_selected_owner(stage_repo: Path, monk
     analysis = raw["scopes"][0]
     analysis["scope_root"] = {"provider": "external_local", "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/analysis"}
     write_json(stage_repo / scopes.CONFIG_REL_PATH, raw)
-    for stage, collection in (("working", "projects"), ("pre-publish", "works")):
+    for stage, collection in (("working", "works"), ("pre-publish", "works")):
         config = scopes.load_docs_scope_stage(stage_repo, "analysis", stage)
         parent = scopes.document_source_path(config)
         parent.mkdir(parents=True)

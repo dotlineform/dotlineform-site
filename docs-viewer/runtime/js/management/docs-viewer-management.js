@@ -561,6 +561,7 @@ export function initDocsViewerManagement(context) {
       "manage-rebuild",
       "manage-publish",
       "manage-scope",
+      "manage-stage",
       "manage-theme"
     ].forEach(function (controlId) {
       projectAppControl(controlId, { hidden: true, disabled: true });
@@ -748,6 +749,7 @@ export function initDocsViewerManagement(context) {
       disabled: management.managementBusy || !publishAvailable
     });
     projectAppControl("manage-scope", { hidden: managementActionsHidden });
+    projectAppControl("manage-stage", { hidden: managementActionsHidden || !viewerStage() });
     projectAppControl("manage-theme", {
       hidden: false,
       pressed: themeIsDark,

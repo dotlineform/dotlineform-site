@@ -3,10 +3,11 @@ import { appendProjectSubjectIcon } from "./project-subject-icons.js";
 
 const SERIES_SCHEMA = "studio_catalogue_lookup_series_search_v2";
 const WORK_SCHEMA = "studio_catalogue_lookup_work_search_v2";
-const PROJECTS_SCOPE = "dotlineform";
-const PROJECTS_SUB_SCOPE = "projects";
-const PROJECTS_CUSTOMISATION = "dotlineform_projects";
-const PROJECTS_REPORT_DOC_ID = "d-20260801-073826-8865a8";
+const WORKS_SCOPE = "analysis";
+const WORKS_STAGE = "working";
+const WORKS_SUB_SCOPE = "works";
+const WORKS_CUSTOMISATION = "working_works";
+const WORKS_REPORT_DOC_ID = "d-20260801-073826-8865a8";
 const SERIES_ID_PATTERN = /^[0-9]{3}$/;
 const WORK_ID_PATTERN = /^[0-9]{5}$/;
 const DOC_ID_PATTERN = /^d-[0-9]{8}-[0-9]{6}-[0-9a-f]{6}$/;
@@ -17,7 +18,7 @@ function cleanString(value) {
 
 function exactKeys(value, expected) {
   return Boolean(value && typeof value === "object" && !Array.isArray(value))
-    && Object.keys(value).sort().join(",") === expected.slice().sort().join(",");
+    && Object.keys(value).filter((key) => key !== "publishable").sort().join(",") === expected.slice().sort().join(",");
 }
 
 function clearNode(node) {
@@ -75,9 +76,9 @@ export function normalizeWorksWorkLookup(payload) {
   });
 }
 
-function normalizeProjectDocument(value) {
+function normalizeWorkDocument(value) {
   const keys = value && typeof value === "object" && !Array.isArray(value)
-    ? Object.keys(value).sort().join(",")
+    ? Object.keys(value).filter((key) => key !== "publishable").sort().join(",")
     : "";
   if (
     ![
@@ -93,7 +94,10 @@ function normalizeProjectDocument(value) {
       )
     )
   ) {
-    throw new Error("Works Projects manifest is invalid.");
+    throw new Error("Working Works manifest is invalid.");
+  }
+  if (Object.hasOwn(value, "publishable") && typeof value.publishable !== "boolean") {
+    throw new Error("Working Works manifest is invalid.");
   }
   const docId = cleanString(value.doc_id);
   const title = cleanString(value.title);
@@ -103,19 +107,19 @@ function normalizeProjectDocument(value) {
     || typeof value.last_updated !== "string"
     || typeof value.ui_status !== "string"
   ) {
-    throw new Error("Works Projects manifest is invalid.");
+    throw new Error("Working Works manifest is invalid.");
   }
   const subject = normalizeDocsViewerAuthoringSubject(value.authoring_subject, {
-    errorMessage: "Works Projects manifest is invalid."
+    errorMessage: "Working Works manifest is invalid."
   });
   return { docId, subject, title };
 }
 
-export function normalizeWorksProjectsManifest(payload) {
+export function normalizeWorksDocumentsManifest(payload) {
   if (
     !exactKeys(payload, ["customisation", "docs", "subject_generation"])
     || !exactKeys(payload.customisation, ["data", "id"])
-    || payload.customisation.id !== PROJECTS_CUSTOMISATION
+    || payload.customisation.id !== WORKS_CUSTOMISATION
     || !payload.customisation.data
     || typeof payload.customisation.data !== "object"
     || Array.isArray(payload.customisation.data)
@@ -123,13 +127,13 @@ export function normalizeWorksProjectsManifest(payload) {
     || !payload.subject_generation.startsWith("sha256:")
     || !Array.isArray(payload.docs)
   ) {
-    throw new Error("Works Projects manifest is invalid.");
+    throw new Error("Working Works manifest is invalid.");
   }
   const seen = new Set();
   return payload.docs.map((value) => {
-    const documentRecord = normalizeProjectDocument(value);
+    const documentRecord = normalizeWorkDocument(value);
     if (seen.has(documentRecord.docId)) {
-      throw new Error("Works Projects manifest is invalid.");
+      throw new Error("Working Works manifest is invalid.");
     }
     seen.add(documentRecord.docId);
     return documentRecord;
@@ -147,7 +151,7 @@ function compareDocuments(collator, left, right) {
     || compareText(collator, left.docId, right.docId);
 }
 
-export function composeWorksProjection(seriesRecords, workRecords, projectDocuments) {
+export function composeWorksProjection(seriesRecords, workRecords, workDocuments) {
   const collator = new Intl.Collator("en", { numeric: true, sensitivity: "base" });
   const catalogueSeries = new Map();
   seriesRecords.forEach((series) => {
@@ -159,7 +163,7 @@ export function composeWorksProjection(seriesRecords, workRecords, projectDocume
   });
   const documentsBySeries = new Map();
   catalogueSeries.forEach((_series, seriesId) => documentsBySeries.set(seriesId, new Map()));
-  projectDocuments.forEach((documentRecord) => {
+  workDocuments.forEach((documentRecord) => {
     const subject = documentRecord.subject;
     if (subject.state !== "valid") return;
     let seriesIds = [];
@@ -190,22 +194,23 @@ export function composeWorksProjection(seriesRecords, workRecords, projectDocume
   return { rowCount: rows.length, rows };
 }
 
-function configuredProjectsManifestUrl(context) {
+function configuredWorkingWorksManifestUrl(context) {
   const configs = Array.isArray(context && context.scopeConfigs) ? context.scopeConfigs : [];
   const scopeMatches = configs.filter((config) => {
-    return cleanString(config && (config.scope_id || config.scopeId)).toLowerCase() === PROJECTS_SCOPE;
+    return cleanString(config && (config.scope_id || config.scopeId)).toLowerCase() === WORKS_SCOPE
+      && config.stage === WORKS_STAGE;
   });
   const subScopes = scopeMatches.length === 1 && Array.isArray(scopeMatches[0].subScopes)
     ? scopeMatches[0].subScopes
     : [];
   const matches = subScopes.filter((record) => {
     return cleanString(record && (record.sub_scope || record.subScope)).toLowerCase()
-      === PROJECTS_SUB_SCOPE;
+      === WORKS_SUB_SCOPE;
   });
   const url = matches.length === 1
     ? cleanString(matches[0].manifest_url || matches[0].manifestUrl)
     : "";
-  if (!url) throw new Error("Works Projects manifest is not configured.");
+  if (!url) throw new Error("Working Works manifest is not configured.");
   return url;
 }
 
@@ -256,9 +261,9 @@ function loadWorksProjection(context) {
       "Failed to load Works Work lookup."
     ).then(normalizeWorksWorkLookup),
     fetchJson(
-      configuredProjectsManifestUrl(context),
-      "Failed to load Works Projects manifest."
-    ).then(normalizeWorksProjectsManifest)
+      configuredWorkingWorksManifestUrl(context),
+      "Failed to load Working Works manifest."
+    ).then(normalizeWorksDocumentsManifest)
   ]).then((inputs) => composeWorksProjection(inputs[0], inputs[1], inputs[2]));
 }
 
@@ -276,22 +281,23 @@ function seriesHref(context, seriesId) {
   return new URL("/series/?series=" + encodeURIComponent(seriesId), preview.origin).toString();
 }
 
-function projectDocumentHref(context, docId) {
+function workDocumentHref(context, docId) {
   if (typeof context.viewerUrlForScope !== "function") {
-    throw new Error("Projects document links are not configured.");
+    throw new Error("Working Works document links are not configured.");
   }
   const raw = cleanString(context.viewerUrlForScope(
-    PROJECTS_SCOPE,
-    PROJECTS_REPORT_DOC_ID,
-    { manage: true }
+    WORKS_SCOPE,
+    WORKS_REPORT_DOC_ID,
+    { manage: true, stage: WORKS_STAGE }
   ));
   const url = new URL(raw, "http://docs.local");
   if (
-    url.searchParams.get("scope") !== PROJECTS_SCOPE
-    || url.searchParams.get("doc") !== PROJECTS_REPORT_DOC_ID
+    url.searchParams.get("scope") !== WORKS_SCOPE
+    || url.searchParams.get("doc") !== WORKS_REPORT_DOC_ID
   ) {
-    throw new Error("Projects document links are not configured.");
+    throw new Error("Working Works document links are not configured.");
   }
+  url.searchParams.set("stage", WORKS_STAGE);
   url.searchParams.set("subdoc", docId);
   return url.origin === "http://docs.local"
     ? url.pathname + url.search + url.hash
@@ -301,14 +307,14 @@ function projectDocumentHref(context, docId) {
 function appendDocumentsCell(state, rowNode, row) {
   const cell = rowNode.ownerDocument.createElement("span");
   cell.className = "docsViewerReport__cellStack";
-  if (!row.documents.length) cell.setAttribute("aria-label", "No Project documents");
+  if (!row.documents.length) cell.setAttribute("aria-label", "No Work documents");
   row.documents.forEach((documentRecord) => {
     const link = rowNode.ownerDocument.createElement("a");
     link.className = "docsViewerReport__cellLink";
     link.dataset.projectDocId = documentRecord.docId;
     link.dataset.projectSubjectKind = documentRecord.subject.kind;
     link.dataset.projectSubjectKey = documentRecord.subject.key;
-    link.href = projectDocumentHref(state.context, documentRecord.docId);
+    link.href = workDocumentHref(state.context, documentRecord.docId);
     appendProjectSubjectIcon(link, documentRecord.subject.kind);
     const label = rowNode.ownerDocument.createElement("span");
     label.textContent = documentRecord.title;

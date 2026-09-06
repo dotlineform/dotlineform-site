@@ -7,7 +7,7 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../../..");
 const workingSubjects = await import(pathToFileURL(path.join(
   repoRoot,
-  "docs-viewer/runtime/js/management/docs-viewer-management-subscope-dotlineform-projects.js"
+  "docs-viewer/runtime/js/management/docs-viewer-management-subscope-working-subjects.js"
 )));
 const configController = await import(pathToFileURL(path.join(
   repoRoot,
@@ -30,10 +30,10 @@ assert.equal(workingSubjects.projectDocsViewerWorkingSubject(detailDocument, {
   available: true, titles: new Map()
 }).state, "valid");
 const analysisCollection = { scope: "analysis", sub_scope: "works" };
-const analysisContribution = await workingSubjects.createDocsViewerManagementSubscopeAnalysisWorks({
+const analysisContribution = await workingSubjects.createDocsViewerManagementSubscopePrePublishWorks({
   collection: analysisCollection,
   descriptor: configController.normalizeDocsViewerSubScopeCustomisation({
-    id: "analysis_works", capabilities: { assignable_field_groups: ["authoring_subject"] }
+    id: "pre_publish_works", capabilities: { assignable_field_groups: ["authoring_subject"] }
   }),
   fetch: () => Promise.reject(new Error("No Catalogue required for a Detail subject"))
 });
@@ -60,8 +60,8 @@ const stylesSource = fs.readFileSync(path.join(
   "docs-viewer/static/css/docs-viewer-manage.css"
 ), "utf8");
 
-assert.match(registrySource, /dotlineform_processing: function/);
-assert.match(registrySource, /createDocsViewerManagementSubscopeDotlineformProcessing/);
+assert.match(registrySource, /working_processing: function/);
+assert.match(registrySource, /createDocsViewerManagementSubscopeWorkingProcessing/);
 assert.doesNotMatch(stylesSource, /data-report-subscope="processing"/);
 assert.match(stylesSource, /data-working-subject-columns="subject"/);
 assert.match(stylesSource, /projectSubjectUnavailableLabel[^{]*\{[^}]*text-decoration:\s*line-through/s);
@@ -108,42 +108,23 @@ assert.deepEqual(
   }
 );
 
-const projectsContribution = await workingSubjects.createDocsViewerManagementSubscopeDotlineformProjects({
+const projectsContribution = await workingSubjects.createDocsViewerManagementSubscopeWorkingWorks({
   collection: { scope: "dotlineform", sub_scope: "projects" },
-  descriptor: { id: "dotlineform_projects" },
+  descriptor: { id: "working_works" },
   fetch: () => Promise.reject(new Error("Catalogue unavailable in focused test"))
 });
-const processingContribution = await workingSubjects.createDocsViewerManagementSubscopeDotlineformProcessing({
+const processingContribution = await workingSubjects.createDocsViewerManagementSubscopeWorkingProcessing({
   collection: { scope: "dotlineform", sub_scope: "processing" },
-  descriptor: { id: "dotlineform_processing" },
+  descriptor: { id: "working_processing" },
   fetch: () => Promise.reject(new Error("Catalogue unavailable in focused test"))
 });
 const projectsRoot = { dataset: {} };
 const processingRoot = { dataset: {} };
 projectsContribution.notify({ type: "mount", root: projectsRoot });
 processingContribution.notify({ type: "mount", root: processingRoot });
-assert.equal(projectsRoot.dataset.workingSubjectColumns, "publication");
-assert.equal(processingRoot.dataset.workingSubjectColumns, "publication");
+assert.equal(projectsRoot.dataset.workingSubjectColumns, "subject");
+assert.equal(processingRoot.dataset.workingSubjectColumns, "subject");
 assert.equal(projectsContribution.renderListToolbar, undefined);
 assert.equal(processingContribution.renderListToolbar, undefined);
-
-const descriptor = configController.normalizeDocsViewerSubScopeCustomisation({
-  id: "dotlineform_processing",
-  capabilities: {
-    assignable_field_groups: ["authoring_subject"],
-    lineage_copy: {
-      contract_id: "dotlineform_processing_to_analysis_works",
-      target: { scope: "analysis", sub_scope: "works" },
-      action_label: "Copy to Analysis",
-      modal_title: "Copy to analysis/works"
-    }
-  }
-});
-assert.deepEqual(descriptor.capabilities.lineageCopy, {
-  contractId: "dotlineform_processing_to_analysis_works",
-  target: { scope: "analysis", sub_scope: "works" },
-  actionLabel: "Copy to Analysis",
-  modalTitle: "Copy to analysis/works"
-});
 
 console.log("docs_viewer_processing_working_collection_contract: passed");

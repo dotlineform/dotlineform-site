@@ -68,7 +68,7 @@ def test_projects_create_plan_accepts_only_custom_folder_path(
                             "dotlineform",
                             "projects",
                             sub_scope_customisation={
-                                "id": "dotlineform_projects",
+                                "id": "working_works",
                                 "settings": {},
                             },
                         )

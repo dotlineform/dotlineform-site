@@ -10,7 +10,6 @@ import json
 import sys
 import tempfile
 from pathlib import Path
-from unittest.mock import patch
 
 from repo_factory import (
     docs_scope_record,
@@ -346,106 +345,104 @@ def write_source_doc(repo_root: Path, scope: str, body: str) -> None:
 def make_repo(content_html: str, *, source_body: str = "") -> Iterator[str]:
     with tempfile.TemporaryDirectory() as temp_path:
         repo_root = Path(temp_path)
-        with patch.object(docs_broken_links, "SCOPE_OUTPUT_DIRS", FIXTURE_SCOPE_OUTPUT_DIRS):
-            (repo_root / "site-tools/config").mkdir(parents=True, exist_ok=True)
-            (repo_root / "site-tools/config/site-tools.json").write_text(
-                '{"schema_version":"site_tools_config_v1","media":{"base":"https://media.dotlineform.test","image_work_details":"/work_details/img"}}\n',
-                encoding="utf-8",
-            )
-            write_json(
-                repo_root / "_data/pipeline.json",
-                {
-                    "variants": {
-                        "primary": {
-                            "preferred_width": 1600,
-                            "suffix": "primary",
-                        },
+        (repo_root / "site-tools/config").mkdir(parents=True, exist_ok=True)
+        (repo_root / "site-tools/config/site-tools.json").write_text(
+            '{"schema_version":"site_tools_config_v1","media":{"base":"https://media.dotlineform.test","image_work_details":"/work_details/img"}}\n',
+            encoding="utf-8",
+        )
+        write_json(
+            repo_root / "_data/pipeline.json",
+            {
+                "variants": {
+                    "primary": {
+                        "preferred_width": 1600,
+                        "suffix": "primary",
                     },
-                    "encoding": {"format": "webp"},
                 },
-            )
-            write_json(
-                repo_root / "studio/data/canonical/catalogue/work_details/00638.json",
-                {
-                    "header": {
-                        "schema": "catalogue_source_work_detail_record_v1",
-                        "work_id": "00638",
-                    },
+                "encoding": {"format": "webp"},
+            },
+        )
+        write_json(
+            repo_root / "studio/data/canonical/catalogue/work_details/00638.json",
+            {
+                "header": {
+                    "schema": "catalogue_source_work_detail_record_v1",
                     "work_id": "00638",
-                    "detail_sections": [
-                        {
-                            "section_id": "00638-1",
-                            "details": [
-                                {
-                                    "detail_uid": "00638-001",
-                                    "detail_id": "001",
-                                    "project_filename": "3 symbols detail.jpg",
-                                    "media_version": 1,
-                                    "title": "3 symbols detail",
-                                    "width_px": 1600,
-                                    "height_px": 1200,
-                                },
-                            ],
-                        },
-                    ],
                 },
-            )
-            write_semantic_token_contract(repo_root)
-            write_scope_contract(repo_root)
+                "work_id": "00638",
+                "detail_sections": [
+                    {
+                        "section_id": "00638-1",
+                        "details": [
+                            {
+                                "detail_uid": "00638-001",
+                                "detail_id": "001",
+                                "project_filename": "3 symbols detail.jpg",
+                                "media_version": 1,
+                                "title": "3 symbols detail",
+                                "width_px": 1600,
+                                "height_px": 1200,
+                            },
+                        ],
+                    },
+                ],
+            },
+        )
+        write_semantic_token_contract(repo_root)
+        write_scope_contract(repo_root)
+        write_json(
+            repo_root / "docs-viewer/scopes/studio/generated/documents/index-tree.json",
+            {
+                "schema": "docs_index_tree_v1",
+                "docs": [
+                    {
+                        "doc_id": "source",
+                        "title": "Source",
+                        "content_url": "/docs-viewer/scopes/studio/generated/documents/by-id/source.json",
+                    }
+                ],
+            },
+        )
+        for scope, output_dir in FIXTURE_SCOPE_OUTPUT_DIRS.items():
+            if scope == "studio":
+                continue
             write_json(
-                repo_root / "docs-viewer/scopes/studio/generated/documents/index-tree.json",
-                {
-                    "schema": "docs_index_tree_v1",
-                    "docs": [
-                        {
-                            "doc_id": "source",
-                            "title": "Source",
-                            "content_url": "/docs-viewer/scopes/studio/generated/documents/by-id/source.json",
-                        }
-                    ],
-                },
+                repo_root / output_dir / "index-tree.json",
+                {"schema": "docs_index_tree_v1", "docs": []},
             )
-            for scope, output_dir in FIXTURE_SCOPE_OUTPUT_DIRS.items():
-                if scope == "studio":
-                    continue
-                write_json(
-                    repo_root / output_dir / "index-tree.json",
-                    {"schema": "docs_index_tree_v1", "docs": []},
-                )
-            write_doc_payload(repo_root, "studio", "source", content_html)
-            write_source_doc(repo_root, "studio", source_body)
-            yield temp_path
+        write_doc_payload(repo_root, "studio", "source", content_html)
+        write_source_doc(repo_root, "studio", source_body)
+        yield temp_path
 
 
 @contextmanager
 def make_public_repo(scope: str, content_html: str) -> Iterator[str]:
     with tempfile.TemporaryDirectory() as temp_path:
         repo_root = Path(temp_path)
-        with patch.object(docs_broken_links, "SCOPE_OUTPUT_DIRS", FIXTURE_SCOPE_OUTPUT_DIRS):
-            (repo_root / "site-tools/config").mkdir(parents=True, exist_ok=True)
-            (repo_root / "site-tools/config/site-tools.json").write_text(
-                '{"schema_version":"site_tools_config_v1"}\n',
-                encoding="utf-8",
+        (repo_root / "site-tools/config").mkdir(parents=True, exist_ok=True)
+        (repo_root / "site-tools/config/site-tools.json").write_text(
+            '{"schema_version":"site_tools_config_v1"}\n',
+            encoding="utf-8",
+        )
+        write_semantic_token_contract(repo_root)
+        write_scope_contract(repo_root)
+        for known_scope, output_dir in FIXTURE_SCOPE_OUTPUT_DIRS.items():
+            docs = []
+            if known_scope == scope:
+                docs = [
+                    {
+                        "doc_id": "source",
+                        "title": "Source",
+                        "content_url": f"/assets/data/docs/scopes/{scope}/by-id/source.json",
+                    }
+                ]
+            write_json(
+                repo_root / output_dir / "index-tree.json",
+                {"schema": "docs_index_tree_v1", "docs": docs},
             )
-            write_semantic_token_contract(repo_root)
-            write_scope_contract(repo_root)
-            for known_scope, output_dir in FIXTURE_SCOPE_OUTPUT_DIRS.items():
-                docs = []
-                if known_scope == scope:
-                    docs = [
-                        {
-                            "doc_id": "source",
-                            "title": "Source",
-                            "content_url": f"/assets/data/docs/scopes/{scope}/by-id/source.json",
-                        }
-                    ]
-                write_json(
-                    repo_root / output_dir / "index-tree.json",
-                    {"schema": "docs_index_tree_v1", "docs": docs},
-                )
-            write_public_reader_doc_payload(repo_root, scope, "source", "Source", content_html)
-            write_source_doc(repo_root, scope, "")
-            yield temp_path
+        write_public_reader_doc_payload(repo_root, scope, "source", "Source", content_html)
+        write_source_doc(repo_root, scope, "")
+        yield temp_path
 
 
 def test_fixture_scope_outputs_are_repo_relative() -> None:

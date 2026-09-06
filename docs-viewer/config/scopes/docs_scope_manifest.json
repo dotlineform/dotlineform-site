@@ -1,7 +1,7 @@
 {
   "schema_version": "docs_scope_manifest_v1",
   "tool_id": "docs-viewer-scope-lifecycle",
-  "updated_at": "2026-08-30T20:39:41Z",
+  "updated_at": "2026-09-06T19:45:06Z",
   "scopes": [
     {
       "scope_id": "analysis",
@@ -12,7 +12,7 @@
       "tool_id": "",
       "repo_status_at_creation": "tracked",
       "created_at": "",
-      "updated_at": "2026-08-30T20:39:41Z",
+      "updated_at": "2026-09-06T19:45:06Z",
       "files": [
         {
           "kind": "scope_root",
@@ -22,86 +22,9 @@
           "exists": true
         },
         {
-          "kind": "source_root",
-          "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/analysis/source",
-          "location": "external",
-          "action": "track",
-          "exists": true
-        },
-        {
-          "kind": "source_documents_root",
-          "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/analysis/source/documents",
-          "location": "external",
-          "action": "track",
-          "exists": true
-        },
-        {
-          "kind": "source_sub_scopes_root",
-          "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/analysis/source/sub-scopes",
-          "location": "external",
-          "action": "track",
-          "exists": true
-        },
-        {
-          "kind": "source_media_root",
-          "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/analysis/source/media",
-          "location": "external",
-          "action": "track",
-          "exists": true
-        },
-        {
           "kind": "scope_config",
           "path": "docs-viewer/config/scopes/docs_scopes.json",
           "location": "repo",
-          "action": "track",
-          "exists": true
-        },
-        {
-          "kind": "default_source_doc",
-          "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/analysis/source/documents/d-20260426-164043-e14f49.md",
-          "location": "external",
-          "action": "track",
-          "exists": true
-        },
-        {
-          "kind": "route_file",
-          "path": "site/analysis/index.html",
-          "location": "repo",
-          "action": "track",
-          "exists": true
-        },
-        {
-          "kind": "generated_docs_root",
-          "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/analysis/generated/documents",
-          "location": "external",
-          "action": "track",
-          "exists": true
-        },
-        {
-          "kind": "generated_docs_index_tree",
-          "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/analysis/generated/documents/index-tree.json",
-          "location": "external",
-          "action": "track",
-          "exists": true
-        },
-        {
-          "kind": "generated_docs_recent",
-          "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/analysis/generated/documents/recent.json",
-          "location": "external",
-          "action": "track",
-          "exists": true
-        },
-        {
-          "kind": "generated_docs_payload_root",
-          "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/analysis/generated/documents/by-id",
-          "location": "external",
-          "action": "track",
-          "exists": true
-        },
-        {
-          "kind": "generated_search_index",
-          "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/analysis/generated/search/index.json",
-          "location": "external",
           "action": "track",
           "exists": true
         },
@@ -153,6 +76,153 @@
           "location": "repo",
           "action": "track",
           "exists": true
+        },
+        {
+          "kind": "working/source_root",
+          "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/analysis/working/source",
+          "location": "external",
+          "action": "track",
+          "exists": true
+        },
+        {
+          "kind": "working/source_documents_root",
+          "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/analysis/working/source/documents",
+          "location": "external",
+          "action": "track",
+          "exists": true
+        },
+        {
+          "kind": "working/source_sub_scopes_root",
+          "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/analysis/working/source/documents/sub-scopes",
+          "location": "external",
+          "action": "track",
+          "exists": true
+        },
+        {
+          "kind": "working/source_media_root",
+          "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/analysis/working/source/media",
+          "location": "external",
+          "action": "track",
+          "exists": true
+        },
+        {
+          "kind": "working/default_source_doc",
+          "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/analysis/working/source/documents/d-20260801-073826-8865a8.md",
+          "location": "external",
+          "action": "track",
+          "exists": true
+        },
+        {
+          "kind": "working/generated_docs_root",
+          "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/analysis/working/generated/documents",
+          "location": "external",
+          "action": "track",
+          "exists": true
+        },
+        {
+          "kind": "working/generated_docs_index_tree",
+          "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/analysis/working/generated/documents/index-tree.json",
+          "location": "external",
+          "action": "track",
+          "exists": true
+        },
+        {
+          "kind": "working/generated_docs_recent",
+          "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/analysis/working/generated/documents/recent.json",
+          "location": "external",
+          "action": "track",
+          "exists": true
+        },
+        {
+          "kind": "working/generated_docs_payload_root",
+          "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/analysis/working/generated/documents/by-id",
+          "location": "external",
+          "action": "track",
+          "exists": true
+        },
+        {
+          "kind": "working/generated_search_index",
+          "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/analysis/working/generated/search/index.json",
+          "location": "external",
+          "action": "track",
+          "exists": true
+        },
+        {
+          "kind": "pre-publish/source_root",
+          "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/analysis/pre-publish/source",
+          "location": "external",
+          "action": "track",
+          "exists": true
+        },
+        {
+          "kind": "pre-publish/source_documents_root",
+          "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/analysis/pre-publish/source/documents",
+          "location": "external",
+          "action": "track",
+          "exists": true
+        },
+        {
+          "kind": "pre-publish/source_sub_scopes_root",
+          "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/analysis/pre-publish/source/documents/sub-scopes",
+          "location": "external",
+          "action": "track",
+          "exists": true
+        },
+        {
+          "kind": "pre-publish/source_media_root",
+          "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/analysis/pre-publish/source/media",
+          "location": "external",
+          "action": "track",
+          "exists": true
+        },
+        {
+          "kind": "pre-publish/default_source_doc",
+          "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/analysis/pre-publish/source/documents/d-20260426-164043-e14f49.md",
+          "location": "external",
+          "action": "track",
+          "exists": true
+        },
+        {
+          "kind": "pre-publish/generated_docs_root",
+          "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/analysis/pre-publish/generated/documents",
+          "location": "external",
+          "action": "track",
+          "exists": true
+        },
+        {
+          "kind": "pre-publish/generated_docs_index_tree",
+          "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/analysis/pre-publish/generated/documents/index-tree.json",
+          "location": "external",
+          "action": "track",
+          "exists": true
+        },
+        {
+          "kind": "pre-publish/generated_docs_recent",
+          "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/analysis/pre-publish/generated/documents/recent.json",
+          "location": "external",
+          "action": "track",
+          "exists": true
+        },
+        {
+          "kind": "pre-publish/generated_docs_payload_root",
+          "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/analysis/pre-publish/generated/documents/by-id",
+          "location": "external",
+          "action": "track",
+          "exists": true
+        },
+        {
+          "kind": "pre-publish/generated_search_index",
+          "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/analysis/pre-publish/generated/search/index.json",
+          "location": "external",
+          "action": "track",
+          "exists": true
+        },
+        {
+          "kind": "route_file",
+          "path": "site/analysis/index.html",
+          "location": "repo",
+          "action": "track",
+          "exists": true
         }
       ],
       "metadata": {
@@ -160,7 +230,11 @@
         "viewer_base_url": "/analysis/",
         "default_doc_id": "d-20260426-164043-e14f49",
         "external_data_root": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer",
-        "publishing_mode": "public_readonly"
+        "publishing_mode": "public_readonly",
+        "stages": [
+          "working",
+          "pre-publish"
+        ]
       }
     },
     {
@@ -172,7 +246,7 @@
       "tool_id": "docs-viewer-scope-lifecycle",
       "repo_status_at_creation": "external",
       "created_at": "2026-08-29T19:50:32Z",
-      "updated_at": "2026-08-30T20:39:41Z",
+      "updated_at": "2026-09-06T19:45:06Z",
       "files": [
         {
           "kind": "scope_root",
@@ -218,7 +292,7 @@
         },
         {
           "kind": "default_source_doc",
-          "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/app/source/documents/d-20260829-205140-9386fc.md",
+          "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/app/source/documents/d-20260902-143007-05a794.md",
           "location": "external",
           "action": "track",
           "exists": true
@@ -276,125 +350,7 @@
       "metadata": {
         "backfilled": false,
         "viewer_base_url": "/docs/",
-        "default_doc_id": "d-20260829-205140-9386fc",
-        "publishing_mode": "local_manage",
-        "external_data_root": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer"
-      }
-    },
-    {
-      "scope_id": "dotlineform",
-      "scope_type": "local",
-      "owner": "user",
-      "user_created": true,
-      "created_by_tool": true,
-      "tool_id": "docs-viewer-scope-lifecycle",
-      "repo_status_at_creation": "external",
-      "created_at": "2026-07-31T13:47:51Z",
-      "updated_at": "2026-08-30T20:39:41Z",
-      "files": [
-        {
-          "kind": "scope_root",
-          "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/dotlineform",
-          "location": "external",
-          "action": "track",
-          "exists": true
-        },
-        {
-          "kind": "source_root",
-          "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/dotlineform/source",
-          "location": "external",
-          "action": "track",
-          "exists": true
-        },
-        {
-          "kind": "source_documents_root",
-          "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/dotlineform/source/documents",
-          "location": "external",
-          "action": "track",
-          "exists": true
-        },
-        {
-          "kind": "source_sub_scopes_root",
-          "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/dotlineform/source/sub-scopes",
-          "location": "external",
-          "action": "track",
-          "exists": true
-        },
-        {
-          "kind": "source_media_root",
-          "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/dotlineform/source/media",
-          "location": "external",
-          "action": "track",
-          "exists": true
-        },
-        {
-          "kind": "scope_config",
-          "path": "docs-viewer/config/scopes/docs_scopes.json",
-          "location": "repo",
-          "action": "track",
-          "exists": true
-        },
-        {
-          "kind": "default_source_doc",
-          "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/dotlineform/source/documents/d-20260801-073826-8865a8.md",
-          "location": "external",
-          "action": "track",
-          "exists": true
-        },
-        {
-          "kind": "generated_docs_root",
-          "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/dotlineform/generated/documents",
-          "location": "external",
-          "action": "track",
-          "exists": true
-        },
-        {
-          "kind": "generated_docs_index_tree",
-          "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/dotlineform/generated/documents/index-tree.json",
-          "location": "external",
-          "action": "track",
-          "exists": true
-        },
-        {
-          "kind": "generated_docs_recent",
-          "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/dotlineform/generated/documents/recent.json",
-          "location": "external",
-          "action": "track",
-          "exists": true
-        },
-        {
-          "kind": "generated_docs_payload_root",
-          "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/dotlineform/generated/documents/by-id",
-          "location": "external",
-          "action": "track",
-          "exists": true
-        },
-        {
-          "kind": "generated_search_index",
-          "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/dotlineform/generated/search/index.json",
-          "location": "external",
-          "action": "track",
-          "exists": true
-        },
-        {
-          "kind": "published_docs_root",
-          "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/dotlineform/published/documents",
-          "location": "external",
-          "action": "track",
-          "exists": true
-        },
-        {
-          "kind": "published_search_index",
-          "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/dotlineform/published/search/index.json",
-          "location": "external",
-          "action": "track",
-          "exists": true
-        }
-      ],
-      "metadata": {
-        "backfilled": false,
-        "viewer_base_url": "/docs/",
-        "default_doc_id": "d-20260801-073826-8865a8",
+        "default_doc_id": "d-20260902-143007-05a794",
         "publishing_mode": "local_manage",
         "external_data_root": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer"
       }
@@ -408,7 +364,7 @@
       "tool_id": "docs-viewer-scope-lifecycle",
       "repo_status_at_creation": "external",
       "created_at": "2026-07-13T21:21:25Z",
-      "updated_at": "2026-08-30T20:39:41Z",
+      "updated_at": "2026-09-06T19:45:06Z",
       "files": [
         {
           "kind": "scope_root",
@@ -526,7 +482,7 @@
       "tool_id": "docs-viewer-scope-lifecycle",
       "repo_status_at_creation": "tracked",
       "created_at": "2026-07-14T08:09:45Z",
-      "updated_at": "2026-08-30T20:39:41Z",
+      "updated_at": "2026-09-06T19:45:06Z",
       "files": [
         {
           "kind": "scope_root",
@@ -644,7 +600,7 @@
       "tool_id": "",
       "repo_status_at_creation": "tracked",
       "created_at": "",
-      "updated_at": "2026-08-30T20:39:41Z",
+      "updated_at": "2026-09-06T19:45:06Z",
       "files": [
         {
           "kind": "scope_root",

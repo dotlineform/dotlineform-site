@@ -24,6 +24,8 @@ from repo_factory import (
 )
 from test_docs_document_transfer import PROJECTS_LINEAGE_CONTRACT, make_lineage_repo
 
+pytestmark = pytest.mark.usefixtures("synthetic_lineage_customisations")
+
 
 PARENT_ID = "d-20260808-100000-aaaaaa"
 DESCENDANT_ID = "d-20260808-100050-ababab"

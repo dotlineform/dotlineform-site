@@ -18,6 +18,7 @@ if str(SERVICES_DIR) not in sys.path:
     sys.path.insert(0, str(SERVICES_DIR))
 
 import docs_management_routes as routes  # noqa: E402
+from repo_factory import docs_scope_record, write_docs_scope_config  # noqa: E402
 
 
 def read_json(path: Path) -> dict[str, object]:
@@ -25,6 +26,7 @@ def read_json(path: Path) -> dict[str, object]:
 
 
 def load_management_service(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
+    write_docs_scope_config(tmp_path, [docs_scope_record("studio")])
     monkeypatch.setenv("DOTLINEFORM_PROJECTS_BASE_DIR", str(tmp_path))
     return importlib.import_module("docs_management_service")
 
@@ -88,7 +90,7 @@ def test_management_service_runs_producer_and_returns_live_report(
     management_service = load_management_service(tmp_path, monkeypatch)
     calls: list[dict[str, object]] = []
     report = {
-        "schema_version": "docs_project_state_report_v2",
+        "schema_version": "docs_project_state_report_v3",
         "generation": "sha256:" + "a" * 64,
         "generated_at": "2026-08-05T15:10:00Z",
         "rows": [],

@@ -158,7 +158,7 @@ def test_python_docs_builder_projects_empty_processing_collection_report(
             "processing",
             title="Processing",
             sub_scope_customisation={
-                "id": "dotlineform_processing",
+                "id": "working_processing",
                 "settings": {},
             },
         ),
@@ -167,7 +167,7 @@ def test_python_docs_builder_projects_empty_processing_collection_report(
             "projects",
             title="Projects",
             sub_scope_customisation={
-                "id": "dotlineform_projects",
+                "id": "working_works",
                 "settings": {},
             },
         ),
@@ -184,7 +184,7 @@ def test_python_docs_builder_projects_empty_processing_collection_report(
                     "works",
                     scope_type="public",
                     sub_scope_customisation={
-                        "id": "analysis_works",
+                        "id": "pre_publish_works",
                         "settings": {},
                     },
                 )
@@ -222,7 +222,7 @@ def test_python_docs_builder_projects_empty_processing_collection_report(
     assert manifest == {"docs": []}
     assert manage_manifest == {
         "customisation": {
-            "id": "dotlineform_processing",
+            "id": "working_processing",
             "data": {},
         },
         "subject_generation": manage_manifest["subject_generation"],
@@ -231,15 +231,9 @@ def test_python_docs_builder_projects_empty_processing_collection_report(
     assert browser_config["scopes"][0]["sub_scopes"][0][
         "sub_scope_customisation"
     ] == {
-        "id": "dotlineform_processing",
+        "id": "working_processing",
         "capabilities": {
             "assignable_field_groups": ["authoring_subject"],
-            "lineage_copy": {
-                "contract_id": "dotlineform_processing_to_analysis_works",
-                "target": {"scope": "analysis", "sub_scope": "works"},
-                "action_label": "Copy to Analysis",
-                "modal_title": "Copy to analysis/works",
-            },
         },
     }
     assert "sub_scope_customisation" not in public_browser_config["scopes"][0][
@@ -251,10 +245,6 @@ def test_python_docs_builder_projects_subjects_into_private_products() -> None:
     first_doc_id = "d-20260801-101500-a1b2c3"
     second_doc_id = "d-20260801-101501-b2c3d4"
     pathless_doc_id = "d-20260801-101502-c3d4e5"
-    pre_publish_doc_id = "d-20260802-101500-d4e5f6"
-    published_doc_id = "d-20260802-101501-e5f6a7"
-    unavailable_doc_id = "d-20260802-101502-f6a7b8"
-    analysis_report_doc_id = "d-20260802-090000-abcdef"
     with tempfile.TemporaryDirectory() as temp_path:
         root = Path(temp_path)
         prepare_repo(root)
@@ -271,7 +261,7 @@ def test_python_docs_builder_projects_subjects_into_private_products() -> None:
                                 "projects",
                                 title="Projects",
                                 sub_scope_customisation={
-                                    "id": "dotlineform_projects",
+                                    "id": "working_works",
                                     "settings": {},
                                 },
                             ),
@@ -280,7 +270,7 @@ def test_python_docs_builder_projects_subjects_into_private_products() -> None:
                                 "processing",
                                 title="Processing",
                                 sub_scope_customisation={
-                                    "id": "dotlineform_processing",
+                                    "id": "working_processing",
                                     "settings": {},
                                 },
                             ),
@@ -298,7 +288,7 @@ def test_python_docs_builder_projects_subjects_into_private_products() -> None:
                                 title="Works",
                                 scope_type="public",
                                 sub_scope_customisation={
-                                    "id": "analysis_works",
+                                    "id": "pre_publish_works",
                                     "settings": {},
                                 },
                             )
@@ -340,98 +330,6 @@ title: Pathless
 # Pathless
 """,
         )
-        target_root = root / (
-            "docs-viewer/scopes/analysis/generated/documents/"
-            "sub-scopes/works/by-id"
-        )
-        pre_publish_url = (
-            f"/docs/?scope=analysis&doc={analysis_report_doc_id}"
-            f"&subdoc={pre_publish_doc_id}"
-        )
-        published_url = (
-            f"/docs/?scope=analysis&doc={analysis_report_doc_id}"
-            f"&subdoc={published_doc_id}"
-        )
-        write_text(
-            root / (
-                "docs-viewer/scopes/analysis/source/documents/"
-                f"{analysis_report_doc_id}.md"
-            ),
-            f"""---
-doc_id: {analysis_report_doc_id}
-title: Works
----
-# Works
-
-:::report
-id: docs_subscope
-access: public
-sub_scope: works
-:::
-""",
-        )
-        write_json(
-            target_root / f"{pre_publish_doc_id}.json",
-            {
-                "doc_id": pre_publish_doc_id,
-                "title": "Editorial draft",
-                "viewer_url": pre_publish_url,
-            },
-        )
-        write_json(
-            target_root / f"{published_doc_id}.json",
-            {
-                "doc_id": published_doc_id,
-                "title": "Published editorial",
-                "viewer_url": published_url,
-            },
-        )
-        write_json(
-            root
-            / "docs-viewer/scopes/dotlineform/source/sub-scopes/projects/data/document-publication-lineage.json",
-            {
-                "schema_version": "docs_document_publication_lineage_v3",
-                "working_collection": {
-                    "scope": "dotlineform",
-                    "sub_scope": "projects",
-                },
-                "editorial_collection": {
-                    "scope": "analysis",
-                    "sub_scope": "works",
-                },
-                "records": [
-                    {
-                        "working_doc_id": first_doc_id,
-                        "editorials": [
-                            {
-                                "doc_id": pre_publish_doc_id,
-                                "created_at": "2026-08-08T10:00:00Z",
-                                "last_copied_at": "2026-08-08T10:00:00Z",
-                                "published_url": None,
-                            },
-                            {
-                                "doc_id": published_doc_id,
-                                "created_at": "2026-08-08T11:00:00Z",
-                                "last_copied_at": "2026-08-08T11:00:00Z",
-                                "published_url": "/analysis/published",
-                            },
-                        ],
-                    },
-                    {
-                        "working_doc_id": pathless_doc_id,
-                        "editorials": [
-                            {
-                                "doc_id": unavailable_doc_id,
-                                "created_at": "2026-08-08T12:00:00Z",
-                                "last_copied_at": "2026-08-08T12:00:00Z",
-                                "published_url": None,
-                            }
-                        ],
-                    },
-                ],
-            },
-        )
-
         exit_code, _stdout, stderr = run_cli(
             root,
             ["--scope", "dotlineform", "--sub-scope", "projects", "--write"],
@@ -472,7 +370,7 @@ sub_scope: works
         ]
     }
     assert manage_manifest == {
-        "customisation": {"id": "dotlineform_projects", "data": {}},
+        "customisation": {"id": "working_works", "data": {}},
         "subject_generation": manage_manifest["subject_generation"],
         "docs": [
             {
@@ -488,30 +386,6 @@ sub_scope: works
                 },
                 "customisation": {
                     "folder_path": "projects/architecture",
-                    "publication_targets": [
-                        {
-                            "editorial": {
-                                "scope": "analysis",
-                                "sub_scope": "works",
-                                "doc_id": pre_publish_doc_id,
-                            },
-                            "available": True,
-                            "title": "Editorial draft",
-                            "viewer_url": pre_publish_url,
-                            "publication": None,
-                        },
-                        {
-                            "editorial": {
-                                "scope": "analysis",
-                                "sub_scope": "works",
-                                "doc_id": published_doc_id,
-                            },
-                            "available": True,
-                            "title": "Published editorial",
-                            "viewer_url": published_url,
-                            "publication": {"public_url": "/analysis/published"},
-                        },
-                    ],
                 },
             },
             {
@@ -537,21 +411,6 @@ sub_scope: works
                     "kind": "none",
                     "key": "",
                     "fields": [],
-                },
-                "customisation": {
-                    "publication_targets": [
-                        {
-                            "editorial": {
-                                "scope": "analysis",
-                                "sub_scope": "works",
-                                "doc_id": unavailable_doc_id,
-                            },
-                            "available": False,
-                            "title": "",
-                            "viewer_url": "",
-                            "publication": None,
-                        }
-                    ]
                 },
             },
         ],
@@ -601,15 +460,9 @@ sub_scope: works
     assert browser_config["scopes"][0]["sub_scopes"][0][
         "sub_scope_customisation"
     ] == {
-        "id": "dotlineform_projects",
+        "id": "working_works",
         "capabilities": {
             "assignable_field_groups": ["authoring_subject"],
-            "lineage_copy": {
-                "contract_id": "dotlineform_projects_to_analysis_works",
-                "target": {"scope": "analysis", "sub_scope": "works"},
-                "action_label": "Copy to Analysis",
-                "modal_title": "Copy to analysis/works",
-            },
         },
     }
     assert "sub_scope_customisation" not in public_browser_config["scopes"][0][
@@ -959,7 +812,7 @@ Related body.
     }
     assert manage_manifest == {
         "customisation": {
-            "id": "analysis_tags",
+            "id": "concepts",
             "data": {
                 "groups": ["subject", "domain", "form", "theme"],
             },
@@ -989,7 +842,7 @@ Related body.
     assert detail["viewer_url"] == f"/docs/?scope=studio&doc={TAGS_REPORT_DOC_ID}&subdoc={DETAIL_DOC_ID}"
     assert 'href="related.md"' in detail["content_html"]
     assert related["parent_id"] == DETAIL_DOC_ID
-    assert tag_associations["schema_version"] == "docs_tag_associations_v1"
+    assert tag_associations["schema_version"] == "docs_tag_associations_v2"
     assert tag_associations["scope"] == "studio"
     assert tag_associations["sub_scope"] == "tags"
     assert [
@@ -1253,7 +1106,7 @@ def test_python_docs_builder_projects_registered_manage_customisation_only() -> 
                 "tags",
                 title="Tags",
                 sub_scope_customisation={
-                    "id": "analysis_tags",
+                    "id": "concepts",
                     "settings": {"groups": ["subject", "theme"]},
                 },
             )
@@ -1314,7 +1167,7 @@ group: subject
     assert manifest == {"docs": [{"doc_id": DETAIL_DOC_ID, "title": "Detail"}]}
     assert manage_manifest == {
         "customisation": {
-            "id": "analysis_tags",
+            "id": "concepts",
             "data": {"groups": ["subject", "theme"]},
         },
         "docs": [
@@ -1331,7 +1184,7 @@ group: subject
         f"/docs/?scope=studio&doc={TAGS_REPORT_DOC_ID}&subdoc={DETAIL_DOC_ID}"
     )
     assert browser_config["scopes"][0]["sub_scopes"][0]["sub_scope_customisation"] == {
-        "id": "analysis_tags",
+        "id": "concepts",
         "capabilities": {
             "assignable_field_groups": ["tag_fields"],
         },
@@ -1514,7 +1367,7 @@ def test_public_authoring_subject_collection_emits_deployment_metadata() -> None
                 "works",
                 title="Works",
                 scope_type="public",
-                sub_scope_customisation={"id": "analysis_works", "settings": {}},
+                sub_scope_customisation={"id": "pre_publish_works", "settings": {}},
             )
         ]
         payload["scopes"].append(
@@ -1525,7 +1378,7 @@ def test_public_authoring_subject_collection_emits_deployment_metadata() -> None
                         "dotlineform",
                         "projects",
                         sub_scope_customisation={
-                            "id": "dotlineform_projects",
+                            "id": "working_works",
                             "settings": {},
                         },
                     ),
@@ -1533,7 +1386,7 @@ def test_public_authoring_subject_collection_emits_deployment_metadata() -> None
                         "dotlineform",
                         "processing",
                         sub_scope_customisation={
-                            "id": "dotlineform_processing",
+                            "id": "working_processing",
                             "settings": {},
                         },
                     ),

@@ -96,7 +96,8 @@ def test_default_payload_loading() -> None:
 def test_registry_v6_primary_document_validation() -> None:
     primary = {
         "scope": "analysis",
-        "sub_scope": "tags",
+        "stage": "working",
+        "sub_scope": "concepts",
         "doc_id": "d-20260729-120000-000001",
     }
     payload = {
@@ -123,10 +124,10 @@ def test_registry_v6_primary_document_validation() -> None:
         "valid optional exact primary",
     )
     for invalid, expected in (
-        ({**primary, "scope": "studio"}, "Analysis Tags collection"),
-        ({**primary, "sub_scope": "other"}, "Analysis Tags collection"),
+        ({**primary, "scope": "studio"}, "Analysis Working Concepts collection"),
+        ({**primary, "sub_scope": "other"}, "Analysis Working Concepts collection"),
         ({**primary, "doc_id": "not-an-id"}, "immutable document identity"),
-        ({"scope": "analysis", "sub_scope": "tags"}, "missing fields"),
+        ({"scope": "analysis", "stage": "working", "sub_scope": "concepts"}, "missing fields"),
         ({**primary, "url": "/analysis/"}, "unsupported fields"),
         (None, "exact document target object"),
     ):

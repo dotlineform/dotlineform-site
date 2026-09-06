@@ -1,7 +1,7 @@
 // Studio Tag document presentation over the private TDL-1 association product.
 
-const ASSOCIATION_SCHEMA_VERSION = "docs_tag_associations_v1";
-const TARGET_KEYS = Object.freeze(["scope", "sub_scope", "doc_id"]);
+const ASSOCIATION_SCHEMA_VERSION = "docs_tag_associations_v2";
+const TARGET_KEYS = Object.freeze(["scope", "stage", "sub_scope", "doc_id"]);
 
 export function normalizeTagDocumentTarget(raw) {
   if (!raw || typeof raw !== "object" || Array.isArray(raw)) return null;
@@ -10,22 +10,24 @@ export function normalizeTagDocumentTarget(raw) {
     return null;
   }
   const scope = String(raw.scope || "").trim();
+  const stage = String(raw.stage || "").trim();
   const subScope = String(raw.sub_scope || "").trim();
   const docId = String(raw.doc_id || "").trim();
   if (
     scope !== "analysis"
-    || subScope !== "tags"
+    || stage !== "working"
+    || subScope !== "concepts"
     || !/^d-\d{8}-\d{6}-[a-f0-9]{6}$/.test(docId)
   ) {
     return null;
   }
-  return { scope, sub_scope: subScope, doc_id: docId };
+  return { scope, stage, sub_scope: subScope, doc_id: docId };
 }
 
 export function tagDocumentTargetKey(target) {
   const normalized = normalizeTagDocumentTarget(target);
   return normalized
-    ? `${normalized.scope}\u0000${normalized.sub_scope}\u0000${normalized.doc_id}`
+    ? `${normalized.scope}\u0000${normalized.stage}\u0000${normalized.sub_scope}\u0000${normalized.doc_id}`
     : "";
 }
 
@@ -58,7 +60,8 @@ export function normalizeTagDocumentAssociations(payload) {
     !payload
     || payload.schema_version !== ASSOCIATION_SCHEMA_VERSION
     || payload.scope !== "analysis"
-    || payload.sub_scope !== "tags"
+    || payload.stage !== "working"
+    || payload.sub_scope !== "concepts"
     || !Array.isArray(payload.associations)
   ) {
     throw new Error("Tag document associations are invalid.");
