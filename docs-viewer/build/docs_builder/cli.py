@@ -42,7 +42,7 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
     parser.add_argument(
         "--skip-browser-config",
         action="store_true",
-        help="Skip browser-config writes during a controlled sub-scope rebuild.",
+        help="Skip browser-config writes during a controlled sub-scope or stage rebuild.",
     )
     parser.add_argument("--diagnostics", action="store_true", help="Print machine-readable diagnostics for automation.")
     parser.add_argument("--write", action="store_true", help="Write generated files.")
@@ -90,14 +90,17 @@ def main(argv: list[str] | None = None) -> int:
         )
 
     replace_scope_ids = requested_scopes or None
-    if args.write and not args.skip_browser_config and not args.stage:
+    if args.write and not args.skip_browser_config:
+        # Local stage configuration retains the complete scope and both stage records.
         write_browser_config(
             repo_root,
-            selected,
+            list(configs_by_scope.values()),
             path=DOCS_VIEWER_BROWSER_CONFIG_PATH,
             label="Docs Viewer browser config",
             replace_scope_ids=replace_scope_ids,
         )
+    # Stage builds never update the frozen public configuration.
+    if args.write and not args.skip_browser_config and not args.stage:
         write_browser_config(
             repo_root,
             public_readonly_configs(selected),

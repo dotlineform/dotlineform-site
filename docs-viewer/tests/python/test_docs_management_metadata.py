@@ -41,12 +41,8 @@ SUB_SCOPE_DOC_ID = "d-20260727-211500-a1b2c3"
     ("analysis", "works", "pre_publish_works"),
 ])
 def test_detail_subject_assignment_and_projection_without_catalogue(
-    scope: str, sub_scope: str, customisation: str, monkeypatch,
+    scope: str, sub_scope: str, customisation: str,
 ) -> None:
-    monkeypatch.setattr(
-        "docs_working_works_customisation.publication_targets_for_documents",
-        lambda *_args, **_kwargs: {},
-    )
     with make_repo() as repo_name:
         repo_root = Path(repo_name)
         write_scope_registry(repo_root, [docs_scope_record(scope, sub_scopes=[
@@ -234,10 +230,6 @@ def test_projects_subject_assignment_read_save_remove_and_strict_rejection(
         docs_management_service.write_rebuild,
         "perform_sub_scope_source_write_and_rebuild",
         fake_sub_scope_rebuild,
-    )
-    monkeypatch.setattr(
-        "docs_working_works_customisation.publication_targets_for_documents",
-        lambda *_args, **_kwargs: {},
     )
     projects_base = tmp_path / "Projects Base"
     projects_base.mkdir()

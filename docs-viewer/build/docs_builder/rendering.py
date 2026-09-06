@@ -100,6 +100,9 @@ class ContentRenderingMixin:
         path_part = parsed.path or ""
         if not path_part:
             return href
+        # Authored stage targets must retain their exact route and child selection.
+        if "stage" in parse_qs(html.unescape(parsed.query), keep_blank_values=True):
+            return href
         query_values = parse_qs(parsed.query)
         viewer_doc_id = (query_values.get("doc") or [""])[0]
         if viewer_doc_id and self.viewer_path_match(path_part, query_values):

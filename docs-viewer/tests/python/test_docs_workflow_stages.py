@@ -176,6 +176,91 @@ def test_stage_build_writes_exact_parent_and_report_payloads(stage_repo: Path) -
         assert f"subdoc={DOC_ID}" in child["viewer_url"]
 
 
+@pytest.mark.parametrize("stage", ["working", "pre-publish"])
+def test_rendered_links_preserve_explicit_stage_and_child_targets(stage_repo: Path, stage: str) -> None:
+    from docs_builder.pipeline import DocsDataBuilder
+    from markdown_renderer import render_markdown_to_html
+
+    builder = DocsDataBuilder(
+        repo_root=stage_repo,
+        config=scopes.load_docs_scope_stage(stage_repo, "analysis", stage),
+        skip_media_builds=True,
+    )
+    documents = builder.load_docs()
+    for target_stage in ("working", "pre-publish"):
+        for query in (
+            f"doc={DOC_ID}&scope=analysis&stage={target_stage}",
+            f"scope=analysis&stage={target_stage}&doc={DOC_ID}",
+        ):
+            href = f"/docs/?{query}&subdoc={DOC_ID}#detail"
+            rendered = render_markdown_to_html(f"[Exact target]({href})")
+            assert builder.rewrite_doc_links(
+                rendered, current_doc=documents[0], docs=documents,
+            ) == rendered
+
+
+@pytest.mark.parametrize("delete_ancestor", [False, True])
+def test_working_default_delete_updates_only_local_browser_config(
+    stage_repo: Path, monkeypatch: pytest.MonkeyPatch, delete_ancestor: bool,
+) -> None:
+    from docs_builder.browser_config import write_browser_config
+    import docs_management_service as service
+    import docs_management_mutation_service as mutation_service
+    import docs_write_rebuild as rebuild
+
+    parent_id = "d-20260906-170001-b2c3d4"
+    survivor_id = "d-20260906-170002-c3d4e5"
+    config_path = stage_repo / scopes.CONFIG_REL_PATH
+    raw = json.loads(config_path.read_text())
+    raw["scopes"][0]["stages"]["working"]["default_doc_id"] = DOC_ID
+    write_json(config_path, raw)
+    configs = scopes.load_docs_scope_configs(stage_repo)
+    working = scopes.select_scope_stage(configs["analysis"], "working")
+    source = stage_repo / scopes.document_source_path(working)
+    if delete_ancestor:
+        (source / f"{parent_id}.md").write_text(f"---\ndoc_id: {parent_id}\ntitle: Parent\n---\n# Parent\n")
+        (source / f"{DOC_ID}.md").write_text(f"---\ndoc_id: {DOC_ID}\ntitle: Default child\nparent_id: {parent_id}\n---\n# Default\n")
+    (source / f"{survivor_id}.md").write_text(f"---\ndoc_id: {survivor_id}\ntitle: Retained\n---\n# Retained\n")
+    browser_path = Path("docs-viewer/config/defaults/docs-viewer-config.json")
+    write_browser_config(stage_repo, list(configs.values()), path=browser_path, label="Fixture local config")
+    before_browser = json.loads((stage_repo / browser_path).read_text())
+    protected_paths = [
+        Path("docs-viewer/config/defaults/docs-viewer-public-config.json"),
+        Path("site/docs-viewer/config/defaults/docs-viewer-public-config.json"),
+        Path("docs-viewer/scopes/analysis/published/documents/accepted.json"),
+    ]
+    for path in protected_paths:
+        write_json(stage_repo / path, {"frozen": path.as_posix()})
+    protected_paths.extend(
+        path.relative_to(stage_repo)
+        for path in (stage_repo / "docs-viewer/scopes/analysis/pre-publish").rglob("*")
+        if path.is_file()
+    )
+    before_protected = {path: (stage_repo / path).read_bytes() for path in protected_paths}
+
+    def fixture_build(command, repo):
+        assert "--stage" in command and "--skip-media-builds" in command
+        code, stdout, stderr = run_cli(repo, command[2:])
+        return {"returncode": code, "stdout": stdout, "stderr": stderr, "command": " ".join(command), "elapsed_seconds": 0}
+
+    monkeypatch.setattr(rebuild, "run_rebuild_command", fixture_build)
+    monkeypatch.setattr(mutation_service, "log_event", lambda *args, **kwargs: None)
+    _, result = service.docs_management_post_response(stage_repo, "/docs/delete-apply", {
+        "scope": "analysis", "stage": "working",
+        "doc_ids": [parent_id if delete_ancestor else DOC_ID], "confirm": True,
+    })
+    assert result["ok"] is True and result["default_doc_id_changed"] is True
+    assert set(result["deleted_doc_ids"]) == ({DOC_ID, parent_id} if delete_ancestor else {DOC_ID})
+    assert scopes.load_docs_scope_stage(stage_repo, "analysis", "working").default_doc_id == ""
+    assert not (source / f"{DOC_ID}.md").exists()
+    assert (source / f"{survivor_id}.md").is_file()
+    expected_browser = deepcopy(before_browser)
+    analysis = next(record for record in expected_browser["scopes"] if record["scope_id"] == "analysis")
+    next(record for record in analysis["stages"] if record["stage"] == "working")["default_doc_id"] = ""
+    assert json.loads((stage_repo / browser_path).read_text()) == expected_browser
+    assert all((stage_repo / path).read_bytes() == value for path, value in before_protected.items())
+
+
 def test_working_write_rebuild_and_delete_preserve_other_owners(stage_repo: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     import docs_write_rebuild as rebuild
     import docs_management_service as service
