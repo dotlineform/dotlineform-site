@@ -57,6 +57,9 @@ export function committedDocumentCreateTarget(payload) {
   if (scope !== target.scope) {
     throw new Error("Create service target does not match its committed scope.");
   }
+  if (String(response.stage || "") !== String(target.stage || "")) {
+    throw new Error("Create service target does not match its committed stage.");
+  }
   if (subScope !== String(target.sub_scope || "")) {
     throw new Error("Create service target does not match its committed sub-scope.");
   }
@@ -79,7 +82,7 @@ export function normalizeManagedSubscopeCollection(value) {
   if (!value || typeof value !== "object" || Array.isArray(value)) {
     throw new Error("Managed sub-scope collection must be an object.");
   }
-  var keys = Object.keys(value).sort();
+  var keys = Object.keys(value).filter(function (key) { return key !== "stage"; }).sort();
   if (
     keys.length !== 2
     || keys[0] !== "scope"
@@ -91,8 +94,12 @@ export function normalizeManagedSubscopeCollection(value) {
   var subScope = String(value.sub_scope || "").trim().toLowerCase();
   if (!scope) throw new Error("Managed sub-scope collection scope is required.");
   if (!subScope) throw new Error("Managed sub-scope collection sub_scope is required.");
+  if (value.stage !== undefined && !["working", "pre-publish"].includes(value.stage)) {
+    throw new Error("Managed sub-scope collection stage is invalid.");
+  }
   return Object.freeze({
     scope: scope,
+    ...(value.stage ? { stage: value.stage } : {}),
     sub_scope: subScope
   });
 }
@@ -500,6 +507,9 @@ export function createDocsViewerManagementActionController(options) {
     ).trim().toLowerCase();
     if (currentScope !== targetCollection.scope) {
       throw new Error("Mounted sub-scope collection does not match the active scope.");
+    }
+    if (String(managementClientOptions().stage || "") !== String(targetCollection.stage || "")) {
+      throw new Error("Mounted sub-scope collection does not match the active stage.");
     }
     if (typeof createSettings.refreshAndSelect !== "function") {
       throw new Error("Sub-scope document creation requires report refresh ownership.");

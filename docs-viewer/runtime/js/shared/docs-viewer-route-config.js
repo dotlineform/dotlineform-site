@@ -371,6 +371,7 @@ export function routeConfigScopeProjection(scopeConfig, options) {
       ? new URL(viewerBaseUrl || fallbackPath, windowRef.location.origin).pathname
       : viewerBaseUrl,
     viewerScope: cleanString(config.scopeId),
+    viewerStage: cleanString(config.stage),
     subScopes: subScopes,
     subScopesById: config.subScopesById instanceof Map
       ? config.subScopesById

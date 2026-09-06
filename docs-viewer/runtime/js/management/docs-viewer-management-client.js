@@ -11,7 +11,7 @@ export var DOCS_MANAGEMENT_UNAVAILABLE_MESSAGE = "Docs management service unavai
 
 function scopedPayload(payload, options) {
   var settings = options || {};
-  return Object.assign({ scope: settings.scope || "" }, payload || {});
+  return Object.assign({ scope: settings.scope || "" }, settings.stage ? { stage: settings.stage } : {}, payload || {});
 }
 
 export function fetchManagementJson(path, method, payload, options) {
@@ -62,7 +62,7 @@ export function readManagedDocsIndex(scope, options) {
   var scopeId = String(scope || "").trim().toLowerCase();
   if (!scopeId) return Promise.reject(new Error("Docs scope is required."));
   return fetchManagementJson(
-    "/docs/index-tree?scope=" + encodeURIComponent(scopeId),
+    "/docs/index-tree?scope=" + encodeURIComponent(scopeId) + (options && options.stage ? "&stage=" + encodeURIComponent(options.stage) : ""),
     "GET",
     undefined,
     options
@@ -174,6 +174,7 @@ export function applyManagedDocsStaticHtmlExport(preview, options) {
 function targetQuery(target) {
   var normalized = normalizeManagedDocumentTarget(target);
   var query = ["scope=" + encodeURIComponent(normalized.scope)];
+  if (normalized.stage) query.push("stage=" + encodeURIComponent(normalized.stage));
   if (normalized.sub_scope) {
     query.push("sub_scope=" + encodeURIComponent(normalized.sub_scope));
   }
@@ -186,7 +187,7 @@ function targetPayload(target, payload) {
   if (typeof fields !== "object" || Array.isArray(fields)) {
     throw new Error("Managed document request payload must be an object.");
   }
-  ["scope", "sub_scope", "doc_id"].forEach(function (key) {
+  ["scope", "stage", "sub_scope", "doc_id"].forEach(function (key) {
     if (Object.prototype.hasOwnProperty.call(fields, key)) {
       throw new Error("Managed document request payload must not replace target field " + key + ".");
     }

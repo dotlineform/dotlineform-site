@@ -228,6 +228,7 @@ export function createDocsViewerCollectionProvider(options) {
     serviceContext: settings.serviceContext,
     source: settings.source,
     viewerScope: settings.viewerScope,
+    viewerStage: settings.viewerStage,
     window: settings.window
   };
   var provider = typeof settings.createCollectionProvider === "function"
@@ -305,6 +306,7 @@ export function createDocsViewerAppComposition(options) {
     management: appSession.domains.management,
     selectedDocument: appSession.domains.selectedDocument,
     viewerScope: settings.viewerScope,
+    viewerStage: settings.viewerStage,
     window: window
   });
   var sourceServiceAdapter = (
@@ -315,6 +317,7 @@ export function createDocsViewerAppComposition(options) {
     ? settings.createSourceAdapter({
         sourceService: serviceContext.source,
         viewerScope: settings.viewerScope,
+        viewerStage: settings.viewerStage,
         window: window
       })
     : null;
@@ -327,6 +330,7 @@ export function createDocsViewerAppComposition(options) {
     serviceContext: serviceContext,
     source: sourceServiceAdapter,
     viewerScope: settings.viewerScope,
+    viewerStage: settings.viewerStage,
     window: window
   });
   var configService = createDocsViewerConfigService({

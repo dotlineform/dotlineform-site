@@ -48,6 +48,37 @@ def capabilities_payload(repo_root: Path) -> Dict[str, Any]:
         scope_configs = DOCS_SCOPE_CONFIGS
     for scope in sorted(scope_configs):
         config = scope_configs[scope]
+        if config.stages:
+            stages = {}
+            for selected in config.stages:
+                available = resolve_scope_path(repo_root, document_source_path(selected)).is_dir()
+                stages[selected.stage] = {
+                    "available": available,
+                    "stage": selected.stage,
+                    "document_authoring": available and selected.stage == "working",
+                    "generated_data_reads": (resolve_scope_path(repo_root, generated_documents_path(selected)) / "index-tree.json").is_file(),
+                    "generated_search_reads": resolve_scope_path(repo_root, generated_search_path(selected)).is_file(),
+                    "published_data_reads": False,
+                    "published_search_reads": False,
+                    "publishable": False,
+                    "document_transfer": {"available": False, "collections": []},
+                    "publishing": {"status": False, "confirm": False, "apply": False},
+                    "deploy_repo": {"available": False, "preview": False, "apply": False},
+                    "scope_lifecycle": {"delete_eligible": False, "rename_eligible": False},
+                    "sub_scope_lifecycle": {"create_eligible": False, "delete_eligible": False, "sub_scopes": []},
+                    "static_html_export": {"preview": False, "apply": False},
+                }
+            scopes[scope] = {
+                "available": any(item["available"] for item in stages.values()),
+                "scope_type": config.scope_type,
+                "stages": stages,
+                "generated_data_reads": False,
+                "generated_search_reads": False,
+                "publishable": False,
+                "publishing": {"status": False, "confirm": False, "apply": False},
+                "deploy_repo": {"available": False, "preview": False, "apply": False},
+            }
+            continue
         root = resolve_scope_path(repo_root, document_source_path(config))
         manifest_record = manifest_scopes.get(scope)
         generated_data_path = resolve_scope_path(repo_root, generated_documents_path(config)) / "index-tree.json"

@@ -121,6 +121,7 @@ export function fetchPreferredGeneratedJson(staticUrl, failureLabel, generatedPa
     if (generatedAvailable) {
       return fetchGeneratedJsonWithRetry(generatedPath, failureLabel, settings);
     }
+    if (settings.viewerStage) throw new Error("Generated data is unavailable for the selected stage.");
     return fetchJsonWithRetry(staticUrl, failureLabel, "", settings);
   });
 }
@@ -149,7 +150,7 @@ export function fetchIndexTreeWithRetry(options) {
   return fetchPreferredGeneratedJson(
     settings.indexTreeUrl,
     "Failed to load docs index tree",
-    managementReloadPath("/docs/index-tree", { scope: settings.viewerScope }),
+    managementReloadPath("/docs/index-tree", { scope: settings.viewerScope, stage: settings.viewerStage }),
     Object.assign({}, settings, { attempt: currentAttempt, useSearchCapability: false })
   )
     .then(function (payload) {

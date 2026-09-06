@@ -239,6 +239,7 @@ def test_parent_create_keeps_response_and_rebuild_contract_with_exact_target(
             "scope": "analysis",
             "changed_paths": [expected_path],
             "suppression_reason": "docs-create",
+            "stage": None,
             "docs_doc_ids": [FIXED_DOC_ID],
         }
     ]
@@ -330,6 +331,7 @@ def test_empty_sub_scope_create_is_confined_and_returns_exact_child_target(
             "sub_scope": "tags",
             "changed_paths": [expected_path],
             "suppression_reason": "docs-create",
+            "stage": None,
         }
     ]
     assert events == [

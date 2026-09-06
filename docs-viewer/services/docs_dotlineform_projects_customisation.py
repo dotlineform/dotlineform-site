@@ -44,6 +44,7 @@ def project_manifest(
     repo_root: Path,
     scope: str,
     sub_scope: str,
+    stage: str = "",
 ) -> dict[str, Any]:
     if settings:
         raise ValueError("dotlineform_projects settings must be empty")
@@ -70,7 +71,7 @@ def project_manifest(
             str(getattr(document, "doc_id", "") or "").strip()
             for document in documents
         },
-    )
+    ) if not stage else {}
     for doc_id, targets in publication_targets.items():
         rows.setdefault(doc_id, {})["publication_targets"] = targets
     return {

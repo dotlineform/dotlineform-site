@@ -13,7 +13,7 @@ from docs_scope_config import (
     DocsScopeConfig,
     generated_documents_path,
     generated_search_path,
-    load_docs_scope_configs,
+    load_docs_scope_stage,
     publication_documents_path,
     resolve_scope_path,
     scope_uses_external_data,
@@ -30,22 +30,24 @@ def browser_path_for_repo_relative(path: Path) -> str:
     return rel.as_posix().lstrip("/")
 
 
-def generated_scope_config(repo_root: Path, scope: str) -> DocsScopeConfig:
-    config = load_docs_scope_configs(repo_root).get(scope)
-    if config is None:
-        raise ValueError(f"unsupported docs scope: {scope}")
-    return config
+def generated_scope_config(repo_root: Path, scope: str, stage: str | None = None) -> DocsScopeConfig:
+    return load_docs_scope_stage(repo_root, scope, stage)
 
 
-def generated_docs_output_root(repo_root: Path, scope: str) -> Path:
-    config = generated_scope_config(repo_root, scope)
+def generated_docs_output_root(repo_root: Path, scope: str, stage: str | None = None) -> Path:
+    config = generated_scope_config(repo_root, scope, stage)
     return resolve_scope_path(repo_root, generated_documents_path(config))
 
 
-def external_sub_scope_payload_path(repo_root: Path, request_path: str) -> Path:
+def external_sub_scope_payload_path(repo_root: Path, request_path: str, stage: str | None = None) -> Path:
     if not request_path.startswith(EXTERNAL_SUB_SCOPE_GENERATED_PREFIX):
         raise ValueError("Invalid external Docs sub-scope payload route")
     parts = request_path.removeprefix(EXTERNAL_SUB_SCOPE_GENERATED_PREFIX).split("/")
+    if len(parts) > 1 and parts[1] in {"working", "pre-publish"}:
+        route_stage = parts.pop(1)
+        if stage is not None and stage != route_stage:
+            raise ValueError("Conflicting generated stage target")
+        stage = route_stage
     if len(parts) == 3 and parts[2] in {
         "manifest.json",
         "manage-manifest.json",
@@ -62,7 +64,7 @@ def external_sub_scope_payload_path(repo_root: Path, request_path: str) -> Path:
     else:
         raise ValueError("Invalid external Docs sub-scope payload route")
 
-    config = load_docs_scope_configs(repo_root, scope_ids=[scope]).get(scope)
+    config = load_docs_scope_stage(repo_root, scope, stage)
     if config is None or not scope_uses_external_data(config):
         raise FileNotFoundError(f"External Docs scope not found: {scope!r}")
     selected = next((item for item in config.sub_scopes if item.sub_scope == sub_scope), None)
@@ -80,30 +82,30 @@ def external_sub_scope_payload_path(repo_root: Path, request_path: str) -> Path:
     return path
 
 
-def generated_docs_index_tree_path(repo_root: Path, scope: str) -> Path:
-    return generated_docs_output_root(repo_root, scope) / "index-tree.json"
+def generated_docs_index_tree_path(repo_root: Path, scope: str, stage: str | None = None) -> Path:
+    return generated_docs_output_root(repo_root, scope, stage) / "index-tree.json"
 
 
-def generated_recent_path(repo_root: Path, scope: str) -> Path:
-    return generated_docs_output_root(repo_root, scope) / "recent.json"
+def generated_recent_path(repo_root: Path, scope: str, stage: str | None = None) -> Path:
+    return generated_docs_output_root(repo_root, scope, stage) / "recent.json"
 
 
-def generated_backlinks_path(repo_root: Path, scope: str) -> Path:
-    return generated_docs_output_root(repo_root, scope) / "backlinks.json"
+def generated_backlinks_path(repo_root: Path, scope: str, stage: str | None = None) -> Path:
+    return generated_docs_output_root(repo_root, scope, stage) / "backlinks.json"
 
 
-def generated_semantic_tokens_index_path(repo_root: Path, scope: str) -> Path:
-    return generated_docs_output_root(repo_root, scope) / "semantic-tokens" / "index.json"
+def generated_semantic_tokens_index_path(repo_root: Path, scope: str, stage: str | None = None) -> Path:
+    return generated_docs_output_root(repo_root, scope, stage) / "semantic-tokens" / "index.json"
 
 
-def generated_doc_payload_path(repo_root: Path, scope: str, doc_id: str) -> Path:
+def generated_doc_payload_path(repo_root: Path, scope: str, doc_id: str, stage: str | None = None) -> Path:
     if not is_immutable_doc_id(doc_id):
         raise ValueError("doc_id must use the immutable document ID format")
-    return generated_docs_output_root(repo_root, scope) / "by-id" / f"{doc_id}.json"
+    return generated_docs_output_root(repo_root, scope, stage) / "by-id" / f"{doc_id}.json"
 
 
-def generated_search_index_path(repo_root: Path, scope: str) -> Path:
-    config = generated_scope_config(repo_root, scope)
+def generated_search_index_path(repo_root: Path, scope: str, stage: str | None = None) -> Path:
+    config = generated_scope_config(repo_root, scope, stage)
     return resolve_scope_path(repo_root, generated_search_path(config))
 
 
@@ -116,54 +118,54 @@ def read_generated_json(path: Path, label: str) -> Dict[str, Any]:
         raise RuntimeError(f"{label} is not valid JSON: {path.name}") from exc
 
 
-def generated_scope_data_available(repo_root: Path, scope: str) -> bool:
-    return generated_docs_index_tree_path(repo_root, scope).exists()
+def generated_scope_data_available(repo_root: Path, scope: str, stage: str | None = None) -> bool:
+    return generated_docs_index_tree_path(repo_root, scope, stage).exists()
 
 
-def generated_search_data_available(repo_root: Path, scope: str) -> bool:
-    return generated_search_index_path(repo_root, scope).exists()
+def generated_search_data_available(repo_root: Path, scope: str, stage: str | None = None) -> bool:
+    return generated_search_index_path(repo_root, scope, stage).exists()
 
 
-def read_generated_docs_index_tree(repo_root: Path, scope: str) -> Dict[str, Any]:
+def read_generated_docs_index_tree(repo_root: Path, scope: str, stage: str | None = None) -> Dict[str, Any]:
     return read_generated_json(
-        generated_docs_index_tree_path(repo_root, scope),
+        generated_docs_index_tree_path(repo_root, scope, stage),
         f"generated docs index tree for {scope}",
     )
 
 
-def read_generated_recent(repo_root: Path, scope: str) -> Dict[str, Any]:
+def read_generated_recent(repo_root: Path, scope: str, stage: str | None = None) -> Dict[str, Any]:
     return read_generated_json(
-        generated_recent_path(repo_root, scope),
+        generated_recent_path(repo_root, scope, stage),
         f"generated Recent docs for {scope}",
     )
 
 
-def read_generated_backlinks(repo_root: Path, scope: str) -> Dict[str, Any]:
+def read_generated_backlinks(repo_root: Path, scope: str, stage: str | None = None) -> Dict[str, Any]:
     return read_generated_json(
-        generated_backlinks_path(repo_root, scope),
+        generated_backlinks_path(repo_root, scope, stage),
         f"generated backlinks for {scope}",
     )
 
 
-def read_generated_semantic_tokens_index(repo_root: Path, scope: str) -> Dict[str, Any]:
+def read_generated_semantic_tokens_index(repo_root: Path, scope: str, stage: str | None = None) -> Dict[str, Any]:
     return read_generated_json(
-        generated_semantic_tokens_index_path(repo_root, scope),
+        generated_semantic_tokens_index_path(repo_root, scope, stage),
         f"generated semantic-token usage index for {scope}",
     )
 
 
-def read_generated_search_index(repo_root: Path, scope: str) -> Dict[str, Any]:
+def read_generated_search_index(repo_root: Path, scope: str, stage: str | None = None) -> Dict[str, Any]:
     return read_generated_json(
-        generated_search_index_path(repo_root, scope),
+        generated_search_index_path(repo_root, scope, stage),
         f"generated search index for {scope}",
     )
 
 
-def read_generated_doc_payload(repo_root: Path, scope: str, doc_id: str) -> Dict[str, Any]:
+def read_generated_doc_payload(repo_root: Path, scope: str, doc_id: str, stage: str | None = None) -> Dict[str, Any]:
     if not is_immutable_doc_id(doc_id):
         raise ValueError("doc_id must use the immutable document ID format")
 
-    index_payload = read_generated_docs_index_tree(repo_root, scope)
+    index_payload = read_generated_docs_index_tree(repo_root, scope, stage)
     docs = index_payload.get("docs")
     if not isinstance(docs, list):
         raise RuntimeError(f"generated docs index tree for {scope} is missing docs")
@@ -172,7 +174,7 @@ def read_generated_doc_payload(repo_root: Path, scope: str, doc_id: str) -> Dict
     if record is None:
         raise FileNotFoundError(f"generated doc payload for {doc_id} not found")
 
-    config = generated_scope_config(repo_root, scope)
+    config = generated_scope_config(repo_root, scope, stage)
     expected_paths = {"docs/doc"}
     if not scope_uses_external_data(config):
         expected_paths.update(
@@ -187,7 +189,7 @@ def read_generated_doc_payload(repo_root: Path, scope: str, doc_id: str) -> Dict
         raise RuntimeError(f"generated docs index tree for {scope} has an unexpected payload path for {doc_id}")
 
     return read_generated_json(
-        generated_doc_payload_path(repo_root, scope, doc_id),
+        generated_doc_payload_path(repo_root, scope, doc_id, stage),
         f"generated doc payload for {doc_id}",
     )
 

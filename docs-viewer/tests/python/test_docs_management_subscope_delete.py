@@ -423,6 +423,7 @@ def test_sub_scope_delete_rebuild_failure_restores_exact_source_and_reports_retr
         write_operation,
         *,
         suppression_reason,
+        stage=None,
     ):
         write_operation()
         calls.append(suppression_reason)
@@ -490,6 +491,7 @@ def test_sub_scope_delete_reports_unreconciled_recovery_as_not_retry_safe(
         write_operation,
         *,
         suppression_reason,
+        stage=None,
     ):
         nonlocal calls
         del suppression_reason

@@ -326,6 +326,9 @@ def configured_workflows(repo_root: Path) -> tuple[DocumentLineageWorkflow, ...]
         dict[str, list[tuple[DocumentLineageCollection, Path]]],
     ] = {}
     for config in load_docs_scope_configs(repo_root).values():
+        if config.stages:
+            # Promotion and lineage follow-through are unavailable in stage views.
+            continue
         for sub_scope in config.sub_scopes:
             collection = DocumentLineageCollection(
                 scope=config.scope_id,

@@ -34,6 +34,7 @@ def project_manifest(
     repo_root: Path,
     scope: str,
     sub_scope: str,
+    stage: str = "",
 ) -> dict[str, Any]:
     """Project document-owned subjects without adding a folder inventory."""
 
@@ -58,7 +59,7 @@ def project_manifest(
             str(getattr(document, "doc_id", "") or "").strip()
             for document in documents
         },
-    )
+    ) if not stage else {}
     for doc_id, targets in publication_targets.items():
         rows.setdefault(doc_id, {})["publication_targets"] = targets
     return {

@@ -98,6 +98,7 @@ export function startDocsViewerRuntime(options) {
   var routeViewerBaseUrl = routeContext.routeViewerBaseUrl;
   var viewerBaseUrl = routeContext.viewerBaseUrl;
   var viewerScope = routeContext.viewerScope;
+  var viewerStage = routeContext.viewerStage || "";
   var includeScopeParam = routeContext.includeScopeParam;
   var preserveQueryParams = routeContext.preserveQueryParams || [];
   var defaultRouteDocId = routeContext.defaultRouteDocId;
@@ -124,6 +125,7 @@ export function startDocsViewerRuntime(options) {
     createCollectionProvider: settings.createCollectionProvider,
     createSourceAdapter: settings.createSourceAdapter,
     viewRegistry: settings.viewRegistry,
+    viewerStage: function () { return viewerStage; },
     viewerScope: function () { return viewerScope; },
     indexPanelAvailable: sidebarCollapseAvailable,
     onBeforePanelInteraction: hideContextMenu,
@@ -365,6 +367,7 @@ export function startDocsViewerRuntime(options) {
     },
     showWarning: statusController.setStatus,
     viewRegistry: viewRegistry,
+    viewerStage: function () { return viewerStage; },
     viewerScope: function () { return viewerScope; },
     viewerTargetDocId: documentIndex.viewerTargetDocId,
     viewerUrl: viewerUrl
@@ -437,6 +440,7 @@ export function startDocsViewerRuntime(options) {
     tableDetailAdapter: settings.tableDetailAdapter,
     themedDiagramAdapter: settings.themedDiagramAdapter,
     toolbar: mainViewToolbar,
+    viewerStage: function () { return viewerStage; },
     viewerScope: function () { return viewerScope; },
     viewerUrlForScope: viewerUrlForScope
   });
@@ -497,6 +501,7 @@ export function startDocsViewerRuntime(options) {
     updateInfoPanel: documentViewCoordinator.updateInfoPanel,
     viewerBaseUrl: function () { return viewerBaseUrl; },
     viewerPathname: function () { return viewerPathname; },
+    viewerStage: function () { return viewerStage; },
     viewerScope: function () { return viewerScope; },
     window: window
   });
@@ -569,6 +574,7 @@ export function startDocsViewerRuntime(options) {
     searchRecent: appSession.domains.searchRecent,
     uiStatusEmojiMaxLength: UI_STATUS_EMOJI_MAX_LENGTH,
     viewerBaseUrl: function () { return viewerBaseUrl; },
+    viewerStage: function () { return viewerStage; },
     viewerScope: function () { return viewerScope; }
   });
 
@@ -649,6 +655,7 @@ export function startDocsViewerRuntime(options) {
       requestMainView: documentViewCoordinator.requestMainView,
       requestDocumentMode: documentViewCoordinator.requestDocumentMode,
       markdownDocLink: markdownDocLink,
+      viewerStage: function () { return viewerStage; },
       viewerScope: function () { return viewerScope; }
     },
     logger: window.console || console,
@@ -674,6 +681,7 @@ export function startDocsViewerRuntime(options) {
     routeContext = updateDocsViewerRouteContext(routeContext, values, { window: window });
     appSession.domains.routeSession.updateRouteContext(routeContext);
     viewerScope = routeContext.viewerScope;
+    viewerStage = routeContext.viewerStage || "";
     defaultRouteDocId = routeContext.defaultRouteDocId;
     viewerBaseUrl = routeContext.viewerBaseUrl;
     includeScopeParam = routeContext.includeScopeParam;

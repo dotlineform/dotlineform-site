@@ -85,7 +85,7 @@ from docs_management_read_service import (  # noqa: E402
     docs_management_get_payload as read_docs_management_get_payload,
 )
 from docs_management_source_service import detect_preferred_markdown_app, open_source_doc, rebuild_source_body  # noqa: E402
-from docs_scope_config import load_docs_scope_configs  # noqa: E402
+from docs_scope_config import load_docs_scope_configs, select_scope_stage, require_document_authoring  # noqa: E402
 
 
 def refresh_source_model_scope_configs(repo_root: Path) -> None:
@@ -94,7 +94,7 @@ def refresh_source_model_scope_configs(repo_root: Path) -> None:
     source_model.DOCS_SCOPE_CONFIGS.update(configs)
     source_model.DOCUMENT_SOURCE_ROOTS.clear()
     source_model.DOCUMENT_SOURCE_ROOTS.update(
-        {scope: source_model.document_source_path(config) for scope, config in configs.items()}
+        {scope: source_model.document_source_path(config) for scope, config in configs.items() if not config.stages}
     )
 
 
@@ -119,6 +119,18 @@ def docs_management_post_response(
     *,
     dry_run: bool = False,
 ) -> tuple[HTTPStatus, dict[str, object]]:
+    configs = load_docs_scope_configs(repo_root)
+    for field in ("scope", "target_scope", "scope_id", "parent_scope"):
+        config = configs.get(str(body.get(field) or "").strip().lower())
+        if config is None or not config.stages:
+            continue
+        allowed = {
+            routes.CREATE_PATH, routes.UPDATE_METADATA_PATH, routes.SOURCE_REBUILD_PATH,
+            routes.OPEN_SOURCE_PATH, routes.DELETE_PREVIEW_PATH, routes.DELETE_APPLY_PATH,
+        }
+        if field != "scope" or path not in allowed:
+            raise ValueError("This action is unavailable in the publishing stage views")
+        require_document_authoring(select_scope_stage(config, body.get("stage")))
     refresh_source_model_scope_configs(repo_root)
     if path == routes.SOURCE_REBUILD_PATH:
         return HTTPStatus.OK, rebuild_source_body(repo_root, body, dry_run)
@@ -325,7 +337,7 @@ def docs_management_post_response(
             )
         scope = source_model.normalize_scope(body.get("scope"))
         doc_ids = mutations.require_delete_doc_ids(body.get("doc_ids"))
-        return HTTPStatus.OK, mutations.plan_delete_preview(repo_root, scope, doc_ids)
+        return HTTPStatus.OK, mutations.plan_delete_preview(repo_root, scope, doc_ids, body.get("stage"))
     if path == routes.DELETE_APPLY_PATH:
         try:
             return HTTPStatus.OK, handle_delete_apply(repo_root, body, dry_run)

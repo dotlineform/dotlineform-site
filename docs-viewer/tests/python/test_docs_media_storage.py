@@ -361,7 +361,7 @@ def test_local_media_route_confines_repo_and_external_scope_assets(tmp_path: Pat
     repo_file = tmp_path / "docs-viewer/scopes/studio/generated/media/img/diagram.png"
     repo_file.parent.mkdir(parents=True)
     repo_file.write_bytes(b"diagram")
-    monkeypatch.setattr("docs_media_storage.load_docs_scope_configs", lambda _repo_root: {"studio": repo_config})
+    monkeypatch.setattr("docs_media_storage.load_docs_scope_stage", lambda _repo_root, _scope, _stage: repo_config)
 
     resolved, media_class = local_media_path_from_route(tmp_path, "/docs/media/studio/img/diagram.png")
     assert resolved == repo_file.resolve()
@@ -397,7 +397,7 @@ def test_local_media_route_confines_repo_and_external_scope_assets(tmp_path: Pat
     external_file = external_root / "scopes/private/generated/media/files/notes.pdf"
     external_file.parent.mkdir(parents=True)
     external_file.write_bytes(b"pdf")
-    monkeypatch.setattr("docs_media_storage.load_docs_scope_configs", lambda _repo_root: {"private": external_config})
+    monkeypatch.setattr("docs_media_storage.load_docs_scope_stage", lambda _repo_root, _scope, _stage: external_config)
 
     resolved, media_class = local_media_path_from_route(tmp_path, "/docs/media/private/files/notes.pdf")
     assert resolved == external_file.resolve()

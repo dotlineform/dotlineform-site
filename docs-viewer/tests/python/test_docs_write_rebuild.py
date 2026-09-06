@@ -157,6 +157,10 @@ def test_rebuild_sub_scope_outputs_runs_only_confined_docs_builder() -> None:
     write_rebuild.subprocess.run = fake_run
     try:
         with tempfile.TemporaryDirectory() as temp_path:
+            write_scope_config(
+                Path(temp_path) / "docs-viewer/config/scopes/docs_scopes.json",
+                [docs_scope_record("studio", sub_scopes=[docs_sub_scope_record("studio", "tags")])],
+            )
             result = write_rebuild.rebuild_sub_scope_outputs(
                 Path(temp_path),
                 "studio",
@@ -580,7 +584,7 @@ def test_perform_sub_scope_source_write_marks_owned_suppression() -> None:
         )
     )
     write_rebuild.rebuild_sub_scope_outputs = (
-        lambda _repo_root, scope, sub_scope: {
+        lambda _repo_root, scope, sub_scope, stage=None: {
             "ok": True,
             "scope": scope,
             "sub_scope": sub_scope,
@@ -650,7 +654,7 @@ def test_sub_scope_docs_failure_restores_source_and_rebuilds_docs() -> None:
         source_path.parent.mkdir(parents=True)
         source_path.write_bytes(b"before")
 
-        def fake_child_rebuild(_repo_root, _scope, _sub_scope):
+        def fake_child_rebuild(_repo_root, _scope, _sub_scope, stage=None):
             nonlocal child_rebuilds
             child_rebuilds += 1
             if child_rebuilds == 1:

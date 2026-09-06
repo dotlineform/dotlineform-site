@@ -81,6 +81,14 @@ export function createDocsViewerManagementActionResolver(options = {}) {
       selectedDocument: selectedDocument
     };
     if (arguments.length > 1) contextOptions.invocationDocId = targetDocId;
+    var stage = options.viewerStage ? options.viewerStage() : "";
+    var stageActions = ["bookmark", "copy-link", "info", "open"];
+    if (stage === "working") stageActions.push("delete", "edit-metadata", "markdown-save", "markdown-source", "new", "new-child", "new-sibling", "open-vscode");
+    if (stage && !stageActions.includes(actionId)) {
+      return Object.assign({}, resolveDocsViewerAction(actionId, createDocsViewerManagementActionContext(contextOptions)), {
+        enabled: false, hidden: true, disabledReason: "This action is unavailable in the selected stage."
+      });
+    }
     return resolveDocsViewerAction(
       actionId,
       createDocsViewerManagementActionContext(contextOptions)
@@ -244,14 +252,20 @@ export function initDocsViewerManagement(context) {
       toggleIndexActionsMenu: function () {
         if (eventRouter) eventRouter.toggleIndexActionsMenu();
       },
+      viewerStage: viewerStage,
       viewerScope: viewerScope
     }
   });
   var indexSelection = indexController.indexSelection;
   resolveAction = createDocsViewerManagementActionResolver({
+    viewerStage: viewerStage,
     indexSelection: indexSelection,
     selectedDocument: selectedDocument
   });
+
+  function viewerStage() {
+    return context.viewerStage ? context.viewerStage() : "";
+  }
 
   function viewerScope() {
     return context.viewerScope();
@@ -264,7 +278,8 @@ export function initDocsViewerManagement(context) {
       );
     }
     return normalizeManagedDocumentCollectionTarget({
-      scope: viewerScope()
+      scope: viewerScope(),
+      ...(viewerStage() ? { stage: viewerStage() } : {})
     });
   }
 
@@ -327,6 +342,7 @@ export function initDocsViewerManagement(context) {
     return {
       baseUrl: serviceClient.managementBaseUrl || context.managementBaseUrl,
       scope: viewerScope(),
+      ...(viewerStage() ? { stage: viewerStage() } : {}),
       fetch: function (url, options) {
         return window.fetch(url, options);
       }
@@ -346,6 +362,7 @@ export function initDocsViewerManagement(context) {
     if (!doc || !doc.doc_id) return null;
     return normalizeManagedDocumentTarget({
       scope: viewerScope(),
+      ...(viewerStage() ? { stage: viewerStage() } : {}),
       doc_id: doc.doc_id
     });
   }
@@ -368,6 +385,7 @@ export function initDocsViewerManagement(context) {
         if (
           !collectionTarget.sub_scope
           || collectionTarget.scope !== parentTarget.scope
+          || String(collectionTarget.stage || "") !== String(parentTarget.stage || "")
         ) {
           throw new Error(
             "Validated sub-scope report collection does not match its parent."
@@ -378,6 +396,7 @@ export function initDocsViewerManagement(context) {
           if (
             !subdocTarget.sub_scope
             || subdocTarget.scope !== parentTarget.scope
+            || String(subdocTarget.stage || "") !== String(parentTarget.stage || "")
             || subdocTarget.sub_scope !== collectionTarget.sub_scope
           ) {
             throw new Error("Validated sub-scope report target does not match its parent report.");
@@ -713,7 +732,7 @@ export function initDocsViewerManagement(context) {
     var themeIsDark = document.documentElement && document.documentElement.getAttribute("data-theme") === "dark";
 
     projectAppControl("manage-import", {
-      hidden: managementActionsHidden,
+      hidden: managementActionsHidden || Boolean(viewerStage()),
       disabled: management.managementBusy || !management.managementAvailable
     });
     projectAppControl("manage-actions", {
@@ -721,7 +740,7 @@ export function initDocsViewerManagement(context) {
       disabled: management.managementBusy || !management.managementAvailable
     });
     projectAppControl("manage-rebuild", {
-      hidden: managementActionsHidden,
+      hidden: managementActionsHidden || Boolean(viewerStage()),
       disabled: management.managementBusy || !management.managementAvailable
     });
     projectAppControl("manage-publish", {
@@ -764,8 +783,13 @@ export function initDocsViewerManagement(context) {
     if (manageSettingsButton) {
       manageSettingsButton.disabled = management.managementBusy || !management.managementAvailable;
     }
-    manageNewButton.disabled = management.managementBusy || !management.managementAvailable;
-    projectDocumentActionButtons(!management.managementChecked || !management.managementAvailable, !management.managementAvailable || editDisabled);
+    var authoringAvailable = management.managementAvailable && viewerStage() !== "pre-publish";
+    manageNewButton.hidden = !authoringAvailable;
+    manageNewButton.disabled = management.managementBusy || !authoringAvailable;
+    manageRebuildButton.hidden = Boolean(viewerStage());
+    manageImportButtons.forEach(function (button) { button.hidden = Boolean(viewerStage()); });
+    if (manageSettingsButton) manageSettingsButton.hidden = Boolean(viewerStage());
+    projectDocumentActionButtons(!management.managementChecked || !authoringAvailable, !authoringAvailable || editDisabled);
     if (metadataWorkflow) metadataWorkflow.render();
     if (settingsWorkflow) settingsWorkflow.render();
   }
@@ -864,6 +888,7 @@ export function initDocsViewerManagement(context) {
       managementClientOptions: managementClientOptions,
       renderManagementUi: renderManagementUi,
       renderSidebar: context.renderSidebar,
+      viewerStage: viewerStage,
       viewerScope: viewerScope
     }
   });
@@ -969,6 +994,7 @@ export function initDocsViewerManagement(context) {
       renderManagementUi: renderManagementUi,
       setManagementBusy: setManagementBusy,
       setManagementMessage: setManagementMessage,
+      viewerStage: viewerStage,
       viewerScope: viewerScope
     }
   });
@@ -1017,6 +1043,7 @@ export function initDocsViewerManagement(context) {
       hideContextMenu: hideContextMenu,
       hideManageActionsMenu: eventRouter.hideManageActionsMenu,
       onImportComplete: displayImportedDocument,
+      viewerStage: viewerStage,
       viewerScope: viewerScope
     }
   });
@@ -1041,6 +1068,7 @@ export function initDocsViewerManagement(context) {
       render: renderManagementUi,
       setBusy: setManagementBusy,
       setMessage: setManagementMessage,
+      viewerStage: viewerStage,
       viewerScope: viewerScope
     }
   });
@@ -1075,6 +1103,7 @@ export function initDocsViewerManagement(context) {
       onMetadataSave: actionController.handleEditMetadataSave,
       onSettingsSubmit: actionController.handleSettingsSubmit,
       managementClientOptions: managementClientOptions,
+      viewerStage: viewerStage,
       viewerScope: viewerScope
     }
   });

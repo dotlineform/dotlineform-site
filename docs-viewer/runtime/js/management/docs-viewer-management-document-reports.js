@@ -53,6 +53,7 @@ function reportSubScope(payload) {
 function parentTarget(settings) {
   return normalizeManagedDocumentTarget({
     scope: currentViewerScope(settings),
+    ...(settings.routeContext && settings.routeContext.viewerStage ? { stage: settings.routeContext.viewerStage } : {}),
     doc_id: cleanString(settings && settings.doc && settings.doc.doc_id)
   });
 }
@@ -80,6 +81,7 @@ function publishReportState(settings, parent, subScope, state) {
   var detail = state && typeof state === "object" ? state : {};
   var collectionTarget = normalizeManagedDocumentCollectionTarget({
     scope: parent.scope,
+    ...(parent.stage ? { stage: parent.stage } : {}),
     sub_scope: subScope
   });
   var subdocTarget = detail.target
@@ -89,6 +91,7 @@ function publishReportState(settings, parent, subScope, state) {
     subdocTarget
     && (
       subdocTarget.scope !== parent.scope
+      || cleanString(subdocTarget.stage) !== cleanString(parent.stage)
       || subdocTarget.sub_scope !== subScope
     )
   ) {
@@ -127,7 +130,8 @@ function publishReportState(settings, parent, subScope, state) {
 function managementClientOptions(settings) {
   var managementService = settings.managementService || null;
   return {
-    baseUrl: cleanString(managementService && managementService.baseUrl)
+    baseUrl: cleanString(managementService && managementService.baseUrl),
+    stage: cleanString(settings.routeContext && settings.routeContext.viewerStage)
   };
 }
 
@@ -209,6 +213,7 @@ function markdownLinkForSubscopeDocument(settings, parent, subScope, target, doc
   var normalized = normalizeManagedDocumentTarget(target);
   if (
     normalized.scope !== parent.scope
+    || cleanString(normalized.stage) !== cleanString(parent.stage)
     || normalized.sub_scope !== subScope
     || typeof settings.viewerUrlForScope !== "function"
   ) {
@@ -228,7 +233,8 @@ function loadSubscopeContribution(settings, parent, subScope, options) {
   var contributionOptions = options || {};
   var clientOptions = managementClientOptions(settings);
   var mutationAvailable = Boolean(
-    settings.managementContext
+    !parent.stage
+    && settings.managementContext
     && cleanString(clientOptions.baseUrl)
   );
   var subScopeConfig = configuredSubScope(settings, parent.scope, subScope);
@@ -269,6 +275,11 @@ function loadSubscopeContribution(settings, parent, subScope, options) {
       setStatus: settings.setStatus,
       uiStatusByValue: contributionOptions.uiStatusByValue
     });
+    if (parent.stage) {
+      return modules[1].composeDocsViewerManagementSubscopeContributions({
+        defaultContribution: defaultContribution
+      });
+    }
     return modules[2].resolveManagementDocsSubscopeCustomisation(
       subScopeConfig.subScopeCustomisation,
       {
@@ -278,7 +289,7 @@ function loadSubscopeContribution(settings, parent, subScope, options) {
             }
           : null,
         clientOptions: clientOptions,
-        collection: { scope: parent.scope, sub_scope: subScope },
+        collection: { scope: parent.scope, ...(parent.stage ? { stage: parent.stage } : {}), sub_scope: subScope },
         openLocalTarget: openLocalTarget,
         publicPreviewBase: cleanString(settings.routeContext && settings.routeContext.publicPreviewBase),
         studioBaseUrl: cleanString(settings.routeContext && settings.routeContext.studioBaseUrl),
@@ -301,13 +312,14 @@ function loadSubscopeContribution(settings, parent, subScope, options) {
 
 function openSubscopeCreate(settings, parent, subScope, request, context) {
   var collection = request && typeof request === "object" ? request : {};
-  var keys = Object.keys(collection).sort();
+  var keys = Object.keys(collection).filter(function (key) { return key !== "stage"; }).sort();
   if (
     keys.length !== 2
     || keys[0] !== "scope"
     || keys[1] !== "sub_scope"
     || cleanString(collection.scope).toLowerCase() !== parent.scope
     || cleanString(collection.sub_scope).toLowerCase() !== subScope
+    || cleanString(collection.stage) !== cleanString(parent.stage)
   ) {
     return Promise.reject(new Error(
       "Sub-scope create collection did not match the mounted report."
@@ -501,6 +513,7 @@ export function mountDocsViewerManageDocumentExtras(context) {
       setStatus: settings.setStatus,
       scopeConfigs: scopeConfigs(settings).slice(),
       viewerScope: currentViewerScope(settings),
+      viewerStage: cleanString(settings.routeContext && settings.routeContext.viewerStage),
       viewerUrlForScope: settings.viewerUrlForScope
     });
   }
@@ -518,6 +531,7 @@ export function mountDocsViewerManageDocumentExtras(context) {
     nonPublishableEmoji: cleanString(scopeConfig.docNonPublishableEmoji),
     onCreateDocument: (
       settings.managementContext
+      && parent.stage !== "pre-publish"
       && reportManagementBaseUrl
       && createAction
     )
@@ -526,7 +540,8 @@ export function mountDocsViewerManageDocumentExtras(context) {
         }
       : null,
     onCopyDocuments: (
-      settings.managementContext
+      !parent.stage
+      && settings.managementContext
       && reportManagementBaseUrl
       && copyAction
     )
@@ -539,13 +554,14 @@ export function mountDocsViewerManageDocumentExtras(context) {
         publishReportState(settings, parent, subScope, event);
       }
     },
-    onPreparePackage: reportManagementBaseUrl
+    onPreparePackage: !parent.stage && reportManagementBaseUrl
       ? function (request, context) {
           return openSubScopePreparePackage(settings, request, context);
         }
       : null,
     onSetPublishable: (
-      settings.managementContext
+      !parent.stage
+      && settings.managementContext
       && reportManagementBaseUrl
       && publishableAction
       && subScopeSupportsPublishable(settings, parent.scope, subScope)
@@ -595,6 +611,7 @@ export function mountDocsViewerManageDocumentExtras(context) {
     scopeConfigs: scopeConfigs(settings).slice(),
     subscopeReportContributionPromise: contribution,
     viewerScope: currentViewerScope(settings),
+    viewerStage: cleanString(settings.routeContext && settings.routeContext.viewerStage),
     viewerUrlForScope: settings.viewerUrlForScope
   });
 }

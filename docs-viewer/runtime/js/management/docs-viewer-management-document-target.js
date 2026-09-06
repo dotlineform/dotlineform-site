@@ -16,7 +16,7 @@ export function normalizeManagedDocumentTarget(value) {
   if (!value || typeof value !== "object" || Array.isArray(value)) {
     throw new Error("Managed document target must be an object.");
   }
-  var keys = targetKeys(value);
+  var keys = targetKeys(value).filter(function (key) { return key !== "stage"; });
   var parentKeys = ["doc_id", "scope"];
   var subScopeKeys = ["doc_id", "scope", "sub_scope"];
   if (!sameKeys(keys, parentKeys) && !sameKeys(keys, subScopeKeys)) {
@@ -40,6 +40,10 @@ export function normalizeManagedDocumentTarget(value) {
     if (!subScope) throw new Error("Managed document target sub_scope is required.");
     target.sub_scope = subScope;
   }
+  if (Object.prototype.hasOwnProperty.call(value, "stage")) {
+    if (value.stage !== "working" && value.stage !== "pre-publish") throw new Error("Managed target stage is invalid.");
+    target.stage = value.stage;
+  }
   return Object.freeze(target);
 }
 
@@ -47,7 +51,7 @@ export function normalizeManagedDocumentCollectionTarget(value) {
   if (!value || typeof value !== "object" || Array.isArray(value)) {
     throw new Error("Managed document collection target must be an object.");
   }
-  var keys = targetKeys(value);
+  var keys = targetKeys(value).filter(function (key) { return key !== "stage"; });
   var parentKeys = ["scope"];
   var subScopeKeys = ["scope", "sub_scope"];
   if (!sameKeys(keys, parentKeys) && !sameKeys(keys, subScopeKeys)) {
@@ -68,6 +72,10 @@ export function normalizeManagedDocumentCollectionTarget(value) {
     }
     target.sub_scope = subScope;
   }
+  if (Object.prototype.hasOwnProperty.call(value, "stage")) {
+    if (value.stage !== "working" && value.stage !== "pre-publish") throw new Error("Managed target stage is invalid.");
+    target.stage = value.stage;
+  }
   return Object.freeze(target);
 }
 
@@ -76,6 +84,7 @@ export function managedDocumentTargetsEqual(left, right) {
   var normalizedRight = normalizeManagedDocumentTarget(right);
   return (
     normalizedLeft.scope === normalizedRight.scope
+    && cleanString(normalizedLeft.stage) === cleanString(normalizedRight.stage)
     && normalizedLeft.doc_id === normalizedRight.doc_id
     && cleanString(normalizedLeft.sub_scope) === cleanString(normalizedRight.sub_scope)
   );

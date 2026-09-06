@@ -69,10 +69,12 @@ def source_media_references(
     for match in MEDIA_REFERENCE_PATTERN.finditer(source):
         logical_path = match.group("path").lstrip("/")
         parts = Path(logical_path).parts
-        if len(parts) < 4 or parts[:2] != ("docs", config.scope_id):
+        if len(parts) < 4:
             continue
         media_type = parts[2]
         if media_type not in config.media.types:
+            continue
+        if Path(*parts[:3]) != config.media.types[media_type].reference_prefix:
             continue
         found.add((media_type, Path(*parts[3:]).as_posix(), logical_path))
     for media_type, media in config.media.types.items():

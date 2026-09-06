@@ -44,8 +44,12 @@ def suppressions_dir(repo_root: Path) -> Path:
     return repo_root / SUPPRESSIONS_REL_DIR
 
 
-def watch_suppression_owner(scope: str, sub_scope: str = "") -> str:
+def watch_suppression_owner(scope: str, sub_scope: str = "", *, stage: str | None = None) -> str:
     normalized_scope = str(scope or "").strip()
+    if stage is not None:
+        if stage not in {"working", "pre-publish"}:
+            raise ValueError("unknown Docs workflow stage")
+        normalized_scope = f"{normalized_scope}/{stage}"
     normalized_sub_scope = str(sub_scope or "").strip()
     return (
         f"{normalized_scope}{SUB_SCOPE_OWNER_SEPARATOR}{normalized_sub_scope}"

@@ -42,7 +42,7 @@ function activeManagedDocument(value, appContext) {
   var context = objectRecord(value);
   var target = objectRecord(context && context.subdocTarget);
   var record = objectRecord(context && context.subdocRecord);
-  var targetKeys = Object.keys(target || {}).sort();
+  var targetKeys = Object.keys(target || {}).filter(function (key) { return key !== "stage"; }).sort();
   var scope = cleanString(target && target.scope).toLowerCase();
   var subScope = cleanString(target && target.sub_scope).toLowerCase();
   var docId = cleanString(target && target.doc_id);
@@ -60,7 +60,7 @@ function activeManagedDocument(value, appContext) {
   return Object.freeze({
     info: normalizeMetadataInfo(context.subdocInfo),
     record: Object.freeze(Object.assign({}, record, { doc_id: docId })),
-    target: Object.freeze({ scope: scope, sub_scope: subScope, doc_id: docId })
+    target: Object.freeze({ scope: scope, ...(target.stage ? { stage: target.stage } : {}), sub_scope: subScope, doc_id: docId })
   });
 }
 

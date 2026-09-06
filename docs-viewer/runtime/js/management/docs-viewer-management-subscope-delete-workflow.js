@@ -19,6 +19,7 @@ function cleanString(value) {
 function sameTarget(left, right) {
   return (
     left.scope === right.scope
+    && String(left.stage || "") === String(right.stage || "")
     && left.sub_scope === right.sub_scope
     && left.doc_id === right.doc_id
   );
@@ -29,6 +30,7 @@ function responseTarget(payload) {
     ? payload.target
     : {
         scope: payload && payload.scope,
+        ...(payload && payload.stage ? { stage: payload.stage } : {}),
         sub_scope: payload && payload.sub_scope,
         doc_id: payload && payload.doc_id
       };

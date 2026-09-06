@@ -23,7 +23,7 @@ def utc_now() -> str:
 
 
 def _safe_root(repo_root: Path, config: DocsScopeConfig, *, role: str) -> Path:
-    location = config.scope_root
+    location = config.stage_root if role in {"source", "generated"} else config.scope_root
     scope_root = resolve_location_path(repo_root, location)
     root = scope_root / role
     if scope_root.is_symlink() or root.is_symlink():
@@ -97,6 +97,7 @@ def write_build_manifest(repo_root: Path, config: DocsScopeConfig) -> dict[str, 
     payload: dict[str, Any] = {
         "schema_version": BUILD_MANIFEST_SCHEMA_VERSION,
         "scope": config.scope_id,
+        **({"stage": config.stage} if config.stage else {}),
         "completed_at": utc_now(),
         "source_revision": tree_revision(source_root, source_files),
         "generated_revision": tree_revision(generated_root, generated_files),

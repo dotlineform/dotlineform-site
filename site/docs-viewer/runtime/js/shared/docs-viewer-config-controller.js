@@ -206,6 +206,15 @@ export function initDocsViewerConfigController(context) {
 
   function normalizeBrowserScopeConfig(rawScope) {
     if (!rawScope || typeof rawScope !== "object") return null;
+    var stages = Array.isArray(rawScope.stages) ? rawScope.stages : [];
+    if (stages.length) {
+      var params = new URLSearchParams(window.location.search);
+      var requestedStage = params.get("scope") === rawScope.scope_id ? params.get("stage") : "";
+      var stageId = requestedStage || "working";
+      var selectedStage = stages.find(function (stage) { return stage.stage === stageId; });
+      if (!selectedStage) throw new Error("Unknown Docs stage: " + stageId);
+      rawScope = Object.assign({}, rawScope, selectedStage);
+    }
     var scopeId = String(rawScope.scope_id || "").trim().toLowerCase();
     if (!scopeId) return null;
     var rawViewerBaseUrl = String(rawScope.viewer_base_url || "").trim() || "/docs/";
@@ -218,6 +227,8 @@ export function initDocsViewerConfigController(context) {
       : [];
     var config = {
       scopeId: scopeId,
+      stage: String(rawScope.stage || ""),
+      stages: stages.map(function (stage) { return stage.stage; }),
       scopeType: String(rawScope.scope_type || "").trim().toLowerCase(),
       meta: String(rawScope.meta || "").trim(),
       emoji: String(rawScope.emoji || "").trim(),
@@ -369,6 +380,39 @@ export function initDocsViewerConfigController(context) {
       context.applyRouteGlobals(routeProjection);
     }
     root.dataset.viewerScope = scope;
+    root.dataset.viewerStage = config.stage;
+    var stageControls = root.querySelector("[data-docs-viewer-stages]");
+    if (!stageControls && config.stages.length && scopeSelect) {
+      stageControls = document.createElement("div");
+      stageControls.className = "docsViewer__stageButtons";
+      stageControls.dataset.docsViewerStages = "true";
+      stageControls.setAttribute("role", "group");
+      stageControls.setAttribute("aria-label", "Analysis stage");
+      scopeSelect.closest(".docsViewer__scopeField").after(stageControls);
+    }
+    if (stageControls) {
+      stageControls.replaceChildren();
+      stageControls.hidden = !config.stages.length;
+      config.stages.forEach(function (stage) {
+        var button = document.createElement("button");
+        button.type = "button";
+        button.textContent = stage === "working" ? "Working" : "Pre-publish";
+        button.setAttribute("aria-pressed", String(config.stage === stage));
+        button.addEventListener("click", function () {
+          if (stage === config.stage) return;
+          var url = new URL(context.routeViewerBaseUrl || "/docs/", window.location.origin);
+          url.searchParams.set("scope", scope);
+          url.searchParams.set("stage", stage);
+          window.location.assign(url.pathname + url.search);
+        });
+        stageControls.append(button);
+      });
+    }
+    if (config.stage && !new URLSearchParams(window.location.search).has("stage")) {
+      var stageUrl = new URL(window.location.href);
+      stageUrl.searchParams.set("stage", config.stage);
+      window.history.replaceState(window.history.state, "", stageUrl.pathname + stageUrl.search + stageUrl.hash);
+    }
     root.dataset.indexTreeUrl = config.indexTreeUrl;
     root.dataset.recentUrl = config.recentUrl;
     root.dataset.searchIndexUrl = config.searchIndexUrl;
@@ -441,6 +485,7 @@ export function initDocsViewerConfigController(context) {
 
     var url = new URL(context.routeViewerBaseUrl || context.viewerBaseUrl(), window.location.origin);
     url.searchParams.set("scope", nextScope);
+    if (config.stage) url.searchParams.set("stage", config.stage);
     if (config.defaultDocId) {
       url.searchParams.set("doc", config.defaultDocId);
     }

@@ -131,6 +131,8 @@ def extract_title(markdown: str) -> str:
 class SourceLoadingMixin:
     def load_docs(self) -> list[DocRecord]:
         paths = sorted(self.source_dir.glob("**/*.md"))
+        if self.config.stage and not getattr(self, "sub_scope_config", None):
+            paths = [path for path in paths if not path.is_relative_to(self.source_dir / "sub-scopes")]
         self.source_files_scanned = len(paths)
         nested_paths = [path for path in paths if path.parent != self.source_dir]
         if nested_paths:
@@ -263,13 +265,15 @@ class SourceLoadingMixin:
         pairs: list[str] = []
         if self.include_scope_param and self.scope_id:
             pairs.append(f"scope={quote(self.scope_id)}")
+        if self.config.stage:
+            pairs.append(f"stage={quote(self.config.stage)}")
         pairs.append(f"doc={quote(str(doc_id))}")
         url = f"{self.viewer_base_url}?{'&'.join(pairs)}"
         return f"{url}#{anchor}" if anchor else url
 
     def content_url_for(self, doc_id: str) -> str:
         if scope_uses_external_data(self.config):
-            return f"/docs/doc?scope={quote(self.scope_id)}&doc_id={quote(str(doc_id))}"
+            return f"/docs/doc?scope={quote(self.scope_id)}&doc_id={quote(str(doc_id))}" + (f"&stage={quote(self.config.stage)}" if self.config.stage else "")
         return f"{self.output_url_base}/by-id/{quote(str(doc_id))}.json"
 
     def output_url_dir(self) -> Path:
@@ -279,7 +283,7 @@ class SourceLoadingMixin:
 
     def output_url_base_for(self, output_dir: Path) -> str:
         if scope_uses_external_data(self.config):
-            return f"/docs/generated/external/{quote(self.scope_id)}"
+            return f"/docs/generated/external/{quote(self.scope_id)}" + (f"/{quote(self.config.stage)}" if self.config.stage else "")
         try:
             relative = output_dir.resolve().relative_to(self.repo_root)
         except ValueError as exc:

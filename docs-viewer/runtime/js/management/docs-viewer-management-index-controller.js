@@ -267,6 +267,7 @@ export function createDocsViewerManagementIndexController(options = {}) {
       disabledReason = resolution ? resolution.disabledReason : "Select one or more documents.";
     }
     return {
+      hidden: Boolean(resolution && resolution.hidden),
       disabled: Boolean(disabledReason),
       disabledReason: disabledReason
     };

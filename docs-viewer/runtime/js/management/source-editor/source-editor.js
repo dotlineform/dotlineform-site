@@ -253,6 +253,7 @@ function loadSource(context, state) {
     .then(function (payload) {
       var responseTarget = {
         scope: cleanString(payload && payload.scope),
+        ...(payload && payload.stage ? { stage: payload.stage } : {}),
         doc_id: cleanString(payload && payload.doc_id)
       };
       if (payload && Object.prototype.hasOwnProperty.call(payload, "sub_scope")) {

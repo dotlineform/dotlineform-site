@@ -187,6 +187,13 @@ class DocsScopeConfig:
     allow_unresolved_parent_ids: bool
     sub_scopes: tuple["DocsSubScopeConfig", ...]
     search_fields: tuple[str, ...] = DEFAULT_DOCS_SEARCH_FIELDS
+    stage: str = ""
+    stages: tuple["DocsScopeConfig", ...] = ()
+
+    @property
+    def stage_root(self) -> ArtifactLocation:
+        """Source/generated owner; the accepted snapshot remains scope-owned."""
+        return location_child(self.scope_root, Path(self.stage)) if self.stage else self.scope_root
 
 
 @dataclass(frozen=True)
@@ -678,19 +685,56 @@ def location_child_path(location: ArtifactLocation, relative: Path) -> Path:
 
 
 def source_container_path(config: DocsScopeConfig | DocsSubScopeConfig) -> Path:
+    require_selected_stage(config)
     return config.source.location.path
 
 
 def document_source_path(config: DocsScopeConfig | DocsSubScopeConfig) -> Path:
+    require_selected_stage(config)
     return location_child_path(config.source.location, config.source.documents_path)
 
 
 def generated_documents_path(config: DocsScopeConfig | DocsSubScopeConfig) -> Path:
+    require_selected_stage(config)
     return config.generated.documents.location.path
 
 
 def generated_search_path(config: DocsScopeConfig | DocsSubScopeConfig) -> Path:
+    require_selected_stage(config)
     return config.generated.search.location.path
+
+
+def require_selected_stage(config: DocsScopeConfig | DocsSubScopeConfig) -> None:
+    """Unselected workflow scopes have no source or generated read/write target."""
+    if isinstance(config, DocsScopeConfig) and config.stages:
+        raise ValueError(f"stage is required for scope {config.scope_id!r}")
+
+
+def select_scope_stage(config: DocsScopeConfig, stage: str | None = None) -> DocsScopeConfig:
+    """Resolve an explicit stage without choosing another stage or retired root."""
+    if not config.stages:
+        if stage is not None and (not config.stage or stage != config.stage):
+            raise ValueError(f"stage is not configured for scope {config.scope_id!r}")
+        return config
+    for candidate in config.stages:
+        if candidate.stage == stage:
+            return candidate
+    raise ValueError(f"scope {config.scope_id!r} requires stage working or pre-publish")
+
+
+def require_document_authoring(config: DocsScopeConfig) -> None:
+    """Enforce the authoring boundary independently of browser capabilities."""
+    require_selected_stage(config)
+    if config.stage == "pre-publish":
+        raise ValueError("Pre-publish document authoring is unavailable")
+
+
+def load_docs_scope_stage(repo_root: Path, scope: str, stage: str | None = None) -> DocsScopeConfig:
+    """Load one exact configured source/generated owner; stages are never inferred."""
+    configs = load_docs_scope_configs(repo_root, scope_ids=(scope,))
+    if scope not in configs:
+        raise ValueError(f"unknown Docs Viewer scope: {scope!r}")
+    return select_scope_stage(configs[scope], stage)
 
 
 def published_documents_path(config: DocsScopeConfig | DocsSubScopeConfig) -> Path:
@@ -723,6 +767,7 @@ def scope_media_reference_root(config: DocsScopeConfig) -> Path:
 
 
 def managed_media_config(config: DocsScopeConfig, media_type: str) -> DocsManagedMediaConfig:
+    require_selected_stage(config)
     normalized = str(media_type or "").strip().lower()
     try:
         return config.media.types[normalized]
@@ -970,7 +1015,10 @@ def normalize_sub_scope_configs(
                 f"{', '.join(unknown_fields)}"
             )
         source = DocsSourceConfig(
-            location=location_child(parent.source.location, SOURCE_SUB_SCOPES_PATH / sub_scope),
+            location=location_child(
+                parent.source.location,
+                parent.source.sub_scopes_path / sub_scope,
+            ),
             documents_path=SOURCE_DOCUMENTS_PATH,
             sub_scopes_path=SOURCE_SUB_SCOPES_PATH,
         )
@@ -991,13 +1039,13 @@ def normalize_sub_scope_configs(
         generated = DocsGeneratedConfig(
             documents=DocsPublishedArtifactConfig(
                 location=location_child(
-                    parent.scope_root,
+                    parent.stage_root,
                     GENERATED_DOCUMENTS_PATH / SOURCE_SUB_SCOPES_PATH / sub_scope,
                 )
             ),
             search=DocsPublishedArtifactConfig(
                 location=location_child(
-                    parent.scope_root,
+                    parent.stage_root,
                     SCOPE_GENERATED_PATH / "search" / SOURCE_SUB_SCOPES_PATH / sub_scope / "index.json",
                 )
             ),
@@ -1058,6 +1106,65 @@ def normalize_sub_scope_configs(
             )
         )
     return tuple(configs)
+
+
+def normalize_workflow_stages(
+    raw: Any, *, parent: DocsScopeConfig, field: str,
+) -> tuple[DocsScopeConfig, ...]:
+    """Derive stage storage while retaining one scope-owned accepted snapshot."""
+    if raw is None:
+        return ()
+    if parent.scope_id != "analysis" or not isinstance(raw, dict) or set(raw) != {"working", "pre-publish"}:
+        raise ValueError(f"{field} requires Analysis working and pre-publish definitions")
+    stages = []
+    for stage in ("working", "pre-publish"):
+        settings = raw[stage]
+        allowed = {"media_namespace", "media", "default_doc_id", "sub_scopes", "non_loadable_doc_ids", "manage_only_tree_root_ids", "allow_unresolved_parent_ids"}
+        if not isinstance(settings, dict) or set(settings) - allowed:
+            raise ValueError(f"{field}.{stage} contains unsupported settings")
+        namespace = settings.get("media_namespace")
+        if not isinstance(namespace, str) or not SUB_SCOPE_ID_PATTERN.fullmatch(namespace):
+            raise ValueError(f"{field}.{stage}.media_namespace must be one explicit namespace")
+        stage_root = location_child(parent.scope_root, Path(stage))
+        media = normalize_media(
+            settings.get("media"), scope_id=namespace, scope_root=stage_root,
+            field=f"{field}.{stage}.media",
+        )
+        published_media_root = location_child(parent.scope_root, SCOPE_PUBLISHED_PATH / "media")
+        media = replace(
+            media,
+            published_location=published_media_root,
+            types={
+                media_type: replace(
+                    item,
+                    published_location=location_child(published_media_root, Path(media_type)),
+                    served_path_prefix=f"/docs/media/{parent.scope_id}/{stage}/{media_type}",
+                )
+                for media_type, item in media.types.items()
+            },
+        )
+        selected = replace(
+            parent,
+            stage=stage,
+            public_projection=parent.public_projection if stage == "pre-publish" else None,
+            viewer_base_url=DOCS_VIEWER_MANAGE_ROUTE_BASE_URL,
+            include_scope_param=True,
+            source=replace(
+                normalize_source({}, scope_root=stage_root, field=f"{field}.{stage}.source"),
+                sub_scopes_path=SOURCE_DOCUMENTS_PATH / SOURCE_SUB_SCOPES_PATH,
+            ),
+            generated=normalize_generated({}, scope_root=stage_root, field=f"{field}.{stage}.generated"),
+            media=media,
+            default_doc_id=str(settings.get("default_doc_id") or "").strip(),
+            non_loadable_doc_ids=string_tuple(settings.get("non_loadable_doc_ids"), field=f"{field}.{stage}.non_loadable_doc_ids"),
+            manage_only_tree_root_ids=string_tuple(settings.get("manage_only_tree_root_ids"), field=f"{field}.{stage}.manage_only_tree_root_ids"),
+            allow_unresolved_parent_ids=settings.get("allow_unresolved_parent_ids") is True,
+            sub_scopes=(),
+        )
+        stages.append(replace(selected, sub_scopes=normalize_sub_scope_configs(
+            settings.get("sub_scopes"), parent=selected, field=f"{field}.{stage}.sub_scopes",
+        )))
+    return tuple(stages)
 
 
 def load_docs_scope_configs(
@@ -1194,7 +1301,9 @@ def load_docs_scope_configs(
                 field=f"{field}.sub_scopes",
             ),
         )
-        configs[scope_id] = config
+        configs[scope_id] = replace(config, stages=normalize_workflow_stages(
+            item.get("stages"), parent=config, field=f"{field}.stages",
+        ))
     return configs
 
 
@@ -1294,6 +1403,7 @@ DOCUMENT_SOURCE_ROOTS: dict[str, Path] = _LazyLoadedDict(
     lambda: {
         scope: document_source_path(config)
         for scope, config in DOCS_SCOPE_CONFIGS.items()
+        if not config.stages
     }
 )
 

@@ -37,21 +37,23 @@ def normalize_scope(repo_root: Path, value: Any) -> str:
 def docs_generated_read_payload(repo_root: Path, path: str, params: dict[str, list[str]]) -> dict[str, object]:
     scope = normalize_scope(repo_root, docs_api_query_value(params, "scope"))
 
+    stage = docs_api_query_value(params, "stage") if "stage" in params else None
+
     if path == routes.GENERATED_INDEX_TREE_PATH:
-        return docs_generated_reads.read_generated_docs_index_tree(repo_root, scope)
+        return docs_generated_reads.read_generated_docs_index_tree(repo_root, scope, stage)
     if path == routes.GENERATED_RECENT_PATH:
-        return docs_generated_reads.read_generated_recent(repo_root, scope)
+        return docs_generated_reads.read_generated_recent(repo_root, scope, stage)
     if path == routes.GENERATED_BACKLINKS_PATH:
-        return docs_generated_reads.read_generated_backlinks(repo_root, scope)
+        return docs_generated_reads.read_generated_backlinks(repo_root, scope, stage)
     if path == routes.GENERATED_SEARCH_PATH:
-        return docs_generated_reads.read_generated_search_index(repo_root, scope)
+        return docs_generated_reads.read_generated_search_index(repo_root, scope, stage)
     if path == routes.GENERATED_SEMANTIC_TOKENS_PATH:
-        return docs_generated_reads.read_generated_semantic_tokens_index(repo_root, scope)
+        return docs_generated_reads.read_generated_semantic_tokens_index(repo_root, scope, stage)
     if path == routes.GENERATED_PAYLOAD_PATH:
         doc_id = docs_api_query_value(params, "doc_id") or docs_api_query_value(params, "doc")
         if not doc_id:
             raise ValueError("doc_id is required")
-        return docs_generated_reads.read_generated_doc_payload(repo_root, scope, doc_id)
+        return docs_generated_reads.read_generated_doc_payload(repo_root, scope, doc_id, stage)
     raise FileNotFoundError("Not found")
 
 
@@ -120,6 +122,8 @@ def docs_management_get_payload(repo_root: Path, path: str, params: dict[str, li
             "scope": docs_api_query_value(params, "scope"),
             "doc_id": docs_api_query_value(params, "doc_id"),
         }
+        if "stage" in params:
+            target["stage"] = docs_api_query_value(params, "stage")
         if "sub_scope" in params:
             target["sub_scope"] = docs_api_query_value(params, "sub_scope")
         if path == routes.SERIES_WORKS_REPORT_PATH:

@@ -14,6 +14,7 @@ from docs_scope_config import (
     SUB_SCOPE_ID_PATTERN,
     document_source_path,
     load_docs_scope_configs,
+    select_scope_stage,
     resolve_scope_path,
 )
 from docs_subscope_customisations import (
@@ -44,11 +45,14 @@ class ManagedDocumentTarget:
     document_config: DocsScopeConfig | DocsSubScopeConfig
     source_root: Path
     document: source_model.ScopeDoc
+    stage: str = ""
 
     def request_target(self) -> dict[str, str]:
         target = {"scope": self.scope, "doc_id": self.doc_id}
         if self.sub_scope:
             target["sub_scope"] = self.sub_scope
+        if self.stage:
+            target["stage"] = self.stage
         return target
 
 
@@ -59,11 +63,14 @@ class ManagedDocumentCollection:
     parent_config: DocsScopeConfig
     document_config: DocsScopeConfig | DocsSubScopeConfig
     source_root: Path
+    stage: str = ""
 
     def request_target(self) -> dict[str, str]:
         target = {"scope": self.scope}
         if self.sub_scope:
             target["sub_scope"] = self.sub_scope
+        if self.stage:
+            target["stage"] = self.stage
         return target
 
 
@@ -79,7 +86,7 @@ def required_target_text(value: Any, *, field: str, lowercase: bool = False) -> 
 def normalize_managed_document_target(target: Mapping[str, Any]) -> dict[str, str]:
     if not isinstance(target, Mapping):
         raise ValueError("managed document target must be an object")
-    keys = frozenset(target)
+    keys = frozenset(target) - {"stage"}
     if keys not in {PARENT_TARGET_KEYS, SUB_SCOPE_TARGET_KEYS}:
         raise ValueError(
             "managed document target must contain exactly scope and doc_id, "
@@ -89,6 +96,8 @@ def normalize_managed_document_target(target: Mapping[str, Any]) -> dict[str, st
         "scope": required_target_text(target.get("scope"), field="scope", lowercase=True),
         "doc_id": required_target_text(target.get("doc_id"), field="doc_id"),
     }
+    if "stage" in target:
+        normalized["stage"] = required_target_text(target["stage"], field="stage")
     if "sub_scope" in target:
         normalized["sub_scope"] = required_target_text(
             target.get("sub_scope"),
@@ -103,7 +112,7 @@ def normalize_managed_document_collection_target(
 ) -> dict[str, str]:
     if not isinstance(target, Mapping):
         raise ValueError("managed document collection target must be an object")
-    keys = frozenset(target)
+    keys = frozenset(target) - {"stage"}
     if keys not in {
         PARENT_COLLECTION_TARGET_KEYS,
         SUB_SCOPE_COLLECTION_TARGET_KEYS,
@@ -119,6 +128,8 @@ def normalize_managed_document_collection_target(
             lowercase=True,
         ),
     }
+    if "stage" in target:
+        normalized["stage"] = required_target_text(target["stage"], field="stage")
     if "sub_scope" in target:
         normalized["sub_scope"] = required_target_text(
             target.get("sub_scope"),
@@ -135,6 +146,8 @@ def managed_document_target_request(request: Mapping[str, Any]) -> dict[str, Any
     }
     if "sub_scope" in request:
         target["sub_scope"] = request.get("sub_scope")
+    if "stage" in request:
+        target["stage"] = request.get("stage")
     return target
 
 
@@ -143,12 +156,14 @@ def resolve_managed_document_collection(
     *,
     scope: Any,
     sub_scope: Any | None = None,
+    stage: str | None = None,
 ) -> ManagedDocumentCollection:
     normalized_scope = required_target_text(scope, field="scope", lowercase=True)
     configs = load_docs_scope_configs(repo_root, scope_ids=[normalized_scope])
     parent_config = configs.get(normalized_scope)
     if parent_config is None:
         raise ValueError(f"unknown Docs Viewer scope: {normalized_scope}")
+    parent_config = select_scope_stage(parent_config, stage)
 
     normalized_sub_scope = ""
     document_config: DocsScopeConfig | DocsSubScopeConfig = parent_config
@@ -185,6 +200,7 @@ def resolve_managed_document_collection(
         parent_config=parent_config,
         document_config=document_config,
         source_root=source_root,
+        stage=parent_config.stage,
     )
 
 
@@ -197,6 +213,7 @@ def resolve_managed_document_collection_target(
         repo_root,
         scope=normalized["scope"],
         sub_scope=normalized.get("sub_scope"),
+        stage=normalized.get("stage"),
     )
 
 
@@ -274,6 +291,7 @@ def resolve_managed_document_target(
         repo_root,
         scope=normalized["scope"],
         sub_scope=normalized.get("sub_scope"),
+        stage=normalized.get("stage"),
     )
     report_contract = source_model.report_source_contract_for_collection(
         repo_root,
@@ -308,7 +326,7 @@ def resolve_managed_document_target(
                 scope=collection.scope,
                 report_contract=report_contract,
             )
-            for candidate in source_model.scope_markdown_paths(collection.source_root)
+            for candidate in source_model.scope_markdown_paths(collection.source_root, stage_parent=bool(collection.stage))
         ]
         for candidate in parent_documents:
             source_model.validate_publishable_front_matter(
@@ -345,6 +363,7 @@ def resolve_managed_document_target(
         document_config=collection.document_config,
         source_root=collection.source_root,
         document=document,
+        stage=collection.stage,
     )
 
 
@@ -370,15 +389,14 @@ def managed_document_metadata(
 
     payload: dict[str, object] = {
         "ok": True,
-        "scope": resolved.scope,
-        "doc_id": document.doc_id,
+        **resolved.request_target(),
         "record": record,
     }
     if resolved.sub_scope:
         subject_fields = sub_scope_customisation_authoring_subject_fields(
             resolved.document_config.sub_scope_customisation
         )
-        folder_supported = resolved.scope == "dotlineform" and FOLDER_PATH_FIELD in subject_fields
+        folder_supported = (resolved.scope == "dotlineform" or resolved.stage == "working") and FOLDER_PATH_FIELD in subject_fields
         if subject_fields or any(
             field_name in front_matter for field_name in AUTHORING_SUBJECT_FIELDS
         ):

@@ -8,7 +8,7 @@ import json
 from pathlib import Path
 from typing import Any
 
-from docs_scope_config import CONFIG_REL_PATH, document_source_path, load_docs_scope_configs, resolve_scope_path
+from docs_scope_config import CONFIG_REL_PATH, document_source_path, load_docs_scope_configs, resolve_scope_path, select_scope_stage, require_document_authoring
 import docs_source_model as source_model
 
 
@@ -184,7 +184,7 @@ def build_settings_contract(repo_root: Path, scope_id: str = "") -> dict[str, An
     }
 
 
-def validate_scope_settings_change(repo_root: Path, scope_id: str, changes: dict[str, Any]) -> dict[str, Any]:
+def validate_scope_settings_change(repo_root: Path, scope_id: str, changes: dict[str, Any], stage: str | None = None) -> dict[str, Any]:
     if not isinstance(changes, dict):
         raise ValueError("changes must be a JSON object")
     configs = load_docs_scope_configs(repo_root)
@@ -196,7 +196,8 @@ def validate_scope_settings_change(repo_root: Path, scope_id: str, changes: dict
     if not changes:
         raise ValueError("At least one source config setting is required")
 
-    config = configs[normalized_scope]
+    config = select_scope_stage(configs[normalized_scope], stage)
+    require_document_authoring(config)
     validated_changes: dict[str, Any] = {}
     rejected_fields: list[dict[str, str]] = []
     warnings: list[str] = []
@@ -251,8 +252,8 @@ def _write_text_atomic(path: Path, text: str) -> None:
     temp_path.replace(path)
 
 
-def apply_scope_settings_change(repo_root: Path, scope_id: str, changes: dict[str, Any], *, dry_run: bool = False) -> dict[str, Any]:
-    validation = validate_scope_settings_change(repo_root, scope_id, changes)
+def apply_scope_settings_change(repo_root: Path, scope_id: str, changes: dict[str, Any], *, dry_run: bool = False, stage: str | None = None) -> dict[str, Any]:
+    validation = validate_scope_settings_change(repo_root, scope_id, changes, stage)
     changed_fields = {
         field: detail["proposed_value"]
         for field, detail in validation["changes"].items()
@@ -271,8 +272,9 @@ def apply_scope_settings_change(repo_root: Path, scope_id: str, changes: dict[st
                 continue
             if str(item.get("scope_id") or "").strip().lower() != validation["scope_id"]:
                 continue
+            destination = item["stages"][stage] if stage else item
             for field, value in changed_fields.items():
-                item[field] = value
+                destination[field] = value
             updated = True
             break
         if not updated:

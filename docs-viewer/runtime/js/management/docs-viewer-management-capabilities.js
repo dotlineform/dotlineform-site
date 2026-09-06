@@ -355,6 +355,13 @@ export function createDocsViewerManagementCapabilityController(options) {
   function applyCapabilities(payload) {
     var capabilities = payload && payload.capabilities ? payload.capabilities : null;
     var scopeCaps = scopeManagementCapabilities(capabilities, viewerScope());
+    if (scopeCaps && scopeCaps.stages) {
+      var stage = managementClientOptions().stage;
+      scopeCaps = scopeCaps.stages[stage] || null;
+      capabilities = Object.assign({}, capabilities, {
+        scopes: Object.assign({}, capabilities.scopes, { [viewerScope()]: scopeCaps })
+      });
+    }
     management.managementCapabilities = capabilities;
     management.managementCapabilityError = "";
     management.managementChecked = true;

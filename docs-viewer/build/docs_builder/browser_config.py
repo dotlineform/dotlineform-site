@@ -46,7 +46,7 @@ def raw_scope_items(repo_root: Path) -> dict[str, dict[str, Any]]:
 
 def browser_docs_index_tree_url(config: DocsScopeConfig, *, published: bool = False) -> str:
     if not published and scope_uses_external_data(config):
-        return f"/docs/index-tree?scope={quote(config.scope_id)}"
+        return f"/docs/index-tree?scope={quote(config.scope_id)}" + (f"&stage={quote(config.stage)}" if config.stage else "")
     output = public_documents_path(config) if published else generated_documents_path(config)
     output = output or published_documents_path(config)
     return f"{browser_path_for_repo_relative(output)}/index-tree.json"
@@ -54,7 +54,7 @@ def browser_docs_index_tree_url(config: DocsScopeConfig, *, published: bool = Fa
 
 def browser_docs_recent_url(config: DocsScopeConfig, *, published: bool = False) -> str:
     if not published and scope_uses_external_data(config):
-        return f"/docs/recent?scope={quote(config.scope_id)}"
+        return f"/docs/recent?scope={quote(config.scope_id)}" + (f"&stage={quote(config.stage)}" if config.stage else "")
     output = public_documents_path(config) if published else generated_documents_path(config)
     output = output or published_documents_path(config)
     return f"{browser_path_for_repo_relative(output)}/recent.json"
@@ -68,7 +68,7 @@ def browser_docs_backlinks_url(
     if published:
         return ""
     if not published and scope_uses_external_data(config):
-        return f"/docs/backlinks?scope={quote(config.scope_id)}"
+        return f"/docs/backlinks?scope={quote(config.scope_id)}" + (f"&stage={quote(config.stage)}" if config.stage else "")
     return (
         f"{browser_path_for_repo_relative(generated_documents_path(config))}"
         "/backlinks.json"
@@ -77,7 +77,7 @@ def browser_docs_backlinks_url(
 
 def browser_search_index_url(config: DocsScopeConfig, *, published: bool = False) -> str:
     if not published and scope_uses_external_data(config):
-        return f"/docs/search?scope={quote(config.scope_id)}"
+        return f"/docs/search?scope={quote(config.scope_id)}" + (f"&stage={quote(config.stage)}" if config.stage else "")
     output = public_search_path(config) if published else generated_search_path(config)
     output = output or published_search_path(config)
     return browser_path_for_repo_relative(output)
@@ -99,7 +99,8 @@ def browser_sub_scope_output_url_base(
     published: bool = False,
 ) -> str:
     if not published and scope_uses_external_data(config):
-        return f"/docs/generated/external/{quote(config.scope_id)}/{quote(sub_scope.sub_scope)}"
+        stage_path = f"/{quote(config.stage)}" if config.stage else ""
+        return f"/docs/generated/external/{quote(config.scope_id)}{stage_path}/{quote(sub_scope.sub_scope)}"
     output = public_documents_path(sub_scope) if published else generated_documents_path(sub_scope)
     output = output or published_documents_path(sub_scope)
     return browser_path_for_repo_relative(output)
@@ -122,7 +123,7 @@ def browser_sub_scope_records(
     }
     lineage_workflows = (
         publication_lineage.configured_workflows(repo_root)
-        if not published and source_contract_ids
+        if not published and not config.stage and source_contract_ids
         else ()
     )
     for sub_scope in config.sub_scopes:
@@ -209,6 +210,13 @@ def browser_scope_record(
     published: bool = False,
 ) -> dict[str, Any]:
     raw_scope = raw_by_scope.get(config.scope_id, {})
+    if config.stages and not published:
+        return {
+            "scope_id": config.scope_id,
+            "scope_type": config.scope_type,
+            "emoji": str(raw_scope.get("emoji") or ""),
+            "stages": [browser_scope_record(repo_root, raw_by_scope, stage) for stage in config.stages],
+        }
     media_config = (
         config.public_projection.media
         if published and config.public_projection is not None
@@ -216,6 +224,7 @@ def browser_scope_record(
     )
     record = {
         "scope_id": config.scope_id,
+        **({"stage": config.stage} if config.stage else {}),
         "scope_type": config.scope_type,
         "meta": str(raw_scope.get("meta") or "").strip(),
         "viewer_base_url": normalize_viewer_base_url(config.viewer_base_url),

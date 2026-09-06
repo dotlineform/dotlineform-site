@@ -9,6 +9,7 @@ import docs_document_publication_lineage as publication_lineage
 import docs_management_mutations as mutations
 import docs_public_delete_cleanup as public_delete_cleanup
 import docs_scope_create
+from docs_scope_config import load_docs_scope_stage, require_document_authoring
 import docs_scope_delete
 import docs_scope_manifest
 import docs_scope_rename
@@ -131,6 +132,7 @@ def recover_sub_scope_document_delete(
             [source_delete.path],
             restore_operation,
             suppression_reason="docs-sub-scope-document-delete-recovery",
+            stage=plan.stage or None,
         )
     except Exception as recovery_error:
         source_restored = source_matches_original()
@@ -163,7 +165,10 @@ def recover_sub_scope_document_delete(
 
 
 def execute_management_mutation_plan(repo_root: Path, plan: mutations.ManagementMutationPlan, dry_run: bool) -> Dict[str, Any]:
+    require_document_authoring(load_docs_scope_stage(repo_root, plan.scope, plan.stage or None))
     payload = dict(plan.response)
+    if plan.stage:
+        payload["stage"] = plan.stage
     rebuild = None
     source_changes_applied = False
 
@@ -179,6 +184,7 @@ def execute_management_mutation_plan(repo_root: Path, plan: mutations.Management
                     if current_bytes != source_write.original_bytes:
                         target = {
                             "scope": plan.scope,
+                            **({"stage": plan.stage} if plan.stage else {}),
                             "doc_id": str(plan.response.get("doc_id") or ""),
                         }
                         if plan.sub_scope:
@@ -255,6 +261,7 @@ def execute_management_mutation_plan(repo_root: Path, plan: mutations.Management
                     plan.changed_paths,
                     write_operation,
                     suppression_reason=plan.suppression_reason or "docs-management",
+                    stage=plan.stage or None,
                 )
             else:
                 rebuild = write_rebuild.perform_source_write_and_rebuild(
@@ -263,6 +270,7 @@ def execute_management_mutation_plan(repo_root: Path, plan: mutations.Management
                     plan.changed_paths,
                     write_operation,
                     suppression_reason=plan.suppression_reason or "docs-management",
+                    stage=plan.stage or None,
                     docs_doc_ids=plan.build_doc_ids,
                 )
         except mutations.ManagedDocumentRevisionConflict:
@@ -468,6 +476,7 @@ def handle_delete_apply(repo_root: Path, body: Dict[str, Any], dry_run: bool) ->
             repo_root,
             plan.scope,
             {"default_doc_id": ""},
+            stage=plan.stage or None,
         )
     return execute_management_mutation_plan(repo_root, plan, dry_run)
 

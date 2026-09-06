@@ -23,8 +23,18 @@ export function createDocsViewerGeneratedDataRuntime(options) {
     return typeof settings.viewerScope === "function" ? settings.viewerScope() : settings.viewerScope;
   }
 
-  function scopeGeneratedCapability(capabilities, scope, key) {
+  function currentViewerStage() {
+    return typeof settings.viewerStage === "function" ? settings.viewerStage() : settings.viewerStage || "";
+  }
+
+  function requestViewerStage(request) {
+    if (Object.prototype.hasOwnProperty.call(request, "viewerStage")) return request.viewerStage || "";
+    return !request.viewerScope || request.viewerScope === currentViewerScope() ? currentViewerStage() : "";
+  }
+
+  function scopeGeneratedCapability(capabilities, scope, key, stage) {
     var scopeCaps = capabilities && capabilities.scopes ? capabilities.scopes[scope] : null;
+    if (scopeCaps && scopeCaps.stages) scopeCaps = scopeCaps.stages[stage === undefined ? requestViewerStage({ viewerScope: scope }) : stage] || null;
     return Boolean(
       capabilities &&
       capabilities.generated_data_reads &&
@@ -49,7 +59,7 @@ export function createDocsViewerGeneratedDataRuntime(options) {
       });
   }
 
-  function checkGeneratedDataReadCapability(scope) {
+  function checkGeneratedDataReadCapability(scope, stage) {
     var viewerScope = currentViewerScope();
     var targetScope = String(scope || viewerScope || "").trim();
     if (!generatedBaseUrl) {
@@ -59,7 +69,7 @@ export function createDocsViewerGeneratedDataRuntime(options) {
     }
     if (generatedData.generatedDataReadChecked) {
       if (generatedData.generatedDataCapabilities && targetScope) {
-        return Promise.resolve(scopeGeneratedCapability(generatedData.generatedDataCapabilities, targetScope, "generated_data_reads"));
+        return Promise.resolve(scopeGeneratedCapability(generatedData.generatedDataCapabilities, targetScope, "generated_data_reads", stage));
       }
       return Promise.resolve(generatedData.generatedDataReadAvailable);
     }
@@ -77,7 +87,7 @@ export function createDocsViewerGeneratedDataRuntime(options) {
         generatedData.generatedDataCapabilities = payload.capabilities || null;
         generatedData.generatedDataReadAvailable = scopeGeneratedCapability(generatedData.generatedDataCapabilities, viewerScope, "generated_data_reads");
         generatedData.generatedDataReadChecked = true;
-        return scopeGeneratedCapability(generatedData.generatedDataCapabilities, targetScope || viewerScope, "generated_data_reads");
+        return scopeGeneratedCapability(generatedData.generatedDataCapabilities, targetScope || viewerScope, "generated_data_reads", stage);
       })
       .catch(function () {
         generatedData.generatedDataReadAvailable = false;
@@ -100,6 +110,7 @@ export function createDocsViewerGeneratedDataRuntime(options) {
       reloadRetryAttempts: reloadRetryAttempts,
       reloadRetryDelayMs: reloadRetryDelayMs,
       managementAvailable: management.managementAvailable,
+      viewerStage: requestViewerStage(requestSettings),
       managementBaseUrl: generatedBaseUrl,
       fetch: function (url, fetchOptions) {
         return window.fetch(url, fetchOptions);
@@ -108,13 +119,14 @@ export function createDocsViewerGeneratedDataRuntime(options) {
         return window.setTimeout(resolve, delayMs);
       },
       checkGeneratedDataReadCapability: function () {
-        return checkGeneratedDataReadCapability(requestSettings.viewerScope || currentViewerScope());
+        return checkGeneratedDataReadCapability(requestSettings.viewerScope || currentViewerScope(), requestViewerStage(requestSettings));
       },
       scopeSupportsGeneratedSearchReads: function () {
         return scopeGeneratedCapability(
           generatedData.generatedDataCapabilities || {},
           requestSettings.viewerScope || currentViewerScope(),
-          "generated_search_reads"
+          "generated_search_reads",
+          requestViewerStage(requestSettings)
         );
       }
     }, requestSettings);
@@ -124,6 +136,7 @@ export function createDocsViewerGeneratedDataRuntime(options) {
     var requestSettings = options || {};
     return fetchIndexTreeWithRetry(dataRequestOptions({
       indexTreeUrl: requestSettings.indexTreeUrl,
+      viewerStage: requestViewerStage(requestSettings),
       viewerScope: requestSettings.viewerScope || currentViewerScope()
     })).then(normalizeDocsIndexTreePayload);
   }
@@ -136,7 +149,7 @@ export function createDocsViewerGeneratedDataRuntime(options) {
     return fetchPreferredGeneratedJson(
       contentUrl,
       "Failed to load " + contentUrl,
-      managementReloadPath("/docs/doc", { scope: viewerScope, doc_id: docId }),
+      managementReloadPath("/docs/doc", { scope: viewerScope, stage: requestViewerStage(requestSettings), doc_id: docId }),
       dataRequestOptions(Object.assign({}, requestSettings, {
         useSearchCapability: false,
         viewerScope: viewerScope
@@ -150,7 +163,7 @@ export function createDocsViewerGeneratedDataRuntime(options) {
     return fetchPreferredGeneratedJson(
       requestSettings.searchIndexUrl,
       "Failed to load search data",
-      managementReloadPath("/docs/search", { scope: viewerScope }),
+      managementReloadPath("/docs/search", { scope: viewerScope, stage: requestViewerStage(requestSettings) }),
       dataRequestOptions(Object.assign({}, requestSettings, {
         useSearchCapability: true,
         viewerScope: viewerScope
@@ -164,7 +177,7 @@ export function createDocsViewerGeneratedDataRuntime(options) {
     return fetchPreferredGeneratedJson(
       requestSettings.recentUrl,
       "Failed to load Recent docs",
-      managementReloadPath("/docs/recent", { scope: viewerScope }),
+      managementReloadPath("/docs/recent", { scope: viewerScope, stage: requestViewerStage(requestSettings) }),
       dataRequestOptions(Object.assign({}, requestSettings, {
         useSearchCapability: false,
         viewerScope: viewerScope

@@ -36,6 +36,7 @@ export function buildViewerUrlForScope(options) {
   } else if (targetConfig && targetConfig.includeScopeParam && targetScope) {
     url.searchParams.set("scope", targetScope);
   }
+  if (targetConfig && targetConfig.stage) url.searchParams.set("stage", targetConfig.stage);
   url.searchParams.set("doc", settings.docId || "");
   return url.pathname + url.search;
 }
@@ -46,6 +47,10 @@ export function routeFromAnchorHref(href, options) {
   var origin = settings.origin || window.location.origin;
   if (url.origin !== origin) return null;
   if (url.pathname !== settings.viewerPathname) return null;
+  var currentStage = new URL(settings.currentHref || window.location.href).searchParams.get("stage");
+  if (url.searchParams.has("stage") && url.searchParams.get("stage") !== currentStage) {
+    return { navigateUrl: url.pathname + url.search + url.hash };
+  }
 
   var scope = String(url.searchParams.get("scope") || "").trim();
   url.searchParams.delete("mode");

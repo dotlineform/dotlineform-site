@@ -17,6 +17,7 @@ function normalizeCollection(collection) {
   var record = collection && typeof collection === "object" ? collection : {};
   return Object.freeze({
     scope: normalizeCollectionId(record.scope),
+    ...(record.stage ? { stage: record.stage } : {}),
     sub_scope: normalizeCollectionId(record.sub_scope)
   });
 }
@@ -24,7 +25,7 @@ function normalizeCollection(collection) {
 function collectionKey(collection) {
   var normalized = normalizeCollection(collection);
   return normalized.scope && normalized.sub_scope
-    ? normalized.scope + "\n" + normalized.sub_scope
+    ? normalized.scope + "\n" + (normalized.stage || "") + "\n" + normalized.sub_scope
     : "";
 }
 

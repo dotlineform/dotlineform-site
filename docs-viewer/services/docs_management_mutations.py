@@ -21,6 +21,8 @@ from docs_management_document_target import (
 )
 from docs_scope_config import (
     load_docs_scope_configs,
+    load_docs_scope_stage,
+    require_document_authoring,
     generated_documents_path,
     resolve_external_data_root,
     resolve_scope_path,
@@ -200,6 +202,7 @@ class ManagementMutationPlan:
     scope: str
     response: Dict[str, Any]
     sub_scope: str = ""
+    stage: str = ""
     source_writes: tuple[SourceWrite, ...] = ()
     source_deletes: tuple[SourceDelete, ...] = ()
     suppression_reason: Optional[str] = None
@@ -237,7 +240,9 @@ def plan_create(repo_root: Path, body: Dict[str, Any]) -> ManagementMutationPlan
         repo_root,
         scope=body.get("scope"),
         sub_scope=body.get("sub_scope") if sub_scope_requested else None,
+        stage=body.get("stage"),
     )
+    require_document_authoring(collection.parent_config)
     scope = collection.scope
     sub_scope = collection.sub_scope
     target_root = collection.source_root
@@ -247,7 +252,7 @@ def plan_create(repo_root: Path, body: Dict[str, Any]) -> ManagementMutationPlan
         collection.document_config,
     )
     docs: list[source_model.ScopeDoc] = []
-    for candidate in source_model.scope_markdown_paths(target_root):
+    for candidate in source_model.scope_markdown_paths(target_root, stage_parent=bool(collection.stage and not sub_scope)):
         confined = confined_source_path(target_root, candidate)
         document = source_doc_from_path(
             path=confined,
@@ -304,7 +309,7 @@ def plan_create(repo_root: Path, body: Dict[str, Any]) -> ManagementMutationPlan
     )
     source_text = source_model.format_source(front_matter, f"# {title}\n")
     path = relative_path(repo_root, target_path)
-    target = {"scope": scope, "doc_id": doc_id}
+    target = {**collection.request_target(), "doc_id": doc_id}
     if sub_scope:
         target["sub_scope"] = sub_scope
     record: Dict[str, Any] = {
@@ -337,6 +342,7 @@ def plan_create(repo_root: Path, body: Dict[str, Any]) -> ManagementMutationPlan
     return ManagementMutationPlan(
         scope=scope,
         sub_scope=sub_scope,
+        stage=collection.stage,
         response=response,
         source_writes=(
             SourceWrite(
@@ -399,6 +405,7 @@ def plan_assign_field_group(
         repo_root,
         managed_document_target_request(body),
     )
+    require_document_authoring(resolved.parent_config)
     if not resolved.sub_scope:
         raise ValueError("assign field group requires a sub-scope document")
 
@@ -524,6 +531,7 @@ def plan_assign_field_group(
     return ManagementMutationPlan(
         scope=resolved.scope,
         sub_scope=resolved.sub_scope,
+        stage=resolved.stage,
         response=response,
         source_writes=(
             SourceWrite(
@@ -560,6 +568,7 @@ def plan_update_metadata(repo_root: Path, body: Dict[str, Any]) -> ManagementMut
         repo_root,
         managed_document_target_request(body),
     )
+    require_document_authoring(resolved.parent_config)
     scope = resolved.scope
     target = resolved.document
     if resolved.sub_scope and "parent_id" in body:
@@ -594,7 +603,7 @@ def plan_update_metadata(repo_root: Path, body: Dict[str, Any]) -> ManagementMut
     docs: list[source_model.ScopeDoc] = []
     parent_id = target.parent_id
     if not resolved.sub_scope:
-        docs = source_model.load_scope_docs(repo_root, scope)
+        docs = source_model.load_scope_docs_for_config(repo_root, resolved.parent_config)
         docs_by_id = {doc.doc_id: doc for doc in docs}
         parent_id = str(body.get("parent_id") or "").strip()
         if parent_id == target.doc_id:
@@ -784,6 +793,7 @@ def plan_update_metadata(repo_root: Path, body: Dict[str, Any]) -> ManagementMut
     return ManagementMutationPlan(
         scope=scope,
         sub_scope=resolved.sub_scope,
+        stage=resolved.stage,
         response=response,
         source_writes=(
             SourceWrite(
@@ -856,10 +866,11 @@ def configured_default_doc_id(repo_root: Path, scope: str) -> str:
     return str(getattr(config, "default_doc_id", "") or "").strip()
 
 
-def plan_delete_preview(repo_root: Path, scope: str, doc_ids: list[str]) -> Dict[str, Any]:
-    scope = source_model.normalize_scope(scope)
+def plan_delete_preview(repo_root: Path, scope: str, doc_ids: list[str], stage: str | None = None) -> Dict[str, Any]:
+    config = load_docs_scope_stage(repo_root, scope, stage)
+    require_document_authoring(config)
     requested_doc_ids = require_delete_doc_ids(doc_ids)
-    docs = source_model.load_scope_docs(repo_root, scope)
+    docs = source_model.load_scope_docs_for_config(repo_root, config)
     effective_root_doc_ids, delete_docs = delete_selection_docs(docs, requested_doc_ids)
     delete_documents = [
         {
@@ -873,13 +884,13 @@ def plan_delete_preview(repo_root: Path, scope: str, doc_ids: list[str]) -> Dict
     requested_count = len(requested_doc_ids)
     additional_descendant_count = len(set(delete_doc_ids) - set(requested_doc_ids))
     warnings = [delete_selection_warning(requested_count, additional_descendant_count)]
-    configured_default = configured_default_doc_id(repo_root, scope)
+    configured_default = config.default_doc_id
     default_doc_id_changed = configured_default in set(delete_doc_ids)
     cleanup_plan = public_delete_cleanup.plan_public_document_delete_cleanup(
         repo_root,
         scope=scope,
         doc_ids=delete_doc_ids,
-    )
+    ) if not config.stage else None
 
     return {
         "ok": True,
@@ -897,21 +908,23 @@ def plan_delete_preview(repo_root: Path, scope: str, doc_ids: list[str]) -> Dict
         "delete_documents": delete_documents,
         "default_doc_id_changed": default_doc_id_changed,
         "default_doc_id": "" if default_doc_id_changed else configured_default,
-        "public_cleanup": cleanup_plan.response(repo_root),
+        "public_cleanup": cleanup_plan.response(repo_root) if cleanup_plan else {"applicable": False},
     }
 
 
 def plan_delete_apply(repo_root: Path, body: Dict[str, Any]) -> ManagementMutationPlan:
-    scope = source_model.normalize_scope(body.get("scope"))
+    scope = str(body.get("scope") or "").strip().lower()
+    config = load_docs_scope_stage(repo_root, scope, body.get("stage"))
+    require_document_authoring(config)
     requested_doc_ids = require_delete_doc_ids(body.get("doc_ids"))
     if not body.get("confirm"):
         raise ValueError("delete apply requires confirm=true")
 
-    preview = plan_delete_preview(repo_root, scope, requested_doc_ids)
+    preview = plan_delete_preview(repo_root, scope, requested_doc_ids, body.get("stage"))
     if not preview["allowed"]:
         raise ValueError("; ".join(preview["blockers"]))
 
-    docs = source_model.load_scope_docs(repo_root, scope)
+    docs = source_model.load_scope_docs_for_config(repo_root, config)
     effective_root_doc_ids, delete_docs = delete_selection_docs(docs, requested_doc_ids)
     delete_doc_ids = [doc.doc_id for doc in delete_docs]
     delete_paths = [relative_path(repo_root, doc.path) for doc in delete_docs]
@@ -921,10 +934,11 @@ def plan_delete_apply(repo_root: Path, body: Dict[str, Any]) -> ManagementMutati
         repo_root,
         scope=scope,
         doc_ids=delete_doc_ids,
-    )
+    ) if not config.stage else None
     summary_text = f"Deleted {delete_count} document{'s' if delete_count != 1 else ''}."
     return ManagementMutationPlan(
         scope=scope,
+        stage=config.stage,
         response={
             "ok": True,
             "scope": scope,
@@ -939,7 +953,7 @@ def plan_delete_apply(repo_root: Path, body: Dict[str, Any]) -> ManagementMutati
             "warnings": preview["warnings"],
             "default_doc_id_changed": preview["default_doc_id_changed"],
             "default_doc_id": preview["default_doc_id"],
-            "public_cleanup": cleanup_plan.response(repo_root),
+            "public_cleanup": cleanup_plan.response(repo_root) if cleanup_plan else {"applicable": False},
             "summary_text": summary_text,
         },
         source_deletes=tuple(SourceDelete(doc.path) for doc in delete_docs),
@@ -967,7 +981,7 @@ def require_exact_sub_scope_delete_request(
     apply: bool,
 ) -> None:
     expected = SUB_SCOPE_DELETE_APPLY_KEYS if apply else SUB_SCOPE_DELETE_PREVIEW_KEYS
-    actual = frozenset(body)
+    actual = frozenset(body) - {"stage"}
     if actual != expected:
         required = ", ".join(sorted(expected))
         raise ValueError(
@@ -1016,6 +1030,7 @@ def plan_sub_scope_delete_preview(
         repo_root,
         managed_document_target_request(body),
     )
+    require_document_authoring(resolved.parent_config)
     if not resolved.sub_scope:
         raise ValueError("sub_scope is required for sub-scope document delete")
 
@@ -1028,7 +1043,7 @@ def plan_sub_scope_delete_preview(
         scope=resolved.scope,
         sub_scope=resolved.sub_scope,
         doc_ids=[document.doc_id],
-    )
+    ) if not resolved.stage else None
     return {
         "ok": True,
         "operation": "preview",
@@ -1050,7 +1065,7 @@ def plan_sub_scope_delete_preview(
             }
         ],
         "generated_outputs": sub_scope_delete_generated_outputs(repo_root, resolved),
-        "public_cleanup": cleanup_plan.response(repo_root),
+        "public_cleanup": cleanup_plan.response(repo_root) if cleanup_plan else {"applicable": False},
     }
 
 
@@ -1095,6 +1110,7 @@ def plan_sub_scope_delete_apply(
         repo_root,
         managed_document_target_request(body),
     )
+    require_document_authoring(resolved.parent_config)
     if not resolved.sub_scope:
         raise ValueError("sub_scope is required for sub-scope document delete")
 
@@ -1117,10 +1133,11 @@ def plan_sub_scope_delete_apply(
         scope=resolved.scope,
         sub_scope=resolved.sub_scope,
         doc_ids=[document.doc_id],
-    )
+    ) if not resolved.stage else None
     return ManagementMutationPlan(
         scope=resolved.scope,
         sub_scope=resolved.sub_scope,
+        stage=resolved.stage,
         response={
             "ok": True,
             "operation": "apply",
@@ -1134,7 +1151,7 @@ def plan_sub_scope_delete_apply(
             "deleted_doc_ids": [document.doc_id],
             "delete_count": 1,
             "generated_outputs": sub_scope_delete_generated_outputs(repo_root, resolved),
-            "public_cleanup": cleanup_plan.response(repo_root),
+            "public_cleanup": cleanup_plan.response(repo_root) if cleanup_plan else {"applicable": False},
             "summary_text": f"Deleted {document.doc_id}.",
         },
         source_deletes=(SourceDelete(document.path, original_bytes=source_bytes),),

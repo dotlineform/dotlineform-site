@@ -716,6 +716,8 @@ def _plan_revision(payload: Mapping[str, Any]) -> str:
 
 def preview_scope_publish(repo_root: Path, body: dict[str, Any]) -> dict[str, Any]:
     config = _scope_config(repo_root, body.get("scope"))
+    if config.stages:
+        raise ValueError("Publish is unavailable while publishing stage actions are deferred")
     generated_root = _lifecycle_root(repo_root, config, "generated")
     published_root = _lifecycle_root(repo_root, config, "published")
     build_manifest, generated_files = _validate_generated_manifest(

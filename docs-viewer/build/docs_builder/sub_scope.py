@@ -103,6 +103,8 @@ class SubScopeDocsBuilder(DocsDataBuilder):
         pairs: list[str] = []
         if self.include_scope_param and self.scope_id:
             pairs.append(f"scope={quote(self.scope_id)}")
+        if self.config.stage:
+            pairs.append(f"stage={quote(self.config.stage)}")
         pairs.append(f"doc={quote(parent_doc_id)}")
         pairs.append(f"subdoc={quote(str(doc_id))}")
         url = f"{self.viewer_base_url}?{'&'.join(pairs)}"
@@ -132,6 +134,7 @@ class SubScopeDocsBuilder(DocsDataBuilder):
             repo_root=self.repo_root,
             scope=self.scope_id,
             sub_scope=self.sub_scope_id,
+            stage=self.config.stage,
         )
         if projected is not None:
             payload["customisation"] = projected["root"]
@@ -172,6 +175,7 @@ class SubScopeDocsBuilder(DocsDataBuilder):
             repo_root=self.repo_root,
             scope=self.scope_id,
             sub_scope=self.sub_scope_id,
+            stage=self.config.stage,
         )
         if projected is not None:
             payload["customisation"] = projected["root"]
@@ -194,7 +198,7 @@ class SubScopeDocsBuilder(DocsDataBuilder):
         return payload
 
     def folder_subject_supported(self) -> bool:
-        return self.config.scope_id == "dotlineform" and FOLDER_PATH_FIELD in sub_scope_customisation_authoring_subject_fields(
+        return (self.config.scope_id == "dotlineform" or self.config.stage == "working") and FOLDER_PATH_FIELD in sub_scope_customisation_authoring_subject_fields(
             self.sub_scope_config.sub_scope_customisation
         )
 
@@ -227,7 +231,8 @@ class SubScopeDocsBuilder(DocsDataBuilder):
     ) -> dict[str, dict[str, Any]] | None:
         customisation = self.sub_scope_config.sub_scope_customisation
         if (
-            customisation is None
+            self.config.stage
+            or customisation is None
             or customisation.customisation_id != "analysis_tags"
         ):
             return None

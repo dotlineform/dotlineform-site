@@ -36,6 +36,7 @@ export function createDocsViewerConfiguredScopeProvider(options) {
     if (targetScope && targetScope === scopeId(route.viewerScope)) {
       return {
         scopeId: targetScope,
+        stage: cleanString(route.viewerStage),
         indexTreeUrl: cleanString(route.indexTreeUrl),
         recentUrl: cleanString(route.recentUrl),
         searchIndexUrl: cleanString(route.searchIndexUrl)
@@ -59,15 +60,19 @@ export function createDocsViewerConfiguredScopeProvider(options) {
     if (!request.config) return Promise.reject(new Error("Docs scope is not configured: " + request.scope));
     return generatedData.readDocsIndexTree({
       indexTreeUrl: cleanString(request.config.indexTreeUrl),
-      viewerScope: request.scope
+      viewerScope: request.scope,
+      viewerStage: cleanString(request.config.stage)
     });
   }
 
   function readDocument(doc, optionsForRead) {
     var requestSettings = optionsForRead || {};
+    var request = collectionRequest(requestSettings);
+    if (!request.config) return Promise.reject(new Error("Docs scope is not configured: " + request.scope));
     return generatedData.readDocumentPayload(doc, {
       docId: cleanString(requestSettings.docId || doc && doc.doc_id),
-      viewerScope: scopeId(requestSettings.scope || activeScope())
+      viewerScope: request.scope,
+      viewerStage: cleanString(request.config.stage)
     });
   }
 
@@ -76,7 +81,8 @@ export function createDocsViewerConfiguredScopeProvider(options) {
     if (!request.config) return Promise.reject(new Error("Docs scope is not configured: " + request.scope));
     return generatedData.readSearchIndex({
       searchIndexUrl: cleanString(request.config.searchIndexUrl),
-      viewerScope: request.scope
+      viewerScope: request.scope,
+      viewerStage: cleanString(request.config.stage)
     });
   }
 
@@ -85,7 +91,8 @@ export function createDocsViewerConfiguredScopeProvider(options) {
     if (!request.config) return Promise.reject(new Error("Docs scope is not configured: " + request.scope));
     return generatedData.readRecent({
       recentUrl: cleanString(request.config.recentUrl),
-      viewerScope: request.scope
+      viewerScope: request.scope,
+      viewerStage: cleanString(request.config.stage)
     });
   }
 

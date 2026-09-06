@@ -16,10 +16,12 @@ from docs_scope_config import (
     document_source_path,
     generated_documents_path,
     load_docs_scope_configs,
+    load_docs_scope_stage,
+    require_document_authoring,
     resolve_scope_path,
 )
 from docs_scope_build_manifest import remove_build_manifest, write_build_manifest
-from docs_source_model import load_scope_docs_for_config, scope_root, write_bytes_atomic
+from docs_source_model import load_scope_docs_for_config, write_bytes_atomic
 from docs_watch_suppression import (
     DEFAULT_COMPLETE_TTL_SECONDS,
     DEFAULT_PENDING_TTL_SECONDS,
@@ -61,23 +63,13 @@ class ScopeSourceSnapshotChanged(RuntimeError):
     """Stop one top-level write boundary before mutation when its snapshot changed."""
 
 
-def current_scope_source_root(repo_root: Path, scope: str) -> Path:
-    try:
-        configs = load_docs_scope_configs(repo_root)
-    except FileNotFoundError:
-        return scope_root(repo_root, scope)
-    config = configs.get(scope)
-    if config is None:
-        raise ValueError(f"scope {scope!r} is not configured")
+def current_scope_source_root(repo_root: Path, scope: str, stage: str | None = None) -> Path:
+    config = load_docs_scope_stage(repo_root, scope, stage)
     return resolve_scope_path(repo_root, document_source_path(config))
 
 
-def current_sub_scope_source_root(repo_root: Path, scope: str, sub_scope: str) -> Path:
-    configs = load_docs_scope_configs(repo_root, scope_ids=[scope])
-    try:
-        config = configs[scope]
-    except KeyError as exc:
-        raise ValueError(f"scope {scope!r} is not configured") from exc
+def current_sub_scope_source_root(repo_root: Path, scope: str, sub_scope: str, stage: str | None = None) -> Path:
+    config = load_docs_scope_stage(repo_root, scope, stage)
     matching = [
         candidate
         for candidate in config.sub_scopes
@@ -122,9 +114,9 @@ def iter_docs_tree_records(docs: Any) -> list[Dict[str, Any]]:
     return records
 
 
-def targeted_docs_build_fallback_reason(repo_root: Path, scope: str, target_doc_ids: list[str]) -> str:
+def targeted_docs_build_fallback_reason(repo_root: Path, scope: str, target_doc_ids: list[str], stage: str | None = None) -> str:
     try:
-        config = load_docs_scope_configs(repo_root)[scope]
+        config = load_docs_scope_stage(repo_root, scope, stage)
     except (KeyError, FileNotFoundError, ValueError) as exc:
         return f"full-scope fallback: docs scope config unavailable: {exc}"
 
@@ -231,20 +223,25 @@ def rebuild_scope_outputs(
     search_doc_ids: Optional[list[str]] = None,
     docs_doc_ids: Optional[list[str]] = None,
     skip_media_builds: bool = False,
+    stage: str | None = None,
 ) -> Dict[str, Any]:
     try:
-        scope_config = load_docs_scope_configs(repo_root, scope_ids=(scope,))[scope]
+        scope_config = load_docs_scope_stage(repo_root, scope, stage)
     except KeyError as exc:
         raise ValueError(f"scope {scope!r} is not configured") from exc
+    if scope_config.stage and include_search:
+        raise ValueError("Stage Search rebuild is outside the current publishing delivery")
     remove_build_manifest(repo_root, scope_config)
     docs_mode = "full"
     docs_target_doc_ids: list[str] = []
     docs_reason = "full-scope fallback: no targeted docs payload ids provided"
     docs_command = python_builder_command(DOCS_BUILDER_SCRIPT, "--scope", scope, "--write", "--diagnostics")
+    if stage:
+        docs_command.extend(["--stage", stage, "--skip-browser-config", "--skip-media-builds"])
     if docs_doc_ids is not None:
         docs_target_doc_ids = ordered_docs_doc_ids(docs_doc_ids)
         if docs_target_doc_ids:
-            fallback_reason = targeted_docs_build_fallback_reason(repo_root, scope, docs_target_doc_ids)
+            fallback_reason = targeted_docs_build_fallback_reason(repo_root, scope, docs_target_doc_ids, stage)
             if fallback_reason:
                 docs_reason = fallback_reason
             else:
@@ -330,6 +327,7 @@ def rebuild_sub_scope_outputs(
     repo_root: Path,
     scope: str,
     sub_scope: str,
+    stage: str | None = None,
 ) -> Dict[str, Any]:
     docs_command = python_builder_command(
         DOCS_BUILDER_SCRIPT,
@@ -341,6 +339,9 @@ def rebuild_sub_scope_outputs(
         "--diagnostics",
         "--skip-browser-config",
     )
+    load_docs_scope_stage(repo_root, scope, stage)
+    if stage:
+        docs_command.extend(["--stage", stage, "--skip-media-builds"])
     steps = []
     docs_diagnostics: Optional[Dict[str, Any]] = None
     step = run_rebuild_command(docs_command, repo_root)
@@ -420,8 +421,11 @@ def perform_source_write_and_rebuild(
     docs_doc_ids: Optional[list[str]] = None,
     written_paths: Optional[list[Path]] = None,
     skip_media_builds: bool = False,
+    stage: str | None = None,
 ) -> Dict[str, Any]:
-    root = current_scope_source_root(repo_root, scope)
+    require_document_authoring(load_docs_scope_stage(repo_root, scope, stage))
+    suppression_owner = watch_suppression_owner(scope, stage=stage)
+    root = current_scope_source_root(repo_root, scope, stage)
     filenames = sorted(
         {
             path.resolve().relative_to(root.resolve()).as_posix()
@@ -432,7 +436,7 @@ def perform_source_write_and_rebuild(
     if filenames:
         set_watch_suppressions(
             repo_root,
-            scope,
+            suppression_owner,
             filenames,
             status=SUPPRESSION_PENDING,
             reason=suppression_reason,
@@ -446,10 +450,11 @@ def perform_source_write_and_rebuild(
             include_search=False,
             docs_doc_ids=docs_doc_ids,
             skip_media_builds=skip_media_builds,
+            stage=stage,
         )
     except Exception:
         if filenames:
-            clear_watch_suppressions(repo_root, scope, filenames)
+            clear_watch_suppressions(repo_root, suppression_owner, filenames)
         raise
     completion_filenames = filenames
     if written_paths is not None:
@@ -461,11 +466,11 @@ def perform_source_write_and_rebuild(
             }
         )
         if filenames:
-            clear_watch_suppressions(repo_root, scope, filenames)
+            clear_watch_suppressions(repo_root, suppression_owner, filenames)
     if completion_filenames:
         set_watch_suppressions(
             repo_root,
-            scope,
+            suppression_owner,
             completion_filenames,
             status=SUPPRESSION_COMPLETE,
             reason=suppression_reason,
@@ -622,8 +627,10 @@ def perform_sub_scope_source_write_and_rebuild(
     *,
     suppression_reason: str,
     source_snapshots: Mapping[Path, bytes] | None = None,
+    stage: str | None = None,
 ) -> Dict[str, Any]:
-    root = current_sub_scope_source_root(repo_root, scope, sub_scope)
+    require_document_authoring(load_docs_scope_stage(repo_root, scope, stage))
+    root = current_sub_scope_source_root(repo_root, scope, sub_scope, stage)
     resolved_changed_paths = {
         path.resolve()
         for path in changed_paths
@@ -655,7 +662,7 @@ def perform_sub_scope_source_write_and_rebuild(
             if isinstance(path, Path)
         }
     )
-    suppression_owner = watch_suppression_owner(scope, sub_scope)
+    suppression_owner = watch_suppression_owner(scope, sub_scope, stage=stage)
     if filenames:
         set_watch_suppressions(
             repo_root,
@@ -678,7 +685,7 @@ def perform_sub_scope_source_write_and_rebuild(
                     + ", ".join(sorted(changed_before_write))
                 )
         write_operation()
-        rebuild = rebuild_sub_scope_outputs(repo_root, scope, sub_scope)
+        rebuild = rebuild_sub_scope_outputs(repo_root, scope, sub_scope, stage=stage)
     except SubScopeSourceSnapshotChanged:
         if filenames:
             clear_watch_suppressions(repo_root, suppression_owner, filenames)
@@ -702,6 +709,7 @@ def perform_sub_scope_source_write_and_rebuild(
                     repo_root,
                     scope,
                     sub_scope,
+                    stage=stage,
                 )
             except Exception as recovery_exc:
                 recovery_error = str(recovery_exc).strip() or recovery_exc.__class__.__name__

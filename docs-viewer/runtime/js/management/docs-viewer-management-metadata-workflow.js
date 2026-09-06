@@ -109,6 +109,7 @@ export function createDocsViewerManagementMetadataWorkflow(options = {}) {
     }
     var responseTarget = {
       scope: response.scope,
+      ...(response.stage ? { stage: response.stage } : {}),
       doc_id: response.doc_id
     };
     if (Object.prototype.hasOwnProperty.call(response, "sub_scope")) {

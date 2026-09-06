@@ -869,6 +869,7 @@ def test_parent_delete_removes_subtree_and_rebuilds_every_deleted_id(monkeypatch
             "include_search": False,
             "docs_doc_ids": ["non-publishable-doc", "child"],
             "skip_media_builds": False,
+            "stage": None,
         }
     ]
 
@@ -912,6 +913,7 @@ def test_multi_selection_delete_applies_union_once(monkeypatch) -> None:
             "include_search": False,
             "docs_doc_ids": ["non-publishable-doc", "child", "other"],
             "skip_media_builds": False,
+            "stage": None,
         }
     ]
 

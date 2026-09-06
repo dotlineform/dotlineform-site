@@ -151,7 +151,8 @@ function resolveReportContribution(context) {
       {
         collection: collectionTarget(
           context && context.viewerScope,
-          subScopeIdValue
+          subScopeIdValue,
+          context && context.viewerStage
         )
       }
     );
@@ -220,9 +221,10 @@ function byIdPayloadUrl(state, docId) {
   return state.byIdUrlBase + "/" + encodeURIComponent(docId) + ".json";
 }
 
-function collectionTarget(scope, subScope) {
+function collectionTarget(scope, subScope, stage) {
   return {
     scope: cleanId(scope),
+    ...(stage ? { stage: stage } : {}),
     sub_scope: cleanId(subScope)
   };
 }
@@ -230,6 +232,7 @@ function collectionTarget(scope, subScope) {
 function detailTarget(state, docId) {
   return {
     scope: state.viewerScope,
+    ...(state.viewerStage ? { stage: state.viewerStage } : {}),
     sub_scope: state.subScopeId,
     doc_id: cleanString(docId)
   };
@@ -268,7 +271,7 @@ function projectDetailInfo(state, docId, payload, metadata) {
   if (!project) return null;
   var doc = state.docs.find(function (record) { return record.docId === docId; });
   var projected = project({
-    collection: collectionTarget(state.viewerScope, state.subScopeId),
+    collection: collectionTarget(state.viewerScope, state.subScopeId, state.viewerStage),
     data: state.customisationData,
     document: documentRecord(doc),
     metadata: metadata,
@@ -288,7 +291,7 @@ function contributionEvent(context, subScopeIdValue, detail) {
   if (!notify) return;
   notify(Object.assign({
     access: context && context.managementContext ? "manage" : "public",
-    collection: collectionTarget(context && context.viewerScope, subScopeIdValue)
+    collection: collectionTarget(context && context.viewerScope, subScopeIdValue, context && context.viewerStage)
   }, detail || {}));
 }
 
@@ -297,7 +300,7 @@ function notifyContribution(state, detail) {
   if (!notify) return;
   notify(Object.assign({
     access: state.managementContext ? "manage" : "public",
-    collection: collectionTarget(state.viewerScope, state.subScopeId)
+    collection: collectionTarget(state.viewerScope, state.subScopeId, state.viewerStage)
   }, detail || {}));
 }
 
@@ -374,7 +377,7 @@ function appendDocRow(state, doc) {
 
   var renderRow = contributionCallback(state.contribution, "renderRow");
   var rowResult = renderRow ? renderRow({
-    collection: collectionTarget(state.viewerScope, state.subScopeId),
+    collection: collectionTarget(state.viewerScope, state.subScopeId, state.viewerStage),
     document: documentRecord(doc),
     leadingHost: leadingHost,
     titlePrefixHost: titlePrefixHost,
@@ -501,7 +504,7 @@ function configureContributionFilters(state) {
   if (!createFilters) return;
   var created = createFilters({
     access: state.managementContext ? "manage" : "public",
-    collection: collectionTarget(state.viewerScope, state.subScopeId),
+    collection: collectionTarget(state.viewerScope, state.subScopeId, state.viewerStage),
     data: state.customisationData,
     documents: Object.freeze(state.docs.map(documentRecord))
   });
@@ -533,7 +536,7 @@ function renderContributionFilters(state) {
     var host = document.createElement("div");
     host.dataset.docsSubscopeCustomFilter = filterId;
     filter.render({
-      collection: collectionTarget(state.viewerScope, state.subScopeId),
+      collection: collectionTarget(state.viewerScope, state.subScopeId, state.viewerStage),
       host: host,
       value: state.filterValues.get(filterId) || "",
       setValue: function (value) {
@@ -627,7 +630,7 @@ function visibleDocuments(state) {
     return state.filters.every(function (filter) {
       var filterId = cleanId(filter.id);
       var matches = filter.matches({
-        collection: collectionTarget(state.viewerScope, state.subScopeId),
+        collection: collectionTarget(state.viewerScope, state.subScopeId, state.viewerStage),
         document: documentRecord(doc),
         value: state.filterValues.get(filterId) || ""
       });
@@ -647,7 +650,7 @@ function visibleDocuments(state) {
         : compareTitleAscending(left, right);
     }
     var comparison = compareCustom({
-      collection: collectionTarget(state.viewerScope, state.subScopeId),
+      collection: collectionTarget(state.viewerScope, state.subScopeId, state.viewerStage),
       left: documentRecord(left),
       right: documentRecord(right),
       sortMode: state.sortMode
@@ -700,7 +703,7 @@ function renderListHead(state, documents) {
   var renderHead = contributionCallback(state.contribution, "renderListHead");
   if (!renderHead) return;
   renderHead({
-    collection: collectionTarget(state.viewerScope, state.subScopeId),
+    collection: collectionTarget(state.viewerScope, state.subScopeId, state.viewerStage),
     documents: Object.freeze(documents.map(documentRecord)),
     host: state.headNode,
     sort: listSortContext(state)
@@ -719,7 +722,7 @@ function renderListToolbar(state, documents) {
   host.className = "docsViewerReport__contributionToolbar docsViewerReport__contributionToolbar--list";
   host.dataset.reportContributionHost = "list-toolbar";
   renderToolbar({
-    collection: collectionTarget(state.viewerScope, state.subScopeId),
+    collection: collectionTarget(state.viewerScope, state.subScopeId, state.viewerStage),
     documents: Object.freeze(documents.map(documentRecord)),
     handleContributionError: function (error, reason) {
       try {
@@ -889,7 +892,7 @@ function renderDetailToolbar(state, docId) {
   host.dataset.reportContributionHost = "detail-toolbar";
   var doc = state.docs.find(function (record) { return record.docId === docId; });
   renderToolbar({
-    collection: collectionTarget(state.viewerScope, state.subScopeId),
+    collection: collectionTarget(state.viewerScope, state.subScopeId, state.viewerStage),
     commitDeletedDocument: function (target) {
       return reconcileCommittedDeletion(state, target);
     },
@@ -925,6 +928,7 @@ function renderDetailPayload(state, docId, payload) {
   var metadata = detailMetadataRecord(state, docId, payload);
   publishState(state, "detail", {
     scope: state.viewerScope,
+    ...(state.viewerStage ? { stage: state.viewerStage } : {}),
     sub_scope: state.subScopeId,
     doc_id: docId
   }, "detail-loaded", {
@@ -994,6 +998,7 @@ function assertCollectionTarget(state, target) {
   var targetDocId = cleanString(target && target.doc_id);
   if (
     !targetDocId
+    || cleanString(target && target.stage) !== state.viewerStage
     || targetScope !== state.viewerScope
     || targetSubScope !== state.subScopeId
   ) {
@@ -1008,6 +1013,7 @@ function assertCreatedCollectionTarget(state, target) {
   var targetDocId = cleanString(target && target.doc_id);
   if (
     !targetDocId
+    || cleanString(target && target.stage) !== state.viewerStage
     || targetScope !== state.viewerScope
     || targetSubScope !== state.subScopeId
   ) {
@@ -1017,19 +1023,20 @@ function assertCreatedCollectionTarget(state, target) {
 }
 
 function assertExactCollectionTarget(state, target) {
-  var keys = Object.keys(target || {}).sort();
+  var keys = Object.keys(target || {}).filter(function (key) { return key !== "stage"; }).sort();
   var targetScope = cleanId(target && target.scope);
   var targetSubScope = cleanId(target && target.sub_scope);
   if (
     keys.length !== 2
     || keys[0] !== "scope"
     || keys[1] !== "sub_scope"
+    || cleanString(target && target.stage) !== state.viewerStage
     || targetScope !== state.viewerScope
     || targetSubScope !== state.subScopeId
   ) {
     throw new Error("Imported package target did not match the mounted collection.");
   }
-  return collectionTarget(targetScope, targetSubScope);
+  return collectionTarget(targetScope, targetSubScope, state.viewerStage);
 }
 
 function focusFirstListRow(state) {
@@ -1285,6 +1292,7 @@ function mountResolvedDocsSubscopeReport(context, contribution) {
     rowsNode: refs.rowsNode,
     validDetailId: "",
     viewerScope: cleanId(context && context.viewerScope),
+    viewerStage: cleanString(context && context.viewerStage),
     mounted: true
   };
   bindFilterControls(state);

@@ -575,6 +575,7 @@ export function createDocsViewerManagementSubscopeDefaultContribution(options = 
           : onCreateDocument(
               {
                 scope: collection.scope,
+                ...(collection.stage ? { stage: collection.stage } : {}),
                 sub_scope: collection.sub_scope
               },
               {
@@ -638,6 +639,7 @@ export function createDocsViewerManagementSubscopeDefaultContribution(options = 
         prepareRequest = onPreparePackage(
           {
             scope: collection.scope,
+            ...(collection.stage ? { stage: collection.stage } : {}),
             sub_scope: collection.sub_scope,
             doc_ids: resolution.targetDocIds.slice()
           },
@@ -693,6 +695,7 @@ export function createDocsViewerManagementSubscopeDefaultContribution(options = 
           publishableRequest = onSetPublishable(
             {
               scope: collection.scope,
+              ...(collection.stage ? { stage: collection.stage } : {}),
               sub_scope: collection.sub_scope,
               doc_ids: resolution.targetDocIds.slice()
             },
@@ -749,6 +752,7 @@ export function createDocsViewerManagementSubscopeDefaultContribution(options = 
         copyRequest = onCopyDocuments(
           {
             scope: collection.scope,
+            ...(collection.stage ? { stage: collection.stage } : {}),
             sub_scope: collection.sub_scope,
             doc_ids: resolution.targetDocIds.slice()
           },
@@ -835,7 +839,8 @@ export function createDocsViewerManagementSubscopeDefaultContribution(options = 
     }
 
     if (
-      typeof settings.commitDeletedDocument !== "function"
+      !managementContext
+      || typeof settings.commitDeletedDocument !== "function"
       || typeof settings.registerAction !== "function"
     ) return;
     var deleteRegistration = settings.registerAction({

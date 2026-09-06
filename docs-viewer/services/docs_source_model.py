@@ -526,8 +526,8 @@ def validate_publishable_front_matter(
 
 def normalize_scope(scope: Any) -> str:
     value = str(scope or "").strip().lower()
-    if value not in DOCUMENT_SOURCE_ROOTS:
-        raise ValueError(f"scope must be one of: {', '.join(sorted(DOCUMENT_SOURCE_ROOTS.keys()))}")
+    if value not in DOCS_SCOPE_CONFIGS:
+        raise ValueError(f"scope must be one of: {', '.join(sorted(DOCS_SCOPE_CONFIGS.keys()))}")
     return value
 
 
@@ -535,8 +535,10 @@ def scope_root(repo_root: Path, scope: str) -> Path:
     return resolve_scope_path(repo_root, DOCUMENT_SOURCE_ROOTS[scope])
 
 
-def scope_markdown_paths(root: Path) -> list[Path]:
+def scope_markdown_paths(root: Path, *, stage_parent: bool = False) -> list[Path]:
     paths = sorted(root.glob("**/*.md"))
+    if stage_parent:
+        paths = [path for path in paths if not path.is_relative_to(root / "sub-scopes")]
     nested_paths = [path for path in paths if path.parent != root]
     if nested_paths:
         nested = ", ".join(path.relative_to(root).as_posix() for path in nested_paths)
@@ -564,7 +566,7 @@ def load_document_collection_docs_for_config(
 
     report_contract: ReportSourceContract | None = None
     docs: list[ScopeDoc] = []
-    for path in scope_markdown_paths(root):
+    for path in scope_markdown_paths(root, stage_parent=bool(parent_config.stage and not sub_scope)):
         source_text = path.read_bytes().decode("utf-8")
         front_matter, body = parse_source_text(
             source_text,

@@ -26,6 +26,7 @@ from docs_scope_config import (
     DocsManagedMediaConfig,
     DocsScopeConfig,
     load_docs_scope_configs,
+    load_docs_scope_stage,
     managed_media_config,
     resolve_location_path,
 )
@@ -365,6 +366,9 @@ def ensure_configured_scope_owned_media_directories(
     configured_scopes = configs if configs is not None else load_docs_scope_configs(repo_root)
     materialized: dict[str, tuple[Path, ...]] = {}
     for scope_id, config in configured_scopes.items():
+        if config.stages:
+            # Stage directories are populated by the user's manual migration.
+            continue
         if (
             config.scope_root.provider == EXTERNAL_LOCAL_PROVIDER
             and not resolve_location_path(repo_root, config.scope_root).is_dir()
@@ -426,12 +430,16 @@ def local_media_path_from_route(repo_root: Path, request_path: str) -> tuple[Pat
     if not request_path.startswith(DOCS_MEDIA_ROUTE_PREFIX):
         raise ValueError("Invalid Docs media route")
     parts = request_path.removeprefix(DOCS_MEDIA_ROUTE_PREFIX).split("/")
-    if len(parts) != 3:
+    if len(parts) == 4 and parts[1] in {"working", "pre-publish"}:
+        scope, stage, media_class, filename = parts
+    elif len(parts) == 3:
+        scope, media_class, filename = parts
+        stage = None
+    else:
         raise ValueError("Invalid Docs media route")
-    scope, media_class, filename = parts
     normalized_class = validate_route_media_class(media_class)
     normalized_filename = validate_media_filename(filename)
-    config = load_docs_scope_configs(repo_root).get(scope)
+    config = load_docs_scope_stage(repo_root, scope, stage)
     if config is None:
         raise FileNotFoundError(f"Docs media scope not found: {scope!r}")
     media = local_media_config(config, normalized_class)

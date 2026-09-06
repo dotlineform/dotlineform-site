@@ -180,6 +180,23 @@ def default_source_doc_record(repo_root: Path, config: DocsScopeConfig) -> dict[
 
 
 def backfilled_scope_record(repo_root: Path, config: DocsScopeConfig) -> dict[str, Any]:
+    if config.stages:
+        stage_records = [(stage, backfilled_scope_record(repo_root, stage)) for stage in config.stages]
+        record = dict(stage_records[-1][1])
+        stage_roles = {"source_root", "source_documents_root", "source_sub_scopes_root", "source_media_root", "default_source_doc"}
+        def is_stage_role(role: str) -> bool:
+            return role in stage_roles or role.startswith("generated_")
+        record["files"] = [item for item in record["files"] if not is_stage_role(item["kind"]) and item["kind"] != "route_file"]
+        for stage, stage_record in stage_records:
+            record["files"].extend(
+                {**item, "kind": f"{stage.stage}/{item['kind']}"}
+                for item in stage_record["files"] if is_stage_role(item["kind"])
+            )
+        route_path = route_file_for_config(repo_root, config)
+        if route_path.exists():
+            record["files"].append(path_record(repo_root, "route_file", route_path))
+        record["metadata"].update(viewer_base_url=config.viewer_base_url, stages=[stage.stage for stage in config.stages])
+        return record
     scope_root = resolve_scope_path(repo_root, config.scope_root.path)
     source_root = resolve_scope_path(repo_root, source_container_path(config))
     source_documents_root = resolve_scope_path(repo_root, document_source_path(config))

@@ -43,7 +43,7 @@ class DocsSubScopeCustomisationConfig:
 @dataclass(frozen=True)
 class DocsSubScopeManifestProjectionAspect:
     project: Callable[
-        [Mapping[str, Any], Sequence[Any], Path, str, str],
+        [Mapping[str, Any], Sequence[Any], Path, str, str, str],
         dict[str, Any],
     ]
 
@@ -313,7 +313,7 @@ def _normalize_analysis_tags_import_front_matter(
 
 
 def _project_analysis_works_manifest(
-    settings: Mapping[str, Any], documents: Sequence[Any], repo_root: Path, scope: str, sub_scope: str,
+    settings: Mapping[str, Any], documents: Sequence[Any], repo_root: Path, scope: str, sub_scope: str, stage: str = "",
 ) -> dict[str, Any]:
     """Identify the Manage subject contribution; shared subject projection owns its rows."""
     return {"root": {"id": ANALYSIS_WORKS_CUSTOMISATION_ID, "data": {}}, "rows": {}}
@@ -330,6 +330,7 @@ def _project_analysis_tags_manifest(
     repo_root: Path,
     scope: str,
     sub_scope: str,
+    stage: str = "",
 ) -> dict[str, Any]:
     del repo_root, scope, sub_scope
     groups = _analysis_tags_document_groups(settings)
@@ -839,6 +840,7 @@ def project_sub_scope_customisation_manifest(
     repo_root: Path,
     scope: str,
     sub_scope: str,
+    stage: str = "",
 ) -> dict[str, Any] | None:
     if customisation is None:
         return None
@@ -859,6 +861,7 @@ def project_sub_scope_customisation_manifest(
         repo_root,
         scope,
         sub_scope,
+        stage,
     )
 
 

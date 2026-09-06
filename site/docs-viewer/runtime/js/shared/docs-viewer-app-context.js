@@ -114,6 +114,7 @@ export function updateDocsViewerRouteContext(context, values, options) {
   var nextViewerBaseUrl = cleanString(values && values.viewerBaseUrl) || current.viewerBaseUrl || locationPathname(windowRef);
   var nextContext = Object.assign({}, current, {
     viewerScope: cleanString(values && values.viewerScope),
+    viewerStage: cleanString(values && values.viewerStage),
     indexTreeUrl: values && values.indexTreeUrl ? values.indexTreeUrl : "",
     recentUrl: values && values.recentUrl ? values.recentUrl : "",
     searchIndexUrl: values && values.searchIndexUrl ? values.searchIndexUrl : "",
@@ -133,5 +134,9 @@ export function updateDocsViewerRouteContext(context, values, options) {
     viewerBaseUrl: nextContext.viewerBaseUrl
   });
   nextContext.bookmarkScope = nextContext.viewerScope || nextContext.viewerPathname || "docs";
+  if (nextContext.viewerStage) {
+    nextContext.bookmarkScope += "/" + nextContext.viewerStage;
+    nextContext.preserveQueryParams = Array.from(new Set([].concat(current.preserveQueryParams || [], ["stage"])));
+  }
   return nextContext;
 }

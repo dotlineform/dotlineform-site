@@ -18,11 +18,13 @@ from .runtime_bootstrap import apply_projects_base_dir_override
 from .pipeline import DocsDataBuilder
 from .source import FrontMatterSyntaxError, InvalidDocIdError, MissingDocIdError
 from .sub_scope import SubScopeDocsBuilder, selected_sub_scope
+from docs_scope_config import select_scope_stage, require_selected_stage
 
 
 def parse_args(argv: list[str]) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Build Docs Viewer generated document payloads.")
     parser.add_argument("--scope", action="append", default=[], help="Limit build to a named docs scope.")
+    parser.add_argument("--stage", choices=("working", "pre-publish"), help="Select the exact Analysis source/generated stage.")
     parser.add_argument(
         "--projects-base-dir",
         help="Override DOTLINEFORM_PROJECTS_BASE_DIR for this build after loading .env.local.",
@@ -58,6 +60,12 @@ def main(argv: list[str] | None = None) -> int:
         scope_ids=requested_scopes or None,
     )
     selected = list(configs_by_scope.values())
+    if args.stage:
+        if len(selected) != 1:
+            raise RuntimeError("--stage requires one explicit scope")
+        selected = [select_scope_stage(selected[0], args.stage)]
+    for config in selected:
+        require_selected_stage(config)
     if not selected:
         raise RuntimeError(f"Unknown docs scope(s): {', '.join(requested_scopes)}")
     if (args.source or args.output or args.viewer_base_url) and len(selected) != 1:
@@ -68,8 +76,8 @@ def main(argv: list[str] | None = None) -> int:
         raise RuntimeError("--skip-media-builds can only be used when exactly one scope is selected")
     if args.sub_scope and len(selected) != 1:
         raise RuntimeError("--sub-scope can only be used when exactly one scope is selected")
-    if args.skip_browser_config and not args.sub_scope:
-        raise RuntimeError("--skip-browser-config requires --sub-scope")
+    if args.skip_browser_config and not (args.sub_scope or args.stage):
+        raise RuntimeError("--skip-browser-config requires --sub-scope or --stage")
     if args.sub_scope and (
         args.source
         or args.output
@@ -82,7 +90,7 @@ def main(argv: list[str] | None = None) -> int:
         )
 
     replace_scope_ids = requested_scopes or None
-    if args.write and not args.skip_browser_config:
+    if args.write and not args.skip_browser_config and not args.stage:
         write_browser_config(
             repo_root,
             selected,

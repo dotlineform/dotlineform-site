@@ -85,6 +85,8 @@ def configured_analysis_tags(
     analysis = SimpleNamespace(
         scope_id="analysis",
         scope_type="public",
+        stage="",
+        stages=(),
         source=source(parent_path),
         media=SimpleNamespace(build_sources={}),
         allow_unresolved_parent_ids=False,
@@ -96,9 +98,9 @@ def configured_analysis_tags(
 def test_watcher_imports_source_model_helpers_directly() -> None:
     module = load_docs_live_rebuild_watcher_module()
 
-    assert callable(module.load_document_collection_docs)
+    assert callable(module.load_document_collection_docs_for_config)
     assert callable(module.scope_doc_sort_key)
-    assert module.load_document_collection_docs.__module__ == "docs_source_model"
+    assert module.load_document_collection_docs_for_config.__module__ == "docs_source_model"
     assert module.scope_doc_sort_key.__module__ == "docs_source_model"
 
 
@@ -184,6 +186,8 @@ def test_watcher_reconciles_scope_and_sub_scope_state_from_config(tmp_path: Path
     def config(source: str, sub_scopes=()):
         return SimpleNamespace(
             scope_type="local",
+            stage="",
+            stages=(),
             source=SimpleNamespace(
                 location=SimpleNamespace(path=Path(source)),
                 documents_path=Path("documents"),
@@ -262,6 +266,8 @@ def test_watcher_registers_configured_mermaid_root_and_renders_only_changed_iden
     )
     config = SimpleNamespace(
         scope_type="local",
+        stage="",
+        stages=(),
         source=source,
         media=SimpleNamespace(
             build_sources={"mermaid": build},
@@ -540,6 +546,7 @@ def test_watcher_invalid_parsed_snapshot_fails_closed() -> None:
         _repo_root: Path,
         _scope: str,
         _sub_scope: str = "",
+        *, stage=None,
     ):
         raise ValueError("simulated invalid source")
 
@@ -773,7 +780,7 @@ def test_parent_watcher_capture_runs_one_existing_rebuild() -> None:
         }
 
         module.try_parsed_doc_snapshot = (
-            lambda _root, _scope, _sub_scope="": (current, "")
+            lambda _root, _scope, _sub_scope="", stage=None: (current, "")
         )
         module.current_doc_timestamp = lambda: "2026-07-16 10:00:01"
         module.rebuild_scope = lambda *args, **kwargs: (
@@ -802,6 +809,7 @@ def test_parent_watcher_capture_runs_one_existing_rebuild() -> None:
                 (repo_root, "studio"),
                 {
                     "docs_doc_ids": ["doc"],
+                    "stage": None,
                 },
             )
         ]
@@ -921,7 +929,7 @@ def test_sub_scope_watcher_captures_preserves_and_rebuilds_exact_collection_once
                     AssertionError("sub-scope processing must not rebuild parent")
                 )
             )
-            module.rebuild_sub_scope = lambda root, scope, sub_scope: (
+            module.rebuild_sub_scope = lambda root, scope, sub_scope, stage=None: (
                 rebuilds.append((root, scope, sub_scope)) or True
             )
             module.log = logs.append
@@ -1029,7 +1037,7 @@ def test_sub_scope_watcher_timestamp_failure_keeps_source_and_rebuilds_once() ->
                     OSError("simulated sub-scope timestamp write failure")
                 )
             )
-            module.rebuild_sub_scope = lambda root, scope, sub_scope: (
+            module.rebuild_sub_scope = lambda root, scope, sub_scope, stage=None: (
                 rebuilds.append((root, scope, sub_scope)) or True
             )
             module.log = logs.append
@@ -1378,7 +1386,7 @@ def test_sub_scope_rebuild_runs_child_docs_only() -> None:
     original_log = module.log
     original_configs = dict(module.DOCS_SCOPE_CONFIGS)
     original_remove_manifest = module.remove_build_manifest
-    scope_config = object()
+    scope_config = SimpleNamespace(stage="", stages=())
     invalidations: list[tuple[Path, object]] = []
 
     class Completed:
@@ -1425,7 +1433,7 @@ def test_watcher_falls_back_to_full_docs_build_when_targeted_payloads_are_missin
     original_fallback = module.targeted_docs_build_fallback_reason
     original_configs = dict(module.DOCS_SCOPE_CONFIGS)
     original_remove_manifest = module.remove_build_manifest
-    scope_config = object()
+    scope_config = SimpleNamespace(stage="", stages=())
     invalidations: list[tuple[Path, object]] = []
 
     class Completed:

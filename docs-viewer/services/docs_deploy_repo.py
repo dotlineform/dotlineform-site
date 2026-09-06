@@ -120,6 +120,8 @@ def deployable_config(repo_root: Path, value: Any) -> DocsScopeConfig:
     config = load_docs_scope_configs(repo_root, scope_ids=(scope,)).get(scope)
     if config is None or config.public_projection is None:
         raise ValueError("Analysis has no configured public projection")
+    if config.stages:
+        raise ValueError("Deploy Repo is unavailable while publishing stage actions are deferred")
     if public_documents_path(config) is None or public_search_path(config) is None:
         raise ValueError("Analysis public documents and Search destinations are required")
     return config

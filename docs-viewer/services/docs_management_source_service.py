@@ -21,7 +21,7 @@ from docs_management_document_target import (  # noqa: E402
     managed_document_target_request,
     resolve_managed_document_target,
 )
-from docs_scope_config import path_label  # noqa: E402
+from docs_scope_config import path_label, require_document_authoring  # noqa: E402
 from local_env import runtime_env  # noqa: E402
 from markdown_renderer import normalize_markdown_blank_lines  # noqa: E402
 
@@ -72,6 +72,8 @@ def read_source_body(repo_root: Path, params: Dict[str, list[str]]) -> Dict[str,
     }
     if "sub_scope" in params:
         request_target["sub_scope"] = (params.get("sub_scope") or [""])[0]
+    if "stage" in params:
+        request_target["stage"] = (params.get("stage") or [""])[0]
     resolved = resolve_managed_document_target(repo_root, request_target)
     target = resolved.document
     source_text = target.source_text
@@ -83,8 +85,7 @@ def read_source_body(repo_root: Path, params: Dict[str, list[str]]) -> Dict[str,
         raise ValueError(f"existing source doc_id {existing_doc_id!r} does not match requested doc {target.doc_id!r}")
     payload = {
         "ok": True,
-        "scope": resolved.scope,
-        "doc_id": target.doc_id,
+        **resolved.request_target(),
         "source_body": normalize_source_body(source_body),
         "source_revision": source_revision_for_text(source_text),
         "path": path_label(repo_root, target.path),
@@ -105,6 +106,7 @@ def rebuild_source_body(repo_root: Path, body: Dict[str, Any], dry_run: bool) ->
         repo_root,
         managed_document_target_request(body),
     )
+    require_document_authoring(resolved.parent_config)
     target = resolved.document
     current_source_text = target.path.read_bytes().decode("utf-8")
     current_revision = source_revision_for_text(current_source_text)
@@ -148,6 +150,7 @@ def rebuild_source_body(repo_root: Path, body: Dict[str, Any], dry_run: bool) ->
                 [target.path],
                 write_operation,
                 suppression_reason="docs-source-editor",
+                stage=resolved.stage or None,
             )
         else:
             rebuild = write_rebuild.perform_source_write_and_rebuild(
@@ -156,6 +159,7 @@ def rebuild_source_body(repo_root: Path, body: Dict[str, Any], dry_run: bool) ->
                 [target.path],
                 write_operation,
                 suppression_reason="docs-source-editor",
+                stage=resolved.stage or None,
                 docs_doc_ids=[target.doc_id],
             )
         event_details = {
@@ -171,8 +175,7 @@ def rebuild_source_body(repo_root: Path, body: Dict[str, Any], dry_run: bool) ->
 
     payload = {
         "ok": True,
-        "scope": resolved.scope,
-        "doc_id": target.doc_id,
+        **resolved.request_target(),
         "source_revision": next_revision,
         "path": path_label(repo_root, target.path),
         "rebuild": rebuild,
@@ -261,8 +264,7 @@ def open_source_doc(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dic
 
     payload = {
         "ok": True,
-        "scope": resolved.scope,
-        "doc_id": target.doc_id,
+        **resolved.request_target(),
         "editor": editor,
         "preferred_app": preferred_app if editor == "default" else "",
         "path": path_label(repo_root, target.path),
