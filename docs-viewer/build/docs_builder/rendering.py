@@ -183,6 +183,7 @@ class ContentRenderingMixin:
         return re.sub(r"\\([\\`*{}\[\]()#+\-.!_>])", r"\1", value or "")
 
     def resolve_media_url(self, raw_path: str) -> str:
+        """Resolve stage-owned Docs media without falling through to remote media."""
         relative_path = raw_path.strip()
         if not relative_path:
             return ""
@@ -196,6 +197,11 @@ class ContentRenderingMixin:
             if clean_path.startswith(f"{reference_prefix}/"):
                 identity = clean_path.removeprefix(f"{reference_prefix}/")
                 return f"{media.served_path_prefix}/{identity}"
+        if self.config.stage and clean_path.startswith("docs/"):
+            raise RuntimeError(
+                f"Docs media reference has no configured role in scope {self.scope_id} "
+                f"stage {self.config.stage}: {clean_path}"
+            )
         if clean_path.startswith(f"docs/{self.scope_id}/"):
             raise RuntimeError(
                 f"Docs media reference has no configured published role in scope {self.scope_id}: {clean_path}"

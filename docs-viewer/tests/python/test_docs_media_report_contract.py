@@ -29,8 +29,8 @@ def load_management_service(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
     (tmp_path / "docs-viewer").mkdir(exist_ok=True)
     analysis = docs_scope_record("analysis", scope_type="public", viewer_base_url="/analysis/", include_scope_param=False)
     analysis["stages"] = {
-        stage: {"media_namespace": namespace, "media": analysis["media"], "sub_scopes": []}
-        for stage, namespace in (("working", "dotlineform"), ("pre-publish", "analysis"))
+        stage: {"media": analysis["media"], "sub_scopes": []}
+        for stage in ("working", "pre-publish")
     }
     write_docs_scope_config(tmp_path, [docs_scope_record("example"), analysis])
     monkeypatch.setenv("DOTLINEFORM_PROJECTS_BASE_DIR", str(tmp_path))

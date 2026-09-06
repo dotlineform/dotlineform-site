@@ -208,19 +208,18 @@ def test_report_isolates_stage_media_and_document_targets(tmp_path: Path, stage:
     analysis["media"]["types"]["svg"]["build_inputs"] = ["mermaid"]
     analysis["stages"] = {
         name: {
-            "media_namespace": namespace,
             "media": analysis["media"],
             "sub_scopes": [docs_sub_scope_record(
                 "analysis", "works", scope_type="public" if name == "pre-publish" else "local"
             )],
         }
-        for name, namespace in (("working", "dotlineform"), ("pre-publish", "analysis"))
+        for name in ("working", "pre-publish")
     }
     write_docs_scope_config(tmp_path, [analysis])
-    for name, namespace in (("working", "dotlineform"), ("pre-publish", "analysis")):
-        _write_document(tmp_path, PARENT_DOC_ID, name, f"[[media:docs/{namespace}/img/same.png]]", scope="analysis", stage=name)
+    for name in ("working", "pre-publish"):
+        _write_document(tmp_path, PARENT_DOC_ID, name, "[[media:docs/analysis/img/same.png]]", scope="analysis", stage=name)
         _write_document(tmp_path, REPORT_HOST_ID, "Works", ":::report\nid: docs_subscope\naccess: local\nsub_scope: works\n:::\n", scope="analysis", stage=name)
-        _write_document(tmp_path, SUBDOC_ID, name, f"[[media:docs/{namespace}/img/same.png]]", scope="analysis", stage=name, sub_scope="works")
+        _write_document(tmp_path, SUBDOC_ID, name, "[[media:docs/analysis/img/same.png]]", scope="analysis", stage=name, sub_scope="works")
         config = load_docs_scope_stage(tmp_path, "analysis", name)
         for location, identity in (
             (config.media.types["img"].source_location, "same.png"),

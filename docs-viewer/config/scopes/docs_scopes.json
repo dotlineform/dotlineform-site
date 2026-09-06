@@ -227,7 +227,6 @@
       },
       "stages": {
         "working": {
-          "media_namespace": "dotlineform",
           "media": {
             "types": {
               "img": {
@@ -310,7 +309,6 @@
           ]
         },
         "pre-publish": {
-          "media_namespace": "analysis",
           "media": {
             "types": {
               "img": {

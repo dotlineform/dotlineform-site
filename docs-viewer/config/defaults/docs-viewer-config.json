@@ -57,19 +57,19 @@
           "default_doc_id": "d-20260801-073826-8865a8",
           "media": {
             "files": {
-              "reference_prefix": "docs/dotlineform/files",
+              "reference_prefix": "docs/analysis/files",
               "served_path_prefix": "/docs/media/analysis/working/files"
             },
             "html": {
-              "reference_prefix": "docs/dotlineform/html",
+              "reference_prefix": "docs/analysis/html",
               "served_path_prefix": "/docs/media/analysis/working/html"
             },
             "img": {
-              "reference_prefix": "docs/dotlineform/img",
+              "reference_prefix": "docs/analysis/img",
               "served_path_prefix": "/docs/media/analysis/working/img"
             },
             "svg": {
-              "reference_prefix": "docs/dotlineform/svg",
+              "reference_prefix": "docs/analysis/svg",
               "served_path_prefix": "/docs/media/analysis/working/svg"
             }
           },

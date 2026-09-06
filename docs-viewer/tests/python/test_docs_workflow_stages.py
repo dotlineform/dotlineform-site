@@ -24,17 +24,13 @@ DOC_ID = "d-20260906-170000-a1b2c3"
 @pytest.fixture
 def stage_repo(tmp_path: Path) -> Path:
     prepare_repo(tmp_path)
-    analysis = docs_scope_record("analysis", scope_type="public", viewer_base_url="/analysis/", include_scope_param=False)
+    analysis = docs_scope_record("analysis", scope_type="public", viewer_base_url="/analysis/", include_scope_param=False, media_types=("img", "svg", "files", "html"))
     analysis["stages"] = {
         stage: {
-            "media_namespace": namespace,
             "media": deepcopy(analysis["media"]),
             "sub_scopes": [docs_sub_scope_record("analysis", collection, scope_type="public" if stage == "pre-publish" else "local")],
         }
-        for stage, namespace, collection in (
-            ("working", "dotlineform", "works"),
-            ("pre-publish", "analysis", "works"),
-        )
+        for stage, collection in (("working", "works"), ("pre-publish", "works"))
     }
     write_json(tmp_path / scopes.CONFIG_REL_PATH, {
         "schema_version": scopes.SCHEMA_VERSION,
@@ -82,8 +78,9 @@ def test_stage_storage_retains_scope_owned_snapshot_and_media_identity(stage_rep
     assert scopes.document_source_path(working.sub_scopes[0]) == Path(
         "docs-viewer/scopes/analysis/working/source/documents/sub-scopes/works/documents"
     )
-    assert working.media.types["img"].reference_prefix == Path("docs/dotlineform/img")
+    assert working.media.types["img"].reference_prefix == pre_publish.media.types["img"].reference_prefix == Path("docs/analysis/img")
     assert working.media.types["img"].served_path_prefix == "/docs/media/analysis/working/img"
+    assert pre_publish.media.types["img"].served_path_prefix == "/docs/media/analysis/pre-publish/img"
     assert scopes.document_source_path(scopes.load_docs_scope_stage(stage_repo, "studio")) == Path(
         "docs-viewer/scopes/studio/source/documents"
     )
@@ -93,6 +90,30 @@ def test_stage_storage_retains_scope_owned_snapshot_and_media_identity(stage_rep
 def test_workflow_scope_requires_exact_stage(stage_repo: Path, stage: str | None) -> None:
     with pytest.raises(ValueError, match="requires stage"):
         scopes.load_docs_scope_stage(stage_repo, "analysis", stage)
+
+
+@pytest.mark.parametrize("stage", ["working", "pre-publish"])
+def test_media_tokens_resolve_shared_identity_in_exact_stage(stage_repo: Path, stage: str) -> None:
+    from docs_builder.pipeline import DocsDataBuilder
+
+    config = scopes.load_docs_scope_stage(stage_repo, "analysis", stage)
+    builder = DocsDataBuilder(repo_root=stage_repo, config=config, skip_media_builds=True)
+    for media_type in ("img", "svg", "files", "html"):
+        token = f"[[media:docs/analysis/{media_type}/same-file]]"
+        assert builder.resolve_media_tokens(token) == f"/docs/media/analysis/{stage}/{media_type}/same-file"
+
+    html_root = stage_repo / config.media.types["html"].source_location.path
+    html_root.mkdir(parents=True)
+    (html_root / "same.html").write_text(f"<p>{stage}</p>", encoding="utf-8")
+    embedded = builder.resolve_html_media_tokens("[[html-media:docs/analysis/html/same.html]]")
+    assert f'src="/docs/media/analysis/{stage}/html/same.html"' in embedded
+
+    # A stale or cross-scope Docs token must not become a generic remote URL.
+    builder.site_config["media"] = {"base": "https://media.example.test"}
+    for namespace in ("dotlineform", "studio"):
+        with pytest.raises(RuntimeError, match=f"no configured role in scope analysis stage {stage}"):
+            builder.resolve_media_tokens(f"[[media:docs/{namespace}/img/same-file]]")
+    assert builder.resolve_media_url("https://example.test/photo.jpg") == "https://example.test/photo.jpg"
 
 
 def test_same_document_id_is_read_only_from_requested_stage(stage_repo: Path) -> None:
@@ -300,7 +321,7 @@ def test_working_write_rebuild_and_delete_preserve_other_owners(stage_repo: Path
         target = created["target"]
         params = {key: [value] for key, value in target.items()}
         read = source_service.read_source_body(stage_repo, params)
-        body = "# Edited\n\n[[media:docs/dotlineform/img/retained.jpg]]\n"
+        body = "# Edited\n\n[[media:docs/analysis/img/retained.jpg]]\n"
         _, saved = service.docs_management_post_response(stage_repo, "/docs/source/rebuild", {
             **target, "source_body": body, "source_revision": read["source_revision"],
         })

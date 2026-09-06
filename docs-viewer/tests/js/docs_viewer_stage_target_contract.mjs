@@ -27,11 +27,11 @@ const fetch = async (url, options) => {
 const options = { scope: "analysis", stage: "working", baseUrl: "http://fixture.test", fetch };
 await createManagedDoc({ title: "Created", sub_scope: "projects" }, options);
 await readManagedDocSource(working, options);
-await rebuildManagedDocSource(working, { source_body: "[[media:docs/dotlineform/img/one.jpg]]", source_revision: "revision" }, options);
+await rebuildManagedDocSource(working, { source_body: "[[media:docs/analysis/img/one.jpg]]", source_revision: "revision" }, options);
 await applyManagedSubScopeDocDelete(working, "sha256:" + "a".repeat(64), options);
 assert.equal(requests[0].body.stage, "working");
 assert.match(requests[1].url, /stage=working/);
-assert.deepEqual(requests[2].body, { ...working, source_body: "[[media:docs/dotlineform/img/one.jpg]]", source_revision: "revision" });
+assert.deepEqual(requests[2].body, { ...working, source_body: "[[media:docs/analysis/img/one.jpg]]", source_revision: "revision" });
 assert.equal(requests[3].body.stage, "working");
 
 const configs = new Map([

@@ -1121,15 +1121,12 @@ def normalize_workflow_stages(
     stages = []
     for stage in ("working", "pre-publish"):
         settings = raw[stage]
-        allowed = {"media_namespace", "media", "default_doc_id", "sub_scopes", "non_loadable_doc_ids", "manage_only_tree_root_ids", "allow_unresolved_parent_ids"}
+        allowed = {"media", "default_doc_id", "sub_scopes", "non_loadable_doc_ids", "manage_only_tree_root_ids", "allow_unresolved_parent_ids"}
         if not isinstance(settings, dict) or set(settings) - allowed:
             raise ValueError(f"{field}.{stage} contains unsupported settings")
-        namespace = settings.get("media_namespace")
-        if not isinstance(namespace, str) or not SUB_SCOPE_ID_PATTERN.fullmatch(namespace):
-            raise ValueError(f"{field}.{stage}.media_namespace must be one explicit namespace")
         stage_root = location_child(parent.scope_root, Path(stage))
         media = normalize_media(
-            settings.get("media"), scope_id=namespace, scope_root=stage_root,
+            settings.get("media"), scope_id=parent.scope_id, scope_root=stage_root,
             field=f"{field}.{stage}.media",
         )
         published_media_root = location_child(parent.scope_root, SCOPE_PUBLISHED_PATH / "media")

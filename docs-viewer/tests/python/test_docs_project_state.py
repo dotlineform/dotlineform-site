@@ -240,13 +240,12 @@ def test_default_paths_select_working_works(tmp_path: Path) -> None:
     analysis = docs_scope_record("analysis", scope_type="public", viewer_base_url="/analysis/", include_scope_param=False)
     analysis["stages"] = {
         stage: {
-            "media_namespace": namespace,
             "media": analysis["media"],
             "sub_scopes": [docs_sub_scope_record(
                 "analysis", "works", scope_type="public" if stage == "pre-publish" else "local"
             )],
         }
-        for stage, namespace in (("working", "dotlineform"), ("pre-publish", "analysis"))
+        for stage in ("working", "pre-publish")
     }
     write_docs_scope_config(tmp_path, [analysis])
 

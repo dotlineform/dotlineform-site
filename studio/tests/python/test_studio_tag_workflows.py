@@ -173,12 +173,11 @@ sub_scope: concepts
     analysis = configuration["scopes"][0]
     analysis["stages"] = {
         stage: {
-            "media_namespace": namespace,
             "media": analysis["media"],
             "sub_scopes": [{**child, "public_projection": None} for child in analysis["sub_scopes"]]
             if stage == "working" else analysis["sub_scopes"],
         }
-        for stage, namespace in (("working", "dotlineform"), ("pre-publish", "analysis"))
+        for stage in ("working", "pre-publish")
     }
     config_path.write_text(json.dumps(configuration))
     reports_path = repo_root / "docs-viewer/config/reports/reports.json"
