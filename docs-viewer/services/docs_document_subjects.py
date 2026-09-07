@@ -15,22 +15,26 @@ FOLDER_PATH_FIELD = "folder_path"
 WORK_ID_FIELD = "work_id"
 SERIES_ID_FIELD = "series_id"
 DETAIL_UID_FIELD = "detail_uid"
+MOMENT_ID_FIELD = "moment_id"
 AUTHORING_SUBJECT_FIELDS = (
     FOLDER_PATH_FIELD,
     WORK_ID_FIELD,
     SERIES_ID_FIELD,
     DETAIL_UID_FIELD,
+    MOMENT_ID_FIELD,
 )
 SUBJECT_KIND_BY_FIELD = {
     FOLDER_PATH_FIELD: "folder",
     WORK_ID_FIELD: "work",
     SERIES_ID_FIELD: "series",
     DETAIL_UID_FIELD: "detail",
+    MOMENT_ID_FIELD: "moment",
 }
 SUBJECT_ASSOCIATIONS_SCHEMA_VERSION = "docs_subject_associations_v1"
 WORK_ID_PATTERN = re.compile(r"\A\d{5}\Z")
 SERIES_ID_PATTERN = re.compile(r"\A[a-z0-9][a-z0-9-]*\Z")
 DETAIL_UID_PATTERN = re.compile(r"\A([0-9]{5})-([0-9]{3})\Z")
+MOMENT_ID_PATTERN = re.compile(r"\A[0-9]{3}\Z")
 
 
 def parse_detail_uid(value: str) -> tuple[str, str]:
@@ -42,13 +46,16 @@ def parse_detail_uid(value: str) -> tuple[str, str]:
     return match.group(1), match.group(2)
 
 
-def catalogue_subject_key_is_canonical(kind: str, key: str) -> bool:
+def subject_key_is_canonical(kind: str, key: str) -> bool:
+    """Validate exact non-Folder identity without consulting a registry."""
     if kind == "work":
         return WORK_ID_PATTERN.fullmatch(key) is not None
     if kind == "series":
         return SERIES_ID_PATTERN.fullmatch(key) is not None
     if kind == "detail":
         return DETAIL_UID_PATTERN.fullmatch(key) is not None
+    if kind == "moment":
+        return MOMENT_ID_PATTERN.fullmatch(key) is not None
     return False
 
 
@@ -96,7 +103,7 @@ def normalize_authoring_subject(
             except ValueError:
                 valid = False
     elif valid:
-        valid = catalogue_subject_key_is_canonical(kind, value)
+        valid = subject_key_is_canonical(kind, value)
     if not valid:
         return {
             "state": "malformed",
@@ -111,6 +118,18 @@ def normalize_authoring_subject(
         "key": value,
         "fields": [field_name],
     }
+
+
+def validate_unique_moment_subjects(subjects_by_doc_id: Mapping[str, Mapping[str, Any]]) -> None:
+    """A collection may omit Moment IDs, but each declared valid ID has one owner."""
+    owners: dict[str, str] = {}
+    for doc_id, subject in subjects_by_doc_id.items():
+        if subject.get("state") != "valid" or subject.get("kind") != "moment":
+            continue
+        key = str(subject["key"])
+        if key in owners:
+            raise ValueError(f"duplicate moment_id {key!r}: {owners[key]} and {doc_id}")
+        owners[key] = doc_id
 
 
 def subject_projection_generation(
@@ -158,7 +177,7 @@ def project_subject_associations(
         kind = str(subject.get("kind") or "")
         key = str(subject.get("key") or "")
         viewer_url = str(getattr(document, "viewer_url", "") or "")
-        if kind not in {"folder", "work", "series", "detail"} or not key or not viewer_url:
+        if kind not in SUBJECT_KIND_BY_FIELD.values() or not key or not viewer_url:
             raise ValueError(
                 f"valid authoring subject has no exact private location for {doc_id!r}"
             )
@@ -208,12 +227,14 @@ __all__ = [
     "AUTHORING_SUBJECT_FIELDS",
     "DETAIL_UID_FIELD",
     "FOLDER_PATH_FIELD",
+    "MOMENT_ID_FIELD",
     "SERIES_ID_FIELD",
     "SUBJECT_ASSOCIATIONS_SCHEMA_VERSION",
     "WORK_ID_FIELD",
-    "catalogue_subject_key_is_canonical",
+    "subject_key_is_canonical",
     "normalize_authoring_subject",
     "parse_detail_uid",
     "project_subject_associations",
     "subject_projection_generation",
+    "validate_unique_moment_subjects",
 ]

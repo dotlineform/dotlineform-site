@@ -17,6 +17,28 @@ if str(SERVICES_DIR) not in sys.path:
 import docs_document_subjects as subjects  # noqa: E402
 
 
+def test_moment_identity_is_exact_and_independent_of_series() -> None:
+    moment = subjects.normalize_authoring_subject({"moment_id": "001"}, folder_supported=False)
+    series = subjects.normalize_authoring_subject({"series_id": "001"}, folder_supported=False)
+    assert moment == {"state": "valid", "kind": "moment", "key": "001", "fields": ["moment_id"]}
+    assert moment != series
+    document = SimpleNamespace(doc_id="moment-doc", viewer_url="/docs/?doc=moment-doc")
+    payload = subjects.project_subject_associations(
+        scope="analysis", sub_scope="moments", documents=[document],
+        subjects_by_doc_id={document.doc_id: moment}, subject_generation="test",
+    )
+    assert payload["associations"][0]["subject"] == {"kind": "moment", "key": "001"}
+    assert subjects.normalize_authoring_subject({"moment_id": "001", "work_id": "00001"}, folder_supported=False)["state"] == "conflicting"
+    subjects.validate_unique_moment_subjects({"moment-doc": moment, "series-doc": series, "plain-doc": {"state": "none"}})
+    with pytest.raises(ValueError, match="duplicate moment_id '001': first and second"):
+        subjects.validate_unique_moment_subjects({"first": moment, "second": moment})
+
+
+@pytest.mark.parametrize("value", [1, "1", "01", "0001", "001\n", " 001", "٠٠١", None])
+def test_moment_identity_rejects_noncanonical_values(value: object) -> None:
+    assert subjects.normalize_authoring_subject({"moment_id": value}, folder_supported=False)["state"] == "malformed"
+
+
 def test_detail_uid_is_exact_identity_without_catalogue_lookup() -> None:
     assert subjects.parse_detail_uid("00008-001") == ("00008", "001")
     normalized = subjects.normalize_authoring_subject(

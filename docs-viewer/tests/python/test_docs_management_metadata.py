@@ -40,8 +40,13 @@ SUB_SCOPE_DOC_ID = "d-20260727-211500-a1b2c3"
     ("dotlineform", "processing", "working_processing"),
     ("analysis", "works", "pre_publish_works"),
 ])
-def test_detail_subject_assignment_and_projection_without_catalogue(
+@pytest.mark.parametrize("subject_field,subject_kind,valid_key,invalid_key", [
+    ("detail_uid", "detail", "00008-001", "8-1"),
+    ("moment_id", "moment", "001", "1"),
+])
+def test_document_subject_assignment_and_projection_without_catalogue(
     scope: str, sub_scope: str, customisation: str,
+    subject_field: str, subject_kind: str, valid_key: str, invalid_key: str,
 ) -> None:
     with make_repo() as repo_name:
         repo_root = Path(repo_name)
@@ -65,16 +70,16 @@ def test_detail_subject_assignment_and_projection_without_catalogue(
             repo_root, docs_management_service.routes.METADATA_PATH, query,
         )
         assert metadata["record"]["authoring_subject"]["state"] == "none"
-        empty_fields = {"folder_path": "", "work_id": "", "series_id": "", "detail_uid": ""}
+        empty_fields = {"folder_path": "", "work_id": "", "series_id": "", "detail_uid": "", "moment_id": ""}
         request = {
             "scope": scope, "sub_scope": sub_scope, "doc_id": SUB_SCOPE_DOC_ID,
             "source_revision": metadata["source_revision"],
             "field_group": "authoring_subject", "confirm": True,
-            "fields": {**empty_fields, "detail_uid": "00008-001"},
+            "fields": {**empty_fields, subject_field: valid_key},
         }
         for invalid in (
-            {**empty_fields, "detail_uid": "8-1"},
-            {**empty_fields, "detail_uid": "00008-001", "work_id": "00008"},
+            {**empty_fields, subject_field: invalid_key},
+            {**empty_fields, subject_field: valid_key, "work_id": "00008"},
         ):
             with pytest.raises(ValueError):
                 docs_management_mutations.plan_assign_field_group(repo_root, {**request, "fields": invalid})
@@ -89,7 +94,7 @@ def test_detail_subject_assignment_and_projection_without_catalogue(
         assert write.path == source_path.resolve()
         write.path.write_text(write.text, encoding="utf-8")
         front_matter, body = model.parse_source(source_path)
-        assert front_matter["detail_uid"] == "00008-001"
+        assert front_matter[subject_field] == valid_key
         assert not any(field in front_matter for field in ("folder_path", "work_id", "series_id"))
         assert body == authored_body
         config = load_docs_scope_configs(repo_root, scope_ids=[scope])[scope]
@@ -101,23 +106,30 @@ def test_detail_subject_assignment_and_projection_without_catalogue(
         output = repo_root / f"docs-viewer/scopes/{scope}/generated/sub-scopes/{sub_scope}/documents"
         manifest = read_json(output / "manage-manifest.json")
         associations = read_json(output / "subject-associations.json")
-        assert manifest["docs"][0]["authoring_subject"]["kind"] == "detail"
-        assert associations["associations"][0]["subject"] == {"kind": "detail", "key": "00008-001"}
+        assert manifest["docs"][0]["authoring_subject"]["kind"] == subject_kind
+        assert associations["associations"][0]["subject"] == {"kind": subject_kind, "key": valid_key}
         metadata = docs_management_service.docs_management_get_payload(
             repo_root, docs_management_service.routes.METADATA_PATH, query,
         )
-        assert metadata["record"]["customisation"]["detail_uid"] == "00008-001"
+        assert metadata["record"]["customisation"][subject_field] == valid_key
         replacement = docs_management_mutations.plan_assign_field_group(repo_root, {
             **request, "source_revision": metadata["source_revision"],
             "fields": {**empty_fields, "work_id": "00008"},
         })
-        assert "detail_uid:" not in replacement.source_writes[0].text
+        assert f"{subject_field}:" not in replacement.source_writes[0].text
         assert replacement.source_writes[0].text.endswith(authored_body)
         cleared = docs_management_mutations.plan_assign_field_group(repo_root, {
             **request, "source_revision": metadata["source_revision"], "fields": empty_fields,
         })
-        assert "detail_uid:" not in cleared.source_writes[0].text
+        assert f"{subject_field}:" not in cleared.source_writes[0].text
         assert cleared.source_writes[0].text.endswith(authored_body)
+        if subject_kind == "moment":
+            duplicate_id = "d-20260905-120000-123456"
+            (source_path.parent / f"{duplicate_id}.md").write_text(model.format_source({
+                **front_matter, "doc_id": duplicate_id, "title": "Another Moment",
+            }, authored_body), encoding="utf-8")
+            with pytest.raises(ValueError, match="duplicate moment_id '001'"):
+                builder.run(write=False)
 
 
 def test_management_request_refreshes_scope_model_from_config() -> None:
@@ -324,17 +336,17 @@ def test_projects_subject_assignment_read_save_remove_and_strict_rejection(
             {
                 **target_body,
                 "confirm": False,
-                "fields": {"folder_path": "", "work_id": "", "series_id": "", "detail_uid": ""},
+                "fields": {"folder_path": "", "work_id": "", "series_id": "", "detail_uid": "", "moment_id": ""},
             },
             {
                 **target_body,
                 "field_group": "AUTHORING_SUBJECT",
-                "fields": {"folder_path": "", "work_id": "", "series_id": "", "detail_uid": ""},
+                "fields": {"folder_path": "", "work_id": "", "series_id": "", "detail_uid": "", "moment_id": ""},
             },
             {
                 **target_body,
                 "field_group": "unknown",
-                "fields": {"folder_path": "", "work_id": "", "series_id": "", "detail_uid": ""},
+                "fields": {"folder_path": "", "work_id": "", "series_id": "", "detail_uid": "", "moment_id": ""},
             },
             {
                 **target_body,
@@ -342,7 +354,7 @@ def test_projects_subject_assignment_read_save_remove_and_strict_rejection(
                     "folder_path": "",
                     "work_id": "",
                     "series_id": "",
-                    "detail_uid": "",
+                    "detail_uid": "", "moment_id": "",
                     "extra": "rejected",
                 },
             },
@@ -352,7 +364,7 @@ def test_projects_subject_assignment_read_save_remove_and_strict_rejection(
                     "folder_path": str(tmp_path / "outside"),
                     "work_id": "",
                     "series_id": "",
-                    "detail_uid": "",
+                    "detail_uid": "", "moment_id": "",
                 },
             },
             {
@@ -361,7 +373,7 @@ def test_projects_subject_assignment_read_save_remove_and_strict_rejection(
                     "folder_path": "dlf-local:projects/architecture",
                     "work_id": "",
                     "series_id": "",
-                    "detail_uid": "",
+                    "detail_uid": "", "moment_id": "",
                 },
             },
             {
@@ -370,7 +382,7 @@ def test_projects_subject_assignment_read_save_remove_and_strict_rejection(
                     "folder_path": "",
                     "work_id": "00123",
                     "series_id": "026",
-                    "detail_uid": "",
+                    "detail_uid": "", "moment_id": "",
                 },
             },
         ]
@@ -394,7 +406,7 @@ def test_projects_subject_assignment_read_save_remove_and_strict_rejection(
                     "folder_path": prospective.as_uri(),
                     "work_id": "",
                     "series_id": "",
-                    "detail_uid": "",
+                    "detail_uid": "", "moment_id": "",
                 },
             },
             dry_run=False,
@@ -418,7 +430,7 @@ def test_projects_subject_assignment_read_save_remove_and_strict_rejection(
             docs_management_service.routes.ASSIGN_FIELD_GROUP_PATH,
             {
                 **target_body,
-                "fields": {"folder_path": "", "work_id": "", "series_id": "", "detail_uid": ""},
+                "fields": {"folder_path": "", "work_id": "", "series_id": "", "detail_uid": "", "moment_id": ""},
             },
             dry_run=False,
         )
@@ -429,7 +441,7 @@ def test_projects_subject_assignment_read_save_remove_and_strict_rejection(
             {
             **target_body,
             "source_revision": result["source_revision"],
-            "fields": {"folder_path": "", "work_id": "", "series_id": "", "detail_uid": ""},
+            "fields": {"folder_path": "", "work_id": "", "series_id": "", "detail_uid": "", "moment_id": ""},
             },
         )
         linked_bytes = source_path.read_bytes()
@@ -452,7 +464,7 @@ def test_projects_subject_assignment_read_save_remove_and_strict_rejection(
                 {
                     **target_body,
                     "source_revision": result["source_revision"],
-                    "fields": {"folder_path": "", "work_id": "", "series_id": "", "detail_uid": ""},
+                    "fields": {"folder_path": "", "work_id": "", "series_id": "", "detail_uid": "", "moment_id": ""},
                 },
                 dry_run=False,
             )
@@ -481,7 +493,7 @@ def test_projects_subject_assignment_read_save_remove_and_strict_rejection(
                         "folder_path": "",
                         "work_id": "00123",
                         "series_id": "",
-                        "detail_uid": "",
+                        "detail_uid": "", "moment_id": "",
                     },
                 },
                 dry_run=False,
@@ -505,7 +517,7 @@ def test_projects_subject_assignment_read_save_remove_and_strict_rejection(
         "folder_path": "projects/architecture",
         "work_id": "",
         "series_id": "",
-        "detail_uid": "",
+        "detail_uid": "", "moment_id": "",
     }
     assert metadata["record"]["authoring_subject"] == {
         "state": "valid",
@@ -524,7 +536,7 @@ def test_projects_subject_assignment_read_save_remove_and_strict_rejection(
         "folder_path": "projects/Future Folder",
         "work_id": "",
         "series_id": "",
-        "detail_uid": "",
+        "detail_uid": "", "moment_id": "",
     }
     assert result["changes"]["authoring_subject_changed"] is True
     assert "folder_path: projects/Future Folder" in linked_source
@@ -555,7 +567,7 @@ def test_projects_subject_assignment_read_save_remove_and_strict_rejection(
         "folder_path": "",
         "work_id": "",
         "series_id": "",
-        "detail_uid": "",
+        "detail_uid": "", "moment_id": "",
     }
     assert "folder_path:" not in removed_source
     assert removed_source.endswith(authored_body)
@@ -572,7 +584,7 @@ def test_projects_subject_assignment_read_save_remove_and_strict_rejection(
         "folder_path": "",
         "work_id": "00123",
         "series_id": "",
-        "detail_uid": "",
+        "detail_uid": "", "moment_id": "",
     }
     assert 'work_id: "00123"' in work_source
     assert work_source.endswith(authored_body)

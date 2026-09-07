@@ -15,9 +15,10 @@ from docs_document_subjects import (
     AUTHORING_SUBJECT_FIELDS,
     DETAIL_UID_FIELD,
     FOLDER_PATH_FIELD,
+    MOMENT_ID_FIELD,
     SERIES_ID_FIELD,
     WORK_ID_FIELD,
-    catalogue_subject_key_is_canonical,
+    subject_key_is_canonical,
     normalize_authoring_subject,
 )
 
@@ -101,8 +102,8 @@ def _strict_scalar_subject_fields(raw: Any, *, field: str) -> dict[str, str]:
         values[field_name] = value
     if sum(bool(value) for value in values.values()) > 1:
         raise ValueError(f"{field} must select at most one authoring subject")
-    for field_name, kind in ((WORK_ID_FIELD, "work"), (SERIES_ID_FIELD, "series"), (DETAIL_UID_FIELD, "detail")):
-        if values[field_name] and not catalogue_subject_key_is_canonical(
+    for field_name, kind in ((WORK_ID_FIELD, "work"), (SERIES_ID_FIELD, "series"), (DETAIL_UID_FIELD, "detail"), (MOMENT_ID_FIELD, "moment")):
+        if values[field_name] and not subject_key_is_canonical(
             kind,
             values[field_name],
         ):
@@ -173,8 +174,8 @@ def normalize_import_front_matter(
         raise ValueError(
             f"custom import authoring subject is conflicting for {doc_id!r}"
         )
-    for field_name, kind in ((WORK_ID_FIELD, "work"), (SERIES_ID_FIELD, "series"), (DETAIL_UID_FIELD, "detail")):
-        if values[field_name] and not catalogue_subject_key_is_canonical(
+    for field_name, kind in ((WORK_ID_FIELD, "work"), (SERIES_ID_FIELD, "series"), (DETAIL_UID_FIELD, "detail"), (MOMENT_ID_FIELD, "moment")):
+        if values[field_name] and not subject_key_is_canonical(
             kind,
             values[field_name],
         ):

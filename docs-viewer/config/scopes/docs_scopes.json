@@ -310,6 +310,10 @@
               "sub_scope": "moments",
               "title": "Moments",
               "public_projection": null,
+              "sub_scope_customisation": {
+                "id": "working_works",
+                "settings": {}
+              },
               "lifecycle": {
                 "tool_id": "docs-viewer-scope-lifecycle",
                 "report_host_doc_id": "d-20260907-180859-c425b2",

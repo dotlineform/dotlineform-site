@@ -30,6 +30,7 @@ from docs_document_subjects import (
     normalize_authoring_subject,
     project_subject_associations,
     subject_projection_generation,
+    validate_unique_moment_subjects,
 )
 from docs_concept_documents import (
     load_current_public_concept_locations,
@@ -292,6 +293,7 @@ class SubScopeDocsBuilder(DocsDataBuilder):
         subject_generation = ""
         subject_associations_payload: dict[str, Any] | None = None
         if subjects_by_doc_id is not None:
+            validate_unique_moment_subjects(subjects_by_doc_id)
             subject_generation = subject_projection_generation(
                 scope=self.scope_id,
                 sub_scope=self.sub_scope_id,

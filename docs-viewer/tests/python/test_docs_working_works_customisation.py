@@ -28,13 +28,13 @@ def test_existing_subject_states_are_non_blocking_and_project_valid_folder_only(
         "folder_path": "",
         "work_id": "",
         "series_id": "",
-        "detail_uid": "",
+        "detail_uid": "", "moment_id": "",
     }
     assert projects.metadata_record({}, conflicting, doc_id=DOC_ID) == {
         "folder_path": "",
         "work_id": "",
         "series_id": "",
-        "detail_uid": "",
+        "detail_uid": "", "moment_id": "",
     }
     assert projects.metadata_record(
         {}, {"work_id": "00123"}, doc_id=DOC_ID
@@ -42,7 +42,7 @@ def test_existing_subject_states_are_non_blocking_and_project_valid_folder_only(
         "folder_path": "",
         "work_id": "00123",
         "series_id": "",
-        "detail_uid": "",
+        "detail_uid": "", "moment_id": "",
     }
 
 
@@ -56,7 +56,7 @@ def test_strict_assignment_preserves_work_identity_and_clears_other_fields(
 
     result = projects.normalize_metadata_update(
         {},
-        {"folder_path": "", "work_id": "00123", "series_id": "", "detail_uid": ""},
+        {"folder_path": "", "work_id": "00123", "series_id": "", "detail_uid": "", "moment_id": ""},
         repo_root=tmp_path,
         front_matter={"folder_path": "projects/old"},
         doc_id=DOC_ID,
@@ -67,13 +67,13 @@ def test_strict_assignment_preserves_work_identity_and_clears_other_fields(
             "folder_path": None,
             "work_id": "00123",
             "series_id": None,
-            "detail_uid": None,
+            "detail_uid": None, "moment_id": None,
         },
         "record": {
             "folder_path": "",
             "work_id": "00123",
             "series_id": "",
-            "detail_uid": "",
+            "detail_uid": "", "moment_id": "",
         },
         "changes": {"authoring_subject_changed": True},
     }
@@ -83,11 +83,11 @@ def test_strict_assignment_preserves_work_identity_and_clears_other_fields(
     "raw",
     [
         {"folder_path": "", "work_id": "00123"},
-        {"folder_path": "", "work_id": 123, "series_id": "", "detail_uid": ""},
-        {"folder_path": "", "work_id": "00123", "series_id": "026", "detail_uid": ""},
-        {"folder_path": "", "work_id": " 00123", "series_id": "", "detail_uid": ""},
-        {"folder_path": "", "work_id": "123", "series_id": "", "detail_uid": ""},
-        {"folder_path": "", "work_id": "", "series_id": "Nerve", "detail_uid": ""},
+        {"folder_path": "", "work_id": 123, "series_id": "", "detail_uid": "", "moment_id": ""},
+        {"folder_path": "", "work_id": "00123", "series_id": "026", "detail_uid": "", "moment_id": ""},
+        {"folder_path": "", "work_id": " 00123", "series_id": "", "detail_uid": "", "moment_id": ""},
+        {"folder_path": "", "work_id": "123", "series_id": "", "detail_uid": "", "moment_id": ""},
+        {"folder_path": "", "work_id": "", "series_id": "Nerve", "detail_uid": "", "moment_id": ""},
     ],
 )
 def test_strict_assignment_rejects_incomplete_malformed_or_conflicting_input(
@@ -105,6 +105,11 @@ def test_strict_assignment_rejects_incomplete_malformed_or_conflicting_input(
 
 
 def test_import_accepts_one_exact_subject_and_preserves_leading_zeroes() -> None:
+    assert projects.normalize_import_front_matter(
+        {}, {"moment_id": "001"}, doc_id=DOC_ID
+    ) == {"moment_id": "001"}
+    with pytest.raises(ValueError, match="canonical moment id"):
+        projects.normalize_import_front_matter({}, {"moment_id": "1"}, doc_id=DOC_ID)
     assert projects.normalize_import_front_matter(
         {}, {"detail_uid": "00008-001"}, doc_id=DOC_ID
     ) == {"detail_uid": "00008-001"}

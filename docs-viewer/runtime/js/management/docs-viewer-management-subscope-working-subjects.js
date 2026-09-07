@@ -135,7 +135,7 @@ function previewSubjectHref(options, subject) {
 }
 
 function subjectAccessibleLabel(subject) {
-  var kindLabel = ({ folder: "Folder", work: "Work", series: "Series", detail: "Detail" })[subject.kind];
+  var kindLabel = ({ folder: "Folder", work: "Work", series: "Series", detail: "Detail", moment: "Moment" })[subject.kind];
   if (!kindLabel) return "";
   if (subject.targetTitle) {
     return kindLabel + " subject " + subject.targetTitle + ", " + subject.key;
@@ -179,10 +179,11 @@ function renderSubjectCell(context, options, targetLookup) {
     host.appendChild(cell);
     return;
   }
-  var link = host.ownerDocument.createElement(subject.kind === "detail" ? "span" : "a");
-  link.className = subject.kind === "detail"
-    ? "docsViewerReport__projectSubjectLink"
-    : "docsViewerReport__cellLink docsViewerReport__projectSubjectLink";
+  var linkedSubject = ["folder", "work", "series"].includes(subject.kind);
+  var link = host.ownerDocument.createElement(linkedSubject ? "a" : "span");
+  link.className = linkedSubject
+    ? "docsViewerReport__cellLink docsViewerReport__projectSubjectLink"
+    : "docsViewerReport__projectSubjectLink";
   link.dataset.projectSubjectKind = subject.kind;
   link.dataset.projectSubjectKey = subject.key;
   appendProjectSubjectIcon(link, subject.kind);
@@ -196,7 +197,7 @@ function renderSubjectCell(context, options, targetLookup) {
     link.href = "#";
     link.dataset.docsViewerLocalTarget = encodedPath;
     link.title = "Open " + subject.key + " in Finder";
-  } else if (subject.kind !== "detail") {
+  } else if (linkedSubject) {
     link.href = previewSubjectHref(options, subject);
     link.title = "Open " + subjectAccessibleLabel(subject) + " in local preview";
   }
@@ -389,7 +390,7 @@ function subjectInfoField(subject) {
       id: AUTHORING_SUBJECT_GROUP_ID,
       label: "Subject",
       state: subject.kind,
-      value: ({ folder: "Folder", work: "Work", series: "Series", detail: "Detail" })[subject.kind]
+      value: ({ folder: "Folder", work: "Work", series: "Series", detail: "Detail", moment: "Moment" })[subject.kind]
     };
   }
   if (subject.state === "malformed") {

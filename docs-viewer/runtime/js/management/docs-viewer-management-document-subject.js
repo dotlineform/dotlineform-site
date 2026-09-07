@@ -2,15 +2,22 @@ export const AUTHORING_SUBJECT_FIELDS = Object.freeze([
   "folder_path",
   "work_id",
   "series_id",
-  "detail_uid"
+  "detail_uid",
+  "moment_id"
 ]);
 
 const SUBJECT_FIELD_BY_KIND = Object.freeze({
   folder: "folder_path",
   work: "work_id",
   series: "series_id",
-  detail: "detail_uid"
+  detail: "detail_uid",
+  moment: "moment_id"
 });
+
+/** Moment identifiers are exact three-digit strings owned by their documents. */
+export function isDocsViewerMomentId(value) {
+  return typeof value === "string" && value.length === 3 && /^[0-9]{3}$/.test(value);
+}
 
 /** Decode the exact Studio composite identifier without a record lookup. */
 export function parseDocsViewerDetailUid(value) {
@@ -68,6 +75,7 @@ export function normalizeDocsViewerAuthoringSubject(value, options = {}) {
     && Boolean(key)
     && key === key.trim()
     && (kind !== "detail" || Boolean(parseDocsViewerDetailUid(key)))
+    && (kind !== "moment" || isDocsViewerMomentId(key))
     && fields.length === 1
     && fields[0] === validField
     && !hasEvidence

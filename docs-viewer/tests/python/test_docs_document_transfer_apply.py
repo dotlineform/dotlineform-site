@@ -410,14 +410,15 @@ def test_lineage_new_and_replace_commit_exact_rows_and_preserve_editorial_gate(
     )
 
 
-def test_detail_subject_survives_copy_to_analysis(tmp_path: Path) -> None:
+@pytest.mark.parametrize("subject_field,subject_key", [("detail_uid", "00008-001"), ("moment_id", "001")])
+def test_document_subject_survives_copy_to_analysis(tmp_path: Path, subject_field: str, subject_key: str) -> None:
     repo_root = make_lineage_repo(tmp_path)
     source_id = "d-20260801-100000-aaaaaa"
     source_path = sub_scope_documents_root(repo_root, "dotlineform", "projects") / f"{source_id}.md"
     front_matter, body = source_model.parse_source(source_path)
     for field in ("folder_path", "work_id", "series_id"):
         front_matter.pop(field, None)
-    front_matter["detail_uid"] = "00008-001"
+    front_matter[subject_field] = subject_key
     source_path.write_text(source_model.format_source(front_matter, body), encoding="utf-8")
     source_before = source_path.read_bytes()
     plan = transfer.plan_document_transfer(
@@ -435,7 +436,7 @@ def test_detail_subject_survives_copy_to_analysis(tmp_path: Path) -> None:
     target_id = result["created_doc_ids"][0]
     target = sub_scope_documents_root(repo_root, "analysis", "works") / f"{target_id}.md"
     copied, copied_body = source_model.parse_source(target)
-    assert copied["detail_uid"] == "00008-001"
+    assert copied[subject_field] == subject_key
     assert not any(field in copied for field in ("folder_path", "work_id", "series_id"))
     assert copied_body == body
     assert source_path.read_bytes() == source_before

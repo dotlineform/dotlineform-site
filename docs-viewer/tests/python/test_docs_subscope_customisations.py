@@ -75,12 +75,12 @@ def test_current_customisations_declare_explicit_aspects() -> None:
     assert works.assignable_field_groups == (
         customisations.DocsSubScopeAssignableFieldGroup(
             group_id="authoring_subject",
-            field_names=("folder_path", "work_id", "series_id", "detail_uid"),
+            field_names=("folder_path", "work_id", "series_id", "detail_uid", "moment_id"),
         ),
     )
     assert works.authoring_subject == (
         customisations.DocsSubScopeAuthoringSubjectAspect(
-            field_names=("work_id", "series_id", "detail_uid"),
+            field_names=("work_id", "series_id", "detail_uid", "moment_id"),
         )
     )
     assert works.transfer is None
@@ -105,7 +105,7 @@ def test_current_customisations_declare_explicit_aspects() -> None:
     assert projects.assignable_field_groups == (
         customisations.DocsSubScopeAssignableFieldGroup(
             group_id="authoring_subject",
-            field_names=("folder_path", "work_id", "series_id", "detail_uid"),
+            field_names=("folder_path", "work_id", "series_id", "detail_uid", "moment_id"),
         ),
     )
     assert projects.transfer is None
@@ -130,7 +130,7 @@ def test_current_customisations_declare_explicit_aspects() -> None:
     assert processing.assignable_field_groups == (
         customisations.DocsSubScopeAssignableFieldGroup(
             group_id="authoring_subject",
-            field_names=("folder_path", "work_id", "series_id", "detail_uid"),
+            field_names=("folder_path", "work_id", "series_id", "detail_uid", "moment_id"),
         ),
     )
     assert processing.transfer is None
@@ -286,7 +286,7 @@ def test_current_customisations_declare_explicit_aspects() -> None:
     ) == works.assignable_field_groups
     assert customisations.sub_scope_customisation_authoring_subject_fields(
         works_config
-    ) == ("work_id", "series_id", "detail_uid")
+    ) == ("work_id", "series_id", "detail_uid", "moment_id")
     assert customisations.sub_scope_customisation_document_lineage_contracts(
         works_config
     ) == works.document_lineages

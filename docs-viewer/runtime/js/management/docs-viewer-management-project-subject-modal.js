@@ -8,6 +8,7 @@ import {
 } from "./docs-viewer-management-document-target.js";
 import {
   AUTHORING_SUBJECT_FIELDS,
+  isDocsViewerMomentId,
   normalizeDocsViewerAuthoringSubject,
   parseDocsViewerDetailUid
 } from "./docs-viewer-management-document-subject.js";
@@ -140,6 +141,7 @@ function modalBody(subject, target) {
       radio("work", "Work", selected) +
       radio("series", "Series", selected) +
       radio("detail", "Detail", selected) +
+      radio("moment", "Moment", selected) +
     "</fieldset>" +
     '<label class="docsViewer__field" data-project-subject-folder' +
       (selected === "folder" ? "" : " hidden") + ">" +
@@ -152,6 +154,12 @@ function modalBody(subject, target) {
       '<input class="docsViewer__fieldInput" data-project-subject-detail-input type="text" autocomplete="off" spellcheck="false" placeholder="00008-001" value="' +
         escapeHtml(subject.state === "valid" && subject.kind === "detail" ? subject.key : "") + '">' +
       '<span class="docsViewer__fieldHint">Five-digit Work ID, a hyphen, then three-digit Detail ID.</span>' +
+    '</label>' +
+    '<label class="docsViewer__field" data-project-subject-moment' + (selected === "moment" ? "" : " hidden") + '>' +
+      '<span class="docsViewer__fieldLabel">Moment ID</span>' +
+      '<input class="docsViewer__fieldInput" data-project-subject-moment-input type="text" inputmode="numeric" autocomplete="off" spellcheck="false" placeholder="001" value="' +
+        escapeHtml(subject.state === "valid" && subject.kind === "moment" ? subject.key : "") + '">' +
+      '<span class="docsViewer__fieldHint">Three digits. Keep the ID when the title changes.</span>' +
     '</label>' +
     '<section class="docsViewerProjectSubjectModal__catalogue" data-project-subject-catalogue' +
       (["work", "series"].includes(selected) ? "" : " hidden") + ">" +
@@ -188,6 +196,8 @@ function openSubjectModal(options, target, loaded) {
       var folderInput = api.host.querySelector("[data-project-subject-folder-input]");
       var detailField = api.host.querySelector("[data-project-subject-detail]");
       var detailInput = api.host.querySelector("[data-project-subject-detail-input]");
+      var momentField = api.host.querySelector("[data-project-subject-moment]");
+      var momentInput = api.host.querySelector("[data-project-subject-moment-input]");
       var catalogue = api.host.querySelector("[data-project-subject-catalogue]");
       var searchInput = api.host.querySelector("#" + SEARCH_INPUT_ID);
       var results = api.host.querySelector("[data-project-subject-results]");
@@ -309,6 +319,8 @@ function openSubjectModal(options, target, loaded) {
         if (folderInput) folderInput.disabled = busy || !folderSelected;
         if (detailField) detailField.hidden = kind !== "detail";
         if (detailInput) detailInput.disabled = busy || kind !== "detail";
+        if (momentField) momentField.hidden = kind !== "moment";
+        if (momentInput) momentInput.disabled = busy || kind !== "moment";
         if (catalogue) catalogue.hidden = !catalogueSelected;
         if (searchInput) searchInput.disabled = busy || !catalogueSelected || !state.support;
         if (catalogueSelected) {
@@ -361,6 +373,15 @@ function openSubjectModal(options, target, loaded) {
         return false;
       }
       var fields = Object.fromEntries(AUTHORING_SUBJECT_FIELDS.map(function (field) { return [field, ""]; }));
+      if (selected.value === "moment") {
+        var momentInput = api.host.querySelector("[data-project-subject-moment-input]");
+        fields.moment_id = momentInput ? momentInput.value.trim() : "";
+        if (!isDocsViewerMomentId(fields.moment_id)) {
+          api.setStatus("Enter a three-digit Moment ID such as 001.");
+          if (momentInput) momentInput.focus();
+          return false;
+        }
+      }
       if (selected.value === "detail") {
         var detailInput = api.host.querySelector("[data-project-subject-detail-input]");
         fields.detail_uid = detailInput ? detailInput.value.trim() : "";

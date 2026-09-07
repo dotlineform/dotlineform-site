@@ -25,12 +25,13 @@ const SUBJECT_ICON_MARKUP = Object.freeze({
 
 export function appendProjectSubjectIcon(parent, kind) {
   const subjectKind = String(kind == null ? "" : kind).trim();
-  if (!parent || !["folder", "work", "series", "detail"].includes(subjectKind)) return null;
+  if (!parent || !["folder", "work", "series", "detail", "moment"].includes(subjectKind)) return null;
   const cue = parent.ownerDocument.createElement("span");
   cue.className = "docsViewerReport__projectSubjectCue";
   cue.dataset.projectSubjectCue = subjectKind;
   cue.setAttribute("aria-hidden", "true");
-  if (SUBJECT_ICON_MARKUP[subjectKind]) cue.innerHTML = SUBJECT_ICON_MARKUP[subjectKind];
+  const markup = SUBJECT_ICON_MARKUP[subjectKind === "moment" ? "work" : subjectKind];
+  if (markup) cue.innerHTML = markup;
   else cue.textContent = "📁";
   parent.appendChild(cue);
   return cue;
