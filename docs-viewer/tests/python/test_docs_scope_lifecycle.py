@@ -525,7 +525,8 @@ def test_sub_scope_delete_apply_removes_config_source_generated_and_published_pa
     assert "sub_scopes" not in final_config["scopes"][0]
 
 
-def test_sub_scope_delete_blocks_an_edited_associated_host() -> None:
+@pytest.mark.parametrize("edit", ["content", "reparent"])
+def test_sub_scope_delete_allows_an_edited_associated_host(edit: str) -> None:
     with make_repo() as temp_path:
         repo_root = Path(temp_path)
         write_docs_scope_config(repo_root)
@@ -534,15 +535,51 @@ def test_sub_scope_delete_blocks_an_edited_associated_host() -> None:
         )
         host_id = create_preview["planned_report_host_identity"]["doc_id"]
         host_path = repo_root / f"docs-viewer/scopes/studio/source/documents/{host_id}.md"
-        host_path.write_text(host_path.read_text() + "\nEdited.\n")
+        lifecycle = docs_management_service.docs_sub_scope_lifecycle
+        if edit == "reparent":
+            front_matter, body = lifecycle.source_model.parse_source(host_path)
+            host_path.write_text(lifecycle.source_model.format_source({**front_matter, "parent_id": "child"}, body))
+        else:
+            host_path.write_text(host_path.read_text() + "\nEdited.\n")
         preview = docs_management_service.docs_sub_scope_lifecycle.plan_delete_sub_scope_preview(
             repo_root,
             {"parent_scope": "studio", "sub_scope": "tags"},
         )
 
-    assert preview["allowed"] is False
-    assert "Report host edited since creation" in preview["blockers"]
+    assert preview["allowed"] is True
+    assert preview["blockers"] == []
+    assert preview["report_host_source_revision"] != create_preview["report_host_source_revision"]
     assert preview["report_host_target"] == {"scope": "studio", "doc_id": host_id}
+
+
+@pytest.mark.parametrize("damage,blocker", [
+    ("missing", "lifecycle-associated report host source is missing"),
+    ("detached", "lifecycle-associated report host is detached"),
+    ("ambiguous", "sub-scope report-host association is ambiguous"),
+])
+def test_sub_scope_delete_requires_current_exact_host_association(damage: str, blocker: str) -> None:
+    with make_repo() as temp_path:
+        repo_root = Path(temp_path)
+        write_docs_scope_config(repo_root)
+        created, _result = apply_sub_scope_fixture(repo_root, "studio", "tags", "Tags")
+        host_id = created["planned_report_host_identity"]["doc_id"]
+        host_path = repo_root / f"docs-viewer/scopes/studio/source/documents/{host_id}.md"
+        lifecycle = docs_management_service.docs_sub_scope_lifecycle
+        front_matter, body = lifecycle.source_model.parse_source(host_path)
+        if damage == "missing":
+            host_path.unlink()
+        elif damage == "detached":
+            host_path.write_text(lifecycle.source_model.format_source(front_matter, "# Ordinary document\n"))
+        else:
+            duplicate_id = "d-20260907-215300-cccccc"
+            (host_path.parent / f"{duplicate_id}.md").write_text(lifecycle.source_model.format_source({
+                **front_matter, "doc_id": duplicate_id, "title": "Second report",
+            }, body))
+        preview = lifecycle.plan_delete_sub_scope_preview(repo_root, {"parent_scope": "studio", "sub_scope": "tags"})
+        assert preview["allowed"] is False
+        assert blocker in preview["blockers"]
+        assert preview["delete_files"] == []
+
 
 def test_scope_create_preview_blocks_local_tracked_assets_regression() -> None:
     with make_repo() as temp_path:

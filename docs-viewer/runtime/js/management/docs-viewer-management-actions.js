@@ -12,6 +12,7 @@ import {
   DOCS_VIEWER_ACTION_IDS
 } from "./docs-viewer-action-definitions.js";
 import {
+  managedDocumentTargetsEqual,
   normalizeManagedDocumentTarget
 } from "./docs-viewer-management-document-target.js";
 import {
@@ -67,6 +68,18 @@ export function committedDocumentCreateTarget(payload) {
     throw new Error("Create service record does not match its committed target.");
   }
   return target;
+}
+
+export function committedDocumentMoveRecord(response, expectedTarget) {
+  if (!managedDocumentTargetsEqual(response && response.target, expectedTarget)) {
+    throw new Error("Move service returned a different document target.");
+  }
+  var record = response && response.record && typeof response.record === "object" ? response.record : null;
+  var docId = String(record && record.doc_id || "").trim();
+  if (!record || !Object.prototype.hasOwnProperty.call(record, "parent_id") || docId !== expectedTarget.doc_id) {
+    throw new Error("Move service returned an invalid committed move record.");
+  }
+  return record;
 }
 
 export function committedDocumentCreatePayload(error) {
@@ -385,15 +398,6 @@ export function createDocsViewerManagementActionController(options) {
       primaryLabel: ACTION_TEXT.createDocButton,
       cancelLabel: ACTION_TEXT.cancelButton
     });
-  }
-
-  function committedMoveRecord(response, expectedDocId) {
-    var record = response && response.record && typeof response.record === "object" ? response.record : null;
-    var docId = String(record && record.doc_id || "").trim();
-    if (!record || !Object.prototype.hasOwnProperty.call(record, "parent_id") || docId !== expectedDocId) {
-      throw new Error("Move service returned an invalid committed move record.");
-    }
-    return record;
   }
 
   function invalidateCommittedMoveCaches(record) {
@@ -775,17 +779,23 @@ export function createDocsViewerManagementActionController(options) {
     var nextParentId = String(parentId || "").trim();
     if (!movingDoc) return;
     if (nextParentId && !documentIndex.docsById.has(nextParentId)) return;
+    var clientOptions = managementClientOptions();
+    var target = normalizeManagedDocumentTarget({
+      scope: clientOptions.scope,
+      ...(clientOptions.stage ? { stage: clientOptions.stage } : {}),
+      doc_id: movingDocId
+    });
 
     setManagementBusy(true);
     clearDragState();
     setManagementMessage("Moving " + movingDoc.title + "...", false);
 
-    return moveManagedDoc(movingDoc.doc_id, nextParentId, managementClientOptions())
+    return moveManagedDoc(movingDoc.doc_id, nextParentId, clientOptions)
       .then(function (response) {
         var record;
         setManagementBusy(false);
         try {
-          record = committedMoveRecord(response, movingDoc.doc_id);
+          record = committedDocumentMoveRecord(response, target);
           if (typeof callbacks.projectCommittedMove !== "function") {
             throw new Error("Docs Viewer local move projection is unavailable.");
           }

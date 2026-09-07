@@ -3,8 +3,8 @@ import { buildViewerUrlForScope, routeFromAnchorHref } from "../../runtime/js/sh
 import { createDocsViewerGeneratedDataRuntime } from "../../runtime/js/shared/docs-viewer-generated-data-runtime.js";
 import { createDocsViewerConfiguredScopeProvider } from "../../runtime/js/shared/docs-viewer-configured-scope-provider.js";
 import { normalizeManagedDocumentTarget, managedDocumentTargetsEqual } from "../../runtime/js/management/docs-viewer-management-document-target.js";
-import { normalizeManagedSubscopeCollection, committedDocumentCreateTarget } from "../../runtime/js/management/docs-viewer-management-actions.js";
-import { createManagedDoc, readManagedDocSource, rebuildManagedDocSource, applyManagedSubScopeDocDelete, assignManagedDocFieldGroup } from "../../runtime/js/management/docs-viewer-management-client.js";
+import { normalizeManagedSubscopeCollection, committedDocumentCreateTarget, committedDocumentMoveRecord } from "../../runtime/js/management/docs-viewer-management-actions.js";
+import { createManagedDoc, readManagedDocSource, rebuildManagedDocSource, applyManagedSubScopeDocDelete, assignManagedDocFieldGroup, moveManagedDoc } from "../../runtime/js/management/docs-viewer-management-client.js";
 import { createDocsViewerManagementActionResolver } from "../../runtime/js/management/docs-viewer-management.js";
 import { DOCS_VIEWER_ACTION_IDS } from "../../runtime/js/management/docs-viewer-action-definitions.js";
 import { subjectFromMetadataResponse } from "../../runtime/js/management/source-editor/subject-link-contribution.js";
@@ -19,6 +19,17 @@ assert.equal(managedDocumentTargetsEqual(working, prePublish), false);
 assert.throws(() => normalizeManagedDocumentTarget({ ...working, stage: "" }), /stage/);
 assert.deepEqual(normalizeManagedSubscopeCollection({ scope: "analysis", stage: "working", sub_scope: "projects" }), { scope: "analysis", stage: "working", sub_scope: "projects" });
 assert.throws(() => committedDocumentCreateTarget({ ...working, stage: "pre-publish", target: working, record: { doc_id: docId } }), /stage/);
+const hostTarget = { scope: "analysis", stage: "working", doc_id: docId };
+const moved = { ...hostTarget, target: hostTarget, record: { doc_id: docId, parent_id: "d-20260907-210000-a1b2c3" } };
+assert.deepEqual(committedDocumentMoveRecord(moved, hostTarget), moved.record);
+for (const wrongTarget of [
+  { ...hostTarget, stage: "pre-publish" },
+  { scope: hostTarget.scope, doc_id: docId },
+  { scope: "studio", doc_id: docId }
+]) {
+  assert.throws(() => committedDocumentMoveRecord({ ...moved, target: wrongTarget }, hostTarget), /different document target/);
+}
+assert.throws(() => committedDocumentMoveRecord({ ...moved, record: { ...moved.record, doc_id: "another" } }, hostTarget), /invalid committed move record/);
 const sourceActions = [
   DOCS_VIEWER_ACTION_IDS.SOURCE_ADD_CATALOGUE_IMAGE,
   DOCS_VIEWER_ACTION_IDS.SOURCE_ADD_CATALOGUE_TOKEN,
@@ -114,6 +125,8 @@ const assignment = {
 };
 await assignManagedDocFieldGroup(working, assignment, options);
 assert.deepEqual(requests.at(-1).body, { ...working, ...assignment });
+await moveManagedDoc(docId, moved.record.parent_id, options);
+assert.deepEqual(requests.at(-1).body, { ...hostTarget, parent_id: moved.record.parent_id });
 
 const configs = new Map([
   ["analysis", { scopeId: "analysis", stage: "pre-publish", viewerBaseUrl: "/docs/", includeScopeParam: true, indexTreeUrl: "/docs/index-tree?scope=analysis&stage=pre-publish" }],

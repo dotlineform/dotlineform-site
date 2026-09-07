@@ -585,8 +585,6 @@ def plan_delete_sub_scope_preview(repo_root: Path, body: dict[str, Any]) -> dict
         None,
     )
     blockers = []
-    if revision != lifecycle.report_host_source_revision:
-        blockers.append("Report host edited since creation")
     if (
         host_document is None
         or host_document.doc_id != lifecycle.report_host_doc_id

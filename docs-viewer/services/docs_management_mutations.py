@@ -813,12 +813,16 @@ def plan_update_metadata(repo_root: Path, body: Dict[str, Any]) -> ManagementMut
 
 def plan_move(repo_root: Path, body: Dict[str, Any]) -> ManagementMutationPlan:
     scope = source_model.normalize_scope(body.get("scope"))
+    config = load_docs_scope_stage(repo_root, scope, body.get("stage"))
+    require_document_authoring(config)
+    if "sub_scope" in body:
+        raise ValueError("Move requires a parent-scope document")
     doc_id = str(body.get("doc_id") or "").strip()
     parent_id = str(body.get("parent_id") or "").strip()
     if not doc_id:
         raise ValueError("doc_id is required")
 
-    docs = source_model.load_scope_docs(repo_root, scope)
+    docs = source_model.load_scope_docs_for_config(repo_root, config)
     docs_by_id = {doc.doc_id: doc for doc in docs}
     moving_doc = docs_by_id.get(doc_id)
     if moving_doc is None:
@@ -831,12 +835,14 @@ def plan_move(repo_root: Path, body: Dict[str, Any]) -> ManagementMutationPlan:
         raise ValueError("parent_id cannot be a child or descendant of the current doc")
 
     changed = moving_doc.parent_id != parent_id
+    target = {"scope": scope, **({"stage": config.stage} if config.stage else {}), "doc_id": doc_id}
     return ManagementMutationPlan(
         scope=scope,
+        stage=config.stage,
         response={
             "ok": True,
-            "scope": scope,
-            "doc_id": moving_doc.doc_id,
+            **target,
+            "target": target,
             "record": {
                 "doc_id": moving_doc.doc_id,
                 "parent_id": parent_id,
@@ -849,8 +855,7 @@ def plan_move(repo_root: Path, body: Dict[str, Any]) -> ManagementMutationPlan:
         build_doc_ids=[moving_doc.doc_id] if changed else [],
         log_event_name="docs-move" if changed else None,
         log_details={
-            "scope": scope,
-            "doc_id": moving_doc.doc_id,
+            **target,
             "from_parent_id": moving_doc.parent_id,
             "to_parent_id": parent_id,
             "changed_count": 1 if changed else 0,

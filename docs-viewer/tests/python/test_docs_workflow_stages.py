@@ -13,7 +13,7 @@ import pytest
 from docs_management_test_support import docs_scope_config as scopes
 from repo_factory import docs_scope_record, docs_sub_scope_record, write_json
 from docs_management_document_target import managed_document_metadata, resolve_managed_document_target
-from docs_management_mutations import plan_assign_field_group, plan_create, plan_delete_apply
+from docs_management_mutations import plan_assign_field_group, plan_create, plan_delete_apply, plan_move
 from docs_generated_reads import read_generated_doc_payload
 from build_docs_test_support import prepare_repo, run_cli
 
@@ -93,6 +93,63 @@ def test_subject_assignment_preserves_exact_working_stage(stage_repo: Path, fiel
         with pytest.raises(ValueError, match=message):
             plan_assign_field_group(stage_repo, rejected)
     assert pre_publish.read_bytes() == pre_publish_before
+
+
+def test_report_host_reparenting_keeps_stage_and_child_destinations(stage_repo: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    import docs_management_mutation_service as service
+    from docs_builder.sub_scope import SubScopeDocsBuilder
+
+    config = scopes.load_docs_scope_stage(stage_repo, "analysis", "working")
+    root = stage_repo / scopes.document_source_path(config)
+    host = root / f"{DOC_ID}.md"
+    host.write_text(host.read_text() + "\n:::report\nid: docs_subscope\naccess: local\nsub_scope: works\n:::\n")
+    parent_id = "d-20260907-215200-aaaaaa"
+    child_id = "d-20260907-215200-bbbbbb"
+    (root / f"{parent_id}.md").write_text(f"---\ndoc_id: {parent_id}\ntitle: Parent\n---\n# Parent\n")
+    (root / f"{child_id}.md").write_text(f"---\ndoc_id: {child_id}\ntitle: Child\nparent_id: {DOC_ID}\n---\n# Child\n")
+    child_source = stage_repo / scopes.document_source_path(config.sub_scopes[0]) / f"{DOC_ID}.md"
+    pre_publish = scopes.load_docs_scope_stage(stage_repo, "analysis", "pre-publish")
+    other_host = stage_repo / scopes.document_source_path(pre_publish) / f"{DOC_ID}.md"
+    before = {path: path.read_bytes() for path in (child_source, other_host, stage_repo / scopes.CONFIG_REL_PATH)}
+    original_body = service.source_model.parse_source(host)[1]
+    child_href = SubScopeDocsBuilder(repo_root=stage_repo, config=config, sub_scope=config.sub_scopes[0]).viewer_url_for(DOC_ID)
+    target = {"scope": "analysis", "stage": "working", "doc_id": DOC_ID}
+    request = {**target, "parent_id": parent_id}
+    plan = plan_move(stage_repo, request)
+    assert plan.stage == "working" and plan.response["target"] == target
+    assert [write.path for write in plan.source_writes] == [host]
+    calls = []
+
+    def rebuild(repo_root, scope, changed_paths, write_operation, **options):
+        calls.append((repo_root, scope, changed_paths, options))
+        write_operation()
+        return {"ok": True}
+
+    monkeypatch.setattr(service.write_rebuild, "perform_source_write_and_rebuild", rebuild)
+    response = service.handle_move(stage_repo, request, dry_run=False)
+    assert response["target"] == target and response["stage"] == "working"
+    assert calls == [(stage_repo, "analysis", [host], {
+        "stage": "working", "docs_doc_ids": [DOC_ID], "suppression_reason": "docs-move",
+    })]
+    front_matter, body = service.source_model.parse_source(host)
+    assert front_matter["doc_id"] == DOC_ID and front_matter["parent_id"] == parent_id
+    assert body == original_body
+    assert SubScopeDocsBuilder(repo_root=stage_repo, config=config, sub_scope=config.sub_scopes[0]).viewer_url_for(DOC_ID) == child_href
+    unchanged = plan_move(stage_repo, request)
+    assert unchanged.stage == "working" and unchanged.response["target"] == target
+    assert not unchanged.source_writes
+
+    for changes, message in (
+        ({"stage": None}, "requires stage"),
+        ({"stage": "pre-publish"}, "Pre-publish document authoring is unavailable"),
+        ({"sub_scope": "works"}, "parent-scope document"),
+        ({"parent_id": "missing"}, "Unknown parent_id"),
+        ({"parent_id": DOC_ID}, "cannot be the current doc"),
+        ({"parent_id": child_id}, "cannot be a child or descendant"),
+    ):
+        with pytest.raises(ValueError, match=message):
+            plan_move(stage_repo, {**request, **changes})
+    assert all(path.read_bytes() == content for path, content in before.items())
 
 
 def test_service_can_import_with_unselected_workflow_parent(stage_repo: Path) -> None:
