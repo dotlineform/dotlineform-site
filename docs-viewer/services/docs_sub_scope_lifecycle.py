@@ -207,8 +207,8 @@ def sub_scope_path_records(repo_root: Path, parent_config: DocsScopeConfig, sub_
         records.append(
             path_record(
                 repo_root,
-                "sub_scope_tag_associations",
-                docs_output / "tag-associations.json",
+                "sub_scope_concept_associations",
+                docs_output / "concept-associations.json",
                 action="generate",
             )
         )

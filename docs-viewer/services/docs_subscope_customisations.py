@@ -11,7 +11,7 @@ from typing import Any, Callable, Mapping, Sequence
 import docs_working_works_customisation as working_works
 import docs_working_processing_customisation as working_processing
 from docs_document_subjects import AUTHORING_SUBJECT_FIELDS, FOLDER_PATH_FIELD
-from docs_tag_documents import TAG_ID_FIELD, normalize_tag_declaration
+from docs_concept_documents import CONCEPT_ID_FIELD, normalize_concept_declaration
 
 
 CUSTOMISATION_ID_PATTERN = re.compile(r"\A[a-z][a-z0-9_]*\Z")
@@ -179,7 +179,7 @@ def _concepts_metadata_record(
     _validate_concepts_transfer_field(settings, "group", raw_group)
     return {
         "group": str(raw_group or "").strip().lower(),
-        TAG_ID_FIELD: front_matter.get(TAG_ID_FIELD, ""),
+        CONCEPT_ID_FIELD: front_matter.get(CONCEPT_ID_FIELD, ""),
     }
 
 
@@ -194,8 +194,8 @@ def _normalize_concepts_metadata_update(
     del repo_root
     if not isinstance(raw, dict):
         raise ValueError("customisation must be an object")
-    if set(raw) != {"group", TAG_ID_FIELD}:
-        raise ValueError("customisation must contain exactly group, tag_id")
+    if set(raw) != {"group", CONCEPT_ID_FIELD}:
+        raise ValueError("customisation must contain exactly group, concept_id")
     raw_group = raw["group"]
     if not isinstance(raw_group, str):
         raise ValueError("customisation.group must be a scalar string")
@@ -208,40 +208,40 @@ def _normalize_concepts_metadata_update(
         front_matter,
         doc_id=doc_id,
     )
-    raw_tag_id = raw[TAG_ID_FIELD]
-    current_raw_tag_id = current_record[TAG_ID_FIELD]
-    current_declaration = normalize_tag_declaration(front_matter)
+    raw_concept_id = raw[CONCEPT_ID_FIELD]
+    current_raw_concept_id = current_record[CONCEPT_ID_FIELD]
+    current_declaration = normalize_concept_declaration(front_matter)
     preserve_malformed = (
         current_declaration["state"] == "malformed"
-        and raw_tag_id == current_raw_tag_id
+        and raw_concept_id == current_raw_concept_id
     )
     if not preserve_malformed:
-        if not isinstance(raw_tag_id, str):
-            raise ValueError("customisation.tag_id must be a scalar string")
-        if raw_tag_id:
-            declaration = normalize_tag_declaration({TAG_ID_FIELD: raw_tag_id})
+        if not isinstance(raw_concept_id, str):
+            raise ValueError("customisation.concept_id must be a scalar string")
+        if raw_concept_id:
+            declaration = normalize_concept_declaration({CONCEPT_ID_FIELD: raw_concept_id})
             if declaration["state"] != "valid":
-                raise ValueError("customisation.tag_id must be one exact canonical tag id")
-    desired_tag_id = raw_tag_id if preserve_malformed or raw_tag_id else None
-    tag_id_changed = (
-        (TAG_ID_FIELD in front_matter) != (desired_tag_id is not None)
+                raise ValueError("customisation.concept_id must be one exact canonical concept id")
+    desired_concept_id = raw_concept_id if preserve_malformed or raw_concept_id else None
+    concept_id_changed = (
+        (CONCEPT_ID_FIELD in front_matter) != (desired_concept_id is not None)
         or (
-            desired_tag_id is not None
-            and desired_tag_id != front_matter.get(TAG_ID_FIELD)
+            desired_concept_id is not None
+            and desired_concept_id != front_matter.get(CONCEPT_ID_FIELD)
         )
     )
     return {
         "front_matter_updates": {
             "group": group or None,
-            TAG_ID_FIELD: desired_tag_id,
+            CONCEPT_ID_FIELD: desired_concept_id,
         },
         "record": {
             "group": group,
-            TAG_ID_FIELD: raw_tag_id,
+            CONCEPT_ID_FIELD: raw_concept_id,
         },
         "changes": {
             "group_changed": group != current_record["group"],
-            "tag_id_changed": tag_id_changed,
+            "concept_id_changed": concept_id_changed,
         },
     }
 
@@ -251,11 +251,11 @@ def _validate_concepts_transfer_field(
     field_name: str,
     value: Any,
 ) -> None:
-    if field_name == TAG_ID_FIELD:
-        normalize_tag_declaration({TAG_ID_FIELD: value})
+    if field_name == CONCEPT_ID_FIELD:
+        normalize_concept_declaration({CONCEPT_ID_FIELD: value})
         return
     if field_name != "group":
-        raise ValueError(f"unsupported Analysis Tags field {field_name!r}")
+        raise ValueError(f"unsupported Analysis Concepts field {field_name!r}")
     if value is None:
         return
     if not isinstance(value, str):
@@ -272,7 +272,7 @@ def _validate_concepts_source(
     doc_id: str,
 ) -> None:
     del settings, doc_id
-    normalize_tag_declaration(front_matter)
+    normalize_concept_declaration(front_matter)
 
 
 def _normalize_concepts_import_front_matter(
@@ -284,7 +284,7 @@ def _normalize_concepts_import_front_matter(
     del doc_id
     if not isinstance(raw, dict):
         raise ValueError("custom import front matter must be an object")
-    if set(raw) - {"group", TAG_ID_FIELD}:
+    if set(raw) - {"group", CONCEPT_ID_FIELD}:
         raise ValueError("custom import front matter contains unknown fields")
     result: dict[str, str] = {}
     if "group" in raw:
@@ -294,15 +294,15 @@ def _normalize_concepts_import_front_matter(
         _validate_concepts_transfer_field(settings, "group", group)
         if group:
             result["group"] = group
-    if TAG_ID_FIELD in raw:
-        tag_id = raw[TAG_ID_FIELD]
-        if not isinstance(tag_id, str):
-            raise ValueError("custom import tag_id must be a scalar string")
-        if tag_id:
-            declaration = normalize_tag_declaration({TAG_ID_FIELD: tag_id})
+    if CONCEPT_ID_FIELD in raw:
+        concept_id = raw[CONCEPT_ID_FIELD]
+        if not isinstance(concept_id, str):
+            raise ValueError("custom import concept_id must be a scalar string")
+        if concept_id:
+            declaration = normalize_concept_declaration({CONCEPT_ID_FIELD: concept_id})
             if declaration["state"] != "valid":
-                raise ValueError("custom import tag_id must be one exact canonical tag id")
-            result[TAG_ID_FIELD] = tag_id
+                raise ValueError("custom import concept_id must be one exact canonical concept id")
+            result[CONCEPT_ID_FIELD] = concept_id
     return result
 
 
@@ -335,8 +335,8 @@ def _project_concepts_manifest(
         if group:
             row["group"] = group
         front_matter = getattr(document, "front_matter", {})
-        if isinstance(front_matter, Mapping) and TAG_ID_FIELD in front_matter:
-            row[TAG_ID_FIELD] = front_matter[TAG_ID_FIELD]
+        if isinstance(front_matter, Mapping) and CONCEPT_ID_FIELD in front_matter:
+            row[CONCEPT_ID_FIELD] = front_matter[CONCEPT_ID_FIELD]
         if row:
             rows[str(document.doc_id)] = row
     return {
@@ -373,13 +373,13 @@ SUB_SCOPE_CUSTOMISATION_DEFINITIONS = {
         ),
         assignable_field_groups=(
             DocsSubScopeAssignableFieldGroup(
-                group_id="tag_fields",
-                field_names=("group", TAG_ID_FIELD),
+                group_id="concept_fields",
+                field_names=("group", CONCEPT_ID_FIELD),
             ),
         ),
         transfer=DocsSubScopeTransferAspect(
-            contract_id="analysis_tag_fields",
-            owned_field_names=("group", TAG_ID_FIELD),
+            contract_id="analysis_concept_fields",
+            owned_field_names=("group", CONCEPT_ID_FIELD),
             validate_field=_validate_concepts_transfer_field,
         ),
     ),

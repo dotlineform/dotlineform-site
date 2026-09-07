@@ -3,7 +3,7 @@ import {
   semanticTokenTextRanges
 } from "./catalogue-token-parser.js";
 
-var TAG_ID_PATTERN = /^[a-z0-9][a-z0-9-]*$/;
+var CONCEPT_ID_PATTERN = /^[a-z0-9][a-z0-9-]*$/;
 
 function cleanString(value) {
   return String(value == null ? "" : value).trim();
@@ -44,7 +44,7 @@ export function selectedTextForTagTitle(value) {
 export function serializeTagToken(options = {}) {
   var targetId = cleanString(options.targetId);
   var title = cleanString(options.title);
-  if (!TAG_ID_PATTERN.test(targetId) || !title || /[\r\n]/.test(title)) return "";
+  if (!CONCEPT_ID_PATTERN.test(targetId) || !title || /[\r\n]/.test(title)) return "";
   var definition = tagDefinition(options.registry);
   if (
     definition
@@ -71,7 +71,7 @@ export function parseTagToken(raw, options = {}) {
     identity.length !== 3
     || identity[0] !== "tag"
     || identity[1] !== "tag"
-    || !TAG_ID_PATTERN.test(targetId)
+    || !CONCEPT_ID_PATTERN.test(targetId)
     || !title
   ) return null;
   var definition = tagDefinition(options.registry);

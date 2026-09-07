@@ -189,7 +189,7 @@ def configure_review_sub_scope_targets(root: Path) -> dict[str, Path]:
             scope_type="public",
             public_docs_path="site/assets/data/docs/scopes/example/tags",
             ui_statuses=["draft", "done"],
-            analysis_tag_groups=["theme"],
+            analysis_concept_groups=["theme"],
         ),
         docs_sub_scope_record(
             "example",

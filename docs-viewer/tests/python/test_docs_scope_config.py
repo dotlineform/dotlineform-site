@@ -221,7 +221,7 @@ def sub_scope_record(
     source_path: str | None = None,
     public_docs_path: str | None = None,
     ui_statuses: list[str] | None = None,
-    analysis_tag_groups: list[str] | None = None,
+    analysis_concept_groups: list[str] | None = None,
 ) -> dict[str, object]:
     record = docs_sub_scope_record(
         scope_id,
@@ -230,7 +230,7 @@ def sub_scope_record(
         scope_type="public",
         public_docs_path=public_docs_path,
         ui_statuses=ui_statuses,
-        analysis_tag_groups=analysis_tag_groups,
+        analysis_concept_groups=analysis_concept_groups,
     )
     if source_path is not None:
         record["source"] = {
@@ -324,7 +324,7 @@ def test_docs_scope_config_accepts_nested_sub_scopes() -> None:
                     "research",
                     "tags",
                     ui_statuses=["draft", "done"],
-                    analysis_tag_groups=["subject", "theme"],
+                    analysis_concept_groups=["subject", "theme"],
                 )
             ],
         )

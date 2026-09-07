@@ -21,37 +21,6 @@ def write_json(path: Path, payload: object) -> None:
     path.write_text(json.dumps(payload), encoding="utf-8")
 
 
-def test_studio_source_paths_resolve_from_repo_root(tmp_path: Path) -> None:
-    assignments_path = audit.resolve_repo_source_path(
-        audit.tag_source_paths.TAG_ASSIGNMENTS_REL_PATH,
-        tmp_path,
-    )
-    series_path = audit.resolve_repo_source_path(
-        Path("studio/data/canonical/catalogue/series.json"),
-        tmp_path,
-    )
-    series_path.parent.mkdir(parents=True)
-    series_path.write_text(
-        json.dumps(
-            {
-                "series": {
-                    "009": {"status": "published"},
-                    "010": {"status": "draft"},
-                }
-            }
-        ),
-        encoding="utf-8",
-    )
-
-    assert assignments_path == (
-        tmp_path / "studio" / "data" / "canonical" / "tags" / "tag-assignments.json"
-    ).resolve()
-    assert audit.load_source_series_statuses(tmp_path) == {
-        "009": "published",
-        "010": "draft",
-    }
-
-
 def test_generated_route_contracts_use_exact_records_without_works_aggregate(tmp_path: Path) -> None:
     write_json(
         tmp_path / "assets/works/index/00001.json",

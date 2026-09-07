@@ -741,7 +741,7 @@ def test_sub_scope_metadata_service_returns_conflict_for_write_race(
                         docs_sub_scope_record(
                             "studio",
                             "tags",
-                            analysis_tag_groups=["subject", "domain", "form", "theme"],
+                            analysis_concept_groups=["subject", "domain", "form", "theme"],
                         )
                     ],
                 )

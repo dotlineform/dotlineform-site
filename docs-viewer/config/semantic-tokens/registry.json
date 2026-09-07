@@ -65,9 +65,9 @@
       "schema_version": "docs_semantic_token_family_definition_v1",
       "key": "tag",
       "labels": {
-        "family": "Tag",
-        "source_action": "Add tag token",
-        "info_view": "Tag token"
+        "family": "Concept",
+        "source_action": "Add concept token",
+        "info_view": "Concept token"
       },
       "occurrence_fields": [
         {
@@ -86,18 +86,17 @@
       "target_types": [
         {
           "key": "tag",
-          "label": "Tag",
+          "label": "Concept",
           "id_policy": {
             "normalizer": "slug",
             "input_pattern": "^[a-z0-9][a-z0-9-]*$",
             "canonical_pattern": "^[a-z0-9][a-z0-9-]*$"
           },
-          "lookup_adapter": "tag-target-lookup",
+          "lookup_adapter": "concept-document-target-lookup",
           "lookup_fields": [
             "title",
             "href",
-            "meta",
-            "aliases"
+            "meta"
           ]
         }
       ]

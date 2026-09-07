@@ -79,14 +79,13 @@ function renderToken(context, state, active) {
   article.className = "docsViewer__metadataInfo docsViewerCatalogueTokenInfo";
   var heading = document.createElement("h3");
   heading.className = "docsViewer__metadataInfoTitle";
-  heading.textContent = "Tag token";
+  heading.textContent = "Concept token";
   var list = document.createElement("dl");
   list.className = "docsViewer__metadataInfoList";
-  appendReadOnlyRow(list, "Family", "Tag");
+  appendReadOnlyRow(list, "Family", "Concept");
   appendReadOnlyRow(list, "Target ID", token.targetId);
-  appendReadOnlyRow(list, "Aliases", target && target.aliases.length ? target.aliases.join(", ") : "None");
-  appendReadOnlyRow(list, "Group", target && target.meta[0] ? target.meta[0] : "Target not resolved");
-  appendReadOnlyRow(list, "Resolved document", target && target.meta[1] ? target.meta[1] : "Target not resolved");
+  appendReadOnlyRow(list, "Context", target && target.meta.length ? target.meta.join(" · ") : "Target not resolved");
+  appendReadOnlyRow(list, "Resolved document", target ? target.title : "Target not resolved");
   appendReadOnlyRow(list, "Destination", target ? target.href : "No resolved destination", destination);
 
   var field = document.createElement("label");
@@ -156,12 +155,12 @@ function renderToken(context, state, active) {
 function render(context, state) {
   if (!context.mount) return;
   if (!state.loaded) {
-    emptyMessage(context.mount, "Tag token info is loading.");
+    emptyMessage(context.mount, "Concept token info is loading.");
     return;
   }
   var active = currentToken(state);
   if (!active) {
-    emptyMessage(context.mount, "Place the caret inside a Tag token to inspect it.");
+    emptyMessage(context.mount, "Place the caret inside a Concept token to inspect it.");
     return;
   }
   renderToken(context, state, active);

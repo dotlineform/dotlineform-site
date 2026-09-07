@@ -2,12 +2,12 @@ import {
   hasDocsViewerAssignableFieldGroup
 } from "../shared/docs-viewer-config-controller.js";
 import {
-  openDocsViewerTagFieldsModal
-} from "./docs-viewer-management-tag-fields-modal.js";
+  openDocsViewerConceptFieldsModal
+} from "./docs-viewer-management-concept-fields-modal.js";
 
 const CUSTOMISATION_ID = "concepts";
-const TAG_FIELDS_GROUP_ID = "tag_fields";
-const TAG_ID_FIELD_ID = "tag_id";
+const CONCEPT_FIELDS_GROUP_ID = "concept_fields";
+const CONCEPT_ID_FIELD_ID = "concept_id";
 
 function cleanString(value) {
   return String(value == null ? "" : value).trim();
@@ -38,7 +38,7 @@ function exactCollection(value) {
     || !scope
     || !subScope
   ) {
-    throw new Error("Analysis/Tags customisation collection target is invalid.");
+    throw new Error("Analysis/Concepts customisation collection target is invalid.");
   }
   return Object.freeze({ scope: scope, sub_scope: subScope });
 }
@@ -46,7 +46,7 @@ function exactCollection(value) {
 function assertCollection(value, expected) {
   var collection = exactCollection(value);
   if (collection.scope !== expected.scope || collection.sub_scope !== expected.sub_scope) {
-    throw new Error("Analysis/Tags customisation collection did not match its registry entry.");
+    throw new Error("Analysis/Concepts customisation collection did not match its registry entry.");
   }
 }
 
@@ -58,7 +58,7 @@ function groupInfoField(documentRecord, groups) {
   ) {
     return {
       detail: "Metadata projection unavailable",
-      id: TAG_FIELDS_GROUP_ID,
+      id: CONCEPT_FIELDS_GROUP_ID,
       label: "Group",
       state: "unavailable",
       value: "Unavailable"
@@ -68,7 +68,7 @@ function groupInfoField(documentRecord, groups) {
   if (!group) {
     return {
       detail: "",
-      id: TAG_FIELDS_GROUP_ID,
+      id: CONCEPT_FIELDS_GROUP_ID,
       label: "Group",
       state: "unassigned",
       value: "Unassigned"
@@ -77,7 +77,7 @@ function groupInfoField(documentRecord, groups) {
   if (!groups.includes(group)) {
     return {
       detail: group,
-      id: TAG_FIELDS_GROUP_ID,
+      id: CONCEPT_FIELDS_GROUP_ID,
       label: "Group",
       state: "unavailable",
       value: "Unavailable"
@@ -85,14 +85,14 @@ function groupInfoField(documentRecord, groups) {
   }
   return {
     detail: "",
-    id: TAG_FIELDS_GROUP_ID,
+    id: CONCEPT_FIELDS_GROUP_ID,
     label: "Group",
     state: "assigned",
     value: group
   };
 }
 
-function tagIdInfoField(documentRecord) {
+function conceptIdInfoField(documentRecord) {
   var customisation = documentRecord && documentRecord.customisation;
   if (
     customisation != null
@@ -100,45 +100,45 @@ function tagIdInfoField(documentRecord) {
   ) {
     return {
       detail: "Metadata projection unavailable",
-      id: TAG_ID_FIELD_ID,
-      label: "Tag",
+      id: CONCEPT_ID_FIELD_ID,
+      label: "Concept ID",
       state: "unavailable",
       value: "Unavailable"
     };
   }
-  if (!customisation || !Object.prototype.hasOwnProperty.call(customisation, "tag_id")) {
+  if (!customisation || customisation.concept_id == null || customisation.concept_id === "") {
     return {
       detail: "",
-      id: TAG_ID_FIELD_ID,
-      label: "Tag",
+      id: CONCEPT_ID_FIELD_ID,
+      label: "Concept ID",
       state: "unassigned",
       value: "Unassigned"
     };
   }
-  var rawTagId = customisation.tag_id;
+  var rawConceptId = customisation.concept_id;
   if (
-    typeof rawTagId !== "string"
-    || rawTagId !== cleanString(rawTagId)
-    || !/^[a-z0-9][a-z0-9-]*$/.test(rawTagId)
+    typeof rawConceptId !== "string"
+    || rawConceptId !== cleanString(rawConceptId)
+    || !/^[a-z0-9][a-z0-9-]*$/.test(rawConceptId)
   ) {
     return {
-      detail: String(rawTagId),
-      id: TAG_ID_FIELD_ID,
-      label: "Tag",
+      detail: String(rawConceptId),
+      id: CONCEPT_ID_FIELD_ID,
+      label: "Concept ID",
       state: "unavailable",
       value: "Malformed"
     };
   }
   return {
     detail: "",
-    id: TAG_ID_FIELD_ID,
-    label: "Tag",
+    id: CONCEPT_ID_FIELD_ID,
+    label: "Concept ID",
     state: "assigned",
-    value: rawTagId
+    value: rawConceptId
   };
 }
 
-function projectDetailInfo(context, collection, tagFieldsAvailable) {
+function projectDetailInfo(context, collection, conceptFieldsAvailable) {
   var settings = context || {};
   assertCollection(settings.collection, collection);
   var target = settings.target || {};
@@ -154,21 +154,21 @@ function projectDetailInfo(context, collection, tagFieldsAvailable) {
     || !cleanString(target.doc_id)
     || cleanString(target.doc_id) !== cleanString(documentRecord.doc_id)
   ) {
-    throw new Error("Analysis/Tags metadata target is invalid.");
+    throw new Error("Analysis/Concepts metadata target is invalid.");
   }
   return Object.freeze({
-    actions: Object.freeze({ tagFields: tagFieldsAvailable }),
+    actions: Object.freeze({ conceptFields: conceptFieldsAvailable }),
     fields: Object.freeze([
       Object.freeze(groupInfoField(documentRecord, normalizedGroups(settings.data))),
-      Object.freeze(tagIdInfoField(documentRecord))
+      Object.freeze(conceptIdInfoField(documentRecord))
     ])
   });
 }
 
-function renderTagFields(context, options, tagFieldsAvailable) {
+function renderConceptFields(context, options, conceptFieldsAvailable) {
   var settings = context || {};
   var host = settings.host;
-  if (!host || !tagFieldsAvailable || typeof settings.registerAction !== "function") return;
+  if (!host || !conceptFieldsAvailable || typeof settings.registerAction !== "function") return;
   var groups = normalizedGroups(settings.data);
   var servicesAvailable = (
     typeof options.readMetadata === "function"
@@ -180,25 +180,24 @@ function renderTagFields(context, options, tagFieldsAvailable) {
     : {
         available: false,
         reason: groups.length
-          ? "Tag fields service is unavailable."
-          : "Configured Tag groups are unavailable."
+          ? "Concept fields service is unavailable."
+          : "Configured Concept groups are unavailable."
       };
   var button = host.ownerDocument.createElement("button");
   var registration = settings.registerAction({
-    id: "assign-tag-fields",
+    id: "assign-concept-fields",
     placement: "detail-toolbar",
     targetKind: "validated-detail",
     capability: capability,
     emptyState: "omitted",
     refreshEffect: "none",
     handler: function (target, actionContext) {
-      return openDocsViewerTagFieldsModal({
+      return openDocsViewerConceptFieldsModal({
         assignFieldGroup: options.assignFieldGroup,
         groups: groups,
         readMetadata: options.readMetadata,
         restoreFocus: button,
         root: options.root,
-        studioBaseUrl: options.studioBaseUrl,
         target: target
       }).then(function (result) {
         if (!result || result.confirmed !== true) return result;
@@ -213,10 +212,10 @@ function renderTagFields(context, options, tagFieldsAvailable) {
     }
   });
   if (registration.hidden) return;
-  button.className = "docsViewerReport__button docsReportDetail__iconButton docsReportDetail__tagFields";
+  button.className = "docsViewerReport__button docsReportDetail__iconButton docsReportDetail__conceptFields";
   button.type = "button";
-  button.dataset.docsTagFields = "true";
-  button.textContent = "Tag fields";
+  button.dataset.docsConceptFields = "true";
+  button.textContent = "Concept fields";
   button.disabled = !registration.enabled;
   if (registration.disabledReason) button.title = registration.disabledReason;
   button.addEventListener("click", function () {
@@ -225,7 +224,7 @@ function renderTagFields(context, options, tagFieldsAvailable) {
     registration.invoke().catch(function (error) {
       if (typeof options.setStatus === "function") {
         options.setStatus(
-          error && error.message ? error.message : "Tag fields assignment failed.",
+          error && error.message ? error.message : "Concept fields assignment failed.",
           true
         );
       }
@@ -252,7 +251,7 @@ function groupFilter(groups) {
       if (!host || typeof settings.setValue !== "function") return;
       var activeValue = normalizeFilterValue(settings.value);
       host.setAttribute("role", "group");
-      host.setAttribute("aria-label", "Filter Tags by group");
+      host.setAttribute("aria-label", "Filter Concepts by group");
       ["", ...groups].forEach(function (group) {
         var button = host.ownerDocument.createElement("button");
         button.className = "docsViewerReport__filter";
@@ -272,12 +271,12 @@ function groupFilter(groups) {
 export function createDocsViewerManagementSubscopeConcepts(options = {}) {
   var descriptorId = cleanString(options.descriptor && options.descriptor.id);
   if (descriptorId !== CUSTOMISATION_ID) {
-    throw new Error("Analysis/Tags customisation identity did not match its registry entry.");
+    throw new Error("Analysis/Concepts customisation identity did not match its registry entry.");
   }
   var collection = exactCollection(options.collection);
-  var tagFieldsAvailable = hasDocsViewerAssignableFieldGroup(
+  var conceptFieldsAvailable = hasDocsViewerAssignableFieldGroup(
     options.descriptor,
-    TAG_FIELDS_GROUP_ID
+    CONCEPT_FIELDS_GROUP_ID
   );
   return {
     id: CUSTOMISATION_ID,
@@ -285,15 +284,15 @@ export function createDocsViewerManagementSubscopeConcepts(options = {}) {
       assertCollection(context && context.collection, collection);
       var groups = normalizedGroups(context && context.data);
       if (!groups.length) {
-        throw new Error("Analysis/Tags customisation requires manifest groups.");
+        throw new Error("Analysis/Concepts customisation requires manifest groups.");
       }
       return [groupFilter(groups)];
     },
     projectDetailInfo: function (context) {
-      return projectDetailInfo(context, collection, tagFieldsAvailable);
+      return projectDetailInfo(context, collection, conceptFieldsAvailable);
     },
     renderDetailToolbar: function (context) {
-      renderTagFields(context, options, tagFieldsAvailable);
+      renderConceptFields(context, options, conceptFieldsAvailable);
     }
   };
 }

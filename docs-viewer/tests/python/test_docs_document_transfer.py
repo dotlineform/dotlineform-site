@@ -184,7 +184,7 @@ def make_collection_repo(tmp_path: Path) -> Path:
             "source",
             "tags",
             title="Tags",
-            analysis_tag_groups=["subject", "domain"],
+            analysis_concept_groups=["subject", "domain"],
         ),
         docs_sub_scope_record(
             "source",
@@ -198,7 +198,7 @@ def make_collection_repo(tmp_path: Path) -> Path:
             "target",
             "tags",
             title="Tags",
-            analysis_tag_groups=["subject"],
+            analysis_concept_groups=["subject"],
         ),
         docs_sub_scope_record(
             "target",

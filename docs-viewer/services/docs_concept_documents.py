@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Document-owned Tag declarations and private reverse associations."""
+"""Document-owned Concept declarations and private reverse associations."""
 
 from __future__ import annotations
 
@@ -9,32 +9,78 @@ import re
 from pathlib import Path
 from typing import Any, Mapping, Sequence
 
-TAG_ID_FIELD = "tag_id"
-TAG_ID_PATTERN = re.compile(r"\A[a-z0-9][a-z0-9-]*\Z")
-TAG_ASSOCIATIONS_SCHEMA_VERSION = "docs_tag_associations_v2"
+CONCEPT_ID_FIELD = "concept_id"
+CONCEPT_ID_PATTERN = re.compile(r"\A[a-z0-9][a-z0-9-]*\Z")
+CONCEPT_ASSOCIATIONS_SCHEMA_VERSION = "docs_concept_associations_v1"
 
 
-def normalize_tag_declaration(front_matter: Mapping[str, Any]) -> dict[str, Any]:
+def validate_unique_concept_declarations(declarations: Mapping[str, Mapping[str, Any]]) -> None:
+    """Require one defining document per nonempty Concept ID in a collection."""
+
+    owners: dict[str, str] = {}
+    for doc_id, declaration in declarations.items():
+        if declaration.get("state") != "valid":
+            continue
+        concept_id = str(declaration[CONCEPT_ID_FIELD])
+        if concept_id in owners:
+            raise ValueError(f"duplicate concept_id {concept_id!r}: {owners[concept_id]} and {doc_id}")
+        owners[concept_id] = doc_id
+
+
+def load_concept_definitions(repo_root: Path, *, stage: str = "working") -> list[dict[str, Any]]:
+    """Read exact Analysis Concept definitions and their stage-owned document destinations."""
+
+    from docs_document_location import management_collection_viewer_url, management_document_viewer_url
+    from docs_scope_config import load_docs_scope_stage
+    from docs_source_model import load_document_collection_docs_for_config
+
+    parent = load_docs_scope_stage(repo_root, "analysis", stage)
+    collection = next((item for item in parent.sub_scopes if item.sub_scope == "concepts"), None)
+    if collection is None:
+        raise ValueError(f"Analysis {stage} Concepts collection is not configured")
+    documents = load_document_collection_docs_for_config(repo_root, parent, collection)
+    declarations = {doc.doc_id: normalize_concept_declaration(doc.front_matter) for doc in documents}
+    validate_unique_concept_declarations(declarations)
+    collection_url = management_collection_viewer_url(repo_root, "analysis", "concepts", stage=stage)
+    return sorted(
+        [
+            {
+                "concept_id": declarations[doc.doc_id][CONCEPT_ID_FIELD],
+                "doc_id": doc.doc_id,
+                "title": doc.title,
+                "group": str(doc.front_matter.get("group") or ""),
+                "href": management_document_viewer_url(collection_url, doc.doc_id, sub_scope=True),
+            }
+            for doc in documents
+            if declarations[doc.doc_id]["state"] == "valid"
+        ],
+        key=lambda record: record[CONCEPT_ID_FIELD],
+    )
+
+
+def normalize_concept_declaration(front_matter: Mapping[str, Any]) -> dict[str, Any]:
     """Project one non-blocking state from exact document front matter."""
 
-    if TAG_ID_FIELD not in front_matter:
-        return {"state": "none", "tag_id": ""}
-    raw_value = front_matter[TAG_ID_FIELD]
+    if CONCEPT_ID_FIELD not in front_matter:
+        return {"state": "none", "concept_id": ""}
+    raw_value = front_matter[CONCEPT_ID_FIELD]
+    if raw_value is None or raw_value == "":
+        return {"state": "none", "concept_id": ""}
     if (
         not isinstance(raw_value, str)
         or not raw_value
         or raw_value != raw_value.strip()
-        or TAG_ID_PATTERN.fullmatch(raw_value) is None
+        or CONCEPT_ID_PATTERN.fullmatch(raw_value) is None
     ):
         return {
             "state": "malformed",
-            "tag_id": "",
+            "concept_id": "",
             "evidence": raw_value,
         }
-    return {"state": "valid", "tag_id": raw_value}
+    return {"state": "valid", "concept_id": raw_value}
 
 
-def tag_declaration_generation(
+def concept_declaration_generation(
     *,
     scope: str,
     stage: str = "",
@@ -48,7 +94,7 @@ def tag_declaration_generation(
         "documents": [
             {
                 "doc_id": doc_id,
-                "tag_declaration": declarations_by_doc_id[doc_id],
+                "concept_declaration": declarations_by_doc_id[doc_id],
             }
             for doc_id in sorted(declarations_by_doc_id)
         ],
@@ -62,7 +108,7 @@ def tag_declaration_generation(
     return "sha256:" + hashlib.sha256(encoded).hexdigest()
 
 
-def load_current_public_tag_locations(
+def load_current_public_concept_locations(
     repo_root: Path,
     *,
     scope: str,
@@ -89,7 +135,7 @@ def load_current_public_tag_locations(
     )
 
 
-def project_tag_associations(
+def project_concept_associations(
     *,
     scope: str,
     stage: str = "",
@@ -102,6 +148,7 @@ def project_tag_associations(
 ) -> dict[str, Any]:
     """Group valid document declarations into a deterministic private product."""
 
+    validate_unique_concept_declarations(declarations_by_doc_id)
     management_urls = management_urls_by_doc_id or {}
     public_by_doc_id: dict[str, list[dict[str, str]]] = {}
     for raw_location in public_location_records:
@@ -131,15 +178,15 @@ def project_tag_associations(
             )
         )
 
-    documents_by_tag: dict[str, list[dict[str, Any]]] = {}
+    documents_by_concept: dict[str, list[dict[str, Any]]] = {}
     for document in documents:
         doc_id = str(getattr(document, "doc_id", "") or "")
         declaration = declarations_by_doc_id.get(doc_id, {})
         if declaration.get("state") != "valid":
             continue
-        tag_id = str(declaration.get("tag_id") or "")
-        if TAG_ID_PATTERN.fullmatch(tag_id) is None:
-            raise ValueError(f"valid Tag declaration is invalid for {doc_id!r}")
+        concept_id = str(declaration.get("concept_id") or "")
+        if CONCEPT_ID_PATTERN.fullmatch(concept_id) is None:
+            raise ValueError(f"valid Concept declaration is invalid for {doc_id!r}")
         locations: list[dict[str, str]] = []
         management_url = str(management_urls.get(doc_id) or "")
         if management_url:
@@ -152,7 +199,7 @@ def project_tag_associations(
                 }
             )
         locations.extend(public_by_doc_id.get(doc_id, ()))
-        documents_by_tag.setdefault(tag_id, []).append(
+        documents_by_concept.setdefault(concept_id, []).append(
             {
                 "target": {
                     "scope": scope,
@@ -166,9 +213,9 @@ def project_tag_associations(
         )
 
     associations: list[dict[str, Any]] = []
-    for tag_id in sorted(documents_by_tag):
+    for concept_id in sorted(documents_by_concept):
         association_documents = sorted(
-            documents_by_tag[tag_id],
+            documents_by_concept[concept_id],
             key=lambda record: (
                 record["target"]["scope"],
                 record["target"]["sub_scope"],
@@ -177,13 +224,13 @@ def project_tag_associations(
         )
         associations.append(
             {
-                "tag_id": tag_id,
+                "concept_id": concept_id,
                 "documents": association_documents,
             }
         )
 
     return {
-        "schema_version": TAG_ASSOCIATIONS_SCHEMA_VERSION,
+        "schema_version": CONCEPT_ASSOCIATIONS_SCHEMA_VERSION,
         "scope": scope,
         "stage": stage,
         "sub_scope": sub_scope,
@@ -193,11 +240,13 @@ def project_tag_associations(
 
 
 __all__ = [
-    "TAG_ASSOCIATIONS_SCHEMA_VERSION",
-    "TAG_ID_FIELD",
-    "TAG_ID_PATTERN",
-    "load_current_public_tag_locations",
-    "normalize_tag_declaration",
-    "project_tag_associations",
-    "tag_declaration_generation",
+    "CONCEPT_ASSOCIATIONS_SCHEMA_VERSION",
+    "CONCEPT_ID_FIELD",
+    "CONCEPT_ID_PATTERN",
+    "load_concept_definitions",
+    "validate_unique_concept_declarations",
+    "load_current_public_concept_locations",
+    "normalize_concept_declaration",
+    "project_concept_associations",
+    "concept_declaration_generation",
 ]

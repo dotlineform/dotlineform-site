@@ -11,8 +11,6 @@ from studio.shared.python.studio_python_paths import ensure_studio_python_paths
 
 ensure_studio_python_paths(__file__)
 
-from tags.tag_management_config import tag_analysis_policy  # noqa: E402
-
 STUDIO_ROUTE_REQUIRED_FIELDS: tuple[str, ...] = (
     "label",
     "title",
@@ -73,27 +71,6 @@ STUDIO_SERVICE_ENDPOINTS: dict[str, object] = {
         "import_apply": "/studio/api/catalogue/import-apply",
         "create_series": "/studio/api/catalogue/series/create",
         "save_series": "/studio/api/catalogue/series/save",
-    },
-    "tags": {
-        "base": "/studio/api/tags",
-        "health": "/studio/api/tags/health",
-        "create_tag": "/studio/api/tags/create-tag",
-        "create_tag_alias": "/studio/api/tags/create-tag-alias",
-        "delete_tag_alias": "/studio/api/tags/delete-tag-alias",
-        "demote_tag": "/studio/api/tags/demote-tag",
-        "demote_tag_preview": "/studio/api/tags/demote-tag-preview",
-        "mutate_tag_alias": "/studio/api/tags/mutate-tag-alias",
-        "mutate_tag_alias_preview": "/studio/api/tags/mutate-tag-alias-preview",
-        "mutate_tag": "/studio/api/tags/mutate-tag",
-        "mutate_tag_preview": "/studio/api/tags/mutate-tag-preview",
-        "promote_tag_alias": "/studio/api/tags/promote-tag-alias",
-        "promote_tag_alias_preview": "/studio/api/tags/promote-tag-alias-preview",
-        "tag_aliases": "/studio/api/tags/tag-aliases",
-        "tag_associations": "/studio/api/tags/tag-associations",
-        "tag_assignments": "/studio/api/tags/tag-assignments",
-        "tag_groups": "/studio/api/tags/tag-groups",
-        "tag_registry": "/studio/api/tags/tag-registry",
-        "save_tags": "/studio/api/tags/save-tags",
     },
 }
 
@@ -266,16 +243,7 @@ def asset_version(repo_root: Path) -> str:
         repo_root / "studio" / "app" / "frontend" / "js" / "catalogue-series-editor.js",
         repo_root / "studio" / "app" / "frontend" / "js" / "catalogue-project-media-picker.js",
         repo_root / "studio" / "app" / "frontend" / "js" / "catalogue-work-editor.js",
-        repo_root / "studio" / "app" / "frontend" / "js" / "tag-groups.js",
-        repo_root / "studio" / "app" / "frontend" / "js" / "tag-registry.js",
-        repo_root / "studio" / "app" / "frontend" / "js" / "tag-registry-documents.js",
-        repo_root / "studio" / "app" / "frontend" / "js" / "tag-aliases.js",
-        repo_root / "studio" / "app" / "frontend" / "js" / "series-tags.js",
-        repo_root / "studio" / "app" / "frontend" / "js" / "series-tag-editor-page.js",
-        repo_root / "studio" / "app" / "frontend" / "js" / "analytics-tag-editor.js",
-        repo_root / "studio" / "app" / "frontend" / "js" / "tag-ui-text.js",
         repo_root / "studio" / "app" / "assets" / "css" / "studio.css",
-        repo_root / "studio" / "app" / "assets" / "css" / "studio-tags.css",
         repo_root / "studio" / "app" / "frontend" / "config" / "studio-config.json",
     ]
     mtimes = [path.stat().st_mtime for path in candidates if path.exists()]
@@ -285,7 +253,6 @@ def asset_version(repo_root: Path) -> str:
 def runtime_config(repo_root: Path, version: str) -> dict[str, object]:
     pipeline_path = repo_root / "_data" / "pipeline.json"
     payload = load_studio_config(repo_root)
-    payload["analysis"] = tag_analysis_policy(repo_root)
     views = studio_views(repo_root, payload)
     try:
         pipeline_payload = json.loads(pipeline_path.read_text(encoding="utf-8"))
@@ -325,7 +292,6 @@ def runtime_config(repo_root: Path, version: str) -> dict[str, object]:
             "encoding": pipeline_encoding,
             "workbooks": pipeline_workbooks,
         },
-        "series_tag_editor": series_tag_editor_runtime_settings(pipeline_payload),
         "views": [
             {"id": view_id, **view}
             for view_id, view in views.items()
@@ -339,38 +305,6 @@ def runtime_config(repo_root: Path, version: str) -> dict[str, object]:
         },
     }
     return payload
-
-
-def series_tag_editor_runtime_settings(
-    pipeline_payload: dict[str, object],
-) -> dict[str, object]:
-    variants = pipeline_payload.get("variants") if isinstance(pipeline_payload.get("variants"), dict) else {}
-    primary_variants = variants.get("primary") if isinstance(variants.get("primary"), dict) else {}
-    encoding = pipeline_payload.get("encoding") if isinstance(pipeline_payload.get("encoding"), dict) else {}
-    render_widths = primary_variants.get("widths") or [800, 1200, 1600]
-    if not isinstance(render_widths, list):
-        render_widths = [800, 1200, 1600]
-    render_widths = [
-        int(value)
-        for value in render_widths
-        if isinstance(value, int) or (isinstance(value, float) and value > 0 and value.is_integer())
-    ] or [800, 1200, 1600]
-    display_width = render_widths[-1]
-    preferred_width = primary_variants.get("preferred_width")
-    full_width = preferred_width if isinstance(preferred_width, int) and preferred_width > 0 else display_width
-    media_config = STUDIO_MEDIA.get("media") if isinstance(STUDIO_MEDIA.get("media"), dict) else {}
-    media_base = str(media_config.get("base") or "")
-    media_works = str(media_config.get("works_images") or "/works/img")
-    return {
-        "media_image_works_base": f"{media_base}{media_works}/",
-        "primary_render_widths": render_widths,
-        "primary_display_width": display_width,
-        "primary_full_width": full_width,
-        "primary_suffix": str(primary_variants.get("suffix") or "primary"),
-        "asset_format": str(encoding.get("format") or "webp"),
-        "tag_editor_module_url": "/studio/app/frontend/js/analytics-tag-editor.js",
-    }
-
 
 def runtime_site_bases() -> dict[str, object]:
     public_site_host = os.environ.get("SITE_HOST", "127.0.0.1").strip() or "127.0.0.1"

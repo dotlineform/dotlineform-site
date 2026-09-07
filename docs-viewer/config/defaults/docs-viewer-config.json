@@ -108,7 +108,7 @@
                 "id": "concepts",
                 "capabilities": {
                   "assignable_field_groups": [
-                    "tag_fields"
+                    "concept_fields"
                   ]
                 }
               }
@@ -176,7 +176,7 @@
                 "id": "concepts",
                 "capabilities": {
                   "assignable_field_groups": [
-                    "tag_fields"
+                    "concept_fields"
                   ]
                 }
               }

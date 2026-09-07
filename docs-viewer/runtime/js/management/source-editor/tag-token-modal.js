@@ -15,37 +15,31 @@ import {
 export const TAG_TOKEN_MODAL_ID = "tag-token-add-modal";
 
 function tagTargetMeta(target) {
-  var aliases = target.aliases.length
-    ? ["Aliases: " + target.aliases.join(", ")]
-    : [];
-  var context = [];
-  if (target.meta[0]) context.push("Group: " + target.meta[0]);
-  if (target.meta[1]) context.push("Document: " + target.meta[1]);
-  return aliases.concat(context);
+  return target.meta.slice();
 }
 
 var TAG_TOKEN_MODAL_SETTINGS = {
   buildToken: buildTagToken,
   collectMatches: collectTagTargetMatches,
-  familyLabel: "Tag",
+  familyLabel: "Concept",
   findByIdentity: findTagTargetByIdentity,
-  loadingMessage: "Loading Tags…",
+  loadingMessage: "Loading Concepts…",
   loadSupport: loadTagTargetSupport,
   modalId: TAG_TOKEN_MODAL_ID,
-  modalTitle: "Add tag token",
-  noMatchesMessage: "No matching Tags.",
+  modalTitle: "Add concept token",
+  noMatchesMessage: "No matching Concepts.",
   parseToken: parseTagToken,
   resultsId: "docsViewerTagTokenResults",
-  resultsLabel: "Tag targets",
+  resultsLabel: "Concept targets",
   searchInputId: "docsViewerTagTokenSearch",
-  searchLabel: "Search Tags and aliases",
+  searchLabel: "Search Concepts",
   selectedText: selectedTextForTagTitle,
   targetMeta: tagTargetMeta,
   titleInputId: "docsViewerTagTokenTitle",
   titleOnSelect: function (target, currentTitle) {
     return String(currentTitle || "").trim() || target.title;
   },
-  unavailableMessage: "Tag targets are unavailable."
+  unavailableMessage: "Concept targets are unavailable."
 };
 
 export function openTagTokenModal(options = {}) {

@@ -84,7 +84,7 @@ def prepare_repo(
                         "analysis",
                         "tags",
                         title="Tags",
-                        analysis_tag_groups=["subject", "domain", "form", "theme"],
+                        analysis_concept_groups=["subject", "domain", "form", "theme"],
                     )
                 ],
             )
@@ -437,7 +437,7 @@ parent_id: retained-sub-scope-parent
             "date": "2026-07-27",
             "date_display": "July 2026",
             "ui_status": "draft",
-            "customisation": {"group": "theme", "tag_id": ""},
+            "customisation": {"group": "theme", "concept_id": ""},
         },
     }
 

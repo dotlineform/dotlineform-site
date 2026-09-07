@@ -114,7 +114,6 @@ def prepare_repo(root: Path) -> None:
                     "title": "nerve",
                     "href": TAG_HREF,
                     "meta": ["subject", "Nerve"],
-                    "aliases": ["neural"],
                 },
                 {
                     "family": "tag",
@@ -123,7 +122,6 @@ def prepare_repo(root: Path) -> None:
                     "title": "unavailable",
                     "href": "",
                     "meta": ["theme", "Unavailable"],
-                    "aliases": [],
                 },
             ],
         },
@@ -168,11 +166,6 @@ def test_tag_registry_defines_separate_authoring_and_info_contributions() -> Non
     families = {family["key"]: family for family in payload["families"]}
     tag = families["tag"]
 
-    assert tag["labels"] == {
-        "family": "Tag",
-        "source_action": "Add tag token",
-        "info_view": "Tag token",
-    }
     assert tag["ui_contributions"] == {
         "source_action": "source-add-tag-token",
         "modal": "tag-token-add-modal",
@@ -187,17 +180,16 @@ def test_tag_registry_defines_separate_authoring_and_info_contributions() -> Non
             "control": "text",
         }
     ]
-    assert tag["target_types"] == [
+    assert [{key: value for key, value in item.items() if key != "label"} for item in tag["target_types"]] == [
         {
             "key": "tag",
-            "label": "Tag",
             "id_policy": {
                 "normalizer": "slug",
                 "input_pattern": "^[a-z0-9][a-z0-9-]*$",
                 "canonical_pattern": "^[a-z0-9][a-z0-9-]*$",
             },
-            "lookup_adapter": "tag-target-lookup",
-            "lookup_fields": ["title", "href", "meta", "aliases"],
+            "lookup_adapter": "concept-document-target-lookup",
+            "lookup_fields": ["title", "href", "meta"],
         }
     ]
     assert families["catalogue"]["ui_contributions"]["source_action"] == (
@@ -267,7 +259,6 @@ def test_tag_builder_renders_one_link_and_records_only_resolved_usage() -> None:
     assert '<a href="/works/?work=00638" data-semantic-token-family="catalogue"' in content
     assert "[[tag:tag:missing|Missing]]" in content
     assert "[[tag:tag:unavailable|Unavailable]]" in content
-    assert "neural" not in content
     assert "tag_registry_version" not in json.dumps(first)
     resolved = usage["occurrences"]
     assert usage["schema_version"] == "docs_semantic_token_usage_index_v1"

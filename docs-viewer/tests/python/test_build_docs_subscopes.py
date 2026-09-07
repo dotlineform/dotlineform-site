@@ -695,7 +695,7 @@ def test_python_docs_builder_writes_sub_scope_payloads_and_minimal_manifest() ->
                 "studio",
                 "tags",
                 title="Tags",
-                analysis_tag_groups=["subject", "domain", "form", "theme"],
+                analysis_concept_groups=["subject", "domain", "form", "theme"],
             )
         ]
         write_json(config_path, payload)
@@ -728,7 +728,7 @@ last_updated: 2026-06-21
 parent_id: ""
 ui_status: draft
 group: subject
-tag_id: absence
+concept_id: absence
 ---
 # Detail
 
@@ -743,7 +743,7 @@ title: Related
 added_date: 2026-06-22
 last_updated: 2026-06-23
 parent_id: {DETAIL_DOC_ID}
-tag_id: absence
+concept_id: ""
 ---
 # Related
 
@@ -760,9 +760,9 @@ Related body.
         )
         detail = read_json(root / f"docs-viewer/scopes/studio/generated/documents/sub-scopes/tags/by-id/{DETAIL_DOC_ID}.json")
         related = read_json(root / f"docs-viewer/scopes/studio/generated/documents/sub-scopes/tags/by-id/{RELATED_DOC_ID}.json")
-        tag_associations = read_json(
+        concept_associations = read_json(
             root
-            / "docs-viewer/scopes/studio/generated/documents/sub-scopes/tags/tag-associations.json"
+            / "docs-viewer/scopes/studio/generated/documents/sub-scopes/tags/concept-associations.json"
         )
         related_source_path = (
             root
@@ -770,8 +770,8 @@ Related body.
         )
         related_source_path.write_text(
             related_source_path.read_text(encoding="utf-8").replace(
-                "tag_id: absence",
-                "tag_id: presence",
+                'concept_id: ""',
+                "concept_id: presence",
             ),
             encoding="utf-8",
         )
@@ -781,7 +781,7 @@ Related body.
         )
         reassigned_associations = read_json(
             root
-            / "docs-viewer/scopes/studio/generated/documents/sub-scopes/tags/tag-associations.json"
+            / "docs-viewer/scopes/studio/generated/documents/sub-scopes/tags/concept-associations.json"
         )
         related_source_path.unlink()
         deleted_exit_code, _deleted_stdout, deleted_stderr = run_cli(
@@ -790,7 +790,7 @@ Related body.
         )
         deleted_associations = read_json(
             root
-            / "docs-viewer/scopes/studio/generated/documents/sub-scopes/tags/tag-associations.json"
+            / "docs-viewer/scopes/studio/generated/documents/sub-scopes/tags/concept-associations.json"
         )
 
     assert exit_code == 0
@@ -823,14 +823,14 @@ Related body.
                 "title": "Detail",
                 "ui_status": "draft",
                 "last_updated": "2026-06-21",
-                "customisation": {"group": "subject", "tag_id": "absence"},
+                "customisation": {"group": "subject", "concept_id": "absence"},
             },
             {
                 "doc_id": RELATED_DOC_ID,
                 "title": "Related",
                 "ui_status": "",
                 "last_updated": "2026-06-23",
-                "customisation": {"tag_id": "absence"},
+                "customisation": {"concept_id": ""},
             },
         ],
     }
@@ -842,34 +842,30 @@ Related body.
     assert detail["viewer_url"] == f"/docs/?scope=studio&doc={TAGS_REPORT_DOC_ID}&subdoc={DETAIL_DOC_ID}"
     assert 'href="related.md"' in detail["content_html"]
     assert related["parent_id"] == DETAIL_DOC_ID
-    assert tag_associations["schema_version"] == "docs_tag_associations_v2"
-    assert tag_associations["scope"] == "studio"
-    assert tag_associations["sub_scope"] == "tags"
+    assert concept_associations["schema_version"] == "docs_concept_associations_v1"
+    assert concept_associations["scope"] == "studio"
+    assert concept_associations["sub_scope"] == "tags"
     assert [
         document["target"]["doc_id"]
-        for document in tag_associations["associations"][0]["documents"]
-    ] == sorted([DETAIL_DOC_ID, RELATED_DOC_ID])
-    assert tag_associations["associations"][0]["tag_id"] == "absence"
+        for document in concept_associations["associations"][0]["documents"]
+    ] == [DETAIL_DOC_ID]
+    assert concept_associations["associations"][0]["concept_id"] == "absence"
     assert all(
         [location["access"] for location in document["locations"]] == ["manage"]
-        for document in tag_associations["associations"][0]["documents"]
+        for document in concept_associations["associations"][0]["documents"]
     )
     assert {
         document["target"]["doc_id"]: document["locations"][0]["url"]
-        for document in tag_associations["associations"][0]["documents"]
+        for document in concept_associations["associations"][0]["documents"]
     } == {
         DETAIL_DOC_ID: (
             f"/docs/?scope=studio&doc={TAGS_REPORT_DOC_ID}"
             f"&subdoc={DETAIL_DOC_ID}"
         ),
-        RELATED_DOC_ID: (
-            f"/docs/?scope=studio&doc={TAGS_REPORT_DOC_ID}"
-            f"&subdoc={RELATED_DOC_ID}"
-        ),
     }
     assert [
         (
-            association["tag_id"],
+            association["concept_id"],
             [document["target"]["doc_id"] for document in association["documents"]],
         )
         for association in reassigned_associations["associations"]
@@ -879,7 +875,7 @@ Related body.
     ]
     assert [
         (
-            association["tag_id"],
+            association["concept_id"],
             [document["target"]["doc_id"] for document in association["documents"]],
         )
         for association in deleted_associations["associations"]
@@ -909,7 +905,7 @@ def test_python_docs_builder_rejects_invalid_sub_scope_group(
             docs_sub_scope_record(
                 "studio",
                 "tags",
-                analysis_tag_groups=["subject", "domain", "form", "theme"],
+                analysis_concept_groups=["subject", "domain", "form", "theme"],
             )
         ]
         write_json(config_path, payload)
@@ -1186,7 +1182,7 @@ group: subject
     assert browser_config["scopes"][0]["sub_scopes"][0]["sub_scope_customisation"] == {
         "id": "concepts",
         "capabilities": {
-            "assignable_field_groups": ["tag_fields"],
+            "assignable_field_groups": ["concept_fields"],
         },
     }
     assert "sub_scope_customisation" not in public_browser_config["scopes"][0]["sub_scopes"][0]

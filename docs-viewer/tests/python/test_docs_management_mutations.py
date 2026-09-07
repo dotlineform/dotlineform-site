@@ -57,7 +57,7 @@ def make_repo() -> tempfile.TemporaryDirectory[str]:
                     docs_sub_scope_record(
                         "studio",
                         "tags",
-                        analysis_tag_groups=["subject", "domain", "form", "theme"],
+                        analysis_concept_groups=["subject", "domain", "form", "theme"],
                     )
                 ],
             ),
@@ -370,7 +370,7 @@ def test_generic_metadata_rejects_group_without_a_write() -> None:
         assert source_path.read_bytes() == before
 
 
-def test_tag_fields_plan_updates_or_clears_only_the_exact_document() -> None:
+def test_concept_fields_plan_updates_or_clears_only_the_exact_document() -> None:
     with make_repo() as temp_path:
         repo_root = Path(temp_path)
         source_path = (
@@ -383,21 +383,21 @@ def test_tag_fields_plan_updates_or_clears_only_the_exact_document() -> None:
             "sub_scope": "tags",
             "doc_id": "detail",
             "source_revision": source_model.source_revision(before),
-            "field_group": "tag_fields",
+            "field_group": "concept_fields",
             "confirm": True,
         }
         updated = mutations.plan_assign_field_group(
             repo_root,
-            {**target, "fields": {"group": "domain", "tag_id": "absence"}},
+            {**target, "fields": {"group": "domain", "concept_id": "absence"}},
         )
         cleared = mutations.plan_assign_field_group(
             repo_root,
-            {**target, "fields": {"group": "", "tag_id": ""}},
+            {**target, "fields": {"group": "", "concept_id": ""}},
         )
         with pytest.raises(ValueError, match="not configured for the target"):
             mutations.plan_assign_field_group(
                 repo_root,
-                {**target, "fields": {"group": "retired", "tag_id": "absence"}},
+                {**target, "fields": {"group": "retired", "concept_id": "absence"}},
             )
         with pytest.raises(
             mutations.ManagedDocumentRevisionConflict,
@@ -408,7 +408,7 @@ def test_tag_fields_plan_updates_or_clears_only_the_exact_document() -> None:
                 {
                     **target,
                     "source_revision": "sha256:" + ("0" * 64),
-                    "fields": {"group": "domain", "tag_id": "absence"},
+                    "fields": {"group": "domain", "concept_id": "absence"},
                 },
             )
 
@@ -417,20 +417,20 @@ def test_tag_fields_plan_updates_or_clears_only_the_exact_document() -> None:
         "sub_scope": "tags",
         "doc_id": "detail",
     }
-    assert updated.response["field_group"] == "tag_fields"
-    assert updated.response["fields"] == {"group": "domain", "tag_id": "absence"}
+    assert updated.response["field_group"] == "concept_fields"
+    assert updated.response["fields"] == {"group": "domain", "concept_id": "absence"}
     assert updated.response["changes"] == {
         "group_changed": True,
-        "tag_id_changed": True,
+        "concept_id_changed": True,
     }
     assert updated.suppression_reason == "docs-assign-field-group"
     assert len(updated.source_writes) == 1
     assert updated.source_writes[0].path == source_path.resolve()
     assert "group: domain" in updated.source_writes[0].text
-    assert "tag_id: absence" in updated.source_writes[0].text
+    assert "concept_id: absence" in updated.source_writes[0].text
     assert 'last_updated: "2026-05-01 10:00"' in updated.source_writes[0].text
     assert "\ngroup:" not in cleared.source_writes[0].text
-    assert "\ntag_id:" not in cleared.source_writes[0].text
+    assert "\nconcept_id:" not in cleared.source_writes[0].text
 
 
 @pytest.mark.parametrize(

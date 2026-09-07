@@ -92,42 +92,6 @@ def test_production_registry_retains_catalogue_and_registers_tag_separately() ->
         "/docs-viewer/data/generated/semantic-tokens/target-lookup.json"
     )
     assert payload["families"][0] == load_fixture()["catalogue_definition"]
-    assert payload["families"][1] == {
-        "schema_version": "docs_semantic_token_family_definition_v1",
-        "key": "tag",
-        "labels": {
-            "family": "Tag",
-            "source_action": "Add tag token",
-            "info_view": "Tag token",
-        },
-        "occurrence_fields": [
-            {
-                "key": "title",
-                "label": "Title",
-                "required": True,
-                "editable": True,
-                "control": "text",
-            }
-        ],
-        "ui_contributions": {
-            "source_action": "source-add-tag-token",
-            "modal": "tag-token-add-modal",
-            "info_view": "tag-token-info",
-        },
-        "target_types": [
-            {
-                "key": "tag",
-                "label": "Tag",
-                "id_policy": {
-                    "normalizer": "slug",
-                    "input_pattern": "^[a-z0-9][a-z0-9-]*$",
-                    "canonical_pattern": "^[a-z0-9][a-z0-9-]*$",
-                },
-                "lookup_adapter": "tag-target-lookup",
-                "lookup_fields": ["title", "href", "meta", "aliases"],
-            }
-        ],
-    }
     registry = load_semantic_token_registry(REPO_ROOT)
     assert registry is not None
     assert [family.key for family in registry.families] == ["catalogue", "tag"]

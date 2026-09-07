@@ -18,15 +18,12 @@ from .semantic_token_registry import (
 from pipeline_config import load_pipeline_config  # noqa: E402
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
-STUDIO_SERVICES_DIR = REPO_ROOT / "studio" / "services"
 DOCS_SERVICES_DIR = REPO_ROOT / "docs-viewer" / "services"
-for module_dir in (STUDIO_SERVICES_DIR, DOCS_SERVICES_DIR):
+for module_dir in (DOCS_SERVICES_DIR,):
     if str(module_dir) not in sys.path:
         sys.path.insert(0, str(module_dir))
 
-from tags import tag_alias_mutations  # noqa: E402
-from tags import tag_document_declarations  # noqa: E402
-from tags import tag_source_model  # noqa: E402
+from docs_concept_documents import load_concept_definitions  # noqa: E402
 
 
 SEMANTIC_TARGET_LOOKUP_SCHEMA_VERSION = "docs_semantic_token_target_lookup_v2"
@@ -123,141 +120,47 @@ def browser_safe_href(value: Any) -> str:
     return href
 
 
-def aliases_by_tag_id(
-    registry_payload: dict[str, Any],
-    aliases_payload: dict[str, Any],
-    *,
-    canonical_tag_ids: set[str],
-) -> dict[str, list[str]]:
-    if aliases_payload.get("tag_aliases_version") != tag_source_model.TAG_ALIASES_VERSION:
-        raise ValueError(
-            f"Tag aliases must use {tag_source_model.TAG_ALIASES_VERSION}"
-        )
-    tag_alias_mutations.validate_alias_entries(aliases_payload, registry_payload)
-    aliases_by_tag = {tag_id: [] for tag_id in canonical_tag_ids}
-    for index, (raw_alias, raw_entry) in enumerate(aliases_payload["aliases"].items()):
-        alias = tag_source_model.sanitize_alias_key(raw_alias, index)
-        entry = tag_source_model.sanitize_alias_entry(
-            raw_entry,
-            alias,
-            "tag_aliases.aliases",
-        )
-        for tag_id in entry["tags"]:
-            aliases_by_tag[tag_id].append(alias)
-    for aliases in aliases_by_tag.values():
-        aliases.sort()
-    return aliases_by_tag
+def concept_resolution_states(repo_root: Path) -> dict[str, str]:
+    """Return resolution states for document-defined Concepts used by existing Tag tokens."""
+
+    return {record["concept_id"]: "" for record in load_concept_definitions(repo_root)}
 
 
-def public_tag_document_location(document: dict[str, Any]) -> dict[str, str] | None:
-    for raw_location in document.get("locations", []):
-        if not isinstance(raw_location, dict):
-            continue
-        if str(raw_location.get("access") or "") != "public":
-            continue
-        href = browser_safe_href(raw_location.get("url"))
-        title = str(raw_location.get("title") or "").strip()
-        return {"href": href, "title": title} if href and title else None
-    return None
-
-
-def selected_tag_document(
-    tag_row: dict[str, Any],
-    documents: list[dict[str, Any]],
-) -> dict[str, Any] | None:
-    if not documents:
-        return None
-    primary = tag_row.get("primary_document")
-    if primary is None:
-        return documents[0]
-    return next(
-        (
-            document
-            for document in documents
-            if document["target"] == primary
-        ),
-        documents[0],
-    )
-
-
-def tag_resolution_states(repo_root: Path) -> dict[str, str]:
-    """Return exact current Tag resolution failures for local diagnosis."""
-
-    registry_payload = tag_source_model.load_registry(
-        repo_root / tag_source_model.REGISTRY_REL_PATH
-    )
-    associations_payload = (
-        tag_document_declarations.load_tag_document_association_payload(repo_root)
-    )
-    documents_by_tag = {
-        association["tag_id"]: association["documents"]
-        for association in associations_payload["associations"]
-    }
-    states: dict[str, str] = {}
-    for tag_row_record in registry_payload["tags"]:
-        tag_id = tag_row_record["tag_id"]
-        documents = documents_by_tag.get(tag_id, [])
-        chosen = selected_tag_document(tag_row_record, documents)
-        if chosen is None:
-            states[tag_id] = "missing_tag_association"
-        elif public_tag_document_location(chosen) is None:
-            states[tag_id] = "missing_tag_destination"
-        else:
-            states[tag_id] = ""
-    return states
-
-
-def tag_target_rows(
+def concept_target_rows(
     family: SemanticTokenFamily,
     target_type: SemanticTokenTargetType,
     *,
-    registry_payload: Any,
-    aliases_payload: Any,
-    associations_payload: Any,
+    definitions: list[dict[str, Any]],
 ) -> list[dict[str, Any]]:
-    if target_type.lookup_adapter != "tag-target-lookup":
+    """Project document-owned Concepts into the retained Tag token contract."""
+
+    if target_type.lookup_adapter != "concept-document-target-lookup":
         return []
-    tag_rows = registry_payload["tags"]
-    aliases = aliases_by_tag_id(
-        registry_payload,
-        aliases_payload,
-        canonical_tag_ids={row["tag_id"] for row in tag_rows},
-    )
-    documents_by_tag = {
-        association["tag_id"]: association["documents"]
-        for association in associations_payload["associations"]
-    }
     targets: list[dict[str, Any]] = []
-    for tag_row_record in tag_rows:
-        tag_id = normalize_semantic_token_id(
-            tag_row_record["tag_id"],
-            target_type.id_policy,
-        )
-        if tag_id is None:
-            raise ValueError(
-                f"Tag {tag_row_record['tag_id']!r} does not match the semantic-token policy"
-            )
-        chosen = selected_tag_document(
-            tag_row_record,
-            documents_by_tag.get(tag_id, []),
-        )
-        if chosen is None:
-            continue
-        location = public_tag_document_location(chosen)
-        if location is None:
-            continue
-        targets.append(
-            {
-                "family": family.key,
-                "target_type": target_type.key,
-                "target_id": tag_id,
-                "title": tag_id,
-                "href": location["href"],
-                "meta": [tag_row_record["group"], location["title"]],
-                "aliases": aliases[tag_id],
-            }
-        )
+    for record in definitions:
+        concept_id = normalize_semantic_token_id(record["concept_id"], target_type.id_policy)
+        if concept_id is None:
+            raise ValueError(f"Concept {record['concept_id']!r} does not match the semantic-token policy")
+        targets.append({
+            "family": family.key,
+            "target_type": target_type.key,
+            "target_id": concept_id,
+            "title": record["title"],
+            "href": record["href"],
+            "meta": [value for value in (record["group"], record["title"]) if value],
+        })
     return targets
+
+
+def concept_token_targets(repo_root: Path, *, stage: str = "working") -> list[dict[str, Any]]:
+    """Resolve retained Tag tokens from the explicitly selected Analysis stage."""
+
+    registry = load_semantic_token_registry(repo_root)
+    family = registry.family("tag") if registry else None
+    target_type = family.target_type("tag") if family else None
+    if family is None or target_type is None:
+        return []
+    return concept_target_rows(family, target_type, definitions=load_concept_definitions(repo_root, stage=stage))
 
 
 def primary_image_settings(
@@ -477,27 +380,7 @@ class SemanticTargetLookupBuilder:
                     if row is not None:
                         targets.append(row)
 
-        tag_family = registry.family("tag")
-        if tag_family is not None:
-            tag_target_type = tag_family.target_type("tag")
-            if tag_target_type is not None:
-                targets.extend(
-                    tag_target_rows(
-                        tag_family,
-                        tag_target_type,
-                        registry_payload=tag_source_model.load_registry(
-                            self.repo_root / tag_source_model.REGISTRY_REL_PATH
-                        ),
-                        aliases_payload=tag_source_model.load_aliases(
-                            self.repo_root / tag_source_model.ALIASES_REL_PATH
-                        ),
-                        associations_payload=(
-                            tag_document_declarations.load_tag_document_association_payload(
-                                self.repo_root
-                            )
-                        ),
-                    )
-                )
+        targets.extend(concept_token_targets(self.repo_root))
         targets.sort(
             key=lambda row: (
                 registry.family(row["family"]).order

@@ -95,11 +95,10 @@ def test_runner_studio_smoke_profile_is_the_retained_boundary_set() -> None:
         "public-site-source-lint",
         "site-validate",
         "studio-catalogue-route-smoke",
-        "studio-tag-route-smoke",
         "public-catalogue-route-smoke",
     ]
-    assert all(command.isolated_projects_base for command in commands[3:5])
-    assert commands[5].isolated_projects_base is False
+    assert commands[3].isolated_projects_base is True
+    assert commands[4].isolated_projects_base is False
     assert all(
         (REPO_ROOT / argument).is_file()
         for command in commands

@@ -54,7 +54,7 @@ export function createTagTokenMainViewControlHandlers() {
         : null;
       if (!adapter || typeof adapter.captureSelection !== "function") {
         if (typeof services.setStatus === "function") {
-          services.setStatus("Tag tokens are available while editing Markdown source.", true);
+          services.setStatus("Concept tokens are available while editing Markdown source.", true);
         }
         return Promise.resolve(null);
       }

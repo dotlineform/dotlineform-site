@@ -295,7 +295,7 @@ def test_sub_scope_delete_revision_hashes_exact_source_bytes(tmp_path: Path) -> 
         },
         {
             **preview_body(),
-            "tag_id": "external-association",
+            "concept_id": "external-association",
         },
         {
             **preview_body(),
@@ -349,7 +349,7 @@ def test_sub_scope_delete_apply_rejects_broadened_payload_after_preview(
     broadened = {
         **apply_body(preview["source_revision"]),
         "doc_ids": [TARGET_DOC_ID, SIBLING_DOC_ID],
-        "tag_id": "external-association",
+        "concept_id": "external-association",
     }
 
     with pytest.raises(ValueError, match="must contain exactly"):

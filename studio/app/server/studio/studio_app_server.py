@@ -40,7 +40,6 @@ if str(STUDIO_DIR) not in sys.path:
 
 from studio_app_config import asset_version, normalize_route_path, runtime_config, studio_shell_route_paths  # noqa: E402
 from studio_catalogue_api import catalogue_get_payload, catalogue_post_response  # noqa: E402
-from studio_tags_api import tags_get_payload, tags_post_response  # noqa: E402
 from catalogue.catalogue_output_paths import CATALOGUE_OUTPUT_ROUTE_PREFIX, catalogue_output_workspace, output_path  # noqa: E402
 
 
@@ -107,9 +106,6 @@ class StudioAppRequestHandler(QuietErrorLoggingMixin, BaseHTTPRequestHandler):
         if path.startswith("/studio/api/catalogue/"):
             self.send_catalogue_api_json(path.removeprefix("/studio/api/catalogue"), query)
             return
-        if path.startswith("/studio/api/tags/"):
-            self.send_tags_api_json(path.removeprefix("/studio/api/tags"))
-            return
         if self.is_studio_shell_route(path):
             self.send_studio_shell()
             return
@@ -128,12 +124,6 @@ class StudioAppRequestHandler(QuietErrorLoggingMixin, BaseHTTPRequestHandler):
                 return
             self.send_catalogue_api_post_json(path.removeprefix("/studio/api/catalogue"))
             return
-        if path.startswith("/studio/api/tags/"):
-            if not self.origin_allowed_for_local_api():
-                self.send_json({"ok": False, "error": "Origin not allowed"}, HTTPStatus.FORBIDDEN)
-                return
-            self.send_tags_api_post_json(path.removeprefix("/studio/api/tags"))
-            return
 
         self.send_error(HTTPStatus.NOT_FOUND, "Not found")
 
@@ -143,7 +133,7 @@ class StudioAppRequestHandler(QuietErrorLoggingMixin, BaseHTTPRequestHandler):
     def do_OPTIONS(self) -> None:
         request = urlsplit(self.path)
         path = unquote(request.path)
-        if not path.startswith(("/studio/api/catalogue/", "/studio/api/tags/")):
+        if not path.startswith("/studio/api/catalogue/"):
             self.send_error(HTTPStatus.NOT_FOUND, "Not found")
             return
         if not self.origin_allowed_for_local_api():
@@ -227,27 +217,6 @@ class StudioAppRequestHandler(QuietErrorLoggingMixin, BaseHTTPRequestHandler):
             self.send_json({"ok": False, "error": str(error)}, HTTPStatus.BAD_REQUEST)
         except RuntimeError as error:
             self.send_json({"ok": False, "error": str(error)}, HTTPStatus.INTERNAL_SERVER_ERROR)
-
-    def send_tags_api_json(self, api_path: str) -> None:
-        try:
-            self.send_json(tags_get_payload(self.repo_root, api_path))
-        except FileNotFoundError as error:
-            self.send_json({"ok": False, "error": str(error)}, HTTPStatus.NOT_FOUND)
-        except RuntimeError as error:
-            self.send_json({"ok": False, "error": str(error)}, HTTPStatus.INTERNAL_SERVER_ERROR)
-
-    def send_tags_api_post_json(self, api_path: str) -> None:
-        try:
-            body = self.read_json_body()
-            status, payload = tags_post_response(self.repo_root, api_path, body)
-            self.send_json(payload, status)
-        except FileNotFoundError as error:
-            self.send_json({"ok": False, "error": str(error)}, HTTPStatus.NOT_FOUND)
-        except ValueError as error:
-            self.send_json({"ok": False, "error": str(error)}, HTTPStatus.BAD_REQUEST)
-        except RuntimeError as error:
-            self.send_json({"ok": False, "error": str(error)}, HTTPStatus.INTERNAL_SERVER_ERROR)
-
     def read_json_body(self) -> dict[str, object]:
         content_length = self.headers.get("Content-Length", "").strip()
         try:

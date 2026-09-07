@@ -20,8 +20,7 @@ function tagTarget(row) {
     targetId: row.targetId,
     title: row.title,
     href: row.href,
-    meta: row.meta.slice(),
-    aliases: row.aliases.slice()
+    meta: row.meta.slice()
   };
 }
 

@@ -78,28 +78,6 @@
       "owner_doc": "data-models-catalogue"
     },
     {
-      "id": "studio_tag_management_source",
-      "classification": "canonical_source",
-      "repo_paths": [
-        "studio/data/canonical/tags/tag-registry.json",
-        "studio/data/canonical/tags/tag-aliases.json",
-        "studio/data/canonical/tags/tag-assignments.json",
-        "studio/data/canonical/tags/tag-groups.json",
-        "studio/data/config/tags/tag-management.json"
-      ],
-      "public_output": {
-        "policy": "forbidden",
-        "paths": [
-          "studio/data/canonical/tags/tag-registry.json",
-          "studio/data/canonical/tags/tag-aliases.json",
-          "studio/data/canonical/tags/tag-assignments.json",
-          "studio/data/canonical/tags/tag-groups.json",
-          "studio/data/config/tags/tag-management.json"
-        ]
-      },
-      "owner_doc": "tag-source-data"
-    },
-    {
       "id": "studio_config_and_route_ui",
       "classification": "studio_projection",
       "repo_paths": [

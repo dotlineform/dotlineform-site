@@ -120,7 +120,7 @@ def tag_family_definition() -> dict[str, object]:
                     "input_pattern": "^[a-z0-9][a-z0-9-]*$",
                     "canonical_pattern": "^[a-z0-9][a-z0-9-]*$",
                 },
-                "lookup_adapter": "tag-target-lookup",
+                "lookup_adapter": "concept-document-target-lookup",
                 "lookup_fields": ["title", "href", "meta", "aliases"],
             }
         ],
@@ -167,13 +167,13 @@ def write_semantic_token_contract(repo_root: Path, *, include_tag: bool = False)
             {
                 "family": "tag",
                 "target_type": "tag",
-                "target_id": tag_id,
-                "title": tag_id,
+                "target_id": concept_id,
+                "title": concept_id,
                 "href": f"/analysis/?doc=report&subdoc={doc_id}",
                 "meta": ["subject", title],
                 "aliases": [],
             }
-            for tag_id, doc_id, title in (
+            for concept_id, doc_id, title in (
                 ("resolved", "d-20260811-120000-100001", "Resolved document"),
                 ("stale", "d-20260811-120000-400001", "Fallback document"),
                 ("unavailable", "d-20260811-120000-500001", "Stale unavailable row"),
@@ -216,114 +216,14 @@ def write_semantic_token_contract(repo_root: Path, *, include_tag: bool = False)
     )
 
 
-def write_tag_diagnosis_contract(repo_root: Path) -> None:
-    write_semantic_token_contract(repo_root, include_tag=True)
-    write_docs_scope_config(
-        repo_root,
-        [
-            docs_scope_record("studio", default_doc_id="source"),
-            docs_scope_record(
-                "analysis",
-                scope_type="public",
-                viewer_base_url="/analysis/",
-                include_scope_param=False,
-                default_doc_id="d-20260811-120000-000001",
-                sub_scopes=[
-                    docs_sub_scope_record(
-                        "analysis",
-                        "tags",
-                        scope_type="public",
-                    )
-                ],
-            )
-        ],
-    )
-    target = lambda doc_id: {  # noqa: E731
-        "scope": "analysis",
-        "sub_scope": "tags",
-        "doc_id": doc_id,
-    }
-    write_json(
-        repo_root / "studio/data/canonical/tags/tag-registry.json",
-        {
-            "tag_registry_version": "tag_registry_v6",
-            "updated_at_utc": "2026-08-11T12:00:00Z",
-            "policy": {"allowed_groups": ["subject"]},
-            "tags": [
-                {
-                    "tag_id": tag_id,
-                    "group": "subject",
-                    "updated_at_utc": "2026-08-11T12:00:00Z",
-                    **(
-                        {"primary_document": target("d-20260811-120000-499999")}
-                        if tag_id == "stale"
-                        else {}
-                    ),
-                }
-                for tag_id in ("resolved", "stale", "unavailable", "zero")
-            ],
-        },
-    )
-    def document(doc_id: str, title: str, *, public: bool) -> dict[str, object]:
-        locations = [
-            {
-                "access": "manage",
-                "url": f"/docs/?scope=analysis&doc=report&subdoc={doc_id}",
-                "title": title,
-            }
-        ]
-        if public:
-            locations.append(
-                {
-                    "access": "public",
-                    "url": f"/analysis/?doc=report&subdoc={doc_id}",
-                    "title": title,
-                }
-            )
-        return {"target": target(doc_id), "title": title, "locations": locations}
+def write_concept_diagnosis_contract(repo_root: Path) -> None:
+    from concept_factory import write_concept_sources
 
-    write_json(
-        repo_root
-        / "docs-viewer/scopes/analysis/generated/documents/sub-scopes/tags/tag-associations.json",
-        {
-            "schema_version": "docs_tag_associations_v1",
-            "scope": "analysis",
-            "sub_scope": "tags",
-            "declaration_generation": "sha256:fixture",
-            "associations": [
-                {
-                    "tag_id": "resolved",
-                    "documents": [
-                        document(
-                            "d-20260811-120000-100001",
-                            "Resolved document",
-                            public=True,
-                        )
-                    ],
-                },
-                {
-                    "tag_id": "stale",
-                    "documents": [
-                        document(
-                            "d-20260811-120000-400001",
-                            "Fallback document",
-                            public=True,
-                        )
-                    ],
-                },
-                {
-                    "tag_id": "unavailable",
-                    "documents": [
-                        document(
-                            "d-20260811-120000-500001",
-                            "Unavailable document",
-                            public=False,
-                        )
-                    ],
-                },
-            ],
-        },
-    )
+    write_semantic_token_contract(repo_root, include_tag=True)
+    config = json.loads((repo_root / "docs-viewer/config/scopes/docs_scopes.json").read_text())
+    write_concept_sources(repo_root, concept_id="resolved", extra_scopes=[
+        scope for scope in config["scopes"] if scope["scope_id"] != "analysis"
+    ])
 
 
 def write_source_doc(repo_root: Path, scope: str, body: str) -> None:
@@ -537,32 +437,14 @@ def test_semantic_token_source_repair_clears_the_audit() -> None:
 
 
 def test_tag_semantic_token_audit_diagnoses_exact_resolution_state() -> None:
-    source_body = (
-        "Resolved [[tag:tag:resolved|Resolved]].\n"
-        "Stale primary fallback [[tag:tag:stale|Stale]].\n"
-        "Unknown [[tag:tag:unknown|Unknown]].\n"
-        "Zero associations [[tag:tag:zero|Zero]].\n"
-        "Unavailable chosen destination [[tag:tag:unavailable|Unavailable]].\n"
-    )
+    source_body = "Resolved [[tag:tag:resolved|Resolved]]. Unknown [[tag:tag:unknown|Unknown]]."
     with make_repo("<p>No semantic-token anchors here.</p>", source_body=source_body) as temp_path:
         repo_root = Path(temp_path)
-        write_tag_diagnosis_contract(repo_root)
-        result = docs_broken_links.audit_docs_broken_links(repo_root, "studio")
-
-    entries = [
-        entry for entry in result["entries"]
-        if entry.get("issue_type") == "semantic_token"
-    ]
-    assert {
-        entry["target_id"]: entry["reason"]
-        for entry in entries
-    } == {
-        "unknown": "unknown_tag",
-        "zero": "missing_tag_association",
-        "unavailable": "missing_tag_destination",
-    }
-    assert not any(entry["target_id"] in {"resolved", "stale"} for entry in entries)
-    assert all(entry["link_url"] == "" for entry in entries)
+        write_concept_diagnosis_contract(repo_root)
+        configs = docs_broken_links.load_docs_scope_configs(repo_root, scope_ids=["studio"])
+        entries = docs_broken_links.semantic_token_broken_entries(repo_root, "studio", configs)
+    assert [(entry["target_id"], entry["reason"]) for entry in entries] == [("unknown", "unknown_concept")]
+    assert entries[0]["link_url"] == ""
 
 
 def main() -> None:

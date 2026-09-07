@@ -683,12 +683,6 @@ def load_semantic_token_target_records(
             if isinstance(raw_target.get("meta"), list)
             else [],
         }
-        if isinstance(raw_target.get("aliases"), list):
-            target["aliases"] = [
-                str(value).strip()
-                for value in raw_target["aliases"]
-                if str(value).strip()
-            ]
         raw_image = raw_target.get("image")
         image_src = (
             browser_safe_image_src(raw_image.get("src"))
@@ -703,12 +697,19 @@ def load_semantic_token_target_records(
     return targets
 
 
-def load_semantic_token_targets(repo_root: Path) -> dict[tuple[str, str, str], dict[str, Any]]:
-    return {
+def load_semantic_token_targets(repo_root: Path, *, stage: str = "") -> dict[tuple[str, str, str], dict[str, Any]]:
+    targets = {
         key: target
         for key, target in load_semantic_token_target_records(repo_root).items()
         if str(target.get("href") or "").startswith("/")
     }
+    if stage:
+        from .semantic_target_lookup import concept_token_targets
+
+        targets = {key: target for key, target in targets.items() if key[0] != "tag"}
+        for target in concept_token_targets(repo_root, stage=stage):
+            targets[(target["family"], target["target_type"], target["target_id"])] = target
+    return targets
 
 
 class SemanticTokensMixin:

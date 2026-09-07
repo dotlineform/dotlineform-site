@@ -1,9 +1,8 @@
 # Studio Smoke Boundaries
 
-This directory contains three retained browser entrypoints plus one small server harness:
+This directory contains two retained browser entrypoints plus one small server harness:
 
 - `studio_catalogue_route.py`: local Catalogue route boot and same-origin service isolation.
-- `studio_tag_route.py`: local Tag route boot and same-origin service isolation.
 - `public_catalogue_route.py`: one checked public Work route without local Studio capability.
 - `studio_route_smoke_support.py`: server startup and route-ready waiting only.
 

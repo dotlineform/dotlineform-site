@@ -16,16 +16,6 @@ const HOME_COLUMNS = Object.freeze([
         siteKey: "docs_viewer"
       })
     ])
-  }),
-  Object.freeze({
-    label: "tags",
-    links: Object.freeze([
-      Object.freeze({ routeId: "tag_groups" }),
-      Object.freeze({ routeId: "tag_registry" }),
-      Object.freeze({ routeId: "tag_aliases" }),
-      Object.freeze({ routeId: "series_tags" }),
-      Object.freeze({ routeId: "series_tag_editor" })
-    ])
   })
 ]);
 

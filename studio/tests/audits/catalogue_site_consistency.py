@@ -18,7 +18,7 @@ import re
 import sys
 import time
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Set, Tuple
+from typing import Any, Dict, List, Optional, Tuple
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 for path in (
@@ -40,7 +40,6 @@ try:
 except ModuleNotFoundError:  # pragma: no cover - package import fallback
     from catalogue.series_ids import normalize_series_id
 
-from tags import tag_source_paths
 
 
 PIPELINE_CONFIG = load_pipeline_config(Path(__file__))
@@ -290,28 +289,6 @@ def load_generated_route_contracts(site_root: Path) -> Tuple[
     return works, series, details
 
 
-def resolve_repo_source_path(rel_path: Path, repo_root: Path = REPO_ROOT) -> Path:
-    return (repo_root / rel_path).resolve()
-
-
-def load_source_series_statuses(repo_root: Path = REPO_ROOT) -> Dict[str, str]:
-    path = resolve_repo_source_path(Path("studio/data/canonical/catalogue/series.json"), repo_root)
-    try:
-        payload = json.loads(path.read_text(encoding="utf-8"))
-    except Exception:
-        return {}
-    series_map = payload.get("series") if isinstance(payload, dict) else None
-    if not isinstance(series_map, dict):
-        return {}
-    statuses: Dict[str, str] = {}
-    for raw_sid, raw_row in series_map.items():
-        sid = normalize_text(raw_sid)
-        if sid == "" or not isinstance(raw_row, dict):
-            continue
-        statuses[sid] = normalize_text(raw_row.get("status")).lower() or "unknown"
-    return statuses
-
-
 def normalize_url(url: str) -> str:
     s = normalize_text(url)
     if s == "":
@@ -445,61 +422,6 @@ def check_cross_refs(
         if detail_uid_norm not in work_details:
             errors += 1
             add_sample(samples, {"check": "cross_refs", "id": detail_uid_norm, "path": ref.get("path", ""), "message": "work JSON references missing work detail contract"}, max_samples)
-
-    # Tag assignments -> lean Series identity and exact Series membership.
-    assignments_path = resolve_repo_source_path(tag_source_paths.TAG_ASSIGNMENTS_REL_PATH)
-    if not assignments_path.exists():
-        warnings += 1
-        add_sample(samples, {"check": "cross_refs", "id": "tag_assignments", "path": str(assignments_path), "message": "missing tag assignments JSON"}, max_samples)
-    else:
-        try:
-            assignments_obj = json.loads(assignments_path.read_text(encoding="utf-8"))
-        except Exception as e:
-            warnings += 1
-            add_sample(samples, {"check": "cross_refs", "id": "tag_assignments", "path": str(assignments_path), "message": f"invalid json: {e}"}, max_samples)
-            assignments_obj = {}
-
-        assignments_series = assignments_obj.get("series") if isinstance(assignments_obj, dict) else None
-        if not isinstance(assignments_series, dict):
-            warnings += 1
-            add_sample(samples, {"check": "cross_refs", "id": "tag_assignments", "path": str(assignments_path), "message": "missing/invalid series map"}, max_samples)
-        else:
-            known_series_index_ids = set(series_map.keys()) if isinstance(series_map, dict) else set()
-            source_series_status_by_id = load_source_series_statuses()
-            known_work_ids = {normalize_text(wid) for wid in works.keys()}
-            series_member_sets: Dict[str, Set[str]] = {
-                series_id: set(member_work_ids)
-                for series_id, member_work_ids in series_membership.items()
-            }
-
-            for sid, row in assignments_series.items():
-                sid_norm = normalize_text(sid)
-                if sid_norm == "":
-                    continue
-                if series_ids_scope is not None and sid_norm not in series_ids_scope:
-                    continue
-                if sid_norm not in known_series_index_ids:
-                    if source_series_status_by_id.get(sid_norm) not in {"", "published"}:
-                        continue
-                    warnings += 1
-                    add_sample(samples, {"check": "cross_refs", "id": sid_norm, "path": str(assignments_path), "message": "tag_assignments series row is missing from series_index"}, max_samples)
-                    continue
-                works_map = row.get("works") if isinstance(row, dict) else None
-                if not isinstance(works_map, dict):
-                    continue
-                for work_id, work_row in works_map.items():
-                    work_id_norm = normalize_text(work_id)
-                    if work_id_norm == "":
-                        continue
-                    if work_ids_scope is not None and work_id_norm not in work_ids_scope:
-                        continue
-                    if work_id_norm not in known_work_ids:
-                        warnings += 1
-                        add_sample(samples, {"check": "cross_refs", "id": work_id_norm, "path": str(assignments_path), "message": f"tag_assignments work override references unknown work_id '{work_id_norm}'"}, max_samples)
-                    members = series_member_sets.get(sid_norm, set())
-                    if members and work_id_norm not in members:
-                        warnings += 1
-                        add_sample(samples, {"check": "cross_refs", "id": work_id_norm, "path": str(assignments_path), "message": f"tag_assignments work override for series '{sid_norm}' is not present in exact Series membership"}, max_samples)
 
     return {"name": "cross_refs", "error_count": errors, "warning_count": warnings, "samples": samples}
 
@@ -779,88 +701,6 @@ def check_json_schema(
                 errors += 1
                 add_sample(samples, {"check": "json_schema", "id": series_id, "path": str(series_index_path), "message": "lean single_work_id does not match exact Series membership"}, max_samples)
 
-    tag_assignments_path = resolve_repo_source_path(tag_source_paths.TAG_ASSIGNMENTS_REL_PATH)
-    try:
-        tag_assignments_obj = json.loads(tag_assignments_path.read_text(encoding="utf-8"))
-    except Exception as e:
-        errors += 1
-        add_sample(samples, {"check": "json_schema", "id": "tag_assignments", "path": str(tag_assignments_path), "message": f"invalid json: {e}"}, max_samples)
-        tag_assignments_obj = None
-
-    if not isinstance(tag_assignments_obj, dict):
-        errors += 1
-        add_sample(samples, {"check": "json_schema", "id": "tag_assignments", "path": str(tag_assignments_path), "message": "tag assignments root must be object"}, max_samples)
-    else:
-        assignments_series = tag_assignments_obj.get("series")
-        if not isinstance(assignments_series, dict):
-            errors += 1
-            add_sample(samples, {"check": "json_schema", "id": "tag_assignments", "path": str(tag_assignments_path), "message": "tag assignments series must be object map"}, max_samples)
-        for sid, row in (assignments_series.items() if isinstance(assignments_series, dict) else []):
-            sid_norm = normalize_text(sid)
-            if sid_norm == "":
-                continue
-            if series_ids_scope is not None and sid_norm not in series_ids_scope:
-                continue
-            if not isinstance(row, dict):
-                errors += 1
-                add_sample(samples, {"check": "json_schema", "id": sid_norm, "path": str(tag_assignments_path), "message": "tag assignments series row must be object"}, max_samples)
-                continue
-            tags = row.get("tags")
-            if not isinstance(tags, list):
-                errors += 1
-                add_sample(samples, {"check": "json_schema", "id": sid_norm, "path": str(tag_assignments_path), "message": "tag assignments series row missing tags list"}, max_samples)
-            else:
-                for tag_row in tags:
-                    if not isinstance(tag_row, dict):
-                        errors += 1
-                        add_sample(samples, {"check": "json_schema", "id": sid_norm, "path": str(tag_assignments_path), "message": "tag assignments series tags must be objects"}, max_samples)
-                        break
-                    if normalize_text(tag_row.get("tag_id")) == "":
-                        errors += 1
-                        add_sample(samples, {"check": "json_schema", "id": sid_norm, "path": str(tag_assignments_path), "message": "tag assignments series tag missing tag_id"}, max_samples)
-                        break
-                    if "w_manual" not in tag_row:
-                        errors += 1
-                        add_sample(samples, {"check": "json_schema", "id": sid_norm, "path": str(tag_assignments_path), "message": "tag assignments series tag missing w_manual"}, max_samples)
-                        break
-            works_map = row.get("works")
-            if works_map is not None and not isinstance(works_map, dict):
-                errors += 1
-                add_sample(samples, {"check": "json_schema", "id": sid_norm, "path": str(tag_assignments_path), "message": "tag assignments works must be object map when present"}, max_samples)
-                continue
-            if not isinstance(works_map, dict):
-                continue
-            for work_id, work_row in works_map.items():
-                work_id_norm = normalize_text(work_id)
-                if work_id_norm == "":
-                    continue
-                if work_ids_scope is not None and work_id_norm not in work_ids_scope:
-                    continue
-                if not re.fullmatch(r"\d{5}", work_id_norm):
-                    errors += 1
-                    add_sample(samples, {"check": "json_schema", "id": work_id_norm, "path": str(tag_assignments_path), "message": "tag assignments work override key must be a 5-digit work_id"}, max_samples)
-                    continue
-                if not isinstance(work_row, dict):
-                    errors += 1
-                    add_sample(samples, {"check": "json_schema", "id": work_id_norm, "path": str(tag_assignments_path), "message": "tag assignments work override row must be object"}, max_samples)
-                    continue
-                if not isinstance(work_row.get("tags"), list):
-                    errors += 1
-                    add_sample(samples, {"check": "json_schema", "id": work_id_norm, "path": str(tag_assignments_path), "message": "tag assignments work override row missing tags list"}, max_samples)
-                    continue
-                for tag_row in work_row.get("tags", []):
-                    if not isinstance(tag_row, dict):
-                        errors += 1
-                        add_sample(samples, {"check": "json_schema", "id": work_id_norm, "path": str(tag_assignments_path), "message": "tag assignments work override tags must be objects"}, max_samples)
-                        break
-                    if normalize_text(tag_row.get("tag_id")) == "":
-                        errors += 1
-                        add_sample(samples, {"check": "json_schema", "id": work_id_norm, "path": str(tag_assignments_path), "message": "tag assignments work override tag missing tag_id"}, max_samples)
-                        break
-                    if "w_manual" not in tag_row:
-                        errors += 1
-                        add_sample(samples, {"check": "json_schema", "id": work_id_norm, "path": str(tag_assignments_path), "message": "tag assignments work override tag missing w_manual"}, max_samples)
-                        break
     # Work detail JSON
     for p in sorted((site_root / "assets/works/index").glob("*.json")):
         wid = p.stem

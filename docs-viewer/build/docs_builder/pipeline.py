@@ -65,7 +65,7 @@ class DocsDataBuilder(
         self.output_url_base = self.output_url_base_for(self.output_url_dir())
         self.site_config = load_site_tools_config(self.repo_root)
         self.semantic_token_registry = load_semantic_token_registry(self.repo_root)
-        self.semantic_token_targets_by_key = load_semantic_token_targets(self.repo_root)
+        self.semantic_token_targets_by_key = load_semantic_token_targets(self.repo_root, stage=config.stage)
         self.source_files_scanned = 0
         self.warnings: list[str] = []
         self._viewer_scope_for_path: dict[str, str] | None = None

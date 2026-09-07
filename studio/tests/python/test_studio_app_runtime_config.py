@@ -76,11 +76,6 @@ def test_runtime_config_exposes_adapter_contract() -> None:
     assert not any(view["id"] == "docs" for view in runtime["views"])
     assert not any("doc_href" in view for view in runtime["views"])
     assert not any(view["id"] in {"studio_catalogue", "data_sharing"} for view in runtime["views"])
-    assert any(view["id"] == "tag_groups" and view["path"] == "/studio/tag-groups/" for view in runtime["views"])
-    assert any(view["id"] == "tag_registry" and view["path"] == "/studio/tag-registry/" for view in runtime["views"])
-    assert any(view["id"] == "tag_aliases" and view["path"] == "/studio/tag-aliases/" for view in runtime["views"])
-    assert any(view["id"] == "series_tags" and view["path"] == "/studio/series-tags/" for view in runtime["views"])
-    assert any(view["id"] == "series_tag_editor" and view["path"] == "/studio/series-tag-editor/" for view in runtime["views"])
     assert not any(view["id"] in {"data_sharing_prepare", "data_sharing_review"} for view in runtime["views"])
     assert not any(view["id"] in {"studio_audits", "studio_risk", "activity"} for view in runtime["views"])
     assert not any(view["id"] == "project_state" or view["path"] == "/studio/project-state/" for view in runtime["views"])
@@ -95,7 +90,6 @@ def test_runtime_config_exposes_adapter_contract() -> None:
     assert any(view["id"] == "catalogue_work_editor" and view["path"] == "/studio/catalogue-work/" for view in runtime["views"])
     assert not any(view["id"] == "catalogue_moment_editor" or view["path"] == "/studio/catalogue-moment/" for view in runtime["views"])
     assert runtime["navigation"]["primary"] == []
-    assert "series_tag_editor" not in runtime["navigation"]["primary"]
     assert "data_sharing" not in runtime["services"]
     assert "docs" not in runtime["services"]
     assert "audits" not in runtime["services"]
@@ -115,6 +109,10 @@ def test_runtime_config_exposes_adapter_contract() -> None:
     }
     assert "ui_text" not in runtime["data_paths"]
     assert runtime["services"]["catalogue"]["base"] == "/studio/api/catalogue"
+    assert "analysis" not in payload
+    assert "tags" not in runtime["services"]
+    assert "series_tag_editor" not in runtime
+    assert not any("tag" in view["id"] for view in runtime["views"])
     assert runtime["services"]["catalogue"]["read"] == "/studio/api/catalogue/read"
     assert runtime["services"]["catalogue"]["bulk_save"] == "/studio/api/catalogue/bulk-save"
     assert runtime["services"]["catalogue"]["delete_preview"] == "/studio/api/catalogue/delete-preview"
@@ -129,29 +127,7 @@ def test_runtime_config_exposes_adapter_contract() -> None:
     assert runtime["services"]["catalogue"]["save_series"] == "/studio/api/catalogue/series/save"
     assert "project_state_report" not in runtime["services"]["catalogue"]
     assert "project_state_open_report" not in runtime["services"]["catalogue"]
-    assert runtime["services"]["tags"]["base"] == "/studio/api/tags"
-    assert runtime["services"]["tags"]["health"] == "/studio/api/tags/health"
-    assert runtime["services"]["tags"]["tag_groups"] == "/studio/api/tags/tag-groups"
-    assert runtime["services"]["tags"]["tag_registry"] == "/studio/api/tags/tag-registry"
-    assert runtime["services"]["tags"]["tag_aliases"] == "/studio/api/tags/tag-aliases"
-    assert runtime["services"]["tags"]["tag_assignments"] == "/studio/api/tags/tag-assignments"
-    assert runtime["services"]["tags"]["save_tags"] == "/studio/api/tags/save-tags"
-    assert "import_tag_assignments" not in runtime["services"]["tags"]
-    assert "import_tag_assignments_preview" not in runtime["services"]["tags"]
-    assert runtime["services"]["tags"]["create_tag"] == "/studio/api/tags/create-tag"
-    assert "concepts_document_url_template" not in runtime["services"]["tags"]
-    assert runtime["services"]["tags"]["create_tag_alias"] == "/studio/api/tags/create-tag-alias"
-    assert "import_tag_registry" not in runtime["services"]["tags"]
-    assert "import_tag_aliases" not in runtime["services"]["tags"]
-    assert "series_index_url" not in runtime["series_tag_editor"]
-    assert "baseurl" not in runtime["series_tag_editor"]
-    assert runtime["series_tag_editor"]["tag_editor_module_url"] == "/studio/app/frontend/js/analytics-tag-editor.js"
-    assert payload["analysis"]["groups"]["ordered"] == ["subject", "domain", "form", "theme"]
-    assert payload["analysis"]["groups"]["coverage_groups"] == ["subject", "domain", "form", "theme"]
     assert "thumbnail_quality_preview" not in runtime["services"]["catalogue"]
-    assert "tag_groups" not in runtime["data_paths"]["studio"]
-    assert "tag_registry" not in runtime["data_paths"]["studio"]
-    assert "tag_aliases" not in runtime["data_paths"]["studio"]
     assert "tag_assignments" not in runtime["data_paths"]["studio"]
     assert "thumbnail_quality_preview" not in runtime["data_paths"]["studio"]
     assert "data_sharing_adapters" not in runtime["data_paths"]["studio"]
@@ -161,6 +137,26 @@ def test_runtime_config_exposes_adapter_contract() -> None:
     assert runtime["pipeline"]["encoding"]["format"] == "webp"
     assert runtime["pipeline"]["workbooks"]["bulk_import"] == "data/works_bulk_import.xlsx"
     assert runtime["modals"]["event"] == "studio:open-modal"
+
+def test_retired_tag_routes_and_apis_return_not_found() -> None:
+    from types import SimpleNamespace
+    from studio_app_server import StudioAppRequestHandler
+
+    handler = object.__new__(StudioAppRequestHandler)
+    handler.server = SimpleNamespace(repo_root=REPO_ROOT)
+    outcomes = []
+    handler.send_error = lambda code, message: outcomes.append(int(code))
+    for path in (
+        "/studio/tag-registry/", "/studio/tag-aliases/", "/studio/tag-groups/",
+        "/studio/series-tags/", "/studio/series-tag-editor/", "/studio/api/tags/tag-registry",
+    ):
+        handler.path = path
+        handler.do_GET()
+    handler.path = "/studio/api/tags/save-tags"
+    handler.do_POST()
+    handler.do_OPTIONS()
+    assert outcomes == [404] * 8
+
 
 def test_studio_route_registry_validation_rejects_invalid_routes() -> None:
     payload = runtime_config(REPO_ROOT, "test-version")

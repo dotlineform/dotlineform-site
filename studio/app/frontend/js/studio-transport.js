@@ -26,22 +26,6 @@ const BULK_ADD_WORK_ENDPOINTS = Object.freeze({
   importApply: "/studio/api/catalogue/import-apply"
 });
 
-const TAG_WRITE_RUNTIME_KEYS = Object.freeze({
-  createTag: "create_tag",
-  createTagAlias: "create_tag_alias",
-  deleteTagAlias: "delete_tag_alias",
-  demoteTag: "demote_tag",
-  demoteTagPreview: "demote_tag_preview",
-  health: "health",
-  mutateTagAlias: "mutate_tag_alias",
-  mutateTagAliasPreview: "mutate_tag_alias_preview",
-  mutateTag: "mutate_tag",
-  mutateTagPreview: "mutate_tag_preview",
-  promoteTagAlias: "promote_tag_alias",
-  promoteTagAliasPreview: "promote_tag_alias_preview",
-  saveTags: "save_tags"
-});
-
 export {
   BULK_ADD_WORK_ENDPOINTS,
   CATALOGUE_READ_ENDPOINTS,
@@ -50,18 +34,6 @@ export {
 
 export function configureStudioTransport(config) {
   void config;
-}
-
-export function getStudioTagWriteEndpoint(key, config = null) {
-  const runtimeKey = TAG_WRITE_RUNTIME_KEYS[key] || "";
-  const runtime = config && config.app && config.app.runtime;
-  const tags = runtime && runtime.services && runtime.services.tags;
-  const configured = runtimeKey && tags && tags[runtimeKey];
-  return typeof configured === "string" && configured.trim() ? configured : "";
-}
-
-export async function probeStudioTagHealth(timeoutMs = 500, options = {}) {
-  return probeHealth(getStudioTagWriteEndpoint("health", options.config), timeoutMs);
 }
 
 export async function probeCatalogueHealth(timeoutMs = 500) {

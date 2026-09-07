@@ -1,9 +1,6 @@
 import {
   DEFAULT_STUDIO_UI_TEXT
 } from "./studio-ui-text.js";
-import {
-  DEFAULT_TAG_UI_TEXT
-} from "./tag-ui-text.js";
 
 const SITE_BASE_PATH = deriveSiteBasePath(import.meta.url);
 let studioConfigPromise = null;
@@ -38,15 +35,6 @@ export function getStudioDataPath(config, key) {
   return resolveSiteAssetPath(typeof path === "string" ? path : "");
 }
 
-export function getStudioGroups(config) {
-  return sanitizeStringArray(pathValue(config, ["analysis", "groups", "ordered"]), []);
-}
-
-export function getStudioCoverageGroups(config) {
-  const fallback = getStudioGroups(config);
-  return sanitizeStringArray(pathValue(config, ["analysis", "groups", "coverage_groups"]), fallback);
-}
-
 export function getStudioRouteRegistry(config) {
   const routes = pathValue(config, ["app", "routes"]);
   return routes && typeof routes === "object" && !Array.isArray(routes) ? routes : {};
@@ -75,9 +63,7 @@ export function buildStudioRouteUrl(config, key, params = {}) {
 
 export function getStudioText(config, key, fallback = "", tokens = null) {
   const pathKeys = String(key || "").split(".").filter(Boolean);
-  const studioValue = pathValue(DEFAULT_STUDIO_UI_TEXT, pathKeys);
-  const tagValue = pathValue(DEFAULT_TAG_UI_TEXT, pathKeys);
-  const value = typeof studioValue === "string" ? studioValue : tagValue;
+  const value = pathValue(DEFAULT_STUDIO_UI_TEXT, pathKeys);
   const source = typeof value === "string" ? value : fallback;
   return applyTextTokens(source, tokens);
 }
@@ -161,19 +147,6 @@ function pathValue(obj, keys) {
     current = current[key];
   }
   return current;
-}
-
-function sanitizeStringArray(value, fallback) {
-  const source = Array.isArray(value) ? value : fallback;
-  const out = [];
-  const seen = new Set();
-  for (const raw of source) {
-    const item = String(raw || "").trim().toLowerCase();
-    if (!item || seen.has(item)) continue;
-    seen.add(item);
-    out.push(item);
-  }
-  return out;
 }
 
 function applyTextTokens(text, tokens) {
