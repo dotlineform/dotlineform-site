@@ -32,6 +32,7 @@ function cleanString(value) {
 function exactResponseTarget(response, target) {
   var candidate = {
     scope: response && response.scope,
+    ...(Object.prototype.hasOwnProperty.call(response, "stage") ? { stage: response.stage } : {}),
     sub_scope: response && response.sub_scope,
     doc_id: response && response.doc_id
   };
@@ -62,7 +63,7 @@ function exactSubjectFields(fields) {
   );
 }
 
-function loadedSubject(response, target) {
+export function subjectMetadataFromResponse(response, target) {
   if (!response || typeof response !== "object" || Array.isArray(response)) {
     throw new Error("Document subject metadata could not be loaded.");
   }
@@ -432,6 +433,6 @@ export function openDocsViewerProjectSubjectModal(options = {}) {
     return Promise.reject(new Error("Document subject assignment service is unavailable."));
   }
   return Promise.resolve(options.readMetadata(target)).then(function (response) {
-    return openSubjectModal(options, target, loadedSubject(response, target));
+    return openSubjectModal(options, target, subjectMetadataFromResponse(response, target));
   });
 }

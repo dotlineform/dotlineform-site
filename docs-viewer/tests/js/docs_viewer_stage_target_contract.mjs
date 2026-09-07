@@ -4,10 +4,12 @@ import { createDocsViewerGeneratedDataRuntime } from "../../runtime/js/shared/do
 import { createDocsViewerConfiguredScopeProvider } from "../../runtime/js/shared/docs-viewer-configured-scope-provider.js";
 import { normalizeManagedDocumentTarget, managedDocumentTargetsEqual } from "../../runtime/js/management/docs-viewer-management-document-target.js";
 import { normalizeManagedSubscopeCollection, committedDocumentCreateTarget } from "../../runtime/js/management/docs-viewer-management-actions.js";
-import { createManagedDoc, readManagedDocSource, rebuildManagedDocSource, applyManagedSubScopeDocDelete } from "../../runtime/js/management/docs-viewer-management-client.js";
+import { createManagedDoc, readManagedDocSource, rebuildManagedDocSource, applyManagedSubScopeDocDelete, assignManagedDocFieldGroup } from "../../runtime/js/management/docs-viewer-management-client.js";
 import { createDocsViewerManagementActionResolver } from "../../runtime/js/management/docs-viewer-management.js";
 import { DOCS_VIEWER_ACTION_IDS } from "../../runtime/js/management/docs-viewer-action-definitions.js";
 import { subjectFromMetadataResponse } from "../../runtime/js/management/source-editor/subject-link-contribution.js";
+import { subjectMetadataFromResponse } from "../../runtime/js/management/docs-viewer-management-project-subject-modal.js";
+import { loadDocsViewerSubscopeContribution } from "../../runtime/js/management/docs-viewer-management-document-reports.js";
 
 const docId = "d-20260906-170000-a1b2c3";
 const working = { scope: "analysis", stage: "working", sub_scope: "projects", doc_id: docId };
@@ -39,6 +41,54 @@ const metadata = { ...working, record: { doc_id: docId, authoring_subject: subje
 assert.deepEqual(subjectFromMetadataResponse(metadata, working), subject);
 assert.throws(() => subjectFromMetadataResponse({ ...metadata, stage: "pre-publish" }, working), /active document/);
 assert.throws(() => subjectFromMetadataResponse({ ...metadata, stage: undefined }, working), /active document/);
+const sourceRevision = "sha256:" + "a".repeat(64);
+const assignMetadata = { ...metadata, source_revision: sourceRevision };
+assert.deepEqual(subjectMetadataFromResponse(assignMetadata, working), { subject, sourceRevision });
+for (const wrongStage of ["pre-publish", undefined]) {
+  const wrongMetadata = { ...assignMetadata, stage: wrongStage };
+  if (wrongStage === undefined) delete wrongMetadata.stage;
+  assert.throws(() => subjectMetadataFromResponse(wrongMetadata, working), /exact target/);
+}
+
+// Exercise the mounted report's actual module loader without DOM or Catalogue access.
+const savedWindow = globalThis.window;
+globalThis.window = { fetch: async () => { throw new Error("Catalogue unavailable in this fixture"); } };
+try {
+  for (const [subScope, customisationId] of [["works", "working_works"], ["moments", "working_works"], ["processing", "working_processing"]]) {
+    for (const stage of ["working", "pre-publish"]) {
+      const collection = { scope: "analysis", stage, sub_scope: subScope };
+      const contribution = await loadDocsViewerSubscopeContribution({
+        managementContext: true,
+        managementService: { baseUrl: "http://fixture.test" },
+        routeContext: { viewerStage: stage },
+        scopeConfigState: { scopeConfigs: [{ scopeId: "analysis", subScopes: [{
+          subScope,
+          subScopeCustomisation: { id: customisationId, capabilities: { assignableFieldGroups: ["authoring_subject"] } }
+        }] }] }
+      }, { scope: "analysis", stage, doc_id: docId }, subScope);
+      const context = { collection, target: { ...collection, doc_id: docId }, document: metadata.record };
+      const info = contribution.projectDetailInfo(context);
+      if (stage === "working") {
+        assert.equal(info.actions.assignSubject, true, `${subScope}: Working loads Subject capability`);
+        assert.equal(info.fields[0].id, "authoring_subject");
+        assert.throws(() => contribution.projectDetailInfo({
+          ...context, target: { ...context.target, stage: "pre-publish" }
+        }), /target is invalid/);
+      } else {
+        assert.equal(info, null, `${subScope}: Pre-publish retains its default contribution`);
+      }
+    }
+  }
+  const deferred = await loadDocsViewerSubscopeContribution({
+    scopeConfigState: { scopeConfigs: [{ scopeId: "analysis", subScopes: [{
+      subScope: "concepts", subScopeCustomisation: { id: "concepts", capabilities: {} }
+    }] }] }
+  }, { scope: "analysis", stage: "working", doc_id: docId }, "concepts");
+  assert.equal(deferred.projectDetailInfo({}), null, "unrelated staged customisations remain deferred");
+} finally {
+  if (savedWindow === undefined) delete globalThis.window;
+  else globalThis.window = savedWindow;
+}
 const requests = [];
 const fetch = async (url, options) => {
   requests.push({ url, body: options.body ? JSON.parse(options.body) : null });
@@ -58,6 +108,12 @@ assert.equal(requests[0].body.stage, "working");
 assert.match(requests[1].url, /stage=working/);
 assert.deepEqual(requests[2].body, { ...working, source_body: "[[media:docs/analysis/img/one.jpg]]", source_revision: "revision" });
 assert.equal(requests[3].body.stage, "working");
+const assignment = {
+  source_revision: sourceRevision, field_group: "authoring_subject", confirm: true,
+  fields: { folder_path: "", work_id: "00293", series_id: "", detail_uid: "", moment_id: "" }
+};
+await assignManagedDocFieldGroup(working, assignment, options);
+assert.deepEqual(requests.at(-1).body, { ...working, ...assignment });
 
 const configs = new Map([
   ["analysis", { scopeId: "analysis", stage: "pre-publish", viewerBaseUrl: "/docs/", includeScopeParam: true, indexTreeUrl: "/docs/index-tree?scope=analysis&stage=pre-publish" }],

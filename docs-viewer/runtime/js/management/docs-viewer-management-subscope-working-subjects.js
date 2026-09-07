@@ -11,6 +11,9 @@ import {
   normalizeDocsViewerAuthoringSubject
 } from "./docs-viewer-management-document-subject.js";
 import {
+  normalizeManagedDocumentCollectionTarget
+} from "./docs-viewer-management-document-target.js";
+import {
   appendProjectSubjectIcon
 } from "../reports/project-subject-icons.js";
 import {
@@ -32,13 +35,11 @@ function cleanString(value) {
 }
 
 function exactCollection(value) {
-  var keys = Object.keys(value || {}).sort();
-  var scope = cleanString(value && value.scope).toLowerCase();
-  var subScope = cleanString(value && value.sub_scope).toLowerCase();
-  if (keys.length !== 2 || keys[0] !== "scope" || keys[1] !== "sub_scope" || !scope || !subScope) {
+  var collection = normalizeManagedDocumentCollectionTarget(value);
+  if (!collection.sub_scope) {
     throw new Error("Working subject customisation collection target is invalid.");
   }
-  return Object.freeze({ scope: scope, sub_scope: subScope });
+  return collection;
 }
 
 function authoringSubject(documentRecord) {
@@ -430,6 +431,7 @@ function workingSubjectDetailInfo(context, assignSubjectAvailable) {
   var target = settings.target || {};
   if (
     cleanString(target.scope).toLowerCase() !== collection.scope
+    || cleanString(target.stage) !== cleanString(collection.stage)
     || cleanString(target.sub_scope).toLowerCase() !== collection.sub_scope
     || cleanString(target.doc_id) !== cleanString(settings.document && settings.document.doc_id)
   ) {

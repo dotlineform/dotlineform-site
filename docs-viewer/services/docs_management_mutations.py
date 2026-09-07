@@ -393,10 +393,10 @@ def plan_assign_field_group(
     repo_root: Path,
     body: Dict[str, Any],
 ) -> ManagementMutationPlan:
-    if frozenset(body) != ASSIGN_FIELD_GROUP_KEYS:
+    if frozenset(body) - {"stage"} != ASSIGN_FIELD_GROUP_KEYS:
         required = ", ".join(sorted(ASSIGN_FIELD_GROUP_KEYS))
         raise ValueError(
-            "assign field group must contain exactly " + required
+            "assign field group must contain exactly " + required + ", with optional stage"
         )
     if body.get("confirm") is not True:
         raise ValueError("assign field group requires confirm=true")
@@ -496,6 +496,7 @@ def plan_assign_field_group(
         return ManagementMutationPlan(
             scope=resolved.scope,
             sub_scope=resolved.sub_scope,
+            stage=resolved.stage,
             response=response,
         )
 

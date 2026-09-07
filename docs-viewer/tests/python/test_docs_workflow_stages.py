@@ -12,8 +12,8 @@ import pytest
 
 from docs_management_test_support import docs_scope_config as scopes
 from repo_factory import docs_scope_record, docs_sub_scope_record, write_json
-from docs_management_document_target import resolve_managed_document_target
-from docs_management_mutations import plan_create, plan_delete_apply
+from docs_management_document_target import managed_document_metadata, resolve_managed_document_target
+from docs_management_mutations import plan_assign_field_group, plan_create, plan_delete_apply
 from docs_generated_reads import read_generated_doc_payload
 from build_docs_test_support import prepare_repo, run_cli
 
@@ -49,6 +49,50 @@ def stage_repo(tmp_path: Path) -> Path:
         write_json(output / "index-tree.json", {"docs": [{"doc_id": DOC_ID, "content_url": "/docs/doc"}]})
         write_json(output / "by-id" / f"{DOC_ID}.json", {"doc_id": DOC_ID, "title": stage})
     return tmp_path
+
+
+@pytest.mark.parametrize("field,key", [("work_id", "00293"), ("moment_id", "001")])
+def test_subject_assignment_preserves_exact_working_stage(stage_repo: Path, field: str, key: str) -> None:
+    config_path = stage_repo / scopes.CONFIG_REL_PATH
+    config = json.loads(config_path.read_text())
+    for stage in ("working", "pre-publish"):
+        config["scopes"][0]["stages"][stage]["sub_scopes"][0]["sub_scope_customisation"] = {
+            "id": "working_works" if stage == "working" else "pre_publish_works", "settings": {},
+        }
+    write_json(config_path, config)
+    target = {"scope": "analysis", "stage": "working", "sub_scope": "works", "doc_id": DOC_ID}
+    working = resolve_managed_document_target(stage_repo, target).document.path
+    pre_publish = resolve_managed_document_target(stage_repo, {**target, "stage": "pre-publish"}).document.path
+    working_before, pre_publish_before = working.read_bytes(), pre_publish.read_bytes()
+    metadata = managed_document_metadata(stage_repo, target)
+    assert metadata["stage"] == "working"
+    assert metadata["record"]["authoring_subject"]["state"] == "none"
+    request = {
+        **target, "source_revision": metadata["source_revision"],
+        "field_group": "authoring_subject", "confirm": True,
+        "fields": {"folder_path": "", "work_id": "", "series_id": "", "detail_uid": "", "moment_id": "", field: key},
+    }
+    plan = plan_assign_field_group(stage_repo, request)
+    assert plan.stage == "working"
+    assert plan.response["target"] == target
+    assert len(plan.source_writes) == 1
+    assert plan.source_writes[0].path == working
+    assert working.read_bytes() == working_before
+    working.write_text(plan.source_writes[0].text, encoding="utf-8")
+    loaded = managed_document_metadata(stage_repo, target)
+    assert loaded["record"]["authoring_subject"]["key"] == key
+    unchanged_request = {**request, "source_revision": loaded["source_revision"]}
+    unchanged = plan_assign_field_group(stage_repo, unchanged_request)
+    assert unchanged.stage == "working"
+    assert unchanged.response["target"] == target
+    assert not unchanged.source_writes
+    for stage, message in ((None, "requires stage"), ("pre-publish", "Pre-publish document authoring is unavailable")):
+        rejected = {**unchanged_request, "stage": stage}
+        if stage is None:
+            del rejected["stage"]
+        with pytest.raises(ValueError, match=message):
+            plan_assign_field_group(stage_repo, rejected)
+    assert pre_publish.read_bytes() == pre_publish_before
 
 
 def test_service_can_import_with_unselected_workflow_parent(stage_repo: Path) -> None:

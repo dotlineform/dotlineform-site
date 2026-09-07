@@ -13,6 +13,9 @@ import {
   openLocalTarget,
   readManagedDocMetadata
 } from "./docs-viewer-management-client.js";
+import {
+  hasDocsViewerAssignableFieldGroup
+} from "../shared/docs-viewer-config-controller.js";
 
 function cleanString(value) {
   return String(value || "").trim();
@@ -229,20 +232,22 @@ function markdownLinkForSubscopeDocument(settings, parent, subScope, target, doc
   return "[" + title + "](" + url.pathname + url.search + url.hash + ")";
 }
 
-function loadSubscopeContribution(settings, parent, subScope, options) {
+export function loadDocsViewerSubscopeContribution(settings, parent, subScope, options) {
   var contributionOptions = options || {};
   var clientOptions = managementClientOptions(settings);
-  var mutationAvailable = Boolean(
-    !parent.stage
-    && settings.managementContext
-    && cleanString(clientOptions.baseUrl)
-  );
   var subScopeConfig = configuredSubScope(settings, parent.scope, subScope);
   if (!subScopeConfig) {
     return Promise.reject(new Error(
       "Docs sub-scope is not configured: " + parent.scope + "/" + subScope
     ));
   }
+  var workingSubjectsAvailable = parent.stage === "working"
+    && hasDocsViewerAssignableFieldGroup(subScopeConfig.subScopeCustomisation, "authoring_subject");
+  var mutationAvailable = Boolean(
+    (!parent.stage || workingSubjectsAvailable)
+    && settings.managementContext
+    && cleanString(clientOptions.baseUrl)
+  );
   return Promise.all([
     import("./docs-viewer-management-subscope-default-contribution.js"),
     import("./docs-viewer-management-subscope-composition.js"),
@@ -275,7 +280,7 @@ function loadSubscopeContribution(settings, parent, subScope, options) {
       setStatus: settings.setStatus,
       uiStatusByValue: contributionOptions.uiStatusByValue
     });
-    if (parent.stage) {
+    if (parent.stage && !workingSubjectsAvailable) {
       return modules[1].composeDocsViewerManagementSubscopeContributions({
         defaultContribution: defaultContribution
       });
@@ -528,7 +533,7 @@ export function mountDocsViewerManageDocumentExtras(context) {
   var createAction = createSubscopeDocumentAction(settings);
   var copyAction = copySubscopeDocumentsAction(settings);
   var publishableAction = setSubscopePublishableAction(settings);
-  var contribution = loadSubscopeContribution(settings, parent, subScope, {
+  var contribution = loadDocsViewerSubscopeContribution(settings, parent, subScope, {
     nonPublishableEmoji: cleanString(scopeConfig.docNonPublishableEmoji),
     onCreateDocument: (
       settings.managementContext
