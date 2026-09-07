@@ -280,8 +280,8 @@ def _media_reference_replacements(
 ) -> tuple[tuple[str, str], ...]:
     replacements: set[tuple[str, str]] = set()
     for item in plan.media:
-        source_media = plan.source_config.media.types[item.media_type]
-        target_media = plan.target_config.media.types[item.media_type]
+        source_media = plan.source_media_config.media.types[item.media_type]
+        target_media = plan.target_media_config.media.types[item.media_type]
         for source_prefix, target_prefix in (
             (
                 source_media.reference_prefix.as_posix().rstrip("/"),
@@ -589,7 +589,7 @@ def apply_target_media_transfer(
     media_types = {item.media_type for item in plan.media}
     source_media_adapters = transfer.published_transfer_adapters(
         repo_root,
-        plan.source_config,
+        plan.source_media_config,
         media_types,
         client=source_media_client,
         env_files=env_files,
@@ -598,7 +598,7 @@ def apply_target_media_transfer(
     if target_media_adapters is None:
         target_media_adapters = transfer.published_transfer_adapters(
             repo_root,
-            plan.target_config,
+            plan.target_media_config,
             media_types,
             client=target_media_client,
             env_files=env_files,
@@ -617,12 +617,12 @@ def apply_target_media_transfer(
             status = _copy_or_reuse_artifact(
                 source=transfer.transfer_build_source_adapter(
                     repo_root,
-                    plan.source_config,
+                    plan.source_media_config,
                     build.build_type,
                 ),
                 target=transfer.transfer_build_source_adapter(
                     repo_root,
-                    plan.target_config,
+                    plan.target_media_config,
                     build.build_type,
                 ),
                 identity=build.source_identity,
@@ -700,7 +700,7 @@ def apply_target_media_transfer(
             media_builder = registered_media_builder
         media_builder(
             repo_root,
-            plan.target_config,
+            plan.target_media_config,
             write=True,
             client=target_media_client,
             requested_generated_identities=requested_build_outputs,
@@ -748,6 +748,7 @@ def apply_target_media_source_evidence(
                 plan.target_scope,
                 item.media_type,
                 item.identity,
+                config=plan.target_media_config,
             )
             if existing is None:
                 media_source_evidence.record_media_source_evidence(
@@ -757,6 +758,7 @@ def apply_target_media_source_evidence(
                     identity=item.identity,
                     source_root=evidence.source_root,
                     source_path=evidence.source_path,
+                    config=plan.target_media_config,
                 )
                 status = "copied"
             else:
@@ -860,7 +862,7 @@ def _target_evidence(
             try:
                 adapter = transfer.transfer_build_source_adapter(
                     repo_root,
-                    plan.target_config,
+                    plan.target_media_config,
                     build.build_type,
                 )
             except Exception:
@@ -981,7 +983,7 @@ def apply_document_copy(
     try:
         target_media_adapters = transfer.published_transfer_adapters(
             repo_root,
-            current_plan.target_config,
+            current_plan.target_media_config,
             {item.media_type for item in current_plan.media},
             client=target_media_client,
             env_files=env_files,

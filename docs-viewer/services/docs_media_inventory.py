@@ -13,7 +13,7 @@ from docs_artifact_locations import (
     artifact_location_adapter,
     authenticated_remote_client_for_locations,
 )
-from docs_scope_config import DocsScopeConfig, resolve_location_path
+from docs_scope_config import DocsScopeConfig, DocsSubScopeConfig, resolve_location_path
 
 
 MEDIA_REFERENCE_PATTERN = re.compile(r"\[\[(?:media|html-media):(?P<path>[^\]\s]+)(?:[^\]]*)\]\]")
@@ -58,7 +58,7 @@ class DocsMediaInventory:
 
 
 def source_media_references(
-    config: DocsScopeConfig,
+    config: DocsScopeConfig | DocsSubScopeConfig,
     source: str,
     *,
     doc_id: str,
@@ -68,15 +68,10 @@ def source_media_references(
     found: set[tuple[str, str, str]] = set()
     for match in MEDIA_REFERENCE_PATTERN.finditer(source):
         logical_path = match.group("path").lstrip("/")
-        parts = Path(logical_path).parts
-        if len(parts) < 4:
-            continue
-        media_type = parts[2]
-        if media_type not in config.media.types:
-            continue
-        if Path(*parts[:3]) != config.media.types[media_type].reference_prefix:
-            continue
-        found.add((media_type, Path(*parts[3:]).as_posix(), logical_path))
+        for media_type, media in config.media.types.items():
+            prefix = media.reference_prefix.as_posix() + "/"
+            if logical_path.startswith(prefix):
+                found.add((media_type, logical_path.removeprefix(prefix), logical_path))
     for media_type, media in config.media.types.items():
         for prefix in (media.reference_prefix.as_posix(), media.served_path_prefix):
             normalized_prefix = prefix.rstrip("/")
@@ -105,7 +100,7 @@ def source_media_references(
     )
 
 
-def document_media_references(repo_root: Path, config: DocsScopeConfig) -> tuple[DocsMediaReference, ...]:
+def document_media_references(repo_root: Path, config: DocsScopeConfig | DocsSubScopeConfig) -> tuple[DocsMediaReference, ...]:
     source_root = resolve_location_path(repo_root, config.source.location)
     documents_root = source_root / config.source.documents_path
     references: list[DocsMediaReference] = []
@@ -119,7 +114,7 @@ def document_media_references(repo_root: Path, config: DocsScopeConfig) -> tuple
 
 def _location_adapters(
     repo_root: Path,
-    config: DocsScopeConfig,
+    config: DocsScopeConfig | DocsSubScopeConfig,
     *,
     client: object | None,
     env_files: Iterable[Path] | None,
@@ -154,7 +149,7 @@ def _location_adapters(
 
 def inventory_scope_media(
     repo_root: Path,
-    config: DocsScopeConfig,
+    config: DocsScopeConfig | DocsSubScopeConfig,
     *,
     references: Iterable[DocsMediaReference] | None = None,
     client: object | None = None,

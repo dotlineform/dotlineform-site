@@ -276,11 +276,11 @@ export async function publishAndInsertStagedMedia(options = {}) {
       listing = await provider.listStagedMedia(kind, { sourceDirectory: selectedDirectory });
     }
   }
-  var request = {
+  var request = Object.assign({}, options.target, {
     media_kind: kind,
     staged_filename: choice.stagedFilename,
     label: choice.label
-  };
+  });
   if (cleanString(listing && listing.source_kind) === "media_source") {
     request.source_directory = choice.sourceDirectory;
   }

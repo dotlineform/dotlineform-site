@@ -63,9 +63,9 @@ def rebuild_sub_scope_fixture(repo_root: Path, scope: str, sub_scope: str):
     parent = lifecycle.load_docs_scope_configs(repo_root)[scope]
     output = lifecycle.resolve_scope_path(
         repo_root,
-        lifecycle.generated_documents_path(parent)
+        lifecycle.generated_documents_path(parent).parent
         / lifecycle.SOURCE_SUB_SCOPES_PATH
-        / sub_scope,
+        / sub_scope / "documents",
     )
     write_json(output / "manifest.json", {"docs": []})
     write_json(output / "manage-manifest.json", {"docs": []})
@@ -375,13 +375,13 @@ def test_sub_scope_create_apply_updates_parent_config_and_creates_nested_roots()
         source_payload = json.loads((repo_root / "docs-viewer/config/scopes/docs_scopes.json").read_text(encoding="utf-8"))
         source_root_exists = (repo_root / "docs-viewer/scopes/studio/source/sub-scopes/tags").is_dir()
         recursive_source_root_exists = (repo_root / "docs-viewer/scopes/studio/source/sub-scopes/tags/sub-scopes").exists()
-        generated_payload_root_exists = (repo_root / "docs-viewer/scopes/studio/generated/documents/sub-scopes/tags/by-id").is_dir()
+        generated_payload_root_exists = (repo_root / "docs-viewer/scopes/studio/generated/sub-scopes/tags/documents/by-id").is_dir()
         top_level_source_exists = (repo_root / "docs-viewer/scopes/tags/source").exists()
         default_doc_exists = (repo_root / "docs-viewer/scopes/studio/source/sub-scopes/tags/documents/tags.md").exists()
         host_id = preview["planned_report_host_identity"]["doc_id"]
         host_path = repo_root / f"docs-viewer/scopes/studio/source/documents/{host_id}.md"
         host_front_matter, host_body = docs_management_service.docs_sub_scope_lifecycle.source_model.parse_source(host_path)
-        manifest = json.loads((repo_root / "docs-viewer/scopes/studio/generated/documents/sub-scopes/tags/manifest.json").read_text())
+        manifest = json.loads((repo_root / "docs-viewer/scopes/studio/generated/sub-scopes/tags/documents/manifest.json").read_text())
         index = json.loads((repo_root / "docs-viewer/scopes/studio/generated/documents/index-tree.json").read_text())
 
     assert payload["ok"] is True
@@ -411,7 +411,7 @@ def test_sub_scope_create_apply_updates_parent_config_and_creates_nested_roots()
     assert any(row["doc_id"] == host_id for row in index["docs"])
     assert any(file["path"] == "docs-viewer/scopes/studio/source/sub-scopes/tags" for file in payload["created_files"])
     assert not any(file["kind"] == "sub_scope_source_sub_scopes_root" for file in payload["created_files"])
-    assert any(file["path"] == "docs-viewer/scopes/studio/generated/documents/sub-scopes/tags/by-id" for file in payload["created_files"])
+    assert any(file["path"] == "docs-viewer/scopes/studio/generated/sub-scopes/tags/documents/by-id" for file in payload["created_files"])
     assert payload["publish_files"] == []
 
 
@@ -488,8 +488,8 @@ def test_sub_scope_delete_apply_removes_config_source_generated_and_published_pa
         host_front_matter, _body = docs_management_service.docs_sub_scope_lifecycle.source_model.parse_source(host_path)
         public_manifest_after_create = (repo_root / "site/assets/data/docs/scopes/studio/tags/manifest.json").exists()
         (repo_root / "docs-viewer/scopes/studio/source/sub-scopes/tags/documents/scale.md").write_text("# Scale\n", encoding="utf-8")
-        write_json(repo_root / "docs-viewer/scopes/studio/generated/documents/sub-scopes/tags/manifest.json", {"doc_ids": "scale"})
-        write_json(repo_root / "docs-viewer/scopes/studio/generated/documents/sub-scopes/tags/by-id/scale.json", {"doc_id": "scale"})
+        write_json(repo_root / "docs-viewer/scopes/studio/generated/sub-scopes/tags/documents/manifest.json", {"doc_ids": "scale"})
+        write_json(repo_root / "docs-viewer/scopes/studio/generated/sub-scopes/tags/documents/by-id/scale.json", {"doc_id": "scale"})
         write_json(repo_root / "site/assets/data/docs/scopes/studio/tags/manifest.json", {"doc_ids": "scale"})
         write_json(repo_root / "site/assets/data/docs/scopes/studio/tags/by-id/scale.json", {"doc_id": "scale"})
         preview = docs_management_service.docs_sub_scope_lifecycle.plan_delete_sub_scope_preview(
@@ -504,14 +504,14 @@ def test_sub_scope_delete_apply_removes_config_source_generated_and_published_pa
         )
         final_config = json.loads(config_path.read_text(encoding="utf-8"))
         source_root_exists = (repo_root / "docs-viewer/scopes/studio/source/sub-scopes/tags").exists()
-        generated_root_exists = (repo_root / "docs-viewer/scopes/studio/generated/documents/sub-scopes/tags").exists()
+        generated_root_exists = (repo_root / "docs-viewer/scopes/studio/generated/sub-scopes/tags/documents").exists()
         published_root_exists = (repo_root / "site/assets/data/docs/scopes/studio/tags").exists()
         host_exists = (repo_root / f"docs-viewer/scopes/studio/source/documents/{host_id}.md").exists()
 
     assert preview["ok"] is True
     assert preview["allowed"] is True
     assert any(file["path"] == "docs-viewer/scopes/studio/source/sub-scopes/tags" for file in preview["delete_files"])
-    assert any(file["path"] == "docs-viewer/scopes/studio/generated/documents/sub-scopes/tags" for file in preview["delete_files"])
+    assert any(file["path"] == "docs-viewer/scopes/studio/generated/sub-scopes/tags" for file in preview["delete_files"])
     assert any(file["path"] == "site/assets/data/docs/scopes/studio/tags" for file in preview["delete_files"])
     assert payload["ok"] is True
     assert payload["action"] == "delete_sub_scope"

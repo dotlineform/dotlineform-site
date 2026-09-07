@@ -69,14 +69,78 @@ def test_service_can_import_with_unselected_workflow_parent(stage_repo: Path) ->
     assert result.returncode == 0, result.stderr
 
 
+def test_sub_scope_creation_binds_config_sources_and_rebuilds_to_working(stage_repo: Path) -> None:
+    import docs_sub_scope_lifecycle as lifecycle
+
+    config_path = stage_repo / scopes.CONFIG_REL_PATH
+    before = json.loads(config_path.read_text())
+    request = {"parent_scope": "analysis", "stage": "working", "sub_scope": "moments", "title": "Moments"}
+    preview = lifecycle.plan_create_sub_scope_preview(stage_repo, request)
+    host_id = preview["planned_report_host_identity"]["doc_id"]
+    assert preview["collection_target"] == {"scope": "analysis", "stage": "working", "sub_scope": "moments"}
+    assert preview["report_host_target"] == {"scope": "analysis", "stage": "working", "doc_id": host_id}
+    assert "stage=working" in preview["urls"]["management"]
+    assert preview["publish_files"] == []
+    assert "parent_search" not in preview["rebuild_plan"]
+    assert json.loads(config_path.read_text()) == before
+    calls = []
+
+    def rebuild(*args, **kwargs):
+        calls.append((args, kwargs))
+        return {"ok": True}
+
+    result = lifecycle.apply_create_sub_scope(
+        stage_repo,
+        {**request, "confirm": True, "planned_report_host_identity": preview["planned_report_host_identity"]},
+        dry_run=False,
+        rebuild_sub_scope_outputs=rebuild,
+        rebuild_scope_outputs=rebuild,
+    )
+    assert result["committed"] is True
+    after = json.loads(config_path.read_text())
+    new_analysis = after["scopes"][0]
+    added = new_analysis["stages"]["working"]["sub_scopes"].pop()
+    assert added["sub_scope"] == "moments"
+    assert added["public_projection"] is None
+    assert after == before
+    working = scopes.load_docs_scope_stage(stage_repo, "analysis", "working")
+    source = stage_repo / scopes.document_source_path(working)
+    assert (source / f"{host_id}.md").is_file()
+    collection = next(item for item in working.sub_scopes if item.sub_scope == "moments")
+    assert (stage_repo / scopes.document_source_path(collection)).is_dir()
+    assert calls[0] == ((stage_repo, "analysis", "moments"), {"stage": "working"})
+    assert calls[1][1] == {"include_search": False, "docs_doc_ids": [host_id], "stage": "working"}
+
+
+@pytest.mark.parametrize("stage", [None, "pre-publish"])
+def test_sub_scope_creation_rejects_missing_or_readonly_stage(stage_repo: Path, stage: str | None) -> None:
+    import docs_sub_scope_lifecycle as lifecycle
+
+    config_path = stage_repo / scopes.CONFIG_REL_PATH
+    before = config_path.read_bytes()
+    request = {"parent_scope": "analysis", "sub_scope": "moments", "title": "Moments"}
+    if stage:
+        request["stage"] = stage
+    message = "requires stage" if stage is None else "Pre-publish document authoring is unavailable"
+    with pytest.raises(ValueError, match=message):
+        lifecycle.plan_create_sub_scope_preview(stage_repo, request)
+    assert config_path.read_bytes() == before
+
+
 def test_stage_storage_retains_scope_owned_snapshot_and_media_identity(stage_repo: Path) -> None:
     working = scopes.load_docs_scope_stage(stage_repo, "analysis", "working")
     pre_publish = scopes.load_docs_scope_stage(stage_repo, "analysis", "pre-publish")
+    child = working.sub_scopes[0]
+    assert child.media.source_location.path == child.source.location.path / "media"
+    assert child.media.generated_location.path == scopes.generated_documents_path(child).parent / "media"
+    assert child.media.published_location.path == Path("docs-viewer/scopes/analysis/published/sub-scopes/works/media")
+    assert child.media.types["img"].reference_prefix.as_posix() == "docs/analysis/sub-scopes/works/img"
+    assert child.media.types["img"].served_path_prefix == "/docs/media/analysis/working/sub-scopes/works/img"
     assert working.scope_id == pre_publish.scope_id == "analysis"
     assert working.published == pre_publish.published
     assert scopes.published_documents_path(working) == Path("docs-viewer/scopes/analysis/published/documents")
     assert scopes.document_source_path(working.sub_scopes[0]) == Path(
-        "docs-viewer/scopes/analysis/working/source/documents/sub-scopes/works/documents"
+        "docs-viewer/scopes/analysis/working/source/sub-scopes/works/documents"
     )
     assert working.media.types["img"].reference_prefix == pre_publish.media.types["img"].reference_prefix == Path("docs/analysis/img")
     assert working.media.types["img"].served_path_prefix == "/docs/media/analysis/working/img"
@@ -86,10 +150,86 @@ def test_stage_storage_retains_scope_owned_snapshot_and_media_identity(stage_rep
     )
 
 
+def test_child_media_insertion_replace_build_and_read_stay_in_collection(stage_repo: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    import docs_staged_media_service as intake
+    from docs_document_packages.workspace import configured_workspace_paths
+    from docs_media_storage import local_media_path_from_route
+    from docs_builder.sub_scope import SubScopeDocsBuilder
+
+    projects = stage_repo / "projects"
+    (projects / "docs-viewer").mkdir(parents=True)
+    (projects / "data-sharing").mkdir()
+    monkeypatch.setenv("DOTLINEFORM_PROJECTS_BASE_DIR", str(projects))
+    staging = configured_workspace_paths(stage_repo).import_staging
+    staging.mkdir(parents=True, exist_ok=True)
+    input_path = staging / "same.pdf"
+    input_path.write_bytes(b"child version one")
+    config = scopes.load_docs_scope_stage(stage_repo, "analysis", "working")
+    child = config.sub_scopes[0]
+    parent_file = stage_repo / config.media.types["files"].source_location.path / "same.pdf"
+    parent_file.parent.mkdir(parents=True, exist_ok=True)
+    parent_file.write_bytes(b"parent content")
+    request = {"scope": "analysis", "stage": "working", "sub_scope": "works", "media_kind": "file", "staged_filename": "same.pdf"}
+    first = intake.apply_staged_media(stage_repo, request)
+    assert first["media_token"] == "[[media:docs/analysis/sub-scopes/works/files/same.pdf]]"
+    child_file = stage_repo / child.media.types["files"].source_location.path / "same.pdf"
+    assert child_file.read_bytes() == b"child version one"
+    route = "/docs/media/analysis/working/sub-scopes/works/files/same.pdf"
+    generated, media_type = local_media_path_from_route(stage_repo, route)
+    assert media_type == "files" and generated.read_bytes() == b"child version one"
+    input_path.write_bytes(b"child version two")
+    assert intake.preview_staged_media(stage_repo, request)["requires_replace_confirmation"] is True
+    with pytest.raises(ValueError, match="confirm replacement"):
+        intake.apply_staged_media(stage_repo, request)
+    assert child_file.read_bytes() == b"child version one"
+    intake.apply_staged_media(stage_repo, {**request, "confirm_replace": True})
+    assert child_file.read_bytes() == b"child version two"
+    assert parent_file.read_bytes() == b"parent content"
+
+    source = stage_repo / scopes.document_source_path(child) / f"{DOC_ID}.md"
+    source.write_text(source.read_text() + "\n[File](" + first["media_token"] + ")\n")
+    built = SubScopeDocsBuilder(repo_root=stage_repo, config=config, sub_scope=child).run(write=True)
+    route = "/docs/media/analysis/working/sub-scopes/works/files/same.pdf"
+    assert route in built["item_payloads"][DOC_ID]["content_html"]
+    generated, media_type = local_media_path_from_route(stage_repo, route)
+    assert media_type == "files" and generated.read_bytes() == b"child version two"
+    assert not (stage_repo / child.media.types["files"].published_location.path / "same.pdf").exists()
+    for invalid in ({"stage": "pre-publish"}, {"stage": ""}, {"sub_scope": "missing"}):
+        with pytest.raises(ValueError):
+            intake.apply_staged_media(stage_repo, {**request, **invalid})
+
+
 @pytest.mark.parametrize("stage", [None, "published", "", "WORKING"])
 def test_workflow_scope_requires_exact_stage(stage_repo: Path, stage: str | None) -> None:
     with pytest.raises(ValueError, match="requires stage"):
         scopes.load_docs_scope_stage(stage_repo, "analysis", stage)
+
+
+def test_child_import_binds_source_and_media_to_the_selected_collection(stage_repo: Path) -> None:
+    from docs_import_document import ImportDocumentMediaContext, apply_import_document, plan_import_document
+    from docs_import_media import build_media_plan
+    from docs_import_content import ImportContent, CONTENT_FORMAT_MARKDOWN, CONTENT_INTENT_REPLACE
+    from docs_management_document_target import resolve_managed_document_collection
+
+    collection = resolve_managed_document_collection(stage_repo, scope="analysis", stage="working", sub_scope="works")
+    staged = stage_repo / "staging/attachment.pdf"
+    staged.parent.mkdir()
+    staged.write_bytes(b"imported child attachment")
+    media = build_media_plan("analysis", "files", staged, "Attachment", media_config=collection.parent_config.media.types["files"])
+    preview = {"scope": "analysis", "markdown_preview": f"[Attachment]({media['media_token']})", "media_plan": media}
+    record = ImportContent(
+        source_kind="staged-source", source_identity=staged.name, record_identity=staged.name,
+        doc_id="imported", title="Imported", content_intent=CONTENT_INTENT_REPLACE,
+        content_format=CONTENT_FORMAT_MARKDOWN, content=preview["markdown_preview"], parent_id="",
+    )
+    plan = plan_import_document(stage_repo, "analysis", record, operation="create", docs=[], import_preview=preview, collection=collection)
+    apply_import_document(stage_repo, plan, media_context=ImportDocumentMediaContext(
+        staging_root=staged.parent, workspace_root=stage_repo, source_path=staged,
+    ))
+    assert "docs/analysis/sub-scopes/works/files/attachment.pdf" in plan.target_path.read_text()
+    for location in (collection.document_config.media.types["files"].source_location, collection.document_config.media.types["files"].generated_location):
+        assert (stage_repo / location.path / staged.name).read_bytes() == staged.read_bytes()
+    assert not (stage_repo / collection.parent_config.media.types["files"].source_location.path / staged.name).exists()
 
 
 @pytest.mark.parametrize("stage", ["working", "pre-publish"])
@@ -321,7 +461,8 @@ def test_working_write_rebuild_and_delete_preserve_other_owners(stage_repo: Path
         target = created["target"]
         params = {key: [value] for key, value in target.items()}
         read = source_service.read_source_body(stage_repo, params)
-        body = "# Edited\n\n[[media:docs/analysis/img/retained.jpg]]\n"
+        media_root = "docs/analysis/sub-scopes/works" if collection.get("sub_scope") else "docs/analysis"
+        body = f"# Edited\n\n[[media:{media_root}/img/retained.jpg]]\n"
         _, saved = service.docs_management_post_response(stage_repo, "/docs/source/rebuild", {
             **target, "source_body": body, "source_revision": read["source_revision"],
         })

@@ -500,7 +500,7 @@ publishable: false
 ExcludedVocabulary must not leak.
 """,
         )
-        output_root = root / "docs-viewer/scopes/analysis/generated/documents/sub-scopes/tags"
+        output_root = root / "docs-viewer/scopes/analysis/generated/sub-scopes/tags/documents"
         write_json(
             output_root / "manage-manifest.json",
             {

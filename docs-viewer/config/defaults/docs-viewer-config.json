@@ -126,6 +126,12 @@
                   ]
                 }
               }
+            },
+            {
+              "sub_scope": "moments",
+              "title": "Moments",
+              "manifest_url": "/docs/generated/external/analysis/working/moments/manage-manifest.json",
+              "by_id_url_base": "/docs/generated/external/analysis/working/moments/by-id"
             }
           ]
         },

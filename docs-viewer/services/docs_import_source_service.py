@@ -36,7 +36,7 @@ from docs_import_document_package import (
     document_package_source_format,
 )
 from docs_import_markdown_package import retarget_markdown_package_media_plans
-from docs_import_media import retarget_inline_media_plans
+from docs_import_media import bind_import_media_owner, retarget_inline_media_plans
 from docs_import_preview import (
     generate_import_preview,
     list_staged_import_source_files,
@@ -416,6 +416,7 @@ def handle_import_source(
         retain_private_media_source=True,
     )
     preview["target"] = destination.request_target()
+    bind_import_media_owner(preview, destination.document_config)
     if sub_scope:
         preview["sub_scope"] = sub_scope
     private_media_source_markdown = str(preview.pop("_inline_media_source_markdown", "") or "")
@@ -425,6 +426,8 @@ def handle_import_source(
         staging_root,
         source_projects_base,
         scope,
+        stage=destination.stage,
+        sub_scope=destination.sub_scope,
     )
     if interactive_plans:
         preview["interactive_html_plans"] = interactive_plans

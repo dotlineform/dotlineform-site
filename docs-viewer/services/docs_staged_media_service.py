@@ -35,7 +35,10 @@ from docs_media_storage import (
     validate_media_filename,
 )
 from docs_mermaid_media import produce_mermaid_svg
-from docs_scope_config import load_docs_scope_configs
+from docs_scope_config import (
+    DocsScopeConfig, DocsSubScopeConfig, load_docs_scope_configs,
+    load_docs_media_owner, managed_media_config, require_document_authoring,
+)
 from docs_staged_media_fragments import (
     build_figure_image_fragment,
     build_file_link_fragment,
@@ -78,6 +81,13 @@ class StagedMediaContract:
     source_root: str
     source_directory: str
     source_path_marker: str
+    stage: str = ""
+    sub_scope: str = ""
+
+
+def media_owner(repo_root: Path, contract: StagedMediaContract) -> DocsScopeConfig | DocsSubScopeConfig:
+    """Resolve the collection validated for this insertion, with no parent fallback."""
+    return load_docs_media_owner(repo_root, contract.scope, stage=contract.stage or None, sub_scope=contract.sub_scope or None)
 
 
 def normalize_media_kind(value: Any) -> str:
@@ -242,9 +252,8 @@ def _prepared_media_source(
 def _staged_media_request_contract(repo_root: Path, body: dict[str, Any]) -> StagedMediaContract:
     kind = normalize_media_kind(body.get("media_kind"))
     scope = str(body.get("scope") or "").strip().lower()
-    configs = load_docs_scope_configs(repo_root, scope_ids=(scope,))
-    if scope not in configs:
-        raise ValueError(f"unknown Docs scope: {scope}")
+    config = load_docs_media_owner(repo_root, scope, stage=body.get("stage") or None, sub_scope=body.get("sub_scope") or None)
+    require_document_authoring(config)
     workspace = configured_workspace_paths(repo_root)
     source_path = _resolve_staged_media(workspace.import_staging, body.get("staged_filename"), kind)
     source_kind = "import_staging"
@@ -267,6 +276,8 @@ def _staged_media_request_contract(repo_root: Path, body: dict[str, Any]) -> Sta
         media_filename = Path(media_filename).with_suffix(".mmd").name
     return StagedMediaContract(
         scope=scope,
+        stage=config.stage,
+        sub_scope=getattr(config, "sub_scope", ""),
         kind=kind,
         source_path=source_path,
         label=label,
@@ -321,11 +332,11 @@ def _artifact_status(adapter: ArtifactLocationAdapter, identity: str, data: byte
 
 def _prepared_mermaid_media(
     repo_root: Path,
-    scope: str,
+    config: DocsScopeConfig | DocsSubScopeConfig,
     source_path: Path,
     source_filename: str,
 ) -> PreparedMermaidMedia:
-    config = load_docs_scope_configs(repo_root, scope_ids=(scope,))[scope]
+    scope = config.scope_id
     build = config.media.build_sources.get("mermaid")
     if build is None or build.producer != "mermaid" or build.publishes_to != "svg":
         raise ValueError(f"scope {scope!r} does not configure Mermaid source media")
@@ -405,6 +416,7 @@ def _mermaid_preview_payload(
         Path(prepared.published_identity),
         contract.label,
         repo_root=repo_root,
+        media_config=managed_media_config(media_owner(repo_root, contract), "svg"),
     )
     return {
         "ok": True,
@@ -443,7 +455,7 @@ def preview_staged_media(repo_root: Path, body: dict[str, Any]) -> dict[str, Any
     if contract.media_class == "mermaid":
         prepared = _prepared_mermaid_media(
             repo_root,
-            contract.scope,
+            media_owner(repo_root, contract),
             contract.source_path,
             contract.media_filename,
         )
@@ -453,7 +465,7 @@ def preview_staged_media(repo_root: Path, body: dict[str, Any]) -> dict[str, Any
             prepared,
             body=body,
         )
-    config = load_docs_scope_configs(repo_root, scope_ids=(contract.scope,))[contract.scope]
+    config = media_owner(repo_root, contract)
     with _prepared_media_source(
         contract.source_path,
         contract.kind,
@@ -473,6 +485,7 @@ def preview_staged_media(repo_root: Path, body: dict[str, Any]) -> dict[str, Any
             Path(contract.media_filename),
             contract.label,
             repo_root=repo_root,
+            media_config=managed_media_config(config, contract.media_class),
         )
         collision = "unchanged" if result.status == "unchanged" else "replace" if result.status == "would_overwrite" else "new"
         return {
@@ -510,7 +523,7 @@ def apply_staged_media(repo_root: Path, body: dict[str, Any], *, write: bool = T
     if contract.media_class == "mermaid":
         prepared = _prepared_mermaid_media(
             repo_root,
-            contract.scope,
+            media_owner(repo_root, contract),
             contract.source_path,
             contract.media_filename,
         )
@@ -566,11 +579,11 @@ def apply_staged_media(repo_root: Path, body: dict[str, Any], *, write: bool = T
                 "reason": "",
             },
             "summary_text": (
-                f"Published {contract.source_path.name} and rendered Mermaid SVG."
+                f"Added {contract.source_path.name} and rendered Mermaid SVG."
                 if write and prepared.collision != "unchanged"
                 else f"Verified {contract.source_path.name} and rendered Mermaid SVG."
                 if write
-                else f"Prepared Mermaid publication preview for {contract.source_path.name}."
+                else f"Prepared Mermaid insertion preview for {contract.source_path.name}."
             ),
         }
 
@@ -579,7 +592,7 @@ def apply_staged_media(repo_root: Path, body: dict[str, Any], *, write: bool = T
     if preview["requires_replace_confirmation"] and not confirm_replace:
         raise ValueError("published media bytes differ; confirm replacement or cancel")
 
-    config = load_docs_scope_configs(repo_root, scope_ids=(contract.scope,))[contract.scope]
+    config = media_owner(repo_root, contract)
     with _prepared_media_source(
         contract.source_path,
         contract.kind,
@@ -598,18 +611,18 @@ def apply_staged_media(repo_root: Path, body: dict[str, Any], *, write: bool = T
             write=write,
             force=confirm_replace,
         )
-    if write and not docs_publish_succeeded(results):
-        raise RuntimeError(f"Docs media publication did not complete: {results[0].status}")
+        if write and not docs_publish_succeeded(results):
+            raise RuntimeError(f"Docs media insertion did not complete: {results[0].status}")
     return {
         **preview,
         "preview_only": not write,
         "publish": asdict(results[0]),
         "summary_text": (
-            f"Published {contract.source_path.name}."
+            f"Added {contract.source_path.name}."
             if write and results[0].status != "unchanged"
             else f"Verified {contract.source_path.name}."
             if write
-            else f"Prepared publication preview for {contract.source_path.name}."
+            else f"Prepared insertion preview for {contract.source_path.name}."
         ),
     }
 

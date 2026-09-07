@@ -37,7 +37,6 @@ from docs_source_model import (  # noqa: E402
     doc_id_matches_added_date,
     format_source,
     is_immutable_doc_id,
-    normalize_scope,
     report_source_contract_for_collection,
     scope_root,
     slugify,
@@ -45,6 +44,7 @@ from docs_source_model import (  # noqa: E402
     write_text_atomic_new,
 )
 from docs_scope_config import load_docs_scope_configs  # noqa: E402
+from docs_import_media import bind_import_media_owner  # noqa: E402
 from markdown_renderer import normalize_markdown_blank_lines  # noqa: E402
 from docs_report_source import RETIRED_REPORT_KEYS, parse_report_source  # noqa: E402
 
@@ -84,6 +84,7 @@ class ImportDocumentPlan:
     publishable: bool | None
     import_preview: dict[str, Any]
     sub_scope: str = ""
+    stage: str = ""
     target: ScopeDoc | None = None
 
     @property
@@ -279,9 +280,8 @@ def plan_import_document(
 ) -> ImportDocumentPlan:
     """Validate and plan one create or overwrite without writing."""
 
-    normalized_scope = normalize_scope(scope)
+    normalized_scope = str(scope or "").strip().lower()
     sub_scope = ""
-    create_root = scope_root(repo_root, normalized_scope)
     if collection is not None:
         if collection.scope != normalized_scope:
             raise ValueError("import collection target does not match the requested scope")
@@ -293,6 +293,7 @@ def plan_import_document(
         configs = load_docs_scope_configs(repo_root, scope_ids=[normalized_scope])
         document_config = configs[normalized_scope]
         parent_config = document_config
+        create_root = scope_root(repo_root, normalized_scope)
     publishable_supported = collection_supports_publishable(document_config)
     if operation == IMPORT_DOCUMENT_OVERWRITE and slugify(record.doc_id) != record.doc_id:
         raise ValueError("ImportContent doc_id must be a safe normalized docs id")
@@ -310,6 +311,7 @@ def plan_import_document(
         raise ValueError("replace content requires a normalized import preview")
 
     preview = copy.deepcopy(import_preview or {})
+    bind_import_media_owner(preview, document_config)
     if record.content_intent == CONTENT_INTENT_REPLACE:
         incoming_body = _replacement_body(preview, record.title)
         report_contract = report_source_contract_for_collection(
@@ -403,6 +405,7 @@ def plan_import_document(
         publishable=publishable,
         import_preview=preview,
         sub_scope=sub_scope,
+        stage=parent_config.stage,
         target=target,
     )
 
@@ -444,6 +447,8 @@ def materialize_import_document_media(
             include_prompt_meta=media_context.include_prompt_meta,
             source_markdown=media_context.source_markdown,
             source_svg_markup=media_context.source_svg_markup,
+            stage=plan.stage,
+            sub_scope=plan.sub_scope,
         )
         interactive_html_written = materialize_interactive_html_assets(
             repo_root,

@@ -121,15 +121,15 @@ def prepare_delete_repo(repo_root: Path, *, build_outputs: bool = False) -> dict
         "sibling_path": sibling_path,
         "manifest_path": (
             repo_root
-            / "docs-viewer/scopes/studio/generated/documents/sub-scopes/tags/manifest.json"
+            / "docs-viewer/scopes/studio/generated/sub-scopes/tags/documents/manifest.json"
         ),
         "target_payload_path": (
             repo_root
-            / f"docs-viewer/scopes/studio/generated/documents/sub-scopes/tags/by-id/{TARGET_DOC_ID}.json"
+            / f"docs-viewer/scopes/studio/generated/sub-scopes/tags/documents/by-id/{TARGET_DOC_ID}.json"
         ),
         "sibling_payload_path": (
             repo_root
-            / f"docs-viewer/scopes/studio/generated/documents/sub-scopes/tags/by-id/{SIBLING_DOC_ID}.json"
+            / f"docs-viewer/scopes/studio/generated/sub-scopes/tags/documents/by-id/{SIBLING_DOC_ID}.json"
         ),
         "parent_sentinels": parent_sentinels,
         "parent_search_path": parent_search_path,

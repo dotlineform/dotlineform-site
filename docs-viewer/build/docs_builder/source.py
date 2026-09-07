@@ -131,8 +131,6 @@ def extract_title(markdown: str) -> str:
 class SourceLoadingMixin:
     def load_docs(self) -> list[DocRecord]:
         paths = sorted(self.source_dir.glob("**/*.md"))
-        if self.config.stage and not getattr(self, "sub_scope_config", None):
-            paths = [path for path in paths if not path.is_relative_to(self.source_dir / "sub-scopes")]
         self.source_files_scanned = len(paths)
         nested_paths = [path for path in paths if path.parent != self.source_dir]
         if nested_paths:

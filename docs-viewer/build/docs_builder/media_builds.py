@@ -13,7 +13,7 @@ from docs_artifact_locations import (
 )
 from docs_mermaid_media import produce_mermaid_svg
 from docs_media_inventory import source_media_references
-from docs_scope_config import DocsScopeConfig, resolve_location_path
+from docs_scope_config import DocsScopeConfig, DocsSubScopeConfig, resolve_location_path
 
 from .common import MEDIA_TOKEN_PATTERN
 
@@ -36,7 +36,7 @@ IGNORED_MEDIA_FILENAMES = frozenset({".DS_Store", ".gitkeep"})
 
 
 def referenced_build_media_identities(
-    config: DocsScopeConfig,
+    config: DocsScopeConfig | DocsSubScopeConfig,
     markdown_sources: Iterable[str],
 ) -> dict[str, tuple[str, ...]]:
     """Collect configured build-media outputs referenced by selected Markdown sources."""
@@ -63,7 +63,7 @@ def referenced_build_media_identities(
 
 def run_registered_media_builds(
     repo_root: Path,
-    config: DocsScopeConfig,
+    config: DocsScopeConfig | DocsSubScopeConfig,
     *,
     write: bool,
     producers: Mapping[str, MediaProducer] | None = None,
@@ -163,12 +163,9 @@ def run_registered_media_builds(
     return results
 
 
-def scope_markdown_sources(repo_root: Path, config: DocsScopeConfig) -> tuple[str, ...]:
+def scope_markdown_sources(repo_root: Path, config: DocsScopeConfig | DocsSubScopeConfig) -> tuple[str, ...]:
+    """Read only the documents belonging to this media owner."""
     roots = [resolve_location_path(repo_root, config.source.location) / config.source.documents_path]
-    roots.extend(
-        resolve_location_path(repo_root, sub_scope.source.location) / sub_scope.source.documents_path
-        for sub_scope in config.sub_scopes
-    )
     sources: list[str] = []
     for root in roots:
         sources.extend(path.read_text(encoding="utf-8") for path in sorted(root.glob("*.md")))
@@ -176,7 +173,7 @@ def scope_markdown_sources(repo_root: Path, config: DocsScopeConfig) -> tuple[st
 
 
 def referenced_media_identities(
-    config: DocsScopeConfig,
+    config: DocsScopeConfig | DocsSubScopeConfig,
     markdown_sources: Iterable[str],
 ) -> dict[str, tuple[str, ...]]:
     identities: dict[str, set[str]] = {media_type: set() for media_type in config.media.types}
@@ -191,7 +188,7 @@ def referenced_media_identities(
 
 def build_scope_media_snapshot(
     repo_root: Path,
-    config: DocsScopeConfig,
+    config: DocsScopeConfig | DocsSubScopeConfig,
     *,
     write: bool,
     producers: Mapping[str, MediaProducer] | None = None,
@@ -237,7 +234,7 @@ def build_scope_media_snapshot(
                 expected[identity] = None
                 continue
             if source_stat is None:
-                missing.append(f"docs/{config.scope_id}/{media_type}/{identity}")
+                missing.append(f"{media.reference_prefix.as_posix()}/{identity}")
                 continue
             expected[identity] = source.read(identity)
 

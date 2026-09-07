@@ -26,7 +26,7 @@ def _verified_diagram_sources(
     repo_root: Path,
     target: ManagedDocumentTarget,
 ) -> list[dict[str, str]]:
-    config = target.parent_config
+    config = target.document_config
     build = config.media.build_sources.get("mermaid")
     published_media = config.media.types.get("svg")
     if (
@@ -88,8 +88,9 @@ def list_diagram_sources(repo_root: Path, params: dict[str, list[str]]) -> dict[
         "scope": (params.get("scope") or [""])[0],
         "doc_id": (params.get("doc_id") or [""])[0],
     }
-    if "sub_scope" in params:
-        request["sub_scope"] = (params.get("sub_scope") or [""])[0]
+    for field in ("stage", "sub_scope"):
+        if field in params:
+            request[field] = (params.get(field) or [""])[0]
     target = resolve_managed_document_target(repo_root, request)
     payload: dict[str, object] = {
         "ok": True,
@@ -124,7 +125,7 @@ def open_diagram_source(
     if target_record is None:
         raise FileNotFoundError("verified Mermaid source is not registered by this document")
 
-    config = target.parent_config
+    config = target.document_config
     build = config.media.build_sources["mermaid"]
     source_path = local_artifact_path(repo_root, build.location, target_record["source_identity"])
     if source_path is None or not source_path.is_file():

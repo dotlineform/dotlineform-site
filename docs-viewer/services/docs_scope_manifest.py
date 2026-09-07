@@ -492,8 +492,8 @@ def planned_scope_config_record(
                 served_path = f"/assets/data/docs/scopes/{scope_id}/media/svg"
             else:
                 media_provider = "r2"
-                media_path = f"docs/{scope_id}/{media_type}"
-                served_path = f"https://media.dotlineform.com/docs/{scope_id}/{media_type}"
+                media_path = f"docs/{scope_id}/media/{media_type}"
+                served_path = f"https://media.dotlineform.com/docs/{scope_id}/media/{media_type}"
             public_media[media_type] = {
                 "location": {"provider": media_provider, "path": media_path},
                 "served_path_prefix": served_path,

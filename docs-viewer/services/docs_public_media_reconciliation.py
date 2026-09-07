@@ -18,7 +18,7 @@ from docs_artifact_locations import (
     authenticated_remote_client_for_locations,
     normalize_artifact_identity,
 )
-from docs_scope_config import DocsScopeConfig
+from docs_scope_config import DocsScopeConfig, public_media_bindings
 
 
 PUBLIC_MEDIA_RECONCILIATION_SCHEMA_VERSION = "docs_public_media_reconciliation_v1"
@@ -58,7 +58,7 @@ def referenced_public_media(
         return {}
     prefixes = {
         media_type: media.served_path_prefix.rstrip("/")
-        for media_type, media in projection.media.items()
+        for media_type, (_collection, media) in public_media_bindings(config).items()
     }
     references: dict[tuple[str, str], set[str]] = {}
     for collection, files in payload_collections:
@@ -106,8 +106,8 @@ def _type_adapters(
     projection = config.public_projection
     if projection is None:
         raise ValueError(f"scope {config.scope_id!r} has no public media projection")
-    published = config.media.types[media_type]
-    public = projection.media[media_type]
+    collection, public = public_media_bindings(config)[media_type]
+    published = collection.media.types[public.media_type]
     return (
         artifact_location_adapter(
             repo_root,
@@ -134,7 +134,7 @@ def _remote_client(
     projection = config.public_projection
     if projection is None:
         return None, "scope has no public media projection"
-    locations = [media.location for media in projection.media.values()]
+    locations = [media.location for _collection, media in public_media_bindings(config).values()]
     try:
         return (
             authenticated_remote_client_for_locations(
@@ -175,6 +175,17 @@ def _reference_rows(
     ]
 
 
+def _published_rows(
+    adapter: ArtifactLocationAdapter,
+    references: Mapping[tuple[str, str], tuple[str, ...]],
+    media_type: str,
+) -> list[tuple[str, tuple[str, ...]]]:
+    """Use the accepted file set; references only supply diagnostics and labels."""
+    identities = {item.identity for item in adapter.list() if not _is_ignored_public_identity(item.identity)}
+    identities.update(identity for identity, _labels in _reference_rows(references, media_type))
+    return [(identity, references.get((media_type, identity), ())) for identity in sorted(identities)]
+
+
 def plan_public_media_reconciliation(
     repo_root: Path,
     config: DocsScopeConfig,
@@ -184,7 +195,7 @@ def plan_public_media_reconciliation(
     env_files: Iterable[Path] | None = None,
     environ: Mapping[str, str] | None = None,
 ) -> dict[str, Any]:
-    """Describe copy, retention, missing, and exact stale-public actions."""
+    """Describe accepted media copies, missing files and exact stale-public actions."""
 
     projection = config.public_projection
     if projection is None:
@@ -198,7 +209,7 @@ def plan_public_media_reconciliation(
     )
     types: list[dict[str, Any]] = []
     all_errors: list[str] = []
-    for media_type, public in sorted(projection.media.items()):
+    for media_type, (_collection, public) in sorted(public_media_bindings(config).items()):
         rows = _reference_rows(references, media_type)
         type_errors: list[str] = []
         items: list[dict[str, Any]] = []
@@ -222,6 +233,11 @@ def plan_public_media_reconciliation(
             public_stats, public_list_error = _public_stats(public_adapter)
             if public_list_error:
                 type_errors.append(public_list_error)
+        if published_adapter is not None:
+            try:
+                rows = _published_rows(published_adapter, references, media_type)
+            except Exception as exc:
+                type_errors.append(str(exc))
 
         for identity, referenced_by in rows:
             source_status = "unavailable"
@@ -254,7 +270,9 @@ def plan_public_media_reconciliation(
                     except Exception as exc:
                         error = str(exc)
                         type_errors.append(error)
-                action = "retain" if public_present else "missing"
+                action = "missing"
+                error = error or f"Accepted media is unavailable: {media_type}/{identity}"
+                type_errors.append(error)
             elif public_adapter is None:
                 action = "unavailable"
             else:
@@ -309,7 +327,7 @@ def plan_public_media_reconciliation(
             {
                 "media_type": media_type,
                 "provider": public.location.provider,
-                "referenced_count": len(rows),
+                "referenced_count": len(_reference_rows(references, media_type)),
                 "available_count": sum(item["source_status"] == "available" for item in items),
                 "copy_count": sum(item["action"] == "copy" for item in items),
                 "unchanged_count": sum(item["action"] == "unchanged" for item in items),
@@ -352,8 +370,7 @@ def _apply_type(
     projection = config.public_projection
     if projection is None:
         raise ValueError(f"scope {config.scope_id!r} has no public media projection")
-    public = projection.media[media_type]
-    rows = _reference_rows(references, media_type)
+    _collection, public = public_media_bindings(config)[media_type]
     results: list[dict[str, Any]] = []
     errors: list[str] = []
     try:
@@ -363,6 +380,7 @@ def _apply_type(
             media_type,
             remote_client=remote_client,
         )
+        rows = _published_rows(published_adapter, references, media_type)
     except Exception as exc:
         error = str(exc)
         return {
@@ -390,12 +408,9 @@ def _apply_type(
         try:
             published_bytes = published_adapter.read(identity)
         except FileNotFoundError:
-            try:
-                result["status"] = "retained" if public_adapter.stat(identity) is not None else "missing"
-            except Exception as exc:
-                result["status"] = "error"
-                result["error"] = str(exc)
-                errors.append(str(exc))
+            result["status"] = "error"
+            result["error"] = f"Accepted media disappeared during deployment: {media_type}/{identity}"
+            errors.append(result["error"])
             results.append(result)
             continue
         except Exception as exc:
@@ -429,7 +444,7 @@ def _apply_type(
     except Exception as exc:
         errors.append(str(exc))
         public_stats = {}
-    for identity in sorted(set(public_stats) - referenced_identities):
+    for identity in sorted(set(public_stats) - referenced_identities) if not errors else ():
         result = {
             "media_type": media_type,
             "identity": identity,
@@ -471,7 +486,7 @@ def apply_public_media_reconciliation(
     env_files: Iterable[Path] | None = None,
     environ: Mapping[str, str] | None = None,
 ) -> dict[str, Any]:
-    """Independently copy referenced media and remove exact stale projections."""
+    """Copy accepted media and remove stale files within each owned projection."""
 
     projection = config.public_projection
     if projection is None:
@@ -483,8 +498,11 @@ def apply_public_media_reconciliation(
         env_files=env_files,
         environ=environ,
     )
+    preflight = plan_public_media_reconciliation(repo_root, config, references, client=remote_client, env_files=env_files, environ=environ)
+    if preflight["error_count"]:
+        return failed_public_media_reconciliation(config.scope_id, "apply", RuntimeError("; ".join(preflight["errors"])))
     types: list[dict[str, Any]] = []
-    for media_type, public in sorted(projection.media.items()):
+    for media_type, (_collection, public) in sorted(public_media_bindings(config).items()):
         if public.location.provider == R2_PROVIDER and remote_error:
             types.append(
                 {

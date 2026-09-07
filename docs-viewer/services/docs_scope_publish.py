@@ -33,6 +33,7 @@ STANDARD_DIRECTORIES = (
     Path("references"),
     Path("reports"),
     Path("media"),
+    Path("sub-scopes"),
 )
 HTML_START_TAG_PATTERN = re.compile(
     r"<(?P<body>[A-Za-z][A-Za-z0-9:-]*(?:[^>\"']|\"[^\"]*\"|'[^']*')*)>",
@@ -244,11 +245,10 @@ def _sub_scope_eligibility(
 ) -> tuple[dict[str, set[str]], set[str]]:
     eligible_by_scope: dict[str, set[str]] = {}
     excluded: set[str] = set()
-    prefix = Path("documents/sub-scopes")
     for relative_path, data in generated_files.items():
-        if len(relative_path.parts) != 4 or Path(*relative_path.parts[:2]) != prefix:
+        if len(relative_path.parts) != 4 or relative_path.parts[0] != "sub-scopes" or relative_path.parts[2] != "documents":
             continue
-        sub_scope = relative_path.parts[2]
+        sub_scope = relative_path.parts[1]
         if relative_path.name == "manifest.json":
             payload = _read_json_bytes(data, f"generated sub-scope manifest {sub_scope}")
             rows = payload.get("docs")
@@ -480,6 +480,23 @@ def _media_identity_from_url(value: str, prefix: str) -> str:
     return path.as_posix()
 
 
+def _published_media_bindings(config: DocsScopeConfig) -> dict[str, tuple[str, str, Path]]:
+    """Map every collection's generated URL to its accepted URL and snapshot path."""
+    bindings = {}
+    for collection in (config, *config.sub_scopes):
+        child = getattr(collection, "sub_scope", "")
+        suffix = f"/sub-scopes/{child}" if child else ""
+        for media_type, media in collection.media.types.items():
+            key = f"{child}/{media_type}" if child else media_type
+            relative = media.published_location.path.relative_to(config.scope_root.path / "published")
+            bindings[key] = (
+                media.served_path_prefix.rstrip("/"),
+                f"/docs/published/media/{config.scope_id}{suffix}/{media_type}",
+                relative,
+            )
+    return bindings
+
+
 def _project_published_media_urls(
     config: DocsScopeConfig,
     data: bytes,
@@ -488,10 +505,7 @@ def _project_published_media_urls(
     content_html = payload.get("content_html")
     if not isinstance(content_html, str):
         return data
-    prefixes = {
-        media_type: media.served_path_prefix.rstrip("/")
-        for media_type, media in config.media.types.items()
-    }
+    bindings = _published_media_bindings(config)
 
     def replace_tag(tag: re.Match[str]) -> str:
         def replace_attribute(attribute: re.Match[str]) -> str:
@@ -502,16 +516,13 @@ def _project_published_media_urls(
                 else attribute.group("unquoted_value")
             )
             projected = value
-            for media_type, prefix in prefixes.items():
+            for prefix, published_prefix, _relative in bindings.values():
                 identity = _media_identity_from_url(value, prefix)
                 if identity:
                     raw_identity = value[len(prefix) + 1:]
                     suffix_match = re.search(r"[?#]", raw_identity)
                     suffix = raw_identity[suffix_match.start():] if suffix_match else ""
-                    projected = (
-                        f"/docs/published/media/{config.scope_id}/"
-                        f"{media_type}/{identity}{suffix}"
-                    )
+                    projected = f"{published_prefix}/{identity}{suffix}"
                     break
             return f"{attribute.group('prefix')}{quote}{projected}{quote}"
 
@@ -528,13 +539,7 @@ def _referenced_media(
     config: DocsScopeConfig,
     files: Mapping[Path, bytes],
 ) -> dict[str, set[str]]:
-    prefixes = {
-        media_type: (
-            media.served_path_prefix.rstrip("/"),
-            f"/docs/published/media/{config.scope_id}/{media_type}",
-        )
-        for media_type, media in config.media.types.items()
-    }
+    prefixes = {key: (source, published) for key, (source, published, _path) in _published_media_bindings(config).items()}
     references = {media_type: set() for media_type in prefixes}
     for relative_path, data in files.items():
         if relative_path.suffix.lower() not in {".json", ".html"}:
@@ -589,7 +594,9 @@ def _published_files(
 
     files: dict[Path, bytes] = {}
     for relative_path, data in generated_files.items():
-        if relative_path.parts and relative_path.parts[0] == "media":
+        if relative_path.parts and (relative_path.parts[0] == "media" or (
+            len(relative_path.parts) >= 4 and relative_path.parts[0] == "sub-scopes" and relative_path.parts[2] == "media"
+        )):
             continue
         if relative_path.parts[:2] == ("documents", ".publish"):
             continue
@@ -628,10 +635,10 @@ def _published_files(
             continue
         if (
             len(relative_path.parts) == 4
-            and relative_path.parts[:2] == ("documents", "sub-scopes")
+            and relative_path.parts[0] == "sub-scopes" and relative_path.parts[2] == "documents"
             and relative_path.name == "subject-associations.json"
         ):
-            sub_scope = relative_path.parts[2]
+            sub_scope = relative_path.parts[1]
             files[relative_path] = json_bytes(
                 _filter_subject_associations(
                     _read_json_bytes(
@@ -644,11 +651,16 @@ def _published_files(
                 )
             )
             continue
-        if relative_path == Path("search/index.json"):
+        child_search = (
+            len(relative_path.parts) == 4
+            and relative_path.parts[0] == "sub-scopes"
+            and relative_path.parts[2:] == ("search", "index.json")
+        )
+        if relative_path == Path("search/index.json") or child_search:
             files[relative_path] = json_bytes(
                 _filter_search(
                     _read_json_bytes(data, "generated Search payload"),
-                    eligible_ids,
+                    sub_scope_eligible.get(relative_path.parts[1], set()) if child_search else eligible_ids,
                 )
             )
             continue
@@ -662,11 +674,11 @@ def _published_files(
             continue
         if (
             len(relative_path.parts) == 5
-            and relative_path.parts[:2] == ("documents", "sub-scopes")
+            and relative_path.parts[0] == "sub-scopes" and relative_path.parts[2] == "documents"
             and relative_path.parts[3] == "by-id"
             and relative_path.suffix == ".json"
         ):
-            sub_scope = relative_path.parts[2]
+            sub_scope = relative_path.parts[1]
             if relative_path.stem in sub_scope_eligible.get(sub_scope, set()):
                 files[relative_path] = _project_published_media_urls(config, data)
             continue
@@ -679,9 +691,10 @@ def _published_files(
         files[relative_path] = data
 
     media_references = _referenced_media(config, files)
+    bindings = _published_media_bindings(config)
     for media_type, identities in sorted(media_references.items()):
         for identity in sorted(identities):
-            relative_path = Path("media") / media_type / identity
+            relative_path = bindings[media_type][2] / identity
             data = generated_files.get(relative_path)
             if data is None:
                 raise FileNotFoundError(
@@ -872,8 +885,8 @@ def apply_scope_publish(repo_root: Path, body: dict[str, Any]) -> dict[str, Any]
 
     for directory in STANDARD_DIRECTORIES:
         (published_root / directory).mkdir(parents=True, exist_ok=True)
-    for media_type in config.media.types:
-        (published_root / "media" / media_type).mkdir(parents=True, exist_ok=True)
+    for _source_url, _published_url, relative in _published_media_bindings(config).values():
+        (published_root / relative).mkdir(parents=True, exist_ok=True)
 
     for relative in preview["removed"]:
         target = published_root / Path(relative)

@@ -151,23 +151,23 @@ def prepare_published(root: Path, *, include_subjects: bool = True) -> str:
         },
     )
     add(
-        "documents/sub-scopes/tags/manifest.json",
+        "sub-scopes/tags/documents/manifest.json",
         {"schema": "docs_sub_scope_manifest_v1", "docs": [{"doc_id": TAG_DOC, "title": "tag"}]},
     )
     add(
-        f"documents/sub-scopes/tags/by-id/{TAG_DOC}.json",
+        f"sub-scopes/tags/documents/by-id/{TAG_DOC}.json",
         document_payload(TAG_DOC, "tag", "<h1>tag</h1>"),
     )
     add(
-        "documents/sub-scopes/tags/concept-associations.json",
+        "sub-scopes/tags/documents/concept-associations.json",
         {"schema_version": "docs_concept_associations_v1", "associations": []},
     )
     add(
-        "documents/sub-scopes/works/manifest.json",
+        "sub-scopes/works/documents/manifest.json",
         {"schema": "docs_sub_scope_manifest_v1", "docs": [{"doc_id": WORK_DOC, "title": "Work note"}]},
     )
     add(
-        f"documents/sub-scopes/works/by-id/{WORK_DOC}.json",
+        f"sub-scopes/works/documents/by-id/{WORK_DOC}.json",
         document_payload(
             WORK_DOC,
             "Work note",
@@ -177,7 +177,7 @@ def prepare_published(root: Path, *, include_subjects: bool = True) -> str:
     )
     if include_subjects:
         add(
-            "documents/sub-scopes/works/subject-associations.json",
+            "sub-scopes/works/documents/subject-associations.json",
             {
                 "schema_version": "docs_subject_associations_v1",
                 "scope": "analysis",

@@ -25,9 +25,11 @@ from docs_scope_config import (
     MANAGED_MEDIA_TYPES,
     DocsManagedMediaConfig,
     DocsScopeConfig,
+    DocsSubScopeConfig,
     load_docs_scope_configs,
-    load_docs_scope_stage,
+    load_docs_media_owner,
     managed_media_config,
+    require_document_authoring,
     resolve_location_path,
 )
 from docs_document_packages.workspace import configured_workspace_paths
@@ -49,6 +51,8 @@ class DocsMediaFile:
     source_root: Path
     size: int
     md5: str
+    stage: str = ""
+    sub_scope: str = ""
 
 
 @dataclass(frozen=True)
@@ -91,7 +95,7 @@ def validate_media_filename(value: str) -> str:
 
 
 def docs_media_file(
-    config: DocsScopeConfig,
+    config: DocsScopeConfig | DocsSubScopeConfig,
     *,
     media_class: str,
     local_path: Path,
@@ -115,6 +119,8 @@ def docs_media_file(
         source_root=resolved_root,
         size=resolved_path.stat().st_size,
         md5=file_md5(resolved_path),
+        stage=config.stage,
+        sub_scope=getattr(config, "sub_scope", ""),
     )
 
 
@@ -231,7 +237,7 @@ def plan_and_publish_docs_media(
 
 def media_adapters_for_scope(
     repo_root: Path,
-    config: DocsScopeConfig,
+    config: DocsScopeConfig | DocsSubScopeConfig,
     media_classes: Iterable[str],
     *,
     remote_client: object | None = None,
@@ -260,13 +266,12 @@ def publish_docs_media_files(
 ) -> list[DocsMediaPublishResult]:
     if not files:
         return []
-    scope_ids = {item.scope for item in files}
-    if len(scope_ids) != 1:
-        raise ValueError("One Docs media publication may target only one exact scope")
-    scope = next(iter(scope_ids))
-    config = load_docs_scope_configs(repo_root).get(scope)
-    if config is None:
-        raise ValueError(f"Unknown Docs media scope: {scope!r}")
+    targets = {(item.scope, item.stage, item.sub_scope) for item in files}
+    if len(targets) != 1:
+        raise ValueError("One Docs media insertion may target only one exact collection")
+    scope, stage, sub_scope = next(iter(targets))
+    config = load_docs_media_owner(repo_root, scope, stage=stage or None, sub_scope=sub_scope or None)
+    require_document_authoring(config)
 
     media_classes = {item.media_class for item in files}
     locations = [managed_media_config(config, media_class).source_location for media_class in media_classes]
@@ -283,7 +288,16 @@ def publish_docs_media_files(
         media_classes,
         remote_client=remote_client,
     )
-    return plan_and_publish_docs_media(files, adapters=adapters, write=write, force=force)
+    results = plan_and_publish_docs_media(files, adapters=adapters, write=write, force=force)
+    if write and docs_publish_succeeded(results):
+        for item in files:
+            media = managed_media_config(config, item.media_class)
+            generated = artifact_location_adapter(repo_root, media.generated_location)
+            data = adapters[item.media_class].read(item.filename)
+            generated.replace(item.filename, data, content_type=safe_content_type(item.local_path))
+            if not generated.verify_bytes(item.filename, data):
+                raise RuntimeError("Generated media verification failed after source insertion")
+    return results
 
 
 def docs_publish_succeeded(results: Sequence[DocsMediaPublishResult]) -> bool:
@@ -350,7 +364,7 @@ def run_docs_staged_media_publish(
     return docs_publish_report(scope=config.scope_id, results=results, write=write, force=force)
 
 
-def local_media_config(config: DocsScopeConfig, media_class: str) -> DocsManagedMediaConfig:
+def local_media_config(config: DocsScopeConfig | DocsSubScopeConfig, media_class: str) -> DocsManagedMediaConfig:
     media = managed_media_config(config, validate_media_class(media_class))
     if media.generated_location.provider not in {REPOSITORY_PROVIDER, EXTERNAL_LOCAL_PROVIDER}:
         raise ValueError(
@@ -430,16 +444,19 @@ def local_media_path_from_route(repo_root: Path, request_path: str) -> tuple[Pat
     if not request_path.startswith(DOCS_MEDIA_ROUTE_PREFIX):
         raise ValueError("Invalid Docs media route")
     parts = request_path.removeprefix(DOCS_MEDIA_ROUTE_PREFIX).split("/")
-    if len(parts) == 4 and parts[1] in {"working", "pre-publish"}:
-        scope, stage, media_class, filename = parts
-    elif len(parts) == 3:
-        scope, media_class, filename = parts
-        stage = None
-    else:
+    scope = parts.pop(0)
+    stage = parts.pop(0) if parts and parts[0] in {"working", "pre-publish"} else None
+    sub_scope = None
+    if parts and parts[0] == "sub-scopes":
+        if len(parts) != 4:
+            raise ValueError("Invalid Docs child media route")
+        _, sub_scope, *parts = parts
+    if len(parts) != 2:
         raise ValueError("Invalid Docs media route")
+    media_class, filename = parts
     normalized_class = validate_route_media_class(media_class)
     normalized_filename = validate_media_filename(filename)
-    config = load_docs_scope_stage(repo_root, scope, stage)
+    config = load_docs_media_owner(repo_root, scope, stage=stage, sub_scope=sub_scope)
     if config is None:
         raise FileNotFoundError(f"Docs media scope not found: {scope!r}")
     media = local_media_config(config, normalized_class)

@@ -205,6 +205,7 @@ class DocsSubScopeLifecycleConfig:
 
 @dataclass(frozen=True)
 class DocsSubScopeConfig:
+    scope_id: str
     sub_scope: str
     title: str
     public_title: str
@@ -213,6 +214,7 @@ class DocsSubScopeConfig:
     sub_scope_customisation: DocsSubScopeCustomisationConfig | None
     lifecycle: DocsSubScopeLifecycleConfig | None
     source: DocsSourceConfig
+    media: DocsMediaConfig
     generated: DocsGeneratedConfig
     published: DocsPublishedConfig
     public_projection: DocsPublicProjectionConfig | None
@@ -663,7 +665,7 @@ def normalize_public_projection(
             expected_path = (
                 PUBLIC_DOCS_OUTPUT_ROOT / scope_id / "media" / media_type
                 if location.provider == REPOSITORY_PROVIDER
-                else Path("docs") / scope_id / media_type
+                else Path("docs") / scope_id / "media" / media_type
             )
             if location.path != expected_path:
                 raise ValueError(
@@ -723,7 +725,7 @@ def select_scope_stage(config: DocsScopeConfig, stage: str | None = None) -> Doc
     raise ValueError(f"scope {config.scope_id!r} requires stage working or pre-publish")
 
 
-def require_document_authoring(config: DocsScopeConfig) -> None:
+def require_document_authoring(config: DocsScopeConfig | DocsSubScopeConfig) -> None:
     """Enforce the authoring boundary independently of browser capabilities."""
     require_selected_stage(config)
     if config.stage == "pre-publish":
@@ -767,7 +769,7 @@ def scope_media_reference_root(config: DocsScopeConfig) -> Path:
     return Path("docs") / config.scope_id
 
 
-def managed_media_config(config: DocsScopeConfig, media_type: str) -> DocsManagedMediaConfig:
+def managed_media_config(config: DocsScopeConfig | DocsSubScopeConfig, media_type: str) -> DocsManagedMediaConfig:
     require_selected_stage(config)
     normalized = str(media_type or "").strip().lower()
     try:
@@ -967,6 +969,58 @@ def normalize_sub_scope_lifecycle(
     )
 
 
+def sub_scope_media_config(
+    parent: DocsScopeConfig,
+    sub_scope: str,
+    source: DocsSourceConfig,
+    generated: DocsGeneratedConfig,
+    published: DocsPublishedConfig,
+) -> DocsMediaConfig:
+    """Repeat the parent's media roles within the child's own lifecycle roots."""
+    source_root = location_child(source.location, "media")
+    generated_root = replace(generated.documents.location, path=generated.documents.location.path.parent / "media")
+    published_root = replace(published.documents.location, path=published.documents.location.path.parent / "media")
+    reference_root = Path("docs") / parent.scope_id / "sub-scopes" / sub_scope
+    route_root = f"/docs/media/{parent.scope_id}"
+    if parent.stage:
+        route_root += f"/{parent.stage}"
+    route_root += f"/sub-scopes/{sub_scope}"
+    return DocsMediaConfig(
+        source_location=source_root,
+        generated_location=generated_root,
+        published_location=published_root,
+        types={
+            media_type: replace(
+                media,
+                reference_prefix=reference_root / media_type,
+                source_location=location_child(source_root, media_type),
+                generated_location=location_child(generated_root, media_type),
+                published_location=location_child(published_root, media_type),
+                served_path_prefix=f"{route_root}/{media_type}",
+            )
+            for media_type, media in parent.media.types.items()
+        },
+        build_sources={
+            build_type: replace(build, location=location_child(source_root, Path("build-source") / build_type))
+            for build_type, build in parent.media.build_sources.items()
+        },
+    )
+
+
+def load_docs_media_owner(
+    repo_root: Path, scope: str, *, stage: str | None = None, sub_scope: str | None = None,
+) -> DocsScopeConfig | DocsSubScopeConfig:
+    """Resolve one explicit collection; a missing child never selects parent media."""
+    config = load_docs_scope_stage(repo_root, scope, stage)
+    if not sub_scope:
+        return config
+    child_id = normalize_sub_scope_id(sub_scope, field="sub_scope")
+    for child in config.sub_scopes:
+        if child.sub_scope == child_id:
+            return child
+    raise ValueError(f"sub-scope {child_id!r} is not configured for scope {scope!r}")
+
+
 def normalize_sub_scope_configs(
     raw: Any,
     *,
@@ -1027,13 +1081,13 @@ def normalize_sub_scope_configs(
             documents=DocsPublishedArtifactConfig(
                 location=location_child(
                     parent.scope_root,
-                    PUBLISHED_DOCUMENTS_PATH / SOURCE_SUB_SCOPES_PATH / sub_scope,
+                    SCOPE_PUBLISHED_PATH / SOURCE_SUB_SCOPES_PATH / sub_scope / "documents",
                 )
             ),
             search=DocsPublishedArtifactConfig(
                 location=location_child(
                     parent.scope_root,
-                    SCOPE_PUBLISHED_PATH / "search" / SOURCE_SUB_SCOPES_PATH / sub_scope / "index.json",
+                    SCOPE_PUBLISHED_PATH / SOURCE_SUB_SCOPES_PATH / sub_scope / "search/index.json",
                 )
             ),
         )
@@ -1041,13 +1095,13 @@ def normalize_sub_scope_configs(
             documents=DocsPublishedArtifactConfig(
                 location=location_child(
                     parent.stage_root,
-                    GENERATED_DOCUMENTS_PATH / SOURCE_SUB_SCOPES_PATH / sub_scope,
+                    SCOPE_GENERATED_PATH / SOURCE_SUB_SCOPES_PATH / sub_scope / "documents",
                 )
             ),
             search=DocsPublishedArtifactConfig(
                 location=location_child(
                     parent.stage_root,
-                    SCOPE_GENERATED_PATH / "search" / SOURCE_SUB_SCOPES_PATH / sub_scope / "index.json",
+                    SCOPE_GENERATED_PATH / SOURCE_SUB_SCOPES_PATH / sub_scope / "search/index.json",
                 )
             ),
         )
@@ -1067,6 +1121,19 @@ def normalize_sub_scope_configs(
                     f"docs scope config sub-scope {parent.scope_id}/{sub_scope} public documents must be "
                     f"{expected_public_documents.as_posix()}"
                 )
+            child_media: dict[str, DocsPublicMediaConfig] = {}
+            for media_type, media in parent.public_projection.media.items():
+                suffix = f"/media/{media_type}"
+                if not media.served_path_prefix.endswith(suffix):
+                    raise ValueError(f"public media URL must end with {suffix!r} to project child collections")
+                relative = Path("sub-scopes") / sub_scope / "media" / media_type
+                child_media[media_type] = replace(
+                    media,
+                    reference_prefix=Path("docs") / parent.scope_id / "sub-scopes" / sub_scope / media_type,
+                    location=replace(media.location, path=media.location.path.parent.parent / relative),
+                    served_path_prefix=f"{media.served_path_prefix.removesuffix(suffix)}/{relative.as_posix()}",
+                )
+            projection = replace(projection, media=child_media)
         ui_statuses = normalize_ordered_sub_scope_values(
             item.get("ui_statuses"),
             field=f"{item_field}.ui_statuses",
@@ -1093,6 +1160,7 @@ def normalize_sub_scope_configs(
             )
         configs.append(
             DocsSubScopeConfig(
+                scope_id=parent.scope_id,
                 sub_scope=sub_scope,
                 title=title,
                 public_title=public_title,
@@ -1101,6 +1169,7 @@ def normalize_sub_scope_configs(
                 sub_scope_customisation=sub_scope_customisation,
                 lifecycle=lifecycle,
                 source=source,
+                media=sub_scope_media_config(parent, sub_scope, source, generated, published),
                 generated=generated,
                 published=published,
                 public_projection=projection,
@@ -1108,6 +1177,25 @@ def normalize_sub_scope_configs(
             )
         )
     return tuple(configs)
+
+
+def public_media_bindings(
+    config: DocsScopeConfig,
+) -> dict[str, tuple[DocsScopeConfig | DocsSubScopeConfig, DocsPublicMediaConfig]]:
+    """Return independent collection/type bindings for public media deployment.
+
+    Keys are a media type for the parent or sub_scope/media_type for a child.
+    File identities are relative to that binding, never to the parent collection.
+    """
+    bindings = {}
+    for collection in (config, *config.sub_scopes):
+        if collection.public_projection is None:
+            continue
+        child = getattr(collection, "sub_scope", "")
+        for media_type, media in collection.public_projection.media.items():
+            key = f"{child}/{media_type}" if child else media_type
+            bindings[key] = (collection, media)
+    return bindings
 
 
 def normalize_workflow_stages(
@@ -1148,10 +1236,7 @@ def normalize_workflow_stages(
             public_projection=parent.public_projection if stage == "pre-publish" else None,
             viewer_base_url=DOCS_VIEWER_MANAGE_ROUTE_BASE_URL,
             include_scope_param=True,
-            source=replace(
-                normalize_source({}, scope_root=stage_root, field=f"{field}.{stage}.source"),
-                sub_scopes_path=SOURCE_DOCUMENTS_PATH / SOURCE_SUB_SCOPES_PATH,
-            ),
+            source=normalize_source({}, scope_root=stage_root, field=f"{field}.{stage}.source"),
             generated=normalize_generated({}, scope_root=stage_root, field=f"{field}.{stage}.generated"),
             media=media,
             default_doc_id=str(settings.get("default_doc_id") or "").strip(),
@@ -1458,6 +1543,7 @@ __all__ = [
     "path_is_strict_relative_to",
     "path_label",
     "public_documents_path",
+    "public_media_bindings",
     "public_search_path",
     "publication_documents_path",
     "publication_search_path",

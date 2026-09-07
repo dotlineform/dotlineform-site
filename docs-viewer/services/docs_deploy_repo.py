@@ -37,6 +37,7 @@ from docs_scope_config import (
     load_docs_scope_configs,
     public_documents_path,
     public_search_path,
+    public_media_bindings,
 )
 from docs_scope_publish import validate_published_snapshot
 from docs_subscope_customisations import (
@@ -290,11 +291,12 @@ def public_media_url_projection(config: DocsScopeConfig) -> dict[str, str]:
     projection = config.public_projection
     if projection is None:
         return {}
-    return {
-        f"/docs/published/media/{config.scope_id}/{media_type}":
-        projection.media[media_type].served_path_prefix.rstrip("/")
-        for media_type in config.media.types
-    }
+    urls = {}
+    for collection, media in public_media_bindings(config).values():
+        child = getattr(collection, "sub_scope", "")
+        suffix = f"/sub-scopes/{child}" if child else ""
+        urls[f"/docs/published/media/{config.scope_id}{suffix}/{media.media_type}"] = media.served_path_prefix.rstrip("/")
+    return urls
 
 
 def project_public_media_urls(content_html: str, projection: Mapping[str, str]) -> str:
@@ -474,7 +476,7 @@ def accepted_document_collections(
     sub_scope_manifests: dict[str, dict[str, Any]] = {}
     subject_associations: dict[tuple[str, str], Mapping[str, Any]] = {}
     for sub_scope in config.sub_scopes:
-        prefix = Path("documents/sub-scopes") / sub_scope.sub_scope
+        prefix = Path("sub-scopes") / sub_scope.sub_scope / "documents"
         files: dict[Path, bytes] = {}
         for relative_path, data in published_files.items():
             try:

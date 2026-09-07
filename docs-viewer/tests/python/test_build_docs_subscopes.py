@@ -60,7 +60,7 @@ After report with **formatted text**.
         tmp_path, ["--scope", "studio", "--sub-scope", "works", "--write", "--skip-media-builds"],
     )
     assert exit_code == 0, stderr
-    child = read_json(tmp_path / f"docs-viewer/scopes/studio/generated/documents/sub-scopes/works/by-id/{DETAIL_DOC_ID}.json")
+    child = read_json(tmp_path / f"docs-viewer/scopes/studio/generated/sub-scopes/works/documents/by-id/{DETAIL_DOC_ID}.json")
     assert child["doc_id"] == DETAIL_DOC_ID
     assert child["report"]["id"] == "reports_list"
     assert child["report"]["access"] == "public"
@@ -104,8 +104,8 @@ Sub-scope detail body.
         {
             "sub_scope": "tags",
             "title": "",
-            "manifest_url": "/docs-viewer/scopes/studio/generated/documents/sub-scopes/tags/manage-manifest.json",
-            "by_id_url_base": "/docs-viewer/scopes/studio/generated/documents/sub-scopes/tags/by-id",
+            "manifest_url": "/docs-viewer/scopes/studio/generated/sub-scopes/tags/documents/manage-manifest.json",
+            "by_id_url_base": "/docs-viewer/scopes/studio/generated/sub-scopes/tags/documents/by-id",
         }
     ]
 
@@ -131,11 +131,11 @@ def test_python_docs_builder_writes_empty_sub_scope_manifest_pair() -> None:
         )
         manifest = read_json(
             root
-            / "docs-viewer/scopes/studio/generated/documents/sub-scopes/tags/manifest.json"
+            / "docs-viewer/scopes/studio/generated/sub-scopes/tags/documents/manifest.json"
         )
         manage_manifest = read_json(
             root
-            / "docs-viewer/scopes/studio/generated/documents/sub-scopes/tags/manage-manifest.json"
+            / "docs-viewer/scopes/studio/generated/sub-scopes/tags/documents/manage-manifest.json"
         )
 
     assert exit_code == 0
@@ -203,11 +203,11 @@ def test_python_docs_builder_projects_empty_processing_collection_report(
     )
     manifest = read_json(
         root
-        / "docs-viewer/scopes/studio/generated/documents/sub-scopes/processing/manifest.json"
+        / "docs-viewer/scopes/studio/generated/sub-scopes/processing/documents/manifest.json"
     )
     manage_manifest = read_json(
         root
-        / "docs-viewer/scopes/studio/generated/documents/sub-scopes/processing/manage-manifest.json"
+        / "docs-viewer/scopes/studio/generated/sub-scopes/processing/documents/manage-manifest.json"
     )
     config = load_docs_scope_configs(root)["studio"]
     browser_config = build_docs.browser_scope_config_payload(root, [config])
@@ -336,8 +336,8 @@ title: Pathless
         )
         manifest = read_json(
             root / (
-                "docs-viewer/scopes/dotlineform/generated/documents/"
-                "sub-scopes/projects/manifest.json"
+                "docs-viewer/scopes/dotlineform/generated/sub-scopes/"
+                "projects/documents/manifest.json"
             )
         )
         config = load_docs_scope_configs(root)["dotlineform"]
@@ -349,14 +349,14 @@ title: Pathless
         )
         manage_manifest = read_json(
             root / (
-                "docs-viewer/scopes/dotlineform/generated/documents/"
-                "sub-scopes/projects/manage-manifest.json"
+                "docs-viewer/scopes/dotlineform/generated/sub-scopes/"
+                "projects/documents/manage-manifest.json"
             )
         )
         subject_associations = read_json(
             root / (
-                "docs-viewer/scopes/dotlineform/generated/documents/"
-                "sub-scopes/projects/subject-associations.json"
+                "docs-viewer/scopes/dotlineform/generated/sub-scopes/"
+                "projects/documents/subject-associations.json"
             )
         )
 
@@ -512,7 +512,7 @@ title: {doc_id}
             ["--scope", "studio", "--sub-scope", "works", "--write"],
         )
         output_root = root / (
-            "docs-viewer/scopes/studio/generated/documents/sub-scopes/works"
+            "docs-viewer/scopes/studio/generated/sub-scopes/works/documents"
         )
         manage_manifest = read_json(output_root / "manage-manifest.json")
         associations = read_json(output_root / "subject-associations.json")
@@ -668,8 +668,8 @@ work_id: "00123"
         )
         associations = read_json(
             root / (
-                "docs-viewer/scopes/studio/generated/documents/sub-scopes/"
-                "works/subject-associations.json"
+                "docs-viewer/scopes/studio/generated/sub-scopes/"
+                "works/documents/subject-associations.json"
             )
         )
 
@@ -750,19 +750,19 @@ concept_id: ""
 Related body.
 """,
         )
-        write_json(root / "docs-viewer/scopes/studio/generated/documents/sub-scopes/tags/by-id/stale.json", {"doc_id": "stale"})
+        write_json(root / "docs-viewer/scopes/studio/generated/sub-scopes/tags/documents/by-id/stale.json", {"doc_id": "stale"})
 
         exit_code, stdout, stderr = run_cli(root, ["--scope", "studio", "--sub-scope", "tags", "--write", "--diagnostics"])
-        manifest = read_json(root / "docs-viewer/scopes/studio/generated/documents/sub-scopes/tags/manifest.json")
+        manifest = read_json(root / "docs-viewer/scopes/studio/generated/sub-scopes/tags/documents/manifest.json")
         manage_manifest = read_json(
             root
-            / "docs-viewer/scopes/studio/generated/documents/sub-scopes/tags/manage-manifest.json"
+            / "docs-viewer/scopes/studio/generated/sub-scopes/tags/documents/manage-manifest.json"
         )
-        detail = read_json(root / f"docs-viewer/scopes/studio/generated/documents/sub-scopes/tags/by-id/{DETAIL_DOC_ID}.json")
-        related = read_json(root / f"docs-viewer/scopes/studio/generated/documents/sub-scopes/tags/by-id/{RELATED_DOC_ID}.json")
+        detail = read_json(root / f"docs-viewer/scopes/studio/generated/sub-scopes/tags/documents/by-id/{DETAIL_DOC_ID}.json")
+        related = read_json(root / f"docs-viewer/scopes/studio/generated/sub-scopes/tags/documents/by-id/{RELATED_DOC_ID}.json")
         concept_associations = read_json(
             root
-            / "docs-viewer/scopes/studio/generated/documents/sub-scopes/tags/concept-associations.json"
+            / "docs-viewer/scopes/studio/generated/sub-scopes/tags/documents/concept-associations.json"
         )
         related_source_path = (
             root
@@ -781,7 +781,7 @@ Related body.
         )
         reassigned_associations = read_json(
             root
-            / "docs-viewer/scopes/studio/generated/documents/sub-scopes/tags/concept-associations.json"
+            / "docs-viewer/scopes/studio/generated/sub-scopes/tags/documents/concept-associations.json"
         )
         related_source_path.unlink()
         deleted_exit_code, _deleted_stdout, deleted_stderr = run_cli(
@@ -790,7 +790,7 @@ Related body.
         )
         deleted_associations = read_json(
             root
-            / "docs-viewer/scopes/studio/generated/documents/sub-scopes/tags/concept-associations.json"
+            / "docs-viewer/scopes/studio/generated/sub-scopes/tags/documents/concept-associations.json"
         )
 
     assert exit_code == 0
@@ -880,9 +880,9 @@ Related body.
         )
         for association in deleted_associations["associations"]
     ] == [("absence", [DETAIL_DOC_ID])]
-    assert not (root / "docs-viewer/scopes/studio/generated/documents/sub-scopes/tags/by-id/stale.json").exists()
-    assert not (root / "docs-viewer/scopes/studio/generated/documents/sub-scopes/tags/index-tree.json").exists()
-    assert not (root / "docs-viewer/scopes/studio/generated/documents/sub-scopes/tags/recent.json").exists()
+    assert not (root / "docs-viewer/scopes/studio/generated/sub-scopes/tags/documents/by-id/stale.json").exists()
+    assert not (root / "docs-viewer/scopes/studio/generated/sub-scopes/tags/documents/index-tree.json").exists()
+    assert not (root / "docs-viewer/scopes/studio/generated/sub-scopes/tags/documents/recent.json").exists()
 
 
 @pytest.mark.parametrize(
@@ -978,7 +978,7 @@ title: Detail
         }
         manifest_exists = (
             root
-            / "docs-viewer/scopes/studio/generated/documents/sub-scopes/tags/manifest.json"
+            / "docs-viewer/scopes/studio/generated/sub-scopes/tags/documents/manifest.json"
         ).is_file()
 
     assert exit_code == 0
@@ -1050,19 +1050,19 @@ publishable: false
             ["--scope", "studio", "--sub-scope", "tags", "--write"],
         )
         manifest = read_json(
-            root / "docs-viewer/scopes/studio/generated/documents/sub-scopes/tags/manifest.json"
+            root / "docs-viewer/scopes/studio/generated/sub-scopes/tags/documents/manifest.json"
         )
         manage_manifest = read_json(
             root
-            / "docs-viewer/scopes/studio/generated/documents/sub-scopes/tags/manage-manifest.json"
+            / "docs-viewer/scopes/studio/generated/sub-scopes/tags/documents/manage-manifest.json"
         )
         visible_payload = read_json(
             root
-            / f"docs-viewer/scopes/studio/generated/documents/sub-scopes/tags/by-id/{DETAIL_DOC_ID}.json"
+            / f"docs-viewer/scopes/studio/generated/sub-scopes/tags/documents/by-id/{DETAIL_DOC_ID}.json"
         )
         hidden_payload_path = (
             root
-            / f"docs-viewer/scopes/studio/generated/documents/sub-scopes/tags/by-id/{HIDDEN_DOC_ID}.json"
+            / f"docs-viewer/scopes/studio/generated/sub-scopes/tags/documents/by-id/{HIDDEN_DOC_ID}.json"
         )
         hidden_payload_exists = hidden_payload_path.is_file()
 
@@ -1140,15 +1140,15 @@ group: subject
             ["--scope", "studio", "--sub-scope", "tags", "--write"],
         )
         manifest = read_json(
-            root / "docs-viewer/scopes/studio/generated/documents/sub-scopes/tags/manifest.json"
+            root / "docs-viewer/scopes/studio/generated/sub-scopes/tags/documents/manifest.json"
         )
         manage_manifest = read_json(
             root
-            / "docs-viewer/scopes/studio/generated/documents/sub-scopes/tags/manage-manifest.json"
+            / "docs-viewer/scopes/studio/generated/sub-scopes/tags/documents/manage-manifest.json"
         )
         detail = read_json(
             root
-            / f"docs-viewer/scopes/studio/generated/documents/sub-scopes/tags/by-id/{DETAIL_DOC_ID}.json"
+            / f"docs-viewer/scopes/studio/generated/sub-scopes/tags/documents/by-id/{DETAIL_DOC_ID}.json"
         )
         config = load_docs_scope_configs(root)["studio"]
         browser_config = build_docs.browser_scope_config_payload(root, [config])
@@ -1303,8 +1303,8 @@ work_id: "00123"
         )
 
         exit_code, _stdout, stderr = run_cli(root, ["--scope", "example", "--sub-scope", "tags", "--write"])
-        detail = read_json(root / f"docs-viewer/scopes/example/generated/documents/sub-scopes/tags/by-id/{DETAIL_DOC_ID}.json")
-        output_root = root / "docs-viewer/scopes/example/generated/documents/sub-scopes/tags"
+        detail = read_json(root / f"docs-viewer/scopes/example/generated/sub-scopes/tags/documents/by-id/{DETAIL_DOC_ID}.json")
+        output_root = root / "docs-viewer/scopes/example/generated/sub-scopes/tags/documents"
         manifest = read_json(output_root / "manifest.json")
         manage_manifest = read_json(output_root / "manage-manifest.json")
         output_names = sorted(path.name for path in output_root.iterdir())
@@ -1335,8 +1335,8 @@ work_id: "00123"
         {
             "sub_scope": "tags",
             "title": "Tags",
-            "manifest_url": "/docs-viewer/scopes/example/generated/documents/sub-scopes/tags/manage-manifest.json",
-            "by_id_url_base": "/docs-viewer/scopes/example/generated/documents/sub-scopes/tags/by-id",
+            "manifest_url": "/docs-viewer/scopes/example/generated/sub-scopes/tags/documents/manage-manifest.json",
+            "by_id_url_base": "/docs-viewer/scopes/example/generated/sub-scopes/tags/documents/by-id",
         }
     ]
     assert public_browser_config["scopes"][0]["sub_scopes"] == [
@@ -1408,7 +1408,7 @@ work_id: "00123"
         )
         associations = read_json(
             root
-            / "docs-viewer/scopes/example/generated/documents/sub-scopes/works/subject-associations.json"
+            / "docs-viewer/scopes/example/generated/sub-scopes/works/documents/subject-associations.json"
         )
 
     assert exit_code == 0

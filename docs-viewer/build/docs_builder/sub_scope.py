@@ -16,6 +16,7 @@ from .common import (
     write_text,
 )
 from .pipeline import DocsDataBuilder
+from .media_builds import build_scope_media_snapshot
 from .source import DocRecord
 from docs_subscope_customisations import (
     project_sub_scope_customisation_manifest,
@@ -275,6 +276,7 @@ class SubScopeDocsBuilder(DocsDataBuilder):
         docs = self.load_docs()
         self.validate_canonical_doc_ids(docs)
         self.validate_docs(docs)
+        media_snapshot = None if self.skip_media_builds else build_scope_media_snapshot(self.repo_root, self.media_owner, write=write)
         ordered_docs = sorted(docs, key=self.doc_sort_key)
         semantic_tokens_by_doc: dict[str, list[dict[str, Any]]] = {}
         item_payloads = {
@@ -367,6 +369,7 @@ class SubScopeDocsBuilder(DocsDataBuilder):
             "subject_associations_payload": subject_associations_payload,
             "concept_associations_payload": concept_associations_payload,
             "item_payloads": item_payloads,
+            "media_snapshot": media_snapshot,
             "write_plan": write_plan,
             "diagnostics": diagnostics,
         }

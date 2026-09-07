@@ -26,10 +26,13 @@ from docs_scope_config import (
     document_source_path,
     is_public_readonly_scope,
     load_docs_scope_configs,
+    load_docs_scope_stage,
     normalize_sub_scope_id,
     public_documents_path,
     generated_documents_path,
+    require_document_authoring,
     resolve_scope_path,
+    select_scope_stage,
     source_container_path,
 )
 from docs_scope_manifest import (
@@ -87,12 +90,24 @@ def planned_sub_scope_config_record(
     }
 
 
-def append_sub_scope_config(repo_root: Path, parent_scope: str, sub_scope_config: dict[str, Any]) -> None:
+def append_sub_scope_config(
+    repo_root: Path,
+    parent_scope: str,
+    sub_scope_config: dict[str, Any],
+    *,
+    stage: str | None = None,
+) -> None:
+    """Append the collection to its selected source owner, preserving other stages."""
     config_path = repo_root / CONFIG_REL_PATH
     payload = load_json_object(config_path, "docs scope config")
     if payload.get("schema_version") != SCOPE_CONFIG_SCHEMA_VERSION:
         raise ValueError(f"docs scope config schema_version must be {SCOPE_CONFIG_SCHEMA_VERSION}")
     parent_record = find_raw_scope_config(payload, parent_scope)
+    if stage is not None:
+        stages = parent_record.get("stages")
+        if not isinstance(stages, dict) or not isinstance(stages.get(stage), dict):
+            raise ValueError(f"stage {stage!r} is not configured for scope {parent_scope!r}")
+        parent_record = stages[stage]
     sub_scopes = parent_record.setdefault("sub_scopes", [])
     if not isinstance(sub_scopes, list):
         raise ValueError(f"scope_id {parent_scope!r} sub_scopes must be an array")
@@ -139,7 +154,7 @@ def sub_scope_storage_contract(
         parent_config.source.location.path / SOURCE_SUB_SCOPES_PATH / sub_scope
     ).as_posix()
     generated_docs = (
-        parent_config.generated.documents.location.path / SOURCE_SUB_SCOPES_PATH / sub_scope
+        parent_config.generated.documents.location.path.parent / SOURCE_SUB_SCOPES_PATH / sub_scope / "documents"
     ).as_posix()
     public_docs = (
         str(projection["documents"]["location"]["path"])
@@ -170,7 +185,7 @@ def sub_scope_path_records(repo_root: Path, parent_config: DocsScopeConfig, sub_
     source_documents_root = source_root / SOURCE_DOCUMENTS_PATH
     docs_output = resolve_scope_path(
         repo_root,
-        generated_documents_path(parent_config) / SOURCE_SUB_SCOPES_PATH / sub_scope,
+        generated_documents_path(parent_config).parent / SOURCE_SUB_SCOPES_PATH / sub_scope / "documents",
     )
     records = [
         path_record(repo_root, "sub_scope_source_root", source_root, action="create"),
@@ -180,6 +195,10 @@ def sub_scope_path_records(repo_root: Path, parent_config: DocsScopeConfig, sub_
         path_record(repo_root, "sub_scope_manifest", docs_output / "manifest.json", action="generate"),
         path_record(repo_root, "sub_scope_manage_manifest", docs_output / "manage-manifest.json", action="generate"),
     ]
+    for media_type in ("img", "svg", "files", "html", "build-source/mermaid"):
+        records.append(path_record(repo_root, "sub_scope_source_media", source_root / "media" / media_type, action="create"))
+    for media_type in ("img", "svg", "files", "html"):
+        records.append(path_record(repo_root, "sub_scope_generated_media", docs_output.parent / "media" / media_type, action="create"))
     if not is_public_readonly_scope(
         viewer_base_url=parent_config.viewer_base_url,
         include_scope_param=parent_config.include_scope_param,
@@ -284,6 +303,7 @@ def report_host_source(parent_config: DocsScopeConfig, sub_scope: str, title: st
 
 
 def plan_create_sub_scope_preview(repo_root: Path, body: dict[str, Any]) -> dict[str, Any]:
+    """Plan a host and collection in one explicit, writable scope or workflow stage."""
     parent_scope = normalize_scope_id(body.get("parent_scope") or body.get("scope"))
     sub_scope = normalize_sub_scope_id(body.get("sub_scope"), field="sub_scope")
     title = normalize_title(body.get("title"))
@@ -291,6 +311,8 @@ def plan_create_sub_scope_preview(repo_root: Path, body: dict[str, Any]) -> dict
     parent_config = configs.get(parent_scope)
     if parent_config is None:
         raise ValueError(f"parent scope {parent_scope!r} does not exist")
+    parent_config = select_scope_stage(parent_config, body.get("stage"))
+    require_document_authoring(parent_config)
     if any(item.sub_scope == sub_scope for item in parent_config.sub_scopes):
         raise ValueError(f"sub_scope {sub_scope!r} already exists in scope {parent_scope!r}")
 
@@ -329,6 +351,8 @@ def plan_create_sub_scope_preview(repo_root: Path, body: dict[str, Any]) -> dict
     if conflicts:
         raise ValueError(f"sub-scope creation would overwrite existing paths: {', '.join(conflicts)}")
     public_readonly = parent_config.public_projection is not None
+    stage_target = {"stage": parent_config.stage} if parent_config.stage else {}
+    stage_query = f"&stage={parent_config.stage}" if parent_config.stage else ""
 
     return {
         "ok": True,
@@ -337,12 +361,13 @@ def plan_create_sub_scope_preview(repo_root: Path, body: dict[str, Any]) -> dict
         "operation": "preview",
         "scope_id": parent_scope,
         "parent_scope": parent_scope,
+        **stage_target,
         "sub_scope": sub_scope,
         "title": title,
         "planned_report_host_identity": identity,
         "report_host_source_revision": host_revision,
-        "collection_target": {"scope": parent_scope, "sub_scope": sub_scope},
-        "report_host_target": {"scope": parent_scope, "doc_id": identity["doc_id"]},
+        "collection_target": {"scope": parent_scope, **stage_target, "sub_scope": sub_scope},
+        "report_host_target": {"scope": parent_scope, **stage_target, "doc_id": identity["doc_id"]},
         "association": association,
         "planned_sub_scope_config": planned_sub_scope_config,
         "storage_contract": sub_scope_storage_contract(
@@ -357,9 +382,9 @@ def plan_create_sub_scope_preview(repo_root: Path, body: dict[str, Any]) -> dict
         "changed_files": [
             path_record(repo_root, "scope_config", repo_root / CONFIG_REL_PATH, action="change"),
         ],
-        "rebuild_plan": ["sub_scope_docs", "parent_docs", "parent_search", "browser_config"],
+        "rebuild_plan": ["sub_scope_docs", "parent_docs", "browser_config"],
         "urls": {
-            "management": f"/docs/?scope={parent_scope}&doc={identity['doc_id']}",
+            "management": f"/docs/?scope={parent_scope}{stage_query}&doc={identity['doc_id']}",
             "public": "",
         },
         "warnings": [],
@@ -381,9 +406,10 @@ def apply_create_sub_scope(
     body: dict[str, Any],
     *,
     dry_run: bool,
-    rebuild_sub_scope_outputs: Callable[[Path, str, str], dict[str, Any]],
+    rebuild_sub_scope_outputs: Callable[..., dict[str, Any]],
     rebuild_scope_outputs: Callable[..., dict[str, Any]],
 ) -> dict[str, Any]:
+    """Create the previewed host/config, then rebuild only that collection and parent stage."""
     require_confirmed(body)
     preview = plan_create_sub_scope_preview(repo_root, body)
     result = {**preview, "schema_version": LIFECYCLE_APPLY_SCHEMA_VERSION, "operation": "apply", "dry_run": dry_run, "committed": False, "retry_create": True, "rebuild": {}}
@@ -392,7 +418,8 @@ def apply_create_sub_scope(
 
     scope = str(preview["parent_scope"])
     sub_scope = str(preview["sub_scope"])
-    parent_config = load_docs_scope_configs(repo_root)[scope]
+    parent_config = load_docs_scope_stage(repo_root, scope, preview.get("stage"))
+    build_kwargs = {"stage": parent_config.stage} if parent_config.stage else {}
     identity = preview["planned_report_host_identity"]
     host_text = report_host_source(parent_config, sub_scope, str(preview["title"]), identity)
     host_path = resolve_scope_path(repo_root, document_source_path(parent_config)) / f"{identity['doc_id']}.md"
@@ -400,7 +427,7 @@ def apply_create_sub_scope(
     try:
         source_model.write_text_atomic_new(host_path, host_text)
         host_created = True
-        append_sub_scope_config(repo_root, scope, preview["planned_sub_scope_config"])
+        append_sub_scope_config(repo_root, scope, preview["planned_sub_scope_config"], **build_kwargs)
     except Exception as error:
         if host_created and host_path.exists() and host_path.read_text(encoding="utf-8") == host_text:
             host_path.unlink()
@@ -413,23 +440,28 @@ def apply_create_sub_scope(
     )
     docs_output = resolve_scope_path(
         repo_root,
-        generated_documents_path(parent_config) / SOURCE_SUB_SCOPES_PATH / sub_scope,
+        generated_documents_path(parent_config).parent / SOURCE_SUB_SCOPES_PATH / sub_scope / "documents",
     )
     public_root = public_documents_path(parent_config)
     stage = "roots"
     try:
         (source_root / SOURCE_DOCUMENTS_PATH).mkdir(parents=True, exist_ok=False)
         (docs_output / "by-id").mkdir(parents=True, exist_ok=False)
+        for media_type in ("img", "svg", "files", "html", "build-source/mermaid"):
+            (source_root / "media" / media_type).mkdir(parents=True, exist_ok=True)
+        for media_type in ("img", "svg", "files", "html"):
+            (docs_output.parent / "media" / media_type).mkdir(parents=True, exist_ok=True)
         if public_root is not None:
             (resolve_scope_path(repo_root, public_root / sub_scope) / "by-id").mkdir(parents=True, exist_ok=False)
         stage = "sub_scope_build"
-        result["rebuild"]["sub_scope"] = rebuild_sub_scope_outputs(repo_root, scope, sub_scope)
+        result["rebuild"]["sub_scope"] = rebuild_sub_scope_outputs(repo_root, scope, sub_scope, **build_kwargs)
         stage = "parent_rebuild"
         result["rebuild"]["parent"] = rebuild_scope_outputs(
             repo_root,
             scope,
             include_search=False,
             docs_doc_ids=[identity["doc_id"]],
+            **build_kwargs,
         )
     except Exception as error:
         raise apply_error(result, error, committed=True, stage=stage) from error
@@ -440,7 +472,7 @@ def apply_create_sub_scope(
 def sub_scope_delete_path_records(repo_root: Path, sub_scope_config: Any, parent_config: DocsScopeConfig) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
     candidate_paths = [
         ("sub_scope_source_root", resolve_scope_path(repo_root, source_container_path(sub_scope_config))),
-        ("sub_scope_generated_docs_root", resolve_scope_path(repo_root, generated_documents_path(sub_scope_config))),
+        ("sub_scope_generated_root", resolve_scope_path(repo_root, generated_documents_path(sub_scope_config).parent)),
     ]
     public_output = public_documents_path(sub_scope_config)
     if public_output is not None:

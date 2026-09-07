@@ -161,7 +161,7 @@ class ContentRenderingMixin:
         clean_path = str(raw_path or "").strip().lstrip("/")
         if not clean_path or re.match(r"\A[a-z][a-z0-9+\-.]*://", clean_path, re.IGNORECASE):
             return ""
-        for media_type, media in self.config.media.types.items():
+        for media_type, media in self.media_owner.media.types.items():
             reference_prefix = media.reference_prefix.as_posix().strip("/")
             if clean_path == reference_prefix or clean_path.startswith(f"{reference_prefix}/"):
                 return media_type
@@ -190,7 +190,7 @@ class ContentRenderingMixin:
         if re.match(r"\A[a-z][a-z0-9+\-.]*://", relative_path, re.IGNORECASE):
             return relative_path
         clean_path = relative_path.lstrip("/")
-        for media in self.config.media.types.values():
+        for media in self.media_owner.media.types.values():
             reference_prefix = media.reference_prefix.as_posix().strip("/")
             if clean_path == reference_prefix:
                 return media.served_path_prefix
@@ -219,7 +219,7 @@ class ContentRenderingMixin:
         token = self.parse_html_media_token(raw_body)
         media_path = token["media_path"]
         identity = token["identity"]
-        media = managed_media_config(self.config, "html")
+        media = managed_media_config(self.media_owner, "html")
         expected_prefix = media.reference_prefix.as_posix().strip("/")
         if media_path != expected_prefix and not media_path.startswith(f"{expected_prefix}/"):
             raise RuntimeError(

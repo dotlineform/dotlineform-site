@@ -251,7 +251,7 @@ def test_default_paths_select_working_works(tmp_path: Path) -> None:
 
     paths = default_project_state_paths(tmp_path)
 
-    generated = tmp_path / "docs-viewer/scopes/analysis/working/generated/documents/sub-scopes/works"
+    generated = tmp_path / "docs-viewer/scopes/analysis/working/generated/sub-scopes/works/documents"
     assert paths.manage_manifest_path == generated / "manage-manifest.json"
     assert paths.subject_associations_path == generated / "subject-associations.json"
 

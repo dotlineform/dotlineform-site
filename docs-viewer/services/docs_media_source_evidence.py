@@ -10,7 +10,7 @@ from typing import Any
 
 from docs_artifact_locations import artifact_location_adapter
 from docs_media_storage import validate_media_filename
-from docs_scope_config import DocsScopeConfig, load_docs_scope_configs
+from docs_scope_config import DocsScopeConfig, DocsSubScopeConfig, load_docs_media_owner
 from studio.shared.python.projects_directories import (
     PROJECTS_ROOT_MARKER,
     normalize_projects_directory_marker,
@@ -46,7 +46,7 @@ def _canonical_source_path(value: Any, *, source_root: str) -> str:
     return normalized
 
 
-def _normalize_record(raw: Any, *, config: DocsScopeConfig, field: str) -> DocsMediaSourceEvidence:
+def _normalize_record(raw: Any, *, config: DocsScopeConfig | DocsSubScopeConfig, field: str) -> DocsMediaSourceEvidence:
     if not isinstance(raw, dict) or set(raw) != {
         "media_type",
         "identity",
@@ -70,19 +70,20 @@ def _normalize_record(raw: Any, *, config: DocsScopeConfig, field: str) -> DocsM
     )
 
 
-def _adapter(repo_root: Path, config: DocsScopeConfig):
+def _adapter(repo_root: Path, config: DocsScopeConfig | DocsSubScopeConfig):
     return artifact_location_adapter(repo_root, config.media.source_location)
 
 
 def load_media_source_evidence(
     repo_root: Path,
     scope: str,
+    *,
+    config: DocsScopeConfig | DocsSubScopeConfig | None = None,
 ) -> tuple[DocsMediaSourceEvidence, ...]:
     normalized_scope = str(scope or "").strip().lower()
-    configs = load_docs_scope_configs(repo_root, scope_ids=(normalized_scope,))
-    if normalized_scope not in configs:
-        raise ValueError(f"unknown Docs scope: {normalized_scope}")
-    config = configs[normalized_scope]
+    config = config if config is not None else load_docs_media_owner(repo_root, normalized_scope)
+    if config.scope_id != normalized_scope:
+        raise ValueError("media evidence collection does not match its scope")
     adapter = _adapter(repo_root, config)
     if adapter.stat(TABLE_IDENTITY) is None:
         return ()
@@ -119,12 +120,12 @@ def record_media_source_evidence(
     identity: str,
     source_root: str,
     source_path: str,
+    config: DocsScopeConfig | DocsSubScopeConfig | None = None,
 ) -> DocsMediaSourceEvidence:
     normalized_scope = str(scope or "").strip().lower()
-    configs = load_docs_scope_configs(repo_root, scope_ids=(normalized_scope,))
-    if normalized_scope not in configs:
-        raise ValueError(f"unknown Docs scope: {normalized_scope}")
-    config = configs[normalized_scope]
+    config = config if config is not None else load_docs_media_owner(repo_root, normalized_scope)
+    if config.scope_id != normalized_scope:
+        raise ValueError("media evidence collection does not match its scope")
     record = _normalize_record(
         {
             "media_type": media_type,
@@ -137,7 +138,7 @@ def record_media_source_evidence(
     )
     records = {
         (existing.media_type, existing.identity): existing
-        for existing in load_media_source_evidence(repo_root, normalized_scope)
+        for existing in load_media_source_evidence(repo_root, normalized_scope, config=config)
     }
     records[(record.media_type, record.identity)] = record
     ordered = tuple(records[key] for key in sorted(records))
@@ -159,12 +160,14 @@ def media_source_evidence_for(
     scope: str,
     media_type: str,
     identity: str,
+    *,
+    config: DocsScopeConfig | DocsSubScopeConfig | None = None,
 ) -> DocsMediaSourceEvidence | None:
     normalized_identity = validate_media_filename(identity)
     return next(
         (
             record
-            for record in load_media_source_evidence(repo_root, scope)
+            for record in load_media_source_evidence(repo_root, scope, config=config)
             if record.media_type == media_type and record.identity == normalized_identity
         ),
         None,

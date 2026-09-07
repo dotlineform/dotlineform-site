@@ -535,10 +535,8 @@ def scope_root(repo_root: Path, scope: str) -> Path:
     return resolve_scope_path(repo_root, DOCUMENT_SOURCE_ROOTS[scope])
 
 
-def scope_markdown_paths(root: Path, *, stage_parent: bool = False) -> list[Path]:
+def scope_markdown_paths(root: Path) -> list[Path]:
     paths = sorted(root.glob("**/*.md"))
-    if stage_parent:
-        paths = [path for path in paths if not path.is_relative_to(root / "sub-scopes")]
     nested_paths = [path for path in paths if path.parent != root]
     if nested_paths:
         nested = ", ".join(path.relative_to(root).as_posix() for path in nested_paths)
@@ -566,7 +564,7 @@ def load_document_collection_docs_for_config(
 
     report_contract: ReportSourceContract | None = None
     docs: list[ScopeDoc] = []
-    for path in scope_markdown_paths(root, stage_parent=bool(parent_config.stage and not sub_scope)):
+    for path in scope_markdown_paths(root):
         source_text = path.read_bytes().decode("utf-8")
         front_matter, body = parse_source_text(
             source_text,

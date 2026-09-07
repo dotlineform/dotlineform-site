@@ -114,13 +114,13 @@ def external_sub_scope_payload_path(repo_root: Path, request_path: str) -> Path:
         "subject-associations.json",
     }:
         scope, sub_scope, filename = parts
-        relative_path = Path("documents/sub-scopes") / sub_scope / filename
+        relative_path = Path("sub-scopes") / sub_scope / "documents" / filename
     elif len(parts) == 4 and parts[2] == "by-id" and parts[3].endswith(".json"):
         scope, sub_scope, _, filename = parts
         doc_id = filename.removesuffix(".json")
         if not is_immutable_doc_id(doc_id):
             raise ValueError("Published Docs sub-scope payload doc_id must use immutable identity")
-        relative_path = Path("documents/sub-scopes") / sub_scope / "by-id" / filename
+        relative_path = Path("sub-scopes") / sub_scope / "documents/by-id" / filename
     else:
         raise ValueError("Invalid published Docs sub-scope payload route")
 
@@ -144,7 +144,13 @@ def published_media_path(repo_root: Path, request_path: str) -> tuple[Path, str]
     parts = request_path.removeprefix(PUBLISHED_MEDIA_PREFIX).split("/")
     if len(parts) < 3:
         raise ValueError("Published Docs media route requires scope, type, and identity")
-    scope, media_type, *identity_parts = parts
+    scope = parts.pop(0)
+    sub_scope = ""
+    if parts[0] == "sub-scopes":
+        if len(parts) < 4:
+            raise ValueError("Published child media requires sub-scope, type, and identity")
+        _, sub_scope, *parts = parts
+    media_type, *identity_parts = parts
     identity = Path(*identity_parts)
     if (
         not scope
@@ -154,9 +160,14 @@ def published_media_path(repo_root: Path, request_path: str) -> tuple[Path, str]
     ):
         raise ValueError("Invalid published Docs media identity")
     config = load_docs_scope_configs(repo_root, scope_ids=(scope,)).get(scope)
-    if config is None or media_type not in config.media.types:
+    if config is None:
+        raise FileNotFoundError(f"Published Docs scope not found: {scope}")
+    collection = config
+    if sub_scope:
+        collection = next((child for child in config.sub_scopes if child.sub_scope == sub_scope), None)
+    if collection is None or media_type not in collection.media.types:
         raise FileNotFoundError(f"Published Docs media type not found: {scope}/{media_type}")
-    relative_path = Path("media") / media_type / identity
+    relative_path = collection.media.types[media_type].published_location.path.relative_to(config.scope_root.path / "published") / identity
     _manifest, root, files = validate_published_snapshot(repo_root, scope)
     if relative_path not in files:
         raise FileNotFoundError(

@@ -18,7 +18,10 @@ from docs_import_common import (
     slugify,
     source_format_for_path,
 )
-from docs_scope_config import DOCS_SCOPE_CONFIGS, load_docs_scope_configs, managed_media_config
+from docs_scope_config import (
+    DOCS_SCOPE_CONFIGS, DocsManagedMediaConfig, DocsScopeConfig, DocsSubScopeConfig,
+    load_docs_media_owner, load_docs_scope_configs, managed_media_config,
+)
 from docs_media_storage import (
     docs_media_file,
     docs_publish_succeeded,
@@ -366,6 +369,8 @@ def materialize_import_media(
     include_prompt_meta: bool,
     source_markdown: str = "",
     source_svg_markup: str = "",
+    stage: str = "",
+    sub_scope: str = "",
 ) -> list[dict[str, Any]]:
     del workspace_root
     plans: list[dict[str, Any]] = []
@@ -421,6 +426,8 @@ def materialize_import_media(
         plans=plans,
         inline_bytes=inline_bytes,
         scope=normalized_scope,
+        stage=stage,
+        sub_scope=sub_scope,
     )
 
 
@@ -432,10 +439,12 @@ def publish_import_media(
     plans: list[dict[str, Any]],
     inline_bytes: dict[int, bytes],
     scope: str,
+    stage: str = "",
+    sub_scope: str = "",
 ) -> list[dict[str, Any]]:
     """Prepare one import record's complete media set and publish before its source write."""
 
-    config = scope_configs_for(repo_root)[scope]
+    config = load_docs_media_owner(repo_root, scope, stage=stage or None, sub_scope=sub_scope or None)
     prepared: list[tuple[dict[str, Any], Path, Path, dict[str, Any]]] = []
     with tempfile.TemporaryDirectory(prefix="docs-media-publish-") as temp_dir:
         temp_root = Path(temp_dir).resolve()
@@ -548,11 +557,11 @@ def build_media_plan(
     title: str,
     *,
     repo_root: Path | None = None,
+    media_config: DocsManagedMediaConfig | None = None,
 ) -> dict[str, Any]:
-    normalized_scope = normalize_media_scope(scope, repo_root)
-    config = media_config_for(normalized_scope, media_class, repo_root)
-    link = media_link_for(normalized_scope, media_class, source_path.name, repo_root=repo_root)
-    media_path = media_path_for(normalized_scope, media_class, source_path.name, repo_root=repo_root)
+    config = media_config if media_config is not None else media_config_for(scope, media_class, repo_root)
+    media_path = f"{config.reference_prefix.as_posix()}/{source_path.name}"
+    link = f"[[media:{media_path}]]"
     return {
         "location_provider": config.source_location.provider,
         "artifact_identity": source_path.name,
@@ -564,3 +573,27 @@ def build_media_plan(
         "served_reference": f"{config.served_path_prefix}/{source_path.name}",
         "title": title,
     }
+
+
+def bind_import_media_owner(
+    preview: dict[str, Any], config: DocsScopeConfig | DocsSubScopeConfig,
+) -> None:
+    """Bind newly imported assets and their Markdown tokens to the exact collection."""
+    plans = list(preview.get("media_plans") or [])
+    if isinstance(preview.get("media_plan"), dict):
+        plans.append(preview["media_plan"])
+    markdown = str(preview.get("markdown_preview") or "")
+    for plan in plans:
+        old_token = plan.get("media_token")
+        updated = build_media_plan(
+            config.scope_id,
+            plan["media_class"],
+            Path(plan["source_path"]),
+            str(plan.get("title") or ""),
+            media_config=managed_media_config(config, plan["media_class"]),
+        )
+        if old_token:
+            markdown = markdown.replace(old_token, updated["media_token"])
+        plan.update(updated)
+    if plans:
+        preview["markdown_preview"] = markdown

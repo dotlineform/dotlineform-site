@@ -247,6 +247,14 @@ class DocumentTransferPlan:
         return self.target_collection.parent_config
 
     @property
+    def source_media_config(self):
+        return self.source_collection.document_config
+
+    @property
+    def target_media_config(self):
+        return self.target_collection.document_config
+
+    @property
     def ok(self) -> bool:
         return not self.blockers
 
@@ -896,19 +904,25 @@ def _retained_dependencies(
             parts = Path(reference).parts
             if len(parts) < 4 or parts[0] != "docs":
                 continue
-            if parts[1] != config.scope_id:
+            owner_parts = ("docs", config.scope_id)
+            if getattr(config, "sub_scope", ""):
+                owner_parts += ("sub-scopes", config.sub_scope)
+            if parts[:len(owner_parts)] != owner_parts:
                 references.setdefault(("other_scope_media", reference), set()).add(doc.doc_id)
                 continue
-            if parts[2] not in config.media.types:
+            role_index = len(owner_parts)
+            if len(parts) <= role_index + 1:
+                continue
+            if parts[role_index] not in config.media.types:
                 blockers.append(
                     TransferBlocker(
                         code="unsupported_source_media_role",
                         message=(
-                            f"source media role {parts[2]!r} is not configured "
+                            f"source media role {parts[role_index]!r} is not configured "
                             f"for scope {config.scope_id!r}"
                         ),
-                        media_type=parts[2],
-                        identity=Path(*parts[3:]).as_posix(),
+                        media_type=parts[role_index],
+                        identity=Path(*parts[role_index + 1:]).as_posix(),
                         document_ids=(doc.doc_id,),
                     )
                 )
@@ -1061,6 +1075,7 @@ def _media_source_evidence_plans(
         for record in media_source_evidence.load_media_source_evidence(
             repo_root,
             source_config.scope_id,
+            config=source_config,
         )
     }
     target_records = {
@@ -1068,6 +1083,7 @@ def _media_source_evidence_plans(
         for record in media_source_evidence.load_media_source_evidence(
             repo_root,
             target_config.scope_id,
+            config=target_config,
         )
     }
     plans: dict[tuple[str, str], TransferMediaSourceEvidencePlan] = {}
@@ -1914,7 +1930,7 @@ def plan_document_transfer(
             )
         )
     retained_dependencies = _retained_dependencies(
-        source_config,
+        source_collection.document_config,
         effective_docs,
         blockers,
     )
@@ -1930,8 +1946,8 @@ def plan_document_transfer(
     )
     media = _media_plans(
         repo_root,
-        source_config,
-        target_config,
+        source_collection.document_config,
+        target_collection.document_config,
         effective_docs,
         mode=mode,
         blockers=blockers,

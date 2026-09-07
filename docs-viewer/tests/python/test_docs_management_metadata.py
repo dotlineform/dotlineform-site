@@ -98,7 +98,7 @@ def test_detail_subject_assignment_and_projection_without_catalogue(
         )
         builder._parent_report_doc_id = ""
         builder.run(write=True)
-        output = repo_root / f"docs-viewer/scopes/{scope}/generated/documents/sub-scopes/{sub_scope}"
+        output = repo_root / f"docs-viewer/scopes/{scope}/generated/sub-scopes/{sub_scope}/documents"
         manifest = read_json(output / "manage-manifest.json")
         associations = read_json(output / "subject-associations.json")
         assert manifest["docs"][0]["authoring_subject"]["kind"] == "detail"
@@ -402,14 +402,14 @@ def test_projects_subject_assignment_read_save_remove_and_strict_rejection(
         linked_source = source_path.read_text(encoding="utf-8")
         linked_manifest = read_json(
             repo_root / (
-                "docs-viewer/scopes/dotlineform/generated/documents/"
-                "sub-scopes/projects/manage-manifest.json"
+                "docs-viewer/scopes/dotlineform/generated/sub-scopes/"
+                "projects/documents/manage-manifest.json"
             )
         )
         linked_associations = read_json(
             repo_root / (
-                "docs-viewer/scopes/dotlineform/generated/documents/"
-                "sub-scopes/projects/subject-associations.json"
+                "docs-viewer/scopes/dotlineform/generated/sub-scopes/"
+                "projects/documents/subject-associations.json"
             )
         )
 
@@ -460,14 +460,14 @@ def test_projects_subject_assignment_read_save_remove_and_strict_rejection(
         removed_source = source_path.read_text(encoding="utf-8")
         removed_manifest = read_json(
             repo_root / (
-                "docs-viewer/scopes/dotlineform/generated/documents/"
-                "sub-scopes/projects/manage-manifest.json"
+                "docs-viewer/scopes/dotlineform/generated/sub-scopes/"
+                "projects/documents/manage-manifest.json"
             )
         )
         removed_associations = read_json(
             repo_root / (
-                "docs-viewer/scopes/dotlineform/generated/documents/"
-                "sub-scopes/projects/subject-associations.json"
+                "docs-viewer/scopes/dotlineform/generated/sub-scopes/"
+                "projects/documents/subject-associations.json"
             )
         )
         work_status, work_result = (
@@ -490,14 +490,14 @@ def test_projects_subject_assignment_read_save_remove_and_strict_rejection(
         work_source = source_path.read_text(encoding="utf-8")
         work_manifest = read_json(
             repo_root / (
-                "docs-viewer/scopes/dotlineform/generated/documents/"
-                "sub-scopes/projects/manage-manifest.json"
+                "docs-viewer/scopes/dotlineform/generated/sub-scopes/"
+                "projects/documents/manage-manifest.json"
             )
         )
         work_associations = read_json(
             repo_root / (
-                "docs-viewer/scopes/dotlineform/generated/documents/"
-                "sub-scopes/projects/subject-associations.json"
+                "docs-viewer/scopes/dotlineform/generated/sub-scopes/"
+                "projects/documents/subject-associations.json"
             )
         )
 

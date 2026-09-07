@@ -207,7 +207,7 @@ def prepare_repo(root: Path) -> None:
         documents / f"by-id/{REPORT_ID}.json",
         {"doc_id": REPORT_ID, "title": "Report", "content_html": "<p>Report</p>"},
     )
-    sub_scope = documents / "sub-scopes/items"
+    sub_scope = documents.parent / "sub-scopes/items/documents"
     write_json(sub_scope / "manifest.json", {"docs": [{"doc_id": SUB_ID, "title": "Sub doc"}]})
     write_json(
         sub_scope / "manage-manifest.json",
@@ -220,7 +220,7 @@ def prepare_repo(root: Path) -> None:
     )
     write_json(
         sub_scope / f"by-id/{SUB_ID}.json",
-        {"doc_id": SUB_ID, "title": "Sub doc", "content_html": "<p>Sub</p>"},
+        {"doc_id": SUB_ID, "title": "Sub doc", "content_html": '<img src="/docs/media/example/sub-scopes/items/img/keep.png">'},
     )
     write_json(
         sub_scope / f"by-id/{HIDDEN_SUB_ID}.json",
@@ -258,7 +258,9 @@ def prepare_repo(root: Path) -> None:
         },
     )
     write_json(scope_root / "generated/search/index.json", search_payload())
+    write_json(scope_root / "generated/sub-scopes/items/search/index.json", search_payload())
     write_text(scope_root / "generated/media/img/keep.png", "kept image")
+    write_text(scope_root / "generated/sub-scopes/items/media/img/keep.png", "child image")
     write_text(scope_root / "generated/media/img/hidden.png", "hidden image")
     write_text(scope_root / "generated/media/files/keep.pdf", "kept file")
     write_json(scope_root / "published/documents/stale.json", {"stale": True})
@@ -290,9 +292,9 @@ def test_scope_publish_is_exact_rerunnable_and_does_not_touch_site(tmp_path: Pat
     assert (published / "publish-manifest.json").is_file()
     assert not (published / "documents/stale.json").exists()
     assert not (published / f"documents/by-id/{HIDDEN_ID}.json").exists()
-    assert not (published / f"documents/sub-scopes/items/by-id/{HIDDEN_SUB_ID}.json").exists()
+    assert not (published / f"sub-scopes/items/documents/by-id/{HIDDEN_SUB_ID}.json").exists()
     subjects = json.loads(
-        (published / "documents/sub-scopes/items/subject-associations.json").read_text(
+        (published / "sub-scopes/items/documents/subject-associations.json").read_text(
             encoding="utf-8"
         )
     )
@@ -310,6 +312,10 @@ def test_scope_publish_is_exact_rerunnable_and_does_not_touch_site(tmp_path: Pat
     ]
     assert not (published / "media/img/hidden.png").exists()
     assert (published / "media/img/keep.png").read_text(encoding="utf-8") == "kept image"
+    child_image, media_type = docs_published_reads.published_media_path(tmp_path, "/docs/published/media/example/sub-scopes/items/img/keep.png")
+    assert media_type == "img" and child_image.read_text() == "child image"
+    child_payload = json.loads((published / f"sub-scopes/items/documents/by-id/{SUB_ID}.json").read_text())
+    assert "/docs/published/media/example/sub-scopes/items/img/keep.png" in child_payload["content_html"]
     assert (published / "reports/intentionally-empty").is_dir()
     root_payload = json.loads(
         (published / f"documents/by-id/{ROOT_ID}.json").read_text(encoding="utf-8")
@@ -319,6 +325,8 @@ def test_scope_publish_is_exact_rerunnable_and_does_not_touch_site(tmp_path: Pat
     assert [row["id"] for row in search["docs"]] == [ROOT_ID, REPORT_ID, SUB_ID]
     assert search["terms"]["sub"]["title"] == [2]
     assert "hidden" not in search["terms"]
+    child_search = json.loads((published / "sub-scopes/items/search/index.json").read_text(encoding="utf-8"))
+    assert [row["id"] for row in child_search["docs"]] == [SUB_ID]
     assert site_marker.read_bytes() == before_site
     assert docs_scope_publish.preview_scope_publish(
         tmp_path,

@@ -247,7 +247,7 @@ def make_collection_repo(tmp_path: Path) -> Path:
             "# Tag A\n\n"
             "[Tag B](/docs/?scope=source&doc="
             f"{report_ids[('source', 'tags')]}&subdoc=tag-b)\n\n"
-            "[[media:docs/source/img/photo.png Photo]]\n"
+            "[[media:docs/source/sub-scopes/tags/img/photo.png Photo]]\n"
         ),
         extra_front_matter={"group": "subject", "work_id": "00123"},
     )
@@ -263,7 +263,7 @@ def make_collection_repo(tmp_path: Path) -> Path:
         title="Work A",
         extra_front_matter={"folder_path": "2026/work-a"},
     )
-    write_bytes(media_path(repo_root, "source", "img", "photo.png"), b"photo")
+    write_bytes(sub_scope_documents_root(repo_root, "source", "tags").parent / "media/img/photo.png", b"photo")
     return repo_root
 
 
@@ -876,8 +876,8 @@ def test_child_copy_receipt_freezes_collections_metadata_links_and_owners(
         "target": {"scope": "target"},
     }
     assert len(plan.media) == 1
-    assert plan.media[0].source_reference == "docs/source/img/photo.png"
-    assert plan.media[0].target_reference == "docs/target/img/photo.png"
+    assert plan.media[0].source_reference == "docs/source/sub-scopes/tags/img/photo.png"
+    assert plan.media[0].target_reference == "docs/target/sub-scopes/works/img/photo.png"
     assert plan.media[0].target_status == "create"
     assert receipt["target_rebuild_owner"] == {
         "scope": "target",

@@ -267,7 +267,7 @@ def rebuild_scope_outputs(
                     "--write",
                     "--diagnostics",
                     "--skip-browser-config",
-                    "--skip-media-builds",
+                    *(["--skip-media-builds"] if skip_media_builds else []),
                 ),
             )
             for sub_scope in scope_config.sub_scopes
@@ -338,10 +338,11 @@ def rebuild_sub_scope_outputs(
         "--write",
         "--diagnostics",
         "--skip-browser-config",
+        "--skip-media-builds",
     )
     load_docs_scope_stage(repo_root, scope, stage)
     if stage:
-        docs_command.extend(["--stage", stage, "--skip-media-builds"])
+        docs_command.extend(["--stage", stage])
     steps = []
     docs_diagnostics: Optional[Dict[str, Any]] = None
     step = run_rebuild_command(docs_command, repo_root)

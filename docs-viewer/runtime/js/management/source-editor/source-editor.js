@@ -367,6 +367,7 @@ function addStagedMedia(context, state, mediaKind) {
         adapter: state.sourceEditorAdapter,
         mediaKind: mediaKind,
         provider: provider,
+        target: Object.assign({}, state.target),
         root: context.root || document.body
       });
     })

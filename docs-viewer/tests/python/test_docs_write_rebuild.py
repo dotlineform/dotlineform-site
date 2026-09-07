@@ -181,6 +181,7 @@ def test_rebuild_sub_scope_outputs_runs_only_confined_docs_builder() -> None:
             "--write",
             "--diagnostics",
             "--skip-browser-config",
+            "--skip-media-builds",
         ],
     ]
     assert result["docs"] == {
@@ -252,6 +253,10 @@ def test_rebuild_scope_outputs_turns_affected_ids_into_whole_search_command() ->
     try:
         with tempfile.TemporaryDirectory() as temp_path:
             prepare_scope(Path(temp_path), "example")
+            config_path = Path(temp_path) / "docs-viewer/config/scopes/docs_scopes.json"
+            config_payload = json.loads(config_path.read_text())
+            next(row for row in config_payload["scopes"] if row["scope_id"] == "example")["sub_scopes"] = [{"sub_scope": "items", "title": "Items"}]
+            config_path.write_text(json.dumps(config_payload))
             result = write_rebuild.rebuild_scope_outputs(
                 Path(temp_path),
                 "example",
@@ -263,7 +268,8 @@ def test_rebuild_scope_outputs_turns_affected_ids_into_whole_search_command() ->
         write_rebuild.PYTHON_EXECUTABLE = original_python
 
     assert result["search"] == {"mode": "full", "doc_ids": ["child", "parent"]}
-    assert calls[1] == [
+    assert "--sub-scope" in calls[1] and "--skip-media-builds" not in calls[1]
+    assert calls[2] == [
         "/tmp/python",
         "docs-viewer/build/build_search.py",
         "--scope",

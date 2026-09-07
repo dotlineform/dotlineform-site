@@ -475,7 +475,7 @@ def test_external_sub_scope_payload_route_resolves_only_configured_json() -> Non
         scope = external_scope_config("private", external_root)
         scope["sub_scopes"] = [docs_sub_scope_record("private", "projects")]
         write_scope_config(repo_root, [scope])
-        output = external_root / "scopes/private/generated/documents/sub-scopes/projects"
+        output = external_root / "scopes/private/generated/sub-scopes/projects/documents"
         write_json(output / "manage-manifest.json", {"docs": [{"doc_id": PRIVATE_DOC_ID}]})
         write_json(
             output / "subject-associations.json",

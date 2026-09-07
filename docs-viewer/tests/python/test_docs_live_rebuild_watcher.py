@@ -73,6 +73,7 @@ def configured_concepts(
 
     tags = SimpleNamespace(
         sub_scope="tags",
+        media=SimpleNamespace(build_sources={}),
         title="Tags",
         public_title="Concepts",
         ui_statuses=("draft", "done"),
@@ -218,6 +219,7 @@ def test_watcher_reconciles_scope_and_sub_scope_state_from_config(tmp_path: Path
 
         tags = SimpleNamespace(
             sub_scope="tags",
+        media=SimpleNamespace(build_sources={}),
             source=SimpleNamespace(
                 location=SimpleNamespace(path=Path("external/scopes/notes/source/sub-scopes/tags")),
                 documents_path=Path("documents"),

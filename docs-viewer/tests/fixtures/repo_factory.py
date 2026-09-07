@@ -107,9 +107,9 @@ def docs_scope_record(
     public_projection = None
     if scope_type == "public":
         resolved_media_provider = media_provider or "r2"
-        media_root = media_location_root or f"docs/{scope_id}"
+        media_root = media_location_root or f"docs/{scope_id}/media"
         served_root = (media_served_root or (
-            f"https://media.example.test/docs/{scope_id}"
+            f"https://media.example.test/docs/{scope_id}/media"
             if resolved_media_provider == "r2"
             else f"/assets/data/docs/scopes/{scope_id}/media"
         )).rstrip("/")

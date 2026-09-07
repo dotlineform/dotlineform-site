@@ -50,6 +50,7 @@ class DocsDataBuilder(
     ) -> None:
         self.repo_root = repo_root.resolve()
         self.config = config
+        self.media_owner = getattr(self, "sub_scope_config", config)
         self.scope_id = config.scope_id
         self.report_source_contract = None
         self.source_dir = resolve_scope_path(self.repo_root, source_dir or document_source_path(config))
@@ -78,7 +79,7 @@ class DocsDataBuilder(
         media_snapshot = (
             None
             if self.skip_media_builds
-            else build_scope_media_snapshot(self.repo_root, self.config, write=write)
+            else build_scope_media_snapshot(self.repo_root, self.media_owner, write=write)
         )
         media_builds = [] if media_snapshot is None else media_snapshot["producer_builds"]
         target_doc_ids = self.only_doc_ids if self.only_doc_ids is not None else [doc.doc_id for doc in docs]

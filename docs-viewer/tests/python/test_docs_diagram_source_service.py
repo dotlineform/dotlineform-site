@@ -74,7 +74,7 @@ def _configure_mermaid_fixture(root: Path) -> None:
         "title: Detail\n"
         "---\n"
         "# Detail\n\n"
-        "![Architecture]([[media:docs/example/svg/architecture.svg]])\n",
+        "![Architecture]([[media:docs/example/sub-scopes/tags/svg/architecture.svg]])\n",
         encoding="utf-8",
     )
     source = managed_media_path(root, "example", "source", "build-source", "mermaid", "architecture.mmd")
@@ -83,6 +83,11 @@ def _configure_mermaid_fixture(root: Path) -> None:
     generated = managed_media_path(root, "example", "generated", "svg", "architecture.svg")
     generated.parent.mkdir(parents=True)
     generated.write_text("<svg xmlns='http://www.w3.org/2000/svg'><rect width='1'/></svg>", encoding="utf-8")
+
+    for role, source_file, target_rel in (("source", source, "build-source/mermaid/architecture.mmd"), ("generated", generated, "svg/architecture.svg")):
+        child_file = root / "docs-viewer/scopes/example" / role / "sub-scopes/tags/media" / target_rel
+        child_file.parent.mkdir(parents=True, exist_ok=True)
+        child_file.write_bytes(source_file.read_bytes())
 
 
 def test_manage_diagram_sources_lists_only_verified_same_basename_pairs() -> None:
@@ -167,7 +172,7 @@ def test_manage_diagram_sources_use_explicit_sub_scope_target() -> None:
                 "scope": "example",
                 "sub_scope": "tags",
                 "doc_id": "detail",
-                "media_identity": "docs/example/svg/architecture.svg",
+                "media_identity": "docs/example/sub-scopes/tags/svg/architecture.svg",
                 "editor": "vscode",
             },
             dry_run=True,

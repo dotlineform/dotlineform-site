@@ -1208,8 +1208,8 @@ def test_apply_child_to_child_copy_uses_exact_transform_rebuild_and_result(
         f"/docs/?scope=target&doc={target_report_id}&subdoc={target_ids[1]}"
         in alpha_body
     )
-    assert "docs/target/img/photo.png" in alpha_body
-    assert media_path(repo_root, "target", "img", "photo.png").read_bytes() == b"photo"
+    assert "docs/target/sub-scopes/works/img/photo.png" in alpha_body
+    assert (sub_scope_documents_root(repo_root, "target", "works").parent / "media/img/photo.png").read_bytes() == b"photo"
     assert rebuild_calls == [
         {
             "scope": "target",
@@ -1546,7 +1546,7 @@ def test_child_copy_revalidates_complete_collection_receipt_before_writes(
             encoding="utf-8",
         )
     else:
-        write_bytes(media_path(repo_root, "source", "img", "photo.png"), b"changed")
+        write_bytes(sub_scope_documents_root(repo_root, "source", "tags").parent / "media/img/photo.png", b"changed")
 
     with pytest.raises(
         transfer_apply.DocumentTransferPlanStaleError,
@@ -1563,7 +1563,7 @@ def test_child_copy_revalidates_complete_collection_receipt_before_writes(
     assert not any(
         sub_scope_documents_root(repo_root, "target", "works").glob("*.md")
     )
-    assert not media_path(repo_root, "target", "img", "photo.png").exists()
+    assert not (sub_scope_documents_root(repo_root, "target", "works").parent / "media/img/photo.png").exists()
 
 
 def test_copy_revalidates_registered_build_source_before_writes(

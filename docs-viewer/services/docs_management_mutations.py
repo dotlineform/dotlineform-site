@@ -252,7 +252,7 @@ def plan_create(repo_root: Path, body: Dict[str, Any]) -> ManagementMutationPlan
         collection.document_config,
     )
     docs: list[source_model.ScopeDoc] = []
-    for candidate in source_model.scope_markdown_paths(target_root, stage_parent=bool(collection.stage and not sub_scope)):
+    for candidate in source_model.scope_markdown_paths(target_root):
         confined = confined_source_path(target_root, candidate)
         document = source_doc_from_path(
             path=confined,

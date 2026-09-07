@@ -347,7 +347,7 @@ def test_docs_scope_config_accepts_nested_sub_scopes() -> None:
         "docs-viewer/scopes/research/source/sub-scopes/tags/documents"
     )
     assert docs_scope_config.published_documents_path(sub_scope).as_posix() == (
-        "docs-viewer/scopes/research/published/documents/sub-scopes/tags"
+        "docs-viewer/scopes/research/published/sub-scopes/tags/documents"
     )
     assert docs_scope_config.public_documents_path(sub_scope).as_posix() == "site/assets/data/docs/scopes/research/tags"
 

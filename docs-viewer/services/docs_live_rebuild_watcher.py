@@ -114,8 +114,6 @@ def snapshot_scope(root: Path, scope: str, *, stage: str = "") -> Dict[str, tupl
 
     snapshot: Dict[str, tuple[int, int]] = {}
     for path in sorted(root.glob("**/*.md")):
-        if stage and path.is_relative_to(root / "sub-scopes"):
-            continue
         try:
             stat = path.stat()
         except FileNotFoundError:
@@ -211,18 +209,22 @@ def desired_watch_state_specs(repo_root: Path, configs: dict[str, Any]) -> dict[
                 "config": config,
                 "watch_kind": "documents",
             }
-            for build_type, build in sorted(config.media.build_sources.items()):
-                label = f"{owner}/media/{build_type}"
-                specs[label] = {
-                    "scope": scope,
-                    "stage": stage,
-                    "sub_scope": "",
-                    "label": label,
-                    "root": filesystem_location_root(repo_root, build.location),
-                    "config": config,
-                    "watch_kind": "build_media",
-                    "build_type": build_type,
-                }
+            for collection in (config, *config.sub_scopes):
+                child = getattr(collection, "sub_scope", "")
+                media_owner = f"{owner}/{child}" if child else owner
+                for build_type, build in sorted(collection.media.build_sources.items()):
+                    label = f"{media_owner}/media/{build_type}"
+                    specs[label] = {
+                        "scope": scope,
+                        "stage": stage,
+                        "sub_scope": child,
+                        "label": label,
+                        "root": filesystem_location_root(repo_root, build.location),
+                        "config": config,
+                        "media_config": collection,
+                        "watch_kind": "build_media",
+                        "build_type": build_type,
+                    }
             for sub_scope in config.sub_scopes:
                 label = f"{owner}/{sub_scope.sub_scope}"
                 specs[label] = {
@@ -971,8 +973,9 @@ def rebuild_build_media(
         return False
 
     config = state["config"]
-    build = config.media.build_sources[build_type]
-    generated_media = config.media.types[build.publishes_to]
+    media_config = state["media_config"]
+    build = media_config.media.build_sources[build_type]
+    generated_media = media_config.media.types[build.publishes_to]
     requested_outputs = tuple(
         Path(filename).with_suffix(".svg").as_posix()
         for filename in ordered_unique(changed_files)

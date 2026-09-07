@@ -326,7 +326,7 @@ def resolve_managed_document_target(
                 scope=collection.scope,
                 report_contract=report_contract,
             )
-            for candidate in source_model.scope_markdown_paths(collection.source_root, stage_parent=bool(collection.stage))
+            for candidate in source_model.scope_markdown_paths(collection.source_root)
         ]
         for candidate in parent_documents:
             source_model.validate_publishable_front_matter(

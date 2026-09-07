@@ -527,7 +527,7 @@ def test_add_media_publication_failure_returns_no_insertable_payload(
             ],
         )
 
-        with pytest.raises(RuntimeError, match="publication did not complete"):
+        with pytest.raises(RuntimeError, match="insertion did not complete"):
             staged_media.apply_staged_media(root, {
                 "scope": "example",
                 "media_kind": "image",
