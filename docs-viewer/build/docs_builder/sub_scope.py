@@ -22,6 +22,7 @@ from docs_subscope_customisations import (
     project_sub_scope_customisation_manifest,
     sub_scope_customisation_authoring_subject_fields,
     sub_scope_customisation_document_groups,
+    sub_scope_customisation_identity_kind,
     validate_sub_scope_customisation_document,
 )
 from docs_document_subjects import (
@@ -30,7 +31,11 @@ from docs_document_subjects import (
     normalize_authoring_subject,
     project_subject_associations,
     subject_projection_generation,
-    validate_unique_moment_subjects,
+)
+from docs_document_identities import (
+    IDENTITY_FIELDS,
+    normalize_document_identity,
+    validate_unique_document_identities,
 )
 from docs_concept_documents import (
     load_current_public_concept_locations,
@@ -277,6 +282,13 @@ class SubScopeDocsBuilder(DocsDataBuilder):
         docs = self.load_docs()
         self.validate_canonical_doc_ids(docs)
         self.validate_docs(docs)
+        identity_kind = sub_scope_customisation_identity_kind(self.sub_scope_config.sub_scope_customisation)
+        if identity_kind:
+            identity_field = IDENTITY_FIELDS[identity_kind]
+            validate_unique_document_identities(
+                {doc.doc_id: normalize_document_identity(doc.front_matter, identity_field) for doc in docs},
+                identity_field,
+            )
         media_snapshot = None if self.skip_media_builds else build_scope_media_snapshot(self.repo_root, self.media_owner, write=write)
         ordered_docs = sorted(docs, key=self.doc_sort_key)
         semantic_tokens_by_doc: dict[str, list[dict[str, Any]]] = {}
@@ -293,7 +305,6 @@ class SubScopeDocsBuilder(DocsDataBuilder):
         subject_generation = ""
         subject_associations_payload: dict[str, Any] | None = None
         if subjects_by_doc_id is not None:
-            validate_unique_moment_subjects(subjects_by_doc_id)
             subject_generation = subject_projection_generation(
                 scope=self.scope_id,
                 sub_scope=self.sub_scope_id,

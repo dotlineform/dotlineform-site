@@ -51,7 +51,7 @@ def stage_repo(tmp_path: Path) -> Path:
     return tmp_path
 
 
-@pytest.mark.parametrize("field,key", [("work_id", "00293"), ("moment_id", "001")])
+@pytest.mark.parametrize("field,key", [("work_id", "00293")])
 def test_subject_assignment_preserves_exact_working_stage(stage_repo: Path, field: str, key: str) -> None:
     config_path = stage_repo / scopes.CONFIG_REL_PATH
     config = json.loads(config_path.read_text())
@@ -70,7 +70,7 @@ def test_subject_assignment_preserves_exact_working_stage(stage_repo: Path, fiel
     request = {
         **target, "source_revision": metadata["source_revision"],
         "field_group": "authoring_subject", "confirm": True,
-        "fields": {"folder_path": "", "work_id": "", "series_id": "", "detail_uid": "", "moment_id": "", field: key},
+        "fields": {"folder_path": "", "work_id": "", "series_id": "", "detail_uid": "", field: key},
     }
     plan = plan_assign_field_group(stage_repo, request)
     assert plan.stage == "working"

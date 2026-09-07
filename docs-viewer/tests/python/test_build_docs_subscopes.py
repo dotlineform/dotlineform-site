@@ -728,7 +728,7 @@ last_updated: 2026-06-21
 parent_id: ""
 ui_status: draft
 group: subject
-concept_id: absence
+concept_id: "001"
 ---
 # Detail
 
@@ -771,7 +771,7 @@ Related body.
         related_source_path.write_text(
             related_source_path.read_text(encoding="utf-8").replace(
                 'concept_id: ""',
-                "concept_id: presence",
+                'concept_id: "002"',
             ),
             encoding="utf-8",
         )
@@ -823,7 +823,7 @@ Related body.
                 "title": "Detail",
                 "ui_status": "draft",
                 "last_updated": "2026-06-21",
-                "customisation": {"group": "subject", "concept_id": "absence"},
+                "customisation": {"group": "subject", "concept_id": "001"},
             },
             {
                 "doc_id": RELATED_DOC_ID,
@@ -849,7 +849,7 @@ Related body.
         document["target"]["doc_id"]
         for document in concept_associations["associations"][0]["documents"]
     ] == [DETAIL_DOC_ID]
-    assert concept_associations["associations"][0]["concept_id"] == "absence"
+    assert concept_associations["associations"][0]["concept_id"] == "001"
     assert all(
         [location["access"] for location in document["locations"]] == ["manage"]
         for document in concept_associations["associations"][0]["documents"]
@@ -870,8 +870,8 @@ Related body.
         )
         for association in reassigned_associations["associations"]
     ] == [
-        ("absence", [DETAIL_DOC_ID]),
-        ("presence", [RELATED_DOC_ID]),
+        ("001", [DETAIL_DOC_ID]),
+        ("002", [RELATED_DOC_ID]),
     ]
     assert [
         (
@@ -879,7 +879,7 @@ Related body.
             [document["target"]["doc_id"] for document in association["documents"]],
         )
         for association in deleted_associations["associations"]
-    ] == [("absence", [DETAIL_DOC_ID])]
+    ] == [("001", [DETAIL_DOC_ID])]
     assert not (root / "docs-viewer/scopes/studio/generated/sub-scopes/tags/documents/by-id/stale.json").exists()
     assert not (root / "docs-viewer/scopes/studio/generated/sub-scopes/tags/documents/index-tree.json").exists()
     assert not (root / "docs-viewer/scopes/studio/generated/sub-scopes/tags/documents/recent.json").exists()
@@ -1182,7 +1182,8 @@ group: subject
     assert browser_config["scopes"][0]["sub_scopes"][0]["sub_scope_customisation"] == {
         "id": "concepts",
         "capabilities": {
-            "assignable_field_groups": ["concept_fields"],
+            "assignable_field_groups": ["concept_group"],
+            "identity_kind": "concept",
         },
     }
     assert "sub_scope_customisation" not in public_browser_config["scopes"][0]["sub_scopes"][0]

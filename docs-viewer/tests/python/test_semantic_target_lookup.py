@@ -249,7 +249,7 @@ def test_concept_lookup_uses_document_defined_concepts_without_studio(tmp_path) 
     targets = [row for row in payload["targets"] if row["family"] == "concept"]
     assert len(targets) == 1
     assert targets[0]["target_type"] == "concept"
-    assert targets[0]["target_id"] == "order"
+    assert targets[0]["target_id"] == "001"
     assert targets[0]["title"] == "Order"
     assert targets[0]["href"].endswith(f"&subdoc={CONCEPT_DOC_ID}")
     assert "stage=working" in targets[0]["href"]
@@ -271,7 +271,7 @@ def test_existing_concept_token_renders_the_exact_concept_in_each_stage(tmp_path
     for stage in ("working", "pre-publish"):
         config = load_docs_scope_stage(tmp_path, "analysis", stage)
         (tmp_path / document_source_path(config) / f"{doc_id}.md").write_text(
-            f"---\ndoc_id: {doc_id}\ntitle: Beauty\n---\nBeauty is [[concept:concept:order|order]].\n",
+            f"---\ndoc_id: {doc_id}\ntitle: Beauty\n---\nBeauty is [[concept:concept:001|order]].\n",
         )
         builder = DocsDataBuilder(repo_root=tmp_path, config=config, skip_media_builds=True)
         docs = builder.load_docs()
@@ -279,6 +279,6 @@ def test_existing_concept_token_renders_the_exact_concept_in_each_stage(tmp_path
         payload = builder.item_entry(document, docs, {})
         content = html.unescape(payload["content_html"])
         assert 'data-semantic-token-family="concept"' in content
-        assert 'data-semantic-token-target-id="order"' in content
+        assert 'data-semantic-token-target-id="001"' in content
         assert f"stage={stage}" in content
         assert f"subdoc={CONCEPT_DOC_ID}" in content

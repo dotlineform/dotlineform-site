@@ -110,7 +110,7 @@ def prepare_repo(root: Path) -> None:
                 {
                     "family": "concept",
                     "target_type": "concept",
-                    "target_id": "nerve",
+                    "target_id": "001",
                     "title": "nerve",
                     "href": CONCEPT_HREF,
                     "meta": ["subject", "Nerve"],
@@ -118,7 +118,7 @@ def prepare_repo(root: Path) -> None:
                 {
                     "family": "concept",
                     "target_type": "concept",
-                    "target_id": "unavailable",
+                    "target_id": "002",
                     "title": "unavailable",
                     "href": "",
                     "meta": ["theme", "Unavailable"],
@@ -133,10 +133,10 @@ def prepare_repo(root: Path) -> None:
             FIRST_DOC_ID,
             "First",
             (
-                "Known [[concept:concept:nerve|Nerve]] and "
+                "Known [[concept:concept:001|Nerve]] and "
                 "[[catalogue:work:00638|three signs]].\n\n"
-                "Unknown [[concept:concept:missing|Missing]] and "
-                "unavailable [[concept:concept:unavailable|Unavailable]]."
+                "Unknown [[concept:concept:999|Missing]] and "
+                "unavailable [[concept:concept:002|Unavailable]]."
             ),
         ),
     )
@@ -145,7 +145,7 @@ def prepare_repo(root: Path) -> None:
         source_text(
             SECOND_DOC_ID,
             "Second",
-            "Another [[concept:concept:nerve|Nerve again]].",
+            "Another [[concept:concept:001|Nerve again]].",
         ),
     )
 
@@ -184,9 +184,10 @@ def test_concept_registry_defines_separate_authoring_and_info_contributions() ->
         {
             "key": "concept",
             "id_policy": {
-                "normalizer": "slug",
-                "input_pattern": "^[a-z0-9][a-z0-9-]*$",
-                "canonical_pattern": "^[a-z0-9][a-z0-9-]*$",
+                "normalizer": "digits_left_pad",
+                "width": 3,
+                "input_pattern": "^[0-9]{1,3}$",
+                "canonical_pattern": "^[0-9]{3}$",
             },
             "lookup_adapter": "concept-document-target-lookup",
             "lookup_fields": ["title", "href", "meta"],
@@ -200,7 +201,7 @@ def test_concept_registry_defines_separate_authoring_and_info_contributions() ->
 def test_concept_parser_is_tolerant_context_aware_and_exact() -> None:
     registry = load_semantic_token_registry(REPO_ROOT)
     assert registry is not None
-    valid = "[[concept:concept:nerve|Nerve \\| signal]]"
+    valid = "[[concept:concept:001|Nerve \\| signal]]"
     unsupported = "[[future:item:alpha|Future]]"
     source = (
         f"{valid} {unsupported}\n"
@@ -215,7 +216,7 @@ def test_concept_parser_is_tolerant_context_aware_and_exact() -> None:
 
     assert [token.raw for token in tokens] == [valid, unsupported]
     assert tokens[0].family == tokens[0].target_type == "concept"
-    assert tokens[0].target_id == "nerve"
+    assert tokens[0].target_id == "001"
     assert tokens[0].title == "Nerve | signal"
     assert tokens[0].supported is True
     assert tokens[1].supported is False
@@ -229,7 +230,7 @@ def test_concept_parser_is_tolerant_context_aware_and_exact() -> None:
     assert serialize_semantic_token(
         family="concept",
         target_type="concept",
-        target_id="nerve",
+        target_id="001",
         title="Nerve | signal",
     ) == valid
 
@@ -253,12 +254,12 @@ def test_concept_builder_renders_one_link_and_records_only_resolved_usage() -> N
         '<a href="/analysis/?doc=d-20260624-213316-478639&amp;subdoc='
         'd-20260727-225608-63967a" data-semantic-token-family="concept" '
         'data-semantic-token-target-type="concept" '
-        'data-semantic-token-target-id="nerve" target="_blank" '
+        'data-semantic-token-target-id="001" target="_blank" '
         'rel="noopener noreferrer">Nerve</a>'
     ) in content
     assert '<a href="/works/?work=00638" data-semantic-token-family="catalogue"' in content
-    assert "[[concept:concept:missing|Missing]]" in content
-    assert "[[concept:concept:unavailable|Unavailable]]" in content
+    assert "[[concept:concept:999|Missing]]" in content
+    assert "[[concept:concept:002|Unavailable]]" in content
     resolved = usage["occurrences"]
     assert usage["schema_version"] == "docs_semantic_token_usage_index_v1"
     assert len(resolved) == 3
@@ -270,12 +271,12 @@ def test_concept_builder_renders_one_link_and_records_only_resolved_usage() -> N
     assert first_concept == {
         "source_scope": "analysis",
         "source_doc_id": FIRST_DOC_ID,
-        "source_range": {"start": 6, "end": 37},
-        "raw": "[[concept:concept:nerve|Nerve]]",
+        "source_range": {"start": 6, "end": 35},
+        "raw": "[[concept:concept:001|Nerve]]",
         "title": "Nerve",
         "family": "concept",
         "target_type": "concept",
-        "target_id": "nerve",
+        "target_id": "001",
         "href": CONCEPT_HREF,
     }
     assert result["diagnostics"]["warning_count"] == 0
@@ -299,8 +300,8 @@ def test_targeted_build_preserves_untouched_concept_usage_and_payload() -> None:
         write_text(
             first_source,
             first_source.read_text(encoding="utf-8").replace(
-                "[[concept:concept:nerve|Nerve]]",
-                "[[concept:concept:nerve|Neural feeling]]",
+                "[[concept:concept:001|Nerve]]",
+                "[[concept:concept:001|Neural feeling]]",
             ),
         )
 

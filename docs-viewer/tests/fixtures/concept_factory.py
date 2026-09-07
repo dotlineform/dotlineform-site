@@ -11,7 +11,7 @@ HOST_ID = "d-20260811-120000-000001"
 CONCEPT_DOC_ID = "d-20260811-120000-100001"
 
 
-def write_concept_sources(root: Path, *, concept_id: str = "order", extra_scopes: list | None = None) -> None:
+def write_concept_sources(root: Path, *, concept_id: str = "001", extra_scopes: list | None = None) -> None:
     """Create matching identities in both stages with independently readable source roots."""
 
     analysis = docs_scope_record("analysis", scope_type="public", default_doc_id=HOST_ID, viewer_base_url="/analysis/", include_scope_param=False)
@@ -34,6 +34,6 @@ def write_concept_sources(root: Path, *, concept_id: str = "order", extra_scopes
         source = root / document_source_path(parent.sub_scopes[0])
         source.mkdir(parents=True, exist_ok=True)
         (source / f"{CONCEPT_DOC_ID}.md").write_text(
-            f"---\ndoc_id: {CONCEPT_DOC_ID}\ntitle: Order\nconcept_id: {concept_id}\n"
+            f'---\ndoc_id: {CONCEPT_DOC_ID}\ntitle: Order\nconcept_id: "{concept_id}"\n'
             "group: theme\n---\n# Order\n",
         )

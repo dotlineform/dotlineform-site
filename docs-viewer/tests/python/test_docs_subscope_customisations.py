@@ -63,8 +63,8 @@ def test_current_customisations_declare_explicit_aspects() -> None:
     )
     assert analysis.assignable_field_groups == (
         customisations.DocsSubScopeAssignableFieldGroup(
-            group_id="concept_fields",
-            field_names=("group", "concept_id"),
+            group_id="concept_group",
+            field_names=("group",),
         ),
     )
     assert analysis.transfer is not None
@@ -75,12 +75,12 @@ def test_current_customisations_declare_explicit_aspects() -> None:
     assert works.assignable_field_groups == (
         customisations.DocsSubScopeAssignableFieldGroup(
             group_id="authoring_subject",
-            field_names=("folder_path", "work_id", "series_id", "detail_uid", "moment_id"),
+            field_names=("folder_path", "work_id", "series_id", "detail_uid"),
         ),
     )
     assert works.authoring_subject == (
         customisations.DocsSubScopeAuthoringSubjectAspect(
-            field_names=("work_id", "series_id", "detail_uid", "moment_id"),
+            field_names=("work_id", "series_id", "detail_uid"),
         )
     )
     assert works.transfer is None
@@ -105,7 +105,7 @@ def test_current_customisations_declare_explicit_aspects() -> None:
     assert projects.assignable_field_groups == (
         customisations.DocsSubScopeAssignableFieldGroup(
             group_id="authoring_subject",
-            field_names=("folder_path", "work_id", "series_id", "detail_uid", "moment_id"),
+            field_names=("folder_path", "work_id", "series_id", "detail_uid"),
         ),
     )
     assert projects.transfer is None
@@ -130,7 +130,7 @@ def test_current_customisations_declare_explicit_aspects() -> None:
     assert processing.assignable_field_groups == (
         customisations.DocsSubScopeAssignableFieldGroup(
             group_id="authoring_subject",
-            field_names=("folder_path", "work_id", "series_id", "detail_uid", "moment_id"),
+            field_names=("folder_path", "work_id", "series_id", "detail_uid"),
         ),
     )
     assert processing.transfer is None
@@ -188,7 +188,8 @@ def test_current_customisations_declare_explicit_aspects() -> None:
     ) == {
         "id": "concepts",
         "capabilities": {
-            "assignable_field_groups": ["concept_fields"],
+            "assignable_field_groups": ["concept_group"],
+            "identity_kind": "concept",
         },
     }
     assert customisations.browser_sub_scope_customisation_payload(
@@ -207,46 +208,46 @@ def test_current_customisations_declare_explicit_aspects() -> None:
     ) == {"group": "", "concept_id": ""}
     assert customisations.normalize_sub_scope_customisation_metadata_update(
         analysis_config,
-        {"group": "domain", "concept_id": "absence"},
+        {"group": "domain"},
         provided=True,
         repo_root=Path("."),
-        front_matter={"group": "theme", "concept_id": "presence"},
+        front_matter={"group": "theme", "concept_id": "002"},
         doc_id="tag-doc",
     ) == {
-        "front_matter_updates": {"group": "domain", "concept_id": "absence"},
-        "record": {"group": "domain", "concept_id": "absence"},
-        "changes": {"group_changed": True, "concept_id_changed": True},
+        "front_matter_updates": {"group": "domain"},
+        "record": {"group": "domain"},
+        "changes": {"group_changed": True},
     }
     assert customisations.normalize_sub_scope_customisation_metadata_update(
         analysis_config,
-        {"group": "", "concept_id": ""},
+        {"group": ""},
         provided=True,
         repo_root=Path("."),
         front_matter={"group": "theme"},
         doc_id="tag-doc",
-    )["front_matter_updates"] == {"group": None, "concept_id": None}
+    )["front_matter_updates"] == {"group": None}
     assert customisations.normalize_sub_scope_customisation_metadata_update(
         analysis_config,
-        {"group": "domain", "concept_id": True},
+        {"group": "domain"},
         provided=True,
         repo_root=Path("."),
         front_matter={"group": "theme", "concept_id": True},
         doc_id="malformed-tag-doc",
     ) == {
-        "front_matter_updates": {"group": "domain", "concept_id": True},
-        "record": {"group": "domain", "concept_id": True},
-        "changes": {"group_changed": True, "concept_id_changed": False},
+        "front_matter_updates": {"group": "domain"},
+        "record": {"group": "domain"},
+        "changes": {"group_changed": True},
     }
     with pytest.raises(ValueError, match="one exact configured group"):
         customisations.normalize_sub_scope_customisation_metadata_update(
             analysis_config,
-            {"group": " Theme ", "concept_id": "absence"},
+            {"group": " Theme "},
             provided=True,
             repo_root=Path("."),
             front_matter={"group": "theme"},
             doc_id="tag-doc",
         )
-    with pytest.raises(ValueError, match="exact canonical concept id"):
+    with pytest.raises(ValueError, match="exactly group"):
         customisations.normalize_sub_scope_customisation_metadata_update(
             analysis_config,
             {"group": "theme", "concept_id": "bad_slug"},
@@ -257,9 +258,9 @@ def test_current_customisations_declare_explicit_aspects() -> None:
         )
     assert customisations.normalize_sub_scope_customisation_import_front_matter(
         analysis_config,
-        {"group": "theme", "concept_id": "absence"},
+        {"group": "theme", "concept_id": "001"},
         doc_id="imported-tag-doc",
-    ) == {"group": "theme", "concept_id": "absence"}
+    ) == {"group": "theme", "concept_id": "001"}
     with pytest.raises(ValueError, match="not configured for the target"):
         customisations.sub_scope_customisation_metadata_record(
             analysis_config,
@@ -286,7 +287,7 @@ def test_current_customisations_declare_explicit_aspects() -> None:
     ) == works.assignable_field_groups
     assert customisations.sub_scope_customisation_authoring_subject_fields(
         works_config
-    ) == ("work_id", "series_id", "detail_uid", "moment_id")
+    ) == ("work_id", "series_id", "detail_uid")
     assert customisations.sub_scope_customisation_document_lineage_contracts(
         works_config
     ) == works.document_lineages

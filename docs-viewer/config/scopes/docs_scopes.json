@@ -311,7 +311,7 @@
               "title": "Moments",
               "public_projection": null,
               "sub_scope_customisation": {
-                "id": "working_works",
+                "id": "moments",
                 "settings": {}
               },
               "lifecycle": {

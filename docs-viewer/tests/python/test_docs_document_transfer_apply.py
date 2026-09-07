@@ -410,7 +410,7 @@ def test_lineage_new_and_replace_commit_exact_rows_and_preserve_editorial_gate(
     )
 
 
-@pytest.mark.parametrize("subject_field,subject_key", [("detail_uid", "00008-001"), ("moment_id", "001")])
+@pytest.mark.parametrize("subject_field,subject_key", [("detail_uid", "00008-001")])
 def test_document_subject_survives_copy_to_analysis(tmp_path: Path, subject_field: str, subject_key: str) -> None:
     repo_root = make_lineage_repo(tmp_path)
     source_id = "d-20260801-100000-aaaaaa"

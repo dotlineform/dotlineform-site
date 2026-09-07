@@ -108,8 +108,9 @@
                 "id": "concepts",
                 "capabilities": {
                   "assignable_field_groups": [
-                    "concept_fields"
-                  ]
+                    "concept_group"
+                  ],
+                  "identity_kind": "concept"
                 }
               }
             },
@@ -133,11 +134,9 @@
               "manifest_url": "/docs/generated/external/analysis/working/moments/manage-manifest.json",
               "by_id_url_base": "/docs/generated/external/analysis/working/moments/by-id",
               "sub_scope_customisation": {
-                "id": "working_works",
+                "id": "moments",
                 "capabilities": {
-                  "assignable_field_groups": [
-                    "authoring_subject"
-                  ]
+                  "identity_kind": "moment"
                 }
               }
             }
@@ -190,8 +189,9 @@
                 "id": "concepts",
                 "capabilities": {
                   "assignable_field_groups": [
-                    "concept_fields"
-                  ]
+                    "concept_group"
+                  ],
+                  "identity_kind": "concept"
                 }
               }
             },

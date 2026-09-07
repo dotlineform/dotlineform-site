@@ -116,9 +116,10 @@ def concept_family_definition() -> dict[str, object]:
                 "key": "concept",
                 "label": "Concept",
                 "id_policy": {
-                    "normalizer": "slug",
-                    "input_pattern": "^[a-z0-9][a-z0-9-]*$",
-                    "canonical_pattern": "^[a-z0-9][a-z0-9-]*$",
+                    "normalizer": "digits_left_pad",
+                    "width": 3,
+                    "input_pattern": "^[0-9]{1,3}$",
+                    "canonical_pattern": "^[0-9]{3}$",
                 },
                 "lookup_adapter": "concept-document-target-lookup",
                 "lookup_fields": ["title", "href", "meta", "aliases"],
@@ -174,11 +175,11 @@ def write_semantic_token_contract(repo_root: Path, *, include_concept: bool = Fa
                 "aliases": [],
             }
             for concept_id, doc_id, title in (
-                ("resolved", "d-20260811-120000-100001", "Resolved document"),
-                ("stale", "d-20260811-120000-400001", "Fallback document"),
-                ("unavailable", "d-20260811-120000-500001", "Stale unavailable row"),
-                ("unknown", "d-20260811-120000-600001", "Stale unknown row"),
-                ("zero", "d-20260811-120000-700001", "Stale zero row"),
+                ("001", "d-20260811-120000-100001", "Resolved document"),
+                ("002", "d-20260811-120000-400001", "Fallback document"),
+                ("003", "d-20260811-120000-500001", "Stale unavailable row"),
+                ("999", "d-20260811-120000-600001", "Stale unknown row"),
+                ("004", "d-20260811-120000-700001", "Stale zero row"),
             )
         ]
     write_json(
@@ -221,7 +222,7 @@ def write_concept_diagnosis_contract(repo_root: Path) -> None:
 
     write_semantic_token_contract(repo_root, include_concept=True)
     config = json.loads((repo_root / "docs-viewer/config/scopes/docs_scopes.json").read_text())
-    write_concept_sources(repo_root, concept_id="resolved", extra_scopes=[
+    write_concept_sources(repo_root, concept_id="001", extra_scopes=[
         scope for scope in config["scopes"] if scope["scope_id"] != "analysis"
     ])
 
@@ -437,13 +438,13 @@ def test_semantic_token_source_repair_clears_the_audit() -> None:
 
 
 def test_concept_semantic_token_audit_diagnoses_exact_resolution_state() -> None:
-    source_body = "Resolved [[concept:concept:resolved|Resolved]]. Unknown [[concept:concept:unknown|Unknown]]."
+    source_body = "Resolved [[concept:concept:001|Resolved]]. Unknown [[concept:concept:999|Unknown]]."
     with make_repo("<p>No semantic-token anchors here.</p>", source_body=source_body) as temp_path:
         repo_root = Path(temp_path)
         write_concept_diagnosis_contract(repo_root)
         configs = docs_broken_links.load_docs_scope_configs(repo_root, scope_ids=["studio"])
         entries = docs_broken_links.semantic_token_broken_entries(repo_root, "studio", configs)
-    assert [(entry["target_id"], entry["reason"]) for entry in entries] == [("unknown", "unknown_concept")]
+    assert [(entry["target_id"], entry["reason"]) for entry in entries] == [("999", "unknown_concept")]
     assert entries[0]["link_url"] == ""
 
 

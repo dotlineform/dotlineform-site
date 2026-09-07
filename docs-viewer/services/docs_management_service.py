@@ -69,6 +69,7 @@ from docs_management_mutation_service import (  # noqa: E402
     SubScopeDocumentDeleteApplyError,
     execute_management_mutation_plan,
     handle_assign_field_group,
+    handle_allocate_identity,
     handle_create,
     handle_delete_apply,
     handle_move,
@@ -130,6 +131,7 @@ def docs_management_post_response(
         allowed = {
             routes.CREATE_PATH, routes.UPDATE_METADATA_PATH, routes.SOURCE_REBUILD_PATH,
             routes.OPEN_SOURCE_PATH, routes.DELETE_PREVIEW_PATH, routes.DELETE_APPLY_PATH,
+            routes.ASSIGN_FIELD_GROUP_PATH, routes.ALLOCATE_IDENTITY_PATH,
         }
         if field != "scope" or path not in allowed:
             raise ValueError("This action is unavailable in the publishing stage views")
@@ -248,6 +250,11 @@ def docs_management_post_response(
             return HTTPStatus.CONFLICT, error.payload
         except docs_management_publishable.PublishableSelectionApplyError as error:
             return HTTPStatus.INTERNAL_SERVER_ERROR, error.payload
+    if path == routes.ALLOCATE_IDENTITY_PATH:
+        try:
+            return HTTPStatus.OK, handle_allocate_identity(repo_root, body, dry_run)
+        except mutations.ManagedDocumentRevisionConflict as error:
+            return HTTPStatus.CONFLICT, error.payload
     if path == routes.ASSIGN_FIELD_GROUP_PATH:
         try:
             return HTTPStatus.OK, handle_assign_field_group(repo_root, body, dry_run)

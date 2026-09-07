@@ -74,7 +74,7 @@ export function normalizeDocsViewerSubScopeCustomisation(rawCustomisation) {
   if (
     !capabilityKeys.length
     || capabilityKeys.some(function (key) {
-      return key !== "assignable_field_groups" && key !== "lineage_copy";
+      return key !== "assignable_field_groups" && key !== "lineage_copy" && key !== "identity_kind";
     })
   ) {
     throw new Error(
@@ -82,6 +82,12 @@ export function normalizeDocsViewerSubScopeCustomisation(rawCustomisation) {
     );
   }
   var capabilities = {};
+  if (Object.prototype.hasOwnProperty.call(rawCapabilities, "identity_kind")) {
+    if (rawCapabilities.identity_kind !== "concept" && rawCapabilities.identity_kind !== "moment") {
+      throw new Error("Docs Viewer document identity kind is invalid.");
+    }
+    capabilities.identityKind = rawCapabilities.identity_kind;
+  }
   if (Object.prototype.hasOwnProperty.call(rawCapabilities, "assignable_field_groups")) {
     var rawGroups = rawCapabilities.assignable_field_groups;
     if (!Array.isArray(rawGroups) || !rawGroups.length) {

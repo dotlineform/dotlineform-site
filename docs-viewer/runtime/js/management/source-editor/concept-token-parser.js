@@ -3,7 +3,7 @@ import {
   semanticTokenTextRanges
 } from "./catalogue-token-parser.js";
 
-var CONCEPT_ID_PATTERN = /^[a-z0-9][a-z0-9-]*$/;
+import { isDocsViewerDocumentIdentity } from "../docs-viewer-management-document-identity.js";
 
 function cleanString(value) {
   return String(value == null ? "" : value).trim();
@@ -44,7 +44,7 @@ export function selectedTextForConceptTitle(value) {
 export function serializeConceptToken(options = {}) {
   var targetId = cleanString(options.targetId);
   var title = cleanString(options.title);
-  if (!CONCEPT_ID_PATTERN.test(targetId) || !title || /[\r\n]/.test(title)) return "";
+  if (!isDocsViewerDocumentIdentity(targetId) || !title || /[\r\n]/.test(title)) return "";
   var definition = conceptDefinition(options.registry);
   if (
     definition
@@ -71,7 +71,7 @@ export function parseConceptToken(raw, options = {}) {
     identity.length !== 3
     || identity[0] !== "concept"
     || identity[1] !== "concept"
-    || !CONCEPT_ID_PATTERN.test(targetId)
+    || !isDocsViewerDocumentIdentity(targetId)
     || !title
   ) return null;
   var definition = conceptDefinition(options.registry);

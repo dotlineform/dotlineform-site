@@ -45,24 +45,6 @@ const detailInfo = analysisContribution.projectDetailInfo({
 assert.equal(detailInfo.actions.assignSubject, true);
 assert.equal(detailInfo.fields[0].state, "detail");
 assert.equal(detailInfo.fields[0].detail, "00008-001");
-const momentDocument = {
-  doc_id: "independent-moment-doc",
-  authoring_subject: { state: "valid", kind: "moment", key: "001", fields: ["moment_id"] }
-};
-assert.equal(subjects.isDocsViewerMomentId("001"), true);
-for (const invalid of [1, "1", "01", "0001", "001\n", "٠٠١", null]) {
-  assert.equal(subjects.isDocsViewerMomentId(invalid), false);
-}
-assert.equal(workingSubjects.projectDocsViewerWorkingSubject(momentDocument, {
-  available: true, titles: new Map([["series:001", "Unrelated Series"]])
-}).label, "001");
-const momentInfo = analysisContribution.projectDetailInfo({
-  collection: analysisCollection,
-  target: { ...analysisCollection, doc_id: momentDocument.doc_id },
-  document: momentDocument
-});
-assert.equal(momentInfo.fields[0].value, "Moment");
-assert.equal(momentInfo.fields[0].detail, "001");
 assert.throws(() => analysisContribution.projectDetailInfo({
   collection: analysisCollection,
   target: { ...analysisCollection, doc_id: "another-doc" },

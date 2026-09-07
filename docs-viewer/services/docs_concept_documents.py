@@ -5,26 +5,23 @@ from __future__ import annotations
 
 import hashlib
 import json
-import re
 from pathlib import Path
 from typing import Any, Mapping, Sequence
 
+from docs_document_identities import (
+    NUMERIC_IDENTITY_PATTERN,
+    normalize_document_identity,
+    validate_unique_document_identities,
+)
+
 CONCEPT_ID_FIELD = "concept_id"
-CONCEPT_ID_PATTERN = re.compile(r"\A[a-z0-9][a-z0-9-]*\Z")
 CONCEPT_ASSOCIATIONS_SCHEMA_VERSION = "docs_concept_associations_v1"
 
 
 def validate_unique_concept_declarations(declarations: Mapping[str, Mapping[str, Any]]) -> None:
     """Require one defining document per nonempty Concept ID in a collection."""
 
-    owners: dict[str, str] = {}
-    for doc_id, declaration in declarations.items():
-        if declaration.get("state") != "valid":
-            continue
-        concept_id = str(declaration[CONCEPT_ID_FIELD])
-        if concept_id in owners:
-            raise ValueError(f"duplicate concept_id {concept_id!r}: {owners[concept_id]} and {doc_id}")
-        owners[concept_id] = doc_id
+    validate_unique_document_identities(declarations, CONCEPT_ID_FIELD)
 
 
 def load_concept_definitions(repo_root: Path, *, stage: str = "working") -> list[dict[str, Any]]:
@@ -59,25 +56,8 @@ def load_concept_definitions(repo_root: Path, *, stage: str = "working") -> list
 
 
 def normalize_concept_declaration(front_matter: Mapping[str, Any]) -> dict[str, Any]:
-    """Project one non-blocking state from exact document front matter."""
-
-    if CONCEPT_ID_FIELD not in front_matter:
-        return {"state": "none", "concept_id": ""}
-    raw_value = front_matter[CONCEPT_ID_FIELD]
-    if raw_value is None or raw_value == "":
-        return {"state": "none", "concept_id": ""}
-    if (
-        not isinstance(raw_value, str)
-        or not raw_value
-        or raw_value != raw_value.strip()
-        or CONCEPT_ID_PATTERN.fullmatch(raw_value) is None
-    ):
-        return {
-            "state": "malformed",
-            "concept_id": "",
-            "evidence": raw_value,
-        }
-    return {"state": "valid", "concept_id": raw_value}
+    """Read an optional, exact numeric identity without deriving it from a title."""
+    return normalize_document_identity(front_matter, CONCEPT_ID_FIELD)
 
 
 def concept_declaration_generation(
@@ -185,7 +165,7 @@ def project_concept_associations(
         if declaration.get("state") != "valid":
             continue
         concept_id = str(declaration.get("concept_id") or "")
-        if CONCEPT_ID_PATTERN.fullmatch(concept_id) is None:
+        if NUMERIC_IDENTITY_PATTERN.fullmatch(concept_id) is None:
             raise ValueError(f"valid Concept declaration is invalid for {doc_id!r}")
         locations: list[dict[str, str]] = []
         management_url = str(management_urls.get(doc_id) or "")
@@ -242,7 +222,6 @@ def project_concept_associations(
 __all__ = [
     "CONCEPT_ASSOCIATIONS_SCHEMA_VERSION",
     "CONCEPT_ID_FIELD",
-    "CONCEPT_ID_PATTERN",
     "load_concept_definitions",
     "validate_unique_concept_declarations",
     "load_current_public_concept_locations",

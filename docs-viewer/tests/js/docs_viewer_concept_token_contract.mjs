@@ -6,12 +6,12 @@ import { conceptTokenControlDefinition, createConceptTokenMainViewControlHandler
 
 const registry = normalizeSemanticTokenRegistry(JSON.parse(fs.readFileSync(new URL("../../config/semantic-tokens/registry.json", import.meta.url))));
 assert.deepEqual([...registry.familiesById.keys()], ["catalogue", "concept"]);
-const raw = serializeConceptToken({ registry, targetId: "order", title: "Order | form" });
-assert.equal(raw, "[[concept:concept:order|Order \\| form]]");
+const raw = serializeConceptToken({ registry, targetId: "001", title: "Order | form" });
+assert.equal(raw, "[[concept:concept:001|Order \\| form]]");
 const token = parseConceptToken(raw, { registry, start: 4 });
 assert.equal(token.family, "concept");
 assert.equal(token.targetType, "concept");
-assert.equal(token.targetId, "order");
+assert.equal(token.targetId, "001");
 assert.equal(token.title, "Order | form");
 assert.equal(token.end, 4 + raw.length);
 assert.equal(conceptTokenAtSelection([token], { start: 5, end: 5 }), token);

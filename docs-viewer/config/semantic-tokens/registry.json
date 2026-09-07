@@ -88,9 +88,10 @@
           "key": "concept",
           "label": "Concept",
           "id_policy": {
-            "normalizer": "slug",
-            "input_pattern": "^[a-z0-9][a-z0-9-]*$",
-            "canonical_pattern": "^[a-z0-9][a-z0-9-]*$"
+            "normalizer": "digits_left_pad",
+            "width": 3,
+            "input_pattern": "^[0-9]{1,3}$",
+            "canonical_pattern": "^[0-9]{3}$"
           },
           "lookup_adapter": "concept-document-target-lookup",
           "lookup_fields": [

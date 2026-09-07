@@ -248,6 +248,7 @@ def format_source(front_matter: Dict[str, Any], body: str) -> str:
         "series_id",
         "detail_uid",
         "moment_id",
+        "concept_id",
         "parent_id",
         "publishable",
     ]

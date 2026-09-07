@@ -31,7 +31,7 @@ function normalizeMetadataInfo(value) {
   return Object.freeze({
     actions: Object.freeze({
       assignSubject: Boolean(actions && actions.assignSubject === true),
-      conceptFields: Boolean(actions && actions.conceptFields === true)
+      conceptGroup: Boolean(actions && actions.conceptGroup === true)
     }),
     fields: Object.freeze(fields)
   });

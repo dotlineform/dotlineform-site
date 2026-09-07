@@ -10,6 +10,7 @@ from typing import Any, Callable, Mapping, Sequence
 
 import docs_working_works_customisation as working_works
 import docs_working_processing_customisation as working_processing
+import docs_moments_customisation as moments
 from docs_document_subjects import AUTHORING_SUBJECT_FIELDS, FOLDER_PATH_FIELD
 from docs_concept_documents import CONCEPT_ID_FIELD, normalize_concept_declaration
 
@@ -108,6 +109,7 @@ class DocsSubScopeCustomisationDefinition:
     authoring_subject: DocsSubScopeAuthoringSubjectAspect | None = None
     transfer: DocsSubScopeTransferAspect | None = None
     document_lineages: tuple[DocsSubScopeDocumentLineageAspect, ...] = ()
+    identity_kind: str = ""
 
 
 def _strict_object(raw: Any, *, field: str, keys: set[str]) -> dict[str, Any]:
@@ -194,8 +196,8 @@ def _normalize_concepts_metadata_update(
     del repo_root
     if not isinstance(raw, dict):
         raise ValueError("customisation must be an object")
-    if set(raw) != {"group", CONCEPT_ID_FIELD}:
-        raise ValueError("customisation must contain exactly group, concept_id")
+    if set(raw) != {"group"}:
+        raise ValueError("customisation must contain exactly group")
     raw_group = raw["group"]
     if not isinstance(raw_group, str):
         raise ValueError("customisation.group must be a scalar string")
@@ -208,40 +210,15 @@ def _normalize_concepts_metadata_update(
         front_matter,
         doc_id=doc_id,
     )
-    raw_concept_id = raw[CONCEPT_ID_FIELD]
-    current_raw_concept_id = current_record[CONCEPT_ID_FIELD]
-    current_declaration = normalize_concept_declaration(front_matter)
-    preserve_malformed = (
-        current_declaration["state"] == "malformed"
-        and raw_concept_id == current_raw_concept_id
-    )
-    if not preserve_malformed:
-        if not isinstance(raw_concept_id, str):
-            raise ValueError("customisation.concept_id must be a scalar string")
-        if raw_concept_id:
-            declaration = normalize_concept_declaration({CONCEPT_ID_FIELD: raw_concept_id})
-            if declaration["state"] != "valid":
-                raise ValueError("customisation.concept_id must be one exact canonical concept id")
-    desired_concept_id = raw_concept_id if preserve_malformed or raw_concept_id else None
-    concept_id_changed = (
-        (CONCEPT_ID_FIELD in front_matter) != (desired_concept_id is not None)
-        or (
-            desired_concept_id is not None
-            and desired_concept_id != front_matter.get(CONCEPT_ID_FIELD)
-        )
-    )
     return {
         "front_matter_updates": {
             "group": group or None,
-            CONCEPT_ID_FIELD: desired_concept_id,
         },
         "record": {
             "group": group,
-            CONCEPT_ID_FIELD: raw_concept_id,
         },
         "changes": {
             "group_changed": group != current_record["group"],
-            "concept_id_changed": concept_id_changed,
         },
     }
 
@@ -252,7 +229,7 @@ def _validate_concepts_transfer_field(
     value: Any,
 ) -> None:
     if field_name == CONCEPT_ID_FIELD:
-        normalize_concept_declaration({CONCEPT_ID_FIELD: value})
+        _validate_concepts_source(settings, {CONCEPT_ID_FIELD: value}, doc_id="transfer")
         return
     if field_name != "group":
         raise ValueError(f"unsupported Analysis Concepts field {field_name!r}")
@@ -271,8 +248,9 @@ def _validate_concepts_source(
     *,
     doc_id: str,
 ) -> None:
-    del settings, doc_id
-    normalize_concept_declaration(front_matter)
+    del settings
+    if normalize_concept_declaration(front_matter)["state"] == "malformed":
+        raise ValueError(f"concept_id must be an exact three-digit string: {doc_id}")
 
 
 def _normalize_concepts_import_front_matter(
@@ -349,8 +327,22 @@ def _project_concepts_manifest(
 
 
 SUB_SCOPE_CUSTOMISATION_DEFINITIONS = {
+    "moments": DocsSubScopeCustomisationDefinition(
+        customisation_id="moments",
+        normalize_settings=_normalize_empty_settings,
+        identity_kind="moment",
+        manifest_projection=DocsSubScopeManifestProjectionAspect(project=moments.project_manifest),
+        source_validation=DocsSubScopeSourceValidationAspect(validate=moments.validate_source),
+        metadata=DocsSubScopeMetadataAspect(read_record=moments.metadata_record),
+        import_front_matter=DocsSubScopeImportFrontMatterAspect(normalize=moments.normalize_import),
+        browser_composition=DocsSubScopeBrowserCompositionAspect(accesses=frozenset({MANAGE_ACCESS})),
+        transfer=DocsSubScopeTransferAspect(
+            contract_id="moment_identity", owned_field_names=("moment_id",), validate_field=moments.validate_transfer,
+        ),
+    ),
     CONCEPTS_CUSTOMISATION_ID: DocsSubScopeCustomisationDefinition(
         customisation_id=CONCEPTS_CUSTOMISATION_ID,
+        identity_kind="concept",
         normalize_settings=_normalize_concepts_settings,
         manifest_projection=DocsSubScopeManifestProjectionAspect(
             project=_project_concepts_manifest,
@@ -373,8 +365,8 @@ SUB_SCOPE_CUSTOMISATION_DEFINITIONS = {
         ),
         assignable_field_groups=(
             DocsSubScopeAssignableFieldGroup(
-                group_id="concept_fields",
-                field_names=("group", CONCEPT_ID_FIELD),
+                group_id="concept_group",
+                field_names=("group",),
             ),
         ),
         transfer=DocsSubScopeTransferAspect(
@@ -485,6 +477,8 @@ def _validate_definition(
     field = f"Docs sub-scope customisation definition {registry_id!r}"
     if definition.customisation_id != registry_id:
         raise ValueError(f"{field} identity does not match its registry key")
+    if definition.identity_kind not in {"", "concept", "moment"}:
+        raise ValueError(f"{field} has an unknown document identity kind")
     if not callable(definition.normalize_settings):
         raise ValueError(f"{field} normalize_settings must be callable")
 
@@ -750,7 +744,13 @@ def browser_sub_scope_customisation_payload(
                 group.group_id for group in assignable_groups
             ]
         }
+    if not published and definition.identity_kind:
+        payload.setdefault("capabilities", {})["identity_kind"] = definition.identity_kind
     return payload
+
+
+def sub_scope_customisation_identity_kind(customisation: DocsSubScopeCustomisationConfig | None) -> str:
+    return _definition_for(customisation).identity_kind if customisation is not None else ""
 
 
 def sub_scope_customisation_assignable_field_groups(
@@ -953,6 +953,7 @@ __all__ = [
     "normalize_sub_scope_customisation_import_front_matter",
     "sub_scope_customisation_assignable_field_groups",
     "sub_scope_customisation_authoring_subject_fields",
+    "sub_scope_customisation_identity_kind",
     "sub_scope_customisation_metadata_record",
     "sub_scope_customisation_document_groups",
     "sub_scope_customisation_document_lineage_contracts",

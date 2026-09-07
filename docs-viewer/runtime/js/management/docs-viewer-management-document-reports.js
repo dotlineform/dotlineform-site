@@ -10,6 +10,7 @@ import {
 } from "./docs-viewer-management-document-target.js";
 import {
   assignManagedDocFieldGroup,
+  allocateManagedDocIdentity,
   openLocalTarget,
   readManagedDocMetadata
 } from "./docs-viewer-management-client.js";
@@ -241,10 +242,14 @@ export function loadDocsViewerSubscopeContribution(settings, parent, subScope, o
       "Docs sub-scope is not configured: " + parent.scope + "/" + subScope
     ));
   }
-  var workingSubjectsAvailable = parent.stage === "working"
-    && hasDocsViewerAssignableFieldGroup(subScopeConfig.subScopeCustomisation, "authoring_subject");
+  var descriptor = subScopeConfig.subScopeCustomisation;
+  var identityKind = descriptor && descriptor.capabilities && descriptor.capabilities.identityKind;
+  var workingCustomisationAvailable = parent.stage === "working" && (
+    hasDocsViewerAssignableFieldGroup(descriptor, "authoring_subject")
+    || identityKind === "concept" || identityKind === "moment"
+  );
   var mutationAvailable = Boolean(
-    (!parent.stage || workingSubjectsAvailable)
+    (!parent.stage || workingCustomisationAvailable)
     && settings.managementContext
     && cleanString(clientOptions.baseUrl)
   );
@@ -280,7 +285,7 @@ export function loadDocsViewerSubscopeContribution(settings, parent, subScope, o
       setStatus: settings.setStatus,
       uiStatusByValue: contributionOptions.uiStatusByValue
     });
-    if (parent.stage && !workingSubjectsAvailable) {
+    if (parent.stage && !workingCustomisationAvailable) {
       return modules[1].composeDocsViewerManagementSubscopeContributions({
         defaultContribution: defaultContribution
       });
@@ -288,6 +293,11 @@ export function loadDocsViewerSubscopeContribution(settings, parent, subScope, o
     return modules[2].resolveManagementDocsSubscopeCustomisation(
       subScopeConfig.subScopeCustomisation,
       {
+        allocateIdentity: mutationAvailable
+          ? function (target, payload) {
+              return allocateManagedDocIdentity(target, payload, clientOptions);
+            }
+          : null,
         assignFieldGroup: mutationAvailable
           ? function (target, payload) {
               return assignManagedDocFieldGroup(target, payload, clientOptions);
