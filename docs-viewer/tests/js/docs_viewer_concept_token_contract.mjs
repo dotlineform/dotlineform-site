@@ -1,0 +1,25 @@
+import assert from "node:assert/strict";
+import fs from "node:fs";
+import { normalizeSemanticTokenRegistry } from "../../runtime/js/management/source-editor/semantic-token-registry.js";
+import { parseConceptToken, parseConceptTokens, serializeConceptToken, conceptTokenAtSelection } from "../../runtime/js/management/source-editor/concept-token-parser.js";
+import { conceptTokenControlDefinition, createConceptTokenMainViewControlHandlers } from "../../runtime/js/management/source-editor/concept-token-contribution.js";
+
+const registry = normalizeSemanticTokenRegistry(JSON.parse(fs.readFileSync(new URL("../../config/semantic-tokens/registry.json", import.meta.url))));
+assert.deepEqual([...registry.familiesById.keys()], ["catalogue", "concept"]);
+const raw = serializeConceptToken({ registry, targetId: "order", title: "Order | form" });
+assert.equal(raw, "[[concept:concept:order|Order \\| form]]");
+const token = parseConceptToken(raw, { registry, start: 4 });
+assert.equal(token.family, "concept");
+assert.equal(token.targetType, "concept");
+assert.equal(token.targetId, "order");
+assert.equal(token.title, "Order | form");
+assert.equal(token.end, 4 + raw.length);
+assert.equal(conceptTokenAtSelection([token], { start: 5, end: 5 }), token);
+assert.equal(conceptTokenAtSelection([token], { start: 4, end: 4 }), null);
+assert.equal(parseConceptToken("[[tag:tag:order|order]]", { registry }), null, "retired syntax has no compatibility alias");
+assert.equal(parseConceptTokens(`${raw}\n\`${raw}\`\n<!-- ${raw} -->\n\`\`\`\n${raw}\n\`\`\``, { registry }).length, 1);
+const control = conceptTokenControlDefinition();
+assert.equal(control.id, "source-add-concept-token");
+assert.equal(control.actionId, control.id);
+assert.equal(typeof createConceptTokenMainViewControlHandlers()[control.id], "function");
+console.log("Concept token contract passed: syntax, identity, ranges, inactive contexts and action wiring.");

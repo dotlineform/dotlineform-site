@@ -81,7 +81,7 @@ def test_registry_and_python_parser_match_the_frozen_fixture() -> None:
             assert active is (tokens[expected_index] if expected_index is not None else None), case["id"]
 
 
-def test_production_registry_retains_catalogue_and_registers_tag_separately() -> None:
+def test_production_registry_retains_catalogue_and_registers_concept_separately() -> None:
     payload = json.loads(
         (
             REPO_ROOT / "docs-viewer/config/semantic-tokens/registry.json"
@@ -94,7 +94,7 @@ def test_production_registry_retains_catalogue_and_registers_tag_separately() ->
     assert payload["families"][0] == load_fixture()["catalogue_definition"]
     registry = load_semantic_token_registry(REPO_ROOT)
     assert registry is not None
-    assert [family.key for family in registry.families] == ["catalogue", "tag"]
+    assert [family.key for family in registry.families] == ["catalogue", "concept"]
 
 
 def test_visual_occurrence_parser_is_canonical_and_context_aware() -> None:

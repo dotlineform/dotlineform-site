@@ -121,7 +121,7 @@ def browser_safe_href(value: Any) -> str:
 
 
 def concept_resolution_states(repo_root: Path) -> dict[str, str]:
-    """Return resolution states for document-defined Concepts used by existing Tag tokens."""
+    """Return resolution states for document-defined Concepts used by Concept tokens."""
 
     return {record["concept_id"]: "" for record in load_concept_definitions(repo_root)}
 
@@ -132,7 +132,7 @@ def concept_target_rows(
     *,
     definitions: list[dict[str, Any]],
 ) -> list[dict[str, Any]]:
-    """Project document-owned Concepts into the retained Tag token contract."""
+    """Project document-owned Concepts into the Concept token contract."""
 
     if target_type.lookup_adapter != "concept-document-target-lookup":
         return []
@@ -153,11 +153,11 @@ def concept_target_rows(
 
 
 def concept_token_targets(repo_root: Path, *, stage: str = "working") -> list[dict[str, Any]]:
-    """Resolve retained Tag tokens from the explicitly selected Analysis stage."""
+    """Resolve Concept tokens from the explicitly selected Analysis stage."""
 
     registry = load_semantic_token_registry(repo_root)
-    family = registry.family("tag") if registry else None
-    target_type = family.target_type("tag") if family else None
+    family = registry.family("concept") if registry else None
+    target_type = family.target_type("concept") if family else None
     if family is None or target_type is None:
         return []
     return concept_target_rows(family, target_type, definitions=load_concept_definitions(repo_root, stage=stage))

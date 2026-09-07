@@ -14,8 +14,8 @@ import {
   subjectLinkControlDefinition
 } from "./source-editor/subject-link-contribution.js";
 import {
-  tagTokenControlDefinition
-} from "./source-editor/tag-token-contribution.js";
+  conceptTokenControlDefinition
+} from "./source-editor/concept-token-contribution.js";
 
 export function createDocsViewerManagementViewDefinitions() {
   return {
@@ -45,15 +45,15 @@ export function createDocsViewerManagementViewDefinitions() {
         }
       },
       {
-        id: "tag-token-info",
-        label: "Tag token",
+        id: "concept-token-info",
+        label: "Concept token",
         panel: "info",
         appKinds: ["manage"],
         features: ["source-editing"],
         load: function () {
-          return import("./source-editor/tag-token-info-view.js")
+          return import("./source-editor/concept-token-info-view.js")
             .then(function (module) {
-              return module.createTagTokenInfoView();
+              return module.createConceptTokenInfoView();
             });
         }
       }
@@ -208,7 +208,7 @@ export function createDocsViewerManagementViewDefinitions() {
         renderer: "source-add-file"
       },
       catalogueTokenControlDefinition(),
-      tagTokenControlDefinition(),
+      conceptTokenControlDefinition(),
       subjectLinkControlDefinition(),
       directiveActionsControlDefinition(),
       {

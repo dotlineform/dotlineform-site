@@ -63,7 +63,7 @@
     },
     {
       "schema_version": "docs_semantic_token_family_definition_v1",
-      "key": "tag",
+      "key": "concept",
       "labels": {
         "family": "Concept",
         "source_action": "Add concept token",
@@ -79,13 +79,13 @@
         }
       ],
       "ui_contributions": {
-        "source_action": "source-add-tag-token",
-        "modal": "tag-token-add-modal",
-        "info_view": "tag-token-info"
+        "source_action": "source-add-concept-token",
+        "modal": "concept-token-add-modal",
+        "info_view": "concept-token-info"
       },
       "target_types": [
         {
-          "key": "tag",
+          "key": "concept",
           "label": "Concept",
           "id_policy": {
             "normalizer": "slug",

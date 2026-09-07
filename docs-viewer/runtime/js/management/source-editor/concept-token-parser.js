@@ -28,39 +28,39 @@ function unescapeTitle(value) {
   return cleanString(output) || null;
 }
 
-function tagDefinition(registry) {
+function conceptDefinition(registry) {
   var family = registry && registry.familiesById
-    ? registry.familiesById.get("tag")
+    ? registry.familiesById.get("concept")
     : null;
   return family && family.targetTypesById
-    ? family.targetTypesById.get("tag")
+    ? family.targetTypesById.get("concept")
     : null;
 }
 
-export function selectedTextForTagTitle(value) {
+export function selectedTextForConceptTitle(value) {
   return cleanString(value).replace(/\s+/g, " ");
 }
 
-export function serializeTagToken(options = {}) {
+export function serializeConceptToken(options = {}) {
   var targetId = cleanString(options.targetId);
   var title = cleanString(options.title);
   if (!CONCEPT_ID_PATTERN.test(targetId) || !title || /[\r\n]/.test(title)) return "";
-  var definition = tagDefinition(options.registry);
+  var definition = conceptDefinition(options.registry);
   if (
     definition
     && definition.idPolicy.canonicalPattern
     && !(new RegExp(definition.idPolicy.canonicalPattern)).test(targetId)
   ) return "";
-  return "[[tag:tag:" + targetId + "|" + escapedTitle(title) + "]]";
+  return "[[concept:concept:" + targetId + "|" + escapedTitle(title) + "]]";
 }
 
-export function buildTagToken(options = {}) {
-  return serializeTagToken(options);
+export function buildConceptToken(options = {}) {
+  return serializeConceptToken(options);
 }
 
-export function parseTagToken(raw, options = {}) {
+export function parseConceptToken(raw, options = {}) {
   var source = String(raw || "");
-  if (!source.startsWith("[[tag:tag:") || !source.endsWith("]]")) return null;
+  if (!source.startsWith("[[concept:concept:") || !source.endsWith("]]")) return null;
   if (/[\r\n]/.test(source)) return null;
   var body = source.slice(2, -2);
   var separator = body.indexOf("|");
@@ -69,12 +69,12 @@ export function parseTagToken(raw, options = {}) {
   var title = separator < 0 ? null : unescapeTitle(body.slice(separator + 1));
   if (
     identity.length !== 3
-    || identity[0] !== "tag"
-    || identity[1] !== "tag"
+    || identity[0] !== "concept"
+    || identity[1] !== "concept"
     || !CONCEPT_ID_PATTERN.test(targetId)
     || !title
   ) return null;
-  var definition = tagDefinition(options.registry);
+  var definition = conceptDefinition(options.registry);
   if (
     definition
     && definition.idPolicy.canonicalPattern
@@ -83,8 +83,8 @@ export function parseTagToken(raw, options = {}) {
   var start = Number.isInteger(options.start) ? options.start : 0;
   return {
     raw: source,
-    family: "tag",
-    targetType: "tag",
+    family: "concept",
+    targetType: "concept",
     targetId: targetId,
     title: title,
     start: start,
@@ -95,18 +95,18 @@ export function parseTagToken(raw, options = {}) {
   };
 }
 
-export function parseTagTokens(markdown, options = {}) {
+export function parseConceptTokens(markdown, options = {}) {
   var source = String(markdown || "");
-  if (source.indexOf("[[tag:tag:") < 0) return [];
+  if (source.indexOf("[[concept:concept:") < 0) return [];
   var tokens = [];
   semanticTokenTextRanges(source).forEach(function (range) {
     var index = range[0];
     while (index < range[1]) {
-      var opening = source.indexOf("[[tag:tag:", index);
+      var opening = source.indexOf("[[concept:concept:", index);
       if (opening < 0 || opening >= range[1]) break;
       var closing = semanticTokenClosingIndex(source, opening + 2);
       if (closing < 0 || closing + 2 > range[1]) break;
-      var token = parseTagToken(source.slice(opening, closing + 2), {
+      var token = parseConceptToken(source.slice(opening, closing + 2), {
         registry: options.registry,
         start: opening
       });
@@ -117,7 +117,7 @@ export function parseTagTokens(markdown, options = {}) {
   return tokens;
 }
 
-export function tagTokenAtSelection(tokens, selection) {
+export function conceptTokenAtSelection(tokens, selection) {
   var start = Number(selection && selection.start);
   var end = Number(selection && selection.end);
   var active = (Array.isArray(tokens) ? tokens : []).filter(function (token) {

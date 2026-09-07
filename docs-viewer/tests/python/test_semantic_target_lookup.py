@@ -34,14 +34,14 @@ def read_json(path: Path) -> dict[str, object]:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
-def tag_family_definition() -> dict[str, object]:
+def concept_family_definition() -> dict[str, object]:
     return {
         "schema_version": "docs_semantic_token_family_definition_v1",
-        "key": "tag",
+        "key": "concept",
         "labels": {
-            "family": "Tag",
-            "source_action": "Add tag token",
-            "info_view": "Tag token",
+            "family": "Concept",
+            "source_action": "Add concept token",
+            "info_view": "Concept token",
         },
         "occurrence_fields": [
             {
@@ -53,14 +53,14 @@ def tag_family_definition() -> dict[str, object]:
             }
         ],
         "ui_contributions": {
-            "source_action": "source-add-tag-token",
-            "modal": "tag-token-add-modal",
-            "info_view": "tag-token-info",
+            "source_action": "source-add-concept-token",
+            "modal": "concept-token-add-modal",
+            "info_view": "concept-token-info",
         },
         "target_types": [
             {
-                "key": "tag",
-                "label": "Tag",
+                "key": "concept",
+                "label": "Concept",
                 "id_policy": {
                     "normalizer": "slug",
                     "input_pattern": "^[a-z0-9][a-z0-9-]*$",
@@ -73,11 +73,11 @@ def tag_family_definition() -> dict[str, object]:
     }
 
 
-def write_registry(root: Path, *, include_tag: bool = False) -> None:
+def write_registry(root: Path, *, include_concept: bool = False) -> None:
     fixture = read_json(REPO_ROOT / "docs-viewer/tests/fixtures/semantic_tokens_catalogue_v1.json")
     families = [fixture["catalogue_definition"]]
-    if include_tag:
-        families.append(tag_family_definition())
+    if include_concept:
+        families.append(concept_family_definition())
     write_json(
         root / "docs-viewer/config/semantic-tokens/registry.json",
         {
@@ -238,17 +238,17 @@ def test_lookup_retains_text_targets_when_exact_image_projection_is_unavailable(
     assert targets[("series", "105")]["href"] == "/series/?series=105"
 
 
-def test_tag_lookup_uses_document_defined_concepts_without_studio(tmp_path) -> None:
+def test_concept_lookup_uses_document_defined_concepts_without_studio(tmp_path) -> None:
     from concept_factory import CONCEPT_DOC_ID, write_concept_sources
 
-    write_registry(tmp_path, include_tag=True)
+    write_registry(tmp_path, include_concept=True)
     write_media_config(tmp_path)
     write_catalogue(tmp_path)
     write_concept_sources(tmp_path)
     payload = SemanticTargetLookupBuilder(repo_root=tmp_path).payload()
-    targets = [row for row in payload["targets"] if row["family"] == "tag"]
+    targets = [row for row in payload["targets"] if row["family"] == "concept"]
     assert len(targets) == 1
-    assert targets[0]["target_type"] == "tag"
+    assert targets[0]["target_type"] == "concept"
     assert targets[0]["target_id"] == "order"
     assert targets[0]["title"] == "Order"
     assert targets[0]["href"].endswith(f"&subdoc={CONCEPT_DOC_ID}")
@@ -258,27 +258,27 @@ def test_tag_lookup_uses_document_defined_concepts_without_studio(tmp_path) -> N
     assert not (tmp_path / "studio/data/canonical/tags").exists()
 
 
-def test_existing_tag_token_renders_the_exact_concept_in_each_stage(tmp_path) -> None:
+def test_existing_concept_token_renders_the_exact_concept_in_each_stage(tmp_path) -> None:
     import html
     from concept_factory import CONCEPT_DOC_ID, write_concept_sources
     from docs_scope_config import document_source_path, load_docs_scope_stage
     from docs_builder.pipeline import DocsDataBuilder
 
-    write_registry(tmp_path, include_tag=True)
+    write_registry(tmp_path, include_concept=True)
     write_media_config(tmp_path)
     write_concept_sources(tmp_path)
     doc_id = "d-20260811-120000-200001"
     for stage in ("working", "pre-publish"):
         config = load_docs_scope_stage(tmp_path, "analysis", stage)
         (tmp_path / document_source_path(config) / f"{doc_id}.md").write_text(
-            f"---\ndoc_id: {doc_id}\ntitle: Beauty\n---\nBeauty is [[tag:tag:order|order]].\n",
+            f"---\ndoc_id: {doc_id}\ntitle: Beauty\n---\nBeauty is [[concept:concept:order|order]].\n",
         )
         builder = DocsDataBuilder(repo_root=tmp_path, config=config, skip_media_builds=True)
         docs = builder.load_docs()
         document = next(doc for doc in docs if doc.doc_id == doc_id)
         payload = builder.item_entry(document, docs, {})
         content = html.unescape(payload["content_html"])
-        assert 'data-semantic-token-family="tag"' in content
+        assert 'data-semantic-token-family="concept"' in content
         assert 'data-semantic-token-target-id="order"' in content
         assert f"stage={stage}" in content
         assert f"subdoc={CONCEPT_DOC_ID}" in content

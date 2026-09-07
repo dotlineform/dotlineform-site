@@ -1,8 +1,8 @@
 import {
-  parseTagTokens,
-  serializeTagToken,
-  tagTokenAtSelection
-} from "./tag-token-parser.js";
+  parseConceptTokens,
+  serializeConceptToken,
+  conceptTokenAtSelection
+} from "./concept-token-parser.js";
 import {
   loadSemanticTokenRegistry
 } from "./semantic-token-registry.js";
@@ -53,8 +53,8 @@ function currentToken(state) {
   ) return null;
   var snapshot = adapter.getBufferSnapshot();
   var selection = adapter.getSelection();
-  var token = tagTokenAtSelection(
-    parseTagTokens(snapshot.value, { registry: state.registry }),
+  var token = conceptTokenAtSelection(
+    parseConceptTokens(snapshot.value, { registry: state.registry }),
     selection
   );
   if (!token) return null;
@@ -116,7 +116,7 @@ function renderToken(context, state, active) {
   updateButton.type = "button";
   updateButton.textContent = "Update token";
   updateButton.addEventListener("click", function () {
-    var serialized = serializeTagToken({
+    var serialized = serializeConceptToken({
       registry: state.registry,
       targetId: token.targetId,
       title: cleanString(input.value)
@@ -172,7 +172,7 @@ function loadSupport(state) {
     return loadSemanticTokenTargets(registry, { fetch: state.fetch });
   }).then(function (targets) {
     state.targetsByKey = new Map(targets.filter(function (target) {
-      return target.family === "tag" && target.targetType === "tag";
+      return target.family === "concept" && target.targetType === "concept";
     }).map(function (target) {
       return [target.targetId, target];
     }));
@@ -180,7 +180,7 @@ function loadSupport(state) {
   });
 }
 
-export function createTagTokenInfoView(options = {}) {
+export function createConceptTokenInfoView(options = {}) {
   var state = {
     adapter: null,
     fetch: options.fetch,

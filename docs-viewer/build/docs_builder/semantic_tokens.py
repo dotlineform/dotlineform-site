@@ -706,7 +706,7 @@ def load_semantic_token_targets(repo_root: Path, *, stage: str = "") -> dict[tup
     if stage:
         from .semantic_target_lookup import concept_token_targets
 
-        targets = {key: target for key, target in targets.items() if key[0] != "tag"}
+        targets = {key: target for key, target in targets.items() if key[0] != "concept"}
         for target in concept_token_targets(repo_root, stage=stage):
             targets[(target["family"], target["target_type"], target["target_id"])] = target
     return targets

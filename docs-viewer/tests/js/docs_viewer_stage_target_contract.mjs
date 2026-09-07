@@ -5,6 +5,9 @@ import { createDocsViewerConfiguredScopeProvider } from "../../runtime/js/shared
 import { normalizeManagedDocumentTarget, managedDocumentTargetsEqual } from "../../runtime/js/management/docs-viewer-management-document-target.js";
 import { normalizeManagedSubscopeCollection, committedDocumentCreateTarget } from "../../runtime/js/management/docs-viewer-management-actions.js";
 import { createManagedDoc, readManagedDocSource, rebuildManagedDocSource, applyManagedSubScopeDocDelete } from "../../runtime/js/management/docs-viewer-management-client.js";
+import { createDocsViewerManagementActionResolver } from "../../runtime/js/management/docs-viewer-management.js";
+import { DOCS_VIEWER_ACTION_IDS } from "../../runtime/js/management/docs-viewer-action-definitions.js";
+import { subjectFromMetadataResponse } from "../../runtime/js/management/source-editor/subject-link-contribution.js";
 
 const docId = "d-20260906-170000-a1b2c3";
 const working = { scope: "analysis", stage: "working", sub_scope: "projects", doc_id: docId };
@@ -14,6 +17,28 @@ assert.equal(managedDocumentTargetsEqual(working, prePublish), false);
 assert.throws(() => normalizeManagedDocumentTarget({ ...working, stage: "" }), /stage/);
 assert.deepEqual(normalizeManagedSubscopeCollection({ scope: "analysis", stage: "working", sub_scope: "projects" }), { scope: "analysis", stage: "working", sub_scope: "projects" });
 assert.throws(() => committedDocumentCreateTarget({ ...working, stage: "pre-publish", target: working, record: { doc_id: docId } }), /stage/);
+const sourceActions = [
+  DOCS_VIEWER_ACTION_IDS.SOURCE_ADD_CATALOGUE_IMAGE,
+  DOCS_VIEWER_ACTION_IDS.SOURCE_ADD_CATALOGUE_TOKEN,
+  DOCS_VIEWER_ACTION_IDS.SOURCE_ADD_CONCEPT_TOKEN,
+  DOCS_VIEWER_ACTION_IDS.SOURCE_ADD_FILE,
+  DOCS_VIEWER_ACTION_IDS.SOURCE_ADD_IMAGE,
+  DOCS_VIEWER_ACTION_IDS.SOURCE_INSERT_SUBJECT_LINK
+];
+for (const stage of ["working", "pre-publish", ""]) {
+  const selectedDocument = { selectedDocId: docId };
+  const resolveAction = createDocsViewerManagementActionResolver({ selectedDocument, viewerStage: () => stage });
+  for (const action of sourceActions) {
+    assert.equal(resolveAction(action).enabled, stage !== "pre-publish", `${stage}: ${action}`);
+  }
+  selectedDocument.selectedDocId = "";
+  assert.ok(sourceActions.every(action => !resolveAction(action).enabled), "insertion requires an active document");
+}
+const subject = { state: "valid", kind: "work", key: "00293", fields: ["work_id"] };
+const metadata = { ...working, record: { doc_id: docId, authoring_subject: subject } };
+assert.deepEqual(subjectFromMetadataResponse(metadata, working), subject);
+assert.throws(() => subjectFromMetadataResponse({ ...metadata, stage: "pre-publish" }, working), /active document/);
+assert.throws(() => subjectFromMetadataResponse({ ...metadata, stage: undefined }, working), /active document/);
 const requests = [];
 const fetch = async (url, options) => {
   requests.push({ url, body: options.body ? JSON.parse(options.body) : null });

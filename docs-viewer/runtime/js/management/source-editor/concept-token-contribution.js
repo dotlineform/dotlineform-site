@@ -9,45 +9,45 @@ import {
   loadSemanticTokenRegistry
 } from "./semantic-token-registry.js";
 import {
-  openTagTokenModal
-} from "./tag-token-modal.js";
+  openConceptTokenModal
+} from "./concept-token-modal.js";
 import {
-  parseTagTokens,
-  tagTokenAtSelection
-} from "./tag-token-parser.js";
+  parseConceptTokens,
+  conceptTokenAtSelection
+} from "./concept-token-parser.js";
 
-export const TAG_TOKEN_CONTROL_ID = "source-add-tag-token";
+export const CONCEPT_TOKEN_CONTROL_ID = "source-add-concept-token";
 
-export function tagTokenControlDefinition() {
+export function conceptTokenControlDefinition() {
   return {
-    id: TAG_TOKEN_CONTROL_ID,
-    actionId: DOCS_VIEWER_ACTION_IDS.SOURCE_ADD_TAG_TOKEN,
-    label: "Add tag token",
+    id: CONCEPT_TOKEN_CONTROL_ID,
+    actionId: DOCS_VIEWER_ACTION_IDS.SOURCE_ADD_CONCEPT_TOKEN,
+    label: "Add concept token",
     ownerType: "view",
     ownerViewId: "rendered-document",
     modeIds: ["markdown-source"],
     surfaceId: "main-view",
     appKinds: ["manage"],
     features: ["source-editing"],
-    renderer: "source-add-tag-token"
+    renderer: "source-add-concept-token"
   };
 }
 
-export function tagTokenControlRenderer(context) {
+export function conceptTokenControlRenderer(context) {
   var button = context.existingRoot;
   if (!button || button.tagName !== "BUTTON") {
     button = context.document.createElement("button");
     button.className = "docsViewer__documentActionButton";
-    button.id = "docsViewerManageSourceAddTagTokenButton";
+    button.id = "docsViewerManageSourceAddConceptTokenButton";
     button.type = "button";
   }
   button.textContent = "🏷️";
   return button;
 }
 
-export function createTagTokenMainViewControlHandlers() {
+export function createConceptTokenMainViewControlHandlers() {
   return {
-    [TAG_TOKEN_CONTROL_ID]: function (context) {
+    [CONCEPT_TOKEN_CONTROL_ID]: function (context) {
       var services = context.sourceEditorServices || {};
       var adapter = typeof services.getActiveSourceEditorContextAdapter === "function"
         ? services.getActiveSourceEditorContextAdapter()
@@ -58,7 +58,7 @@ export function createTagTokenMainViewControlHandlers() {
         }
         return Promise.resolve(null);
       }
-      return openTagTokenModal({
+      return openConceptTokenModal({
         adapter: adapter,
         capture: adapter.captureSelection(),
         root: context.root
@@ -84,8 +84,8 @@ export function createSemanticTokenInfoViewResolver(options = {}) {
     return loadRegistry().then(function (registry) {
       var snapshot = adapter.getBufferSnapshot();
       var selection = adapter.getSelection();
-      if (tagTokenAtSelection(parseTagTokens(snapshot.value, { registry: registry }), selection)) {
-        return "tag-token-info";
+      if (conceptTokenAtSelection(parseConceptTokens(snapshot.value, { registry: registry }), selection)) {
+        return "concept-token-info";
       }
       if (
         catalogueTokenAtSelection(

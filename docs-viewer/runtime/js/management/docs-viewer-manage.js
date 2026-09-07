@@ -76,11 +76,11 @@ import {
   subjectLinkControlRenderer
 } from "./source-editor/subject-link-contribution.js";
 import {
-  TAG_TOKEN_CONTROL_ID,
+  CONCEPT_TOKEN_CONTROL_ID,
   createSemanticTokenInfoViewResolver,
-  createTagTokenMainViewControlHandlers,
-  tagTokenControlRenderer
-} from "./source-editor/tag-token-contribution.js";
+  createConceptTokenMainViewControlHandlers,
+  conceptTokenControlRenderer
+} from "./source-editor/concept-token-contribution.js";
 
 function mountDocsViewerManageExtras(context) {
   var settings = context || {};
@@ -125,7 +125,7 @@ startDocsViewerManageApp({
     {
       [CATALOGUE_IMAGE_CONTROL_ID]: catalogueImageControlRenderer,
       [CATALOGUE_TOKEN_CONTROL_ID]: catalogueTokenControlRenderer,
-      [TAG_TOKEN_CONTROL_ID]: tagTokenControlRenderer,
+      [CONCEPT_TOKEN_CONTROL_ID]: conceptTokenControlRenderer,
       [SUBJECT_LINK_CONTROL_ID]: subjectLinkControlRenderer,
       [DIRECTIVE_ACTIONS_CONTROL_ID]: directiveActionsControlRenderer
     }
@@ -154,7 +154,7 @@ startDocsViewerManageApp({
     {},
     createCatalogueImageMainViewControlHandlers(),
     createCatalogueTokenMainViewControlHandlers(),
-    createTagTokenMainViewControlHandlers(),
+    createConceptTokenMainViewControlHandlers(),
     createSubjectLinkMainViewControlHandlers(),
     createDirectiveActionsMainViewControlHandlers(),
     managedTableTools.controlHandlers()
@@ -165,7 +165,7 @@ startDocsViewerManageApp({
   sourceEditorActionControlIds: [
     CATALOGUE_IMAGE_CONTROL_ID,
     CATALOGUE_TOKEN_CONTROL_ID,
-    TAG_TOKEN_CONTROL_ID,
+    CONCEPT_TOKEN_CONTROL_ID,
     SUBJECT_LINK_CONTROL_ID,
     DIRECTIVE_ACTIONS_CONTROL_ID
   ],

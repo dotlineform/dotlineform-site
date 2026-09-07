@@ -180,7 +180,7 @@ def semantic_token_broken_entries(
             reason = ""
             if not token.supported:
                 reason = "unsupported_kind"
-            elif token.family == "tag":
+            elif token.family == "concept":
                 if concept_states is None:
                     concept_states = concept_resolution_states(repo_root)
                 reason = concept_states.get(token.target_id, "unknown_concept")
@@ -197,7 +197,7 @@ def semantic_token_broken_entries(
             if not reason:
                 continue
             link_url = str((target or {}).get("href") or "").strip()
-            if token.family == "tag" and reason == "unknown_concept":
+            if token.family == "concept" and reason == "unknown_concept":
                 link_url = ""
             entries.append(
                 {

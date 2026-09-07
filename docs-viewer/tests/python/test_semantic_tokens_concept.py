@@ -1,4 +1,4 @@
-"""Focused parser, builder, usage, and targeted-build checks for Tag tokens."""
+"""Focused parser, builder, usage, and targeted-build checks for Concept tokens."""
 
 from __future__ import annotations
 
@@ -33,7 +33,7 @@ from docs_scope_config import load_docs_scope_configs  # noqa: E402
 
 FIRST_DOC_ID = "d-20260811-140000-a1b2c3"
 SECOND_DOC_ID = "d-20260811-140001-d4e5f6"
-TAG_HREF = (
+CONCEPT_HREF = (
     "/analysis/?doc=d-20260624-213316-478639"
     "&subdoc=d-20260727-225608-63967a"
 )
@@ -108,16 +108,16 @@ def prepare_repo(root: Path) -> None:
                     "meta": ["2007"],
                 },
                 {
-                    "family": "tag",
-                    "target_type": "tag",
+                    "family": "concept",
+                    "target_type": "concept",
                     "target_id": "nerve",
                     "title": "nerve",
-                    "href": TAG_HREF,
+                    "href": CONCEPT_HREF,
                     "meta": ["subject", "Nerve"],
                 },
                 {
-                    "family": "tag",
-                    "target_type": "tag",
+                    "family": "concept",
+                    "target_type": "concept",
                     "target_id": "unavailable",
                     "title": "unavailable",
                     "href": "",
@@ -133,10 +133,10 @@ def prepare_repo(root: Path) -> None:
             FIRST_DOC_ID,
             "First",
             (
-                "Known [[tag:tag:nerve|Nerve]] and "
+                "Known [[concept:concept:nerve|Nerve]] and "
                 "[[catalogue:work:00638|three signs]].\n\n"
-                "Unknown [[tag:tag:missing|Missing]] and "
-                "unavailable [[tag:tag:unavailable|Unavailable]]."
+                "Unknown [[concept:concept:missing|Missing]] and "
+                "unavailable [[concept:concept:unavailable|Unavailable]]."
             ),
         ),
     )
@@ -145,7 +145,7 @@ def prepare_repo(root: Path) -> None:
         source_text(
             SECOND_DOC_ID,
             "Second",
-            "Another [[tag:tag:nerve|Nerve again]].",
+            "Another [[concept:concept:nerve|Nerve again]].",
         ),
     )
 
@@ -159,19 +159,19 @@ def builder(root: Path, *, only_doc_ids: list[str] | None = None) -> DocsDataBui
     )
 
 
-def test_tag_registry_defines_separate_authoring_and_info_contributions() -> None:
+def test_concept_registry_defines_separate_authoring_and_info_contributions() -> None:
     payload = read_json(
         REPO_ROOT / "docs-viewer/config/semantic-tokens/registry.json"
     )
     families = {family["key"]: family for family in payload["families"]}
-    tag = families["tag"]
+    concept = families["concept"]
 
-    assert tag["ui_contributions"] == {
-        "source_action": "source-add-tag-token",
-        "modal": "tag-token-add-modal",
-        "info_view": "tag-token-info",
+    assert concept["ui_contributions"] == {
+        "source_action": "source-add-concept-token",
+        "modal": "concept-token-add-modal",
+        "info_view": "concept-token-info",
     }
-    assert tag["occurrence_fields"] == [
+    assert concept["occurrence_fields"] == [
         {
             "key": "title",
             "label": "Title",
@@ -180,9 +180,9 @@ def test_tag_registry_defines_separate_authoring_and_info_contributions() -> Non
             "control": "text",
         }
     ]
-    assert [{key: value for key, value in item.items() if key != "label"} for item in tag["target_types"]] == [
+    assert [{key: value for key, value in item.items() if key != "label"} for item in concept["target_types"]] == [
         {
-            "key": "tag",
+            "key": "concept",
             "id_policy": {
                 "normalizer": "slug",
                 "input_pattern": "^[a-z0-9][a-z0-9-]*$",
@@ -197,24 +197,24 @@ def test_tag_registry_defines_separate_authoring_and_info_contributions() -> Non
     )
 
 
-def test_tag_parser_is_tolerant_context_aware_and_exact() -> None:
+def test_concept_parser_is_tolerant_context_aware_and_exact() -> None:
     registry = load_semantic_token_registry(REPO_ROOT)
     assert registry is not None
-    valid = "[[tag:tag:nerve|Nerve \\| signal]]"
+    valid = "[[concept:concept:nerve|Nerve \\| signal]]"
     unsupported = "[[future:item:alpha|Future]]"
     source = (
         f"{valid} {unsupported}\n"
         f"`{valid}`\n"
         f"<!-- {valid} -->\n"
         f"```\n{valid}\n```\n"
-        "[[tag:tag:Nerve|wrong identity]]\n"
-        "[[tag:image:tag:nerve|alt=wrong]]\n"
+        "[[concept:concept:Nerve|wrong identity]]\n"
+        "[[concept:image:concept:nerve|alt=wrong]]\n"
     )
 
     tokens = parse_semantic_tokens(source, registry=registry)
 
     assert [token.raw for token in tokens] == [valid, unsupported]
-    assert tokens[0].family == tokens[0].target_type == "tag"
+    assert tokens[0].family == tokens[0].target_type == "concept"
     assert tokens[0].target_id == "nerve"
     assert tokens[0].title == "Nerve | signal"
     assert tokens[0].supported is True
@@ -227,14 +227,14 @@ def test_tag_parser_is_tolerant_context_aware_and_exact() -> None:
         end=tokens[0].start + 2,
     ) is tokens[0]
     assert serialize_semantic_token(
-        family="tag",
-        target_type="tag",
+        family="concept",
+        target_type="concept",
         target_id="nerve",
         title="Nerve | signal",
     ) == valid
 
 
-def test_tag_builder_renders_one_link_and_records_only_resolved_usage() -> None:
+def test_concept_builder_renders_one_link_and_records_only_resolved_usage() -> None:
     with tempfile.TemporaryDirectory() as temp_path:
         root = Path(temp_path)
         prepare_repo(root)
@@ -251,39 +251,38 @@ def test_tag_builder_renders_one_link_and_records_only_resolved_usage() -> None:
     content = first["content_html"]
     assert (
         '<a href="/analysis/?doc=d-20260624-213316-478639&amp;subdoc='
-        'd-20260727-225608-63967a" data-semantic-token-family="tag" '
-        'data-semantic-token-target-type="tag" '
+        'd-20260727-225608-63967a" data-semantic-token-family="concept" '
+        'data-semantic-token-target-type="concept" '
         'data-semantic-token-target-id="nerve" target="_blank" '
         'rel="noopener noreferrer">Nerve</a>'
     ) in content
     assert '<a href="/works/?work=00638" data-semantic-token-family="catalogue"' in content
-    assert "[[tag:tag:missing|Missing]]" in content
-    assert "[[tag:tag:unavailable|Unavailable]]" in content
-    assert "tag_registry_version" not in json.dumps(first)
+    assert "[[concept:concept:missing|Missing]]" in content
+    assert "[[concept:concept:unavailable|Unavailable]]" in content
     resolved = usage["occurrences"]
     assert usage["schema_version"] == "docs_semantic_token_usage_index_v1"
     assert len(resolved) == 3
-    first_tag = next(
+    first_concept = next(
         row
         for row in resolved
-        if row["source_doc_id"] == FIRST_DOC_ID and row["family"] == "tag"
+        if row["source_doc_id"] == FIRST_DOC_ID and row["family"] == "concept"
     )
-    assert first_tag == {
+    assert first_concept == {
         "source_scope": "analysis",
         "source_doc_id": FIRST_DOC_ID,
-        "source_range": {"start": 6, "end": 29},
-        "raw": "[[tag:tag:nerve|Nerve]]",
+        "source_range": {"start": 6, "end": 37},
+        "raw": "[[concept:concept:nerve|Nerve]]",
         "title": "Nerve",
-        "family": "tag",
-        "target_type": "tag",
+        "family": "concept",
+        "target_type": "concept",
         "target_id": "nerve",
-        "href": TAG_HREF,
+        "href": CONCEPT_HREF,
     }
     assert result["diagnostics"]["warning_count"] == 0
     assert not (root / "site").exists()
 
 
-def test_targeted_build_preserves_untouched_tag_usage_and_payload() -> None:
+def test_targeted_build_preserves_untouched_concept_usage_and_payload() -> None:
     with tempfile.TemporaryDirectory() as temp_path:
         root = Path(temp_path)
         prepare_repo(root)
@@ -300,8 +299,8 @@ def test_targeted_build_preserves_untouched_tag_usage_and_payload() -> None:
         write_text(
             first_source,
             first_source.read_text(encoding="utf-8").replace(
-                "[[tag:tag:nerve|Nerve]]",
-                "[[tag:tag:nerve|Neural feeling]]",
+                "[[concept:concept:nerve|Nerve]]",
+                "[[concept:concept:nerve|Neural feeling]]",
             ),
         )
 
@@ -315,8 +314,8 @@ def test_targeted_build_preserves_untouched_tag_usage_and_payload() -> None:
     assert result["diagnostics"]["build_mode"] == "targeted"
     assert result["diagnostics"]["only_doc_ids"] == [FIRST_DOC_ID]
     assert second_after == second_before
-    tag_rows = [row for row in usage["occurrences"] if row["family"] == "tag"]
-    assert [(row["source_doc_id"], row["title"]) for row in tag_rows] == [
+    concept_rows = [row for row in usage["occurrences"] if row["family"] == "concept"]
+    assert [(row["source_doc_id"], row["title"]) for row in concept_rows] == [
         (FIRST_DOC_ID, "Neural feeling"),
         (SECOND_DOC_ID, "Nerve again"),
     ]

@@ -104,17 +104,17 @@ def write_public_reader_doc_payload(repo_root: Path, scope: str, doc_id: str, ti
     )
 
 
-def tag_family_definition() -> dict[str, object]:
+def concept_family_definition() -> dict[str, object]:
     return {
         "schema_version": "docs_semantic_token_family_definition_v1",
-        "key": "tag",
+        "key": "concept",
         "labels": {},
         "occurrence_fields": [],
         "ui_contributions": {},
         "target_types": [
             {
-                "key": "tag",
-                "label": "Tag",
+                "key": "concept",
+                "label": "Concept",
                 "id_policy": {
                     "normalizer": "slug",
                     "input_pattern": "^[a-z0-9][a-z0-9-]*$",
@@ -127,7 +127,7 @@ def tag_family_definition() -> dict[str, object]:
     }
 
 
-def write_semantic_token_contract(repo_root: Path, *, include_tag: bool = False) -> None:
+def write_semantic_token_contract(repo_root: Path, *, include_concept: bool = False) -> None:
     families: list[dict[str, object]] = [
         {
             "schema_version": "docs_semantic_token_family_definition_v1",
@@ -151,8 +151,8 @@ def write_semantic_token_contract(repo_root: Path, *, include_tag: bool = False)
             ],
         }
     ]
-    if include_tag:
-        families.append(tag_family_definition())
+    if include_concept:
+        families.append(concept_family_definition())
     write_json(
         repo_root / "docs-viewer/config/semantic-tokens/registry.json",
         {
@@ -161,12 +161,12 @@ def write_semantic_token_contract(repo_root: Path, *, include_tag: bool = False)
             "families": families,
         },
     )
-    tag_targets: list[dict[str, object]] = []
-    if include_tag:
-        tag_targets = [
+    concept_targets: list[dict[str, object]] = []
+    if include_concept:
+        concept_targets = [
             {
-                "family": "tag",
-                "target_type": "tag",
+                "family": "concept",
+                "target_type": "concept",
                 "target_id": concept_id,
                 "title": concept_id,
                 "href": f"/analysis/?doc=report&subdoc={doc_id}",
@@ -211,7 +211,7 @@ def write_semantic_token_contract(repo_root: Path, *, include_tag: bool = False)
                     "title": "image unavailable",
                     "href": "/works/?work=00009",
                 },
-            ] + tag_targets,
+            ] + concept_targets,
         },
     )
 
@@ -219,7 +219,7 @@ def write_semantic_token_contract(repo_root: Path, *, include_tag: bool = False)
 def write_concept_diagnosis_contract(repo_root: Path) -> None:
     from concept_factory import write_concept_sources
 
-    write_semantic_token_contract(repo_root, include_tag=True)
+    write_semantic_token_contract(repo_root, include_concept=True)
     config = json.loads((repo_root / "docs-viewer/config/scopes/docs_scopes.json").read_text())
     write_concept_sources(repo_root, concept_id="resolved", extra_scopes=[
         scope for scope in config["scopes"] if scope["scope_id"] != "analysis"
@@ -436,8 +436,8 @@ def test_semantic_token_source_repair_clears_the_audit() -> None:
     assert repaired["summary"] == {"total": 0}
 
 
-def test_tag_semantic_token_audit_diagnoses_exact_resolution_state() -> None:
-    source_body = "Resolved [[tag:tag:resolved|Resolved]]. Unknown [[tag:tag:unknown|Unknown]]."
+def test_concept_semantic_token_audit_diagnoses_exact_resolution_state() -> None:
+    source_body = "Resolved [[concept:concept:resolved|Resolved]]. Unknown [[concept:concept:unknown|Unknown]]."
     with make_repo("<p>No semantic-token anchors here.</p>", source_body=source_body) as temp_path:
         repo_root = Path(temp_path)
         write_concept_diagnosis_contract(repo_root)
@@ -453,7 +453,7 @@ def main() -> None:
         test_public_reader_payloads_do_not_need_viewer_url_metadata,
         test_semantic_token_audit_reads_source_independently_of_rendered_usage,
         test_semantic_token_source_repair_clears_the_audit,
-        test_tag_semantic_token_audit_diagnoses_exact_resolution_state,
+        test_concept_semantic_token_audit_diagnoses_exact_resolution_state,
     ]
     for test in tests:
         test()

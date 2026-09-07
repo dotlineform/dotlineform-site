@@ -34,6 +34,9 @@ export function subjectFromMetadataResponse(response, target) {
   var responseTarget = response && typeof response === "object" && !Array.isArray(response)
     ? { scope: response.scope, doc_id: response.doc_id }
     : null;
+  if (responseTarget && Object.prototype.hasOwnProperty.call(response, "stage")) {
+    responseTarget.stage = response.stage;
+  }
   if (responseTarget && Object.prototype.hasOwnProperty.call(response, "sub_scope")) {
     responseTarget.sub_scope = response.sub_scope;
   }
