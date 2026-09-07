@@ -13,16 +13,6 @@
         "shell_type": "html-template",
         "ready_state_route_id": "studio-home"
       },
-      "bulk_add_work": {
-        "label": "bulk add",
-        "title": "Bulk Add Work",
-        "path": "/studio/bulk-add-work/",
-        "template": "/studio/app/frontend/routes/bulk-add-work.html",
-        "script": "/studio/app/frontend/js/bulk-add-work.js",
-        "nav": false,
-        "shell_type": "html-template",
-        "ready_state_route_id": "bulk-add-work"
-      },
       "catalogue_field_registry": {
         "label": "field registry",
         "title": "Catalogue Field Registry",

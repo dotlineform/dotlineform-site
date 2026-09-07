@@ -38,27 +38,14 @@ from catalogue.catalogue_lookup import (  # noqa: E402
     build_work_search_payload,
 )
 from catalogue.catalogue_media_files import IMAGE_EXTENSIONS  # noqa: E402
-from catalogue.catalogue_service_context import utc_now  # noqa: E402
-from catalogue.catalogue_service_context import build_catalogue_write_context  # noqa: E402
-from catalogue.catalogue_output_service import complete_saved_catalogue_output  # noqa: E402
 from catalogue.catalogue_source import (  # noqa: E402
     DEFAULT_SOURCE_DIR,
     SOURCE_FILES,
     load_json_file,
     normalize_text,
     normalize_detail_uid_value,
-    payload_for_map,
     records_from_json_source,
     slug_id,
-    work_details_payload_for_maps,
-)
-from catalogue.catalogue_transactions import execute_source_json_write  # noqa: E402
-from catalogue.catalogue_workbook_import import (  # noqa: E402
-    DEFAULT_IMPORT_WORKBOOK_PATH,
-    apply_workbook_import_plan,
-    build_workbook_import_plan,
-    normalize_import_mode,
-    plan_to_response,
 )
 from catalogue_work_media_sources import (  # noqa: E402
     WorkMediaSourceRoot,
@@ -97,8 +84,6 @@ def catalogue_get_payload(repo_root: Path, api_path: str, query: Mapping[str, li
                 "work/save",
                 "series/create",
                 "series/save",
-                "import-preview",
-                "import-apply",
                 "project-media",
             ],
         }
@@ -116,10 +101,6 @@ def catalogue_post_response(
     *,
     dry_run: bool = False,
 ) -> tuple[HTTPStatus, dict[str, Any]]:
-    if api_path == "/import-preview":
-        return HTTPStatus.OK, import_preview_payload(repo_root, body)
-    if api_path == "/import-apply":
-        return import_apply_response(repo_root, body, dry_run=dry_run)
     if api_path in catalogue_write_service.SERVICE_POST_PATHS:
         try:
             return catalogue_write_service.handle_catalogue_post(repo_root, api_path, body, dry_run=dry_run)
@@ -297,94 +278,16 @@ def project_media_file_records(folder_path: Path, query: str) -> list[dict[str, 
     return records
 
 
-def import_preview_payload(repo_root: Path, body: Mapping[str, Any]) -> dict[str, Any]:
-    mode = normalize_import_mode(body.get("mode"))
-    paths = catalogue_paths(repo_root)
-    plan = build_workbook_import_plan(paths["source_dir"], (repo_root / DEFAULT_IMPORT_WORKBOOK_PATH).resolve(), mode)
-    return {"ok": True, "mode": mode, "preview": plan_to_response(plan, repo_root=repo_root)}
-
-
-def import_apply_response(repo_root: Path, body: Mapping[str, Any], *, dry_run: bool = False) -> tuple[HTTPStatus, dict[str, Any]]:
-    mode = normalize_import_mode(body.get("mode"))
-    paths = catalogue_paths(repo_root)
-    previous = records_from_json_source(paths["source_dir"])
-    plan = build_workbook_import_plan(paths["source_dir"], (repo_root / DEFAULT_IMPORT_WORKBOOK_PATH).resolve(), mode)
-    preview_payload = plan_to_response(plan, repo_root=repo_root)
-    if plan.blocked_count > 0:
-        return HTTPStatus.BAD_REQUEST, {
-            "ok": False,
-            "error": "import preview contains blocked rows",
-            "mode": mode,
-            "preview": preview_payload,
-        }
-
-    changed = plan.importable_count > 0
-    target_kind = plan.target_kind
-    if changed and not dry_run:
-        updated_records = apply_workbook_import_plan(paths["source_dir"], plan)
-        target_path = paths["works_path"] if target_kind == "works" else paths["work_details_path"]
-        payload = (
-            payload_for_map("works", updated_records.works)
-            if target_kind == "works"
-            else work_details_payload_for_maps(updated_records.work_detail_sections, updated_records.work_details)
-        )
-        if target_path not in paths["allowed_write_paths"]:
-            raise ValueError("write target not allowlisted")
-        execute_source_json_write(
-            {target_path: payload},
-            dry_run=dry_run,
-            repo_root=repo_root,
-        )
-
-    response_payload: dict[str, Any] = {
-        "ok": True,
-        "mode": mode,
-        "changed": changed,
-        "imported_count": plan.importable_count,
-        "duplicate_count": plan.duplicate_count,
-        "target_kind": target_kind,
-        "preview": preview_payload,
-    }
-    if dry_run:
-        response_payload["dry_run"] = True
-        response_payload["would_write"] = changed
-    elif changed:
-        response_payload["saved_at_utc"] = utc_now()
-        complete_saved_catalogue_output(build_catalogue_write_context(repo_root), response_payload, previous)
-
-    log_event(
-        repo_root,
-        "catalogue_import_apply",
-        {
-            "mode": mode,
-            "imported_count": plan.importable_count,
-            "duplicate_count": plan.duplicate_count,
-            "blocked_count": plan.blocked_count,
-            "dry_run": dry_run,
-        },
-    )
-    return HTTPStatus.OK, response_payload
-
-
 def catalogue_paths(repo_root: Path) -> dict[str, Any]:
     source_dir = (repo_root / DEFAULT_SOURCE_DIR).resolve()
     lookup_dir = (repo_root / DEFAULT_LOOKUP_DIR).resolve()
     works_path = (source_dir / SOURCE_FILES["works"]).resolve()
-    work_details_path = (source_dir / SOURCE_FILES["work_details"]).resolve()
     series_path = (source_dir / SOURCE_FILES["series"]).resolve()
-    allowed_write_paths = {
-        (source_dir / filename).resolve()
-        for kind, filename in SOURCE_FILES.items()
-        if kind != "meta"
-    }
     return {
         "source_dir": source_dir,
         "lookup_dir": lookup_dir,
         "works_path": works_path,
-        "work_details_path": work_details_path,
         "series_path": series_path,
-        "allowed_write_paths": allowed_write_paths,
-        "allowed_write_roots": set(),
     }
 
 

@@ -67,8 +67,6 @@ STUDIO_SERVICE_ENDPOINTS: dict[str, object] = {
         "create_work_detail_section": "/studio/api/catalogue/work-detail-section/create",
         "create_work": "/studio/api/catalogue/work/create",
         "save_work": "/studio/api/catalogue/work/save",
-        "import_preview": "/studio/api/catalogue/import-preview",
-        "import_apply": "/studio/api/catalogue/import-apply",
         "create_series": "/studio/api/catalogue/series/create",
         "save_series": "/studio/api/catalogue/series/save",
     },
@@ -234,11 +232,9 @@ def asset_version(repo_root: Path) -> str:
         repo_root / "studio" / "app" / "frontend" / "js" / "studio-home.js",
         repo_root / "studio" / "app" / "frontend" / "js" / "catalogue-editor-shell-media.js",
         repo_root / "studio" / "app" / "frontend" / "routes" / "studio-home.html",
-        repo_root / "studio" / "app" / "frontend" / "routes" / "bulk-add-work.html",
         repo_root / "studio" / "app" / "frontend" / "routes" / "catalogue-field-registry.html",
         repo_root / "studio" / "app" / "frontend" / "routes" / "catalogue-series.html",
         repo_root / "studio" / "app" / "frontend" / "routes" / "catalogue-work.html",
-        repo_root / "studio" / "app" / "frontend" / "js" / "bulk-add-work.js",
         repo_root / "studio" / "app" / "frontend" / "js" / "catalogue-field-registry-review.js",
         repo_root / "studio" / "app" / "frontend" / "js" / "catalogue-series-editor.js",
         repo_root / "studio" / "app" / "frontend" / "js" / "catalogue-project-media-picker.js",
@@ -264,10 +260,6 @@ def runtime_config(repo_root: Path, version: str) -> dict[str, object]:
     pipeline_encoding = pipeline_payload.get("encoding") if isinstance(pipeline_payload, dict) else {}
     if not isinstance(pipeline_encoding, dict):
         pipeline_encoding = {}
-    pipeline_paths = pipeline_payload.get("paths") if isinstance(pipeline_payload, dict) else {}
-    if not isinstance(pipeline_paths, dict):
-        pipeline_paths = {}
-    pipeline_workbooks = pipeline_paths.get("workbooks") if isinstance(pipeline_paths.get("workbooks"), dict) else {}
 
     payload.setdefault("app", {})
     app_config = payload["app"]
@@ -290,7 +282,6 @@ def runtime_config(repo_root: Path, version: str) -> dict[str, object]:
         "pipeline": {
             "variants": pipeline_variants,
             "encoding": pipeline_encoding,
-            "workbooks": pipeline_workbooks,
         },
         "views": [
             {"id": view_id, **view}

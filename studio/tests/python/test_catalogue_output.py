@@ -206,24 +206,6 @@ def test_studio_serves_generated_thumbnails_and_rejects_paths_outside_output(out
     assert handler.wfile.getvalue() == b"thumbnail bytes"
 
 
-def test_import_apply_completes_generated_output(output_catalogue):
-    openpyxl = pytest.importorskip("openpyxl")
-    repo, _, root = output_catalogue
-    workbook_path = repo / "data/works_bulk_import.xlsx"
-    workbook_path.parent.mkdir()
-    workbook = openpyxl.Workbook()
-    workbook.active.title = "Works"
-    workbook.active.append(["work_id", "series_id", "title"])
-    workbook.active.append(["42", "010", "Imported Work"])
-    workbook.save(workbook_path)
-    status, response = catalogue_post_response(repo, "/import-apply", {"mode": "works"})
-    assert status == 200
-    assert response["saved"] is True
-    assert response["output"]["status"] == "completed", response
-    assert read_json(root / "works/index/00042.json")["work"]["title"] == "Imported Work"
-    assert read_json(root / "series/index/010.json")["member_works"][0]["work_id"] == "00042"
-
-
 class MemoryMedia:
     def __init__(self):
         self.objects = {}

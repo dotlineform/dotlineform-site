@@ -157,7 +157,6 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
                 "studio/tests/python/test_studio_app_runtime_config.py",
                 "studio/tests/python/test_local_studio_runner_contract.py",
                 "studio/tests/python/test_studio_catalogue_read_routes.py",
-                "studio/tests/python/test_studio_catalogue_import_routes.py",
                 "studio/tests/python/test_studio_catalogue_write_routes.py",
                 "tests/test_run_checks.py",
                 "studio/tests/python/test_local_env.py",

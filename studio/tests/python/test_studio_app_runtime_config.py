@@ -14,6 +14,7 @@ from studio_app_server_test_support import (
     REPO_ROOT,
     StudioAppRequestHandler,
     asset_version,
+    catalogue_post_response,
     env_flag,
     parse_args,
     runtime_config,
@@ -62,7 +63,7 @@ def test_runtime_config_exposes_adapter_contract() -> None:
     assert payload["app"]["routes"]["studio_home"]["shell_type"] == "html-template"
     assert payload["app"]["routes"]["studio_home"]["template"] == "/studio/app/frontend/routes/studio-home.html"
     assert payload["app"]["routes"]["catalogue_work_editor"]["path"] == "/studio/catalogue-work/"
-    assert payload["app"]["routes"]["bulk_add_work"]["shell_type"] == "html-template"
+    assert "bulk_add_work" not in payload["app"]["routes"]
     assert payload["app"]["routes"]["catalogue_field_registry"]["shell_type"] == "html-template"
     assert "catalogue_status" not in payload["app"]["routes"]
     assert payload["app"]["routes"]["catalogue_series_editor"]["shell_type"] == "html-template"
@@ -82,7 +83,6 @@ def test_runtime_config_exposes_adapter_contract() -> None:
     assert not any(view["id"] == "thumbnail_quality" for view in runtime["views"])
     assert not any("doc_id" in view for view in runtime["views"])
     assert not any("docId" in view for view in runtime["views"])
-    assert any(view["id"] == "bulk_add_work" and view["path"] == "/studio/bulk-add-work/" for view in runtime["views"])
     assert any(view["id"] == "catalogue_field_registry" and view["path"] == "/studio/catalogue-field-registry/" for view in runtime["views"])
     assert not any(view["id"] == "catalogue_status" and view["path"] == "/studio/catalogue-status/" for view in runtime["views"])
     assert not any(view["id"] == "studio_works" or view["path"] == "/studio/studio-works/" for view in runtime["views"])
@@ -121,8 +121,8 @@ def test_runtime_config_exposes_adapter_contract() -> None:
     assert "publication_apply" not in runtime["services"]["catalogue"]
     assert runtime["services"]["catalogue"]["create_work"] == "/studio/api/catalogue/work/create"
     assert runtime["services"]["catalogue"]["save_work"] == "/studio/api/catalogue/work/save"
-    assert runtime["services"]["catalogue"]["import_preview"] == "/studio/api/catalogue/import-preview"
-    assert runtime["services"]["catalogue"]["import_apply"] == "/studio/api/catalogue/import-apply"
+    assert "import_preview" not in runtime["services"]["catalogue"]
+    assert "import_apply" not in runtime["services"]["catalogue"]
     assert runtime["services"]["catalogue"]["create_series"] == "/studio/api/catalogue/series/create"
     assert runtime["services"]["catalogue"]["save_series"] == "/studio/api/catalogue/series/save"
     assert "project_state_report" not in runtime["services"]["catalogue"]
@@ -135,7 +135,7 @@ def test_runtime_config_exposes_adapter_contract() -> None:
     assert runtime["media"]["thumbs"]["works"] == "/studio/catalogue-output/works/thumbs"
     assert runtime["pipeline"]["variants"]["thumb"]["suffix"] == "thumb"
     assert runtime["pipeline"]["encoding"]["format"] == "webp"
-    assert runtime["pipeline"]["workbooks"]["bulk_import"] == "data/works_bulk_import.xlsx"
+    assert "workbooks" not in runtime["pipeline"]
     assert runtime["modals"]["event"] == "studio:open-modal"
 
 def test_retired_tag_routes_and_apis_return_not_found() -> None:
@@ -158,33 +158,39 @@ def test_retired_tag_routes_and_apis_return_not_found() -> None:
     assert outcomes == [404] * 8
 
 
+@pytest.mark.parametrize("api_path", ["/import-preview", "/import-apply"])
+def test_retired_workbook_import_apis_are_unavailable(api_path: str) -> None:
+    with pytest.raises(FileNotFoundError, match="Unknown catalogue API route"):
+        catalogue_post_response(REPO_ROOT, api_path, {"mode": "works"})
+
+
 def test_studio_route_registry_validation_rejects_invalid_routes() -> None:
     payload = runtime_config(REPO_ROOT, "test-version")
     routes = payload["app"]["routes"]
 
     duplicate_path = json.loads(json.dumps(payload))
-    duplicate_path["app"]["routes"]["bulk_add_work"]["path"] = routes["catalogue_field_registry"]["path"]
+    duplicate_path["app"]["routes"]["catalogue_work_editor"]["path"] = routes["catalogue_field_registry"]["path"]
     with pytest.raises(RuntimeError, match="duplicate path"):
         validate_studio_route_registry(REPO_ROOT, duplicate_path)
 
     missing_script = json.loads(json.dumps(payload))
-    missing_script["app"]["routes"]["bulk_add_work"].pop("script")
-    with pytest.raises(RuntimeError, match="bulk_add_work: shell route is missing script"):
+    missing_script["app"]["routes"]["catalogue_work_editor"].pop("script")
+    with pytest.raises(RuntimeError, match="catalogue_work_editor: shell route is missing script"):
         validate_studio_route_registry(REPO_ROOT, missing_script)
 
     missing_template = json.loads(json.dumps(payload))
-    missing_template["app"]["routes"]["bulk_add_work"].pop("template")
-    with pytest.raises(RuntimeError, match="bulk_add_work: missing required field template"):
+    missing_template["app"]["routes"]["catalogue_work_editor"].pop("template")
+    with pytest.raises(RuntimeError, match="catalogue_work_editor: missing required field template"):
         validate_studio_route_registry(REPO_ROOT, missing_template)
 
     missing_template_path = json.loads(json.dumps(payload))
-    missing_template_path["app"]["routes"]["bulk_add_work"]["template"] = "/studio/app/frontend/routes/missing.html"
-    with pytest.raises(RuntimeError, match="bulk_add_work: template does not exist"):
+    missing_template_path["app"]["routes"]["catalogue_work_editor"]["template"] = "/studio/app/frontend/routes/missing.html"
+    with pytest.raises(RuntimeError, match="catalogue_work_editor: template does not exist"):
         validate_studio_route_registry(REPO_ROOT, missing_template_path)
 
     unsupported_shell = json.loads(json.dumps(payload))
-    unsupported_shell["app"]["routes"]["bulk_add_work"]["shell_type"] = "server"
-    with pytest.raises(RuntimeError, match="bulk_add_work: unsupported shell_type"):
+    unsupported_shell["app"]["routes"]["catalogue_work_editor"]["shell_type"] = "server"
+    with pytest.raises(RuntimeError, match="catalogue_work_editor: unsupported shell_type"):
         validate_studio_route_registry(REPO_ROOT, unsupported_shell)
 
     external_route = json.loads(json.dumps(payload))
@@ -192,8 +198,8 @@ def test_studio_route_registry_validation_rejects_invalid_routes() -> None:
         "label": "external",
         "title": "External",
         "path": "/external/",
-        "template": "/studio/app/frontend/routes/bulk-add-work.html",
-        "script": "/studio/app/frontend/js/bulk-add-work.js",
+        "template": "/studio/app/frontend/routes/catalogue-work.html",
+        "script": "/studio/app/frontend/js/catalogue-work-editor.js",
         "nav": False,
         "shell_type": "html-template",
         "ready_state_route_id": "external",
@@ -206,8 +212,8 @@ def test_studio_route_registry_validation_rejects_invalid_routes() -> None:
         "label": "configured",
         "title": "Configured",
         "path": "/studio/configured/",
-        "template": "/studio/app/frontend/routes/bulk-add-work.html",
-        "script": "/studio/app/frontend/js/bulk-add-work.js",
+        "template": "/studio/app/frontend/routes/catalogue-work.html",
+        "script": "/studio/app/frontend/js/catalogue-work-editor.js",
         "nav": False,
         "shell_type": "html-template",
         "ready_state_route_id": "configured",

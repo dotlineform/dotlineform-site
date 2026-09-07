@@ -6,8 +6,6 @@ const CATALOGUE_WRITE_ENDPOINTS = Object.freeze({
   saveWorkDetailSection: "/studio/api/catalogue/work-detail-section/save",
   createWork: "/studio/api/catalogue/work/create",
   saveWork: "/studio/api/catalogue/work/save",
-  importPreview: "/studio/api/catalogue/import-preview",
-  importApply: "/studio/api/catalogue/import-apply",
   createSeries: "/studio/api/catalogue/series/create",
   saveSeries: "/studio/api/catalogue/series/save",
   projectMedia: "/studio/api/catalogue/project-media",
@@ -20,14 +18,7 @@ const CATALOGUE_READ_ENDPOINTS = Object.freeze({
   read: "/studio/api/catalogue/read"
 });
 
-const BULK_ADD_WORK_ENDPOINTS = Object.freeze({
-  catalogueHealth: "/studio/api/catalogue/health",
-  importPreview: "/studio/api/catalogue/import-preview",
-  importApply: "/studio/api/catalogue/import-apply"
-});
-
 export {
-  BULK_ADD_WORK_ENDPOINTS,
   CATALOGUE_READ_ENDPOINTS,
   CATALOGUE_WRITE_ENDPOINTS,
 };
@@ -42,10 +33,6 @@ export async function probeCatalogueHealth(timeoutMs = 500) {
 
 export async function probeCatalogueReadHealth(timeoutMs = 500) {
   return probeHealth(CATALOGUE_READ_ENDPOINTS.catalogueHealth, timeoutMs);
-}
-
-export async function probeBulkAddWorkCatalogueHealth(timeoutMs = 500) {
-  return probeHealth(BULK_ADD_WORK_ENDPOINTS.catalogueHealth, timeoutMs);
 }
 
 async function probeHealth(url, timeoutMs = 500) {

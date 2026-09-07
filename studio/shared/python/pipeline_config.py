@@ -24,9 +24,6 @@ DEFAULT_PIPELINE_CONFIG: Dict[str, Any] = {
         "srcset_success_ids_file": "MAKE_SRCSET_SUCCESS_IDS_FILE",
     },
     "paths": {
-        "workbooks": {
-            "bulk_import": "data/works_bulk_import.xlsx",
-        },
         "source_roots": {
             "work_media": {
                 "default": "projects",
@@ -209,7 +206,3 @@ def work_media_source_root_subdir(config: Mapping[str, Any], source_id: str) -> 
 
 def source_works_prose_subdir(config: Mapping[str, Any]) -> Path:
     return Path(str(config["paths"]["source_subdirs"]["prose"]))
-
-
-def bulk_import_workbook_path(config: Mapping[str, Any]) -> Path:
-    return Path(str(config["paths"]["workbooks"]["bulk_import"]))

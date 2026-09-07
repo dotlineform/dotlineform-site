@@ -11,8 +11,6 @@ WORK_LINK_SAVE_PATH = "/catalogue/work-link/save"
 WORK_LINK_CREATE_PATH = "/catalogue/work-link/create"
 WORK_LINK_DELETE_PATH = "/catalogue/work-link/delete"
 CATALOGUE_READ_PATH = "/catalogue/read"
-IMPORT_PREVIEW_PATH = "/catalogue/import-preview"
-IMPORT_APPLY_PATH = "/catalogue/import-apply"
 SERIES_SAVE_PATH = "/catalogue/series/save"
 SERIES_CREATE_PATH = "/catalogue/series/create"
 BULK_SAVE_PATH = "/catalogue/bulk-save"
@@ -32,8 +30,6 @@ POST_PATHS = (
     WORK_LINK_CREATE_PATH,
     WORK_LINK_SAVE_PATH,
     WORK_LINK_DELETE_PATH,
-    IMPORT_PREVIEW_PATH,
-    IMPORT_APPLY_PATH,
     SERIES_SAVE_PATH,
     SERIES_CREATE_PATH,
     THUMBNAIL_QUALITY_PREVIEW_PATH,
