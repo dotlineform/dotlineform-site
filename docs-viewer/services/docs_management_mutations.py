@@ -300,7 +300,7 @@ def plan_create(repo_root: Path, body: Dict[str, Any]) -> ManagementMutationPlan
         front_matter_seed,
         timestamp=timestamp,
     )
-    source_text = source_model.format_source(front_matter, f"# {title}\n")
+    source_text = source_model.format_source(front_matter, f"# {title}\n", sub_scope=sub_scope)
     path = relative_path(repo_root, target_path)
     target = {**collection.request_target(), "doc_id": doc_id}
     if sub_scope:
@@ -510,6 +510,7 @@ def plan_assign_field_group(
     updated_source_text = source_model.format_source(
         updated_front_matter,
         target.body,
+        sub_scope=resolved.sub_scope,
     )
     source_model.parse_collection_document_report(
         repo_root,
@@ -747,6 +748,7 @@ def plan_update_metadata(repo_root: Path, body: Dict[str, Any]) -> ManagementMut
     updated_source_text = source_model.format_source(
         updated_front_matter,
         target.body,
+        sub_scope=resolved.sub_scope,
     )
     source_model.parse_collection_document_report(
         repo_root,

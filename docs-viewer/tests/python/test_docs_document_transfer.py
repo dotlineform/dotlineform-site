@@ -20,6 +20,7 @@ if str(DOCS_SERVICES_DIR) not in sys.path:
     sys.path.insert(0, str(DOCS_SERVICES_DIR))
 
 import docs_document_transfer as transfer  # noqa: E402
+import docs_document_transfer_apply as transfer_apply  # noqa: E402
 import docs_document_publication_lineage as publication_lineage  # noqa: E402
 import docs_media_source_evidence as media_source_evidence  # noqa: E402
 import docs_scope_config  # noqa: E402
@@ -247,7 +248,7 @@ def make_collection_repo(tmp_path: Path) -> Path:
             f"{report_ids[('source', 'tags')]}&subdoc=tag-b)\n\n"
             "[[media:docs/source/sub-scopes/tags/img/photo.png Photo]]\n"
         ),
-        extra_front_matter={"work_id": "00123"},
+        extra_front_matter={"work_id": "00123", "sub-scope": "tags"},
     )
     write_doc(
         sub_scope_documents_root(repo_root, "source", "tags"),
@@ -813,6 +814,13 @@ def test_copy_plans_all_exact_parent_and_child_collection_shapes(
     assert plan.target_collection.request_target() == expected_target
     assert plan.documents[0].target_path.parent == plan.target_collection.source_root
     assert plan.preview_payload()["source"] == expected_source
+    transformed = transfer_apply.transform_document_copy(plan, repo_root=repo_root)
+    for item in transformed.documents:
+        fields, _body = source_model.parse_source_text(item.source_text)
+        if target_sub_scope:
+            assert fields["sub-scope"] == target_sub_scope
+        else:
+            assert "sub-scope" not in fields
     assert {
         key: value
         for key, value in plan.preview_payload()["target"].items()

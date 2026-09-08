@@ -227,10 +227,40 @@ def format_front_matter_value(value: Any) -> str:
     return json.dumps(text, ensure_ascii=False)
 
 
-def format_source(front_matter: Dict[str, Any], body: str) -> str:
+def document_sub_scope_front_matter(front_matter: Mapping[str, Any], sub_scope: str) -> Dict[str, Any]:
+    """Record membership from the resolved destination, never from incoming metadata."""
+    updated = dict(front_matter)
+    if sub_scope:
+        updated["sub-scope"] = sub_scope
+    else:
+        updated.pop("sub-scope", None)
+    return updated
+
+
+def rewrite_source_sub_scope(source_text: str, sub_scope: str) -> str:
+    """Maintain membership while preserving other fields, the body and timestamps."""
+    prefix, front_matter, body = split_source_text(source_text)
+    updated = document_sub_scope_front_matter(front_matter, sub_scope)
+    if updated == front_matter:
+        return source_text
+    lines = prefix.splitlines(keepends=True)
+    closing = next(index for index, line in enumerate(lines[1:], 1) if line.strip() == "---")
+    header = [line for line in lines[:closing] if not re.match(r"^[ \t]*sub-scope[ \t]*:", line)]
+    if sub_scope:
+        while header and not header[-1].strip():
+            header.pop()
+        newline = "\r\n" if lines[0].endswith("\r\n") else "\n"
+        header.append(f"sub-scope: {format_front_matter_value(sub_scope)}{newline}")
+    return "".join(header + lines[closing:]) + body
+
+
+def format_source(front_matter: Dict[str, Any], body: str, *, sub_scope: str | None = None) -> str:
+    if sub_scope is not None:
+        front_matter = document_sub_scope_front_matter(front_matter, sub_scope)
     preferred_order = [
         "doc_id",
         "title",
+        "sub-scope",
         "date",
         "date_display",
         "added_date",

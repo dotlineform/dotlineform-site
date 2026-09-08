@@ -90,7 +90,7 @@ def transform_document_move(
         transformed.append(
             DocumentMoveSourceTransform(
                 planned_document=planned_document,
-                source_text=source_model.format_source(front_matter, body),
+                source_text=source_model.format_source(front_matter, body, sub_scope=plan.target_sub_scope),
                 viewer_link_rewrites=viewer_link_rewrites,
                 media_link_rewrites=media_link_rewrites,
             )
@@ -116,7 +116,7 @@ def _validate_transformation(transformation: DocumentMoveTransformation) -> None
                 f"document transfer plan is stale: candidate source for "
                 f"{planned.target_doc_id!r} is invalid: {exc}"
             ) from exc
-        expected_front_matter = dict(planned.source_doc.front_matter)
+        expected_front_matter = source_model.document_sub_scope_front_matter(planned.source_doc.front_matter, plan.target_sub_scope)
         expected_front_matter["parent_id"] = planned.target_parent_id
         if front_matter != expected_front_matter:
             raise transfer_apply.DocumentTransferPlanStaleError(

@@ -1480,7 +1480,7 @@ def test_child_copy_stale_target_fails_before_media_or_document_writes(
     assert snapshot(repo_root / "docs-viewer/scopes/target/source/media") == media_before
 
 
-def test_apply_child_copy_retains_matching_custom_metadata(
+def test_apply_child_copy_retains_subject_and_destination_membership(
     tmp_path: Path,
 ) -> None:
     repo_root = make_collection_repo(tmp_path)
@@ -1508,7 +1508,7 @@ def test_apply_child_copy_retains_matching_custom_metadata(
         sub_scope_documents_root(repo_root, "target", "tags")
         / f"{result['created_doc_ids'][0]}.md"
     )
-    assert front_matter["group"] == "subject"
+    assert front_matter["sub-scope"] == "tags"
     assert front_matter["work_id"] == "00123"
     assert "scope=source" in body
     assert "subdoc=tag-b" in body

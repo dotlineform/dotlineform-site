@@ -475,6 +475,7 @@ def test_rebuild_sub_scope_source_uses_configured_build_and_preserves_target(
     assert payload["rebuild"]["docs"]["mode"] == "sub_scope"
     assert 'last_updated: "2026-07-27 20:15:00"' in written
     assert written.endswith("# Detail\n\nChanged body.\n")
+    assert "sub-scope: tags\n" in written
 
 
 def test_open_source_doc_resolves_parent_and_sub_scope_targets() -> None:

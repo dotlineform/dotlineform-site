@@ -232,6 +232,7 @@ def test_parent_create_keeps_response_and_rebuild_contract_with_exact_target(
     assert expected_path.is_file()
     front_matter, body = source_model.parse_source(expected_path)
     assert front_matter["parent_id"] == "report"
+    assert "sub-scope" not in front_matter
     assert body == "# Parent Child\n"
     assert rebuild_calls == [
         {
@@ -320,6 +321,7 @@ def test_empty_sub_scope_create_is_confined_and_returns_exact_child_target(
     front_matter, body = source_model.parse_source(expected_path)
     assert front_matter["doc_id"] == FIXED_DOC_ID
     assert front_matter["title"] == "First Concept"
+    assert front_matter["sub-scope"] == "tags"
     assert "publishable" not in front_matter
     assert "parent_id" not in front_matter
     assert body == "# First Concept\n"

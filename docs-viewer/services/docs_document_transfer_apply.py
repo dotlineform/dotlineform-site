@@ -372,7 +372,7 @@ def transform_document_copy(
         transformed.append(
             DocumentCopySourceTransform(
                 planned_document=planned_document,
-                source_text=source_model.format_source(front_matter, body),
+                source_text=source_model.format_source(front_matter, body, sub_scope=plan.target_sub_scope),
                 viewer_link_rewrites=viewer_link_rewrites,
                 media_link_rewrites=media_link_rewrites,
             )
@@ -464,6 +464,8 @@ def _validate_transformation(
                     "document transfer plan is stale: retained custom metadata "
                     f"changed for {planned.target_doc_id!r}"
                 )
+        if front_matter != source_model.document_sub_scope_front_matter(front_matter, plan.target_sub_scope):
+            raise DocumentTransferPlanStaleError("document transfer plan is stale: destination sub-scope changed")
         _remaining_body, remaining_viewer_links = rewrite_document_copy_viewer_links(
             body,
             plan,

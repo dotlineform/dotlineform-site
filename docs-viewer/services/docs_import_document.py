@@ -213,7 +213,7 @@ def _create_source(
         if record.content_intent == CONTENT_INTENT_REPLACE
         else ""
     )
-    return format_source(front_matter, body), parent_id, publishable
+    return format_source(front_matter, body, sub_scope=sub_scope), parent_id, publishable
 
 
 def _overwrite_source(
@@ -222,6 +222,7 @@ def _overwrite_source(
     import_preview: dict[str, Any],
     explicit_front_matter: dict[str, Any],
     *,
+    sub_scope: str,
     preserve_collection_metadata: bool = False,
     publishable_supported: bool,
 ) -> tuple[str, str, bool | None]:
@@ -251,7 +252,7 @@ def _overwrite_source(
         if record.content_intent == CONTENT_INTENT_REPLACE
         else target.body
     )
-    candidate_source = format_source(front_matter, body)
+    candidate_source = format_source(front_matter, body, sub_scope=sub_scope)
     if candidate_source == target.source_text:
         return target.source_text, parent_id, publishable
     front_matter = advance_front_matter_for_recent_edit(
@@ -260,7 +261,7 @@ def _overwrite_source(
         front_matter,
         body,
     )
-    return format_source(front_matter, body), parent_id, publishable
+    return format_source(front_matter, body, sub_scope=sub_scope), parent_id, publishable
 
 
 def plan_import_document(
@@ -390,6 +391,7 @@ def plan_import_document(
             target,
             preview,
             explicit_front_matter,
+            sub_scope=sub_scope,
             preserve_collection_metadata=preserve_collection_metadata,
             publishable_supported=publishable_supported,
         )

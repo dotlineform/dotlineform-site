@@ -121,8 +121,11 @@ def rebuild_source_body(repo_root: Path, body: Dict[str, Any], dry_run: bool) ->
         raise ValueError(f"existing source doc_id {existing_doc_id!r} does not match requested doc {target.doc_id!r}")
 
     next_source_body = normalize_source_body_for_write(body.get("source_body"))
-    source_changed = next_source_body != normalize_source_body(current_source_body)
-    next_source_text = front_matter_source + next_source_body
+    body_changed = next_source_body != normalize_source_body(current_source_body)
+    if not body_changed:
+        next_source_body = current_source_body
+    next_source_text = source_model.rewrite_source_sub_scope(front_matter_source + next_source_body, resolved.sub_scope)
+    source_changed = next_source_text != current_source_text
     source_model.parse_collection_document_report(
         repo_root,
         resolved.parent_config,
@@ -136,8 +139,8 @@ def rebuild_source_body(repo_root: Path, body: Dict[str, Any], dry_run: bool) ->
         next_front_matter_source = source_model.rewrite_front_matter_source_timestamp(
             front_matter_source,
             front_matter,
-        )
-        next_source_text = next_front_matter_source + next_source_body
+        ) if body_changed else front_matter_source
+        next_source_text = source_model.rewrite_source_sub_scope(next_front_matter_source + next_source_body, resolved.sub_scope)
 
         def write_operation() -> None:
             source_model.write_text_atomic(target.path, next_source_text)

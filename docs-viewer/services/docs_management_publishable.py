@@ -108,7 +108,7 @@ def _collection_from_request(
     return collection
 
 
-def _updated_source_text(document: source_model.ScopeDoc, publishable: bool) -> str | None:
+def _updated_source_text(document: source_model.ScopeDoc, publishable: bool, sub_scope: str) -> str | None:
     updated_front_matter = dict(document.front_matter)
     if publishable:
         if "publishable" not in updated_front_matter:
@@ -124,7 +124,7 @@ def _updated_source_text(document: source_model.ScopeDoc, publishable: bool) -> 
         updated_front_matter,
         document.body,
     )
-    return source_model.format_source(updated_front_matter, document.body)
+    return source_model.format_source(updated_front_matter, document.body, sub_scope=sub_scope)
 
 
 def plan_set_publishable(
@@ -144,7 +144,7 @@ def plan_set_publishable(
     for doc_id in requested_doc_ids:
         target = {**collection.request_target(), "doc_id": doc_id}
         resolved = resolve_managed_document_target(repo_root, target)
-        source_text = _updated_source_text(resolved.document, publishable)
+        source_text = _updated_source_text(resolved.document, publishable, collection.sub_scope)
         if source_text is None:
             unchanged_doc_ids.append(doc_id)
             continue
