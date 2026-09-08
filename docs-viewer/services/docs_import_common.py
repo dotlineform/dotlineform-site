@@ -8,7 +8,7 @@ from pathlib import Path
 
 from bs4 import BeautifulSoup
 
-from docs_scope_config import DOCUMENT_SOURCE_ROOTS
+from docs_scope_config import DOCS_SCOPE_CONFIGS, load_docs_scope_configs
 
 HTML_STAGED_SUFFIXES = {".html", ".htm"}
 DOCX_STAGED_SUFFIXES = {".docx"}
@@ -110,10 +110,12 @@ def relative_path(base: Path, path: Path) -> str:
         return str(path)
 
 
-def normalize_scope(scope: str) -> str:
+def normalize_scope(scope: str, repo_root: Path | None = None) -> str:
+    """Validate a scope name against its repository, independently of source stages."""
     value = str(scope or "").strip().lower()
-    if value not in DOCUMENT_SOURCE_ROOTS:
-        raise ValueError(f"scope must be one of: {', '.join(sorted(DOCUMENT_SOURCE_ROOTS.keys()))}")
+    configs = load_docs_scope_configs(repo_root) if repo_root is not None else DOCS_SCOPE_CONFIGS
+    if value not in configs:
+        raise ValueError(f"scope must be one of: {', '.join(sorted(configs))}")
     return value
 
 

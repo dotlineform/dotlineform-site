@@ -745,7 +745,6 @@ def test_sub_scope_metadata_service_returns_conflict_for_write_race(
                         docs_sub_scope_record(
                             "studio",
                             "tags",
-                            analysis_concept_groups=["subject", "domain", "form", "theme"],
                         )
                     ],
                 )
@@ -762,7 +761,6 @@ def test_sub_scope_metadata_service_returns_conflict_for_write_race(
                     "doc_id": SUB_SCOPE_DOC_ID,
                     "title": "Detail",
                     "ui_status": "draft",
-                    "group": "subject",
                 },
                 "# Detail\n",
             ),

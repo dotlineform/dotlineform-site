@@ -3,19 +3,9 @@ function cleanString(value) {
 }
 
 const MANAGEMENT_CUSTOMISATION_LOADERS = Object.freeze({
-  moments: function () {
-    return import("./docs-viewer-management-subscope-moments.js").then(function (module) {
-      return module.createDocsViewerManagementSubscopeMoments;
-    });
-  },
   pre_publish_works: function () {
     return import("./docs-viewer-management-subscope-working-subjects.js").then(function (module) {
       return module.createDocsViewerManagementSubscopePrePublishWorks;
-    });
-  },
-  concepts: function () {
-    return import("./docs-viewer-management-subscope-concepts.js").then(function (module) {
-      return module.createDocsViewerManagementSubscopeConcepts;
     });
   },
   working_works: function () {

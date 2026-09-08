@@ -58,7 +58,6 @@ def make_repo() -> tempfile.TemporaryDirectory[str]:
                     docs_sub_scope_record(
                         "studio",
                         "tags",
-                        analysis_concept_groups=["subject", "domain", "form", "theme"],
                     )
                 ],
             ),
@@ -147,7 +146,6 @@ def make_repo() -> tempfile.TemporaryDirectory[str]:
                 "added_date": "2026-05-01 09:00",
                 "last_updated": "2026-05-01 10:00",
                 "ui_status": "draft",
-                "group": "subject",
                 "parent_id": "retained-parent",
                 "sort_order": 4,
             },
@@ -305,7 +303,6 @@ def test_sub_scope_metadata_plan_updates_common_fields_without_parentage() -> No
     assert plan.build_doc_ids == []
     assert "parent_id: retained-parent" in plan.source_writes[0].text
     assert "sort_order: 4" in plan.source_writes[0].text
-    assert "group: subject" in plan.source_writes[0].text
     assert 'added_date: "2026-05-01 09:00"' in plan.source_writes[0].text
     assert 'last_updated: "2026-05-01 10:00"' not in plan.source_writes[0].text
     assert re.search(
@@ -340,97 +337,8 @@ def test_sub_scope_metadata_plan_noops_without_advancing_timestamp() -> None:
 
     assert plan.source_writes == ()
     assert "publishable" not in plan.response["record"]
-    assert "group" not in plan.response["record"]
     assert "parent_id" not in plan.response["record"]
     assert all(changed is False for changed in plan.response["changes"].values())
-
-
-def test_generic_metadata_rejects_group_without_a_write() -> None:
-    with make_repo() as temp_path:
-        repo_root = Path(temp_path)
-        source_path = (
-            repo_root
-            / "docs-viewer/scopes/studio/source/sub-scopes/tags/documents/detail.md"
-        )
-        before = source_path.read_bytes()
-        with pytest.raises(
-            ValueError,
-            match="group is not editable through generic metadata",
-        ):
-            mutations.plan_update_metadata(
-                repo_root,
-                {
-                    "scope": "studio",
-                    "sub_scope": "tags",
-                    "doc_id": "detail",
-                    "source_revision": source_model.source_revision(before),
-                    "title": "Detail",
-                    "group": "domain",
-                },
-            )
-        assert source_path.read_bytes() == before
-
-
-def test_concept_group_plan_updates_or_clears_only_the_exact_document() -> None:
-    with make_repo() as temp_path:
-        repo_root = Path(temp_path)
-        source_path = (
-            repo_root
-            / "docs-viewer/scopes/studio/source/sub-scopes/tags/documents/detail.md"
-        )
-        before = source_path.read_bytes()
-        target = {
-            "scope": "studio",
-            "sub_scope": "tags",
-            "doc_id": "detail",
-            "source_revision": source_model.source_revision(before),
-            "field_group": "concept_group",
-            "confirm": True,
-        }
-        updated = mutations.plan_assign_field_group(
-            repo_root,
-            {**target, "fields": {"group": "domain"}},
-        )
-        cleared = mutations.plan_assign_field_group(
-            repo_root,
-            {**target, "fields": {"group": ""}},
-        )
-        with pytest.raises(ValueError, match="not configured for the target"):
-            mutations.plan_assign_field_group(
-                repo_root,
-                {**target, "fields": {"group": "retired"}},
-            )
-        with pytest.raises(
-            mutations.ManagedDocumentRevisionConflict,
-            match="source changed before field group assignment",
-        ):
-            mutations.plan_assign_field_group(
-                repo_root,
-                {
-                    **target,
-                    "source_revision": "sha256:" + ("0" * 64),
-                    "fields": {"group": "domain"},
-                },
-            )
-
-    assert updated.response["target"] == {
-        "scope": "studio",
-        "sub_scope": "tags",
-        "doc_id": "detail",
-    }
-    assert updated.response["field_group"] == "concept_group"
-    assert updated.response["fields"] == {"group": "domain"}
-    assert updated.response["changes"] == {
-        "group_changed": True,
-    }
-    assert updated.suppression_reason == "docs-assign-field-group"
-    assert len(updated.source_writes) == 1
-    assert updated.source_writes[0].path == source_path.resolve()
-    assert "group: domain" in updated.source_writes[0].text
-    assert "\nconcept_id:" not in updated.source_writes[0].text
-    assert 'last_updated: "2026-05-01 10:00"' in updated.source_writes[0].text
-    assert "\ngroup:" not in cleared.source_writes[0].text
-    assert "\nconcept_id:" not in cleared.source_writes[0].text
 
 
 @pytest.mark.parametrize(
@@ -493,54 +401,6 @@ def test_sub_scope_metadata_plan_rejects_missing_or_stale_revision() -> None:
                     "doc_id": "detail",
                     "source_revision": "sha256:" + ("0" * 64),
                     "title": "Detail",
-                },
-            )
-        assert source_path.read_bytes() == before
-
-
-def test_generic_metadata_rejects_group_for_unconfigured_collection() -> None:
-    with make_repo() as temp_path:
-        repo_root = Path(temp_path)
-        write_docs_scope_config(
-            repo_root,
-            [
-                docs_scope_record(
-                    "studio",
-                    sub_scopes=[
-                        docs_sub_scope_record(
-                            "studio",
-                            "tags",
-                        )
-                    ],
-                ),
-                docs_scope_record("scratch"),
-            ],
-        )
-        source_path = (
-            repo_root
-            / "docs-viewer/scopes/studio/source/sub-scopes/tags/documents/detail.md"
-        )
-        source_path.write_text(
-            source_path.read_text(encoding="utf-8").replace(
-                "group: subject\n",
-                "",
-            ),
-            encoding="utf-8",
-        )
-        before = source_path.read_bytes()
-        with pytest.raises(
-            ValueError,
-            match="group is not editable through generic metadata",
-        ):
-            mutations.plan_update_metadata(
-                repo_root,
-                {
-                    "scope": "studio",
-                    "sub_scope": "tags",
-                    "doc_id": "detail",
-                    "source_revision": source_model.source_revision(before),
-                    "title": "Detail",
-                    "group": "",
                 },
             )
         assert source_path.read_bytes() == before

@@ -30,7 +30,6 @@ from docs_scope_config import (
 from docs_subscope_customisations import (
     normalize_sub_scope_customisation_metadata_update,
     sub_scope_customisation_assignable_field_groups,
-    sub_scope_customisation_document_groups,
 )
 
 
@@ -269,12 +268,6 @@ def plan_create(repo_root: Path, body: Dict[str, Any]) -> ManagementMutationPlan
             source_model.validate_sub_scope_document_metadata(
                 document,
                 ui_statuses=collection.document_config.ui_statuses,
-                document_groups=sub_scope_customisation_document_groups(
-                    collection.document_config.sub_scope_customisation
-                ),
-                sub_scope_customisation=(
-                    collection.document_config.sub_scope_customisation
-                ),
             )
         docs.append(document)
     source_model.validate_scope_docs(
@@ -563,8 +556,6 @@ def plan_update_metadata(repo_root: Path, body: Dict[str, Any]) -> ManagementMut
         raise ValueError("legacy viewable is not accepted")
     if "publishable" in body:
         raise ValueError("publishable is not editable through metadata")
-    if "group" in body:
-        raise ValueError("group is not editable through generic metadata")
     resolved = resolve_managed_document_target(
         repo_root,
         managed_document_target_request(body),

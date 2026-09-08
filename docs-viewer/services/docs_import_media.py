@@ -39,18 +39,8 @@ def scope_configs_for(repo_root: Path | None = None):
     return load_docs_scope_configs(repo_root) if repo_root is not None else DOCS_SCOPE_CONFIGS
 
 
-def normalize_media_scope(scope: str, repo_root: Path | None = None) -> str:
-    if repo_root is None:
-        return normalize_scope(scope)
-    value = str(scope or "").strip().lower()
-    configs = scope_configs_for(repo_root)
-    if value not in configs:
-        raise ValueError(f"scope must be one of: {', '.join(sorted(configs))}")
-    return value
-
-
 def media_config_for(scope: str, media_class: str, repo_root: Path | None = None):
-    normalized_scope = normalize_media_scope(scope, repo_root)
+    normalized_scope = normalize_scope(scope, repo_root)
     return managed_media_config(scope_configs_for(repo_root)[normalized_scope], media_class)
 
 def next_inline_media_filename(staging_root: Path, doc_id: str, extension: str, used_filenames: set[str]) -> str:
@@ -383,7 +373,7 @@ def materialize_import_media(
     if not plans:
         return []
 
-    normalized_scope = normalize_media_scope(str(import_preview.get("scope")), repo_root)
+    normalized_scope = normalize_scope(str(import_preview.get("scope")), repo_root)
     inline_plans = [plan for plan in plans if plan.get("source") in INLINE_MEDIA_SOURCE_KINDS]
     inline_bytes: dict[int, bytes] = {}
     if inline_plans:
@@ -535,8 +525,7 @@ def media_token(scope: str, media_class: str, filename: str, *, repo_root: Path 
 
 
 def media_path_for(scope: str, media_class: str, filename: str, *, repo_root: Path | None = None) -> str:
-    normalized_scope = normalize_media_scope(scope, repo_root)
-    config = media_config_for(normalized_scope, media_class, repo_root)
+    config = media_config_for(scope, media_class, repo_root)
     return f"{config.reference_prefix.as_posix().strip('/')}/{filename}"
 
 

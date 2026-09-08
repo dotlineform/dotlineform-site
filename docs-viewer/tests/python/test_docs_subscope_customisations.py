@@ -30,7 +30,6 @@ def _empty_manifest(
 
 
 def test_current_customisations_declare_explicit_aspects() -> None:
-    analysis = customisations.SUB_SCOPE_CUSTOMISATION_DEFINITIONS["concepts"]
     works = customisations.SUB_SCOPE_CUSTOMISATION_DEFINITIONS["pre_publish_works"]
     projects = customisations.SUB_SCOPE_CUSTOMISATION_DEFINITIONS[
         "working_works"
@@ -38,38 +37,6 @@ def test_current_customisations_declare_explicit_aspects() -> None:
     processing = customisations.SUB_SCOPE_CUSTOMISATION_DEFINITIONS[
         "working_processing"
     ]
-
-    assert isinstance(
-        analysis.manifest_projection,
-        customisations.DocsSubScopeManifestProjectionAspect,
-    )
-    assert isinstance(
-        analysis.document_groups,
-        customisations.DocsSubScopeDocumentGroupsAspect,
-    )
-    assert isinstance(
-        analysis.source_validation,
-        customisations.DocsSubScopeSourceValidationAspect,
-    )
-    assert isinstance(analysis.metadata, customisations.DocsSubScopeMetadataAspect)
-    assert isinstance(
-        analysis.import_front_matter,
-        customisations.DocsSubScopeImportFrontMatterAspect,
-    )
-    assert analysis.browser_composition == (
-        customisations.DocsSubScopeBrowserCompositionAspect(
-            accesses=frozenset({"manage"}),
-        )
-    )
-    assert analysis.assignable_field_groups == (
-        customisations.DocsSubScopeAssignableFieldGroup(
-            group_id="concept_group",
-            field_names=("group",),
-        ),
-    )
-    assert analysis.transfer is not None
-    assert analysis.transfer.contract_id == "analysis_concept_fields"
-    assert analysis.transfer.owned_field_names == ("group", "concept_id")
 
     assert works.browser_composition.accesses == frozenset({"manage"})
     assert works.assignable_field_groups == (
@@ -90,8 +57,6 @@ def test_current_customisations_declare_explicit_aspects() -> None:
         projects.manifest_projection,
         customisations.DocsSubScopeManifestProjectionAspect,
     )
-    assert projects.document_groups is None
-    assert projects.source_validation is None
     assert isinstance(projects.metadata, customisations.DocsSubScopeMetadataAspect)
     assert isinstance(
         projects.import_front_matter,
@@ -115,8 +80,6 @@ def test_current_customisations_declare_explicit_aspects() -> None:
         processing.manifest_projection,
         customisations.DocsSubScopeManifestProjectionAspect,
     )
-    assert processing.document_groups is None
-    assert processing.source_validation is None
     assert isinstance(processing.metadata, customisations.DocsSubScopeMetadataAspect)
     assert isinstance(
         processing.import_front_matter,
@@ -174,99 +137,6 @@ def test_current_customisations_declare_explicit_aspects() -> None:
     assert customisations.sub_scope_customisation_document_lineage_contracts(
         processing_config
     ) == processing.document_lineages
-
-    analysis_config = customisations.normalize_docs_subscope_customisation(
-        {
-            "id": "concepts",
-            "settings": {"groups": ["subject", "domain", "form", "theme"]},
-        },
-        field="sub_scope_customisation",
-    )
-    assert customisations.browser_sub_scope_customisation_payload(
-        analysis_config,
-        published=False,
-    ) == {
-        "id": "concepts",
-        "capabilities": {
-            "assignable_field_groups": ["concept_group"],
-            "identity_kind": "concept",
-        },
-    }
-    assert customisations.browser_sub_scope_customisation_payload(
-        analysis_config,
-        published=True,
-    ) is None
-    assert customisations.sub_scope_customisation_metadata_record(
-        analysis_config,
-        {"group": " Theme "},
-        doc_id="tag-doc",
-    ) == {"group": "theme", "concept_id": ""}
-    assert customisations.sub_scope_customisation_metadata_record(
-        analysis_config,
-        {},
-        doc_id="untagged-doc",
-    ) == {"group": "", "concept_id": ""}
-    assert customisations.normalize_sub_scope_customisation_metadata_update(
-        analysis_config,
-        {"group": "domain"},
-        provided=True,
-        repo_root=Path("."),
-        front_matter={"group": "theme", "concept_id": "002"},
-        doc_id="tag-doc",
-    ) == {
-        "front_matter_updates": {"group": "domain"},
-        "record": {"group": "domain"},
-        "changes": {"group_changed": True},
-    }
-    assert customisations.normalize_sub_scope_customisation_metadata_update(
-        analysis_config,
-        {"group": ""},
-        provided=True,
-        repo_root=Path("."),
-        front_matter={"group": "theme"},
-        doc_id="tag-doc",
-    )["front_matter_updates"] == {"group": None}
-    assert customisations.normalize_sub_scope_customisation_metadata_update(
-        analysis_config,
-        {"group": "domain"},
-        provided=True,
-        repo_root=Path("."),
-        front_matter={"group": "theme", "concept_id": True},
-        doc_id="malformed-tag-doc",
-    ) == {
-        "front_matter_updates": {"group": "domain"},
-        "record": {"group": "domain"},
-        "changes": {"group_changed": True},
-    }
-    with pytest.raises(ValueError, match="one exact configured group"):
-        customisations.normalize_sub_scope_customisation_metadata_update(
-            analysis_config,
-            {"group": " Theme "},
-            provided=True,
-            repo_root=Path("."),
-            front_matter={"group": "theme"},
-            doc_id="tag-doc",
-        )
-    with pytest.raises(ValueError, match="exactly group"):
-        customisations.normalize_sub_scope_customisation_metadata_update(
-            analysis_config,
-            {"group": "theme", "concept_id": "bad_slug"},
-            provided=True,
-            repo_root=Path("."),
-            front_matter={"group": "theme"},
-            doc_id="tag-doc",
-        )
-    assert customisations.normalize_sub_scope_customisation_import_front_matter(
-        analysis_config,
-        {"group": "theme", "concept_id": "001"},
-        doc_id="imported-tag-doc",
-    ) == {"group": "theme", "concept_id": "001"}
-    with pytest.raises(ValueError, match="not configured for the target"):
-        customisations.sub_scope_customisation_metadata_record(
-            analysis_config,
-            {"group": "retired"},
-            doc_id="retired-tag-doc",
-        )
 
     works_config = customisations.normalize_docs_subscope_customisation(
         {"id": "pre_publish_works", "settings": {}},

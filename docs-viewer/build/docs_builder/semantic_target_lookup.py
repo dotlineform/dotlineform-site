@@ -23,7 +23,6 @@ for module_dir in (DOCS_SERVICES_DIR,):
     if str(module_dir) not in sys.path:
         sys.path.insert(0, str(module_dir))
 
-from docs_concept_documents import load_concept_definitions  # noqa: E402
 
 
 SEMANTIC_TARGET_LOOKUP_SCHEMA_VERSION = "docs_semantic_token_target_lookup_v2"
@@ -118,49 +117,6 @@ def browser_safe_href(value: Any) -> str:
     if parsed.scheme or parsed.netloc or parsed.fragment:
         return ""
     return href
-
-
-def concept_resolution_states(repo_root: Path) -> dict[str, str]:
-    """Return resolution states for document-defined Concepts used by Concept tokens."""
-
-    return {record["concept_id"]: "" for record in load_concept_definitions(repo_root)}
-
-
-def concept_target_rows(
-    family: SemanticTokenFamily,
-    target_type: SemanticTokenTargetType,
-    *,
-    definitions: list[dict[str, Any]],
-) -> list[dict[str, Any]]:
-    """Project document-owned Concepts into the Concept token contract."""
-
-    if target_type.lookup_adapter != "concept-document-target-lookup":
-        return []
-    targets: list[dict[str, Any]] = []
-    for record in definitions:
-        concept_id = normalize_semantic_token_id(record["concept_id"], target_type.id_policy)
-        if concept_id is None:
-            raise ValueError(f"Concept {record['concept_id']!r} does not match the semantic-token policy")
-        targets.append({
-            "family": family.key,
-            "target_type": target_type.key,
-            "target_id": concept_id,
-            "title": record["title"],
-            "href": record["href"],
-            "meta": [value for value in (record["group"], record["title"]) if value],
-        })
-    return targets
-
-
-def concept_token_targets(repo_root: Path, *, stage: str = "working") -> list[dict[str, Any]]:
-    """Resolve Concept tokens from the explicitly selected Analysis stage."""
-
-    registry = load_semantic_token_registry(repo_root)
-    family = registry.family("concept") if registry else None
-    target_type = family.target_type("concept") if family else None
-    if family is None or target_type is None:
-        return []
-    return concept_target_rows(family, target_type, definitions=load_concept_definitions(repo_root, stage=stage))
 
 
 def primary_image_settings(
@@ -380,7 +336,6 @@ class SemanticTargetLookupBuilder:
                     if row is not None:
                         targets.append(row)
 
-        targets.extend(concept_token_targets(self.repo_root))
         targets.sort(
             key=lambda row: (
                 registry.family(row["family"]).order

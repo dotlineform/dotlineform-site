@@ -10,14 +10,10 @@ from typing import Any, Callable, Mapping, Sequence
 
 import docs_working_works_customisation as working_works
 import docs_working_processing_customisation as working_processing
-import docs_moments_customisation as moments
 from docs_document_subjects import AUTHORING_SUBJECT_FIELDS, FOLDER_PATH_FIELD
-from docs_concept_documents import CONCEPT_ID_FIELD, normalize_concept_declaration
 
 
 CUSTOMISATION_ID_PATTERN = re.compile(r"\A[a-z][a-z0-9_]*\Z")
-VALUE_ID_PATTERN = re.compile(r"\A[a-z0-9][a-z0-9_-]*\Z")
-CONCEPTS_CUSTOMISATION_ID = "concepts"
 PRE_PUBLISH_WORKS_CUSTOMISATION_ID = "pre_publish_works"
 WORKING_WORKS_CUSTOMISATION_ID = working_works.CUSTOMISATION_ID
 WORKING_PROCESSING_CUSTOMISATION_ID = working_processing.CUSTOMISATION_ID
@@ -41,16 +37,6 @@ class DocsSubScopeManifestProjectionAspect:
         [Mapping[str, Any], Sequence[Any], Path, str, str, str],
         dict[str, Any],
     ]
-
-
-@dataclass(frozen=True)
-class DocsSubScopeDocumentGroupsAspect:
-    resolve: Callable[[Mapping[str, Any]], tuple[str, ...]]
-
-
-@dataclass(frozen=True)
-class DocsSubScopeSourceValidationAspect:
-    validate: Callable[..., None]
 
 
 @dataclass(frozen=True)
@@ -100,8 +86,6 @@ class DocsSubScopeCustomisationDefinition:
     customisation_id: str
     normalize_settings: Callable[[Any, str], Mapping[str, Any]]
     manifest_projection: DocsSubScopeManifestProjectionAspect | None = None
-    document_groups: DocsSubScopeDocumentGroupsAspect | None = None
-    source_validation: DocsSubScopeSourceValidationAspect | None = None
     metadata: DocsSubScopeMetadataAspect | None = None
     import_front_matter: DocsSubScopeImportFrontMatterAspect | None = None
     browser_composition: DocsSubScopeBrowserCompositionAspect | None = None
@@ -109,7 +93,6 @@ class DocsSubScopeCustomisationDefinition:
     authoring_subject: DocsSubScopeAuthoringSubjectAspect | None = None
     transfer: DocsSubScopeTransferAspect | None = None
     document_lineages: tuple[DocsSubScopeDocumentLineageAspect, ...] = ()
-    identity_kind: str = ""
 
 
 def _strict_object(raw: Any, *, field: str, keys: set[str]) -> dict[str, Any]:
@@ -130,160 +113,6 @@ def _strict_object(raw: Any, *, field: str, keys: set[str]) -> dict[str, Any]:
     return raw
 
 
-def _normalize_ordered_ids(raw: Any, *, field: str) -> tuple[str, ...]:
-    if not isinstance(raw, list):
-        raise ValueError(f"docs scope config field {field} must be an array")
-    values: list[str] = []
-    seen: set[str] = set()
-    for index, raw_value in enumerate(raw):
-        if not isinstance(raw_value, str):
-            raise ValueError(
-                f"docs scope config field {field}[{index}] must be a string"
-            )
-        value = raw_value.strip().lower()
-        if not VALUE_ID_PATTERN.fullmatch(value):
-            raise ValueError(
-                f"docs scope config field {field}[{index}] is invalid"
-            )
-        if value in seen:
-            raise ValueError(
-                f"docs scope config field {field} must not contain duplicates"
-            )
-        seen.add(value)
-        values.append(value)
-    if not values:
-        raise ValueError(f"docs scope config field {field} must not be empty")
-    return tuple(values)
-
-
-def _normalize_concepts_settings(raw: Any, field: str) -> Mapping[str, Any]:
-    settings = _strict_object(raw, field=field, keys={"groups"})
-    return {
-        "groups": _normalize_ordered_ids(
-            settings["groups"],
-            field=f"{field}.groups",
-        )
-    }
-
-
-def _concepts_document_groups(settings: Mapping[str, Any]) -> tuple[str, ...]:
-    return tuple(str(value) for value in settings.get("groups", ()))
-
-
-def _concepts_metadata_record(
-    settings: Mapping[str, Any],
-    front_matter: Mapping[str, Any],
-    *,
-    doc_id: str,
-) -> dict[str, Any]:
-    del doc_id
-    raw_group = front_matter.get("group")
-    _validate_concepts_transfer_field(settings, "group", raw_group)
-    return {
-        "group": str(raw_group or "").strip().lower(),
-        CONCEPT_ID_FIELD: front_matter.get(CONCEPT_ID_FIELD, ""),
-    }
-
-
-def _normalize_concepts_metadata_update(
-    settings: Mapping[str, Any],
-    raw: Any,
-    *,
-    repo_root: Path,
-    front_matter: Mapping[str, Any],
-    doc_id: str,
-) -> dict[str, Any]:
-    del repo_root
-    if not isinstance(raw, dict):
-        raise ValueError("customisation must be an object")
-    if set(raw) != {"group"}:
-        raise ValueError("customisation must contain exactly group")
-    raw_group = raw["group"]
-    if not isinstance(raw_group, str):
-        raise ValueError("customisation.group must be a scalar string")
-    group = raw_group.strip().lower()
-    if raw_group != group:
-        raise ValueError("customisation.group must be one exact configured group")
-    _validate_concepts_transfer_field(settings, "group", group)
-    current_record = _concepts_metadata_record(
-        settings,
-        front_matter,
-        doc_id=doc_id,
-    )
-    return {
-        "front_matter_updates": {
-            "group": group or None,
-        },
-        "record": {
-            "group": group,
-        },
-        "changes": {
-            "group_changed": group != current_record["group"],
-        },
-    }
-
-
-def _validate_concepts_transfer_field(
-    settings: Mapping[str, Any],
-    field_name: str,
-    value: Any,
-) -> None:
-    if field_name == CONCEPT_ID_FIELD:
-        _validate_concepts_source(settings, {CONCEPT_ID_FIELD: value}, doc_id="transfer")
-        return
-    if field_name != "group":
-        raise ValueError(f"unsupported Analysis Concepts field {field_name!r}")
-    if value is None:
-        return
-    if not isinstance(value, str):
-        raise ValueError("group must be a scalar string")
-    normalized = value.strip().lower()
-    if normalized and normalized not in _concepts_document_groups(settings):
-        raise ValueError(f"group {normalized!r} is not configured for the target")
-
-
-def _validate_concepts_source(
-    settings: Mapping[str, Any],
-    front_matter: Mapping[str, Any],
-    *,
-    doc_id: str,
-) -> None:
-    del settings
-    if normalize_concept_declaration(front_matter)["state"] == "malformed":
-        raise ValueError(f"concept_id must be an exact three-digit string: {doc_id}")
-
-
-def _normalize_concepts_import_front_matter(
-    settings: Mapping[str, Any],
-    raw: Any,
-    *,
-    doc_id: str,
-) -> dict[str, str]:
-    del doc_id
-    if not isinstance(raw, dict):
-        raise ValueError("custom import front matter must be an object")
-    if set(raw) - {"group", CONCEPT_ID_FIELD}:
-        raise ValueError("custom import front matter contains unknown fields")
-    result: dict[str, str] = {}
-    if "group" in raw:
-        group = raw["group"]
-        if not isinstance(group, str) or group != group.strip().lower():
-            raise ValueError("custom import group must be one exact configured group")
-        _validate_concepts_transfer_field(settings, "group", group)
-        if group:
-            result["group"] = group
-    if CONCEPT_ID_FIELD in raw:
-        concept_id = raw[CONCEPT_ID_FIELD]
-        if not isinstance(concept_id, str):
-            raise ValueError("custom import concept_id must be a scalar string")
-        if concept_id:
-            declaration = normalize_concept_declaration({CONCEPT_ID_FIELD: concept_id})
-            if declaration["state"] != "valid":
-                raise ValueError("custom import concept_id must be one exact canonical concept id")
-            result[CONCEPT_ID_FIELD] = concept_id
-    return result
-
-
 def _project_pre_publish_works_manifest(
     settings: Mapping[str, Any], documents: Sequence[Any], repo_root: Path, scope: str, sub_scope: str, stage: str = "",
 ) -> dict[str, Any]:
@@ -296,85 +125,7 @@ def _normalize_empty_settings(raw: Any, field: str) -> Mapping[str, Any]:
     return settings
 
 
-def _project_concepts_manifest(
-    settings: Mapping[str, Any],
-    documents: Sequence[Any],
-    repo_root: Path,
-    scope: str,
-    sub_scope: str,
-    stage: str = "",
-) -> dict[str, Any]:
-    del repo_root, scope, sub_scope
-    groups = _concepts_document_groups(settings)
-    rows: dict[str, dict[str, Any]] = {}
-    for document in documents:
-        row: dict[str, Any] = {}
-        group = str(getattr(document, "group", "") or "").strip()
-        if group:
-            row["group"] = group
-        front_matter = getattr(document, "front_matter", {})
-        if isinstance(front_matter, Mapping) and CONCEPT_ID_FIELD in front_matter:
-            row[CONCEPT_ID_FIELD] = front_matter[CONCEPT_ID_FIELD]
-        if row:
-            rows[str(document.doc_id)] = row
-    return {
-        "root": {
-            "id": CONCEPTS_CUSTOMISATION_ID,
-            "data": {"groups": list(groups)},
-        },
-        "rows": rows,
-    }
-
-
 SUB_SCOPE_CUSTOMISATION_DEFINITIONS = {
-    "moments": DocsSubScopeCustomisationDefinition(
-        customisation_id="moments",
-        normalize_settings=_normalize_empty_settings,
-        identity_kind="moment",
-        manifest_projection=DocsSubScopeManifestProjectionAspect(project=moments.project_manifest),
-        source_validation=DocsSubScopeSourceValidationAspect(validate=moments.validate_source),
-        metadata=DocsSubScopeMetadataAspect(read_record=moments.metadata_record),
-        import_front_matter=DocsSubScopeImportFrontMatterAspect(normalize=moments.normalize_import),
-        browser_composition=DocsSubScopeBrowserCompositionAspect(accesses=frozenset({MANAGE_ACCESS})),
-        transfer=DocsSubScopeTransferAspect(
-            contract_id="moment_identity", owned_field_names=("moment_id",), validate_field=moments.validate_transfer,
-        ),
-    ),
-    CONCEPTS_CUSTOMISATION_ID: DocsSubScopeCustomisationDefinition(
-        customisation_id=CONCEPTS_CUSTOMISATION_ID,
-        identity_kind="concept",
-        normalize_settings=_normalize_concepts_settings,
-        manifest_projection=DocsSubScopeManifestProjectionAspect(
-            project=_project_concepts_manifest,
-        ),
-        document_groups=DocsSubScopeDocumentGroupsAspect(
-            resolve=_concepts_document_groups,
-        ),
-        source_validation=DocsSubScopeSourceValidationAspect(
-            validate=_validate_concepts_source,
-        ),
-        metadata=DocsSubScopeMetadataAspect(
-            read_record=_concepts_metadata_record,
-            normalize_update=_normalize_concepts_metadata_update,
-        ),
-        import_front_matter=DocsSubScopeImportFrontMatterAspect(
-            normalize=_normalize_concepts_import_front_matter,
-        ),
-        browser_composition=DocsSubScopeBrowserCompositionAspect(
-            accesses=frozenset({MANAGE_ACCESS}),
-        ),
-        assignable_field_groups=(
-            DocsSubScopeAssignableFieldGroup(
-                group_id="concept_group",
-                field_names=("group",),
-            ),
-        ),
-        transfer=DocsSubScopeTransferAspect(
-            contract_id="analysis_concept_fields",
-            owned_field_names=("group", CONCEPT_ID_FIELD),
-            validate_field=_validate_concepts_transfer_field,
-        ),
-    ),
     PRE_PUBLISH_WORKS_CUSTOMISATION_ID: DocsSubScopeCustomisationDefinition(
         customisation_id=PRE_PUBLISH_WORKS_CUSTOMISATION_ID,
         normalize_settings=_normalize_empty_settings,
@@ -477,8 +228,6 @@ def _validate_definition(
     field = f"Docs sub-scope customisation definition {registry_id!r}"
     if definition.customisation_id != registry_id:
         raise ValueError(f"{field} identity does not match its registry key")
-    if definition.identity_kind not in {"", "concept", "moment"}:
-        raise ValueError(f"{field} has an unknown document identity kind")
     if not callable(definition.normalize_settings):
         raise ValueError(f"{field} normalize_settings must be callable")
 
@@ -487,16 +236,6 @@ def _validate_definition(
             "manifest_projection",
             definition.manifest_projection,
             DocsSubScopeManifestProjectionAspect,
-        ),
-        (
-            "document_groups",
-            definition.document_groups,
-            DocsSubScopeDocumentGroupsAspect,
-        ),
-        (
-            "source_validation",
-            definition.source_validation,
-            DocsSubScopeSourceValidationAspect,
         ),
         ("metadata", definition.metadata, DocsSubScopeMetadataAspect),
         (
@@ -525,18 +264,6 @@ def _validate_definition(
             "manifest_projection.project",
             definition.manifest_projection.project
             if definition.manifest_projection is not None
-            else None,
-        ),
-        (
-            "document_groups.resolve",
-            definition.document_groups.resolve
-            if definition.document_groups is not None
-            else None,
-        ),
-        (
-            "source_validation.validate",
-            definition.source_validation.validate
-            if definition.source_validation is not None
             else None,
         ),
         (
@@ -744,13 +471,7 @@ def browser_sub_scope_customisation_payload(
                 group.group_id for group in assignable_groups
             ]
         }
-    if not published and definition.identity_kind:
-        payload.setdefault("capabilities", {})["identity_kind"] = definition.identity_kind
     return payload
-
-
-def sub_scope_customisation_identity_kind(customisation: DocsSubScopeCustomisationConfig | None) -> str:
-    return _definition_for(customisation).identity_kind if customisation is not None else ""
 
 
 def sub_scope_customisation_assignable_field_groups(
@@ -786,20 +507,6 @@ def sub_scope_customisation_document_lineage_contracts(
     return _definition_for(customisation).document_lineages
 
 
-def sub_scope_customisation_document_groups(
-    customisation: DocsSubScopeCustomisationConfig | None,
-) -> tuple[str, ...]:
-    """Return document-group choices owned by the selected customisation."""
-
-    if customisation is None:
-        return ()
-    definition = _definition_for(customisation)
-    aspect = definition.document_groups
-    if aspect is None:
-        return ()
-    return aspect.resolve(customisation.settings)
-
-
 def project_sub_scope_customisation_manifest(
     customisation: DocsSubScopeCustomisationConfig | None,
     documents: Sequence[Any],
@@ -831,23 +538,6 @@ def project_sub_scope_customisation_manifest(
         sub_scope,
         stage,
     )
-
-
-def validate_sub_scope_customisation_document(
-    customisation: DocsSubScopeCustomisationConfig | None,
-    front_matter: Mapping[str, Any],
-    *,
-    doc_id: str,
-) -> None:
-    if customisation is None:
-        return
-    aspect = _definition_for(customisation).source_validation
-    if aspect is not None:
-        aspect.validate(
-            customisation.settings,
-            front_matter,
-            doc_id=doc_id,
-        )
 
 
 def sub_scope_customisation_metadata_record(
@@ -929,7 +619,6 @@ def registered_sub_scope_customisation_access() -> dict[str, tuple[str, ...]]:
 
 
 __all__ = [
-    "CONCEPTS_CUSTOMISATION_ID",
     "PRE_PUBLISH_WORKS_CUSTOMISATION_ID",
     "WORKING_WORKS_CUSTOMISATION_ID",
     "WORKING_PROCESSING_CUSTOMISATION_ID",
@@ -938,12 +627,10 @@ __all__ = [
     "DocsSubScopeBrowserCompositionAspect",
     "DocsSubScopeCustomisationConfig",
     "DocsSubScopeCustomisationDefinition",
-    "DocsSubScopeDocumentGroupsAspect",
     "DocsSubScopeDocumentLineageAspect",
     "DocsSubScopeImportFrontMatterAspect",
     "DocsSubScopeManifestProjectionAspect",
     "DocsSubScopeMetadataAspect",
-    "DocsSubScopeSourceValidationAspect",
     "DocsSubScopeTransferAspect",
     "browser_sub_scope_customisation_payload",
     "normalize_docs_subscope_customisation",
@@ -953,10 +640,7 @@ __all__ = [
     "normalize_sub_scope_customisation_import_front_matter",
     "sub_scope_customisation_assignable_field_groups",
     "sub_scope_customisation_authoring_subject_fields",
-    "sub_scope_customisation_identity_kind",
     "sub_scope_customisation_metadata_record",
-    "sub_scope_customisation_document_groups",
     "sub_scope_customisation_document_lineage_contracts",
     "sub_scope_customisation_transfer_contract",
-    "validate_sub_scope_customisation_document",
 ]

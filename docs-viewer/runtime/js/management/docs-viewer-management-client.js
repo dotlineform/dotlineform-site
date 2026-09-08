@@ -226,11 +226,6 @@ export function setManagedDocsPublishable(collection, docIds, publishable, optio
   );
 }
 
-/** Allocate the next document identity in the target's configured Working collection. */
-export function allocateManagedDocIdentity(target, payload, options) {
-  return fetchManagementJson("/docs/allocate-identity", "POST", targetPayload(target, payload), options);
-}
-
 export function assignManagedDocFieldGroup(target, payload, options) {
   return fetchManagementJson(
     "/docs/assign-field-group",

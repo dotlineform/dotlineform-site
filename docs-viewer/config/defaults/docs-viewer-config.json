@@ -103,16 +103,7 @@
               "sub_scope": "concepts",
               "title": "Concepts",
               "manifest_url": "/docs/generated/external/analysis/working/concepts/manage-manifest.json",
-              "by_id_url_base": "/docs/generated/external/analysis/working/concepts/by-id",
-              "sub_scope_customisation": {
-                "id": "concepts",
-                "capabilities": {
-                  "assignable_field_groups": [
-                    "concept_group"
-                  ],
-                  "identity_kind": "concept"
-                }
-              }
+              "by_id_url_base": "/docs/generated/external/analysis/working/concepts/by-id"
             },
             {
               "sub_scope": "processing",
@@ -132,13 +123,7 @@
               "sub_scope": "moments",
               "title": "Moments",
               "manifest_url": "/docs/generated/external/analysis/working/moments/manage-manifest.json",
-              "by_id_url_base": "/docs/generated/external/analysis/working/moments/by-id",
-              "sub_scope_customisation": {
-                "id": "moments",
-                "capabilities": {
-                  "identity_kind": "moment"
-                }
-              }
+              "by_id_url_base": "/docs/generated/external/analysis/working/moments/by-id"
             }
           ]
         },
@@ -184,16 +169,7 @@
               "sub_scope": "concepts",
               "title": "Concepts",
               "manifest_url": "/docs/generated/external/analysis/pre-publish/concepts/manage-manifest.json",
-              "by_id_url_base": "/docs/generated/external/analysis/pre-publish/concepts/by-id",
-              "sub_scope_customisation": {
-                "id": "concepts",
-                "capabilities": {
-                  "assignable_field_groups": [
-                    "concept_group"
-                  ],
-                  "identity_kind": "concept"
-                }
-              }
+              "by_id_url_base": "/docs/generated/external/analysis/pre-publish/concepts/by-id"
             },
             {
               "sub_scope": "works",

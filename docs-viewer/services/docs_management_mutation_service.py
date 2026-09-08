@@ -447,13 +447,6 @@ def handle_update_metadata(repo_root: Path, body: Dict[str, Any], dry_run: bool)
     return execute_management_mutation_plan(repo_root, mutations.plan_update_metadata(repo_root, body), dry_run)
 
 
-def handle_allocate_identity(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dict[str, Any]:
-    """Save an allocated identity and rebuild only its owning document collection."""
-    from docs_document_identity_allocation import plan_allocate_document_identity
-
-    return execute_management_mutation_plan(repo_root, plan_allocate_document_identity(repo_root, body), dry_run)
-
-
 def handle_assign_field_group(
     repo_root: Path,
     body: Dict[str, Any],

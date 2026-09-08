@@ -18,7 +18,7 @@ import docs_source_model
 from docs_import_common import FILE_MEDIA_STAGED_SUFFIXES
 from docs_import_docx_test_support import semantic_docx_bytes
 from docs_document_packages.workspace import configured_workspace_paths
-from repo_factory import docs_sub_scope_record
+from repo_factory import docs_scope_record, docs_sub_scope_record, write_docs_scope_config, write_site_tools_config
 
 from docs_import_test_support import (
     make_repo,
@@ -189,7 +189,6 @@ def configure_review_sub_scope_targets(root: Path) -> dict[str, Path]:
             scope_type="public",
             public_docs_path="site/assets/data/docs/scopes/example/tags",
             ui_statuses=["draft", "done"],
-            analysis_concept_groups=["theme"],
         ),
         docs_sub_scope_record(
             "example",
@@ -250,7 +249,6 @@ def configure_review_sub_scope_targets(root: Path) -> dict[str, Path]:
                 "last_updated": "2026-07-29 10:00:00",
                 "summary": "Original Tag A summary.",
                 "ui_status": "draft",
-                "group": "theme",
                 "publishable": False,
             },
             "# Tag A\n",
@@ -262,7 +260,6 @@ def configure_review_sub_scope_targets(root: Path) -> dict[str, Path]:
                 "added_date": "2026-07-02 10:00:00",
                 "last_updated": "2026-07-29 11:00:00",
                 "ui_status": "done",
-                "group": "theme",
             },
             "# Tag B\n",
         ),
@@ -273,7 +270,6 @@ def configure_review_sub_scope_targets(root: Path) -> dict[str, Path]:
                 "added_date": "2026-07-03 10:00:00",
                 "last_updated": "2026-07-29 12:00:00",
                 "ui_status": "draft",
-                "group": "theme",
             },
             "# Other Tag\n",
         ),
@@ -725,8 +721,53 @@ def test_source_import_listing_reports_missing_configured_staging_root() -> None
         with pytest.raises(FileNotFoundError, match="source_directory does not exist"):
             list_import_sources(root)
 
-def test_media_path_comes_from_scope_config() -> None:
-    assert docs_import_media.media_path_for("analysis", "img", "diagram.png") == "docs/analysis/img/diagram.png"
-    assert docs_import_media.media_token("analysis", "img", "diagram.png") == "[[media:docs/analysis/img/diagram.png]]"
-    assert docs_import_media.media_path_for("analysis", "svg", "diagram.svg") == "docs/analysis/svg/diagram.svg"
-    assert docs_import_media.media_token("analysis", "svg", "diagram.svg") == "[[media:docs/analysis/svg/diagram.svg]]"
+def test_media_path_comes_from_scope_config(tmp_path: Path) -> None:
+    write_site_tools_config(tmp_path)
+    analysis = docs_scope_record("analysis")
+    write_docs_scope_config(tmp_path, [analysis])
+    assert docs_import_media.media_path_for("analysis", "img", "diagram.png", repo_root=tmp_path) == "docs/analysis/img/diagram.png"
+    assert docs_import_media.media_token("analysis", "img", "diagram.png", repo_root=tmp_path) == "[[media:docs/analysis/img/diagram.png]]"
+    assert docs_import_media.media_path_for("analysis", "svg", "diagram.svg", repo_root=tmp_path) == "docs/analysis/svg/diagram.svg"
+    assert docs_import_media.media_token("analysis", "svg", "diagram.svg", repo_root=tmp_path) == "[[media:docs/analysis/svg/diagram.svg]]"
+
+    analysis["stages"] = {
+        stage: {"media": analysis["media"], "sub_scopes": []}
+        for stage in ("working", "pre-publish")
+    }
+    write_docs_scope_config(tmp_path, [analysis])
+    with pytest.raises(ValueError, match="stage is required for scope 'analysis'"):
+        docs_import_media.media_path_for("analysis", "img", "diagram.png", repo_root=tmp_path)
+
+
+@pytest.mark.parametrize(
+    ("filename", "content"),
+    [("note.md", "# Imported\n"), ("note.html", "<h1>Imported</h1>"), ("note.txt", "Imported")],
+)
+def test_preview_uses_the_supplied_repository_scope(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    filename: str,
+    content: str,
+) -> None:
+    write_site_tools_config(tmp_path)
+    write_docs_scope_config(tmp_path, [docs_scope_record("preview-only")])
+    staging = tmp_path / "staging"
+    staging.mkdir()
+    source = staging / filename
+    source.write_text(content, encoding="utf-8")
+    monkeypatch.setattr(
+        docs_import_preview,
+        "validate_markdown_preview",
+        lambda *_args, **_kwargs: {"ok": True},
+    )
+    options = {
+        "staging_root": staging,
+        "workspace_root": tmp_path,
+        "source_path": source,
+        "include_prompt_meta": False,
+    }
+    preview = docs_import_preview.generate_import_preview(tmp_path, scope="preview-only", **options)
+    assert preview["scope"] == "preview-only"
+    assert preview["markdown_validation"]["ok"] is True
+    with pytest.raises(ValueError, match="scope must be one of: preview-only"):
+        docs_import_preview.generate_import_preview(tmp_path, scope="studio", **options)

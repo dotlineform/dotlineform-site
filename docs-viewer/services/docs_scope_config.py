@@ -1037,11 +1037,6 @@ def normalize_sub_scope_configs(
         item_field = f"{field}[{index}]"
         if not isinstance(item, dict):
             raise ValueError(f"docs scope config field {item_field} must be an object")
-        if "document_groups" in item:
-            raise ValueError(
-                f"docs scope config field {item_field}.document_groups is no longer supported; "
-                "configure groups through sub_scope_customisation"
-            )
         sub_scope = str(item.get("sub_scope") or "").strip().lower()
         if not SUB_SCOPE_ID_PATTERN.fullmatch(sub_scope):
             raise ValueError(f"docs scope config field {item_field}.sub_scope is invalid")

@@ -57,7 +57,6 @@ class DocRecord:
     content_url: str
     report: ReportDescriptor | None
     body_markdown: str
-    group: str = ""
     front_matter: dict[str, Any] = field(default_factory=dict)
 def parse_front_matter_value(raw_value: str) -> Any:
     value = raw_value.strip()
@@ -157,12 +156,6 @@ class SourceLoadingMixin:
             added_date = str(front_matter.get("added_date") or last_updated).strip()
             summary = normalize_text(front_matter.get("summary"))
             ui_status = str(front_matter.get("ui_status") or "").strip()
-            raw_group = front_matter.get("group")
-            if raw_group is not None and not isinstance(raw_group, str):
-                raise FrontMatterSyntaxError(
-                    f"group must be a scalar string in {relative_path}"
-                )
-            group = str(raw_group or "").strip().lower()
             document_config = getattr(self, "sub_scope_config", self.config)
             try:
                 validate_publishable_front_matter(
@@ -215,7 +208,6 @@ class SourceLoadingMixin:
                     content_url=self.content_url_for(doc_id),
                     report=report,
                     body_markdown=body_markdown,
-                    group=group,
                     front_matter=dict(front_matter),
                 )
             )

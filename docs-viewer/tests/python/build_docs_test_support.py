@@ -198,10 +198,6 @@ def write_catalogue_records(root: Path) -> None:
         base / "series.json",
         {"series": {"026": {"series_id": "026", "title": "Collected", "status": "published"}}},
     )
-    write_json(
-        base / "moments.json",
-        {"moments": {"dark-sky": {"moment_id": "dark-sky", "title": "Dark Sky", "status": "published"}}},
-    )
 
 
 def write_source_docs(

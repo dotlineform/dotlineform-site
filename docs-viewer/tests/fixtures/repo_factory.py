@@ -185,14 +185,9 @@ def docs_sub_scope_record(
     scope_type: str = "local",
     public_docs_path: str | None = None,
     ui_statuses: list[str] | None = None,
-    analysis_concept_groups: list[str] | None = None,
     sub_scope_customisation: dict[str, object] | None = None,
     lifecycle: dict[str, object] | None = None,
 ) -> dict[str, object]:
-    if analysis_concept_groups is not None and sub_scope_customisation is not None:
-        raise ValueError(
-            "analysis_concept_groups and sub_scope_customisation are mutually exclusive"
-        )
     record: dict[str, object] = {
         "sub_scope": sub_scope,
         "title": title,
@@ -215,11 +210,6 @@ def docs_sub_scope_record(
         record["public_title"] = public_title
     if supports_return_import is not None:
         record["supports_return_import"] = supports_return_import
-    if analysis_concept_groups is not None:
-        record["sub_scope_customisation"] = {
-            "id": "concepts",
-            "settings": {"groups": analysis_concept_groups},
-        }
     if sub_scope_customisation is not None:
         record["sub_scope_customisation"] = sub_scope_customisation
     if lifecycle is not None:

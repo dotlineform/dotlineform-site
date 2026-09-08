@@ -74,7 +74,6 @@ def prepare_repo(
                         "tags",
                         scope_type=scope_type,
                         title="Tags",
-                        analysis_concept_groups=["subject", "domain", "form", "theme"],
                     )
                 ],
             )

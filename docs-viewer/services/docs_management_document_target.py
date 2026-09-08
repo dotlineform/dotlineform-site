@@ -19,7 +19,6 @@ from docs_scope_config import (
 )
 from docs_subscope_customisations import (
     sub_scope_customisation_authoring_subject_fields,
-    sub_scope_customisation_document_groups,
     sub_scope_customisation_metadata_record,
 )
 from docs_document_subjects import (
@@ -277,7 +276,6 @@ def source_doc_from_path(
         ui_status=source_model.normalize_ui_status(front_matter.get("ui_status")),
         parent_id=str(front_matter.get("parent_id") or "").strip(),
         publishable=source_model.doc_is_publishable(front_matter),
-        group=source_model.normalize_document_group(front_matter.get("group")),
         report=report,
     )
 
@@ -314,10 +312,6 @@ def resolve_managed_document_target(
         source_model.validate_sub_scope_document_metadata(
             document,
             ui_statuses=collection.document_config.ui_statuses,
-            document_groups=sub_scope_customisation_document_groups(
-                collection.document_config.sub_scope_customisation
-            ),
-            sub_scope_customisation=collection.document_config.sub_scope_customisation,
         )
     else:
         parent_documents = [

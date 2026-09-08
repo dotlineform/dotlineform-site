@@ -60,18 +60,22 @@ def make_doc(
     )
 
 
-def test_publishable_support_follows_exact_public_projection() -> None:
+def test_publishable_support_follows_stage_and_public_projection() -> None:
     assert source_model.collection_supports_publishable(
-        SimpleNamespace(public_projection=object())
+        SimpleNamespace(stage="", public_projection=object())
     ) is True
     assert source_model.collection_supports_publishable(
-        SimpleNamespace(public_projection=None)
+        SimpleNamespace(stage="", public_projection=None)
     ) is False
+    for stage in ("working", "pre-publish"):
+        assert source_model.collection_supports_publishable(
+            SimpleNamespace(stage=stage, public_projection=None)
+        ) is True
 
 
 def test_publishable_front_matter_rejects_legacy_and_local_fields() -> None:
-    public = SimpleNamespace(public_projection=object())
-    local = SimpleNamespace(public_projection=None)
+    public = SimpleNamespace(stage="", public_projection=object())
+    local = SimpleNamespace(stage="", public_projection=None)
 
     source_model.validate_publishable_front_matter(
         {"publishable": False},
@@ -210,10 +214,7 @@ def test_document_collection_loader_selects_exact_configured_sub_scope() -> None
     child_config = SimpleNamespace(
         sub_scope="tags",
         ui_statuses=("draft",),
-        sub_scope_customisation=SimpleNamespace(
-            customisation_id="concepts",
-            settings={"groups": ("subject",)},
-        ),
+        sub_scope_customisation=None,
         source=SimpleNamespace(
             location=SimpleNamespace(path=Path("analysis-tags")),
             documents_path=Path("documents"),
@@ -246,7 +247,6 @@ def test_document_collection_loader_selects_exact_configured_sub_scope() -> None
                 "doc_id": FIXTURE_DOC_ID,
                 "title": "Tag version",
                 "ui_status": "draft",
-                "group": "subject",
             },
         )
         source_model.DOCS_SCOPE_CONFIGS.clear()
@@ -271,8 +271,8 @@ def test_document_collection_loader_selects_exact_configured_sub_scope() -> None
             source_model.DOCS_SCOPE_CONFIGS.clear()
             source_model.DOCS_SCOPE_CONFIGS.update(original_configs)
 
-    assert [(doc.doc_id, doc.title, doc.group) for doc in docs] == [
-        (FIXTURE_DOC_ID, "Tag version", "subject")
+    assert [(doc.doc_id, doc.title, doc.ui_status) for doc in docs] == [
+        (FIXTURE_DOC_ID, "Tag version", "draft")
     ]
     assert "unknown sub_scope 'missing' for scope 'analysis'" in missing_error
 

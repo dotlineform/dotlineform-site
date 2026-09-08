@@ -40,10 +40,6 @@ from docs_report_source import (
     build_report_source_contract,
     parse_report_source,
 )
-from docs_subscope_customisations import (
-    sub_scope_customisation_document_groups,
-    validate_sub_scope_customisation_document,
-)
 
 
 FRONT_MATTER_PATTERN = re.compile(r"\A---\s*\n(.*?)\n---\s*\n?", re.DOTALL)
@@ -65,7 +61,6 @@ class ScopeDoc:
     ui_status: str
     parent_id: str
     publishable: bool
-    group: str = ""
     report: ReportDescriptor | None = None
 
 
@@ -242,13 +237,10 @@ def format_source(front_matter: Dict[str, Any], body: str) -> str:
         "last_updated",
         "summary",
         "ui_status",
-        "group",
         "folder_path",
         "work_id",
         "series_id",
         "detail_uid",
-        "moment_id",
-        "concept_id",
         "parent_id",
         "publishable",
     ]
@@ -459,20 +451,10 @@ def normalize_ui_status(value: Any) -> str:
     return str(value or "").strip()
 
 
-def normalize_document_group(value: Any) -> str:
-    if value is None:
-        return ""
-    if not isinstance(value, str):
-        raise ValueError("group must be a scalar string")
-    return value.strip().lower()
-
-
 def validate_sub_scope_document_metadata(
     doc: ScopeDoc,
     *,
     ui_statuses: tuple[str, ...],
-    document_groups: tuple[str, ...],
-    sub_scope_customisation: Any = None,
 ) -> None:
     """Validate metadata owned by one configured sub-scope."""
 
@@ -480,19 +462,6 @@ def validate_sub_scope_document_metadata(
         raise ValueError(
             f"Unknown ui_status {doc.ui_status!r} for sub-scope doc {doc.doc_id!r}"
         )
-    if doc.group and not document_groups:
-        raise ValueError(
-            f"group is not configured for sub-scope doc {doc.doc_id!r}"
-        )
-    if doc.group and doc.group not in document_groups:
-        raise ValueError(
-            f"Unknown group {doc.group!r} for sub-scope doc {doc.doc_id!r}"
-        )
-    validate_sub_scope_customisation_document(
-        sub_scope_customisation,
-        doc.front_matter,
-        doc_id=doc.doc_id,
-    )
 
 
 def collection_supports_publishable(
@@ -577,7 +546,6 @@ def load_document_collection_docs_for_config(
             raise ValueError(f"missing required doc_id in {path.relative_to(root).as_posix()}")
         title = str(front_matter.get("title") or humanize(doc_id or path.stem)).strip() or doc_id
         ui_status = normalize_ui_status(front_matter.get("ui_status"))
-        group = normalize_document_group(front_matter.get("group"))
         parent_id = str(front_matter.get("parent_id") or "").strip()
         validate_publishable_front_matter(
             front_matter,
@@ -618,7 +586,6 @@ def load_document_collection_docs_for_config(
                 ui_status=ui_status,
                 parent_id=parent_id,
                 publishable=publishable,
-                group=group,
                 report=report,
             )
         )
@@ -631,10 +598,6 @@ def load_document_collection_docs_for_config(
             validate_sub_scope_document_metadata(
                 doc,
                 ui_statuses=document_config.ui_statuses,
-                document_groups=sub_scope_customisation_document_groups(
-                    document_config.sub_scope_customisation
-                ),
-                sub_scope_customisation=document_config.sub_scope_customisation,
             )
     return docs
 

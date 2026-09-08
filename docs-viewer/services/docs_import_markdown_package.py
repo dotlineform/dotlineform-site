@@ -197,7 +197,7 @@ def next_package_media_filename(
     extension: str,
     used_filenames: set[str],
 ) -> str:
-    normalized_scope = normalize_scope(scope)
+    normalized_scope = normalize_scope(scope, repo_root)
     safe_doc_id = slugify(doc_id or "imported-doc")
     safe_extension = extension.lower().lstrip(".")
     staging_root = staging_root.resolve()

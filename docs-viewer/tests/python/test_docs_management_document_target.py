@@ -35,7 +35,6 @@ def write_source_doc(
     source_doc_id: str | None = None,
     title: str = "",
     ui_status: str = "",
-    group: str = "",
     publishable: bool | None = None,
     sub_scope: str = "",
     extra_front_matter: dict[str, str] | None = None,
@@ -52,8 +51,6 @@ def write_source_doc(
     ]
     if ui_status:
         front_matter.append(f"ui_status: {ui_status}")
-    if group:
-        front_matter.append(f"group: {group}")
     if publishable is not None:
         front_matter.append(f"publishable: {'true' if publishable else 'false'}")
     for field_name, value in (extra_front_matter or {}).items():
@@ -84,7 +81,6 @@ def prepare_repo(
                         "analysis",
                         "tags",
                         title="Tags",
-                        analysis_concept_groups=["subject", "domain", "form", "theme"],
                     )
                 ],
             )
@@ -311,59 +307,75 @@ def test_resolver_rejects_unlisted_mismatched_and_escaping_sources(tmp_path: Pat
         ("series_id", "selected-series", "series"),
     ],
 )
-def test_pre_publish_works_reads_subjects_without_assignment_capability(
+def test_pre_publish_works_reads_subjects_but_rejects_authoring(
     tmp_path: Path,
     field_name: str,
     value: str,
     kind: str,
 ) -> None:
     write_site_tools_config(tmp_path)
-    write_docs_scope_config(
-        tmp_path,
-        [
-            docs_scope_record(
-                "analysis",
-                sub_scopes=[
-                    docs_sub_scope_record(
-                        "analysis",
-                        "works",
-                        title="Works",
-                        sub_scope_customisation={
-                            "id": "pre_publish_works",
-                            "settings": {},
-                        },
-                    )
-                ],
-            )
-        ],
-    )
-    scope_root = tmp_path / "docs-viewer/scopes/analysis"
+    analysis = docs_scope_record("analysis")
+    analysis["stages"] = {
+        stage: {
+            "media": analysis["media"],
+            "sub_scopes": [
+                docs_sub_scope_record(
+                    "analysis",
+                    "works",
+                    title="Works",
+                    sub_scope_customisation={"id": customisation_id, "settings": {}},
+                )
+            ],
+        }
+        for stage, customisation_id in (
+            ("working", "working_works"),
+            ("pre-publish", "pre_publish_works"),
+        )
+    }
+    write_docs_scope_config(tmp_path, [analysis])
+    scope_root = tmp_path / "docs-viewer/scopes/analysis/pre-publish"
     write_source_doc(scope_root, "report", title="Works")
-    write_source_doc(
+    source = write_source_doc(
         scope_root,
         "detail-doc",
         title="Detail",
         sub_scope="works",
         extra_front_matter={field_name: f'"{value}"'},
     )
+    before = source.read_bytes()
+    target = {
+        "scope": "analysis",
+        "stage": "pre-publish",
+        "sub_scope": "works",
+        "doc_id": "detail-doc",
+    }
+    payload = target_service.managed_document_metadata(tmp_path, target)
 
-    payload = target_service.managed_document_metadata(
-        tmp_path,
-        {
-            "scope": "analysis",
-            "sub_scope": "works",
-            "doc_id": "detail-doc",
-        },
-    )
-
-    assert payload["record"]["authoring_subject"] == {
-        "state": "valid",
+    # Folder is a Working-only subject; retain malformed evidence for review.
+    valid = kind != "folder"
+    subject = {
+        "state": "valid" if valid else "malformed",
         "kind": kind,
-        "key": value,
+        "key": value if valid else "",
         "fields": [field_name],
     }
+    if not valid:
+        subject["evidence"] = {field_name: value}
+    assert payload["stage"] == "pre-publish"
+    assert payload["record"]["authoring_subject"] == subject
+    assert payload["record"]["customisation"] == {
+        field: value if valid and field == field_name else ""
+        for field in ("folder_path", "work_id", "series_id", "detail_uid")
+    }
     assert payload["choices"] == {"ui_status": ["draft", "done"]}
-    assert "customisation" not in payload["record"]
+    with pytest.raises(ValueError, match="Pre-publish document authoring is unavailable"):
+        management_service.docs_management_post_response(
+            tmp_path,
+            routes.UPDATE_METADATA_PATH,
+            {**target, "source_revision": payload["source_revision"], "title": "Changed"},
+            dry_run=True,
+        )
+    assert source.read_bytes() == before
 
 
 def test_metadata_route_hydrates_parent_and_sub_scope_records_from_source(
@@ -382,7 +394,6 @@ summary: Full local summary
 date: 2026-07-27
 date_display: July 2026
 ui_status: draft
-group: theme
 parent_id: retained-sub-scope-parent
 ---
 # Detail
@@ -437,7 +448,6 @@ parent_id: retained-sub-scope-parent
             "date": "2026-07-27",
             "date_display": "July 2026",
             "ui_status": "draft",
-            "customisation": {"group": "theme", "concept_id": ""},
         },
     }
 

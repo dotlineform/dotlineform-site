@@ -221,7 +221,6 @@ def sub_scope_record(
     source_path: str | None = None,
     public_docs_path: str | None = None,
     ui_statuses: list[str] | None = None,
-    analysis_concept_groups: list[str] | None = None,
 ) -> dict[str, object]:
     record = docs_sub_scope_record(
         scope_id,
@@ -230,7 +229,6 @@ def sub_scope_record(
         scope_type="public",
         public_docs_path=public_docs_path,
         ui_statuses=ui_statuses,
-        analysis_concept_groups=analysis_concept_groups,
     )
     if source_path is not None:
         record["source"] = {
@@ -324,7 +322,6 @@ def test_docs_scope_config_accepts_nested_sub_scopes() -> None:
                     "research",
                     "tags",
                     ui_statuses=["draft", "done"],
-                    analysis_concept_groups=["subject", "theme"],
                 )
             ],
         )
@@ -338,11 +335,7 @@ def test_docs_scope_config_accepts_nested_sub_scopes() -> None:
     assert sub_scope.supports_return_import is False
     assert sub_scope.lifecycle is None
     assert sub_scope.ui_statuses == ("draft", "done")
-    assert sub_scope.sub_scope_customisation is not None
-    assert sub_scope.sub_scope_customisation.customisation_id == "concepts"
-    assert sub_scope.sub_scope_customisation.settings == {
-        "groups": ("subject", "theme")
-    }
+    assert sub_scope.sub_scope_customisation is None
     assert docs_scope_config.document_source_path(sub_scope).as_posix() == (
         "docs-viewer/scopes/research/source/sub-scopes/tags/documents"
     )
@@ -413,8 +406,8 @@ def test_docs_scope_config_accepts_registered_sub_scope_customisation() -> None:
             "studio",
             "tags",
             sub_scope_customisation={
-                "id": "concepts",
-                "settings": {"groups": ["Subject", "theme"]},
+                "id": "working_works",
+                "settings": {},
             },
         )
         write_scope_record(
@@ -426,8 +419,8 @@ def test_docs_scope_config_accepts_registered_sub_scope_customisation() -> None:
 
     customisation = config.sub_scopes[0].sub_scope_customisation
     assert customisation is not None
-    assert customisation.customisation_id == "concepts"
-    assert customisation.settings == {"groups": ("subject", "theme")}
+    assert customisation.customisation_id == "working_works"
+    assert customisation.settings == {}
 
 
 def test_docs_scope_config_selects_projects_customisation_from_configured_collection() -> None:
@@ -489,20 +482,14 @@ def test_docs_scope_config_selects_processing_customisation_from_configured_coll
 @pytest.mark.parametrize(
     ("sub_scope_customisation", "error"),
     [
-        ("concepts", "must be an object"),
-        ({"id": "concepts"}, "missing required fields: settings"),
+        ("working_works", "must be an object"),
+        ({"id": "working_works"}, "missing required fields: settings"),
         (
-            {"id": "concepts", "settings": {"groups": ["subject"]}, "module": "bad.js"},
+            {"id": "working_works", "settings": {}, "module": "bad.js"},
             "unknown fields: module",
         ),
-        ({"id": "analysis-tags", "settings": {"groups": ["subject"]}}, "id is invalid"),
+        ({"id": "analysis-tags", "settings": {}}, "id is invalid"),
         ({"id": "unknown", "settings": {}}, "id is unknown"),
-        ({"id": "concepts", "settings": {}}, "missing required fields: groups"),
-        ({"id": "concepts", "settings": {"groups": []}}, "must not be empty"),
-        (
-            {"id": "concepts", "settings": {"groups": ["subject", "subject"]}},
-            "must not contain duplicates",
-        ),
         (
             {"id": "working_works", "settings": {"extra": True}},
             "unknown fields: extra",
@@ -527,27 +514,6 @@ def test_docs_scope_config_rejects_invalid_sub_scope_customisation(
         )
 
         with pytest.raises(ValueError, match=error):
-            docs_scope_config.load_docs_scope_configs(repo_root)
-
-
-def test_docs_scope_config_rejects_legacy_document_groups_field() -> None:
-    with make_repo() as temp_path:
-        repo_root = Path(temp_path)
-        sub_scope = docs_sub_scope_record(
-            "studio",
-            "tags",
-            sub_scope_customisation={
-                "id": "concepts",
-                "settings": {"groups": ["subject"]},
-            },
-        )
-        sub_scope["document_groups"] = ["subject"]
-        write_scope_record(
-            repo_root,
-            docs_scope_record("studio", sub_scopes=[sub_scope]),
-        )
-
-        with pytest.raises(ValueError, match="document_groups is no longer supported"):
             docs_scope_config.load_docs_scope_configs(repo_root)
 
 
@@ -599,12 +565,7 @@ def test_checked_scope_config_opts_only_concepts_into_return_import() -> None:
         (sub_scope.sub_scope, sub_scope.supports_return_import)
         for sub_scope in configs["analysis"].sub_scopes
     ] == [("tags", True), ("works", False)]
-    assert not hasattr(concepts, "document_groups")
-    assert concepts.sub_scope_customisation is not None
-    assert concepts.sub_scope_customisation.customisation_id == "concepts"
-    assert concepts.sub_scope_customisation.settings == {
-        "groups": ("subject", "domain", "form", "theme")
-    }
+    assert concepts.sub_scope_customisation is None
     assert pre_publish_works.sub_scope_customisation is not None
     assert pre_publish_works.sub_scope_customisation.customisation_id == "pre_publish_works"
     assert pre_publish_works.sub_scope_customisation.settings == {}

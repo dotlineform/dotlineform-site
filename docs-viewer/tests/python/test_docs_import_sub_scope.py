@@ -39,7 +39,6 @@ def prepare_repo(repo_root: Path) -> None:
                         "tags",
                         title="Tags",
                         ui_statuses=["draft", "done"],
-                        analysis_concept_groups=["theme"],
                     )
                 ],
             ),
@@ -148,7 +147,7 @@ def test_markdown_import_creates_only_in_exact_child_with_fresh_identity(
 title: Imported Tag Note
 doc_id: existing-tag-doc
 summary: This must not become canonical metadata.
-group: theme
+unrelated: ignored
 ---
 
 Body without an H1.
@@ -204,7 +203,7 @@ Body without an H1.
     assert "publishable" not in front_matter
     assert "parent_id" not in front_matter
     assert "summary" not in front_matter
-    assert "group" not in front_matter
+    assert "unrelated" not in front_matter
     assert body == "Body without an H1.\n"
     assert payload["import_preview"]["target"] == {
         "scope": "analysis",
@@ -212,8 +211,8 @@ Body without an H1.
     }
     assert payload["import_preview"]["ordinary_front_matter"] == {
         "stripped": True,
-        "fields": ["title", "doc_id", "summary", "group"],
-        "ignored_fields": ["doc_id", "summary", "group"],
+        "fields": ["title", "doc_id", "summary", "unrelated"],
+        "ignored_fields": ["doc_id", "summary", "unrelated"],
         "title_used": True,
     }
     assert len(rebuild_calls) == 1
@@ -224,7 +223,7 @@ Body without an H1.
     assert payload["rebuild"]["search"] == {"mode": "none", "doc_ids": []}
 
 
-def test_markdown_package_reuses_parent_media_and_child_source_owners(
+def test_markdown_package_keeps_media_and_source_in_the_child_collection(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
@@ -268,7 +267,7 @@ Package body.
     source_text = target_path.read_text(encoding="utf-8")
     media_result = payload["inline_media_written"][0]
     media_path = (
-        tmp_path / "docs-viewer/scopes/analysis/source/media/img"
+        tmp_path / "docs-viewer/scopes/analysis/source/sub-scopes/tags/media/img"
         / media_result["artifact_identity"]
     )
 
@@ -282,9 +281,13 @@ Package body.
     assert "package-overwrite-id" not in source_text
     assert target_path.parent.name == "documents"
     assert target_path.parent.parent.name == "tags"
-    assert media_result["media_path"].startswith("docs/analysis/img/")
+    assert media_result["media_path"].startswith("docs/analysis/sub-scopes/tags/img/")
     assert media_result["publish_status"] == "uploaded"
     assert media_path.is_file()
+    assert not (
+        tmp_path / "docs-viewer/scopes/analysis/source/media/img"
+        / media_result["artifact_identity"]
+    ).exists()
     assert media_path.suffix == ".webp"
     assert f"[[media:{media_result['media_path']}]]" in source_text
     assert len(rebuild_calls) == 1
@@ -349,7 +352,7 @@ def test_child_collection_metadata_is_validated_before_preview(
         """---
 doc_id: invalid
 title: Invalid
-group: unsupported
+ui_status: unsupported
 ---
 # Invalid
 """,
@@ -363,7 +366,7 @@ group: unsupported
         ),
     )
 
-    with pytest.raises(ValueError, match="Unknown group 'unsupported'"):
+    with pytest.raises(ValueError, match="Unknown ui_status 'unsupported'"):
         import_service.handle_import_source(
             tmp_path,
             {

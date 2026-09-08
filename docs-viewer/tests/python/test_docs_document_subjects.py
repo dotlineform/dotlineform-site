@@ -18,7 +18,7 @@ import docs_document_subjects as subjects  # noqa: E402
 
 
 def test_document_identity_is_independent_of_subject() -> None:
-    fields = {"moment_id": "001", "concept_id": "001"}
+    fields = {"doc_id": "d-20260908-184516-f87fc8", "title": "A document"}
     assert subjects.normalize_authoring_subject(fields, folder_supported=False)["state"] == "none"
     assert subjects.normalize_authoring_subject({**fields, "work_id": "00001"}, folder_supported=False) == {
         "state": "valid", "kind": "work", "key": "00001", "fields": ["work_id"],

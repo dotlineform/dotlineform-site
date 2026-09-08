@@ -13,9 +13,6 @@ import {
 import {
   subjectLinkControlDefinition
 } from "./source-editor/subject-link-contribution.js";
-import {
-  conceptTokenControlDefinition
-} from "./source-editor/concept-token-contribution.js";
 
 export function createDocsViewerManagementViewDefinitions() {
   return {
@@ -41,19 +38,6 @@ export function createDocsViewerManagementViewDefinitions() {
           return import("./source-editor/catalogue-token-info-view.js")
             .then(function (module) {
               return module.createCatalogueTokenInfoView();
-            });
-        }
-      },
-      {
-        id: "concept-token-info",
-        label: "Concept token",
-        panel: "info",
-        appKinds: ["manage"],
-        features: ["source-editing"],
-        load: function () {
-          return import("./source-editor/concept-token-info-view.js")
-            .then(function (module) {
-              return module.createConceptTokenInfoView();
             });
         }
       }
@@ -208,7 +192,6 @@ export function createDocsViewerManagementViewDefinitions() {
         renderer: "source-add-file"
       },
       catalogueTokenControlDefinition(),
-      conceptTokenControlDefinition(),
       subjectLinkControlDefinition(),
       directiveActionsControlDefinition(),
       {

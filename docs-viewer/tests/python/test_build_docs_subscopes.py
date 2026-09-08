@@ -695,7 +695,6 @@ def test_python_docs_builder_writes_sub_scope_payloads_and_minimal_manifest() ->
                 "studio",
                 "tags",
                 title="Tags",
-                analysis_concept_groups=["subject", "domain", "form", "theme"],
             )
         ]
         write_json(config_path, payload)
@@ -707,7 +706,6 @@ title: Tags
 added_date: 2026-06-20
 last_updated: 2026-06-21
 parent_id: ""
-group: subject
 ---
 # Tags
 
@@ -727,8 +725,6 @@ added_date: 2026-06-20
 last_updated: 2026-06-21
 parent_id: ""
 ui_status: draft
-group: subject
-concept_id: "001"
 ---
 # Detail
 
@@ -743,7 +739,6 @@ title: Related
 added_date: 2026-06-22
 last_updated: 2026-06-23
 parent_id: {DETAIL_DOC_ID}
-concept_id: ""
 ---
 # Related
 
@@ -760,45 +755,10 @@ Related body.
         )
         detail = read_json(root / f"docs-viewer/scopes/studio/generated/sub-scopes/tags/documents/by-id/{DETAIL_DOC_ID}.json")
         related = read_json(root / f"docs-viewer/scopes/studio/generated/sub-scopes/tags/documents/by-id/{RELATED_DOC_ID}.json")
-        concept_associations = read_json(
-            root
-            / "docs-viewer/scopes/studio/generated/sub-scopes/tags/documents/concept-associations.json"
-        )
-        related_source_path = (
-            root
-            / f"docs-viewer/scopes/studio/source/sub-scopes/tags/documents/{RELATED_DOC_ID}.md"
-        )
-        related_source_path.write_text(
-            related_source_path.read_text(encoding="utf-8").replace(
-                'concept_id: ""',
-                'concept_id: "002"',
-            ),
-            encoding="utf-8",
-        )
-        reassigned_exit_code, _reassigned_stdout, reassigned_stderr = run_cli(
-            root,
-            ["--scope", "studio", "--sub-scope", "tags", "--write"],
-        )
-        reassigned_associations = read_json(
-            root
-            / "docs-viewer/scopes/studio/generated/sub-scopes/tags/documents/concept-associations.json"
-        )
-        related_source_path.unlink()
-        deleted_exit_code, _deleted_stdout, deleted_stderr = run_cli(
-            root,
-            ["--scope", "studio", "--sub-scope", "tags", "--write"],
-        )
-        deleted_associations = read_json(
-            root
-            / "docs-viewer/scopes/studio/generated/sub-scopes/tags/documents/concept-associations.json"
-        )
+        assert not (root / "docs-viewer/scopes/studio/generated/sub-scopes/tags/documents/by-id/stale.json").exists()
 
-    assert exit_code == 0
+    assert exit_code == 0, stderr
     assert stderr == ""
-    assert reassigned_exit_code == 0
-    assert reassigned_stderr == ""
-    assert deleted_exit_code == 0
-    assert deleted_stderr == ""
     assert "Docs sub-scope build (write) scope=studio sub_scope=tags" in stdout
     diagnostics = diagnostics_from_stdout(stdout)
     assert diagnostics["build_mode"] == "sub_scope"
@@ -811,26 +771,18 @@ Related body.
         ]
     }
     assert manage_manifest == {
-        "customisation": {
-            "id": "concepts",
-            "data": {
-                "groups": ["subject", "domain", "form", "theme"],
-            },
-        },
         "docs": [
             {
                 "doc_id": DETAIL_DOC_ID,
                 "title": "Detail",
                 "ui_status": "draft",
                 "last_updated": "2026-06-21",
-                "customisation": {"group": "subject", "concept_id": "001"},
             },
             {
                 "doc_id": RELATED_DOC_ID,
                 "title": "Related",
                 "ui_status": "",
                 "last_updated": "2026-06-23",
-                "customisation": {"concept_id": ""},
             },
         ],
     }
@@ -838,94 +790,9 @@ Related body.
     assert detail["title"] == "Detail"
     assert detail["last_updated"] == "2026-06-21"
     assert "source_path" not in detail
-    assert "group" not in detail
     assert detail["viewer_url"] == f"/docs/?scope=studio&doc={TAGS_REPORT_DOC_ID}&subdoc={DETAIL_DOC_ID}"
     assert 'href="related.md"' in detail["content_html"]
     assert related["parent_id"] == DETAIL_DOC_ID
-    assert concept_associations["schema_version"] == "docs_concept_associations_v1"
-    assert concept_associations["scope"] == "studio"
-    assert concept_associations["sub_scope"] == "tags"
-    assert [
-        document["target"]["doc_id"]
-        for document in concept_associations["associations"][0]["documents"]
-    ] == [DETAIL_DOC_ID]
-    assert concept_associations["associations"][0]["concept_id"] == "001"
-    assert all(
-        [location["access"] for location in document["locations"]] == ["manage"]
-        for document in concept_associations["associations"][0]["documents"]
-    )
-    assert {
-        document["target"]["doc_id"]: document["locations"][0]["url"]
-        for document in concept_associations["associations"][0]["documents"]
-    } == {
-        DETAIL_DOC_ID: (
-            f"/docs/?scope=studio&doc={TAGS_REPORT_DOC_ID}"
-            f"&subdoc={DETAIL_DOC_ID}"
-        ),
-    }
-    assert [
-        (
-            association["concept_id"],
-            [document["target"]["doc_id"] for document in association["documents"]],
-        )
-        for association in reassigned_associations["associations"]
-    ] == [
-        ("001", [DETAIL_DOC_ID]),
-        ("002", [RELATED_DOC_ID]),
-    ]
-    assert [
-        (
-            association["concept_id"],
-            [document["target"]["doc_id"] for document in association["documents"]],
-        )
-        for association in deleted_associations["associations"]
-    ] == [("001", [DETAIL_DOC_ID])]
-    assert not (root / "docs-viewer/scopes/studio/generated/sub-scopes/tags/documents/by-id/stale.json").exists()
-    assert not (root / "docs-viewer/scopes/studio/generated/sub-scopes/tags/documents/index-tree.json").exists()
-    assert not (root / "docs-viewer/scopes/studio/generated/sub-scopes/tags/documents/recent.json").exists()
-
-
-@pytest.mark.parametrize(
-    ("group", "error"),
-    [
-        ("unknown", "Unknown group"),
-        ("[subject, theme]", "Unknown group"),
-    ],
-)
-def test_python_docs_builder_rejects_invalid_sub_scope_group(
-    group: str,
-    error: str,
-) -> None:
-    with tempfile.TemporaryDirectory() as temp_path:
-        root = Path(temp_path)
-        prepare_repo(root)
-        config_path = root / "docs-viewer/config/scopes/docs_scopes.json"
-        payload = read_json(config_path)
-        payload["scopes"][0]["sub_scopes"] = [
-            docs_sub_scope_record(
-                "studio",
-                "tags",
-                analysis_concept_groups=["subject", "domain", "form", "theme"],
-            )
-        ]
-        write_json(config_path, payload)
-        write_text(
-            root
-            / f"docs-viewer/scopes/studio/source/sub-scopes/tags/documents/{DETAIL_DOC_ID}.md",
-            f"""---
-doc_id: {DETAIL_DOC_ID}
-title: Detail
-group: {group}
----
-# Detail
-""",
-        )
-
-        with pytest.raises(RuntimeError, match=error):
-            run_cli(
-                root,
-                ["--scope", "studio", "--sub-scope", "tags"],
-            )
 
 
 def test_python_docs_builder_can_confine_sub_scope_write_from_browser_configs() -> None:
@@ -1088,105 +955,6 @@ publishable: false
     }
     assert set(visible_payload) >= {"doc_id", "title", "content_html"}
     assert hidden_payload_exists
-
-
-def test_python_docs_builder_projects_registered_manage_customisation_only() -> None:
-    with tempfile.TemporaryDirectory() as temp_path:
-        root = Path(temp_path)
-        prepare_repo(root)
-        config_path = root / "docs-viewer/config/scopes/docs_scopes.json"
-        payload = read_json(config_path)
-        payload["scopes"][0]["sub_scopes"] = [
-            docs_sub_scope_record(
-                "studio",
-                "tags",
-                title="Tags",
-                sub_scope_customisation={
-                    "id": "concepts",
-                    "settings": {"groups": ["subject", "theme"]},
-                },
-            )
-        ]
-        write_json(config_path, payload)
-        write_text(
-            root / f"docs-viewer/scopes/studio/source/documents/{TAGS_REPORT_DOC_ID}.md",
-            f"""---
-doc_id: {TAGS_REPORT_DOC_ID}
-title: Tags
----
-# Tags
-
-:::report
-id: docs_subscope
-access: local
-sub_scope: tags
-:::
-""",
-        )
-        write_text(
-            root / f"docs-viewer/scopes/studio/source/sub-scopes/tags/documents/{DETAIL_DOC_ID}.md",
-            f"""---
-doc_id: {DETAIL_DOC_ID}
-title: Detail
-last_updated: 2026-06-21
-group: subject
----
-# Detail
-""",
-        )
-
-        exit_code, _stdout, stderr = run_cli(
-            root,
-            ["--scope", "studio", "--sub-scope", "tags", "--write"],
-        )
-        manifest = read_json(
-            root / "docs-viewer/scopes/studio/generated/sub-scopes/tags/documents/manifest.json"
-        )
-        manage_manifest = read_json(
-            root
-            / "docs-viewer/scopes/studio/generated/sub-scopes/tags/documents/manage-manifest.json"
-        )
-        detail = read_json(
-            root
-            / f"docs-viewer/scopes/studio/generated/sub-scopes/tags/documents/by-id/{DETAIL_DOC_ID}.json"
-        )
-        config = load_docs_scope_configs(root)["studio"]
-        browser_config = build_docs.browser_scope_config_payload(root, [config])
-        public_browser_config = build_docs.browser_scope_config_payload(
-            root,
-            [config],
-            published=True,
-        )
-
-    assert exit_code == 0
-    assert stderr == ""
-    assert manifest == {"docs": [{"doc_id": DETAIL_DOC_ID, "title": "Detail"}]}
-    assert manage_manifest == {
-        "customisation": {
-            "id": "concepts",
-            "data": {"groups": ["subject", "theme"]},
-        },
-        "docs": [
-            {
-                "doc_id": DETAIL_DOC_ID,
-                "title": "Detail",
-                "ui_status": "",
-                "last_updated": "2026-06-21",
-                "customisation": {"group": "subject"},
-            }
-        ],
-    }
-    assert detail["viewer_url"] == (
-        f"/docs/?scope=studio&doc={TAGS_REPORT_DOC_ID}&subdoc={DETAIL_DOC_ID}"
-    )
-    assert browser_config["scopes"][0]["sub_scopes"][0]["sub_scope_customisation"] == {
-        "id": "concepts",
-        "capabilities": {
-            "assignable_field_groups": ["concept_group"],
-            "identity_kind": "concept",
-        },
-    }
-    assert "sub_scope_customisation" not in public_browser_config["scopes"][0]["sub_scopes"][0]
 
 
 def test_browser_config_projects_assignable_group_for_exact_configured_collection(

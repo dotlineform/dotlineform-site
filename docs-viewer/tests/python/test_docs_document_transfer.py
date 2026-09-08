@@ -184,7 +184,6 @@ def make_collection_repo(tmp_path: Path) -> Path:
             "source",
             "tags",
             title="Tags",
-            analysis_concept_groups=["subject", "domain"],
         ),
         docs_sub_scope_record(
             "source",
@@ -198,7 +197,6 @@ def make_collection_repo(tmp_path: Path) -> Path:
             "target",
             "tags",
             title="Tags",
-            analysis_concept_groups=["subject"],
         ),
         docs_sub_scope_record(
             "target",
@@ -249,13 +247,12 @@ def make_collection_repo(tmp_path: Path) -> Path:
             f"{report_ids[('source', 'tags')]}&subdoc=tag-b)\n\n"
             "[[media:docs/source/sub-scopes/tags/img/photo.png Photo]]\n"
         ),
-        extra_front_matter={"group": "subject", "work_id": "00123"},
+        extra_front_matter={"work_id": "00123"},
     )
     write_doc(
         sub_scope_documents_root(repo_root, "source", "tags"),
         doc_id="tag-b",
         title="Tag B",
-        extra_front_matter={"group": "domain"},
     )
     write_doc(
         sub_scope_documents_root(repo_root, "source", "works"),
@@ -851,14 +848,8 @@ def test_child_copy_receipt_freezes_collections_metadata_links_and_owners(
     assert "target_default_publishable" not in preview
     assert preview["custom_metadata"]["retained"] == []
     assert preview["custom_metadata"]["rejected"] == []
-    assert {
-        (item["source_doc_id"], item["field_name"], item["status"])
-        for item in preview["custom_metadata"]["omitted"]
-    } == {
-        ("tag-a", "group", "omitted"),
-        ("tag-b", "group", "omitted"),
-    }
-    assert {item.field_name for item in plan.custom_metadata} == {"group"}
+    assert preview["custom_metadata"]["omitted"] == []
+    assert plan.custom_metadata == ()
     assert plan.link_decisions == (
         transfer.TransferLinkDecision(
             source_doc_id="tag-a",
@@ -889,54 +880,6 @@ def test_child_copy_receipt_freezes_collections_metadata_links_and_owners(
     assert snapshot(repo_root) == before
 
 
-def test_custom_metadata_contract_retains_omits_and_rejects_by_target_settings(
-    tmp_path: Path,
-) -> None:
-    repo_root = make_collection_repo(tmp_path)
-    retained = transfer.plan_document_transfer(
-        repo_root,
-        source_scope="source",
-        source_sub_scope="tags",
-        requested_doc_ids=["tag-a"],
-        target_scope="target",
-        target_sub_scope="tags",
-        transfer_mode="copy",
-        operation_timestamp="2026-07-24 09:10:11",
-        token_factory=sequential_tokens("aaaaaa"),
-    )
-    omitted = transfer.plan_document_transfer(
-        repo_root,
-        source_scope="source",
-        source_sub_scope="tags",
-        requested_doc_ids=["tag-a"],
-        target_scope="target",
-        target_sub_scope="works",
-        transfer_mode="copy",
-        operation_timestamp="2026-07-24 09:10:11",
-        token_factory=sequential_tokens("bbbbbb"),
-    )
-    rejected = transfer.plan_document_transfer(
-        repo_root,
-        source_scope="source",
-        source_sub_scope="tags",
-        requested_doc_ids=["tag-b"],
-        target_scope="target",
-        target_sub_scope="tags",
-        transfer_mode="copy",
-        operation_timestamp="2026-07-24 09:10:11",
-        token_factory=sequential_tokens("cccccc"),
-    )
-
-    assert retained.ok
-    assert retained.custom_metadata[0].status == "retained"
-    assert omitted.ok
-    assert omitted.custom_metadata[0].status == "omitted"
-    assert not rejected.ok
-    assert rejected.custom_metadata[0].status == "rejected"
-    assert blocker_codes(rejected) == {"target_custom_metadata_rejected"}
-    assert rejected.preview_payload()["apply_plan"] is None
-
-
 def test_child_flatness_and_move_boundaries_are_explicit(tmp_path: Path) -> None:
     repo_root = make_collection_repo(tmp_path)
     with pytest.raises(ValueError, match="does not support descendant"):
@@ -963,7 +906,6 @@ def test_child_flatness_and_move_boundaries_are_explicit(tmp_path: Path) -> None
         doc_id="tag-child",
         title="Tag Child",
         parent_id="tag-a",
-        extra_front_matter={"group": "subject"},
     )
     with pytest.raises(ValueError, match="contains a parent/child relationship"):
         transfer.plan_document_transfer(

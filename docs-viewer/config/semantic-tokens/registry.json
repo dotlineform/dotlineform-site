@@ -60,47 +60,6 @@
           ]
         }
       ]
-    },
-    {
-      "schema_version": "docs_semantic_token_family_definition_v1",
-      "key": "concept",
-      "labels": {
-        "family": "Concept",
-        "source_action": "Add concept token",
-        "info_view": "Concept token"
-      },
-      "occurrence_fields": [
-        {
-          "key": "title",
-          "label": "Title",
-          "required": true,
-          "editable": true,
-          "control": "text"
-        }
-      ],
-      "ui_contributions": {
-        "source_action": "source-add-concept-token",
-        "modal": "concept-token-add-modal",
-        "info_view": "concept-token-info"
-      },
-      "target_types": [
-        {
-          "key": "concept",
-          "label": "Concept",
-          "id_policy": {
-            "normalizer": "digits_left_pad",
-            "width": 3,
-            "input_pattern": "^[0-9]{1,3}$",
-            "canonical_pattern": "^[0-9]{3}$"
-          },
-          "lookup_adapter": "concept-document-target-lookup",
-          "lookup_fields": [
-            "title",
-            "href",
-            "meta"
-          ]
-        }
-      ]
     }
   ]
 }

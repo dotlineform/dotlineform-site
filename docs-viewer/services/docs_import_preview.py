@@ -17,7 +17,6 @@ if str(SHARED_PYTHON_DIR) not in sys.path:
     sys.path.insert(0, str(SHARED_PYTHON_DIR))
 
 from markdown_renderer import markdown_renderer_contract, render_markdown_document  # noqa: E402
-from docs_scope_config import DOCUMENT_SOURCE_ROOTS  # noqa: E402
 
 from docs_import_common import (  # noqa: E402
     HTML_STAGED_SUFFIXES,
@@ -344,7 +343,7 @@ def generate_html_content_import_preview(
     title: str = "",
     doc_id: str = "",
 ) -> dict[str, Any]:
-    normalized_scope = normalize_scope(scope)
+    normalized_scope = normalize_scope(scope, repo_root)
     parsed = parse_html_document(source_html)
     parsed_title = extract_html_title(parsed.root)
     summary = build_summary(
@@ -593,7 +592,7 @@ def generate_markdown_content_import_preview(
     doc_id: str = "",
     normalize_ordinary_front_matter: bool = False,
 ) -> dict[str, Any]:
-    normalized_scope = normalize_scope(scope)
+    normalized_scope = normalize_scope(scope, repo_root)
     ordinary_front_matter = None
     front_matter_title = ""
     front_matter_warnings: list[str] = []
@@ -647,7 +646,7 @@ def generate_markdown_package_import_preview(
     scope: str,
     retain_private_media_source: bool = False,
 ) -> dict[str, Any]:
-    normalized_scope = normalize_scope(scope)
+    normalized_scope = normalize_scope(scope, repo_root)
     package_root = package_path.resolve()
     markdown_path = find_package_markdown_file(package_root)
     source_markdown = markdown_path.read_text(encoding="utf-8", errors="replace")
@@ -710,6 +709,7 @@ def generate_text_import_preview(
 ) -> dict[str, Any]:
     source_text = source_path.read_text(encoding="utf-8", errors="replace")
     summary = generate_plain_text_content_import_preview(
+        repo_root=repo_root,
         source_text=source_text,
         source_identity=source_path.stem,
         scope=scope,
@@ -723,6 +723,7 @@ def generate_text_import_preview(
 
 def generate_plain_text_content_import_preview(
     *,
+    repo_root: Path | None = None,
     source_text: str,
     source_identity: str,
     scope: str,
@@ -731,7 +732,7 @@ def generate_plain_text_content_import_preview(
     title: str = "",
     doc_id: str = "",
 ) -> dict[str, Any]:
-    normalized_scope = normalize_scope(scope)
+    normalized_scope = normalize_scope(scope, repo_root)
     summary = build_text_summary(source_text, source_identity)
     apply_content_identity_hints(summary, title=title, doc_id=doc_id)
     summary["scope"] = normalized_scope
@@ -780,6 +781,7 @@ def generate_content_import_preview(
         )
     if content_format == "plain_text":
         return generate_plain_text_content_import_preview(
+            repo_root=repo_root,
             source_text=content,
             source_identity=source_identity,
             scope=scope,
@@ -850,7 +852,6 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument(
         "--scope",
         default="studio",
-        choices=sorted(DOCUMENT_SOURCE_ROOTS.keys()),
         help="Target docs scope.",
     )
     parser.add_argument("--include-prompt-meta", action="store_true", help="Include clearly identifiable prompt/meta blocks.")

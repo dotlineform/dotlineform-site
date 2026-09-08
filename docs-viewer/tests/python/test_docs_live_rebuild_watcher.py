@@ -77,10 +77,7 @@ def configured_concepts(
         title="Tags",
         public_title="Concepts",
         ui_statuses=("draft", "done"),
-        sub_scope_customisation=SimpleNamespace(
-            customisation_id="concepts",
-            settings={"groups": ("subject", "domain")},
-        ),
+        sub_scope_customisation=None,
         source=source(child_path),
     )
     analysis = SimpleNamespace(

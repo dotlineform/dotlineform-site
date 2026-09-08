@@ -10,7 +10,6 @@ import {
 } from "./docs-viewer-management-document-target.js";
 import {
   assignManagedDocFieldGroup,
-  allocateManagedDocIdentity,
   openLocalTarget,
   readManagedDocMetadata
 } from "./docs-viewer-management-client.js";
@@ -243,11 +242,8 @@ export function loadDocsViewerSubscopeContribution(settings, parent, subScope, o
     ));
   }
   var descriptor = subScopeConfig.subScopeCustomisation;
-  var identityKind = descriptor && descriptor.capabilities && descriptor.capabilities.identityKind;
-  var workingCustomisationAvailable = parent.stage === "working" && (
-    hasDocsViewerAssignableFieldGroup(descriptor, "authoring_subject")
-    || identityKind === "concept" || identityKind === "moment"
-  );
+  var workingCustomisationAvailable = parent.stage === "working"
+    && hasDocsViewerAssignableFieldGroup(descriptor, "authoring_subject");
   var mutationAvailable = Boolean(
     (!parent.stage || workingCustomisationAvailable)
     && settings.managementContext
@@ -293,11 +289,6 @@ export function loadDocsViewerSubscopeContribution(settings, parent, subScope, o
     return modules[2].resolveManagementDocsSubscopeCustomisation(
       subScopeConfig.subScopeCustomisation,
       {
-        allocateIdentity: mutationAvailable
-          ? function (target, payload) {
-              return allocateManagedDocIdentity(target, payload, clientOptions);
-            }
-          : null,
         assignFieldGroup: mutationAvailable
           ? function (target, payload) {
               return assignManagedDocFieldGroup(target, payload, clientOptions);

@@ -104,31 +104,7 @@ def write_public_reader_doc_payload(repo_root: Path, scope: str, doc_id: str, ti
     )
 
 
-def concept_family_definition() -> dict[str, object]:
-    return {
-        "schema_version": "docs_semantic_token_family_definition_v1",
-        "key": "concept",
-        "labels": {},
-        "occurrence_fields": [],
-        "ui_contributions": {},
-        "target_types": [
-            {
-                "key": "concept",
-                "label": "Concept",
-                "id_policy": {
-                    "normalizer": "digits_left_pad",
-                    "width": 3,
-                    "input_pattern": "^[0-9]{1,3}$",
-                    "canonical_pattern": "^[0-9]{3}$",
-                },
-                "lookup_adapter": "concept-document-target-lookup",
-                "lookup_fields": ["title", "href", "meta", "aliases"],
-            }
-        ],
-    }
-
-
-def write_semantic_token_contract(repo_root: Path, *, include_concept: bool = False) -> None:
+def write_semantic_token_contract(repo_root: Path) -> None:
     families: list[dict[str, object]] = [
         {
             "schema_version": "docs_semantic_token_family_definition_v1",
@@ -152,8 +128,6 @@ def write_semantic_token_contract(repo_root: Path, *, include_concept: bool = Fa
             ],
         }
     ]
-    if include_concept:
-        families.append(concept_family_definition())
     write_json(
         repo_root / "docs-viewer/config/semantic-tokens/registry.json",
         {
@@ -162,26 +136,6 @@ def write_semantic_token_contract(repo_root: Path, *, include_concept: bool = Fa
             "families": families,
         },
     )
-    concept_targets: list[dict[str, object]] = []
-    if include_concept:
-        concept_targets = [
-            {
-                "family": "concept",
-                "target_type": "concept",
-                "target_id": concept_id,
-                "title": concept_id,
-                "href": f"/analysis/?doc=report&subdoc={doc_id}",
-                "meta": ["subject", title],
-                "aliases": [],
-            }
-            for concept_id, doc_id, title in (
-                ("001", "d-20260811-120000-100001", "Resolved document"),
-                ("002", "d-20260811-120000-400001", "Fallback document"),
-                ("003", "d-20260811-120000-500001", "Stale unavailable row"),
-                ("999", "d-20260811-120000-600001", "Stale unknown row"),
-                ("004", "d-20260811-120000-700001", "Stale zero row"),
-            )
-        ]
     write_json(
         repo_root / "docs-viewer/data/generated/semantic-tokens/target-lookup.json",
         {
@@ -212,19 +166,9 @@ def write_semantic_token_contract(repo_root: Path, *, include_concept: bool = Fa
                     "title": "image unavailable",
                     "href": "/works/?work=00009",
                 },
-            ] + concept_targets,
+            ],
         },
     )
-
-
-def write_concept_diagnosis_contract(repo_root: Path) -> None:
-    from concept_factory import write_concept_sources
-
-    write_semantic_token_contract(repo_root, include_concept=True)
-    config = json.loads((repo_root / "docs-viewer/config/scopes/docs_scopes.json").read_text())
-    write_concept_sources(repo_root, concept_id="001", extra_scopes=[
-        scope for scope in config["scopes"] if scope["scope_id"] != "analysis"
-    ])
 
 
 def write_source_doc(repo_root: Path, scope: str, body: str) -> None:
@@ -437,24 +381,12 @@ def test_semantic_token_source_repair_clears_the_audit() -> None:
     assert repaired["summary"] == {"total": 0}
 
 
-def test_concept_semantic_token_audit_diagnoses_exact_resolution_state() -> None:
-    source_body = "Resolved [[concept:concept:001|Resolved]]. Unknown [[concept:concept:999|Unknown]]."
-    with make_repo("<p>No semantic-token anchors here.</p>", source_body=source_body) as temp_path:
-        repo_root = Path(temp_path)
-        write_concept_diagnosis_contract(repo_root)
-        configs = docs_broken_links.load_docs_scope_configs(repo_root, scope_ids=["studio"])
-        entries = docs_broken_links.semantic_token_broken_entries(repo_root, "studio", configs)
-    assert [(entry["target_id"], entry["reason"]) for entry in entries] == [("999", "unknown_concept")]
-    assert entries[0]["link_url"] == ""
-
-
 def main() -> None:
     tests = [
         test_missing_docs_links_inside_code_blocks_are_ignored,
         test_public_reader_payloads_do_not_need_viewer_url_metadata,
         test_semantic_token_audit_reads_source_independently_of_rendered_usage,
         test_semantic_token_source_repair_clears_the_audit,
-        test_concept_semantic_token_audit_diagnoses_exact_resolution_state,
     ]
     for test in tests:
         test()

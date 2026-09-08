@@ -48,7 +48,6 @@ def write_config(root: Path, *, media_provider: str = "repository") -> None:
             title="Tags",
             public_title="Concepts",
             scope_type="public",
-            analysis_concept_groups=["subject"],
         ),
         docs_sub_scope_record(
             "analysis",
@@ -159,7 +158,7 @@ def prepare_published(root: Path, *, include_subjects: bool = True) -> str:
         document_payload(TAG_DOC, "tag", "<h1>tag</h1>"),
     )
     add(
-        "sub-scopes/tags/documents/concept-associations.json",
+        "sub-scopes/tags/documents/private-report.json",
         {"schema_version": "docs_concept_associations_v1", "associations": []},
     )
     add(
