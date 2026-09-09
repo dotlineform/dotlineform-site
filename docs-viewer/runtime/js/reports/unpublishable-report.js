@@ -8,7 +8,7 @@ export function readUnpublishableRows(payload) {
   return payload.rows.map(function (row) {
     const target = row && row.target;
     if (!target || target.scope !== payload.scope || target.stage !== payload.stage
-      || typeof target.sub_scope !== "string" || typeof target.doc_id !== "string" || !target.doc_id
+      || target.sub_scope !== "" || typeof target.doc_id !== "string" || !target.doc_id
       || typeof row.title !== "string" || !row.title
       || typeof row.collection_title !== "string" || !row.collection_title
       || typeof row.href !== "string") {
@@ -18,8 +18,8 @@ export function readUnpublishableRows(payload) {
     const url = new URL(row.href, "http://docs.invalid");
     if (seen.has(key) || !row.href.startsWith("/docs/?") || url.origin !== "http://docs.invalid"
       || url.searchParams.get("scope") !== target.scope || url.searchParams.get("stage") !== target.stage
-      || url.searchParams.get(target.sub_scope ? "subdoc" : "doc") !== target.doc_id
-      || (target.sub_scope && !url.searchParams.get("doc"))) {
+      || url.searchParams.get("doc") !== target.doc_id
+      || url.searchParams.has("subdoc")) {
       throw new Error("Unpublishable document link is invalid.");
     }
     seen.add(key);
@@ -51,7 +51,7 @@ export function mountUnpublishableReport(context) {
   const table = documentRef.createElement("table");
   const head = documentRef.createElement("thead");
   const headings = documentRef.createElement("tr");
-  ["Title", "Collection"].forEach(function (label) {
+  ["Title"].forEach(function (label) {
     const cell = documentRef.createElement("th");
     cell.scope = "col";
     cell.textContent = label;
@@ -86,9 +86,7 @@ export function mountUnpublishableReport(context) {
         link.href = row.href;
         link.textContent = row.title;
         title.appendChild(link);
-        const collection = documentRef.createElement("td");
-        collection.textContent = row.collection_title;
-        tr.append(title, collection);
+        tr.appendChild(title);
         body.appendChild(tr);
       });
       table.hidden = rows.length === 0;

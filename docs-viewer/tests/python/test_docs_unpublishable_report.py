@@ -55,13 +55,13 @@ def report_repo(tmp_path: Path) -> Path:
     return tmp_path
 
 
-def test_reads_every_working_collection_and_only_explicit_false(report_repo: Path) -> None:
+def test_reads_only_ordinary_working_explicit_false(report_repo: Path) -> None:
     assert UNPUBLISHABLE_REPORT_PATH in GET_PATHS
     payload = docs_management_get_payload(report_repo, UNPUBLISHABLE_REPORT_PATH, {"scope": ["analysis"], "stage": ["working"]})
     assert payload["ok"] is True and payload["stage"] == "working"
     rows = payload["rows"]
     assert [(row["target"]["sub_scope"], row["target"]["doc_id"]) for row in rows] == [
-        ("", EXCLUDED_ID), ("concepts", EXCLUDED_ID), ("works", EXCLUDED_ID),
+        ("", EXCLUDED_ID),
     ]
     for row in rows:
         target = row["target"]

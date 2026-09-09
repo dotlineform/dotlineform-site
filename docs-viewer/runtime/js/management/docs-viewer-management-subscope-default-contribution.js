@@ -88,7 +88,6 @@ export function createDocsViewerManagementSubscopeDefaultContribution(options = 
   var statuses = options.uiStatusByValue instanceof Map
     ? options.uiStatusByValue
     : new Map();
-  var nonPublishableEmoji = cleanString(options.nonPublishableEmoji) || "\uD83D\uDEAB";
   var onLifecycleEvent = typeof options.onLifecycleEvent === "function"
     ? options.onLifecycleEvent
     : null;
@@ -98,13 +97,13 @@ export function createDocsViewerManagementSubscopeDefaultContribution(options = 
   var onCopyDocuments = typeof options.onCopyDocuments === "function"
     ? options.onCopyDocuments
     : null;
+  var onToggleDraft = typeof options.onToggleDraft === "function"
+    ? options.onToggleDraft
+    : null;
   var lineageCopy = options.lineageCopy && typeof options.lineageCopy === "object"
     ? options.lineageCopy
     : null;
   var copyActionLabel = cleanString(lineageCopy && lineageCopy.actionLabel) || "Copy to…";
-  var onSetPublishable = typeof options.onSetPublishable === "function"
-    ? options.onSetPublishable
-    : null;
   var onCreateDocument = typeof options.onCreateDocument === "function"
     ? options.onCreateDocument
     : null;
@@ -118,7 +117,6 @@ export function createDocsViewerManagementSubscopeDefaultContribution(options = 
   var copyInFlight = false;
   var createInFlight = false;
   var prepareInFlight = false;
-  var setPublishableInFlight = false;
   var rowSelections = new Map();
   var activeDeleteWorkflow = null;
   var deleteWorkflowRequest = 0;
@@ -136,15 +134,6 @@ export function createDocsViewerManagementSubscopeDefaultContribution(options = 
   function copyResolution() {
     return resolveDocsViewerAction(
       DOCS_VIEWER_ACTION_IDS.COPY,
-      createDocsViewerActionContext({
-        selectedDocIds: selectionOwner.selectedDocIds()
-      })
-    );
-  }
-
-  function setPublishableResolution() {
-    return resolveDocsViewerAction(
-      DOCS_VIEWER_ACTION_IDS.SET_PUBLISHABLE,
       createDocsViewerActionContext({
         selectedDocIds: selectionOwner.selectedDocIds()
       })
@@ -250,31 +239,6 @@ export function createDocsViewerManagementSubscopeDefaultContribution(options = 
     } else {
       delete listToolbar.copyButton.dataset.docsViewerDisabledReason;
     }
-    if (listToolbar.publishableButton) {
-      var publishableResolution = setPublishableResolution();
-      var publishableDisabledReason = !onSetPublishable
-        ? "Set Publishable is unavailable for this collection."
-        : !publishableResolution.enabled
-          ? publishableResolution.disabledReason
-          : setPublishableInFlight ? "Set Publishable is in progress." : "";
-      var publishableLabel = "Set Publishable…";
-      var publishableAccessibleLabel = publishableDisabledReason
-        ? publishableLabel + " " + publishableDisabledReason
-        : publishableLabel;
-      listToolbar.publishableButton.disabled = Boolean(publishableDisabledReason);
-      listToolbar.publishableButton.title = publishableAccessibleLabel;
-      listToolbar.publishableButton.setAttribute(
-        "aria-label",
-        publishableAccessibleLabel
-      );
-      if (publishableDisabledReason) {
-        listToolbar.publishableButton.dataset.docsViewerDisabledReason = (
-          publishableDisabledReason
-        );
-      } else {
-        delete listToolbar.publishableButton.dataset.docsViewerDisabledReason;
-      }
-    }
     return snapshot;
   }
 
@@ -356,8 +320,8 @@ export function createDocsViewerManagementSubscopeDefaultContribution(options = 
     if (uiStatus && appendIcon(host, "docsViewer__navStatus", uiStatus.emoji)) {
       accessibleLabels.push(cleanString(uiStatus.label) || cleanString(doc.ui_status));
     }
-    if (doc.publishable === false && appendIcon(host, "docsViewer__publishableExclusion", nonPublishableEmoji)) {
-      accessibleLabels.push("Excluded from next Publish");
+    if (doc.draft === true && appendIcon(host, "docsViewer__draftIndicator", "📝")) {
+      accessibleLabels.push("Draft");
     }
     return { accessibleLabels: accessibleLabels };
   }
@@ -457,25 +421,6 @@ export function createDocsViewerManagementSubscopeDefaultContribution(options = 
     menu.className = "docsViewer__actionsMenu docsViewerReport__subscopeActionsMenu";
     menu.setAttribute("role", "menu");
     menu.hidden = true;
-    var publishableButton = null;
-    if (managementContext) {
-      publishableButton = documentRef.createElement("button");
-      publishableButton.className = "docsViewer__actionMenuItem";
-      publishableButton.type = "button";
-      publishableButton.id = "docsViewerSubscopeSetPublishableButton";
-      publishableButton.setAttribute("role", "menuitem");
-      publishableButton.dataset.docsViewerAction = (
-        DOCS_VIEWER_ACTION_IDS.SET_PUBLISHABLE
-      );
-      var publishableEmoji = documentRef.createElement("span");
-      publishableEmoji.className = "docsViewer__actionMenuEmoji";
-      publishableEmoji.setAttribute("aria-hidden", "true");
-      publishableEmoji.textContent = "🌐";
-      var publishableLabel = documentRef.createElement("span");
-      publishableLabel.className = "docsViewer__actionMenuLabel";
-      publishableLabel.textContent = "Set Publishable…";
-      publishableButton.replaceChildren(publishableEmoji, publishableLabel);
-    }
     var copyButton = documentRef.createElement("button");
     copyButton.className = "docsViewer__actionMenuItem";
     copyButton.type = "button";
@@ -504,13 +449,7 @@ export function createDocsViewerManagementSubscopeDefaultContribution(options = 
     prepareLabel.className = "docsViewer__actionMenuLabel";
     prepareLabel.textContent = "Prepare package…";
     prepareButton.replaceChildren(prepareEmoji, prepareLabel);
-    menu.replaceChildren.apply(
-      menu,
-      (publishableButton ? [publishableButton] : []).concat([
-        copyButton,
-        prepareButton
-      ])
-    );
+    menu.replaceChildren(copyButton, prepareButton);
     actionsHost.replaceChildren(actionsButton, menu);
 
     var selectionControl = documentRef.createElement("div");
@@ -550,7 +489,6 @@ export function createDocsViewerManagementSubscopeDefaultContribution(options = 
       handleDocumentKeydown: handleDocumentKeydown,
       menu: menu,
       prepareButton: prepareButton,
-      publishableButton: publishableButton,
       root: root,
       selectAllButton: selectAllButton,
       selectionControl: selectionControl
@@ -656,64 +594,6 @@ export function createDocsViewerManagementSubscopeDefaultContribution(options = 
         projectSelection();
       });
     });
-    if (publishableButton) {
-      publishableButton.addEventListener("click", function () {
-        if (publishableButton.disabled || !onSetPublishable) return;
-        var resolution = setPublishableResolution();
-        if (!resolution.enabled) return;
-        hideActionsMenu(true);
-        var collection = selectionOwner.collection();
-        setPublishableInFlight = true;
-        projectSelection();
-        var publishableRequest;
-        if (typeof settings.registerSelectionAction === "function") {
-          publishableRequest = settings.registerSelectionAction({
-            id: DOCS_VIEWER_ACTION_IDS.SET_PUBLISHABLE,
-            placement: "selection",
-            targetKind: "selection",
-            capability: true,
-            emptyState: "disabled",
-            refreshEffect: "collection",
-            handler: function (target, actionContext) {
-              return onSetPublishable(target, {
-                refreshCollection: actionContext.refreshCollection,
-                restoreFocus: actionsButton
-              });
-            }
-          }, {
-            active: selectionOwner.snapshot().selectionModeActive,
-            checkedDocIds: resolution.targetDocIds,
-            eligibleDocIds: eligibleDocIds()
-          }).invoke();
-        } else {
-          publishableRequest = onSetPublishable(
-            {
-              scope: collection.scope,
-              ...(collection.stage ? { stage: collection.stage } : {}),
-              sub_scope: collection.sub_scope,
-              doc_ids: resolution.targetDocIds.slice()
-            },
-            {
-              refreshCollection: settings.refreshCollection,
-              restoreFocus: actionsButton
-            }
-          );
-        }
-        Promise.resolve(publishableRequest).catch(function (error) {
-          if (typeof options.setStatus === "function") {
-            options.setStatus(
-              error && error.message
-                ? error.message
-                : "Sub-scope Set Publishable failed.",
-              true
-            );
-          }
-        }).finally(function () {
-          setPublishableInFlight = false;
-          projectSelection();
-        });
-      });
-    }
     copyButton.addEventListener("click", function () {
       if (copyButton.disabled || !onCopyDocuments) return;
       var resolution = copyResolution();
@@ -791,6 +671,41 @@ export function createDocsViewerManagementSubscopeDefaultContribution(options = 
     var host = settings.host;
     var target = settings.target;
     if (!host || !target) return;
+
+    if (managementContext && target.scope === "analysis" && target.stage === "working"
+      && onToggleDraft && typeof settings.registerAction === "function") {
+      var draftRegistration = settings.registerAction({
+        id: "set-draft",
+        placement: "detail-toolbar",
+        targetKind: "validated-detail",
+        capability: true,
+        emptyState: "omitted",
+        refreshEffect: "none",
+        handler: onToggleDraft
+      });
+      var draft = settings.document?.draft === true;
+      var draftButton = host.ownerDocument.createElement("button");
+      draftButton.className = "docsViewerReport__button docsViewerReport__button--pill docsReportDetail__iconButton";
+      draftButton.type = "button";
+      draftButton.dataset.docsSubscopeDraft = "true";
+      draftButton.title = draft ? "Draft — mark ready" : "Ready — mark as draft";
+      draftButton.setAttribute("aria-label", draftButton.title);
+      draftButton.setAttribute("aria-pressed", String(draft));
+      draftButton.textContent = draft ? "📝" : "✅";
+      draftButton.disabled = !draftRegistration.enabled;
+      draftButton.addEventListener("click", function () {
+        if (draftButton.disabled) return;
+        draftButton.disabled = true;
+        draftRegistration.invoke().catch(function (error) {
+          if (typeof options.setStatus === "function") {
+            options.setStatus(error.message || "Draft readiness could not be saved.", true);
+          }
+        }).finally(function () {
+          draftButton.disabled = !draftRegistration.enabled;
+        });
+      });
+      host.appendChild(draftButton);
+    }
 
     if (markdownLinkForDocument && typeof settings.registerAction === "function") {
       var copyRegistration = settings.registerAction({

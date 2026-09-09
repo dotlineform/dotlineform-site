@@ -143,6 +143,18 @@ export function createDocsViewerManagementViewDefinitions() {
         renderer: "manage-index-actions"
       },
       {
+        id: "draft",
+        actionId: "set-draft",
+        label: "Draft readiness",
+        ownerType: "view",
+        ownerViewId: "rendered-document",
+        modeIds: ["rendered-document"],
+        surfaceId: "main-view",
+        appKinds: ["manage"],
+        features: ["management"],
+        renderer: "manage-draft"
+      },
+      {
         id: "edit",
         actionId: "edit-metadata",
         label: "Edit",

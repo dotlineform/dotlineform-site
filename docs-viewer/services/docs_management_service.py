@@ -27,6 +27,7 @@ import docs_document_transfer  # noqa: E402
 import docs_document_transfer_apply  # noqa: E402
 import docs_management_document_target  # noqa: E402
 import docs_management_publishable  # noqa: E402
+import docs_management_draft  # noqa: E402
 import docs_import_source_service as import_source_service  # noqa: E402
 import docs_local_links  # noqa: E402
 import docs_media_report  # noqa: E402
@@ -130,12 +131,18 @@ def docs_management_post_response(
         allowed = {
             routes.CREATE_PATH, routes.UPDATE_METADATA_PATH, routes.SOURCE_REBUILD_PATH,
             routes.OPEN_SOURCE_PATH, routes.DELETE_PREVIEW_PATH, routes.DELETE_APPLY_PATH,
-            routes.ASSIGN_FIELD_GROUP_PATH, routes.SET_PUBLISHABLE_PATH,
+            routes.ASSIGN_FIELD_GROUP_PATH, routes.SET_PUBLISHABLE_PATH, routes.SET_DRAFT_PATH,
         }
         if field != "scope" or path not in allowed:
             raise ValueError("This action is unavailable in the publishing stage views")
         require_document_authoring(select_scope_stage(config, body.get("stage")))
     refresh_source_model_scope_configs(repo_root)
+    if path == routes.SET_DRAFT_PATH:
+        try:
+            plan = docs_management_draft.plan_set_draft(repo_root, body)
+            return HTTPStatus.OK, execute_management_mutation_plan(repo_root, plan, dry_run)
+        except mutations.ManagedDocumentRevisionConflict as error:
+            return HTTPStatus.CONFLICT, error.payload
     if path == routes.SOURCE_REBUILD_PATH:
         return HTTPStatus.OK, rebuild_source_body(repo_root, body, dry_run)
     if path == routes.OPEN_SOURCE_PATH:

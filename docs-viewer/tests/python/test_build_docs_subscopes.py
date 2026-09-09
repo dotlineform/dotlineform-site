@@ -724,7 +724,7 @@ title: Detail
 added_date: 2026-06-20
 last_updated: 2026-06-21
 parent_id: ""
-ui_status: draft
+ui_status: review
 ---
 # Detail
 
@@ -775,7 +775,7 @@ Related body.
             {
                 "doc_id": DETAIL_DOC_ID,
                 "title": "Detail",
-                "ui_status": "draft",
+                "ui_status": "review",
                 "last_updated": "2026-06-21",
             },
             {

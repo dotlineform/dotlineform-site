@@ -384,6 +384,14 @@ export function startDocsViewerRuntime(options) {
     mediaDetailAdapter: settings.mediaDetailAdapter,
     managementService: managementService,
     managementDocumentActions: {
+      toggleSubscopeDocumentDraft: function (target) {
+        return loadManagementController().then(function (controller) {
+          if (!controller || typeof controller.toggleSubscopeDocumentDraft !== "function") {
+            throw new Error("Sub-scope draft readiness is unavailable.");
+          }
+          return controller.toggleSubscopeDocumentDraft(target);
+        });
+      },
       copySubscopeDocuments: function (selection, options) {
         return loadManagementController().then(function (controller) {
           if (!controller || typeof controller.copySubscopeDocuments !== "function") {
@@ -398,14 +406,6 @@ export function startDocsViewerRuntime(options) {
             throw new Error("Sub-scope document creation is unavailable.");
           }
           return controller.createSubscopeDocument(collection, options);
-        });
-      },
-      setSubscopePublishable: function (selection, options) {
-        return loadManagementController().then(function (controller) {
-          if (!controller || typeof controller.setSubscopePublishable !== "function") {
-            throw new Error("Sub-scope Set Publishable is unavailable.");
-          }
-          return controller.setSubscopePublishable(selection, options);
         });
       }
     },

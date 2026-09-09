@@ -64,7 +64,7 @@ from docs_source_model import (  # noqa: E402
     load_document_collection_docs_for_config,
     parse_document_report,
     report_source_contract_for_collection,
-    validate_publishable_front_matter,
+    validate_document_status_front_matter,
 )
 from markdown_renderer import extract_markdown_search_fields  # noqa: E402
 
@@ -363,7 +363,7 @@ class DocsViewerSearchDataBuilder:
             if not doc_id or not title:
                 continue
             try:
-                validate_publishable_front_matter(
+                validate_document_status_front_matter(
                     front_matter,
                     collection_config=self.scope_config,
                     source_name=source_name,

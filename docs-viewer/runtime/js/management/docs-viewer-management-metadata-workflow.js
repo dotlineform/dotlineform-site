@@ -90,19 +90,6 @@ export function createDocsViewerManagementMetadataWorkflow(options = {}) {
     if (modal && payload) modal.closeMetadataModal(payload);
   }
 
-  function normalizedChoices(response, target) {
-    if (!target.sub_scope) return null;
-    var rawChoices = response && response.choices;
-    if (!rawChoices || typeof rawChoices !== "object") {
-      throw new Error("Sub-scope metadata choices could not be loaded.");
-    }
-    return {
-      ui_status: Array.isArray(rawChoices.ui_status)
-        ? rawChoices.ui_status.map(String).map(function (value) { return value.trim(); }).filter(Boolean)
-        : []
-    };
-  }
-
   function metadataDocFromResponse(response, target) {
     if (!response || typeof response !== "object") {
       throw new Error("Document metadata could not be loaded.");
@@ -124,7 +111,7 @@ export function createDocsViewerManagementMetadataWorkflow(options = {}) {
     }
     return {
       record: record,
-      choices: normalizedChoices(response, target),
+      choices: null,
       sourceRevision: String(response.source_revision || "").trim()
     };
   }

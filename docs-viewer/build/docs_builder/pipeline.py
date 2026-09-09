@@ -25,7 +25,6 @@ from .semantic_token_registry import load_semantic_token_registry
 from .semantic_tokens import SemanticTokensMixin, load_semantic_token_targets
 from .source import SourceLoadingMixin
 from .write_plan import WritePlanMixin
-from docs_source_model import collection_supports_publishable
 
 
 class DocsDataBuilder(
@@ -192,11 +191,6 @@ class DocsDataBuilder(
             "non_loadable_doc_ids": self.non_loadable_doc_ids,
             "manage_only_tree_root_ids": self.manage_only_tree_root_ids,
         }
-
-    @property
-    def publishable_supported(self) -> bool:
-        document_config = getattr(self, "sub_scope_config", self.config)
-        return collection_supports_publishable(document_config)
 
     @property
     def public_readonly_scope(self) -> bool:

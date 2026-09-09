@@ -210,7 +210,6 @@ class DocsSubScopeConfig:
     title: str
     public_title: str
     supports_return_import: bool
-    ui_statuses: tuple[str, ...]
     sub_scope_customisation: DocsSubScopeCustomisationConfig | None
     lifecycle: DocsSubScopeLifecycleConfig | None
     source: DocsSourceConfig
@@ -889,38 +888,6 @@ def validate_scope_policy(config: DocsScopeConfig, *, field: str) -> None:
         )
 
 
-def normalize_ordered_sub_scope_values(
-    raw: Any,
-    *,
-    field: str,
-) -> tuple[str, ...]:
-    """Normalize one ordered, duplicate-free sub-scope metadata vocabulary."""
-
-    if raw is None:
-        return ()
-    if not isinstance(raw, list):
-        raise ValueError(f"docs scope config field {field} must be an array")
-    values: list[str] = []
-    seen: set[str] = set()
-    for index, raw_value in enumerate(raw):
-        if not isinstance(raw_value, str):
-            raise ValueError(
-                f"docs scope config field {field}[{index}] must be a string"
-            )
-        value = raw_value.strip().lower()
-        if not SUB_SCOPE_ID_PATTERN.fullmatch(value):
-            raise ValueError(
-                f"docs scope config field {field}[{index}] is invalid"
-            )
-        if value in seen:
-            raise ValueError(
-                f"docs scope config field {field} must not contain duplicates"
-            )
-        seen.add(value)
-        values.append(value)
-    return tuple(values)
-
-
 def normalize_sub_scope_lifecycle(
     raw: Any,
     *,
@@ -1056,7 +1023,6 @@ def normalize_sub_scope_configs(
             "sub_scope_customisation",
             "supports_return_import",
             "title",
-            "ui_statuses",
         }
         unknown_fields = sorted(set(item) - supported_fields)
         if unknown_fields:
@@ -1129,10 +1095,6 @@ def normalize_sub_scope_configs(
                     served_path_prefix=f"{media.served_path_prefix.removesuffix(suffix)}/{relative.as_posix()}",
                 )
             projection = replace(projection, media=child_media)
-        ui_statuses = normalize_ordered_sub_scope_values(
-            item.get("ui_statuses"),
-            field=f"{item_field}.ui_statuses",
-        )
         sub_scope_customisation = normalize_docs_subscope_customisation(
             item.get("sub_scope_customisation"),
             field=f"{item_field}.sub_scope_customisation",
@@ -1160,7 +1122,6 @@ def normalize_sub_scope_configs(
                 title=title,
                 public_title=public_title,
                 supports_return_import=supports_return_import,
-                ui_statuses=ui_statuses,
                 sub_scope_customisation=sub_scope_customisation,
                 lifecycle=lifecycle,
                 source=source,

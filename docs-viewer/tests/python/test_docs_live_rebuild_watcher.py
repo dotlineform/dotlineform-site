@@ -76,7 +76,6 @@ def configured_concepts(
         media=SimpleNamespace(build_sources={}),
         title="Tags",
         public_title="Concepts",
-        ui_statuses=("draft", "done"),
         sub_scope_customisation=None,
         source=source(child_path),
     )

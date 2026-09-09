@@ -23,7 +23,7 @@ from docs_report_source import ReportDescriptor, ReportSourceContractRequired
 from docs_source_model import (
     parse_document_report,
     report_source_contract_for_collection,
-    validate_publishable_front_matter,
+    validate_document_status_front_matter,
 )
 
 
@@ -158,7 +158,7 @@ class SourceLoadingMixin:
             ui_status = str(front_matter.get("ui_status") or "").strip()
             document_config = getattr(self, "sub_scope_config", self.config)
             try:
-                validate_publishable_front_matter(
+                validate_document_status_front_matter(
                     front_matter,
                     collection_config=document_config,
                     source_name=relative_path,
@@ -302,6 +302,8 @@ class SourceLoadingMixin:
         parent_id = self.effective_parent_id(doc, docs)
         if parent_id:
             entry["parent_id"] = parent_id
+        if self.config.stage == "working":
+            entry["draft"] = doc.front_matter.get("draft", True)
         if not doc.publishable:
             entry["publishable"] = False
         if doc.summary:

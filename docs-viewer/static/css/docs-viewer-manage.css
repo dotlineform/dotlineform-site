@@ -1,5 +1,4 @@
 .docsViewer{
-  --docs-viewer-draft-color: var(--docs-viewer-muted);
 }
 
 .docsViewer__stageButtons{
@@ -161,7 +160,7 @@
 }
 
 
-.docsViewer__publishableExclusion{
+.docsViewer__draftIndicator{
   display: inline-block;
   margin-right: 0.35rem;
   line-height: 1;
@@ -449,10 +448,6 @@
 
 .docsViewerReport[data-report-subscope-selection="inactive"] [data-report-contribution-head]{
   display: none;
-}
-
-.docsViewer__navRow.is-publication-excluded .docsViewer__navLink{
-  color: var(--docs-viewer-draft-color);
 }
 
 .docsViewer__navLink[draggable="true"]{

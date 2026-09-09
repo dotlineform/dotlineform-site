@@ -18,11 +18,8 @@ from docs_management_document_target import (
 )
 
 
-PARENT_REQUEST_KEYS = frozenset(
-    {"scope", "doc_ids", "publishable", "confirm"}
-)
-SUB_SCOPE_REQUEST_KEYS = frozenset(
-    {"scope", "sub_scope", "doc_ids", "publishable", "confirm"}
+REQUEST_KEYS = frozenset(
+    {"scope", "stage", "doc_ids", "publishable", "confirm"}
 )
 
 
@@ -84,34 +81,26 @@ def _collection_from_request(
     repo_root: Path,
     body: dict[str, Any],
 ) -> ManagedDocumentCollection:
-    expected_keys = (
-        SUB_SCOPE_REQUEST_KEYS if "sub_scope" in body else PARENT_REQUEST_KEYS
-    )
-    if frozenset(body) - {"stage"} != expected_keys:
+    expected_keys = REQUEST_KEYS
+    if frozenset(body) != expected_keys:
         expected = ", ".join(sorted(expected_keys))
         raise ValueError(f"Set Publishable must contain exactly {expected}")
+    if body.get("scope") != "analysis" or body.get("stage") != "working":
+        raise ValueError("Set Publishable is available only for ordinary Analysis Working documents")
     collection = resolve_managed_document_collection(
         repo_root,
         scope=body.get("scope"),
-        sub_scope=body.get("sub_scope") if "sub_scope" in body else None,
         stage=body.get("stage"),
     )
     require_document_authoring(collection.document_config)
     if not source_model.collection_supports_publishable(
         collection.document_config
     ):
-        label = (
-            f"{collection.scope}/{collection.sub_scope}"
-            if collection.sub_scope
-            else collection.scope
-        )
-        raise ValueError(
-            f"Set Publishable is not supported for local collection {label}"
-        )
+        raise ValueError("Set Publishable is available only for ordinary Analysis Working documents")
     return collection
 
 
-def _updated_source_text(document: source_model.ScopeDoc, publishable: bool, sub_scope: str) -> str | None:
+def _updated_source_text(document: source_model.ScopeDoc, publishable: bool) -> str | None:
     updated_front_matter = dict(document.front_matter)
     if publishable:
         if "publishable" not in updated_front_matter:
@@ -127,7 +116,7 @@ def _updated_source_text(document: source_model.ScopeDoc, publishable: bool, sub
         updated_front_matter,
         document.body,
     )
-    return source_model.format_source(updated_front_matter, document.body, sub_scope=sub_scope)
+    return source_model.format_source(updated_front_matter, document.body, sub_scope="")
 
 
 def plan_set_publishable(
@@ -147,7 +136,7 @@ def plan_set_publishable(
     for doc_id in requested_doc_ids:
         target = {**collection.request_target(), "doc_id": doc_id}
         resolved = resolve_managed_document_target(repo_root, target)
-        source_text = _updated_source_text(resolved.document, publishable, collection.sub_scope)
+        source_text = _updated_source_text(resolved.document, publishable)
         if source_text is None:
             unchanged_doc_ids.append(doc_id)
             continue
@@ -185,8 +174,7 @@ def _result_payload(
     updated_doc_ids = [update.doc_id for update in plan.updates]
     count = len(plan.requested_doc_ids)
     if updated_doc_ids:
-        verb = "Included" if plan.publishable else "Excluded"
-        summary = f"{verb} {count} checked document{'s' if count != 1 else ''} in next Publish."
+        summary = f"Updated publication intent for {count} checked document{'s' if count != 1 else ''}."
     else:
         summary = f"No publishability changes for {count} checked document{'s' if count != 1 else ''}."
     return {
@@ -195,11 +183,6 @@ def _result_payload(
         "target": plan.target(),
         "scope": plan.collection.scope,
         **({"stage": plan.collection.stage} if plan.collection.stage else {}),
-        **(
-            {"sub_scope": plan.collection.sub_scope}
-            if plan.collection.sub_scope
-            else {}
-        ),
         "publishable": plan.publishable,
         "requested_doc_ids": list(plan.requested_doc_ids),
         "updated_doc_ids": updated_doc_ids,
@@ -261,39 +244,25 @@ def apply_set_publishable_plan(
             source_model.write_text_atomic(update.path, update.source_text)
 
     try:
-        if plan.collection.sub_scope:
-            rebuild = write_rebuild.perform_sub_scope_source_write_and_rebuild(
-                repo_root,
-                plan.collection.scope,
-                plan.collection.sub_scope,
-                [update.path for update in plan.updates],
-                write_operation,
-                suppression_reason="docs-set-publishable",
-                source_snapshots=snapshots,
-                **({"stage": plan.collection.stage} if plan.collection.stage else {}),
-            )
-        else:
-            updated_doc_ids = [update.doc_id for update in plan.updates]
-            rebuild = write_rebuild.perform_scope_source_write_and_rebuild_atomic(
-                repo_root,
-                plan.collection.scope,
-                [update.path for update in plan.updates],
-                write_operation,
-                suppression_reason="docs-set-publishable",
-                source_snapshots=snapshots,
-                docs_doc_ids=updated_doc_ids,
-                **({"stage": plan.collection.stage} if plan.collection.stage else {}),
-            )
+        updated_doc_ids = [update.doc_id for update in plan.updates]
+        rebuild = write_rebuild.perform_scope_source_write_and_rebuild_atomic(
+            repo_root,
+            plan.collection.scope,
+            [update.path for update in plan.updates],
+            write_operation,
+            suppression_reason="docs-set-publishable",
+            source_snapshots=snapshots,
+            docs_doc_ids=updated_doc_ids,
+            **({"stage": plan.collection.stage} if plan.collection.stage else {}),
+        )
     except (
         write_rebuild.ScopeSourceSnapshotChanged,
-        write_rebuild.SubScopeSourceSnapshotChanged,
     ) as error:
         raise PublishableSelectionConflict(
             _failure_payload(plan, error, rollback=None)
         ) from error
     except (
         write_rebuild.ScopeWriteRebuildFailure,
-        write_rebuild.SubScopeWriteRebuildFailure,
     ) as error:
         raise PublishableSelectionApplyError(
             _failure_payload(plan, error, rollback=error.rollback)

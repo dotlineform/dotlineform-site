@@ -55,8 +55,8 @@ export function setPublishableChoiceOptions(options = {}) {
     name: "docsViewerSetPublishableChoice",
     value: "",
     choices: [
-      { value: "include", label: "Include in next Publish" },
-      { value: "exclude", label: "Exclude from next Publish" }
+      { value: "include", label: "Publishable" },
+      { value: "exclude", label: "Unpublishable" }
     ],
     primaryLabel: "OK",
     cancelLabel: "Cancel",

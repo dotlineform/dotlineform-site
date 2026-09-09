@@ -18,7 +18,7 @@ function cleanString(value) {
 
 function exactKeys(value, expected) {
   return Boolean(value && typeof value === "object" && !Array.isArray(value))
-    && Object.keys(value).filter((key) => key !== "publishable").sort().join(",") === expected.slice().sort().join(",");
+    && Object.keys(value).sort().join(",") === expected.slice().sort().join(",");
 }
 
 function clearNode(node) {
@@ -78,7 +78,7 @@ export function normalizeWorksWorkLookup(payload) {
 
 function normalizeWorkDocument(value) {
   const keys = value && typeof value === "object" && !Array.isArray(value)
-    ? Object.keys(value).filter((key) => key !== "publishable").sort().join(",")
+    ? Object.keys(value).filter((key) => key !== "draft").sort().join(",")
     : "";
   if (
     ![
@@ -96,7 +96,7 @@ function normalizeWorkDocument(value) {
   ) {
     throw new Error("Working Works manifest is invalid.");
   }
-  if (Object.hasOwn(value, "publishable") && typeof value.publishable !== "boolean") {
+  if (Object.hasOwn(value, "draft") && typeof value.draft !== "boolean") {
     throw new Error("Working Works manifest is invalid.");
   }
   const docId = cleanString(value.doc_id);

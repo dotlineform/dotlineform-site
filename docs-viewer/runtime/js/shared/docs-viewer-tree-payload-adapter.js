@@ -27,6 +27,7 @@ function normalizeTreeDoc(row, parentId, depth, treeOrder) {
   var reportId = optionalStringRecordValue(row, "report_id");
   if (parentId) doc.parent_id = parentId;
   if (row.publishable === false) doc.publishable = false;
+  if (typeof row.draft === "boolean") doc.draft = row.draft;
   if (uiStatus) doc.ui_status = uiStatus;
   if (reportId) doc.report_id = reportId;
   return doc;

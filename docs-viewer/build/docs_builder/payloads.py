@@ -86,6 +86,8 @@ class PayloadBuilderMixin:
             "title": doc.title,
             "content_url": doc.content_url,
         }
+        if self.config.stage == "working":
+            entry["draft"] = doc.front_matter.get("draft", True)
         if not doc.publishable:
             entry["publishable"] = False
         if doc.ui_status:

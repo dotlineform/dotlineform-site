@@ -273,6 +273,7 @@ def format_source(front_matter: Dict[str, Any], body: str, *, sub_scope: str | N
         "detail_uid",
         "parent_id",
         "publishable",
+        "draft",
     ]
     ordered_keys = [key for key in preferred_order if key in front_matter]
     ordered_keys.extend(sorted(key for key in front_matter.keys() if key not in ordered_keys))
@@ -478,38 +479,39 @@ def front_matter_boolean(front_matter: Dict[str, Any], key: str, default: bool) 
 
 
 def normalize_ui_status(value: Any) -> str:
-    return str(value or "").strip()
-
-
-def validate_sub_scope_document_metadata(
-    doc: ScopeDoc,
-    *,
-    ui_statuses: tuple[str, ...],
-) -> None:
-    """Validate metadata owned by one configured sub-scope."""
-
-    if doc.ui_status and doc.ui_status not in ui_statuses:
-        raise ValueError(
-            f"Unknown ui_status {doc.ui_status!r} for sub-scope doc {doc.doc_id!r}"
-        )
+    status = str(value or "").strip()
+    if status == "draft":
+        raise ValueError("ui_status draft is no longer supported; use a visual status such as review")
+    return status
 
 
 def collection_supports_publishable(
     config: DocsScopeConfig | DocsSubScopeConfig,
 ) -> bool:
-    """Allow eligibility metadata in workflow stages and public collections."""
+    """Publication intent belongs only to ordinary Analysis Working documents."""
 
-    return bool(config.stage) or config.public_projection is not None
+    return collection_supports_draft(config) and not isinstance(config, DocsSubScopeConfig)
 
 
-def validate_publishable_front_matter(
+def collection_supports_draft(config: DocsScopeConfig | DocsSubScopeConfig) -> bool:
+    """Draft readiness belongs to all collections in Analysis Working."""
+    return config.scope_id == "analysis" and config.stage == "working"
+
+
+def validate_document_status_front_matter(
     front_matter: Dict[str, Any],
     *,
     collection_config: DocsScopeConfig | DocsSubScopeConfig,
     source_name: str,
 ) -> None:
-    """Enforce the clean-cut publication field for one exact collection."""
+    """Validate visual status and the availability/types of Working publication fields."""
 
+    normalize_ui_status(front_matter.get("ui_status"))
+    if "draft" in front_matter:
+        if not collection_supports_draft(collection_config):
+            raise ValueError(f"draft front matter is supported only in Analysis Working: {source_name}")
+        if not isinstance(front_matter["draft"], bool):
+            raise ValueError(f"draft front matter must be a boolean in {source_name}")
     if "viewable" in front_matter:
         raise ValueError(
             f"legacy viewable front matter is not supported in {source_name}; "
@@ -519,7 +521,7 @@ def validate_publishable_front_matter(
         return
     if not collection_supports_publishable(collection_config):
         raise ValueError(
-            f"publishable front matter is not supported in local collection {source_name}"
+            f"publishable front matter is supported only on ordinary Analysis Working documents: {source_name}"
         )
     if not isinstance(front_matter["publishable"], bool):
         raise ValueError(f"publishable front matter must be a boolean in {source_name}")
@@ -577,7 +579,7 @@ def load_document_collection_docs_for_config(
         title = str(front_matter.get("title") or humanize(doc_id or path.stem)).strip() or doc_id
         ui_status = normalize_ui_status(front_matter.get("ui_status"))
         parent_id = str(front_matter.get("parent_id") or "").strip()
-        validate_publishable_front_matter(
+        validate_document_status_front_matter(
             front_matter,
             collection_config=document_config,
             source_name=path.name,
@@ -623,12 +625,6 @@ def load_document_collection_docs_for_config(
         docs,
         allow_unknown_parent_ids=parent_config.allow_unresolved_parent_ids,
     )
-    if sub_scope:
-        for doc in docs:
-            validate_sub_scope_document_metadata(
-                doc,
-                ui_statuses=document_config.ui_statuses,
-            )
     return docs
 
 

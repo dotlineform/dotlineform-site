@@ -214,6 +214,9 @@ export function updateManagedDocMetadata(target, payload, options) {
 
 export function setManagedDocsPublishable(collection, docIds, publishable, options) {
   var target = normalizeManagedDocumentCollectionTarget(collection);
+  if (target.scope !== "analysis" || target.stage !== "working" || target.sub_scope) {
+    throw new Error("Set Publishable is available only for ordinary Analysis Working documents.");
+  }
   return fetchManagementJson(
     "/docs/set-publishable",
     "POST",
@@ -224,6 +227,11 @@ export function setManagedDocsPublishable(collection, docIds, publishable, optio
     }),
     options
   );
+}
+
+/** Write readiness using the exact document identity and source revision. */
+export function setManagedDocDraft(target, payload, options) {
+  return fetchManagementJson("/docs/set-draft", "POST", targetPayload(target, payload), options);
 }
 
 export function assignManagedDocFieldGroup(target, payload, options) {

@@ -149,8 +149,8 @@ class SubScopeDocsBuilder(DocsDataBuilder):
                 "ui_status": doc.ui_status,
                 "last_updated": doc.last_updated,
             }
-            if self.publishable_supported and not doc.publishable:
-                row["publishable"] = False
+            if self.config.stage == "working":
+                row["draft"] = doc.front_matter.get("draft", True)
             rows.append(row)
         payload: dict[str, Any] = {"docs": rows}
         if subjects_by_doc_id is not None:
@@ -213,16 +213,6 @@ class SubScopeDocsBuilder(DocsDataBuilder):
             )
             for doc in ordered_docs
         }
-
-    def validate_docs(self, docs: list[DocRecord]) -> None:
-        super().validate_docs(docs)
-        allowed_statuses = set(self.sub_scope_config.ui_statuses)
-        for doc in docs:
-            if doc.ui_status and doc.ui_status not in allowed_statuses:
-                raise RuntimeError(
-                    f"Unknown ui_status {doc.ui_status!r} for "
-                    f"{self.scope_id}/{self.sub_scope_id} doc {doc.doc_id!r}"
-                )
 
     def run(self, *, write: bool, emit_diagnostics: bool = False) -> dict[str, Any]:
         started_at = monotonic_time()

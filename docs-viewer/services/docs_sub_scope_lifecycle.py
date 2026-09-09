@@ -271,6 +271,8 @@ def report_host_source(parent_config: DocsScopeConfig, sub_scope: str, title: st
         "added_date": identity["added_date"],
         "last_updated": identity["added_date"],
     }
+    if source_model.collection_supports_draft(parent_config):
+        front_matter["draft"] = True
     body = (
         f"# {title}\n\n"
         ":::report\n"

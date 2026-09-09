@@ -97,7 +97,6 @@ function createStateDefaults(settings) {
     generatedDataReadAvailable: false,
     generatedDataReadRequestPromise: null,
     generatedDataCapabilities: null,
-    docNonPublishableEmoji: "\uD83D\uDEAB",
     reloadNonce: "",
     reloadExpectedDocId: "",
     pendingBusyCount: 0,
@@ -154,7 +153,6 @@ function createStateDomains(state, settings) {
       "uiStatuses",
       "uiStatusByValue",
       "recentLimit",
-      "docNonPublishableEmoji"
     ]),
     documentIndex: stateDomain("documentIndex", "generated static data or local generated-read service", state, [
       "allDocs",

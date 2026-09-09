@@ -370,7 +370,7 @@ def test_same_document_id_is_read_only_from_requested_stage(stage_repo: Path) ->
         })
 
 
-@pytest.mark.parametrize("sub_scope", [None, "works"])
+@pytest.mark.parametrize("sub_scope", [None])
 def test_set_publishable_updates_only_selected_working_collection(stage_repo: Path, monkeypatch: pytest.MonkeyPatch, sub_scope: str | None) -> None:
     import docs_management_publishable as publishable
     import docs_management_service as service
@@ -412,7 +412,7 @@ def test_set_publishable_updates_only_selected_working_collection(stage_repo: Pa
         if stage is None:
             del rejected["stage"]
         for operation in (publishable.plan_set_publishable, lambda root, body: service.docs_management_post_response(root, routes.SET_PUBLISHABLE_PATH, body)):
-            with pytest.raises(ValueError, match="requires stage|authoring is unavailable"):
+            with pytest.raises(ValueError, match="requires stage|authoring is unavailable|must contain exactly|ordinary Analysis Working"):
                 operation(stage_repo, rejected)
     assert all(path.read_bytes() == content for path, content in before.items())
 
@@ -441,16 +441,16 @@ def test_set_publishable_rollback_rebuilds_only_working(stage_repo: Path, monkey
 
 
 @pytest.mark.parametrize("sub_scope", [None, "works"])
-def test_working_preserves_publishability_without_public_projection(stage_repo: Path, sub_scope: str | None) -> None:
+def test_working_projects_draft_without_public_projection(stage_repo: Path, sub_scope: str | None) -> None:
     import docs_source_model as source_model
 
     config = scopes.load_docs_scope_stage(stage_repo, "analysis", "working")
     collection = config.sub_scopes[0] if sub_scope else config
     assert collection.stage == "working" and collection.public_projection is None
     path = stage_repo / scopes.document_source_path(collection) / f"{DOC_ID}.md"
-    path.write_text(f"---\ndoc_id: {DOC_ID}\ntitle: Private work\npublishable: false\n---\n# Private work\n")
+    path.write_text(f"---\ndoc_id: {DOC_ID}\ntitle: Private work\ndraft: true\n---\n# Private work\n")
     documents = source_model.load_document_collection_docs_for_config(stage_repo, config, collection)
-    assert documents[0].publishable is False
+    assert documents[0].front_matter["draft"] is True
     code, _stdout, stderr = run_cli(stage_repo, [
         "--scope", "analysis", "--stage", "working",
         *(["--sub-scope", sub_scope] if sub_scope else []),
@@ -459,8 +459,8 @@ def test_working_preserves_publishability_without_public_projection(stage_repo: 
     assert code == 0, stderr
     output = stage_repo / scopes.generated_documents_path(collection)
     index = "manage-manifest.json" if sub_scope else "index-tree.json"
-    assert json.loads((output / index).read_text())["docs"][0]["publishable"] is False
-    assert json.loads((output / "by-id" / f"{DOC_ID}.json").read_text())["publishable"] is False
+    assert json.loads((output / index).read_text())["docs"][0]["draft"] is True
+    assert json.loads((output / "by-id" / f"{DOC_ID}.json").read_text())["draft"] is True
 
 
 @pytest.mark.parametrize("sub_scope", [None, "works"])
@@ -735,3 +735,79 @@ def test_scope_manifest_records_stages_without_retired_source_paths(stage_repo: 
     assert "pre-publish/source_documents_root" in roles
     assert "source_documents_root" not in roles
     assert "published_docs_root" in roles
+
+
+@pytest.mark.parametrize("sub_scope", [None, "works"])
+def test_draft_write_is_revision_bound_and_rebuilds_exact_target(stage_repo: Path, monkeypatch: pytest.MonkeyPatch, sub_scope: str | None) -> None:
+    import docs_management_service as service
+    import docs_management_mutation_service as mutation_service
+    import docs_management_routes as routes
+    import docs_source_model as source_model
+
+    target = {"scope": "analysis", "stage": "working", "doc_id": DOC_ID, **({"sub_scope": sub_scope} if sub_scope else {})}
+    path = resolve_managed_document_target(stage_repo, target).document.path
+    fields, body = source_model.parse_source(path)
+    fields.update({"draft": False, "ui_status": "review"})
+    if not sub_scope:
+        fields["publishable"] = False
+    path.write_text(source_model.format_source(fields, body, sub_scope=sub_scope or ""))
+    other = resolve_managed_document_target(stage_repo, {**target, "stage": "pre-publish"}).document.path
+    other_before = other.read_bytes()
+    metadata = managed_document_metadata(stage_repo, target)
+    rebuilds = []
+
+    def rebuilt(_root, scope, *args, **options):
+        assert source_model.parse_source(path)[0]["draft"] is True
+        rebuilds.append((scope, args, options["stage"]))
+        return {"ok": True}
+
+    monkeypatch.setattr(mutation_service.write_rebuild, "rebuild_scope_outputs", rebuilt)
+    monkeypatch.setattr(mutation_service.write_rebuild, "rebuild_sub_scope_outputs", rebuilt)
+    request = {**target, "draft": True, "source_revision": metadata["source_revision"]}
+    assert routes.SET_DRAFT_PATH in routes.POST_PATHS
+    status, result = service.docs_management_post_response(stage_repo, routes.SET_DRAFT_PATH, request)
+    assert status == 200 and result["record"]["draft"] is True and result["target"] == target
+    assert rebuilds == [("analysis", ("works",) if sub_scope else (), "working")]
+    assert source_model.parse_source(path)[0] == {**fields, "draft": True, **({"sub-scope": sub_scope} if sub_scope else {})}
+    assert other.read_bytes() == other_before
+    status, conflict = service.docs_management_post_response(stage_repo, routes.SET_DRAFT_PATH, {**request, "draft": False})
+    assert status == 409 and conflict["operation"] == "set_draft"
+    assert source_model.parse_source(path)[0]["draft"] is True
+    assert len(rebuilds) == 1
+    for invalid in ({**request, "draft": "true"}, {**request, "stage": "pre-publish"}, {**request, "publishable": False}):
+        with pytest.raises(ValueError):
+            service.docs_management_post_response(stage_repo, routes.SET_DRAFT_PATH, invalid)
+
+
+@pytest.mark.parametrize("sub_scope", [None, "works"])
+def test_new_working_create_and_import_start_draft(stage_repo: Path, sub_scope: str | None) -> None:
+    from docs_import_content import ImportContent, CONTENT_INTENT_EMPTY_NEW
+    from docs_import_document import plan_import_document, IMPORT_DOCUMENT_CREATE
+    from docs_management_document_target import resolve_managed_document_collection
+    from docs_source_model import parse_source_text
+
+    target = {"scope": "analysis", "stage": "working", **({"sub_scope": sub_scope} if sub_scope else {})}
+    assert managed_document_metadata(stage_repo, {**target, "doc_id": DOC_ID})["record"]["draft"] is True
+    create = plan_create(stage_repo, {**target, "title": "New"})
+    assert parse_source_text(create.source_writes[0].text)[0]["draft"] is True
+    collection = resolve_managed_document_collection(stage_repo, **target)
+    record = ImportContent(source_kind="test", source_identity="test", record_identity="one", doc_id="d-20260909-180000-123abc", title="Imported", content_intent=CONTENT_INTENT_EMPTY_NEW, content_format="markdown")
+    imported = plan_import_document(stage_repo, "analysis", record, operation=IMPORT_DOCUMENT_CREATE, docs=[], collection=collection,
+        create_doc_id=record.doc_id, create_added_date="2026-09-09 18:00:00")
+    assert parse_source_text(imported.source_text)[0]["draft"] is True
+
+
+def test_subscope_rejects_publishable_and_supports_shared_visual_statuses(stage_repo: Path) -> None:
+    from docs_management_publishable import plan_set_publishable
+    from docs_management_mutations import plan_update_metadata
+    from docs_source_model import parse_source_text, validate_document_status_front_matter
+
+    target = {"scope": "analysis", "stage": "working", "sub_scope": "works", "doc_id": DOC_ID}
+    with pytest.raises(ValueError, match="must contain exactly"):
+        plan_set_publishable(stage_repo, {key: value for key, value in {**target, "doc_ids": [DOC_ID], "publishable": False, "confirm": True}.items() if key != "doc_id"})
+    resolved = resolve_managed_document_target(stage_repo, target)
+    with pytest.raises(ValueError, match="ordinary Analysis Working"):
+        validate_document_status_front_matter({"publishable": False}, collection_config=resolved.document_config, source_name="child.md")
+    metadata = managed_document_metadata(stage_repo, target)
+    plan = plan_update_metadata(stage_repo, {**target, "title": "Shared visual options", "ui_status": "research", "source_revision": metadata["source_revision"]})
+    assert parse_source_text(plan.source_writes[0].text)[0]["ui_status"] == "research"

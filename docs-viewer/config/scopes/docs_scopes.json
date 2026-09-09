@@ -47,10 +47,6 @@
         {
           "sub_scope": "default",
           "title": "Default",
-          "ui_statuses": [
-            "draft",
-            "done"
-          ],
           "public_projection": null
         }
       ],
@@ -153,18 +149,6 @@
           "title": "Tags",
           "public_title": "Concepts",
           "supports_return_import": true,
-          "ui_statuses": [
-            "draft",
-            "done",
-            "urgent",
-            "review",
-            "in-progress",
-            "planned",
-            "paused",
-            "deferred",
-            "report",
-            "research"
-          ],
           "public_projection": {
             "documents": {
               "location": {
@@ -178,18 +162,6 @@
         {
           "sub_scope": "works",
           "title": "Works",
-          "ui_statuses": [
-            "draft",
-            "done",
-            "urgent",
-            "review",
-            "in-progress",
-            "planned",
-            "paused",
-            "deferred",
-            "report",
-            "research"
-          ],
           "sub_scope_customisation": {
             "id": "pre_publish_works",
             "settings": {}
@@ -256,18 +228,6 @@
               "sub_scope": "concepts",
               "title": "Concepts",
               "supports_return_import": true,
-              "ui_statuses": [
-                "draft",
-                "done",
-                "urgent",
-                "review",
-                "in-progress",
-                "planned",
-                "paused",
-                "deferred",
-                "report",
-                "research"
-              ],
               "public_projection": null
             },
             {
@@ -330,18 +290,6 @@
               "sub_scope": "concepts",
               "title": "Concepts",
               "supports_return_import": true,
-              "ui_statuses": [
-                "draft",
-                "done",
-                "urgent",
-                "review",
-                "in-progress",
-                "planned",
-                "paused",
-                "deferred",
-                "report",
-                "research"
-              ],
               "public_projection": {
                 "documents": {
                   "location": {
@@ -355,18 +303,6 @@
             {
               "sub_scope": "works",
               "title": "Works",
-              "ui_statuses": [
-                "draft",
-                "done",
-                "urgent",
-                "review",
-                "in-progress",
-                "planned",
-                "paused",
-                "deferred",
-                "report",
-                "research"
-              ],
               "sub_scope_customisation": {
                 "id": "pre_publish_works",
                 "settings": {}
@@ -523,8 +459,6 @@
     }
   ],
   "docs_viewer": {
-    "recent_limit": 10,
-    "non_publishable_nav_color": "var(--muted)",
-    "doc_non_publishable_emoji": "🚫"
+    "recent_limit": 10
   }
 }

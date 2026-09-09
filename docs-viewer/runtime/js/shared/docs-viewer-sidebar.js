@@ -1,7 +1,4 @@
 import {
-  isDocNonPublishable
-} from "./docs-viewer-tree.js";
-import {
   projectCommittedTreeMoveDom
 } from "./docs-viewer-tree-move-projection.js";
 
@@ -54,9 +51,6 @@ export function initDocsViewerSidebarRenderer(context) {
       item.className = "docsViewer__navItem";
       var row = document.createElement("div");
       row.className = "docsViewer__navRow";
-      if (isDocNonPublishable(doc)) {
-        row.className += " is-publication-excluded";
-      }
       row.dataset.docRowId = doc.doc_id;
       var children = docChildren(doc.doc_id);
       var hasChildren = children.length > 0;
@@ -84,10 +78,6 @@ export function initDocsViewerSidebarRenderer(context) {
         link.className += " is-active";
         link.setAttribute("aria-current", "page");
       }
-      if (isDocNonPublishable(doc)) {
-        link.setAttribute("data-publishable", "false");
-        link.title = "Excluded from next Publish";
-      }
       link.href = context.viewerUrl(context.viewerTargetDocId(doc.doc_id));
       link.dataset.docId = doc.doc_id;
       if (context.canDragCurrentDoc(doc)) {
@@ -96,9 +86,6 @@ export function initDocsViewerSidebarRenderer(context) {
       }
       link.textContent = "";
       var uiStatus = context.statusForIndexDoc(doc);
-      var nonPublishableEmoji = isDocNonPublishable(doc)
-        ? String(context.scopeConfig && context.scopeConfig.docNonPublishableEmoji || "\uD83D\uDEAB")
-        : "";
       if (uiStatus) {
         var statusIcon = document.createElement("span");
         statusIcon.className = "docsViewer__navStatus";
@@ -106,11 +93,12 @@ export function initDocsViewerSidebarRenderer(context) {
         statusIcon.textContent = uiStatus.emoji;
         link.appendChild(statusIcon);
       }
-      if (nonPublishableEmoji && (!uiStatus || uiStatus.emoji !== nonPublishableEmoji)) {
+      if (doc.draft === true) {
         var draftIcon = document.createElement("span");
-        draftIcon.className = "docsViewer__publishableExclusion";
+        draftIcon.className = "docsViewer__draftIndicator";
         draftIcon.setAttribute("aria-hidden", "true");
-        draftIcon.textContent = nonPublishableEmoji;
+        draftIcon.textContent = "📝";
+        draftIcon.title = "Draft";
         link.appendChild(draftIcon);
       }
       if (doc.report_id === "docs_subscope") {

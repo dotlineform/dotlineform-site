@@ -362,6 +362,15 @@ def transform_document_copy(
                 raise ValueError(
                     "blocked custom metadata decision cannot be transformed"
                 )
+        target_config = plan.target_collection.document_config
+        if source_model.collection_supports_draft(target_config):
+            front_matter["draft"] = (
+                replacement.front_matter.get("draft", True) if replacement is not None else True
+            )
+        else:
+            front_matter.pop("draft", None)
+        if not source_model.collection_supports_publishable(target_config):
+            front_matter.pop("publishable", None)
         body, viewer_link_rewrites = rewrite_document_copy_viewer_links(
             planned_document.source_doc.body,
             plan,
@@ -419,7 +428,7 @@ def _validate_transformation(
                     f"for {planned.target_doc_id!r}"
                 )
         try:
-            source_model.validate_publishable_front_matter(
+            source_model.validate_document_status_front_matter(
                 front_matter,
                 collection_config=target_document_config,
                 source_name=planned.target_path.name,

@@ -303,11 +303,6 @@ def load_current_collection_docs(
         )
         for path in source_model.scope_markdown_paths(collection.source_root)
     ]
-    for doc in docs:
-        source_model.validate_sub_scope_document_metadata(
-            doc,
-            ui_statuses=collection.document_config.ui_statuses,
-        )
     return docs
 
 

@@ -516,10 +516,6 @@ export function initDocsViewerConfigController(context) {
     scopeConfig.uiStatusByValue = new Map(scopeConfig.uiStatuses.map(function (status) {
       return [status.ui_status, status];
     }));
-    var nonPublishableColor = String(getConfigValue(config, "docs_viewer.non_publishable_nav_color") || "").trim();
-    if (nonPublishableColor) {
-      root.style.setProperty("--docs-viewer-draft-color", nonPublishableColor);
-    }
     if (typeof context.setRecentControlLabel === "function") context.setRecentControlLabel("Recent");
     if (context.managementController()) {
       context.managementController().applyConfig(config);

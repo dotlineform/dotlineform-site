@@ -184,14 +184,12 @@ def docs_sub_scope_record(
     supports_return_import: bool | None = None,
     scope_type: str = "local",
     public_docs_path: str | None = None,
-    ui_statuses: list[str] | None = None,
     sub_scope_customisation: dict[str, object] | None = None,
     lifecycle: dict[str, object] | None = None,
 ) -> dict[str, object]:
     record: dict[str, object] = {
         "sub_scope": sub_scope,
         "title": title,
-        "ui_statuses": ["draft", "done"] if ui_statuses is None else ui_statuses,
         "public_projection": (
             {
                 "documents": {

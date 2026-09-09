@@ -1,10 +1,8 @@
+import { toggleManagedDocDraft } from "./docs-viewer-management-draft-workflow.js";
 import {
   createDocsViewerManagementCapabilityController,
   scopePublishWorkflowSupported
 } from "./docs-viewer-management-capabilities.js";
-import {
-  applyDocsViewerManagementConfig
-} from "./docs-viewer-management-config.js";
 import {
   createDocsViewerManagementEventRouter
 } from "./docs-viewer-management-event-router.js";
@@ -32,6 +30,7 @@ import {
   requestCommittedDocumentSource
 } from "./docs-viewer-management-actions.js";
 import {
+  managedDocumentTargetsEqual,
   normalizeManagedDocumentCollectionTarget,
   normalizeManagedDocumentTarget
 } from "./docs-viewer-management-document-target.js";
@@ -537,6 +536,15 @@ export function initDocsViewerManagement(context) {
     });
     if (typeof context.projectMainViewControlState === "function") {
       context.projectMainViewControlState("edit", projectedReportControls.editMetadata.state);
+      var draftRecord = currentActiveDoc();
+      var draftTarget = sourceTargetForDoc(draftRecord);
+      context.projectMainViewControlState("draft", {
+        hidden: actionsHidden || markdownMode || viewerScope() !== "analysis" || viewerStage() !== "working"
+          || (reportActive && subscopeReportState?.state !== "list"),
+        disabled: actionsDisabled || !draftTarget || !draftRecord,
+        pressed: Boolean(draftRecord && draftRecord.draft === true),
+        label: draftRecord && draftRecord.draft === true ? "Draft — mark ready" : "Ready — mark as draft"
+      });
       context.projectMainViewControlState("open-vscode", projectedReportControls.openVsCode.state);
       context.projectMainViewControlState("markdown-source", projectedReportControls.parentSource.state);
       context.projectMainViewControlState("subdoc-source", projectedReportControls.subdocSource.state);
@@ -576,9 +584,43 @@ export function initDocsViewerManagement(context) {
     });
   }
 
+  function runDraftToggle(target, reloadTarget) {
+    setManagementBusy(true);
+    setManagementMessage("", false);
+    renderManagementUi();
+    return toggleManagedDocDraft(target, {
+      clientOptions: managementClientOptions(),
+      reloadTarget: reloadTarget
+    }).catch(function (error) {
+      setManagementMessage(error.message || "Draft readiness could not be saved.", true);
+    }).finally(function () {
+      setManagementBusy(false);
+      renderManagementUi();
+    });
+  }
+
+  function toggleSubscopeDocumentDraft(target) {
+    if (management.managementBusy || viewerScope() !== "analysis" || viewerStage() !== "working"
+      || subscopeReportState?.state !== "detail"
+      || !managedDocumentTargetsEqual(target, subscopeReportState.subdocTarget)
+      || typeof subscopeReportState.refreshDocument !== "function") {
+      return Promise.reject(new Error("Draft readiness is unavailable for this sub-scope document."));
+    }
+    return runDraftToggle(target, subscopeReportState.refreshDocument);
+  }
+
   function handleMainViewControl(detail) {
     var controlId = String(detail && detail.controlId || "").trim();
     var actionId = String(detail && detail.actionId || "").trim();
+    if (controlId === "draft") {
+      var draftControl = projectedReportControls && projectedReportControls.editMetadata;
+      if (!draftControl || draftControl.state.hidden || draftControl.state.disabled
+        || !draftControl.target || draftControl.target.sub_scope
+        || management.managementBusy || viewerScope() !== "analysis" || viewerStage() !== "working") return;
+      return runDraftToggle(draftControl.target, function (target) {
+        return reloadDocsIndex(target.doc_id, "");
+      });
+    }
     var reportControlOwners = new Map([
       ["edit", {
         projection: "editMetadata",
@@ -881,13 +923,8 @@ export function initDocsViewerManagement(context) {
     renderManagementUi();
   }
 
-  function applyConfig(config) {
-    applyDocsViewerManagementConfig({
-      config: config,
-      context: context,
-      scopeConfig: scopeConfig,
-      metadataWorkflow: metadataWorkflow
-    });
+  function applyConfig() {
+    if (metadataWorkflow) metadataWorkflow.refreshEditingOptions();
   }
 
   capabilityController = createDocsViewerManagementCapabilityController({
@@ -1129,6 +1166,7 @@ export function initDocsViewerManagement(context) {
     canDragCurrentDoc: canDragCurrentDoc,
     copySubscopeDocuments: indexController.copySubscopeDocuments,
     createSubscopeDocument: actionController.handleCreateSubscopeDocument,
+    toggleSubscopeDocumentDraft: toggleSubscopeDocumentDraft,
     handleDocumentKeydown: eventRouter.handleDocumentKeydown,
     handleAppManagementControl: handleAppManagementControl,
     handleIndexViewChange: indexController.handleViewChange,
@@ -1143,7 +1181,6 @@ export function initDocsViewerManagement(context) {
     reconcileIndexSelectionReload: indexController.reconcileReload,
     render: renderManagementUi,
     renderIndexSelectionGutter: indexController.renderSelectionGutter,
-    setSubscopePublishable: indexController.setSubscopePublishable,
     updateNavDragState: updateNavDragState
   };
 }

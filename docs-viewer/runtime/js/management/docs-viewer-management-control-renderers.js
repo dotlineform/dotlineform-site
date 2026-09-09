@@ -156,6 +156,12 @@ export function createDocsViewerManagementControlRenderers() {
         emoji: "✏️"
       });
     },
+    "manage-draft": function (context) {
+      return renderDocumentActionButton(context, {
+        id: "docsViewerManageDraftButton",
+        emoji: function (state) { return state.pressed === true ? "📝" : "✅"; }
+      });
+    },
     "manage-open-vscode": function (context) {
       var button = renderDocumentActionButton(context, {
         id: "docsViewerManageOpenVsCodeButton",

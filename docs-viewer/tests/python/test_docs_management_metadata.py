@@ -760,7 +760,7 @@ def test_sub_scope_metadata_service_returns_conflict_for_write_race(
                 {
                     "doc_id": SUB_SCOPE_DOC_ID,
                     "title": "Detail",
-                    "ui_status": "draft",
+                    "ui_status": "review",
                 },
                 "# Detail\n",
             ),

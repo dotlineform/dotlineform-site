@@ -12,8 +12,9 @@ const child = {
   ...row, target: { ...row.target, sub_scope: "works" }, collection_title: "Works",
   href: `/docs/?scope=analysis&stage=working&doc=report-host&subdoc=${docId}`
 };
-const payload = { ok: true, schema_version: "docs_unpublishable_report_v1", ...collection, rows: [row, child] };
-assert.deepEqual(readUnpublishableRows(payload), [row, child]);
+const payload = { ok: true, schema_version: "docs_unpublishable_report_v1", ...collection, rows: [row] };
+assert.deepEqual(readUnpublishableRows(payload), [row]);
+assert.throws(() => readUnpublishableRows({ ...payload, rows: [child] }), /identity is invalid/);
 assert.deepEqual(readUnpublishableRows({ ...payload, rows: [] }), []);
 assert.throws(() => readUnpublishableRows({ ...payload, stage: "pre-publish" }), /data is invalid/);
 assert.throws(() => readUnpublishableRows({ ...payload, rows: [row, row] }), /link is invalid/);
@@ -33,4 +34,4 @@ assert.equal(await service.readUnpublishable(collection), payload);
 assert.equal(requests[0].url, "http://fixture.test/docs/unpublishable-report?scope=analysis&stage=working");
 assert.equal(requests[0].options.method, "GET");
 assert.equal(requests[0].options.cache, "no-store");
-console.log("Unpublishable contract passed: exact Working reads and parent/child links.");
+console.log("Unpublishable contract passed: exact Working reads and ordinary document links.");

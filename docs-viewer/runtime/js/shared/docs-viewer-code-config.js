@@ -11,11 +11,6 @@ export var DOCS_VIEWER_CODE_CONFIG = {
   },
   uiStatuses: [
     {
-      ui_status: "draft",
-      label: "Draft",
-      emoji: "📝"
-    },
-    {
       ui_status: "done",
       label: "Done",
       emoji: "✅"

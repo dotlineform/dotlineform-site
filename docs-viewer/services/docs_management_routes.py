@@ -43,6 +43,7 @@ STAGED_MEDIA_PREVIEW_PATH = "/docs/staged-media-preview"
 STAGED_MEDIA_APPLY_PATH = "/docs/staged-media-apply"
 UPDATE_METADATA_PATH = "/docs/update-metadata"
 SET_PUBLISHABLE_PATH = "/docs/set-publishable"
+SET_DRAFT_PATH = "/docs/set-draft"
 ASSIGN_FIELD_GROUP_PATH = "/docs/assign-field-group"
 CREATE_PATH = "/docs/create"
 REBUILD_PATH = "/docs/rebuild"
@@ -115,6 +116,7 @@ POST_PATHS = (
     STAGED_MEDIA_APPLY_PATH,
     UPDATE_METADATA_PATH,
     SET_PUBLISHABLE_PATH,
+    SET_DRAFT_PATH,
     ASSIGN_FIELD_GROUP_PATH,
     CREATE_PATH,
     REBUILD_PATH,

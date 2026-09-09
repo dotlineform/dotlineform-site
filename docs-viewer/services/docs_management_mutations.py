@@ -79,27 +79,6 @@ def normalize_metadata_text(value: Any) -> str:
     return str(value or "").strip()
 
 
-def normalize_configured_metadata_choice(
-    value: Any,
-    *,
-    field: str,
-    allowed_values: tuple[str, ...],
-) -> str:
-    if value is None:
-        return ""
-    if not isinstance(value, str):
-        raise ValueError(f"{field} must be a scalar string")
-    normalized = value.strip().lower()
-    if normalized and not allowed_values:
-        raise ValueError(f"{field} is not configured for this sub-scope")
-    if normalized and normalized not in allowed_values:
-        raise ValueError(
-            f"Unknown {field} {normalized!r}; expected one of: "
-            + ", ".join(allowed_values)
-        )
-    return normalized
-
-
 def ordered_doc_ids(doc_ids: list[str]) -> list[str]:
     seen: set[str] = set()
     ordered: list[str] = []
@@ -232,8 +211,8 @@ class ManagementMutationPlan:
 def plan_create(repo_root: Path, body: Dict[str, Any]) -> ManagementMutationPlan:
     if "viewable" in body:
         raise ValueError("legacy viewable is not accepted")
-    if "publishable" in body:
-        raise ValueError("publishable is not accepted by Create")
+    if "publishable" in body or "draft" in body:
+        raise ValueError("publishable and draft are assigned by Create")
     sub_scope_requested = "sub_scope" in body
     collection = resolve_managed_document_collection(
         repo_root,
@@ -259,16 +238,11 @@ def plan_create(repo_root: Path, body: Dict[str, Any]) -> ManagementMutationPlan
             requested_doc_id=candidate.stem if sub_scope else None,
             report_contract=report_contract,
         )
-        source_model.validate_publishable_front_matter(
+        source_model.validate_document_status_front_matter(
             document.front_matter,
             collection_config=collection.document_config,
             source_name=candidate.name,
         )
-        if sub_scope:
-            source_model.validate_sub_scope_document_metadata(
-                document,
-                ui_statuses=collection.document_config.ui_statuses,
-            )
         docs.append(document)
     source_model.validate_scope_docs(
         docs,
@@ -294,6 +268,8 @@ def plan_create(repo_root: Path, body: Dict[str, Any]) -> ManagementMutationPlan
         "title": title,
         "added_date": timestamp,
     }
+    if source_model.collection_supports_draft(collection.document_config):
+        front_matter_seed["draft"] = True
     if not sub_scope:
         front_matter_seed["parent_id"] = parent_id
     front_matter = source_model.advance_doc_front_matter(
@@ -309,6 +285,8 @@ def plan_create(repo_root: Path, body: Dict[str, Any]) -> ManagementMutationPlan
         "doc_id": doc_id,
         "title": title,
     }
+    if source_model.collection_supports_draft(collection.document_config):
+        record["draft"] = True
     if source_model.collection_supports_publishable(collection.document_config):
         record["publishable"] = True
     if not sub_scope:
@@ -555,8 +533,8 @@ def plan_assign_field_group(
 def plan_update_metadata(repo_root: Path, body: Dict[str, Any]) -> ManagementMutationPlan:
     if "viewable" in body:
         raise ValueError("legacy viewable is not accepted")
-    if "publishable" in body:
-        raise ValueError("publishable is not editable through metadata")
+    if "publishable" in body or "draft" in body:
+        raise ValueError("publication flags are not editable through metadata")
     resolved = resolve_managed_document_target(
         repo_root,
         managed_document_target_request(body),
@@ -622,14 +600,7 @@ def plan_update_metadata(repo_root: Path, body: Dict[str, Any]) -> ManagementMut
     date_display_changed = date_display_was_provided and date_display != current_date_display
     status_was_provided = "ui_status" in body
     current_ui_status = source_model.normalize_ui_status(target.front_matter.get("ui_status"))
-    if resolved.sub_scope and status_was_provided:
-        ui_status = normalize_configured_metadata_choice(
-            body.get("ui_status"),
-            field="ui_status",
-            allowed_values=resolved.document_config.ui_statuses,
-        )
-    else:
-        ui_status = source_model.normalize_ui_status(body.get("ui_status")) if status_was_provided else current_ui_status
+    ui_status = source_model.normalize_ui_status(body.get("ui_status")) if status_was_provided else current_ui_status
     status_changed = status_was_provided and ui_status != current_ui_status
     _reject_assignable_fields_from_metadata_update(
         resolved,

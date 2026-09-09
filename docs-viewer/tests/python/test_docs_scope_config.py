@@ -220,7 +220,6 @@ def sub_scope_record(
     *,
     source_path: str | None = None,
     public_docs_path: str | None = None,
-    ui_statuses: list[str] | None = None,
 ) -> dict[str, object]:
     record = docs_sub_scope_record(
         scope_id,
@@ -228,7 +227,6 @@ def sub_scope_record(
         title=sub_scope.title(),
         scope_type="public",
         public_docs_path=public_docs_path,
-        ui_statuses=ui_statuses,
     )
     if source_path is not None:
         record["source"] = {
@@ -321,7 +319,6 @@ def test_docs_scope_config_accepts_nested_sub_scopes() -> None:
                 sub_scope_record(
                     "research",
                     "tags",
-                    ui_statuses=["draft", "done"],
                 )
             ],
         )
@@ -334,7 +331,6 @@ def test_docs_scope_config_accepts_nested_sub_scopes() -> None:
     assert sub_scope.public_title == "Tags"
     assert sub_scope.supports_return_import is False
     assert sub_scope.lifecycle is None
-    assert sub_scope.ui_statuses == ("draft", "done")
     assert sub_scope.sub_scope_customisation is None
     assert docs_scope_config.document_source_path(sub_scope).as_posix() == (
         "docs-viewer/scopes/research/source/sub-scopes/tags/documents"
@@ -600,8 +596,6 @@ def test_docs_scope_config_rejects_invalid_sub_scope_return_import_opt_in(
 
 def test_docs_scope_config_rejects_invalid_sub_scope_metadata_vocabularies() -> None:
     invalid_values = (
-        ("ui_statuses", "draft", "must be an array"),
-        ("ui_statuses", ["draft", "draft"], "must not contain duplicates"),
     )
     for field, value, error in invalid_values:
         with make_repo() as temp_path:

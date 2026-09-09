@@ -38,7 +38,6 @@ def prepare_repo(repo_root: Path) -> None:
                         "analysis",
                         "tags",
                         title="Tags",
-                        ui_statuses=["draft", "done"],
                     )
                 ],
             ),

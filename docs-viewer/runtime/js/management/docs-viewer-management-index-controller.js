@@ -732,64 +732,6 @@ export function createDocsViewerManagementIndexController(options = {}) {
     });
   }
 
-  function normalizeSubscopePublishableRequest(value) {
-    if (!value || typeof value !== "object" || Array.isArray(value)) {
-      throw new Error("Sub-scope Set Publishable request must be an object.");
-    }
-    var keys = Object.keys(value).sort();
-    if (keys.join("\u0000") !== ["doc_ids", "scope", "sub_scope"].join("\u0000")) {
-      throw new Error(
-        "Sub-scope Set Publishable request must contain exactly scope, sub_scope, and doc_ids."
-      );
-    }
-    var source = normalizeManagedDocumentCollectionTarget({
-      scope: value.scope,
-      sub_scope: value.sub_scope
-    });
-    var seen = new Set();
-    var docIds = Array.isArray(value.doc_ids)
-      ? value.doc_ids.map(function (docId) {
-          return String(docId || "").trim();
-        }).filter(function (docId) {
-          if (!docId || seen.has(docId)) return false;
-          seen.add(docId);
-          return true;
-        })
-      : [];
-    if (!docIds.length) throw new Error("Select one or more documents.");
-    return { source: source, docIds: docIds };
-  }
-
-  function setSubscopePublishable(request, options) {
-    var normalized;
-    try {
-      normalized = normalizeSubscopePublishableRequest(request);
-    } catch (error) {
-      return Promise.reject(error);
-    }
-    var controlState = setPublishableActionControlState(
-      normalized.source,
-      { enabled: true, disabledReason: "", targetDocIds: normalized.docIds }
-    );
-    if (controlState.hidden || controlState.disabled) {
-      return Promise.reject(new Error(
-        controlState.disabledReason || "Set Publishable is unavailable for this collection."
-      ));
-    }
-    var refreshCollection = options && options.refreshCollection;
-    if (typeof refreshCollection !== "function") {
-      return Promise.reject(new Error(
-        "The exact Set Publishable sub-scope collection cannot be refreshed."
-      ));
-    }
-    return openSetPublishable(normalized.source, normalized.docIds, {
-      restoreFocus: options && options.restoreFocus,
-      onApplied: function () {
-        return refreshCollection(normalized.source);
-      }
-    });
-  }
-
   function handleControl(detail) {
     var controlId = String(detail && detail.controlId || "").trim();
     var actionId = String(detail && detail.actionId || "").trim();
@@ -870,7 +812,6 @@ export function createDocsViewerManagementIndexController(options = {}) {
     projectSelection: projectSelection,
     reconcileReload: reconcileReload,
     render: render,
-    renderSelectionGutter: renderIndexSelectionGutter,
-    setSubscopePublishable: setSubscopePublishable
+    renderSelectionGutter: renderIndexSelectionGutter
   };
 }

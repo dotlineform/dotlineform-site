@@ -16,7 +16,6 @@ from docs_scope_publish import PUBLISH_MANIFEST_FILENAME
 from docs_scope_config import (
     DOCS_SCOPE_CONFIGS,
     document_source_path,
-    is_public_readonly_scope,
     path_label,
     generated_documents_path,
     generated_search_path,
@@ -93,10 +92,6 @@ def capabilities_payload(repo_root: Path) -> Dict[str, Any]:
                 "apply": False,
                 "reason": "The Analysis scope is unavailable.",
             }
-        publishable = is_public_readonly_scope(
-            viewer_base_url=config.viewer_base_url,
-            include_scope_param=config.include_scope_param,
-        )
         transfer_capabilities = (
             docs_document_transfer.document_transfer_scope_capabilities(
                 repo_root,
@@ -117,7 +112,7 @@ def capabilities_payload(repo_root: Path) -> Dict[str, Any]:
             "generated_search_reads": resolve_scope_path(repo_root, generated_search_path(config)).exists(),
             "published_data_reads": published_available,
             "published_search_reads": published_available,
-            "publishable": publishable,
+            "publishable": False,
             "document_transfer": transfer_capabilities,
             "scope_lifecycle": {
                 "manifest_recorded": manifest_record is not None,

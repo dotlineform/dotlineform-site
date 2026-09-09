@@ -60,46 +60,24 @@ def make_doc(
     )
 
 
-def test_publishable_support_follows_stage_and_public_projection() -> None:
-    assert source_model.collection_supports_publishable(
-        SimpleNamespace(stage="", public_projection=object())
-    ) is True
-    assert source_model.collection_supports_publishable(
-        SimpleNamespace(stage="", public_projection=None)
-    ) is False
-    for stage in ("working", "pre-publish"):
-        assert source_model.collection_supports_publishable(
-            SimpleNamespace(stage=stage, public_projection=None)
-        ) is True
+def test_publishable_support_is_only_analysis_working() -> None:
+    for scope, stage, supported in (("analysis", "working", True), ("analysis", "pre-publish", False), ("studio", "", False)):
+        config = SimpleNamespace(scope_id=scope, stage=stage)
+        assert source_model.collection_supports_publishable(config) is supported
 
 
-def test_publishable_front_matter_rejects_legacy_and_local_fields() -> None:
-    public = SimpleNamespace(stage="", public_projection=object())
-    local = SimpleNamespace(stage="", public_projection=None)
+@pytest.mark.parametrize("fields", [{"viewable": False}, {"ui_status": "draft"}, {"draft": "true"}, {"publishable": "false"}])
+def test_document_status_validation_rejects_retired_and_nonboolean_fields(fields) -> None:
+    config = SimpleNamespace(scope_id="analysis", stage="working")
+    with pytest.raises(ValueError):
+        source_model.validate_document_status_front_matter(fields, collection_config=config, source_name="invalid.md")
 
-    source_model.validate_publishable_front_matter(
-        {"publishable": False},
-        collection_config=public,
-        source_name="public.md",
-    )
-    with pytest.raises(ValueError, match="legacy viewable"):
-        source_model.validate_publishable_front_matter(
-            {"viewable": False},
-            collection_config=public,
-            source_name="legacy.md",
-        )
-    with pytest.raises(ValueError, match="not supported in local collection"):
-        source_model.validate_publishable_front_matter(
-            {"publishable": False},
-            collection_config=local,
-            source_name="local.md",
-        )
-    with pytest.raises(ValueError, match="must be a boolean"):
-        source_model.validate_publishable_front_matter(
-            {"publishable": "false"},
-            collection_config=public,
-            source_name="invalid.md",
-        )
+
+@pytest.mark.parametrize("field", ["publishable", "draft"])
+def test_publication_fields_rejected_outside_working(field) -> None:
+    config = SimpleNamespace(scope_id="analysis", stage="pre-publish")
+    with pytest.raises(ValueError, match="Analysis Working"):
+        source_model.validate_document_status_front_matter({field: False}, collection_config=config, source_name="invalid.md")
 
 
 def test_front_matter_parses_and_formats_supported_scalar_values() -> None:
@@ -213,7 +191,6 @@ def test_scope_loader_does_not_fallback_to_repository_scope_copy(
 def test_document_collection_loader_selects_exact_configured_sub_scope() -> None:
     child_config = SimpleNamespace(
         sub_scope="tags",
-        ui_statuses=("draft",),
         sub_scope_customisation=None,
         source=SimpleNamespace(
             location=SimpleNamespace(path=Path("analysis-tags")),
@@ -246,7 +223,7 @@ def test_document_collection_loader_selects_exact_configured_sub_scope() -> None
             {
                 "doc_id": FIXTURE_DOC_ID,
                 "title": "Tag version",
-                "ui_status": "draft",
+                "ui_status": "review",
             },
         )
         source_model.DOCS_SCOPE_CONFIGS.clear()
@@ -272,7 +249,7 @@ def test_document_collection_loader_selects_exact_configured_sub_scope() -> None
             source_model.DOCS_SCOPE_CONFIGS.update(original_configs)
 
     assert [(doc.doc_id, doc.title, doc.ui_status) for doc in docs] == [
-        (FIXTURE_DOC_ID, "Tag version", "draft")
+        (FIXTURE_DOC_ID, "Tag version", "review")
     ]
     assert "unknown sub_scope 'missing' for scope 'analysis'" in missing_error
 
@@ -280,7 +257,6 @@ def test_document_collection_loader_selects_exact_configured_sub_scope() -> None
 def test_projects_collection_loader_keeps_malformed_folder_source_loadable() -> None:
     child_config = SimpleNamespace(
         sub_scope="projects",
-        ui_statuses=("draft", "done"),
         sub_scope_customisation=SimpleNamespace(
             customisation_id="working_works",
             settings={},

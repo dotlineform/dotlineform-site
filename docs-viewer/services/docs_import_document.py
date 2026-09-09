@@ -33,6 +33,9 @@ from docs_source_model import (  # noqa: E402
     advance_front_matter_for_recent_edit,
     allocate_doc_id,
     collection_supports_publishable,
+    collection_supports_draft,
+    parse_source_text,
+    validate_document_status_front_matter,
     current_doc_timestamp,
     doc_id_matches_added_date,
     format_source,
@@ -43,7 +46,7 @@ from docs_source_model import (  # noqa: E402
     write_text_atomic,
     write_text_atomic_new,
 )
-from docs_scope_config import load_docs_scope_configs  # noqa: E402
+from docs_scope_config import load_docs_scope_configs, require_document_authoring  # noqa: E402
 from docs_import_media import bind_import_media_owner  # noqa: E402
 from markdown_renderer import normalize_markdown_blank_lines  # noqa: E402
 from docs_report_source import RETIRED_REPORT_KEYS, parse_report_source  # noqa: E402
@@ -295,6 +298,7 @@ def plan_import_document(
         document_config = configs[normalized_scope]
         parent_config = document_config
         create_root = scope_root(repo_root, normalized_scope)
+    require_document_authoring(parent_config)
     publishable_supported = collection_supports_publishable(document_config)
     if operation == IMPORT_DOCUMENT_OVERWRITE and slugify(record.doc_id) != record.doc_id:
         raise ValueError("ImportContent doc_id must be a safe normalized docs id")
@@ -396,6 +400,13 @@ def plan_import_document(
             publishable_supported=publishable_supported,
         )
 
+    front_matter, candidate_body = parse_source_text(source_text)
+    if collection_supports_draft(document_config) and operation == IMPORT_DOCUMENT_CREATE:
+        front_matter["draft"] = True
+        source_text = format_source(front_matter, candidate_body, sub_scope=sub_scope)
+    validate_document_status_front_matter(
+        front_matter, collection_config=document_config, source_name=target_path.name,
+    )
     return ImportDocumentPlan(
         scope=normalized_scope,
         operation=operation,

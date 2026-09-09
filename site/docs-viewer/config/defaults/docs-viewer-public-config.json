@@ -54,8 +54,6 @@
     }
   ],
   "docs_viewer": {
-    "recent_limit": 10,
-    "non_publishable_nav_color": "var(--muted)",
-    "doc_non_publishable_emoji": "🚫"
+    "recent_limit": 10
   }
 }

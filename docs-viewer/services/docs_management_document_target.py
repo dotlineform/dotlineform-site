@@ -304,14 +304,10 @@ def resolve_managed_document_target(
             requested_doc_id=normalized["doc_id"],
             report_contract=report_contract,
         )
-        source_model.validate_publishable_front_matter(
+        source_model.validate_document_status_front_matter(
             document.front_matter,
             collection_config=collection.document_config,
             source_name=path.name,
-        )
-        source_model.validate_sub_scope_document_metadata(
-            document,
-            ui_statuses=collection.document_config.ui_statuses,
         )
     else:
         parent_documents = [
@@ -323,7 +319,7 @@ def resolve_managed_document_target(
             for candidate in source_model.scope_markdown_paths(collection.source_root)
         ]
         for candidate in parent_documents:
-            source_model.validate_publishable_front_matter(
+            source_model.validate_document_status_front_matter(
                 candidate.front_matter,
                 collection_config=collection.document_config,
                 source_name=candidate.path.name,
@@ -378,6 +374,9 @@ def managed_document_metadata(
     }
     if source_model.collection_supports_publishable(resolved.document_config):
         record["publishable"] = document.publishable
+    payload_revision = source_model.source_revision(document.source_text.encode("utf-8"))
+    if source_model.collection_supports_draft(resolved.document_config):
+        record["draft"] = front_matter.get("draft", True)
     if not resolved.sub_scope:
         record["parent_id"] = document.parent_id
 
@@ -385,6 +384,7 @@ def managed_document_metadata(
         "ok": True,
         **resolved.request_target(),
         "record": record,
+        "source_revision": payload_revision,
     }
     if resolved.sub_scope:
         subject_fields = sub_scope_customisation_authoring_subject_fields(
@@ -406,10 +406,4 @@ def managed_document_metadata(
         if customisation_record is not None:
             record["customisation"] = customisation_record
         payload["sub_scope"] = resolved.sub_scope
-        payload["source_revision"] = source_model.source_revision(
-            document.source_text.encode("utf-8")
-        )
-        payload["choices"] = {
-            "ui_status": list(resolved.document_config.ui_statuses),
-        }
     return payload

@@ -188,7 +188,6 @@ def configure_review_sub_scope_targets(root: Path) -> dict[str, Path]:
             supports_return_import=True,
             scope_type="public",
             public_docs_path="site/assets/data/docs/scopes/example/tags",
-            ui_statuses=["draft", "done"],
         ),
         docs_sub_scope_record(
             "example",
@@ -197,7 +196,6 @@ def configure_review_sub_scope_targets(root: Path) -> dict[str, Path]:
             supports_return_import=True,
             scope_type="public",
             public_docs_path="site/assets/data/docs/scopes/example/notes",
-            ui_statuses=["draft", "done"],
         ),
     ]
     config_path.write_text(json.dumps(config, indent=2) + "\n", encoding="utf-8")

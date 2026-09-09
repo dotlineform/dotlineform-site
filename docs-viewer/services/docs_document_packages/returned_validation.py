@@ -249,11 +249,6 @@ def validate_whole_returned_package(
                     collection.source_root
                 )
             ]
-            for doc in collection_docs:
-                source_model.validate_sub_scope_document_metadata(
-                    doc,
-                    ui_statuses=collection.document_config.ui_statuses,
-                )
             collection_ids = {
                 doc.doc_id
                 for doc in collection_docs
