@@ -10,6 +10,10 @@ import { DOCS_VIEWER_ACTION_IDS } from "../../runtime/js/management/docs-viewer-
 import { subjectFromMetadataResponse } from "../../runtime/js/management/source-editor/subject-link-contribution.js";
 import { subjectMetadataFromResponse } from "../../runtime/js/management/docs-viewer-management-project-subject-modal.js";
 import { loadDocsViewerSubscopeContribution } from "../../runtime/js/management/docs-viewer-management-document-reports.js";
+import { createDocsViewerIndexSelectionOwner } from "../../runtime/js/management/docs-viewer-index-selection.js";
+import { docsViewerSetPublishableActionControlState } from "../../runtime/js/management/docs-viewer-management-index-controller.js";
+import { setManagedDocsPublishable } from "../../runtime/js/management/docs-viewer-management-client.js";
+import { validateSetPublishableResponse } from "../../runtime/js/management/docs-viewer-management-publishable-workflow.js";
 
 const docId = "d-20260906-170000-a1b2c3";
 const working = { scope: "analysis", stage: "working", sub_scope: "projects", doc_id: docId };
@@ -20,6 +24,27 @@ assert.throws(() => normalizeManagedDocumentTarget({ ...working, stage: "" }), /
 assert.deepEqual(normalizeManagedSubscopeCollection({ scope: "analysis", stage: "working", sub_scope: "projects" }), { scope: "analysis", stage: "working", sub_scope: "projects" });
 assert.throws(() => committedDocumentCreateTarget({ ...working, stage: "pre-publish", target: working, record: { doc_id: docId } }), /stage/);
 const hostTarget = { scope: "analysis", stage: "working", doc_id: docId };
+const selection = createDocsViewerIndexSelectionOwner({ initialScopeId: "analysis" });
+selection.enter();
+selection.toggle(docId, true);
+for (const stage of ["working", "pre-publish"]) {
+  const resolveAction = createDocsViewerManagementActionResolver({ indexSelection: selection, viewerStage: () => stage });
+  const resolution = resolveAction(DOCS_VIEWER_ACTION_IDS.SET_PUBLISHABLE);
+  assert.equal(resolution.enabled, stage === "working");
+  const state = docsViewerSetPublishableActionControlState({
+    source: { scope: "analysis", stage }, resolution, managementChecked: true, managementAvailable: true,
+    capabilities: { scopes: { analysis: { available: true, stage, publishable: stage === "working", publishing: { apply: false, confirm: false } } } }
+  });
+  assert.equal(state.disabled, stage !== "working");
+  assert.equal(state.hidden, stage !== "working");
+}
+const publishableCollection = { scope: "analysis", stage: "working" };
+const publishableResult = { ok: true, operation: "set_publishable", publishable: false, target: publishableCollection, requested_doc_ids: [docId] };
+const publishableOptions = { source: publishableCollection, checkedDocIds: [docId], publishable: false };
+assert.equal(validateSetPublishableResponse(publishableResult, publishableOptions), publishableResult);
+for (const target of [{ scope: "analysis" }, { ...publishableCollection, stage: "pre-publish" }]) {
+  assert.throws(() => validateSetPublishableResponse({ ...publishableResult, target }, publishableOptions), /exact checked selection/);
+}
 const moved = { ...hostTarget, target: hostTarget, record: { doc_id: docId, parent_id: "d-20260907-210000-a1b2c3" } };
 assert.deepEqual(committedDocumentMoveRecord(moved, hostTarget), moved.record);
 for (const wrongTarget of [
@@ -126,6 +151,8 @@ await assignManagedDocFieldGroup(working, assignment, options);
 assert.deepEqual(requests.at(-1).body, { ...working, ...assignment });
 await moveManagedDoc(docId, moved.record.parent_id, options);
 assert.deepEqual(requests.at(-1).body, { ...hostTarget, parent_id: moved.record.parent_id });
+await setManagedDocsPublishable(publishableCollection, [docId], false, options);
+assert.deepEqual(requests.at(-1).body, { ...publishableCollection, doc_ids: [docId], publishable: false, confirm: true });
 
 const configs = new Map([
   ["analysis", { scopeId: "analysis", stage: "pre-publish", viewerBaseUrl: "/docs/", includeScopeParam: true, indexTreeUrl: "/docs/index-tree?scope=analysis&stage=pre-publish" }],

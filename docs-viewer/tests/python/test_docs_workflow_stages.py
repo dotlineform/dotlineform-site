@@ -370,23 +370,96 @@ def test_same_document_id_is_read_only_from_requested_stage(stage_repo: Path) ->
         })
 
 
-def test_working_child_preserves_publishability_without_public_projection(stage_repo: Path) -> None:
+@pytest.mark.parametrize("sub_scope", [None, "works"])
+def test_set_publishable_updates_only_selected_working_collection(stage_repo: Path, monkeypatch: pytest.MonkeyPatch, sub_scope: str | None) -> None:
+    import docs_management_publishable as publishable
+    import docs_management_service as service
+    import docs_management_routes as routes
+
+    collection = {"scope": "analysis", "stage": "working"}
+    if sub_scope:
+        collection["sub_scope"] = sub_scope
+    target = {**collection, "doc_id": DOC_ID}
+    source = resolve_managed_document_target(stage_repo, target).document.path
+    protected = [resolve_managed_document_target(stage_repo, {
+        "scope": "analysis", "stage": stage, "doc_id": DOC_ID,
+        **({"sub_scope": child} if child else {}),
+    }).document.path for stage in ("working", "pre-publish") for child in (None, "works")]
+    before = {path: path.read_bytes() for path in protected if path != source}
+    rebuilds = []
+
+    def rebuild(_root, scope, *args, **options):
+        rebuilds.append((scope, args, options["stage"]))
+        return {"ok": True}
+
+    monkeypatch.setattr(publishable.write_rebuild, "rebuild_scope_outputs", rebuild)
+    monkeypatch.setattr(publishable.write_rebuild, "rebuild_sub_scope_outputs", rebuild)
+    monkeypatch.setattr(publishable, "log_event", lambda *_args: None)
+    capabilities = service.capabilities_payload(stage_repo)["capabilities"]["scopes"]["analysis"]["stages"]
+    assert capabilities["working"]["publishable"] is True
+    assert capabilities["pre-publish"]["publishable"] is False
+    assert capabilities["working"]["publishing"]["apply"] is False
+    request = {**collection, "doc_ids": [DOC_ID], "publishable": False, "confirm": True}
+    for include in (False, True):
+        status, result = service.docs_management_post_response(stage_repo, routes.SET_PUBLISHABLE_PATH, {**request, "publishable": include})
+        assert status == 200 and result["target"] == collection
+        assert result["stage"] == "working" and result["updated_doc_ids"] == [DOC_ID]
+        front_matter, _body = publishable.source_model.parse_source(source)
+        assert ("publishable" not in front_matter) if include else front_matter["publishable"] is False
+    assert rebuilds == [("analysis", ("works",) if sub_scope else (), "working")] * 2
+    for stage in (None, "pre-publish"):
+        rejected = {**request, "stage": stage}
+        if stage is None:
+            del rejected["stage"]
+        for operation in (publishable.plan_set_publishable, lambda root, body: service.docs_management_post_response(root, routes.SET_PUBLISHABLE_PATH, body)):
+            with pytest.raises(ValueError, match="requires stage|authoring is unavailable"):
+                operation(stage_repo, rejected)
+    assert all(path.read_bytes() == content for path, content in before.items())
+
+
+def test_set_publishable_rollback_rebuilds_only_working(stage_repo: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    import docs_management_publishable as publishable
+
+    target = {"scope": "analysis", "stage": "working", "doc_id": DOC_ID}
+    source = resolve_managed_document_target(stage_repo, target).document.path
+    other = resolve_managed_document_target(stage_repo, {**target, "stage": "pre-publish"}).document.path
+    before = {path: path.read_bytes() for path in (source, other)}
+    rebuilds = []
+
+    def fail_then_recover(_root, scope, **options):
+        rebuilds.append((scope, options["stage"]))
+        if len(rebuilds) == 1:
+            raise RuntimeError("rebuild failed")
+        return {"ok": True}
+
+    monkeypatch.setattr(publishable.write_rebuild, "rebuild_scope_outputs", fail_then_recover)
+    with pytest.raises(publishable.PublishableSelectionApplyError) as error:
+        publishable.set_publishable(stage_repo, {"scope": "analysis", "stage": "working", "doc_ids": [DOC_ID], "publishable": False, "confirm": True})
+    assert error.value.payload["rollback"]["status"] == "completed"
+    assert rebuilds == [("analysis", "working")] * 2
+    assert all(path.read_bytes() == content for path, content in before.items())
+
+
+@pytest.mark.parametrize("sub_scope", [None, "works"])
+def test_working_preserves_publishability_without_public_projection(stage_repo: Path, sub_scope: str | None) -> None:
     import docs_source_model as source_model
 
     config = scopes.load_docs_scope_stage(stage_repo, "analysis", "working")
-    child = config.sub_scopes[0]
-    assert child.stage == "working" and child.public_projection is None
-    path = stage_repo / scopes.document_source_path(child) / f"{DOC_ID}.md"
+    collection = config.sub_scopes[0] if sub_scope else config
+    assert collection.stage == "working" and collection.public_projection is None
+    path = stage_repo / scopes.document_source_path(collection) / f"{DOC_ID}.md"
     path.write_text(f"---\ndoc_id: {DOC_ID}\ntitle: Private work\npublishable: false\n---\n# Private work\n")
-    documents = source_model.load_document_collection_docs_for_config(stage_repo, config, child)
+    documents = source_model.load_document_collection_docs_for_config(stage_repo, config, collection)
     assert documents[0].publishable is False
     code, _stdout, stderr = run_cli(stage_repo, [
-        "--scope", "analysis", "--stage", "working", "--sub-scope", "works",
+        "--scope", "analysis", "--stage", "working",
+        *(["--sub-scope", sub_scope] if sub_scope else []),
         "--write", "--skip-browser-config", "--skip-media-builds",
     ])
     assert code == 0, stderr
-    output = stage_repo / scopes.generated_documents_path(child)
-    assert json.loads((output / "manage-manifest.json").read_text())["docs"][0]["publishable"] is False
+    output = stage_repo / scopes.generated_documents_path(collection)
+    index = "manage-manifest.json" if sub_scope else "index-tree.json"
+    assert json.loads((output / index).read_text())["docs"][0]["publishable"] is False
     assert json.loads((output / "by-id" / f"{DOC_ID}.json").read_text())["publishable"] is False
 
 

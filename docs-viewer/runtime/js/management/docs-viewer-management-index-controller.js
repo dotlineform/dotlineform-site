@@ -3,7 +3,7 @@ import {
   documentTransferSourceSupported,
   documentTransferSupported,
   documentTransferTargets,
-  scopePublishSupported,
+  scopeManagementCapabilities,
   scopeStaticHtmlExportCapability
 } from "./docs-viewer-management-capabilities.js";
 import {
@@ -102,10 +102,11 @@ export function docsViewerStaticHtmlExportActionControlState(options = {}) {
 
 export function docsViewerSetPublishableActionControlState(options = {}) {
   var resolution = options.resolution || null;
-  var hidden = !options.managementChecked || !scopePublishSupported(
+  var scopeCaps = scopeManagementCapabilities(
     options.capabilities,
     options.source && options.source.scope
   );
+  var hidden = !options.managementChecked || !scopeCaps || !scopeCaps.available || !scopeCaps.publishable;
   var disabledReason = "";
   if (!hidden && !options.managementAvailable) {
     disabledReason = "Set Publishable is unavailable.";
@@ -715,6 +716,8 @@ export function createDocsViewerManagementIndexController(options = {}) {
   function handleSetPublishable() {
     var resolution = resolveAction(DOCS_VIEWER_ACTION_IDS.SET_PUBLISHABLE);
     var source = { scope: viewerScope() };
+    var stage = managementClientOptions().stage;
+    if (stage) source.stage = stage;
     var controlState = setPublishableActionControlState(source);
     if (!resolution || !resolution.enabled || controlState.disabled) {
       return Promise.resolve(null);

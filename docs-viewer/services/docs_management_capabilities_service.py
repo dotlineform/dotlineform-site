@@ -60,7 +60,7 @@ def capabilities_payload(repo_root: Path) -> Dict[str, Any]:
                     "generated_search_reads": resolve_scope_path(repo_root, generated_search_path(selected)).is_file(),
                     "published_data_reads": False,
                     "published_search_reads": False,
-                    "publishable": False,
+                    "publishable": available and selected.stage == "working",
                     "document_transfer": {"available": False, "collections": []},
                     "publishing": {"status": False, "confirm": False, "apply": False},
                     "deploy_repo": {"available": False, "preview": False, "apply": False},

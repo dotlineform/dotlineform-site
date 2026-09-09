@@ -29,6 +29,7 @@ function exactDocIds(values) {
 function sameCollection(left, right) {
   return (
     left.scope === right.scope
+    && String(left.stage || "") === String(right.stage || "")
     && String(left.sub_scope || "") === String(right.sub_scope || "")
   );
 }

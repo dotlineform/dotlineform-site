@@ -130,7 +130,7 @@ def docs_management_post_response(
         allowed = {
             routes.CREATE_PATH, routes.UPDATE_METADATA_PATH, routes.SOURCE_REBUILD_PATH,
             routes.OPEN_SOURCE_PATH, routes.DELETE_PREVIEW_PATH, routes.DELETE_APPLY_PATH,
-            routes.ASSIGN_FIELD_GROUP_PATH,
+            routes.ASSIGN_FIELD_GROUP_PATH, routes.SET_PUBLISHABLE_PATH,
         }
         if field != "scope" or path not in allowed:
             raise ValueError("This action is unavailable in the publishing stage views")

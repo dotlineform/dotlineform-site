@@ -10,6 +10,7 @@ from typing import Any
 import docs_source_model as source_model
 import docs_write_rebuild as write_rebuild
 from docs_management_context import log_event
+from docs_scope_config import require_document_authoring
 from docs_management_document_target import (
     ManagedDocumentCollection,
     resolve_managed_document_collection,
@@ -86,14 +87,16 @@ def _collection_from_request(
     expected_keys = (
         SUB_SCOPE_REQUEST_KEYS if "sub_scope" in body else PARENT_REQUEST_KEYS
     )
-    if frozenset(body) != expected_keys:
+    if frozenset(body) - {"stage"} != expected_keys:
         expected = ", ".join(sorted(expected_keys))
         raise ValueError(f"Set Publishable must contain exactly {expected}")
     collection = resolve_managed_document_collection(
         repo_root,
         scope=body.get("scope"),
         sub_scope=body.get("sub_scope") if "sub_scope" in body else None,
+        stage=body.get("stage"),
     )
+    require_document_authoring(collection.document_config)
     if not source_model.collection_supports_publishable(
         collection.document_config
     ):
@@ -191,6 +194,7 @@ def _result_payload(
         "operation": "set_publishable",
         "target": plan.target(),
         "scope": plan.collection.scope,
+        **({"stage": plan.collection.stage} if plan.collection.stage else {}),
         **(
             {"sub_scope": plan.collection.sub_scope}
             if plan.collection.sub_scope
@@ -266,6 +270,7 @@ def apply_set_publishable_plan(
                 write_operation,
                 suppression_reason="docs-set-publishable",
                 source_snapshots=snapshots,
+                **({"stage": plan.collection.stage} if plan.collection.stage else {}),
             )
         else:
             updated_doc_ids = [update.doc_id for update in plan.updates]
@@ -277,6 +282,7 @@ def apply_set_publishable_plan(
                 suppression_reason="docs-set-publishable",
                 source_snapshots=snapshots,
                 docs_doc_ids=updated_doc_ids,
+                **({"stage": plan.collection.stage} if plan.collection.stage else {}),
             )
     except (
         write_rebuild.ScopeSourceSnapshotChanged,

@@ -489,10 +489,13 @@ def perform_scope_source_write_and_rebuild_atomic(
     suppression_reason: str,
     source_snapshots: Mapping[Path, bytes],
     docs_doc_ids: Optional[list[str]] = None,
+    stage: str | None = None,
 ) -> Dict[str, Any]:
-    """Write/rebuild one parent scope or restore its complete source snapshot."""
+    """Write/rebuild one exact parent stage or restore its source snapshot there."""
 
-    root = current_scope_source_root(repo_root, scope)
+    require_document_authoring(load_docs_scope_stage(repo_root, scope, stage))
+    root = current_scope_source_root(repo_root, scope, stage)
+    suppression_owner = watch_suppression_owner(scope, stage=stage)
     resolved_changed_paths = {
         path.resolve()
         for path in changed_paths
@@ -525,7 +528,7 @@ def perform_scope_source_write_and_rebuild_atomic(
     if filenames:
         set_watch_suppressions(
             repo_root,
-            scope,
+            suppression_owner,
             filenames,
             status=SUPPRESSION_PENDING,
             reason=suppression_reason,
@@ -549,10 +552,11 @@ def perform_scope_source_write_and_rebuild_atomic(
             include_search=False,
             docs_doc_ids=docs_doc_ids,
             skip_media_builds=True,
+            stage=stage,
         )
     except ScopeSourceSnapshotChanged:
         if filenames:
-            clear_watch_suppressions(repo_root, scope, filenames)
+            clear_watch_suppressions(repo_root, suppression_owner, filenames)
         raise
     except Exception as exc:
         restoration_errors: list[str] = []
@@ -573,6 +577,7 @@ def perform_scope_source_write_and_rebuild_atomic(
                     include_search=False,
                     docs_doc_ids=docs_doc_ids,
                     skip_media_builds=True,
+                    stage=stage,
                 )
             except Exception as recovery_exc:
                 recovery_error = (
@@ -588,14 +593,14 @@ def perform_scope_source_write_and_rebuild_atomic(
             if rollback_status == "completed":
                 set_watch_suppressions(
                     repo_root,
-                    scope,
+                    suppression_owner,
                     filenames,
                     status=SUPPRESSION_COMPLETE,
                     reason=f"{suppression_reason}-rollback",
                     ttl_seconds=DEFAULT_COMPLETE_TTL_SECONDS,
                 )
             else:
-                clear_watch_suppressions(repo_root, scope, filenames)
+                clear_watch_suppressions(repo_root, suppression_owner, filenames)
         raise ScopeWriteRebuildFailure(
             str(exc).strip() or exc.__class__.__name__,
             rollback={
@@ -610,7 +615,7 @@ def perform_scope_source_write_and_rebuild_atomic(
     if filenames:
         set_watch_suppressions(
             repo_root,
-            scope,
+            suppression_owner,
             filenames,
             status=SUPPRESSION_COMPLETE,
             reason=suppression_reason,

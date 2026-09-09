@@ -85,6 +85,7 @@ export function createDocsViewerManagementActionResolver(options = {}) {
     var stageActions = ["bookmark", "copy-link", "info", "open"];
     if (stage === "working") stageActions.push(
       "delete", "edit-metadata", "markdown-save", "markdown-source", "new", "new-child", "new-sibling", "open-vscode",
+      DOCS_VIEWER_ACTION_IDS.SET_PUBLISHABLE,
       DOCS_VIEWER_ACTION_IDS.SOURCE_ADD_CATALOGUE_IMAGE,
       DOCS_VIEWER_ACTION_IDS.SOURCE_ADD_CATALOGUE_TOKEN,
       DOCS_VIEWER_ACTION_IDS.SOURCE_ADD_FILE,
