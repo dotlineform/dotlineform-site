@@ -6,6 +6,8 @@ import {
   readManagedDiagramSources,
   readManagedDocMetadata,
   readManagedDocSource,
+  readCatalogueMediaTargets,
+  readCatalogueWork,
   rebuildManagedDocSource,
   validateLocalTarget
 } from "./docs-viewer-management-client.js";
@@ -32,6 +34,12 @@ export function createDocsViewerManagementSourceAdapter(options) {
   }
 
   return {
+    readCatalogueMediaTargets: function () {
+      return readCatalogueMediaTargets(clientOptions());
+    },
+    readCatalogueWork: function (workId) {
+      return readCatalogueWork(workId, clientOptions());
+    },
     readSource: function (target, optionsForRead) {
       return readManagedDocSource(target, clientOptions(optionsForRead));
     },

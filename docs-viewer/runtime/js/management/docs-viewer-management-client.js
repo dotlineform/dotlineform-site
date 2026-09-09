@@ -31,6 +31,7 @@ export function fetchManagementJson(path, method, payload, options) {
     requestOptions.headers["Content-Type"] = "application/json";
     requestOptions.body = JSON.stringify(payload);
   }
+  if (settings.cache) requestOptions.cache = settings.cache;
 
   var fetchImpl = settings.fetch || defaultFetch;
   return fetchImpl(baseUrl + path, requestOptions).then(function (response) {
@@ -56,6 +57,17 @@ export function fetchManagementJson(path, method, payload, options) {
 
 export function readManagementCapabilities(options) {
   return fetchManagementJson("/capabilities", "GET", undefined, options);
+}
+
+/** Read generated Catalogue targets independently of document scope and association. */
+export function readCatalogueMediaTargets(options) {
+  return fetchManagementJson("/docs/catalogue-media-targets", "GET", undefined, options);
+}
+
+/** Read the current generated Work consumer record independently of Document Build. */
+export function readCatalogueWork(workId, options) {
+  return fetchManagementJson("/docs/catalogue-work?work_id=" + encodeURIComponent(workId), "GET", undefined,
+    Object.assign({}, options, { cache: "no-store" }));
 }
 
 export function readManagedDocsIndex(scope, options) {

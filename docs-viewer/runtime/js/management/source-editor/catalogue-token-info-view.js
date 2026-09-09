@@ -8,6 +8,7 @@ import {
 import {
   loadSemanticTokenRegistry
 } from "./semantic-token-registry.js";
+import { readCatalogueMediaPresentation } from "./catalogue-media-link.js";
 import {
   loadSemanticTokenTargets,
   resolveSemanticTokenTargetHref
@@ -47,22 +48,6 @@ function appendReadOnlyRow(list, label, value, href) {
 
 function targetKey(token) {
   return [token.family, token.targetType, token.targetId].join(":");
-}
-
-function occurrenceDestination(token, target) {
-  if (!target) return "";
-  if (
-    token.presentation === "image"
-    && token.targetType === "work"
-    && token.detailId
-  ) {
-    var detailUid = token.targetId + "-" + token.detailId;
-    return (
-      "/work-details/?detail=" + encodeURIComponent(detailUid)
-      + "&from_work=" + encodeURIComponent(token.targetId)
-    );
-  }
-  return target.href || "";
 }
 
 function emptyMessage(mount, message) {
@@ -105,7 +90,7 @@ function renderToken(context, state, active) {
   var token = active.token;
   var capture = active.capture;
   var target = state.targetsByKey.get(targetKey(token)) || null;
-  var occurrenceHref = occurrenceDestination(token, target);
+  var occurrenceHref = target && target.href || "";
   var destinationHref = occurrenceHref
     ? resolveSemanticTokenTargetHref(occurrenceHref, state.publicPreviewBase)
     : "";
@@ -115,7 +100,7 @@ function renderToken(context, state, active) {
   article.className = "docsViewer__metadataInfo docsViewerCatalogueTokenInfo";
   var heading = document.createElement("h3");
   heading.className = "docsViewer__metadataInfoTitle";
-  heading.textContent = token.presentation === "image" ? "Catalogue image" : "Catalogue token";
+  heading.textContent = token.presentation === "image" ? "Catalogue image" : token.presentation === "media" ? "Media View link" : "Catalogue token";
 
   var list = document.createElement("dl");
   list.className = "docsViewer__metadataInfoList";
@@ -145,11 +130,7 @@ function renderToken(context, state, active) {
     detailInput.inputMode = "numeric";
     detailInput.pattern = "[0-9]*";
     detailInput.value = token.detailId;
-    detailInput.disabled = (
-      token.targetType !== "work"
-      || !target
-      || target.hasDetails !== true
-    );
+    detailInput.disabled = token.targetType !== "work";
     detailField.append(detailLabel, detailInput);
   }
 
@@ -202,7 +183,7 @@ function renderToken(context, state, active) {
     status.classList.toggle("is-error", Boolean(isError));
   }
 
-  updateButton.addEventListener("click", function () {
+  updateButton.addEventListener("click", async function () {
     var value = cleanString(occurrenceInput.value);
     var serialized;
     if (token.presentation === "image") {
@@ -232,6 +213,7 @@ function renderToken(context, state, active) {
     } else {
       serialized = serializeCatalogueToken({
         registry: state.registry,
+        presentation: token.presentation,
         targetType: token.targetType,
         targetId: token.targetId,
         title: value
@@ -247,13 +229,23 @@ function renderToken(context, state, active) {
       occurrenceInput.focus();
       return;
     }
-    if (
-      !state.adapter
-      || typeof state.adapter.replaceCapturedRange !== "function"
-      || !state.adapter.replaceCapturedRange(capture, serialized, "select")
-    ) {
-      setStatus("Markdown source changed. Select the token again.", true);
-      return;
+    var adapter = state.adapter;
+    var controls = Array.from(article.querySelectorAll("input, textarea, button"));
+    var disabled = controls.map(function (control) { return control.disabled; });
+    controls.forEach(function (control) { control.disabled = true; });
+    try {
+      if (token.presentation === "image" && token.targetType === "work") {
+        await readCatalogueMediaPresentation(adapter, token.targetId, detailId);
+      }
+      if (state.adapter !== adapter || !mount.contains(article)) return;
+      if (!adapter || typeof adapter.replaceCapturedRange !== "function"
+        || !adapter.replaceCapturedRange(capture, serialized, "select")) {
+        setStatus("Markdown source changed. Select the token again.", true);
+      }
+    } catch (error) {
+      if (state.adapter === adapter && mount.contains(article)) setStatus(error.message || "Catalogue media is unavailable.", true);
+    } finally {
+      controls.forEach(function (control, index) { control.disabled = disabled[index]; });
     }
   });
 
@@ -288,6 +280,28 @@ function render(context, state) {
     emptyMessage(context.mount, "Place the caret inside a Catalogue token to inspect it.");
     return;
   }
+  var currentMedia = active.token.targetType === "work" && ["media", "image"].includes(active.token.presentation);
+  var key = currentMedia ? "media:" + active.token.targetId + ":" + active.token.detailId : "catalogue";
+  if (state.targetKey !== key) {
+    emptyMessage(context.mount, "Catalogue target info is loading.");
+    if (state.loadingKey === key) return;
+    state.loadingKey = key;
+    var adapter = state.adapter;
+    var load = currentMedia
+      ? readCatalogueMediaPresentation(adapter, active.token.targetId, active.token.detailId).then(function (presentation) {
+          return [{ family: "catalogue", targetType: "work", targetId: active.token.targetId,
+            title: presentation.label, href: presentation.newTabTarget }];
+        })
+      : loadSemanticTokenTargets(state.registry, { fetch: state.fetch });
+    load.catch(function () { return []; }).then(function (targets) {
+      if (state.adapter !== adapter || state.loadingKey !== key) return;
+      state.targetsByKey = new Map(targets.map(function (target) { return [targetKey(target), target]; }));
+      state.targetKey = key;
+      state.loadingKey = "";
+      render(context, state);
+    });
+    return;
+  }
   renderToken(context, state, active);
 }
 
@@ -295,12 +309,6 @@ function loadSupport(state) {
   return loadSemanticTokenRegistry({ fetch: state.fetch })
     .then(function (registry) {
       state.registry = registry;
-      return loadSemanticTokenTargets(registry, { fetch: state.fetch });
-    })
-    .then(function (targets) {
-      state.targetsByKey = new Map(targets.map(function (target) {
-        return [[target.family, target.targetType, target.targetId].join(":"), target];
-      }));
       state.loaded = true;
     });
 }
@@ -309,7 +317,10 @@ export function createCatalogueTokenInfoView(options = {}) {
   var state = {
     adapter: null,
     fetch: options.fetch,
+    generation: 0,
     loaded: false,
+    targetKey: "",
+    loadingKey: "",
     publicPreviewBase: "",
     registry: null,
     targetsByKey: new Map(),
@@ -330,20 +341,25 @@ export function createCatalogueTokenInfoView(options = {}) {
   }
 
   function unbind() {
+    state.generation += 1;
     if (typeof state.unsubscribe === "function") state.unsubscribe();
     state.unsubscribe = null;
     state.adapter = null;
+    state.targetKey = "";
+    state.loadingKey = "";
   }
 
   return {
     mount: function (context) {
+      var generation = state.generation;
       bind(context);
       render(context, state);
       return loadSupport(state)
         .then(function () {
-          render(context, state);
+          if (state.generation === generation) render(context, state);
         })
         .catch(function () {
+          if (state.generation !== generation) return;
           state.loaded = true;
           render(context, state);
         });

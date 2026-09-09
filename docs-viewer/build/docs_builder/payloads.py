@@ -37,7 +37,10 @@ class PayloadBuilderMixin:
             semantic_tokens_by_doc=semantic_tokens_by_doc,
         )
         content_html = add_missing_image_titles(
-            self.rewrite_doc_links(render_markdown_to_html(resolved), current_doc=doc, docs=docs)
+            self.rewrite_doc_links(
+                self.restore_catalogue_media_html(render_markdown_to_html(resolved)),
+                current_doc=doc, docs=docs,
+            )
         )
         entry = self.by_id_metadata_entry(doc, docs)
         entry["content_html"] = content_html

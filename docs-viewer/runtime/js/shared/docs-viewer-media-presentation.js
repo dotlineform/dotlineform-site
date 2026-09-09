@@ -48,7 +48,11 @@ function normalizeWorkPresentation(value) {
   }
   var targetKind = cleanString(targetSource.kind);
   var targetId = cleanString(targetSource.id);
-  if (targetKind !== "catalogue-work" || !/^\d{5}$/.test(targetId)) {
+  var detail = targetKind === "catalogue-work-detail";
+  var workId = detail ? targetSource.workId : targetId;
+  if (typeof workId !== "string" || !/^\d{5}$/.test(workId) || (detail
+    ? !targetId.startsWith(workId + "-") || !/^(?:\d{3}|[1-9]\d{3,})$/.test(targetId.slice(6)) || /^0+$/.test(targetId.slice(6))
+    : targetKind !== "catalogue-work")) {
     throw new Error("Media View requires an exact Catalogue Work target.");
   }
 
@@ -80,7 +84,7 @@ function normalizeWorkPresentation(value) {
 
   return Object.freeze({
     schemaVersion: "docs_media_view_v1",
-    target: Object.freeze({ kind: targetKind, id: targetId }),
+    target: Object.freeze({ kind: targetKind, id: targetId, ...(detail ? { workId: workId } : {}) }),
     label: normalizedTextField(value.label, "a label"),
     image: Object.freeze({
       src: imageSrc,
@@ -143,6 +147,7 @@ export function normalizeDocsViewerMediaPresentation(value) {
   var ids = new Set();
   var members = source.members.map(function (entry) {
     var work = normalizeWorkPresentation(entry && entry.work);
+    if (work.target.kind !== "catalogue-work") throw new Error("Media View gallery members must be Works.");
     if (ids.has(work.target.id)) throw new Error("Media View gallery has a duplicate Work target.");
     ids.add(work.target.id);
     return Object.freeze({ work: work, thumbnail: normalizeThumbnail(entry.thumbnail) });

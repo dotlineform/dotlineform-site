@@ -1,6 +1,7 @@
 import {
   appendAssetVersion
 } from "../shared/docs-viewer-asset-url.js";
+import { mountDocsViewerMediaLinks } from "../shared/docs-viewer-media-detail.js";
 
 const PUBLIC_REPORT_LOADERS = {
   docs_subscope: {
@@ -168,7 +169,18 @@ export function mountDocsViewerPublicReport(context) {
         reportRoot: root,
         reportMeta: resolvedReportMeta,
         reportRegistry: registry,
-        mountSubscopeDocumentReport: function (child) {
+        mountSubscopeDocumentContent: function (child) {
+          var target = child.documentTarget;
+          mountDocsViewerMediaLinks({
+            content: child.content,
+            documentTarget: { scope: target.scope, ...(target.stage ? { stage: target.stage } : {}),
+              subScope: target.sub_scope, docId: target.doc_id },
+            isCurrentDocument: child.isCurrentDocument,
+            openMediaTarget: context.openMediaTarget,
+            loadMediaTarget: context.loadMediaTarget,
+            openMediaPresentation: context.openMediaPresentation
+          });
+          if (!child.payload.report) return Promise.resolve();
           return mountDocsViewerPublicReport(Object.assign({}, context, child));
         }
       }))).then(function () {

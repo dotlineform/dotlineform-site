@@ -1,3 +1,5 @@
+import { readPublicCatalogueWork } from "./docs-viewer-catalogue-media.js";
+
 function cleanString(value) {
   return String(value == null ? "" : value).trim();
 }
@@ -111,6 +113,22 @@ export function createDocsViewerConfiguredScopeProvider(options) {
   if (source && typeof source.readMetadata === "function") {
     provider.readMetadata = function (target, optionsForRead) {
       return source.readMetadata(target, optionsForRead || {});
+    };
+  }
+  if (source && typeof source.readCatalogueMediaTargets === "function") {
+    provider.readCatalogueMediaTargets = function () {
+      return source.readCatalogueMediaTargets();
+    };
+  }
+  if (source && typeof source.readCatalogueWork === "function") {
+    provider.readCatalogueWork = function (workId) {
+      return source.readCatalogueWork(workId);
+    };
+  } else if (routeContext().routeConfig && routeContext().routeConfig.appKind === "public") {
+    provider.readCatalogueWork = function (workId) {
+      return readPublicCatalogueWork(routeContext().routeConfig.catalogueWorkRecordsBaseUrl, workId, function (url, optionsForFetch) {
+        return settings.window.fetch(url, optionsForFetch);
+      });
     };
   }
   if (source && typeof source.writeSource === "function") {

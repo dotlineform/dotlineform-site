@@ -102,7 +102,9 @@ export function serializeCatalogueToken(options = {}) {
     var canonicalPattern = new RegExp(definition.idPolicy.canonicalPattern);
     if (!canonicalPattern.test(targetId)) return "";
   }
-  return "[[catalogue:" + targetType + ":" + targetId + "|" + escapedTitle(title) + "]]";
+  var media = options.presentation === "media";
+  if (media && (targetType !== "work" || !/^\d{5}$/.test(targetId))) return "";
+  return "[[catalogue:" + (media ? "media:" : "") + targetType + ":" + targetId + "|" + escapedTitle(title) + "]]";
 }
 
 export function serializeCatalogueImageToken(options = {}) {
@@ -193,10 +195,12 @@ export function parseCatalogueToken(raw, options = {}) {
   if (separator < 0) return null;
   var identity = body.slice(0, separator).split(":");
   var imagePresentation = identity.length === 4 && identity[1] === "image";
-  if (identity.length !== 3 && !imagePresentation) return null;
+  var mediaPresentation = identity.length === 4 && identity[1] === "media";
+  if (identity.length !== 3 && !imagePresentation && !mediaPresentation) return null;
   var family = identity[0];
   var targetType = identity[identity.length - 2];
   var targetId = identity[identity.length - 1];
+  if (mediaPresentation && (targetType !== "work" || !/^\d{5}$/.test(targetId))) return null;
   var rawFields = body.slice(separator + 1);
   var imageFields = imagePresentation
     ? parseCatalogueImageFields(rawFields, {
@@ -232,7 +236,7 @@ export function parseCatalogueToken(raw, options = {}) {
     end: start + source.length,
     supported: supported,
     activatable: supported,
-    presentation: imagePresentation ? "image" : "text",
+    presentation: imagePresentation ? "image" : mediaPresentation ? "media" : "text",
     alt: imageFields ? imageFields.alt : "",
     caption: imageFields ? imageFields.caption : "",
     summary: imageFields ? imageFields.summary : "",

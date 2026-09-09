@@ -35,7 +35,7 @@ function modalBody(settings, searchQuery, selectionTitle) {
       '<div class="docsViewerCatalogueTargetPicker__results docsViewerCatalogueTokenModal__results" id="' + settings.resultsId + '" role="listbox" aria-label="' + escapeHtml(settings.resultsLabel) + '" data-role="catalogue-results" tabindex="0"></div>' +
       '<div class="docsViewerCatalogueTokenModal__selected" data-role="catalogue-selected" hidden></div>' +
       '<label class="docsViewer__field" for="' + settings.titleInputId + '">' +
-        '<span class="docsViewer__fieldLabel">Title</span>' +
+        '<span class="docsViewer__fieldLabel">' + escapeHtml(settings.titleLabel || "Title") + '</span>' +
         '<input class="docsViewer__fieldInput" id="' + settings.titleInputId + '" type="text" autocomplete="off" value="' + escapeHtml(selectionTitle) + '" required>' +
       "</label>" +
     "</div>"
@@ -61,6 +61,7 @@ export function openSemanticTextTokenModal(settings, options = {}) {
   var state = {
     disposed: false,
     initialToken: selectedToken,
+    lastSelectedTarget: null,
     list: null,
     selectedTarget: null,
     support: null
@@ -143,9 +144,11 @@ export function openSemanticTextTokenModal(settings, options = {}) {
         title: function (target) { return target.title; },
         meta: function (target) { return settings.targetMeta(target); },
         onSelect: function (target) {
+          var previousTarget = state.lastSelectedTarget;
           renderSelectedTarget(target);
+          state.lastSelectedTarget = target;
           if (titleInput) {
-            titleInput.value = settings.titleOnSelect(target, titleInput.value);
+            titleInput.value = settings.titleOnSelect(target, titleInput.value, previousTarget);
           }
         }
       });
@@ -181,7 +184,7 @@ export function openSemanticTextTokenModal(settings, options = {}) {
           }
         });
     },
-    onSubmit: function (api) {
+    onSubmit: async function (api) {
       var titleInput = api.host.querySelector("#" + settings.titleInputId);
       var title = String(titleInput && titleInput.value || "").trim();
       if (!state.selectedTarget) {
@@ -201,6 +204,9 @@ export function openSemanticTextTokenModal(settings, options = {}) {
       if (!token) {
         api.setStatus("The selected target and Title cannot be serialized.");
         return false;
+      }
+      if (typeof settings.validateTarget === "function") {
+        await settings.validateTarget(state.selectedTarget);
       }
       if (
         !adapter

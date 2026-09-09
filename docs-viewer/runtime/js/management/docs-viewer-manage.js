@@ -55,6 +55,11 @@ import {
   createCatalogueImageMainViewControlHandlers
 } from "./source-editor/catalogue-image-contribution.js";
 import {
+  CATALOGUE_MEDIA_LINK_CONTROL_ID,
+  catalogueMediaLinkControlRenderer,
+  createCatalogueMediaLinkControlHandlers
+} from "./source-editor/catalogue-media-link.js";
+import {
   CATALOGUE_TOKEN_CONTROL_ID,
   catalogueTokenControlRenderer,
   createCatalogueTokenInfoViewResolver,
@@ -120,6 +125,7 @@ startDocsViewerManageApp({
     {
       [CATALOGUE_IMAGE_CONTROL_ID]: catalogueImageControlRenderer,
       [CATALOGUE_TOKEN_CONTROL_ID]: catalogueTokenControlRenderer,
+      [CATALOGUE_MEDIA_LINK_CONTROL_ID]: catalogueMediaLinkControlRenderer,
       [SUBJECT_LINK_CONTROL_ID]: subjectLinkControlRenderer,
       [DIRECTIVE_ACTIONS_CONTROL_ID]: directiveActionsControlRenderer
     }
@@ -148,6 +154,7 @@ startDocsViewerManageApp({
     {},
     createCatalogueImageMainViewControlHandlers(),
     createCatalogueTokenMainViewControlHandlers(),
+    createCatalogueMediaLinkControlHandlers(),
     createSubjectLinkMainViewControlHandlers(),
     createDirectiveActionsMainViewControlHandlers(),
     managedTableTools.controlHandlers()
@@ -158,6 +165,7 @@ startDocsViewerManageApp({
   sourceEditorActionControlIds: [
     CATALOGUE_IMAGE_CONTROL_ID,
     CATALOGUE_TOKEN_CONTROL_ID,
+    CATALOGUE_MEDIA_LINK_CONTROL_ID,
     SUBJECT_LINK_CONTROL_ID,
     DIRECTIVE_ACTIONS_CONTROL_ID
   ],

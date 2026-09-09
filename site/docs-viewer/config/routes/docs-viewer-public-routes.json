@@ -37,6 +37,9 @@
         "recent_url": "/assets/data/docs/scopes/analysis/recent.json",
         "search_index_url": "/assets/data/search/analysis/index.json"
       },
+      "catalogue_paths": {
+        "work_records_base_url": "/assets/data/catalogue/works/index/"
+      },
       "config_urls": {
         "docs_viewer": "/docs-viewer/config/defaults/docs-viewer-public-config.json",
         "report_registry": "/assets/data/docs/public-reports.json"

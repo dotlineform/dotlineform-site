@@ -20,6 +20,8 @@ SOURCE_CONFIG_PATH = "/docs/source-config"
 SERIES_WORKS_REPORT_PATH = "/docs/series-works-report"
 UNPUBLISHABLE_REPORT_PATH = "/docs/unpublishable-report"
 SERIES_WORK_MEDIA_PATH = "/docs/series-work-media"
+CATALOGUE_MEDIA_TARGETS_PATH = "/docs/catalogue-media-targets"
+CATALOGUE_WORK_PATH = "/docs/catalogue-work"
 SOURCE_CONFIG_SETTINGS_PATH = "/docs/source-config-settings"
 IMPORT_SOURCE_DIRECTORIES_PATH = "/docs/import-source-directories"
 IMPORT_SOURCE_FILES_PATH = "/docs/import-source-files"
@@ -89,6 +91,8 @@ GET_PATHS = (
     SERIES_WORKS_REPORT_PATH,
     UNPUBLISHABLE_REPORT_PATH,
     SERIES_WORK_MEDIA_PATH,
+    CATALOGUE_MEDIA_TARGETS_PATH,
+    CATALOGUE_WORK_PATH,
     SOURCE_CONFIG_SETTINGS_PATH,
     SOURCE_BODY_PATH,
     METADATA_PATH,

@@ -25,7 +25,6 @@ from docs_builder.semantic_token_registry import (  # noqa: E402
 )
 from docs_builder.semantic_tokens import (  # noqa: E402
     parse_catalogue_tokens,
-    resolve_catalogue_image_target,
     semantic_token_at_selection,
     serialize_catalogue_image_token,
     serialize_semantic_token,
@@ -385,11 +384,9 @@ def test_builder_projects_linked_visual_occurrences_and_preserves_missing_images
         )
 
     html = payload["content_html"]
-    assert '<a class="docsViewerCatalogueImageLink" href="/works/?work=00638"' in html
-    assert 'src="https://media.dotlineform.com/works/img/00638-primary-1600.webp?v=1"' in html
-    assert '<a class="docsViewerCatalogueImageLink" href="/work-details/?detail=00638-001&amp;from_work=00638"' in html
-    assert 'src="https://media.dotlineform.com/work_details/img/00638-001-primary-1600.webp?v=3"' in html
-    assert 'data-semantic-token-target-id="00638"' in html
+    assert 'data-docs-media-kind="catalogue-work" data-docs-media-id="00638"' in html
+    assert 'data-docs-media-kind="catalogue-work-detail" data-docs-media-id="00638-001" data-docs-media-work-id="00638"' in html
+    assert 'src="https://media.dotlineform.com/work_details/img/00638-001-primary-1600.webp?v=3"' not in html
     assert 'target="_blank" rel="noopener noreferrer"' in html
     assert '<figure class="docsViewerFigure docsViewerFigure--image-right docsViewerFigure--natural-width">' in html
     assert '<a class="docsViewerFigure__imageLink" href="/series/?series=005"' in html
@@ -397,52 +394,18 @@ def test_builder_projects_linked_visual_occurrences_and_preserves_missing_images
     assert 'data-semantic-token-target-id="005"' in html
     assert '<span class="docsViewerFigure__caption">Quiet field</span>' in html
     assert '<span class="docsViewerFigure__summary">Supporting copy</span>' in html
-    assert missing_image in html
-    assert missing_detail.replace("&", "&amp;") in html
+    assert 'data-docs-media-id="00008"' in html
+    assert 'data-docs-media-id="00638-999"' in html
     assert '<a href="/works/?work=00008" data-semantic-token-family="catalogue"' in html
     resolved_rows = [row for row in usage["occurrences"] if row["source_doc_id"] == doc_id]
     assert usage["schema_version"] == "docs_semantic_token_usage_index_v1"
-    assert [row["title"] for row in resolved_rows] == ["3 symbols", "3 symbols detail", "Quiet field", "nerve"]
+    assert [row["title"] for row in resolved_rows] == ["3 symbols", "3 symbols detail", "Quiet field", "missing detail", "nerve", "nerve"]
     assert resolved_rows[1]["target_type"] == "work"
     assert resolved_rows[1]["target_id"] == "00638"
-    assert resolved_rows[1]["href"] == "/work-details/?detail=00638-001&from_work=00638"
+    assert resolved_rows[1]["href"] == ""
     assert resolved_rows[2]["target_type"] == "series"
     assert resolved_rows[2]["target_id"] == "005"
     assert resolved_rows[2]["href"] == "/series/?series=005"
-    assert resolved_rows[3]["raw"] == text_same_target
-    assert not any(row["raw"] == missing_image for row in resolved_rows)
-    assert not any(row["raw"] == missing_detail for row in resolved_rows)
-
-
-def test_work_detail_resolution_requires_exact_usable_record() -> None:
-    with tempfile.TemporaryDirectory() as temp_path:
-        root = Path(temp_path)
-        write_builder_fixture(root)
-        registry = load_semantic_token_registry(root)
-        assert registry is not None
-        token = parse_catalogue_tokens(
-            "[[catalogue:image:work:00638|alt=detail&detail_id=001]]",
-            registry=registry,
-        )[0]
-        target = {
-            "href": "/works/?work=00638",
-            "image": {
-                "src": "https://media.dotlineform.com/works/img/00638-primary-1600.webp?v=1",
-            },
-        }
-        detail_path = root / "studio/data/canonical/catalogue/work_details/00638.json"
-        detail_payload = json.loads(detail_path.read_text(encoding="utf-8"))
-
-        resolved = resolve_catalogue_image_target(root, token, target)
-        assert resolved is not None
-        assert resolved["href"] == "/work-details/?detail=00638-001&from_work=00638"
-        assert resolved["image"]["src"].endswith(
-            "/work_details/img/00638-001-primary-1600.webp?v=3"
-        )
-
-        detail_path.unlink()
-        assert resolve_catalogue_image_target(root, token, target) is None
-
-        detail_payload["detail_sections"][0]["details"][0]["media_version"] = None
-        write_json(detail_path, detail_payload)
-        assert resolve_catalogue_image_target(root, token, target) is None
+    assert resolved_rows[5]["raw"] == text_same_target
+    assert resolved_rows[4]["raw"] == missing_image and resolved_rows[4]["href"] == ""
+    assert resolved_rows[3]["raw"] == missing_detail and resolved_rows[3]["href"] == ""

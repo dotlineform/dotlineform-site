@@ -94,13 +94,11 @@ export function openDocsViewerManagementModal(options = {}) {
   var statusNode = host.querySelector('[data-role="modal-status"]');
   var focusTarget = options.focusSelector ? host.querySelector(options.focusSelector) : primary;
   var modalControls = Array.from(host.querySelectorAll("button, input, select, textarea"));
-  modalControls.forEach(function (control) {
-    if (control.disabled) control.dataset.initiallyDisabled = "true";
-  });
 
   return new Promise(function (resolve) {
     var settled = false;
     var submitting = false;
+    var readyControlStates = new Map();
 
     function setStatus(message) {
       if (!statusNode) return;
@@ -123,14 +121,20 @@ export function openDocsViewerManagementModal(options = {}) {
     }
 
     function setBusy(value) {
-      submitting = value === true;
+      var next = value === true;
+      if (submitting === next) return;
+      if (next) {
+        modalControls.forEach(function (control) { readyControlStates.set(control, control.disabled); });
+      }
+      submitting = next;
       if (form) {
         if (submitting) form.dataset.busy = "true";
         else delete form.dataset.busy;
       }
       modalControls.forEach(function (control) {
-        control.disabled = submitting || control.dataset.initiallyDisabled === "true";
+        control.disabled = submitting || readyControlStates.get(control) === true;
       });
+      if (!submitting) readyControlStates.clear();
       if (form && form.ownerDocument && form.ownerDocument.defaultView) {
         form.dispatchEvent(new form.ownerDocument.defaultView.CustomEvent(
           "docs-viewer-modal-busy-change",

@@ -182,14 +182,6 @@ export function createDocsViewerDocumentViewCoordinator(options) {
     bind: function () { infoPanelController.bind(); },
     closeInfoIfOpen: function () { return infoPanelController.closeIfOpen(); },
     controlActive: controlActive,
-    isConfiguredInfoView: function (viewId) {
-      var map = settings.infoPanelDefaultViewByDocumentMode;
-      if (!map || typeof map !== "object") return false;
-      return Object.keys(map).some(function (modeId) {
-        var configuredViewId = cleanString(map[modeId]);
-        return configuredViewId && configuredViewId !== "metadata-info" && configuredViewId === cleanString(viewId);
-      });
-    },
     isInfoOpen: function () { return infoPanelController.isOpen(); },
     handleInfoControl: function () { return infoPanelController.handleControl(); },
     openInfoView: function (viewId) { return infoPanelController.openView(viewId); },

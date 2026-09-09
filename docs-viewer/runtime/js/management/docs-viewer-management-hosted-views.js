@@ -4,6 +4,7 @@ import {
 import {
   catalogueImageControlDefinition
 } from "./source-editor/catalogue-image-contribution.js";
+import { catalogueMediaLinkControlDefinition } from "./source-editor/catalogue-media-link.js";
 import {
   catalogueTokenControlDefinition
 } from "./source-editor/catalogue-token-contribution.js";
@@ -204,6 +205,7 @@ export function createDocsViewerManagementViewDefinitions() {
         renderer: "source-add-file"
       },
       catalogueTokenControlDefinition(),
+      catalogueMediaLinkControlDefinition(),
       subjectLinkControlDefinition(),
       directiveActionsControlDefinition(),
       {

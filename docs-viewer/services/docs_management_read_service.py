@@ -6,6 +6,7 @@ from pathlib import Path
 from typing import Any
 
 import docs_generated_reads
+import docs_catalogue_media
 import docs_diagram_source_service
 import docs_import_source_service as import_source_service
 import docs_management_routes as routes
@@ -91,6 +92,12 @@ def docs_management_get_payload(repo_root: Path, path: str, params: dict[str, li
         return {"ok": True, "service": "docs_management", "dry_run": dry_run}
     if path == routes.CAPABILITIES_PATH:
         return capabilities_payload(repo_root)
+    if path == routes.CATALOGUE_MEDIA_TARGETS_PATH:
+        return docs_catalogue_media.read_catalogue_media_targets(repo_root)
+    if path == routes.CATALOGUE_WORK_PATH:
+        return docs_catalogue_media.read_catalogue_work(
+            repo_root, docs_api_query_value(params, "work_id"),
+        )
     if path == routes.UNPUBLISHABLE_REPORT_PATH:
         return docs_unpublishable_report.build_unpublishable_report(
             repo_root,

@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import html
 import re
+from uuid import uuid4
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Callable, Iterable
@@ -9,7 +10,6 @@ from urllib.parse import quote, unquote_to_bytes, urlsplit
 
 from .common import read_json
 from .semantic_token_registry import SemanticTokenRegistry
-from .semantic_target_lookup import positive_integer, primary_image_settings
 from .source import DocRecord
 from docs_staged_media_fragments import (
     FIGURE_NATURAL_WIDTH_CLASS,
@@ -25,9 +25,7 @@ SEMANTIC_TOKEN_TARGET_LOOKUP_SCHEMA_VERSION = "docs_semantic_token_target_lookup
 SEMANTIC_TOKEN_TARGET_LOOKUP_PATH = Path(
     "docs-viewer/data/generated/semantic-tokens/target-lookup.json"
 )
-CATALOGUE_WORK_DETAILS_SOURCE_DIR = Path(
-    "studio/data/canonical/catalogue/work_details"
-)
+
 
 
 @dataclass(frozen=True)
@@ -269,10 +267,13 @@ def parse_semantic_token(
         and len(parts) == 4
         and parts[1] == "image"
     )
-    if not separator or (len(parts) != 3 and not is_image):
+    is_media = family == "catalogue" and len(parts) == 4 and parts[1] == "media"
+    if not separator or (len(parts) != 3 and not is_image and not is_media):
         return None
     target_type = parts[-2]
     target_id = parts[-1]
+    if is_media and (target_type != "work" or not re.fullmatch(r"[0-9]{5}", target_id)):
+        return None
     if (
         not LEXICAL_KEY_PATTERN.fullmatch(family)
         or not LEXICAL_KEY_PATTERN.fullmatch(target_type)
@@ -305,7 +306,7 @@ def parse_semantic_token(
         start=start,
         end=start + len(raw),
         supported=supported,
-        presentation="image" if is_image else "text",
+        presentation="image" if is_image else "media" if is_media else "text",
         alt=image_fields["alt"] if image_fields else "",
         caption=image_fields["caption"] if image_fields else "",
         summary=image_fields["summary"] if image_fields else "",
@@ -557,78 +558,39 @@ def render_catalogue_token(token: SemanticTokenOccurrence, target: dict[str, Any
     )
 
 
-def resolve_catalogue_image_target(
-    repo_root: Path,
-    token: SemanticTokenOccurrence,
-    target: dict[str, Any],
-) -> dict[str, Any] | None:
-    if token.presentation != "image":
-        return target
-    if not token.detail_id:
-        return target if target.get("image") else None
-    if token.target_type != "work":
-        return None
-    payload = read_json(
-        repo_root
-        / CATALOGUE_WORK_DETAILS_SOURCE_DIR
-        / f"{token.target_id}.json"
+def render_catalogue_media_reference(token: SemanticTokenOccurrence) -> str:
+    """Retain only authored text and exact Catalogue identity for runtime resolution."""
+    kind = "catalogue-work-detail" if token.detail_id else "catalogue-work"
+    identity = f"{token.target_id}-{token.detail_id}" if token.detail_id else token.target_id
+    attrs = (
+        f'data-docs-content-detail="media" data-docs-media-kind="{kind}" '
+        f'data-docs-media-id="{html.escape(identity, quote=True)}"'
     )
-    if not isinstance(payload, dict):
-        return None
-    header = payload.get("header") if isinstance(payload.get("header"), dict) else {}
-    source_work_id = str(payload.get("work_id") or header.get("work_id") or "").strip()
-    if source_work_id != token.target_id:
-        return None
-    detail_uid = f"{token.target_id}-{token.detail_id}"
-    detail_record: dict[str, Any] | None = None
-    sections = payload.get("detail_sections")
-    if not isinstance(sections, list):
-        return None
-    for section in sections:
-        details = section.get("details") if isinstance(section, dict) else None
-        if not isinstance(details, list):
-            continue
-        for raw_detail in details:
-            if not isinstance(raw_detail, dict):
-                continue
-            if str(raw_detail.get("detail_uid") or "").strip() == detail_uid:
-                detail_record = raw_detail
-                break
-        if detail_record is not None:
-            break
-    if (
-        detail_record is None
-        or str(detail_record.get("detail_id") or "").strip() != token.detail_id
-        or not str(detail_record.get("project_filename") or "").strip()
-        or positive_integer(detail_record.get("media_version")) is None
-        or positive_integer(detail_record.get("width_px")) is None
-        or positive_integer(detail_record.get("height_px")) is None
-    ):
-        return None
-    try:
-        settings = primary_image_settings(
-            repo_root,
-            media_path_key="image_work_details",
+    if token.detail_id:
+        attrs += f' data-docs-media-work-id="{html.escape(token.target_id, quote=True)}"'
+    if token.presentation == "media":
+        return (
+            f'<span {attrs}><button type="button" class="docsViewer__mediaTextLink" data-docs-media-open>'
+            f'{html.escape(token.title)}</button></span>'
         )
-    except ValueError:
-        return None
-    filename = (
-        f"{detail_uid}-{settings['suffix']}-{settings['width']}."
-        f"{settings['format']}"
+    image_class = "docsViewerFigure__imageLink" if token.caption else "docsViewerCatalogueImageLink"
+    opener = (
+        f'<button type="button" class="docsViewer__mediaImageLink {image_class}" data-docs-media-open '
+        f'aria-label="{html.escape("Open " + token.alt + " in Media View", quote=True)}">'
+        f'<img data-docs-media-image alt="{html.escape(token.alt, quote=True)}" hidden>'
+        f'<span data-docs-media-placeholder>{html.escape(token.alt)}</span></button>'
     )
-    src = browser_safe_image_src(
-        f"{settings['base']}{settings['path']}/{quote(filename)}"
-        f"?v={positive_integer(detail_record.get('media_version'))}"
+    if not token.caption:
+        return f'<span {attrs}>{opener}</span>'
+    modifiers = [FIGURE_PLACEMENT_CLASSES[token.placement]]
+    if not token.fill_width:
+        modifiers.append(FIGURE_NATURAL_WIDTH_CLASS)
+    summary = f'<span class="docsViewerFigure__summary">{html.escape(token.summary)}</span>' if token.summary else ""
+    return (
+        f'<figure class="docsViewerFigure {" ".join(modifiers)}" {attrs}>{opener}'
+        f'<figcaption><span class="docsViewerFigure__caption">{html.escape(token.caption)}</span>'
+        f'{summary}</figcaption></figure>'
     )
-    if not src:
-        return None
-    resolved = dict(target)
-    resolved["href"] = (
-        f"/work-details/?detail={quote(detail_uid)}"
-        f"&from_work={quote(token.target_id)}"
-    )
-    resolved["image"] = {"src": src}
-    return resolved
 
 
 def browser_safe_image_src(value: Any) -> str:
@@ -707,6 +669,12 @@ def load_semantic_token_targets(repo_root: Path) -> dict[tuple[str, str, str], d
 
 
 class SemanticTokensMixin:
+    def restore_catalogue_media_html(self, content_html: str) -> str:
+        """Restore built fragments after Markdown so authored labels stay literal."""
+        for marker, fragment in self._catalogue_media_html.items():
+            content_html = content_html.replace(marker, fragment)
+        return content_html
+
     def resolve_semantic_tokens(
         self,
         markdown: str,
@@ -715,20 +683,28 @@ class SemanticTokensMixin:
         occurrences_by_doc: dict[str, list[dict[str, Any]]],
     ) -> str:
         occurrences: list[dict[str, Any]] = []
+        self._catalogue_media_html: dict[str, str] = {}
 
         def replace(token: SemanticTokenOccurrence) -> str:
             if not token.supported:
                 return token.raw
+            if token.presentation == "media" or (token.presentation == "image" and token.target_type == "work"):
+                occurrences.append({
+                    "source_scope": self.scope_id, "source_doc_id": doc.doc_id,
+                    "source_range": token.source_range, "raw": token.raw, "title": token.title,
+                    "family": token.family, "target_type": token.target_type, "target_id": token.target_id,
+                    "href": "",
+                })
+                fragment = render_catalogue_media_reference(token)
+                marker = f"<!--catalogue-media-{uuid4().hex}-->"
+                self._catalogue_media_html[marker] = fragment
+                return marker
             target = self.semantic_token_targets_by_key.get(
                 (token.family, token.target_type, token.target_id)
             )
             if target is None:
                 return token.raw
-            resolved_target = (
-                resolve_catalogue_image_target(self.repo_root, token, target)
-                if token.presentation == "image"
-                else target
-            )
+            resolved_target = target if token.presentation != "image" or target.get("image") else None
             if resolved_target is None:
                 return token.raw
             occurrences.append(

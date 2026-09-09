@@ -3,6 +3,7 @@ import {
   normalizeDocsViewerMediaPresentation
 } from "./docs-viewer-media-presentation.js";
 import { CONTENT_DETAIL_LABEL_CONTROL_ID } from "./docs-viewer-content-detail-view.js";
+import { catalogueMediaTargetWorkId, catalogueWorkMediaPresentation } from "./docs-viewer-catalogue-media.js";
 
 const MEDIA_DETAIL_SELECTOR = '[data-docs-content-detail="media"]';
 const MEDIA_OPEN_SELECTOR = "[data-docs-media-open]";
@@ -24,15 +25,149 @@ function sameDocumentTarget(left, right) {
   var first = left || {};
   var second = right || {};
   return cleanString(first.scope) === cleanString(second.scope)
+    && cleanString(first.stage) === cleanString(second.stage)
     && cleanString(first.subScope) === cleanString(second.subScope)
     && cleanString(first.docId) === cleanString(second.docId);
+}
+
+function markedPresentation(marker) {
+  var control = marker.querySelector(MEDIA_OPEN_SELECTOR);
+  var payload = marker.querySelector(MEDIA_PRESENTATION_SELECTOR);
+  if (!control || !payload) return null;
+  try {
+    var source = JSON.parse(payload.textContent || "");
+    var presentation = normalizeDocsViewerMediaPresentation(source);
+    if (presentation.gallery) {
+      if (control.tagName !== "BUTTON" || control.getAttribute("type") !== "button") return null;
+    } else if (cleanString(control.getAttribute("href")) !== presentation.newTabTarget) return null;
+    return { openControl: control, presentation: presentation, source: source };
+  } catch (_error) {
+    return null;
+  }
+}
+
+/** Bind child document markers to the existing outer Media View host with explicit identity. */
+export function mountDocsViewerMediaLinks(context) {
+  mountCatalogueReferences(context);
+  if (typeof context.openMediaPresentation !== "function") return;
+  var documentTarget = Object.freeze(Object.assign({}, context.documentTarget));
+  context.content.querySelectorAll(MEDIA_DETAIL_SELECTOR).forEach(function (marker) {
+    var record = markedPresentation(marker);
+    if (!record) return;
+    record.openControl.addEventListener("click", function (event) {
+      if (!context.isCurrentDocument()) return;
+      if (context.openMediaPresentation({
+        presentation: record.source,
+        invocationControl: record.openControl,
+        documentTarget: documentTarget,
+        isCurrentDocument: context.isCurrentDocument
+      }) === true) event.preventDefault();
+    });
+  });
+}
+
+function mountCatalogueReferences(context) {
+  var cleanups = [];
+  context.content.querySelectorAll(MEDIA_DETAIL_SELECTOR).forEach(function (marker) {
+    var kind = marker.getAttribute("data-docs-media-kind");
+    var id = marker.getAttribute("data-docs-media-id");
+    var target = { kind: kind, id: id, ...(kind === "catalogue-work-detail"
+      ? { workId: marker.getAttribute("data-docs-media-work-id") } : {}) };
+    var control = marker.querySelector(MEDIA_OPEN_SELECTOR);
+    if (!control || control.tagName !== "BUTTON" || control.getAttribute("type") !== "button") return;
+    try { catalogueMediaTargetWorkId(target); } catch (_error) { return; }
+    var inlineImage = control.querySelector("[data-docs-media-image]");
+    var placeholder = control.querySelector("[data-docs-media-placeholder]");
+    var status = marker.ownerDocument.createElement("span");
+    status.setAttribute("role", "status");
+    status.hidden = true;
+    marker.appendChild(status);
+    var released = false;
+    function isCurrent() {
+      return !released && context.content.contains(control) && context.isCurrentDocument();
+    }
+    function message(text) {
+      status.textContent = text;
+      status.hidden = !text;
+    }
+    function projectInlineImage(presentation) {
+      if (!inlineImage || !isCurrent()) return;
+      var data = presentation.image;
+      inlineImage.width = data.width_px;
+      inlineImage.height = data.height_px;
+      inlineImage.src = data.src;
+      inlineImage.hidden = false;
+      if (placeholder) placeholder.hidden = true;
+    }
+    function imageFailed() {
+      if (!isCurrent()) return;
+      inlineImage.hidden = true;
+      if (placeholder) placeholder.hidden = false;
+      message(" Image unavailable. Select it to retry.");
+    }
+    function request() {
+      return { mediaTarget: target, invocationControl: control,
+        documentTarget: context.documentTarget, isCurrentDocument: isCurrent };
+    }
+    async function initialImage() {
+      control.disabled = true;
+      control.setAttribute("aria-busy", "true");
+      message(" Loading image…");
+      try {
+        if (typeof context.loadMediaTarget !== "function") throw new Error("Catalogue media is unavailable in this view.");
+        var presentation = await context.loadMediaTarget(request());
+        if (presentation && isCurrent()) { projectInlineImage(presentation); message(""); }
+      } catch (error) {
+        if (isCurrent()) message(" " + (error.message || "Image unavailable.") + " Select the image to retry.");
+      } finally {
+        if (!released) { control.disabled = false; control.removeAttribute("aria-busy"); }
+      }
+    }
+    async function handleClick(event) {
+      event.preventDefault();
+      if (control.disabled || !isCurrent()) return;
+      control.disabled = true;
+      control.setAttribute("aria-busy", "true");
+      message(" Loading…");
+      try {
+        if (typeof context.openMediaTarget !== "function") throw new Error("Catalogue media is unavailable in this view.");
+        await context.openMediaTarget(Object.assign(request(), { onPresentation: projectInlineImage }));
+        if (isCurrent()) message("");
+      } catch (error) {
+        if (isCurrent()) {
+          if (inlineImage) imageFailed();
+          message(" " + (error.message || "Catalogue media is unavailable.") + " Try again.");
+        }
+      } finally {
+        if (!released) {
+          control.disabled = false;
+          control.removeAttribute("aria-busy");
+        }
+      }
+    }
+    control.addEventListener("click", handleClick);
+    if (inlineImage) {
+      inlineImage.addEventListener("error", imageFailed);
+      initialImage();
+    }
+    cleanups.push(function () {
+      released = true;
+      control.removeEventListener("click", handleClick);
+      if (inlineImage) inlineImage.removeEventListener("error", imageFailed);
+      control.disabled = false;
+      control.removeAttribute("aria-busy");
+      status.remove();
+    });
+  });
+  return cleanups;
 }
 
 function sameMediaTarget(left, right) {
   var first = left || {};
   var second = right || {};
   return cleanString(first.kind) === cleanString(second.kind)
-    && cleanString(first.id) === cleanString(second.id);
+    && cleanString(first.id) === cleanString(second.id)
+    && cleanString(first.workId) === cleanString(second.workId);
 }
 
 function immutableTargetContext(state, record) {
@@ -70,6 +205,8 @@ export function createDocsViewerMediaDetailAdapter() {
 
   function releaseState(root, state) {
     if (!state) return { released: 0 };
+    state.workReads.clear();
+    state.referenceCleanups.forEach(function (cleanup) { cleanup(); });
     Array.from(state.presentations).forEach(function (presentation) {
       presentation.release();
     });
@@ -115,27 +252,15 @@ export function createDocsViewerMediaDetailAdapter() {
   }
 
   function readRecord(marker, index) {
-    var openControl = marker.querySelector(MEDIA_OPEN_SELECTOR);
-    var payloadElement = marker.querySelector(MEDIA_PRESENTATION_SELECTOR);
-    if (!openControl || !payloadElement) return null;
-    var presentation;
-    try {
-      presentation = normalizeDocsViewerMediaPresentation(JSON.parse(payloadElement.textContent || ""));
-    } catch (_error) {
-      return null;
-    }
-    if (presentation.gallery) {
-      if (openControl.tagName !== "BUTTON" || openControl.getAttribute("type") !== "button") return null;
-    } else if (cleanString(openControl.getAttribute("href")) !== presentation.newTabTarget) {
-      return null;
-    }
+    var record = markedPresentation(marker);
+    if (!record) return null;
     return {
       handleClick: null,
       id: "media-" + index,
       marker: marker,
       occurrence: index + 1,
-      openControl: openControl,
-      presentation: presentation
+      openControl: record.openControl,
+      presentation: record.presentation
     };
   }
 
@@ -151,6 +276,7 @@ export function createDocsViewerMediaDetailAdapter() {
     var documentMountGeneration = positiveInteger(context.documentMountGeneration);
     var documentTarget = {
       scope: cleanString(context.viewerScope),
+      ...(context.viewerStage ? { stage: cleanString(context.viewerStage) } : {}),
       subScope: "",
       docId: cleanString(context.doc && context.doc.doc_id)
     };
@@ -164,6 +290,10 @@ export function createDocsViewerMediaDetailAdapter() {
       presentations: new Set(),
       records: new Map(),
       nextDynamicRecord: 0,
+      mediaRequestGeneration: 0,
+      collectionProvider: context.collectionProvider,
+      workReads: new Map(),
+      referenceCleanups: [],
       requestContentDetail: typeof context.requestContentDetail === "function"
         ? context.requestContentDetail
         : function () { return false; }
@@ -175,16 +305,27 @@ export function createDocsViewerMediaDetailAdapter() {
       record.handleClick = function (event) {
         var targetContext = immutableTargetContext(state, record);
         if (!resolveRecord(root, targetContext)) return;
+        state.mediaRequestGeneration += 1;
         if (state.requestContentDetail(targetContext) === true && event) event.preventDefault();
       };
       record.openControl.addEventListener("click", record.handleClick);
       state.records.set(record.id, record);
     });
     stateByRoot.set(root, state);
+    state.referenceCleanups = mountCatalogueReferences({
+      content: root, documentTarget: Object.freeze(Object.assign({}, documentTarget)),
+      isCurrentDocument: function () { return stateByRoot.get(root) === state; },
+      loadMediaTarget: function (request) {
+        return loadTarget(Object.assign({}, request, { content: root, documentMountGeneration: documentMountGeneration }));
+      },
+      openMediaTarget: function (request) {
+        return openTarget(Object.assign({}, request, { content: root, documentMountGeneration: documentMountGeneration }));
+      }
+    });
     return {
       found: markers.length,
-      decorated: state.records.size,
-      skipped: markers.length - state.records.size
+      decorated: state.records.size + state.referenceCleanups.length,
+      skipped: markers.length - state.records.size - state.referenceCleanups.length
     };
   }
 
@@ -197,7 +338,10 @@ export function createDocsViewerMediaDetailAdapter() {
     if (!state || state.documentMountGeneration !== context.documentMountGeneration
       || !control || !root.contains(control)
       || !target || cleanString(target.scope) !== state.documentTarget.scope || !cleanString(target.docId)
+      || cleanString(target.stage) !== cleanString(state.documentTarget.stage)
       || (context.isCurrentDocument && !context.isCurrentDocument())) return false;
+
+    state.mediaRequestGeneration += 1;
 
     var index = ++state.nextDynamicRecord;
     var record = {
@@ -206,7 +350,8 @@ export function createDocsViewerMediaDetailAdapter() {
       marker: control,
       openControl: control,
       documentTarget: Object.freeze({
-        scope: cleanString(target.scope), subScope: cleanString(target.subScope), docId: cleanString(target.docId)
+        scope: cleanString(target.scope), ...(target.stage ? { stage: cleanString(target.stage) } : {}),
+        subScope: cleanString(target.subScope), docId: cleanString(target.docId)
       }),
       isCurrentDocument: context.isCurrentDocument,
       presentation: normalizeDocsViewerMediaPresentation(context.presentation),
@@ -216,6 +361,66 @@ export function createDocsViewerMediaDetailAdapter() {
     if (state.requestContentDetail(immutableTargetContext(state, record)) === true) return true;
     state.records.delete(record.id);
     return false;
+  }
+
+  function currentTargetState(context) {
+    var root = context.content;
+    var state = root && stateByRoot.get(root);
+    return state && state.documentMountGeneration === context.documentMountGeneration
+      && root.contains(context.invocationControl) && context.documentTarget
+      && context.documentTarget.scope === state.documentTarget.scope
+      && cleanString(context.documentTarget.stage) === cleanString(state.documentTarget.stage)
+      && Boolean(cleanString(context.documentTarget.docId))
+      && (!context.isCurrentDocument || context.isCurrentDocument()) ? state : null;
+  }
+
+  /** Share simultaneous Work reads only; inline mounting and later activation both read current data. */
+  async function loadTarget(context) {
+    context = Object.assign({}, context, {
+      documentTarget: Object.freeze(Object.assign({}, context.documentTarget)),
+      mediaTarget: Object.freeze(Object.assign({}, context.mediaTarget))
+    });
+    var state = currentTargetState(context);
+    if (!state) return null;
+    var workId = catalogueMediaTargetWorkId(context.mediaTarget);
+    if (!state.workReads.has(workId)) {
+      var provider = state.collectionProvider;
+      if (!provider || typeof provider.readCatalogueWork !== "function") throw new Error("Catalogue media is unavailable in this view.");
+      var read = Promise.resolve().then(function () { return provider.readCatalogueWork(workId); })
+        .finally(function () { state.workReads.delete(workId); });
+      state.workReads.set(workId, read);
+    }
+    var payload = await state.workReads.get(workId);
+    if (currentTargetState(context) !== state) return null;
+    return catalogueWorkMediaPresentation(payload, workId,
+      context.mediaTarget.kind === "catalogue-work-detail" ? context.mediaTarget.id.slice(6) : "");
+  }
+
+  /** Resolve current Catalogue data only for the latest request in this document mount. */
+  async function openTarget(context) {
+    context = Object.assign({}, context, {
+      documentTarget: Object.freeze(Object.assign({}, context.documentTarget)),
+      mediaTarget: Object.freeze(Object.assign({}, context.mediaTarget))
+    });
+    var state = currentTargetState(context);
+    function isCurrent() {
+      return state && currentTargetState(context) === state;
+    }
+    if (!isCurrent()) return false;
+    var requestGeneration = ++state.mediaRequestGeneration;
+    try {
+      var presentation = await loadTarget(context);
+      if (!isCurrent() || requestGeneration !== state.mediaRequestGeneration) return false;
+      if (!presentation) return false;
+      if (typeof context.onPresentation === "function") context.onPresentation(presentation);
+      if (!openPresentation(Object.assign({}, context, { presentation: presentation }))) {
+        throw new Error("Media View could not open this Work.");
+      }
+      return true;
+    } catch (error) {
+      if (!isCurrent() || requestGeneration !== state.mediaRequestGeneration) return false;
+      throw error;
+    }
   }
 
   function mountPresentation(presentationContext) {
@@ -378,6 +583,8 @@ export function createDocsViewerMediaDetailAdapter() {
   return {
     mountDocument: mountDocument,
     openPresentation: openPresentation,
+    openTarget: openTarget,
+    loadTarget: loadTarget,
     mountPresentation: mountPresentation,
     releaseDocument: releaseDocument
   };

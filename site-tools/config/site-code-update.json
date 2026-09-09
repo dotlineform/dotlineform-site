@@ -29,6 +29,7 @@
         "docs-viewer-app-shell.js",
         "docs-viewer-asset-url.js",
         "docs-viewer-bookmarks.js",
+        "docs-viewer-catalogue-media.js",
         "docs-viewer-code-config.js",
         "docs-viewer-config-controller.js",
         "docs-viewer-config-service.js",

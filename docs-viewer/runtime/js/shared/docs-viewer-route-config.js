@@ -309,6 +309,7 @@ export function resolveDocsViewerRouteConfig(options) {
       : cleanString(configUrls.report_registry),
     publicPreviewBase: normalizeSiteBase(rawConfig.sites, "public_preview"),
     studioBaseUrl: normalizeSiteBase(rawConfig.sites, "studio"),
+    catalogueWorkRecordsBaseUrl: cleanString(rawConfig.catalogue_paths && rawConfig.catalogue_paths.work_records_base_url),
     indexTreeUrl: normalizePath(requireRouteConfigField(docsPaths.index_tree_url, "docs_paths.index_tree_url")),
     recentUrl: normalizePath(recentEnabled
       ? requireRouteConfigField(docsPaths.recent_url, "docs_paths.recent_url")

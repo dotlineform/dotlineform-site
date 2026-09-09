@@ -63,6 +63,20 @@ export function initDocsViewerDocumentController(context) {
       payload: payload,
       documentMountGeneration: mountGeneration,
       reportPresentationAdapter: context.reportPresentationAdapter,
+      loadMediaTarget: function (request) {
+        var adapter = context.mediaDetailAdapter;
+        if (mountGeneration !== documentMountGeneration || !adapter) return null;
+        return adapter.loadTarget(Object.assign({}, request, {
+          content: content, documentMountGeneration: mountGeneration
+        }));
+      },
+      openMediaTarget: function (request) {
+        var adapter = context.mediaDetailAdapter;
+        if (mountGeneration !== documentMountGeneration || !adapter) return false;
+        return adapter.openTarget(Object.assign({}, request, {
+          content: content, documentMountGeneration: mountGeneration
+        }));
+      },
       openMediaPresentation: function (request) {
         var adapter = context.mediaDetailAdapter;
         if (mountGeneration !== documentMountGeneration || !adapter) return false;
@@ -126,7 +140,9 @@ export function initDocsViewerDocumentController(context) {
     var adapter = context.mediaDetailAdapter;
     if (!adapter || typeof adapter.mountDocument !== "function") return;
     try {
+      var route = typeof context.routeContext === "function" ? context.routeContext() : context.routeContext;
       adapter.mountDocument({
+        collectionProvider: context.collectionProvider,
         content: content,
         doc: doc,
         document: content ? content.ownerDocument : null,
@@ -134,6 +150,7 @@ export function initDocsViewerDocumentController(context) {
         payload: payload,
         requestContentDetail: context.requestContentDetail,
         viewerScope: currentViewerScope(),
+        viewerStage: route && route.viewerStage,
         window: content && content.ownerDocument ? content.ownerDocument.defaultView : null
       });
     } catch (error) {

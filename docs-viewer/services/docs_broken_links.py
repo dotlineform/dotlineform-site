@@ -8,6 +8,8 @@ Run:
 
 from __future__ import annotations
 
+from docs_catalogue_media import catalogue_media_record, read_catalogue_work
+
 import argparse
 import json
 import sys
@@ -43,7 +45,6 @@ from docs_builder.semantic_token_registry import load_semantic_token_registry  #
 from docs_builder.semantic_tokens import (  # noqa: E402
     load_semantic_token_target_records,
     parse_semantic_tokens,
-    resolve_catalogue_image_target,
 )
 from docs_source_model import load_document_collection_docs_for_config  # noqa: E402
 
@@ -162,17 +163,22 @@ def semantic_token_broken_entries(
             reason = ""
             if not token.supported:
                 reason = "unsupported_kind"
+            elif token.presentation == "media" or (token.presentation == "image" and token.target_type == "work"):
+                try:
+                    catalogue_media_record(read_catalogue_work(repo_root, token.target_id), token.target_id, token.detail_id)
+                except ValueError:
+                    reason = "missing_detail_image" if token.detail_id else "missing_media"
             elif target is None:
                 reason = "missing_target"
             elif not str(target.get("href") or "").strip().startswith("/"):
                 reason = "missing_destination"
             elif token.presentation == "image":
-                resolved_target = resolve_catalogue_image_target(repo_root, token, target)
-                if resolved_target is None:
-                    reason = "missing_detail_image" if token.detail_id else "missing_image"
+                if not target.get("image"):
+                    reason = "missing_image"
             if not reason:
                 continue
-            link_url = str((target or {}).get("href") or "").strip()
+            current_media = token.presentation == "media" or (token.presentation == "image" and token.target_type == "work")
+            link_url = "" if current_media else str((target or {}).get("href") or "").strip()
             entries.append(
                 {
                     "issue_type": "semantic_token",

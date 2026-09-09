@@ -901,12 +901,10 @@ export function startDocsViewerRuntime(options) {
         return capabilities ? capabilities.local_folder_links || null : null;
       },
       clearActiveSourceEditorContextAdapter: function (adapter) {
-        if (!adapter || activeSourceEditorContextAdapter === adapter) {
-          clearInfoSubscription();
-          activeSourceEditorContextAdapter = null;
-        }
-        var activeViewId = documentViewCoordinator ? documentViewCoordinator.activeInfoViewId() : "";
-        if (documentViewCoordinator && documentViewCoordinator.isConfiguredInfoView(activeViewId)) {
+        if (adapter && activeSourceEditorContextAdapter !== adapter) return;
+        clearInfoSubscription();
+        activeSourceEditorContextAdapter = null;
+        if (documentViewCoordinator && documentViewCoordinator.isInfoOpen()) {
           documentViewCoordinator.openInfoView("metadata-info");
         } else if (documentViewCoordinator) {
           documentViewCoordinator.renderInfoToggle();

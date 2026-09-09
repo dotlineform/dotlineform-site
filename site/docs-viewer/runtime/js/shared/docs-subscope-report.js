@@ -935,10 +935,10 @@ function renderDetailPayload(state, docId, payload) {
     info: projectDetailInfo(state, docId, payload, metadata),
     record: metadata
   });
-  if (!payload.report || typeof state.mountDocumentReport !== "function") return Promise.resolve();
+  if (typeof state.mountDocumentContent !== "function") return Promise.resolve();
   var content = state.detailBodyNode;
   var requestVersion = state.detailRequestVersion;
-  return state.mountDocumentReport({
+  return state.mountDocumentContent({
     content: content,
     doc: payload,
     payload: payload,
@@ -1264,7 +1264,7 @@ function mountResolvedDocsSubscopeReport(context, contribution) {
   refs.statusNode.textContent = "Loading " + subScopeTitle(subScope, subScopeIdValue) + "...";
   var state = {
     root: root,
-    mountDocumentReport: context.mountSubscopeDocumentReport,
+    mountDocumentContent: context.mountSubscopeDocumentContent,
     parentDocId: cleanString(context && context.doc && context.doc.doc_id),
     subScope: subScope,
     subScopeId: subScopeIdValue,

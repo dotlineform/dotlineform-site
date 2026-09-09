@@ -114,6 +114,10 @@ class FakeElement {
     return this.attributes.has(String(name)) ? this.attributes.get(String(name)) : null;
   }
 
+  removeAttribute(name) {
+    this.attributes.delete(String(name));
+  }
+
   addEventListener(name, handler) {
     this.listeners.set(String(name), handler);
   }
@@ -128,6 +132,9 @@ class FakeElement {
     }
     if (selector === "[data-docs-media-open]") {
       return this.attributes.has("data-docs-media-open");
+    }
+    if (selector === "[data-docs-media-image]" || selector === "[data-docs-media-placeholder]") {
+      return this.attributes.has(selector.slice(1, -1));
     }
     if (selector === 'script[type="application/json"][data-docs-media-presentation]') {
       return this.tagName === "SCRIPT"
@@ -201,6 +208,197 @@ function appendMarker(documentRef, root, payload, href) {
 }
 
 const documentRef = new FakeDocument();
+
+// Inline Work/Detail images share current reads and exactly match their opened presentation.
+{
+  const root = documentRef.createElement("article");
+  function reference(detailId = "", owner = root) {
+    const marker = documentRef.createElement("figure");
+    marker.setAttribute("data-docs-content-detail", "media");
+    marker.setAttribute("data-docs-media-kind", detailId ? "catalogue-work-detail" : "catalogue-work");
+    marker.setAttribute("data-docs-media-id", "00523" + (detailId ? "-" + detailId : ""));
+    if (detailId) marker.setAttribute("data-docs-media-work-id", "00523");
+    const control = documentRef.createElement("button");
+    control.setAttribute("data-docs-media-open", "");
+    control.setAttribute("type", "button");
+    const image = documentRef.createElement("img");
+    image.setAttribute("data-docs-media-image", "");
+    image.alt = "Authored alt text";
+    image.hidden = true;
+    const placeholder = documentRef.createElement("span");
+    placeholder.setAttribute("data-docs-media-placeholder", "");
+    control.appendChild(image);
+    control.appendChild(placeholder);
+    marker.appendChild(control);
+    owner.appendChild(marker);
+    return { marker, control, image };
+  }
+  const work = reference();
+  const detail = reference("015");
+  const record = { work: { work_id: "00523", title: "Work", width_px: 800, height_px: 600,
+    media: { primary: [{ width: 800, url: mediaTarget }] } }, sections: [{ details: [
+    { work_id: "00523", detail_id: "015", detail_uid: "00523-015", title: "Detail", width_px: 700, height_px: 700,
+      media: { primary: [{ width: 800, url: "https://media.example.test/detail.webp?v=1" }] } }
+  ] }] };
+  const adapter = mediaDetail.createDocsViewerMediaDetailAdapter();
+  let reads = 0;
+  const opened = [];
+  const mount = { content: root, viewerScope: "analysis", viewerStage: "working", doc: { doc_id: "parent" }, documentMountGeneration: 1,
+    collectionProvider: { readCatalogueWork: async () => { reads += 1; return structuredClone(record); } },
+    requestContentDetail: (target) => { opened.push(target); return true; } };
+  adapter.mountDocument(mount);
+  await adapter.loadTarget({ content: root, documentMountGeneration: 1, invocationControl: detail.control,
+    documentTarget: { scope: "analysis", stage: "working", subScope: "", docId: "parent" },
+    mediaTarget: { kind: "catalogue-work-detail", id: "00523-015", workId: "00523" } });
+  await Promise.resolve();
+  assert.equal(reads, 1, "inline occurrences share only the in-flight Work record");
+  assert.equal(work.image.src, mediaTarget);
+  assert.equal(detail.image.src, record.sections[0].details[0].media.primary[0].url);
+  assert.equal(detail.image.alt, "Authored alt text");
+  record.sections[0].details[0].media.primary[0].url = "https://media.example.test/detail.webp?v=2";
+  await detail.control.listeners.get("click")({ preventDefault() {} });
+  assert.equal(reads, 2, "activation revalidates after inline mounting");
+  assert.deepEqual(opened[0].mediaTarget, { kind: "catalogue-work-detail", id: "00523-015", workId: "00523" });
+  const view = adapter.mountPresentation({ content: root, targetContext: opened[0] });
+  assert.equal(view.root.querySelector(".docsViewer__mediaDetailImage").src, detail.image.src);
+  assert.equal(detail.image.src, record.sections[0].details[0].media.primary[0].url);
+  view.release();
+  record.sections[0].details = [];
+  await detail.control.listeners.get("click")({ preventDefault() {} });
+  assert.equal(opened.length, 1, "a missing Detail does not open its parent Work");
+  assert.equal(detail.image.hidden, true, "removed Detail images are no longer displayed");
+  adapter.releaseDocument({ content: root });
+
+  // Child images use the outer host while retaining exact staged document identity.
+  root.replaceChildren();
+  record.sections[0].details.push({ work_id: "00523", detail_id: "015", detail_uid: "00523-015",
+    title: "Child Detail", width_px: 700, height_px: 700,
+    media: { primary: [{ width: 700, url: "https://media.example.test/child.webp" }] } });
+  adapter.mountDocument(mount);
+  const child = documentRef.createElement("section");
+  root.appendChild(child);
+  let childCurrent = true;
+  const childTarget = { scope: "analysis", stage: "working", subScope: "works", docId: "child" };
+  const childContext = { content: child, documentTarget: childTarget, isCurrentDocument: () => childCurrent,
+    loadMediaTarget: (request) => adapter.loadTarget({ ...request, content: root, documentMountGeneration: 1 }),
+    openMediaTarget: (request) => adapter.openTarget({ ...request, content: root, documentMountGeneration: 1 }) };
+  const childImage = reference("015", child);
+  mediaDetail.mountDocsViewerMediaLinks(childContext);
+  await adapter.loadTarget({ content: root, documentMountGeneration: 1, invocationControl: childImage.control,
+    documentTarget: childTarget, mediaTarget: { kind: "catalogue-work-detail", id: "00523-015", workId: "00523" } });
+  await Promise.resolve();
+  assert.equal(childImage.image.src, record.sections[0].details[0].media.primary[0].url);
+  await childImage.control.listeners.get("click")({ preventDefault() {} });
+  assert.deepEqual(opened.at(-1).documentTarget, childTarget);
+  adapter.releaseDocument({ content: root });
+
+  // Initial image reads cannot update a departed child or a replaced outer document.
+  for (const departure of ["child", "root"]) {
+    let resolveRead;
+    root.replaceChildren();
+    adapter.mountDocument({ ...mount, collectionProvider: {
+      readCatalogueWork: () => new Promise((resolve) => { resolveRead = resolve; })
+    } });
+    child.replaceChildren();
+    root.appendChild(child);
+    childCurrent = true;
+    const lateImage = reference("015", child);
+    mediaDetail.mountDocsViewerMediaLinks(childContext);
+    const pending = adapter.loadTarget({ content: root, documentMountGeneration: 1, invocationControl: lateImage.control,
+      documentTarget: childTarget, isCurrentDocument: () => childCurrent,
+      mediaTarget: { kind: "catalogue-work-detail", id: "00523-015", workId: "00523" } });
+    await Promise.resolve();
+    if (departure === "child") childCurrent = false;
+    else adapter.mountDocument({ ...mount, documentMountGeneration: 2 });
+    resolveRead(record);
+    assert.equal(await pending, null);
+    await Promise.resolve();
+    assert.equal(lateImage.image.hidden, true);
+    assert.equal(lateImage.image.src, undefined, "late records never reach a departed image");
+    adapter.releaseDocument({ content: root });
+  }
+}
+
+// Target-only generated markers and child documents reach the same current-data host.
+{
+  const root = documentRef.createElement("article");
+  const body = documentRef.createElement("div");
+  root.appendChild(body);
+  const marker = documentRef.createElement("span");
+  marker.setAttribute("data-docs-content-detail", "media");
+  marker.setAttribute("data-docs-media-kind", "catalogue-work");
+  marker.setAttribute("data-docs-media-id", "00523");
+  const control = documentRef.createElement("button");
+  control.setAttribute("data-docs-media-open", "");
+  control.setAttribute("type", "button");
+  marker.appendChild(control);
+  body.appendChild(marker);
+  const liveAdapter = mediaDetail.createDocsViewerMediaDetailAdapter();
+  let imageUrl = mediaTarget;
+  let reads = 0;
+  let selected;
+  const mount = { content: root, viewerScope: "analysis", doc: { doc_id: "parent" }, documentMountGeneration: 1,
+    collectionProvider: { readCatalogueWork: async (id) => {
+      reads += 1;
+      assert.equal(id, "00523");
+      return { work: { work_id: id, title: "Current title", width_px: 800, height_px: 600,
+        media: { primary: [{ width: 800, url: imageUrl }] } } };
+    } }, requestContentDetail: (target) => { selected = target; return true; } };
+  assert.equal(liveAdapter.mountDocument(mount).decorated, 1);
+  await control.listeners.get("click")({ preventDefault() {} });
+  let view = liveAdapter.mountPresentation({ content: root, targetContext: selected });
+  assert.equal(view.root.querySelector(".docsViewer__mediaDetailImage").src, imageUrl);
+  view.release();
+  imageUrl = "https://media.example.test/current.webp?v=2";
+  await control.listeners.get("click")({ preventDefault() {} });
+  view = liveAdapter.mountPresentation({ content: root, targetContext: selected });
+  assert.equal(view.root.querySelector(".docsViewer__mediaDetailImage").src, imageUrl);
+  assert.equal(reads, 2);
+  view.release();
+  liveAdapter.releaseDocument({ content: root });
+  body.remove();
+  liveAdapter.mountDocument(mount);
+  root.appendChild(body);
+  const childTarget = { scope: "analysis", subScope: "works", docId: "child" };
+  mediaDetail.mountDocsViewerMediaLinks({ content: body, documentTarget: childTarget, isCurrentDocument: () => true,
+    openMediaTarget: (request) => liveAdapter.openTarget({ ...request, content: root, documentMountGeneration: 1 }) });
+  await control.listeners.get("click")({ preventDefault() {} });
+  assert.deepEqual(selected.documentTarget, childTarget);
+  assert.equal(reads, 3);
+  liveAdapter.releaseDocument({ content: root });
+}
+
+// An inline child link uses the same host, retains its exact stage/collection, and rejects stale entry.
+{
+const childHost = documentRef.createElement("article");
+const childBody = documentRef.createElement("div");
+childHost.appendChild(childBody);
+const childAdapter = mediaDetail.createDocsViewerMediaDetailAdapter();
+let childRequest;
+childAdapter.mountDocument({ content: childHost, viewerScope: "analysis", viewerStage: "working",
+  doc: { doc_id: "host-document" }, documentMountGeneration: 1,
+  requestContentDetail(target) { childRequest = target; return true; }
+});
+const childMarker = appendMarker(documentRef, childBody, suppliedPayload, mediaTarget);
+childMarker.openControl.textContent = "A text link";
+let childCurrent = true;
+const childTarget = { scope: "analysis", stage: "working", subScope: "works", docId: "child-document" };
+mediaDetail.mountDocsViewerMediaLinks({ content: childBody, documentTarget: childTarget,
+  isCurrentDocument: () => childCurrent,
+  openMediaPresentation: (request) => childAdapter.openPresentation({ ...request, content: childHost, documentMountGeneration: 1 })
+});
+assert.equal(childMarker.openControl.dispatchClick(), true);
+assert.deepEqual(childRequest.documentTarget, childTarget);
+const childPresentation = childAdapter.mountPresentation({ content: childHost, document: documentRef, targetContext: childRequest });
+childPresentation.release();
+childCurrent = false;
+assert.equal(childMarker.openControl.dispatchClick(), false);
+assert.equal(childAdapter.openPresentation({ content: childHost, documentMountGeneration: 1,
+  invocationControl: childMarker.openControl, documentTarget: { ...childTarget, stage: "pre-publish" },
+  presentation: suppliedPayload, isCurrentDocument: () => true
+}), false);
+}
+
 const root = documentRef.createElement("article");
 const valid = appendMarker(documentRef, root, suppliedPayload, mediaTarget);
 appendMarker(

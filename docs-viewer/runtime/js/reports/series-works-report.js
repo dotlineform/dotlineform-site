@@ -135,7 +135,7 @@ export function mountSeriesWorksReport(context) {
       if (typeof context.openMediaPresentation !== "function" || !context.openMediaPresentation({
         presentation: presentation,
         invocationControl: control,
-        documentTarget: { scope: target.scope, subScope: target.sub_scope || "", docId: target.doc_id },
+        documentTarget: { scope: target.scope, ...(target.stage ? { stage: target.stage } : {}), subScope: target.sub_scope || "", docId: target.doc_id },
         isCurrentDocument: isCurrent
       })) throw new Error("Media View is unavailable for this document.");
       status.textContent = seriesLabel + " · " + filterSeriesWorks(rows, filter.value).length + " of " + rows.length + " works";

@@ -195,6 +195,12 @@ function createSourceEditorContextAdapter(state) {
       }
       return provider.readMetadata(state.target);
     },
+    readCatalogueMediaTargets: function () {
+      return state.collectionProvider.readCatalogueMediaTargets();
+    },
+    readCatalogueWork: function (workId) {
+      return state.collectionProvider.readCatalogueWork(workId);
+    },
     getSelection: function () {
       return sourceSelection(state);
     },

@@ -1,6 +1,7 @@
 import {
   appendAssetVersion
 } from "../shared/docs-viewer-asset-url.js";
+import { mountDocsViewerMediaLinks } from "../shared/docs-viewer-media-detail.js";
 
 const REPORT_LOADERS = {
   unpublishable: {
@@ -304,7 +305,18 @@ export function mountDocsViewerReport(context) {
           reportRoot: root,
           reportMeta: resolvedReportMeta,
           reportRegistry: registry,
-          mountSubscopeDocumentReport: function (child) {
+          mountSubscopeDocumentContent: function (child) {
+            var target = child.documentTarget;
+            mountDocsViewerMediaLinks({
+              content: child.content,
+              documentTarget: { scope: target.scope, ...(target.stage ? { stage: target.stage } : {}),
+                subScope: target.sub_scope, docId: target.doc_id },
+              isCurrentDocument: child.isCurrentDocument,
+              openMediaTarget: context.openMediaTarget,
+              loadMediaTarget: context.loadMediaTarget,
+              openMediaPresentation: context.openMediaPresentation
+            });
+            if (!child.payload.report) return Promise.resolve();
             return mountDocsViewerReport(Object.assign({}, context, child, {
               // Child reports mount inline; the outer document owns Content Detail.
               reportPresentationAdapter: null
