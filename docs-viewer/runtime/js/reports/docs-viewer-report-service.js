@@ -89,7 +89,9 @@ export function createDocsViewerReportService(options) {
     },
     runBrokenLinksAudit: function (request) {
       var payload = {
-        scope: cleanString(request && request.scope).toLowerCase()
+        scope: cleanString(request && request.scope).toLowerCase(),
+        ...(request && request.stage ? { stage: cleanString(request.stage) } : {}),
+        report_context: request && request.report_context
       };
       return fetchReportJson("/docs/broken-links", Object.assign({}, serviceOptions, {
         method: "POST",

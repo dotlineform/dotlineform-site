@@ -96,14 +96,12 @@ def parse_docs_target(
     resolved_href: str,
     *,
     viewer_routes: Iterable[tuple[str, str]],
-    known_scopes: set[str] | None = None,
     local_origin: str = LOCAL_ORIGIN,
 ) -> dict[str, str] | None:
-    """Resolve one rendered href using explicit viewer-route inputs.
+    """Parse viewer identity without substituting unknown explicit scopes.
 
-    ``known_scopes`` retains Broken Links' existing invalid-scope fallback.
-    Omitting it preserves any explicit scope so same-scope consumers can reject
-    cross-scope and unknown-scope targets without configuration inference.
+    ``doc_id`` remains the route's parent document; ``subdoc`` identifies an
+    opened child. Consumers resolve stage defaults and collection ownership.
     """
 
     raw = normalize_text(resolved_href)
@@ -133,16 +131,12 @@ def parse_docs_target(
         if not doc_id:
             return None
         explicit_scope = normalize_text(query.get("scope", [""])[0]).lower()
-        if explicit_scope and (
-            known_scopes is None or explicit_scope in known_scopes
-        ):
-            target_scope = explicit_scope
-        else:
-            target_scope = normalized_route_scope
         return {
             "kind": "viewer",
-            "scope": target_scope,
+            "scope": explicit_scope or normalized_route_scope,
             "doc_id": doc_id,
+            "stage": normalize_text(query.get("stage", [""])[0]),
+            "subdoc": normalize_text(query.get("subdoc", [""])[0]),
             "fragment": fragment,
         }
 
@@ -161,6 +155,8 @@ def is_same_doc_fragment_link(
     current_scope: str,
     current_doc_id: str,
     target: dict[str, str],
+    current_stage: str = "",
+    current_parent_doc_id: str = "",
 ) -> bool:
     if not normalize_text(target.get("fragment")):
         return False
@@ -168,6 +164,8 @@ def is_same_doc_fragment_link(
         target.get("kind") == "viewer"
         and normalize_text(target.get("scope")).lower()
         == normalize_text(current_scope).lower()
-        and normalize_text(target.get("doc_id"))
+        and normalize_text(target.get("stage")) == current_stage
+        and (not target.get("subdoc") or target.get("doc_id") == current_parent_doc_id)
+        and normalize_text(target.get("subdoc") or target.get("doc_id"))
         == normalize_text(current_doc_id)
     )

@@ -124,7 +124,7 @@ def docs_management_post_response(
         config = configs.get(str(body.get(field) or "").strip().lower())
         if config is None or not config.stages:
             continue
-        if field == "scope" and path == routes.DOCS_MEDIA_REPORT_PATH:
+        if field == "scope" and path in {routes.DOCS_MEDIA_REPORT_PATH, routes.BROKEN_LINKS_PATH}:
             select_scope_stage(config, body.get("stage"))
             continue
         allowed = {
