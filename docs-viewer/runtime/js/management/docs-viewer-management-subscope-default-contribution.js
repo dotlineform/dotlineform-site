@@ -210,22 +210,18 @@ export function createDocsViewerManagementSubscopeDefaultContribution(options = 
         listToolbar.createButton.removeAttribute("aria-busy");
       }
     }
-    listToolbar.actionsButton.disabled = !available || eligible.length === 0;
+    listToolbar.actionsButton.disabled = !available;
     listToolbar.selectionControl.hidden = !active;
     listToolbar.selectAllButton.disabled = !active || allSelected || eligible.length === 0;
     listToolbar.clearButton.disabled = !active || selected.size === 0;
     listToolbar.doneButton.disabled = !active;
 
     var resolution = prepareResolution();
-    var disabledReason = resolution.enabled
-      ? (
-          prepareInFlight
-            ? "Sub-scope package preparation is in progress."
-            : onPreparePackage
-              ? ""
-              : "Sub-scope package preparation is unavailable."
-        )
-      : resolution.disabledReason;
+    var disabledReason = !onPreparePackage
+      ? "Sub-scope package preparation is unavailable."
+      : !resolution.enabled
+        ? resolution.disabledReason
+        : prepareInFlight ? "Sub-scope package preparation is in progress." : "";
     var label = "Prepare package…";
     var accessibleLabel = disabledReason ? label + " " + disabledReason : label;
     listToolbar.prepareButton.disabled = Boolean(disabledReason);
@@ -237,15 +233,11 @@ export function createDocsViewerManagementSubscopeDefaultContribution(options = 
       delete listToolbar.prepareButton.dataset.docsViewerDisabledReason;
     }
     var copyActionResolution = copyResolution();
-    var copyDisabledReason = copyActionResolution.enabled
-      ? (
-          copyInFlight
-            ? "Sub-scope Copy is in progress."
-            : onCopyDocuments
-              ? ""
-              : "Sub-scope Copy is unavailable."
-        )
-      : copyActionResolution.disabledReason;
+    var copyDisabledReason = !onCopyDocuments
+      ? "Sub-scope Copy is unavailable."
+      : !copyActionResolution.enabled
+        ? copyActionResolution.disabledReason
+        : copyInFlight ? "Sub-scope Copy is in progress." : "";
     var copyLabel = copyActionLabel;
     var copyAccessibleLabel = copyDisabledReason
       ? copyLabel + " " + copyDisabledReason
@@ -260,9 +252,11 @@ export function createDocsViewerManagementSubscopeDefaultContribution(options = 
     }
     if (listToolbar.publishableButton) {
       var publishableResolution = setPublishableResolution();
-      var publishableDisabledReason = publishableResolution.enabled
-        ? (setPublishableInFlight ? "Set Publishable is in progress." : "")
-        : publishableResolution.disabledReason;
+      var publishableDisabledReason = !onSetPublishable
+        ? "Set Publishable is unavailable for this collection."
+        : !publishableResolution.enabled
+          ? publishableResolution.disabledReason
+          : setPublishableInFlight ? "Set Publishable is in progress." : "";
       var publishableLabel = "Set Publishable…";
       var publishableAccessibleLabel = publishableDisabledReason
         ? publishableLabel + " " + publishableDisabledReason
@@ -464,7 +458,7 @@ export function createDocsViewerManagementSubscopeDefaultContribution(options = 
     menu.setAttribute("role", "menu");
     menu.hidden = true;
     var publishableButton = null;
-    if (onSetPublishable) {
+    if (managementContext) {
       publishableButton = documentRef.createElement("button");
       publishableButton.className = "docsViewer__actionMenuItem";
       publishableButton.type = "button";
