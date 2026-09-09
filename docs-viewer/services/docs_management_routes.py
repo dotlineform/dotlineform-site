@@ -18,6 +18,7 @@ PUBLISHED_SEARCH_PATH = "/docs/published/search"
 PUBLISHED_SEMANTIC_TOKENS_PATH = "/docs/published/semantic-tokens"
 SOURCE_CONFIG_PATH = "/docs/source-config"
 SERIES_WORKS_REPORT_PATH = "/docs/series-works-report"
+UNPUBLISHABLE_REPORT_PATH = "/docs/unpublishable-report"
 SERIES_WORK_MEDIA_PATH = "/docs/series-work-media"
 SOURCE_CONFIG_SETTINGS_PATH = "/docs/source-config-settings"
 IMPORT_SOURCE_DIRECTORIES_PATH = "/docs/import-source-directories"
@@ -85,6 +86,7 @@ GET_PATHS = (
     PUBLISHED_SEMANTIC_TOKENS_PATH,
     SOURCE_CONFIG_PATH,
     SERIES_WORKS_REPORT_PATH,
+    UNPUBLISHABLE_REPORT_PATH,
     SERIES_WORK_MEDIA_PATH,
     SOURCE_CONFIG_SETTINGS_PATH,
     SOURCE_BODY_PATH,

@@ -2,6 +2,14 @@
   "schema": "docs_viewer_reports_v1",
   "reports": [
     {
+      "report_id": "unpublishable",
+      "title": "Unpublishable",
+      "description": "Lists documents with publishable: false across Analysis Working and all its sub-scopes.",
+      "default_access": "local",
+      "loader_id": "unpublishable",
+      "presets": []
+    },
+    {
       "report_id": "series_works",
       "title": "Works in Series",
       "description": "Lists generated member Works for the containing document's Series subject.",

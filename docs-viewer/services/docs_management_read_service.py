@@ -14,6 +14,7 @@ import docs_scope_publish
 from docs_scope_config import load_docs_scope_configs
 import docs_source_config_report
 import docs_series_works_report
+import docs_unpublishable_report
 import docs_source_config_settings
 import docs_staged_media_service
 from docs_management_capabilities_service import capabilities_payload
@@ -90,6 +91,12 @@ def docs_management_get_payload(repo_root: Path, path: str, params: dict[str, li
         return {"ok": True, "service": "docs_management", "dry_run": dry_run}
     if path == routes.CAPABILITIES_PATH:
         return capabilities_payload(repo_root)
+    if path == routes.UNPUBLISHABLE_REPORT_PATH:
+        return docs_unpublishable_report.build_unpublishable_report(
+            repo_root,
+            scope=docs_api_query_value(params, "scope"),
+            stage=docs_api_query_value(params, "stage"),
+        )
     if path in {
         routes.GENERATED_INDEX_TREE_PATH,
         routes.GENERATED_RECENT_PATH,

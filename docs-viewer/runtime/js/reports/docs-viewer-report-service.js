@@ -58,6 +58,12 @@ export function createDocsViewerReportService(options) {
 
   return {
     baseUrl: serviceOptions.baseUrl,
+    readUnpublishable: function (request) {
+      return fetchReportJson("/docs/unpublishable-report?" + new URLSearchParams({
+        scope: request.scope,
+        stage: request.stage
+      }).toString(), Object.assign({}, serviceOptions, { requireOkEnvelope: true }));
+    },
     readSeriesWorkMedia: function (request) {
       var target = normalizeManagedDocumentTarget(request && request.target);
       var query = new URLSearchParams(Object.assign({}, target, { work_id: request.workId })).toString();

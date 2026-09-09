@@ -128,7 +128,7 @@ export async function openDocsViewerSetPublishableWorkflow(options = {}) {
     if (typeof callbacks.onApplied === "function") {
       await callbacks.onApplied(applied);
     }
-    setMessage(callbacks, applied.summary_text || "Publishability updated.", false);
+    setMessage(callbacks, "", false);
     return applied;
   } catch (error) {
     setMessage(

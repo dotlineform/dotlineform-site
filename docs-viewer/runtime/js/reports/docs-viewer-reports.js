@@ -3,6 +3,13 @@ import {
 } from "../shared/docs-viewer-asset-url.js";
 
 const REPORT_LOADERS = {
+  unpublishable: {
+    load: function () {
+      return import("./unpublishable-report.js").then(function (module) {
+        return module.mountUnpublishableReport;
+      });
+    }
+  },
   series_works: {
     load: function () {
       return import("./series-works-report.js").then(function (module) {
