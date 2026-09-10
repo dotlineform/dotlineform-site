@@ -28,7 +28,7 @@ from docs_subscope_customisations import (
     browser_sub_scope_customisation_payload,
     sub_scope_customisation_document_lineage_contracts,
 )
-from .links_builder import pilot_targets
+from .links_builder import links_enabled
 
 
 def raw_scope_items(repo_root: Path) -> dict[str, dict[str, Any]]:
@@ -244,7 +244,7 @@ def browser_scope_record(
         "search": browser_search_policy_payload(config, published=published),
     }
     emoji = str(raw_scope.get("emoji") or "").strip()
-    if not published and pilot_targets(repo_root, config):
+    if not published and links_enabled(repo_root, config):
         record["links_enabled"] = True
     if emoji:
         record["emoji"] = emoji

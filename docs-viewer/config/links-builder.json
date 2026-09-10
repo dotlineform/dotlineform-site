@@ -1,13 +1,4 @@
 {
   "scope": "analysis",
-  "stage": "working",
-  "test_documents": [
-    {"sub_scope": "", "doc_id": "d-20260910-162855-c541ce"},
-    {"sub_scope": "works", "doc_id": "d-20260910-162855-8f41b0"},
-    {"sub_scope": "concepts", "doc_id": "d-20260910-162855-7e0de5"},
-    {"sub_scope": "", "doc_id": "d-20260910-162855-0081ed"},
-    {"sub_scope": "", "doc_id": "d-20260910-162855-381377"},
-    {"sub_scope": "", "doc_id": "d-20260910-162855-ca5dc8"},
-    {"sub_scope": "", "doc_id": "d-20260910-162855-1a90cc"}
-  ]
+  "stage": "working"
 }

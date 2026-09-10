@@ -1,4 +1,4 @@
-"""Document Build integration for the explicitly scoped Links pilot.
+"""Document Build relationship maintenance for a configured Working scope.
 
 Sources own references. A private, rebuildable baseline survives builder process
 restarts and is independent of the UI JSON schema. Writes complete synchronously;
@@ -34,28 +34,19 @@ if TYPE_CHECKING:
     from .pipeline import DocsDataBuilder
 
 
-def pilot_targets(repo_root: Path, config: DocsScopeConfig) -> set[DocumentTarget]:
-    """Read the closed pilot boundary; no config or another scope/stage is a no-op."""
+def links_enabled(repo_root: Path, config: DocsScopeConfig) -> bool:
+    """Enable all configured collections of the selected scope and Working stage."""
     path = repo_root / CONFIG_PATH
     if not path.is_file():
-        return set()
+        return False
     policy = json.loads(path.read_text())
-    if policy["scope"] != config.scope_id or policy["stage"] != config.stage:
-        return set()
-    if config.stage != "working":
-        raise ValueError("Links pilot requires an explicit Working stage")
-    collections = {"", *(owner.sub_scope for owner in config.sub_scopes)}
-    targets = set()
-    identities = set()
-    for row in policy["test_documents"]:
-        key = DocumentTarget(config.scope_id, row["sub_scope"], row["doc_id"])
-        if key.sub_scope not in collections or not is_immutable_doc_id(key.doc_id):
-            raise ValueError("Links pilot requires exact configured document identities")
-        if key.doc_id in identities:
-            raise ValueError("Links pilot document IDs must be unique across collections")
-        identities.add(key.doc_id)
-        targets.add(key)
-    return targets
+    if not isinstance(policy, dict) or set(policy) != {"scope", "stage"}:
+        raise ValueError("Links configuration requires only scope and stage")
+    if not isinstance(policy["scope"], str) or not policy["scope"] or policy["scope"] != policy["scope"].strip():
+        raise ValueError("Links configuration requires an exact scope")
+    if policy["stage"] != "working":
+        raise ValueError("Links configuration requires an explicit Working stage")
+    return policy["scope"] == config.scope_id and policy["stage"] == config.stage
 
 
 def _safe_path(root: Path, name: str) -> Path:
@@ -66,29 +57,27 @@ def _safe_path(root: Path, name: str) -> Path:
 
 
 def load_link_documents(
-    repo_root: Path, config: DocsScopeConfig, targets: set[DocumentTarget], *,
+    repo_root: Path, config: DocsScopeConfig, *,
     pending_targets: Collection[DocumentTarget] = (),
 ) -> dict[DocumentTarget, DocumentLinks]:
-    """Resolve exact sources, document existence and authored links inside the pilot."""
+    """Read every configured collection once and resolve exact authored links."""
     owners = {"": config, **{owner.sub_scope: owner for owner in config.sub_scopes}}
     records, paths, locations, host_ids, payload_exists = {}, {}, {}, {}, {}
-    by_id = {key.doc_id: key for key in targets}
+    by_id = {}
     route_config = load_docs_scope_configs(repo_root, scope_ids=[config.scope_id])[config.scope_id]
     viewer_routes = tuple(sorted({(config.scope_id, config.viewer_base_url), (config.scope_id, route_config.viewer_base_url)}))
-    for collection in sorted({key.sub_scope for key in targets}):
-        owner = owners[collection]
+    for collection, owner in sorted(owners.items()):
         source_root = resolve_scope_path(repo_root, document_source_path(owner))
         output_root = resolve_scope_path(repo_root, generated_documents_path(owner)) / "by-id"
-        host = sub_scope_report_placement(repo_root, config.scope_id, collection, stage=config.stage)[2] if collection else ""
-        for key in targets:
-            if key.sub_scope != collection:
-                continue
+        docs = load_document_collection_docs_for_config(repo_root, config, owner)
+        host = sub_scope_report_placement(repo_root, config.scope_id, collection, stage=config.stage)[2] if collection and docs else ""
+        for doc in docs:
+            key = DocumentTarget(config.scope_id, collection, doc.doc_id)
+            if not is_immutable_doc_id(key.doc_id) or key.doc_id in by_id:
+                raise ValueError("Links requires immutable document IDs unique across configured collections")
+            by_id[key.doc_id] = key
             host_ids[key] = host
             locations[key] = canonical_document_viewer_url(config, host or key.doc_id, subdoc_id=key.doc_id if host else "")
-        for doc in load_document_collection_docs_for_config(repo_root, config, owner):
-            key = DocumentTarget(config.scope_id, collection, doc.doc_id)
-            if key not in targets:
-                continue
             if doc.path.is_symlink() or doc.path.resolve().parent != source_root.resolve():
                 raise ValueError("Links source escaped its configured collection")
             records[key] = doc
@@ -148,11 +137,11 @@ def _read_baseline(path: Path) -> dict[DocumentTarget, DocumentLinks]:
 
 
 def rebuild_links(
-    repo_root: Path, config: DocsScopeConfig, targets: set[DocumentTarget], *,
+    repo_root: Path, config: DocsScopeConfig, *,
     write: bool, serializer: Serializer = relationship_payload,
     pending_targets: Collection[DocumentTarget] = (),
 ) -> dict[str, Any]:
-    """Reconcile the closed test graph; only changed relationship files are written.
+    """Reconcile all configured sources; write only changed relationship files.
 
     Reprojection on each invocation lets schema changes update existing output
     without reading the old UI schema. The private baseline is not publishable.
@@ -161,17 +150,19 @@ def rebuild_links(
     output = resolve_scope_path(repo_root, generated_documents_path(config)) / "links-by-id"
     private = repo_root / "var/docs-viewer/links-builder" / config.scope_id / config.stage
     state_path = _safe_path(private, "state.json")
-    before = {key: value for key, value in _read_baseline(state_path).items() if key in targets}
-    documents = load_link_documents(repo_root, config, targets, pending_targets=pending_targets)
+    before = _read_baseline(state_path)
+    documents = load_link_documents(repo_root, config, pending_targets=pending_targets)
     changes = compare_links(before, documents)
     views = relationship_views(documents)
-    writes, removals = {}, []
-    for key in sorted(targets):
+    writes = {}
+    expected_ids = {key.doc_id for key in views}
+    # The scope-owned directory must also recover from deletions without a baseline.
+    removals = [
+        _safe_path(output, path.name) for path in sorted(output.glob("*.json"))
+        if is_immutable_doc_id(path.stem) and path.stem not in expected_ids
+    ]
+    for key in sorted(views):
         path = _safe_path(output, f"{key.doc_id}.json")
-        if key not in views:
-            if path.exists():
-                removals.append(path)
-            continue
         content = json_text(serializer(views[key], documents))
         if not path.exists() or path.read_text() != content:
             writes[path] = content
@@ -198,20 +189,19 @@ def build_document_links(
     builder: DocsDataBuilder, built_doc_ids: Collection[str], *, write: bool,
 ) -> dict[str, Any] | None:
     """Called by ordinary parent/child Doc Build, before its operation completes."""
-    targets = pilot_targets(builder.repo_root, builder.config)
-    collection = getattr(builder, "sub_scope_id", "")
-    if not any(key.sub_scope == collection and key.doc_id in built_doc_ids for key in targets):
+    if not links_enabled(builder.repo_root, builder.config):
         return None
+    collection = getattr(builder, "sub_scope_id", "")
     owner = getattr(builder, "sub_scope_config", builder.config)
     if builder.source_dir != resolve_scope_path(builder.repo_root, document_source_path(owner)) or builder.output_dir != resolve_scope_path(builder.repo_root, generated_documents_path(owner)):
-        raise ValueError("Links pilot requires the configured source and output locations")
+        raise ValueError("Links builder requires the configured source and output locations")
     if not write:
         pending = {DocumentTarget(builder.scope_id, collection, doc_id) for doc_id in built_doc_ids}
-        return rebuild_links(builder.repo_root, builder.config, targets, write=False, pending_targets=pending)
+        return rebuild_links(builder.repo_root, builder.config, write=False, pending_targets=pending)
     private = builder.repo_root / "var/docs-viewer/links-builder" / builder.scope_id / builder.config.stage
     private.mkdir(parents=True, exist_ok=True)
     with _safe_path(private, "build.lock").open("a") as lock:
         fcntl.flock(lock, fcntl.LOCK_EX)
-        result = rebuild_links(builder.repo_root, builder.config, targets, write=True)
+        result = rebuild_links(builder.repo_root, builder.config, write=True)
     print(f"  links: {len(result['written'])} written; {len(result['removed'])} removed; {result['occurrences_added']} occurrences added; {result['occurrences_deleted']} deleted")
     return result
