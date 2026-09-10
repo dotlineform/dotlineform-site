@@ -7,6 +7,7 @@ from collections.abc import Iterator
 from contextlib import contextmanager
 import importlib.util
 import json
+import subprocess
 import sys
 import tempfile
 
@@ -65,6 +66,19 @@ def write_scope_contract(repo_root: Path) -> None:
             ),
         ],
     )
+
+
+def test_standalone_cli_starts_without_python_path_overrides() -> None:
+    result = subprocess.run(
+        [sys.executable, "-E", str(DOCS_BROKEN_LINKS_PATH), "--help"],
+        cwd=REPO_ROOT,
+        capture_output=True,
+        text=True,
+        timeout=10,
+        check=False,
+    )
+    assert result.returncode == 0, result.stderr
+    assert "--scope" in result.stdout
 
 
 def test_broken_links_reuses_the_pure_rendered_link_owner() -> None:
@@ -153,10 +167,6 @@ def write_semantic_token_contract(repo_root: Path) -> None:
                     "target_id": "00638",
                     "title": "3 symbols",
                     "href": "/works/?work=00638",
-                    "has_details": True,
-                    "image": {
-                        "src": "https://media.dotlineform.test/works/img/00638-primary-1600.webp?v=1"
-                    },
                 },
                 {
                     "family": "catalogue",
@@ -164,13 +174,6 @@ def write_semantic_token_contract(repo_root: Path) -> None:
                     "target_id": "00008",
                     "title": "nerve",
                     "href": "",
-                },
-                {
-                    "family": "catalogue",
-                    "target_type": "work",
-                    "target_id": "00009",
-                    "title": "image unavailable",
-                    "href": "/works/?work=00009",
                 },
             ],
         },
@@ -198,46 +201,8 @@ def make_repo(content_html: str, *, source_body: str = "") -> Iterator[str]:
         repo_root = Path(temp_path)
         (repo_root / "site-tools/config").mkdir(parents=True, exist_ok=True)
         (repo_root / "site-tools/config/site-tools.json").write_text(
-            '{"schema_version":"site_tools_config_v1","media":{"base":"https://media.dotlineform.test","image_work_details":"/work_details/img"}}\n',
+            '{"schema_version":"site_tools_config_v1"}\n',
             encoding="utf-8",
-        )
-        write_json(
-            repo_root / "_data/pipeline.json",
-            {
-                "variants": {
-                    "primary": {
-                        "preferred_width": 1600,
-                        "suffix": "primary",
-                    },
-                },
-                "encoding": {"format": "webp"},
-            },
-        )
-        write_json(
-            repo_root / "studio/data/canonical/catalogue/work_details/00638.json",
-            {
-                "header": {
-                    "schema": "catalogue_source_work_detail_record_v1",
-                    "work_id": "00638",
-                },
-                "work_id": "00638",
-                "detail_sections": [
-                    {
-                        "section_id": "00638-1",
-                        "details": [
-                            {
-                                "detail_uid": "00638-001",
-                                "detail_id": "001",
-                                "project_filename": "3 symbols detail.jpg",
-                                "media_version": 1,
-                                "title": "3 symbols detail",
-                                "width_px": 1600,
-                                "height_px": 1200,
-                            },
-                        ],
-                    },
-                ],
-            },
         )
         write_semantic_token_contract(repo_root)
         write_scope_contract(repo_root)
@@ -331,7 +296,33 @@ def test_public_reader_payloads_do_not_need_viewer_url_metadata() -> None:
     assert result["entries"][0]["from_page_url"] == f"/docs/?scope=analysis&doc={SOURCE_ID}"
 
 
-def test_semantic_token_audit_reads_source_independently_of_rendered_usage() -> None:
+def test_semantic_token_audit_reads_source_independently_of_rendered_usage(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    projects_base = tmp_path / "projects"
+    monkeypatch.setenv("DOTLINEFORM_PROJECTS_BASE_DIR", str(projects_base))
+    generated = projects_base / "catalogue/generated/works/index"
+    write_json(generated / "00638.json", {
+        "work": {
+            "work_id": "00638", "title": "3 symbols", "width_px": 1600, "height_px": 1200,
+            "media": {"primary": [{
+                "width": 1600, "url": "https://media.example.test/works/00638.webp?v=1",
+            }]},
+        },
+        "sections": [{"details": [{
+            "work_id": "00638", "detail_id": "001", "detail_uid": "00638-001",
+            "title": "3 symbols detail", "width_px": 800, "height_px": 600,
+            "media": {"primary": [{
+                "width": 800, "url": "https://media.example.test/details/00638-001.webp?v=1",
+            }]},
+        }]}],
+    })
+    write_json(generated / "00009.json", {
+        "work": {
+            "work_id": "00009", "title": "image unavailable", "width_px": 1600, "height_px": 1200,
+            "media": {"primary": []},
+        },
+    })
     source_body = (
         "Resolved [[catalogue:work:00638|3 symbols]].\n"
         "Missing [[catalogue:work:99999|missing work]].\n"
@@ -354,7 +345,7 @@ def test_semantic_token_audit_reads_source_independently_of_rendered_usage() -> 
         "unsupported_kind",
         "missing_target",
         "missing_destination",
-        "missing_image",
+        "missing_media",
         "missing_detail_image",
     ])
     assert all(entry["source_scope"] == "studio" for entry in semantic_entries)
@@ -435,7 +426,8 @@ def test_working_audits_every_collection_and_keeps_exact_correction_identity() -
         for name in ("", "works", "concepts", "processing", "moments"):
             write_collection_doc(
                 root, "analysis", SOURCE_ID, f'<a href="/analysis/?doc={TARGET_ID}">missing</a>',
-                stage="working", sub_scope=name, metadata={"publishable": False, "folder": "example"},
+                stage="working", sub_scope=name,
+                metadata={"folder": "example", **({"publishable": False} if not name else {})},
                 body="[[catalogue:work:99999|missing token]]",
             )
         # A stale Working index and a payload in another stage cannot satisfy the target.

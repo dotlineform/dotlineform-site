@@ -8,8 +8,6 @@ Run:
 
 from __future__ import annotations
 
-from docs_catalogue_media import catalogue_media_record, read_catalogue_work
-
 import argparse
 import json
 import sys
@@ -47,6 +45,8 @@ from docs_builder.semantic_tokens import (  # noqa: E402
     parse_semantic_tokens,
 )
 from docs_source_model import load_document_collection_docs_for_config  # noqa: E402
+# The scope and builder imports above initialize repository and shared Python paths.
+from docs_catalogue_media import catalogue_media_record, read_catalogue_work  # noqa: E402
 
 
 @dataclass(frozen=True)
