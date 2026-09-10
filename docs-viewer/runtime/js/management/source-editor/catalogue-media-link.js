@@ -88,7 +88,7 @@ export function catalogueMediaLinkControlRenderer(context) {
   var button = context.existingRoot || context.document.createElement("button");
   button.className = "docsViewer__documentActionButton";
   button.type = "button";
-  button.textContent = "Add Media View link";
+  button.textContent = "👁️";
   return button;
 }
 
