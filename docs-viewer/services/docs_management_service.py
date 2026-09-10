@@ -132,6 +132,7 @@ def docs_management_post_response(
             routes.CREATE_PATH, routes.UPDATE_METADATA_PATH, routes.SOURCE_REBUILD_PATH,
             routes.OPEN_SOURCE_PATH, routes.DELETE_PREVIEW_PATH, routes.DELETE_APPLY_PATH,
             routes.ASSIGN_FIELD_GROUP_PATH, routes.SET_PUBLISHABLE_PATH, routes.SET_DRAFT_PATH,
+            routes.REBUILD_PATH,
         }
         if field != "scope" or path not in allowed:
             raise ValueError("This action is unavailable in the publishing stage views")
@@ -270,6 +271,7 @@ def docs_management_post_response(
             repo_root,
             scope,
             include_search=True,
+            stage=body.get("stage"),
         )
         payload["summary_text"] = f"Docs and docs search rebuilt for {scope}."
         return HTTPStatus.OK, payload

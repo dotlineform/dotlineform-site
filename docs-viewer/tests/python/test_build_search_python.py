@@ -416,7 +416,8 @@ def test_v2_index_keeps_same_doc_id_for_distinct_exact_targets() -> None:
     assert payload["terms"][doc_id] == {"identity": [0, 1]}
 
 
-def test_python_docs_search_builder_includes_manage_owned_sub_scope_docs() -> None:
+@pytest.mark.parametrize("stage", [None, "working"])
+def test_python_docs_search_builder_includes_manage_owned_sub_scope_docs(stage) -> None:
     with tempfile.TemporaryDirectory() as temp_path:
         root = Path(temp_path)
         host_id = "d-20260814-000001-aaaaaa"
@@ -438,6 +439,14 @@ def test_python_docs_search_builder_includes_manage_owned_sub_scope_docs() -> No
             sub_scopes=[sub_scope],
         )
         scope["search_fields"] = ["title", "heading", "summary", "body", "code"]
+        if stage:
+            scope["stages"] = {
+                name: {"media": scope["media"], "sub_scopes": [{**sub_scope, **({"public_projection": None} if name == "working" else {})}]}
+                for name in ("working", "pre-publish")
+            }
+            scope["sub_scopes"] = []
+        owner_root = root / "docs-viewer/scopes/analysis" / (stage or "")
+        viewer_prefix = f"/docs/?scope=analysis&stage={stage}&" if stage else "/analysis/?"
         write_json(
             root / "docs-viewer/config/scopes/docs_scopes.json",
             {
@@ -452,7 +461,7 @@ def test_python_docs_search_builder_includes_manage_owned_sub_scope_docs() -> No
             ),
         )
         write_text(
-            root / f"docs-viewer/scopes/analysis/source/documents/{host_id}.md",
+            owner_root / f"source/documents/{host_id}.md",
             f"""---
 doc_id: {host_id}
 title: Concepts
@@ -467,7 +476,7 @@ sub_scope: tags
 :::
 """,
         )
-        source_root = root / "docs-viewer/scopes/analysis/source/sub-scopes/tags/documents"
+        source_root = owner_root / "source/sub-scopes/tags/documents"
         write_text(
             source_root / f"{child_id}.md",
             f"""---
@@ -492,15 +501,15 @@ doc_id: {excluded_id}
 title: Hidden Child
 added_date: 2026-08-14 09:03:00
 last_updated: 2026-08-14 09:04:00
-ui_status: draft
-publishable: false
+ui_status: review
+{"draft: true" if stage else ""}
 ---
 # Hidden Child
 
 ExcludedVocabulary must not leak.
 """,
         )
-        output_root = root / "docs-viewer/scopes/analysis/generated/sub-scopes/tags/documents"
+        output_root = owner_root / "generated/sub-scopes/tags/documents"
         write_json(
             output_root / "manage-manifest.json",
             {
@@ -516,7 +525,7 @@ ExcludedVocabulary must not leak.
                 "doc_id": child_id,
                 "title": "Visible Child",
                 "last_updated": "2026-08-14 09:02:00",
-                "viewer_url": f"/analysis/?doc={host_id}&subdoc={child_id}",
+                "viewer_url": f"{viewer_prefix}doc={host_id}&subdoc={child_id}",
                 "content_html": "<h1>Visible Child</h1><p>EligibleVocabulary appears once.</p>",
             },
         )
@@ -526,13 +535,13 @@ ExcludedVocabulary must not leak.
                 "doc_id": excluded_id,
                 "title": "Hidden Child",
                 "last_updated": "2026-08-14 09:04:00",
-                "viewer_url": f"/analysis/?doc={host_id}&subdoc={excluded_id}",
+                "viewer_url": f"{viewer_prefix}doc={host_id}&subdoc={excluded_id}",
                 "content_html": "<h1>Hidden Child</h1><p>ExcludedVocabulary remains manageable.</p>",
             },
         )
 
-        exit_code, stdout, stderr = run_cli(root, ["--scope", "analysis", "--write"])
-        payload = read_json(root / "docs-viewer/scopes/analysis/generated/search/index.json")
+        exit_code, stdout, stderr = run_cli(root, ["--scope", "analysis", "--write", *(["--stage", stage] if stage else [])])
+        payload = read_json(owner_root / "generated/search/index.json")
 
     assert exit_code == 0
     assert stderr == ""
@@ -542,7 +551,7 @@ ExcludedVocabulary must not leak.
     assert child == {
         "id": child_id,
         "title": "Visible Child",
-        "href": f"/analysis/?doc={host_id}&subdoc={child_id}",
+        "href": f"{viewer_prefix}doc={host_id}&subdoc={child_id}",
         "last_updated": "2026-08-14 09:02:00",
         "display_meta": "2026-08-14 09:02:00 • Tags",
         "sub_scope": "tags",

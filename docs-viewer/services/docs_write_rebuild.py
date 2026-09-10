@@ -21,6 +21,7 @@ from docs_scope_config import (
     resolve_scope_path,
 )
 from docs_scope_build_manifest import remove_build_manifest, write_build_manifest
+from docs_scope_links import write_scope_links
 from docs_source_model import load_scope_docs_for_config, write_bytes_atomic
 from docs_watch_suppression import (
     DEFAULT_COMPLETE_TTL_SECONDS,
@@ -225,12 +226,17 @@ def rebuild_scope_outputs(
     skip_media_builds: bool = False,
     stage: str | None = None,
 ) -> Dict[str, Any]:
+    """Await document work and requested Search before recording scope completion.
+
+    Full Working docs-and-Search rebuilds also combine prepared Links records.
+    Individual document operations omit Search and leave that aggregate alone.
+    """
     try:
         scope_config = load_docs_scope_stage(repo_root, scope, stage)
     except KeyError as exc:
         raise ValueError(f"scope {scope!r} is not configured") from exc
     if scope_config.stage and include_search:
-        raise ValueError("Stage Search rebuild is outside the current publishing delivery")
+        require_document_authoring(scope_config)
     remove_build_manifest(repo_root, scope_config)
     docs_mode = "full"
     docs_target_doc_ids: list[str] = []
@@ -267,14 +273,18 @@ def rebuild_scope_outputs(
                     "--write",
                     "--diagnostics",
                     "--skip-browser-config",
-                    *(["--skip-media-builds"] if skip_media_builds else []),
+                    *(["--stage", scope_config.stage] if scope_config.stage else []),
+                    *(["--skip-media-builds"] if skip_media_builds or scope_config.stage else []),
                 ),
             )
             for sub_scope in scope_config.sub_scopes
         )
         if search_doc_ids is None:
             search = {"mode": "full", "doc_ids": []}
-            commands.append(("search", python_builder_command(SEARCH_BUILDER_SCRIPT, "--scope", scope, "--write")))
+            commands.append(("search", python_builder_command(
+                SEARCH_BUILDER_SCRIPT, "--scope", scope, "--write",
+                *(["--stage", scope_config.stage] if scope_config.stage else []),
+            )))
         else:
             target_doc_ids = ordered_search_doc_ids(search_doc_ids)
             search = {"mode": "full" if target_doc_ids else "none", "doc_ids": target_doc_ids}
@@ -287,6 +297,7 @@ def rebuild_scope_outputs(
                             "--scope",
                             scope,
                             "--write",
+                            *(["--stage", scope_config.stage] if scope_config.stage else []),
                         ),
                     )
                 )
@@ -305,6 +316,12 @@ def rebuild_scope_outputs(
         if step["returncode"] != 0:
             detail = step["stderr"] or step["stdout"] or f"exit {step['returncode']}"
             raise RuntimeError(rebuild_failure_message(f"rebuild failed for {scope}", detail))
+    links = (
+        write_scope_links(repo_root, scope_config)
+        if include_search and search["mode"] == "full"
+        and scope == "analysis" and scope_config.stage == "working"
+        else None
+    )
     build_manifest = (
         write_build_manifest(repo_root, scope_config)
         if include_search and search["mode"] == "full"
@@ -320,6 +337,7 @@ def rebuild_scope_outputs(
             "search": search_diagnostics,
         },
         "build_manifest": build_manifest,
+        **({"links": links} if links is not None else {}),
     }
 
 

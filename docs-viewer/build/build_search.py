@@ -52,6 +52,8 @@ from docs_scope_config import (  # noqa: E402
     generated_documents_path,
     generated_search_path,
     resolve_scope_path,
+    select_scope_stage,
+    require_document_authoring,
 )
 from docs_document_location import sub_scope_report_placement  # noqa: E402
 from docs_document_identity import is_immutable_doc_id  # noqa: E402
@@ -294,16 +296,25 @@ def relative_path(path: Path | None, repo_root: Path) -> str:
 
 
 class DocsViewerSearchDataBuilder:
+    """Build one exact source corpus; staged scopes require their authoring stage.
+
+    The selected configuration owns source/output paths and child placements.
+    Generated Search hrefs retain stage so local results reopen that same corpus.
+    """
+
     def __init__(
         self,
         *,
         repo_root: Path,
         scope: str,
         output_path: Path | None = None,
+        stage: str | None = None,
     ) -> None:
         self.repo_root = repo_root.resolve()
         self.scope = normalize(scope)
-        self.scope_config = self.docs_scope_config(self.scope)
+        self.scope_config = select_scope_stage(self.docs_scope_config(self.scope), stage)
+        if self.scope_config.stage:
+            require_document_authoring(self.scope_config)
         self.content_search_enabled = bool(
             SEARCH_V2_CONTENT_FIELDS.intersection(self.scope_config.search_fields)
         )
@@ -413,6 +424,8 @@ class DocsViewerSearchDataBuilder:
         pairs: list[str] = []
         if self.scope_config.include_scope_param and self.scope:
             pairs.append(f"scope={quote(self.scope)}")
+        if self.scope_config.stage:
+            pairs.append(f"stage={quote(self.scope_config.stage)}")
         pairs.append(f"doc={quote(str(doc_id))}")
         return f"{self.scope_config.viewer_base_url}?{'&'.join(pairs)}"
 
@@ -547,6 +560,7 @@ class DocsViewerSearchDataBuilder:
                     sub_scope.sub_scope,
                     eligible_parent_doc_ids=eligible_parent_doc_ids,
                     require_public=False,
+                    stage=self.scope_config.stage,
                 )
                 records.extend(
                     self.load_sub_scope_collection_docs(
@@ -723,6 +737,7 @@ class DocsViewerSearchDataBuilder:
 def parse_args(argv: list[str]) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Build Docs Viewer search indexes.")
     parser.add_argument("--scope", default=DEFAULT_SCOPE, help="Docs Viewer search scope to build.")
+    parser.add_argument("--stage", help="Exact authoring stage for a staged scope.")
     parser.add_argument(
         "--projects-base-dir",
         help="Override DOTLINEFORM_PROJECTS_BASE_DIR for this build after loading .env.local.",
@@ -745,6 +760,7 @@ def main(argv: list[str] | None = None) -> int:
     builder = DocsViewerSearchDataBuilder(
         repo_root=repo_root,
         scope=args.scope,
+        stage=args.stage,
         output_path=Path(args.output) if args.output else None,
     )
     builder.run(

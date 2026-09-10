@@ -152,6 +152,22 @@ def test_report_host_reparenting_keeps_stage_and_child_destinations(stage_repo: 
     assert all(path.read_bytes() == content for path, content in before.items())
 
 
+def test_scope_rebuild_dispatch_preserves_working_and_rejects_other_stages(stage_repo: Path, monkeypatch) -> None:
+    import docs_management_service as service
+
+    calls = []
+    monkeypatch.setattr(service.write_rebuild, "rebuild_scope_outputs", lambda *args, **kwargs: calls.append((args, kwargs)) or {"ok": True})
+    status, payload = service.docs_management_post_response(stage_repo, service.routes.REBUILD_PATH, {
+        "scope": "analysis", "stage": "working",
+    })
+    assert status == 200 and payload["ok"] is True
+    assert calls == [((stage_repo, "analysis"), {"include_search": True, "stage": "working"})]
+    for stage, message in ((None, "requires stage"), ("pre-publish", "Pre-publish document authoring is unavailable")):
+        with pytest.raises(ValueError, match=message):
+            service.docs_management_post_response(stage_repo, service.routes.REBUILD_PATH, {"scope": "analysis", "stage": stage})
+    assert len(calls) == 1
+
+
 def test_service_can_import_with_unselected_workflow_parent(stage_repo: Path) -> None:
     services = Path(scopes.__file__).parent
     result = subprocess.run(
