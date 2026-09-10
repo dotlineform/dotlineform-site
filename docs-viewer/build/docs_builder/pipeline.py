@@ -4,6 +4,7 @@ from pathlib import Path
 from typing import Any
 
 from .backlinks import BacklinksMixin
+from .links_builder import build_document_links
 from .common import (
     DocsScopeConfig,
     document_source_path,
@@ -166,6 +167,9 @@ class DocsDataBuilder(
                 semantic_token_payloads,
                 write_plan,
             )
+        links_build = build_document_links(
+            self, set(target_doc_ids) | set(write_plan["stale_item_ids"]), write=write,
+        )
         if emit_diagnostics:
             self.print_diagnostics(diagnostics)
         return {
@@ -180,6 +184,7 @@ class DocsDataBuilder(
             "diagnostics": diagnostics,
             "media_builds": media_builds,
             "media_snapshot": media_snapshot,
+            "links_build": links_build,
         }
 
     @property

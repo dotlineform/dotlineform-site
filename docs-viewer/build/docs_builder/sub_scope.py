@@ -16,6 +16,7 @@ from .common import (
     write_text,
 )
 from .pipeline import DocsDataBuilder
+from .links_builder import build_document_links
 from .media_builds import build_scope_media_snapshot
 from .source import DocRecord
 from docs_subscope_customisations import (
@@ -267,6 +268,9 @@ class SubScopeDocsBuilder(DocsDataBuilder):
             self.write_sub_scope_outputs(write_plan, docs_total=len(docs))
         else:
             self.print_sub_scope_summary(write_plan, mode="dry-run", docs_total=len(docs))
+        links_build = build_document_links(
+            self, set(item_payloads) | set(write_plan["stale_item_ids"]), write=write,
+        )
         if emit_diagnostics:
             self.print_diagnostics(diagnostics)
         return {
@@ -277,6 +281,7 @@ class SubScopeDocsBuilder(DocsDataBuilder):
             "media_snapshot": media_snapshot,
             "write_plan": write_plan,
             "diagnostics": diagnostics,
+            "links_build": links_build,
         }
 
     def build_sub_scope_write_plan(
