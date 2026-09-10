@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import fs from "node:fs";
-import { parseCatalogueToken, parseCatalogueTokens, serializeCatalogueToken } from "../../runtime/js/management/source-editor/catalogue-token-parser.js";
+import { parseCatalogueToken, parseCatalogueTokens, serializeCatalogueMediaToken } from "../../runtime/js/management/source-editor/catalogue-token-parser.js";
 import { normalizeSemanticTokenRegistry } from "../../runtime/js/management/source-editor/semantic-token-registry.js";
 import { catalogueMediaLinkLabel, readCatalogueMediaPresentation, loadCatalogueMediaSupport, catalogueMediaLinkControlDefinition } from "../../runtime/js/management/source-editor/catalogue-media-link.js";
 import { createDocsViewerManagementSourceAdapter } from "../../runtime/js/management/docs-viewer-management-source-adapter.js";
@@ -13,13 +13,13 @@ import { resolveDocsViewerRouteConfig } from "../../runtime/js/shared/docs-viewe
 const registryPayload = JSON.parse(fs.readFileSync(new URL("../../config/semantic-tokens/registry.json", import.meta.url)));
 const registry = normalizeSemanticTokenRegistry(registryPayload);
 const title = "A *label* | ] \\ end";
-const token = serializeCatalogueToken({ presentation: "media", targetType: "work", targetId: "00523", title });
+const token = serializeCatalogueMediaToken({ targetType: "work", targetId: "00523", title });
 const parsed = parseCatalogueToken(token, { registry });
 assert.equal(parsed.presentation, "media");
 assert.equal(parsed.targetId, "00523");
 assert.equal(parsed.title, title);
-assert.equal(serializeCatalogueToken(parsed), token, "editing preserves the media form");
-assert.equal(parseCatalogueToken("[[catalogue:work:00523|old]]", { registry }).presentation, "text");
+assert.equal(serializeCatalogueMediaToken(parsed), token, "editing preserves the media form");
+assert.equal(parseCatalogueToken("[[catalogue:work:00523|unqualified]]", { registry }), null);
 for (const raw of ["[[catalogue:media:work:523|bad]]", "[[catalogue:media:series:143|bad]]"]) {
   assert.equal(parseCatalogueToken(raw, { registry }), null);
 }

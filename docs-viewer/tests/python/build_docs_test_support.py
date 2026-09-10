@@ -237,22 +237,22 @@ parent_id: {PARENT_DOC_ID}
 ---
 # Child
 
-Intro with [parent](/docs/?scope=studio&doc={PARENT_DOC_ID}), ![Diagram]([[media:docs/studio/img/diagram.png]]), and [[catalogue:work:00638|three signs]].
+Intro with [parent](/docs/?scope=studio&doc={PARENT_DOC_ID}), ![Diagram]([[media:docs/studio/img/diagram.png]]), and [[catalogue:media:work:00638|three signs]].
 
 ![Measured diagram]([[media:docs/studio/img/measured-diagram.png width=800 height=600]])
 
 ![Persistent SVG diagram]([[media:docs/studio/svg/persistent-diagram.svg]])
 
-<!-- [[catalogue:work:63899|commented missing work]] -->
+<!-- [[catalogue:media:work:63899|commented missing work]] -->
 
 <!--
-[[catalogue:work:63898|commented missing work multiline]]
+[[catalogue:media:work:63898|commented missing work multiline]]
 -->
 
-`[[catalogue:work:00638|inline code]]`
+`[[catalogue:media:work:00638|inline code]]`
 
 ```text
-[[catalogue:work:00638|fenced code]]
+[[catalogue:media:work:00638|fenced code]]
 ```
 
 [[html-media:docs/studio/html/chart.html height=420]]

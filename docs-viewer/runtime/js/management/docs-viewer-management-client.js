@@ -59,6 +59,15 @@ export function readManagementCapabilities(options) {
   return fetchManagementJson("/capabilities", "GET", undefined, options);
 }
 
+/** Read authoring targets in one exact scope/stage; the response supplies ordinary hrefs. */
+export function readDocumentLinkTargets(target, options) {
+  var collection = normalizeManagedDocumentCollectionTarget(target);
+  var query = "?scope=" + encodeURIComponent(collection.scope);
+  if (collection.stage) query += "&stage=" + encodeURIComponent(collection.stage);
+  return fetchManagementJson("/docs/document-link-targets" + query, "GET", undefined,
+    Object.assign({}, options, { cache: "no-store" }));
+}
+
 /** Read generated Catalogue targets independently of document scope and association. */
 export function readCatalogueMediaTargets(options) {
   return fetchManagementJson("/docs/catalogue-media-targets", "GET", undefined, options);
@@ -112,10 +121,6 @@ export function encodeDecodedLocalTarget(target) {
 
 export function openLocalTarget(target, options) {
   return fetchManagementJson("/docs/open-local-target", "POST", { target: String(target || "") }, options);
-}
-
-export function validateLocalTarget(target, options) {
-  return fetchManagementJson("/docs/validate-local-target", "POST", { target: String(target || "") }, options);
 }
 
 export function createManagedDoc(payload, options) {

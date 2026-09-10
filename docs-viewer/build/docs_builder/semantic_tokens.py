@@ -38,7 +38,7 @@ class SemanticTokenOccurrence:
     start: int
     end: int
     supported: bool
-    presentation: str = "text"
+    presentation: str
     alt: str = ""
     caption: str = ""
     summary: str = ""
@@ -49,26 +49,6 @@ class SemanticTokenOccurrence:
     @property
     def source_range(self) -> dict[str, int]:
         return {"start": self.start, "end": self.end}
-
-
-def escape_semantic_token_title(value: str) -> str:
-    return value.replace("\\", "\\\\").replace("|", "\\|").replace("]", "\\]")
-
-
-def serialize_semantic_token(
-    *,
-    family: str,
-    target_type: str,
-    target_id: str,
-    title: str,
-) -> str:
-    clean_title = str(title or "").strip()
-    if not clean_title or "\n" in clean_title or "\r" in clean_title:
-        return ""
-    return (
-        f"[[{family}:{target_type}:{target_id}|"
-        f"{escape_semantic_token_title(clean_title)}]]"
-    )
 
 
 def unescape_semantic_token_title(value: str) -> str | None:
@@ -268,7 +248,7 @@ def parse_semantic_token(
         and parts[1] == "image"
     )
     is_media = family == "catalogue" and len(parts) == 4 and parts[1] == "media"
-    if not separator or (len(parts) != 3 and not is_image and not is_media):
+    if not separator or (not is_image and not is_media):
         return None
     target_type = parts[-2]
     target_id = parts[-1]
@@ -306,7 +286,7 @@ def parse_semantic_token(
         start=start,
         end=start + len(raw),
         supported=supported,
-        presentation="image" if is_image else "media" if is_media else "text",
+        presentation="image" if is_image else "media",
         alt=image_fields["alt"] if image_fields else "",
         caption=image_fields["caption"] if image_fields else "",
         summary=image_fields["summary"] if image_fields else "",
@@ -492,25 +472,6 @@ def replace_catalogue_tokens(
     return "".join(output)
 
 
-def render_semantic_text_token(
-    token: SemanticTokenOccurrence,
-    target: dict[str, Any],
-) -> str:
-    href = str(target.get("href") or "").strip()
-    if not href:
-        return token.raw
-    attrs = (
-        f'data-semantic-token-family="{html.escape(token.family, quote=True)}" '
-        f'data-semantic-token-target-type="{html.escape(token.target_type, quote=True)}" '
-        f'data-semantic-token-target-id="{html.escape(token.target_id, quote=True)}" '
-        'target="_blank" rel="noopener noreferrer"'
-    )
-    return (
-        f'<a href="{html.escape(href, quote=True)}" {attrs}>'
-        f"{html.escape(token.title)}</a>"
-    )
-
-
 def render_catalogue_token(token: SemanticTokenOccurrence, target: dict[str, Any]) -> str:
     href = str(target.get("href") or "").strip()
     if not href:
@@ -521,8 +482,6 @@ def render_catalogue_token(token: SemanticTokenOccurrence, target: dict[str, Any
         f'data-semantic-token-target-id="{html.escape(token.target_id, quote=True)}" '
         'target="_blank" rel="noopener noreferrer"'
     )
-    if token.presentation != "image":
-        return render_semantic_text_token(token, target)
     image = target.get("image") if isinstance(target.get("image"), dict) else {}
     src = browser_safe_image_src(image.get("src"))
     if not src:
@@ -710,8 +669,7 @@ class SemanticTokensMixin:
             )
             if target is None:
                 return token.raw
-            resolved_target = target if token.presentation != "image" or target.get("image") else None
-            if resolved_target is None:
+            if not target.get("image"):
                 return token.raw
             occurrences.append(
                 {
@@ -723,14 +681,10 @@ class SemanticTokensMixin:
                     "family": token.family,
                     "target_type": token.target_type,
                     "target_id": token.target_id,
-                    "href": resolved_target["href"],
+                    "href": target["href"],
                 }
             )
-            return (
-                render_catalogue_token(token, resolved_target)
-                if token.presentation == "image"
-                else render_semantic_text_token(token, resolved_target)
-            )
+            return render_catalogue_token(token, target)
 
         rendered = replace_semantic_tokens(
             markdown,

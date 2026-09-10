@@ -3,26 +3,8 @@ import {
   openDocsViewerManagementModal
 } from "../docs-viewer-management-modal-shell.js";
 import {
-  buildCatalogueToken,
-  selectedTextForCatalogueTitle
-} from "./catalogue-token-contract.js";
-import {
-  collectCatalogueTargetMatches,
-  findCatalogueTargetByIdentity,
-  loadCatalogueTargetSupport
-} from "./catalogue-token-targets.js";
-import {
-  parseCatalogueToken
-} from "./catalogue-token-parser.js";
-import {
   createCatalogueTargetPickerList
 } from "./catalogue-target-picker.js";
-
-var SEARCH_INPUT_ID = "docsViewerCatalogueTokenSearch";
-var RESULTS_ID = "docsViewerCatalogueTokenResults";
-var TITLE_INPUT_ID = "docsViewerCatalogueTokenTitle";
-
-export const CATALOGUE_TOKEN_MODAL_ID = "catalogue-token-add-modal";
 
 function modalBody(settings, searchQuery, selectionTitle) {
   return (
@@ -231,30 +213,4 @@ export function openSemanticTextTokenModal(settings, options = {}) {
     if (adapter && typeof adapter.focus === "function") adapter.focus();
     return result;
   });
-}
-
-var CATALOGUE_TOKEN_MODAL_SETTINGS = {
-  buildToken: buildCatalogueToken,
-  collectMatches: collectCatalogueTargetMatches,
-  familyLabel: "Catalogue",
-  findByIdentity: findCatalogueTargetByIdentity,
-  loadingMessage: "Loading Catalogue…",
-  loadSupport: loadCatalogueTargetSupport,
-  modalId: CATALOGUE_TOKEN_MODAL_ID,
-  modalTitle: "Add catalogue token",
-  noMatchesMessage: "No matching Catalogue targets.",
-  parseToken: parseCatalogueToken,
-  resultsId: RESULTS_ID,
-  resultsLabel: "Catalogue targets",
-  searchInputId: SEARCH_INPUT_ID,
-  searchLabel: "Search Catalogue",
-  selectedText: selectedTextForCatalogueTitle,
-  targetMeta: function (target) { return target.meta; },
-  titleOnSelect: function (target) { return target.title; },
-  titleInputId: TITLE_INPUT_ID,
-  unavailableMessage: "Catalogue targets are unavailable."
-};
-
-export function openCatalogueTokenModal(options = {}) {
-  return openSemanticTextTokenModal(CATALOGUE_TOKEN_MODAL_SETTINGS, options);
 }

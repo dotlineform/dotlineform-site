@@ -64,7 +64,7 @@ def test_python_docs_builder_public_generated_payloads_include_manage_rows() -> 
             child_source_path,
             (
                 child_source_path.read_text(encoding="utf-8")
-                + "\n[[catalogue:work:00638|3 symbols]]\n"
+                + "\n[[catalogue:media:work:00638|3 symbols]]\n"
             ),
         )
         config = load_docs_scope_configs(root)["example"]
@@ -90,13 +90,13 @@ def test_python_docs_builder_public_generated_payloads_include_manage_rows() -> 
         {
             "source_scope": "example",
             "source_doc_id": CHILD_DOC_ID,
-            "source_range": {"start": 22, "end": 56},
-            "raw": "[[catalogue:work:00638|3 symbols]]",
+            "source_range": {"start": 22, "end": 62},
+            "raw": "[[catalogue:media:work:00638|3 symbols]]",
             "title": "3 symbols",
             "family": "catalogue",
             "target_type": "work",
             "target_id": "00638",
-            "href": "/works/?work=00638",
+            "href": "",
         }
     ]
     public_tree_forbidden_keys = {

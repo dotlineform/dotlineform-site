@@ -7,7 +7,6 @@ import { normalizeManagedSubscopeCollection, committedDocumentCreateTarget, comm
 import { createManagedDoc, readManagedDocSource, rebuildManagedDocSource, applyManagedSubScopeDocDelete, assignManagedDocFieldGroup, moveManagedDoc } from "../../runtime/js/management/docs-viewer-management-client.js";
 import { createDocsViewerManagementActionResolver } from "../../runtime/js/management/docs-viewer-management.js";
 import { DOCS_VIEWER_ACTION_IDS } from "../../runtime/js/management/docs-viewer-action-definitions.js";
-import { subjectFromMetadataResponse } from "../../runtime/js/management/source-editor/subject-link-contribution.js";
 import { subjectMetadataFromResponse } from "../../runtime/js/management/docs-viewer-management-project-subject-modal.js";
 import { loadDocsViewerSubscopeContribution } from "../../runtime/js/management/docs-viewer-management-document-reports.js";
 import { createDocsViewerIndexSelectionOwner } from "../../runtime/js/management/docs-viewer-index-selection.js";
@@ -57,11 +56,10 @@ for (const wrongTarget of [
 assert.throws(() => committedDocumentMoveRecord({ ...moved, record: { ...moved.record, doc_id: "another" } }, hostTarget), /invalid committed move record/);
 const sourceActions = [
   DOCS_VIEWER_ACTION_IDS.SOURCE_ADD_CATALOGUE_IMAGE,
-  DOCS_VIEWER_ACTION_IDS.SOURCE_ADD_CATALOGUE_TOKEN,
   DOCS_VIEWER_ACTION_IDS.SOURCE_ADD_MEDIA_VIEW_LINK,
   DOCS_VIEWER_ACTION_IDS.SOURCE_ADD_FILE,
   DOCS_VIEWER_ACTION_IDS.SOURCE_ADD_IMAGE,
-  DOCS_VIEWER_ACTION_IDS.SOURCE_INSERT_SUBJECT_LINK
+  DOCS_VIEWER_ACTION_IDS.SOURCE_INSERT_DOC_LINK
 ];
 for (const stage of ["working", "pre-publish", ""]) {
   const selectedDocument = { selectedDocId: docId };
@@ -74,9 +72,6 @@ for (const stage of ["working", "pre-publish", ""]) {
 }
 const subject = { state: "valid", kind: "work", key: "00293", fields: ["work_id"] };
 const metadata = { ...working, record: { doc_id: docId, authoring_subject: subject } };
-assert.deepEqual(subjectFromMetadataResponse(metadata, working), subject);
-assert.throws(() => subjectFromMetadataResponse({ ...metadata, stage: "pre-publish" }, working), /active document/);
-assert.throws(() => subjectFromMetadataResponse({ ...metadata, stage: undefined }, working), /active document/);
 const sourceRevision = "sha256:" + "a".repeat(64);
 const assignMetadata = { ...metadata, source_revision: sourceRevision };
 assert.deepEqual(subjectMetadataFromResponse(assignMetadata, working), { subject, sourceRevision });

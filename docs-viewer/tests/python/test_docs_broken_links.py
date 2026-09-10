@@ -125,29 +125,7 @@ def write_public_reader_doc_payload(repo_root: Path, scope: str, doc_id: str, ti
 
 
 def write_semantic_token_contract(repo_root: Path) -> None:
-    families: list[dict[str, object]] = [
-        {
-            "schema_version": "docs_semantic_token_family_definition_v1",
-            "key": "catalogue",
-            "labels": {},
-            "occurrence_fields": [],
-            "ui_contributions": {},
-            "target_types": [
-                {
-                    "key": "work",
-                    "label": "Work",
-                    "id_policy": {
-                        "normalizer": "digits_left_pad",
-                        "width": 5,
-                        "input_pattern": "^\\d{1,5}$",
-                        "canonical_pattern": "^\\d{5}$",
-                    },
-                    "lookup_adapter": "catalogue-work-target-lookup",
-                    "lookup_fields": ["title", "href", "image"],
-                }
-            ],
-        }
-    ]
+    families = json.loads((REPO_ROOT / "docs-viewer/config/semantic-tokens/registry.json").read_text())["families"]
     write_json(
         repo_root / "docs-viewer/config/semantic-tokens/registry.json",
         {
@@ -163,14 +141,15 @@ def write_semantic_token_contract(repo_root: Path) -> None:
             "targets": [
                 {
                     "family": "catalogue",
-                    "target_type": "work",
+                    "target_type": "series",
                     "target_id": "00638",
                     "title": "3 symbols",
-                    "href": "/works/?work=00638",
+                    "href": "/series/?series=00638",
+                    "image": {"src": "https://media.example.test/series.webp"},
                 },
                 {
                     "family": "catalogue",
-                    "target_type": "work",
+                    "target_type": "series",
                     "target_id": "00008",
                     "title": "nerve",
                     "href": "",
@@ -324,15 +303,15 @@ def test_semantic_token_audit_reads_source_independently_of_rendered_usage(
         },
     })
     source_body = (
-        "Resolved [[catalogue:work:00638|3 symbols]].\n"
-        "Missing [[catalogue:work:99999|missing work]].\n"
-        "No destination [[catalogue:work:00008|nerve]].\n"
+        "Resolved [[catalogue:media:work:00638|3 symbols]].\n"
+        "Missing [[catalogue:image:series:99999|alt=Missing%20series]].\n"
+        "No destination [[catalogue:image:series:00008|alt=nerve]].\n"
         "Missing image [[catalogue:image:work:00009|alt=image%20unavailable]].\n"
         "Resolved image [[catalogue:image:work:00638|alt=3%20symbols]].\n"
         "Missing detail [[catalogue:image:work:00638|alt=missing%20detail&detail_id=999]].\n"
         "Resolved detail [[catalogue:image:work:00638|alt=3%20symbols%20detail&detail_id=001]].\n"
-        "Unsupported [[catalogue:asset:abc|asset]].\n"
-        "`Ignored [[catalogue:work:99998|inline code]]`.\n"
+        "Unsupported [[catalogue:image:asset:abc|alt=asset]].\n"
+        "`Ignored [[catalogue:media:work:99998|inline code]]`.\n"
     )
     with make_repo("<p>No semantic-token anchors here.</p>", source_body=source_body) as temp_path:
         result = docs_broken_links.audit_docs_broken_links(Path(temp_path), "studio")
@@ -362,14 +341,14 @@ def test_semantic_token_audit_reads_source_independently_of_rendered_usage(
 def test_semantic_token_source_repair_clears_the_audit() -> None:
     with make_repo(
         "<p>The unresolved source remains ordinary text.</p>",
-        source_body="Missing [[catalogue:work:99999|missing work]].\n",
+        source_body="Missing [[catalogue:image:series:99999|alt=Missing%20series]].\n",
     ) as temp_path:
         repo_root = Path(temp_path)
         broken = docs_broken_links.audit_docs_broken_links(repo_root, "studio")
         write_source_doc(
             repo_root,
             "studio",
-            "Resolved [[catalogue:work:00638|3 symbols]].\n",
+            "Resolved [[catalogue:image:series:00638|alt=3%20symbols]].\n",
         )
         repaired = docs_broken_links.audit_docs_broken_links(repo_root, "studio")
 
@@ -428,7 +407,7 @@ def test_working_audits_every_collection_and_keeps_exact_correction_identity() -
                 root, "analysis", SOURCE_ID, f'<a href="/analysis/?doc={TARGET_ID}">missing</a>',
                 stage="working", sub_scope=name,
                 metadata={"folder": "example", **({"publishable": False} if not name else {})},
-                body="[[catalogue:work:99999|missing token]]",
+                body="[[catalogue:media:work:99999|missing token]]",
             )
         # A stale Working index and a payload in another stage cannot satisfy the target.
         write_json(root / "docs-viewer/scopes/analysis/working/generated/documents/index-tree.json", {
@@ -476,7 +455,7 @@ def test_studio_destination_lookup_preserves_analysis_stage_and_child_identity()
 def test_missing_source_payload_does_not_hide_other_findings_or_token_diagnosis() -> None:
     with make_repo("") as tmp:
         root = Path(tmp)
-        missing = write_collection_doc(root, "studio", TARGET_ID, body="[[catalogue:work:99999|missing token]]")
+        missing = write_collection_doc(root, "studio", TARGET_ID, body="[[catalogue:media:work:99999|missing token]]")
         missing.unlink()
         write_collection_doc(root, "studio", SOURCE_ID, f'<a href="/docs/?scope=studio&doc={TARGET_ID}">unbuilt</a>')
         result = docs_broken_links.audit_docs_broken_links(root, "studio")

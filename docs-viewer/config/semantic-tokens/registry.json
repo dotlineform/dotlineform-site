@@ -7,7 +7,6 @@
       "key": "catalogue",
       "labels": {
         "family": "Catalogue",
-        "source_action": "Add catalogue token",
         "info_view": "Catalogue token"
       },
       "occurrence_fields": [
@@ -20,8 +19,6 @@
         }
       ],
       "ui_contributions": {
-        "source_action": "source-add-catalogue-token",
-        "modal": "catalogue-token-add-modal",
         "info_view": "catalogue-token-info"
       },
       "target_types": [

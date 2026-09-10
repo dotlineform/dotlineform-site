@@ -82,12 +82,11 @@ def test_python_docs_builder_writes_docs_payloads_and_semantic_token_usage() -> 
     ) in content_html
     assert content_html.count('data-docs-viewer-diagram-kind="persistent-svg"') == 1
     assert 'title="Alt text"' in content_html
-    assert 'href="/works/?work=00638"' in content_html
-    assert 'data-semantic-token-family="catalogue"' in content_html
-    assert "[[catalogue:work:63899|commented missing work]]" in content_html
-    assert "[[catalogue:work:63898|commented missing work multiline]]" in content_html
-    assert "[[catalogue:work:00638|inline code]]" in content_html
-    assert "[[catalogue:work:00638|fenced code]]" in content_html
+    assert 'data-docs-media-kind="catalogue-work" data-docs-media-id="00638"' in content_html
+    assert "[[catalogue:media:work:63899|commented missing work]]" in content_html
+    assert "[[catalogue:media:work:63898|commented missing work multiline]]" in content_html
+    assert "[[catalogue:media:work:00638|inline code]]" in content_html
+    assert "[[catalogue:media:work:00638|fenced code]]" in content_html
     assert child["date"] == "2026-06-02"
     assert child["date_display"] == "June 2026"
 
@@ -241,7 +240,7 @@ def test_python_docs_builder_targeted_build_removes_selected_doc_usage_from_scop
         write_text(
             child_source,
             child_source.read_text(encoding="utf-8").replace(
-                "[[catalogue:work:00638|three signs]]",
+                "[[catalogue:media:work:00638|three signs]]",
                 "three signs",
             ),
         )
@@ -256,13 +255,13 @@ def test_python_docs_builder_targeted_build_removes_selected_doc_usage_from_scop
     assert usage_index["occurrences"] == []
 
 
-def test_python_docs_builder_leaves_unresolved_catalogue_tokens_literal() -> None:
+def test_python_docs_builder_leaves_unsupported_catalogue_images_literal() -> None:
     with tempfile.TemporaryDirectory() as temp_path:
         root = Path(temp_path)
         prepare_repo(root)
         write_source_docs(
             root,
-            child_body_suffix="Missing target [[catalogue:work:99999|still literal]].",
+            child_body_suffix="Missing target [[catalogue:image:series:99999|alt=Still%20literal]].",
         )
         result = run_builder(root)
         child = read_json(root / f"docs-viewer/scopes/studio/generated/documents/by-id/{CHILD_DOC_ID}.json")
@@ -271,7 +270,7 @@ def test_python_docs_builder_leaves_unresolved_catalogue_tokens_literal() -> Non
         )
 
     assert result["diagnostics"]["warning_count"] == 0
-    assert "[[catalogue:work:99999|still literal]]" in child["content_html"]
+    assert "[[catalogue:image:series:99999|alt=Still%20literal]]" in child["content_html"]
     assert all(
         occurrence["target_id"] != "99999"
         for occurrence in usage_index["occurrences"]

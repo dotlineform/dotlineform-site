@@ -87,7 +87,7 @@ export function semanticTokenClosingIndex(text, start) {
   return -1;
 }
 
-export function serializeCatalogueToken(options = {}) {
+export function serializeCatalogueMediaToken(options = {}) {
   var targetType = cleanString(options.targetType);
   var targetId = cleanString(options.targetId);
   var title = cleanString(options.title);
@@ -102,9 +102,8 @@ export function serializeCatalogueToken(options = {}) {
     var canonicalPattern = new RegExp(definition.idPolicy.canonicalPattern);
     if (!canonicalPattern.test(targetId)) return "";
   }
-  var media = options.presentation === "media";
-  if (media && (targetType !== "work" || !/^\d{5}$/.test(targetId))) return "";
-  return "[[catalogue:" + (media ? "media:" : "") + targetType + ":" + targetId + "|" + escapedTitle(title) + "]]";
+  if (targetType !== "work" || !/^\d{5}$/.test(targetId)) return "";
+  return "[[catalogue:media:" + targetType + ":" + targetId + "|" + escapedTitle(title) + "]]";
 }
 
 export function serializeCatalogueImageToken(options = {}) {
@@ -196,7 +195,7 @@ export function parseCatalogueToken(raw, options = {}) {
   var identity = body.slice(0, separator).split(":");
   var imagePresentation = identity.length === 4 && identity[1] === "image";
   var mediaPresentation = identity.length === 4 && identity[1] === "media";
-  if (identity.length !== 3 && !imagePresentation && !mediaPresentation) return null;
+  if (!imagePresentation && !mediaPresentation) return null;
   var family = identity[0];
   var targetType = identity[identity.length - 2];
   var targetId = identity[identity.length - 1];
@@ -236,7 +235,7 @@ export function parseCatalogueToken(raw, options = {}) {
     end: start + source.length,
     supported: supported,
     activatable: supported,
-    presentation: imagePresentation ? "image" : mediaPresentation ? "media" : "text",
+    presentation: imagePresentation ? "image" : "media",
     alt: imageFields ? imageFields.alt : "",
     caption: imageFields ? imageFields.caption : "",
     summary: imageFields ? imageFields.summary : "",

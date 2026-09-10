@@ -11,12 +11,6 @@ from contextlib import redirect_stdout
 from io import StringIO
 from pathlib import Path
 
-from repo_factory import (
-    docs_scope_record,
-    docs_sub_scope_record,
-    write_docs_scope_config,
-)
-
 REPO_ROOT = Path(__file__).resolve().parents[3]
 BUILD_DIR = REPO_ROOT / "docs-viewer" / "build"
 if str(BUILD_DIR) not in sys.path:
@@ -35,8 +29,8 @@ def read_json(path: Path) -> dict[str, object]:
 
 
 def write_registry(root: Path) -> None:
-    fixture = read_json(REPO_ROOT / "docs-viewer/tests/fixtures/semantic_tokens_catalogue_v1.json")
-    families = [fixture["catalogue_definition"]]
+    registry = read_json(REPO_ROOT / "docs-viewer/config/semantic-tokens/registry.json")
+    families = registry["families"]
     write_json(
         root / "docs-viewer/config/semantic-tokens/registry.json",
         {

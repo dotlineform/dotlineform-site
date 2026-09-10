@@ -188,15 +188,13 @@ function createSourceEditorContextAdapter(state) {
     getDocumentTarget: function () {
       return state.target ? Object.assign({}, state.target) : null;
     },
-    readDocumentMetadata: function () {
-      var provider = state.collectionProvider || {};
-      if (typeof provider.readMetadata !== "function") {
-        return Promise.reject(new Error("Document subject metadata is unavailable."));
-      }
-      return provider.readMetadata(state.target);
-    },
     readCatalogueMediaTargets: function () {
       return state.collectionProvider.readCatalogueMediaTargets();
+    },
+    readDocumentLinkTargets: function () {
+      var target = { scope: state.target.scope };
+      if (state.target.stage) target.stage = state.target.stage;
+      return state.collectionProvider.readDocumentLinkTargets(target);
     },
     readCatalogueWork: function (workId) {
       return state.collectionProvider.readCatalogueWork(workId);
@@ -235,13 +233,6 @@ function createSourceEditorContextAdapter(state) {
     },
     setStatus: function (message, isError) {
       setStatus(state, message, isError);
-    },
-    validateLocalTarget: function (target) {
-      var provider = state.collectionProvider || {};
-      if (typeof provider.validateLocalTarget !== "function") {
-        return Promise.reject(new Error("Local Folder target validation is unavailable."));
-      }
-      return provider.validateLocalTarget(target);
     }
   };
 }

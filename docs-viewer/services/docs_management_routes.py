@@ -29,12 +29,12 @@ STAGED_MEDIA_FILES_PATH = "/docs/staged-media-files"
 DIAGRAM_SOURCES_PATH = "/docs/diagram-sources"
 
 SOURCE_BODY_PATH = "/docs/source"
+DOCUMENT_LINK_TARGETS_PATH = "/docs/document-link-targets"
 METADATA_PATH = "/docs/metadata"
 SOURCE_REBUILD_PATH = "/docs/source/rebuild"
 OPEN_SOURCE_PATH = "/docs/open-source"
 OPEN_DIAGRAM_SOURCE_PATH = "/docs/open-diagram-source"
 OPEN_LOCAL_TARGET_PATH = "/docs/open-local-target"
-VALIDATE_LOCAL_TARGET_PATH = "/docs/validate-local-target"
 BROKEN_LINKS_PATH = "/docs/broken-links"
 PROJECT_STATE_PATH = "/docs/project-state"
 DOCS_MEDIA_REPORT_PATH = "/docs/media-report"
@@ -95,6 +95,7 @@ GET_PATHS = (
     CATALOGUE_WORK_PATH,
     SOURCE_CONFIG_SETTINGS_PATH,
     SOURCE_BODY_PATH,
+    DOCUMENT_LINK_TARGETS_PATH,
     METADATA_PATH,
     IMPORT_SOURCE_DIRECTORIES_PATH,
     IMPORT_SOURCE_FILES_PATH,
@@ -108,7 +109,6 @@ POST_PATHS = (
     OPEN_SOURCE_PATH,
     OPEN_DIAGRAM_SOURCE_PATH,
     OPEN_LOCAL_TARGET_PATH,
-    VALIDATE_LOCAL_TARGET_PATH,
     BROKEN_LINKS_PATH,
     PROJECT_STATE_PATH,
     DOCS_MEDIA_REPORT_PATH,

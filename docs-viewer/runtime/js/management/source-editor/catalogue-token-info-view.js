@@ -3,7 +3,7 @@ import {
   normalizeCatalogueDetailId,
   parseCatalogueTokens,
   serializeCatalogueImageToken,
-  serializeCatalogueToken
+  serializeCatalogueMediaToken
 } from "./catalogue-token-parser.js";
 import {
   loadSemanticTokenRegistry
@@ -100,7 +100,7 @@ function renderToken(context, state, active) {
   article.className = "docsViewer__metadataInfo docsViewerCatalogueTokenInfo";
   var heading = document.createElement("h3");
   heading.className = "docsViewer__metadataInfoTitle";
-  heading.textContent = token.presentation === "image" ? "Catalogue image" : token.presentation === "media" ? "Media View link" : "Catalogue token";
+  heading.textContent = token.presentation === "image" ? "Catalogue image" : "Media View link";
 
   var list = document.createElement("dl");
   list.className = "docsViewer__metadataInfoList";
@@ -211,9 +211,8 @@ function renderToken(context, state, active) {
       }
       serialized = serializeCatalogueImageToken(serialization);
     } else {
-      serialized = serializeCatalogueToken({
+      serialized = serializeCatalogueMediaToken({
         registry: state.registry,
-        presentation: token.presentation,
         targetType: token.targetType,
         targetId: token.targetId,
         title: value

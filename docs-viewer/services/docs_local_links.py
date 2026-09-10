@@ -206,14 +206,6 @@ def _validated_local_target(
     }, resolved
 
 
-def validate_local_target_response(
-    repo_root: Path,
-    body: dict[str, Any],
-) -> tuple[HTTPStatus, dict[str, object]]:
-    status, payload, _ = _validated_local_target(repo_root, body)
-    return status, payload
-
-
 def open_local_target_response(
     repo_root: Path, body: dict[str, Any], *, dry_run: bool = False,
 ) -> tuple[HTTPStatus, dict[str, object]]:

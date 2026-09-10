@@ -4,7 +4,7 @@ import html
 import re
 from pathlib import Path
 from typing import Any
-from urllib.parse import parse_qs, urlparse
+from urllib.parse import parse_qs, parse_qsl, urlencode, urlparse
 
 from .common import (
     HTML_MEDIA_HEIGHT_PATTERN,
@@ -96,7 +96,7 @@ class ContentRenderingMixin:
     ) -> str:
         if not href or href.startswith(("#", "mailto:")) or re.match(r"\A[a-z][a-z0-9+\-.]*:", href, re.IGNORECASE):
             return href
-        parsed = urlparse(href)
+        parsed = urlparse(html.unescape(href))
         path_part = parsed.path or ""
         if not path_part:
             return href
@@ -107,7 +107,15 @@ class ContentRenderingMixin:
         viewer_doc_id = (query_values.get("doc") or [""])[0]
         if viewer_doc_id and self.viewer_path_match(path_part, query_values):
             target = docs_by_id.get(viewer_doc_id)
-            return self.viewer_url_for(target.doc_id, parsed.fragment) if target else href
+            if target:
+                rewritten = self.viewer_url_for(target.doc_id, parsed.fragment)
+                child_id = (query_values.get("subdoc") or [""])[0]
+                if child_id:
+                    location = urlparse(rewritten)
+                    pairs = [(key, value) for key, value in parse_qsl(location.query) if key != "subdoc"]
+                    pairs.append(("subdoc", child_id))
+                    rewritten = location._replace(query=urlencode(pairs)).geturl()
+                return html.escape(rewritten, quote=True)
         return href
 
     def viewer_path_match(self, path_part: str, query_values: dict[str, list[str]]) -> bool:

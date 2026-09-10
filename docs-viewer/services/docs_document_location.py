@@ -74,13 +74,28 @@ def sub_scope_report_placement(
     return config, sub_scope, matching_reports[0]
 
 
+def canonical_document_viewer_url(config: DocsScopeConfig, doc_id: str, *, subdoc_id: str = "") -> str:
+    """Build an ordinary location from explicit document/host identity, without a workflow stage."""
+    if not is_immutable_doc_id(doc_id) or (subdoc_id and not is_immutable_doc_id(subdoc_id)):
+        raise ValueError("doc_id and subdoc_id must use immutable document identity")
+    pairs = []
+    if config.include_scope_param:
+        pairs.append(f"scope={quote(config.scope_id)}")
+    pairs.append(f"doc={quote(doc_id)}")
+    if subdoc_id:
+        pairs.append(f"subdoc={quote(subdoc_id)}")
+    return f"{config.viewer_base_url}?{'&'.join(pairs)}"
+
+
 def canonical_sub_scope_document_url(
     repo_root: Path,
     scope_id: str,
     sub_scope_id: str,
     doc_id: str,
+    *,
+    stage: str = "",
 ) -> str:
-    """Return the configured canonical URL for one sub-scope document."""
+    """Resolve the exact stage's report host, returning a stage-free document URL."""
 
     normalized_doc_id = str(doc_id or "").strip()
     if not is_immutable_doc_id(normalized_doc_id):
@@ -90,14 +105,10 @@ def canonical_sub_scope_document_url(
         repo_root,
         scope_id,
         sub_scope_id,
+        stage=stage,
     )
 
-    pairs: list[str] = []
-    if config.include_scope_param:
-        pairs.append(f"scope={quote(config.scope_id)}")
-    pairs.append(f"doc={quote(parent_doc_id)}")
-    pairs.append(f"subdoc={quote(normalized_doc_id)}")
-    return f"{config.viewer_base_url}?{'&'.join(pairs)}"
+    return canonical_document_viewer_url(config, parent_doc_id, subdoc_id=normalized_doc_id)
 
 
 def management_collection_viewer_url(
@@ -146,6 +157,7 @@ def management_document_viewer_url(
 
 
 __all__ = [
+    "canonical_document_viewer_url",
     "canonical_sub_scope_document_url",
     "management_collection_viewer_url",
     "management_document_viewer_url",

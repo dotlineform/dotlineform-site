@@ -60,10 +60,7 @@ import {
   createCatalogueMediaLinkControlHandlers
 } from "./source-editor/catalogue-media-link.js";
 import {
-  CATALOGUE_TOKEN_CONTROL_ID,
-  catalogueTokenControlRenderer,
-  createCatalogueTokenInfoViewResolver,
-  createCatalogueTokenMainViewControlHandlers
+  createCatalogueTokenInfoViewResolver
 } from "./source-editor/catalogue-token-contribution.js";
 import {
   DIRECTIVE_ACTIONS_CONTROL_ID,
@@ -77,10 +74,10 @@ import {
   mountLocalFolderLinkActivation
 } from "./source-editor/local-folder-links.js";
 import {
-  SUBJECT_LINK_CONTROL_ID,
-  createSubjectLinkMainViewControlHandlers,
-  subjectLinkControlRenderer
-} from "./source-editor/subject-link-contribution.js";
+  DOCUMENT_LINK_CONTROL_ID,
+  createDocumentLinkControlHandlers,
+  documentLinkControlRenderer
+} from "./source-editor/document-link-contribution.js";
 
 function mountDocsViewerManageExtras(context) {
   var settings = context || {};
@@ -124,9 +121,8 @@ startDocsViewerManageApp({
     createDocsViewerManagedTableToolControlRenderers(),
     {
       [CATALOGUE_IMAGE_CONTROL_ID]: catalogueImageControlRenderer,
-      [CATALOGUE_TOKEN_CONTROL_ID]: catalogueTokenControlRenderer,
       [CATALOGUE_MEDIA_LINK_CONTROL_ID]: catalogueMediaLinkControlRenderer,
-      [SUBJECT_LINK_CONTROL_ID]: subjectLinkControlRenderer,
+      [DOCUMENT_LINK_CONTROL_ID]: documentLinkControlRenderer,
       [DIRECTIVE_ACTIONS_CONTROL_ID]: directiveActionsControlRenderer
     }
   ),
@@ -153,9 +149,8 @@ startDocsViewerManageApp({
   mainViewControlHandlerContributions: Object.assign(
     {},
     createCatalogueImageMainViewControlHandlers(),
-    createCatalogueTokenMainViewControlHandlers(),
     createCatalogueMediaLinkControlHandlers(),
-    createSubjectLinkMainViewControlHandlers(),
+    createDocumentLinkControlHandlers(),
     createDirectiveActionsMainViewControlHandlers(),
     managedTableTools.controlHandlers()
   ),
@@ -164,9 +159,8 @@ startDocsViewerManageApp({
   reportPresentationAdapter: reportPresentationAdapter,
   sourceEditorActionControlIds: [
     CATALOGUE_IMAGE_CONTROL_ID,
-    CATALOGUE_TOKEN_CONTROL_ID,
     CATALOGUE_MEDIA_LINK_CONTROL_ID,
-    SUBJECT_LINK_CONTROL_ID,
+    DOCUMENT_LINK_CONTROL_ID,
     DIRECTIVE_ACTIONS_CONTROL_ID
   ],
   sourceEditorInfoViewResolver: createCatalogueTokenInfoViewResolver(),

@@ -21,6 +21,7 @@ import docs_staged_media_service
 from docs_management_capabilities_service import capabilities_payload
 from docs_management_document_target import managed_document_metadata
 from docs_management_source_service import read_source_body
+from docs_document_link_targets import read_document_link_targets
 from studio.shared.python.projects_directories import list_projects_directory
 
 
@@ -92,6 +93,12 @@ def docs_management_get_payload(repo_root: Path, path: str, params: dict[str, li
         return {"ok": True, "service": "docs_management", "dry_run": dry_run}
     if path == routes.CAPABILITIES_PATH:
         return capabilities_payload(repo_root)
+    if path == routes.DOCUMENT_LINK_TARGETS_PATH:
+        return read_document_link_targets(
+            repo_root,
+            scope=docs_api_query_value(params, "scope"),
+            stage=docs_api_query_value(params, "stage") if "stage" in params else None,
+        )
     if path == routes.CATALOGUE_MEDIA_TARGETS_PATH:
         return docs_catalogue_media.read_catalogue_media_targets(repo_root)
     if path == routes.CATALOGUE_WORK_PATH:

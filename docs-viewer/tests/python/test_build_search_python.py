@@ -236,7 +236,7 @@ docs_subscope = handleEditMetadataSave()
 
 [[html-media:docs/studio/html/private-demo.html]]
 
-[[catalogue:work:01942|Linked Artwork]]
+[[catalogue:media:work:01942|Linked Artwork]]
 
 :::report
 id: docs_backlinks

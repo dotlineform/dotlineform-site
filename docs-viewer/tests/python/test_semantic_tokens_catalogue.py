@@ -1,103 +1,42 @@
-"""Production parser, registry, projection, and usage checks for Catalogue tokens."""
-
-from __future__ import annotations
+"""Catalogue media/image grammar, source ranges and Series image Build ownership."""
 
 import json
-import sys
-import tempfile
 from pathlib import Path
-from typing import Any
+import sys
 
-from repo_factory import docs_scope_record, write_docs_scope_config, write_json, write_text
-
+from repo_factory import docs_scope_record, write_docs_scope_config, write_json, write_site_tools_config, write_text
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
-BUILD_DIR = REPO_ROOT / "docs-viewer" / "build"
-SERVICES_DIR = REPO_ROOT / "docs-viewer" / "services"
-for path in (BUILD_DIR, SERVICES_DIR):
-    if str(path) not in sys.path:
-        sys.path.insert(0, str(path))
+sys.path.insert(0, str(REPO_ROOT / "docs-viewer/build"))
 
 from docs_builder.pipeline import DocsDataBuilder  # noqa: E402
-from docs_builder.semantic_token_registry import (  # noqa: E402
-    load_semantic_token_registry,
-    parse_semantic_token_registry,
-)
+from docs_builder.semantic_token_registry import load_semantic_token_registry  # noqa: E402
 from docs_builder.semantic_tokens import (  # noqa: E402
     parse_catalogue_tokens,
     semantic_token_at_selection,
     serialize_catalogue_image_token,
-    serialize_semantic_token,
 )
 from docs_scope_config import load_docs_scope_configs  # noqa: E402
 
 
-FIXTURE_PATH = REPO_ROOT / "docs-viewer/tests/fixtures/semantic_tokens_catalogue_v1.json"
-
-
-def load_fixture() -> dict[str, Any]:
-    return json.loads(FIXTURE_PATH.read_text(encoding="utf-8"))
-
-
-def fixture_registry_payload() -> dict[str, Any]:
-    return {
-        "schema_version": "docs_semantic_token_registry_v1",
-        "target_lookup_url": "/docs-viewer/data/generated/semantic-tokens/target-lookup.json",
-        "families": [load_fixture()["catalogue_definition"]],
-    }
-
-
-def test_registry_and_python_parser_match_the_frozen_fixture() -> None:
-    fixture = load_fixture()
-    registry = parse_semantic_token_registry(fixture_registry_payload())
-    assert registry is not None
-
-    for case in fixture["cases"]:
-        tokens = parse_catalogue_tokens(case["source"], registry=registry)
-        assert len(tokens) == len(case["tokens"]), case["id"]
-        for actual, expected in zip(tokens, case["tokens"], strict=True):
-            assert actual.raw == expected["raw"], case["id"]
-            assert actual.source_range == expected["source_range"], case["id"]
-            assert actual.family == expected["family"], case["id"]
-            assert actual.target_type == expected["target_type"], case["id"]
-            assert actual.target_id == expected["target_id"], case["id"]
-            assert actual.title == expected["title"], case["id"]
-            assert actual.supported is expected["supported"], case["id"]
-            if actual.supported:
-                assert serialize_semantic_token(
-                    family=actual.family,
-                    target_type=actual.target_type,
-                    target_id=actual.target_id,
-                    title=expected.get("input_title", actual.title),
-                ) == expected["serialized"], case["id"]
-        for expectation in case.get("caret_expectations", []):
-            active = semantic_token_at_selection(
-                tokens,
-                start=expectation["offset"],
-                end=expectation["offset"],
-            )
-            expected_index = expectation["active_token_index"]
-            assert active is (tokens[expected_index] if expected_index is not None else None), case["id"]
-
-
-def test_production_registry_retains_catalogue_and_registers_concept_separately() -> None:
-    payload = json.loads(
-        (
-            REPO_ROOT / "docs-viewer/config/semantic-tokens/registry.json"
-        ).read_text(encoding="utf-8")
-    )
-    assert payload["schema_version"] == "docs_semantic_token_registry_v1"
-    assert payload["target_lookup_url"] == (
-        "/docs-viewer/data/generated/semantic-tokens/target-lookup.json"
-    )
-    assert payload["families"][0] == load_fixture()["catalogue_definition"]
+def test_media_parser_preserves_literal_labels_ranges_and_code_boundaries() -> None:
     registry = load_semantic_token_registry(REPO_ROOT)
-    assert registry is not None
-    assert [family.key for family in registry.families] == ["catalogue", "concept"]
+    first = r"[[catalogue:media:work:00638|A \| label \] with \\]]"
+    second = "[[catalogue:media:work:00008|Another]]"
+    source = f"before {first}{second} after\n`{first}`\n<!-- {second} -->\n```text\n{first}\n```\n"
+    tokens = parse_catalogue_tokens(source, registry=registry)
+    assert [token.raw for token in tokens] == [first, second]
+    assert tokens[0].title == "A | label ] with \\"
+    for token in tokens:
+        assert token.presentation == "media" and token.supported
+        assert source[token.start:token.end] == token.raw
+        assert semantic_token_at_selection(tokens, start=token.start + 1, end=token.start + 1) is token
+        assert semantic_token_at_selection(tokens, start=token.start, end=token.start) is None
+        assert semantic_token_at_selection(tokens, start=token.end, end=token.end) is None
 
 
 def test_visual_occurrence_parser_is_canonical_and_context_aware() -> None:
-    registry = parse_semantic_token_registry(fixture_registry_payload())
+    registry = load_semantic_token_registry(REPO_ROOT)
     assert registry is not None
     plain = "[[catalogue:image:work:00638|alt=3%20symbols]]"
     detail = "[[catalogue:image:work:00638|alt=3%20symbols%20detail&detail_id=001]]"
@@ -154,258 +93,39 @@ def test_visual_occurrence_parser_is_canonical_and_context_aware() -> None:
         assert parse_catalogue_tokens(raw, registry=registry) == [], raw
 
 
-def write_builder_fixture(root: Path) -> tuple[str, str]:
-    resolved_case = next(
-        case for case in load_fixture()["cases"] if case["id"] == "resolved_work_00638"
+def test_builder_retains_series_image_projection_and_usage(tmp_path: Path) -> None:
+    root = tmp_path
+    doc_id = "d-20260910-120000-a1b2c3"
+    write_site_tools_config(root)
+    write_docs_scope_config(root, [docs_scope_record("studio", default_doc_id=doc_id)])
+    for relative in ("docs-viewer/config/semantic-tokens/registry.json", "docs-viewer/config/routes/docs-viewer-routes.json"):
+        write_text(root / relative, (REPO_ROOT / relative).read_text())
+    write_json(root / "docs-viewer/data/generated/semantic-tokens/target-lookup.json", {
+        "schema_version": "docs_semantic_token_target_lookup_v2",
+        "targets": [{"family": "catalogue", "target_type": "series", "target_id": "005",
+                     "title": "Series", "href": "/series/?series=005",
+                     "image": {"src": "https://media.example.test/series.webp"}}],
+    })
+    figure = (
+        "[[catalogue:image:series:005|alt=Series&caption=Quiet%20field&"
+        "summary=Supporting%20copy&placement=right&fill_width=false]]"
     )
-    broken_case = next(
-        case for case in load_fixture()["cases"] if case["id"] == "broken_missing_work"
-    )
-    scope_record = docs_scope_record(
-        "analysis",
-        default_doc_id=resolved_case["source_doc_id"],
-    )
-    write_docs_scope_config(root, [scope_record])
-    write_json(
-        root / "site-tools/config/site-tools.json",
-        {
-            "schema_version": "site_tools_config_v1",
-            "media": {
-                "base": "https://media.dotlineform.com",
-                "image_work_details": "/work_details/img",
-            },
-        },
-        indent=2,
-    )
-    write_json(
-        root / "_data/pipeline.json",
-        {
-            "variants": {
-                "primary": {
-                    "preferred_width": 1600,
-                    "suffix": "primary",
-                },
-            },
-            "encoding": {"format": "webp"},
-        },
-        indent=2,
-    )
-    write_json(
-        root / "docs-viewer/config/routes/docs-viewer-routes.json",
-        {
-            "schema_version": "docs_viewer_routes_v1",
-            "routes": [
-                {
-                    "route_id": "docs-manage",
-                    "app_kind": "manage",
-                    "default_scope_id": "analysis",
-                    "features": ["recent"],
-                    "recent_basis": "edited",
-                }
-            ],
-        },
-    )
-    write_json(
-        root / "docs-viewer/config/semantic-tokens/registry.json",
-        fixture_registry_payload(),
-    )
-    target_lookup = load_fixture()["target_lookup_example"]
-    target_lookup["targets"][0]["has_details"] = True
-    target_lookup["targets"].append(
-        {
-            "family": "catalogue",
-            "target_type": "work",
-            "target_id": "99999",
-            "title": "missing work",
-            "href": "",
-            "meta": [],
-        }
-    )
-    target_lookup["targets"].append(
-        {
-            "family": "catalogue",
-            "target_type": "series",
-            "target_id": "005",
-            "title": "3 symbols",
-            "href": "/series/?series=005",
-            "meta": ["2007"],
-            "image": {
-                "src": "https://media.dotlineform.com/works/img/00638-primary-1600.webp?v=1"
-            },
-        }
-    )
-    write_json(
-        root / "docs-viewer/data/generated/semantic-tokens/target-lookup.json",
-        target_lookup,
-    )
-    write_json(
-        root / "studio/data/canonical/catalogue/work_details/00638.json",
-        {
-            "header": {
-                "schema": "catalogue_source_work_detail_record_v1",
-                "work_id": "00638",
-            },
-            "work_id": "00638",
-            "detail_sections": [
-                {
-                    "section_id": "00638-1",
-                    "details": [
-                        {
-                            "detail_uid": "00638-001",
-                            "detail_id": "001",
-                            "project_filename": "3 symbols detail.jpg",
-                            "media_version": 3,
-                            "title": "3 symbols detail",
-                            "width_px": 2400,
-                            "height_px": 1600,
-                        },
-                    ],
-                },
-            ],
-        },
-    )
-    write_text(
-        root / f"docs-viewer/scopes/analysis/source/documents/{resolved_case['source_doc_id']}.md",
-        (
-            "---\n"
-            f"doc_id: {resolved_case['source_doc_id']}\n"
-            "title: Resolved fixture\n"
-            "added_date: 2026-07-26\n"
-            "last_updated: 2026-07-26 12:00:00\n"
-            'parent_id: ""\n'
-            "---\n"
-            f"{resolved_case['source']}"
-        ),
-    )
-    write_text(
-        root / f"docs-viewer/scopes/analysis/source/documents/{broken_case['source_doc_id']}.md",
-        (
-            "---\n"
-            f"doc_id: {broken_case['source_doc_id']}\n"
-            "title: Broken fixture\n"
-            "added_date: 2026-07-26\n"
-            "last_updated: 2026-07-26 12:00:00\n"
-            'parent_id: ""\n'
-            "---\n"
-            f"{broken_case['source']}"
-        ),
-    )
-    return resolved_case["source_doc_id"], broken_case["source_doc_id"]
-
-
-def test_builder_projects_only_resolved_lookup_rows_and_writes_usage() -> None:
-    with tempfile.TemporaryDirectory() as temp_path:
-        root = Path(temp_path)
-        resolved_doc_id, broken_doc_id = write_builder_fixture(root)
-        registry = load_semantic_token_registry(root)
-        assert registry is not None
-        builder = DocsDataBuilder(
-            repo_root=root,
-            config=load_docs_scope_configs(root)["analysis"],
-            skip_media_builds=True,
-        )
-        result = builder.run(write=True)
-        resolved_payload = json.loads(
-            (
-                root
-                / f"docs-viewer/scopes/analysis/generated/documents/by-id/{resolved_doc_id}.json"
-            ).read_text(encoding="utf-8")
-        )
-        broken_payload = json.loads(
-            (
-                root
-                / f"docs-viewer/scopes/analysis/generated/documents/by-id/{broken_doc_id}.json"
-            ).read_text(encoding="utf-8")
-        )
-        usage_index = json.loads(
-            (
-                root
-                / "docs-viewer/scopes/analysis/generated/documents/semantic-tokens/index.json"
-            ).read_text(encoding="utf-8")
-        )
-        semantic_tokens_dir = (
-            root / "docs-viewer/scopes/analysis/generated/documents/semantic-tokens"
-        )
-        by_document_exists = (semantic_tokens_dir / "by-document").exists()
-        by_target_exists = (semantic_tokens_dir / "by-target").exists()
-
-    assert '<a href="/works/?work=00638"' in resolved_payload["content_html"]
-    assert "[[catalogue:work:99999|missing work]]" in broken_payload["content_html"]
-    assert result["diagnostics"]["warning_count"] == 0
-    assert usage_index == load_fixture()["usage_index_example"]
-    assert not by_document_exists
-    assert not by_target_exists
-
-
-def test_builder_projects_linked_visual_occurrences_and_preserves_missing_images() -> None:
-    with tempfile.TemporaryDirectory() as temp_path:
-        root = Path(temp_path)
-        write_builder_fixture(root)
-        doc_id = "d-20260809-120000-a1b2c3"
-        plain = "[[catalogue:image:work:00638|alt=3%20symbols]]"
-        detail = "[[catalogue:image:work:00638|alt=3%20symbols%20detail&detail_id=001]]"
-        figure = (
-            "[[catalogue:image:series:005|alt=3%20symbols&caption=Quiet%20field&"
-            "summary=Supporting%20copy&placement=right&fill_width=false]]"
-        )
-        missing_image = "[[catalogue:image:work:00008|alt=nerve]]"
-        missing_detail = "[[catalogue:image:work:00638|alt=missing%20detail&detail_id=999]]"
-        text_same_target = "[[catalogue:work:00008|nerve]]"
-        write_text(
-            root / f"docs-viewer/scopes/analysis/source/documents/{doc_id}.md",
-            (
-                "---\n"
-                f"doc_id: {doc_id}\n"
-                "title: Visual fixture\n"
-                "added_date: 2026-08-09\n"
-                "last_updated: 2026-08-09 12:00:00\n"
-                'parent_id: ""\n'
-                "---\n"
-                f"{plain}\n\n{detail}\n\n{figure}\n\n{missing_detail}\n\n{missing_image}\n\n{text_same_target}\n"
-            ),
-        )
-        builder = DocsDataBuilder(
-            repo_root=root,
-            config=load_docs_scope_configs(root)["analysis"],
-            skip_media_builds=True,
-        )
-        builder.run(write=True)
-        payload = json.loads(
-            (
-                root
-                / f"docs-viewer/scopes/analysis/generated/documents/by-id/{doc_id}.json"
-            ).read_text(encoding="utf-8")
-        )
-        usage = json.loads(
-            (
-                root
-                / "docs-viewer/scopes/analysis/generated/documents/semantic-tokens/index.json"
-            ).read_text(encoding="utf-8")
-        )
-
-    html = payload["content_html"]
-    assert 'data-docs-media-kind="catalogue-work" data-docs-media-id="00638"' in html
-    assert 'data-docs-media-kind="catalogue-work-detail" data-docs-media-id="00638-001" data-docs-media-work-id="00638"' in html
-    assert 'src="https://media.dotlineform.com/work_details/img/00638-001-primary-1600.webp?v=3"' not in html
-    assert 'target="_blank" rel="noopener noreferrer"' in html
-    assert '<figure class="docsViewerFigure docsViewerFigure--image-right docsViewerFigure--natural-width">' in html
-    assert '<a class="docsViewerFigure__imageLink" href="/series/?series=005"' in html
-    assert 'data-semantic-token-target-type="series"' in html
-    assert 'data-semantic-token-target-id="005"' in html
-    assert '<span class="docsViewerFigure__caption">Quiet field</span>' in html
-    assert '<span class="docsViewerFigure__summary">Supporting copy</span>' in html
-    assert 'data-docs-media-id="00008"' in html
-    assert 'data-docs-media-id="00638-999"' in html
-    assert '<a href="/works/?work=00008" data-semantic-token-family="catalogue"' in html
-    resolved_rows = [row for row in usage["occurrences"] if row["source_doc_id"] == doc_id]
-    assert usage["schema_version"] == "docs_semantic_token_usage_index_v1"
-    assert [row["title"] for row in resolved_rows] == ["3 symbols", "3 symbols detail", "Quiet field", "missing detail", "nerve", "nerve"]
-    assert resolved_rows[1]["target_type"] == "work"
-    assert resolved_rows[1]["target_id"] == "00638"
-    assert resolved_rows[1]["href"] == ""
-    assert resolved_rows[2]["target_type"] == "series"
-    assert resolved_rows[2]["target_id"] == "005"
-    assert resolved_rows[2]["href"] == "/series/?series=005"
-    assert resolved_rows[5]["raw"] == text_same_target
-    assert resolved_rows[4]["raw"] == missing_image and resolved_rows[4]["href"] == ""
-    assert resolved_rows[3]["raw"] == missing_detail and resolved_rows[3]["href"] == ""
+    missing = "[[catalogue:image:series:999|alt=Missing]]"
+    write_text(root / f"docs-viewer/scopes/studio/source/documents/{doc_id}.md",
+               f'---\ndoc_id: {doc_id}\ntitle: Images\nadded_date: "2026-09-10 12:00:00"\n---\n{figure}\n\n{missing}\n')
+    builder = DocsDataBuilder(repo_root=root, config=load_docs_scope_configs(root)["studio"], skip_media_builds=True)
+    builder.run(write=True)
+    generated = root / "docs-viewer/scopes/studio/generated/documents"
+    content = json.loads((generated / f"by-id/{doc_id}.json").read_text())["content_html"]
+    usage = json.loads((generated / "semantic-tokens/index.json").read_text())
+    assert '<a class="docsViewerFigure__imageLink" href="/series/?series=005"' in content
+    assert 'src="https://media.example.test/series.webp"' in content
+    assert 'target="_blank" rel="noopener noreferrer"' in content
+    assert 'docsViewerFigure--image-right docsViewerFigure--natural-width' in content
+    assert '<span class="docsViewerFigure__caption">Quiet field</span>' in content
+    assert '<span class="docsViewerFigure__summary">Supporting copy</span>' in content
+    assert missing in content
+    assert not builder.warnings
+    assert len(usage["occurrences"]) == 1
+    assert usage["occurrences"][0]["raw"] == figure
+    assert usage["occurrences"][0]["href"] == "/series/?series=005"

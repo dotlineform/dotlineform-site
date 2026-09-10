@@ -1,7 +1,7 @@
 import { DOCS_VIEWER_ACTION_IDS } from "../docs-viewer-action-definitions.js";
 import { openSemanticTextTokenModal } from "./catalogue-token-modal.js";
 import { selectedTextForCatalogueTitle } from "./catalogue-token-contract.js";
-import { parseCatalogueToken, serializeCatalogueToken } from "./catalogue-token-parser.js";
+import { parseCatalogueToken, serializeCatalogueMediaToken } from "./catalogue-token-parser.js";
 import { loadSemanticTokenRegistry } from "./semantic-token-registry.js";
 import { collectSemanticTokenTargetMatches, normalizeSemanticTokenTargets } from "./semantic-token-targets.js";
 import { normalizeDocsViewerMediaPresentation } from "../../shared/docs-viewer-media-presentation.js";
@@ -40,7 +40,7 @@ export async function readCatalogueMediaPresentation(adapter, workId, detailId =
 export function openCatalogueMediaLinkModal(options = {}) {
   var adapter = options.adapter;
   return openSemanticTextTokenModal({
-    buildToken: function (value) { return serializeCatalogueToken(Object.assign({}, value, { presentation: "media" })); },
+    buildToken: serializeCatalogueMediaToken,
     collectMatches: function (support, query, limit) {
       return collectSemanticTokenTargetMatches(support.targets, query, support.registry, limit);
     },

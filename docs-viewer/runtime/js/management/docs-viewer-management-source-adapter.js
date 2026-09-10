@@ -4,12 +4,11 @@ import {
   previewStagedMedia,
   openManagedDiagramSource,
   readManagedDiagramSources,
-  readManagedDocMetadata,
   readManagedDocSource,
   readCatalogueMediaTargets,
   readCatalogueWork,
-  rebuildManagedDocSource,
-  validateLocalTarget
+  readDocumentLinkTargets,
+  rebuildManagedDocSource
 } from "./docs-viewer-management-client.js";
 
 function currentValue(value) {
@@ -34,6 +33,9 @@ export function createDocsViewerManagementSourceAdapter(options) {
   }
 
   return {
+    readDocumentLinkTargets: function (target) {
+      return readDocumentLinkTargets(target, clientOptions());
+    },
     readCatalogueMediaTargets: function () {
       return readCatalogueMediaTargets(clientOptions());
     },
@@ -43,9 +45,6 @@ export function createDocsViewerManagementSourceAdapter(options) {
     readSource: function (target, optionsForRead) {
       return readManagedDocSource(target, clientOptions(optionsForRead));
     },
-    readMetadata: function (target, optionsForRead) {
-      return readManagedDocMetadata(target, clientOptions(optionsForRead));
-    },
     writeSource: function (target, payload, optionsForWrite) {
       return rebuildManagedDocSource(target, payload, clientOptions(optionsForWrite));
     },
@@ -54,9 +53,6 @@ export function createDocsViewerManagementSourceAdapter(options) {
     },
     openDiagramSource: function (target, payload, optionsForOpen) {
       return openManagedDiagramSource(target, payload, clientOptions(optionsForOpen));
-    },
-    validateLocalTarget: function (target, optionsForValidation) {
-      return validateLocalTarget(target, clientOptions(optionsForValidation));
     },
     listStagedMedia: function (mediaKind, optionsForList) {
       return listStagedMedia(mediaKind, clientOptions(optionsForList));

@@ -40,6 +40,7 @@
     "source_config": "/docs/source-config",
     "source_config_settings": "/docs/source-config-settings",
     "source_body": "/docs/source",
+    "document_link_targets": "/docs/document-link-targets",
     "metadata": "/docs/metadata",
     "source_rebuild": "/docs/source/rebuild",
     "import_source_directories": "/docs/import-source-directories",

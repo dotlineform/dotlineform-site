@@ -91,12 +91,12 @@ def test_mismatched_record_and_escaped_workspace_are_rejected(catalogue, tmp_pat
         read_catalogue_media_targets(root)
 
 
-def build_document(root, body):
-    source = root / f"docs-viewer/scopes/studio/source/documents/{DOC_ID}.md"
+def build_document(root, body, *, scope="studio"):
+    source = root / f"docs-viewer/scopes/{scope}/source/documents/{DOC_ID}.md"
     write_text(source, f'---\ndoc_id: {DOC_ID}\ntitle: Invoking document\nadded_date: "2026-09-09 12:00:00"\n---\n{body}\n')
-    builder = DocsDataBuilder(repo_root=root, config=load_docs_scope_configs(root)["studio"], skip_media_builds=True)
+    builder = DocsDataBuilder(repo_root=root, config=load_docs_scope_configs(root)[scope], skip_media_builds=True)
     builder.run(write=True)
-    payload = json.loads((root / f"docs-viewer/scopes/studio/generated/documents/by-id/{DOC_ID}.json").read_text())
+    payload = json.loads((root / f"docs-viewer/scopes/{scope}/generated/documents/by-id/{DOC_ID}.json").read_text())
     return payload["content_html"], builder.warnings
 
 
@@ -118,6 +118,16 @@ def test_build_preserves_only_authored_text_and_independent_references(catalogue
     assert not warnings
     (generated / "works/index/00523.json").unlink()
     assert build_document(root, source)[0] == content
+
+
+def test_public_scope_build_preserves_media_activation_without_management(catalogue):
+    root, _, _ = catalogue
+    write_docs_scope_config(root, [docs_scope_record("example", scope_type="public", viewer_base_url="/analysis/", include_scope_param=False)])
+    content, warnings = build_document(root, "[[catalogue:media:work:00523|Public link]]", scope="example")
+    marker = BeautifulSoup(content, "html.parser").select_one('[data-docs-content-detail="media"]')
+    assert marker["data-docs-media-id"] == "00523"
+    assert marker.select_one("button[data-docs-media-open]").get_text() == "Public link"
+    assert not warnings
 
 
 def test_missing_work_retains_a_live_reference_and_code_tokens_remain_literal(catalogue):
@@ -154,10 +164,10 @@ def test_leading_inline_media_preserves_surrounding_markdown(catalogue, prefix, 
     assert container.select_one('[data-docs-media-id="00523"]') is not None
 
 
-def test_media_parser_keeps_old_text_meaning_and_rejects_other_targets(catalogue):
+def test_media_parser_requires_explicit_presentation_and_exact_work_target(catalogue):
     root, _, _ = catalogue
     registry = load_semantic_token_registry(root)
-    assert parse_catalogue_token("[[catalogue:work:00523|Old]]", registry=registry).presentation == "text"
+    assert parse_catalogue_token("[[catalogue:work:00523|Unqualified]]", registry=registry) is None
     assert parse_catalogue_token("[[catalogue:media:work:00523|New]]", registry=registry).presentation == "media"
     for raw in ("[[catalogue:media:series:143|Series]]", "[[catalogue:media:work:523|Short]]"):
         assert parse_catalogue_token(raw, registry=registry) is None

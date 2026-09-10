@@ -110,9 +110,9 @@ export function createDocsViewerConfiguredScopeProvider(options) {
       return source.readSource(target, optionsForRead || {});
     };
   }
-  if (source && typeof source.readMetadata === "function") {
-    provider.readMetadata = function (target, optionsForRead) {
-      return source.readMetadata(target, optionsForRead || {});
+  if (source && typeof source.readDocumentLinkTargets === "function") {
+    provider.readDocumentLinkTargets = function (target) {
+      return source.readDocumentLinkTargets(target);
     };
   }
   if (source && typeof source.readCatalogueMediaTargets === "function") {
@@ -134,11 +134,6 @@ export function createDocsViewerConfiguredScopeProvider(options) {
   if (source && typeof source.writeSource === "function") {
     provider.writeSource = function (target, payload, optionsForWrite) {
       return source.writeSource(target, payload, optionsForWrite || {});
-    };
-  }
-  if (source && typeof source.validateLocalTarget === "function") {
-    provider.validateLocalTarget = function (target, optionsForValidation) {
-      return source.validateLocalTarget(target, optionsForValidation || {});
     };
   }
   if (source && typeof source.readDiagramSources === "function") {
