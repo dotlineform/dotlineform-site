@@ -58,6 +58,12 @@ export function createDocsViewerReportService(options) {
 
   return {
     baseUrl: serviceOptions.baseUrl,
+    readScopeLinks: function (request) {
+      return fetchReportJson("/docs/scope-links?" + new URLSearchParams({
+        scope: request.scope,
+        stage: request.stage
+      }).toString(), serviceOptions);
+    },
     readUnpublishable: function (request) {
       return fetchReportJson("/docs/unpublishable-report?" + new URLSearchParams({
         scope: request.scope,

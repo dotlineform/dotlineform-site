@@ -134,6 +134,24 @@ def read_generated_doc_links(
     return payload
 
 
+def read_generated_scope_links(repo_root: Path, scope: str, stage: str | None) -> Dict[str, Any]:
+    """Read the last completed Working aggregate without building or scanning records."""
+    if scope != "analysis" or stage != "working":
+        raise ValueError("Scope Links is available only in Analysis Working")
+    output = generated_docs_output_root(repo_root, scope, stage).resolve()
+    path = output / "links.json"
+    if path.is_symlink():
+        raise ValueError("Scope Links data must remain in its configured directory")
+    payload = read_generated_json(path, "generated scope Links")
+    if (
+        not isinstance(payload, dict) or payload.get("schema_version") != 1
+        or payload.get("scope") != scope or payload.get("stage") != stage
+        or not isinstance(payload.get("documents"), list)
+    ):
+        raise ValueError("Scope Links data does not match Analysis Working")
+    return payload
+
+
 def read_generated_json(path: Path, label: str) -> Dict[str, Any]:
     if not path.exists():
         raise FileNotFoundError(f"{label} not found: {path.name}")

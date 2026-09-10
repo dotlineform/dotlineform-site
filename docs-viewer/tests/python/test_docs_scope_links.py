@@ -9,6 +9,9 @@ import pytest
 import docs_write_rebuild as rebuild
 from docs_scope_config import load_docs_scope_stage, generated_documents_path, document_source_path
 from docs_scope_links import write_scope_links
+from docs_generated_reads import read_generated_scope_links
+from docs_management_read_service import docs_management_get_payload
+from docs_management_routes import GENERATED_SCOPE_LINKS_PATH, GET_PATHS
 from repo_factory import docs_scope_record, docs_sub_scope_record, write_docs_scope_config, write_json
 
 
@@ -97,3 +100,34 @@ def test_aggregation_failure_prevents_scope_rebuild_completion(working, monkeypa
     with pytest.raises(ValueError, match="invalid JSON"):
         rebuild.rebuild_scope_outputs(root, "analysis", stage="working", include_search=True)
     assert not (output.parent / "build-manifest.json").exists()
+
+
+def test_scope_read_returns_the_completed_snapshot_without_consulting_inputs(working):
+    root, config, output = working
+    write_scope_links(root, config)
+    path = output / "links.json"
+    before = path.read_bytes()
+    (output / "links-by-id/unreadable.json").write_text("{")
+    assert GENERATED_SCOPE_LINKS_PATH in GET_PATHS
+    payload = docs_management_get_payload(root, GENERATED_SCOPE_LINKS_PATH, {"scope": ["analysis"], "stage": ["working"]})
+    assert payload == json.loads(before)
+    assert path.read_bytes() == before
+
+
+@pytest.mark.parametrize("scope,stage", [("analysis", None), ("analysis", "pre-publish"), ("studio", "working")])
+def test_scope_read_requires_exact_working_owner(working, scope, stage):
+    with pytest.raises(ValueError, match="only in Analysis Working"):
+        read_generated_scope_links(working[0], scope, stage)
+
+
+def test_scope_read_distinguishes_missing_invalid_and_wrong_snapshot(working):
+    root, _config, output = working
+    path = output / "links.json"
+    with pytest.raises(FileNotFoundError):
+        read_generated_scope_links(root, "analysis", "working")
+    path.write_text("{")
+    with pytest.raises(RuntimeError, match="not valid JSON"):
+        read_generated_scope_links(root, "analysis", "working")
+    write_json(path, {"schema_version": 1, "scope": "analysis", "stage": "pre-publish", "documents": []})
+    with pytest.raises(ValueError, match="does not match"):
+        read_generated_scope_links(root, "analysis", "working")

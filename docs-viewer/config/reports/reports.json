@@ -2,6 +2,14 @@
   "schema": "docs_viewer_reports_v1",
   "reports": [
     {
+      "report_id": "scope_links",
+      "title": "Links",
+      "description": "Lists directed document links from the last Analysis Working scope rebuild.",
+      "default_access": "local",
+      "loader_id": "scope_links",
+      "presets": []
+    },
+    {
       "report_id": "unpublishable",
       "title": "Unpublishable",
       "description": "Lists documents with publishable: false across Analysis Working and all its sub-scopes.",

@@ -11,7 +11,10 @@ function sameTarget(left, right) {
   return left.scope === right.scope && left.sub_scope === right.sub_scope && left.doc_id === right.doc_id;
 }
 
-function documentSummary(value, invokingTarget) {
+/** Validate a prepared document summary and apply the explicit local viewing stage.
+ * Preserve collection and Subject metadata for consumers' document presentation.
+ */
+export function docsViewerLinksDocumentSummary(value, invokingTarget) {
   var target = identity(value && value.target);
   if (typeof value.title !== "string" || !value.title.trim()) throw new Error("Links document title is missing.");
   var href = value.href;
@@ -49,14 +52,14 @@ export function docsViewerLinksPresentation(payload, target) {
   if (!payload || payload.schema_version !== 1 || !Array.isArray(payload.outgoing) || !Array.isArray(payload.incoming)) {
     throw new Error("Unsupported Links data. Expected schema version 1.");
   }
-  var self = documentSummary(payload.self, target);
+  var self = docsViewerLinksDocumentSummary(payload.self, target);
   if (!sameTarget(self.target, expected)) throw new Error("Links data does not match the displayed document.");
   var sections = new Map(["Concepts", "Works", "References"].map(function (label) { return [label, []]; }));
   var documents = new Map();
   ["outgoing", "incoming"].forEach(function (direction) {
     var seen = new Set();
     payload[direction].forEach(function (entry) {
-      var document = documentSummary(entry && entry.document, target);
+      var document = docsViewerLinksDocumentSummary(entry && entry.document, target);
       var key = JSON.stringify(document.target);
       if (seen.has(key) || !Array.isArray(entry.occurrences) || !entry.occurrences.length) {
         throw new Error("Links contains an invalid counterpart entry.");

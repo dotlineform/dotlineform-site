@@ -57,6 +57,8 @@ def docs_generated_read_payload(repo_root: Path, path: str, params: dict[str, li
             repo_root, scope, docs_api_query_value(params, "doc_id"),
             docs_api_query_value(params, "sub_scope"), stage,
         )
+    if path == routes.GENERATED_SCOPE_LINKS_PATH:
+        return docs_generated_reads.read_generated_scope_links(repo_root, scope, stage)
     if path == routes.GENERATED_PAYLOAD_PATH:
         doc_id = docs_api_query_value(params, "doc_id") or docs_api_query_value(params, "doc")
         if not doc_id:
@@ -122,6 +124,7 @@ def docs_management_get_payload(repo_root: Path, path: str, params: dict[str, li
         routes.GENERATED_BACKLINKS_PATH,
         routes.GENERATED_PAYLOAD_PATH,
         routes.GENERATED_LINKS_PATH,
+        routes.GENERATED_SCOPE_LINKS_PATH,
         routes.GENERATED_SEARCH_PATH,
         routes.GENERATED_SEMANTIC_TOKENS_PATH,
     }:
