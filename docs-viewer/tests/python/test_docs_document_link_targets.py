@@ -135,7 +135,8 @@ def test_lookup_http_gate_requires_management_and_allowed_origin(management: boo
 
 
 @pytest.mark.parametrize("stage,path,scope_query", [("working", "/docs/", "scope=analysis&"), ("", "/analysis/", "")])
-def test_rendered_ordinary_link_preserves_child_and_literal_title(stage: str, path: str, scope_query: str) -> None:
+@pytest.mark.parametrize("origin", ["", "//example.test", "https://example.test"])
+def test_rendered_ordinary_link_preserves_destination_child_and_literal_title(stage: str, path: str, scope_query: str, origin: str) -> None:
     class Renderer(ContentRenderingMixin, SourceLoadingMixin):
         pass
 
@@ -145,12 +146,13 @@ def test_rendered_ordinary_link_preserves_child_and_literal_title(stage: str, pa
     renderer.include_scope_param = bool(scope_query)
     renderer.config = SimpleNamespace(stage=stage)
     doc = SimpleNamespace(doc_id=HOST)
-    href = f"{path}?{scope_query}doc={HOST}&subdoc={CHILD}#part"
-    # These are the ordinary Markdown bytes produced by the picker for a literal title.
+    href = f"{origin}{path}?{scope_query}doc={HOST}&subdoc={CHILD}#part"
+    # Picker links and authored external links retain their destination and literal title.
     source = f"[A \\[label\\] \\*literal\\* &lt;b&gt; &amp; \\\\ end](<{href}>)"
     rendered = renderer.rewrite_doc_links(render_markdown_to_html(source), current_doc=doc, docs=[doc])
     anchor = BeautifulSoup(rendered, "html.parser").find("a")
     assert anchor.get_text() == "A [label] *literal* <b> & \\ end"
     assert not anchor.find("b") and not anchor.find("em")
     expected_stage = f"stage={stage}&" if stage else ""
-    assert anchor["href"] == f"{path}?{scope_query}{expected_stage}doc={HOST}&subdoc={CHILD}#part"
+    expected_href = href if origin else f"{path}?{scope_query}{expected_stage}doc={HOST}&subdoc={CHILD}#part"
+    assert anchor["href"] == expected_href

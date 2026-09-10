@@ -97,6 +97,8 @@ class ContentRenderingMixin:
         if not href or href.startswith(("#", "mailto:")) or re.match(r"\A[a-z][a-z0-9+\-.]*:", href, re.IGNORECASE):
             return href
         parsed = urlparse(html.unescape(href))
+        if parsed.netloc:
+            return href
         path_part = parsed.path or ""
         if not path_part:
             return href
