@@ -21,7 +21,6 @@ from build_docs_test_support import (
     write_json,
     write_public_scope_config,
     write_public_source_docs,
-    write_route_config,
     write_site_tools_config,
     write_text,
 )
@@ -31,7 +30,6 @@ from repo_factory import docs_scope_record, docs_sub_scope_record
 TAGS_REPORT_DOC_ID = "d-20260620-000000-000011"
 DETAIL_DOC_ID = "d-20260620-000000-000012"
 RELATED_DOC_ID = "d-20260622-000000-000013"
-HIDDEN_DOC_ID = "d-20260622-000000-000014"
 
 
 def test_child_report_preserves_descriptor_and_authored_host(tmp_path: Path) -> None:
@@ -870,91 +868,32 @@ def test_python_docs_builder_rejects_browser_config_suppression_outside_sub_scop
             )
 
 
-def test_python_docs_builder_keeps_non_publishable_docs_out_of_public_manifest() -> None:
+def test_python_docs_builder_rejects_publishable_in_public_sub_scope() -> None:
     with tempfile.TemporaryDirectory() as temp_path:
         root = Path(temp_path)
-        prepare_repo(root)
-        write_route_config(root, public_scope="studio", public_basis="edited")
-        config_path = root / "docs-viewer/config/scopes/docs_scopes.json"
-        payload = read_json(config_path)
-        payload["scopes"][0] = docs_scope_record(
-            "studio",
-            scope_type="public",
-            viewer_base_url="/studio/",
-            include_scope_param=False,
-            default_doc_id=PARENT_DOC_ID,
-            sub_scopes=[
-                docs_sub_scope_record(
-                    "studio",
-                    "tags",
-                    scope_type="public",
-                )
-            ],
-        )
-        write_json(config_path, payload)
+        write_site_tools_config(root, media_base="")
+        write_public_scope_config(root)
+        write_public_source_docs(root)
         write_text(
-            root / f"docs-viewer/scopes/studio/source/sub-scopes/tags/documents/{DETAIL_DOC_ID}.md",
+            root / f"docs-viewer/scopes/example/source/sub-scopes/tags/documents/{DETAIL_DOC_ID}.md",
             f"""---
 doc_id: {DETAIL_DOC_ID}
 title: Detail
----
-# Detail
-""",
-        )
-        write_text(
-            root / f"docs-viewer/scopes/studio/source/sub-scopes/tags/documents/{HIDDEN_DOC_ID}.md",
-            f"""---
-doc_id: {HIDDEN_DOC_ID}
-title: Hidden
 publishable: false
 ---
-# Hidden
+# Detail
 """,
         )
 
         exit_code, _stdout, stderr = run_cli(
             root,
-            ["--scope", "studio", "--sub-scope", "tags", "--write"],
+            ["--scope", "example", "--sub-scope", "tags", "--write"],
         )
-        manifest = read_json(
-            root / "docs-viewer/scopes/studio/generated/sub-scopes/tags/documents/manifest.json"
-        )
-        manage_manifest = read_json(
-            root
-            / "docs-viewer/scopes/studio/generated/sub-scopes/tags/documents/manage-manifest.json"
-        )
-        visible_payload = read_json(
-            root
-            / f"docs-viewer/scopes/studio/generated/sub-scopes/tags/documents/by-id/{DETAIL_DOC_ID}.json"
-        )
-        hidden_payload_path = (
-            root
-            / f"docs-viewer/scopes/studio/generated/sub-scopes/tags/documents/by-id/{HIDDEN_DOC_ID}.json"
-        )
-        hidden_payload_exists = hidden_payload_path.is_file()
 
-    assert exit_code == 0
-    assert stderr == ""
-    assert manifest == {"docs": [{"doc_id": DETAIL_DOC_ID, "title": "Detail"}]}
-    assert manage_manifest == {
-        "docs": [
-            {
-                "doc_id": DETAIL_DOC_ID,
-                "title": "Detail",
-                "ui_status": "",
-                "last_updated": "",
-            },
-            {
-                "doc_id": HIDDEN_DOC_ID,
-                "title": "Hidden",
-                "ui_status": "",
-                "publishable": False,
-                "last_updated": "",
-            },
-        ]
-    }
-    assert set(visible_payload) >= {"doc_id", "title", "content_html"}
-    assert hidden_payload_exists
+        assert exit_code == 1
+        assert "publishable front matter is supported only on ordinary Analysis Working documents" in stderr
+        assert f"{DETAIL_DOC_ID}.md" in stderr
+        assert not (root / "docs-viewer/scopes/example/generated").exists()
 
 
 def test_browser_config_projects_assignable_group_for_exact_configured_collection(
@@ -1072,6 +1011,8 @@ work_id: "00123"
         )
 
         exit_code, _stdout, stderr = run_cli(root, ["--scope", "example", "--sub-scope", "tags", "--write"])
+        assert exit_code == 0, stderr
+        assert stderr == ""
         detail = read_json(root / f"docs-viewer/scopes/example/generated/sub-scopes/tags/documents/by-id/{DETAIL_DOC_ID}.json")
         output_root = root / "docs-viewer/scopes/example/generated/sub-scopes/tags/documents"
         manifest = read_json(output_root / "manifest.json")
@@ -1085,8 +1026,6 @@ work_id: "00123"
             published=True,
         )
 
-    assert exit_code == 0
-    assert stderr == ""
     assert detail["doc_id"] == DETAIL_DOC_ID
     assert manifest == {"docs": [{"doc_id": DETAIL_DOC_ID, "title": "Detail"}]}
     assert manage_manifest == {
@@ -1175,13 +1114,13 @@ work_id: "00123"
             root,
             ["--scope", "example", "--sub-scope", "works", "--write"],
         )
+        assert exit_code == 0, stderr
+        assert stderr == ""
         associations = read_json(
             root
             / "docs-viewer/scopes/example/generated/sub-scopes/works/documents/subject-associations.json"
         )
 
-    assert exit_code == 0
-    assert stderr == ""
     assert associations["scope"] == "example"
     assert associations["sub_scope"] == "works"
     assert associations["associations"][0]["subject"] == {

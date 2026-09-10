@@ -35,8 +35,6 @@ from docs_scope_config import load_docs_scope_configs  # noqa: E402
 EXTERNAL_DATA_ROOT_MARKER = "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer"
 PARENT_DOC_ID = "d-20260601-000000-000001"
 CHILD_DOC_ID = "d-20260601-000000-000002"
-HIDDEN_DOC_ID = "d-20260601-000000-000003"
-HIDDEN_CHILD_DOC_ID = "d-20260601-000000-000004"
 MANAGE_ROOT_DOC_ID = "d-20260601-000000-000005"
 MANAGE_CHILD_DOC_ID = "d-20260601-000000-000006"
 PRIVATE_DOC_ID = "d-20260601-000000-000007"
@@ -266,15 +264,12 @@ Intro with [parent](/docs/?scope=studio&doc={PARENT_DOC_ID}), ![Diagram]([[media
 
 def write_public_source_docs(root: Path) -> None:
     rows = [
-        (PARENT_DOC_ID, "Parent", "2026-06-01", "2026-06-01 10:00:00", "", True),
-        (CHILD_DOC_ID, "Child", "2026-06-03", "2026-06-03 10:00:00", PARENT_DOC_ID, True),
-        (HIDDEN_DOC_ID, "Hidden", "2026-06-04", "2026-06-04 10:00:00", PARENT_DOC_ID, False),
-        (HIDDEN_CHILD_DOC_ID, "Hidden Child", "2026-06-05", "2026-06-05 10:00:00", HIDDEN_DOC_ID, True),
-        (MANAGE_ROOT_DOC_ID, "Manage Root", "2026-06-05", "2026-06-05 10:00:00", "", True),
-        (MANAGE_CHILD_DOC_ID, "Manage Child", "2026-06-06", "2026-06-06 10:00:00", MANAGE_ROOT_DOC_ID, True),
+        (PARENT_DOC_ID, "Parent", "2026-06-01", "2026-06-01 10:00:00", ""),
+        (CHILD_DOC_ID, "Child", "2026-06-03", "2026-06-03 10:00:00", PARENT_DOC_ID),
+        (MANAGE_ROOT_DOC_ID, "Manage Root", "2026-06-05", "2026-06-05 10:00:00", ""),
+        (MANAGE_CHILD_DOC_ID, "Manage Child", "2026-06-06", "2026-06-06 10:00:00", MANAGE_ROOT_DOC_ID),
     ]
-    for doc_id, title, added_date, last_updated, parent_id, publishable in rows:
-        publishable_line = "" if publishable else "publishable: false\n"
+    for doc_id, title, added_date, last_updated, parent_id in rows:
         parent_line = f"parent_id: {parent_id}\n" if parent_id else ""
         date_lines = "date: 2026-06-02\ndate_display: June 2026\n" if doc_id == CHILD_DOC_ID else ""
         write_text(
@@ -286,7 +281,7 @@ title: {json.dumps(title)}
 last_updated: {last_updated}
 summary: {json.dumps(title + " summary")}
 ui_status: done
-{parent_line}{publishable_line}---
+{parent_line}---
 # {title}
 
 {title} body.

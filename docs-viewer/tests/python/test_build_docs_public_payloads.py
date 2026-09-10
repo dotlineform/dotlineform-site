@@ -11,8 +11,6 @@ from docs_scope_config import load_docs_scope_configs
 
 from build_docs_test_support import (
     CHILD_DOC_ID,
-    HIDDEN_CHILD_DOC_ID,
-    HIDDEN_DOC_ID,
     MANAGE_CHILD_DOC_ID,
     MANAGE_ROOT_DOC_ID,
     PARENT_DOC_ID,
@@ -73,7 +71,6 @@ def test_python_docs_builder_public_generated_payloads_include_manage_rows() -> 
         recent = read_json(root / "docs-viewer/scopes/example/generated/documents/recent.json")
         publication_recent = read_json(root / "docs-viewer/scopes/example/generated/documents/.publish/recent.json")
         child_payload = read_json(root / f"docs-viewer/scopes/example/generated/documents/by-id/{CHILD_DOC_ID}.json")
-        hidden_payload = read_json(root / f"docs-viewer/scopes/example/generated/documents/by-id/{HIDDEN_DOC_ID}.json")
         semantic_tokens_generated = (
             root / "docs-viewer/scopes/example/generated/documents/semantic-tokens"
         ).exists()
@@ -84,7 +81,7 @@ def test_python_docs_builder_public_generated_payloads_include_manage_rows() -> 
         manage_browser_config = build_docs.browser_scope_config_payload(root, [config])
         public_browser_config = build_docs.browser_scope_config_payload(root, [config], published=True)
 
-    assert result["diagnostics"]["docs_emitted"] == 6
+    assert result["diagnostics"]["docs_emitted"] == 4
     assert semantic_tokens_generated
     assert semantic_tokens_index["occurrences"] == [
         {
@@ -100,6 +97,7 @@ def test_python_docs_builder_public_generated_payloads_include_manage_rows() -> 
         }
     ]
     public_tree_forbidden_keys = {
+        "publishable",
         "summary",
         "date",
         "date_display",
@@ -148,22 +146,19 @@ def test_python_docs_builder_public_generated_payloads_include_manage_rows() -> 
     assert index_tree["schema"] == "docs_index_tree_v1"
     assert [doc["doc_id"] for doc in index_tree["docs"]] == [MANAGE_ROOT_DOC_ID, PARENT_DOC_ID]
     assert [doc["doc_id"] for doc in index_tree["docs"][0]["children"]] == [MANAGE_CHILD_DOC_ID]
-    assert [doc["doc_id"] for doc in index_tree["docs"][1]["children"]] == [CHILD_DOC_ID, HIDDEN_DOC_ID]
-    assert [doc["doc_id"] for doc in index_tree["docs"][1]["children"][1]["children"]] == [HIDDEN_CHILD_DOC_ID]
+    assert [doc["doc_id"] for doc in index_tree["docs"][1]["children"]] == [CHILD_DOC_ID]
     flattened_tree_docs = [
         index_tree["docs"][0],
         *index_tree["docs"][0]["children"],
         index_tree["docs"][1],
         *index_tree["docs"][1]["children"],
-        *index_tree["docs"][1]["children"][1]["children"],
     ]
     assert all("parent_id" not in doc for doc in flattened_tree_docs)
-    assert index_tree["docs"][1]["children"][1]["publishable"] is False
     assert all(public_tree_forbidden_keys.isdisjoint(doc) for doc in flattened_tree_docs)
     assert recent["schema"] == "docs_recent_v1"
     assert recent["basis"] == "edited"
     assert recent["limit"] == 2
-    assert [doc["doc_id"] for doc in recent["docs"]] == [MANAGE_CHILD_DOC_ID, HIDDEN_CHILD_DOC_ID]
+    assert [doc["doc_id"] for doc in recent["docs"]] == [MANAGE_CHILD_DOC_ID, MANAGE_ROOT_DOC_ID]
     assert recent["docs"][0]["timestamp"] == "2026-06-06 10:00:00"
     assert recent["docs"][0]["parent_title"] == "Manage Root"
     assert publication_recent["basis"] == "edited"
@@ -176,10 +171,11 @@ def test_python_docs_builder_public_generated_payloads_include_manage_rows() -> 
     assert child_payload["summary"] == "Child summary"
     assert child_payload["last_updated"] == "2026-06-03 10:00:00"
     assert "content_html" in child_payload
-    assert 'href="/works/?work=00638"' in child_payload["content_html"]
-    assert 'data-semantic-token-family="catalogue"' in child_payload["content_html"]
+    assert 'data-docs-content-detail="media"' in child_payload["content_html"]
+    assert 'data-docs-media-kind="catalogue-work"' in child_payload["content_html"]
+    assert 'data-docs-media-id="00638"' in child_payload["content_html"]
+    assert 'data-docs-media-open>3 symbols</button>' in child_payload["content_html"]
     assert public_by_id_forbidden_keys.isdisjoint(child_payload)
-    assert hidden_payload["title"] == "Hidden"
     assert manage_browser_config["scopes"][0]["index_tree_url"] == "/docs-viewer/scopes/example/generated/documents/index-tree.json"
     assert manage_browser_config["scopes"][0]["recent_url"] == "/docs-viewer/scopes/example/generated/documents/recent.json"
     assert manage_browser_config["scopes"][0]["backlinks_url"] == (
@@ -203,7 +199,7 @@ def test_python_docs_builder_public_generated_payloads_include_manage_rows() -> 
     assert public_browser_config["scopes"][0]["search"]["rebuild_policy"] == "whole_index"
     assert public_browser_config["scopes"][0]["scope_type"] == "public"
     assert public_browser_config["scopes"][0]["media"]["img"]["served_path_prefix"] == (
-        "https://media.example.test/docs/example/img"
+        "https://media.example.test/docs/example/media/img"
     )
     assert public_browser_config["scopes"][0]["media"]["svg"]["served_path_prefix"] == (
         "/assets/data/docs/scopes/example/media/svg"
@@ -247,11 +243,11 @@ sub_scope: tags
         "preset": None,
         "sub_scope": "tags",
     }
-    assert report_payload["content_html"].endswith(
+    assert report_payload["content_html"].rstrip().endswith(
         '<section class="docsViewerReport" data-docs-viewer-report-host '
         'aria-label="Document report"></section>'
     )
-    report_row = index_tree["docs"][1]["children"][2]
+    report_row = index_tree["docs"][1]["children"][1]
     assert report_row["doc_id"] == REPORT_DOC_ID
     assert report_row["report_id"] == "docs_subscope"
     assert "report" not in report_row
