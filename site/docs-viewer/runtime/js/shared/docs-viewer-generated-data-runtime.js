@@ -171,6 +171,26 @@ export function createDocsViewerGeneratedDataRuntime(options) {
     );
   }
 
+  /** Use the generated-read service locally or a configured static file publicly.
+   * A missing relationship file is unavailable data, distinct from an empty record.
+   */
+  function readDocumentLinks(target, options) {
+    var staticBase = String(options && options.linksByIdUrlBase || "").replace(/\/$/, "");
+    var path = managementReloadPath("/docs/links", {
+      scope: target.scope, stage: target.stage, sub_scope: target.sub_scope, doc_id: target.doc_id
+    });
+    return fetchPreferredGeneratedJson(
+      staticBase ? staticBase + "/" + encodeURIComponent(target.doc_id) + ".json" : "",
+      "Failed to load Links",
+      path,
+      dataRequestOptions({ viewerScope: target.scope, viewerStage: target.stage || "", useSearchCapability: false,
+        reloadNonce: "", reloadRetryAttempts: 1 })
+    ).catch(function (error) {
+      if (error.status === 404) return null;
+      throw error;
+    });
+  }
+
   function readRecent(options) {
     var requestSettings = options || {};
     var viewerScope = requestSettings.viewerScope || currentViewerScope();
@@ -190,6 +210,7 @@ export function createDocsViewerGeneratedDataRuntime(options) {
     dataRequestOptions: dataRequestOptions,
     readDocsIndexTree: readDocsIndexTree,
     readDocumentPayload: readDocumentPayload,
+    readDocumentLinks: readDocumentLinks,
     readRecent: readRecent,
     readSearchIndex: readSearchIndex,
     scopeGeneratedCapability: scopeGeneratedCapability

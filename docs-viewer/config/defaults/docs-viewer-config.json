@@ -82,6 +82,7 @@
             "index_url": "/docs/search?scope=analysis&stage=working",
             "rebuild_policy": "whole_index"
           },
+          "links_enabled": true,
           "emoji": "䷑",
           "backlinks_url": "/docs/backlinks?scope=analysis&stage=working",
           "sub_scopes": [

@@ -1341,6 +1341,29 @@ body.docs-viewer-service{
   min-width: 0;
 }
 
+.docsViewer__linksSection{
+  display: grid;
+  grid-template-columns: 8rem minmax(0, 1fr);
+  gap: var(--docs-viewer-space-3);
+  padding-block: var(--docs-viewer-space-3);
+  border-bottom: 1px solid var(--docs-viewer-border);
+}
+
+.docsViewer__linksSection > h2,
+.docsViewer__linksSection > ul{
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 1rem;
+  overflow-wrap: anywhere;
+}
+
+.docsViewer__linksConcepts{
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--docs-viewer-space-3);
+}
+
 .docsViewer__diagramDetailViewport{
   box-sizing: border-box;
   width: 100%;
@@ -1833,7 +1856,8 @@ body.docs-viewer-service{
   text-underline-offset: 2px;
 }
 
-.docsViewer__content > :first-child{
+.docsViewer__content > :first-child,
+.docsViewer__linksDetail > :first-child{
   margin-top: 0;
 }
 

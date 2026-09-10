@@ -109,6 +109,31 @@ def generated_search_index_path(repo_root: Path, scope: str, stage: str | None =
     return resolve_scope_path(repo_root, generated_search_path(config))
 
 
+def read_generated_doc_links(
+    repo_root: Path, scope: str, doc_id: str, sub_scope: str = "", stage: str | None = None,
+) -> Dict[str, Any]:
+    """Read one configured relationship file and require its exact requested identity.
+
+    This read does not build, repair, or search another collection or stage.
+    """
+    if not is_immutable_doc_id(doc_id):
+        raise ValueError("doc_id must use the immutable document ID format")
+    config = generated_scope_config(repo_root, scope, stage)
+    if sub_scope and sub_scope not in {child.sub_scope for child in config.sub_scopes}:
+        raise ValueError("Links sub_scope must be an exact configured collection")
+    output = resolve_scope_path(repo_root, generated_documents_path(config)).resolve()
+    directory = output / "links-by-id"
+    path = directory / f"{doc_id}.json"
+    if directory.is_symlink() or path.is_symlink() or path.resolve().parent != directory.resolve():
+        raise ValueError("Links data must remain in its configured directory")
+    payload = read_generated_json(path, "generated document Links")
+    expected = {"scope": scope, "sub_scope": sub_scope, "doc_id": doc_id}
+    summary = payload.get("self") if isinstance(payload, dict) else None
+    if not isinstance(summary, dict) or summary.get("target") != expected:
+        raise ValueError("Links data does not match the requested document")
+    return payload
+
+
 def read_generated_json(path: Path, label: str) -> Dict[str, Any]:
     if not path.exists():
         raise FileNotFoundError(f"{label} not found: {path.name}")

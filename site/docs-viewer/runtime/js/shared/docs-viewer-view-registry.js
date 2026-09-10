@@ -86,11 +86,23 @@ function normalizeView(record) {
   if (panel !== "main" && mainLayoutState !== "normal") {
     throw new Error("Docs Viewer view " + view.id + " cannot project a main layout state outside the main panel.");
   }
+  // Hosted presentations can retain their own layout within one shared view lifecycle.
+  var targetLayouts = source.mainLayoutByTargetKind || {};
+  if (typeof targetLayouts !== "object" || Array.isArray(targetLayouts)) {
+    throw new Error("Docs Viewer view " + view.id + " requires a target-kind layout map.");
+  }
+  var mainLayoutByTargetKind = Object.fromEntries(Object.entries(targetLayouts).map(function ([kind, layout]) {
+    if (panel !== "main" || !kind.trim() || MAIN_LAYOUT_STATES.indexOf(layout) === -1) {
+      throw new Error("Docs Viewer view " + view.id + " has an invalid target-kind layout: " + kind);
+    }
+    return [kind, layout];
+  }));
   return Object.assign(view, {
     panel: panel,
     renderer: cleanString(source.renderer),
     placeholderText: cleanString(source.placeholderText),
     mainLayoutState: mainLayoutState,
+    mainLayoutByTargetKind: Object.freeze(mainLayoutByTargetKind),
     capabilities: normalizeHostedViewCapabilities(source.capabilities)
   });
 }

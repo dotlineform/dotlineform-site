@@ -113,6 +113,14 @@ function renderContentDetailBack(context) {
   return button;
 }
 
+function renderDocumentLinks(context) {
+  var button = context.existingRoot || context.document.createElement("button");
+  button.className = "docsViewer__actionButton";
+  button.type = "button";
+  button.textContent = "🔀 Links";
+  return button;
+}
+
 function renderContentDetailLabel(context) {
   var label = context.existingRoot;
   if (!label || label.tagName !== "SPAN") {
@@ -150,6 +158,7 @@ export function createDocsViewerSharedControlRenderers() {
     "index-view-toggle": renderIndexViewToggle,
     "bookmark-toggle": renderBookmarkToggle,
     "info-toggle": renderInfoToggle,
+    "document-links": renderDocumentLinks,
     "content-detail-back": renderContentDetailBack,
     "content-detail-label": renderContentDetailLabel,
     "content-detail-open-new-tab": renderContentDetailOpenNewTab

@@ -13,6 +13,7 @@ from docs_builder.pipeline import DocsDataBuilder
 from docs_builder.sub_scope import SubScopeDocsBuilder
 from docs_builder.links_model import DocumentTarget
 from docs_builder.links_schema import relationship_payload
+from docs_builder.browser_config import browser_scope_record
 from docs_scope_config import load_docs_scope_stage, document_source_path, generated_documents_path
 from repo_factory import docs_scope_record, docs_sub_scope_record, write_docs_scope_config, write_json, write_site_tools_config, write_text
 
@@ -64,6 +65,16 @@ def pilot(tmp_path):
     build()
     build(B)
     return tmp_path, config, source, build, output
+
+
+def test_links_view_availability_comes_from_pilot_config(pilot):
+    root, config, *_ = pilot
+    assert browser_scope_record(root, {}, config)["links_enabled"] is True
+    pre_publish = load_docs_scope_stage(root, "analysis", "pre-publish")
+    assert "links_enabled" not in browser_scope_record(root, {}, pre_publish)
+    assert "links_enabled" not in browser_scope_record(root, {}, config, published=True)
+    (root / links_builder.CONFIG_PATH).unlink()
+    assert "links_enabled" not in browser_scope_record(root, {}, config)
 
 
 def read_links(output, doc_id):

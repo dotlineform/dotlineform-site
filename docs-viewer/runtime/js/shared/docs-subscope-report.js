@@ -777,6 +777,9 @@ function renderRows(state, docs) {
 }
 
 function publishState(state, reportState, target, reason, detail) {
+  if (typeof state.onDocumentState === "function") {
+    state.onDocumentState(Object.assign({ state: reportState, target: target }, detail || {}));
+  }
   notifyContribution(state, Object.assign({
     type: "state",
     state: cleanString(reportState),
@@ -1265,6 +1268,7 @@ function mountResolvedDocsSubscopeReport(context, contribution) {
   var state = {
     root: root,
     mountDocumentContent: context.mountSubscopeDocumentContent,
+    onDocumentState: context.onSubscopeDocumentState,
     parentDocId: cleanString(context && context.doc && context.doc.doc_id),
     subScope: subScope,
     subScopeId: subScopeIdValue,

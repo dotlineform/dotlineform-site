@@ -18,6 +18,7 @@ export function initDocsViewerDocumentController(context) {
   }
 
   function nextDocumentMountGeneration() {
+    if (context.linksDetailAdapter) context.linksDetailAdapter.releaseDocument({ content: content });
     documentMountGeneration += 1;
     return documentMountGeneration;
   }
@@ -86,6 +87,15 @@ export function initDocsViewerDocumentController(context) {
         }));
       },
       requestContentDetail: context.requestContentDetail,
+      onSubscopeDocumentState: function (state) {
+        var adapter = context.linksDetailAdapter;
+        if (mountGeneration !== documentMountGeneration || !adapter) return;
+        var target = state.state === "detail" ? state.target : null;
+        if (target && (target.scope !== currentViewerScope()
+          || target.sub_scope !== payload.report.sub_scope
+          || String(target.stage || "") !== String(context.viewerStage() || ""))) return;
+        adapter.setDocument({ content: content, target: target, title: state.record && state.record.title });
+      },
       publishSubscopeReportState: context.publishSubscopeReportState,
       routeContext: typeof context.routeContext === "function" ? context.routeContext() : context.routeContext,
       scopeConfigState: scopeConfigState,
@@ -371,6 +381,19 @@ export function initDocsViewerDocumentController(context) {
     releaseTableDetails();
     releaseDiagramDetails();
     content.innerHTML = payload.content_html || "";
+    if (context.linksDetailAdapter) {
+      context.linksDetailAdapter.mountDocument({
+        content: content,
+        target: payload.report ? null : {
+          scope: currentViewerScope(), stage: context.viewerStage(), sub_scope: "", doc_id: payload.doc_id
+        },
+        title: payload.title,
+        collectionProvider: context.collectionProvider,
+        projectControlState: context.projectLinksControlState,
+        requestContentDetail: context.requestContentDetail,
+        showWarning: setStatus
+      });
+    }
     mountTableDetails(doc, payload, mountGeneration);
     mountMediaDetails(doc, payload, mountGeneration);
     mountThemedDiagrams(doc, payload);
@@ -434,6 +457,10 @@ export function initDocsViewerDocumentController(context) {
   }
 
   return {
+    openLinks: function (detail) {
+      if (detail.eventType !== "click" || !context.linksDetailAdapter) return false;
+      return context.linksDetailAdapter.openTarget({ content: content, invocationControl: detail.target });
+    },
     handleMissingDoc: handleMissingDoc,
     handlePayloadError: handlePayloadError,
     hideDocPane: hideDocPane,

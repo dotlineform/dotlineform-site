@@ -26,6 +26,7 @@ export function mountDocsViewerPublicDocumentExtras(context) {
     openMediaPresentation: settings.openMediaPresentation,
     openMediaTarget: settings.openMediaTarget,
     loadMediaTarget: settings.loadMediaTarget,
+    onSubscopeDocumentState: settings.onSubscopeDocumentState,
     reportRegistryUrl: cleanString(settings.routeContext && settings.routeContext.reportRegistryUrl),
     routeContext: settings.routeContext,
     scopeConfigs: settings.scopeConfigState && Array.isArray(settings.scopeConfigState.scopeConfigs)
@@ -33,6 +34,7 @@ export function mountDocsViewerPublicDocumentExtras(context) {
       : [],
     setStatus: settings.setStatus,
     viewerScope: cleanString(settings.viewerScope),
+    viewerStage: cleanString(settings.routeContext && settings.routeContext.viewerStage),
     viewerUrlForScope: settings.viewerUrlForScope
   });
 }

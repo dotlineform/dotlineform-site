@@ -39,6 +39,7 @@ export function createDocsViewerContentDetailView(options) {
   var tableDetailAdapter = settings.tableDetailAdapter || null;
   var diagramDetailAdapter = settings.diagramDetailAdapter || null;
   var mediaDetailAdapter = settings.mediaDetailAdapter || null;
+  var linksDetailAdapter = settings.linksDetailAdapter || null;
   var reportPresentationAdapter = settings.reportPresentationAdapter || null;
   var active = null;
 
@@ -47,6 +48,7 @@ export function createDocsViewerContentDetailView(options) {
     if (kind === "table") return tableDetailAdapter;
     if (kind === "diagram") return diagramDetailAdapter;
     if (kind === "media") return mediaDetailAdapter;
+    if (kind === "links") return linksDetailAdapter;
     if (kind === "report") return reportPresentationAdapter;
     return null;
   }
@@ -72,6 +74,10 @@ export function createDocsViewerContentDetailView(options) {
     }
     if (current.presentation.invocationControl && current.presentation.invocationControl.isConnected) {
       current.presentation.invocationControl.focus({ preventScroll: true });
+    }
+    // Toolbar controls are recreated when the document view becomes active again.
+    if (typeof current.presentation.restoreInvocationFocus === "function") {
+      Promise.resolve().then(current.presentation.restoreInvocationFocus);
     }
   }
 
@@ -142,10 +148,12 @@ export function withDocsViewerContentDetailDefinitions(definitions, options) {
       panel: "main",
       appKinds: ["public", "manage"],
       mainLayoutState: "expanded-main",
+      mainLayoutByTargetKind: { links: "normal" },
       load: function () {
         return createDocsViewerContentDetailView({
           diagramDetailAdapter: settings.diagramDetailAdapter,
           mediaDetailAdapter: settings.mediaDetailAdapter,
+          linksDetailAdapter: settings.linksDetailAdapter,
           reportPresentationAdapter: settings.reportPresentationAdapter,
           tableDetailAdapter: settings.tableDetailAdapter
         });
@@ -153,6 +161,16 @@ export function withDocsViewerContentDetailDefinitions(definitions, options) {
     }]),
     modes: (source.modes || []).slice(),
     controls: (source.controls || []).concat([
+      {
+        id: "document-links",
+        label: "Links",
+        ownerType: "view",
+        ownerViewId: "rendered-document",
+        modeIds: ["rendered-document"],
+        surfaceId: "main-view",
+        appKinds: ["public", "manage"],
+        renderer: "document-links"
+      },
       {
         id: CONTENT_DETAIL_BACK_CONTROL_ID,
         label: "Back to document",

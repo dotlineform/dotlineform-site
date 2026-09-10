@@ -11,6 +11,7 @@ import {
 import {
   docsViewerMediaDetailAdapter
 } from "../shared/docs-viewer-media-detail.js";
+import { docsViewerLinksDetailAdapter } from "../shared/docs-viewer-links-detail.js";
 import {
   docsViewerTableDetailAdapter
 } from "../shared/docs-viewer-table-detail.js";
@@ -36,11 +37,13 @@ import(appendAssetVersion("../shared/docs-viewer-app-boot.js"))
       contentDetailBackControlId: CONTENT_DETAIL_BACK_CONTROL_ID,
       diagramDetailAdapter: docsViewerDiagramDetailAdapter,
       mediaDetailAdapter: docsViewerMediaDetailAdapter,
+      linksDetailAdapter: docsViewerLinksDetailAdapter,
       mountDocumentExtras: mountDocsViewerPublicDocumentExtras,
       tableDetailAdapter: docsViewerTableDetailAdapter,
       viewRegistryContributions: withDocsViewerContentDetailDefinitions(null, {
         diagramDetailAdapter: docsViewerDiagramDetailAdapter,
         mediaDetailAdapter: docsViewerMediaDetailAdapter,
+        linksDetailAdapter: docsViewerLinksDetailAdapter,
         tableDetailAdapter: docsViewerTableDetailAdapter
       }),
       themedDiagramAdapter: themedDiagramAdapter

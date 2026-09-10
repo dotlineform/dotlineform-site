@@ -99,11 +99,26 @@ export function createDocsViewerConfiguredScopeProvider(options) {
   }
 
   var provider = {
+    canReadLinks: canReadLinks,
+    readLinks: readLinks,
     readDocument: readDocument,
     readIndex: readIndex,
     readRecent: readRecent,
     readSearch: readSearch
   };
+
+  function canReadLinks(target) {
+    var config = target && configForScope(target.scope);
+    return Boolean(config && config.linksEnabled && cleanString(target.stage) === cleanString(config.stage)
+      && (cleanString(config.stage) || config.linksByIdUrlBase));
+  }
+
+  /** Read the exact staged document's separate relationship record; never search other scopes. */
+  function readLinks(target) {
+    if (!canReadLinks(target)) return Promise.reject(new Error("Links is not enabled for this scope and stage."));
+    var config = configForScope(target.scope);
+    return generatedData.readDocumentLinks(target, { linksByIdUrlBase: config.linksByIdUrlBase });
+  }
 
   if (source && typeof source.readSource === "function") {
     provider.readSource = function (target, optionsForRead) {

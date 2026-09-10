@@ -157,7 +157,12 @@ export function createDocsViewerMainViewHost(options) {
       panelLayout.setActiveMainView(activeViewId);
     }
     if (panelLayout && typeof panelLayout.setMainLayoutState === "function") {
-      panelLayout.setMainLayoutState(resolved.view.mainLayoutState || "normal");
+      var layouts = resolved.view.mainLayoutByTargetKind || {};
+      var kind = cleanString(activeTargetContext && activeTargetContext.kind);
+      var layout = Object.prototype.hasOwnProperty.call(layouts, kind)
+        ? layouts[kind]
+        : resolved.view.mainLayoutState;
+      panelLayout.setMainLayoutState(layout || "normal");
     }
     projectState();
     if (requestSettings.projectControls !== false && typeof settings.onViewChange === "function") {

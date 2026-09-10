@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import json
+from copy import deepcopy
 import os
 import sys
 import tempfile
@@ -511,6 +512,43 @@ def test_external_sub_scope_payload_route_resolves_only_configured_json() -> Non
                 os.environ.pop("DOTLINEFORM_PROJECTS_BASE_DIR", None)
             else:
                 os.environ["DOTLINEFORM_PROJECTS_BASE_DIR"] = old_projects_base
+
+
+def test_links_read_is_exact_staged_separate_and_read_only(tmp_path):
+    scope = docs_scope_record("analysis", scope_type="public", viewer_base_url="/analysis/", include_scope_param=False)
+    scope["stages"] = {
+        stage: {"media": deepcopy(scope["media"]), "sub_scopes": [docs_sub_scope_record(
+            "analysis", "works", scope_type="local" if stage == "working" else "public",
+        )]}
+        for stage in ("working", "pre-publish")
+    }
+    write_json(tmp_path / "docs-viewer/config/scopes/docs_scopes.json", {"schema_version": "docs_scopes_v5", "scopes": [scope]})
+    output = generated_reads.generated_docs_output_root(tmp_path, "analysis", "working")
+    path = output / "links-by-id" / f"{CHILD_DOC_ID}.json"
+    payload = {"schema_version": 1, "self": {"target": {"scope": "analysis", "sub_scope": "works", "doc_id": CHILD_DOC_ID}}, "outgoing": [], "incoming": []}
+    write_json(path, payload)
+    query = {"scope": ["analysis"], "stage": ["working"], "sub_scope": ["works"], "doc_id": [CHILD_DOC_ID]}
+    before = path.stat().st_mtime_ns
+    assert management_reads.docs_generated_read_payload(tmp_path, routes.GENERATED_LINKS_PATH, query) == payload
+    assert path.stat().st_mtime_ns == before
+    with pytest.raises(ValueError, match="requested document"):
+        management_reads.docs_generated_read_payload(tmp_path, routes.GENERATED_LINKS_PATH, {**query, "sub_scope": [""]})
+    with pytest.raises(ValueError, match="configured collection"):
+        management_reads.docs_generated_read_payload(tmp_path, routes.GENERATED_LINKS_PATH, {**query, "sub_scope": ["concepts"]})
+    with pytest.raises(FileNotFoundError):
+        management_reads.docs_generated_read_payload(tmp_path, routes.GENERATED_LINKS_PATH, {**query, "stage": ["pre-publish"]})
+    with pytest.raises(ValueError):
+        management_reads.docs_generated_read_payload(tmp_path, routes.GENERATED_LINKS_PATH, {**query, "doc_id": ["../outside"]})
+    # An ordinary payload cannot substitute for an absent relationship file.
+    write_json(output / "by-id" / path.name, {"doc_id": CHILD_DOC_ID})
+    path.unlink()
+    with pytest.raises(FileNotFoundError):
+        management_reads.docs_generated_read_payload(tmp_path, routes.GENERATED_LINKS_PATH, query)
+    outside = tmp_path / "outside.json"
+    write_json(outside, payload)
+    path.symlink_to(outside)
+    with pytest.raises(ValueError, match="configured directory"):
+        management_reads.docs_generated_read_payload(tmp_path, routes.GENERATED_LINKS_PATH, query)
 
 
 def test_read_generated_json_reports_invalid_json() -> None:
