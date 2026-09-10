@@ -696,7 +696,13 @@ class SemanticTokensMixin:
                     "href": "",
                 })
                 fragment = render_catalogue_media_reference(token)
-                marker = f"<!--catalogue-media-{uuid4().hex}-->"
+                marker_id = uuid4().hex
+                # Comments start HTML blocks at line beginnings; inline references must not.
+                marker = (
+                    f"<!--catalogue-media-{marker_id}-->"
+                    if token.presentation == "image" and token.caption
+                    else f'<span data-catalogue-media-fragment="{marker_id}"></span>'
+                )
                 self._catalogue_media_html[marker] = fragment
                 return marker
             target = self.semantic_token_targets_by_key.get(

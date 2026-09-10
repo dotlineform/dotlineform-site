@@ -132,6 +132,28 @@ def test_missing_work_retains_a_live_reference_and_code_tokens_remain_literal(ca
     assert not warnings
 
 
+@pytest.mark.parametrize("prefix, container_selector", [("", "p"), ("- ", "li")])
+@pytest.mark.parametrize("token", [
+    "[[catalogue:media:work:00523|*literal*]]",
+    "[[catalogue:image:work:00523|alt=%2Aliteral%2A]]",
+])
+def test_leading_inline_media_preserves_surrounding_markdown(catalogue, prefix, container_selector, token):
+    root, _, _ = catalogue
+    content, warnings = build_document(
+        root, prefix + token + " followed by **bold** and [a link](https://example.com).",
+    )
+    soup = BeautifulSoup(content, "html.parser")
+    container = soup.select_one(container_selector)
+    assert not warnings
+    assert container is not None
+    assert container.get_text().strip() == "*literal* followed by bold and a link."
+    assert container.strong.get_text() == "bold"
+    assert container.a["href"] == "https://example.com"
+    assert container.button.get_text() == "*literal*"
+    assert not container.button.select("em, strong")
+    assert container.select_one('[data-docs-media-id="00523"]') is not None
+
+
 def test_media_parser_keeps_old_text_meaning_and_rejects_other_targets(catalogue):
     root, _, _ = catalogue
     registry = load_semantic_token_registry(root)
@@ -166,6 +188,7 @@ def test_work_and_detail_images_build_only_exact_references_and_authored_present
     assert all('src' not in image.attrs for image in soup.select('img'))
     assert not soup.select('script, a')
     detail = soup.select('[data-docs-media-kind="catalogue-work-detail"]')[0]
+    assert detail.find_parent("p") is None
     assert detail['data-docs-media-id'] == '00523-015'
     assert detail['data-docs-media-work-id'] == '00523'
     assert detail.img['alt'] == 'Detail alt'
