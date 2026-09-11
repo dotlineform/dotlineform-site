@@ -277,6 +277,7 @@ def test_child_media_insertion_replace_build_and_read_stay_in_collection(stage_r
     (projects / "docs-viewer").mkdir(parents=True)
     (projects / "data-sharing").mkdir()
     monkeypatch.setenv("DOTLINEFORM_PROJECTS_BASE_DIR", str(projects))
+    monkeypatch.setenv("DOTLINEFORM_DOCS_BASE_DIR", str(projects / "docs-viewer"))
     staging = configured_workspace_paths(stage_repo).import_staging
     staging.mkdir(parents=True, exist_ok=True)
     input_path = staging / "same.pdf"
@@ -703,10 +704,11 @@ def test_external_stage_urls_and_media_use_selected_owner(stage_repo: Path, monk
     from docs_builder.browser_config import browser_scope_record
 
     monkeypatch.setenv("DOTLINEFORM_PROJECTS_BASE_DIR", str(stage_repo / "external"))
+    monkeypatch.setenv("DOTLINEFORM_DOCS_BASE_DIR", str((stage_repo / "external") / "docs-viewer"))
     (stage_repo / "external/docs-viewer").mkdir(parents=True)
     raw = json.loads((stage_repo / scopes.CONFIG_REL_PATH).read_text())
     analysis = raw["scopes"][0]
-    analysis["scope_root"] = {"provider": "external_local", "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/analysis"}
+    analysis["scope_root"] = {"provider": "external_local", "path": "$DOTLINEFORM_DOCS_BASE_DIR/scopes/analysis"}
     write_json(stage_repo / scopes.CONFIG_REL_PATH, raw)
     for stage, collection in (("working", "works"), ("pre-publish", "works")):
         config = scopes.load_docs_scope_stage(stage_repo, "analysis", stage)

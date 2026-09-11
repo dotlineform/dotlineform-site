@@ -7,7 +7,7 @@ Docs Viewer code and configuration live in this repository. Scope-owned document
 `config/scopes/docs_scopes.json` is the storage authority. Every configured scope resolves to:
 
 ```text
-$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/<scope-id>/
+$DOTLINEFORM_DOCS_BASE_DIR/scopes/<scope-id>/
 ├── source/
 │   ├── documents/
 │   └── media/
@@ -21,6 +21,12 @@ $DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/<scope-id>/
 ```
 
 Keep the standard directories even when they are empty. There is no repository fallback and no shared top-level media workspace. If the configured root is unavailable, leave it unavailable and fix or reconnect that root.
+
+Set `DOTLINEFORM_DOCS_BASE_DIR` in `.env.local` to the existing Docs Viewer folder itself. The resolver appends `scopes/<scope-id>/`, not another `docs-viewer/`. `DOTLINEFORM_PROJECTS_BASE_DIR` independently selects Catalogue, Processing, Data Sharing and other project workspaces. There is no fallback from the Docs setting to the Projects setting.
+
+When relocating the complete Docs workspace, stop the local services and watcher, copy the complete `scopes/` folder into the new root, then change `DOTLINEFORM_DOCS_BASE_DIR` and restart the services. Verify the configured source/generated/published roots before resuming writes. The location change does not require a content migration, Publish or Deploy.
+
+Docs build commands accept `--docs-base-dir <absolute-path>` and `--projects-base-dir <absolute-path>` as independent overrides after loading `.env.local`. Use both when a check needs isolated Docs storage and Projects-owned media or package storage.
 
 ## Set up or migrate a scope
 

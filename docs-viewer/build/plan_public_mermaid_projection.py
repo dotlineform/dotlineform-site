@@ -10,10 +10,12 @@ from pathlib import Path
 import sys
 from typing import Any
 
-from docs_builder.runtime_bootstrap import apply_repo_local_env, projects_base_dir_from_argv
+from docs_builder.runtime_bootstrap import (
+    add_workspace_arguments, apply_repo_local_env, apply_workspace_overrides, workspace_overrides_from_argv,
+)
 
 if __name__ == "__main__":
-    apply_repo_local_env(projects_base_dir=projects_base_dir_from_argv(sys.argv[1:]))
+    apply_repo_local_env(**workspace_overrides_from_argv(sys.argv[1:]))
 
 from docs_builder.common import is_public_readonly_scope, load_docs_scope_configs
 from docs_builder.pipeline import DocsDataBuilder
@@ -43,10 +45,7 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
     )
     parser.add_argument("--scope", required=True, help="Configured public Docs Viewer scope.")
     parser.add_argument("--sub-scope", help="Configured public Docs Viewer sub-scope.")
-    parser.add_argument(
-        "--projects-base-dir",
-        help="Override DOTLINEFORM_PROJECTS_BASE_DIR after loading .env.local.",
-    )
+    add_workspace_arguments(parser)
     parser.add_argument(
         "--diagnostics",
         action="store_true",
@@ -187,6 +186,7 @@ def print_human_report(plan: dict[str, Any], manifest_path: Path, repo_root: Pat
 
 def main(argv: list[str] | None = None) -> int:
     args = parse_args(argv or sys.argv[1:])
+    apply_workspace_overrides(args)
     repo_root = Path.cwd().resolve()
     try:
         plan, manifest_path = build_projection_plan(

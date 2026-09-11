@@ -123,6 +123,7 @@ def test_external_scope_keeps_evidence_in_its_external_source_root(
     root.mkdir()
     (projects / "docs-viewer").mkdir(parents=True, exist_ok=True)
     monkeypatch.setenv("DOTLINEFORM_PROJECTS_BASE_DIR", str(projects))
+    monkeypatch.setenv("DOTLINEFORM_DOCS_BASE_DIR", str(projects / "docs-viewer"))
     write_docs_scope_config(
         root,
         [

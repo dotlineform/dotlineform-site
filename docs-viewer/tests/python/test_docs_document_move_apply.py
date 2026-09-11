@@ -670,6 +670,7 @@ def test_apply_move_writes_external_local_target_then_cleans_repository_source(
 ) -> None:
     projects_base = tmp_path / "Projects"
     monkeypatch.setenv("DOTLINEFORM_PROJECTS_BASE_DIR", str(projects_base))
+    monkeypatch.setenv("DOTLINEFORM_DOCS_BASE_DIR", str(projects_base / "docs-viewer"))
     repo_root = make_repo(
         tmp_path,
         source_scope=base_scope("source", media_types=("img",)),

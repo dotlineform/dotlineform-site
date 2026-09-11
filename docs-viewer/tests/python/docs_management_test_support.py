@@ -34,7 +34,7 @@ docs_management_mutations = sys.modules["docs_management_mutations"]
 docs_scope_config = sys.modules["docs_scope_config"]
 docs_source_model = sys.modules["docs_source_model"]
 
-EXTERNAL_DATA_ROOT_MARKER = "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer"
+EXTERNAL_DATA_ROOT_MARKER = "$DOTLINEFORM_DOCS_BASE_DIR"
 
 
 def write_doc(root: Path, filename: str, front_matter: dict[str, object], body: str = "", scope: str = "studio") -> None:

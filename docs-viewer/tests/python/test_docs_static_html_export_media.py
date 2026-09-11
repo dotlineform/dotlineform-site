@@ -59,6 +59,7 @@ def configured_scope(
     projects_root = tmp_path / "projects"
     (projects_root / "docs-viewer").mkdir(parents=True)
     monkeypatch.setenv("DOTLINEFORM_PROJECTS_BASE_DIR", str(projects_root))
+    monkeypatch.setenv("DOTLINEFORM_DOCS_BASE_DIR", str(projects_root / "docs-viewer"))
     write_docs_scope_config(repo_root, [record])
     scope_id = str(record["scope_id"])
     return repo_root, load_docs_scope_configs(repo_root, scope_ids=(scope_id,))[scope_id]

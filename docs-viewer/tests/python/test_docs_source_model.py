@@ -171,13 +171,14 @@ def test_scope_loader_does_not_fallback_to_repository_scope_copy(
     projects_root = tmp_path / "projects"
     (projects_root / "docs-viewer").mkdir(parents=True)
     monkeypatch.setenv("DOTLINEFORM_PROJECTS_BASE_DIR", str(projects_root))
+    monkeypatch.setenv("DOTLINEFORM_DOCS_BASE_DIR", str(projects_root / "docs-viewer"))
     config = docs_scope_record(
         "studio",
-        scope_root_path="$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/studio",
+        scope_root_path="$DOTLINEFORM_DOCS_BASE_DIR/scopes/studio",
     )
     config["scope_root"] = {
         "provider": "external_local",
-        "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/studio",
+        "path": "$DOTLINEFORM_DOCS_BASE_DIR/scopes/studio",
     }
     write_docs_scope_config(tmp_path, [config])
 

@@ -483,6 +483,7 @@ def test_external_local_target_uses_configured_workspace(
     repo_root = tmp_path / "repo"
     projects_base = tmp_path / "projects"
     monkeypatch.setenv("DOTLINEFORM_PROJECTS_BASE_DIR", str(projects_base))
+    monkeypatch.setenv("DOTLINEFORM_DOCS_BASE_DIR", str(projects_base / "docs-viewer"))
     scope_root = prepare_repo(
         repo_root,
         scope_type="local",

@@ -25,14 +25,14 @@ def test_resolver_projects_distinct_domain_roots_from_one_projects_base(tmp_path
 
     data_workspace = resolve_external_workspace_root("data-sharing", environ=environ, require_exists=True)
     catalogue_workspace = resolve_external_workspace_root("catalogue/media", environ=environ, require_exists=False)
-    docs_workspace = resolve_external_workspace_root("docs-viewer", environ=environ, require_exists=False)
+    processing_workspace = resolve_external_workspace_root("processing", environ=environ, require_exists=False)
     docs_export_workspace = resolve_external_workspace_root("docs-export", environ=environ, require_exists=False)
 
     assert data_workspace.root == data_sharing.resolve()
     assert data_workspace.marker == "$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing"
     assert catalogue_workspace.root == (projects_base / "catalogue/media").resolve()
     assert catalogue_workspace.marker == "$DOTLINEFORM_PROJECTS_BASE_DIR/catalogue/media"
-    assert docs_workspace.root == (projects_base / "docs-viewer").resolve()
+    assert processing_workspace.root == (projects_base / "processing").resolve()
     assert docs_export_workspace.root == (projects_base / "docs-export").resolve()
 
 

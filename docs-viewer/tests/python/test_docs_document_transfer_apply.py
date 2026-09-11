@@ -164,6 +164,7 @@ def isolated_media_workspace(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) ->
     projects = tmp_path / "projects"
     (projects / "docs-viewer").mkdir(parents=True)
     monkeypatch.setenv("DOTLINEFORM_PROJECTS_BASE_DIR", str(projects))
+    monkeypatch.setenv("DOTLINEFORM_DOCS_BASE_DIR", str(projects / "docs-viewer"))
 
 
 def make_repo(
@@ -1102,6 +1103,7 @@ def test_apply_copy_writes_external_local_target_documents_and_media(
 ) -> None:
     projects_base = tmp_path / "Projects"
     monkeypatch.setenv("DOTLINEFORM_PROJECTS_BASE_DIR", str(projects_base))
+    monkeypatch.setenv("DOTLINEFORM_DOCS_BASE_DIR", str(projects_base / "docs-viewer"))
     target_scope = base_scope(
         "target",
         scope_type="local",

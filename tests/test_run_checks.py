@@ -50,10 +50,10 @@ def test_runner_docs_profile_isolates_only_full_registry_pytest() -> None:
         "studio-docs-build",
         "studio-search-build",
     ]
-    assert commands[1].isolated_projects_base is True
-    assert commands[1].projects_base_argument is False
-    assert all(command.isolated_projects_base is False for command in (commands[0], *commands[2:]))
-    assert all(command.projects_base_argument is False for command in commands)
+    assert commands[1].isolated_workspaces is True
+    assert commands[1].workspace_arguments is False
+    assert all(command.isolated_workspaces is False for command in (commands[0], *commands[2:]))
+    assert all(command.workspace_arguments is False for command in commands)
     assert commands[2].argv[-1] == "--skip-media-builds"
     assert all("/tests/smoke/" not in argument for argument in commands[1].argv)
     assert all(
@@ -97,8 +97,8 @@ def test_runner_studio_smoke_profile_is_the_retained_boundary_set() -> None:
         "studio-catalogue-route-smoke",
         "public-catalogue-route-smoke",
     ]
-    assert commands[3].isolated_projects_base is True
-    assert commands[4].isolated_projects_base is False
+    assert commands[3].isolated_workspaces is True
+    assert commands[4].isolated_workspaces is False
     assert all(
         (REPO_ROOT / argument).is_file()
         for command in commands
@@ -195,7 +195,7 @@ def test_runner_executes_representative_app_local_pytest(tmp_path) -> None:
             shutil.rmtree(log_dir)
 
 
-def test_runner_materializes_isolated_projects_base_for_opted_in_command(tmp_path, monkeypatch) -> None:
+def test_runner_materializes_isolated_workspaces_for_opted_in_command(tmp_path, monkeypatch) -> None:
     runner = load_runner_module()
     monkeypatch.setattr(runner, "REPO_ROOT", tmp_path)
     log_path = tmp_path / "run" / "isolated-command.log"
@@ -205,17 +205,23 @@ def test_runner_materializes_isolated_projects_base_for_opted_in_command(tmp_pat
         (
             sys.executable,
             "-c",
-            "import os; raise SystemExit(0 if os.environ.get('DOTLINEFORM_PROJECTS_BASE_DIR') else 2)",
+            "import os; from pathlib import Path; "
+            "projects = Path(os.environ['DOTLINEFORM_PROJECTS_BASE_DIR']); "
+            "docs = Path(os.environ['DOTLINEFORM_DOCS_BASE_DIR']); "
+            "assert projects.is_dir() and docs.is_dir() and not docs.is_relative_to(projects)",
         ),
         "Run with an isolated Projects base.",
-        isolated_projects_base=True,
-        projects_base_argument=True,
+        isolated_workspaces=True,
+        workspace_arguments=True,
     )
 
     result = runner.run_command(command, log_path)
 
     projects_base = log_path.parent / "isolated-projects"
     assert result["exit_code"] == 0
-    assert projects_base.joinpath("docs-viewer").is_dir()
-    assert result["command"][-2:] == ["--projects-base-dir", str(projects_base.resolve())]
+    docs_base = log_path.parent / "isolated-docs"
+    assert docs_base.is_dir()
+    assert result["command"][-4:] == [
+        "--projects-base-dir", str(projects_base.resolve()), "--docs-base-dir", str(docs_base.resolve()),
+    ]
     assert str(projects_base.resolve()) in log_path.read_text(encoding="utf-8")

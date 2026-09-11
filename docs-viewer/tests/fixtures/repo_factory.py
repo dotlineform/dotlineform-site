@@ -95,7 +95,7 @@ def docs_scope_record(
         raise ValueError("scope_root_provider must be repository or external_local")
     external = scope_root_provider == "external_local"
     scope_root = scope_root_path or (
-        f"$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/{scope_id}"
+        f"$DOTLINEFORM_DOCS_BASE_DIR/scopes/{scope_id}"
         if external
         else f"docs-viewer/scopes/{scope_id}"
     )

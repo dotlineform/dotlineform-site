@@ -8,13 +8,14 @@ import sys
 from pathlib import Path
 
 from docs_builder.runtime_bootstrap import (
-    apply_projects_base_dir_override,
+    add_workspace_arguments,
+    apply_workspace_overrides,
     apply_repo_local_env,
-    projects_base_dir_from_argv,
+    workspace_overrides_from_argv,
 )
 
 if __name__ == "__main__":
-    apply_repo_local_env(projects_base_dir=projects_base_dir_from_argv(sys.argv[1:]))
+    apply_repo_local_env(**workspace_overrides_from_argv(sys.argv[1:]))
 
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
@@ -41,10 +42,7 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
         default=[],
         help="Limit the build to analysis.",
     )
-    parser.add_argument(
-        "--projects-base-dir",
-        help="Override DOTLINEFORM_PROJECTS_BASE_DIR after loading .env.local.",
-    )
+    add_workspace_arguments(parser)
     parser.add_argument("--write", action="store_true", help="Write generated files.")
     return parser.parse_args(argv)
 
@@ -75,8 +73,7 @@ def write_bytes_atomic(path: Path, payload: bytes) -> None:
 
 def main(argv: list[str] | None = None) -> int:
     args = parse_args(argv or sys.argv[1:])
-    if args.projects_base_dir:
-        apply_projects_base_dir_override(args.projects_base_dir)
+    apply_workspace_overrides(args)
     repo_root = Path.cwd().resolve()
     scope_ids = selected_scope_ids(args.scope)
     configs = load_docs_scope_configs(repo_root, scope_ids=scope_ids)

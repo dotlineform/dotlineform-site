@@ -2,8 +2,8 @@
 
 - Ask for confirmation before edits unless the request is trivial or the user has explicitly asked for the edit.
 - For code changes, summarize the intended change set and ask for confirmation before editing unless the request is trivial.
-- Use `$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/studio/source/documents/d-20260523-190651-7157ec.md` as the project implementation checklist. Keep durable repo guardrails there.
-- Use `$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/studio/source/documents/d-20260523-000000-bf7161.md` when lifecycle decisions, roadmap deliveries, task trackers, or closeout state need more context.
+- Use `$DOTLINEFORM_DOCS_BASE_DIR/scopes/studio/source/documents/d-20260523-190651-7157ec.md` as the project implementation checklist. Keep durable repo guardrails there.
+- Use `$DOTLINEFORM_DOCS_BASE_DIR/scopes/studio/source/documents/d-20260523-000000-bf7161.md` when lifecycle decisions, roadmap deliveries, task trackers, or closeout state need more context.
 - Compatibility aliases are prohibited unless justified before implementation with removal criteria.
 - If you find compatibility layers during new feature development, report. Fix them immediately when non-trivial.
 - Tests and documents are not contracts for deciding how to implement code. They should follow current development objectives unless a constraint has been called out and agreed.
@@ -33,7 +33,7 @@
 ## Documentation And Generated Payloads
 
 - When writing or updating Markdown source documents, do not apply a fixed-column source wrap. Each paragraph is one source line, each list item is one source line. Code blocks, tables, headings, and front matter retain their required structure.
-- Every configured Docs Viewer scope stores its lifecycle beneath `$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/<scope-id>/`: canonical input in `source/`, replaceable Build output in `generated/`, and the accepted local snapshot in `published/`. The repository `docs-viewer/scopes/` tree is retired and must not be recreated or used as a fallback.
+- Every configured Docs Viewer scope stores its lifecycle beneath `$DOTLINEFORM_DOCS_BASE_DIR/scopes/<scope-id>/`: canonical input in `source/`, replaceable Build output in `generated/`, and the accepted local snapshot in `published/`. The repository `docs-viewer/scopes/` tree is retired and must not be recreated or used as a fallback.
 - Scope configuration is the authority for storage resolution. If a configured external root is unavailable, report the scope as unavailable; do not create a replacement root, infer a repository path, or manufacture a second copy.
 - Keep the same media skeleton in every scope: `source/media/{img,svg,files,html,build-source/mermaid}`. Empty directories are intentional and may be retained.
 - For an ordinary Markdown create or edit in any configured scope, resolve the canonical `source/documents/` location from scope configuration. When that source is directly writable, edit the Markdown file in place with `apply_patch`; do not route the text edit through the source service. Let the docs watcher running under `bin/local-studio` rebuild the document projections. Do not run a manual Docs or Search rebuild merely to finish the source change.
@@ -61,8 +61,8 @@
 
 ## Checks And Test Policy
 
-- Use `$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/studio/source/documents/d-20260501-174746-efd581.md`, `$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/studio/source/documents/d-20260514-135716-c70591.md`, and `$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/studio/source/documents/d-20260501-000000-49b626.md` as the maintained test policy.
-- `$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/studio/source/documents/d-20260627-212121-7cf7de.md` determines approach for subsequent testing and review of existing tests.
+- Use `$DOTLINEFORM_DOCS_BASE_DIR/scopes/studio/source/documents/d-20260501-174746-efd581.md`, `$DOTLINEFORM_DOCS_BASE_DIR/scopes/studio/source/documents/d-20260514-135716-c70591.md`, and `$DOTLINEFORM_DOCS_BASE_DIR/scopes/studio/source/documents/d-20260501-000000-49b626.md` as the maintained test policy.
+- `$DOTLINEFORM_DOCS_BASE_DIR/scopes/studio/source/documents/d-20260627-212121-7cf7de.md` determines approach for subsequent testing and review of existing tests.
 - Choose the smallest check that proves the changed contract. Do not run broad profiles just to produce more evidence.
 - Leave UI design testing to the user unless specifically requested; browser probes are brittle.
 - A UI change does not create an automatic requirement to add, update, or run a permanent browser test. Recorded manual confirmation is sufficient for ordinary interaction, presentation, copy, focus, modal, filtering, and navigation behavior when no durable browser integration boundary changed.
@@ -90,8 +90,8 @@
   - Broader blast radius: `$HOME/miniconda3/bin/python3 tests/run_checks.py --profile <profile>`
 
 ## Important testing factors
-- Before running Python tests that import Docs Viewer services, export `.env.local` in the same shell (`set -a; source .env.local; set +a`). Scope configuration is loaded during test collection, and configured external-local scopes require `DOTLINEFORM_PROJECTS_BASE_DIR`; a test run without it can fail during collection before any tests execute.
-- `tests/run_checks.py --profile docs` is self-contained: its broad Python step receives a run-owned writable Projects base, its Studio document build explicitly skips registered media producers, and its Studio search build does not resolve media storage. Checks that exercise managed media or registered media producers still need the real external workspace or an explicit suitable `--projects-base-dir <absolute-writable-path>`.
+- Before running Python tests that import Docs Viewer services, export `.env.local` in the same shell (`set -a; source .env.local; set +a`). External-local scopes require `DOTLINEFORM_DOCS_BASE_DIR`; Projects-owned media and packages independently require `DOTLINEFORM_PROJECTS_BASE_DIR`. Docs pytest fixtures isolate both settings before service imports.
+- `tests/run_checks.py --profile docs` isolates both workspace settings for its Python step. Its Studio document and Search builds use the configured Docs workspace; the document build skips registered media producers. Explicit build isolation uses `--docs-base-dir <absolute-writable-path>` and, when Projects-owned media or packages are involved, `--projects-base-dir <absolute-writable-path>` independently.
 - Use the smallest relevant `run_checks.py` profile, such as `source-lint`, `quick`, `studio`, `catalogue`, `docs`, `docs-viewer-smoke`, or `studio-smoke`.
 - When `tests/run_checks.py` is used, report the profile, pass/fail result, and `var/test-runs/.../summary.md` path.
 - For commands that bind loopback ports or launch browser smokes, run them with elevated localhost/browser permissions in the Codex sandbox. Keep pure syntax checks, `git diff --check`, JSON parsing, and non-network pytest runs sandboxed.
@@ -111,7 +111,7 @@
 
 ## Security And Sanitization
 
-- Use `$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/studio/source/documents/d-20260523-190651-7157ec.md` for sanitization triggers and local write-service safety.
+- Use `$DOTLINEFORM_DOCS_BASE_DIR/scopes/studio/source/documents/d-20260523-190651-7157ec.md` for sanitization triggers and local write-service safety.
 - When a focused scan is needed for changed files, use:
   - `rg -n "/Users/|/home/|C:\\\\|miniconda|rbenv|api[_-]?key|token|secret|password|PRIVATE KEY" <changed-files>`
 
@@ -119,7 +119,7 @@
 
 - Treat local and cloud sessions as one workflow with the same command shapes and validation steps.
 - In cloud sessions, keep repo docs and examples machine-agnostic.
-- Required shared env vars for media/generation flows: `DOTLINEFORM_PROJECTS_BASE_DIR`
+- Required shared env vars: `DOTLINEFORM_DOCS_BASE_DIR` for Docs lifecycle storage; `DOTLINEFORM_PROJECTS_BASE_DIR` for other project/media workspaces. Both select explicit existing roots and neither is an alias or fallback for the other.
 - Optional shared env var: `MAKE_SRCSET_JOBS`
 - Keep remote media credentials out of tracked files; use platform secret stores.
 - Before reporting environment issues in Codex Cloud or Codespaces, run a Python version/dependency check for app/runtime, site validation, and preview work.

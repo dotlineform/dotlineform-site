@@ -137,6 +137,7 @@ def isolated_media_workspace(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) ->
     projects = tmp_path / "projects"
     (projects / "docs-viewer").mkdir(parents=True)
     monkeypatch.setenv("DOTLINEFORM_PROJECTS_BASE_DIR", str(projects))
+    monkeypatch.setenv("DOTLINEFORM_DOCS_BASE_DIR", str(projects / "docs-viewer"))
 
 
 def test_preview_and_copy_apply_routes_share_apply_plan(

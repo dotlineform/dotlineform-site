@@ -41,6 +41,7 @@ def isolated_media_workspace(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) ->
     projects_base = tmp_path / "projects"
     (projects_base / "docs-viewer").mkdir(parents=True)
     monkeypatch.setenv("DOTLINEFORM_PROJECTS_BASE_DIR", str(projects_base))
+    monkeypatch.setenv("DOTLINEFORM_DOCS_BASE_DIR", str(projects_base / "docs-viewer"))
 
 
 def _write_document(

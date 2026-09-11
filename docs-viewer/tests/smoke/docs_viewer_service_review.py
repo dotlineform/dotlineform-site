@@ -131,11 +131,13 @@ def assert_review_route(page, base_url: str, timeout_ms: int, wait_for_document)
 def main() -> int:
     timeout_ms = 15000
     previous_projects_base = os.environ.get("DOTLINEFORM_PROJECTS_BASE_DIR")
+    previous_docs_base = os.environ.get("DOTLINEFORM_DOCS_BASE_DIR")
     with tempfile.TemporaryDirectory(prefix="docs-viewer-review-") as temp_dir:
         projects_base = Path(temp_dir)
         os.environ["DOTLINEFORM_PROJECTS_BASE_DIR"] = str(projects_base)
         (projects_base / "data-sharing").mkdir()
         (projects_base / "docs-viewer").mkdir()
+        os.environ["DOTLINEFORM_DOCS_BASE_DIR"] = str(projects_base / "docs-viewer")
         write_fixture_package(projects_base)
         try:
             from docs_viewer_route_smoke_support import (  # noqa: PLC0415
@@ -165,6 +167,10 @@ def main() -> int:
                 os.environ.pop("DOTLINEFORM_PROJECTS_BASE_DIR", None)
             else:
                 os.environ["DOTLINEFORM_PROJECTS_BASE_DIR"] = previous_projects_base
+            if previous_docs_base is None:
+                os.environ.pop("DOTLINEFORM_DOCS_BASE_DIR", None)
+            else:
+                os.environ["DOTLINEFORM_DOCS_BASE_DIR"] = previous_docs_base
 
     print("Docs Review authority boundary OK")
     return 0

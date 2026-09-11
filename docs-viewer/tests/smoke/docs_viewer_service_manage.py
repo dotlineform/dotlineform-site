@@ -33,8 +33,8 @@ Isolated Docs Viewer Manage route fixture.
 
 
 def prepare_external_studio_generated_data() -> None:
-    projects_base = Path(os.environ["DOTLINEFORM_PROJECTS_BASE_DIR"])
-    scope_root = projects_base / "docs-viewer/scopes/studio"
+    docs_base = Path(os.environ["DOTLINEFORM_DOCS_BASE_DIR"])
+    scope_root = docs_base / "scopes/studio"
     documents_root = scope_root / "source/documents"
     documents_root.mkdir(parents=True, exist_ok=True)
     (scope_root / "generated").mkdir(parents=True, exist_ok=True)
@@ -151,10 +151,13 @@ def assert_manage_route_boundary(state: dict[str, object], base_url: str) -> Non
         raise AssertionError(f"Docs Viewer Manage route boundary changed: {state!r}")
 
 
-def run_manage_smoke(projects_base: Path, *, timeout_ms: int) -> None:
+def run_manage_smoke(projects_base: Path, docs_base: Path, *, timeout_ms: int) -> None:
     previous_projects_base = os.environ.get("DOTLINEFORM_PROJECTS_BASE_DIR")
+    previous_docs_base = os.environ.get("DOTLINEFORM_DOCS_BASE_DIR")
     projects_base.mkdir(parents=True, exist_ok=True)
+    docs_base.mkdir(parents=True, exist_ok=True)
     os.environ["DOTLINEFORM_PROJECTS_BASE_DIR"] = str(projects_base)
+    os.environ["DOTLINEFORM_DOCS_BASE_DIR"] = str(docs_base)
     server = None
     base_url = ""
     errors: list[str] = []
@@ -189,6 +192,10 @@ def run_manage_smoke(projects_base: Path, *, timeout_ms: int) -> None:
             os.environ.pop("DOTLINEFORM_PROJECTS_BASE_DIR", None)
         else:
             os.environ["DOTLINEFORM_PROJECTS_BASE_DIR"] = previous_projects_base
+        if previous_docs_base is None:
+            os.environ.pop("DOTLINEFORM_DOCS_BASE_DIR", None)
+        else:
+            os.environ["DOTLINEFORM_DOCS_BASE_DIR"] = previous_docs_base
 
     print(f"Docs Viewer Manage route boundary OK: {base_url}/docs/")
 
@@ -197,19 +204,15 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--timeout-ms", type=int, default=15000)
     parser.add_argument("--projects-base-dir")
+    parser.add_argument("--docs-base-dir")
     args = parser.parse_args(argv)
 
-    if args.projects_base_dir:
+    with TemporaryDirectory(prefix="docs-viewer-manage-smoke-") as temporary_directory:
         run_manage_smoke(
-            Path(args.projects_base_dir).resolve(),
+            Path(args.projects_base_dir).resolve() if args.projects_base_dir else Path(temporary_directory) / "Projects",
+            Path(args.docs_base_dir).resolve() if args.docs_base_dir else Path(temporary_directory) / "Docs",
             timeout_ms=args.timeout_ms,
         )
-    else:
-        with TemporaryDirectory(prefix="docs-viewer-manage-smoke-") as temporary_directory:
-            run_manage_smoke(
-                Path(temporary_directory) / "Projects",
-                timeout_ms=args.timeout_ms,
-            )
     return 0
 
 

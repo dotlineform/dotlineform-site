@@ -95,6 +95,7 @@ def write_generated_scope(
 
 def prepare_repo(root: Path, projects_root: Path) -> None:
     os.environ["DOTLINEFORM_PROJECTS_BASE_DIR"] = str(projects_root)
+    os.environ["DOTLINEFORM_DOCS_BASE_DIR"] = str(projects_root / "docs-viewer")
     (projects_root / "docs-viewer").mkdir(parents=True, exist_ok=True)
     write_scope_config(root)
     write_generated_scope(

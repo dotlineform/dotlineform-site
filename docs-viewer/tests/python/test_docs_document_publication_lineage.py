@@ -39,6 +39,7 @@ def configured_lineage_authority(
     projects_base = tmp_path / "projects"
     (projects_base / "docs-viewer").mkdir(parents=True)
     monkeypatch.setenv("DOTLINEFORM_PROJECTS_BASE_DIR", str(projects_base))
+    monkeypatch.setenv("DOTLINEFORM_DOCS_BASE_DIR", str(projects_base / "docs-viewer"))
     write_docs_scope_config(
         tmp_path / "repo",
         [

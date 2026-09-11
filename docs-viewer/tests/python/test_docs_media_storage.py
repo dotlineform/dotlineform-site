@@ -287,6 +287,7 @@ def test_exact_scope_staged_file_runner_uses_safe_docs_report(tmp_path: Path, mo
     projects_base = tmp_path / "projects"
     (projects_base / "docs-viewer").mkdir(parents=True)
     monkeypatch.setenv("DOTLINEFORM_PROJECTS_BASE_DIR", str(projects_base))
+    monkeypatch.setenv("DOTLINEFORM_DOCS_BASE_DIR", str(projects_base / "docs-viewer"))
     write_scope_config(tmp_path, public_scope_record())
     staging_root = tmp_path / "import-staging"
     staging_root.mkdir()
@@ -318,6 +319,7 @@ def test_scope_config_derives_media_lifecycle_from_external_scope_root(
     projects_base = tmp_path / "projects"
     (projects_base / "docs-viewer").mkdir(parents=True)
     monkeypatch.setenv("DOTLINEFORM_PROJECTS_BASE_DIR", str(projects_base))
+    monkeypatch.setenv("DOTLINEFORM_DOCS_BASE_DIR", str(projects_base / "docs-viewer"))
     external = external_scope_record()
     write_scope_config(tmp_path, external)
     loaded = load_docs_scope_configs(tmp_path)["private"]
@@ -328,7 +330,7 @@ def test_scope_config_derives_media_lifecycle_from_external_scope_root(
 
     external["media"]["types"]["img"]["location"] = {  # type: ignore[index]
         "provider": EXTERNAL_LOCAL_PROVIDER,
-        "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/elsewhere/source/media/img",
+        "path": "$DOTLINEFORM_DOCS_BASE_DIR/scopes/elsewhere/source/media/img",
     }
     write_scope_config(tmp_path, external)
     with pytest.raises(ValueError, match="unknown fields: location"):

@@ -5,6 +5,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass, replace
 import json
+import os
 from pathlib import Path
 import re
 import sys
@@ -41,11 +42,6 @@ from docs_subscope_customisations import (  # noqa: E402
     DocsSubScopeCustomisationConfig,
     normalize_docs_subscope_customisation,
 )
-from studio.shared.python.external_workspace_paths import (  # noqa: E402
-    ExternalWorkspaceRoot,
-    resolve_external_workspace_root,
-    resolve_workspace_path,
-)
 CONFIG_REL_PATH = Path("docs-viewer/config/scopes/docs_scopes.json")
 SCHEMA_VERSION = "docs_scopes_v5"
 DOCS_VIEWER_MANAGE_ROUTE_BASE_URL = "/docs/"
@@ -64,8 +60,8 @@ SOURCE_SUB_SCOPES_PATH = Path("sub-scopes")
 PUBLIC_SCOPE_TYPE = "public"
 LOCAL_SCOPE_TYPE = "local"
 SUPPORTED_SCOPE_TYPES = {PUBLIC_SCOPE_TYPE, LOCAL_SCOPE_TYPE}
-DOTLINEFORM_PROJECTS_BASE_DIR_ENV = "DOTLINEFORM_PROJECTS_BASE_DIR"
-EXTERNAL_DATA_ROOT_MARKER = f"${DOTLINEFORM_PROJECTS_BASE_DIR_ENV}/docs-viewer"
+DOTLINEFORM_DOCS_BASE_DIR_ENV = "DOTLINEFORM_DOCS_BASE_DIR"
+EXTERNAL_DATA_ROOT_MARKER = f"${DOTLINEFORM_DOCS_BASE_DIR_ENV}"
 SUB_SCOPE_ID_PATTERN = re.compile(r"\A[a-z0-9][a-z0-9_-]*\Z")
 SOURCE_REVISION_PATTERN = re.compile(r"\Asha256:[0-9a-f]{64}\Z")
 SCOPE_LIFECYCLE_TOOL_ID = "docs-viewer-scope-lifecycle"
@@ -260,32 +256,31 @@ def safe_scope_data_path(value: Any, *, field: str, allow_external: bool = False
     return path
 
 
-def resolve_external_data_workspace() -> ExternalWorkspaceRoot:
-    try:
-        return resolve_external_workspace_root("docs-viewer", require_exists=True)
-    except ValueError as exc:
-        message = str(exc)
-        if f"{DOTLINEFORM_PROJECTS_BASE_DIR_ENV} is required" in message:
-            raise ValueError(
-                f"{DOTLINEFORM_PROJECTS_BASE_DIR_ENV} is required for external local Docs Viewer scopes"
-            ) from exc
-        if "external workspace does not exist" in message or "does not exist or is not a directory" in message:
-            raise ValueError(f"external_data_root does not exist: {EXTERNAL_DATA_ROOT_MARKER}") from exc
-        if "external workspace must be a directory" in message:
-            raise ValueError(f"external_data_root must be a directory: {EXTERNAL_DATA_ROOT_MARKER}") from exc
-        if "external workspace must be readable and writable" in message:
-            raise ValueError(f"external_data_root must be readable and writable: {EXTERNAL_DATA_ROOT_MARKER}") from exc
-        raise
-
-
 def resolve_external_data_root() -> Path:
-    return resolve_external_data_workspace().root
+    """Resolve the existing Docs root directly, independently of Projects storage.
+
+    Configuration never creates this root or falls back to another workspace.
+    """
+    text = str(os.environ.get(DOTLINEFORM_DOCS_BASE_DIR_ENV) or "").strip()
+    if not text:
+        raise ValueError(f"{DOTLINEFORM_DOCS_BASE_DIR_ENV} is required for external local Docs Viewer scopes")
+    path = Path(text).expanduser()
+    if not path.is_absolute() or ".." in path.parts:
+        raise ValueError(f"{DOTLINEFORM_DOCS_BASE_DIR_ENV} must be an absolute path without parent segments")
+    root = path.resolve()
+    if not root.exists():
+        raise ValueError(f"external_data_root does not exist: {EXTERNAL_DATA_ROOT_MARKER}")
+    if not root.is_dir():
+        raise ValueError(f"external_data_root must be a directory: {EXTERNAL_DATA_ROOT_MARKER}")
+    if not os.access(root, os.R_OK | os.W_OK):
+        raise ValueError(f"external_data_root must be readable and writable: {EXTERNAL_DATA_ROOT_MARKER}")
+    return root
 
 
 def resolve_external_data_marker_path(value: Any, *, field: str) -> Path:
     text = str(value or "").strip()
     if text == EXTERNAL_DATA_ROOT_MARKER:
-        return resolve_external_data_workspace().root
+        return resolve_external_data_root()
     prefix = f"{EXTERNAL_DATA_ROOT_MARKER}/"
     if not text.startswith(prefix):
         raise ValueError(f"docs scope config field {field} must be under {EXTERNAL_DATA_ROOT_MARKER}")
@@ -293,11 +288,11 @@ def resolve_external_data_marker_path(value: Any, *, field: str) -> Path:
     relative_path = Path(relative_text)
     if relative_path.is_absolute() or ".." in relative_path.parts:
         raise ValueError(f"docs scope config field {field} must be under {EXTERNAL_DATA_ROOT_MARKER}")
-    workspace = resolve_external_data_workspace()
-    try:
-        return resolve_workspace_path(workspace, relative_path)
-    except ValueError as exc:
-        raise ValueError(f"docs scope config field {field} must be under {EXTERNAL_DATA_ROOT_MARKER}") from exc
+    root = resolve_external_data_root()
+    resolved = (root / relative_path).resolve()
+    if not resolved.is_relative_to(root):
+        raise ValueError(f"docs scope config field {field} must be under {EXTERNAL_DATA_ROOT_MARKER}")
+    return resolved
 
 
 def resolve_scope_path(repo_root: Path, path: Path) -> Path:
@@ -1453,7 +1448,7 @@ __all__ = [
     "DOCS_SCOPE_CONFIGS",
     "DOCUMENT_SOURCE_ROOTS",
     "DOCS_VIEWER_MANAGE_ROUTE_BASE_URL",
-    "DOTLINEFORM_PROJECTS_BASE_DIR_ENV",
+    "DOTLINEFORM_DOCS_BASE_DIR_ENV",
     "DocsBuildMediaConfig",
     "DocsGeneratedConfig",
     "DocsPublicProjectionConfig",
@@ -1508,7 +1503,6 @@ __all__ = [
     "published_search_path",
     "resolve_external_data_marker_path",
     "resolve_external_data_root",
-    "resolve_external_data_workspace",
     "resolve_location_path",
     "resolve_scope_path",
     "safe_relative_path",

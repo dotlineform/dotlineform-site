@@ -136,9 +136,11 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
 
     previous_projects_base = os.environ.get("DOTLINEFORM_PROJECTS_BASE_DIR")
+    previous_docs_base = os.environ.get("DOTLINEFORM_DOCS_BASE_DIR")
     with TemporaryDirectory(prefix="docs-viewer-external-mermaid-") as temporary_directory:
         projects_base = Path(temporary_directory) / "Projects"
         os.environ["DOTLINEFORM_PROJECTS_BASE_DIR"] = str(projects_base)
+        os.environ["DOTLINEFORM_DOCS_BASE_DIR"] = str(projects_base / "docs-viewer")
         prepare_external_scope(projects_base)
         try:
             build_external_scope()
@@ -188,6 +190,10 @@ def main(argv: list[str] | None = None) -> int:
                 os.environ.pop("DOTLINEFORM_PROJECTS_BASE_DIR", None)
             else:
                 os.environ["DOTLINEFORM_PROJECTS_BASE_DIR"] = previous_projects_base
+            if previous_docs_base is None:
+                os.environ.pop("DOTLINEFORM_DOCS_BASE_DIR", None)
+            else:
+                os.environ["DOTLINEFORM_DOCS_BASE_DIR"] = previous_docs_base
 
     print("Docs Viewer external-local Mermaid boundary OK")
     return 0

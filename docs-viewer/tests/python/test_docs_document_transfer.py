@@ -137,6 +137,7 @@ def isolated_media_workspace(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) ->
     projects = tmp_path / "projects"
     (projects / "docs-viewer").mkdir(parents=True)
     monkeypatch.setenv("DOTLINEFORM_PROJECTS_BASE_DIR", str(projects))
+    monkeypatch.setenv("DOTLINEFORM_DOCS_BASE_DIR", str(projects / "docs-viewer"))
 
 
 def make_repo(
@@ -1405,6 +1406,7 @@ def test_public_scope_managed_source_to_external_local_target_is_provider_neutra
     projects_base = tmp_path / "Projects"
     (projects_base / "docs-viewer").mkdir(parents=True, exist_ok=True)
     monkeypatch.setenv("DOTLINEFORM_PROJECTS_BASE_DIR", str(projects_base))
+    monkeypatch.setenv("DOTLINEFORM_DOCS_BASE_DIR", str(projects_base / "docs-viewer"))
     source_scope = docs_scope_record(
         "source",
         scope_type="public",
@@ -1463,6 +1465,7 @@ def test_external_local_source_can_plan_move_to_local_target(
     projects_base = tmp_path / "Projects"
     (projects_base / "docs-viewer").mkdir(parents=True, exist_ok=True)
     monkeypatch.setenv("DOTLINEFORM_PROJECTS_BASE_DIR", str(projects_base))
+    monkeypatch.setenv("DOTLINEFORM_DOCS_BASE_DIR", str(projects_base / "docs-viewer"))
     source_scope = docs_scope_record(
         "source",
         scope_type="local",

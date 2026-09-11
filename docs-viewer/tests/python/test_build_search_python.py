@@ -352,7 +352,7 @@ def test_selected_scope_search_build_does_not_resolve_unselected_external_scope(
         write_source_docs(root)
         unavailable_projects = root / "unavailable-projects"
         env = dict(os.environ)
-        env["DOTLINEFORM_PROJECTS_BASE_DIR"] = str(unavailable_projects)
+        env["DOTLINEFORM_DOCS_BASE_DIR"] = str(unavailable_projects)
         result = subprocess.run(
             [
                 sys.executable,
@@ -671,8 +671,8 @@ def test_python_docs_search_builder_writes_external_local_scope_index() -> None:
         projects_root = (root.parent / f"{root.name}-external").resolve()
         external_root = projects_root / "docs-viewer"
         external_root.mkdir(parents=True)
-        old_projects_base = os.environ.get("DOTLINEFORM_PROJECTS_BASE_DIR")
-        os.environ["DOTLINEFORM_PROJECTS_BASE_DIR"] = projects_root.as_posix()
+        old_docs_base = os.environ.get("DOTLINEFORM_DOCS_BASE_DIR")
+        os.environ["DOTLINEFORM_DOCS_BASE_DIR"] = (projects_root / "docs-viewer").as_posix()
         write_external_scope_config(root, external_root)
         write_text(
             external_root / "scopes/private/source/documents/private.md",
@@ -690,10 +690,10 @@ External search body.
             exit_code, stdout, stderr = run_cli(root, ["--scope", "private", "--write"])
             payload = read_json(external_root / "scopes/private/generated/search/index.json")
         finally:
-            if old_projects_base is None:
-                os.environ.pop("DOTLINEFORM_PROJECTS_BASE_DIR", None)
+            if old_docs_base is None:
+                os.environ.pop("DOTLINEFORM_DOCS_BASE_DIR", None)
             else:
-                os.environ["DOTLINEFORM_PROJECTS_BASE_DIR"] = old_projects_base
+                os.environ["DOTLINEFORM_DOCS_BASE_DIR"] = old_docs_base
 
     assert exit_code == 0
     assert stderr == ""

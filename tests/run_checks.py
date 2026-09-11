@@ -28,8 +28,8 @@ class CheckCommand:
     argv: tuple[str, ...]
     description: str
     coverage: str = ""
-    isolated_projects_base: bool = False
-    projects_base_argument: bool = False
+    isolated_workspaces: bool = False
+    workspace_arguments: bool = False
 
 
 def site_validate_argv() -> tuple[str, ...]:
@@ -284,7 +284,7 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
                 "docs-viewer/tests/python/test_generated_output_contract_fixtures.py",
             ),
             "Run docs-profile Python tests through pytest collection.",
-            isolated_projects_base=True,
+            isolated_workspaces=True,
         ),
         CheckCommand(
             "studio-docs-build",
@@ -318,7 +318,7 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
                 "docs-viewer/tests/smoke/docs_viewer_external_inline_mermaid_route.py",
             ),
             "Smoke-check external-local build addressability and lazy Mermaid browser rendering.",
-            isolated_projects_base=True,
+            isolated_workspaces=True,
         ),
         CheckCommand(
             "docs-viewer-service-manage-smoke",
@@ -327,8 +327,8 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
                 "docs-viewer/tests/smoke/docs_viewer_service_manage.py",
             ),
             "Smoke-check standalone Docs Viewer Manage route boot and configured service projection.",
-            isolated_projects_base=True,
-            projects_base_argument=True,
+            isolated_workspaces=True,
+            workspace_arguments=True,
         ),
         CheckCommand(
             "docs-viewer-service-review-smoke",
@@ -337,7 +337,7 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
                 "docs-viewer/tests/smoke/docs_viewer_service_review.py",
             ),
             "Smoke-check Docs Review route boot, package-provider reads, and isolated API authority.",
-            isolated_projects_base=True,
+            isolated_workspaces=True,
         ),
         CheckCommand(
             "public-docs-viewer-readonly-smoke",
@@ -365,7 +365,7 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
                 "studio/tests/smoke/studio_catalogue_route.py",
             ),
             "Smoke-check local Studio Catalogue route boot and service isolation.",
-            isolated_projects_base=True,
+            isolated_workspaces=True,
         ),
         CheckCommand(
             "public-catalogue-route-smoke",
@@ -420,31 +420,36 @@ def expand_profiles(profile_names: Iterable[str]) -> list[CheckCommand]:
     return commands
 
 
-def isolated_projects_base(command: CheckCommand, *, log_path: Path) -> Path | None:
-    if not command.isolated_projects_base:
+def isolated_workspaces(command: CheckCommand, *, log_path: Path) -> Path | None:
+    if not command.isolated_workspaces:
         return None
     projects_base = log_path.parent / "isolated-projects"
-    (projects_base / "docs-viewer").mkdir(parents=True, exist_ok=True)
+    projects_base.mkdir(parents=True, exist_ok=True)
+    (log_path.parent / "isolated-docs").mkdir(exist_ok=True)
     return projects_base.resolve()
 
 
 def command_argv(command: CheckCommand, *, projects_base: Path | None) -> tuple[str, ...]:
-    if not command.projects_base_argument:
+    if not command.workspace_arguments:
         return command.argv
     if projects_base is None:
         raise ValueError(f"check command {command.name!r} requires an isolated Projects base")
-    return (*command.argv, "--projects-base-dir", str(projects_base))
+    return (
+        *command.argv, "--projects-base-dir", str(projects_base),
+        "--docs-base-dir", str(projects_base.parent / "isolated-docs"),
+    )
 
 
 def run_command(command: CheckCommand, log_path: Path) -> dict[str, object]:
     started = time.monotonic()
     started_at = dt.datetime.now(dt.timezone.utc).isoformat()
-    projects_base = isolated_projects_base(command, log_path=log_path)
+    projects_base = isolated_workspaces(command, log_path=log_path)
     argv = command_argv(command, projects_base=projects_base)
     environ = None
     if projects_base is not None:
         environ = dict(os.environ)
         environ["DOTLINEFORM_PROJECTS_BASE_DIR"] = str(projects_base)
+        environ["DOTLINEFORM_DOCS_BASE_DIR"] = str(projects_base.parent / "isolated-docs")
     header = [
         f"name: {command.name}",
         f"description: {command.description}",
@@ -457,6 +462,7 @@ def run_command(command: CheckCommand, log_path: Path) -> dict[str, object]:
         header.insert(2, f"coverage: {command.coverage}")
     if projects_base is not None:
         header.insert(4, f"projects_base: {projects_base}")
+        header.insert(5, f"docs_base: {projects_base.parent / 'isolated-docs'}")
 
     try:
         result = subprocess.run(

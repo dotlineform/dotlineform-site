@@ -34,6 +34,7 @@ def load_management_service(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
     }
     write_docs_scope_config(tmp_path, [docs_scope_record("example"), analysis])
     monkeypatch.setenv("DOTLINEFORM_PROJECTS_BASE_DIR", str(tmp_path))
+    monkeypatch.setenv("DOTLINEFORM_DOCS_BASE_DIR", str(tmp_path / "docs-viewer"))
     return importlib.import_module("docs_management_service")
 
 

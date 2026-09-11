@@ -15,16 +15,19 @@ from dataclasses import replace
 REPO_ROOT = Path(__file__).resolve().parents[2]
 FIXTURES_DIR = Path(__file__).resolve().parent / "fixtures"
 PROJECTS_BASE_ENV = "DOTLINEFORM_PROJECTS_BASE_DIR"
+DOCS_BASE_ENV = "DOTLINEFORM_DOCS_BASE_DIR"
 
 
 _ORIGINAL_PROJECTS_BASE = os.environ.get(PROJECTS_BASE_ENV)
+_ORIGINAL_DOCS_BASE = os.environ.get(DOCS_BASE_ENV)
 _COLLECTION_PROJECTS_WORKSPACE = tempfile.TemporaryDirectory(
     prefix="docs-viewer-pytest-projects-"
 )
 _COLLECTION_PROJECTS_BASE = Path(_COLLECTION_PROJECTS_WORKSPACE.name)
 (_COLLECTION_PROJECTS_BASE / "data-sharing").mkdir()
-(_COLLECTION_PROJECTS_BASE / "docs-viewer").mkdir()
+_COLLECTION_DOCS_WORKSPACE = tempfile.TemporaryDirectory(prefix="docs-viewer-pytest-docs-")
 os.environ[PROJECTS_BASE_ENV] = str(_COLLECTION_PROJECTS_BASE)
+os.environ[DOCS_BASE_ENV] = _COLLECTION_DOCS_WORKSPACE.name
 
 
 for path in (FIXTURES_DIR, REPO_ROOT):
@@ -68,11 +71,13 @@ def synthetic_lineage_customisations(monkeypatch: pytest.MonkeyPatch) -> None:
 def pytest_unconfigure() -> None:
     """Restore the invoking environment after collection-safe test isolation."""
 
-    if _ORIGINAL_PROJECTS_BASE is None:
-        os.environ.pop(PROJECTS_BASE_ENV, None)
-    else:
-        os.environ[PROJECTS_BASE_ENV] = _ORIGINAL_PROJECTS_BASE
+    for key, original in ((PROJECTS_BASE_ENV, _ORIGINAL_PROJECTS_BASE), (DOCS_BASE_ENV, _ORIGINAL_DOCS_BASE)):
+        if original is None:
+            os.environ.pop(key, None)
+        else:
+            os.environ[key] = original
     _COLLECTION_PROJECTS_WORKSPACE.cleanup()
+    _COLLECTION_DOCS_WORKSPACE.cleanup()
 
 
 @pytest.fixture(autouse=True)
@@ -80,8 +85,10 @@ def external_data_sharing_workspace(tmp_path: Path, monkeypatch: pytest.MonkeyPa
     projects_base = tmp_path / "projects-base"
     workspace = projects_base / "data-sharing"
     workspace.mkdir(parents=True)
-    (projects_base / "docs-viewer").mkdir()
+    docs_base = tmp_path / "docs-base"
+    docs_base.mkdir()
     monkeypatch.setenv("DOTLINEFORM_PROJECTS_BASE_DIR", str(projects_base))
+    monkeypatch.setenv(DOCS_BASE_ENV, str(docs_base))
     from docs_scope_config import DOCS_SCOPE_CONFIGS, DOCUMENT_SOURCE_ROOTS
 
     original_configs = dict(DOCS_SCOPE_CONFIGS)

@@ -52,7 +52,7 @@
       ],
       "scope_root": {
         "provider": "external_local",
-        "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/studio"
+        "path": "$DOTLINEFORM_DOCS_BASE_DIR/scopes/studio"
       }
     },
     {
@@ -203,7 +203,7 @@
       ],
       "scope_root": {
         "provider": "external_local",
-        "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/analysis"
+        "path": "$DOTLINEFORM_DOCS_BASE_DIR/scopes/analysis"
       },
       "stages": {
         "working": {
@@ -411,7 +411,7 @@
       "sub_scopes": [],
       "scope_root": {
         "provider": "external_local",
-        "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/notes"
+        "path": "$DOTLINEFORM_DOCS_BASE_DIR/scopes/notes"
       }
     },
     {
@@ -452,7 +452,7 @@
       "sub_scopes": [],
       "scope_root": {
         "provider": "external_local",
-        "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/processing"
+        "path": "$DOTLINEFORM_DOCS_BASE_DIR/scopes/processing"
       }
     },
     {
@@ -461,7 +461,7 @@
       "meta": "local",
       "scope_root": {
         "provider": "external_local",
-        "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/app"
+        "path": "$DOTLINEFORM_DOCS_BASE_DIR/scopes/app"
       },
       "source": {},
       "search_fields": [

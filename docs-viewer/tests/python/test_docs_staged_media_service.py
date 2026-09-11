@@ -23,6 +23,7 @@ def isolated_media_workspace(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) ->
     projects = tmp_path / "projects"
     (projects / "docs-viewer").mkdir(parents=True)
     monkeypatch.setenv("DOTLINEFORM_PROJECTS_BASE_DIR", str(projects))
+    monkeypatch.setenv("DOTLINEFORM_DOCS_BASE_DIR", str(projects / "docs-viewer"))
 
 
 def managed_media_path(repo_root: Path, scope: str, *parts: str) -> Path:
@@ -282,6 +283,7 @@ def test_add_image_uses_external_scope_owned_media_root(monkeypatch: pytest.Monk
         staging_root = projects_root / "data-sharing/import-staging"
         staging_root.mkdir(parents=True)
         monkeypatch.setenv("DOTLINEFORM_PROJECTS_BASE_DIR", str(projects_root))
+        monkeypatch.setenv("DOTLINEFORM_DOCS_BASE_DIR", str(projects_root / "docs-viewer"))
         write_docs_scope_config(
             root,
             [

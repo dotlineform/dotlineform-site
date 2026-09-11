@@ -23,8 +23,8 @@ def test_python_docs_builder_writes_external_local_scope_outputs() -> None:
         projects_root = (root.parent / f"{root.name}-external").resolve()
         external_root = projects_root / "docs-viewer"
         external_root.mkdir(parents=True)
-        old_projects_base = os.environ.get("DOTLINEFORM_PROJECTS_BASE_DIR")
-        os.environ["DOTLINEFORM_PROJECTS_BASE_DIR"] = projects_root.as_posix()
+        old_docs_base = os.environ.get("DOTLINEFORM_DOCS_BASE_DIR")
+        os.environ["DOTLINEFORM_DOCS_BASE_DIR"] = (projects_root / "docs-viewer").as_posix()
         write_site_tools_config(root)
         write_catalogue_records(root)
         write_external_scope_config(root, external_root)
@@ -48,10 +48,10 @@ External body.
                 external_root / f"scopes/private/generated/documents/by-id/{PRIVATE_DOC_ID}.json"
             )
         finally:
-            if old_projects_base is None:
-                os.environ.pop("DOTLINEFORM_PROJECTS_BASE_DIR", None)
+            if old_docs_base is None:
+                os.environ.pop("DOTLINEFORM_DOCS_BASE_DIR", None)
             else:
-                os.environ["DOTLINEFORM_PROJECTS_BASE_DIR"] = old_projects_base
+                os.environ["DOTLINEFORM_DOCS_BASE_DIR"] = old_docs_base
 
     assert exit_code == 0
     assert stderr == ""

@@ -27,11 +27,11 @@ pytestmark = pytest.mark.usefixtures("synthetic_lineage_customisations")
 def isolated_media_workspace(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     projects = tmp_path / "projects"
     (projects / "docs-viewer").mkdir(parents=True)
-    monkeypatch.setenv("DOTLINEFORM_PROJECTS_BASE_DIR", str(projects))
+    monkeypatch.setenv("DOTLINEFORM_DOCS_BASE_DIR", str(projects / "docs-viewer"))
 
 
 def external_scope_root(scope: str) -> Path:
-    return Path(os.environ["DOTLINEFORM_PROJECTS_BASE_DIR"]) / "docs-viewer/scopes" / scope
+    return Path(os.environ["DOTLINEFORM_DOCS_BASE_DIR"]) / "scopes" / scope
 
 
 def external_scope_label(scope: str, relative: str = "") -> str:
@@ -327,7 +327,7 @@ def test_scope_create_preview_rejects_a_changed_planned_document_identity() -> N
     assert "added_date must match" in error
 
 def test_scope_create_preview_blocks_tmp_for_icloud_external_workspace() -> None:
-    original_projects_base = os.environ.get("DOTLINEFORM_PROJECTS_BASE_DIR")
+    original_docs_base = os.environ.get("DOTLINEFORM_DOCS_BASE_DIR")
     try:
         with make_repo() as temp_path:
             repo_root = Path(temp_path)
@@ -340,7 +340,7 @@ def test_scope_create_preview_blocks_tmp_for_icloud_external_workspace() -> None
                 / "dotlineform"
             )
             (projects_root / "docs-viewer").mkdir(parents=True)
-            os.environ["DOTLINEFORM_PROJECTS_BASE_DIR"] = projects_root.as_posix()
+            os.environ["DOTLINEFORM_DOCS_BASE_DIR"] = (projects_root / "docs-viewer").as_posix()
             write_docs_scope_config(repo_root)
 
             try:
@@ -358,10 +358,10 @@ def test_scope_create_preview_blocks_tmp_for_icloud_external_workspace() -> None
             else:
                 raise AssertionError("iCloud external scope creation should reject the tmp scope id")
     finally:
-        if original_projects_base is None:
-            os.environ.pop("DOTLINEFORM_PROJECTS_BASE_DIR", None)
+        if original_docs_base is None:
+            os.environ.pop("DOTLINEFORM_DOCS_BASE_DIR", None)
         else:
-            os.environ["DOTLINEFORM_PROJECTS_BASE_DIR"] = original_projects_base
+            os.environ["DOTLINEFORM_DOCS_BASE_DIR"] = original_docs_base
 
     assert "iCloud excludes folders named tmp from sync" in error
 
@@ -645,13 +645,13 @@ def test_scope_create_apply_requires_confirmation() -> None:
             raise AssertionError("scope create apply should require explicit confirmation")
 
 def test_scope_create_preview_requires_existing_external_docs_viewer_root() -> None:
-    old_projects_base = os.environ.get("DOTLINEFORM_PROJECTS_BASE_DIR")
+    old_docs_base = os.environ.get("DOTLINEFORM_DOCS_BASE_DIR")
     try:
         with make_repo() as temp_path:
             repo_root = Path(temp_path)
             projects_root = (repo_root.parent / f"{repo_root.name}-external-docs-data").resolve()
             projects_root.mkdir()
-            os.environ["DOTLINEFORM_PROJECTS_BASE_DIR"] = projects_root.as_posix()
+            os.environ["DOTLINEFORM_DOCS_BASE_DIR"] = (projects_root / "docs-viewer").as_posix()
             write_docs_scope_config(repo_root)
             try:
                 docs_management_service.docs_scope_create.plan_create_scope_preview(
@@ -668,10 +668,10 @@ def test_scope_create_preview_requires_existing_external_docs_viewer_root() -> N
             else:
                 raise AssertionError("external local preview should require an existing docs-viewer external root")
     finally:
-        if old_projects_base is None:
-            os.environ.pop("DOTLINEFORM_PROJECTS_BASE_DIR", None)
+        if old_docs_base is None:
+            os.environ.pop("DOTLINEFORM_DOCS_BASE_DIR", None)
         else:
-            os.environ["DOTLINEFORM_PROJECTS_BASE_DIR"] = old_projects_base
+            os.environ["DOTLINEFORM_DOCS_BASE_DIR"] = old_docs_base
 
     assert "external_data_root does not exist" in error
     assert not (projects_root / "docs-viewer").exists()
@@ -689,14 +689,14 @@ def test_scope_create_apply_writes_allowlisted_files_and_runs_rebuild() -> None:
         }
 
     docs_management_service.write_rebuild.rebuild_scope_outputs = fake_rebuild
-    original_projects_base = os.environ.get("DOTLINEFORM_PROJECTS_BASE_DIR")
+    original_docs_base = os.environ.get("DOTLINEFORM_DOCS_BASE_DIR")
     try:
         with make_repo() as temp_path:
             repo_root = Path(temp_path)
             projects_root = (repo_root.parent / f"{repo_root.name}-external-docs-data").resolve()
             external_root = projects_root / "docs-viewer"
             (external_root / "media").mkdir(parents=True)
-            os.environ["DOTLINEFORM_PROJECTS_BASE_DIR"] = projects_root.as_posix()
+            os.environ["DOTLINEFORM_DOCS_BASE_DIR"] = (projects_root / "docs-viewer").as_posix()
             write_docs_scope_config(repo_root)
             preview = docs_management_service.docs_scope_create.plan_create_scope_preview(
                 repo_root,
@@ -735,10 +735,10 @@ def test_scope_create_apply_writes_allowlisted_files_and_runs_rebuild() -> None:
             route_exists = (repo_root / "research/index.md").exists()
     finally:
         docs_management_service.write_rebuild.rebuild_scope_outputs = original_rebuild
-        if original_projects_base is None:
-            os.environ.pop("DOTLINEFORM_PROJECTS_BASE_DIR", None)
+        if original_docs_base is None:
+            os.environ.pop("DOTLINEFORM_DOCS_BASE_DIR", None)
         else:
-            os.environ["DOTLINEFORM_PROJECTS_BASE_DIR"] = original_projects_base
+            os.environ["DOTLINEFORM_DOCS_BASE_DIR"] = original_docs_base
 
     assert payload["ok"] is True
     assert payload["schema_version"] == "docs_scope_lifecycle_apply_v1"
@@ -807,7 +807,7 @@ def test_scope_rename_preview_blocks_system_scopes() -> None:
     assert "only user-created local Manage scopes" in payload["blockers"][0]
 
 def test_scope_rename_preview_blocks_tmp_for_icloud_external_workspace() -> None:
-    original_projects_base = os.environ.get("DOTLINEFORM_PROJECTS_BASE_DIR")
+    original_docs_base = os.environ.get("DOTLINEFORM_DOCS_BASE_DIR")
     try:
         with make_repo() as temp_path:
             repo_root = Path(temp_path)
@@ -820,7 +820,7 @@ def test_scope_rename_preview_blocks_tmp_for_icloud_external_workspace() -> None
                 / "dotlineform"
             )
             (projects_root / "docs-viewer").mkdir(parents=True)
-            os.environ["DOTLINEFORM_PROJECTS_BASE_DIR"] = projects_root.as_posix()
+            os.environ["DOTLINEFORM_DOCS_BASE_DIR"] = (projects_root / "docs-viewer").as_posix()
             write_docs_scope_config(repo_root)
             docs_management_service.docs_scope_create.apply_create_scope(
                 repo_root,
@@ -840,10 +840,10 @@ def test_scope_rename_preview_blocks_tmp_for_icloud_external_workspace() -> None
                 {"scope_id": "research", "new_scope_id": "tmp"},
             )
     finally:
-        if original_projects_base is None:
-            os.environ.pop("DOTLINEFORM_PROJECTS_BASE_DIR", None)
+        if original_docs_base is None:
+            os.environ.pop("DOTLINEFORM_DOCS_BASE_DIR", None)
         else:
-            os.environ["DOTLINEFORM_PROJECTS_BASE_DIR"] = original_projects_base
+            os.environ["DOTLINEFORM_DOCS_BASE_DIR"] = original_docs_base
 
     assert payload["allowed"] is False
     assert any("iCloud excludes folders named tmp from sync" in blocker for blocker in payload["blockers"])
@@ -857,14 +857,14 @@ def test_scope_rename_apply_moves_external_roots_and_preserves_links_and_doc_ids
         return {"ok": True, "steps": [], "search": {"mode": "full", "doc_ids": []}}
 
     docs_management_service.write_rebuild.rebuild_scope_outputs = fake_rebuild
-    original_projects_base = os.environ.get("DOTLINEFORM_PROJECTS_BASE_DIR")
+    original_docs_base = os.environ.get("DOTLINEFORM_DOCS_BASE_DIR")
     try:
         with make_repo() as temp_path:
             repo_root = Path(temp_path)
             projects_root = (repo_root.parent / f"{repo_root.name}-external-docs-data").resolve()
             external_root = projects_root / "docs-viewer"
             (external_root / "media").mkdir(parents=True)
-            os.environ["DOTLINEFORM_PROJECTS_BASE_DIR"] = projects_root.as_posix()
+            os.environ["DOTLINEFORM_DOCS_BASE_DIR"] = (projects_root / "docs-viewer").as_posix()
             write_docs_scope_config(repo_root)
             docs_management_service.handle_scope_create_apply(
                 repo_root,
@@ -933,10 +933,10 @@ def test_scope_rename_apply_moves_external_roots_and_preserves_links_and_doc_ids
             renamed_source_text = (external_root / f"scopes/field-notes/source/documents/{default_doc_id}.md").read_text(encoding="utf-8")
     finally:
         docs_management_service.write_rebuild.rebuild_scope_outputs = original_rebuild
-        if original_projects_base is None:
-            os.environ.pop("DOTLINEFORM_PROJECTS_BASE_DIR", None)
+        if original_docs_base is None:
+            os.environ.pop("DOTLINEFORM_DOCS_BASE_DIR", None)
         else:
-            os.environ["DOTLINEFORM_PROJECTS_BASE_DIR"] = original_projects_base
+            os.environ["DOTLINEFORM_DOCS_BASE_DIR"] = original_docs_base
 
     assert "confirm must be true" in confirmation_error
     assert blocked_preview["allowed"] is False
@@ -1362,7 +1362,7 @@ def test_scope_delete_apply_removes_manifest_scope_and_runs_rebuild() -> None:
 def test_scope_delete_apply_removes_external_scope_owned_media_with_published_docs_root() -> None:
     original_create_rebuild = docs_management_service.write_rebuild.rebuild_scope_outputs
     original_delete_rebuild = docs_management_service.write_rebuild.rebuild_all_docs_outputs
-    original_projects_base = os.environ.get("DOTLINEFORM_PROJECTS_BASE_DIR")
+    original_docs_base = os.environ.get("DOTLINEFORM_DOCS_BASE_DIR")
     docs_management_service.write_rebuild.rebuild_scope_outputs = (
         lambda *_args, **_kwargs: {"ok": True}
     )
@@ -1375,7 +1375,7 @@ def test_scope_delete_apply_removes_external_scope_owned_media_with_published_do
             projects_root = (repo_root.parent / f"{repo_root.name}-external-docs-data").resolve()
             external_root = projects_root / "docs-viewer"
             (external_root / "media").mkdir(parents=True)
-            os.environ["DOTLINEFORM_PROJECTS_BASE_DIR"] = projects_root.as_posix()
+            os.environ["DOTLINEFORM_DOCS_BASE_DIR"] = (projects_root / "docs-viewer").as_posix()
             write_docs_scope_config(repo_root)
             docs_management_service.handle_scope_create_apply(
                 repo_root,
@@ -1412,10 +1412,10 @@ def test_scope_delete_apply_removes_external_scope_owned_media_with_published_do
     finally:
         docs_management_service.write_rebuild.rebuild_scope_outputs = original_create_rebuild
         docs_management_service.write_rebuild.rebuild_all_docs_outputs = original_delete_rebuild
-        if original_projects_base is None:
-            os.environ.pop("DOTLINEFORM_PROJECTS_BASE_DIR", None)
+        if original_docs_base is None:
+            os.environ.pop("DOTLINEFORM_DOCS_BASE_DIR", None)
         else:
-            os.environ["DOTLINEFORM_PROJECTS_BASE_DIR"] = original_projects_base
+            os.environ["DOTLINEFORM_DOCS_BASE_DIR"] = original_docs_base
 
     assert preview["allowed"] is True
     assert any(

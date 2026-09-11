@@ -32,13 +32,15 @@ def test_python_docs_builder_scripts_load_repo_local_env_before_scope_config() -
     with tempfile.TemporaryDirectory() as temp_path:
         root = Path(temp_path)
         projects_root = root / "projects"
-        external_workspace = projects_root / "docs-viewer"
+        external_workspace = root / "docs-workspace"
+        projects_root.mkdir()
         external_workspace.mkdir(parents=True)
         write_site_tools_config(root, media_base="")
         write_external_scope_config(root, external_workspace)
-        write_text(root / ".env.local", f"DOTLINEFORM_PROJECTS_BASE_DIR={projects_root}\n")
+        write_text(root / ".env.local", f"DOTLINEFORM_PROJECTS_BASE_DIR={projects_root}\nDOTLINEFORM_DOCS_BASE_DIR={external_workspace}\n")
         env = dict(os.environ)
         env.pop("DOTLINEFORM_PROJECTS_BASE_DIR", None)
+        env.pop("DOTLINEFORM_DOCS_BASE_DIR", None)
 
         results = [
             subprocess.run(
@@ -61,15 +63,17 @@ def test_python_docs_builder_scripts_load_repo_local_env_before_scope_config() -
     assert all("DOTLINEFORM_PROJECTS_BASE_DIR is required" not in result.stderr for result in results)
 
 
-def test_python_docs_builders_accept_explicit_projects_base_after_repo_local_env() -> None:
+def test_python_docs_builders_accept_independent_workspace_overrides_after_repo_local_env() -> None:
     with tempfile.TemporaryDirectory() as temp_path:
         root = Path(temp_path)
         unavailable_projects_root = root / "unavailable-projects"
         isolated_projects_root = root / "isolated-projects"
-        (isolated_projects_root / "docs-viewer").mkdir(parents=True)
+        isolated_projects_root.mkdir()
+        docs_root = root / "isolated-docs"
+        docs_root.mkdir()
         write_site_tools_config(root, media_base="")
-        write_external_scope_config(root, isolated_projects_root / "docs-viewer")
-        write_text(root / ".env.local", f"DOTLINEFORM_PROJECTS_BASE_DIR={unavailable_projects_root}\n")
+        write_external_scope_config(root, docs_root)
+        write_text(root / ".env.local", f"DOTLINEFORM_PROJECTS_BASE_DIR={unavailable_projects_root}\nDOTLINEFORM_DOCS_BASE_DIR={root / 'unavailable-docs'}\n")
 
         results = [
             subprocess.run(
@@ -78,6 +82,8 @@ def test_python_docs_builders_accept_explicit_projects_base_after_repo_local_env
                     str(BUILD_DIR / script),
                     "--projects-base-dir",
                     str(isolated_projects_root),
+                    "--docs-base-dir",
+                    str(docs_root),
                     "--help",
                 ],
                 cwd=root,
@@ -89,6 +95,8 @@ def test_python_docs_builders_accept_explicit_projects_base_after_repo_local_env
                 "build_docs.py",
                 "build_search.py",
                 "build_document_locations.py",
+                "plan_public_mermaid_projection.py",
+                "build_public_mermaid_projection.py",
             )
         ]
 
@@ -124,10 +132,9 @@ def test_targeted_local_docs_build_does_not_resolve_unselected_external_scope() 
                 "scopes": [retained_private_record],
             },
         )
-        unavailable_projects = root / "unavailable-projects"
-        unavailable_projects.mkdir()
+        unavailable_docs = root / "unavailable-docs"
         env = dict(os.environ)
-        env["DOTLINEFORM_PROJECTS_BASE_DIR"] = str(unavailable_projects)
+        env["DOTLINEFORM_DOCS_BASE_DIR"] = str(unavailable_docs)
         result = subprocess.run(
             [
                 sys.executable,

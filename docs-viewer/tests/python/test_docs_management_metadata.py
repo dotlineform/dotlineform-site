@@ -948,6 +948,7 @@ def test_external_scope_default_doc_delete_uses_workspace_relative_path(tmp_path
         encoding="utf-8",
     )
     monkeypatch.setenv("DOTLINEFORM_PROJECTS_BASE_DIR", str(projects_base))
+    monkeypatch.setenv("DOTLINEFORM_DOCS_BASE_DIR", str(projects_base / "docs-viewer"))
     config_path = repo_root / "docs-viewer/config/scopes/docs_scopes.json"
     config_path.parent.mkdir(parents=True)
     config_path.write_text(

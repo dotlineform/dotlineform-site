@@ -406,8 +406,8 @@ def test_generated_reads_support_external_local_scope_payloads() -> None:
         projects_root = (repo_root.parent / f"{repo_root.name}-external").resolve()
         external_root = projects_root / "docs-viewer"
         external_root.mkdir(parents=True)
-        old_projects_base = os.environ.get("DOTLINEFORM_PROJECTS_BASE_DIR")
-        os.environ["DOTLINEFORM_PROJECTS_BASE_DIR"] = projects_root.as_posix()
+        old_docs_base = os.environ.get("DOTLINEFORM_DOCS_BASE_DIR")
+        os.environ["DOTLINEFORM_DOCS_BASE_DIR"] = (projects_root / "docs-viewer").as_posix()
         write_scope_config(repo_root, [external_scope_config("private", external_root)])
         docs_root = external_root / "scopes/private/generated/documents"
         write_json(
@@ -455,10 +455,10 @@ def test_generated_reads_support_external_local_scope_payloads() -> None:
                 {"scope": ["private"]},
             )
         finally:
-            if old_projects_base is None:
-                os.environ.pop("DOTLINEFORM_PROJECTS_BASE_DIR", None)
+            if old_docs_base is None:
+                os.environ.pop("DOTLINEFORM_DOCS_BASE_DIR", None)
             else:
-                os.environ["DOTLINEFORM_PROJECTS_BASE_DIR"] = old_projects_base
+                os.environ["DOTLINEFORM_DOCS_BASE_DIR"] = old_docs_base
 
     assert payload == {"doc_id": PRIVATE_DOC_ID}
     assert search["docs"] == [{"id": PRIVATE_DOC_ID}]
@@ -471,8 +471,8 @@ def test_external_sub_scope_payload_route_resolves_only_configured_json() -> Non
         projects_root = (repo_root.parent / f"{repo_root.name}-external").resolve()
         external_root = projects_root / "docs-viewer"
         external_root.mkdir(parents=True)
-        old_projects_base = os.environ.get("DOTLINEFORM_PROJECTS_BASE_DIR")
-        os.environ["DOTLINEFORM_PROJECTS_BASE_DIR"] = projects_root.as_posix()
+        old_docs_base = os.environ.get("DOTLINEFORM_DOCS_BASE_DIR")
+        os.environ["DOTLINEFORM_DOCS_BASE_DIR"] = (projects_root / "docs-viewer").as_posix()
         scope = external_scope_config("private", external_root)
         scope["sub_scopes"] = [docs_sub_scope_record("private", "projects")]
         write_scope_config(repo_root, [scope])
@@ -508,10 +508,10 @@ def test_external_sub_scope_payload_route_resolves_only_configured_json() -> Non
                     "/docs/generated/external/private/missing/manage-manifest.json",
                 )
         finally:
-            if old_projects_base is None:
-                os.environ.pop("DOTLINEFORM_PROJECTS_BASE_DIR", None)
+            if old_docs_base is None:
+                os.environ.pop("DOTLINEFORM_DOCS_BASE_DIR", None)
             else:
-                os.environ["DOTLINEFORM_PROJECTS_BASE_DIR"] = old_projects_base
+                os.environ["DOTLINEFORM_DOCS_BASE_DIR"] = old_docs_base
 
 
 def test_links_read_is_exact_staged_separate_and_read_only(tmp_path):

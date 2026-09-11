@@ -28,12 +28,66 @@ def write_scope_record(repo_root: Path, record: dict[str, object]) -> None:
     )
 
 
+def test_docs_root_is_independent_of_projects(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    from studio.shared.python.external_workspace_paths import resolve_external_workspace_root
+
+    projects = tmp_path / "projects"
+    (projects / "catalogue").mkdir(parents=True)
+    (projects / "data-sharing").mkdir()
+    docs = tmp_path / "my-docs"
+    docs.mkdir()
+    monkeypatch.setenv("DOTLINEFORM_PROJECTS_BASE_DIR", str(projects))
+    monkeypatch.setenv("DOTLINEFORM_DOCS_BASE_DIR", str(docs))
+    assert docs_scope_config.resolve_external_data_root() == docs
+    assert docs_scope_config.resolve_external_data_marker_path(
+        "$DOTLINEFORM_DOCS_BASE_DIR/scopes/studio", field="scope_root",
+    ) == docs / "scopes/studio"
+    for name in ("catalogue", "data-sharing"):
+        assert resolve_external_workspace_root(name, require_exists=True).root == projects / name
+    monkeypatch.delenv("DOTLINEFORM_PROJECTS_BASE_DIR")
+    assert docs_scope_config.resolve_external_data_root() == docs
+
+
+def test_docs_root_has_no_projects_fallback(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    (tmp_path / "docs-viewer").mkdir()
+    monkeypatch.setenv("DOTLINEFORM_PROJECTS_BASE_DIR", str(tmp_path))
+    monkeypatch.delenv("DOTLINEFORM_DOCS_BASE_DIR")
+    with pytest.raises(ValueError, match="DOTLINEFORM_DOCS_BASE_DIR is required"):
+        docs_scope_config.resolve_external_data_root()
+    missing = tmp_path / "missing-docs"
+    monkeypatch.setenv("DOTLINEFORM_DOCS_BASE_DIR", str(missing))
+    with pytest.raises(ValueError, match="external_data_root does not exist"):
+        docs_scope_config.resolve_external_data_root()
+    assert not missing.exists()
+
+
+@pytest.mark.parametrize("value", ["relative", "/tmp/../docs"])
+def test_docs_root_rejects_unsafe_paths(value: str, monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setenv("DOTLINEFORM_DOCS_BASE_DIR", value)
+    with pytest.raises(ValueError, match="absolute path without parent segments"):
+        docs_scope_config.resolve_external_data_root()
+
+
+def test_docs_marker_rejects_escape_and_retired_marker(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    root = tmp_path / "docs"
+    root.mkdir()
+    (root / "escape").symlink_to(tmp_path, target_is_directory=True)
+    monkeypatch.setenv("DOTLINEFORM_DOCS_BASE_DIR", str(root))
+    for marker in (
+        "$DOTLINEFORM_DOCS_BASE_DIR/../elsewhere",
+        "$DOTLINEFORM_DOCS_BASE_DIR/escape/elsewhere",
+        "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/studio",
+    ):
+        with pytest.raises(ValueError, match="must be under"):
+            docs_scope_config.resolve_external_data_marker_path(marker, field="scope_root")
+
+
 def test_docs_viewer_pytest_collection_ignores_unavailable_external_workspace(tmp_path: Path) -> None:
     tests_root = REPO_ROOT / "docs-viewer/tests"
-    hostile_projects_base = tmp_path / "unavailable-projects"
+    hostile_docs_base = tmp_path / "unavailable-docs"
     environment = dict(os.environ)
-    environment["DOTLINEFORM_PROJECTS_BASE_DIR"] = str(hostile_projects_base)
-    environment["HOSTILE_PROJECTS_BASE"] = str(hostile_projects_base)
+    environment["DOTLINEFORM_DOCS_BASE_DIR"] = str(hostile_docs_base)
+    environment["HOSTILE_DOCS_BASE"] = str(hostile_docs_base)
 
     with tempfile.TemporaryDirectory(prefix=".collection-bootstrap-", dir=tests_root) as temp_path_text:
         probe_path = Path(temp_path_text) / "test_collection_probe.py"
@@ -44,13 +98,13 @@ import os
 from docs_scope_config import DOCS_SCOPE_CONFIGS
 
 
-collection_projects_base = Path(os.environ["DOTLINEFORM_PROJECTS_BASE_DIR"])
-assert collection_projects_base != Path(os.environ["HOSTILE_PROJECTS_BASE"])
-assert (collection_projects_base / "docs-viewer").is_dir()
+collection_docs_base = Path(os.environ["DOTLINEFORM_DOCS_BASE_DIR"])
+assert collection_docs_base != Path(os.environ["HOSTILE_DOCS_BASE"])
+assert collection_docs_base.is_dir()
 assert list(DOCS_SCOPE_CONFIGS)
 
 
-def test_collection_completed_with_isolated_projects_base() -> None:
+def test_collection_completed_with_isolated_docs_base() -> None:
     pass
 """,
             encoding="utf-8",
@@ -155,10 +209,10 @@ def test_docs_scope_config_selected_local_scope_does_not_resolve_external_worksp
                 ],
             },
         )
-        unavailable_projects = repo_root / "unavailable-projects"
+        unavailable_docs = repo_root / "unavailable-docs"
         with patch.dict(
             "os.environ",
-            {"DOTLINEFORM_PROJECTS_BASE_DIR": str(unavailable_projects)},
+            {"DOTLINEFORM_DOCS_BASE_DIR": str(unavailable_docs)},
         ):
             configs = docs_scope_config.load_docs_scope_configs(
                 repo_root,
@@ -201,10 +255,10 @@ def test_docs_scope_config_public_only_does_not_resolve_external_workspace() -> 
                 ],
             },
         )
-        unavailable_projects = repo_root / "unavailable-projects"
+        unavailable_docs = repo_root / "unavailable-docs"
         with patch.dict(
             "os.environ",
-            {"DOTLINEFORM_PROJECTS_BASE_DIR": str(unavailable_projects)},
+            {"DOTLINEFORM_DOCS_BASE_DIR": str(unavailable_docs)},
         ):
             configs = docs_scope_config.load_docs_scope_configs(
                 repo_root,
@@ -549,26 +603,25 @@ def test_docs_scope_config_accepts_explicit_sub_scope_return_import_opt_in() -> 
     assert config.sub_scopes[0].supports_return_import is True
 
 
-def test_checked_scope_config_opts_only_concepts_into_return_import() -> None:
+def test_checked_pre_publish_config_has_four_read_only_collections() -> None:
     configs = docs_scope_config.load_docs_scope_configs(
         REPO_ROOT,
         scope_ids=["analysis"],
     )
 
-    concepts = configs["analysis"].sub_scopes[0]
-    pre_publish_works = configs["analysis"].sub_scopes[1]
+    pre_publish = docs_scope_config.select_scope_stage(configs["analysis"], "pre-publish")
+    collections = {entry.sub_scope: entry for entry in pre_publish.sub_scopes}
+    concepts = collections["concepts"]
+    pre_publish_works = collections["works"]
     assert [
         (sub_scope.sub_scope, sub_scope.supports_return_import)
-        for sub_scope in configs["analysis"].sub_scopes
-    ] == [("tags", True), ("works", False)]
+        for sub_scope in pre_publish.sub_scopes
+    ] == [("works", False), ("concepts", False), ("processing", False), ("moments", False)]
     assert concepts.sub_scope_customisation is None
     assert pre_publish_works.sub_scope_customisation is not None
     assert pre_publish_works.sub_scope_customisation.customisation_id == "pre_publish_works"
     assert pre_publish_works.sub_scope_customisation.settings == {}
-    assert pre_publish_works.lifecycle is not None
-    assert pre_publish_works.lifecycle.report_host_doc_id == (
-        "d-20260807-082735-54d9d5"
-    )
+    assert pre_publish_works.lifecycle is None
     assert pre_publish_works.public_projection is not None
     assert pre_publish_works.public_projection.documents.location.path.as_posix() == (
         "site/assets/data/docs/scopes/analysis/works"

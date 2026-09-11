@@ -116,8 +116,8 @@ def test_checked_studio_config_registers_and_materializes_mermaid_source() -> No
     build = config.media.build_sources["mermaid"]
 
     assert build.location.path == (
-        Path(os.environ["DOTLINEFORM_PROJECTS_BASE_DIR"])
-        / "docs-viewer/scopes/studio/source/media/build-source/mermaid"
+        Path(os.environ["DOTLINEFORM_DOCS_BASE_DIR"])
+        / "scopes/studio/source/media/build-source/mermaid"
     )
     assert build.producer == "mermaid"
     assert build.publishes_to == "svg"
