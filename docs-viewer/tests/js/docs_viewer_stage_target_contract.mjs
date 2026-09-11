@@ -69,6 +69,9 @@ for (const stage of ["working", "pre-publish", ""]) {
   }
   selectedDocument.selectedDocId = "";
   assert.ok(sourceActions.every(action => !resolveAction(action).enabled), "insertion requires an active document");
+  const rebuild = resolveAction(DOCS_VIEWER_ACTION_IDS.REBUILD_DOCS);
+  assert.equal(rebuild.enabled, stage !== "pre-publish", `${stage}: scope rebuild does not require an active document`);
+  assert.equal(Boolean(rebuild.hidden), stage === "pre-publish", `${stage}: scope rebuild availability`);
 }
 const subject = { state: "valid", kind: "work", key: "00293", fields: ["work_id"] };
 const metadata = { ...working, record: { doc_id: docId, authoring_subject: subject } };
