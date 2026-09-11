@@ -39,11 +39,13 @@ export function documentPackagePrepareCapability(capabilities) {
   return { available: true, reason: "" };
 }
 
+/** Read scope capabilities; the controller owns active-stage selection. */
 export function scopeManagementCapabilities(capabilities, scope, stage) {
   var scopeId = normalizeScopeId(scope);
   if (!capabilities || !capabilities.scopes || !scopeId) return null;
   var scopeCaps = capabilities.scopes[scopeId] || null;
-  return stage ? scopeCaps && scopeCaps.stages && scopeCaps.stages[stage] || null : scopeCaps;
+  if (stage !== undefined && (!scopeCaps || String(scopeCaps.stage || "") !== String(stage || ""))) return null;
+  return scopeCaps;
 }
 
 export function scopePrePublishSupported(capabilities, scope, stage) {

@@ -580,6 +580,7 @@ export function initDocsViewerManagement(context) {
       "manage-actions",
       "manage-rebuild",
       "manage-publish",
+      "manage-pre-publish",
       "manage-scope",
       "manage-stage",
       "manage-theme"

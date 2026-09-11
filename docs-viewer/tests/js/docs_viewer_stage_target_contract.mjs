@@ -13,7 +13,8 @@ import { createDocsViewerIndexSelectionOwner } from "../../runtime/js/management
 import { docsViewerSetPublishableActionControlState } from "../../runtime/js/management/docs-viewer-management-index-controller.js";
 import { setManagedDocsPublishable } from "../../runtime/js/management/docs-viewer-management-client.js";
 import { validateSetPublishableResponse } from "../../runtime/js/management/docs-viewer-management-publishable-workflow.js";
-import { scopePrePublishSupported, scopePublishSupported } from "../../runtime/js/management/docs-viewer-management-capabilities.js";
+import { createDocsViewerManagementCapabilityController, scopePrePublishSupported, scopePublishSupported } from "../../runtime/js/management/docs-viewer-management-capabilities.js";
+import { docsViewerPublishWorkflowAvailability } from "../../runtime/js/management/docs-viewer-management-publish-workflow.js";
 
 const docId = "d-20260906-170000-a1b2c3";
 const working = { scope: "analysis", stage: "working", sub_scope: "projects", doc_id: docId };
@@ -79,14 +80,40 @@ for (const stage of ["working", "pre-publish", ""]) {
 const stagedCapabilities = {
   docs_management: true, publishing: { confirm: true, apply: true },
   scopes: { analysis: { available: true, stages: {
-    working: { available: true, pre_publish: { preview: true, apply: true } },
-    "pre-publish": { available: true, publishing: { confirm: true, apply: true } }
+    working: { stage: "working", available: true, pre_publish: { preview: true, apply: true } },
+    "pre-publish": { stage: "pre-publish", available: true, publishing: { confirm: true, apply: true } }
   } } }
 };
-assert.equal(scopePrePublishSupported(stagedCapabilities, "analysis", "working"), true);
-assert.equal(scopePrePublishSupported(stagedCapabilities, "analysis", "pre-publish"), false);
-assert.equal(scopePublishSupported(stagedCapabilities, "analysis", "pre-publish"), true);
-assert.equal(scopePublishSupported(stagedCapabilities, "analysis", "working"), false);
+// Exercise the service response through the real controller before checking the
+// toolbar/workflow consumers. They receive the selected stage, not nested stages.
+for (const stage of ["working", "pre-publish"]) {
+  const management = { managementCapabilityCheckId: 0 };
+  let capabilitiesReady;
+  const ready = new Promise(resolve => { capabilitiesReady = resolve; });
+  const controller = createDocsViewerManagementCapabilityController({
+    management,
+    routeSession: {},
+    context: { isManagementContext: () => true, managementBaseUrl: "http://fixture.test" },
+    callbacks: {
+      viewerScope: () => "analysis",
+      managementClientOptions: () => ({
+        stage, baseUrl: "http://fixture.test",
+        fetch: async () => ({ ok: true, json: async () => ({ capabilities: stagedCapabilities }) })
+      }),
+      renderManagementUi: () => { if (management.managementChecked) capabilitiesReady(); }
+    }
+  });
+  controller.initialize();
+  await ready;
+  const active = management.managementCapabilities;
+  assert.equal(management.managementAvailable, true);
+  assert.equal(scopePrePublishSupported(active, "analysis", stage), stage === "working");
+  assert.equal(scopePublishSupported(active, "analysis", stage), stage === "pre-publish");
+  assert.equal(docsViewerPublishWorkflowAvailability(active, "analysis", stage).publish.available, stage === "pre-publish");
+  const otherStage = stage === "working" ? "pre-publish" : "working";
+  assert.equal(scopePrePublishSupported(active, "analysis", otherStage), false);
+  assert.equal(scopePublishSupported(active, "analysis", otherStage), false);
+}
 assert.equal(scopePublishSupported(stagedCapabilities, "analysis"), false);
 const subject = { state: "valid", kind: "work", key: "00293", fields: ["work_id"] };
 const metadata = { ...working, record: { doc_id: docId, authoring_subject: subject } };
