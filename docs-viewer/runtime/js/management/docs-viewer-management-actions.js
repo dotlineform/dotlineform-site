@@ -1,9 +1,11 @@
 import {
   applyManagedDocDelete,
+  applyManagedDocsPrePublish,
   createManagedDoc,
   moveManagedDoc,
   openManagedDocSource,
   previewManagedDocDelete,
+  previewManagedDocsPrePublish,
   rebuildManagedDocs,
   updateSourceConfigSettings,
   updateManagedDocMetadata
@@ -634,6 +636,36 @@ export function createDocsViewerManagementActionController(options) {
       });
   }
 
+  async function handlePrePublishDocs() {
+    var clientOptions = managementClientOptions();
+    try {
+      setManagementBusy(true);
+      setManagementMessage("Checking Working content...", false);
+      renderManagementUi();
+      var preview = await previewManagedDocsPrePublish(clientOptions);
+      var confirmed = await openDocsViewerConfirmModal({
+        root: root,
+        title: "Rebuild Pre-publish?",
+        body: preview.summary_text + " This replaces the previous Pre-publish content.",
+        primaryLabel: "Pre-publish",
+        cancelLabel: ACTION_TEXT.cancelButton
+      });
+      if (!confirmed) {
+        setManagementMessage("", false);
+        return;
+      }
+      setManagementMessage("Building Pre-publish documents and Search...", false);
+      var result = await applyManagedDocsPrePublish(preview, clientOptions);
+      setManagementMessage(result.summary_text, false);
+      if (callbacks.refreshManagementCapabilities) await callbacks.refreshManagementCapabilities();
+    } catch (error) {
+      setManagementMessage(error.message || "Pre-publish failed.", true);
+    } finally {
+      setManagementBusy(false);
+      renderManagementUi();
+    }
+  }
+
   function handleMarkdownSource(target) {
     if (typeof context.requestDocumentMode !== "function") return false;
     var sourceTarget = normalizeManagedDocumentTarget(target);
@@ -865,6 +897,7 @@ export function createDocsViewerManagementActionController(options) {
     handleMoveDoc: handleMoveDoc,
     handleOpenSource: handleOpenSource,
     handlePublishDocs: handlePublishDocs,
+    handlePrePublishDocs: handlePrePublishDocs,
     handleRebuildDocs: handleRebuildDocs,
     handleSettingsSubmit: handleSettingsSubmit
   };

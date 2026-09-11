@@ -235,15 +235,15 @@ def rebuild_scope_outputs(
         scope_config = load_docs_scope_stage(repo_root, scope, stage)
     except KeyError as exc:
         raise ValueError(f"scope {scope!r} is not configured") from exc
-    if scope_config.stage and include_search:
-        require_document_authoring(scope_config)
     remove_build_manifest(repo_root, scope_config)
     docs_mode = "full"
     docs_target_doc_ids: list[str] = []
     docs_reason = "full-scope fallback: no targeted docs payload ids provided"
     docs_command = python_builder_command(DOCS_BUILDER_SCRIPT, "--scope", scope, "--write", "--diagnostics")
     if stage:
-        docs_command.extend(["--stage", stage, "--skip-media-builds"])
+        docs_command.extend(["--stage", stage])
+    if stage == "working":
+        docs_command.append("--skip-media-builds")
     if docs_doc_ids is not None:
         docs_target_doc_ids = ordered_docs_doc_ids(docs_doc_ids)
         if docs_target_doc_ids:
@@ -274,7 +274,7 @@ def rebuild_scope_outputs(
                     "--diagnostics",
                     "--skip-browser-config",
                     *(["--stage", scope_config.stage] if scope_config.stage else []),
-                    *(["--skip-media-builds"] if skip_media_builds or scope_config.stage else []),
+                    *(["--skip-media-builds"] if skip_media_builds or scope_config.stage == "working" else []),
                 ),
             )
             for sub_scope in scope_config.sub_scopes

@@ -405,6 +405,9 @@ def apply_capability_flags(payload: dict[str, object], config: DocsViewerService
             for scope_caps in scopes.values():
                 if not isinstance(scope_caps, dict):
                     continue
+                for stage_caps in scope_caps.get("stages", {}).values():
+                    for operation in ("pre_publish", "publishing"):
+                        stage_caps[operation] = {key: False for key in stage_caps.get(operation, {})}
                 scope_deploy_repo = scope_caps.get("deploy_repo")
                 if isinstance(scope_deploy_repo, dict):
                     scope_deploy_repo.update(

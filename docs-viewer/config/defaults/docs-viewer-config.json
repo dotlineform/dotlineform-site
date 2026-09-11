@@ -167,12 +167,6 @@
           "backlinks_url": "/docs/backlinks?scope=analysis&stage=pre-publish",
           "sub_scopes": [
             {
-              "sub_scope": "concepts",
-              "title": "Concepts",
-              "manifest_url": "/docs/generated/external/analysis/pre-publish/concepts/manage-manifest.json",
-              "by_id_url_base": "/docs/generated/external/analysis/pre-publish/concepts/by-id"
-            },
-            {
               "sub_scope": "works",
               "title": "Works",
               "manifest_url": "/docs/generated/external/analysis/pre-publish/works/manage-manifest.json",
@@ -185,6 +179,24 @@
                   ]
                 }
               }
+            },
+            {
+              "sub_scope": "concepts",
+              "title": "Concepts",
+              "manifest_url": "/docs/generated/external/analysis/pre-publish/concepts/manage-manifest.json",
+              "by_id_url_base": "/docs/generated/external/analysis/pre-publish/concepts/by-id"
+            },
+            {
+              "sub_scope": "processing",
+              "title": "Processing",
+              "manifest_url": "/docs/generated/external/analysis/pre-publish/processing/manage-manifest.json",
+              "by_id_url_base": "/docs/generated/external/analysis/pre-publish/processing/by-id"
+            },
+            {
+              "sub_scope": "moments",
+              "title": "Moments",
+              "manifest_url": "/docs/generated/external/analysis/pre-publish/moments/manage-manifest.json",
+              "by_id_url_base": "/docs/generated/external/analysis/pre-publish/moments/by-id"
             }
           ]
         }

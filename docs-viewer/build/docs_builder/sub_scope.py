@@ -27,6 +27,7 @@ from docs_document_subjects import (
     AUTHORING_SUBJECT_FIELDS,
     FOLDER_PATH_FIELD,
     normalize_authoring_subject,
+    project_reader_subject,
     project_subject_associations,
     subject_projection_generation,
 )
@@ -113,6 +114,7 @@ class SubScopeDocsBuilder(DocsDataBuilder):
                 {
                     "doc_id": doc.doc_id,
                     "title": doc.title,
+                    "subject": project_reader_subject(doc.front_matter),
                 }
                 for doc in visible_docs
             ]

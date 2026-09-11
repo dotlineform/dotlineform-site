@@ -17,6 +17,21 @@ if str(SERVICES_DIR) not in sys.path:
 import docs_document_subjects as subjects  # noqa: E402
 
 
+@pytest.mark.parametrize(("front_matter", "expected"), [
+    ({"work_id": "00123"}, {"kind": "work", "key": "00123"}),
+    ({"series_id": "026"}, {"kind": "series", "key": "026"}),
+    ({"detail_uid": "00008-001"}, {"kind": "detail", "key": "00008-001"}),
+    ({}, None),
+    ({"work_id": 123}, None),
+    ({"work_id": "123"}, None),
+    ({"work_id": "00123", "series_id": "026"}, None),
+    ({"folder_path": "projects/private"}, None),
+    ({"folder_path": "projects/private", "work_id": "00123"}, None),
+])
+def test_reader_subject_exposes_only_valid_catalogue_identity(front_matter, expected) -> None:
+    assert subjects.project_reader_subject(front_matter) == expected
+
+
 def test_document_identity_is_independent_of_subject() -> None:
     fields = {"doc_id": "d-20260908-184516-f87fc8", "title": "A document"}
     assert subjects.normalize_authoring_subject(fields, folder_supported=False)["state"] == "none"

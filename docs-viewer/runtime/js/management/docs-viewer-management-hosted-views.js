@@ -92,6 +92,16 @@ export function createDocsViewerManagementViewDefinitions() {
         renderer: "manage-toolbar-publish"
       },
       {
+        id: "manage-pre-publish",
+        actionId: DOCS_VIEWER_ACTION_IDS.PRE_PUBLISH_DOCS,
+        label: "Pre-publish",
+        ownerType: "app",
+        surfaceId: "app-management",
+        appKinds: ["manage"],
+        features: ["management"],
+        renderer: "manage-toolbar-pre-publish"
+      },
+      {
         id: "manage-scope",
         label: "Docs scope",
         ownerType: "app",

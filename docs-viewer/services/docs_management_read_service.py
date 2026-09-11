@@ -186,7 +186,7 @@ def docs_management_get_payload(repo_root: Path, path: str, params: dict[str, li
     if path == routes.PUBLISH_STATUS_PATH:
         return docs_scope_publish.preview_scope_publish(
             repo_root,
-            {"scope": docs_api_query_value(params, "scope")},
+            {"scope": docs_api_query_value(params, "scope"), "stage": docs_api_query_value(params, "stage")},
         )
     if docs_api_query_value(params, "scope"):
         normalize_scope(repo_root, docs_api_query_value(params, "scope"))

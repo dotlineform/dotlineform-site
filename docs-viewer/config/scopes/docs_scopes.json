@@ -145,27 +145,8 @@
       "allow_unresolved_parent_ids": false,
       "sub_scopes": [
         {
-          "sub_scope": "tags",
-          "title": "Tags",
-          "public_title": "Concepts",
-          "supports_return_import": true,
-          "public_projection": {
-            "documents": {
-              "location": {
-                "provider": "repository",
-                "path": "site/assets/data/docs/scopes/analysis/tags"
-              }
-            },
-            "search": null
-          }
-        },
-        {
           "sub_scope": "works",
           "title": "Works",
-          "sub_scope_customisation": {
-            "id": "pre_publish_works",
-            "settings": {}
-          },
           "public_projection": {
             "documents": {
               "location": {
@@ -175,10 +156,48 @@
             },
             "search": null
           },
-          "lifecycle": {
-            "tool_id": "docs-viewer-scope-lifecycle",
-            "report_host_doc_id": "d-20260807-082735-54d9d5",
-            "report_host_source_revision": "sha256:833512fc6654a465739c4dea8ef9f3aa6e83ea4622eea5a423691cf15882799b"
+          "sub_scope_customisation": {
+            "id": "pre_publish_works",
+            "settings": {}
+          }
+        },
+        {
+          "sub_scope": "concepts",
+          "title": "Concepts",
+          "public_projection": {
+            "documents": {
+              "location": {
+                "provider": "repository",
+                "path": "site/assets/data/docs/scopes/analysis/concepts"
+              }
+            },
+            "search": null
+          }
+        },
+        {
+          "sub_scope": "processing",
+          "title": "Processing",
+          "public_projection": {
+            "documents": {
+              "location": {
+                "provider": "repository",
+                "path": "site/assets/data/docs/scopes/analysis/processing"
+              }
+            },
+            "search": null
+          }
+        },
+        {
+          "sub_scope": "moments",
+          "title": "Moments",
+          "public_projection": {
+            "documents": {
+              "location": {
+                "provider": "repository",
+                "path": "site/assets/data/docs/scopes/analysis/moments"
+              }
+            },
+            "search": null
           }
         }
       ],
@@ -287,9 +306,25 @@
           "allow_unresolved_parent_ids": false,
           "sub_scopes": [
             {
+              "sub_scope": "works",
+              "title": "Works",
+              "public_projection": {
+                "documents": {
+                  "location": {
+                    "provider": "repository",
+                    "path": "site/assets/data/docs/scopes/analysis/works"
+                  }
+                },
+                "search": null
+              },
+              "sub_scope_customisation": {
+                "id": "pre_publish_works",
+                "settings": {}
+              }
+            },
+            {
               "sub_scope": "concepts",
               "title": "Concepts",
-              "supports_return_import": true,
               "public_projection": {
                 "documents": {
                   "location": {
@@ -301,25 +336,29 @@
               }
             },
             {
-              "sub_scope": "works",
-              "title": "Works",
-              "sub_scope_customisation": {
-                "id": "pre_publish_works",
-                "settings": {}
-              },
+              "sub_scope": "processing",
+              "title": "Processing",
               "public_projection": {
                 "documents": {
                   "location": {
                     "provider": "repository",
-                    "path": "site/assets/data/docs/scopes/analysis/works"
+                    "path": "site/assets/data/docs/scopes/analysis/processing"
                   }
                 },
                 "search": null
-              },
-              "lifecycle": {
-                "tool_id": "docs-viewer-scope-lifecycle",
-                "report_host_doc_id": "d-20260807-082735-54d9d5",
-                "report_host_source_revision": "sha256:55365a090e228af9ddc10a226b8e89ed6826c19f226ad6e289327aba2a94044d"
+              }
+            },
+            {
+              "sub_scope": "moments",
+              "title": "Moments",
+              "public_projection": {
+                "documents": {
+                  "location": {
+                    "provider": "repository",
+                    "path": "site/assets/data/docs/scopes/analysis/moments"
+                  }
+                },
+                "search": null
               }
             }
           ]

@@ -135,6 +135,17 @@ export function confirmManagedDocsPublish(options) {
   return fetchManagementJson("/docs/publish/confirm", "POST", scopedPayload({}, options), options);
 }
 
+export function previewManagedDocsPrePublish(options) {
+  return fetchManagementJson("/docs/pre-publish/preview", "POST", scopedPayload({}, options), options);
+}
+
+export function applyManagedDocsPrePublish(preview, options) {
+  return fetchManagementJson("/docs/pre-publish/apply", "POST", scopedPayload({
+    confirm: true,
+    plan_revision: String(preview && preview.plan_revision || "")
+  }, options), options);
+}
+
 export function applyManagedDocsPublish(preview, options) {
   var plan = preview && typeof preview === "object" ? preview : {};
   return fetchManagementJson("/docs/publish/apply", "POST", scopedPayload({

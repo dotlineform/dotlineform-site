@@ -16,6 +16,7 @@ from .common import (
 from .rendering import add_missing_image_titles
 from .source import DocRecord
 from docs_document_identity import is_doc_timestamp
+from docs_document_subjects import project_reader_subject
 from docs_report_source import project_report_markdown
 
 
@@ -43,6 +44,7 @@ class PayloadBuilderMixin:
             )
         )
         entry = self.by_id_metadata_entry(doc, docs)
+        entry["subject"] = project_reader_subject(doc.front_matter)
         entry["content_html"] = content_html
         return entry
 

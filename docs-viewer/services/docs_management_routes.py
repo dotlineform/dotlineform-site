@@ -51,6 +51,8 @@ SET_DRAFT_PATH = "/docs/set-draft"
 ASSIGN_FIELD_GROUP_PATH = "/docs/assign-field-group"
 CREATE_PATH = "/docs/create"
 REBUILD_PATH = "/docs/rebuild"
+PRE_PUBLISH_PREVIEW_PATH = "/docs/pre-publish/preview"
+PRE_PUBLISH_APPLY_PATH = "/docs/pre-publish/apply"
 MOVE_PATH = "/docs/move"
 DOCUMENT_TRANSFER_PREVIEW_PATH = "/docs/document-transfer-preview"
 DOCUMENT_TRANSFER_APPLY_PATH = "/docs/document-transfer-apply"
@@ -128,6 +130,8 @@ POST_PATHS = (
     ASSIGN_FIELD_GROUP_PATH,
     CREATE_PATH,
     REBUILD_PATH,
+    PRE_PUBLISH_PREVIEW_PATH,
+    PRE_PUBLISH_APPLY_PATH,
     MOVE_PATH,
     DOCUMENT_TRANSFER_PREVIEW_PATH,
     DOCUMENT_TRANSFER_APPLY_PATH,

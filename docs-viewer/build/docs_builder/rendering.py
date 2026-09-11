@@ -55,7 +55,7 @@ class ContentRenderingMixin:
         for match in reversed(matches):
             label = self.unescape_markdown_label(match.group("label")) or "[local file or folder]"
             replacement = html.escape(label)
-            if not match.group("image"):
+            if not match.group("image") and self.config.stage != "pre-publish":
                 target = match.group("target")
                 try:
                     decode_relative_target(target)
@@ -102,7 +102,14 @@ class ContentRenderingMixin:
         path_part = parsed.path or ""
         if not path_part:
             return href
-        # Authored stage targets must retain their exact route and child selection.
+        # Pre-publish projects Analysis links into its prepared snapshot while
+        # preserving the exact document, child selection, and fragment.
+        values = parse_qs(parsed.query)
+        if (self.config.stage == "pre-publish" and path_part == "/docs/"
+                and values.get("scope") == [self.scope_id] and values.get("stage") == ["working"]):
+            pairs = [(key, "pre-publish" if key == "stage" else value) for key, value in parse_qsl(parsed.query)]
+            return html.escape(parsed._replace(query=urlencode(pairs)).geturl(), quote=True)
+        # Other authored stage targets retain their exact route and child selection.
         if "stage" in parse_qs(html.unescape(parsed.query), keep_blank_values=True):
             return href
         query_values = parse_qs(parsed.query)

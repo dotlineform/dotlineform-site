@@ -111,6 +111,7 @@ export function createDocsViewerManagementEventRouter(options = {}) {
       ["export-scopes", ["exportScopes", { hideContextMenu: true, hideManageActionsMenu: true }]],
       ["settings", ["openSettings", {}]],
       ["publish-docs", ["publish", { hideContextMenu: true, hideManageActionsMenu: true }]],
+      ["pre-publish-docs", ["prePublish", { hideContextMenu: true, hideManageActionsMenu: true }]],
       ["new", ["createDoc", { hideContextMenu: true, hideManageActionsMenu: true }]],
       ["new-scope", ["createScope", { hideContextMenu: true, hideManageActionsMenu: true }]],
       ["rename-scope", ["renameScope", { hideContextMenu: true, hideManageActionsMenu: true }]],

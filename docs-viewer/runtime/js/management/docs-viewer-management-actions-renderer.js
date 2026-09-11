@@ -205,6 +205,13 @@ export function createDocsViewerManagementAppControlRenderers() {
         text: "🌍"
       });
     },
+    "manage-toolbar-pre-publish": function (context) {
+      return renderActionButton(context, {
+        className: "docsViewer__actionButton",
+        id: "docsViewerManagePrePublishButton",
+        text: "Pre-publish"
+      });
+    },
     "manage-scope-select": renderScopeControl,
     "manage-stage-select": function (context) {
       var root = context.existingRoot || context.document.createElement("div");

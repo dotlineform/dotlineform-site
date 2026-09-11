@@ -114,6 +114,18 @@ def normalize_authoring_subject(
     }
 
 
+def project_reader_subject(front_matter: Mapping[str, Any]) -> dict[str, str] | None:
+    """Expose an exact Catalogue subject in reader JSON, or null when unavailable.
+
+    Reuse authoring validation without exposing Folder paths, raw declarations,
+    or authoring diagnostics. No Catalogue lookup or identity inference occurs.
+    """
+    subject = normalize_authoring_subject(front_matter, folder_supported=False)
+    if subject["state"] != "valid" or subject["kind"] not in {"work", "series", "detail"}:
+        return None
+    return {"kind": subject["kind"], "key": subject["key"]}
+
+
 def subject_projection_generation(
     *,
     scope: str,
@@ -215,6 +227,7 @@ __all__ = [
     "subject_key_is_canonical",
     "normalize_authoring_subject",
     "parse_detail_uid",
+    "project_reader_subject",
     "project_subject_associations",
     "subject_projection_generation",
 ]

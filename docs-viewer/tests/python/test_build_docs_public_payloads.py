@@ -61,7 +61,7 @@ def test_python_docs_builder_public_generated_payloads_include_manage_rows() -> 
         write_text(
             child_source_path,
             (
-                child_source_path.read_text(encoding="utf-8")
+                child_source_path.read_text(encoding="utf-8").replace("---\n", '---\nwork_id: "00123"\n', 1)
                 + "\n[[catalogue:media:work:00638|3 symbols]]\n"
             ),
         )
@@ -164,7 +164,8 @@ def test_python_docs_builder_public_generated_payloads_include_manage_rows() -> 
     assert publication_recent["basis"] == "edited"
     assert [doc["doc_id"] for doc in publication_recent["docs"]] == [CHILD_DOC_ID, PARENT_DOC_ID]
     assert all(public_recent_forbidden_keys.isdisjoint(doc) for doc in publication_recent["docs"])
-    assert set(child_payload) == {"content_html", "date", "date_display", "last_updated", "summary", "title"}
+    assert set(child_payload) == {"content_html", "date", "date_display", "last_updated", "summary", "title", "subject"}
+    assert child_payload["subject"] == {"kind": "work", "key": "00123"}
     assert child_payload["title"] == "Child"
     assert child_payload["date"] == "2026-06-02"
     assert child_payload["date_display"] == "June 2026"

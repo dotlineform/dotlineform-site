@@ -547,7 +547,7 @@ def test_rendered_links_preserve_explicit_stage_and_child_targets(stage_repo: Pa
             rendered = render_markdown_to_html(f"[Exact target]({href})")
             assert builder.rewrite_doc_links(
                 rendered, current_doc=documents[0], docs=documents,
-            ) == rendered
+            ) == (rendered.replace("stage=working", "stage=pre-publish") if stage == "pre-publish" else rendered)
 
 
 @pytest.mark.parametrize("delete_ancestor", [False, True])
@@ -674,7 +674,7 @@ def test_working_write_rebuild_and_delete_preserve_other_owners(stage_repo: Path
     assert all(path.read_bytes() == value for path, value in before.items())
 
 
-@pytest.mark.parametrize("path", ["/docs/create", "/docs/update-metadata", "/docs/source/rebuild", "/docs/delete-preview", "/docs/delete-apply", "/docs/publish/apply", "/docs/document-transfer-preview"])
+@pytest.mark.parametrize("path", ["/docs/create", "/docs/update-metadata", "/docs/source/rebuild", "/docs/delete-preview", "/docs/delete-apply", "/docs/document-transfer-preview"])
 def test_pre_publish_services_reject_before_writes(stage_repo: Path, path: str) -> None:
     import docs_management_service as service
     before = {p: p.read_bytes() for p in stage_repo.rglob("*.md")}

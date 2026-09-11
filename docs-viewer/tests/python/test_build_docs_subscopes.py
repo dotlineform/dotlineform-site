@@ -362,9 +362,9 @@ title: Pathless
     assert stderr == ""
     assert manifest == {
         "docs": [
-            {"doc_id": first_doc_id, "title": "Architecture"},
-            {"doc_id": second_doc_id, "title": "Architecture notes"},
-            {"doc_id": pathless_doc_id, "title": "Pathless"},
+            {"doc_id": first_doc_id, "title": "Architecture", "subject": None},
+            {"doc_id": second_doc_id, "title": "Architecture notes", "subject": None},
+            {"doc_id": pathless_doc_id, "title": "Pathless", "subject": None},
         ]
     }
     assert manage_manifest == {
@@ -514,6 +514,17 @@ title: {doc_id}
         )
         manage_manifest = read_json(output_root / "manage-manifest.json")
         associations = read_json(output_root / "subject-associations.json")
+        expected_subjects = {
+            work_doc_id: {"kind": "work", "key": "00123"},
+            series_doc_id: {"kind": "series", "key": "026"},
+            malformed_doc_id: None,
+            conflicting_doc_id: None,
+            none_doc_id: None,
+        }
+        for row in read_json(output_root / "manifest.json")["docs"]:
+            assert set(row) == {"doc_id", "title", "subject"}
+            by_id = read_json(output_root / f"by-id/{row['doc_id']}.json")
+            assert row["subject"] == by_id["subject"] == expected_subjects[row["doc_id"]]
         write_text(
             source_root / f"{work_doc_id}.md",
             f"""---
@@ -529,6 +540,8 @@ title: {work_doc_id}
         )
         cleared_manifest = read_json(output_root / "manage-manifest.json")
         cleared_associations = read_json(output_root / "subject-associations.json")
+        assert read_json(output_root / f"by-id/{work_doc_id}.json")["subject"] is None
+        assert next(row for row in read_json(output_root / "manifest.json")["docs"] if row["doc_id"] == work_doc_id)["subject"] is None
         for doc_id in fixtures:
             write_text(
                 source_root / f"{doc_id}.md",
@@ -764,8 +777,8 @@ Related body.
     assert diagnostics["docs_emitted"] == 2
     assert manifest == {
         "docs": [
-            {"doc_id": DETAIL_DOC_ID, "title": "Detail"},
-            {"doc_id": RELATED_DOC_ID, "title": "Related"},
+            {"doc_id": DETAIL_DOC_ID, "title": "Detail", "subject": None},
+            {"doc_id": RELATED_DOC_ID, "title": "Related", "subject": None},
         ]
     }
     assert manage_manifest == {
@@ -1027,7 +1040,8 @@ work_id: "00123"
         )
 
     assert detail["doc_id"] == DETAIL_DOC_ID
-    assert manifest == {"docs": [{"doc_id": DETAIL_DOC_ID, "title": "Detail"}]}
+    assert detail["subject"] == {"kind": "work", "key": "00123"}
+    assert manifest == {"docs": [{"doc_id": DETAIL_DOC_ID, "title": "Detail", "subject": detail["subject"]}]}
     assert manage_manifest == {
         "docs": [
             {

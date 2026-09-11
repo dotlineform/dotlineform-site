@@ -27,9 +27,9 @@ function cleanString(value) {
   return String(value == null ? "" : value).trim();
 }
 
-export function docsViewerPublishWorkflowAvailability(capabilities, scope) {
-  var publishAvailable = scopePublishSupported(capabilities, scope);
-  var deployRepo = scopeDeployRepoCapability(capabilities, scope);
+export function docsViewerPublishWorkflowAvailability(capabilities, scope, stage) {
+  var publishAvailable = scopePublishSupported(capabilities, scope, stage);
+  var deployRepo = scopeDeployRepoCapability(capabilities, scope, stage);
   return {
     publish: {
       available: publishAvailable,
@@ -243,7 +243,8 @@ function defaultConfirmDeployRepo(root, preview) {
 export async function runManagedDocsPublishWorkflow(options = {}) {
   var availability = options.availability || docsViewerPublishWorkflowAvailability(
     options.capabilities,
-    options.scope
+    options.scope,
+    options.clientOptions && options.clientOptions.stage
   );
   var operations = options.operations || {};
   var selection = options.selection || await (

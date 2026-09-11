@@ -20,6 +20,7 @@ from docs_scope_config import (
     DocsScopeConfig,
     load_docs_scope_configs,
     resolve_location_path,
+    select_scope_stage,
 )
 
 
@@ -88,7 +89,8 @@ def _scope_config(repo_root: Path, value: Any) -> DocsScopeConfig:
 
 
 def _lifecycle_root(repo_root: Path, config: DocsScopeConfig, role: str) -> Path:
-    scope_root = resolve_location_path(repo_root, config.scope_root)
+    location = config.stage_root if role in {"source", "generated"} else config.scope_root
+    scope_root = resolve_location_path(repo_root, location)
     root = scope_root / role
     if scope_root.is_symlink() or root.is_symlink():
         raise ValueError(f"Docs scope {config.scope_id!r} {role} root must not be a symlink")
@@ -134,6 +136,7 @@ def _read_json_bytes(data: bytes, label: str) -> dict[str, Any]:
 def _validate_generated_manifest(
     generated_root: Path,
     expected_scope: str,
+    expected_stage: str = "",
 ) -> tuple[dict[str, Any], dict[Path, bytes]]:
     manifest_path = generated_root / BUILD_MANIFEST_FILENAME
     if not manifest_path.is_file() or manifest_path.is_symlink():
@@ -143,6 +146,8 @@ def _validate_generated_manifest(
         raise RuntimeError("generated build manifest has an unsupported schema")
     if manifest.get("scope") != expected_scope:
         raise RuntimeError("generated build manifest has the wrong scope identity")
+    if str(manifest.get("stage") or "") != expected_stage:
+        raise RuntimeError("generated build manifest has the wrong stage identity")
     generated_files = _files_from_root(
         generated_root,
         excluded=(BUILD_MANIFEST_FILENAME,),
@@ -727,15 +732,25 @@ def _plan_revision(payload: Mapping[str, Any]) -> str:
     return f"sha256:{hashlib.sha256(canonical).hexdigest()}"
 
 
-def preview_scope_publish(repo_root: Path, body: dict[str, Any]) -> dict[str, Any]:
+def _publish_config(repo_root: Path, body: dict[str, Any]) -> DocsScopeConfig:
     config = _scope_config(repo_root, body.get("scope"))
     if config.stages:
-        raise ValueError("Publish is unavailable while publishing stage actions are deferred")
+        config = select_scope_stage(config, body.get("stage"))
+        if config.stage != "pre-publish":
+            raise ValueError("Publish requires the Pre-publish stage")
+    elif body.get("stage"):
+        raise ValueError("This scope has no publishing stages")
+    return config
+
+
+def preview_scope_publish(repo_root: Path, body: dict[str, Any]) -> dict[str, Any]:
+    config = _publish_config(repo_root, body)
     generated_root = _lifecycle_root(repo_root, config, "generated")
     published_root = _lifecycle_root(repo_root, config, "published")
     build_manifest, generated_files = _validate_generated_manifest(
         generated_root,
         config.scope_id,
+        config.stage,
     )
     desired_files, eligibility = _published_files(config, generated_files)
     current_files = _files_from_root(
@@ -756,6 +771,7 @@ def preview_scope_publish(repo_root: Path, body: dict[str, Any]) -> dict[str, An
     current_revision = files_revision(current_files)
     plan_basis = {
         "scope": config.scope_id,
+        "stage": config.stage,
         "generated_revision": build_manifest["generated_revision"],
         "current_published_revision": current_revision,
         "target_published_revision": target_revision,
@@ -768,6 +784,7 @@ def preview_scope_publish(repo_root: Path, body: dict[str, Any]) -> dict[str, An
         "schema_version": PUBLISH_PREVIEW_SCHEMA_VERSION,
         "operation": "preview",
         "scope": config.scope_id,
+        **({"stage": config.stage} if config.stage else {}),
         "generated_revision": build_manifest["generated_revision"],
         "current_published_revision": current_revision,
         "target_published_revision": target_revision,
@@ -867,12 +884,13 @@ def apply_scope_publish(repo_root: Path, body: dict[str, Any]) -> dict[str, Any]
     if body.get("target_published_revision") != preview["target_published_revision"]:
         raise ValueError("Publish target revision does not match the confirmed preview")
 
-    config = _scope_config(repo_root, preview["scope"])
+    config = _publish_config(repo_root, body)
     generated_root = _lifecycle_root(repo_root, config, "generated")
     published_root = _lifecycle_root(repo_root, config, "published")
     build_manifest, generated_files = _validate_generated_manifest(
         generated_root,
         config.scope_id,
+        config.stage,
     )
     desired_files, _eligibility = _published_files(config, generated_files)
     if files_revision(desired_files) != preview["target_published_revision"]:

@@ -34,6 +34,7 @@ import docs_media_report  # noqa: E402
 import docs_management_mutations as mutations  # noqa: E402
 import docs_management_routes as routes  # noqa: E402
 import docs_scope_publish  # noqa: E402
+import docs_pre_publish  # noqa: E402
 import docs_project_state  # noqa: E402
 import docs_missing_source_files  # noqa: E402
 import docs_uncataloged_files  # noqa: E402
@@ -128,6 +129,15 @@ def docs_management_post_response(
         if field == "scope" and path in {routes.DOCS_MEDIA_REPORT_PATH, routes.BROKEN_LINKS_PATH}:
             select_scope_stage(config, body.get("stage"))
             continue
+        if field == "scope" and path in {
+            routes.PRE_PUBLISH_PREVIEW_PATH, routes.PRE_PUBLISH_APPLY_PATH,
+            routes.PUBLISH_CONFIRM_PATH, routes.PUBLISH_APPLY_PATH,
+        }:
+            selected = select_scope_stage(config, body.get("stage"))
+            required_stage = "working" if path in {routes.PRE_PUBLISH_PREVIEW_PATH, routes.PRE_PUBLISH_APPLY_PATH} else "pre-publish"
+            if selected.stage != required_stage:
+                raise ValueError(f"This action requires stage {required_stage}")
+            continue
         allowed = {
             routes.CREATE_PATH, routes.UPDATE_METADATA_PATH, routes.SOURCE_REBUILD_PATH,
             routes.OPEN_SOURCE_PATH, routes.DELETE_PREVIEW_PATH, routes.DELETE_APPLY_PATH,
@@ -138,6 +148,12 @@ def docs_management_post_response(
             raise ValueError("This action is unavailable in the publishing stage views")
         require_document_authoring(select_scope_stage(config, body.get("stage")))
     refresh_source_model_scope_configs(repo_root)
+    if path == routes.PRE_PUBLISH_PREVIEW_PATH:
+        return HTTPStatus.OK, docs_pre_publish.preview_pre_publish(repo_root, body)
+    if path == routes.PRE_PUBLISH_APPLY_PATH:
+        if dry_run:
+            raise ValueError("Pre-publish apply does not support dry_run")
+        return HTTPStatus.OK, docs_pre_publish.apply_pre_publish(repo_root, body)
     if path == routes.SET_DRAFT_PATH:
         try:
             plan = docs_management_draft.plan_set_draft(repo_root, body)
@@ -402,6 +418,8 @@ def docs_management_post_response(
     if path == routes.PUBLISH_CONFIRM_PATH:
         return HTTPStatus.OK, docs_scope_publish.preview_scope_publish(repo_root, body)
     if path == routes.PUBLISH_APPLY_PATH:
+        if dry_run:
+            raise ValueError("Publish apply does not support dry_run")
         return HTTPStatus.OK, docs_scope_publish.apply_scope_publish(repo_root, body)
     if path == routes.DEPLOY_REPO_PREVIEW_PATH:
         return HTTPStatus.OK, docs_deploy_repo.preview_deploy_repo(repo_root, body)

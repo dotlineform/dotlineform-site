@@ -1,6 +1,7 @@
 import { toggleManagedDocDraft } from "./docs-viewer-management-draft-workflow.js";
 import {
   createDocsViewerManagementCapabilityController,
+  scopePrePublishSupported,
   scopePublishWorkflowSupported
 } from "./docs-viewer-management-capabilities.js";
 import {
@@ -85,6 +86,7 @@ export function createDocsViewerManagementActionResolver(options = {}) {
     if (stage === "working") stageActions.push(
       "delete", "edit-metadata", "markdown-save", "markdown-source", "new", "new-child", "new-sibling", "open-vscode",
       DOCS_VIEWER_ACTION_IDS.REBUILD_DOCS,
+      DOCS_VIEWER_ACTION_IDS.PRE_PUBLISH_DOCS,
       DOCS_VIEWER_ACTION_IDS.SET_PUBLISHABLE,
       DOCS_VIEWER_ACTION_IDS.SOURCE_ADD_CATALOGUE_IMAGE,
       DOCS_VIEWER_ACTION_IDS.SOURCE_ADD_MEDIA_VIEW_LINK,
@@ -92,6 +94,7 @@ export function createDocsViewerManagementActionResolver(options = {}) {
       DOCS_VIEWER_ACTION_IDS.SOURCE_ADD_IMAGE,
       DOCS_VIEWER_ACTION_IDS.SOURCE_INSERT_DOC_LINK
     );
+    if (stage === "pre-publish") stageActions.push(DOCS_VIEWER_ACTION_IDS.PUBLISH_DOCS);
     if (stage && !stageActions.includes(actionId)) {
       return Object.assign({}, resolveDocsViewerAction(actionId, createDocsViewerManagementActionContext(contextOptions)), {
         enabled: false, hidden: true, disabledReason: "This action is unavailable in the selected stage."
@@ -778,7 +781,11 @@ export function initDocsViewerManagement(context) {
     );
     var publishAvailable = management.managementAvailable && scopePublishWorkflowSupported(
       management.managementCapabilities,
-      viewerScope()
+      viewerScope(),
+      viewerStage()
+    );
+    var prePublishAvailable = management.managementAvailable && scopePrePublishSupported(
+      management.managementCapabilities, viewerScope(), viewerStage()
     );
     var exportScopesActionAvailable = exportScopesAvailable();
     var themeIsDark = document.documentElement && document.documentElement.getAttribute("data-theme") === "dark";
@@ -798,6 +805,10 @@ export function initDocsViewerManagement(context) {
     projectAppControl("manage-publish", {
       hidden: managementActionsHidden || !publishAvailable,
       disabled: management.managementBusy || !publishAvailable
+    });
+    projectAppControl("manage-pre-publish", {
+      hidden: managementActionsHidden || !prePublishAvailable,
+      disabled: management.managementBusy || !prePublishAvailable
     });
     projectAppControl("manage-scope", { hidden: managementActionsHidden });
     projectAppControl("manage-stage", { hidden: managementActionsHidden || !viewerStage() });
@@ -1064,6 +1075,7 @@ export function initDocsViewerManagement(context) {
       openImport: openAppImport,
       openSettings: function () { settingsWorkflow.open(); },
       publish: function () { actionController.handlePublishDocs(); },
+      prePublish: function () { actionController.handlePrePublishDocs(); },
       renameScope: function () { scopeLifecycleController.renameScope(); },
       rebuild: function () { actionController.handleRebuildDocs(); }
     },

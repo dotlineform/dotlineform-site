@@ -13,6 +13,7 @@ import { createDocsViewerIndexSelectionOwner } from "../../runtime/js/management
 import { docsViewerSetPublishableActionControlState } from "../../runtime/js/management/docs-viewer-management-index-controller.js";
 import { setManagedDocsPublishable } from "../../runtime/js/management/docs-viewer-management-client.js";
 import { validateSetPublishableResponse } from "../../runtime/js/management/docs-viewer-management-publishable-workflow.js";
+import { scopePrePublishSupported, scopePublishSupported } from "../../runtime/js/management/docs-viewer-management-capabilities.js";
 
 const docId = "d-20260906-170000-a1b2c3";
 const working = { scope: "analysis", stage: "working", sub_scope: "projects", doc_id: docId };
@@ -72,7 +73,21 @@ for (const stage of ["working", "pre-publish", ""]) {
   const rebuild = resolveAction(DOCS_VIEWER_ACTION_IDS.REBUILD_DOCS);
   assert.equal(rebuild.enabled, stage !== "pre-publish", `${stage}: scope rebuild does not require an active document`);
   assert.equal(Boolean(rebuild.hidden), stage === "pre-publish", `${stage}: scope rebuild availability`);
+  assert.equal(resolveAction(DOCS_VIEWER_ACTION_IDS.PUBLISH_DOCS).enabled, stage !== "working");
+  assert.equal(resolveAction(DOCS_VIEWER_ACTION_IDS.PRE_PUBLISH_DOCS).enabled, stage !== "pre-publish");
 }
+const stagedCapabilities = {
+  docs_management: true, publishing: { confirm: true, apply: true },
+  scopes: { analysis: { available: true, stages: {
+    working: { available: true, pre_publish: { preview: true, apply: true } },
+    "pre-publish": { available: true, publishing: { confirm: true, apply: true } }
+  } } }
+};
+assert.equal(scopePrePublishSupported(stagedCapabilities, "analysis", "working"), true);
+assert.equal(scopePrePublishSupported(stagedCapabilities, "analysis", "pre-publish"), false);
+assert.equal(scopePublishSupported(stagedCapabilities, "analysis", "pre-publish"), true);
+assert.equal(scopePublishSupported(stagedCapabilities, "analysis", "working"), false);
+assert.equal(scopePublishSupported(stagedCapabilities, "analysis"), false);
 const subject = { state: "valid", kind: "work", key: "00293", fields: ["work_id"] };
 const metadata = { ...working, record: { doc_id: docId, authoring_subject: subject } };
 const sourceRevision = "sha256:" + "a".repeat(64);

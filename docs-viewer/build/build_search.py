@@ -53,7 +53,6 @@ from docs_scope_config import (  # noqa: E402
     generated_search_path,
     resolve_scope_path,
     select_scope_stage,
-    require_document_authoring,
 )
 from docs_document_location import sub_scope_report_placement  # noqa: E402
 from docs_document_identity import is_immutable_doc_id  # noqa: E402
@@ -313,8 +312,6 @@ class DocsViewerSearchDataBuilder:
         self.repo_root = repo_root.resolve()
         self.scope = normalize(scope)
         self.scope_config = select_scope_stage(self.docs_scope_config(self.scope), stage)
-        if self.scope_config.stage:
-            require_document_authoring(self.scope_config)
         self.content_search_enabled = bool(
             SEARCH_V2_CONTENT_FIELDS.intersection(self.scope_config.search_fields)
         )
@@ -554,6 +551,13 @@ class DocsViewerSearchDataBuilder:
             key=lambda item: item.sub_scope,
         ):
             try:
+                if self.scope_config.stage == "pre-publish" and not any(
+                    doc.report is not None and doc.report.id == "docs_subscope"
+                    and doc.report.sub_scope == sub_scope.sub_scope for doc in parent_docs
+                ):
+                    if self.load_sub_scope_collection_docs(sub_scope, report_doc_id=""):
+                        raise ValueError(f"Pre-publish collection {sub_scope.sub_scope} has documents without a report host")
+                    continue
                 _config, _sub_scope, report_doc_id = sub_scope_report_placement(
                     self.repo_root,
                     self.scope,

@@ -39,10 +39,18 @@ export function documentPackagePrepareCapability(capabilities) {
   return { available: true, reason: "" };
 }
 
-export function scopeManagementCapabilities(capabilities, scope) {
+export function scopeManagementCapabilities(capabilities, scope, stage) {
   var scopeId = normalizeScopeId(scope);
   if (!capabilities || !capabilities.scopes || !scopeId) return null;
-  return capabilities.scopes[scopeId] || null;
+  var scopeCaps = capabilities.scopes[scopeId] || null;
+  return stage ? scopeCaps && scopeCaps.stages && scopeCaps.stages[stage] || null : scopeCaps;
+}
+
+export function scopePrePublishSupported(capabilities, scope, stage) {
+  var scopeCaps = scopeManagementCapabilities(capabilities, scope, stage);
+  var operation = scopeCaps && scopeCaps.pre_publish;
+  return Boolean(capabilities && capabilities.docs_management && scopeCaps && scopeCaps.available
+    && operation && operation.preview && operation.apply);
 }
 
 export function scopeCreateSupported(capabilities) {
@@ -95,8 +103,8 @@ export function subScopeDeleteSupported(capabilities, scope) {
   );
 }
 
-export function scopePublishSupported(capabilities, scope) {
-  var scopeCaps = scopeManagementCapabilities(capabilities, scope);
+export function scopePublishSupported(capabilities, scope, stage) {
+  var scopeCaps = scopeManagementCapabilities(capabilities, scope, stage);
   var publishing = capabilities && capabilities.publishing && typeof capabilities.publishing === "object"
     ? capabilities.publishing
     : null;
@@ -115,8 +123,8 @@ export function scopePublishSupported(capabilities, scope) {
   );
 }
 
-export function scopeDeployRepoCapability(capabilities, scope) {
-  var scopeCaps = scopeManagementCapabilities(capabilities, scope);
+export function scopeDeployRepoCapability(capabilities, scope, stage) {
+  var scopeCaps = scopeManagementCapabilities(capabilities, scope, stage);
   var service = capabilities && capabilities.deploy_repo && typeof capabilities.deploy_repo === "object"
     ? capabilities.deploy_repo
     : null;
@@ -148,9 +156,9 @@ export function scopeDeployRepoCapability(capabilities, scope) {
   return { available: true, reason: "" };
 }
 
-export function scopePublishWorkflowSupported(capabilities, scope) {
-  return scopePublishSupported(capabilities, scope)
-    || scopeDeployRepoCapability(capabilities, scope).available;
+export function scopePublishWorkflowSupported(capabilities, scope, stage) {
+  return scopePublishSupported(capabilities, scope, stage)
+    || scopeDeployRepoCapability(capabilities, scope, stage).available;
 }
 
 export function scopeStaticHtmlExportCapability(capabilities, scope) {
