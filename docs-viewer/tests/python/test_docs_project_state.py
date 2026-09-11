@@ -41,6 +41,7 @@ DOC_WORK_NO_SERIES = "d-20260101-000000-000008"
 DOC_UNKNOWN_WORK = "d-20260101-000000-000009"
 DOC_EMPTY_SERIES = "d-20260101-000000-000010"
 DOC_NONE = "d-20260101-000000-000011"
+DOC_DETAIL = "d-20260101-000000-000012"
 
 
 def write_json(path: Path, payload: object) -> None:
@@ -393,6 +394,27 @@ def test_project_state_builds_only_scanned_folder_rows_and_exact_relationships()
         assert excluded not in report_text
     assert not (root / "var/docs/project-state").exists()
     assert not (root / "site/assets/data/docs/project-state").exists()
+
+
+def test_project_state_excludes_detail_documents_from_rows_and_reconciliation_counts(tmp_path: Path) -> None:
+    paths = build_fixture(tmp_path)
+    producer = ProjectStateProducer(repo_root=tmp_path, paths=paths, clock=lambda: GENERATED_AT)
+    before = producer.run()
+    manifest = read_json(paths.manage_manifest_path)
+    manifest["docs"].append(
+        manifest_doc(DOC_DETAIL, "Detail note", valid_subject("detail", "00001-007", "detail_uid"))
+    )
+    manifest["subject_generation"] = "sha256:" + "2" * 64
+    write_json(paths.manage_manifest_path, manifest)
+    write_json(paths.subject_associations_path, fixture_associations(manifest))
+
+    after = producer.run()
+
+    assert after["report"]["rows"] == before["report"]["rows"]
+    assert after["diagnostics"] == {
+        **before["diagnostics"],
+        "manifest_document_count": before["diagnostics"]["manifest_document_count"] + 1,
+    }
 
 
 def test_project_state_ignores_non_relationship_work_fields() -> None:

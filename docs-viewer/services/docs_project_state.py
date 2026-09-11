@@ -133,7 +133,7 @@ def _subject_documents(
             continue
         kind = str(subject.get("kind") or "").strip()
         key = str(subject.get("key") or "").strip()
-        if kind not in {"folder", "work", "series"} or not key:
+        if kind not in {"folder", "work", "series", "detail"} or not key:
             raise ValueError("Projects Manage manifest contains an invalid valid subject")
         expected.add((kind, key, doc_id))
 
@@ -159,7 +159,7 @@ def _subject_documents(
             raise ValueError("Projects subject associations contain an invalid association")
         kind = str(subject.get("kind") or "").strip()
         key = str(subject.get("key") or "").strip()
-        if kind not in {"folder", "work", "series"} or not key or (kind, key) in subject_groups:
+        if kind not in {"folder", "work", "series", "detail"} or not key or (kind, key) in subject_groups:
             raise ValueError("Projects subject associations contain an invalid or duplicate subject")
         subject_groups.add((kind, key))
         for document in documents:
@@ -187,6 +187,9 @@ def _subject_documents(
                 or not title
             ):
                 raise ValueError("Project document association has invalid presentation")
+            # Details participate in shared-input validation, but not folder reconciliation.
+            if kind == "detail":
+                continue
             by_subject[(kind, key)].append(
                 {
                     "target": {
