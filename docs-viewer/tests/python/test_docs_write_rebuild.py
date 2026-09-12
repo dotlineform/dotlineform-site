@@ -7,8 +7,111 @@ import json
 import sys
 import tempfile
 from pathlib import Path
+from copy import deepcopy
+
+import pytest
 
 from repo_factory import docs_scope_record, docs_sub_scope_record
+
+
+@pytest.mark.parametrize("sub_scope", ["", "works"])
+def test_working_source_write_carries_exact_changes_deletion_and_creation(tmp_path, monkeypatch, sub_scope):
+    record = docs_scope_record("analysis", scope_type="public", viewer_base_url="/analysis/", include_scope_param=False)
+    record["stages"] = {
+        stage: {"media": deepcopy(record["media"]), "sub_scopes": [docs_sub_scope_record("analysis", "works", scope_type="local" if stage == "working" else "public")]}
+        for stage in ("working", "pre-publish")
+    }
+    write_scope_config(tmp_path / "docs-viewer/config/scopes/docs_scopes.json", [record])
+    config = write_rebuild.load_docs_scope_stage(tmp_path, "analysis", "working")
+    write_rebuild.resolve_scope_path(tmp_path, write_rebuild.generated_documents_path(config)).mkdir(parents=True, exist_ok=True)
+    root = (write_rebuild.current_sub_scope_source_root(tmp_path, "analysis", sub_scope, "working") if sub_scope
+            else write_rebuild.current_scope_source_root(tmp_path, "analysis", "working"))
+    root.mkdir(parents=True, exist_ok=True)
+    updated, deleted, created = [f"d-20260910-120000-{number:06x}" for number in range(1, 4)]
+    paths = [root / name for name in ("changed.md", "deleted.md", "created.md")]
+
+    def source(path, doc_id):
+        path.write_text(f"---\ndoc_id: {doc_id}\ntitle: Document\n---\n")
+
+    source(paths[0], updated)
+    source(paths[1], deleted)
+    excluded = root / "excluded.md"
+    excluded.write_text("---\ndoc_id: d-20260910-120000-000004\npublishable: false\n---\n")
+    paths.append(excluded)
+    calls = []
+
+    def run(command, _repo_root):
+        calls.append(command)
+        return {"returncode": 0, "stdout": 'Docs builder diagnostics: {"warnings":["missing neighbour"],"warning_count":1}', "stderr": "", "elapsed_seconds": 0}
+
+    monkeypatch.setattr(write_rebuild, "run_rebuild_command", run)
+
+    def mutate():
+        source(paths[0], updated)
+        paths[1].unlink()
+        source(paths[2], created)
+        excluded.unlink()
+
+    if sub_scope:
+        result = write_rebuild.perform_sub_scope_source_write_and_rebuild(tmp_path, "analysis", sub_scope, paths, mutate, stage="working", suppression_reason="test")
+    else:
+        result = write_rebuild.perform_source_write_and_rebuild(tmp_path, "analysis", paths, mutate, stage="working", suppression_reason="test", docs_doc_ids=[updated])
+    command = calls[0]
+    assert command[command.index("--links-doc-ids") + 1] == ",".join((updated, deleted, created))
+    assert command[command.index("--links-created-doc-ids") + 1] == created
+    assert "--only-doc-ids" not in command  # Missing ordinary output uses its existing full-render fallback.
+    assert result["ok"] is True
+    assert result["diagnostics"]["docs"]["warnings"] == ["missing neighbour"]
+
+
+def test_collection_move_builds_destination_before_former_owner(tmp_path, monkeypatch):
+    from types import SimpleNamespace
+
+    doc_id = "d-20260910-120000-000001"
+    child = tmp_path / "child"
+    parent = tmp_path / "parent"
+    child.mkdir()
+    parent.mkdir()
+    previous = child / f"{doc_id}.md"
+    destination = parent / previous.name
+    previous.write_text(f"---\ndoc_id: {doc_id}\n---\n")
+    monkeypatch.setattr(write_rebuild, "load_docs_scope_stage", lambda *_args: SimpleNamespace())
+    monkeypatch.setattr(write_rebuild, "require_document_authoring", lambda *_args: None)
+    monkeypatch.setattr(write_rebuild, "current_scope_source_root", lambda *_args: parent)
+    monkeypatch.setattr(write_rebuild, "current_sub_scope_source_root", lambda *_args: child)
+    calls = []
+    monkeypatch.setattr(write_rebuild, "rebuild_scope_outputs", lambda *_args, **kwargs: calls.append(("parent", kwargs)) or {})
+    monkeypatch.setattr(write_rebuild, "rebuild_sub_scope_outputs", lambda *_args, **kwargs: calls.append(("child", kwargs)) or {})
+
+    def move():
+        destination.write_text(previous.read_text())
+        previous.unlink()
+
+    plans = [{"scope": "analysis", "stage": "working", "sub_scope": collection, "changed_paths": [path]}
+             for collection, path in (("works", previous), ("", destination))]
+    write_rebuild.perform_multi_scope_source_write_and_rebuild(tmp_path, plans, move, suppression_reason="test")
+    assert [collection for collection, _ in calls] == ["parent", "child"]
+    assert calls[0][1]["links_created_doc_ids"] == [doc_id]
+    assert calls[1][1]["links_doc_ids"] == [doc_id]
+    assert calls[1][1]["links_created_doc_ids"] == []
+
+
+def test_source_restoration_does_not_authorise_initial_links_creation(tmp_path, monkeypatch):
+    from types import SimpleNamespace
+
+    source = tmp_path / "restored.md"
+    doc_id = "d-20260910-120000-000001"
+    monkeypatch.setattr(write_rebuild, "load_docs_scope_stage", lambda *_args: SimpleNamespace())
+    monkeypatch.setattr(write_rebuild, "require_document_authoring", lambda *_args: None)
+    monkeypatch.setattr(write_rebuild, "current_sub_scope_source_root", lambda *_args: tmp_path)
+    calls = []
+    monkeypatch.setattr(write_rebuild, "rebuild_sub_scope_outputs", lambda *_args, **kwargs: calls.append(kwargs) or {})
+    write_rebuild.perform_sub_scope_source_write_and_rebuild(
+        tmp_path, "analysis", "works", [source], lambda: source.write_text(f"---\ndoc_id: {doc_id}\n---\n"),
+        stage="working", suppression_reason="restore", links_created_doc_ids=[],
+    )
+    assert calls[0]["links_doc_ids"] == [doc_id]
+    assert calls[0]["links_created_doc_ids"] == []
 
 
 REPO_ROOT = Path(__file__).resolve().parents[3]

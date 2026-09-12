@@ -394,7 +394,7 @@ def parsed_doc_snapshot(
             "source_revision": source_revision(doc.source_text.encode("utf-8")),
             "sort_key": scope_doc_sort_key(doc),
         }
-        if getattr(document_config, "public_projection", None) is not None:
+        if parent_config.stage == "working" or getattr(document_config, "public_projection", None) is not None:
             row["publishable"] = doc.publishable
         snapshot[doc.path.relative_to(root).as_posix()] = row
     return snapshot
@@ -746,7 +746,8 @@ def rebuild_scope(
     repo_root: Path,
     scope: str,
     docs_doc_ids: Optional[list[str]] = None,
-    *, stage: str | None = None,
+    *, stage: str | None = None, links_doc_ids: Optional[list[str]] = None,
+    links_created_doc_ids: Optional[list[str]] = None,
 ) -> bool:
     try:
         remove_build_manifest(repo_root, select_scope_stage(DOCS_SCOPE_CONFIGS[scope], stage))
@@ -756,6 +757,10 @@ def rebuild_scope(
     docs_command = python_builder_command(DOCS_BUILDER_SCRIPT, "--scope", scope, "--write", "--diagnostics")
     if stage:
         docs_command.extend(["--stage", stage, "--skip-browser-config", "--skip-media-builds"])
+    if stage == "working" and links_doc_ids is not None:
+        docs_command.extend(["--links-doc-ids", ",".join(ordered_unique(links_doc_ids))])
+    if stage == "working" and links_created_doc_ids:
+        docs_command.extend(["--links-created-doc-ids", ",".join(ordered_unique(links_created_doc_ids))])
     docs_target_doc_ids = ordered_unique(docs_doc_ids or [])
     if docs_doc_ids is not None and docs_target_doc_ids:
         fallback_reason = targeted_docs_build_fallback_reason(repo_root, scope, docs_target_doc_ids, stage=stage)
@@ -810,14 +815,28 @@ def process_document_collection_changes(
         sub_scope,
         stage=stage,
     )
+    # This set follows changed source identities, independently of renderer
+    # thresholds, descendant updates and full-child rendering.
+    links_arguments = {}
+    if stage == "working":
+        links_arguments["links_doc_ids"] = sorted({
+            str(row["doc_id"])
+            for snapshot in (state.get("doc_snapshot") or {}, current_docs or {})
+            for filename in changed_files
+            if (row := snapshot.get(filename)) and row.get("doc_id") and row.get("publishable", True) is not False
+        })
+        if state.get("doc_snapshot") is not None and current_docs is not None:
+            before = {row["doc_id"] for filename in changed_files if (row := state["doc_snapshot"].get(filename)) and row.get("publishable", True) is not False}
+            after = {row["doc_id"] for filename in changed_files if (row := current_docs.get(filename)) and row.get("publishable", True) is not False}
+            links_arguments["links_created_doc_ids"] = sorted(after - before)
     if snapshot_error or current_docs is None:
         log(
             f"{label} parsed docs snapshot unavailable; timestamp capture skipped: "
             f"{snapshot_error or 'parsed docs snapshot unavailable'}"
         )
         if sub_scope:
-            return rebuild_sub_scope(repo_root, scope, sub_scope, stage=stage), None
-        return rebuild_scope(repo_root, scope, stage=stage), None
+            return rebuild_sub_scope(repo_root, scope, sub_scope, stage=stage, **links_arguments), None
+        return rebuild_scope(repo_root, scope, stage=stage, **links_arguments), None
 
     docs_doc_ids: Optional[list[str]] = None
     if not sub_scope:
@@ -897,7 +916,7 @@ def process_document_collection_changes(
 
     if sub_scope:
         return (
-            rebuild_sub_scope(repo_root, scope, sub_scope, stage=stage),
+            rebuild_sub_scope(repo_root, scope, sub_scope, stage=stage, **links_arguments),
             current_docs,
         )
     return (
@@ -906,12 +925,16 @@ def process_document_collection_changes(
             scope,
             docs_doc_ids=docs_doc_ids,
             stage=stage,
+            **links_arguments,
         ),
         current_docs,
     )
 
 
-def rebuild_sub_scope(repo_root: Path, scope: str, sub_scope: str, *, stage: str | None = None) -> bool:
+def rebuild_sub_scope(
+    repo_root: Path, scope: str, sub_scope: str, *, stage: str | None = None,
+    links_doc_ids: Optional[list[str]] = None, links_created_doc_ids: Optional[list[str]] = None,
+) -> bool:
     label = f"{scope}/{sub_scope}"
     try:
         remove_build_manifest(repo_root, select_scope_stage(DOCS_SCOPE_CONFIGS[scope], stage))
@@ -930,6 +953,8 @@ def rebuild_sub_scope(repo_root: Path, scope: str, sub_scope: str, *, stage: str
                 "--write",
                 "--diagnostics",
                 *(["--stage", stage, "--skip-browser-config", "--skip-media-builds"] if stage else []),
+                *(["--links-doc-ids", ",".join(ordered_unique(links_doc_ids))] if stage == "working" and links_doc_ids is not None else []),
+                *(["--links-created-doc-ids", ",".join(ordered_unique(links_created_doc_ids))] if stage == "working" and links_created_doc_ids else []),
             ),
         ),
     ]

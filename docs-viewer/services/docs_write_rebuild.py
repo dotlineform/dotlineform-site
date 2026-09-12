@@ -22,7 +22,7 @@ from docs_scope_config import (
 )
 from docs_scope_build_manifest import remove_build_manifest, write_build_manifest
 from docs_scope_links import write_scope_links
-from docs_source_model import load_scope_docs_for_config, write_bytes_atomic
+from docs_source_model import load_scope_docs_for_config, parse_source, write_bytes_atomic
 from docs_watch_suppression import (
     DEFAULT_COMPLETE_TTL_SECONDS,
     DEFAULT_PENDING_TTL_SECONDS,
@@ -99,6 +99,30 @@ def ordered_search_doc_ids(doc_ids: list[str]) -> list[str]:
 
 def ordered_docs_doc_ids(doc_ids: list[str]) -> list[str]:
     return ordered_search_doc_ids(doc_ids)
+
+
+def changed_source_document_ids(paths: list[Path]) -> list[str]:
+    """Read eligible Links identities from changed sources before/after a mutation.
+
+    Capture before deletion as well as after creation. Paths never stand in for
+    document identity, and this helper never inventories a collection.
+    """
+    identities = set()
+    for path in paths:
+        if path.is_file():
+            metadata = parse_source(path)[0]
+            if metadata.get("publishable", True) is not False:
+                identities.add(str(metadata.get("doc_id") or ""))
+    return sorted(identities - {""})
+
+
+def links_write_arguments(before: list[str] | None, paths: list[Path], *, created_doc_ids: list[str] | None = None) -> dict[str, list[str]]:
+    """Carry changed/deleted identities and explicit creation from one source write."""
+    if before is None:
+        return {}
+    after = set(changed_source_document_ids(paths))
+    created = after - set(before) if created_doc_ids is None else set(created_doc_ids)
+    return {"links_doc_ids": sorted(set(before) | after), "links_created_doc_ids": sorted(created)}
 
 
 def iter_docs_tree_records(docs: Any) -> list[Dict[str, Any]]:
@@ -225,6 +249,8 @@ def rebuild_scope_outputs(
     docs_doc_ids: Optional[list[str]] = None,
     skip_media_builds: bool = False,
     stage: str | None = None,
+    links_doc_ids: Optional[list[str]] = None,
+    links_created_doc_ids: Optional[list[str]] = None,
 ) -> Dict[str, Any]:
     """Await document work and requested Search before recording scope completion.
 
@@ -244,6 +270,11 @@ def rebuild_scope_outputs(
         docs_command.extend(["--stage", stage])
     if stage == "working":
         docs_command.append("--skip-media-builds")
+        selected_links = links_doc_ids if links_doc_ids is not None else docs_doc_ids
+        if selected_links is not None:
+            docs_command.extend(["--links-doc-ids", ",".join(ordered_docs_doc_ids(selected_links))])
+        if links_created_doc_ids:
+            docs_command.extend(["--links-created-doc-ids", ",".join(ordered_docs_doc_ids(links_created_doc_ids))])
     if docs_doc_ids is not None:
         docs_target_doc_ids = ordered_docs_doc_ids(docs_doc_ids)
         if docs_target_doc_ids:
@@ -346,6 +377,8 @@ def rebuild_sub_scope_outputs(
     scope: str,
     sub_scope: str,
     stage: str | None = None,
+    links_doc_ids: Optional[list[str]] = None,
+    links_created_doc_ids: Optional[list[str]] = None,
 ) -> Dict[str, Any]:
     docs_command = python_builder_command(
         DOCS_BUILDER_SCRIPT,
@@ -361,6 +394,10 @@ def rebuild_sub_scope_outputs(
     load_docs_scope_stage(repo_root, scope, stage)
     if stage:
         docs_command.extend(["--stage", stage])
+    if stage == "working" and links_doc_ids is not None:
+        docs_command.extend(["--links-doc-ids", ",".join(ordered_docs_doc_ids(links_doc_ids))])
+    if stage == "working" and links_created_doc_ids:
+        docs_command.extend(["--links-created-doc-ids", ",".join(ordered_docs_doc_ids(links_created_doc_ids))])
     steps = []
     docs_diagnostics: Optional[Dict[str, Any]] = None
     step = run_rebuild_command(docs_command, repo_root)
@@ -452,6 +489,7 @@ def perform_source_write_and_rebuild(
             if isinstance(path, Path)
         }
     )
+    links_before = changed_source_document_ids(changed_paths) if stage == "working" else None
     if filenames:
         set_watch_suppressions(
             repo_root,
@@ -470,6 +508,7 @@ def perform_source_write_and_rebuild(
             docs_doc_ids=docs_doc_ids,
             skip_media_builds=skip_media_builds,
             stage=stage,
+            **links_write_arguments(links_before, changed_paths),
         )
     except Exception:
         if filenames:
@@ -543,6 +582,7 @@ def perform_scope_source_write_and_rebuild_atomic(
         path.relative_to(root.resolve()).as_posix()
         for path in resolved_changed_paths
     )
+    links_before = changed_source_document_ids(changed_paths) if stage == "working" else None
     if filenames:
         set_watch_suppressions(
             repo_root,
@@ -571,6 +611,7 @@ def perform_scope_source_write_and_rebuild_atomic(
             docs_doc_ids=docs_doc_ids,
             skip_media_builds=True,
             stage=stage,
+            **links_write_arguments(links_before, changed_paths),
         )
     except ScopeSourceSnapshotChanged:
         if filenames:
@@ -596,6 +637,7 @@ def perform_scope_source_write_and_rebuild_atomic(
                     docs_doc_ids=docs_doc_ids,
                     skip_media_builds=True,
                     stage=stage,
+                    **({"links_doc_ids": links_before} if links_before is not None else {}),
                 )
             except Exception as recovery_exc:
                 recovery_error = (
@@ -652,6 +694,7 @@ def perform_sub_scope_source_write_and_rebuild(
     suppression_reason: str,
     source_snapshots: Mapping[Path, bytes] | None = None,
     stage: str | None = None,
+    links_created_doc_ids: list[str] | None = None,
 ) -> Dict[str, Any]:
     require_document_authoring(load_docs_scope_stage(repo_root, scope, stage))
     root = current_sub_scope_source_root(repo_root, scope, sub_scope, stage)
@@ -687,6 +730,7 @@ def perform_sub_scope_source_write_and_rebuild(
         }
     )
     suppression_owner = watch_suppression_owner(scope, sub_scope, stage=stage)
+    links_before = changed_source_document_ids(changed_paths) if stage == "working" else None
     if filenames:
         set_watch_suppressions(
             repo_root,
@@ -709,7 +753,10 @@ def perform_sub_scope_source_write_and_rebuild(
                     + ", ".join(sorted(changed_before_write))
                 )
         write_operation()
-        rebuild = rebuild_sub_scope_outputs(repo_root, scope, sub_scope, stage=stage)
+        rebuild = rebuild_sub_scope_outputs(
+            repo_root, scope, sub_scope, stage=stage,
+            **links_write_arguments(links_before, changed_paths, created_doc_ids=links_created_doc_ids),
+        )
     except SubScopeSourceSnapshotChanged:
         if filenames:
             clear_watch_suppressions(repo_root, suppression_owner, filenames)
@@ -734,6 +781,7 @@ def perform_sub_scope_source_write_and_rebuild(
                     scope,
                     sub_scope,
                     stage=stage,
+                    **({"links_doc_ids": links_before} if links_before is not None else {}),
                 )
             except Exception as recovery_exc:
                 recovery_error = str(recovery_exc).strip() or recovery_exc.__class__.__name__
@@ -780,6 +828,7 @@ def perform_multi_scope_source_write_and_rebuild(
 ) -> Dict[str, Any]:
     """Write once under exact collection suppressions and await every rebuild."""
     suppressions: list[tuple[str, list[str]]] = []
+    links_before: dict[str, list[str]] = {}
     for plan in rebuild_plans:
         scope = str(plan.get("scope") or "").strip()
         stage = plan.get("stage") or None
@@ -787,6 +836,8 @@ def perform_multi_scope_source_write_and_rebuild(
         require_document_authoring(load_docs_scope_stage(repo_root, scope, stage))
         root = current_sub_scope_source_root(repo_root, scope, sub_scope, stage) if sub_scope else current_scope_source_root(repo_root, scope, stage)
         owner = watch_suppression_owner(scope, sub_scope, stage=stage)
+        if stage == "working":
+            links_before[owner] = changed_source_document_ids(plan.get("changed_paths", []))
         filenames = sorted(
             {
                 path.resolve().relative_to(root.resolve()).as_posix()
@@ -808,17 +859,26 @@ def perform_multi_scope_source_write_and_rebuild(
             )
         write_operation()
         rebuilds: Dict[str, Any] = {}
+        prepared_rebuilds = []
         for plan in rebuild_plans:
+            owner = watch_suppression_owner(str(plan["scope"]), str(plan.get("sub_scope") or ""), stage=plan.get("stage") or None)
+            prepared_rebuilds.append((plan, links_write_arguments(links_before.get(owner), plan.get("changed_paths", []))))
+        # A collection move keeps its immutable ID and shared Links filename.
+        # Prepare the destination first so it can transfer the exact prior
+        # record before the former collection processes its deletion identity.
+        prepared_rebuilds.sort(key=lambda item: not bool(item[1].get("links_created_doc_ids")))
+        for plan, links_arguments in prepared_rebuilds:
             scope = str(plan.get("scope") or "").strip()
             stage = plan.get("stage") or None
             sub_scope = str(plan.get("sub_scope") or "")
             owner = watch_suppression_owner(scope, sub_scope, stage=stage)
             if sub_scope:
-                rebuilds[owner] = rebuild_sub_scope_outputs(repo_root, scope, sub_scope, stage=stage)
+                rebuilds[owner] = rebuild_sub_scope_outputs(repo_root, scope, sub_scope, stage=stage, **links_arguments)
             else:
                 rebuilds[owner] = rebuild_scope_outputs(
                     repo_root, scope, include_search=False,
                     docs_doc_ids=plan.get("docs_doc_ids"),
+                    **links_arguments,
                     **({"stage": stage, "skip_media_builds": True} if stage else {}),
                 )
     except Exception:

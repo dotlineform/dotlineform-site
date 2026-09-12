@@ -230,7 +230,7 @@ def test_sub_scope_creation_binds_config_sources_and_rebuilds_to_working(stage_r
     collection = next(item for item in working.sub_scopes if item.sub_scope == "moments")
     assert (stage_repo / scopes.document_source_path(collection)).is_dir()
     assert calls[0] == ((stage_repo, "analysis", "moments"), {"stage": "working"})
-    assert calls[1][1] == {"include_search": False, "docs_doc_ids": [host_id], "stage": "working"}
+    assert calls[1][1] == {"include_search": False, "docs_doc_ids": [host_id], "stage": "working", "links_created_doc_ids": [host_id]}
 
 
 @pytest.mark.parametrize("stage", [None, "pre-publish"])

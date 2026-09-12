@@ -141,6 +141,7 @@ def recover_sub_scope_document_delete(
             restore_operation,
             suppression_reason="docs-sub-scope-document-delete-recovery",
             stage=plan.stage or None,
+            **({"links_created_doc_ids": []} if plan.stage == "working" else {}),
         )
     except Exception as recovery_error:
         source_restored = source_matches_original()

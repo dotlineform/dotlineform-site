@@ -4,7 +4,7 @@ from pathlib import Path
 from typing import Any
 
 from .backlinks import BacklinksMixin
-from .links_builder import build_document_links
+from .links_builder import build_document_links, prepare_document_links
 from .common import (
     DocsScopeConfig,
     document_source_path,
@@ -46,6 +46,8 @@ class DocsDataBuilder(
         output_dir: Path | None = None,
         viewer_base_url: str | None = None,
         only_doc_ids: list[str] | None = None,
+        links_doc_ids: list[str] | None = None,
+        links_created_doc_ids: list[str] | None = None,
         skip_media_builds: bool = False,
     ) -> None:
         self.repo_root = repo_root.resolve()
@@ -62,6 +64,8 @@ class DocsDataBuilder(
         self.manage_only_tree_root_ids = normalize_doc_ids(list(config.manage_only_tree_root_ids))
         self.allow_unresolved_parent_ids = config.allow_unresolved_parent_ids is True
         self.only_doc_ids = None if only_doc_ids is None else normalize_doc_ids(only_doc_ids)
+        self.links_doc_ids = None if links_doc_ids is None else normalize_doc_ids(links_doc_ids)
+        self.links_created_doc_ids = normalize_doc_ids(links_created_doc_ids or [])
         self.skip_media_builds = skip_media_builds is True
         self.output_url_base = self.output_url_base_for(self.output_url_dir())
         self.site_config = load_site_tools_config(self.repo_root)
@@ -140,6 +144,7 @@ class DocsDataBuilder(
             backlinks_payload=backlinks_payload,
             target_doc_ids=target_doc_ids if self.targeted_build else None,
         )
+        links_plan = prepare_document_links(self, docs, target_doc_ids, write_plan["stale_item_ids"])
         diagnostics = self.diagnostics_payload(
             docs=docs,
             write_plan=write_plan,
@@ -162,9 +167,8 @@ class DocsDataBuilder(
                 semantic_token_payloads,
                 write_plan,
             )
-        links_build = build_document_links(
-            self, set(target_doc_ids) | set(write_plan["stale_item_ids"]), write=write,
-        )
+        links_build = build_document_links(self, links_plan, write=write)
+        diagnostics["warning_count"] = len(self.warnings)
         if emit_diagnostics:
             self.print_diagnostics(diagnostics)
         return {

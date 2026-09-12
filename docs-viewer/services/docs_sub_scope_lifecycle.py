@@ -443,6 +443,7 @@ def apply_create_sub_scope(
             scope,
             include_search=False,
             docs_doc_ids=[identity["doc_id"]],
+            **({"links_created_doc_ids": [identity["doc_id"]]} if parent_config.stage == "working" else {}),
             **build_kwargs,
         )
     except Exception as error:

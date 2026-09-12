@@ -16,7 +16,7 @@ from .common import (
     write_text,
 )
 from .pipeline import DocsDataBuilder
-from .links_builder import build_document_links
+from .links_builder import build_document_links, prepare_document_links
 from .media_builds import build_scope_media_snapshot
 from .source import DocRecord
 from docs_subscope_customisations import (
@@ -41,6 +41,8 @@ class SubScopeDocsBuilder(DocsDataBuilder):
         config: DocsScopeConfig,
         sub_scope: Any,
         skip_media_builds: bool = False,
+        links_doc_ids: list[str] | None = None,
+        links_created_doc_ids: list[str] | None = None,
     ) -> None:
         self.sub_scope_config = sub_scope
         super().__init__(
@@ -49,6 +51,8 @@ class SubScopeDocsBuilder(DocsDataBuilder):
             source_dir=document_source_path(sub_scope),
             output_dir=generated_documents_path(sub_scope),
             skip_media_builds=skip_media_builds,
+            links_doc_ids=links_doc_ids,
+            links_created_doc_ids=links_created_doc_ids,
         )
         self.sub_scope_id = sub_scope.sub_scope
         self.output_url_base = self.output_url_base_for(self.output_url_dir())
@@ -263,6 +267,7 @@ class SubScopeDocsBuilder(DocsDataBuilder):
         )
         semantic_token_payloads = self.build_semantic_token_payloads(docs, semantic_tokens_by_doc)
         write_plan.update(self.build_semantic_token_write_plan(semantic_token_payloads))
+        links_plan = prepare_document_links(self, docs, item_payloads, write_plan["stale_item_ids"])
         diagnostics = self.sub_scope_diagnostics_payload(
             docs=docs,
             write_plan=write_plan,
@@ -272,9 +277,8 @@ class SubScopeDocsBuilder(DocsDataBuilder):
             self.write_sub_scope_outputs(write_plan, docs_total=len(docs))
         else:
             self.print_sub_scope_summary(write_plan, mode="dry-run", docs_total=len(docs))
-        links_build = build_document_links(
-            self, set(item_payloads) | set(write_plan["stale_item_ids"]), write=write,
-        )
+        links_build = build_document_links(self, links_plan, write=write)
+        diagnostics["warning_count"] = len(self.warnings)
         if emit_diagnostics:
             self.print_diagnostics(diagnostics)
         return {
