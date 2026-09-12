@@ -85,12 +85,7 @@ class DocsDataBuilder(
         target_doc_ids = self.only_doc_ids if self.only_doc_ids is not None else [doc.doc_id for doc in docs]
         if self.targeted_build:
             self.validate_targeted_build_prerequisites(docs, target_doc_ids)
-            semantic_tokens_by_doc = self.existing_semantic_token_occurrences_by_doc(
-                docs,
-                target_doc_ids,
-            )
-        else:
-            semantic_tokens_by_doc: dict[str, list[dict[str, Any]]] = {}
+        semantic_tokens_by_doc: dict[str, list[dict[str, Any]]] = {}
 
         docs_for_item_build = [doc for doc in docs if doc.doc_id in target_doc_ids]
         item_payloads = {

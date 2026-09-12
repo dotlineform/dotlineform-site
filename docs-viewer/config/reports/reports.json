@@ -94,7 +94,7 @@
     {
       "report_id": "semantic_tokens",
       "title": "Semantic Tokens",
-      "description": "Lists resolved semantic-token occurrences for a selected docs scope.",
+      "description": "Lists semantic-token occurrences across all Analysis Working collections.",
       "default_access": "local",
       "loader_id": "semantic_tokens",
       "presets": []

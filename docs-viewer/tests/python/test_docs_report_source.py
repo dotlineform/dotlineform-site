@@ -193,6 +193,7 @@ def test_retired_front_matter_fails_even_when_blank(retired_key: str) -> None:
         (("id: docs_index_table", "access: local", "scope: missing"), "invalid_scope"),
         (("id: docs_index_table", "access: local", "preset: missing"), "invalid_preset"),
         (("id: reports_list", "access: public", "scope: analysis"), "invalid_scope"),
+        (("id: semantic_tokens", "access: local", "scope: studio"), "invalid_scope"),
         (("id: docs_broken_links", "access: local", "preset: az_index"), "invalid_preset"),
         (("id: reports_list", "access: public", "sub_scope: tags"), "invalid_sub_scope"),
     ],
@@ -203,9 +204,8 @@ def test_unknown_values_and_forbidden_context_fail(
     assert_error(block(*attributes), code)
 
 
-@pytest.mark.parametrize("report_id", ["docs_broken_links", "semantic_tokens"])
-def test_registered_scope_context_is_allowed_for_scope_reports(report_id: str) -> None:
-    descriptor = parse(block(f"id: {report_id}", "access: local", "scope: studio"))
+def test_registered_scope_context_is_allowed_for_scope_reports() -> None:
+    descriptor = parse(block("id: docs_broken_links", "access: local", "scope: studio"))
     assert descriptor is not None
     assert descriptor.scope == "studio"
 

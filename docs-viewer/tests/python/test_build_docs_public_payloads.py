@@ -86,6 +86,7 @@ def test_python_docs_builder_public_generated_payloads_include_manage_rows() -> 
     assert semantic_tokens_index["occurrences"] == [
         {
             "source_scope": "example",
+            "source_sub_scope": "",
             "source_doc_id": CHILD_DOC_ID,
             "source_range": {"start": 22, "end": 62},
             "raw": "[[catalogue:media:work:00638|3 symbols]]",

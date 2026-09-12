@@ -95,7 +95,10 @@ export function createDocsViewerReportService(options) {
         ? "/docs/published/semantic-tokens"
         : "/docs/semantic-tokens";
       return fetchReportJson(
-        path + "?scope=" + encodeURIComponent(scope),
+        path + "?" + new URLSearchParams({
+          scope: scope,
+          ...(request && request.stage ? { stage: cleanString(request.stage) } : {})
+        }).toString(),
         serviceOptions
       );
     },

@@ -573,12 +573,14 @@ def test_apply_move_rebuilds_loadable_target_and_removes_source_outputs(
     root_id = "d-20260701-100000-aaaaaa"
     alpha_id = "d-20260701-100001-bbbbbb"
     grand_id = "d-20260701-100002-cccccc"
-    write_doc(source_root, doc_id=root_id, title="Root")
+    token = "[[catalogue:media:work:00638|Three symbols]]"
+    write_doc(source_root, doc_id=root_id, title="Root", body=token)
     write_doc(
         source_root,
         doc_id=alpha_id,
         title="Alpha",
         parent_id=root_id,
+        body=f"{token}\n\n{token}",
     )
     write_doc(
         source_root,
@@ -636,6 +638,11 @@ def test_apply_move_rebuilds_loadable_target_and_removes_source_outputs(
     moved_ids = set(result["moved_doc_ids"])
     target_output = repo_root / "docs-viewer/scopes/target/generated/documents"
     source_output = repo_root / "docs-viewer/scopes/source/generated/documents"
+    source_usage = json.loads((source_output / "semantic-tokens/index.json").read_text())["occurrences"]
+    target_usage = json.loads((target_output / "semantic-tokens/index.json").read_text())["occurrences"]
+    assert [(row["source_scope"], row["source_doc_id"]) for row in source_usage] == [("source", root_id)]
+    assert [(row["source_scope"], row["source_doc_id"]) for row in target_usage] == [("target", alpha_id), ("target", alpha_id)]
+    assert all(row["raw"] == token and row["source_sub_scope"] == "" for row in target_usage + source_usage)
     target_search = json.loads(
         (
             repo_root / "docs-viewer/scopes/target/generated/search/index.json"

@@ -10,28 +10,10 @@ function clearNode(node) {
   while (node.firstChild) node.removeChild(node.firstChild);
 }
 
-function configuredScopes(context) {
-  const scopes = Array.isArray(context && context.scopeConfigs) ? context.scopeConfigs : [];
-  return scopes.map((scope) => ({
-    scopeId: cleanString(scope && (scope.scope_id || scope.scopeId)).toLowerCase(),
-    title: cleanString(scope && scope.title) || cleanString(scope && (scope.scope_id || scope.scopeId))
-  })).filter((scope) => scope.scopeId);
-}
-
-function selectedScopeFromRoute(scopes, fallbackScope) {
-  const params = new URLSearchParams(window.location.search);
-  const selected = cleanString(params.get("report_scope")).toLowerCase();
-  if (scopes.some((scope) => scope.scopeId === selected)) return selected;
-  const fallback = cleanString(fallbackScope).toLowerCase();
-  if (scopes.some((scope) => scope.scopeId === fallback)) return fallback;
-  return scopes[0] ? scopes[0].scopeId : "";
-}
-
-function persistSelectedScope(scopeId) {
-  const url = new URL(window.location.href);
-  if (scopeId) url.searchParams.set("report_scope", scopeId);
-  else url.searchParams.delete("report_scope");
-  window.history.replaceState({}, "", url.pathname + url.search + url.hash);
+function requireAnalysisWorking(context) {
+  if (context.viewerScope !== "analysis" || context.viewerStage !== "working") {
+    throw new Error("Semantic Tokens is available only in Analysis Working.");
+  }
 }
 
 function reportService(context) {
@@ -62,26 +44,36 @@ function persistSort(state) {
   window.history.replaceState({}, "", url.pathname + url.search + url.hash);
 }
 
-function flattenDocs(rows, target) {
-  (Array.isArray(rows) ? rows : []).forEach((row) => {
-    if (!row || typeof row !== "object") return;
-    const docId = cleanString(row.doc_id);
-    if (docId) target.set(docId, cleanString(row.title) || docId);
-    flattenDocs(row.children, target);
+/** Pair occurrences with response-owned source locations without guessing collection identity. */
+export function readSemanticTokenRows(payload) {
+  if (!payload || payload.scope !== "analysis" || payload.stage !== "working"
+    || !Array.isArray(payload.occurrences) || !Array.isArray(payload.source_documents)) {
+    throw new Error("Semantic-token report data does not match its scope/stage.");
+  }
+  const key = (target) => JSON.stringify([target.scope, target.sub_scope, target.doc_id]);
+  const documents = new Map(payload.source_documents.map((document) => [key(document.target), document]));
+  return payload.occurrences.map((row) => {
+    const source = documents.get(key({ scope: row.source_scope, sub_scope: row.source_sub_scope || "", doc_id: row.source_doc_id }));
+    if (!source) throw new Error("Semantic-token source document is unavailable.");
+    return {
+      family: cleanString(row.family),
+      targetType: cleanString(row.target_type),
+      targetId: cleanString(row.target_id),
+      title: cleanString(row.title),
+      sourceDocId: cleanString(row.source_doc_id),
+      sourceSubScope: cleanString(row.source_sub_scope),
+      sourceTitle: source.title,
+      sourceHref: source.href,
+      raw: cleanString(row.raw)
+    };
   });
-  return target;
 }
 
-function normalizeOccurrences(payload) {
-  const rows = Array.isArray(payload && payload.occurrences) ? payload.occurrences : [];
-  return rows.map((row) => ({
-    family: cleanString(row && row.family),
-    targetType: cleanString(row && row.target_type),
-    targetId: cleanString(row && row.target_id),
-    title: cleanString(row && row.title),
-    sourceDocId: cleanString(row && row.source_doc_id),
-    raw: cleanString(row && row.raw)
-  })).filter((row) => row.family && row.targetType && row.targetId && row.sourceDocId);
+/** Read the Analysis Working inventory through the existing local report service. */
+export async function loadSemanticTokenRows(context) {
+  requireAnalysisWorking(context);
+  const payload = await reportService(context).readSemanticTokens({ scope: "analysis", stage: "working" });
+  return readSemanticTokenRows(payload);
 }
 
 function tokenIdentity(row) {
@@ -92,28 +84,28 @@ function tokenLabel(row) {
   return row.title || tokenIdentity(row);
 }
 
-function documentLabel(state, row) {
-  return state.documentTitles.get(row.sourceDocId) || row.sourceDocId;
+function documentLabel(row) {
+  return row.sourceTitle || row.sourceDocId;
 }
 
-function sortValue(state, row, key) {
+function sortValue(row, key) {
   if (key === "identity") return tokenIdentity(row);
-  if (key === "document") return documentLabel(state, row);
+  if (key === "document") return documentLabel(row);
   return tokenLabel(row);
 }
 
 function compareRows(state, left, right) {
   const direction = state.sortDir === "desc" ? -1 : 1;
   const primary = state.collator.compare(
-    sortValue(state, left, state.sortKey),
-    sortValue(state, right, state.sortKey)
+    sortValue(left, state.sortKey),
+    sortValue(right, state.sortKey)
   );
   if (primary !== 0) return primary * direction;
   for (const key of SORT_KEYS) {
     if (key === state.sortKey) continue;
     const fallback = state.collator.compare(
-      sortValue(state, left, key),
-      sortValue(state, right, key)
+      sortValue(left, key),
+      sortValue(right, key)
     );
     if (fallback !== 0) return fallback;
   }
@@ -134,15 +126,11 @@ function appendIdentityCell(row, occurrence) {
   row.appendChild(cell);
 }
 
-function appendDocumentCell(row, state, occurrence) {
+function appendDocumentCell(row, occurrence) {
   const link = document.createElement("a");
   link.className = "docsViewerReport__cellLink docsViewerReport__title";
-  link.href = state.context.viewerUrlForScope(
-    state.selectedScope,
-    occurrence.sourceDocId,
-    { manage: true }
-  );
-  link.textContent = documentLabel(state, occurrence);
+  link.href = occurrence.sourceHref;
+  link.textContent = documentLabel(occurrence);
   row.appendChild(link);
 }
 
@@ -175,7 +163,7 @@ function renderRows(state) {
   state.statusNode.textContent = rows.length === 1 ? "1 semantic token" : `${rows.length} semantic tokens`;
   state.emptyNode.hidden = rows.length > 0;
   if (!rows.length) {
-    state.emptyNode.textContent = `No resolved semantic tokens found in ${state.selectedScope}.`;
+    state.emptyNode.textContent = "No semantic tokens found in Analysis Working.";
     return;
   }
   rows.forEach((occurrence) => {
@@ -184,20 +172,9 @@ function renderRows(state) {
     row.dataset.reportDocId = occurrence.sourceDocId;
     appendTitleCell(row, occurrence);
     appendIdentityCell(row, occurrence);
-    appendDocumentCell(row, state, occurrence);
+    appendDocumentCell(row, occurrence);
     state.rowsNode.appendChild(row);
   });
-}
-
-function renderScopeSelect(state) {
-  clearNode(state.scopeSelectNode);
-  state.scopes.forEach((scope) => {
-    const option = document.createElement("option");
-    option.value = scope.scopeId;
-    option.textContent = scope.title || scope.scopeId;
-    state.scopeSelectNode.appendChild(option);
-  });
-  state.scopeSelectNode.value = state.selectedScope;
 }
 
 function loadScope(state) {
@@ -208,16 +185,11 @@ function loadScope(state) {
   state.statusNode.textContent = "Loading semantic tokens...";
   state.emptyNode.hidden = true;
   clearNode(state.rowsNode);
-  return Promise.all([
-    service.readSemanticTokens({ scope: state.selectedScope }),
-    state.context.fetchDocsIndexTree(state.selectedScope)
-  ]).then(([payload, indexPayload]) => {
-    state.occurrences = normalizeOccurrences(payload);
-    state.documentTitles = flattenDocs(indexPayload && indexPayload.docs, new Map());
+  return loadSemanticTokenRows(state.context).then((rows) => {
+    state.occurrences = rows;
     renderRows(state);
   }).catch((error) => {
     state.occurrences = [];
-    state.documentTitles = new Map();
     renderHead(state);
     state.statusNode.textContent = error && error.message
       ? error.message
@@ -228,11 +200,6 @@ function loadScope(state) {
 }
 
 function attachEvents(state) {
-  state.scopeSelectNode.addEventListener("change", () => {
-    state.selectedScope = cleanString(state.scopeSelectNode.value).toLowerCase();
-    persistSelectedScope(state.selectedScope);
-    loadScope(state);
-  });
   state.headNode.addEventListener("click", (event) => {
     const button = event.target instanceof Element ? event.target.closest("[data-report-sort]") : null;
     if (!button) return;
@@ -255,15 +222,8 @@ function renderShell(root) {
 
   const toolbar = document.createElement("div");
   toolbar.className = "docsViewerReport__toolbar";
-  const label = document.createElement("label");
-  label.className = "docsViewerReport__selectLabel";
-  label.textContent = "Scope ";
-  const select = document.createElement("select");
-  select.className = "docsViewerReport__select";
-  label.appendChild(select);
   const status = document.createElement("p");
   status.className = "docsViewerReport__status";
-  toolbar.appendChild(label);
   toolbar.appendChild(status);
 
   const table = document.createElement("div");
@@ -281,7 +241,6 @@ function renderShell(root) {
   root.appendChild(table);
   root.appendChild(empty);
   return {
-    scopeSelectNode: select,
     statusNode: status,
     headNode: head,
     rowsNode: rows,
@@ -290,29 +249,17 @@ function renderShell(root) {
 }
 
 export function mountSemanticTokensReport(context) {
-  const scopes = configuredScopes(context);
-  const selectedScope = selectedScopeFromRoute(
-    scopes,
-    cleanString(context.reportMeta && context.reportMeta.scope) || cleanString(context.viewerScope)
-  );
+  requireAnalysisWorking(context);
   const routeSort = readRouteSort();
   const nodes = renderShell(context.reportRoot);
   const state = Object.assign({
     context,
-    scopes,
-    selectedScope,
     occurrences: [],
-    documentTitles: new Map(),
     collator: new Intl.Collator(undefined, { numeric: true, sensitivity: "base" }),
     sortKey: routeSort.sortKey,
     sortDir: routeSort.sortDir
   }, nodes);
-  renderScopeSelect(state);
   renderHead(state);
   attachEvents(state);
-  if (!selectedScope) {
-    state.statusNode.textContent = "No docs scopes are configured.";
-    return Promise.resolve();
-  }
   return loadScope(state);
 }

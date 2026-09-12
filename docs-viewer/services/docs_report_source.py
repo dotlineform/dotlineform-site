@@ -26,7 +26,7 @@ RETIRED_REPORT_KEYS = frozenset(
 )
 _KEYS = frozenset({"id", "access", "scope", "preset", "sub_scope"})
 _ACCESS = frozenset({"local", "public"})
-_SCOPE_REPORTS = frozenset({"docs_index_table", "docs_broken_links", "semantic_tokens"})
+_SCOPE_REPORTS = frozenset({"docs_index_table", "docs_broken_links"})
 _ID = re.compile(r"[a-z0-9][a-z0-9_-]*\Z")
 _ATTRIBUTE = re.compile(r"([a-z_]+): ([a-z0-9][a-z0-9_-]*)\Z")
 _MARKDOWN = MarkdownIt("commonmark")

@@ -9,6 +9,7 @@ from typing import Any, Dict
 from urllib.parse import urlparse
 
 from docs_document_identity import is_immutable_doc_id
+from docs_document_location import management_collection_viewer_url, management_document_viewer_url
 from docs_scope_config import (
     DocsScopeConfig,
     generated_documents_path,
@@ -191,10 +192,43 @@ def read_generated_backlinks(repo_root: Path, scope: str, stage: str | None = No
 
 
 def read_generated_semantic_tokens_index(repo_root: Path, scope: str, stage: str | None = None) -> Dict[str, Any]:
-    return read_generated_json(
+    """Read usage plus exact generated source titles and stage-owned report locations.
+
+    Source summaries are response-only. Never infer a collection from a document
+    ID or use publication eligibility to omit an indexed occurrence.
+    """
+    config = generated_scope_config(repo_root, scope, stage)
+    payload = read_generated_json(
         generated_semantic_tokens_index_path(repo_root, scope, stage),
         f"generated semantic-token usage index for {scope}",
     )
+    if payload.get("scope") != scope or payload.get("stage", config.stage) != config.stage or not isinstance(payload.get("occurrences"), list):
+        raise ValueError("Semantic-token index does not match its requested scope/stage")
+    owners = {"": config, **{child.sub_scope: child for child in config.sub_scopes}}
+    documents: dict[tuple[str, str], dict[str, Any]] = {}
+    collection_urls: dict[str, str] = {}
+    for occurrence in payload["occurrences"]:
+        if not isinstance(occurrence, dict) or occurrence.get("source_scope") != scope:
+            raise ValueError("Semantic-token occurrence has invalid source scope")
+        collection = occurrence.get("source_sub_scope", "")
+        doc_id = occurrence.get("source_doc_id")
+        if collection not in owners or not is_immutable_doc_id(doc_id):
+            raise ValueError("Semantic-token source must identify an exact configured document")
+        key = (collection, doc_id)
+        if key in documents:
+            continue
+        output = resolve_scope_path(repo_root, generated_documents_path(owners[collection]))
+        document = read_generated_json(output / "by-id" / f"{doc_id}.json", "semantic-token source document")
+        if document.get("doc_id") != doc_id or not isinstance(document.get("title"), str):
+            raise ValueError("Semantic-token source payload does not match its document")
+        if collection not in collection_urls:
+            collection_urls[collection] = management_collection_viewer_url(repo_root, scope, collection, stage=config.stage)
+        documents[key] = {
+            "target": {"scope": scope, "sub_scope": collection, "doc_id": doc_id},
+            "title": document["title"],
+            "href": management_document_viewer_url(collection_urls[collection], doc_id, sub_scope=bool(collection)),
+        }
+    return {**payload, "stage": config.stage, "source_documents": list(documents.values())}
 
 
 def read_generated_search_index(repo_root: Path, scope: str, stage: str | None = None) -> Dict[str, Any]:

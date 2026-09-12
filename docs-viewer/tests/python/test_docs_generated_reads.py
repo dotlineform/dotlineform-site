@@ -108,7 +108,7 @@ def write_generated_docs(root: Path) -> None:
         {"schema": "docs_recent_v1", "basis": "edited", "limit": 10, "docs": [docs[1]]},
     )
     write_json(root / f"docs-viewer/scopes/studio/generated/documents/by-id/{NON_VIEWABLE_DOC_ID}.json", {"doc_id": NON_VIEWABLE_DOC_ID})
-    write_json(root / f"docs-viewer/scopes/studio/generated/documents/by-id/{CHILD_DOC_ID}.json", {"doc_id": CHILD_DOC_ID})
+    write_json(root / f"docs-viewer/scopes/studio/generated/documents/by-id/{CHILD_DOC_ID}.json", {"doc_id": CHILD_DOC_ID, "title": "Child"})
     write_json(
         root / "docs-viewer/scopes/studio/generated/documents/semantic-tokens/index.json",
         {

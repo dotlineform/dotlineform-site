@@ -261,6 +261,8 @@ class SubScopeDocsBuilder(DocsDataBuilder):
             subject_associations_payload,
             item_payloads,
         )
+        semantic_token_payloads = self.build_semantic_token_payloads(docs, semantic_tokens_by_doc)
+        write_plan.update(self.build_semantic_token_write_plan(semantic_token_payloads))
         diagnostics = self.sub_scope_diagnostics_payload(
             docs=docs,
             write_plan=write_plan,
@@ -280,6 +282,7 @@ class SubScopeDocsBuilder(DocsDataBuilder):
             "manage_manifest_payload": manage_manifest_payload,
             "subject_associations_payload": subject_associations_payload,
             "item_payloads": item_payloads,
+            "semantic_token_payloads": semantic_token_payloads,
             "media_snapshot": media_snapshot,
             "write_plan": write_plan,
             "diagnostics": diagnostics,
@@ -346,6 +349,7 @@ class SubScopeDocsBuilder(DocsDataBuilder):
             write_text(self.items_dir / f"{doc_id}.json", write_plan["item_text_by_id"][doc_id])
         for doc_id in write_plan["stale_item_ids"]:
             (self.items_dir / f"{doc_id}.json").unlink(missing_ok=True)
+        self.write_semantic_token_outputs(write_plan)
         self.print_sub_scope_summary(write_plan, mode="write", docs_total=docs_total)
 
     def print_sub_scope_summary(self, write_plan: dict[str, Any], *, mode: str, docs_total: int) -> None:
@@ -364,6 +368,7 @@ class SubScopeDocsBuilder(DocsDataBuilder):
             "  subject associations "
             f"{verb}: {1 if write_plan['subject_associations_write'] else 0}"
         )
+        print(f"  semantic tokens {verb}: {1 if write_plan['semantic_token_index_write'] else 0}")
         print(f"  warnings: {len(self.warnings)}")
 
     def sub_scope_diagnostics_payload(
@@ -388,6 +393,7 @@ class SubScopeDocsBuilder(DocsDataBuilder):
             "subject_associations_changed": (
                 1 if write_plan["subject_associations_write"] else 0
             ),
+            "semantic_token_index_changed": 1 if write_plan["semantic_token_index_write"] else 0,
             "warning_count": len(self.warnings),
             "warnings": self.warnings,
             "elapsed_seconds": elapsed_seconds,
