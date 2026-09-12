@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { buildViewerUrlForScope, routeFromAnchorHref } from "../../runtime/js/shared/docs-viewer-router.js";
 import { createDocsViewerGeneratedDataRuntime } from "../../runtime/js/shared/docs-viewer-generated-data-runtime.js";
 import { createDocsViewerConfiguredScopeProvider } from "../../runtime/js/shared/docs-viewer-configured-scope-provider.js";
+import { normalizeDocsViewerControlState } from "../../runtime/js/shared/docs-viewer-view-registry.js";
 import { normalizeManagedDocumentTarget, managedDocumentTargetsEqual } from "../../runtime/js/management/docs-viewer-management-document-target.js";
 import { normalizeManagedSubscopeCollection, committedDocumentCreateTarget, committedDocumentMoveRecord, committedDocumentPlacement } from "../../runtime/js/management/docs-viewer-management-actions.js";
 import { createManagedDoc, readManagedDocSource, rebuildManagedDocSource, applyManagedSubScopeDocDelete, assignManagedDocFieldGroup, moveManagedDoc } from "../../runtime/js/management/docs-viewer-management-client.js";
@@ -10,7 +11,7 @@ import { DOCS_VIEWER_ACTION_IDS } from "../../runtime/js/management/docs-viewer-
 import { subjectMetadataFromResponse } from "../../runtime/js/management/docs-viewer-management-project-subject-modal.js";
 import { loadDocsViewerSubscopeContribution } from "../../runtime/js/management/docs-viewer-management-document-reports.js";
 import { createDocsViewerIndexSelectionOwner } from "../../runtime/js/management/docs-viewer-index-selection.js";
-import { docsViewerSetPublishableActionControlState, docsViewerDocumentTransferActionControlState } from "../../runtime/js/management/docs-viewer-management-index-controller.js";
+import { createDocsViewerManagementIndexController, docsViewerSetPublishableActionControlState } from "../../runtime/js/management/docs-viewer-management-index-controller.js";
 import { setManagedDocsPublishable } from "../../runtime/js/management/docs-viewer-management-client.js";
 import { validateSetPublishableResponse } from "../../runtime/js/management/docs-viewer-management-publishable-workflow.js";
 import { createDocsViewerManagementCapabilityController, scopePrePublishSupported, scopePublishSupported } from "../../runtime/js/management/docs-viewer-management-capabilities.js";
@@ -59,9 +60,38 @@ for (const invalid of [
   { target: destination, placement: { ...placement, viewer_url: placement.viewer_url.replace(docId, "other") } },
   { target: destination, placement: { ...placement, viewer_url: "https://example.test" + placement.viewer_url } }
 ]) assert.throws(() => committedDocumentPlacement(invalid, hostTarget), /Placement service/);
-for (const mode of ["copy", "move"]) {
-  assert.equal(docsViewerDocumentTransferActionControlState({ mode, source: { scope: "analysis", stage: "working" } }).hidden, true);
-  assert.equal(docsViewerDocumentTransferActionControlState({ mode, source: { scope: "studio" } }).hidden, false);
+const transferSources = [{ scope: "analysis", stage: "working" }, { scope: "studio" }, { scope: "notes" }];
+const transferCapabilities = {
+  document_transfer: { preview: true, apply: true },
+  scopes: Object.fromEntries(transferSources.map(target => [target.scope, {
+    document_transfer: { collections: [{ target, copy_source: true, move_source: true, copy_target: true, move_target: true }] }
+  }]))
+};
+for (const source of transferSources) {
+  const transferSelection = createDocsViewerIndexSelectionOwner({ initialScopeId: source.scope });
+  transferSelection.enter();
+  transferSelection.toggle(docId, true);
+  let projectedActions;
+  const controller = createDocsViewerManagementIndexController({
+    document: {}, window: {}, documentIndex: { docs: [{ doc_id: docId }] },
+    indexSelection: transferSelection,
+    routeSession: { managementContext: true },
+    management: { managementChecked: true, managementAvailable: true, managementCapabilities: transferCapabilities },
+    callbacks: {
+      viewerScope: () => source.scope,
+      managementClientOptions: () => source,
+      resolveAction: createDocsViewerManagementActionResolver({ indexSelection: transferSelection, viewerStage: () => source.stage }),
+      projectIndexViewControlState: (id, state) => {
+        if (id === "index-actions") projectedActions = normalizeDocsViewerControlState(state);
+      }
+    }
+  });
+  controller.render();
+  for (const mode of ["copy", "move"]) {
+    const item = projectedActions.items[mode];
+    assert.equal(item.hidden, source.scope === "analysis", `${source.scope}: ${mode} visibility`);
+    assert.equal(item.disabled, source.scope === "analysis", `${source.scope}: ${mode}: ${item.disabledReason}`);
+  }
 }
 for (const wrongTarget of [
   { ...hostTarget, stage: "pre-publish" },

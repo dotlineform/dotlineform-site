@@ -277,7 +277,9 @@ export function createDocsViewerManagementIndexController(options = {}) {
 
   function documentTransferActionControlState(mode) {
     var actionId = mode === "move" ? DOCS_VIEWER_ACTION_IDS.MOVE : DOCS_VIEWER_ACTION_IDS.COPY;
-    var source = { scope: viewerScope(), stage: managementClientOptions().stage };
+    var source = { scope: viewerScope() };
+    var stage = managementClientOptions().stage;
+    if (stage) source.stage = stage;
     var targets = documentTransferTargets(
       management.managementCapabilities,
       source,

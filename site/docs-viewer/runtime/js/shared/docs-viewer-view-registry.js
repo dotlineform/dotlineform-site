@@ -187,6 +187,7 @@ export function normalizeDocsViewerControlState(record) {
       var item = source.items[itemId];
       if (!id || !item || typeof item !== "object" || Array.isArray(item)) return items;
       items[id] = {
+        hidden: Boolean(item.hidden),
         disabled: Boolean(item.disabled),
         disabledReason: cleanString(item.disabledReason)
       };
