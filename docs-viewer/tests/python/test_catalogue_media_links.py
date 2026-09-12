@@ -35,6 +35,9 @@ def catalogue(tmp_path, monkeypatch):
     }
     write_json(generated / "works/works_index.json", {"works": {"00523": work}})
     write_json(generated / "works/index/00523.json", {"work": work})
+    series = {"series_id": "143", "title": "A Series", "year_display": "2023"}
+    write_json(generated / "series/series_index.json", {"series": {"143": series}})
+    write_json(generated / "series/index/143.json", {"series": series, "member_works": []})
     monkeypatch.setenv("DOTLINEFORM_PROJECTS_BASE_DIR", str(base))
     write_site_tools_config(root)
     write_docs_scope_config(root, [docs_scope_record("studio")])
@@ -49,7 +52,9 @@ def test_local_routes_read_generated_data_without_documents_or_archive(catalogue
     root, _, work = catalogue
     result = docs_management_get_payload(root, routes.CATALOGUE_MEDIA_TARGETS_PATH, {})
     assert result["targets"] == [{"family": "catalogue", "target_type": "work", "target_id": "00523",
-                                  "title": work["title"], "meta": ["2023"]}]
+                                  "title": work["title"], "meta": ["2023"]},
+                                 {"family": "catalogue", "target_type": "series", "target_id": "143",
+                                  "title": "A Series", "meta": ["2023"]}]
     result = docs_management_get_payload(root, routes.CATALOGUE_WORK_PATH, {"work_id": ["00523"]})
     assert result["work"] == work
     assert result["work"]["media"]["primary"][0]["url"] == MEDIA_URL
@@ -164,12 +169,16 @@ def test_leading_inline_media_preserves_surrounding_markdown(catalogue, prefix, 
     assert container.select_one('[data-docs-media-id="00523"]') is not None
 
 
-def test_media_parser_requires_explicit_presentation_and_exact_work_target(catalogue):
+def test_media_parser_requires_explicit_presentation_and_exact_target(catalogue):
     root, _, _ = catalogue
     registry = load_semantic_token_registry(root)
     assert parse_catalogue_token("[[catalogue:work:00523|Unqualified]]", registry=registry) is None
     assert parse_catalogue_token("[[catalogue:media:work:00523|New]]", registry=registry).presentation == "media"
-    for raw in ("[[catalogue:media:series:143|Series]]", "[[catalogue:media:work:523|Short]]"):
+    assert parse_catalogue_token("[[catalogue:media:series:143|Series]]", registry=registry).target_type == "series"
+    assert parse_catalogue_token("[[catalogue:media:work:00523:015|Detail]]", registry=registry).detail_id == "015"
+    for raw in ("[[catalogue:media:series:14|Short]]", "[[catalogue:media:work:523|Short]]",
+                "[[catalogue:media:series:143:015|Wrong owner]]", "[[catalogue:media:work:00523:15|Short]]",
+                "[[catalogue:media:work:00523:000|Zero]]", "[[catalogue:media:work:00523:|Empty]]"):
         assert parse_catalogue_token(raw, registry=registry) is None
 
 
@@ -230,3 +239,35 @@ def test_detail_availability_uses_exact_generated_record_without_work_primary(ca
     payload['sections'][0]['details'] = [dict(detail, work_id='00524')]
     with pytest.raises(ValueError, match='unavailable or mismatched'):
         catalogue_media_record(payload, '00523', '015')
+
+
+def test_detail_and_series_text_links_build_reference_only_usage_and_diagnosis(catalogue):
+    from docs_broken_links import DocMeta, semantic_token_broken_entries
+
+    root, _, _ = catalogue
+    body = '[[catalogue:media:work:00523:015|Detail <label>]] and [[catalogue:media:series:143|Series *label*]]'
+    content, warnings = build_document(root, body)
+    soup = BeautifulSoup(content, 'html.parser')
+    assert not warnings and not soup.select('img, script, em, a')
+    controls = soup.select('[data-docs-media-open]')
+    assert [control.get_text() for control in controls] == ['Detail <label>', 'Series *label*']
+    assert controls[0].parent['data-docs-media-id'] == '00523-015'
+    assert controls[0].parent['data-docs-media-work-id'] == '00523'
+    assert controls[1].parent['data-docs-media-kind'] == 'catalogue-series'
+    assert controls[1].parent['data-docs-media-id'] == '143'
+    usage = json.loads((root / 'docs-viewer/scopes/studio/generated/documents/semantic-tokens/index.json').read_text())
+    assert [(row['target_type'], row['target_id'], row['detail_id'], row['href']) for row in usage['occurrences']] == [
+        ('work', '00523', '015', ''), ('series', '143', '', ''),
+    ]
+    meta = DocMeta('analysis', DOC_ID, 'Example', '/docs/', 'working', 'works')
+    issues = semantic_token_broken_entries(root, [(meta, body + ' [[catalogue:media:series:144|Missing]]')])
+    assert [(row['reason'], row['target_id'], row['detail_id']) for row in issues] == [
+        ('missing_detail_image', '00523', '015'), ('missing_series', '144', ''),
+    ], 'An empty Series is available independently of any Work primary'
+
+
+def test_search_rejects_mismatched_series_identities(catalogue):
+    root, generated, _ = catalogue
+    write_json(generated / 'series/series_index.json', {'series': {'143': {'series_id': '144', 'title': 'Wrong'}}})
+    with pytest.raises(ValueError, match='identity'):
+        read_catalogue_media_targets(root)

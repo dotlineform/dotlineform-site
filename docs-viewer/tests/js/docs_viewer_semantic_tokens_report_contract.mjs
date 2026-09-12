@@ -8,7 +8,7 @@ const docId = "d-20260912-120000-000001";
 const hostId = "d-20260912-120000-000002";
 const raw = "[[catalogue:image:work:00008|alt=Detail&detail_id=003]]";
 const occurrence = collection => ({
-  family: "catalogue", target_type: "work", target_id: "00008", title: "Detail", raw,
+  family: "catalogue", target_type: "work", target_id: "00008", detail_id: "003", title: "Detail", raw,
   source_scope: "analysis", source_sub_scope: collection, source_doc_id: docId
 });
 const source = (collection, title) => ({
@@ -27,6 +27,7 @@ assert.equal(rows[1].sourceHref, payload.source_documents[1].href);
 assert.equal(rows[0].sourceHref, payload.source_documents[0].href);
 assert.equal(rows[1].sourceSubScope, "works");
 assert.equal(rows[1].targetId, "00008");
+assert.equal(rows[1].detailId, "003");
 assert.equal(rows[1].raw, raw);
 assert.deepEqual(payload, before);
 assert.throws(() => readSemanticTokenRows({ ...payload, source_documents: [payload.source_documents[0]] }), /unavailable/);

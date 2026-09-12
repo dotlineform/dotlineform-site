@@ -4,11 +4,9 @@ import html
 import re
 from uuid import uuid4
 from dataclasses import dataclass
-from pathlib import Path
 from typing import Any, Callable, Iterable
-from urllib.parse import quote, unquote_to_bytes, urlsplit
+from urllib.parse import quote, unquote_to_bytes
 
-from .common import read_json
 from .semantic_token_registry import SemanticTokenRegistry
 from .source import DocRecord
 from docs_staged_media_fragments import (
@@ -21,10 +19,6 @@ from docs_staged_media_fragments import (
 LEXICAL_KEY_PATTERN = re.compile(r"[a-z][a-z0-9-]*")
 LEXICAL_ID_PATTERN = re.compile(r"[A-Za-z0-9][A-Za-z0-9._-]*")
 FENCE_PATTERN = re.compile(r"\A {0,3}(`{3,}|~{3,})")
-SEMANTIC_TOKEN_TARGET_LOOKUP_SCHEMA_VERSION = "docs_semantic_token_target_lookup_v2"
-SEMANTIC_TOKEN_TARGET_LOOKUP_PATH = Path(
-    "docs-viewer/data/generated/semantic-tokens/target-lookup.json"
-)
 
 
 
@@ -122,8 +116,8 @@ def serialize_catalogue_image_token(
     detail_id: Any = "",
 ) -> str:
     if (
-        not LEXICAL_KEY_PATTERN.fullmatch(str(target_type or ""))
-        or not LEXICAL_ID_PATTERN.fullmatch(str(target_id or ""))
+        target_type != "work"
+        or not re.fullmatch(r"[0-9]{5}", str(target_id or ""))
     ):
         return ""
     alt_text = normalize_plain_text(alt, required=True)
@@ -247,13 +241,22 @@ def parse_semantic_token(
         and len(parts) == 4
         and parts[1] == "image"
     )
-    is_media = family == "catalogue" and len(parts) == 4 and parts[1] == "media"
+    is_media = family == "catalogue" and len(parts) in {4, 5} and parts[1] == "media"
     if not separator or (not is_image and not is_media):
         return None
-    target_type = parts[-2]
-    target_id = parts[-1]
-    if is_media and (target_type != "work" or not re.fullmatch(r"[0-9]{5}", target_id)):
+    target_type = parts[2]
+    target_id = parts[3]
+    media_detail_id = parts[4] if len(parts) == 5 else ""
+    if is_image and (target_type != "work" or not re.fullmatch(r"[0-9]{5}", target_id)):
         return None
+    if is_media:
+        if target_type == "work":
+            if not re.fullmatch(r"[0-9]{5}", target_id):
+                return None
+        elif target_type != "series" or not re.fullmatch(r"[0-9]{3}", target_id) or len(parts) == 5:
+            return None
+        if len(parts) == 5 and (not media_detail_id or normalize_catalogue_detail_id(media_detail_id) != media_detail_id):
+            return None
     if (
         not LEXICAL_KEY_PATTERN.fullmatch(family)
         or not LEXICAL_KEY_PATTERN.fullmatch(target_type)
@@ -292,7 +295,7 @@ def parse_semantic_token(
         summary=image_fields["summary"] if image_fields else "",
         placement=image_fields["placement"] if image_fields else "",
         fill_width=image_fields["fill_width"] if image_fields else None,
-        detail_id=image_fields["detail_id"] if image_fields else "",
+        detail_id=image_fields["detail_id"] if image_fields else media_detail_id,
     )
 
 
@@ -472,54 +475,9 @@ def replace_catalogue_tokens(
     return "".join(output)
 
 
-def render_catalogue_token(token: SemanticTokenOccurrence, target: dict[str, Any]) -> str:
-    href = str(target.get("href") or "").strip()
-    if not href:
-        return token.raw
-    attrs = (
-        f'data-semantic-token-family="{html.escape(token.family, quote=True)}" '
-        f'data-semantic-token-target-type="{html.escape(token.target_type, quote=True)}" '
-        f'data-semantic-token-target-id="{html.escape(token.target_id, quote=True)}" '
-        'target="_blank" rel="noopener noreferrer"'
-    )
-    image = target.get("image") if isinstance(target.get("image"), dict) else {}
-    src = browser_safe_image_src(image.get("src"))
-    if not src:
-        return token.raw
-    link_attrs = f'href="{html.escape(href, quote=True)}" {attrs}'
-    image_html = (
-        f'<img src="{html.escape(src, quote=True)}" '
-        f'alt="{html.escape(token.alt, quote=True)}">'
-    )
-    if not token.caption:
-        return (
-            f'<a class="docsViewerCatalogueImageLink" {link_attrs}>'
-            f"{image_html}</a>"
-        )
-    modifiers = [FIGURE_PLACEMENT_CLASSES[token.placement]]
-    if not token.fill_width:
-        modifiers.append(FIGURE_NATURAL_WIDTH_CLASS)
-    summary_html = (
-        f'\n    <span class="docsViewerFigure__summary">'
-        f'{html.escape(token.summary, quote=False)}</span>'
-        if token.summary
-        else ""
-    )
-    return (
-        f'<figure class="docsViewerFigure {" ".join(modifiers)}">\n'
-        f'  <a class="docsViewerFigure__imageLink" {link_attrs}>{image_html}</a>\n'
-        "  <figcaption>\n"
-        f'    <span class="docsViewerFigure__caption">'
-        f'{html.escape(token.caption, quote=False)}</span>'
-        f"{summary_html}\n"
-        "  </figcaption>\n"
-        "</figure>"
-    )
-
-
 def render_catalogue_media_reference(token: SemanticTokenOccurrence) -> str:
     """Retain only authored text and exact Catalogue identity for runtime resolution."""
-    kind = "catalogue-work-detail" if token.detail_id else "catalogue-work"
+    kind = "catalogue-work-detail" if token.detail_id else f"catalogue-{token.target_type}"
     identity = f"{token.target_id}-{token.detail_id}" if token.detail_id else token.target_id
     attrs = (
         f'data-docs-content-detail="media" data-docs-media-kind="{kind}" '
@@ -552,81 +510,6 @@ def render_catalogue_media_reference(token: SemanticTokenOccurrence) -> str:
     )
 
 
-def browser_safe_image_src(value: Any) -> str:
-    src = str(value or "").strip()
-    if not src:
-        return ""
-    if src.startswith("/") and not src.startswith("//"):
-        return src
-    parsed = urlsplit(src)
-    if (
-        parsed.scheme == "https"
-        and parsed.netloc
-        and parsed.username is None
-        and parsed.password is None
-    ):
-        return src
-    return ""
-
-
-def load_semantic_token_target_records(
-    repo_root: Path,
-) -> dict[tuple[str, str, str], dict[str, Any]]:
-    payload = read_json(repo_root / SEMANTIC_TOKEN_TARGET_LOOKUP_PATH)
-    if (
-        not isinstance(payload, dict)
-        or payload.get("schema_version") != SEMANTIC_TOKEN_TARGET_LOOKUP_SCHEMA_VERSION
-        or not isinstance(payload.get("targets"), list)
-    ):
-        return {}
-    targets: dict[tuple[str, str, str], dict[str, Any]] = {}
-    for raw_target in payload["targets"]:
-        if not isinstance(raw_target, dict):
-            continue
-        family = str(raw_target.get("family") or "").strip()
-        target_type = str(raw_target.get("target_type") or "").strip()
-        target_id = str(raw_target.get("target_id") or "").strip()
-        title = str(raw_target.get("title") or "").strip()
-        href = str(raw_target.get("href") or "").strip()
-        if not family or not target_type or not target_id or not title:
-            continue
-        target = {
-            "family": family,
-            "target_type": target_type,
-            "target_id": target_id,
-            "title": title,
-            "href": href,
-            "meta": [
-                str(value).strip()
-                for value in raw_target.get("meta", [])
-                if str(value).strip()
-            ]
-            if isinstance(raw_target.get("meta"), list)
-            else [],
-        }
-        raw_image = raw_target.get("image")
-        image_src = (
-            browser_safe_image_src(raw_image.get("src"))
-            if isinstance(raw_image, dict)
-            else ""
-        )
-        if image_src:
-            target["image"] = {"src": image_src}
-        if raw_target.get("has_details") is True:
-            target["has_details"] = True
-        targets[(family, target_type, target_id)] = target
-    return targets
-
-
-def load_semantic_token_targets(repo_root: Path) -> dict[tuple[str, str, str], dict[str, Any]]:
-    targets = {
-        key: target
-        for key, target in load_semantic_token_target_records(repo_root).items()
-        if str(target.get("href") or "").startswith("/")
-    }
-    return targets
-
-
 class SemanticTokensMixin:
     def restore_catalogue_media_html(self, content_html: str) -> str:
         """Restore built fragments after Markdown so authored labels stay literal."""
@@ -647,44 +530,22 @@ class SemanticTokensMixin:
         def replace(token: SemanticTokenOccurrence) -> str:
             if not token.supported:
                 return token.raw
-            if token.presentation == "media" or (token.presentation == "image" and token.target_type == "work"):
-                occurrences.append({
-                    "source_scope": self.scope_id, "source_doc_id": doc.doc_id,
-                    "source_range": token.source_range, "raw": token.raw, "title": token.title,
-                    "family": token.family, "target_type": token.target_type, "target_id": token.target_id,
-                    "href": "",
-                })
-                fragment = render_catalogue_media_reference(token)
-                marker_id = uuid4().hex
-                # Comments start HTML blocks at line beginnings; inline references must not.
-                marker = (
-                    f"<!--catalogue-media-{marker_id}-->"
-                    if token.presentation == "image" and token.caption
-                    else f'<span data-catalogue-media-fragment="{marker_id}"></span>'
-                )
-                self._catalogue_media_html[marker] = fragment
-                return marker
-            target = self.semantic_token_targets_by_key.get(
-                (token.family, token.target_type, token.target_id)
+            occurrences.append({
+                "source_scope": self.scope_id, "source_doc_id": doc.doc_id,
+                "source_range": token.source_range, "raw": token.raw, "title": token.title,
+                "family": token.family, "target_type": token.target_type, "target_id": token.target_id,
+                "detail_id": token.detail_id, "href": "",
+            })
+            fragment = render_catalogue_media_reference(token)
+            marker_id = uuid4().hex
+            # Comments start HTML blocks at line beginnings; inline references must not.
+            marker = (
+                f"<!--catalogue-media-{marker_id}-->"
+                if token.presentation == "image" and token.caption
+                else f'<span data-catalogue-media-fragment="{marker_id}"></span>'
             )
-            if target is None:
-                return token.raw
-            if not target.get("image"):
-                return token.raw
-            occurrences.append(
-                {
-                    "source_scope": self.scope_id,
-                    "source_doc_id": doc.doc_id,
-                    "source_range": token.source_range,
-                    "raw": token.raw,
-                    "title": token.title,
-                    "family": token.family,
-                    "target_type": token.target_type,
-                    "target_id": token.target_id,
-                    "href": target["href"],
-                }
-            )
-            return render_catalogue_token(token, target)
+            self._catalogue_media_html[marker] = fragment
+            return marker
 
         rendered = replace_semantic_tokens(
             markdown,

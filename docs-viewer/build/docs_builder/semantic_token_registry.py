@@ -10,7 +10,7 @@ from typing import Any
 SEMANTIC_TOKEN_REGISTRY_SCHEMA_VERSION = "docs_semantic_token_registry_v1"
 SEMANTIC_TOKEN_FAMILY_SCHEMA_VERSION = "docs_semantic_token_family_definition_v1"
 SEMANTIC_TOKEN_REGISTRY_PATH = Path("docs-viewer/config/semantic-tokens/registry.json")
-SUPPORTED_NORMALIZERS = {"digits_left_pad", "series_id_or_slug", "slug"}
+SUPPORTED_NORMALIZERS = {"digits_left_pad", "slug"}
 
 
 @dataclass(frozen=True)
@@ -182,7 +182,7 @@ def normalize_semantic_token_id(value: str, policy: SemanticTokenIdPolicy) -> st
         return None
     if policy.normalizer == "digits_left_pad":
         normalized = text.rjust(policy.width or 0, "0")
-    elif policy.normalizer in {"series_id_or_slug", "slug"}:
+    elif policy.normalizer == "slug":
         normalized = text.lower()
     else:
         return None

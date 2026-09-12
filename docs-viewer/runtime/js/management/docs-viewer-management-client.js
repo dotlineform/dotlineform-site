@@ -79,6 +79,12 @@ export function readCatalogueWork(workId, options) {
     Object.assign({}, options, { cache: "no-store" }));
 }
 
+/** Read current Series membership without resolving any member Work records. */
+export function readCatalogueSeries(seriesId, options) {
+  return fetchManagementJson("/docs/catalogue-series?series_id=" + encodeURIComponent(seriesId), "GET", undefined,
+    Object.assign({}, options, { cache: "no-store" }));
+}
+
 export function readManagedDocsIndex(scope, options) {
   var scopeId = String(scope || "").trim().toLowerCase();
   if (!scopeId) return Promise.reject(new Error("Docs scope is required."));

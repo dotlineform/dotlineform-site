@@ -33,6 +33,19 @@ function normalizedTextField(value, fieldName) {
   return normalized;
 }
 
+function normalizedMetadata(value) {
+  if (!Array.isArray(value)) throw new Error("Media View requires ordered metadata.");
+  return Object.freeze(value.map(function (entry) {
+    if (!entry || typeof entry !== "object" || Array.isArray(entry)) {
+      throw new Error("Media View metadata entries must be objects.");
+    }
+    return Object.freeze({
+      label: normalizedTextField(entry.label, "a metadata label"),
+      value: normalizedTextField(entry.value, "a metadata value")
+    });
+  }));
+}
+
 /** Validate and freeze one complete browser-ready Media View presentation. */
 function normalizeWorkPresentation(value) {
   if (!value || typeof value !== "object" || Array.isArray(value)) {
@@ -66,18 +79,7 @@ function normalizeWorkPresentation(value) {
   if (!imageSrc) throw new Error("Media View image target is unsupported.");
   if (!imageWidth || !imageHeight) throw new Error("Media View image dimensions must be positive integers.");
 
-  if (!Array.isArray(value.metadata)) {
-    throw new Error("Media View requires ordered metadata.");
-  }
-  var metadata = value.metadata.map(function (entry) {
-    if (!entry || typeof entry !== "object" || Array.isArray(entry)) {
-      throw new Error("Media View metadata entries must be objects.");
-    }
-    return Object.freeze({
-      label: normalizedTextField(entry.label, "a metadata label"),
-      value: normalizedTextField(entry.value, "a metadata value")
-    });
-  });
+  var metadata = normalizedMetadata(value.metadata);
 
   var newTabTarget = docsViewerSafeMediaTarget(value.new_tab_target);
   if (!newTabTarget) throw new Error("Media View new-tab target is unsupported.");
@@ -92,7 +94,7 @@ function normalizeWorkPresentation(value) {
       widthPx: imageWidth,
       heightPx: imageHeight
     }),
-    metadata: Object.freeze(metadata),
+    metadata: metadata,
     newTabTarget: newTabTarget
   });
 }
@@ -126,35 +128,42 @@ export function docsViewerMediaPresentationForTarget(supplied, target) {
   if (!supplied.gallery) return matches(supplied.target) ? supplied : null;
   if (matches(supplied.gallery.target)) return supplied.gallery;
   var member = supplied.gallery.members.find(function (entry) {
-    return matches(entry.work.target);
+    return matches(entry.target);
   });
   return member ? member.work : null;
 }
 
 /**
- * Validate either a single Work or an embedded gallery proof with an explicit entry target.
- * Both remain immutable; the gallery's member order and complete Work records own navigation.
- * This fixture contract does not prescribe production loading or token syntax.
+ * Freeze a Work or an ordered gallery. Gallery members explicitly supply either a complete
+ * Work presentation (existing supplied callers) or an exact reference for on-demand loading.
  */
 export function normalizeDocsViewerMediaPresentation(value) {
   if (!value || value.schema_version !== "docs_media_gallery_v1") {
     return normalizeWorkPresentation(value);
   }
   var source = value.gallery;
-  if (!source || !Array.isArray(source.members) || !source.members.length) {
+  if (!source || !Array.isArray(source.members)) {
     throw new Error("Media View requires a gallery with supplied members.");
   }
   var ids = new Set();
   var members = source.members.map(function (entry) {
-    var work = normalizeWorkPresentation(entry && entry.work);
-    if (work.target.kind !== "catalogue-work") throw new Error("Media View gallery members must be Works.");
-    if (ids.has(work.target.id)) throw new Error("Media View gallery has a duplicate Work target.");
-    ids.add(work.target.id);
-    return Object.freeze({ work: work, thumbnail: normalizeThumbnail(entry.thumbnail) });
+    if (!entry || typeof entry !== "object") throw new Error("Media View requires a gallery member.");
+    var work = Object.prototype.hasOwnProperty.call(entry, "work") ? normalizeWorkPresentation(entry.work) : null;
+    if (work && (entry.target || entry.label)) throw new Error("Media View member must supply one Work identity.");
+    var target = work ? work.target : entry.target;
+    if (!target || target.kind !== "catalogue-work" || typeof target.id !== "string" || !/^\d{5}$/.test(target.id)) {
+      throw new Error("Media View gallery members require an exact Catalogue Work target.");
+    }
+    if (ids.has(target.id)) throw new Error("Media View gallery has a duplicate Work target.");
+    ids.add(target.id);
+    return Object.freeze({ target: Object.freeze({ kind: target.kind, id: target.id }),
+      label: work ? work.label : normalizedTextField(entry.label, "a Work label"),
+      work: work, thumbnail: normalizeThumbnail(entry.thumbnail) });
   });
   var gallery = Object.freeze({
     target: normalizedSeriesTarget(source.target),
     label: normalizedTextField(source.label, "a gallery label"),
+    metadata: normalizedMetadata(source.metadata === undefined ? [] : source.metadata),
     members: Object.freeze(members),
     newTabTarget: ""
   });

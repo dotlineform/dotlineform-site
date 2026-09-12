@@ -41,12 +41,11 @@ if str(BUILD_DIR) not in sys.path:
 
 from docs_builder.semantic_token_registry import load_semantic_token_registry  # noqa: E402
 from docs_builder.semantic_tokens import (  # noqa: E402
-    load_semantic_token_target_records,
     parse_semantic_tokens,
 )
 from docs_source_model import load_document_collection_docs_for_config  # noqa: E402
 # The scope and builder imports above initialize repository and shared Python paths.
-from docs_catalogue_media import catalogue_media_record, read_catalogue_work  # noqa: E402
+from docs_catalogue_media import catalogue_media_record, read_catalogue_series, read_catalogue_work  # noqa: E402
 
 
 @dataclass(frozen=True)
@@ -155,29 +154,22 @@ def semantic_token_broken_entries(
     registry = load_semantic_token_registry(repo_root)
     if registry is None:
         raise ValueError("Semantic-token registry is unavailable.")
-    targets_by_key = load_semantic_token_target_records(repo_root)
     entries: list[dict[str, Any]] = []
     for meta, body in sources:
         for token in parse_semantic_tokens(body, registry=registry):
-            target = targets_by_key.get((token.family, token.target_type, token.target_id))
             reason = ""
             if not token.supported:
                 reason = "unsupported_kind"
-            elif token.presentation == "media" or (token.presentation == "image" and token.target_type == "work"):
+            else:
                 try:
-                    catalogue_media_record(read_catalogue_work(repo_root, token.target_id), token.target_id, token.detail_id)
+                    if token.target_type == "series":
+                        read_catalogue_series(repo_root, token.target_id)
+                    else:
+                        catalogue_media_record(read_catalogue_work(repo_root, token.target_id), token.target_id, token.detail_id)
                 except ValueError:
-                    reason = "missing_detail_image" if token.detail_id else "missing_media"
-            elif target is None:
-                reason = "missing_target"
-            elif not str(target.get("href") or "").strip().startswith("/"):
-                reason = "missing_destination"
-            elif not target.get("image"):
-                reason = "missing_image"
+                    reason = "missing_series" if token.target_type == "series" else "missing_detail_image" if token.detail_id else "missing_media"
             if not reason:
                 continue
-            current_media = token.presentation == "media" or (token.presentation == "image" and token.target_type == "work")
-            link_url = "" if current_media else str((target or {}).get("href") or "").strip()
             entries.append(
                 {
                     "issue_type": "semantic_token",
@@ -188,9 +180,10 @@ def semantic_token_broken_entries(
                     "family": token.family,
                     "target_type": token.target_type,
                     "target_id": token.target_id,
+                    "detail_id": token.detail_id,
                     "reason": reason,
                     "link_text": token.title,
-                    "link_url": link_url,
+                    "link_url": "",
                     **meta.source_fields(),
                 }
             )

@@ -26,6 +26,58 @@ function workRecord(payload, workId) {
   return work;
 }
 
+/** Series identity never depends on a document, thumbnail or selected member. */
+export function catalogueSeriesTarget(seriesId) {
+  if (typeof seriesId !== "string" || !/^\d{3}$/.test(seriesId)) {
+    throw new Error("An exact Catalogue Series ID is required.");
+  }
+  return Object.freeze({ kind: "catalogue-series", id: seriesId });
+}
+
+function seriesRecord(payload, seriesId) {
+  catalogueSeriesTarget(seriesId);
+  var series = payload && payload.series;
+  if (!series || series.series_id !== seriesId) throw new Error("Catalogue data does not match the selected Series.");
+  if (typeof series.title !== "string" || !series.title.trim()) throw new Error("Catalogue Series title is unavailable.");
+  if (!Array.isArray(payload.member_works)) throw new Error("Catalogue Series membership is unavailable.");
+  return series;
+}
+
+/** Resolve the established generated Work thumbnail convention from explicit route policy. */
+export function catalogueWorkThumbnail(workId, title, settings) {
+  catalogueMediaTarget(workId);
+  var base = settings && settings.base_url;
+  if (typeof base !== "string" || !docsViewerSafeMediaTarget(base) || !base.endsWith("/")
+    || /[?#\s]/.test(base) || !Number.isInteger(settings.size) || settings.size <= 0
+    || typeof settings.suffix !== "string" || !/^[a-z0-9-]+$/.test(settings.suffix)
+    || typeof settings.format !== "string" || !/^(?:webp|avif|png|jpg)$/.test(settings.format)) {
+    throw new Error("Catalogue thumbnail configuration is unavailable or unsafe.");
+  }
+  return { src: base + workId + "-" + settings.suffix + "-" + settings.size + "." + settings.format,
+    alt: title, width_px: settings.size, height_px: settings.size };
+}
+
+/** Project ordered references only; complete Work records are obtained when selected. */
+export function catalogueSeriesMediaPresentation(payload, seriesId, thumbnailSettings) {
+  var series = seriesRecord(payload, seriesId);
+  var target = catalogueSeriesTarget(seriesId);
+  var presentation = {
+    schema_version: "docs_media_gallery_v1", target: target,
+    gallery: { target: target, label: series.title,
+      metadata: typeof series.year_display === "string" && series.year_display.trim()
+        ? [{ label: "Year", value: series.year_display.trim() }] : [],
+      members: payload.member_works.map(function (member) {
+        if (!member || typeof member.title !== "string" || !member.title.trim()) {
+          throw new Error("Catalogue Series member title is unavailable.");
+        }
+        return { target: catalogueMediaTarget(member.work_id), label: member.title,
+          thumbnail: catalogueWorkThumbnail(member.work_id, member.title, thumbnailSettings) };
+      }) }
+  };
+  normalizeDocsViewerMediaPresentation(presentation);
+  return presentation;
+}
+
 /** Preserve supplied Detail order and identity; never infer another record or primary image. */
 export function catalogueWorkDetails(payload, workId) {
   workRecord(payload, workId);
@@ -89,13 +141,28 @@ export function catalogueWorkMediaPresentation(payload, workId, detailId = "") {
 /** Revalidate public consumer JSON on every activation; retain no document-lifetime cache. */
 export async function readPublicCatalogueWork(baseUrl, workId, fetchImpl) {
   if (typeof workId !== "string" || !/^\d{5}$/.test(workId)) throw new Error("An exact Catalogue Work ID is required.");
-  if (typeof baseUrl !== "string" || !baseUrl.startsWith("/") || baseUrl.startsWith("//")
-    || !baseUrl.endsWith("/") || /[?#\\\s]/.test(baseUrl)) {
-    throw new Error("Public Catalogue data is not configured.");
-  }
+  validatePublicRecordBase(baseUrl);
   var response = await fetchImpl(baseUrl + workId + ".json", { cache: "no-cache", headers: { Accept: "application/json" } });
   if (!response.ok) throw new Error("Catalogue Work " + workId + " is unavailable (HTTP " + response.status + ").");
   var payload = await response.json();
   workRecord(payload, workId);
+  return payload;
+}
+
+function validatePublicRecordBase(baseUrl) {
+  if (typeof baseUrl !== "string" || !baseUrl.startsWith("/") || baseUrl.startsWith("//")
+    || !baseUrl.endsWith("/") || /[?#\\\s]/.test(baseUrl)) {
+    throw new Error("Public Catalogue data is not configured.");
+  }
+}
+
+/** Read the deployed Series record only, using the same freshness policy as Work reads. */
+export async function readPublicCatalogueSeries(baseUrl, seriesId, fetchImpl) {
+  catalogueSeriesTarget(seriesId);
+  validatePublicRecordBase(baseUrl);
+  var response = await fetchImpl(baseUrl + seriesId + ".json", { cache: "no-cache", headers: { Accept: "application/json" } });
+  if (!response.ok) throw new Error("Catalogue Series " + seriesId + " is unavailable (HTTP " + response.status + ").");
+  var payload = await response.json();
+  seriesRecord(payload, seriesId);
   return payload;
 }

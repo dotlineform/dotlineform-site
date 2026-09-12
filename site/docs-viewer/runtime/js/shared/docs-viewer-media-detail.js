@@ -3,7 +3,12 @@ import {
   normalizeDocsViewerMediaPresentation
 } from "./docs-viewer-media-presentation.js";
 import { CONTENT_DETAIL_LABEL_CONTROL_ID } from "./docs-viewer-content-detail-view.js";
-import { catalogueMediaTargetWorkId, catalogueWorkMediaPresentation } from "./docs-viewer-catalogue-media.js";
+import { catalogueMediaTargetWorkId, catalogueWorkMediaPresentation, catalogueSeriesTarget } from "./docs-viewer-catalogue-media.js";
+import {
+  DOCS_VIEWER_MEDIA_GALLERY_LAYOUT,
+  docsViewerMediaGalleryPage,
+  docsViewerMediaGalleryPosition
+} from "./docs-viewer-media-gallery.js";
 
 const MEDIA_DETAIL_SELECTOR = '[data-docs-content-detail="media"]';
 const MEDIA_OPEN_SELECTOR = "[data-docs-media-open]";
@@ -75,8 +80,12 @@ function mountCatalogueReferences(context) {
       ? { workId: marker.getAttribute("data-docs-media-work-id") } : {}) };
     var control = marker.querySelector(MEDIA_OPEN_SELECTOR);
     if (!control || control.tagName !== "BUTTON" || control.getAttribute("type") !== "button") return;
-    try { catalogueMediaTargetWorkId(target); } catch (_error) { return; }
+    try {
+      if (kind === "catalogue-series") catalogueSeriesTarget(id);
+      else catalogueMediaTargetWorkId(target);
+    } catch (_error) { return; }
     var inlineImage = control.querySelector("[data-docs-media-image]");
+    if (kind === "catalogue-series" && inlineImage) return;
     var placeholder = control.querySelector("[data-docs-media-placeholder]");
     var status = marker.ownerDocument.createElement("span");
     status.setAttribute("role", "status");
@@ -374,15 +383,8 @@ export function createDocsViewerMediaDetailAdapter() {
       && (!context.isCurrentDocument || context.isCurrentDocument()) ? state : null;
   }
 
-  /** Share simultaneous Work reads only; inline mounting and later activation both read current data. */
-  async function loadTarget(context) {
-    context = Object.assign({}, context, {
-      documentTarget: Object.freeze(Object.assign({}, context.documentTarget)),
-      mediaTarget: Object.freeze(Object.assign({}, context.mediaTarget))
-    });
-    var state = currentTargetState(context);
-    if (!state) return null;
-    var workId = catalogueMediaTargetWorkId(context.mediaTarget);
+  /** Retain only in-flight reads under the existing provider lifecycle. */
+  function readWork(state, workId) {
     if (!state.workReads.has(workId)) {
       var provider = state.collectionProvider;
       if (!provider || typeof provider.readCatalogueWork !== "function") throw new Error("Catalogue media is unavailable in this view.");
@@ -390,7 +392,31 @@ export function createDocsViewerMediaDetailAdapter() {
         .finally(function () { state.workReads.delete(workId); });
       state.workReads.set(workId, read);
     }
-    var payload = await state.workReads.get(workId);
+    return state.workReads.get(workId);
+  }
+
+  /** Resolve one exact Work/Detail or a lightweight Series; gallery entry reads no Works. */
+  async function loadTarget(context) {
+    context = Object.assign({}, context, {
+      documentTarget: Object.freeze(Object.assign({}, context.documentTarget)),
+      mediaTarget: Object.freeze(Object.assign({}, context.mediaTarget))
+    });
+    var state = currentTargetState(context);
+    if (!state) return null;
+    if (context.mediaTarget.kind === "catalogue-series") {
+      catalogueSeriesTarget(context.mediaTarget.id);
+      var provider = state.collectionProvider;
+      if (!provider || typeof provider.readCatalogueSeriesPresentation !== "function") {
+        throw new Error("Catalogue Series data is unavailable in this view.");
+      }
+      var series = await provider.readCatalogueSeriesPresentation(context.mediaTarget.id);
+      if (currentTargetState(context) !== state) return null;
+      var normalized = normalizeDocsViewerMediaPresentation(series);
+      if (!sameMediaTarget(normalized.target, context.mediaTarget)) throw new Error("Catalogue Series identity is mismatched.");
+      return series;
+    }
+    var workId = catalogueMediaTargetWorkId(context.mediaTarget);
+    var payload = await readWork(state, workId);
     if (currentTargetState(context) !== state) return null;
     return catalogueWorkMediaPresentation(payload, workId,
       context.mediaTarget.kind === "catalogue-work-detail" ? context.mediaTarget.id.slice(6) : "");
@@ -414,7 +440,7 @@ export function createDocsViewerMediaDetailAdapter() {
       if (!presentation) return false;
       if (typeof context.onPresentation === "function") context.onPresentation(presentation);
       if (!openPresentation(Object.assign({}, context, { presentation: presentation }))) {
-        throw new Error("Media View could not open this Work.");
+        throw new Error("Media View could not open this Catalogue target.");
       }
       return true;
     } catch (error) {
@@ -436,6 +462,9 @@ export function createDocsViewerMediaDetailAdapter() {
     var section = documentRef.createElement("section");
     section.className = "docsViewer__contentDetail docsViewer__contentDetail--media";
     section.setAttribute("data-docs-content-detail-view", "media");
+    var layout = DOCS_VIEWER_MEDIA_GALLERY_LAYOUT;
+    section.style.setProperty("--docs-media-gallery-size", layout.thumbnailSize + "px");
+    section.style.setProperty("--docs-media-gallery-gap", layout.gap + "px");
 
     var viewport = documentRef.createElement("div");
     viewport.className = "docsViewer__mediaDetailViewport";
@@ -446,6 +475,31 @@ export function createDocsViewerMediaDetailAdapter() {
     var released = false;
     var controls = null;
     var current = null;
+    var selectionRequest = 0;
+    var galleryPage = 0;
+    var failedImage = null;
+    var feedback = documentRef.createElement("p");
+    feedback.setAttribute("role", "status");
+    feedback.hidden = true;
+    section.appendChild(feedback);
+
+    function message(text, retry) {
+      failedImage = null;
+      feedback.replaceChildren();
+      feedback.textContent = text;
+      feedback.hidden = !text;
+      if (retry) {
+        var button = documentRef.createElement("button");
+        button.type = "button";
+        button.textContent = "Retry";
+        button.addEventListener("click", function () { if (isCurrent() && feedback.contains(button)) retry(); });
+        feedback.appendChild(button);
+      }
+    }
+
+    function isCurrent() {
+      return !released && Boolean(resolveRecord(root, context.targetContext));
+    }
 
     function imageElement(data, className) {
       var image = documentRef.createElement("img");
@@ -454,6 +508,16 @@ export function createDocsViewerMediaDetailAdapter() {
       image.alt = data.alt;
       image.width = data.widthPx;
       image.height = data.heightPx;
+      image.addEventListener("error", function () {
+        if (!isCurrent() || !viewport.contains(image)) return;
+        message("Image unavailable. ", function () {
+          if (viewport.contains(image)) image.src = data.src;
+        });
+        failedImage = image;
+      });
+      image.addEventListener("load", function () {
+        if (isCurrent() && failedImage === image && viewport.contains(image)) message("");
+      });
       return image;
     }
 
@@ -471,10 +535,36 @@ export function createDocsViewerMediaDetailAdapter() {
       button.setAttribute("aria-label", label);
       button.addEventListener("click", function () {
         if (released || !viewport.contains(button)) return;
-        renderTarget(target);
-        viewport.focus({ preventScroll: true });
+        selectTarget(target);
       });
       return button;
+    }
+
+    function navigationControls(label, index, total, previous, next) {
+      var navigation = documentRef.createElement("nav");
+      navigation.className = "docsViewer__mediaDetailPagination";
+      navigation.setAttribute("aria-label", label + " " + index + " of " + total);
+      var position = documentRef.createElement("p");
+      position.className = "docsViewer__mediaDetailPosition";
+      position.textContent = index + "/" + total;
+      navigation.appendChild(position);
+      var buttons = documentRef.createElement("div");
+      buttons.className = "docsViewer__mediaDetailNavigationButtons";
+      [["Previous", previous], ["Next", next]].forEach(function (entry) {
+        var button = documentRef.createElement("button");
+        button.type = "button";
+        button.className = "docsViewer__actionButton docsViewer__mediaDetail" + entry[0];
+        button.textContent = entry[0] === "Previous" ? "←" : "→";
+        button.setAttribute("aria-label", entry[0] + " " + label);
+        button.disabled = !entry[1];
+        button.addEventListener("click", function () {
+          if (button.disabled || !isCurrent() || !viewport.contains(button)) return;
+          entry[1]();
+        });
+        buttons.appendChild(button);
+      });
+      navigation.appendChild(buttons);
+      return navigation;
     }
 
     function renderWork(work) {
@@ -501,33 +591,58 @@ export function createDocsViewerMediaDetailAdapter() {
         row.appendChild(term);
         row.appendChild(description);
         metadata.appendChild(row);
+        var position = docsViewerMediaGalleryPosition(supplied.gallery, work.target);
+        caption.appendChild(navigationControls("Work", position.index + 1, position.total,
+          position.previous ? function () { selectTarget(position.previous); } : null,
+          position.next ? function () { selectTarget(position.next); } : null));
       }
       figure.appendChild(caption);
       return figure;
     }
 
     function renderGallery(gallery) {
+      var page = docsViewerMediaGalleryPage(gallery, galleryPage);
       var container = documentRef.createElement("div");
-      container.appendChild(titleElement(gallery.label));
+      container.className = "docsViewer__mediaDetailFigure";
+      var canvas = documentRef.createElement("div");
+      canvas.className = "docsViewer__mediaDetailGalleryPane";
       var list = documentRef.createElement("ul");
       list.className = "docsViewer__mediaDetailGallery";
-      gallery.members.forEach(function (member) {
+      list.style.setProperty("--docs-media-gallery-page-columns", String(Math.min(layout.columns, page.members.length) || 1));
+      page.members.forEach(function (member) {
         var item = documentRef.createElement("li");
         var button = targetButton(
-          "Open " + member.work.label + " (" + member.work.target.id + ")",
+          "Open " + member.label + " (" + member.target.id + ")",
           "docsViewer__mediaDetailThumbnail",
-          member.work.target
+          member.target
         );
         var image = imageElement(member.thumbnail, "docsViewer__mediaDetailThumbnailImage");
         image.loading = "lazy";
         button.appendChild(image);
-        var label = documentRef.createElement("span");
-        label.textContent = member.work.label;
-        button.appendChild(label);
+        button.title = member.label + " (" + member.target.id + ")";
         item.appendChild(button);
         list.appendChild(item);
       });
-      container.appendChild(list);
+      canvas.appendChild(list);
+      if (!gallery.members.length) {
+        var empty = documentRef.createElement("p");
+        empty.textContent = "This Series has no Works.";
+        canvas.appendChild(empty);
+      }
+      container.appendChild(canvas);
+      var information = documentRef.createElement("div");
+      information.className = "docsViewer__mediaDetailCaption";
+      information.appendChild(titleElement(gallery.label));
+      appendMetadata(documentRef, information, gallery.metadata.concat([
+        { label: "Series", value: gallery.target.id }, { label: "Works", value: String(page.total) }
+      ]));
+      if (page.pageCount) {
+        var pagination = navigationControls("page", page.pageIndex + 1, page.pageCount,
+          page.pageCount > 1 ? function () { selectGalleryPage(page.pageIndex - 1); } : null,
+          page.pageCount > 1 ? function () { selectGalleryPage(page.pageIndex + 1); } : null);
+        information.appendChild(pagination);
+      }
+      container.appendChild(information);
       return container;
     }
 
@@ -540,18 +655,60 @@ export function createDocsViewerMediaDetailAdapter() {
       controls.projectNewTabTarget(current.newTabTarget);
     }
 
-    function renderTarget(target) {
-      current = docsViewerMediaPresentationForTarget(supplied, target);
-      if (!current) throw new Error("Media View target is not in the supplied presentation.");
+    function renderPresentation(next) {
+      if (supplied.gallery && next.target.kind === "catalogue-work") {
+        galleryPage = docsViewerMediaGalleryPosition(supplied.gallery, next.target).pageIndex;
+      }
+      current = next;
       viewport.replaceChildren(current.target.kind === "catalogue-series"
         ? renderGallery(current)
         : renderWork(current));
-      viewport.setAttribute("aria-label", current.label);
+      viewport.setAttribute("aria-label", current.label + (current.target.kind === "catalogue-series" && current.members.length
+        ? ", page " + (galleryPage + 1) : ""));
       section.setAttribute("data-docs-media-kind", current.target.kind);
       section.setAttribute("data-docs-media-id", current.target.id);
       presentation.label = current.label;
       presentation.newTabTarget = current.newTabTarget;
       projectControls();
+    }
+
+    function selectGalleryPage(pageIndex) {
+      if (!isCurrent() || current.target.kind !== "catalogue-series") return;
+      galleryPage = docsViewerMediaGalleryPage(supplied.gallery, pageIndex).pageIndex;
+      selectTarget(supplied.gallery.target);
+    }
+
+    async function selectTarget(target) {
+      if (!isCurrent()) return;
+      var request = ++selectionRequest;
+      message("");
+      section.removeAttribute("aria-busy");
+      var ready = docsViewerMediaPresentationForTarget(supplied, target);
+      if (ready) {
+        renderPresentation(ready);
+        viewport.focus({ preventScroll: true });
+        return;
+      }
+      var member = supplied.gallery && supplied.gallery.members.find(function (entry) {
+        return sameMediaTarget(entry.target, target);
+      });
+      if (!member) throw new Error("Media View target is not in the supplied gallery.");
+      section.setAttribute("aria-busy", "true");
+      message("Loading " + member.label + "…");
+      try {
+        var payload = await readWork(state, member.target.id);
+        if (!isCurrent() || request !== selectionRequest) return;
+        var work = normalizeDocsViewerMediaPresentation(catalogueWorkMediaPresentation(payload, member.target.id));
+        renderPresentation(work);
+        message("");
+        viewport.focus({ preventScroll: true });
+      } catch (error) {
+        if (isCurrent() && request === selectionRequest) {
+          message((error.message || "Catalogue Work is unavailable.") + " ", function () { selectTarget(target); });
+        }
+      } finally {
+        if (isCurrent() && request === selectionRequest) section.removeAttribute("aria-busy");
+      }
     }
 
     var presentation = {
@@ -568,6 +725,7 @@ export function createDocsViewerMediaDetailAdapter() {
       release: function () {
         if (released) return;
         released = true;
+        selectionRequest += 1;
         controls = null;
         viewport.replaceChildren();
         section.remove();
@@ -575,7 +733,9 @@ export function createDocsViewerMediaDetailAdapter() {
         if (record.dynamic) state.records.delete(record.id);
       }
     };
-    renderTarget(supplied.target);
+    var initial = docsViewerMediaPresentationForTarget(supplied, supplied.target);
+    if (!initial) throw new Error("Media View entry presentation is unavailable.");
+    renderPresentation(initial);
     state.presentations.add(presentation);
     return presentation;
   }

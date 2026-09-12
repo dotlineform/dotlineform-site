@@ -8,9 +8,8 @@ import {
 import {
   loadSemanticTokenRegistry
 } from "./semantic-token-registry.js";
-import { readCatalogueMediaPresentation } from "./catalogue-media-link.js";
+import { readCatalogueTokenPresentation } from "./catalogue-media-support.js";
 import {
-  loadSemanticTokenTargets,
   resolveSemanticTokenTargetHref
 } from "./semantic-token-targets.js";
 import {
@@ -107,11 +106,12 @@ function renderToken(context, state, active) {
   appendReadOnlyRow(list, "Family", "Catalogue");
   appendReadOnlyRow(list, "Target type", token.targetType);
   appendReadOnlyRow(list, "Target ID", token.targetId);
+  if (token.detailId) appendReadOnlyRow(list, "Detail UID", token.targetId + "-" + token.detailId);
   appendReadOnlyRow(list, "Catalogue title", target ? target.title : "Target not resolved");
   appendReadOnlyRow(
     list,
     "Destination",
-    occurrenceHref || "No resolved destination",
+    occurrenceHref || (token.targetType === "series" ? "Series gallery in Media View" : "No resolved destination"),
     destinationHref
   );
 
@@ -138,7 +138,7 @@ function renderToken(context, state, active) {
   occurrenceField.className = "docsViewer__field";
   var occurrenceLabel = document.createElement("span");
   occurrenceLabel.className = "docsViewer__fieldLabel";
-  occurrenceLabel.textContent = token.presentation === "image" ? "Alt text" : "Title";
+  occurrenceLabel.textContent = token.presentation === "image" ? "Alt text" : "Link text";
   var occurrenceInput = document.createElement("input");
   occurrenceInput.className = "docsViewer__fieldInput";
   occurrenceInput.type = "text";
@@ -215,6 +215,7 @@ function renderToken(context, state, active) {
         registry: state.registry,
         targetType: token.targetType,
         targetId: token.targetId,
+        detailId: token.detailId,
         title: value
       });
     }
@@ -222,7 +223,7 @@ function renderToken(context, state, active) {
       setStatus(
         token.presentation === "image"
           ? "Enter alt text and complete the enabled caption presentation."
-          : "Enter a single-line Title.",
+          : "Enter single-line link text.",
         true
       );
       occurrenceInput.focus();
@@ -233,9 +234,7 @@ function renderToken(context, state, active) {
     var disabled = controls.map(function (control) { return control.disabled; });
     controls.forEach(function (control) { control.disabled = true; });
     try {
-      if (token.presentation === "image" && token.targetType === "work") {
-        await readCatalogueMediaPresentation(adapter, token.targetId, detailId);
-      }
+      await readCatalogueTokenPresentation(adapter, token, token.presentation === "image" ? detailId : token.detailId);
       if (state.adapter !== adapter || !mount.contains(article)) return;
       if (!adapter || typeof adapter.replaceCapturedRange !== "function"
         || !adapter.replaceCapturedRange(capture, serialized, "select")) {
@@ -279,19 +278,16 @@ function render(context, state) {
     emptyMessage(context.mount, "Place the caret inside a Catalogue token to inspect it.");
     return;
   }
-  var currentMedia = active.token.targetType === "work" && ["media", "image"].includes(active.token.presentation);
-  var key = currentMedia ? "media:" + active.token.targetId + ":" + active.token.detailId : "catalogue";
+  var key = targetKey(active.token) + ":" + active.token.detailId;
   if (state.targetKey !== key) {
     emptyMessage(context.mount, "Catalogue target info is loading.");
     if (state.loadingKey === key) return;
     state.loadingKey = key;
     var adapter = state.adapter;
-    var load = currentMedia
-      ? readCatalogueMediaPresentation(adapter, active.token.targetId, active.token.detailId).then(function (presentation) {
-          return [{ family: "catalogue", targetType: "work", targetId: active.token.targetId,
+    var load = readCatalogueTokenPresentation(adapter, active.token, active.token.detailId).then(function (presentation) {
+          return [{ family: "catalogue", targetType: active.token.targetType, targetId: active.token.targetId,
             title: presentation.label, href: presentation.newTabTarget }];
-        })
-      : loadSemanticTokenTargets(state.registry, { fetch: state.fetch });
+        });
     load.catch(function () { return []; }).then(function (targets) {
       if (state.adapter !== adapter || state.loadingKey !== key) return;
       state.targetsByKey = new Map(targets.map(function (target) { return [targetKey(target), target]; }));

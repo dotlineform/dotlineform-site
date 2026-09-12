@@ -99,6 +99,14 @@
         "recent_url": "/docs/recent?scope=studio",
         "search_index_url": "/docs/search?scope=studio"
       },
+      "catalogue_paths": {
+        "work_thumbnails": {
+          "base_url": "/docs/catalogue-thumbnails/",
+          "size": 96,
+          "suffix": "thumb",
+          "format": "webp"
+        }
+      },
       "config_urls": {
         "docs_viewer": "/docs-viewer/config/defaults/docs-viewer-config.json",
         "report_registry": "/docs-viewer/config/reports/reports.json"
@@ -155,7 +163,14 @@
         "search_index_url": "/assets/data/search/analysis/index.json"
       },
       "catalogue_paths": {
-        "work_records_base_url": "/assets/data/catalogue/works/index/"
+        "work_records_base_url": "/assets/data/catalogue/works/index/",
+        "series_records_base_url": "/assets/data/catalogue/series/index/",
+        "work_thumbnails": {
+          "base_url": "/assets/data/catalogue/works/thumbs/",
+          "size": 96,
+          "suffix": "thumb",
+          "format": "webp"
+        }
       },
       "config_urls": {
         "docs_viewer": "/docs-viewer/config/defaults/docs-viewer-public-config.json",

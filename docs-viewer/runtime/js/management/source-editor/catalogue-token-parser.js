@@ -102,14 +102,17 @@ export function serializeCatalogueMediaToken(options = {}) {
     var canonicalPattern = new RegExp(definition.idPolicy.canonicalPattern);
     if (!canonicalPattern.test(targetId)) return "";
   }
-  if (targetType !== "work" || !/^\d{5}$/.test(targetId)) return "";
-  return "[[catalogue:media:" + targetType + ":" + targetId + "|" + escapedTitle(title) + "]]";
+  var detailId = normalizeCatalogueDetailId(options.detailId);
+  if (detailId === null || (targetType === "work" ? !/^\d{5}$/.test(targetId)
+    : targetType !== "series" || !/^\d{3}$/.test(targetId) || detailId)) return "";
+  return "[[catalogue:media:" + targetType + ":" + targetId + (detailId ? ":" + detailId : "") + "|" + escapedTitle(title) + "]]";
 }
 
 export function serializeCatalogueImageToken(options = {}) {
   var targetType = cleanString(options.targetType);
   var targetId = cleanString(options.targetId);
   var alt = plainText(options.alt);
+  if (targetType !== "work" || !/^\d{5}$/.test(targetId)) return "";
   if (
     !LEXICAL_KEY_PATTERN.test(targetType)
     || !LEXICAL_ID_PATTERN.test(targetId)
@@ -194,12 +197,13 @@ export function parseCatalogueToken(raw, options = {}) {
   if (separator < 0) return null;
   var identity = body.slice(0, separator).split(":");
   var imagePresentation = identity.length === 4 && identity[1] === "image";
-  var mediaPresentation = identity.length === 4 && identity[1] === "media";
+  var mediaPresentation = [4, 5].includes(identity.length) && identity[1] === "media";
   if (!imagePresentation && !mediaPresentation) return null;
   var family = identity[0];
-  var targetType = identity[identity.length - 2];
-  var targetId = identity[identity.length - 1];
-  if (mediaPresentation && (targetType !== "work" || !/^\d{5}$/.test(targetId))) return null;
+  var targetType = identity[2];
+  var targetId = identity[3];
+  var mediaDetailId = identity.length === 5 ? identity[4] : "";
+  if (identity.length === 5 && (!mediaDetailId || normalizeCatalogueDetailId(mediaDetailId) !== mediaDetailId)) return null;
   var rawFields = body.slice(separator + 1);
   var imageFields = imagePresentation
     ? parseCatalogueImageFields(rawFields, {
@@ -211,6 +215,7 @@ export function parseCatalogueToken(raw, options = {}) {
   var title = imagePresentation
     ? imageFields && (imageFields.caption || imageFields.alt)
     : unescapeTitle(rawFields);
+  if (mediaPresentation && !serializeCatalogueMediaToken({ targetType: targetType, targetId: targetId, detailId: mediaDetailId, title: title })) return null;
   if (
     family !== "catalogue"
     || !LEXICAL_KEY_PATTERN.test(family)
@@ -241,7 +246,7 @@ export function parseCatalogueToken(raw, options = {}) {
     summary: imageFields ? imageFields.summary : "",
     placement: imageFields ? imageFields.placement : "",
     fillWidth: imageFields ? imageFields.fillWidth : null,
-    detailId: imageFields ? imageFields.detailId : ""
+    detailId: imageFields ? imageFields.detailId : mediaDetailId
   };
 }
 

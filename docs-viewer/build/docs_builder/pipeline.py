@@ -23,7 +23,7 @@ from .recent_policy import recent_basis_for_route
 from .rendering import ContentRenderingMixin
 from .semantic_token_artifacts import SemanticTokenArtifactsMixin
 from .semantic_token_registry import load_semantic_token_registry
-from .semantic_tokens import SemanticTokensMixin, load_semantic_token_targets
+from .semantic_tokens import SemanticTokensMixin
 from .source import SourceLoadingMixin
 from .write_plan import WritePlanMixin
 
@@ -70,7 +70,6 @@ class DocsDataBuilder(
         self.output_url_base = self.output_url_base_for(self.output_url_dir())
         self.site_config = load_site_tools_config(self.repo_root)
         self.semantic_token_registry = load_semantic_token_registry(self.repo_root)
-        self.semantic_token_targets_by_key = load_semantic_token_targets(self.repo_root)
         self.source_files_scanned = 0
         self.warnings: list[str] = []
         self._viewer_scope_for_path: dict[str, str] | None = None

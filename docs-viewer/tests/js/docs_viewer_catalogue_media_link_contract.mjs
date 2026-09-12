@@ -1,8 +1,9 @@
 import assert from "node:assert/strict";
 import fs from "node:fs";
-import { parseCatalogueToken, parseCatalogueTokens, serializeCatalogueMediaToken } from "../../runtime/js/management/source-editor/catalogue-token-parser.js";
+import { parseCatalogueToken, parseCatalogueTokens, serializeCatalogueMediaToken, serializeCatalogueImageToken } from "../../runtime/js/management/source-editor/catalogue-token-parser.js";
 import { normalizeSemanticTokenRegistry } from "../../runtime/js/management/source-editor/semantic-token-registry.js";
-import { catalogueMediaLinkLabel, readCatalogueMediaPresentation, loadCatalogueMediaSupport, catalogueMediaLinkControlDefinition } from "../../runtime/js/management/source-editor/catalogue-media-link.js";
+import { catalogueMediaLinkControlDefinition } from "../../runtime/js/management/source-editor/catalogue-media-link.js";
+import { catalogueMediaLinkLabel, readCatalogueMediaPresentation, readCatalogueTokenPresentation, loadCatalogueMediaSupport } from "../../runtime/js/management/source-editor/catalogue-media-support.js";
 import { createDocsViewerManagementSourceAdapter } from "../../runtime/js/management/docs-viewer-management-source-adapter.js";
 import { createDocsViewerConfiguredScopeProvider } from "../../runtime/js/shared/docs-viewer-configured-scope-provider.js";
 import { collectSemanticTokenTargetMatches } from "../../runtime/js/management/source-editor/semantic-token-targets.js";
@@ -20,10 +21,30 @@ assert.equal(parsed.targetId, "00523");
 assert.equal(parsed.title, title);
 assert.equal(serializeCatalogueMediaToken(parsed), token, "editing preserves the media form");
 assert.equal(parseCatalogueToken("[[catalogue:work:00523|unqualified]]", { registry }), null);
-for (const raw of ["[[catalogue:media:work:523|bad]]", "[[catalogue:media:series:143|bad]]"]) {
+for (const raw of ["[[catalogue:media:work:523|bad]]", "[[catalogue:media:series:14|bad]]",
+  "[[catalogue:media:series:143:015|bad]]", "[[catalogue:media:work:00523:15|bad]]",
+  "[[catalogue:media:work:00523:000|bad]]", "[[catalogue:media:work:00523:|bad]]",
+  "[[catalogue:image:series:143|alt=bad]]"]) {
   assert.equal(parseCatalogueToken(raw, { registry }), null);
 }
+for (const fields of [{ targetType: "series", targetId: "143" }, { targetType: "work", targetId: "00523", detailId: "015" }]) {
+  const raw = serializeCatalogueMediaToken({ ...fields, title, registry });
+  const parsed = parseCatalogueToken(raw, { registry });
+  assert.ok(parsed.supported);
+  assert.equal(parsed.detailId, fields.detailId || "");
+  assert.equal(parsed.title, title);
+  assert.equal(serializeCatalogueMediaToken(parsed), raw);
+}
 assert.equal(parseCatalogueTokens("`" + token + "`\n\n```text\n" + token + "\n```", { registry }).length, 0);
+for (const detailId of ["", "015"]) {
+  const image = serializeCatalogueImageToken({ targetType: "work", targetId: "00523", detailId, alt: "Selected image",
+    caption: "Caption", summary: "Two\nlines", placement: "right", fillWidth: false });
+  const parsed = parseCatalogueToken(image, { registry });
+  assert.equal(parsed.detailId, detailId);
+  assert.equal(parsed.summary, "Two\nlines");
+  assert.equal(serializeCatalogueImageToken(parsed), image, "image authoring retains its canonical presentation fields");
+}
+assert.equal(serializeCatalogueImageToken({ targetType: "series", targetId: "143", alt: "Series" }), "");
 const first = { targetId: "00523", title: "First" };
 const second = { targetId: "00524", title: "Second" };
 assert.equal(catalogueMediaLinkLabel(first, "selected words", null), "selected words");
@@ -34,7 +55,8 @@ assert.equal(catalogueMediaLinkLabel(second, "First", first, true), "First", "se
 
 const requests = [];
 const payload = { ok: true, schema_version: "docs_semantic_token_target_lookup_v2", targets: [
-  { family: "catalogue", target_type: "work", target_id: "00523", title: "First", meta: ["2023"] }
+  { family: "catalogue", target_type: "work", target_id: "00523", title: "First", meta: ["2023"] },
+  { family: "catalogue", target_type: "series", target_id: "143", title: "Series title", meta: [] }
 ] };
 const workPayload = { work: { work_id: "00523", title: "First", width_px: 800, height_px: 600,
   height_cm: 45, width_cm: 80, media: { primary: [{ url: "https://media.example.test/image.webp", width: 800 }] } } };
@@ -49,6 +71,8 @@ const source = createDocsViewerManagementSourceAdapter({
 const provider = createDocsViewerConfiguredScopeProvider({ source });
 const support = await loadCatalogueMediaSupport(provider, { fetch: async () => ({ ok: true, json: async () => registryPayload }) });
 assert.equal(collectSemanticTokenTargetMatches(support.targets, "00523", support.registry, 20)[0].title, "First");
+assert.equal(collectSemanticTokenTargetMatches(support.targets, "Series title", support.registry, 20)[0].targetType, "series");
+assert.equal(collectSemanticTokenTargetMatches(support.targets, "series 143", support.registry, 20)[0].targetId, "143");
 assert.equal((await readCatalogueMediaPresentation(provider, "00523")).target.id, "00523");
 assert.deepEqual(requests, ["http://127.0.0.1:9999/docs/catalogue-media-targets", "http://127.0.0.1:9999/docs/catalogue-work?work_id=00523"]);
 assert.equal(createDocsViewerConfiguredScopeProvider({}).readCatalogueMediaTargets, undefined, "public provider has no local Catalogue reads");
@@ -151,3 +175,15 @@ currentWork = detailPayload;
 assert.equal((await publicProvider.readCatalogueWork("00523")).sections[0].details[0].detail_uid, "00523-015", "public raw reads permit Details without a Work primary");
 assert.equal((await readCatalogueMediaPresentation(publicProvider, "00523", "015")).target.workId, "00523");
 console.log("Exact generated Detail selection and public reader contracts passed");
+
+assert.equal((await readCatalogueTokenPresentation(publicProvider, { targetType: "work", targetId: "00523" }, "015")).target.id, "00523-015");
+const seriesTarget = { targetType: "series", targetId: "143" };
+const series = { schema_version: "docs_media_gallery_v1", target: { kind: "catalogue-series", id: "143" },
+  gallery: { target: { kind: "catalogue-series", id: "143" }, label: "Empty Series", members: [] } };
+const seriesAdapter = { readCatalogueSeriesPresentation: async id => { assert.equal(id, "143"); return structuredClone(series); } };
+assert.equal((await readCatalogueTokenPresentation(seriesAdapter, seriesTarget)).label, "Empty Series");
+await assert.rejects(readCatalogueTokenPresentation(seriesAdapter, seriesTarget, "015"), /Unsupported/);
+series.target.id = series.gallery.target.id = "144";
+await assert.rejects(readCatalogueTokenPresentation(seriesAdapter, seriesTarget), /mismatched/);
+payload.targets[1].target_id = "14";
+await assert.rejects(loadCatalogueMediaSupport(provider, { fetch: async () => ({ ok: true, json: async () => registryPayload }) }), /identities/);

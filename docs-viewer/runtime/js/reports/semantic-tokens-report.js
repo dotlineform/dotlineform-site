@@ -59,6 +59,7 @@ export function readSemanticTokenRows(payload) {
       family: cleanString(row.family),
       targetType: cleanString(row.target_type),
       targetId: cleanString(row.target_id),
+      detailId: cleanString(row.detail_id),
       title: cleanString(row.title),
       sourceDocId: cleanString(row.source_doc_id),
       sourceSubScope: cleanString(row.source_sub_scope),
@@ -77,7 +78,7 @@ export async function loadSemanticTokenRows(context) {
 }
 
 function tokenIdentity(row) {
-  return `${row.family}:${row.targetType}:${row.targetId}`;
+  return `${row.family}:${row.targetType}:${row.targetId}${row.detailId ? ":" + row.detailId : ""}`;
 }
 
 function tokenLabel(row) {

@@ -304,13 +304,12 @@ def test_semantic_token_audit_reads_source_independently_of_rendered_usage(
     })
     source_body = (
         "Resolved [[catalogue:media:work:00638|3 symbols]].\n"
-        "Missing [[catalogue:image:series:99999|alt=Missing%20series]].\n"
-        "No destination [[catalogue:image:series:00008|alt=nerve]].\n"
+        "Missing [[catalogue:media:series:999|Missing series]].\n"
         "Missing image [[catalogue:image:work:00009|alt=image%20unavailable]].\n"
         "Resolved image [[catalogue:image:work:00638|alt=3%20symbols]].\n"
         "Missing detail [[catalogue:image:work:00638|alt=missing%20detail&detail_id=999]].\n"
         "Resolved detail [[catalogue:image:work:00638|alt=3%20symbols%20detail&detail_id=001]].\n"
-        "Unsupported [[catalogue:image:asset:abc|alt=asset]].\n"
+        "Unsupported literal [[catalogue:image:series:143|alt=series]].\n"
         "`Ignored [[catalogue:media:work:99998|inline code]]`.\n"
     )
     with make_repo("<p>No semantic-token anchors here.</p>", source_body=source_body) as temp_path:
@@ -321,9 +320,7 @@ def test_semantic_token_audit_reads_source_independently_of_rendered_usage(
         if entry.get("issue_type") == "semantic_token"
     ]
     assert sorted(entry["reason"] for entry in semantic_entries) == sorted([
-        "unsupported_kind",
-        "missing_target",
-        "missing_destination",
+        "missing_series",
         "missing_media",
         "missing_detail_image",
     ])
@@ -338,22 +335,27 @@ def test_semantic_token_audit_reads_source_independently_of_rendered_usage(
     assert not any("99998" in entry["raw"] for entry in semantic_entries)
 
 
-def test_semantic_token_source_repair_clears_the_audit() -> None:
+def test_semantic_token_source_repair_clears_the_audit(tmp_path, monkeypatch) -> None:
+    projects_base = tmp_path / "projects"
+    monkeypatch.setenv("DOTLINEFORM_PROJECTS_BASE_DIR", str(projects_base))
+    write_json(projects_base / "catalogue/generated/series/index/143.json", {
+        "series": {"series_id": "143", "title": "Empty Series"}, "member_works": [],
+    })
     with make_repo(
         "<p>The unresolved source remains ordinary text.</p>",
-        source_body="Missing [[catalogue:image:series:99999|alt=Missing%20series]].\n",
+        source_body="Missing [[catalogue:media:series:999|Missing series]].\n",
     ) as temp_path:
         repo_root = Path(temp_path)
         broken = docs_broken_links.audit_docs_broken_links(repo_root, "studio")
         write_source_doc(
             repo_root,
             "studio",
-            "Resolved [[catalogue:image:series:00638|alt=3%20symbols]].\n",
+            "Resolved [[catalogue:media:series:143|Empty Series]].\n",
         )
         repaired = docs_broken_links.audit_docs_broken_links(repo_root, "studio")
 
     assert broken["summary"] == {"total": 1}
-    assert broken["entries"][0]["reason"] == "missing_target"
+    assert broken["entries"][0]["reason"] == "missing_series"
     assert repaired["summary"] == {"total": 0}
 
 

@@ -12,7 +12,10 @@ import re
 from typing import Any
 from urllib.parse import urlsplit
 
+from pipeline_config import load_pipeline_config
 from studio.services.catalogue.catalogue_output_paths import catalogue_output_workspace, output_path
+
+CATALOGUE_THUMBNAIL_PREFIX = "/docs/catalogue-thumbnails/"
 
 
 def _read_generated(repo_root: Path, relative: str) -> dict[str, Any]:
@@ -59,7 +62,7 @@ def _safe_media_url(value: Any) -> str:
 
 
 def read_catalogue_media_targets(repo_root: Path) -> dict[str, Any]:
-    """Expose identifying Work fields from the generated index, without document filtering."""
+    """Expose Work and Series search identities from generated indexes, without document filtering."""
     payload = _read_generated(repo_root, "works/works_index.json")
     works = payload.get("works")
     if not isinstance(works, dict):
@@ -75,6 +78,20 @@ def read_catalogue_media_targets(repo_root: Path) -> dict[str, Any]:
             "title": _text(work.get("title"), "title"),
             "meta": [year] if isinstance(year, str) and year else [],
         })
+    series = _read_generated(repo_root, "series/series_index.json").get("series")
+    if not isinstance(series, dict):
+        raise ValueError("Generated Catalogue Series index is unavailable")
+    for series_id, record in series.items():
+        if not re.fullmatch(r"[0-9]{3}", series_id) or not isinstance(record, dict) or record.get("series_id") != series_id:
+            raise ValueError("Generated Series index identity is mismatched")
+        title = record.get("title")
+        if not isinstance(title, str) or not title.strip():
+            raise ValueError("Generated Series title is unavailable")
+        year = record.get("year_display")
+        targets.append({
+            "family": "catalogue", "target_type": "series", "target_id": series_id,
+            "title": title.strip(), "meta": [year] if isinstance(year, str) and year else [],
+        })
     return {"ok": True, "schema_version": "docs_semantic_token_target_lookup_v2", "targets": targets}
 
 
@@ -87,6 +104,48 @@ def read_catalogue_work(repo_root: Path, work_id: str) -> dict[str, Any]:
         raise ValueError(f"Generated data does not match Work {work_id}")
     _text(work.get("title"), "title")
     return payload
+
+
+def read_catalogue_series(repo_root: Path, series_id: str) -> dict[str, Any]:
+    """Read exact ordered membership without requiring documents or member Work reads."""
+    if not isinstance(series_id, str) or not re.fullmatch(r"[0-9]{3}", series_id):
+        raise ValueError("An exact three-digit Catalogue Series ID is required")
+    payload = _read_generated(repo_root, f"series/index/{series_id}.json")
+    series = payload.get("series")
+    if not isinstance(series, dict) or series.get("series_id") != series_id:
+        raise ValueError("Generated Series data does not match the selected Series")
+    if not isinstance(series.get("title"), str) or not series["title"].strip():
+        raise ValueError("Generated Series title is unavailable")
+    members = payload.get("member_works")
+    if not isinstance(members, list):
+        raise ValueError("Generated Series membership is unavailable")
+    seen = set()
+    for member in members:
+        if not isinstance(member, dict):
+            raise ValueError("Generated Series member must be an object")
+        work_id = _work_identity(member.get("work_id"))
+        if work_id in seen:
+            raise ValueError("Generated Series has a duplicate Work")
+        seen.add(work_id)
+        _text(member.get("title"), "title")
+    return payload
+
+
+def catalogue_thumbnail_path(repo_root: Path, request_path: str) -> Path:
+    """Serve only configured Work thumbnail variants within generated Catalogue output."""
+    if not request_path.startswith(CATALOGUE_THUMBNAIL_PREFIX):
+        raise ValueError("Unsupported Catalogue thumbnail path")
+    filename = request_path[len(CATALOGUE_THUMBNAIL_PREFIX):]
+    pipeline = load_pipeline_config(repo_root=repo_root)
+    variant = pipeline["variants"]["thumb"]
+    sizes = "|".join(re.escape(str(size)) for size in variant["sizes"])
+    pattern = rf"[0-9]{{5}}-{re.escape(variant['suffix'])}-(?:{sizes})\.{re.escape(pipeline['encoding']['format'])}"
+    if not re.fullmatch(pattern, filename):
+        raise ValueError("An exact configured Work thumbnail is required")
+    path = output_path(catalogue_output_workspace(repo_root), f"works/thumbs/{filename}")
+    if not path.is_file():
+        raise FileNotFoundError("Generated Catalogue thumbnail is unavailable")
+    return path
 
 
 def catalogue_media_record(payload: dict[str, Any], work_id: str, detail_id: str = "") -> dict[str, Any]:

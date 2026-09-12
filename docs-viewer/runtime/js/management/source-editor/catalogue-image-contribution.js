@@ -2,8 +2,8 @@ import {
   DOCS_VIEWER_ACTION_IDS
 } from "../docs-viewer-action-definitions.js";
 import {
-  openCatalogueImageModal
-} from "./catalogue-image-modal.js";
+  openCatalogueMediaModal
+} from "./catalogue-media-modal.js";
 
 export const CATALOGUE_IMAGE_CONTROL_ID = "source-add-catalogue-image";
 
@@ -47,7 +47,8 @@ export function createCatalogueImageMainViewControlHandlers() {
         }
         return Promise.resolve(null);
       }
-      return openCatalogueImageModal({
+      return openCatalogueMediaModal({
+        presentation: "image",
         adapter: adapter,
         capture: adapter.captureSelection(),
         root: context.root

@@ -36,6 +36,7 @@ if str(SERVICE_DIR) not in sys.path:
     sys.path.insert(0, str(SERVICE_DIR))
 
 import docs_management_routes as routes  # noqa: E402
+import docs_catalogue_media as catalogue_media  # noqa: E402
 import docs_management_service as docs_service  # noqa: E402
 import docs_document_package_routes as package_routes  # noqa: E402
 from docs_document_packages import service as package_service  # noqa: E402
@@ -512,6 +513,12 @@ class DocsViewerRequestHandler(QuietErrorLoggingMixin, BaseHTTPRequestHandler):
         if path.startswith(media_storage.DOCS_MEDIA_ROUTE_PREFIX):
             self.send_docs_media(path)
             return
+        if path.startswith(catalogue_media.CATALOGUE_THUMBNAIL_PREFIX):
+            if not self.config.generated_reads_enabled:
+                self.send_json({"ok": False, "error": "Generated reads are disabled"}, HTTPStatus.FORBIDDEN)
+                return
+            self.send_catalogue_thumbnail(path)
+            return
         if path.startswith(published_reads.PUBLISHED_MEDIA_PREFIX):
             if not self.config.generated_reads_enabled:
                 self.send_json({"ok": False, "error": "Published reads are disabled"}, HTTPStatus.FORBIDDEN)
@@ -704,6 +711,24 @@ class DocsViewerRequestHandler(QuietErrorLoggingMixin, BaseHTTPRequestHandler):
                     "Content-Security-Policy",
                     "sandbox allow-scripts; default-src 'self' data: blob:; connect-src 'none'",
                 )
+            self.send_header("Content-Length", str(len(body)))
+            self.end_headers()
+            self.wfile.write(body)
+        except FileNotFoundError as error:
+            self.send_json({"ok": False, "error": str(error)}, HTTPStatus.NOT_FOUND)
+        except ValueError as error:
+            self.send_json({"ok": False, "error": str(error)}, HTTPStatus.BAD_REQUEST)
+
+    def send_catalogue_thumbnail(self, request_path: str) -> None:
+        """Expose the existing generated thumbnail without a source or archive fallback."""
+        try:
+            path = catalogue_media.catalogue_thumbnail_path(self.repo_root, request_path)
+            body = path.read_bytes()
+            self.send_response(HTTPStatus.OK)
+            self.send_cors_headers()
+            self.send_header("Content-Type", media_storage.safe_content_type(path))
+            self.send_header("Cache-Control", "no-store")
+            self.send_header("X-Content-Type-Options", "nosniff")
             self.send_header("Content-Length", str(len(body)))
             self.end_headers()
             self.wfile.write(body)

@@ -1,4 +1,4 @@
-import { readPublicCatalogueWork } from "./docs-viewer-catalogue-media.js";
+import { readPublicCatalogueWork, readPublicCatalogueSeries, catalogueSeriesMediaPresentation } from "./docs-viewer-catalogue-media.js";
 
 function cleanString(value) {
   return String(value == null ? "" : value).trim();
@@ -144,6 +144,22 @@ export function createDocsViewerConfiguredScopeProvider(options) {
       return readPublicCatalogueWork(routeContext().routeConfig.catalogueWorkRecordsBaseUrl, workId, function (url, optionsForFetch) {
         return settings.window.fetch(url, optionsForFetch);
       });
+    };
+  }
+  if (source && typeof source.readCatalogueSeries === "function") {
+    provider.readCatalogueSeries = function (seriesId) { return source.readCatalogueSeries(seriesId); };
+  } else if (routeContext().routeConfig && routeContext().routeConfig.appKind === "public") {
+    provider.readCatalogueSeries = function (seriesId) {
+      return readPublicCatalogueSeries(routeContext().routeConfig.catalogueSeriesRecordsBaseUrl, seriesId, function (url, optionsForFetch) {
+        return settings.window.fetch(url, optionsForFetch);
+      });
+    };
+  }
+  if (provider.readCatalogueSeries) {
+    provider.readCatalogueSeriesPresentation = async function (seriesId) {
+      var payload = await provider.readCatalogueSeries(seriesId);
+      var config = routeContext().routeConfig || {};
+      return catalogueSeriesMediaPresentation(payload, seriesId, config.catalogueWorkThumbnails);
     };
   }
   if (source && typeof source.writeSource === "function") {
