@@ -66,6 +66,7 @@ from docs_management_context import (  # noqa: E402
 from docs_management_import_service import handle_import_source, import_source_dependencies  # noqa: E402
 from docs_management_mutation_service import (  # noqa: E402
     DocumentCreateCommittedError,
+    DocumentPlacementCommittedError,
     DocumentDeleteLineageFollowThroughError,
     DocumentDeletePublicCleanupError,
     SubScopeDocumentDeleteApplyError,
@@ -142,7 +143,7 @@ def docs_management_post_response(
             routes.CREATE_PATH, routes.UPDATE_METADATA_PATH, routes.SOURCE_REBUILD_PATH,
             routes.OPEN_SOURCE_PATH, routes.DELETE_PREVIEW_PATH, routes.DELETE_APPLY_PATH,
             routes.ASSIGN_FIELD_GROUP_PATH, routes.SET_PUBLISHABLE_PATH, routes.SET_DRAFT_PATH,
-            routes.REBUILD_PATH,
+            routes.REBUILD_PATH, routes.MOVE_PATH,
         }
         if field != "scope" or path not in allowed:
             raise ValueError("This action is unavailable in the publishing stage views")
@@ -255,6 +256,8 @@ def docs_management_post_response(
     if path == routes.UPDATE_METADATA_PATH:
         try:
             return HTTPStatus.OK, handle_update_metadata(repo_root, body, dry_run)
+        except DocumentPlacementCommittedError as error:
+            return HTTPStatus.INTERNAL_SERVER_ERROR, error.payload
         except mutations.ManagedDocumentRevisionConflict as error:
             return HTTPStatus.CONFLICT, error.payload
     if path == routes.SET_PUBLISHABLE_PATH:
@@ -292,7 +295,12 @@ def docs_management_post_response(
         payload["summary_text"] = f"Docs and docs search rebuilt for {scope}."
         return HTTPStatus.OK, payload
     if path == routes.MOVE_PATH:
-        return HTTPStatus.OK, handle_move(repo_root, body, dry_run)
+        try:
+            return HTTPStatus.OK, handle_move(repo_root, body, dry_run)
+        except DocumentPlacementCommittedError as error:
+            return HTTPStatus.INTERNAL_SERVER_ERROR, error.payload
+        except mutations.ManagedDocumentRevisionConflict as error:
+            return HTTPStatus.CONFLICT, error.payload
     if path == routes.DOCUMENT_TRANSFER_PREVIEW_PATH:
         source_scope = source_model.normalize_scope(body.get("scope"))
         plan = docs_document_transfer.plan_document_transfer(

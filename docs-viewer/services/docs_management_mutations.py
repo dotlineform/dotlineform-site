@@ -5,12 +5,14 @@ from __future__ import annotations
 
 import hashlib
 import re
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from pathlib import Path
 from typing import Any, Dict, Optional
 
 import docs_source_model as source_model
 import docs_public_delete_cleanup as public_delete_cleanup
+from docs_document_placement import DocumentPlacement, resolve_document_placement
+from docs_document_placement_references import MediaCopy, placement_reference_changes
 from docs_management_document_target import (
     ManagedDocumentTarget,
     confined_source_path,
@@ -30,6 +32,7 @@ from docs_scope_config import (
 from docs_subscope_customisations import (
     normalize_sub_scope_customisation_metadata_update,
     sub_scope_customisation_assignable_field_groups,
+    sub_scope_customisation_metadata_record,
 )
 
 
@@ -156,10 +159,13 @@ def delete_selection_warning(requested_count: int, additional_descendant_count: 
 
 @dataclass(frozen=True)
 class SourceWrite:
+    """A planned write, optionally identifying a referring document's revision."""
+
     path: Path
     text: str
     original_bytes: Optional[bytes] = None
     create_only: bool = False
+    revision_target: Optional[dict[str, str]] = None
 
 
 @dataclass(frozen=True)
@@ -173,6 +179,8 @@ class ScopeRebuild:
     scope: str
     changed_paths: tuple[Path, ...]
     build_doc_ids: Optional[list[str]] = None
+    stage: str = ""
+    sub_scope: str = ""
 
 
 @dataclass(frozen=True)
@@ -183,6 +191,7 @@ class ManagementMutationPlan:
     stage: str = ""
     source_writes: tuple[SourceWrite, ...] = ()
     source_deletes: tuple[SourceDelete, ...] = ()
+    media_copies: tuple[MediaCopy, ...] = ()
     suppression_reason: Optional[str] = None
     build_doc_ids: Optional[list[str]] = None
     rebuilds: tuple[ScopeRebuild, ...] = ()
@@ -542,8 +551,9 @@ def plan_update_metadata(repo_root: Path, body: Dict[str, Any]) -> ManagementMut
     require_document_authoring(resolved.parent_config)
     scope = resolved.scope
     target = resolved.document
-    if resolved.sub_scope and "parent_id" in body:
-        raise ValueError("parent_id is not editable for a sub-scope document")
+    placement = resolve_document_placement(
+        repo_root, resolved, str(body.get("parent_id") or "").strip() if "parent_id" in body else None,
+    )
     requested_revision = str(body.get("source_revision") or "").strip()
     if resolved.sub_scope and not SOURCE_REVISION_PATTERN.fullmatch(
         requested_revision
@@ -571,21 +581,10 @@ def plan_update_metadata(repo_root: Path, body: Dict[str, Any]) -> ManagementMut
     if not title:
         raise ValueError("title is required")
 
-    docs: list[source_model.ScopeDoc] = []
-    parent_id = target.parent_id
-    if not resolved.sub_scope:
-        docs = source_model.load_scope_docs_for_config(repo_root, resolved.parent_config)
-        docs_by_id = {doc.doc_id: doc for doc in docs}
-        parent_id = str(body.get("parent_id") or "").strip()
-        if parent_id == target.doc_id:
-            raise ValueError("parent_id cannot be the current doc")
-        if parent_id and parent_id not in docs_by_id:
-            raise ValueError(f"Unknown parent_id {parent_id!r} for scope {scope}")
-        if parent_id and parent_id in source_model.descendant_doc_ids(docs, target.doc_id):
-            raise ValueError("parent_id cannot be a child or descendant of the current doc")
+    parent_id = placement.parent_id
 
     title_changed = title != target.title
-    parent_changed = not resolved.sub_scope and parent_id != target.parent_id
+    parent_changed = placement.changed
     summary_was_provided = "summary" in body
     current_summary = normalize_summary(target.front_matter.get("summary"))
     summary = normalize_summary(body.get("summary")) if summary_was_provided else current_summary
@@ -656,11 +655,12 @@ def plan_update_metadata(repo_root: Path, body: Dict[str, Any]) -> ManagementMut
         }
         if resolved.sub_scope:
             response["sub_scope"] = resolved.sub_scope
-        return ManagementMutationPlan(
+        return with_document_placement(repo_root, ManagementMutationPlan(
             scope=scope,
             sub_scope=resolved.sub_scope,
+            stage=resolved.stage,
             response=response,
-        )
+        ), placement)
 
     updated_front_matter = dict(target.front_matter)
     updated_front_matter["title"] = title
@@ -692,9 +692,11 @@ def plan_update_metadata(repo_root: Path, body: Dict[str, Any]) -> ManagementMut
                 updated_front_matter.pop(field_name, None)
             else:
                 updated_front_matter[field_name] = field_value
-    if not resolved.sub_scope:
+    if not placement.destination.sub_scope:
         updated_front_matter["parent_id"] = parent_id
         updated_front_matter.pop("sort_order", None)
+    elif placement.collection_changed:
+        updated_front_matter.pop("parent_id", None)
     updated_front_matter = source_model.advance_front_matter_for_recent_edit(
         target.front_matter,
         target.body,
@@ -712,19 +714,19 @@ def plan_update_metadata(repo_root: Path, body: Dict[str, Any]) -> ManagementMut
     }
     if source_model.collection_supports_publishable(resolved.document_config):
         record["publishable"] = target.publishable
-    if not resolved.sub_scope:
+    if not placement.destination.sub_scope:
         record["parent_id"] = parent_id
     elif customisation_update is not None:
         record["customisation"] = customisation_update["record"]
     updated_source_text = source_model.format_source(
         updated_front_matter,
         target.body,
-        sub_scope=resolved.sub_scope,
+        sub_scope=placement.destination.sub_scope,
     )
     source_model.parse_collection_document_report(
         repo_root,
         resolved.parent_config,
-        resolved.document_config,
+        placement.destination.document_config,
         updated_source_text,
         source_name=target.path.as_posix(),
     )
@@ -755,7 +757,7 @@ def plan_update_metadata(repo_root: Path, body: Dict[str, Any]) -> ManagementMut
     if customisation_update is not None:
         log_details.update(customisation_update["changes"])
 
-    return ManagementMutationPlan(
+    return with_document_placement(repo_root, ManagementMutationPlan(
         scope=scope,
         sub_scope=resolved.sub_scope,
         stage=resolved.stage,
@@ -772,37 +774,23 @@ def plan_update_metadata(repo_root: Path, body: Dict[str, Any]) -> ManagementMut
         log_event_name="docs-update-metadata",
         log_details=log_details,
         include_write_result_keys=True,
-    )
+    ), placement)
 
 
 def plan_move(repo_root: Path, body: Dict[str, Any]) -> ManagementMutationPlan:
-    scope = source_model.normalize_scope(body.get("scope"))
-    config = load_docs_scope_stage(repo_root, scope, body.get("stage"))
-    require_document_authoring(config)
-    if "sub_scope" in body:
-        raise ValueError("Move requires a parent-scope document")
-    doc_id = str(body.get("doc_id") or "").strip()
+    resolved = resolve_managed_document_target(repo_root, managed_document_target_request(body))
+    scope = resolved.scope
+    config = resolved.parent_config
     parent_id = str(body.get("parent_id") or "").strip()
-    if not doc_id:
-        raise ValueError("doc_id is required")
-
-    docs = source_model.load_scope_docs_for_config(repo_root, config)
-    docs_by_id = {doc.doc_id: doc for doc in docs}
-    moving_doc = docs_by_id.get(doc_id)
-    if moving_doc is None:
-        raise FileNotFoundError(f"doc {doc_id!r} not found in scope {scope}")
-    if parent_id == moving_doc.doc_id:
-        raise ValueError("parent_id cannot be the current doc")
-    if parent_id and parent_id not in docs_by_id:
-        raise ValueError(f"Unknown parent_id {parent_id!r} for scope {scope}")
-    if parent_id and parent_id in source_model.descendant_doc_ids(docs, moving_doc.doc_id):
-        raise ValueError("parent_id cannot be a child or descendant of the current doc")
-
-    changed = moving_doc.parent_id != parent_id
-    target = {"scope": scope, **({"stage": config.stage} if config.stage else {}), "doc_id": doc_id}
-    return ManagementMutationPlan(
+    placement = resolve_document_placement(repo_root, resolved, parent_id)
+    parent_id = placement.parent_id
+    moving_doc = resolved.document
+    changed = placement.changed
+    target = resolved.request_target()
+    return with_document_placement(repo_root, ManagementMutationPlan(
         scope=scope,
         stage=config.stage,
+        sub_scope=resolved.sub_scope,
         response={
             "ok": True,
             **target,
@@ -814,8 +802,10 @@ def plan_move(repo_root: Path, body: Dict[str, Any]) -> ManagementMutationPlan:
             "changed_doc_ids": [moving_doc.doc_id] if changed else [],
             "summary_text": f"Moved {moving_doc.doc_id}." if changed else f"No move needed for {moving_doc.doc_id}.",
         },
-        source_writes=(SourceWrite(moving_doc.path, source_model.rewrite_doc_placement_source(moving_doc, parent_id)),) if changed else (),
+        source_writes=(SourceWrite(moving_doc.path, source_model.rewrite_doc_placement_source(moving_doc, parent_id), original_bytes=moving_doc.source_text.encode("utf-8")),) if changed else (),
         suppression_reason="docs-move",
+        revision_conflict_operation="move",
+        revision_conflict_error="document source changed before move",
         build_doc_ids=[moving_doc.doc_id] if changed else [],
         log_event_name="docs-move" if changed else None,
         log_details={
@@ -825,6 +815,81 @@ def plan_move(repo_root: Path, body: Dict[str, Any]) -> ManagementMutationPlan:
             "changed_count": 1 if changed else 0,
         },
         include_write_result_keys=True,
+    ), placement)
+
+
+def with_document_placement(
+    repo_root: Path, plan: ManagementMutationPlan, placement: DocumentPlacement,
+) -> ManagementMutationPlan:
+    """Attach one committed placement and plan collection-owned source changes."""
+    target = placement.target()
+    response = {**plan.response, "target": target, "placement": placement.response(repo_root)}
+    response.pop("sub_scope", None)
+    response.update(target)
+    if not placement.collection_changed:
+        return replace(plan, response=response)
+    source = placement.source
+    destination = placement.destination
+    destination_path = destination.source_root / f"{source.doc_id}.md"
+    if destination_path.exists() or destination_path.is_symlink():
+        raise ValueError("Placement destination already contains this document")
+    front_matter, body = source_model.parse_source_text(plan.source_writes[0].text)
+    body, reference_changes, media_copies = placement_reference_changes(repo_root, placement, body)
+    if destination.sub_scope:
+        front_matter.pop("parent_id", None)
+    else:
+        front_matter["parent_id"] = placement.parent_id
+    source_text = source_model.format_source(front_matter, body, sub_scope=destination.sub_scope)
+    source_model.validate_document_status_front_matter(
+        front_matter, collection_config=destination.document_config,
+        source_name=destination_path.name,
+    )
+    customisation_record = None
+    if destination.sub_scope:
+        customisation_record = sub_scope_customisation_metadata_record(
+            destination.document_config.sub_scope_customisation,
+            front_matter, doc_id=source.doc_id,
+        )
+    source_model.parse_collection_document_report(
+        repo_root, destination.parent_config, destination.document_config,
+        source_text, source_name=destination_path.name,
+    )
+    writes = [SourceWrite(destination_path, source_text, create_only=True)]
+    affected: dict[str, list[Path]] = {
+        source.sub_scope: [source.document.path],
+        destination.sub_scope: [destination_path],
+    }
+    for change in reference_changes:
+        doc = change.document
+        metadata = source_model.advance_front_matter_for_recent_edit(doc.front_matter, doc.body, doc.front_matter, change.body)
+        writes.append(SourceWrite(
+            doc.path, source_model.format_source(metadata, change.body, sub_scope=change.sub_scope),
+            original_bytes=doc.source_text.encode("utf-8"),
+            revision_target={
+                "scope": source.scope, "stage": source.stage, "doc_id": doc.doc_id,
+                **({"sub_scope": change.sub_scope} if change.sub_scope else {}),
+            },
+        ))
+        affected.setdefault(change.sub_scope, []).append(doc.path)
+    record = {**response["record"]}
+    record.pop("customisation", None)
+    if customisation_record is not None:
+        record["customisation"] = customisation_record
+    if source_model.collection_supports_publishable(destination.document_config):
+        record["publishable"] = source_model.doc_is_publishable(front_matter)
+    else:
+        record.pop("publishable", None)
+    if destination.sub_scope:
+        record.pop("parent_id", None)
+    else:
+        record["parent_id"] = placement.parent_id
+    response.update({"record": record, "path": relative_path(repo_root, destination_path), "source_revision": source_revision(source_text.encode("utf-8"))})
+    return replace(
+        plan, response=response, source_writes=tuple(writes),
+        source_deletes=(SourceDelete(source.document.path, source.document.source_text.encode("utf-8")),),
+        media_copies=tuple(media_copies),
+        rebuilds=tuple(ScopeRebuild(source.scope, tuple(affected[name]), stage=source.stage, sub_scope=name)
+                       for name in sorted(affected, key=lambda name: (not bool(name), name))),
     )
 
 
@@ -1126,6 +1191,8 @@ def plan_sub_scope_delete_apply(
         },
         source_deletes=(SourceDelete(document.path, original_bytes=source_bytes),),
         suppression_reason="docs-sub-scope-document-delete",
+        revision_conflict_operation="apply",
+        revision_conflict_error="sub-scope document source changed after delete preview",
         public_delete_cleanup=cleanup_plan,
         log_event_name="docs-delete",
         log_details={

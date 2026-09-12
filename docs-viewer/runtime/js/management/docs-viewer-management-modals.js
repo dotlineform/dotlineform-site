@@ -339,6 +339,8 @@ export function createDocsViewerManagementModalController(options = {}) {
       target
     );
     var showParent = settings.showParent === true;
+    var parentLabel = refs.metadataParentField.querySelector("label");
+    if (parentLabel) parentLabel.textContent = doc.location_parent_id !== undefined ? "location" : "parent";
     refs.metadataParentField.hidden = !showParent;
     refs.metadataParentInput.disabled = !showParent;
     if (showParent) {

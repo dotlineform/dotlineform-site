@@ -39,7 +39,8 @@ export function docsViewerLinksDocumentSummary(value, invokingTarget) {
 function category(document) {
   if (document.target.scope === "analysis" && document.target.sub_scope === "concepts") return "Concepts";
   if (document.subject && document.subject.state === "valid" && document.subject.kind === "work") return "Works";
-  if (!document.target.sub_scope) return "References";
+  if (!document.target.sub_scope
+    || (document.target.scope === "analysis" && document.target.sub_scope === "works")) return "References";
   return "";
 }
 

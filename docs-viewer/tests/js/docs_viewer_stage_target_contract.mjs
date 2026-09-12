@@ -3,14 +3,14 @@ import { buildViewerUrlForScope, routeFromAnchorHref } from "../../runtime/js/sh
 import { createDocsViewerGeneratedDataRuntime } from "../../runtime/js/shared/docs-viewer-generated-data-runtime.js";
 import { createDocsViewerConfiguredScopeProvider } from "../../runtime/js/shared/docs-viewer-configured-scope-provider.js";
 import { normalizeManagedDocumentTarget, managedDocumentTargetsEqual } from "../../runtime/js/management/docs-viewer-management-document-target.js";
-import { normalizeManagedSubscopeCollection, committedDocumentCreateTarget, committedDocumentMoveRecord } from "../../runtime/js/management/docs-viewer-management-actions.js";
+import { normalizeManagedSubscopeCollection, committedDocumentCreateTarget, committedDocumentMoveRecord, committedDocumentPlacement } from "../../runtime/js/management/docs-viewer-management-actions.js";
 import { createManagedDoc, readManagedDocSource, rebuildManagedDocSource, applyManagedSubScopeDocDelete, assignManagedDocFieldGroup, moveManagedDoc } from "../../runtime/js/management/docs-viewer-management-client.js";
 import { createDocsViewerManagementActionResolver } from "../../runtime/js/management/docs-viewer-management.js";
 import { DOCS_VIEWER_ACTION_IDS } from "../../runtime/js/management/docs-viewer-action-definitions.js";
 import { subjectMetadataFromResponse } from "../../runtime/js/management/docs-viewer-management-project-subject-modal.js";
 import { loadDocsViewerSubscopeContribution } from "../../runtime/js/management/docs-viewer-management-document-reports.js";
 import { createDocsViewerIndexSelectionOwner } from "../../runtime/js/management/docs-viewer-index-selection.js";
-import { docsViewerSetPublishableActionControlState } from "../../runtime/js/management/docs-viewer-management-index-controller.js";
+import { docsViewerSetPublishableActionControlState, docsViewerDocumentTransferActionControlState } from "../../runtime/js/management/docs-viewer-management-index-controller.js";
 import { setManagedDocsPublishable } from "../../runtime/js/management/docs-viewer-management-client.js";
 import { validateSetPublishableResponse } from "../../runtime/js/management/docs-viewer-management-publishable-workflow.js";
 import { createDocsViewerManagementCapabilityController, scopePrePublishSupported, scopePublishSupported } from "../../runtime/js/management/docs-viewer-management-capabilities.js";
@@ -48,6 +48,21 @@ for (const target of [{ scope: "analysis" }, { ...publishableCollection, stage: 
 }
 const moved = { ...hostTarget, target: hostTarget, record: { doc_id: docId, parent_id: "d-20260907-210000-a1b2c3" } };
 assert.deepEqual(committedDocumentMoveRecord(moved, hostTarget), moved.record);
+const destination = { ...hostTarget, sub_scope: "works" };
+const placement = { changed: true, collection_changed: true, ignored: false, viewer_url: `/docs/?scope=analysis&stage=working&doc=host&subdoc=${docId}` };
+assert.deepEqual(committedDocumentPlacement({ target: destination, placement }, hostTarget), { ...placement, target: destination });
+assert.equal(committedDocumentPlacement({ target: hostTarget, placement: { changed: false, collection_changed: false, ignored: true } }, hostTarget).ignored, true);
+for (const invalid of [
+  { target: { ...destination, doc_id: "other" }, placement },
+  { target: { ...destination, stage: "pre-publish" }, placement },
+  { target: destination, placement: { ...placement, collection_changed: false } },
+  { target: destination, placement: { ...placement, viewer_url: placement.viewer_url.replace(docId, "other") } },
+  { target: destination, placement: { ...placement, viewer_url: "https://example.test" + placement.viewer_url } }
+]) assert.throws(() => committedDocumentPlacement(invalid, hostTarget), /Placement service/);
+for (const mode of ["copy", "move"]) {
+  assert.equal(docsViewerDocumentTransferActionControlState({ mode, source: { scope: "analysis", stage: "working" } }).hidden, true);
+  assert.equal(docsViewerDocumentTransferActionControlState({ mode, source: { scope: "studio" } }).hidden, false);
+}
 for (const wrongTarget of [
   { ...hostTarget, stage: "pre-publish" },
   { scope: hostTarget.scope, doc_id: docId },

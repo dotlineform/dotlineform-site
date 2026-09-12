@@ -18,7 +18,8 @@ const payload = { schema_version: 1, self: summary(1, "A"), outgoing: [
   entry(summary(3, "Concept", "concepts", work)),
   entry(summary(4, "Reference")),
   entry(summary(5, "Other child", "moments")),
-  entry(summary(6, "alpha", "works", work))
+  entry(summary(6, "alpha", "works", work)),
+  entry(summary(8, "Unassociated Work document", "works", { state: "none", kind: "none", key: "", fields: [] }))
 ], incoming: [entry(summary(2, "Zebra", "works", work)), entry(summary(4, "Reference")), entry(summary(7, "Reference"))] };
 const originalPayload = structuredClone(payload);
 const view = docsViewerLinksPresentation(payload, target);
@@ -26,7 +27,7 @@ assert.deepEqual(payload, originalPayload); // Direction and occurrences remain 
 assert.deepEqual(view.sections.map(s => s.label), ["Concepts", "Works", "References"]);
 assert.equal(view.sections[0].entries.length, 1); // Concept classification wins subject overlap.
 assert.deepEqual(view.sections[1].entries.map(e => e.document.title), ["alpha", "Zebra"]);
-assert.deepEqual(view.sections[2].entries.map(e => e.document.target.doc_id), [id(4), id(7)]); // Include incoming-only documents; keep same-title identities distinct.
+assert.deepEqual(view.sections[2].entries.map(e => e.document.target.doc_id), [id(4), id(7), id(8)]); // Preserve incoming-only and same-title identities, and unassociated Works documents.
 assert.equal(view.sections.flatMap(s => s.entries).some(e => "direction" in e), false);
 const exactIdentities = docsViewerLinksPresentation({ ...payload,
   outgoing: [entry(summary(2, "Same", "works", work))],

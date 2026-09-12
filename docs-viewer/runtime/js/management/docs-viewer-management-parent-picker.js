@@ -145,7 +145,7 @@ export function createDocsViewerMetadataParentPicker(options = {}) {
 
   function renderOptions(doc) {
     if (!refs.metadataParentInput) return;
-    var currentParentId = String(doc && doc.parent_id || "").trim();
+    var currentParentId = String(doc && (doc.location_parent_id !== undefined ? doc.location_parent_id : doc.parent_id) || "").trim();
     var records = parentOptions(callbacks, doc);
     var currentOption = records.find(function (option) {
       return option.value === currentParentId;

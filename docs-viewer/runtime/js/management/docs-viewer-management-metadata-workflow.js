@@ -11,7 +11,7 @@ import {
 
 var METADATA_TEXT = {
   parentRootOption: "Root",
-  parentInvalid: "Select a parent from the search field suggestions or enter Root.",
+  parentInvalid: "Select a location from the search field suggestions or enter Root.",
   titleRequired: "Enter a title."
 };
 
@@ -71,7 +71,7 @@ export function createDocsViewerManagementMetadataWorkflow(options = {}) {
       ? modal.readMetadataCustomisation()
       : null;
     if (customisation !== null) payload.customisation = customisation;
-    if (!editingTarget.sub_scope) {
+    if (!editingTarget.sub_scope || Object.prototype.hasOwnProperty.call(editingDoc, "location_parent_id")) {
       if (!refs.parentInput) return null;
       var parentId = modal.resolveMetadataParentId(editingDoc);
       if (parentId === null) {
@@ -109,8 +109,13 @@ export function createDocsViewerManagementMetadataWorkflow(options = {}) {
     if (!record || typeof record !== "object" || String(record.doc_id || "").trim() !== target.doc_id) {
       throw new Error("Loaded document metadata did not match the requested document.");
     }
+    if (response.location_parent_id !== undefined && typeof response.location_parent_id !== "string") {
+      throw new Error("Loaded document location is invalid.");
+    }
     return {
-      record: record,
+      record: response.location_parent_id === undefined
+        ? record
+        : { ...record, location_parent_id: response.location_parent_id },
       choices: null,
       sourceRevision: String(response.source_revision || "").trim()
     };
@@ -157,7 +162,7 @@ export function createDocsViewerManagementMetadataWorkflow(options = {}) {
           if (!modal) return null;
           var modalOptions = {
             target: normalizedTarget,
-            showParent: !normalizedTarget.sub_scope,
+            showParent: !normalizedTarget.sub_scope || Object.prototype.hasOwnProperty.call(editingDoc, "location_parent_id"),
             choices: editingChoices
           };
           if (metadataContribution) {
@@ -166,9 +171,9 @@ export function createDocsViewerManagementMetadataWorkflow(options = {}) {
           return modal.openMetadataModal(editingDoc, modalOptions);
         });
       })
-      .then(function (payload) {
+      .then(async function (payload) {
         if (payload && editingTarget && typeof callbacks.onSave === "function") {
-          callbacks.onSave(editingTarget, payload);
+          await callbacks.onSave(editingTarget, payload);
         }
         clearEditingState();
         return payload;
@@ -184,7 +189,7 @@ export function createDocsViewerManagementMetadataWorkflow(options = {}) {
     var modal = modalController();
     if (!modal || !editingTarget || !editingDoc) return;
     modal.renderMetadataStatusOptions(editingDoc, editingChoices);
-    if (!editingTarget.sub_scope) {
+    if (!editingTarget.sub_scope || Object.prototype.hasOwnProperty.call(editingDoc, "location_parent_id")) {
       modal.renderMetadataParentOptions(editingDoc);
     }
   }

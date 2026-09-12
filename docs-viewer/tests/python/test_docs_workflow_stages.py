@@ -19,6 +19,7 @@ from build_docs_test_support import prepare_repo, run_cli
 
 
 DOC_ID = "d-20260906-170000-a1b2c3"
+REPORT_ID = "d-20260906-170000-d4e5f6"
 
 
 @pytest.fixture
@@ -46,6 +47,9 @@ def stage_repo(tmp_path: Path) -> Path:
                 encoding="utf-8",
             )
         output = tmp_path / scopes.generated_documents_path(config)
+        (tmp_path / scopes.document_source_path(config) / f"{REPORT_ID}.md").write_text(
+            f"---\ndoc_id: {REPORT_ID}\ntitle: Works\n---\n:::report\nid: docs_subscope\naccess: {'local' if stage == 'working' else 'public'}\nsub_scope: works\n:::\n"
+        )
         write_json(output / "index-tree.json", {"docs": [{"doc_id": DOC_ID, "content_url": "/docs/doc"}]})
         write_json(output / "by-id" / f"{DOC_ID}.json", {"doc_id": DOC_ID, "title": stage})
     return tmp_path
@@ -102,6 +106,7 @@ def test_report_host_reparenting_keeps_stage_and_child_destinations(stage_repo: 
     config = scopes.load_docs_scope_stage(stage_repo, "analysis", "working")
     root = stage_repo / scopes.document_source_path(config)
     host = root / f"{DOC_ID}.md"
+    (root / f"{REPORT_ID}.md").unlink()
     host.write_text(host.read_text() + "\n:::report\nid: docs_subscope\naccess: local\nsub_scope: works\n:::\n")
     parent_id = "d-20260907-215200-aaaaaa"
     child_id = "d-20260907-215200-bbbbbb"
@@ -140,9 +145,8 @@ def test_report_host_reparenting_keeps_stage_and_child_destinations(stage_repo: 
     assert not unchanged.source_writes
 
     for changes, message in (
-        ({"stage": None}, "requires stage"),
+        ({"stage": None}, "stage must be a non-blank string"),
         ({"stage": "pre-publish"}, "Pre-publish document authoring is unavailable"),
-        ({"sub_scope": "works"}, "parent-scope document"),
         ({"parent_id": "missing"}, "Unknown parent_id"),
         ({"parent_id": DOC_ID}, "cannot be the current doc"),
         ({"parent_id": child_id}, "cannot be a child or descendant"),
@@ -512,6 +516,7 @@ def test_stage_build_writes_exact_parent_and_report_payloads(stage_repo: Path) -
         config = scopes.load_docs_scope_stage(stage_repo, "analysis", stage)
         root = stage_repo / scopes.document_source_path(config)
         source = root / f"{DOC_ID}.md"
+        (root / f"{REPORT_ID}.md").unlink()
         source.write_text(source.read_text() + f"\n:::report\nid: docs_subscope\naccess: public\nsub_scope: {collection}\n:::\n", encoding="utf-8")
         code, stdout, stderr = run_cli(stage_repo, ["--scope", "analysis", "--stage", stage, "--write", "--skip-media-builds"])
         assert code == 0, stdout + stderr
@@ -693,7 +698,7 @@ def test_watcher_owns_working_collections_only(stage_repo: Path) -> None:
     assert "analysis/working" in specs and "analysis/working/works" in specs
     assert not any("pre-publish" in key for key in specs)
     state = specs["analysis/working"]
-    assert list(watcher.state_snapshot(state)) == [f"{DOC_ID}.md"]
+    assert set(watcher.state_snapshot(state)) == {f"{DOC_ID}.md", f"{REPORT_ID}.md"}
     assert watch_suppression_owner("analysis", "projects", stage="working") != watch_suppression_owner("analysis", "projects", stage="pre-publish")
 
 

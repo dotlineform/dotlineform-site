@@ -206,9 +206,7 @@ def test_sub_scope_delete_service_removes_only_exact_child_outputs(
     assert not paths["target_payload_path"].exists()
     assert paths["sibling_path"].read_bytes() == sibling_source_before
     assert paths["sibling_payload_path"].read_bytes() == sibling_payload_before
-    assert read_json(paths["manifest_path"]) == {
-        "docs": [{"doc_id": SIBLING_DOC_ID, "title": "Sibling"}]
-    }
+    assert [row["doc_id"] for row in read_json(paths["manifest_path"])["docs"]] == [SIBLING_DOC_ID]
     assert {
         path: path.read_bytes()
         for path in paths["parent_sentinels"]
@@ -232,9 +230,11 @@ def test_sub_scope_delete_service_removes_only_exact_child_outputs(
     ]
 
 
+@pytest.mark.parametrize("changed_when", ["before_plan", "before_write"])
 def test_sub_scope_delete_apply_rejects_stale_source_without_writing(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
+    changed_when: str,
 ) -> None:
     paths = prepare_delete_repo(tmp_path)
     _status, preview = management_service.docs_management_post_response(
@@ -243,12 +243,19 @@ def test_sub_scope_delete_apply_rejects_stale_source_without_writing(
         preview_body(),
     )
     changed_bytes = paths["target_path"].read_bytes() + b"\nChanged after preview.\n"
-    paths["target_path"].write_bytes(changed_bytes)
+    if changed_when == "before_plan":
+        paths["target_path"].write_bytes(changed_bytes)
     rebuild_calls: list[object] = []
+
+    def rebuild(_repo, _scope, _collection, _paths, write_operation, **_options):
+        paths["target_path"].write_bytes(changed_bytes)
+        write_operation()
+        rebuild_calls.append(object())
+
     monkeypatch.setattr(
         mutation_service.write_rebuild,
         "perform_sub_scope_source_write_and_rebuild",
-        lambda *_args, **_kwargs: rebuild_calls.append(object()),
+        rebuild,
     )
 
     status, payload = management_service.docs_management_post_response(
@@ -259,6 +266,7 @@ def test_sub_scope_delete_apply_rejects_stale_source_without_writing(
 
     assert status == HTTPStatus.CONFLICT
     assert payload["ok"] is False
+    assert payload["operation"] == "apply"
     assert payload["target"] == preview_body()
     assert payload["source_revision"] == preview["source_revision"]
     assert payload["current_source_revision"] != preview["source_revision"]

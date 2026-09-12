@@ -386,6 +386,10 @@ def managed_document_metadata(
         "record": record,
         "source_revision": payload_revision,
     }
+    if resolved.scope == "analysis" and resolved.stage == "working":
+        from docs_document_placement import document_location_parent_id
+
+        payload["location_parent_id"] = document_location_parent_id(repo_root, resolved)
     if resolved.sub_scope:
         subject_fields = sub_scope_customisation_authoring_subject_fields(
             resolved.document_config.sub_scope_customisation

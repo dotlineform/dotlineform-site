@@ -778,10 +778,15 @@ def perform_multi_scope_source_write_and_rebuild(
     *,
     suppression_reason: str,
 ) -> Dict[str, Any]:
+    """Write once under exact collection suppressions and await every rebuild."""
     suppressions: list[tuple[str, list[str]]] = []
     for plan in rebuild_plans:
         scope = str(plan.get("scope") or "").strip()
-        root = current_scope_source_root(repo_root, scope)
+        stage = plan.get("stage") or None
+        sub_scope = str(plan.get("sub_scope") or "")
+        require_document_authoring(load_docs_scope_stage(repo_root, scope, stage))
+        root = current_sub_scope_source_root(repo_root, scope, sub_scope, stage) if sub_scope else current_scope_source_root(repo_root, scope, stage)
+        owner = watch_suppression_owner(scope, sub_scope, stage=stage)
         filenames = sorted(
             {
                 path.resolve().relative_to(root.resolve()).as_posix()
@@ -790,26 +795,32 @@ def perform_multi_scope_source_write_and_rebuild(
             }
         )
         if filenames:
+            suppressions.append((owner, filenames))
+    try:
+        for owner, filenames in suppressions:
             set_watch_suppressions(
                 repo_root,
-                scope,
+                owner,
                 filenames,
                 status=SUPPRESSION_PENDING,
                 reason=suppression_reason,
                 ttl_seconds=DEFAULT_PENDING_TTL_SECONDS,
             )
-            suppressions.append((scope, filenames))
-    try:
         write_operation()
         rebuilds: Dict[str, Any] = {}
         for plan in rebuild_plans:
             scope = str(plan.get("scope") or "").strip()
-            rebuilds[scope] = rebuild_scope_outputs(
-                repo_root,
-                scope,
-                include_search=False,
-                docs_doc_ids=plan.get("docs_doc_ids"),
-            )
+            stage = plan.get("stage") or None
+            sub_scope = str(plan.get("sub_scope") or "")
+            owner = watch_suppression_owner(scope, sub_scope, stage=stage)
+            if sub_scope:
+                rebuilds[owner] = rebuild_sub_scope_outputs(repo_root, scope, sub_scope, stage=stage)
+            else:
+                rebuilds[owner] = rebuild_scope_outputs(
+                    repo_root, scope, include_search=False,
+                    docs_doc_ids=plan.get("docs_doc_ids"),
+                    **({"stage": stage, "skip_media_builds": True} if stage else {}),
+                )
     except Exception:
         for scope, filenames in suppressions:
             clear_watch_suppressions(repo_root, scope, filenames)

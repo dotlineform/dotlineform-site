@@ -74,6 +74,7 @@ export function docsViewerDocumentTransferActionControlState(options = {}) {
   return {
     disabled: Boolean(disabledReason),
     disabledReason: disabledReason,
+    hidden: Boolean(options.source && options.source.scope === "analysis" && options.source.stage === "working"),
     targets: targets
   };
 }
@@ -276,7 +277,7 @@ export function createDocsViewerManagementIndexController(options = {}) {
 
   function documentTransferActionControlState(mode) {
     var actionId = mode === "move" ? DOCS_VIEWER_ACTION_IDS.MOVE : DOCS_VIEWER_ACTION_IDS.COPY;
-    var source = { scope: viewerScope() };
+    var source = { scope: viewerScope(), stage: managementClientOptions().stage };
     var targets = documentTransferTargets(
       management.managementCapabilities,
       source,

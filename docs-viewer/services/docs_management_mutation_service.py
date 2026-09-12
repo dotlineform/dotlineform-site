@@ -42,6 +42,14 @@ class DocumentCreateCommittedError(RuntimeError):
         self.payload = payload
 
 
+class DocumentPlacementCommittedError(RuntimeError):
+    """Placement wrote source but did not complete every required result."""
+
+    def __init__(self, payload: Dict[str, Any]) -> None:
+        super().__init__(str(payload["error"]))
+        self.payload = payload
+
+
 class DocumentDeletePublicCleanupError(RuntimeError):
     """A document Delete committed before required public cleanup failed."""
 
@@ -175,7 +183,10 @@ def execute_management_mutation_plan(repo_root: Path, plan: mutations.Management
     if not dry_run and plan.has_source_changes:
         def write_operation() -> None:
             nonlocal source_changes_applied
-            for source_write in plan.source_writes:
+            # Check all source revisions before creating a destination or
+            # updating a referring document. Deletes carry the source revision
+            # for a relocation even though its write has a new path.
+            for source_write in (*plan.source_writes, *plan.source_deletes):
                 if source_write.original_bytes is not None:
                     try:
                         current_bytes = source_write.path.read_bytes()
@@ -189,6 +200,8 @@ def execute_management_mutation_plan(repo_root: Path, plan: mutations.Management
                         }
                         if plan.sub_scope:
                             target["sub_scope"] = plan.sub_scope
+                        if isinstance(source_write, mutations.SourceWrite) and source_write.revision_target is not None:
+                            target = source_write.revision_target
                         raise mutations.ManagedDocumentRevisionConflict(
                             mutations.revision_conflict_payload(
                                 target=target,
@@ -204,6 +217,17 @@ def execute_management_mutation_plan(repo_root: Path, plan: mutations.Management
                                 error=plan.revision_conflict_error,
                             )
                         )
+            for copy in plan.media_copies:
+                if copy.source.read_bytes() != copy.content:
+                    raise ValueError("Source media changed before placement")
+                if copy.destination.is_symlink() or (copy.destination.exists() and copy.destination.read_bytes() != copy.content):
+                    raise ValueError("Destination media changed before placement")
+            for copy in plan.media_copies:
+                if not copy.destination.exists():
+                    copy.destination.parent.mkdir(parents=True, exist_ok=True)
+                    with copy.destination.open("xb") as output:
+                        output.write(copy.content)
+            for source_write in plan.source_writes:
                 if source_write.create_only:
                     source_model.write_text_atomic_new(
                         source_write.path,
@@ -214,27 +238,8 @@ def execute_management_mutation_plan(repo_root: Path, plan: mutations.Management
                         source_write.path,
                         source_write.text,
                     )
+                source_changes_applied = True
             for source_delete in plan.source_deletes:
-                if source_delete.original_bytes is not None:
-                    try:
-                        current_bytes = source_delete.path.read_bytes()
-                    except FileNotFoundError:
-                        current_bytes = b""
-                    if current_bytes != source_delete.original_bytes:
-                        target = dict(plan.response.get("target") or {})
-                        raise mutations.ManagedDocumentRevisionConflict(
-                            mutations.revision_conflict_payload(
-                                target=target,
-                                requested_revision=str(
-                                    plan.response.get("source_revision") or ""
-                                ),
-                                current_revision=(
-                                    mutations.source_revision(current_bytes)
-                                    if current_bytes
-                                    else ""
-                                ),
-                            )
-                        )
                 source_delete.path.unlink()
             source_changes_applied = True
 
@@ -245,6 +250,8 @@ def execute_management_mutation_plan(repo_root: Path, plan: mutations.Management
                     [
                         {
                             "scope": rebuild_plan.scope,
+                            "stage": rebuild_plan.stage,
+                            "sub_scope": rebuild_plan.sub_scope,
                             "changed_paths": list(rebuild_plan.changed_paths),
                             "docs_doc_ids": rebuild_plan.build_doc_ids,
                         }
@@ -276,6 +283,11 @@ def execute_management_mutation_plan(repo_root: Path, plan: mutations.Management
         except mutations.ManagedDocumentRevisionConflict:
             raise
         except Exception as error:
+            if source_changes_applied and plan.response.get("placement", {}).get("collection_changed"):
+                raise DocumentPlacementCommittedError({
+                    **plan.response, "ok": False, "committed": True,
+                    "error": f"Document placement changed source, but its required results are incomplete: {error}",
+                }) from error
             if plan.restore_deletes_on_rebuild_failure:
                 recover_sub_scope_document_delete(repo_root, plan, error)
             if (

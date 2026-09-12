@@ -72,6 +72,30 @@ export function committedDocumentCreateTarget(payload) {
   return target;
 }
 
+/** Validate a placement result while retaining the requested scope, stage and document identity. */
+export function committedDocumentPlacement(response, source) {
+  var target = normalizeManagedDocumentTarget(response && response.target);
+  if (target.scope !== source.scope || target.doc_id !== source.doc_id || target.stage !== source.stage) {
+    throw new Error("Placement service returned a different document identity.");
+  }
+  var placement = response && response.placement;
+  var collectionChanged = String(target.sub_scope || "") !== String(source.sub_scope || "");
+  if (!placement || placement.collection_changed !== collectionChanged || typeof placement.ignored !== "boolean" || typeof placement.changed !== "boolean"
+    || (placement.ignored && placement.changed) || (collectionChanged && !placement.changed)) {
+    throw new Error("Placement service returned an invalid placement outcome.");
+  }
+  if (collectionChanged) {
+    var url = new URL(placement.viewer_url, "https://docs.invalid");
+    if (url.origin !== "https://docs.invalid" || url.pathname !== "/docs/"
+      || url.searchParams.get("scope") !== target.scope || url.searchParams.get("stage") !== target.stage
+      || (target.sub_scope ? url.searchParams.get("subdoc") !== target.doc_id || !url.searchParams.get("doc")
+        : url.searchParams.get("doc") !== target.doc_id || url.searchParams.has("subdoc"))) {
+      throw new Error("Placement service returned an invalid destination URL.");
+    }
+  }
+  return { ...placement, target: target };
+}
+
 export function committedDocumentMoveRecord(response, expectedTarget) {
   if (!managedDocumentTargetsEqual(response && response.target, expectedTarget)) {
     throw new Error("Move service returned a different document target.");
@@ -557,6 +581,10 @@ export function createDocsViewerManagementActionController(options) {
     return updateManagedDocMetadata(normalizedTarget, payload, managementClientOptions())
       .then(function (response) {
         setManagementMessage("", false);
+        var placement = committedDocumentPlacement(response, normalizedTarget);
+        if (placement.collection_changed) {
+          return callbacks.reloadPlacedDocument(placement.target, placement.viewer_url);
+        }
         if (normalizedTarget.sub_scope) {
           return callbacks.reloadMetadataTarget
             ? callbacks.reloadMetadataTarget(normalizedTarget, response)
@@ -640,13 +668,16 @@ export function createDocsViewerManagementActionController(options) {
     var clientOptions = managementClientOptions();
     try {
       setManagementBusy(true);
-      setManagementMessage("Checking Working content...", false);
+      setManagementMessage("", false);
       renderManagementUi();
       var preview = await previewManagedDocsPrePublish(clientOptions);
+      setManagementBusy(false);
+      setManagementMessage("", false);
+      renderManagementUi();
       var confirmed = await openDocsViewerConfirmModal({
         root: root,
-        title: "Rebuild Pre-publish?",
-        body: preview.summary_text + " This replaces the previous Pre-publish content.",
+        title: "Pre-publish",
+        body: preview.document_count + " documents",
         primaryLabel: "Pre-publish",
         cancelLabel: ACTION_TEXT.cancelButton
       });
@@ -654,7 +685,9 @@ export function createDocsViewerManagementActionController(options) {
         setManagementMessage("", false);
         return;
       }
+      setManagementBusy(true);
       setManagementMessage("Building Pre-publish documents and Search...", false);
+      renderManagementUi();
       var result = await applyManagedDocsPrePublish(preview, clientOptions);
       setManagementMessage(result.summary_text, false);
       if (callbacks.refreshManagementCapabilities) await callbacks.refreshManagementCapabilities();
@@ -820,13 +853,18 @@ export function createDocsViewerManagementActionController(options) {
 
     setManagementBusy(true);
     clearDragState();
-    setManagementMessage("Moving " + movingDoc.title + "...", false);
+    setManagementMessage("", false);
+    renderManagementUi();
 
     return moveManagedDoc(movingDoc.doc_id, nextParentId, clientOptions)
       .then(function (response) {
         var record;
-        setManagementBusy(false);
         try {
+          var placement = committedDocumentPlacement(response, target);
+          if (placement.collection_changed) {
+            return callbacks.reloadPlacedDocument(placement.target, placement.viewer_url);
+          }
+          if (placement.ignored || !placement.changed) return;
           record = committedDocumentMoveRecord(response, target);
           if (typeof callbacks.projectCommittedMove !== "function") {
             throw new Error("Docs Viewer local move projection is unavailable.");

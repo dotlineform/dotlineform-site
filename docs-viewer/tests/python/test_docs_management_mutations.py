@@ -145,7 +145,7 @@ def make_repo() -> tempfile.TemporaryDirectory[str]:
                 "date_display": "May 2026",
                 "added_date": "2026-05-01 09:00",
                 "last_updated": "2026-05-01 10:00",
-                "ui_status": "draft",
+                "ui_status": "review",
                 "parent_id": "retained-parent",
                 "sort_order": 4,
             },
@@ -331,7 +331,7 @@ def test_sub_scope_metadata_plan_noops_without_advancing_timestamp() -> None:
                 "summary": "old detail summary",
                 "date": "2026-05-03",
                 "date_display": "May 2026",
-                "ui_status": "draft",
+                "ui_status": "review",
             },
         )
 
@@ -344,8 +344,7 @@ def test_sub_scope_metadata_plan_noops_without_advancing_timestamp() -> None:
 @pytest.mark.parametrize(
     ("changes", "error"),
     [
-        ({"ui_status": ["draft"]}, "ui_status must be a scalar string"),
-        ({"ui_status": "unknown"}, "Unknown ui_status"),
+        ({"ui_status": "draft"}, "ui_status draft is no longer supported"),
     ],
 )
 def test_sub_scope_metadata_plan_rejects_invalid_configured_choices(

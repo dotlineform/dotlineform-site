@@ -881,9 +881,9 @@ export function initDocsViewerManagement(context) {
     return typeof routeCommands[name] === "function" ? routeCommands[name] : null;
   }
 
-  function setRouteHistory(docId, hash, query, mode) {
+  function setRouteHistory(docId, hash, query, mode, reportParams) {
     var command = routeCommand("setHistory");
-    if (command) command(docId, hash, query, mode);
+    if (command) command(docId, hash, query, mode, reportParams);
   }
 
   function loadRouteIndex() {
@@ -891,7 +891,7 @@ export function initDocsViewerManagement(context) {
     return command ? command() : Promise.resolve(null);
   }
 
-  function reloadDocsIndex(targetDocId, _summaryText) {
+  function reloadDocsIndex(targetDocId, _summaryText, reportParams) {
     selectedDocument.payloadCache.clear();
     searchRecent.searchIndex = null;
     searchRecent.searchLoaded = false;
@@ -910,7 +910,7 @@ export function initDocsViewerManagement(context) {
     }
 
     if (targetDocId) {
-      setRouteHistory(targetDocId, "", "", "replace");
+      setRouteHistory(targetDocId, "", "", "replace", reportParams);
     }
 
     return loadRouteIndex().then(function () {
@@ -1047,6 +1047,10 @@ export function initDocsViewerManagement(context) {
         return typeof context.reloadMetadataTarget === "function"
           ? context.reloadMetadataTarget(target, response)
           : response;
+      },
+      reloadPlacedDocument: function (target, viewerUrl) {
+        var url = new URL(viewerUrl, "https://docs.invalid");
+        return reloadDocsIndex(url.searchParams.get("doc"), "", target.sub_scope ? { subdoc: target.doc_id } : {});
       },
       reloadViewerConfiguration: reloadViewerConfiguration,
       refreshManagementCapabilities: refreshManagementCapabilities,
