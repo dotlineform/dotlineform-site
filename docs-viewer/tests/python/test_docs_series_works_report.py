@@ -39,7 +39,6 @@ series_id: "143"
 ---
 :::report
 id: series_works
-access: local
 :::
 ''')
     series_file = base / "catalogue/generated/series/index/143.json"

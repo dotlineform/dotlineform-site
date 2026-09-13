@@ -26,7 +26,6 @@ import docs_document_move_apply  # noqa: E402
 import docs_document_transfer  # noqa: E402
 import docs_document_transfer_apply  # noqa: E402
 import docs_management_document_target  # noqa: E402
-import docs_management_publishable  # noqa: E402
 import docs_management_draft  # noqa: E402
 import docs_import_source_service as import_source_service  # noqa: E402
 import docs_local_links  # noqa: E402
@@ -87,7 +86,7 @@ from docs_management_read_service import (  # noqa: E402
     docs_generated_read_payload,
     docs_management_get_payload as read_docs_management_get_payload,
 )
-from docs_management_source_service import detect_preferred_markdown_app, open_source_doc, rebuild_source_body  # noqa: E402
+from docs_management_source_service import detect_preferred_markdown_app, open_publication_ignore, open_source_doc, rebuild_source_body  # noqa: E402
 from docs_scope_config import load_docs_scope_configs, select_scope_stage, require_document_authoring  # noqa: E402
 
 
@@ -141,8 +140,8 @@ def docs_management_post_response(
             continue
         allowed = {
             routes.CREATE_PATH, routes.UPDATE_METADATA_PATH, routes.SOURCE_REBUILD_PATH,
-            routes.OPEN_SOURCE_PATH, routes.DELETE_PREVIEW_PATH, routes.DELETE_APPLY_PATH,
-            routes.ASSIGN_FIELD_GROUP_PATH, routes.SET_PUBLISHABLE_PATH, routes.SET_DRAFT_PATH,
+            routes.OPEN_SOURCE_PATH, routes.OPEN_PUBLICATION_IGNORE_PATH, routes.DELETE_PREVIEW_PATH, routes.DELETE_APPLY_PATH,
+            routes.ASSIGN_FIELD_GROUP_PATH, routes.SET_DRAFT_PATH,
             routes.REBUILD_PATH, routes.MOVE_PATH,
         }
         if field != "scope" or path not in allowed:
@@ -165,6 +164,8 @@ def docs_management_post_response(
         return HTTPStatus.OK, rebuild_source_body(repo_root, body, dry_run)
     if path == routes.OPEN_SOURCE_PATH:
         return HTTPStatus.OK, open_source_doc(repo_root, body, dry_run)
+    if path == routes.OPEN_PUBLICATION_IGNORE_PATH:
+        return HTTPStatus.OK, open_publication_ignore(repo_root, body, dry_run)
     if path == routes.OPEN_DIAGRAM_SOURCE_PATH:
         return HTTPStatus.OK, docs_diagram_source_service.open_diagram_source(repo_root, body, dry_run)
     if path == routes.OPEN_LOCAL_TARGET_PATH:
@@ -260,20 +261,6 @@ def docs_management_post_response(
             return HTTPStatus.INTERNAL_SERVER_ERROR, error.payload
         except mutations.ManagedDocumentRevisionConflict as error:
             return HTTPStatus.CONFLICT, error.payload
-    if path == routes.SET_PUBLISHABLE_PATH:
-        try:
-            return (
-                HTTPStatus.OK,
-                docs_management_publishable.set_publishable(
-                    repo_root,
-                    body,
-                    dry_run=dry_run,
-                ),
-            )
-        except docs_management_publishable.PublishableSelectionConflict as error:
-            return HTTPStatus.CONFLICT, error.payload
-        except docs_management_publishable.PublishableSelectionApplyError as error:
-            return HTTPStatus.INTERNAL_SERVER_ERROR, error.payload
     if path == routes.ASSIGN_FIELD_GROUP_PATH:
         try:
             return HTTPStatus.OK, handle_assign_field_group(repo_root, body, dry_run)

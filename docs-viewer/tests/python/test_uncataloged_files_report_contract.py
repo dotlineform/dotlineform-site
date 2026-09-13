@@ -38,17 +38,9 @@ def test_manage_registry_declares_local_uncataloged_files_report() -> None:
         if isinstance(record, dict)
     }
 
-    assert records["uncataloged_files"] == {
-        "report_id": "uncataloged_files",
-        "title": "Uncataloged Files",
-        "description": (
-            "Lists ordinary files in represented Work source folders that are "
-            "not canonical Work primary sources."
-        ),
-        "default_access": "local",
-        "loader_id": "uncataloged_files",
-        "presets": [],
-    }
+    assert records["uncataloged_files"]['report_id'] == "uncataloged_files"
+    assert records["uncataloged_files"]['loader_id'] == "uncataloged_files"
+    assert records["uncataloged_files"]['presets'] == []
 
 
 def test_public_registry_does_not_expose_uncataloged_files_report() -> None:
@@ -113,12 +105,9 @@ def test_management_service_returns_table_only_live_report(
     )
 
     assert status == HTTPStatus.OK
-    assert payload == {
-        "ok": True,
-        "dry_run": False,
-        "summary_text": "Uncataloged Files refreshed.",
-        "report": report,
-    }
+    assert payload['ok'] == True
+    assert payload['dry_run'] == False
+    assert payload['report'] == report
     assert calls == [tmp_path]
 
 

@@ -3,7 +3,6 @@ import {
   documentTransferSourceSupported,
   documentTransferSupported,
   documentTransferTargets,
-  scopeManagementCapabilities,
   scopeStaticHtmlExportCapability
 } from "./docs-viewer-management-capabilities.js";
 import {
@@ -17,9 +16,6 @@ import {
 import {
   openStaticHtmlSnapshotExportWorkflow
 } from "./docs-viewer-static-html-export-workflow.js";
-import {
-  openDocsViewerSetPublishableWorkflow
-} from "./docs-viewer-management-publishable-workflow.js";
 import {
   normalizeManagedDocumentCollectionTarget
 } from "./docs-viewer-management-document-target.js";
@@ -101,30 +97,6 @@ export function docsViewerStaticHtmlExportActionControlState(options = {}) {
   };
 }
 
-export function docsViewerSetPublishableActionControlState(options = {}) {
-  var resolution = options.resolution || null;
-  var scopeCaps = scopeManagementCapabilities(
-    options.capabilities,
-    options.source && options.source.scope
-  );
-  var hidden = !options.managementChecked || !scopeCaps || !scopeCaps.available || !scopeCaps.publishable;
-  var disabledReason = "";
-  if (!hidden && !options.managementAvailable) {
-    disabledReason = "Set Publishable is unavailable.";
-  } else if (!hidden && (options.managementBusy || options.workflowActive)) {
-    disabledReason = "Docs management is busy.";
-  } else if (!hidden && (!resolution || !resolution.enabled)) {
-    disabledReason = resolution && resolution.disabledReason
-      ? resolution.disabledReason
-      : "Select one or more documents.";
-  }
-  return {
-    hidden: hidden,
-    disabled: hidden || Boolean(disabledReason),
-    disabledReason: disabledReason
-  };
-}
-
 export function createDocsViewerManagementIndexController(options = {}) {
   var root = options.root || null;
   var nav = options.nav || null;
@@ -136,7 +108,6 @@ export function createDocsViewerManagementIndexController(options = {}) {
   var documentRef = options.document || document;
   var windowRef = options.window || window;
   var openSnapshotExportWorkflow = options.openSnapshotExportWorkflow || openStaticHtmlSnapshotExportWorkflow;
-  var openSetPublishableWorkflow = options.openSetPublishableWorkflow || openDocsViewerSetPublishableWorkflow;
   var indexSelection = options.indexSelection || createDocsViewerIndexSelectionOwner({
     initialScopeId: viewerScope()
   });
@@ -144,7 +115,6 @@ export function createDocsViewerManagementIndexController(options = {}) {
   var documentTransferWorkflowRequest = null;
   var preparePackageWorkflowRequest = null;
   var snapshotExportWorkflowActive = false;
-  var setPublishableWorkflowActive = false;
 
   function viewerScope() {
     return typeof callbacks.viewerScope === "function" ? callbacks.viewerScope() : "";
@@ -309,18 +279,6 @@ export function createDocsViewerManagementIndexController(options = {}) {
     });
   }
 
-  function setPublishableActionControlState(source, resolution) {
-    return docsViewerSetPublishableActionControlState({
-      capabilities: management.managementCapabilities,
-      managementAvailable: management.managementAvailable,
-      managementBusy: management.managementBusy,
-      managementChecked: management.managementChecked,
-      resolution: resolution || resolveAction(DOCS_VIEWER_ACTION_IDS.SET_PUBLISHABLE),
-      source: source,
-      workflowActive: setPublishableWorkflowActive
-    });
-  }
-
   function projectActions() {
     if (typeof callbacks.projectIndexViewControlState !== "function") return null;
     var visible = Boolean(
@@ -333,7 +291,6 @@ export function createDocsViewerManagementIndexController(options = {}) {
       items: {
         [DOCS_VIEWER_ACTION_IDS.EXPORT_DOCS]: snapshotExportActionControlState(),
         [DOCS_VIEWER_ACTION_IDS.PREPARE_DOCUMENT_PACKAGE]: preparePackageActionControlState(),
-        [DOCS_VIEWER_ACTION_IDS.SET_PUBLISHABLE]: setPublishableActionControlState({ scope: viewerScope() }),
         [DOCS_VIEWER_ACTION_IDS.COPY]: documentTransferActionControlState("copy"),
         [DOCS_VIEWER_ACTION_IDS.MOVE]: documentTransferActionControlState("move"),
         [DOCS_VIEWER_ACTION_IDS.DELETE]: deleteActionControlState()
@@ -694,47 +651,6 @@ export function createDocsViewerManagementIndexController(options = {}) {
     });
   }
 
-  function openSetPublishable(source, checkedDocIds, options) {
-    var settings = options || {};
-    setPublishableWorkflowActive = true;
-    renderManagementUi();
-    return openSetPublishableWorkflow({
-      root: root,
-      source: source,
-      checkedDocIds: checkedDocIds,
-      restoreFocus: settings.restoreFocus,
-      clientOptions: managementClientOptions(),
-      callbacks: {
-        setBusy: setManagementBusy,
-        setMessage: setManagementMessage,
-        render: renderManagementUi,
-        onApplied: settings.onApplied
-      }
-    }).finally(function () {
-      setPublishableWorkflowActive = false;
-      renderManagementUi();
-    });
-  }
-
-  function handleSetPublishable() {
-    var resolution = resolveAction(DOCS_VIEWER_ACTION_IDS.SET_PUBLISHABLE);
-    var source = { scope: viewerScope() };
-    var stage = managementClientOptions().stage;
-    if (stage) source.stage = stage;
-    var controlState = setPublishableActionControlState(source);
-    if (!resolution || !resolution.enabled || controlState.disabled) {
-      return Promise.resolve(null);
-    }
-    return openSetPublishable(source, resolution.targetDocIds.slice(), {
-      restoreFocus: indexActionsButton(),
-      onApplied: function () {
-        return typeof callbacks.reloadDocsIndex === "function"
-          ? callbacks.reloadDocsIndex(activeDocId(), "")
-          : null;
-      }
-    });
-  }
-
   function handleControl(detail) {
     var controlId = String(detail && detail.controlId || "").trim();
     var actionId = String(detail && detail.actionId || "").trim();
@@ -791,8 +707,6 @@ export function createDocsViewerManagementIndexController(options = {}) {
       handlePreparePackage();
     } else if (actionId === DOCS_VIEWER_ACTION_IDS.EXPORT_DOCS) {
       handleSnapshotExport();
-    } else if (actionId === DOCS_VIEWER_ACTION_IDS.SET_PUBLISHABLE) {
-      handleSetPublishable();
     } else if (actionId === DOCS_VIEWER_ACTION_IDS.COPY) {
       handleDocumentTransfer("copy");
     } else if (actionId === DOCS_VIEWER_ACTION_IDS.MOVE) {

@@ -136,7 +136,6 @@ def test_rebuild_source_body_lightly_validates_inserted_report_block() -> None:
                     "# Target\n\n"
                     ":::report\n"
                     "id: reports_list\n"
-                    "access: public\n"
                     ":::\n"
                 ),
             },
@@ -152,7 +151,6 @@ def test_rebuild_source_body_lightly_validates_inserted_report_block() -> None:
                     "source_body": (
                         "# Target\n\n"
                         ":::report\n"
-                        "id: reports_list\n"
                         ":::\n"
                     ),
                 },

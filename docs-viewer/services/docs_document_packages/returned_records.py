@@ -27,7 +27,7 @@ def normalize_record(row: dict[str, Any], record_index: int, line: int | None) -
             issue(
                 "error",
                 "legacy_viewable",
-                "record uses retired viewable metadata; regenerate the package with publishable",
+                "record uses retired viewable metadata; regenerate the package",
                 record_index=record_index,
                 line=line,
                 doc_id=doc_id,
@@ -52,9 +52,6 @@ def normalize_record(row: dict[str, Any], record_index: int, line: int | None) -
     for key in ["summary", "current_summary"]:
         if key in row:
             normalized["metadata"][key] = str(row.get(key) or "")
-    for key in ["publishable"]:
-        if key in row:
-            normalized["metadata"][key] = row.get(key)
     if "headings" in row:
         normalized["metadata"]["headings"] = normalize_string_list(row.get("headings"))
     if "content" in row:

@@ -1,8 +1,6 @@
 import {
   buildChildrenMap,
-  hasNonPublishableAncestor,
-  compareDocs,
-  isDocPublishable
+  compareDocs
 } from "./docs-viewer-tree.js";
 import {
   projectCommittedTreeMoveModel
@@ -26,7 +24,6 @@ export function createDocsViewerDocumentIndexState(options) {
 
   function shouldIncludeDoc(doc) {
     if (!state.managementContext && isManageOnlyTreeDoc(doc)) return false;
-    if (!state.managementContext) return isDocPublishable(doc) && !hasNonPublishableAncestor(doc, state.allDocsById);
     return true;
   }
 
@@ -59,7 +56,6 @@ export function createDocsViewerDocumentIndexState(options) {
   function statusForIndexDoc(doc) {
     if (!doc || isNonLoadableDoc(doc)) return null;
     if (!state.managementContext && isManageOnlyTreeDoc(doc)) return null;
-    if (!isDocPublishable(doc) && !state.managementContext) return null;
     var statusValue = String(doc.ui_status || "").trim();
     return statusValue ? state.uiStatusByValue.get(statusValue) || null : null;
   }

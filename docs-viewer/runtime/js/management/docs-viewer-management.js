@@ -87,7 +87,6 @@ export function createDocsViewerManagementActionResolver(options = {}) {
       "delete", "edit-metadata", "markdown-save", "markdown-source", "new", "new-child", "new-sibling", "open-vscode",
       DOCS_VIEWER_ACTION_IDS.REBUILD_DOCS,
       DOCS_VIEWER_ACTION_IDS.PRE_PUBLISH_DOCS,
-      DOCS_VIEWER_ACTION_IDS.SET_PUBLISHABLE,
       DOCS_VIEWER_ACTION_IDS.SOURCE_ADD_CATALOGUE_IMAGE,
       DOCS_VIEWER_ACTION_IDS.SOURCE_ADD_MEDIA_VIEW_LINK,
       DOCS_VIEWER_ACTION_IDS.SOURCE_ADD_FILE,

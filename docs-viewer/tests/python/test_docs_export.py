@@ -62,8 +62,6 @@ BASE_CONFIG = {
             "selection": {
                 "mode": "explicit_doc_ids",
                 "include_descendants": True,
-                "include_non_publishable": True,
-                "supports_include_non_publishable": True,
                 "supports_missing_summary_only": True,
                 "default_missing_summary_only": False,
             },
@@ -132,7 +130,6 @@ def write_doc(
     parent_id: str = "",
     summary: str = "",
     last_updated: str = "2026-05-03 10:00",
-    publishable: bool = True,
     body: str = "Body text.",
 ) -> None:
     lines = [
@@ -146,8 +143,6 @@ def write_doc(
         lines.append(f"parent_id: {parent_id}")
     if summary:
         lines.append(f"summary: {summary}")
-    if not publishable:
-        lines.append("publishable: false")
     lines.extend(["---", "", body])
     path = root / "docs-viewer/scopes/example/source/documents" / filename
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -208,32 +203,6 @@ def test_missing_summary_filter_reports_expected_skips() -> None:
     ]
 
 
-def test_non_publishable_override_is_revalidated_inside_submitted_target() -> None:
-    with make_repo() as temp:
-        root = Path(temp)
-        write_doc(
-            root,
-            "child-with-summary.md",
-            doc_id="child-with-summary",
-            title="Child With Summary",
-            parent_id="example",
-            summary="Existing summary.",
-            publishable=False,
-        )
-        report = run_export(
-            root,
-            selected_doc_ids=["example", "child-with-summary"],
-            missing_summary_only=False,
-            include_non_publishable=False,
-        )
-
-    assert report["ok"] is True
-    assert report["counts"] == {"selected": 2, "exported": 1, "skipped": 1, "failed": 0, "truncated": 0}
-    assert report["selected_doc_ids"] == ["example"]
-    assert report["skipped_summary"] == {"non_publishable": 1}
-    assert report["counts"]["selected"] == sum(
-        report["counts"][key] for key in ("exported", "failed", "skipped")
-    )
 
 
 def test_zero_result_keeps_submitted_target_inside_count_invariant() -> None:
@@ -254,19 +223,11 @@ def test_zero_result_keeps_submitted_target_inside_count_invariant() -> None:
 def test_unsupported_filter_choices_fail_before_source_selection() -> None:
     config = copy.deepcopy(BASE_CONFIG)
     config["configs"][0]["selection"]["supports_missing_summary_only"] = False
-    config["configs"][0]["selection"]["supports_include_non_publishable"] = False
     with make_repo(config) as temp:
         missing_summary = run_export(Path(temp), missing_summary_only=True)
-        non_publishable = run_export(
-            Path(temp),
-            missing_summary_only=False,
-            include_non_publishable=False,
-        )
 
     assert missing_summary["ok"] is False
     assert "config document-content: missing_summary_only true is not supported" in missing_summary["errors"]
-    assert non_publishable["ok"] is False
-    assert "config document-content: include_non_publishable cannot override the profile default" in non_publishable["errors"]
 
 
 def test_selected_doc_resolution_uses_explicit_ids_only() -> None:
@@ -672,8 +633,6 @@ def test_repo_documents_prepare_profiles_load_and_validate() -> None:
     assert full_config["selection"] == {
         "mode": "explicit_doc_ids",
         "include_descendants": True,
-        "include_non_publishable": True,
-        "supports_include_non_publishable": True,
         "supports_missing_summary_only": True,
         "default_missing_summary_only": False,
     }
@@ -681,7 +640,6 @@ def test_repo_documents_prepare_profiles_load_and_validate() -> None:
     assert docs_document_packages.export_config.supported_content_formats(full_config) == ["markdown", "plain_text"]
     assert docs_document_packages.export_config.default_content_format(full_config) == "markdown"
     tree_config = docs_document_packages.export_config.find_export_config(payload, "document-tree")
-    assert tree_config["selection"]["supports_include_non_publishable"] is False
     assert tree_config["selection"]["supports_missing_summary_only"] is False
     assert tree_config["workflow"]["supports_docs_review"] is False
     assert tree_config["workflow"]["supports_return_import"] is False

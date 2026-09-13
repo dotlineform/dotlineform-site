@@ -89,9 +89,6 @@ function selectedPayloadMetadata(payload, appContext, docId) {
     ui_status: cleanString(record.ui_status),
     viewer_url: cleanString(record.viewer_url)
   };
-  if (Object.prototype.hasOwnProperty.call(record, "publishable")) {
-    metadata.publishable = record.publishable !== false;
-  }
   return metadata;
 }
 

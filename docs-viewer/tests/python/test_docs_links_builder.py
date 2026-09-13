@@ -31,6 +31,7 @@ def working_scope(tmp_path):
     for relative in ("docs-viewer/config/routes/docs-viewer-routes.json", "docs-viewer/config/semantic-tokens/registry.json"):
         write_text(tmp_path / relative, (REPO / relative).read_text())
     config = load_docs_scope_stage(tmp_path, "analysis", "working")
+    write_json(tmp_path / document_source_path(config) / "unpublishable.json", [X, B])
     write_json(tmp_path / links_builder.CONFIG_PATH, {"scope": "analysis", "stage": "working"})
 
     def source(doc_id, body="", metadata="", title=None):
@@ -39,12 +40,12 @@ def working_scope(tmp_path):
         write_text(path, f'---\ndoc_id: {doc_id}\ntitle: {title or doc_id}\nadded_date: "2026-09-10 12:00:00"\n{metadata}---\n{body}\n')
         return path
 
-    source(HOST, ":::report\nid: docs_subscope\naccess: local\nsub_scope: works\n:::")
+    source(HOST, ":::report\nid: docs_subscope\nsub_scope: works\n:::")
     source(A, f"[B](/docs/?scope=analysis&doc={HOST}&subdoc={B})\n\n[B detail](/docs/?scope=analysis&doc={HOST}&subdoc={B}#detail)")
     source(B, metadata='work_id: "00523"\ndraft: true\n')
     source(C, f"[A](/docs/?scope=analysis&doc={A})")
     source(D)
-    source(X, f"[B](/docs/?scope=analysis&doc={HOST}&subdoc={B})", "publishable: false\n")
+    source(X, f"[B](/docs/?scope=analysis&doc={HOST}&subdoc={B})")
     source(F, f"[B](/docs/?scope=analysis&doc={HOST}&subdoc={B})", 'folder_path: "projects/example"\n')
     source(OUTSIDE, f"[B](/docs/?scope=analysis&doc={HOST}&subdoc={B})")
 

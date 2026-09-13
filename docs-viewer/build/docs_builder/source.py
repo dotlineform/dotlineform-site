@@ -51,7 +51,6 @@ class DocRecord:
     summary: str
     ui_status: str
     parent_id: str
-    publishable: bool
     source_path: str
     viewer_url: str
     content_url: str
@@ -165,7 +164,6 @@ class SourceLoadingMixin:
                 )
             except ValueError as exc:
                 raise FrontMatterSyntaxError(str(exc)) from exc
-            publishable = front_matter_boolean(front_matter, "publishable", True)
             try:
                 try:
                     report = parse_document_report(
@@ -202,7 +200,6 @@ class SourceLoadingMixin:
                     summary=summary,
                     ui_status=ui_status,
                     parent_id=parent_id,
-                    publishable=publishable,
                     source_path=relative_path,
                     viewer_url=self.viewer_url_for(doc_id),
                     content_url=self.content_url_for(doc_id),
@@ -304,8 +301,6 @@ class SourceLoadingMixin:
             entry["parent_id"] = parent_id
         if self.config.stage == "working":
             entry["draft"] = doc.front_matter.get("draft", True)
-        if not doc.publishable:
-            entry["publishable"] = False
         if doc.summary:
             entry["summary"] = doc.summary
         if doc.ui_status:

@@ -405,7 +405,7 @@ def test_sub_scope_create_apply_updates_parent_config_and_creates_nested_roots()
     assert sub_scope["lifecycle"] == payload["association"]
     assert "viewer_report" not in host_front_matter
     assert host_body.endswith(
-        ":::report\nid: docs_subscope\naccess: local\nsub_scope: tags\n:::\n"
+        ":::report\nid: docs_subscope\nsub_scope: tags\n:::\n"
     )
     assert manifest == {"docs": []}
     assert any(row["doc_id"] == host_id for row in index["docs"])

@@ -59,7 +59,6 @@ def capabilities_payload(repo_root: Path) -> Dict[str, Any]:
                     "generated_search_reads": resolve_scope_path(repo_root, generated_search_path(selected)).is_file(),
                     "published_data_reads": False,
                     "published_search_reads": False,
-                    "publishable": available and selected.stage == "working",
                     "document_transfer": {"available": False, "collections": []},
                     "pre_publish": {"preview": available and selected.stage == "working", "apply": available and selected.stage == "working"},
                     "publishing": {"status": available and selected.stage == "pre-publish", "confirm": available and selected.stage == "pre-publish", "apply": available and selected.stage == "pre-publish"},
@@ -74,7 +73,6 @@ def capabilities_payload(repo_root: Path) -> Dict[str, Any]:
                 "stages": stages,
                 "generated_data_reads": False,
                 "generated_search_reads": False,
-                "publishable": False,
                 "publishing": {"status": False, "confirm": False, "apply": False},
                 "deploy_repo": {"available": False, "preview": False, "apply": False},
             }
@@ -113,7 +111,6 @@ def capabilities_payload(repo_root: Path) -> Dict[str, Any]:
             "generated_search_reads": resolve_scope_path(repo_root, generated_search_path(config)).exists(),
             "published_data_reads": published_available,
             "published_search_reads": published_available,
-            "publishable": False,
             "document_transfer": transfer_capabilities,
             "scope_lifecycle": {
                 "manifest_recorded": manifest_record is not None,

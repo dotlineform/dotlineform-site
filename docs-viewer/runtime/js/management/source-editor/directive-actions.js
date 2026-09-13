@@ -5,7 +5,7 @@ export const DIRECTIVE_ACTIONS = Object.freeze([
     emoji: "≡",
     id: "series-works",
     label: "Works in this Series",
-    source: ":::report\nid: series_works\naccess: local\n:::"
+    source: ":::report\nid: series_works\n:::"
   }),
   Object.freeze({
     emoji: "⊞",
@@ -17,7 +17,7 @@ export const DIRECTIVE_ACTIONS = Object.freeze([
     emoji: "↩",
     id: "docs-backlinks",
     label: "Documents linking here",
-    source: ":::report\nid: docs_backlinks\naccess: local\n:::"
+    source: ":::report\nid: docs_backlinks\n:::"
   })
 ]);
 

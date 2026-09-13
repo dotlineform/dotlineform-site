@@ -60,7 +60,7 @@ status = 404;
 await assert.rejects(() => service.readScopeLinks({ scope: "analysis", stage: "working" }), /Snapshot unavailable/);
 
 const local = JSON.parse(fs.readFileSync(new URL("../../config/reports/reports.json", import.meta.url)));
-assert.equal(local.reports.find(row => row.report_id === "scope_links").default_access, "local");
+assert.equal(local.reports.find(row => row.report_id === "scope_links").loader_id, "scope_links");
 const publicRegistry = JSON.parse(fs.readFileSync(new URL("../../../site/assets/data/docs/public-reports.json", import.meta.url)));
 assert.equal(publicRegistry.reports.some(row => row.report_id === "scope_links"), false);
 assert.equal(fs.readFileSync(new URL("../../runtime/js/reports/docs-viewer-public-reports.js", import.meta.url), "utf8").includes("scope-links-report.js"), false);

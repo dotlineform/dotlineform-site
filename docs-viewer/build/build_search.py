@@ -40,7 +40,6 @@ from build_docs import (  # noqa: E402
     HTML_MEDIA_TOKEN_PATTERN,
     MEDIA_TOKEN_PATTERN,
     extract_title,
-    front_matter_boolean,
     humanize,
 )
 from docs_builder.semantic_tokens import replace_semantic_tokens  # noqa: E402
@@ -411,7 +410,6 @@ class DocsViewerSearchDataBuilder:
                     "last_updated": normalize_text(front_matter.get("last_updated")),
                     "parent_id": normalize_text(front_matter.get("parent_id") if "parent_id" in front_matter else ""),
                     "viewer_url": self.viewer_url_for(doc_id),
-                    "publishable": front_matter_boolean(front_matter, "publishable", True),
                     "body_markdown": body_markdown,
                     "report": report,
                 }
@@ -460,11 +458,6 @@ class DocsViewerSearchDataBuilder:
             normalize_text(value)
             for value in self.scope_config.manage_only_tree_root_ids
         ]
-        roots.extend(
-            normalize_text(row.get("doc_id"))
-            for row in docs
-            if isinstance(row, dict) and not boolean_field(row, "publishable", True)
-        )
         roots = [value for value in roots if value]
         if not roots:
             return set()
@@ -564,7 +557,6 @@ class DocsViewerSearchDataBuilder:
                     self.scope,
                     sub_scope.sub_scope,
                     eligible_parent_doc_ids=eligible_parent_doc_ids,
-                    require_public=False,
                     stage=self.scope_config.stage,
                 )
                 records.extend(

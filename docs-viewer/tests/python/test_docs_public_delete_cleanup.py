@@ -309,7 +309,6 @@ def prepare_child_repo(repo_root: Path) -> dict[str, Path]:
             "# Works\n\n"
             ":::report\n"
             "id: docs_subscope\n"
-            "access: public\n"
             "sub_scope: works\n"
             ":::\n"
         ),
@@ -361,7 +360,6 @@ def prepare_child_repo(repo_root: Path) -> dict[str, Path]:
         "title": "Works",
         "report": {
             "id": "docs_subscope",
-            "access": "public",
             "scope": None,
             "preset": None,
             "sub_scope": "works",

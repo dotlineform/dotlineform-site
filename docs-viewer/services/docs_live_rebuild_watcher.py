@@ -394,8 +394,6 @@ def parsed_doc_snapshot(
             "source_revision": source_revision(doc.source_text.encode("utf-8")),
             "sort_key": scope_doc_sort_key(doc),
         }
-        if parent_config.stage == "working" or getattr(document_config, "public_projection", None) is not None:
-            row["publishable"] = doc.publishable
         snapshot[doc.path.relative_to(root).as_posix()] = row
     return snapshot
 
@@ -823,11 +821,11 @@ def process_document_collection_changes(
             str(row["doc_id"])
             for snapshot in (state.get("doc_snapshot") or {}, current_docs or {})
             for filename in changed_files
-            if (row := snapshot.get(filename)) and row.get("doc_id") and row.get("publishable", True) is not False
+            if (row := snapshot.get(filename)) and row.get("doc_id")
         })
         if state.get("doc_snapshot") is not None and current_docs is not None:
-            before = {row["doc_id"] for filename in changed_files if (row := state["doc_snapshot"].get(filename)) and row.get("publishable", True) is not False}
-            after = {row["doc_id"] for filename in changed_files if (row := current_docs.get(filename)) and row.get("publishable", True) is not False}
+            before = {row["doc_id"] for filename in changed_files if (row := state["doc_snapshot"].get(filename)) and row.get("doc_id")}
+            after = {row["doc_id"] for filename in changed_files if (row := current_docs.get(filename)) and row.get("doc_id")}
             links_arguments["links_created_doc_ids"] = sorted(after - before)
     if snapshot_error or current_docs is None:
         log(

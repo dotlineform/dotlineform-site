@@ -6,10 +6,7 @@ from __future__ import annotations
 import tempfile
 from pathlib import Path
 
-import build_docs
-import docs_subscope_customisations as customisations
 import pytest
-from docs_scope_config import load_docs_scope_configs
 
 from build_docs_test_support import (
     CHILD_DOC_ID,
@@ -24,6 +21,9 @@ from build_docs_test_support import (
     write_site_tools_config,
     write_text,
 )
+import build_docs
+import docs_subscope_customisations as customisations
+from docs_scope_config import load_docs_scope_configs
 from repo_factory import docs_scope_record, docs_sub_scope_record
 
 
@@ -48,7 +48,6 @@ Before report.
 
 :::report
 id: reports_list
-access: public
 :::
 
 After report with **formatted text**.
@@ -61,7 +60,7 @@ After report with **formatted text**.
     child = read_json(tmp_path / f"docs-viewer/scopes/studio/generated/sub-scopes/works/documents/by-id/{DETAIL_DOC_ID}.json")
     assert child["doc_id"] == DETAIL_DOC_ID
     assert child["report"]["id"] == "reports_list"
-    assert child["report"]["access"] == "public"
+    assert "access" not in child["report"]
     html = child["content_html"]
     assert html.count("data-docs-viewer-report-host") == 1
     assert html.index("Before report") < html.index("data-docs-viewer-report-host") < html.index("After report")
@@ -657,7 +656,6 @@ title: Works
 
 :::report
 id: docs_subscope
-access: local
 sub_scope: works
 :::
 """,
@@ -722,7 +720,6 @@ parent_id: ""
 
 :::report
 id: docs_subscope
-access: local
 sub_scope: tags
 :::
 """,
@@ -904,7 +901,7 @@ publishable: false
         )
 
         assert exit_code == 1
-        assert "publishable front matter is supported only on ordinary Analysis Working documents" in stderr
+        assert "publishable front matter is retired" in stderr
         assert f"{DETAIL_DOC_ID}.md" in stderr
         assert not (root / "docs-viewer/scopes/example/generated").exists()
 

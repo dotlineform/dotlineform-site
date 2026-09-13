@@ -21,7 +21,7 @@ WATCHER_PATH = REPO_ROOT / "docs-viewer" / "services" / "docs_live_rebuild_watch
 def test_working_watcher_preserves_exact_links_changes_across_render_fallback(tmp_path, monkeypatch, sub_scope):
     module = load_docs_live_rebuild_watcher_module()
     updated, deleted, created = [f"d-20260910-120000-{number:06x}" for number in range(1, 4)]
-    before = {"changed.md": {"doc_id": updated}, "deleted.md": {"doc_id": deleted}, "excluded.md": {"doc_id": "d-20260910-120000-000004", "publishable": False}}
+    before = {"changed.md": {"doc_id": updated}, "deleted.md": {"doc_id": deleted}, "excluded.md": {"doc_id": "d-20260910-120000-000004"}}
     current = {"changed.md": {"doc_id": updated}, "created.md": {"doc_id": created}, "unrelated.md": {"doc_id": "unrelated"}}
     state = {"scope": "analysis", "stage": "working", "sub_scope": sub_scope, "doc_snapshot": before, "root": tmp_path}
     calls = []
@@ -31,7 +31,7 @@ def test_working_watcher_preserves_exact_links_changes_across_render_fallback(tm
     monkeypatch.setattr(module, "rebuild_sub_scope", lambda *_args, **kwargs: calls.append(kwargs) or True)
     result, _ = module.process_document_collection_changes(tmp_path, state, ["changed.md", "deleted.md", "created.md", "excluded.md"], targeted_docs_threshold=0)
     assert result is True
-    assert calls[0]["links_doc_ids"] == [updated, deleted, created]
+    assert calls[0]["links_doc_ids"] == [updated, deleted, created, "d-20260910-120000-000004"]
     assert calls[0]["links_created_doc_ids"] == [created]
     if not sub_scope:
         assert calls[0]["docs_doc_ids"] is None

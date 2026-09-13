@@ -81,7 +81,6 @@ def assert_error(markdown: str, code: str, **kwargs: object) -> ReportSourceErro
 def test_valid_descriptor_is_stable_immutable_and_order_independent() -> None:
     markdown = "Intro\n\n" + block(
         "preset: scope_documents_admin",
-        "access: local",
         "id: docs_index_table",
         "scope: analysis",
     )
@@ -90,7 +89,6 @@ def test_valid_descriptor_is_stable_immutable_and_order_independent() -> None:
     assert descriptor is not None
     assert dict(descriptor.as_payload()) == {
         "id": "docs_index_table",
-        "access": "local",
         "scope": "analysis",
         "preset": "scope_documents_admin",
         "sub_scope": None,
@@ -98,7 +96,7 @@ def test_valid_descriptor_is_stable_immutable_and_order_independent() -> None:
     assert descriptor.source_range.start == len("Intro\n\n")
     assert descriptor.source_range.end == len(markdown)
     assert descriptor.source_range.start_line == 3
-    assert descriptor.source_range.end_line == 8
+    assert descriptor.source_range.end_line == 7
     with pytest.raises(FrozenInstanceError):
         descriptor.id = "reports_list"  # type: ignore[misc]
     with pytest.raises(TypeError):
@@ -119,25 +117,25 @@ def test_zero_blocks_skip_commonmark_parse(monkeypatch: pytest.MonkeyPatch) -> N
 
 
 def test_crlf_range_and_line_offset_are_exact() -> None:
-    markdown = "Head\r\n\r\n:::report\r\nid: reports_list\r\naccess: public\r\n:::\r\n"
+    markdown = "Head\r\n\r\n:::report\r\nid: reports_list\r\n:::\r\n"
     descriptor = parse(markdown, line_offset=4)
 
     assert descriptor is not None
     assert descriptor.source_range.start == len("Head\r\n\r\n")
     assert descriptor.source_range.end == len(markdown)
     assert descriptor.source_range.start_line == 7
-    assert descriptor.source_range.end_line == 10
+    assert descriptor.source_range.end_line == 9
 
 
 @pytest.mark.parametrize(
     ("markdown", "code"),
     [
-        (block("id: reports_list"), "missing_attribute"),
-        (block("access: public"), "missing_attribute"),
-        (block("id: reports_list", "access: public", ""), "malformed_attribute"),
+        (block(), "missing_attribute"),
+        (block("id: reports_list", "access: public"), "unknown_attribute"),
+        (block("id: reports_list", ""), "malformed_attribute"),
         (block("id: reports_list", "access: \"public\""), "malformed_attribute"),
-        (block(" id: reports_list", "access: public"), "malformed_attribute"),
-        (" :::report\nid: reports_list\naccess: public\n:::\n", "malformed_opener"),
+        (block(" id: reports_list"), "malformed_attribute"),
+        (" :::report\nid: reports_list\n:::\n", "malformed_opener"),
         (":::report trailing\n", "malformed_opener"),
     ],
 )
@@ -147,21 +145,21 @@ def test_required_attributes_and_exact_syntax(markdown: str, code: str) -> None:
 
 def test_duplicate_and_unknown_attributes_fail_at_attribute_line() -> None:
     duplicate = assert_error(
-        block("id: reports_list", "id: reports_list", "access: public"),
+        block("id: reports_list", "id: reports_list"),
         "duplicate_attribute",
     )
     unknown = assert_error(
-        block("id: reports_list", "access: public", "loader: reports_list"),
+        block("id: reports_list", "loader: reports_list"),
         "unknown_attribute",
     )
     assert duplicate.line == 3
-    assert unknown.line == 4
+    assert unknown.line == 3
 
 
 def test_cardinality_closure_and_blank_line_isolation() -> None:
-    first = block("id: reports_list", "access: public")
+    first = block("id: reports_list")
     assert_error(first + "\n" + first, "multiple_blocks")
-    assert_error(":::report\nid: reports_list\naccess: public\n", "unclosed_block")
+    assert_error(":::report\nid: reports_list\n", "unclosed_block")
     assert_error("Text\n" + first, "block_isolation")
     assert_error(first.rstrip("\n") + "\nText\n", "block_isolation")
 
@@ -188,14 +186,14 @@ def test_retired_front_matter_fails_even_when_blank(retired_key: str) -> None:
 @pytest.mark.parametrize(
     ("attributes", "code"),
     [
-        (("id: missing_report", "access: public"), "unknown_report"),
-        (("id: reports_list", "access: private"), "unknown_access"),
-        (("id: docs_index_table", "access: local", "scope: missing"), "invalid_scope"),
-        (("id: docs_index_table", "access: local", "preset: missing"), "invalid_preset"),
-        (("id: reports_list", "access: public", "scope: analysis"), "invalid_scope"),
-        (("id: semantic_tokens", "access: local", "scope: studio"), "invalid_scope"),
-        (("id: docs_broken_links", "access: local", "preset: az_index"), "invalid_preset"),
-        (("id: reports_list", "access: public", "sub_scope: tags"), "invalid_sub_scope"),
+        (("id: missing_report",), "unknown_report"),
+        (("id: reports_list", "access: private"), "unknown_attribute"),
+        (("id: docs_index_table", "scope: missing"), "invalid_scope"),
+        (("id: docs_index_table", "preset: missing"), "invalid_preset"),
+        (("id: reports_list", "scope: analysis"), "invalid_scope"),
+        (("id: semantic_tokens", "scope: studio"), "invalid_scope"),
+        (("id: docs_broken_links", "preset: az_index"), "invalid_preset"),
+        (("id: reports_list", "sub_scope: tags"), "invalid_sub_scope"),
     ],
 )
 def test_unknown_values_and_forbidden_context_fail(
@@ -205,19 +203,19 @@ def test_unknown_values_and_forbidden_context_fail(
 
 
 def test_registered_scope_context_is_allowed_for_scope_reports() -> None:
-    descriptor = parse(block("id: docs_broken_links", "access: local", "scope: studio"))
+    descriptor = parse(block("id: docs_broken_links", "scope: studio"))
     assert descriptor is not None
     assert descriptor.scope == "studio"
 
 
 def test_docs_subscope_requires_a_configured_child() -> None:
-    assert_error(block("id: docs_subscope", "access: public"), "invalid_sub_scope")
+    assert_error(block("id: docs_subscope"), "invalid_sub_scope")
     assert_error(
-        block("id: docs_subscope", "access: public", "sub_scope: unknown"),
+        block("id: docs_subscope", "sub_scope: unknown"),
         "invalid_sub_scope",
     )
     descriptor = parse(
-        block("id: docs_subscope", "access: public", "sub_scope: works")
+        block("id: docs_subscope", "sub_scope: works")
     )
     assert descriptor is not None
     assert descriptor.sub_scope == "works"
@@ -225,7 +223,7 @@ def test_docs_subscope_requires_a_configured_child() -> None:
 
 def test_ordinary_report_block_is_allowed_in_child_subscope_source() -> None:
     descriptor = parse(
-        block("id: reports_list", "access: public"),
+        block("id: reports_list"),
         contract=contract(source_sub_scope_id="works"),
     )
     assert descriptor is not None
@@ -235,7 +233,7 @@ def test_ordinary_report_block_is_allowed_in_child_subscope_source() -> None:
 def test_collection_report_is_forbidden_in_child_subscope_source() -> None:
     child_contract = contract(source_sub_scope_id="works")
     assert_error(
-        block("id: docs_subscope", "access: public", "sub_scope: works"),
+        block("id: docs_subscope", "sub_scope: works"),
         "sub_scope_source",
         contract=child_contract,
     )
@@ -255,7 +253,7 @@ def test_collection_report_is_forbidden_in_child_subscope_source() -> None:
     ],
 )
 def test_literal_markdown_contexts_are_ignored(literal: str) -> None:
-    markdown = literal + "\n\n" + block("id: reports_list", "access: public")
+    markdown = literal + "\n\n" + block("id: reports_list")
     descriptor = parse(markdown)
     assert descriptor is not None
     assert descriptor.id == "reports_list"
@@ -275,14 +273,14 @@ def test_non_declaration_tokens_are_not_recognized(markdown: str) -> None:
 
 def test_error_includes_source_path_line_and_exact_range() -> None:
     error = assert_error(
-        "Head\n\n" + block("id: reports_list", "access: public", "unknown: value"),
+        "Head\n\n" + block("id: reports_list", "unknown: value"),
         "unknown_attribute",
     )
     assert error.source_name == SOURCE_NAME
-    assert error.line == 6
-    assert error.start == len("Head\n\n:::report\nid: reports_list\naccess: public\n")
+    assert error.line == 5
+    assert error.start == len("Head\n\n:::report\nid: reports_list\n")
     assert error.end > error.start
-    assert f"{SOURCE_NAME}:6:" in str(error)
+    assert f"{SOURCE_NAME}:5:" in str(error)
     assert f"source range {error.start}:{error.end}" in str(error)
 
 

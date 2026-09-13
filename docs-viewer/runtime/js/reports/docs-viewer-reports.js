@@ -146,7 +146,6 @@ function normalizeReport(raw) {
     reportId,
     title: cleanString(raw && raw.title) || reportId,
     description: cleanString(raw && raw.description),
-    defaultAccess: cleanString(raw && raw.default_access) || "public",
     loaderId: cleanString(raw && raw.loader_id) || reportId,
     presets: Array.isArray(raw && raw.presets)
       ? raw.presets.map(normalizePreset).filter(function (preset) { return preset.presetId; })
@@ -196,7 +195,6 @@ function normalizeReportMetadata(payload) {
   return {
     reportId,
     scope: cleanString(report.scope),
-    access: cleanString(report.access),
     preset: cleanString(report.preset),
     subScope: cleanString(report.sub_scope)
   };
@@ -245,32 +243,6 @@ function unavailable(root, message) {
   root.appendChild(note);
 }
 
-function accessMessage(access) {
-  if (access === "local") {
-    return "This report is available in local Docs Viewer mode.";
-  }
-  return "This report is unavailable in the current viewer context.";
-}
-
-function canMountReport(meta, reportMeta, context) {
-  const access = meta.access || reportMeta.defaultAccess || "public";
-  if (access === "public") {
-    return Promise.resolve({ ok: true, access });
-  }
-  if (access === "local") {
-    return Promise.resolve({
-      ok: Boolean(
-        context.managementContext
-        && context.managementService
-        && context.appContext
-        && context.appContext.kind === "manage"
-      ),
-      access
-    });
-  }
-  return Promise.resolve({ ok: false, access });
-}
-
 export function mountDocsViewerReport(context) {
   const meta = normalizeReportMetadata(context && context.payload);
   if (!meta) return Promise.resolve(false);
@@ -298,42 +270,35 @@ export function mountDocsViewerReport(context) {
       return true;
     }
 
-    return canMountReport(meta, reportMeta, context).then((result) => {
+    root.innerHTML = '<p class="docsViewerReport__status">Loading report...</p>';
+    return loader.load().then(function (mount) {
       if (!isCurrent()) return false;
-      if (!result.ok) {
-        unavailable(root, accessMessage(result.access));
-        return true;
-      }
-      root.innerHTML = '<p class="docsViewerReport__status">Loading report...</p>';
-      return loader.load().then(function (mount) {
+      const resolvedReportMeta = Object.assign({}, meta, { registryEntry: reportMeta });
+      return Promise.resolve(mount(Object.assign({}, context, {
+        reportRoot: root,
+        reportMeta: resolvedReportMeta,
+        reportRegistry: registry,
+        mountSubscopeDocumentContent: function (child) {
+          var target = child.documentTarget;
+          mountDocsViewerMediaLinks({
+            content: child.content,
+            documentTarget: { scope: target.scope, ...(target.stage ? { stage: target.stage } : {}),
+              subScope: target.sub_scope, docId: target.doc_id },
+            isCurrentDocument: child.isCurrentDocument,
+            openMediaTarget: context.openMediaTarget,
+            loadMediaTarget: context.loadMediaTarget,
+            openMediaPresentation: context.openMediaPresentation
+          });
+          if (!child.payload.report) return Promise.resolve();
+          return mountDocsViewerReport(Object.assign({}, context, child, {
+            // Child reports mount inline; the outer document owns Content Detail.
+            reportPresentationAdapter: null
+          }));
+        }
+      }))).then(function (mountResult) {
         if (!isCurrent()) return false;
-        const resolvedReportMeta = Object.assign({}, meta, { registryEntry: reportMeta });
-        return Promise.resolve(mount(Object.assign({}, context, {
-          reportRoot: root,
-          reportMeta: resolvedReportMeta,
-          reportRegistry: registry,
-          mountSubscopeDocumentContent: function (child) {
-            var target = child.documentTarget;
-            mountDocsViewerMediaLinks({
-              content: child.content,
-              documentTarget: { scope: target.scope, ...(target.stage ? { stage: target.stage } : {}),
-                subScope: target.sub_scope, docId: target.doc_id },
-              isCurrentDocument: child.isCurrentDocument,
-              openMediaTarget: context.openMediaTarget,
-              loadMediaTarget: context.loadMediaTarget,
-              openMediaPresentation: context.openMediaPresentation
-            });
-            if (!child.payload.report) return Promise.resolve();
-            return mountDocsViewerReport(Object.assign({}, context, child, {
-              // Child reports mount inline; the outer document owns Content Detail.
-              reportPresentationAdapter: null
-            }));
-          }
-        }))).then(function (mountResult) {
-          if (!isCurrent()) return false;
-          registerExpandedPresentation(context, root, resolvedReportMeta, mountResult);
-          return true;
-        });
+        registerExpandedPresentation(context, root, resolvedReportMeta, mountResult);
+        return true;
       });
     });
   }).catch((error) => {

@@ -112,7 +112,6 @@ class SubScopeDocsBuilder(DocsDataBuilder):
         return entry
 
     def manifest_payload(self, ordered_docs: list[DocRecord]) -> dict[str, Any]:
-        visible_docs = [doc for doc in ordered_docs if doc.publishable]
         payload: dict[str, Any] = {
             "docs": [
                 {
@@ -120,12 +119,12 @@ class SubScopeDocsBuilder(DocsDataBuilder):
                     "title": doc.title,
                     "subject": project_reader_subject(doc.front_matter),
                 }
-                for doc in visible_docs
+                for doc in ordered_docs
             ]
         }
         projected = project_sub_scope_customisation_manifest(
             self.sub_scope_config.sub_scope_customisation,
-            visible_docs,
+            ordered_docs,
             published=True,
             repo_root=self.repo_root,
             scope=self.scope_id,

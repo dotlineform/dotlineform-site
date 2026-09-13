@@ -60,7 +60,6 @@ class ScopeDoc:
     title: str
     ui_status: str
     parent_id: str
-    publishable: bool
     report: ReportDescriptor | None = None
 
 
@@ -272,7 +271,6 @@ def format_source(front_matter: Dict[str, Any], body: str, *, sub_scope: str | N
         "series_id",
         "detail_uid",
         "parent_id",
-        "publishable",
         "draft",
     ]
     ordered_keys = [key for key in preferred_order if key in front_matter]
@@ -465,10 +463,6 @@ def rewrite_front_matter_source_timestamp(
     return "".join(lines)
 
 
-def doc_is_publishable(front_matter: Dict[str, Any]) -> bool:
-    return front_matter_boolean(front_matter, "publishable", True)
-
-
 def front_matter_boolean(front_matter: Dict[str, Any], key: str, default: bool) -> bool:
     if key not in front_matter:
         return default
@@ -483,14 +477,6 @@ def normalize_ui_status(value: Any) -> str:
     if status == "draft":
         raise ValueError("ui_status draft is no longer supported; use a visual status such as review")
     return status
-
-
-def collection_supports_publishable(
-    config: DocsScopeConfig | DocsSubScopeConfig,
-) -> bool:
-    """Publication intent belongs only to ordinary Analysis Working documents."""
-
-    return collection_supports_draft(config) and not isinstance(config, DocsSubScopeConfig)
 
 
 def collection_supports_draft(config: DocsScopeConfig | DocsSubScopeConfig) -> bool:
@@ -515,16 +501,10 @@ def validate_document_status_front_matter(
     if "viewable" in front_matter:
         raise ValueError(
             f"legacy viewable front matter is not supported in {source_name}; "
-            "use publishable only in a publish-capable collection"
+            "use Working draft status and the publication ignore list"
         )
-    if "publishable" not in front_matter:
-        return
-    if not collection_supports_publishable(collection_config):
-        raise ValueError(
-            f"publishable front matter is supported only on ordinary Analysis Working documents: {source_name}"
-        )
-    if not isinstance(front_matter["publishable"], bool):
-        raise ValueError(f"publishable front matter must be a boolean in {source_name}")
+    if "publishable" in front_matter:
+        raise ValueError(f"publishable front matter is retired; use the Working publication ignore list: {source_name}")
 
 
 def normalize_scope(scope: Any) -> str:
@@ -584,7 +564,6 @@ def load_document_collection_docs_for_config(
             collection_config=document_config,
             source_name=path.name,
         )
-        publishable = doc_is_publishable(front_matter)
         try:
             report = parse_document_report(
                 source_text,
@@ -617,7 +596,6 @@ def load_document_collection_docs_for_config(
                 title=title,
                 ui_status=ui_status,
                 parent_id=parent_id,
-                publishable=publishable,
                 report=report,
             )
         )

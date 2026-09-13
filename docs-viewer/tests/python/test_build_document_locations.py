@@ -122,7 +122,6 @@ def test_projection_emits_only_actual_public_report_placements() -> None:
                 REPORT_ONE_ID: {
                     "report": {
                         "id": "docs_subscope",
-                        "access": "public",
                         "scope": None,
                         "preset": None,
                         "sub_scope": "tags",
@@ -131,7 +130,6 @@ def test_projection_emits_only_actual_public_report_placements() -> None:
                 REPORT_TWO_ID: {
                     "report": {
                         "id": "docs_subscope",
-                        "access": "public",
                         "scope": None,
                         "preset": None,
                         "sub_scope": "tags",
@@ -297,7 +295,6 @@ def test_public_projection_loader_does_not_read_source_or_manage_manifest() -> N
             {
                 "report": {
                     "id": "docs_subscope",
-                    "access": "public",
                     "scope": None,
                     "preset": None,
                     "sub_scope": "tags",

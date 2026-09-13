@@ -329,13 +329,6 @@ def project_public_report_payload(payload: dict[str, Any]) -> None:
     content_html = payload.get("content_html")
     if not isinstance(content_html, str) or content_html.count(REPORT_HOST_HTML) != 1:
         raise ValueError("accepted report document must contain exactly one generated host")
-    access = str(report.get("access") or "").strip()
-    if access == "public":
-        return
-    if access != "local":
-        raise ValueError(f"accepted document report has invalid access: {access!r}")
-    payload.pop("report")
-    payload["content_html"] = content_html.replace(REPORT_HOST_HTML, "", 1)
 
 
 def project_document_payload(

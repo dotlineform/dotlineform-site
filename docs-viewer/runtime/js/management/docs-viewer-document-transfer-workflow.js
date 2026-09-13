@@ -241,17 +241,6 @@ export function buildDocumentTransferConfirmationBody(preview) {
   }).forEach(function (warning) {
     lines.push("Warning: " + String(warning && warning.message || warning || "").trim());
   });
-  var lineage = lineageSources(preview);
-  var includesNew = !lineage.length || lineage.some(function (source) {
-    return source && source.action === "new";
-  });
-  if (
-    mode === "copy"
-    && includesNew
-    && Object.prototype.hasOwnProperty.call(preview, "target_default_publishable")
-  ) {
-    lines.push("New documents will be included in the next Publish.");
-  }
   var omitted = preview && preview.custom_metadata && Array.isArray(preview.custom_metadata.omitted)
     ? preview.custom_metadata.omitted
     : [];

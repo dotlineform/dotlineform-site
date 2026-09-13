@@ -275,7 +275,6 @@ def source_doc_from_path(
         title=title or existing_doc_id,
         ui_status=source_model.normalize_ui_status(front_matter.get("ui_status")),
         parent_id=str(front_matter.get("parent_id") or "").strip(),
-        publishable=source_model.doc_is_publishable(front_matter),
         report=report,
     )
 
@@ -372,8 +371,6 @@ def managed_document_metadata(
         "date_display": str(front_matter.get("date_display") or "").strip(),
         "ui_status": document.ui_status,
     }
-    if source_model.collection_supports_publishable(resolved.document_config):
-        record["publishable"] = document.publishable
     payload_revision = source_model.source_revision(document.source_text.encode("utf-8"))
     if source_model.collection_supports_draft(resolved.document_config):
         record["draft"] = front_matter.get("draft", True)

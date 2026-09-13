@@ -48,7 +48,7 @@ def stage_repo(tmp_path: Path) -> Path:
             )
         output = tmp_path / scopes.generated_documents_path(config)
         (tmp_path / scopes.document_source_path(config) / f"{REPORT_ID}.md").write_text(
-            f"---\ndoc_id: {REPORT_ID}\ntitle: Works\n---\n:::report\nid: docs_subscope\naccess: {'local' if stage == 'working' else 'public'}\nsub_scope: works\n:::\n"
+            f"---\ndoc_id: {REPORT_ID}\ntitle: Works\n---\n:::report\nid: docs_subscope\nsub_scope: works\n:::\n"
         )
         write_json(output / "index-tree.json", {"docs": [{"doc_id": DOC_ID, "content_url": "/docs/doc"}]})
         write_json(output / "by-id" / f"{DOC_ID}.json", {"doc_id": DOC_ID, "title": stage})
@@ -107,7 +107,7 @@ def test_report_host_reparenting_keeps_stage_and_child_destinations(stage_repo: 
     root = stage_repo / scopes.document_source_path(config)
     host = root / f"{DOC_ID}.md"
     (root / f"{REPORT_ID}.md").unlink()
-    host.write_text(host.read_text() + "\n:::report\nid: docs_subscope\naccess: local\nsub_scope: works\n:::\n")
+    host.write_text(host.read_text() + "\n:::report\nid: docs_subscope\nsub_scope: works\n:::\n")
     parent_id = "d-20260907-215200-aaaaaa"
     child_id = "d-20260907-215200-bbbbbb"
     (root / f"{parent_id}.md").write_text(f"---\ndoc_id: {parent_id}\ntitle: Parent\n---\n# Parent\n")
@@ -391,74 +391,8 @@ def test_same_document_id_is_read_only_from_requested_stage(stage_repo: Path) ->
         })
 
 
-@pytest.mark.parametrize("sub_scope", [None])
-def test_set_publishable_updates_only_selected_working_collection(stage_repo: Path, monkeypatch: pytest.MonkeyPatch, sub_scope: str | None) -> None:
-    import docs_management_publishable as publishable
-    import docs_management_service as service
-    import docs_management_routes as routes
-
-    collection = {"scope": "analysis", "stage": "working"}
-    if sub_scope:
-        collection["sub_scope"] = sub_scope
-    target = {**collection, "doc_id": DOC_ID}
-    source = resolve_managed_document_target(stage_repo, target).document.path
-    protected = [resolve_managed_document_target(stage_repo, {
-        "scope": "analysis", "stage": stage, "doc_id": DOC_ID,
-        **({"sub_scope": child} if child else {}),
-    }).document.path for stage in ("working", "pre-publish") for child in (None, "works")]
-    before = {path: path.read_bytes() for path in protected if path != source}
-    rebuilds = []
-
-    def rebuild(_root, scope, *args, **options):
-        rebuilds.append((scope, args, options["stage"]))
-        return {"ok": True}
-
-    monkeypatch.setattr(publishable.write_rebuild, "rebuild_scope_outputs", rebuild)
-    monkeypatch.setattr(publishable.write_rebuild, "rebuild_sub_scope_outputs", rebuild)
-    monkeypatch.setattr(publishable, "log_event", lambda *_args: None)
-    capabilities = service.capabilities_payload(stage_repo)["capabilities"]["scopes"]["analysis"]["stages"]
-    assert capabilities["working"]["publishable"] is True
-    assert capabilities["pre-publish"]["publishable"] is False
-    assert capabilities["working"]["publishing"]["apply"] is False
-    request = {**collection, "doc_ids": [DOC_ID], "publishable": False, "confirm": True}
-    for include in (False, True):
-        status, result = service.docs_management_post_response(stage_repo, routes.SET_PUBLISHABLE_PATH, {**request, "publishable": include})
-        assert status == 200 and result["target"] == collection
-        assert result["stage"] == "working" and result["updated_doc_ids"] == [DOC_ID]
-        front_matter, _body = publishable.source_model.parse_source(source)
-        assert ("publishable" not in front_matter) if include else front_matter["publishable"] is False
-    assert rebuilds == [("analysis", ("works",) if sub_scope else (), "working")] * 2
-    for stage in (None, "pre-publish"):
-        rejected = {**request, "stage": stage}
-        if stage is None:
-            del rejected["stage"]
-        for operation in (publishable.plan_set_publishable, lambda root, body: service.docs_management_post_response(root, routes.SET_PUBLISHABLE_PATH, body)):
-            with pytest.raises(ValueError, match="requires stage|authoring is unavailable|must contain exactly|ordinary Analysis Working"):
-                operation(stage_repo, rejected)
-    assert all(path.read_bytes() == content for path, content in before.items())
 
 
-def test_set_publishable_rollback_rebuilds_only_working(stage_repo: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    import docs_management_publishable as publishable
-
-    target = {"scope": "analysis", "stage": "working", "doc_id": DOC_ID}
-    source = resolve_managed_document_target(stage_repo, target).document.path
-    other = resolve_managed_document_target(stage_repo, {**target, "stage": "pre-publish"}).document.path
-    before = {path: path.read_bytes() for path in (source, other)}
-    rebuilds = []
-
-    def fail_then_recover(_root, scope, **options):
-        rebuilds.append((scope, options["stage"]))
-        if len(rebuilds) == 1:
-            raise RuntimeError("rebuild failed")
-        return {"ok": True}
-
-    monkeypatch.setattr(publishable.write_rebuild, "rebuild_scope_outputs", fail_then_recover)
-    with pytest.raises(publishable.PublishableSelectionApplyError) as error:
-        publishable.set_publishable(stage_repo, {"scope": "analysis", "stage": "working", "doc_ids": [DOC_ID], "publishable": False, "confirm": True})
-    assert error.value.payload["rollback"]["status"] == "completed"
-    assert rebuilds == [("analysis", "working")] * 2
-    assert all(path.read_bytes() == content for path, content in before.items())
 
 
 @pytest.mark.parametrize("sub_scope", [None, "works"])
@@ -517,7 +451,7 @@ def test_stage_build_writes_exact_parent_and_report_payloads(stage_repo: Path) -
         root = stage_repo / scopes.document_source_path(config)
         source = root / f"{DOC_ID}.md"
         (root / f"{REPORT_ID}.md").unlink()
-        source.write_text(source.read_text() + f"\n:::report\nid: docs_subscope\naccess: public\nsub_scope: {collection}\n:::\n", encoding="utf-8")
+        source.write_text(source.read_text() + f"\n:::report\nid: docs_subscope\nsub_scope: {collection}\n:::\n", encoding="utf-8")
         code, stdout, stderr = run_cli(stage_repo, ["--scope", "analysis", "--stage", stage, "--write", "--skip-media-builds"])
         assert code == 0, stdout + stderr
         output = stage_repo / scopes.generated_documents_path(config)
@@ -719,7 +653,7 @@ def test_external_stage_urls_and_media_use_selected_owner(stage_repo: Path, monk
         config = scopes.load_docs_scope_stage(stage_repo, "analysis", stage)
         parent = scopes.document_source_path(config)
         parent.mkdir(parents=True)
-        (parent / f"{DOC_ID}.md").write_text(f"---\ndoc_id: {DOC_ID}\ntitle: {stage}\n---\n:::report\nid: docs_subscope\naccess: public\nsub_scope: {collection}\n:::\n")
+        (parent / f"{DOC_ID}.md").write_text(f"---\ndoc_id: {DOC_ID}\ntitle: {stage}\n---\n:::report\nid: docs_subscope\nsub_scope: {collection}\n:::\n")
         child = scopes.document_source_path(config.sub_scopes[0])
         child.mkdir(parents=True)
         (child / f"{DOC_ID}.md").write_text(f"---\ndoc_id: {DOC_ID}\ntitle: {stage}\n---\n# Child\n")
@@ -771,8 +705,6 @@ def test_draft_write_is_revision_bound_and_rebuilds_exact_target(stage_repo: Pat
     path = resolve_managed_document_target(stage_repo, target).document.path
     fields, body = source_model.parse_source(path)
     fields.update({"draft": False, "ui_status": "review"})
-    if not sub_scope:
-        fields["publishable"] = False
     path.write_text(source_model.format_source(fields, body, sub_scope=sub_scope or ""))
     other = resolve_managed_document_target(stage_repo, {**target, "stage": "pre-publish"}).document.path
     other_before = other.read_bytes()
@@ -821,15 +753,12 @@ def test_new_working_create_and_import_start_draft(stage_repo: Path, sub_scope: 
 
 
 def test_subscope_rejects_publishable_and_supports_shared_visual_statuses(stage_repo: Path) -> None:
-    from docs_management_publishable import plan_set_publishable
     from docs_management_mutations import plan_update_metadata
     from docs_source_model import parse_source_text, validate_document_status_front_matter
 
     target = {"scope": "analysis", "stage": "working", "sub_scope": "works", "doc_id": DOC_ID}
-    with pytest.raises(ValueError, match="must contain exactly"):
-        plan_set_publishable(stage_repo, {key: value for key, value in {**target, "doc_ids": [DOC_ID], "publishable": False, "confirm": True}.items() if key != "doc_id"})
     resolved = resolve_managed_document_target(stage_repo, target)
-    with pytest.raises(ValueError, match="ordinary Analysis Working"):
+    with pytest.raises(ValueError, match="publishable front matter is retired"):
         validate_document_status_front_matter({"publishable": False}, collection_config=resolved.document_config, source_name="child.md")
     metadata = managed_document_metadata(stage_repo, target)
     plan = plan_update_metadata(stage_repo, {**target, "title": "Shared visual options", "ui_status": "research", "source_revision": metadata["source_revision"]})

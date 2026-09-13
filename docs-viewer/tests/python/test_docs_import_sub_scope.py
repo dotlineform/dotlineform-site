@@ -63,7 +63,6 @@ def prepare_repo(repo_root: Path) -> None:
             "# Tags\n\n"
             ":::report\n"
             "id: docs_subscope\n"
-            "access: public\n"
             "sub_scope: tags\n"
             ":::\n"
         ),

@@ -5,15 +5,13 @@
       "report_id": "scope_links",
       "title": "Links",
       "description": "Lists directed document links from the last Analysis Working scope rebuild.",
-      "default_access": "local",
       "loader_id": "scope_links",
       "presets": []
     },
     {
       "report_id": "unpublishable",
       "title": "Unpublishable",
-      "description": "Lists documents with publishable: false across Analysis Working and all its sub-scopes.",
-      "default_access": "local",
+      "description": "Reads ordinary document IDs from Analysis Working source/documents/unpublishable.json.",
       "loader_id": "unpublishable",
       "presets": []
     },
@@ -21,7 +19,6 @@
       "report_id": "series_works",
       "title": "Works in Series",
       "description": "Lists generated member Works for the containing document's Series subject.",
-      "default_access": "local",
       "loader_id": "series_works",
       "presets": []
     },
@@ -29,17 +26,16 @@
       "report_id": "docs_index_table",
       "title": "Docs Index Table",
       "description": "Displays a sortable Docs Viewer index table for a selected docs scope.",
-      "default_access": "public",
       "loader_id": "docs_index_table",
       "presets": [
         {
           "preset_id": "scope_documents_admin",
           "title": "Scope Documents Admin",
-          "description": "Management report for reviewing a publish-capable scope by title, doc_id, and publishability.",
+          "description": "Management report for reviewing a scope by title and doc_id.",
           "default_scope": "analysis",
-          "columns": ["title", "doc_id", "publishable"],
-          "filters": ["non_publishable"],
-          "sortable": ["title", "doc_id", "publishable"]
+          "columns": ["title", "doc_id"],
+          "filters": [],
+          "sortable": ["title", "doc_id"]
         },
         {
           "preset_id": "az_index",
@@ -55,7 +51,6 @@
       "report_id": "reports_list",
       "title": "Reports List",
       "description": "Displays the configured Docs Viewer report metadata from the report registry.",
-      "default_access": "public",
       "loader_id": "reports_list",
       "presets": []
     },
@@ -63,7 +58,6 @@
       "report_id": "docs_subscope",
       "title": "Docs Sub-Scope",
       "description": "Displays a report-owned list over a configured Docs Viewer sub-scope.",
-      "default_access": "public",
       "loader_id": "docs_subscope",
       "presets": []
     },
@@ -71,7 +65,6 @@
       "report_id": "source_config",
       "title": "Source Config",
       "description": "Displays Docs Viewer source config for all scopes in manage mode.",
-      "default_access": "local",
       "loader_id": "source_config",
       "presets": []
     },
@@ -79,7 +72,6 @@
       "report_id": "docs_broken_links",
       "title": "Docs Broken Links",
       "description": "Runs the Docs Viewer broken-links audit for a selected scope.",
-      "default_access": "local",
       "loader_id": "docs_broken_links",
       "presets": []
     },
@@ -87,7 +79,6 @@
       "report_id": "docs_backlinks",
       "title": "Documents Linking Here",
       "description": "Lists current same-scope documents linking to the exact report host document.",
-      "default_access": "local",
       "loader_id": "docs_backlinks",
       "presets": []
     },
@@ -95,7 +86,6 @@
       "report_id": "semantic_tokens",
       "title": "Semantic Tokens",
       "description": "Lists semantic-token occurrences across all Analysis Working collections.",
-      "default_access": "local",
       "loader_id": "semantic_tokens",
       "presets": []
     },
@@ -103,7 +93,6 @@
       "report_id": "project_state",
       "title": "Project State",
       "description": "Reconciles immediate project folders with canonical Works, Series, and Project documents.",
-      "default_access": "local",
       "loader_id": "project_state",
       "presets": []
     },
@@ -111,7 +100,6 @@
       "report_id": "docs_media",
       "title": "Docs Media",
       "description": "Lists each live ready-media and build-source file with its exact referencing documents.",
-      "default_access": "local",
       "loader_id": "docs_media",
       "presets": []
     },
@@ -119,7 +107,6 @@
       "report_id": "works",
       "title": "Works",
       "description": "Shows documentation coverage for every Series.",
-      "default_access": "local",
       "loader_id": "works",
       "presets": []
     },
@@ -127,7 +114,6 @@
       "report_id": "catalogue_works",
       "title": "Catalogue Works",
       "description": "Searches every canonical Work with exact Series and storage context.",
-      "default_access": "local",
       "loader_id": "catalogue_works",
       "presets": []
     },
@@ -135,7 +121,6 @@
       "report_id": "uncataloged_files",
       "title": "Uncataloged Files",
       "description": "Lists ordinary files in represented Work source folders that are not canonical Work primary sources.",
-      "default_access": "local",
       "loader_id": "uncataloged_files",
       "presets": []
     },
@@ -143,7 +128,6 @@
       "report_id": "missing_source_files",
       "title": "Missing Source Files",
       "description": "Lists canonical Works whose complete expected source path does not resolve to a file.",
-      "default_access": "local",
       "loader_id": "missing_source_files",
       "presets": []
     }

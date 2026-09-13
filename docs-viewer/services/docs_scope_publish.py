@@ -183,215 +183,12 @@ def _flatten_tree(rows: Any, *, parent_id: str = "") -> list[dict[str, Any]]:
     return flattened
 
 
-def _parent_eligibility(index_tree: dict[str, Any]) -> tuple[set[str], set[str]]:
-    rows = _flatten_tree(index_tree.get("docs"))
-    excluded = {
-        str(row.get("doc_id") or "").strip()
-        for row in rows
-        if row.get("publishable") is False
-    }
-    by_parent: dict[str, list[str]] = {}
-    for row in rows:
-        parent_id = str(row.get("_parent_id") or "").strip()
-        doc_id = str(row.get("doc_id") or "").strip()
-        if parent_id and doc_id:
-            by_parent.setdefault(parent_id, []).append(doc_id)
-    queue = list(excluded)
-    while queue:
-        parent_id = queue.pop(0)
-        for child_id in by_parent.get(parent_id, []):
-            if child_id in excluded:
-                continue
-            excluded.add(child_id)
-            queue.append(child_id)
-    all_ids = {str(row.get("doc_id") or "").strip() for row in rows}
-    all_ids.discard("")
-    return all_ids - excluded, excluded
-
-
-def _published_tree_node(value: Any, excluded_ids: set[str]) -> dict[str, Any] | None:
-    if not isinstance(value, dict):
-        return None
-    doc_id = str(value.get("doc_id") or "").strip()
-    if not doc_id or doc_id in excluded_ids:
-        return None
-    row = {
-        key: item
-        for key, item in value.items()
-        if key not in {"children", "publishable"}
-    }
-    children = [
-        child
-        for child in (
-            _published_tree_node(item, excluded_ids)
-            for item in value.get("children", [])
-        )
-        if child is not None
-    ]
-    if children:
-        row["children"] = children
-    return row
-
-
-def _published_index_tree(payload: dict[str, Any], excluded_ids: set[str]) -> dict[str, Any]:
-    rows = [
-        row
-        for row in (
-            _published_tree_node(value, excluded_ids)
-            for value in payload.get("docs", [])
-        )
-        if row is not None
-    ]
-    return {**payload, "docs": rows}
-
-
-def _sub_scope_eligibility(
-    generated_files: Mapping[Path, bytes],
-) -> tuple[dict[str, set[str]], set[str]]:
-    eligible_by_scope: dict[str, set[str]] = {}
-    excluded: set[str] = set()
-    for relative_path, data in generated_files.items():
-        if len(relative_path.parts) != 4 or relative_path.parts[0] != "sub-scopes" or relative_path.parts[2] != "documents":
-            continue
-        sub_scope = relative_path.parts[1]
-        if relative_path.name == "manifest.json":
-            payload = _read_json_bytes(data, f"generated sub-scope manifest {sub_scope}")
-            rows = payload.get("docs")
-            if not isinstance(rows, list):
-                raise RuntimeError(f"generated sub-scope manifest {sub_scope} is missing docs")
-            eligible_by_scope[sub_scope] = {
-                str(row.get("doc_id") or "").strip()
-                for row in rows
-                if isinstance(row, dict) and str(row.get("doc_id") or "").strip()
-            }
-        elif relative_path.name == "manage-manifest.json":
-            payload = _read_json_bytes(data, f"generated sub-scope manage manifest {sub_scope}")
-            rows = payload.get("docs")
-            if not isinstance(rows, list):
-                raise RuntimeError(
-                    f"generated sub-scope manage manifest {sub_scope} is missing docs"
-                )
-            excluded.update(
-                str(row.get("doc_id") or "").strip()
-                for row in rows
-                if isinstance(row, dict) and row.get("publishable") is False
-            )
-    return eligible_by_scope, excluded
-
-
-def _filter_recent(payload: dict[str, Any], eligible_ids: set[str]) -> dict[str, Any]:
-    rows = payload.get("docs")
-    if not isinstance(rows, list):
-        raise RuntimeError("generated Recent payload is missing docs")
-    return {
-        **payload,
-        "docs": [
-            row
-            for row in rows
-            if isinstance(row, dict)
-            and str(row.get("doc_id") or "").strip() in eligible_ids
-        ],
-    }
-
-
-def _filter_search(payload: dict[str, Any], eligible_ids: set[str]) -> dict[str, Any]:
-    docs = payload.get("docs")
-    terms = payload.get("terms")
-    header = payload.get("header")
-    fields = payload.get("fields")
-    if not isinstance(docs, list) or not isinstance(terms, dict):
-        raise RuntimeError("generated Search payload has an unsupported shape")
-    if not isinstance(header, dict) or not isinstance(fields, list):
-        raise RuntimeError("generated Search payload is missing header or fields")
-    retained_indexes = [
-        index
-        for index, row in enumerate(docs)
-        if isinstance(row, dict) and str(row.get("id") or "").strip() in eligible_ids
-    ]
-    index_map = {old: new for new, old in enumerate(retained_indexes)}
-    filtered_terms: dict[str, dict[str, list[int]]] = {}
-    for term, raw_postings in terms.items():
-        if not isinstance(raw_postings, dict):
-            raise RuntimeError("generated Search term postings must be objects")
-        postings: dict[str, list[int]] = {}
-        for field, raw_indexes in raw_postings.items():
-            if not isinstance(raw_indexes, list):
-                raise RuntimeError("generated Search postings must be arrays")
-            indexes = [index_map[index] for index in raw_indexes if index in index_map]
-            if indexes:
-                postings[str(field)] = indexes
-        if postings:
-            filtered_terms[str(term)] = postings
-    filtered_docs = [docs[index] for index in retained_indexes]
-    version_payload = {
-        "schema": header.get("schema"),
-        "scope": header.get("scope"),
-        "fields": fields,
-        "docs": filtered_docs,
-        "terms": filtered_terms,
-    }
-    canonical = json.dumps(
-        version_payload,
-        ensure_ascii=False,
-        sort_keys=True,
-        separators=(",", ":"),
-    ).encode("utf-8")
-    published_header = {
-        **header,
-        "version": f"blake2b-{hashlib.blake2b(canonical, digest_size=64).digest()[:16].hex()}",
-        "count": len(filtered_docs),
-    }
-    return {
-        **payload,
-        "header": published_header,
-        "docs": filtered_docs,
-        "terms": filtered_terms,
-    }
-
-
-def _filter_backlinks(payload: dict[str, Any], eligible_ids: set[str]) -> dict[str, Any]:
-    by_target = payload.get("by_target")
-    if not isinstance(by_target, dict):
-        raise RuntimeError("generated backlinks payload is missing by_target")
-    filtered: dict[str, list[dict[str, Any]]] = {}
-    for target_id, raw_rows in by_target.items():
-        if str(target_id) not in eligible_ids or not isinstance(raw_rows, list):
-            continue
-        rows = [
-            row
-            for row in raw_rows
-            if isinstance(row, dict)
-            and str(row.get("doc_id") or "").strip() in eligible_ids
-        ]
-        if rows:
-            filtered[str(target_id)] = rows
-    return {**payload, "by_target": filtered}
-
-
-def _filter_semantic_tokens(
-    payload: dict[str, Any], eligible_ids: set[str]
-) -> dict[str, Any]:
-    occurrences = payload.get("occurrences")
-    if not isinstance(occurrences, list):
-        raise RuntimeError("generated semantic-token payload is missing occurrences")
-    return {
-        **payload,
-        "occurrences": [
-            row
-            for row in occurrences
-            if isinstance(row, dict)
-            and str(row.get("source_doc_id") or "").strip() in eligible_ids
-        ],
-    }
-
-
-def _filter_subject_associations(
+def _validate_subject_associations(
     payload: dict[str, Any],
     *,
     scope: str,
     sub_scope: str,
-    eligible_ids: set[str],
-) -> dict[str, Any]:
+) -> None:
     if payload.get("schema_version") != "docs_subject_associations_v1":
         raise RuntimeError(
             f"generated subject associations for {scope}/{sub_scope} have an unsupported schema"
@@ -406,7 +203,6 @@ def _filter_subject_associations(
             f"generated subject associations for {scope}/{sub_scope} are missing associations"
         )
 
-    associations: list[dict[str, Any]] = []
     seen_doc_ids: set[str] = set()
     for raw_association in raw_associations:
         if not isinstance(raw_association, dict):
@@ -418,7 +214,6 @@ def _filter_subject_associations(
             raise RuntimeError(
                 f"generated subject associations for {scope}/{sub_scope} contain invalid documents"
             )
-        documents: list[dict[str, Any]] = []
         for raw_document in raw_documents:
             if not isinstance(raw_document, dict):
                 raise RuntimeError(
@@ -443,29 +238,42 @@ def _filter_subject_associations(
                     f"generated subject associations for {scope}/{sub_scope} duplicate {doc_id}"
                 )
             seen_doc_ids.add(doc_id)
-            if doc_id in eligible_ids:
-                documents.append(raw_document)
-        if documents:
-            associations.append({**raw_association, "documents": documents})
 
-    generation_payload = {
-        "scope": scope,
-        "sub_scope": sub_scope,
-        "associations": associations,
-    }
-    generation = hashlib.sha256(
-        json.dumps(
-            generation_payload,
-            ensure_ascii=False,
-            sort_keys=True,
-            separators=(",", ":"),
-        ).encode("utf-8")
-    ).hexdigest()
-    return {
-        **payload,
-        "subject_generation": f"sha256:{generation}",
-        "associations": associations,
-    }
+
+def _validate_prepared_index(path: Path, data: bytes, scope: str) -> None:
+    """Retain index shape and identity checks without altering the prepared set."""
+    parts = path.parts
+    child_index = len(parts) == 4 and parts[0] == "sub-scopes" and parts[2] == "documents"
+    if child_index and path.name == "subject-associations.json":
+        _validate_subject_associations(
+            _read_json_bytes(data, "generated subject associations"),
+            scope=scope, sub_scope=parts[1],
+        )
+    elif path == Path("search/index.json") or (
+        len(parts) == 4 and parts[0] == "sub-scopes" and parts[2:] == ("search", "index.json")
+    ):
+        payload = _read_json_bytes(data, "generated Search payload")
+        if not isinstance(payload.get("docs"), list) or not isinstance(payload.get("terms"), dict):
+            raise RuntimeError("generated Search payload has an unsupported shape")
+        if not isinstance(payload.get("header"), dict) or not isinstance(payload.get("fields"), list):
+            raise RuntimeError("generated Search payload is missing header or fields")
+        for postings in payload["terms"].values():
+            if not isinstance(postings, dict):
+                raise RuntimeError("generated Search term postings must be objects")
+            if any(not isinstance(indexes, list) for indexes in postings.values()):
+                raise RuntimeError("generated Search postings must be arrays")
+    else:
+        key = ""
+        if path == Path("documents/recent.json") or (child_index and path.name == "manifest.json"):
+            key = "docs"
+        elif path == Path("documents/backlinks.json"):
+            key = "by_target"
+        elif path == Path("documents/semantic-tokens/index.json"):
+            key = "occurrences"
+        if key:
+            payload = _read_json_bytes(data, f"generated {path}")
+            if not isinstance(payload.get(key), dict if key == "by_target" else list):
+                raise RuntimeError(f"generated {path} is missing {key}")
 
 
 def _media_identity_from_url(value: str, prefix: str) -> str:
@@ -590,110 +398,38 @@ def _published_files(
     if index_path not in generated_files:
         raise FileNotFoundError("generated documents/index-tree.json is missing")
     index_tree = _read_json_bytes(generated_files[index_path], "generated index tree")
-    parent_eligible, parent_excluded = _parent_eligibility(index_tree)
-    sub_scope_eligible, sub_scope_excluded = _sub_scope_eligibility(generated_files)
-    eligible_ids = set(parent_eligible)
-    for ids in sub_scope_eligible.values():
-        eligible_ids.update(ids)
-    excluded_ids = parent_excluded | sub_scope_excluded
-
+    # Pre-publish owns document selection. Accept every prepared collection and
+    # its indexes together; Publish only projects lifecycle paths and media.
+    document_ids: set[str] = set()
     files: dict[Path, bytes] = {}
     for relative_path, data in generated_files.items():
-        if relative_path.parts and (relative_path.parts[0] == "media" or (
-            len(relative_path.parts) >= 4 and relative_path.parts[0] == "sub-scopes" and relative_path.parts[2] == "media"
+        parts = relative_path.parts
+        if parts and (parts[0] == "media" or (
+            len(parts) >= 4 and parts[0] == "sub-scopes" and parts[2] == "media"
         )):
             continue
-        if relative_path.parts[:2] == ("documents", ".publish"):
+        if parts[:2] == ("documents", ".publish") or relative_path.name == "manage-manifest.json":
             continue
-        if relative_path.name == "manage-manifest.json":
-            continue
-        if relative_path == index_path:
-            files[relative_path] = json_bytes(
-                _published_index_tree(index_tree, parent_excluded)
-            )
-            continue
-        if relative_path == Path("documents/recent.json"):
-            publication_recent = generated_files.get(
-                Path("documents/.publish/recent.json")
-            )
-            recent = _read_json_bytes(
-                publication_recent or data,
-                "generated publication Recent payload",
-            )
-            files[relative_path] = json_bytes(_filter_recent(recent, eligible_ids))
-            continue
-        if relative_path == Path("documents/backlinks.json"):
-            files[relative_path] = json_bytes(
-                _filter_backlinks(
-                    _read_json_bytes(data, "generated backlinks payload"),
-                    eligible_ids,
-                )
-            )
-            continue
-        if relative_path == Path("documents/semantic-tokens/index.json"):
-            files[relative_path] = json_bytes(
-                _filter_semantic_tokens(
-                    _read_json_bytes(data, "generated semantic-token payload"),
-                    eligible_ids,
-                )
-            )
-            continue
-        if (
-            len(relative_path.parts) == 4
-            and relative_path.parts[0] == "sub-scopes" and relative_path.parts[2] == "documents"
-            and relative_path.name == "subject-associations.json"
-        ):
-            sub_scope = relative_path.parts[1]
-            files[relative_path] = json_bytes(
-                _filter_subject_associations(
-                    _read_json_bytes(
-                        data,
-                        f"generated subject associations {sub_scope}",
-                    ),
-                    scope=config.scope_id,
-                    sub_scope=sub_scope,
-                    eligible_ids=sub_scope_eligible.get(sub_scope, set()),
-                )
-            )
-            continue
-        child_search = (
-            len(relative_path.parts) == 4
-            and relative_path.parts[0] == "sub-scopes"
-            and relative_path.parts[2:] == ("search", "index.json")
-        )
-        if relative_path == Path("search/index.json") or child_search:
-            files[relative_path] = json_bytes(
-                _filter_search(
-                    _read_json_bytes(data, "generated Search payload"),
-                    sub_scope_eligible.get(relative_path.parts[1], set()) if child_search else eligible_ids,
-                )
-            )
-            continue
-        if (
-            len(relative_path.parts) == 3
-            and relative_path.parts[:2] == ("documents", "by-id")
-            and relative_path.suffix == ".json"
-        ):
-            if relative_path.stem in parent_eligible:
-                files[relative_path] = _project_published_media_urls(config, data)
-            continue
-        if (
-            len(relative_path.parts) == 5
-            and relative_path.parts[0] == "sub-scopes" and relative_path.parts[2] == "documents"
-            and relative_path.parts[3] == "by-id"
-            and relative_path.suffix == ".json"
-        ):
-            sub_scope = relative_path.parts[1]
-            if relative_path.stem in sub_scope_eligible.get(sub_scope, set()):
-                files[relative_path] = _project_published_media_urls(config, data)
-            continue
-        if relative_path.parts[:2] == ("references", "by-doc"):
-            if relative_path.stem not in eligible_ids:
-                continue
-        if relative_path.parts and relative_path.parts[0] == "reports":
-            if relative_path.stem in excluded_ids:
-                continue
-        files[relative_path] = data
+        ordinary_document = len(parts) == 3 and parts[:2] == ("documents", "by-id")
+        child_document = len(parts) == 5 and parts[0] == "sub-scopes" and parts[2:4] == ("documents", "by-id")
+        if relative_path.suffix == ".json" and (ordinary_document or child_document):
+            payload = _read_json_bytes(data, "prepared document")
+            if payload.get("doc_id") != relative_path.stem:
+                raise ValueError("Prepared document identity does not match its file")
+            document_ids.add(relative_path.stem)
+            files[relative_path] = _project_published_media_urls(config, data)
+        elif relative_path == Path("documents/recent.json"):
+            files[relative_path] = generated_files.get(Path("documents/.publish/recent.json"), data)
+        else:
+            files[relative_path] = data
+
+    for path, data in files.items():
+        _validate_prepared_index(path, data, config.scope_id)
+
+    tree_ids = {row["doc_id"] for row in _flatten_tree(index_tree.get("docs"))}
+    ordinary_ids = {path.stem for path in files if len(path.parts) == 3 and path.parts[:2] == ("documents", "by-id") and path.suffix == ".json"}
+    if tree_ids != ordinary_ids:
+        raise ValueError("Prepared index tree and ordinary document set do not match")
 
     media_references = _referenced_media(config, files)
     bindings = _published_media_bindings(config)
@@ -709,8 +445,8 @@ def _published_files(
             files[relative_path] = data
 
     return files, {
-        "eligible_doc_ids": sorted(eligible_ids),
-        "excluded_doc_ids": sorted(excluded_ids),
+        "eligible_doc_ids": sorted(document_ids),
+        "excluded_doc_ids": [],
         "media_references": {
             media_type: sorted(identities)
             for media_type, identities in sorted(media_references.items())

@@ -139,7 +139,6 @@ def test_import_rejects_report_host_targets_and_incoming_report_blocks(
                 "# Alpha\n\n"
                 ":::report\n"
                 "id: reports_list\n"
-                "access: public\n"
                 ":::\n"
             ),
         )
@@ -159,7 +158,6 @@ def test_import_rejects_report_host_targets_and_incoming_report_blocks(
                 "# Incoming\n\n"
                 ":::report\n"
                 "id: reports_list\n"
-                "access: public\n"
                 ":::\n"
             ),
         )

@@ -394,7 +394,7 @@ def staged_scope_contract(repo_root: Path) -> None:
             host_id = f"d-20260101-000000-{index:06d}"
             write_collection_doc(
                 repo_root, "analysis", host_id, stage=stage,
-                body=f":::report\nid: docs_subscope\naccess: local\nsub_scope: {name}\n:::\n",
+                body=f":::report\nid: docs_subscope\nsub_scope: {name}\n:::\n",
                 report={"id": "docs_subscope", "sub_scope": name},
             )
             write_collection_doc(repo_root, "analysis", CHILD_ID, stage=stage, sub_scope=name)
@@ -404,11 +404,12 @@ def test_working_audits_every_collection_and_keeps_exact_correction_identity() -
     with make_repo("") as tmp:
         root = Path(tmp)
         staged_scope_contract(root)
+        write_json(root / "docs-viewer/scopes/analysis/working/source/documents/unpublishable.json", [SOURCE_ID])
         for name in ("", "works", "concepts", "processing", "moments"):
             write_collection_doc(
                 root, "analysis", SOURCE_ID, f'<a href="/analysis/?doc={TARGET_ID}">missing</a>',
                 stage="working", sub_scope=name,
-                metadata={"folder": "example", **({"publishable": False} if not name else {})},
+                metadata={"folder": "example", "draft": True},
                 body="[[catalogue:media:work:99999|missing token]]",
             )
         # A stale Working index and a payload in another stage cannot satisfy the target.
@@ -437,6 +438,7 @@ def test_studio_destination_lookup_preserves_analysis_stage_and_child_identity()
     with make_repo("") as tmp:
         root = Path(tmp)
         staged_scope_contract(root)
+        write_json(root / "docs-viewer/scopes/analysis/working/source/documents/unpublishable.json", [SOURCE_ID])
         works_host = "d-20260101-000000-000010"
         concepts_host = "d-20260101-000000-000011"
         write_collection_doc(root, "analysis", TARGET_ID, stage="working", sub_scope="works")
@@ -469,6 +471,7 @@ def test_fragment_ignores_require_the_same_stage_and_child_route() -> None:
     with make_repo("") as tmp:
         root = Path(tmp)
         staged_scope_contract(root)
+        write_json(root / "docs-viewer/scopes/analysis/working/source/documents/unpublishable.json", [SOURCE_ID])
         host = "d-20260101-000000-000010"
         links = ["#section", f"{SOURCE_ID}.md#section", f"/analysis/?doc={host}&subdoc={SOURCE_ID}#section"]
         wrong = f"/analysis/?stage=pre-publish&doc={host}&subdoc={SOURCE_ID}#section"

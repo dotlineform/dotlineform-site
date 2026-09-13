@@ -41,7 +41,6 @@ function normalizeReport(raw) {
     reportId,
     title: cleanString(raw && raw.title) || reportId,
     description: cleanString(raw && raw.description),
-    defaultAccess: cleanString(raw && raw.default_access) || "public",
     loaderId: cleanString(raw && raw.loader_id) || reportId,
     presets: Array.isArray(raw && raw.presets)
       ? raw.presets.map(normalizePreset).filter(function (preset) { return preset.presetId; })
@@ -55,7 +54,7 @@ function normalizeReportRegistry(payload) {
     : [];
   const reportsById = new Map();
   reports.forEach(function (report) {
-    if (report.defaultAccess === "public") reportsById.set(report.reportId, report);
+    if (PUBLIC_REPORT_LOADERS[report.loaderId]) reportsById.set(report.reportId, report);
   });
   return {
     schema: cleanString(payload && payload.schema),
@@ -87,7 +86,6 @@ function normalizeReportMetadata(payload) {
   return {
     reportId,
     scope: cleanString(report.scope),
-    access: cleanString(report.access),
     preset: cleanString(report.preset),
     subScope: cleanString(report.sub_scope)
   };
@@ -116,14 +114,7 @@ function unavailable(root, message) {
   root.appendChild(note);
 }
 
-function canMountPublicReport(meta, reportMeta) {
-  const access = meta.access || reportMeta.defaultAccess || "public";
-  if (access !== "public") {
-    return { ok: false, message: "This report is local-only." };
-  }
-  if (reportMeta.defaultAccess !== "public") {
-    return { ok: false, message: "This report has not been promoted for public routes." };
-  }
+function canMountPublicReport(reportMeta) {
   if (!PUBLIC_REPORT_LOADERS[reportMeta.loaderId]) {
     return { ok: false, message: "This report type is not available on public routes yet." };
   }
@@ -155,7 +146,7 @@ export function mountDocsViewerPublicReport(context) {
       return true;
     }
 
-    const availability = canMountPublicReport(meta, reportMeta);
+    const availability = canMountPublicReport(reportMeta);
     if (!availability.ok) {
       unavailable(root, availability.message);
       return true;

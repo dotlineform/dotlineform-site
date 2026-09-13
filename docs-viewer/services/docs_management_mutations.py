@@ -221,7 +221,7 @@ def plan_create(repo_root: Path, body: Dict[str, Any]) -> ManagementMutationPlan
     if "viewable" in body:
         raise ValueError("legacy viewable is not accepted")
     if "publishable" in body or "draft" in body:
-        raise ValueError("publishable and draft are assigned by Create")
+        raise ValueError("publishable is retired and draft is assigned by Create")
     sub_scope_requested = "sub_scope" in body
     collection = resolve_managed_document_collection(
         repo_root,
@@ -296,8 +296,6 @@ def plan_create(repo_root: Path, body: Dict[str, Any]) -> ManagementMutationPlan
     }
     if source_model.collection_supports_draft(collection.document_config):
         record["draft"] = True
-    if source_model.collection_supports_publishable(collection.document_config):
-        record["publishable"] = True
     if not sub_scope:
         record["parent_id"] = parent_id
     response: Dict[str, Any] = {
@@ -637,8 +635,6 @@ def plan_update_metadata(repo_root: Path, body: Dict[str, Any]) -> ManagementMut
             "date_display": current_date_display,
             "ui_status": current_ui_status,
         }
-        if source_model.collection_supports_publishable(resolved.document_config):
-            record["publishable"] = target.publishable
         if not resolved.sub_scope:
             record["parent_id"] = target.parent_id
         elif customisation_update is not None:
@@ -712,8 +708,6 @@ def plan_update_metadata(repo_root: Path, body: Dict[str, Any]) -> ManagementMut
         "date_display": date_display,
         "ui_status": ui_status,
     }
-    if source_model.collection_supports_publishable(resolved.document_config):
-        record["publishable"] = target.publishable
     if not placement.destination.sub_scope:
         record["parent_id"] = parent_id
     elif customisation_update is not None:
@@ -875,10 +869,6 @@ def with_document_placement(
     record.pop("customisation", None)
     if customisation_record is not None:
         record["customisation"] = customisation_record
-    if source_model.collection_supports_publishable(destination.document_config):
-        record["publishable"] = source_model.doc_is_publishable(front_matter)
-    else:
-        record.pop("publishable", None)
     if destination.sub_scope:
         record.pop("parent_id", None)
     else:

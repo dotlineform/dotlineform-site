@@ -46,7 +46,6 @@ def report_body(title: str) -> str:
         f"# {title}\n\n"
         ":::report\n"
         "id: docs_subscope\n"
-        "access: local\n"
         "sub_scope: works\n"
         ":::\n"
     )

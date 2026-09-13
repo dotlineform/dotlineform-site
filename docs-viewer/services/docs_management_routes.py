@@ -36,6 +36,7 @@ DOCUMENT_LINK_TARGETS_PATH = "/docs/document-link-targets"
 METADATA_PATH = "/docs/metadata"
 SOURCE_REBUILD_PATH = "/docs/source/rebuild"
 OPEN_SOURCE_PATH = "/docs/open-source"
+OPEN_PUBLICATION_IGNORE_PATH = "/docs/open-publication-ignore"
 OPEN_DIAGRAM_SOURCE_PATH = "/docs/open-diagram-source"
 OPEN_LOCAL_TARGET_PATH = "/docs/open-local-target"
 BROKEN_LINKS_PATH = "/docs/broken-links"
@@ -47,7 +48,6 @@ IMPORT_SOURCE_PATH = "/docs/import-source"
 STAGED_MEDIA_PREVIEW_PATH = "/docs/staged-media-preview"
 STAGED_MEDIA_APPLY_PATH = "/docs/staged-media-apply"
 UPDATE_METADATA_PATH = "/docs/update-metadata"
-SET_PUBLISHABLE_PATH = "/docs/set-publishable"
 SET_DRAFT_PATH = "/docs/set-draft"
 ASSIGN_FIELD_GROUP_PATH = "/docs/assign-field-group"
 CREATE_PATH = "/docs/create"
@@ -115,6 +115,7 @@ GET_PATHS = (
 POST_PATHS = (
     SOURCE_REBUILD_PATH,
     OPEN_SOURCE_PATH,
+    OPEN_PUBLICATION_IGNORE_PATH,
     OPEN_DIAGRAM_SOURCE_PATH,
     OPEN_LOCAL_TARGET_PATH,
     BROKEN_LINKS_PATH,
@@ -127,7 +128,6 @@ POST_PATHS = (
     STAGED_MEDIA_PREVIEW_PATH,
     STAGED_MEDIA_APPLY_PATH,
     UPDATE_METADATA_PATH,
-    SET_PUBLISHABLE_PATH,
     SET_DRAFT_PATH,
     ASSIGN_FIELD_GROUP_PATH,
     CREATE_PATH,

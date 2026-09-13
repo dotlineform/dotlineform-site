@@ -55,8 +55,6 @@ def _record_state(
         front_matter["summary"] = source.summary
     if source.parent_id_present and not sub_scope:
         front_matter["parent_id"] = source.parent_id
-    if source.publishable_present:
-        front_matter["publishable"] = source.publishable
     normalized = ImportContent(
         source_kind=EDITED_REVIEW_SOURCE_FORMAT,
         source_identity=folder.staged_filename,

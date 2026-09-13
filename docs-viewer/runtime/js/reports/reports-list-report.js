@@ -55,7 +55,6 @@ export function mountReportsListReport(context) {
   const head = document.createElement("div");
   head.className = "docsViewerReport__head";
   appendHeaderCell(head, "report");
-  appendHeaderCell(head, "access");
   appendHeaderCell(head, "presets");
 
   const rows = document.createElement("ul");
@@ -72,7 +71,6 @@ export function mountReportsListReport(context) {
       row.className = "docsViewerReport__row";
       row.dataset.reportDocId = cleanString(report.reportId);
       appendReportCell(row, report);
-      appendTextCell(row, "docsViewerReport__cellMeta", cleanString(report.defaultAccess) || "public");
       appendTextCell(row, "docsViewerReport__cellMeta", presetLabel(report));
       rows.appendChild(row);
     });

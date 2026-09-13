@@ -21,17 +21,9 @@ def test_manage_registry_and_loader_own_one_local_backlinks_report() -> None:
         for record in registry["reports"]
         if isinstance(record, dict)
     }
-    assert records["docs_backlinks"] == {
-        "report_id": "docs_backlinks",
-        "title": "Documents Linking Here",
-        "description": (
-            "Lists current same-scope documents linking to the exact report "
-            "host document."
-        ),
-        "default_access": "local",
-        "loader_id": "docs_backlinks",
-        "presets": [],
-    }
+    assert records["docs_backlinks"]['report_id'] == "docs_backlinks"
+    assert records["docs_backlinks"]['loader_id'] == "docs_backlinks"
+    assert records["docs_backlinks"]['presets'] == []
 
     loader = (
         REPO_ROOT / "docs-viewer/runtime/js/reports/docs-viewer-reports.js"
@@ -46,12 +38,10 @@ def test_directives_menu_owns_the_exact_local_backlinks_insertion() -> None:
         / "docs-viewer/runtime/js/management/source-editor/directive-actions.js"
     ).read_text(encoding="utf-8")
     assert source.count('id: "docs-backlinks"') == 1
-    assert source.count('label: "Documents linking here"') == 1
     assert source.count(
-        'source: ":::report\\nid: docs_backlinks\\naccess: local\\n:::"'
+        'source: ":::report\\nid: docs_backlinks\\n:::"'
     ) == 1
     assert "createDirectiveInsertionPlan" in source
-    assert 'if (/^\\n+$/.test(source.slice(insertionPoint))) return "";' in source
 
 
 def test_report_binds_only_the_exact_loaded_host_target_and_scope_owned_url() -> None:

@@ -30,18 +30,18 @@ from docs_scope_config import load_docs_scope_configs  # noqa: E402
 
 
 ROOT_ID = "d-20260830-100000-aaaaaa"
-HIDDEN_ID = "d-20260830-100100-bbbbbb"
-HIDDEN_CHILD_ID = "d-20260830-100200-cccccc"
+EXTRA_ID = "d-20260830-100100-bbbbbb"
+EXTRA_CHILD_ID = "d-20260830-100200-cccccc"
 REPORT_ID = "d-20260830-100300-dddddd"
 SUB_ID = "d-20260830-100400-eeeeee"
-HIDDEN_SUB_ID = "d-20260830-100500-ffffff"
+EXTRA_SUB_ID = "d-20260830-100500-ffffff"
 
 
 def search_payload() -> dict[str, object]:
     docs = [
         {"id": ROOT_ID, "title": "Root", "href": f"/docs/?scope=example&doc={ROOT_ID}"},
-        {"id": HIDDEN_ID, "title": "Hidden", "href": f"/docs/?scope=example&doc={HIDDEN_ID}"},
-        {"id": HIDDEN_CHILD_ID, "title": "Hidden child", "href": f"/docs/?scope=example&doc={HIDDEN_CHILD_ID}"},
+        {"id": EXTRA_ID, "title": "Extra", "href": f"/docs/?scope=example&doc={EXTRA_ID}"},
+        {"id": EXTRA_CHILD_ID, "title": "Extra child", "href": f"/docs/?scope=example&doc={EXTRA_CHILD_ID}"},
         {"id": REPORT_ID, "title": "Report", "href": f"/docs/?scope=example&doc={REPORT_ID}"},
         {
             "id": SUB_ID,
@@ -52,9 +52,9 @@ def search_payload() -> dict[str, object]:
             "collection_title": "Items",
         },
         {
-            "id": HIDDEN_SUB_ID,
-            "title": "Hidden sub doc",
-            "href": f"/docs/?scope=example&doc={REPORT_ID}&subdoc={HIDDEN_SUB_ID}",
+            "id": EXTRA_SUB_ID,
+            "title": "Extra sub doc",
+            "href": f"/docs/?scope=example&doc={REPORT_ID}&subdoc={EXTRA_SUB_ID}",
             "sub_scope": "items",
             "report_doc_id": REPORT_ID,
             "collection_title": "Items",
@@ -72,7 +72,7 @@ def search_payload() -> dict[str, object]:
         "docs": docs,
         "terms": {
             "root": {"title": [0]},
-            "hidden": {"title": [1, 2, 5]},
+            "extra": {"title": [1, 2, 5]},
             "report": {"title": [3]},
             "sub": {"title": [4, 5]},
         },
@@ -119,15 +119,14 @@ def prepare_repo(root: Path) -> None:
                 "content_url": f"/docs/doc?scope=example&doc_id={ROOT_ID}",
                 "children": [
                     {
-                        "doc_id": HIDDEN_ID,
-                        "title": "Hidden",
-                        "publishable": False,
-                        "content_url": f"/docs/doc?scope=example&doc_id={HIDDEN_ID}",
+                        "doc_id": EXTRA_ID,
+                        "title": "Extra",
+                        "content_url": f"/docs/doc?scope=example&doc_id={EXTRA_ID}",
                         "children": [
                             {
-                                "doc_id": HIDDEN_CHILD_ID,
-                                "title": "Hidden child",
-                                "content_url": f"/docs/doc?scope=example&doc_id={HIDDEN_CHILD_ID}",
+                                "doc_id": EXTRA_CHILD_ID,
+                                "title": "Extra child",
+                                "content_url": f"/docs/doc?scope=example&doc_id={EXTRA_CHILD_ID}",
                             }
                         ],
                     }
@@ -146,7 +145,7 @@ def prepare_repo(root: Path) -> None:
         "schema": "docs_recent_v1",
         "basis": "edited",
         "docs": [
-            {"doc_id": HIDDEN_ID, "title": "Hidden"},
+            {"doc_id": EXTRA_ID, "title": "Extra"},
             {"doc_id": ROOT_ID, "title": "Root"},
         ],
     }
@@ -163,9 +162,9 @@ def prepare_repo(root: Path) -> None:
             "by_target": {
                 ROOT_ID: [
                     {"doc_id": REPORT_ID, "title": "Report", "viewer_url": "/docs/"},
-                    {"doc_id": HIDDEN_ID, "title": "Hidden", "viewer_url": "/docs/"},
+                    {"doc_id": EXTRA_ID, "title": "Extra", "viewer_url": "/docs/"},
                 ],
-                HIDDEN_ID: [{"doc_id": ROOT_ID, "title": "Root", "viewer_url": "/docs/"}],
+                EXTRA_ID: [{"doc_id": ROOT_ID, "title": "Root", "viewer_url": "/docs/"}],
             },
         },
     )
@@ -176,7 +175,7 @@ def prepare_repo(root: Path) -> None:
             "scope": "example",
             "occurrences": [
                 {"source_doc_id": ROOT_ID},
-                {"source_doc_id": HIDDEN_ID},
+                {"source_doc_id": EXTRA_ID},
             ],
         },
     )
@@ -192,16 +191,16 @@ def prepare_repo(root: Path) -> None:
         },
     )
     write_json(
-        documents / f"by-id/{HIDDEN_ID}.json",
+        documents / f"by-id/{EXTRA_ID}.json",
         {
-            "doc_id": HIDDEN_ID,
-            "title": "Hidden",
-            "content_html": '<img src="/docs/media/example/img/hidden.png">',
+            "doc_id": EXTRA_ID,
+            "title": "Extra",
+            "content_html": '<img src="/docs/media/example/img/extra.png">',
         },
     )
     write_json(
-        documents / f"by-id/{HIDDEN_CHILD_ID}.json",
-        {"doc_id": HIDDEN_CHILD_ID, "title": "Hidden child"},
+        documents / f"by-id/{EXTRA_CHILD_ID}.json",
+        {"doc_id": EXTRA_CHILD_ID, "title": "Extra child"},
     )
     write_json(
         documents / f"by-id/{REPORT_ID}.json",
@@ -214,7 +213,7 @@ def prepare_repo(root: Path) -> None:
         {
             "docs": [
                 {"doc_id": SUB_ID, "title": "Sub doc"},
-                {"doc_id": HIDDEN_SUB_ID, "title": "Hidden sub doc", "publishable": False},
+                {"doc_id": EXTRA_SUB_ID, "title": "Extra sub doc"},
             ]
         },
     )
@@ -223,8 +222,8 @@ def prepare_repo(root: Path) -> None:
         {"doc_id": SUB_ID, "title": "Sub doc", "content_html": '<img src="/docs/media/example/sub-scopes/items/img/keep.png">'},
     )
     write_json(
-        sub_scope / f"by-id/{HIDDEN_SUB_ID}.json",
-        {"doc_id": HIDDEN_SUB_ID, "title": "Hidden sub doc"},
+        sub_scope / f"by-id/{EXTRA_SUB_ID}.json",
+        {"doc_id": EXTRA_SUB_ID, "title": "Extra sub doc"},
     )
     write_json(
         sub_scope / "subject-associations.json",
@@ -248,8 +247,8 @@ def prepare_repo(root: Path) -> None:
                     "subject": {"kind": "series", "key": "001"},
                     "documents": [
                         {
-                            "target": {"scope": "example", "sub_scope": "items", "doc_id": HIDDEN_SUB_ID},
-                            "title": "Hidden sub doc",
+                            "target": {"scope": "example", "sub_scope": "items", "doc_id": EXTRA_SUB_ID},
+                            "title": "Extra sub doc",
                             "locations": [],
                         }
                     ],
@@ -261,7 +260,7 @@ def prepare_repo(root: Path) -> None:
     write_json(scope_root / "generated/sub-scopes/items/search/index.json", search_payload())
     write_text(scope_root / "generated/media/img/keep.png", "kept image")
     write_text(scope_root / "generated/sub-scopes/items/media/img/keep.png", "child image")
-    write_text(scope_root / "generated/media/img/hidden.png", "hidden image")
+    write_text(scope_root / "generated/media/img/extra.png", "extra image")
     write_text(scope_root / "generated/media/files/keep.pdf", "kept file")
     write_json(scope_root / "published/documents/stale.json", {"stale": True})
     (scope_root / "published/reports/intentionally-empty").mkdir(parents=True)
@@ -288,29 +287,19 @@ def test_scope_publish_is_exact_rerunnable_and_does_not_touch_site(tmp_path: Pat
 
     published = tmp_path / "docs-viewer/scopes/example/published"
     assert result["applied"] is True
-    assert result["excluded_doc_ids"] == [HIDDEN_ID, HIDDEN_CHILD_ID, HIDDEN_SUB_ID]
+    assert result["excluded_doc_ids"] == []
     assert (published / "publish-manifest.json").is_file()
     assert not (published / "documents/stale.json").exists()
-    assert not (published / f"documents/by-id/{HIDDEN_ID}.json").exists()
-    assert not (published / f"sub-scopes/items/documents/by-id/{HIDDEN_SUB_ID}.json").exists()
+    assert (published / f"documents/by-id/{EXTRA_ID}.json").exists()
+    assert (published / f"sub-scopes/items/documents/by-id/{EXTRA_SUB_ID}.json").exists()
     subjects = json.loads(
         (published / "sub-scopes/items/documents/subject-associations.json").read_text(
             encoding="utf-8"
         )
     )
-    assert subjects["associations"] == [
-        {
-            "subject": {"kind": "work", "key": "00123"},
-            "documents": [
-                {
-                    "target": {"scope": "example", "sub_scope": "items", "doc_id": SUB_ID},
-                    "title": "Sub doc",
-                    "locations": [],
-                }
-            ],
-        }
-    ]
-    assert not (published / "media/img/hidden.png").exists()
+    generated_subjects = json.loads((tmp_path / "docs-viewer/scopes/example/generated/sub-scopes/items/documents/subject-associations.json").read_text())
+    assert subjects == generated_subjects
+    assert (published / "media/img/extra.png").exists()
     assert (published / "media/img/keep.png").read_text(encoding="utf-8") == "kept image"
     child_image, media_type = docs_published_reads.published_media_path(tmp_path, "/docs/published/media/example/sub-scopes/items/img/keep.png")
     assert media_type == "img" and child_image.read_text() == "child image"
@@ -322,16 +311,29 @@ def test_scope_publish_is_exact_rerunnable_and_does_not_touch_site(tmp_path: Pat
     )
     assert "/docs/published/media/example/img/keep.png?size=2" in root_payload["content_html"]
     search = json.loads((published / "search/index.json").read_text(encoding="utf-8"))
-    assert [row["id"] for row in search["docs"]] == [ROOT_ID, REPORT_ID, SUB_ID]
-    assert search["terms"]["sub"]["title"] == [2]
-    assert "hidden" not in search["terms"]
+    assert search == search_payload()
     child_search = json.loads((published / "sub-scopes/items/search/index.json").read_text(encoding="utf-8"))
-    assert [row["id"] for row in child_search["docs"]] == [SUB_ID]
+    assert child_search == search_payload()
     assert site_marker.read_bytes() == before_site
     assert docs_scope_publish.preview_scope_publish(
         tmp_path,
         {"scope": "example"},
     )["up_to_date"] is True
+
+
+@pytest.mark.parametrize("path,payload,message", [
+    ("search/index.json", {"docs": [], "terms": []}, "unsupported shape"),
+    ("sub-scopes/items/documents/subject-associations.json", {
+        "schema_version": "docs_subject_associations_v1", "scope": "example", "sub_scope": "other", "associations": [],
+    }, "wrong collection identity"),
+])
+def test_scope_publish_preserves_index_validation(tmp_path: Path, path: str, payload: dict, message: str) -> None:
+    prepare_repo(tmp_path)
+    write_json(tmp_path / "docs-viewer/scopes/example/generated" / path, payload)
+    config = load_docs_scope_configs(tmp_path)["example"]
+    docs_scope_build_manifest.write_build_manifest(tmp_path, config)
+    with pytest.raises(RuntimeError, match=message):
+        docs_scope_publish.preview_scope_publish(tmp_path, {"scope": "example"})
 
 
 def test_scope_publish_rejects_build_manifest_for_another_scope(tmp_path: Path) -> None:

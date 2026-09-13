@@ -56,12 +56,14 @@ def collections(tmp_path):
 
     for stage in ("working", "pre-publish"):
         for child, host in (("works", WORKS_HOST), ("moments", MOMENTS_HOST)):
-            source("", host, f":::report\nid: docs_subscope\naccess: public\nsub_scope: {child}\n:::", stage=stage)
-        flags = "publishable: false\ndraft: true\n" if stage == "working" else ""
+            source("", host, f":::report\nid: docs_subscope\nsub_scope: {child}\n:::", stage=stage)
+        flags = "draft: true\n" if stage == "working" else ""
         draft = "draft: true\n" if stage == "working" else ""
         source("", MAIN, MEDIA, flags, title=f"Main {stage}", stage=stage)
         source("works", WORK, f"{IMAGE}\n\n{IMAGE}", draft + 'work_id: "00008"\n', f"Work {stage}", stage)
         source("moments", MOMENT, DETAIL, draft, f"Moment {stage}", stage)
+    working = load_docs_scope_stage(tmp_path, "analysis", "working")
+    write_text(tmp_path / document_source_path(working) / "unpublishable.json", json.dumps([MAIN]))
     return tmp_path, source, builder
 
 
@@ -82,7 +84,7 @@ def test_sequential_builds_preserve_collections_occurrences_and_unfiltered_sourc
     assert all(row["source_range"]["end"] - row["source_range"]["start"] == len(row["raw"]) for row in rows)
 
     # A targeted parent Save preserves both children, even with excluded/draft/Subject metadata.
-    source("", MAIN, MEDIA, 'publishable: false\ndraft: true\nwork_id: "00638"\n')
+    source("", MAIN, MEDIA, 'draft: true\nwork_id: "00638"\n')
     builder(doc_id=MAIN).run(write=True)
     assert usage(builder)["occurrences"] == rows
     source("works", WORK, IMAGE, "draft: false\n")
@@ -135,6 +137,6 @@ def test_report_does_not_guess_missing_child_or_ambiguous_host(collections):
     with pytest.raises(FileNotFoundError, match="source document"):
         read_generated_semantic_tokens_index(root, "analysis", "working")
     write_text(child_payload, original)
-    source("", MAIN, ":::report\nid: docs_subscope\naccess: public\nsub_scope: works\n:::")
+    source("", MAIN, ":::report\nid: docs_subscope\nsub_scope: works\n:::")
     with pytest.raises(ValueError, match="must resolve exactly once"):
         read_generated_semantic_tokens_index(root, "analysis", "working")

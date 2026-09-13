@@ -23,7 +23,6 @@ def sub_scope_report_placement(
     sub_scope_id: str,
     *,
     eligible_parent_doc_ids: Collection[str] | None = None,
-    require_public: bool = False,
     stage: str = "",
 ) -> tuple[DocsScopeConfig, DocsSubScopeConfig, str]:
     """Resolve one configured child collection to its exact eligible report host."""
@@ -58,7 +57,6 @@ def sub_scope_report_placement(
             and report.id == "docs_subscope"
             and report.sub_scope == sub_scope_id
             and (eligible_ids is None or document.doc_id in eligible_ids)
-            and (not require_public or report.access == "public")
         ):
             parent_doc_id = document.doc_id
             if not is_immutable_doc_id(parent_doc_id):

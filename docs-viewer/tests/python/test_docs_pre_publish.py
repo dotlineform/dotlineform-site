@@ -48,9 +48,10 @@ def repo(tmp_path, monkeypatch):
     (tmp_path / analysis["scope_root"]["path"] / "published").mkdir(parents=True, exist_ok=True)
     working = load_docs_scope_stage(tmp_path, "analysis", "working")
     ordinary = tmp_path / document_source_path(working)
+    write_json(ordinary / "unpublishable.json", [])
     source(ordinary, ROOT, fields="draft: false\n", body=f"[Work](/docs/?scope=analysis&stage=working&doc={HOST}&subdoc={CHILD}#part)\n\n![Diagram]([[media:docs/analysis/svg/example.svg]])\n\n[Local](dlf-local:private/folder)")
     write_text(ordinary.parent / "media/svg/example.svg", '<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10"></svg>')
-    source(ordinary, HOST, fields="draft: false\n", body=":::report\nid: docs_subscope\naccess: local\nsub_scope: works\n:::\n")
+    source(ordinary, HOST, fields="draft: false\n", body=":::report\nid: docs_subscope\nsub_scope: works\n:::\n")
     source(ordinary, DRAFT, fields="draft: true\n")
     source(ordinary, DESCENDANT, fields=f"draft: false\nparent_id: {DRAFT}\n")
     source(tmp_path / document_source_path(working.sub_scopes[0]), CHILD, fields='draft: false\nwork_id: "00123"\n')
@@ -86,7 +87,7 @@ def test_rebuild_and_publish_replace_stale_derivatives_without_changing_working(
     assert promotion._files_from_root(source_root) == before
     generated = repo / generated_documents_path(target)
     host = json.loads((generated / "by-id" / f"{HOST}.json").read_text())
-    assert host["report"]["access"] == "public"
+    assert "access" not in host["report"]
     root_payload = json.loads((generated / "by-id" / f"{ROOT}.json").read_text())
     assert "stage=working" not in root_payload["content_html"]
     assert "stage=pre-publish" in root_payload["content_html"]
@@ -105,10 +106,14 @@ def test_rebuild_and_publish_replace_stale_derivatives_without_changing_working(
     assert files[Path("media/svg/example.svg")] == before[Path("media/svg/example.svg")]
 
 
-def test_excluded_host_omits_collection_and_next_rebuild_removes_deleted_content(repo):
+@pytest.mark.parametrize("exclusion", ["draft", "ignore"])
+def test_excluded_host_omits_collection_and_next_rebuild_removes_deleted_content(repo, exclusion):
     apply(repo)
     working = load_docs_scope_stage(repo, "analysis", "working")
-    source(repo / document_source_path(working), HOST, fields="draft: true\n", body=":::report\nid: docs_subscope\naccess: local\nsub_scope: works\n:::\n")
+    if exclusion == "draft":
+        source(repo / document_source_path(working), HOST, fields="draft: true\n", body=":::report\nid: docs_subscope\nsub_scope: works\n:::\n")
+    else:
+        write_json(repo / document_source_path(working) / "unpublishable.json", [HOST])
     result = apply(repo)
     assert result["collections"]["works"] == 0
     target = load_docs_scope_stage(repo, "analysis", "pre-publish")
@@ -138,11 +143,29 @@ def test_failed_build_cannot_publish_previous_snapshot(repo, monkeypatch):
         publication.preview_scope_publish(repo, PREPARED)
 
 
-@pytest.mark.parametrize("fields", ["draft: true\n", "draft: false\npublishable: false\n", ""])
+@pytest.mark.parametrize("fields", ["draft: true\n", ""])
 def test_readiness_and_intent_exclude_descendants(repo, fields):
     working = load_docs_scope_stage(repo, "analysis", "working")
     source(repo / document_source_path(working), DRAFT, fields=fields)
     assert promotion.preview_pre_publish(repo, WORKING)["excluded_doc_ids"] == [DRAFT, DESCENDANT]
+
+
+def test_ignore_set_is_additional_and_does_not_exclude_child_collection_ids(repo):
+    working = load_docs_scope_stage(repo, "analysis", "working")
+    ordinary = repo / document_source_path(working)
+    ignored = "d-20260911-100000-000006"
+    source(ordinary, ignored, fields="draft: false\n", body=":::report\nid: source_config\n:::\n")
+    write_json(ordinary / "unpublishable.json", [ignored, CHILD])
+    result = apply(repo)
+    assert result["excluded_doc_ids"] == sorted([DRAFT, DESCENDANT, ignored])
+    assert CHILD in result["eligible_doc_ids"]
+    target = load_docs_scope_stage(repo, "analysis", "pre-publish")
+    assert not (repo / document_source_path(target) / "unpublishable.json").exists()
+    write_json(ordinary / "unpublishable.json", [])
+    result = apply(repo)
+    assert ignored in result["eligible_doc_ids"]
+    host = json.loads((repo / generated_documents_path(target) / "by-id" / f"{ignored}.json").read_text())
+    assert host["report"]["id"] == "source_config" and "access" not in host["report"]
 
 
 def test_read_only_status_and_stage_manifest_identity(repo):

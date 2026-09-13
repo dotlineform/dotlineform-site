@@ -113,7 +113,6 @@ def _build_fixture(root: Path) -> None:
             "# Tags\n\n"
             ":::report\n"
             "id: docs_subscope\n"
-            "access: local\n"
             "sub_scope: tags\n"
             ":::\n"
         ),
@@ -219,7 +218,7 @@ def test_report_isolates_stage_media_and_document_targets(tmp_path: Path, stage:
     write_docs_scope_config(tmp_path, [analysis])
     for name in ("working", "pre-publish"):
         _write_document(tmp_path, PARENT_DOC_ID, name, "[[media:docs/analysis/img/same.png]]", scope="analysis", stage=name)
-        _write_document(tmp_path, REPORT_HOST_ID, "Works", ":::report\nid: docs_subscope\naccess: local\nsub_scope: works\n:::\n", scope="analysis", stage=name)
+        _write_document(tmp_path, REPORT_HOST_ID, "Works", ":::report\nid: docs_subscope\nsub_scope: works\n:::\n", scope="analysis", stage=name)
         _write_document(tmp_path, SUBDOC_ID, name, "[[media:docs/analysis/img/same.png]]", scope="analysis", stage=name, sub_scope="works")
         config = load_docs_scope_stage(tmp_path, "analysis", name)
         for location, identity in (

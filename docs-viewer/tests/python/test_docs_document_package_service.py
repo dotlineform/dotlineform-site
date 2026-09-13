@@ -46,7 +46,6 @@ def write_sub_scope_source_doc(
     title: str,
     parent_id: str = "",
     summary: str = "",
-    publishable: bool = True,
 ) -> None:
     lines = [
         "---",
@@ -59,8 +58,6 @@ def write_sub_scope_source_doc(
         lines.append(f"parent_id: {parent_id}")
     if summary:
         lines.append(f"summary: {summary}")
-    if not publishable:
-        lines.append("publishable: false")
     lines.extend(["---", "", f"# {title}", "", f"{title} body.", ""])
     path = (
         repo_root
@@ -146,7 +143,6 @@ def add_sub_scope_package_fixture(
         title="Tag B",
         parent_id=TAG_A_ID,
         summary="Existing summary.",
-        publishable=False,
     )
     write_sub_scope_source_doc(
         repo_root,
@@ -257,8 +253,6 @@ def test_fixed_routes_and_config_contract() -> None:
     assert payload["profiles"][0]["selection"] == {
         "mode": "explicit_doc_ids",
         "include_descendants": False,
-        "include_non_publishable": True,
-        "supports_include_non_publishable": True,
         "supports_missing_summary_only": True,
         "default_missing_summary_only": False,
     }
@@ -322,8 +316,6 @@ def test_prepare_uses_direct_fields_and_rejects_adapter_contract_fields() -> Non
     [
         ("missing_summary_only", None),
         ("missing_summary_only", "true"),
-        ("include_non_publishable", None),
-        ("include_non_publishable", 1),
     ],
 )
 def test_prepare_type_checks_filter_choices(field: str, value: object) -> None:
@@ -361,7 +353,6 @@ def test_prepare_revalidates_stale_summary_without_broadening_target() -> None:
                 "doc_ids": ["example", "alpha"],
                 "select_all": False,
                 "missing_summary_only": True,
-                "include_non_publishable": True,
                 "dry_run": True,
             },
         )
@@ -397,8 +388,6 @@ def test_direct_prepare_treats_tree_doc_ids_as_the_final_target() -> None:
         tree_profile["selection"] = {
             "mode": "explicit_doc_ids",
             "include_descendants": True,
-            "include_non_publishable": True,
-            "supports_include_non_publishable": False,
             "supports_missing_summary_only": False,
             "default_missing_summary_only": False,
         }
@@ -414,7 +403,6 @@ def test_direct_prepare_treats_tree_doc_ids_as_the_final_target() -> None:
                 "doc_ids": ["example"],
                 "select_all": False,
                 "missing_summary_only": False,
-                "include_non_publishable": True,
                 "dry_run": True,
             },
         )
@@ -427,20 +415,6 @@ def test_direct_prepare_treats_tree_doc_ids_as_the_final_target() -> None:
                 "doc_ids": ["example"],
                 "select_all": False,
                 "missing_summary_only": True,
-                "include_non_publishable": True,
-                "dry_run": True,
-            },
-        )
-        non_publishable_status, non_publishable_payload = service.post_response(
-            repo_root,
-            routes.PREPARE_PATH,
-            {
-                "scope": "example",
-                "profile_id": "document-tree",
-                "doc_ids": ["example"],
-                "select_all": False,
-                "missing_summary_only": False,
-                "include_non_publishable": False,
                 "dry_run": True,
             },
         )
@@ -451,31 +425,30 @@ def test_direct_prepare_treats_tree_doc_ids_as_the_final_target() -> None:
     assert payload["counts"] == {"selected": 1, "exported": 1, "skipped": 0, "failed": 0, "truncated": 0}
     assert int(missing_status) == 400
     assert "config document-tree: missing_summary_only true is not supported" in missing_payload["errors"]
-    assert int(non_publishable_status) == 400
-    assert (
-        "config document-tree: include_non_publishable cannot override the profile default"
-        in non_publishable_payload["errors"]
-    )
 
 
-def test_package_document_feed_keeps_non_publishable_source_selectable() -> None:
+def test_package_document_feed_has_no_publication_eligibility() -> None:
     with make_docs_import_repo() as temp:
-        repo_root = Path(temp)
-        source_path = repo_root / "docs-viewer/scopes/example/source/documents/alpha.md"
-        source_path.write_text(
-            source_path.read_text(encoding="utf-8").replace(
-                "---\n\n# Body",
-                "publishable: false\n---\n\n# Body",
-            ),
-            encoding="utf-8",
-        )
-        payload = service.documents_payload(repo_root, {"scope": ["example"]})
+        payload = service.documents_payload(Path(temp), {"scope": ["example"]})
 
     alpha = next(record for record in payload["records"] if record["doc_id"] == "alpha")
-    assert alpha["publishable"] is False
+    assert "publishable" not in alpha
     assert alpha["selectable"] is True
     assert "published" not in alpha
-    assert alpha["issues"] == [{"level": "warning", "message": "Document is not publishable."}]
+    assert alpha["issues"] == []
+
+
+@pytest.mark.parametrize("value", [True, False, None])
+def test_prepare_rejects_retired_publication_filter(value: object) -> None:
+    with make_docs_import_repo() as temp:
+        with pytest.raises(ValueError, match="publication eligibility filters are not accepted"):
+            service.prepare_package(Path(temp), {
+                "scope": "example",
+                "profile_id": "document-content",
+                "doc_ids": ["alpha"],
+                "include_non_publishable": value,
+                "dry_run": True,
+            })
 
 
 def test_sub_scope_config_and_documents_are_flat_export_only() -> None:
@@ -530,7 +503,7 @@ def test_sub_scope_config_and_documents_are_flat_export_only() -> None:
         "sub_scope": "tags",
     }
     assert [record["doc_id"] for record in documents["records"]] == [TAG_A_ID, TAG_B_ID]
-    assert documents["records"][1]["publishable"] is False
+    assert "publishable" not in documents["records"][1]
     assert documents["records"][1]["summary"] == "Existing summary."
     assert profiles_after == profiles_before
 
@@ -557,34 +530,17 @@ def test_sub_scope_filters_only_subtract_from_checked_ids(
                 "doc_ids": [TAG_B_ID, TAG_A_ID],
                 "select_all": False,
                 "missing_summary_only": True,
-                "include_non_publishable": True,
-                "dry_run": True,
-            },
-        )
-        _, publishable_only = service.post_response(
-            repo_root,
-            routes.PREPARE_PATH,
-            {
-                "scope": "example",
-                "sub_scope": "tags",
-                "profile_id": "document-content",
-                "doc_ids": [TAG_B_ID, TAG_A_ID],
-                "select_all": False,
-                "missing_summary_only": False,
-                "include_non_publishable": False,
                 "dry_run": True,
             },
         )
 
-    for payload in (missing_summary, publishable_only):
-        assert payload["scope"] == "example"
-        assert payload["sub_scope"] == "tags"
-        assert payload["supports_docs_review"] is True
-        assert payload["supports_return_import"] is False
-        assert payload["selected_doc_ids"] == [TAG_A_ID]
-        assert payload["exported_doc_ids"] == [TAG_A_ID]
+    assert missing_summary["scope"] == "example"
+    assert missing_summary["sub_scope"] == "tags"
+    assert missing_summary["supports_docs_review"] is True
+    assert missing_summary["supports_return_import"] is False
+    assert missing_summary["selected_doc_ids"] == [TAG_A_ID]
+    assert missing_summary["exported_doc_ids"] == [TAG_A_ID]
     assert missing_summary["skipped"] == [{"doc_id": TAG_B_ID, "reason": "has_summary"}]
-    assert publishable_only["skipped"] == [{"doc_id": TAG_B_ID, "reason": "non_publishable"}]
     assert events == [
         (
             "document-package-prepare",
@@ -598,18 +554,7 @@ def test_sub_scope_filters_only_subtract_from_checked_ids(
                 "doc_ids": [TAG_A_ID],
             },
         ),
-        (
-            "document-package-prepare",
-            {
-                "scope": "example",
-                "sub_scope": "tags",
-                "profile_id": "document-content",
-                "dry_run": True,
-                "output_written": False,
-                "exported": 1,
-                "doc_ids": [TAG_A_ID],
-            },
-        ),
+
     ]
 
 
@@ -691,7 +636,6 @@ def test_sub_scope_tree_profile_keeps_exact_checked_records_as_roots() -> None:
                 "doc_ids": [TAG_A_ID],
                 "select_all": False,
                 "missing_summary_only": False,
-                "include_non_publishable": True,
                 "dry_run": False,
             },
         )
@@ -724,7 +668,6 @@ def test_sub_scope_written_package_is_reviewable_but_blocked_from_import() -> No
                 "doc_ids": [TAG_B_ID, TAG_A_ID],
                 "select_all": False,
                 "missing_summary_only": False,
-                "include_non_publishable": True,
                 "dry_run": False,
             },
         )
@@ -899,7 +842,6 @@ def test_opted_in_sub_scope_projects_importable_package_and_exact_listing() -> N
                 "doc_ids": [TAG_B_ID, TAG_A_ID],
                 "select_all": False,
                 "missing_summary_only": False,
-                "include_non_publishable": True,
                 "dry_run": False,
             },
         )
@@ -1129,14 +1071,12 @@ def test_content_review_projects_safe_new_or_existing_review_identity() -> None:
     assert first["review_existing"] is False
     assert first["review_package_id"]
     assert first["review_url"] == f"/docs-review/?package={first['review_package_id']}"
-    assert first["summary_text"] == f"Prepared Docs Review package {first['review_package_id']}."
     assert package_path.is_dir()
     assert safe_keys <= set(second)
     assert second["ok"] is True
     assert second["review_package_id"] == first["review_package_id"]
     assert second["review_url"] == first["review_url"]
     assert second["review_existing"] is True
-    assert second["summary_text"] == f"Docs Review package {first['review_package_id']} already exists."
 
 
 def test_invalid_returned_record_blocks_complete_review() -> None:

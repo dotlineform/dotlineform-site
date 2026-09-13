@@ -161,7 +161,7 @@
 
 .docsViewerReport[data-report-id="reports_list"] .docsViewerReport__head,
 .docsViewerReport[data-report-id="reports_list"] .docsViewerReport__row{
-  grid-template-columns: minmax(12rem, 1fr) 7rem minmax(12rem, 1fr);
+  grid-template-columns: repeat(2, minmax(12rem, 1fr));
 }
 
 .docsViewerReport[data-report-id="docs_broken_links"] .docsViewerReport__head,
@@ -290,21 +290,7 @@
   overflow-wrap: anywhere;
 }
 
-.docsViewerReport__publishable{
-  display: inline-block;
-  justify-self: start;
-  margin-top: 0.35rem;
-  width: 0.45rem;
-  height: 0.45rem;
-  border: 1px solid var(--docs-viewer-border);
-  border-radius: 999px;
-  background: transparent;
-}
 
-.docsViewerReport__publishable.is-publishable{
-  border-color: var(--docs-viewer-link);
-  background: var(--docs-viewer-link);
-}
 
 .docsViewerReport__configScopes{
   display: grid;

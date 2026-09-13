@@ -25,6 +25,7 @@ from docs_document_subjects import normalize_authoring_subject
 from docs_rendered_links import collect_anchors, parse_docs_target, resolve_href
 from docs_scope_config import DocsScopeConfig, document_source_path, generated_documents_path, load_docs_scope_configs, resolve_scope_path
 from docs_source_model import parse_source, write_text_atomic
+from docs_publication_ignore import working_ignored_doc_ids
 
 CONFIG_PATH = Path("docs-viewer/config/links-builder.json")
 
@@ -80,6 +81,7 @@ class _DocumentRefresh:
         self.builder = builder
         self.config = builder.config
         self.collection = getattr(builder, "sub_scope_id", "")
+        self.ignored_ids = working_ignored_doc_ids(builder.repo_root, self.config)
         self.owners = {"": self.config, **{owner.sub_scope: owner for owner in self.config.sub_scopes}}
         self.sources = {name: resolve_scope_path(builder.repo_root, document_source_path(owner)) for name, owner in self.owners.items()}
         self.outputs = {name: resolve_scope_path(builder.repo_root, generated_documents_path(owner)) / "by-id" for name, owner in self.owners.items()}
@@ -112,7 +114,7 @@ class _DocumentRefresh:
         metadata = doc.front_matter if doc else parse_source(source)[0]
         if metadata.get("doc_id") != target.doc_id:
             raise ValueError("Links source document identity does not match")
-        if require_eligible and metadata.get("publishable", True) is False:
+        if require_eligible and not target.sub_scope and target.doc_id in self.ignored_ids:
             return None
         path = _safe_path(self.outputs[target.sub_scope], f"{target.doc_id}.json")
         if target in self.pending and doc:
@@ -293,13 +295,13 @@ def build_document_links(builder: DocsDataBuilder, plan: dict[str, Any] | None, 
         for doc_id in sorted(plan["new_doc_ids"]):
             key = refresh.key(doc_id)
             doc = refresh.docs[key]
-            if doc.publishable:
+            if key.sub_scope or key.doc_id not in refresh.ignored_ids:
                 refresh.admit_created(key, doc)
         added = deleted = 0
         for doc_id in sorted(plan["doc_ids"]):
             key = refresh.key(doc_id)
             doc = refresh.docs.get(key)
-            if doc is not None and not doc.publishable:
+            if doc is not None and not key.sub_scope and key.doc_id in refresh.ignored_ids:
                 continue
             new, removed = refresh.refresh(key, doc)
             added += new

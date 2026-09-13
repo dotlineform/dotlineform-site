@@ -128,8 +128,6 @@ def profile_contract(
         "selection": {
             "mode": str(selection.get("mode") or "").strip(),
             "include_descendants": selection.get("include_descendants") is not False,
-            "include_non_publishable": selection.get("include_non_publishable") is not False,
-            "supports_include_non_publishable": selection.get("supports_include_non_publishable") is True,
             "supports_missing_summary_only": selection.get("supports_missing_summary_only") is True,
             "default_missing_summary_only": selection.get("default_missing_summary_only") is True,
         },
@@ -267,9 +265,9 @@ def get_payload(
 
 
 def prepare_package(repo_root: Path, body: dict[str, Any]) -> dict[str, Any]:
-    if "include_non_viewable" in body:
+    if "include_non_viewable" in body or "include_non_publishable" in body:
         raise ValueError(
-            "legacy include_non_viewable is not accepted; use include_non_publishable"
+            "publication eligibility filters are not accepted for package preparation"
         )
     collection_aliases = sorted(
         field for field in PACKAGE_COLLECTION_ALIAS_FIELDS if field in body
@@ -302,7 +300,6 @@ def prepare_package(repo_root: Path, body: dict[str, Any]) -> dict[str, Any]:
         raise ValueError("sub-scope package preparation requires select_all false")
     dry_run = dry_run_value(body)
     missing_summary_only = optional_boolean_value(body, "missing_summary_only")
-    include_non_publishable = optional_boolean_value(body, "include_non_publishable")
     roots = configured_workspace_paths(repo_root)
     payload = build_document_package(
         repo_root,
@@ -313,7 +310,6 @@ def prepare_package(repo_root: Path, body: dict[str, Any]) -> dict[str, Any]:
         raw_doc_ids=doc_ids,
         select_all=select_all,
         missing_summary_only=missing_summary_only,
-        include_non_publishable=include_non_publishable,
         dry_run=dry_run,
         config_path="",
         target_format=str(body.get("target_format") or "").strip(),

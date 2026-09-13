@@ -70,6 +70,13 @@ export function createDocsViewerReportService(options) {
         stage: request.stage
       }).toString(), Object.assign({}, serviceOptions, { requireOkEnvelope: true }));
     },
+    openPublicationIgnore: function () {
+      return fetchReportJson("/docs/open-publication-ignore", Object.assign({}, serviceOptions, {
+        method: "POST",
+        payload: { scope: "analysis", stage: "working" },
+        requireOkEnvelope: true
+      }));
+    },
     readSeriesWorkMedia: function (request) {
       var target = normalizeManagedDocumentTarget(request && request.target);
       var query = new URLSearchParams(Object.assign({}, target, { work_id: request.workId })).toString();

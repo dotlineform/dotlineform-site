@@ -326,10 +326,6 @@ class DocumentTransferPlan:
             "warnings": [asdict(warning) for warning in self.warnings],
             "apply_plan": self.apply_plan_payload() if self.ok else None,
         }
-        if source_model.collection_supports_publishable(
-            self.target_collection.document_config
-        ):
-            payload["target_default_publishable"] = True
         return payload
 
     def apply_plan_payload(self) -> dict[str, Any]:
@@ -400,10 +396,6 @@ class DocumentTransferPlan:
             ],
             "lineage": _lineage_apply_payload(self.lineage),
         }
-        if source_model.collection_supports_publishable(
-            self.target_collection.document_config
-        ):
-            payload["target_default_publishable"] = True
         return payload
 
 

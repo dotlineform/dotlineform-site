@@ -32,7 +32,6 @@ from docs_source_model import (  # noqa: E402
     advance_doc_front_matter,
     advance_front_matter_for_recent_edit,
     allocate_doc_id,
-    collection_supports_publishable,
     collection_supports_draft,
     parse_source_text,
     validate_document_status_front_matter,
@@ -56,7 +55,7 @@ IMPORT_DOCUMENT_CREATE = "create"
 IMPORT_DOCUMENT_OVERWRITE = "overwrite"
 IMPORT_DOCUMENT_OPERATIONS = {IMPORT_DOCUMENT_CREATE, IMPORT_DOCUMENT_OVERWRITE}
 
-ALLOWED_IMPORT_FRONT_MATTER_FIELDS = ("title", "parent_id", "summary", "publishable")
+ALLOWED_IMPORT_FRONT_MATTER_FIELDS = ("title", "parent_id", "summary")
 
 
 @dataclass(frozen=True)
@@ -84,7 +83,6 @@ class ImportDocumentPlan:
     source_text: str
     title: str
     parent_id: str
-    publishable: bool | None
     import_preview: dict[str, Any]
     sub_scope: str = ""
     stage: str = ""
@@ -120,6 +118,8 @@ def _clean_text(value: Any) -> str:
 def _explicit_front_matter(record: ImportContent) -> dict[str, Any]:
     if "viewable" in record.front_matter:
         raise ValueError("ImportContent legacy viewable front matter is not supported")
+    if "publishable" in record.front_matter:
+        raise ValueError("ImportContent publishable front matter is retired")
     retired_report_keys = sorted(RETIRED_REPORT_KEYS.intersection(record.front_matter))
     if retired_report_keys:
         raise ValueError(
@@ -133,23 +133,12 @@ def _explicit_front_matter(record: ImportContent) -> dict[str, Any]:
     for field in ("title", "parent_id", "summary"):
         if field in front_matter and not isinstance(front_matter[field], str):
             raise ValueError(f"ImportContent front_matter {field} must be a string")
-    if "publishable" in front_matter and not isinstance(front_matter["publishable"], bool):
-        raise ValueError("ImportContent front_matter publishable must be a boolean")
     if "title" in front_matter and _clean_text(front_matter["title"]) != _clean_text(record.title):
         raise ValueError("ImportContent title must match front_matter title")
     declared_parent_id = _clean_text(front_matter.get("parent_id"))
     if "parent_id" in front_matter and declared_parent_id != _clean_text(record.parent_id):
         raise ValueError("ImportContent parent_id must match front_matter parent_id")
     return front_matter
-
-
-def _publishable_value(front_matter: dict[str, Any], default: bool) -> bool:
-    if "publishable" not in front_matter:
-        return default
-    value = front_matter["publishable"]
-    if isinstance(value, bool):
-        return value
-    return _clean_text(value).lower() not in {"false", "0", "no", "off"}
 
 
 def _replacement_body(import_preview: dict[str, Any], title: str) -> str:
@@ -171,11 +160,6 @@ def _apply_explicit_front_matter(
             front_matter.pop("summary", None)
     if "parent_id" in explicit_front_matter:
         front_matter["parent_id"] = _clean_text(explicit_front_matter.get("parent_id"))
-    if "publishable" in explicit_front_matter:
-        if _publishable_value(explicit_front_matter, True):
-            front_matter.pop("publishable", None)
-        else:
-            front_matter["publishable"] = False
 
 
 def _create_source(
@@ -186,9 +170,7 @@ def _create_source(
     explicit_front_matter: dict[str, Any],
     custom_front_matter: dict[str, Any],
     added_date: str,
-    *,
-    publishable_supported: bool,
-) -> tuple[str, str, bool | None]:
+) -> tuple[str, str]:
     if record.content_intent == CONTENT_INTENT_PRESERVE_EXISTING:
         raise ValueError("preserve-existing content requires an existing import target")
     parent_id = _clean_text(record.parent_id)
@@ -206,17 +188,14 @@ def _create_source(
         front_matter_seed,
         timestamp=added_date,
     )
-    if not publishable_supported and "publishable" in explicit_front_matter:
-        raise ValueError("publishable front matter is not supported for a local collection")
     _apply_explicit_front_matter(front_matter, explicit_front_matter)
     front_matter.update(custom_front_matter)
-    publishable = _publishable_value(front_matter, True) if publishable_supported else None
     body = (
         _replacement_body(import_preview, record.title)
         if record.content_intent == CONTENT_INTENT_REPLACE
         else ""
     )
-    return format_source(front_matter, body, sub_scope=sub_scope), parent_id, publishable
+    return format_source(front_matter, body, sub_scope=sub_scope), parent_id
 
 
 def _overwrite_source(
@@ -227,8 +206,7 @@ def _overwrite_source(
     *,
     sub_scope: str,
     preserve_collection_metadata: bool = False,
-    publishable_supported: bool,
-) -> tuple[str, str, bool | None]:
+) -> tuple[str, str]:
     if record.content_intent == CONTENT_INTENT_EMPTY_NEW:
         raise ValueError("empty-new content cannot overwrite an existing import target")
     front_matter = dict(target.front_matter)
@@ -239,17 +217,9 @@ def _overwrite_source(
         # Retain the ordinary single-source overwrite cleanup contract.
         front_matter["parent_id"] = target.parent_id
         front_matter.pop("sort_order", None)
-        if publishable_supported:
-            front_matter.pop("publishable", None)
-            if not target.publishable:
-                front_matter["publishable"] = False
-
-    if not publishable_supported and "publishable" in explicit_front_matter:
-        raise ValueError("publishable front matter is not supported for a local collection")
 
     _apply_explicit_front_matter(front_matter, explicit_front_matter)
     parent_id = _clean_text(front_matter.get("parent_id"))
-    publishable = _publishable_value(front_matter, True) if publishable_supported else None
     body = (
         _replacement_body(import_preview, record.title)
         if record.content_intent == CONTENT_INTENT_REPLACE
@@ -257,14 +227,14 @@ def _overwrite_source(
     )
     candidate_source = format_source(front_matter, body, sub_scope=sub_scope)
     if candidate_source == target.source_text:
-        return target.source_text, parent_id, publishable
+        return target.source_text, parent_id
     front_matter = advance_front_matter_for_recent_edit(
         target.front_matter,
         target.body,
         front_matter,
         body,
     )
-    return format_source(front_matter, body, sub_scope=sub_scope), parent_id, publishable
+    return format_source(front_matter, body, sub_scope=sub_scope), parent_id
 
 
 def plan_import_document(
@@ -299,7 +269,6 @@ def plan_import_document(
         parent_config = document_config
         create_root = scope_root(repo_root, normalized_scope)
     require_document_authoring(parent_config)
-    publishable_supported = collection_supports_publishable(document_config)
     if operation == IMPORT_DOCUMENT_OVERWRITE and slugify(record.doc_id) != record.doc_id:
         raise ValueError("ImportContent doc_id must be a safe normalized docs id")
     if operation not in IMPORT_DOCUMENT_OPERATIONS:
@@ -377,7 +346,7 @@ def plan_import_document(
             raise ValueError(f"cannot create existing import target {record.doc_id!r}")
         if target_path.exists():
             raise ValueError(f"cannot create existing import target {record.doc_id!r}")
-        source_text, parent_id, publishable = _create_source(
+        source_text, parent_id = _create_source(
             record,
             normalized_scope,
             sub_scope,
@@ -385,19 +354,17 @@ def plan_import_document(
             explicit_front_matter,
             normalized_custom_front_matter,
             added_date,
-            publishable_supported=publishable_supported,
         )
     else:
         assert target is not None
         target_path = target.path
-        source_text, parent_id, publishable = _overwrite_source(
+        source_text, parent_id = _overwrite_source(
             record,
             target,
             preview,
             explicit_front_matter,
             sub_scope=sub_scope,
             preserve_collection_metadata=preserve_collection_metadata,
-            publishable_supported=publishable_supported,
         )
 
     front_matter, candidate_body = parse_source_text(source_text)
@@ -415,7 +382,6 @@ def plan_import_document(
         source_text=source_text,
         title=title,
         parent_id=parent_id,
-        publishable=publishable,
         import_preview=preview,
         sub_scope=sub_scope,
         stage=parent_config.stage,
@@ -531,8 +497,6 @@ def import_document_result(
         "doc_id": plan.doc_id,
         "title": plan.title,
     }
-    if plan.publishable is not None:
-        record["publishable"] = plan.publishable
     if not plan.sub_scope:
         record["parent_id"] = plan.parent_id
     result = {

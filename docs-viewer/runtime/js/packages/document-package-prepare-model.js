@@ -123,52 +123,30 @@ export function projectDocumentPackageSelection(options = {}) {
       ? options.missingSummaryOnly === true
       : selection.default_missing_summary_only === true
     : false;
-  const supportsIncludeNonPublishable = selection.supports_include_non_publishable === true;
-  const defaultIncludeNonPublishable = selection.include_non_publishable !== false;
-  const includeNonPublishable = supportsIncludeNonPublishable
-    ? Object.prototype.hasOwnProperty.call(options, "includeNonPublishable")
-      ? options.includeNonPublishable !== false
-      : defaultIncludeNonPublishable
-    : defaultIncludeNonPublishable;
-
   const expandedDocIds = expandDocumentPackageSelection(
     documents,
     options.checkedDocIds,
     includeDescendants
   );
-  const afterPublishability = expandedDocIds.filter((docId) => {
-    const record = documentsById.get(docId);
-    return includeNonPublishable || !record || record.publishable !== false;
-  });
-  const excludedNonPublishableCount = expandedDocIds.length - afterPublishability.length;
-  const afterSummary = afterPublishability.filter((docId) => {
+  const afterSummary = expandedDocIds.filter((docId) => {
     const record = documentsById.get(docId);
     return !missingSummaryOnly || !packageText(record && record.summary);
   });
-  const excludedWithSummaryCount = afterPublishability.length - afterSummary.length;
+  const excludedWithSummaryCount = expandedDocIds.length - afterSummary.length;
   const rawMaxDocuments = profile && profile.limits && profile.limits.max_documents;
   const maxDocuments = Number.isInteger(rawMaxDocuments) && rawMaxDocuments > 0
     ? rawMaxDocuments
     : null;
   const docIds = maxDocuments === null ? afterSummary : afterSummary.slice(0, maxDocuments);
   const excludedByLimitCount = afterSummary.length - docIds.length;
-  const includedNonPublishableCount = docIds.filter((docId) => {
-    const record = documentsById.get(docId);
-    return record && record.publishable === false;
-  }).length;
-
   return {
     docIds,
     includeDescendants,
     missingSummaryOnly,
-    includeNonPublishable,
     supportsMissingSummaryOnly,
-    supportsIncludeNonPublishable,
     total: docIds.length,
-    excludedNonPublishableCount,
     excludedWithSummaryCount,
     excludedByLimitCount,
-    includedNonPublishableCount
   };
 }
 
@@ -213,7 +191,6 @@ export function createDocumentPackagePrepareRequest(options = {}) {
     doc_ids: effectiveDocIds,
     select_all: false,
     missing_summary_only: options.missingSummaryOnly === true,
-    include_non_publishable: options.includeNonPublishable !== false,
     target_format: requestedTargetFormat,
     content_format: requestedContentFormat,
     dry_run: false

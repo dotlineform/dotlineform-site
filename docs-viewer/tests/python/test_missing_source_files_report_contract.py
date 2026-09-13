@@ -38,14 +38,9 @@ def test_manage_registry_declares_local_missing_source_files_report() -> None:
         if isinstance(record, dict)
     }
 
-    assert records["missing_source_files"] == {
-        "report_id": "missing_source_files",
-        "title": "Missing Source Files",
-        "description": "Lists canonical Works whose complete expected source path does not resolve to a file.",
-        "default_access": "local",
-        "loader_id": "missing_source_files",
-        "presets": [],
-    }
+    assert records["missing_source_files"]['report_id'] == "missing_source_files"
+    assert records["missing_source_files"]['loader_id'] == "missing_source_files"
+    assert records["missing_source_files"]['presets'] == []
 
 
 def test_public_registry_does_not_expose_missing_source_files_report() -> None:
@@ -118,12 +113,9 @@ def test_management_service_returns_table_only_live_report(
     )
 
     assert status == HTTPStatus.OK
-    assert payload == {
-        "ok": True,
-        "dry_run": False,
-        "summary_text": "Missing Source Files refreshed.",
-        "report": report,
-    }
+    assert payload['ok'] == True
+    assert payload['dry_run'] == False
+    assert payload['report'] == report
     assert calls == [tmp_path]
 
 

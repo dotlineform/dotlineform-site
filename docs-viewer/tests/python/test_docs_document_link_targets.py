@@ -1,6 +1,7 @@
 """Exact, read-only document-link lookup across authoring collections."""
 
 from copy import deepcopy
+import json
 from pathlib import Path
 from types import SimpleNamespace
 import sys
@@ -52,22 +53,23 @@ def authoring_repo(tmp_path: Path) -> Path:
         for owner in config.sub_scopes:
             (tmp_path / scopes.document_source_path(owner)).mkdir(parents=True)
         write_document(root, HOST if stage == "working" else OTHER_HOST, "Works",
-                       ":::report\nid: docs_subscope\naccess: local\nsub_scope: works\n:::")
-        write_document(root, PLAIN, "Same title", metadata="publishable: false\ndraft: true\n")
+                       ":::report\nid: docs_subscope\nsub_scope: works\n:::")
+        write_document(root, PLAIN, "Same title", metadata="draft: true\n")
+        if stage == "working":
+            (root / "unpublishable.json").write_text(json.dumps([PLAIN]))
         write_document(tmp_path / scopes.document_source_path(config.sub_scopes[1]), CHILD, "Same title", metadata="draft: true\n")
     studio = scopes.load_docs_scope_configs(tmp_path, scope_ids=["studio"])["studio"]
     write_document(tmp_path / scopes.document_source_path(studio), PLAIN, "Studio")
     return tmp_path
 
 
-@pytest.mark.parametrize("publishable", [None, True, False])
+@pytest.mark.parametrize("ignored", [True, False])
 def test_lookup_keeps_exact_stage_child_and_excludes_only_unpublishable_targets(
-    authoring_repo: Path, publishable: bool | None,
+    authoring_repo: Path, ignored: bool,
 ) -> None:
     config = scopes.load_docs_scope_stage(authoring_repo, "analysis", "working")
     metadata = "draft: true\n"
-    if publishable is not None:
-        metadata += f"publishable: {str(publishable).lower()}\n"
+    (authoring_repo / scopes.document_source_path(config) / "unpublishable.json").write_text(json.dumps([PLAIN, CHILD] if ignored else [CHILD]))
     write_document(authoring_repo / scopes.document_source_path(config), PLAIN, "Same title", metadata=metadata)
     before = {path: path.read_bytes() for path in authoring_repo.rglob("*") if path.is_file()}
     payload = docs_management_get_payload(authoring_repo, DOCUMENT_LINK_TARGETS_PATH, {"scope": ["analysis"], "stage": ["working"]})
@@ -78,8 +80,8 @@ def test_lookup_keeps_exact_stage_child_and_excludes_only_unpublishable_targets(
         "target": {"scope": "analysis", "sub_scope": "works", "doc_id": CHILD},
         "title": "Same title", "href": f"/docs/?scope=analysis&doc={HOST}&subdoc={CHILD}",
     }
-    assert set(records) == ({HOST, CHILD} if publishable is False else {HOST, CHILD, PLAIN})
-    if publishable is not False:
+    assert set(records) == ({HOST, CHILD} if ignored else {HOST, CHILD, PLAIN})
+    if not ignored:
         assert records[PLAIN]["href"] == f"/docs/?scope=analysis&doc={PLAIN}"
     assert OTHER_HOST not in records
     assert canonical_sub_scope_document_url(authoring_repo, "analysis", "works", CHILD, stage="working") == records[CHILD]["href"]
@@ -99,7 +101,7 @@ def test_child_host_must_resolve_exactly_once(authoring_repo: Path, ambiguous: b
     config = scopes.load_docs_scope_stage(authoring_repo, "analysis", "working")
     root = authoring_repo / scopes.document_source_path(config)
     if ambiguous:
-        write_document(root, OTHER_HOST, "Second host", ":::report\nid: docs_subscope\naccess: local\nsub_scope: works\n:::")
+        write_document(root, OTHER_HOST, "Second host", ":::report\nid: docs_subscope\nsub_scope: works\n:::")
     else:
         (root / f"{HOST}.md").unlink()
     with pytest.raises(ValueError, match="resolve exactly once"):

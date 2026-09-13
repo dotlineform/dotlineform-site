@@ -1,29 +1,26 @@
-/** Validate Working identities before rendering local document links. */
-export function readUnpublishableRows(payload) {
-  if (!payload || payload.ok !== true || payload.schema_version !== "docs_unpublishable_report_v1"
-    || payload.scope !== "analysis" || payload.stage !== "working" || !Array.isArray(payload.rows)) {
+const TITLE_ORDER = new Intl.Collator("en", { sensitivity: "base", numeric: true });
+
+/** Validate the report envelope and order documents by title for display. */
+export function readUnpublishableDocuments(payload) {
+  if (!payload || payload.ok !== true || payload.schema_version !== "docs_unpublishable_report_v3"
+    || payload.scope !== "analysis" || payload.stage !== "working" || !Array.isArray(payload.documents)) {
     throw new Error("Unpublishable report data is invalid.");
   }
   const seen = new Set();
-  return payload.rows.map(function (row) {
-    const target = row && row.target;
-    if (!target || target.scope !== payload.scope || target.stage !== payload.stage
-      || target.sub_scope !== "" || typeof target.doc_id !== "string" || !target.doc_id
-      || typeof row.title !== "string" || !row.title
-      || typeof row.collection_title !== "string" || !row.collection_title
-      || typeof row.href !== "string") {
+  return payload.documents.map(function (record) {
+    const docId = record && record.doc_id;
+    if (typeof docId !== "string" || !docId || docId !== docId.trim() || seen.has(docId)) {
       throw new Error("Unpublishable document identity is invalid.");
     }
-    const key = JSON.stringify([target.sub_scope, target.doc_id]);
-    const url = new URL(row.href, "http://docs.invalid");
-    if (seen.has(key) || !row.href.startsWith("/docs/?") || url.origin !== "http://docs.invalid"
-      || url.searchParams.get("scope") !== target.scope || url.searchParams.get("stage") !== target.stage
-      || url.searchParams.get("doc") !== target.doc_id
-      || url.searchParams.has("subdoc")) {
-      throw new Error("Unpublishable document link is invalid.");
+    seen.add(docId);
+    if (record.title !== null && typeof record.title !== "string") {
+      throw new Error("Unpublishable document title is invalid.");
     }
-    seen.add(key);
-    return row;
+    return { doc_id: docId, title: record.title };
+  }).sort(function (left, right) {
+    return Number(!left.title) - Number(!right.title)
+      || TITLE_ORDER.compare(left.title || "", right.title || "")
+      || left.doc_id.localeCompare(right.doc_id);
   });
 }
 
@@ -33,7 +30,7 @@ export function mountUnpublishableReport(context) {
     throw new Error("Unpublishable is available only in Analysis Working.");
   }
   const service = context.reportService;
-  if (!service || typeof service.readUnpublishable !== "function") {
+  if (!service || typeof service.readUnpublishable !== "function" || typeof service.openPublicationIgnore !== "function") {
     throw new Error("Unpublishable requires the local report service.");
   }
   const root = context.reportRoot;
@@ -45,13 +42,18 @@ export function mountUnpublishableReport(context) {
   refresh.className = "docsViewerReport__button";
   refresh.textContent = "Refresh";
   toolbar.appendChild(refresh);
+  const open = documentRef.createElement("button");
+  open.type = "button";
+  open.className = "docsViewerReport__button";
+  open.textContent = "Open in VS Code";
+  toolbar.appendChild(open);
   const status = documentRef.createElement("p");
   status.className = "docsViewerReport__status";
   status.setAttribute("aria-live", "polite");
   const table = documentRef.createElement("table");
   const head = documentRef.createElement("thead");
   const headings = documentRef.createElement("tr");
-  ["Title"].forEach(function (label) {
+  ["Title", "Document ID"].forEach(function (label) {
     const cell = documentRef.createElement("th");
     cell.scope = "col";
     cell.textContent = label;
@@ -62,6 +64,13 @@ export function mountUnpublishableReport(context) {
   table.append(head, body);
   root.replaceChildren(toolbar, status, table);
   let requestVersion = 0;
+  let busy = false;
+
+  function setBusy(value) {
+    busy = value;
+    refresh.disabled = value;
+    open.disabled = value;
+  }
 
   function current(version) {
     return version === requestVersion && root.isConnected !== false
@@ -69,34 +78,55 @@ export function mountUnpublishableReport(context) {
   }
 
   async function load() {
+    if (busy) return;
     const version = ++requestVersion;
-    refresh.disabled = true;
+    setBusy(true);
     body.replaceChildren();
     table.hidden = true;
-    status.textContent = "Loading documents…";
+    status.textContent = "Reading unpublishable.json…";
     try {
       const payload = await service.readUnpublishable({ scope: context.viewerScope, stage: context.viewerStage });
       if (!current(version)) return;
-      const rows = readUnpublishableRows(payload);
-      rows.forEach(function (row) {
+      const documents = readUnpublishableDocuments(payload);
+      documents.forEach(function (record) {
         const tr = documentRef.createElement("tr");
-        const title = documentRef.createElement("td");
-        const link = documentRef.createElement("a");
-        link.className = "docsViewerReport__cellLink";
-        link.href = row.href;
-        link.textContent = row.title;
-        title.appendChild(link);
-        tr.appendChild(title);
+        const href = "/docs/?" + new URLSearchParams({ scope: "analysis", stage: "working", doc: record.doc_id });
+        [record.title, record.doc_id].forEach(function (value) {
+          const cell = documentRef.createElement("td");
+          if (value) {
+            const link = documentRef.createElement("a");
+            link.className = "docsViewerReport__cellLink";
+            link.href = href;
+            link.textContent = value;
+            cell.appendChild(link);
+          } else {
+            cell.textContent = "—";
+          }
+          tr.appendChild(cell);
+        });
         body.appendChild(tr);
       });
-      table.hidden = rows.length === 0;
-      status.textContent = rows.length ? `${rows.length} ${rows.length === 1 ? "document" : "documents"}` : "No unpublishable documents.";
+      table.hidden = documents.length === 0;
+      status.textContent = documents.length ? `${documents.length} ${documents.length === 1 ? "document" : "documents"}` : "The ignore list is empty.";
     } catch (error) {
       if (current(version)) status.textContent = error.message;
     } finally {
-      if (current(version)) refresh.disabled = false;
+      if (current(version)) setBusy(false);
     }
   }
   refresh.addEventListener("click", load);
+  open.addEventListener("click", async function () {
+    if (busy) return;
+    const version = ++requestVersion;
+    setBusy(true);
+    try {
+      await service.openPublicationIgnore();
+      if (current(version)) status.textContent = "Opened unpublishable.json in VS Code. Refresh after saving.";
+    } catch (error) {
+      if (current(version)) status.textContent = error.message;
+    } finally {
+      if (current(version)) setBusy(false);
+    }
+  });
   return load().then(function () { return true; });
 }

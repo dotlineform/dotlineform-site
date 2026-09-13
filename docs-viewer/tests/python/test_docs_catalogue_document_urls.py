@@ -216,7 +216,6 @@ def test_loader_joins_public_parent_and_sub_scope_sources_across_configured_scop
             {
                 "report": {
                     "id": "docs_subscope",
-                    "access": "public",
                     "scope": None,
                     "preset": None,
                     "sub_scope": "works",

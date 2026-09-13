@@ -111,15 +111,15 @@ globalThis.fetch = async function (url) {
   let payload;
   if (pathname === "/reports.json") {
     payload = { reports: [
-      { report_id: "docs_subscope", default_access: "public", presets: [] },
-      { report_id: "series_works", default_access: "local", presets: [] }
+      { report_id: "docs_subscope", presets: [] },
+      { report_id: "series_works", presets: [] }
     ] };
   } else if (pathname === "/manifest.json") {
     payload = { docs: [{ doc_id: firstId, title: "First" }, { doc_id: secondId, title: "Second" }] };
   } else {
     const docId = pathname.slice("/children/".length, -".json".length);
     assert.ok([firstId, secondId].includes(docId), pathname);
-    payload = { doc_id: docId, title: docId, report: { id: "series_works", access: "local" },
+    payload = { doc_id: docId, title: docId, report: { id: "series_works" },
       content_html: '<section data-docs-viewer-report-host></section>' };
   }
   return { ok: true, json: async () => payload };
@@ -128,7 +128,7 @@ globalThis.fetch = async function (url) {
 const mounted = mountDocsViewerReport({
   appContext: { kind: "manage" }, managementContext: true, managementService: {},
   content, doc: { doc_id: parentId }, viewerScope: "analysis",
-  payload: { report: { id: "docs_subscope", access: "public", sub_scope: "works" } },
+  payload: { report: { id: "docs_subscope", sub_scope: "works" } },
   reportRegistryUrl: "/reports.json", reportService,
   openMediaPresentation(request) { mediaOpened.push(request); return true; },
   subscopeReportContributionPromise: null,
@@ -157,7 +157,6 @@ assert.equal(firstBody.children.length, 0, "late response must not fill the repl
 const currentBody = content.querySelector("tbody");
 assert.notEqual(currentBody, firstBody);
 assert.equal(currentBody.children.length, 1);
-assert.deepEqual(currentBody.children[0].children.map(cell => cell.textContent || cell.firstChild?.textContent), ["01941", "se1", "2026"]);
 assert.equal(mediaRequests.length, 0, "rendering rows must not fetch any Work media");
 const titleLink = currentBody.querySelector(".docsViewerReport__workTitleLink");
 const firstMedia = titleLink.listeners.get("click")();

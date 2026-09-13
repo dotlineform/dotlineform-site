@@ -11,9 +11,7 @@ import { DOCS_VIEWER_ACTION_IDS } from "../../runtime/js/management/docs-viewer-
 import { subjectMetadataFromResponse } from "../../runtime/js/management/docs-viewer-management-project-subject-modal.js";
 import { loadDocsViewerSubscopeContribution } from "../../runtime/js/management/docs-viewer-management-document-reports.js";
 import { createDocsViewerIndexSelectionOwner } from "../../runtime/js/management/docs-viewer-index-selection.js";
-import { createDocsViewerManagementIndexController, docsViewerSetPublishableActionControlState } from "../../runtime/js/management/docs-viewer-management-index-controller.js";
-import { setManagedDocsPublishable } from "../../runtime/js/management/docs-viewer-management-client.js";
-import { validateSetPublishableResponse } from "../../runtime/js/management/docs-viewer-management-publishable-workflow.js";
+import { createDocsViewerManagementIndexController } from "../../runtime/js/management/docs-viewer-management-index-controller.js";
 import { createDocsViewerManagementCapabilityController, scopePrePublishSupported, scopePublishSupported } from "../../runtime/js/management/docs-viewer-management-capabilities.js";
 import { docsViewerPublishWorkflowAvailability } from "../../runtime/js/management/docs-viewer-management-publish-workflow.js";
 
@@ -29,24 +27,6 @@ const hostTarget = { scope: "analysis", stage: "working", doc_id: docId };
 const selection = createDocsViewerIndexSelectionOwner({ initialScopeId: "analysis" });
 selection.enter();
 selection.toggle(docId, true);
-for (const stage of ["working", "pre-publish"]) {
-  const resolveAction = createDocsViewerManagementActionResolver({ indexSelection: selection, viewerStage: () => stage });
-  const resolution = resolveAction(DOCS_VIEWER_ACTION_IDS.SET_PUBLISHABLE);
-  assert.equal(resolution.enabled, stage === "working");
-  const state = docsViewerSetPublishableActionControlState({
-    source: { scope: "analysis", stage }, resolution, managementChecked: true, managementAvailable: true,
-    capabilities: { scopes: { analysis: { available: true, stage, publishable: stage === "working", publishing: { apply: false, confirm: false } } } }
-  });
-  assert.equal(state.disabled, stage !== "working");
-  assert.equal(state.hidden, stage !== "working");
-}
-const publishableCollection = { scope: "analysis", stage: "working" };
-const publishableResult = { ok: true, operation: "set_publishable", publishable: false, target: publishableCollection, requested_doc_ids: [docId] };
-const publishableOptions = { source: publishableCollection, checkedDocIds: [docId], publishable: false };
-assert.equal(validateSetPublishableResponse(publishableResult, publishableOptions), publishableResult);
-for (const target of [{ scope: "analysis" }, { ...publishableCollection, stage: "pre-publish" }]) {
-  assert.throws(() => validateSetPublishableResponse({ ...publishableResult, target }, publishableOptions), /exact checked selection/);
-}
 const moved = { ...hostTarget, target: hostTarget, record: { doc_id: docId, parent_id: "d-20260907-210000-a1b2c3" } };
 assert.deepEqual(committedDocumentMoveRecord(moved, hostTarget), moved.record);
 const destination = { ...hostTarget, sub_scope: "works" };
@@ -237,8 +217,6 @@ await assignManagedDocFieldGroup(working, assignment, options);
 assert.deepEqual(requests.at(-1).body, { ...working, ...assignment });
 await moveManagedDoc(docId, moved.record.parent_id, options);
 assert.deepEqual(requests.at(-1).body, { ...hostTarget, parent_id: moved.record.parent_id });
-await setManagedDocsPublishable(publishableCollection, [docId], false, options);
-assert.deepEqual(requests.at(-1).body, { ...publishableCollection, doc_ids: [docId], publishable: false, confirm: true });
 
 const configs = new Map([
   ["analysis", { scopeId: "analysis", stage: "pre-publish", viewerBaseUrl: "/docs/", includeScopeParam: true, indexTreeUrl: "/docs/index-tree?scope=analysis&stage=pre-publish" }],

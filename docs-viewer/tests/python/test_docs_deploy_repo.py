@@ -139,14 +139,14 @@ def prepare_published(root: Path, *, include_subjects: bool = True) -> str:
         f"documents/by-id/{TAG_HOST}.json",
         {
             **document_payload(TAG_HOST, "Concepts", f"<h1>Concepts</h1>{report_html}"),
-            "report": {"id": "docs_subscope", "access": "public", "sub_scope": "tags"},
+            "report": {"id": "docs_subscope", "sub_scope": "tags"},
         },
     )
     add(
         f"documents/by-id/{WORK_HOST}.json",
         {
             **document_payload(WORK_HOST, "Works", f"<h1>Works</h1>{report_html}"),
-            "report": {"id": "docs_subscope", "access": "public", "sub_scope": "works"},
+            "report": {"id": "docs_subscope", "sub_scope": "works"},
         },
     )
     add(

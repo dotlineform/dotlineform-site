@@ -102,7 +102,7 @@ def ordered_docs_doc_ids(doc_ids: list[str]) -> list[str]:
 
 
 def changed_source_document_ids(paths: list[Path]) -> list[str]:
-    """Read eligible Links identities from changed sources before/after a mutation.
+    """Read changed source identities; the Links builder owns ignore-list selection.
 
     Capture before deletion as well as after creation. Paths never stand in for
     document identity, and this helper never inventories a collection.
@@ -111,8 +111,7 @@ def changed_source_document_ids(paths: list[Path]) -> list[str]:
     for path in paths:
         if path.is_file():
             metadata = parse_source(path)[0]
-            if metadata.get("publishable", True) is not False:
-                identities.add(str(metadata.get("doc_id") or ""))
+            identities.add(str(metadata.get("doc_id") or ""))
     return sorted(identities - {""})
 
 

@@ -374,7 +374,7 @@ def test_lineage_new_and_replace_commit_exact_rows_and_preserve_editorial_gate(
     assert replaced_front_matter["doc_id"] == existing_target_id
     assert replaced_front_matter["added_date"] == target_before["added_date"]
     assert replaced_front_matter["last_updated"] == "2026-08-08 11:00:00"
-    assert replaced_front_matter["publishable"] is False
+    assert "publishable" not in replaced_front_matter
     assert replaced_front_matter["folder_path"] == "2026/working-a"
     assert replaced_front_matter["work_id"] == "00123"
     assert "Replacement body from A." in replaced_body
@@ -1294,7 +1294,7 @@ def test_apply_child_to_parent_copy_rewrites_subdoc_as_doc(
     assert rebuild_calls[0]["kwargs"]["docs_doc_ids"] == target_ids
 
 
-def test_apply_parent_to_public_child_uses_omitted_true_default_and_subdoc_links(
+def test_apply_parent_to_public_child_uses_subdoc_links(
     tmp_path: Path,
 ) -> None:
     target_scope = docs_scope_record(
@@ -1329,7 +1329,6 @@ def test_apply_parent_to_public_child_uses_omitted_true_default_and_subdoc_links
         "# Target Works\n\n"
         ":::report\n"
         "id: docs_subscope\n"
-        "access: local\n"
         "sub_scope: works\n"
         ":::\n"
     )
@@ -1432,7 +1431,6 @@ def test_apply_public_parent_to_public_parent_uses_working_projection_without_pu
     second_front_matter, _second_body = source_model.parse_source(
         local_documents_root(repo_root, "target") / f"{target_ids[1]}.md"
     )
-    assert plan.preview_payload()["target_default_publishable"] is True
     assert "publishable" not in first_front_matter
     assert "publishable" not in second_front_matter
     assert f"/target/?doc={target_ids[1]}#detail" in first_body

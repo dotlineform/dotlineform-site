@@ -30,27 +30,6 @@ export function buildChildrenMap(docs) {
   return childrenByParent;
 }
 
-export function isDocPublishable(doc) {
-  return !isDocNonPublishable(doc);
-}
-
-export function isDocNonPublishable(doc) {
-  if (!doc) return false;
-  return doc.publishable === false;
-}
-
-export function hasNonPublishableAncestor(doc, docsById) {
-  if (!doc || !doc.parent_id || !docsById) return false;
-  var visited = new Set([doc.doc_id]);
-  var current = docsById.get(doc.parent_id);
-  while (current && current.doc_id && !visited.has(current.doc_id)) {
-    if (!isDocPublishable(current)) return true;
-    visited.add(current.doc_id);
-    current = current.parent_id ? docsById.get(current.parent_id) : null;
-  }
-  return false;
-}
-
 export function normalizeDocIdSet(values, fallback) {
   var source = Array.isArray(values) ? values : fallback;
   var ids = Array.isArray(source) ? source : [];

@@ -1,8 +1,8 @@
 const PRESETS = {
   scope_documents_admin: {
-    columns: ["title", "doc_id", "publishable"],
-    filters: ["non_publishable"],
-    sortable: ["title", "doc_id", "publishable"],
+    columns: ["title", "doc_id"],
+    filters: [],
+    sortable: ["title", "doc_id"],
     defaultSort: "tree",
     defaultDir: "asc",
     linkMode: "manage"
@@ -18,9 +18,7 @@ const PRESETS = {
 };
 
 const DEFAULT_PRESET = PRESETS.scope_documents_admin;
-const FILTER_LABELS = {
-  non_publishable: "Excluded from next Publish"
-};
+const FILTER_LABELS = {};
 
 function cleanString(value) {
   return String(value == null ? "" : value).trim();
@@ -48,14 +46,6 @@ function docTreeOrder(doc) {
   return Number.isFinite(order) && order >= 0 ? order : 0;
 }
 
-function docIsPublishable(doc) {
-  return Boolean(doc) && doc.publishable !== false;
-}
-
-function docIsNonPublishable(doc) {
-  return !docIsPublishable(doc);
-}
-
 function buildParentIdSet(docs) {
   const ids = new Set(docs.map(docId).filter(Boolean));
   const parentIds = new Set();
@@ -70,14 +60,11 @@ function docIsParent(state, doc) {
   return state.parentIds.has(docId(doc));
 }
 
-function filterCounts(state) {
-  return {
-    non_publishable: state.docs.filter((doc) => docIsNonPublishable(doc)).length
-  };
+function filterCounts() {
+  return {};
 }
 
 function docMatchesFilters(state, doc) {
-  if (state.activeFilters.has("non_publishable") && !docIsNonPublishable(doc)) return false;
   if (state.activeFilters.has("parent") && !docIsParent(state, doc)) return false;
   return true;
 }
@@ -93,9 +80,6 @@ function compareDocs(state, a, b) {
   } else if (state.sortKey === "title") {
     av = docTitle(a);
     bv = docTitle(b);
-  } else if (state.sortKey === "publishable") {
-    av = docIsPublishable(a) ? "1" : "0";
-    bv = docIsPublishable(b) ? "1" : "0";
   } else {
     av = docId(a);
     bv = docId(b);
@@ -215,13 +199,6 @@ function appendDataCell(state, row, doc, column) {
     appendTextCell(row, "docsViewerReport__cellMeta docsViewerReport__date", docAddedDate(doc));
   } else if (column === "parent") {
     appendTextCell(row, "docsViewerReport__cellMeta docsViewerReport__parent", docIsParent(state, doc) ? "parent" : "");
-  } else if (column === "publishable") {
-    const cell = document.createElement("span");
-    cell.className = "docsViewerReport__publishable" + (docIsPublishable(doc) ? " is-publishable" : "");
-    cell.setAttribute("aria-label", docIsPublishable(doc) ? "Included in next Publish" : "Excluded from next Publish");
-    row.appendChild(cell);
-  } else if (column === "non_publishable") {
-    appendTextCell(row, "docsViewerReport__cellMeta docsViewerReport__publishable", docIsNonPublishable(doc) ? "Excluded from next Publish" : "");
   } else {
     appendTitleCell(row, state, doc);
   }

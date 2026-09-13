@@ -341,16 +341,11 @@ def transform_document_copy(
         replacement = planned_document.replacement_doc
         if planned_document.copy_action == transfer.COPY_ACTION_NEW:
             front_matter["added_date"] = plan.operation_timestamp
-            front_matter.pop("publishable", None)
         elif (
             planned_document.copy_action == transfer.COPY_ACTION_REPLACE
             and replacement is not None
         ):
             front_matter["added_date"] = replacement.front_matter.get("added_date")
-            if "publishable" in replacement.front_matter:
-                front_matter["publishable"] = replacement.front_matter["publishable"]
-            else:
-                front_matter.pop("publishable", None)
         else:
             raise ValueError("document Copy transformation contains an invalid action")
         for decision in plan.custom_metadata:
@@ -369,8 +364,6 @@ def transform_document_copy(
             )
         else:
             front_matter.pop("draft", None)
-        if not source_model.collection_supports_publishable(target_config):
-            front_matter.pop("publishable", None)
         body, viewer_link_rewrites = rewrite_document_copy_viewer_links(
             planned_document.source_doc.body,
             plan,
@@ -435,27 +428,9 @@ def _validate_transformation(
             )
         except ValueError as exc:
             raise DocumentTransferPlanStaleError(
-                f"document transfer plan is stale: candidate publishability changed "
+                f"document transfer plan is stale: candidate status changed "
                 f"for {planned.target_doc_id!r}: {exc}"
             ) from exc
-        if source_model.collection_supports_publishable(target_document_config):
-            if planned.replacement_doc is None:
-                publishability_changed = not source_model.doc_is_publishable(
-                    front_matter
-                )
-            else:
-                replacement_front_matter = planned.replacement_doc.front_matter
-                publishability_changed = (
-                    ("publishable" in front_matter)
-                    != ("publishable" in replacement_front_matter)
-                    or front_matter.get("publishable")
-                    != replacement_front_matter.get("publishable")
-                )
-            if publishability_changed:
-                raise DocumentTransferPlanStaleError(
-                    f"document transfer plan is stale: candidate publishability changed "
-                    f"for {planned.target_doc_id!r}"
-                )
         for decision in plan.custom_metadata:
             if decision.source_doc_id != planned.source_doc.doc_id:
                 continue

@@ -24,8 +24,7 @@ RETIRED_REPORT_KEYS = frozenset(
         "viewer_report_subscope",
     }
 )
-_KEYS = frozenset({"id", "access", "scope", "preset", "sub_scope"})
-_ACCESS = frozenset({"local", "public"})
+_KEYS = frozenset({"id", "scope", "preset", "sub_scope"})
 _SCOPE_REPORTS = frozenset({"docs_index_table", "docs_broken_links"})
 _ID = re.compile(r"[a-z0-9][a-z0-9_-]*\Z")
 _ATTRIBUTE = re.compile(r"([a-z_]+): ([a-z0-9][a-z0-9_-]*)\Z")
@@ -43,7 +42,6 @@ class ReportSourceRange:
 @dataclass(frozen=True)
 class ReportDescriptor:
     id: str
-    access: str
     scope: str | None
     preset: str | None
     sub_scope: str | None
@@ -53,7 +51,6 @@ class ReportDescriptor:
         return MappingProxyType(
             {
                 "id": self.id,
-                "access": self.access,
                 "scope": self.scope,
                 "preset": self.preset,
                 "sub_scope": self.sub_scope,
@@ -284,15 +281,13 @@ def _descriptor(
     contract: ReportSourceContract,
     source_name: str,
 ) -> ReportDescriptor:
-    for required in ("id", "access"):
+    for required in ("id",):
         if required not in attributes:
             raise _invalid(f"missing required report attribute: {required}", "missing_attribute", source_name, source_range)
-    report_id, access = attributes["id"], attributes["access"]
+    report_id = attributes["id"]
     definition = contract.report(report_id)
     if definition is None:
         raise _invalid(f"unknown report id: {report_id}", "unknown_report", source_name, source_range)
-    if access not in _ACCESS:
-        raise _invalid(f"unknown report access: {access}", "unknown_access", source_name, source_range)
 
     scope, preset, sub_scope = (attributes.get(key) for key in ("scope", "preset", "sub_scope"))
     if scope is not None:
@@ -313,7 +308,7 @@ def _descriptor(
             raise _invalid(message, "invalid_sub_scope", source_name, source_range)
     elif sub_scope is not None:
         raise _invalid(f"sub_scope is not allowed for report: {report_id}", "invalid_sub_scope", source_name, source_range)
-    return ReportDescriptor(report_id, access, scope, preset, sub_scope, source_range)
+    return ReportDescriptor(report_id, scope, preset, sub_scope, source_range)
 
 
 def parse_report_source(

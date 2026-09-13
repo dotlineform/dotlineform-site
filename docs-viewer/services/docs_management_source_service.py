@@ -24,6 +24,7 @@ from docs_management_document_target import (  # noqa: E402
 from docs_scope_config import path_label, require_document_authoring  # noqa: E402
 from local_env import runtime_env  # noqa: E402
 from markdown_renderer import normalize_markdown_blank_lines  # noqa: E402
+from docs_publication_ignore import publication_ignore_path  # noqa: E402
 
 STRICT_FRONT_MATTER_PATTERN = re.compile(r"\A---[ \t]*\r?\n(.*?)\r?\n---[ \t]*(?:\r?\n|$)", re.DOTALL)
 
@@ -193,6 +194,17 @@ def rebuild_source_body(repo_root: Path, body: Dict[str, Any], dry_run: bool) ->
     if resolved.sub_scope:
         payload["sub_scope"] = resolved.sub_scope
     return payload
+
+
+def open_publication_ignore(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dict[str, Any]:
+    """Open only the configured Working ignore file in VS Code, including invalid JSON for repair."""
+    if set(body) != {"scope", "stage"} or body.get("scope") != "analysis" or body.get("stage") != "working":
+        raise ValueError("Opening the publication ignore file requires only Analysis Working identity")
+    path = publication_ignore_path(repo_root)
+    if not path.is_file():
+        raise FileNotFoundError("Working unpublishable.json is unavailable")
+    open_source_path(repo_root, path, editor="vscode", dry_run=dry_run)
+    return {"ok": True, "scope": "analysis", "stage": "working", "editor": "vscode", "dry_run": dry_run}
 
 
 def detect_preferred_markdown_app() -> Optional[str]:

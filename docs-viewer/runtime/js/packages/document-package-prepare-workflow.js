@@ -81,10 +81,6 @@ function optionsBodyHtml() {
     '  <input class="docsViewer__checkboxInput" type="checkbox" data-package-missing-summary-only>',
     '  <span class="docsViewer__fieldLabel">Only documents missing summaries</span>',
     '</label>',
-    '<label class="docsViewer__field docsViewer__field--checkbox" data-package-include-non-publishable-field>',
-    '  <input class="docsViewer__checkboxInput" type="checkbox" data-package-include-non-publishable>',
-    '  <span class="docsViewer__fieldLabel">Include non-publishable documents</span>',
-    '</label>',
     '<section class="docsViewerPackagePrepare__selectionSummary" aria-live="polite">',
     '  <p data-package-effective-total></p>',
     '  <ul class="muted small" data-package-selection-details hidden></ul>',
@@ -101,15 +97,6 @@ function selectionProjectionMessages(projection) {
   if (projection.total === 0) {
     messages.push("No documents remain after applying the selected package filters.");
   }
-  if (projection.excludedNonPublishableCount) {
-    messages.push(
-      countLabel(
-        projection.excludedNonPublishableCount,
-        "non-publishable document excluded.",
-        "non-publishable documents excluded."
-      )
-    );
-  }
   if (projection.excludedWithSummaryCount) {
     messages.push(
       countLabel(
@@ -125,15 +112,6 @@ function selectionProjectionMessages(projection) {
         projection.excludedByLimitCount,
         "document excluded by the profile maximum.",
         "documents excluded by the profile maximum."
-      )
-    );
-  }
-  if (projection.includedNonPublishableCount) {
-    messages.push(
-      countLabel(
-        projection.includedNonPublishableCount,
-        "non-publishable document included.",
-        "non-publishable documents included."
       )
     );
   }
@@ -219,8 +197,6 @@ function openPrepareOptions(options) {
       const descendantsInput = api.host.querySelector("[data-package-include-descendants]");
       const missingSummaryField = api.host.querySelector("[data-package-missing-summary-field]");
       const missingSummaryInput = api.host.querySelector("[data-package-missing-summary-only]");
-      const includeNonPublishableField = api.host.querySelector("[data-package-include-non-publishable-field]");
-      const includeNonPublishableInput = api.host.querySelector("[data-package-include-non-publishable]");
       const description = api.host.querySelector("[data-package-profile-description]");
       let currentProjection = null;
 
@@ -231,7 +207,6 @@ function openPrepareOptions(options) {
           contentFormat: packageText(contentFormatSelect && contentFormatSelect.value),
           includeDescendants: Boolean(descendantsInput && descendantsInput.checked),
           missingSummaryOnly: Boolean(missingSummaryInput && missingSummaryInput.checked),
-          includeNonPublishable: Boolean(includeNonPublishableInput && includeNonPublishableInput.checked)
         });
       }
 
@@ -245,7 +220,6 @@ function openPrepareOptions(options) {
           flatCollection: options.flatCollection === true,
           includeDescendants: Boolean(descendantsInput && descendantsInput.checked),
           missingSummaryOnly: Boolean(missingSummaryInput && missingSummaryInput.checked),
-          includeNonPublishable: Boolean(includeNonPublishableInput && includeNonPublishableInput.checked)
         });
         writeSelectionProjection(api.host, currentProjection);
       }
@@ -291,14 +265,6 @@ function openPrepareOptions(options) {
             ? choice.missingSummaryOnly
             : selection.default_missing_summary_only === true
           : false;
-        const supportsIncludeNonPublishable = selection.supports_include_non_publishable === true;
-        includeNonPublishableField.hidden = !supportsIncludeNonPublishable;
-        includeNonPublishableInput.disabled = !supportsIncludeNonPublishable;
-        includeNonPublishableInput.checked = supportsIncludeNonPublishable
-          ? Object.prototype.hasOwnProperty.call(choice, "includeNonPublishable")
-            ? choice.includeNonPublishable
-            : selection.include_non_publishable !== false
-          : selection.include_non_publishable !== false;
         description.textContent = packageText(profile.description);
         updateSelectionProjection();
       }
@@ -314,7 +280,7 @@ function openPrepareOptions(options) {
         currentProfileId = packageText(profileSelect.value);
         renderCurrentProfile();
       });
-      [descendantsInput, missingSummaryInput, includeNonPublishableInput].forEach((input) => {
+      [descendantsInput, missingSummaryInput].forEach((input) => {
         input.addEventListener("change", updateSelectionProjection);
       });
       api.prepareOptionState = function () {
@@ -347,7 +313,6 @@ function openPrepareOptions(options) {
           documents: options.documents,
           effectiveDocIds: state.projection.docIds,
           missingSummaryOnly: state.projection.missingSummaryOnly,
-          includeNonPublishable: state.projection.includeNonPublishable,
           targetFormat: state.choices.targetFormat,
           contentFormat: state.choices.contentFormat
         });

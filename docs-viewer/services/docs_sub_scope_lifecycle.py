@@ -46,7 +46,6 @@ import docs_source_model as source_model
 
 
 REPORT_ID = "docs_subscope"
-REPORT_ACCESS = "local"
 
 
 class SubScopeLifecycleApplyError(RuntimeError):
@@ -277,7 +276,6 @@ def report_host_source(parent_config: DocsScopeConfig, sub_scope: str, title: st
         f"# {title}\n\n"
         ":::report\n"
         f"id: {REPORT_ID}\n"
-        f"access: {REPORT_ACCESS}\n"
         f"sub_scope: {sub_scope}\n"
         ":::\n"
     )
@@ -573,7 +571,6 @@ def plan_delete_sub_scope_preview(repo_root: Path, body: dict[str, Any]) -> dict
         or host_document.doc_id != lifecycle.report_host_doc_id
         or host_document.report is None
         or host_document.report.id != REPORT_ID
-        or host_document.report.access != REPORT_ACCESS
         or host_document.report.sub_scope != sub_scope
     ):
         blockers.append("lifecycle-associated report host is detached")

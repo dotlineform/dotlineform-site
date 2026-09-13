@@ -321,8 +321,6 @@ def write_documents_prepare_profiles(root: Path) -> None:
                     "selection": {
                         "mode": "explicit_doc_ids",
                         "include_descendants": False,
-                        "include_non_publishable": True,
-                        "supports_include_non_publishable": True,
                         "supports_missing_summary_only": True,
                         "default_missing_summary_only": False,
                     },

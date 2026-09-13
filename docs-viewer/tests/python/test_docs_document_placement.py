@@ -64,12 +64,13 @@ def working(tmp_path, monkeypatch):
         return path
 
     for host, collection in ((WORKS, "works"), (CONCEPTS, "concepts")):
-        source(host, body=f":::report\nid: docs_subscope\naccess: local\nsub_scope: {collection}\n:::\n")
+        source(host, body=f":::report\nid: docs_subscope\nsub_scope: {collection}\n:::\n")
     source(DEFAULT)
     source(P)
     source(A, work_id="00523")
     source(B, "concepts")
-    source(X, body=f"[A](/docs/?scope=analysis&doc={A}#detail)", publishable=False)
+    source(X, body=f"[A](/docs/?scope=analysis&doc={A}#detail)")
+    write_json(tmp_path / document_source_path(config) / "unpublishable.json", [X])
     calls = []
 
     def build(collection=""):
@@ -183,7 +184,7 @@ def test_preflight_conflicts_do_not_relocate_and_rebuild_failure_is_visible(work
     original = working.root / document_source_path(working.config) / f"{A}.md"
     destination = working.root / document_source_path(working.owners["works"]) / f"{A}.md"
     plan = mutations.plan_move(working.root, {**target(), "parent_id": WORKS})
-    working.source(X, body="Changed since planning", publishable=False)
+    working.source(X, body="Changed since planning")
     with pytest.raises(mutations.ManagedDocumentRevisionConflict) as conflict:
         executor.execute_management_mutation_plan(working.root, plan, dry_run=False)
     assert conflict.value.payload["target"] == target(X)
@@ -208,7 +209,7 @@ def test_collision_unsupported_metadata_and_readonly_stage_fail_before_write(wor
         mutations.plan_move(working.root, {**target(), "parent_id": WORKS})
     destination.unlink()
     working.source(A, publishable=False)
-    with pytest.raises(ValueError, match="ordinary Analysis Working"):
+    with pytest.raises(ValueError, match="publishable front matter is retired"):
         mutations.plan_move(working.root, {**target(), "parent_id": WORKS})
     source.write_bytes(before)
     with pytest.raises(ValueError, match="Pre-publish document authoring"):
@@ -281,7 +282,7 @@ def test_metadata_move_response_uses_destination_fields_without_assigning_subjec
     plan = mutations.plan_update_metadata(working.root, {
         **target(collection="works"), "title": A, "parent_id": "", "source_revision": metadata["source_revision"],
     })
-    assert plan.response["record"]["publishable"] is True
+    assert "publishable" not in plan.response["record"]
     assert "customisation" not in plan.response["record"]
     assert plan.response["record"]["parent_id"] == ""
 

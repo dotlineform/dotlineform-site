@@ -6,9 +6,6 @@ from __future__ import annotations
 import tempfile
 from pathlib import Path
 
-import build_docs
-from docs_scope_config import load_docs_scope_configs
-
 from build_docs_test_support import (
     CHILD_DOC_ID,
     MANAGE_CHILD_DOC_ID,
@@ -22,6 +19,8 @@ from build_docs_test_support import (
     write_site_tools_config,
     write_text,
 )
+import build_docs
+from docs_scope_config import load_docs_scope_configs
 
 
 REPORT_DOC_ID = "d-20260624-000000-000008"
@@ -94,6 +93,7 @@ def test_python_docs_builder_public_generated_payloads_include_manage_rows() -> 
             "family": "catalogue",
             "target_type": "work",
             "target_id": "00638",
+            "detail_id": "",
             "href": "",
         }
     ]
@@ -227,7 +227,6 @@ parent_id: {PARENT_DOC_ID}
 
 :::report
 id: docs_subscope
-access: public
 sub_scope: tags
 :::
 """,
@@ -240,7 +239,6 @@ sub_scope: tags
 
     assert report_payload["report"] == {
         "id": "docs_subscope",
-        "access": "public",
         "scope": None,
         "preset": None,
         "sub_scope": "tags",

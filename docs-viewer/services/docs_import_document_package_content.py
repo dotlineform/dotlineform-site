@@ -37,7 +37,7 @@ COMPACT_SCHEMA_VERSION = "data_sharing_returned_package_v1"
 FULL_SOURCE_SCHEMA_VERSION = "documents_full_package_v1"
 
 COMPACT_CONTENT_FORMATS = {CONTENT_FORMAT_MARKDOWN, CONTENT_FORMAT_PLAIN_TEXT}
-ALLOWED_FRONT_MATTER_FIELDS = ("title", "parent_id", "summary", "publishable")
+ALLOWED_FRONT_MATTER_FIELDS = ("title", "parent_id", "summary")
 COMPACT_MAPPED_FIELDS = {
     "doc_id",
     "title",
@@ -45,7 +45,6 @@ COMPACT_MAPPED_FIELDS = {
     "parent_title",
     "summary",
     "current_summary",
-    "publishable",
     "headings",
     "last_updated",
     "content",
@@ -94,9 +93,9 @@ def object_tuple(value: Any, *, field: str, record_index: int) -> tuple[dict[str
 
 
 def allowed_front_matter(source: dict[str, Any]) -> dict[str, Any]:
-    if "viewable" in source:
+    if "viewable" in source or "publishable" in source:
         raise ValueError(
-            "legacy viewable metadata is not supported; regenerate the package with publishable"
+            "retired publication metadata is not supported; regenerate the package"
         )
     return {
         field: copy.deepcopy(source[field])

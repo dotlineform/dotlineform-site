@@ -91,7 +91,6 @@ def write_doc(
     summary: str = "",
     added_date: str = "2026-01-01",
     last_updated: str = "2026-01-02",
-    publishable: bool | None = None,
     ui_status: str = "",
     body: str = "Body text.",
 ) -> None:
@@ -106,8 +105,6 @@ def write_doc(
         lines.append(f"summary: {summary}")
     if parent_id:
         lines.append(f"parent_id: {parent_id}")
-    if publishable is not None:
-        lines.append(f"publishable: {'true' if publishable else 'false'}")
     if ui_status:
         lines.append(f"ui_status: {ui_status}")
     lines.extend(["---", "", body])
@@ -134,7 +131,7 @@ def test_source_records_include_locked_fields_and_rendered_text() -> None:
             doc_id="child",
             title="Child",
             parent_id="parent",
-            ui_status="draft",
+            ui_status="review",
             body="# Child\n\n## Details\n\nChild **body** with [parent](parent.md).",
         )
 
@@ -144,10 +141,9 @@ def test_source_records_include_locked_fields_and_rendered_text() -> None:
     assert child.scope == "studio"
     assert child.doc_id == "child"
     assert child.title == "Child"
-    assert child.publishable is None
     assert child.parent_id == "parent"
     assert child.parent_title == "Parent"
-    assert child.ui_status == "draft"
+    assert child.ui_status == "review"
     assert child.source_path == "docs-viewer/scopes/studio/source/documents/child.md"
     assert child.viewer_url == "/docs/?scope=studio&doc=child"
     assert child.content_text_length == len("Details\n\nChild body with parent.")
@@ -258,7 +254,6 @@ def test_rendered_package_content_omits_inert_report_host() -> None:
                 "# Report\n\n"
                 ":::report\n"
                 "id: reports_list\n"
-                "access: public\n"
                 ":::\n"
             ),
         )

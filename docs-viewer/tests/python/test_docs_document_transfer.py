@@ -56,7 +56,6 @@ def report_body(title: str, sub_scope: str) -> str:
         f"# {title}\n\n"
         ":::report\n"
         "id: docs_subscope\n"
-        "access: local\n"
         f"sub_scope: {sub_scope}\n"
         ":::\n"
     )
@@ -366,7 +365,6 @@ def make_lineage_repo(tmp_path: Path) -> Path:
         doc_id=target_id,
         title="Editorial B One",
         body="# Editorial B One\n\nEditorial body one.\n",
-        extra_front_matter={"publishable": False},
     )
     write_doc(
         target_root,
@@ -1542,7 +1540,7 @@ def test_public_copy_target_is_allowed_but_public_moves_are_rejected(
     )
 
     assert plan.ok
-    assert plan.preview_payload()["target_default_publishable"] is True
+    assert "target_default_publishable" not in plan.preview_payload()
 
     with pytest.raises(ValueError, match="public source scopes cannot be moved"):
         transfer.plan_document_transfer(
@@ -1616,7 +1614,7 @@ def test_public_parent_and_child_can_accept_copy(
     )
 
     assert child_plan.ok
-    assert child_plan.preview_payload()["target_default_publishable"] is True
+    assert "target_default_publishable" not in child_plan.preview_payload()
     assert capabilities == {
         "copy_source": True,
         "move_source": False,
@@ -1637,7 +1635,7 @@ def test_public_parent_and_child_can_accept_copy(
     )
 
     assert parent_plan.ok
-    assert parent_plan.preview_payload()["target_default_publishable"] is True
+    assert "target_default_publishable" not in parent_plan.preview_payload()
     assert parent_capabilities == {
         "copy_source": True,
         "move_source": False,

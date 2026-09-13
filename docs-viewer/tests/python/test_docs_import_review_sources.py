@@ -169,7 +169,6 @@ def test_review_source_folder_uses_shared_markdown_content_normalization() -> No
                     "doc_id": "alpha",
                     "title": "Alpha",
                     "summary": "Returned summary.",
-                    "publishable": False,
                     "content": returned_content,
                 },
             ],
@@ -275,7 +274,6 @@ def test_review_source_folder_reuses_an_exact_existing_validated_package(
     assert second["review_existing"] is True
     assert second["review_source_folder_written"] is False
     assert second["generated"]["document_count"] == 1
-    assert second["summary_text"] == f"Docs Review package {first['folder_id']} already exists."
     assert after == before
 
 

@@ -60,12 +60,6 @@ var INDEX_ACTION_ITEMS = [
     label: "Prepare package…"
   },
   {
-    id: "docsViewerIndexSetPublishableButton",
-    actionId: "set-publishable",
-    emoji: "🌐",
-    label: "Set Publishable…"
-  },
-  {
     id: "docsViewerIndexCopyButton",
     actionId: "copy",
     emoji: "⧉",

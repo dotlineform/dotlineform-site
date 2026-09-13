@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build public document-location records from publishable Docs Viewer data."""
+"""Build public document-location records from the accepted Docs Viewer snapshot."""
 
 from __future__ import annotations
 
@@ -206,8 +206,6 @@ def build_exact_document_location_records(
         report = parent_payload.get("report")
         if not isinstance(report, dict) or clean_text(report.get("id")) != "docs_subscope":
             continue
-        if clean_text(report.get("access")) != "public":
-            continue
 
         sub_scope_id = clean_text(report.get("sub_scope")).lower()
         if sub_scope_id not in configured_sub_scopes:
@@ -271,7 +269,6 @@ def load_public_document_location_inputs(
         if isinstance(payload, dict)
         and isinstance(payload.get("report"), dict)
         and clean_text(payload["report"].get("id")) == "docs_subscope"
-        and clean_text(payload["report"].get("access")) == "public"
     }
     for sub_scope_id in sorted(placed_sub_scope_ids):
         sub_scope = configured_sub_scopes.get(sub_scope_id)

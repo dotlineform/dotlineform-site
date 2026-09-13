@@ -125,7 +125,6 @@ def prepare_repo(root: Path, projects_root: Path) -> None:
                 "title": "Parent & Root",
                 "report": {
                     "id": "reports_list",
-                    "access": "local",
                     "scope": None,
                     "preset": None,
                     "sub_scope": None,

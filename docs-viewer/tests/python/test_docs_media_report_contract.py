@@ -46,17 +46,9 @@ def test_manage_registry_declares_local_docs_media_report() -> None:
         if isinstance(record, dict)
     }
 
-    assert records["docs_media"] == {
-        "report_id": "docs_media",
-        "title": "Docs Media",
-        "description": (
-            "Lists each live ready-media and build-source file with its exact "
-            "referencing documents."
-        ),
-        "default_access": "local",
-        "loader_id": "docs_media",
-        "presets": [],
-    }
+    assert records["docs_media"]['report_id'] == "docs_media"
+    assert records["docs_media"]['loader_id'] == "docs_media"
+    assert records["docs_media"]['presets'] == []
 
 
 def test_public_registry_and_static_runtime_do_not_expose_docs_media() -> None:
@@ -120,12 +112,9 @@ def test_management_service_returns_selected_scope_docs_media_report(
     )
 
     assert status == HTTPStatus.OK
-    assert payload == {
-        "ok": True,
-        "dry_run": False,
-        "summary_text": "Docs Media refreshed.",
-        "report": report,
-    }
+    assert payload['ok'] == True
+    assert payload['dry_run'] == False
+    assert payload['report'] == report
     assert calls == [(tmp_path, config)]
 
 

@@ -1,18 +1,18 @@
-"""Exact source eligibility and document links for the local Unpublishable report."""
+"""Exact file reads and the confined local editor action for publication exclusions."""
 
 from copy import deepcopy
+import json
 from pathlib import Path
-from urllib.parse import parse_qs, urlparse
 
 import pytest
 
 from docs_management_test_support import docs_scope_config as scopes
 from docs_management_read_service import docs_management_get_payload
-from docs_management_routes import GET_PATHS, UNPUBLISHABLE_REPORT_PATH
-from docs_source_model import format_source
+from docs_management_routes import UNPUBLISHABLE_REPORT_PATH
+from docs_management_source_service import open_publication_ignore
+from docs_publication_ignore import publication_ignore_path, read_publication_ignore_ids
 from docs_unpublishable_report import build_unpublishable_report
-from repo_factory import docs_scope_record, docs_sub_scope_record, write_docs_scope_config, write_site_tools_config
-
+from repo_factory import docs_scope_record, write_docs_scope_config, write_site_tools_config
 
 EXCLUDED_ID = "d-20260909-160000-000001"
 INCLUDED_ID = "d-20260909-160000-000002"
@@ -23,65 +23,84 @@ def report_repo(tmp_path: Path) -> Path:
     write_site_tools_config(tmp_path)
     analysis = docs_scope_record("analysis", scope_type="public", viewer_base_url="/analysis/", include_scope_param=False)
     analysis["stages"] = {
-        stage: {
-            "media": deepcopy(analysis["media"]),
-            "sub_scopes": [
-                docs_sub_scope_record("analysis", name, title=name.title(), scope_type="public" if stage == "pre-publish" else "local")
-                for name in ("works", "concepts")
-            ],
-        }
+        stage: {"media": deepcopy(analysis["media"]), "sub_scopes": []}
         for stage in ("working", "pre-publish")
     }
     write_docs_scope_config(tmp_path, [analysis])
-    for stage in ("working", "pre-publish"):
-        config = scopes.load_docs_scope_stage(tmp_path, "analysis", stage)
-        for sub_scope, collection in [("", config), *[(child.sub_scope, child) for child in config.sub_scopes]]:
-            source = scopes.resolve_scope_path(tmp_path, scopes.document_source_path(collection))
-            source.mkdir(parents=True)
-            for doc_id, included in ((EXCLUDED_ID, False), (INCLUDED_ID, True)):
-                fields = {"doc_id": doc_id, "title": "Repeated title"}
-                if not included:
-                    fields["publishable"] = False
-                elif not sub_scope:
-                    fields["parent_id"] = EXCLUDED_ID
-                (source / f"{doc_id}.md").write_text(format_source(fields, "# Document\n", sub_scope=sub_scope))
-        parent = scopes.resolve_scope_path(tmp_path, scopes.document_source_path(config))
-        for index, child in enumerate(config.sub_scopes, start=3):
-            host_id = f"d-20260909-160000-{index:06d}"
-            (parent / f"{host_id}.md").write_text(format_source(
-                {"doc_id": host_id, "title": child.title},
-                f":::report\nid: docs_subscope\naccess: local\nsub_scope: {child.sub_scope}\n:::\n",
-            ))
+    path = publication_ignore_path(tmp_path)
+    path.parent.mkdir(parents=True)
+    path.write_text(json.dumps([EXCLUDED_ID, EXCLUDED_ID]))
     return tmp_path
 
 
-def test_reads_only_ordinary_working_explicit_false(report_repo: Path) -> None:
-    assert UNPUBLISHABLE_REPORT_PATH in GET_PATHS
+def test_refresh_preserves_ids_without_source_or_generated_index(report_repo):
     payload = docs_management_get_payload(report_repo, UNPUBLISHABLE_REPORT_PATH, {"scope": ["analysis"], "stage": ["working"]})
-    assert payload["ok"] is True and payload["stage"] == "working"
-    rows = payload["rows"]
-    assert [(row["target"]["sub_scope"], row["target"]["doc_id"]) for row in rows] == [
-        ("", EXCLUDED_ID),
-    ]
-    for row in rows:
-        target = row["target"]
-        query = parse_qs(urlparse(row["href"]).query)
-        assert target["scope"] == "analysis" and target["stage"] == "working"
-        assert query["scope"] == ["analysis"] and query["stage"] == ["working"]
-        assert query["subdoc" if target["sub_scope"] else "doc"] == [EXCLUDED_ID]
-        if target["sub_scope"]:
-            host_index = 3 if target["sub_scope"] == "works" else 4
-            assert query["doc"] == [f"d-20260909-160000-{host_index:06d}"]
+    assert payload == {"ok": True, "schema_version": "docs_unpublishable_report_v3", "scope": "analysis", "stage": "working", "documents": [{"doc_id": EXCLUDED_ID, "title": None}]}
+    path = publication_ignore_path(report_repo)
+    path.write_text(json.dumps([INCLUDED_ID]))
+    assert read_publication_ignore_ids(report_repo) == {INCLUDED_ID}
+    path.write_text("[]")
+    assert build_unpublishable_report(report_repo, scope="analysis", stage="working")["documents"] == []
 
-    # Refresh reads source again, even without a generated document index.
-    config = scopes.load_docs_scope_stage(report_repo, "analysis", "working")
-    for collection in (config, *config.sub_scopes):
-        path = scopes.resolve_scope_path(report_repo, scopes.document_source_path(collection)) / f"{EXCLUDED_ID}.md"
-        path.write_text(path.read_text().replace("publishable: false\n", ""))
-    assert build_unpublishable_report(report_repo, scope="analysis", stage="working")["rows"] == []
+
+def test_titles_read_only_listed_canonical_sources_and_refresh(report_repo):
+    root = publication_ignore_path(report_repo).parent
+    source = root / f"{EXCLUDED_ID}.md"
+    source.write_text(f"---\ndoc_id: {EXCLUDED_ID}\ntitle: First title\n---\n")
+    (root / "unrelated.md").write_text("---\ninvalid: [\n---\n")
+    assert build_unpublishable_report(report_repo, scope="analysis", stage="working")["documents"] == [{"doc_id": EXCLUDED_ID, "title": "First title"}]
+    source.write_text(f"---\ndoc_id: {EXCLUDED_ID}\ntitle: Updated title\n---\n")
+    assert build_unpublishable_report(report_repo, scope="analysis", stage="working")["documents"] == [{"doc_id": EXCLUDED_ID, "title": "Updated title"}]
+    source.write_text(f"---\ndoc_id: {INCLUDED_ID}\ntitle: Wrong document\n---\n")
+    with pytest.raises(ValueError):
+        build_unpublishable_report(report_repo, scope="analysis", stage="working")
+
+
+@pytest.mark.parametrize("content", ["{}", "[1]", '["invalid"]', '["../document.md"]', '[" d-20260909-160000-000001"]', "[", "null"])
+def test_invalid_list_fails_instead_of_reusing_previous_values(report_repo, content):
+    assert read_publication_ignore_ids(report_repo) == {EXCLUDED_ID}
+    publication_ignore_path(report_repo).write_text(content)
+    with pytest.raises(ValueError, match="unpublishable.json"):
+        read_publication_ignore_ids(report_repo)
+
+
+def test_missing_file_does_not_read_another_stage_or_create_a_replacement(report_repo):
+    path = publication_ignore_path(report_repo)
+    path.unlink()
+    config = scopes.load_docs_scope_stage(report_repo, "analysis", "pre-publish")
+    other = scopes.resolve_scope_path(report_repo, scopes.document_source_path(config)) / "unpublishable.json"
+    other.parent.mkdir(parents=True)
+    other.write_text("[]")
+    with pytest.raises(FileNotFoundError):
+        read_publication_ignore_ids(report_repo)
+    assert not path.exists()
+
+
+def test_symlink_is_not_an_alternate_policy_file(report_repo):
+    path = publication_ignore_path(report_repo)
+    path.unlink()
+    substitute = report_repo / "substitute.json"
+    substitute.write_text("[]")
+    path.symlink_to(substitute)
+    with pytest.raises(ValueError, match="configured source directory"):
+        read_publication_ignore_ids(report_repo)
+
+
+def test_editor_opens_only_configured_file_even_when_json_needs_repair(report_repo, monkeypatch):
+    import docs_management_source_service as service
+    path = publication_ignore_path(report_repo)
+    path.write_text("[")
+    opened = []
+    monkeypatch.setattr(service, "open_source_path", lambda repo, target, **options: opened.append((repo, target, options)))
+    result = open_publication_ignore(report_repo, {"scope": "analysis", "stage": "working"}, True)
+    assert result["ok"] is True
+    assert opened == [(report_repo, path, {"editor": "vscode", "dry_run": True})]
+    with pytest.raises(ValueError, match="only Analysis Working"):
+        open_publication_ignore(report_repo, {"scope": "analysis", "stage": "working", "path": "/unrelated"}, True)
+    assert len(opened) == 1
 
 
 @pytest.mark.parametrize("scope,stage", [("studio", ""), ("analysis", ""), ("analysis", "pre-publish")])
-def test_rejects_other_report_owners(report_repo: Path, scope: str, stage: str) -> None:
+def test_rejects_other_report_owners(report_repo, scope, stage):
     with pytest.raises(ValueError, match="only in Analysis Working"):
         build_unpublishable_report(report_repo, scope=scope, stage=stage)

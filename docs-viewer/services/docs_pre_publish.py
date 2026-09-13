@@ -10,42 +10,31 @@ from docs_scope_publish import _files_from_root, _lifecycle_root, files_revision
 from docs_source_model import ScopeDoc, format_source, load_document_collection_docs_for_config
 from docs_write_rebuild import rebuild_scope_outputs
 from docs_document_subjects import AUTHORING_SUBJECT_FIELDS, SUBJECT_KIND_BY_FIELD, project_reader_subject
+from docs_publication_ignore import read_publication_ignore_ids
 
 
-def excluded_documents(docs: list[ScopeDoc], *, ordinary: bool) -> set[str]:
-    """Apply readiness and intent, then exclude descendants in the same collection."""
+def excluded_documents(docs: list[ScopeDoc], *, ignored_ids: frozenset[str] = frozenset()) -> set[str]:
+    """Exclude draft subtrees, then the exact ignored IDs in this collection."""
     excluded = {
         doc.doc_id for doc in docs
-        if not doc.publishable or doc.front_matter.get("draft", True) is True
-        or (ordinary and doc.report is not None and doc.report.access == "local"
-            and doc.report.id != "docs_subscope")
+        if doc.front_matter.get("draft", True) is True
     }
     while True:
         descendants = {doc.doc_id for doc in docs if doc.parent_id in excluded}
         if descendants <= excluded:
-            return excluded
+            return excluded | {doc.doc_id for doc in docs if doc.doc_id in ignored_ids}
         excluded.update(descendants)
 
 
 def promoted_source(doc: ScopeDoc) -> bytes:
     front_matter = dict(doc.front_matter)
     subject = project_reader_subject(front_matter)
-    for field in ("draft", "publishable", *AUTHORING_SUBJECT_FIELDS):
+    for field in ("draft", *AUTHORING_SUBJECT_FIELDS):
         front_matter.pop(field, None)
     if subject is not None:
         field = next(field for field, kind in SUBJECT_KIND_BY_FIELD.items() if kind == subject["kind"])
         front_matter[field] = subject["key"]
-    body = doc.body
-    if doc.report is not None and doc.report.access == "local":
-        span = doc.report.source_range
-        declaration = body[span.start:span.end]
-        replacement = (
-            declaration.replace("access: local", "access: public")
-            if doc.report.id == "docs_subscope" else ""
-        )
-        body = body[:span.start] + replacement + body[span.end:]
-
-    return format_source(front_matter, body).encode("utf-8")
+    return format_source(front_matter, doc.body).encode("utf-8")
 
 
 def _plan(repo_root: Path, body: dict[str, Any]) -> tuple[dict[str, Any], dict[Path, bytes]]:
@@ -61,7 +50,9 @@ def _plan(repo_root: Path, body: dict[str, Any]) -> tuple[dict[str, Any], dict[P
     source_files = _files_from_root(source_root)
     source_revision = files_revision(source_files)
     ordinary = load_document_collection_docs_for_config(repo_root, working, working)
-    excluded = excluded_documents(ordinary, ordinary=True)
+    ignored_ids = read_publication_ignore_ids(repo_root)
+    ordinary_excluded = excluded_documents(ordinary, ignored_ids=ignored_ids)
+    excluded = set(ordinary_excluded)
     hosts: dict[str, list[str]] = {}
     for doc in ordinary:
         if doc.report is not None and doc.report.id == "docs_subscope":
@@ -72,12 +63,12 @@ def _plan(repo_root: Path, body: dict[str, Any]) -> tuple[dict[str, Any], dict[P
     for collection in (working, *working.sub_scopes):
         child = str(getattr(collection, "sub_scope", ""))
         docs = ordinary if not child else load_document_collection_docs_for_config(repo_root, working, collection)
-        rejected = excluded_documents(docs, ordinary=not child)
+        rejected = excluded_documents(docs) if child else set(ordinary_excluded)
         if child:
             report_hosts = hosts.get(child, [])
             if len(report_hosts) != 1:
                 raise ValueError(f"Pre-publish requires exactly one report host for {child}")
-            if report_hosts[0] in excluded:
+            if report_hosts[0] in ordinary_excluded:
                 rejected.update(doc.doc_id for doc in docs)
         excluded.update(rejected)
         accepted = [doc for doc in docs if doc.doc_id not in rejected]
@@ -89,8 +80,8 @@ def _plan(repo_root: Path, body: dict[str, Any]) -> tuple[dict[str, Any], dict[P
         prefix = Path("sub-scopes") / child / "media" if child else Path("media")
         if accepted:
             desired.update({path: data for path, data in source_files.items() if path.is_relative_to(prefix)})
-    if target.default_doc_id not in eligible:
-        raise ValueError("The Pre-publish default document is excluded; choose a ready, publishable default")
+    if not any(doc.doc_id == target.default_doc_id and doc.doc_id not in ordinary_excluded for doc in ordinary):
+        raise ValueError("The Pre-publish default document is excluded; choose a non-draft default outside the ignore list")
     if files_revision(_files_from_root(source_root)) != source_revision:
         raise ValueError("Working changed during Pre-publish planning; try again")
     current_revision = files_revision(_files_from_root(target_root))
@@ -109,7 +100,7 @@ def _plan(repo_root: Path, body: dict[str, Any]) -> tuple[dict[str, Any], dict[P
         "document_count": len(eligible), "excluded_document_count": len(excluded),
         "collections": counts, "eligible_doc_ids": sorted(eligible),
         "excluded_doc_ids": sorted(excluded),
-        "summary_text": f"Prepare {len(eligible)} documents; omit {len(excluded)} draft, excluded or local documents and their descendants.",
+        "summary_text": f"Prepare {len(eligible)} documents; omit {len(excluded)} documents through draft and ignore-list exclusions.",
     }, desired
 
 

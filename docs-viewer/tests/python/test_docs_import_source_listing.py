@@ -211,7 +211,6 @@ def configure_review_sub_scope_targets(root: Path) -> dict[str, Path]:
                 "# Tags\n\n"
                 ":::report\n"
                 "id: docs_subscope\n"
-                "access: public\n"
                 "sub_scope: tags\n"
                 ":::\n"
             ),
@@ -246,8 +245,7 @@ def configure_review_sub_scope_targets(root: Path) -> dict[str, Path]:
                 "added_date": "2026-07-01 10:00:00",
                 "last_updated": "2026-07-29 10:00:00",
                 "summary": "Original Tag A summary.",
-                "ui_status": "draft",
-                "publishable": False,
+                "ui_status": "review",
             },
             "# Tag A\n",
         ),
@@ -267,7 +265,7 @@ def configure_review_sub_scope_targets(root: Path) -> dict[str, Path]:
                 "title": "Other Tag",
                 "added_date": "2026-07-03 10:00:00",
                 "last_updated": "2026-07-29 12:00:00",
-                "ui_status": "draft",
+                "ui_status": "review",
             },
             "# Other Tag\n",
         ),
@@ -277,7 +275,7 @@ def configure_review_sub_scope_targets(root: Path) -> dict[str, Path]:
                 "title": "Notes Tag A",
                 "added_date": "2026-07-04 10:00:00",
                 "last_updated": "2026-07-29 13:00:00",
-                "ui_status": "draft",
+                "ui_status": "review",
             },
             "# Notes Tag A\n",
         ),

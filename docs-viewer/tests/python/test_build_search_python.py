@@ -240,7 +240,6 @@ docs_subscope = handleEditMetadataSave()
 
 :::report
 id: docs_backlinks
-access: local
 :::
 """,
         )
@@ -471,7 +470,6 @@ last_updated: 2026-08-14 09:00:00
 
 :::report
 id: docs_subscope
-access: public
 sub_scope: tags
 :::
 """,
@@ -600,7 +598,6 @@ last_updated: 2026-08-14 10:00:00
 
 :::report
 id: docs_subscope
-access: local
 sub_scope: tags
 :::
 """,

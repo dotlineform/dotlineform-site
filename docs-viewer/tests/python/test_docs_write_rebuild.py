@@ -36,7 +36,7 @@ def test_working_source_write_carries_exact_changes_deletion_and_creation(tmp_pa
     source(paths[0], updated)
     source(paths[1], deleted)
     excluded = root / "excluded.md"
-    excluded.write_text("---\ndoc_id: d-20260910-120000-000004\npublishable: false\n---\n")
+    excluded.write_text("---\ndoc_id: d-20260910-120000-000004\n---\n")
     paths.append(excluded)
     calls = []
 
@@ -57,7 +57,7 @@ def test_working_source_write_carries_exact_changes_deletion_and_creation(tmp_pa
     else:
         result = write_rebuild.perform_source_write_and_rebuild(tmp_path, "analysis", paths, mutate, stage="working", suppression_reason="test", docs_doc_ids=[updated])
     command = calls[0]
-    assert command[command.index("--links-doc-ids") + 1] == ",".join((updated, deleted, created))
+    assert command[command.index("--links-doc-ids") + 1] == ",".join((updated, deleted, created, "d-20260910-120000-000004"))
     assert command[command.index("--links-created-doc-ids") + 1] == created
     assert "--only-doc-ids" not in command  # Missing ordinary output uses its existing full-render fallback.
     assert result["ok"] is True

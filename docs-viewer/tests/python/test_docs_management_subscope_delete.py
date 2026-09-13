@@ -68,7 +68,6 @@ def prepare_delete_repo(repo_root: Path, *, build_outputs: bool = False) -> dict
             "# Tags\n\n"
             ":::report\n"
             "id: docs_subscope\n"
-            "access: local\n"
             "sub_scope: tags\n"
             ":::\n"
         ),

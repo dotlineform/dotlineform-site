@@ -56,24 +56,23 @@ def make_doc(
         title=str(front_matter["title"]),
         ui_status="",
         parent_id=parent_id,
-        publishable=True,
     )
 
 
-def test_publishable_support_is_only_analysis_working() -> None:
+def test_draft_support_is_only_analysis_working() -> None:
     for scope, stage, supported in (("analysis", "working", True), ("analysis", "pre-publish", False), ("studio", "", False)):
         config = SimpleNamespace(scope_id=scope, stage=stage)
-        assert source_model.collection_supports_publishable(config) is supported
+        assert source_model.collection_supports_draft(config) is supported
 
 
-@pytest.mark.parametrize("fields", [{"viewable": False}, {"ui_status": "draft"}, {"draft": "true"}, {"publishable": "false"}])
+@pytest.mark.parametrize("fields", [{"viewable": False}, {"ui_status": "draft"}, {"draft": "true"}, {"publishable": False}, {"publishable": True}])
 def test_document_status_validation_rejects_retired_and_nonboolean_fields(fields) -> None:
     config = SimpleNamespace(scope_id="analysis", stage="working")
     with pytest.raises(ValueError):
         source_model.validate_document_status_front_matter(fields, collection_config=config, source_name="invalid.md")
 
 
-@pytest.mark.parametrize("field", ["publishable", "draft"])
+@pytest.mark.parametrize("field", ["draft"])
 def test_publication_fields_rejected_outside_working(field) -> None:
     config = SimpleNamespace(scope_id="analysis", stage="pre-publish")
     with pytest.raises(ValueError, match="Analysis Working"):
@@ -90,7 +89,7 @@ def test_front_matter_parses_and_formats_supported_scalar_values() -> None:
                     "doc_id: sample",
                     "title: \"Quoted Title\"",
                     "parent_id: \"\"",
-                    "publishable: false",
+                    "draft: false",
                     "summary: \"\"",
                     "---",
                     "# Sample",
@@ -105,10 +104,10 @@ def test_front_matter_parses_and_formats_supported_scalar_values() -> None:
 
     assert front_matter["title"] == "Quoted Title"
     assert front_matter["parent_id"] == ""
-    assert front_matter["publishable"] is False
+    assert front_matter["draft"] is False
     assert front_matter["summary"] == ""
     assert "parent_id: \"\"" in formatted
-    assert "publishable: false" in formatted
+    assert "draft: false" in formatted
 
 
 def test_front_matter_formatter_quotes_digit_only_string_identity() -> None:
