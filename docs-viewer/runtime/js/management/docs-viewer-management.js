@@ -582,8 +582,7 @@ export function initDocsViewerManagement(context) {
       "manage-publish",
       "manage-pre-publish",
       "manage-scope",
-      "manage-stage",
-      "manage-theme"
+      "manage-stage"
     ].forEach(function (controlId) {
       projectAppControl(controlId, { hidden: true, disabled: true });
     });
@@ -789,7 +788,6 @@ export function initDocsViewerManagement(context) {
       management.managementCapabilities, viewerScope(), viewerStage()
     );
     var exportScopesActionAvailable = exportScopesAvailable();
-    var themeIsDark = document.documentElement && document.documentElement.getAttribute("data-theme") === "dark";
 
     projectAppControl("manage-import", {
       hidden: managementActionsHidden || Boolean(viewerStage()),
@@ -813,11 +811,6 @@ export function initDocsViewerManagement(context) {
     });
     projectAppControl("manage-scope", { hidden: managementActionsHidden });
     projectAppControl("manage-stage", { hidden: managementActionsHidden || !viewerStage() });
-    projectAppControl("manage-theme", {
-      hidden: false,
-      pressed: themeIsDark,
-      label: themeIsDark ? "Switch to light mode" : "Switch to dark mode"
-    });
 
     manageRebuildButton.disabled = management.managementBusy || !management.managementAvailable;
     if (manageActionsButton) {

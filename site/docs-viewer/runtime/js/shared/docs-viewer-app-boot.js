@@ -15,9 +15,6 @@ import {
   startDocsViewerRuntime
 } from "./docs-viewer-app-runtime.js";
 import {
-  docsViewerRouteFeatureEnabled
-} from "./docs-viewer-route-features.js";
-import {
   composeDocsViewerViewDefinitionSets,
   createDocsViewerViewRegistry
 } from "./docs-viewer-view-registry.js";
@@ -230,23 +227,18 @@ export function initDocsViewerBootThemeToggle(bootContext) {
         return inlineMermaidAdapter.handleThemeChange(theme);
       }
     : null;
-  if (
-    !appContext.routeAccess
-    || !appContext.routeAccess.managementUi
-    || !docsViewerRouteFeatureEnabled(appContext.featurePolicy, "management")
-  ) {
+  if (appContext.kind !== "public" && appContext.kind !== "manage") {
     return Promise.resolve(null);
   }
   return (context.appShellReady || Promise.resolve())
     .then(function () {
-      return import("../management/docs-viewer-theme.js");
+      return import("./docs-viewer-theme.js");
     }).then(function (module) {
       if (module && typeof module.initDocsViewerThemeToggle === "function") {
         return module.initDocsViewerThemeToggle({
           root: context.root,
           document: context.document,
-          onThemeChange: onThemeChange,
-          storage: context.window ? context.window.localStorage : null
+          onThemeChange: onThemeChange
         });
       }
       return null;

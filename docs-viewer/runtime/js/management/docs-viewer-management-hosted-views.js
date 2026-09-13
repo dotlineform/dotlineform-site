@@ -120,15 +120,6 @@ export function createDocsViewerManagementViewDefinitions() {
         renderer: "manage-stage-select"
       },
       {
-        id: "manage-theme",
-        label: "Switch to dark mode",
-        ownerType: "app",
-        surfaceId: "app-management",
-        appKinds: ["manage"],
-        features: ["management"],
-        renderer: "manage-theme-toggle"
-      },
-      {
         id: "index-selection",
         label: "Index selection",
         ownerType: "view",

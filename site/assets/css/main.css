@@ -273,10 +273,6 @@ th{ background: var(--panel-2); }
   padding: var(--space-6) 18px var(--space-7);
 }
 
-main.container:has(> .docsViewer){
-  max-width: none;
-}
-
 .studio{
   max-width: 980px;
   margin: 0 auto;

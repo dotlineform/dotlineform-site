@@ -115,9 +115,9 @@ function renderContentDetailBack(context) {
 
 function renderDocumentLinks(context) {
   var button = context.existingRoot || context.document.createElement("button");
-  button.className = "docsViewer__actionButton";
+  button.className = "docsViewer__documentActionButton";
   button.type = "button";
-  button.textContent = "🔀 Links";
+  button.textContent = "🔀";
   return button;
 }
 

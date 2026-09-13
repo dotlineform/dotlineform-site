@@ -1,12 +1,14 @@
-.docsViewer{
-}
-
 .docsViewer__stageButtons{
+  box-sizing: border-box;
   display: inline-flex;
+  align-items: stretch;
+  height: var(--docs-viewer-control-height);
   gap: 0.2rem;
   padding: 0.2rem;
   border: 1px solid var(--docs-viewer-border);
   border-radius: 0.5rem;
+  font-size: var(--docs-viewer-font-small);
+  line-height: var(--docs-viewer-line-snug);
 }
 
 .docsViewer__stageButtons[hidden]{
@@ -16,7 +18,7 @@
 .docsViewer__stageButtons button{
   border: 0;
   border-radius: 0.3rem;
-  padding: 0.3rem 0.6rem;
+  padding: 0 0.6rem;
   background: transparent;
   color: var(--docs-viewer-text);
   font: inherit;
@@ -1155,8 +1157,8 @@ select.docsViewer__fieldInput--listbox{
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 2.3rem;
-  min-width: 2.3rem;
+  width: var(--docs-viewer-control-height, 2.3rem);
+  min-width: var(--docs-viewer-control-height, 2.3rem);
   padding-inline: 0;
 }
 
@@ -1248,13 +1250,13 @@ select.docsViewer__fieldInput--listbox{
   grid-template-columns: 1.35rem minmax(0, 1fr) max-content;
   align-items: center;
   gap: 0.38rem;
-  height: 2.3rem;
-  min-height: 2.3rem;
+  height: var(--docs-viewer-control-height);
+  min-height: var(--docs-viewer-control-height);
   border: 1px solid var(--docs-viewer-border);
   border-radius: 999px;
   background: var(--docs-viewer-panel);
   color: var(--docs-viewer-text);
-  padding: 0.45rem 0.85rem;
+  padding: var(--docs-viewer-control-padding-block) 0.85rem;
   font: inherit;
   font-size: var(--docs-viewer-font-small);
   line-height: var(--docs-viewer-line-snug);
@@ -1358,42 +1360,6 @@ select.docsViewer__fieldInput--listbox{
   font-size: var(--docs-viewer-font-caption);
   font-weight: 400;
   white-space: nowrap;
-}
-
-.docsViewer__themeToggle{
-  box-sizing: border-box;
-  flex: 0 0 auto;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 2.3rem;
-  min-width: 2.3rem;
-  height: 2.3rem;
-  padding: 0;
-  border: 0;
-  border-radius: 999px;
-  color: var(--docs-viewer-text);
-  background: transparent;
-  cursor: pointer;
-}
-
-.docsViewer__themeToggle:hover{
-  background: var(--docs-viewer-panel-2);
-}
-
-.docsViewer__themeToggle:focus-visible{
-  outline: 2px solid var(--docs-viewer-focus-ring);
-  outline-offset: 2px;
-}
-
-.docsViewer__themeIcon{
-  width: 1.25rem;
-  height: 1.25rem;
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 2;
-  stroke-linecap: round;
-  stroke-linejoin: round;
 }
 
 .docsViewer__actionsMenuHost{

@@ -1,6 +1,24 @@
 import {
   renderDocsViewerViewerToolbar
 } from "./docs-viewer-viewer-toolbar-renderer.js";
+import {
+  renderDocsViewerThemeToggle
+} from "./docs-viewer-theme.js";
+
+function appendReaderTopRow(documentRef, mount, topBar, routeContext) {
+  var row = documentRef.createElement("div");
+  row.className = "docsViewer__topRow";
+  var homeLink = documentRef.createElement("a");
+  homeLink.className = "docsViewer__homeLink";
+  homeLink.textContent = "dotlineform";
+  var homeUrl = new URL(routeContext.routeViewerBaseUrl, documentRef.baseURI);
+  if (routeContext.appContext.kind === "manage") {
+    homeUrl.searchParams.set("scope", "analysis");
+  }
+  homeLink.href = homeUrl.pathname + homeUrl.search;
+  row.append(homeLink, topBar, renderDocsViewerThemeToggle(documentRef));
+  mount.appendChild(row);
+}
 
 function routeAllowsManagement(routeContext) {
   return Boolean(
@@ -31,6 +49,7 @@ function appendMainViewToolbarMount(documentRef, topBar) {
   return mount;
 }
 
+/** Compose shared Public/Manage reader chrome around route-owned toolbar mounts. */
 export function renderDocsViewerTopBar(options) {
   var settings = options || {};
   var documentRef = settings.document || document;
@@ -55,7 +74,12 @@ export function renderDocsViewerTopBar(options) {
     ? appendManageToolbarMount(documentRef, topBar)
     : null;
 
-  mount.appendChild(topBar);
+  var appKind = routeContext && routeContext.appContext && routeContext.appContext.kind;
+  if (appKind === "public" || appKind === "manage") {
+    appendReaderTopRow(documentRef, mount, topBar, routeContext);
+  } else {
+    mount.appendChild(topBar);
+  }
   return {
     topBar: topBar,
     viewerToolbar: viewerToolbar,

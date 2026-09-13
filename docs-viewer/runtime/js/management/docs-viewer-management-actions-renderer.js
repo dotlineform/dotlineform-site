@@ -159,25 +159,6 @@ function renderScopeControl(context) {
   return { root: root, interactive: root.querySelector("#docsViewerScopeSelect") };
 }
 
-function renderThemeToggle(context) {
-  var button = context.existingRoot;
-  if (!button || button.tagName !== "BUTTON") {
-    button = elementFromMarkup(context.document, [
-      '<button class="docsViewer__themeToggle" type="button" data-docs-viewer-theme-toggle>',
-      '  <svg class="docsViewer__themeIcon" data-docs-viewer-theme-icon="light" viewBox="0 0 24 24" aria-hidden="true">',
-      '    <circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="M4.93 4.93l1.41 1.41"></path><path d="M17.66 17.66l1.41 1.41"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="M4.93 19.07l1.41-1.41"></path><path d="M17.66 6.34l1.41-1.41"></path>',
-      "  </svg>",
-      '  <svg class="docsViewer__themeIcon" data-docs-viewer-theme-icon="dark" viewBox="0 0 24 24" aria-hidden="true" hidden><path d="M21 12.79A8.5 8.5 0 1 1 11.21 3 6.5 6.5 0 0 0 21 12.79z"></path></svg>',
-      "</button>"
-    ].join(""));
-  }
-  var dark = Boolean(context.control.state && context.control.state.pressed);
-  button.querySelectorAll("[data-docs-viewer-theme-icon]").forEach(function (icon) {
-    icon.hidden = icon.dataset.docsViewerThemeIcon !== (dark ? "dark" : "light");
-  });
-  return button;
-}
-
 export function createDocsViewerManagementAppControlRenderers() {
   return {
     "manage-toolbar-import": function (context) {
@@ -219,7 +200,6 @@ export function createDocsViewerManagementAppControlRenderers() {
       root.dataset.docsViewerStages = "true";
       root.setAttribute("role", "group");
       return root;
-    },
-    "manage-theme-toggle": renderThemeToggle
+    }
   };
 }
