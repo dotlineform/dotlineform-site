@@ -1040,11 +1040,6 @@ main.container:has(> .docsViewer){
   outline-offset: 2px;
 }
 
-.docsViewer__mediaTextLink[aria-busy="true"],
-.docsViewer__mediaImageLink[aria-busy="true"]{
-  cursor: progress;
-}
-
 .docsViewer__content a,
 .docsViewer__content code{
   overflow-wrap: normal;
