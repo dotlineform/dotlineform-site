@@ -66,7 +66,7 @@ function createStateDefaults(settings) {
     searchDebounceId: null,
     searchRouteActive: false,
     recentModeActive: false,
-    recentLimit: options.defaultRecentLimit || 10,
+    recentLimit: options.defaultRecentLimit || 20,
     docsViewerConfigLoaded: false,
     docsViewerConfigRequestPromise: null,
     configuredScopesLoaded: false,

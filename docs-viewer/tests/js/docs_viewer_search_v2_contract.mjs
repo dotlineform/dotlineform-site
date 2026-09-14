@@ -14,6 +14,9 @@ const search = await import(pathToFileURL(
 const searchController = await import(pathToFileURL(
   path.join(repoRoot, "docs-viewer/runtime/js/shared/docs-viewer-search-controller.js")
 ));
+const payloadAdapter = await import(pathToFileURL(
+  path.join(repoRoot, "docs-viewer/runtime/js/shared/docs-viewer-tree-payload-adapter.js")
+));
 const routeWorkflow = await import(pathToFileURL(
   path.join(repoRoot, "docs-viewer/runtime/js/shared/docs-viewer-route-workflow.js")
 ));
@@ -129,6 +132,7 @@ function viewerRouteCommands(viewerBaseUrl, includeScopeParam) {
     viewerBaseUrl,
     viewerScope: "analysis",
     window: {
+      addEventListener() {},
       location: {
         hash: "",
         href: "http://localhost/docs/",
@@ -207,6 +211,52 @@ assert.deepEqual(renderedRouteCalls, [
 ]);
 assert.match(results.innerHTML, new RegExp(`/analysis/\\?doc=report&amp;subdoc=${sharedDocId}`));
 assert.match(results.innerHTML, /2026-08-14 • Concepts/);
+
+const recentPayload = {
+  schema: "docs_recent_v1", basis: "edited", limit: 20,
+  docs: [
+    { doc_id: sharedDocId, title: "Ordinary", timestamp: "2026-08-14 12:00:00", content_url: "/ordinary.json", parent_title: "Parent" },
+    { doc_id: sharedDocId, title: "Child", timestamp: "2026-08-14 13:00:00", content_url: "/child.json",
+      sub_scope: "tags", report_doc_id: "report", collection_title: "Concepts" }
+  ]
+};
+const recentEntries = search.normalizeRecentEntries(payloadAdapter.normalizeRecentPayload(recentPayload).docs);
+assert.equal(recentEntries[1].sub_scope, "tags");
+assert.equal(recentEntries[1].report_doc_id, "report");
+assert.equal(recentEntries[1].collection_title, "Concepts");
+assert.throws(() => payloadAdapter.normalizeRecentPayload({
+  ...recentPayload, docs: [{ ...recentPayload.docs[1], report_doc_id: "" }]
+}), /requires report_doc_id/);
+assert.deepEqual(search.collectRecentDocs(recentEntries, 20).map((row) => row.sub_scope), ["tags", ""]);
+const recentCalls = [];
+globalThis.document = { title: "" };
+try {
+  const controller = searchController.initDocsViewerSearchController({
+    documentIndex: { docsById: new Map() },
+    more, results, resultsStatus,
+    paneCommands: { showRecentPane() {} },
+    recentEnabled: true, recentBasis: "edited",
+    searchRecent: { recentLoaded: true, recentEntries, recentLimit: 20 },
+    selectedDocument: {}, setRecentModeActive() {},
+    routeCommands: {
+      viewerTargetDocId: (docId) => docId === "report" ? "wrong-host" : docId,
+      viewerUrl(docId, hash, query, reportParams) {
+        recentCalls.push({ docId, reportParams });
+        return manageRouteCommands.viewerUrl(docId, hash, query, reportParams);
+      }
+    }
+  });
+  controller.renderRecentMode();
+} finally {
+  globalThis.document = priorDocument;
+}
+assert.deepEqual(recentCalls, [
+  { docId: "report", reportParams: { subdoc: sharedDocId } },
+  { docId: sharedDocId, reportParams: undefined }
+]);
+assert.match(results.innerHTML, /2026-08-14 13:00:00 • Concepts/);
+assert.match(results.innerHTML, /2026-08-14 12:00:00 • Parent/);
+assert.match(results.innerHTML, new RegExp(`doc=report&amp;subdoc=${sharedDocId}`));
 
 // Document navigation must leave Search before any cached or fetched payload renders.
 for (const cached of [true, false]) {

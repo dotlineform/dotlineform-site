@@ -661,6 +661,6 @@
     }
   ],
   "docs_viewer": {
-    "recent_limit": 10
+    "recent_limit": 20
   }
 }

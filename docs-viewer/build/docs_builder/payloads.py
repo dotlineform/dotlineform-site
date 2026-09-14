@@ -3,21 +3,25 @@ from __future__ import annotations
 import json
 from pathlib import Path
 from typing import Any
+from urllib.parse import quote
 
+from .browser_config import browser_sub_scope_output_url_base
 from .common import (
     CONFIG_REL_PATH,
     DEFAULT_RECENT_LIMIT,
     DOCS_INDEX_TREE_SCHEMA_VERSION,
     DOCS_RECENT_SCHEMA_VERSION,
+    humanize,
     read_json,
     render_markdown_to_html,
     utc_timestamp,
 )
 from .rendering import add_missing_image_titles
-from .source import DocRecord
-from docs_document_identity import is_doc_timestamp
+from .source import DocRecord, extract_title
+from docs_document_identity import is_doc_timestamp, is_immutable_doc_id
 from docs_document_subjects import project_reader_subject
 from docs_report_source import project_report_markdown
+from docs_source_model import load_document_collection_docs_for_config
 
 
 class PayloadBuilderMixin:
@@ -157,14 +161,13 @@ class PayloadBuilderMixin:
         doc: DocRecord,
         docs: list[DocRecord],
         title_by_id: dict[str, str],
-        *,
-        basis: str,
     ) -> dict[str, Any]:
         entry: dict[str, Any] = {
             "doc_id": doc.doc_id,
             "title": doc.title,
             "content_url": doc.content_url,
-            "timestamp": doc.added_date if basis == "added" else doc.last_updated,
+            "added_date": doc.added_date,
+            "last_updated": doc.last_updated,
         }
         parent_id = self.effective_parent_id(doc, docs)
         if parent_id and parent_id in title_by_id:
@@ -172,29 +175,77 @@ class PayloadBuilderMixin:
             entry["parent_title"] = title_by_id[parent_id]
         return entry
 
+    def recent_candidates(self, docs: list[DocRecord]) -> list[dict[str, Any]]:
+        """Read all stage-local Recent metadata once, without rendering children.
+
+        Full scope builds own this scan. Preparation already selected the stage's
+        documents; report hosts validate destinations and do not filter candidates.
+        """
+        title_by_id = {doc.doc_id: doc.title for doc in docs}
+        rows = [self.recent_entry(doc, docs, title_by_id) for doc in docs]
+        for sub_scope in self.config.sub_scopes:
+            children = load_document_collection_docs_for_config(self.repo_root, self.config, sub_scope)
+            if not children:
+                continue
+            hosts = [
+                doc for doc in docs
+                if doc.report is not None and doc.report.id == "docs_subscope"
+                and doc.report.sub_scope == sub_scope.sub_scope
+            ]
+            if len(hosts) != 1:
+                raise ValueError(
+                    f"Recent requires exactly one report host for {self.scope_id}/{sub_scope.sub_scope}; "
+                    f"found {len(hosts)}"
+                )
+            output_base = browser_sub_scope_output_url_base(self.config, sub_scope)
+            for child in children:
+                if not is_immutable_doc_id(child.doc_id):
+                    raise ValueError(f"Recent child has invalid doc_id: {child.path}")
+                last_updated = str(child.front_matter.get("last_updated") or "").strip()
+                rows.append({
+                    "doc_id": child.doc_id,
+                    "title": str(child.front_matter.get("title") or extract_title(child.body) or humanize(child.path.stem)).strip(),
+                    "content_url": f"{output_base}/by-id/{quote(child.doc_id)}.json",
+                    "added_date": str(child.front_matter.get("added_date") or last_updated).strip(),
+                    "last_updated": last_updated,
+                    "sub_scope": sub_scope.sub_scope,
+                    "report_doc_id": hosts[0].doc_id,
+                    "collection_title": sub_scope.title or hosts[0].title,
+                })
+        return rows
+
     def recent_payload(
         self,
-        docs: list[DocRecord],
+        candidates: list[dict[str, Any]],
         *,
         basis: str,
         output_path: Path,
+        published: bool = False,
     ) -> dict[str, Any]:
+        """Sort the complete candidate set before limiting a reader projection."""
         if basis not in {"added", "edited"}:
             raise ValueError(f"unsupported Recent basis {basis!r}")
         limit = self.recent_limit()
-        included_docs = docs
-        title_by_id = {doc.doc_id: doc.title for doc in included_docs}
-        ordered_docs = sorted(included_docs, key=lambda doc: (doc.title.lower(), doc.doc_id))
-        ordered_docs.sort(
-            key=lambda doc: doc.added_date if basis == "added" else doc.last_updated,
-            reverse=True,
+        timestamp_key = "added_date" if basis == "added" else "last_updated"
+        ordered = sorted(
+            candidates,
+            key=lambda row: (row["title"].lower(), row["doc_id"], row.get("sub_scope", "")),
         )
+        ordered.sort(key=lambda row: row[timestamp_key], reverse=True)
+        fields = ("doc_id", "title", "content_url", "parent_id", "parent_title",
+                  "sub_scope", "report_doc_id", "collection_title")
         rows = [
-            self.recent_entry(doc, docs, title_by_id, basis=basis)
-            for doc in ordered_docs
-            if (basis == "added" and doc.added_date)
-            or (basis == "edited" and is_doc_timestamp(doc.last_updated))
+            {**{key: row[key] for key in fields if key in row}, "timestamp": row[timestamp_key]}
+            for row in ordered
+            if (basis == "added" and row[timestamp_key])
+            or (basis == "edited" and is_doc_timestamp(row[timestamp_key]))
         ][:limit]
+        if published:
+            public_titles = {child.sub_scope: child.public_title for child in self.config.sub_scopes}
+            for row in rows:
+                public_title = public_titles.get(row.get("sub_scope", ""))
+                if public_title:
+                    row["collection_title"] = public_title
         comparable = {
             "schema": DOCS_RECENT_SCHEMA_VERSION,
             "basis": basis,
@@ -205,19 +256,3 @@ class PayloadBuilderMixin:
             **comparable,
             "generated_at": self.effective_generated_at_for_payload(output_path, comparable),
         }
-
-    def public_recent_docs(self, docs: list[DocRecord]) -> list[DocRecord]:
-        hidden_ids = set(self.manage_only_tree_root_ids)
-        children_by_parent: dict[str, list[str]] = {}
-        for doc in docs:
-            if doc.parent_id:
-                children_by_parent.setdefault(doc.parent_id, []).append(doc.doc_id)
-        queue = list(hidden_ids)
-        while queue:
-            parent_id = queue.pop(0)
-            for child_id in children_by_parent.get(parent_id, []):
-                if child_id in hidden_ids:
-                    continue
-                hidden_ids.add(child_id)
-                queue.append(child_id)
-        return [doc for doc in docs if doc.doc_id not in hidden_ids]

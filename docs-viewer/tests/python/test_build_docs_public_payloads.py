@@ -163,7 +163,7 @@ def test_python_docs_builder_public_generated_payloads_include_manage_rows() -> 
     assert recent["docs"][0]["timestamp"] == "2026-06-06 10:00:00"
     assert recent["docs"][0]["parent_title"] == "Manage Root"
     assert publication_recent["basis"] == "edited"
-    assert [doc["doc_id"] for doc in publication_recent["docs"]] == [CHILD_DOC_ID, PARENT_DOC_ID]
+    assert [doc["doc_id"] for doc in publication_recent["docs"]] == [MANAGE_CHILD_DOC_ID, MANAGE_ROOT_DOC_ID]
     assert all(public_recent_forbidden_keys.isdisjoint(doc) for doc in publication_recent["docs"])
     assert set(child_payload) == {"content_html", "date", "date_display", "last_updated", "summary", "title", "subject"}
     assert child_payload["subject"] == {"kind": "work", "key": "00123"}

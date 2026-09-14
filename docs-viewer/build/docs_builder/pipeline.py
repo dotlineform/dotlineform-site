@@ -112,26 +112,26 @@ class DocsDataBuilder(
             "docs": flat_doc_rows,
         }
         index_tree_payload = self.index_tree_payload(docs, viewer_options)
-        recent_basis = recent_basis_for_route(self.repo_root, app_kind="manage")
-        recent_payload = self.recent_payload(
-            docs,
-            basis=recent_basis,
-            output_path=self.output_dir / "recent.json",
-        )
-        public_recent_basis = recent_basis_for_route(
-            self.repo_root,
-            app_kind="public",
-            scope=self.scope_id,
-        )
-        publication_recent_payload = (
-            self.recent_payload(
-                self.public_recent_docs(docs),
-                basis=public_recent_basis,
-                output_path=self.output_dir / ".publish/recent.json",
+        # Targeted builds leave every Recent projection untouched, even if missing.
+        recent_payload = None
+        publication_recent_payload = None
+        if not self.targeted_build:
+            recent_candidates = self.recent_candidates(docs)
+            recent_payload = self.recent_payload(
+                recent_candidates,
+                basis=recent_basis_for_route(self.repo_root, app_kind="manage"),
+                output_path=self.output_dir / "recent.json",
             )
-            if public_recent_basis
-            else None
-        )
+            public_recent_basis = recent_basis_for_route(
+                self.repo_root, app_kind="public", scope=self.scope_id,
+            )
+            if public_recent_basis:
+                publication_recent_payload = self.recent_payload(
+                    recent_candidates,
+                    basis=public_recent_basis,
+                    output_path=self.output_dir / ".publish/recent.json",
+                    published=True,
+                )
         semantic_token_payloads = self.build_semantic_token_payloads(docs, semantic_tokens_by_doc)
         backlinks_payload = self.backlinks_payload(docs, item_payloads)
         write_plan = self.build_write_plan(
@@ -155,7 +155,7 @@ class DocsDataBuilder(
                 write_plan,
                 docs_total=len(index_payload["docs"]),
                 tree_total=len(index_tree_payload["docs"]),
-                recent_total=len(recent_payload["docs"]),
+                recent_total=len(recent_payload["docs"]) if recent_payload is not None else None,
                 semantic_token_total=len(semantic_token_payloads["index"]["occurrences"]),
             )
         else:

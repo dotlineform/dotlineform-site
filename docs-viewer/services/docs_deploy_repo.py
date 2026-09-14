@@ -255,17 +255,25 @@ def collection_public_url_prefix(
     return public_url_prefix(path)
 
 
-def project_content_urls(value: Any, prefix: str) -> Any:
+def project_content_urls(
+    value: Any, prefix: str, *, sub_scope_prefixes: Mapping[str, str] | None = None,
+) -> Any:
+    """Project document URLs using each row's exact collection identity."""
     if isinstance(value, list):
-        return [project_content_urls(item, prefix) for item in value]
+        return [project_content_urls(item, prefix, sub_scope_prefixes=sub_scope_prefixes) for item in value]
     if not isinstance(value, dict):
         return value
     projected = {
-        key: project_content_urls(item, prefix)
+        key: project_content_urls(item, prefix, sub_scope_prefixes=sub_scope_prefixes)
         for key, item in value.items()
     }
     doc_id = str(projected.get("doc_id") or "").strip()
     if doc_id and "content_url" in projected:
+        sub_scope = str(projected.get("sub_scope") or "").strip()
+        if sub_scope:
+            if sub_scope_prefixes is None or sub_scope not in sub_scope_prefixes:
+                raise ValueError(f"Recent has no configured public collection: {sub_scope}")
+            prefix = sub_scope_prefixes[sub_scope]
         projected["content_url"] = f"{prefix}/by-id/{doc_id}.json"
     return projected
 
@@ -446,6 +454,10 @@ def accepted_document_collections(
         project_content_urls(
             read_json_bytes(published_files[recent_path], "accepted Recent"),
             parent_prefix,
+            sub_scope_prefixes={
+                child.sub_scope: collection_public_url_prefix(child)
+                for child in config.sub_scopes if child.public_projection is not None
+            },
         )
     )
     for relative_path, data in published_files.items():

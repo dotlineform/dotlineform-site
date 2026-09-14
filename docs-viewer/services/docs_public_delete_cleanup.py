@@ -243,22 +243,6 @@ def filtered_tree_payload(payload: Mapping[str, Any], doc_ids: set[str]) -> dict
     return {**payload, "docs": filtered_rows(payload.get("docs"))}
 
 
-def filtered_recent_payload(payload: Mapping[str, Any], doc_ids: set[str]) -> dict[str, Any]:
-    rows = payload.get("docs")
-    if not isinstance(rows, list):
-        raise ValueError("public Recent docs must be an array")
-    if any(not isinstance(row, dict) for row in rows):
-        raise ValueError("public Recent document must be an object")
-    return {
-        **payload,
-        "docs": [
-            row
-            for row in rows
-            if str(row.get("doc_id") or "").strip() not in doc_ids
-        ],
-    }
-
-
 def filtered_search_payload(
     payload: Mapping[str, Any],
     doc_ids: set[str],
@@ -457,6 +441,7 @@ def plan_public_document_delete_cleanup(
         str(row.get("doc_id") or "").strip()
         for row in state.recent.get("docs", [])
         if isinstance(row, dict)
+        and not str(row.get("sub_scope") or "").strip()
     ).union(
         str(row.get("id") or "").strip()
         for row in state.search.get("docs", [])
@@ -464,7 +449,6 @@ def plan_public_document_delete_cleanup(
         and not str(row.get("sub_scope") or "").strip()
     )
     next_tree = state.index_tree
-    next_recent = state.recent
     next_search = state.search
     next_parent_documents = dict(state.parent_documents)
     next_sub_scope_manifests = dict(state.sub_scope_manifests)
@@ -501,7 +485,7 @@ def plan_public_document_delete_cleanup(
             impacted_ids.update(delete_ids)
     else:
         next_tree = filtered_tree_payload(state.index_tree, delete_ids)
-        next_recent = filtered_recent_payload(state.recent, delete_ids)
+        # Recent belongs to full scope builds and the subsequent snapshot transfer.
         next_search = filtered_search_payload(
             state.search,
             delete_ids,
@@ -515,7 +499,6 @@ def plan_public_document_delete_cleanup(
         }
         for path, before, after in (
             (state.docs_root / "index-tree.json", state.index_tree, next_tree),
-            (state.docs_root / "recent.json", state.recent, next_recent),
             (state.search_path, state.search, next_search),
         ):
             if before != after:

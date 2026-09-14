@@ -440,7 +440,8 @@ def test_parent_cleanup_updates_docs_and_leaves_catalogue_paused(
     assert sibling_path.read_bytes() == sibling_before
     assert stale_path.read_bytes() == stale_before
     assert [row["doc_id"] for row in read_json(paths["docs_root"] / "index-tree.json")["docs"]] == [SIBLING_ID]
-    assert [row["doc_id"] for row in read_json(paths["docs_root"] / "recent.json")["docs"]] == [SIBLING_ID]
+    assert [row["doc_id"] for row in read_json(paths["docs_root"] / "recent.json")["docs"]] == [PARENT_ID, SIBLING_ID]
+    assert paths["docs_root"] / "recent.json" not in plan.writes_by_path
     next_search = read_json(paths["search"])
     assert [row["id"] for row in next_search["docs"]] == [SIBLING_ID]
     assert next_search["terms"][SIBLING_ID]["identity"] == [0]

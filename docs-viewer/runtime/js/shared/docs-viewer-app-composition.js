@@ -80,7 +80,7 @@ import {
 export var DOCS_VIEWER_RUNTIME_DEFAULTS = {
   searchBatchSize: 50,
   searchDebounceMs: 140,
-  defaultRecentLimit: 10,
+  defaultRecentLimit: 20,
   bookmarkDbName: "dotlineform-docs-viewer",
   bookmarkDbVersion: 1,
   bookmarkStoreName: "favorites",

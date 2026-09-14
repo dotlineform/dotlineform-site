@@ -78,6 +78,10 @@ def test_python_docs_builder_excludes_configured_sub_scope_sources() -> None:
         ]
         write_json(config_path, payload)
         write_text(
+            root / f"docs-viewer/scopes/studio/source/documents/{PARENT_DOC_ID}.md",
+            f"---\ndoc_id: {PARENT_DOC_ID}\ntitle: Parent\n---\n:::report\nid: docs_subscope\nsub_scope: tags\n:::\n",
+        )
+        write_text(
             root / f"docs-viewer/scopes/studio/source/sub-scopes/tags/documents/{DETAIL_DOC_ID}.md",
             f"""---
 doc_id: {DETAIL_DOC_ID}

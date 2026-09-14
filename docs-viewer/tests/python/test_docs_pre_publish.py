@@ -11,6 +11,7 @@ from repo_factory import docs_scope_record, docs_sub_scope_record, write_json, w
 import docs_pre_publish as promotion
 import docs_scope_publish as publication
 import docs_write_rebuild as rebuild
+from docs_deploy_repo import accepted_document_collections
 from docs_scope_config import SCHEMA_VERSION, load_docs_scope_stage, document_source_path, generated_documents_path
 
 
@@ -101,6 +102,15 @@ def test_rebuild_and_publish_replace_stale_derivatives_without_changing_working(
     published = publication.apply_scope_publish(repo, {**PREPARED, "confirm": True, "plan_revision": preview["plan_revision"], "target_published_revision": preview["target_published_revision"]})
     assert published["document_count"] == 3
     _, _, files = publication.validate_published_snapshot(repo, "analysis")
+    recent = json.loads(files[Path("documents/recent.json")])
+    assert {row["doc_id"] for row in recent["docs"]} == {ROOT, HOST, CHILD}
+    recent_child = next(row for row in recent["docs"] if row["doc_id"] == CHILD)
+    assert recent_child["sub_scope"] == "works" and recent_child["report_doc_id"] == HOST
+    projected, *_ = accepted_document_collections(target, files)
+    deployed_recent = json.loads(projected[Path("recent.json")])
+    deployed_child = next(row for row in deployed_recent["docs"] if row["doc_id"] == CHILD)
+    assert deployed_child["content_url"] == f"/assets/data/docs/scopes/analysis/works/by-id/{CHILD}.json"
+    assert deployed_child["report_doc_id"] == HOST
     assert json.loads(files[Path("sub-scopes/works/documents/by-id") / f"{CHILD}.json"])["subject"] == child["subject"]
     assert all(path.name != "manage-manifest.json" for path in files)
     assert files[Path("media/svg/example.svg")] == before[Path("media/svg/example.svg")]

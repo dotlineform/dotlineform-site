@@ -20,7 +20,7 @@ class WritePlanMixin:
     def build_write_plan(
         self,
         index_tree_payload: dict[str, Any],
-        recent_payload: dict[str, Any],
+        recent_payload: dict[str, Any] | None,
         publication_recent_payload: dict[str, Any] | None,
         item_payloads: dict[str, dict[str, Any]],
         semantic_token_payloads: dict[str, Any],
@@ -31,11 +31,12 @@ class WritePlanMixin:
         """Return exact writes and removals without mutating generated output.
 
         A targeted build may remove stale document and semantic-token payloads
-        only when their identities are in ``target_doc_ids``.
+        only when their identities are in ``target_doc_ids``. A missing Recent
+        payload means generation was not requested; leave both projections alone.
         """
 
         index_tree_text = json_text(index_tree_payload)
-        recent_text = json_text(recent_payload)
+        recent_text = json_text(recent_payload) if recent_payload is not None else ""
         publication_recent_text = json_text(publication_recent_payload) if publication_recent_payload else ""
         item_text_by_id: dict[str, str] = {}
         changed_item_ids: list[str] = []
@@ -57,7 +58,7 @@ class WritePlanMixin:
         return {
             "index_tree_write": read_text(self.output_dir / "index-tree.json") != index_tree_text,
             "index_tree_text": index_tree_text,
-            "recent_write": read_text(self.output_dir / "recent.json") != recent_text,
+            "recent_write": recent_payload is not None and read_text(self.output_dir / "recent.json") != recent_text,
             "recent_text": recent_text,
             "publication_recent_write": (
                 read_text(self.output_dir / ".publish/recent.json") != publication_recent_text
@@ -65,7 +66,7 @@ class WritePlanMixin:
                 else False
             ),
             "publication_recent_text": publication_recent_text,
-            "publication_recent_remove": publication_recent_payload is None and (self.output_dir / ".publish/recent.json").exists(),
+            "publication_recent_remove": recent_payload is not None and publication_recent_payload is None and (self.output_dir / ".publish/recent.json").exists(),
             "changed_item_ids": sorted(changed_item_ids),
             "stale_item_ids": stale_item_ids,
             "item_text_by_id": item_text_by_id,
@@ -83,7 +84,7 @@ class WritePlanMixin:
         *,
         docs_total: int,
         tree_total: int,
-        recent_total: int,
+        recent_total: int | None,
         semantic_token_total: int,
     ) -> None:
         """Apply one write plan and report the resulting output counts.
@@ -122,7 +123,7 @@ class WritePlanMixin:
         self,
         index_payload: dict[str, Any],
         index_tree_payload: dict[str, Any],
-        recent_payload: dict[str, Any],
+        recent_payload: dict[str, Any] | None,
         semantic_token_payloads: dict[str, Any],
         write_plan: dict[str, Any],
     ) -> None:
@@ -131,7 +132,7 @@ class WritePlanMixin:
             mode="dry-run",
             docs_total=len(index_payload["docs"]),
             tree_total=len(index_tree_payload["docs"]),
-            recent_total=len(recent_payload["docs"]),
+            recent_total=len(recent_payload["docs"]) if recent_payload is not None else None,
             semantic_token_total=len(semantic_token_payloads["index"]["occurrences"]),
         )
 
@@ -142,7 +143,7 @@ class WritePlanMixin:
         mode: str,
         docs_total: int,
         tree_total: int,
-        recent_total: int,
+        recent_total: int | None,
         semantic_token_total: int,
     ) -> None:
         doc_write_count = len(write_plan["changed_item_ids"])
@@ -163,7 +164,7 @@ class WritePlanMixin:
         print(f"  docs {verb}: {doc_write_count}")
         print(f"  docs {remove_verb}: {doc_remove_count}")
         print(f"  tree docs total: {tree_total}")
-        print(f"  recent total: {recent_total}")
+        print(f"  recent total: {recent_total if recent_total is not None else 'unchanged'}")
         print(f"  semantic tokens total: {semantic_token_total}")
         print(f"  semantic tokens {verb}: {semantic_token_write_count}")
         print(f"  indexes {verb}: {index_write_count}")

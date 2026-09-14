@@ -204,7 +204,9 @@ export function initDocsViewerSearchController(context) {
     var parts = [];
     var timestamp = String(doc.timestamp || "").trim();
     if (timestamp) parts.push(timestamp);
-    if (doc.parent_title) {
+    if (doc.sub_scope) {
+      parts.push(String(doc.collection_title || "").trim());
+    } else if (doc.parent_title) {
       parts.push(String(doc.parent_title || "").trim());
     } else if (doc.parent_id) {
       var parent = documentIndex.docsById.get(doc.parent_id);
@@ -214,22 +216,21 @@ export function initDocsViewerSearchController(context) {
     return parts.join(" • ");
   }
 
-  function renderSearchResultEntry(entry) {
-    var subScopeId = String(entry.sub_scope || "").trim();
-    if (!subScopeId) {
-      return renderSearchEntry(entry, viewerUrl(viewerTargetDocId(entry.id), "", ""));
+  function resultEntryUrl(entry, docId) {
+    if (!String(entry.sub_scope || "").trim()) {
+      return viewerUrl(viewerTargetDocId(docId), "", "");
     }
-
     var reportDocId = String(entry.report_doc_id || "").trim();
-    var childDocId = String(entry.id || "").trim();
-    var href = reportDocId && childDocId
-      ? viewerUrl(reportDocId, "", "", { subdoc: childDocId })
-      : "#";
-    return renderSearchEntry(entry, href);
+    if (!reportDocId || !docId) throw new Error("Document result requires an exact report host and child.");
+    return viewerUrl(reportDocId, "", "", { subdoc: docId });
+  }
+
+  function renderSearchResultEntry(entry) {
+    return renderSearchEntry(entry, resultEntryUrl(entry, entry.id));
   }
 
   function renderRecentResultEntry(doc) {
-    return renderRecentEntry(doc, displayRecentMetaForDoc(doc), viewerUrl(viewerTargetDocId(doc.doc_id), "", ""));
+    return renderRecentEntry(doc, displayRecentMetaForDoc(doc), resultEntryUrl(doc, doc.doc_id));
   }
 
   function renderRecentMode() {
