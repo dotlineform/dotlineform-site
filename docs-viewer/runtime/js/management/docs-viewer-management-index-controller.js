@@ -1,8 +1,6 @@
 import {
   documentPackagePrepareCapability,
-  documentTransferSourceSupported,
-  documentTransferSupported,
-  documentTransferTargets,
+  archiveSupported,
   scopeStaticHtmlExportCapability
 } from "./docs-viewer-management-capabilities.js";
 import {
@@ -16,9 +14,6 @@ import {
 import {
   openStaticHtmlSnapshotExportWorkflow
 } from "./docs-viewer-static-html-export-workflow.js";
-import {
-  normalizeManagedDocumentCollectionTarget
-} from "./docs-viewer-management-document-target.js";
 
 export function docsViewerPreparePackageActionControlState(options = {}) {
   var resolution = options.resolution || null;
@@ -41,37 +36,6 @@ export function docsViewerPreparePackageActionControlState(options = {}) {
   return {
     disabled: Boolean(disabledReason),
     disabledReason: disabledReason
-  };
-}
-
-export function docsViewerDocumentTransferActionControlState(options = {}) {
-  var mode = String(options.mode || "").trim().toLowerCase();
-  var label = mode === "move" ? "Move" : "Copy";
-  var resolution = options.resolution || null;
-  var targets = Array.isArray(options.targets) ? options.targets : [];
-  var disabledReason = "";
-  if (!options.managementChecked) {
-    disabledReason = "Checking " + label + " availability.";
-  } else if (!options.managementAvailable) {
-    disabledReason = label + " is unavailable.";
-  } else if (options.managementBusy || options.workflowActive) {
-    disabledReason = "Docs management is busy.";
-  } else if (!resolution || !resolution.enabled) {
-    disabledReason = resolution && resolution.disabledReason
-      ? resolution.disabledReason
-      : "Select one or more documents.";
-  } else if (!documentTransferSupported(options.capabilities)) {
-    disabledReason = label + " is unavailable.";
-  } else if (!documentTransferSourceSupported(options.capabilities, options.source, mode)) {
-    disabledReason = label + " is not supported from this collection.";
-  } else if (!targets.length) {
-    disabledReason = "No other writable Docs Viewer collection is available.";
-  }
-  return {
-    disabled: Boolean(disabledReason),
-    disabledReason: disabledReason,
-    hidden: Boolean(options.source && options.source.stage && options.source.stage !== "working"),
-    targets: targets
   };
 }
 
@@ -111,8 +75,8 @@ export function createDocsViewerManagementIndexController(options = {}) {
   var indexSelection = options.indexSelection || createDocsViewerIndexSelectionOwner({
     initialScopeId: viewerScope()
   });
-  var documentTransferWorkflowActive = false;
-  var documentTransferWorkflowRequest = null;
+  var archiveWorkflowActive = false;
+  var archiveWorkflowRequest = null;
   var preparePackageWorkflowRequest = null;
   var snapshotExportWorkflowActive = false;
 
@@ -245,27 +209,16 @@ export function createDocsViewerManagementIndexController(options = {}) {
     };
   }
 
-  function documentTransferActionControlState(mode) {
-    var actionId = mode === "move" ? DOCS_VIEWER_ACTION_IDS.MOVE : DOCS_VIEWER_ACTION_IDS.COPY;
-    var source = { scope: viewerScope() };
-    var stage = managementClientOptions().stage;
-    if (stage) source.stage = stage;
-    var targets = documentTransferTargets(
-      management.managementCapabilities,
-      source,
-      mode
-    );
-    return docsViewerDocumentTransferActionControlState({
-      capabilities: management.managementCapabilities,
-      managementAvailable: management.managementAvailable,
-      managementBusy: management.managementBusy,
-      managementChecked: management.managementChecked,
-      mode: mode,
-      resolution: resolveAction(actionId),
-      source: source,
-      targets: targets,
-      workflowActive: documentTransferWorkflowActive
-    });
+  function archiveActionControlState() {
+    var source = { scope: viewerScope(), stage: managementClientOptions().stage };
+    var resolution = resolveAction(DOCS_VIEWER_ACTION_IDS.ARCHIVE);
+    var available = archiveSupported(management.managementCapabilities, source);
+    return {
+      hidden: source.stage !== "working" || source.scope === "notes",
+      disabled: !management.managementAvailable || management.managementBusy || archiveWorkflowActive
+        || !available || !resolution || !resolution.enabled,
+      disabledReason: !available ? "Archive is unavailable." : ""
+    };
   }
 
   function snapshotExportActionControlState() {
@@ -291,8 +244,7 @@ export function createDocsViewerManagementIndexController(options = {}) {
       items: {
         [DOCS_VIEWER_ACTION_IDS.EXPORT_DOCS]: snapshotExportActionControlState(),
         [DOCS_VIEWER_ACTION_IDS.PREPARE_DOCUMENT_PACKAGE]: preparePackageActionControlState(),
-        [DOCS_VIEWER_ACTION_IDS.COPY]: documentTransferActionControlState("copy"),
-        [DOCS_VIEWER_ACTION_IDS.MOVE]: documentTransferActionControlState("move"),
+        [DOCS_VIEWER_ACTION_IDS.ARCHIVE]: archiveActionControlState(),
         [DOCS_VIEWER_ACTION_IDS.DELETE]: deleteActionControlState()
       }
     };
@@ -329,21 +281,6 @@ export function createDocsViewerManagementIndexController(options = {}) {
   function render() {
     indexSelection.syncContext(lifecycleContext());
     return projectSelection();
-  }
-
-  function checkedSelectionHasDescendants(checkedDocIds) {
-    var selected = new Set(checkedDocIds || []);
-    return documentIndex.docs.some(function (doc) {
-      var parentId = String(doc && doc.parent_id || "").trim();
-      var seen = new Set();
-      while (parentId && !seen.has(parentId)) {
-        if (selected.has(parentId)) return true;
-        seen.add(parentId);
-        var parent = documentIndex.docsById.get(parentId);
-        parentId = String(parent && parent.parent_id || "").trim();
-      }
-      return false;
-    });
   }
 
   function reconcileReload(eligibleDocIds) {
@@ -414,197 +351,38 @@ export function createDocsViewerManagementIndexController(options = {}) {
       });
   }
 
-  function loadDocumentTransferWorkflow() {
-    if (documentTransferWorkflowRequest) return documentTransferWorkflowRequest;
-    documentTransferWorkflowRequest = import("./docs-viewer-document-transfer-workflow.js")
-      .then(function (module) {
-        if (!module || typeof module.openDocumentTransferWorkflow !== "function") {
-          throw new Error("Document transfer workflow is unavailable.");
-        }
-        return module;
-      })
-      .catch(function (error) {
-        documentTransferWorkflowRequest = null;
-        throw error;
-      });
-    return documentTransferWorkflowRequest;
-  }
-
-  function openDocumentTransfer(options) {
-    var settings = options || {};
-    var checkedDocIds = settings.checkedDocIds.slice();
-    documentTransferWorkflowActive = true;
+  async function handleArchive() {
+    var resolution = resolveAction(DOCS_VIEWER_ACTION_IDS.ARCHIVE);
+    if (archiveActionControlState().disabled || !resolution || !resolution.enabled) return;
+    var source = { scope: viewerScope(), stage: managementClientOptions().stage };
+    var docIds = resolution.targetDocIds.slice();
+    archiveWorkflowActive = true;
     renderManagementUi();
-    return loadDocumentTransferWorkflow()
-      .then(function (module) {
-        return module.openDocumentTransferWorkflow({
-          root: root,
-          restoreFocus: settings.restoreFocus,
-          source: settings.source,
-          mode: settings.mode,
-          checkedDocIds: checkedDocIds,
-          targets: settings.targets,
-          fixedTarget: settings.fixedTarget,
-          modalTitle: settings.modalTitle,
-          copyDescendantsAvailable: settings.copyDescendantsAvailable === true,
-          clientOptions: managementClientOptions(),
-          callbacks: {
-            setBusy: setManagementBusy,
-            setMessage: setManagementMessage,
-            render: renderManagementUi,
-            onApplied: function (payload) {
-              var effectiveRoots = Array.isArray(payload && payload.effective_roots)
-                ? payload.effective_roots
-                : [];
-              var targetUrl = String(
-                effectiveRoots[0] && effectiveRoots[0].target_viewer_url || ""
-              ).trim();
-              if (!targetUrl) {
-                throw new Error("Document transfer result did not include a target URL.");
-              }
-              windowRef.location.assign(new URL(targetUrl, windowRef.location.href).toString());
-            }
-          }
-        });
-      })
-      .catch(function (error) {
-        setManagementBusy(false);
-        setManagementMessage(
-          error && error.message ? error.message : "Document transfer workflow is unavailable.",
-          true
-        );
-        return null;
-      })
-      .finally(function () {
-        documentTransferWorkflowActive = false;
-        renderManagementUi();
-      });
-  }
-
-  function handleDocumentTransfer(mode) {
-    var normalizedMode = mode === "move" ? "move" : "copy";
-    var actionId = normalizedMode === "move"
-      ? DOCS_VIEWER_ACTION_IDS.MOVE
-      : DOCS_VIEWER_ACTION_IDS.COPY;
-    var resolution = resolveAction(actionId);
-    var controlState = documentTransferActionControlState(normalizedMode);
-    if (
-      !resolution
-      || !resolution.enabled
-      || controlState.disabled
-      || documentTransferWorkflowActive
-    ) {
-      return Promise.resolve(null);
-    }
-    var checkedDocIds = resolution.targetDocIds.slice();
-    return openDocumentTransfer({
-      source: { scope: viewerScope(), stage: managementClientOptions().stage },
-      mode: normalizedMode,
-      checkedDocIds: checkedDocIds,
-      targets: controlState.targets,
-      copyDescendantsAvailable: checkedSelectionHasDescendants(checkedDocIds),
-      restoreFocus: indexActionsButton()
-    });
-  }
-
-  function normalizeSubscopeCopyRequest(value) {
-    if (!value || typeof value !== "object" || Array.isArray(value)) {
-      throw new Error("Sub-scope Copy request must be an object.");
-    }
-    var keys = Object.keys(value).sort();
-    if (keys.join("\u0000") !== ["doc_ids", "scope", "sub_scope"].join("\u0000")) {
-      throw new Error(
-        "Sub-scope Copy request must contain exactly scope, sub_scope, and doc_ids."
-      );
-    }
-    var source = normalizeManagedDocumentCollectionTarget({
-      scope: value.scope,
-      sub_scope: value.sub_scope
-    });
-    if (!Array.isArray(value.doc_ids) || !value.doc_ids.length) {
-      throw new Error("Select one or more documents.");
-    }
-    var seen = new Set();
-    var docIds = value.doc_ids.map(function (docId) {
-      if (typeof docId !== "string" || !docId || docId !== docId.trim()) {
-        throw new Error("Every checked document id must be exact and non-blank.");
-      }
-      if (seen.has(docId)) {
-        throw new Error("Checked document ids must not contain duplicates.");
-      }
-      seen.add(docId);
-      return docId;
-    });
-    return { source: source, docIds: docIds };
-  }
-
-  function copySubscopeDocuments(request, options) {
-    var normalized;
     try {
-      normalized = normalizeSubscopeCopyRequest(request);
-    } catch (error) {
-      return Promise.reject(error);
-    }
-    var targets = documentTransferTargets(
-      management.managementCapabilities,
-      normalized.source,
-      "copy"
-    );
-    var lineageCopy = options && options.lineageCopy;
-    var fixedTarget = null;
-    var modalTitle = "";
-    if (lineageCopy != null) {
-      if (!lineageCopy || typeof lineageCopy !== "object" || Array.isArray(lineageCopy)) {
-        return Promise.reject(new Error("Lineage Copy configuration is invalid."));
+      if (!archiveWorkflowRequest) {
+        archiveWorkflowRequest = import("./docs-viewer-archive-workflow.js").catch(function (error) {
+          archiveWorkflowRequest = null;
+          throw error;
+        });
       }
-      try {
-        fixedTarget = normalizeManagedDocumentCollectionTarget(lineageCopy.target);
-      } catch (error) {
-        return Promise.reject(error);
-      }
-      modalTitle = String(lineageCopy.modalTitle || "").trim();
-      if (!modalTitle) {
-        return Promise.reject(new Error("Lineage Copy modal title is unavailable."));
-      }
-      targets = targets.filter(function (record) {
-        try {
-          var candidate = normalizeManagedDocumentCollectionTarget(record.target);
-          return candidate.scope === fixedTarget.scope
-            && candidate.sub_scope === fixedTarget.sub_scope;
-        } catch (error) {
-          return false;
+      var workflow = await archiveWorkflowRequest;
+      await workflow.openArchiveWorkflow({
+        root: root, restoreFocus: indexActionsButton(), source: source, docIds: docIds,
+        clientOptions: managementClientOptions(),
+        callbacks: {
+          setBusy: setManagementBusy, setMessage: setManagementMessage, render: renderManagementUi,
+          onApplied: function (payload) {
+            if (!payload || !payload.viewer_url) throw new Error("Archive returned no destination.");
+            windowRef.location.assign(new URL(payload.viewer_url, windowRef.location.href).toString());
+          }
         }
       });
-      if (targets.length !== 1) {
-        return Promise.reject(new Error(
-          "The configured lineage Copy target is not one exact writable collection."
-        ));
-      }
+    } catch (error) {
+      setManagementMessage(error && error.message ? error.message : "Archive failed.", true);
+    } finally {
+      archiveWorkflowActive = false;
+      renderManagementUi();
     }
-    var controlState = docsViewerDocumentTransferActionControlState({
-      capabilities: management.managementCapabilities,
-      managementAvailable: management.managementAvailable,
-      managementBusy: management.managementBusy,
-      managementChecked: management.managementChecked,
-      mode: "copy",
-      resolution: { enabled: true },
-      source: normalized.source,
-      targets: targets,
-      workflowActive: documentTransferWorkflowActive
-    });
-    if (controlState.disabled) {
-      return Promise.reject(new Error(controlState.disabledReason));
-    }
-    return openDocumentTransfer({
-      source: normalized.source,
-      mode: "copy",
-      checkedDocIds: normalized.docIds,
-      targets: targets,
-      fixedTarget: fixedTarget,
-      modalTitle: modalTitle,
-      copyDescendantsAvailable: false,
-      restoreFocus: options && options.restoreFocus
-    });
   }
 
   function handleSnapshotExport() {
@@ -707,10 +485,8 @@ export function createDocsViewerManagementIndexController(options = {}) {
       handlePreparePackage();
     } else if (actionId === DOCS_VIEWER_ACTION_IDS.EXPORT_DOCS) {
       handleSnapshotExport();
-    } else if (actionId === DOCS_VIEWER_ACTION_IDS.COPY) {
-      handleDocumentTransfer("copy");
-    } else if (actionId === DOCS_VIEWER_ACTION_IDS.MOVE) {
-      handleDocumentTransfer("move");
+    } else if (actionId === DOCS_VIEWER_ACTION_IDS.ARCHIVE) {
+      handleArchive();
     } else if (actionId === DOCS_VIEWER_ACTION_IDS.DELETE) {
       if (typeof callbacks.handleDeleteDoc === "function") callbacks.handleDeleteDoc();
     } else {
@@ -722,7 +498,6 @@ export function createDocsViewerManagementIndexController(options = {}) {
   return {
     actionsButton: indexActionsButton,
     actionsMenu: indexActionsMenu,
-    copySubscopeDocuments: copySubscopeDocuments,
     handleControl: handleControl,
     handleViewChange: handleViewChange,
     indexSelection: indexSelection,

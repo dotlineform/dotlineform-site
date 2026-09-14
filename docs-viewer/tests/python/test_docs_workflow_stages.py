@@ -59,11 +59,11 @@ def test_local_stages_share_capabilities_config_and_exact_settings(stage_repo: P
     capabilities = capabilities_payload(stage_repo)["capabilities"]["scopes"][scope]["stages"]
     assert capabilities["working"]["document_authoring"] is True
     assert capabilities["working"]["pre_publish"]["apply"] is True
-    assert capabilities["working"]["document_transfer"]["collections"][0]["target"] == {"scope": scope, "stage": "working"}
+    assert "archive" in capabilities["working"]
     assert capabilities["pre-publish"]["publishing"]["apply"] is True
     for stage in ("pre-publish", "published"):
         assert capabilities[stage]["document_authoring"] is False
-        assert capabilities[stage]["document_transfer"]["collections"] == []
+        assert capabilities[stage]["archive"]["available"] is False
     settings = build_settings_contract(stage_repo, scope, "working")["scopes"][0]
     assert settings["stage"] == "working" and settings["fields"][0]["current_value"] == DOC_ID
     with pytest.raises(ValueError, match="requires stage"):
@@ -79,21 +79,6 @@ def test_local_stages_share_capabilities_config_and_exact_settings(stage_repo: P
     rebuild.rebuild_scope_outputs(stage_repo, scope, stage="working", include_search=False)
     assert commands[0][commands[0].index("--stage") + 1] == "working"
     assert "--skip-media-builds" not in commands[0]
-
-
-def test_staged_local_transfer_keeps_owner_and_rejects_prepared_writes(stage_repo: Path) -> None:
-    from docs_document_transfer import plan_document_transfer, restore_document_transfer_apply_plan
-    from docs_document_transfer_apply import management_collection_document_url
-
-    for scope in ("studio", "notes"):
-        add_local_stages(stage_repo, scope)
-    request = dict(source_scope="studio", source_stage="working", target_scope="notes", target_stage="working", requested_doc_ids=[DOC_ID], transfer_mode="copy")
-    plan = plan_document_transfer(stage_repo, **request)
-    restored = restore_document_transfer_apply_plan(stage_repo, plan.apply_plan_payload())
-    assert restored.source_collection.stage == restored.target_collection.stage == "working"
-    assert "stage=working" in management_collection_document_url(stage_repo, restored.target_collection, DOC_ID)
-    with pytest.raises(ValueError, match="Pre-publish document authoring"):
-        plan_document_transfer(stage_repo, **{**request, "target_stage": "pre-publish"})
 
 
 def test_staged_local_import_uses_working_destination_and_rebuild(stage_repo: Path, monkeypatch) -> None:
@@ -422,15 +407,10 @@ def test_media_examples_remain_literal_in_working(stage_repo: Path) -> None:
     assert renderer.resolve_media_tokens("[[media:docs/studio/img/example.png]]") == "/docs/media/studio/working/img/example.png"
 
 
-def test_working_service_transfer_and_settings_keep_stage(stage_repo: Path) -> None:
+def test_working_service_settings_keep_stage(stage_repo: Path) -> None:
     import docs_management_service as service
 
     add_local_stages(stage_repo, "notes")
-    status, payload = service.docs_management_post_response(stage_repo, service.routes.DOCUMENT_TRANSFER_PREVIEW_PATH, {
-        "scope": "studio", "stage": "working", "doc_ids": [DOC_ID],
-        "target_scope": "notes", "target_stage": "working", "transfer_mode": "copy",
-    })
-    assert status == 200 and payload["ok"] is True
     status, payload = service.docs_management_post_response(stage_repo, service.routes.SOURCE_CONFIG_SETTINGS_PATH, {
         "scope": "studio", "stage": "working", "changes": {"default_doc_id": ""},
     }, dry_run=True)
@@ -780,7 +760,7 @@ def test_working_write_rebuild_and_delete_preserve_other_owners(stage_repo: Path
     assert all(path.read_bytes() == value for path, value in before.items())
 
 
-@pytest.mark.parametrize("path", ["/docs/create", "/docs/update-metadata", "/docs/source/rebuild", "/docs/delete-preview", "/docs/delete-apply", "/docs/document-transfer-preview"])
+@pytest.mark.parametrize("path", ["/docs/create", "/docs/update-metadata", "/docs/source/rebuild", "/docs/delete-preview", "/docs/delete-apply", "/docs/archive-preview"])
 def test_pre_publish_services_reject_before_writes(stage_repo: Path, path: str) -> None:
     import docs_management_service as service
     before = {p: p.read_bytes() for p in stage_repo.rglob("*.md")}

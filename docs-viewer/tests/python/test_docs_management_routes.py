@@ -88,9 +88,11 @@ def test_deploy_repo_routes_are_management_owned() -> None:
     assert routes.DEPLOY_REPO_APPLY_PATH in routes.POST_PATHS
 
 
-def test_document_transfer_routes_are_management_owned_and_singular_copy_is_retired() -> None:
-    assert routes.DOCUMENT_TRANSFER_PREVIEW_PATH in routes.POST_PATHS
-    assert routes.DOCUMENT_TRANSFER_APPLY_PATH in routes.POST_PATHS
+def test_archive_routes_are_management_owned_and_transfer_is_retired() -> None:
+    assert routes.ARCHIVE_PREVIEW_PATH in routes.POST_PATHS
+    assert routes.ARCHIVE_APPLY_PATH in routes.POST_PATHS
+    assert "/docs/document-transfer-preview" not in routes.POST_PATHS
+    assert "/docs/document-transfer-apply" not in routes.POST_PATHS
     assert "/docs/copy-subtree-preview" not in routes.POST_PATHS
     assert "/docs/copy-subtree-apply" not in routes.POST_PATHS
 
@@ -174,7 +176,7 @@ def main() -> None:
     test_dedicated_publishability_config_entries_are_retired()
     test_abandoned_review_session_routes_remain_retired()
     test_static_html_export_routes_are_management_owned()
-    test_document_transfer_routes_are_management_owned_and_singular_copy_is_retired()
+    test_archive_routes_are_management_owned_and_transfer_is_retired()
     test_staged_media_routes_are_management_owned()
     test_import_source_directory_route_is_management_owned()
     test_diagram_source_routes_are_management_owned()

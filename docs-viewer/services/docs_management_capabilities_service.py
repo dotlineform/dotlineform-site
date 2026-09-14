@@ -11,7 +11,7 @@ import docs_deploy_repo
 import docs_local_links
 import docs_source_config_settings
 import docs_static_html_export
-import docs_document_transfer
+import docs_document_archive
 from docs_scope_publish import PUBLISH_MANIFEST_FILENAME
 from docs_scope_config import (
     document_source_path,
@@ -46,18 +46,6 @@ def scope_capabilities(repo_root: Path, config: Any, manifest_record: Any, stati
             "apply": False,
             "reason": "The Analysis scope is unavailable.",
         }
-    transfer_capabilities = (
-        docs_document_transfer.document_transfer_scope_capabilities(
-            repo_root,
-            config,
-        )
-    )
-    transfer_capabilities["collections"] = (
-        docs_document_transfer.document_transfer_collection_capability_records(
-            repo_root,
-            config,
-        )
-    )
     record = {
         "available": root.exists(),
         "scope_type": config.scope_type,
@@ -66,7 +54,7 @@ def scope_capabilities(repo_root: Path, config: Any, manifest_record: Any, stati
         "generated_search_reads": resolve_scope_path(repo_root, generated_search_path(config)).exists(),
         "published_data_reads": published_available,
         "published_search_reads": published_available,
-        "document_transfer": transfer_capabilities,
+        "archive": docs_document_archive.archive_capability(repo_root, config),
         "scope_lifecycle": {
             "manifest_recorded": manifest_record is not None,
             "owner": str((manifest_record or {}).get("owner") or ""),
@@ -120,7 +108,7 @@ def scope_capabilities(repo_root: Path, config: Any, manifest_record: Any, stati
         record["publishing"].update({key: config.stage == "pre-publish" for key in ("status", "confirm", "apply")})
         record["deploy_repo"] = {"available": False, "preview": False, "apply": False}
         if not authoring:
-            record["document_transfer"] = {"copy_source": False, "move_source": False, "target": False, "collections": []}
+            record["archive"] = {"available": False}
             record["scope_lifecycle"].update(delete_eligible=False, rename_eligible=False)
             record["sub_scope_lifecycle"].update(create_eligible=False, delete_eligible=False)
     return record
@@ -153,7 +141,7 @@ def capabilities_payload(repo_root: Path) -> Dict[str, Any]:
             "pre_publish": {"preview": False, "apply": False},
             "publishing": {"status": False, "confirm": False, "apply": False},
             "deploy_repo": docs_deploy_repo.deploy_repo_capability(repo_root, config),
-            "document_transfer": {"copy_source": False, "move_source": False, "target": False, "collections": []},
+            "archive": {"available": False},
             "scope_lifecycle": {"delete_eligible": False, "rename_eligible": False},
             "sub_scope_lifecycle": {"create_eligible": False, "delete_eligible": False, "sub_scopes": []},
             "static_html_export": {"preview": False, "apply": False},
@@ -184,10 +172,7 @@ def capabilities_payload(repo_root: Path) -> Dict[str, Any]:
                 "review_returned": data_sharing_workspace["available"],
                 "atomic_return": True,
             },
-            "document_transfer": {
-                "preview": True,
-                "apply": True,
-            },
+            "archive": {"preview": True, "apply": True},
             "document_delete": {
                 "preview": True,
                 "apply": True,

@@ -22,9 +22,8 @@ SCRIPTS_DIR = REPO_ROOT / "scripts"
 
 import docs_diagram_source_service  # noqa: E402
 import docs_deploy_repo  # noqa: E402
-import docs_document_move_apply  # noqa: E402
-import docs_document_transfer  # noqa: E402
-import docs_document_transfer_apply  # noqa: E402
+import docs_document_archive  # noqa: E402
+import docs_document_archive_apply  # noqa: E402
 import docs_management_document_target  # noqa: E402
 import docs_management_draft  # noqa: E402
 import docs_import_source_service as import_source_service  # noqa: E402
@@ -274,71 +273,15 @@ def docs_management_post_response(
             return HTTPStatus.INTERNAL_SERVER_ERROR, error.payload
         except mutations.ManagedDocumentRevisionConflict as error:
             return HTTPStatus.CONFLICT, error.payload
-    if path == routes.DOCUMENT_TRANSFER_PREVIEW_PATH:
-        source_scope = source_model.normalize_scope(body.get("scope"))
-        plan = docs_document_transfer.plan_document_transfer(
-            repo_root,
-            source_scope=source_scope,
-            source_stage=body.get("stage"),
-            source_sub_scope=(
-                body.get("sub_scope") if "sub_scope" in body else None
-            ),
-            requested_doc_ids=body.get("doc_ids"),
-            target_scope=body.get("target_scope"),
-            target_stage=body.get("target_stage"),
-            target_sub_scope=(
-                body.get("target_sub_scope")
-                if "target_sub_scope" in body
-                else None
-            ),
-            transfer_mode=body.get("transfer_mode"),
-            include_descendants=body.get("include_descendants", False),
-            copy_lineage_actions=body.get("copy_lineage_actions"),
-        )
-        payload = plan.preview_payload()
-        payload["dry_run"] = True
-        return HTTPStatus.OK, payload
-    if path == routes.DOCUMENT_TRANSFER_APPLY_PATH:
+    if path == routes.ARCHIVE_PREVIEW_PATH:
+        return HTTPStatus.OK, docs_document_archive.plan_archive(repo_root, body).preview()
+    if path == routes.ARCHIVE_APPLY_PATH:
         if dry_run:
-            raise ValueError("document transfer apply does not support dry_run")
-        source_scope = source_model.normalize_scope(body.get("scope"))
-        plan = docs_document_transfer.restore_document_transfer_apply_plan(
-            repo_root,
-            body.get("apply_plan"),
-        )
-        request_source = {"scope": source_scope, "stage": body.get("stage")}
-        if "sub_scope" in body:
-            request_source["sub_scope"] = body.get("sub_scope")
-        normalized_request_source = (
-            docs_management_document_target.normalize_managed_document_collection_target(
-                request_source
-            )
-        )
-        if plan.source_collection.request_target() != normalized_request_source:
-            raise ValueError(
-                "document transfer apply_plan source collection does not match request"
-            )
+            raise ValueError("Archive apply does not support dry_run")
         try:
-            if plan.mode == docs_document_transfer.COPY_MODE:
-                payload = docs_document_transfer_apply.apply_document_copy(
-                    repo_root,
-                    plan,
-                    confirm=body.get("confirm") is True,
-                )
-            else:
-                payload = docs_document_move_apply.apply_document_move(
-                    repo_root,
-                    plan,
-                    confirm=body.get("confirm") is True,
-                )
-        except (
-            docs_document_transfer_apply.DocumentTransferApplyError,
-            docs_document_move_apply.DocumentMoveApplyError,
-        ) as exc:
-            failure = dict(exc.result)
-            failure["error"] = str(exc)
-            return HTTPStatus.CONFLICT, failure
-        return HTTPStatus.OK, payload
+            return HTTPStatus.OK, docs_document_archive_apply.apply_archive(repo_root, body)
+        except docs_document_archive_apply.ArchiveApplyError as error:
+            return HTTPStatus.CONFLICT, error.result
     if path == routes.DELETE_PREVIEW_PATH:
         if "sub_scope" in body:
             return (

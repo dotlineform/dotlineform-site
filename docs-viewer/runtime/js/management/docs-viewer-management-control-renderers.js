@@ -60,16 +60,10 @@ var INDEX_ACTION_ITEMS = [
     label: "Prepare package…"
   },
   {
-    id: "docsViewerIndexCopyButton",
-    actionId: "copy",
-    emoji: "⧉",
-    label: "Copy to…"
-  },
-  {
-    id: "docsViewerIndexMoveButton",
-    actionId: "move",
-    emoji: "↗",
-    label: "Move to scope…"
+    id: "docsViewerIndexArchiveButton",
+    actionId: "archive",
+    emoji: "🗄",
+    label: "Archive"
   },
   {
     id: "docsViewerIndexDeleteButton",

@@ -5,7 +5,7 @@ from __future__ import annotations
 
 import json
 from dataclasses import dataclass, replace
-from datetime import datetime, timezone
+from datetime import datetime
 from pathlib import Path
 from typing import Any, Iterable, Mapping
 
@@ -103,10 +103,6 @@ class DocumentLineageDeleteResult:
     @property
     def changed(self) -> bool:
         return any(change.affected_working_doc_ids for change in self.workflows)
-
-
-def current_timestamp() -> str:
-    return datetime.now(timezone.utc).strftime(UTC_TIMESTAMP_FORMAT)
 
 
 def _strict_object(raw: Any, *, field: str, keys: set[str]) -> Mapping[str, Any]:
@@ -401,29 +397,6 @@ def workflow_for_contract(repo_root: Path, contract_id: str) -> DocumentLineageW
     return matching[0]
 
 
-def workflow_for_collections(
-    repo_root: Path,
-    *,
-    working_scope: str,
-    working_sub_scope: str,
-    editorial_scope: str,
-    editorial_sub_scope: str,
-) -> DocumentLineageWorkflow:
-    expected_working = DocumentLineageCollection(working_scope, working_sub_scope)
-    expected_editorial = DocumentLineageCollection(editorial_scope, editorial_sub_scope)
-    matching = [
-        workflow
-        for workflow in configured_workflows(repo_root)
-        if workflow.working_collection == expected_working
-        and workflow.editorial_collection == expected_editorial
-    ]
-    if len(matching) != 1:
-        raise ValueError(
-            "document publication lineage workflow does not match one exact Copy"
-        )
-    return matching[0]
-
-
 def workflows_for_collection(
     repo_root: Path,
     collection: DocumentLineageCollection,
@@ -568,120 +541,6 @@ def write_table_atomic(
     return validated
 
 
-def editorials_for_working(
-    table: DocumentLineageTable | None,
-    *,
-    working_scope: str,
-    working_sub_scope: str,
-    editorial_scope: str,
-    editorial_sub_scope: str,
-    working_doc_id: str,
-) -> tuple[DocumentEditorialChild, ...]:
-    if table is None:
-        return ()
-    expected_working = DocumentLineageCollection(working_scope, working_sub_scope)
-    expected_editorial = DocumentLineageCollection(editorial_scope, editorial_sub_scope)
-    if (
-        table.working_collection != expected_working
-        or table.editorial_collection != expected_editorial
-    ):
-        raise ValueError("document publication lineage collections do not match Copy")
-    for record in table.records:
-        if record.working_doc_id == working_doc_id:
-            return record.editorials
-    return ()
-
-
-def apply_copy_results(
-    repo_root: Path,
-    *,
-    contract_id: str,
-    source_scope: str,
-    source_sub_scope: str,
-    editorial_scope: str,
-    editorial_sub_scope: str,
-    results: Iterable[Mapping[str, str]],
-) -> DocumentLineageTable:
-    workflow = workflow_for_contract(repo_root, contract_id)
-    expected_working = DocumentLineageCollection(source_scope, source_sub_scope)
-    expected_editorial = DocumentLineageCollection(editorial_scope, editorial_sub_scope)
-    if (
-        workflow.working_collection != expected_working
-        or workflow.editorial_collection != expected_editorial
-    ):
-        raise ValueError("document publication lineage collections do not match Copy")
-    table = load_table(repo_root, contract_id=contract_id) or empty_table(
-        working_scope=source_scope,
-        working_sub_scope=source_sub_scope,
-        editorial_scope=editorial_scope,
-        editorial_sub_scope=editorial_sub_scope,
-    )
-    if (
-        table.working_collection != expected_working
-        or table.editorial_collection != expected_editorial
-    ):
-        raise ValueError("document publication lineage collections do not match Copy")
-
-    copied_at = current_timestamp()
-    records = {record.working_doc_id: record for record in table.records}
-    editorial_owners = {
-        editorial.doc_id: record.working_doc_id
-        for record in table.records
-        for editorial in record.editorials
-    }
-    for index, result in enumerate(results):
-        working_doc_id = _doc_id(
-            result.get("source_doc_id"),
-            field=f"copy results[{index}].source_doc_id",
-        )
-        editorial_doc_id = _doc_id(
-            result.get("target_doc_id"),
-            field=f"copy results[{index}].target_doc_id",
-        )
-        record = records.get(working_doc_id)
-        editorials = list(record.editorials if record is not None else ())
-        existing_index = next(
-            (
-                child_index
-                for child_index, editorial in enumerate(editorials)
-                if editorial.doc_id == editorial_doc_id
-            ),
-            None,
-        )
-        action = str(result.get("action") or "").strip().lower()
-        if action == "new":
-            if editorial_doc_id in editorial_owners:
-                raise ValueError("New copy would duplicate an exact Editorial child")
-            editorials.append(
-                DocumentEditorialChild(
-                    doc_id=editorial_doc_id,
-                    created_at=copied_at,
-                    last_copied_at=copied_at,
-                    published_url=None,
-                )
-            )
-            editorial_owners[editorial_doc_id] = working_doc_id
-        elif action == "replace":
-            if existing_index is None:
-                raise ValueError("Replace target is not an exact current Editorial child")
-            editorials[existing_index] = replace(
-                editorials[existing_index],
-                last_copied_at=copied_at,
-            )
-        else:
-            raise ValueError(f"copy results[{index}].action is invalid")
-        records[working_doc_id] = DocumentLineageRecord(
-            working_doc_id=working_doc_id,
-            editorials=tuple(editorials),
-        )
-
-    return write_table_atomic(
-        repo_root,
-        replace(table, records=tuple(records.values())),
-        contract_id=contract_id,
-    )
-
-
 def apply_document_deletes(
     repo_root: Path,
     *,
@@ -805,18 +664,14 @@ __all__ = [
     "LINEAGE_FILENAME",
     "LINEAGE_RELATIVE_PATH",
     "LINEAGE_SCHEMA_VERSION",
-    "apply_copy_results",
     "apply_document_deletes",
     "configured_workflows",
-    "current_timestamp",
-    "editorials_for_working",
     "empty_table",
     "load_table",
     "load_tables",
     "project_publications",
     "render_table",
     "table_path",
-    "workflow_for_collections",
     "workflow_for_contract",
     "workflows_for_collection",
     "write_table_atomic",

@@ -248,12 +248,12 @@ def test_media_collision_is_rejected_and_remote_media_keeps_its_identity(working
     "<pre>\n/docs/?scope=analysis&doc=old\n</pre>\n",
 ])
 def test_literal_and_unrelated_references_keep_exact_source(body):
-    from docs_document_placement_references import _rewrite_active_text
+    from docs_document_placement_references import rewrite_document_references
 
     def rewrite(url):
         return url.replace("doc=old", "doc=new") if "scope=analysis" in url else url
 
-    assert _rewrite_active_text(body, rewrite) == body
+    assert rewrite_document_references(body, rewrite) == body
 
 
 @pytest.mark.parametrize("reference,filename", [("relative", "diagram.svg"), ("relative", "diagram name.svg"), ("logical", "diagram.svg")])

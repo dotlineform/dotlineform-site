@@ -152,13 +152,6 @@ function createSubscopeDocumentAction(settings) {
     : null;
 }
 
-function copySubscopeDocumentsAction(settings) {
-  var actions = settings && settings.managementDocumentActions;
-  return actions && typeof actions.copySubscopeDocuments === "function"
-    ? actions.copySubscopeDocuments
-    : null;
-}
-
 function configuredSubScopeLabel(settings, scope, subScope) {
   var child = configuredSubScope(settings, scope, subScope);
   var normalizedScope = cleanString(scope).toLowerCase();
@@ -236,11 +229,6 @@ export function loadDocsViewerSubscopeContribution(settings, parent, subScope, o
     var defaultContribution = modules[0].createDocsViewerManagementSubscopeDefaultContribution({
       clientOptions: clientOptions,
       managementContext: Boolean(settings.managementContext),
-      lineageCopy: (
-        subScopeConfig.subScopeCustomisation
-        && subScopeConfig.subScopeCustomisation.capabilities
-        && subScopeConfig.subScopeCustomisation.capabilities.lineageCopy
-      ) || null,
       markdownLinkForDocument: function (target, documentRecord) {
         return markdownLinkForSubscopeDocument(
           settings,
@@ -251,7 +239,6 @@ export function loadDocsViewerSubscopeContribution(settings, parent, subScope, o
         );
       },
       onCreateDocument: contributionOptions.onCreateDocument,
-      onCopyDocuments: contributionOptions.onCopyDocuments,
       onToggleDraft: settings.managementContext && parent.stage === "working"
         && cleanString(clientOptions.baseUrl)
         ? settings.managementDocumentActions?.toggleSubscopeDocumentDraft
@@ -333,41 +320,6 @@ function openSubscopeCreate(settings, parent, subScope, request, context) {
     },
     {
       refreshAndSelect: refreshAndOpenDocument
-    }
-  );
-}
-
-function openSubscopeCopy(settings, parent, subScope, request, context) {
-  var selection = request && typeof request === "object" ? request : {};
-  var keys = Object.keys(selection).sort();
-  var rawDocIds = Array.isArray(selection.doc_ids) ? selection.doc_ids : [];
-  var docIds = rawDocIds.slice();
-  var exactDocIds = docIds.length > 0 && docIds.every(function (docId) {
-    return typeof docId === "string" && docId && docId === docId.trim();
-  }) && new Set(docIds).size === docIds.length;
-  if (
-    keys.join("\u0000") !== ["doc_ids", "scope", "sub_scope"].join("\u0000")
-    || cleanString(selection.scope).toLowerCase() !== parent.scope
-    || cleanString(selection.sub_scope).toLowerCase() !== subScope
-    || !exactDocIds
-  ) {
-    return Promise.reject(new Error(
-      "Sub-scope Copy selection did not match the mounted report."
-    ));
-  }
-  var action = copySubscopeDocumentsAction(settings);
-  if (!action) {
-    return Promise.reject(new Error("Sub-scope document Copy is unavailable."));
-  }
-  return action(
-    {
-      scope: parent.scope,
-      sub_scope: subScope,
-      doc_ids: docIds
-    },
-    {
-      restoreFocus: context && context.restoreFocus,
-      lineageCopy: context && context.lineageCopy
     }
   );
 }
@@ -477,7 +429,6 @@ export function mountDocsViewerManageDocumentExtras(context) {
   });
   var scopeConfig = settings.scopeConfigState || {};
   var createAction = createSubscopeDocumentAction(settings);
-  var copyAction = copySubscopeDocumentsAction(settings);
   var contribution = loadDocsViewerSubscopeContribution(settings, parent, subScope, {
     onCreateDocument: (
       settings.managementContext
@@ -487,16 +438,6 @@ export function mountDocsViewerManageDocumentExtras(context) {
     )
       ? function (request, context) {
           return openSubscopeCreate(settings, parent, subScope, request, context);
-        }
-      : null,
-    onCopyDocuments: (
-      !parent.stage
-      && settings.managementContext
-      && reportManagementBaseUrl
-      && copyAction
-    )
-      ? function (request, context) {
-          return openSubscopeCopy(settings, parent, subScope, request, context);
         }
       : null,
     onLifecycleEvent: function (event) {

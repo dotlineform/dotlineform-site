@@ -74,7 +74,7 @@ export function normalizeDocsViewerSubScopeCustomisation(rawCustomisation) {
   if (
     !capabilityKeys.length
     || capabilityKeys.some(function (key) {
-      return key !== "assignable_field_groups" && key !== "lineage_copy";
+      return key !== "assignable_field_groups";
     })
   ) {
     throw new Error(
@@ -102,55 +102,6 @@ export function normalizeDocsViewerSubScopeCustomisation(rawCustomisation) {
     }));
   }
 
-  if (Object.prototype.hasOwnProperty.call(rawCapabilities, "lineage_copy")) {
-    var rawLineageCopy = rawCapabilities.lineage_copy;
-    if (!rawLineageCopy || typeof rawLineageCopy !== "object" || Array.isArray(rawLineageCopy)) {
-      throw new Error("Docs Viewer sub_scope_customisation lineage_copy must be an object.");
-    }
-    if (Object.keys(rawLineageCopy).sort().join("\u0000") !== [
-      "action_label",
-      "contract_id",
-      "modal_title",
-      "target"
-    ].join("\u0000")) {
-      throw new Error(
-        "Docs Viewer sub_scope_customisation lineage_copy fields are invalid."
-      );
-    }
-    var contractId = String(rawLineageCopy.contract_id || "").trim();
-    var actionLabel = String(rawLineageCopy.action_label || "").trim();
-    var modalTitle = String(rawLineageCopy.modal_title || "").trim();
-    var rawTarget = rawLineageCopy.target;
-    if (!/^[a-z][a-z0-9_]*$/.test(contractId) || !actionLabel || !modalTitle) {
-      throw new Error(
-        "Docs Viewer sub_scope_customisation lineage_copy identity and presentation are required."
-      );
-    }
-    if (
-      !rawTarget
-      || typeof rawTarget !== "object"
-      || Array.isArray(rawTarget)
-      || Object.keys(rawTarget).sort().join("\u0000") !== ["scope", "sub_scope"].join("\u0000")
-    ) {
-      throw new Error("Docs Viewer sub_scope_customisation lineage_copy target is invalid.");
-    }
-    var targetScope = String(rawTarget.scope || "").trim().toLowerCase();
-    var targetSubScope = String(rawTarget.sub_scope || "").trim().toLowerCase();
-    if (
-      !/^[a-z][a-z0-9_-]*$/.test(targetScope)
-      || !/^[a-z][a-z0-9_-]*$/.test(targetSubScope)
-    ) {
-      throw new Error(
-        "Docs Viewer sub_scope_customisation lineage_copy target is invalid."
-      );
-    }
-    capabilities.lineageCopy = Object.freeze({
-      contractId: contractId,
-      target: Object.freeze({ scope: targetScope, sub_scope: targetSubScope }),
-      actionLabel: actionLabel,
-      modalTitle: modalTitle
-    });
-  }
   return Object.freeze({
     id: customisationId,
     capabilities: Object.freeze(capabilities)

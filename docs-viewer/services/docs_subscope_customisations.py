@@ -67,18 +67,9 @@ class DocsSubScopeAuthoringSubjectAspect:
 
 
 @dataclass(frozen=True)
-class DocsSubScopeTransferAspect:
-    contract_id: str
-    owned_field_names: tuple[str, ...]
-    validate_field: Callable[[Mapping[str, Any], str, Any], None]
-
-
-@dataclass(frozen=True)
 class DocsSubScopeDocumentLineageAspect:
     contract_id: str
     role: str
-    copy_action_label: str = ""
-    copy_modal_title: str = ""
 
 
 @dataclass(frozen=True)
@@ -91,7 +82,6 @@ class DocsSubScopeCustomisationDefinition:
     browser_composition: DocsSubScopeBrowserCompositionAspect | None = None
     assignable_field_groups: tuple[DocsSubScopeAssignableFieldGroup, ...] = ()
     authoring_subject: DocsSubScopeAuthoringSubjectAspect | None = None
-    transfer: DocsSubScopeTransferAspect | None = None
     document_lineages: tuple[DocsSubScopeDocumentLineageAspect, ...] = ()
     prepare_publication: Callable[[Mapping[str, Any]], dict[str, Any]] | None = None
 
@@ -257,7 +247,6 @@ def _validate_definition(
             definition.authoring_subject,
             DocsSubScopeAuthoringSubjectAspect,
         ),
-        ("transfer", definition.transfer, DocsSubScopeTransferAspect),
     )
     for aspect_name, aspect, aspect_type in aspect_types:
         if aspect is not None and not isinstance(aspect, aspect_type):
@@ -357,24 +346,6 @@ def _validate_definition(
                 f"{', '.join(unknown_subject_fields)}"
             )
 
-    transfer = definition.transfer
-    if transfer is not None:
-        if not isinstance(
-            transfer.contract_id,
-            str,
-        ) or not CUSTOMISATION_ID_PATTERN.fullmatch(transfer.contract_id):
-            raise ValueError(f"{field} transfer contains an invalid contract id")
-        _validate_owned_field_names(
-            transfer.owned_field_names,
-            field=f"{field} transfer owned_field_names",
-        )
-        if set(transfer.owned_field_names) & set(AUTHORING_SUBJECT_FIELDS):
-            raise ValueError(
-                f"{field} transfer must not own shared authoring-subject fields"
-            )
-        if not callable(transfer.validate_field):
-            raise ValueError(f"{field} transfer validate_field must be callable")
-
     document_lineages = definition.document_lineages
     if not isinstance(document_lineages, tuple):
         raise ValueError(f"{field} document_lineages must be a tuple")
@@ -396,22 +367,6 @@ def _validate_definition(
         seen_lineage_contracts.add(document_lineage.contract_id)
         if document_lineage.role not in SUPPORTED_LINEAGE_ROLES:
             raise ValueError(f"{field} document_lineages contains an invalid role")
-        presentation_values = (
-            document_lineage.copy_action_label,
-            document_lineage.copy_modal_title,
-        )
-        if document_lineage.role == LINEAGE_SOURCE_ROLE:
-            if any(
-                not isinstance(value, str) or not value.strip() or value != value.strip()
-                for value in presentation_values
-            ):
-                raise ValueError(
-                    f"{field} source document_lineages require exact Copy presentation"
-                )
-        elif any(presentation_values):
-            raise ValueError(
-                f"{field} Editorial document_lineages must not declare Copy presentation"
-            )
     return definition
 
 
@@ -502,14 +457,6 @@ def prepare_sub_scope_publication(
     """Delegate publication projection only to the configured collection owner."""
     prepare = _definition_for(customisation).prepare_publication if customisation is not None else None
     return prepare(front_matter) if prepare is not None else dict(front_matter)
-
-
-def sub_scope_customisation_transfer_contract(
-    customisation: DocsSubScopeCustomisationConfig | None,
-) -> DocsSubScopeTransferAspect | None:
-    if customisation is None:
-        return None
-    return _definition_for(customisation).transfer
 
 
 def sub_scope_customisation_document_lineage_contracts(
@@ -644,7 +591,6 @@ __all__ = [
     "DocsSubScopeImportFrontMatterAspect",
     "DocsSubScopeManifestProjectionAspect",
     "DocsSubScopeMetadataAspect",
-    "DocsSubScopeTransferAspect",
     "browser_sub_scope_customisation_payload",
     "normalize_docs_subscope_customisation",
     "project_sub_scope_customisation_manifest",
@@ -655,6 +601,5 @@ __all__ = [
     "sub_scope_customisation_authoring_subject_fields",
     "sub_scope_customisation_metadata_record",
     "sub_scope_customisation_document_lineage_contracts",
-    "sub_scope_customisation_transfer_contract",
     "prepare_sub_scope_publication",
 ]

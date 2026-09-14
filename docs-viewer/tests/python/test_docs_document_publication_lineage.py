@@ -194,34 +194,6 @@ def test_workflow_discovery_keeps_independent_working_owned_paths(
     ).exists()
 
 
-def test_processing_copy_creates_only_its_exact_table(
-    tmp_path: Path,
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    repo_root = tmp_path / "repo"
-    monkeypatch.setattr(lineage, "current_timestamp", lambda: "2026-09-01T12:00:00Z")
-
-    table = lineage.apply_copy_results(
-        repo_root,
-        contract_id=PROCESSING_CONTRACT,
-        source_scope="dotlineform",
-        source_sub_scope="processing",
-        editorial_scope="analysis",
-        editorial_sub_scope="works",
-        results=[
-            {
-                "source_doc_id": SOURCE_ID,
-                "target_doc_id": EDITORIAL_ID,
-                "action": "new",
-            }
-        ],
-    )
-
-    assert table.working_collection.sub_scope == "processing"
-    assert lineage.load_table(repo_root, contract_id=PROJECTS_CONTRACT) is None
-    assert lineage.load_table(repo_root, contract_id=PROCESSING_CONTRACT) == table
-
-
 def test_cross_table_editorial_ownership_is_rejected(tmp_path: Path) -> None:
     repo_root = tmp_path / "repo"
     projects = replace(
@@ -316,122 +288,6 @@ def test_workflow_discovery_rejects_incomplete_and_duplicate_roles(
         lineage.configured_workflows(repo_root)
 
 
-def test_new_creates_ordered_children_and_replace_updates_one_exact_child(
-    tmp_path: Path,
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    repo_root = tmp_path / "repo"
-    monkeypatch.setattr(lineage, "current_timestamp", lambda: "2026-08-08T10:00:00Z")
-
-    created = lineage.apply_copy_results(
-        repo_root,
-        contract_id=PROJECTS_CONTRACT,
-        source_scope="dotlineform",
-        source_sub_scope="projects",
-        editorial_scope="analysis",
-        editorial_sub_scope="works",
-        results=[
-            {
-                "source_doc_id": SOURCE_ID,
-                "target_doc_id": SECOND_EDITORIAL_ID,
-                "action": "new",
-            },
-            {
-                "source_doc_id": SOURCE_ID,
-                "target_doc_id": EDITORIAL_ID,
-                "action": "new",
-            },
-            {
-                "source_doc_id": SECOND_SOURCE_ID,
-                "target_doc_id": "d-20260802-130000-eeeeee",
-                "action": "new",
-            },
-        ],
-    )
-
-    assert tuple(item.working_doc_id for item in created.records) == (
-        SOURCE_ID,
-        SECOND_SOURCE_ID,
-    )
-    assert tuple(item.doc_id for item in created.records[0].editorials) == (
-        EDITORIAL_ID,
-        SECOND_EDITORIAL_ID,
-    )
-    published = replace(
-        created.records[0].editorials[0],
-        published_url="/analysis/current",
-    )
-    seeded = replace(
-        created,
-        records=(
-            replace(
-                created.records[0],
-                editorials=(published, created.records[0].editorials[1]),
-            ),
-            created.records[1],
-        ),
-    )
-    lineage.write_table_atomic(
-        repo_root,
-        seeded,
-        contract_id=PROJECTS_CONTRACT,
-    )
-
-    monkeypatch.setattr(lineage, "current_timestamp", lambda: "2026-08-08T11:00:00Z")
-    replaced = lineage.apply_copy_results(
-        repo_root,
-        contract_id=PROJECTS_CONTRACT,
-        source_scope="dotlineform",
-        source_sub_scope="projects",
-        editorial_scope="analysis",
-        editorial_sub_scope="works",
-        results=[
-            {
-                "source_doc_id": SOURCE_ID,
-                "target_doc_id": EDITORIAL_ID,
-                "action": "replace",
-            }
-        ],
-    )
-    exact_child = replaced.records[0].editorials[0]
-    assert exact_child.created_at == "2026-08-08T10:00:00Z"
-    assert exact_child.last_copied_at == "2026-08-08T11:00:00Z"
-    assert exact_child.published_url == "/analysis/current"
-
-
-def test_editorials_for_working_requires_the_exact_configured_collections() -> None:
-    table = replace(
-        empty_table(),
-        records=(record(SOURCE_ID, editorial(EDITORIAL_ID)),),
-    )
-
-    assert lineage.editorials_for_working(
-        table,
-        working_scope="dotlineform",
-        working_sub_scope="projects",
-        editorial_scope="analysis",
-        editorial_sub_scope="works",
-        working_doc_id=SOURCE_ID,
-    ) == (editorial(EDITORIAL_ID),)
-    assert lineage.editorials_for_working(
-        table,
-        working_scope="dotlineform",
-        working_sub_scope="projects",
-        editorial_scope="analysis",
-        editorial_sub_scope="works",
-        working_doc_id=SECOND_SOURCE_ID,
-    ) == ()
-    with pytest.raises(ValueError, match="collections do not match Copy"):
-        lineage.editorials_for_working(
-            table,
-            working_scope="dotlineform",
-            working_sub_scope="projects",
-            editorial_scope="example",
-            editorial_sub_scope="works",
-            working_doc_id=SOURCE_ID,
-        )
-
-
 @pytest.mark.parametrize(
     ("payload", "error"),
     [
@@ -515,25 +371,6 @@ def test_table_rejects_duplicate_working_and_cross_record_editorial_ids() -> Non
     )
     with pytest.raises(ValueError, match="Editorial doc_id is duplicated"):
         lineage.render_table(duplicate_editorial)
-
-
-def test_replace_requires_an_exact_current_editorial_child(tmp_path: Path) -> None:
-    with pytest.raises(ValueError, match="exact current Editorial child"):
-        lineage.apply_copy_results(
-            tmp_path / "repo",
-            contract_id=PROJECTS_CONTRACT,
-            source_scope="dotlineform",
-            source_sub_scope="projects",
-            editorial_scope="analysis",
-            editorial_sub_scope="works",
-            results=[
-                {
-                    "source_doc_id": SOURCE_ID,
-                    "target_doc_id": EDITORIAL_ID,
-                    "action": "replace",
-                }
-            ],
-        )
 
 
 def test_editorial_delete_removes_exact_children_and_empty_records(

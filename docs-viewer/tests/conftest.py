@@ -56,7 +56,6 @@ def synthetic_lineage_customisations(monkeypatch: pytest.MonkeyPatch) -> None:
             definitions[source_id], customisation_id=fixture_id,
             document_lineages=(aspect(
                 contract_id=contract, role="source",
-                copy_action_label="Copy fixture", copy_modal_title="Copy fixture documents",
             ),),
         ))
     monkeypatch.setitem(definitions, "fixture_editorial_works", replace(

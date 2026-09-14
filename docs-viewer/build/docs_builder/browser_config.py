@@ -22,11 +22,8 @@ from .common import (
     scope_uses_external_data,
 )
 
-import docs_document_publication_lineage as publication_lineage
 from docs_subscope_customisations import (
-    LINEAGE_SOURCE_ROLE,
     browser_sub_scope_customisation_payload,
-    sub_scope_customisation_document_lineage_contracts,
 )
 from .links_builder import links_enabled
 from docs_scope_config import select_scope_stage
@@ -115,19 +112,6 @@ def browser_sub_scope_records(
     published: bool = False,
 ) -> list[dict[str, Any]]:
     records: list[dict[str, Any]] = []
-    source_contract_ids = {
-        aspect.contract_id
-        for sub_scope in config.sub_scopes
-        for aspect in sub_scope_customisation_document_lineage_contracts(
-            sub_scope.sub_scope_customisation
-        )
-        if aspect.role == LINEAGE_SOURCE_ROLE
-    }
-    lineage_workflows = (
-        publication_lineage.configured_workflows(repo_root)
-        if not published and not config.stage and source_contract_ids
-        else ()
-    )
     for sub_scope in config.sub_scopes:
         output_base = browser_sub_scope_output_url_base(
             config,
@@ -149,45 +133,6 @@ def browser_sub_scope_records(
             published=published,
         )
         if sub_scope_customisation is not None:
-            if not published:
-                collection = publication_lineage.DocumentLineageCollection(
-                    scope=config.scope_id,
-                    sub_scope=sub_scope.sub_scope,
-                )
-                workflows = [
-                    workflow
-                    for workflow in lineage_workflows
-                    if workflow.working_collection == collection
-                ]
-                if len(workflows) > 1:
-                    raise ValueError(
-                        "Docs Viewer collection configures ambiguous lineage Copy workflows"
-                    )
-                if workflows:
-                    workflow = workflows[0]
-                    source_aspects = [
-                        aspect
-                        for aspect in sub_scope_customisation_document_lineage_contracts(
-                            sub_scope.sub_scope_customisation
-                        )
-                        if aspect.role == LINEAGE_SOURCE_ROLE
-                        and aspect.contract_id == workflow.contract_id
-                    ]
-                    if len(source_aspects) != 1:
-                        raise ValueError(
-                            "Docs Viewer lineage Copy presentation is not configured exactly once"
-                        )
-                    aspect = source_aspects[0]
-                    capabilities = sub_scope_customisation.setdefault(
-                        "capabilities",
-                        {},
-                    )
-                    capabilities["lineage_copy"] = {
-                        "contract_id": workflow.contract_id,
-                        "target": workflow.editorial_collection.payload(),
-                        "action_label": aspect.copy_action_label,
-                        "modal_title": aspect.copy_modal_title,
-                    }
             record["sub_scope_customisation"] = sub_scope_customisation
         records.append(record)
     return records

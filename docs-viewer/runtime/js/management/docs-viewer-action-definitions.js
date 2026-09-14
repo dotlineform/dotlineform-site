@@ -1,6 +1,6 @@
 export const DOCS_VIEWER_ACTION_IDS = Object.freeze({
   BOOKMARK: "bookmark",
-  COPY: "copy",
+  ARCHIVE: "archive",
   COPY_LINK: "copy-link",
   DELETE: "delete",
   DELETE_SCOPE: "delete-scope",
@@ -17,7 +17,6 @@ export const DOCS_VIEWER_ACTION_IDS = Object.freeze({
   SOURCE_ADD_FILE: "source-add-file",
   SOURCE_ADD_IMAGE: "source-add-image",
   SOURCE_INSERT_DOC_LINK: "source-insert-doc-link",
-  MOVE: "move",
   NEW: "new",
   NEW_CHILD: "new-child",
   NEW_SCOPE: "new-scope",
@@ -58,7 +57,7 @@ var IDS = DOCS_VIEWER_ACTION_IDS;
 
 export const DOCS_VIEWER_ACTION_DEFINITIONS = Object.freeze({
   [IDS.BOOKMARK]: actionDefinition(IDS.BOOKMARK, TARGETS.ACTIVE_DOCUMENT),
-  [IDS.COPY]: actionDefinition(IDS.COPY, TARGETS.SELECTION, POLICIES.ALL),
+  [IDS.ARCHIVE]: actionDefinition(IDS.ARCHIVE, TARGETS.SELECTION, POLICIES.ALL),
   [IDS.COPY_LINK]: actionDefinition(IDS.COPY_LINK, TARGETS.DOCUMENT),
   [IDS.DELETE]: actionDefinition(IDS.DELETE, TARGETS.SELECTION, POLICIES.ALL),
   [IDS.DELETE_SCOPE]: actionDefinition(IDS.DELETE_SCOPE, TARGETS.SCOPE),
@@ -75,7 +74,6 @@ export const DOCS_VIEWER_ACTION_DEFINITIONS = Object.freeze({
   [IDS.SOURCE_ADD_FILE]: actionDefinition(IDS.SOURCE_ADD_FILE, TARGETS.ACTIVE_DOCUMENT),
   [IDS.SOURCE_ADD_IMAGE]: actionDefinition(IDS.SOURCE_ADD_IMAGE, TARGETS.ACTIVE_DOCUMENT),
   [IDS.SOURCE_INSERT_DOC_LINK]: actionDefinition(IDS.SOURCE_INSERT_DOC_LINK, TARGETS.ACTIVE_DOCUMENT),
-  [IDS.MOVE]: actionDefinition(IDS.MOVE, TARGETS.SELECTION, POLICIES.ALL),
   [IDS.NEW]: actionDefinition(IDS.NEW, TARGETS.SCOPE),
   [IDS.NEW_CHILD]: actionDefinition(IDS.NEW_CHILD, TARGETS.DOCUMENT),
   [IDS.NEW_SCOPE]: actionDefinition(IDS.NEW_SCOPE, TARGETS.SCOPE),

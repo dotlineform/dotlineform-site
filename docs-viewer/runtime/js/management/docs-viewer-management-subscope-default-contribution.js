@@ -94,16 +94,9 @@ export function createDocsViewerManagementSubscopeDefaultContribution(options = 
   var onPreparePackage = typeof options.onPreparePackage === "function"
     ? options.onPreparePackage
     : null;
-  var onCopyDocuments = typeof options.onCopyDocuments === "function"
-    ? options.onCopyDocuments
-    : null;
   var onToggleDraft = typeof options.onToggleDraft === "function"
     ? options.onToggleDraft
     : null;
-  var lineageCopy = options.lineageCopy && typeof options.lineageCopy === "object"
-    ? options.lineageCopy
-    : null;
-  var copyActionLabel = cleanString(lineageCopy && lineageCopy.actionLabel) || "Copy to…";
   var onCreateDocument = typeof options.onCreateDocument === "function"
     ? options.onCreateDocument
     : null;
@@ -114,7 +107,6 @@ export function createDocsViewerManagementSubscopeDefaultContribution(options = 
   var selectionOwner = options.selectionOwner || createDocsViewerSubscopeSelectionOwner();
   var currentDocuments = [];
   var listToolbar = null;
-  var copyInFlight = false;
   var createInFlight = false;
   var prepareInFlight = false;
   var rowSelections = new Map();
@@ -125,15 +117,6 @@ export function createDocsViewerManagementSubscopeDefaultContribution(options = 
   function prepareResolution() {
     return resolveDocsViewerAction(
       DOCS_VIEWER_ACTION_IDS.PREPARE_DOCUMENT_PACKAGE,
-      createDocsViewerActionContext({
-        selectedDocIds: selectionOwner.selectedDocIds()
-      })
-    );
-  }
-
-  function copyResolution() {
-    return resolveDocsViewerAction(
-      DOCS_VIEWER_ACTION_IDS.COPY,
       createDocsViewerActionContext({
         selectedDocIds: selectionOwner.selectedDocIds()
       })
@@ -220,24 +203,6 @@ export function createDocsViewerManagementSubscopeDefaultContribution(options = 
       listToolbar.prepareButton.dataset.docsViewerDisabledReason = disabledReason;
     } else {
       delete listToolbar.prepareButton.dataset.docsViewerDisabledReason;
-    }
-    var copyActionResolution = copyResolution();
-    var copyDisabledReason = !onCopyDocuments
-      ? "Sub-scope Copy is unavailable."
-      : !copyActionResolution.enabled
-        ? copyActionResolution.disabledReason
-        : copyInFlight ? "Sub-scope Copy is in progress." : "";
-    var copyLabel = copyActionLabel;
-    var copyAccessibleLabel = copyDisabledReason
-      ? copyLabel + " " + copyDisabledReason
-      : copyLabel;
-    listToolbar.copyButton.disabled = Boolean(copyDisabledReason);
-    listToolbar.copyButton.title = copyAccessibleLabel;
-    listToolbar.copyButton.setAttribute("aria-label", copyAccessibleLabel);
-    if (copyDisabledReason) {
-      listToolbar.copyButton.dataset.docsViewerDisabledReason = copyDisabledReason;
-    } else {
-      delete listToolbar.copyButton.dataset.docsViewerDisabledReason;
     }
     return snapshot;
   }
@@ -421,20 +386,6 @@ export function createDocsViewerManagementSubscopeDefaultContribution(options = 
     menu.className = "docsViewer__actionsMenu docsViewerReport__subscopeActionsMenu";
     menu.setAttribute("role", "menu");
     menu.hidden = true;
-    var copyButton = documentRef.createElement("button");
-    copyButton.className = "docsViewer__actionMenuItem";
-    copyButton.type = "button";
-    copyButton.id = "docsViewerSubscopeCopyButton";
-    copyButton.setAttribute("role", "menuitem");
-    copyButton.dataset.docsViewerAction = DOCS_VIEWER_ACTION_IDS.COPY;
-    var copyEmoji = documentRef.createElement("span");
-    copyEmoji.className = "docsViewer__actionMenuEmoji";
-    copyEmoji.setAttribute("aria-hidden", "true");
-    copyEmoji.textContent = "⧉";
-    var copyLabel = documentRef.createElement("span");
-    copyLabel.className = "docsViewer__actionMenuLabel";
-    copyLabel.textContent = copyActionLabel;
-    copyButton.replaceChildren(copyEmoji, copyLabel);
     var prepareButton = documentRef.createElement("button");
     prepareButton.className = "docsViewer__actionMenuItem";
     prepareButton.type = "button";
@@ -449,7 +400,7 @@ export function createDocsViewerManagementSubscopeDefaultContribution(options = 
     prepareLabel.className = "docsViewer__actionMenuLabel";
     prepareLabel.textContent = "Prepare package…";
     prepareButton.replaceChildren(prepareEmoji, prepareLabel);
-    menu.replaceChildren(copyButton, prepareButton);
+    menu.replaceChildren(prepareButton);
     actionsHost.replaceChildren(actionsButton, menu);
 
     var selectionControl = documentRef.createElement("div");
@@ -481,7 +432,6 @@ export function createDocsViewerManagementSubscopeDefaultContribution(options = 
     listToolbar = {
       actionsButton: actionsButton,
       clearButton: clearButton,
-      copyButton: copyButton,
       createButton: createButton,
       document: documentRef,
       doneButton: doneButton,
@@ -591,62 +541,6 @@ export function createDocsViewerManagementSubscopeDefaultContribution(options = 
         }
       }).finally(function () {
         prepareInFlight = false;
-        projectSelection();
-      });
-    });
-    copyButton.addEventListener("click", function () {
-      if (copyButton.disabled || !onCopyDocuments) return;
-      var resolution = copyResolution();
-      if (!resolution.enabled) return;
-      hideActionsMenu(true);
-      var collection = selectionOwner.collection();
-      copyInFlight = true;
-      projectSelection();
-      var copyRequest;
-      if (typeof settings.registerSelectionAction === "function") {
-        copyRequest = settings.registerSelectionAction({
-          id: DOCS_VIEWER_ACTION_IDS.COPY,
-          placement: "selection",
-          targetKind: "selection",
-          capability: Boolean(onCopyDocuments),
-          emptyState: "disabled",
-          refreshEffect: "none",
-          handler: function (target) {
-            return onCopyDocuments(target, {
-              restoreFocus: actionsButton,
-              lineageCopy: lineageCopy
-            });
-          }
-        }, {
-          active: selectionOwner.snapshot().selectionModeActive,
-          checkedDocIds: resolution.targetDocIds,
-          eligibleDocIds: eligibleDocIds()
-        }).invoke();
-      } else {
-        copyRequest = onCopyDocuments(
-          {
-            scope: collection.scope,
-            ...(collection.stage ? { stage: collection.stage } : {}),
-            sub_scope: collection.sub_scope,
-            doc_ids: resolution.targetDocIds.slice()
-          },
-          {
-            restoreFocus: actionsButton,
-            lineageCopy: lineageCopy
-          }
-        );
-      }
-      Promise.resolve(copyRequest).catch(function (error) {
-        if (typeof options.setStatus === "function") {
-          options.setStatus(
-            error && error.message
-              ? error.message
-              : "Sub-scope document Copy failed.",
-            true
-          );
-        }
-      }).finally(function () {
-        copyInFlight = false;
         projectSelection();
       });
     });

@@ -18,7 +18,7 @@ from markdown_it import MarkdownIt
 
 from docs_document_location import canonical_document_viewer_url, sub_scope_report_placement
 from docs_document_placement import DocumentPlacement
-from docs_management_document_target import resolve_managed_document_collection, confined_source_path
+from docs_management_document_target import ManagedDocumentTarget, ManagedDocumentCollection, resolve_managed_document_collection, confined_source_path
 from docs_media_inventory import source_media_references
 from docs_scope_config import resolve_location_path, load_docs_scope_configs
 import docs_source_model as source_model
@@ -81,7 +81,8 @@ def _reference_text_ranges(body: str) -> Iterator[tuple[int, int]]:
     yield from _inline_text_ranges(body, cursor, len(body))
 
 
-def _rewrite_active_text(body: str, transform: Callable[[str], str]) -> str:
+def rewrite_document_references(body: str, transform: Callable[[str], str]) -> str:
+    """Rewrite active authored references while preserving code and comments."""
     edits = []
     for start, end in _reference_text_ranges(body):
         for match in URL_PATTERN.finditer(body, start, end):
@@ -160,20 +161,23 @@ def placement_reference_changes(
     for owner, doc in docs:
         if doc.path == source.document.path:
             continue
-        rewritten = _rewrite_active_text(doc.body, lambda url: rewrite_url(url, doc, False))
+        rewritten = rewrite_document_references(doc.body, lambda url: rewrite_url(url, doc, False))
         if rewritten != doc.body:
             changes.append(ReferenceChange(owner.sub_scope, doc, rewritten))
-    body = _rewrite_active_text(body, lambda url: rewrite_url(url, source.document, True))
-    body, copies = _relocate_media(repo_root, placement, body)
+    body = rewrite_document_references(body, lambda url: rewrite_url(url, source.document, True))
+    body, copies = relocate_document_media(repo_root, source, destination, body)
     return body, changes, copies
 
 
-def _relocate_media(repo_root: Path, placement: DocumentPlacement, body: str) -> tuple[str, list[MediaCopy]]:
-    source_owner = placement.source.document_config
-    target_owner = placement.destination.document_config
+def relocate_document_media(
+    repo_root: Path, source: ManagedDocumentTarget, destination: ManagedDocumentCollection, body: str,
+) -> tuple[str, list[MediaCopy]]:
+    """Plan confined local source-media copies and reference rewrites without writes."""
+    source_owner = source.document_config
+    target_owner = destination.document_config
     active = "\n".join(body[start:end] for start, end in _reference_text_ranges(body))
-    active = _rewrite_active_text(active, lambda url: "" if urlsplit(url).scheme or urlsplit(url).netloc else url)
-    references = source_media_references(source_owner, active.replace("|", " "), doc_id=placement.source.doc_id)
+    active = rewrite_document_references(active, lambda url: "" if urlsplit(url).scheme or urlsplit(url).netloc else url)
+    references = source_media_references(source_owner, active.replace("|", " "), doc_id=source.doc_id)
     copies: dict[Path, MediaCopy] = {}
     replacements: dict[str, str] = {}
 
@@ -237,7 +241,7 @@ def _relocate_media(repo_root: Path, placement: DocumentPlacement, body: str) ->
         # Resolve only configured source media. The viewer route stays /docs/,
         # so unrelated relative web links retain their original destination.
         if path.startswith(("../", "./")) and not path.endswith(".md"):
-            original = (placement.source.document.path.parent / unquote(path)).resolve()
+            original = (source.document.path.parent / unquote(path)).resolve()
             for media_type, media in source_owner.media.types.items():
                 root = resolve_location_path(repo_root, media.source_location).resolve()
                 if original.is_relative_to(root):
@@ -246,5 +250,5 @@ def _relocate_media(repo_root: Path, placement: DocumentPlacement, body: str) ->
                     return urlunsplit(("", "", copy_reference(media_type, identity), parsed.query, parsed.fragment))
         return url
 
-    body = _rewrite_active_text(body, rewrite_media)
+    body = rewrite_document_references(body, rewrite_media)
     return body, list(copies.values())

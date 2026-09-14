@@ -428,39 +428,19 @@ export function moveManagedDoc(docId, parentId, options) {
   }, options), options);
 }
 
-export function previewManagedDocumentTransfer(source, docIds, target, transferMode, includeDescendants, options, copyLineageActions) {
-  var settings = Object.assign({}, options || {}, { acceptNotOk: true });
-  var sourceCollection = normalizeManagedDocumentCollectionTarget(source);
-  var targetCollection = normalizeManagedDocumentCollectionTarget(target);
-  var payload = {
-    scope: sourceCollection.scope,
-    doc_ids: docIds,
-    target_scope: targetCollection.scope,
-    transfer_mode: transferMode,
-    include_descendants: includeDescendants === true
-  };
-  if (Array.isArray(copyLineageActions) && copyLineageActions.length) {
-    payload.copy_lineage_actions = copyLineageActions;
-  }
-  if (sourceCollection.sub_scope) payload.sub_scope = sourceCollection.sub_scope;
-  if (targetCollection.sub_scope) payload.target_sub_scope = targetCollection.sub_scope;
-  if (sourceCollection.stage) payload.stage = sourceCollection.stage;
-  if (targetCollection.stage) payload.target_stage = targetCollection.stage;
-  return fetchManagementJson("/docs/document-transfer-preview", "POST", payload, settings);
+/** Preview the complete ordinary-document subtree move to Notes. */
+export function previewManagedDocumentArchive(source, docIds, options) {
+  var collection = normalizeManagedDocumentCollectionTarget(source);
+  return fetchManagementJson("/docs/archive-preview", "POST", {
+    ...collection, doc_ids: docIds
+  }, options);
 }
 
-export function applyManagedDocumentTransfer(applyPlan, options) {
-  var sourceCollection = normalizeManagedDocumentCollectionTarget(
-    applyPlan && applyPlan.source
-  );
-  var payload = {
-    scope: sourceCollection.scope,
-    stage: sourceCollection.stage,
-    apply_plan: applyPlan,
-    confirm: true
-  };
-  if (sourceCollection.sub_scope) payload.sub_scope = sourceCollection.sub_scope;
-  return fetchManagementJson("/docs/document-transfer-apply", "POST", payload, options);
+/** Apply the exact receipt accepted in Archive confirmation. */
+export function applyManagedDocumentArchive(receipt, options) {
+  return fetchManagementJson("/docs/archive-apply", "POST", {
+    scope: receipt.scope, stage: receipt.stage, receipt: receipt, confirm: true
+  }, options);
 }
 
 export function openManagedDocSource(target, editor, options) {

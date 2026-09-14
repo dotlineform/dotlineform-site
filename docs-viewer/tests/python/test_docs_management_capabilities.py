@@ -3,7 +3,6 @@
 
 from __future__ import annotations
 
-import json
 from pathlib import Path
 from types import SimpleNamespace
 
@@ -20,7 +19,6 @@ from docs_management_capabilities_service import (
     capability_scope_root_label,
 )
 import docs_local_links
-from repo_factory import docs_scope_record, docs_sub_scope_record
 
 def test_capabilities_require_the_requested_repository_config(tmp_path: Path) -> None:
     with pytest.raises(FileNotFoundError):
@@ -105,7 +103,7 @@ def test_capabilities_advertise_source_config_reads() -> None:
     assert payload["capabilities"]["source_config_reads"] is True
     assert payload["capabilities"]["source_config_settings_reads"] is True
     assert payload["capabilities"]["source_config_settings_writes"] is True
-    assert payload["capabilities"]["document_transfer"] == {
+    assert payload["capabilities"]["archive"] == {
         "preview": True,
         "apply": True,
     }
@@ -134,96 +132,7 @@ def test_capabilities_advertise_source_config_reads() -> None:
     assert payload["capabilities"]["scopes"]["studio"]["stages"]["working"]["sub_scope_lifecycle"]["sub_scopes"] == []
     assert payload["capabilities"]["scopes"]["studio"]["stages"]["working"]["scope_lifecycle"]["rename_eligible"] is False
     assert payload["capabilities"]["scopes"]["studio"]["stages"]["working"]["scope_type"] == "local"
-    assert payload["capabilities"]["scopes"]["studio"]["stages"]["working"]["document_transfer"] == {
-        "copy_source": True,
-        "move_source": True,
-        "target": True,
-        "collections": [
-            {
-                "target": {"stage": "working", "scope": "studio"},
-                "label": "studio",
-                "copy_source": True,
-                "move_source": True,
-                "copy_target": True,
-                "move_target": True,
-            },
-        ],
-    }
-
-
-def test_public_scope_working_supports_copy_and_move() -> None:
-    with make_repo() as temp_path:
-        repo_root = Path(temp_path)
-        write_docs_scope_config(repo_root)
-        config_path = repo_root / "docs-viewer/config/scopes/docs_scopes.json"
-        config = json.loads(config_path.read_text(encoding="utf-8"))
-        config["scopes"][0] = docs_scope_record(
-            "studio",
-            scope_type="public",
-            viewer_base_url="/studio/",
-            include_scope_param=False,
-            default_doc_id="child",
-        )
-        config_path.write_text(json.dumps(config, indent=2) + "\n", encoding="utf-8")
-        payload = docs_management_service.capabilities_payload(repo_root)
-
-    assert payload["capabilities"]["scopes"]["studio"]["stages"]["working"]["document_transfer"] == {
-        "copy_source": True,
-        "move_source": True,
-        "target": True,
-        "collections": [
-            {
-                "target": {"stage": "working", "scope": "studio"},
-                "label": "studio",
-                "copy_source": True,
-                "move_source": True,
-                "copy_target": True,
-                "move_target": True,
-            },
-        ],
-    }
-
-
-def test_capabilities_list_exact_parent_and_child_transfer_collections() -> None:
-    with make_repo() as temp_path:
-        repo_root = Path(temp_path)
-        write_docs_scope_config(repo_root)
-        config_path = repo_root / "docs-viewer/config/scopes/docs_scopes.json"
-        config = json.loads(config_path.read_text(encoding="utf-8"))
-        config["scopes"][0]["stages"]["working"]["sub_scopes"] = [
-            docs_sub_scope_record("studio", "works", title="Works"),
-        ]
-        config_path.write_text(
-            json.dumps(config, indent=2) + "\n",
-            encoding="utf-8",
-        )
-        (
-            repo_root
-            / "docs-viewer/scopes/studio/working/source/sub-scopes/works/documents"
-        ).mkdir(parents=True)
-        payload = docs_management_service.capabilities_payload(repo_root)
-
-    collections = payload["capabilities"]["scopes"]["studio"]["stages"]["working"][
-        "document_transfer"
-    ]["collections"]
-    assert collections == [
-        {
-            "target": {"stage": "working", "scope": "studio"},
-            "label": "studio",
-            "copy_source": True,
-            "move_source": True,
-            "copy_target": True,
-            "move_target": True,
-        },
-        {
-            "target": {"stage": "working", "scope": "studio", "sub_scope": "works"},
-            "label": "studio / Works",
-            "copy_source": True,
-            "move_source": False,
-            "copy_target": True,
-            "move_target": False,
-        },
-    ]
+    assert payload["capabilities"]["scopes"]["studio"]["stages"]["working"]["archive"]["available"] is False
 
 
 def test_external_scope_capability_uses_portable_root_label() -> None:
