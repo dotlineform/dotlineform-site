@@ -25,6 +25,7 @@ if str(DOCS_SERVICES_DIR) not in sys.path:
 import docs_management_routes as routes  # noqa: E402
 import docs_management_service  # noqa: E402
 import docs_static_html_export as exporter  # noqa: E402
+from docs_scope_config import select_scope_stage  # noqa: E402
 
 
 FIXED_EXPORT_DATE = date(2026, 7, 31)
@@ -33,6 +34,7 @@ FIXED_EXPORT_DATE = date(2026, 7, 31)
 def snapshot_apply_body(preview: dict[str, object], *, replace_existing: bool = False) -> dict[str, object]:
     return {
         "scope": preview["scope"],
+        "stage": preview["stage"],
         "doc_ids": preview["doc_ids"],
         "export_date": preview["export_date"],
         "plan_revision": preview["plan_revision"],
@@ -99,31 +101,31 @@ def prepare_repo(root: Path, projects_root: Path) -> None:
     (projects_root / "docs-viewer").mkdir(parents=True, exist_ok=True)
     write_scope_config(root)
     write_generated_scope(
-        root / "docs-viewer/scopes/studio/generated/documents",
+        root / "docs-viewer/scopes/studio/working/generated/documents",
         [
             {
                 "doc_id": "parent",
                 "title": "Parent & Root",
-                "content_url": "/docs-viewer/scopes/studio/generated/documents/by-id/parent.json",
+                "content_url": "/docs-viewer/scopes/studio/working/generated/documents/by-id/parent.json",
                 "children": [
                     {
                         "doc_id": "child",
                         "title": "Child",
-                        "content_url": "/docs-viewer/scopes/studio/generated/documents/by-id/child.json",
+                        "content_url": "/docs-viewer/scopes/studio/working/generated/documents/by-id/child.json",
                     }
                 ],
             },
             {
                 "doc_id": "sibling",
                 "title": "Sibling",
-                "content_url": "/docs-viewer/scopes/studio/generated/documents/by-id/sibling.json",
+                "content_url": "/docs-viewer/scopes/studio/working/generated/documents/by-id/sibling.json",
             },
         ],
         [
             {
                 "doc_id": "parent",
                 "title": "Parent & Root",
-                "report": {
+                "report": {"stage": "working",
                     "id": "reports_list",
                     "scope": None,
                     "preset": None,
@@ -149,16 +151,16 @@ def prepare_repo(root: Path, projects_root: Path) -> None:
         ],
     )
     write_generated_scope(
-        root / "docs-viewer/scopes/example/generated/documents",
+        root / "docs-viewer/scopes/example/working/generated/documents",
         [{"doc_id": "example", "title": "Example"}],
         [{"doc_id": "example", "title": "Example", "content_html": "<p>Example body</p>"}],
     )
     write_json(
-        root / "docs-viewer/scopes/example/generated/documents/by-id/example.json",
+        root / "docs-viewer/scopes/example/working/generated/documents/by-id/example.json",
         {"title": "Example", "content_html": "<p>Example body</p>"},
     )
     write_generated_scope(
-        projects_root / "docs-viewer/scopes/external/generated/documents",
+        projects_root / "docs-viewer/scopes/external/working/generated/documents",
         [{"doc_id": "external", "title": "External"}],
         [{"doc_id": "external", "title": "External", "content_html": "<p>External body</p>"}],
     )
@@ -177,7 +179,7 @@ def test_snapshot_preview_plans_exact_single_partial_and_complete_sets_without_w
 
         single = exporter.plan_static_html_snapshot(
             repo_root,
-            {"scope": "studio", "doc_ids": ["parent"]},
+            {"stage": "working", "scope": "studio", "doc_ids": ["parent"]},
             export_date=FIXED_EXPORT_DATE,
         )
         assert single.doc_ids == ("parent",)
@@ -188,13 +190,13 @@ def test_snapshot_preview_plans_exact_single_partial_and_complete_sets_without_w
             {
                 "doc_id": "parent",
                 "title": "Parent & Root",
-                "content_url": "/docs-viewer/scopes/studio/generated/documents/by-id/parent.json",
+                "content_url": "/docs-viewer/scopes/studio/working/generated/documents/by-id/parent.json",
             }
         ]
 
         partial = exporter.plan_static_html_snapshot(
             repo_root,
-            {"scope": "studio", "doc_ids": ["sibling", "child"]},
+            {"stage": "working", "scope": "studio", "doc_ids": ["sibling", "child"]},
             export_date=FIXED_EXPORT_DATE,
         )
         assert partial.doc_ids == ("child", "sibling")
@@ -206,14 +208,14 @@ def test_snapshot_preview_plans_exact_single_partial_and_complete_sets_without_w
 
         partial_reordered = exporter.plan_static_html_snapshot(
             repo_root,
-            {"scope": "studio", "doc_ids": ["child", "sibling"]},
+            {"stage": "working", "scope": "studio", "doc_ids": ["child", "sibling"]},
             export_date=FIXED_EXPORT_DATE,
         )
         assert partial_reordered.plan_revision == partial.plan_revision
 
         complete = exporter.plan_static_html_snapshot(
             repo_root,
-            {"scope": "studio", "doc_ids": ["sibling", "child", "parent"]},
+            {"stage": "working", "scope": "studio", "doc_ids": ["sibling", "child", "parent"]},
             export_date=FIXED_EXPORT_DATE,
         )
         assert complete.doc_ids == ("parent", "child", "sibling")
@@ -229,18 +231,18 @@ def test_snapshot_preview_rejects_invalid_or_inferred_selection_fields() -> None
         repo_root = Path(repo_path)
         prepare_repo(repo_root, Path(projects_path))
         invalid_requests = [
-            ({"scope": "studio"}, "non-empty array"),
-            ({"scope": "studio", "doc_ids": []}, "non-empty array"),
-            ({"scope": "studio", "doc_ids": ["parent", "parent"]}, "duplicate doc_id"),
-            ({"scope": "studio", "doc_ids": ["example"]}, "active generated scope"),
-            ({"scope": "studio", "doc_ids": ["../escape"]}, "safe HTML filename"),
-            ({"scope": "studio", "doc_ids": ["parent"], "action": "export"}, "action is not supported"),
-            ({"scope": "studio", "doc_ids": ["parent"], "mode": "complete"}, "mode is not supported"),
+            ({"stage": "working", "scope": "studio"}, "non-empty array"),
+            ({"stage": "working", "scope": "studio", "doc_ids": []}, "non-empty array"),
+            ({"stage": "working", "scope": "studio", "doc_ids": ["parent", "parent"]}, "duplicate doc_id"),
+            ({"stage": "working", "scope": "studio", "doc_ids": ["example"]}, "active generated scope"),
+            ({"stage": "working", "scope": "studio", "doc_ids": ["../escape"]}, "safe HTML filename"),
+            ({"stage": "working", "scope": "studio", "doc_ids": ["parent"], "action": "export"}, "action is not supported"),
+            ({"stage": "working", "scope": "studio", "doc_ids": ["parent"], "mode": "complete"}, "mode is not supported"),
             (
-                {"scope": "studio", "doc_ids": ["parent"], "include_descendants": True},
+                {"stage": "working", "scope": "studio", "doc_ids": ["parent"], "include_descendants": True},
                 "include_descendants is not supported",
             ),
-            ({"scope": "studio", "sub_scope": "tags", "doc_ids": ["parent"]}, "sub_scope is not supported"),
+            ({"stage": "working", "scope": "studio", "sub_scope": "tags", "doc_ids": ["parent"]}, "sub_scope is not supported"),
         ]
         for body, expected_message in invalid_requests:
             try:
@@ -263,7 +265,7 @@ def test_snapshot_plans_and_renders_repo_public_and_external_local_generated_pay
         ):
             plan = exporter.plan_static_html_snapshot(
                 repo_root,
-                {"scope": scope, "doc_ids": [doc_id]},
+                {"stage": "working", "scope": scope, "doc_ids": [doc_id]},
                 export_date=FIXED_EXPORT_DATE,
             )
             assert plan.scope == scope
@@ -275,6 +277,26 @@ def test_snapshot_plans_and_renders_repo_public_and_external_local_generated_pay
                 assert b"data-docs-viewer-report-host" in files[
                     Path("docs") / "parent.html"
                 ]
+
+
+def test_snapshot_export_retains_exact_working_stage() -> None:
+    from copy import deepcopy
+
+    with tempfile.TemporaryDirectory() as repo_path, tempfile.TemporaryDirectory() as projects_path:
+        repo_root = Path(repo_path)
+        prepare_repo(repo_root, Path(projects_path))
+        path = repo_root / "docs-viewer/config/scopes/docs_scopes.json"
+        raw = json.loads(path.read_text())
+        record = next(item for item in raw["scopes"] if item["scope_id"] == "studio")
+        record["stages"] = {stage: {"media": deepcopy(record["media"]), "sub_scopes": []} for stage in ("working", "pre-publish")}
+        write_json(path, raw)
+        preview = exporter.preview_static_html_export(repo_root, {"scope": "studio", "stage": "working", "doc_ids": ["parent"]}, export_date=FIXED_EXPORT_DATE)
+        assert preview["stage"] == "working"
+        request = {**snapshot_apply_body(preview), "stage": "working"}
+        result = exporter.apply_static_html_snapshot(repo_root, request)
+        assert result["document_count"] == 1
+        with pytest.raises(ValueError, match="requires stage"):
+            exporter.preview_static_html_export(repo_root, {"scope": "studio", "doc_ids": ["parent"]})
 
 
 def test_snapshot_capability_accepts_readable_repo_public_and_external_generated_payloads() -> None:
@@ -289,7 +311,7 @@ def test_snapshot_capability_accepts_readable_repo_public_and_external_generated
             capability = exporter.scope_static_html_export_capability(
                 repo_root,
                 scope,
-                configs[scope],
+                select_scope_stage(configs[scope], "working"),
                 workspace_available=True,
             )
             assert capability == {
@@ -316,7 +338,7 @@ def test_snapshot_preview_reports_absent_recognized_unrecognized_and_non_directo
 
         absent = exporter.preview_static_html_export(
             repo_root,
-            {"scope": "studio", "doc_ids": ["parent"]},
+            {"stage": "working", "scope": "studio", "doc_ids": ["parent"]},
             export_date=FIXED_EXPORT_DATE,
         )
         assert absent["target_state"] == "absent"
@@ -343,7 +365,7 @@ def test_snapshot_preview_reports_absent_recognized_unrecognized_and_non_directo
         )
         recognized = exporter.preview_static_html_export(
             repo_root,
-            {"scope": "studio", "doc_ids": ["parent"]},
+            {"stage": "working", "scope": "studio", "doc_ids": ["parent"]},
             export_date=FIXED_EXPORT_DATE,
         )
         assert recognized["target_state"] == "recognized"
@@ -361,7 +383,7 @@ def test_snapshot_preview_reports_absent_recognized_unrecognized_and_non_directo
         extra_path.write_text("changed", encoding="utf-8")
         changed = exporter.preview_static_html_export(
             repo_root,
-            {"scope": "studio", "doc_ids": ["parent"]},
+            {"stage": "working", "scope": "studio", "doc_ids": ["parent"]},
             export_date=FIXED_EXPORT_DATE,
         )
         assert changed["target_revision"] != first_target_revision
@@ -370,7 +392,7 @@ def test_snapshot_preview_reports_absent_recognized_unrecognized_and_non_directo
         os.utime(extra_path, ns=(changed_stat.st_atime_ns, changed_stat.st_mtime_ns))
         content_changed = exporter.preview_static_html_export(
             repo_root,
-            {"scope": "studio", "doc_ids": ["parent"]},
+            {"stage": "working", "scope": "studio", "doc_ids": ["parent"]},
             export_date=FIXED_EXPORT_DATE,
         )
         assert content_changed["target_revision"] != changed["target_revision"]
@@ -389,7 +411,7 @@ def test_snapshot_preview_reports_absent_recognized_unrecognized_and_non_directo
         )
         unrecognized = exporter.preview_static_html_export(
             repo_root,
-            {"scope": "studio", "doc_ids": ["child", "sibling"]},
+            {"stage": "working", "scope": "studio", "doc_ids": ["child", "sibling"]},
             export_date=date(2026, 7, 30),
         )
         assert unrecognized["target_state"] == "unrecognized"
@@ -400,7 +422,7 @@ def test_snapshot_preview_reports_absent_recognized_unrecognized_and_non_directo
         non_directory_root.write_text("collision", encoding="utf-8")
         non_directory = exporter.preview_static_html_export(
             repo_root,
-            {"scope": "studio", "doc_ids": ["parent", "child", "sibling"]},
+            {"stage": "working", "scope": "studio", "doc_ids": ["parent", "child", "sibling"]},
             export_date=FIXED_EXPORT_DATE,
         )
         assert non_directory["target_state"] == "non_directory"
@@ -410,7 +432,7 @@ def test_snapshot_preview_reports_absent_recognized_unrecognized_and_non_directo
         symlink_root.symlink_to(recognized_root, target_is_directory=True)
         symlink = exporter.preview_static_html_export(
             repo_root,
-            {"scope": "studio", "doc_ids": ["child"]},
+            {"stage": "working", "scope": "studio", "doc_ids": ["child"]},
             export_date=date(2026, 7, 29),
         )
         assert symlink["target_state"] == "non_directory"
@@ -430,7 +452,7 @@ def test_snapshot_preview_reports_absent_recognized_unrecognized_and_non_directo
         )
         version_one = exporter.preview_static_html_export(
             repo_root,
-            {"scope": "studio", "doc_ids": ["parent"]},
+            {"stage": "working", "scope": "studio", "doc_ids": ["parent"]},
             export_date=date(2026, 7, 28),
         )
         assert version_one["target_state"] == "unrecognized"
@@ -456,12 +478,12 @@ def test_snapshot_preview_missing_payload_error_omits_filesystem_path() -> None:
     with tempfile.TemporaryDirectory() as repo_path, tempfile.TemporaryDirectory() as projects_path:
         repo_root = Path(repo_path)
         prepare_repo(repo_root, Path(projects_path))
-        (repo_root / "docs-viewer/scopes/studio/generated/documents/by-id/sibling.json").unlink()
+        (repo_root / "docs-viewer/scopes/studio/working/generated/documents/by-id/sibling.json").unlink()
 
         try:
             exporter.preview_static_html_export(
                 repo_root,
-                {"scope": "studio", "doc_ids": ["sibling"]},
+                {"stage": "working", "scope": "studio", "doc_ids": ["sibling"]},
                 export_date=FIXED_EXPORT_DATE,
             )
         except FileNotFoundError as exc:
@@ -558,7 +580,7 @@ def test_portable_page_inlines_selected_documents_css_and_image_placeholders() -
     with tempfile.TemporaryDirectory() as repo_path, tempfile.TemporaryDirectory() as projects_path:
         repo_root = Path(repo_path)
         prepare_repo(repo_root, Path(projects_path))
-        parent_path = repo_root / "docs-viewer/scopes/studio/generated/documents/by-id/parent.json"
+        parent_path = repo_root / "docs-viewer/scopes/studio/working/generated/documents/by-id/parent.json"
         parent = json.loads(parent_path.read_text(encoding="utf-8"))
         parent["title"] = "Parent [draft]"
         parent["content_html"] = (
@@ -569,14 +591,14 @@ def test_portable_page_inlines_selected_documents_css_and_image_placeholders() -
             '<img src="data:image/png;base64,eA==" alt="">'
         )
         write_json(parent_path, parent)
-        child_path = repo_root / "docs-viewer/scopes/studio/generated/documents/by-id/child.json"
+        child_path = repo_root / "docs-viewer/scopes/studio/working/generated/documents/by-id/child.json"
         child = json.loads(child_path.read_text(encoding="utf-8"))
         child["content_html"] = '<h1>Child</h1><p>Child body</p>'
         write_json(child_path, child)
 
         plan = exporter.plan_static_html_snapshot(
             repo_root,
-            {"scope": "studio", "doc_ids": ["parent", "child"]},
+            {"stage": "working", "scope": "studio", "doc_ids": ["parent", "child"]},
             export_date=FIXED_EXPORT_DATE,
         )
         portable = exporter.render_portable_html(plan)
@@ -625,7 +647,7 @@ def test_snapshot_apply_creates_exact_partial_artifact_with_provenance() -> None
         prepare_repo(repo_root, projects_root)
         preview = exporter.preview_static_html_export(
             repo_root,
-            {"scope": "studio", "doc_ids": ["sibling", "child"]},
+            {"stage": "working", "scope": "studio", "doc_ids": ["sibling", "child"]},
             export_date=FIXED_EXPORT_DATE,
         )
 
@@ -670,7 +692,7 @@ def test_snapshot_packages_only_selected_owned_media_and_records_external_depend
         repo_root = Path(repo_path)
         projects_root = Path(projects_path)
         prepare_repo(repo_root, projects_root)
-        media_root = repo_root / "docs-viewer/scopes/studio/generated/media"
+        media_root = repo_root / "docs-viewer/scopes/studio/working/generated/media"
         media_objects = {
             "img/photo one.png": b"photo",
             "svg/diagram.svg": b"<svg/>",
@@ -682,24 +704,24 @@ def test_snapshot_packages_only_selected_owned_media_and_records_external_depend
             path = media_root / relative_path
             path.parent.mkdir(parents=True, exist_ok=True)
             path.write_bytes(content)
-        parent_payload_path = repo_root / "docs-viewer/scopes/studio/generated/documents/by-id/parent.json"
+        parent_payload_path = repo_root / "docs-viewer/scopes/studio/working/generated/documents/by-id/parent.json"
         parent_payload = json.loads(parent_payload_path.read_text(encoding="utf-8"))
         parent_payload["content_html"] = (
-            '<p><img src="/docs/media/studio/img/photo%20one.png?cache=1#view">'
-            '<img src="/docs/media/studio/svg/diagram.svg">'
-            '<a href="/docs/media/studio/files/manual.pdf">Manual</a>'
-            '<iframe src="/docs/media/studio/html/widget.html"></iframe>'
+            '<p><img src="/docs/media/studio/working/img/photo%20one.png?cache=1#view">'
+            '<img src="/docs/media/studio/working/svg/diagram.svg">'
+            '<a href="/docs/media/studio/working/files/manual.pdf">Manual</a>'
+            '<iframe src="/docs/media/studio/working/html/widget.html"></iframe>'
             '<img src="images/external.png?cache=2"></p>'
         )
         write_json(parent_payload_path, parent_payload)
-        sibling_payload_path = repo_root / "docs-viewer/scopes/studio/generated/documents/by-id/sibling.json"
+        sibling_payload_path = repo_root / "docs-viewer/scopes/studio/working/generated/documents/by-id/sibling.json"
         sibling_payload = json.loads(sibling_payload_path.read_text(encoding="utf-8"))
-        sibling_payload["content_html"] = '<img src="/docs/media/studio/img/unchecked.png">'
+        sibling_payload["content_html"] = '<img src="/docs/media/studio/working/img/unchecked.png">'
         write_json(sibling_payload_path, sibling_payload)
 
         preview = exporter.preview_static_html_export(
             repo_root,
-            {"scope": "studio", "doc_ids": ["parent"]},
+            {"stage": "working", "scope": "studio", "doc_ids": ["parent"]},
             export_date=FIXED_EXPORT_DATE,
         )
 
@@ -779,10 +801,10 @@ def test_snapshot_plan_revision_detects_body_and_media_byte_changes() -> None:
     with tempfile.TemporaryDirectory() as repo_path, tempfile.TemporaryDirectory() as projects_path:
         repo_root = Path(repo_path)
         prepare_repo(repo_root, Path(projects_path))
-        payload_path = repo_root / "docs-viewer/scopes/studio/generated/documents/by-id/parent.json"
+        payload_path = repo_root / "docs-viewer/scopes/studio/working/generated/documents/by-id/parent.json"
         first = exporter.preview_static_html_export(
             repo_root,
-            {"scope": "studio", "doc_ids": ["parent"]},
+            {"stage": "working", "scope": "studio", "doc_ids": ["parent"]},
             export_date=FIXED_EXPORT_DATE,
         )
         payload = json.loads(payload_path.read_text(encoding="utf-8"))
@@ -790,25 +812,25 @@ def test_snapshot_plan_revision_detects_body_and_media_byte_changes() -> None:
         write_json(payload_path, payload)
         body_changed = exporter.preview_static_html_export(
             repo_root,
-            {"scope": "studio", "doc_ids": ["parent"]},
+            {"stage": "working", "scope": "studio", "doc_ids": ["parent"]},
             export_date=FIXED_EXPORT_DATE,
         )
         assert body_changed["plan_revision"] != first["plan_revision"]
 
-        media_path = repo_root / "docs-viewer/scopes/studio/generated/media/img/photo.png"
+        media_path = repo_root / "docs-viewer/scopes/studio/working/generated/media/img/photo.png"
         media_path.parent.mkdir(parents=True)
         media_path.write_bytes(b"first")
-        payload["content_html"] = '<img src="/docs/media/studio/img/photo.png">'
+        payload["content_html"] = '<img src="/docs/media/studio/working/img/photo.png">'
         write_json(payload_path, payload)
         media_first = exporter.preview_static_html_export(
             repo_root,
-            {"scope": "studio", "doc_ids": ["parent"]},
+            {"stage": "working", "scope": "studio", "doc_ids": ["parent"]},
             export_date=FIXED_EXPORT_DATE,
         )
         media_path.write_bytes(b"second")
         media_changed = exporter.preview_static_html_export(
             repo_root,
-            {"scope": "studio", "doc_ids": ["parent"]},
+            {"stage": "working", "scope": "studio", "doc_ids": ["parent"]},
             export_date=FIXED_EXPORT_DATE,
         )
         assert media_changed["plan_revision"] != media_first["plan_revision"]
@@ -832,18 +854,18 @@ def test_snapshot_apply_reads_public_and_external_local_generated_scopes() -> No
         repo_root = Path(repo_path)
         projects_root = Path(projects_path)
         prepare_repo(repo_root, projects_root)
-        external_payload_path = projects_root / "docs-viewer/scopes/external/generated/documents/by-id/external.json"
+        external_payload_path = projects_root / "docs-viewer/scopes/external/working/generated/documents/by-id/external.json"
         external_payload = json.loads(external_payload_path.read_text(encoding="utf-8"))
-        external_payload["content_html"] = '<img src="/docs/media/external/svg/diagram.svg">'
+        external_payload["content_html"] = '<img src="/docs/media/external/working/svg/diagram.svg">'
         write_json(external_payload_path, external_payload)
-        external_svg = projects_root / "docs-viewer/scopes/external/generated/media/svg/diagram.svg"
+        external_svg = projects_root / "docs-viewer/scopes/external/working/generated/media/svg/diagram.svg"
         external_svg.parent.mkdir(parents=True)
         external_svg.write_bytes(b"<svg>external</svg>")
 
         for scope in ("example", "external"):
             preview = exporter.preview_static_html_export(
                 repo_root,
-                {"scope": scope, "doc_ids": [scope]},
+                {"stage": "working", "scope": scope, "doc_ids": [scope]},
                 export_date=FIXED_EXPORT_DATE,
             )
             payload = exporter.apply_static_html_snapshot(repo_root, snapshot_apply_body(preview))
@@ -864,13 +886,13 @@ def test_snapshot_apply_packages_public_scope_managed_media_without_fetching_ser
         repo_root = Path(repo_path)
         projects_root = Path(projects_path)
         prepare_repo(repo_root, projects_root)
-        example_payload_path = repo_root / "docs-viewer/scopes/example/generated/documents/by-id/example.json"
+        example_payload_path = repo_root / "docs-viewer/scopes/example/working/generated/documents/by-id/example.json"
         example_payload = json.loads(example_payload_path.read_text(encoding="utf-8"))
         example_payload["content_html"] = (
-            '<img src="/docs/media/example/img/photo.webp?cache=1">'
+            '<img src="/docs/media/example/working/img/photo.webp?cache=1">'
         )
         write_json(example_payload_path, example_payload)
-        managed_photo = repo_root / "docs-viewer/scopes/example/generated/media/img/photo.webp"
+        managed_photo = repo_root / "docs-viewer/scopes/example/working/generated/media/img/photo.webp"
         managed_photo.parent.mkdir(parents=True)
         managed_photo.write_bytes(b"managed-photo")
 
@@ -879,7 +901,7 @@ def test_snapshot_apply_packages_public_scope_managed_media_without_fetching_ser
         ):
             preview = exporter.preview_static_html_export(
                 repo_root,
-                {"scope": "example", "doc_ids": ["example"]},
+                {"stage": "working", "scope": "example", "doc_ids": ["example"]},
                 export_date=FIXED_EXPORT_DATE,
             )
             payload = exporter.apply_static_html_snapshot(repo_root, snapshot_apply_body(preview))
@@ -899,7 +921,7 @@ def test_snapshot_apply_replaces_only_explicitly_confirmed_existing_target() -> 
         prepare_repo(repo_root, projects_root)
         first_preview = exporter.preview_static_html_export(
             repo_root,
-            {"scope": "studio", "doc_ids": ["parent"]},
+            {"stage": "working", "scope": "studio", "doc_ids": ["parent"]},
             export_date=FIXED_EXPORT_DATE,
         )
         exporter.apply_static_html_snapshot(repo_root, snapshot_apply_body(first_preview))
@@ -912,7 +934,7 @@ def test_snapshot_apply_replaces_only_explicitly_confirmed_existing_target() -> 
         duplicate_docs_path.mkdir()
         replacement_preview = exporter.preview_static_html_export(
             repo_root,
-            {"scope": "studio", "doc_ids": ["parent"]},
+            {"stage": "working", "scope": "studio", "doc_ids": ["parent"]},
             export_date=FIXED_EXPORT_DATE,
         )
 
@@ -946,7 +968,7 @@ def test_snapshot_apply_ignores_finder_metadata_created_during_direct_write() ->
         prepare_repo(repo_root, projects_root)
         preview = exporter.preview_static_html_export(
             repo_root,
-            {"scope": "studio", "doc_ids": ["parent"]},
+            {"stage": "working", "scope": "studio", "doc_ids": ["parent"]},
             export_date=FIXED_EXPORT_DATE,
         )
         real_writer = exporter.write_snapshot_files
@@ -966,7 +988,7 @@ def test_snapshot_apply_ignores_finder_metadata_created_during_direct_write() ->
 
         replacement_preview = exporter.preview_static_html_export(
             repo_root,
-            {"scope": "studio", "doc_ids": ["parent"]},
+            {"stage": "working", "scope": "studio", "doc_ids": ["parent"]},
             export_date=FIXED_EXPORT_DATE,
         )
         nested_finder_metadata = destination / "docs/.DS_Store"
@@ -992,7 +1014,7 @@ def test_snapshot_apply_can_replace_an_explicitly_confirmed_unrecognized_directo
         (destination / "unrelated.txt").write_text("existing", encoding="utf-8")
         preview = exporter.preview_static_html_export(
             repo_root,
-            {"scope": "studio", "doc_ids": ["parent"]},
+            {"stage": "working", "scope": "studio", "doc_ids": ["parent"]},
             export_date=FIXED_EXPORT_DATE,
         )
         assert preview["target_state"] == "unrecognized"
@@ -1017,7 +1039,7 @@ def test_snapshot_apply_rejects_missing_confirmation_and_non_directory_target() 
         destination.write_text("preserve collision", encoding="utf-8")
         preview = exporter.preview_static_html_export(
             repo_root,
-            {"scope": "studio", "doc_ids": ["parent"]},
+            {"stage": "working", "scope": "studio", "doc_ids": ["parent"]},
             export_date=FIXED_EXPORT_DATE,
         )
         assert preview["target_state"] == "non_directory"
@@ -1050,16 +1072,16 @@ def test_snapshot_apply_rejects_stale_plan_and_target_while_preserving_existing_
         prepare_repo(repo_root, projects_root)
         stale_plan_preview = exporter.preview_static_html_export(
             repo_root,
-            {"scope": "studio", "doc_ids": ["parent"]},
+            {"stage": "working", "scope": "studio", "doc_ids": ["parent"]},
             export_date=FIXED_EXPORT_DATE,
         )
         exporter.apply_static_html_snapshot(repo_root, snapshot_apply_body(stale_plan_preview))
         stale_plan_preview = exporter.preview_static_html_export(
             repo_root,
-            {"scope": "studio", "doc_ids": ["parent"]},
+            {"stage": "working", "scope": "studio", "doc_ids": ["parent"]},
             export_date=FIXED_EXPORT_DATE,
         )
-        parent_payload_path = repo_root / "docs-viewer/scopes/studio/generated/documents/by-id/parent.json"
+        parent_payload_path = repo_root / "docs-viewer/scopes/studio/working/generated/documents/by-id/parent.json"
         parent_payload = json.loads(parent_payload_path.read_text(encoding="utf-8"))
         parent_payload["title"] = "Changed title"
         write_json(parent_payload_path, parent_payload)
@@ -1079,7 +1101,7 @@ def test_snapshot_apply_rejects_stale_plan_and_target_while_preserving_existing_
 
         current_preview = exporter.preview_static_html_export(
             repo_root,
-            {"scope": "studio", "doc_ids": ["parent"]},
+            {"stage": "working", "scope": "studio", "doc_ids": ["parent"]},
             export_date=FIXED_EXPORT_DATE,
         )
         exporter.apply_static_html_snapshot(
@@ -1088,7 +1110,7 @@ def test_snapshot_apply_rejects_stale_plan_and_target_while_preserving_existing_
         )
         replacement_preview = exporter.preview_static_html_export(
             repo_root,
-            {"scope": "studio", "doc_ids": ["parent"]},
+            {"stage": "working", "scope": "studio", "doc_ids": ["parent"]},
             export_date=FIXED_EXPORT_DATE,
         )
         destination = projects_root / "docs-export/studio selection - 2026-07-31"
@@ -1114,7 +1136,7 @@ def test_snapshot_render_failure_preserves_existing_target_before_direct_write()
         prepare_repo(repo_root, projects_root)
         first_preview = exporter.preview_static_html_export(
             repo_root,
-            {"scope": "studio", "doc_ids": ["parent"]},
+            {"stage": "working", "scope": "studio", "doc_ids": ["parent"]},
             export_date=FIXED_EXPORT_DATE,
         )
         exporter.apply_static_html_snapshot(repo_root, snapshot_apply_body(first_preview))
@@ -1123,7 +1145,7 @@ def test_snapshot_render_failure_preserves_existing_target_before_direct_write()
         marker.write_text("original", encoding="utf-8")
         replacement_preview = exporter.preview_static_html_export(
             repo_root,
-            {"scope": "studio", "doc_ids": ["parent"]},
+            {"stage": "working", "scope": "studio", "doc_ids": ["parent"]},
             export_date=FIXED_EXPORT_DATE,
         )
         with patch.object(exporter, "compute_snapshot_files", side_effect=RuntimeError("simulated render failure")):
@@ -1146,7 +1168,7 @@ def test_snapshot_direct_write_failure_leaves_rerunnable_unrecognized_target() -
         prepare_repo(repo_root, projects_root)
         first_preview = exporter.preview_static_html_export(
             repo_root,
-            {"scope": "studio", "doc_ids": ["parent"]},
+            {"stage": "working", "scope": "studio", "doc_ids": ["parent"]},
             export_date=FIXED_EXPORT_DATE,
         )
         exporter.apply_static_html_snapshot(repo_root, snapshot_apply_body(first_preview))
@@ -1155,7 +1177,7 @@ def test_snapshot_direct_write_failure_leaves_rerunnable_unrecognized_target() -
         docs_inode = (destination / "docs").stat().st_ino
         replacement_preview = exporter.preview_static_html_export(
             repo_root,
-            {"scope": "studio", "doc_ids": ["parent"]},
+            {"stage": "working", "scope": "studio", "doc_ids": ["parent"]},
             export_date=FIXED_EXPORT_DATE,
         )
         real_writer = exporter.write_snapshot_files
@@ -1180,7 +1202,7 @@ def test_snapshot_direct_write_failure_leaves_rerunnable_unrecognized_target() -
         assert not (destination / exporter.SNAPSHOT_PROVENANCE_FILENAME).exists()
         retry_preview = exporter.preview_static_html_export(
             repo_root,
-            {"scope": "studio", "doc_ids": ["parent"]},
+            {"stage": "working", "scope": "studio", "doc_ids": ["parent"]},
             export_date=FIXED_EXPORT_DATE,
         )
         assert retry_preview["target_state"] == "unrecognized"
@@ -1192,7 +1214,7 @@ def test_snapshot_direct_write_failure_leaves_rerunnable_unrecognized_target() -
 
         validation_preview = exporter.preview_static_html_export(
             repo_root,
-            {"scope": "studio", "doc_ids": ["parent"]},
+            {"stage": "working", "scope": "studio", "doc_ids": ["parent"]},
             export_date=FIXED_EXPORT_DATE,
         )
 
@@ -1209,7 +1231,7 @@ def test_snapshot_direct_write_failure_leaves_rerunnable_unrecognized_target() -
         assert not (destination / exporter.SNAPSHOT_PROVENANCE_FILENAME).exists()
         incomplete_preview = exporter.preview_static_html_export(
             repo_root,
-            {"scope": "studio", "doc_ids": ["parent"]},
+            {"stage": "working", "scope": "studio", "doc_ids": ["parent"]},
             export_date=FIXED_EXPORT_DATE,
         )
         assert incomplete_preview["target_state"] == "unrecognized"
@@ -1225,7 +1247,7 @@ def test_management_apply_route_returns_snapshot_response_and_stale_conflict() -
         _preview_status, preview = docs_management_service.docs_management_post_response(
             repo_root,
             routes.STATIC_HTML_EXPORT_PREVIEW_PATH,
-            {"scope": "studio", "doc_ids": ["parent"]},
+            {"stage": "working", "scope": "studio", "doc_ids": ["parent"]},
         )
 
         status, payload = docs_management_service.docs_management_post_response(
@@ -1244,7 +1266,7 @@ def test_management_apply_route_returns_snapshot_response_and_stale_conflict() -
         _replacement_status, replacement_preview = docs_management_service.docs_management_post_response(
             repo_root,
             routes.STATIC_HTML_EXPORT_PREVIEW_PATH,
-            {"scope": "studio", "doc_ids": ["parent"]},
+            {"stage": "working", "scope": "studio", "doc_ids": ["parent"]},
         )
         destination = projects_root / replacement_preview["destination_label"].strip("/")
         (destination / "changed.txt").write_text("changed", encoding="utf-8")
@@ -1269,7 +1291,7 @@ def test_management_preview_route_returns_write_free_browser_safe_plan() -> None
         status, payload = docs_management_service.docs_management_post_response(
             repo_root,
             routes.STATIC_HTML_EXPORT_PREVIEW_PATH,
-            {"scope": "studio", "doc_ids": ["sibling", "child"]},
+            {"stage": "working", "scope": "studio", "doc_ids": ["sibling", "child"]},
         )
 
         assert status.value == 200

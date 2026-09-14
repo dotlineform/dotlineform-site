@@ -362,6 +362,7 @@ async function openResultSource(state, link) {
   if (!scope || !docId) return;
   try {
     const target = { scope, doc_id: docId };
+    if (link.dataset.stage) target.stage = link.dataset.stage;
     if (subScope) target.sub_scope = subScope;
     await openManagedDocSource(target, "vscode", managementOptionsForState(state));
   } catch (error) {
@@ -441,6 +442,7 @@ async function runImport(state) {
     await state.collectionController.preview({
       file: candidate.raw,
       scope: target.scope,
+      stage: target.stage || "",
       subScope: normalizeText(target.sub_scope),
       sourceDirectory: state.sourceDirectory,
       managementBaseUrl: state.managementBaseUrl
@@ -450,6 +452,7 @@ async function runImport(state) {
   await runDocsHtmlImportWorkflow(state, {
     files: [candidate.raw],
     scope: target.scope,
+    stage: target.stage || "",
     subScope: normalizeText(target.sub_scope),
     includePromptMeta: Boolean(state.includePromptMeta.checked),
     sourceDirectory: state.sourceDirectory,

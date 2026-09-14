@@ -62,7 +62,7 @@ def repo(tmp_path, monkeypatch):
             code, stdout, stderr = run_cli(repo_root, command[2:])
         else:
             from build_search import DocsViewerSearchDataBuilder
-            DocsViewerSearchDataBuilder(repo_root=repo_root, scope="analysis", stage="pre-publish").run(write=True, force=False)
+            DocsViewerSearchDataBuilder(repo_root=repo_root, scope=command[command.index("--scope") + 1], stage="pre-publish").run(write=True, force=False)
             code, stdout, stderr = 0, "", ""
         return {"returncode": code, "stdout": stdout, "stderr": stderr, "elapsed_seconds": 0}
     monkeypatch.setattr(rebuild, "run_rebuild_command", command)
@@ -126,7 +126,7 @@ def test_stale_preview_and_wrong_stage_cannot_write(repo):
     source(repo / document_source_path(working), DRAFT, fields="draft: false\n")
     with pytest.raises(ValueError, match="stale"):
         promotion.apply_pre_publish(repo, {**WORKING, "confirm": True, "plan_revision": preview["plan_revision"]})
-    with pytest.raises(ValueError, match="Analysis Working"):
+    with pytest.raises(ValueError, match="requires Working"):
         promotion.preview_pre_publish(repo, PREPARED)
     with pytest.raises(ValueError, match="Pre-publish stage"):
         publication.preview_scope_publish(repo, WORKING)
@@ -180,3 +180,41 @@ def test_read_only_status_and_stage_manifest_identity(repo):
     write_json(path, manifest)
     with pytest.raises(RuntimeError, match="stage identity"):
         publication.preview_scope_publish(repo, PREPARED)
+
+
+@pytest.mark.parametrize("scope", ["studio", "notes", "processing", "app"])
+def test_local_scope_preparation_uses_own_policy_and_allows_empty_candidate(repo, scope):
+    config_path = repo / "docs-viewer/config/scopes/docs_scopes.json"
+    config = json.loads(config_path.read_text())
+    local = docs_scope_record(scope)
+    local["stages"] = {
+        stage: {"default_doc_id": ROOT, "media": deepcopy(local["media"]), "sub_scopes": []}
+        for stage in ("working", "pre-publish")
+    }
+    config["scopes"].append(local)
+    write_json(config_path, config)
+    (repo / local["scope_root"]["path"] / "published").mkdir(parents=True)
+    working = load_docs_scope_stage(repo, scope, "working")
+    target = load_docs_scope_stage(repo, scope, "pre-publish")
+    ordinary = repo / document_source_path(working)
+    # An omitted draft stays omitted and is excluded by the common default.
+    source(ordinary, ROOT)
+    ready = source(ordinary, CHILD, fields='draft: false\nwork_id: "00123"\n')
+    write_json(ordinary / "unpublishable.json", [CHILD])
+    for stage_config in (working, target):
+        (repo / document_source_path(stage_config)).mkdir(parents=True, exist_ok=True)
+        (repo / generated_documents_path(stage_config)).mkdir(parents=True, exist_ok=True)
+    request = {"scope": scope, "stage": "working"}
+    preview = promotion.preview_pre_publish(repo, request)
+    assert preview["eligible_doc_ids"] == []
+    empty = promotion.apply_pre_publish(repo, {**request, "confirm": True, "plan_revision": preview["plan_revision"]})
+    assert empty["document_count"] == 0
+    prepared_request = {"scope": scope, "stage": "pre-publish"}
+    publish = publication.preview_scope_publish(repo, prepared_request)
+    assert publish["document_count"] == 0
+    write_json(ordinary / "unpublishable.json", [])
+    preview = promotion.preview_pre_publish(repo, request)
+    assert preview["eligible_doc_ids"] == [CHILD]
+    promotion.apply_pre_publish(repo, {**request, "confirm": True, "plan_revision": preview["plan_revision"]})
+    assert (repo / document_source_path(target) / ready.name).read_text() == ready.read_text()
+    assert "draft:" not in (ordinary / f"{ROOT}.md").read_text()

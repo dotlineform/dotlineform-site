@@ -12,7 +12,6 @@ from pathlib import Path
 from typing import Any, Callable, Dict, Mapping, Optional
 
 from docs_scope_config import (
-    DOCS_SCOPE_CONFIGS,
     document_source_path,
     generated_documents_path,
     load_docs_scope_configs,
@@ -268,7 +267,6 @@ def rebuild_scope_outputs(
     if stage:
         docs_command.extend(["--stage", stage])
     if stage == "working":
-        docs_command.append("--skip-media-builds")
         selected_links = links_doc_ids if links_doc_ids is not None else docs_doc_ids
         if selected_links is not None:
             docs_command.extend(["--links-doc-ids", ",".join(ordered_docs_doc_ids(selected_links))])
@@ -304,7 +302,7 @@ def rebuild_scope_outputs(
                     "--diagnostics",
                     "--skip-browser-config",
                     *(["--stage", scope_config.stage] if scope_config.stage else []),
-                    *(["--skip-media-builds"] if skip_media_builds or scope_config.stage == "working" else []),
+                    *(["--skip-media-builds"] if skip_media_builds else []),
                 ),
             )
             for sub_scope in scope_config.sub_scopes
@@ -428,42 +426,6 @@ def rebuild_sub_scope_outputs(
     }
 
 
-def rebuild_parent_search_after_sub_scope(
-    repo_root: Path,
-    scope: str,
-    rebuild: Mapping[str, Any],
-) -> Dict[str, Any]:
-    """Append one atomic parent-scope Search rebuild after child Docs output."""
-
-    search = {"mode": "full", "doc_ids": []}
-    step = run_rebuild_command(
-        python_builder_command(
-            SEARCH_BUILDER_SCRIPT,
-            "--scope",
-            scope,
-            "--write",
-        ),
-        repo_root,
-    )
-    if step["returncode"] != 0:
-        detail = step["stderr"] or step["stdout"] or f"exit {step['returncode']}"
-        raise RuntimeError(
-            rebuild_failure_message(
-                f"search rebuild failed for parent scope {scope}",
-                detail,
-            )
-        )
-    search_diagnostics = extract_search_step_diagnostics(step["stdout"], search)
-    search_diagnostics["elapsed_seconds"] = step["elapsed_seconds"]
-    diagnostics = rebuild.get("diagnostics")
-    next_diagnostics = dict(diagnostics) if isinstance(diagnostics, Mapping) else {}
-    next_diagnostics["search"] = search_diagnostics
-    return {
-        **rebuild,
-        "steps": [*list(rebuild.get("steps", [])), step],
-        "search": search,
-        "diagnostics": next_diagnostics,
-    }
 
 
 def perform_source_write_and_rebuild(
@@ -475,7 +437,7 @@ def perform_source_write_and_rebuild(
     suppression_reason: str,
     docs_doc_ids: Optional[list[str]] = None,
     written_paths: Optional[list[Path]] = None,
-    skip_media_builds: bool = False,
+    skip_media_builds: bool = True,
     stage: str | None = None,
 ) -> Dict[str, Any]:
     require_document_authoring(load_docs_scope_stage(repo_root, scope, stage))
@@ -900,49 +862,22 @@ def perform_multi_scope_source_write_and_rebuild(
 
 
 def rebuild_all_docs_outputs(repo_root: Path) -> Dict[str, Any]:
-    try:
-        configs = load_docs_scope_configs(repo_root)
-    except FileNotFoundError:
-        configs = dict(DOCS_SCOPE_CONFIGS)
-    scope_ids = list(configs)
-
-    for config in configs.values():
-        remove_build_manifest(repo_root, config)
-
-    commands = [
-        ("docs", python_builder_command(DOCS_BUILDER_SCRIPT, "--write", "--diagnostics")),
-    ]
-    for scope in scope_ids:
-        commands.append(("search", python_builder_command(SEARCH_BUILDER_SCRIPT, "--scope", scope, "--write")))
-    steps = []
-    docs_diagnostics: list[Dict[str, Any]] = []
-    search_diagnostics: list[Dict[str, Any]] = []
-    for label, command in commands:
-        step = run_rebuild_command(command, repo_root)
-        steps.append(step)
-        if label == "docs":
-            docs_diagnostics.extend(extract_docs_builder_diagnostics(step["stdout"]))
-        elif label == "search":
-            scope_index = len(search_diagnostics)
-            scope_id = scope_ids[scope_index] if scope_index < len(scope_ids) else ""
-            diagnostics = extract_search_step_diagnostics(step["stdout"], {"mode": "full", "doc_ids": []})
-            diagnostics["scope"] = scope_id
-            diagnostics["elapsed_seconds"] = step["elapsed_seconds"]
-            search_diagnostics.append(diagnostics)
-        if step["returncode"] != 0:
-            detail = step["stderr"] or step["stdout"] or f"exit {step['returncode']}"
-            raise RuntimeError(rebuild_failure_message("docs rebuild failed", detail))
-    build_manifests = {
-        scope_id: write_build_manifest(repo_root, config)
-        for scope_id, config in configs.items()
-    }
+    """Rebuild each remaining authoring scope after a scope lifecycle change."""
+    configs = load_docs_scope_configs(repo_root)
+    results = {}
+    for scope in configs:
+        results[scope] = rebuild_scope_outputs(
+            repo_root, scope, include_search=True, skip_media_builds=True,
+            stage="working",
+        )
     return {
         "ok": True,
-        "steps": steps,
-        "build_manifests": build_manifests,
+        "steps": [step for result in results.values() for step in result["steps"]],
+        "scopes": results,
+        "build_manifests": {scope: result["build_manifest"] for scope, result in results.items()},
         "diagnostics": {
-            "docs": docs_diagnostics,
-            "search": search_diagnostics,
+            "docs": [result["diagnostics"]["docs"] for result in results.values()],
+            "search": [{**result["diagnostics"]["search"], "scope": scope} for scope, result in results.items()],
         },
-        "summary_text": f"Docs and docs search rebuilt for {', '.join(scope_ids)}.",
+        "summary_text": f"Working docs and Search rebuilt for {', '.join(results)}.",
     }

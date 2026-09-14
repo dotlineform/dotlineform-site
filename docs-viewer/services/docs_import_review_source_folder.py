@@ -551,6 +551,7 @@ def recognize_edited_review_source_folder(
     resolve_managed_document_collection(
         repo_root,
         scope=source_scope,
+        stage="working",
         sub_scope=source_sub_scope or None,
     )
 

@@ -29,6 +29,7 @@ from docs_subscope_customisations import (
     sub_scope_customisation_document_lineage_contracts,
 )
 from .links_builder import links_enabled
+from docs_scope_config import select_scope_stage
 
 
 def raw_scope_items(repo_root: Path) -> dict[str, dict[str, Any]]:
@@ -203,6 +204,23 @@ def docs_viewer_settings_payload(repo_root: Path) -> dict[str, Any] | None:
     return json.loads(json.dumps(settings))
 
 
+def browser_published_scope_record(repo_root: Path, raw_by_scope: dict[str, Any], config: DocsScopeConfig) -> dict[str, Any]:
+    """Describe the accepted local reader without granting source or generated ownership."""
+    prepared = select_scope_stage(config, "pre-publish")
+    record = browser_scope_record(repo_root, raw_by_scope, prepared)
+    record.update(stage="published", default_doc_id="", links_enabled=False)
+    for key, route in (("index_tree_url", "index-tree"), ("recent_url", "recent"), ("backlinks_url", "backlinks"), ("search_index_url", "search")):
+        record[key] = f"/docs/published/{route}?scope={quote(config.scope_id)}"
+    record["search"] = {**record["search"], "index_url": record["search_index_url"]}
+    for media_type, media in record["media"].items():
+        media["served_path_prefix"] = f"/docs/published/media/{quote(config.scope_id)}/{media_type}"
+    record["sub_scopes"] = browser_sub_scope_records(repo_root, prepared, published=True)
+    for child in record["sub_scopes"]:
+        base = f"/docs/published/external/{quote(config.scope_id)}/{quote(child['sub_scope'])}"
+        child.update(manifest_url=f"{base}/manifest.json", by_id_url_base=f"{base}/by-id")
+    return record
+
+
 def browser_scope_record(
     repo_root: Path,
     raw_by_scope: dict[str, dict[str, Any]],
@@ -216,7 +234,8 @@ def browser_scope_record(
             "scope_id": config.scope_id,
             "scope_type": config.scope_type,
             "emoji": str(raw_scope.get("emoji") or ""),
-            "stages": [browser_scope_record(repo_root, raw_by_scope, stage) for stage in config.stages],
+            "stages": [browser_scope_record(repo_root, raw_by_scope, stage) for stage in config.stages]
+            + [browser_published_scope_record(repo_root, raw_by_scope, config)],
         }
     media_config = (
         config.public_projection.media

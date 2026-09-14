@@ -193,7 +193,7 @@ class SubScopeDocsBuilder(DocsDataBuilder):
         return payload
 
     def folder_subject_supported(self) -> bool:
-        return (self.config.scope_id == "dotlineform" or self.config.stage == "working") and FOLDER_PATH_FIELD in sub_scope_customisation_authoring_subject_fields(
+        return self.config.stage == "working" and FOLDER_PATH_FIELD in sub_scope_customisation_authoring_subject_fields(
             self.sub_scope_config.sub_scope_customisation
         )
 

@@ -381,7 +381,7 @@ def ensure_configured_scope_owned_media_directories(
     materialized: dict[str, tuple[Path, ...]] = {}
     for scope_id, config in configured_scopes.items():
         if config.stages:
-            # Stage directories are populated by the user's manual migration.
+            # Unselected parents have no source/generated owner; scope creation owns stage setup.
             continue
         if (
             config.scope_root.provider == EXTERNAL_LOCAL_PROVIDER

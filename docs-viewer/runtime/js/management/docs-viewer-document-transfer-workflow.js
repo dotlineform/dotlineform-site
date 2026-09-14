@@ -61,7 +61,7 @@ function collectionLabel(target) {
 
 function collectionKey(target) {
   var normalized = normalizeManagedDocumentCollectionTarget(target);
-  return normalized.scope + "\u0000" + String(normalized.sub_scope || "");
+  return normalized.scope + "\u0000" + String(normalized.stage || "") + "\u0000" + String(normalized.sub_scope || "");
 }
 
 function optionMarkup(options) {

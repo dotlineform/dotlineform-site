@@ -21,7 +21,6 @@ from docs_document_packages.returned_profiles import (
 from docs_document_packages.returned_parser import parse_staged_import
 from docs_document_packages import source_context
 from docs_document_packages.metadata import list_staged_files_with_metadata
-from docs_scope_config import load_docs_scope_configs
 import docs_source_model as source_model
 
 
@@ -168,10 +167,7 @@ def list_returned_document_packages(
     )
     if sub_scope is not None and not normalized_sub_scope:
         raise ValueError("sub_scope is required for exact returned-package listing")
-    scope_config = load_docs_scope_configs(
-        repo_root,
-        scope_ids=[normalized_scope],
-    )[normalized_scope]
+    scope_config = source_context.package_source_scope_config(repo_root, normalized_scope)
     sub_scope_labels = {
         record.sub_scope: record.title
         for record in scope_config.sub_scopes

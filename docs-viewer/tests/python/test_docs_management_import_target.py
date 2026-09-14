@@ -38,11 +38,11 @@ def prepare_repo(repo_root: Path) -> None:
         ],
     )
     for path in (
-        repo_root / "docs-viewer/scopes/studio/source/documents",
-        repo_root / "docs-viewer/scopes/analysis/source/documents",
+        repo_root / "docs-viewer/scopes/studio/working/source/documents",
+        repo_root / "docs-viewer/scopes/analysis/working/source/documents",
         (
             repo_root
-            / "docs-viewer/scopes/analysis/source/sub-scopes/tags/documents"
+            / "docs-viewer/scopes/analysis/working/source/sub-scopes/tags/documents"
         ),
     ):
         path.mkdir(parents=True, exist_ok=True)
@@ -55,15 +55,15 @@ def test_import_target_adopts_parent_and_configured_child(
 
     parent = import_service.resolve_ordinary_import_target(
         tmp_path,
-        {"scope": " STUDIO "},
+        {"stage": "working", "scope": " STUDIO "},
     )
     child = import_service.resolve_ordinary_import_target(
         tmp_path,
-        {"scope": "analysis", "sub_scope": "TAGS"},
+        {"stage": "working", "scope": "analysis", "sub_scope": "TAGS"},
     )
 
-    assert parent.request_target() == {"scope": "studio"}
-    assert child.request_target() == {
+    assert parent.request_target() == {"stage": "working", "scope": "studio"}
+    assert child.request_target() == {"stage": "working",
         "scope": "analysis",
         "sub_scope": "tags",
     }
@@ -91,7 +91,7 @@ def test_import_handler_preview_freezes_child_destination(
 
     payload = import_service.handle_import_source(
         tmp_path,
-        {
+        {"stage": "working",
             "scope": "analysis",
             "sub_scope": "tags",
             "source_directory": "data-sharing/import-staging",
@@ -104,17 +104,17 @@ def test_import_handler_preview_freezes_child_destination(
     assert payload["preview_only"] is True
     assert payload["scope"] == "analysis"
     assert payload["sub_scope"] == "tags"
-    assert payload["import_preview"]["target"] == {
+    assert payload["import_preview"]["target"] == {"stage": "working",
         "scope": "analysis",
         "sub_scope": "tags",
     }
     assert not list(
-        (tmp_path / "docs-viewer/scopes/analysis/source/documents").glob("*.md")
+        (tmp_path / "docs-viewer/scopes/analysis/working/source/documents").glob("*.md")
     )
     assert not list(
         (
             tmp_path
-            / "docs-viewer/scopes/analysis/source/sub-scopes/tags/documents"
+            / "docs-viewer/scopes/analysis/working/source/sub-scopes/tags/documents"
         ).glob("*.md")
     )
 
@@ -122,26 +122,26 @@ def test_import_handler_preview_freezes_child_destination(
 @pytest.mark.parametrize(
     ("target", "message"),
     [
-        ({"scope": ""}, "scope is required"),
-        ({"scope": "missing"}, "unknown Docs Viewer scope"),
+        ({"stage": "working", "scope": ""}, "scope is required"),
+        ({"stage": "working", "scope": "missing"}, "unknown Docs Viewer scope"),
         (
-            {"scope": "analysis", "sub_scope": ""},
+            {"stage": "working", "scope": "analysis", "sub_scope": ""},
             "sub_scope is required",
         ),
         (
-            {"scope": "analysis", "sub_scope": "missing"},
+            {"stage": "working", "scope": "analysis", "sub_scope": "missing"},
             "unknown sub_scope",
         ),
         (
-            {"scope": "analysis", "sub_scope": "tags/nested"},
+            {"stage": "working", "scope": "analysis", "sub_scope": "tags/nested"},
             "one configured child",
         ),
         (
-            {"scope": "studio", "sub_scope": "tags"},
+            {"stage": "working", "scope": "studio", "sub_scope": "tags"},
             "unknown sub_scope",
         ),
         (
-            {
+            {"stage": "working",
                 "scope": "analysis",
                 "sub_scope": "tags",
                 "selected_parent": "tags-report",

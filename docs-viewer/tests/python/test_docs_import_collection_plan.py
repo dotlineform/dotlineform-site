@@ -9,6 +9,7 @@ from pathlib import Path
 import docs_import_preview
 import pytest
 from docs_import_document_package_collection import plan_document_package_collection
+from docs_management_document_target import resolve_managed_document_collection
 from docs_document_packages.workspace import configured_workspace_paths
 
 from docs_import_test_support import handle_import_source, make_repo, write_staged
@@ -79,6 +80,7 @@ def plan_package(root: Path, filename: str):
         staging_root=paths.import_staging,
         workspace_root=paths.root,
         metadata_root=paths.meta,
+        collection=resolve_managed_document_collection(root, scope="example", stage="working"),
     )
 
 
@@ -119,7 +121,7 @@ def test_collection_preview_dispatches_through_existing_import_post(monkeypatch)
 
         payload = handle_import_source(
             root,
-            {
+            {"stage": "working",
                 "scope": "example",
                 "staged_filename": "post-preview.jsonl",
                 "preview_only": True,
@@ -129,7 +131,7 @@ def test_collection_preview_dispatches_through_existing_import_post(monkeypatch)
         with pytest.raises(ValueError, match="preview_only false"):
             handle_import_source(
                 root,
-                {
+                {"stage": "working",
                     "scope": "example",
                     "staged_filename": "post-preview.jsonl",
                 },
@@ -338,7 +340,7 @@ def test_collection_plan_blocks_malformed_or_unsafe_record_identity(monkeypatch)
     assert payload["records"][3]["action"] == "blocked"
 
 
-def test_collection_plan_blocks_invalid_front_matter_for_the_whole_package(monkeypatch) -> None:
+def test_collection_plan_blocks_retired_publication_fields_for_the_whole_package(monkeypatch) -> None:
     stub_markdown_validation(monkeypatch)
     with make_repo() as temp:
         root = Path(temp)
@@ -366,7 +368,7 @@ def test_collection_plan_blocks_invalid_front_matter_for_the_whole_package(monke
     assert payload["ready_for_confirmation"] is False
     record = payload["records"][0]
     assert record["action"] == "blocked"
-    assert record["errors"][0]["code"] == "invalid_front_matter"
+    assert record["errors"][0]["code"] == "invalid_record_contract"
 
 
 def test_collection_plan_preserves_existing_parent_when_parent_is_omitted() -> None:

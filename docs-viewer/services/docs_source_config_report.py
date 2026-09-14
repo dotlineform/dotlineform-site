@@ -120,15 +120,19 @@ def build_source_config_report(repo_root: Path) -> dict[str, Any]:
     browser_by_scope = _browser_scope_records(repo_root)
     scopes: list[dict[str, Any]] = []
 
-    for scope_id in sorted(configs):
-        config = configs[scope_id]
+    for config in (selected for scope in sorted(configs) for selected in configs[scope].stages):
+        scope_id = config.scope_id
         raw = raw_by_scope.get(scope_id, {})
         browser = browser_by_scope.get(scope_id, {})
+        if config.stage:
+            raw = {**raw, **raw["stages"][config.stage]}
+            browser = next((item for item in browser.get("stages", []) if item.get("stage") == config.stage), {})
         viewer_options, warnings = _read_viewer_options(repo_root, config)
         scopes.append(
             {
                 "scope_id": scope_id,
-                "title": _scope_title(raw, scope_id),
+                **({"stage": config.stage} if config.stage else {}),
+                "title": _scope_title(raw, scope_id) + (f" / {config.stage}" if config.stage else ""),
                 "source_config": _safe_raw_subset(raw),
                 "source_config_path": CONFIG_REL_PATH.as_posix(),
                 "browser_config": browser,

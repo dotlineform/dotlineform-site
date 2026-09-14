@@ -43,16 +43,68 @@
       "non_loadable_doc_ids": [],
       "manage_only_tree_root_ids": [],
       "allow_unresolved_parent_ids": false,
-      "sub_scopes": [
-        {
-          "sub_scope": "default",
-          "title": "Default",
-          "public_projection": null
-        }
-      ],
+      "sub_scopes": [],
       "scope_root": {
         "provider": "external_local",
         "path": "$DOTLINEFORM_DOCS_BASE_DIR/scopes/studio"
+      },
+      "stages": {
+        "working": {
+          "media": {
+            "types": {
+              "img": {
+                "build_inputs": []
+              },
+              "svg": {
+                "build_inputs": [
+                  "mermaid"
+                ]
+              },
+              "files": {
+                "build_inputs": []
+              }
+            },
+            "build_sources": {
+              "mermaid": {
+                "producer": "mermaid",
+                "publishes_to": "svg"
+              }
+            }
+          },
+          "default_doc_id": "d-20260428-000000-f5ff18",
+          "non_loadable_doc_ids": [],
+          "manage_only_tree_root_ids": [],
+          "allow_unresolved_parent_ids": false,
+          "sub_scopes": []
+        },
+        "pre-publish": {
+          "media": {
+            "types": {
+              "img": {
+                "build_inputs": []
+              },
+              "svg": {
+                "build_inputs": [
+                  "mermaid"
+                ]
+              },
+              "files": {
+                "build_inputs": []
+              }
+            },
+            "build_sources": {
+              "mermaid": {
+                "producer": "mermaid",
+                "publishes_to": "svg"
+              }
+            }
+          },
+          "default_doc_id": "",
+          "non_loadable_doc_ids": [],
+          "manage_only_tree_root_ids": [],
+          "allow_unresolved_parent_ids": false,
+          "sub_scopes": []
+        }
       }
     },
     {
@@ -412,6 +464,64 @@
       "scope_root": {
         "provider": "external_local",
         "path": "$DOTLINEFORM_DOCS_BASE_DIR/scopes/notes"
+      },
+      "stages": {
+        "working": {
+          "media": {
+            "types": {
+              "img": {
+                "build_inputs": []
+              },
+              "svg": {
+                "build_inputs": [
+                  "mermaid"
+                ]
+              },
+              "files": {
+                "build_inputs": []
+              }
+            },
+            "build_sources": {
+              "mermaid": {
+                "producer": "mermaid",
+                "publishes_to": "svg"
+              }
+            }
+          },
+          "default_doc_id": "d-20260526-000000-04ce37",
+          "non_loadable_doc_ids": [],
+          "manage_only_tree_root_ids": [],
+          "allow_unresolved_parent_ids": false,
+          "sub_scopes": []
+        },
+        "pre-publish": {
+          "media": {
+            "types": {
+              "img": {
+                "build_inputs": []
+              },
+              "svg": {
+                "build_inputs": [
+                  "mermaid"
+                ]
+              },
+              "files": {
+                "build_inputs": []
+              }
+            },
+            "build_sources": {
+              "mermaid": {
+                "producer": "mermaid",
+                "publishes_to": "svg"
+              }
+            }
+          },
+          "default_doc_id": "",
+          "non_loadable_doc_ids": [],
+          "manage_only_tree_root_ids": [],
+          "allow_unresolved_parent_ids": false,
+          "sub_scopes": []
+        }
       }
     },
     {
@@ -453,6 +563,50 @@
       "scope_root": {
         "provider": "external_local",
         "path": "$DOTLINEFORM_DOCS_BASE_DIR/scopes/processing"
+      },
+      "stages": {
+        "working": {
+          "media": {
+            "types": {
+              "img": {
+                "build_inputs": []
+              },
+              "svg": {
+                "build_inputs": []
+              },
+              "files": {
+                "build_inputs": []
+              }
+            },
+            "build_sources": {}
+          },
+          "default_doc_id": "d-20260714-092047-06a5db",
+          "non_loadable_doc_ids": [],
+          "manage_only_tree_root_ids": [],
+          "allow_unresolved_parent_ids": false,
+          "sub_scopes": []
+        },
+        "pre-publish": {
+          "media": {
+            "types": {
+              "img": {
+                "build_inputs": []
+              },
+              "svg": {
+                "build_inputs": []
+              },
+              "files": {
+                "build_inputs": []
+              }
+            },
+            "build_sources": {}
+          },
+          "default_doc_id": "",
+          "non_loadable_doc_ids": [],
+          "manage_only_tree_root_ids": [],
+          "allow_unresolved_parent_ids": false,
+          "sub_scopes": []
+        }
       }
     },
     {
@@ -494,7 +648,51 @@
       "non_loadable_doc_ids": [],
       "manage_only_tree_root_ids": [],
       "allow_unresolved_parent_ids": false,
-      "sub_scopes": []
+      "sub_scopes": [],
+      "stages": {
+        "working": {
+          "media": {
+            "types": {
+              "img": {
+                "build_inputs": []
+              },
+              "svg": {
+                "build_inputs": []
+              },
+              "files": {
+                "build_inputs": []
+              }
+            },
+            "build_sources": {}
+          },
+          "default_doc_id": "d-20260902-143007-05a794",
+          "non_loadable_doc_ids": [],
+          "manage_only_tree_root_ids": [],
+          "allow_unresolved_parent_ids": false,
+          "sub_scopes": []
+        },
+        "pre-publish": {
+          "media": {
+            "types": {
+              "img": {
+                "build_inputs": []
+              },
+              "svg": {
+                "build_inputs": []
+              },
+              "files": {
+                "build_inputs": []
+              }
+            },
+            "build_sources": {}
+          },
+          "default_doc_id": "",
+          "non_loadable_doc_ids": [],
+          "manage_only_tree_root_ids": [],
+          "allow_unresolved_parent_ids": false,
+          "sub_scopes": []
+        }
+      }
     }
   ],
   "docs_viewer": {

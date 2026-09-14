@@ -111,7 +111,9 @@ def configured_concepts(
         allow_unresolved_parent_ids=False,
         sub_scopes=(tags,),
     )
-    return analysis, tags
+    analysis.stage = "working"
+    tags.stage = "working"
+    return SimpleNamespace(**{**vars(analysis), "stage": "", "stages": (analysis,)}), tags
 
 
 def test_watcher_imports_source_model_helpers_directly() -> None:
@@ -165,7 +167,7 @@ def test_watcher_snapshots_only_mermaid_sources_in_build_media_root(tmp_path: Pa
 def test_watcher_pauses_and_can_resume_when_scope_root_is_temporarily_missing(tmp_path: Path) -> None:
     module = load_docs_live_rebuild_watcher_module()
     source_root = tmp_path / "source" / "research"
-    state = {
+    state = {"stage": "working",
         "scope": "research",
         "sub_scope": "",
         "label": "research",
@@ -200,12 +202,11 @@ def test_watcher_pauses_and_can_resume_when_scope_root_is_temporarily_missing(tm
 def test_watcher_reconciles_scope_and_sub_scope_state_from_config(tmp_path: Path) -> None:
     module = load_docs_live_rebuild_watcher_module()
     original_configs = dict(module.DOCS_SCOPE_CONFIGS)
-    original_roots = dict(module.DOCUMENT_SOURCE_ROOTS)
 
     def config(source: str, sub_scopes=()):
-        return SimpleNamespace(
+        working = SimpleNamespace(
             scope_type="local",
-            stage="",
+            stage="working",
             stages=(),
             source=SimpleNamespace(
                 location=SimpleNamespace(path=Path(source)),
@@ -214,17 +215,18 @@ def test_watcher_reconciles_scope_and_sub_scope_state_from_config(tmp_path: Path
             media=SimpleNamespace(build_sources={}),
             sub_scopes=tuple(sub_scopes),
         )
+        return SimpleNamespace(stages=(working,))
 
     states = {}
     try:
         changes = module.reconcile_watch_states(
             tmp_path,
             states,
-            {"notes": config("docs-viewer/scopes/notes/source")},
+            {"notes": config("docs-viewer/scopes/notes/working/source")},
             baseline=False,
         )
-        assert changes == {"added": ["notes"], "removed": [], "reloaded": []}
-        assert states["notes"]["root"] == tmp_path / "docs-viewer/scopes/notes/source/documents"
+        assert changes == {"added": ["notes/working"], "removed": [], "reloaded": []}
+        assert states["notes/working"]["root"] == tmp_path / "docs-viewer/scopes/notes/working/source/documents"
 
         changes = module.reconcile_watch_states(
             tmp_path,
@@ -232,8 +234,8 @@ def test_watcher_reconciles_scope_and_sub_scope_state_from_config(tmp_path: Path
             {"notes": config("external/scopes/notes/source")},
             baseline=False,
         )
-        assert changes == {"added": [], "removed": [], "reloaded": ["notes"]}
-        assert states["notes"]["root"] == tmp_path / "external/scopes/notes/source/documents"
+        assert changes == {"added": [], "removed": [], "reloaded": ["notes/working"]}
+        assert states["notes/working"]["root"] == tmp_path / "external/scopes/notes/source/documents"
 
         tags = SimpleNamespace(
             sub_scope="tags",
@@ -250,33 +252,29 @@ def test_watcher_reconciles_scope_and_sub_scope_state_from_config(tmp_path: Path
             baseline=False,
         )
         assert changes == {
-            "added": ["archive", "archive/tags"],
-            "removed": ["notes"],
+            "added": ["archive/working", "archive/working/tags"],
+            "removed": ["notes/working"],
             "reloaded": [],
         }
-        assert sorted(states) == ["archive", "archive/tags"]
-        assert module.DOCUMENT_SOURCE_ROOTS == {"archive": Path("external/source/archive/documents")}
+        assert sorted(states) == ["archive/working", "archive/working/tags"]
     finally:
         module.DOCS_SCOPE_CONFIGS.clear()
         module.DOCS_SCOPE_CONFIGS.update(original_configs)
-        module.DOCUMENT_SOURCE_ROOTS.clear()
-        module.DOCUMENT_SOURCE_ROOTS.update(original_roots)
 
 
 def test_watcher_registers_configured_mermaid_root_and_renders_only_changed_identity(tmp_path: Path) -> None:
     module = load_docs_live_rebuild_watcher_module()
     original_configs = dict(module.DOCS_SCOPE_CONFIGS)
-    original_roots = dict(module.DOCUMENT_SOURCE_ROOTS)
     build = SimpleNamespace(
         location=SimpleNamespace(
             provider="repository",
-            path=Path("docs-viewer/scopes/studio/source/media/build-source/mermaid"),
+            path=Path("docs-viewer/scopes/studio/working/source/media/build-source/mermaid"),
         ),
         producer="mermaid",
         publishes_to="svg",
     )
     source = SimpleNamespace(
-        location=SimpleNamespace(provider="repository", path=Path("docs-viewer/scopes/studio/source")),
+        location=SimpleNamespace(provider="repository", path=Path("docs-viewer/scopes/studio/working/source")),
         documents_path=Path("documents"),
         build_media={"mermaid": build},
     )
@@ -286,7 +284,7 @@ def test_watcher_registers_configured_mermaid_root_and_renders_only_changed_iden
     )
     config = SimpleNamespace(
         scope_type="local",
-        stage="",
+        stage="working",
         stages=(),
         source=source,
         media=SimpleNamespace(
@@ -311,12 +309,12 @@ def test_watcher_registers_configured_mermaid_root_and_renders_only_changed_iden
         changes = module.reconcile_watch_states(
             tmp_path,
             states,
-            {"studio": config},
+            {"studio": SimpleNamespace(stages=(config,))},
             baseline=False,
         )
-        media_state = states["studio/media/mermaid"]
-        assert media_state["root"] == tmp_path / "docs-viewer/scopes/studio/source/media/build-source/mermaid"
-        assert changes["added"] == ["studio", "studio/media/mermaid"]
+        media_state = states["studio/working/media/mermaid"]
+        assert media_state["root"] == tmp_path / "docs-viewer/scopes/studio/working/source/media/build-source/mermaid"
+        assert changes["added"] == ["studio/working", "studio/working/media/mermaid"]
         assert module.rebuild_build_media(
             tmp_path,
             media_state,
@@ -327,8 +325,6 @@ def test_watcher_registers_configured_mermaid_root_and_renders_only_changed_iden
         module.remove_build_manifest = original_remove_manifest
         module.DOCS_SCOPE_CONFIGS.clear()
         module.DOCS_SCOPE_CONFIGS.update(original_configs)
-        module.DOCUMENT_SOURCE_ROOTS.clear()
-        module.DOCUMENT_SOURCE_ROOTS.update(original_roots)
 
     assert calls == [("architecture.svg",)]
     assert invalidations == [(tmp_path, config)]
@@ -572,7 +568,7 @@ def test_watcher_invalid_parsed_snapshot_fails_closed() -> None:
 
     module.parsed_doc_snapshot = fail_snapshot
     try:
-        snapshot, error = module.try_parsed_doc_snapshot(Path("/repo"), "studio")
+        snapshot, error = module.try_parsed_doc_snapshot(Path("/repo"), "studio", stage="working")
     finally:
         module.parsed_doc_snapshot = original_snapshot
 
@@ -584,7 +580,6 @@ def test_watcher_sub_scope_snapshot_and_baseline_are_exact() -> None:
     module = load_docs_live_rebuild_watcher_module()
     analysis, _tags = configured_concepts()
     original_configs = dict(module.DOCS_SCOPE_CONFIGS)
-    original_roots = dict(module.DOCUMENT_SOURCE_ROOTS)
 
     with tempfile.TemporaryDirectory() as temp:
         repo_root = Path(temp)
@@ -617,21 +612,24 @@ def test_watcher_sub_scope_snapshot_and_baseline_are_exact() -> None:
             parent_snapshot = module.parsed_doc_snapshot(
                 repo_root,
                 "analysis",
+                stage="working",
             )
             child_snapshot = module.parsed_doc_snapshot(
                 repo_root,
                 "analysis",
                 "tags",
+                stage="working",
             )
             missing_snapshot, missing_error = module.try_parsed_doc_snapshot(
                 repo_root,
                 "analysis",
                 "missing",
+                stage="working",
             )
             child_spec = module.desired_watch_state_specs(
                 repo_root,
                 {"analysis": analysis},
-            )["analysis/tags"]
+            )["analysis/working/tags"]
             child_state = module.new_watch_state(
                 repo_root,
                 child_spec,
@@ -640,8 +638,6 @@ def test_watcher_sub_scope_snapshot_and_baseline_are_exact() -> None:
         finally:
             module.DOCS_SCOPE_CONFIGS.clear()
             module.DOCS_SCOPE_CONFIGS.update(original_configs)
-            module.DOCUMENT_SOURCE_ROOTS.clear()
-            module.DOCUMENT_SOURCE_ROOTS.update(original_roots)
 
     assert parent_snapshot["shared.md"]["title"] == "Parent version"
     assert child_snapshot["shared.md"]["title"] == "Tag version"
@@ -792,7 +788,7 @@ def test_parent_watcher_capture_runs_one_existing_rebuild() -> None:
         (source_root / "doc.md").write_text(current_source, encoding="utf-8")
         previous = {"doc.md": timestamp_snapshot_row(module, previous_source)}
         current = {"doc.md": timestamp_snapshot_row(module, current_source)}
-        state = {
+        state = {"stage": "working",
             "scope": "studio",
             "root": source_root,
             "doc_snapshot": previous,
@@ -829,7 +825,9 @@ def test_parent_watcher_capture_runs_one_existing_rebuild() -> None:
                 (repo_root, "studio"),
                 {
                     "docs_doc_ids": ["doc"],
-                    "stage": None,
+                    "stage": "working",
+                    "links_doc_ids": ["doc"],
+                    "links_created_doc_ids": [],
                 },
             )
         ]
@@ -847,7 +845,6 @@ def test_sub_scope_watcher_captures_preserves_and_rebuilds_exact_collection_once
     module = load_docs_live_rebuild_watcher_module()
     analysis, _tags = configured_concepts()
     original_configs = dict(module.DOCS_SCOPE_CONFIGS)
-    original_roots = dict(module.DOCUMENT_SOURCE_ROOTS)
     original_timestamp = module.current_doc_timestamp
     original_parent_rebuild = module.rebuild_scope
     original_sub_scope_rebuild = module.rebuild_sub_scope
@@ -929,16 +926,17 @@ def test_sub_scope_watcher_captures_preserves_and_rebuilds_exact_collection_once
                 repo_root,
                 "analysis",
                 "tags",
+                stage="working",
             )
             for filename, source_text in current_sources.items():
                 child_root.joinpath(filename).write_text(
                     source_text,
                     encoding="utf-8",
                 )
-            state = {
+            state = {"stage": "working",
                 "scope": "analysis",
                 "sub_scope": "tags",
-                "label": "analysis/tags",
+                "label": "analysis/working/tags",
                 "root": child_root,
                 "doc_snapshot": previous_docs,
                 "snapshot": module.snapshot_markdown_root(child_root),
@@ -949,7 +947,7 @@ def test_sub_scope_watcher_captures_preserves_and_rebuilds_exact_collection_once
                     AssertionError("sub-scope processing must not rebuild parent")
                 )
             )
-            module.rebuild_sub_scope = lambda root, scope, sub_scope, stage=None: (
+            module.rebuild_sub_scope = lambda root, scope, sub_scope, stage=None, **_kwargs: (
                 rebuilds.append((root, scope, sub_scope)) or True
             )
             module.log = logs.append
@@ -966,6 +964,7 @@ def test_sub_scope_watcher_captures_preserves_and_rebuilds_exact_collection_once
                 repo_root,
                 "analysis",
                 "tags",
+                stage="working",
             )
             no_loop_plans = module.direct_edit_timestamp_plan(
                 adopted_docs,
@@ -980,8 +979,6 @@ def test_sub_scope_watcher_captures_preserves_and_rebuilds_exact_collection_once
             module.log = original_log
             module.DOCS_SCOPE_CONFIGS.clear()
             module.DOCS_SCOPE_CONFIGS.update(original_configs)
-            module.DOCUMENT_SOURCE_ROOTS.clear()
-            module.DOCUMENT_SOURCE_ROOTS.update(original_roots)
 
         assert rebuilt is True
         assert rebuilds == [(repo_root, "analysis", "tags")]
@@ -1007,7 +1004,6 @@ def test_sub_scope_watcher_timestamp_failure_keeps_source_and_rebuilds_once() ->
     module = load_docs_live_rebuild_watcher_module()
     analysis, _tags = configured_concepts()
     original_configs = dict(module.DOCS_SCOPE_CONFIGS)
-    original_roots = dict(module.DOCUMENT_SOURCE_ROOTS)
     original_timestamp = module.current_doc_timestamp
     original_write = module.write_text_atomic
     original_sub_scope_rebuild = module.rebuild_sub_scope
@@ -1041,12 +1037,13 @@ def test_sub_scope_watcher_timestamp_failure_keeps_source_and_rebuilds_once() ->
                 repo_root,
                 "analysis",
                 "tags",
+                stage="working",
             )
             path.write_text(current_source, encoding="utf-8")
-            state = {
+            state = {"stage": "working",
                 "scope": "analysis",
                 "sub_scope": "tags",
-                "label": "analysis/tags",
+                "label": "analysis/working/tags",
                 "root": child_root,
                 "doc_snapshot": previous_docs,
                 "snapshot": module.snapshot_markdown_root(child_root),
@@ -1057,7 +1054,7 @@ def test_sub_scope_watcher_timestamp_failure_keeps_source_and_rebuilds_once() ->
                     OSError("simulated sub-scope timestamp write failure")
                 )
             )
-            module.rebuild_sub_scope = lambda root, scope, sub_scope, stage=None: (
+            module.rebuild_sub_scope = lambda root, scope, sub_scope, stage=None, **_kwargs: (
                 rebuilds.append((root, scope, sub_scope)) or True
             )
             module.log = logs.append
@@ -1077,8 +1074,6 @@ def test_sub_scope_watcher_timestamp_failure_keeps_source_and_rebuilds_once() ->
             module.log = original_log
             module.DOCS_SCOPE_CONFIGS.clear()
             module.DOCS_SCOPE_CONFIGS.update(original_configs)
-            module.DOCUMENT_SOURCE_ROOTS.clear()
-            module.DOCUMENT_SOURCE_ROOTS.update(original_roots)
 
         assert rebuilt is True
         assert current_docs["failure.md"]["last_updated"] == (
@@ -1406,7 +1401,7 @@ def test_sub_scope_rebuild_runs_child_docs_only() -> None:
     original_log = module.log
     original_configs = dict(module.DOCS_SCOPE_CONFIGS)
     original_remove_manifest = module.remove_build_manifest
-    scope_config = SimpleNamespace(stage="", stages=())
+    scope_config = SimpleNamespace(stage="working", stages=(), scope_id="analysis")
     invalidations: list[tuple[Path, object]] = []
 
     class Completed:
@@ -1423,7 +1418,7 @@ def test_sub_scope_rebuild_runs_child_docs_only() -> None:
     module.DOCS_SCOPE_CONFIGS["analysis"] = scope_config
     module.remove_build_manifest = lambda root, config: invalidations.append((root, config))
     try:
-        assert module.rebuild_sub_scope(Path("/repo"), "analysis", "tags")
+        assert module.rebuild_sub_scope(Path("/repo"), "analysis", "tags", stage="working")
     finally:
         module.subprocess.run = original_run
         module.log = original_log
@@ -1441,6 +1436,7 @@ def test_sub_scope_rebuild_runs_child_docs_only() -> None:
             "tags",
             "--write",
             "--diagnostics",
+            "--stage", "working", "--skip-browser-config", "--skip-media-builds",
         ],
     ]
     assert invalidations == [(Path("/repo"), scope_config)]
@@ -1453,7 +1449,7 @@ def test_watcher_falls_back_to_full_docs_build_when_targeted_payloads_are_missin
     original_fallback = module.targeted_docs_build_fallback_reason
     original_configs = dict(module.DOCS_SCOPE_CONFIGS)
     original_remove_manifest = module.remove_build_manifest
-    scope_config = SimpleNamespace(stage="", stages=())
+    scope_config = SimpleNamespace(stage="working", stages=(), scope_id="analysis")
     invalidations: list[tuple[Path, object]] = []
 
     class Completed:
@@ -1476,6 +1472,7 @@ def test_watcher_falls_back_to_full_docs_build_when_targeted_payloads_are_missin
             Path("/repo"),
             "tmp",
             docs_doc_ids=["tmp"],
+            stage="working",
         )
     finally:
         module.subprocess.run = original_run
@@ -1485,7 +1482,7 @@ def test_watcher_falls_back_to_full_docs_build_when_targeted_payloads_are_missin
         module.DOCS_SCOPE_CONFIGS.update(original_configs)
 
     assert calls == [
-        [module.PYTHON_EXECUTABLE, "docs-viewer/build/build_docs.py", "--scope", "tmp", "--write", "--diagnostics"],
+        [module.PYTHON_EXECUTABLE, "docs-viewer/build/build_docs.py", "--scope", "tmp", "--write", "--diagnostics", "--stage", "working", "--skip-browser-config", "--skip-media-builds"],
     ]
     assert invalidations == [(Path("/repo"), scope_config)]
 

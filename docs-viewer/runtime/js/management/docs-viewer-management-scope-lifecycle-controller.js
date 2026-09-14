@@ -25,6 +25,7 @@ export function followCreatedSubScopeReport(payload, options = {}) {
       || payload.committed !== true
       || Object.prototype.hasOwnProperty.call(target, "sub_scope")
       || target.scope !== String(options.activeScope || "").trim().toLowerCase()
+      || target.stage !== options.activeStage
     ) {
       throw new Error("Created sub-scope report target is invalid.");
     }
@@ -97,6 +98,7 @@ export function createDocsViewerManagementScopeLifecycleController(options = {})
       followCreatedSubScopeReport: function (payload) {
         return followCreatedSubScopeReport(payload, {
           activeScope: viewerScope(),
+          activeStage: typeof callbacks.managementClientOptions === "function" ? callbacks.managementClientOptions().stage : undefined,
           reloadViewerConfiguration: callbacks.reloadViewerConfiguration,
           refreshManagementCapabilities: callbacks.refreshManagementCapabilities,
           reloadDocsIndex: callbacks.reloadDocsIndex

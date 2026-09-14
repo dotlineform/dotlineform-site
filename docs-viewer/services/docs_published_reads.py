@@ -4,16 +4,66 @@
 from __future__ import annotations
 
 import json
+import html
+import re
 from pathlib import Path
 from typing import Any
+from urllib.parse import parse_qsl, urlencode, urlsplit
 
 from docs_document_identity import is_immutable_doc_id
-from docs_scope_config import load_docs_scope_configs
+from docs_scope_config import load_docs_scope_configs, select_scope_stage
 from docs_scope_publish import validate_published_snapshot
 
 
 EXTERNAL_SUB_SCOPE_PUBLISHED_PREFIX = "/docs/published/external/"
 PUBLISHED_MEDIA_PREFIX = "/docs/published/media/"
+
+
+def project_published_view(repo_root: Path, scope: str, payload: dict[str, Any]) -> dict[str, Any]:
+    """Present accepted URLs in the local Published view without changing snapshot bytes."""
+    config = load_docs_scope_configs(repo_root, scope_ids=(scope,))[scope]
+
+    def project_url(value: str) -> str:
+        parsed = urlsplit(html.unescape(value))
+        if parsed.scheme or parsed.netloc or not parsed.path.startswith("/"):
+            return value
+        pairs = parse_qsl(parsed.query, keep_blank_values=True)
+        query = dict(pairs)
+        owns_document = query.get("scope") == scope or (
+            parsed.path == config.viewer_base_url and not config.include_scope_param and "scope" not in query
+        )
+        if owns_document and query.get("stage", "pre-publish") == "pre-publish":
+            if parsed.path in {"/docs/", config.viewer_base_url} and is_immutable_doc_id(query.get("doc", "")):
+                pairs = [(key, value) for key, value in pairs if key not in {"scope", "stage"}]
+                return parsed._replace(path="/docs/", query=urlencode([("scope", scope), ("stage", "published"), *pairs])).geturl()
+            if parsed.path in {"/docs/doc", "/docs/index-tree", "/docs/recent", "/docs/search", "/docs/backlinks"}:
+                return parsed._replace(path=parsed.path.replace("/docs/", "/docs/published/", 1), query=urlencode([(key, value) for key, value in pairs if key != "stage"])).geturl()
+        prefix = f"/docs/generated/external/{scope}/pre-publish/"
+        if parsed.path.startswith(prefix):
+            return parsed._replace(path=f"/docs/published/external/{scope}/" + parsed.path.removeprefix(prefix)).geturl()
+        return value
+
+    def project(value: Any) -> Any:
+        if isinstance(value, dict):
+            return {key: project(item) for key, item in value.items()}
+        if isinstance(value, list):
+            return [project(item) for item in value]
+        if not isinstance(value, str):
+            return value
+        if value.startswith("/"):
+            return project_url(value)
+        if "<" not in value:
+            return value
+
+        def tag(match: re.Match[str]) -> str:
+            def attribute(item: re.Match[str]) -> str:
+                original = html.unescape(item[3])
+                projected = project_url(original)
+                return item[0] if projected == original else item[1] + item[2] + html.escape(projected, quote=True) + item[2]
+            return re.sub(r"(\b(?:href|src)\s*=\s*)([\"'])(.*?)\2", attribute, match[0], flags=re.IGNORECASE | re.DOTALL)
+        return re.sub(r"<[^>]+>", tag, value)
+
+    return project(payload)
 
 
 def _read_json(data: bytes, label: str) -> dict[str, Any]:
@@ -33,7 +83,8 @@ def _snapshot_file(repo_root: Path, scope: str, relative_path: Path) -> bytes:
         raise FileNotFoundError(
             f"published snapshot file for {scope} not found: {relative_path.as_posix()}"
         )
-    return data
+    payload = _read_json(data, f"published {scope}/{relative_path}")
+    return json.dumps(project_published_view(repo_root, scope, payload), ensure_ascii=False).encode("utf-8")
 
 
 def read_published_docs_index_tree(repo_root: Path, scope: str) -> dict[str, Any]:
@@ -127,6 +178,7 @@ def external_sub_scope_payload_path(repo_root: Path, request_path: str) -> Path:
     config = load_docs_scope_configs(repo_root, scope_ids=(scope,)).get(scope)
     if config is None:
         raise FileNotFoundError(f"Published Docs scope not found: {scope!r}")
+    config = select_scope_stage(config, "pre-publish")
     if not any(item.sub_scope == sub_scope for item in config.sub_scopes):
         raise FileNotFoundError(f"Docs sub-scope not found: {scope}/{sub_scope}")
     _manifest, root, files = validate_published_snapshot(repo_root, scope)
@@ -162,6 +214,7 @@ def published_media_path(repo_root: Path, request_path: str) -> tuple[Path, str]
     config = load_docs_scope_configs(repo_root, scope_ids=(scope,)).get(scope)
     if config is None:
         raise FileNotFoundError(f"Published Docs scope not found: {scope}")
+    config = select_scope_stage(config, "pre-publish")
     collection = config
     if sub_scope:
         collection = next((child for child in config.sub_scopes if child.sub_scope == sub_scope), None)

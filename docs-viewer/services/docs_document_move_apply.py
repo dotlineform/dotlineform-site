@@ -560,6 +560,7 @@ def apply_document_move(
             docs_doc_ids=moved_doc_ids,
             written_paths=target_written_paths,
             skip_media_builds=True,
+            stage=current_plan.target_collection.stage or None,
         )
         target_rebuild_complete = True
 
@@ -574,6 +575,7 @@ def apply_document_move(
             docs_doc_ids=moved_doc_ids,
             written_paths=[],
             skip_media_builds=True,
+            stage=current_plan.source_collection.stage or None,
         )
         source_rebuild_complete = True
 

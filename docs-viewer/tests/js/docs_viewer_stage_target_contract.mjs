@@ -6,7 +6,9 @@ import { normalizeDocsViewerControlState } from "../../runtime/js/shared/docs-vi
 import { normalizeManagedDocumentTarget, managedDocumentTargetsEqual } from "../../runtime/js/management/docs-viewer-management-document-target.js";
 import { normalizeManagedSubscopeCollection, committedDocumentCreateTarget, committedDocumentMoveRecord, committedDocumentPlacement } from "../../runtime/js/management/docs-viewer-management-actions.js";
 import { createManagedDoc, readManagedDocSource, rebuildManagedDocSource, applyManagedSubScopeDocDelete, assignManagedDocFieldGroup, moveManagedDoc } from "../../runtime/js/management/docs-viewer-management-client.js";
-import { createDocsViewerManagementActionResolver } from "../../runtime/js/management/docs-viewer-management.js";
+import { createDocsViewerManagementActionResolver, refreshDocsImportTerminalDestination } from "../../runtime/js/management/docs-viewer-management.js";
+import { docsImportResultDestination } from "../../runtime/js/management/docs-viewer-management-import-result.js";
+import { managementReloadPath } from "../../runtime/js/shared/docs-viewer-data.js";
 import { DOCS_VIEWER_ACTION_IDS } from "../../runtime/js/management/docs-viewer-action-definitions.js";
 import { subjectMetadataFromResponse } from "../../runtime/js/management/docs-viewer-management-project-subject-modal.js";
 import { loadDocsViewerSubscopeContribution } from "../../runtime/js/management/docs-viewer-management-document-reports.js";
@@ -14,6 +16,9 @@ import { createDocsViewerIndexSelectionOwner } from "../../runtime/js/management
 import { createDocsViewerManagementIndexController } from "../../runtime/js/management/docs-viewer-management-index-controller.js";
 import { createDocsViewerManagementCapabilityController, scopePrePublishSupported, scopePublishSupported } from "../../runtime/js/management/docs-viewer-management-capabilities.js";
 import { docsViewerPublishWorkflowAvailability } from "../../runtime/js/management/docs-viewer-management-publish-workflow.js";
+import { previewSubScopeCreate, applySubScopeCreate } from "../../runtime/js/management/docs-viewer-management-client.js";
+import { subScopeDeleteSupported } from "../../runtime/js/management/docs-viewer-management-capabilities.js";
+import { followCreatedSubScopeReport } from "../../runtime/js/management/docs-viewer-management-scope-lifecycle-controller.js";
 
 const docId = "d-20260906-170000-a1b2c3";
 const working = { scope: "analysis", stage: "working", sub_scope: "projects", doc_id: docId };
@@ -69,8 +74,8 @@ for (const source of transferSources) {
   controller.render();
   for (const mode of ["copy", "move"]) {
     const item = projectedActions.items[mode];
-    assert.equal(item.hidden, source.scope === "analysis", `${source.scope}: ${mode} visibility`);
-    assert.equal(item.disabled, source.scope === "analysis", `${source.scope}: ${mode}: ${item.disabledReason}`);
+    assert.equal(item.hidden, false, `${source.scope}: ${mode} visibility`);
+    assert.equal(item.disabled, false, `${source.scope}: ${mode}: ${item.disabledReason}`);
   }
 }
 for (const wrongTarget of [
@@ -209,6 +214,19 @@ assert.equal(requests[0].body.stage, "working");
 assert.match(requests[1].url, /stage=working/);
 assert.deepEqual(requests[2].body, { ...working, source_body: "[[media:docs/analysis/img/one.jpg]]", source_revision: "revision" });
 assert.equal(requests[3].body.stage, "working");
+const childCreate = { parent_scope: "analysis", sub_scope: "concepts", title: "Concepts" };
+await previewSubScopeCreate(childCreate, options);
+assert.deepEqual(requests.at(-1).body, { ...childCreate, stage: "working" });
+await applySubScopeCreate(childCreate, options);
+assert.deepEqual(requests.at(-1).body, { ...childCreate, stage: "working", confirm: true });
+assert.equal(subScopeDeleteSupported({
+  scope_lifecycle: { sub_scope_delete_preview: true, sub_scope_delete_apply: true },
+  scopes: { analysis: { available: true, sub_scope_lifecycle: { delete_eligible: false } } }
+}, "analysis"), false);
+const childCreated = { action: "create_sub_scope", committed: true, report_host_target: hostTarget };
+const followOptions = { activeScope: "analysis", activeStage: "working", reloadViewerConfiguration: async () => {}, reloadDocsIndex: async () => {} };
+assert.deepEqual(await followCreatedSubScopeReport(childCreated, followOptions), hostTarget);
+await assert.rejects(followCreatedSubScopeReport(childCreated, { ...followOptions, activeStage: "pre-publish" }), /target is invalid/);
 const assignment = {
   source_revision: sourceRevision, field_group: "authoring_subject", confirm: true,
   fields: { folder_path: "", work_id: "00293", series_id: "", detail_uid: "" }
@@ -238,3 +256,41 @@ assert.deepEqual(routeFromAnchorHref(href, {
   viewerPathname: "/docs/", viewerScope: "analysis", includeScopeParam: true, allowScopeQuery: true
 }), { navigateUrl: href });
 console.log("Stage target contract passed: exact read/write requests, cross-scope reads and cross-stage navigation.");
+
+const imported = { target: { scope: "studio", stage: "working", doc_id: docId }, viewer_url: `/docs/?scope=studio&stage=working&doc=${docId}` };
+assert.deepEqual(docsImportResultDestination(imported).target, imported.target);
+assert.throws(() => docsImportResultDestination({ ...imported, viewer_url: imported.viewer_url.replace("working", "pre-publish") }), /stage/);
+const refresh = await refreshDocsImportTerminalDestination({ result: imported, destinationUrl: imported.viewer_url }, {
+  currentCollection: { scope: "studio", stage: "pre-publish" },
+  reloadParent: () => { throw new Error("Import must not refresh another stage"); }
+});
+assert.equal(refresh.refreshed, false);
+
+for (const route of ["index-tree", "recent", "doc", "search", "backlinks", "semantic-tokens"]) {
+  assert.equal(managementReloadPath(`/docs/${route}`, { scope: "studio", stage: "published" }), `/docs/published/${route}?scope=studio`);
+}
+assert.throws(() => managementReloadPath("/docs/source", { scope: "studio", stage: "published" }), /Published/);
+const publishedRequests = [];
+let acceptedAvailable = true;
+function publishedRuntime() {
+  return createDocsViewerGeneratedDataRuntime({
+    window: { fetch: async (url) => {
+      publishedRequests.push(url);
+      return { ok: true, json: async () => url.endsWith("/capabilities") ? { capabilities: {
+        generated_data_reads: true, scopes: { studio: { stages: {
+          published: { available: acceptedAvailable, published_data_reads: acceptedAvailable, published_search_reads: acceptedAvailable, generated_data_reads: false },
+          working: { available: true, generated_data_reads: true }
+        } } }
+      } } : { schema: "docs_index_tree_v1", docs: [], doc_id: docId } };
+    } },
+    generatedBaseUrl: "http://fixture.test", viewerScope: () => "studio", viewerStage: () => "published"
+  });
+}
+const accepted = publishedRuntime();
+await accepted.readDocsIndexTree({ indexTreeUrl: "/unexpected-static-index.json" });
+await accepted.readSearchIndex({ searchIndexUrl: "/unexpected-static-search.json" });
+assert.equal(publishedRequests.at(-2), "http://fixture.test/docs/published/index-tree?scope=studio");
+assert.equal(publishedRequests.at(-1), "http://fixture.test/docs/published/search?scope=studio");
+acceptedAvailable = false;
+await assert.rejects(publishedRuntime().readDocsIndexTree({ indexTreeUrl: "/unexpected-static-index.json" }), /unavailable/);
+assert.ok(publishedRequests.every(url => !url.includes("unexpected-static") && !url.includes("stage=working")));

@@ -22,6 +22,122 @@ DOC_ID = "d-20260906-170000-a1b2c3"
 REPORT_ID = "d-20260906-170000-d4e5f6"
 
 
+def add_local_stages(repo: Path, scope: str) -> None:
+    path = repo / scopes.CONFIG_REL_PATH
+    raw = json.loads(path.read_text())
+    record = docs_scope_record(scope)
+    record["stages"] = {
+        stage: {"media": deepcopy(record["media"]), "sub_scopes": [], "default_doc_id": DOC_ID if stage == "working" else ""}
+        for stage in ("working", "pre-publish")
+    }
+    raw["scopes"] = [item for item in raw["scopes"] if item["scope_id"] != scope] + [record]
+    write_json(path, raw)
+    for stage in ("working", "pre-publish"):
+        config = scopes.load_docs_scope_stage(repo, scope, stage)
+        source = repo / scopes.document_source_path(config)
+        source.mkdir(parents=True, exist_ok=True)
+        (source / f"{DOC_ID}.md").write_text(f"---\ndoc_id: {DOC_ID}\ntitle: {stage}\ndraft: false\n---\n# {stage}\n")
+        write_json(repo / scopes.generated_documents_path(config) / "index-tree.json", {"docs": [{"doc_id": DOC_ID}]})
+    working = scopes.load_docs_scope_stage(repo, scope, "working")
+    write_json(repo / scopes.document_source_path(working) / "unpublishable.json", [])
+
+
+@pytest.mark.parametrize("scope", ["studio", "notes", "processing", "app"])
+def test_local_stages_share_capabilities_config_and_exact_settings(stage_repo: Path, scope: str, monkeypatch) -> None:
+    from docs_builder.browser_config import browser_scope_record
+    from docs_management_capabilities_service import capabilities_payload
+    from docs_source_config_settings import build_settings_contract
+
+    add_local_stages(stage_repo, scope)
+    config = scopes.load_docs_scope_configs(stage_repo)[scope]
+    records = browser_scope_record(stage_repo, {}, config)["stages"]
+    assert [record["stage"] for record in records] == ["working", "pre-publish", "published"]
+    assert records[2]["index_tree_url"] == f"/docs/published/index-tree?scope={scope}"
+    assert records[2]["search_index_url"] == f"/docs/published/search?scope={scope}"
+    assert records[2]["default_doc_id"] == ""
+    assert records[2]["sub_scopes"] == []
+    capabilities = capabilities_payload(stage_repo)["capabilities"]["scopes"][scope]["stages"]
+    assert capabilities["working"]["document_authoring"] is True
+    assert capabilities["working"]["pre_publish"]["apply"] is True
+    assert capabilities["working"]["document_transfer"]["collections"][0]["target"] == {"scope": scope, "stage": "working"}
+    assert capabilities["pre-publish"]["publishing"]["apply"] is True
+    for stage in ("pre-publish", "published"):
+        assert capabilities[stage]["document_authoring"] is False
+        assert capabilities[stage]["document_transfer"]["collections"] == []
+    settings = build_settings_contract(stage_repo, scope, "working")["scopes"][0]
+    assert settings["stage"] == "working" and settings["fields"][0]["current_value"] == DOC_ID
+    with pytest.raises(ValueError, match="requires stage"):
+        build_settings_contract(stage_repo, scope)
+    import docs_write_rebuild as rebuild
+    commands = []
+
+    def run(command, _repo):
+        commands.append(command)
+        return {"returncode": 0, "stdout": "", "stderr": "", "elapsed_seconds": 0}
+
+    monkeypatch.setattr(rebuild, "run_rebuild_command", run)
+    rebuild.rebuild_scope_outputs(stage_repo, scope, stage="working", include_search=False)
+    assert commands[0][commands[0].index("--stage") + 1] == "working"
+    assert "--skip-media-builds" not in commands[0]
+
+
+def test_staged_local_transfer_keeps_owner_and_rejects_prepared_writes(stage_repo: Path) -> None:
+    from docs_document_transfer import plan_document_transfer, restore_document_transfer_apply_plan
+    from docs_document_transfer_apply import management_collection_document_url
+
+    for scope in ("studio", "notes"):
+        add_local_stages(stage_repo, scope)
+    request = dict(source_scope="studio", source_stage="working", target_scope="notes", target_stage="working", requested_doc_ids=[DOC_ID], transfer_mode="copy")
+    plan = plan_document_transfer(stage_repo, **request)
+    restored = restore_document_transfer_apply_plan(stage_repo, plan.apply_plan_payload())
+    assert restored.source_collection.stage == restored.target_collection.stage == "working"
+    assert "stage=working" in management_collection_document_url(stage_repo, restored.target_collection, DOC_ID)
+    with pytest.raises(ValueError, match="Pre-publish document authoring"):
+        plan_document_transfer(stage_repo, **{**request, "target_stage": "pre-publish"})
+
+
+def test_staged_local_import_uses_working_destination_and_rebuild(stage_repo: Path, monkeypatch) -> None:
+    import docs_management_import_service as service
+    import docs_import_preview
+    from repo_factory import write_site_tools_config, write_staged_import_file
+
+    add_local_stages(stage_repo, "studio")
+    write_site_tools_config(stage_repo)
+    write_staged_import_file(stage_repo, "ordinary.md", "# Imported\n\nBody.\n")
+    monkeypatch.setattr(docs_import_preview, "validate_markdown_preview", lambda markdown, **_kwargs: {"ok": True, "html_chars": len(markdown), "renderer": "stub"})
+    calls = []
+
+    def rebuild(_repo, scope, paths, write, **options):
+        calls.append((scope, paths, options))
+        write()
+        return {"ok": True}
+
+    monkeypatch.setattr(service.write_rebuild, "perform_source_write_and_rebuild", rebuild)
+    request = {"scope": "studio", "stage": "working", "source_directory": "data-sharing/import-staging", "staged_filename": "ordinary.md"}
+    result = service.handle_import_source(stage_repo, request, dry_run=False)
+    assert result["target"]["stage"] == "working"
+    assert "stage=working" in result["viewer_url"]
+    assert calls[0][2]["stage"] == "working"
+    assert all("working/source/documents" in path.as_posix() for path in calls[0][1])
+    with pytest.raises(ValueError, match="Pre-publish document authoring"):
+        service.handle_import_source(stage_repo, {**request, "stage": "pre-publish"}, dry_run=False)
+
+
+def test_document_packages_read_working_source_without_changing_package_identity(stage_repo: Path) -> None:
+    from docs_document_packages.source_context import load_document_package_source_context
+    from docs_document_packages import service
+    import docs_document_package_routes as routes
+
+    add_local_stages(stage_repo, "studio")
+    context = load_document_package_source_context(stage_repo, "studio")
+    assert context.scope_config.stage == "working"
+    assert context.records_by_id[DOC_ID].title == "working"
+    payload = service.get_payload(stage_repo, routes.DOCUMENTS_PATH, {"scope": ["studio"], "stage": ["working"]})
+    assert payload["scope"] == "studio"
+    with pytest.raises(ValueError, match="require Working"):
+        service.get_payload(stage_repo, routes.DOCUMENTS_PATH, {"scope": ["studio"], "stage": ["pre-publish"]})
+
+
 @pytest.fixture
 def stage_repo(tmp_path: Path) -> Path:
     prepare_repo(tmp_path)
@@ -37,6 +153,7 @@ def stage_repo(tmp_path: Path) -> Path:
         "schema_version": scopes.SCHEMA_VERSION,
         "scopes": [analysis, docs_scope_record("studio")],
     })
+    add_local_stages(tmp_path, "studio")
     for stage, collection in (("working", "works"), ("pre-publish", "works")):
         config = scopes.load_docs_scope_stage(tmp_path, "analysis", stage)
         for owner in (config, config.sub_scopes[0]):
@@ -266,9 +383,58 @@ def test_stage_storage_retains_scope_owned_snapshot_and_media_identity(stage_rep
     assert working.media.types["img"].reference_prefix == pre_publish.media.types["img"].reference_prefix == Path("docs/analysis/img")
     assert working.media.types["img"].served_path_prefix == "/docs/media/analysis/working/img"
     assert pre_publish.media.types["img"].served_path_prefix == "/docs/media/analysis/pre-publish/img"
-    assert scopes.document_source_path(scopes.load_docs_scope_stage(stage_repo, "studio")) == Path(
-        "docs-viewer/scopes/studio/source/documents"
+    assert scopes.document_source_path(scopes.load_docs_scope_stage(stage_repo, "studio", "working")) == Path(
+        "docs-viewer/scopes/studio/working/source/documents"
     )
+
+
+def test_every_configured_scope_requires_stage_definitions(stage_repo: Path) -> None:
+    path = stage_repo / scopes.CONFIG_REL_PATH
+    raw = json.loads(path.read_text())
+    del raw["scopes"][1]["stages"]
+    write_json(path, raw)
+    with pytest.raises(ValueError, match="requires working and pre-publish definitions"):
+        scopes.load_docs_scope_configs(stage_repo)
+
+
+def test_whole_sub_scope_retirement_remains_unavailable(stage_repo: Path) -> None:
+    import docs_sub_scope_lifecycle as lifecycle
+    from docs_management_capabilities_service import capabilities_payload
+
+    request = {"parent_scope": "analysis", "stage": "working", "sub_scope": "works", "confirm": True}
+    preview = lifecycle.plan_delete_sub_scope_preview(stage_repo, request)
+    assert preview["allowed"] is False and preview["delete_files"] == []
+    with pytest.raises(ValueError, match="Whole-sub-scope deletion is unavailable"):
+        lifecycle.apply_delete_sub_scope(stage_repo, request, dry_run=False, rebuild_scope_outputs=lambda *_args, **_kwargs: pytest.fail("must not rebuild"))
+    assert capabilities_payload(stage_repo)["capabilities"]["scopes"]["analysis"]["stages"]["working"]["sub_scope_lifecycle"]["delete_eligible"] is False
+
+
+def test_media_examples_remain_literal_in_working(stage_repo: Path) -> None:
+    from docs_builder.rendering import ContentRenderingMixin
+
+    renderer = ContentRenderingMixin()
+    renderer.config = scopes.load_docs_scope_stage(stage_repo, "studio", "working")
+    renderer.media_owner = renderer.config
+    renderer.scope_id = "studio"
+    literal = "`[[media:docs/<scope>/<type>/<file>]]`\n```text\n[[html-media:invalid]]\n![Example]([[media:docs/other/img/example.png]])\n```\n<!-- [[media:docs/other/img/example.png]] -->\n"
+    assert renderer.resolve_media_tokens(literal) == literal
+    assert renderer.resolve_html_media_tokens(literal) == literal
+    assert renderer.resolve_media_tokens("[[media:docs/studio/img/example.png]]") == "/docs/media/studio/working/img/example.png"
+
+
+def test_working_service_transfer_and_settings_keep_stage(stage_repo: Path) -> None:
+    import docs_management_service as service
+
+    add_local_stages(stage_repo, "notes")
+    status, payload = service.docs_management_post_response(stage_repo, service.routes.DOCUMENT_TRANSFER_PREVIEW_PATH, {
+        "scope": "studio", "stage": "working", "doc_ids": [DOC_ID],
+        "target_scope": "notes", "target_stage": "working", "transfer_mode": "copy",
+    })
+    assert status == 200 and payload["ok"] is True
+    status, payload = service.docs_management_post_response(stage_repo, service.routes.SOURCE_CONFIG_SETTINGS_PATH, {
+        "scope": "studio", "stage": "working", "changes": {"default_doc_id": ""},
+    }, dry_run=True)
+    assert status == 200 and payload["stage"] == "working"
 
 
 def test_child_media_insertion_replace_build_and_read_stay_in_collection(stage_repo: Path, monkeypatch: pytest.MonkeyPatch) -> None:

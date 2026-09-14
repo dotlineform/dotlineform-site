@@ -99,15 +99,15 @@ def make_repo(tmp_path: Path) -> Path:
             ],
         },
     )
-    source_root = repo_root / "docs-viewer/scopes/source/source/documents"
-    target_root = repo_root / "docs-viewer/scopes/target/source/documents"
+    source_root = repo_root / "docs-viewer/scopes/source/working/source/documents"
+    target_root = repo_root / "docs-viewer/scopes/target/working/source/documents"
     source_works_root = (
         repo_root
-        / "docs-viewer/scopes/source/source/sub-scopes/works/documents"
+        / "docs-viewer/scopes/source/working/source/sub-scopes/works/documents"
     )
     target_works_root = (
         repo_root
-        / "docs-viewer/scopes/target/source/sub-scopes/works/documents"
+        / "docs-viewer/scopes/target/working/source/sub-scopes/works/documents"
     )
     write_doc(source_root, doc_id="root", title="Root")
     write_doc(source_root, doc_id="alpha", title="Alpha", parent_id="root")
@@ -147,7 +147,7 @@ def test_preview_and_copy_apply_routes_share_apply_plan(
     status, preview = docs_management_service.docs_management_post_response(
         repo_root,
         docs_management_service.routes.DOCUMENT_TRANSFER_PREVIEW_PATH,
-        {
+        {"stage": "working", "target_stage": "working",
             "scope": "source",
             "doc_ids": ["root"],
             "target_scope": "target",
@@ -159,8 +159,8 @@ def test_preview_and_copy_apply_routes_share_apply_plan(
     assert status == HTTPStatus.OK
     assert preview["ok"] is True
     assert preview["dry_run"] is True
-    assert preview["source"] == {"scope": "source"}
-    assert preview["target"] == {"scope": "target", "placement": "scope_root"}
+    assert preview["source"] == {"stage": "working", "scope": "source"}
+    assert preview["target"] == {"stage": "working", "scope": "target", "placement": "scope_root"}
     assert preview["mode"] == "copy"
     assert preview["requested_count"] == 1
     assert preview["document_count"] == 4
@@ -201,7 +201,7 @@ def test_preview_and_copy_apply_routes_share_apply_plan(
     status, applied = docs_management_service.docs_management_post_response(
         repo_root,
         docs_management_service.routes.DOCUMENT_TRANSFER_APPLY_PATH,
-        {
+        {"stage": "working",
             "scope": "source",
             "apply_plan": apply_plan,
             "confirm": True,
@@ -228,7 +228,7 @@ def test_preview_and_copy_apply_routes_share_apply_plan(
         docs_management_service.docs_management_post_response(
             repo_root,
             docs_management_service.routes.DOCUMENT_TRANSFER_APPLY_PATH,
-            {
+            {"stage": "working",
                 "scope": "target",
                 "apply_plan": apply_plan,
                 "confirm": True,
@@ -244,7 +244,7 @@ def test_preview_and_apply_routes_preserve_exact_child_collections(
     status, preview = docs_management_service.docs_management_post_response(
         repo_root,
         docs_management_service.routes.DOCUMENT_TRANSFER_PREVIEW_PATH,
-        {
+        {"stage": "working", "target_stage": "working",
             "scope": "source",
             "sub_scope": "works",
             "doc_ids": ["work-a"],
@@ -256,8 +256,8 @@ def test_preview_and_apply_routes_preserve_exact_child_collections(
     )
 
     assert status == HTTPStatus.OK
-    assert preview["source"] == {"scope": "source", "sub_scope": "works"}
-    assert preview["target"] == {
+    assert preview["source"] == {"stage": "working", "scope": "source", "sub_scope": "works"}
+    assert preview["target"] == {"stage": "working",
         "scope": "target",
         "sub_scope": "works",
         "placement": "sub_scope_root",
@@ -283,7 +283,7 @@ def test_preview_and_apply_routes_preserve_exact_child_collections(
     status, applied = docs_management_service.docs_management_post_response(
         repo_root,
         docs_management_service.routes.DOCUMENT_TRANSFER_APPLY_PATH,
-        {
+        {"stage": "working",
             "scope": "source",
             "sub_scope": "works",
             "apply_plan": preview["apply_plan"],
@@ -295,15 +295,15 @@ def test_preview_and_apply_routes_preserve_exact_child_collections(
     assert applied == {"ok": True}
     assert captured == {
         "repo_root": repo_root,
-        "source": {"scope": "source", "sub_scope": "works"},
-        "target": {"scope": "target", "sub_scope": "works"},
+        "source": {"stage": "working", "scope": "source", "sub_scope": "works"},
+        "target": {"stage": "working", "scope": "target", "sub_scope": "works"},
         "confirm": True,
     }
     with pytest.raises(ValueError, match="source collection does not match request"):
         docs_management_service.docs_management_post_response(
             repo_root,
             docs_management_service.routes.DOCUMENT_TRANSFER_APPLY_PATH,
-            {
+            {"stage": "working",
                 "scope": "source",
                 "apply_plan": preview["apply_plan"],
                 "confirm": True,
@@ -319,7 +319,7 @@ def test_preview_forces_move_descendants_and_apply_dispatches_move(
     status, preview = docs_management_service.docs_management_post_response(
         repo_root,
         docs_management_service.routes.DOCUMENT_TRANSFER_PREVIEW_PATH,
-        {
+        {"stage": "working", "target_stage": "working",
             "scope": "source",
             "doc_ids": ["alpha"],
             "target_scope": "target",
@@ -364,7 +364,7 @@ def test_preview_forces_move_descendants_and_apply_dispatches_move(
     status, applied = docs_management_service.docs_management_post_response(
         repo_root,
         docs_management_service.routes.DOCUMENT_TRANSFER_APPLY_PATH,
-        {
+        {"stage": "working",
             "scope": "source",
             "apply_plan": preview["apply_plan"],
             "confirm": True,
@@ -389,7 +389,7 @@ def test_apply_route_preserves_failure_evidence(
     _status, preview = docs_management_service.docs_management_post_response(
         repo_root,
         docs_management_service.routes.DOCUMENT_TRANSFER_PREVIEW_PATH,
-        {
+        {"stage": "working", "target_stage": "working",
             "scope": "source",
             "doc_ids": ["root"],
             "target_scope": "target",
@@ -417,7 +417,7 @@ def test_apply_route_preserves_failure_evidence(
     status, payload = docs_management_service.docs_management_post_response(
         repo_root,
         docs_management_service.routes.DOCUMENT_TRANSFER_APPLY_PATH,
-        {
+        {"stage": "working",
             "scope": "source",
             "apply_plan": preview["apply_plan"],
             "confirm": True,

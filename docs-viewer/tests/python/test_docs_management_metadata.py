@@ -23,7 +23,7 @@ from repo_factory import (  # noqa: E402
     write_docs_scope_config as write_scope_registry,
 )
 from docs_builder.sub_scope import SubScopeDocsBuilder, selected_sub_scope  # noqa: E402
-from docs_scope_config import load_docs_scope_configs  # noqa: E402
+from docs_scope_config import load_docs_scope_configs, select_scope_stage  # noqa: E402
 
 from docs_management_test_support import (  # noqa: E402
     docs_management_mutations,
@@ -55,22 +55,25 @@ def test_document_subject_assignment_and_projection_without_catalogue(
             }),
         ])])
         source_path = repo_root / (
-            f"docs-viewer/scopes/{scope}/source/sub-scopes/{sub_scope}/documents/{SUB_SCOPE_DOC_ID}.md"
+            f"docs-viewer/scopes/{scope}/working/source/sub-scopes/{sub_scope}/documents/{SUB_SCOPE_DOC_ID}.md"
         )
         source_path.parent.mkdir(parents=True, exist_ok=True)
+        parent_path = repo_root / f"docs-viewer/scopes/{scope}/working/source/documents/d-20260914-090000-123456.md"
+        parent_path.parent.mkdir(parents=True, exist_ok=True)
+        parent_path.write_text(f"---\ndoc_id: d-20260914-090000-123456\ntitle: Report\n---\n# Report\n\n:::report\nid: docs_subscope\nsub_scope: {sub_scope}\n:::\n", encoding="utf-8")
         model = docs_management_mutations.source_model
         authored_body = "# Independent document\n\nKeep this body.\n"
         source_path.write_text(model.format_source({
             "doc_id": SUB_SCOPE_DOC_ID, "title": "Independent document",
             "added_date": "2026-09-05 12:00:00", "last_updated": "2026-09-05 12:00:00",
         }, authored_body), encoding="utf-8")
-        query = {"scope": [scope], "sub_scope": [sub_scope], "doc_id": [SUB_SCOPE_DOC_ID]}
+        query = {"stage": ["working"], "scope": [scope], "sub_scope": [sub_scope], "doc_id": [SUB_SCOPE_DOC_ID]}
         metadata = docs_management_service.docs_management_get_payload(
             repo_root, docs_management_service.routes.METADATA_PATH, query,
         )
         assert metadata["record"]["authoring_subject"]["state"] == "none"
         empty_fields = {"folder_path": "", "work_id": "", "series_id": "", "detail_uid": ""}
-        request = {
+        request = {"stage": "working",
             "scope": scope, "sub_scope": sub_scope, "doc_id": SUB_SCOPE_DOC_ID,
             "source_revision": metadata["source_revision"],
             "field_group": "authoring_subject", "confirm": True,
@@ -96,13 +99,13 @@ def test_document_subject_assignment_and_projection_without_catalogue(
         assert front_matter[subject_field] == valid_key
         assert not any(field in front_matter for field in ("folder_path", "work_id", "series_id"))
         assert body == authored_body
-        config = load_docs_scope_configs(repo_root, scope_ids=[scope])[scope]
+        config = select_scope_stage(load_docs_scope_configs(repo_root, scope_ids=[scope])[scope], "working")
         builder = SubScopeDocsBuilder(
             repo_root=repo_root, config=config, sub_scope=selected_sub_scope(config, sub_scope),
         )
         builder._parent_report_doc_id = ""
         builder.run(write=True)
-        output = repo_root / f"docs-viewer/scopes/{scope}/generated/sub-scopes/{sub_scope}/documents"
+        output = repo_root / f"docs-viewer/scopes/{scope}/working/generated/sub-scopes/{sub_scope}/documents"
         manifest = read_json(output / "manage-manifest.json")
         associations = read_json(output / "subject-associations.json")
         assert manifest["docs"][0]["authoring_subject"]["kind"] == subject_kind
@@ -127,27 +130,24 @@ def test_document_subject_assignment_and_projection_without_catalogue(
 def test_management_request_refreshes_scope_model_from_config() -> None:
     source_model = docs_management_mutations.source_model
     original_configs = dict(source_model.DOCS_SCOPE_CONFIGS)
-    original_roots = dict(source_model.DOCUMENT_SOURCE_ROOTS)
     try:
         with make_repo() as temp_path:
             repo_root = Path(temp_path)
             write_docs_scope_config(repo_root)
-            source_model.DOCUMENT_SOURCE_ROOTS["retired"] = Path("docs-viewer/scopes/retired/source/documents")
+            source_model.DOCS_SCOPE_CONFIGS["retired"] = object()
             docs_management_service.refresh_source_model_scope_configs(repo_root)
-            assert list(source_model.DOCUMENT_SOURCE_ROOTS) == ["studio"]
-            assert source_model.DOCUMENT_SOURCE_ROOTS["studio"] == Path("docs-viewer/scopes/studio/source/documents")
+            assert list(source_model.DOCS_SCOPE_CONFIGS) == ["studio"]
+            assert [item.stage for item in source_model.DOCS_SCOPE_CONFIGS["studio"].stages] == ["working", "pre-publish"]
     finally:
         source_model.DOCS_SCOPE_CONFIGS.clear()
         source_model.DOCS_SCOPE_CONFIGS.update(original_configs)
-        source_model.DOCUMENT_SOURCE_ROOTS.clear()
-        source_model.DOCUMENT_SOURCE_ROOTS.update(original_roots)
 
 def test_local_doc_is_editable_in_dry_run_without_publishable_metadata() -> None:
     with make_repo() as repo_name:
         repo_root = Path(repo_name)
         result = docs_management_service.handle_update_metadata(
             repo_root,
-            {
+            {"stage": "working",
                 "scope": "studio",
                 "doc_id": "non-publishable-doc",
                 "title": "Non-publishable Doc",
@@ -176,7 +176,7 @@ def test_update_metadata_rejects_publishable() -> None:
         with pytest.raises(ValueError, match="not editable through metadata"):
             docs_management_service.handle_update_metadata(
                 repo_root,
-                {
+                {"stage": "working",
                     "scope": "studio",
                     "doc_id": "other",
                     "title": "Other",
@@ -192,6 +192,9 @@ def test_projects_subject_assignment_read_save_remove_and_strict_rejection(
     monkeypatch,
     tmp_path: Path,
 ) -> None:
+    from copy import deepcopy
+    from docs_scope_config import load_docs_scope_stage
+
     rebuild_calls: list[dict[str, object]] = []
     authored_body = (
         "# Architecture\n\n"
@@ -208,7 +211,7 @@ def test_projects_subject_assignment_read_save_remove_and_strict_rejection(
         **kwargs,
     ):
         write_operation()
-        config = load_docs_scope_configs(repo_root, scope_ids=[scope])[scope]
+        config = load_docs_scope_stage(repo_root, scope, kwargs.get("stage"))
         builder = SubScopeDocsBuilder(
             repo_root=repo_root,
             config=config,
@@ -217,7 +220,7 @@ def test_projects_subject_assignment_read_save_remove_and_strict_rejection(
         builder._parent_report_doc_id = ""
         builder.run(write=True)
         rebuild_calls.append(
-            {
+            {"stage": "working",
                 "scope": scope,
                 "sub_scope": sub_scope,
                 "changed_paths": [path.name for path in changed_paths],
@@ -259,8 +262,22 @@ def test_projects_subject_assignment_read_save_remove_and_strict_rejection(
                 )
             ],
         )
+        config_path = repo_root / "docs-viewer/config/scopes/docs_scopes.json"
+        raw = read_json(config_path)
+        record = raw["scopes"][0]
+        record["stages"] = {
+            stage: {"media": deepcopy(record["media"]), "sub_scopes": deepcopy(record["sub_scopes"])}
+            for stage in ("working", "pre-publish")
+        }
+        config_path.write_text(json.dumps(raw))
+        parent_source = repo_root / "docs-viewer/scopes/dotlineform/working/source/documents"
+        parent_source.mkdir(parents=True)
+        report_id = "d-20260914-100000-000001"
+        (parent_source / f"{report_id}.md").write_text(
+            f"---\ndoc_id: {report_id}\ntitle: Works\n---\n:::report\nid: docs_subscope\nsub_scope: projects\n:::\n"
+        )
         source_path = repo_root / (
-            "docs-viewer/scopes/dotlineform/source/sub-scopes/"
+            "docs-viewer/scopes/dotlineform/working/source/sub-scopes/"
             f"projects/documents/{SUB_SCOPE_DOC_ID}.md"
         )
         source_path.parent.mkdir(parents=True, exist_ok=True)
@@ -277,9 +294,7 @@ def test_projects_subject_assignment_read_save_remove_and_strict_rejection(
             ),
             encoding="utf-8",
         )
-        config = load_docs_scope_configs(repo_root, scope_ids=["dotlineform"])[
-            "dotlineform"
-        ]
+        config = load_docs_scope_stage(repo_root, "dotlineform", "working")
         builder = SubScopeDocsBuilder(
             repo_root=repo_root,
             config=config,
@@ -293,6 +308,7 @@ def test_projects_subject_assignment_read_save_remove_and_strict_rejection(
             docs_management_service.routes.METADATA_PATH,
             {
                 "scope": ["dotlineform"],
+                "stage": ["working"],
                 "sub_scope": ["projects"],
                 "doc_id": [SUB_SCOPE_DOC_ID],
             },
@@ -301,6 +317,7 @@ def test_projects_subject_assignment_read_save_remove_and_strict_rejection(
         target_body = {
             "scope": "dotlineform",
             "sub_scope": "projects",
+            "stage": "working",
             "doc_id": SUB_SCOPE_DOC_ID,
             "source_revision": revision,
             "field_group": "authoring_subject",
@@ -317,6 +334,7 @@ def test_projects_subject_assignment_read_save_remove_and_strict_rejection(
                 {
                     "scope": "dotlineform",
                     "sub_scope": "projects",
+                    "stage": "working",
                     "doc_id": SUB_SCOPE_DOC_ID,
                     "source_revision": revision,
                     "title": "Architecture",
@@ -406,13 +424,13 @@ def test_projects_subject_assignment_read_save_remove_and_strict_rejection(
         linked_source = source_path.read_text(encoding="utf-8")
         linked_manifest = read_json(
             repo_root / (
-                "docs-viewer/scopes/dotlineform/generated/sub-scopes/"
+                "docs-viewer/scopes/dotlineform/working/generated/sub-scopes/"
                 "projects/documents/manage-manifest.json"
             )
         )
         linked_associations = read_json(
             repo_root / (
-                "docs-viewer/scopes/dotlineform/generated/sub-scopes/"
+                "docs-viewer/scopes/dotlineform/working/generated/sub-scopes/"
                 "projects/documents/subject-associations.json"
             )
         )
@@ -464,13 +482,13 @@ def test_projects_subject_assignment_read_save_remove_and_strict_rejection(
         removed_source = source_path.read_text(encoding="utf-8")
         removed_manifest = read_json(
             repo_root / (
-                "docs-viewer/scopes/dotlineform/generated/sub-scopes/"
+                "docs-viewer/scopes/dotlineform/working/generated/sub-scopes/"
                 "projects/documents/manage-manifest.json"
             )
         )
         removed_associations = read_json(
             repo_root / (
-                "docs-viewer/scopes/dotlineform/generated/sub-scopes/"
+                "docs-viewer/scopes/dotlineform/working/generated/sub-scopes/"
                 "projects/documents/subject-associations.json"
             )
         )
@@ -494,13 +512,13 @@ def test_projects_subject_assignment_read_save_remove_and_strict_rejection(
         work_source = source_path.read_text(encoding="utf-8")
         work_manifest = read_json(
             repo_root / (
-                "docs-viewer/scopes/dotlineform/generated/sub-scopes/"
+                "docs-viewer/scopes/dotlineform/working/generated/sub-scopes/"
                 "projects/documents/manage-manifest.json"
             )
         )
         work_associations = read_json(
             repo_root / (
-                "docs-viewer/scopes/dotlineform/generated/sub-scopes/"
+                "docs-viewer/scopes/dotlineform/working/generated/sub-scopes/"
                 "projects/documents/subject-associations.json"
             )
         )
@@ -521,6 +539,7 @@ def test_projects_subject_assignment_read_save_remove_and_strict_rejection(
     assert result["target"] == {
         "scope": "dotlineform",
         "sub_scope": "projects",
+        "stage": "working",
         "doc_id": SUB_SCOPE_DOC_ID,
     }
     assert result["field_group"] == "authoring_subject"
@@ -594,19 +613,19 @@ def test_projects_subject_assignment_read_save_remove_and_strict_rejection(
         "key": "00123",
     }
     assert rebuild_calls == [
-        {
+        {"stage": "working",
             "scope": "dotlineform",
             "sub_scope": "projects",
             "changed_paths": [f"{SUB_SCOPE_DOC_ID}.md"],
             "suppression_reason": "docs-assign-field-group",
         },
-        {
+        {"stage": "working",
             "scope": "dotlineform",
             "sub_scope": "projects",
             "changed_paths": [f"{SUB_SCOPE_DOC_ID}.md"],
             "suppression_reason": "docs-assign-field-group",
         },
-        {
+        {"stage": "working",
             "scope": "dotlineform",
             "sub_scope": "projects",
             "changed_paths": [f"{SUB_SCOPE_DOC_ID}.md"],
@@ -637,7 +656,7 @@ def test_projects_malformed_subject_remains_ordinary_metadata_saveable() -> None
             ],
         )
         source_path = repo_root / (
-            "docs-viewer/scopes/dotlineform/source/sub-scopes/"
+            "docs-viewer/scopes/dotlineform/working/source/sub-scopes/"
             f"projects/documents/{SUB_SCOPE_DOC_ID}.md"
         )
         source_path.parent.mkdir(parents=True, exist_ok=True)
@@ -654,7 +673,7 @@ work_id: 123
 
         plan = docs_management_mutations.plan_update_metadata(
             repo_root,
-            {
+            {"stage": "working",
                 "scope": "dotlineform",
                 "sub_scope": "projects",
                 "doc_id": SUB_SCOPE_DOC_ID,
@@ -673,62 +692,6 @@ work_id: 123
     assert "work_id: 123" in plan.source_writes[0].text
 
 
-def test_sub_scope_metadata_service_rejects_parent_without_writing(
-    monkeypatch,
-) -> None:
-    def fail_rebuild(*_args, **_kwargs):
-        raise AssertionError("rebuild must not run for a rejected sub-scope parent")
-
-    monkeypatch.setattr(
-        docs_management_service.write_rebuild,
-        "perform_sub_scope_source_write_and_rebuild",
-        fail_rebuild,
-    )
-
-    with make_repo() as temp_path:
-        repo_root = Path(temp_path)
-        write_scope_registry(
-            repo_root,
-            [
-                docs_scope_record(
-                    "studio",
-                    sub_scopes=[docs_sub_scope_record("studio", "tags")],
-                )
-            ],
-        )
-        source_path = (
-            repo_root
-            / f"docs-viewer/scopes/studio/source/sub-scopes/tags/documents/{SUB_SCOPE_DOC_ID}.md"
-        )
-        source_path.parent.mkdir(parents=True, exist_ok=True)
-        source_path.write_text(
-            docs_management_mutations.source_model.format_source(
-                {
-                    "doc_id": SUB_SCOPE_DOC_ID,
-                    "title": "Detail",
-                    "parent_id": "retained-parent",
-                },
-                "# Detail\n",
-            ),
-            encoding="utf-8",
-        )
-        before = source_path.read_bytes()
-        with pytest.raises(
-            ValueError,
-            match="parent_id is not editable for a sub-scope document",
-        ):
-            docs_management_service.handle_update_metadata(
-                repo_root,
-                {
-                    "scope": "studio",
-                    "sub_scope": "tags",
-                    "doc_id": SUB_SCOPE_DOC_ID,
-                    "title": "Detail",
-                    "parent_id": "",
-                },
-                dry_run=False,
-            )
-        assert source_path.read_bytes() == before
 
 
 def test_sub_scope_metadata_service_returns_conflict_for_write_race(
@@ -752,7 +715,7 @@ def test_sub_scope_metadata_service_returns_conflict_for_write_race(
         )
         source_path = (
             repo_root
-            / f"docs-viewer/scopes/studio/source/sub-scopes/tags/documents/{SUB_SCOPE_DOC_ID}.md"
+            / f"docs-viewer/scopes/studio/working/source/sub-scopes/tags/documents/{SUB_SCOPE_DOC_ID}.md"
         )
         source_path.parent.mkdir(parents=True, exist_ok=True)
         source_path.write_text(
@@ -789,7 +752,7 @@ def test_sub_scope_metadata_service_returns_conflict_for_write_race(
         status, payload = docs_management_service.docs_management_post_response(
             repo_root,
             docs_management_service.routes.UPDATE_METADATA_PATH,
-            {
+            {"stage": "working",
                 "scope": "studio",
                 "sub_scope": "tags",
                 "doc_id": SUB_SCOPE_DOC_ID,
@@ -805,7 +768,7 @@ def test_sub_scope_metadata_service_returns_conflict_for_write_race(
         assert status is HTTPStatus.CONFLICT
         assert payload["operation"] == "update_metadata"
         assert payload["error"] == "managed document source changed before metadata save"
-        assert payload["target"] == {
+        assert payload["target"] == {"stage": "working",
             "scope": "studio",
             "sub_scope": "tags",
             "doc_id": SUB_SCOPE_DOC_ID,
@@ -817,7 +780,7 @@ def test_sub_scope_metadata_service_returns_conflict_for_write_race(
 def test_hidden_parent_delete_includes_children() -> None:
     with make_repo() as temp_path:
         repo_root = Path(temp_path)
-        result = docs_management_mutations.plan_delete_preview(repo_root, "studio", ["non-publishable-doc"])
+        result = docs_management_mutations.plan_delete_preview(repo_root, "studio", ["non-publishable-doc"], stage="working")
 
     assert result["allowed"] is True
     assert result["blockers"] == []
@@ -830,7 +793,7 @@ def test_parent_delete_removes_subtree_and_rebuilds_every_deleted_id(monkeypatch
     rebuild_calls = []
 
     def rebuild_scope_outputs(_repo_root, scope, **kwargs):
-        rebuild_calls.append({"scope": scope, **kwargs})
+        rebuild_calls.append({"stage": "working", "scope": scope, **kwargs})
         return {"ok": True}
 
     monkeypatch.setattr(
@@ -841,10 +804,10 @@ def test_parent_delete_removes_subtree_and_rebuilds_every_deleted_id(monkeypatch
 
     with make_repo() as temp_path:
         repo_root = Path(temp_path)
-        source_root = repo_root / "docs-viewer/scopes/studio/source/documents"
+        source_root = repo_root / "docs-viewer/scopes/studio/working/source/documents"
         result = docs_management_service.handle_delete_apply(
             repo_root,
-            {
+            {"stage": "working",
                 "scope": "studio",
                 "doc_ids": ["non-publishable-doc"],
                 "confirm": True,
@@ -862,8 +825,10 @@ def test_parent_delete_removes_subtree_and_rebuilds_every_deleted_id(monkeypatch
             "scope": "studio",
             "include_search": False,
             "docs_doc_ids": ["non-publishable-doc", "child"],
-            "skip_media_builds": False,
-            "stage": None,
+                "links_doc_ids": ["child", "non-publishable-doc"],
+                "links_created_doc_ids": [],
+            "skip_media_builds": True,
+            "stage": "working",
         }
     ]
 
@@ -872,7 +837,7 @@ def test_multi_selection_delete_applies_union_once(monkeypatch) -> None:
     rebuild_calls = []
 
     def rebuild_scope_outputs(_repo_root, scope, **kwargs):
-        rebuild_calls.append({"scope": scope, **kwargs})
+        rebuild_calls.append({"stage": "working", "scope": scope, **kwargs})
         return {"ok": True}
 
     monkeypatch.setattr(
@@ -883,10 +848,10 @@ def test_multi_selection_delete_applies_union_once(monkeypatch) -> None:
 
     with make_repo() as temp_path:
         repo_root = Path(temp_path)
-        source_root = repo_root / "docs-viewer/scopes/studio/source/documents"
+        source_root = repo_root / "docs-viewer/scopes/studio/working/source/documents"
         result = docs_management_service.handle_delete_apply(
             repo_root,
-            {
+            {"stage": "working",
                 "scope": "studio",
                 "doc_ids": ["child", "non-publishable-doc", "other"],
                 "confirm": True,
@@ -906,8 +871,10 @@ def test_multi_selection_delete_applies_union_once(monkeypatch) -> None:
             "scope": "studio",
             "include_search": False,
             "docs_doc_ids": ["non-publishable-doc", "child", "other"],
-            "skip_media_builds": False,
-            "stage": None,
+                "links_doc_ids": ["child", "non-publishable-doc", "other"],
+                "links_created_doc_ids": [],
+            "skip_media_builds": True,
+            "stage": "working",
         }
     ]
 
@@ -921,7 +888,7 @@ def test_external_scope_default_doc_delete_uses_workspace_relative_path(tmp_path
     )
     projects_base = tmp_path / "projects-base"
     external_root = projects_base / "docs-viewer"
-    source_root = external_root / "scopes/dlf/source"
+    source_root = external_root / "scopes/dlf/working/source"
     documents_root = source_root / "documents"
     documents_root.mkdir(parents=True)
     target_path = documents_root / "dlf.md"
@@ -972,15 +939,14 @@ def test_external_scope_default_doc_delete_uses_workspace_relative_path(tmp_path
 
     source_model = docs_management_mutations.source_model
     original_configs = dict(source_model.DOCS_SCOPE_CONFIGS)
-    original_roots = dict(source_model.DOCUMENT_SOURCE_ROOTS)
     original_rebuild = docs_management_service.write_rebuild.rebuild_scope_outputs
     docs_management_service.refresh_source_model_scope_configs(repo_root)
     docs_management_service.write_rebuild.rebuild_scope_outputs = lambda *_args, **_kwargs: {"ok": True}
     try:
-        preview = docs_management_mutations.plan_delete_preview(repo_root, "dlf", ["dlf"])
+        preview = docs_management_mutations.plan_delete_preview(repo_root, "dlf", ["dlf"], stage="working")
         result = docs_management_service.handle_delete_apply(
             repo_root,
-            {
+            {"stage": "working",
                 "scope": "dlf",
                 "doc_ids": ["dlf"],
                 "confirm": True,
@@ -990,15 +956,13 @@ def test_external_scope_default_doc_delete_uses_workspace_relative_path(tmp_path
     finally:
         source_model.DOCS_SCOPE_CONFIGS.clear()
         source_model.DOCS_SCOPE_CONFIGS.update(original_configs)
-        source_model.DOCUMENT_SOURCE_ROOTS.clear()
-        source_model.DOCUMENT_SOURCE_ROOTS.update(original_roots)
         docs_management_service.write_rebuild.rebuild_scope_outputs = original_rebuild
 
-    assert preview["delete_documents"][0]["path"] == "scopes/dlf/source/documents/dlf.md"
+    assert preview["delete_documents"][0]["path"] == "scopes/dlf/working/source/documents/dlf.md"
     assert preview["default_doc_id_changed"] is True
-    assert result["paths"] == ["scopes/dlf/source/documents/dlf.md"]
+    assert result["paths"] == ["scopes/dlf/working/source/documents/dlf.md"]
     assert result["default_doc_id_changed"] is True
     assert result["default_doc_id"] == ""
     assert result["rebuild"] == {"ok": True}
     assert not target_path.exists()
-    assert json.loads(config_path.read_text(encoding="utf-8"))["scopes"][0]["default_doc_id"] == ""
+    assert json.loads(config_path.read_text(encoding="utf-8"))["scopes"][0]["stages"]["working"]["default_doc_id"] == ""

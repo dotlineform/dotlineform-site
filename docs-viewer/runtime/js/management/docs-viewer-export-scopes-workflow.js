@@ -47,9 +47,11 @@ export function docsViewerExportScopeRecords(options = {}) {
     var scope = normalizeScope(config && (config.scopeId || config.scope_id));
     if (!scope || seen.has(scope)) return null;
     seen.add(scope);
-    var capability = scopeStaticHtmlExportCapability(capabilities, scope);
+    var stage = cleanString(config && config.stage);
+    var capability = scopeStaticHtmlExportCapability(capabilities, scope, stage);
     return {
       scope: scope,
+      stage: stage,
       label: cleanString(config && (config.label || config.scopeId || config.scope_id)) || scope,
       emoji: cleanString(config && config.emoji),
       available: capability.available === true,
@@ -216,8 +218,8 @@ export async function runManagedDocsExportScopesWorkflow(options = {}) {
   var confirmBatch = operations.confirmBatch || function (confirmationOptions) {
     return openDocsViewerConfirmModal(confirmationOptions);
   };
-  var readIndex = operations.readIndex || function (scope) {
-    return readManagedDocsIndex(scope, options.clientOptions || {})
+  var readIndex = operations.readIndex || function (scope, clientOptions) {
+    return readManagedDocsIndex(scope, clientOptions)
       .then(normalizeDocsIndexTreePayload);
   };
   var previewSnapshot = operations.previewSnapshot || function (scope, docIds, clientOptions) {
@@ -250,11 +252,13 @@ export async function runManagedDocsExportScopesWorkflow(options = {}) {
         "Preparing " + (index + 1) + " of " + selectedRecords.length + ": " + record.scope + "…",
         false
       );
-      var indexPayload = await readIndex(record.scope);
+      var clientOptions = Object.assign({}, options.clientOptions, { scope: record.scope, stage: record.stage });
+      var indexPayload = await readIndex(record.scope, clientOptions);
       var docIds = docsViewerExportScopeDocIds(indexPayload, record.scope);
-      var preview = await previewSnapshot(record.scope, docIds, options.clientOptions || {});
+      var preview = await previewSnapshot(record.scope, docIds, clientOptions);
       preview = validateStaticHtmlSnapshotPreview(preview, {
         scope: record.scope,
+        stage: record.stage,
         checkedDocIds: docIds
       });
       if (preview.selection_kind !== "complete") {
@@ -262,7 +266,7 @@ export async function runManagedDocsExportScopesWorkflow(options = {}) {
           "The generated Index changed before the full-scope preview for " + record.scope + "."
         );
       }
-      plans.push({ scope: record.scope, docIds: docIds, preview: preview });
+      plans.push({ scope: record.scope, stage: record.stage, docIds: docIds, preview: preview });
     }
   } finally {
     setBusy(callbacks, false);
@@ -288,7 +292,7 @@ export async function runManagedDocsExportScopesWorkflow(options = {}) {
         var applied = await applySnapshot(
           plan.scope,
           plan.preview,
-          options.clientOptions || {}
+          Object.assign({}, options.clientOptions, { scope: plan.scope, stage: plan.stage })
         );
         results.push({ scope: plan.scope, payload: applied });
       } catch (error) {

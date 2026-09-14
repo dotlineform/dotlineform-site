@@ -35,12 +35,11 @@ import docs_source_model as source_model  # noqa: E402
 import docs_write_rebuild as write_rebuild  # noqa: E402
 from docs_scope_config import (  # noqa: E402
     DOCS_SCOPE_CONFIGS,
-    DOCUMENT_SOURCE_ROOTS,
     document_source_path,
     load_docs_scope_configs,
     managed_media_config,
     resolve_location_path,
-)
+    select_scope_stage)
 from docs_management_import_service import handle_import_source as handle_managed_import_source  # noqa: E402
 from docs_document_packages import service as document_package_service  # noqa: E402
 
@@ -50,14 +49,13 @@ def handle_documents_import_preview(root: Path, body: dict[str, object], dry_run
 
 def make_repo() -> tempfile.TemporaryDirectory:
     temp_dir = make_docs_import_repo(source_model.format_front_matter_value)
-    config = load_docs_scope_configs(Path(temp_dir.name))["example"]
+    config = select_scope_stage(load_docs_scope_configs(Path(temp_dir.name))["example"], "working")
     DOCS_SCOPE_CONFIGS["example"] = config
-    DOCUMENT_SOURCE_ROOTS["example"] = document_source_path(config)
     return temp_dir
 
 
 def managed_media_path(root: Path, scope: str, media_type: str, *parts: str) -> Path:
-    config = load_docs_scope_configs(root, scope_ids=(scope,))[scope]
+    config = select_scope_stage(load_docs_scope_configs(root, scope_ids=(scope,))[scope], "working")
     location = managed_media_config(config, media_type).source_location
     return resolve_location_path(root, location) / Path(*parts)
 
@@ -185,7 +183,7 @@ def stub_rebuild():
             },
             "search": {"mode": "none", "doc_ids": []},
             "diagnostics": {
-                "docs": {"scope": scope, "build_mode": "targeted" if docs_doc_ids else "full"},
+                "docs": {"stage": "working", "scope": scope, "build_mode": "targeted" if docs_doc_ids else "full"},
                 "search": {"mode": "none", "doc_ids": []},
             },
         }

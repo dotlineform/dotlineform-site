@@ -83,6 +83,7 @@ async function requestImport(
     confirm_interactive_html_overwrite: confirmInteractiveHtmlOverwrite,
     preview_only: false
   };
+  if (context.stage) requestBody.stage = context.stage;
   if (context.subScope) requestBody.sub_scope = context.subScope;
   return fetchManagementJson(
     "/docs/import-source",
@@ -135,6 +136,7 @@ export async function runDocsHtmlImportWorkflow(
   {
     files = [],
     scope = "",
+    stage = "",
     subScope = "",
     sourceDirectory = "",
     includePromptMeta = false,
@@ -146,6 +148,7 @@ export async function runDocsHtmlImportWorkflow(
 ) {
   const workflowContext = {
     scope: normalizeText(scope),
+    stage: normalizeText(stage),
     subScope: normalizeText(subScope).toLowerCase(),
     sourceDirectory: normalizeText(sourceDirectory),
     includePromptMeta: Boolean(includePromptMeta),

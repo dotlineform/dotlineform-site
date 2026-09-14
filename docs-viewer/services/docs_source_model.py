@@ -25,11 +25,11 @@ from docs_document_identity import (
 
 from docs_scope_config import (
     DOCS_SCOPE_CONFIGS,
-    DOCUMENT_SOURCE_ROOTS,
     DocsScopeConfig,
     DocsSubScopeConfig,
     document_source_path,
     load_docs_scope_configs,
+    load_docs_scope_stage,
     path_label,
     resolve_scope_path,
 )
@@ -480,8 +480,8 @@ def normalize_ui_status(value: Any) -> str:
 
 
 def collection_supports_draft(config: DocsScopeConfig | DocsSubScopeConfig) -> bool:
-    """Draft readiness belongs to all collections in Analysis Working."""
-    return config.scope_id == "analysis" and config.stage == "working"
+    """Draft authoring belongs to every collection in Working."""
+    return config.stage == "working"
 
 
 def validate_document_status_front_matter(
@@ -494,8 +494,8 @@ def validate_document_status_front_matter(
 
     normalize_ui_status(front_matter.get("ui_status"))
     if "draft" in front_matter:
-        if not collection_supports_draft(collection_config):
-            raise ValueError(f"draft front matter is supported only in Analysis Working: {source_name}")
+        if collection_config.stage not in {"working", "pre-publish"}:
+            raise ValueError(f"draft front matter requires a workflow stage: {source_name}")
         if not isinstance(front_matter["draft"], bool):
             raise ValueError(f"draft front matter must be a boolean in {source_name}")
     if "viewable" in front_matter:
@@ -512,10 +512,6 @@ def normalize_scope(scope: Any) -> str:
     if value not in DOCS_SCOPE_CONFIGS:
         raise ValueError(f"scope must be one of: {', '.join(sorted(DOCS_SCOPE_CONFIGS.keys()))}")
     return value
-
-
-def scope_root(repo_root: Path, scope: str) -> Path:
-    return resolve_scope_path(repo_root, DOCUMENT_SOURCE_ROOTS[scope])
 
 
 def scope_markdown_paths(root: Path) -> list[Path]:
@@ -610,32 +606,21 @@ def load_scope_docs_for_config(repo_root: Path, config: DocsScopeConfig) -> list
     return load_document_collection_docs_for_config(repo_root, config, config)
 
 
-def _scope_configs_for_repo(repo_root: Path, scope: str) -> Mapping[str, Any]:
-    if (repo_root / "docs-viewer/config/scopes/docs_scopes.json").is_file():
-        return load_docs_scope_configs(repo_root, scope_ids=(scope,))
-    config = DOCS_SCOPE_CONFIGS.get(scope)
-    return {scope: config} if config is not None else {}
-
-
-def load_scope_docs(repo_root: Path, scope: str) -> list[ScopeDoc]:
-    configs = _scope_configs_for_repo(repo_root, scope)
-    config = configs.get(scope)
-    if config is None:
-        raise ValueError(f"unknown Docs Viewer scope: {scope}")
-    return load_scope_docs_for_config(repo_root, config)
+def load_scope_docs(repo_root: Path, scope: str, *, stage: str) -> list[ScopeDoc]:
+    """Read the exact configured ordinary collection in the requested stage."""
+    return load_scope_docs_for_config(repo_root, load_docs_scope_stage(repo_root, scope, stage))
 
 
 def load_document_collection_docs(
     repo_root: Path,
     scope: str,
     sub_scope: str = "",
+    *,
+    stage: str,
 ) -> list[ScopeDoc]:
-    """Load exactly the configured parent or named sub-scope collection."""
+    """Load exactly the configured stage and parent or named sub-scope collection."""
 
-    configs = _scope_configs_for_repo(repo_root, scope)
-    parent_config = configs.get(scope)
-    if parent_config is None:
-        raise ValueError(f"unknown Docs Viewer scope: {scope}")
+    parent_config = load_docs_scope_stage(repo_root, scope, stage)
     normalized_sub_scope = str(sub_scope or "").strip().lower()
     if not normalized_sub_scope:
         return load_scope_docs_for_config(repo_root, parent_config)

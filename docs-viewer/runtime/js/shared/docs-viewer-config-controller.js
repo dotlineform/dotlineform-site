@@ -390,7 +390,7 @@ export function initDocsViewerConfigController(context) {
       config.stages.forEach(function (stage) {
         var button = document.createElement("button");
         button.type = "button";
-        button.textContent = stage === "working" ? "Working" : "Pre-publish";
+        button.textContent = { working: "Working", "pre-publish": "Pre-publish", published: "Published" }[stage];
         button.setAttribute("aria-pressed", String(config.stage === stage));
         button.addEventListener("click", function () {
           if (stage === config.stage) return;

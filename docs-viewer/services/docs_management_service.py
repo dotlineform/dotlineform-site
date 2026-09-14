@@ -94,10 +94,6 @@ def refresh_source_model_scope_configs(repo_root: Path) -> None:
     configs = load_docs_scope_configs(repo_root)
     source_model.DOCS_SCOPE_CONFIGS.clear()
     source_model.DOCS_SCOPE_CONFIGS.update(configs)
-    source_model.DOCUMENT_SOURCE_ROOTS.clear()
-    source_model.DOCUMENT_SOURCE_ROOTS.update(
-        {scope: source_model.document_source_path(config) for scope, config in configs.items() if not config.stages}
-    )
 
 
 def capabilities_payload(repo_root: Path) -> dict[str, object]:
@@ -122,31 +118,20 @@ def docs_management_post_response(
     dry_run: bool = False,
 ) -> tuple[HTTPStatus, dict[str, object]]:
     configs = load_docs_scope_configs(repo_root)
-    for field in ("scope", "target_scope", "scope_id", "parent_scope"):
-        config = configs.get(str(body.get(field) or "").strip().lower())
-        if config is None or not config.stages:
-            continue
-        if field == "scope" and path in {routes.DOCS_MEDIA_REPORT_PATH, routes.BROKEN_LINKS_PATH}:
-            select_scope_stage(config, body.get("stage"))
-            continue
-        if field == "scope" and path in {
+    config = configs.get(str(body.get("scope") or "").strip().lower())
+    if config is not None:
+        selected = select_scope_stage(config, body.get("stage"))
+        if path in {routes.DOCS_MEDIA_REPORT_PATH, routes.BROKEN_LINKS_PATH}:
+            pass
+        elif path in {
             routes.PRE_PUBLISH_PREVIEW_PATH, routes.PRE_PUBLISH_APPLY_PATH,
             routes.PUBLISH_CONFIRM_PATH, routes.PUBLISH_APPLY_PATH,
         }:
-            selected = select_scope_stage(config, body.get("stage"))
             required_stage = "working" if path in {routes.PRE_PUBLISH_PREVIEW_PATH, routes.PRE_PUBLISH_APPLY_PATH} else "pre-publish"
             if selected.stage != required_stage:
                 raise ValueError(f"This action requires stage {required_stage}")
-            continue
-        allowed = {
-            routes.CREATE_PATH, routes.UPDATE_METADATA_PATH, routes.SOURCE_REBUILD_PATH,
-            routes.OPEN_SOURCE_PATH, routes.OPEN_PUBLICATION_IGNORE_PATH, routes.DELETE_PREVIEW_PATH, routes.DELETE_APPLY_PATH,
-            routes.ASSIGN_FIELD_GROUP_PATH, routes.SET_DRAFT_PATH,
-            routes.REBUILD_PATH, routes.MOVE_PATH,
-        }
-        if field != "scope" or path not in allowed:
-            raise ValueError("This action is unavailable in the publishing stage views")
-        require_document_authoring(select_scope_stage(config, body.get("stage")))
+        else:
+            require_document_authoring(selected)
     refresh_source_model_scope_configs(repo_root)
     if path == routes.PRE_PUBLISH_PREVIEW_PATH:
         return HTTPStatus.OK, docs_pre_publish.preview_pre_publish(repo_root, body)
@@ -216,10 +201,11 @@ def docs_management_post_response(
             repo_root,
             scope,
             changes,
+            stage=body.get("stage"),
             dry_run=dry_run,
         )
         if payload.get("requires_rebuild") and not dry_run:
-            payload["rebuild"] = write_rebuild.rebuild_scope_outputs(repo_root, scope, include_search=False)
+            payload["rebuild"] = write_rebuild.rebuild_scope_outputs(repo_root, scope, include_search=False, stage=body.get("stage"))
         else:
             payload["rebuild"] = None
         if payload.get("changed") and not dry_run:
@@ -293,11 +279,13 @@ def docs_management_post_response(
         plan = docs_document_transfer.plan_document_transfer(
             repo_root,
             source_scope=source_scope,
+            source_stage=body.get("stage"),
             source_sub_scope=(
                 body.get("sub_scope") if "sub_scope" in body else None
             ),
             requested_doc_ids=body.get("doc_ids"),
             target_scope=body.get("target_scope"),
+            target_stage=body.get("target_stage"),
             target_sub_scope=(
                 body.get("target_sub_scope")
                 if "target_sub_scope" in body
@@ -318,7 +306,7 @@ def docs_management_post_response(
             repo_root,
             body.get("apply_plan"),
         )
-        request_source = {"scope": source_scope}
+        request_source = {"scope": source_scope, "stage": body.get("stage")}
         if "sub_scope" in body:
             request_source["sub_scope"] = body.get("sub_scope")
         normalized_request_source = (

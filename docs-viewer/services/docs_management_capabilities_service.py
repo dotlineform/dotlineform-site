@@ -14,7 +14,6 @@ import docs_static_html_export
 import docs_document_transfer
 from docs_scope_publish import PUBLISH_MANIFEST_FILENAME
 from docs_scope_config import (
-    DOCS_SCOPE_CONFIGS,
     document_source_path,
     path_label,
     generated_documents_path,
@@ -31,6 +30,102 @@ def capability_scope_root_label(repo_root: Path, scope: str, config: Any) -> str
     return (Path("docs-viewer/scopes") / scope).as_posix()
 
 
+def scope_capabilities(repo_root: Path, config: Any, manifest_record: Any, static_html_export: dict[str, Any]) -> dict[str, Any]:
+    """Project one exact source stage's capabilities through the owning services."""
+    scope = config.scope_id
+    root = resolve_scope_path(repo_root, document_source_path(config))
+    generated_data_path = resolve_scope_path(repo_root, generated_documents_path(config)) / "index-tree.json"
+    published_root = resolve_scope_path(repo_root, published_documents_path(config)).parent
+    published_manifest_path = published_root / PUBLISH_MANIFEST_FILENAME
+    published_available = published_manifest_path.is_file() and not published_manifest_path.is_symlink()
+    deploy_repo = docs_deploy_repo.deploy_repo_capability(repo_root, config)
+    if config.scope_id == docs_deploy_repo.DEPLOYABLE_SCOPE and not root.exists():
+        deploy_repo = {
+            "available": False,
+            "preview": False,
+            "apply": False,
+            "reason": "The Analysis scope is unavailable.",
+        }
+    transfer_capabilities = (
+        docs_document_transfer.document_transfer_scope_capabilities(
+            repo_root,
+            config,
+        )
+    )
+    transfer_capabilities["collections"] = (
+        docs_document_transfer.document_transfer_collection_capability_records(
+            repo_root,
+            config,
+        )
+    )
+    record = {
+        "available": root.exists(),
+        "scope_type": config.scope_type,
+        "root": capability_scope_root_label(repo_root, scope, config),
+        "generated_data_reads": generated_data_path.exists(),
+        "generated_search_reads": resolve_scope_path(repo_root, generated_search_path(config)).exists(),
+        "published_data_reads": published_available,
+        "published_search_reads": published_available,
+        "document_transfer": transfer_capabilities,
+        "scope_lifecycle": {
+            "manifest_recorded": manifest_record is not None,
+            "owner": str((manifest_record or {}).get("owner") or ""),
+            "created_by_tool": (manifest_record or {}).get("created_by_tool") is True,
+            "delete_eligible": docs_scope_manifest.scope_delete_eligible(manifest_record),
+            "rename_eligible": docs_scope_rename.scope_rename_eligible(config, manifest_record),
+        },
+        "sub_scope_lifecycle": {
+            "create_eligible": True,
+            "delete_eligible": False,
+            "sub_scopes": [
+                {
+                    "sub_scope": sub_scope.sub_scope,
+                    "title": sub_scope.title,
+                    "source": path_label(repo_root, document_source_path(sub_scope)),
+                    "output": path_label(repo_root, generated_documents_path(sub_scope)),
+                    "publish_output": path_label(repo_root, published_documents_path(sub_scope)),
+                }
+                for sub_scope in config.sub_scopes
+                if sub_scope.lifecycle is not None
+            ],
+        },
+        "publishing": {
+            "status": True,
+            "confirm": True,
+            "apply": True,
+            "published_available": published_available,
+            "published_docs_root": path_label(
+                repo_root,
+                published_documents_path(config),
+            ),
+            "published_search_index": path_label(
+                repo_root,
+                published_search_path(config),
+            ),
+        },
+        "deploy_repo": deploy_repo,
+        "static_html_export": docs_static_html_export.scope_static_html_export_capability(
+            repo_root,
+            scope,
+            config,
+            workspace_available=static_html_export["preview"] and static_html_export["apply"],
+        ),
+    }
+
+    authoring = config.stage == "working"
+    record["document_authoring"] = record["available"] and authoring
+    if config.stage:
+        record["stage"] = config.stage
+        record["pre_publish"] = {"preview": authoring, "apply": authoring}
+        record["publishing"].update({key: config.stage == "pre-publish" for key in ("status", "confirm", "apply")})
+        record["deploy_repo"] = {"available": False, "preview": False, "apply": False}
+        if not authoring:
+            record["document_transfer"] = {"copy_source": False, "move_source": False, "target": False, "collections": []}
+            record["scope_lifecycle"].update(delete_eligible=False, rename_eligible=False)
+            record["sub_scope_lifecycle"].update(create_eligible=False, delete_eligible=False)
+    return record
+
+
 def capabilities_payload(repo_root: Path) -> Dict[str, Any]:
     data_sharing_workspace = workspace_status(repo_root)
     docs_import_workspace = workspace_status(repo_root, required_paths=("import_staging",))
@@ -41,123 +136,33 @@ def capabilities_payload(repo_root: Path) -> Dict[str, Any]:
     except (FileNotFoundError, ValueError):
         manifest = {"scopes": []}
     manifest_scopes = docs_scope_manifest.manifest_scopes_by_id(manifest)
-    try:
-        scope_configs = docs_source_config_settings.load_docs_scope_configs(repo_root)
-    except FileNotFoundError:
-        scope_configs = DOCS_SCOPE_CONFIGS
-    for scope in sorted(scope_configs):
-        config = scope_configs[scope]
-        if config.stages:
-            stages = {}
-            for selected in config.stages:
-                available = resolve_scope_path(repo_root, document_source_path(selected)).is_dir()
-                stages[selected.stage] = {
-                    "available": available,
-                    "stage": selected.stage,
-                    "document_authoring": available and selected.stage == "working",
-                    "generated_data_reads": (resolve_scope_path(repo_root, generated_documents_path(selected)) / "index-tree.json").is_file(),
-                    "generated_search_reads": resolve_scope_path(repo_root, generated_search_path(selected)).is_file(),
-                    "published_data_reads": False,
-                    "published_search_reads": False,
-                    "document_transfer": {"available": False, "collections": []},
-                    "pre_publish": {"preview": available and selected.stage == "working", "apply": available and selected.stage == "working"},
-                    "publishing": {"status": available and selected.stage == "pre-publish", "confirm": available and selected.stage == "pre-publish", "apply": available and selected.stage == "pre-publish"},
-                    "deploy_repo": {"available": False, "preview": False, "apply": False},
-                    "scope_lifecycle": {"delete_eligible": False, "rename_eligible": False},
-                    "sub_scope_lifecycle": {"create_eligible": False, "delete_eligible": False, "sub_scopes": []},
-                    "static_html_export": {"preview": False, "apply": False},
-                }
-            scopes[scope] = {
-                "available": any(item["available"] for item in stages.values()),
-                "scope_type": config.scope_type,
-                "stages": stages,
-                "generated_data_reads": False,
-                "generated_search_reads": False,
-                "publishing": {"status": False, "confirm": False, "apply": False},
-                "deploy_repo": {"available": False, "preview": False, "apply": False},
-            }
-            continue
-        root = resolve_scope_path(repo_root, document_source_path(config))
+    scope_configs = docs_source_config_settings.load_docs_scope_configs(repo_root)
+    for scope, config in sorted(scope_configs.items()):
         manifest_record = manifest_scopes.get(scope)
-        generated_data_path = resolve_scope_path(repo_root, generated_documents_path(config)) / "index-tree.json"
+        stages = {
+            selected.stage: scope_capabilities(repo_root, selected, manifest_record, static_html_export)
+            for selected in config.stages
+        }
         published_root = resolve_scope_path(repo_root, published_documents_path(config)).parent
-        published_manifest_path = published_root / PUBLISH_MANIFEST_FILENAME
-        published_available = published_manifest_path.is_file() and not published_manifest_path.is_symlink()
-        deploy_repo = docs_deploy_repo.deploy_repo_capability(repo_root, config)
-        if config.scope_id == docs_deploy_repo.DEPLOYABLE_SCOPE and not root.exists():
-            deploy_repo = {
-                "available": False,
-                "preview": False,
-                "apply": False,
-                "reason": "The Analysis scope is unavailable.",
-            }
-        transfer_capabilities = (
-            docs_document_transfer.document_transfer_scope_capabilities(
-                repo_root,
-                config,
-            )
-        )
-        transfer_capabilities["collections"] = (
-            docs_document_transfer.document_transfer_collection_capability_records(
-                repo_root,
-                config,
-            )
-        )
+        completion = published_root / PUBLISH_MANIFEST_FILENAME
+        published_available = completion.is_file() and not completion.is_symlink()
+        stages["published"] = {
+            "available": published_available, "stage": "published", "document_authoring": False,
+            "generated_data_reads": False, "generated_search_reads": False,
+            "published_data_reads": published_available, "published_search_reads": published_available,
+            "pre_publish": {"preview": False, "apply": False},
+            "publishing": {"status": False, "confirm": False, "apply": False},
+            "deploy_repo": docs_deploy_repo.deploy_repo_capability(repo_root, config),
+            "document_transfer": {"copy_source": False, "move_source": False, "target": False, "collections": []},
+            "scope_lifecycle": {"delete_eligible": False, "rename_eligible": False},
+            "sub_scope_lifecycle": {"create_eligible": False, "delete_eligible": False, "sub_scopes": []},
+            "static_html_export": {"preview": False, "apply": False},
+        }
         scopes[scope] = {
-            "available": root.exists(),
-            "scope_type": config.scope_type,
-            "root": capability_scope_root_label(repo_root, scope, config),
-            "generated_data_reads": generated_data_path.exists(),
-            "generated_search_reads": resolve_scope_path(repo_root, generated_search_path(config)).exists(),
-            "published_data_reads": published_available,
-            "published_search_reads": published_available,
-            "document_transfer": transfer_capabilities,
-            "scope_lifecycle": {
-                "manifest_recorded": manifest_record is not None,
-                "owner": str((manifest_record or {}).get("owner") or ""),
-                "created_by_tool": (manifest_record or {}).get("created_by_tool") is True,
-                "delete_eligible": docs_scope_manifest.scope_delete_eligible(manifest_record),
-                "rename_eligible": docs_scope_rename.scope_rename_eligible(config, manifest_record),
-            },
-            "sub_scope_lifecycle": {
-                "create_eligible": True,
-                "delete_eligible": any(
-                    sub_scope.lifecycle is not None
-                    for sub_scope in config.sub_scopes
-                ),
-                "sub_scopes": [
-                    {
-                        "sub_scope": sub_scope.sub_scope,
-                        "title": sub_scope.title,
-                        "source": path_label(repo_root, document_source_path(sub_scope)),
-                        "output": path_label(repo_root, generated_documents_path(sub_scope)),
-                        "publish_output": path_label(repo_root, published_documents_path(sub_scope)),
-                    }
-                    for sub_scope in config.sub_scopes
-                    if sub_scope.lifecycle is not None
-                ],
-            },
-            "publishing": {
-                "status": True,
-                "confirm": True,
-                "apply": True,
-                "published_available": published_available,
-                "published_docs_root": path_label(
-                    repo_root,
-                    published_documents_path(config),
-                ),
-                "published_search_index": path_label(
-                    repo_root,
-                    published_search_path(config),
-                ),
-            },
-            "deploy_repo": deploy_repo,
-            "static_html_export": docs_static_html_export.scope_static_html_export_capability(
-                repo_root,
-                scope,
-                config,
-                workspace_available=static_html_export["preview"] and static_html_export["apply"],
-            ),
+            "available": any(item["available"] for item in stages.values()), "scope_type": config.scope_type,
+            "stages": stages, "generated_data_reads": False, "generated_search_reads": False,
+            "publishing": {"status": False, "confirm": False, "apply": False},
+            "deploy_repo": {"available": False, "preview": False, "apply": False},
         }
     return {
         "ok": True,

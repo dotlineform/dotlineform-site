@@ -56,7 +56,6 @@ from docs_mermaid_media import produce_mermaid_svg
 from docs_scope_config import (
     CONFIG_REL_PATH,
     DOCS_SCOPE_CONFIGS,
-    DOCUMENT_SOURCE_ROOTS,
     document_source_path,
     load_docs_scope_configs,
     resolve_scope_path,
@@ -187,8 +186,6 @@ def config_file_signature(path: Path) -> tuple[int, int]:
 def sync_scope_config_globals(configs: dict[str, Any]) -> None:
     DOCS_SCOPE_CONFIGS.clear()
     DOCS_SCOPE_CONFIGS.update(configs)
-    DOCUMENT_SOURCE_ROOTS.clear()
-    DOCUMENT_SOURCE_ROOTS.update({scope: document_source_path(config) for scope, config in configs.items() if not config.stages})
 
 
 def desired_watch_state_specs(repo_root: Path, configs: dict[str, Any]) -> dict[str, dict[str, Any]]:
@@ -196,7 +193,7 @@ def desired_watch_state_specs(repo_root: Path, configs: dict[str, Any]) -> dict[
 
     for scope, parent in sorted(configs.items()):
         # Pre-publish is read-only. Only Working owns source-watch writes.
-        selected = [config for config in parent.stages if config.stage == "working"] if parent.stages else [parent]
+        selected = [config for config in parent.stages if config.stage == "working"]
         for config in selected:
             stage = config.stage
             owner = f"{scope}/{stage}" if stage else scope

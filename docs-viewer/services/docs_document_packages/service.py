@@ -32,6 +32,7 @@ from docs_import_document_package_content import normalize_documents_import_cont
 from docs_management_context import log_event
 from docs_management_document_target import resolve_managed_document_collection
 from docs_scope_config import load_docs_scope_configs
+from docs_document_packages.source_context import package_source_scope_config
 import docs_source_model as source_model
 
 
@@ -51,10 +52,6 @@ def refresh_source_model_scope_configs(repo_root: Path) -> dict[str, Any]:
     configs = load_docs_scope_configs(repo_root)
     source_model.DOCS_SCOPE_CONFIGS.clear()
     source_model.DOCS_SCOPE_CONFIGS.update(configs)
-    source_model.DOCUMENT_SOURCE_ROOTS.clear()
-    source_model.DOCUMENT_SOURCE_ROOTS.update(
-        {scope: source_model.document_source_path(config) for scope, config in configs.items()}
-    )
     return configs
 
 
@@ -64,13 +61,7 @@ def query_value(params: dict[str, list[str]], key: str) -> str:
 
 def require_scope(repo_root: Path, value: Any) -> str:
     scope = str(value or "").strip().lower()
-    try:
-        configs = refresh_source_model_scope_configs(repo_root)
-    except FileNotFoundError:
-        configs = {
-            configured_scope: source_model.DOCS_SCOPE_CONFIGS.get(configured_scope)
-            for configured_scope in source_model.DOCUMENT_SOURCE_ROOTS
-        }
+    configs = refresh_source_model_scope_configs(repo_root)
     if scope not in configs:
         raise ValueError(f"scope must be one of: {', '.join(sorted(configs))}")
     return scope
@@ -152,6 +143,7 @@ def config_payload(
             repo_root,
             scope=query_value(request_params, "scope"),
             sub_scope=query_value(request_params, "sub_scope"),
+            stage=package_source_scope_config(repo_root, query_value(request_params, "scope")).stage or None,
         )
     profile_payload = load_config_file(repo_root)
     errors, warnings = validate_full_config_payload(profile_payload)
@@ -199,6 +191,7 @@ def documents_payload(repo_root: Path, params: dict[str, list[str]]) -> dict[str
             repo_root,
             scope=scope,
             sub_scope=query_value(params, "sub_scope"),
+            stage=package_source_scope_config(repo_root, scope).stage or None,
         )
         sub_scope = collection.sub_scope
     return selectable_document_records(
@@ -217,6 +210,7 @@ def returned_payload(repo_root: Path, params: dict[str, list[str]]) -> dict[str,
             repo_root,
             scope=scope,
             sub_scope=query_value(params, "sub_scope"),
+            stage=package_source_scope_config(repo_root, scope).stage or None,
         )
         if not collection.document_config.supports_return_import:
             raise ValueError(
@@ -255,6 +249,8 @@ def get_payload(
     path: str,
     params: dict[str, list[str]],
 ) -> dict[str, Any]:
+    if query_value(params, "stage") not in {"", "working"}:
+        raise ValueError("Document packages require Working")
     if path == routes.CONFIG_PATH:
         return config_payload(repo_root, params)
     if path == routes.DOCUMENTS_PATH:
@@ -285,6 +281,7 @@ def prepare_package(repo_root: Path, body: dict[str, Any]) -> dict[str, Any]:
             repo_root,
             scope=scope,
             sub_scope=body.get("sub_scope"),
+            stage=package_source_scope_config(repo_root, scope).stage or None,
         )
         sub_scope = collection.sub_scope
     profile_id = str(body.get("profile_id") or "").strip()
@@ -424,6 +421,8 @@ def post_response(
     body: dict[str, Any],
 ) -> tuple[HTTPStatus, dict[str, Any]]:
     require_direct_request(body)
+    if body.get("stage", "") not in {"", "working"}:
+        raise ValueError("Document packages require Working")
     if path == routes.PREPARE_PATH:
         payload = prepare_package(repo_root, body)
     elif path == routes.RETURNED_REVIEW_PATH:

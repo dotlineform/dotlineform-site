@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from copy import deepcopy
 import json
 import os
 import tempfile
@@ -170,6 +171,20 @@ def docs_scope_record(
         "allow_unresolved_parent_ids": allow_unresolved_parent_ids,
         "sub_scopes": sub_scopes or [],
     }
+    record["stages"] = {
+        stage: {
+            field: deepcopy(record[field])
+            for field in (
+                "media", "default_doc_id", "sub_scopes", "non_loadable_doc_ids",
+                "manage_only_tree_root_ids", "allow_unresolved_parent_ids",
+            )
+        }
+        for stage in ("working", "pre-publish")
+    }
+    for settings in record["stages"].values():
+        settings["media"] = record["media"]
+    for child in record["stages"]["working"]["sub_scopes"]:
+        child["public_projection"] = None
     if media_source_root is not None:
         record["media_source_root"] = media_source_root
     return record
@@ -228,7 +243,7 @@ def write_doc(
     for key, value in front_matter.items():
         lines.append(f"{key}: {format_value(value)}")
     lines.extend(["---", "", body or f"# {front_matter['title']}", ""])
-    path = root / "docs-viewer/scopes" / scope / "source/documents" / filename
+    path = root / "docs-viewer/scopes" / scope / "working/source/documents" / filename
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text("\n".join(lines), encoding="utf-8")
 

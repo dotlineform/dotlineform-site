@@ -180,26 +180,24 @@ def write_review_source_fixture(
 def configure_review_sub_scope_targets(root: Path) -> dict[str, Path]:
     config_path = root / "docs-viewer/config/scopes/docs_scopes.json"
     config = json.loads(config_path.read_text(encoding="utf-8"))
-    config["scopes"][0]["sub_scopes"] = [
+    config["scopes"][0]["stages"]["working"]["sub_scopes"] = [
         docs_sub_scope_record(
             "example",
             "tags",
             title="Tags",
             supports_return_import=True,
-            scope_type="public",
-            public_docs_path="site/assets/data/docs/scopes/example/tags",
+            scope_type="local",
         ),
         docs_sub_scope_record(
             "example",
             "notes",
             title="Notes",
             supports_return_import=True,
-            scope_type="public",
-            public_docs_path="site/assets/data/docs/scopes/example/notes",
+            scope_type="local",
         ),
     ]
     config_path.write_text(json.dumps(config, indent=2) + "\n", encoding="utf-8")
-    parent_root = root / "docs-viewer/scopes/example/source/documents"
+    parent_root = root / "docs-viewer/scopes/example/working/source/documents"
     parent_root.mkdir(parents=True, exist_ok=True)
     (parent_root / f"{LIBRARY_TAGS_REPORT_DOC_ID}.md").write_text(
         docs_source_model.format_source(
@@ -219,11 +217,11 @@ def configure_review_sub_scope_targets(root: Path) -> dict[str, Path]:
     )
     tags_root = (
         root
-        / "docs-viewer/scopes/example/source/sub-scopes/tags/documents"
+        / "docs-viewer/scopes/example/working/source/sub-scopes/tags/documents"
     )
     notes_root = (
         root
-        / "docs-viewer/scopes/example/source/sub-scopes/notes/documents"
+        / "docs-viewer/scopes/example/working/source/sub-scopes/notes/documents"
     )
     tags_root.mkdir(parents=True, exist_ok=True)
     notes_root.mkdir(parents=True, exist_ok=True)
@@ -234,7 +232,7 @@ def configure_review_sub_scope_targets(root: Path) -> dict[str, Path]:
         "notes-tag-a": notes_root / "tag-a.md",
         "parent-tag-a": (
             root
-            / "docs-viewer/scopes/example/source/documents/parent-tag-a.md"
+            / "docs-viewer/scopes/example/working/source/documents/parent-tag-a.md"
         ),
     }
     records = {
@@ -379,6 +377,7 @@ def test_edited_review_source_outside_staging_remains_blocked() -> None:
                 root,
                 {
                     "scope": "example",
+                    "stage": "working",
                     "source_directory": "projects/review-source",
                     "staged_filename": moved.name,
                 },
@@ -458,7 +457,7 @@ def test_app_level_candidate_projection_is_global_body_free_and_recognizer_first
     returned = candidates["returned-documents.jsonl"]
     assert returned["candidate_kind"] == "returned_package"
     assert returned["target_mode"] == "manifest_collection"
-    assert returned["target"] == {"scope": "example"}
+    assert returned["target"] == {"scope": "example", "stage": "working"}
     assert returned["target_label"] == "Example"
     assert returned["docs_review_enabled"] is True
     assert returned["import_enabled"] is True
@@ -469,6 +468,7 @@ def test_app_level_candidate_projection_is_global_body_free_and_recognizer_first
     assert reviewed["candidate_kind"] == "edited_review_source"
     assert reviewed["target"] == {
         "scope": "example",
+        "stage": "working",
         "sub_scope": "tags",
     }
     assert reviewed["target_label"] == "Example / Tags"
@@ -725,15 +725,6 @@ def test_media_path_comes_from_scope_config(tmp_path: Path) -> None:
     assert docs_import_media.media_token("analysis", "img", "diagram.png", repo_root=tmp_path) == "[[media:docs/analysis/img/diagram.png]]"
     assert docs_import_media.media_path_for("analysis", "svg", "diagram.svg", repo_root=tmp_path) == "docs/analysis/svg/diagram.svg"
     assert docs_import_media.media_token("analysis", "svg", "diagram.svg", repo_root=tmp_path) == "[[media:docs/analysis/svg/diagram.svg]]"
-
-    analysis["stages"] = {
-        stage: {"media": analysis["media"], "sub_scopes": []}
-        for stage in ("working", "pre-publish")
-    }
-    write_docs_scope_config(tmp_path, [analysis])
-    with pytest.raises(ValueError, match="stage is required for scope 'analysis'"):
-        docs_import_media.media_path_for("analysis", "img", "diagram.png", repo_root=tmp_path)
-
 
 @pytest.mark.parametrize(
     ("filename", "content"),

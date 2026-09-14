@@ -22,6 +22,10 @@ from docs_management_capabilities_service import (
 import docs_local_links
 from repo_factory import docs_scope_record, docs_sub_scope_record
 
+def test_capabilities_require_the_requested_repository_config(tmp_path: Path) -> None:
+    with pytest.raises(FileNotFoundError):
+        docs_management_service.capabilities_payload(tmp_path)
+
 def test_capabilities_advertise_generated_data_reads() -> None:
     with make_repo() as temp_path:
         repo_root = Path(temp_path)
@@ -30,8 +34,8 @@ def test_capabilities_advertise_generated_data_reads() -> None:
         payload = docs_management_service.capabilities_payload(repo_root)
 
     assert payload["capabilities"]["generated_data_reads"] is True
-    assert payload["capabilities"]["scopes"]["studio"]["generated_data_reads"] is True
-    assert payload["capabilities"]["scopes"]["studio"]["generated_search_reads"] is True
+    assert payload["capabilities"]["scopes"]["studio"]["stages"]["working"]["generated_data_reads"] is True
+    assert payload["capabilities"]["scopes"]["studio"]["stages"]["working"]["generated_search_reads"] is True
 
 
 def test_capabilities_do_not_parse_scope_documents_for_unused_counts() -> None:
@@ -39,13 +43,13 @@ def test_capabilities_do_not_parse_scope_documents_for_unused_counts() -> None:
         repo_root = Path(temp_path)
         source_path = (
             repo_root
-            / "docs-viewer/scopes/studio/source/documents/non-publishable-doc.md"
+            / "docs-viewer/scopes/studio/working/source/documents/non-publishable-doc.md"
         )
         source_path.write_text("not valid document source\n", encoding="utf-8")
 
         payload = docs_management_service.capabilities_payload(repo_root)
 
-    scope = payload["capabilities"]["scopes"]["studio"]
+    scope = payload["capabilities"]["scopes"]["studio"]["stages"]["working"]
     assert scope["available"] is True
     assert "count" not in scope
 
@@ -83,7 +87,7 @@ def test_static_snapshot_export_capability_projects_preview_and_apply() -> None:
         "apply": True,
         "error": "",
     }
-    assert capabilities["scopes"]["studio"]["static_html_export"] == {
+    assert capabilities["scopes"]["studio"]["stages"]["working"]["static_html_export"] == {
         "preview": True,
         "apply": True,
         "document_count": 2,
@@ -126,17 +130,17 @@ def test_capabilities_advertise_source_config_reads() -> None:
         "public_readonly",
         "local_manage",
     ]
-    assert payload["capabilities"]["scopes"]["studio"]["sub_scope_lifecycle"]["create_eligible"] is True
-    assert payload["capabilities"]["scopes"]["studio"]["sub_scope_lifecycle"]["sub_scopes"] == []
-    assert payload["capabilities"]["scopes"]["studio"]["scope_lifecycle"]["rename_eligible"] is False
-    assert payload["capabilities"]["scopes"]["studio"]["scope_type"] == "local"
-    assert payload["capabilities"]["scopes"]["studio"]["document_transfer"] == {
+    assert payload["capabilities"]["scopes"]["studio"]["stages"]["working"]["sub_scope_lifecycle"]["create_eligible"] is True
+    assert payload["capabilities"]["scopes"]["studio"]["stages"]["working"]["sub_scope_lifecycle"]["sub_scopes"] == []
+    assert payload["capabilities"]["scopes"]["studio"]["stages"]["working"]["scope_lifecycle"]["rename_eligible"] is False
+    assert payload["capabilities"]["scopes"]["studio"]["stages"]["working"]["scope_type"] == "local"
+    assert payload["capabilities"]["scopes"]["studio"]["stages"]["working"]["document_transfer"] == {
         "copy_source": True,
         "move_source": True,
         "target": True,
         "collections": [
             {
-                "target": {"scope": "studio"},
+                "target": {"stage": "working", "scope": "studio"},
                 "label": "studio",
                 "copy_source": True,
                 "move_source": True,
@@ -147,7 +151,7 @@ def test_capabilities_advertise_source_config_reads() -> None:
     }
 
 
-def test_public_scope_is_copy_source_and_target_but_not_move_source_or_target() -> None:
+def test_public_scope_working_supports_copy_and_move() -> None:
     with make_repo() as temp_path:
         repo_root = Path(temp_path)
         write_docs_scope_config(repo_root)
@@ -163,18 +167,18 @@ def test_public_scope_is_copy_source_and_target_but_not_move_source_or_target() 
         config_path.write_text(json.dumps(config, indent=2) + "\n", encoding="utf-8")
         payload = docs_management_service.capabilities_payload(repo_root)
 
-    assert payload["capabilities"]["scopes"]["studio"]["document_transfer"] == {
+    assert payload["capabilities"]["scopes"]["studio"]["stages"]["working"]["document_transfer"] == {
         "copy_source": True,
-        "move_source": False,
+        "move_source": True,
         "target": True,
         "collections": [
             {
-                "target": {"scope": "studio"},
+                "target": {"stage": "working", "scope": "studio"},
                 "label": "studio",
                 "copy_source": True,
-                "move_source": False,
+                "move_source": True,
                 "copy_target": True,
-                "move_target": False,
+                "move_target": True,
             },
         ],
     }
@@ -186,7 +190,7 @@ def test_capabilities_list_exact_parent_and_child_transfer_collections() -> None
         write_docs_scope_config(repo_root)
         config_path = repo_root / "docs-viewer/config/scopes/docs_scopes.json"
         config = json.loads(config_path.read_text(encoding="utf-8"))
-        config["scopes"][0]["sub_scopes"] = [
+        config["scopes"][0]["stages"]["working"]["sub_scopes"] = [
             docs_sub_scope_record("studio", "works", title="Works"),
         ]
         config_path.write_text(
@@ -195,16 +199,16 @@ def test_capabilities_list_exact_parent_and_child_transfer_collections() -> None
         )
         (
             repo_root
-            / "docs-viewer/scopes/studio/source/sub-scopes/works/documents"
+            / "docs-viewer/scopes/studio/working/source/sub-scopes/works/documents"
         ).mkdir(parents=True)
         payload = docs_management_service.capabilities_payload(repo_root)
 
-    collections = payload["capabilities"]["scopes"]["studio"][
+    collections = payload["capabilities"]["scopes"]["studio"]["stages"]["working"][
         "document_transfer"
     ]["collections"]
     assert collections == [
         {
-            "target": {"scope": "studio"},
+            "target": {"stage": "working", "scope": "studio"},
             "label": "studio",
             "copy_source": True,
             "move_source": True,
@@ -212,7 +216,7 @@ def test_capabilities_list_exact_parent_and_child_transfer_collections() -> None
             "move_target": True,
         },
         {
-            "target": {"scope": "studio", "sub_scope": "works"},
+            "target": {"stage": "working", "scope": "studio", "sub_scope": "works"},
             "label": "studio / Works",
             "copy_source": True,
             "move_source": False,
@@ -255,10 +259,10 @@ def test_missing_external_workspace_disables_only_import_and_review_capabilities
     assert capabilities["html_import"] is False
     assert capabilities["docs_import"]["available"] is False
     assert capabilities["docs_review"]["available"] is False
-    assert capabilities["scopes"]["studio"]["available"] is True
+    assert capabilities["scopes"]["studio"]["stages"]["working"]["available"] is True
     assert capabilities["static_html_export"]["preview"] is False
     assert capabilities["static_html_export"]["apply"] is False
-    assert capabilities["scopes"]["studio"]["static_html_export"]["preview"] is False
+    assert capabilities["scopes"]["studio"]["stages"]["working"]["static_html_export"]["preview"] is False
     assert str(tmp_path) not in capabilities["static_html_export"]["error"]
 
 def test_source_config_report_reads_known_config_files() -> None:
@@ -276,8 +280,8 @@ def test_source_config_report_reads_known_config_files() -> None:
     assert payload["scopes"][0]["source_config"]["scope_type"] == "local"
     assert payload["scopes"][0]["roles"]["source"]["provider"] == "repository"
     assert payload["scopes"][0]["roles"]["generated_documents"]["provider"] == "repository"
-    assert payload["scopes"][0]["browser_config"]["index_tree_url"] == "/docs-viewer/scopes/studio/generated/documents/index-tree.json"
-    assert payload["scopes"][0]["browser_config"]["recent_url"] == "/docs-viewer/scopes/studio/generated/documents/recent.json"
+    assert payload["scopes"][0]["browser_config"]["index_tree_url"] == "/docs-viewer/scopes/studio/working/generated/documents/index-tree.json"
+    assert payload["scopes"][0]["browser_config"]["recent_url"] == "/docs-viewer/scopes/studio/working/generated/documents/recent.json"
     assert payload["scopes"][0]["artifacts"] == {
         "generated_documents_available": True,
         "generated_search_available": True,

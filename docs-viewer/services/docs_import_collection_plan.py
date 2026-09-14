@@ -702,6 +702,7 @@ def plan_import_content_collection(
     }
     response["target"] = {
         "scope": scope,
+        **({"stage": collection.stage} if collection is not None and collection.stage else {}),
         **(
             {"sub_scope": collection.sub_scope}
             if collection is not None and collection.sub_scope

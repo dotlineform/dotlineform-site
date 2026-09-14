@@ -44,16 +44,16 @@ def prepare_repo(repo_root: Path) -> None:
         ],
     )
     for path in (
-        repo_root / "docs-viewer/scopes/analysis/source/documents",
+        repo_root / "docs-viewer/scopes/analysis/working/source/documents",
         (
             repo_root
-            / "docs-viewer/scopes/analysis/source/sub-scopes/tags/documents"
+            / "docs-viewer/scopes/analysis/working/source/sub-scopes/tags/documents"
         ),
     ):
         path.mkdir(parents=True, exist_ok=True)
     (
         repo_root
-        / f"docs-viewer/scopes/analysis/source/documents/{REPORT_DOC_ID}.md"
+        / f"docs-viewer/scopes/analysis/working/source/documents/{REPORT_DOC_ID}.md"
     ).write_text(
         (
             "---\n"
@@ -100,7 +100,7 @@ def stub_confined_rebuild(
     ):
         write_operation()
         calls.append(
-            {
+            {"stage": "working",
                 "repo_root": repo_root,
                 "scope": scope,
                 "sub_scope": sub_scope,
@@ -154,7 +154,7 @@ Body without an H1.
 
     payload = import_service.handle_import_source(
         tmp_path,
-        {
+        {"stage": "working",
             "scope": "analysis",
             "sub_scope": "tags",
             "source_directory": "data-sharing/import-staging",
@@ -167,7 +167,7 @@ Body without an H1.
     front_matter, body = source_model.parse_source(target_path)
     child_root = (
         tmp_path
-        / "docs-viewer/scopes/analysis/source/sub-scopes/tags/documents"
+        / "docs-viewer/scopes/analysis/working/source/sub-scopes/tags/documents"
     )
 
     assert payload["ok"] is True
@@ -175,13 +175,13 @@ Body without an H1.
     assert payload["scope"] == "analysis"
     assert payload["sub_scope"] == "tags"
     assert payload["source_directory"] == "data-sharing/import-staging"
-    assert payload["target"] == {
+    assert payload["target"] == {"stage": "working",
         "scope": "analysis",
         "sub_scope": "tags",
         "doc_id": payload["doc_id"],
     }
     assert payload["viewer_url"] == (
-        f"/docs/?scope=analysis&doc={REPORT_DOC_ID}&subdoc={payload['doc_id']}"
+        f"/docs/?scope=analysis&stage=working&doc={REPORT_DOC_ID}&subdoc={payload['doc_id']}"
     )
     assert payload["record"] == {
         "doc_id": payload["doc_id"],
@@ -193,7 +193,7 @@ Body without an H1.
     assert [
         path.name
         for path in (
-            tmp_path / "docs-viewer/scopes/analysis/source/documents"
+            tmp_path / "docs-viewer/scopes/analysis/working/source/documents"
         ).glob("*.md")
     ] == [f"{REPORT_DOC_ID}.md"]
     assert front_matter["doc_id"] == payload["doc_id"]
@@ -203,7 +203,7 @@ Body without an H1.
     assert "summary" not in front_matter
     assert "unrelated" not in front_matter
     assert body == "Body without an H1.\n"
-    assert payload["import_preview"]["target"] == {
+    assert payload["import_preview"]["target"] == {"stage": "working",
         "scope": "analysis",
         "sub_scope": "tags",
     }
@@ -252,7 +252,7 @@ Package body.
 
     payload = import_service.handle_import_source(
         tmp_path,
-        {
+        {"stage": "working",
             "scope": "analysis",
             "sub_scope": "tags",
             "source_directory": "data-sharing/import-staging",
@@ -265,7 +265,7 @@ Package body.
     source_text = target_path.read_text(encoding="utf-8")
     media_result = payload["inline_media_written"][0]
     media_path = (
-        tmp_path / "docs-viewer/scopes/analysis/source/sub-scopes/tags/media/img"
+        tmp_path / "docs-viewer/scopes/analysis/working/source/sub-scopes/tags/media/img"
         / media_result["artifact_identity"]
     )
 
@@ -273,7 +273,7 @@ Package body.
     assert payload["import_preview"]["source_format"] == "markdown_package"
     assert payload["title"] == "Package Tag Note"
     assert payload["viewer_url"] == (
-        f"/docs/?scope=analysis&doc={REPORT_DOC_ID}&subdoc={payload['doc_id']}"
+        f"/docs/?scope=analysis&stage=working&doc={REPORT_DOC_ID}&subdoc={payload['doc_id']}"
     )
     assert "---" not in payload["import_preview"]["markdown_preview"]
     assert "package-overwrite-id" not in source_text
@@ -283,7 +283,7 @@ Package body.
     assert media_result["publish_status"] == "uploaded"
     assert media_path.is_file()
     assert not (
-        tmp_path / "docs-viewer/scopes/analysis/source/media/img"
+        tmp_path / "docs-viewer/scopes/analysis/working/source/media/img"
         / media_result["artifact_identity"]
     ).exists()
     assert media_path.suffix == ".webp"
@@ -322,7 +322,7 @@ def test_child_destination_rejects_registered_collection_before_markdown(
     ):
         import_service.handle_import_source(
             tmp_path,
-            {
+            {"stage": "working",
                 "scope": "analysis",
                 "sub_scope": "tags",
                 "source_directory": "data-sharing/import-staging",
@@ -344,13 +344,13 @@ def test_child_collection_metadata_is_validated_before_preview(
     )
     invalid_child = (
         tmp_path
-        / "docs-viewer/scopes/analysis/source/sub-scopes/tags/documents/invalid.md"
+        / "docs-viewer/scopes/analysis/working/source/sub-scopes/tags/documents/invalid.md"
     )
     invalid_child.write_text(
         """---
 doc_id: invalid
 title: Invalid
-ui_status: unsupported
+viewable: false
 ---
 # Invalid
 """,
@@ -364,10 +364,10 @@ ui_status: unsupported
         ),
     )
 
-    with pytest.raises(ValueError, match="Unknown ui_status 'unsupported'"):
+    with pytest.raises(ValueError, match="viewable"):
         import_service.handle_import_source(
             tmp_path,
-            {
+            {"stage": "working",
                 "scope": "analysis",
                 "sub_scope": "tags",
                 "source_directory": "data-sharing/import-staging",

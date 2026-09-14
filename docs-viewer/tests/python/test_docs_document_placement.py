@@ -73,21 +73,23 @@ def working(tmp_path, monkeypatch):
     write_json(tmp_path / document_source_path(config) / "unpublishable.json", [X])
     calls = []
 
-    def build(collection=""):
-        builder = (SubScopeDocsBuilder(repo_root=tmp_path, config=config, sub_scope=owners[collection], skip_media_builds=True)
-                   if collection else DocsDataBuilder(repo_root=tmp_path, config=config, skip_media_builds=True))
+    def build(collection="", *, created=False, **links):
+        builder = (SubScopeDocsBuilder(repo_root=tmp_path, config=config, sub_scope=owners[collection], skip_media_builds=True, **links)
+                   if collection else DocsDataBuilder(repo_root=tmp_path, config=config, skip_media_builds=True, **links))
+        if created:
+            builder.links_created_doc_ids = [doc.doc_id for doc in builder.load_docs()]
         return builder.run(write=True)
 
     def rebuild_parent(repo_root, scope, **options):
         assert repo_root == tmp_path and scope == "analysis" and options["stage"] == "working"
         assert options["include_search"] is False
         calls.append("")
-        return build()
+        return build(**{key: value for key, value in options.items() if key.startswith("links_")})
 
     def rebuild_child(repo_root, scope, collection, **options):
         assert repo_root == tmp_path and scope == "analysis" and options["stage"] == "working"
         calls.append(collection)
-        return build(collection)
+        return build(collection, **{key: value for key, value in options.items() if key.startswith("links_")})
 
     monkeypatch.setattr(executor.write_rebuild, "rebuild_scope_outputs", rebuild_parent)
     monkeypatch.setattr(executor.write_rebuild, "rebuild_sub_scope_outputs", rebuild_child)
@@ -138,8 +140,8 @@ def test_collection_round_trip_finishes_sources_media_links_and_projections(work
     body = f"[Parent]({P}.md#top)\n\n[[media:{image.reference_prefix}/diagram.svg]]\n\n`[Example]({original_link})`\n\n<!-- {original_link} -->\n"
     original = working.source(A, body=body, work_id="00523")
     working.source(P, body=f"[A]({original_link})\n[Remote](https://example.test{original_link})\n[Preview]({original_link}&stage=pre-publish)")
-    for collection in ("works", "concepts", ""):
-        working.build(collection)
+    for collection in ("", "works", "concepts"):
+        working.build(collection, created=True)
     working.calls.clear()
     for old, new, parent, metadata in (("", "works", WORKS, False), ("works", "concepts", CONCEPTS, True), ("concepts", "", P, False)):
         source_path = working.root / document_source_path(working.owners[old]) / f"{A}.md"
@@ -151,7 +153,7 @@ def test_collection_round_trip_finishes_sources_media_links_and_projections(work
             request.update(title="Moved title", source_revision=loaded["source_revision"])
             route = service.routes.UPDATE_METADATA_PATH
         status, response = service.docs_management_post_response(working.root, route, request)
-        assert status == 200 and response["ok"] is True and response["rebuild"]["ok"] is True
+        assert status == 200 and response["ok"] is True and response["rebuild"]["ok"] is True, response
         assert response["target"] == target(collection=new)
         assert response["placement"]["collection_changed"] is True
         assert not source_path.exists()
@@ -177,7 +179,7 @@ def test_collection_round_trip_finishes_sources_media_links_and_projections(work
         links = json.loads((working.root / generated_documents_path(working.config) / "links-by-id" / f"{A}.json").read_text())
         assert links["self"]["target"].get("sub_scope", "") == new
         assert [item["document"]["target"]["doc_id"] for item in links["incoming"]] == [P]
-    assert original.is_file() and working.calls == ["works", "", "concepts", "works", "", "concepts", ""]
+    assert original.is_file() and working.calls == ["works", "", "concepts", "works", "", "", "concepts"]
 
 
 def test_preflight_conflicts_do_not_relocate_and_rebuild_failure_is_visible(working, monkeypatch):

@@ -81,15 +81,19 @@ def apply_create_scope(
     manifest = load_manifest(repo_root)
     scope_id = str(preview["scope_id"])
     scope_root = local_scope_root_path(repo_root, preview["planned_scope_config"])
-    source_root = scope_root / SCOPE_SOURCE_PATH
+    source_root = scope_root / "working" / SCOPE_SOURCE_PATH
     documents_root = source_root / SOURCE_DOCUMENTS_PATH
     default_doc_path = documents_root / f"{preview['planned_scope_config']['default_doc_id']}.md"
     rebuild = None
 
     if not dry_run:
         scope_root.mkdir(parents=True, exist_ok=False)
-        source_root.mkdir(exist_ok=False)
+        source_root.mkdir(parents=True, exist_ok=False)
         documents_root.mkdir(exist_ok=False)
+        write_text_atomic(documents_root / "unpublishable.json", "[]\n")
+        (scope_root / "pre-publish/source/documents").mkdir(parents=True)
+        (scope_root / "pre-publish/generated").mkdir(parents=True)
+        (scope_root / "published/documents").mkdir(parents=True)
         write_text_atomic(
             default_doc_path,
             default_source_doc_text(
@@ -102,7 +106,7 @@ def apply_create_scope(
         created_config = load_docs_scope_configs(repo_root)[scope_id]
         ensure_configured_scope_owned_media_directories(
             repo_root,
-            {scope_id: created_config},
+            {f"{scope_id}/{stage.stage}": stage for stage in created_config.stages},
         )
         if preview["urls"]["public"]:
             route_path = route_file_for_public_path(repo_root, str(preview["urls"]["public"]))
@@ -127,6 +131,7 @@ def apply_create_scope(
             repo_root,
             scope_id,
             include_search=True,
+            stage="working",
         )
 
     return {
@@ -200,18 +205,21 @@ def plan_create_scope_preview(repo_root: Path, body: dict[str, Any]) -> dict[str
         raise ValueError(f"scope_id {scope_id!r} already exists in docs scope manifest")
 
     created_scope_root = local_scope_root_path(repo_root, planned_scope_config)
-    created_source_root = created_scope_root / SCOPE_SOURCE_PATH
+    created_source_root = created_scope_root / "working" / SCOPE_SOURCE_PATH
     created_documents_root = created_source_root / SOURCE_DOCUMENTS_PATH
     created_files = [
         path_record(repo_root, "scope_root", created_scope_root, action="create"),
         path_record(repo_root, "source_root", created_source_root, action="create"),
         path_record(repo_root, "source_documents_root", created_documents_root, action="create"),
         path_record(repo_root, "default_source_doc", created_documents_root / f"{default_doc_id}.md", action="create"),
+        path_record(repo_root, "publication_ignore", created_documents_root / "unpublishable.json", action="create"),
+        path_record(repo_root, "pre_publish_source", created_scope_root / "pre-publish/source/documents", action="create"),
+        path_record(repo_root, "pre_publish_generated", created_scope_root / "pre-publish/generated", action="create"),
     ]
     generated_docs_output = local_generated_docs_output_path(repo_root, planned_scope_config)
     published_docs_output = local_published_docs_output_path(repo_root, planned_scope_config)
-    source_media_root = created_scope_root / "source/media"
-    generated_media_root = created_scope_root / "generated/media"
+    source_media_root = created_scope_root / "working/source/media"
+    generated_media_root = created_scope_root / "working/generated/media"
     published_media_root = created_scope_root / "published/media"
     for role, media_root in (
         ("source", source_media_root),
@@ -285,10 +293,10 @@ def plan_create_scope_preview(repo_root: Path, body: dict[str, Any]) -> dict[str
         raise ValueError(f"scope creation would overwrite existing paths: {', '.join(conflicts)}")
 
     commands = []
-    commands.append({"command": f"./docs-viewer/build/build_docs.py --scope {scope_id} --write", "status": "planned"})
-    commands.append({"command": f"./docs-viewer/build/build_search.py --scope {scope_id} --write", "status": "planned"})
+    commands.append({"command": f"./docs-viewer/build/build_docs.py --scope {scope_id} --stage working --write", "status": "planned"})
+    commands.append({"command": f"./docs-viewer/build/build_search.py --scope {scope_id} --stage working --write", "status": "planned"})
 
-    management_url = f"/docs/?scope={scope_id}"
+    management_url = f"/docs/?scope={scope_id}&stage=working"
     return {
         "ok": True,
         "schema_version": LIFECYCLE_PREVIEW_SCHEMA_VERSION,

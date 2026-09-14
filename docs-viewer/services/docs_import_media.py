@@ -20,7 +20,7 @@ from docs_import_common import (
 )
 from docs_scope_config import (
     DOCS_SCOPE_CONFIGS, DocsManagedMediaConfig, DocsScopeConfig, DocsSubScopeConfig,
-    load_docs_media_owner, load_docs_scope_configs, managed_media_config,
+    load_docs_media_owner, load_docs_scope_configs, managed_media_config, select_scope_stage,
 )
 from docs_media_storage import (
     docs_media_file,
@@ -41,7 +41,7 @@ def scope_configs_for(repo_root: Path | None = None):
 
 def media_config_for(scope: str, media_class: str, repo_root: Path | None = None):
     normalized_scope = normalize_scope(scope, repo_root)
-    return managed_media_config(scope_configs_for(repo_root)[normalized_scope], media_class)
+    return managed_media_config(select_scope_stage(scope_configs_for(repo_root)[normalized_scope], "working"), media_class)
 
 def next_inline_media_filename(staging_root: Path, doc_id: str, extension: str, used_filenames: set[str]) -> str:
     safe_doc_id = slugify(doc_id or "imported-doc")

@@ -514,6 +514,7 @@ def management_collection_document_url(
         repo_root,
         collection.scope,
         collection.sub_scope,
+        stage=collection.stage,
     )
     return document_location.management_document_viewer_url(
         collection_url,
@@ -1023,6 +1024,7 @@ def apply_document_copy(
                 target_paths,
                 write_operation,
                 suppression_reason=DOCUMENT_COPY_SUPPRESSION_REASON,
+                stage=current_plan.target_collection.stage or None,
             )
         else:
             if perform_source_write_and_rebuild is None:
@@ -1040,6 +1042,7 @@ def apply_document_copy(
                 docs_doc_ids=created_doc_ids,
                 written_paths=written_paths,
                 skip_media_builds=True,
+                stage=current_plan.target_collection.stage or None,
             )
         rebuild_complete = True
 

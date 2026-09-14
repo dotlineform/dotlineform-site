@@ -33,6 +33,8 @@ export function createDocsViewerGeneratedDataRuntime(options) {
   }
 
   function scopeGeneratedCapability(capabilities, scope, key, stage) {
+    stage = stage === undefined ? requestViewerStage({ viewerScope: scope }) : stage;
+    if (stage === "published") key = key.replace("generated_", "published_");
     var scopeCaps = capabilities && capabilities.scopes ? capabilities.scopes[scope] : null;
     if (scopeCaps && scopeCaps.stages) scopeCaps = scopeCaps.stages[stage === undefined ? requestViewerStage({ viewerScope: scope }) : stage] || null;
     return Boolean(

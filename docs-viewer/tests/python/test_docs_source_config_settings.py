@@ -13,7 +13,8 @@ def test_source_config_settings_contract_exposes_default_doc_id() -> None:
         repo_root = Path(temp_path)
         write_docs_scope_config(repo_root)
         write_generated_docs(repo_root)
-        payload = docs_management_service.docs_source_config_settings.build_settings_contract(repo_root, "studio")
+        payload = docs_management_service.docs_source_config_settings.build_settings_contract(repo_root, "studio", stage="working")
+        prepared = docs_management_service.docs_source_config_settings.build_settings_contract(repo_root, "studio", stage="pre-publish")
 
     assert payload["ok"] is True
     assert payload["schema_version"] == "docs_source_config_settings_v1"
@@ -21,8 +22,8 @@ def test_source_config_settings_contract_exposes_default_doc_id() -> None:
         {
             "field": "default_doc_id",
             "type": "string",
-            "source_path": "docs-viewer/config/scopes/docs_scopes.json scopes[].default_doc_id",
-            "generated_path": "docs-viewer/config/defaults/docs-viewer-config.json scopes[].default_doc_id",
+            "source_path": "docs-viewer/config/scopes/docs_scopes.json scopes[].stages.<stage>.default_doc_id",
+            "generated_path": "docs-viewer/config/defaults/docs-viewer-config.json scopes[].stages[].default_doc_id",
             "requires_rebuild": True,
             "description": "Default document id opened for this scope when no document is requested. Leave blank to use the first loadable document.",
         }
@@ -36,6 +37,8 @@ def test_source_config_settings_contract_exposes_default_doc_id() -> None:
     assert scope["fields"][0]["type"] == "string"
     assert scope["fields"][0]["current_value"] == "child"
     assert scope["fields"][0]["editable"] is True
+    assert scope["fields"][0]["source_path"].endswith("stages.working.default_doc_id")
+    assert prepared["scopes"][0]["fields"][0]["editable"] is False
 
 def test_source_config_settings_validates_and_writes_default_doc_id() -> None:
     with make_repo() as temp_path:
@@ -47,17 +50,20 @@ def test_source_config_settings_validates_and_writes_default_doc_id() -> None:
             repo_root,
             "studio",
             {"default_doc_id": "other"},
+            stage="working",
         )
         dry_run = docs_management_service.docs_source_config_settings.apply_scope_settings_change(
             repo_root,
             "studio",
             {"default_doc_id": "other"},
             dry_run=True,
+            stage="working",
         )
         applied = docs_management_service.docs_source_config_settings.apply_scope_settings_change(
             repo_root,
             "studio",
             {"default_doc_id": "other"},
+            stage="working",
         )
         config_payload = json.loads((repo_root / "docs-viewer/config/scopes/docs_scopes.json").read_text(encoding="utf-8"))
 
@@ -66,11 +72,11 @@ def test_source_config_settings_validates_and_writes_default_doc_id() -> None:
     assert validation["changes"]["default_doc_id"]["changed"] is True
     assert validation["requires_rebuild"] is True
     assert validation["affected_artifacts"] == [
-        "docs-viewer/config/defaults/docs-viewer-config.json scopes[].default_doc_id"
+        "docs-viewer/config/defaults/docs-viewer-config.json scopes[].stages[].default_doc_id"
     ]
     assert dry_run["changed"] is True
     assert applied["changed"] is True
-    assert config_payload["scopes"][0]["default_doc_id"] == "other"
+    assert config_payload["scopes"][0]["stages"]["working"]["default_doc_id"] == "other"
 
 def test_source_config_settings_rejects_unknown_default_doc_id() -> None:
     with make_repo() as temp_path:
@@ -83,6 +89,7 @@ def test_source_config_settings_rejects_unknown_default_doc_id() -> None:
                 repo_root,
                 "studio",
                 {"default_doc_id": "missing-doc"},
+                stage="working",
             )
         except ValueError as exc:
             assert "default_doc_id" in str(exc)
@@ -101,6 +108,7 @@ def test_source_config_settings_rejects_blocked_and_deferred_fields() -> None:
                 repo_root,
                 "studio",
                 {"source": "_docs2"},
+                stage="working",
             )
         except ValueError as exc:
             assert "source" in str(exc)
@@ -112,6 +120,7 @@ def test_source_config_settings_rejects_blocked_and_deferred_fields() -> None:
                 repo_root,
                 "studio",
                 {"recent_limit": 12},
+                stage="working",
             )
         except ValueError as exc:
             assert "recent_limit" in str(exc)

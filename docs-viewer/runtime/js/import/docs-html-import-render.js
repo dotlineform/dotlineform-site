@@ -43,6 +43,7 @@ function resultDocLinksHtml(payload) {
   const sourceLink = [
     `<a href="#" data-doc-source-link="true"`,
     ` data-scope="${escapeHtml(normalizedScope)}"`,
+    returnedTarget.stage ? ` data-stage="${escapeHtml(returnedTarget.stage)}"` : "",
     normalizedSubScope
       ? ` data-sub-scope="${escapeHtml(normalizedSubScope)}"`
       : "",

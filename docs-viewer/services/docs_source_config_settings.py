@@ -29,8 +29,8 @@ EDITABLE_SCOPE_FIELDS: dict[str, EditableScopeField] = {
     "default_doc_id": EditableScopeField(
         field="default_doc_id",
         value_type="string",
-        source_path=f"{CONFIG_REL_PATH.as_posix()} scopes[].default_doc_id",
-        generated_path="docs-viewer/config/defaults/docs-viewer-config.json scopes[].default_doc_id",
+        source_path=f"{CONFIG_REL_PATH.as_posix()} scopes[].stages.<stage>.default_doc_id",
+        generated_path="docs-viewer/config/defaults/docs-viewer-config.json scopes[].stages[].default_doc_id",
         requires_rebuild=True,
         description="Default document id opened for this scope when no document is requested. Leave blank to use the first loadable document.",
     ),
@@ -91,8 +91,8 @@ def _scope_field_payload(config: Any, contract: EditableScopeField) -> dict[str,
         "field": contract.field,
         "type": contract.value_type,
         "current_value": _field_current_value(config, contract),
-        "editable": True,
-        "source_path": contract.source_path,
+        "editable": config.stage == "working",
+        "source_path": contract.source_path.replace("<stage>", config.stage),
         "generated_path": contract.generated_path,
         "requires_rebuild": contract.requires_rebuild,
         "description": contract.description,
@@ -103,6 +103,7 @@ def _scope_field_payload(config: Any, contract: EditableScopeField) -> dict[str,
 def _scope_payload(config: Any) -> dict[str, Any]:
     return {
         "scope_id": config.scope_id,
+        **({"stage": config.stage} if config.stage else {}),
         "source_config_path": CONFIG_REL_PATH.as_posix(),
         "fields": [
             _scope_field_payload(config, contract)
@@ -147,7 +148,7 @@ def _validate_default_doc_id(repo_root: Path, config: Any, value: str) -> list[s
     return []
 
 
-def build_settings_contract(repo_root: Path, scope_id: str = "") -> dict[str, Any]:
+def build_settings_contract(repo_root: Path, scope_id: str = "", stage: str | None = None) -> dict[str, Any]:
     configs = load_docs_scope_configs(repo_root)
     requested_scope = str(scope_id or "").strip().lower()
     if requested_scope and requested_scope not in configs:
@@ -177,7 +178,14 @@ def build_settings_contract(repo_root: Path, scope_id: str = "") -> dict[str, An
             {"field": field, "reason": reason}
             for field, reason in sorted(DEFERRED_GLOBAL_FIELDS.items())
         ],
-        "scopes": [_scope_payload(configs[item]) for item in scope_ids],
+        "scopes": [
+            _scope_payload(selected)
+            for item in scope_ids
+            for selected in (
+                (select_scope_stage(configs[item], stage),) if requested_scope
+                else configs[item].stages
+            )
+        ],
     }
 
 
@@ -235,6 +243,7 @@ def validate_scope_settings_change(repo_root: Path, scope_id: str, changes: dict
         "ok": True,
         "schema_version": SCHEMA_VERSION,
         "scope_id": normalized_scope,
+        "stage": config.stage,
         "source_config_path": CONFIG_REL_PATH.as_posix(),
         "changes": validated_changes,
         "warnings": warnings,
@@ -269,7 +278,7 @@ def apply_scope_settings_change(repo_root: Path, scope_id: str, changes: dict[st
                 continue
             if str(item.get("scope_id") or "").strip().lower() != validation["scope_id"]:
                 continue
-            destination = item["stages"][stage] if stage else item
+            destination = item["stages"][stage]
             for field, value in changed_fields.items():
                 destination[field] = value
             updated = True

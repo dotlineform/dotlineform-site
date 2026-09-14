@@ -289,12 +289,15 @@ def load_current_collection_docs(
     scope: str,
     sub_scope: str,
 ) -> list[source_model.ScopeDoc]:
+    from docs_document_packages.source_context import package_source_scope_config
+    config = package_source_scope_config(repo_root, scope)
     if not sub_scope:
-        return source_model.load_scope_docs(repo_root, scope)
+        return source_model.load_scope_docs_for_config(repo_root, config)
     collection = resolve_managed_document_collection(
         repo_root,
         scope=scope,
         sub_scope=sub_scope,
+        stage=config.stage or None,
     )
     docs = [
         source_doc_from_path(

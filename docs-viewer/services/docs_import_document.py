@@ -40,12 +40,11 @@ from docs_source_model import (  # noqa: E402
     format_source,
     is_immutable_doc_id,
     report_source_contract_for_collection,
-    scope_root,
     slugify,
     write_text_atomic,
     write_text_atomic_new,
 )
-from docs_scope_config import load_docs_scope_configs, require_document_authoring  # noqa: E402
+from docs_scope_config import require_document_authoring  # noqa: E402
 from docs_import_media import bind_import_media_owner  # noqa: E402
 from markdown_renderer import normalize_markdown_blank_lines  # noqa: E402
 from docs_report_source import RETIRED_REPORT_KEYS, parse_report_source  # noqa: E402
@@ -255,19 +254,14 @@ def plan_import_document(
     """Validate and plan one create or overwrite without writing."""
 
     normalized_scope = str(scope or "").strip().lower()
-    sub_scope = ""
-    if collection is not None:
-        if collection.scope != normalized_scope:
-            raise ValueError("import collection target does not match the requested scope")
-        sub_scope = collection.sub_scope
-        create_root = collection.source_root
-        document_config = collection.document_config
-        parent_config = collection.parent_config
-    else:
-        configs = load_docs_scope_configs(repo_root, scope_ids=[normalized_scope])
-        document_config = configs[normalized_scope]
-        parent_config = document_config
-        create_root = scope_root(repo_root, normalized_scope)
+    if collection is None:
+        raise ValueError("Import requires an exact scope/stage collection")
+    if collection.scope != normalized_scope:
+        raise ValueError("import collection target does not match the requested scope")
+    sub_scope = collection.sub_scope
+    create_root = collection.source_root
+    document_config = collection.document_config
+    parent_config = collection.parent_config
     require_document_authoring(parent_config)
     if operation == IMPORT_DOCUMENT_OVERWRITE and slugify(record.doc_id) != record.doc_id:
         raise ValueError("ImportContent doc_id must be a safe normalized docs id")
@@ -491,6 +485,8 @@ def import_document_result(
     inline_media_written = list(apply_result.inline_media_written)
     interactive_html_written = list(apply_result.interactive_html_written)
     target = {"scope": plan.scope, "doc_id": plan.doc_id}
+    if plan.stage:
+        target["stage"] = plan.stage
     if plan.sub_scope:
         target["sub_scope"] = plan.sub_scope
     record: dict[str, Any] = {

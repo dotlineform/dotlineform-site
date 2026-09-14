@@ -67,6 +67,7 @@ export function createDocsImportCollectionController(options = {}) {
     sourceDirectory: "",
     sourceFormat: "",
     scope: "",
+    stage: "",
     subScope: "",
     plan: null,
     result: null,
@@ -106,6 +107,7 @@ export function createDocsImportCollectionController(options = {}) {
     state.sourceDirectory = "";
     state.sourceFormat = "";
     state.scope = "";
+    state.stage = "";
     state.subScope = "";
     state.plan = null;
     state.result = null;
@@ -178,6 +180,7 @@ export function createDocsImportCollectionController(options = {}) {
     const targetDocId = normalizeText(target && target.doc_id);
     if (
       targetScope !== state.scope
+      || normalizeText(target && target.stage) !== state.stage
       || targetDocId
       || (
         state.subScope
@@ -189,6 +192,7 @@ export function createDocsImportCollectionController(options = {}) {
     }
     return {
       scope: targetScope,
+      ...(state.stage ? { stage: state.stage } : {}),
       ...(targetSubScope ? { sub_scope: targetSubScope } : {})
     };
   }
@@ -196,6 +200,7 @@ export function createDocsImportCollectionController(options = {}) {
   async function preview({
     file,
     scope,
+    stage = "",
     subScope = "",
     sourceDirectory = "",
     managementBaseUrl = ""
@@ -229,6 +234,7 @@ export function createDocsImportCollectionController(options = {}) {
     state.sourceDirectory = normalizedSourceDirectory;
     state.sourceFormat = sourceFormat;
     state.scope = normalizedScope;
+    state.stage = normalizeText(stage);
     state.subScope = normalizedSubScope;
     state.managementBaseUrl = normalizeText(managementBaseUrl);
     state.plan = null;
@@ -240,6 +246,7 @@ export function createDocsImportCollectionController(options = {}) {
     try {
       const payload = await fetchManagementJson("/docs/import-source", "POST", {
         scope: normalizedScope,
+        ...(state.stage ? { stage: state.stage } : {}),
         ...(normalizedSubScope ? { sub_scope: normalizedSubScope } : {}),
         source_directory: normalizedSourceDirectory,
         staged_filename: stagedFilename,
@@ -291,6 +298,7 @@ export function createDocsImportCollectionController(options = {}) {
     try {
       const payload = await fetchManagementJson("/docs/import-source", "POST", {
         scope: state.scope,
+        ...(state.stage ? { stage: state.stage } : {}),
         ...(state.subScope ? { sub_scope: state.subScope } : {}),
         source_directory: state.sourceDirectory,
         staged_filename: state.stagedFilename,
@@ -342,6 +350,7 @@ export function createDocsImportCollectionController(options = {}) {
           )) || null;
           const terminalDetail = {
             scope: state.scope,
+            ...(state.stage ? { stage: state.stage } : {}),
             subScope: state.subScope,
             docId: normalizeText(displayedRecord && displayedRecord.doc_id),
             target,

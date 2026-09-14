@@ -160,8 +160,14 @@ class ContentRenderingMixin:
     def resolve_media_tokens(self, markdown: str) -> str:
         if "[[media:" not in markdown:
             return markdown
-        rendered = MEDIA_IMAGE_TOKEN_PATTERN.sub(self.render_media_image_token, markdown)
-        return MEDIA_TOKEN_PATTERN.sub(lambda match: self.resolve_media_url(self.parse_media_token(match.group(1))[0]), rendered)
+        # Authored examples and comments are literal Markdown, not media inputs.
+        for start, end in reversed(list(semantic_token_text_ranges(markdown))):
+            rendered = MEDIA_IMAGE_TOKEN_PATTERN.sub(self.render_media_image_token, markdown[start:end])
+            rendered = MEDIA_TOKEN_PATTERN.sub(
+                lambda match: self.resolve_media_url(self.parse_media_token(match.group(1))[0]), rendered,
+            )
+            markdown = markdown[:start] + rendered + markdown[end:]
+        return markdown
 
     def render_media_image_token(self, match: re.Match[str]) -> str:
         media_path, media_attrs = self.parse_media_token(match.group("body"))
@@ -230,7 +236,12 @@ class ContentRenderingMixin:
     def resolve_html_media_tokens(self, markdown: str) -> str:
         if "[[html-media:" not in markdown:
             return markdown
-        return HTML_MEDIA_TOKEN_PATTERN.sub(lambda match: self.html_media_iframe(match.group(1)), markdown)
+        for start, end in reversed(list(semantic_token_text_ranges(markdown))):
+            rendered = HTML_MEDIA_TOKEN_PATTERN.sub(
+                lambda match: self.html_media_iframe(match.group(1)), markdown[start:end],
+            )
+            markdown = markdown[:start] + rendered + markdown[end:]
+        return markdown
 
     def html_media_iframe(self, raw_body: str) -> str:
         token = self.parse_html_media_token(raw_body)

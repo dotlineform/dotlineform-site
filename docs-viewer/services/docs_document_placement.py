@@ -17,7 +17,7 @@ from docs_scope_config import require_document_authoring
 
 
 def supports_collection_placement(target: ManagedDocumentTarget) -> bool:
-    return target.scope == "analysis" and target.stage == "working"
+    return target.stage == "working"
 
 
 @dataclass(frozen=True)
@@ -62,7 +62,7 @@ def resolve_document_placement(
 
 None means no requested placement edit. Empty text means the ordinary root.
 The existing parent_id request carries the selected ordinary document ID; in
-Analysis Working an exact collection host selects its collection instead.
+Working an exact collection host selects its collection instead.
 """
     require_document_authoring(source.parent_config)
     current = resolve_managed_document_collection(

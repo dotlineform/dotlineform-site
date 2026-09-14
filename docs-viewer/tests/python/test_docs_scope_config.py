@@ -377,7 +377,7 @@ def test_docs_scope_config_accepts_nested_sub_scopes() -> None:
             ],
         )
         write_scope_record(repo_root, record)
-        config = docs_scope_config.load_docs_scope_configs(repo_root)["research"]
+        config = docs_scope_config.select_scope_stage(docs_scope_config.load_docs_scope_configs(repo_root)["research"], "pre-publish")
 
     sub_scope = config.sub_scopes[0]
     assert sub_scope.sub_scope == "tags"
@@ -387,7 +387,7 @@ def test_docs_scope_config_accepts_nested_sub_scopes() -> None:
     assert sub_scope.lifecycle is None
     assert sub_scope.sub_scope_customisation is None
     assert docs_scope_config.document_source_path(sub_scope).as_posix() == (
-        "docs-viewer/scopes/research/source/sub-scopes/tags/documents"
+        "docs-viewer/scopes/research/pre-publish/source/sub-scopes/tags/documents"
     )
     assert docs_scope_config.published_documents_path(sub_scope).as_posix() == (
         "docs-viewer/scopes/research/published/sub-scopes/tags/documents"
@@ -747,10 +747,10 @@ def test_docs_scope_config_accepts_explicit_mermaid_to_svg_build_contract() -> N
         record["media"]["types"]["svg"]["build_inputs"] = ["mermaid"]  # type: ignore[index]
         write_scope_record(repo_root, record)
 
-        config = docs_scope_config.load_docs_scope_configs(repo_root)["studio"]
+        config = docs_scope_config.select_scope_stage(docs_scope_config.load_docs_scope_configs(repo_root)["studio"], "working")
 
     assert config.media.build_sources["mermaid"].location.path == Path(
-        "docs-viewer/scopes/studio/source/media/build-source/mermaid"
+        "docs-viewer/scopes/studio/working/source/media/build-source/mermaid"
     )
     assert config.media.types["svg"].build_inputs == ("mermaid",)
 

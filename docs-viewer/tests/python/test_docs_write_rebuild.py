@@ -166,8 +166,8 @@ def prepare_scope(repo_root: Path, scope: str = "studio") -> None:
         repo_root / "docs-viewer/config/scopes/docs_scopes.json",
         [docs_scope_record(scope)],
     )
-    (repo_root / f"docs-viewer/scopes/{scope}/source").mkdir(parents=True)
-    (repo_root / f"docs-viewer/scopes/{scope}/generated").mkdir(parents=True)
+    (repo_root / f"docs-viewer/scopes/{scope}/working/source").mkdir(parents=True)
+    (repo_root / f"docs-viewer/scopes/{scope}/working/generated").mkdir(parents=True)
 
 
 def test_rebuild_scope_outputs_preserves_full_command_shapes() -> None:
@@ -187,6 +187,7 @@ def test_rebuild_scope_outputs_preserves_full_command_shapes() -> None:
                 Path(temp_path),
                 "studio",
                 include_search=True,
+                stage="working",
             )
     finally:
         write_rebuild.subprocess.run = original_run
@@ -200,8 +201,8 @@ def test_rebuild_scope_outputs_preserves_full_command_shapes() -> None:
     }
     assert result["search"] == {"mode": "full", "doc_ids": []}
     assert calls == [
-        (["/tmp/python", "docs-viewer/build/build_docs.py", "--scope", "studio", "--write", "--diagnostics"], calls[0][1]),
-        (["/tmp/python", "docs-viewer/build/build_search.py", "--scope", "studio", "--write"], calls[0][1]),
+        (['/tmp/python', 'docs-viewer/build/build_docs.py', '--scope', 'studio', '--write', '--diagnostics', '--stage', 'working'], calls[0][1]),
+        (['/tmp/python', 'docs-viewer/build/build_search.py', '--scope', 'studio', '--write', '--stage', 'working'], calls[0][1]),
     ]
     assert result["diagnostics"]["search"]["mode"] == "full"
     assert result["diagnostics"]["search"]["doc_ids"] == []
@@ -219,7 +220,7 @@ def test_rebuild_scope_outputs_extracts_docs_and_search_diagnostics() -> None:
             return Completed(stdout=DOCS_DIAGNOSTICS_STDOUT)
         return Completed(
             stdout=(
-                "Wrote docs-viewer/scopes/studio/generated/search/index.json "
+                "Wrote docs-viewer/scopes/studio/working/generated/search/index.json "
                 "with 10 studio search docs\n"
             )
         )
@@ -233,6 +234,7 @@ def test_rebuild_scope_outputs_extracts_docs_and_search_diagnostics() -> None:
                 "studio",
                 include_search=True,
                 search_doc_ids=["a", "b"],
+                stage="working",
             )
     finally:
         write_rebuild.subprocess.run = original_run
@@ -268,24 +270,14 @@ def test_rebuild_sub_scope_outputs_runs_only_confined_docs_builder() -> None:
                 Path(temp_path),
                 "studio",
                 "tags",
+                stage="working",
             )
     finally:
         write_rebuild.subprocess.run = original_run
         write_rebuild.PYTHON_EXECUTABLE = original_python
 
     assert calls == [
-        [
-            "/tmp/python",
-            "docs-viewer/build/build_docs.py",
-            "--scope",
-            "studio",
-            "--sub-scope",
-            "tags",
-            "--write",
-            "--diagnostics",
-            "--skip-browser-config",
-            "--skip-media-builds",
-        ],
+        ['/tmp/python', 'docs-viewer/build/build_docs.py', '--scope', 'studio', '--sub-scope', 'tags', '--write', '--diagnostics', '--skip-browser-config', '--skip-media-builds', '--stage', 'working'],
     ]
     assert result["docs"] == {
         "mode": "sub_scope",
@@ -298,49 +290,6 @@ def test_rebuild_sub_scope_outputs_runs_only_confined_docs_builder() -> None:
     assert result["diagnostics"]["search"] == {"mode": "none", "doc_ids": []}
 
 
-def test_parent_search_rebuild_follows_confined_sub_scope_docs() -> None:
-    calls: list[list[str]] = []
-    original_python = with_fake_python()
-    original_run = write_rebuild.subprocess.run
-
-    def fake_run(command, **_kwargs):
-        calls.append(list(command))
-        return Completed(
-            stdout=(
-                "Wrote docs-viewer/scopes/studio/generated/search/index.json "
-                "with 12 studio search docs\n"
-            )
-        )
-
-    write_rebuild.subprocess.run = fake_run
-    try:
-        with tempfile.TemporaryDirectory() as temp_path:
-            result = write_rebuild.rebuild_parent_search_after_sub_scope(
-                Path(temp_path),
-                "studio",
-                {
-                    "ok": True,
-                    "steps": [{"command": "child"}],
-                    "search": {"mode": "none", "doc_ids": []},
-                    "diagnostics": {"docs": {"scope": "studio"}},
-                },
-            )
-    finally:
-        write_rebuild.subprocess.run = original_run
-        write_rebuild.PYTHON_EXECUTABLE = original_python
-
-    assert calls == [
-        [
-            "/tmp/python",
-            "docs-viewer/build/build_search.py",
-            "--scope",
-            "studio",
-            "--write",
-        ]
-    ]
-    assert result["search"] == {"mode": "full", "doc_ids": []}
-    assert result["steps"][0] == {"command": "child"}
-    assert result["diagnostics"]["search"]["docs"] == 12
 
 
 def test_rebuild_scope_outputs_turns_affected_ids_into_whole_search_command() -> None:
@@ -358,13 +307,14 @@ def test_rebuild_scope_outputs_turns_affected_ids_into_whole_search_command() ->
             prepare_scope(Path(temp_path), "example")
             config_path = Path(temp_path) / "docs-viewer/config/scopes/docs_scopes.json"
             config_payload = json.loads(config_path.read_text())
-            next(row for row in config_payload["scopes"] if row["scope_id"] == "example")["sub_scopes"] = [{"sub_scope": "items", "title": "Items"}]
+            next(row for row in config_payload["scopes"] if row["scope_id"] == "example")["stages"]["working"]["sub_scopes"] = [{"sub_scope": "items", "title": "Items"}]
             config_path.write_text(json.dumps(config_payload))
             result = write_rebuild.rebuild_scope_outputs(
                 Path(temp_path),
                 "example",
                 include_search=True,
                 search_doc_ids=["child", "", "parent", "child"],
+                stage="working",
             )
     finally:
         write_rebuild.subprocess.run = original_run
@@ -372,13 +322,7 @@ def test_rebuild_scope_outputs_turns_affected_ids_into_whole_search_command() ->
 
     assert result["search"] == {"mode": "full", "doc_ids": ["child", "parent"]}
     assert "--sub-scope" in calls[1] and "--skip-media-builds" not in calls[1]
-    assert calls[2] == [
-        "/tmp/python",
-        "docs-viewer/build/build_search.py",
-        "--scope",
-        "example",
-        "--write",
-    ]
+    assert calls[2] == ['/tmp/python', 'docs-viewer/build/build_search.py', '--scope', 'example', '--write', '--stage', 'working']
 
 
 def test_rebuild_scope_outputs_passes_targeted_docs_command() -> None:
@@ -401,6 +345,7 @@ def test_rebuild_scope_outputs_passes_targeted_docs_command() -> None:
                 "studio",
                 include_search=False,
                 docs_doc_ids=["body-doc", "", "body-doc", "linked-doc"],
+                stage="working",
             )
     finally:
         write_rebuild.subprocess.run = original_run
@@ -414,16 +359,7 @@ def test_rebuild_scope_outputs_passes_targeted_docs_command() -> None:
     }
     assert result["search"] == {"mode": "none", "doc_ids": []}
     assert calls == [
-        [
-            "/tmp/python",
-            "docs-viewer/build/build_docs.py",
-                "--scope",
-                "studio",
-                "--write",
-                "--diagnostics",
-                "--only-doc-ids",
-                "body-doc,linked-doc",
-            ]
+        ['/tmp/python', 'docs-viewer/build/build_docs.py', '--scope', 'studio', '--write', '--diagnostics', '--stage', 'working', '--links-doc-ids', 'body-doc,linked-doc', '--only-doc-ids', 'body-doc,linked-doc']
     ]
 
 
@@ -448,6 +384,7 @@ def test_rebuild_scope_outputs_can_skip_media_after_controlled_transfer() -> Non
                 include_search=False,
                 docs_doc_ids=["copied-doc"],
                 skip_media_builds=True,
+                stage="working",
             )
     finally:
         write_rebuild.subprocess.run = original_run
@@ -456,17 +393,7 @@ def test_rebuild_scope_outputs_can_skip_media_after_controlled_transfer() -> Non
 
     assert result["docs"]["mode"] == "targeted"
     assert calls == [
-        [
-            "/tmp/python",
-            "docs-viewer/build/build_docs.py",
-            "--scope",
-            "studio",
-            "--write",
-            "--diagnostics",
-            "--only-doc-ids",
-            "copied-doc",
-            "--skip-media-builds",
-        ]
+        ['/tmp/python', 'docs-viewer/build/build_docs.py', '--scope', 'studio', '--write', '--diagnostics', '--stage', 'working', '--links-doc-ids', 'copied-doc', '--only-doc-ids', 'copied-doc', '--skip-media-builds']
     ]
 
 
@@ -490,6 +417,7 @@ def test_rebuild_scope_outputs_falls_back_when_targeted_docs_outputs_are_missing
                 "studio",
                 include_search=False,
                 docs_doc_ids=["body-doc"],
+                stage="working",
             )
     finally:
         write_rebuild.subprocess.run = original_run
@@ -501,7 +429,7 @@ def test_rebuild_scope_outputs_falls_back_when_targeted_docs_outputs_are_missing
         "doc_ids": ["body-doc"],
         "reason": "full-scope fallback: existing docs index tree missing",
     }
-    assert calls == [["/tmp/python", "docs-viewer/build/build_docs.py", "--scope", "studio", "--write", "--diagnostics"]]
+    assert calls == [['/tmp/python', 'docs-viewer/build/build_docs.py', '--scope', 'studio', '--write', '--diagnostics', '--stage', 'working', '--links-doc-ids', 'body-doc']]
 
 
 def test_targeted_docs_build_uses_index_tree_without_flat_index() -> None:
@@ -520,23 +448,23 @@ def test_targeted_docs_build_uses_index_tree_without_flat_index() -> None:
                 )
             ],
         )
-        source_root = repo_root / "docs-viewer/scopes/example/source/documents"
+        source_root = repo_root / "docs-viewer/scopes/example/working/source/documents"
         source_root.mkdir(parents=True)
         (source_root / "example.md").write_text("---\ndoc_id: example\ntitle: Example\n---\n# Example\n", encoding="utf-8")
         (source_root / "child.md").write_text("---\ndoc_id: child\ntitle: Child\n---\n# Child\n", encoding="utf-8")
-        (repo_root / "docs-viewer/scopes/example/generated/documents/by-id").mkdir(parents=True)
-        (repo_root / "docs-viewer/scopes/example/generated/documents/by-id/example.json").write_text("{}", encoding="utf-8")
-        (repo_root / "docs-viewer/scopes/example/generated/documents/index-tree.json").write_text(
+        (repo_root / "docs-viewer/scopes/example/working/generated/documents/by-id").mkdir(parents=True)
+        (repo_root / "docs-viewer/scopes/example/working/generated/documents/by-id/example.json").write_text("{}", encoding="utf-8")
+        (repo_root / "docs-viewer/scopes/example/working/generated/documents/index-tree.json").write_text(
             """{"docs":[{"doc_id":"example","children":[{"doc_id":"child"}]}]}""",
             encoding="utf-8",
         )
         semantic_token_index = (
             repo_root
-            / "docs-viewer/scopes/example/generated/documents/semantic-tokens/index.json"
+            / "docs-viewer/scopes/example/working/generated/documents/semantic-tokens/index.json"
         )
         semantic_token_index.parent.mkdir(parents=True)
         semantic_token_index.write_text('{"occurrences":[]}', encoding="utf-8")
-        reason = write_rebuild.targeted_docs_build_fallback_reason(repo_root, "example", ["child"])
+        reason = write_rebuild.targeted_docs_build_fallback_reason(repo_root, "example", ["child"], stage="working")
 
     assert reason == ""
 
@@ -557,24 +485,24 @@ def test_targeted_docs_build_falls_back_for_unindexed_source_without_payload() -
                 )
             ],
         )
-        source_root = repo_root / "docs-viewer/scopes/example/source/documents"
+        source_root = repo_root / "docs-viewer/scopes/example/working/source/documents"
         source_root.mkdir(parents=True)
         (source_root / "example.md").write_text("---\ndoc_id: example\ntitle: Example\n---\n# Example\n", encoding="utf-8")
         (source_root / "child.md").write_text("---\ndoc_id: child\ntitle: Child\n---\n# Child\n", encoding="utf-8")
         (source_root / "new.md").write_text("---\ndoc_id: new\ntitle: New\n---\n# New\n", encoding="utf-8")
-        (repo_root / "docs-viewer/scopes/example/generated/documents/by-id").mkdir(parents=True)
-        (repo_root / "docs-viewer/scopes/example/generated/documents/by-id/example.json").write_text("{}", encoding="utf-8")
-        (repo_root / "docs-viewer/scopes/example/generated/documents/index-tree.json").write_text(
+        (repo_root / "docs-viewer/scopes/example/working/generated/documents/by-id").mkdir(parents=True)
+        (repo_root / "docs-viewer/scopes/example/working/generated/documents/by-id/example.json").write_text("{}", encoding="utf-8")
+        (repo_root / "docs-viewer/scopes/example/working/generated/documents/index-tree.json").write_text(
             """{"docs":[{"doc_id":"example","children":[{"doc_id":"child"}]}]}""",
             encoding="utf-8",
         )
         semantic_token_index = (
             repo_root
-            / "docs-viewer/scopes/example/generated/documents/semantic-tokens/index.json"
+            / "docs-viewer/scopes/example/working/generated/documents/semantic-tokens/index.json"
         )
         semantic_token_index.parent.mkdir(parents=True)
         semantic_token_index.write_text('{"occurrences":[]}', encoding="utf-8")
-        reason = write_rebuild.targeted_docs_build_fallback_reason(repo_root, "example", ["child"])
+        reason = write_rebuild.targeted_docs_build_fallback_reason(repo_root, "example", ["child"], stage="working")
 
     assert reason == "full-scope fallback: existing payloads missing for unselected docs"
 
@@ -597,13 +525,14 @@ def test_rebuild_scope_outputs_skips_empty_targeted_search() -> None:
                 "studio",
                 include_search=True,
                 search_doc_ids=["", " "],
+                stage="working",
             )
     finally:
         write_rebuild.subprocess.run = original_run
         write_rebuild.PYTHON_EXECUTABLE = original_python
 
     assert result["search"] == {"mode": "none", "doc_ids": []}
-    assert calls == [["/tmp/python", "docs-viewer/build/build_docs.py", "--scope", "studio", "--write", "--diagnostics"]]
+    assert calls == [['/tmp/python', 'docs-viewer/build/build_docs.py', '--scope', 'studio', '--write', '--diagnostics', '--stage', 'working']]
 
 
 def test_rebuild_scope_outputs_preserves_front_matter_failure_message() -> None:
@@ -611,14 +540,14 @@ def test_rebuild_scope_outputs_preserves_front_matter_failure_message() -> None:
     original_run = write_rebuild.subprocess.run
 
     def fake_run(_command, **_kwargs):
-        return Completed(returncode=1, stderr="problem with front-matter on doc docs-viewer/scopes/studio/source/documents/bad.md at line 7 column 1: could not find expected ':'")
+        return Completed(returncode=1, stderr="problem with front-matter on doc docs-viewer/scopes/studio/working/source/documents/bad.md at line 7 column 1: could not find expected ':'")
 
     write_rebuild.subprocess.run = fake_run
     try:
         with tempfile.TemporaryDirectory() as temp_path:
             prepare_scope(Path(temp_path))
             try:
-                write_rebuild.rebuild_scope_outputs(Path(temp_path), "studio")
+                write_rebuild.rebuild_scope_outputs(Path(temp_path), "studio", stage="working")
             except RuntimeError as exc:
                 message = str(exc)
             else:
@@ -627,7 +556,7 @@ def test_rebuild_scope_outputs_preserves_front_matter_failure_message() -> None:
         write_rebuild.subprocess.run = original_run
         write_rebuild.PYTHON_EXECUTABLE = original_python
 
-    assert message == "problem with front-matter on doc docs-viewer/scopes/studio/source/documents/bad.md at line 7 column 1: could not find expected ':'"
+    assert message == "problem with front-matter on doc docs-viewer/scopes/studio/working/source/documents/bad.md at line 7 column 1: could not find expected ':'"
 
 
 def test_perform_source_write_and_rebuild_marks_pending_then_complete() -> None:
@@ -653,7 +582,7 @@ def test_perform_source_write_and_rebuild_marks_pending_then_complete() -> None:
         with tempfile.TemporaryDirectory() as temp_path:
             repo_root = Path(temp_path)
             prepare_scope(repo_root)
-            source_path = repo_root / "docs-viewer/scopes/studio/source/documents" / "child.md"
+            source_path = repo_root / "docs-viewer/scopes/studio/working/source/documents" / "child.md"
             source_path.parent.mkdir(parents=True)
             source_path.write_text("# Child\n", encoding="utf-8")
             result = write_rebuild.perform_source_write_and_rebuild(
@@ -662,6 +591,7 @@ def test_perform_source_write_and_rebuild_marks_pending_then_complete() -> None:
                 [source_path],
                 lambda: events.append(("write", "studio", [])),
                 suppression_reason="test",
+                stage="working",
             )
     finally:
         write_rebuild.set_watch_suppressions = original_set
@@ -693,7 +623,7 @@ def test_perform_sub_scope_source_write_marks_owned_suppression() -> None:
         )
     )
     write_rebuild.rebuild_sub_scope_outputs = (
-        lambda _repo_root, scope, sub_scope, stage=None: {
+        lambda _repo_root, scope, sub_scope, stage=None, **_kwargs: {"stage": "working",
             "ok": True,
             "scope": scope,
             "sub_scope": sub_scope,
@@ -713,7 +643,7 @@ def test_perform_sub_scope_source_write_marks_owned_suppression() -> None:
             )
             source_path = (
                 repo_root
-                / "docs-viewer/scopes/studio/source/sub-scopes/tags/documents/detail.md"
+                / "docs-viewer/scopes/studio/working/source/sub-scopes/tags/documents/detail.md"
             )
             source_path.parent.mkdir(parents=True)
             source_path.write_text("# Detail\n", encoding="utf-8")
@@ -724,14 +654,15 @@ def test_perform_sub_scope_source_write_marks_owned_suppression() -> None:
                 [source_path],
                 lambda: events.append(("write", "studio/tags", [])),
                 suppression_reason="test",
+                stage="working",
             )
     finally:
         write_rebuild.set_watch_suppressions = original_set
         write_rebuild.clear_watch_suppressions = original_clear
         write_rebuild.rebuild_sub_scope_outputs = original_rebuild
 
-    assert result == {"ok": True, "scope": "studio", "sub_scope": "tags"}
-    owner = "studio__sub_scope__tags"
+    assert result == {"stage": "working", "ok": True, "scope": "studio", "sub_scope": "tags"}
+    owner = "studio/working__sub_scope__tags"
     assert events == [
         ("set:" + owner, write_rebuild.SUPPRESSION_PENDING, ["detail.md"]),
         ("write", "studio/tags", []),
@@ -758,12 +689,12 @@ def test_sub_scope_docs_failure_restores_source_and_rebuilds_docs() -> None:
         )
         source_path = (
             repo_root
-            / "docs-viewer/scopes/studio/source/sub-scopes/tags/documents/detail.md"
+            / "docs-viewer/scopes/studio/working/source/sub-scopes/tags/documents/detail.md"
         )
         source_path.parent.mkdir(parents=True)
         source_path.write_bytes(b"before")
 
-        def fake_child_rebuild(_repo_root, _scope, _sub_scope, stage=None):
+        def fake_child_rebuild(_repo_root, _scope, _sub_scope, stage=None, **_kwargs):
             nonlocal child_rebuilds
             child_rebuilds += 1
             if child_rebuilds == 1:
@@ -790,6 +721,7 @@ def test_sub_scope_docs_failure_restores_source_and_rebuilds_docs() -> None:
                     lambda: source_path.write_bytes(b"after"),
                     suppression_reason="test",
                     source_snapshots={source_path: b"before"},
+                    stage="working",
                 )
             except write_rebuild.SubScopeWriteRebuildFailure as exc:
                 rollback = exc.rollback
@@ -814,9 +746,9 @@ def test_current_scope_source_root_uses_fresh_repo_config() -> None:
         config_path = repo_root / "docs-viewer/config/scopes/docs_scopes.json"
         write_scope_config(config_path, [docs_scope_record("fresh-scope")])
 
-        root = write_rebuild.current_scope_source_root(repo_root, "fresh-scope")
+        root = write_rebuild.current_scope_source_root(repo_root, "fresh-scope", stage="working")
 
-    assert root == repo_root / "docs-viewer/scopes/fresh-scope/source/documents"
+    assert root == repo_root / "docs-viewer/scopes/fresh-scope/working/source/documents"
 
 
 def test_perform_source_write_and_rebuild_clears_pending_on_exception() -> None:
@@ -838,7 +770,7 @@ def test_perform_source_write_and_rebuild_clears_pending_on_exception() -> None:
         with tempfile.TemporaryDirectory() as temp_path:
             repo_root = Path(temp_path)
             prepare_scope(repo_root)
-            source_path = repo_root / "docs-viewer/scopes/studio/source/documents" / "child.md"
+            source_path = repo_root / "docs-viewer/scopes/studio/working/source/documents" / "child.md"
             source_path.parent.mkdir(parents=True)
             source_path.write_text("# Child\n", encoding="utf-8")
             try:
@@ -848,6 +780,7 @@ def test_perform_source_write_and_rebuild_clears_pending_on_exception() -> None:
                     [source_path],
                     lambda: (_ for _ in ()).throw(RuntimeError("write failed")),
                     suppression_reason="test",
+                    stage="working",
                 )
             except RuntimeError as exc:
                 assert "write failed" in str(exc)
@@ -860,7 +793,7 @@ def test_perform_source_write_and_rebuild_clears_pending_on_exception() -> None:
 
     assert events == [
         ("set", write_rebuild.SUPPRESSION_PENDING, ["child.md"]),
-        ("clear", "studio", ["child.md"]),
+        ("clear", "studio/working", ["child.md"]),
     ]
 
 
@@ -883,7 +816,7 @@ def test_perform_source_write_and_rebuild_completes_only_reported_written_paths(
         with tempfile.TemporaryDirectory() as temp_path:
             repo_root = Path(temp_path)
             prepare_scope(repo_root)
-            source_root = repo_root / "docs-viewer/scopes/studio/source/documents"
+            source_root = repo_root / "docs-viewer/scopes/studio/working/source/documents"
             source_root.mkdir(parents=True)
             first = source_root / "first.md"
             second = source_root / "second.md"
@@ -900,6 +833,7 @@ def test_perform_source_write_and_rebuild_completes_only_reported_written_paths(
                 write_first_only,
                 suppression_reason="test",
                 written_paths=written_paths,
+                stage="working",
             )
     finally:
         write_rebuild.set_watch_suppressions = original_set
@@ -909,7 +843,7 @@ def test_perform_source_write_and_rebuild_completes_only_reported_written_paths(
     assert events == [
         ("set", write_rebuild.SUPPRESSION_PENDING, ["first.md", "second.md"]),
         ("write", "studio", []),
-        ("clear", "studio", ["first.md", "second.md"]),
+        ("clear", "studio/working", ["first.md", "second.md"]),
         ("set", write_rebuild.SUPPRESSION_COMPLETE, ["first.md"]),
     ]
 
@@ -936,7 +870,12 @@ def test_rebuild_all_docs_outputs_preserves_command_sequence() -> None:
     )
     try:
         with tempfile.TemporaryDirectory() as temp_path:
-            result = write_rebuild.rebuild_all_docs_outputs(Path(temp_path))
+            repo_root = Path(temp_path)
+            records = [docs_scope_record(scope) for scope in ("studio", "notes")]
+            for record in records:
+                record["stages"] = {stage: {"media": deepcopy(record["media"]), "sub_scopes": []} for stage in ("working", "pre-publish")}
+            write_scope_config(repo_root / "docs-viewer/config/scopes/docs_scopes.json", records)
+            result = write_rebuild.rebuild_all_docs_outputs(repo_root)
     finally:
         write_rebuild.subprocess.run = original_run
         write_rebuild.remove_build_manifest = original_remove
@@ -944,16 +883,13 @@ def test_rebuild_all_docs_outputs_preserves_command_sequence() -> None:
         write_rebuild.PYTHON_EXECUTABLE = original_python
 
     assert result["ok"] is True
-    assert calls[0] == ["/tmp/python", "docs-viewer/build/build_docs.py", "--write", "--diagnostics"]
-    assert calls[1:] == [
-        ["/tmp/python", "docs-viewer/build/build_search.py", "--scope", scope["scope"], "--write"]
-        for scope in result["diagnostics"]["search"]
-        if scope["mode"] == "full"
-    ]
+    assert len(calls) == 4
+    assert [call[call.index("--scope") + 1] for call in calls] == ["studio", "studio", "notes", "notes"]
+    assert all(call[call.index("--stage") + 1] == "working" for call in calls)
+    assert all("--skip-media-builds" in call for call in calls if "build_docs.py" in call[1])
     scope_ids = [scope["scope"] for scope in result["diagnostics"]["search"]]
     assert manifest_events == [
-        *[("remove", scope_id) for scope_id in scope_ids],
-        *[("write", scope_id) for scope_id in scope_ids],
+        event for scope_id in scope_ids for event in (("remove", scope_id), ("write", scope_id))
     ]
 
 
@@ -991,8 +927,8 @@ def test_rebuild_all_docs_outputs_uses_current_scope_config() -> None:
 
     assert result["ok"] is True
     assert calls == [
-        ["/tmp/python", "docs-viewer/build/build_docs.py", "--write", "--diagnostics"],
-        ["/tmp/python", "docs-viewer/build/build_search.py", "--scope", "studio", "--write"],
+        ['/tmp/python', 'docs-viewer/build/build_docs.py', '--scope', 'studio', '--write', '--diagnostics', '--stage', 'working', '--skip-media-builds'],
+        ['/tmp/python', 'docs-viewer/build/build_search.py', '--scope', 'studio', '--write', '--stage', 'working'],
     ]
     assert manifest_events == [("remove", "studio"), ("write", "studio")]
     assert result["build_manifests"] == {"studio": {"scope": "studio"}}

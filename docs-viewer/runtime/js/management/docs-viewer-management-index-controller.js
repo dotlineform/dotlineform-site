@@ -70,7 +70,7 @@ export function docsViewerDocumentTransferActionControlState(options = {}) {
   return {
     disabled: Boolean(disabledReason),
     disabledReason: disabledReason,
-    hidden: Boolean(options.source && options.source.scope === "analysis" && options.source.stage === "working"),
+    hidden: Boolean(options.source && options.source.stage && options.source.stage !== "working"),
     targets: targets
   };
 }

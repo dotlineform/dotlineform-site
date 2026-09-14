@@ -383,7 +383,7 @@ def managed_document_metadata(
         "record": record,
         "source_revision": payload_revision,
     }
-    if resolved.scope == "analysis" and resolved.stage == "working":
+    if resolved.stage == "working":
         from docs_document_placement import document_location_parent_id
 
         payload["location_parent_id"] = document_location_parent_id(repo_root, resolved)
@@ -391,7 +391,7 @@ def managed_document_metadata(
         subject_fields = sub_scope_customisation_authoring_subject_fields(
             resolved.document_config.sub_scope_customisation
         )
-        folder_supported = (resolved.scope == "dotlineform" or resolved.stage == "working") and FOLDER_PATH_FIELD in subject_fields
+        folder_supported = resolved.stage == "working" and FOLDER_PATH_FIELD in subject_fields
         if subject_fields or any(
             field_name in front_matter for field_name in AUTHORING_SUBJECT_FIELDS
         ):

@@ -41,7 +41,7 @@ export function normalizeManagedDocumentTarget(value) {
     target.sub_scope = subScope;
   }
   if (Object.prototype.hasOwnProperty.call(value, "stage")) {
-    if (value.stage !== "working" && value.stage !== "pre-publish") throw new Error("Managed target stage is invalid.");
+    if (!["working", "pre-publish", "published"].includes(value.stage)) throw new Error("Managed target stage is invalid.");
     target.stage = value.stage;
   }
   return Object.freeze(target);
@@ -73,7 +73,7 @@ export function normalizeManagedDocumentCollectionTarget(value) {
     target.sub_scope = subScope;
   }
   if (Object.prototype.hasOwnProperty.call(value, "stage")) {
-    if (value.stage !== "working" && value.stage !== "pre-publish") throw new Error("Managed target stage is invalid.");
+    if (!["working", "pre-publish", "published"].includes(value.stage)) throw new Error("Managed target stage is invalid.");
     target.stage = value.stage;
   }
   return Object.freeze(target);

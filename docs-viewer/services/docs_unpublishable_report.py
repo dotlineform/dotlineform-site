@@ -1,4 +1,4 @@
-"""Read the exact configured Analysis Working publication ignore file."""
+"""Read the selected scope's configured Working publication ignore file."""
 
 from __future__ import annotations
 
@@ -12,10 +12,10 @@ from docs_source_model import parse_source
 
 def build_unpublishable_report(repo_root: Path, *, scope: str, stage: str) -> dict[str, Any]:
     """Read the explicit IDs and only their exact ordinary Working source titles."""
-    if scope != "analysis" or stage != "working":
-        raise ValueError("Unpublishable is available only in Analysis Working")
-    doc_ids = sorted(read_publication_ignore_ids(repo_root))
-    source_root = publication_ignore_path(repo_root).parent.resolve()
+    if stage != "working":
+        raise ValueError("Unpublishable is available only in Working")
+    doc_ids = sorted(read_publication_ignore_ids(repo_root, scope))
+    source_root = publication_ignore_path(repo_root, scope).parent.resolve()
     documents = []
     for doc_id in doc_ids:
         try:

@@ -672,7 +672,7 @@ export function createDocsViewerManagementSubscopeDefaultContribution(options = 
     var target = settings.target;
     if (!host || !target) return;
 
-    if (managementContext && target.scope === "analysis" && target.stage === "working"
+    if (managementContext && target.stage === "working"
       && onToggleDraft && typeof settings.registerAction === "function") {
       var draftRegistration = settings.registerAction({
         id: "set-draft",

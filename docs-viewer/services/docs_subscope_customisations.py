@@ -93,6 +93,7 @@ class DocsSubScopeCustomisationDefinition:
     authoring_subject: DocsSubScopeAuthoringSubjectAspect | None = None
     transfer: DocsSubScopeTransferAspect | None = None
     document_lineages: tuple[DocsSubScopeDocumentLineageAspect, ...] = ()
+    prepare_publication: Callable[[Mapping[str, Any]], dict[str, Any]] | None = None
 
 
 def _strict_object(raw: Any, *, field: str, keys: set[str]) -> dict[str, Any]:
@@ -150,6 +151,7 @@ SUB_SCOPE_CUSTOMISATION_DEFINITIONS = {
     ),
     WORKING_WORKS_CUSTOMISATION_ID: DocsSubScopeCustomisationDefinition(
         customisation_id=WORKING_WORKS_CUSTOMISATION_ID,
+        prepare_publication=working_works.publication_front_matter,
         normalize_settings=working_works.normalize_settings,
         manifest_projection=DocsSubScopeManifestProjectionAspect(
             project=working_works.project_manifest,
@@ -230,6 +232,8 @@ def _validate_definition(
         raise ValueError(f"{field} identity does not match its registry key")
     if not callable(definition.normalize_settings):
         raise ValueError(f"{field} normalize_settings must be callable")
+    if definition.prepare_publication is not None and not callable(definition.prepare_publication):
+        raise ValueError(f"{field} prepare_publication must be callable")
 
     aspect_types = (
         (
@@ -491,6 +495,15 @@ def sub_scope_customisation_authoring_subject_fields(
     return aspect.field_names if aspect is not None else ()
 
 
+def prepare_sub_scope_publication(
+    customisation: DocsSubScopeCustomisationConfig | None,
+    front_matter: Mapping[str, Any],
+) -> dict[str, Any]:
+    """Delegate publication projection only to the configured collection owner."""
+    prepare = _definition_for(customisation).prepare_publication if customisation is not None else None
+    return prepare(front_matter) if prepare is not None else dict(front_matter)
+
+
 def sub_scope_customisation_transfer_contract(
     customisation: DocsSubScopeCustomisationConfig | None,
 ) -> DocsSubScopeTransferAspect | None:
@@ -643,4 +656,5 @@ __all__ = [
     "sub_scope_customisation_metadata_record",
     "sub_scope_customisation_document_lineage_contracts",
     "sub_scope_customisation_transfer_contract",
+    "prepare_sub_scope_publication",
 ]

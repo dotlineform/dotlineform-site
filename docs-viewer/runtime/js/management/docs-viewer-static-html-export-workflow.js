@@ -73,6 +73,9 @@ export function validateStaticHtmlSnapshotPreview(preview, options = {}) {
   if (!scope || String(payload.scope || "").trim() !== scope) {
     throw new Error("Snapshot preview scope no longer matches the active scope.");
   }
+  if (String(payload.stage || "") !== String(options.stage || "")) {
+    throw new Error("Snapshot preview stage no longer matches the active stage.");
+  }
   if (
     !requestedDocIds.length
     || rawPreviewDocIds.length !== previewDocIds.length
@@ -195,6 +198,7 @@ export async function openStaticHtmlSnapshotExportWorkflow(options = {}) {
   }
   preview = validateStaticHtmlSnapshotPreview(preview, {
     scope: scope,
+    stage: clientOptions.stage,
     checkedDocIds: checkedDocIds
   });
   setMessage(callbacks, "", false);

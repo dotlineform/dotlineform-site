@@ -80,7 +80,7 @@ def test_review_source_folder_rejects_missing_export_id() -> None:
 
         payload = handle_documents_import_preview(
             root,
-            {"scope": "example", "staged_filename": "content.json"},
+            {"stage": "working", "scope": "example", "staged_filename": "content.json"},
             dry_run=False,
         )
 
@@ -104,7 +104,7 @@ def test_review_source_folder_rejects_missing_and_mismatched_metadata() -> None:
         )
         missing_payload = handle_documents_import_preview(
             root,
-            {"scope": "example", "staged_filename": "missing-meta.jsonl"},
+            {"stage": "working", "scope": "example", "staged_filename": "missing-meta.jsonl"},
             dry_run=False,
         )
 
@@ -120,7 +120,7 @@ def test_review_source_folder_rejects_missing_and_mismatched_metadata() -> None:
         write_content_meta(root, mismatched_export_id, metadata_export_id="ds_20260627T205012Z")
         mismatch_payload = handle_documents_import_preview(
             root,
-            {"scope": "example", "staged_filename": "mismatch.jsonl"},
+            {"stage": "working", "scope": "example", "staged_filename": "mismatch.jsonl"},
             dry_run=False,
         )
 
@@ -146,7 +146,7 @@ def test_review_source_folder_rejects_unsafe_metadata_derived_folder_id() -> Non
 
         payload = handle_documents_import_preview(
             root,
-            {"scope": "example", "staged_filename": "content.jsonl"},
+            {"stage": "working", "scope": "example", "staged_filename": "content.jsonl"},
             dry_run=False,
         )
 
@@ -177,7 +177,7 @@ def test_review_source_folder_uses_shared_markdown_content_normalization() -> No
 
         payload = handle_documents_import_preview(
             root,
-            {"scope": "example", "staged_filename": "renamed-return.jsonl"},
+            {"stage": "working", "scope": "example", "staged_filename": "renamed-return.jsonl"},
             dry_run=False,
         )
         manifest = json.loads(resolve_data_sharing_marker(str(payload["manifest_path"])).read_text(encoding="utf-8"))
@@ -242,7 +242,7 @@ def test_review_source_folder_reuses_an_exact_existing_validated_package(
             ],
         )
         write_content_meta(root, export_id)
-        request = {
+        request = {"stage": "working",
             "scope": "example",
             "staged_filename": "content.jsonl",
         }
@@ -290,7 +290,7 @@ def test_review_source_folder_rejects_mismatched_existing_package_without_overwr
             ],
         )
         write_content_meta(root, export_id)
-        request = {
+        request = {"stage": "working",
             "scope": "example",
             "staged_filename": "content.jsonl",
         }
@@ -346,7 +346,7 @@ Full-source body.
 
         payload = handle_documents_import_preview(
             root,
-            {
+            {"stage": "working",
                 "scope": "example",
                 "staged_filename": "full-source.jsonl",
             },
@@ -380,7 +380,7 @@ def test_review_source_folder_roots_parent_outside_compact_package_and_warns() -
         write_content_meta(root, export_id)
         payload = handle_documents_import_preview(
             root,
-            {"scope": "example", "staged_filename": "content.jsonl"},
+            {"stage": "working", "scope": "example", "staged_filename": "content.jsonl"},
             dry_run=False,
         )
         source_path = resolve_data_sharing_marker(str(payload["source_files"][0]["path"]))
@@ -421,7 +421,7 @@ def test_persistent_review_reads_survive_staged_package_deletion_without_reconve
         write_content_meta(root, export_id)
         payload = handle_documents_import_preview(
             root,
-            {"scope": "example", "staged_filename": "content.jsonl"},
+            {"stage": "working", "scope": "example", "staged_filename": "content.jsonl"},
             dry_run=False,
         )
         staged_path = data_sharing_workspace_root() / "import-staging/content.jsonl"
@@ -468,7 +468,7 @@ def test_persistent_review_build_failure_publishes_no_partial_package(
         monkeypatch.setattr(review_sources, "publish_review_package", fail_publication)
         payload = handle_documents_import_preview(
             root,
-            {"scope": "example", "staged_filename": "content.jsonl"},
+            {"stage": "working", "scope": "example", "staged_filename": "content.jsonl"},
             dry_run=False,
         )
         package_path = resolve_data_sharing_marker(str(payload["folder_path"]))
@@ -498,12 +498,12 @@ def test_review_source_folder_preserves_existing_body_and_materializes_empty_new
         )
         write_content_meta(root, export_id, selected_doc_ids=["new-parent", "alpha"])
         _current_front_matter, current_alpha_body = source_model.parse_source(
-            root / "docs-viewer/scopes/example/source/documents/alpha.md"
+            root / "docs-viewer/scopes/example/working/source/documents/alpha.md"
         )
 
         payload = handle_documents_import_preview(
             root,
-            {
+            {"stage": "working",
                 "scope": "example",
                 "staged_filename": "hierarchy-only.jsonl",
             },
@@ -542,7 +542,7 @@ def test_review_source_folder_rejects_package_local_hierarchy_cycle() -> None:
 
         payload = handle_documents_import_preview(
             root,
-            {"scope": "example", "staged_filename": "content.jsonl"},
+            {"stage": "working", "scope": "example", "staged_filename": "content.jsonl"},
             dry_run=False,
         )
 
@@ -574,7 +574,7 @@ def test_review_source_folder_skips_invalid_rows_and_does_not_write() -> None:
 
         payload = handle_documents_import_preview(
             root,
-            {"scope": "example", "staged_filename": "content.jsonl"},
+            {"stage": "working", "scope": "example", "staged_filename": "content.jsonl"},
             dry_run=False,
         )
 
@@ -599,7 +599,7 @@ def test_review_source_folder_rejects_a_changed_atomic_return_before_existing_fo
         )
         first = handle_documents_import_preview(
             root,
-            {"scope": "example", "staged_filename": "content.jsonl"},
+            {"stage": "working", "scope": "example", "staged_filename": "content.jsonl"},
             dry_run=False,
         )
         stale_path = resolve_data_sharing_marker(str(first["folder_path"])) / "source" / "stale.md"
@@ -615,7 +615,7 @@ def test_review_source_folder_rejects_a_changed_atomic_return_before_existing_fo
 
         second = handle_documents_import_preview(
             root,
-            {"scope": "example", "staged_filename": "content.jsonl"},
+            {"stage": "working", "scope": "example", "staged_filename": "content.jsonl"},
             dry_run=False,
         )
         first_body = source_folder_body(root, first, "alpha.md")

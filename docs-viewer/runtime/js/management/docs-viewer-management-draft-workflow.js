@@ -4,7 +4,7 @@ import { managedDocumentTargetsEqual, normalizeManagedDocumentTarget } from "./d
 /** Await the exact revision-bound write and its visible document/index refresh. */
 export async function toggleManagedDocDraft(target, options) {
   const normalized = normalizeManagedDocumentTarget(target);
-  if (normalized.scope !== "analysis" || normalized.stage !== "working") {
+  if (normalized.stage !== "working") {
     throw new Error("Draft readiness is available only in Analysis Working.");
   }
   const metadata = await readManagedDocMetadata(normalized, options.clientOptions);

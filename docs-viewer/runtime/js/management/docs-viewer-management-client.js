@@ -190,12 +190,13 @@ export function applyManagedDocsStaticHtmlExport(preview, options) {
   var plan = preview && typeof preview === "object" ? preview : {};
   var settings = options || {};
   var scope = String(plan.scope || "").trim();
-  if (!scope || scope !== String(settings.scope || "").trim()) {
+  if (!scope || scope !== String(settings.scope || "").trim() || String(plan.stage || "") !== String(settings.stage || "")) {
     return Promise.reject(new Error("Snapshot preview scope no longer matches the active scope."));
   }
   var replaceExisting = plan.target_state === "recognized" || plan.target_state === "unrecognized";
   return fetchManagementJson("/docs/export/static-html/apply", "POST", {
     scope: scope,
+    ...(plan.stage ? { stage: plan.stage } : {}),
     doc_ids: Array.isArray(plan.doc_ids) ? plan.doc_ids.slice() : [],
     export_date: String(plan.export_date || "").trim(),
     plan_revision: String(plan.plan_revision || "").trim(),
@@ -303,6 +304,7 @@ export function readSourceConfigSettings(options) {
   var settings = options || {};
   var scope = encodeURIComponent(String(settings.scope || "").trim());
   var path = "/docs/source-config-settings" + (scope ? "?scope=" + scope : "");
+  if (settings.stage) path += (scope ? "&" : "?") + "stage=" + encodeURIComponent(settings.stage);
   return fetchManagementJson(path, "GET", undefined, options);
 }
 
@@ -395,11 +397,11 @@ export function applyScopeDelete(scopeId, options) {
 }
 
 export function previewSubScopeCreate(payload, options) {
-  return fetchManagementJson("/docs/scopes/sub-scopes/create-preview", "POST", payload || {}, options);
+  return fetchManagementJson("/docs/scopes/sub-scopes/create-preview", "POST", Object.assign({ stage: options && options.stage }, payload || {}), options);
 }
 
 export function applySubScopeCreate(payload, options) {
-  return fetchManagementJson("/docs/scopes/sub-scopes/create-apply", "POST", Object.assign({}, payload || {}, {
+  return fetchManagementJson("/docs/scopes/sub-scopes/create-apply", "POST", Object.assign({ stage: options && options.stage }, payload || {}, {
     confirm: true
   }), options);
 }
@@ -442,6 +444,8 @@ export function previewManagedDocumentTransfer(source, docIds, target, transferM
   }
   if (sourceCollection.sub_scope) payload.sub_scope = sourceCollection.sub_scope;
   if (targetCollection.sub_scope) payload.target_sub_scope = targetCollection.sub_scope;
+  if (sourceCollection.stage) payload.stage = sourceCollection.stage;
+  if (targetCollection.stage) payload.target_stage = targetCollection.stage;
   return fetchManagementJson("/docs/document-transfer-preview", "POST", payload, settings);
 }
 

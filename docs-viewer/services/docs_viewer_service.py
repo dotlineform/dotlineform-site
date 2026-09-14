@@ -816,7 +816,9 @@ class DocsViewerRequestHandler(QuietErrorLoggingMixin, BaseHTTPRequestHandler):
                 self.repo_root,
                 request_path,
             )
-            body = path.read_bytes()
+            scope = request_path.removeprefix(published_reads.EXTERNAL_SUB_SCOPE_PUBLISHED_PREFIX).split("/", 1)[0]
+            payload = published_reads.project_published_view(self.repo_root, scope, json.loads(path.read_bytes()))
+            body = json.dumps(payload, ensure_ascii=False).encode("utf-8")
             self.send_response(HTTPStatus.OK)
             self.send_cors_headers()
             self.send_header("Content-Type", "application/json; charset=utf-8")

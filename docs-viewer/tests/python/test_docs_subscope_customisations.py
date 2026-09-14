@@ -3,12 +3,21 @@
 
 from __future__ import annotations
 
-from pathlib import Path
 from unittest.mock import patch
 
 import pytest
 
 import docs_subscope_customisations as customisations
+
+
+def test_publication_subject_projection_belongs_only_to_configured_works() -> None:
+    original = {"title": "Example", "draft": False, "folder_path": "projects/example"}
+    works = customisations.normalize_docs_subscope_customisation({"id": "working_works", "settings": {}}, field="customisation")
+    assert customisations.prepare_sub_scope_publication(None, original) == original
+    assert customisations.prepare_sub_scope_publication(works, original) == {"title": "Example", "draft": False}
+    assert original["folder_path"] == "projects/example"
+    typed = {"draft": False, "work_id": "00123"}
+    assert customisations.prepare_sub_scope_publication(works, typed) == typed
 
 
 def _empty_settings(raw: object, field: str) -> dict[str, object]:

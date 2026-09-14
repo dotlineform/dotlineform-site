@@ -101,7 +101,9 @@ export function subScopeDeleteSupported(capabilities, scope) {
     lifecycle.sub_scope_delete_preview &&
     lifecycle.sub_scope_delete_apply &&
     scopeCaps &&
-    scopeCaps.available
+    scopeCaps.available &&
+    scopeCaps.sub_scope_lifecycle &&
+    scopeCaps.sub_scope_lifecycle.delete_eligible
   );
 }
 
@@ -163,8 +165,10 @@ export function scopePublishWorkflowSupported(capabilities, scope, stage) {
     || scopeDeployRepoCapability(capabilities, scope, stage).available;
 }
 
-export function scopeStaticHtmlExportCapability(capabilities, scope) {
+export function scopeStaticHtmlExportCapability(capabilities, scope, stage) {
   var scopeCaps = scopeManagementCapabilities(capabilities, scope);
+  if (scopeCaps && scopeCaps.stages) scopeCaps = scopeCaps.stages[stage] || null;
+  if (stage !== undefined && scopeCaps && String(scopeCaps.stage || "") !== String(stage || "")) scopeCaps = null;
   var exportCapabilities = capabilities && capabilities.static_html_export && typeof capabilities.static_html_export === "object"
     ? capabilities.static_html_export
     : null;
@@ -195,7 +199,7 @@ export function documentTransferSupported(capabilities) {
 
 function documentTransferCollectionKey(target) {
   var normalized = normalizeManagedDocumentCollectionTarget(target);
-  return normalized.scope + "\u0000" + String(normalized.sub_scope || "");
+  return normalized.scope + "\u0000" + String(normalized.stage || "") + "\u0000" + String(normalized.sub_scope || "");
 }
 
 function documentTransferCollectionRecords(capabilities) {
@@ -205,6 +209,7 @@ function documentTransferCollectionRecords(capabilities) {
   var records = [];
   Object.keys(scopes).sort().forEach(function (scopeId) {
     var scopeCaps = scopes[scopeId] || {};
+    if (scopeCaps.stages) scopeCaps = scopeCaps.stages.working || {};
     var transfer = scopeCaps.document_transfer && typeof scopeCaps.document_transfer === "object"
       ? scopeCaps.document_transfer
       : null;
@@ -275,6 +280,7 @@ export function scopeLifecycleDeleteTargets(capabilities) {
     : {};
   return Object.keys(scopes).sort().map(function (scopeId) {
     var scopeCaps = scopes[scopeId] || {};
+    if (scopeCaps.stages) scopeCaps = scopeCaps.stages.working || {};
     var lifecycle = scopeCaps.scope_lifecycle || {};
     return {
       scopeId: scopeId,
@@ -292,6 +298,7 @@ export function scopeLifecycleRenameTargets(capabilities) {
     : {};
   return Object.keys(scopes).sort().map(function (scopeId) {
     var scopeCaps = scopes[scopeId] || {};
+    if (scopeCaps.stages) scopeCaps = scopeCaps.stages.working || {};
     var lifecycle = scopeCaps.scope_lifecycle || {};
     return {
       scopeId: scopeId,

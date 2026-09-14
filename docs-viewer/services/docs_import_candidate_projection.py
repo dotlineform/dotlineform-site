@@ -251,6 +251,7 @@ def _returned_package_candidate(
         collection = resolve_managed_document_collection(
             repo_root,
             scope=scope,
+            stage="working",
             sub_scope=sub_scope or None,
         )
     except (FileNotFoundError, OSError, ValueError):
@@ -472,6 +473,7 @@ def list_import_candidates(
                     collection = resolve_managed_document_collection(
                         repo_root,
                         scope=edited.source_scope,
+                        stage="working",
                         sub_scope=edited.source_sub_scope or None,
                     )
                 except (FileNotFoundError, OSError, RuntimeError, ValueError) as exc:

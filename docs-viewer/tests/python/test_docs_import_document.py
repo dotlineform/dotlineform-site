@@ -18,7 +18,7 @@ from docs_import_document import (
     plan_import_document,
 )
 from docs_management_document_target import resolve_managed_document_collection
-from docs_scope_config import load_docs_scope_configs
+from docs_scope_config import load_docs_scope_configs, select_scope_stage
 import docs_source_model as source_model
 
 from docs_import_test_support import make_repo, write_example_doc
@@ -41,7 +41,7 @@ def import_content(**changes: object) -> ImportContent:
 
 
 def normalized_preview(record: ImportContent) -> dict[str, object]:
-    return {
+    return {"stage": "working",
         "scope": "example",
         "source_format": "markdown",
         "title": record.title,
@@ -51,53 +51,41 @@ def normalized_preview(record: ImportContent) -> dict[str, object]:
     }
 
 
-def test_projects_create_plan_accepts_only_custom_folder_path(
+def test_working_works_create_plan_accepts_only_custom_folder_path(
     external_data_sharing_workspace: Path,
 ) -> None:
     with make_repo() as temp:
         root = Path(temp)
-        write_docs_scope_config(
-            root,
-            [
-                docs_scope_record(
-                    "dotlineform",
-                    scope_type="local",
-                    scope_root_provider="external_local",
-                    sub_scopes=[
-                        docs_sub_scope_record(
-                            "dotlineform",
-                            "projects",
-                            sub_scope_customisation={
-                                "id": "working_works",
-                                "settings": {},
-                            },
-                        )
-                    ],
-                )
-            ],
-        )
-        source_root = (
-            external_data_sharing_workspace.parent
-            / "docs-viewer/scopes/dotlineform/source/sub-scopes/projects/documents"
-        )
+        from copy import deepcopy
+        from docs_scope_config import document_source_path, load_docs_scope_stage
+
+        scope = docs_scope_record("analysis")
+        scope["stages"] = {
+            stage: {
+                "media": deepcopy(scope["media"]),
+                "sub_scopes": [docs_sub_scope_record("analysis", "works", sub_scope_customisation={
+                    "id": "working_works" if stage == "working" else "pre_publish_works", "settings": {},
+                })],
+            }
+            for stage in ("working", "pre-publish")
+        }
+        write_docs_scope_config(root, [scope])
+        config = load_docs_scope_stage(root, "analysis", "working")
+        source_root = root / document_source_path(config.sub_scopes[0])
         source_root.mkdir(parents=True)
-        collection = resolve_managed_document_collection(
-            root,
-            scope="dotlineform",
-            sub_scope="projects",
-        )
+        collection = resolve_managed_document_collection(root, scope="analysis", stage="working", sub_scope="works")
         record = import_content(
             doc_id="d-20260801-120000-a1b2c3",
             title="Architecture notes",
         )
-        preview = {
+        preview = {"stage": "working",
             **normalized_preview(record),
-            "scope": "dotlineform",
+            "scope": "analysis",
         }
 
         plan = plan_import_document(
             root,
-            "dotlineform",
+            "analysis",
             record,
             operation=IMPORT_DOCUMENT_CREATE,
             docs=[],
@@ -112,7 +100,7 @@ def test_projects_create_plan_accepts_only_custom_folder_path(
         with pytest.raises(ValueError, match="unknown fields"):
             plan_import_document(
                 root,
-                "dotlineform",
+                "analysis",
                 record,
                 operation=IMPORT_DOCUMENT_CREATE,
                 docs=[],
@@ -142,13 +130,8 @@ def test_import_rejects_report_host_targets_and_incoming_report_blocks(
                 ":::\n"
             ),
         )
-        config = load_docs_scope_configs(root)["example"]
+        config = select_scope_stage(load_docs_scope_configs(root)["example"], "working")
         monkeypatch.setitem(source_model.DOCS_SCOPE_CONFIGS, "example", config)
-        monkeypatch.setitem(
-            source_model.DOCUMENT_SOURCE_ROOTS,
-            "example",
-            root / "docs-viewer/scopes/example/source/documents",
-        )
         docs = source_model.load_scope_docs_for_config(root, config)
         target = next(doc for doc in docs if doc.doc_id == "alpha")
         overwrite = import_content()
@@ -169,6 +152,7 @@ def test_import_rejects_report_host_targets_and_incoming_report_blocks(
                 overwrite,
                 operation=IMPORT_DOCUMENT_OVERWRITE,
                 docs=docs,
+                collection=resolve_managed_document_collection(root, scope="example", stage="working"),
                 target=target,
                 import_preview=normalized_preview(overwrite),
             )
@@ -179,5 +163,6 @@ def test_import_rejects_report_host_targets_and_incoming_report_blocks(
                 incoming,
                 operation=IMPORT_DOCUMENT_CREATE,
                 docs=docs,
+                collection=resolve_managed_document_collection(root, scope="example", stage="working"),
                 import_preview=normalized_preview(incoming),
             )

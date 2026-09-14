@@ -5,40 +5,108 @@
     {
       "scope_id": "studio",
       "scope_type": "local",
-      "meta": "local",
-      "viewer_base_url": "/docs/",
-      "include_scope_param": true,
-      "default_doc_id": "d-20260428-000000-f5ff18",
-      "media": {
-        "files": {
-          "reference_prefix": "docs/studio/files",
-          "served_path_prefix": "/docs/media/studio/files"
-        },
-        "img": {
-          "reference_prefix": "docs/studio/img",
-          "served_path_prefix": "/docs/media/studio/img"
-        },
-        "svg": {
-          "reference_prefix": "docs/studio/svg",
-          "served_path_prefix": "/docs/media/studio/svg"
-        }
-      },
-      "index_tree_url": "/docs/index-tree?scope=studio",
-      "recent_url": "/docs/recent?scope=studio",
-      "search_index_url": "/docs/search?scope=studio",
-      "search": {
-        "domain": "docs_viewer",
-        "schema": "docs_viewer_search_index_v2",
-        "index_url": "/docs/search?scope=studio",
-        "rebuild_policy": "whole_index"
-      },
-      "backlinks_url": "/docs/backlinks?scope=studio",
-      "sub_scopes": [
+      "emoji": "",
+      "stages": [
         {
-          "sub_scope": "default",
-          "title": "Default",
-          "manifest_url": "/docs/generated/external/studio/default/manage-manifest.json",
-          "by_id_url_base": "/docs/generated/external/studio/default/by-id"
+          "scope_id": "studio",
+          "stage": "working",
+          "scope_type": "local",
+          "meta": "local",
+          "viewer_base_url": "/docs/",
+          "include_scope_param": true,
+          "default_doc_id": "d-20260428-000000-f5ff18",
+          "media": {
+            "files": {
+              "reference_prefix": "docs/studio/files",
+              "served_path_prefix": "/docs/media/studio/working/files"
+            },
+            "img": {
+              "reference_prefix": "docs/studio/img",
+              "served_path_prefix": "/docs/media/studio/working/img"
+            },
+            "svg": {
+              "reference_prefix": "docs/studio/svg",
+              "served_path_prefix": "/docs/media/studio/working/svg"
+            }
+          },
+          "index_tree_url": "/docs/index-tree?scope=studio&stage=working",
+          "recent_url": "/docs/recent?scope=studio&stage=working",
+          "search_index_url": "/docs/search?scope=studio&stage=working",
+          "search": {
+            "domain": "docs_viewer",
+            "schema": "docs_viewer_search_index_v2",
+            "index_url": "/docs/search?scope=studio&stage=working",
+            "rebuild_policy": "whole_index"
+          },
+          "backlinks_url": "/docs/backlinks?scope=studio&stage=working"
+        },
+        {
+          "scope_id": "studio",
+          "stage": "pre-publish",
+          "scope_type": "local",
+          "meta": "local",
+          "viewer_base_url": "/docs/",
+          "include_scope_param": true,
+          "default_doc_id": "",
+          "media": {
+            "files": {
+              "reference_prefix": "docs/studio/files",
+              "served_path_prefix": "/docs/media/studio/pre-publish/files"
+            },
+            "img": {
+              "reference_prefix": "docs/studio/img",
+              "served_path_prefix": "/docs/media/studio/pre-publish/img"
+            },
+            "svg": {
+              "reference_prefix": "docs/studio/svg",
+              "served_path_prefix": "/docs/media/studio/pre-publish/svg"
+            }
+          },
+          "index_tree_url": "/docs/index-tree?scope=studio&stage=pre-publish",
+          "recent_url": "/docs/recent?scope=studio&stage=pre-publish",
+          "search_index_url": "/docs/search?scope=studio&stage=pre-publish",
+          "search": {
+            "domain": "docs_viewer",
+            "schema": "docs_viewer_search_index_v2",
+            "index_url": "/docs/search?scope=studio&stage=pre-publish",
+            "rebuild_policy": "whole_index"
+          },
+          "backlinks_url": "/docs/backlinks?scope=studio&stage=pre-publish"
+        },
+        {
+          "scope_id": "studio",
+          "stage": "published",
+          "scope_type": "local",
+          "meta": "local",
+          "viewer_base_url": "/docs/",
+          "include_scope_param": true,
+          "default_doc_id": "",
+          "media": {
+            "files": {
+              "reference_prefix": "docs/studio/files",
+              "served_path_prefix": "/docs/published/media/studio/files"
+            },
+            "img": {
+              "reference_prefix": "docs/studio/img",
+              "served_path_prefix": "/docs/published/media/studio/img"
+            },
+            "svg": {
+              "reference_prefix": "docs/studio/svg",
+              "served_path_prefix": "/docs/published/media/studio/svg"
+            }
+          },
+          "index_tree_url": "/docs/published/index-tree?scope=studio",
+          "recent_url": "/docs/published/recent?scope=studio",
+          "search_index_url": "/docs/published/search?scope=studio",
+          "search": {
+            "domain": "docs_viewer",
+            "schema": "docs_viewer_search_index_v2",
+            "index_url": "/docs/published/search?scope=studio",
+            "rebuild_policy": "whole_index"
+          },
+          "backlinks_url": "/docs/published/backlinks?scope=studio",
+          "links_enabled": false,
+          "sub_scopes": []
         }
       ]
     },
@@ -199,104 +267,397 @@
               "by_id_url_base": "/docs/generated/external/analysis/pre-publish/moments/by-id"
             }
           ]
+        },
+        {
+          "scope_id": "analysis",
+          "stage": "published",
+          "scope_type": "public",
+          "meta": "public",
+          "viewer_base_url": "/docs/",
+          "include_scope_param": true,
+          "default_doc_id": "",
+          "media": {
+            "files": {
+              "reference_prefix": "docs/analysis/files",
+              "served_path_prefix": "/docs/published/media/analysis/files"
+            },
+            "html": {
+              "reference_prefix": "docs/analysis/html",
+              "served_path_prefix": "/docs/published/media/analysis/html"
+            },
+            "img": {
+              "reference_prefix": "docs/analysis/img",
+              "served_path_prefix": "/docs/published/media/analysis/img"
+            },
+            "svg": {
+              "reference_prefix": "docs/analysis/svg",
+              "served_path_prefix": "/docs/published/media/analysis/svg"
+            }
+          },
+          "index_tree_url": "/docs/published/index-tree?scope=analysis",
+          "recent_url": "/docs/published/recent?scope=analysis",
+          "search_index_url": "/docs/published/search?scope=analysis",
+          "search": {
+            "domain": "docs_viewer",
+            "schema": "docs_viewer_search_index_v2",
+            "index_url": "/docs/published/search?scope=analysis",
+            "rebuild_policy": "whole_index"
+          },
+          "emoji": "䷑",
+          "backlinks_url": "/docs/published/backlinks?scope=analysis",
+          "sub_scopes": [
+            {
+              "sub_scope": "works",
+              "title": "Works",
+              "manifest_url": "/docs/published/external/analysis/works/manifest.json",
+              "by_id_url_base": "/docs/published/external/analysis/works/by-id"
+            },
+            {
+              "sub_scope": "concepts",
+              "title": "Concepts",
+              "manifest_url": "/docs/published/external/analysis/concepts/manifest.json",
+              "by_id_url_base": "/docs/published/external/analysis/concepts/by-id"
+            },
+            {
+              "sub_scope": "processing",
+              "title": "Processing",
+              "manifest_url": "/docs/published/external/analysis/processing/manifest.json",
+              "by_id_url_base": "/docs/published/external/analysis/processing/by-id"
+            },
+            {
+              "sub_scope": "moments",
+              "title": "Moments",
+              "manifest_url": "/docs/published/external/analysis/moments/manifest.json",
+              "by_id_url_base": "/docs/published/external/analysis/moments/by-id"
+            }
+          ],
+          "links_enabled": false
         }
       ]
     },
     {
       "scope_id": "notes",
       "scope_type": "local",
-      "meta": "local",
-      "viewer_base_url": "/docs/",
-      "include_scope_param": true,
-      "default_doc_id": "d-20260526-000000-04ce37",
-      "media": {
-        "files": {
-          "reference_prefix": "docs/notes/files",
-          "served_path_prefix": "/docs/media/notes/files"
+      "emoji": "",
+      "stages": [
+        {
+          "scope_id": "notes",
+          "stage": "working",
+          "scope_type": "local",
+          "meta": "local",
+          "viewer_base_url": "/docs/",
+          "include_scope_param": true,
+          "default_doc_id": "d-20260526-000000-04ce37",
+          "media": {
+            "files": {
+              "reference_prefix": "docs/notes/files",
+              "served_path_prefix": "/docs/media/notes/working/files"
+            },
+            "img": {
+              "reference_prefix": "docs/notes/img",
+              "served_path_prefix": "/docs/media/notes/working/img"
+            },
+            "svg": {
+              "reference_prefix": "docs/notes/svg",
+              "served_path_prefix": "/docs/media/notes/working/svg"
+            }
+          },
+          "index_tree_url": "/docs/index-tree?scope=notes&stage=working",
+          "recent_url": "/docs/recent?scope=notes&stage=working",
+          "search_index_url": "/docs/search?scope=notes&stage=working",
+          "search": {
+            "domain": "docs_viewer",
+            "schema": "docs_viewer_search_index_v2",
+            "index_url": "/docs/search?scope=notes&stage=working",
+            "rebuild_policy": "whole_index"
+          },
+          "backlinks_url": "/docs/backlinks?scope=notes&stage=working"
         },
-        "img": {
-          "reference_prefix": "docs/notes/img",
-          "served_path_prefix": "/docs/media/notes/img"
+        {
+          "scope_id": "notes",
+          "stage": "pre-publish",
+          "scope_type": "local",
+          "meta": "local",
+          "viewer_base_url": "/docs/",
+          "include_scope_param": true,
+          "default_doc_id": "",
+          "media": {
+            "files": {
+              "reference_prefix": "docs/notes/files",
+              "served_path_prefix": "/docs/media/notes/pre-publish/files"
+            },
+            "img": {
+              "reference_prefix": "docs/notes/img",
+              "served_path_prefix": "/docs/media/notes/pre-publish/img"
+            },
+            "svg": {
+              "reference_prefix": "docs/notes/svg",
+              "served_path_prefix": "/docs/media/notes/pre-publish/svg"
+            }
+          },
+          "index_tree_url": "/docs/index-tree?scope=notes&stage=pre-publish",
+          "recent_url": "/docs/recent?scope=notes&stage=pre-publish",
+          "search_index_url": "/docs/search?scope=notes&stage=pre-publish",
+          "search": {
+            "domain": "docs_viewer",
+            "schema": "docs_viewer_search_index_v2",
+            "index_url": "/docs/search?scope=notes&stage=pre-publish",
+            "rebuild_policy": "whole_index"
+          },
+          "backlinks_url": "/docs/backlinks?scope=notes&stage=pre-publish"
         },
-        "svg": {
-          "reference_prefix": "docs/notes/svg",
-          "served_path_prefix": "/docs/media/notes/svg"
+        {
+          "scope_id": "notes",
+          "stage": "published",
+          "scope_type": "local",
+          "meta": "local",
+          "viewer_base_url": "/docs/",
+          "include_scope_param": true,
+          "default_doc_id": "",
+          "media": {
+            "files": {
+              "reference_prefix": "docs/notes/files",
+              "served_path_prefix": "/docs/published/media/notes/files"
+            },
+            "img": {
+              "reference_prefix": "docs/notes/img",
+              "served_path_prefix": "/docs/published/media/notes/img"
+            },
+            "svg": {
+              "reference_prefix": "docs/notes/svg",
+              "served_path_prefix": "/docs/published/media/notes/svg"
+            }
+          },
+          "index_tree_url": "/docs/published/index-tree?scope=notes",
+          "recent_url": "/docs/published/recent?scope=notes",
+          "search_index_url": "/docs/published/search?scope=notes",
+          "search": {
+            "domain": "docs_viewer",
+            "schema": "docs_viewer_search_index_v2",
+            "index_url": "/docs/published/search?scope=notes",
+            "rebuild_policy": "whole_index"
+          },
+          "backlinks_url": "/docs/published/backlinks?scope=notes",
+          "links_enabled": false,
+          "sub_scopes": []
         }
-      },
-      "index_tree_url": "/docs/index-tree?scope=notes",
-      "recent_url": "/docs/recent?scope=notes",
-      "search_index_url": "/docs/search?scope=notes",
-      "search": {
-        "domain": "docs_viewer",
-        "schema": "docs_viewer_search_index_v2",
-        "index_url": "/docs/search?scope=notes",
-        "rebuild_policy": "whole_index"
-      },
-      "backlinks_url": "/docs/backlinks?scope=notes"
+      ]
     },
     {
       "scope_id": "processing",
       "scope_type": "local",
-      "meta": "local",
-      "viewer_base_url": "/docs/",
-      "include_scope_param": true,
-      "default_doc_id": "d-20260714-092047-06a5db",
-      "media": {
-        "files": {
-          "reference_prefix": "docs/processing/files",
-          "served_path_prefix": "/docs/media/processing/files"
+      "emoji": "",
+      "stages": [
+        {
+          "scope_id": "processing",
+          "stage": "working",
+          "scope_type": "local",
+          "meta": "local",
+          "viewer_base_url": "/docs/",
+          "include_scope_param": true,
+          "default_doc_id": "d-20260714-092047-06a5db",
+          "media": {
+            "files": {
+              "reference_prefix": "docs/processing/files",
+              "served_path_prefix": "/docs/media/processing/working/files"
+            },
+            "img": {
+              "reference_prefix": "docs/processing/img",
+              "served_path_prefix": "/docs/media/processing/working/img"
+            },
+            "svg": {
+              "reference_prefix": "docs/processing/svg",
+              "served_path_prefix": "/docs/media/processing/working/svg"
+            }
+          },
+          "index_tree_url": "/docs/index-tree?scope=processing&stage=working",
+          "recent_url": "/docs/recent?scope=processing&stage=working",
+          "search_index_url": "/docs/search?scope=processing&stage=working",
+          "search": {
+            "domain": "docs_viewer",
+            "schema": "docs_viewer_search_index_v2",
+            "index_url": "/docs/search?scope=processing&stage=working",
+            "rebuild_policy": "whole_index"
+          },
+          "backlinks_url": "/docs/backlinks?scope=processing&stage=working"
         },
-        "img": {
-          "reference_prefix": "docs/processing/img",
-          "served_path_prefix": "/docs/media/processing/img"
+        {
+          "scope_id": "processing",
+          "stage": "pre-publish",
+          "scope_type": "local",
+          "meta": "local",
+          "viewer_base_url": "/docs/",
+          "include_scope_param": true,
+          "default_doc_id": "",
+          "media": {
+            "files": {
+              "reference_prefix": "docs/processing/files",
+              "served_path_prefix": "/docs/media/processing/pre-publish/files"
+            },
+            "img": {
+              "reference_prefix": "docs/processing/img",
+              "served_path_prefix": "/docs/media/processing/pre-publish/img"
+            },
+            "svg": {
+              "reference_prefix": "docs/processing/svg",
+              "served_path_prefix": "/docs/media/processing/pre-publish/svg"
+            }
+          },
+          "index_tree_url": "/docs/index-tree?scope=processing&stage=pre-publish",
+          "recent_url": "/docs/recent?scope=processing&stage=pre-publish",
+          "search_index_url": "/docs/search?scope=processing&stage=pre-publish",
+          "search": {
+            "domain": "docs_viewer",
+            "schema": "docs_viewer_search_index_v2",
+            "index_url": "/docs/search?scope=processing&stage=pre-publish",
+            "rebuild_policy": "whole_index"
+          },
+          "backlinks_url": "/docs/backlinks?scope=processing&stage=pre-publish"
         },
-        "svg": {
-          "reference_prefix": "docs/processing/svg",
-          "served_path_prefix": "/docs/media/processing/svg"
+        {
+          "scope_id": "processing",
+          "stage": "published",
+          "scope_type": "local",
+          "meta": "local",
+          "viewer_base_url": "/docs/",
+          "include_scope_param": true,
+          "default_doc_id": "",
+          "media": {
+            "files": {
+              "reference_prefix": "docs/processing/files",
+              "served_path_prefix": "/docs/published/media/processing/files"
+            },
+            "img": {
+              "reference_prefix": "docs/processing/img",
+              "served_path_prefix": "/docs/published/media/processing/img"
+            },
+            "svg": {
+              "reference_prefix": "docs/processing/svg",
+              "served_path_prefix": "/docs/published/media/processing/svg"
+            }
+          },
+          "index_tree_url": "/docs/published/index-tree?scope=processing",
+          "recent_url": "/docs/published/recent?scope=processing",
+          "search_index_url": "/docs/published/search?scope=processing",
+          "search": {
+            "domain": "docs_viewer",
+            "schema": "docs_viewer_search_index_v2",
+            "index_url": "/docs/published/search?scope=processing",
+            "rebuild_policy": "whole_index"
+          },
+          "backlinks_url": "/docs/published/backlinks?scope=processing",
+          "links_enabled": false,
+          "sub_scopes": []
         }
-      },
-      "index_tree_url": "/docs/index-tree?scope=processing",
-      "recent_url": "/docs/recent?scope=processing",
-      "search_index_url": "/docs/search?scope=processing",
-      "search": {
-        "domain": "docs_viewer",
-        "schema": "docs_viewer_search_index_v2",
-        "index_url": "/docs/search?scope=processing",
-        "rebuild_policy": "whole_index"
-      },
-      "backlinks_url": "/docs/backlinks?scope=processing"
+      ]
     },
     {
       "scope_id": "app",
       "scope_type": "local",
-      "meta": "local",
-      "viewer_base_url": "/docs/",
-      "include_scope_param": true,
-      "default_doc_id": "d-20260902-143007-05a794",
-      "media": {
-        "files": {
-          "reference_prefix": "docs/app/files",
-          "served_path_prefix": "/docs/media/app/files"
+      "emoji": "",
+      "stages": [
+        {
+          "scope_id": "app",
+          "stage": "working",
+          "scope_type": "local",
+          "meta": "local",
+          "viewer_base_url": "/docs/",
+          "include_scope_param": true,
+          "default_doc_id": "d-20260902-143007-05a794",
+          "media": {
+            "files": {
+              "reference_prefix": "docs/app/files",
+              "served_path_prefix": "/docs/media/app/working/files"
+            },
+            "img": {
+              "reference_prefix": "docs/app/img",
+              "served_path_prefix": "/docs/media/app/working/img"
+            },
+            "svg": {
+              "reference_prefix": "docs/app/svg",
+              "served_path_prefix": "/docs/media/app/working/svg"
+            }
+          },
+          "index_tree_url": "/docs/index-tree?scope=app&stage=working",
+          "recent_url": "/docs/recent?scope=app&stage=working",
+          "search_index_url": "/docs/search?scope=app&stage=working",
+          "search": {
+            "domain": "docs_viewer",
+            "schema": "docs_viewer_search_index_v2",
+            "index_url": "/docs/search?scope=app&stage=working",
+            "rebuild_policy": "whole_index"
+          },
+          "backlinks_url": "/docs/backlinks?scope=app&stage=working"
         },
-        "img": {
-          "reference_prefix": "docs/app/img",
-          "served_path_prefix": "/docs/media/app/img"
+        {
+          "scope_id": "app",
+          "stage": "pre-publish",
+          "scope_type": "local",
+          "meta": "local",
+          "viewer_base_url": "/docs/",
+          "include_scope_param": true,
+          "default_doc_id": "",
+          "media": {
+            "files": {
+              "reference_prefix": "docs/app/files",
+              "served_path_prefix": "/docs/media/app/pre-publish/files"
+            },
+            "img": {
+              "reference_prefix": "docs/app/img",
+              "served_path_prefix": "/docs/media/app/pre-publish/img"
+            },
+            "svg": {
+              "reference_prefix": "docs/app/svg",
+              "served_path_prefix": "/docs/media/app/pre-publish/svg"
+            }
+          },
+          "index_tree_url": "/docs/index-tree?scope=app&stage=pre-publish",
+          "recent_url": "/docs/recent?scope=app&stage=pre-publish",
+          "search_index_url": "/docs/search?scope=app&stage=pre-publish",
+          "search": {
+            "domain": "docs_viewer",
+            "schema": "docs_viewer_search_index_v2",
+            "index_url": "/docs/search?scope=app&stage=pre-publish",
+            "rebuild_policy": "whole_index"
+          },
+          "backlinks_url": "/docs/backlinks?scope=app&stage=pre-publish"
         },
-        "svg": {
-          "reference_prefix": "docs/app/svg",
-          "served_path_prefix": "/docs/media/app/svg"
+        {
+          "scope_id": "app",
+          "stage": "published",
+          "scope_type": "local",
+          "meta": "local",
+          "viewer_base_url": "/docs/",
+          "include_scope_param": true,
+          "default_doc_id": "",
+          "media": {
+            "files": {
+              "reference_prefix": "docs/app/files",
+              "served_path_prefix": "/docs/published/media/app/files"
+            },
+            "img": {
+              "reference_prefix": "docs/app/img",
+              "served_path_prefix": "/docs/published/media/app/img"
+            },
+            "svg": {
+              "reference_prefix": "docs/app/svg",
+              "served_path_prefix": "/docs/published/media/app/svg"
+            }
+          },
+          "index_tree_url": "/docs/published/index-tree?scope=app",
+          "recent_url": "/docs/published/recent?scope=app",
+          "search_index_url": "/docs/published/search?scope=app",
+          "search": {
+            "domain": "docs_viewer",
+            "schema": "docs_viewer_search_index_v2",
+            "index_url": "/docs/published/search?scope=app",
+            "rebuild_policy": "whole_index"
+          },
+          "backlinks_url": "/docs/published/backlinks?scope=app",
+          "links_enabled": false,
+          "sub_scopes": []
         }
-      },
-      "index_tree_url": "/docs/index-tree?scope=app",
-      "recent_url": "/docs/recent?scope=app",
-      "search_index_url": "/docs/search?scope=app",
-      "search": {
-        "domain": "docs_viewer",
-        "schema": "docs_viewer_search_index_v2",
-        "index_url": "/docs/search?scope=app",
-        "rebuild_policy": "whole_index"
-      },
-      "backlinks_url": "/docs/backlinks?scope=app"
+      ]
     }
   ],
   "docs_viewer": {

@@ -71,6 +71,7 @@ assert.deepEqual(
   [
     {
       scope: "analysis",
+      stage: "",
       label: "analysis",
       emoji: "🌐",
       available: true,
@@ -79,6 +80,7 @@ assert.deepEqual(
     },
     {
       scope: "notes",
+      stage: "",
       label: "notes",
       emoji: "💻",
       available: false,
@@ -87,6 +89,7 @@ assert.deepEqual(
     },
     {
       scope: "studio",
+      stage: "",
       label: "studio",
       emoji: "䷑",
       available: true,

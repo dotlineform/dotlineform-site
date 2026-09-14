@@ -148,6 +148,7 @@ def docs_management_get_payload(repo_root: Path, path: str, params: dict[str, li
         return docs_source_config_settings.build_settings_contract(
             repo_root,
             docs_api_query_value(params, "scope"),
+            docs_api_query_value(params, "stage") or None,
         )
     if path == routes.SOURCE_BODY_PATH:
         return read_source_body(repo_root, params)

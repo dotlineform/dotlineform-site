@@ -17,6 +17,7 @@ from docs_document_packages.returned_common import (
     normalize_text,
 )
 import docs_source_model as source_model
+from docs_document_packages.source_context import package_source_scope_config
 
 
 def validate_whole_returned_package(
@@ -239,6 +240,7 @@ def validate_whole_returned_package(
                 repo_root,
                 scope=expected_scope,
                 sub_scope=metadata_sub_scope,
+                stage=package_source_scope_config(repo_root, expected_scope).stage or None,
             )
             collection_docs = [
                 source_doc_from_path(

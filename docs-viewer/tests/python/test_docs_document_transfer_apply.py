@@ -21,7 +21,6 @@ for _path in (DOCS_SERVICES_DIR, DOCS_BUILD_DIR):
         sys.path.insert(0, str(_path))
 
 import docs_document_transfer as transfer  # noqa: E402
-import docs_document_publication_lineage as publication_lineage  # noqa: E402
 import docs_document_transfer_apply as transfer_apply  # noqa: E402
 import docs_artifact_locations as artifact_locations  # noqa: E402
 import docs_media_source_evidence as media_source_evidence  # noqa: E402
@@ -35,9 +34,7 @@ from build_docs_test_support import (  # noqa: E402
     write_site_tools_config,
 )
 from test_docs_document_transfer import (  # noqa: E402
-    PROJECTS_LINEAGE_CONTRACT,
     make_collection_repo,
-    make_lineage_repo,
     sub_scope_documents_root,
 )
 
@@ -96,7 +93,7 @@ def write_doc(
 
 
 def local_documents_root(repo_root: Path, scope: str) -> Path:
-    return repo_root / "docs-viewer/scopes" / scope / "source/documents"
+    return repo_root / "docs-viewer/scopes" / scope / "working/source/documents"
 
 
 def media_path(
@@ -105,7 +102,7 @@ def media_path(
     media_type: str,
     identity: str,
 ) -> Path:
-    config = docs_scope_config.load_docs_scope_configs(repo_root)[scope]
+    config = docs_scope_config.select_scope_stage(docs_scope_config.load_docs_scope_configs(repo_root)[scope], "working")
     location = docs_scope_config.managed_media_config(config, media_type).source_location
     return docs_scope_config.resolve_location_path(repo_root, location) / identity
 
@@ -116,7 +113,7 @@ def build_source_path(
     build_type: str,
     identity: str,
 ) -> Path:
-    config = docs_scope_config.load_docs_scope_configs(repo_root)[scope]
+    config = docs_scope_config.select_scope_stage(docs_scope_config.load_docs_scope_configs(repo_root)[scope], "working")
     location = config.media.build_sources[build_type].location
     return docs_scope_config.resolve_location_path(repo_root, location) / identity
 
@@ -222,7 +219,7 @@ def fake_rebuild(
             before_write()
         write_operation()
         calls.append(
-            {
+            {"stage": "working",
                 "scope": scope,
                 "changed_paths": list(changed_paths),
                 "kwargs": kwargs,
@@ -244,7 +241,7 @@ def fake_sub_scope_rebuild(calls: list[dict[str, object]]):
     ) -> dict[str, object]:
         write_operation()
         calls.append(
-            {
+            {"stage": "working",
                 "scope": scope,
                 "sub_scope": sub_scope,
                 "changed_paths": list(changed_paths),
@@ -256,166 +253,15 @@ def fake_sub_scope_rebuild(calls: list[dict[str, object]]):
     return perform
 
 
-def test_lineage_new_and_replace_commit_exact_rows_and_preserve_editorial_gate(
-    tmp_path: Path,
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    repo_root = make_lineage_repo(tmp_path)
-    source_id = "d-20260801-100000-aaaaaa"
-    existing_target_id = "d-20260802-110000-bbbbbb"
-    source_path = sub_scope_documents_root(
-        repo_root,
-        "dotlineform",
-        "projects",
-    ) / f"{source_id}.md"
-    target_path = sub_scope_documents_root(
-        repo_root,
-        "analysis",
-        "works",
-    ) / f"{existing_target_id}.md"
-    target_before, _body = source_model.parse_source(target_path)
-    rebuild_calls: list[dict[str, object]] = []
-
-    new_plan = transfer.plan_document_transfer(
-        repo_root,
-        source_scope="dotlineform",
-        source_sub_scope="projects",
-        requested_doc_ids=[source_id],
-        target_scope="analysis",
-        target_sub_scope="works",
-        transfer_mode="copy",
-        operation_timestamp="2026-08-08 10:00:00",
-        copy_lineage_actions=[
-            {
-                "source_doc_id": source_id,
-                "action": "new",
-                "replace_target_doc_id": "",
-            }
-        ],
-        token_factory=sequential_tokens("eeeeee"),
-    )
-    monkeypatch.setattr(
-        transfer_apply.publication_lineage,
-        "current_timestamp",
-        lambda: "2026-08-08T10:00:00Z",
-    )
-    new_result = transfer_apply.apply_document_copy(
-        repo_root,
-        new_plan,
-        confirm=True,
-        perform_sub_scope_source_write_and_rebuild=fake_sub_scope_rebuild(
-            rebuild_calls
-        ),
-        event_logger=lambda *_args: None,
-    )
-    new_target_id = "d-20260808-100000-eeeeee"
-    assert new_result["created_doc_ids"] == [new_target_id]
-    assert new_result["replaced_doc_ids"] == []
-    assert new_result["copy_results"] == [
-        {
-            "source_doc_id": source_id,
-            "target_doc_id": new_target_id,
-            "action": "new",
-        }
-    ]
-    assert new_result["lineage"] == {
-        "schema_version": "docs_document_publication_lineage_v3",
-        "record_count": 1,
-    }
-
-    source_front_matter, _source_body = source_model.parse_source(source_path)
-    source_front_matter["title"] = "Working A Updated"
-    source_path.write_text(
-        source_model.format_source(
-            source_front_matter,
-            "# Working A Updated\n\nReplacement body from A.\n",
-        ),
-        encoding="utf-8",
-    )
-    replace_plan = transfer.plan_document_transfer(
-        repo_root,
-        source_scope="dotlineform",
-        source_sub_scope="projects",
-        requested_doc_ids=[source_id],
-        target_scope="analysis",
-        target_sub_scope="works",
-        transfer_mode="copy",
-        operation_timestamp="2026-08-08 11:00:00",
-        copy_lineage_actions=[
-            {
-                "source_doc_id": source_id,
-                "action": "replace",
-                "replace_target_doc_id": existing_target_id,
-            }
-        ],
-    )
-    monkeypatch.setattr(
-        transfer_apply.publication_lineage,
-        "current_timestamp",
-        lambda: "2026-08-08T11:00:00Z",
-    )
-    replace_result = transfer_apply.apply_document_copy(
-        repo_root,
-        replace_plan,
-        confirm=True,
-        perform_sub_scope_source_write_and_rebuild=fake_sub_scope_rebuild(
-            rebuild_calls
-        ),
-        event_logger=lambda *_args: None,
-    )
-
-    replaced_front_matter, replaced_body = source_model.parse_source(target_path)
-    assert replace_result["created_doc_ids"] == []
-    assert replace_result["replaced_doc_ids"] == [existing_target_id]
-    assert replace_result["lineage"] == {
-        "schema_version": "docs_document_publication_lineage_v3",
-        "record_count": 1,
-    }
-    assert replaced_front_matter["doc_id"] == existing_target_id
-    assert replaced_front_matter["added_date"] == target_before["added_date"]
-    assert replaced_front_matter["last_updated"] == "2026-08-08 11:00:00"
-    assert "publishable" not in replaced_front_matter
-    assert replaced_front_matter["folder_path"] == "2026/working-a"
-    assert replaced_front_matter["work_id"] == "00123"
-    assert "Replacement body from A." in replaced_body
-
-    table = json.loads(
-        publication_lineage.table_path(
-            repo_root,
-            contract_id=PROJECTS_LINEAGE_CONTRACT,
-        ).read_text(encoding="utf-8")
-    )
-    exact_child = next(
-        editorial
-        for record in table["records"]
-        for editorial in record["editorials"]
-        if editorial["doc_id"] == existing_target_id
-    )
-    assert exact_child["created_at"] == "2026-08-07T20:00:00Z"
-    assert exact_child["last_copied_at"] == "2026-08-08T11:00:00Z"
-    assert [
-        (call["scope"], call["sub_scope"], call["changed_paths"])
-        for call in rebuild_calls
-    ] == [
-        ("analysis", "works", [sub_scope_documents_root(
-            repo_root,
-            "analysis",
-            "works",
-        ) / f"{new_target_id}.md"]),
-        ("dotlineform", "projects", []),
-        ("analysis", "works", [target_path]),
-        ("dotlineform", "projects", []),
-    ]
-    assert source_model.parse_source(source_path)[1].endswith(
-        "Replacement body from A.\n"
-    )
 
 
 @pytest.mark.parametrize("subject_field,subject_key", [("detail_uid", "00008-001")])
-def test_document_subject_survives_copy_to_analysis(tmp_path: Path, subject_field: str, subject_key: str) -> None:
-    repo_root = make_lineage_repo(tmp_path)
+def test_document_subject_survives_copy_between_working_works(tmp_path: Path, subject_field: str, subject_key: str) -> None:
+    repo_root = make_collection_repo(tmp_path)
+    write_doc(sub_scope_documents_root(repo_root, "source", "works"),
+              doc_id="d-20260801-100000-aaaaaa", title="Subject document")
     source_id = "d-20260801-100000-aaaaaa"
-    source_path = sub_scope_documents_root(repo_root, "dotlineform", "projects") / f"{source_id}.md"
+    source_path = sub_scope_documents_root(repo_root, "source", "works") / f"{source_id}.md"
     front_matter, body = source_model.parse_source(source_path)
     for field in ("folder_path", "work_id", "series_id"):
         front_matter.pop(field, None)
@@ -423,11 +269,11 @@ def test_document_subject_survives_copy_to_analysis(tmp_path: Path, subject_fiel
     source_path.write_text(source_model.format_source(front_matter, body), encoding="utf-8")
     source_before = source_path.read_bytes()
     plan = transfer.plan_document_transfer(
-        repo_root, source_scope="dotlineform", source_sub_scope="projects",
-        requested_doc_ids=[source_id], target_scope="analysis", target_sub_scope="works",
+        repo_root, source_scope="source", source_sub_scope="works",
+        requested_doc_ids=[source_id], target_scope="target", target_sub_scope="works",
         transfer_mode="copy", operation_timestamp="2026-09-05 12:00:00",
-        copy_lineage_actions=[{"source_doc_id": source_id, "action": "new", "replace_target_doc_id": ""}],
         token_factory=sequential_tokens("eeeeee"),
+        source_stage="working", target_stage="working",
     )
     result = transfer_apply.apply_document_copy(
         repo_root, plan, confirm=True,
@@ -435,84 +281,14 @@ def test_document_subject_survives_copy_to_analysis(tmp_path: Path, subject_fiel
         event_logger=lambda *_args: None,
     )
     target_id = result["created_doc_ids"][0]
-    target = sub_scope_documents_root(repo_root, "analysis", "works") / f"{target_id}.md"
+    target = sub_scope_documents_root(repo_root, "target", "works") / f"{target_id}.md"
     copied, copied_body = source_model.parse_source(target)
     assert copied[subject_field] == subject_key
     assert not any(field in copied for field in ("folder_path", "work_id", "series_id"))
     assert copied_body == body
     assert source_path.read_bytes() == source_before
-    assert result["copy_results"] == [{"source_doc_id": source_id, "target_doc_id": target_id, "action": "new"}]
 
 
-def test_processing_copy_apply_writes_only_its_lineage_and_rebuilds_its_source(
-    tmp_path: Path,
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    repo_root = make_lineage_repo(tmp_path)
-    source_id = "d-20260901-120000-abcdef"
-    source_root = sub_scope_documents_root(
-        repo_root,
-        "dotlineform",
-        "processing",
-    )
-    write_doc(
-        source_root,
-        doc_id=source_id,
-        title="Impossibility And Incompleteness",
-        body="# Impossibility And Incompleteness\n",
-        extra_front_matter={"folder_path": "processing/ink-engine"},
-    )
-    projects_path = publication_lineage.table_path(
-        repo_root,
-        contract_id=PROJECTS_LINEAGE_CONTRACT,
-    )
-    projects_before = projects_path.read_bytes()
-    plan = transfer.plan_document_transfer(
-        repo_root,
-        source_scope="dotlineform",
-        source_sub_scope="processing",
-        requested_doc_ids=[source_id],
-        target_scope="analysis",
-        target_sub_scope="works",
-        transfer_mode="copy",
-        operation_timestamp="2026-09-01 12:00:00",
-        token_factory=sequential_tokens("fedcba"),
-    )
-    rebuild_calls: list[dict[str, object]] = []
-    monkeypatch.setattr(
-        transfer_apply.publication_lineage,
-        "current_timestamp",
-        lambda: "2026-09-01T12:00:00Z",
-    )
-
-    result = transfer_apply.apply_document_copy(
-        repo_root,
-        plan,
-        confirm=True,
-        perform_sub_scope_source_write_and_rebuild=fake_sub_scope_rebuild(
-            rebuild_calls
-        ),
-        event_logger=lambda *_args: None,
-    )
-
-    assert result["lineage"] == {
-        "schema_version": "docs_document_publication_lineage_v3",
-        "record_count": 1,
-    }
-    assert projects_path.read_bytes() == projects_before
-    processing = publication_lineage.load_table(
-        repo_root,
-        contract_id=PROCESSING_LINEAGE_CONTRACT,
-    )
-    assert processing is not None
-    assert processing.records[0].working_doc_id == source_id
-    assert [
-        (call["scope"], call["sub_scope"])
-        for call in rebuild_calls
-    ] == [
-        ("analysis", "works"),
-        ("dotlineform", "processing"),
-    ]
 
 
 def test_transform_copy_preserves_selected_hierarchy_and_rewrites_owned_links(
@@ -537,7 +313,7 @@ flowchart LR
 [Beta](/docs/?scope=source&doc=beta)
 [Outside](/docs/?scope=source&doc=other)
 [[media:docs/source/img/shared.png Shared]]
-![Shared](/docs/media/source/img/shared.png?v=1)
+![Shared](/docs/media/source/working/img/shared.png?v=1)
 
 {inline_mermaid}
 """,
@@ -552,6 +328,7 @@ flowchart LR
         transfer_mode="copy",
         operation_timestamp=COPY_TIMESTAMP,
         token_factory=sequential_tokens("aaaaaa", "bbbbbb", "cccccc"),
+        source_stage="working", target_stage="working",
     )
     transformed = transfer_apply.transform_document_copy(plan)
     transformed_by_source = {
@@ -580,7 +357,7 @@ flowchart LR
     assert f"/docs/?scope=target&doc={plan.id_map['beta']}" in body
     assert "/docs/?scope=source&doc=other" in body
     assert "[[media:docs/target/img/shared.png Shared]]" in body
-    assert "/docs/media/target/img/shared.png?v=1" in body
+    assert "/docs/media/target/working/img/shared.png?v=1" in body
     assert inline_mermaid in body
     assert transformed.viewer_link_rewrites == 2
     assert transformed.media_link_rewrites == 2
@@ -599,6 +376,7 @@ def test_restore_receipt_revalidates_exact_plan_and_rejects_source_change(
         include_descendants=True,
         operation_timestamp=COPY_TIMESTAMP,
         token_factory=sequential_tokens("aaaaaa", "bbbbbb"),
+        source_stage="working", target_stage="working",
     )
     receipt = plan.apply_plan_payload()
 
@@ -649,6 +427,7 @@ def test_apply_copy_transfers_shared_media_once_and_repeated_copy_reuses_it(
     media_source_evidence.record_media_source_evidence(
         repo_root,
         "source",
+        config=docs_scope_config.load_docs_scope_stage(repo_root, "source", "working"),
         media_type="img",
         identity="shared.png",
         source_root="analysis",
@@ -665,6 +444,7 @@ def test_apply_copy_transfers_shared_media_once_and_repeated_copy_reuses_it(
         transfer_mode="copy",
         operation_timestamp=COPY_TIMESTAMP,
         token_factory=sequential_tokens("aaaaaa", "bbbbbb"),
+        source_stage="working", target_stage="working",
     )
 
     def before_first_write() -> None:
@@ -679,6 +459,7 @@ def test_apply_copy_transfers_shared_media_once_and_repeated_copy_reuses_it(
             "target",
             "img",
             "shared.png",
+            config=docs_scope_config.load_docs_scope_stage(repo_root, "target", "working"),
         )
         assert copied is not None
         assert copied.source_path == "analysis/source/shared.png"
@@ -723,6 +504,7 @@ def test_apply_copy_transfers_shared_media_once_and_repeated_copy_reuses_it(
         transfer_mode="copy",
         operation_timestamp="2026-07-24 14:00:01",
         token_factory=sequential_tokens("cccccc", "dddddd"),
+        source_stage="working", target_stage="working",
     )
     second = transfer_apply.apply_document_copy(
         repo_root,
@@ -770,6 +552,7 @@ def test_apply_copy_builds_loadable_target_documents_and_search_once(
         transfer_mode="copy",
         operation_timestamp=COPY_TIMESTAMP,
         token_factory=sequential_tokens("aaaaaa", "bbbbbb"),
+        source_stage="working", target_stage="working",
     )
     rebuild_calls = 0
 
@@ -784,7 +567,7 @@ def test_apply_copy_builds_loadable_target_documents_and_search_once(
         rebuild_calls += 1
         assert kwargs["skip_media_builds"] is True
         write_operation()
-        config = docs_scope_config.load_docs_scope_configs(repo_root)[scope]
+        config = docs_scope_config.select_scope_stage(docs_scope_config.load_docs_scope_configs(repo_root)[scope], "working")
         docs_result = build_docs.DocsDataBuilder(
             repo_root=repo_root,
             config=config,
@@ -793,6 +576,7 @@ def test_apply_copy_builds_loadable_target_documents_and_search_once(
         search_result = build_search.DocsViewerSearchDataBuilder(
             repo_root=repo_root,
             scope=scope,
+            stage="working",
         ).run(write=True, force=True)
         return {
             "ok": True,
@@ -808,14 +592,14 @@ def test_apply_copy_builds_loadable_target_documents_and_search_once(
         event_logger=lambda *_args, **_kwargs: None,
     )
 
-    output_root = repo_root / "docs-viewer/scopes/target/generated/documents"
+    output_root = repo_root / "docs-viewer/scopes/target/working/generated/documents"
     tree_payload = json.loads(
         (output_root / "index-tree.json").read_text(encoding="utf-8")
     )
     search_payload = json.loads(
         (
             repo_root
-            / "docs-viewer/scopes/target/generated/search/index.json"
+            / "docs-viewer/scopes/target/working/generated/search/index.json"
         ).read_text(encoding="utf-8")
     )
 
@@ -895,6 +679,7 @@ flowchart LR
         transfer_mode="copy",
         operation_timestamp=COPY_TIMESTAMP,
         token_factory=sequential_tokens("aaaaaa"),
+        source_stage="working", target_stage="working",
     )
     assert plan.media[0].target_status == "produce"
     assert plan.media[0].build_sources[0].target_status == "create"
@@ -985,6 +770,7 @@ def test_apply_copy_reports_exact_partial_target_after_document_write_failure(
         transfer_mode="copy",
         operation_timestamp=COPY_TIMESTAMP,
         token_factory=sequential_tokens("aaaaaa", "bbbbbb"),
+        source_stage="working", target_stage="working",
     )
     original_write = transfer_apply.source_model.write_text_atomic_new
     writes = 0
@@ -1062,6 +848,7 @@ def test_apply_copy_reports_exact_partial_target_after_media_write_failure(
         transfer_mode="copy",
         operation_timestamp=COPY_TIMESTAMP,
         token_factory=sequential_tokens("aaaaaa"),
+        source_stage="working", target_stage="working",
     )
     original_write = artifact_locations.FilesystemArtifactLocationAdapter.write
 
@@ -1116,7 +903,7 @@ def test_apply_copy_writes_external_local_target_documents_and_media(
         target_scope=target_scope,
     )
     external_root = projects_base / "docs-viewer/scopes/target"
-    external_documents = external_root / "source/documents"
+    external_documents = external_root / "working/source/documents"
     external_documents.mkdir(parents=True, exist_ok=True)
     write_doc(
         local_documents_root(repo_root, "source"),
@@ -1134,6 +921,7 @@ def test_apply_copy_writes_external_local_target_documents_and_media(
         transfer_mode="copy",
         operation_timestamp=COPY_TIMESTAMP,
         token_factory=sequential_tokens("aaaaaa"),
+        source_stage="working", target_stage="working",
     )
 
     result = transfer_apply.apply_document_copy(
@@ -1147,7 +935,7 @@ def test_apply_copy_writes_external_local_target_documents_and_media(
     copied_path = external_documents / f"{result['created_doc_ids'][0]}.md"
     assert copied_path.is_file()
     assert (
-        projects_base / "docs-viewer/scopes/target/source/media/img/photo.png"
+        projects_base / "docs-viewer/scopes/target/working/source/media/img/photo.png"
     ).read_bytes() == b"photo"
     assert "docs/target/img/photo.png" in copied_path.read_text(encoding="utf-8")
 
@@ -1169,6 +957,7 @@ def test_apply_child_to_child_copy_uses_exact_transform_rebuild_and_result(
         transfer_mode="copy",
         operation_timestamp=COPY_TIMESTAMP,
         token_factory=sequential_tokens("aaaaaa", "bbbbbb"),
+        source_stage="working", target_stage="working",
     )
 
     def reject_parent_rebuild(*_args, **_kwargs):
@@ -1198,8 +987,8 @@ def test_apply_child_to_child_copy_uses_exact_transform_rebuild_and_result(
     target_report_id = "d-20260701-100003-dddddd"
 
     assert result["schema_version"] == "docs_document_copy_apply_v3"
-    assert result["source"] == {"scope": "source", "sub_scope": "tags"}
-    assert result["target"] == {"scope": "target", "sub_scope": "works"}
+    assert result["source"] == {"stage": "working", "scope": "source", "sub_scope": "tags"}
+    assert result["target"] == {"stage": "working", "scope": "target", "sub_scope": "works"}
     assert "source_scope" not in result
     assert "target_scope" not in result
     assert alpha_front_matter["work_id"] == "00123"
@@ -1214,7 +1003,7 @@ def test_apply_child_to_child_copy_uses_exact_transform_rebuild_and_result(
     assert "docs/target/sub-scopes/works/img/photo.png" in alpha_body
     assert (sub_scope_documents_root(repo_root, "target", "works").parent / "media/img/photo.png").read_bytes() == b"photo"
     assert rebuild_calls == [
-        {
+        {"stage": "working",
             "scope": "target",
             "sub_scope": "works",
             "changed_paths": [
@@ -1222,7 +1011,8 @@ def test_apply_child_to_child_copy_uses_exact_transform_rebuild_and_result(
                 target_root / f"{target_ids[1]}.md",
             ],
             "kwargs": {
-                "suppression_reason": transfer_apply.DOCUMENT_COPY_SUPPRESSION_REASON
+                "suppression_reason": transfer_apply.DOCUMENT_COPY_SUPPRESSION_REASON,
+                "stage": "working",
             },
         }
     ]
@@ -1231,7 +1021,7 @@ def test_apply_child_to_child_copy_uses_exact_transform_rebuild_and_result(
             "source_doc_id": "tag-a",
             "target_doc_id": target_ids[0],
             "target_viewer_url": (
-                f"/docs/?scope=target&doc={target_report_id}"
+                f"/docs/?scope=target&stage=working&doc={target_report_id}"
                 f"&subdoc={target_ids[0]}"
             ),
         },
@@ -1239,7 +1029,7 @@ def test_apply_child_to_child_copy_uses_exact_transform_rebuild_and_result(
             "source_doc_id": "tag-b",
             "target_doc_id": target_ids[1],
             "target_viewer_url": (
-                f"/docs/?scope=target&doc={target_report_id}"
+                f"/docs/?scope=target&stage=working&doc={target_report_id}"
                 f"&subdoc={target_ids[1]}"
             ),
         },
@@ -1247,9 +1037,9 @@ def test_apply_child_to_child_copy_uses_exact_transform_rebuild_and_result(
     assert event_calls[0][1:] == (
         transfer_apply.DOCUMENT_COPY_EVENT,
         {
-            "source": {"scope": "source", "sub_scope": "tags"},
+            "source": {"stage": "working", "scope": "source", "sub_scope": "tags"},
             "requested_doc_ids": ["tag-a", "tag-b"],
-            "target": {"scope": "target", "sub_scope": "works"},
+            "target": {"stage": "working", "scope": "target", "sub_scope": "works"},
             "effective_roots": result["effective_roots"],
             "created_count": 2,
             "unique_media_count": 1,
@@ -1272,6 +1062,7 @@ def test_apply_child_to_parent_copy_rewrites_subdoc_as_doc(
         transfer_mode="copy",
         operation_timestamp=COPY_TIMESTAMP,
         token_factory=sequential_tokens("cccccc", "dddddd"),
+        source_stage="working", target_stage="working",
     )
 
     result = transfer_apply.apply_document_copy(
@@ -1285,7 +1076,7 @@ def test_apply_child_to_parent_copy_rewrites_subdoc_as_doc(
     target_ids = result["created_doc_ids"]
     copied = local_documents_root(repo_root, "target") / f"{target_ids[0]}.md"
     front_matter, body = source_model.parse_source(copied)
-    assert result["target"] == {"scope": "target"}
+    assert result["target"] == {"stage": "working", "scope": "target"}
     assert front_matter["work_id"] == "00123"
     assert "group" not in front_matter
     assert f"/docs/?scope=target&doc={target_ids[1]}" in body
@@ -1354,6 +1145,7 @@ def test_apply_parent_to_public_child_uses_subdoc_links(
         transfer_mode="copy",
         operation_timestamp=COPY_TIMESTAMP,
         token_factory=sequential_tokens("eeeeee", "ffffff"),
+        source_stage="working", target_stage="working",
     )
 
     result = transfer_apply.apply_document_copy(
@@ -1370,9 +1162,9 @@ def test_apply_parent_to_public_child_uses_subdoc_links(
     )
     assert "publishable" not in front_matter
     assert front_matter["parent_id"] == ""
-    assert f"/target/?doc={target_report_id}&subdoc={target_ids[1]}#detail" in body
+    assert f"/docs/?scope=target&doc={target_report_id}&subdoc={target_ids[1]}#detail" in body
     assert result["effective_roots"][0]["target_viewer_url"] == (
-        f"/docs/?scope=target&doc={target_report_id}&subdoc={target_ids[0]}"
+        f"/docs/?scope=target&stage=working&doc={target_report_id}&subdoc={target_ids[0]}"
     )
 
 
@@ -1401,7 +1193,7 @@ def test_apply_public_parent_to_public_parent_uses_working_projection_without_pu
         doc_id="alpha",
         title="Alpha",
         parent_id="root",
-        body="# Alpha\n\n[Beta](/source/?doc=beta#detail)\n",
+        body="# Alpha\n\n[Beta](/docs/?scope=source&doc=beta#detail)\n",
     )
     public_root = repo_root / "site/assets/data/docs/scopes/target"
     write_json(public_root / "by-id/existing.json", {"doc_id": "existing"})
@@ -1414,6 +1206,7 @@ def test_apply_public_parent_to_public_parent_uses_working_projection_without_pu
         transfer_mode="copy",
         operation_timestamp=COPY_TIMESTAMP,
         token_factory=sequential_tokens("111111", "222222"),
+        source_stage="working", target_stage="working",
     )
 
     result = transfer_apply.apply_document_copy(
@@ -1433,10 +1226,10 @@ def test_apply_public_parent_to_public_parent_uses_working_projection_without_pu
     )
     assert "publishable" not in first_front_matter
     assert "publishable" not in second_front_matter
-    assert f"/target/?doc={target_ids[1]}#detail" in first_body
-    assert result["target"] == {"scope": "target"}
+    assert f"/docs/?scope=target&doc={target_ids[1]}#detail" in first_body
+    assert result["target"] == {"stage": "working", "scope": "target"}
     assert result["effective_roots"][0]["target_viewer_url"] == (
-        f"/docs/?scope=target&doc={target_ids[0]}"
+        f"/docs/?scope=target&stage=working&doc={target_ids[0]}"
     )
     assert snapshot(public_root) == public_before
 
@@ -1455,6 +1248,7 @@ def test_child_copy_stale_target_fails_before_media_or_document_writes(
         transfer_mode="copy",
         operation_timestamp=COPY_TIMESTAMP,
         token_factory=sequential_tokens("aaaaaa"),
+        source_stage="working", target_stage="working",
     )
     target_path = plan.documents[0].target_path
     write_doc(
@@ -1462,7 +1256,7 @@ def test_child_copy_stale_target_fails_before_media_or_document_writes(
         doc_id=plan.documents[0].target_doc_id,
         title="Concurrent target",
     )
-    media_before = snapshot(repo_root / "docs-viewer/scopes/target/source/media")
+    media_before = snapshot(repo_root / "docs-viewer/scopes/target/working/source/media")
 
     with pytest.raises(
         transfer_apply.DocumentTransferPlanStaleError,
@@ -1477,7 +1271,7 @@ def test_child_copy_stale_target_fails_before_media_or_document_writes(
         )
 
     assert target_path.read_text(encoding="utf-8").find("Concurrent target") >= 0
-    assert snapshot(repo_root / "docs-viewer/scopes/target/source/media") == media_before
+    assert snapshot(repo_root / "docs-viewer/scopes/target/working/source/media") == media_before
 
 
 def test_apply_child_copy_retains_subject_and_destination_membership(
@@ -1494,6 +1288,7 @@ def test_apply_child_copy_retains_subject_and_destination_membership(
         transfer_mode="copy",
         operation_timestamp=COPY_TIMESTAMP,
         token_factory=sequential_tokens("aaaaaa"),
+        source_stage="working", target_stage="working",
     )
 
     result = transfer_apply.apply_document_copy(
@@ -1530,11 +1325,12 @@ def test_child_copy_revalidates_complete_collection_receipt_before_writes(
         transfer_mode="copy",
         operation_timestamp=COPY_TIMESTAMP,
         token_factory=sequential_tokens("aaaaaa"),
+        source_stage="working", target_stage="working",
     )
     if stale_fact == "collection_config":
         config_path = repo_root / "docs-viewer/config/scopes/docs_scopes.json"
         config_payload = json.loads(config_path.read_text(encoding="utf-8"))
-        config_payload["scopes"][1]["sub_scopes"][1]["title"] = "Changed Works"
+        config_payload["scopes"][1]["stages"]["working"]["sub_scopes"][1]["title"] = "Changed Works"
         write_json(config_path, config_payload)
     elif stale_fact == "metadata":
         source_path = (
@@ -1602,6 +1398,7 @@ def test_copy_revalidates_registered_build_source_before_writes(
         transfer_mode="copy",
         operation_timestamp=COPY_TIMESTAMP,
         token_factory=sequential_tokens("aaaaaa"),
+        source_stage="working", target_stage="working",
     )
     write_bytes(source_build, b"flowchart LR\n  A --> Changed\n")
 
@@ -1644,6 +1441,7 @@ def test_child_copy_failure_reports_only_the_exact_target_collection(
         transfer_mode="copy",
         operation_timestamp=COPY_TIMESTAMP,
         token_factory=sequential_tokens("aaaaaa", "bbbbbb"),
+        source_stage="working", target_stage="working",
     )
     original_write = transfer_apply.source_model.write_text_atomic_new
     writes = 0
@@ -1674,8 +1472,8 @@ def test_child_copy_failure_reports_only_the_exact_target_collection(
         )
 
     failure = captured.value.result
-    assert failure["source"] == {"scope": "source", "sub_scope": "tags"}
-    assert failure["target"] == {"scope": "target", "sub_scope": "works"}
+    assert failure["source"] == {"stage": "working", "scope": "source", "sub_scope": "tags"}
+    assert failure["target"] == {"stage": "working", "scope": "target", "sub_scope": "works"}
     assert [
         item["state"] for item in failure["target_state"]["documents"]
     ] == ["exact", "missing"]

@@ -32,7 +32,6 @@ from docs_management_document_target import (
 from docs_source_model import (
     ScopeDoc,
     load_document_collection_docs_for_config,
-    load_scope_docs,
     normalize_scope,
 )
 from docs_document_packages.workspace import marker_path
@@ -215,7 +214,9 @@ def plan_document_package_collection(
     """Read and completely plan one trusted package without applying any writes."""
 
     normalized_scope = normalize_scope(scope)
-    if collection is not None and collection.scope != normalized_scope:
+    if collection is None:
+        raise ValueError("Package Import requires an exact scope/stage collection")
+    if collection.scope != normalized_scope:
         raise ValueError("managed collection does not match requested package scope")
     sub_scope = collection.sub_scope if collection is not None else ""
     package, blockers = load_document_package(
@@ -236,14 +237,8 @@ def plan_document_package_collection(
             sub_scope=sub_scope,
         )
 
-    docs = (
-        load_document_collection_docs_for_config(
-            repo_root,
-            collection.parent_config,
-            collection.document_config,
-        )
-        if collection is not None and collection.sub_scope
-        else load_scope_docs(repo_root, normalized_scope)
+    docs = load_document_collection_docs_for_config(
+        repo_root, collection.parent_config, collection.document_config,
     )
     if sub_scope:
         non_flat_targets = sorted(doc.doc_id for doc in docs if doc.parent_id)

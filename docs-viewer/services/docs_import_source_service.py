@@ -260,6 +260,7 @@ def handle_import_source(
                 repo_root,
                 scope,
                 sub_scope,
+                stage=destination.stage,
             )
             result = apply_edited_review_source_collection(
                 repo_root,
@@ -276,6 +277,7 @@ def handle_import_source(
                     dependencies.perform_sub_scope_source_write_and_rebuild
                 ),
             )
+            result["target"] = destination.request_target()
             result["viewer_url"] = destination_url
             result["source_directory"] = accepted_source_directory
             return result
@@ -287,6 +289,7 @@ def handle_import_source(
             workspace_root=workspace_root,
         )
         payload = plan.as_dict()
+        payload["target"] = destination.request_target()
         dependencies.log_event(
             repo_root,
             (
@@ -353,6 +356,7 @@ def handle_import_source(
                 repo_root,
                 scope,
                 sub_scope,
+                stage=destination.stage,
             )
             result = apply_document_package_collection(
                 repo_root,
@@ -364,13 +368,14 @@ def handle_import_source(
                 metadata_root=metadata_root,
                 log_event=dependencies.log_event,
                 perform_source_write_and_rebuild=dependencies.perform_source_write_and_rebuild,
-                collection=destination if sub_scope else None,
+                collection=destination,
                 perform_sub_scope_source_write_and_rebuild=(
                     dependencies.perform_sub_scope_source_write_and_rebuild
                     if sub_scope
                     else None
                 ),
             )
+            result["target"] = destination.request_target()
             result["viewer_url"] = destination_url
             result["source_directory"] = accepted_source_directory
             return result
@@ -381,9 +386,10 @@ def handle_import_source(
             staging_root=staging_root,
             workspace_root=workspace_root,
             metadata_root=metadata_root,
-            collection=destination if sub_scope else None,
+            collection=destination,
         )
         payload = plan.as_dict()
+        payload["target"] = destination.request_target()
         dependencies.log_event(
             repo_root,
             "docs-import-collection-preview",
@@ -494,6 +500,7 @@ def handle_import_source(
         repo_root,
         scope,
         sub_scope,
+        stage=destination.stage,
     )
     source_doc_id = str(preview["proposed_doc_id"])
     create_added_date = current_doc_timestamp()
@@ -570,6 +577,7 @@ def handle_import_source(
             plan.changed_paths,
             write_import_document,
             suppression_reason=plan.suppression_reason,
+            stage=destination.stage or None,
         )
     else:
         rebuild = dependencies.perform_source_write_and_rebuild(
@@ -578,6 +586,7 @@ def handle_import_source(
             plan.changed_paths,
             write_import_document,
             suppression_reason=plan.suppression_reason,
+            stage=destination.stage or None,
             docs_doc_ids=plan.docs_doc_ids,
         )
     event_name, event_details = import_document_event(

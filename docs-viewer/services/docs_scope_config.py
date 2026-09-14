@@ -709,9 +709,7 @@ def require_selected_stage(config: DocsScopeConfig | DocsSubScopeConfig) -> None
 
 def select_scope_stage(config: DocsScopeConfig, stage: str | None = None) -> DocsScopeConfig:
     """Resolve an explicit stage without choosing another stage or retired root."""
-    if not config.stages:
-        if stage is not None and (not config.stage or stage != config.stage):
-            raise ValueError(f"stage is not configured for scope {config.scope_id!r}")
+    if config.stage and stage == config.stage:
         return config
     for candidate in config.stages:
         if candidate.stage == stage:
@@ -722,8 +720,9 @@ def select_scope_stage(config: DocsScopeConfig, stage: str | None = None) -> Doc
 def require_document_authoring(config: DocsScopeConfig | DocsSubScopeConfig) -> None:
     """Enforce the authoring boundary independently of browser capabilities."""
     require_selected_stage(config)
-    if config.stage == "pre-publish":
-        raise ValueError("Pre-publish document authoring is unavailable")
+    if config.stage != "working":
+        label = "Pre-publish" if config.stage == "pre-publish" else "Unselected stage"
+        raise ValueError(f"{label} document authoring is unavailable")
 
 
 def load_docs_scope_stage(repo_root: Path, scope: str, stage: str | None = None) -> DocsScopeConfig:
@@ -1153,10 +1152,8 @@ def normalize_workflow_stages(
     raw: Any, *, parent: DocsScopeConfig, field: str,
 ) -> tuple[DocsScopeConfig, ...]:
     """Derive stage storage while retaining one scope-owned accepted snapshot."""
-    if raw is None:
-        return ()
-    if parent.scope_id != "analysis" or not isinstance(raw, dict) or set(raw) != {"working", "pre-publish"}:
-        raise ValueError(f"{field} requires Analysis working and pre-publish definitions")
+    if not isinstance(raw, dict) or set(raw) != {"working", "pre-publish"}:
+        raise ValueError(f"{field} requires working and pre-publish definitions")
     stages = []
     for stage in ("working", "pre-publish"):
         settings = raw[stage]
@@ -1434,19 +1431,11 @@ class _LazyLoadedDict(dict[str, Any]):
 
 
 DOCS_SCOPE_CONFIGS: dict[str, DocsScopeConfig] = _LazyLoadedDict(load_docs_scope_configs)
-DOCUMENT_SOURCE_ROOTS: dict[str, Path] = _LazyLoadedDict(
-    lambda: {
-        scope: document_source_path(config)
-        for scope, config in DOCS_SCOPE_CONFIGS.items()
-        if not config.stages
-    }
-)
 
 
 __all__ = [
     "CONFIG_REL_PATH",
     "DOCS_SCOPE_CONFIGS",
-    "DOCUMENT_SOURCE_ROOTS",
     "DOCS_VIEWER_MANAGE_ROUTE_BASE_URL",
     "DOTLINEFORM_DOCS_BASE_DIR_ENV",
     "DocsBuildMediaConfig",

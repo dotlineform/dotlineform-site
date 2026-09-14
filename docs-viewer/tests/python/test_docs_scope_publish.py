@@ -26,7 +26,7 @@ if str(SERVICES) not in sys.path:
 import docs_published_reads  # noqa: E402
 import docs_scope_build_manifest  # noqa: E402
 import docs_scope_publish  # noqa: E402
-from docs_scope_config import load_docs_scope_configs  # noqa: E402
+from docs_scope_config import load_docs_scope_configs, select_scope_stage  # noqa: E402
 
 
 ROOT_ID = "d-20260830-100000-aaaaaa"
@@ -93,10 +93,11 @@ def prepare_repo(root: Path) -> None:
             sub_scope_customisation={"id": "pre_publish_works", "settings": {}},
         )
     ]
+    scope["stages"]["pre-publish"]["sub_scopes"] = scope["sub_scopes"]
     write_docs_scope_config(root, [scope])
     write_text(root / "docs-viewer/config/reports/reports.json", '{"reports": []}\n')
     scope_root = root / "docs-viewer/scopes/example"
-    for role in ("source", "generated", "published"):
+    for role in ("pre-publish/source", "pre-publish/generated", "published"):
         for relative in (
             "documents",
             "search",
@@ -108,7 +109,7 @@ def prepare_repo(root: Path) -> None:
             "media/html",
         ):
             (scope_root / role / relative).mkdir(parents=True, exist_ok=True)
-    write_text(scope_root / "source/documents/root.md", "# Root\n")
+    write_text(scope_root / "pre-publish/source/documents/root.md", "# Root\n")
 
     tree = {
         "schema": "docs_index_tree_v1",
@@ -139,7 +140,7 @@ def prepare_repo(root: Path) -> None:
             },
         ],
     }
-    documents = scope_root / "generated/documents"
+    documents = scope_root / "pre-publish/generated/documents"
     write_json(documents / "index-tree.json", tree)
     recent = {
         "schema": "docs_recent_v1",
@@ -185,8 +186,8 @@ def prepare_repo(root: Path) -> None:
             "doc_id": ROOT_ID,
             "title": "Root",
             "content_html": (
-                '<p><img src="/docs/media/example/img/keep.png?size=2">'
-                '<a href="/docs/media/example/files/keep.pdf">file</a></p>'
+                '<p><img src="/docs/media/example/pre-publish/img/keep.png?size=2">'
+                '<a href="/docs/media/example/pre-publish/files/keep.pdf">file</a></p>'
             ),
         },
     )
@@ -195,7 +196,7 @@ def prepare_repo(root: Path) -> None:
         {
             "doc_id": EXTRA_ID,
             "title": "Extra",
-            "content_html": '<img src="/docs/media/example/img/extra.png">',
+            "content_html": '<img src="/docs/media/example/pre-publish/img/extra.png">',
         },
     )
     write_json(
@@ -219,7 +220,7 @@ def prepare_repo(root: Path) -> None:
     )
     write_json(
         sub_scope / f"by-id/{SUB_ID}.json",
-        {"doc_id": SUB_ID, "title": "Sub doc", "content_html": '<img src="/docs/media/example/sub-scopes/items/img/keep.png">'},
+        {"doc_id": SUB_ID, "title": "Sub doc", "content_html": '<img src="/docs/media/example/pre-publish/sub-scopes/items/img/keep.png">'},
     )
     write_json(
         sub_scope / f"by-id/{EXTRA_SUB_ID}.json",
@@ -237,7 +238,7 @@ def prepare_repo(root: Path) -> None:
                     "subject": {"kind": "work", "key": "00123"},
                     "documents": [
                         {
-                            "target": {"scope": "example", "sub_scope": "items", "doc_id": SUB_ID},
+                            "target": {"stage": "pre-publish", "scope": "example", "sub_scope": "items", "doc_id": SUB_ID},
                             "title": "Sub doc",
                             "locations": [],
                         }
@@ -247,7 +248,7 @@ def prepare_repo(root: Path) -> None:
                     "subject": {"kind": "series", "key": "001"},
                     "documents": [
                         {
-                            "target": {"scope": "example", "sub_scope": "items", "doc_id": EXTRA_SUB_ID},
+                            "target": {"stage": "pre-publish", "scope": "example", "sub_scope": "items", "doc_id": EXTRA_SUB_ID},
                             "title": "Extra sub doc",
                             "locations": [],
                         }
@@ -256,15 +257,15 @@ def prepare_repo(root: Path) -> None:
             ],
         },
     )
-    write_json(scope_root / "generated/search/index.json", search_payload())
-    write_json(scope_root / "generated/sub-scopes/items/search/index.json", search_payload())
-    write_text(scope_root / "generated/media/img/keep.png", "kept image")
-    write_text(scope_root / "generated/sub-scopes/items/media/img/keep.png", "child image")
-    write_text(scope_root / "generated/media/img/extra.png", "extra image")
-    write_text(scope_root / "generated/media/files/keep.pdf", "kept file")
+    write_json(scope_root / "pre-publish/generated/search/index.json", search_payload())
+    write_json(scope_root / "pre-publish/generated/sub-scopes/items/search/index.json", search_payload())
+    write_text(scope_root / "pre-publish/generated/media/img/keep.png", "kept image")
+    write_text(scope_root / "pre-publish/generated/sub-scopes/items/media/img/keep.png", "child image")
+    write_text(scope_root / "pre-publish/generated/media/img/extra.png", "extra image")
+    write_text(scope_root / "pre-publish/generated/media/files/keep.pdf", "kept file")
     write_json(scope_root / "published/documents/stale.json", {"stale": True})
     (scope_root / "published/reports/intentionally-empty").mkdir(parents=True)
-    config = load_docs_scope_configs(root)["example"]
+    config = select_scope_stage(load_docs_scope_configs(root)["example"], "pre-publish")
     docs_scope_build_manifest.write_build_manifest(root, config)
 
 
@@ -274,11 +275,12 @@ def test_scope_publish_is_exact_rerunnable_and_does_not_touch_site(tmp_path: Pat
     write_json(site_marker, {"unchanged": True})
     before_site = site_marker.read_bytes()
 
-    preview = docs_scope_publish.preview_scope_publish(tmp_path, {"scope": "example"})
+    preview = docs_scope_publish.preview_scope_publish(tmp_path, {"stage": "pre-publish", "scope": "example"})
     result = docs_scope_publish.apply_scope_publish(
         tmp_path,
         {
             "scope": "example",
+            "stage": "pre-publish",
             "confirm": True,
             "plan_revision": preview["plan_revision"],
             "target_published_revision": preview["target_published_revision"],
@@ -297,7 +299,7 @@ def test_scope_publish_is_exact_rerunnable_and_does_not_touch_site(tmp_path: Pat
             encoding="utf-8"
         )
     )
-    generated_subjects = json.loads((tmp_path / "docs-viewer/scopes/example/generated/sub-scopes/items/documents/subject-associations.json").read_text())
+    generated_subjects = json.loads((tmp_path / "docs-viewer/scopes/example/pre-publish/generated/sub-scopes/items/documents/subject-associations.json").read_text())
     assert subjects == generated_subjects
     assert (published / "media/img/extra.png").exists()
     assert (published / "media/img/keep.png").read_text(encoding="utf-8") == "kept image"
@@ -317,7 +319,7 @@ def test_scope_publish_is_exact_rerunnable_and_does_not_touch_site(tmp_path: Pat
     assert site_marker.read_bytes() == before_site
     assert docs_scope_publish.preview_scope_publish(
         tmp_path,
-        {"scope": "example"},
+        {"stage": "pre-publish", "scope": "example"},
     )["up_to_date"] is True
 
 
@@ -329,18 +331,18 @@ def test_scope_publish_is_exact_rerunnable_and_does_not_touch_site(tmp_path: Pat
 ])
 def test_scope_publish_preserves_index_validation(tmp_path: Path, path: str, payload: dict, message: str) -> None:
     prepare_repo(tmp_path)
-    write_json(tmp_path / "docs-viewer/scopes/example/generated" / path, payload)
-    config = load_docs_scope_configs(tmp_path)["example"]
+    write_json(tmp_path / "docs-viewer/scopes/example/pre-publish/generated" / path, payload)
+    config = select_scope_stage(load_docs_scope_configs(tmp_path)["example"], "pre-publish")
     docs_scope_build_manifest.write_build_manifest(tmp_path, config)
     with pytest.raises(RuntimeError, match=message):
-        docs_scope_publish.preview_scope_publish(tmp_path, {"scope": "example"})
+        docs_scope_publish.preview_scope_publish(tmp_path, {"stage": "pre-publish", "scope": "example"})
 
 
 def test_scope_publish_rejects_build_manifest_for_another_scope(tmp_path: Path) -> None:
     prepare_repo(tmp_path)
     manifest_path = (
         tmp_path
-        / "docs-viewer/scopes/example/generated"
+        / "docs-viewer/scopes/example/pre-publish/generated"
         / docs_scope_build_manifest.BUILD_MANIFEST_FILENAME
     )
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
@@ -348,16 +350,17 @@ def test_scope_publish_rejects_build_manifest_for_another_scope(tmp_path: Path) 
     write_json(manifest_path, manifest)
 
     with pytest.raises(RuntimeError, match="wrong scope identity"):
-        docs_scope_publish.preview_scope_publish(tmp_path, {"scope": "example"})
+        docs_scope_publish.preview_scope_publish(tmp_path, {"stage": "pre-publish", "scope": "example"})
 
 
 def test_published_reads_require_current_completion_manifest(tmp_path: Path) -> None:
     prepare_repo(tmp_path)
-    preview = docs_scope_publish.preview_scope_publish(tmp_path, {"scope": "example"})
+    preview = docs_scope_publish.preview_scope_publish(tmp_path, {"stage": "pre-publish", "scope": "example"})
     docs_scope_publish.apply_scope_publish(
         tmp_path,
         {
             "scope": "example",
+            "stage": "pre-publish",
             "confirm": True,
             "plan_revision": preview["plan_revision"],
             "target_published_revision": preview["target_published_revision"],
@@ -365,6 +368,20 @@ def test_published_reads_require_current_completion_manifest(tmp_path: Path) -> 
     )
     payload = docs_published_reads.read_published_doc_payload(tmp_path, "example", ROOT_ID)
     assert payload["doc_id"] == ROOT_ID
+    projected = docs_published_reads.project_published_view(tmp_path, "example", {
+        "viewer_url": f"/docs/?scope=example&doc={ROOT_ID}",
+        "content_url": f"/docs/doc?scope=example&stage=pre-publish&doc_id={ROOT_ID}",
+        "html": f'<a href="/docs/?scope=example&amp;doc={ROOT_ID}#heading">Open</a>',
+        "child": "/docs/generated/external/example/pre-publish/items/by-id/document.json",
+        "working": f"/docs/?scope=example&stage=working&doc={ROOT_ID}",
+        "other": f"/docs/?scope=studio&doc={ROOT_ID}",
+    })
+    assert projected["viewer_url"] == f"/docs/?scope=example&stage=published&doc={ROOT_ID}"
+    assert projected["content_url"] == f"/docs/published/doc?scope=example&doc_id={ROOT_ID}"
+    assert "stage=published" in projected["html"] and "#heading" in projected["html"]
+    assert projected["child"] == "/docs/published/external/example/items/by-id/document.json"
+    assert "stage=working" in projected["working"]
+    assert projected["other"] == f"/docs/?scope=studio&doc={ROOT_ID}"
     media_path, media_type = docs_published_reads.published_media_path(
         tmp_path,
         "/docs/published/media/example/img/keep.png",
@@ -384,12 +401,13 @@ def test_published_reads_require_current_completion_manifest(tmp_path: Path) -> 
 
 def test_scope_publish_apply_revalidates_confirmed_preview(tmp_path: Path) -> None:
     prepare_repo(tmp_path)
-    preview = docs_scope_publish.preview_scope_publish(tmp_path, {"scope": "example"})
+    preview = docs_scope_publish.preview_scope_publish(tmp_path, {"stage": "pre-publish", "scope": "example"})
     with pytest.raises(ValueError, match="preview is stale"):
         docs_scope_publish.apply_scope_publish(
             tmp_path,
             {
                 "scope": "example",
+                "stage": "pre-publish",
                 "confirm": True,
                 "plan_revision": "sha256:" + "0" * 64,
                 "target_published_revision": preview["target_published_revision"],

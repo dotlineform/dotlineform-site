@@ -470,12 +470,9 @@ def _plan_revision(payload: Mapping[str, Any]) -> str:
 
 def _publish_config(repo_root: Path, body: dict[str, Any]) -> DocsScopeConfig:
     config = _scope_config(repo_root, body.get("scope"))
-    if config.stages:
-        config = select_scope_stage(config, body.get("stage"))
-        if config.stage != "pre-publish":
-            raise ValueError("Publish requires the Pre-publish stage")
-    elif body.get("stage"):
-        raise ValueError("This scope has no publishing stages")
+    config = select_scope_stage(config, body.get("stage"))
+    if config.stage != "pre-publish":
+        raise ValueError("Publish requires the Pre-publish stage")
     return config
 
 

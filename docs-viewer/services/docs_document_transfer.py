@@ -33,6 +33,7 @@ from docs_media_inventory import (
 )
 from docs_scope_config import (
     DocsScopeConfig,
+    require_document_authoring,
 )
 from docs_management_document_target import (
     ManagedDocumentCollection,
@@ -530,6 +531,8 @@ def _require_collection_root(
         and mode != COPY_MODE
     ):
         raise ValueError(f"public {role} scope {collection.scope!r} is not writable")
+    if writable:
+        require_document_authoring(collection.parent_config)
     root = collection.source_root
     label = (
         f"{collection.scope}/{collection.sub_scope}"
@@ -593,6 +596,7 @@ def document_transfer_scope_capabilities(
         collection = resolve_managed_document_collection(
             repo_root,
             scope=config.scope_id,
+            stage=config.stage or None,
         )
     except (OSError, ValueError):
         return {
@@ -621,6 +625,8 @@ def document_transfer_collection_capability_records(
     ]
     for sub_scope, label in configured:
         target = {"scope": config.scope_id}
+        if config.stage:
+            target["stage"] = config.stage
         if sub_scope:
             target["sub_scope"] = sub_scope
         try:
@@ -628,6 +634,7 @@ def document_transfer_collection_capability_records(
                 repo_root,
                 scope=config.scope_id,
                 sub_scope=sub_scope or None,
+                stage=config.stage or None,
             )
             capabilities = document_transfer_collection_capabilities(collection)
         except (OSError, ValueError):
@@ -1787,9 +1794,11 @@ def plan_document_transfer(
     *,
     source_scope: Any,
     source_sub_scope: Any | None = None,
+    source_stage: str | None = None,
     requested_doc_ids: Any,
     target_scope: Any,
     target_sub_scope: Any | None = None,
+    target_stage: str | None = None,
     transfer_mode: Any,
     include_descendants: Any = False,
     copy_lineage_actions: Any = None,
@@ -1809,11 +1818,13 @@ def plan_document_transfer(
         repo_root,
         scope=normalized_source_scope,
         sub_scope=source_sub_scope,
+        stage=source_stage,
     )
     target_collection = resolve_managed_document_collection(
         repo_root,
         scope=normalized_target_scope,
         sub_scope=target_sub_scope,
+        stage=target_stage,
     )
     if source_collection.request_target() == target_collection.request_target():
         raise ValueError("target collection must differ from source collection")
@@ -2027,6 +2038,7 @@ def restore_document_transfer_apply_plan(
     source_collection = resolve_managed_document_collection(
         repo_root,
         scope=source_target.get("scope"),
+        stage=source_target.get("stage"),
         sub_scope=(
             source_target.get("sub_scope")
             if "sub_scope" in source_target
@@ -2036,6 +2048,7 @@ def restore_document_transfer_apply_plan(
     target_collection = resolve_managed_document_collection(
         repo_root,
         scope=target_target.get("scope"),
+        stage=target_target.get("stage"),
         sub_scope=(
             target_target.get("sub_scope")
             if "sub_scope" in target_target
@@ -2130,9 +2143,11 @@ def restore_document_transfer_apply_plan(
         restored = plan_document_transfer(
             repo_root,
             source_scope=source_collection.scope,
+            source_stage=source_collection.stage or None,
             source_sub_scope=source_collection.sub_scope or None,
             requested_doc_ids=requested_doc_ids,
             target_scope=target_collection.scope,
+            target_stage=target_collection.stage or None,
             target_sub_scope=target_collection.sub_scope or None,
             transfer_mode=mode,
             include_descendants=include_descendants,

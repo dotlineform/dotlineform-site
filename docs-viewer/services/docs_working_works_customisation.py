@@ -19,10 +19,24 @@ from docs_document_subjects import (
     WORK_ID_FIELD,
     subject_key_is_canonical,
     normalize_authoring_subject,
+    project_reader_subject,
+    SUBJECT_KIND_BY_FIELD,
 )
 
 
 CUSTOMISATION_ID = "working_works"
+
+
+def publication_front_matter(front_matter: Mapping[str, Any]) -> dict[str, Any]:
+    """Prepare Works reader Subject fields without altering authored Working metadata."""
+    prepared = dict(front_matter)
+    subject = project_reader_subject(front_matter)
+    for field in AUTHORING_SUBJECT_FIELDS:
+        prepared.pop(field, None)
+    if subject is not None:
+        field = next(field for field, kind in SUBJECT_KIND_BY_FIELD.items() if kind == subject["kind"])
+        prepared[field] = subject["key"]
+    return prepared
 
 
 def normalize_settings(raw: Any, field: str) -> Mapping[str, Any]:
@@ -123,7 +137,7 @@ def normalize_metadata_update(
         raise ValueError("working_works settings must be empty")
     values = _strict_scalar_subject_fields(raw, field="customisation")
     if values[FOLDER_PATH_FIELD] and not folder_supported:
-        raise ValueError("Folder subjects are available only in dotlineform")
+        raise ValueError("This collection does not support Folder subjects")
     if values[FOLDER_PATH_FIELD]:
         base_path = configured_base_dir(repo_root)
         try:

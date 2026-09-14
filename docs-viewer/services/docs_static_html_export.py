@@ -22,6 +22,7 @@ from docs_static_html_export_media import SnapshotMediaPlan, plan_snapshot_media
 from docs_scope_config import (
     DocsScopeConfig,
     load_docs_scope_configs,
+    select_scope_stage,
     resolve_location_path,
 )
 from studio.shared.python.external_workspace_paths import (
@@ -73,6 +74,7 @@ class StaticHtmlSnapshotPlan:
     target_state: str
     target_revision: str
     existing_snapshot: dict[str, Any] | None
+    stage: str = ""
 
 
 class StaticHtmlSnapshotApplyConflict(ValueError):
@@ -99,7 +101,7 @@ class StaticHtmlSnapshotApplyConflict(ValueError):
             )
 
 
-def normalize_snapshot_scope(repo_root: Path, value: Any) -> tuple[str, DocsScopeConfig]:
+def normalize_snapshot_scope(repo_root: Path, value: Any, stage: str | None = None) -> tuple[str, DocsScopeConfig]:
     """Resolve one configured snapshot scope without imposing source ownership policy."""
 
     scope = str(value or "").strip().lower()
@@ -108,7 +110,7 @@ def normalize_snapshot_scope(repo_root: Path, value: Any) -> tuple[str, DocsScop
     config = load_docs_scope_configs(repo_root, scope_ids=(scope,)).get(scope)
     if config is None:
         raise ValueError(f"unsupported docs scope: {scope}")
-    return scope, config
+    return scope, select_scope_stage(config, stage)
 
 
 def resolve_docs_export_workspace() -> ExternalWorkspaceRoot:
@@ -472,6 +474,7 @@ def inspect_snapshot_destination(destination_root: Path) -> tuple[str, str, dict
 def _snapshot_plan_revision(
     *,
     scope: str,
+    stage: str,
     doc_ids: tuple[str, ...],
     export_date: str,
     folder_name: str,
@@ -483,6 +486,7 @@ def _snapshot_plan_revision(
     return _revision(
         {
             "scope": scope,
+            "stage": stage,
             "doc_ids": doc_ids,
             "export_date": export_date,
             "folder_name": folder_name,
@@ -512,7 +516,7 @@ def plan_static_html_snapshot(
             raise ValueError(f"{unsupported_field} is not supported for static HTML snapshots")
     if str(body.get("sub_scope") or "").strip():
         raise ValueError("sub_scope is not supported for static HTML snapshots")
-    scope, config = normalize_snapshot_scope(repo_root, body.get("scope"))
+    scope, config = normalize_snapshot_scope(repo_root, body.get("scope"), body.get("stage"))
     paths = resolve_snapshot_input_paths(repo_root, scope, config)
     index_tree = load_index_tree(paths.index_tree_path)
     available_doc_ids = collect_doc_ids_from_tree(index_tree.get("docs"))
@@ -540,6 +544,7 @@ def plan_static_html_snapshot(
     target_state, target_revision, existing_snapshot = inspect_snapshot_destination(destination_root)
     plan_revision = _snapshot_plan_revision(
         scope=scope,
+        stage=config.stage,
         doc_ids=doc_ids,
         export_date=selected_date.isoformat(),
         folder_name=folder_name,
@@ -550,6 +555,7 @@ def plan_static_html_snapshot(
     )
     return StaticHtmlSnapshotPlan(
         scope=scope,
+        stage=config.stage,
         doc_ids=doc_ids,
         selection_kind=selection_kind,
         default_doc_id=default_doc_id,
@@ -580,6 +586,7 @@ def preview_static_html_export(
         "operation": "preview",
         "dry_run": True,
         "scope": plan.scope,
+        **({"stage": plan.stage} if plan.stage else {}),
         "doc_ids": list(plan.doc_ids),
         "document_count": len(plan.doc_ids),
         "media_count": len(plan.media_plan.items),

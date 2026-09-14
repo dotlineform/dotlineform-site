@@ -9,7 +9,7 @@ from docs_scope_config import load_docs_scope_stage, document_source_path, resol
 from docs_scope_publish import _files_from_root, _lifecycle_root, files_revision
 from docs_source_model import ScopeDoc, format_source, load_document_collection_docs_for_config
 from docs_write_rebuild import rebuild_scope_outputs
-from docs_document_subjects import AUTHORING_SUBJECT_FIELDS, SUBJECT_KIND_BY_FIELD, project_reader_subject
+from docs_subscope_customisations import prepare_sub_scope_publication
 from docs_publication_ignore import read_publication_ignore_ids
 
 
@@ -26,22 +26,22 @@ def excluded_documents(docs: list[ScopeDoc], *, ignored_ids: frozenset[str] = fr
         excluded.update(descendants)
 
 
-def promoted_source(doc: ScopeDoc) -> bytes:
-    front_matter = dict(doc.front_matter)
-    subject = project_reader_subject(front_matter)
-    for field in ("draft", *AUTHORING_SUBJECT_FIELDS):
-        front_matter.pop(field, None)
-    if subject is not None:
-        field = next(field for field, kind in SUBJECT_KIND_BY_FIELD.items() if kind == subject["kind"])
-        front_matter[field] = subject["key"]
+def promoted_source(doc: ScopeDoc, collection: Any) -> bytes:
+    """Retain ordinary source bytes; only the collection owner can project its fields."""
+    front_matter = prepare_sub_scope_publication(
+        getattr(collection, "sub_scope_customisation", None), doc.front_matter,
+    )
+    if front_matter == doc.front_matter:
+        return doc.path.read_bytes()
     return format_source(front_matter, doc.body).encode("utf-8")
 
 
 def _plan(repo_root: Path, body: dict[str, Any]) -> tuple[dict[str, Any], dict[Path, bytes]]:
-    if body.get("scope") != "analysis" or body.get("stage") != "working":
-        raise ValueError("Pre-publish requires Analysis Working")
-    working = load_docs_scope_stage(repo_root, "analysis", "working")
-    target = load_docs_scope_stage(repo_root, "analysis", "pre-publish")
+    if body.get("stage") != "working":
+        raise ValueError("Pre-publish requires Working")
+    scope = body.get("scope")
+    working = load_docs_scope_stage(repo_root, scope, "working")
+    target = load_docs_scope_stage(repo_root, scope, "pre-publish")
     if {child.sub_scope for child in working.sub_scopes} != {child.sub_scope for child in target.sub_scopes}:
         raise ValueError("Working and Pre-publish must configure the same collections")
     source_root = _lifecycle_root(repo_root, working, "source")
@@ -50,7 +50,7 @@ def _plan(repo_root: Path, body: dict[str, Any]) -> tuple[dict[str, Any], dict[P
     source_files = _files_from_root(source_root)
     source_revision = files_revision(source_files)
     ordinary = load_document_collection_docs_for_config(repo_root, working, working)
-    ignored_ids = read_publication_ignore_ids(repo_root)
+    ignored_ids = read_publication_ignore_ids(repo_root, scope)
     ordinary_excluded = excluded_documents(ordinary, ignored_ids=ignored_ids)
     excluded = set(ordinary_excluded)
     hosts: dict[str, list[str]] = {}
@@ -75,13 +75,11 @@ def _plan(repo_root: Path, body: dict[str, Any]) -> tuple[dict[str, Any], dict[P
         counts[child or "documents"] = len(accepted)
         eligible.extend(doc.doc_id for doc in accepted)
         for doc in accepted:
-            desired[doc.path.relative_to(source_root)] = promoted_source(doc)
+            desired[doc.path.relative_to(source_root)] = promoted_source(doc, collection)
         # Media is a collection-owned input. The ordinary Build resolves its outputs.
         prefix = Path("sub-scopes") / child / "media" if child else Path("media")
         if accepted:
             desired.update({path: data for path, data in source_files.items() if path.is_relative_to(prefix)})
-    if not any(doc.doc_id == target.default_doc_id and doc.doc_id not in ordinary_excluded for doc in ordinary):
-        raise ValueError("The Pre-publish default document is excluded; choose a non-draft default outside the ignore list")
     if files_revision(_files_from_root(source_root)) != source_revision:
         raise ValueError("Working changed during Pre-publish planning; try again")
     current_revision = files_revision(_files_from_root(target_root))
@@ -94,7 +92,7 @@ def _plan(repo_root: Path, body: dict[str, Any]) -> tuple[dict[str, Any], dict[P
         Path("target"): target_revision.encode(),
     })
     return {
-        "ok": True, "scope": "analysis", "stage": "working",
+        "ok": True, "scope": scope, "stage": "working",
         "plan_revision": plan_revision, "source_revision": source_revision,
         "target_source_revision": target_revision,
         "document_count": len(eligible), "excluded_document_count": len(excluded),
@@ -115,7 +113,7 @@ def apply_pre_publish(repo_root: Path, body: dict[str, Any]) -> dict[str, Any]:
     preview, desired = _plan(repo_root, body)
     if body.get("plan_revision") != preview["plan_revision"]:
         raise ValueError("Pre-publish preview is stale; preview again")
-    config = load_docs_scope_stage(repo_root, "analysis", "pre-publish")
+    config = load_docs_scope_stage(repo_root, preview["scope"], "pre-publish")
     source_root = _lifecycle_root(repo_root, config, "source")
     generated_root = _lifecycle_root(repo_root, config, "generated")
     # These are replaceable derivatives. Invalidate completion before any write;
@@ -136,7 +134,7 @@ def apply_pre_publish(repo_root: Path, body: dict[str, Any]) -> dict[str, Any]:
             (documents.parent / "media" / media_type).mkdir(parents=True, exist_ok=True)
     if files_revision(_files_from_root(source_root)) != preview["target_source_revision"]:
         raise RuntimeError("Pre-publish source snapshot did not verify")
-    build = rebuild_scope_outputs(repo_root, "analysis", stage="pre-publish", include_search=True)
+    build = rebuild_scope_outputs(repo_root, preview["scope"], stage="pre-publish", include_search=True)
     return {
         **preview, "applied": True, "build": build,
         "summary_text": f"Pre-publish rebuilt: {preview['document_count']} documents and Search. Review Pre-publish before Publish.",

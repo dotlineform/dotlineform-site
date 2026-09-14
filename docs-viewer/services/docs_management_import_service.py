@@ -30,6 +30,8 @@ def import_source_dependencies() -> import_source_service.ImportSourceDependenci
 
 def ordinary_import_target_request(body: Dict[str, Any]) -> Dict[str, Any]:
     target = {"scope": body.get("scope")}
+    if "stage" in body:
+        target["stage"] = body.get("stage")
     if "sub_scope" in body:
         target["sub_scope"] = body.get("sub_scope")
     return target
@@ -39,7 +41,10 @@ def resolve_ordinary_import_target(
     repo_root: Path,
     target: Dict[str, Any],
 ) -> ManagedDocumentCollection:
-    return resolve_managed_document_collection_target(repo_root, target)
+    from docs_scope_config import require_document_authoring
+    collection = resolve_managed_document_collection_target(repo_root, target)
+    require_document_authoring(collection.parent_config)
+    return collection
 
 
 def handle_import_source(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dict[str, Any]:

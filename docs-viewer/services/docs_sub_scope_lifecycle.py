@@ -6,11 +6,8 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any, Callable
 
-import docs_public_delete_cleanup as public_delete_cleanup
-import docs_document_publication_lineage as publication_lineage
 
 from docs_lifecycle_paths import (
-    delete_manifest_paths,
     load_json_object,
     path_record,
     render_json,
@@ -33,7 +30,6 @@ from docs_scope_config import (
     require_document_authoring,
     resolve_scope_path,
     select_scope_stage,
-    source_container_path,
 )
 from docs_scope_manifest import (
     LIFECYCLE_APPLY_SCHEMA_VERSION,
@@ -117,27 +113,6 @@ def append_sub_scope_config(
     write_text_atomic(config_path, render_json(payload))
 
 
-def remove_sub_scope_config(repo_root: Path, parent_scope: str, sub_scope: str) -> None:
-    config_path = repo_root / CONFIG_REL_PATH
-    payload = load_json_object(config_path, "docs scope config")
-    if payload.get("schema_version") != SCOPE_CONFIG_SCHEMA_VERSION:
-        raise ValueError(f"docs scope config schema_version must be {SCOPE_CONFIG_SCHEMA_VERSION}")
-    parent_record = find_raw_scope_config(payload, parent_scope)
-    sub_scopes = parent_record.get("sub_scopes")
-    if not isinstance(sub_scopes, list):
-        raise ValueError(f"sub_scope {sub_scope!r} is missing from scope {parent_scope!r}")
-    retained = [
-        item
-        for item in sub_scopes
-        if not (isinstance(item, dict) and str(item.get("sub_scope") or "").strip() == sub_scope)
-    ]
-    if len(retained) == len(sub_scopes):
-        raise ValueError(f"sub_scope {sub_scope!r} is missing from scope {parent_scope!r}")
-    if retained:
-        parent_record["sub_scopes"] = retained
-    else:
-        parent_record.pop("sub_scopes", None)
-    write_text_atomic(config_path, render_json(payload))
 
 
 def sub_scope_storage_contract(
@@ -450,29 +425,6 @@ def apply_create_sub_scope(
     return result
 
 
-def sub_scope_delete_path_records(repo_root: Path, sub_scope_config: Any, parent_config: DocsScopeConfig) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
-    candidate_paths = [
-        ("sub_scope_source_root", resolve_scope_path(repo_root, source_container_path(sub_scope_config))),
-        ("sub_scope_generated_root", resolve_scope_path(repo_root, generated_documents_path(sub_scope_config).parent)),
-    ]
-    public_output = public_documents_path(sub_scope_config)
-    if public_output is not None:
-        candidate_paths.append(("sub_scope_public_docs_root", resolve_scope_path(repo_root, public_output)))
-
-    delete_files: list[dict[str, Any]] = []
-    missing_files: list[dict[str, Any]] = []
-    seen_paths: set[str] = set()
-    for kind, path in candidate_paths:
-        key = path.resolve().as_posix()
-        if key in seen_paths:
-            continue
-        seen_paths.add(key)
-        record = path_record(repo_root, kind, path, action="delete")
-        if path.exists():
-            delete_files.append(record)
-        else:
-            missing_files.append(record)
-    return delete_files, missing_files
 
 
 def blocked_delete_preview(parent_scope: str, sub_scope: str, blockers: list[str], **details: Any) -> dict[str, Any]:
@@ -495,125 +447,17 @@ def blocked_delete_preview(parent_scope: str, sub_scope: str, blockers: list[str
 
 
 def plan_delete_sub_scope_preview(repo_root: Path, body: dict[str, Any]) -> dict[str, Any]:
+    """Keep whole-collection retirement unavailable until its cross-stage contract is defined."""
     parent_scope = normalize_scope_id(body.get("parent_scope") or body.get("scope"))
     sub_scope = normalize_sub_scope_id(body.get("sub_scope"), field="sub_scope")
-    configs = load_docs_scope_configs(repo_root)
-    parent_config = configs.get(parent_scope)
-    if parent_config is None:
+    config = load_docs_scope_configs(repo_root).get(parent_scope)
+    if config is None:
         return blocked_delete_preview(parent_scope, sub_scope, [f"parent scope {parent_scope!r} does not exist"])
-    matching = [item for item in parent_config.sub_scopes if item.sub_scope == sub_scope]
-    if not matching:
-        return blocked_delete_preview(parent_scope, sub_scope, [f"sub_scope {sub_scope!r} is not configured in scope {parent_scope!r}"])
-
-    sub_scope_config = matching[0]
-    collection = publication_lineage.DocumentLineageCollection(
-        scope=parent_scope,
-        sub_scope=sub_scope,
+    select_scope_stage(config, body.get("stage"))
+    return blocked_delete_preview(
+        parent_scope, sub_scope,
+        ["Whole-sub-scope deletion is unavailable in the shared lifecycle."],
     )
-    lineage_workflows = publication_lineage.workflows_for_collection(
-        repo_root,
-        collection,
-    )
-    if lineage_workflows:
-        lineage_tables = publication_lineage.load_tables(repo_root)
-        non_empty_contracts = [
-            workflow.contract_id
-            for workflow in lineage_workflows
-            if lineage_tables[workflow.contract_id] is not None
-            and lineage_tables[workflow.contract_id].records
-        ]
-        if non_empty_contracts:
-            return blocked_delete_preview(
-                parent_scope,
-                sub_scope,
-                [
-                    "sub-scope participates in non-empty document publication "
-                    "lineage: " + ", ".join(non_empty_contracts)
-                ],
-                title=sub_scope_config.title,
-            )
-    lifecycle = sub_scope_config.lifecycle
-    if lifecycle is None:
-        return blocked_delete_preview(
-            parent_scope, sub_scope,
-            ["sub-scope has no lifecycle-created report-host association"],
-            title=sub_scope_config.title,
-        )
-    association = {
-        "tool_id": lifecycle.tool_id,
-        "report_host_doc_id": lifecycle.report_host_doc_id,
-        "report_host_source_revision": lifecycle.report_host_source_revision,
-    }
-    host_target = {"scope": parent_scope, "doc_id": lifecycle.report_host_doc_id}
-    host_path = resolve_scope_path(repo_root, document_source_path(parent_config)) / f"{lifecycle.report_host_doc_id}.md"
-    details = {
-        "title": sub_scope_config.title,
-        "association": association,
-        "report_host_target": host_target,
-        "recorded_report_host_source_revision": lifecycle.report_host_source_revision,
-    }
-    if not host_path.is_file():
-        return blocked_delete_preview(parent_scope, sub_scope, ["lifecycle-associated report host source is missing"], **details)
-
-    revision = source_model.source_revision(host_path.read_bytes())
-    parent_documents = parent_source_records(repo_root, parent_config)
-    host_document = next(
-        (
-            document
-            for document in parent_documents
-            if document.path.resolve() == host_path.resolve()
-        ),
-        None,
-    )
-    blockers = []
-    if (
-        host_document is None
-        or host_document.doc_id != lifecycle.report_host_doc_id
-        or host_document.report is None
-        or host_document.report.id != REPORT_ID
-        or host_document.report.sub_scope != sub_scope
-    ):
-        blockers.append("lifecycle-associated report host is detached")
-    claimants = report_claimants(parent_documents, sub_scope)
-    if len(claimants) != 1 or claimants[0].path.resolve() != host_path.resolve():
-        blockers.append("sub-scope report-host association is ambiguous")
-    if blockers:
-        return blocked_delete_preview(
-            parent_scope, sub_scope, blockers,
-            current_report_host_source_revision=revision, **details,
-        )
-
-    delete_files, missing_files = sub_scope_delete_path_records(repo_root, sub_scope_config, parent_config)
-    delete_files.append(path_record(repo_root, "report_host_source", host_path, action="delete"))
-    public_cleanup_plan = public_delete_cleanup.plan_public_document_delete_cleanup(
-        repo_root,
-        scope=parent_scope,
-        doc_ids=[lifecycle.report_host_doc_id],
-    )
-    return {
-        "ok": True,
-        "schema_version": LIFECYCLE_PREVIEW_SCHEMA_VERSION,
-        "action": "delete_sub_scope",
-        "operation": "preview",
-        "scope_id": parent_scope,
-        "parent_scope": parent_scope,
-        "sub_scope": sub_scope,
-        "title": sub_scope_config.title,
-        "allowed": True,
-        "blockers": [],
-        "collection_target": {"scope": parent_scope, "sub_scope": sub_scope},
-        "report_host_target": host_target,
-        "report_host_source_revision": revision,
-        "association": association,
-        "delete_files": delete_files,
-        "missing_files": missing_files,
-        "changed_files": [
-            path_record(repo_root, "scope_config", repo_root / CONFIG_REL_PATH, action="change"),
-        ],
-        "rebuild_plan": ["parent_docs", "parent_search", "browser_config"],
-        "public_cleanup": public_cleanup_plan.response(repo_root),
-        "summary_text": f"Previewed deletion for Docs Viewer sub-scope {parent_scope}/{sub_scope} and report host {lifecycle.report_host_doc_id}.",
-    }
 
 
 def apply_delete_sub_scope(
@@ -623,64 +467,7 @@ def apply_delete_sub_scope(
     dry_run: bool,
     rebuild_scope_outputs: Callable[..., dict[str, Any]],
 ) -> dict[str, Any]:
+    """Reject retirement without mutating Working, prepared or accepted collections."""
     require_confirmed(body)
     preview = plan_delete_sub_scope_preview(repo_root, body)
-    if not preview.get("allowed"):
-        blockers = preview.get("blockers") if isinstance(preview.get("blockers"), list) else []
-        raise ValueError("; ".join(str(blocker) for blocker in blockers) or "sub-scope delete is not allowed")
-
-    result = {
-        **preview,
-        "schema_version": LIFECYCLE_APPLY_SCHEMA_VERSION,
-        "operation": "apply",
-        "dry_run": dry_run,
-        "committed": False,
-        "retry_delete": True,
-        "deleted_files": preview["delete_files"],
-        "rebuild": {},
-        "urls": {"management": f"/docs/?scope={preview['parent_scope']}", "public": ""},
-    }
-    if dry_run:
-        return result
-
-    scope = str(preview["parent_scope"])
-    sub_scope = str(preview["sub_scope"])
-    host_id = str(preview["report_host_target"]["doc_id"])
-    public_cleanup_plan = public_delete_cleanup.plan_public_document_delete_cleanup(
-        repo_root,
-        scope=scope,
-        doc_ids=[host_id],
-    )
-    try:
-        remove_sub_scope_config(repo_root, scope, sub_scope)
-    except Exception as error:
-        raise apply_error(result, error, committed=False, stage="config_commit") from error
-
-    result.update({"committed": True, "retry_delete": False})
-    try:
-        delete_manifest_paths(repo_root, preview["delete_files"])
-        result["rebuild"]["parent"] = rebuild_scope_outputs(
-            repo_root,
-            scope,
-            include_search=False,
-            docs_doc_ids=[host_id],
-        )
-        try:
-            result["public_cleanup"] = (
-                public_delete_cleanup.apply_public_document_delete_cleanup(
-                    repo_root,
-                    public_cleanup_plan,
-                )
-            )
-        except public_delete_cleanup.PublicDeleteCleanupApplyError as error:
-            result["public_cleanup"] = error.result
-            raise
-    except Exception as error:
-        stage = (
-            "public_cleanup"
-            if isinstance(error, public_delete_cleanup.PublicDeleteCleanupApplyError)
-            else "cleanup_rebuild"
-        )
-        raise apply_error(result, error, committed=True, stage=stage) from error
-    result["summary_text"] = f"Deleted Docs Viewer sub-scope {scope}/{sub_scope} and report host {host_id}."
-    return result
+    raise ValueError("; ".join(preview["blockers"]))

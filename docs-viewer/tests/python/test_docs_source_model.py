@@ -48,7 +48,7 @@ def make_doc(
     body = f"# {front_matter['title']}\n"
     return source_model.ScopeDoc(
         scope="studio",
-        path=Path(f"docs-viewer/scopes/studio/source/documents/{stem or doc_id}.md"),
+        path=Path(f"docs-viewer/scopes/studio/working/source/documents/{stem or doc_id}.md"),
         source_text=source_model.format_source(front_matter, body),
         front_matter=front_matter,
         body=body,
@@ -59,8 +59,8 @@ def make_doc(
     )
 
 
-def test_draft_support_is_only_analysis_working() -> None:
-    for scope, stage, supported in (("analysis", "working", True), ("analysis", "pre-publish", False), ("studio", "", False)):
+def test_draft_authoring_is_shared_by_working_scopes() -> None:
+    for scope, stage, supported in (("analysis", "working", True), ("studio", "working", True), ("notes", "working", True), ("processing", "working", True), ("app", "working", True), ("analysis", "pre-publish", False), ("studio", "", False)):
         config = SimpleNamespace(scope_id=scope, stage=stage)
         assert source_model.collection_supports_draft(config) is supported
 
@@ -73,10 +73,9 @@ def test_document_status_validation_rejects_retired_and_nonboolean_fields(fields
 
 
 @pytest.mark.parametrize("field", ["draft"])
-def test_publication_fields_rejected_outside_working(field) -> None:
+def test_prepared_sources_retain_existing_publication_fields(field) -> None:
     config = SimpleNamespace(scope_id="analysis", stage="pre-publish")
-    with pytest.raises(ValueError, match="Analysis Working"):
-        source_model.validate_document_status_front_matter({field: False}, collection_config=config, source_name="invalid.md")
+    source_model.validate_document_status_front_matter({field: False}, collection_config=config, source_name="prepared.md")
 
 
 def test_front_matter_parses_and_formats_supported_scalar_values() -> None:
@@ -141,13 +140,13 @@ def test_scope_loader_preserves_exact_source_bytes_and_newlines() -> None:
         root = Path(temp)
         path = (
             root
-            / "docs-viewer/scopes/studio/source/documents/exact-source.md"
+            / "docs-viewer/scopes/studio/working/source/documents/exact-source.md"
         )
         path.parent.mkdir(parents=True)
         path.write_bytes(raw_source)
         configure_repository_scope(root)
 
-        docs = source_model.load_scope_docs(root, "studio")
+        docs = source_model.load_scope_docs(root, "studio", stage="working")
 
     assert len(docs) == 1
     assert docs[0].source_text.encode("utf-8") == raw_source
@@ -163,7 +162,7 @@ def test_scope_loader_does_not_fallback_to_repository_scope_copy(
 ) -> None:
     write_doc(
         tmp_path,
-        "docs-viewer/scopes/studio/source/documents",
+        "docs-viewer/scopes/studio/working/source/documents",
         "retired-copy.md",
         {"doc_id": FIXTURE_DOC_ID, "title": "Retired copy"},
     )
@@ -182,144 +181,39 @@ def test_scope_loader_does_not_fallback_to_repository_scope_copy(
     write_docs_scope_config(tmp_path, [config])
 
     with pytest.raises(ValueError, match="missing source root for scope studio") as error:
-        source_model.load_scope_docs(tmp_path, "studio")
+        source_model.load_scope_docs(tmp_path, "studio", stage="working")
 
     assert str(projects_root / "docs-viewer/scopes/studio") in str(error.value)
     assert "retired-copy.md" not in str(error.value)
 
 
-def test_document_collection_loader_selects_exact_configured_sub_scope() -> None:
-    child_config = SimpleNamespace(
-        sub_scope="tags",
-        sub_scope_customisation=None,
-        source=SimpleNamespace(
-            location=SimpleNamespace(path=Path("analysis-tags")),
-            documents_path=Path("documents"),
-        ),
-    )
-    parent_config = SimpleNamespace(
-        scope_id="analysis",
-        allow_unresolved_parent_ids=False,
-        source=SimpleNamespace(
-            location=SimpleNamespace(path=Path("analysis-parent")),
-            documents_path=Path("documents"),
-        ),
-        sub_scopes=(child_config,),
-    )
-    original_configs = dict(source_model.DOCS_SCOPE_CONFIGS)
+def test_document_collection_loader_selects_exact_configured_sub_scope(tmp_path: Path) -> None:
+    from repo_factory import docs_sub_scope_record
 
-    with tempfile.TemporaryDirectory() as temp:
-        root = Path(temp)
-        write_doc(
-            root,
-            "analysis-parent/documents",
-            "shared.md",
-            {"doc_id": FIXTURE_DOC_ID, "title": "Parent version"},
-        )
-        write_doc(
-            root,
-            "analysis-tags/documents",
-            "shared.md",
-            {
-                "doc_id": FIXTURE_DOC_ID,
-                "title": "Tag version",
-                "ui_status": "review",
-            },
-        )
-        source_model.DOCS_SCOPE_CONFIGS.clear()
-        source_model.DOCS_SCOPE_CONFIGS["analysis"] = parent_config
-        try:
-            docs = source_model.load_document_collection_docs(
-                root,
-                "analysis",
-                "tags",
-            )
-            try:
-                source_model.load_document_collection_docs(
-                    root,
-                    "analysis",
-                    "missing",
-                )
-            except ValueError as exc:
-                missing_error = str(exc)
-            else:
-                raise AssertionError("unknown sub-scope should not load parent docs")
-        finally:
-            source_model.DOCS_SCOPE_CONFIGS.clear()
-            source_model.DOCS_SCOPE_CONFIGS.update(original_configs)
-
-    assert [(doc.doc_id, doc.title, doc.ui_status) for doc in docs] == [
-        (FIXTURE_DOC_ID, "Tag version", "review")
-    ]
-    assert "unknown sub_scope 'missing' for scope 'analysis'" in missing_error
+    write_docs_scope_config(tmp_path, [docs_scope_record(
+        "analysis", sub_scopes=[docs_sub_scope_record("analysis", "tags")],
+    )])
+    for collection, title in (("documents", "Parent version"), ("sub-scopes/tags/documents", "Tag version")):
+        write_doc(tmp_path, f"docs-viewer/scopes/analysis/working/source/{collection}",
+                  "shared.md", {"doc_id": FIXTURE_DOC_ID, "title": title, "ui_status": "review"})
+    docs = source_model.load_document_collection_docs(tmp_path, "analysis", "tags", stage="working")
+    assert [(doc.doc_id, doc.title, doc.ui_status) for doc in docs] == [(FIXTURE_DOC_ID, "Tag version", "review")]
+    with pytest.raises(ValueError, match="unknown sub_scope 'missing'"):
+        source_model.load_document_collection_docs(tmp_path, "analysis", "missing", stage="working")
 
 
-def test_projects_collection_loader_keeps_malformed_folder_source_loadable() -> None:
-    child_config = SimpleNamespace(
-        sub_scope="projects",
-        sub_scope_customisation=SimpleNamespace(
-            customisation_id="working_works",
-            settings={},
-        ),
-        source=SimpleNamespace(
-            location=SimpleNamespace(path=Path("dotlineform-projects")),
-            documents_path=Path("documents"),
-        ),
-    )
-    parent_config = SimpleNamespace(
-        scope_id="dotlineform",
-        allow_unresolved_parent_ids=False,
-        source=SimpleNamespace(
-            location=SimpleNamespace(path=Path("dotlineform-parent")),
-            documents_path=Path("documents"),
-        ),
-        sub_scopes=(child_config,),
-    )
-    original_configs = dict(source_model.DOCS_SCOPE_CONFIGS)
+def test_works_collection_loader_keeps_malformed_folder_source_loadable(tmp_path: Path) -> None:
+    from repo_factory import docs_sub_scope_record
 
-    with tempfile.TemporaryDirectory() as temp:
-        root = Path(temp)
-        path = root / "dotlineform-projects/documents/project.md"
-        write_doc(
-            root,
-            "dotlineform-projects/documents",
-            "project.md",
-            {
-                "doc_id": FIXTURE_DOC_ID,
-                "title": "Project",
-                "folder_path": "projects/Future Folder",
-            },
-        )
-        source_model.DOCS_SCOPE_CONFIGS.clear()
-        source_model.DOCS_SCOPE_CONFIGS["dotlineform"] = parent_config
-        try:
-            docs = source_model.load_document_collection_docs(
-                root,
-                "dotlineform",
-                "projects",
-            )
-            path.write_text(
-                source_model.format_source(
-                    {
-                        "doc_id": FIXTURE_DOC_ID,
-                        "title": "Project",
-                        "folder_path": "/absolute/not-stored",
-                    },
-                    "# Project\n",
-                ),
-                encoding="utf-8",
-            )
-            malformed_docs = source_model.load_document_collection_docs(
-                root,
-                "dotlineform",
-                "projects",
-            )
-        finally:
-            source_model.DOCS_SCOPE_CONFIGS.clear()
-            source_model.DOCS_SCOPE_CONFIGS.update(original_configs)
-
-    assert docs[0].front_matter["folder_path"] == "projects/Future Folder"
-    assert malformed_docs[0].front_matter["folder_path"] == "/absolute/not-stored"
+    write_docs_scope_config(tmp_path, [docs_scope_record(
+        "analysis", sub_scopes=[docs_sub_scope_record("analysis", "works",
+            sub_scope_customisation={"id": "working_works", "settings": {}})],
+    )])
+    for folder in ("projects/Future Folder", "/absolute/not-stored"):
+        write_doc(tmp_path, "docs-viewer/scopes/analysis/working/source/sub-scopes/works/documents",
+                  "project.md", {"doc_id": FIXTURE_DOC_ID, "title": "Project", "folder_path": folder})
+        docs = source_model.load_document_collection_docs(tmp_path, "analysis", "works", stage="working")
+        assert docs[0].front_matter["folder_path"] == folder
 
 
 def test_atomic_new_source_write_refuses_existing_destination() -> None:
@@ -369,12 +263,12 @@ def test_atomic_source_write_failure_preserves_existing_file() -> None:
 def test_load_scope_docs_rejects_duplicate_doc_ids() -> None:
     with tempfile.TemporaryDirectory() as temp:
         root = Path(temp)
-        write_doc(root, "docs-viewer/scopes/studio/source/documents", "first.md", {"doc_id": FIXTURE_DOC_ID, "title": "First"})
-        write_doc(root, "docs-viewer/scopes/studio/source/documents", "second.md", {"doc_id": FIXTURE_DOC_ID, "title": "Second"})
+        write_doc(root, "docs-viewer/scopes/studio/working/source/documents", "first.md", {"doc_id": FIXTURE_DOC_ID, "title": "First"})
+        write_doc(root, "docs-viewer/scopes/studio/working/source/documents", "second.md", {"doc_id": FIXTURE_DOC_ID, "title": "Second"})
         configure_repository_scope(root)
 
         try:
-            source_model.load_scope_docs(root, "studio")
+            source_model.load_scope_docs(root, "studio", stage="working")
         except ValueError as error:
             message = str(error)
         else:
@@ -386,11 +280,11 @@ def test_load_scope_docs_rejects_duplicate_doc_ids() -> None:
 def test_load_scope_docs_rejects_missing_doc_id() -> None:
     with tempfile.TemporaryDirectory() as temp:
         root = Path(temp)
-        write_doc(root, "docs-viewer/scopes/studio/source/documents", "missing.md", {"title": "Missing"})
+        write_doc(root, "docs-viewer/scopes/studio/working/source/documents", "missing.md", {"title": "Missing"})
         configure_repository_scope(root)
 
         try:
-            source_model.load_scope_docs(root, "studio")
+            source_model.load_scope_docs(root, "studio", stage="working")
         except ValueError as error:
             message = str(error)
         else:
@@ -404,14 +298,14 @@ def test_load_scope_docs_rejects_unknown_studio_parent() -> None:
         root = Path(temp)
         write_doc(
             root,
-            "docs-viewer/scopes/studio/source/documents",
+            "docs-viewer/scopes/studio/working/source/documents",
             "child.md",
             {"doc_id": FIXTURE_DOC_ID, "title": "Child", "parent_id": "missing"},
         )
         configure_repository_scope(root)
 
         try:
-            source_model.load_scope_docs(root, "studio")
+            source_model.load_scope_docs(root, "studio", stage="working")
         except ValueError as error:
             message = str(error)
         else:

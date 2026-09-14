@@ -70,10 +70,10 @@ export function createDocsViewerReportService(options) {
         stage: request.stage
       }).toString(), Object.assign({}, serviceOptions, { requireOkEnvelope: true }));
     },
-    openPublicationIgnore: function () {
+    openPublicationIgnore: function (request) {
       return fetchReportJson("/docs/open-publication-ignore", Object.assign({}, serviceOptions, {
         method: "POST",
-        payload: { scope: "analysis", stage: "working" },
+        payload: { scope: request.scope, stage: request.stage },
         requireOkEnvelope: true
       }));
     },

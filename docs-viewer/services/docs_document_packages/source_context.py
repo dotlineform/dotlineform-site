@@ -20,6 +20,7 @@ from docs_scope_config import (  # noqa: E402
     document_source_path,
     load_docs_scope_configs,
     resolve_scope_path,
+    select_scope_stage,
 )
 from docs_document_packages.rendered_content import doc_content_text  # noqa: E402
 from docs_document_packages.source_records import (  # noqa: E402
@@ -54,18 +55,28 @@ def source_file_path(context: DocumentPackageSourceContext, doc: DocRecord) -> P
     return path
 
 
+def package_source_scope_config(repo_root: Path, scope: str) -> DocsScopeConfig:
+    """Packages are authoring-source operations owned by the scope's Working stage."""
+    configs = load_docs_scope_configs(repo_root, scope_ids=[scope])
+    config = configs[scope]
+    return select_scope_stage(config, "working")
+
+
 def load_document_package_source_context(
     repo_root: Path,
     scope: str,
     sub_scope: str = "",
 ) -> DocumentPackageSourceContext:
     root = repo_root.resolve()
+    normalized_scope = str(scope or "").strip().lower()
+    config = package_source_scope_config(root, normalized_scope)
     normalized_sub_scope = str(sub_scope or "").strip().lower()
     if normalized_sub_scope:
         collection = resolve_managed_document_collection(
             root,
             scope=scope,
             sub_scope=normalized_sub_scope,
+            stage=config.stage or None,
         )
         normalized_scope = collection.scope
         config = collection.parent_config
@@ -77,11 +88,6 @@ def load_document_package_source_context(
             sub_scope=collection.document_config,
         )
     else:
-        configs = load_docs_scope_configs(root)
-        normalized_scope = str(scope or "").strip().lower()
-        config = configs.get(normalized_scope)
-        if config is None:
-            raise ValueError(f"unknown docs scope for document package source context: {scope}")
         source_root = resolve_scope_path(root, document_source_path(config))
         if not source_root.exists() or not source_root.is_dir():
             raise RuntimeError(

@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import datetime as dt
+from copy import deepcopy
 import json
 import re
 import subprocess
@@ -117,17 +118,17 @@ def local_published_docs_output_path(repo_root: Path, config: DocsScopeConfig | 
 def local_generated_search_index_path(repo_root: Path, config: DocsScopeConfig | dict[str, Any]) -> Path:
     if isinstance(config, DocsScopeConfig):
         return resolve_scope_path(repo_root, generated_search_path(config))
-    return resolve_scope_path(repo_root, planned_scope_root_path(config) / GENERATED_SEARCH_PATH)
+    return resolve_scope_path(repo_root, planned_scope_root_path(config) / "working" / GENERATED_SEARCH_PATH)
 
 
 def local_generated_docs_output_path(repo_root: Path, config: DocsScopeConfig | dict[str, Any]) -> Path:
     if isinstance(config, DocsScopeConfig):
         return resolve_scope_path(repo_root, generated_documents_path(config))
-    return resolve_scope_path(repo_root, planned_scope_root_path(config) / GENERATED_DOCUMENTS_PATH)
+    return resolve_scope_path(repo_root, planned_scope_root_path(config) / "working" / GENERATED_DOCUMENTS_PATH)
 
 
 def planned_source_output_path(repo_root: Path, config: dict[str, Any]) -> Path:
-    return resolve_scope_path(repo_root, planned_scope_root_path(config) / SCOPE_SOURCE_PATH)
+    return resolve_scope_path(repo_root, planned_scope_root_path(config) / "working" / SCOPE_SOURCE_PATH)
 
 
 def public_projection_docs_output_path(repo_root: Path, config: DocsScopeConfig | dict[str, Any]) -> Path:
@@ -538,6 +539,10 @@ def planned_scope_config_record(
         "allow_unresolved_parent_ids": False,
         "sub_scopes": [],
     }
+    record["stages"] = {
+        stage: {"default_doc_id": default_doc_id, "media": deepcopy(record["media"]), "sub_scopes": []}
+        for stage in ("working", "pre-publish")
+    }
     return record
 
 
@@ -545,10 +550,10 @@ def planned_storage_contract(preview: dict[str, Any]) -> dict[str, Any]:
     publishing_mode = str(preview["publishing_mode"])
     config = preview["planned_scope_config"]
     scope_root = str(_planned_role_location(config, "scope_root", "path") or "")
-    source_root = (Path(scope_root) / SCOPE_SOURCE_PATH).as_posix()
-    docs_output = (Path(scope_root) / GENERATED_DOCUMENTS_PATH).as_posix()
-    search_output = (Path(scope_root) / GENERATED_SEARCH_PATH).as_posix()
-    media_root = (Path(scope_root) / SCOPE_SOURCE_PATH / "media").as_posix()
+    source_root = (Path(scope_root) / "working" / SCOPE_SOURCE_PATH).as_posix()
+    docs_output = (Path(scope_root) / "working" / GENERATED_DOCUMENTS_PATH).as_posix()
+    search_output = (Path(scope_root) / "working" / GENERATED_SEARCH_PATH).as_posix()
+    media_root = (Path(scope_root) / "working" / SCOPE_SOURCE_PATH / "media").as_posix()
     publish_output = (Path(scope_root) / PUBLISHED_DOCUMENTS_PATH).as_posix()
     publish_search_output = (Path(scope_root) / PUBLISHED_SEARCH_PATH).as_posix()
     deploy_output = str(

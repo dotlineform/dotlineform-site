@@ -1,4 +1,4 @@
-"""Revision-bound draft readiness writes for exact Analysis Working documents."""
+"""Revision-bound draft readiness writes for exact Working documents."""
 
 from pathlib import Path
 from typing import Any
@@ -23,7 +23,7 @@ def plan_set_draft(repo_root: Path, body: dict[str, Any]) -> ManagementMutationP
     target = {key: body[key] for key in ("scope", "stage", "sub_scope", "doc_id") if key in body}
     resolved = resolve_managed_document_target(repo_root, target)
     if not source_model.collection_supports_draft(resolved.document_config):
-        raise ValueError("Set Draft is available only in Analysis Working")
+        raise ValueError("Set Draft is available only in Working")
     document = resolved.document
     original = document.source_text.encode("utf-8")
     revision = source_model.source_revision(original)

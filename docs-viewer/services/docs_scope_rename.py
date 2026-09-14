@@ -34,6 +34,7 @@ from docs_scope_manifest import (
     scope_delete_eligible,
     utc_now,
 )
+from docs_scope_publish import PUBLISH_MANIFEST_FILENAME
 
 
 LINK_REWRITE_WARNING = (
@@ -116,17 +117,15 @@ def _move_records(
     ]
 
 
-def _build_commands(scope_id: str, *, dry_run: bool) -> list[dict[str, str]]:
+def _build_commands(scope_id: str, *, dry_run: bool, stages: tuple = ()) -> list[dict[str, str]]:
     status = "planned" if dry_run else "completed"
     return [
         {
-            "command": f"./docs-viewer/build/build_docs.py --scope {scope_id} --write",
+            "command": f"./docs-viewer/build/{script}.py --scope {scope_id}{stage_arg} --write",
             "status": status,
-        },
-        {
-            "command": f"./docs-viewer/build/build_search.py --scope {scope_id} --write",
-            "status": status,
-        },
+        }
+        for stage_arg in [f" --stage {stage.stage}" for stage in stages]
+        for script in ("build_docs", "build_search")
     ]
 
 
@@ -160,6 +159,8 @@ def plan_rename_scope_preview(repo_root: Path, body: dict[str, Any]) -> dict[str
         old_roots = external_scope_roots(external_root, old_scope_id)
         new_roots = external_scope_roots(external_root, new_scope_id)
         configured_paths = {"scope_root": config.scope_root.path}
+        if _path_present(config.scope_root.path / "published" / PUBLISH_MANIFEST_FILENAME):
+            blockers.append("a scope with a Published snapshot cannot be renamed")
         for kind, configured_path in configured_paths.items():
             if configured_path.resolve() != old_roots[kind].resolve():
                 blockers.append(f"configured {kind.replace('_', ' ')} does not match the lifecycle-owned external path")
@@ -186,9 +187,9 @@ def plan_rename_scope_preview(repo_root: Path, body: dict[str, Any]) -> dict[str
             path_record(repo_root, "scope_config", repo_root / CONFIG_REL_PATH, action="change"),
             path_record(repo_root, "scope_manifest", repo_root / MANIFEST_REL_PATH, action="change"),
         ],
-        "build_commands": _build_commands(new_scope_id, dry_run=True),
+        "build_commands": _build_commands(new_scope_id, dry_run=True, stages=config.stages if config else ()),
         "urls": {
-            "management": f"/docs/?scope={new_scope_id}",
+            "management": f"/docs/?scope={new_scope_id}&stage=working",
             "public": "",
         },
         "summary_text": f"Ready to rename Docs Viewer scope {old_scope_id} to {new_scope_id}.",
@@ -327,14 +328,21 @@ def apply_rename_scope(
         moved_paths = _move_external_roots(old_roots, new_roots)
         write_text_atomic(repo_root / CONFIG_REL_PATH, render_json(config_payload))
         write_text_atomic(repo_root / MANIFEST_REL_PATH, render_json(manifest_payload))
-        rebuild = rebuild_scope_outputs(repo_root, new_scope_id, include_search=True)
+        config = load_docs_scope_configs(repo_root)[new_scope_id]
+        rebuild = {
+            "ok": True,
+            "stages": {
+                selected.stage: rebuild_scope_outputs(repo_root, new_scope_id, include_search=True, stage=selected.stage)
+                for selected in config.stages
+            },
+        }
 
     return {
         **preview,
         "schema_version": LIFECYCLE_APPLY_SCHEMA_VERSION,
         "operation": "apply",
         "move_paths": moved_paths if not dry_run else preview["move_paths"],
-        "build_commands": _build_commands(new_scope_id, dry_run=dry_run),
+        "build_commands": [{**command, "status": "planned" if dry_run else "completed"} for command in preview["build_commands"]],
         "rebuild": rebuild,
         "summary_text": (
             f"Renamed Docs Viewer scope {old_scope_id} to {new_scope_id}."

@@ -103,21 +103,21 @@ def write_docs_route_configs(root: Path) -> None:
 
 def write_generated_docs(root: Path) -> None:
     docs = [
-        {
+        {"stage": "working",
             "scope": "studio",
             "doc_id": "non-publishable-doc",
             "title": "Non-publishable Doc",
-            "content_url": "/docs-viewer/scopes/studio/generated/documents/by-id/non-publishable-doc.json",
+            "content_url": "/docs-viewer/scopes/studio/working/generated/documents/by-id/non-publishable-doc.json",
         },
-        {
+        {"stage": "working",
             "scope": "studio",
             "doc_id": "child",
             "title": "Child",
-            "content_url": "/docs-viewer/scopes/studio/generated/documents/by-id/child.json",
+            "content_url": "/docs-viewer/scopes/studio/working/generated/documents/by-id/child.json",
         },
     ]
     write_json(
-        root / "docs-viewer/scopes/studio/generated/documents/index-tree.json",
+        root / "docs-viewer/scopes/studio/working/generated/documents/index-tree.json",
         {
             "schema": "docs_index_tree_v1",
             "viewer_options": {
@@ -128,7 +128,7 @@ def write_generated_docs(root: Path) -> None:
         },
     )
     write_json(
-        root / "docs-viewer/scopes/studio/generated/documents/recent.json",
+        root / "docs-viewer/scopes/studio/working/generated/documents/recent.json",
         {
             "schema": "docs_recent_v1",
             "basis": "edited",
@@ -136,9 +136,9 @@ def write_generated_docs(root: Path) -> None:
             "docs": [docs[1]],
         },
     )
-    write_json(root / "docs-viewer/scopes/studio/generated/documents/by-id/non-publishable-doc.json", {"doc_id": "non-publishable-doc"})
-    write_json(root / "docs-viewer/scopes/studio/generated/documents/by-id/child.json", {"doc_id": "child"})
-    write_json(root / "docs-viewer/scopes/studio/generated/search/index.json", {"entries": [{"doc_id": "child"}]})
+    write_json(root / "docs-viewer/scopes/studio/working/generated/documents/by-id/non-publishable-doc.json", {"doc_id": "non-publishable-doc"})
+    write_json(root / "docs-viewer/scopes/studio/working/generated/documents/by-id/child.json", {"doc_id": "child"})
+    write_json(root / "docs-viewer/scopes/studio/working/generated/search/index.json", {"entries": [{"doc_id": "child"}]})
 
 
 def write_docs_scope_config(root: Path) -> None:
@@ -163,38 +163,15 @@ def write_docs_scope_config(root: Path) -> None:
 
 
 def write_docs_viewer_browser_config(root: Path) -> None:
-    write_json(
-        root / "docs-viewer/config/defaults/docs-viewer-config.json",
-        {
-            "schema_version": "docs_viewer_config_v1",
-            "default_scope_id": "studio",
-            "scopes": [
-                {
-                    "scope_id": "studio",
-                    "viewer_base_url": "/docs/",
-                    "include_scope_param": True,
-                    "default_doc_id": "child",
-                    "media": {
-                        "img": {
-                            "reference_prefix": "docs/studio/img",
-                            "served_path_prefix": "/docs/media/studio/img",
-                        },
-                        "svg": {
-                            "reference_prefix": "docs/studio/svg",
-                            "served_path_prefix": "/docs/media/studio/svg",
-                        },
-                        "files": {
-                            "reference_prefix": "docs/studio/files",
-                            "served_path_prefix": "/docs/media/studio/files",
-                        },
-                    },
-                    "index_tree_url": "/docs-viewer/scopes/studio/generated/documents/index-tree.json",
-                    "recent_url": "/docs-viewer/scopes/studio/generated/documents/recent.json",
-                    "search_index_url": "/docs-viewer/scopes/studio/generated/search/index.json",
-                }
-            ],
-            "docs_viewer": {
-                "recent_limit": 10,
-            },
-        },
-    )
+    build_dir = REPO_ROOT / "docs-viewer/build"
+    if str(build_dir) not in sys.path:
+        sys.path.insert(0, str(build_dir))
+    from docs_builder.browser_config import browser_scope_record
+
+    configs = docs_scope_config.load_docs_scope_configs(root)
+    write_json(root / "docs-viewer/config/defaults/docs-viewer-config.json", {
+        "schema_version": "docs_viewer_config_v1",
+        "default_scope_id": "studio",
+        "scopes": [browser_scope_record(root, {}, config) for config in configs.values()],
+        "docs_viewer": {"recent_limit": 10},
+    })

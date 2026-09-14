@@ -5,13 +5,10 @@ import sys
 from pathlib import Path
 
 from .browser_config import (
-    public_readonly_configs,
     write_browser_config,
 )
 from .common import (
     DOCS_VIEWER_BROWSER_CONFIG_PATH,
-    DOCS_VIEWER_PUBLIC_BROWSER_CONFIG_PATH,
-    SITE_DOCS_VIEWER_PUBLIC_BROWSER_CONFIG_PATH,
     load_docs_scope_configs,
 )
 from .runtime_bootstrap import add_workspace_arguments, apply_workspace_overrides
@@ -24,7 +21,7 @@ from docs_scope_config import select_scope_stage, require_selected_stage
 def parse_args(argv: list[str]) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Build Docs Viewer generated document payloads.")
     parser.add_argument("--scope", action="append", default=[], help="Limit build to a named docs scope.")
-    parser.add_argument("--stage", choices=("working", "pre-publish"), help="Select the exact Analysis source/generated stage.")
+    parser.add_argument("--stage", choices=("working", "pre-publish"), help="Select the exact scope source/generated stage.")
     add_workspace_arguments(parser)
     parser.add_argument("--source", help="Override docs source directory for a single selected scope.")
     parser.add_argument("--output", help="Override docs data output directory for a single selected scope.")
@@ -97,24 +94,6 @@ def main(argv: list[str] | None = None) -> int:
             list(configs_by_scope.values()),
             path=DOCS_VIEWER_BROWSER_CONFIG_PATH,
             label="Docs Viewer browser config",
-            replace_scope_ids=replace_scope_ids,
-        )
-    # Stage builds never update the frozen public configuration.
-    if args.write and not args.skip_browser_config and not args.stage:
-        write_browser_config(
-            repo_root,
-            public_readonly_configs(selected),
-            path=DOCS_VIEWER_PUBLIC_BROWSER_CONFIG_PATH,
-            label="Docs Viewer public browser config",
-            published=True,
-            replace_scope_ids=replace_scope_ids,
-        )
-        write_browser_config(
-            repo_root,
-            public_readonly_configs(selected),
-            path=SITE_DOCS_VIEWER_PUBLIC_BROWSER_CONFIG_PATH,
-            label="Docs Viewer site public browser config",
-            published=True,
             replace_scope_ids=replace_scope_ids,
         )
     only_doc_ids = None if args.only_doc_ids is None else [item.strip() for item in args.only_doc_ids.split(",") if item.strip()]

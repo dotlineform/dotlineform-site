@@ -252,7 +252,7 @@ export function loadDocsViewerSubscopeContribution(settings, parent, subScope, o
       },
       onCreateDocument: contributionOptions.onCreateDocument,
       onCopyDocuments: contributionOptions.onCopyDocuments,
-      onToggleDraft: settings.managementContext && parent.scope === "analysis" && parent.stage === "working"
+      onToggleDraft: settings.managementContext && parent.stage === "working"
         && cleanString(clientOptions.baseUrl)
         ? settings.managementDocumentActions?.toggleSubscopeDocumentDraft
         : null,
@@ -481,7 +481,7 @@ export function mountDocsViewerManageDocumentExtras(context) {
   var contribution = loadDocsViewerSubscopeContribution(settings, parent, subScope, {
     onCreateDocument: (
       settings.managementContext
-      && parent.stage !== "pre-publish"
+      && (!parent.stage || parent.stage === "working")
       && reportManagementBaseUrl
       && createAction
     )

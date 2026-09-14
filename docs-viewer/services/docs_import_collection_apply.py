@@ -316,6 +316,7 @@ def apply_import_content_collection(
                 suppression_reason="docs-import-collection-apply",
                 docs_doc_ids=docs_doc_ids,
                 written_paths=written_paths,
+                stage=plan.response.get("target", {}).get("stage") or None,
             )
             generation = {"status": "completed", "rebuild": rebuild, "error": ""}
         except NoAppliedCollectionWrites:
@@ -604,6 +605,7 @@ def apply_import_content_collection_atomic(
             write_operation,
             suppression_reason="docs-import-sub-scope-collection-apply",
             source_snapshots=snapshots,
+            stage=collection.stage or None,
         )
 
     return _apply_import_content_collection_atomic(
@@ -655,6 +657,7 @@ def apply_import_content_collection_scope_atomic(
             write_operation,
             suppression_reason="docs-import-reviewed-scope-collection-apply",
             source_snapshots=snapshots,
+            stage=collection.stage or None,
             docs_doc_ids=docs_doc_ids,
         )
 

@@ -121,7 +121,7 @@ export function fetchPreferredGeneratedJson(staticUrl, failureLabel, generatedPa
     if (generatedAvailable) {
       return fetchGeneratedJsonWithRetry(generatedPath, failureLabel, settings);
     }
-    if (settings.viewerStage) throw new Error("Generated data is unavailable for the selected stage.");
+    if (settings.viewerStage) throw new Error("Data is unavailable for the selected stage.");
     return fetchJsonWithRetry(staticUrl, failureLabel, "", settings);
   });
 }
@@ -171,6 +171,15 @@ export function fetchIndexTreeWithRetry(options) {
 
 export function managementReloadPath(path, params) {
   if (!path || !params) return "";
+  if (params.stage === "published") {
+    const reads = ["index-tree", "recent", "backlinks", "doc", "search", "semantic-tokens"];
+    if (!reads.some(function (name) { return path === "/docs/" + name; })) {
+      throw new Error("This operation is unavailable in Published.");
+    }
+    path = path.replace("/docs/", "/docs/published/");
+    params = Object.assign({}, params);
+    delete params.stage;
+  }
   var query = [];
   Object.keys(params).forEach(function (key) {
     var value = String(params[key] || "").trim();
