@@ -498,7 +498,7 @@ export function createDocsViewerManagementIndexController(options = {}) {
     }
     var checkedDocIds = resolution.targetDocIds.slice();
     return openDocumentTransfer({
-      source: { scope: viewerScope() },
+      source: { scope: viewerScope(), stage: managementClientOptions().stage },
       mode: normalizedMode,
       checkedDocIds: checkedDocIds,
       targets: controlState.targets,

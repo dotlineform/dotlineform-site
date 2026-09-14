@@ -16,7 +16,7 @@ import { createDocsViewerIndexSelectionOwner } from "../../runtime/js/management
 import { createDocsViewerManagementIndexController } from "../../runtime/js/management/docs-viewer-management-index-controller.js";
 import { createDocsViewerManagementCapabilityController, scopePrePublishSupported, scopePublishSupported } from "../../runtime/js/management/docs-viewer-management-capabilities.js";
 import { docsViewerPublishWorkflowAvailability } from "../../runtime/js/management/docs-viewer-management-publish-workflow.js";
-import { previewSubScopeCreate, applySubScopeCreate } from "../../runtime/js/management/docs-viewer-management-client.js";
+import { previewSubScopeCreate, applySubScopeCreate, previewManagedDocumentTransfer, applyManagedDocumentTransfer } from "../../runtime/js/management/docs-viewer-management-client.js";
 import { subScopeDeleteSupported } from "../../runtime/js/management/docs-viewer-management-capabilities.js";
 import { followCreatedSubScopeReport } from "../../runtime/js/management/docs-viewer-management-scope-lifecycle-controller.js";
 
@@ -45,7 +45,7 @@ for (const invalid of [
   { target: destination, placement: { ...placement, viewer_url: placement.viewer_url.replace(docId, "other") } },
   { target: destination, placement: { ...placement, viewer_url: "https://example.test" + placement.viewer_url } }
 ]) assert.throws(() => committedDocumentPlacement(invalid, hostTarget), /Placement service/);
-const transferSources = [{ scope: "analysis", stage: "working" }, { scope: "studio" }, { scope: "notes" }];
+const transferSources = ["analysis", "studio", "notes"].map(scope => ({ scope, stage: "working" }));
 const transferCapabilities = {
   document_transfer: { preview: true, apply: true },
   scopes: Object.fromEntries(transferSources.map(target => [target.scope, {
@@ -214,6 +214,22 @@ assert.equal(requests[0].body.stage, "working");
 assert.match(requests[1].url, /stage=working/);
 assert.deepEqual(requests[2].body, { ...working, source_body: "[[media:docs/analysis/img/one.jpg]]", source_revision: "revision" });
 assert.equal(requests[3].body.stage, "working");
+const transferSource = { scope: "notes", stage: "working" };
+const transferTarget = { scope: "studio", stage: "working" };
+const transferOptions = { ...options, scope: "notes", stage: "pre-publish" };
+for (const mode of ["copy", "move"]) {
+  await previewManagedDocumentTransfer(transferSource, [docId], transferTarget, mode, true, transferOptions);
+  assert.deepEqual(requests.at(-1).body, {
+    scope: "notes", stage: "working", doc_ids: [docId],
+    target_scope: "studio", target_stage: "working",
+    transfer_mode: mode, include_descendants: true
+  });
+  const applyPlan = { source: transferSource, target: transferTarget, mode };
+  await applyManagedDocumentTransfer(applyPlan, transferOptions);
+  assert.deepEqual(requests.at(-1).body, {
+    scope: "notes", stage: "working", apply_plan: applyPlan, confirm: true
+  }, "Apply must retain the approved plan stage independently of the active view");
+}
 const childCreate = { parent_scope: "analysis", sub_scope: "concepts", title: "Concepts" };
 await previewSubScopeCreate(childCreate, options);
 assert.deepEqual(requests.at(-1).body, { ...childCreate, stage: "working" });

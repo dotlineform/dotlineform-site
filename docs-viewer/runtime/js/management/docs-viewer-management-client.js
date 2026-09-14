@@ -455,6 +455,7 @@ export function applyManagedDocumentTransfer(applyPlan, options) {
   );
   var payload = {
     scope: sourceCollection.scope,
+    stage: sourceCollection.stage,
     apply_plan: applyPlan,
     confirm: true
   };
