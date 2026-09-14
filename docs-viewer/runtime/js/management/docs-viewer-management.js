@@ -582,13 +582,21 @@ export function initDocsViewerManagement(context) {
     });
   }
 
-  function runDraftToggle(target, reloadTarget) {
+  function runDraftToggle(target) {
     setManagementBusy(true);
     setManagementMessage("", false);
     renderManagementUi();
     return toggleManagedDocDraft(target, {
       clientOptions: managementClientOptions(),
-      reloadTarget: reloadTarget
+      onSaved: function (savedTarget, response) {
+        if (savedTarget.scope !== viewerScope() || savedTarget.stage !== viewerStage()) return;
+        var record = savedTarget.sub_scope
+          ? (managedDocumentTargetsEqual(savedTarget, subscopeReportState?.subdocTarget) ? subscopeReportState.subdocRecord : null)
+          : documentIndex.docsById.get(savedTarget.doc_id);
+        if (record) record.draft = response.record.draft;
+        if (!savedTarget.sub_scope) context.renderSidebar();
+        renderManagementUi();
+      }
     }).catch(function (error) {
       setManagementMessage(error.message || "Draft readiness could not be saved.", true);
     }).finally(function () {
@@ -601,10 +609,10 @@ export function initDocsViewerManagement(context) {
     if (management.managementBusy || viewerStage() !== "working"
       || subscopeReportState?.state !== "detail"
       || !managedDocumentTargetsEqual(target, subscopeReportState.subdocTarget)
-      || typeof subscopeReportState.refreshDocument !== "function") {
+    ) {
       return Promise.reject(new Error("Draft readiness is unavailable for this sub-scope document."));
     }
-    return runDraftToggle(target, subscopeReportState.refreshDocument);
+    return runDraftToggle(target);
   }
 
   function handleMainViewControl(detail) {
@@ -615,9 +623,7 @@ export function initDocsViewerManagement(context) {
       if (!draftControl || draftControl.state.hidden || draftControl.state.disabled
         || !draftControl.target || draftControl.target.sub_scope
         || management.managementBusy || viewerStage() !== "working") return;
-      return runDraftToggle(draftControl.target, function (target) {
-        return reloadDocsIndex(target.doc_id, "");
-      });
+      return runDraftToggle(draftControl.target);
     }
     var reportControlOwners = new Map([
       ["edit", {

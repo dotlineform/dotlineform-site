@@ -1,11 +1,11 @@
 import { readManagedDocMetadata, setManagedDocDraft } from "./docs-viewer-management-client.js";
 import { managedDocumentTargetsEqual, normalizeManagedDocumentTarget } from "./docs-viewer-management-document-target.js";
 
-/** Await the exact revision-bound write and its visible document/index refresh. */
+/** Save the exact source field; watcher completion drives the later index reload. */
 export async function toggleManagedDocDraft(target, options) {
   const normalized = normalizeManagedDocumentTarget(target);
   if (normalized.stage !== "working") {
-    throw new Error("Draft readiness is available only in Analysis Working.");
+    throw new Error("Draft readiness is available only in Working.");
   }
   const metadata = await readManagedDocMetadata(normalized, options.clientOptions);
   const metadataTarget = { scope: metadata.scope, stage: metadata.stage, doc_id: metadata.doc_id,
@@ -23,6 +23,6 @@ export async function toggleManagedDocDraft(target, options) {
     || !response.record || response.record.draft !== draft) {
     throw new Error("Draft readiness response did not match the requested document.");
   }
-  await options.reloadTarget(normalized, response);
+  options.onSaved(normalized, response);
   return response;
 }

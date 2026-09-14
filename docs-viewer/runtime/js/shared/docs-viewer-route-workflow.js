@@ -70,6 +70,9 @@ export function initDocsViewerRouteWorkflow(context) {
   var searchInput = context.searchInput;
   var scopeConfig = context.scopeConfig || {};
   var statusCommands = context.statusCommands || {};
+  var loadedIndex = "";
+  var indexRefreshTimer = null;
+  var indexRefreshRunning = false;
 
   function viewerScope() {
     return currentValue(context.viewerScope);
@@ -291,7 +294,8 @@ export function initDocsViewerRouteWorkflow(context) {
     return result;
   }
 
-  function initializeIndex(payload) {
+  function replaceIndex(payload) {
+    loadedIndex = JSON.stringify(payload);
     state.managementContext = managementUiEnabled();
     var viewerOptions = payload && payload.viewer_options && typeof payload.viewer_options === "object"
       ? payload.viewer_options
@@ -310,20 +314,59 @@ export function initDocsViewerRouteWorkflow(context) {
 
     context.renderSidebar();
     context.renderBookmarkUi();
+  }
+
+  function initializeIndex(payload) {
+    replaceIndex(payload);
 
     if (state.docs.length === 0) {
       setStatus("No docs available.", true);
       return;
     }
 
-    applyCurrentRoute({ historyMode: "replace", hash: currentHash() });
+    return applyCurrentRoute({ historyMode: "replace", hash: currentHash() });
   }
+
+  // Read the existing generated index. The watcher remains the only build owner.
+  async function refreshWorkingIndex() {
+    if (indexRefreshRunning || !managementUiEnabled() || currentValue(context.viewerStage) !== "working"
+        || root.ownerDocument.hidden || root.dataset.managementBusy === "true"
+        || root.dataset.documentDisplayMode === "markdown-source") return;
+    var scope = viewerScope();
+    indexRefreshRunning = true;
+    try {
+      var payload = await context.collectionProvider.readIndex();
+      if (scope !== viewerScope() || currentValue(context.viewerStage) !== "working"
+          || root.dataset.managementBusy === "true" || root.dataset.documentDisplayMode === "markdown-source"
+          || JSON.stringify(payload) === loadedIndex) return;
+      state.payloadCache.clear();
+      replaceIndex(payload);
+      context.renderManagementUi();
+    } catch (error) {
+      setStatus(error.message || "Could not refresh the Working index.", true);
+    } finally {
+      indexRefreshRunning = false;
+    }
+  }
+
+  function startIndexRefresh() {
+    if (indexRefreshTimer === null && managementUiEnabled()) {
+      indexRefreshTimer = window.setInterval(refreshWorkingIndex, 2000);
+    }
+  }
+
+  window.addEventListener("pagehide", function () {
+    window.clearInterval(indexRefreshTimer);
+    indexRefreshTimer = null;
+  });
+  window.addEventListener("pageshow", startIndexRefresh);
 
   function loadIndex() {
     var stopBusy = startBusy();
     return context.collectionProvider.readIndex()
       .then(function (payload) {
-        initializeIndex(payload);
+        startIndexRefresh();
+        return initializeIndex(payload);
       })
       .catch(function (error) {
         state.reloadExpectedDocId = "";

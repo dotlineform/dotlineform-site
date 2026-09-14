@@ -590,7 +590,14 @@ export function createDocsViewerManagementSubscopeDefaultContribution(options = 
       draftButton.addEventListener("click", function () {
         if (draftButton.disabled) return;
         draftButton.disabled = true;
-        draftRegistration.invoke().catch(function (error) {
+        draftRegistration.invoke().then(function (response) {
+          if (!response || response.ok !== true) return;
+          draft = response.record.draft;
+          draftButton.title = draft ? "Draft — mark ready" : "Ready — mark as draft";
+          draftButton.setAttribute("aria-label", draftButton.title);
+          draftButton.setAttribute("aria-pressed", String(draft));
+          draftButton.textContent = draft ? "📝" : "✅";
+        }).catch(function (error) {
           if (typeof options.setStatus === "function") {
             options.setStatus(error.message || "Draft readiness could not be saved.", true);
           }

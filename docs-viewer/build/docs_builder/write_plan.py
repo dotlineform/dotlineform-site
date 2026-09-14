@@ -93,8 +93,6 @@ class WritePlanMixin:
 
         self.output_dir.mkdir(parents=True, exist_ok=True)
         self.items_dir.mkdir(parents=True, exist_ok=True)
-        if write_plan["index_tree_write"]:
-            write_text(self.output_dir / "index-tree.json", write_plan["index_tree_text"])
         if write_plan["recent_write"]:
             write_text(self.output_dir / "recent.json", write_plan["recent_text"])
         if write_plan["publication_recent_write"]:
@@ -108,6 +106,9 @@ class WritePlanMixin:
         for doc_id in write_plan["stale_item_ids"]:
             (self.items_dir / f"{doc_id}.json").unlink(missing_ok=True)
         self.write_semantic_token_outputs(write_plan)
+        # Readers seeing the changed index can now load every referenced payload.
+        if write_plan["index_tree_write"]:
+            write_text(self.output_dir / "index-tree.json", write_plan["index_tree_text"])
         self.print_human_summary(
             write_plan,
             mode="write",

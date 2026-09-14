@@ -140,8 +140,7 @@ def docs_management_post_response(
         return HTTPStatus.OK, docs_pre_publish.apply_pre_publish(repo_root, body)
     if path == routes.SET_DRAFT_PATH:
         try:
-            plan = docs_management_draft.plan_set_draft(repo_root, body)
-            return HTTPStatus.OK, execute_management_mutation_plan(repo_root, plan, dry_run)
+            return HTTPStatus.OK, docs_management_draft.set_draft(repo_root, body, dry_run=dry_run)
         except mutations.ManagedDocumentRevisionConflict as error:
             return HTTPStatus.CONFLICT, error.payload
     if path == routes.SOURCE_REBUILD_PATH:
