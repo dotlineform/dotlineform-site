@@ -62,7 +62,7 @@
       "app_kind": "manage",
       "route_id": "docs-manage",
       "route_path": "/docs/",
-      "default_scope_id": "studio",
+      "default_scope_id": "analysis",
       "include_scope_param": true,
       "viewer_base_url": "/docs/",
       "features": [
@@ -95,9 +95,9 @@
         }
       },
       "docs_paths": {
-        "index_tree_url": "/docs/index-tree?scope=studio",
-        "recent_url": "/docs/recent?scope=studio",
-        "search_index_url": "/docs/search?scope=studio"
+        "index_tree_url": "/docs/index-tree?scope=analysis",
+        "recent_url": "/docs/recent?scope=analysis",
+        "search_index_url": "/docs/search?scope=analysis"
       },
       "catalogue_paths": {
         "work_thumbnails": {
