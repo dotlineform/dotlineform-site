@@ -63,14 +63,19 @@
 
 - Use `$DOTLINEFORM_DOCS_BASE_DIR/scopes/studio/working/source/documents/d-20260501-174746-efd581.md`, `$DOTLINEFORM_DOCS_BASE_DIR/scopes/studio/working/source/documents/d-20260514-135716-c70591.md`, and `$DOTLINEFORM_DOCS_BASE_DIR/scopes/studio/working/source/documents/d-20260501-000000-49b626.md` as the maintained test policy.
 - `$DOTLINEFORM_DOCS_BASE_DIR/scopes/studio/working/source/documents/d-20260627-212121-7cf7de.md` determines approach for subsequent testing and review of existing tests.
-- Choose the smallest check that proves the changed contract. Do not run broad profiles just to produce more evidence.
+- Test work is a delivery with its own agreed specification. Approval to implement a feature or fix does not authorize creating, updating, refactoring, deleting, or expanding tests, fixtures, harnesses, or profile membership. Specify the proposed test work and obtain approval before implementing it; an already approved test specification is sufficient authorization within its scope.
+- This applies to every test layer, including temporary regression scripts. Do not bypass the rule by calling new test code a probe, smoke, or one-off check.
+- Maintain each test or coherent collection's specification and current coverage description outside delivery documents, under Testing or its durable app/domain owner. Document exact test paths/selectors and collection membership, scenarios and inputs, asserted outcomes, fixtures and mocks, real systems exercised, write/network effects, exclusions, run commands/triggers, and costs. A profile name, test count, pass result, or source listing alone does not explain coverage. Deliveries link to this record and keep only selected run evidence and outcomes.
+- Account for authoring, maintenance, runtime, compute, setup, token/context use, and diagnosis time. Before a non-trivial run, identify the risk it addresses, the exact existing selection, what it proves, its side effects, and a proportionate cost estimate or unknowns. Use the smallest justified existing check within the accepted verification budget; do not run suites automatically because a file changed or a delivery is closing. Do not benchmark merely to fill an estimate.
+- Read-only inspection and ordinary existing lint, syntax, whitespace, or direct diagnostic commands may provide focused evidence without creating test code. A documentation-only or trivial change may need no executable test. An unapproved test proposal does not block an otherwise complete fix unless the user has made it an acceptance requirement; report the evidence limit.
+- Existing tests without adequate coverage documentation are unreviewed, not automatically accepted. Inspect only the relevant selection before relying on it; record what it actually does and any unknowns. Suite-wide documentation, cleanup, or redesign is separately scoped work. A failure does not authorize changing either the test or production behavior merely to obtain a pass.
 - Leave UI design testing to the user unless specifically requested; browser probes are brittle.
 - A UI change does not create an automatic requirement to add, update, or run a permanent browser test. Recorded manual confirmation is sufficient for ordinary interaction, presentation, copy, focus, modal, filtering, and navigation behavior when no durable browser integration boundary changed.
 - Before adding or expanding a browser test, name the unique regression it could catch, why a pure/service/API/generator check cannot catch it, and why repeated manual confirmation would be materially costly or risky. If those answers are not concrete, do not change the browser suite.
 - Do not use an executable smoke as a shared fixture library. Put genuinely shared route startup/readiness code in a small non-test support module; keep each retained smoke to one integration boundary.
 - Treat a browser script over 500 lines or covering more than one route/workflow owner as a mandatory deletion/split review, not a file to extend. Existing profile membership is not evidence that the script remains worthwhile.
 - Do not include smoke scripts in broad pytest collection. Smoke profiles are explicit boundary audits, not ordinary closeout gates.
-- Before adding or expanding a permanent test, apply the review gate:
+- When specifying test work for approval, apply the review gate:
   - Can this be tested as pure function or service behavior?
   - Can this be tested by direct HTTP/API request?
   - Is a browser required to verify a product contract, or only to mimic user clicks?
@@ -79,20 +84,20 @@
 - Browser smokes are only for durable browser boundaries: route boot, module wiring, public/private asset boundaries, local API reachability, request/response agreement, or shared ready/busy state.
 - Human manual checks are used for tactile interaction, visual fit, copy tone, modal feel, and mobile ergonomics.
 - The retained Docs Viewer browser profile is intentionally limited to Manage route/service boot, Docs Review authority, public read-only isolation, and external-local Mermaid loading. Additions require an explicit policy change, not routine feature follow-through.
-- The retained Studio browser profile is intentionally limited to local Catalogue route/service boot, local Tag route/service boot, and one representative public Catalogue route without local capability. Deterministic Catalogue/Tag behavior belongs in Python tests; UI behavior remains manual.
-- Default focused checks:
-  - Python/service changes: `$HOME/miniconda3/bin/python3 -m pytest <test-path>`
-  - Script changes: syntax check with `$HOME/miniconda3/bin/python3 -m py_compile <files>`
+- The retained Studio browser profile is intentionally limited to local Catalogue route/service boot and one representative public Catalogue route without local capability. When automation is approved, deterministic Catalogue behavior belongs in Python tests; UI behavior remains manual.
+- Command recipes for justified checks, not an automatic checklist:
+  - Selected existing Python/service tests: `$HOME/miniconda3/bin/python3 -m pytest <test-path> [-k <selection>]`
+  - Python syntax when relevant: `$HOME/miniconda3/bin/python3 -m py_compile <files>`
   - Changed Python source: `bin/lint-python <path> [path ...]`
   - Changed JavaScript source: `bin/lint-js <path> [path ...]`
   - Complete adopted source boundary: `bin/lint --scope <scope-id>`
   - Repo whitespace: `git diff --check`
-  - Broader blast radius: `$HOME/miniconda3/bin/python3 tests/run_checks.py --profile <profile>`
+  - Accepted collection with a documented purpose and cost: `$HOME/miniconda3/bin/python3 tests/run_checks.py --profile <profile>`
 
 ## Important testing factors
 - Before running Python tests that import Docs Viewer services, export `.env.local` in the same shell (`set -a; source .env.local; set +a`). External-local scopes require `DOTLINEFORM_DOCS_BASE_DIR`; Projects-owned media and packages independently require `DOTLINEFORM_PROJECTS_BASE_DIR`. Docs pytest fixtures isolate both settings before service imports.
 - `tests/run_checks.py --profile docs` isolates both workspace settings for its Python step. Its Studio document and Search builds use the configured Docs workspace; the document build skips registered media producers. Explicit build isolation uses `--docs-base-dir <absolute-writable-path>` and, when Projects-owned media or packages are involved, `--projects-base-dir <absolute-writable-path>` independently.
-- Use the smallest relevant `run_checks.py` profile, such as `source-lint`, `quick`, `studio`, `catalogue`, `docs`, `docs-viewer-smoke`, or `studio-smoke`.
+- Select a `run_checks.py` profile only after inspecting its resolved commands and coverage; prefer an individual command when the collection includes unnecessary work. Profile names such as `quick` do not establish cost or relevance.
 - When `tests/run_checks.py` is used, report the profile, pass/fail result, and `var/test-runs/.../summary.md` path.
 - For commands that bind loopback ports or launch browser smokes, run them with elevated localhost/browser permissions in the Codex sandbox. Keep pure syntax checks, `git diff --check`, JSON parsing, and non-network pytest runs sandboxed.
 - If a local route is expected to be running but the sandbox cannot reach localhost, use an isolated temporary build/server if automated verification needs it.

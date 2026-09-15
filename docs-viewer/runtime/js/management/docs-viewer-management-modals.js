@@ -950,6 +950,9 @@ export function createDocsViewerManagementModalController(options = {}) {
       });
     }
     if (refs.metadataParentInput) {
+      refs.metadataParentInput.addEventListener("focus", function () {
+        refs.metadataParentInput.select();
+      });
       refs.metadataParentInput.addEventListener("input", function () {
         if (metadataEditingDoc) metadataParentPicker.handleInput(metadataEditingDoc);
       });

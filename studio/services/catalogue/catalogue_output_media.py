@@ -70,7 +70,9 @@ def complete_catalogue_media(
 
     Dry runs compare remote objects without writes. Original project media and
     the frozen archive are never cleanup targets. A supplied client supports
-    isolated service verification without remote writes.
+    isolated service verification without remote writes. An unchanged download
+    recorded in the Work's previous source and generated output may use its
+    verified remote object when no local replacement is staged.
     """
     errors = validate_source_records(records)
     if errors:
@@ -82,9 +84,11 @@ def complete_catalogue_media(
     targets: list[tuple[str, str]] = []
     removed: list[tuple[str, str]] = []
     generated_downloads: set[str] = set()
+    downloads_requiring_local: set[str] = set()
     for wid in work_ids:
         path = output_path(workspace, f"works/index/{wid}.json")
         if not path.exists():
+            downloads_requiring_local.update(_downloads(records, [wid]))
             continue
         payload = json.loads(path.read_text())
         if payload.get("work", {}).get("work_id") != wid:
@@ -98,10 +102,11 @@ def complete_catalogue_media(
                     raise ValueError(f"Detail {uid} is outside Work {wid}")
                 if detail.get("media") and not records.work_details.get(uid, {}).get("project_filename"):
                     removed.append(("work_details", uid))
-        generated_downloads.update(_download_filename(item["filename"]) for item in payload["work"].get("downloads", []))
+        output_downloads = {_download_filename(item["filename"]) for item in payload["work"].get("downloads", [])}
+        generated_downloads.update(output_downloads)
+        previous_downloads = _downloads(previous, [wid]) if previous else set()
+        downloads_requiring_local.update(_downloads(records, [wid]) - (output_downloads & previous_downloads))
     downloads = _downloads(records, work_ids)
-    if downloads and not staging.root.is_dir():
-        raise ValueError(f"Catalogue staging is unavailable: {staging.marker}")
     old_downloads = generated_downloads | (_downloads(previous, work_ids) if previous else set())
     removed_downloads = old_downloads - _downloads(records, list(records.works))
     tasks: list[dict[str, Any]] = []
@@ -171,11 +176,16 @@ def complete_catalogue_media(
     objects = []
     for filename in sorted(downloads):
         path = resolve_workspace_path(staging, f"works/files/{filename}")
+        object_key = f"{prefix}/{filename}"
+        if not path.exists() and filename not in downloads_requiring_local:
+            if remote.head_object(object_key) is None:
+                raise ValueError(f"download file is missing locally and in R2: {path} ({object_key})")
+            continue
         if not path.is_file():
             raise ValueError(f"download file is missing: {path}")
         objects.append(transport.LocalMediaObject(
             scope="catalogue", kind="files", item_id=filename, width=0, local_path=path,
-            source_root=download_root, object_key=f"{prefix}/{filename}", size=path.stat().st_size, md5=transport.file_md5(path),
+            source_root=download_root, object_key=object_key, size=path.stat().st_size, md5=transport.file_md5(path),
         ))
     if objects:
         uploaded = transport.plan_and_publish(objects=objects, client=remote, write=write, force=True)

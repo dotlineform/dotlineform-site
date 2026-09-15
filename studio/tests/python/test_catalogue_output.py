@@ -19,7 +19,7 @@ from catalogue.catalogue_json_build import populate_catalogue_output
 from catalogue.catalogue_write_service import handle_catalogue_post
 from catalogue import catalogue_build_media as media
 from studio.services.media import publish_media_to_r2 as transport
-from studio_app_server_test_support import StudioAppRequestHandler, catalogue_post_response
+from studio_app_server_test_support import StudioAppRequestHandler
 
 
 @pytest.fixture
@@ -252,6 +252,26 @@ def save_work(repo, source, record):
     return handle_catalogue_post(repo, "/work/save", {
         "work_id": "00001", "expected_record_hash": record_hash(records_from_json_source(source).works["00001"]), "record": record,
     })[1]
+
+
+def test_title_save_reuses_existing_remote_download_without_staging(output_catalogue, media_client):
+    repo, source, root = output_catalogue
+    filename = "00001-book.pdf"
+    key = f"works/files/{filename}"
+    records = records_from_json_source(source)
+    records.works["00001"]["downloads"] = [{"filename": filename, "label": "Book"}]
+    write_source_record_payloads(source, records)
+    generate_catalogue_json(repo, source, write=True)
+    media_client.objects[key] = b"existing remote PDF"
+
+    response = save_work(repo, source, {"title": "Updated title"})
+
+    assert response["output"]["status"] == "completed", response.get("output")
+    work = read_json(root / "works/index/00001.json")["work"]
+    assert work["title"] == "Updated title"
+    assert work["downloads"][0]["url"] == f"https://media.dotlineform.com/{key}"
+    assert media_client.objects[key] == b"existing remote PDF"
+    assert not (root.parent / "media-staging/works/files" / filename).exists()
 
 
 def test_save_completes_thumbnails_primary_downloads_and_confirmed_versions(output_catalogue, media_client):
