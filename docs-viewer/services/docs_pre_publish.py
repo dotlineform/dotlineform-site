@@ -14,15 +14,15 @@ from docs_publication_ignore import read_publication_ignore_ids
 
 
 def excluded_documents(docs: list[ScopeDoc], *, ignored_ids: frozenset[str] = frozenset()) -> set[str]:
-    """Exclude draft subtrees, then the exact ignored IDs in this collection."""
+    """Exclude draft and explicitly ignored roots together with their descendants."""
     excluded = {
         doc.doc_id for doc in docs
-        if doc.front_matter.get("draft", True) is True
+        if doc.front_matter.get("draft", True) is True or doc.doc_id in ignored_ids
     }
     while True:
         descendants = {doc.doc_id for doc in docs if doc.parent_id in excluded}
         if descendants <= excluded:
-            return excluded | {doc.doc_id for doc in docs if doc.doc_id in ignored_ids}
+            return excluded
         excluded.update(descendants)
 
 
