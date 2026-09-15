@@ -58,7 +58,7 @@ HTML_START_TAG_PATTERN = re.compile(
     re.DOTALL,
 )
 MEDIA_URL_ATTRIBUTE_PATTERN = re.compile(
-    r"(?P<prefix>(?<![\w:-])(?:src|href)\s*=\s*)"
+    r"(?P<prefix>(?<![\w:-])(?:src|href|data-docs-viewer-diagram-(?:light|dark)-src)\s*=\s*)"
     r"(?:(?P<quote>[\"'])(?P<quoted_value>.*?)(?P=quote)|(?P<unquoted_value>[^\s\"'=<>`]+))",
     re.IGNORECASE,
 )

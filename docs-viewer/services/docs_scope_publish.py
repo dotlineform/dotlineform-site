@@ -16,6 +16,7 @@ from docs_scope_build_manifest import (
     BUILD_MANIFEST_FILENAME,
     BUILD_MANIFEST_SCHEMA_VERSION,
 )
+from docs_public_mermaid_payload import public_mermaid_payload_requires_projection
 from docs_scope_config import (
     DocsScopeConfig,
     load_docs_scope_configs,
@@ -41,7 +42,7 @@ HTML_START_TAG_PATTERN = re.compile(
     re.DOTALL,
 )
 MEDIA_URL_ATTRIBUTE_PATTERN = re.compile(
-    r"(?P<prefix>(?<![\w:-])(?:src|href)\s*=\s*)"
+    r"(?P<prefix>(?<![\w:-])(?:src|href|data-docs-viewer-diagram-(?:light|dark)-src)\s*=\s*)"
     r"(?:(?P<quote>[\"'])(?P<quoted_value>.*?)(?P=quote)|(?P<unquoted_value>[^\s\"'=<>`]+))",
     re.IGNORECASE,
 )
@@ -416,6 +417,8 @@ def _published_files(
             payload = _read_json_bytes(data, "prepared document")
             if payload.get("doc_id") != relative_path.stem:
                 raise ValueError("Prepared document identity does not match its file")
+            if config.public_projection is not None and public_mermaid_payload_requires_projection(payload):
+                raise ValueError("Pre-publish Mermaid preparation is incomplete; rebuild Pre-publish before Publish")
             document_ids.add(relative_path.stem)
             files[relative_path] = _project_published_media_urls(config, data)
         elif relative_path == Path("documents/recent.json"):

@@ -171,6 +171,7 @@ export function mountDocsViewerPublicReport(context) {
             loadMediaTarget: context.loadMediaTarget,
             openMediaPresentation: context.openMediaPresentation
           });
+          if (typeof context.mountThemedDiagrams === "function") context.mountThemedDiagrams();
           if (!child.payload.report) return Promise.resolve();
           return mountDocsViewerPublicReport(Object.assign({}, context, child));
         }

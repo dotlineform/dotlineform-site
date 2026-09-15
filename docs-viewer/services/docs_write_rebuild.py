@@ -20,6 +20,7 @@ from docs_scope_config import (
     resolve_scope_path,
 )
 from docs_scope_build_manifest import remove_build_manifest, write_build_manifest
+from docs_mermaid_preparation import prepare_scope_mermaid
 from docs_scope_links import write_scope_links
 from docs_source_model import load_scope_docs_for_config, parse_source, write_bytes_atomic
 from docs_watch_suppression import (
@@ -350,6 +351,11 @@ def rebuild_scope_outputs(
         and scope == "analysis" and scope_config.stage == "working"
         else None
     )
+    mermaid = (
+        prepare_scope_mermaid(repo_root, scope_config)
+        if include_search and search["mode"] == "full"
+        else None
+    )
     build_manifest = (
         write_build_manifest(repo_root, scope_config)
         if include_search and search["mode"] == "full"
@@ -365,6 +371,7 @@ def rebuild_scope_outputs(
             "search": search_diagnostics,
         },
         "build_manifest": build_manifest,
+        **({"mermaid": mermaid} if mermaid is not None else {}),
         **({"links": links} if links is not None else {}),
     }
 

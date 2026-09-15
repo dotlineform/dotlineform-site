@@ -289,6 +289,7 @@ export function mountDocsViewerReport(context) {
             loadMediaTarget: context.loadMediaTarget,
             openMediaPresentation: context.openMediaPresentation
           });
+          if (typeof context.mountThemedDiagrams === "function") context.mountThemedDiagrams();
           if (!child.payload.report) return Promise.resolve();
           return mountDocsViewerReport(Object.assign({}, context, child, {
             // Child reports mount inline; the outer document owns Content Detail.

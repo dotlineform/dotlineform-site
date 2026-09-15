@@ -16,20 +16,13 @@ for _path in (REPO_ROOT / "docs-viewer" / "build", REPO_ROOT / "docs-viewer" / "
         sys.path.insert(0, str(_path))
 
 from docs_public_mermaid_projection import (  # noqa: E402
-    PUBLIC_MERMAID_MANIFEST_SCHEMA_VERSION,
     inventory_public_mermaid_fences,
     plan_public_mermaid_projection,
     public_mermaid_projection_report,
 )
-import plan_public_mermaid_projection as projection_cli  # noqa: E402
 
 from build_docs_test_support import (  # noqa: E402
-    CHILD_DOC_ID,
     PARENT_DOC_ID,
-    write_public_scope_config,
-    write_public_source_docs,
-    write_site_tools_config,
-    write_text,
 )
 
 
@@ -195,75 +188,3 @@ def test_previous_manifest_cannot_claim_authored_or_unowned_svg() -> None:
             public_url_prefix="/assets/data/docs/scopes/example",
             previous_manifest=manifest,
         )
-
-
-def test_cli_reports_both_variants_failures_and_no_writes(
-    tmp_path: Path,
-    monkeypatch: pytest.MonkeyPatch,
-    capsys: pytest.CaptureFixture[str],
-) -> None:
-    write_site_tools_config(tmp_path, media_base="")
-    write_public_scope_config(tmp_path)
-    write_public_source_docs(tmp_path)
-    child_path = (
-        tmp_path
-        / f"docs-viewer/scopes/example/source/documents/{CHILD_DOC_ID}.md"
-    )
-    write_text(
-        child_path,
-        f"""---
-doc_id: {CHILD_DOC_ID}
-title: Child
-added_date: 2026-06-03
-last_updated: 2026-06-03 10:00:00
-parent_id: {PARENT_DOC_ID}
----
-# Child
-
-{fenced_mermaid("CLI flow", "The dry-run reports both variants.")}
-
-```mermaid
-flowchart LR
-  accTitle: Broken flow
-  A --> B
-```
-""",
-    )
-    before_files = sorted(
-        path.relative_to(tmp_path).as_posix()
-        for path in tmp_path.rglob("*")
-        if path.is_file()
-    )
-    monkeypatch.chdir(tmp_path)
-
-    exit_code = projection_cli.main(["--scope", "example", "--diagnostics"])
-    output = capsys.readouterr()
-    after_files = sorted(
-        path.relative_to(tmp_path).as_posix()
-        for path in tmp_path.rglob("*")
-        if path.is_file()
-    )
-
-    assert exit_code == 0
-    assert output.err == ""
-    assert "Public Mermaid projection plan (dry-run) scope=example" in output.out
-    assert "variants total: 2" in output.out
-    assert "failures: 1" in output.out
-    assert "light=projection-assets/mermaid/" in output.out
-    assert "dark=projection-assets/mermaid/" in output.out
-    assert "requires a non-empty accDescr" in output.out
-    diagnostics_line = next(
-        line
-        for line in output.out.splitlines()
-        if line.startswith("Public Mermaid projection diagnostics: ")
-    )
-    diagnostics = json.loads(diagnostics_line.split(": ", 1)[1])
-    assert diagnostics["manifest"]["schema_version"] == PUBLIC_MERMAID_MANIFEST_SCHEMA_VERSION
-    assert diagnostics["summary"]["variant_count"] == 2
-    assert all("mermaid" not in item["source"] for item in diagnostics["diagrams"])
-    assert before_files == after_files
-    assert not (
-        tmp_path
-        / "docs-viewer/scopes/example/published/documents/.publish"
-        / projection_cli.MANIFEST_FILENAME
-    ).exists()

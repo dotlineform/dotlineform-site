@@ -265,7 +265,9 @@
                 "build_inputs": []
               },
               "svg": {
-                "build_inputs": []
+                "build_inputs": [
+                  "mermaid"
+                ]
               },
               "files": {
                 "build_inputs": []
@@ -274,7 +276,12 @@
                 "build_inputs": []
               }
             },
-            "build_sources": {}
+            "build_sources": {
+              "mermaid": {
+                "producer": "mermaid",
+                "publishes_to": "svg"
+              }
+            }
           },
           "default_doc_id": "d-20260801-073826-8865a8",
           "non_loadable_doc_ids": [],

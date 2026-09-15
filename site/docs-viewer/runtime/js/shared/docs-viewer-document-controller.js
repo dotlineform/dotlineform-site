@@ -61,6 +61,7 @@ export function initDocsViewerDocumentController(context) {
       managementDocumentActions: context.managementDocumentActions || null,
       managementService: context.managementService || null,
       managementContext: managementContextActive(),
+      mountThemedDiagrams: function () { mountThemedDiagrams(doc, payload); },
       payload: payload,
       documentMountGeneration: mountGeneration,
       reportPresentationAdapter: context.reportPresentationAdapter,
@@ -269,8 +270,9 @@ export function initDocsViewerDocumentController(context) {
   function mountInlineMermaid(doc, payload, mountGeneration) {
     var adapter = context.inlineMermaidAdapter;
     var scopeType = currentScopeType();
-    var managedLocalScope = scopeType === "local";
-    if (!managedLocalScope || !adapter || typeof adapter.mountDocument !== "function") return;
+    var inlineRenderingEnabled = scopeType === "local"
+      || (managementContextActive() && context.viewerStage() === "working");
+    if (!inlineRenderingEnabled || !adapter || typeof adapter.mountDocument !== "function") return;
     Promise.resolve(adapter.mountDocument({
       content: content,
       diagramDetailAdapter: context.diagramDetailAdapter,

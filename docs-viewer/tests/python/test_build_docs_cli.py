@@ -95,8 +95,6 @@ def test_python_docs_builders_accept_independent_workspace_overrides_after_repo_
                 "build_docs.py",
                 "build_search.py",
                 "build_document_locations.py",
-                "plan_public_mermaid_projection.py",
-                "build_public_mermaid_projection.py",
             )
         ]
 

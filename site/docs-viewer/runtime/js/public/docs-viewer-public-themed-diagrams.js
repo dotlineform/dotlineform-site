@@ -11,7 +11,14 @@ function variantUrl(diagram, theme) {
     ? diagram.dataset.docsViewerDiagramDarkSrc
     : diagram.dataset.docsViewerDiagramLightSrc;
   var url = String(value || "").trim();
-  return url.startsWith("/") ? url : "";
+  if (url.startsWith("/") && !url.startsWith("//")) return url;
+  try {
+    var parsed = new URL(url);
+    return (parsed.protocol === "https:" || parsed.protocol === "http:") && !parsed.username && !parsed.password
+      ? url : "";
+  } catch (_error) {
+    return "";
+  }
 }
 
 function appliedTheme(documentRef) {

@@ -23,6 +23,7 @@ export function mountDocsViewerPublicDocumentExtras(context) {
     managementContext: false,
     managementService: null,
     payload: payload,
+    mountThemedDiagrams: settings.mountThemedDiagrams,
     openMediaPresentation: settings.openMediaPresentation,
     openMediaTarget: settings.openMediaTarget,
     loadMediaTarget: settings.loadMediaTarget,
