@@ -17,6 +17,7 @@ from docs_workspace_config import (
     CONFIG_REL_PATH,
     SCHEMA_VERSION as WORKSPACE_CONFIG_SCHEMA_VERSION,
     COLLECTION_LIFECYCLE_TOOL_ID,
+    STAGES,
     SOURCE_DOCUMENTS_PATH,
     SOURCE_COLLECTIONS_PATH,
     DocsStageConfig,
@@ -65,29 +66,34 @@ def planned_collection_config_record(collection: str, title: str, lifecycle: dic
     return {"collection": collection, "title": title, "lifecycle": lifecycle}
 
 
-def append_collection_config(
+def plan_collection_registration(
     repo_root: Path,
     collection_config: dict[str, Any],
-    *,
-    stage: str,
-) -> None:
-    """Append the collection to its selected source owner, preserving other stages."""
+) -> dict[str, Any]:
+    """Plan both stage registrations, retaining creation provenance in Working only.
+
+    Validate both destinations before any write; the caller commits the complete
+    workspace configuration once. Pre-publish owns preparing its source/output.
+    """
     config_path = repo_root / CONFIG_REL_PATH
     payload = load_json_object(config_path, "Docs workspace config")
     if payload.get("schema_version") != WORKSPACE_CONFIG_SCHEMA_VERSION:
         raise ValueError(f"Docs workspace config schema_version must be {WORKSPACE_CONFIG_SCHEMA_VERSION}")
     stages = payload.get("stages")
-    if not isinstance(stages, dict) or not isinstance(stages.get(stage), dict):
-        raise ValueError(f"stage {stage!r} is not configured")
-    parent_record = stages[stage]
-    collections = parent_record.setdefault("collections", [])
-    if not isinstance(collections, list):
-        raise ValueError(f"stage {stage!r} collections must be an array")
     collection = str(collection_config.get("collection") or "").strip()
-    if any(isinstance(item, dict) and str(item.get("collection") or "").strip() == collection for item in collections):
-        raise ValueError(f"collection {collection!r} already exists in this stage")
-    collections.append(collection_config)
-    write_text_atomic(config_path, render_json(payload))
+    for stage in STAGES:
+        if not isinstance(stages, dict) or not isinstance(stages.get(stage), dict):
+            raise ValueError(f"stage {stage!r} is not configured")
+        collections = stages[stage].setdefault("collections", [])
+        if not isinstance(collections, list):
+            raise ValueError(f"stage {stage!r} collections must be an array")
+        if any(isinstance(item, dict) and str(item.get("collection") or "").strip() == collection for item in collections):
+            raise ValueError(f"collection {collection!r} already exists in stage {stage!r}")
+        collections.append(collection_config if stage == "working" else {
+            "collection": collection,
+            "title": collection_config["title"],
+        })
+    return payload
 
 def collection_storage_contract(parent_config: DocsStageConfig, collection: str) -> dict[str, Any]:
     source_root = parent_config.source.location.path / SOURCE_COLLECTIONS_PATH / collection
@@ -101,7 +107,7 @@ def collection_storage_contract(parent_config: DocsStageConfig, collection: str)
         "docs_output": generated_docs.as_posix(),
         "publish_output": (public_docs / collection).as_posix() if public_docs else "",
         "search_output": "",
-        "summary": "Creates a collection source/generated collection and its ordinary report host in the selected stage.",
+        "summary": "Registers the collection in Working and Pre-publish, then creates its source/generated collection and ordinary report host in Working. Pre-publish prepares its contents separately.",
     }
 
 
@@ -209,14 +215,11 @@ def report_host_source(parent_config: DocsStageConfig, collection: str, title: s
 
 
 def plan_create_collection_preview(repo_root: Path, body: dict[str, Any]) -> dict[str, Any]:
-    """Plan a host and collection in one explicit, writable workflow stage."""
+    """Plan a Working host/collection and matching Pre-publish registration."""
     parent_config = request_stage_config(repo_root, body)
     collection = normalize_collection_id(body.get("collection"), field="collection")
     title = normalize_title(body.get("title"))
     require_document_authoring(parent_config)
-    if any(item.collection == collection for item in parent_config.collections):
-        raise ValueError(f"collection {collection!r} already exists in this stage")
-
     parent_sources = parent_source_records(repo_root, parent_config)
     claimants = report_claimants(parent_sources, collection)
     if claimants:
@@ -241,6 +244,7 @@ def plan_create_collection_preview(repo_root: Path, body: dict[str, Any]) -> dic
     planned_collection_config = planned_collection_config_record(
         collection, title, association
     )
+    plan_collection_registration(repo_root, planned_collection_config)
     created_files, publish_files = collection_path_records(repo_root, parent_config, collection)
     host_path = resolve_workspace_path(repo_root, document_source_path(parent_config)) / f"{identity['doc_id']}.md"
     created_files.append(path_record(repo_root, "report_host_source", host_path, action="create"))
@@ -300,7 +304,7 @@ def apply_create_collection(
     rebuild_collection_outputs: Callable[..., dict[str, Any]],
     rebuild_stage_outputs: Callable[..., dict[str, Any]],
 ) -> dict[str, Any]:
-    """Create the previewed host/config, then rebuild only that collection and parent stage."""
+    """Register both stages, create the Working host, and await its Working rebuilds."""
     require_confirmed(body)
     preview = plan_create_collection_preview(repo_root, body)
     result = {**preview, "schema_version": LIFECYCLE_APPLY_SCHEMA_VERSION, "operation": "apply", "dry_run": dry_run, "committed": False, "retry_create": True, "rebuild": {}}
@@ -313,11 +317,12 @@ def apply_create_collection(
     identity = preview["planned_report_host_identity"]
     host_text = report_host_source(parent_config, collection, str(preview["title"]), identity)
     host_path = resolve_workspace_path(repo_root, document_source_path(parent_config)) / f"{identity['doc_id']}.md"
+    workspace_config = plan_collection_registration(repo_root, preview["planned_collection_config"])
     host_created = False
     try:
         source_model.write_text_atomic_new(host_path, host_text)
         host_created = True
-        append_collection_config(repo_root, preview["planned_collection_config"], **build_kwargs)
+        write_text_atomic(repo_root / CONFIG_REL_PATH, render_json(workspace_config))
     except Exception as error:
         if host_created and host_path.exists() and host_path.read_text(encoding="utf-8") == host_text:
             host_path.unlink()

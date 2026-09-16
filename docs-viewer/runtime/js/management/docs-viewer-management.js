@@ -556,11 +556,17 @@ export function initDocsViewerManagement(context) {
       clientOptions: managementClientOptions(),
       onSaved: function (savedTarget, response) {
         if (savedTarget.stage !== viewerStage()) return;
-        var record = savedTarget.collection
-          ? (managedDocumentTargetsEqual(savedTarget, collectionReportState?.subdocTarget) ? collectionReportState.subdocRecord : null)
-          : documentIndex.docsById.get(savedTarget.doc_id);
-        if (record) record.draft = response.record.draft;
-        if (!savedTarget.collection) context.renderSidebar();
+        if (savedTarget.collection) {
+          if (managedDocumentTargetsEqual(savedTarget, collectionReportState?.subdocTarget)) {
+            collectionReportState.subdocRecord = Object.freeze(Object.assign(
+              {}, collectionReportState.subdocRecord, { draft: response.record.draft }
+            ));
+          }
+        } else {
+          var record = documentIndex.docsById.get(savedTarget.doc_id);
+          if (record) record.draft = response.record.draft;
+          context.renderSidebar();
+        }
         renderManagementUi();
       }
     }).catch(function (error) {

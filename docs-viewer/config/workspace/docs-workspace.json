@@ -184,6 +184,10 @@
         {
           "collection": "moments",
           "title": "Moments"
+        },
+        {
+          "collection": "catalogue",
+          "title": "catalogue"
         }
       ]
     }

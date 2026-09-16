@@ -149,6 +149,12 @@
           "title": "Moments",
           "manifest_url": "/docs/generated/external/pre-publish/moments/manage-manifest.json",
           "by_id_url_base": "/docs/generated/external/pre-publish/moments/by-id"
+        },
+        {
+          "collection": "catalogue",
+          "title": "catalogue",
+          "manifest_url": "/docs/generated/external/pre-publish/catalogue/manage-manifest.json",
+          "by_id_url_base": "/docs/generated/external/pre-publish/catalogue/by-id"
         }
       ],
       "stage": "pre-publish",
@@ -209,6 +215,12 @@
           "title": "Moments",
           "manifest_url": "/docs/published/external/moments/manifest.json",
           "by_id_url_base": "/docs/published/external/moments/by-id"
+        },
+        {
+          "collection": "catalogue",
+          "title": "catalogue",
+          "manifest_url": "/docs/published/external/catalogue/manifest.json",
+          "by_id_url_base": "/docs/published/external/catalogue/by-id"
         }
       ],
       "stage": "published",
