@@ -9,19 +9,9 @@ export function catalogueDocumentSubjectTarget(subject) {
   if (!subject) return null;
   if (subject.kind === "detail") {
     var detail = parseDocsViewerDetailUid(subject.key);
-    return { targetType: "work", targetId: detail.workId, detailId: detail.detailId, subjectType: "detail" };
+    return { targetType: "work", targetId: detail.workId, detailId: detail.detailId };
   }
-  return { targetType: subject.kind, targetId: subject.key, detailId: "", subjectType: subject.kind };
-}
-
-/** Resolve identity for inspection while retaining the abbreviated source mode. */
-export function resolveCatalogueTokenSubject(token, subject) {
-  if (!token.useDocumentSubject) return token;
-  var target = catalogueDocumentSubjectTarget(subject);
-  return Object.assign({}, token, target, {
-    subjectType: token.subjectType,
-    detailId: token.presentation === "image" ? token.detailId : target.detailId
-  });
+  return { targetType: subject.kind, targetId: subject.key, detailId: "" };
 }
 
 /** Preserve authored labels while allowing an untouched default to follow selection. */

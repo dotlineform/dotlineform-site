@@ -8,7 +8,7 @@ import {
 import {
   loadSemanticTokenRegistry
 } from "./semantic-token-registry.js";
-import { readCatalogueTokenPresentation, resolveCatalogueTokenSubject } from "./catalogue-media-support.js";
+import { readCatalogueTokenPresentation } from "./catalogue-media-support.js";
 import {
   resolveSemanticTokenTargetHref
 } from "./semantic-token-targets.js";
@@ -81,7 +81,7 @@ function currentToken(state) {
   ) {
     adapter.selectCapturedRange(capture);
   }
-  return { token: resolveCatalogueTokenSubject(token, adapter.getDocumentSubject()), capture: capture };
+  return { token: token, capture: capture };
 }
 
 function renderToken(context, state, active) {
@@ -104,7 +104,6 @@ function renderToken(context, state, active) {
   var list = document.createElement("dl");
   list.className = "docsViewer__metadataInfoList";
   appendReadOnlyRow(list, "Family", "Catalogue");
-  if (token.useDocumentSubject) appendReadOnlyRow(list, "Identity source", "Document subject");
   appendReadOnlyRow(list, "Target type", token.targetType);
   appendReadOnlyRow(list, "Target ID", token.targetId);
   if (token.detailId) appendReadOnlyRow(list, "Detail UID", token.targetId + "-" + token.detailId);
@@ -199,7 +198,6 @@ function renderToken(context, state, active) {
         registry: state.registry,
         targetType: token.targetType,
         targetId: token.targetId,
-        useDocumentSubject: token.useDocumentSubject,
         detailId: detailId,
         alt: value
       };
@@ -217,8 +215,6 @@ function renderToken(context, state, active) {
         registry: state.registry,
         targetType: token.targetType,
         targetId: token.targetId,
-        useDocumentSubject: token.useDocumentSubject,
-        subjectType: token.subjectType,
         detailId: token.detailId,
         title: value
       });

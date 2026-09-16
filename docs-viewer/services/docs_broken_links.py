@@ -44,7 +44,6 @@ if str(BUILD_DIR) not in sys.path:
 from docs_builder.semantic_token_registry import load_semantic_token_registry  # noqa: E402
 from docs_builder.semantic_tokens import (  # noqa: E402
     parse_semantic_tokens,
-    resolve_catalogue_token_subject,
 )
 from docs_source_model import load_document_collection_docs_for_config  # noqa: E402
 # The workspace and builder imports initialize repository and shared Python paths.
@@ -58,7 +57,6 @@ class DocMeta:
     viewer_url: str
     stage: str
     collection: str
-    front_matter: dict[str, Any]
 
     def source_fields(self) -> dict[str, str]:
         """Expose the exact correction location without filesystem paths."""
@@ -152,7 +150,6 @@ def semantic_token_broken_entries(
     entries: list[dict[str, Any]] = []
     for meta, body in sources:
         for token in parse_semantic_tokens(body, registry=registry):
-            token = resolve_catalogue_token_subject(token, meta.front_matter)
             reason = ""
             if not token.supported:
                 reason = "unsupported_kind"
@@ -212,7 +209,6 @@ def audit_docs_broken_links(repo_root: Path, *, stage: str) -> dict[str, Any]:
             meta = DocMeta(
                 stage=config.stage, collection=collection,
                 doc_id=doc.doc_id, title=doc.title,
-                front_matter=doc.front_matter,
                 viewer_url=document_location.management_document_viewer_url(
                     collection_url, doc.doc_id, collection=bool(collection),
                 ),

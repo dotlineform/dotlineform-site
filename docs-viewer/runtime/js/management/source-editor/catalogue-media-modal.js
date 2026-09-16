@@ -2,7 +2,7 @@ import { escapeHtml, openDocsViewerManagementModal } from "../docs-viewer-manage
 import { selectedTextForCatalogueTitle } from "./catalogue-token-contract.js";
 import {
   catalogueDocumentSubjectTarget, catalogueMediaLinkLabel, loadCatalogueMediaSupport,
-  readCatalogueTokenPresentation, resolveCatalogueTokenSubject
+  readCatalogueTokenPresentation
 } from "./catalogue-media-support.js";
 import { collectSemanticTokenTargetMatches } from "./semantic-token-targets.js";
 import { parseCatalogueToken, serializeCatalogueImageToken, serializeCatalogueMediaToken } from "./catalogue-token-parser.js";
@@ -53,11 +53,10 @@ export function openCatalogueMediaModal(options = {}) {
   var subjectTarget = catalogueDocumentSubjectTarget(subject);
   var initialToken = !imageMode && parseCatalogueToken(capture && capture.text);
   if (initialToken && initialToken.presentation !== "media") initialToken = null;
-  if (initialToken) initialToken = resolveCatalogueTokenSubject(initialToken, subject);
   var selectionText = initialToken ? initialToken.title : selectedTextForCatalogueTitle(capture && capture.text);
   var state = { disposed: false, request: 0, list: null, support: null, target: null,
     details: [], workTitle: "", captionDefault: "", altDefault: "", replaceDefaults: null,
-    useDocumentSubject: Boolean(initialToken && initialToken.useDocumentSubject) };
+    useDocumentSubject: false };
   return openDocsViewerManagementModal({
     root: options.root,
     restoreFocus: adapter && typeof adapter.focus === "function" ? { focus: function () { adapter.focus(); } } : null,
@@ -213,19 +212,17 @@ export function openCatalogueMediaModal(options = {}) {
       loadCatalogueMediaSupport(adapter, { fetch: options.fetch }).then(function (support) {
         if (state.disposed) return;
         state.support = support;
-        subjectCheckbox.disabled = !subjectTarget || (imageMode && subjectTarget.subjectType !== "work");
-        search.disabled = state.useDocumentSubject;
+        subjectCheckbox.disabled = !subjectTarget || (imageMode && subject.kind !== "work");
+        search.disabled = false;
         updateMatches();
-        if (state.useDocumentSubject) {
-          selectSubject();
-        } else if (initialToken) {
+        if (initialToken) {
           var target = support.targets.find(function (item) {
             return item.targetType === initialToken.targetType && item.targetId === initialToken.targetId;
           });
           if (target) selectTarget(target, initialToken.detailId);
           else message("The selected Catalogue target is unavailable.", true);
         }
-        (state.useDocumentSubject ? alt : search).focus();
+        search.focus();
       }).catch(function (error) {
         if (!state.disposed) message(error.message || "Catalogue images are unavailable.", true);
       });
@@ -245,10 +242,6 @@ export function openCatalogueMediaModal(options = {}) {
         return false;
       }
       var fields = { registry: state.support.registry, targetType: state.target.targetType, targetId: state.target.targetId, detailId: detailId, alt: alt, title: alt };
-      if (state.useDocumentSubject) {
-        fields.useDocumentSubject = true;
-        fields.subjectType = subjectTarget.subjectType;
-      }
       if (presentation && presentation.addCaption) {
         Object.assign(fields, { caption: presentation.caption, summary: presentation.summary,
           placement: presentation.placement, fillWidth: presentation.fillWidth });
