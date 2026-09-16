@@ -1,7 +1,8 @@
 """Synchronous current-document and direct-neighbour Links maintenance.
 
-Existing Links JSON is the only relationship prior state. A refresh reads no
-unrelated Markdown or Links records and never repairs a missing existing record.
+Existing Links JSON is the only relationship prior state. Targeted refreshes
+read selected documents, necessary ancestors and directly affected neighbours.
+Complete builds initialise missing eligible records before refreshing links.
 """
 
 from __future__ import annotations
@@ -24,8 +25,8 @@ from docs_document_location import canonical_document_viewer_url
 from docs_document_subjects import normalize_authoring_subject
 from docs_rendered_links import collect_anchors, parse_docs_target, resolve_href
 from docs_workspace_config import DocsStageConfig, document_source_path, generated_documents_path, resolve_workspace_path
-from docs_source_model import parse_source, write_text_atomic
-from docs_publication_ignore import working_ignored_doc_ids
+from docs_source_model import load_document_collection_docs_for_config, parse_source, write_text_atomic
+from docs_publication_ignore import WorkingLinksExclusions, working_ignored_doc_ids
 
 CONFIG_PATH = Path("docs-viewer/config/links-builder.json")
 
@@ -59,8 +60,8 @@ def prepare_document_links(
 ) -> dict[str, Any] | None:
     """Keep explicit change/creation identities independent of ordinary rendering.
 
-    A create operation or watcher supplies initial creation. Missing files never
-    imply creation, and no collection index is read to make that decision.
+    Targeted operations require explicit creation. Complete builds also admit
+    missing eligible records from source, without consulting a collection index.
     """
     if not links_enabled(builder.repo_root, builder.config):
         return None
@@ -79,7 +80,6 @@ class _DocumentRefresh:
         self.builder = builder
         self.config = builder.config
         self.collection = getattr(builder, "collection_id", "")
-        self.ignored_ids = working_ignored_doc_ids(builder.repo_root, self.config)
         self.owners = {"": self.config, **{owner.collection: owner for owner in self.config.collections}}
         self.sources = {name: resolve_workspace_path(builder.repo_root, document_source_path(owner)) for name, owner in self.owners.items()}
         self.outputs = {name: resolve_workspace_path(builder.repo_root, generated_documents_path(owner)) / "by-id" for name, owner in self.owners.items()}
@@ -88,6 +88,10 @@ class _DocumentRefresh:
         self.output = self.outputs[""].parent / "links-by-id"
         self.routes = ("/docs/", builder.workspace.public_viewer_base_url)
         self.docs = {self.key(doc.doc_id): doc for doc in plan["documents"]}
+        self.exclusions = WorkingLinksExclusions(
+            self.sources[""], working_ignored_doc_ids(builder.repo_root, self.config),
+            {doc.doc_id: doc.parent_id for doc in plan["documents"]} if not self.collection else None,
+        )
         self.pending = {self.key(doc_id) for doc_id in plan["built_doc_ids"]} if not write else set()
         self.records: dict[DocumentTarget, DocumentLinks | None] = {}
         self.original: dict[DocumentTarget, str | None] = {}
@@ -101,6 +105,48 @@ class _DocumentRefresh:
         if target.stage != self.config.stage or target.collection not in self.owners or not is_immutable_doc_id(target.doc_id):
             raise ValueError("Links requires an exact configured document identity")
 
+    def excluded(self, target: DocumentTarget) -> bool:
+        return not target.collection and self.exclusions.excludes(target.doc_id)
+
+    def initialise_missing(self) -> None:
+        """Seed a complete build before any relationship refresh.
+
+        Ordinary Build starts the workspace sequence, so it seeds all configured
+        collections first. A standalone collection Build seeds its own sources.
+        Existing records remain the relationship prior state.
+        """
+        ordinary = list(self.docs.values()) if not self.collection else []
+        owners = {self.collection: self.owners[self.collection]} if self.collection else self.owners
+        identities: set[str] = set()
+        for collection, owner in owners.items():
+            docs = list(self.docs.values()) if collection == self.collection else load_document_collection_docs_for_config(
+                self.builder.repo_root, self.config, owner,
+            )
+            host_id = ""
+            if collection and docs and not self.collection:
+                hosts = [doc.doc_id for doc in ordinary if doc.report and doc.report.id == "docs_collection" and doc.report.collection == collection]
+                if len(hosts) != 1:
+                    raise ValueError(f"Links requires exactly one report host for collection {collection}")
+                host_id = hosts[0]
+            for doc in docs:
+                target = DocumentTarget(self.config.stage, collection, doc.doc_id)
+                self.validate_target(target)
+                source = _safe_path(self.sources[collection], f"{doc.doc_id}.md")
+                if not source.is_file() or doc.front_matter.get("doc_id") != doc.doc_id or (collection != self.collection and source != doc.path):
+                    raise ValueError("Links initialisation requires exact source filenames and identities")
+                if doc.doc_id in identities:
+                    raise ValueError(f"Links source identity exists in multiple collections: {doc.doc_id}")
+                identities.add(doc.doc_id)
+                if self.excluded(target) or _safe_path(self.output, f"{doc.doc_id}.json").exists():
+                    continue
+                if collection == self.collection:
+                    summary = self.summary(target, doc)
+                else:
+                    href = canonical_document_viewer_url(self.config, host_id, subdoc_id=doc.doc_id)
+                    summary = DocumentSummary(target, doc.title, href, normalize_authoring_subject(doc.front_matter, folder_supported=True))
+                self.records[target] = DocumentLinks(summary)
+                self.original[target] = None
+
     def payload(self, target: DocumentTarget, *, require_eligible: bool = True) -> dict[str, Any] | None:
         """Read one exact generated destination, including its source identity guard."""
         self.validate_target(target)
@@ -111,7 +157,7 @@ class _DocumentRefresh:
         metadata = doc.front_matter if doc else parse_source(source)[0]
         if metadata.get("doc_id") != target.doc_id:
             raise ValueError("Links source document identity does not match")
-        if require_eligible and not target.collection and target.doc_id in self.ignored_ids:
+        if require_eligible and self.excluded(target):
             return None
         path = _safe_path(self.outputs[target.collection], f"{target.doc_id}.json")
         if target in self.pending and doc:
@@ -256,6 +302,7 @@ class _DocumentRefresh:
             record.incoming.pop(previous.target, None)
             record.outgoing.pop(previous.target, None)
         record.document = summary
+        record.incoming = {key: value for key, value in record.incoming.items() if not self.excluded(key)}
         references = self.references(target, doc, summary.href)
         for neighbour in set(record.outgoing) | set(references):
             other = self.read(neighbour)
@@ -288,18 +335,22 @@ def build_document_links(builder: DocsDataBuilder, plan: dict[str, Any] | None, 
 
     def run() -> dict[str, Any]:
         refresh = _DocumentRefresh(builder, plan, write=write)
+        if builder.only_doc_ids is None and builder.links_doc_ids is None:
+            refresh.initialise_missing()
         # Admit only genuinely new selected documents before resolving mutual links.
         for doc_id in sorted(plan["new_doc_ids"]):
             key = refresh.key(doc_id)
             doc = refresh.docs[key]
-            if key.collection or key.doc_id not in refresh.ignored_ids:
+            if not refresh.excluded(key):
                 refresh.admit_created(key, doc)
         added = deleted = 0
         for doc_id in sorted(plan["doc_ids"]):
             key = refresh.key(doc_id)
             doc = refresh.docs.get(key)
-            if doc is not None and not key.collection and key.doc_id in refresh.ignored_ids:
-                continue
+            if refresh.excluded(key):
+                if not _safe_path(refresh.output, f"{key.doc_id}.json").exists():
+                    continue
+                doc = None
             new, removed = refresh.refresh(key, doc)
             added += new
             deleted += removed
