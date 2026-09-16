@@ -5,7 +5,7 @@ const TITLE_ORDER = new Intl.Collator("en", { sensitivity: "base", numeric: true
 
 function documentKey(document) {
   const target = document.target;
-  return JSON.stringify([target.stage, target.sub_scope, target.doc_id]);
+  return JSON.stringify([target.stage, target.collection, target.doc_id]);
 }
 
 /** Project directed pairs from the saved aggregate; incoming mirrors add no rows.

@@ -15,11 +15,11 @@ from docs_watch_suppression import clear_watch_suppressions, watch_suppression_o
 def set_draft(repo_root: Path, body: dict[str, Any], *, dry_run: bool = False) -> dict[str, Any]:
     """Save one revision-checked boolean; the normal watcher owns its build."""
     required = {"stage", "doc_id", "draft", "source_revision"}
-    if set(body) - {"sub_scope"} != required:
-        raise ValueError("Set Draft requires stage, doc_id, draft and source_revision, with optional sub_scope")
+    if set(body) - {"collection"} != required:
+        raise ValueError("Set Draft requires stage, doc_id, draft and source_revision, with optional collection")
     if not isinstance(body["draft"], bool):
         raise ValueError("draft must be true or false")
-    target = {key: body[key] for key in ("stage", "sub_scope", "doc_id") if key in body}
+    target = {key: body[key] for key in ("stage", "collection", "doc_id") if key in body}
     resolved = resolve_managed_document_target(repo_root, target)
     if not source_model.collection_supports_draft(resolved.document_config):
         raise ValueError("Set Draft is available only in Working")
@@ -33,12 +33,12 @@ def set_draft(repo_root: Path, body: dict[str, Any], *, dry_run: bool = False) -
             error="Document source changed before draft readiness was saved",
         ))
     front_matter = {**document.front_matter, "draft": body["draft"]}
-    source = source_model.format_source(front_matter, document.body, sub_scope=resolved.sub_scope)
+    source = source_model.format_source(front_matter, document.body, collection=resolved.collection)
     changed = document.front_matter.get("draft") is not body["draft"]
     if changed and not dry_run:
         # A completed earlier management save must not hide this new watcher write.
         clear_watch_suppressions(repo_root, watch_suppression_owner(
-            resolved.sub_scope, stage=resolved.stage,
+            resolved.collection, stage=resolved.stage,
         ), [document.path.relative_to(resolved.source_root).as_posix()])
         source_model.write_text_atomic(document.path, source)
     return {

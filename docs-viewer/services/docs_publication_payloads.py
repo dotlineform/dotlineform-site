@@ -28,8 +28,8 @@ def project_public_view(config: DocsWorkspaceConfig, payload: dict[str, Any]) ->
 
     parent_prefix = asset_url(public_documents_path(config))
     child_prefixes = {
-        child.sub_scope: asset_url(public_documents_path(child))
-        for child in select_workspace_stage(config, "pre-publish").sub_scopes
+        child.collection: asset_url(public_documents_path(child))
+        for child in select_workspace_stage(config, "pre-publish").collections
     }
 
     def project_url(value: str) -> str:
@@ -94,7 +94,7 @@ def project_published_view(config: DocsWorkspaceConfig, payload: dict[str, Any])
         owns_document = parsed.path in {"/docs/", config.public_viewer_base_url}
         owns_api = parsed.path in {"/docs/doc", "/docs/index-tree", "/docs/recent", "/docs/search", "/docs/backlinks"}
         if (owns_document or owns_api) and "scope" in query:
-            raise ValueError("Accepted snapshot contains a retired scope target; convert the snapshot before activation")
+            raise ValueError("Accepted snapshot contains a retired scope target; prepare and publish a fresh snapshot before activation")
         if query.get("stage", "pre-publish") == "pre-publish":
             if owns_document and is_immutable_doc_id(query.get("doc", "")):
                 pairs = [(key, value) for key, value in pairs if key != "stage"]

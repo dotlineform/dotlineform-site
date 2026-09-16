@@ -138,7 +138,7 @@ def empty_export_report(
     export_id: str,
     config_id: str,
     stage: str,
-    sub_scope: str,
+    collection: str,
     target_format: str,
     paths: ExportOutputPaths | None = None,
     warnings: list[str],
@@ -167,8 +167,8 @@ def empty_export_report(
         "issue_counts": {"errors": len(errors), "warnings": len(warnings)},
         "output_written": False,
     }
-    if sub_scope:
-        report["sub_scope"] = sub_scope
+    if collection:
+        report["collection"] = collection
     if supported_formats is not None:
         report["supported_target_formats"] = supported_formats
     return report
@@ -302,7 +302,7 @@ def build_export(
     select_all: bool,
     missing_summary_only: bool | None,
     write: bool,
-    sub_scope: str = "",
+    collection: str = "",
     expand_document_tree_descendants: bool = True,
     data_domain: str = "documents",
     config_path: str | None = None,
@@ -311,7 +311,7 @@ def build_export(
     output_root: Path | str | None = None,
     metadata_root: Path | str | None = None,
 ) -> dict[str, Any]:
-    normalized_sub_scope = normalize_text(sub_scope).lower()
+    normalized_collection = normalize_text(collection).lower()
     generated_at, filename_timestamp_dt = export_run_times()
     export_id = export_id_from_generated_at(generated_at)
     config_payload = load_config_file(repo_root, config_path)
@@ -322,7 +322,7 @@ def build_export(
             export_id=export_id,
             config_id=config_id,
             stage=stage,
-            sub_scope=normalized_sub_scope,
+            collection=normalized_collection,
             target_format="",
             warnings=payload_warnings,
             errors=payload_errors,
@@ -335,7 +335,7 @@ def build_export(
             export_id=export_id,
             config_id=config_id,
             stage=stage,
-            sub_scope=normalized_sub_scope,
+            collection=normalized_collection,
             target_format="",
             warnings=payload_warnings,
             errors=[str(exc)],
@@ -347,8 +347,8 @@ def build_export(
         errors.append(f"config {config_id}: data_domain {data_domain} is not supported")
     if not config.get("enabled", False):
         errors.append(f"config {config_id}: export config is disabled")
-    if normalized_sub_scope and select_all:
-        errors.append("sub-scope package preparation requires explicit doc_ids")
+    if normalized_collection and select_all:
+        errors.append("collection package preparation requires explicit doc_ids")
     selection_config = config.get("selection") if isinstance(config.get("selection"), dict) else {}
     if missing_summary_only is not None and not isinstance(missing_summary_only, bool):
         errors.append(f"config {config_id}: missing_summary_only must be true, false, or null")
@@ -396,7 +396,7 @@ def build_export(
             export_id=export_id,
             config_id=config_id,
             stage=stage,
-            sub_scope=normalized_sub_scope,
+            collection=normalized_collection,
             target_format=resolved_target_format,
             paths=paths,
             warnings=warnings,
@@ -407,7 +407,7 @@ def build_export(
         source_context, docs = load_source_export_context(
             repo_root,
             stage,
-            normalized_sub_scope,
+            normalized_collection,
         )
     except (FileNotFoundError, ValueError, RuntimeError, OSError) as exc:
         return empty_export_report(
@@ -415,7 +415,7 @@ def build_export(
             export_id=export_id,
             config_id=config_id,
             stage=stage,
-            sub_scope=normalized_sub_scope,
+            collection=normalized_collection,
             target_format=resolved_target_format,
             paths=paths,
             warnings=warnings,
@@ -426,7 +426,7 @@ def build_export(
     context = ExportContext(
         repo_root=repo_root,
         stage=stage,
-        sub_scope=normalized_sub_scope,
+        collection=normalized_collection,
         supports_return_import=(
             supports_return_import(config)
             and source_context.return_import_enabled
@@ -491,8 +491,8 @@ def build_export(
         "errors": errors,
         "issue_counts": {"errors": len(errors), "warnings": len(warnings)},
     }
-    if normalized_sub_scope:
-        report["sub_scope"] = normalized_sub_scope
+    if normalized_collection:
+        report["collection"] = normalized_collection
 
     if errors:
         report["output_written"] = False
@@ -511,7 +511,7 @@ def build_export(
             export_id=export_id,
             docs=(
                 [{**doc, "parent_id": ""} for doc in selected]
-                if normalized_sub_scope
+                if normalized_collection
                 else selected
             ),
         )

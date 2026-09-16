@@ -25,7 +25,7 @@ function sameReportTarget(left, right) {
   var second = right || {};
   return cleanString(first.reportId) === cleanString(second.reportId)
     && cleanString(first.preset) === cleanString(second.preset)
-    && cleanString(first.subScope) === cleanString(second.subScope);
+    && cleanString(first.collection) === cleanString(second.collection);
 }
 
 function immutableTargetContext(state) {
@@ -218,7 +218,7 @@ export function createDocsViewerReportPresentationAdapter(options) {
       reportTarget: {
         preset: cleanString(reportMeta.preset),
         reportId: cleanString(reportMeta.reportId),
-        subScope: cleanString(reportMeta.subScope)
+        collection: cleanString(reportMeta.collection)
       },
       requestContentDetail: typeof context.requestContentDetail === "function"
         ? context.requestContentDetail

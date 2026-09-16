@@ -24,17 +24,17 @@ var MANAGEMENT_ACTION_MENU_ITEMS = [
     label: "Export"
   },
   {
-    id: "docsViewerManageNewSubScopeButton",
-    actionId: ACTION_IDS.NEW_SUB_SCOPE,
+    id: "docsViewerManageNewCollectionButton",
+    actionId: ACTION_IDS.NEW_COLLECTION,
     emoji: "📁",
-    label: "New sub-scope",
+    label: "New collection",
     hidden: true
   },
   {
-    id: "docsViewerManageDeleteSubScopeButton",
-    actionId: ACTION_IDS.DELETE_SUB_SCOPE,
+    id: "docsViewerManageDeleteCollectionButton",
+    actionId: ACTION_IDS.DELETE_COLLECTION,
     emoji: "🗑️",
-    label: "Delete sub-scope",
+    label: "Delete collection",
     hidden: true
   },
   {

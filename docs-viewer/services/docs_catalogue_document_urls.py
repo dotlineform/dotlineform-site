@@ -19,11 +19,11 @@ CatalogueDocuments = dict[str, dict[str, list[dict[str, str]]]]
 
 
 def exact_location_target(record: Mapping[str, Any]) -> CatalogueTarget:
-    sub_scope = str(record.get("sub_scope") or "").strip().lower()
+    collection = str(record.get("collection") or "").strip().lower()
     doc_id = str(record.get("doc_id") or "").strip()
     if "scope_id" in record or "scope" in record or not doc_id:
-        raise ValueError("public document location must retain exact sub_scope and doc_id without scope")
-    return sub_scope, doc_id
+        raise ValueError("public document location must retain exact collection and doc_id without scope")
+    return collection, doc_id
 
 
 def project_catalogue_documents(
@@ -88,19 +88,19 @@ def project_catalogue_documents_from_subject_associations(
         target: {} for target in location_targets
     }
     seen_targets: set[CatalogueTarget] = set()
-    for (stage, sub_scope), payload in sorted(subject_associations_by_collection.items()):
+    for (stage, collection), payload in sorted(subject_associations_by_collection.items()):
         if payload.get("schema_version") != "docs_subject_associations_v2":
             raise ValueError(
-                f"accepted subject associations for {stage}/{sub_scope} have an unsupported schema"
+                f"accepted subject associations for {stage}/{collection} have an unsupported schema"
             )
-        if stage != "published" or "scope" in payload or payload.get("stage") != stage or payload.get("sub_scope") != sub_scope:
+        if stage != "published" or "scope" in payload or payload.get("stage") != stage or payload.get("collection") != collection:
             raise ValueError(
-                f"accepted subject associations for {stage}/{sub_scope} have the wrong collection identity"
+                f"accepted subject associations for {stage}/{collection} have the wrong collection identity"
             )
         raw_associations = payload.get("associations")
         if not isinstance(raw_associations, list):
             raise ValueError(
-                f"accepted subject associations for {stage}/{sub_scope} are missing associations"
+                f"accepted subject associations for {stage}/{collection} are missing associations"
             )
         for raw_association in raw_associations:
             if not isinstance(raw_association, Mapping):
@@ -121,12 +121,12 @@ def project_catalogue_documents_from_subject_associations(
                 if not isinstance(raw_target, Mapping):
                     raise ValueError("accepted subject document must contain an exact target")
                 target = (
-                    str(raw_target.get("sub_scope") or "").strip().lower(),
+                    str(raw_target.get("collection") or "").strip().lower(),
                     str(raw_target.get("doc_id") or "").strip(),
                 )
                 if not target[0] or not target[1]:
                     raise ValueError("accepted subject document target is incomplete")
-                if "scope" in raw_target or raw_target.get("stage") != stage or target[0] != sub_scope:
+                if "scope" in raw_target or raw_target.get("stage") != stage or target[0] != collection:
                     raise ValueError("accepted subject document has the wrong collection identity")
                 if target not in location_targets:
                     raise ValueError(
@@ -158,8 +158,8 @@ def load_public_catalogue_documents(repo_root: Path) -> CatalogueDocuments:
             raise ValueError(f"Accepted {path} must be an object")
         return project_public_view(workspace, value)
 
-    accepted_children = {path.parts[1] for path in files if len(path.parts) > 2 and path.parts[0] == "sub-scopes"}
-    configured_children = {child.sub_scope: child for child in config.sub_scopes}
+    accepted_children = {path.parts[1] for path in files if len(path.parts) > 2 and path.parts[0] == "collections"}
+    configured_children = {child.collection: child for child in config.collections}
     if accepted_children - set(configured_children):
         raise ValueError("Accepted snapshot contains unconfigured child identities")
     children = [configured_children[child] for child in sorted(accepted_children)]
@@ -168,15 +168,15 @@ def load_public_catalogue_documents(repo_root: Path) -> CatalogueDocuments:
         search_payload=payload(Path("search/index.json")),
         parent_documents={path.stem: payload(path) for path in files
                           if len(path.parts) == 3 and path.parts[:2] == ("documents", "by-id") and path.suffix == ".json"},
-        sub_scope_manifests={child.sub_scope: payload(Path("sub-scopes") / child.sub_scope / "documents/manifest.json")
+        collection_manifests={child.collection: payload(Path("collections") / child.collection / "documents/manifest.json")
                              for child in children},
     )
     associations = {}
     for child in children:
-        path = Path("sub-scopes") / child.sub_scope / "documents/subject-associations.json"
+        path = Path("collections") / child.collection / "documents/subject-associations.json"
         if path in files:
-            associations[("published", child.sub_scope)] = payload(path)
-        elif child.sub_scope_customisation is not None:
+            associations[("published", child.collection)] = payload(path)
+        elif child.collection_customisation is not None:
             raise FileNotFoundError(f"Accepted Published snapshot is missing {path}")
     return project_catalogue_documents_from_subject_associations(
         exact_locations=locations, subject_associations_by_collection=associations,

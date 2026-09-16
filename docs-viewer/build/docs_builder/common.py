@@ -37,7 +37,7 @@ from markdown_renderer import plain_text_from_html, render_markdown_to_html  # n
 DOCS_VIEWER_BROWSER_CONFIG_PATH = Path("docs-viewer/config/defaults/docs-viewer-config.json")
 DOCS_VIEWER_PUBLIC_BROWSER_CONFIG_PATH = Path("docs-viewer/config/defaults/docs-viewer-public-config.json")
 SITE_DOCS_VIEWER_PUBLIC_BROWSER_CONFIG_PATH = Path("site/docs-viewer/config/defaults/docs-viewer-public-config.json")
-DOCS_VIEWER_BROWSER_CONFIG_SCHEMA_VERSION = "docs_viewer_config_v2"
+DOCS_VIEWER_BROWSER_CONFIG_SCHEMA_VERSION = "docs_viewer_config_v3"
 DOCS_INDEX_TREE_SCHEMA_VERSION = "docs_index_tree_v1"
 DOCS_RECENT_SCHEMA_VERSION = "docs_recent_v1"
 DEFAULT_RECENT_LIMIT = 20

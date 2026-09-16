@@ -32,7 +32,7 @@ EXPORT_METADATA_FIELDS = {
     "adapter_id",
     "data_domain",
     "stage",
-    "sub_scope",
+    "collection",
     "target_format",
     "record_shape",
     "generated_at",

@@ -64,13 +64,13 @@ function reportService(context) {
 
 function normalizeDocument(value, stage) {
   const target = value && value.target;
-  const subScope = cleanString(target && target.sub_scope).toLowerCase();
+  const collection = cleanString(target && target.collection).toLowerCase();
   const docId = cleanString(target && target.doc_id);
   const title = cleanString(value && value.title);
   const href = cleanString(value && value.href);
   if (
     !exactKeys(value, ["target", "title", "href"])
-    || !exactKeys(target, ["stage", "sub_scope", "doc_id"])
+    || !exactKeys(target, ["stage", "collection", "doc_id"])
     || cleanString(target && target.stage) !== stage
     || !docId
     || !title
@@ -79,20 +79,20 @@ function normalizeDocument(value, stage) {
     throw new Error("Docs Media document target is invalid.");
   }
   return {
-    target: { stage, subScope, docId },
+    target: { stage, collection, docId },
     title,
     href
   };
 }
 
 function normalizeRow(value, stage) {
-  const subScope = cleanString(value && value.sub_scope);
+  const collection = cleanString(value && value.collection);
   const mediaType = cleanString(value && value.media_type).toLowerCase();
   const identity = cleanString(value && value.identity);
   const role = cleanString(value && value.role);
   const documents = value && value.documents;
   if (
-    !exactKeys(value, ["stage", "sub_scope", "media_type", "identity", "role", "documents"])
+    !exactKeys(value, ["stage", "collection", "media_type", "identity", "role", "documents"])
     || value.stage !== stage
     || !mediaType
     || !identity
@@ -104,10 +104,10 @@ function normalizeRow(value, stage) {
   }
   return {
     stage,
-    subScope,
+    collection,
     mediaType,
     identity,
-    mediaTarget: { stage, sub_scope: subScope, role, media_type: mediaType, identity },
+    mediaTarget: { stage, collection: collection, role, media_type: mediaType, identity },
     documents: documents.map((documentRecord) => normalizeDocument(documentRecord, stage))
   };
 }
@@ -231,7 +231,7 @@ function appendDocumentsCell(rowNode, row) {
     link.href = documentRecord.href;
     link.textContent = documentRecord.title;
     link.dataset.docsViewerStage = documentRecord.target.stage;
-    link.dataset.docsViewerSubscope = documentRecord.target.subScope;
+    link.dataset.docsViewerCollection = documentRecord.target.collection;
     link.dataset.docsViewerDocId = documentRecord.target.docId;
     cell.appendChild(link);
   });

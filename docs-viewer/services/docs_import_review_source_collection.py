@@ -48,13 +48,13 @@ def _record_state(
     folder: EditedReviewSourceFolder,
     record_index: int,
     *,
-    sub_scope: str,
+    collection: str,
 ) -> CollectionRecordState:
     source = folder.records[record_index]
     front_matter: dict[str, Any] = {"title": source.title}
     if source.summary_present:
         front_matter["summary"] = source.summary
-    if source.parent_id_present and not sub_scope:
+    if source.parent_id_present and not collection:
         front_matter["parent_id"] = source.parent_id
     normalized = ImportContent(
         source_kind=EDITED_REVIEW_SOURCE_FORMAT,
@@ -68,7 +68,7 @@ def _record_state(
         front_matter=front_matter,
         parent_id=(
             source.parent_id
-            if source.parent_id_present and not sub_scope
+            if source.parent_id_present and not collection
             else ""
         ),
         provenance={
@@ -85,13 +85,13 @@ def _record_state(
         parent_id=normalized.parent_id,
         normalized=normalized,
     )
-    if sub_scope and source.parent_id:
+    if collection and source.parent_id:
         state.blocked = True
         state.errors.append(
             collection_issue(
                 "error",
-                "sub_scope_hierarchy_not_allowed",
-                "edited review sub-scope source has non-empty parent_id",
+                "collection_hierarchy_not_allowed",
+                "edited review collection source has non-empty parent_id",
                 record_index=record_index,
                 doc_id=source.doc_id,
             )
@@ -108,15 +108,15 @@ def _validate_destination(
             "Edited review source folder belongs to stage "
             f"{folder.source_stage!r}, not {collection.stage!r}.",
         )
-    if folder.source_sub_scope != collection.sub_scope:
+    if folder.source_collection != collection.collection:
         source_target = (
-            f"{folder.source_stage}/{folder.source_sub_scope}"
-            if folder.source_sub_scope
+            f"{folder.source_stage}/{folder.source_collection}"
+            if folder.source_collection
             else folder.source_stage
         )
         destination_target = (
-            f"{collection.stage}/{collection.sub_scope}"
-            if collection.sub_scope
+            f"{collection.stage}/{collection.collection}"
+            if collection.collection
             else collection.stage
         )
         raise ValueError(
@@ -151,14 +151,14 @@ def plan_edited_review_source_collection(
         },
         docs,
     )
-    if collection.sub_scope:
+    if collection.collection:
         non_flat_targets = sorted(doc.doc_id for doc in docs if doc.parent_id)
         if non_flat_targets:
             blockers.append(
                 collection_issue(
                     "error",
-                    "non_flat_sub_scope_target",
-                    "configured sub-scope contains canonical hierarchy metadata: "
+                    "non_flat_collection_target",
+                    "configured collection contains canonical hierarchy metadata: "
                     + ", ".join(non_flat_targets),
                 )
             )
@@ -166,7 +166,7 @@ def plan_edited_review_source_collection(
         _record_state(
             folder,
             record_index,
-            sub_scope=collection.sub_scope,
+            collection=collection.collection,
         )
         for record_index in range(len(folder.records))
     ]
@@ -175,7 +175,7 @@ def plan_edited_review_source_collection(
         "review_folder_id": folder.review_folder_id,
         "profile_id": folder.profile_id,
         "source_stage": folder.source_stage,
-        "source_sub_scope": folder.source_sub_scope,
+        "source_collection": folder.source_collection,
         "content_format": CONTENT_FORMAT_MARKDOWN,
         "document_count": folder.document_count,
         "staged_path": marker_path(folder.path, workspace_root=workspace_root),
@@ -217,7 +217,7 @@ def apply_edited_review_source_collection(
     workspace_root: Path,
     log_event: Callable[[Path, str, dict[str, Any]], None],
     perform_source_write_and_rebuild_atomic: Callable[..., dict[str, Any]],
-    perform_sub_scope_source_write_and_rebuild: Callable[..., dict[str, Any]],
+    perform_collection_source_write_and_rebuild: Callable[..., dict[str, Any]],
 ) -> dict[str, Any]:
     """Revalidate and atomically apply one confirmed exact edited folder."""
 
@@ -236,7 +236,7 @@ def apply_edited_review_source_collection(
         workspace_root=workspace_root,
         planned_identities=planned_identities,
     )
-    if collection.sub_scope:
+    if collection.collection:
         return apply_import_content_collection_atomic(
             repo_root,
             plan,
@@ -244,8 +244,8 @@ def apply_edited_review_source_collection(
             workspace_root=workspace_root,
             log_event=log_event,
             collection=collection,
-            perform_sub_scope_source_write_and_rebuild=(
-                perform_sub_scope_source_write_and_rebuild
+            perform_collection_source_write_and_rebuild=(
+                perform_collection_source_write_and_rebuild
             ),
         )
     return apply_import_content_collection_document_atomic(

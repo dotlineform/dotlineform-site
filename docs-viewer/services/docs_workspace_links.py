@@ -32,10 +32,10 @@ def write_workspace_links(repo_root: Path, config: DocsStageConfig) -> dict[str,
         summary = record.get("self")
         identity = summary.get("target") if isinstance(summary, dict) else None
         if (record.get("schema_version") != 2 or not isinstance(identity, dict)
-                or set(identity) != {"stage", "sub_scope", "doc_id"}
+                or set(identity) != {"stage", "collection", "doc_id"}
                 or identity["stage"] != config.stage or identity["doc_id"] != path.stem
                 or not is_immutable_doc_id(identity["doc_id"])
-                or identity["sub_scope"] not in {"", *(child.sub_scope for child in config.sub_scopes)}):
+                or identity["collection"] not in {"", *(child.collection for child in config.collections)}):
             raise ValueError(f"Prepared Links record {path.name} has invalid stage or document identity")
         if not isinstance(record.get("incoming"), list) or not isinstance(record.get("outgoing"), list):
             raise ValueError(f"Prepared Links record {path.name} requires incoming and outgoing lists")

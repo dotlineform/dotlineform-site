@@ -308,7 +308,7 @@ function openPrepareOptions(options) {
       try {
         const request = createDocumentPackagePrepareRequest({
           stage: options.stage,
-          subScope: options.subScope,
+          collection: options.collection,
           profile,
           documents: options.documents,
           effectiveDocIds: state.projection.docIds,
@@ -360,7 +360,7 @@ function showPrepareResult(options) {
 export async function openDocumentPackagePrepareWorkflow(options = {}) {
   const root = options.root || document.body;
   const stage = packageText(options.stage).toLowerCase();
-  const subScope = packageText(options.subScope).toLowerCase();
+  const collection = packageText(options.collection).toLowerCase();
   const checkedDocIds = normalizeCheckedDocIds(options.checkedDocIds);
   const callbacks = options.callbacks || {};
   const client = {
@@ -390,8 +390,8 @@ export async function openDocumentPackagePrepareWorkflow(options = {}) {
     setBusy(true);
     setMessage("Loading package options...", false);
     [configPayload, documentsPayload] = await Promise.all([
-      client.getConfig(stage, subScope),
-      client.getDocuments(stage, subScope)
+      client.getConfig(stage, collection),
+      client.getDocuments(stage, collection)
     ]);
   } catch (error) {
     loadError = error;
@@ -413,19 +413,19 @@ export async function openDocumentPackagePrepareWorkflow(options = {}) {
     if (packageText(configPayload.stage) !== stage || packageText(documentsPayload.stage) !== stage) {
       throw new Error("Package response does not match the selected stage.");
     }
-    if (subScope) {
+    if (collection) {
       if (
         packageText(configPayload && configPayload.stage).toLowerCase() !== stage
-        || packageText(configPayload && configPayload.sub_scope).toLowerCase() !== subScope
+        || packageText(configPayload && configPayload.collection).toLowerCase() !== collection
       ) {
-        throw new Error("Package configuration did not match the active sub-scope collection.");
+        throw new Error("Package configuration did not match the active collection.");
       }
       if (
         packageText(documentsPayload && documentsPayload.stage).toLowerCase() !== stage
-        || packageText(documentsPayload && documentsPayload.sub_scope).toLowerCase() !== subScope
+        || packageText(documentsPayload && documentsPayload.collection).toLowerCase() !== collection
         || documentsPayload.flat_collection !== true
       ) {
-        throw new Error("Package documents did not match the active flat sub-scope collection.");
+        throw new Error("Package documents did not match the active flat collection.");
       }
     }
     const profiles = Array.isArray(configPayload.profiles) ? configPayload.profiles : [];
@@ -445,11 +445,11 @@ export async function openDocumentPackagePrepareWorkflow(options = {}) {
       root,
       restoreFocus: options.restoreFocus,
       stage,
-      subScope,
+      collection,
       checkedDocIds,
       profiles,
       documents,
-      flatCollection: Boolean(subScope)
+      flatCollection: Boolean(collection)
     });
     if (!result || !result.confirmed) return { confirmed: false };
 

@@ -36,7 +36,7 @@ from docs_media_storage import (
 )
 from docs_mermaid_media import produce_mermaid_svg
 from docs_workspace_config import (
-    DocsStageConfig, DocsSubScopeConfig,
+    DocsStageConfig, DocsCollectionConfig,
     load_docs_media_owner, managed_media_config, require_document_authoring,
 )
 from docs_staged_media_fragments import (
@@ -81,12 +81,12 @@ class StagedMediaContract:
     source_root: str
     source_directory: str
     source_path_marker: str
-    sub_scope: str = ""
+    collection: str = ""
 
 
-def media_owner(repo_root: Path, contract: StagedMediaContract) -> DocsStageConfig | DocsSubScopeConfig:
+def media_owner(repo_root: Path, contract: StagedMediaContract) -> DocsStageConfig | DocsCollectionConfig:
     """Resolve the collection validated for this insertion, with no parent fallback."""
-    return load_docs_media_owner(repo_root, contract.stage, contract.sub_scope)
+    return load_docs_media_owner(repo_root, contract.stage, contract.collection)
 
 
 def normalize_media_kind(value: Any) -> str:
@@ -180,9 +180,9 @@ def list_staged_media_files(
     kind: str,
     *,
     stage: str,
-    sub_scope: str = "",
+    collection: str = "",
 ) -> dict[str, Any]:
-    require_document_authoring(load_docs_media_owner(repo_root, stage, sub_scope))
+    require_document_authoring(load_docs_media_owner(repo_root, stage, collection))
     normalized_kind = normalize_media_kind(kind)
 
     status = workspace_status(repo_root, required_paths=("import_staging",))
@@ -248,8 +248,10 @@ def _prepared_media_source(
 def _staged_media_request_contract(repo_root: Path, body: dict[str, Any]) -> StagedMediaContract:
     kind = normalize_media_kind(body.get("media_kind"))
     if "scope" in body:
-        raise ValueError("scope is retired; supply stage and optional sub_scope")
-    config = load_docs_media_owner(repo_root, body.get("stage"), body.get("sub_scope", ""))
+        raise ValueError("scope is retired; supply stage and optional collection")
+    if "sub_scope" in body:
+        raise ValueError("sub_scope is retired; use collection")
+    config = load_docs_media_owner(repo_root, body.get("stage"), body.get("collection", ""))
     require_document_authoring(config)
     workspace = configured_workspace_paths(repo_root)
     source_path = _resolve_staged_media(workspace.import_staging, body.get("staged_filename"), kind)
@@ -273,7 +275,7 @@ def _staged_media_request_contract(repo_root: Path, body: dict[str, Any]) -> Sta
         media_filename = Path(media_filename).with_suffix(".mmd").name
     return StagedMediaContract(
         stage=config.stage,
-        sub_scope=getattr(config, "sub_scope", ""),
+        collection=getattr(config, "collection", ""),
         kind=kind,
         source_path=source_path,
         label=label,
@@ -316,7 +318,7 @@ def _artifact_status(adapter: ArtifactLocationAdapter, identity: str, data: byte
 
 def _prepared_mermaid_media(
     repo_root: Path,
-    config: DocsStageConfig | DocsSubScopeConfig,
+    config: DocsStageConfig | DocsCollectionConfig,
     source_path: Path,
     source_filename: str,
 ) -> PreparedMermaidMedia:
@@ -405,7 +407,7 @@ def _mermaid_preview_payload(
     return {
         "ok": True,
         "stage": contract.stage,
-        "sub_scope": contract.sub_scope,
+        "collection": contract.collection,
         "media_kind": contract.kind,
         "media_format": "mermaid",
         "staged_filename": contract.source_path.name,
@@ -476,7 +478,7 @@ def preview_staged_media(repo_root: Path, body: dict[str, Any]) -> dict[str, Any
         return {
             "ok": True,
             "stage": contract.stage,
-            "sub_scope": contract.sub_scope,
+            "collection": contract.collection,
             "media_kind": contract.kind,
             "staged_filename": contract.source_path.name,
             "source_kind": contract.source_kind,
@@ -558,7 +560,7 @@ def apply_staged_media(repo_root: Path, body: dict[str, Any], *, write: bool = T
             },
             "publish": {
                 "stage": contract.stage,
-                "sub_scope": contract.sub_scope,
+                "collection": contract.collection,
                 "media_class": "svg",
                 "filename": prepared.published_identity,
                 "size": len(prepared.published_bytes),

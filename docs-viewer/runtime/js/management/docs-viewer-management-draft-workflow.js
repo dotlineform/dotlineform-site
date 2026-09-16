@@ -9,7 +9,7 @@ export async function toggleManagedDocDraft(target, options) {
   }
   const metadata = await readManagedDocMetadata(normalized, options.clientOptions);
   const metadataTarget = { stage: metadata.stage, doc_id: metadata.doc_id,
-    ...(Object.prototype.hasOwnProperty.call(metadata, "sub_scope") ? { sub_scope: metadata.sub_scope } : {}) };
+    ...(Object.prototype.hasOwnProperty.call(metadata, "collection") ? { collection: metadata.collection } : {}) };
   if (!managedDocumentTargetsEqual(metadataTarget, normalized)
     || !metadata.record || typeof metadata.record.draft !== "boolean"
     || !/^sha256:[0-9a-f]{64}$/.test(metadata.source_revision || "")) {

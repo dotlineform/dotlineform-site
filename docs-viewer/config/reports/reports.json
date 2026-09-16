@@ -54,10 +54,10 @@
       "presets": []
     },
     {
-      "report_id": "docs_subscope",
-      "title": "Docs Sub-Scope",
-      "description": "Displays a report-owned list over a configured Docs Viewer sub-scope.",
-      "loader_id": "docs_subscope",
+      "report_id": "docs_collection",
+      "title": "Docs Collection",
+      "description": "Displays a report-owned list over a configured Docs Viewer collection.",
+      "loader_id": "docs_collection",
       "presets": []
     },
     {

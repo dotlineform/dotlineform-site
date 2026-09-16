@@ -7,11 +7,11 @@ from urllib.parse import quote
 
 from .common import DOCS_VIEWER_BROWSER_CONFIG_SCHEMA_VERSION, browser_path_for_repo_relative, json_text
 from .links_builder import links_enabled
-from docs_workspace_config import DocsStageConfig, DocsSubScopeConfig, DocsWorkspaceConfig, public_documents_path, public_search_path, select_workspace_stage
-from docs_subscope_customisations import browser_sub_scope_customisation_payload
+from docs_workspace_config import DocsStageConfig, DocsCollectionConfig, DocsWorkspaceConfig, public_documents_path, public_search_path, select_workspace_stage
+from docs_collection_customisations import browser_collection_customisation_payload
 
 
-def public_document_base(config: DocsStageConfig | DocsSubScopeConfig) -> str:
+def public_document_base(config: DocsStageConfig | DocsCollectionConfig) -> str:
     output = public_documents_path(config)
     if output is None:
         raise ValueError("public document projection requires a configured destination")
@@ -44,25 +44,25 @@ def browser_search_policy_payload(config: DocsStageConfig, *, published: bool = 
             "index_url": browser_search_index_url(config, published=published), "rebuild_policy": "whole_index"}
 
 
-def browser_sub_scope_output_url_base(config: DocsStageConfig, sub_scope: DocsSubScopeConfig, *, published: bool = False) -> str:
+def browser_collection_output_url_base(config: DocsStageConfig, collection: DocsCollectionConfig, *, published: bool = False) -> str:
     if published:
-        return public_document_base(sub_scope)
-    return f"/docs/generated/external/{quote(config.stage)}/{quote(sub_scope.sub_scope)}"
+        return public_document_base(collection)
+    return f"/docs/generated/external/{quote(config.stage)}/{quote(collection.collection)}"
 
 
-def browser_sub_scope_records(repo_root: Path, config: DocsStageConfig, *, published: bool = False) -> list[dict[str, Any]]:
+def browser_collection_records(repo_root: Path, config: DocsStageConfig, *, published: bool = False) -> list[dict[str, Any]]:
     records = []
-    for child in config.sub_scopes:
-        base = browser_sub_scope_output_url_base(config, child, published=published)
+    for child in config.collections:
+        base = browser_collection_output_url_base(config, child, published=published)
         record = {
-            "sub_scope": child.sub_scope,
+            "collection": child.collection,
             "title": child.public_title if published else child.title,
             "manifest_url": f"{base}/manifest.json" if published else f"{base}/manage-manifest.json",
             "by_id_url_base": f"{base}/by-id",
         }
-        customisation = browser_sub_scope_customisation_payload(child.sub_scope_customisation, published=published)
+        customisation = browser_collection_customisation_payload(child.collection_customisation, published=published)
         if customisation is not None:
-            record["sub_scope_customisation"] = customisation
+            record["collection_customisation"] = customisation
         records.append(record)
     return records
 
@@ -80,7 +80,7 @@ def browser_stage_record(repo_root: Path, config: DocsStageConfig, *, public_vie
         "recent_url": browser_docs_recent_url(config, published=published),
         "search_index_url": browser_search_index_url(config, published=published),
         "search": browser_search_policy_payload(config, published=published),
-        "sub_scopes": browser_sub_scope_records(repo_root, config, published=published),
+        "collections": browser_collection_records(repo_root, config, published=published),
     }
     if not published:
         record.update(stage=config.stage, links_enabled=links_enabled(repo_root, config), backlinks_url=browser_docs_backlinks_url(config))
@@ -97,9 +97,9 @@ def browser_published_record(repo_root: Path, workspace: DocsWorkspaceConfig) ->
     record["search"] = {**record["search"], "index_url": record["search_index_url"]}
     for kind, media in record["media"].items():
         media["served_path_prefix"] = f"/docs/published/media/{kind}"
-    record["sub_scopes"] = browser_sub_scope_records(repo_root, prepared, published=True)
-    for child in record["sub_scopes"]:
-        base = f"/docs/published/external/{quote(child['sub_scope'])}"
+    record["collections"] = browser_collection_records(repo_root, prepared, published=True)
+    for child in record["collections"]:
+        base = f"/docs/published/external/{quote(child['collection'])}"
         child.update(manifest_url=f"{base}/manifest.json", by_id_url_base=f"{base}/by-id")
     return record
 

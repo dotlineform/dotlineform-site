@@ -24,8 +24,8 @@ from docs_import_media import materialize_import_media  # noqa: E402
 from docs_import_source_helpers import import_summary_text, relative_path, viewer_url_for  # noqa: E402
 from docs_import_source_interactive import materialize_interactive_html_assets  # noqa: E402
 from docs_management_document_target import ManagedDocumentCollection  # noqa: E402
-from docs_subscope_customisations import (  # noqa: E402
-    normalize_sub_scope_customisation_import_front_matter,
+from docs_collection_customisations import (  # noqa: E402
+    normalize_collection_customisation_import_front_matter,
 )
 from docs_source_model import (  # noqa: E402
     SourceDoc,
@@ -83,7 +83,7 @@ class ImportDocumentPlan:
     title: str
     parent_id: str
     import_preview: dict[str, Any]
-    sub_scope: str = ""
+    collection: str = ""
     target: SourceDoc | None = None
 
     @property
@@ -162,7 +162,7 @@ def _apply_explicit_front_matter(
 
 def _create_source(
     record: ImportContent,
-    sub_scope: str,
+    collection: str,
     import_preview: dict[str, Any],
     explicit_front_matter: dict[str, Any],
     custom_front_matter: dict[str, Any],
@@ -176,9 +176,9 @@ def _create_source(
         "title": record.title,
         "added_date": added_date,
     }
-    if sub_scope:
+    if collection:
         if parent_id or "parent_id" in explicit_front_matter:
-            raise ValueError("parent_id is not accepted for a sub-scope import")
+            raise ValueError("parent_id is not accepted for a collection import")
     else:
         front_matter_seed["parent_id"] = parent_id
     front_matter = advance_doc_front_matter(
@@ -192,7 +192,7 @@ def _create_source(
         if record.content_intent == CONTENT_INTENT_REPLACE
         else ""
     )
-    return format_source(front_matter, body, sub_scope=sub_scope), parent_id
+    return format_source(front_matter, body, collection=collection), parent_id
 
 
 def _overwrite_source(
@@ -201,7 +201,7 @@ def _overwrite_source(
     import_preview: dict[str, Any],
     explicit_front_matter: dict[str, Any],
     *,
-    sub_scope: str,
+    collection: str,
     preserve_collection_metadata: bool = False,
 ) -> tuple[str, str]:
     if record.content_intent == CONTENT_INTENT_EMPTY_NEW:
@@ -222,7 +222,7 @@ def _overwrite_source(
         if record.content_intent == CONTENT_INTENT_REPLACE
         else target.body
     )
-    candidate_source = format_source(front_matter, body, sub_scope=sub_scope)
+    candidate_source = format_source(front_matter, body, collection=collection)
     if candidate_source == target.source_text:
         return target.source_text, parent_id
     front_matter = advance_front_matter_for_recent_edit(
@@ -231,7 +231,7 @@ def _overwrite_source(
         front_matter,
         body,
     )
-    return format_source(front_matter, body, sub_scope=sub_scope), parent_id
+    return format_source(front_matter, body, collection=collection), parent_id
 
 
 def plan_import_document(
@@ -256,7 +256,7 @@ def plan_import_document(
         raise ValueError("Import requires an exact stage collection")
     if collection.stage != normalized_stage:
         raise ValueError("import collection target does not match the requested stage")
-    sub_scope = collection.sub_scope
+    collection_id = collection.collection
     create_root = collection.source_root
     document_config = collection.document_config
     parent_config = collection.parent_config
@@ -320,13 +320,13 @@ def plan_import_document(
     explicit_front_matter = _explicit_front_matter(record)
     normalized_custom_front_matter: dict[str, Any] = {}
     if custom_front_matter is not None:
-        if operation != IMPORT_DOCUMENT_CREATE or collection is None or not sub_scope:
+        if operation != IMPORT_DOCUMENT_CREATE or collection is None or not collection_id:
             raise ValueError(
-                "custom import front matter requires a configured sub-scope create"
+                "custom import front matter requires a configured collection create"
             )
         normalized_custom_front_matter = (
-            normalize_sub_scope_customisation_import_front_matter(
-                collection.document_config.sub_scope_customisation,
+            normalize_collection_customisation_import_front_matter(
+                collection.document_config.collection_customisation,
                 custom_front_matter,
                 doc_id=record.doc_id,
             )
@@ -340,7 +340,7 @@ def plan_import_document(
             raise ValueError(f"cannot create existing import target {record.doc_id!r}")
         source_text, parent_id = _create_source(
             record,
-            sub_scope,
+            collection_id,
             preview,
             explicit_front_matter,
             normalized_custom_front_matter,
@@ -354,14 +354,14 @@ def plan_import_document(
             target,
             preview,
             explicit_front_matter,
-            sub_scope=sub_scope,
+            collection=collection_id,
             preserve_collection_metadata=preserve_collection_metadata,
         )
 
     front_matter, candidate_body = parse_source_text(source_text)
     if collection_supports_draft(document_config) and operation == IMPORT_DOCUMENT_CREATE:
         front_matter["draft"] = True
-        source_text = format_source(front_matter, candidate_body, sub_scope=sub_scope)
+        source_text = format_source(front_matter, candidate_body, collection=collection_id)
     validate_document_status_front_matter(
         front_matter, collection_config=document_config, source_name=target_path.name,
     )
@@ -374,7 +374,7 @@ def plan_import_document(
         title=title,
         parent_id=parent_id,
         import_preview=preview,
-        sub_scope=sub_scope,
+        collection=collection_id,
         target=target,
     )
 
@@ -417,7 +417,7 @@ def materialize_import_document_media(
             source_markdown=media_context.source_markdown,
             source_svg_markup=media_context.source_svg_markup,
             stage=plan.stage,
-            sub_scope=plan.sub_scope,
+            collection=plan.collection,
         )
         interactive_html_written = materialize_interactive_html_assets(
             repo_root,
@@ -462,7 +462,7 @@ def import_document_event(
             "doc_id": plan.doc_id,
             "path": relative_path(repo_root, plan.target_path),
             "include_prompt_meta": include_prompt_meta,
-            **({"sub_scope": plan.sub_scope} if plan.sub_scope else {}),
+            **({"collection": plan.collection} if plan.collection else {}),
         },
     )
 
@@ -481,13 +481,13 @@ def import_document_result(
     inline_media_written = list(apply_result.inline_media_written)
     interactive_html_written = list(apply_result.interactive_html_written)
     target = {"stage": plan.stage, "doc_id": plan.doc_id}
-    if plan.sub_scope:
-        target["sub_scope"] = plan.sub_scope
+    if plan.collection:
+        target["collection"] = plan.collection
     record: dict[str, Any] = {
         "doc_id": plan.doc_id,
         "title": plan.title,
     }
-    if not plan.sub_scope:
+    if not plan.collection:
         record["parent_id"] = plan.parent_id
     result = {
         "operation": plan.operation,
@@ -507,8 +507,8 @@ def import_document_result(
         ),
         "dry_run": dry_run,
     }
-    if plan.sub_scope:
-        result["sub_scope"] = plan.sub_scope
+    if plan.collection:
+        result["collection"] = plan.collection
     else:
         result["viewer_url"] = viewer_url_for(plan.doc_id, stage=plan.stage)
     return result

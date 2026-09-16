@@ -50,10 +50,10 @@ export function readSemanticTokenRows(payload) {
     || !Array.isArray(payload.occurrences) || !Array.isArray(payload.source_documents)) {
     throw new Error("Semantic-token report data does not match its stage.");
   }
-  const key = (target) => JSON.stringify([target.stage, target.sub_scope, target.doc_id]);
+  const key = (target) => JSON.stringify([target.stage, target.collection, target.doc_id]);
   const documents = new Map(payload.source_documents.map((document) => [key(document.target), document]));
   return payload.occurrences.map((row) => {
-    const source = documents.get(key({ stage: payload.stage, sub_scope: row.source_sub_scope || "", doc_id: row.source_doc_id }));
+    const source = documents.get(key({ stage: payload.stage, collection: row.source_collection || "", doc_id: row.source_doc_id }));
     if (!source) throw new Error("Semantic-token source document is unavailable.");
     return {
       family: cleanString(row.family),
@@ -62,7 +62,7 @@ export function readSemanticTokenRows(payload) {
       detailId: cleanString(row.detail_id),
       title: cleanString(row.title),
       sourceDocId: cleanString(row.source_doc_id),
-      sourceSubScope: cleanString(row.source_sub_scope),
+      sourceCollection: cleanString(row.source_collection),
       sourceTitle: source.title,
       sourceHref: source.href,
       raw: cleanString(row.raw)

@@ -14,7 +14,7 @@ from docs_workspace_config import DocsStageConfig, resolve_location_path
 
 
 BUILD_MANIFEST_FILENAME = "build-manifest.json"
-BUILD_MANIFEST_SCHEMA_VERSION = "docs_build_manifest_v1"
+BUILD_MANIFEST_SCHEMA_VERSION = "docs_build_manifest_v2"
 IGNORED_FILENAMES = frozenset({".DS_Store", ".gitkeep"})
 
 

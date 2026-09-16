@@ -81,8 +81,8 @@ export function createDocsViewerRouteContext(options) {
     defaultRouteDocId: "",
     viewerPathname: resolvedViewerPathname,
     searchIndexUrl: appendAssetVersion(routeConfig.searchIndexUrl, assetVersion),
-    subScopes: [],
-    subScopesById: new Map(),
+    collections: [],
+    collectionsById: new Map(),
     reportRegistryUrl: routeConfig.reportRegistryUrl
   };
   context.bookmarkOwner = savedStateOwner(routeConfig.appKind, context.viewerStage);
@@ -118,8 +118,8 @@ export function updateDocsViewerRouteContext(context, values, options) {
     indexTreeUrl: values && values.indexTreeUrl ? values.indexTreeUrl : "",
     recentUrl: values && values.recentUrl ? values.recentUrl : "",
     searchIndexUrl: values && values.searchIndexUrl ? values.searchIndexUrl : "",
-    subScopes: Array.isArray(values && values.subScopes) ? values.subScopes : [],
-    subScopesById: values && values.subScopesById instanceof Map ? values.subScopesById : new Map(),
+    collections: Array.isArray(values && values.collections) ? values.collections : [],
+    collectionsById: values && values.collectionsById instanceof Map ? values.collectionsById : new Map(),
     defaultRouteDocId: cleanString(values && values.defaultRouteDocId),
     viewerBaseUrl: nextViewerBaseUrl,
     viewerPathname: values && values.viewerPathname ? values.viewerPathname : viewerPathname(nextViewerBaseUrl, windowRef)
@@ -128,7 +128,7 @@ export function updateDocsViewerRouteContext(context, values, options) {
     indexTreeUrl: nextContext.indexTreeUrl,
     recentUrl: nextContext.recentUrl,
     searchIndexUrl: nextContext.searchIndexUrl,
-    subScopes: nextContext.subScopes,
+    collections: nextContext.collections,
     viewerBaseUrl: nextContext.viewerBaseUrl
   });
   nextContext.bookmarkOwner = savedStateOwner(nextContext.routeConfig.appKind, nextContext.viewerStage);

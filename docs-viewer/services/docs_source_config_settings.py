@@ -44,7 +44,7 @@ BLOCKED_STAGE_FIELDS = {
     "non_loadable_doc_ids": "Tree loading behavior depends on published docs structure.",
     "manage_only_tree_root_ids": "Manage-only tree behavior depends on published docs structure.",
     "allow_unresolved_parent_ids": "Parent validation policy affects source validation.",
-    "sub_scopes": "Sub-scope roles and locations are managed through the sub-scope lifecycle workflow.",
+    "collections": "Collection roles and locations are managed through the collection lifecycle workflow.",
 }
 
 DEFERRED_GLOBAL_FIELDS = {

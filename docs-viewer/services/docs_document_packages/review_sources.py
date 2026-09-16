@@ -42,7 +42,7 @@ from docs_document_packages.returned_validation import validate_whole_returned_p
 from docs_document_packages.workspace import configured_workspace_paths
 
 
-SCHEMA_VERSION = "docs_review_validated_package_v2"
+SCHEMA_VERSION = "docs_review_validated_package_v3"
 FOLDER_ID_SOURCE = "export_metadata"
 SAFE_FOLDER_ID_RE = re.compile(r"\A[A-Za-z0-9][A-Za-z0-9._-]*\Z")
 SAFE_DOC_ID_RE = re.compile(r"\A[A-Za-z0-9][A-Za-z0-9._-]*\Z")
@@ -287,22 +287,22 @@ def load_current_collection_docs(
     repo_root: Path,
     *,
     stage: str,
-    sub_scope: str,
+    collection: str,
 ) -> list[source_model.SourceDoc]:
     from docs_document_packages.source_context import package_source_stage_config
     config = package_source_stage_config(repo_root, stage)
-    if not sub_scope:
+    if not collection:
         return source_model.load_stage_docs_for_config(repo_root, config)
-    collection = resolve_managed_document_collection(
+    resolved_collection = resolve_managed_document_collection(
         repo_root,
         stage=stage,
-        sub_scope=sub_scope,
+        collection=collection,
     )
     docs = [
         source_doc_from_path(
             path=path,
         )
-        for path in source_model.document_markdown_paths(collection.source_root)
+        for path in source_model.document_markdown_paths(resolved_collection.source_root)
     ]
     return docs
 
@@ -324,9 +324,9 @@ def review_front_matter(
         "review_source_stage": clean_text(metadata.get("stage")),
         "review_profile_id": clean_text(metadata.get("profile_id")),
     }
-    source_sub_scope = clean_text(metadata.get("sub_scope"))
-    if source_sub_scope:
-        front_matter["review_source_sub_scope"] = source_sub_scope
+    source_collection = clean_text(metadata.get("collection"))
+    if source_collection:
+        front_matter["review_source_collection"] = source_collection
     for field in FRONT_MATTER_FIELDS:
         if field in row and field not in front_matter:
             front_matter[field] = row[field]
@@ -508,8 +508,8 @@ def create_review_source_folder(
     issues.extend(skipped_records)
     content_format = content_format_from_package(metadata, package_metadata, raw_rows)
     source_stage = clean_text(metadata.get("stage")) if metadata else ""
-    source_sub_scope = clean_text(metadata.get("sub_scope")) if metadata else ""
-    if source_sub_scope:
+    source_collection = clean_text(metadata.get("collection")) if metadata else ""
+    if source_collection:
         materialized_rows = project_flat_package_rows(valid_rows)
     else:
         materialized_rows, hierarchy_warnings = project_package_local_hierarchy(valid_rows)
@@ -521,7 +521,7 @@ def create_review_source_folder(
         load_current_collection_docs(
             repo_root,
             stage=stage,
-            sub_scope=source_sub_scope,
+            collection=source_collection,
         )
         if not any(item.get("level") == "error" for item in issues)
         else []
@@ -655,7 +655,7 @@ def create_review_source_folder(
         "status": "validated" if ok else "",
         "data_domain": clean_text(metadata.get("data_domain")) if metadata else "",
         "source_stage": source_stage,
-        "source_sub_scope": source_sub_scope,
+        "source_collection": source_collection,
         "default_doc_id": default_doc_id,
         "profile_id": source_profile_id,
         "supports_docs_review": metadata.get("supports_docs_review") if metadata else None,
@@ -794,7 +794,7 @@ def create_review_source_folder(
         "schema_version": SCHEMA_VERSION,
         "source_export_id": export_id,
         "source_stage": source_stage,
-        "source_sub_scope": source_sub_scope,
+        "source_collection": source_collection,
         "source_profile_id": clean_text(metadata.get("profile_id")) if metadata else "",
         "content_format": content_format,
         "folder_id": folder_id,

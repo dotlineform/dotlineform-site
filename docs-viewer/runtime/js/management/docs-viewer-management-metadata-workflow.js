@@ -71,7 +71,7 @@ export function createDocsViewerManagementMetadataWorkflow(options = {}) {
       ? modal.readMetadataCustomisation()
       : null;
     if (customisation !== null) payload.customisation = customisation;
-    if (!editingTarget.sub_scope || Object.prototype.hasOwnProperty.call(editingDoc, "location_parent_id")) {
+    if (!editingTarget.collection || Object.prototype.hasOwnProperty.call(editingDoc, "location_parent_id")) {
       if (!refs.parentInput) return null;
       var parentId = modal.resolveMetadataParentId(editingDoc);
       if (parentId === null) {
@@ -98,8 +98,8 @@ export function createDocsViewerManagementMetadataWorkflow(options = {}) {
       ...(response.stage ? { stage: response.stage } : {}),
       doc_id: response.doc_id
     };
-    if (Object.prototype.hasOwnProperty.call(response, "sub_scope")) {
-      responseTarget.sub_scope = response.sub_scope;
+    if (Object.prototype.hasOwnProperty.call(response, "collection")) {
+      responseTarget.collection = response.collection;
     }
     if (!managedDocumentTargetsEqual(responseTarget, target)) {
       throw new Error("Loaded document metadata did not match the requested target.");
@@ -150,8 +150,8 @@ export function createDocsViewerManagementMetadataWorkflow(options = {}) {
         editingDoc = loaded.record;
         editingChoices = loaded.choices;
         editingRevision = loaded.sourceRevision;
-        if (normalizedTarget.sub_scope && !/^sha256:[0-9a-f]{64}$/.test(editingRevision)) {
-          throw new Error("Sub-scope metadata revision could not be loaded.");
+        if (normalizedTarget.collection && !/^sha256:[0-9a-f]{64}$/.test(editingRevision)) {
+          throw new Error("Collection metadata revision could not be loaded.");
         }
         var contributionRequest = typeof callbacks.resolveMetadataContribution === "function"
           ? callbacks.resolveMetadataContribution(normalizedTarget)
@@ -161,7 +161,7 @@ export function createDocsViewerManagementMetadataWorkflow(options = {}) {
           if (!modal) return null;
           var modalOptions = {
             target: normalizedTarget,
-            showParent: !normalizedTarget.sub_scope || Object.prototype.hasOwnProperty.call(editingDoc, "location_parent_id"),
+            showParent: !normalizedTarget.collection || Object.prototype.hasOwnProperty.call(editingDoc, "location_parent_id"),
             choices: editingChoices
           };
           if (metadataContribution) {
@@ -188,7 +188,7 @@ export function createDocsViewerManagementMetadataWorkflow(options = {}) {
     var modal = modalController();
     if (!modal || !editingTarget || !editingDoc) return;
     modal.renderMetadataStatusOptions(editingDoc, editingChoices);
-    if (!editingTarget.sub_scope || Object.prototype.hasOwnProperty.call(editingDoc, "location_parent_id")) {
+    if (!editingTarget.collection || Object.prototype.hasOwnProperty.call(editingDoc, "location_parent_id")) {
       modal.renderMetadataParentOptions(editingDoc);
     }
   }

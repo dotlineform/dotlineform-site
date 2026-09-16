@@ -84,8 +84,8 @@ def read_source_body(repo_root: Path, params: Dict[str, list[str]]) -> Dict[str,
         "source_revision": source_revision_for_text(source_text),
         "path": path_label(repo_root, target.path),
     }
-    if resolved.sub_scope:
-        payload["sub_scope"] = resolved.sub_scope
+    if resolved.collection:
+        payload["collection"] = resolved.collection
     return payload
 
 
@@ -118,7 +118,7 @@ def rebuild_source_body(repo_root: Path, body: Dict[str, Any], dry_run: bool) ->
     body_changed = next_source_body != normalize_source_body(current_source_body)
     if not body_changed:
         next_source_body = current_source_body
-    next_source_text = source_model.rewrite_source_sub_scope(front_matter_source + next_source_body, resolved.sub_scope)
+    next_source_text = source_model.rewrite_source_collection(front_matter_source + next_source_body, resolved.collection)
     source_changed = next_source_text != current_source_text
     source_model.parse_collection_document_report(
         repo_root,
@@ -134,15 +134,15 @@ def rebuild_source_body(repo_root: Path, body: Dict[str, Any], dry_run: bool) ->
             front_matter_source,
             front_matter,
         ) if body_changed else front_matter_source
-        next_source_text = source_model.rewrite_source_sub_scope(next_front_matter_source + next_source_body, resolved.sub_scope)
+        next_source_text = source_model.rewrite_source_collection(next_front_matter_source + next_source_body, resolved.collection)
 
         def write_operation() -> None:
             source_model.write_text_atomic(target.path, next_source_text)
 
-        if resolved.sub_scope:
-            rebuild = write_rebuild.perform_sub_scope_source_write_and_rebuild(
+        if resolved.collection:
+            rebuild = write_rebuild.perform_collection_source_write_and_rebuild(
                 repo_root,
-                resolved.sub_scope,
+                resolved.collection,
                 [target.path],
                 write_operation,
                 suppression_reason="docs-source-editor",
@@ -162,8 +162,8 @@ def rebuild_source_body(repo_root: Path, body: Dict[str, Any], dry_run: bool) ->
             "doc_id": target.doc_id,
             "path": path_label(repo_root, target.path),
         }
-        if resolved.sub_scope:
-            event_details["sub_scope"] = resolved.sub_scope
+        if resolved.collection:
+            event_details["collection"] = resolved.collection
         log_event(repo_root, "docs-source-editor-rebuild", event_details)
 
     next_revision = source_revision_for_text(next_source_text)
@@ -182,8 +182,8 @@ def rebuild_source_body(repo_root: Path, body: Dict[str, Any], dry_run: bool) ->
         "source_changed": source_changed,
         "dry_run": dry_run,
     }
-    if resolved.sub_scope:
-        payload["sub_scope"] = resolved.sub_scope
+    if resolved.collection:
+        payload["collection"] = resolved.collection
     return payload
 
 
@@ -264,8 +264,8 @@ def open_source_doc(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dic
             "preferred_app": preferred_app if editor == "default" else "",
             "path": path_label(repo_root, target.path),
         }
-        if resolved.sub_scope:
-            event_details["sub_scope"] = resolved.sub_scope
+        if resolved.collection:
+            event_details["collection"] = resolved.collection
         log_event(repo_root, "docs-open-source", event_details)
 
     payload = {
@@ -277,6 +277,6 @@ def open_source_doc(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dic
         "summary_text": f"Opened {target.doc_id} source.",
         "dry_run": dry_run,
     }
-    if resolved.sub_scope:
-        payload["sub_scope"] = resolved.sub_scope
+    if resolved.collection:
+        payload["collection"] = resolved.collection
     return payload

@@ -1,5 +1,5 @@
 {
-  "schema_version": "docs_workspace_v1",
+  "schema_version": "docs_workspace_v2",
   "public_viewer_base_url": "/analysis/",
   "recent_limit": 20,
   "search_fields": [
@@ -83,11 +83,11 @@
       "non_loadable_doc_ids": [],
       "manage_only_tree_root_ids": [],
       "allow_unresolved_parent_ids": false,
-      "sub_scopes": [
+      "collections": [
         {
-          "sub_scope": "works",
+          "collection": "works",
           "title": "Works",
-          "sub_scope_customisation": {
+          "collection_customisation": {
             "id": "working_works",
             "settings": {}
           },
@@ -98,14 +98,14 @@
           }
         },
         {
-          "sub_scope": "concepts",
+          "collection": "concepts",
           "title": "Concepts",
           "supports_return_import": true
         },
         {
-          "sub_scope": "processing",
+          "collection": "processing",
           "title": "Processing",
-          "sub_scope_customisation": {
+          "collection_customisation": {
             "id": "working_processing",
             "settings": {}
           },
@@ -116,7 +116,7 @@
           }
         },
         {
-          "sub_scope": "moments",
+          "collection": "moments",
           "title": "Moments",
           "lifecycle": {
             "tool_id": "docs-viewer-scope-lifecycle",
@@ -155,25 +155,25 @@
       "non_loadable_doc_ids": [],
       "manage_only_tree_root_ids": [],
       "allow_unresolved_parent_ids": false,
-      "sub_scopes": [
+      "collections": [
         {
-          "sub_scope": "works",
+          "collection": "works",
           "title": "Works",
-          "sub_scope_customisation": {
+          "collection_customisation": {
             "id": "pre_publish_works",
             "settings": {}
           }
         },
         {
-          "sub_scope": "concepts",
+          "collection": "concepts",
           "title": "Concepts"
         },
         {
-          "sub_scope": "processing",
+          "collection": "processing",
           "title": "Processing"
         },
         {
-          "sub_scope": "moments",
+          "collection": "moments",
           "title": "Moments"
         }
       ]

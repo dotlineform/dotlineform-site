@@ -19,9 +19,9 @@ export function initDocsViewerDocumentController(context) {
     return documentMountGeneration;
   }
 
-  function clearSubscopeReportState(reason, mountGeneration) {
-    if (typeof context.publishSubscopeReportState !== "function") return;
-    context.publishSubscopeReportState({
+  function clearCollectionReportState(reason, mountGeneration) {
+    if (typeof context.publishCollectionReportState !== "function") return;
+    context.publishCollectionReportState({
       state: "inactive",
       reason: String(reason || "document-navigation"),
       documentMountGeneration: mountGeneration,
@@ -76,15 +76,15 @@ export function initDocsViewerDocumentController(context) {
         }));
       },
       requestContentDetail: context.requestContentDetail,
-      onSubscopeDocumentState: function (state) {
+      onCollectionDocumentState: function (state) {
         var adapter = context.linksDetailAdapter;
         if (mountGeneration !== documentMountGeneration || !adapter) return;
         var target = state.state === "detail" ? state.target : null;
-        if (target && (target.sub_scope !== payload.report.sub_scope
+        if (target && (target.collection !== payload.report.collection
           || String(target.stage || "") !== String(context.viewerStage() || ""))) return;
         adapter.setDocument({ content: content, target: target, title: state.record && state.record.title });
       },
-      publishSubscopeReportState: context.publishSubscopeReportState,
+      publishCollectionReportState: context.publishCollectionReportState,
       routeContext: typeof context.routeContext === "function" ? context.routeContext() : context.routeContext,
       workspaceConfigState: workspaceConfigState,
       setStatus: setStatus,
@@ -286,7 +286,7 @@ export function initDocsViewerDocumentController(context) {
 
   function hideDocPane() {
     var mountGeneration = nextDocumentMountGeneration();
-    clearSubscopeReportState("document-pane-hidden", mountGeneration);
+    clearCollectionReportState("document-pane-hidden", mountGeneration);
     releaseReportPresentation();
     releaseMediaDetails();
     releaseTableDetails();
@@ -312,7 +312,7 @@ export function initDocsViewerDocumentController(context) {
   function renderDocumentStatus(message, isError, options) {
     var settings = options || {};
     var mountGeneration = nextDocumentMountGeneration();
-    clearSubscopeReportState("document-status", mountGeneration);
+    clearCollectionReportState("document-status", mountGeneration);
     showDocPane();
     if (settings.hideMeta) {
       projectDocumentShell({
@@ -345,7 +345,7 @@ export function initDocsViewerDocumentController(context) {
 
   function renderPayload(doc, payload, hash) {
     var mountGeneration = nextDocumentMountGeneration();
-    clearSubscopeReportState("document-mount", mountGeneration);
+    clearCollectionReportState("document-mount", mountGeneration);
     selectedDocument.selectedDocId = doc.doc_id;
     context.renderSidebar();
     context.renderBookmarkUi();
@@ -368,7 +368,7 @@ export function initDocsViewerDocumentController(context) {
       context.linksDetailAdapter.mountDocument({
         content: content,
         target: payload.report ? null : {
-          stage: context.viewerStage(), sub_scope: "", doc_id: payload.doc_id
+          stage: context.viewerStage(), collection: "", doc_id: payload.doc_id
         },
         title: payload.title,
         collectionProvider: context.collectionProvider,
@@ -402,7 +402,7 @@ export function initDocsViewerDocumentController(context) {
 
   function renderDocLoadingState(doc) {
     var mountGeneration = nextDocumentMountGeneration();
-    clearSubscopeReportState("navigation-start", mountGeneration);
+    clearCollectionReportState("navigation-start", mountGeneration);
     context.renderSidebar();
     showDocPane();
     context.renderMeta(doc);

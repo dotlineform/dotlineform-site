@@ -15,8 +15,8 @@ from docs_management_source_service import open_source_path, split_source_exact
 from docs_review_build import build_review_package
 from docs_document_packages.workspace import configured_workspace_paths, marker_path
 
-PACKAGE_SCHEMA_VERSION = "docs_review_validated_package_v2"
-PACKAGES_SCHEMA_VERSION = "docs_review_packages_v2"
+PACKAGE_SCHEMA_VERSION = "docs_review_validated_package_v3"
+PACKAGES_SCHEMA_VERSION = "docs_review_packages_v3"
 SAFE_PACKAGE_ID_PATTERN = re.compile(r"\A[A-Za-z0-9][A-Za-z0-9._-]*\Z")
 SAFE_DOC_ID_PATTERN = re.compile(r"\A[A-Za-z0-9][A-Za-z0-9._-]*\Z")
 INVENTORY_FILENAMES = (
@@ -82,7 +82,7 @@ def _read_json_object(path: Path, label: str) -> dict[str, Any]:
 
 def _validated_manifest(package_path: Path) -> dict[str, Any]:
     manifest = _read_json_object(package_path / "manifest.json", "review package manifest")
-    if "source_scope" in manifest or "scope" in manifest or manifest.get("schema_version") == "docs_review_validated_package_v1":
+    if any(field in manifest for field in ("source_scope", "scope", "source_sub_scope", "sub_scope")) or manifest.get("schema_version") in {"docs_review_validated_package_v1", "docs_review_validated_package_v2"}:
         raise ValueError(REEXPORT_MESSAGE)
     if manifest.get("schema_version") != PACKAGE_SCHEMA_VERSION:
         raise ValueError(f"review package manifest schema_version must be {PACKAGE_SCHEMA_VERSION}")
@@ -247,7 +247,7 @@ def package_record(repo_root: Path, package_path: Path) -> dict[str, Any]:
         "package_id": package_path.name,
         "title": str(manifest.get("title") or package_path.name),
         "source_stage": str(manifest.get("source_stage") or ""),
-        "source_sub_scope": str(manifest.get("source_sub_scope") or ""),
+        "source_collection": str(manifest.get("source_collection") or ""),
         "supports_docs_review": manifest.get("supports_docs_review"),
         "supports_return_import": manifest.get("supports_return_import"),
         "default_doc_id": str(manifest.get("default_doc_id") or ""),

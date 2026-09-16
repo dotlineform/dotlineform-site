@@ -43,23 +43,23 @@ function activeManagedDocument(value, appContext) {
   var record = objectRecord(context && context.subdocRecord);
   var targetKeys = Object.keys(target || {}).sort();
   var stage = cleanString(target && target.stage);
-  var subScope = cleanString(target && target.sub_scope).toLowerCase();
+  var collection = cleanString(target && target.collection).toLowerCase();
   var docId = cleanString(target && target.doc_id);
   if (
     cleanString(context && context.state).toLowerCase() !== "detail"
     || targetKeys.length !== 3
-    || targetKeys[0] !== "doc_id"
-    || targetKeys[1] !== "stage"
-    || targetKeys[2] !== "sub_scope"
+    || targetKeys[0] !== "collection"
+    || targetKeys[1] !== "doc_id"
+    || targetKeys[2] !== "stage"
     || !["working", "pre-publish", "published"].includes(stage)
-    || !subScope
+    || !collection
     || !docId
     || cleanString(record && record.doc_id) !== docId
   ) return null;
   return Object.freeze({
     info: normalizeMetadataInfo(context.subdocInfo),
     record: Object.freeze(Object.assign({}, record, { doc_id: docId })),
-    target: Object.freeze({ stage: stage, sub_scope: subScope, doc_id: docId })
+    target: Object.freeze({ stage: stage, collection: collection, doc_id: docId })
   });
 }
 

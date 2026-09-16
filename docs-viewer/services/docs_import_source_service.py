@@ -84,14 +84,14 @@ class ImportSourceDependencies:
     log_event: LogEvent
     perform_source_write_and_rebuild: PerformSourceWriteAndRebuild
     perform_source_write_and_rebuild_atomic: PerformSourceWriteAndRebuild
-    perform_sub_scope_source_write_and_rebuild: PerformSourceWriteAndRebuild
+    perform_collection_source_write_and_rebuild: PerformSourceWriteAndRebuild
 
 
 def load_ordinary_import_collection_docs(
     repo_root: Path,
     collection: ManagedDocumentCollection,
 ) -> list[source_model.SourceDoc]:
-    if not collection.sub_scope:
+    if not collection.collection:
         return []
     return source_model.load_document_collection_docs_for_config(
         repo_root,
@@ -109,7 +109,7 @@ def allocate_ordinary_import_doc_id(
     if not documents_root.is_dir():
         raise ValueError(
             f"missing source root for import target "
-            f"{collection.stage}/{collection.sub_scope or '(parent)'}: "
+            f"{collection.stage}/{collection.collection or '(parent)'}: "
             f"{documents_root}",
         )
     unavailable = {
@@ -224,7 +224,7 @@ def handle_import_source(
     trusted_sources_allowed: bool,
 ) -> Dict[str, Any]:
     stage = destination.stage
-    sub_scope = destination.sub_scope
+    collection = destination.collection
     staged_filename = str(body.get("staged_filename") or "").strip()
     include_prompt_meta = bool(body.get("include_prompt_meta"))
     confirm_interactive_html_overwrite = bool(body.get("confirm_interactive_html_overwrite"))
@@ -246,19 +246,19 @@ def handle_import_source(
     if edited_review_source is not None:
         if not trusted_sources_allowed:
             raise ValueError(TRUSTED_SOURCE_STAGING_MESSAGE)
-        if sub_scope and not getattr(
+        if collection and not getattr(
             destination.document_config,
             "supports_return_import",
             False,
         ):
             raise ValueError(
                 "Edited review source folders are not supported for this "
-                "configured sub-scope destination.",
+                "configured collection destination.",
             )
         if not (dry_run or preview_only):
             destination_url = management_collection_viewer_url(
                 repo_root,
-                sub_scope,
+                collection,
                 stage=destination.stage,
             )
             result = apply_edited_review_source_collection(
@@ -272,8 +272,8 @@ def handle_import_source(
                 perform_source_write_and_rebuild_atomic=(
                     dependencies.perform_source_write_and_rebuild_atomic
                 ),
-                perform_sub_scope_source_write_and_rebuild=(
-                    dependencies.perform_sub_scope_source_write_and_rebuild
+                perform_collection_source_write_and_rebuild=(
+                    dependencies.perform_collection_source_write_and_rebuild
                 ),
             )
             result["target"] = destination.request_target()
@@ -292,13 +292,13 @@ def handle_import_source(
         dependencies.log_event(
             repo_root,
             (
-                "docs-import-reviewed-sub-scope-collection-preview"
-                if sub_scope
+                "docs-import-reviewed-collection-collection-preview"
+                if collection
                 else "docs-import-reviewed-stage-collection-preview"
             ),
             {
                 "stage": stage,
-                **({"sub_scope": sub_scope} if sub_scope else {}),
+                **({"collection": collection} if collection else {}),
                 "staged_filename": staged_filename,
                 "source_directory": accepted_source_directory,
                 "source_format": EDITED_REVIEW_SOURCE_FORMAT,
@@ -323,8 +323,8 @@ def handle_import_source(
         repo_root,
         source_path,
         metadata_root=metadata_root,
-        allow_sub_scope_return_import=bool(
-            sub_scope
+        allow_collection_return_import=bool(
+            collection
             and getattr(destination.document_config, "supports_return_import", False)
         ),
     )
@@ -341,19 +341,19 @@ def handle_import_source(
             "Export-only document packages cannot enter Docs Import."
         )
     if source_format == COLLECTION_SOURCE_FORMAT:
-        if sub_scope and not getattr(
+        if collection and not getattr(
             destination.document_config,
             "supports_return_import",
             False,
         ):
             raise ValueError(
                 "Returned document packages are not supported for this configured "
-                "sub-scope destination.",
+                "collection destination.",
             )
         if not (dry_run or preview_only):
             destination_url = management_collection_viewer_url(
                 repo_root,
-                sub_scope,
+                collection,
                 stage=destination.stage,
             )
             result = apply_document_package_collection(
@@ -367,9 +367,9 @@ def handle_import_source(
                 log_event=dependencies.log_event,
                 perform_source_write_and_rebuild=dependencies.perform_source_write_and_rebuild,
                 collection=destination,
-                perform_sub_scope_source_write_and_rebuild=(
-                    dependencies.perform_sub_scope_source_write_and_rebuild
-                    if sub_scope
+                perform_collection_source_write_and_rebuild=(
+                    dependencies.perform_collection_source_write_and_rebuild
+                    if collection
                     else None
                 ),
             )
@@ -401,7 +401,7 @@ def handle_import_source(
                 "record_errors": payload["counts"]["record_errors"],
                 "blockers": payload["counts"]["blockers"],
                 "ready_for_confirmation": payload["ready_for_confirmation"],
-                **({"sub_scope": sub_scope} if sub_scope else {}),
+                **({"collection": collection} if collection else {}),
             },
         )
         payload["dry_run"] = dry_run
@@ -421,8 +421,8 @@ def handle_import_source(
     )
     preview["target"] = destination.request_target()
     bind_import_media_owner(preview, destination.document_config)
-    if sub_scope:
-        preview["sub_scope"] = sub_scope
+    if collection:
+        preview["collection"] = collection
     private_media_source_markdown = str(preview.pop("_inline_media_source_markdown", "") or "")
     preview.pop("_inline_svg_source_markup", None)
     interactive_plans = interactive_html_asset_plans(
@@ -430,7 +430,7 @@ def handle_import_source(
         staging_root,
         source_projects_base,
         stage=destination.stage,
-        sub_scope=destination.sub_scope,
+        collection=destination.collection,
     )
     if interactive_plans:
         preview["interactive_html_plans"] = interactive_plans
@@ -462,8 +462,8 @@ def handle_import_source(
             "interactive_html_asset_count": len(interactive_plans),
             "requires_interactive_html_confirmation": requires_interactive_html_confirmation,
         }
-        if sub_scope:
-            preview_event["sub_scope"] = sub_scope
+        if collection:
+            preview_event["collection"] = collection
         dependencies.log_event(
             repo_root,
             "docs-import-source-preview",
@@ -485,8 +485,8 @@ def handle_import_source(
             ),
             "dry_run": dry_run,
         }
-        if sub_scope:
-            response["sub_scope"] = sub_scope
+        if collection:
+            response["collection"] = collection
         return response
 
     ensure_interactive_html_targets_available(
@@ -495,7 +495,7 @@ def handle_import_source(
     )
     destination_url = management_collection_viewer_url(
         repo_root,
-        sub_scope,
+        collection,
         stage=destination.stage,
     )
     source_doc_id = str(preview["proposed_doc_id"])
@@ -565,10 +565,10 @@ def handle_import_source(
             media_context=media_context,
         )
 
-    if sub_scope:
-        rebuild = dependencies.perform_sub_scope_source_write_and_rebuild(
+    if collection:
+        rebuild = dependencies.perform_collection_source_write_and_rebuild(
             repo_root,
-            sub_scope,
+            collection,
             plan.changed_paths,
             write_import_document,
             suppression_reason=plan.suppression_reason,
@@ -602,7 +602,7 @@ def handle_import_source(
     result["viewer_url"] = management_document_viewer_url(
         destination_url,
         plan.doc_id,
-        sub_scope=bool(sub_scope),
+        collection=bool(collection),
     )
     response = {
         "ok": True,
@@ -615,6 +615,6 @@ def handle_import_source(
         "import_preview": plan.import_preview,
         **result,
     }
-    if sub_scope:
-        response["sub_scope"] = sub_scope
+    if collection:
+        response["collection"] = collection
     return response

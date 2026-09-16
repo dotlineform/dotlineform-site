@@ -88,7 +88,7 @@
 }
 
 .docsViewer__indexActionsButton,
-.docsViewerReport__subscopeActionsButton{
+.docsViewerReport__collectionActionsButton{
   appearance: none;
   display: inline-flex;
   width: 1.8rem;
@@ -106,18 +106,18 @@
 
 .docsViewer__indexActionsButton:hover,
 .docsViewer__indexActionsButton:focus-visible,
-.docsViewerReport__subscopeActionsButton:hover:not(:disabled),
-.docsViewerReport__subscopeActionsButton:focus-visible{
+.docsViewerReport__collectionActionsButton:hover:not(:disabled),
+.docsViewerReport__collectionActionsButton:focus-visible{
   background: var(--docs-viewer-panel-2);
 }
 
 .docsViewer__indexActionsButton:focus-visible,
-.docsViewerReport__subscopeActionsButton:focus-visible{
+.docsViewerReport__collectionActionsButton:focus-visible{
   outline: 2px solid var(--docs-viewer-focus-ring);
   outline-offset: 1px;
 }
 
-.docsViewerReport__subscopeActionsButton:disabled{
+.docsViewerReport__collectionActionsButton:disabled{
   color: var(--docs-viewer-disabled);
   cursor: default;
   opacity: 1;
@@ -242,17 +242,17 @@
   grid-template-columns: max-content repeat(2, minmax(0, 1fr));
 }
 
-.docsViewerReport[data-working-subject-columns="publication"][data-report-subscope-selection="inactive"]
+.docsViewerReport[data-working-subject-columns="publication"][data-report-collection-selection="inactive"]
   .docsViewerReport__head,
-.docsViewerReport[data-working-subject-columns="publication"][data-report-subscope-selection="inactive"]
+.docsViewerReport[data-working-subject-columns="publication"][data-report-collection-selection="inactive"]
   .docsViewerReport__row{
   grid-template-areas: "publication title subject";
   grid-template-columns: 1rem repeat(2, minmax(0, 1fr));
 }
 
-.docsViewerReport[data-working-subject-columns="subject"][data-report-subscope-selection="inactive"]
+.docsViewerReport[data-working-subject-columns="subject"][data-report-collection-selection="inactive"]
   .docsViewerReport__head,
-.docsViewerReport[data-working-subject-columns="subject"][data-report-subscope-selection="inactive"]
+.docsViewerReport[data-working-subject-columns="subject"][data-report-collection-selection="inactive"]
   .docsViewerReport__row{
   grid-template-areas: "title subject";
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -272,14 +272,14 @@
   display: contents;
 }
 
-.docsViewerReport[data-working-subject-columns][data-report-subscope-selection="inactive"]
+.docsViewerReport[data-working-subject-columns][data-report-collection-selection="inactive"]
   [data-report-contribution-host="row-leading"],
-.docsViewerReport[data-working-subject-columns][data-report-subscope-selection="inactive"]
+.docsViewerReport[data-working-subject-columns][data-report-collection-selection="inactive"]
   .docsViewerReport__projectSelectionHead{
   display: none;
 }
 
-.docsViewerReport[data-working-subject-columns] .docsViewerReport__subscopeButton{
+.docsViewerReport[data-working-subject-columns] .docsViewerReport__collectionButton{
   display: inline-flex;
   grid-area: title;
   align-items: center;
@@ -348,14 +348,14 @@
   justify-self: start;
 }
 
-.docsViewerReport__subscopeFilterToolbar
+.docsViewerReport__collectionFilterToolbar
   > .docsViewerReport__contributionToolbar--list{
   flex: 0 0 auto;
   width: auto;
   margin-inline-start: auto;
 }
 
-.docsViewerReport__subscopeSelectionToolbar{
+.docsViewerReport__collectionSelectionToolbar{
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -364,23 +364,23 @@
   width: 100%;
 }
 
-.docsViewerReport__subscopeFilterToolbar
-  .docsViewerReport__subscopeSelectionToolbar{
+.docsViewerReport__collectionFilterToolbar
+  .docsViewerReport__collectionSelectionToolbar{
   flex-wrap: nowrap;
   width: auto;
 }
 
-.docsViewerReport__subscopeActionsHost{
+.docsViewerReport__collectionActionsHost{
   position: relative;
   display: inline-flex;
 }
 
-.docsViewerReport__subscopeActionsMenu{
+.docsViewerReport__collectionActionsMenu{
   right: 0;
   left: auto;
 }
 
-.docsViewerReport__subscopeSelectionControl{
+.docsViewerReport__collectionSelectionControl{
   display: inline-flex;
   align-items: center;
   gap: 0.3rem;
@@ -388,11 +388,11 @@
   white-space: nowrap;
 }
 
-.docsViewerReport__subscopeSelectionControl[hidden]{
+.docsViewerReport__collectionSelectionControl[hidden]{
   display: none;
 }
 
-.docsViewerReport__subscopeSelectionButton{
+.docsViewerReport__collectionSelectionButton{
   appearance: none;
   box-sizing: border-box;
   display: inline-flex;
@@ -409,27 +409,27 @@
   cursor: pointer;
 }
 
-.docsViewerReport__subscopeSelectionButton:hover,
-.docsViewerReport__subscopeSelectionButton:focus-visible{
+.docsViewerReport__collectionSelectionButton:hover,
+.docsViewerReport__collectionSelectionButton:focus-visible{
   background: var(--docs-viewer-panel-2);
 }
 
-.docsViewerReport__subscopeSelectionButton:focus-visible{
+.docsViewerReport__collectionSelectionButton:focus-visible{
   outline: 2px solid var(--docs-viewer-focus-ring);
   outline-offset: 1px;
 }
 
-.docsViewerReport__subscopeSelectionButton[disabled]{
+.docsViewerReport__collectionSelectionButton[disabled]{
   color: var(--docs-viewer-disabled);
   opacity: 1;
   cursor: default;
 }
 
-.docsViewerReport__subscopeSelectionGutter[hidden]{
+.docsViewerReport__collectionSelectionGutter[hidden]{
   display: none;
 }
 
-.docsViewerReport__subscopeSelectionCheckbox{
+.docsViewerReport__collectionSelectionCheckbox{
   box-sizing: border-box;
   width: 0.82rem;
   height: 0.82rem;
@@ -438,17 +438,17 @@
   cursor: pointer;
 }
 
-.docsViewerReport__subscopeSelectionCheckbox:focus-visible{
+.docsViewerReport__collectionSelectionCheckbox:focus-visible{
   outline: 2px solid var(--docs-viewer-focus-ring);
   outline-offset: 2px;
 }
 
-.docsViewerReport[data-report-subscope-selection="inactive"] .docsViewerReport__head,
-.docsViewerReport[data-report-subscope-selection="inactive"] .docsViewerReport__row{
+.docsViewerReport[data-report-collection-selection="inactive"] .docsViewerReport__head,
+.docsViewerReport[data-report-collection-selection="inactive"] .docsViewerReport__row{
   grid-template-columns: minmax(0, 1fr);
 }
 
-.docsViewerReport[data-report-subscope-selection="inactive"] [data-report-contribution-head]{
+.docsViewerReport[data-report-collection-selection="inactive"] [data-report-contribution-head]{
   display: none;
 }
 

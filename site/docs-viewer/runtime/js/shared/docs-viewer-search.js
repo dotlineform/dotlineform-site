@@ -139,7 +139,7 @@ export function normalizeRecentEntries(entries) {
         timestamp: String(entry.timestamp || "").trim(),
         parent_id: String(entry.parent_id || "").trim(),
         parent_title: String(entry.parent_title || "").trim(),
-        sub_scope: String(entry.sub_scope || "").trim(),
+        collection: String(entry.collection || "").trim(),
         report_doc_id: String(entry.report_doc_id || "").trim(),
         collection_title: String(entry.collection_title || "").trim()
       };
@@ -157,7 +157,7 @@ export function compareRecentDocs(left, right) {
   if (titleCmp !== 0) return titleCmp;
   var idCmp = String(left.doc_id || "").localeCompare(String(right.doc_id || ""), undefined, { sensitivity: "base", numeric: true });
   if (idCmp !== 0) return idCmp;
-  return String(left.sub_scope || "").localeCompare(String(right.sub_scope || ""));
+  return String(left.collection || "").localeCompare(String(right.collection || ""));
 }
 
 export function collectRecentDocs(docs, recentLimit) {

@@ -38,7 +38,7 @@ import docs_source_config_report  # noqa: E402
 import docs_source_config_settings  # noqa: E402
 import docs_static_html_export  # noqa: E402
 import docs_staged_media_service  # noqa: E402
-import docs_sub_scope_lifecycle  # noqa: E402
+import docs_collection_lifecycle  # noqa: E402
 import docs_source_model as source_model  # noqa: E402
 import docs_write_rebuild as write_rebuild  # noqa: E402
 from docs_management_broken_links_service import handle_broken_links  # noqa: E402
@@ -58,14 +58,14 @@ from docs_management_import_service import handle_import_source, import_source_d
 from docs_management_mutation_service import (  # noqa: E402
     DocumentCreateCommittedError,
     DocumentPlacementCommittedError,
-    SubScopeDocumentDeleteApplyError,
+    CollectionDocumentDeleteApplyError,
     execute_management_mutation_plan,
     handle_assign_field_group,
     handle_create,
     handle_delete_apply,
     handle_move,
-    handle_sub_scope_create_apply,
-    handle_sub_scope_delete_apply,
+    handle_collection_create_apply,
+    handle_collection_delete_apply,
     handle_update_metadata,
 )
 from docs_management_read_service import (  # noqa: E402
@@ -97,7 +97,9 @@ def docs_management_post_response(
     dry_run: bool = False,
 ) -> tuple[HTTPStatus, dict[str, object]]:
     if "scope" in body or "parent_scope" in body:
-        raise ValueError("scope is retired; supply an explicit stage and optional sub_scope")
+        raise ValueError("scope is retired; supply an explicit stage and optional collection")
+    if "sub_scope" in body:
+        raise ValueError("sub_scope is retired; use collection")
     if path in {routes.DEPLOY_REPO_PREVIEW_PATH, routes.DEPLOY_REPO_APPLY_PATH}:
         if body.get("stage") != "published":
             raise ValueError("Deploy Repo requires stage published")
@@ -252,10 +254,10 @@ def docs_management_post_response(
         except mutations.ManagedDocumentRevisionConflict as error:
             return HTTPStatus.CONFLICT, error.payload
     if path == routes.DELETE_PREVIEW_PATH:
-        if "sub_scope" in body:
+        if "collection" in body:
             return (
                 HTTPStatus.OK,
-                mutations.plan_sub_scope_delete_preview(repo_root, body),
+                mutations.plan_collection_delete_preview(repo_root, body),
             )
         doc_ids = mutations.require_delete_doc_ids(body.get("doc_ids"))
         return HTTPStatus.OK, mutations.plan_delete_preview(repo_root, doc_ids, stage=body.get("stage"))
@@ -264,25 +266,25 @@ def docs_management_post_response(
             return HTTPStatus.OK, handle_delete_apply(repo_root, body, dry_run)
         except mutations.ManagedDocumentRevisionConflict as error:
             return HTTPStatus.CONFLICT, error.payload
-        except SubScopeDocumentDeleteApplyError as error:
+        except CollectionDocumentDeleteApplyError as error:
             return HTTPStatus.INTERNAL_SERVER_ERROR, error.payload
-    if path == routes.SUB_SCOPE_CREATE_PREVIEW_PATH:
-        payload = docs_sub_scope_lifecycle.plan_create_sub_scope_preview(repo_root, body)
+    if path == routes.COLLECTION_CREATE_PREVIEW_PATH:
+        payload = docs_collection_lifecycle.plan_create_collection_preview(repo_root, body)
         payload["dry_run"] = True
         return HTTPStatus.OK, payload
-    if path == routes.SUB_SCOPE_CREATE_APPLY_PATH:
+    if path == routes.COLLECTION_CREATE_APPLY_PATH:
         try:
-            return HTTPStatus.OK, handle_sub_scope_create_apply(repo_root, body, dry_run)
-        except docs_sub_scope_lifecycle.SubScopeLifecycleApplyError as error:
+            return HTTPStatus.OK, handle_collection_create_apply(repo_root, body, dry_run)
+        except docs_collection_lifecycle.CollectionLifecycleApplyError as error:
             return HTTPStatus.INTERNAL_SERVER_ERROR, error.payload
-    if path == routes.SUB_SCOPE_DELETE_PREVIEW_PATH:
-        payload = docs_sub_scope_lifecycle.plan_delete_sub_scope_preview(repo_root, body)
+    if path == routes.COLLECTION_DELETE_PREVIEW_PATH:
+        payload = docs_collection_lifecycle.plan_delete_collection_preview(repo_root, body)
         payload["dry_run"] = True
         return HTTPStatus.OK, payload
-    if path == routes.SUB_SCOPE_DELETE_APPLY_PATH:
+    if path == routes.COLLECTION_DELETE_APPLY_PATH:
         try:
-            return HTTPStatus.OK, handle_sub_scope_delete_apply(repo_root, body, dry_run)
-        except docs_sub_scope_lifecycle.SubScopeLifecycleApplyError as error:
+            return HTTPStatus.OK, handle_collection_delete_apply(repo_root, body, dry_run)
+        except docs_collection_lifecycle.CollectionLifecycleApplyError as error:
             return HTTPStatus.INTERNAL_SERVER_ERROR, error.payload
     if path == routes.PUBLISH_CONFIRM_PATH:
         return HTTPStatus.OK, docs_publish.preview_publish(repo_root, body)

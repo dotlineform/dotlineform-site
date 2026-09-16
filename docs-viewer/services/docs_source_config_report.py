@@ -35,7 +35,7 @@ def _load_json(path: Path, label: str) -> dict[str, Any]:
 
 def _browser_stage_records(repo_root: Path) -> dict[str, dict[str, Any]]:
     payload = _load_json(repo_root / BROWSER_CONFIG_REL_PATH, str(BROWSER_CONFIG_REL_PATH))
-    if payload.get("schema_version") != "docs_viewer_config_v2":
+    if payload.get("schema_version") != "docs_viewer_config_v3":
         raise ValueError("Browser configuration requires regeneration with the current builder")
     return {item["stage"]: item for item in payload.get("stages", []) if isinstance(item, dict) and item.get("stage")}
 

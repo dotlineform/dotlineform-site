@@ -164,13 +164,13 @@ def _source_record(
 
 def _collection_label(collection: ManagedDocumentCollection) -> str:
     scope_label = source_model.humanize(collection.stage)
-    if not collection.sub_scope:
+    if not collection.collection:
         return scope_label
-    sub_scope_label = (
+    collection_label = (
         _clean_text(getattr(collection.document_config, "title", ""))
-        or source_model.humanize(collection.sub_scope)
+        or source_model.humanize(collection.collection)
     )
-    return f"{scope_label} / {sub_scope_label}"
+    return f"{scope_label} / {collection_label}"
 
 
 def _edited_review_candidate(
@@ -252,16 +252,16 @@ def _returned_package_candidate(
         )
 
     stage = _clean_text(record.get("stage")).lower()
-    sub_scope = _clean_text(record.get("sub_scope")).lower()
+    collection = _clean_text(record.get("collection")).lower()
     declared_target = {
         "stage": stage,
-        **({"sub_scope": sub_scope} if sub_scope else {}),
+        **({"collection": collection} if collection else {}),
     }
     try:
-        collection = resolve_managed_document_collection(
+        resolved_collection = resolve_managed_document_collection(
             repo_root,
             stage=stage,
-            sub_scope=sub_scope or None,
+            collection=collection or None,
         )
     except (FileNotFoundError, OSError, ValueError):
         blocked = _blocked_candidate(
@@ -281,8 +281,8 @@ def _returned_package_candidate(
     capabilities_valid = record.get("capabilities_ok") is True
     supports_review = capabilities_valid and record.get("supports_docs_review") is True
     supports_import = capabilities_valid and record.get("supports_return_import") is True
-    if sub_scope and not getattr(
-        collection.document_config,
+    if collection and not getattr(
+        resolved_collection.document_config,
         "supports_return_import",
         False,
     ):
@@ -291,8 +291,8 @@ def _returned_package_candidate(
     review_payload = (
         parse_staged_import(
             repo_root=repo_root,
-            stage=collection.stage,
-            sub_scope=collection.sub_scope or None,
+            stage=resolved_collection.stage,
+            collection=resolved_collection.collection or None,
             staged_file=path.name,
             staging_root=path.parent,
             metadata_root=metadata_root,
@@ -304,8 +304,8 @@ def _returned_package_candidate(
     import_payload = (
         parse_staged_import(
             repo_root=repo_root,
-            stage=collection.stage,
-            sub_scope=collection.sub_scope or None,
+            stage=resolved_collection.stage,
+            collection=resolved_collection.collection or None,
             staged_file=path.name,
             staging_root=path.parent,
             metadata_root=metadata_root,
@@ -334,7 +334,7 @@ def _returned_package_candidate(
                 "Trusted package capabilities do not enable Docs Review or Import.",
             )
         )
-    elif not import_enabled and sub_scope and record.get("supports_return_import") is True:
+    elif not import_enabled and collection and record.get("supports_return_import") is True:
         diagnostics.append(
             _diagnostic(
                 "collection_import_disabled",
@@ -374,10 +374,10 @@ def _returned_package_candidate(
     elif import_diagnostics:
         import_disabled_reason = import_diagnostics[0]["code"]
     elif (
-        sub_scope
+        collection
         and record.get("supports_return_import") is True
         and not getattr(
-            collection.document_config,
+            resolved_collection.document_config,
             "supports_return_import",
             False,
         )
@@ -392,8 +392,8 @@ def _returned_package_candidate(
         "candidate_kind": RETURNED_PACKAGE_CANDIDATE_KIND,
         "validation_state": validation_state,
         "target_mode": MANIFEST_COLLECTION_TARGET_MODE,
-        "target": collection.request_target(),
-        "target_label": _collection_label(collection),
+        "target": resolved_collection.request_target(),
+        "target_label": _collection_label(resolved_collection),
         "supports_docs_review": record.get("supports_docs_review") is True,
         "supports_return_import": record.get("supports_return_import") is True,
         "docs_review_enabled": docs_review_enabled,
@@ -482,7 +482,7 @@ def list_import_candidates(
                     collection = resolve_managed_document_collection(
                         repo_root,
                         stage=edited.source_stage,
-                        sub_scope=edited.source_sub_scope or None,
+                        collection=edited.source_collection or None,
                     )
                 except (FileNotFoundError, OSError, RuntimeError, ValueError) as exc:
                     if ordinary_record is not None:

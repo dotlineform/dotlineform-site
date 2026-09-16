@@ -155,7 +155,7 @@ def validate_prepared_source_versions(
     return issues
 
 
-def _confine_sub_scope_records(
+def _confine_collection_records(
     states: list[Any],
 ) -> None:
     for state in states:
@@ -167,8 +167,8 @@ def _confine_sub_scope_records(
             state.blocked = True
             problem = collection_issue(
                 "error",
-                "sub_scope_hierarchy_not_allowed",
-                "returned sub-scope document has non-empty hierarchy fields: "
+                "collection_hierarchy_not_allowed",
+                "returned collection document has non-empty hierarchy fields: "
                 + ", ".join(hierarchy_fields),
                 record_index=state.record_index,
                 doc_id=state.doc_id,
@@ -181,8 +181,8 @@ def _confine_sub_scope_records(
             state.blocked = True
             problem = collection_issue(
                 "error",
-                "sub_scope_assets_not_supported",
-                "returned sub-scope documents cannot materialize package assets",
+                "collection_assets_not_supported",
+                "returned collection documents cannot materialize package assets",
                 record_index=state.record_index,
                 doc_id=state.doc_id,
             )
@@ -219,14 +219,14 @@ def plan_document_package_collection(
         raise ValueError("Package Import requires an exact stage collection")
     if collection.stage != normalized_stage:
         raise ValueError("managed collection does not match requested package stage")
-    sub_scope = collection.sub_scope if collection is not None else ""
+    collection_id = collection.collection if collection is not None else ""
     package, blockers = load_document_package(
         repo_root,
         stage=normalized_stage,
         staged_filename=staged_filename,
         staging_root=staging_root,
         metadata_root=metadata_root,
-        sub_scope=sub_scope,
+        collection=collection_id,
     )
     if package is None:
         return blocked_collection_plan(
@@ -235,20 +235,20 @@ def plan_document_package_collection(
             staged_filename=staged_filename,
             blockers=blockers,
             workspace_root=workspace_root,
-            sub_scope=sub_scope,
+            collection=collection_id,
         )
 
     docs = load_document_collection_docs_for_config(
         repo_root, collection.parent_config, collection.document_config,
     )
-    if sub_scope:
+    if collection_id:
         non_flat_targets = sorted(doc.doc_id for doc in docs if doc.parent_id)
         if non_flat_targets:
             blockers.append(
                 collection_issue(
                     "error",
-                    "non_flat_sub_scope_target",
-                    "configured sub-scope contains canonical hierarchy metadata: "
+                    "non_flat_collection_target",
+                    "configured collection contains canonical hierarchy metadata: "
                     + ", ".join(non_flat_targets),
                 )
             )
@@ -268,8 +268,8 @@ def plan_document_package_collection(
             staged_filename=staged_filename,
         )
     )
-    if sub_scope:
-        _confine_sub_scope_records(states)
+    if collection_id:
+        _confine_collection_records(states)
     package_projection = {
         "export_id": package.export_id,
         "profile_id": _clean_text(
@@ -282,9 +282,9 @@ def plan_document_package_collection(
         "staged_path": marker_path(package.path, workspace_root=workspace_root),
         "source_sha256": package.source_sha256,
     }
-    if sub_scope:
-        package_projection["source_sub_scope"] = _clean_text(
-            package.package_metadata.get("sub_scope")
+    if collection_id:
+        package_projection["source_collection"] = _clean_text(
+            package.package_metadata.get("collection")
         )
         package_projection["source_last_updated"] = copy.deepcopy(
             package.package_metadata.get("source_last_updated")
@@ -310,7 +310,7 @@ def plan_document_package_collection(
         blockers=blockers,
         planned_identities=planned_identities,
         collection=collection,
-        overwrite_only=bool(sub_scope),
+        overwrite_only=bool(collection_id),
     )
 
 
@@ -326,7 +326,7 @@ def apply_document_package_collection(
     log_event: Callable[[Path, str, dict[str, Any]], None],
     perform_source_write_and_rebuild: Callable[..., dict[str, Any]],
     collection: ManagedDocumentCollection | None = None,
-    perform_sub_scope_source_write_and_rebuild: Callable[..., dict[str, Any]] | None = None,
+    perform_collection_source_write_and_rebuild: Callable[..., dict[str, Any]] | None = None,
 ) -> dict[str, Any]:
     """Recompute and synchronously apply one confirmed whole-package plan."""
 
@@ -345,9 +345,9 @@ def apply_document_package_collection(
         planned_identities=planned_identities,
         collection=collection,
     )
-    if collection is not None and collection.sub_scope:
-        if perform_sub_scope_source_write_and_rebuild is None:
-            raise ValueError("sub-scope collection apply requires its confined rebuild owner")
+    if collection is not None and collection.collection:
+        if perform_collection_source_write_and_rebuild is None:
+            raise ValueError("collection import apply requires its confined rebuild owner")
         return apply_import_content_collection_atomic(
             repo_root,
             plan,
@@ -355,8 +355,8 @@ def apply_document_package_collection(
             workspace_root=workspace_root,
             log_event=log_event,
             collection=collection,
-            perform_sub_scope_source_write_and_rebuild=(
-                perform_sub_scope_source_write_and_rebuild
+            perform_collection_source_write_and_rebuild=(
+                perform_collection_source_write_and_rebuild
             ),
         )
     return apply_import_content_collection(

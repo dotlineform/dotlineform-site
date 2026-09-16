@@ -31,7 +31,7 @@ function cleanString(value) {
 function exactResponseTarget(response, target) {
   var candidate = {
     ...(Object.prototype.hasOwnProperty.call(response, "stage") ? { stage: response.stage } : {}),
-    sub_scope: response && response.sub_scope,
+    collection: response && response.collection,
     doc_id: response && response.doc_id
   };
   if (!managedDocumentTargetsEqual(candidate, target)) {
@@ -403,8 +403,8 @@ function openSubjectModal(options, target, loaded) {
 
 export function openDocsViewerProjectSubjectModal(options = {}) {
   var target = normalizeManagedDocumentTarget(options.target);
-  if (!target.sub_scope) {
-    return Promise.reject(new Error("Document subject assignment requires a sub-scope document target."));
+  if (!target.collection) {
+    return Promise.reject(new Error("Document subject assignment requires a collection document target."));
   }
   if (typeof options.readMetadata !== "function" || typeof options.assignFieldGroup !== "function") {
     return Promise.reject(new Error("Document subject assignment service is unavailable."));

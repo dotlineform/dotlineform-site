@@ -281,7 +281,7 @@ def _docs_viewer_default_doc_payload(site_root: Path, route_id: str, route: dict
         context=f"Docs Viewer route {route_id} config_urls.docs_viewer",
     )
     config = json.loads(config_path.read_text(encoding="utf-8"))
-    if not isinstance(config, dict) or config.get("schema_version") != "docs_viewer_config_v2":
+    if not isinstance(config, dict) or config.get("schema_version") != "docs_viewer_config_v3":
         raise RuntimeError(f"Docs Viewer config for route {route_id} requires regeneration")
     workspace = config.get("workspace")
     if not isinstance(workspace, dict) or "stages" in config or "scopes" in config:

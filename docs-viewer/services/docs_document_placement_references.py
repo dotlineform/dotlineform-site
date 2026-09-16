@@ -16,7 +16,7 @@ from urllib.parse import parse_qsl, quote, urlencode, urlsplit, urlunsplit, unqu
 
 from markdown_it import MarkdownIt
 
-from docs_document_location import canonical_document_viewer_url, sub_scope_report_placement
+from docs_document_location import canonical_document_viewer_url, collection_report_placement
 from docs_document_placement import DocumentPlacement
 from docs_management_document_target import ManagedDocumentTarget, ManagedDocumentCollection, resolve_managed_document_collection, confined_source_path
 from docs_media_inventory import source_media_references
@@ -36,7 +36,7 @@ class MediaCopy:
 
 @dataclass(frozen=True)
 class ReferenceChange:
-    sub_scope: str
+    collection: str
     document: source_model.SourceDoc
     body: str
 
@@ -110,17 +110,17 @@ def placement_reference_changes(
     route_config = load_docs_workspace_config(repo_root)
     routes = {"/docs", route_config.public_viewer_base_url.rstrip("/")}
     collections = [resolve_managed_document_collection(
-        repo_root, stage=source.stage, sub_scope=name or None,
-    ) for name in ("", *(owner.sub_scope for owner in config.sub_scopes))]
-    hosts = {owner.sub_scope: sub_scope_report_placement(
-        repo_root, owner.sub_scope, stage=source.stage,
-    )[2] for owner in collections if owner.sub_scope}
+        repo_root, stage=source.stage, collection=name or None,
+    ) for name in ("", *(owner.collection for owner in config.collections))]
+    hosts = {owner.collection: collection_report_placement(
+        repo_root, owner.collection, stage=source.stage,
+    )[2] for owner in collections if owner.collection}
     docs = [(owner, doc) for owner in collections for doc in source_model.load_document_collection_docs_for_config(
         repo_root, config, owner.document_config,
     )]
-    by_path = {doc.path.resolve(): (owner.sub_scope, doc.doc_id) for owner, doc in docs}
-    before_host = hosts.get(source.sub_scope, source.doc_id)
-    after_host = hosts.get(destination.sub_scope, source.doc_id)
+    by_path = {doc.path.resolve(): (owner.collection, doc.doc_id) for owner, doc in docs}
+    before_host = hosts.get(source.collection, source.doc_id)
+    after_host = hosts.get(destination.collection, source.doc_id)
 
     def document_url(collection: str, doc_id: str) -> str:
         return canonical_document_viewer_url(config, hosts.get(collection, doc_id), subdoc_id=doc_id if collection else "")
@@ -135,10 +135,10 @@ def placement_reference_changes(
         if parsed.path.rstrip("/") in routes:
             if params.get("doc") != before_host:
                 return url
-            if (params.get("subdoc", "") != source.doc_id if source.sub_scope else bool(params.get("subdoc"))):
+            if (params.get("subdoc", "") != source.doc_id if source.collection else bool(params.get("subdoc"))):
                 return url
             params["doc"] = after_host
-            if destination.sub_scope:
+            if destination.collection:
                 params["subdoc"] = source.doc_id
             else:
                 params.pop("subdoc", None)
@@ -146,7 +146,7 @@ def placement_reference_changes(
         if not parsed.path.startswith("/") and parsed.path.endswith(".md"):
             target_path = (doc.path.parent / unquote(parsed.path)).resolve()
             if target_path == source.document.path.resolve():
-                target = document_url(destination.sub_scope, source.doc_id)
+                target = document_url(destination.collection, source.doc_id)
             elif moving and target_path in by_path:
                 target = document_url(*by_path[target_path])
             else:
@@ -163,7 +163,7 @@ def placement_reference_changes(
             continue
         rewritten = rewrite_document_references(doc.body, lambda url: rewrite_url(url, doc, False))
         if rewritten != doc.body:
-            changes.append(ReferenceChange(owner.sub_scope, doc, rewritten))
+            changes.append(ReferenceChange(owner.collection, doc, rewritten))
     body = rewrite_document_references(body, lambda url: rewrite_url(url, source.document, True))
     body, copies = relocate_document_media(repo_root, source, destination, body)
     return body, changes, copies

@@ -101,7 +101,7 @@ export function initDocsViewerSidebarRenderer(context) {
         draftIcon.title = "Draft";
         link.appendChild(draftIcon);
       }
-      if (doc.report_id === "docs_subscope") {
+      if (doc.report_id === "docs_collection") {
         var reportIcon = document.createElement("span");
         reportIcon.className = "docsViewer__navReportIcon";
         reportIcon.setAttribute("aria-hidden", "true");
@@ -109,7 +109,7 @@ export function initDocsViewerSidebarRenderer(context) {
         link.appendChild(reportIcon);
         var reportLabel = document.createElement("span");
         reportLabel.className = "visually-hidden";
-        reportLabel.textContent = "Sub-scope report: ";
+        reportLabel.textContent = "Collection report: ";
         link.appendChild(reportLabel);
       }
       link.appendChild(document.createTextNode(doc.title));

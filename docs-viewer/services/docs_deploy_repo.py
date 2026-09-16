@@ -33,7 +33,7 @@ from docs_public_mermaid_payload import public_mermaid_payload_requires_projecti
 from docs_report_source import REPORT_HOST_HTML
 from docs_workspace_config import (
     DocsStageConfig,
-    DocsSubScopeConfig,
+    DocsCollectionConfig,
     DocsWorkspaceConfig,
     load_docs_workspace_config,
     load_docs_stage,
@@ -44,10 +44,10 @@ from docs_workspace_config import (
 )
 from docs_publish import validate_published_snapshot
 from docs_publication_payloads import project_public_view
-from docs_subscope_customisations import (
-    sub_scope_customisation_authoring_subject_fields,
+from docs_collection_customisations import (
+    collection_customisation_authoring_subject_fields,
 )
-from docs_write_rebuild import rebuild_sub_scope_outputs
+from docs_write_rebuild import rebuild_collection_outputs
 
 
 DEPLOY_REPO_PREVIEW_SCHEMA_VERSION = "docs_deploy_repo_preview_v2"
@@ -186,9 +186,9 @@ def deploy_repo_capability(
         (document_location_projection_path(config), False),
     ]
     destinations.extend(
-        (sub_scope.public_projection.documents.location.path, True)
-        for sub_scope in deployable.sub_scopes
-        if sub_scope.public_projection is not None
+        (collection.public_projection.documents.location.path, True)
+        for collection in deployable.collections
+        if collection.public_projection is not None
     )
     destinations.extend(
         (media.location.path, True)
@@ -243,7 +243,7 @@ def public_url_prefix(path: Path) -> str:
 
 
 def collection_public_url_prefix(
-    collection: DocsStageConfig | DocsSubScopeConfig,
+    collection: DocsStageConfig | DocsCollectionConfig,
 ) -> str:
     path = public_documents_path(collection)
     if path is None:
@@ -252,24 +252,24 @@ def collection_public_url_prefix(
 
 
 def project_content_urls(
-    value: Any, prefix: str, *, sub_scope_prefixes: Mapping[str, str] | None = None,
+    value: Any, prefix: str, *, collection_prefixes: Mapping[str, str] | None = None,
 ) -> Any:
     """Project document URLs using each row's exact collection identity."""
     if isinstance(value, list):
-        return [project_content_urls(item, prefix, sub_scope_prefixes=sub_scope_prefixes) for item in value]
+        return [project_content_urls(item, prefix, collection_prefixes=collection_prefixes) for item in value]
     if not isinstance(value, dict):
         return value
     projected = {
-        key: project_content_urls(item, prefix, sub_scope_prefixes=sub_scope_prefixes)
+        key: project_content_urls(item, prefix, collection_prefixes=collection_prefixes)
         for key, item in value.items()
     }
     doc_id = str(projected.get("doc_id") or "").strip()
     if doc_id and "content_url" in projected:
-        sub_scope = str(projected.get("sub_scope") or "").strip()
-        if sub_scope:
-            if sub_scope_prefixes is None or sub_scope not in sub_scope_prefixes:
-                raise ValueError(f"Recent has no configured public collection: {sub_scope}")
-            prefix = sub_scope_prefixes[sub_scope]
+        collection = str(projected.get("collection") or "").strip()
+        if collection:
+            if collection_prefixes is None or collection not in collection_prefixes:
+                raise ValueError(f"Recent has no configured public collection: {collection}")
+            prefix = collection_prefixes[collection]
         projected["content_url"] = f"{prefix}/by-id/{doc_id}.json"
     return projected
 
@@ -297,8 +297,8 @@ def public_media_url_projection(config: DocsStageConfig) -> dict[str, str]:
         return {}
     urls = {}
     for collection, media in public_media_bindings(config).values():
-        child = getattr(collection, "sub_scope", "")
-        suffix = f"/sub-scopes/{child}" if child else ""
+        child = getattr(collection, "collection", "")
+        suffix = f"/collections/{child}" if child else ""
         urls[f"/docs/published/media{suffix}/{media.media_type}"] = media.served_path_prefix.rstrip("/")
     return urls
 
@@ -373,9 +373,9 @@ def project_public_search(
     ):
         raise ValueError("accepted Search has the wrong schema or Published identity")
     public_titles = {
-        sub_scope.sub_scope: sub_scope.public_title
-        for sub_scope in config.sub_scopes
-        if sub_scope.public_title
+        collection.collection: collection.public_title
+        for collection in config.collections
+        if collection.public_title
     }
     changed = False
     projected_docs: list[Any] = []
@@ -384,8 +384,8 @@ def project_public_search(
             projected_docs.append(raw_document)
             continue
         document = dict(raw_document)
-        sub_scope = str(document.get("sub_scope") or "").strip().lower()
-        public_title = public_titles.get(sub_scope, "")
+        collection = str(document.get("collection") or "").strip().lower()
+        public_title = public_titles.get(collection, "")
         current_title = str(document.get("collection_title") or "").strip()
         if public_title and current_title and public_title != current_title:
             document["collection_title"] = public_title
@@ -458,9 +458,9 @@ def accepted_document_collections(
         project_content_urls(
             read_json_bytes(published_files[recent_path], "accepted Recent"),
             parent_prefix,
-            sub_scope_prefixes={
-                child.sub_scope: collection_public_url_prefix(child)
-                for child in config.sub_scopes if child.public_projection is not None
+            collection_prefixes={
+                child.collection: collection_public_url_prefix(child)
+                for child in config.collections if child.public_projection is not None
             },
         )
     )
@@ -481,16 +481,16 @@ def accepted_document_collections(
                 f"projected parent document {relative_path.stem}",
             )
 
-    sub_scope_files: dict[str, dict[Path, bytes]] = {}
-    sub_scope_manifests: dict[str, dict[str, Any]] = {}
+    collection_files: dict[str, dict[Path, bytes]] = {}
+    collection_manifests: dict[str, dict[str, Any]] = {}
     subject_associations: dict[tuple[str, str], Mapping[str, Any]] = {}
-    accepted_children = {path.parts[1] for path in published_files if len(path.parts) > 2 and path.parts[0] == "sub-scopes"}
-    configured_children = {child.sub_scope: child for child in config.sub_scopes}
+    accepted_children = {path.parts[1] for path in published_files if len(path.parts) > 2 and path.parts[0] == "collections"}
+    configured_children = {child.collection: child for child in config.collections}
     if accepted_children - set(configured_children):
         raise ValueError("Accepted snapshot contains unconfigured child identities; convert them explicitly before activation")
     for child_id in sorted(accepted_children):
-        sub_scope = configured_children[child_id]
-        prefix = Path("sub-scopes") / sub_scope.sub_scope / "documents"
+        collection = configured_children[child_id]
+        prefix = Path("collections") / collection.collection / "documents"
         files: dict[Path, bytes] = {}
         for relative_path, data in published_files.items():
             try:
@@ -498,9 +498,9 @@ def accepted_document_collections(
             except ValueError:
                 continue
             if collection_relative == Path("subject-associations.json"):
-                subject_associations[("published", sub_scope.sub_scope)] = read_json_bytes(
+                subject_associations[("published", collection.collection)] = read_json_bytes(
                     data,
-                    f"accepted subject associations {sub_scope.sub_scope}",
+                    f"accepted subject associations {collection.collection}",
                 )
                 continue
             if (
@@ -511,7 +511,7 @@ def accepted_document_collections(
                 files[collection_relative] = project_document_payload(
                     data,
                     label=(
-                        f"accepted document {sub_scope.sub_scope}/"
+                        f"accepted document {collection.collection}/"
                         f"{collection_relative.stem}"
                     ),
                     media_projection=media_projection,
@@ -523,20 +523,20 @@ def accepted_document_collections(
             raise FileNotFoundError(
                 f"accepted Published snapshot is missing {prefix.as_posix()}/manifest.json"
             )
-        sub_scope_files[sub_scope.sub_scope] = files
-        sub_scope_manifests[sub_scope.sub_scope] = read_json_bytes(
+        collection_files[collection.collection] = files
+        collection_manifests[collection.collection] = read_json_bytes(
             manifest_bytes,
-            f"accepted sub-scope manifest {sub_scope.sub_scope}",
+            f"accepted collection manifest {collection.collection}",
         )
         if (
-            sub_scope_customisation_authoring_subject_fields(
-                sub_scope.sub_scope_customisation
+            collection_customisation_authoring_subject_fields(
+                collection.collection_customisation
             )
-            and ("published", sub_scope.sub_scope) not in subject_associations
+            and ("published", collection.collection) not in subject_associations
         ):
             raise FileNotFoundError(
                 f"accepted Published snapshot is missing deployment subject associations for "
-                f"{sub_scope.sub_scope}"
+                f"{collection.collection}"
             )
 
     search_payload = project_public_search(
@@ -546,14 +546,14 @@ def accepted_document_collections(
     _validate_complete_document_set(
         search_payload,
         parent_documents,
-        sub_scope_files,
-        sub_scope_manifests,
+        collection_files,
+        collection_manifests,
     )
     return (
         parent_files,
-        sub_scope_files,
+        collection_files,
         search_payload,
-        sub_scope_manifests,
+        collection_manifests,
         subject_associations,
     )
 
@@ -561,8 +561,8 @@ def accepted_document_collections(
 def _validate_complete_document_set(
     search_payload: Mapping[str, Any],
     parent_documents: Mapping[str, Any],
-    sub_scope_files: Mapping[str, Mapping[Path, bytes]],
-    sub_scope_manifests: Mapping[str, Mapping[str, Any]],
+    collection_files: Mapping[str, Mapping[Path, bytes]],
+    collection_manifests: Mapping[str, Mapping[str, Any]],
 ) -> None:
     raw_search_docs = search_payload.get("docs")
     if not isinstance(raw_search_docs, list):
@@ -573,15 +573,15 @@ def _validate_complete_document_set(
         if isinstance(row, Mapping) and str(row.get("id") or "").strip()
     }
     accepted_ids = set(parent_documents)
-    for sub_scope, files in sub_scope_files.items():
+    for collection, files in collection_files.items():
         by_id_ids = {
             path.stem
             for path in files
             if len(path.parts) == 2 and path.parts[0] == "by-id" and path.suffix == ".json"
         }
-        raw_manifest_docs = sub_scope_manifests[sub_scope].get("docs")
+        raw_manifest_docs = collection_manifests[collection].get("docs")
         if not isinstance(raw_manifest_docs, list):
-            raise ValueError(f"accepted sub-scope manifest {sub_scope} docs must be an array")
+            raise ValueError(f"accepted collection manifest {collection} docs must be an array")
         manifest_ids = {
             str(row.get("doc_id") or "").strip()
             for row in raw_manifest_docs
@@ -589,7 +589,7 @@ def _validate_complete_document_set(
         }
         if by_id_ids != manifest_ids:
             raise RuntimeError(
-                f"accepted {sub_scope} manifest and by-ID document identities do not match"
+                f"accepted {collection} manifest and by-ID document identities do not match"
             )
         accepted_ids.update(by_id_ids)
     if search_ids != accepted_ids:
@@ -608,9 +608,9 @@ def desired_repository_projection(
 ]:
     (
         parent_files,
-        sub_scope_files,
+        collection_files,
         search_payload,
-        sub_scope_manifests,
+        collection_manifests,
         subject_associations,
     ) = accepted_document_collections(repo_root, config, published_files)
     parent_root_path = public_documents_path(config)
@@ -622,14 +622,14 @@ def desired_repository_projection(
         parent_root / relative_path: data
         for relative_path, data in parent_files.items()
     }
-    configured_sub_scopes = {item.sub_scope: item for item in config.sub_scopes}
-    for sub_scope_id, files in sub_scope_files.items():
-        sub_scope_path = public_documents_path(configured_sub_scopes[sub_scope_id])
-        if sub_scope_path is None:
-            raise ValueError(f"Analysis/{sub_scope_id} has no public destination")
-        sub_scope_root = repository_path(repo_root, sub_scope_path)
+    configured_collections = {item.collection: item for item in config.collections}
+    for collection_id, files in collection_files.items():
+        collection_path = public_documents_path(configured_collections[collection_id])
+        if collection_path is None:
+            raise ValueError(f"Analysis/{collection_id} has no public destination")
+        collection_root = repository_path(repo_root, collection_path)
         desired.update(
-            {sub_scope_root / relative_path: data for relative_path, data in files.items()}
+            {collection_root / relative_path: data for relative_path, data in files.items()}
         )
     search_target = repository_path(repo_root, search_target_path)
     desired[search_target] = json_bytes(search_payload)
@@ -643,7 +643,7 @@ def desired_repository_projection(
             for path, data in parent_files.items()
             if len(path.parts) == 2 and path.parts[0] == "by-id"
         },
-        sub_scope_manifests=sub_scope_manifests,
+        collection_manifests=collection_manifests,
     )
     location_payload = build_document_location_payload(
         workspace,
@@ -653,7 +653,7 @@ def desired_repository_projection(
             for path, data in parent_files.items()
             if len(path.parts) == 2 and path.parts[0] == "by-id"
         },
-        sub_scope_manifests=sub_scope_manifests,
+        collection_manifests=collection_manifests,
     )
     location_target = repository_path(
         repo_root,
@@ -664,8 +664,8 @@ def desired_repository_projection(
     payload_collections: list[tuple[str, Mapping[Path, bytes]]] = [
         ("documents", parent_files),
         *[
-            (f"{sub_scope}", files)
-            for sub_scope, files in sorted(sub_scope_files.items())
+            (f"{collection}", files)
+            for collection, files in sorted(collection_files.items())
         ],
     ]
     media_references = referenced_public_media(config, payload_collections)
@@ -696,10 +696,10 @@ def current_repository_projection(
         raise ValueError("Analysis public documents and Search destinations are required")
     parent_root = repository_path(repo_root, parent_path)
     excluded_roots = []
-    for sub_scope in config.sub_scopes:
-        destination = public_documents_path(sub_scope)
+    for collection in config.collections:
+        destination = public_documents_path(collection)
         if destination is None:
-            raise ValueError(f"Public collection has no configured destination: {sub_scope.sub_scope}")
+            raise ValueError(f"Public collection has no configured destination: {collection.collection}")
         excluded_roots.append(repository_path(repo_root, destination))
     excluded_roots.extend(
         repository_path(repo_root, media.location.path)
@@ -713,12 +713,12 @@ def current_repository_projection(
         if any(path == excluded or path.is_relative_to(excluded) for excluded in excluded_roots):
             continue
         current[path] = path.read_bytes()
-    for sub_scope in config.sub_scopes:
-        sub_scope_path = public_documents_path(sub_scope)
-        if sub_scope_path is None:
+    for collection in config.collections:
+        collection_path = public_documents_path(collection)
+        if collection_path is None:
             continue
-        sub_scope_root = repository_path(repo_root, sub_scope_path)
-        current.update({path: path.read_bytes() for path in iter_managed_files(sub_scope_root)})
+        collection_root = repository_path(repo_root, collection_path)
+        current.update({path: path.read_bytes() for path in iter_managed_files(collection_root)})
     search_target = repository_path(repo_root, search_path)
     if search_target.is_file():
         current[search_target] = search_target.read_bytes()
@@ -787,14 +787,14 @@ def lineage_projections(
         publication_urls = {
             str(record.get("doc_id") or "").strip(): str(record.get("url") or "").strip()
             for record in locations
-            if str(record.get("sub_scope") or "").strip().lower() == editorial.sub_scope
+            if str(record.get("collection") or "").strip().lower() == editorial.collection
             and str(record.get("doc_id") or "").strip()
             and str(record.get("url") or "").strip()
         }
         desired[workflow.contract_id] = publication_lineage.project_publications(
             table,
             editorial_stage=editorial.stage,
-            editorial_sub_scope=editorial.sub_scope,
+            editorial_collection=editorial.collection,
             publication_urls=publication_urls,
         )
     return desired
@@ -824,7 +824,7 @@ def lineage_preview(
                 "contract_id": workflow.contract_id,
                 "path": (
                     f"{workflow.working_collection.stage}/"
-                    f"{workflow.working_collection.sub_scope}/data/"
+                    f"{workflow.working_collection.collection}/data/"
                     f"{publication_lineage.LINEAGE_FILENAME}"
                 ),
                 "working_collection": workflow.working_collection.payload(),
@@ -1094,9 +1094,9 @@ def apply_deploy_repo(
                 lineage_error = str(exc)
             else:
                 try:
-                    rebuild_sub_scope_outputs(
+                    rebuild_collection_outputs(
                         repo_root.resolve(),
-                        workflow.working_collection.sub_scope,
+                        workflow.working_collection.collection,
                         stage=workflow.working_collection.stage,
                     )
                     rebuild_status = "updated"

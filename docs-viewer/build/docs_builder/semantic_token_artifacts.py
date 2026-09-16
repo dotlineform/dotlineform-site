@@ -17,7 +17,7 @@ class SemanticTokenArtifactsMixin:
         """All collections contribute to the selected stage's one usage index."""
         output = (
             resolve_workspace_path(self.repo_root, generated_documents_path(self.config))
-            if getattr(self, "sub_scope_id", "") else self.output_dir
+            if getattr(self, "collection_id", "") else self.output_dir
         )
         return output / "semantic-tokens"
 
@@ -43,7 +43,7 @@ class SemanticTokenArtifactsMixin:
         The existing synchronous Build sequence owns ordering. Reuse collected
         occurrences without another source scan or publication eligibility decision.
         """
-        collection = getattr(self, "sub_scope_id", "")
+        collection = getattr(self, "collection_id", "")
         text = read_text(self.semantic_tokens_dir / "index.json")
         payload = json.loads(text) if text is not None else self.semantic_token_usage_envelope([])
         if (
@@ -56,25 +56,25 @@ class SemanticTokenArtifactsMixin:
             raise ValueError("Semantic-token index does not match its stage")
         known = {doc.doc_id for doc in docs}
         selected = set(self.only_doc_ids) if self.targeted_build else known
-        configured = {"", *(child.sub_scope for child in self.config.sub_scopes)}
+        configured = {"", *(child.collection for child in self.config.collections)}
         retained = []
         for row in payload["occurrences"]:
             if not isinstance(row, dict) or "source_scope" in row or row.get("source_stage") != self.config.stage or not row.get("source_doc_id"):
                 raise ValueError("Semantic-token occurrence has invalid source identity")
-            source_collection = row.get("source_sub_scope")
+            source_collection = row.get("source_collection")
             if not isinstance(source_collection, str):
                 raise ValueError("Semantic-token occurrence requires explicit collection identity")
             if source_collection not in configured:
                 continue
             if source_collection == collection and (row["source_doc_id"] in selected or row["source_doc_id"] not in known):
                 continue
-            retained.append({**row, "source_sub_scope": source_collection})
+            retained.append({**row, "source_collection": source_collection})
         occurrences = retained + [
-            {**occurrence, "source_sub_scope": collection}
+            {**occurrence, "source_collection": collection}
             for doc in docs
             for occurrence in occurrences_by_doc.get(doc.doc_id, [])
         ]
-        occurrences.sort(key=lambda row: (row["source_sub_scope"], row["source_doc_id"]))
+        occurrences.sort(key=lambda row: (row["source_collection"], row["source_doc_id"]))
         return {"enabled": True, "index": self.semantic_token_usage_envelope(occurrences)}
 
     def build_semantic_token_write_plan(

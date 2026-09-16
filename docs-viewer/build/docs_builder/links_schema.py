@@ -34,7 +34,7 @@ def read_relationship_payload(payload: Any, target: DocumentTarget) -> DocumentL
         if not isinstance(value, dict) or set(value) != {"target", "title", "href", "subject"}:
             raise ValueError("Links requires a complete document summary")
         identity = value["target"]
-        if not isinstance(identity, dict) or set(identity) != {"stage", "sub_scope", "doc_id"}:
+        if not isinstance(identity, dict) or set(identity) != {"stage", "collection", "doc_id"}:
             raise ValueError("Links requires an exact document target")
         if (not all(isinstance(item, str) for item in identity.values())
                 or identity["stage"] != target.stage or target.stage != "working"

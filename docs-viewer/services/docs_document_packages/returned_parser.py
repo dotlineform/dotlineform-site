@@ -35,7 +35,7 @@ def parse_staged_import(
     *,
     repo_root: Path,
     stage: str,
-    sub_scope: str | None = None,
+    collection: str | None = None,
     staged_file: str,
     staging_root: Path | str | None = None,
     metadata_root: Path | None = None,
@@ -163,20 +163,20 @@ def parse_staged_import(
             package_metadata,
             repo_root=repo_root,
             stage=normalized_stage,
-            sub_scope=sub_scope,
+            collection=collection,
             required_capability=required_capability,
         )
     )
-    metadata_sub_scope = normalize_text(package_metadata.get("sub_scope")).lower()
+    metadata_collection = normalize_text(package_metadata.get("collection")).lower()
     current_context, current_issues = {}, []
     if not any(item.get("level") == "error" for item in report["issues"]):
         current_context, current_issues = load_current_docs_context(
             repo_root,
             normalized_stage,
             (
-                metadata_sub_scope
-                if sub_scope is None
-                else normalize_text(sub_scope).lower()
+                metadata_collection
+                if collection is None
+                else normalize_text(collection).lower()
             ),
         )
     report["issues"].extend(current_issues)
@@ -205,7 +205,7 @@ def parse_staged_import(
         and not supports_return_import
     ):
         if (
-            not normalize_text(package_metadata.get("sub_scope"))
+            not normalize_text(package_metadata.get("collection"))
             and "export_only_profile" not in issue_codes
         ):
             report["issues"].append(

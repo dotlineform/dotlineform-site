@@ -84,7 +84,7 @@ function normalizeDocument(value) {
   ).map(cleanString);
   if (
     cleanString(target && target.stage) !== "working"
-    || cleanString(target && target.sub_scope) !== "works"
+    || cleanString(target && target.collection) !== "works"
     || !docId
     || !title
     || !href
@@ -174,7 +174,7 @@ export function normalizeProjectStateResponse(payload) {
     || !report
     || report.schema_version !== REPORT_SCHEMA
     || cleanString(inputs && inputs.stage) !== "working"
-    || cleanString(inputs && inputs.sub_scope) !== "works"
+    || cleanString(inputs && inputs.collection) !== "works"
     || !generation
     || !generatedAt
   ) {
@@ -409,7 +409,7 @@ function appendDocumentsCell(rowNode, row) {
       SUBJECT_LABELS[documentRecord.declaredSubject.kind] + " subject " + documentRecord.declaredSubject.key
     ].join(", "));
     link.dataset.docsViewerStage = cleanString(documentRecord.target && documentRecord.target.stage);
-    link.dataset.docsViewerSubscope = cleanString(documentRecord.target && documentRecord.target.sub_scope);
+    link.dataset.docsViewerCollection = cleanString(documentRecord.target && documentRecord.target.collection);
     link.dataset.docsViewerDocId = cleanString(documentRecord.target && documentRecord.target.doc_id);
   });
   rowNode.appendChild(cell);

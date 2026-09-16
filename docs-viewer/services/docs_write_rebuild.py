@@ -39,7 +39,7 @@ DOCS_BUILDER_SCRIPT = "docs-viewer/build/build_docs.py"
 SEARCH_BUILDER_SCRIPT = "docs-viewer/build/build_search.py"
 
 
-class SubScopeWriteRebuildFailure(RuntimeError):
+class CollectionWriteRebuildFailure(RuntimeError):
     """Report one failed child write/rebuild after its owned rollback attempt."""
 
     def __init__(self, message: str, *, rollback: dict[str, Any]):
@@ -47,7 +47,7 @@ class SubScopeWriteRebuildFailure(RuntimeError):
         self.rollback = rollback
 
 
-class SubScopeSourceSnapshotChanged(RuntimeError):
+class CollectionSourceSnapshotChanged(RuntimeError):
     """Stop one child write boundary before mutation when its snapshot changed."""
 
 
@@ -68,15 +68,15 @@ def current_document_source_root(repo_root: Path, stage: str | None = None) -> P
     return resolve_workspace_path(repo_root, document_source_path(config))
 
 
-def current_sub_scope_source_root(repo_root: Path, sub_scope: str, stage: str | None = None) -> Path:
+def current_collection_source_root(repo_root: Path, collection: str, stage: str | None = None) -> Path:
     config = load_docs_stage(repo_root, stage)
     matching = [
         candidate
-        for candidate in config.sub_scopes
-        if candidate.sub_scope == sub_scope
+        for candidate in config.collections
+        if candidate.collection == collection
     ]
     if not matching:
-        raise ValueError(f"sub-scope {stage}/{sub_scope} is not configured")
+        raise ValueError(f"collection {stage}/{collection} is not configured")
     return resolve_workspace_path(repo_root, document_source_path(matching[0]))
 
 
@@ -290,11 +290,11 @@ def rebuild_stage_outputs(
     if include_search:
         commands.extend(
             (
-                "sub_scope_docs",
+                "collection_docs",
                 python_builder_command(
                     DOCS_BUILDER_SCRIPT,
-                    "--sub-scope",
-                    sub_scope.sub_scope,
+                    "--collection",
+                    collection.collection,
                     "--write",
                     "--diagnostics",
                     "--skip-browser-config",
@@ -302,7 +302,7 @@ def rebuild_stage_outputs(
                     *(["--skip-media-builds"] if skip_media_builds else []),
                 ),
             )
-            for sub_scope in stage_config.sub_scopes
+            for collection in stage_config.collections
         )
         if search_doc_ids is None:
             search = {"mode": "full", "doc_ids": []}
@@ -370,17 +370,17 @@ def rebuild_stage_outputs(
     }
 
 
-def rebuild_sub_scope_outputs(
+def rebuild_collection_outputs(
     repo_root: Path,
-    sub_scope: str,
+    collection: str,
     stage: str | None = None,
     links_doc_ids: Optional[list[str]] = None,
     links_created_doc_ids: Optional[list[str]] = None,
 ) -> Dict[str, Any]:
     docs_command = python_builder_command(
         DOCS_BUILDER_SCRIPT,
-        "--sub-scope",
-        sub_scope,
+        "--collection",
+        collection,
         "--write",
         "--diagnostics",
         "--skip-browser-config",
@@ -403,7 +403,7 @@ def rebuild_sub_scope_outputs(
         detail = step["stderr"] or step["stdout"] or f"exit {step['returncode']}"
         raise RuntimeError(
             rebuild_failure_message(
-                f"rebuild failed for {stage}/{sub_scope}",
+                f"rebuild failed for {stage}/{collection}",
                 detail,
             )
         )
@@ -412,10 +412,10 @@ def rebuild_sub_scope_outputs(
         "steps": steps,
         "search": {"mode": "none", "doc_ids": []},
         "docs": {
-            "mode": "sub_scope",
+            "mode": "collection",
             "doc_ids": [],
-            "sub_scope": sub_scope,
-            "reason": "configured sub-scope rebuild",
+            "collection": collection,
+            "reason": "configured collection rebuild",
         },
         "diagnostics": {
             "docs": docs_diagnostics,
@@ -637,9 +637,9 @@ def perform_source_write_and_rebuild_atomic(
     return rebuild
 
 
-def perform_sub_scope_source_write_and_rebuild(
+def perform_collection_source_write_and_rebuild(
     repo_root: Path,
-    sub_scope: str,
+    collection: str,
     changed_paths: list[Path],
     write_operation: Callable[[], Any],
     *,
@@ -649,7 +649,7 @@ def perform_sub_scope_source_write_and_rebuild(
     links_created_doc_ids: list[str] | None = None,
 ) -> Dict[str, Any]:
     require_document_authoring(load_docs_stage(repo_root, stage))
-    root = current_sub_scope_source_root(repo_root, sub_scope, stage)
+    root = current_collection_source_root(repo_root, collection, stage)
     resolved_changed_paths = {
         path.resolve()
         for path in changed_paths
@@ -663,16 +663,16 @@ def perform_sub_scope_source_write_and_rebuild(
         }
         if set(normalized_snapshots) != resolved_changed_paths:
             raise ValueError(
-                "sub-scope rollback snapshot must cover every changed source exactly"
+                "collection rollback snapshot must cover every changed source exactly"
             )
         if any(not isinstance(source_bytes, bytes) for source_bytes in normalized_snapshots.values()):
-            raise ValueError("sub-scope rollback snapshot values must be bytes")
+            raise ValueError("collection rollback snapshot values must be bytes")
         for path in normalized_snapshots:
             try:
                 path.relative_to(root.resolve())
             except ValueError as exc:
                 raise ValueError(
-                    "sub-scope rollback snapshot escapes configured source root"
+                    "collection rollback snapshot escapes configured source root"
                 ) from exc
     filenames = sorted(
         {
@@ -681,7 +681,7 @@ def perform_sub_scope_source_write_and_rebuild(
             if isinstance(path, Path)
         }
     )
-    suppression_owner = watch_suppression_owner(sub_scope, stage=stage)
+    suppression_owner = watch_suppression_owner(collection, stage=stage)
     links_before = changed_source_document_ids(changed_paths) if stage == "working" else None
     if filenames:
         set_watch_suppressions(
@@ -700,16 +700,16 @@ def perform_sub_scope_source_write_and_rebuild(
                 if path.read_bytes() != source_bytes
             ]
             if changed_before_write:
-                raise SubScopeSourceSnapshotChanged(
-                    "sub-scope sources changed immediately before apply: "
+                raise CollectionSourceSnapshotChanged(
+                    "collection sources changed immediately before apply: "
                     + ", ".join(sorted(changed_before_write))
                 )
         write_operation()
-        rebuild = rebuild_sub_scope_outputs(
-            repo_root, sub_scope, stage=stage,
+        rebuild = rebuild_collection_outputs(
+            repo_root, collection, stage=stage,
             **links_write_arguments(links_before, changed_paths, created_doc_ids=links_created_doc_ids),
         )
-    except SubScopeSourceSnapshotChanged:
+    except CollectionSourceSnapshotChanged:
         if filenames:
             clear_watch_suppressions(repo_root, suppression_owner, filenames)
         raise
@@ -728,9 +728,9 @@ def perform_sub_scope_source_write_and_rebuild(
         recovery_error = ""
         if not restoration_errors:
             try:
-                recovery_rebuild = rebuild_sub_scope_outputs(
+                recovery_rebuild = rebuild_collection_outputs(
                     repo_root,
-                    sub_scope,
+                    collection,
                     stage=stage,
                     **({"links_doc_ids": links_before} if links_before is not None else {}),
                 )
@@ -749,7 +749,7 @@ def perform_sub_scope_source_write_and_rebuild(
                 )
             else:
                 clear_watch_suppressions(repo_root, suppression_owner, filenames)
-        raise SubScopeWriteRebuildFailure(
+        raise CollectionWriteRebuildFailure(
             str(exc).strip() or exc.__class__.__name__,
             rollback={
                 "status": rollback_status,
@@ -782,10 +782,10 @@ def perform_multi_collection_source_write_and_rebuild(
     links_before: dict[str, list[str]] = {}
     for plan in rebuild_plans:
         stage = plan.get("stage") or None
-        sub_scope = str(plan.get("sub_scope") or "")
+        collection = str(plan.get("collection") or "")
         require_document_authoring(load_docs_stage(repo_root, stage))
-        root = current_sub_scope_source_root(repo_root, sub_scope, stage) if sub_scope else current_document_source_root(repo_root, stage)
-        owner = watch_suppression_owner(sub_scope, stage=stage)
+        root = current_collection_source_root(repo_root, collection, stage) if collection else current_document_source_root(repo_root, stage)
+        owner = watch_suppression_owner(collection, stage=stage)
         if stage == "working":
             links_before[owner] = changed_source_document_ids(plan.get("changed_paths", []))
         filenames = sorted(
@@ -811,7 +811,7 @@ def perform_multi_collection_source_write_and_rebuild(
         rebuilds: Dict[str, Any] = {}
         prepared_rebuilds = []
         for plan in rebuild_plans:
-            owner = watch_suppression_owner(str(plan.get("sub_scope") or ""), stage=plan.get("stage") or None)
+            owner = watch_suppression_owner(str(plan.get("collection") or ""), stage=plan.get("stage") or None)
             prepared_rebuilds.append((plan, links_write_arguments(links_before.get(owner), plan.get("changed_paths", []))))
         # A collection move keeps its immutable ID and shared Links filename.
         # Prepare the destination first so it can transfer the exact prior
@@ -819,10 +819,10 @@ def perform_multi_collection_source_write_and_rebuild(
         prepared_rebuilds.sort(key=lambda item: not bool(item[1].get("links_created_doc_ids")))
         for plan, links_arguments in prepared_rebuilds:
             stage = plan.get("stage") or None
-            sub_scope = str(plan.get("sub_scope") or "")
-            owner = watch_suppression_owner(sub_scope, stage=stage)
-            if sub_scope:
-                rebuilds[owner] = rebuild_sub_scope_outputs(repo_root, sub_scope, stage=stage, **links_arguments)
+            collection = str(plan.get("collection") or "")
+            owner = watch_suppression_owner(collection, stage=stage)
+            if collection:
+                rebuilds[owner] = rebuild_collection_outputs(repo_root, collection, stage=stage, **links_arguments)
             else:
                 rebuilds[owner] = rebuild_stage_outputs(
                     repo_root, include_search=False,

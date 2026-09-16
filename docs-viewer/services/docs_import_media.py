@@ -18,7 +18,7 @@ from docs_import_common import (
     source_format_for_path,
 )
 from docs_workspace_config import (
-    DocsManagedMediaConfig, DocsStageConfig, DocsSubScopeConfig,
+    DocsManagedMediaConfig, DocsStageConfig, DocsCollectionConfig,
     load_docs_media_owner, managed_media_config,
 )
 from docs_media_storage import (
@@ -357,7 +357,7 @@ def materialize_import_media(
     source_markdown: str = "",
     source_svg_markup: str = "",
     stage: str,
-    sub_scope: str = "",
+    collection: str = "",
 ) -> list[dict[str, Any]]:
     del workspace_root
     plans: list[dict[str, Any]] = []
@@ -414,7 +414,7 @@ def materialize_import_media(
         plans=plans,
         inline_bytes=inline_bytes,
         stage=stage,
-        sub_scope=sub_scope,
+        collection=collection,
     )
 
 
@@ -426,11 +426,11 @@ def publish_import_media(
     plans: list[dict[str, Any]],
     inline_bytes: dict[int, bytes],
     stage: str,
-    sub_scope: str = "",
+    collection: str = "",
 ) -> list[dict[str, Any]]:
     """Prepare one import record's complete media set and publish before its source write."""
 
-    config = load_docs_media_owner(repo_root, stage, sub_scope)
+    config = load_docs_media_owner(repo_root, stage, collection)
     prepared: list[tuple[dict[str, Any], Path, Path, dict[str, Any]]] = []
     with tempfile.TemporaryDirectory(prefix="docs-media-publish-") as temp_dir:
         temp_root = Path(temp_dir).resolve()
@@ -561,7 +561,7 @@ def build_media_plan(
 
 
 def bind_import_media_owner(
-    preview: dict[str, Any], config: DocsStageConfig | DocsSubScopeConfig,
+    preview: dict[str, Any], config: DocsStageConfig | DocsCollectionConfig,
 ) -> None:
     """Bind newly imported assets and their Markdown tokens to the exact collection."""
     plans = list(preview.get("media_plans") or [])

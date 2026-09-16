@@ -15,7 +15,7 @@ function sameDocumentTarget(left, right) {
   var first = left || {};
   var second = right || {};
   return cleanString(first.stage) === cleanString(second.stage)
-    && cleanString(first.subScope) === cleanString(second.subScope)
+    && cleanString(first.collection) === cleanString(second.collection)
     && cleanString(first.docId) === cleanString(second.docId);
 }
 
@@ -164,7 +164,7 @@ export function createDocsViewerTableDetailAdapter(options) {
     var documentMountGeneration = positiveInteger(context.documentMountGeneration);
     var documentTarget = {
       stage: cleanString(context.viewerStage),
-      subScope: "",
+      collection: "",
       docId: cleanString(doc.doc_id)
     };
     var tables = Array.from(root.querySelectorAll(TABLE_DETAIL_SELECTOR));

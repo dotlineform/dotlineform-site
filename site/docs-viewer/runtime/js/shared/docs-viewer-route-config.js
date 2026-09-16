@@ -361,7 +361,7 @@ export function routeConfigWorkspaceProjection(workspaceConfig, options) {
   var windowRef = settings.window || (typeof window !== "undefined" ? window : null);
   var fallbackPath = windowRef && windowRef.location ? windowRef.location.pathname : "";
   var viewerBaseUrl = routeViewerBaseUrl || cleanString(config.viewerBaseUrl) || fallbackPath;
-  var subScopes = Array.isArray(config.subScopes) ? config.subScopes : [];
+  var collections = Array.isArray(config.collections) ? config.collections : [];
   return {
     defaultRouteDocId: cleanString(config.defaultDocId),
     indexTreeUrl: appendAssetVersion(config.indexTreeUrl || "", settings.assetVersion),
@@ -372,11 +372,11 @@ export function routeConfigWorkspaceProjection(workspaceConfig, options) {
       ? new URL(viewerBaseUrl || fallbackPath, windowRef.location.origin).pathname
       : viewerBaseUrl,
     viewerStage: cleanString(config.stage),
-    subScopes: subScopes,
-    subScopesById: config.subScopesById instanceof Map
-      ? config.subScopesById
-      : new Map(subScopes.map(function (subScopeConfig) {
-        return [cleanString(subScopeConfig.subScope), subScopeConfig];
+    collections: collections,
+    collectionsById: config.collectionsById instanceof Map
+      ? config.collectionsById
+      : new Map(collections.map(function (collectionConfig) {
+        return [cleanString(collectionConfig.collection), collectionConfig];
       }))
   };
 }

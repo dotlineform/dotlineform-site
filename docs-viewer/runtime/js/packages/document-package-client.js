@@ -47,18 +47,18 @@ export async function requestDocumentPackageJson(path, options = {}) {
   return payload;
 }
 
-export function getDocumentPackageConfig(stage, subScope = "") {
-  const normalizedSubScope = String(subScope == null ? "" : subScope).trim();
+export function getDocumentPackageConfig(stage, collection = "") {
+  const normalizedCollection = String(collection == null ? "" : collection).trim();
   return requestDocumentPackageJson(endpointUrl(DOCUMENT_PACKAGE_ENDPOINTS.config, {
     stage,
-    sub_scope: normalizedSubScope
+    collection: normalizedCollection
   }));
 }
 
-export function getPackageDocuments(stage, subScope = "") {
+export function getPackageDocuments(stage, collection = "") {
   return requestDocumentPackageJson(endpointUrl(DOCUMENT_PACKAGE_ENDPOINTS.documents, {
     stage,
-    sub_scope: subScope
+    collection: collection
   }));
 }
 

@@ -69,9 +69,9 @@ export function createDocsViewerReviewControlRenderers() {
 
 export function reviewCanonicalDocumentHref(packageManifest, docId) {
   var sourceStage = String(packageManifest && packageManifest.source_stage || "").trim();
-  var sourceSubScope = String(packageManifest && packageManifest.source_sub_scope || "").trim();
+  var sourceCollection = String(packageManifest && packageManifest.source_collection || "").trim();
   var selectedDocId = String(docId || "").trim();
-  return sourceStage === "working" && selectedDocId && !sourceSubScope
+  return sourceStage === "working" && selectedDocId && !sourceCollection
     ? "/docs/?stage=" + encodeURIComponent(sourceStage) + "&doc=" + encodeURIComponent(selectedDocId)
     : "";
 }

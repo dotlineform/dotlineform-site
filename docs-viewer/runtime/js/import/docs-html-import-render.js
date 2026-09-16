@@ -35,8 +35,8 @@ function resultDocLinksHtml(payload) {
     ? payload.target
     : {};
   const stage = normalizeText(returnedTarget.stage || (payload && payload.stage));
-  const normalizedSubScope = normalizeText(
-    returnedTarget.sub_scope || (payload && payload.sub_scope)
+  const normalizedCollection = normalizeText(
+    returnedTarget.collection || (payload && payload.collection)
   );
   const normalizedDocId = normalizeText(returnedTarget.doc_id || (payload && payload.doc_id));
   if (!stage || !normalizedDocId) return "";
@@ -44,8 +44,8 @@ function resultDocLinksHtml(payload) {
     `<a href="#" data-doc-source-link="true"`,
     ` data-stage="${escapeHtml(stage)}"`,
     returnedTarget.stage ? ` data-stage="${escapeHtml(returnedTarget.stage)}"` : "",
-    normalizedSubScope
-      ? ` data-sub-scope="${escapeHtml(normalizedSubScope)}"`
+    normalizedCollection
+      ? ` data-collection="${escapeHtml(normalizedCollection)}"`
       : "",
     ` data-doc-id="${escapeHtml(normalizedDocId)}">`,
     `Source</a>`

@@ -31,10 +31,12 @@ def docs_api_query_value(params: dict[str, list[str]], key: str) -> str:
 
 
 def docs_generated_read_payload(repo_root: Path, path: str, params: dict[str, list[str]]) -> dict[str, object]:
+    if "sub_scope" in params:
+        raise ValueError("sub_scope is retired; use collection")
     if "scope" in params:
         raise ValueError("scope is retired")
-    if "sub_scope" in params and path != routes.GENERATED_LINKS_PATH:
-        raise ValueError("Use the configured sub-scope artifact route for child payloads")
+    if "collection" in params and path != routes.GENERATED_LINKS_PATH:
+        raise ValueError("Use the configured collection artifact route for child payloads")
 
     stage = docs_api_query_value(params, "stage") if "stage" in params else None
 
@@ -51,7 +53,7 @@ def docs_generated_read_payload(repo_root: Path, path: str, params: dict[str, li
     if path == routes.GENERATED_LINKS_PATH:
         return docs_generated_reads.read_generated_doc_links(
             repo_root, docs_api_query_value(params, "doc_id"),
-            docs_api_query_value(params, "sub_scope"), stage,
+            docs_api_query_value(params, "collection"), stage,
         )
     if path == routes.GENERATED_WORKSPACE_LINKS_PATH:
         return docs_generated_reads.read_generated_workspace_links(repo_root, stage)
@@ -68,12 +70,14 @@ def docs_published_read_payload(
     path: str,
     params: dict[str, list[str]],
 ) -> dict[str, object]:
+    if "sub_scope" in params:
+        raise ValueError("sub_scope is retired; use collection")
     if "scope" in params:
         raise ValueError("scope is retired")
     if "stage" in params and docs_api_query_value(params, "stage") != "published":
         raise ValueError("Published reads cannot address a source/generated stage")
-    if "sub_scope" in params:
-        raise ValueError("Use the configured Published sub-scope artifact route for child payloads")
+    if "collection" in params:
+        raise ValueError("Use the configured Published collection artifact route for child payloads")
     if path == routes.PUBLISHED_INDEX_TREE_PATH:
         return docs_published_reads.read_published_docs_index_tree(repo_root)
     if path == routes.PUBLISHED_RECENT_PATH:
@@ -96,8 +100,10 @@ def docs_published_read_payload(
 
 
 def docs_management_get_payload(repo_root: Path, path: str, params: dict[str, list[str]], *, dry_run: bool = False) -> dict[str, object]:
+    if "sub_scope" in params:
+        raise ValueError("sub_scope is retired; use collection")
     if "scope" in params:
-        raise ValueError("scope is retired; supply an explicit stage and optional sub_scope")
+        raise ValueError("scope is retired; supply an explicit stage and optional collection")
     if path == routes.HEALTH_PATH:
         return {"ok": True, "service": "docs_management", "dry_run": dry_run}
     if path == routes.CAPABILITIES_PATH:
@@ -156,8 +162,8 @@ def docs_management_get_payload(repo_root: Path, path: str, params: dict[str, li
             "stage": docs_api_query_value(params, "stage"),
             "doc_id": docs_api_query_value(params, "doc_id"),
         }
-        if "sub_scope" in params:
-            target["sub_scope"] = docs_api_query_value(params, "sub_scope")
+        if "collection" in params:
+            target["collection"] = docs_api_query_value(params, "collection")
         if path == routes.SERIES_WORKS_REPORT_PATH:
             return docs_series_works_report.build_series_works_report(repo_root, target)
         if path == routes.SERIES_WORK_MEDIA_PATH:
@@ -181,7 +187,7 @@ def docs_management_get_payload(repo_root: Path, path: str, params: dict[str, li
             repo_root,
             docs_api_query_value(params, "media_kind"),
             stage=docs_api_query_value(params, "stage"),
-            sub_scope=docs_api_query_value(params, "sub_scope"),
+            collection=docs_api_query_value(params, "collection"),
         )
     if path == routes.DIAGRAM_SOURCES_PATH:
         return docs_diagram_source_service.list_diagram_sources(repo_root, params)

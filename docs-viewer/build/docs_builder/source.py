@@ -153,7 +153,7 @@ class SourceLoadingMixin:
             added_date = str(front_matter.get("added_date") or last_updated).strip()
             summary = normalize_text(front_matter.get("summary"))
             ui_status = str(front_matter.get("ui_status") or "").strip()
-            document_config = getattr(self, "sub_scope_config", self.config)
+            document_config = getattr(self, "collection_config", self.config)
             try:
                 validate_document_status_front_matter(
                     front_matter,
@@ -175,7 +175,7 @@ class SourceLoadingMixin:
                     self.report_source_contract = report_source_contract_for_collection(
                         self.repo_root,
                         self.config,
-                        getattr(self, "sub_scope_config", self.config),
+                        getattr(self, "collection_config", self.config),
                     )
                     report = parse_document_report(
                         source_text,
@@ -259,8 +259,8 @@ class SourceLoadingMixin:
         return self.output_dir
 
     def output_url_base_for(self, output_dir: Path) -> str:
-        child = getattr(self, "sub_scope_config", None)
-        suffix = f"/{quote(child.sub_scope)}" if child is not None else ""
+        child = getattr(self, "collection_config", None)
+        suffix = f"/{quote(child.collection)}" if child is not None else ""
         return f"/docs/generated/external/{quote(self.config.stage)}{suffix}"
 
     def effective_parent_id(self, doc: DocRecord, docs: list[DocRecord]) -> str:

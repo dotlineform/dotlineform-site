@@ -49,8 +49,8 @@ def export_metadata(
         "supports_docs_review": supports_docs_review(context.config),
         "supports_return_import": context.supports_return_import,
     }
-    if context.sub_scope:
-        metadata["sub_scope"] = context.sub_scope
+    if context.collection:
+        metadata["collection"] = context.collection
     if context.content_format:
         metadata["content_format"] = context.content_format
     optional_values = {
@@ -62,7 +62,7 @@ def export_metadata(
     metadata.update({
         key: value
         for key, value in optional_values.items()
-        if key in include or (context.sub_scope and key == "selected_doc_ids")
+        if key in include or (context.collection and key == "selected_doc_ids")
     })
     return metadata
 

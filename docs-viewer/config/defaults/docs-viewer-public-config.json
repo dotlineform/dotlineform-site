@@ -1,5 +1,5 @@
 {
-  "schema_version": "docs_viewer_config_v2",
+  "schema_version": "docs_viewer_config_v3",
   "docs_viewer": {
     "recent_limit": 20
   },
@@ -33,27 +33,27 @@
       "index_url": "/assets/data/search/analysis/index.json",
       "rebuild_policy": "whole_index"
     },
-    "sub_scopes": [
+    "collections": [
       {
-        "sub_scope": "works",
+        "collection": "works",
         "title": "Works",
         "manifest_url": "/assets/data/docs/works/manifest.json",
         "by_id_url_base": "/assets/data/docs/works/by-id"
       },
       {
-        "sub_scope": "concepts",
+        "collection": "concepts",
         "title": "Concepts",
         "manifest_url": "/assets/data/docs/concepts/manifest.json",
         "by_id_url_base": "/assets/data/docs/concepts/by-id"
       },
       {
-        "sub_scope": "processing",
+        "collection": "processing",
         "title": "Processing",
         "manifest_url": "/assets/data/docs/processing/manifest.json",
         "by_id_url_base": "/assets/data/docs/processing/by-id"
       },
       {
-        "sub_scope": "moments",
+        "collection": "moments",
         "title": "Moments",
         "manifest_url": "/assets/data/docs/moments/manifest.json",
         "by_id_url_base": "/assets/data/docs/moments/by-id"

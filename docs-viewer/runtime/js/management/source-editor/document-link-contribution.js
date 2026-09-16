@@ -49,7 +49,7 @@ export function openDocumentLinkModal(options) {
       }
       state.list = createCatalogueTargetPickerList(results, {
         id: function (record) { return record.target.doc_id; },
-        kind: function (record) { return record.target.sub_scope || "Scope-level"; },
+        kind: function (record) { return record.target.collection || "Scope-level"; },
         title: function (record) { return record.title; },
         onSelect: function (record) {
           state.selected = record;
@@ -71,7 +71,7 @@ export function openDocumentLinkModal(options) {
         if (state.disposed) return;
         if (!options.isCurrent()) throw new Error("The source document is no longer active. Cancel and try again.");
         state.support = normalizeDocumentLinkTargets(payload, target);
-        state.support.subScopes.forEach(function (name) {
+        state.support.collections.forEach(function (name) {
           collection.insertAdjacentHTML("beforeend", '<option value="sub:' + escapeHtml(name) + '">' + escapeHtml(name) + "</option>");
         });
         search.disabled = false;

@@ -7,7 +7,7 @@ export function readSeriesWorkPresentation(payload, target, workId) {
   var actual = payload && payload.target;
   var presentation = payload && payload.presentation;
   if (!actual || actual.doc_id !== target.doc_id
-    || (actual.sub_scope || "") !== (target.sub_scope || "")
+    || (actual.collection || "") !== (target.collection || "")
     || !presentation || !presentation.target
     || presentation.target.kind !== "catalogue-work" || presentation.target.id !== workId) {
     throw new Error("Work media response does not match the selected Work and document.");
@@ -21,7 +21,7 @@ export function readSeriesWorksRows(payload, target) {
   if (
     !payload || payload.schema !== "docs_series_works_report_v1"
     || !actual || actual.doc_id !== target.doc_id
-    || (actual.sub_scope || "") !== (target.sub_scope || "")
+    || (actual.collection || "") !== (target.collection || "")
     || !Array.isArray(payload.works)
   ) {
     throw new Error("Works in Series response does not match its document.");
@@ -134,7 +134,7 @@ export function mountSeriesWorksReport(context) {
       if (typeof context.openMediaPresentation !== "function" || !context.openMediaPresentation({
         presentation: presentation,
         invocationControl: control,
-        documentTarget: { ...(target.stage ? { stage: target.stage } : {}), subScope: target.sub_scope || "", docId: target.doc_id },
+        documentTarget: { ...(target.stage ? { stage: target.stage } : {}), collection: target.collection || "", docId: target.doc_id },
         isCurrentDocument: isCurrent
       })) throw new Error("Media View is unavailable for this document.");
       status.textContent = seriesLabel + " · " + filterSeriesWorks(rows, filter.value).length + " of " + rows.length + " works";

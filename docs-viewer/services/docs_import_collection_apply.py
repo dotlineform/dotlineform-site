@@ -26,8 +26,8 @@ from docs_management_document_target import ManagedDocumentCollection
 from docs_write_rebuild import (
     DocumentSourceSnapshotChanged,
     DocumentWriteRebuildFailure,
-    SubScopeSourceSnapshotChanged,
-    SubScopeWriteRebuildFailure,
+    CollectionSourceSnapshotChanged,
+    CollectionWriteRebuildFailure,
 )
 
 
@@ -43,7 +43,7 @@ def _clean_text(value: Any) -> str:
 
 COLLECTION_APPLY_BODY_FIELDS = {
     "stage",
-    "sub_scope",
+    "collection",
     "staged_filename",
     "preview_only",
     "confirm",
@@ -383,8 +383,8 @@ def _atomic_collection_result(
         timestamp=utc_timestamp(),
     )
     result_payload["target"] = collection.request_target()
-    if collection.sub_scope:
-        result_payload["sub_scope"] = collection.sub_scope
+    if collection.collection:
+        result_payload["collection"] = collection.collection
     result_payload["rollback"] = copy.deepcopy(rollback)
     event_details = {
         "stage": collection.stage,
@@ -394,8 +394,8 @@ def _atomic_collection_result(
         "generation_status": result_payload["generation"]["status"],
         "rollback_status": result_payload["rollback"]["status"],
     }
-    if collection.sub_scope:
-        event_details["sub_scope"] = collection.sub_scope
+    if collection.collection:
+        event_details["collection"] = collection.collection
     log_event(
         repo_root,
         event_name,
@@ -584,11 +584,11 @@ def apply_import_content_collection_atomic(
     workspace_root: Path,
     log_event: LogEvent,
     collection: ManagedDocumentCollection,
-    perform_sub_scope_source_write_and_rebuild: PerformSourceWriteAndRebuild,
+    perform_collection_source_write_and_rebuild: PerformSourceWriteAndRebuild,
 ) -> dict[str, Any]:
     """Apply one exact child package or restore every source and its projection."""
 
-    if not collection.sub_scope:
+    if not collection.collection:
         raise ValueError("atomic collection apply requires a managed child collection")
 
     def perform_boundary(
@@ -596,12 +596,12 @@ def apply_import_content_collection_atomic(
         write_operation: Callable[[], None],
         snapshots: dict[Path, bytes],
     ) -> dict[str, Any]:
-        return perform_sub_scope_source_write_and_rebuild(
+        return perform_collection_source_write_and_rebuild(
             repo_root,
-            collection.sub_scope,
+            collection.collection,
             changed_paths,
             write_operation,
-            suppression_reason="docs-import-sub-scope-collection-apply",
+            suppression_reason="docs-import-collection-collection-apply",
             source_snapshots=snapshots,
             stage=collection.stage or None,
         )
@@ -614,10 +614,10 @@ def apply_import_content_collection_atomic(
         log_event=log_event,
         collection=collection,
         perform_atomic_boundary=perform_boundary,
-        snapshot_changed_type=SubScopeSourceSnapshotChanged,
-        write_rebuild_failure_type=SubScopeWriteRebuildFailure,
-        event_name="docs-import-sub-scope-collection-apply",
-        target_label="sub-scope",
+        snapshot_changed_type=CollectionSourceSnapshotChanged,
+        write_rebuild_failure_type=CollectionWriteRebuildFailure,
+        event_name="docs-import-collection-collection-apply",
+        target_label="collection",
     )
 
 
@@ -633,7 +633,7 @@ def apply_import_content_collection_document_atomic(
 ) -> dict[str, Any]:
     """Apply one exact parent-stage package or restore its complete projection."""
 
-    if collection.sub_scope:
+    if collection.collection:
         raise ValueError("stage collection apply requires a top-level collection")
     docs_doc_ids = list(
         dict.fromkeys(

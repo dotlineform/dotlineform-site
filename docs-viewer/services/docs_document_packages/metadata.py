@@ -114,7 +114,7 @@ def staged_file_record(path: Path, *, metadata_root: Path, workspace_root: Path)
         )
         return record
 
-    sub_scope = normalize_text(metadata.get("sub_scope")).lower()
+    collection = normalize_text(metadata.get("collection")).lower()
     capabilities_error = capability_error(metadata)
     record.update(
         {
@@ -128,7 +128,7 @@ def staged_file_record(path: Path, *, metadata_root: Path, workspace_root: Path)
             "config_id": normalize_text(metadata.get("config_id")),
             "profile_id": normalize_text(metadata.get("profile_id")),
             "stage": normalize_text(metadata.get("stage")),
-            "sub_scope": sub_scope,
+            "collection": collection,
             "target_format": normalize_text(metadata.get("target_format")),
             "record_shape": normalize_text(metadata.get("record_shape")),
             "supports_docs_review": metadata.get("supports_docs_review"),

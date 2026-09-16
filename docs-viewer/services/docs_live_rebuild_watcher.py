@@ -172,18 +172,18 @@ def desired_watch_state_specs(repo_root: Path, workspace: DocsWorkspaceConfig) -
     # Pre-publish has no authoring watcher. Working owns all source-watch writes.
     config = select_workspace_stage(workspace, "working")
     specs: dict[str, dict[str, Any]] = {}
-    for collection in (config, *config.sub_scopes):
-        child = getattr(collection, "sub_scope", "")
+    for collection in (config, *config.collections):
+        child = getattr(collection, "collection", "")
         label = f"working/{child}" if child else "working"
         specs[label] = {
-            "stage": "working", "sub_scope": child, "label": label,
+            "stage": "working", "collection": child, "label": label,
             "root": resolve_workspace_path(repo_root, document_source_path(collection)),
             "config": config, "watch_kind": "documents",
         }
         for build_type, build in sorted(collection.media.build_sources.items()):
             media_label = f"{label}/media/{build_type}"
             specs[media_label] = {
-                "stage": "working", "sub_scope": child, "label": media_label,
+                "stage": "working", "collection": child, "label": media_label,
                 "root": filesystem_location_root(repo_root, build.location),
                 "config": config, "media_config": collection,
                 "watch_kind": "build_media", "build_type": build_type,
@@ -207,7 +207,7 @@ def new_watch_state(repo_root: Path, spec: dict[str, Any], *, baseline: bool) ->
     if state.get("watch_kind") == "documents":
         doc_snapshot, snapshot_error = try_parsed_doc_snapshot(
             repo_root,
-            str(state.get("sub_scope") or ""),
+            str(state.get("collection") or ""),
             stage=state.get("stage") or None,
         )
         state["doc_snapshot"] = doc_snapshot
@@ -308,21 +308,21 @@ def affected_doc_ids_log_text(doc_ids: Optional[list[str]]) -> str:
 
 def parsed_doc_snapshot(
     repo_root: Path,
-    sub_scope: str = "",
+    collection: str = "",
     *, stage: str | None = None,
 ) -> Dict[str, Dict[str, Any]]:
-    normalized_sub_scope = str(sub_scope or "").strip().lower()
+    normalized_collection = str(collection or "").strip().lower()
     parent_config = load_docs_stage(repo_root, stage)
     document_config = parent_config
-    if normalized_sub_scope:
+    if normalized_collection:
         matching = [
             candidate
-            for candidate in parent_config.sub_scopes
-            if candidate.sub_scope == normalized_sub_scope
+            for candidate in parent_config.collections
+            if candidate.collection == normalized_collection
         ]
         if len(matching) != 1:
             raise ValueError(
-                f"unknown sub_scope {normalized_sub_scope!r} in stage {stage!r}"
+                f"unknown collection {normalized_collection!r} in stage {stage!r}"
             )
         document_config = matching[0]
     docs = load_document_collection_docs_for_config(repo_root, parent_config, document_config)
@@ -346,11 +346,11 @@ def parsed_doc_snapshot(
 
 def try_parsed_doc_snapshot(
     repo_root: Path,
-    sub_scope: str = "",
+    collection: str = "",
     *, stage: str | None = None,
 ) -> tuple[Optional[Dict[str, Dict[str, Any]]], str]:
     try:
-        return parsed_doc_snapshot(repo_root, sub_scope, stage=stage), ""
+        return parsed_doc_snapshot(repo_root, collection, stage=stage), ""
     except Exception as exc:  # noqa: BLE001 - watcher must fall back rather than stop on bad source state.
         return None, str(exc)
 
@@ -747,12 +747,12 @@ def process_document_collection_changes(
 ) -> tuple[bool, Optional[Dict[str, Dict[str, Any]]]]:
     """Capture eligible timestamps, then run one exact collection rebuild."""
 
-    sub_scope = str(state.get("sub_scope") or "")
+    collection = str(state.get("collection") or "")
     stage = state.get("stage") or None
-    label = f"{stage}/{sub_scope}" if sub_scope else stage
+    label = f"{stage}/{collection}" if collection else stage
     current_docs, snapshot_error = try_parsed_doc_snapshot(
         repo_root,
-        sub_scope,
+        collection,
         stage=stage,
     )
     # This set follows changed source identities, independently of renderer
@@ -774,12 +774,12 @@ def process_document_collection_changes(
             f"{label} parsed docs snapshot unavailable; timestamp capture skipped: "
             f"{snapshot_error or 'parsed docs snapshot unavailable'}"
         )
-        if sub_scope:
-            return rebuild_sub_scope(repo_root, sub_scope, stage=stage, **links_arguments), None
+        if collection:
+            return rebuild_collection(repo_root, collection, stage=stage, **links_arguments), None
         return rebuild_stage(repo_root, stage=stage, **links_arguments), None
 
     docs_doc_ids: Optional[list[str]] = None
-    if not sub_scope:
+    if not collection:
         docs_doc_ids, fallback_reason = affected_doc_ids(
             state["doc_snapshot"],
             current_docs,
@@ -854,9 +854,9 @@ def process_document_collection_changes(
             "for automatic timestamp capture."
         )
 
-    if sub_scope:
+    if collection:
         return (
-            rebuild_sub_scope(repo_root, sub_scope, stage=stage, **links_arguments),
+            rebuild_collection(repo_root, collection, stage=stage, **links_arguments),
             current_docs,
         )
     return (
@@ -870,23 +870,23 @@ def process_document_collection_changes(
     )
 
 
-def rebuild_sub_scope(
-    repo_root: Path, sub_scope: str, *, stage: str | None = None,
+def rebuild_collection(
+    repo_root: Path, collection: str, *, stage: str | None = None,
     links_doc_ids: Optional[list[str]] = None, links_created_doc_ids: Optional[list[str]] = None,
 ) -> bool:
-    label = f"{stage}/{sub_scope}"
+    label = f"{stage}/{collection}"
     try:
         remove_build_manifest(repo_root, load_docs_stage(repo_root, stage))
     except (KeyError, FileNotFoundError, ValueError) as exc:
-        log(f"{label} sub-scope docs rebuild failed before writing: {exc}")
+        log(f"{label} collection docs rebuild failed before writing: {exc}")
         return False
     commands = [
         (
-            "sub-scope docs",
+            "collection docs",
             python_builder_command(
                 DOCS_BUILDER_SCRIPT,
-                "--sub-scope",
-                sub_scope,
+                "--collection",
+                collection,
                 "--write",
                 "--diagnostics",
                 *(["--stage", stage, "--skip-browser-config", "--skip-media-builds"] if stage else []),
@@ -895,7 +895,7 @@ def rebuild_sub_scope(
             ),
         ),
     ]
-    log(f"Rebuilding {label} sub-scope docs. Parent Search remains explicit via Rebuild.")
+    log(f"Rebuilding {label} collection docs. Parent Search remains explicit via Rebuild.")
     for step_label, command in commands:
         completed = subprocess.run(
             command,
@@ -912,11 +912,11 @@ def rebuild_sub_scope(
             return False
         diagnostics = (
             formatted_docs_builder_diagnostics(stdout)
-            if step_label == "sub-scope docs"
+            if step_label == "collection docs"
             else []
         )
         if diagnostics:
-            log(f"{label} sub-scope diagnostics:")
+            log(f"{label} collection diagnostics:")
             for line in diagnostics:
                 log(f"  {line}")
         else:
@@ -1033,7 +1033,7 @@ def main() -> int:
         f"Watching {watch_roots_log_text(states)} "
         f"(poll={args.poll_seconds:.2f}s, debounce={args.debounce_seconds:.2f}s)."
     )
-    log(f"Watching workspace config {config_path}; Working and sub-scope state will reconcile after config changes.")
+    log(f"Watching workspace config {config_path}; Working and collection state will reconcile after config changes.")
 
     try:
         while True:
@@ -1088,7 +1088,7 @@ def main() -> int:
                 ready_label = state["label"]
                 changed_files = list(state["changed_files"])
                 suppression_owner = watch_suppression_owner(
-                    str(state.get("sub_scope") or ""),
+                    str(state.get("collection") or ""),
                     stage=state.get("stage") or None,
                 )
                 active_suppressions = load_active_watch_suppressions(
@@ -1110,7 +1110,7 @@ def main() -> int:
                             current_doc_snapshot, snapshot_error = (
                                 try_parsed_doc_snapshot(
                                     repo_root,
-                                    str(state.get("sub_scope") or ""),
+                                    str(state.get("collection") or ""),
                                     stage=state["stage"],
                                 )
                             )

@@ -25,7 +25,7 @@ from docs_document_identity import (
 
 from docs_workspace_config import (
     DocsStageConfig,
-    DocsSubScopeConfig,
+    DocsCollectionConfig,
     document_source_path,
     load_docs_stage,
     path_label,
@@ -119,7 +119,7 @@ def parse_source(path: Path) -> tuple[Dict[str, Any], str]:
 def report_source_contract_for_collection(
     repo_root: Path,
     parent_config: DocsStageConfig,
-    document_config: DocsStageConfig | DocsSubScopeConfig,
+    document_config: DocsStageConfig | DocsCollectionConfig,
 ) -> ReportSourceContract:
     """Load the one report registry with exact configured host context."""
 
@@ -127,8 +127,8 @@ def report_source_contract_for_collection(
     registry_payload = json.loads(registry_path.read_text(encoding="utf-8"))
     return build_report_source_contract(
         registry_payload,
-        configured_sub_scope_ids=(item.sub_scope for item in parent_config.sub_scopes),
-        source_sub_scope_id=str(getattr(document_config, "sub_scope", "") or ""),
+        configured_collection_ids=(item.collection for item in parent_config.collections),
+        source_collection_id=str(getattr(document_config, "collection", "") or ""),
     )
 
 
@@ -156,7 +156,7 @@ def parse_document_report(
 def parse_collection_document_report(
     repo_root: Path,
     parent_config: DocsStageConfig,
-    document_config: DocsStageConfig | DocsSubScopeConfig,
+    document_config: DocsStageConfig | DocsCollectionConfig,
     source_text: str,
     *,
     source_name: str,
@@ -211,40 +211,40 @@ def format_front_matter_value(value: Any) -> str:
     return json.dumps(text, ensure_ascii=False)
 
 
-def document_sub_scope_front_matter(front_matter: Mapping[str, Any], sub_scope: str) -> Dict[str, Any]:
+def document_collection_front_matter(front_matter: Mapping[str, Any], collection: str) -> Dict[str, Any]:
     """Record membership from the resolved destination, never from incoming metadata."""
     updated = dict(front_matter)
-    if sub_scope:
-        updated["sub-scope"] = sub_scope
+    if collection:
+        updated["collection"] = collection
     else:
-        updated.pop("sub-scope", None)
+        updated.pop("collection", None)
     return updated
 
 
-def rewrite_source_sub_scope(source_text: str, sub_scope: str) -> str:
+def rewrite_source_collection(source_text: str, collection: str) -> str:
     """Maintain membership while preserving other fields, the body and timestamps."""
     prefix, front_matter, body = split_source_text(source_text)
-    updated = document_sub_scope_front_matter(front_matter, sub_scope)
+    updated = document_collection_front_matter(front_matter, collection)
     if updated == front_matter:
         return source_text
     lines = prefix.splitlines(keepends=True)
     closing = next(index for index, line in enumerate(lines[1:], 1) if line.strip() == "---")
-    header = [line for line in lines[:closing] if not re.match(r"^[ \t]*sub-scope[ \t]*:", line)]
-    if sub_scope:
+    header = [line for line in lines[:closing] if not re.match(r"^[ \t]*collection[ \t]*:", line)]
+    if collection:
         while header and not header[-1].strip():
             header.pop()
         newline = "\r\n" if lines[0].endswith("\r\n") else "\n"
-        header.append(f"sub-scope: {format_front_matter_value(sub_scope)}{newline}")
+        header.append(f"collection: {format_front_matter_value(collection)}{newline}")
     return "".join(header + lines[closing:]) + body
 
 
-def format_source(front_matter: Dict[str, Any], body: str, *, sub_scope: str | None = None) -> str:
-    if sub_scope is not None:
-        front_matter = document_sub_scope_front_matter(front_matter, sub_scope)
+def format_source(front_matter: Dict[str, Any], body: str, *, collection: str | None = None) -> str:
+    if collection is not None:
+        front_matter = document_collection_front_matter(front_matter, collection)
     preferred_order = [
         "doc_id",
         "title",
-        "sub-scope",
+        "collection",
         "date",
         "date_display",
         "added_date",
@@ -464,7 +464,7 @@ def normalize_ui_status(value: Any) -> str:
     return status
 
 
-def collection_supports_draft(config: DocsStageConfig | DocsSubScopeConfig) -> bool:
+def collection_supports_draft(config: DocsStageConfig | DocsCollectionConfig) -> bool:
     """Draft authoring belongs to every collection in Working."""
     return config.stage == "working"
 
@@ -472,12 +472,14 @@ def collection_supports_draft(config: DocsStageConfig | DocsSubScopeConfig) -> b
 def validate_document_status_front_matter(
     front_matter: Dict[str, Any],
     *,
-    collection_config: DocsStageConfig | DocsSubScopeConfig,
+    collection_config: DocsStageConfig | DocsCollectionConfig,
     source_name: str,
 ) -> None:
     """Validate visual status and the availability/types of Working publication fields."""
 
     normalize_ui_status(front_matter.get("ui_status"))
+    if "sub-scope" in front_matter or "sub_scope" in front_matter:
+        raise ValueError(f"sub-scope front matter is retired; use collection: {source_name}")
     if "draft" in front_matter:
         if collection_config.stage not in {"working", "pre-publish"}:
             raise ValueError(f"draft front matter requires a workflow stage: {source_name}")
@@ -504,15 +506,15 @@ def document_markdown_paths(root: Path) -> list[Path]:
 def load_document_collection_docs_for_config(
     repo_root: Path,
     parent_config: DocsStageConfig,
-    document_config: DocsStageConfig | DocsSubScopeConfig,
+    document_config: DocsStageConfig | DocsCollectionConfig,
 ) -> list[SourceDoc]:
-    """Load one exact configured parent or sub-scope document collection."""
+    """Load one exact configured parent or collection document collection."""
 
     root = resolve_workspace_path(repo_root, document_source_path(document_config))
-    sub_scope = str(getattr(document_config, "sub_scope", "") or "").strip()
+    collection = str(getattr(document_config, "collection", "") or "").strip()
     if not root.is_dir():
-        collection = sub_scope or "ordinary documents"
-        raise ValueError(f"missing source root for {document_config.stage}/{collection}: {root}")
+        resolved_collection = collection or "ordinary documents"
+        raise ValueError(f"missing source root for {document_config.stage}/{resolved_collection}: {root}")
 
     report_contract: ReportSourceContract | None = None
     docs: list[SourceDoc] = []
@@ -585,24 +587,24 @@ def load_stage_docs(repo_root: Path, *, stage: str) -> list[SourceDoc]:
 
 def load_document_collection_docs(
     repo_root: Path,
-    sub_scope: str = "",
+    collection: str = "",
     *,
     stage: str,
 ) -> list[SourceDoc]:
-    """Load exactly the configured stage and parent or named sub-scope collection."""
+    """Load exactly the configured stage and ordinary or named collection."""
 
     parent_config = load_docs_stage(repo_root, stage)
-    normalized_sub_scope = str(sub_scope or "").strip().lower()
-    if not normalized_sub_scope:
+    normalized_collection = str(collection or "").strip().lower()
+    if not normalized_collection:
         return load_stage_docs_for_config(repo_root, parent_config)
     matching = [
         candidate
-        for candidate in parent_config.sub_scopes
-        if candidate.sub_scope == normalized_sub_scope
+        for candidate in parent_config.collections
+        if candidate.collection == normalized_collection
     ]
     if len(matching) != 1:
         raise ValueError(
-            f"unknown sub_scope {normalized_sub_scope!r}"
+            f"unknown collection {normalized_collection!r}"
         )
     return load_document_collection_docs_for_config(
         repo_root,

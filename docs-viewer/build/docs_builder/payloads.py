@@ -4,7 +4,7 @@ from pathlib import Path
 from typing import Any
 from urllib.parse import quote
 
-from .browser_config import browser_sub_scope_output_url_base
+from .browser_config import browser_collection_output_url_base
 from .common import (
     DOCS_INDEX_TREE_SCHEMA_VERSION,
     DOCS_RECENT_SCHEMA_VERSION,
@@ -170,21 +170,21 @@ class PayloadBuilderMixin:
         """
         title_by_id = {doc.doc_id: doc.title for doc in docs}
         rows = [self.recent_entry(doc, docs, title_by_id) for doc in docs]
-        for sub_scope in self.config.sub_scopes:
-            children = load_document_collection_docs_for_config(self.repo_root, self.config, sub_scope)
+        for collection in self.config.collections:
+            children = load_document_collection_docs_for_config(self.repo_root, self.config, collection)
             if not children:
                 continue
             hosts = [
                 doc for doc in docs
-                if doc.report is not None and doc.report.id == "docs_subscope"
-                and doc.report.sub_scope == sub_scope.sub_scope
+                if doc.report is not None and doc.report.id == "docs_collection"
+                and doc.report.collection == collection.collection
             ]
             if len(hosts) != 1:
                 raise ValueError(
-                    f"Recent requires exactly one report host for {self.config.stage}/{sub_scope.sub_scope}; "
+                    f"Recent requires exactly one report host for {self.config.stage}/{collection.collection}; "
                     f"found {len(hosts)}"
                 )
-            output_base = browser_sub_scope_output_url_base(self.config, sub_scope)
+            output_base = browser_collection_output_url_base(self.config, collection)
             for child in children:
                 if not is_immutable_doc_id(child.doc_id):
                     raise ValueError(f"Recent child has invalid doc_id: {child.path}")
@@ -195,9 +195,9 @@ class PayloadBuilderMixin:
                     "content_url": f"{output_base}/by-id/{quote(child.doc_id)}.json",
                     "added_date": str(child.front_matter.get("added_date") or last_updated).strip(),
                     "last_updated": last_updated,
-                    "sub_scope": sub_scope.sub_scope,
+                    "collection": collection.collection,
                     "report_doc_id": hosts[0].doc_id,
-                    "collection_title": sub_scope.title or hosts[0].title,
+                    "collection_title": collection.title or hosts[0].title,
                 })
         return rows
 
@@ -216,11 +216,11 @@ class PayloadBuilderMixin:
         timestamp_key = "added_date" if basis == "added" else "last_updated"
         ordered = sorted(
             candidates,
-            key=lambda row: (row["title"].lower(), row["doc_id"], row.get("sub_scope", "")),
+            key=lambda row: (row["title"].lower(), row["doc_id"], row.get("collection", "")),
         )
         ordered.sort(key=lambda row: row[timestamp_key], reverse=True)
         fields = ("doc_id", "title", "content_url", "parent_id", "parent_title",
-                  "sub_scope", "report_doc_id", "collection_title")
+                  "collection", "report_doc_id", "collection_title")
         rows = [
             {**{key: row[key] for key in fields if key in row}, "timestamp": row[timestamp_key]}
             for row in ordered
@@ -228,9 +228,9 @@ class PayloadBuilderMixin:
             or (basis == "edited" and is_doc_timestamp(row[timestamp_key]))
         ][:limit]
         if published:
-            public_titles = {child.sub_scope: child.public_title for child in self.config.sub_scopes}
+            public_titles = {child.collection: child.public_title for child in self.config.collections}
             for row in rows:
-                public_title = public_titles.get(row.get("sub_scope", ""))
+                public_title = public_titles.get(row.get("collection", ""))
                 if public_title:
                     row["collection_title"] = public_title
         comparable = {

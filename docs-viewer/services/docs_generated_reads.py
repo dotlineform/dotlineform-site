@@ -19,7 +19,7 @@ from docs_workspace_config import (
 )
 
 
-EXTERNAL_SUB_SCOPE_GENERATED_PREFIX = "/docs/generated/external/"
+EXTERNAL_COLLECTION_GENERATED_PREFIX = "/docs/generated/external/"
 
 
 def generated_stage_config(repo_root: Path, stage: str | None = None) -> DocsStageConfig:
@@ -31,31 +31,31 @@ def generated_docs_output_root(repo_root: Path, stage: str | None = None) -> Pat
     return resolve_workspace_path(repo_root, generated_documents_path(config))
 
 
-def external_sub_scope_payload_path(repo_root: Path, request_path: str, stage: str | None = None) -> Path:
-    if not request_path.startswith(EXTERNAL_SUB_SCOPE_GENERATED_PREFIX):
-        raise ValueError("Invalid external Docs sub-scope payload route")
-    parts = request_path.removeprefix(EXTERNAL_SUB_SCOPE_GENERATED_PREFIX).split("/")
+def external_collection_payload_path(repo_root: Path, request_path: str, stage: str | None = None) -> Path:
+    if not request_path.startswith(EXTERNAL_COLLECTION_GENERATED_PREFIX):
+        raise ValueError("Invalid external Docs collection payload route")
+    parts = request_path.removeprefix(EXTERNAL_COLLECTION_GENERATED_PREFIX).split("/")
     if len(parts) < 3:
-        raise ValueError("Generated sub-scope route requires stage, sub-scope and artifact")
-    route_stage, sub_scope, *artifact = parts
+        raise ValueError("Generated collection route requires stage, collection and artifact")
+    route_stage, collection, *artifact = parts
     if stage is not None and stage != route_stage:
         raise ValueError("Conflicting generated stage target")
     config = load_docs_stage(repo_root, route_stage)
-    selected = next((child for child in config.sub_scopes if child.sub_scope == sub_scope), None)
+    selected = next((child for child in config.collections if child.collection == collection), None)
     if selected is None:
-        raise FileNotFoundError(f"Docs sub-scope not found: {sub_scope}")
+        raise FileNotFoundError(f"Docs collection not found: {collection}")
     if len(artifact) == 1 and artifact[0] in {"manifest.json", "manage-manifest.json", "subject-associations.json"}:
         relative_path = Path(artifact[0])
     elif len(artifact) == 2 and artifact[0] == "by-id" and artifact[1].endswith(".json") and is_immutable_doc_id(artifact[1][:-5]):
         relative_path = Path(*artifact)
     else:
-        raise ValueError("Invalid external Docs sub-scope payload route")
+        raise ValueError("Invalid external Docs collection payload route")
     output_root = resolve_workspace_path(repo_root, generated_documents_path(selected))
     path = (output_root / relative_path).resolve()
     if not path.is_relative_to(output_root):
-        raise ValueError("Generated sub-scope payload escapes its configured output")
+        raise ValueError("Generated collection payload escapes its configured output")
     if not path.is_file():
-        raise FileNotFoundError(f"Generated sub-scope payload not found: {route_stage}/{sub_scope}/{relative_path}")
+        raise FileNotFoundError(f"Generated collection payload not found: {route_stage}/{collection}/{relative_path}")
     return path
 
 
@@ -87,7 +87,7 @@ def generated_search_index_path(repo_root: Path, stage: str | None = None) -> Pa
 
 
 def read_generated_doc_links(
-    repo_root: Path, doc_id: str, sub_scope: str = "", stage: str | None = None,
+    repo_root: Path, doc_id: str, collection: str = "", stage: str | None = None,
 ) -> Dict[str, Any]:
     """Read one configured relationship file and require its exact requested identity.
 
@@ -96,15 +96,15 @@ def read_generated_doc_links(
     if not is_immutable_doc_id(doc_id):
         raise ValueError("doc_id must use the immutable document ID format")
     config = generated_stage_config(repo_root, stage)
-    if sub_scope and sub_scope not in {child.sub_scope for child in config.sub_scopes}:
-        raise ValueError("Links sub_scope must be an exact configured collection")
+    if collection and collection not in {child.collection for child in config.collections}:
+        raise ValueError("Links collection must be an exact configured collection")
     output = resolve_workspace_path(repo_root, generated_documents_path(config)).resolve()
     directory = output / "links-by-id"
     path = directory / f"{doc_id}.json"
     if directory.is_symlink() or path.is_symlink() or path.resolve().parent != directory.resolve():
         raise ValueError("Links data must remain in its configured directory")
     payload = read_generated_json(path, "generated document Links")
-    expected = {"stage": config.stage, "sub_scope": sub_scope, "doc_id": doc_id}
+    expected = {"stage": config.stage, "collection": collection, "doc_id": doc_id}
     summary = payload.get("self") if isinstance(payload, dict) else None
     if not isinstance(summary, dict) or summary.get("target") != expected:
         raise ValueError("Links data does not match the requested document")
@@ -183,13 +183,13 @@ def read_generated_semantic_tokens_index(repo_root: Path, stage: str | None = No
     )
     if payload.get("schema_version") != "docs_semantic_token_usage_index_v2" or "scope" in payload or payload.get("stage") != config.stage or not isinstance(payload.get("occurrences"), list):
         raise ValueError("Semantic-token index does not match its requested stage")
-    owners = {"": config, **{child.sub_scope: child for child in config.sub_scopes}}
+    owners = {"": config, **{child.collection: child for child in config.collections}}
     documents: dict[tuple[str, str], dict[str, Any]] = {}
     collection_urls: dict[str, str] = {}
     for occurrence in payload["occurrences"]:
         if not isinstance(occurrence, dict) or "source_scope" in occurrence or occurrence.get("source_stage") != config.stage:
             raise ValueError("Semantic-token occurrence has invalid source stage")
-        collection = occurrence.get("source_sub_scope")
+        collection = occurrence.get("source_collection")
         doc_id = occurrence.get("source_doc_id")
         if collection not in owners or not is_immutable_doc_id(doc_id):
             raise ValueError("Semantic-token source must identify an exact configured document")
@@ -203,9 +203,9 @@ def read_generated_semantic_tokens_index(repo_root: Path, stage: str | None = No
         if collection not in collection_urls:
             collection_urls[collection] = management_collection_viewer_url(repo_root, collection, stage=config.stage)
         documents[key] = {
-            "target": {"stage": config.stage, "sub_scope": collection, "doc_id": doc_id},
+            "target": {"stage": config.stage, "collection": collection, "doc_id": doc_id},
             "title": document["title"],
-            "href": management_document_viewer_url(collection_urls[collection], doc_id, sub_scope=bool(collection)),
+            "href": management_document_viewer_url(collection_urls[collection], doc_id, collection=bool(collection)),
         }
     return {**payload, "stage": config.stage, "source_documents": list(documents.values())}
 

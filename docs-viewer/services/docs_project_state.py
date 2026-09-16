@@ -44,7 +44,7 @@ from studio.shared.python.projects_directories import (  # noqa: E402
 REPORT_SCHEMA_VERSION = "docs_project_state_report_v4"
 SUBJECT_ASSOCIATIONS_SCHEMA_VERSION = "docs_subject_associations_v2"
 WORKS_STAGE = "working"
-WORKS_SUB_SCOPE = "works"
+WORKS_COLLECTION = "works"
 GENERATION_PATTERN = re.compile(r"\Asha256:[0-9a-f]{64}\Z")
 WORK_ID_PATTERN = re.compile(r"\A[0-9]{5}\Z")
 
@@ -65,10 +65,10 @@ def default_project_state_paths(repo_root: Path) -> ProjectStatePaths:
     """Read document projections from the exact configured Working Works collection."""
     root = repo_root.resolve()
     scope = load_docs_stage(root, WORKS_STAGE)
-    sub_scope = next((item for item in scope.sub_scopes if item.sub_scope == WORKS_SUB_SCOPE), None)
-    if sub_scope is None:
-        raise ValueError(f"Docs Viewer sub-scope is not configured: {WORKS_STAGE}/{WORKS_SUB_SCOPE}")
-    generated_root = resolve_workspace_path(root, generated_documents_path(sub_scope))
+    collection = next((item for item in scope.collections if item.collection == WORKS_COLLECTION), None)
+    if collection is None:
+        raise ValueError(f"Docs Viewer collection is not configured: {WORKS_STAGE}/{WORKS_COLLECTION}")
+    generated_root = resolve_workspace_path(root, generated_documents_path(collection))
     return ProjectStatePaths(
         projects_base_dir=configured_projects_base(),
         manage_manifest_path=generated_root / "manage-manifest.json",
@@ -140,7 +140,7 @@ def _subject_documents(
         associations.get("schema_version") != SUBJECT_ASSOCIATIONS_SCHEMA_VERSION
         or "scope" in associations
         or associations.get("stage") != WORKS_STAGE
-        or associations.get("sub_scope") != WORKS_SUB_SCOPE
+        or associations.get("collection") != WORKS_COLLECTION
     ):
         raise ValueError("Projects subject associations identify the wrong collection")
     if associations.get("subject_generation") != generation:
@@ -171,7 +171,7 @@ def _subject_documents(
                 not isinstance(target, dict)
                 or "scope" in target
                 or target.get("stage") != WORKS_STAGE
-                or target.get("sub_scope") != WORKS_SUB_SCOPE
+                or target.get("collection") != WORKS_COLLECTION
                 or doc_id not in manifest_by_id
                 or identity in actual
             ):
@@ -196,7 +196,7 @@ def _subject_documents(
                     "target": {
 
                         "stage": WORKS_STAGE,
-                        "sub_scope": WORKS_SUB_SCOPE,
+                        "collection": WORKS_COLLECTION,
                         "doc_id": doc_id,
                     },
                     "title": title,
@@ -435,7 +435,7 @@ def validate_report(report: Mapping[str, Any]) -> None:
         or not isinstance(inputs, dict)
         or "scope" in inputs
         or inputs.get("stage") != WORKS_STAGE
-        or inputs.get("sub_scope") != WORKS_SUB_SCOPE
+        or inputs.get("collection") != WORKS_COLLECTION
         or not GENERATION_PATTERN.fullmatch(str(inputs.get("subject_generation") or ""))
         or inputs.get("folder_scan") != {"root": "projects", "depth": "immediate_children"}
         or not isinstance(rows, list)
@@ -477,7 +477,7 @@ def validate_report(report: Mapping[str, Any]) -> None:
                 or not is_immutable_doc_id(doc_id)
                 or "scope" in target
                 or target.get("stage") != WORKS_STAGE
-                or target.get("sub_scope") != WORKS_SUB_SCOPE
+                or target.get("collection") != WORKS_COLLECTION
                 or not str(document.get("title") or "").strip()
                 or not str(document.get("href") or "").strip()
                 or doc_id in document_ids
@@ -564,7 +564,7 @@ class ProjectStateProducer:
             "inputs": {
 
                 "stage": WORKS_STAGE,
-                "sub_scope": WORKS_SUB_SCOPE,
+                "collection": WORKS_COLLECTION,
                 "subject_generation": subject_generation,
                 "folder_scan": {"root": "projects", "depth": "immediate_children"},
             },
@@ -585,7 +585,7 @@ class ProjectStateProducer:
 
 __all__ = [
     "WORKS_STAGE",
-    "WORKS_SUB_SCOPE",
+    "WORKS_COLLECTION",
     "ProjectStatePaths",
     "ProjectStateProducer",
     "REPORT_SCHEMA_VERSION",

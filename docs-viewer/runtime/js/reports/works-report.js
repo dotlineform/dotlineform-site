@@ -4,7 +4,7 @@ import { appendProjectSubjectIcon } from "./project-subject-icons.js";
 const SERIES_SCHEMA = "studio_catalogue_lookup_series_search_v2";
 const WORK_SCHEMA = "studio_catalogue_lookup_work_search_v2";
 const WORKS_STAGE = "working";
-const WORKS_SUB_SCOPE = "works";
+const WORKS_COLLECTION = "works";
 const WORKS_CUSTOMISATION = "working_works";
 const WORKS_REPORT_DOC_ID = "d-20260801-073826-8865a8";
 const SERIES_ID_PATTERN = /^[0-9]{3}$/;
@@ -198,12 +198,12 @@ function configuredWorkingWorksManifestUrl(context) {
   const stageMatches = configs.filter((config) => {
     return config.stage === WORKS_STAGE;
   });
-  const subScopes = stageMatches.length === 1 && Array.isArray(stageMatches[0].subScopes)
-    ? stageMatches[0].subScopes
+  const collections = stageMatches.length === 1 && Array.isArray(stageMatches[0].collections)
+    ? stageMatches[0].collections
     : [];
-  const matches = subScopes.filter((record) => {
-    return cleanString(record && (record.sub_scope || record.subScope)).toLowerCase()
-      === WORKS_SUB_SCOPE;
+  const matches = collections.filter((record) => {
+    return cleanString(record && record.collection).toLowerCase()
+      === WORKS_COLLECTION;
   });
   const url = matches.length === 1
     ? cleanString(matches[0].manifest_url || matches[0].manifestUrl)

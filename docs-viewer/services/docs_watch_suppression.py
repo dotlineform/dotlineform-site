@@ -19,7 +19,7 @@ SUPPRESSION_PENDING = "pending"
 SUPPRESSION_COMPLETE = "complete"
 DEFAULT_PENDING_TTL_SECONDS = 300
 DEFAULT_COMPLETE_TTL_SECONDS = 30
-SUB_SCOPE_OWNER_SEPARATOR = "__sub_scope__"
+COLLECTION_OWNER_SEPARATOR = "__collection__"
 
 
 def utc_now() -> dt.datetime:
@@ -44,13 +44,13 @@ def suppressions_dir(repo_root: Path) -> Path:
     return repo_root / SUPPRESSIONS_REL_DIR
 
 
-def watch_suppression_owner(sub_scope: str = "", *, stage: str | None) -> str:
+def watch_suppression_owner(collection: str = "", *, stage: str | None) -> str:
     if stage not in {"working", "pre-publish"}:
         raise ValueError("an explicit Docs workflow stage is required")
-    if sub_scope:
-        from docs_workspace_config import normalize_sub_scope_id
-        sub_scope = normalize_sub_scope_id(sub_scope, field="sub_scope")
-    return f"{stage}{SUB_SCOPE_OWNER_SEPARATOR}{sub_scope}" if sub_scope else stage
+    if collection:
+        from docs_workspace_config import normalize_collection_id
+        collection = normalize_collection_id(collection, field="collection")
+    return f"{stage}{COLLECTION_OWNER_SEPARATOR}{collection}" if collection else stage
 
 
 def suppression_path(repo_root: Path, owner: str, filename: str) -> Path:

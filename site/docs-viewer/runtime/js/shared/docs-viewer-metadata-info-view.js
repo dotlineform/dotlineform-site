@@ -109,7 +109,7 @@ function renderMetadataDetails(context, metadata) {
   });
 
   if (context.managedDocumentTarget) {
-    article.dataset.docsMetadataTarget = "subscope-document";
+    article.dataset.docsMetadataTarget = "collection-document";
   }
   if (projectedInfo.actions && projectedInfo.actions.assignSubject === true) {
     article.dataset.docsAssignSubjectAvailable = "true";

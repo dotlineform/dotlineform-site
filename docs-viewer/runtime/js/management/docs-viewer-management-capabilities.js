@@ -3,9 +3,9 @@ import {
   readManagementCapabilities
 } from "./docs-viewer-management-client.js";
 
-function subScopeLifecycleCapabilities(capabilities) {
-  return capabilities && capabilities.sub_scope_lifecycle && typeof capabilities.sub_scope_lifecycle === "object"
-    ? capabilities.sub_scope_lifecycle
+function collectionLifecycleCapabilities(capabilities) {
+  return capabilities && capabilities.collection_lifecycle && typeof capabilities.collection_lifecycle === "object"
+    ? capabilities.collection_lifecycle
     : null;
 }
 
@@ -44,11 +44,11 @@ export function stagePrePublishSupported(capabilities, stage) {
     && operation && operation.preview && operation.apply);
 }
 
-export function subScopeCreateSupported(capabilities, stage) {
-  var lifecycle = subScopeLifecycleCapabilities(capabilities);
+export function collectionCreateSupported(capabilities, stage) {
+  var lifecycle = collectionLifecycleCapabilities(capabilities);
   var stageCaps = stageManagementCapabilities(capabilities, stage);
-  var subScopeLifecycle = stageCaps && stageCaps.sub_scope_lifecycle && typeof stageCaps.sub_scope_lifecycle === "object"
-    ? stageCaps.sub_scope_lifecycle
+  var collectionLifecycle = stageCaps && stageCaps.collection_lifecycle && typeof stageCaps.collection_lifecycle === "object"
+    ? stageCaps.collection_lifecycle
     : null;
   return Boolean(
     lifecycle &&
@@ -56,13 +56,13 @@ export function subScopeCreateSupported(capabilities, stage) {
     lifecycle.create_apply &&
     stageCaps &&
     stageCaps.available &&
-    subScopeLifecycle &&
-    subScopeLifecycle.create_eligible
+    collectionLifecycle &&
+    collectionLifecycle.create_eligible
   );
 }
 
-export function subScopeDeleteSupported(capabilities, stage) {
-  var lifecycle = subScopeLifecycleCapabilities(capabilities);
+export function collectionDeleteSupported(capabilities, stage) {
+  var lifecycle = collectionLifecycleCapabilities(capabilities);
   var stageCaps = stageManagementCapabilities(capabilities, stage);
   return Boolean(
     lifecycle &&
@@ -70,8 +70,8 @@ export function subScopeDeleteSupported(capabilities, stage) {
     lifecycle.delete_apply &&
     stageCaps &&
     stageCaps.available &&
-    stageCaps.sub_scope_lifecycle &&
-    stageCaps.sub_scope_lifecycle.delete_eligible
+    stageCaps.collection_lifecycle &&
+    stageCaps.collection_lifecycle.delete_eligible
   );
 }
 
@@ -157,21 +157,21 @@ export function stageStaticHtmlExportCapability(capabilities, stage) {
   return { available: true, reason: "" };
 }
 
-export function subScopeLifecycleDeleteTargets(capabilities, stage) {
+export function collectionLifecycleDeleteTargets(capabilities, stage) {
   var stageCaps = stageManagementCapabilities(capabilities, stage);
-  var lifecycle = stageCaps && stageCaps.sub_scope_lifecycle && typeof stageCaps.sub_scope_lifecycle === "object"
-    ? stageCaps.sub_scope_lifecycle
+  var lifecycle = stageCaps && stageCaps.collection_lifecycle && typeof stageCaps.collection_lifecycle === "object"
+    ? stageCaps.collection_lifecycle
     : null;
-  var records = lifecycle && Array.isArray(lifecycle.sub_scopes) ? lifecycle.sub_scopes : [];
+  var records = lifecycle && Array.isArray(lifecycle.collections) ? lifecycle.collections : [];
   return records.map(function (record) {
-    var subScope = String(record && record.sub_scope || "").trim();
+    var collection = String(record && record.collection || "").trim();
     return {
-      subScope: subScope,
+      collection: collection,
       title: String(record && record.title || "").trim(),
       source: String(record && record.source || "").trim()
     };
   }).filter(function (record) {
-    return Boolean(record.subScope);
+    return Boolean(record.collection);
   });
 }
 

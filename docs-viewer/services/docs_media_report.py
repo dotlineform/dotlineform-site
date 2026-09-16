@@ -16,7 +16,7 @@ from docs_media_inventory import (
     inventory_collection_media,
     source_media_references,
 )
-from docs_workspace_config import DocsStageConfig, DocsSubScopeConfig, load_docs_media_owner
+from docs_workspace_config import DocsStageConfig, DocsCollectionConfig, load_docs_media_owner
 
 
 REPORT_SCHEMA_VERSION = "docs_media_report_v4"
@@ -36,9 +36,9 @@ def _document_references(
     ] = {}
     collections = (
         ("", config),
-        *((sub_scope.sub_scope, sub_scope) for sub_scope in config.sub_scopes),
+        *((collection.collection, collection) for collection in config.collections),
     )
-    for sub_scope, collection_config in collections:
+    for collection, collection_config in collections:
         documents = source_model.load_document_collection_docs_for_config(
             repo_root, config, collection_config,
         )
@@ -46,14 +46,14 @@ def _document_references(
             continue
         collection_url = document_location.management_collection_viewer_url(
             repo_root,
-            sub_scope,
+            collection,
             stage=config.stage,
         )
         for document in documents:
-            target_key = (config.stage, sub_scope, document.doc_id)
+            target_key = (config.stage, collection, document.doc_id)
             target = {
                 "stage": config.stage,
-                "sub_scope": sub_scope,
+                "collection": collection,
                 "doc_id": document.doc_id,
             }
             presentation = {
@@ -62,7 +62,7 @@ def _document_references(
                 "href": document_location.management_document_viewer_url(
                     collection_url,
                     document.doc_id,
-                    sub_scope=bool(sub_scope),
+                    collection=bool(collection),
                 ),
             }
             for reference in source_media_references(
@@ -79,7 +79,7 @@ def _document_references(
 
 
 def _source_path(
-    repo_root: Path, config: DocsStageConfig | DocsSubScopeConfig,
+    repo_root: Path, config: DocsStageConfig | DocsCollectionConfig,
     role: str, media_type: str, identity: str,
 ) -> Path:
     if role == "build-source":
@@ -102,12 +102,12 @@ def open_media_source(
     repo_root: Path, body: dict[str, Any], *, dry_run: bool = False,
 ) -> dict[str, object]:
     """Reveal one exact configured Docs media file without accepting a filesystem path."""
-    if set(body) != {"stage", "sub_scope", "role", "media_type", "identity"} or any(
-        not isinstance(value, str) or value != value.strip() or (not value and key != "sub_scope")
+    if set(body) != {"stage", "collection", "role", "media_type", "identity"} or any(
+        not isinstance(value, str) or value != value.strip() or (not value and key != "collection")
         for key, value in body.items()
     ):
-        raise ValueError("Docs media requires an exact stage, sub-scope, role, media type and identity")
-    config = load_docs_media_owner(repo_root, body["stage"], body["sub_scope"])
+        raise ValueError("Docs media requires an exact stage, collection, role, media type and identity")
+    config = load_docs_media_owner(repo_root, body["stage"], body["collection"])
     path = _source_path(repo_root, config, body["role"], body["media_type"], body["identity"])
     if sys.platform != "darwin":
         raise ValueError("Open in Finder is unavailable on this platform")
@@ -154,7 +154,7 @@ def build_docs_media_report(
         rows.append(
             {
                 "stage": item.stage,
-                "sub_scope": item.sub_scope,
+                "collection": item.collection,
                 "media_type": item.media_type,
                 "identity": item.identity,
                 "role": item.role,

@@ -153,8 +153,8 @@ export function startDocsViewerRuntime(options) {
   var sourceEditorInfoRequest = 0;
   var sourceEditorInfoViewId = "metadata-info";
   var recentControlLabel = "Recent";
-  var latestSubscopeReportGeneration = 0;
-  var latestSubscopeReportState = {
+  var latestCollectionReportGeneration = 0;
+  var latestCollectionReportState = {
     state: "inactive",
     reason: "startup",
     parentTarget: null,
@@ -176,13 +176,13 @@ export function startDocsViewerRuntime(options) {
   var mainViewControlStates = new Map();
   var mainViewControlHost = null;
 
-  function publishSubscopeReportState(value) {
+  function publishCollectionReportState(value) {
     var generation = Number(value && value.documentMountGeneration);
     if (Number.isInteger(generation) && generation > 0) {
-      if (generation < latestSubscopeReportGeneration) return;
-      latestSubscopeReportGeneration = generation;
+      if (generation < latestCollectionReportGeneration) return;
+      latestCollectionReportGeneration = generation;
     }
-    latestSubscopeReportState = value && typeof value === "object"
+    latestCollectionReportState = value && typeof value === "object"
       ? Object.assign({}, value)
       : {
           state: "inactive",
@@ -197,8 +197,8 @@ export function startDocsViewerRuntime(options) {
           refreshCollection: null
         };
     var controller = managementRuntime ? managementRuntime.controller() : null;
-    if (controller && typeof controller.publishSubscopeReportState === "function") {
-      controller.publishSubscopeReportState(latestSubscopeReportState);
+    if (controller && typeof controller.publishCollectionReportState === "function") {
+      controller.publishCollectionReportState(latestCollectionReportState);
     }
     if (documentViewCoordinator) documentViewCoordinator.updateInfoPanel();
   }
@@ -340,7 +340,7 @@ export function startDocsViewerRuntime(options) {
     infoPanelAutoOpenDocumentModes: settings.infoPanelAutoOpenDocumentModes,
     infoPanelDefaultViewByDocumentMode: settings.infoPanelDefaultViewByDocumentMode,
     infoPanelRefs: infoPanelRefs,
-    managedDocumentContext: function () { return latestSubscopeReportState; },
+    managedDocumentContext: function () { return latestCollectionReportState; },
     mount: content,
     panelLayout: panelLayout,
     panelView: appSession.domains.panelView,
@@ -384,20 +384,20 @@ export function startDocsViewerRuntime(options) {
     },
     managementService: managementService,
     managementDocumentActions: {
-      toggleSubscopeDocumentDraft: function (target) {
+      toggleCollectionDocumentDraft: function (target) {
         return loadManagementController().then(function (controller) {
-          if (!controller || typeof controller.toggleSubscopeDocumentDraft !== "function") {
-            throw new Error("Sub-scope draft readiness is unavailable.");
+          if (!controller || typeof controller.toggleCollectionDocumentDraft !== "function") {
+            throw new Error("Collection draft readiness is unavailable.");
           }
-          return controller.toggleSubscopeDocumentDraft(target);
+          return controller.toggleCollectionDocumentDraft(target);
         });
       },
-      createSubscopeDocument: function (collection, options) {
+      createCollectionDocument: function (collection, options) {
         return loadManagementController().then(function (controller) {
-          if (!controller || typeof controller.createSubscopeDocument !== "function") {
-            throw new Error("Sub-scope document creation is unavailable.");
+          if (!controller || typeof controller.createCollectionDocument !== "function") {
+            throw new Error("Collection document creation is unavailable.");
           }
-          return controller.createSubscopeDocument(collection, options);
+          return controller.createCollectionDocument(collection, options);
         });
       }
     },
@@ -412,7 +412,7 @@ export function startDocsViewerRuntime(options) {
     renderSearchMode: renderSearchMode,
     renderSidebar: renderSidebar,
     results: results,
-    publishSubscopeReportState: publishSubscopeReportState,
+    publishCollectionReportState: publishCollectionReportState,
     requestContentDetail: function (targetContext) {
       if (!documentViewCoordinator) return false;
       return documentViewCoordinator.requestMainView("content-detail", {
@@ -645,8 +645,8 @@ export function startDocsViewerRuntime(options) {
     logger: window.console || console,
     onLoaded: function () {
       var controller = managementRuntime ? managementRuntime.controller() : null;
-      if (controller && typeof controller.publishSubscopeReportState === "function") {
-        controller.publishSubscopeReportState(latestSubscopeReportState);
+      if (controller && typeof controller.publishCollectionReportState === "function") {
+        controller.publishCollectionReportState(latestCollectionReportState);
       }
       renderSidebar();
     }
@@ -840,7 +840,7 @@ export function startDocsViewerRuntime(options) {
   function reloadManagedDocumentTarget(target) {
     var managedTarget = target && typeof target === "object" ? target : {};
     var docId = String(managedTarget.doc_id || "").trim();
-    if (String(managedTarget.sub_scope || "").trim()) {
+    if (String(managedTarget.collection || "").trim()) {
       docId = String(appSession.domains.selectedDocument.selectedDocId || "").trim();
     }
     return reloadGeneratedDoc(docId);

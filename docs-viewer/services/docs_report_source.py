@@ -24,7 +24,7 @@ RETIRED_REPORT_KEYS = frozenset(
         "viewer_report_subscope",
     }
 )
-_KEYS = frozenset({"id", "preset", "sub_scope"})
+_KEYS = frozenset({"id", "preset", "collection"})
 _ID = re.compile(r"[a-z0-9][a-z0-9_-]*\Z")
 _ATTRIBUTE = re.compile(r"([a-z_]+): ([a-z0-9][a-z0-9_-]*)\Z")
 _MARKDOWN = MarkdownIt("commonmark")
@@ -42,7 +42,7 @@ class ReportSourceRange:
 class ReportDescriptor:
     id: str
     preset: str | None
-    sub_scope: str | None
+    collection: str | None
     source_range: ReportSourceRange
 
     def as_payload(self) -> Mapping[str, str | None]:
@@ -50,7 +50,7 @@ class ReportDescriptor:
             {
                 "id": self.id,
                 "preset": self.preset,
-                "sub_scope": self.sub_scope,
+                "collection": self.collection,
             }
         )
 
@@ -81,8 +81,8 @@ class ReportDefinition:
 @dataclass(frozen=True)
 class ReportSourceContract:
     reports: tuple[ReportDefinition, ...]
-    configured_sub_scope_ids: frozenset[str]
-    source_sub_scope_id: str = ""
+    configured_collection_ids: frozenset[str]
+    source_collection_id: str = ""
 
     def report(self, report_id: str) -> ReportDefinition | None:
         return next((item for item in self.reports if item.report_id == report_id), None)
@@ -128,8 +128,8 @@ def _identifier(value: Any, label: str) -> str:
 def build_report_source_contract(
     registry_payload: Mapping[str, Any],
     *,
-    configured_sub_scope_ids: Iterable[str] = (),
-    source_sub_scope_id: str = "",
+    configured_collection_ids: Iterable[str] = (),
+    source_collection_id: str = "",
 ) -> ReportSourceContract:
     """Normalize registry and host context into an immutable parser contract."""
 
@@ -158,10 +158,10 @@ def build_report_source_contract(
             presets.add(preset_id)
         reports.append(ReportDefinition(report_id, frozenset(presets)))
 
-    children = frozenset(_identifier(value, "sub-scope id") for value in configured_sub_scope_ids)
-    child_source = _identifier(source_sub_scope_id, "source_sub_scope_id") if source_sub_scope_id else ""
+    children = frozenset(_identifier(value, "collection id") for value in configured_collection_ids)
+    child_source = _identifier(source_collection_id, "source_collection_id") if source_collection_id else ""
     if child_source and child_source not in children:
-        raise ValueError(f"source_sub_scope_id is not configured: {child_source}")
+        raise ValueError(f"source_collection_id is not configured: {child_source}")
     return ReportSourceContract(tuple(reports), children, child_source)
 
 
@@ -278,21 +278,21 @@ def _descriptor(
     if definition is None:
         raise _invalid(f"unknown report id: {report_id}", "unknown_report", source_name, source_range)
 
-    preset, sub_scope = (attributes.get(key) for key in ("preset", "sub_scope"))
+    preset, collection = (attributes.get(key) for key in ("preset", "collection"))
     if preset is not None:
         if report_id != "docs_index_table":
             raise _invalid(f"preset is not allowed for report: {report_id}", "invalid_preset", source_name, source_range)
         if preset not in definition.preset_ids:
             raise _invalid(f"preset is not registered for {report_id}: {preset}", "invalid_preset", source_name, source_range)
-    if report_id == "docs_subscope":
-        if sub_scope is None:
-            raise _invalid("docs_subscope requires sub_scope", "invalid_sub_scope", source_name, source_range)
-        if sub_scope not in contract.configured_sub_scope_ids:
-            message = f"sub_scope is not configured: {sub_scope}"
-            raise _invalid(message, "invalid_sub_scope", source_name, source_range)
-    elif sub_scope is not None:
-        raise _invalid(f"sub_scope is not allowed for report: {report_id}", "invalid_sub_scope", source_name, source_range)
-    return ReportDescriptor(report_id, preset, sub_scope, source_range)
+    if report_id == "docs_collection":
+        if collection is None:
+            raise _invalid("docs_collection requires collection", "invalid_collection", source_name, source_range)
+        if collection not in contract.configured_collection_ids:
+            message = f"collection is not configured: {collection}"
+            raise _invalid(message, "invalid_collection", source_name, source_range)
+    elif collection is not None:
+        raise _invalid(f"collection is not allowed for report: {report_id}", "invalid_collection", source_name, source_range)
+    return ReportDescriptor(report_id, preset, collection, source_range)
 
 
 def parse_report_source(
@@ -354,6 +354,6 @@ def parse_report_source(
         raise ReportSourceContractRequired(
             f"{source_name}:{source_range.start_line}: report source contract is required"
         )
-    if contract.source_sub_scope_id and attributes.get("id") == "docs_subscope":
-        raise _invalid("sub-scope collection reports cannot be nested in child documents", "sub_scope_source", source_name, source_range)
+    if contract.source_collection_id and attributes.get("id") == "docs_collection":
+        raise _invalid("collection reports cannot be nested in child documents", "collection_source", source_name, source_range)
     return _descriptor(attributes, source_range, contract, source_name)

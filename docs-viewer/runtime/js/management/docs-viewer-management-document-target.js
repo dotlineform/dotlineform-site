@@ -18,11 +18,11 @@ export function normalizeManagedDocumentTarget(value) {
   }
   var keys = targetKeys(value);
   var parentKeys = ["doc_id", "stage"];
-  var subScopeKeys = ["doc_id", "stage", "sub_scope"];
-  if (!sameKeys(keys, parentKeys) && !sameKeys(keys, subScopeKeys)) {
+  var collectionKeys = ["collection", "doc_id", "stage"];
+  if (!sameKeys(keys, parentKeys) && !sameKeys(keys, collectionKeys)) {
     throw new Error(
       "Managed document target must contain exactly stage and doc_id, "
-      + "with sub_scope only for a sub-scope document."
+      + "with collection only for a collection document."
     );
   }
 
@@ -34,10 +34,10 @@ export function normalizeManagedDocumentTarget(value) {
     stage: value.stage,
     doc_id: docId
   };
-  if (Object.prototype.hasOwnProperty.call(value, "sub_scope")) {
-    var subScope = cleanString(value.sub_scope).toLowerCase();
-    if (!subScope) throw new Error("Managed document target sub_scope is required.");
-    target.sub_scope = subScope;
+  if (Object.prototype.hasOwnProperty.call(value, "collection")) {
+    var collection = cleanString(value.collection).toLowerCase();
+    if (!collection) throw new Error("Managed document target collection is required.");
+    target.collection = collection;
   }
   return Object.freeze(target);
 }
@@ -48,23 +48,23 @@ export function normalizeManagedDocumentCollectionTarget(value) {
   }
   var keys = targetKeys(value);
   var parentKeys = ["stage"];
-  var subScopeKeys = ["stage", "sub_scope"];
-  if (!sameKeys(keys, parentKeys) && !sameKeys(keys, subScopeKeys)) {
+  var collectionKeys = ["collection", "stage"];
+  if (!sameKeys(keys, parentKeys) && !sameKeys(keys, collectionKeys)) {
     throw new Error(
       "Managed document collection target must contain exactly stage, "
-      + "with sub_scope only for a configured child collection."
+      + "with collection only for a configured child collection."
     );
   }
 
   if (!["working", "pre-publish", "published"].includes(value.stage)) throw new Error("Managed collection stage is required.");
 
   var target = { stage: value.stage };
-  if (Object.prototype.hasOwnProperty.call(value, "sub_scope")) {
-    var subScope = cleanString(value.sub_scope).toLowerCase();
-    if (!subScope) {
-      throw new Error("Managed document collection target sub_scope is required.");
+  if (Object.prototype.hasOwnProperty.call(value, "collection")) {
+    var collection = cleanString(value.collection).toLowerCase();
+    if (!collection) {
+      throw new Error("Managed document collection target collection is required.");
     }
-    target.sub_scope = subScope;
+    target.collection = collection;
   }
   return Object.freeze(target);
 }
@@ -75,6 +75,6 @@ export function managedDocumentTargetsEqual(left, right) {
   return (
     cleanString(normalizedLeft.stage) === cleanString(normalizedRight.stage)
     && normalizedLeft.doc_id === normalizedRight.doc_id
-    && cleanString(normalizedLeft.sub_scope) === cleanString(normalizedRight.sub_scope)
+    && cleanString(normalizedLeft.collection) === cleanString(normalizedRight.collection)
   );
 }

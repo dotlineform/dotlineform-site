@@ -28,7 +28,7 @@ from docs_workspace_config import (
 
 
 PUBLISH_MANIFEST_FILENAME = "publish-manifest.json"
-PUBLISH_MANIFEST_SCHEMA_VERSION = "docs_publish_manifest_v1"
+PUBLISH_MANIFEST_SCHEMA_VERSION = "docs_publish_manifest_v2"
 PUBLISH_PREVIEW_SCHEMA_VERSION = "docs_publish_preview_v1"
 IGNORED_FILENAMES = frozenset({".DS_Store", ".gitkeep"})
 STANDARD_DIRECTORIES = (
@@ -37,7 +37,7 @@ STANDARD_DIRECTORIES = (
     Path("references"),
     Path("reports"),
     Path("media"),
-    Path("sub-scopes"),
+    Path("collections"),
 )
 HTML_START_TAG_PATTERN = re.compile(
     r"<(?P<body>[A-Za-z][A-Za-z0-9:-]*(?:[^>\"']|\"[^\"]*\"|'[^']*')*)>",
@@ -186,56 +186,56 @@ def _validate_subject_associations(
     payload: dict[str, Any],
     *,
     stage: str,
-    sub_scope: str,
+    collection: str,
 ) -> None:
     if payload.get("schema_version") != "docs_subject_associations_v2":
         raise RuntimeError(
-            f"generated subject associations for {stage}/{sub_scope} have an unsupported schema"
+            f"generated subject associations for {stage}/{collection} have an unsupported schema"
         )
-    if "scope" in payload or payload.get("stage") != stage or payload.get("sub_scope") != sub_scope:
+    if "scope" in payload or payload.get("stage") != stage or payload.get("collection") != collection:
         raise RuntimeError(
-            f"generated subject associations for {stage}/{sub_scope} have the wrong collection identity"
+            f"generated subject associations for {stage}/{collection} have the wrong collection identity"
         )
     raw_associations = payload.get("associations")
     if not isinstance(raw_associations, list):
         raise RuntimeError(
-            f"generated subject associations for {stage}/{sub_scope} are missing associations"
+            f"generated subject associations for {stage}/{collection} are missing associations"
         )
 
     seen_doc_ids: set[str] = set()
     for raw_association in raw_associations:
         if not isinstance(raw_association, dict):
             raise RuntimeError(
-                f"generated subject associations for {stage}/{sub_scope} contain an invalid association"
+                f"generated subject associations for {stage}/{collection} contain an invalid association"
             )
         raw_documents = raw_association.get("documents")
         if not isinstance(raw_documents, list):
             raise RuntimeError(
-                f"generated subject associations for {stage}/{sub_scope} contain invalid documents"
+                f"generated subject associations for {stage}/{collection} contain invalid documents"
             )
         for raw_document in raw_documents:
             if not isinstance(raw_document, dict):
                 raise RuntimeError(
-                    f"generated subject associations for {stage}/{sub_scope} contain an invalid document"
+                    f"generated subject associations for {stage}/{collection} contain an invalid document"
                 )
             target = raw_document.get("target")
             if not isinstance(target, dict):
                 raise RuntimeError(
-                    f"generated subject associations for {stage}/{sub_scope} contain a document without a target"
+                    f"generated subject associations for {stage}/{collection} contain a document without a target"
                 )
             doc_id = str(target.get("doc_id") or "").strip()
             if (
                 "scope" in target
                 or target.get("stage") != stage
-                or target.get("sub_scope") != sub_scope
+                or target.get("collection") != collection
                 or not doc_id
             ):
                 raise RuntimeError(
-                    f"generated subject associations for {stage}/{sub_scope} contain the wrong target identity"
+                    f"generated subject associations for {stage}/{collection} contain the wrong target identity"
                 )
             if doc_id in seen_doc_ids:
                 raise RuntimeError(
-                    f"generated subject associations for {stage}/{sub_scope} duplicate {doc_id}"
+                    f"generated subject associations for {stage}/{collection} duplicate {doc_id}"
                 )
             seen_doc_ids.add(doc_id)
 
@@ -243,14 +243,14 @@ def _validate_subject_associations(
 def _validate_prepared_index(path: Path, data: bytes, stage: str) -> None:
     """Retain index shape and identity checks without altering the prepared set."""
     parts = path.parts
-    child_index = len(parts) == 4 and parts[0] == "sub-scopes" and parts[2] == "documents"
+    child_index = len(parts) == 4 and parts[0] == "collections" and parts[2] == "documents"
     if child_index and path.name == "subject-associations.json":
         _validate_subject_associations(
             _read_json_bytes(data, "generated subject associations"),
-            stage=stage, sub_scope=parts[1],
+            stage=stage, collection=parts[1],
         )
     elif path == Path("search/index.json") or (
-        len(parts) == 4 and parts[0] == "sub-scopes" and parts[2:] == ("search", "index.json")
+        len(parts) == 4 and parts[0] == "collections" and parts[2:] == ("search", "index.json")
     ):
         payload = _read_json_bytes(data, "generated Search payload")
         if not isinstance(payload.get("docs"), list) or not isinstance(payload.get("terms"), dict):
@@ -298,9 +298,9 @@ def _media_identity_from_url(value: str, prefix: str) -> str:
 def _published_media_bindings(config: DocsStageConfig) -> dict[str, tuple[str, str, Path]]:
     """Map every collection's generated URL to its accepted URL and snapshot path."""
     bindings = {}
-    for collection in (config, *config.sub_scopes):
-        child = getattr(collection, "sub_scope", "")
-        suffix = f"/sub-scopes/{child}" if child else ""
+    for collection in (config, *config.collections):
+        child = getattr(collection, "collection", "")
+        suffix = f"/collections/{child}" if child else ""
         for media_type, media in collection.media.types.items():
             key = f"{child}/{media_type}" if child else media_type
             relative = media.published_location.path.relative_to(config.workspace_root.path / "published")
@@ -409,13 +409,13 @@ def _published_files(
         parts = relative_path.parts
         _validate_prepared_index(relative_path, data, "pre-publish")
         if parts and (parts[0] == "media" or (
-            len(parts) >= 4 and parts[0] == "sub-scopes" and parts[2] == "media"
+            len(parts) >= 4 and parts[0] == "collections" and parts[2] == "media"
         )):
             continue
         if parts[:2] == ("documents", ".publish") or relative_path.name == "manage-manifest.json":
             continue
         ordinary_document = len(parts) == 3 and parts[:2] == ("documents", "by-id")
-        child_document = len(parts) == 5 and parts[0] == "sub-scopes" and parts[2:4] == ("documents", "by-id")
+        child_document = len(parts) == 5 and parts[0] == "collections" and parts[2:4] == ("documents", "by-id")
         if relative_path.suffix == ".json" and (ordinary_document or child_document):
             payload = _read_json_bytes(data, "prepared document")
             if payload.get("doc_id") != relative_path.stem:
@@ -591,7 +591,7 @@ def validate_published_snapshot(
     if manifest.get("schema_version") != PUBLISH_MANIFEST_SCHEMA_VERSION:
         raise RuntimeError("published snapshot for the workspace has an unsupported manifest")
     if "scope" in manifest or manifest.get("stage") != "published":
-        raise RuntimeError("published snapshot must identify Published without scope; convert the accepted snapshot before activation")
+        raise RuntimeError("published snapshot must identify Published without scope; prepare and publish a fresh snapshot before activation")
     files = _files_from_root(
         published_root,
         excluded=(PUBLISH_MANIFEST_FILENAME,),

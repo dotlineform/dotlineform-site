@@ -32,7 +32,7 @@ import {
 var ACTION_TEXT = {
   cancelButton: "Cancel",
   createDocTitle: "New doc title",
-  createSubscopeDocTitle: "New",
+  createCollectionDocTitle: "New",
   createChildDocTitle: "New child title",
   createSiblingDocTitle: "New sibling title",
   createDocLabel: "title",
@@ -51,7 +51,7 @@ export function committedDocumentCreateTarget(payload) {
   var response = payload && typeof payload === "object" ? payload : {};
   var target = normalizeManagedDocumentTarget(response.target);
   var docId = String(response.doc_id || "").trim();
-  var subScope = String(response.sub_scope || "").trim().toLowerCase();
+  var collection = String(response.collection || "").trim().toLowerCase();
   var recordDocId = String(response.record && response.record.doc_id || "").trim();
   if (docId !== target.doc_id) {
     throw new Error("Create service target does not match its committed document.");
@@ -59,8 +59,8 @@ export function committedDocumentCreateTarget(payload) {
   if (String(response.stage || "") !== String(target.stage || "")) {
     throw new Error("Create service target does not match its committed stage.");
   }
-  if (subScope !== String(target.sub_scope || "")) {
-    throw new Error("Create service target does not match its committed sub-scope.");
+  if (collection !== String(target.collection || "")) {
+    throw new Error("Create service target does not match its committed collection.");
   }
   if (recordDocId !== target.doc_id) {
     throw new Error("Create service record does not match its committed target.");
@@ -75,7 +75,7 @@ export function committedDocumentPlacement(response, source) {
     throw new Error("Placement service returned a different document identity.");
   }
   var placement = response && response.placement;
-  var collectionChanged = String(target.sub_scope || "") !== String(source.sub_scope || "");
+  var collectionChanged = String(target.collection || "") !== String(source.collection || "");
   if (!placement || placement.collection_changed !== collectionChanged || typeof placement.ignored !== "boolean" || typeof placement.changed !== "boolean"
     || (placement.ignored && placement.changed) || (collectionChanged && !placement.changed)) {
     throw new Error("Placement service returned an invalid placement outcome.");
@@ -84,7 +84,7 @@ export function committedDocumentPlacement(response, source) {
     var url = new URL(placement.viewer_url, "https://docs.invalid");
     if (url.origin !== "https://docs.invalid" || url.pathname !== "/docs/"
       || url.searchParams.has("scope") || url.searchParams.get("stage") !== target.stage
-      || (target.sub_scope ? url.searchParams.get("subdoc") !== target.doc_id || !url.searchParams.get("doc")
+      || (target.collection ? url.searchParams.get("subdoc") !== target.doc_id || !url.searchParams.get("doc")
         : url.searchParams.get("doc") !== target.doc_id || url.searchParams.has("subdoc"))) {
       throw new Error("Placement service returned an invalid destination URL.");
     }
@@ -113,26 +113,26 @@ export function committedDocumentCreatePayload(error) {
     : null;
 }
 
-export function normalizeManagedSubscopeCollection(value) {
+export function normalizeManagedCollectionCreateTarget(value) {
   if (!value || typeof value !== "object" || Array.isArray(value)) {
-    throw new Error("Managed sub-scope collection must be an object.");
+    throw new Error("Managed collection create target must be an object.");
   }
   var keys = Object.keys(value).sort();
   if (
     keys.length !== 2
-    || keys[0] !== "stage"
-    || keys[1] !== "sub_scope"
+    || keys[0] !== "collection"
+    || keys[1] !== "stage"
   ) {
-    throw new Error("Managed sub-scope collection must contain exactly stage and sub_scope.");
+    throw new Error("Managed collection create target must contain exactly stage and collection.");
   }
-  var subScope = String(value.sub_scope || "").trim().toLowerCase();
-  if (!subScope) throw new Error("Managed sub-scope collection sub_scope is required.");
+  var collection = String(value.collection || "").trim().toLowerCase();
+  if (!collection) throw new Error("Managed collection create target requires a collection ID.");
   if (!["working", "pre-publish"].includes(value.stage)) {
-    throw new Error("Managed sub-scope collection stage is invalid.");
+    throw new Error("Managed collection create target stage is invalid.");
   }
   return Object.freeze({
     ...(value.stage ? { stage: value.stage } : {}),
-    sub_scope: subScope
+    collection: collection
   });
 }
 
@@ -519,21 +519,21 @@ export function createDocsViewerManagementActionController(options) {
     return createDocumentAndOpenSource(payload);
   }
 
-  async function handleCreateSubscopeDocument(collection, optionsForCreate) {
-    var targetCollection = normalizeManagedSubscopeCollection(collection);
+  async function handleCreateCollectionDocument(collection, optionsForCreate) {
+    var targetCollection = normalizeManagedCollectionCreateTarget(collection);
     var createSettings = optionsForCreate || {};
     if (String(managementClientOptions().stage || "") !== String(targetCollection.stage || "")) {
-      throw new Error("Mounted sub-scope collection does not match the active stage.");
+      throw new Error("Mounted collection target does not match the active stage.");
     }
     if (typeof createSettings.refreshAndSelect !== "function") {
-      throw new Error("Sub-scope document creation requires report refresh ownership.");
+      throw new Error("Collection document creation requires report refresh ownership.");
     }
     if (management.managementBusy) {
       throw new Error("Docs management is busy.");
     }
 
     var titleResult = await openCreateTitleModal(
-      ACTION_TEXT.createSubscopeDocTitle,
+      ACTION_TEXT.createCollectionDocTitle,
       { compactLabel: true }
     );
     if (!titleResult || !titleResult.confirmed) return null;
@@ -544,7 +544,7 @@ export function createDocsViewerManagementActionController(options) {
     return createDocumentAndOpenSource(
       {
         title: title,
-        sub_scope: targetCollection.sub_scope
+        collection: targetCollection.collection
       },
       {
         clientOptions: managementClientOptions(),
@@ -567,7 +567,7 @@ export function createDocsViewerManagementActionController(options) {
         if (placement.collection_changed) {
           return callbacks.reloadPlacedDocument(placement.target, placement.viewer_url);
         }
-        if (normalizedTarget.sub_scope) {
+        if (normalizedTarget.collection) {
           return callbacks.reloadMetadataTarget
             ? callbacks.reloadMetadataTarget(normalizedTarget, response)
             : response;
@@ -906,7 +906,7 @@ export function createDocsViewerManagementActionController(options) {
     handleCopyLink: handleCopyLink,
     handleCreateDoc: handleCreateDoc,
     handleCreateRelatedDoc: handleCreateRelatedDoc,
-    handleCreateSubscopeDocument: handleCreateSubscopeDocument,
+    handleCreateCollectionDocument: handleCreateCollectionDocument,
     handleDeleteDoc: handleDeleteDoc,
     handleEditMetadataSave: handleEditMetadataSave,
     handleMarkdownSave: handleMarkdownSave,

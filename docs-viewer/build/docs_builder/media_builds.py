@@ -13,7 +13,7 @@ from docs_artifact_locations import (
 )
 from docs_mermaid_media import produce_mermaid_svg
 from docs_media_inventory import source_media_references
-from docs_workspace_config import DocsStageConfig, DocsSubScopeConfig, resolve_location_path
+from docs_workspace_config import DocsStageConfig, DocsCollectionConfig, resolve_location_path
 
 from .common import MEDIA_TOKEN_PATTERN
 
@@ -21,7 +21,7 @@ from .common import MEDIA_TOKEN_PATTERN
 @dataclass(frozen=True)
 class MediaBuildContext:
     stage: str
-    sub_scope: str
+    collection: str
     build_type: str
     publishes_to: str
     source: ArtifactLocationAdapter
@@ -37,7 +37,7 @@ IGNORED_MEDIA_FILENAMES = frozenset({".DS_Store", ".gitkeep"})
 
 
 def referenced_build_media_identities(
-    config: DocsStageConfig | DocsSubScopeConfig,
+    config: DocsStageConfig | DocsCollectionConfig,
     markdown_sources: Iterable[str],
 ) -> dict[str, tuple[str, ...]]:
     """Collect configured build-media outputs referenced by selected Markdown sources."""
@@ -64,7 +64,7 @@ def referenced_build_media_identities(
 
 def run_registered_media_builds(
     repo_root: Path,
-    config: DocsStageConfig | DocsSubScopeConfig,
+    config: DocsStageConfig | DocsCollectionConfig,
     *,
     write: bool,
     producers: Mapping[str, MediaProducer] | None = None,
@@ -131,7 +131,7 @@ def run_registered_media_builds(
             for identity in producer(
                 MediaBuildContext(
                     stage=config.stage,
-                    sub_scope=getattr(config, "sub_scope", ""),
+                    collection=getattr(config, "collection", ""),
                     build_type=build_type,
                     publishes_to=build.publishes_to,
                     source=source,
@@ -165,7 +165,7 @@ def run_registered_media_builds(
     return results
 
 
-def collection_markdown_sources(repo_root: Path, config: DocsStageConfig | DocsSubScopeConfig) -> tuple[str, ...]:
+def collection_markdown_sources(repo_root: Path, config: DocsStageConfig | DocsCollectionConfig) -> tuple[str, ...]:
     """Read only the documents belonging to this media owner."""
     roots = [resolve_location_path(repo_root, config.source.location) / config.source.documents_path]
     sources: list[str] = []
@@ -175,7 +175,7 @@ def collection_markdown_sources(repo_root: Path, config: DocsStageConfig | DocsS
 
 
 def referenced_media_identities(
-    config: DocsStageConfig | DocsSubScopeConfig,
+    config: DocsStageConfig | DocsCollectionConfig,
     markdown_sources: Iterable[str],
 ) -> dict[str, tuple[str, ...]]:
     identities: dict[str, set[str]] = {media_type: set() for media_type in config.media.types}
@@ -190,7 +190,7 @@ def referenced_media_identities(
 
 def build_collection_media_snapshot(
     repo_root: Path,
-    config: DocsStageConfig | DocsSubScopeConfig,
+    config: DocsStageConfig | DocsCollectionConfig,
     *,
     write: bool,
     producers: Mapping[str, MediaProducer] | None = None,

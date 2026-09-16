@@ -8,31 +8,31 @@ import {
   createDocsViewerManagementSettingsWorkflow
 } from "./docs-viewer-management-settings-workflow.js";
 import {
-  resolveManagementDocsSubscopeCustomisation
-} from "./docs-viewer-management-subscope-customisation-registry.js";
+  resolveManagementDocsCollectionCustomisation
+} from "./docs-viewer-management-collection-customisation-registry.js";
 
 function cleanString(value) {
   return String(value == null ? "" : value).trim();
 }
 
 function metadataCustomisationDescriptor(workspaceConfig, target) {
-  if (!target || !target.sub_scope) return null;
+  if (!target || !target.collection) return null;
   var configs = Array.isArray(workspaceConfig && workspaceConfig.stageConfigs)
     ? workspaceConfig.stageConfigs
     : [];
   var stage = cleanString(target.stage);
-  var subScope = cleanString(target.sub_scope).toLowerCase();
+  var collection = cleanString(target.collection).toLowerCase();
   var parent = configs.find(function (config) {
     return cleanString(config && config.stage) === stage;
   });
-  var children = parent && Array.isArray(parent.subScopes) ? parent.subScopes : [];
+  var children = parent && Array.isArray(parent.collections) ? parent.collections : [];
   var child = children.find(function (record) {
-    return cleanString(record && (record.subScope || record.sub_scope)).toLowerCase() === subScope;
+    return cleanString(record && record.collection).toLowerCase() === collection;
   });
   if (!child) {
     throw new Error("Edit Metadata target collection is not configured.");
   }
-  return child.subScopeCustomisation || null;
+  return child.collectionCustomisation || null;
 }
 
 function shellRef(shellRefs, name, id) {
@@ -116,10 +116,10 @@ export function createDocsViewerManagementModalComposition(options = {}) {
       onSave: callbacks.onMetadataSave,
       resolveMetadataContribution: function (target) {
         var descriptor = metadataCustomisationDescriptor(workspaceConfig, target);
-        return resolveManagementDocsSubscopeCustomisation(descriptor, {
+        return resolveManagementDocsCollectionCustomisation(descriptor, {
           collection: {
             stage: cleanString(target && target.stage),
-            sub_scope: cleanString(target && target.sub_scope).toLowerCase()
+            collection: cleanString(target && target.collection).toLowerCase()
           }
         });
       }

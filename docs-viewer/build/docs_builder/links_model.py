@@ -8,7 +8,7 @@ from typing import Any
 @dataclass(frozen=True, order=True)
 class DocumentTarget:
     stage: str
-    sub_scope: str
+    collection: str
     doc_id: str
 
 

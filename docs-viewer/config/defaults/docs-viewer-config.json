@@ -1,5 +1,5 @@
 {
-  "schema_version": "docs_viewer_config_v2",
+  "schema_version": "docs_viewer_config_v3",
   "docs_viewer": {
     "recent_limit": 20
   },
@@ -35,13 +35,13 @@
         "index_url": "/docs/search?stage=working",
         "rebuild_policy": "whole_index"
       },
-      "sub_scopes": [
+      "collections": [
         {
-          "sub_scope": "works",
+          "collection": "works",
           "title": "Works",
           "manifest_url": "/docs/generated/external/working/works/manage-manifest.json",
           "by_id_url_base": "/docs/generated/external/working/works/by-id",
-          "sub_scope_customisation": {
+          "collection_customisation": {
             "id": "working_works",
             "capabilities": {
               "assignable_field_groups": [
@@ -51,17 +51,17 @@
           }
         },
         {
-          "sub_scope": "concepts",
+          "collection": "concepts",
           "title": "Concepts",
           "manifest_url": "/docs/generated/external/working/concepts/manage-manifest.json",
           "by_id_url_base": "/docs/generated/external/working/concepts/by-id"
         },
         {
-          "sub_scope": "processing",
+          "collection": "processing",
           "title": "Processing",
           "manifest_url": "/docs/generated/external/working/processing/manage-manifest.json",
           "by_id_url_base": "/docs/generated/external/working/processing/by-id",
-          "sub_scope_customisation": {
+          "collection_customisation": {
             "id": "working_processing",
             "capabilities": {
               "assignable_field_groups": [
@@ -71,7 +71,7 @@
           }
         },
         {
-          "sub_scope": "moments",
+          "collection": "moments",
           "title": "Moments",
           "manifest_url": "/docs/generated/external/working/moments/manage-manifest.json",
           "by_id_url_base": "/docs/generated/external/working/moments/by-id"
@@ -111,13 +111,13 @@
         "index_url": "/docs/search?stage=pre-publish",
         "rebuild_policy": "whole_index"
       },
-      "sub_scopes": [
+      "collections": [
         {
-          "sub_scope": "works",
+          "collection": "works",
           "title": "Works",
           "manifest_url": "/docs/generated/external/pre-publish/works/manage-manifest.json",
           "by_id_url_base": "/docs/generated/external/pre-publish/works/by-id",
-          "sub_scope_customisation": {
+          "collection_customisation": {
             "id": "pre_publish_works",
             "capabilities": {
               "assignable_field_groups": [
@@ -127,19 +127,19 @@
           }
         },
         {
-          "sub_scope": "concepts",
+          "collection": "concepts",
           "title": "Concepts",
           "manifest_url": "/docs/generated/external/pre-publish/concepts/manage-manifest.json",
           "by_id_url_base": "/docs/generated/external/pre-publish/concepts/by-id"
         },
         {
-          "sub_scope": "processing",
+          "collection": "processing",
           "title": "Processing",
           "manifest_url": "/docs/generated/external/pre-publish/processing/manage-manifest.json",
           "by_id_url_base": "/docs/generated/external/pre-publish/processing/by-id"
         },
         {
-          "sub_scope": "moments",
+          "collection": "moments",
           "title": "Moments",
           "manifest_url": "/docs/generated/external/pre-publish/moments/manage-manifest.json",
           "by_id_url_base": "/docs/generated/external/pre-publish/moments/by-id"
@@ -179,27 +179,27 @@
         "index_url": "/docs/published/search",
         "rebuild_policy": "whole_index"
       },
-      "sub_scopes": [
+      "collections": [
         {
-          "sub_scope": "works",
+          "collection": "works",
           "title": "Works",
           "manifest_url": "/docs/published/external/works/manifest.json",
           "by_id_url_base": "/docs/published/external/works/by-id"
         },
         {
-          "sub_scope": "concepts",
+          "collection": "concepts",
           "title": "Concepts",
           "manifest_url": "/docs/published/external/concepts/manifest.json",
           "by_id_url_base": "/docs/published/external/concepts/by-id"
         },
         {
-          "sub_scope": "processing",
+          "collection": "processing",
           "title": "Processing",
           "manifest_url": "/docs/published/external/processing/manifest.json",
           "by_id_url_base": "/docs/published/external/processing/by-id"
         },
         {
-          "sub_scope": "moments",
+          "collection": "moments",
           "title": "Moments",
           "manifest_url": "/docs/published/external/moments/manifest.json",
           "by_id_url_base": "/docs/published/external/moments/by-id"

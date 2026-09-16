@@ -46,10 +46,10 @@ const REPORT_LOADERS = {
       });
     }
   },
-  docs_subscope: {
+  docs_collection: {
     load: function () {
-      return import("../shared/docs-subscope-report.js").then(function (module) {
-        return module.mountDocsSubscopeReport;
+      return import("../shared/docs-collection-report.js").then(function (module) {
+        return module.mountDocsCollectionReport;
       });
     }
   },
@@ -194,7 +194,7 @@ function normalizeReportMetadata(payload) {
   return {
     reportId,
     preset: cleanString(report.preset),
-    subScope: cleanString(report.sub_scope)
+    collection: cleanString(report.collection)
   };
 }
 
@@ -276,12 +276,12 @@ export function mountDocsViewerReport(context) {
         reportRoot: root,
         reportMeta: resolvedReportMeta,
         reportRegistry: registry,
-        mountSubscopeDocumentContent: function (child) {
+        mountCollectionDocumentContent: function (child) {
           var target = child.documentTarget;
           mountDocsViewerMediaLinks({
             content: child.content,
             documentTarget: { ...(target.stage ? { stage: target.stage } : {}),
-              subScope: target.sub_scope, docId: target.doc_id },
+              collection: target.collection, docId: target.doc_id },
             isCurrentDocument: child.isCurrentDocument,
             openMediaTarget: context.openMediaTarget,
             loadMediaTarget: context.loadMediaTarget,

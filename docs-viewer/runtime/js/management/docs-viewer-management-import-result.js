@@ -45,7 +45,7 @@ export function docsImportResultDestination(payload, options = {}) {
     }
     expectedKeys.push("stage");
   }
-  if (target.sub_scope) {
+  if (target.collection) {
     const reportDocId = cleanText(url.searchParams.get("doc"));
     if (!reportDocId) {
       throw new Error("Docs Import child destination requires its report document.");

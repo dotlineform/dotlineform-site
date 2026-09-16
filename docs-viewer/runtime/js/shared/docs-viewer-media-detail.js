@@ -30,7 +30,7 @@ function sameDocumentTarget(left, right) {
   var first = left || {};
   var second = right || {};
   return cleanString(first.stage) === cleanString(second.stage)
-    && cleanString(first.subScope) === cleanString(second.subScope)
+    && cleanString(first.collection) === cleanString(second.collection)
     && cleanString(first.docId) === cleanString(second.docId);
 }
 
@@ -284,7 +284,7 @@ export function createDocsViewerMediaDetailAdapter() {
     var documentMountGeneration = positiveInteger(context.documentMountGeneration);
     var documentTarget = {
       ...(context.viewerStage ? { stage: cleanString(context.viewerStage) } : {}),
-      subScope: "",
+      collection: "",
       docId: cleanString(context.doc && context.doc.doc_id)
     };
     if (!documentMountGeneration || !documentTarget.docId) {
@@ -358,7 +358,7 @@ export function createDocsViewerMediaDetailAdapter() {
       openControl: control,
       documentTarget: Object.freeze({
         ...(target.stage ? { stage: cleanString(target.stage) } : {}),
-        subScope: cleanString(target.subScope), docId: cleanString(target.docId)
+        collection: cleanString(target.collection), docId: cleanString(target.docId)
       }),
       isCurrentDocument: context.isCurrentDocument,
       presentation: normalizeDocsViewerMediaPresentation(context.presentation),

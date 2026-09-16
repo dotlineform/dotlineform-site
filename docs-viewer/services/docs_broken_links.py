@@ -20,7 +20,7 @@ from docs_document_identity import is_immutable_doc_id
 
 from docs_workspace_config import (
     DocsStageConfig,
-    DocsSubScopeConfig,
+    DocsCollectionConfig,
     DocsWorkspaceConfig,
     generated_documents_path,
     published_documents_path,
@@ -56,7 +56,7 @@ class DocMeta:
     title: str
     viewer_url: str
     stage: str
-    sub_scope: str
+    collection: str
 
     def source_fields(self) -> dict[str, str]:
         """Expose the exact correction location without filesystem paths."""
@@ -64,7 +64,7 @@ class DocMeta:
             "from_page_text": self.title,
             "from_page_url": self.viewer_url,
             "from_page_stage": self.stage,
-            "from_page_sub_scope": self.sub_scope,
+            "from_page_collection": self.collection,
             "from_page_doc_id": self.doc_id,
         }
 
@@ -129,10 +129,10 @@ def target_payload_exists(
         return False
     host = read_json(path, "destination report host")
     report = host.get("report")
-    if not isinstance(report, dict) or report.get("id") != "docs_subscope":
+    if not isinstance(report, dict) or report.get("id") != "docs_collection":
         return False
     collection = next(
-        (item for item in config.sub_scopes if item.sub_scope == report.get("sub_scope")),
+        (item for item in config.collections if item.collection == report.get("collection")),
         None,
     )
     return bool(collection and (
@@ -167,7 +167,7 @@ def semantic_token_broken_entries(
                 {
                     "issue_type": "semantic_token",
                     "source_stage": meta.stage,
-                    "source_sub_scope": meta.sub_scope,
+                    "source_collection": meta.collection,
                     "source_doc_id": meta.doc_id,
                     "source_range": token.source_range,
                     "raw": token.raw,
@@ -195,26 +195,26 @@ def audit_docs_broken_links(repo_root: Path, *, stage: str) -> dict[str, Any]:
     workspace = load_docs_workspace_config(repo_root)
     config = select_workspace_stage(workspace, stage)
     viewer_routes = ("/docs/", workspace.public_viewer_base_url)
-    collections: list[tuple[str, DocsStageConfig | DocsSubScopeConfig]] = [("", config)]
-    collections.extend((item.sub_scope, item) for item in config.sub_scopes)
+    collections: list[tuple[str, DocsStageConfig | DocsCollectionConfig]] = [("", config)]
+    collections.extend((item.collection, item) for item in config.collections)
     sources: list[tuple[DocMeta, str]] = []
     entries: list[dict[str, Any]] = []
     unavailable_sources: list[dict[str, str]] = []
     destination_exists: dict[str, bool] = {}
-    for sub_scope, collection in collections:
+    for collection, resolved_collection in collections:
         collection_url = document_location.management_collection_viewer_url(
-            repo_root, sub_scope, stage=config.stage,
+            repo_root, collection, stage=config.stage,
         )
-        for doc in load_document_collection_docs_for_config(repo_root, config, collection):
+        for doc in load_document_collection_docs_for_config(repo_root, config, resolved_collection):
             meta = DocMeta(
-                stage=config.stage, sub_scope=sub_scope,
+                stage=config.stage, collection=collection,
                 doc_id=doc.doc_id, title=doc.title,
                 viewer_url=document_location.management_document_viewer_url(
-                    collection_url, doc.doc_id, sub_scope=bool(sub_scope),
+                    collection_url, doc.doc_id, collection=bool(collection),
                 ),
             )
             sources.append((meta, doc.body))
-            payload_path = resolve_workspace_path(repo_root, generated_documents_path(collection)) / "by-id" / f"{doc.doc_id}.json"
+            payload_path = resolve_workspace_path(repo_root, generated_documents_path(resolved_collection)) / "by-id" / f"{doc.doc_id}.json"
             if not payload_path.is_file():
                 unavailable_sources.append(meta.source_fields())
                 continue
@@ -246,7 +246,7 @@ def rendered_link_broken_entries(
 ) -> list[dict[str, Any]]:
     """Diagnose rendered document links while retaining the owning source identity."""
     entries: list[dict[str, Any]] = []
-    parent_id = parse_qs(urlparse(meta.viewer_url).query).get("doc", [""])[0] if meta.sub_scope else ""
+    parent_id = parse_qs(urlparse(meta.viewer_url).query).get("doc", [""])[0] if meta.collection else ""
     for anchor in collect_anchors(content_html):
         raw_href = normalize_text(anchor.get("href"))
         if not raw_href:

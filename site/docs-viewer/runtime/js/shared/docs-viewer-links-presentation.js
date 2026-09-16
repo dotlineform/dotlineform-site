@@ -1,14 +1,14 @@
 function identity(value) {
   if (!value || !["working", "pre-publish", "published"].includes(value.stage)
-    || typeof value.sub_scope !== "string" || !/^(?:[a-z][a-z0-9-]*)?$/.test(value.sub_scope)
+    || typeof value.collection !== "string" || !/^(?:[a-z][a-z0-9-]*)?$/.test(value.collection)
     || !/^d-\d{8}-\d{6}-[a-f0-9]{6}$/.test(value.doc_id)) {
     throw new Error("Links requires an exact document identity.");
   }
-  return { stage: value.stage, sub_scope: value.sub_scope, doc_id: value.doc_id };
+  return { stage: value.stage, collection: value.collection, doc_id: value.doc_id };
 }
 
 function sameTarget(left, right) {
-  return left.stage === right.stage && left.sub_scope === right.sub_scope && left.doc_id === right.doc_id;
+  return left.stage === right.stage && left.collection === right.collection && left.doc_id === right.doc_id;
 }
 
 /** Validate a prepared document summary and apply the explicit local viewing stage.
@@ -24,7 +24,7 @@ export function docsViewerLinksDocumentSummary(value, invokingTarget) {
   var url = new URL(href, "https://docs.invalid");
   var params = url.searchParams;
   if (params.has("scope")
-    || (target.sub_scope
+    || (target.collection
       ? !params.get("doc") || params.get("subdoc") !== target.doc_id
       : params.get("doc") !== target.doc_id || params.has("subdoc"))) {
     throw new Error("Links navigation does not match its document identity.");
@@ -38,10 +38,10 @@ export function docsViewerLinksDocumentSummary(value, invokingTarget) {
 }
 
 function category(document) {
-  if (document.target.sub_scope === "concepts") return "Concepts";
+  if (document.target.collection === "concepts") return "Concepts";
   if (document.subject && document.subject.state === "valid" && document.subject.kind === "work") return "Works";
-  if (!document.target.sub_scope
-    || (document.target.sub_scope === "works")) return "References";
+  if (!document.target.collection
+    || (document.target.collection === "works")) return "References";
   return "";
 }
 

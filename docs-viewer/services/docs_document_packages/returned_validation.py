@@ -26,7 +26,7 @@ def validate_whole_returned_package(
     *,
     repo_root: Path,
     stage: str,
-    sub_scope: str | None = None,
+    collection: str | None = None,
     required_capability: str,
 ) -> list[dict[str, Any]]:
     """Require trusted routing, optional exact child identity, and full membership."""
@@ -42,7 +42,7 @@ def validate_whole_returned_package(
         return [issue("error", "invalid_package_provenance", provenance_error)]
     issues: list[dict[str, Any]] = []
     expected_identity = {
-        "schema_version": "data_sharing_export_meta_v2",
+        "schema_version": "data_sharing_export_meta_v3",
         "app": "docs-viewer",
         "adapter_id": "documents",
         "data_domain": "documents",
@@ -127,25 +127,25 @@ def validate_whole_returned_package(
             )
         )
 
-    metadata_sub_scope = normalize_text(trusted_metadata.get("sub_scope")).lower()
-    expected_sub_scope = (
+    metadata_collection = normalize_text(trusted_metadata.get("collection")).lower()
+    expected_collection = (
         None
-        if sub_scope is None
-        else normalize_text(sub_scope).lower()
+        if collection is None
+        else normalize_text(collection).lower()
     )
-    sub_scope_matches_request = (
-        expected_sub_scope is None
-        or metadata_sub_scope == expected_sub_scope
+    collection_matches_request = (
+        expected_collection is None
+        or metadata_collection == expected_collection
     )
-    if not sub_scope_matches_request:
+    if not collection_matches_request:
         issues.append(
             issue(
                 "error",
-                "sub_scope_mismatch",
+                "collection_mismatch",
                 (
-                    "trusted package sub_scope "
-                    f"{metadata_sub_scope or '<parent>'!r} does not match "
-                    f"requested sub_scope {expected_sub_scope or '<parent>'!r}"
+                    "trusted package collection "
+                    f"{metadata_collection or '<parent>'!r} does not match "
+                    f"requested collection {expected_collection or '<parent>'!r}"
                 ),
             )
         )
@@ -169,11 +169,11 @@ def validate_whole_returned_package(
         issues.append(
             issue(
                 "error",
-                "export_only_sub_scope" if metadata_sub_scope else "export_only_profile",
+                "export_only_collection" if metadata_collection else "export_only_profile",
                 (
-                    "trusted sub-scope package does not support Docs Import: "
-                    f"{metadata_stage}/{metadata_sub_scope}"
-                    if metadata_sub_scope
+                    "trusted collection package does not support Docs Import: "
+                    f"{metadata_stage}/{metadata_collection}"
+                    if metadata_collection
                     else f"profile does not support returned-package import: {profile_id or '<missing>'}"
                 ),
             )
@@ -234,23 +234,23 @@ def validate_whole_returned_package(
         expected.append(doc_id)
 
     if (
-        metadata_sub_scope
+        metadata_collection
         and metadata_stage == expected_stage
-        and sub_scope_matches_request
+        and collection_matches_request
         and expected_seen
     ):
         try:
-            collection = resolve_managed_document_collection(
+            resolved_collection = resolve_managed_document_collection(
                 repo_root,
                 stage=expected_stage,
-                sub_scope=metadata_sub_scope,
+                collection=metadata_collection,
             )
             collection_docs = [
                 source_doc_from_path(
                     path=path,
                 )
                 for path in source_model.document_markdown_paths(
-                    collection.source_root
+                    resolved_collection.source_root
                 )
             ]
             collection_ids = {
@@ -263,9 +263,9 @@ def validate_whole_returned_package(
             issues.append(
                 issue(
                     "error",
-                    "invalid_sub_scope",
+                    "invalid_collection",
                     (
-                        "trusted package metadata sub_scope must identify one "
+                        "trusted package metadata collection must identify one "
                         f"configured child collection: {exc}"
                     ),
                 )
@@ -278,7 +278,7 @@ def validate_whole_returned_package(
                     "cross_collection_selected_documents",
                     (
                         "trusted selected_doc_ids contains documents outside "
-                        f"{expected_stage}/{metadata_sub_scope}: "
+                        f"{expected_stage}/{metadata_collection}: "
                         + ", ".join(cross_collection)
                     ),
                 )

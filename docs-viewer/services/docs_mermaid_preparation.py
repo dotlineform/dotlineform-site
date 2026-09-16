@@ -27,10 +27,10 @@ def prepare_stage_mermaid(repo_root: Path, config: DocsStageConfig) -> dict[str,
     if config.stage != "pre-publish" or config.public_projection is None:
         return None
     results = []
-    for collection in (config, *config.sub_scopes):
+    for collection in (config, *config.collections):
         if collection.public_projection is None:
             continue
-        child = getattr(collection, "sub_scope", "")
+        child = getattr(collection, "collection", "")
         owner = f"{config.stage}/{child}" if child else config.stage
         docs = load_document_collection_docs_for_config(repo_root, config, collection)
         media = collection.media.types.get("svg")

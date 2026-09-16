@@ -22,28 +22,29 @@ from docs_artifact_locations import (
     filesystem_location_root,
 )
 from docs_document_identity import is_immutable_doc_id
-from docs_subscope_customisations import (
-    DocsSubScopeCustomisationConfig,
-    normalize_docs_subscope_customisation,
+from docs_collection_customisations import (
+    DocsCollectionCustomisationConfig,
+    normalize_docs_collection_customisation,
 )
 
 
 CONFIG_REL_PATH = Path("docs-viewer/config/workspace/docs-workspace.json")
-SCHEMA_VERSION = "docs_workspace_v1"
+SCHEMA_VERSION = "docs_workspace_v2"
 DOTLINEFORM_DOCS_BASE_DIR_ENV = "DOTLINEFORM_DOCS_BASE_DIR"
 EXTERNAL_DATA_ROOT_MARKER = f"${DOTLINEFORM_DOCS_BASE_DIR_ENV}"
 STAGES = ("working", "pre-publish")
 SOURCE_DOCUMENTS_PATH = Path("documents")
-SOURCE_SUB_SCOPES_PATH = Path("sub-scopes")
+SOURCE_COLLECTIONS_PATH = Path("collections")
 PUBLIC_DOCS_OUTPUT_ROOT = Path("site/assets/data/docs")
 PUBLIC_SEARCH_OUTPUT_ROOT = Path("site/assets/data/search")
 MEDIA_REFERENCE_ROOT = Path("docs")
 MANAGED_MEDIA_TYPES = frozenset({"files", "html", "img", "svg"})
 BUILD_MEDIA_TYPES = frozenset({"mermaid"})
-SUB_SCOPE_ID_PATTERN = re.compile(r"\A[a-z0-9][a-z0-9_-]*\Z")
+COLLECTION_ID_PATTERN = re.compile(r"\A[a-z0-9][a-z0-9_-]*\Z")
 SOURCE_REVISION_PATTERN = re.compile(r"\Asha256:[0-9a-f]{64}\Z")
-# Existing child-collection receipts retain the identity of their creating tool.
-SUB_SCOPE_LIFECYCLE_TOOL_ID = "docs-viewer-scope-lifecycle"
+COLLECTION_LIFECYCLE_TOOL_ID = "docs-viewer-collection-lifecycle"
+# Read only as historical creation provenance, never as an active tool alias.
+HISTORICAL_COLLECTION_LIFECYCLE_TOOL_ID = "docs-viewer-scope-lifecycle"
 SEARCH_FIELDS = frozenset({"body", "code", "heading", "identity", "last_updated", "parent_title", "summary", "title"})
 DEFAULT_DOCS_SEARCH_FIELDS = ("title", "heading", "summary", "body", "code")
 
@@ -52,7 +53,7 @@ DEFAULT_DOCS_SEARCH_FIELDS = ("title", "heading", "summary", "body", "code")
 class DocsSourceConfig:
     location: ArtifactLocation
     documents_path: Path = SOURCE_DOCUMENTS_PATH
-    sub_scopes_path: Path = SOURCE_SUB_SCOPES_PATH
+    collections_path: Path = SOURCE_COLLECTIONS_PATH
 
 
 @dataclass(frozen=True)
@@ -115,20 +116,20 @@ class DocsPublicProjectionConfig:
 
 
 @dataclass(frozen=True)
-class DocsSubScopeLifecycleConfig:
+class DocsCollectionLifecycleConfig:
     tool_id: str
     report_host_doc_id: str
     report_host_source_revision: str
 
 
 @dataclass(frozen=True)
-class DocsSubScopeConfig:
-    sub_scope: str
+class DocsCollectionConfig:
+    collection: str
     title: str
     public_title: str
     supports_return_import: bool
-    sub_scope_customisation: DocsSubScopeCustomisationConfig | None
-    lifecycle: DocsSubScopeLifecycleConfig | None
+    collection_customisation: DocsCollectionCustomisationConfig | None
+    lifecycle: DocsCollectionLifecycleConfig | None
     stage: str
     source: DocsSourceConfig
     media: DocsMediaConfig
@@ -150,7 +151,7 @@ class DocsStageConfig:
     non_loadable_doc_ids: tuple[str, ...]
     manage_only_tree_root_ids: tuple[str, ...]
     allow_unresolved_parent_ids: bool
-    sub_scopes: tuple[DocsSubScopeConfig, ...]
+    collections: tuple[DocsCollectionConfig, ...]
     search_fields: tuple[str, ...]
 
     @property
@@ -275,9 +276,9 @@ def _doc_ids(raw: Any, *, field: str) -> tuple[str, ...]:
     return tuple(_doc_id(value, field=field) for value in _strings(raw, field=field))
 
 
-def normalize_sub_scope_id(raw: Any, *, field: str) -> str:
-    if not isinstance(raw, str) or not SUB_SCOPE_ID_PATTERN.fullmatch(raw):
-        raise ValueError(f"{field} must identify one sub-scope")
+def normalize_collection_id(raw: Any, *, field: str) -> str:
+    if not isinstance(raw, str) or not COLLECTION_ID_PATTERN.fullmatch(raw):
+        raise ValueError(f"{field} must identify one collection")
     return raw
 
 
@@ -335,7 +336,7 @@ def _public_projection(raw: Any) -> DocsPublicProjectionConfig:
 
 
 def _media(raw: Any, *, source_root: ArtifactLocation, generated_root: ArtifactLocation,
-           published_root: ArtifactLocation, stage: str, sub_scope: str = "") -> DocsMediaConfig:
+           published_root: ArtifactLocation, stage: str, collection: str = "") -> DocsMediaConfig:
     field = f"stages.{stage}.media"
     item = _object(raw, field=field, required={"types", "build_sources"})
     types = item["types"]
@@ -344,8 +345,8 @@ def _media(raw: Any, *, source_root: ArtifactLocation, generated_root: ArtifactL
     source_media = location_child(source_root, Path("media"))
     generated_media = location_child(generated_root, Path("media"))
     published_media = location_child(published_root, Path("media"))
-    reference_root = MEDIA_REFERENCE_ROOT / "sub-scopes" / sub_scope if sub_scope else MEDIA_REFERENCE_ROOT
-    served_root = f"/docs/media/{stage}" + (f"/sub-scopes/{sub_scope}" if sub_scope else "")
+    reference_root = MEDIA_REFERENCE_ROOT / "collections" / collection if collection else MEDIA_REFERENCE_ROOT
+    served_root = f"/docs/media/{stage}" + (f"/collections/{collection}" if collection else "")
     raw_builds = item["build_sources"]
     if not isinstance(raw_builds, dict) or set(raw_builds) - BUILD_MEDIA_TYPES:
         raise ValueError(f"{field}.build_sources contains unsupported producers")
@@ -379,60 +380,61 @@ def _generated(root: ArtifactLocation) -> DocsGeneratedConfig:
                                DocsArtifactConfig(location_child(root, Path("search/index.json"))))
 
 
-def _lifecycle(raw: Any, *, field: str) -> DocsSubScopeLifecycleConfig | None:
+def _lifecycle(raw: Any, *, field: str) -> DocsCollectionLifecycleConfig | None:
     if raw is None:
         return None
     item = _object(raw, field=field, required={"tool_id", "report_host_doc_id", "report_host_source_revision"})
-    if item["tool_id"] != SUB_SCOPE_LIFECYCLE_TOOL_ID:
-        raise ValueError(f"{field}.tool_id is not the registered sub-scope lifecycle tool")
+    if item["tool_id"] not in {COLLECTION_LIFECYCLE_TOOL_ID, HISTORICAL_COLLECTION_LIFECYCLE_TOOL_ID}:
+        raise ValueError(f"{field}.tool_id is not a recognised collection creation receipt")
     doc_id = _doc_id(item["report_host_doc_id"], field=f"{field}.report_host_doc_id")
     revision = item["report_host_source_revision"]
     if not isinstance(revision, str) or not SOURCE_REVISION_PATTERN.fullmatch(revision):
         raise ValueError(f"{field}.report_host_source_revision must be a sha256 receipt")
-    return DocsSubScopeLifecycleConfig(item["tool_id"], doc_id, revision)
+    return DocsCollectionLifecycleConfig(item["tool_id"], doc_id, revision)
 
 
-def _sub_scopes(raw: Any, *, workspace_root: ArtifactLocation, stage: str,
-                media_settings: Any, projection: DocsPublicProjectionConfig | None) -> tuple[DocsSubScopeConfig, ...]:
+def _collections(raw: Any, *, workspace_root: ArtifactLocation, stage: str,
+                media_settings: Any, projection: DocsPublicProjectionConfig | None) -> tuple[DocsCollectionConfig, ...]:
     if not isinstance(raw, list):
-        raise ValueError(f"stages.{stage}.sub_scopes must be an array")
+        raise ValueError(f"stages.{stage}.collections must be an array")
     result = []
     seen = set()
     for index, raw_item in enumerate(raw):
-        field = f"stages.{stage}.sub_scopes[{index}]"
-        item = _object(raw_item, field=field, required={"sub_scope", "title"}, optional={
-            "public_title", "supports_return_import", "sub_scope_customisation", "lifecycle",
+        field = f"stages.{stage}.collections[{index}]"
+        item = _object(raw_item, field=field, required={"collection", "title"}, optional={
+            "public_title", "supports_return_import", "collection_customisation", "lifecycle",
         })
-        child = normalize_sub_scope_id(item["sub_scope"], field=f"{field}.sub_scope")
+        child = normalize_collection_id(item["collection"], field=f"{field}.collection")
         if child in seen:
-            raise ValueError(f"{field}.sub_scope is duplicated: {child}")
+            raise ValueError(f"{field}.collection is duplicated: {child}")
         seen.add(child)
         if not isinstance(item["title"], str) or not isinstance(item.get("public_title", ""), str):
             raise ValueError(f"{field} titles must be strings")
-        source_root = location_child(workspace_root, Path(stage) / "source/sub-scopes" / child)
-        generated_root = location_child(workspace_root, Path(stage) / "generated/sub-scopes" / child)
-        published_root = location_child(workspace_root, Path("published/sub-scopes") / child)
+        source_root = location_child(workspace_root, Path(stage) / "source/collections" / child)
+        generated_root = location_child(workspace_root, Path(stage) / "generated/collections" / child)
+        published_root = location_child(workspace_root, Path("published/collections") / child)
         child_projection = None
         if projection is not None:
             public_media = {}
             for media_type, media in projection.media.items():
+                # Public object addresses stay stable across the local directory rename.
                 suffix = Path("sub-scopes") / child / "media" / media_type
                 public_media[media_type] = DocsPublicMediaConfig(
-                    media_type, MEDIA_REFERENCE_ROOT / "sub-scopes" / child / media_type,
+                    media_type, MEDIA_REFERENCE_ROOT / "collections" / child / media_type,
                     ArtifactLocation(media.location.provider, media.location.path.parent.parent / suffix),
                     media.served_path_prefix.removesuffix(f"/media/{media_type}") + f"/{suffix.as_posix()}",
                 )
             child_projection = DocsPublicProjectionConfig(
                 DocsArtifactConfig(location_child(projection.documents.location, Path(child))), None, public_media,
             )
-        result.append(DocsSubScopeConfig(
-            sub_scope=child, title=item["title"], public_title=item.get("public_title", item["title"]),
+        result.append(DocsCollectionConfig(
+            collection=child, title=item["title"], public_title=item.get("public_title", item["title"]),
             supports_return_import=_boolean(item.get("supports_return_import", False), field=f"{field}.supports_return_import"),
-            sub_scope_customisation=normalize_docs_subscope_customisation(item.get("sub_scope_customisation"), field=f"{field}.sub_scope_customisation"),
+            collection_customisation=normalize_docs_collection_customisation(item.get("collection_customisation"), field=f"{field}.collection_customisation"),
             lifecycle=_lifecycle(item.get("lifecycle"), field=f"{field}.lifecycle"), stage=stage,
             source=DocsSourceConfig(source_root), generated=_generated(generated_root), published=_published(published_root),
             media=_media(media_settings, source_root=source_root, generated_root=generated_root,
-                         published_root=published_root, stage=stage, sub_scope=child),
+                         published_root=published_root, stage=stage, collection=child),
             public_projection=child_projection,
         ))
     return tuple(result)
@@ -474,7 +476,7 @@ def load_docs_workspace_config(repo_root: Path | None = None) -> DocsWorkspaceCo
     for stage in STAGES:
         field = f"stages.{stage}"
         item = _object(settings[stage], field=field, required={
-            "media", "default_doc_id", "sub_scopes", "non_loadable_doc_ids",
+            "media", "default_doc_id", "collections", "non_loadable_doc_ids",
             "manage_only_tree_root_ids", "allow_unresolved_parent_ids",
         })
         source_root = location_child(workspace_root, Path(stage) / "source")
@@ -491,7 +493,7 @@ def load_docs_workspace_config(repo_root: Path | None = None) -> DocsWorkspaceCo
             non_loadable_doc_ids=_doc_ids(item["non_loadable_doc_ids"], field=f"{field}.non_loadable_doc_ids"),
             manage_only_tree_root_ids=_doc_ids(item["manage_only_tree_root_ids"], field=f"{field}.manage_only_tree_root_ids"),
             allow_unresolved_parent_ids=_boolean(item["allow_unresolved_parent_ids"], field=f"{field}.allow_unresolved_parent_ids"),
-            sub_scopes=_sub_scopes(item["sub_scopes"], workspace_root=workspace_root, stage=stage,
+            collections=_collections(item["collections"], workspace_root=workspace_root, stage=stage,
                                    media_settings=item["media"], projection=stage_projection), search_fields=fields,
         ))
     return DocsWorkspaceConfig(workspace_root, public_url, projection, published, fields, recent_limit, tuple(stages))
@@ -509,76 +511,76 @@ def load_docs_stage(repo_root: Path, stage: str | None) -> DocsStageConfig:
     return select_workspace_stage(load_docs_workspace_config(repo_root), stage)
 
 
-def require_selected_stage(config: DocsStageConfig | DocsSubScopeConfig) -> None:
-    if not isinstance(config, (DocsStageConfig, DocsSubScopeConfig)) or config.stage not in STAGES:
+def require_selected_stage(config: DocsStageConfig | DocsCollectionConfig) -> None:
+    if not isinstance(config, (DocsStageConfig, DocsCollectionConfig)) or config.stage not in STAGES:
         raise ValueError("an explicit Working or Pre-publish stage is required")
 
 
-def require_document_authoring(config: DocsStageConfig | DocsSubScopeConfig) -> None:
+def require_document_authoring(config: DocsStageConfig | DocsCollectionConfig) -> None:
     require_selected_stage(config)
     if config.stage != "working":
         raise ValueError("document authoring is only available in Working")
 
 
-def source_container_path(config: DocsStageConfig | DocsSubScopeConfig) -> Path:
+def source_container_path(config: DocsStageConfig | DocsCollectionConfig) -> Path:
     require_selected_stage(config)
     return config.source.location.path
 
 
-def document_source_path(config: DocsStageConfig | DocsSubScopeConfig) -> Path:
+def document_source_path(config: DocsStageConfig | DocsCollectionConfig) -> Path:
     return source_container_path(config) / config.source.documents_path
 
 
-def generated_documents_path(config: DocsStageConfig | DocsSubScopeConfig) -> Path:
+def generated_documents_path(config: DocsStageConfig | DocsCollectionConfig) -> Path:
     require_selected_stage(config)
     return config.generated.documents.location.path
 
 
-def generated_search_path(config: DocsStageConfig | DocsSubScopeConfig) -> Path:
+def generated_search_path(config: DocsStageConfig | DocsCollectionConfig) -> Path:
     require_selected_stage(config)
     return config.generated.search.location.path
 
 
-def published_documents_path(config: DocsWorkspaceConfig | DocsStageConfig | DocsSubScopeConfig) -> Path:
+def published_documents_path(config: DocsWorkspaceConfig | DocsStageConfig | DocsCollectionConfig) -> Path:
     return config.published.documents.location.path
 
 
-def published_search_path(config: DocsWorkspaceConfig | DocsStageConfig | DocsSubScopeConfig) -> Path:
+def published_search_path(config: DocsWorkspaceConfig | DocsStageConfig | DocsCollectionConfig) -> Path:
     return config.published.search.location.path
 
 
-def public_documents_path(config: DocsWorkspaceConfig | DocsStageConfig | DocsSubScopeConfig) -> Path | None:
+def public_documents_path(config: DocsWorkspaceConfig | DocsStageConfig | DocsCollectionConfig) -> Path | None:
     return config.public_projection.documents.location.path if config.public_projection else None
 
 
-def public_search_path(config: DocsWorkspaceConfig | DocsStageConfig | DocsSubScopeConfig) -> Path | None:
+def public_search_path(config: DocsWorkspaceConfig | DocsStageConfig | DocsCollectionConfig) -> Path | None:
     projection = config.public_projection
     return projection.search.location.path if projection and projection.search else None
 
 
-def managed_media_config(config: DocsStageConfig | DocsSubScopeConfig, media_type: str) -> DocsManagedMediaConfig:
+def managed_media_config(config: DocsStageConfig | DocsCollectionConfig, media_type: str) -> DocsManagedMediaConfig:
     require_selected_stage(config)
     if media_type not in config.media.types:
         raise ValueError(f"unconfigured media type: {media_type}")
     return config.media.types[media_type]
 
 
-def load_docs_media_owner(repo_root: Path, stage: str | None, sub_scope: str = "") -> DocsStageConfig | DocsSubScopeConfig:
+def load_docs_media_owner(repo_root: Path, stage: str | None, collection: str = "") -> DocsStageConfig | DocsCollectionConfig:
     config = load_docs_stage(repo_root, stage)
-    if not sub_scope:
+    if not collection:
         return config
-    for child in config.sub_scopes:
-        if child.sub_scope == sub_scope:
+    for child in config.collections:
+        if child.collection == collection:
             return child
-    raise ValueError(f"unconfigured sub-scope: {sub_scope}")
+    raise ValueError(f"unconfigured collection: {collection}")
 
 
-def public_media_bindings(config: DocsStageConfig) -> dict[str, tuple[DocsStageConfig | DocsSubScopeConfig, DocsPublicMediaConfig]]:
-    """Bind media to its exact ordinary/sub-scope owner for public deployment."""
+def public_media_bindings(config: DocsStageConfig) -> dict[str, tuple[DocsStageConfig | DocsCollectionConfig, DocsPublicMediaConfig]]:
+    """Bind media to its exact ordinary/collection owner for public deployment."""
     bindings = {}
-    for collection in (config, *config.sub_scopes):
+    for collection in (config, *config.collections):
         if collection.public_projection is not None:
-            child = getattr(collection, "sub_scope", "")
+            child = getattr(collection, "collection", "")
             for media_type, media in collection.public_projection.media.items():
                 bindings[f"{child}/{media_type}" if child else media_type] = (collection, media)
     return bindings

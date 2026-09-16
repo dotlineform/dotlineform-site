@@ -357,13 +357,13 @@ function refreshStagedFiles(state) {
 
 async function openResultSource(state, link) {
   const stage = normalizeText(link && link.dataset ? link.dataset.stage : "");
-  const subScope = normalizeText(link && link.dataset ? link.dataset.subScope : "");
+  const collection = normalizeText(link && link.dataset ? link.dataset.collection : "");
   const docId = normalizeText(link && link.dataset ? link.dataset.docId : "");
   if (!stage || !docId) return;
   try {
     const target = { stage, doc_id: docId };
     if (link.dataset.stage) target.stage = link.dataset.stage;
-    if (subScope) target.sub_scope = subScope;
+    if (collection) target.collection = collection;
     await openManagedDocSource(target, "vscode", managementOptionsForState(state));
   } catch (error) {
     console.warn("docs_import_source: open source failed", error);
@@ -441,7 +441,7 @@ async function runImport(state) {
     await state.collectionController.preview({
       file: candidate.raw,
       stage: target.stage || "",
-      subScope: normalizeText(target.sub_scope),
+      collection: normalizeText(target.collection),
       sourceDirectory: state.sourceDirectory,
       managementBaseUrl: state.managementBaseUrl
     });
@@ -450,7 +450,7 @@ async function runImport(state) {
   await runDocsHtmlImportWorkflow(state, {
     files: [candidate.raw],
     stage: target.stage || "",
-    subScope: normalizeText(target.sub_scope),
+    collection: normalizeText(target.collection),
     includePromptMeta: Boolean(state.includePromptMeta.checked),
     sourceDirectory: state.sourceDirectory,
     routePath: state.routePath,

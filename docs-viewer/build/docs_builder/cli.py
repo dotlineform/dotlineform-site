@@ -9,7 +9,7 @@ from .common import DOCS_VIEWER_BROWSER_CONFIG_PATH, load_docs_workspace_config
 from .runtime_bootstrap import add_workspace_arguments, apply_workspace_overrides
 from .pipeline import DocsDataBuilder
 from .source import FrontMatterSyntaxError, InvalidDocIdError, MissingDocIdError
-from .sub_scope import SubScopeDocsBuilder, selected_sub_scope
+from .collection import CollectionDocsBuilder, selected_collection
 from docs_workspace_config import select_workspace_stage
 
 
@@ -20,7 +20,7 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
     parser.add_argument("--source", help="Override the selected stage's docs source directory.")
     parser.add_argument("--output", help="Override the selected stage's generated document directory.")
     parser.add_argument("--viewer-base-url", help="Override the local viewer page URL base.")
-    parser.add_argument("--sub-scope", help="Build one configured sub-scope in the selected stage.")
+    parser.add_argument("--collection", help="Build one configured collection in the selected stage.")
     parser.add_argument("--only-doc-ids", help="Comma-separated doc ids for a targeted docs payload rebuild.")
     parser.add_argument("--links-doc-ids", help="Exact changed/deleted document ids for Links, independently of ordinary rendering; an empty value selects none.")
     parser.add_argument("--links-created-doc-ids", help="Exact documents created by this operation that require initial Links records.")
@@ -37,17 +37,17 @@ def main(argv: list[str] | None = None) -> int:
     repo_root = Path.cwd().resolve()
     workspace = load_docs_workspace_config(repo_root)
     config = select_workspace_stage(workspace, args.stage)
-    if args.sub_scope and (args.source or args.output or args.viewer_base_url or args.only_doc_ids is not None):
-        raise RuntimeError("--sub-scope cannot be combined with --source, --output, --viewer-base-url, or --only-doc-ids")
+    if args.collection and (args.source or args.output or args.viewer_base_url or args.only_doc_ids is not None):
+        raise RuntimeError("--collection cannot be combined with --source, --output, --viewer-base-url, or --only-doc-ids")
     if args.write and not args.skip_browser_config:
         write_browser_config(repo_root, workspace, path=DOCS_VIEWER_BROWSER_CONFIG_PATH, label="Docs Viewer browser config")
     only_doc_ids = None if args.only_doc_ids is None else [item.strip() for item in args.only_doc_ids.split(",") if item.strip()]
     links_doc_ids = None if args.links_doc_ids is None else [item.strip() for item in args.links_doc_ids.split(",") if item.strip()]
     links_created_doc_ids = [item.strip() for item in (args.links_created_doc_ids or "").split(",") if item.strip()]
     try:
-        if args.sub_scope:
-            builder = SubScopeDocsBuilder(
-                repo_root=repo_root, config=config, sub_scope=selected_sub_scope(config, args.sub_scope),
+        if args.collection:
+            builder = CollectionDocsBuilder(
+                repo_root=repo_root, config=config, collection=selected_collection(config, args.collection),
                 links_doc_ids=links_doc_ids, links_created_doc_ids=links_created_doc_ids,
                 skip_media_builds=args.skip_media_builds,
             )

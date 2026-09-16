@@ -11,7 +11,7 @@ export var DOCS_MANAGEMENT_UNAVAILABLE_MESSAGE = "Docs management service unavai
 
 function stagedPayload(payload, options) {
   var settings = options || {};
-  return Object.assign({ stage: settings.stage }, settings.sub_scope ? { sub_scope: settings.sub_scope } : {}, payload || {});
+  return Object.assign({ stage: settings.stage }, settings.collection ? { collection: settings.collection } : {}, payload || {});
 }
 
 export function fetchManagementJson(path, method, payload, options) {
@@ -63,7 +63,7 @@ export function readManagementCapabilities(options) {
 export function readDocumentLinkTargets(target, options) {
   var collection = normalizeManagedDocumentCollectionTarget(target);
   var query = "?stage=" + encodeURIComponent(collection.stage);
-  if (collection.sub_scope) query += "&sub_scope=" + encodeURIComponent(collection.sub_scope);
+  if (collection.collection) query += "&collection=" + encodeURIComponent(collection.collection);
   return fetchManagementJson("/docs/document-link-targets" + query, "GET", undefined,
     Object.assign({}, options, { cache: "no-store" }));
 }
@@ -203,8 +203,8 @@ export function applyManagedDocsStaticHtmlExport(preview, options) {
 function targetQuery(target) {
   var normalized = normalizeManagedDocumentTarget(target);
   var query = ["stage=" + encodeURIComponent(normalized.stage)];
-  if (normalized.sub_scope) {
-    query.push("sub_scope=" + encodeURIComponent(normalized.sub_scope));
+  if (normalized.collection) {
+    query.push("collection=" + encodeURIComponent(normalized.collection));
   }
   query.push("doc_id=" + encodeURIComponent(normalized.doc_id));
   return query.join("&");
@@ -215,7 +215,7 @@ function targetPayload(target, payload) {
   if (typeof fields !== "object" || Array.isArray(fields)) {
     throw new Error("Managed document request payload must be an object.");
   }
-  ["scope", "stage", "sub_scope", "doc_id"].forEach(function (key) {
+  ["scope", "stage", "collection", "doc_id"].forEach(function (key) {
     if (Object.prototype.hasOwnProperty.call(fields, key)) {
       throw new Error("Managed document request payload must not replace target field " + key + ".");
     }
@@ -272,7 +272,7 @@ export function listStagedMedia(mediaKind, options) {
   var settings = options || {};
   var kind = encodeURIComponent(String(mediaKind || "").trim());
   var query = ["stage=" + encodeURIComponent(settings.stage), "media_kind=" + kind];
-  if (settings.sub_scope) query.push("sub_scope=" + encodeURIComponent(settings.sub_scope));
+  if (settings.collection) query.push("collection=" + encodeURIComponent(settings.collection));
   var sourceDirectory = String(settings.sourceDirectory || "").trim();
   if (sourceDirectory) {
     query.push("source_directory=" + encodeURIComponent(sourceDirectory));
@@ -317,32 +317,32 @@ export function applyManagedDocDelete(docIds, options) {
   }, options), options);
 }
 
-function subScopeDeleteTargetPayload(target, payload) {
+function collectionDeleteTargetPayload(target, payload) {
   var normalized = normalizeManagedDocumentTarget(target);
-  if (!normalized.sub_scope) {
-    throw new Error("Sub-scope document delete requires a sub-scope target.");
+  if (!normalized.collection) {
+    throw new Error("Collection document delete requires a collection target.");
   }
   return targetPayload(normalized, payload);
 }
 
-export function previewManagedSubScopeDocDelete(target, options) {
+export function previewManagedCollectionDocDelete(target, options) {
   return fetchManagementJson(
     "/docs/delete-preview",
     "POST",
-    subScopeDeleteTargetPayload(target, {}),
+    collectionDeleteTargetPayload(target, {}),
     options
   );
 }
 
-export function applyManagedSubScopeDocDelete(target, sourceRevision, options) {
+export function applyManagedCollectionDocDelete(target, sourceRevision, options) {
   var revision = String(sourceRevision || "").trim();
   if (!/^sha256:[0-9a-f]{64}$/.test(revision)) {
-    throw new Error("Sub-scope document delete requires a sha256 source revision.");
+    throw new Error("Collection document delete requires a sha256 source revision.");
   }
   return fetchManagementJson(
     "/docs/delete-apply",
     "POST",
-    subScopeDeleteTargetPayload(target, {
+    collectionDeleteTargetPayload(target, {
       source_revision: revision,
       confirm: true
     }),
@@ -350,27 +350,27 @@ export function applyManagedSubScopeDocDelete(target, sourceRevision, options) {
   );
 }
 
-export function previewSubScopeCreate(payload, options) {
-  return fetchManagementJson("/docs/sub-scopes/create-preview", "POST", Object.assign({ stage: options && options.stage }, payload || {}), options);
+export function previewCollectionCreate(payload, options) {
+  return fetchManagementJson("/docs/collections/create-preview", "POST", Object.assign({ stage: options && options.stage }, payload || {}), options);
 }
 
-export function applySubScopeCreate(payload, options) {
-  return fetchManagementJson("/docs/sub-scopes/create-apply", "POST", Object.assign({ stage: options && options.stage }, payload || {}, {
+export function applyCollectionCreate(payload, options) {
+  return fetchManagementJson("/docs/collections/create-apply", "POST", Object.assign({ stage: options && options.stage }, payload || {}, {
     confirm: true
   }), options);
 }
 
-export function previewSubScopeDelete(subScope, options) {
-  return fetchManagementJson("/docs/sub-scopes/delete-preview", "POST", {
+export function previewCollectionDelete(collection, options) {
+  return fetchManagementJson("/docs/collections/delete-preview", "POST", {
     stage: options && options.stage,
-    sub_scope: subScope
+    collection: collection
   }, options);
 }
 
-export function applySubScopeDelete(subScope, options) {
-  return fetchManagementJson("/docs/sub-scopes/delete-apply", "POST", {
+export function applyCollectionDelete(collection, options) {
+  return fetchManagementJson("/docs/collections/delete-apply", "POST", {
     stage: options && options.stage,
-    sub_scope: subScope,
+    collection: collection,
     confirm: true
   }, options);
 }

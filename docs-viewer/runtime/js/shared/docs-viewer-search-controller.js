@@ -204,7 +204,7 @@ export function initDocsViewerSearchController(context) {
     var parts = [];
     var timestamp = String(doc.timestamp || "").trim();
     if (timestamp) parts.push(timestamp);
-    if (doc.sub_scope) {
+    if (doc.collection) {
       parts.push(String(doc.collection_title || "").trim());
     } else if (doc.parent_title) {
       parts.push(String(doc.parent_title || "").trim());
@@ -217,7 +217,7 @@ export function initDocsViewerSearchController(context) {
   }
 
   function resultEntryUrl(entry, docId) {
-    if (!String(entry.sub_scope || "").trim()) {
+    if (!String(entry.collection || "").trim()) {
       return viewerUrl(viewerTargetDocId(docId), "", "");
     }
     var reportDocId = String(entry.report_doc_id || "").trim();

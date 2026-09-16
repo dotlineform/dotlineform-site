@@ -27,22 +27,22 @@ from docs_workspace_config import (
     resolve_external_data_root,
     resolve_workspace_path,
 )
-from docs_subscope_customisations import (
-    normalize_sub_scope_customisation_metadata_update,
-    sub_scope_customisation_assignable_field_groups,
-    sub_scope_customisation_metadata_record,
+from docs_collection_customisations import (
+    normalize_collection_customisation_metadata_update,
+    collection_customisation_assignable_field_groups,
+    collection_customisation_metadata_record,
 )
 
 
-SUB_SCOPE_DELETE_PREVIEW_KEYS = frozenset({"stage", "sub_scope", "doc_id"})
-SUB_SCOPE_DELETE_APPLY_KEYS = frozenset(
-    {"stage", "sub_scope", "doc_id", "source_revision", "confirm"}
+COLLECTION_DELETE_PREVIEW_KEYS = frozenset({"stage", "collection", "doc_id"})
+COLLECTION_DELETE_APPLY_KEYS = frozenset(
+    {"stage", "collection", "doc_id", "source_revision", "confirm"}
 )
 SOURCE_REVISION_PATTERN = re.compile(r"^sha256:[0-9a-f]{64}$")
 ASSIGN_FIELD_GROUP_KEYS = frozenset(
     {
         "stage",
-        "sub_scope",
+        "collection",
         "doc_id",
         "source_revision",
         "field_group",
@@ -177,14 +177,14 @@ class CollectionRebuild:
     stage: str
     changed_paths: tuple[Path, ...]
     build_doc_ids: Optional[list[str]] = None
-    sub_scope: str = ""
+    collection: str = ""
 
 
 @dataclass(frozen=True)
 class ManagementMutationPlan:
     stage: str
     response: Dict[str, Any]
-    sub_scope: str = ""
+    collection: str = ""
     source_writes: tuple[SourceWrite, ...] = ()
     source_deletes: tuple[SourceDelete, ...] = ()
     media_copies: tuple[MediaCopy, ...] = ()
@@ -217,46 +217,46 @@ def plan_create(repo_root: Path, body: Dict[str, Any]) -> ManagementMutationPlan
         raise ValueError("legacy viewable is not accepted")
     if "publishable" in body or "draft" in body:
         raise ValueError("publishable is retired and draft is assigned by Create")
-    sub_scope_requested = "sub_scope" in body
-    collection = resolve_managed_document_collection(
+    collection_requested = "collection" in body
+    resolved_collection = resolve_managed_document_collection(
         repo_root,
-        sub_scope=body.get("sub_scope") if sub_scope_requested else None,
+        collection=body.get("collection") if collection_requested else None,
         stage=body.get("stage"),
     )
-    require_document_authoring(collection.parent_config)
-    stage = collection.stage
-    sub_scope = collection.sub_scope
-    target_root = collection.source_root
+    require_document_authoring(resolved_collection.parent_config)
+    stage = resolved_collection.stage
+    collection = resolved_collection.collection
+    target_root = resolved_collection.source_root
     report_contract = source_model.report_source_contract_for_collection(
         repo_root,
-        collection.parent_config,
-        collection.document_config,
+        resolved_collection.parent_config,
+        resolved_collection.document_config,
     )
     docs: list[source_model.SourceDoc] = []
     for candidate in source_model.document_markdown_paths(target_root):
         confined = confined_source_path(target_root, candidate)
         document = source_doc_from_path(
             path=confined,
-            requested_doc_id=candidate.stem if sub_scope else None,
+            requested_doc_id=candidate.stem if collection else None,
             report_contract=report_contract,
         )
         source_model.validate_document_status_front_matter(
             document.front_matter,
-            collection_config=collection.document_config,
+            collection_config=resolved_collection.document_config,
             source_name=candidate.name,
         )
         docs.append(document)
     source_model.validate_collection_docs(
         docs,
-        allow_unknown_parent_ids=collection.parent_config.allow_unresolved_parent_ids,
+        allow_unknown_parent_ids=resolved_collection.parent_config.allow_unresolved_parent_ids,
     )
-    if sub_scope and "parent_id" in body:
-        raise ValueError("parent_id is not accepted for a sub-scope document")
+    if collection and "parent_id" in body:
+        raise ValueError("parent_id is not accepted for a collection document")
     title = str(body.get("title") or "New Doc").strip() or "New Doc"
     docs_by_id = {doc.doc_id: doc for doc in docs}
     parent_id = str(body.get("parent_id") or "").strip()
 
-    if not sub_scope and parent_id and parent_id not in docs_by_id:
+    if not collection and parent_id and parent_id not in docs_by_id:
         raise ValueError(f"Unknown parent_id {parent_id!r} in stage {stage}")
 
     timestamp = source_model.current_doc_timestamp()
@@ -270,26 +270,26 @@ def plan_create(repo_root: Path, body: Dict[str, Any]) -> ManagementMutationPlan
         "title": title,
         "added_date": timestamp,
     }
-    if source_model.collection_supports_draft(collection.document_config):
+    if source_model.collection_supports_draft(resolved_collection.document_config):
         front_matter_seed["draft"] = True
-    if not sub_scope:
+    if not collection:
         front_matter_seed["parent_id"] = parent_id
     front_matter = source_model.advance_doc_front_matter(
         front_matter_seed,
         timestamp=timestamp,
     )
-    source_text = source_model.format_source(front_matter, f"# {title}\n", sub_scope=sub_scope)
+    source_text = source_model.format_source(front_matter, f"# {title}\n", collection=collection)
     path = relative_path(repo_root, target_path)
-    target = {**collection.request_target(), "doc_id": doc_id}
-    if sub_scope:
-        target["sub_scope"] = sub_scope
+    target = {**resolved_collection.request_target(), "doc_id": doc_id}
+    if collection:
+        target["collection"] = collection
     record: Dict[str, Any] = {
         "doc_id": doc_id,
         "title": title,
     }
-    if source_model.collection_supports_draft(collection.document_config):
+    if source_model.collection_supports_draft(resolved_collection.document_config):
         record["draft"] = True
-    if not sub_scope:
+    if not collection:
         record["parent_id"] = parent_id
     response: Dict[str, Any] = {
         "ok": True,
@@ -300,19 +300,19 @@ def plan_create(repo_root: Path, body: Dict[str, Any]) -> ManagementMutationPlan
         "record": record,
         "summary_text": f"Created {doc_id}.",
     }
-    if sub_scope:
-        response["sub_scope"] = sub_scope
+    if collection:
+        response["collection"] = collection
     log_details = {
         "stage": stage,
         "doc_id": doc_id,
         "path": path,
     }
-    if sub_scope:
-        log_details["sub_scope"] = sub_scope
+    if collection:
+        log_details["collection"] = collection
 
     return ManagementMutationPlan(
-        sub_scope=sub_scope,
-        stage=collection.stage,
+        collection=collection,
+        stage=resolved_collection.stage,
         response=response,
         source_writes=(
             SourceWrite(
@@ -322,7 +322,7 @@ def plan_create(repo_root: Path, body: Dict[str, Any]) -> ManagementMutationPlan
             ),
         ),
         suppression_reason="docs-create",
-        build_doc_ids=[] if sub_scope else [doc_id],
+        build_doc_ids=[] if collection else [doc_id],
         log_event_name="docs-create",
         log_details=log_details,
         include_write_result_keys=True,
@@ -331,10 +331,10 @@ def plan_create(repo_root: Path, body: Dict[str, Any]) -> ManagementMutationPlan
 
 
 def _assignable_field_groups(resolved: ManagedDocumentTarget) -> tuple[Any, ...]:
-    if not resolved.sub_scope:
+    if not resolved.collection:
         return ()
-    return sub_scope_customisation_assignable_field_groups(
-        resolved.document_config.sub_scope_customisation
+    return collection_customisation_assignable_field_groups(
+        resolved.document_config.collection_customisation
     )
 
 
@@ -376,8 +376,8 @@ def plan_assign_field_group(
         managed_document_target_request(body),
     )
     require_document_authoring(resolved.parent_config)
-    if not resolved.sub_scope:
-        raise ValueError("assign field group requires a sub-scope document")
+    if not resolved.collection:
+        raise ValueError("assign field group requires a collection document")
 
     requested_revision = str(body.get("source_revision") or "").strip()
     if not SOURCE_REVISION_PATTERN.fullmatch(requested_revision):
@@ -428,8 +428,8 @@ def plan_assign_field_group(
             )
         )
 
-    customisation_update = normalize_sub_scope_customisation_metadata_update(
-        resolved.document_config.sub_scope_customisation,
+    customisation_update = normalize_collection_customisation_metadata_update(
+        resolved.document_config.collection_customisation,
         raw_fields,
         provided=True,
         repo_root=repo_root,
@@ -453,7 +453,7 @@ def plan_assign_field_group(
         "operation": "assign_field_group",
         "target": resolved.request_target(),
         "stage": resolved.stage,
-        "sub_scope": resolved.sub_scope,
+        "collection": resolved.collection,
         "doc_id": target.doc_id,
         "field_group": group.group_id,
         "fields": customisation_update["record"],
@@ -464,7 +464,7 @@ def plan_assign_field_group(
     if not any(customisation_update["changes"].values()):
         response["summary_text"] = f"No {group.group_id} changes for {target.doc_id}."
         return ManagementMutationPlan(
-            sub_scope=resolved.sub_scope,
+            collection=resolved.collection,
             stage=resolved.stage,
             response=response,
         )
@@ -486,7 +486,7 @@ def plan_assign_field_group(
     updated_source_text = source_model.format_source(
         updated_front_matter,
         target.body,
-        sub_scope=resolved.sub_scope,
+        collection=resolved.collection,
     )
     source_model.parse_collection_document_report(
         repo_root,
@@ -500,7 +500,7 @@ def plan_assign_field_group(
     )
     response["summary_text"] = f"Updated {group.group_id} for {target.doc_id}."
     return ManagementMutationPlan(
-        sub_scope=resolved.sub_scope,
+        collection=resolved.collection,
         stage=resolved.stage,
         response=response,
         source_writes=(
@@ -514,7 +514,7 @@ def plan_assign_field_group(
         log_event_name="docs-assign-field-group",
         log_details={
             "stage": resolved.stage,
-            "sub_scope": resolved.sub_scope,
+            "collection": resolved.collection,
             "doc_id": target.doc_id,
             "field_group": group.group_id,
             **customisation_update["changes"],
@@ -543,11 +543,11 @@ def plan_update_metadata(repo_root: Path, body: Dict[str, Any]) -> ManagementMut
         repo_root, resolved, str(body.get("parent_id") or "").strip() if "parent_id" in body else None,
     )
     requested_revision = str(body.get("source_revision") or "").strip()
-    if resolved.sub_scope and not SOURCE_REVISION_PATTERN.fullmatch(
+    if resolved.collection and not SOURCE_REVISION_PATTERN.fullmatch(
         requested_revision
     ):
         raise ValueError(
-            "source_revision is required for sub-scope metadata updates"
+            "source_revision is required for collection metadata updates"
         )
     if requested_revision and not SOURCE_REVISION_PATTERN.fullmatch(
         requested_revision
@@ -594,10 +594,10 @@ def plan_update_metadata(repo_root: Path, body: Dict[str, Any]) -> ManagementMut
         body.get("customisation"),
         provided="customisation" in body,
     )
-    customisation_update = normalize_sub_scope_customisation_metadata_update(
+    customisation_update = normalize_collection_customisation_metadata_update(
         (
-            resolved.document_config.sub_scope_customisation
-            if resolved.sub_scope
+            resolved.document_config.collection_customisation
+            if resolved.collection
             else None
         ),
         body.get("customisation"),
@@ -625,7 +625,7 @@ def plan_update_metadata(repo_root: Path, body: Dict[str, Any]) -> ManagementMut
             "date_display": current_date_display,
             "ui_status": current_ui_status,
         }
-        if not resolved.sub_scope:
+        if not resolved.collection:
             record["parent_id"] = target.parent_id
         elif customisation_update is not None:
             record["customisation"] = customisation_update["record"]
@@ -639,10 +639,10 @@ def plan_update_metadata(repo_root: Path, body: Dict[str, Any]) -> ManagementMut
             "changes": dict.fromkeys(changes.keys(), False),
             "summary_text": f"No metadata changes for {target.doc_id}.",
         }
-        if resolved.sub_scope:
-            response["sub_scope"] = resolved.sub_scope
+        if resolved.collection:
+            response["collection"] = resolved.collection
         return with_document_placement(repo_root, ManagementMutationPlan(
-            sub_scope=resolved.sub_scope,
+            collection=resolved.collection,
             stage=resolved.stage,
             response=response,
         ), placement)
@@ -677,7 +677,7 @@ def plan_update_metadata(repo_root: Path, body: Dict[str, Any]) -> ManagementMut
                 updated_front_matter.pop(field_name, None)
             else:
                 updated_front_matter[field_name] = field_value
-    if not placement.destination.sub_scope:
+    if not placement.destination.collection:
         updated_front_matter["parent_id"] = parent_id
         updated_front_matter.pop("sort_order", None)
     elif placement.collection_changed:
@@ -697,14 +697,14 @@ def plan_update_metadata(repo_root: Path, body: Dict[str, Any]) -> ManagementMut
         "date_display": date_display,
         "ui_status": ui_status,
     }
-    if not placement.destination.sub_scope:
+    if not placement.destination.collection:
         record["parent_id"] = parent_id
     elif customisation_update is not None:
         record["customisation"] = customisation_update["record"]
     updated_source_text = source_model.format_source(
         updated_front_matter,
         target.body,
-        sub_scope=placement.destination.sub_scope,
+        collection=placement.destination.collection,
     )
     source_model.parse_collection_document_report(
         repo_root,
@@ -723,8 +723,8 @@ def plan_update_metadata(repo_root: Path, body: Dict[str, Any]) -> ManagementMut
         "changes": changes,
         "summary_text": f"Updated metadata for {target.doc_id}.",
     }
-    if resolved.sub_scope:
-        response["sub_scope"] = resolved.sub_scope
+    if resolved.collection:
+        response["collection"] = resolved.collection
     log_details = {
         "stage": stage,
         "doc_id": target.doc_id,
@@ -735,13 +735,13 @@ def plan_update_metadata(repo_root: Path, body: Dict[str, Any]) -> ManagementMut
         "date_display_changed": date_display_changed,
         "status_changed": status_changed,
     }
-    if resolved.sub_scope:
-        log_details["sub_scope"] = resolved.sub_scope
+    if resolved.collection:
+        log_details["collection"] = resolved.collection
     if customisation_update is not None:
         log_details.update(customisation_update["changes"])
 
     return with_document_placement(repo_root, ManagementMutationPlan(
-        sub_scope=resolved.sub_scope,
+        collection=resolved.collection,
         stage=resolved.stage,
         response=response,
         source_writes=(
@@ -752,7 +752,7 @@ def plan_update_metadata(repo_root: Path, body: Dict[str, Any]) -> ManagementMut
             ),
         ),
         suppression_reason="docs-update-metadata",
-        build_doc_ids=[] if resolved.sub_scope else [target.doc_id],
+        build_doc_ids=[] if resolved.collection else [target.doc_id],
         log_event_name="docs-update-metadata",
         log_details=log_details,
         include_write_result_keys=True,
@@ -770,7 +770,7 @@ def plan_move(repo_root: Path, body: Dict[str, Any]) -> ManagementMutationPlan:
     target = resolved.request_target()
     return with_document_placement(repo_root, ManagementMutationPlan(
         stage=config.stage,
-        sub_scope=resolved.sub_scope,
+        collection=resolved.collection,
         response={
             "ok": True,
             **target,
@@ -804,7 +804,7 @@ def with_document_placement(
     """Attach one committed placement and plan collection-owned source changes."""
     target = placement.target()
     response = {**plan.response, "target": target, "placement": placement.response(repo_root)}
-    response.pop("sub_scope", None)
+    response.pop("collection", None)
     response.update(target)
     if not placement.collection_changed:
         return replace(plan, response=response)
@@ -815,19 +815,19 @@ def with_document_placement(
         raise ValueError("Placement destination already contains this document")
     front_matter, body = source_model.parse_source_text(plan.source_writes[0].text)
     body, reference_changes, media_copies = placement_reference_changes(repo_root, placement, body)
-    if destination.sub_scope:
+    if destination.collection:
         front_matter.pop("parent_id", None)
     else:
         front_matter["parent_id"] = placement.parent_id
-    source_text = source_model.format_source(front_matter, body, sub_scope=destination.sub_scope)
+    source_text = source_model.format_source(front_matter, body, collection=destination.collection)
     source_model.validate_document_status_front_matter(
         front_matter, collection_config=destination.document_config,
         source_name=destination_path.name,
     )
     customisation_record = None
-    if destination.sub_scope:
-        customisation_record = sub_scope_customisation_metadata_record(
-            destination.document_config.sub_scope_customisation,
+    if destination.collection:
+        customisation_record = collection_customisation_metadata_record(
+            destination.document_config.collection_customisation,
             front_matter, doc_id=source.doc_id,
         )
     source_model.parse_collection_document_report(
@@ -836,26 +836,26 @@ def with_document_placement(
     )
     writes = [SourceWrite(destination_path, source_text, create_only=True)]
     affected: dict[str, list[Path]] = {
-        source.sub_scope: [source.document.path],
-        destination.sub_scope: [destination_path],
+        source.collection: [source.document.path],
+        destination.collection: [destination_path],
     }
     for change in reference_changes:
         doc = change.document
         metadata = source_model.advance_front_matter_for_recent_edit(doc.front_matter, doc.body, doc.front_matter, change.body)
         writes.append(SourceWrite(
-            doc.path, source_model.format_source(metadata, change.body, sub_scope=change.sub_scope),
+            doc.path, source_model.format_source(metadata, change.body, collection=change.collection),
             original_bytes=doc.source_text.encode("utf-8"),
             revision_target={
                 "stage": source.stage, "doc_id": doc.doc_id,
-                **({"sub_scope": change.sub_scope} if change.sub_scope else {}),
+                **({"collection": change.collection} if change.collection else {}),
             },
         ))
-        affected.setdefault(change.sub_scope, []).append(doc.path)
+        affected.setdefault(change.collection, []).append(doc.path)
     record = {**response["record"]}
     record.pop("customisation", None)
     if customisation_record is not None:
         record["customisation"] = customisation_record
-    if destination.sub_scope:
+    if destination.collection:
         record.pop("parent_id", None)
     else:
         record["parent_id"] = placement.parent_id
@@ -864,7 +864,7 @@ def with_document_placement(
         plan, response=response, source_writes=tuple(writes),
         source_deletes=(SourceDelete(source.document.path, source.document.source_text.encode("utf-8")),),
         media_copies=tuple(media_copies),
-        rebuilds=tuple(CollectionRebuild(source.stage, tuple(affected[name]), sub_scope=name)
+        rebuilds=tuple(CollectionRebuild(source.stage, tuple(affected[name]), collection=name)
                        for name in sorted(affected, key=lambda name: (not bool(name), name))),
     )
 
@@ -966,17 +966,17 @@ def plan_delete_apply(repo_root: Path, body: Dict[str, Any]) -> ManagementMutati
     )
 
 
-def require_exact_sub_scope_delete_request(
+def require_exact_collection_delete_request(
     body: Dict[str, Any],
     *,
     apply: bool,
 ) -> None:
-    expected = SUB_SCOPE_DELETE_APPLY_KEYS if apply else SUB_SCOPE_DELETE_PREVIEW_KEYS
+    expected = COLLECTION_DELETE_APPLY_KEYS if apply else COLLECTION_DELETE_PREVIEW_KEYS
     actual = frozenset(body)
     if actual != expected:
         required = ", ".join(sorted(expected))
         raise ValueError(
-            "sub-scope document delete "
+            "collection document delete "
             f"{'apply' if apply else 'preview'} must contain exactly {required}"
         )
 
@@ -985,7 +985,7 @@ def source_revision(source_bytes: bytes) -> str:
     return f"sha256:{hashlib.sha256(source_bytes).hexdigest()}"
 
 
-def sub_scope_delete_generated_outputs(
+def collection_delete_generated_outputs(
     repo_root: Path,
     resolved: ManagedDocumentTarget,
 ) -> list[dict[str, str]]:
@@ -995,12 +995,12 @@ def sub_scope_delete_generated_outputs(
     )
     return [
         {
-            "kind": "sub_scope_manifest",
+            "kind": "collection_manifest",
             "action": "rebuild",
             "path": relative_path(repo_root, output_root / "manifest.json"),
         },
         {
-            "kind": "sub_scope_document",
+            "kind": "collection_document",
             "action": "remove",
             "path": relative_path(
                 repo_root,
@@ -1010,20 +1010,20 @@ def sub_scope_delete_generated_outputs(
     ]
 
 
-def plan_sub_scope_delete_preview(
+def plan_collection_delete_preview(
     repo_root: Path,
     body: Dict[str, Any],
 ) -> Dict[str, Any]:
     """Plan a write-free delete of one exact configured child document."""
 
-    require_exact_sub_scope_delete_request(body, apply=False)
+    require_exact_collection_delete_request(body, apply=False)
     resolved = resolve_managed_document_target(
         repo_root,
         managed_document_target_request(body),
     )
     require_document_authoring(resolved.parent_config)
-    if not resolved.sub_scope:
-        raise ValueError("sub_scope is required for sub-scope document delete")
+    if not resolved.collection:
+        raise ValueError("collection is required for collection document delete")
 
     document = resolved.document
     source_bytes = document.source_text.encode("utf-8")
@@ -1034,13 +1034,13 @@ def plan_sub_scope_delete_preview(
         "operation": "preview",
         "target": target,
         "stage": resolved.stage,
-        "sub_scope": resolved.sub_scope,
+        "collection": resolved.collection,
         "doc_id": document.doc_id,
         "title": document.title,
         "source_revision": source_revision(source_bytes),
         "allowed": True,
         "blockers": [],
-        "warnings": ["This permanently deletes the displayed sub-scope document."],
+        "warnings": ["This permanently deletes the displayed collection document."],
         "delete_count": 1,
         "delete_documents": [
             {
@@ -1049,7 +1049,7 @@ def plan_sub_scope_delete_preview(
                 "path": path,
             }
         ],
-        "generated_outputs": sub_scope_delete_generated_outputs(repo_root, resolved),
+        "generated_outputs": collection_delete_generated_outputs(repo_root, resolved),
     }
 
 
@@ -1059,7 +1059,7 @@ def revision_conflict_payload(
     requested_revision: str,
     current_revision: str,
     operation: str = "apply",
-    error: str = "sub-scope document source changed after delete preview",
+    error: str = "collection document source changed after delete preview",
 ) -> Dict[str, Any]:
     payload: Dict[str, Any] = {
         "ok": False,
@@ -1072,20 +1072,20 @@ def revision_conflict_payload(
         "error": error,
         "retry_safe": False,
     }
-    if target.get("sub_scope"):
-        payload["sub_scope"] = target["sub_scope"]
+    if target.get("collection"):
+        payload["collection"] = target["collection"]
     return payload
 
 
-def plan_sub_scope_delete_apply(
+def plan_collection_delete_apply(
     repo_root: Path,
     body: Dict[str, Any],
 ) -> ManagementMutationPlan:
     """Plan one confirmed child-source deletion against its preview revision."""
 
-    require_exact_sub_scope_delete_request(body, apply=True)
+    require_exact_collection_delete_request(body, apply=True)
     if body.get("confirm") is not True:
-        raise ValueError("sub-scope document delete apply requires confirm=true")
+        raise ValueError("collection document delete apply requires confirm=true")
     requested_revision = str(body.get("source_revision") or "").strip()
     if not SOURCE_REVISION_PATTERN.fullmatch(requested_revision):
         raise ValueError("source_revision must be a sha256 revision receipt")
@@ -1095,8 +1095,8 @@ def plan_sub_scope_delete_apply(
         managed_document_target_request(body),
     )
     require_document_authoring(resolved.parent_config)
-    if not resolved.sub_scope:
-        raise ValueError("sub_scope is required for sub-scope document delete")
+    if not resolved.collection:
+        raise ValueError("collection is required for collection document delete")
 
     document = resolved.document
     source_bytes = document.source_text.encode("utf-8")
@@ -1113,31 +1113,31 @@ def plan_sub_scope_delete_apply(
 
     path = relative_path(repo_root, document.path)
     return ManagementMutationPlan(
-        sub_scope=resolved.sub_scope,
+        collection=resolved.collection,
         stage=resolved.stage,
         response={
             "ok": True,
             "operation": "apply",
             "target": target,
             "stage": resolved.stage,
-            "sub_scope": resolved.sub_scope,
+            "collection": resolved.collection,
             "doc_id": document.doc_id,
             "title": document.title,
             "source_revision": requested_revision,
             "path": path,
             "deleted_doc_ids": [document.doc_id],
             "delete_count": 1,
-            "generated_outputs": sub_scope_delete_generated_outputs(repo_root, resolved),
+            "generated_outputs": collection_delete_generated_outputs(repo_root, resolved),
             "summary_text": f"Deleted {document.doc_id}.",
         },
         source_deletes=(SourceDelete(document.path, original_bytes=source_bytes),),
-        suppression_reason="docs-sub-scope-document-delete",
+        suppression_reason="docs-collection-document-delete",
         revision_conflict_operation="apply",
-        revision_conflict_error="sub-scope document source changed after delete preview",
+        revision_conflict_error="collection document source changed after delete preview",
         log_event_name="docs-delete",
         log_details={
             "stage": resolved.stage,
-            "sub_scope": resolved.sub_scope,
+            "collection": resolved.collection,
             "doc_id": document.doc_id,
             "deleted_doc_ids": [document.doc_id],
             "delete_count": 1,

@@ -17,7 +17,7 @@
   align-items: center;
 }
 
-.docsViewerReport__subscopeFilterToolbar{
+.docsViewerReport__collectionFilterToolbar{
   gap: 0.35rem 0.55rem;
 }
 
@@ -130,7 +130,7 @@
   min-width: 0;
 }
 
-.docsViewerReport[data-report-subscope] .docsViewerReport__table{
+.docsViewerReport[data-report-collection] .docsViewerReport__table{
   padding-top: 0.35rem;
 }
 
@@ -188,7 +188,7 @@
   text-underline-offset: 2px;
 }
 
-.docsViewerReport__subscopeButton{
+.docsViewerReport__collectionButton{
   appearance: none;
   border: 0;
   background: transparent;

@@ -19,7 +19,7 @@ def handle_broken_links(repo_root: Path, body: Dict[str, Any]) -> Dict[str, Any]
     selected = normalize_managed_document_collection_target({
         key: body[key] for key in ("stage",) if key in body
     })
-    if "sub_scope" in context:
+    if "collection" in context:
         raise ValueError("Broken Links requires an ordinary report context")
     if context.get("stage") != "working" or selected != context:
         raise ValueError("Broken Links audits Working only")

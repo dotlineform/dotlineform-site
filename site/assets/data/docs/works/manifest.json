@@ -1,12 +1,92 @@
 {
   "docs": [
     {
-      "doc_id": "d-20260812-215843-fc4ef9",
-      "title": "3 symbols"
+      "doc_id": "d-20260801-212422-43b47c",
+      "title": "10,000",
+      "subject": {
+        "kind": "series",
+        "key": "001"
+      }
     },
     {
-      "doc_id": "d-20260901-171122-3a84ba",
-      "title": "Impossibility And Incompleteness"
+      "doc_id": "d-20260801-212422-3aa736",
+      "title": "10,000 - original text",
+      "subject": {
+        "kind": "series",
+        "key": "001"
+      }
+    },
+    {
+      "doc_id": "d-20260801-212422-081a73",
+      "title": "16 forms",
+      "subject": {
+        "kind": "series",
+        "key": "003"
+      }
+    },
+    {
+      "doc_id": "d-20260801-212422-9f0121",
+      "title": "20 photos",
+      "subject": {
+        "kind": "series",
+        "key": "024"
+      }
+    },
+    {
+      "doc_id": "d-20260801-212422-df11f3",
+      "title": "3 symbols",
+      "subject": {
+        "kind": "work",
+        "key": "00638"
+      }
+    },
+    {
+      "doc_id": "d-20260801-212422-632af5",
+      "title": "64 forms",
+      "subject": {
+        "kind": "series",
+        "key": "065"
+      }
+    },
+    {
+      "doc_id": "d-20260801-212422-3a2da4",
+      "title": "a doll story",
+      "subject": {
+        "kind": "series",
+        "key": "006"
+      }
+    },
+    {
+      "doc_id": "d-20260801-212422-773b86",
+      "title": "a feeling that we are part of a structure",
+      "subject": {
+        "kind": "series",
+        "key": "007"
+      }
+    },
+    {
+      "doc_id": "d-20260801-212422-bc7ae1",
+      "title": "a humid home full of light",
+      "subject": {
+        "kind": "series",
+        "key": "008"
+      }
+    },
+    {
+      "doc_id": "d-20260801-212422-d91151",
+      "title": "a poem divided into 4 parts",
+      "subject": {
+        "kind": "series",
+        "key": "009"
+      }
+    },
+    {
+      "doc_id": "d-20260801-212422-186a69",
+      "title": "a theory of happiness",
+      "subject": {
+        "kind": "series",
+        "key": "010"
+      }
     }
   ]
 }

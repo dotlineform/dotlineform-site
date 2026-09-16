@@ -255,8 +255,8 @@ function loadSource(context, state) {
         ...(payload && payload.stage ? { stage: payload.stage } : {}),
         doc_id: cleanString(payload && payload.doc_id)
       };
-      if (payload && Object.prototype.hasOwnProperty.call(payload, "sub_scope")) {
-        responseTarget.sub_scope = cleanString(payload.sub_scope);
+      if (payload && Object.prototype.hasOwnProperty.call(payload, "collection")) {
+        responseTarget.collection = cleanString(payload.collection);
       }
       if (!managedDocumentTargetsEqual(responseTarget, state.target)) {
         throw new Error("Source service returned a different managed document target.");

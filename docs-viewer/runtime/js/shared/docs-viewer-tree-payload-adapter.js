@@ -60,14 +60,14 @@ function normalizeRecentDoc(row) {
   var parentTitle = optionalStringRecordValue(row, "parent_title");
   if (parentId) doc.parent_id = parentId;
   if (parentTitle) doc.parent_title = parentTitle;
-  var subScope = optionalStringRecordValue(row, "sub_scope");
-  if (subScope) {
+  var collection = optionalStringRecordValue(row, "collection");
+  if (collection) {
     var reportDocId = optionalStringRecordValue(row, "report_doc_id");
     var collectionTitle = optionalStringRecordValue(row, "collection_title");
     if (!reportDocId || !collectionTitle) {
       throw new Error("Recent child requires report_doc_id and collection_title.");
     }
-    doc.sub_scope = subScope;
+    doc.collection = collection;
     doc.report_doc_id = reportDocId;
     doc.collection_title = collectionTitle;
   }

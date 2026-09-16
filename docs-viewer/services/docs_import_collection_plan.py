@@ -351,8 +351,8 @@ def _plan_document_candidates(
                 state.errors.append(
                     collection_issue(
                         "error",
-                        "sub_scope_media_not_supported",
-                        "returned sub-scope documents cannot materialize inline media",
+                        "collection_media_not_supported",
+                        "returned collection documents cannot materialize inline media",
                         record_index=state.record_index,
                         doc_id=record.doc_id,
                     )
@@ -547,7 +547,7 @@ def blocked_collection_plan(
     staged_filename: str,
     blockers: list[dict[str, Any]],
     workspace_root: Path,
-    sub_scope: str = "",
+    collection: str = "",
 ) -> DocumentsCollectionPlan:
     safe_blockers = _sanitize_issue_paths(blockers, workspace_root)
     response = {
@@ -578,10 +578,10 @@ def blocked_collection_plan(
     }
     response["target"] = {
         "stage": stage,
-        **({"sub_scope": sub_scope} if sub_scope else {}),
+        **({"collection": collection} if collection else {}),
     }
-    if sub_scope:
-        response["sub_scope"] = sub_scope
+    if collection:
+        response["collection"] = collection
     return DocumentsCollectionPlan(normalized_records=(), document_plans=(), response=response)
 
 
@@ -703,13 +703,13 @@ def plan_import_content_collection(
     response["target"] = {
         "stage": stage,
         **(
-            {"sub_scope": collection.sub_scope}
-            if collection is not None and collection.sub_scope
+            {"collection": collection.collection}
+            if collection is not None and collection.collection
             else {}
         ),
     }
-    if collection is not None and collection.sub_scope:
-        response["sub_scope"] = collection.sub_scope
+    if collection is not None and collection.collection:
+        response["collection"] = collection.collection
     return DocumentsCollectionPlan(
         normalized_records=tuple(state.normalized for state in states),
         document_plans=tuple(state.document_plan for state in states),

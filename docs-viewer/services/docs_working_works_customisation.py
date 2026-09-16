@@ -54,7 +54,7 @@ def project_manifest(
     settings: Mapping[str, Any],
     documents: Sequence[Any],
     repo_root: Path,
-    sub_scope: str,
+    collection: str,
     stage: str,
 ) -> dict[str, Any]:
     if settings:

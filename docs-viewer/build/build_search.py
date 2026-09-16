@@ -45,14 +45,14 @@ from build_docs import (  # noqa: E402
 from docs_builder.semantic_tokens import replace_semantic_tokens  # noqa: E402
 from docs_builder.source import parse_source_text  # noqa: E402
 from docs_workspace_config import (  # noqa: E402
-    DocsSubScopeConfig,
+    DocsCollectionConfig,
     document_source_path,
     load_docs_stage,
     generated_documents_path,
     generated_search_path,
     resolve_workspace_path,
 )
-from docs_document_location import sub_scope_report_placement  # noqa: E402
+from docs_document_location import collection_report_placement  # noqa: E402
 from docs_document_identity import is_immutable_doc_id  # noqa: E402
 from docs_report_source import (  # noqa: E402
     ReportDescriptor,
@@ -95,7 +95,7 @@ class SearchDocRecord:
     summary: str = ""
     body_markdown: str = ""
     report: ReportDescriptor | None = None
-    sub_scope: str = ""
+    collection: str = ""
     report_doc_id: str = ""
     collection_title: str = ""
 
@@ -186,7 +186,7 @@ def build_search_index_v3(
         "parent_id",
         "parent_title",
         "display_meta",
-        "sub_scope",
+        "collection",
         "report_doc_id",
         "collection_title",
     )
@@ -194,7 +194,7 @@ def build_search_index_v3(
         documents,
         key=lambda document: (
             normalize(document.get("id")),
-            normalize(document.get("sub_scope")),
+            normalize(document.get("collection")),
             normalize(document.get("report_doc_id")),
         ),
     )
@@ -208,26 +208,26 @@ def build_search_index_v3(
     ]
     document_targets = [
         (
-            normalize_text(document.get("sub_scope")),
+            normalize_text(document.get("collection")),
             normalize_text(document.get("id")),
         )
         for document in docs
     ]
     if (
-        any(not doc_id for _sub_scope, doc_id in document_targets)
+        any(not doc_id for _collection, doc_id in document_targets)
         or len(document_targets) != len(set(document_targets))
     ):
         raise ValueError("Search documents require unique non-empty exact targets")
     if any(not normalize_text(document.get("title")) or not normalize_text(document.get("href")) for document in docs):
         raise ValueError("Search documents require title and href")
     for document in docs:
-        sub_scope = normalize_text(document.get("sub_scope"))
-        if sub_scope and (
+        collection = normalize_text(document.get("collection"))
+        if collection and (
             not normalize_text(document.get("report_doc_id"))
             or not normalize_text(document.get("collection_title"))
         ):
             raise ValueError(
-                "Sub-scope search documents require report_doc_id and collection_title"
+                "Collection search documents require report_doc_id and collection_title"
             )
 
     postings: dict[str, dict[str, set[int]]] = {}
@@ -471,7 +471,7 @@ class DocsViewerSearchDataBuilder:
     ) -> dict[str, Any]:
         docs = self.load_source_docs()
         title_by_id = {doc.doc_id: doc.title for doc in docs}
-        combined_docs = [*docs, *self.load_sub_scope_docs(docs)]
+        combined_docs = [*docs, *self.load_collection_docs(docs)]
         records: list[dict[str, Any]] = []
         for doc in combined_docs:
             parent_title = "" if not doc.parent_id else normalize_text(title_by_id.get(doc.parent_id))
@@ -488,10 +488,10 @@ class DocsViewerSearchDataBuilder:
                     doc.collection_title or parent_title,
                 ),
             }
-            if doc.sub_scope:
+            if doc.collection:
                 record.update(
                     {
-                        "sub_scope": doc.sub_scope,
+                        "collection": doc.collection,
                         "report_doc_id": doc.report_doc_id,
                         "collection_title": doc.collection_title,
                     }
@@ -516,7 +516,7 @@ class DocsViewerSearchDataBuilder:
             generated_at_utc=generated_at_utc,
         )
 
-    def load_sub_scope_docs(
+    def load_collection_docs(
         self,
         parent_docs: list[SearchDocRecord],
     ) -> list[SearchDocRecord]:
@@ -524,27 +524,27 @@ class DocsViewerSearchDataBuilder:
 
         eligible_parent_doc_ids = {document.doc_id for document in parent_docs}
         records: list[SearchDocRecord] = []
-        for sub_scope in sorted(
-            self.config.sub_scopes,
-            key=lambda item: item.sub_scope,
+        for collection in sorted(
+            self.config.collections,
+            key=lambda item: item.collection,
         ):
             try:
                 if self.config.stage == "pre-publish" and not any(
-                    doc.report is not None and doc.report.id == "docs_subscope"
-                    and doc.report.sub_scope == sub_scope.sub_scope for doc in parent_docs
+                    doc.report is not None and doc.report.id == "docs_collection"
+                    and doc.report.collection == collection.collection for doc in parent_docs
                 ):
-                    if self.load_sub_scope_collection_docs(sub_scope, report_doc_id=""):
-                        raise ValueError(f"Pre-publish collection {sub_scope.sub_scope} has documents without a report host")
+                    if self.load_named_collection_docs(collection, report_doc_id=""):
+                        raise ValueError(f"Pre-publish collection {collection.collection} has documents without a report host")
                     continue
-                _config, _sub_scope, report_doc_id = sub_scope_report_placement(
+                _config, _collection, report_doc_id = collection_report_placement(
                     self.repo_root,
-                    sub_scope.sub_scope,
+                    collection.collection,
                     eligible_parent_doc_ids=eligible_parent_doc_ids,
                     stage=self.config.stage,
                 )
                 records.extend(
-                    self.load_sub_scope_collection_docs(
-                        sub_scope,
+                    self.load_named_collection_docs(
+                        collection,
                         report_doc_id=report_doc_id,
                     )
                 )
@@ -552,37 +552,37 @@ class DocsViewerSearchDataBuilder:
                 raise SystemExit(str(exc)) from exc
         return records
 
-    def load_sub_scope_collection_docs(
+    def load_named_collection_docs(
         self,
-        sub_scope: DocsSubScopeConfig,
+        collection: DocsCollectionConfig,
         *,
         report_doc_id: str,
     ) -> list[SearchDocRecord]:
         output_root = resolve_workspace_path(
             self.repo_root,
-            generated_documents_path(sub_scope),
+            generated_documents_path(collection),
         )
         manifest_path = output_root / "manage-manifest.json"
         try:
             manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
         except (OSError, json.JSONDecodeError) as exc:
             raise ValueError(
-                f"Docs Viewer search requires readable sub-scope manifest: {manifest_path}"
+                f"Docs Viewer search requires readable collection manifest: {manifest_path}"
             ) from exc
         manifest_rows = manifest.get("docs") if isinstance(manifest, dict) else None
         if not isinstance(manifest_rows, list):
             raise ValueError(
-                f"Docs Viewer search sub-scope manifest docs must be an array: {manifest_path}"
+                f"Docs Viewer search collection manifest docs must be an array: {manifest_path}"
             )
 
         source_docs = load_document_collection_docs_for_config(
             self.repo_root,
             self.config,
-            sub_scope,
+            collection,
         )
         source_by_id = {document.doc_id: document for document in source_docs}
         seen_doc_ids: set[str] = set()
-        collection_title = normalize_text(sub_scope.title)
+        collection_title = normalize_text(collection.title)
         records: list[SearchDocRecord] = []
         for index, raw_row in enumerate(manifest_rows):
             field = f"{manifest_path}.docs[{index}]"
@@ -601,7 +601,7 @@ class DocsViewerSearchDataBuilder:
             source_doc = source_by_id.get(doc_id)
             if source_doc is None:
                 raise ValueError(
-                    f"sub-scope manifest document {self.config.stage}/{sub_scope.sub_scope}/{doc_id} "
+                    f"collection manifest document {self.config.stage}/{collection.collection}/{doc_id} "
                     "has no source document"
                 )
             by_id_path = output_root / "by-id" / f"{doc_id}.json"
@@ -609,32 +609,32 @@ class DocsViewerSearchDataBuilder:
                 by_id = json.loads(by_id_path.read_text(encoding="utf-8"))
             except (OSError, json.JSONDecodeError) as exc:
                 raise ValueError(
-                    f"Docs Viewer search requires readable sub-scope by-id payload: {by_id_path}"
+                    f"Docs Viewer search requires readable collection by-id payload: {by_id_path}"
                 ) from exc
             if not isinstance(by_id, dict):
-                raise ValueError(f"sub-scope by-id payload must be an object: {by_id_path}")
+                raise ValueError(f"collection by-id payload must be an object: {by_id_path}")
 
             expected_url = f"{self.viewer_url_for(report_doc_id)}&subdoc={quote(doc_id)}"
             source_title = normalize_text(source_doc.title)
             by_id_title = normalize_text(by_id.get("title"))
             if title != source_title or title != by_id_title:
                 raise ValueError(
-                    f"sub-scope manifest, source, and by-id titles must match for "
-                    f"{self.config.stage}/{sub_scope.sub_scope}/{doc_id}"
+                    f"collection manifest, source, and by-id titles must match for "
+                    f"{self.config.stage}/{collection.collection}/{doc_id}"
                 )
             if (
                 normalize_text(by_id.get("doc_id")) != doc_id
                 or normalize_text(by_id.get("viewer_url")) != expected_url
             ):
                 raise ValueError(
-                    f"sub-scope by-id identity or viewer_url is stale for "
-                    f"{self.config.stage}/{sub_scope.sub_scope}/{doc_id}"
+                    f"collection by-id identity or viewer_url is stale for "
+                    f"{self.config.stage}/{collection.collection}/{doc_id}"
                 )
             last_updated = normalize_text(by_id.get("last_updated"))
             if last_updated != normalize_text(source_doc.front_matter.get("last_updated")):
                 raise ValueError(
-                    f"sub-scope source and by-id last_updated must match for "
-                    f"{self.config.stage}/{sub_scope.sub_scope}/{doc_id}"
+                    f"collection source and by-id last_updated must match for "
+                    f"{self.config.stage}/{collection.collection}/{doc_id}"
                 )
             records.append(
                 SearchDocRecord(
@@ -646,7 +646,7 @@ class DocsViewerSearchDataBuilder:
                     summary=normalize_text(source_doc.front_matter.get("summary")),
                     body_markdown=source_doc.body,
                     report=source_doc.report,
-                    sub_scope=sub_scope.sub_scope,
+                    collection=collection.collection,
                     report_doc_id=report_doc_id,
                     collection_title=collection_title,
                 )

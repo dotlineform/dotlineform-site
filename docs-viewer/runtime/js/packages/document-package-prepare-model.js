@@ -159,7 +159,7 @@ export function documentPackageProfileLabel(profile) {
 
 export function createDocumentPackagePrepareRequest(options = {}) {
   const stage = packageText(options.stage).toLowerCase();
-  const subScope = packageText(options.subScope).toLowerCase();
+  const collection = packageText(options.collection).toLowerCase();
   const profile = options.profile || null;
   const effectiveDocIds = normalizeIds(options.effectiveDocIds);
   if (!stage) throw new Error("A Docs Viewer stage is required.");
@@ -195,6 +195,6 @@ export function createDocumentPackagePrepareRequest(options = {}) {
     content_format: requestedContentFormat,
     dry_run: false
   };
-  if (subScope) request.sub_scope = subScope;
+  if (collection) request.collection = collection;
   return request;
 }

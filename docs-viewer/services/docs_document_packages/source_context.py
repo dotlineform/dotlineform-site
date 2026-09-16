@@ -13,7 +13,7 @@ if str(DOCS_BUILD_DIR) not in sys.path:
     sys.path.insert(0, str(DOCS_BUILD_DIR))
 
 from build_docs import DocsDataBuilder, DocRecord  # noqa: E402
-from docs_builder.sub_scope import SubScopeDocsBuilder  # noqa: E402
+from docs_builder.collection import CollectionDocsBuilder  # noqa: E402
 from docs_management_document_target import resolve_managed_document_collection  # noqa: E402
 from docs_workspace_config import (  # noqa: E402
     DocsStageConfig,
@@ -33,11 +33,11 @@ from docs_document_packages.source_records import (  # noqa: E402
 class DocumentPackageSourceContext:
     repo_root: Path
     stage: str
-    sub_scope: str
+    collection: str
     return_import_enabled: bool
     stage_config: DocsStageConfig
     source_root: Path
-    builder: DocsDataBuilder | SubScopeDocsBuilder
+    builder: DocsDataBuilder | CollectionDocsBuilder
     source_docs: list[DocRecord]
     records: list[DocumentPackageSourceRecord]
     records_by_id: dict[str, DocumentPackageSourceRecord]
@@ -63,26 +63,26 @@ def package_source_stage_config(repo_root: Path, stage: str) -> DocsStageConfig:
 def load_document_package_source_context(
     repo_root: Path,
     stage: str,
-    sub_scope: str = "",
+    collection: str = "",
 ) -> DocumentPackageSourceContext:
     root = repo_root.resolve()
     normalized_stage = str(stage or "").strip().lower()
     config = package_source_stage_config(root, normalized_stage)
-    normalized_sub_scope = str(sub_scope or "").strip().lower()
-    if normalized_sub_scope:
-        collection = resolve_managed_document_collection(
+    normalized_collection = str(collection or "").strip().lower()
+    if normalized_collection:
+        resolved_collection = resolve_managed_document_collection(
             root,
             stage=stage,
-            sub_scope=normalized_sub_scope,
+            collection=normalized_collection,
         )
-        normalized_stage = collection.stage
-        config = collection.parent_config
-        source_root = collection.source_root
-        return_import_enabled = collection.document_config.supports_return_import
-        builder: DocsDataBuilder | SubScopeDocsBuilder = SubScopeDocsBuilder(
+        normalized_stage = resolved_collection.stage
+        config = resolved_collection.parent_config
+        source_root = resolved_collection.source_root
+        return_import_enabled = resolved_collection.document_config.supports_return_import
+        builder: DocsDataBuilder | CollectionDocsBuilder = CollectionDocsBuilder(
             repo_root=root,
             config=config,
-            sub_scope=collection.document_config,
+            collection=resolved_collection.document_config,
         )
     else:
         source_root = resolve_workspace_path(root, document_source_path(config))
@@ -101,7 +101,7 @@ def load_document_package_source_context(
     context = DocumentPackageSourceContext(
         repo_root=root,
         stage=normalized_stage,
-        sub_scope=normalized_sub_scope,
+        collection=normalized_collection,
         return_import_enabled=return_import_enabled,
         stage_config=config,
         source_root=source_root,
@@ -140,6 +140,6 @@ def load_document_package_source_context(
 def load_document_package_source_records(
     repo_root: Path,
     stage: str,
-    sub_scope: str = "",
+    collection: str = "",
 ) -> list[DocumentPackageSourceRecord]:
-    return load_document_package_source_context(repo_root, stage, sub_scope).records
+    return load_document_package_source_context(repo_root, stage, collection).records

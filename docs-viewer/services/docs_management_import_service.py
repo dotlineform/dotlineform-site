@@ -22,8 +22,8 @@ def import_source_dependencies() -> import_source_service.ImportSourceDependenci
         perform_source_write_and_rebuild_atomic=(
             write_rebuild.perform_source_write_and_rebuild_atomic
         ),
-        perform_sub_scope_source_write_and_rebuild=(
-            write_rebuild.perform_sub_scope_source_write_and_rebuild
+        perform_collection_source_write_and_rebuild=(
+            write_rebuild.perform_collection_source_write_and_rebuild
         ),
     )
 
@@ -31,9 +31,11 @@ def import_source_dependencies() -> import_source_service.ImportSourceDependenci
 def ordinary_import_target_request(body: Dict[str, Any]) -> Dict[str, Any]:
     target = {"stage": body.get("stage")}
     if "scope" in body:
-        raise ValueError("scope is retired; use stage and optional sub_scope")
+        raise ValueError("scope is retired; use stage and optional collection")
     if "sub_scope" in body:
-        target["sub_scope"] = body.get("sub_scope")
+        raise ValueError("sub_scope is retired; use collection")
+    if "collection" in body:
+        target["collection"] = body.get("collection")
     return target
 
 

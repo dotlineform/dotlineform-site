@@ -33,7 +33,7 @@ function normalizeProjectionRecord(rawRecord, index) {
     throw new Error(`${field}.url is not a canonical public document location`);
   }
   if (record.url.includes("&subdoc=") !== Boolean(record.report_title)) {
-    throw new Error(`${field}.report_title must identify sub-scope placements only`);
+    throw new Error(`${field}.report_title must identify collection placements only`);
   }
   return Object.freeze(record);
 }

@@ -15,7 +15,7 @@ from docs_workspace_config import path_label
 def load_current_docs_context(
     repo_root: Path,
     stage: str,
-    sub_scope: str = "",
+    collection: str = "",
 ) -> tuple[dict[str, Any], list[dict[str, Any]]]:
     """Load current records from the exact package collection."""
 
@@ -32,7 +32,7 @@ def load_current_docs_context(
         loaded_context = docs_source_context.load_document_package_source_context(
             repo_root,
             stage,
-            sub_scope,
+            collection,
         )
     except (FileNotFoundError, json.JSONDecodeError, ValueError, RuntimeError, OSError) as exc:
         issues.append(issue("warning", "current_source_unreadable", f"current {stage} docs source context could not be read: {exc}"))

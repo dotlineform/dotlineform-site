@@ -36,19 +36,19 @@ def stage_capabilities(repo_root: Path, config: Any, static_html_export: dict[st
         "generated_search_reads": resolve_workspace_path(repo_root, generated_search_path(config)).exists(),
         "published_data_reads": published_available,
         "published_search_reads": published_available,
-        "sub_scope_lifecycle": {
+        "collection_lifecycle": {
             "create_eligible": True,
             "delete_eligible": False,
-            "sub_scopes": [
+            "collections": [
                 {
-                    "sub_scope": sub_scope.sub_scope,
-                    "title": sub_scope.title,
-                    "source": path_label(repo_root, document_source_path(sub_scope)),
-                    "output": path_label(repo_root, generated_documents_path(sub_scope)),
-                    "publish_output": path_label(repo_root, published_documents_path(sub_scope)),
+                    "collection": collection.collection,
+                    "title": collection.title,
+                    "source": path_label(repo_root, document_source_path(collection)),
+                    "output": path_label(repo_root, generated_documents_path(collection)),
+                    "publish_output": path_label(repo_root, published_documents_path(collection)),
                 }
-                for sub_scope in config.sub_scopes
-                if sub_scope.lifecycle is not None
+                for collection in config.collections
+                if collection.lifecycle is not None
             ],
         },
         "publishing": {
@@ -81,7 +81,7 @@ def stage_capabilities(repo_root: Path, config: Any, static_html_export: dict[st
         record["publishing"].update({key: config.stage == "pre-publish" for key in ("status", "confirm", "apply")})
         record["deploy_repo"] = {"available": False, "preview": False, "apply": False}
         if not authoring:
-            record["sub_scope_lifecycle"].update(create_eligible=False, delete_eligible=False)
+            record["collection_lifecycle"].update(create_eligible=False, delete_eligible=False)
     return record
 
 
@@ -106,7 +106,7 @@ def capabilities_payload(repo_root: Path) -> Dict[str, Any]:
         "pre_publish": {"preview": False, "apply": False},
         "publishing": {"status": False, "confirm": False, "apply": False},
         "deploy_repo": deployment,
-        "sub_scope_lifecycle": {"create_eligible": False, "delete_eligible": False, "sub_scopes": []},
+        "collection_lifecycle": {"create_eligible": False, "delete_eligible": False, "collections": []},
         "static_html_export": {"preview": False, "apply": False},
     }
     return {
@@ -132,7 +132,7 @@ def capabilities_payload(repo_root: Path) -> Dict[str, Any]:
             "document_delete": {
                 "preview": True,
                 "apply": True,
-                "sub_scope_detail": True,
+                "collection_detail": True,
             },
             "docs_import": {
                 "available": docs_import_workspace["available"],
@@ -148,7 +148,7 @@ def capabilities_payload(repo_root: Path) -> Dict[str, Any]:
                 "message": data_sharing_workspace["message"],
                 "workspace_root": data_sharing_workspace["root"],
             },
-            "sub_scope_lifecycle": {
+            "collection_lifecycle": {
                 "create_preview": True,
                 "create_apply": True,
                 "delete_preview": True,

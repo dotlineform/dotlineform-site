@@ -113,8 +113,8 @@ export function createDocsViewerManagementEventRouter(options = {}) {
       ["publish-docs", ["publish", { hideContextMenu: true, hideManageActionsMenu: true }]],
       ["pre-publish-docs", ["prePublish", { hideContextMenu: true, hideManageActionsMenu: true }]],
       ["new", ["createDoc", { hideContextMenu: true, hideManageActionsMenu: true }]],
-      ["new-sub-scope", ["createSubScope", { hideContextMenu: true, hideManageActionsMenu: true }]],
-      ["delete-sub-scope", ["deleteSubScope", { hideContextMenu: true, hideManageActionsMenu: true }]]
+      ["new-collection", ["createCollection", { hideContextMenu: true, hideManageActionsMenu: true }]],
+      ["delete-collection", ["deleteCollection", { hideContextMenu: true, hideManageActionsMenu: true }]]
     ]);
     var command = commandsByAction.get(actionId);
     if (!command || detail.eventType !== "click") return false;

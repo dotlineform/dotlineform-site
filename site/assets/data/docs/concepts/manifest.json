@@ -2,995 +2,1233 @@
   "docs": [
     {
       "doc_id": "d-20260727-225608-579c27",
-      "title": "absence"
+      "title": "absence",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-b5e4f7",
-      "title": "alienation"
+      "title": "alienation",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-51df31",
-      "title": "ambiguity"
+      "title": "ambiguity",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-79f04e",
-      "title": "angular"
+      "title": "angular",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-84a2a1",
-      "title": "animal"
+      "title": "animal",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-651586",
-      "title": "anxiety"
+      "title": "anxiety",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-208450",
-      "title": "architecture"
+      "title": "architecture",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-24dfb5",
-      "title": "astronomy"
+      "title": "astronomy",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-ac0827",
-      "title": "asymmetric"
+      "title": "asymmetric",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-ecb7a9",
-      "title": "attention"
+      "title": "attention",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-32e172",
-      "title": "awe"
+      "title": "awe",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-c4b45c",
-      "title": "balanced"
+      "title": "balanced",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-87a3e0",
-      "title": "becoming"
+      "title": "becoming",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-10fc9c",
-      "title": "biology"
+      "title": "biology",
+      "subject": null
     },
     {
       "doc_id": "d-20260624-204534-0d6ae2",
-      "title": "bird"
-    },
-    {
-      "doc_id": "d-20260727-225608-f7402d",
-      "title": "bird"
+      "title": "bird",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-932f79",
-      "title": "blurred"
+      "title": "blurred",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-7fbfa5",
-      "title": "body"
+      "title": "body",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-381c61",
-      "title": "botany"
+      "title": "botany",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-440ecd",
-      "title": "boundary"
+      "title": "boundary",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-833b94",
-      "title": "braided"
+      "title": "braided",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-84a22b",
-      "title": "branch"
+      "title": "branch",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-591e49",
-      "title": "branching"
+      "title": "branching",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-b85e09",
-      "title": "broken"
+      "title": "broken",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-ecf994",
-      "title": "building"
+      "title": "building",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-1e1df9",
-      "title": "calm"
+      "title": "calm",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-ecb267",
-      "title": "cellular"
+      "title": "cellular",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-75f272",
-      "title": "central"
+      "title": "central",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-8d753d",
-      "title": "chance"
+      "title": "chance",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-30dfef",
-      "title": "change"
+      "title": "change",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-afb0a7",
-      "title": "chaotic"
+      "title": "chaotic",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-0d540d",
-      "title": "clarity"
+      "title": "clarity",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-e546d0",
-      "title": "cloud"
+      "title": "cloud",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-0fa362",
-      "title": "cloudlike"
+      "title": "cloudlike",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-8b320d",
-      "title": "communication"
+      "title": "communication",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-cfc88e",
-      "title": "compressed"
+      "title": "compressed",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-616fda",
-      "title": "confusion"
+      "title": "confusion",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-45ac22",
-      "title": "connection"
+      "title": "connection",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-bed170",
-      "title": "consciousness"
+      "title": "consciousness",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-686651",
-      "title": "containment"
+      "title": "containment",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-3374bd",
-      "title": "contemplation"
+      "title": "contemplation",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-2497a8",
-      "title": "continuous"
+      "title": "continuous",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-330a89",
-      "title": "contour"
+      "title": "contour",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-f8abb3",
-      "title": "contoured"
+      "title": "contoured",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-8dc973",
-      "title": "control"
+      "title": "control",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-6d8930",
-      "title": "craft"
+      "title": "craft",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-21836e",
-      "title": "curve"
+      "title": "curve",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-a34891",
-      "title": "curvilinear"
+      "title": "curvilinear",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-db297c",
-      "title": "cutoff"
+      "title": "cutoff",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-c04eca",
-      "title": "cycle"
+      "title": "cycle",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-a60c24",
-      "title": "dark"
+      "title": "dark",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-78ee39",
-      "title": "decay"
+      "title": "decay",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-ca7056",
-      "title": "decoding"
+      "title": "decoding",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-2af018",
-      "title": "dense"
+      "title": "dense",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-c88144",
-      "title": "depth"
+      "title": "depth",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-1ee86d",
-      "title": "diagram"
+      "title": "diagram",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-be5e27",
-      "title": "digital"
+      "title": "digital",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-a45198",
-      "title": "dispersed"
+      "title": "dispersed",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-6c8101",
-      "title": "door"
+      "title": "door",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-90eabc",
-      "title": "dot"
+      "title": "dot",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-22f690",
-      "title": "drawing"
+      "title": "drawing",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-b5542c",
-      "title": "drift"
+      "title": "drift",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-44902d",
-      "title": "droplet"
+      "title": "droplet",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-f1e271",
-      "title": "duration"
+      "title": "duration",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-fb78ac",
-      "title": "ecology"
+      "title": "ecology",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-57a4c7",
-      "title": "edge"
+      "title": "edge",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-0d87ce",
-      "title": "embodiment"
+      "title": "embodiment",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-55e44d",
-      "title": "emergence"
+      "title": "emergence",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-0ccf1f",
-      "title": "emptiness"
+      "title": "emptiness",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-82cce1",
-      "title": "enclosed"
+      "title": "enclosed",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-11de40",
-      "title": "encoding"
+      "title": "encoding",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-295b0c",
-      "title": "entanglement"
+      "title": "entanglement",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-04889f",
-      "title": "eye"
+      "title": "eye",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-3cd1dd",
-      "title": "face"
+      "title": "face",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-32eda3",
-      "title": "fear"
+      "title": "fear",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-a607e0",
-      "title": "fence"
+      "title": "fence",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-531c17",
-      "title": "fiber"
+      "title": "fiber",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-c913bf",
-      "title": "field"
+      "title": "field",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-6c146c",
-      "title": "fieldlike"
+      "title": "fieldlike",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-4ab240",
-      "title": "figure"
+      "title": "figure",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-8a0601",
-      "title": "filament"
+      "title": "filament",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-3899cc",
-      "title": "flat"
+      "title": "flat",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-c21bf0",
-      "title": "flow"
+      "title": "flow",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-63967a",
-      "title": "flower"
+      "title": "flower",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-6f0bef",
-      "title": "fog"
+      "title": "fog",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-f3f980",
-      "title": "form"
+      "title": "form",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-0066f5",
-      "title": "fragility"
+      "title": "fragility",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-3bf2bc",
-      "title": "fragment"
+      "title": "fragment",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-e124eb",
-      "title": "fragmentation"
+      "title": "fragmentation",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-e8d7a7",
-      "title": "fragmented"
+      "title": "fragmented",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-f9d97a",
-      "title": "frame"
+      "title": "frame",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-ef31f9",
-      "title": "freedom"
+      "title": "freedom",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-3a5f20",
-      "title": "geology"
+      "title": "geology",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-ba99c7",
-      "title": "gesture"
+      "title": "gesture",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-d9afd4",
-      "title": "glitch"
+      "title": "glitch",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-34d9fb",
-      "title": "grainy"
+      "title": "grainy",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-c474d0",
-      "title": "granular"
+      "title": "granular",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-93f7d5",
-      "title": "grass"
+      "title": "grass",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-723889",
-      "title": "grid"
+      "title": "grid",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-aa54c9",
-      "title": "grief"
+      "title": "grief",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-fd71ef",
-      "title": "growth"
+      "title": "growth",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-dc2548",
-      "title": "hand"
+      "title": "hand",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-2d38a1",
-      "title": "hard"
+      "title": "hard",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-31a370",
-      "title": "hope"
+      "title": "hope",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-1091be",
-      "title": "i-ching"
+      "title": "i-ching",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-13749a",
-      "title": "identity"
+      "title": "identity",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-dd62ff",
-      "title": "information"
+      "title": "information",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-ce80bb",
-      "title": "insect"
+      "title": "insect",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-37bb5c",
-      "title": "interpretation"
+      "title": "interpretation",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-ef7408",
-      "title": "intimacy"
+      "title": "intimacy",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-107781",
-      "title": "joy"
+      "title": "joy",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-7927df",
-      "title": "knotted"
+      "title": "knotted",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-b61c55",
-      "title": "landscape"
+      "title": "landscape",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-9eb839",
-      "title": "language"
+      "title": "language",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-7abff3",
-      "title": "layered"
+      "title": "layered",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-bd3137",
-      "title": "leaf"
+      "title": "leaf",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-2c1b7a",
-      "title": "letter"
+      "title": "letter",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-e943ff",
-      "title": "lichen"
+      "title": "lichen",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-200179",
-      "title": "light"
+      "title": "light",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-85a70e",
-      "title": "line"
+      "title": "line",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-6e75fd",
-      "title": "linear"
+      "title": "linear",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-603ccd",
-      "title": "loop"
+      "title": "loop",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-b2a6f0",
-      "title": "looped"
+      "title": "looped",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-476c0b",
-      "title": "low-contrast"
+      "title": "low-contrast",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-20f785",
-      "title": "map"
+      "title": "map",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-012951",
-      "title": "margin"
+      "title": "margin",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-452c13",
-      "title": "mark"
+      "title": "mark",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-07e0eb",
-      "title": "materiality"
+      "title": "materiality",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-d39666",
-      "title": "mathematics"
+      "title": "mathematics",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-b7eb37",
-      "title": "maximal"
+      "title": "maximal",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-5cb64c",
-      "title": "melancholy"
+      "title": "melancholy",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-169780",
-      "title": "memory"
+      "title": "memory",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-38c206",
-      "title": "memory-trace"
+      "title": "memory-trace",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-7fe018",
-      "title": "micro-macro"
+      "title": "micro-macro",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-96dc3a",
-      "title": "minimal"
+      "title": "minimal",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-753567",
-      "title": "mirror"
+      "title": "mirror",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-955195",
-      "title": "monochrome"
+      "title": "monochrome",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-6cac49",
-      "title": "moon"
+      "title": "moon",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-7d2c08",
-      "title": "moss"
+      "title": "moss",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-422df7",
-      "title": "movement"
+      "title": "movement",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-84860c",
-      "title": "music"
+      "title": "music",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-626b4c",
-      "title": "myth"
+      "title": "myth",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-03e966",
-      "title": "nature"
+      "title": "nature",
+      "subject": null
     },
     {
       "doc_id": "d-20260624-204534-ecfc12",
-      "title": "nerve"
-    },
-    {
-      "doc_id": "d-20260727-225608-2517eb",
-      "title": "nerve"
+      "title": "nerve",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-438fab",
-      "title": "net"
+      "title": "net",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-6b3825",
-      "title": "netted"
+      "title": "netted",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-8104f2",
-      "title": "networks"
+      "title": "networks",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-6796ef",
-      "title": "noise"
+      "title": "noise",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-1bf2c3",
-      "title": "number"
+      "title": "number",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-23cb8e",
-      "title": "object"
+      "title": "object",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-0e1745",
-      "title": "open"
+      "title": "open",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-dbeb69",
-      "title": "order"
+      "title": "order",
+      "subject": null
     },
     {
       "doc_id": "d-20260624-204534-e3de0b",
-      "title": "ordered"
+      "title": "ordered",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-4c56a9",
-      "title": "overlay"
+      "title": "overlay",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-44c370",
-      "title": "overwhelm"
+      "title": "overwhelm",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-6e036f",
-      "title": "path"
+      "title": "path",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-f5791d",
-      "title": "pattern"
+      "title": "pattern",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-16b7b8",
-      "title": "perception"
+      "title": "perception",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-6250bf",
-      "title": "peripheral"
+      "title": "peripheral",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-0b3df4",
-      "title": "photography"
+      "title": "photography",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-58741a",
-      "title": "physics"
+      "title": "physics",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-b84d7e",
-      "title": "play"
+      "title": "play",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-9e62b8",
-      "title": "point"
+      "title": "point",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-27bc3b",
-      "title": "polychrome"
+      "title": "polychrome",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-4e62cb",
-      "title": "porous"
+      "title": "porous",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-2f1649",
-      "title": "presence"
+      "title": "presence",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-759902",
-      "title": "print"
+      "title": "print",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-d2e201",
-      "title": "quantum"
+      "title": "quantum",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-761a32",
-      "title": "quiet"
+      "title": "quiet",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-812ad8",
-      "title": "radial"
+      "title": "radial",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-085a6c",
-      "title": "rain"
+      "title": "rain",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-b10f2d",
-      "title": "random"
+      "title": "random",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-8258a1",
-      "title": "reconstruction"
+      "title": "reconstruction",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-60991f",
-      "title": "recurrence"
+      "title": "recurrence",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-a4d142",
-      "title": "reflection"
+      "title": "reflection",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-9c842f",
-      "title": "release"
+      "title": "release",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-3eabe1",
-      "title": "renewal"
+      "title": "renewal",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-520788",
-      "title": "repair"
+      "title": "repair",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-708a9e",
-      "title": "repetition"
+      "title": "repetition",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-e97d11",
-      "title": "resilience"
+      "title": "resilience",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-2a8ef3",
-      "title": "resistance"
+      "title": "resistance",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-6555f7",
-      "title": "restlessness"
+      "title": "restlessness",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-f589fc",
-      "title": "return"
+      "title": "return",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-5b31e2",
-      "title": "rhythmic"
+      "title": "rhythmic",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-d6cc89",
-      "title": "ritual"
+      "title": "ritual",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-52dcb3",
-      "title": "road"
+      "title": "road",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-36c93d",
-      "title": "rock"
+      "title": "rock",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-5296a2",
-      "title": "root"
+      "title": "root",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-d41939",
-      "title": "ruin"
+      "title": "ruin",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-8fec97",
-      "title": "sand"
+      "title": "sand",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-2dd29d",
-      "title": "scale"
+      "title": "scale",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-42c9e0",
-      "title": "science"
+      "title": "science",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-8d3c1d",
-      "title": "screen"
+      "title": "screen",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-2ded48",
-      "title": "seed"
+      "title": "seed",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-388a29",
-      "title": "shadow"
+      "title": "shadow",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-e18b6c",
-      "title": "shallow"
+      "title": "shallow",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-b2d217",
-      "title": "shape"
+      "title": "shape",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-6bdf47",
-      "title": "sharp"
+      "title": "sharp",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-c11b96",
-      "title": "signal"
+      "title": "signal",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-9b8192",
-      "title": "silhouette"
+      "title": "silhouette",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-99c3be",
-      "title": "skin"
+      "title": "skin",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-ed1025",
-      "title": "sky"
+      "title": "sky",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-3239cc",
-      "title": "slaughter"
+      "title": "slaughter",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-0813e3",
-      "title": "smooth"
+      "title": "smooth",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-dc0028",
-      "title": "soft"
+      "title": "soft",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-482c64",
-      "title": "sorrow"
+      "title": "sorrow",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-24efce",
-      "title": "sparse"
+      "title": "sparse",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-391f5b",
-      "title": "spiralling"
+      "title": "spiralling",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-25c814",
-      "title": "splash"
+      "title": "splash",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-e3851f",
-      "title": "stacked"
+      "title": "stacked",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-f543c8",
-      "title": "stain"
+      "title": "stain",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-933750",
-      "title": "stairs"
+      "title": "stairs",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-f5ddde",
-      "title": "stillness"
+      "title": "stillness",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-6f785e",
-      "title": "stone"
+      "title": "stone",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-7be84b",
-      "title": "stroke"
+      "title": "stroke",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-49e2d4",
-      "title": "sun"
+      "title": "sun",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-124217",
-      "title": "surface"
+      "title": "surface",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-43e86d",
-      "title": "symbol"
+      "title": "symbol",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-557834",
-      "title": "symmetric"
+      "title": "symmetric",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-3ccb9e",
-      "title": "system"
+      "title": "system",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-f16645",
-      "title": "tangled"
+      "title": "tangled",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-4c4195",
-      "title": "technology"
+      "title": "technology",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-2c1750",
-      "title": "tension"
+      "title": "tension",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-6c7384",
-      "title": "text"
+      "title": "text",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-fb0e11",
-      "title": "textured"
+      "title": "textured",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-ae606d",
-      "title": "threadlike"
+      "title": "threadlike",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-cbb3d7",
-      "title": "threshold"
+      "title": "threshold",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-edadc1",
-      "title": "time"
+      "title": "time",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-7893a2",
-      "title": "trace"
+      "title": "trace",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-12c5ee",
-      "title": "transformation"
+      "title": "transformation",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-8be4b8",
-      "title": "translation"
+      "title": "translation",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-e0e993",
-      "title": "tree"
+      "title": "tree",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-c7b1f6",
-      "title": "unbalanced"
+      "title": "unbalanced",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-c844db",
-      "title": "uncertainty"
+      "title": "uncertainty",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-d81ffc",
-      "title": "urban"
+      "title": "urban",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-8a8d26",
-      "title": "violent"
+      "title": "violent",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-80e8b0",
-      "title": "volumetric"
+      "title": "volumetric",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-1864ea",
-      "title": "wall"
+      "title": "wall",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-4c0762",
-      "title": "water"
+      "title": "water",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-a05992",
-      "title": "wave"
+      "title": "wave",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-b235c6",
-      "title": "weather"
+      "title": "weather",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-2fffa8",
-      "title": "weed"
+      "title": "weed",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-2a27c8",
-      "title": "window"
+      "title": "window",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-2617b3",
-      "title": "wire"
+      "title": "wire",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-ab4327",
-      "title": "wonder"
+      "title": "wonder",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-d0194d",
-      "title": "woven"
+      "title": "woven",
+      "subject": null
     },
     {
       "doc_id": "d-20260727-225608-defa99",
-      "title": "writing"
+      "title": "writing",
+      "subject": null
     }
   ]
 }

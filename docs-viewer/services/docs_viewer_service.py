@@ -383,8 +383,8 @@ def apply_capability_flags(payload: dict[str, object], config: DocsViewerService
         if isinstance(document_delete, dict):
             document_delete["preview"] = False
             document_delete["apply"] = False
-            document_delete["sub_scope_detail"] = False
-        lifecycle = capabilities.get("sub_scope_lifecycle")
+            document_delete["collection_detail"] = False
+        lifecycle = capabilities.get("collection_lifecycle")
         if isinstance(lifecycle, dict):
             for key in (
                 "create_apply",
@@ -407,7 +407,7 @@ def apply_capability_flags(payload: dict[str, object], config: DocsViewerService
                 stage_caps["document_authoring"] = False
                 for operation in ("pre_publish", "publishing", "deploy_repo", "static_html_export"):
                     stage_caps[operation] = {key: False for key in stage_caps.get(operation, {})}
-                stage_caps["sub_scope_lifecycle"].update(create_eligible=False, delete_eligible=False)
+                stage_caps["collection_lifecycle"].update(create_eligible=False, delete_eligible=False)
     if not config.generated_reads_enabled:
         stages = capabilities.get("stages")
         if isinstance(stages, dict):
@@ -514,17 +514,17 @@ class DocsViewerRequestHandler(QuietErrorLoggingMixin, BaseHTTPRequestHandler):
                 return
             self.send_published_docs_media(path)
             return
-        if path.startswith(generated_reads.EXTERNAL_SUB_SCOPE_GENERATED_PREFIX):
+        if path.startswith(generated_reads.EXTERNAL_COLLECTION_GENERATED_PREFIX):
             if not self.config.generated_reads_enabled:
                 self.send_json({"ok": False, "error": "Generated reads are disabled"}, HTTPStatus.FORBIDDEN)
                 return
-            self.send_external_sub_scope_payload(path)
+            self.send_external_collection_payload(path)
             return
-        if path.startswith(published_reads.EXTERNAL_SUB_SCOPE_PUBLISHED_PREFIX):
+        if path.startswith(published_reads.EXTERNAL_COLLECTION_PUBLISHED_PREFIX):
             if not self.config.generated_reads_enabled:
                 self.send_json({"ok": False, "error": "Published reads are disabled"}, HTTPStatus.FORBIDDEN)
                 return
-            self.send_external_published_sub_scope_payload(path)
+            self.send_external_published_collection_payload(path)
             return
         if path in routes.GET_PATHS:
             self.send_docs_api_json(path, query)
@@ -782,9 +782,9 @@ class DocsViewerRequestHandler(QuietErrorLoggingMixin, BaseHTTPRequestHandler):
         except RuntimeError as error:
             self.send_json({"ok": False, "error": str(error)}, HTTPStatus.INTERNAL_SERVER_ERROR)
 
-    def send_external_sub_scope_payload(self, request_path: str) -> None:
+    def send_external_collection_payload(self, request_path: str) -> None:
         try:
-            path = generated_reads.external_sub_scope_payload_path(self.repo_root, request_path)
+            path = generated_reads.external_collection_payload_path(self.repo_root, request_path)
             body = path.read_bytes()
             self.send_response(HTTPStatus.OK)
             self.send_cors_headers()
@@ -799,9 +799,9 @@ class DocsViewerRequestHandler(QuietErrorLoggingMixin, BaseHTTPRequestHandler):
         except ValueError as error:
             self.send_json({"ok": False, "error": str(error)}, HTTPStatus.BAD_REQUEST)
 
-    def send_external_published_sub_scope_payload(self, request_path: str) -> None:
+    def send_external_published_collection_payload(self, request_path: str) -> None:
         try:
-            path = published_reads.external_sub_scope_payload_path(
+            path = published_reads.external_collection_payload_path(
                 self.repo_root,
                 request_path,
             )

@@ -104,7 +104,7 @@ def synthetic_review_config(
         source=DocsSourceConfig(
             location=ArtifactLocation(provider=EXTERNAL_LOCAL_PROVIDER, path=source_dir),
             documents_path=Path("."),
-            sub_scopes_path=Path("."),
+            collections_path=Path("."),
         ),
         media=DocsMediaConfig(
             source_location=ArtifactLocation(
@@ -149,7 +149,7 @@ def synthetic_review_config(
         non_loadable_doc_ids=(),
         manage_only_tree_root_ids=(),
         allow_unresolved_parent_ids=False,
-        sub_scopes=(),
+        collections=(),
         search_fields=(),
     )
 

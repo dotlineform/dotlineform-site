@@ -92,8 +92,8 @@ def list_diagram_sources(repo_root: Path, params: dict[str, list[str]]) -> dict[
         "doc_id": target.doc_id,
         "sources": _verified_diagram_sources(repo_root, target),
     }
-    if target.sub_scope:
-        payload["sub_scope"] = target.sub_scope
+    if target.collection:
+        payload["collection"] = target.collection
     return payload
 
 
@@ -143,8 +143,8 @@ def open_diagram_source(
             "source_identity": target_record["source_identity"],
             "editor": editor,
         }
-        if target.sub_scope:
-            event["sub_scope"] = target.sub_scope
+        if target.collection:
+            event["collection"] = target.collection
         log_event(repo_root, "docs-open-diagram-source", event)
 
     payload: dict[str, object] = {
@@ -157,8 +157,8 @@ def open_diagram_source(
         "summary_text": f"Opened {target_record['source_identity']} in VS Code.",
         "dry_run": dry_run,
     }
-    if target.sub_scope:
-        payload["sub_scope"] = target.sub_scope
+    if target.collection:
+        payload["collection"] = target.collection
     return payload
 
 

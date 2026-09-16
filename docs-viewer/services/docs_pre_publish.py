@@ -9,7 +9,7 @@ from docs_workspace_config import load_docs_stage, document_source_path, resolve
 from docs_publish import _files_from_root, _lifecycle_root, files_revision
 from docs_source_model import SourceDoc, format_source, load_document_collection_docs_for_config
 from docs_write_rebuild import rebuild_stage_outputs
-from docs_subscope_customisations import prepare_sub_scope_publication
+from docs_collection_customisations import prepare_collection_publication
 from docs_publication_ignore import read_publication_ignore_ids
 
 
@@ -28,8 +28,8 @@ def excluded_documents(docs: list[SourceDoc], *, ignored_ids: frozenset[str] = f
 
 def promoted_source(doc: SourceDoc, collection: Any) -> bytes:
     """Retain ordinary source bytes; only the collection owner can project its fields."""
-    front_matter = prepare_sub_scope_publication(
-        getattr(collection, "sub_scope_customisation", None), doc.front_matter,
+    front_matter = prepare_collection_publication(
+        getattr(collection, "collection_customisation", None), doc.front_matter,
     )
     if front_matter == doc.front_matter:
         return doc.path.read_bytes()
@@ -43,7 +43,7 @@ def _plan(repo_root: Path, body: dict[str, Any]) -> tuple[dict[str, Any], dict[P
         raise ValueError("scope is retired; Pre-publish requires stage working")
     working = load_docs_stage(repo_root, "working")
     target = load_docs_stage(repo_root, "pre-publish")
-    if {child.sub_scope for child in working.sub_scopes} != {child.sub_scope for child in target.sub_scopes}:
+    if {child.collection for child in working.collections} != {child.collection for child in target.collections}:
         raise ValueError("Working and Pre-publish must configure the same collections")
     source_root = _lifecycle_root(repo_root, working, "source")
     target_root = _lifecycle_root(repo_root, target, "source")
@@ -56,13 +56,13 @@ def _plan(repo_root: Path, body: dict[str, Any]) -> tuple[dict[str, Any], dict[P
     excluded = set(ordinary_excluded)
     hosts: dict[str, list[str]] = {}
     for doc in ordinary:
-        if doc.report is not None and doc.report.id == "docs_subscope":
-            hosts.setdefault(str(doc.report.sub_scope), []).append(doc.doc_id)
+        if doc.report is not None and doc.report.id == "docs_collection":
+            hosts.setdefault(str(doc.report.collection), []).append(doc.doc_id)
     desired: dict[Path, bytes] = {}
     counts: dict[str, int] = {}
     eligible: list[str] = []
-    for collection in (working, *working.sub_scopes):
-        child = str(getattr(collection, "sub_scope", ""))
+    for collection in (working, *working.collections):
+        child = str(getattr(collection, "collection", ""))
         docs = ordinary if not child else load_document_collection_docs_for_config(repo_root, working, collection)
         rejected = excluded_documents(docs) if child else set(ordinary_excluded)
         if child:
@@ -78,7 +78,7 @@ def _plan(repo_root: Path, body: dict[str, Any]) -> tuple[dict[str, Any], dict[P
         for doc in accepted:
             desired[doc.path.relative_to(source_root)] = promoted_source(doc, collection)
         # Media is a collection-owned input. The ordinary Build resolves its outputs.
-        prefix = Path("sub-scopes") / child / "media" if child else Path("media")
+        prefix = Path("collections") / child / "media" if child else Path("media")
         if accepted:
             desired.update({path: data for path, data in source_files.items() if path.is_relative_to(prefix)})
     if files_revision(_files_from_root(source_root)) != source_revision:
@@ -128,7 +128,7 @@ def apply_pre_publish(repo_root: Path, body: dict[str, Any]) -> dict[str, Any]:
         path = source_root / relative
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_bytes(data)
-    for collection in (config, *config.sub_scopes):
+    for collection in (config, *config.collections):
         documents = resolve_workspace_path(repo_root, document_source_path(collection))
         documents.mkdir(parents=True, exist_ok=True)
         for media_type in ("img", "svg", "files", "html", "build-source/mermaid"):

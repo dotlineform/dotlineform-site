@@ -67,7 +67,7 @@ export function createDocsImportCollectionController(options = {}) {
     sourceDirectory: "",
     sourceFormat: "",
     stage: "",
-    subScope: "",
+    collection: "",
     plan: null,
     result: null,
     terminalDetail: null,
@@ -106,7 +106,7 @@ export function createDocsImportCollectionController(options = {}) {
     state.sourceDirectory = "";
     state.sourceFormat = "";
     state.stage = "";
-    state.subScope = "";
+    state.collection = "";
     state.plan = null;
     state.result = null;
     state.terminalDetail = null;
@@ -173,34 +173,34 @@ export function createDocsImportCollectionController(options = {}) {
 
   function exactCollectionTarget(payload, context) {
     const target = payload && payload.target;
-    const targetSubScope = normalizeText(target && target.sub_scope).toLowerCase();
+    const targetCollection = normalizeText(target && target.collection).toLowerCase();
     const targetDocId = normalizeText(target && target.doc_id);
     if (
       normalizeText(target && target.stage) !== state.stage
       || targetDocId
       || (
-        state.subScope
-          ? targetSubScope !== state.subScope
-          : Boolean(targetSubScope)
+        state.collection
+          ? targetCollection !== state.collection
+          : Boolean(targetCollection)
       )
     ) {
       throw new Error(`Docs Import ${context} did not match the requested collection.`);
     }
     return {
       ...(state.stage ? { stage: state.stage } : {}),
-      ...(targetSubScope ? { sub_scope: targetSubScope } : {})
+      ...(targetCollection ? { collection: targetCollection } : {})
     };
   }
 
   async function preview({
     file,
     stage = "",
-    subScope = "",
+    collection = "",
     sourceDirectory = "",
     managementBaseUrl = ""
   } = {}) {
     const stagedFilename = normalizeText(file && file.filename);
-    const normalizedSubScope = normalizeText(subScope).toLowerCase();
+    const normalizedCollection = normalizeText(collection).toLowerCase();
     const normalizedSourceDirectory = normalizeText(sourceDirectory);
     const sourceFormat = normalizeText(file && file.source_format);
     if (
@@ -212,9 +212,9 @@ export function createDocsImportCollectionController(options = {}) {
       throw new Error(importText("collectionRequired"));
     }
     if (
-      normalizedSubScope
+      normalizedCollection
       && (
-        normalizeText(file && file.sub_scope).toLowerCase() !== normalizedSubScope
+        normalizeText(file && file.collection).toLowerCase() !== normalizedCollection
         || file.supports_return_import !== true
       )
     ) {
@@ -226,7 +226,7 @@ export function createDocsImportCollectionController(options = {}) {
     state.sourceDirectory = normalizedSourceDirectory;
     state.sourceFormat = sourceFormat;
     state.stage = normalizeText(stage);
-    state.subScope = normalizedSubScope;
+    state.collection = normalizedCollection;
     state.managementBaseUrl = normalizeText(managementBaseUrl);
     state.plan = null;
     state.result = null;
@@ -237,7 +237,7 @@ export function createDocsImportCollectionController(options = {}) {
     try {
       const payload = await fetchManagementJson("/docs/import-source", "POST", {
         ...(state.stage ? { stage: state.stage } : {}),
-        ...(normalizedSubScope ? { sub_scope: normalizedSubScope } : {}),
+        ...(normalizedCollection ? { collection: normalizedCollection } : {}),
         source_directory: normalizedSourceDirectory,
         staged_filename: stagedFilename,
         preview_only: true
@@ -288,7 +288,7 @@ export function createDocsImportCollectionController(options = {}) {
     try {
       const payload = await fetchManagementJson("/docs/import-source", "POST", {
         ...(state.stage ? { stage: state.stage } : {}),
-        ...(state.subScope ? { sub_scope: state.subScope } : {}),
+        ...(state.collection ? { collection: state.collection } : {}),
         source_directory: state.sourceDirectory,
         staged_filename: state.stagedFilename,
         preview_only: false,
@@ -329,24 +329,24 @@ export function createDocsImportCollectionController(options = {}) {
         );
         state.result = payload;
         const completed = payload.outcome === "completed";
-        state.phase = state.subScope && !completed ? "confirmation" : "result";
+        state.phase = state.collection && !completed ? "confirmation" : "result";
         setStatus(statusNode, completed ? "success" : "error", importText("collectionResultStatus", {
           outcome: normalizeText(payload.outcome) || "unknown"
         }));
-        if (!state.subScope || completed) {
+        if (!state.collection || completed) {
           const displayedRecord = (Array.isArray(payload.records) ? payload.records : []).find((record) => (
             record && (record.status === "created" || record.status === "overwritten") && normalizeText(record.doc_id)
           )) || null;
           const terminalDetail = {
             ...(state.stage ? { stage: state.stage } : {}),
-            subScope: state.subScope,
+            collection: state.collection,
             docId: normalizeText(displayedRecord && displayedRecord.doc_id),
             target,
             destinationUrl: destination.href,
             result: payload
           };
           try {
-            if (state.subScope) {
+            if (state.collection) {
               await projectTerminalDetail(terminalDetail);
             } else {
               await onTerminalResult(terminalDetail);
@@ -383,7 +383,7 @@ export function createDocsImportCollectionController(options = {}) {
       phase: state.phase,
       stagedFilename: state.stagedFilename,
       sourceFormat: state.sourceFormat,
-      subScope: state.subScope,
+      collection: state.collection,
       busy: state.busy
     })
   };

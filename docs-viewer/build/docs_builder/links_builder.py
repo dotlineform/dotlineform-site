@@ -78,9 +78,9 @@ class _DocumentRefresh:
     def __init__(self, builder: DocsDataBuilder, plan: dict[str, Any], *, write: bool):
         self.builder = builder
         self.config = builder.config
-        self.collection = getattr(builder, "sub_scope_id", "")
+        self.collection = getattr(builder, "collection_id", "")
         self.ignored_ids = working_ignored_doc_ids(builder.repo_root, self.config)
-        self.owners = {"": self.config, **{owner.sub_scope: owner for owner in self.config.sub_scopes}}
+        self.owners = {"": self.config, **{owner.collection: owner for owner in self.config.collections}}
         self.sources = {name: resolve_workspace_path(builder.repo_root, document_source_path(owner)) for name, owner in self.owners.items()}
         self.outputs = {name: resolve_workspace_path(builder.repo_root, generated_documents_path(owner)) / "by-id" for name, owner in self.owners.items()}
         if builder.source_dir != self.sources[self.collection] or builder.items_dir != self.outputs[self.collection]:
@@ -98,22 +98,22 @@ class _DocumentRefresh:
         return DocumentTarget(self.config.stage, self.collection, doc_id)
 
     def validate_target(self, target: DocumentTarget) -> None:
-        if target.stage != self.config.stage or target.sub_scope not in self.owners or not is_immutable_doc_id(target.doc_id):
+        if target.stage != self.config.stage or target.collection not in self.owners or not is_immutable_doc_id(target.doc_id):
             raise ValueError("Links requires an exact configured document identity")
 
     def payload(self, target: DocumentTarget, *, require_eligible: bool = True) -> dict[str, Any] | None:
         """Read one exact generated destination, including its source identity guard."""
         self.validate_target(target)
-        source = _safe_path(self.sources[target.sub_scope], f"{target.doc_id}.md")
+        source = _safe_path(self.sources[target.collection], f"{target.doc_id}.md")
         doc = self.docs.get(target)
         if not source.is_file():
             return None
         metadata = doc.front_matter if doc else parse_source(source)[0]
         if metadata.get("doc_id") != target.doc_id:
             raise ValueError("Links source document identity does not match")
-        if require_eligible and not target.sub_scope and target.doc_id in self.ignored_ids:
+        if require_eligible and not target.collection and target.doc_id in self.ignored_ids:
             return None
-        path = _safe_path(self.outputs[target.sub_scope], f"{target.doc_id}.json")
+        path = _safe_path(self.outputs[target.collection], f"{target.doc_id}.json")
         if target in self.pending and doc:
             return {"doc_id": target.doc_id, "report": doc.report.as_payload() if doc.report else None}
         if not path.is_file():
@@ -133,9 +133,9 @@ class _DocumentRefresh:
         if child:
             host = self.payload(DocumentTarget(self.config.stage, "", doc_id), require_eligible=False)
             report = host.get("report") if host else None
-            if not isinstance(report, dict) or report.get("id") != "docs_subscope":
+            if not isinstance(report, dict) or report.get("id") != "docs_collection":
                 return None
-            collection = report.get("sub_scope", "")
+            collection = report.get("collection", "")
             if not collection or collection not in self.owners:
                 return None
         target = DocumentTarget(self.config.stage, collection, child or doc_id)
@@ -169,7 +169,7 @@ class _DocumentRefresh:
         self.original[target] = text
         record = read_relationship_payload(json.loads(text), target) if text is not None else None
         if record is None:
-            self.warnings.append(f"Missing Links JSON for {target.stage}/{target.sub_scope or '(parent)'}/{target.doc_id}; Links update skipped")
+            self.warnings.append(f"Missing Links JSON for {target.stage}/{target.collection or '(parent)'}/{target.doc_id}; Links update skipped")
         else:
             for neighbour in record.incoming.keys() | record.outgoing.keys():
                 self.validate_target(neighbour)
@@ -195,7 +195,7 @@ class _DocumentRefresh:
         record = read_relationship_payload(payload, owner)
         if owner == target:
             return
-        if owner.doc_id != target.doc_id or _safe_path(self.sources[owner.sub_scope], f"{owner.doc_id}.md").exists():
+        if owner.doc_id != target.doc_id or _safe_path(self.sources[owner.collection], f"{owner.doc_id}.md").exists():
             raise ValueError("Links initial creation conflicts with an existing document identity")
         self.records[target] = record
         self.original[target] = text
@@ -215,7 +215,7 @@ class _DocumentRefresh:
             elif resolved and resolved["kind"] == "source_markdown":
                 raw = urlsplit(authored)
                 if not raw.scheme and not raw.netloc:
-                    source = self.sources[target.sub_scope] / unquote(raw.path)
+                    source = self.sources[target.collection] / unquote(raw.path)
                     for collection, root in self.sources.items():
                         if source.resolve().parent == root.resolve() and source.is_file():
                             source = _safe_path(root, source.name)
@@ -292,13 +292,13 @@ def build_document_links(builder: DocsDataBuilder, plan: dict[str, Any] | None, 
         for doc_id in sorted(plan["new_doc_ids"]):
             key = refresh.key(doc_id)
             doc = refresh.docs[key]
-            if key.sub_scope or key.doc_id not in refresh.ignored_ids:
+            if key.collection or key.doc_id not in refresh.ignored_ids:
                 refresh.admit_created(key, doc)
         added = deleted = 0
         for doc_id in sorted(plan["doc_ids"]):
             key = refresh.key(doc_id)
             doc = refresh.docs.get(key)
-            if doc is not None and not key.sub_scope and key.doc_id in refresh.ignored_ids:
+            if doc is not None and not key.collection and key.doc_id in refresh.ignored_ids:
                 continue
             new, removed = refresh.refresh(key, doc)
             added += new

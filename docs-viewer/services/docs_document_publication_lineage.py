@@ -15,10 +15,10 @@ from docs_workspace_config import (
     load_docs_stage,
     resolve_workspace_path,
 )
-from docs_subscope_customisations import (
+from docs_collection_customisations import (
     LINEAGE_EDITORIAL_ROLE,
     LINEAGE_SOURCE_ROLE,
-    sub_scope_customisation_document_lineage_contracts,
+    collection_customisation_document_lineage_contracts,
 )
 
 
@@ -31,10 +31,10 @@ UTC_TIMESTAMP_FORMAT = "%Y-%m-%dT%H:%M:%SZ"
 @dataclass(frozen=True, order=True)
 class DocumentLineageCollection:
     stage: str
-    sub_scope: str
+    collection: str
 
     def payload(self) -> dict[str, str]:
-        return {"stage": self.stage, "sub_scope": self.sub_scope}
+        return {"stage": self.stage, "collection": self.collection}
 
 
 @dataclass(frozen=True, order=True)
@@ -151,14 +151,14 @@ def _published_url(raw: Any, *, field: str) -> str | None:
 
 
 def _collection(raw: Any, *, field: str) -> DocumentLineageCollection:
-    payload = _strict_object(raw, field=field, keys={"stage", "sub_scope"})
+    payload = _strict_object(raw, field=field, keys={"stage", "collection"})
     if payload["stage"] != "working":
         raise ValueError(f"{field}.stage must identify Working")
     return DocumentLineageCollection(
         stage=payload["stage"],
-        sub_scope=_required_text(
-            payload["sub_scope"],
-            field=f"{field}.sub_scope",
+        collection=_required_text(
+            payload["collection"],
+            field=f"{field}.collection",
         ),
     )
 
@@ -290,19 +290,19 @@ def _validated_table(table: DocumentLineageTable) -> DocumentLineageTable:
 def empty_table(
     *,
     working_stage: str,
-    working_sub_scope: str,
+    working_collection: str,
     editorial_stage: str,
-    editorial_sub_scope: str,
+    editorial_collection: str,
 ) -> DocumentLineageTable:
     return _validated_table(
         DocumentLineageTable(
             working_collection=DocumentLineageCollection(
                 stage=working_stage,
-                sub_scope=working_sub_scope,
+                collection=working_collection,
             ),
             editorial_collection=DocumentLineageCollection(
                 stage=editorial_stage,
-                sub_scope=editorial_sub_scope,
+                collection=editorial_collection,
             ),
             records=(),
         )
@@ -324,24 +324,24 @@ def configured_workflows(repo_root: Path) -> tuple[DocumentLineageWorkflow, ...]
         dict[str, list[tuple[DocumentLineageCollection, Path]]],
     ] = {}
     config = load_docs_stage(repo_root, "working")
-    for sub_scope in config.sub_scopes:
-        collection = DocumentLineageCollection(
+    for collection in config.collections:
+        resolved_collection = DocumentLineageCollection(
             stage=config.stage,
-            sub_scope=sub_scope.sub_scope,
+            collection=collection.collection,
         )
         documents_root = resolve_workspace_path(
             repo_root,
-            document_source_path(sub_scope),
+            document_source_path(collection),
         )
-        for aspect in sub_scope_customisation_document_lineage_contracts(
-            sub_scope.sub_scope_customisation
+        for aspect in collection_customisation_document_lineage_contracts(
+            collection.collection_customisation
         ):
             roles = roles_by_contract.setdefault(
                 aspect.contract_id,
                 {LINEAGE_SOURCE_ROLE: [], LINEAGE_EDITORIAL_ROLE: []},
             )
             roles[aspect.role].append(
-                (collection, documents_root.parent / LINEAGE_RELATIVE_PATH)
+                (resolved_collection, documents_root.parent / LINEAGE_RELATIVE_PATH)
             )
 
     workflows: list[DocumentLineageWorkflow] = []
@@ -544,16 +544,16 @@ def apply_document_deletes(
     repo_root: Path,
     *,
     stage: str,
-    sub_scope: str,
+    collection: str,
     doc_ids: Iterable[str],
 ) -> DocumentLineageDeleteResult:
     """Remove exact Working records or Editorial children after confirmed Delete."""
 
     target_collection = DocumentLineageCollection(
         stage=_required_text(stage, field="delete collection.stage"),
-        sub_scope=_required_text(
-            sub_scope,
-            field="delete collection.sub_scope",
+        collection=_required_text(
+            collection,
+            field="delete collection.collection",
         ),
     )
     deleted_doc_ids = {
@@ -629,12 +629,12 @@ def project_publications(
     table: DocumentLineageTable | None,
     *,
     editorial_stage: str,
-    editorial_sub_scope: str,
+    editorial_collection: str,
     publication_urls: Mapping[str, str],
 ) -> DocumentLineageTable | None:
     if table is None or table.editorial_collection != DocumentLineageCollection(
         editorial_stage,
-        editorial_sub_scope,
+        editorial_collection,
     ):
         return table
     records: list[DocumentLineageRecord] = []

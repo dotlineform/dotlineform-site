@@ -134,7 +134,7 @@ export function createDocsViewerGeneratedDataRuntime(options) {
   function readDocumentLinks(target, options) {
     var staticBase = String(options && options.linksByIdUrlBase || "").replace(/\/$/, "");
     var path = managementReloadPath("/docs/links", {
-      stage: target.stage, sub_scope: target.sub_scope, doc_id: target.doc_id
+      stage: target.stage, collection: target.collection, doc_id: target.doc_id
     });
     return fetchPreferredGeneratedJson(
       staticBase ? staticBase + "/" + encodeURIComponent(target.doc_id) + ".json" : "",

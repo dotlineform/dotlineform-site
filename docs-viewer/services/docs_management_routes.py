@@ -58,10 +58,10 @@ PRE_PUBLISH_APPLY_PATH = "/docs/pre-publish/apply"
 MOVE_PATH = "/docs/move"
 DELETE_PREVIEW_PATH = "/docs/delete-preview"
 DELETE_APPLY_PATH = "/docs/delete-apply"
-SUB_SCOPE_CREATE_PREVIEW_PATH = "/docs/sub-scopes/create-preview"
-SUB_SCOPE_CREATE_APPLY_PATH = "/docs/sub-scopes/create-apply"
-SUB_SCOPE_DELETE_PREVIEW_PATH = "/docs/sub-scopes/delete-preview"
-SUB_SCOPE_DELETE_APPLY_PATH = "/docs/sub-scopes/delete-apply"
+COLLECTION_CREATE_PREVIEW_PATH = "/docs/collections/create-preview"
+COLLECTION_CREATE_APPLY_PATH = "/docs/collections/create-apply"
+COLLECTION_DELETE_PREVIEW_PATH = "/docs/collections/delete-preview"
+COLLECTION_DELETE_APPLY_PATH = "/docs/collections/delete-apply"
 PUBLISH_STATUS_PATH = "/docs/publish/status"
 PUBLISH_CONFIRM_PATH = "/docs/publish/confirm"
 PUBLISH_APPLY_PATH = "/docs/publish/apply"
@@ -131,10 +131,10 @@ POST_PATHS = (
     MOVE_PATH,
     DELETE_PREVIEW_PATH,
     DELETE_APPLY_PATH,
-    SUB_SCOPE_CREATE_PREVIEW_PATH,
-    SUB_SCOPE_CREATE_APPLY_PATH,
-    SUB_SCOPE_DELETE_PREVIEW_PATH,
-    SUB_SCOPE_DELETE_APPLY_PATH,
+    COLLECTION_CREATE_PREVIEW_PATH,
+    COLLECTION_CREATE_APPLY_PATH,
+    COLLECTION_DELETE_PREVIEW_PATH,
+    COLLECTION_DELETE_APPLY_PATH,
     PUBLISH_CONFIRM_PATH,
     PUBLISH_APPLY_PATH,
     DEPLOY_REPO_PREVIEW_PATH,

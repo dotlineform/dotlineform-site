@@ -52,7 +52,7 @@ class DocsDataBuilder(
     ) -> None:
         self.repo_root = repo_root.resolve()
         self.config = config
-        self.media_owner = getattr(self, "sub_scope_config", config)
+        self.media_owner = getattr(self, "collection_config", config)
         self.workspace = load_docs_workspace_config(self.repo_root)
         self.report_source_contract = None
         self.source_dir = resolve_workspace_path(self.repo_root, source_dir or document_source_path(config))

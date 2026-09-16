@@ -35,9 +35,9 @@ export function formatText(template, tokens) {
   return text;
 }
 
-export function normalizeDocsViewerSubScopeCustomisation(rawCustomisation) {
+export function normalizeDocsViewerCollectionCustomisation(rawCustomisation) {
   if (!rawCustomisation || typeof rawCustomisation !== "object" || Array.isArray(rawCustomisation)) {
-    throw new Error("Docs Viewer sub_scope_customisation must be an object.");
+    throw new Error("Docs Viewer collection_customisation must be an object.");
   }
   var customisationKeys = Object.keys(rawCustomisation).sort();
   if (
@@ -49,12 +49,12 @@ export function normalizeDocsViewerSubScopeCustomisation(rawCustomisation) {
     })
   ) {
     throw new Error(
-      "Docs Viewer sub_scope_customisation must contain id and optional capabilities."
+      "Docs Viewer collection_customisation must contain id and optional capabilities."
     );
   }
   var customisationId = String(rawCustomisation.id || "").trim();
   if (!/^[a-z][a-z0-9_]*$/.test(customisationId)) {
-    throw new Error("Docs Viewer sub_scope_customisation id is invalid.");
+    throw new Error("Docs Viewer collection_customisation id is invalid.");
   }
   if (!Object.prototype.hasOwnProperty.call(rawCustomisation, "capabilities")) {
     return Object.freeze({ id: customisationId });
@@ -62,7 +62,7 @@ export function normalizeDocsViewerSubScopeCustomisation(rawCustomisation) {
 
   var rawCapabilities = rawCustomisation.capabilities;
   if (!rawCapabilities || typeof rawCapabilities !== "object" || Array.isArray(rawCapabilities)) {
-    throw new Error("Docs Viewer sub_scope_customisation capabilities must be an object.");
+    throw new Error("Docs Viewer collection_customisation capabilities must be an object.");
   }
   var capabilityKeys = Object.keys(rawCapabilities).sort();
   if (
@@ -72,7 +72,7 @@ export function normalizeDocsViewerSubScopeCustomisation(rawCustomisation) {
     })
   ) {
     throw new Error(
-      "Docs Viewer sub_scope_customisation capabilities contains an invalid field."
+      "Docs Viewer collection_customisation capabilities contains an invalid field."
     );
   }
   var capabilities = {};
@@ -80,7 +80,7 @@ export function normalizeDocsViewerSubScopeCustomisation(rawCustomisation) {
     var rawGroups = rawCapabilities.assignable_field_groups;
     if (!Array.isArray(rawGroups) || !rawGroups.length) {
       throw new Error(
-        "Docs Viewer sub_scope_customisation assignable_field_groups must be a non-empty array."
+        "Docs Viewer collection_customisation assignable_field_groups must be a non-empty array."
       );
     }
     var seen = new Set();
@@ -88,7 +88,7 @@ export function normalizeDocsViewerSubScopeCustomisation(rawCustomisation) {
       var groupId = String(rawGroup || "").trim();
       if (!/^[a-z][a-z0-9_]*$/.test(groupId) || seen.has(groupId)) {
         throw new Error(
-          "Docs Viewer sub_scope_customisation assignable_field_groups contains an invalid or duplicate id."
+          "Docs Viewer collection_customisation assignable_field_groups contains an invalid or duplicate id."
         );
       }
       seen.add(groupId);
@@ -121,33 +121,33 @@ export function initDocsViewerConfigController(context) {
   if (!workspaceConfig.stageConfigsById) workspaceConfig.stageConfigsById = new Map();
   if (!Array.isArray(documentIndex.docs)) documentIndex.docs = [];
 
-  function normalizeSubScopeConfig(rawSubScope) {
-    if (!rawSubScope || typeof rawSubScope !== "object") return null;
-    var subScope = String(rawSubScope.sub_scope || "").trim().toLowerCase();
-    if (!subScope) return null;
-    var manifestUrl = String(rawSubScope.manifest_url || "").trim();
-    var byIdUrlBase = String(rawSubScope.by_id_url_base || "").trim().replace(/\/+$/, "");
+  function normalizeCollectionConfig(rawCollection) {
+    if (!rawCollection || typeof rawCollection !== "object") return null;
+    var collection = String(rawCollection.collection || "").trim().toLowerCase();
+    if (!collection) return null;
+    var manifestUrl = String(rawCollection.manifest_url || "").trim();
+    var byIdUrlBase = String(rawCollection.by_id_url_base || "").trim().replace(/\/+$/, "");
     if (!manifestUrl || !byIdUrlBase) return null;
-    var subScopeCustomisation = null;
-    if (Object.prototype.hasOwnProperty.call(rawSubScope, "sub_scope_customisation")) {
-      subScopeCustomisation = normalizeDocsViewerSubScopeCustomisation(
-        rawSubScope.sub_scope_customisation
+    var collectionCustomisation = null;
+    if (Object.prototype.hasOwnProperty.call(rawCollection, "collection_customisation")) {
+      collectionCustomisation = normalizeDocsViewerCollectionCustomisation(
+        rawCollection.collection_customisation
       );
     }
     return {
-      subScope: subScope,
-      title: String(rawSubScope.title || "").trim(),
+      collection: collection,
+      title: String(rawCollection.title || "").trim(),
       manifestUrl: manifestUrl,
       byIdUrlBase: byIdUrlBase,
-      subScopeCustomisation: subScopeCustomisation
+      collectionCustomisation: collectionCustomisation
     };
   }
 
   function normalizeBrowserConfig(raw) {
     if (!raw || typeof raw !== "object" || Array.isArray(raw)) throw new Error("Docs Viewer configuration must be an object.");
-    var children = (raw.sub_scopes || []).map(normalizeSubScopeConfig);
-    if (children.some(function (child) { return !child; }) || new Set(children.map(function (child) { return child.subScope; })).size !== children.length) {
-      throw new Error("Docs Viewer sub-scopes require unique configured identities and payload URLs.");
+    var children = (raw.collections || []).map(normalizeCollectionConfig);
+    if (children.some(function (child) { return !child; }) || new Set(children.map(function (child) { return child.collection; })).size !== children.length) {
+      throw new Error("Docs Viewer collections require unique configured identities and payload URLs.");
     }
     var config = {
       stage: String(raw.stage || ""),
@@ -158,8 +158,8 @@ export function initDocsViewerConfigController(context) {
       backlinksUrl: String(raw.backlinks_url || ""),
       linksEnabled: raw.links_enabled === true,
       searchIndexUrl: String(raw.search_index_url || ""),
-      subScopes: children,
-      subScopesById: new Map(children.map(function (child) { return [child.subScope, child]; }))
+      collections: children,
+      collectionsById: new Map(children.map(function (child) { return [child.collection, child]; }))
     };
     if (!config.viewerBaseUrl || !config.indexTreeUrl
         || context.featurePolicy.recent && !config.recentUrl
@@ -170,7 +170,7 @@ export function initDocsViewerConfigController(context) {
   }
 
   function normalizeConfigEnvelope(payload) {
-    if (!payload || payload.schema_version !== "docs_viewer_config_v2") {
+    if (!payload || payload.schema_version !== "docs_viewer_config_v3") {
       throw new Error("Docs Viewer config has an unsupported schema.");
     }
     return {

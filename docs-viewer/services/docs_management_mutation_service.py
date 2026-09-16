@@ -8,18 +8,18 @@ from typing import Any, Dict
 import docs_management_mutations as mutations
 from docs_workspace_config import load_docs_stage, require_document_authoring
 import docs_source_config_settings
-import docs_sub_scope_lifecycle
+import docs_collection_lifecycle
 import docs_source_model as source_model
 import docs_write_rebuild as write_rebuild
-from docs_workspace_config import normalize_sub_scope_id
+from docs_workspace_config import normalize_collection_id
 from docs_management_context import log_event
 
 
-class SubScopeDocumentDeleteApplyError(RuntimeError):
+class CollectionDocumentDeleteApplyError(RuntimeError):
     """A child delete was compensated after its generated rebuild failed."""
 
     def __init__(self, payload: Dict[str, Any]) -> None:
-        super().__init__(str(payload.get("error") or "sub-scope document delete failed"))
+        super().__init__(str(payload.get("error") or "collection document delete failed"))
         self.payload = payload
 
 
@@ -73,7 +73,7 @@ def create_committed_error_payload(
     return payload
 
 
-def recover_sub_scope_document_delete(
+def recover_collection_document_delete(
     repo_root: Path,
     plan: mutations.ManagementMutationPlan,
     initial_error: Exception,
@@ -104,12 +104,12 @@ def recover_sub_scope_document_delete(
             return False
 
     try:
-        recovery_rebuild = write_rebuild.perform_sub_scope_source_write_and_rebuild(
+        recovery_rebuild = write_rebuild.perform_collection_source_write_and_rebuild(
             repo_root,
-            plan.sub_scope,
+            plan.collection,
             [source_delete.path],
             restore_operation,
-            suppression_reason="docs-sub-scope-document-delete-recovery",
+            suppression_reason="docs-collection-document-delete-recovery",
             stage=plan.stage,
             **({"links_created_doc_ids": []} if plan.stage == "working" else {}),
         )
@@ -124,13 +124,13 @@ def recover_sub_scope_document_delete(
 
     target = dict(plan.response.get("target") or {})
     retry_safe = source_restored and recovery_rebuild.get("ok") is True
-    raise SubScopeDocumentDeleteApplyError(
+    raise CollectionDocumentDeleteApplyError(
         {
             "ok": False,
             "operation": "apply",
             "target": target,
             "stage": plan.stage,
-            "sub_scope": plan.sub_scope,
+            "collection": plan.collection,
             "doc_id": plan.response.get("doc_id", ""),
             "source_revision": plan.response.get("source_revision", ""),
             "deleted_doc_ids": [],
@@ -138,7 +138,7 @@ def recover_sub_scope_document_delete(
             "source_restored": source_restored,
             "recovery_rebuild": recovery_rebuild,
             "retry_safe": retry_safe,
-            "error": f"sub-scope document delete rebuild failed: {initial_error}",
+            "error": f"collection document delete rebuild failed: {initial_error}",
         }
     ) from initial_error
 
@@ -168,8 +168,8 @@ def execute_management_mutation_plan(repo_root: Path, plan: mutations.Management
                             "stage": plan.stage,
                             "doc_id": str(plan.response.get("doc_id") or ""),
                         }
-                        if plan.sub_scope:
-                            target["sub_scope"] = plan.sub_scope
+                        if plan.collection:
+                            target["collection"] = plan.collection
                         if isinstance(source_write, mutations.SourceWrite) and source_write.revision_target is not None:
                             target = source_write.revision_target
                         raise mutations.ManagedDocumentRevisionConflict(
@@ -220,7 +220,7 @@ def execute_management_mutation_plan(repo_root: Path, plan: mutations.Management
                     [
                         {
                             "stage": rebuild_plan.stage,
-                            "sub_scope": rebuild_plan.sub_scope,
+                            "collection": rebuild_plan.collection,
                             "changed_paths": list(rebuild_plan.changed_paths),
                             "docs_doc_ids": rebuild_plan.build_doc_ids,
                         }
@@ -229,10 +229,10 @@ def execute_management_mutation_plan(repo_root: Path, plan: mutations.Management
                     write_operation,
                     suppression_reason=plan.suppression_reason or "docs-management",
                 )
-            elif plan.sub_scope:
-                rebuild = write_rebuild.perform_sub_scope_source_write_and_rebuild(
+            elif plan.collection:
+                rebuild = write_rebuild.perform_collection_source_write_and_rebuild(
                     repo_root,
-                    plan.sub_scope,
+                    plan.collection,
                     plan.changed_paths,
                     write_operation,
                     suppression_reason=plan.suppression_reason or "docs-management",
@@ -256,7 +256,7 @@ def execute_management_mutation_plan(repo_root: Path, plan: mutations.Management
                     "error": f"Document placement changed source, but its required results are incomplete: {error}",
                 }) from error
             if plan.restore_deletes_on_rebuild_failure:
-                recover_sub_scope_document_delete(repo_root, plan, error)
+                recover_collection_document_delete(repo_root, plan, error)
             if (
                 plan.report_create_commit_on_rebuild_failure
                 and source_changes_applied
@@ -308,10 +308,10 @@ def handle_move(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dict[st
 
 
 def handle_delete_apply(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dict[str, Any]:
-    if "sub_scope" in body:
+    if "collection" in body:
         return execute_management_mutation_plan(
             repo_root,
-            mutations.plan_sub_scope_delete_apply(repo_root, body),
+            mutations.plan_collection_delete_apply(repo_root, body),
             dry_run,
         )
     plan = mutations.plan_delete_apply(repo_root, body)
@@ -324,23 +324,23 @@ def handle_delete_apply(repo_root: Path, body: Dict[str, Any], dry_run: bool) ->
     return execute_management_mutation_plan(repo_root, plan, dry_run)
 
 
-def handle_sub_scope_create_apply(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dict[str, Any]:
-    sub_scope = normalize_sub_scope_id(body.get("sub_scope"), field="sub_scope")
-    docs_sub_scope_lifecycle.require_confirmed(body)
-    payload = docs_sub_scope_lifecycle.apply_create_sub_scope(
+def handle_collection_create_apply(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dict[str, Any]:
+    collection = normalize_collection_id(body.get("collection"), field="collection")
+    docs_collection_lifecycle.require_confirmed(body)
+    payload = docs_collection_lifecycle.apply_create_collection(
         repo_root,
         body,
         dry_run=dry_run,
-        rebuild_sub_scope_outputs=write_rebuild.rebuild_sub_scope_outputs,
+        rebuild_collection_outputs=write_rebuild.rebuild_collection_outputs,
         rebuild_stage_outputs=write_rebuild.rebuild_stage_outputs,
     )
     if not dry_run:
         log_event(
             repo_root,
-            "docs_sub_scope_create_apply",
+            "docs_collection_create_apply",
             {
                 "stage": body["stage"],
-                "sub_scope": sub_scope,
+                "collection": collection,
                 "created_count": len(payload.get("created_files", [])),
                 "changed_count": len(payload.get("changed_files", [])),
             },
@@ -348,10 +348,10 @@ def handle_sub_scope_create_apply(repo_root: Path, body: Dict[str, Any], dry_run
     return payload
 
 
-def handle_sub_scope_delete_apply(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dict[str, Any]:
-    sub_scope = normalize_sub_scope_id(body.get("sub_scope"), field="sub_scope")
-    docs_sub_scope_lifecycle.require_confirmed(body)
-    payload = docs_sub_scope_lifecycle.apply_delete_sub_scope(
+def handle_collection_delete_apply(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dict[str, Any]:
+    collection = normalize_collection_id(body.get("collection"), field="collection")
+    docs_collection_lifecycle.require_confirmed(body)
+    payload = docs_collection_lifecycle.apply_delete_collection(
         repo_root,
         body,
         dry_run=dry_run,
@@ -360,10 +360,10 @@ def handle_sub_scope_delete_apply(repo_root: Path, body: Dict[str, Any], dry_run
     if not dry_run:
         log_event(
             repo_root,
-            "docs_sub_scope_delete_apply",
+            "docs_collection_delete_apply",
             {
                 "stage": body["stage"],
-                "sub_scope": sub_scope,
+                "collection": collection,
                 "deleted_count": len(payload.get("deleted_files", [])),
                 "missing_count": len(payload.get("missing_files", [])),
                 "changed_count": len(payload.get("changed_files", [])),

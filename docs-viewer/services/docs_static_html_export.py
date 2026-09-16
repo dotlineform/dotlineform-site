@@ -505,8 +505,8 @@ def plan_static_html_snapshot(
     for unsupported_field in ("scope", "action", "mode", "include_descendants", "root_doc_id"):
         if unsupported_field in body:
             raise ValueError(f"{unsupported_field} is not supported for static HTML snapshots")
-    if str(body.get("sub_scope") or "").strip():
-        raise ValueError("sub_scope is not supported for static HTML snapshots")
+    if str(body.get("collection") or "").strip():
+        raise ValueError("collection is not supported for static HTML snapshots")
     config = normalize_snapshot_stage(repo_root, body.get("stage"))
     stage = config.stage
     paths = resolve_snapshot_input_paths(repo_root, config.stage, config)
@@ -610,7 +610,7 @@ def rewrite_internal_docs_viewer_links(
         if split.scheme or split.netloc or split.path != "/docs/":
             return match.group(0)
         params = parse_qs(split.query, keep_blank_values=True)
-        if "scope" in params or "subdoc" in params or "sub_scope" in params:
+        if "scope" in params or "subdoc" in params or "collection" in params:
             return match.group(0)
         if params.get("stage", [stage]) != [stage]:
             return match.group(0)

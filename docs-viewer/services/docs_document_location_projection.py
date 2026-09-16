@@ -64,13 +64,13 @@ def canonical_search_document(
     return doc_id, title, href
 
 
-def canonical_sub_scope_url(parent_url: str, doc_id: str) -> str:
+def canonical_collection_url(parent_url: str, doc_id: str) -> str:
     if not is_immutable_doc_id(doc_id):
-        raise ValueError("sub-scope doc_id must use immutable document identity")
+        raise ValueError("collection doc_id must use immutable document identity")
     return f"{parent_url}&subdoc={quote(doc_id)}"
 
 
-def sub_scope_manifest_records(payload: Any, *, field: str) -> list[tuple[str, str]]:
+def collection_manifest_records(payload: Any, *, field: str) -> list[tuple[str, str]]:
     if not isinstance(payload, dict) or not isinstance(payload.get("docs"), list):
         raise ValueError(f"{field}.docs must be an array")
     records: list[tuple[str, str]] = []
@@ -97,11 +97,11 @@ def build_document_location_payload(
     *,
     search_payload: Any,
     parent_documents: Mapping[str, Any],
-    sub_scope_manifests: Mapping[str, Any],
+    collection_manifests: Mapping[str, Any],
 ) -> dict[str, Any]:
     """Project exact public document and report placements for the public workspace.
 
-    Inputs are already-public search, parent-document, and sub-scope manifest
+    Inputs are already-public search, parent-document, and collection manifest
     projections. Source front matter and manage manifests are intentionally
     outside this boundary.
     """
@@ -110,7 +110,7 @@ def build_document_location_payload(
         config,
         search_payload=search_payload,
         parent_documents=parent_documents,
-        sub_scope_manifests=sub_scope_manifests,
+        collection_manifests=collection_manifests,
     )
     return {
         "schema_version": DOCUMENT_LOCATION_SCHEMA_VERSION,
@@ -130,7 +130,7 @@ def build_exact_document_location_records(
     *,
     search_payload: Any,
     parent_documents: Mapping[str, Any],
-    sub_scope_manifests: Mapping[str, Any],
+    collection_manifests: Mapping[str, Any],
 ) -> list[dict[str, str]]:
     """Retain exact source identity while projecting current public URLs.
 
@@ -150,7 +150,7 @@ def build_exact_document_location_records(
     ):
         raise ValueError("public search must describe the accepted Published set")
 
-    configured_sub_scopes = {sub_scope.sub_scope for sub_scope in select_workspace_stage(config, "pre-publish").sub_scopes}
+    configured_collections = {collection.collection for collection in select_workspace_stage(config, "pre-publish").collections}
     manifest_records: dict[str, list[tuple[str, str]]] = {}
 
     records: list[dict[str, str]] = []
@@ -159,7 +159,7 @@ def build_exact_document_location_records(
     def append_record(
         *,
         doc_id: str,
-        sub_scope: str,
+        collection: str,
         url: str,
         document_title: str,
         report_title: str = "",
@@ -170,7 +170,7 @@ def build_exact_document_location_records(
         records.append(
             {
                 "url": url,
-                "sub_scope": sub_scope,
+                "collection": collection,
                 "doc_id": doc_id,
                 "document_title": document_title,
                 "report_title": report_title,
@@ -178,7 +178,7 @@ def build_exact_document_location_records(
         )
 
     for index, raw_document in enumerate(search_payload["docs"]):
-        if isinstance(raw_document, dict) and clean_text(raw_document.get("sub_scope")):
+        if isinstance(raw_document, dict) and clean_text(raw_document.get("collection")):
             continue
         doc_id, title, href = canonical_search_document(
             config,
@@ -187,7 +187,7 @@ def build_exact_document_location_records(
         )
         append_record(
             doc_id=doc_id,
-            sub_scope="",
+            collection="",
             url=href,
             document_title=title,
         )
@@ -196,25 +196,25 @@ def build_exact_document_location_records(
         if not isinstance(parent_payload, dict):
             raise ValueError(f"public parent payload is missing for search document {doc_id!r}")
         report = parent_payload.get("report")
-        if not isinstance(report, dict) or clean_text(report.get("id")) != "docs_subscope":
+        if not isinstance(report, dict) or clean_text(report.get("id")) != "docs_collection":
             continue
 
-        sub_scope_id = clean_text(report.get("sub_scope")).lower()
-        if sub_scope_id not in configured_sub_scopes:
+        collection_id = clean_text(report.get("collection")).lower()
+        if collection_id not in configured_collections:
             raise ValueError(
-                f"public report {doc_id!r} references unsupported sub-scope "
-                f"{sub_scope_id!r}"
+                f"public report {doc_id!r} references unsupported collection "
+                f"{collection_id!r}"
             )
-        if sub_scope_id not in manifest_records:
-            manifest_records[sub_scope_id] = sub_scope_manifest_records(
-                sub_scope_manifests.get(sub_scope_id),
-                field=f"sub_scopes.{sub_scope_id}",
+        if collection_id not in manifest_records:
+            manifest_records[collection_id] = collection_manifest_records(
+                collection_manifests.get(collection_id),
+                field=f"collections.{collection_id}",
             )
-        for child_doc_id, child_title in manifest_records[sub_scope_id]:
+        for child_doc_id, child_title in manifest_records[collection_id]:
             append_record(
                 doc_id=child_doc_id,
-                sub_scope=sub_scope_id,
-                url=canonical_sub_scope_url(href, child_doc_id),
+                collection=collection_id,
+                url=canonical_collection_url(href, child_doc_id),
                 document_title=child_title,
                 report_title=title,
             )
@@ -244,40 +244,40 @@ def load_public_document_location_inputs(
             else []
         )
         if isinstance(document, dict)
-        and not clean_text(document.get("sub_scope"))
+        and not clean_text(document.get("collection"))
     }
     parent_documents = {
         path.stem: json.loads(path.read_text(encoding="utf-8"))
         for path in sorted((resolved_documents_path / "by-id").glob("*.json"))
     }
-    sub_scope_manifests = {}
-    configured_sub_scopes = {
-        sub_scope.sub_scope: sub_scope for sub_scope in select_workspace_stage(config, "pre-publish").sub_scopes
+    collection_manifests = {}
+    configured_collections = {
+        collection.collection: collection for collection in select_workspace_stage(config, "pre-publish").collections
     }
-    placed_sub_scope_ids = {
-        clean_text(payload["report"].get("sub_scope")).lower()
+    placed_collection_ids = {
+        clean_text(payload["report"].get("collection")).lower()
         for doc_id, payload in parent_documents.items()
         if doc_id in search_doc_ids
         if isinstance(payload, dict)
         and isinstance(payload.get("report"), dict)
-        and clean_text(payload["report"].get("id")) == "docs_subscope"
+        and clean_text(payload["report"].get("id")) == "docs_collection"
     }
-    for sub_scope_id in sorted(placed_sub_scope_ids):
-        sub_scope = configured_sub_scopes.get(sub_scope_id)
-        if sub_scope is None:
+    for collection_id in sorted(placed_collection_ids):
+        collection = configured_collections.get(collection_id)
+        if collection is None:
             raise ValueError(
-                f"public report references unsupported sub-scope {sub_scope_id!r}"
+                f"public report references unsupported collection {collection_id!r}"
             )
-        sub_scope_path = public_documents_path(sub_scope)
-        if sub_scope_path is None:
+        collection_path = public_documents_path(collection)
+        if collection_path is None:
             raise ValueError(
-                f"sub-scope {sub_scope.sub_scope} has no public projection"
+                f"collection {collection.collection} has no public projection"
             )
-        manifest_path = resolve_workspace_path(repo_root, sub_scope_path) / "manifest.json"
-        sub_scope_manifests[sub_scope.sub_scope] = json.loads(
+        manifest_path = resolve_workspace_path(repo_root, collection_path) / "manifest.json"
+        collection_manifests[collection.collection] = json.loads(
             manifest_path.read_text(encoding="utf-8")
         )
-    return search_payload, parent_documents, sub_scope_manifests
+    return search_payload, parent_documents, collection_manifests
 
 
 def load_public_document_location_payload(
@@ -286,7 +286,7 @@ def load_public_document_location_payload(
 ) -> dict[str, Any]:
     """Build from the currently published site projection without source reads."""
 
-    search_payload, parent_documents, sub_scope_manifests = (
+    search_payload, parent_documents, collection_manifests = (
         load_public_document_location_inputs(repo_root, config)
     )
 
@@ -294,7 +294,7 @@ def load_public_document_location_payload(
         config,
         search_payload=search_payload,
         parent_documents=parent_documents,
-        sub_scope_manifests=sub_scope_manifests,
+        collection_manifests=collection_manifests,
     )
 
 
@@ -304,14 +304,14 @@ def load_public_exact_document_location_records(
 ) -> list[dict[str, str]]:
     """Build exact internal records for the configured public workspace."""
 
-    search_payload, parent_documents, sub_scope_manifests = (
+    search_payload, parent_documents, collection_manifests = (
         load_public_document_location_inputs(repo_root, config)
     )
     return build_exact_document_location_records(
         config,
         search_payload=search_payload,
         parent_documents=parent_documents,
-        sub_scope_manifests=sub_scope_manifests,
+        collection_manifests=collection_manifests,
     )
 
 
@@ -320,7 +320,7 @@ __all__ = [
     "build_document_location_payload",
     "build_exact_document_location_records",
     "canonical_search_document",
-    "canonical_sub_scope_url",
+    "canonical_collection_url",
     "document_location_projection_path",
     "json_bytes",
     "load_public_exact_document_location_records",

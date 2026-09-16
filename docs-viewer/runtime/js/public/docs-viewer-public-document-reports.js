@@ -27,7 +27,7 @@ export function mountDocsViewerPublicDocumentExtras(context) {
     openMediaPresentation: settings.openMediaPresentation,
     openMediaTarget: settings.openMediaTarget,
     loadMediaTarget: settings.loadMediaTarget,
-    onSubscopeDocumentState: settings.onSubscopeDocumentState,
+    onCollectionDocumentState: settings.onCollectionDocumentState,
     reportRegistryUrl: cleanString(settings.routeContext && settings.routeContext.reportRegistryUrl),
     routeContext: settings.routeContext,
     stageConfigs: settings.workspaceConfigState && Array.isArray(settings.workspaceConfigState.stageConfigs)

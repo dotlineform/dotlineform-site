@@ -43,8 +43,9 @@ FORBIDDEN_REQUEST_FIELDS = {
     "record_indices",
     "selection",
     "scope",
+    "sub_scope",
 }
-PACKAGE_COLLECTION_ALIAS_FIELDS = {"scope", "collection", "parent_scope", "subscope"}
+PACKAGE_COLLECTION_ALIAS_FIELDS = {"scope", "sub_scope", "parent_scope"}
 
 
 def query_value(params: dict[str, list[str]], key: str) -> str:
@@ -122,11 +123,11 @@ def config_payload(
     collection = None
     request_params = params or {}
     stage = require_package_stage(query_value(request_params, "stage"))
-    if "sub_scope" in request_params:
+    if "collection" in request_params:
         collection = resolve_managed_document_collection(
             repo_root,
             stage=query_value(request_params, "stage"),
-            sub_scope=query_value(request_params, "sub_scope"),
+            collection=query_value(request_params, "collection"),
         )
     profile_payload = load_config_file(repo_root)
     errors, warnings = validate_full_config_payload(profile_payload)
@@ -157,7 +158,7 @@ def config_payload(
     if collection is not None:
         payload.update({
             "stage": collection.stage,
-            "sub_scope": collection.sub_scope,
+            "collection": collection.collection,
             "flat_collection": True,
         })
     return payload
@@ -165,45 +166,45 @@ def config_payload(
 
 def documents_payload(repo_root: Path, params: dict[str, list[str]]) -> dict[str, Any]:
     stage = require_package_stage(query_value(params, "stage"))
-    sub_scope = ""
-    if "sub_scope" in params:
-        collection = resolve_managed_document_collection(
+    collection = ""
+    if "collection" in params:
+        resolved_collection = resolve_managed_document_collection(
             repo_root,
             stage=stage,
-            sub_scope=query_value(params, "sub_scope"),
+            collection=query_value(params, "collection"),
         )
-        sub_scope = collection.sub_scope
+        collection = resolved_collection.collection
     return selectable_document_records(
         repo_root,
         stage=stage,
-        sub_scope=sub_scope,
-        selection_model="sub_scope_documents" if sub_scope else "documents",
+        collection=collection,
+        selection_model="collection_documents" if collection else "documents",
     )
 
 
 def returned_payload(repo_root: Path, params: dict[str, list[str]]) -> dict[str, Any]:
     stage = require_package_stage(query_value(params, "stage"))
-    sub_scope = None
-    if "sub_scope" in params:
-        collection = resolve_managed_document_collection(
+    collection = None
+    if "collection" in params:
+        resolved_collection = resolve_managed_document_collection(
             repo_root,
             stage=stage,
-            sub_scope=query_value(params, "sub_scope"),
+            collection=query_value(params, "collection"),
         )
-        if not collection.document_config.supports_return_import:
+        if not resolved_collection.document_config.supports_return_import:
             raise ValueError(
                 "returned-package import is not enabled for configured "
-                f"sub-scope {collection.stage}/{collection.sub_scope}"
+                f"collection {resolved_collection.stage}/{resolved_collection.collection}"
             )
-        sub_scope = collection.sub_scope
+        collection = resolved_collection.collection
     roots = configured_workspace_paths(repo_root)
     report = list_returned_document_packages(
         repo_root,
         stage=stage,
-        sub_scope=sub_scope,
+        collection=collection,
         required_capability=(
             RETURN_IMPORT_CAPABILITY
-            if sub_scope is not None
+            if collection is not None
             else DOCS_REVIEW_CAPABILITY
         ),
         staging_root=roots.import_staging,
@@ -229,7 +230,9 @@ def get_payload(
 ) -> dict[str, Any]:
     require_package_stage(query_value(params, "stage"))
     if "scope" in params:
-        raise ValueError("scope is retired; use stage and optional sub_scope")
+        raise ValueError("scope is retired; use stage and optional collection")
+    if "sub_scope" in params:
+        raise ValueError("sub_scope is retired; use collection")
     if path == routes.CONFIG_PATH:
         return config_payload(repo_root, params)
     if path == routes.DOCUMENTS_PATH:
@@ -249,19 +252,19 @@ def prepare_package(repo_root: Path, body: dict[str, Any]) -> dict[str, Any]:
     )
     if collection_aliases:
         raise ValueError(
-            "document package prepare accepts only stage and optional sub_scope "
+            "document package prepare accepts only stage and optional collection "
             "for collection identity: "
             + ", ".join(collection_aliases)
         )
     stage = require_package_stage(body.get("stage"))
-    sub_scope = ""
-    if "sub_scope" in body:
-        collection = resolve_managed_document_collection(
+    collection = ""
+    if "collection" in body:
+        resolved_collection = resolve_managed_document_collection(
             repo_root,
             stage=stage,
-            sub_scope=body.get("sub_scope"),
+            collection=body.get("collection"),
         )
-        sub_scope = collection.sub_scope
+        collection = resolved_collection.collection
     profile_id = str(body.get("profile_id") or "").strip()
     if not profile_id:
         raise ValueError("profile_id is required")
@@ -271,15 +274,15 @@ def prepare_package(repo_root: Path, body: dict[str, Any]) -> dict[str, Any]:
     select_all = body.get("select_all", False)
     if not isinstance(select_all, bool):
         raise ValueError("select_all must be true or false")
-    if sub_scope and select_all:
-        raise ValueError("sub-scope package preparation requires select_all false")
+    if collection and select_all:
+        raise ValueError("collection package preparation requires select_all false")
     dry_run = dry_run_value(body)
     missing_summary_only = optional_boolean_value(body, "missing_summary_only")
     roots = configured_workspace_paths(repo_root)
     payload = build_document_package(
         repo_root,
         stage=stage,
-        sub_scope=sub_scope,
+        collection=collection,
         data_domain=DOCUMENTS_DATA_DOMAIN,
         config_id=profile_id,
         raw_doc_ids=doc_ids,
@@ -309,10 +312,10 @@ def prepare_package(repo_root: Path, body: dict[str, Any]) -> dict[str, Any]:
             "exported": int(payload.get("counts", {}).get("exported") or 0),
             **(
                 {
-                    "sub_scope": sub_scope,
+                    "collection": collection,
                     "doc_ids": list(payload.get("selected_doc_ids") or []),
                 }
-                if sub_scope
+                if collection
                 else {}
             ),
         },
@@ -362,9 +365,9 @@ def content_review_response(payload: dict[str, Any]) -> dict[str, Any]:
 def review_returned(repo_root: Path, body: dict[str, Any]) -> dict[str, Any]:
     stage = require_package_stage(body.get("stage"))
     staged_filename = str(body.get("staged_filename") or "").strip()
-    if "sub_scope" in body:
+    if "collection" in body:
         raise ValueError(
-            "returned-package review derives sub_scope from trusted export metadata"
+            "returned-package review derives collection from trusted export metadata"
         )
     if "review_action" in body:
         raise ValueError("review_action is not supported; returned-package review always prepares full content")

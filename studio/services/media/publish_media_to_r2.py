@@ -180,7 +180,7 @@ def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
     )
     ap.add_argument("--id", dest="item_id", help="Specific work or work-detail id")
     ap.add_argument("--docs-stage", choices=("working",), help="Explicit Working stage for --scope docs")
-    ap.add_argument("--docs-sub-scope", help="Optional configured Docs sub-scope for --scope docs")
+    ap.add_argument("--docs-collection", help="Optional configured Docs collection for --scope docs")
     ap.add_argument(
         "--staged-filename",
         help="One direct-child filename under the shared import-staging drop-zone for --scope docs",
@@ -221,7 +221,7 @@ def main(argv: Sequence[str] | None = None) -> int:
             report = run_docs_staged_media_publish(
                 repo_root,
                 stage=args.docs_stage,
-                sub_scope=args.docs_sub_scope or "",
+                collection=args.docs_collection or "",
                 media_class=args.kind,
                 staged_filename=args.staged_filename,
                 write=args.write,
@@ -234,8 +234,8 @@ def main(argv: Sequence[str] | None = None) -> int:
         write_report(repo_root=repo_root, report=report, report_json=args.report_json)
         failed_statuses = {"blocked_changed", "failed", "not_attempted"}
         return 1 if any(report["counts"].get(status, 0) for status in failed_statuses) else 0
-    if args.docs_stage or args.docs_sub_scope or args.staged_filename:
-        raise SystemExit("Error: --docs-stage, --docs-sub-scope and --staged-filename require --scope docs.")
+    if args.docs_stage or args.docs_collection or args.staged_filename:
+        raise SystemExit("Error: --docs-stage, --docs-collection and --staged-filename require --scope docs.")
     if args.kind in {"files", "img"}:
         raise SystemExit("Error: catalogue publishing requires --kind works or --kind work_details.")
     if args.delete and not args.item_id:
@@ -980,7 +980,7 @@ def print_report(report: Mapping[str, object]) -> None:
 
 
 def print_docs_report(report: Mapping[str, object]) -> None:
-    print(f"R2 Docs media publish {report['mode']}: {report.get('stage')}/{report.get('sub_scope') or 'documents'}")
+    print(f"R2 Docs media publish {report['mode']}: {report.get('stage')}/{report.get('collection') or 'documents'}")
     counts = report.get("counts", {})
     if isinstance(counts, Mapping) and counts:
         print("Counts: " + ", ".join(f"{key}={counts[key]}" for key in sorted(counts)))

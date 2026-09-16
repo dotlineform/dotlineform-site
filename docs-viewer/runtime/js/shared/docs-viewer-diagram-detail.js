@@ -20,7 +20,7 @@ function sameDocumentTarget(left, right) {
   var first = left || {};
   var second = right || {};
   return cleanString(first.stage) === cleanString(second.stage)
-    && cleanString(first.subScope) === cleanString(second.subScope)
+    && cleanString(first.collection) === cleanString(second.collection)
     && cleanString(first.docId) === cleanString(second.docId);
 }
 
@@ -155,7 +155,7 @@ export function createDocsViewerDiagramDetailAdapter(options) {
       ),
       documentTarget: {
           stage: cleanString(context.viewerStage),
-          subScope: "",
+          collection: "",
         docId: cleanString(doc.doc_id)
       },
       inlineByHost: new Map(),
@@ -342,7 +342,7 @@ export function createDocsViewerDiagramDetailAdapter(options) {
     var expectedGeneration = positiveInteger(context.mountGeneration || context.documentMountGeneration);
     var expectedTarget = {
       stage: cleanString(context.viewerStage),
-      subScope: "",
+      collection: "",
       docId: cleanString(context.doc && context.doc.doc_id)
     };
     if (

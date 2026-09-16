@@ -22,8 +22,8 @@ import {
   createDocsViewerManagementModalComposition
 } from "./docs-viewer-management-modal-composition.js";
 import {
-  createDocsViewerManagementSubScopeLifecycleController
-} from "./docs-viewer-management-sub-scope-lifecycle-controller.js";
+  createDocsViewerManagementCollectionLifecycleController
+} from "./docs-viewer-management-collection-lifecycle-controller.js";
 import {
   createDocsViewerManagementActionController,
   requestCommittedDocumentSource
@@ -110,15 +110,15 @@ export function refreshDocsImportTerminalDestination(detail, options = {}) {
   var target = destination.target;
   var targetCollection = normalizeManagedDocumentCollectionTarget({
     ...(target.stage ? { stage: target.stage } : {}),
-    ...(target.sub_scope ? { sub_scope: target.sub_scope } : {})
+    ...(target.collection ? { collection: target.collection } : {})
   });
   var displayedCollection = normalizeManagedDocumentCollectionTarget(
     options.currentCollection
   );
   var destinationIsDisplayed = (
     String(displayedCollection.stage || "") === String(targetCollection.stage || "")
-    && String(displayedCollection.sub_scope || "")
-      === String(targetCollection.sub_scope || "")
+    && String(displayedCollection.collection || "")
+      === String(targetCollection.collection || "")
   );
   if (!destinationIsDisplayed) {
     return Promise.resolve({
@@ -127,14 +127,14 @@ export function refreshDocsImportTerminalDestination(detail, options = {}) {
     });
   }
 
-  if (targetCollection.sub_scope) {
+  if (targetCollection.collection) {
     var reportState = options.reportState || {};
     var refresh = isCollection
       ? reportState.refreshCollection
       : reportState.refreshDocument;
     if (typeof refresh !== "function") {
       return Promise.reject(new Error(
-        "The exact imported sub-scope destination is no longer mounted."
+        "The exact imported collection destination is no longer mounted."
       ));
     }
     return Promise.resolve(refresh(target)).then(function () {
@@ -198,7 +198,7 @@ export function initDocsViewerManagement(context) {
   var interactionController = null;
   var metadataWorkflow = null;
   var modalController = null;
-  var subScopeLifecycleController = null;
+  var collectionLifecycleController = null;
   var workspaceExportActive = false;
   var workspaceExportButton = document.getElementById("docsViewerManageExportWorkspaceButton");
   var settingsWorkflow = null;
@@ -206,7 +206,7 @@ export function initDocsViewerManagement(context) {
   var resolveAction = null;
   var projectedReportControls = null;
   var sourceSessionReportActive = false;
-  var subscopeReportState = null;
+  var collectionReportState = null;
   var indexController = createDocsViewerManagementIndexController({
     root: root,
     nav: nav,
@@ -268,9 +268,9 @@ export function initDocsViewerManagement(context) {
   }
 
   function currentImportDisplayContext() {
-    if (subscopeReportState && subscopeReportState.collectionTarget) {
+    if (collectionReportState && collectionReportState.collectionTarget) {
       return normalizeManagedDocumentCollectionTarget(
-        subscopeReportState.collectionTarget
+        collectionReportState.collectionTarget
       );
     }
     return normalizeManagedDocumentCollectionTarget({
@@ -279,8 +279,8 @@ export function initDocsViewerManagement(context) {
   }
 
   function currentImportDisplayContextLabel() {
-    if (subscopeReportState && subscopeReportState.collectionTarget) {
-      return String(subscopeReportState.collectionLabel || "").trim();
+    if (collectionReportState && collectionReportState.collectionTarget) {
+      return String(collectionReportState.collectionLabel || "").trim();
     }
     return viewerStage();
   }
@@ -341,7 +341,7 @@ export function initDocsViewerManagement(context) {
     });
   }
 
-  function publishSubscopeReportState(value) {
+  function publishCollectionReportState(value) {
     var state = value && typeof value === "object" ? value : {};
     var stateName = String(state.state || "").trim().toLowerCase();
     var activeStateNames = ["list", "loading", "detail", "invalid", "error"];
@@ -357,21 +357,21 @@ export function initDocsViewerManagement(context) {
           state.collectionTarget
         );
         if (
-          !collectionTarget.sub_scope
+          !collectionTarget.collection
           || String(collectionTarget.stage || "") !== String(parentTarget.stage || "")
         ) {
           throw new Error(
-            "Validated sub-scope report collection does not match its parent."
+            "Validated collection report collection does not match its parent."
           );
         }
         if (stateName === "detail") {
           subdocTarget = normalizeManagedDocumentTarget(state.subdocTarget);
           if (
-            !subdocTarget.sub_scope
+            !subdocTarget.collection
             || String(subdocTarget.stage || "") !== String(parentTarget.stage || "")
-            || subdocTarget.sub_scope !== collectionTarget.sub_scope
+            || subdocTarget.collection !== collectionTarget.collection
           ) {
-            throw new Error("Validated sub-scope report target does not match its parent report.");
+            throw new Error("Validated collection report target does not match its parent report.");
           }
           if (
             !state.subdocRecord
@@ -379,7 +379,7 @@ export function initDocsViewerManagement(context) {
             || Array.isArray(state.subdocRecord)
             || String(state.subdocRecord.doc_id || "").trim() !== subdocTarget.doc_id
           ) {
-            throw new Error("Validated sub-scope report record does not match its target.");
+            throw new Error("Validated collection report record does not match its target.");
           }
           subdocRecord = Object.freeze(Object.assign({}, state.subdocRecord));
           subdocInfo = state.subdocInfo && typeof state.subdocInfo === "object"
@@ -394,7 +394,7 @@ export function initDocsViewerManagement(context) {
       subdocRecord = null;
       subdocInfo = null;
     }
-    subscopeReportState = parentTarget
+    collectionReportState = parentTarget
       ? {
           state: stateName,
           parentTarget: parentTarget,
@@ -433,7 +433,7 @@ export function initDocsViewerManagement(context) {
   }
 
   function openCreatedDocumentSource(target) {
-    sourceSessionReportActive = Boolean(subscopeReportState);
+    sourceSessionReportActive = Boolean(collectionReportState);
     return requestCommittedDocumentSource(target, function (modeId, options) {
       return context.requestDocumentMode(modeId, options);
     });
@@ -488,16 +488,16 @@ export function initDocsViewerManagement(context) {
     var actionsDisabled = Boolean(disabled);
     var documentMode = root && root.dataset ? String(root.dataset.documentDisplayMode || "") : "";
     var markdownMode = documentMode === "markdown-source";
-    var reportActive = Boolean(subscopeReportState) || (markdownMode && sourceSessionReportActive);
+    var reportActive = Boolean(collectionReportState) || (markdownMode && sourceSessionReportActive);
     projectedReportControls = projectDocsViewerReportControlState({
       disabled: actionsDisabled,
       documentMode: documentMode,
       hidden: actionsHidden,
       ordinaryTarget: sourceTargetForDoc(currentActiveDoc()),
-      parentTarget: subscopeReportState ? subscopeReportState.parentTarget : null,
+      parentTarget: collectionReportState ? collectionReportState.parentTarget : null,
       reportActive: reportActive,
-      reportState: subscopeReportState ? subscopeReportState.state : "",
-      subdocTarget: subscopeReportState ? subscopeReportState.subdocTarget : null
+      reportState: collectionReportState ? collectionReportState.state : "",
+      subdocTarget: collectionReportState ? collectionReportState.subdocTarget : null
     });
     if (typeof context.projectMainViewControlState === "function") {
       context.projectMainViewControlState("edit", projectedReportControls.editMetadata.state);
@@ -505,7 +505,7 @@ export function initDocsViewerManagement(context) {
       var draftTarget = sourceTargetForDoc(draftRecord);
       context.projectMainViewControlState("draft", {
         hidden: actionsHidden || markdownMode || viewerStage() !== "working"
-          || (reportActive && subscopeReportState?.state !== "list"),
+          || (reportActive && collectionReportState?.state !== "list"),
         disabled: actionsDisabled || !draftTarget || !draftRecord,
         pressed: Boolean(draftRecord && draftRecord.draft === true),
         label: draftRecord && draftRecord.draft === true ? "Draft — mark ready" : "Ready — mark as draft"
@@ -556,11 +556,11 @@ export function initDocsViewerManagement(context) {
       clientOptions: managementClientOptions(),
       onSaved: function (savedTarget, response) {
         if (savedTarget.stage !== viewerStage()) return;
-        var record = savedTarget.sub_scope
-          ? (managedDocumentTargetsEqual(savedTarget, subscopeReportState?.subdocTarget) ? subscopeReportState.subdocRecord : null)
+        var record = savedTarget.collection
+          ? (managedDocumentTargetsEqual(savedTarget, collectionReportState?.subdocTarget) ? collectionReportState.subdocRecord : null)
           : documentIndex.docsById.get(savedTarget.doc_id);
         if (record) record.draft = response.record.draft;
-        if (!savedTarget.sub_scope) context.renderSidebar();
+        if (!savedTarget.collection) context.renderSidebar();
         renderManagementUi();
       }
     }).catch(function (error) {
@@ -571,12 +571,12 @@ export function initDocsViewerManagement(context) {
     });
   }
 
-  function toggleSubscopeDocumentDraft(target) {
+  function toggleCollectionDocumentDraft(target) {
     if (management.managementBusy || viewerStage() !== "working"
-      || subscopeReportState?.state !== "detail"
-      || !managedDocumentTargetsEqual(target, subscopeReportState.subdocTarget)
+      || collectionReportState?.state !== "detail"
+      || !managedDocumentTargetsEqual(target, collectionReportState.subdocTarget)
     ) {
-      return Promise.reject(new Error("Draft readiness is unavailable for this sub-scope document."));
+      return Promise.reject(new Error("Draft readiness is unavailable for this collection document."));
     }
     return runDraftToggle(target);
   }
@@ -587,7 +587,7 @@ export function initDocsViewerManagement(context) {
     if (controlId === "draft") {
       var draftControl = projectedReportControls && projectedReportControls.editMetadata;
       if (!draftControl || draftControl.state.hidden || draftControl.state.disabled
-        || !draftControl.target || draftControl.target.sub_scope
+        || !draftControl.target || draftControl.target.collection
         || management.managementBusy || viewerStage() !== "working") return;
       return runDraftToggle(draftControl.target);
     }
@@ -601,14 +601,14 @@ export function initDocsViewerManagement(context) {
       ["markdown-source", {
         projection: "parentSource",
         run: function (target) {
-          sourceSessionReportActive = Boolean(subscopeReportState);
+          sourceSessionReportActive = Boolean(collectionReportState);
           actionController.handleMarkdownSource(target);
         }
       }],
       ["subdoc-source", {
         projection: "subdocSource",
         run: function (target) {
-          sourceSessionReportActive = Boolean(subscopeReportState);
+          sourceSessionReportActive = Boolean(collectionReportState);
           actionController.handleMarkdownSource(target);
         }
       }],
@@ -782,7 +782,7 @@ export function initDocsViewerManagement(context) {
         eventRouter.hideManageActionsMenu();
       }
     }
-    if (subScopeLifecycleController) subScopeLifecycleController.render();
+    if (collectionLifecycleController) collectionLifecycleController.render();
     if (workspaceExportButton) {
       var exportCapability = stageStaticHtmlExportCapability(management.managementCapabilities, viewerStage());
       workspaceExportButton.disabled = management.managementBusy || workspaceExportActive || !exportCapability.available;
@@ -872,7 +872,7 @@ export function initDocsViewerManagement(context) {
   function displayImportedDocument(detail) {
     return refreshDocsImportTerminalDestination(detail, {
       currentCollection: currentImportDisplayContext(),
-      reportState: subscopeReportState,
+      reportState: collectionReportState,
       reloadParent: function (targetDocId) {
         return reloadDocsIndex(targetDocId, "");
       }
@@ -999,7 +999,7 @@ export function initDocsViewerManagement(context) {
       },
       reloadPlacedDocument: function (target, viewerUrl) {
         var url = new URL(viewerUrl, "https://docs.invalid");
-        return reloadDocsIndex(url.searchParams.get("doc"), "", target.sub_scope ? { subdoc: target.doc_id } : {});
+        return reloadDocsIndex(url.searchParams.get("doc"), "", target.collection ? { subdoc: target.doc_id } : {});
       },
       reloadViewerConfiguration: reloadViewerConfiguration,
       refreshManagementCapabilities: refreshManagementCapabilities,
@@ -1020,9 +1020,9 @@ export function initDocsViewerManagement(context) {
     commands: {
       createDoc: function () { actionController.handleCreateDoc(); },
       exportWorkspace: openExportWorkspace,
-      createSubScope: function () { subScopeLifecycleController.createSubScope(); },
+      createCollection: function () { collectionLifecycleController.createCollection(); },
       deleteDoc: function () { actionController.handleDeleteDoc(); },
-      deleteSubScope: function () { subScopeLifecycleController.deleteSubScope(); },
+      deleteCollection: function () { collectionLifecycleController.deleteCollection(); },
       openImport: openAppImport,
       openSettings: function () { settingsWorkflow.open(); },
       publish: function () { actionController.handlePublishDocs(); },
@@ -1056,7 +1056,7 @@ export function initDocsViewerManagement(context) {
     }
   });
 
-  subScopeLifecycleController = createDocsViewerManagementSubScopeLifecycleController({
+  collectionLifecycleController = createDocsViewerManagementCollectionLifecycleController({
     root: root,
     management: management,
     callbacks: {
@@ -1116,8 +1116,8 @@ export function initDocsViewerManagement(context) {
   return {
     applyConfig: applyConfig,
     canDragCurrentDoc: canDragCurrentDoc,
-    createSubscopeDocument: actionController.handleCreateSubscopeDocument,
-    toggleSubscopeDocumentDraft: toggleSubscopeDocumentDraft,
+    createCollectionDocument: actionController.handleCreateCollectionDocument,
+    toggleCollectionDocumentDraft: toggleCollectionDocumentDraft,
     handleDocumentKeydown: eventRouter.handleDocumentKeydown,
     handleAppManagementControl: handleAppManagementControl,
     handleIndexViewChange: indexController.handleViewChange,
@@ -1128,7 +1128,7 @@ export function initDocsViewerManagement(context) {
     indexSelection: indexSelection,
     initialize: initializeManagement,
     openImportModal: importController.open,
-    publishSubscopeReportState: publishSubscopeReportState,
+    publishCollectionReportState: publishCollectionReportState,
     reconcileIndexSelectionReload: indexController.reconcileReload,
     render: renderManagementUi,
     renderIndexSelectionGutter: indexController.renderSelectionGutter,
