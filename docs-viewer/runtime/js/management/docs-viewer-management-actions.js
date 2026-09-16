@@ -28,6 +28,7 @@ import {
   docsViewerPublishWorkflowMessage,
   runManagedDocsPublishWorkflow
 } from "./docs-viewer-management-publish-workflow.js";
+import { openDocsViewerCatalogueCreateModal } from "./docs-viewer-management-catalogue-create-modal.js";
 
 var ACTION_TEXT = {
   cancelButton: "Cancel",
@@ -532,18 +533,24 @@ export function createDocsViewerManagementActionController(options) {
       throw new Error("Docs management is busy.");
     }
 
-    var titleResult = await openCreateTitleModal(
-      ACTION_TEXT.createCollectionDocTitle,
-      { compactLabel: true }
-    );
-    if (!titleResult || !titleResult.confirmed) return null;
-
-    var title = String(titleResult.value || "").trim() || ACTION_TEXT.createDocDefaultTitle;
+    var fields;
+    if (targetCollection.collection === "catalogue") {
+      var catalogueResult = await openDocsViewerCatalogueCreateModal({ root: root });
+      if (!catalogueResult || !catalogueResult.confirmed) return null;
+      fields = catalogueResult.fields;
+    } else {
+      var titleResult = await openCreateTitleModal(
+        ACTION_TEXT.createCollectionDocTitle,
+        { compactLabel: true }
+      );
+      if (!titleResult || !titleResult.confirmed) return null;
+      fields = { title: String(titleResult.value || "").trim() || ACTION_TEXT.createDocDefaultTitle };
+    }
     setManagementBusy(true);
     setManagementMessage("Creating doc...", false);
     return createDocumentAndOpenSource(
       {
-        title: title,
+        ...fields,
         collection: targetCollection.collection
       },
       {

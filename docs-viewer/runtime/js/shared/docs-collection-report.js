@@ -15,6 +15,8 @@ import {
  * Render callbacks receive detached hosts that enter the document only when
  * populated. `notify` receives explicit collection-scoped mount, state,
  * complete-manifest refresh, visible-row projection, and unmount events.
+ * Detail toolbars receive `commitDocumentDraft(target, draft)` to project a
+ * confirmed save into the report's list and detail records without I/O.
  *
  * @typedef {Object} DocsCollectionReportContribution
  * @property {function(Object): void} [notify]
@@ -896,6 +898,9 @@ function renderDetailToolbar(state, docId) {
     commitDeletedDocument: function (target) {
       return reconcileCommittedDeletion(state, target);
     },
+    commitDocumentDraft: function (target, draft) {
+      return reconcileCommittedDraft(state, target, draft);
+    },
     data: state.customisationData,
     document: documentRecord(doc),
     host: host,
@@ -916,6 +921,11 @@ function renderDetailPayload(state, docId, payload) {
   var payloadDocId = cleanString(payload && payload.doc_id);
   if (payloadDocId !== docId) {
     throw new Error("Docs collection detail payload did not match the requested document.");
+  }
+  // A saved readiness response is current before the watcher catches up.
+  var record = documentRecord(state.docs.find(function (doc) { return doc.docId === docId; }));
+  if (typeof record.draft === "boolean") {
+    payload = Object.assign({}, payload, { draft: record.draft });
   }
   state.detailPayloads[docId] = payload;
   state.detailNode.dataset.reportSubdocId = docId;
@@ -1173,6 +1183,40 @@ function returnFromDeletedDetail(state, docId) {
   }
   if (state.root.dataset.reportState === "list") {
     renderListView(state);
+  }
+}
+
+/** Project a confirmed save into the mounted report without a fetch or rebuild. */
+function reconcileCommittedDraft(state, target, draft) {
+  var docId = cleanString(target && target.doc_id);
+  if (!docId || target.stage !== state.viewerStage || target.collection !== state.collectionId
+    || state.viewerStage !== "working" || typeof draft !== "boolean") {
+    throw new Error("Draft readiness response did not match the mounted collection.");
+  }
+  if (!state.mounted) return;
+  var matches = state.docs.filter(function (doc) { return doc.docId === docId; });
+  if (matches.length !== 1) {
+    throw new Error("Saved draft readiness did not match one collection document.");
+  }
+  state.docs = state.docs.map(function (doc) {
+    return doc.docId === docId
+      ? normalizeDocument(Object.assign({}, doc.record, { draft: draft }))
+      : doc;
+  });
+  var payload = state.detailPayloads[docId];
+  if (payload) {
+    payload = Object.assign({}, payload, { draft: draft });
+    state.detailPayloads[docId] = payload;
+  }
+  publishDocumentsRefresh(state, "document-draft-saved");
+  if (state.root.dataset.reportState === "list") {
+    renderListProjectionContained(state, "document-draft-saved");
+  } else if (state.validDetailId === docId) {
+    var metadata = detailMetadataRecord(state, docId, payload);
+    publishState(state, "detail", detailTarget(state, docId), "document-draft-saved", {
+      record: metadata,
+      info: projectDetailInfo(state, docId, payload, metadata)
+    });
   }
 }
 

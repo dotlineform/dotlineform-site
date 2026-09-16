@@ -384,12 +384,12 @@ export function startDocsViewerRuntime(options) {
     },
     managementService: managementService,
     managementDocumentActions: {
-      toggleCollectionDocumentDraft: function (target) {
+      toggleCollectionDocumentDraft: function (target, draft) {
         return loadManagementController().then(function (controller) {
           if (!controller || typeof controller.toggleCollectionDocumentDraft !== "function") {
             throw new Error("Collection draft readiness is unavailable.");
           }
-          return controller.toggleCollectionDocumentDraft(target);
+          return controller.toggleCollectionDocumentDraft(target, draft);
         });
       },
       createCollectionDocument: function (collection, options) {

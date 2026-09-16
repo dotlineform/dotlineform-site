@@ -548,21 +548,15 @@ export function initDocsViewerManagement(context) {
     });
   }
 
-  function runDraftToggle(target) {
+  function runDraftToggle(target, draft) {
     setManagementBusy(true);
     setManagementMessage("", false);
     renderManagementUi();
-    return toggleManagedDocDraft(target, {
+    return toggleManagedDocDraft(target, draft, {
       clientOptions: managementClientOptions(),
       onSaved: function (savedTarget, response) {
         if (savedTarget.stage !== viewerStage()) return;
-        if (savedTarget.collection) {
-          if (managedDocumentTargetsEqual(savedTarget, collectionReportState?.subdocTarget)) {
-            collectionReportState.subdocRecord = Object.freeze(Object.assign(
-              {}, collectionReportState.subdocRecord, { draft: response.record.draft }
-            ));
-          }
-        } else {
+        if (!savedTarget.collection) {
           var record = documentIndex.docsById.get(savedTarget.doc_id);
           if (record) record.draft = response.record.draft;
           context.renderSidebar();
@@ -577,14 +571,14 @@ export function initDocsViewerManagement(context) {
     });
   }
 
-  function toggleCollectionDocumentDraft(target) {
+  function toggleCollectionDocumentDraft(target, draft) {
     if (management.managementBusy || viewerStage() !== "working"
       || collectionReportState?.state !== "detail"
       || !managedDocumentTargetsEqual(target, collectionReportState.subdocTarget)
     ) {
       return Promise.reject(new Error("Draft readiness is unavailable for this collection document."));
     }
-    return runDraftToggle(target);
+    return runDraftToggle(target, draft);
   }
 
   function handleMainViewControl(detail) {
@@ -595,7 +589,9 @@ export function initDocsViewerManagement(context) {
       if (!draftControl || draftControl.state.hidden || draftControl.state.disabled
         || !draftControl.target || draftControl.target.collection
         || management.managementBusy || viewerStage() !== "working") return;
-      return runDraftToggle(draftControl.target);
+      var draftRecord = currentActiveDoc();
+      if (!draftRecord || draftRecord.doc_id !== draftControl.target.doc_id) return;
+      return runDraftToggle(draftControl.target, draftRecord.draft !== true);
     }
     var reportControlOwners = new Map([
       ["edit", {

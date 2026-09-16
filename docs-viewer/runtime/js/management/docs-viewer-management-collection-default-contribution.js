@@ -565,7 +565,9 @@ export function createDocsViewerManagementCollectionDefaultContribution(options 
     if (!host || !target) return;
 
     if (managementContext && target.stage === "working"
-      && onToggleDraft && typeof settings.registerAction === "function") {
+      && onToggleDraft && typeof settings.registerAction === "function"
+      && typeof settings.commitDocumentDraft === "function") {
+      var draft = settings.document?.draft === true;
       var draftRegistration = settings.registerAction({
         id: "set-draft",
         placement: "detail-toolbar",
@@ -573,9 +575,10 @@ export function createDocsViewerManagementCollectionDefaultContribution(options 
         capability: true,
         emptyState: "omitted",
         refreshEffect: "none",
-        handler: onToggleDraft
+        handler: function (draftTarget) {
+          return onToggleDraft(draftTarget, !draft);
+        }
       });
-      var draft = settings.document?.draft === true;
       var draftButton = host.ownerDocument.createElement("button");
       draftButton.className = "docsViewerReport__button docsViewerReport__button--pill docsReportDetail__iconButton";
       draftButton.type = "button";
@@ -590,6 +593,7 @@ export function createDocsViewerManagementCollectionDefaultContribution(options 
         draftButton.disabled = true;
         draftRegistration.invoke().then(function (response) {
           if (!response || response.ok !== true) return;
+          settings.commitDocumentDraft(response.target, response.record.draft);
           draft = response.record.draft;
           draftButton.title = draft ? "Draft — mark ready" : "Ready — mark as draft";
           draftButton.setAttribute("aria-label", draftButton.title);

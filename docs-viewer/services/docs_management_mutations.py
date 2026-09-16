@@ -10,6 +10,7 @@ from pathlib import Path
 from typing import Any, Dict, Optional
 
 import docs_source_model as source_model
+from docs_document_subjects import subject_key_is_canonical
 from docs_document_placement import DocumentPlacement, resolve_document_placement
 from docs_document_placement_references import MediaCopy, placement_reference_changes
 from docs_management_document_target import (
@@ -211,6 +212,7 @@ class ManagementMutationPlan:
 
 
 def plan_create(repo_root: Path, body: Dict[str, Any]) -> ManagementMutationPlan:
+    """Plan one source write with Catalogue fields present before the creation build."""
     if "scope" in body:
         raise ValueError("scope is retired; supply stage")
     if "viewable" in body:
@@ -226,6 +228,17 @@ def plan_create(repo_root: Path, body: Dict[str, Any]) -> ManagementMutationPlan
     require_document_authoring(resolved_collection.parent_config)
     stage = resolved_collection.stage
     collection = resolved_collection.collection
+    title = str(body.get("title") or "New Doc").strip() or "New Doc"
+    create_fields: Dict[str, Any] = {}
+    if collection == "catalogue":
+        work_id = body.get("work_id")
+        if not isinstance(work_id, str) or not work_id.isascii() or not subject_key_is_canonical("work", work_id):
+            raise ValueError("Catalogue New requires work_id as an exact five-digit string")
+        if not isinstance(body.get("title"), str) or not body["title"].strip():
+            raise ValueError("Catalogue New requires a non-blank title")
+        create_fields["work_id"] = work_id
+    elif "work_id" in body:
+        raise ValueError("work_id is only accepted when creating a Catalogue collection document")
     target_root = resolved_collection.source_root
     report_contract = source_model.report_source_contract_for_collection(
         repo_root,
@@ -252,7 +265,6 @@ def plan_create(repo_root: Path, body: Dict[str, Any]) -> ManagementMutationPlan
     )
     if collection and "parent_id" in body:
         raise ValueError("parent_id is not accepted for a collection document")
-    title = str(body.get("title") or "New Doc").strip() or "New Doc"
     docs_by_id = {doc.doc_id: doc for doc in docs}
     parent_id = str(body.get("parent_id") or "").strip()
 
@@ -269,6 +281,7 @@ def plan_create(repo_root: Path, body: Dict[str, Any]) -> ManagementMutationPlan
         "doc_id": doc_id,
         "title": title,
         "added_date": timestamp,
+        **create_fields,
     }
     if source_model.collection_supports_draft(resolved_collection.document_config):
         front_matter_seed["draft"] = True
