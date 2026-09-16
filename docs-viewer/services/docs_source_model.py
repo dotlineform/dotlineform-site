@@ -23,15 +23,13 @@ from docs_document_identity import (
     is_immutable_doc_id,
 )
 
-from docs_scope_config import (
-    DOCS_SCOPE_CONFIGS,
-    DocsScopeConfig,
+from docs_workspace_config import (
+    DocsStageConfig,
     DocsSubScopeConfig,
     document_source_path,
-    load_docs_scope_configs,
-    load_docs_scope_stage,
+    load_docs_stage,
     path_label,
-    resolve_scope_path,
+    resolve_workspace_path,
 )
 from docs_report_source import (
     ReportDescriptor,
@@ -50,8 +48,7 @@ RECENT_EDIT_FRONT_MATTER_FIELDS = ("title", "summary")
 
 
 @dataclass
-class ScopeDoc:
-    scope: str
+class SourceDoc:
     path: Path
     source_text: str
     front_matter: Dict[str, Any]
@@ -121,27 +118,15 @@ def parse_source(path: Path) -> tuple[Dict[str, Any], str]:
 
 def report_source_contract_for_collection(
     repo_root: Path,
-    parent_config: DocsScopeConfig,
-    document_config: DocsScopeConfig | DocsSubScopeConfig,
+    parent_config: DocsStageConfig,
+    document_config: DocsStageConfig | DocsSubScopeConfig,
 ) -> ReportSourceContract:
     """Load the one report registry with exact configured host context."""
 
     registry_path = repo_root / "docs-viewer/config/reports/reports.json"
     registry_payload = json.loads(registry_path.read_text(encoding="utf-8"))
-    scope_payload = json.loads(
-        (repo_root / "docs-viewer/config/scopes/docs_scopes.json").read_text(
-            encoding="utf-8"
-        )
-    )
-    configured_scope_ids = (
-        str(item.get("scope_id") or "").strip()
-        for item in scope_payload.get("scopes", ())
-        if isinstance(item, dict)
-    )
     return build_report_source_contract(
         registry_payload,
-        source_scope_id=parent_config.scope_id,
-        configured_scope_ids=configured_scope_ids,
         configured_sub_scope_ids=(item.sub_scope for item in parent_config.sub_scopes),
         source_sub_scope_id=str(getattr(document_config, "sub_scope", "") or ""),
     )
@@ -170,8 +155,8 @@ def parse_document_report(
 
 def parse_collection_document_report(
     repo_root: Path,
-    parent_config: DocsScopeConfig,
-    document_config: DocsScopeConfig | DocsSubScopeConfig,
+    parent_config: DocsStageConfig,
+    document_config: DocsStageConfig | DocsSubScopeConfig,
     source_text: str,
     *,
     source_name: str,
@@ -479,7 +464,7 @@ def normalize_ui_status(value: Any) -> str:
     return status
 
 
-def collection_supports_draft(config: DocsScopeConfig | DocsSubScopeConfig) -> bool:
+def collection_supports_draft(config: DocsStageConfig | DocsSubScopeConfig) -> bool:
     """Draft authoring belongs to every collection in Working."""
     return config.stage == "working"
 
@@ -487,7 +472,7 @@ def collection_supports_draft(config: DocsScopeConfig | DocsSubScopeConfig) -> b
 def validate_document_status_front_matter(
     front_matter: Dict[str, Any],
     *,
-    collection_config: DocsScopeConfig | DocsSubScopeConfig,
+    collection_config: DocsStageConfig | DocsSubScopeConfig,
     source_name: str,
 ) -> None:
     """Validate visual status and the availability/types of Working publication fields."""
@@ -507,43 +492,31 @@ def validate_document_status_front_matter(
         raise ValueError(f"publishable front matter is retired; use the Working publication ignore list: {source_name}")
 
 
-def normalize_scope(scope: Any) -> str:
-    value = str(scope or "").strip().lower()
-    if value not in DOCS_SCOPE_CONFIGS:
-        raise ValueError(f"scope must be one of: {', '.join(sorted(DOCS_SCOPE_CONFIGS.keys()))}")
-    return value
-
-
-def scope_markdown_paths(root: Path) -> list[Path]:
+def document_markdown_paths(root: Path) -> list[Path]:
     paths = sorted(root.glob("**/*.md"))
     nested_paths = [path for path in paths if path.parent != root]
     if nested_paths:
         nested = ", ".join(path.relative_to(root).as_posix() for path in nested_paths)
-        raise ValueError(f"Nested markdown docs are not supported under {root}; move these files to the scope root: {nested}")
+        raise ValueError(f"Nested markdown docs are not supported under {root}; move these files to the collection root: {nested}")
     return paths
 
 
 def load_document_collection_docs_for_config(
     repo_root: Path,
-    parent_config: DocsScopeConfig,
-    document_config: DocsScopeConfig | DocsSubScopeConfig,
-) -> list[ScopeDoc]:
+    parent_config: DocsStageConfig,
+    document_config: DocsStageConfig | DocsSubScopeConfig,
+) -> list[SourceDoc]:
     """Load one exact configured parent or sub-scope document collection."""
 
-    scope = parent_config.scope_id
-    root = resolve_scope_path(repo_root, document_source_path(document_config))
+    root = resolve_workspace_path(repo_root, document_source_path(document_config))
     sub_scope = str(getattr(document_config, "sub_scope", "") or "").strip()
-    if not root.exists():
-        collection = (
-            f"{scope}/{sub_scope}"
-            if sub_scope
-            else scope
-        )
-        raise ValueError(f"missing source root for scope {collection}: {root}")
+    if not root.is_dir():
+        collection = sub_scope or "ordinary documents"
+        raise ValueError(f"missing source root for {document_config.stage}/{collection}: {root}")
 
     report_contract: ReportSourceContract | None = None
-    docs: list[ScopeDoc] = []
-    for path in scope_markdown_paths(root):
+    docs: list[SourceDoc] = []
+    for path in document_markdown_paths(root):
         source_text = path.read_bytes().decode("utf-8")
         front_matter, body = parse_source_text(
             source_text,
@@ -582,8 +555,7 @@ def load_document_collection_docs_for_config(
                 contract=report_contract,
             )
         docs.append(
-            ScopeDoc(
-                scope=scope,
+            SourceDoc(
                 path=path,
                 source_text=source_text,
                 front_matter=dict(front_matter),
@@ -595,35 +567,34 @@ def load_document_collection_docs_for_config(
                 report=report,
             )
         )
-    validate_scope_docs(
+    validate_collection_docs(
         docs,
         allow_unknown_parent_ids=parent_config.allow_unresolved_parent_ids,
     )
     return docs
 
 
-def load_scope_docs_for_config(repo_root: Path, config: DocsScopeConfig) -> list[ScopeDoc]:
+def load_stage_docs_for_config(repo_root: Path, config: DocsStageConfig) -> list[SourceDoc]:
     return load_document_collection_docs_for_config(repo_root, config, config)
 
 
-def load_scope_docs(repo_root: Path, scope: str, *, stage: str) -> list[ScopeDoc]:
+def load_stage_docs(repo_root: Path, *, stage: str) -> list[SourceDoc]:
     """Read the exact configured ordinary collection in the requested stage."""
-    return load_scope_docs_for_config(repo_root, load_docs_scope_stage(repo_root, scope, stage))
+    return load_stage_docs_for_config(repo_root, load_docs_stage(repo_root, stage))
 
 
 def load_document_collection_docs(
     repo_root: Path,
-    scope: str,
     sub_scope: str = "",
     *,
     stage: str,
-) -> list[ScopeDoc]:
+) -> list[SourceDoc]:
     """Load exactly the configured stage and parent or named sub-scope collection."""
 
-    parent_config = load_docs_scope_stage(repo_root, scope, stage)
+    parent_config = load_docs_stage(repo_root, stage)
     normalized_sub_scope = str(sub_scope or "").strip().lower()
     if not normalized_sub_scope:
-        return load_scope_docs_for_config(repo_root, parent_config)
+        return load_stage_docs_for_config(repo_root, parent_config)
     matching = [
         candidate
         for candidate in parent_config.sub_scopes
@@ -631,7 +602,7 @@ def load_document_collection_docs(
     ]
     if len(matching) != 1:
         raise ValueError(
-            f"unknown sub_scope {normalized_sub_scope!r} for scope {scope!r}"
+            f"unknown sub_scope {normalized_sub_scope!r}"
         )
     return load_document_collection_docs_for_config(
         repo_root,
@@ -640,11 +611,11 @@ def load_document_collection_docs(
     )
 
 
-def validate_scope_docs(docs: list[ScopeDoc], *, allow_unknown_parent_ids: bool = False) -> None:
-    id_seen: dict[str, ScopeDoc] = {}
+def validate_collection_docs(docs: list[SourceDoc], *, allow_unknown_parent_ids: bool = False) -> None:
+    id_seen: dict[str, SourceDoc] = {}
     for doc in docs:
         if doc.doc_id in id_seen:
-            raise ValueError(f"Duplicate doc_id {doc.doc_id!r} in scope docs")
+            raise ValueError(f"Duplicate doc_id {doc.doc_id!r} in the document collection")
         id_seen[doc.doc_id] = doc
 
     for doc in docs:
@@ -654,33 +625,33 @@ def validate_scope_docs(docs: list[ScopeDoc], *, allow_unknown_parent_ids: bool 
             raise ValueError(f"Unknown parent_id {doc.parent_id!r} for doc {doc.doc_id!r}")
 
 
-def scope_doc_sort_key(doc: ScopeDoc) -> tuple[Any, ...]:
+def document_sort_key(doc: SourceDoc) -> tuple[Any, ...]:
     return (
         doc.title.lower(),
         doc.doc_id,
     )
 
 
-def sorted_siblings(docs: list[ScopeDoc], parent_id: str) -> list[ScopeDoc]:
-    return sorted((doc for doc in docs if doc.parent_id == parent_id), key=scope_doc_sort_key)
+def sorted_siblings(docs: list[SourceDoc], parent_id: str) -> list[SourceDoc]:
+    return sorted((doc for doc in docs if doc.parent_id == parent_id), key=document_sort_key)
 
 
-def subtree_docs_in_tree_order(docs: list[ScopeDoc], root_doc_id: str) -> list[ScopeDoc]:
+def subtree_docs_in_tree_order(docs: list[SourceDoc], root_doc_id: str) -> list[SourceDoc]:
     docs_by_id = {doc.doc_id: doc for doc in docs}
     root = docs_by_id.get(root_doc_id)
     if root is None:
         raise FileNotFoundError(f"doc {root_doc_id!r} not found")
 
-    children_by_parent: dict[str, list[ScopeDoc]] = {}
+    children_by_parent: dict[str, list[SourceDoc]] = {}
     for doc in docs:
         children_by_parent.setdefault(doc.parent_id, []).append(doc)
     for children in children_by_parent.values():
-        children.sort(key=scope_doc_sort_key)
+        children.sort(key=document_sort_key)
 
-    ordered: list[ScopeDoc] = []
+    ordered: list[SourceDoc] = []
     seen: set[str] = set()
 
-    def append_subtree(doc: ScopeDoc) -> None:
+    def append_subtree(doc: SourceDoc) -> None:
         if doc.doc_id in seen:
             return
         seen.add(doc.doc_id)
@@ -692,8 +663,8 @@ def subtree_docs_in_tree_order(docs: list[ScopeDoc], root_doc_id: str) -> list[S
     return ordered
 
 
-def descendant_doc_ids(docs: list[ScopeDoc], doc_id: str) -> set[str]:
-    children_by_parent: dict[str, list[ScopeDoc]] = {}
+def descendant_doc_ids(docs: list[SourceDoc], doc_id: str) -> set[str]:
+    children_by_parent: dict[str, list[SourceDoc]] = {}
     for doc in docs:
         children_by_parent.setdefault(doc.parent_id, []).append(doc)
 
@@ -709,11 +680,11 @@ def descendant_doc_ids(docs: list[ScopeDoc], doc_id: str) -> set[str]:
     return seen
 
 
-def direct_child_doc_ids(docs: list[ScopeDoc], doc_id: str) -> list[str]:
-    return [doc.doc_id for doc in sorted(docs, key=scope_doc_sort_key) if doc.parent_id == doc_id]
+def direct_child_doc_ids(docs: list[SourceDoc], doc_id: str) -> list[str]:
+    return [doc.doc_id for doc in sorted(docs, key=document_sort_key) if doc.parent_id == doc_id]
 
 
-def rewrite_doc_source(doc: ScopeDoc, front_matter_updates: Dict[str, Any]) -> str:
+def rewrite_doc_source(doc: SourceDoc, front_matter_updates: Dict[str, Any]) -> str:
     updated_front_matter = dict(doc.front_matter)
     for key, value in front_matter_updates.items():
         if value is None:
@@ -730,5 +701,5 @@ def rewrite_doc_source(doc: ScopeDoc, front_matter_updates: Dict[str, Any]) -> s
     return format_source(updated_front_matter, doc.body)
 
 
-def rewrite_doc_placement_source(doc: ScopeDoc, parent_id: str) -> str:
+def rewrite_doc_placement_source(doc: SourceDoc, parent_id: str) -> str:
     return rewrite_doc_source(doc, {"parent_id": parent_id})

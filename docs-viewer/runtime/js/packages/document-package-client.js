@@ -47,26 +47,23 @@ export async function requestDocumentPackageJson(path, options = {}) {
   return payload;
 }
 
-export function getDocumentPackageConfig(scope = "", subScope = "") {
+export function getDocumentPackageConfig(stage, subScope = "") {
   const normalizedSubScope = String(subScope == null ? "" : subScope).trim();
-  if (!normalizedSubScope) {
-    return requestDocumentPackageJson(DOCUMENT_PACKAGE_ENDPOINTS.config);
-  }
   return requestDocumentPackageJson(endpointUrl(DOCUMENT_PACKAGE_ENDPOINTS.config, {
-    scope,
+    stage,
     sub_scope: normalizedSubScope
   }));
 }
 
-export function getPackageDocuments(scope, subScope = "") {
+export function getPackageDocuments(stage, subScope = "") {
   return requestDocumentPackageJson(endpointUrl(DOCUMENT_PACKAGE_ENDPOINTS.documents, {
-    scope,
+    stage,
     sub_scope: subScope
   }));
 }
 
-export function getReturnedDocumentPackages(scope) {
-  return requestDocumentPackageJson(endpointUrl(DOCUMENT_PACKAGE_ENDPOINTS.returned, { scope }));
+export function getReturnedDocumentPackages(stage) {
+  return requestDocumentPackageJson(endpointUrl(DOCUMENT_PACKAGE_ENDPOINTS.returned, { stage }));
 }
 
 export function postDocumentPackageJson(path, payload) {

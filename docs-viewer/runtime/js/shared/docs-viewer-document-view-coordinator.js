@@ -45,8 +45,8 @@ export function createDocsViewerDocumentViewCoordinator(options) {
       payloadCache: settings.selectedDocument.payloadCache,
       appContext: typeof settings.appContext === "function" ? settings.appContext() : settings.appContext,
       selectedDocId: settings.selectedDocument.selectedDocId,
-      uiStatusByValue: settings.scopeConfig.uiStatusByValue,
-      viewerScope: typeof settings.viewerScope === "function" ? settings.viewerScope() : settings.viewerScope,
+      uiStatusByValue: settings.workspaceConfig.uiStatusByValue,
+      viewerStage: typeof settings.viewerStage === "function" ? settings.viewerStage() : settings.viewerStage,
       viewerTargetDocId: settings.viewerTargetDocId,
       viewerUrl: settings.viewerUrl
     };
@@ -119,13 +119,13 @@ export function createDocsViewerDocumentViewCoordinator(options) {
     appContext: settings.appContext,
     collectionProvider: settings.collectionProvider,
     managedDocumentContext: settings.managedDocumentContext,
-    scopeConfig: settings.scopeConfig,
+    workspaceConfig: settings.workspaceConfig,
     selectedDocument: settings.selectedDocument,
     defaultViewId: function () {
       return infoPanelDefaultViewId(settings, documentDisplayModeHost.activeModeId()) || "metadata-info";
     },
     sourceEditorServices: settings.sourceEditorServices,
-    viewerScope: settings.viewerScope,
+    viewerStage: settings.viewerStage,
     viewerTargetDocId: settings.viewerTargetDocId,
     viewerUrl: settings.viewerUrl
   });

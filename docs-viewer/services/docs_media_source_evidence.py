@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Private scope-owned provenance for media added from configured source folders."""
+"""Private collection-owned provenance for media added from configured source folders."""
 
 from __future__ import annotations
 
@@ -10,14 +10,14 @@ from typing import Any
 
 from docs_artifact_locations import artifact_location_adapter
 from docs_media_storage import validate_media_filename
-from docs_scope_config import DocsScopeConfig, DocsSubScopeConfig, load_docs_media_owner
+from docs_workspace_config import DocsStageConfig, DocsSubScopeConfig, load_docs_media_owner
 from studio.shared.python.projects_directories import (
     PROJECTS_ROOT_MARKER,
     normalize_projects_directory_marker,
 )
 
 
-SCHEMA_VERSION = "docs_media_source_evidence_v1"
+SCHEMA_VERSION = "docs_media_source_evidence_v2"
 TABLE_IDENTITY = "media-source-evidence.json"
 
 
@@ -46,7 +46,7 @@ def _canonical_source_path(value: Any, *, source_root: str) -> str:
     return normalized
 
 
-def _normalize_record(raw: Any, *, config: DocsScopeConfig | DocsSubScopeConfig, field: str) -> DocsMediaSourceEvidence:
+def _normalize_record(raw: Any, *, config: DocsStageConfig | DocsSubScopeConfig, field: str) -> DocsMediaSourceEvidence:
     if not isinstance(raw, dict) or set(raw) != {
         "media_type",
         "identity",
@@ -56,7 +56,7 @@ def _normalize_record(raw: Any, *, config: DocsScopeConfig | DocsSubScopeConfig,
         raise ValueError(f"{field} must contain only media_type, identity, source_root, and source_path")
     media_type = str(raw.get("media_type") or "")
     if media_type not in config.media.types:
-        raise ValueError(f"{field}.media_type must be configured for scope {config.scope_id!r}")
+        raise ValueError(f"{field}.media_type must be configured for stage {config.stage!r}")
     identity = validate_media_filename(str(raw.get("identity") or ""))
     source_root = normalize_projects_directory_marker(raw.get("source_root"))
     if source_root == PROJECTS_ROOT_MARKER:
@@ -70,20 +70,21 @@ def _normalize_record(raw: Any, *, config: DocsScopeConfig | DocsSubScopeConfig,
     )
 
 
-def _adapter(repo_root: Path, config: DocsScopeConfig | DocsSubScopeConfig):
+def _adapter(repo_root: Path, config: DocsStageConfig | DocsSubScopeConfig):
     return artifact_location_adapter(repo_root, config.media.source_location)
 
 
 def load_media_source_evidence(
     repo_root: Path,
-    scope: str,
+    stage: str,
     *,
-    config: DocsScopeConfig | DocsSubScopeConfig | None = None,
+    sub_scope: str = "",
+    config: DocsStageConfig | DocsSubScopeConfig | None = None,
 ) -> tuple[DocsMediaSourceEvidence, ...]:
-    normalized_scope = str(scope or "").strip().lower()
-    config = config if config is not None else load_docs_media_owner(repo_root, normalized_scope)
-    if config.scope_id != normalized_scope:
-        raise ValueError("media evidence collection does not match its scope")
+    owner = load_docs_media_owner(repo_root, stage, sub_scope)
+    if config is not None and config != owner:
+        raise ValueError("media evidence config does not match its exact stage and collection")
+    config = owner
     adapter = _adapter(repo_root, config)
     if adapter.stat(TABLE_IDENTITY) is None:
         return ()
@@ -91,12 +92,12 @@ def load_media_source_evidence(
         payload = json.loads(adapter.read(TABLE_IDENTITY).decode("utf-8"))
     except (UnicodeDecodeError, json.JSONDecodeError) as exc:
         raise ValueError("Docs media source evidence is invalid JSON") from exc
-    if not isinstance(payload, dict) or set(payload) != {"schema_version", "scope", "records"}:
-        raise ValueError("Docs media source evidence must contain only schema_version, scope, and records")
+    if not isinstance(payload, dict) or set(payload) != {"schema_version", "stage", "sub_scope", "records"}:
+        raise ValueError("Docs media source evidence must contain only schema_version, stage, sub_scope, and records")
     if payload.get("schema_version") != SCHEMA_VERSION:
         raise ValueError(f"Docs media source evidence schema_version must be {SCHEMA_VERSION}")
-    if payload.get("scope") != normalized_scope:
-        raise ValueError("Docs media source evidence scope does not match its owner")
+    if payload.get("stage") != stage or payload.get("sub_scope") != sub_scope:
+        raise ValueError("Docs media source evidence collection does not match its owner")
     raw_records = payload.get("records")
     if not isinstance(raw_records, list):
         raise ValueError("Docs media source evidence records must be an array")
@@ -114,18 +115,21 @@ def load_media_source_evidence(
 
 def record_media_source_evidence(
     repo_root: Path,
-    scope: str,
+    stage: str,
     *,
+    sub_scope: str = "",
     media_type: str,
     identity: str,
     source_root: str,
     source_path: str,
-    config: DocsScopeConfig | DocsSubScopeConfig | None = None,
+    config: DocsStageConfig | DocsSubScopeConfig | None = None,
 ) -> DocsMediaSourceEvidence:
-    normalized_scope = str(scope or "").strip().lower()
-    config = config if config is not None else load_docs_media_owner(repo_root, normalized_scope)
-    if config.scope_id != normalized_scope:
-        raise ValueError("media evidence collection does not match its scope")
+    owner = load_docs_media_owner(repo_root, stage, sub_scope)
+    if config is not None and config != owner:
+        raise ValueError("media evidence config does not match its exact stage and collection")
+    config = owner
+    if stage != "working":
+        raise ValueError("Media source evidence writes require Working")
     record = _normalize_record(
         {
             "media_type": media_type,
@@ -138,13 +142,14 @@ def record_media_source_evidence(
     )
     records = {
         (existing.media_type, existing.identity): existing
-        for existing in load_media_source_evidence(repo_root, normalized_scope, config=config)
+        for existing in load_media_source_evidence(repo_root, stage, sub_scope=sub_scope, config=config)
     }
     records[(record.media_type, record.identity)] = record
     ordered = tuple(records[key] for key in sorted(records))
     payload = {
         "schema_version": SCHEMA_VERSION,
-        "scope": normalized_scope,
+        "stage": stage,
+        "sub_scope": sub_scope,
         "records": [asdict(item) for item in ordered],
     }
     encoded = (json.dumps(payload, ensure_ascii=False, indent=2) + "\n").encode("utf-8")
@@ -157,17 +162,18 @@ def record_media_source_evidence(
 
 def media_source_evidence_for(
     repo_root: Path,
-    scope: str,
+    stage: str,
     media_type: str,
     identity: str,
     *,
-    config: DocsScopeConfig | DocsSubScopeConfig | None = None,
+    sub_scope: str = "",
+    config: DocsStageConfig | DocsSubScopeConfig | None = None,
 ) -> DocsMediaSourceEvidence | None:
     normalized_identity = validate_media_filename(identity)
     return next(
         (
             record
-            for record in load_media_source_evidence(repo_root, scope, config=config)
+            for record in load_media_source_evidence(repo_root, stage, sub_scope=sub_scope, config=config)
             if record.media_type == media_type and record.identity == normalized_identity
         ),
         None,

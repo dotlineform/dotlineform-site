@@ -1,16 +1,14 @@
+import { runManagedDocsExportWorkspaceWorkflow } from "./docs-viewer-export-workspace-workflow.js";
+import { stageStaticHtmlExportCapability } from "./docs-viewer-management-capabilities.js";
 import { toggleManagedDocDraft } from "./docs-viewer-management-draft-workflow.js";
 import {
   createDocsViewerManagementCapabilityController,
-  scopePrePublishSupported,
-  scopePublishWorkflowSupported
+  stagePrePublishSupported,
+  stagePublishWorkflowSupported
 } from "./docs-viewer-management-capabilities.js";
 import {
   createDocsViewerManagementEventRouter
 } from "./docs-viewer-management-event-router.js";
-import {
-  docsViewerExportScopesAvailable,
-  runManagedDocsExportScopesWorkflow
-} from "./docs-viewer-export-scopes-workflow.js";
 import {
   createDocsViewerManagementInteractionController
 } from "./docs-viewer-management-interactions.js";
@@ -24,8 +22,8 @@ import {
   createDocsViewerManagementModalComposition
 } from "./docs-viewer-management-modal-composition.js";
 import {
-  createDocsViewerManagementScopeLifecycleController
-} from "./docs-viewer-management-scope-lifecycle-controller.js";
+  createDocsViewerManagementSubScopeLifecycleController
+} from "./docs-viewer-management-sub-scope-lifecycle-controller.js";
 import {
   createDocsViewerManagementActionController,
   requestCommittedDocumentSource
@@ -111,7 +109,6 @@ export function refreshDocsImportTerminalDestination(detail, options = {}) {
   }
   var target = destination.target;
   var targetCollection = normalizeManagedDocumentCollectionTarget({
-    scope: target.scope,
     ...(target.stage ? { stage: target.stage } : {}),
     ...(target.sub_scope ? { sub_scope: target.sub_scope } : {})
   });
@@ -119,8 +116,7 @@ export function refreshDocsImportTerminalDestination(detail, options = {}) {
     options.currentCollection
   );
   var destinationIsDisplayed = (
-    displayedCollection.scope === targetCollection.scope
-    && String(displayedCollection.stage || "") === String(targetCollection.stage || "")
+    String(displayedCollection.stage || "") === String(targetCollection.stage || "")
     && String(displayedCollection.sub_scope || "")
       === String(targetCollection.sub_scope || "")
   );
@@ -166,7 +162,7 @@ export function initDocsViewerManagement(context) {
   var documentIndex = domains.documentIndex || {};
   var management = domains.management || {};
   var routeSession = domains.routeSession || {};
-  var scopeConfig = domains.scopeConfig || {};
+  var workspaceConfig = domains.workspaceConfig || {};
   var searchRecent = domains.searchRecent || {};
   var selectedDocument = domains.selectedDocument || {};
   var serviceClient = context.serviceClient || {};
@@ -193,7 +189,6 @@ export function initDocsViewerManagement(context) {
   var manageImportButton = document.getElementById("docsViewerManageImportButton");
   var manageToolbarImportButton = document.getElementById("docsViewerManageToolbarImportButton");
   var manageImportButtons = [manageImportButton, manageToolbarImportButton].filter(Boolean);
-  var manageExportScopesButton = document.getElementById("docsViewerManageExportScopesButton");
   var manageNewButton = document.getElementById("docsViewerManageNewButton");
   var importRoot = shellRef("importRoot", "docsHtmlImportRoot");
   var importBootStatus = shellRef("importBootStatus", "docsHtmlImportBootStatus");
@@ -203,14 +198,15 @@ export function initDocsViewerManagement(context) {
   var interactionController = null;
   var metadataWorkflow = null;
   var modalController = null;
-  var scopeLifecycleController = null;
+  var subScopeLifecycleController = null;
+  var workspaceExportActive = false;
+  var workspaceExportButton = document.getElementById("docsViewerManageExportWorkspaceButton");
   var settingsWorkflow = null;
   var actionController = null;
   var resolveAction = null;
   var projectedReportControls = null;
   var sourceSessionReportActive = false;
   var subscopeReportState = null;
-  var exportScopesWorkflowActive = false;
   var indexController = createDocsViewerManagementIndexController({
     root: root,
     nav: nav,
@@ -258,7 +254,6 @@ export function initDocsViewerManagement(context) {
         if (eventRouter) eventRouter.toggleIndexActionsMenu();
       },
       viewerStage: viewerStage,
-      viewerScope: viewerScope
     }
   });
   var indexSelection = indexController.indexSelection;
@@ -272,10 +267,6 @@ export function initDocsViewerManagement(context) {
     return context.viewerStage ? context.viewerStage() : "";
   }
 
-  function viewerScope() {
-    return context.viewerScope();
-  }
-
   function currentImportDisplayContext() {
     if (subscopeReportState && subscopeReportState.collectionTarget) {
       return normalizeManagedDocumentCollectionTarget(
@@ -283,7 +274,6 @@ export function initDocsViewerManagement(context) {
       );
     }
     return normalizeManagedDocumentCollectionTarget({
-      scope: viewerScope(),
       ...(viewerStage() ? { stage: viewerStage() } : {})
     });
   }
@@ -292,7 +282,7 @@ export function initDocsViewerManagement(context) {
     if (subscopeReportState && subscopeReportState.collectionTarget) {
       return String(subscopeReportState.collectionLabel || "").trim();
     }
-    return viewerScope();
+    return viewerStage();
   }
 
   function openAppImport(detail) {
@@ -304,49 +294,29 @@ export function initDocsViewerManagement(context) {
     });
   }
 
-  function exportScopesAvailable() {
-    return docsViewerExportScopesAvailable({
-      capabilities: management.managementCapabilities,
-      currentScope: viewerScope(),
-      scopeConfigs: scopeConfig.scopeConfigs
-    });
-  }
-
-  function openExportScopes() {
-    if (exportScopesWorkflowActive || management.managementBusy) {
-      return Promise.resolve(null);
-    }
-    exportScopesWorkflowActive = true;
+  async function openExportWorkspace() {
+    if (workspaceExportActive || management.managementBusy) return null;
+    workspaceExportActive = true;
     renderManagementUi();
-    return runManagedDocsExportScopesWorkflow({
-      root: root,
-      restoreFocus: manageActionsButton,
-      capabilities: management.managementCapabilities,
-      clientOptions: managementClientOptions(),
-      currentScope: viewerScope(),
-      scopeConfigs: scopeConfig.scopeConfigs,
-      callbacks: {
-        render: renderManagementUi,
-        setBusy: setManagementBusy,
-        setMessage: setManagementMessage
-      }
-    }).catch(function (error) {
-      setManagementMessage(
-        error && error.message ? error.message : "Export Scopes failed.",
-        true
-      );
+    try {
+      return await runManagedDocsExportWorkspaceWorkflow({
+        root: root, restoreFocus: manageActionsButton,
+        capabilities: management.managementCapabilities, clientOptions: managementClientOptions(),
+        callbacks: { render: renderManagementUi, setBusy: setManagementBusy, setMessage: setManagementMessage }
+      });
+    } catch (error) {
+      setManagementMessage(error.message || "Workspace export failed.", true);
       return null;
-    }).finally(function () {
-      exportScopesWorkflowActive = false;
+    } finally {
+      workspaceExportActive = false;
       setManagementBusy(false);
       renderManagementUi();
-    });
+    }
   }
 
   function managementClientOptions() {
     return {
       baseUrl: serviceClient.managementBaseUrl || context.managementBaseUrl,
-      scope: viewerScope(),
       ...(viewerStage() ? { stage: viewerStage() } : {}),
       fetch: function (url, options) {
         return window.fetch(url, options);
@@ -366,7 +336,6 @@ export function initDocsViewerManagement(context) {
   function sourceTargetForDoc(doc) {
     if (!doc || !doc.doc_id) return null;
     return normalizeManagedDocumentTarget({
-      scope: viewerScope(),
       ...(viewerStage() ? { stage: viewerStage() } : {}),
       doc_id: doc.doc_id
     });
@@ -389,7 +358,6 @@ export function initDocsViewerManagement(context) {
         );
         if (
           !collectionTarget.sub_scope
-          || collectionTarget.scope !== parentTarget.scope
           || String(collectionTarget.stage || "") !== String(parentTarget.stage || "")
         ) {
           throw new Error(
@@ -400,7 +368,6 @@ export function initDocsViewerManagement(context) {
           subdocTarget = normalizeManagedDocumentTarget(state.subdocTarget);
           if (
             !subdocTarget.sub_scope
-            || subdocTarget.scope !== parentTarget.scope
             || String(subdocTarget.stage || "") !== String(parentTarget.stage || "")
             || subdocTarget.sub_scope !== collectionTarget.sub_scope
           ) {
@@ -575,7 +542,6 @@ export function initDocsViewerManagement(context) {
       "manage-rebuild",
       "manage-publish",
       "manage-pre-publish",
-      "manage-scope",
       "manage-stage"
     ].forEach(function (controlId) {
       projectAppControl(controlId, { hidden: true, disabled: true });
@@ -589,7 +555,7 @@ export function initDocsViewerManagement(context) {
     return toggleManagedDocDraft(target, {
       clientOptions: managementClientOptions(),
       onSaved: function (savedTarget, response) {
-        if (savedTarget.scope !== viewerScope() || savedTarget.stage !== viewerStage()) return;
+        if (savedTarget.stage !== viewerStage()) return;
         var record = savedTarget.sub_scope
           ? (managedDocumentTargetsEqual(savedTarget, subscopeReportState?.subdocTarget) ? subscopeReportState.subdocRecord : null)
           : documentIndex.docsById.get(savedTarget.doc_id);
@@ -779,15 +745,13 @@ export function initDocsViewerManagement(context) {
       !editAction.enabled ||
       searchRecent.searchRouteActive
     );
-    var publishAvailable = management.managementAvailable && scopePublishWorkflowSupported(
+    var publishAvailable = management.managementAvailable && stagePublishWorkflowSupported(
       management.managementCapabilities,
-      viewerScope(),
       viewerStage()
     );
-    var prePublishAvailable = management.managementAvailable && scopePrePublishSupported(
-      management.managementCapabilities, viewerScope(), viewerStage()
+    var prePublishAvailable = management.managementAvailable && stagePrePublishSupported(
+      management.managementCapabilities, viewerStage()
     );
-    var exportScopesActionAvailable = exportScopesAvailable();
 
     projectAppControl("manage-import", {
       hidden: managementActionsHidden || viewerStage() !== "working",
@@ -809,7 +773,6 @@ export function initDocsViewerManagement(context) {
       hidden: managementActionsHidden || !prePublishAvailable,
       disabled: management.managementBusy || !prePublishAvailable
     });
-    projectAppControl("manage-scope", { hidden: managementActionsHidden });
     projectAppControl("manage-stage", { hidden: managementActionsHidden || !viewerStage() });
 
     manageRebuildButton.disabled = management.managementBusy || !management.managementAvailable;
@@ -819,7 +782,12 @@ export function initDocsViewerManagement(context) {
         eventRouter.hideManageActionsMenu();
       }
     }
-    if (scopeLifecycleController) scopeLifecycleController.render();
+    if (subScopeLifecycleController) subScopeLifecycleController.render();
+    if (workspaceExportButton) {
+      var exportCapability = stageStaticHtmlExportCapability(management.managementCapabilities, viewerStage());
+      workspaceExportButton.disabled = management.managementBusy || workspaceExportActive || !exportCapability.available;
+      workspaceExportButton.title = exportCapability.available ? "Export workspace" : exportCapability.reason;
+    }
     managePublishButtons.forEach(function (button) {
       button.disabled = management.managementBusy || !publishAvailable;
     });
@@ -827,17 +795,6 @@ export function initDocsViewerManagement(context) {
     manageImportButtons.forEach(function (button) {
       button.disabled = management.managementBusy || !management.managementAvailable;
     });
-    if (manageExportScopesButton) {
-      var exportScopesDisabled = management.managementBusy
-        || exportScopesWorkflowActive
-        || !exportScopesActionAvailable;
-      var exportScopesLabel = exportScopesActionAvailable
-        ? "Export"
-        : "Export is unavailable for registered scopes.";
-      manageExportScopesButton.disabled = exportScopesDisabled;
-      manageExportScopesButton.title = exportScopesLabel;
-      manageExportScopesButton.setAttribute("aria-label", exportScopesLabel);
-    }
     if (manageSettingsButton) {
       manageSettingsButton.disabled = management.managementBusy || !management.managementAvailable;
     }
@@ -941,7 +898,6 @@ export function initDocsViewerManagement(context) {
       renderManagementUi: renderManagementUi,
       renderSidebar: context.renderSidebar,
       viewerStage: viewerStage,
-      viewerScope: viewerScope
     }
   });
 
@@ -1051,7 +1007,6 @@ export function initDocsViewerManagement(context) {
       setManagementBusy: setManagementBusy,
       setManagementMessage: setManagementMessage,
       viewerStage: viewerStage,
-      viewerScope: viewerScope
     }
   });
 
@@ -1064,17 +1019,14 @@ export function initDocsViewerManagement(context) {
     },
     commands: {
       createDoc: function () { actionController.handleCreateDoc(); },
-      createScope: function () { scopeLifecycleController.createScope(); },
-      createSubScope: function () { scopeLifecycleController.createSubScope(); },
+      exportWorkspace: openExportWorkspace,
+      createSubScope: function () { subScopeLifecycleController.createSubScope(); },
       deleteDoc: function () { actionController.handleDeleteDoc(); },
-      deleteScope: function () { scopeLifecycleController.deleteScope(); },
-      deleteSubScope: function () { scopeLifecycleController.deleteSubScope(); },
-      exportScopes: openExportScopes,
+      deleteSubScope: function () { subScopeLifecycleController.deleteSubScope(); },
       openImport: openAppImport,
       openSettings: function () { settingsWorkflow.open(); },
       publish: function () { actionController.handlePublishDocs(); },
       prePublish: function () { actionController.handlePrePublishDocs(); },
-      renameScope: function () { scopeLifecycleController.renameScope(); },
       rebuild: function () { actionController.handleRebuildDocs(); }
     },
     controllers: {
@@ -1101,24 +1053,16 @@ export function initDocsViewerManagement(context) {
       hideManageActionsMenu: eventRouter.hideManageActionsMenu,
       onImportComplete: displayImportedDocument,
       viewerStage: viewerStage,
-      viewerScope: viewerScope
     }
   });
 
-  scopeLifecycleController = createDocsViewerManagementScopeLifecycleController({
+  subScopeLifecycleController = createDocsViewerManagementSubScopeLifecycleController({
     root: root,
     management: management,
     callbacks: {
       hideContextMenu: hideContextMenu,
       hideManageActionsMenu: eventRouter.hideManageActionsMenu,
       managementClientOptions: managementClientOptions,
-      navigateToScope: function (scopeId) {
-        var url = new URL(window.location.href);
-        url.searchParams.set("scope", scopeId);
-        url.searchParams.delete("doc");
-        url.searchParams.delete("q");
-        window.location.assign(url.toString());
-      },
       refreshManagementCapabilities: refreshManagementCapabilities,
       reloadDocsIndex: reloadDocsIndex,
       reloadViewerConfiguration: reloadViewerConfiguration,
@@ -1126,7 +1070,6 @@ export function initDocsViewerManagement(context) {
       setBusy: setManagementBusy,
       setMessage: setManagementMessage,
       viewerStage: viewerStage,
-      viewerScope: viewerScope
     }
   });
 
@@ -1136,7 +1079,7 @@ export function initDocsViewerManagement(context) {
       documentIndex: documentIndex,
       management: management,
       routeSession: routeSession,
-      scopeConfig: scopeConfig
+      workspaceConfig: workspaceConfig
     },
     context: context,
     shellRefs: shellRefs,
@@ -1161,7 +1104,6 @@ export function initDocsViewerManagement(context) {
       onSettingsSubmit: actionController.handleSettingsSubmit,
       managementClientOptions: managementClientOptions,
       viewerStage: viewerStage,
-      viewerScope: viewerScope
     }
   });
   metadataWorkflow = modalComposition.metadataWorkflow;

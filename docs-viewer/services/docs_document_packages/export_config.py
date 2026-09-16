@@ -15,7 +15,6 @@ from docs_document_packages.export_common import normalize_text, read_json
 
 DEFAULT_CONFIG_PATH = Path("docs-viewer/config/document-packages/profiles.json")
 SCHEMA_VERSION = "documents_prepare_profiles_v1"
-EXPORT_META_SCHEMA_VERSION = "data_sharing_export_meta_v1"
 ID_RE = re.compile(r"^[a-z0-9][a-z0-9-]*[a-z0-9]$")
 OUTPUT_PATH_RE = re.compile(r"^[A-Za-z_][A-Za-z0-9_]*(\.[A-Za-z_][A-Za-z0-9_]*)*$")
 SUPPORTED_TRANSFORMS = {

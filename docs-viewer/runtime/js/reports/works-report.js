@@ -3,7 +3,6 @@ import { appendProjectSubjectIcon } from "./project-subject-icons.js";
 
 const SERIES_SCHEMA = "studio_catalogue_lookup_series_search_v2";
 const WORK_SCHEMA = "studio_catalogue_lookup_work_search_v2";
-const WORKS_SCOPE = "analysis";
 const WORKS_STAGE = "working";
 const WORKS_SUB_SCOPE = "works";
 const WORKS_CUSTOMISATION = "working_works";
@@ -195,13 +194,12 @@ export function composeWorksProjection(seriesRecords, workRecords, workDocuments
 }
 
 function configuredWorkingWorksManifestUrl(context) {
-  const configs = Array.isArray(context && context.scopeConfigs) ? context.scopeConfigs : [];
-  const scopeMatches = configs.filter((config) => {
-    return cleanString(config && (config.scope_id || config.scopeId)).toLowerCase() === WORKS_SCOPE
-      && config.stage === WORKS_STAGE;
+  const configs = Array.isArray(context && context.stageConfigs) ? context.stageConfigs : [];
+  const stageMatches = configs.filter((config) => {
+    return config.stage === WORKS_STAGE;
   });
-  const subScopes = scopeMatches.length === 1 && Array.isArray(scopeMatches[0].subScopes)
-    ? scopeMatches[0].subScopes
+  const subScopes = stageMatches.length === 1 && Array.isArray(stageMatches[0].subScopes)
+    ? stageMatches[0].subScopes
     : [];
   const matches = subScopes.filter((record) => {
     return cleanString(record && (record.sub_scope || record.subScope)).toLowerCase()
@@ -282,17 +280,16 @@ function seriesHref(context, seriesId) {
 }
 
 function workDocumentHref(context, docId) {
-  if (typeof context.viewerUrlForScope !== "function") {
+  if (typeof context.viewerUrlForDocument !== "function") {
     throw new Error("Working Works document links are not configured.");
   }
-  const raw = cleanString(context.viewerUrlForScope(
-    WORKS_SCOPE,
+  const raw = cleanString(context.viewerUrlForDocument(
     WORKS_REPORT_DOC_ID,
     { manage: true, stage: WORKS_STAGE }
   ));
   const url = new URL(raw, "http://docs.local");
   if (
-    url.searchParams.get("scope") !== WORKS_SCOPE
+    url.searchParams.get("stage") !== WORKS_STAGE
     || url.searchParams.get("doc") !== WORKS_REPORT_DOC_ID
   ) {
     throw new Error("Working Works document links are not configured.");

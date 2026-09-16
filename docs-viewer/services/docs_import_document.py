@@ -28,7 +28,7 @@ from docs_subscope_customisations import (  # noqa: E402
     normalize_sub_scope_customisation_import_front_matter,
 )
 from docs_source_model import (  # noqa: E402
-    ScopeDoc,
+    SourceDoc,
     advance_doc_front_matter,
     advance_front_matter_for_recent_edit,
     allocate_doc_id,
@@ -44,7 +44,7 @@ from docs_source_model import (  # noqa: E402
     write_text_atomic,
     write_text_atomic_new,
 )
-from docs_scope_config import require_document_authoring  # noqa: E402
+from docs_workspace_config import require_document_authoring  # noqa: E402
 from docs_import_media import bind_import_media_owner  # noqa: E402
 from markdown_renderer import normalize_markdown_blank_lines  # noqa: E402
 from docs_report_source import RETIRED_REPORT_KEYS, parse_report_source  # noqa: E402
@@ -75,7 +75,7 @@ class ImportDocumentMediaContext:
 class ImportDocumentPlan:
     """Validated source and asset plan for one normalized import record."""
 
-    scope: str
+    stage: str
     operation: str
     record: ImportContent
     target_path: Path
@@ -84,8 +84,7 @@ class ImportDocumentPlan:
     parent_id: str
     import_preview: dict[str, Any]
     sub_scope: str = ""
-    stage: str = ""
-    target: ScopeDoc | None = None
+    target: SourceDoc | None = None
 
     @property
     def doc_id(self) -> str:
@@ -163,7 +162,6 @@ def _apply_explicit_front_matter(
 
 def _create_source(
     record: ImportContent,
-    scope: str,
     sub_scope: str,
     import_preview: dict[str, Any],
     explicit_front_matter: dict[str, Any],
@@ -199,7 +197,7 @@ def _create_source(
 
 def _overwrite_source(
     record: ImportContent,
-    target: ScopeDoc,
+    target: SourceDoc,
     import_preview: dict[str, Any],
     explicit_front_matter: dict[str, Any],
     *,
@@ -238,12 +236,12 @@ def _overwrite_source(
 
 def plan_import_document(
     repo_root: Path,
-    scope: str,
+    stage: str,
     record: ImportContent,
     *,
     operation: str,
-    docs: list[ScopeDoc],
-    target: ScopeDoc | None = None,
+    docs: list[SourceDoc],
+    target: SourceDoc | None = None,
     import_preview: dict[str, Any] | None = None,
     create_doc_id: str = "",
     create_added_date: str = "",
@@ -253,11 +251,11 @@ def plan_import_document(
 ) -> ImportDocumentPlan:
     """Validate and plan one create or overwrite without writing."""
 
-    normalized_scope = str(scope or "").strip().lower()
+    normalized_stage = str(stage or "").strip().lower()
     if collection is None:
-        raise ValueError("Import requires an exact scope/stage collection")
-    if collection.scope != normalized_scope:
-        raise ValueError("import collection target does not match the requested scope")
+        raise ValueError("Import requires an exact stage collection")
+    if collection.stage != normalized_stage:
+        raise ValueError("import collection target does not match the requested stage")
     sub_scope = collection.sub_scope
     create_root = collection.source_root
     document_config = collection.document_config
@@ -342,7 +340,6 @@ def plan_import_document(
             raise ValueError(f"cannot create existing import target {record.doc_id!r}")
         source_text, parent_id = _create_source(
             record,
-            normalized_scope,
             sub_scope,
             preview,
             explicit_front_matter,
@@ -369,7 +366,7 @@ def plan_import_document(
         front_matter, collection_config=document_config, source_name=target_path.name,
     )
     return ImportDocumentPlan(
-        scope=normalized_scope,
+        stage=normalized_stage,
         operation=operation,
         record=record,
         target_path=target_path,
@@ -378,7 +375,6 @@ def plan_import_document(
         parent_id=parent_id,
         import_preview=preview,
         sub_scope=sub_scope,
-        stage=parent_config.stage,
         target=target,
     )
 
@@ -456,7 +452,7 @@ def import_document_event(
     return (
         plan.suppression_reason,
         {
-            "scope": plan.scope,
+            "stage": plan.stage,
             "staged_filename": source_label,
             "source_format": plan.import_preview.get("source_format"),
             "inline_media_count": len(plan.import_preview.get("media_plans") or []),
@@ -484,9 +480,7 @@ def import_document_result(
 
     inline_media_written = list(apply_result.inline_media_written)
     interactive_html_written = list(apply_result.interactive_html_written)
-    target = {"scope": plan.scope, "doc_id": plan.doc_id}
-    if plan.stage:
-        target["stage"] = plan.stage
+    target = {"stage": plan.stage, "doc_id": plan.doc_id}
     if plan.sub_scope:
         target["sub_scope"] = plan.sub_scope
     record: dict[str, Any] = {
@@ -516,7 +510,7 @@ def import_document_result(
     if plan.sub_scope:
         result["sub_scope"] = plan.sub_scope
     else:
-        result["viewer_url"] = viewer_url_for(plan.scope, plan.doc_id)
+        result["viewer_url"] = viewer_url_for(plan.doc_id, stage=plan.stage)
     return result
 
 

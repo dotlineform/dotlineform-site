@@ -10,10 +10,10 @@ from pathlib import Path
 from typing import Any, Iterable, Mapping
 
 import docs_source_model as source_model
-from docs_scope_config import (
+from docs_workspace_config import (
     document_source_path,
-    load_docs_scope_configs,
-    resolve_scope_path,
+    load_docs_stage,
+    resolve_workspace_path,
 )
 from docs_subscope_customisations import (
     LINEAGE_EDITORIAL_ROLE,
@@ -22,7 +22,7 @@ from docs_subscope_customisations import (
 )
 
 
-LINEAGE_SCHEMA_VERSION = "docs_document_publication_lineage_v3"
+LINEAGE_SCHEMA_VERSION = "docs_document_publication_lineage_v4"
 LINEAGE_FILENAME = "document-publication-lineage.json"
 LINEAGE_RELATIVE_PATH = Path("data") / LINEAGE_FILENAME
 UTC_TIMESTAMP_FORMAT = "%Y-%m-%dT%H:%M:%SZ"
@@ -30,11 +30,11 @@ UTC_TIMESTAMP_FORMAT = "%Y-%m-%dT%H:%M:%SZ"
 
 @dataclass(frozen=True, order=True)
 class DocumentLineageCollection:
-    scope: str
+    stage: str
     sub_scope: str
 
     def payload(self) -> dict[str, str]:
-        return {"scope": self.scope, "sub_scope": self.sub_scope}
+        return {"stage": self.stage, "sub_scope": self.sub_scope}
 
 
 @dataclass(frozen=True, order=True)
@@ -151,9 +151,11 @@ def _published_url(raw: Any, *, field: str) -> str | None:
 
 
 def _collection(raw: Any, *, field: str) -> DocumentLineageCollection:
-    payload = _strict_object(raw, field=field, keys={"scope", "sub_scope"})
+    payload = _strict_object(raw, field=field, keys={"stage", "sub_scope"})
+    if payload["stage"] != "working":
+        raise ValueError(f"{field}.stage must identify Working")
     return DocumentLineageCollection(
-        scope=_required_text(payload["scope"], field=f"{field}.scope"),
+        stage=payload["stage"],
         sub_scope=_required_text(
             payload["sub_scope"],
             field=f"{field}.sub_scope",
@@ -287,19 +289,19 @@ def _validated_table(table: DocumentLineageTable) -> DocumentLineageTable:
 
 def empty_table(
     *,
-    working_scope: str,
+    working_stage: str,
     working_sub_scope: str,
-    editorial_scope: str,
+    editorial_stage: str,
     editorial_sub_scope: str,
 ) -> DocumentLineageTable:
     return _validated_table(
         DocumentLineageTable(
             working_collection=DocumentLineageCollection(
-                scope=working_scope,
+                stage=working_stage,
                 sub_scope=working_sub_scope,
             ),
             editorial_collection=DocumentLineageCollection(
-                scope=editorial_scope,
+                stage=editorial_stage,
                 sub_scope=editorial_sub_scope,
             ),
             records=(),
@@ -321,29 +323,26 @@ def configured_workflows(repo_root: Path) -> tuple[DocumentLineageWorkflow, ...]
         str,
         dict[str, list[tuple[DocumentLineageCollection, Path]]],
     ] = {}
-    for config in load_docs_scope_configs(repo_root).values():
-        if config.stages:
-            # Promotion and lineage follow-through are unavailable in stage views.
-            continue
-        for sub_scope in config.sub_scopes:
-            collection = DocumentLineageCollection(
-                scope=config.scope_id,
-                sub_scope=sub_scope.sub_scope,
+    config = load_docs_stage(repo_root, "working")
+    for sub_scope in config.sub_scopes:
+        collection = DocumentLineageCollection(
+            stage=config.stage,
+            sub_scope=sub_scope.sub_scope,
+        )
+        documents_root = resolve_workspace_path(
+            repo_root,
+            document_source_path(sub_scope),
+        )
+        for aspect in sub_scope_customisation_document_lineage_contracts(
+            sub_scope.sub_scope_customisation
+        ):
+            roles = roles_by_contract.setdefault(
+                aspect.contract_id,
+                {LINEAGE_SOURCE_ROLE: [], LINEAGE_EDITORIAL_ROLE: []},
             )
-            documents_root = resolve_scope_path(
-                repo_root,
-                document_source_path(sub_scope),
+            roles[aspect.role].append(
+                (collection, documents_root.parent / LINEAGE_RELATIVE_PATH)
             )
-            for aspect in sub_scope_customisation_document_lineage_contracts(
-                sub_scope.sub_scope_customisation
-            ):
-                roles = roles_by_contract.setdefault(
-                    aspect.contract_id,
-                    {LINEAGE_SOURCE_ROLE: [], LINEAGE_EDITORIAL_ROLE: []},
-                )
-                roles[aspect.role].append(
-                    (collection, documents_root.parent / LINEAGE_RELATIVE_PATH)
-                )
 
     workflows: list[DocumentLineageWorkflow] = []
     for contract_id, roles in sorted(roles_by_contract.items()):
@@ -544,14 +543,14 @@ def write_table_atomic(
 def apply_document_deletes(
     repo_root: Path,
     *,
-    scope: str,
+    stage: str,
     sub_scope: str,
     doc_ids: Iterable[str],
 ) -> DocumentLineageDeleteResult:
     """Remove exact Working records or Editorial children after confirmed Delete."""
 
     target_collection = DocumentLineageCollection(
-        scope=_required_text(scope, field="delete collection.scope"),
+        stage=_required_text(stage, field="delete collection.stage"),
         sub_scope=_required_text(
             sub_scope,
             field="delete collection.sub_scope",
@@ -629,12 +628,12 @@ def apply_document_deletes(
 def project_publications(
     table: DocumentLineageTable | None,
     *,
-    editorial_scope: str,
+    editorial_stage: str,
     editorial_sub_scope: str,
     publication_urls: Mapping[str, str],
 ) -> DocumentLineageTable | None:
     if table is None or table.editorial_collection != DocumentLineageCollection(
-        editorial_scope,
+        editorial_stage,
         editorial_sub_scope,
     ):
         return table

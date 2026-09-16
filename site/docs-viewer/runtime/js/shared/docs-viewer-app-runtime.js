@@ -78,7 +78,6 @@ export function startDocsViewerRuntime(options) {
   var pathEl = mainViewRefs.pathEl;
   var bookmarkRow = appShellRefs.bookmarkRow;
   var content = mainViewRefs.content;
-  var scopeSelect = null;
   var searchInput = null;
   var resultsStatus = mainViewRefs.resultsStatus;
   var results = mainViewRefs.results;
@@ -88,18 +87,15 @@ export function startDocsViewerRuntime(options) {
   var routeAccess = appContext.routeAccess || {};
   var featurePolicy = appContext.featurePolicy || {};
   var bookmarksEnabled = docsViewerRouteFeatureEnabled(featurePolicy, "bookmarks");
-  var configuredScopeDiscoveryEnabled = docsViewerRouteFeatureEnabled(featurePolicy, "configured-scope-discovery");
+  var workspaceConfigurationEnabled = docsViewerRouteFeatureEnabled(featurePolicy, "workspace-configuration");
   var managementEnabled = docsViewerRouteFeatureEnabled(featurePolicy, "management");
   var recentEnabled = docsViewerRouteFeatureEnabled(featurePolicy, "recent");
   var searchEnabled = docsViewerRouteFeatureEnabled(featurePolicy, "search");
   var sourceEditingEnabled = docsViewerRouteFeatureEnabled(featurePolicy, "source-editing");
-  var allowScopeQuery = routeAccess.allowScopeQuery;
   var docsViewerConfigUrl = routeContext.docsViewerConfigUrl;
   var routeViewerBaseUrl = routeContext.routeViewerBaseUrl;
   var viewerBaseUrl = routeContext.viewerBaseUrl;
-  var viewerScope = routeContext.viewerScope;
   var viewerStage = routeContext.viewerStage || "";
-  var includeScopeParam = routeContext.includeScopeParam;
   var preserveQueryParams = routeContext.preserveQueryParams || [];
   var defaultRouteDocId = routeContext.defaultRouteDocId;
   var viewerPathname = routeContext.viewerPathname;
@@ -114,7 +110,7 @@ export function startDocsViewerRuntime(options) {
   var MANAGEMENT_CAPABILITY_RETRY_DELAY_MS = runtimeDefaults.managementCapabilityRetryDelayMs;
   var UI_STATUS_EMOJI_MAX_LENGTH = runtimeDefaults.uiStatusEmojiMaxLength;
   var SIDEBAR_COLLAPSE_MEDIA = runtimeDefaults.sidebarCollapseMedia;
-  var bookmarkScope = routeContext.bookmarkScope;
+  var bookmarkOwner = routeContext.bookmarkOwner;
   var latestIndexProjection = null;
   var composition = createDocsViewerAppComposition({
     root: root,
@@ -126,7 +122,6 @@ export function startDocsViewerRuntime(options) {
     createSourceAdapter: settings.createSourceAdapter,
     viewRegistry: settings.viewRegistry,
     viewerStage: function () { return viewerStage; },
-    viewerScope: function () { return viewerScope; },
     indexPanelAvailable: sidebarCollapseAvailable,
     onBeforePanelInteraction: hideContextMenu,
     onIndexProjection: function (projection) {
@@ -308,7 +303,6 @@ export function startDocsViewerRuntime(options) {
   renderIndexViewControls();
   renderMainViewControls();
   searchInput = controlSurfaceElement("appViewer", "search", "#docsViewerSearchInput");
-  scopeSelect = controlSurfaceElement("appManagement", "manage-scope", "#docsViewerScopeSelect");
   documentIndex = composition.documentIndex;
   var generatedDataRuntime = composition.generatedDataRuntime;
   var collectionProvider = composition.collectionProvider;
@@ -331,7 +325,7 @@ export function startDocsViewerRuntime(options) {
         ? controller.renderIndexSelectionGutter(doc)
         : null;
     },
-    scopeConfig: appSession.domains.scopeConfig,
+    workspaceConfig: appSession.domains.workspaceConfig,
     selectedDocument: appSession.domains.selectedDocument,
     statusForIndexDoc: documentIndex.statusForIndexDoc,
     updateNavDragState: updateNavDragState,
@@ -363,7 +357,7 @@ export function startDocsViewerRuntime(options) {
       projectMainViewControlState("info-panel", controlId, controlState);
     },
     root: root,
-    scopeConfig: appSession.domains.scopeConfig,
+    workspaceConfig: appSession.domains.workspaceConfig,
     selectedDocument: appSession.domains.selectedDocument,
     sourceEditorServices: function () {
       return sourceEditingEnabled && sourceService ? sourceEditorServices() : null;
@@ -371,7 +365,6 @@ export function startDocsViewerRuntime(options) {
     showWarning: statusController.setStatus,
     viewRegistry: viewRegistry,
     viewerStage: function () { return viewerStage; },
-    viewerScope: function () { return viewerScope; },
     viewerTargetDocId: documentIndex.viewerTargetDocId,
     viewerUrl: viewerUrl
   });
@@ -430,7 +423,7 @@ export function startDocsViewerRuntime(options) {
     },
     routeContext: function () { return routeContext; },
     routeSession: appSession.domains.routeSession,
-    scopeConfig: appSession.domains.scopeConfig,
+    workspaceConfig: appSession.domains.workspaceConfig,
     selectedDocument: appSession.domains.selectedDocument,
     setRecentModeActive: setRecentModeActive,
     statusCommands: {
@@ -440,12 +433,10 @@ export function startDocsViewerRuntime(options) {
     themedDiagramAdapter: settings.themedDiagramAdapter,
     toolbar: mainViewToolbar,
     viewerStage: function () { return viewerStage; },
-    viewerScope: function () { return viewerScope; },
-    viewerUrlForScope: viewerUrlForScope
+    viewerUrlForDocument: viewerUrlForDocument
   });
   routeWorkflow = initDocsViewerRouteWorkflow({
     managementUiEnabled: function () { return managementUiEnabled; },
-    allowScopeQuery: function () { return allowScopeQuery; },
     applyDocVisibility: documentIndex.applyDocVisibility,
     cancelSearchDebounce: cancelSearchDebounce,
     clearManagementMessageForDocChange: clearManagementMessageForDocChange,
@@ -463,7 +454,6 @@ export function startDocsViewerRuntime(options) {
     hideContextMenu: hideContextMenu,
     hideDocPane: hideDocPane,
     collectionProvider: collectionProvider,
-    includeScopeParam: function () { return includeScopeParam; },
     preserveQueryParams: function () { return preserveQueryParams; },
     more: more,
     onIndexReplaced: function (replacement) {
@@ -483,13 +473,13 @@ export function startDocsViewerRuntime(options) {
     resolveLoadableDocId: documentIndex.resolveLoadableDocId,
     results: results,
     root: root,
-    routeScopeFromUrl: routeScopeFromUrl,
+    routeStageFromUrl: routeStageFromUrl,
     routeViewerBaseUrl: function () { return routeViewerBaseUrl; },
     searchBatchSize: SEARCH_BATCH_SIZE,
     searchInput: searchInput,
     setRecentModeActive: setRecentModeActive,
     routeSession: appSession.domains.routeSession,
-    scopeConfig: appSession.domains.scopeConfig,
+    workspaceConfig: appSession.domains.workspaceConfig,
     documentIndex: appSession.domains.documentIndex,
     selectedDocument: appSession.domains.selectedDocument,
     searchRecent: appSession.domains.searchRecent,
@@ -501,7 +491,6 @@ export function startDocsViewerRuntime(options) {
     viewerBaseUrl: function () { return viewerBaseUrl; },
     viewerPathname: function () { return viewerPathname; },
     viewerStage: function () { return viewerStage; },
-    viewerScope: function () { return viewerScope; },
     window: window
   });
   var routeWorkflowCommands = routeWorkflow.commands;
@@ -548,7 +537,6 @@ export function startDocsViewerRuntime(options) {
     }
   });
   var configController = initDocsViewerConfigController({
-    allowScopeQuery: allowScopeQuery,
     configService: composition.configService,
     featurePolicy: featurePolicy,
     defaultRecentLimit: DEFAULT_RECENT_LIMIT,
@@ -568,13 +556,11 @@ export function startDocsViewerRuntime(options) {
     },
     routeViewerBaseUrl: routeViewerBaseUrl,
     routeSession: appSession.domains.routeSession,
-    scopeSelect: scopeSelect,
-    scopeConfig: appSession.domains.scopeConfig,
+    workspaceConfig: appSession.domains.workspaceConfig,
     searchRecent: appSession.domains.searchRecent,
     uiStatusEmojiMaxLength: UI_STATUS_EMOJI_MAX_LENGTH,
     viewerBaseUrl: function () { return viewerBaseUrl; },
     viewerStage: function () { return viewerStage; },
-    viewerScope: function () { return viewerScope; }
   });
 
   var treeMoveProjection = managementEnabled ? createDocsViewerTreeMoveProjection({
@@ -603,7 +589,7 @@ export function startDocsViewerRuntime(options) {
       applyDocVisibility: documentIndex.applyDocVisibility,
       cancelSearchDebounce: cancelSearchDebounce,
       cssEscape: cssEscape,
-      currentViewerConfig: function () { return appSession.domains.scopeConfig.viewerConfig || {}; },
+      currentViewerConfig: function () { return appSession.domains.workspaceConfig.viewerConfig || {}; },
       defaultDocId: documentIndex.defaultDocId,
       defaultRouteDocId: function () { return defaultRouteDocId; },
       docsViewerConfigUrl: docsViewerConfigUrl,
@@ -622,7 +608,7 @@ export function startDocsViewerRuntime(options) {
           documentIndex: appSession.domains.documentIndex,
           management: appSession.domains.management,
           routeSession: appSession.domains.routeSession,
-          scopeConfig: appSession.domains.scopeConfig,
+          workspaceConfig: appSession.domains.workspaceConfig,
           searchRecent: appSession.domains.searchRecent,
           selectedDocument: appSession.domains.selectedDocument
         }
@@ -655,7 +641,6 @@ export function startDocsViewerRuntime(options) {
       requestDocumentMode: documentViewCoordinator.requestDocumentMode,
       markdownDocLink: markdownDocLink,
       viewerStage: function () { return viewerStage; },
-      viewerScope: function () { return viewerScope; }
     },
     logger: window.console || console,
     onLoaded: function () {
@@ -671,32 +656,27 @@ export function startDocsViewerRuntime(options) {
     return managementRuntime ? managementRuntime.load() : Promise.resolve(null);
   }
 
-  function routeScopeFromUrl() {
-    if (!configuredScopeDiscoveryEnabled) return viewerScope;
-    return configController.routeScopeFromUrl();
+  function routeStageFromUrl() {
+    if (!workspaceConfigurationEnabled) return viewerStage;
+    return configController.routeStageFromUrl();
   }
 
   function applyRouteGlobals(values) {
     routeContext = updateDocsViewerRouteContext(routeContext, values, { window: window });
     appSession.domains.routeSession.updateRouteContext(routeContext);
-    viewerScope = routeContext.viewerScope;
     viewerStage = routeContext.viewerStage || "";
     defaultRouteDocId = routeContext.defaultRouteDocId;
     viewerBaseUrl = routeContext.viewerBaseUrl;
-    includeScopeParam = routeContext.includeScopeParam;
     preserveQueryParams = routeContext.preserveQueryParams || preserveQueryParams;
     viewerPathname = routeContext.viewerPathname;
-    bookmarkScope = routeContext.bookmarkScope;
-    state.indexPanelState = panelLayout.setStorageScope(bookmarkScope);
+    bookmarkOwner = routeContext.bookmarkOwner;
+    state.indexPanelState = panelLayout.setStorageOwner(bookmarkOwner);
   }
 
-  function loadConfiguredScopes() {
-    return configController.loadConfiguredScopes();
+  function loadWorkspaceConfiguration() {
+    return configController.loadWorkspaceConfiguration();
   }
 
-  function handleScopeChange() {
-    configController.handleScopeChange();
-  }
 
   function hasActiveQuery(query) {
     if (!searchEnabled) return false;
@@ -969,8 +949,8 @@ export function startDocsViewerRuntime(options) {
     return routeWorkflowCommands.viewerUrl(docId, hash, query);
   }
 
-  function viewerUrlForScope(scope, docId, options) {
-    return routeWorkflowCommands.viewerUrlForScope(scope, docId, options);
+  function viewerUrlForDocument(docId, options) {
+    return routeWorkflowCommands.viewerUrlForDocument(docId, options);
   }
 
   function escapeMarkdownLinkText(value) {
@@ -983,7 +963,7 @@ export function startDocsViewerRuntime(options) {
   function markdownDocLink(doc) {
     if (!doc || !doc.doc_id) return "";
     var title = escapeMarkdownLinkText(doc.title || doc.doc_id);
-    var url = viewerUrlForScope(viewerScope, documentIndex.viewerTargetDocId(doc.doc_id), { manage: false });
+    var url = viewerUrlForDocument(documentIndex.viewerTargetDocId(doc.doc_id), { manage: false });
     return "[" + title + "](" + url + ")";
   }
 
@@ -1115,11 +1095,6 @@ export function startDocsViewerRuntime(options) {
 
     documentViewCoordinator.bind();
 
-    if (featurePolicy.scopeSelection && scopeSelect) {
-      scopeSelect.addEventListener("change", function () {
-        handleScopeChange();
-      });
-    }
 
     if (bookmarkController) {
       bookmarkController.bind();
@@ -1174,7 +1149,7 @@ export function startDocsViewerRuntime(options) {
     bookmarkController = initDocsViewerBookmarks({
       bookmarks: appSession.domains.bookmarks,
       bookmarkRow: bookmarkRow,
-      bookmarkScope: function () { return bookmarkScope; },
+      bookmarkOwner: function () { return bookmarkOwner; },
       controlActive: documentViewCoordinator.controlActive,
       cssEscape: cssEscape,
       dbName: BOOKMARK_DB_NAME,
@@ -1196,7 +1171,7 @@ export function startDocsViewerRuntime(options) {
     composition: composition,
     bindEvents: bindLinkInterception,
     startBusy: statusController.startBusy,
-    loadConfiguredScopes: loadConfiguredScopes,
+    loadWorkspaceConfiguration: loadWorkspaceConfiguration,
     renderIndexPanelState: renderIndexPanelState,
     loadViewerSettings: loadViewerSettings,
     initializeBookmarks: initializeBookmarks,

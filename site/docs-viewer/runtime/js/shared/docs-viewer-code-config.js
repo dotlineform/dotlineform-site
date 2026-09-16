@@ -1,14 +1,4 @@
 export var DOCS_VIEWER_CODE_CONFIG = {
-  scopeTypeBadges: {
-    public: {
-      label: "Public",
-      emoji: "🌐"
-    },
-    local: {
-      label: "Local",
-      emoji: "💻"
-    }
-  },
   uiStatuses: [
     {
       ui_status: "done",

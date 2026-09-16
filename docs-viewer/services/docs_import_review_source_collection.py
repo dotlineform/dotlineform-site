@@ -3,13 +3,15 @@
 
 from __future__ import annotations
 
+from docs_import_common import require_import_stage
+
 import copy
 from pathlib import Path
 from typing import Any, Callable
 
 from docs_import_collection_apply import (
     apply_import_content_collection_atomic,
-    apply_import_content_collection_scope_atomic,
+    apply_import_content_collection_document_atomic,
 )
 from docs_import_collection_plan import (
     CollectionRecordState,
@@ -32,7 +34,6 @@ from docs_import_review_source_folder import (
 from docs_management_document_target import ManagedDocumentCollection
 from docs_source_model import (
     load_document_collection_docs_for_config,
-    normalize_scope,
 )
 from docs_document_packages.workspace import marker_path
 
@@ -102,21 +103,21 @@ def _validate_destination(
     folder: EditedReviewSourceFolder,
     collection: ManagedDocumentCollection,
 ) -> None:
-    if folder.source_scope != collection.scope:
+    if folder.source_stage != collection.stage:
         raise ValueError(
-            "Edited review source folder belongs to scope "
-            f"{folder.source_scope!r}, not {collection.scope!r}.",
+            "Edited review source folder belongs to stage "
+            f"{folder.source_stage!r}, not {collection.stage!r}.",
         )
     if folder.source_sub_scope != collection.sub_scope:
         source_target = (
-            f"{folder.source_scope}/{folder.source_sub_scope}"
+            f"{folder.source_stage}/{folder.source_sub_scope}"
             if folder.source_sub_scope
-            else folder.source_scope
+            else folder.source_stage
         )
         destination_target = (
-            f"{collection.scope}/{collection.sub_scope}"
+            f"{collection.stage}/{collection.sub_scope}"
             if collection.sub_scope
-            else collection.scope
+            else collection.stage
         )
         raise ValueError(
             "Edited review source folder belongs to collection "
@@ -136,7 +137,7 @@ def plan_edited_review_source_collection(
     """Map one trusted edited folder into the shared write-free collection plan."""
 
     _validate_destination(folder, collection)
-    scope = normalize_scope(collection.scope)
+    stage = require_import_stage(collection.stage)
     docs = load_document_collection_docs_for_config(
         repo_root,
         collection.parent_config,
@@ -173,7 +174,7 @@ def plan_edited_review_source_collection(
         "export_id": folder.source_export_id,
         "review_folder_id": folder.review_folder_id,
         "profile_id": folder.profile_id,
-        "source_scope": folder.source_scope,
+        "source_stage": folder.source_stage,
         "source_sub_scope": folder.source_sub_scope,
         "content_format": CONTENT_FORMAT_MARKDOWN,
         "document_count": folder.document_count,
@@ -185,7 +186,7 @@ def plan_edited_review_source_collection(
     return plan_import_content_collection(
         repo_root,
         source_format=EDITED_REVIEW_SOURCE_FORMAT,
-        scope=scope,
+        stage=stage,
         staged_filename=folder.staged_filename,
         states=states,
         docs=docs,
@@ -215,7 +216,7 @@ def apply_edited_review_source_collection(
     staging_root: Path,
     workspace_root: Path,
     log_event: Callable[[Path, str, dict[str, Any]], None],
-    perform_scope_source_write_and_rebuild_atomic: Callable[..., dict[str, Any]],
+    perform_source_write_and_rebuild_atomic: Callable[..., dict[str, Any]],
     perform_sub_scope_source_write_and_rebuild: Callable[..., dict[str, Any]],
 ) -> dict[str, Any]:
     """Revalidate and atomically apply one confirmed exact edited folder."""
@@ -247,15 +248,15 @@ def apply_edited_review_source_collection(
                 perform_sub_scope_source_write_and_rebuild
             ),
         )
-    return apply_import_content_collection_scope_atomic(
+    return apply_import_content_collection_document_atomic(
         repo_root,
         plan,
         body,
         workspace_root=workspace_root,
         log_event=log_event,
         collection=collection,
-        perform_scope_source_write_and_rebuild_atomic=(
-            perform_scope_source_write_and_rebuild_atomic
+        perform_source_write_and_rebuild_atomic=(
+            perform_source_write_and_rebuild_atomic
         ),
     )
 

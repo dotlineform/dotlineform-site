@@ -2,8 +2,8 @@
 """Export Docs Viewer source data through document-package profiles.
 
 Run:
-  ./docs-viewer/services/docs_document_packages/export.py --config-id document-content --scope analysis
-  ./docs-viewer/services/docs_document_packages/export.py --config-id document-content --scope analysis --write
+  ./docs-viewer/services/docs_document_packages/export.py --config-id document-content --stage working
+  ./docs-viewer/services/docs_document_packages/export.py --config-id document-content --stage working --write
 """
 
 from __future__ import annotations
@@ -137,7 +137,7 @@ def empty_export_report(
     write: bool,
     export_id: str,
     config_id: str,
-    scope: str,
+    stage: str,
     sub_scope: str,
     target_format: str,
     paths: ExportOutputPaths | None = None,
@@ -151,7 +151,7 @@ def empty_export_report(
         "dry_run": not write,
         "export_id": export_id,
         "config_id": config_id,
-        "scope": scope,
+        "stage": stage,
         "target_format": target_format,
         "supports_docs_review": False,
         "supports_return_import": False,
@@ -297,7 +297,7 @@ def build_export(
     *,
     repo_root: Path,
     config_id: str,
-    scope: str,
+    stage: str,
     selected_doc_ids: list[str],
     select_all: bool,
     missing_summary_only: bool | None,
@@ -321,7 +321,7 @@ def build_export(
             write=write,
             export_id=export_id,
             config_id=config_id,
-            scope=scope,
+            stage=stage,
             sub_scope=normalized_sub_scope,
             target_format="",
             warnings=payload_warnings,
@@ -334,7 +334,7 @@ def build_export(
             write=write,
             export_id=export_id,
             config_id=config_id,
-            scope=scope,
+            stage=stage,
             sub_scope=normalized_sub_scope,
             target_format="",
             warnings=payload_warnings,
@@ -395,7 +395,7 @@ def build_export(
             write=write,
             export_id=export_id,
             config_id=config_id,
-            scope=scope,
+            stage=stage,
             sub_scope=normalized_sub_scope,
             target_format=resolved_target_format,
             paths=paths,
@@ -406,7 +406,7 @@ def build_export(
     try:
         source_context, docs = load_source_export_context(
             repo_root,
-            scope,
+            stage,
             normalized_sub_scope,
         )
     except (FileNotFoundError, ValueError, RuntimeError, OSError) as exc:
@@ -414,7 +414,7 @@ def build_export(
             write=write,
             export_id=export_id,
             config_id=config_id,
-            scope=scope,
+            stage=stage,
             sub_scope=normalized_sub_scope,
             target_format=resolved_target_format,
             paths=paths,
@@ -425,7 +425,7 @@ def build_export(
     docs_by_id = {normalize_text(doc.get("doc_id")): doc for doc in docs}
     context = ExportContext(
         repo_root=repo_root,
-        scope=scope,
+        stage=stage,
         sub_scope=normalized_sub_scope,
         supports_return_import=(
             supports_return_import(config)
@@ -473,7 +473,7 @@ def build_export(
         "dry_run": not write,
         "export_id": export_id,
         "config_id": config_id,
-        "scope": scope,
+        "stage": stage,
         "target_format": resolved_target_format,
         "supported_target_formats": supported_formats,
         "content_format": resolved_content_format,
@@ -540,7 +540,7 @@ def build_export(
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Export Docs Viewer data through a configured export pattern.")
     parser.add_argument("--config-id", required=True, help="Export config id to run")
-    parser.add_argument("--scope", required=True, help="Docs Viewer scope to export")
+    parser.add_argument("--stage", required=True, help="Docs Viewer stage to export")
     parser.add_argument("--doc-id", action="append", default=[], help="Document id to include; repeatable")
     parser.add_argument("--doc-ids", action="append", default=[], help="Comma-separated document ids to include")
     parser.add_argument("--all", action="store_true", help="Export all docs matching the selected config filters")
@@ -572,7 +572,7 @@ def main() -> int:
         report = build_export(
             repo_root=repo_root,
             config_id=normalize_text(args.config_id),
-            scope=normalize_text(args.scope),
+            stage=normalize_text(args.stage),
             selected_doc_ids=doc_ids,
             select_all=bool(args.all),
             missing_summary_only=args.missing_summary_only,

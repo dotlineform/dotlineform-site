@@ -34,11 +34,11 @@ export function docsImportResultDestination(payload, options = {}) {
   if (url.origin !== base.origin || url.pathname !== "/docs/" || url.hash) {
     throw new Error("Docs Import result destination URL is invalid.");
   }
-  if (url.searchParams.get("scope") !== target.scope) {
-    throw new Error("Docs Import result destination scope does not match its target.");
+  if (url.searchParams.has("scope")) {
+    throw new Error("Docs Import result uses a retired scope URL.");
   }
 
-  let expectedKeys = ["scope"];
+  let expectedKeys = [];
   if (target.stage) {
     if (url.searchParams.get("stage") !== target.stage) {
       throw new Error("Docs Import result destination stage does not match its target.");

@@ -14,6 +14,7 @@ from docs_import_document_package_content import duplicate_front_matter_fields
 from docs_management_document_target import resolve_managed_document_collection
 from docs_management_source_service import split_source_exact
 import docs_review_packages
+from docs_document_packages.provenance import REEXPORT_MESSAGE
 from docs_document_packages.returned_common import RETURN_IMPORT_CAPABILITY
 from docs_document_packages.returned_files import metadata_from_internal_export_meta
 from docs_document_packages.returned_profiles import supported_return_import_profile_ids
@@ -23,7 +24,7 @@ from docs_document_packages.review_sources import derive_folder_id
 
 EDITED_REVIEW_SOURCE_FORMAT = "edited_review_sources"
 REVIEW_SOURCE_MARKER_PATTERN = re.compile(
-    r"(?m)^[ \t]*review_(?:folder_id|source_export_id|source_scope|"
+    r"(?m)^[ \t]*review_(?:folder_id|source_export_id|source_scope|source_stage|"
     r"source_sub_scope|profile_id)[ \t]*:",
 )
 DATE_PATTERN = re.compile(r"\A\d{4}-\d{2}-\d{2}\Z")
@@ -34,7 +35,7 @@ REQUIRED_TEXT_FIELDS = (
     "last_updated",
     "review_folder_id",
     "review_source_export_id",
-    "review_source_scope",
+    "review_source_stage",
     "review_profile_id",
 )
 OPTIONAL_REVIEW_FIELD = "review_source_sub_scope"
@@ -47,7 +48,7 @@ ALLOWED_FRONT_MATTER_FIELDS = {
 PROVENANCE_FIELDS = (
     "review_folder_id",
     "review_source_export_id",
-    "review_source_scope",
+    "review_source_stage",
     OPTIONAL_REVIEW_FIELD,
     "review_profile_id",
 )
@@ -181,6 +182,8 @@ def _source_record(path: Path) -> dict[str, Any]:
         raise ValueError(
             f"edited review source {path.name} front matter is invalid: {exc}",
         ) from exc
+    if "review_source_scope" in front_matter:
+        raise ValueError(REEXPORT_MESSAGE)
     unknown_fields = sorted(set(front_matter) - ALLOWED_FRONT_MATTER_FIELDS)
     if unknown_fields:
         raise ValueError(
@@ -400,7 +403,7 @@ class EditedReviewSourceFolder:
     staged_filename: str
     review_folder_id: str
     source_export_id: str
-    source_scope: str
+    source_stage: str
     source_sub_scope: str
     profile_id: str
     document_count: int
@@ -414,12 +417,12 @@ class EditedReviewSourceFolder:
         return {
             "display_name": f"{self.review_folder_id} (reviewed)",
             "source_format": EDITED_REVIEW_SOURCE_FORMAT,
-            "scope": self.source_scope,
+            "stage": self.source_stage,
             "sub_scope": self.source_sub_scope,
             "supports_return_import": True,
             "review_folder_id": self.review_folder_id,
             "source_export_id": self.source_export_id,
-            "source_scope": self.source_scope,
+            "source_stage": self.source_stage,
             "source_sub_scope": self.source_sub_scope,
             "profile_id": self.profile_id,
             "document_count": self.document_count,
@@ -449,7 +452,7 @@ def recognize_edited_review_source_folder(
         _consistent_value(records, "review_folder_id"),
     )
     export_id = _consistent_value(records, "review_source_export_id")
-    source_scope = _consistent_value(records, "review_source_scope").lower()
+    source_stage = _consistent_value(records, "review_source_stage").lower()
     source_sub_scope = _consistent_value(
         records,
         OPTIONAL_REVIEW_FIELD,
@@ -466,7 +469,7 @@ def recognize_edited_review_source_folder(
     manifest = manifest_payload["manifest"]
     expected_manifest = {
         "source_export_id": export_id,
-        "source_scope": source_scope,
+        "source_stage": source_stage,
         "source_sub_scope": source_sub_scope,
         "profile_id": profile_id,
     }
@@ -512,8 +515,8 @@ def recognize_edited_review_source_folder(
         [{"doc_id": doc_id} for doc_id in doc_ids],
         trusted_metadata,
         repo_root=repo_root,
-        scope=source_scope,
-        sub_scope=source_sub_scope or None,
+        stage=source_stage,
+        sub_scope=source_sub_scope,
         required_capability=RETURN_IMPORT_CAPABILITY,
     )
     if issues:
@@ -550,9 +553,8 @@ def recognize_edited_review_source_folder(
     )
     resolve_managed_document_collection(
         repo_root,
-        scope=source_scope,
-        stage="working",
-        sub_scope=source_sub_scope or None,
+        stage=source_stage,
+        sub_scope=source_sub_scope,
     )
 
     return EditedReviewSourceFolder(
@@ -560,7 +562,7 @@ def recognize_edited_review_source_folder(
         staged_filename=path.name,
         review_folder_id=folder_id,
         source_export_id=export_id,
-        source_scope=source_scope,
+        source_stage=source_stage,
         source_sub_scope=source_sub_scope,
         profile_id=profile_id,
         document_count=len(records),

@@ -66,7 +66,6 @@ export function createDocsImportCollectionController(options = {}) {
     stagedFilename: "",
     sourceDirectory: "",
     sourceFormat: "",
-    scope: "",
     stage: "",
     subScope: "",
     plan: null,
@@ -106,7 +105,6 @@ export function createDocsImportCollectionController(options = {}) {
     state.stagedFilename = "";
     state.sourceDirectory = "";
     state.sourceFormat = "";
-    state.scope = "";
     state.stage = "";
     state.subScope = "";
     state.plan = null;
@@ -175,12 +173,10 @@ export function createDocsImportCollectionController(options = {}) {
 
   function exactCollectionTarget(payload, context) {
     const target = payload && payload.target;
-    const targetScope = normalizeText(target && target.scope).toLowerCase();
     const targetSubScope = normalizeText(target && target.sub_scope).toLowerCase();
     const targetDocId = normalizeText(target && target.doc_id);
     if (
-      targetScope !== state.scope
-      || normalizeText(target && target.stage) !== state.stage
+      normalizeText(target && target.stage) !== state.stage
       || targetDocId
       || (
         state.subScope
@@ -191,7 +187,6 @@ export function createDocsImportCollectionController(options = {}) {
       throw new Error(`Docs Import ${context} did not match the requested collection.`);
     }
     return {
-      scope: targetScope,
       ...(state.stage ? { stage: state.stage } : {}),
       ...(targetSubScope ? { sub_scope: targetSubScope } : {})
     };
@@ -199,20 +194,18 @@ export function createDocsImportCollectionController(options = {}) {
 
   async function preview({
     file,
-    scope,
     stage = "",
     subScope = "",
     sourceDirectory = "",
     managementBaseUrl = ""
   } = {}) {
     const stagedFilename = normalizeText(file && file.filename);
-    const normalizedScope = normalizeText(scope).toLowerCase();
     const normalizedSubScope = normalizeText(subScope).toLowerCase();
     const normalizedSourceDirectory = normalizeText(sourceDirectory);
     const sourceFormat = normalizeText(file && file.source_format);
     if (
       !stagedFilename
-      || !normalizedScope
+      || stage !== "working"
       || !normalizedSourceDirectory
       || !isDocsImportCollectionRecord(file)
     ) {
@@ -221,8 +214,7 @@ export function createDocsImportCollectionController(options = {}) {
     if (
       normalizedSubScope
       && (
-        normalizeText(file && file.scope).toLowerCase() !== normalizedScope
-        || normalizeText(file && file.sub_scope).toLowerCase() !== normalizedSubScope
+        normalizeText(file && file.sub_scope).toLowerCase() !== normalizedSubScope
         || file.supports_return_import !== true
       )
     ) {
@@ -233,7 +225,6 @@ export function createDocsImportCollectionController(options = {}) {
     state.stagedFilename = stagedFilename;
     state.sourceDirectory = normalizedSourceDirectory;
     state.sourceFormat = sourceFormat;
-    state.scope = normalizedScope;
     state.stage = normalizeText(stage);
     state.subScope = normalizedSubScope;
     state.managementBaseUrl = normalizeText(managementBaseUrl);
@@ -245,7 +236,6 @@ export function createDocsImportCollectionController(options = {}) {
     render();
     try {
       const payload = await fetchManagementJson("/docs/import-source", "POST", {
-        scope: normalizedScope,
         ...(state.stage ? { stage: state.stage } : {}),
         ...(normalizedSubScope ? { sub_scope: normalizedSubScope } : {}),
         source_directory: normalizedSourceDirectory,
@@ -297,7 +287,6 @@ export function createDocsImportCollectionController(options = {}) {
     render();
     try {
       const payload = await fetchManagementJson("/docs/import-source", "POST", {
-        scope: state.scope,
         ...(state.stage ? { stage: state.stage } : {}),
         ...(state.subScope ? { sub_scope: state.subScope } : {}),
         source_directory: state.sourceDirectory,
@@ -349,7 +338,6 @@ export function createDocsImportCollectionController(options = {}) {
             record && (record.status === "created" || record.status === "overwritten") && normalizeText(record.doc_id)
           )) || null;
           const terminalDetail = {
-            scope: state.scope,
             ...(state.stage ? { stage: state.stage } : {}),
             subScope: state.subScope,
             docId: normalizeText(displayedRecord && displayedRecord.doc_id),
@@ -395,7 +383,6 @@ export function createDocsImportCollectionController(options = {}) {
       phase: state.phase,
       stagedFilename: state.stagedFilename,
       sourceFormat: state.sourceFormat,
-      scope: state.scope,
       subScope: state.subScope,
       busy: state.busy
     })

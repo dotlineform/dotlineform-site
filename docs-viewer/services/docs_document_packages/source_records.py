@@ -7,13 +7,13 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
-from docs_scope_config import path_label
+from docs_workspace_config import path_label
 
 
 @dataclass(frozen=True)
 class DocumentPackageSourceRecord:
     doc_id: str
-    scope: str
+    stage: str
     title: str
     summary: str
     added_date: str
@@ -35,14 +35,14 @@ def source_record_from_doc(
     *,
     repo_root: Path,
     source_root: Path,
-    scope: str,
+    stage: str,
     doc: Any,
     parent_title: str,
     content_text_length: int,
 ) -> DocumentPackageSourceRecord:
     return DocumentPackageSourceRecord(
         doc_id=doc.doc_id,
-        scope=scope,
+        stage=stage,
         title=doc.title,
         summary=doc.summary,
         added_date=doc.added_date,

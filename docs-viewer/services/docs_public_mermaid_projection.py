@@ -16,8 +16,8 @@ from docs_document_identity import is_immutable_doc_id
 from docs_mermaid_accessibility import mermaid_accessibility_metadata
 
 
-PUBLIC_MERMAID_PLAN_SCHEMA_VERSION = "docs_public_mermaid_projection_plan_v1"
-PUBLIC_MERMAID_MANIFEST_SCHEMA_VERSION = "docs_public_mermaid_projection_manifest_v1"
+PUBLIC_MERMAID_PLAN_SCHEMA_VERSION = "docs_public_mermaid_projection_plan_v2"
+PUBLIC_MERMAID_MANIFEST_SCHEMA_VERSION = "docs_public_mermaid_projection_manifest_v2"
 PUBLIC_MERMAID_DIAGRAM_SCHEMA_VERSION = "docs_public_mermaid_diagram_v1"
 PUBLIC_MERMAID_ASSET_PREFIX = Path("projection-assets/mermaid")
 PUBLIC_MERMAID_THEMES = ("light", "dark")
@@ -181,7 +181,7 @@ def _manifest_record(fence: PublicMermaidFence, projection: Mapping[str, Any]) -
 def _validated_previous_records(
     previous_manifest: Mapping[str, Any] | None,
     *,
-    scope: str,
+    collection: str,
 ) -> tuple[dict[str, Any], ...]:
     if previous_manifest is None:
         return ()
@@ -190,8 +190,8 @@ def _validated_previous_records(
             "public Mermaid projection manifest schema_version must be "
             f"{PUBLIC_MERMAID_MANIFEST_SCHEMA_VERSION}"
         )
-    if str(previous_manifest.get("scope") or "").strip() != scope:
-        raise ValueError("public Mermaid projection manifest scope does not match the requested scope")
+    if str(previous_manifest.get("collection") or "").strip() != collection:
+        raise ValueError("public Mermaid projection manifest collection does not match the requested collection")
     raw_records = previous_manifest.get("diagrams")
     if not isinstance(raw_records, list):
         raise ValueError("public Mermaid projection manifest diagrams must be a list")
@@ -253,31 +253,31 @@ def _validated_previous_records(
 def validate_public_mermaid_manifest(
     manifest: Mapping[str, Any],
     *,
-    scope: str,
+    collection: str,
 ) -> tuple[dict[str, Any], ...]:
     """Validate and normalize one prepared public projection manifest."""
 
-    normalized_scope = str(scope or "").strip().lower()
-    if not normalized_scope:
-        raise ValueError("public Mermaid projection manifest scope is required")
-    return _validated_previous_records(manifest, scope=normalized_scope)
+    normalized_collection = str(collection or "").strip().lower()
+    if not normalized_collection:
+        raise ValueError("public Mermaid projection manifest collection is required")
+    return _validated_previous_records(manifest, collection=normalized_collection)
 
 
 def plan_public_mermaid_projection(
     *,
-    scope: str,
+    collection: str,
     documents: Iterable[tuple[str, str]],
     public_url_prefix: str,
     previous_manifest: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Return a complete no-write plan, next manifest, failures, and stale pairs."""
 
-    normalized_scope = str(scope or "").strip().lower()
-    if not normalized_scope:
-        raise ValueError("public Mermaid projection scope is required")
+    normalized_collection = str(collection or "").strip().lower()
+    if not normalized_collection:
+        raise ValueError("public Mermaid projection collection is required")
     url_prefix = _public_url_prefix(public_url_prefix)
     fences, failures = inventory_public_mermaid_fences(documents)
-    previous_records = _validated_previous_records(previous_manifest, scope=normalized_scope)
+    previous_records = _validated_previous_records(previous_manifest, collection=normalized_collection)
     previous_by_id = {record["projection_id"]: record for record in previous_records}
 
     diagrams: list[dict[str, Any]] = []
@@ -334,13 +334,13 @@ def plan_public_mermaid_projection(
     ]
     manifest = {
         "schema_version": PUBLIC_MERMAID_MANIFEST_SCHEMA_VERSION,
-        "scope": normalized_scope,
+        "collection": normalized_collection,
         "diagrams": manifest_records,
     }
     return {
         "schema_version": PUBLIC_MERMAID_PLAN_SCHEMA_VERSION,
         "mode": "dry-run",
-        "scope": normalized_scope,
+        "collection": normalized_collection,
         "summary": {
             "diagram_count": len(diagrams),
             "variant_count": len(diagrams) * len(PUBLIC_MERMAID_THEMES),
@@ -364,7 +364,7 @@ def public_mermaid_projection_report(plan: Mapping[str, Any]) -> dict[str, Any]:
     return {
         "schema_version": plan["schema_version"],
         "mode": plan["mode"],
-        "scope": plan["scope"],
+        "collection": plan["collection"],
         "summary": dict(plan["summary"]),
         "diagrams": [
             {

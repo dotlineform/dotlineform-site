@@ -1,4 +1,4 @@
-"""Version 1 Links records: validated prior state and deterministic projection."""
+"""Version 2 Links records: exact stage identity and deterministic projection."""
 
 from dataclasses import asdict
 from typing import Any
@@ -15,7 +15,7 @@ def relationship_payload(record: DocumentLinks) -> dict[str, Any]:
         )]
 
     return {
-        "schema_version": 1,
+        "schema_version": 2,
         "self": asdict(record.document),
         "outgoing": entries(record.outgoing),
         "incoming": entries(record.incoming),
@@ -34,11 +34,12 @@ def read_relationship_payload(payload: Any, target: DocumentTarget) -> DocumentL
         if not isinstance(value, dict) or set(value) != {"target", "title", "href", "subject"}:
             raise ValueError("Links requires a complete document summary")
         identity = value["target"]
-        if not isinstance(identity, dict) or set(identity) != {"scope", "sub_scope", "doc_id"}:
+        if not isinstance(identity, dict) or set(identity) != {"stage", "sub_scope", "doc_id"}:
             raise ValueError("Links requires an exact document target")
         if (not all(isinstance(item, str) for item in identity.values())
-                or identity["scope"] != target.scope or not is_immutable_doc_id(identity["doc_id"])):
-            raise ValueError("Links document identity does not match its scope")
+                or identity["stage"] != target.stage or target.stage != "working"
+                or not is_immutable_doc_id(identity["doc_id"])):
+            raise ValueError("Links document identity does not match Working")
         if not isinstance(value["title"], str) or not isinstance(value["href"], str) or not isinstance(value["subject"], dict):
             raise ValueError("Links document summary is invalid")
         return DocumentSummary(DocumentTarget(**identity), value["title"], value["href"], value["subject"])
@@ -60,7 +61,7 @@ def read_relationship_payload(payload: Any, target: DocumentTarget) -> DocumentL
             result[document.target] = Relationship(document, tuple(Occurrence(**item) for item in occurrences))
         return result
 
-    if not isinstance(payload, dict) or payload.get("schema_version") != 1:
+    if not isinstance(payload, dict) or payload.get("schema_version") != 2:
         raise ValueError("Unsupported Links record schema")
     record = DocumentLinks(summary(payload.get("self")), entries(payload.get("outgoing")), entries(payload.get("incoming")))
     if record.document.target != target:

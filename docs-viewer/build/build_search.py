@@ -44,15 +44,13 @@ from build_docs import (  # noqa: E402
 )
 from docs_builder.semantic_tokens import replace_semantic_tokens  # noqa: E402
 from docs_builder.source import parse_source_text  # noqa: E402
-from docs_scope_config import (  # noqa: E402
-    DocsScopeConfig,
+from docs_workspace_config import (  # noqa: E402
     DocsSubScopeConfig,
     document_source_path,
-    load_docs_scope_configs,
+    load_docs_stage,
     generated_documents_path,
     generated_search_path,
-    resolve_scope_path,
-    select_scope_stage,
+    resolve_workspace_path,
 )
 from docs_document_location import sub_scope_report_placement  # noqa: E402
 from docs_document_identity import is_immutable_doc_id  # noqa: E402
@@ -70,8 +68,7 @@ from docs_source_model import (  # noqa: E402
 from markdown_renderer import extract_markdown_search_fields  # noqa: E402
 
 
-DEFAULT_SCOPE = "studio"
-SEARCH_INDEX_V2_SCHEMA = "docs_viewer_search_index_v2"
+SEARCH_INDEX_V3_SCHEMA = "docs_viewer_search_index_v3"
 SEARCH_V2_STOP_WORDS = frozenset({
     "a", "an", "and", "are", "as", "at", "be", "by", "for", "from",
     "in", "is", "it", "of", "on", "or", "that", "the", "to", "with",
@@ -168,13 +165,19 @@ def search_field_values_v2(document: Mapping[str, Any], field: str) -> list[Any]
     return list(value) if isinstance(value, (list, tuple)) else [value]
 
 
-def build_search_index_v2(
+def build_search_index_v3(
     *,
-    scope: str,
+    stage: str,
     documents: list[Mapping[str, Any]],
     search_fields: tuple[str, ...],
     generated_at_utc: str | None = None,
 ) -> dict[str, Any]:
+    """Build atomic postings with exact lifecycle identity in the content version.
+
+    Source builders pass their stage; publication owns the accepted-stage projection.
+    """
+    if stage not in {"working", "pre-publish", "published"}:
+        raise ValueError("Search requires an exact lifecycle stage")
     doc_fields = (
         "id",
         "title",
@@ -214,9 +217,9 @@ def build_search_index_v2(
         any(not doc_id for _sub_scope, doc_id in document_targets)
         or len(document_targets) != len(set(document_targets))
     ):
-        raise ValueError("v2 search documents require unique non-empty exact targets")
+        raise ValueError("Search documents require unique non-empty exact targets")
     if any(not normalize_text(document.get("title")) or not normalize_text(document.get("href")) for document in docs):
-        raise ValueError("v2 search documents require title and href")
+        raise ValueError("Search documents require title and href")
     for document in docs:
         sub_scope = normalize_text(document.get("sub_scope"))
         if sub_scope and (
@@ -224,7 +227,7 @@ def build_search_index_v2(
             or not normalize_text(document.get("collection_title"))
         ):
             raise ValueError(
-                "v2 sub-scope search documents require report_doc_id and collection_title"
+                "Sub-scope search documents require report_doc_id and collection_title"
             )
 
     postings: dict[str, dict[str, set[int]]] = {}
@@ -248,16 +251,16 @@ def build_search_index_v2(
         for term in sorted(postings)
     }
     version_payload = {
-        "schema": SEARCH_INDEX_V2_SCHEMA,
-        "scope": normalize(scope),
+        "schema": SEARCH_INDEX_V3_SCHEMA,
+        "stage": stage,
         "fields": list(search_fields),
         "docs": docs,
         "terms": terms,
     }
     return {
         "header": {
-            "schema": SEARCH_INDEX_V2_SCHEMA,
-            "scope": normalize(scope),
+            "schema": SEARCH_INDEX_V3_SCHEMA,
+            "stage": stage,
             "version": f"blake2b-{blake2b_payload_hash(version_payload)}",
             "generated_at_utc": generated_at_utc or utc_timestamp(),
             "count": len(docs),
@@ -295,7 +298,7 @@ def relative_path(path: Path | None, repo_root: Path) -> str:
 
 
 class DocsViewerSearchDataBuilder:
-    """Build one exact source corpus; staged scopes require their authoring stage.
+    """Build one exact source corpus selected by its explicit authoring stage.
 
     The selected configuration owns source/output paths and child placements.
     Generated Search hrefs retain stage so local results reopen that same corpus.
@@ -305,18 +308,16 @@ class DocsViewerSearchDataBuilder:
         self,
         *,
         repo_root: Path,
-        scope: str,
         output_path: Path | None = None,
-        stage: str | None = None,
+        stage: str,
     ) -> None:
         self.repo_root = repo_root.resolve()
-        self.scope = normalize(scope)
-        self.scope_config = select_scope_stage(self.docs_scope_config(self.scope), stage)
+        self.config = load_docs_stage(self.repo_root, stage)
         self.content_search_enabled = bool(
-            SEARCH_V2_CONTENT_FIELDS.intersection(self.scope_config.search_fields)
+            SEARCH_V2_CONTENT_FIELDS.intersection(self.config.search_fields)
         )
         self.report_source_contract = None
-        self.output_path = self.resolve_path(output_path or generated_search_path(self.scope_config))
+        self.output_path = self.resolve_path(output_path or generated_search_path(self.config))
 
     def run(
         self,
@@ -327,32 +328,18 @@ class DocsViewerSearchDataBuilder:
         payload = self.build_docs_v2_payload()
         return self.write_payload(payload, write=write, force=force)
 
-    def docs_scope_config(self, scope: str) -> DocsScopeConfig:
-        try:
-            configs = load_docs_scope_configs(
-                self.repo_root,
-                scope_ids=(scope,),
-            )
-        except ValueError as exc:
-            raise SystemExit(f"Invalid Docs Viewer scope config: {exc}") from exc
-        config = configs.get(scope)
-        if config:
-            return config
-        available = ", ".join(sorted(configs))
-        raise SystemExit(f"Unsupported docs search scope: {scope}. Current Docs Viewer scopes: {available}")
-
     def resolve_path(self, path: Path | str | None) -> Path | None:
         if path is None:
             return None
-        return resolve_scope_path(self.repo_root, Path(path))
+        return resolve_workspace_path(self.repo_root, Path(path))
 
     def load_source_docs(self) -> list[SearchDocRecord]:
-        source_dir = resolve_scope_path(self.repo_root, document_source_path(self.scope_config))
+        source_dir = resolve_workspace_path(self.repo_root, document_source_path(self.config))
         paths = sorted(source_dir.glob("**/*.md"))
         nested_paths = [path for path in paths if path.parent != source_dir]
         if nested_paths:
             nested = ", ".join(path.relative_to(source_dir).as_posix() for path in nested_paths)
-            raise SystemExit(f"Nested markdown docs are not supported under {source_dir}; move these files to the scope root: {nested}")
+            raise SystemExit(f"Nested markdown docs are not supported under {source_dir}; move these files to the collection root: {nested}")
 
         raw_records: list[dict[str, Any]] = []
         for path in paths:
@@ -373,7 +360,7 @@ class DocsViewerSearchDataBuilder:
             try:
                 validate_document_status_front_matter(
                     front_matter,
-                    collection_config=self.scope_config,
+                    collection_config=self.config,
                     source_name=source_name,
                 )
             except ValueError as exc:
@@ -390,8 +377,8 @@ class DocsViewerSearchDataBuilder:
                 except ReportSourceContractRequired:
                     self.report_source_contract = report_source_contract_for_collection(
                         self.repo_root,
-                        self.scope_config,
-                        self.scope_config,
+                        self.config,
+                        self.config,
                     )
                     report = parse_document_report(
                         source_text,
@@ -418,12 +405,9 @@ class DocsViewerSearchDataBuilder:
 
     def viewer_url_for(self, doc_id: str) -> str:
         pairs: list[str] = []
-        if self.scope_config.include_scope_param and self.scope:
-            pairs.append(f"scope={quote(self.scope)}")
-        if self.scope_config.stage:
-            pairs.append(f"stage={quote(self.scope_config.stage)}")
+        pairs.append(f"stage={quote(self.config.stage)}")
         pairs.append(f"doc={quote(str(doc_id))}")
-        return f"{self.scope_config.viewer_base_url}?{'&'.join(pairs)}"
+        return f"/docs/?{'&'.join(pairs)}"
 
     def search_records_from_source_rows(self, rows: list[dict[str, Any]]) -> list[SearchDocRecord]:
         all_doc_ids = {normalize_text(row.get("doc_id")) for row in rows if isinstance(row, dict)}
@@ -456,7 +440,7 @@ class DocsViewerSearchDataBuilder:
     def hidden_doc_ids(self, docs: list[Any]) -> set[str]:
         roots = [
             normalize_text(value)
-            for value in self.scope_config.manage_only_tree_root_ids
+            for value in self.config.manage_only_tree_root_ids
         ]
         roots = [value for value in roots if value]
         if not roots:
@@ -525,10 +509,10 @@ class DocsViewerSearchDataBuilder:
                     }
                 )
             records.append(record)
-        return build_search_index_v2(
-            scope=self.scope,
+        return build_search_index_v3(
+            stage=self.config.stage,
             documents=records,
-            search_fields=self.scope_config.search_fields,
+            search_fields=self.config.search_fields,
             generated_at_utc=generated_at_utc,
         )
 
@@ -541,11 +525,11 @@ class DocsViewerSearchDataBuilder:
         eligible_parent_doc_ids = {document.doc_id for document in parent_docs}
         records: list[SearchDocRecord] = []
         for sub_scope in sorted(
-            self.scope_config.sub_scopes,
+            self.config.sub_scopes,
             key=lambda item: item.sub_scope,
         ):
             try:
-                if self.scope_config.stage == "pre-publish" and not any(
+                if self.config.stage == "pre-publish" and not any(
                     doc.report is not None and doc.report.id == "docs_subscope"
                     and doc.report.sub_scope == sub_scope.sub_scope for doc in parent_docs
                 ):
@@ -554,10 +538,9 @@ class DocsViewerSearchDataBuilder:
                     continue
                 _config, _sub_scope, report_doc_id = sub_scope_report_placement(
                     self.repo_root,
-                    self.scope,
                     sub_scope.sub_scope,
                     eligible_parent_doc_ids=eligible_parent_doc_ids,
-                    stage=self.scope_config.stage,
+                    stage=self.config.stage,
                 )
                 records.extend(
                     self.load_sub_scope_collection_docs(
@@ -575,7 +558,7 @@ class DocsViewerSearchDataBuilder:
         *,
         report_doc_id: str,
     ) -> list[SearchDocRecord]:
-        output_root = resolve_scope_path(
+        output_root = resolve_workspace_path(
             self.repo_root,
             generated_documents_path(sub_scope),
         )
@@ -594,7 +577,7 @@ class DocsViewerSearchDataBuilder:
 
         source_docs = load_document_collection_docs_for_config(
             self.repo_root,
-            self.scope_config,
+            self.config,
             sub_scope,
         )
         source_by_id = {document.doc_id: document for document in source_docs}
@@ -618,7 +601,7 @@ class DocsViewerSearchDataBuilder:
             source_doc = source_by_id.get(doc_id)
             if source_doc is None:
                 raise ValueError(
-                    f"sub-scope manifest document {self.scope}/{sub_scope.sub_scope}/{doc_id} "
+                    f"sub-scope manifest document {self.config.stage}/{sub_scope.sub_scope}/{doc_id} "
                     "has no source document"
                 )
             by_id_path = output_root / "by-id" / f"{doc_id}.json"
@@ -637,7 +620,7 @@ class DocsViewerSearchDataBuilder:
             if title != source_title or title != by_id_title:
                 raise ValueError(
                     f"sub-scope manifest, source, and by-id titles must match for "
-                    f"{self.scope}/{sub_scope.sub_scope}/{doc_id}"
+                    f"{self.config.stage}/{sub_scope.sub_scope}/{doc_id}"
                 )
             if (
                 normalize_text(by_id.get("doc_id")) != doc_id
@@ -645,13 +628,13 @@ class DocsViewerSearchDataBuilder:
             ):
                 raise ValueError(
                     f"sub-scope by-id identity or viewer_url is stale for "
-                    f"{self.scope}/{sub_scope.sub_scope}/{doc_id}"
+                    f"{self.config.stage}/{sub_scope.sub_scope}/{doc_id}"
                 )
             last_updated = normalize_text(by_id.get("last_updated"))
             if last_updated != normalize_text(source_doc.front_matter.get("last_updated")):
                 raise ValueError(
                     f"sub-scope source and by-id last_updated must match for "
-                    f"{self.scope}/{sub_scope.sub_scope}/{doc_id}"
+                    f"{self.config.stage}/{sub_scope.sub_scope}/{doc_id}"
                 )
             records.append(
                 SearchDocRecord(
@@ -715,11 +698,11 @@ class DocsViewerSearchDataBuilder:
             print(f"Search index JSON done. Would write: 0. Skipped: 1. Path: {relative_output_path}")
 
     def print_dry_run_message(self, relative_output_path: str, count: int) -> None:
-        print(f"Dry run: {count} {self.scope} search docs")
+        print(f"Dry run: {count} {self.config.stage} search docs")
         print(f"Would write: {relative_output_path}")
 
     def print_write_message(self, relative_output_path: str, count: int) -> None:
-        print(f"Wrote {relative_output_path} with {count} {self.scope} search docs")
+        print(f"Wrote {relative_output_path} with {count} {self.config.stage} search docs")
 
     def extract_existing_version(self, path: Path | None) -> str | None:
         if not path or not path.exists():
@@ -733,17 +716,12 @@ class DocsViewerSearchDataBuilder:
 
 def parse_args(argv: list[str]) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Build Docs Viewer search indexes.")
-    parser.add_argument("--scope", default=DEFAULT_SCOPE, help="Docs Viewer search scope to build.")
-    parser.add_argument("--stage", help="Exact authoring stage for a staged scope.")
+    parser.add_argument("--stage", required=True, choices=("working", "pre-publish"), help="Exact authoring stage to index.")
     add_workspace_arguments(parser)
     parser.add_argument("--output", help="Generated search index output path.")
-    parser.add_argument("--only-records", help="Catalogue-only targeted search records.")
     parser.add_argument("--write", action="store_true", help="Persist generated files; default is dry-run.")
     parser.add_argument("--force", action="store_true", help="Write even when the content version matches.")
-    args = parser.parse_args(argv)
-    if args.only_records is not None:
-        raise SystemExit("Docs Viewer search does not support --only-records")
-    return args
+    return parser.parse_args(argv)
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -752,7 +730,6 @@ def main(argv: list[str] | None = None) -> int:
     repo_root = Path.cwd().resolve()
     builder = DocsViewerSearchDataBuilder(
         repo_root=repo_root,
-        scope=args.scope,
         stage=args.stage,
         output_path=Path(args.output) if args.output else None,
     )

@@ -27,7 +27,7 @@ SUBJECT_KIND_BY_FIELD = {
     SERIES_ID_FIELD: "series",
     DETAIL_UID_FIELD: "detail",
 }
-SUBJECT_ASSOCIATIONS_SCHEMA_VERSION = "docs_subject_associations_v1"
+SUBJECT_ASSOCIATIONS_SCHEMA_VERSION = "docs_subject_associations_v2"
 WORK_ID_PATTERN = re.compile(r"\A\d{5}\Z")
 SERIES_ID_PATTERN = re.compile(r"\A[a-z0-9][a-z0-9-]*\Z")
 DETAIL_UID_PATTERN = re.compile(r"\A([0-9]{5})-([0-9]{3})\Z")
@@ -128,12 +128,12 @@ def project_reader_subject(front_matter: Mapping[str, Any]) -> dict[str, str] | 
 
 def subject_projection_generation(
     *,
-    scope: str,
+    stage: str,
     sub_scope: str,
     subjects_by_doc_id: Mapping[str, Mapping[str, Any]],
 ) -> str:
     source = {
-        "scope": scope,
+        "stage": stage,
         "sub_scope": sub_scope,
         "documents": [
             {
@@ -154,7 +154,7 @@ def subject_projection_generation(
 
 def project_subject_associations(
     *,
-    scope: str,
+    stage: str,
     sub_scope: str,
     documents: Sequence[Any],
     subjects_by_doc_id: Mapping[str, Mapping[str, Any]],
@@ -178,7 +178,7 @@ def project_subject_associations(
         documents_by_subject.setdefault((kind, key), []).append(
             {
                 "target": {
-                    "scope": scope,
+                    "stage": stage,
                     "sub_scope": sub_scope,
                     "doc_id": doc_id,
                 },
@@ -196,7 +196,7 @@ def project_subject_associations(
         association_documents = sorted(
             documents_by_subject[(kind, key)],
             key=lambda record: (
-                record["target"]["scope"],
+                record["target"]["stage"],
                 record["target"]["sub_scope"],
                 record["target"]["doc_id"],
             ),
@@ -210,7 +210,7 @@ def project_subject_associations(
 
     return {
         "schema_version": SUBJECT_ASSOCIATIONS_SCHEMA_VERSION,
-        "scope": scope,
+        "stage": stage,
         "sub_scope": sub_scope,
         "subject_generation": subject_generation,
         "associations": associations,

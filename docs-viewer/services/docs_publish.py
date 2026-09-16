@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Preview and apply one consumer-neutral Docs Viewer scope snapshot."""
+"""Preview and apply one consumer-neutral Docs Viewer workspace snapshot."""
 
 from __future__ import annotations
 
@@ -12,22 +12,24 @@ from pathlib import Path
 from typing import Any, Iterable, Mapping
 from urllib.parse import unquote
 
-from docs_scope_build_manifest import (
+from docs_build_manifest import (
     BUILD_MANIFEST_FILENAME,
     BUILD_MANIFEST_SCHEMA_VERSION,
 )
+from docs_publication_payloads import project_published_view
 from docs_public_mermaid_payload import public_mermaid_payload_requires_projection
-from docs_scope_config import (
-    DocsScopeConfig,
-    load_docs_scope_configs,
+from docs_workspace_config import (
+    DocsStageConfig,
+    DocsWorkspaceConfig,
+    load_docs_workspace_config,
+    load_docs_stage,
     resolve_location_path,
-    select_scope_stage,
 )
 
 
 PUBLISH_MANIFEST_FILENAME = "publish-manifest.json"
-PUBLISH_MANIFEST_SCHEMA_VERSION = "docs_scope_publish_manifest_v1"
-PUBLISH_PREVIEW_SCHEMA_VERSION = "docs_scope_publish_preview_v1"
+PUBLISH_MANIFEST_SCHEMA_VERSION = "docs_publish_manifest_v1"
+PUBLISH_PREVIEW_SCHEMA_VERSION = "docs_publish_preview_v1"
 IGNORED_FILENAMES = frozenset({".DS_Store", ".gitkeep"})
 STANDARD_DIRECTORIES = (
     Path("documents"),
@@ -79,24 +81,21 @@ def files_revision(files: Mapping[Path, bytes]) -> str:
     return f"sha256:{digest.hexdigest()}"
 
 
-def _scope_config(repo_root: Path, value: Any) -> DocsScopeConfig:
-    scope = str(value or "").strip().lower()
-    if not scope:
-        raise ValueError("scope is required")
-    config = load_docs_scope_configs(repo_root, scope_ids=(scope,)).get(scope)
-    if config is None:
-        raise ValueError(f"unsupported docs scope: {scope}")
-    return config
-
-
-def _lifecycle_root(repo_root: Path, config: DocsScopeConfig, role: str) -> Path:
-    location = config.stage_root if role in {"source", "generated"} else config.scope_root
-    scope_root = resolve_location_path(repo_root, location)
-    root = scope_root / role
-    if scope_root.is_symlink() or root.is_symlink():
-        raise ValueError(f"Docs scope {config.scope_id!r} {role} root must not be a symlink")
-    if not scope_root.is_dir() or not root.is_dir():
-        raise FileNotFoundError(f"Docs scope {config.scope_id!r} {role} root is unavailable")
+def _lifecycle_root(repo_root: Path, config: DocsStageConfig | DocsWorkspaceConfig, role: str) -> Path:
+    if role in {"source", "generated"}:
+        if not isinstance(config, DocsStageConfig):
+            raise ValueError("Source and generated roots require an explicit stage")
+        location = config.stage_root
+    elif role == "published":
+        location = config.workspace_root
+    else:
+        raise ValueError(f"Unknown Docs lifecycle role: {role}")
+    owner_root = resolve_location_path(repo_root, location)
+    root = owner_root / role
+    if owner_root.is_symlink() or root.is_symlink():
+        raise ValueError(f"Docs {role} root must not be a symlink")
+    if not owner_root.is_dir() or not root.is_dir():
+        raise FileNotFoundError(f"Docs {role} root is unavailable")
     return root.resolve()
 
 
@@ -136,8 +135,7 @@ def _read_json_bytes(data: bytes, label: str) -> dict[str, Any]:
 
 def _validate_generated_manifest(
     generated_root: Path,
-    expected_scope: str,
-    expected_stage: str = "",
+    expected_stage: str,
 ) -> tuple[dict[str, Any], dict[Path, bytes]]:
     manifest_path = generated_root / BUILD_MANIFEST_FILENAME
     if not manifest_path.is_file() or manifest_path.is_symlink():
@@ -145,8 +143,8 @@ def _validate_generated_manifest(
     manifest = _read_json_bytes(manifest_path.read_bytes(), "generated build manifest")
     if manifest.get("schema_version") != BUILD_MANIFEST_SCHEMA_VERSION:
         raise RuntimeError("generated build manifest has an unsupported schema")
-    if manifest.get("scope") != expected_scope:
-        raise RuntimeError("generated build manifest has the wrong scope identity")
+    if "scope" in manifest:
+        raise RuntimeError("generated build manifest has retired scope identity; rebuild the stage")
     if str(manifest.get("stage") or "") != expected_stage:
         raise RuntimeError("generated build manifest has the wrong stage identity")
     generated_files = _files_from_root(
@@ -187,68 +185,69 @@ def _flatten_tree(rows: Any, *, parent_id: str = "") -> list[dict[str, Any]]:
 def _validate_subject_associations(
     payload: dict[str, Any],
     *,
-    scope: str,
+    stage: str,
     sub_scope: str,
 ) -> None:
-    if payload.get("schema_version") != "docs_subject_associations_v1":
+    if payload.get("schema_version") != "docs_subject_associations_v2":
         raise RuntimeError(
-            f"generated subject associations for {scope}/{sub_scope} have an unsupported schema"
+            f"generated subject associations for {stage}/{sub_scope} have an unsupported schema"
         )
-    if payload.get("scope") != scope or payload.get("sub_scope") != sub_scope:
+    if "scope" in payload or payload.get("stage") != stage or payload.get("sub_scope") != sub_scope:
         raise RuntimeError(
-            f"generated subject associations for {scope}/{sub_scope} have the wrong collection identity"
+            f"generated subject associations for {stage}/{sub_scope} have the wrong collection identity"
         )
     raw_associations = payload.get("associations")
     if not isinstance(raw_associations, list):
         raise RuntimeError(
-            f"generated subject associations for {scope}/{sub_scope} are missing associations"
+            f"generated subject associations for {stage}/{sub_scope} are missing associations"
         )
 
     seen_doc_ids: set[str] = set()
     for raw_association in raw_associations:
         if not isinstance(raw_association, dict):
             raise RuntimeError(
-                f"generated subject associations for {scope}/{sub_scope} contain an invalid association"
+                f"generated subject associations for {stage}/{sub_scope} contain an invalid association"
             )
         raw_documents = raw_association.get("documents")
         if not isinstance(raw_documents, list):
             raise RuntimeError(
-                f"generated subject associations for {scope}/{sub_scope} contain invalid documents"
+                f"generated subject associations for {stage}/{sub_scope} contain invalid documents"
             )
         for raw_document in raw_documents:
             if not isinstance(raw_document, dict):
                 raise RuntimeError(
-                    f"generated subject associations for {scope}/{sub_scope} contain an invalid document"
+                    f"generated subject associations for {stage}/{sub_scope} contain an invalid document"
                 )
             target = raw_document.get("target")
             if not isinstance(target, dict):
                 raise RuntimeError(
-                    f"generated subject associations for {scope}/{sub_scope} contain a document without a target"
+                    f"generated subject associations for {stage}/{sub_scope} contain a document without a target"
                 )
             doc_id = str(target.get("doc_id") or "").strip()
             if (
-                target.get("scope") != scope
+                "scope" in target
+                or target.get("stage") != stage
                 or target.get("sub_scope") != sub_scope
                 or not doc_id
             ):
                 raise RuntimeError(
-                    f"generated subject associations for {scope}/{sub_scope} contain the wrong target identity"
+                    f"generated subject associations for {stage}/{sub_scope} contain the wrong target identity"
                 )
             if doc_id in seen_doc_ids:
                 raise RuntimeError(
-                    f"generated subject associations for {scope}/{sub_scope} duplicate {doc_id}"
+                    f"generated subject associations for {stage}/{sub_scope} duplicate {doc_id}"
                 )
             seen_doc_ids.add(doc_id)
 
 
-def _validate_prepared_index(path: Path, data: bytes, scope: str) -> None:
+def _validate_prepared_index(path: Path, data: bytes, stage: str) -> None:
     """Retain index shape and identity checks without altering the prepared set."""
     parts = path.parts
     child_index = len(parts) == 4 and parts[0] == "sub-scopes" and parts[2] == "documents"
     if child_index and path.name == "subject-associations.json":
         _validate_subject_associations(
             _read_json_bytes(data, "generated subject associations"),
-            scope=scope, sub_scope=parts[1],
+            stage=stage, sub_scope=parts[1],
         )
     elif path == Path("search/index.json") or (
         len(parts) == 4 and parts[0] == "sub-scopes" and parts[2:] == ("search", "index.json")
@@ -258,6 +257,8 @@ def _validate_prepared_index(path: Path, data: bytes, scope: str) -> None:
             raise RuntimeError("generated Search payload has an unsupported shape")
         if not isinstance(payload.get("header"), dict) or not isinstance(payload.get("fields"), list):
             raise RuntimeError("generated Search payload is missing header or fields")
+        if payload["header"].get("schema") != "docs_viewer_search_index_v3" or payload["header"].get("stage") != stage or "scope" in payload["header"]:
+            raise RuntimeError("generated Search payload has the wrong schema or stage identity")
         for postings in payload["terms"].values():
             if not isinstance(postings, dict):
                 raise RuntimeError("generated Search term postings must be objects")
@@ -294,7 +295,7 @@ def _media_identity_from_url(value: str, prefix: str) -> str:
     return path.as_posix()
 
 
-def _published_media_bindings(config: DocsScopeConfig) -> dict[str, tuple[str, str, Path]]:
+def _published_media_bindings(config: DocsStageConfig) -> dict[str, tuple[str, str, Path]]:
     """Map every collection's generated URL to its accepted URL and snapshot path."""
     bindings = {}
     for collection in (config, *config.sub_scopes):
@@ -302,17 +303,17 @@ def _published_media_bindings(config: DocsScopeConfig) -> dict[str, tuple[str, s
         suffix = f"/sub-scopes/{child}" if child else ""
         for media_type, media in collection.media.types.items():
             key = f"{child}/{media_type}" if child else media_type
-            relative = media.published_location.path.relative_to(config.scope_root.path / "published")
+            relative = media.published_location.path.relative_to(config.workspace_root.path / "published")
             bindings[key] = (
                 media.served_path_prefix.rstrip("/"),
-                f"/docs/published/media/{config.scope_id}{suffix}/{media_type}",
+                f"/docs/published/media{suffix}/{media_type}",
                 relative,
             )
     return bindings
 
 
 def _project_published_media_urls(
-    config: DocsScopeConfig,
+    config: DocsStageConfig,
     data: bytes,
 ) -> bytes:
     payload = _read_json_bytes(data, "generated document payload")
@@ -350,7 +351,7 @@ def _project_published_media_urls(
 
 
 def _referenced_media(
-    config: DocsScopeConfig,
+    config: DocsStageConfig,
     files: Mapping[Path, bytes],
 ) -> dict[str, set[str]]:
     prefixes = {key: (source, published) for key, (source, published, _path) in _published_media_bindings(config).items()}
@@ -392,7 +393,8 @@ def _referenced_media(
 
 
 def _published_files(
-    config: DocsScopeConfig,
+    repo_root: Path,
+    config: DocsStageConfig,
     generated_files: Mapping[Path, bytes],
 ) -> tuple[dict[Path, bytes], dict[str, Any]]:
     index_path = Path("documents/index-tree.json")
@@ -405,6 +407,7 @@ def _published_files(
     files: dict[Path, bytes] = {}
     for relative_path, data in generated_files.items():
         parts = relative_path.parts
+        _validate_prepared_index(relative_path, data, "pre-publish")
         if parts and (parts[0] == "media" or (
             len(parts) >= 4 and parts[0] == "sub-scopes" and parts[2] == "media"
         )):
@@ -426,8 +429,12 @@ def _published_files(
         else:
             files[relative_path] = data
 
+    workspace = load_docs_workspace_config(repo_root)
+    for path, data in list(files.items()):
+        if path.suffix == ".json":
+            files[path] = json_bytes(project_published_view(workspace, _read_json_bytes(data, f"prepared {path}")))
     for path, data in files.items():
-        _validate_prepared_index(path, data, config.scope_id)
+        _validate_prepared_index(path, data, "published")
 
     tree_ids = {row["doc_id"] for row in _flatten_tree(index_tree.get("docs"))}
     ordinary_ids = {path.stem for path in files if len(path.parts) == 3 and path.parts[:2] == ("documents", "by-id") and path.suffix == ".json"}
@@ -471,24 +478,23 @@ def _plan_revision(payload: Mapping[str, Any]) -> str:
     return f"sha256:{hashlib.sha256(canonical).hexdigest()}"
 
 
-def _publish_config(repo_root: Path, body: dict[str, Any]) -> DocsScopeConfig:
-    config = _scope_config(repo_root, body.get("scope"))
-    config = select_scope_stage(config, body.get("stage"))
-    if config.stage != "pre-publish":
+def _publish_config(repo_root: Path, body: dict[str, Any]) -> DocsStageConfig:
+    if "scope" in body:
+        raise ValueError("scope is retired; Publish requires stage pre-publish")
+    if body.get("stage") != "pre-publish":
         raise ValueError("Publish requires the Pre-publish stage")
-    return config
+    return load_docs_stage(repo_root, "pre-publish")
 
 
-def preview_scope_publish(repo_root: Path, body: dict[str, Any]) -> dict[str, Any]:
+def preview_publish(repo_root: Path, body: dict[str, Any]) -> dict[str, Any]:
     config = _publish_config(repo_root, body)
     generated_root = _lifecycle_root(repo_root, config, "generated")
     published_root = _lifecycle_root(repo_root, config, "published")
     build_manifest, generated_files = _validate_generated_manifest(
         generated_root,
-        config.scope_id,
         config.stage,
     )
-    desired_files, eligibility = _published_files(config, generated_files)
+    desired_files, eligibility = _published_files(repo_root, config, generated_files)
     current_files = _files_from_root(
         published_root,
         excluded=(PUBLISH_MANIFEST_FILENAME,),
@@ -506,7 +512,6 @@ def preview_scope_publish(repo_root: Path, body: dict[str, Any]) -> dict[str, An
     target_revision = files_revision(desired_files)
     current_revision = files_revision(current_files)
     plan_basis = {
-        "scope": config.scope_id,
         "stage": config.stage,
         "generated_revision": build_manifest["generated_revision"],
         "current_published_revision": current_revision,
@@ -519,8 +524,7 @@ def preview_scope_publish(repo_root: Path, body: dict[str, Any]) -> dict[str, An
         "ok": True,
         "schema_version": PUBLISH_PREVIEW_SCHEMA_VERSION,
         "operation": "preview",
-        "scope": config.scope_id,
-        **({"stage": config.stage} if config.stage else {}),
+        "stage": config.stage,
         "generated_revision": build_manifest["generated_revision"],
         "current_published_revision": current_revision,
         "target_published_revision": target_revision,
@@ -540,7 +544,7 @@ def preview_scope_publish(repo_root: Path, body: dict[str, Any]) -> dict[str, An
         "media_references": eligibility["media_references"],
         "up_to_date": not added and not changed and not removed,
         "summary_text": (
-            f"Publish preview for {config.scope_id}: {len(added)} add, "
+            f"Publish preview for the workspace: {len(added)} add, "
             f"{len(changed)} change, {len(removed)} remove, "
             f"{len(eligibility['eligible_doc_ids'])} documents accepted, "
             f"{len(eligibility['excluded_doc_ids'])} excluded."
@@ -549,7 +553,6 @@ def preview_scope_publish(repo_root: Path, body: dict[str, Any]) -> dict[str, An
 
 
 def _publish_manifest_payload(
-    scope: str,
     generated_revision: str,
     files: Mapping[Path, bytes],
 ) -> dict[str, Any]:
@@ -559,7 +562,7 @@ def _publish_manifest_payload(
     ]
     return {
         "schema_version": PUBLISH_MANIFEST_SCHEMA_VERSION,
-        "scope": scope,
+        "stage": "published",
         "completed_at": utc_now(),
         "generated_revision": generated_revision,
         "published_revision": files_revision(files),
@@ -570,26 +573,25 @@ def _publish_manifest_payload(
 
 def validate_published_snapshot(
     repo_root: Path,
-    scope: str,
 ) -> tuple[dict[str, Any], Path, dict[Path, bytes]]:
     """Reject missing, incomplete, or externally changed published state."""
 
-    config = _scope_config(repo_root, scope)
+    config = load_docs_workspace_config(repo_root)
     published_root = _lifecycle_root(repo_root, config, "published")
     manifest_path = published_root / PUBLISH_MANIFEST_FILENAME
     if not manifest_path.is_file() or manifest_path.is_symlink():
         raise FileNotFoundError(
-            f"published snapshot for {config.scope_id} is unavailable: "
+            f"published snapshot for the workspace is unavailable: "
             f"{PUBLISH_MANIFEST_FILENAME} is missing"
         )
     manifest = _read_json_bytes(
         manifest_path.read_bytes(),
-        f"published snapshot manifest for {config.scope_id}",
+        "published snapshot manifest for the workspace",
     )
     if manifest.get("schema_version") != PUBLISH_MANIFEST_SCHEMA_VERSION:
-        raise RuntimeError(f"published snapshot for {config.scope_id} has an unsupported manifest")
-    if manifest.get("scope") != config.scope_id:
-        raise RuntimeError(f"published snapshot for {config.scope_id} has the wrong scope identity")
+        raise RuntimeError("published snapshot for the workspace has an unsupported manifest")
+    if "scope" in manifest or manifest.get("stage") != "published":
+        raise RuntimeError("published snapshot must identify Published without scope; convert the accepted snapshot before activation")
     files = _files_from_root(
         published_root,
         excluded=(PUBLISH_MANIFEST_FILENAME,),
@@ -600,23 +602,23 @@ def validate_published_snapshot(
     ]
     if manifest.get("files") != records or manifest.get("file_count") != len(records):
         raise RuntimeError(
-            f"published snapshot for {config.scope_id} is stale: files do not match "
+            f"published snapshot for the workspace is stale: files do not match "
             f"{PUBLISH_MANIFEST_FILENAME}"
         )
     revision = files_revision(files)
     if manifest.get("published_revision") != revision:
         raise RuntimeError(
-            f"published snapshot for {config.scope_id} is stale: revision does not match"
+            "published snapshot for the workspace is stale: revision does not match"
         )
     return manifest, published_root, files
 
 
-def apply_scope_publish(repo_root: Path, body: dict[str, Any]) -> dict[str, Any]:
+def apply_publish(repo_root: Path, body: dict[str, Any]) -> dict[str, Any]:
     if body.get("confirm") is not True:
-        raise ValueError("confirm must be true to publish a scope snapshot")
-    preview = preview_scope_publish(repo_root, body)
+        raise ValueError("confirm must be true to publish a stage snapshot")
+    preview = preview_publish(repo_root, body)
     if body.get("plan_revision") != preview["plan_revision"]:
-        raise ValueError("Publish preview is stale; preview the scope again")
+        raise ValueError("Publish preview is stale; preview the stage again")
     if body.get("target_published_revision") != preview["target_published_revision"]:
         raise ValueError("Publish target revision does not match the confirmed preview")
 
@@ -625,10 +627,9 @@ def apply_scope_publish(repo_root: Path, body: dict[str, Any]) -> dict[str, Any]
     published_root = _lifecycle_root(repo_root, config, "published")
     build_manifest, generated_files = _validate_generated_manifest(
         generated_root,
-        config.scope_id,
         config.stage,
     )
-    desired_files, _eligibility = _published_files(config, generated_files)
+    desired_files, _eligibility = _published_files(repo_root, config, generated_files)
     if files_revision(desired_files) != preview["target_published_revision"]:
         raise ValueError("generated output changed after Publish confirmation")
 
@@ -668,7 +669,6 @@ def apply_scope_publish(repo_root: Path, body: dict[str, Any]) -> dict[str, Any]
             )
 
     manifest = _publish_manifest_payload(
-        config.scope_id,
         str(build_manifest["generated_revision"]),
         desired_files,
     )
@@ -681,7 +681,7 @@ def apply_scope_publish(repo_root: Path, body: dict[str, Any]) -> dict[str, Any]
         "applied": True,
         "publish_manifest": manifest,
         "summary_text": (
-            f"Published accepted snapshot for {config.scope_id}: "
+            f"Published accepted snapshot for the workspace: "
             f"{preview['added_count']} added, {preview['changed_count']} changed, "
             f"{preview['removed_count']} removed."
         ),
@@ -692,8 +692,8 @@ __all__ = [
     "PUBLISH_MANIFEST_FILENAME",
     "PUBLISH_MANIFEST_SCHEMA_VERSION",
     "PUBLISH_PREVIEW_SCHEMA_VERSION",
-    "apply_scope_publish",
+    "apply_publish",
     "files_revision",
-    "preview_scope_publish",
+    "preview_publish",
     "validate_published_snapshot",
 ]

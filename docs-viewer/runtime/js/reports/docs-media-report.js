@@ -1,4 +1,4 @@
-const REPORT_SCHEMA = "docs_media_report_v2";
+const REPORT_SCHEMA = "docs_media_report_v4";
 const DEFAULT_SORT_KEY = "type";
 const DEFAULT_SORT_DIR = "asc";
 const SORT_KEYS = Object.freeze(["type", "file", "documents"]);
@@ -25,44 +25,10 @@ function exactKeys(value, expected) {
   );
 }
 
-function scopeTitle(value) {
-  return cleanString(value).split(/[_-]+/).filter(Boolean).map((part) => (
-    part.charAt(0).toUpperCase() + part.slice(1)
-  )).join(" ");
-}
-
-function configuredScopes(context) {
-  const configs = Array.isArray(context && context.scopeConfigs) ? context.scopeConfigs : [];
-  return configs.map((config) => {
-    const scopeId = cleanString(config && (config.scope_id || config.scopeId)).toLowerCase();
-    return {
-      scopeId,
-      stage: cleanString(config && config.stage),
-      title: cleanString(config && config.title) || scopeTitle(scopeId)
-    };
-  }).filter((scope) => scope.scopeId);
-}
-
-function selectedScopeFromRoute(scopes, viewerScope) {
-  const selected = cleanString(
-    new URLSearchParams(window.location.search).get("report_scope")
-  ).toLowerCase();
-  if (scopes.some((scope) => scope.scopeId === selected)) return selected;
-  if (scopes.some((scope) => scope.scopeId === viewerScope)) return viewerScope;
-  return scopes[0] ? scopes[0].scopeId : "";
-}
-
 function replaceRouteParams(mutator) {
   const url = new URL(window.location.href);
   mutator(url.searchParams);
   window.history.replaceState({}, "", url.pathname + url.search + url.hash);
-}
-
-function persistSelectedScope(scopeId) {
-  replaceRouteParams((params) => {
-    if (scopeId) params.set("report_scope", scopeId);
-    else params.delete("report_scope");
-  });
 }
 
 function readRouteSort() {
@@ -92,21 +58,19 @@ function reportService(context) {
   return (
     service
     && typeof service.runDocsMedia === "function"
-    && typeof service.openLocalTarget === "function"
+    && typeof service.openDocsMediaSource === "function"
   ) ? service : null;
 }
 
-function normalizeDocument(value, scope, stage) {
+function normalizeDocument(value, stage) {
   const target = value && value.target;
-  const targetScope = cleanString(target && target.scope).toLowerCase();
   const subScope = cleanString(target && target.sub_scope).toLowerCase();
   const docId = cleanString(target && target.doc_id);
   const title = cleanString(value && value.title);
   const href = cleanString(value && value.href);
   if (
     !exactKeys(value, ["target", "title", "href"])
-    || !exactKeys(target, ["scope", "sub_scope", "doc_id", ...(stage ? ["stage"] : [])])
-    || targetScope !== scope
+    || !exactKeys(target, ["stage", "sub_scope", "doc_id"])
     || cleanString(target && target.stage) !== stage
     || !docId
     || !title
@@ -115,59 +79,56 @@ function normalizeDocument(value, scope, stage) {
     throw new Error("Docs Media document target is invalid.");
   }
   return {
-    target: { scope: targetScope, ...(stage ? { stage } : {}), subScope, docId },
+    target: { stage, subScope, docId },
     title,
     href
   };
 }
 
-function normalizeRow(value, reportScope, stage) {
-  const scope = cleanString(value && value.scope).toLowerCase();
+function normalizeRow(value, stage) {
+  const subScope = cleanString(value && value.sub_scope);
   const mediaType = cleanString(value && value.media_type).toLowerCase();
   const identity = cleanString(value && value.identity);
-  const localTarget = cleanString(value && value.local_target);
+  const role = cleanString(value && value.role);
   const documents = value && value.documents;
   if (
-    !exactKeys(value, ["scope", "media_type", "identity", "local_target", "documents"])
-    || scope !== reportScope
+    !exactKeys(value, ["stage", "sub_scope", "media_type", "identity", "role", "documents"])
+    || value.stage !== stage
     || !mediaType
     || !identity
     || identity.startsWith("/")
-    || !localTarget
-    || localTarget.startsWith("/")
+    || !["source", "build-source"].includes(role)
     || !Array.isArray(documents)
   ) {
     throw new Error("Docs Media row is invalid.");
   }
   return {
-    scope,
+    stage,
+    subScope,
     mediaType,
     identity,
-    localTarget,
-    documents: documents.map((documentRecord) => normalizeDocument(documentRecord, scope, stage))
+    mediaTarget: { stage, sub_scope: subScope, role, media_type: mediaType, identity },
+    documents: documents.map((documentRecord) => normalizeDocument(documentRecord, stage))
   };
 }
 
-/** Require the response and document targets to match the exact requested scope/stage. */
+/** Require the response and document targets to match the exact requested stage. */
 export function normalizeDocsMediaResponse(payload, requestedCollection) {
   const report = payload && payload.report;
-  const scope = cleanString(report && report.scope).toLowerCase();
   const stage = cleanString(requestedCollection && requestedCollection.stage);
   if (
     !exactKeys(payload, ["ok", "dry_run", "summary_text", "report"])
     || payload.ok !== true
-    || !exactKeys(report, ["schema_version", "scope", "rows", ...(stage ? ["stage"] : [])])
+    || !exactKeys(report, ["schema_version", "stage", "rows"])
     || report.schema_version !== REPORT_SCHEMA
-    || scope !== cleanString(requestedCollection && requestedCollection.scope).toLowerCase()
     || cleanString(report.stage) !== stage
     || !Array.isArray(report.rows)
   ) {
     throw new Error("Docs Media report is invalid.");
   }
   return {
-    scope,
-    ...(stage ? { stage } : {}),
-    rows: report.rows.map((row) => normalizeRow(row, scope, stage))
+    stage,
+    rows: report.rows.map((row) => normalizeRow(row, stage))
   };
 }
 
@@ -256,7 +217,7 @@ function appendFileCell(rowNode, row) {
   link.className = "docsViewerReport__cellLink docsViewerReport__title";
   link.href = "#";
   link.textContent = row.identity;
-  link.dataset.docsMediaTarget = row.localTarget;
+  link.dataset.docsMediaTarget = JSON.stringify(row.mediaTarget);
   cell.appendChild(link);
   rowNode.appendChild(cell);
 }
@@ -269,7 +230,7 @@ function appendDocumentsCell(rowNode, row) {
     link.className = "docsViewerReport__cellLink";
     link.href = documentRecord.href;
     link.textContent = documentRecord.title;
-    link.dataset.docsViewerScope = documentRecord.target.scope;
+    link.dataset.docsViewerStage = documentRecord.target.stage;
     link.dataset.docsViewerSubscope = documentRecord.target.subScope;
     link.dataset.docsViewerDocId = documentRecord.target.docId;
     cell.appendChild(link);
@@ -293,7 +254,7 @@ function renderRows(state) {
   if (!projection.rows.length) {
     state.emptyNode.textContent = state.sourceRows.length
       ? "No Docs Media rows match the current search."
-      : "No media files were found in " + state.selectedScope + ".";
+      : "No media files were found in " + state.stage + ".";
     return;
   }
   projection.rows.forEach((row) => {
@@ -310,22 +271,10 @@ function renderRows(state) {
 
 function resultStatus(state) {
   const count = state.sourceRows.length;
-  return count + (count === 1 ? " media file in " : " media files in ") + state.selectedScope + ".";
-}
-
-function renderScopeSelect(state) {
-  clearNode(state.scopeSelectNode);
-  state.scopes.forEach((scope) => {
-    const option = document.createElement("option");
-    option.value = scope.scopeId;
-    option.textContent = scope.title;
-    state.scopeSelectNode.appendChild(option);
-  });
-  state.scopeSelectNode.value = state.selectedScope;
+  return count + (count === 1 ? " media file in " : " media files in ") + state.stage + ".";
 }
 
 function updateControls(state) {
-  state.scopeSelectNode.disabled = state.busy;
   state.runButton.disabled = state.busy;
   state.runButton.setAttribute("aria-busy", state.busy ? "true" : "false");
   state.searchInputNode.disabled = state.busy;
@@ -341,7 +290,7 @@ function setBusy(state, busy) {
   updateControls(state);
 }
 
-function loadScope(state) {
+function loadStage(state) {
   const service = reportService(state.context);
   if (!service) {
     state.statusNode.textContent = "Local docs-management server is not configured.";
@@ -354,11 +303,7 @@ function loadScope(state) {
   state.sourceRows = [];
   clearNode(state.rowsNode);
   state.emptyNode.hidden = true;
-  const selected = state.scopes.find((scope) => scope.scopeId === state.selectedScope);
-  const request = {
-    scope: state.selectedScope,
-    ...(selected && selected.stage ? { stage: selected.stage } : {})
-  };
+  const request = { stage: state.stage };
   return service.runDocsMedia(request)
     .then((payload) => normalizeDocsMediaResponse(payload, request))
     .then((report) => {
@@ -387,7 +332,7 @@ function openFile(state, target) {
     state.statusNode.textContent = "Open in Finder is unavailable.";
     return Promise.resolve();
   }
-  return service.openLocalTarget(target)
+  return service.openDocsMediaSource(target)
     .then(() => {
       state.statusNode.textContent = resultStatus(state);
     })
@@ -399,14 +344,8 @@ function openFile(state, target) {
 }
 
 function attachEvents(state) {
-  state.scopeSelectNode.addEventListener("change", () => {
-    if (state.busy) return;
-    state.selectedScope = cleanString(state.scopeSelectNode.value).toLowerCase();
-    persistSelectedScope(state.selectedScope);
-    loadScope(state);
-  });
   state.runButton.addEventListener("click", () => {
-    if (!state.busy) loadScope(state);
+    if (!state.busy) loadStage(state);
   });
   state.searchInputNode.addEventListener("input", () => {
     state.searchText = state.searchInputNode.value;
@@ -442,7 +381,7 @@ function attachEvents(state) {
       : null;
     if (!link || state.busy) return;
     event.preventDefault();
-    openFile(state, cleanString(link.dataset.docsMediaTarget));
+    openFile(state, JSON.parse(link.dataset.docsMediaTarget));
   });
 }
 
@@ -451,9 +390,6 @@ function renderShell(root) {
   root.dataset.reportColumns = "3";
   root.innerHTML = [
     '<div class="docsViewerReport__toolbar">',
-    '  <label class="docsViewerReport__selectLabel">Scope ',
-    '    <select id="docsMediaReportScope" class="docsViewerReport__select"></select>',
-    "  </label>",
     '  <button id="docsMediaReportRun" type="button" class="docsViewerReport__button docsViewerReport__button--pill" aria-label="Run/Refresh" title="Run/Refresh">🔄</button>',
     '  <span class="docsViewerReport__search">',
     '    <input id="docsMediaReportSearch" class="docsViewerReport__searchInput" type="search" placeholder="Search" aria-label="Search Docs Media">',
@@ -472,7 +408,6 @@ function renderShell(root) {
     headNode: root.querySelector(".docsViewerReport__head"),
     rowsNode: root.querySelector(".docsViewerReport__rows"),
     runButton: root.querySelector("#docsMediaReportRun"),
-    scopeSelectNode: root.querySelector("#docsMediaReportScope"),
     searchClearNode: root.querySelector(".docsViewerReport__searchClear"),
     searchInputNode: root.querySelector("#docsMediaReportSearch"),
     statusNode: root.querySelector(".docsViewerReport__status")
@@ -480,29 +415,26 @@ function renderShell(root) {
 }
 
 export function mountDocsMediaReport(context) {
-  const scopes = configuredScopes(context);
-  const selectedScope = selectedScopeFromRoute(scopes, cleanString(context.viewerScope));
+  const stage = cleanString(context.viewerStage);
   const routeSort = readRouteSort();
   const nodes = renderShell(context.reportRoot);
   const state = Object.assign({
     busy: false,
     context,
-    scopes,
     searchText: "",
-    selectedScope,
+    stage,
     sortDir: routeSort.sortDir,
     sortKey: routeSort.sortKey,
     sourceRows: []
   }, nodes);
-  renderScopeSelect(state);
   renderHead(state);
   attachEvents(state);
   updateControls(state);
-  if (!selectedScope) {
-    state.statusNode.textContent = "No docs scopes are configured.";
+  if (!["working", "pre-publish"].includes(stage)) {
+    state.statusNode.textContent = "Docs Media requires Working or Pre-publish.";
     state.emptyNode.hidden = false;
     state.emptyNode.textContent = "Docs Media could not run in this viewer context.";
     return Promise.resolve();
   }
-  return loadScope(state);
+  return loadStage(state);
 }

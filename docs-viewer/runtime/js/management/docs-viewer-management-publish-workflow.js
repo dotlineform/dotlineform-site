@@ -5,8 +5,8 @@ import {
   previewManagedDocsDeployRepo
 } from "./docs-viewer-management-client.js";
 import {
-  scopeDeployRepoCapability,
-  scopePublishSupported
+  stageDeployRepoCapability,
+  stagePublishSupported
 } from "./docs-viewer-management-capabilities.js";
 import {
   escapeHtml,
@@ -18,7 +18,7 @@ var WORKFLOW_TEXT = {
   cancelButton: "Cancel",
   selectionTitle: "Publish",
   publishChecking: "Checking accepted-snapshot changes...",
-  publishApplying: "Updating the accepted scope snapshot...",
+  publishApplying: "Updating the accepted snapshot...",
   deployChecking: "Checking repository deployment changes...",
   deployApplying: "Updating the repository deployment..."
 };
@@ -27,13 +27,13 @@ function cleanString(value) {
   return String(value == null ? "" : value).trim();
 }
 
-export function docsViewerPublishWorkflowAvailability(capabilities, scope, stage) {
-  var publishAvailable = scopePublishSupported(capabilities, scope, stage);
-  var deployRepo = scopeDeployRepoCapability(capabilities, scope, stage);
+export function docsViewerPublishWorkflowAvailability(capabilities, stage) {
+  var publishAvailable = stagePublishSupported(capabilities, stage);
+  var deployRepo = stageDeployRepoCapability(capabilities, stage);
   return {
     publish: {
       available: publishAvailable,
-      reason: publishAvailable ? "" : "Publish is unavailable for this scope."
+      reason: publishAvailable ? "" : "Publish is unavailable for this stage."
     },
     deploy_repo: deployRepo
   };
@@ -231,7 +231,7 @@ function acceptedPublishRevision(preview, payload) {
 function defaultConfirmDeployRepo(root, preview) {
   return openDocsViewerConfirmModal({
     root: root,
-    title: "Deploy accepted scope snapshot to repository",
+    title: "Deploy accepted snapshot to repository",
     body: docsViewerDeployRepoConfirmBody(preview),
     size: "wide",
     primaryLabel: "Deploy Repo",
@@ -243,7 +243,6 @@ function defaultConfirmDeployRepo(root, preview) {
 export async function runManagedDocsPublishWorkflow(options = {}) {
   var availability = options.availability || docsViewerPublishWorkflowAvailability(
     options.capabilities,
-    options.scope,
     options.clientOptions && options.clientOptions.stage
   );
   var operations = options.operations || {};

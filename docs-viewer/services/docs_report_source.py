@@ -24,8 +24,7 @@ RETIRED_REPORT_KEYS = frozenset(
         "viewer_report_subscope",
     }
 )
-_KEYS = frozenset({"id", "scope", "preset", "sub_scope"})
-_SCOPE_REPORTS = frozenset({"docs_index_table", "docs_broken_links"})
+_KEYS = frozenset({"id", "preset", "sub_scope"})
 _ID = re.compile(r"[a-z0-9][a-z0-9_-]*\Z")
 _ATTRIBUTE = re.compile(r"([a-z_]+): ([a-z0-9][a-z0-9_-]*)\Z")
 _MARKDOWN = MarkdownIt("commonmark")
@@ -42,7 +41,6 @@ class ReportSourceRange:
 @dataclass(frozen=True)
 class ReportDescriptor:
     id: str
-    scope: str | None
     preset: str | None
     sub_scope: str | None
     source_range: ReportSourceRange
@@ -51,7 +49,6 @@ class ReportDescriptor:
         return MappingProxyType(
             {
                 "id": self.id,
-                "scope": self.scope,
                 "preset": self.preset,
                 "sub_scope": self.sub_scope,
             }
@@ -84,8 +81,6 @@ class ReportDefinition:
 @dataclass(frozen=True)
 class ReportSourceContract:
     reports: tuple[ReportDefinition, ...]
-    configured_scope_ids: frozenset[str]
-    source_scope_id: str
     configured_sub_scope_ids: frozenset[str]
     source_sub_scope_id: str = ""
 
@@ -133,8 +128,6 @@ def _identifier(value: Any, label: str) -> str:
 def build_report_source_contract(
     registry_payload: Mapping[str, Any],
     *,
-    source_scope_id: str,
-    configured_scope_ids: Iterable[str],
     configured_sub_scope_ids: Iterable[str] = (),
     source_sub_scope_id: str = "",
 ) -> ReportSourceContract:
@@ -165,15 +158,11 @@ def build_report_source_contract(
             presets.add(preset_id)
         reports.append(ReportDefinition(report_id, frozenset(presets)))
 
-    scopes = frozenset(_identifier(value, "scope id") for value in configured_scope_ids)
-    source_scope = _identifier(source_scope_id, "source_scope_id")
-    if source_scope not in scopes:
-        raise ValueError(f"source_scope_id is not configured: {source_scope}")
     children = frozenset(_identifier(value, "sub-scope id") for value in configured_sub_scope_ids)
     child_source = _identifier(source_sub_scope_id, "source_sub_scope_id") if source_sub_scope_id else ""
     if child_source and child_source not in children:
         raise ValueError(f"source_sub_scope_id is not configured: {child_source}")
-    return ReportSourceContract(tuple(reports), scopes, source_scope, children, child_source)
+    return ReportSourceContract(tuple(reports), children, child_source)
 
 
 def _lines(markdown: str) -> list[_Line]:
@@ -289,12 +278,7 @@ def _descriptor(
     if definition is None:
         raise _invalid(f"unknown report id: {report_id}", "unknown_report", source_name, source_range)
 
-    scope, preset, sub_scope = (attributes.get(key) for key in ("scope", "preset", "sub_scope"))
-    if scope is not None:
-        if report_id not in _SCOPE_REPORTS:
-            raise _invalid(f"scope is not allowed for report: {report_id}", "invalid_scope", source_name, source_range)
-        if scope not in contract.configured_scope_ids:
-            raise _invalid(f"scope is not configured: {scope}", "invalid_scope", source_name, source_range)
+    preset, sub_scope = (attributes.get(key) for key in ("preset", "sub_scope"))
     if preset is not None:
         if report_id != "docs_index_table":
             raise _invalid(f"preset is not allowed for report: {report_id}", "invalid_preset", source_name, source_range)
@@ -304,11 +288,11 @@ def _descriptor(
         if sub_scope is None:
             raise _invalid("docs_subscope requires sub_scope", "invalid_sub_scope", source_name, source_range)
         if sub_scope not in contract.configured_sub_scope_ids:
-            message = f"sub_scope is not configured for {contract.source_scope_id}: {sub_scope}"
+            message = f"sub_scope is not configured: {sub_scope}"
             raise _invalid(message, "invalid_sub_scope", source_name, source_range)
     elif sub_scope is not None:
         raise _invalid(f"sub_scope is not allowed for report: {report_id}", "invalid_sub_scope", source_name, source_range)
-    return ReportDescriptor(report_id, scope, preset, sub_scope, source_range)
+    return ReportDescriptor(report_id, preset, sub_scope, source_range)
 
 
 def parse_report_source(

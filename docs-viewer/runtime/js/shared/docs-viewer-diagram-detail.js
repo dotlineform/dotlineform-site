@@ -19,7 +19,7 @@ function positiveInteger(value) {
 function sameDocumentTarget(left, right) {
   var first = left || {};
   var second = right || {};
-  return cleanString(first.scope) === cleanString(second.scope)
+  return cleanString(first.stage) === cleanString(second.stage)
     && cleanString(first.subScope) === cleanString(second.subScope)
     && cleanString(first.docId) === cleanString(second.docId);
 }
@@ -154,8 +154,8 @@ export function createDocsViewerDiagramDetailAdapter(options) {
         context.documentMountGeneration || context.mountGeneration
       ),
       documentTarget: {
-        scope: cleanString(context.viewerScope),
-        subScope: "",
+          stage: cleanString(context.viewerStage),
+          subScope: "",
         docId: cleanString(doc.doc_id)
       },
       inlineByHost: new Map(),
@@ -208,7 +208,6 @@ export function createDocsViewerDiagramDetailAdapter(options) {
     if (
       !state
       || !state.documentMountGeneration
-      || !state.documentTarget.scope
       || !state.documentTarget.docId
       || cleanString(target.kind) !== "diagram"
       || positiveInteger(target.documentMountGeneration) !== state.documentMountGeneration
@@ -342,7 +341,7 @@ export function createDocsViewerDiagramDetailAdapter(options) {
     var state = stateFor(root, context);
     var expectedGeneration = positiveInteger(context.mountGeneration || context.documentMountGeneration);
     var expectedTarget = {
-      scope: cleanString(context.viewerScope),
+      stage: cleanString(context.viewerStage),
       subScope: "",
       docId: cleanString(context.doc && context.doc.doc_id)
     };

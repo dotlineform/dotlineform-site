@@ -31,23 +31,26 @@ from docs_public_media_reconciliation import (
 )
 from docs_public_mermaid_payload import public_mermaid_payload_requires_projection
 from docs_report_source import REPORT_HOST_HTML
-from docs_scope_config import (
-    DocsScopeConfig,
+from docs_workspace_config import (
+    DocsStageConfig,
     DocsSubScopeConfig,
-    load_docs_scope_configs,
+    DocsWorkspaceConfig,
+    load_docs_workspace_config,
+    load_docs_stage,
+    select_workspace_stage,
     public_documents_path,
     public_search_path,
     public_media_bindings,
 )
-from docs_scope_publish import validate_published_snapshot
+from docs_publish import validate_published_snapshot
+from docs_publication_payloads import project_public_view
 from docs_subscope_customisations import (
     sub_scope_customisation_authoring_subject_fields,
 )
 from docs_write_rebuild import rebuild_sub_scope_outputs
 
 
-DEPLOY_REPO_PREVIEW_SCHEMA_VERSION = "docs_deploy_repo_preview_v1"
-DEPLOYABLE_SCOPE = "analysis"
+DEPLOY_REPO_PREVIEW_SCHEMA_VERSION = "docs_deploy_repo_preview_v2"
 IGNORED_FILENAMES = frozenset({".DS_Store", ".gitkeep"})
 LOCAL_FOLDER_ANCHOR_PATTERN = re.compile(
     r"<a\b(?P<attrs>(?:[^>\"']|\"[^\"]*\"|'[^']*')*)>(?P<label>.*?)</a\s*>",
@@ -67,7 +70,7 @@ MEDIA_URL_ATTRIBUTE_PATTERN = re.compile(
 @dataclass(frozen=True)
 class DeployRepoPlan:
     preview: dict[str, Any]
-    config: DocsScopeConfig
+    config: DocsStageConfig
     desired_repository_files: Mapping[Path, bytes]
     current_repository_files: Mapping[Path, bytes]
     media_references: Mapping[tuple[str, str], tuple[str, ...]]
@@ -114,17 +117,12 @@ def plan_revision(payload: Mapping[str, Any]) -> str:
     return f"sha256:{hashlib.sha256(canonical).hexdigest()}"
 
 
-def deployable_config(repo_root: Path, value: Any) -> DocsScopeConfig:
-    scope = str(value or "").strip().lower()
-    if scope != DEPLOYABLE_SCOPE:
-        raise ValueError("Deploy Repo is available only for the Analysis scope")
-    config = load_docs_scope_configs(repo_root, scope_ids=(scope,)).get(scope)
-    if config is None or config.public_projection is None:
-        raise ValueError("Analysis has no configured public projection")
-    if config.stages:
-        raise ValueError("Deploy Repo is unavailable while publishing stage actions are deferred")
-    if public_documents_path(config) is None or public_search_path(config) is None:
-        raise ValueError("Analysis public documents and Search destinations are required")
+def deployable_config(repo_root: Path) -> DocsStageConfig:
+    # Pre-publish configuration describes collection destinations; no source or
+    # generated artifact is read by deployment.
+    config = load_docs_stage(repo_root, "pre-publish")
+    if config.public_projection is None or public_documents_path(config) is None or public_search_path(config) is None:
+        raise ValueError("Public documents and Search destinations are required")
     return config
 
 
@@ -158,7 +156,7 @@ def _writable_repository_destination(
 
 def deploy_repo_capability(
     repo_root: Path,
-    config: DocsScopeConfig,
+    config: DocsWorkspaceConfig,
 ) -> dict[str, Any]:
     """Project a browser-safe capability from configured destination authority."""
 
@@ -166,12 +164,10 @@ def deploy_repo_capability(
         "available": False,
         "preview": False,
         "apply": False,
-        "reason": "Deploy Repo is available only for Analysis.",
+        "reason": "The configured repository projection is unavailable.",
     }
-    if config.scope_id != DEPLOYABLE_SCOPE:
-        return unavailable
     try:
-        deployable = deployable_config(repo_root, config.scope_id)
+        deployable = select_workspace_stage(config, "pre-publish")
     except (FileNotFoundError, ValueError):
         return {
             **unavailable,
@@ -187,7 +183,7 @@ def deploy_repo_capability(
     destinations: list[tuple[Path, bool]] = [
         (projection.documents.location.path, True),
         (projection.search.location.path, False),
-        (document_location_projection_path(deployable), False),
+        (document_location_projection_path(config), False),
     ]
     destinations.extend(
         (sub_scope.public_projection.documents.location.path, True)
@@ -247,7 +243,7 @@ def public_url_prefix(path: Path) -> str:
 
 
 def collection_public_url_prefix(
-    collection: DocsScopeConfig | DocsSubScopeConfig,
+    collection: DocsStageConfig | DocsSubScopeConfig,
 ) -> str:
     path = public_documents_path(collection)
     if path is None:
@@ -295,7 +291,7 @@ def project_public_local_folder_links(content_html: str) -> str:
     return LOCAL_FOLDER_ANCHOR_PATTERN.sub(replace, content_html)
 
 
-def public_media_url_projection(config: DocsScopeConfig) -> dict[str, str]:
+def public_media_url_projection(config: DocsStageConfig) -> dict[str, str]:
     projection = config.public_projection
     if projection is None:
         return {}
@@ -303,7 +299,7 @@ def public_media_url_projection(config: DocsScopeConfig) -> dict[str, str]:
     for collection, media in public_media_bindings(config).values():
         child = getattr(collection, "sub_scope", "")
         suffix = f"/sub-scopes/{child}" if child else ""
-        urls[f"/docs/published/media/{config.scope_id}{suffix}/{media.media_type}"] = media.served_path_prefix.rstrip("/")
+        urls[f"/docs/published/media{suffix}/{media.media_type}"] = media.served_path_prefix.rstrip("/")
     return urls
 
 
@@ -361,7 +357,7 @@ def project_document_payload(
 
 
 def project_public_search(
-    config: DocsScopeConfig,
+    config: DocsStageConfig,
     payload: dict[str, Any],
 ) -> dict[str, Any]:
     """Project configured public collection names without rebuilding postings."""
@@ -370,11 +366,12 @@ def project_public_search(
     docs = payload.get("docs")
     if (
         not isinstance(header, dict)
-        or header.get("schema") != "docs_viewer_search_index_v2"
-        or header.get("scope") != config.scope_id
+        or header.get("schema") != "docs_viewer_search_index_v3"
+        or "scope" in header
+        or header.get("stage") != "published"
         or not isinstance(docs, list)
     ):
-        raise ValueError("accepted Search has the wrong schema or scope identity")
+        raise ValueError("accepted Search has the wrong schema or Published identity")
     public_titles = {
         sub_scope.sub_scope: sub_scope.public_title
         for sub_scope in config.sub_scopes
@@ -407,7 +404,7 @@ def project_public_search(
     projected = {**payload, "docs": projected_docs}
     version_payload = {
         "schema": header["schema"],
-        "scope": header["scope"],
+        "stage": header["stage"],
         "fields": projected.get("fields", []),
         "docs": projected_docs,
         "terms": projected.get("terms", {}),
@@ -424,7 +421,8 @@ def project_public_search(
 
 
 def accepted_document_collections(
-    config: DocsScopeConfig,
+    repo_root: Path,
+    config: DocsStageConfig,
     published_files: Mapping[Path, bytes],
 ) -> tuple[
     dict[Path, bytes],
@@ -433,6 +431,12 @@ def accepted_document_collections(
     dict[str, dict[str, Any]],
     dict[str, Any],
 ]:
+    workspace = load_docs_workspace_config(repo_root)
+    published_files = {
+        path: json_bytes(project_public_view(workspace, read_json_bytes(data, f"accepted {path}")))
+        if path.suffix == ".json" else data
+        for path, data in published_files.items()
+    }
     media_projection = public_media_url_projection(config)
     parent_files: dict[Path, bytes] = {}
     parent_documents: dict[str, dict[str, Any]] = {}
@@ -480,7 +484,12 @@ def accepted_document_collections(
     sub_scope_files: dict[str, dict[Path, bytes]] = {}
     sub_scope_manifests: dict[str, dict[str, Any]] = {}
     subject_associations: dict[tuple[str, str], Mapping[str, Any]] = {}
-    for sub_scope in config.sub_scopes:
+    accepted_children = {path.parts[1] for path in published_files if len(path.parts) > 2 and path.parts[0] == "sub-scopes"}
+    configured_children = {child.sub_scope: child for child in config.sub_scopes}
+    if accepted_children - set(configured_children):
+        raise ValueError("Accepted snapshot contains unconfigured child identities; convert them explicitly before activation")
+    for child_id in sorted(accepted_children):
+        sub_scope = configured_children[child_id]
         prefix = Path("sub-scopes") / sub_scope.sub_scope / "documents"
         files: dict[Path, bytes] = {}
         for relative_path, data in published_files.items():
@@ -489,9 +498,9 @@ def accepted_document_collections(
             except ValueError:
                 continue
             if collection_relative == Path("subject-associations.json"):
-                subject_associations[(config.scope_id, sub_scope.sub_scope)] = read_json_bytes(
+                subject_associations[("published", sub_scope.sub_scope)] = read_json_bytes(
                     data,
-                    f"accepted subject associations {config.scope_id}/{sub_scope.sub_scope}",
+                    f"accepted subject associations {sub_scope.sub_scope}",
                 )
                 continue
             if (
@@ -502,7 +511,7 @@ def accepted_document_collections(
                 files[collection_relative] = project_document_payload(
                     data,
                     label=(
-                        f"accepted document {config.scope_id}/{sub_scope.sub_scope}/"
+                        f"accepted document {sub_scope.sub_scope}/"
                         f"{collection_relative.stem}"
                     ),
                     media_projection=media_projection,
@@ -523,11 +532,11 @@ def accepted_document_collections(
             sub_scope_customisation_authoring_subject_fields(
                 sub_scope.sub_scope_customisation
             )
-            and (config.scope_id, sub_scope.sub_scope) not in subject_associations
+            and ("published", sub_scope.sub_scope) not in subject_associations
         ):
             raise FileNotFoundError(
                 f"accepted Published snapshot is missing deployment subject associations for "
-                f"{config.scope_id}/{sub_scope.sub_scope}"
+                f"{sub_scope.sub_scope}"
             )
 
     search_payload = project_public_search(
@@ -589,7 +598,7 @@ def _validate_complete_document_set(
 
 def desired_repository_projection(
     repo_root: Path,
-    config: DocsScopeConfig,
+    config: DocsStageConfig,
     published_files: Mapping[Path, bytes],
 ) -> tuple[
     dict[Path, bytes],
@@ -603,7 +612,7 @@ def desired_repository_projection(
         search_payload,
         sub_scope_manifests,
         subject_associations,
-    ) = accepted_document_collections(config, published_files)
+    ) = accepted_document_collections(repo_root, config, published_files)
     parent_root_path = public_documents_path(config)
     search_target_path = public_search_path(config)
     if parent_root_path is None or search_target_path is None:
@@ -625,8 +634,9 @@ def desired_repository_projection(
     search_target = repository_path(repo_root, search_target_path)
     desired[search_target] = json_bytes(search_payload)
 
+    workspace = load_docs_workspace_config(repo_root)
     exact_locations = build_exact_document_location_records(
-        config,
+        workspace,
         search_payload=search_payload,
         parent_documents={
             path.stem: read_json_bytes(data, f"projected parent document {path.stem}")
@@ -636,7 +646,7 @@ def desired_repository_projection(
         sub_scope_manifests=sub_scope_manifests,
     )
     location_payload = build_document_location_payload(
-        config,
+        workspace,
         search_payload=search_payload,
         parent_documents={
             path.stem: read_json_bytes(data, f"projected parent document {path.stem}")
@@ -647,14 +657,14 @@ def desired_repository_projection(
     )
     location_target = repository_path(
         repo_root,
-        document_location_projection_path(config),
+        document_location_projection_path(workspace),
     )
     desired[location_target] = document_location_json_bytes(location_payload)
 
     payload_collections: list[tuple[str, Mapping[Path, bytes]]] = [
-        (config.scope_id, parent_files),
+        ("documents", parent_files),
         *[
-            (f"{config.scope_id}/{sub_scope}", files)
+            (f"{sub_scope}", files)
             for sub_scope, files in sorted(sub_scope_files.items())
         ],
     ]
@@ -678,17 +688,19 @@ def iter_managed_files(root: Path) -> Iterable[Path]:
 
 def current_repository_projection(
     repo_root: Path,
-    config: DocsScopeConfig,
+    config: DocsStageConfig,
 ) -> dict[Path, bytes]:
     parent_path = public_documents_path(config)
     search_path = public_search_path(config)
     if parent_path is None or search_path is None:
         raise ValueError("Analysis public documents and Search destinations are required")
     parent_root = repository_path(repo_root, parent_path)
-    excluded_roots = [
-        repository_path(repo_root, public_documents_path(sub_scope) or Path("."))
-        for sub_scope in config.sub_scopes
-    ]
+    excluded_roots = []
+    for sub_scope in config.sub_scopes:
+        destination = public_documents_path(sub_scope)
+        if destination is None:
+            raise ValueError(f"Public collection has no configured destination: {sub_scope.sub_scope}")
+        excluded_roots.append(repository_path(repo_root, destination))
     excluded_roots.extend(
         repository_path(repo_root, media.location.path)
         for media in (config.public_projection.media.values() if config.public_projection else ())
@@ -696,6 +708,8 @@ def current_repository_projection(
     )
     current: dict[Path, bytes] = {}
     for path in iter_managed_files(parent_root):
+        if path == parent_root / "public-reports.json":
+            continue
         if any(path == excluded or path.is_relative_to(excluded) for excluded in excluded_roots):
             continue
         current[path] = path.read_bytes()
@@ -708,7 +722,7 @@ def current_repository_projection(
     search_target = repository_path(repo_root, search_path)
     if search_target.is_file():
         current[search_target] = search_target.read_bytes()
-    location_target = repository_path(repo_root, document_location_projection_path(config))
+    location_target = repository_path(repo_root, document_location_projection_path(load_docs_workspace_config(repo_root)))
     if location_target.is_file():
         current[location_target] = location_target.read_bytes()
     return current
@@ -773,14 +787,13 @@ def lineage_projections(
         publication_urls = {
             str(record.get("doc_id") or "").strip(): str(record.get("url") or "").strip()
             for record in locations
-            if str(record.get("scope_id") or "").strip() == editorial.scope
-            and str(record.get("sub_scope") or "").strip().lower() == editorial.sub_scope
+            if str(record.get("sub_scope") or "").strip().lower() == editorial.sub_scope
             and str(record.get("doc_id") or "").strip()
             and str(record.get("url") or "").strip()
         }
         desired[workflow.contract_id] = publication_lineage.project_publications(
             table,
-            editorial_scope=editorial.scope,
+            editorial_stage=editorial.stage,
             editorial_sub_scope=editorial.sub_scope,
             publication_urls=publication_urls,
         )
@@ -810,7 +823,7 @@ def lineage_preview(
             {
                 "contract_id": workflow.contract_id,
                 "path": (
-                    f"{workflow.working_collection.scope}/"
+                    f"{workflow.working_collection.stage}/"
                     f"{workflow.working_collection.sub_scope}/data/"
                     f"{publication_lineage.LINEAGE_FILENAME}"
                 ),
@@ -858,10 +871,11 @@ def build_deploy_repo_plan(
     environ: Mapping[str, str] | None = None,
 ) -> DeployRepoPlan:
     repo_root = repo_root.resolve()
-    config = deployable_config(repo_root, body.get("scope"))
+    if "scope" in body or body.get("stage") != "published":
+        raise ValueError("Deploy Repo requires the Published stage without scope")
+    config = deployable_config(repo_root)
     manifest, _published_root, published_files = validate_published_snapshot(
         repo_root,
-        config.scope_id,
     )
     timestamp = str(body.get("deployment_timestamp") or "").strip() or utc_now()
     desired, media_references, exact_locations, catalogue_projection = (
@@ -893,11 +907,7 @@ def build_deploy_repo_plan(
         )
         catalogue = catalogue_preview(repo_root, catalogue_plan)
         catalogue_summary = f"{catalogue['changed_count']} Catalogue change"
-    lineage_workflows = tuple(
-        workflow
-        for workflow in publication_lineage.configured_workflows(repo_root)
-        if workflow.editorial_collection.scope == config.scope_id
-    )
+    lineage_workflows = publication_lineage.configured_workflows(repo_root)
     current_lineages = publication_lineage.load_tables(repo_root)
     desired_lineages = lineage_projections(
         exact_locations,
@@ -910,7 +920,7 @@ def build_deploy_repo_plan(
         desired_lineages,
     )
     plan_basis = {
-        "scope": config.scope_id,
+        "stage": "published",
         "published_revision": manifest["published_revision"],
         "deployment_timestamp": timestamp,
         "repository": repository,
@@ -932,7 +942,7 @@ def build_deploy_repo_plan(
         "ok": True,
         "schema_version": DEPLOY_REPO_PREVIEW_SCHEMA_VERSION,
         "operation": "preview",
-        "scope": config.scope_id,
+        "stage": "published",
         "published_revision": manifest["published_revision"],
         "deployment_timestamp": timestamp,
         "plan_revision": revision,
@@ -945,7 +955,7 @@ def build_deploy_repo_plan(
         "error_count": int(media.get("error_count") or 0),
         "up_to_date": change_count == 0 and int(media.get("error_count") or 0) == 0,
         "summary_text": (
-            f"Deploy Repo preview for {config.scope_id} at {manifest['published_revision']}: "
+            f"Deploy Repo preview for the workspace at {manifest['published_revision']}: "
             f"{repository['added_count']} repository add, "
             f"{repository['changed_count']} change, {repository['removed_count']} remove; "
             f"{media.get('copy_count', 0)} media copy, {media.get('remove_count', 0)} remove; "
@@ -1086,8 +1096,8 @@ def apply_deploy_repo(
                 try:
                     rebuild_sub_scope_outputs(
                         repo_root.resolve(),
-                        workflow.working_collection.scope,
                         workflow.working_collection.sub_scope,
+                        stage=workflow.working_collection.stage,
                     )
                     rebuild_status = "updated"
                 except Exception as exc:
@@ -1169,7 +1179,6 @@ def apply_deploy_repo(
 
 __all__ = [
     "DEPLOY_REPO_PREVIEW_SCHEMA_VERSION",
-    "DEPLOYABLE_SCOPE",
     "apply_deploy_repo",
     "build_deploy_repo_plan",
     "deploy_repo_capability",

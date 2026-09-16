@@ -16,23 +16,19 @@ for path in (DOCS_SERVICES_DIR, SHARED_PYTHON_DIR):
     if str(path) not in sys.path:
         sys.path.insert(0, str(path))
 
-from docs_scope_config import (  # noqa: E402
+from docs_workspace_config import (  # noqa: E402
     CONFIG_REL_PATH,
-    DocsScopeConfig,
+    DocsStageConfig,
     document_source_path,
     generated_documents_path,
     generated_search_path,
-    is_public_readonly_scope,
-    load_docs_scope_configs,
-    normalize_viewer_base_url,
+    load_docs_workspace_config,
     public_documents_path,
     public_search_path,
-    publication_documents_path,
     managed_media_config,
     published_documents_path,
     published_search_path,
-    resolve_scope_path,
-    scope_uses_external_data,
+    resolve_workspace_path,
 )
 from docs_artifact_locations import local_artifact_path, normalize_artifact_identity  # noqa: E402
 from markdown_renderer import plain_text_from_html, render_markdown_to_html  # noqa: E402
@@ -41,7 +37,7 @@ from markdown_renderer import plain_text_from_html, render_markdown_to_html  # n
 DOCS_VIEWER_BROWSER_CONFIG_PATH = Path("docs-viewer/config/defaults/docs-viewer-config.json")
 DOCS_VIEWER_PUBLIC_BROWSER_CONFIG_PATH = Path("docs-viewer/config/defaults/docs-viewer-public-config.json")
 SITE_DOCS_VIEWER_PUBLIC_BROWSER_CONFIG_PATH = Path("site/docs-viewer/config/defaults/docs-viewer-public-config.json")
-DOCS_VIEWER_BROWSER_CONFIG_SCHEMA_VERSION = "docs_viewer_config_v1"
+DOCS_VIEWER_BROWSER_CONFIG_SCHEMA_VERSION = "docs_viewer_config_v2"
 DOCS_INDEX_TREE_SCHEMA_VERSION = "docs_index_tree_v1"
 DOCS_RECENT_SCHEMA_VERSION = "docs_recent_v1"
 DEFAULT_RECENT_LIMIT = 20
@@ -67,6 +63,13 @@ def utc_timestamp() -> str:
 
 def normalize_text(value: Any) -> str:
     return re.sub(r"\s+", " ", str(value or "")).strip()
+
+
+def normalize_viewer_base_url(value: Any) -> str:
+    text = str(value or "").strip() or "/docs/"
+    if not text.startswith("/"):
+        text = f"/{text}"
+    return text if text.endswith("/") else f"{text}/"
 def humanize(value: str) -> str:
     return " ".join(part.capitalize() for part in re.split(r"[_\-\s]+", value.strip()) if part)
 

@@ -82,7 +82,7 @@ export function buildDocsViewerDeletePreviewBody(preview) {
 export function createDocsViewerManagementModalController(options = {}) {
   var refs = options.refs || {};
   var management = options.management || {};
-  var scopeConfig = options.scopeConfig || {};
+  var workspaceConfig = options.workspaceConfig || {};
   var context = options.context || {};
   var nav = options.nav || null;
   var callbacks = options.callbacks || {};
@@ -133,8 +133,8 @@ export function createDocsViewerManagementModalController(options = {}) {
     onRequestClose: function () { closeSettingsModal(); }
   }) : null;
 
-  function viewerScope() {
-    return typeof callbacks.viewerScope === "function" ? callbacks.viewerScope() : "";
+  function viewerStage() {
+    return typeof callbacks.viewerStage === "function" ? callbacks.viewerStage() : "";
   }
 
   function metadataModalOpen() {
@@ -158,7 +158,7 @@ export function createDocsViewerManagementModalController(options = {}) {
       ? new Set(choices.ui_status)
       : null;
     var optionRecords = [];
-    (scopeConfig.uiStatuses || []).forEach(function (status) {
+    (workspaceConfig.uiStatuses || []).forEach(function (status) {
       if (allowedValues && !allowedValues.has(status.ui_status)) return;
       optionRecords.push({
         value: status.ui_status,
@@ -699,7 +699,7 @@ export function createDocsViewerManagementModalController(options = {}) {
   function openImportModal(options) {
     if (!refs.importModal || !refs.importRoot) return Promise.resolve();
     var settings = options || {};
-    var scope = viewerScope();
+    var stage = viewerStage();
     importEntryFocusTarget = null;
     var lifecycle = ensureImportModalLifecycle();
     refs.importModal.hidden = false;
@@ -715,7 +715,7 @@ export function createDocsViewerManagementModalController(options = {}) {
         restoreFocus: importRestoreFocusTarget
       });
     }
-    var initResult = typeof callbacks.onImportOpen === "function" ? callbacks.onImportOpen(scope) : null;
+    var initResult = typeof callbacks.onImportOpen === "function" ? callbacks.onImportOpen(stage) : null;
     if (initResult && typeof initResult.then === "function") {
       return initResult.then(function () {
         focusImportModalEntry();
@@ -804,7 +804,7 @@ export function createDocsViewerManagementModalController(options = {}) {
     if (typeof callbacks.hideManageActionsMenu === "function") callbacks.hideManageActionsMenu();
     settingsFieldState = null;
     if (refs.settingsSaveButton) refs.settingsSaveButton.disabled = true;
-    if (refs.settingsScope) refs.settingsScope.textContent = "scope: " + viewerScope();
+    if (refs.settingsStage) refs.settingsStage.textContent = "stage: " + viewerStage();
     renderSettingsField(null);
     setSettingsStatus(MODAL_TEXT.settingsLoading, "busy");
     renderSettingsWarnings([]);

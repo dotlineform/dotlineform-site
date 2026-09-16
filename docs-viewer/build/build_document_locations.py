@@ -24,44 +24,20 @@ if str(DOCS_SERVICES_DIR) not in sys.path:
     sys.path.insert(0, str(DOCS_SERVICES_DIR))
 
 from docs_document_location_projection import (  # noqa: E402
-    SUPPORTED_DOCUMENT_LOCATION_SCOPE_IDS,
     document_location_projection_path,
     json_bytes,
     load_public_document_location_payload,
 )
-from docs_scope_config import load_docs_scope_configs, resolve_scope_path  # noqa: E402
+from docs_workspace_config import load_docs_workspace_config, resolve_workspace_path  # noqa: E402
 
 
 def parse_args(argv: list[str]) -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description="Build public Docs Viewer document-location search indexes."
     )
-    parser.add_argument(
-        "--scope",
-        action="append",
-        default=[],
-        help="Limit the build to analysis.",
-    )
     add_workspace_arguments(parser)
     parser.add_argument("--write", action="store_true", help="Write generated files.")
     return parser.parse_args(argv)
-
-
-def selected_scope_ids(values: list[str]) -> list[str]:
-    requested = [str(value or "").strip().lower() for value in values]
-    scope_ids = requested or list(SUPPORTED_DOCUMENT_LOCATION_SCOPE_IDS)
-    if any(not scope_id for scope_id in scope_ids):
-        raise ValueError("scope must not be empty")
-    if len(set(scope_ids)) != len(scope_ids):
-        raise ValueError("scope must not be repeated")
-    unsupported = sorted(
-        set(scope_ids) - set(SUPPORTED_DOCUMENT_LOCATION_SCOPE_IDS)
-    )
-    if unsupported:
-        raise ValueError(
-            "unsupported document-location scope: " + ", ".join(unsupported)
-        )
-    return scope_ids
 
 
 def write_bytes_atomic(path: Path, payload: bytes) -> None:
@@ -75,31 +51,18 @@ def main(argv: list[str] | None = None) -> int:
     args = parse_args(argv or sys.argv[1:])
     apply_workspace_overrides(args)
     repo_root = Path.cwd().resolve()
-    scope_ids = selected_scope_ids(args.scope)
-    configs = load_docs_scope_configs(repo_root, scope_ids=scope_ids)
-    missing = [scope_id for scope_id in scope_ids if scope_id not in configs]
-    if missing:
-        raise ValueError("unknown Docs Viewer scope: " + ", ".join(missing))
-
-    for scope_id in scope_ids:
-        config = configs[scope_id]
-        payload = load_public_document_location_payload(repo_root, config)
-        output_path = resolve_scope_path(
-            repo_root,
-            document_location_projection_path(config),
-        )
-        output_bytes = json_bytes(payload)
-        changed = not output_path.is_file() or output_path.read_bytes() != output_bytes
-        if args.write and changed:
-            write_bytes_atomic(output_path, output_bytes)
-        mode = "wrote" if args.write and changed else "unchanged"
-        if not args.write:
-            mode = "would write" if changed else "unchanged"
-        relative_path = output_path.relative_to(repo_root).as_posix()
-        print(
-            f"Document locations scope={scope_id}: {mode} {relative_path} "
-            f"({len(payload['records'])} records)"
-        )
+    config = load_docs_workspace_config(repo_root)
+    payload = load_public_document_location_payload(repo_root, config)
+    output_path = resolve_workspace_path(repo_root, document_location_projection_path(config))
+    output_bytes = json_bytes(payload)
+    changed = not output_path.is_file() or output_path.read_bytes() != output_bytes
+    if args.write and changed:
+        write_bytes_atomic(output_path, output_bytes)
+    mode = "wrote" if args.write and changed else "unchanged"
+    if not args.write:
+        mode = "would write" if changed else "unchanged"
+    relative_path = output_path.relative_to(repo_root).as_posix()
+    print(f"Document locations: {mode} {relative_path} ({len(payload['records'])} records)")
     return 0
 
 

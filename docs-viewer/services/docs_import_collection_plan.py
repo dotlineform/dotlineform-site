@@ -19,7 +19,7 @@ from docs_import_preview import generate_normalized_import_content_preview
 from docs_import_source_helpers import relative_path
 from docs_management_document_target import ManagedDocumentCollection
 from docs_source_model import (
-    ScopeDoc,
+    SourceDoc,
     allocate_doc_id,
     current_doc_timestamp,
     doc_id_matches_added_date,
@@ -67,7 +67,7 @@ class CollectionRecordState:
     errors: list[dict[str, Any]] = field(default_factory=list)
     warnings: list[dict[str, Any]] = field(default_factory=list)
     blocked: bool = False
-    collision: ScopeDoc | None = None
+    collision: SourceDoc | None = None
     document_plan: ImportDocumentPlan | None = None
     import_preview: dict[str, Any] = field(default_factory=dict)
     parent_resolution: dict[str, Any] = field(default_factory=dict)
@@ -116,7 +116,7 @@ def _sanitize_issue_paths(items: list[dict[str, Any]], workspace_root: Path) -> 
     return sanitized
 
 
-def _collision_for(record: ImportContent, docs: list[ScopeDoc]) -> ScopeDoc | None:
+def _collision_for(record: ImportContent, docs: list[SourceDoc]) -> SourceDoc | None:
     return next(
         (doc for doc in docs if doc.doc_id == record.doc_id or doc.path.stem == record.doc_id),
         None,
@@ -125,7 +125,7 @@ def _collision_for(record: ImportContent, docs: list[ScopeDoc]) -> ScopeDoc | No
 
 def _prepare_local_create_identities(
     states: list[CollectionRecordState],
-    docs: list[ScopeDoc],
+    docs: list[SourceDoc],
     planned_identities: list[dict[str, Any]] | None,
 ) -> list[dict[str, Any]]:
     supplied: dict[int, dict[str, Any]] = {}
@@ -225,7 +225,7 @@ def _prepare_local_create_identities(
     return rows
 
 
-def _collision_payload(repo_root: Path, target: ScopeDoc | None) -> dict[str, Any]:
+def _collision_payload(repo_root: Path, target: SourceDoc | None) -> dict[str, Any]:
     if target is None:
         return {"exists": False, "doc_id": "", "title": "", "path": "", "stem": ""}
     return {
@@ -282,9 +282,9 @@ def _declared_asset_plans(
 
 def _plan_document_candidates(
     repo_root: Path,
-    scope: str,
+    stage: str,
     states: list[CollectionRecordState],
-    docs: list[ScopeDoc],
+    docs: list[SourceDoc],
     *,
     staging_root: Path,
     workspace_root: Path,
@@ -319,7 +319,7 @@ def _plan_document_candidates(
                 preview = generate_normalized_import_content_preview(
                     record,
                     repo_root=repo_root,
-                    scope=scope,
+                    stage=stage,
                     staging_root=staging_root,
                     workspace_root=workspace_root,
                 )
@@ -363,7 +363,7 @@ def _plan_document_candidates(
         try:
             state.document_plan = plan_import_document(
                 repo_root,
-                scope,
+                stage,
                 record,
                 operation=operation,
                 docs=docs,
@@ -391,7 +391,7 @@ def _plan_document_candidates(
 def _parent_resolution(
     state: CollectionRecordState,
     *,
-    existing_docs_by_id: dict[str, ScopeDoc],
+    existing_docs_by_id: dict[str, SourceDoc],
     package_states_by_id: dict[str, CollectionRecordState],
 ) -> dict[str, Any]:
     parent_id = state.parent_id
@@ -411,7 +411,7 @@ def _parent_resolution(
 
 def _validate_hierarchy(
     states: list[CollectionRecordState],
-    docs: list[ScopeDoc],
+    docs: list[SourceDoc],
 ) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
     blockers: list[dict[str, Any]] = []
     dependencies: list[dict[str, Any]] = []
@@ -543,7 +543,7 @@ def _record_response(repo_root: Path, state: CollectionRecordState) -> dict[str,
 def blocked_collection_plan(
     *,
     source_format: str,
-    scope: str,
+    stage: str,
     staged_filename: str,
     blockers: list[dict[str, Any]],
     workspace_root: Path,
@@ -555,7 +555,7 @@ def blocked_collection_plan(
         "plan_valid": False,
         "collection": True,
         "source_format": source_format,
-        "scope": scope,
+        "stage": stage,
         "staged_filename": staged_filename,
         "preview_only": True,
         "ready_for_confirmation": False,
@@ -577,7 +577,7 @@ def blocked_collection_plan(
         },
     }
     response["target"] = {
-        "scope": scope,
+        "stage": stage,
         **({"sub_scope": sub_scope} if sub_scope else {}),
     }
     if sub_scope:
@@ -589,10 +589,10 @@ def plan_import_content_collection(
     repo_root: Path,
     *,
     source_format: str,
-    scope: str,
+    stage: str,
     staged_filename: str,
     states: list[CollectionRecordState],
-    docs: list[ScopeDoc],
+    docs: list[SourceDoc],
     staging_root: Path,
     workspace_root: Path,
     package_projection: dict[str, Any],
@@ -604,8 +604,8 @@ def plan_import_content_collection(
 ) -> DocumentsCollectionPlan:
     """Complete a body-free collection plan from wrapper-normalized states."""
 
-    if collection is not None and collection.scope != scope:
-        raise ValueError("managed collection does not match collection plan scope")
+    if collection is not None and collection.stage != stage:
+        raise ValueError("managed collection does not match collection plan stage")
     if overwrite_only:
         for state in states:
             record = state.normalized
@@ -626,7 +626,7 @@ def plan_import_content_collection(
     blockers.extend(
         _plan_document_candidates(
             repo_root,
-            scope,
+            stage,
             states,
             docs,
             staging_root=staging_root,
@@ -679,7 +679,7 @@ def plan_import_content_collection(
         "plan_valid": not blockers,
         "collection": True,
         "source_format": source_format,
-        "scope": scope,
+        "stage": stage,
         "staged_filename": staged_filename,
         "preview_only": True,
         "ready_for_confirmation": not blockers,
@@ -701,8 +701,7 @@ def plan_import_content_collection(
         },
     }
     response["target"] = {
-        "scope": scope,
-        **({"stage": collection.stage} if collection is not None and collection.stage else {}),
+        "stage": stage,
         **(
             {"sub_scope": collection.sub_scope}
             if collection is not None and collection.sub_scope

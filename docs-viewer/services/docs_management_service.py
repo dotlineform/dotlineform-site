@@ -22,8 +22,6 @@ SCRIPTS_DIR = REPO_ROOT / "scripts"
 
 import docs_diagram_source_service  # noqa: E402
 import docs_deploy_repo  # noqa: E402
-import docs_document_archive  # noqa: E402
-import docs_document_archive_apply  # noqa: E402
 import docs_management_document_target  # noqa: E402
 import docs_management_draft  # noqa: E402
 import docs_import_source_service as import_source_service  # noqa: E402
@@ -31,15 +29,11 @@ import docs_local_links  # noqa: E402
 import docs_media_report  # noqa: E402
 import docs_management_mutations as mutations  # noqa: E402
 import docs_management_routes as routes  # noqa: E402
-import docs_scope_publish  # noqa: E402
+import docs_publish  # noqa: E402
 import docs_pre_publish  # noqa: E402
 import docs_project_state  # noqa: E402
 import docs_missing_source_files  # noqa: E402
 import docs_uncataloged_files  # noqa: E402
-import docs_scope_create  # noqa: E402
-import docs_scope_delete  # noqa: E402
-import docs_scope_manifest  # noqa: E402
-import docs_scope_rename  # noqa: E402
 import docs_source_config_report  # noqa: E402
 import docs_source_config_settings  # noqa: E402
 import docs_static_html_export  # noqa: E402
@@ -59,23 +53,17 @@ from docs_management_context import (  # noqa: E402
     log_event,
     relative_path,
     utc_now,
-    viewer_url_for,
 )
 from docs_management_import_service import handle_import_source, import_source_dependencies  # noqa: E402
 from docs_management_mutation_service import (  # noqa: E402
     DocumentCreateCommittedError,
     DocumentPlacementCommittedError,
-    DocumentDeleteLineageFollowThroughError,
-    DocumentDeletePublicCleanupError,
     SubScopeDocumentDeleteApplyError,
     execute_management_mutation_plan,
     handle_assign_field_group,
     handle_create,
     handle_delete_apply,
     handle_move,
-    handle_scope_create_apply,
-    handle_scope_delete_apply,
-    handle_scope_rename_apply,
     handle_sub_scope_create_apply,
     handle_sub_scope_delete_apply,
     handle_update_metadata,
@@ -86,17 +74,10 @@ from docs_management_read_service import (  # noqa: E402
     docs_management_get_payload as read_docs_management_get_payload,
 )
 from docs_management_source_service import detect_preferred_markdown_app, open_publication_ignore, open_source_doc, rebuild_source_body  # noqa: E402
-from docs_scope_config import load_docs_scope_configs, select_scope_stage, require_document_authoring  # noqa: E402
-
-
-def refresh_source_model_scope_configs(repo_root: Path) -> None:
-    configs = load_docs_scope_configs(repo_root)
-    source_model.DOCS_SCOPE_CONFIGS.clear()
-    source_model.DOCS_SCOPE_CONFIGS.update(configs)
+from docs_workspace_config import load_docs_stage, require_document_authoring  # noqa: E402
 
 
 def capabilities_payload(repo_root: Path) -> dict[str, object]:
-    refresh_source_model_scope_configs(repo_root)
     return build_capabilities_payload(repo_root)
 
 
@@ -105,7 +86,6 @@ def docs_management_get_payload(
     path: str,
     params: dict[str, list[str]],
 ) -> dict[str, object]:
-    refresh_source_model_scope_configs(repo_root)
     return read_docs_management_get_payload(repo_root, path, params)
 
 
@@ -116,11 +96,14 @@ def docs_management_post_response(
     *,
     dry_run: bool = False,
 ) -> tuple[HTTPStatus, dict[str, object]]:
-    configs = load_docs_scope_configs(repo_root)
-    config = configs.get(str(body.get("scope") or "").strip().lower())
-    if config is not None:
-        selected = select_scope_stage(config, body.get("stage"))
-        if path in {routes.DOCS_MEDIA_REPORT_PATH, routes.BROKEN_LINKS_PATH}:
+    if "scope" in body or "parent_scope" in body:
+        raise ValueError("scope is retired; supply an explicit stage and optional sub_scope")
+    if path in {routes.DEPLOY_REPO_PREVIEW_PATH, routes.DEPLOY_REPO_APPLY_PATH}:
+        if body.get("stage") != "published":
+            raise ValueError("Deploy Repo requires stage published")
+    elif "stage" in body:
+        selected = load_docs_stage(repo_root, body["stage"])
+        if path in {routes.DOCS_MEDIA_REPORT_PATH, routes.BROKEN_LINKS_PATH, routes.OPEN_MEDIA_SOURCE_PATH}:
             pass
         elif path in {
             routes.PRE_PUBLISH_PREVIEW_PATH, routes.PRE_PUBLISH_APPLY_PATH,
@@ -131,7 +114,6 @@ def docs_management_post_response(
                 raise ValueError(f"This action requires stage {required_stage}")
         else:
             require_document_authoring(selected)
-    refresh_source_model_scope_configs(repo_root)
     if path == routes.PRE_PUBLISH_PREVIEW_PATH:
         return HTTPStatus.OK, docs_pre_publish.preview_pre_publish(repo_root, body)
     if path == routes.PRE_PUBLISH_APPLY_PATH:
@@ -153,6 +135,8 @@ def docs_management_post_response(
         return HTTPStatus.OK, docs_diagram_source_service.open_diagram_source(repo_root, body, dry_run)
     if path == routes.OPEN_LOCAL_TARGET_PATH:
         return docs_local_links.open_local_target_response(repo_root, body, dry_run=dry_run)
+    if path == routes.OPEN_MEDIA_SOURCE_PATH:
+        return HTTPStatus.OK, docs_media_report.open_media_source(repo_root, body, dry_run=dry_run)
     if path == routes.BROKEN_LINKS_PATH:
         payload = handle_broken_links(repo_root, body)
         return HTTPStatus.OK, payload
@@ -163,12 +147,11 @@ def docs_management_post_response(
         payload["summary_text"] = "Project State refreshed."
         return HTTPStatus.OK, payload
     if path == routes.DOCS_MEDIA_REPORT_PATH:
-        if "scope" not in body or set(body) - {"scope", "stage"}:
-            raise ValueError("Docs Media request must contain only scope and optional stage")
-        scope = source_model.normalize_scope(body.get("scope"))
+        if set(body) != {"stage"}:
+            raise ValueError("Docs Media request must contain only stage")
         report = docs_media_report.build_docs_media_report(
             repo_root,
-            select_scope_stage(configs[scope], body.get("stage")),
+            load_docs_stage(repo_root, body["stage"]),
         )
         return HTTPStatus.OK, {
             "ok": True,
@@ -193,17 +176,15 @@ def docs_management_post_response(
         payload["summary_text"] = "Missing Source Files refreshed."
         return HTTPStatus.OK, payload
     if path == routes.SOURCE_CONFIG_SETTINGS_PATH:
-        scope = source_model.normalize_scope(body.get("scope"))
         changes = body.get("changes")
-        payload = docs_source_config_settings.apply_scope_settings_change(
+        payload = docs_source_config_settings.apply_stage_settings_change(
             repo_root,
-            scope,
             changes,
             stage=body.get("stage"),
             dry_run=dry_run,
         )
         if payload.get("requires_rebuild") and not dry_run:
-            payload["rebuild"] = write_rebuild.rebuild_scope_outputs(repo_root, scope, include_search=False, stage=body.get("stage"))
+            payload["rebuild"] = write_rebuild.rebuild_stage_outputs(repo_root, include_search=False, stage=body.get("stage"))
         else:
             payload["rebuild"] = None
         if payload.get("changed") and not dry_run:
@@ -211,7 +192,7 @@ def docs_management_post_response(
                 repo_root,
                 "docs_source_config_settings",
                 {
-                    "scope": scope,
+                    "stage": body["stage"],
                     "fields": sorted(payload.get("changes", {}).keys()),
                     "source_config_path": payload.get("source_config_path", ""),
                 },
@@ -230,7 +211,7 @@ def docs_management_post_response(
                 repo_root,
                 "docs-staged-media-publish",
                 {
-                    "scope": payload["scope"],
+                    "stage": payload["stage"],
                     "media_kind": payload["media_kind"],
                     "staged_filename": payload["staged_filename"],
                     "media_identity": payload["media_identity"],
@@ -256,14 +237,12 @@ def docs_management_post_response(
         except DocumentCreateCommittedError as error:
             return HTTPStatus.INTERNAL_SERVER_ERROR, error.payload
     if path == routes.REBUILD_PATH:
-        scope = source_model.normalize_scope(body.get("scope"))
-        payload = write_rebuild.rebuild_scope_outputs(
+        payload = write_rebuild.rebuild_stage_outputs(
             repo_root,
-            scope,
             include_search=True,
             stage=body.get("stage"),
         )
-        payload["summary_text"] = f"Docs and docs search rebuilt for {scope}."
+        payload["summary_text"] = f"Docs and docs search rebuilt for {body['stage']}."
         return HTTPStatus.OK, payload
     if path == routes.MOVE_PATH:
         try:
@@ -272,55 +251,20 @@ def docs_management_post_response(
             return HTTPStatus.INTERNAL_SERVER_ERROR, error.payload
         except mutations.ManagedDocumentRevisionConflict as error:
             return HTTPStatus.CONFLICT, error.payload
-    if path == routes.ARCHIVE_PREVIEW_PATH:
-        return HTTPStatus.OK, docs_document_archive.plan_archive(repo_root, body).preview()
-    if path == routes.ARCHIVE_APPLY_PATH:
-        if dry_run:
-            raise ValueError("Archive apply does not support dry_run")
-        try:
-            return HTTPStatus.OK, docs_document_archive_apply.apply_archive(repo_root, body)
-        except docs_document_archive_apply.ArchiveApplyError as error:
-            return HTTPStatus.CONFLICT, error.result
     if path == routes.DELETE_PREVIEW_PATH:
         if "sub_scope" in body:
             return (
                 HTTPStatus.OK,
                 mutations.plan_sub_scope_delete_preview(repo_root, body),
             )
-        scope = source_model.normalize_scope(body.get("scope"))
         doc_ids = mutations.require_delete_doc_ids(body.get("doc_ids"))
-        return HTTPStatus.OK, mutations.plan_delete_preview(repo_root, scope, doc_ids, body.get("stage"))
+        return HTTPStatus.OK, mutations.plan_delete_preview(repo_root, doc_ids, stage=body.get("stage"))
     if path == routes.DELETE_APPLY_PATH:
         try:
             return HTTPStatus.OK, handle_delete_apply(repo_root, body, dry_run)
         except mutations.ManagedDocumentRevisionConflict as error:
             return HTTPStatus.CONFLICT, error.payload
         except SubScopeDocumentDeleteApplyError as error:
-            return HTTPStatus.INTERNAL_SERVER_ERROR, error.payload
-        except DocumentDeletePublicCleanupError as error:
-            return HTTPStatus.INTERNAL_SERVER_ERROR, error.payload
-        except DocumentDeleteLineageFollowThroughError as error:
-            return HTTPStatus.INTERNAL_SERVER_ERROR, error.payload
-    if path == routes.SCOPE_CREATE_PREVIEW_PATH:
-        payload = docs_scope_create.plan_create_scope_preview(repo_root, body)
-        payload["dry_run"] = True
-        return HTTPStatus.OK, payload
-    if path == routes.SCOPE_CREATE_APPLY_PATH:
-        return HTTPStatus.OK, handle_scope_create_apply(repo_root, body, dry_run)
-    if path == routes.SCOPE_RENAME_PREVIEW_PATH:
-        payload = docs_scope_rename.plan_rename_scope_preview(repo_root, body)
-        payload["dry_run"] = True
-        return HTTPStatus.OK, payload
-    if path == routes.SCOPE_RENAME_APPLY_PATH:
-        return HTTPStatus.OK, handle_scope_rename_apply(repo_root, body, dry_run)
-    if path == routes.SCOPE_DELETE_PREVIEW_PATH:
-        payload = docs_scope_delete.plan_delete_scope_preview(repo_root, body)
-        payload["dry_run"] = True
-        return HTTPStatus.OK, payload
-    if path == routes.SCOPE_DELETE_APPLY_PATH:
-        try:
-            return HTTPStatus.OK, handle_scope_delete_apply(repo_root, body, dry_run)
-        except docs_scope_delete.ScopeDeleteApplyError as error:
             return HTTPStatus.INTERNAL_SERVER_ERROR, error.payload
     if path == routes.SUB_SCOPE_CREATE_PREVIEW_PATH:
         payload = docs_sub_scope_lifecycle.plan_create_sub_scope_preview(repo_root, body)
@@ -341,11 +285,11 @@ def docs_management_post_response(
         except docs_sub_scope_lifecycle.SubScopeLifecycleApplyError as error:
             return HTTPStatus.INTERNAL_SERVER_ERROR, error.payload
     if path == routes.PUBLISH_CONFIRM_PATH:
-        return HTTPStatus.OK, docs_scope_publish.preview_scope_publish(repo_root, body)
+        return HTTPStatus.OK, docs_publish.preview_publish(repo_root, body)
     if path == routes.PUBLISH_APPLY_PATH:
         if dry_run:
             raise ValueError("Publish apply does not support dry_run")
-        return HTTPStatus.OK, docs_scope_publish.apply_scope_publish(repo_root, body)
+        return HTTPStatus.OK, docs_publish.apply_publish(repo_root, body)
     if path == routes.DEPLOY_REPO_PREVIEW_PATH:
         return HTTPStatus.OK, docs_deploy_repo.preview_deploy_repo(repo_root, body)
     if path == routes.DEPLOY_REPO_APPLY_PATH:

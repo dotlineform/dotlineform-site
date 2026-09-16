@@ -7,38 +7,10 @@ function normalizedPathname(value) {
   return pathname.replace(/\/+$/, "/");
 }
 
-function configuredPublicScope(targetUrl, currentUrl, scopeConfigsById) {
-  if (!(scopeConfigsById instanceof Map) || targetUrl.origin !== currentUrl.origin) {
-    return "";
-  }
-  var currentPathname = normalizedPathname(currentUrl.pathname);
-  var targetPathname = normalizedPathname(targetUrl.pathname);
-  var matches = [];
-  scopeConfigsById.forEach(function (config, configuredScopeId) {
-    var scopeId = cleanText(config && config.scopeId || configuredScopeId).toLowerCase();
-    var viewerBaseUrl = cleanText(config && config.viewerBaseUrl);
-    if (!scopeId || !viewerBaseUrl) return;
-    var configuredUrl;
-    try {
-      configuredUrl = new URL(viewerBaseUrl, currentUrl);
-    } catch (_error) {
-      return;
-    }
-    var configuredPathname = normalizedPathname(configuredUrl.pathname);
-    if (
-      configuredPathname !== currentPathname
-      && configuredPathname === targetPathname
-    ) {
-      matches.push(scopeId);
-    }
-  });
-  return matches.length === 1 ? matches[0] : "";
-}
-
 export function resolveManagedDocsViewerDocumentHref(href, options = {}) {
   var rawHref = cleanText(href);
-  var viewerUrlForScope = options.viewerUrlForScope;
-  if (!rawHref || typeof viewerUrlForScope !== "function") return "";
+  var viewerUrlForDocument = options.viewerUrlForDocument;
+  if (!rawHref || typeof viewerUrlForDocument !== "function") return "";
 
   var currentUrl;
   var targetUrl;
@@ -48,18 +20,17 @@ export function resolveManagedDocsViewerDocumentHref(href, options = {}) {
   } catch (_error) {
     return "";
   }
-  var scopeId = configuredPublicScope(
-    targetUrl,
-    currentUrl,
-    options.scopeConfigsById
-  );
+  var publicUrl;
+  try { publicUrl = new URL(options.publicViewerBaseUrl, currentUrl); } catch (_error) { return ""; }
   var docId = cleanText(targetUrl.searchParams.get("doc"));
-  if (!scopeId || !docId) return "";
+  if (!options.publicViewerBaseUrl || !docId || targetUrl.origin !== currentUrl.origin
+      || normalizedPathname(targetUrl.pathname) !== normalizedPathname(publicUrl.pathname)
+      || targetUrl.searchParams.has("scope") || targetUrl.searchParams.has("stage")) return "";
 
   var managedUrl;
   try {
     managedUrl = new URL(
-      viewerUrlForScope(scopeId, docId, { manage: true }),
+      viewerUrlForDocument(docId, { manage: true }),
       currentUrl
     );
   } catch (_error) {

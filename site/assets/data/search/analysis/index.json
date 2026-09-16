@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "docs_viewer_search_index_v2",
-    "scope": "analysis",
-    "version": "blake2b-e3cc59f6ac6b36d0af42dc2500f5c4ac",
+    "schema": "docs_viewer_search_index_v3",
+    "stage": "published",
+    "version": "blake2b-4b94e76e89903cd0007e72ea883feb97",
     "generated_at_utc": "2026-09-01T16:13:24Z",
     "count": 267
   },
@@ -26,7 +26,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260624-204534-0d6ae2",
       "last_updated": "2026-06-24",
       "display_meta": "2026-06-24 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -36,7 +36,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260624-204534-e3de0b",
       "last_updated": "2026-06-24",
       "display_meta": "2026-06-24 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -46,7 +46,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260624-204534-ecfc12",
       "last_updated": "2026-07-27 21:46:03",
       "display_meta": "2026-07-27 21:46:03 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -65,7 +65,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-0066f5",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -75,7 +75,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-012951",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -85,7 +85,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-03e966",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -95,7 +95,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-04889f",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -105,7 +105,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-07e0eb",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -115,7 +115,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-0813e3",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -125,7 +125,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-085a6c",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -135,7 +135,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-0b3df4",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -145,7 +145,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-0ccf1f",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -155,7 +155,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-0d540d",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -165,7 +165,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-0d87ce",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -175,7 +175,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-0e1745",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -185,7 +185,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-0fa362",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -195,7 +195,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-107781",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -205,7 +205,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-1091be",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -215,7 +215,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-10fc9c",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -225,7 +225,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-11de40",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -235,7 +235,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-124217",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -245,7 +245,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-12c5ee",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -255,7 +255,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-13749a",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -265,7 +265,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-169780",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -275,7 +275,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-16b7b8",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -285,7 +285,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-1864ea",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -295,7 +295,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-1bf2c3",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -305,7 +305,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-1e1df9",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -315,7 +315,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-1ee86d",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -325,7 +325,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-200179",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -335,7 +335,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-208450",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -345,7 +345,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-20f785",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -355,7 +355,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-21836e",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -365,7 +365,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-22f690",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -375,7 +375,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-23cb8e",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -385,7 +385,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-2497a8",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -395,7 +395,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-24dfb5",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -405,7 +405,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-24efce",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -415,7 +415,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-2517eb",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -425,7 +425,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-25c814",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -435,7 +435,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-2617b3",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -445,7 +445,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-27bc3b",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -455,7 +455,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-295b0c",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -465,7 +465,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-2a27c8",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -475,7 +475,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-2a8ef3",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -485,7 +485,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-2af018",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -495,7 +495,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-2c1750",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -505,7 +505,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-2c1b7a",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -515,7 +515,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-2d38a1",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -525,7 +525,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-2dd29d",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -535,7 +535,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-2ded48",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -545,7 +545,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-2f1649",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -555,7 +555,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-2fffa8",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -565,7 +565,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-30dfef",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -575,7 +575,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-31a370",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -585,7 +585,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-3239cc",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -595,7 +595,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-32e172",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -605,7 +605,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-32eda3",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -615,7 +615,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-330a89",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -625,7 +625,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-3374bd",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -635,7 +635,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-34d9fb",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -645,7 +645,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-36c93d",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -655,7 +655,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-37bb5c",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -665,7 +665,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-381c61",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -675,7 +675,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-388a29",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -685,7 +685,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-3899cc",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -695,7 +695,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-38c206",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -705,7 +705,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-391f5b",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -715,7 +715,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-3a5f20",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -725,7 +725,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-3bf2bc",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -735,7 +735,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-3ccb9e",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -745,7 +745,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-3cd1dd",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -755,7 +755,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-3eabe1",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -765,7 +765,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-422df7",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -775,7 +775,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-42c9e0",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -785,7 +785,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-438fab",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -795,7 +795,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-43e86d",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -805,7 +805,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-440ecd",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -815,7 +815,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-44902d",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -825,7 +825,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-44c370",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -835,7 +835,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-452c13",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -845,7 +845,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-45ac22",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -855,7 +855,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-476c0b",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -865,7 +865,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-482c64",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -875,7 +875,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-49e2d4",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -885,7 +885,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-4ab240",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -895,7 +895,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-4c0762",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -905,7 +905,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-4c4195",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -915,7 +915,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-4c56a9",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -925,7 +925,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-4e62cb",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -935,7 +935,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-51df31",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -945,7 +945,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-520788",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -955,7 +955,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-5296a2",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -965,7 +965,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-52dcb3",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -975,7 +975,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-531c17",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -985,7 +985,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-557834",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -995,7 +995,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-55e44d",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -1005,7 +1005,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-579c27",
       "last_updated": "2026-07-31 07:02:25",
       "display_meta": "2026-07-31 07:02:25 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -1015,7 +1015,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-57a4c7",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -1025,7 +1025,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-58741a",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -1035,7 +1035,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-591e49",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -1045,7 +1045,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-5b31e2",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -1055,7 +1055,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-5cb64c",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -1065,7 +1065,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-603ccd",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -1075,7 +1075,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-60991f",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -1085,7 +1085,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-616fda",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -1095,7 +1095,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-6250bf",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -1105,7 +1105,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-626b4c",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -1115,7 +1115,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-63967a",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -1125,7 +1125,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-651586",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -1135,7 +1135,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-6555f7",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -1145,7 +1145,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-6796ef",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -1155,7 +1155,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-686651",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -1165,7 +1165,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-6b3825",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -1175,7 +1175,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-6bdf47",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -1185,7 +1185,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-6c146c",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -1195,7 +1195,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-6c7384",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -1205,7 +1205,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-6c8101",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -1215,7 +1215,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-6cac49",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -1225,7 +1225,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-6d8930",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -1235,7 +1235,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-6e036f",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -1245,7 +1245,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-6e75fd",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -1255,7 +1255,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-6f0bef",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -1265,7 +1265,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-6f785e",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -1275,7 +1275,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-708a9e",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -1285,7 +1285,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-723889",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -1295,7 +1295,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-753567",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -1305,7 +1305,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-759902",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -1315,7 +1315,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-75f272",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -1325,7 +1325,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-761a32",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -1335,7 +1335,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-7893a2",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -1345,7 +1345,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-78ee39",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -1355,7 +1355,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-7927df",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -1365,7 +1365,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-79f04e",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -1375,7 +1375,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-7abff3",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -1385,7 +1385,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-7be84b",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -1395,7 +1395,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-7d2c08",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -1405,7 +1405,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-7fbfa5",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -1415,7 +1415,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-7fe018",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -1425,7 +1425,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-80e8b0",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -1435,7 +1435,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-8104f2",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -1445,7 +1445,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-812ad8",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -1455,7 +1455,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-8258a1",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -1465,7 +1465,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-82cce1",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -1475,7 +1475,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-833b94",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -1485,7 +1485,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-84860c",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -1495,7 +1495,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-84a22b",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -1505,7 +1505,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-84a2a1",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -1515,7 +1515,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-85a70e",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -1525,7 +1525,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-87a3e0",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -1535,7 +1535,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-8a0601",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -1545,7 +1545,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-8a8d26",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -1555,7 +1555,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-8b320d",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -1565,7 +1565,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-8be4b8",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -1575,7 +1575,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-8d3c1d",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -1585,7 +1585,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-8d753d",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -1595,7 +1595,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-8dc973",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -1605,7 +1605,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-8fec97",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -1615,7 +1615,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-90eabc",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -1625,7 +1625,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-932f79",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -1635,7 +1635,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-933750",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -1645,7 +1645,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-93f7d5",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -1655,7 +1655,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-955195",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -1665,7 +1665,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-96dc3a",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -1675,7 +1675,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-99c3be",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -1685,7 +1685,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-9b8192",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -1695,7 +1695,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-9c842f",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -1705,7 +1705,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-9e62b8",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -1715,7 +1715,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-9eb839",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -1725,7 +1725,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-a05992",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -1735,7 +1735,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-a34891",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -1745,7 +1745,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-a45198",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -1755,7 +1755,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-a4d142",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -1765,7 +1765,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-a607e0",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -1775,7 +1775,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-a60c24",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -1785,7 +1785,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-aa54c9",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -1795,7 +1795,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-ab4327",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -1805,7 +1805,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-ac0827",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -1815,7 +1815,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-ae606d",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -1825,7 +1825,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-afb0a7",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -1835,7 +1835,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-b10f2d",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -1845,7 +1845,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-b235c6",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -1855,7 +1855,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-b2a6f0",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -1865,7 +1865,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-b2d217",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -1875,7 +1875,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-b5542c",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -1885,7 +1885,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-b5e4f7",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -1895,7 +1895,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-b61c55",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -1905,7 +1905,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-b7eb37",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -1915,7 +1915,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-b84d7e",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -1925,7 +1925,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-b85e09",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -1935,7 +1935,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-ba99c7",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -1945,7 +1945,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-bd3137",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -1955,7 +1955,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-be5e27",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -1965,7 +1965,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-bed170",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -1975,7 +1975,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-c04eca",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -1985,7 +1985,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-c11b96",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -1995,7 +1995,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-c21bf0",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -2005,7 +2005,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-c474d0",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -2015,7 +2015,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-c4b45c",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -2025,7 +2025,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-c7b1f6",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -2035,7 +2035,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-c844db",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -2045,7 +2045,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-c88144",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -2055,7 +2055,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-c913bf",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -2065,7 +2065,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-ca7056",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -2075,7 +2075,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-cbb3d7",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -2085,7 +2085,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-ce80bb",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -2095,7 +2095,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-cfc88e",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -2105,7 +2105,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-d0194d",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -2115,7 +2115,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-d2e201",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -2125,7 +2125,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-d39666",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -2135,7 +2135,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-d41939",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -2145,7 +2145,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-d6cc89",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -2155,7 +2155,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-d81ffc",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -2165,7 +2165,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-d9afd4",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -2175,7 +2175,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-db297c",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -2185,7 +2185,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-dbeb69",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -2195,7 +2195,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-dc0028",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -2205,7 +2205,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-dc2548",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -2215,7 +2215,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-dd62ff",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -2225,7 +2225,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-defa99",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -2235,7 +2235,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-e0e993",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -2245,7 +2245,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-e124eb",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -2255,7 +2255,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-e18b6c",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -2265,7 +2265,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-e3851f",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -2275,7 +2275,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-e546d0",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -2285,7 +2285,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-e8d7a7",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -2295,7 +2295,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-e943ff",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -2305,7 +2305,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-e97d11",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -2315,7 +2315,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-ecb267",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -2325,7 +2325,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-ecb7a9",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -2335,7 +2335,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-ecf994",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -2345,7 +2345,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-ed1025",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -2355,7 +2355,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-edadc1",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -2365,7 +2365,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-ef31f9",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -2375,7 +2375,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-ef7408",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -2385,7 +2385,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-f16645",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -2395,7 +2395,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-f1e271",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -2405,7 +2405,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-f3f980",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -2415,7 +2415,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-f543c8",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -2425,7 +2425,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-f5791d",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -2435,7 +2435,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-f589fc",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -2445,7 +2445,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-f5ddde",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -2455,7 +2455,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-f7402d",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -2465,7 +2465,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-f8abb3",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -2475,7 +2475,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-f9d97a",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -2485,7 +2485,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-fb0e11",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -2495,7 +2495,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-fb78ac",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },
@@ -2505,7 +2505,7 @@
       "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-fd71ef",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
-      "sub_scope": "tags",
+      "sub_scope": "concepts",
       "report_doc_id": "d-20260624-213316-478639",
       "collection_title": "Concepts"
     },

@@ -27,7 +27,6 @@ function normalizePreset(raw) {
     presetId: cleanString(raw && raw.preset_id),
     title: cleanString(raw && raw.title),
     description: cleanString(raw && raw.description),
-    defaultScope: cleanString(raw && raw.default_scope),
     columns: normalizeList(raw && raw.columns),
     filters: normalizeList(raw && raw.filters),
     sortable: normalizeList(raw && raw.sortable)
@@ -85,7 +84,6 @@ function normalizeReportMetadata(payload) {
   if (!reportId) return null;
   return {
     reportId,
-    scope: cleanString(report.scope),
     preset: cleanString(report.preset),
     subScope: cleanString(report.sub_scope)
   };
@@ -164,7 +162,7 @@ export function mountDocsViewerPublicReport(context) {
           var target = child.documentTarget;
           mountDocsViewerMediaLinks({
             content: child.content,
-            documentTarget: { scope: target.scope, ...(target.stage ? { stage: target.stage } : {}),
+            documentTarget: { ...(target.stage ? { stage: target.stage } : {}),
               subScope: target.sub_scope, docId: target.doc_id },
             isCurrentDocument: child.isCurrentDocument,
             openMediaTarget: context.openMediaTarget,

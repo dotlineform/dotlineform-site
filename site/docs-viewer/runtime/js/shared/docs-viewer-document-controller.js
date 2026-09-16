@@ -1,6 +1,6 @@
 export function initDocsViewerDocumentController(context) {
   var routeSession = context.routeSession;
-  var scopeConfigState = context.scopeConfig;
+  var workspaceConfigState = context.workspaceConfig;
   var selectedDocument = context.selectedDocument;
   var statusCommands = context.statusCommands || {};
   var content = context.content;
@@ -8,10 +8,6 @@ export function initDocsViewerDocumentController(context) {
   var results = context.results;
   var more = context.more;
   var documentMountGeneration = 0;
-
-  function currentViewerScope() {
-    return typeof context.viewerScope === "function" ? context.viewerScope() : context.viewerScope;
-  }
 
   function managementContextActive() {
     return Boolean(routeSession && routeSession.managementContext);
@@ -32,14 +28,6 @@ export function initDocsViewerDocumentController(context) {
       parentTarget: null,
       subdocTarget: null
     });
-  }
-
-  function currentScopeType() {
-    var configsById = scopeConfigState && scopeConfigState.scopeConfigsById;
-    var scopeConfig = configsById && typeof configsById.get === "function"
-      ? configsById.get(currentViewerScope())
-      : null;
-    return scopeConfig ? String(scopeConfig.scopeType || "").trim().toLowerCase() : "";
   }
 
   function setStatus(message, isError) {
@@ -92,17 +80,16 @@ export function initDocsViewerDocumentController(context) {
         var adapter = context.linksDetailAdapter;
         if (mountGeneration !== documentMountGeneration || !adapter) return;
         var target = state.state === "detail" ? state.target : null;
-        if (target && (target.scope !== currentViewerScope()
-          || target.sub_scope !== payload.report.sub_scope
+        if (target && (target.sub_scope !== payload.report.sub_scope
           || String(target.stage || "") !== String(context.viewerStage() || ""))) return;
         adapter.setDocument({ content: content, target: target, title: state.record && state.record.title });
       },
       publishSubscopeReportState: context.publishSubscopeReportState,
       routeContext: typeof context.routeContext === "function" ? context.routeContext() : context.routeContext,
-      scopeConfigState: scopeConfigState,
+      workspaceConfigState: workspaceConfigState,
       setStatus: setStatus,
-      viewerScope: currentViewerScope(),
-      viewerUrlForScope: context.viewerUrlForScope
+      viewerStage: context.viewerStage(),
+      viewerUrlForDocument: context.viewerUrlForDocument
     })).catch(function (error) {
       console.warn("docs_viewer: document extras unavailable", error);
     });
@@ -119,8 +106,7 @@ export function initDocsViewerDocumentController(context) {
         documentMountGeneration: mountGeneration,
         payload: payload,
         requestContentDetail: context.requestContentDetail,
-        scopeType: currentScopeType(),
-        viewerScope: currentViewerScope(),
+        viewerStage: context.viewerStage(),
         window: content && content.ownerDocument ? content.ownerDocument.defaultView : null
       });
     } catch (error) {
@@ -139,7 +125,7 @@ export function initDocsViewerDocumentController(context) {
         documentMountGeneration: mountGeneration,
         payload: payload,
         requestContentDetail: context.requestContentDetail,
-        viewerScope: currentViewerScope(),
+        viewerStage: context.viewerStage(),
         window: content && content.ownerDocument ? content.ownerDocument.defaultView : null
       });
     } catch (error) {
@@ -160,7 +146,6 @@ export function initDocsViewerDocumentController(context) {
         documentMountGeneration: mountGeneration,
         payload: payload,
         requestContentDetail: context.requestContentDetail,
-        viewerScope: currentViewerScope(),
         viewerStage: route && route.viewerStage,
         window: content && content.ownerDocument ? content.ownerDocument.defaultView : null
       });
@@ -258,8 +243,7 @@ export function initDocsViewerDocumentController(context) {
         doc: doc,
         document: content ? content.ownerDocument : null,
         payload: payload,
-        scopeType: currentScopeType(),
-        viewerScope: currentViewerScope(),
+        viewerStage: context.viewerStage(),
         window: content && content.ownerDocument ? content.ownerDocument.defaultView : null
       });
     } catch (error) {
@@ -269,9 +253,7 @@ export function initDocsViewerDocumentController(context) {
 
   function mountInlineMermaid(doc, payload, mountGeneration) {
     var adapter = context.inlineMermaidAdapter;
-    var scopeType = currentScopeType();
-    var inlineRenderingEnabled = scopeType === "local"
-      || (managementContextActive() && context.viewerStage() === "working");
+    var inlineRenderingEnabled = managementContextActive() && context.viewerStage() === "working";
     if (!inlineRenderingEnabled || !adapter || typeof adapter.mountDocument !== "function") return;
     Promise.resolve(adapter.mountDocument({
       content: content,
@@ -283,8 +265,7 @@ export function initDocsViewerDocumentController(context) {
       },
       mountGeneration: mountGeneration,
       payload: payload,
-      scopeType: scopeType,
-      viewerScope: currentViewerScope(),
+      viewerStage: context.viewerStage(),
       window: content && content.ownerDocument ? content.ownerDocument.defaultView : null
     })).catch(function (error) {
       console.warn("docs_viewer: inline Mermaid adapter unavailable", error);
@@ -387,7 +368,7 @@ export function initDocsViewerDocumentController(context) {
       context.linksDetailAdapter.mountDocument({
         content: content,
         target: payload.report ? null : {
-          scope: currentViewerScope(), stage: context.viewerStage(), sub_scope: "", doc_id: payload.doc_id
+          stage: context.viewerStage(), sub_scope: "", doc_id: payload.doc_id
         },
         title: payload.title,
         collectionProvider: context.collectionProvider,

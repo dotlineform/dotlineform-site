@@ -3,6 +3,8 @@
 
 from __future__ import annotations
 
+from docs_import_common import require_import_stage
+
 import re
 import tempfile
 from pathlib import Path
@@ -11,15 +13,16 @@ from typing import Any, Dict
 from docs_artifact_locations import artifact_location_adapter, authenticated_remote_client_for_locations
 from docs_import_common import HTML_STAGED_SUFFIXES, is_interactive_html_import_asset
 from docs_media_storage import docs_media_file, docs_publish_succeeded, publish_docs_media_files
-from docs_scope_config import load_docs_media_owner, managed_media_config
-from docs_source_model import normalize_scope, slugify
+from docs_workspace_config import load_docs_media_owner, managed_media_config
+from docs_source_model import slugify
 from studio.shared.python.projects_directories import projects_path_marker
 
 INTERACTIVE_HTML_FILENAME_PATTERN = re.compile(r"^[a-z0-9][a-z0-9-]*\.html$")
 
 
-def _html_media_adapter(repo_root: Path, scope: str, *, stage: str = "", sub_scope: str = ""):
-    config = load_docs_media_owner(repo_root, scope, stage=stage or None, sub_scope=sub_scope or None)
+def _html_media_adapter(repo_root: Path, *, stage: str, sub_scope: str = ""):
+    require_import_stage(stage)
+    config = load_docs_media_owner(repo_root, stage=stage, sub_scope=sub_scope)
     media = managed_media_config(config, "html")
     remote_client = authenticated_remote_client_for_locations(repo_root, [media.source_location])
     return config, media, artifact_location_adapter(
@@ -47,21 +50,19 @@ def interactive_html_asset_plan_for_path(
     repo_root: Path,
     workspace_root: Path,
     source_path: Path,
-    scope: str,
     *,
-    stage: str = "",
+    stage: str,
     sub_scope: str = "",
 ) -> Dict[str, Any]:
     filename = f"{slugify(source_path.stem)}.html"
     if not INTERACTIVE_HTML_FILENAME_PATTERN.fullmatch(filename):
         raise ValueError(f"Interactive HTML asset filename must be a simple slug ending in .html: {filename}")
 
-    normalized_scope = normalize_scope(scope)
-    _config, media, adapter = _html_media_adapter(repo_root, normalized_scope, stage=stage, sub_scope=sub_scope)
+    require_import_stage(stage)
+    _config, media, adapter = _html_media_adapter(repo_root, stage=stage, sub_scope=sub_scope)
     media_path = f"{media.reference_prefix.as_posix()}/{filename}"
 
     return {
-        "scope": normalized_scope,
         "stage": stage,
         "sub_scope": sub_scope,
         "source_path": projects_path_marker(source_path, workspace_root),
@@ -80,13 +81,12 @@ def interactive_html_asset_plans(
     repo_root: Path,
     staging_root: Path,
     workspace_root: Path,
-    scope: str,
     *,
-    stage: str = "",
+    stage: str,
     sub_scope: str = "",
 ) -> list[Dict[str, Any]]:
     plans = [
-        interactive_html_asset_plan_for_path(repo_root, workspace_root, path, scope, stage=stage, sub_scope=sub_scope)
+        interactive_html_asset_plan_for_path(repo_root, workspace_root, path, stage=stage, sub_scope=sub_scope)
         for path in interactive_html_staged_paths(staging_root)
     ]
     target_paths: set[str] = set()
@@ -125,9 +125,10 @@ def materialize_interactive_html_asset(
     staging_root = staging_root.resolve()
     if not source_path.is_relative_to(staging_root):
         raise ValueError("Interactive HTML asset source escapes import staging root.")
-    scope = normalize_scope(str(plan.get("scope") or ""))
+    if "scope" in plan:
+        raise ValueError("scope-bearing import plans are retired; recreate the preview")
     config, _media, adapter = _html_media_adapter(
-        repo_root, scope, stage=str(plan.get("stage") or ""), sub_scope=str(plan.get("sub_scope") or ""),
+        repo_root, stage=str(plan.get("stage") or ""), sub_scope=str(plan.get("sub_scope") or ""),
     )
     target_existed = adapter.stat(staged_filename if not plan.get("filename") else str(plan["filename"])) is not None
     if target_existed and not allow_overwrite:

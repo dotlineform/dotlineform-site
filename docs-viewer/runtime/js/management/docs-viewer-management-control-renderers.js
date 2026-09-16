@@ -60,12 +60,6 @@ var INDEX_ACTION_ITEMS = [
     label: "Prepare package…"
   },
   {
-    id: "docsViewerIndexArchiveButton",
-    actionId: "archive",
-    emoji: "🗄",
-    label: "Archive"
-  },
-  {
     id: "docsViewerIndexDeleteButton",
     actionId: "delete",
     emoji: "🗑️",

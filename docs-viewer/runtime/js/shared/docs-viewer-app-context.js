@@ -1,3 +1,5 @@
+import { savedStateOwner } from "./docs-viewer-saved-state.js";
+
 import {
   appendAssetVersion
 } from "./docs-viewer-asset-url.js";
@@ -74,8 +76,7 @@ export function createDocsViewerRouteContext(options) {
     recentUrl: appendAssetVersion(routeConfig.recentUrl, assetVersion),
     recentBasis: routeConfig.recentBasis,
     viewerBaseUrl: viewerBaseUrl,
-    viewerScope: routeConfig.defaultScopeId,
-    includeScopeParam: Boolean(routeConfig.includeScopeParam),
+    viewerStage: routeConfig.appKind === "manage" ? (new URLSearchParams(locationSearch(windowRef)).get("stage") || routeConfig.defaultStage) : "",
     preserveQueryParams: routeConfig.preserveQueryParams || [],
     defaultRouteDocId: "",
     viewerPathname: resolvedViewerPathname,
@@ -84,7 +85,7 @@ export function createDocsViewerRouteContext(options) {
     subScopesById: new Map(),
     reportRegistryUrl: routeConfig.reportRegistryUrl
   };
-  context.bookmarkScope = context.viewerScope || context.viewerPathname || "docs";
+  context.bookmarkOwner = savedStateOwner(routeConfig.appKind, context.viewerStage);
   var routeParams = new URLSearchParams(locationSearch(windowRef));
   context.openImportOnLoad = context.isDocsManagementRoute && routeParams.get("import") === "1";
   return context;
@@ -113,7 +114,6 @@ export function updateDocsViewerRouteContext(context, values, options) {
   var windowRef = settings.window || defaultWindowRef();
   var nextViewerBaseUrl = cleanString(values && values.viewerBaseUrl) || current.viewerBaseUrl || locationPathname(windowRef);
   var nextContext = Object.assign({}, current, {
-    viewerScope: cleanString(values && values.viewerScope),
     viewerStage: cleanString(values && values.viewerStage),
     indexTreeUrl: values && values.indexTreeUrl ? values.indexTreeUrl : "",
     recentUrl: values && values.recentUrl ? values.recentUrl : "",
@@ -122,20 +122,17 @@ export function updateDocsViewerRouteContext(context, values, options) {
     subScopesById: values && values.subScopesById instanceof Map ? values.subScopesById : new Map(),
     defaultRouteDocId: cleanString(values && values.defaultRouteDocId),
     viewerBaseUrl: nextViewerBaseUrl,
-    includeScopeParam: Boolean(values && values.includeScopeParam),
     viewerPathname: values && values.viewerPathname ? values.viewerPathname : viewerPathname(nextViewerBaseUrl, windowRef)
   });
   nextContext.routeConfig = Object.assign({}, current.routeConfig || {}, {
-    defaultScopeId: nextContext.viewerScope,
     indexTreeUrl: nextContext.indexTreeUrl,
     recentUrl: nextContext.recentUrl,
     searchIndexUrl: nextContext.searchIndexUrl,
     subScopes: nextContext.subScopes,
     viewerBaseUrl: nextContext.viewerBaseUrl
   });
-  nextContext.bookmarkScope = nextContext.viewerScope || nextContext.viewerPathname || "docs";
+  nextContext.bookmarkOwner = savedStateOwner(nextContext.routeConfig.appKind, nextContext.viewerStage);
   if (nextContext.viewerStage) {
-    nextContext.bookmarkScope += "/" + nextContext.viewerStage;
     nextContext.preserveQueryParams = Array.from(new Set([].concat(current.preserveQueryParams || [], ["stage"])));
   }
   return nextContext;

@@ -3,6 +3,8 @@
 
 from __future__ import annotations
 
+from docs_import_common import require_import_stage
+
 import copy
 from dataclasses import replace
 import hashlib
@@ -30,9 +32,8 @@ from docs_management_document_target import (
     ManagedDocumentCollection,
 )
 from docs_source_model import (
-    ScopeDoc,
+    SourceDoc,
     load_document_collection_docs_for_config,
-    normalize_scope,
 )
 from docs_document_packages.workspace import marker_path
 
@@ -67,7 +68,7 @@ def _returned_hierarchy_fields(raw_row: Any) -> list[str]:
 
 def validate_prepared_source_versions(
     package_metadata: dict[str, Any],
-    docs: list[ScopeDoc],
+    docs: list[SourceDoc],
 ) -> list[dict[str, Any]]:
     issues: list[dict[str, Any]] = []
     selected = package_metadata.get("selected_doc_ids")
@@ -203,7 +204,7 @@ def _confine_sub_scope_records(
 def plan_document_package_collection(
     repo_root: Path,
     *,
-    scope: str,
+    stage: str,
     staged_filename: str,
     staging_root: Path,
     workspace_root: Path,
@@ -213,24 +214,24 @@ def plan_document_package_collection(
 ) -> DocumentsCollectionPlan:
     """Read and completely plan one trusted package without applying any writes."""
 
-    normalized_scope = normalize_scope(scope)
+    normalized_stage = require_import_stage(stage)
     if collection is None:
-        raise ValueError("Package Import requires an exact scope/stage collection")
-    if collection.scope != normalized_scope:
-        raise ValueError("managed collection does not match requested package scope")
+        raise ValueError("Package Import requires an exact stage collection")
+    if collection.stage != normalized_stage:
+        raise ValueError("managed collection does not match requested package stage")
     sub_scope = collection.sub_scope if collection is not None else ""
     package, blockers = load_document_package(
         repo_root,
-        scope=normalized_scope,
+        stage=normalized_stage,
         staged_filename=staged_filename,
         staging_root=staging_root,
         metadata_root=metadata_root,
-        sub_scope=sub_scope or None,
+        sub_scope=sub_scope,
     )
     if package is None:
         return blocked_collection_plan(
             source_format=COLLECTION_SOURCE_FORMAT,
-            scope=normalized_scope,
+            stage=normalized_stage,
             staged_filename=staged_filename,
             blockers=blockers,
             workspace_root=workspace_root,
@@ -276,7 +277,7 @@ def plan_document_package_collection(
             or package.package_metadata.get("config_id")
         ),
         "schema_version": _clean_text(package.package_metadata.get("schema_version")),
-        "source_scope": _clean_text(package.package_metadata.get("scope")),
+        "source_stage": _clean_text(package.package_metadata.get("stage")),
         "content_format": _clean_text(package.package_metadata.get("content_format")),
         "staged_path": marker_path(package.path, workspace_root=workspace_root),
         "source_sha256": package.source_sha256,
@@ -299,7 +300,7 @@ def plan_document_package_collection(
     return plan_import_content_collection(
         repo_root,
         source_format=COLLECTION_SOURCE_FORMAT,
-        scope=normalized_scope,
+        stage=normalized_stage,
         staged_filename=staged_filename,
         states=states,
         docs=docs,
@@ -316,7 +317,7 @@ def plan_document_package_collection(
 def apply_document_package_collection(
     repo_root: Path,
     *,
-    scope: str,
+    stage: str,
     staged_filename: str,
     body: dict[str, Any],
     staging_root: Path,
@@ -336,7 +337,7 @@ def apply_document_package_collection(
         raise ValueError("collection apply requires planned_identities from the confirmed preview")
     plan = plan_document_package_collection(
         repo_root,
-        scope=scope,
+        stage=stage,
         staged_filename=staged_filename,
         staging_root=staging_root,
         workspace_root=workspace_root,

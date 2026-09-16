@@ -5,19 +5,18 @@ from typing import Any
 from urllib.parse import quote
 
 from .common import (
-    DocsScopeConfig,
+    DocsStageConfig,
     document_source_path,
     generated_documents_path,
     json_text,
     monotonic_time,
     read_text,
-    publication_documents_path,
-    resolve_scope_path,
+    resolve_workspace_path,
     write_text,
 )
 from .pipeline import DocsDataBuilder
 from .links_builder import build_document_links, prepare_document_links
-from .media_builds import build_scope_media_snapshot
+from .media_builds import build_collection_media_snapshot
 from .source import DocRecord
 from docs_subscope_customisations import (
     project_sub_scope_customisation_manifest,
@@ -38,7 +37,7 @@ class SubScopeDocsBuilder(DocsDataBuilder):
         self,
         *,
         repo_root: Path,
-        config: DocsScopeConfig,
+        config: DocsStageConfig,
         sub_scope: Any,
         skip_media_builds: bool = False,
         links_doc_ids: list[str] | None = None,
@@ -59,12 +58,11 @@ class SubScopeDocsBuilder(DocsDataBuilder):
         self._parent_report_doc_id: str | None = None
 
     def output_url_dir(self) -> Path:
-        output = (
-            publication_documents_path(self.sub_scope_config)
-            if self.public_readonly_scope
-            else generated_documents_path(self.sub_scope_config)
-        )
-        return resolve_scope_path(self.repo_root, output)
+        output = generated_documents_path(self.sub_scope_config)
+        return resolve_workspace_path(self.repo_root, output)
+
+    def content_url_for(self, doc_id: str) -> str:
+        return f"{self.output_url_base}/by-id/{quote(doc_id)}.json"
 
     def parent_report_doc_id(self) -> str:
         if self._parent_report_doc_id is not None:
@@ -86,7 +84,7 @@ class SubScopeDocsBuilder(DocsDataBuilder):
             if len(matching) > 1:
                 self.warnings.append(
                     "Sub-scope detail links are ambiguous for "
-                    f"{self.scope_id}/{self.sub_scope_id}; matching parent reports: {', '.join(sorted(matching))}"
+                    f"{self.config.stage}/{self.sub_scope_id}; matching parent reports: {', '.join(sorted(matching))}"
                 )
             self._parent_report_doc_id = ""
         return self._parent_report_doc_id
@@ -96,10 +94,7 @@ class SubScopeDocsBuilder(DocsDataBuilder):
         if not parent_doc_id:
             return super().viewer_url_for(doc_id, anchor)
         pairs: list[str] = []
-        if self.include_scope_param and self.scope_id:
-            pairs.append(f"scope={quote(self.scope_id)}")
-        if self.config.stage:
-            pairs.append(f"stage={quote(self.config.stage)}")
+        pairs.append(f"stage={quote(self.config.stage)}")
         pairs.append(f"doc={quote(parent_doc_id)}")
         pairs.append(f"subdoc={quote(str(doc_id))}")
         url = f"{self.viewer_base_url}?{'&'.join(pairs)}"
@@ -127,7 +122,6 @@ class SubScopeDocsBuilder(DocsDataBuilder):
             ordered_docs,
             published=True,
             repo_root=self.repo_root,
-            scope=self.scope_id,
             sub_scope=self.sub_scope_id,
             stage=self.config.stage,
         )
@@ -168,7 +162,6 @@ class SubScopeDocsBuilder(DocsDataBuilder):
             ordered_docs,
             published=False,
             repo_root=self.repo_root,
-            scope=self.scope_id,
             sub_scope=self.sub_scope_id,
             stage=self.config.stage,
         )
@@ -205,8 +198,6 @@ class SubScopeDocsBuilder(DocsDataBuilder):
         configured_fields = sub_scope_customisation_authoring_subject_fields(
             self.sub_scope_config.sub_scope_customisation
         )
-        if self.public_readonly_scope and not configured_fields:
-            return None
         if not configured_fields and not any(
             any(field_name in doc.front_matter for field_name in AUTHORING_SUBJECT_FIELDS)
             for doc in ordered_docs
@@ -225,7 +216,7 @@ class SubScopeDocsBuilder(DocsDataBuilder):
         docs = self.load_docs()
         self.validate_canonical_doc_ids(docs)
         self.validate_docs(docs)
-        media_snapshot = None if self.skip_media_builds else build_scope_media_snapshot(self.repo_root, self.media_owner, write=write)
+        media_snapshot = None if self.skip_media_builds else build_collection_media_snapshot(self.repo_root, self.media_owner, write=write)
         ordered_docs = sorted(docs, key=self.doc_sort_key)
         semantic_tokens_by_doc: dict[str, list[dict[str, Any]]] = {}
         item_payloads = {
@@ -242,12 +233,12 @@ class SubScopeDocsBuilder(DocsDataBuilder):
         subject_associations_payload: dict[str, Any] | None = None
         if subjects_by_doc_id is not None:
             subject_generation = subject_projection_generation(
-                scope=self.scope_id,
+                stage=self.config.stage,
                 sub_scope=self.sub_scope_id,
                 subjects_by_doc_id=subjects_by_doc_id,
             )
             subject_associations_payload = project_subject_associations(
-                scope=self.scope_id,
+                stage=self.config.stage,
                 sub_scope=self.sub_scope_id,
                 documents=ordered_docs,
                 subjects_by_doc_id=subjects_by_doc_id,
@@ -358,7 +349,7 @@ class SubScopeDocsBuilder(DocsDataBuilder):
     def print_sub_scope_summary(self, write_plan: dict[str, Any], *, mode: str, docs_total: int) -> None:
         verb = "would write" if mode == "dry-run" else "wrote"
         remove_verb = "would remove" if mode == "dry-run" else "removed"
-        print(f"Docs sub-scope build ({mode}) scope={self.scope_id} sub_scope={self.sub_scope_id}")
+        print(f"Docs sub-scope build ({mode}) stage={self.config.stage} sub_scope={self.sub_scope_id}")
         print(f"  docs total: {docs_total}")
         print(f"  docs {verb}: {len(write_plan['changed_item_ids'])}")
         print(f"  docs {remove_verb}: {len(write_plan['stale_item_ids'])}")
@@ -382,7 +373,7 @@ class SubScopeDocsBuilder(DocsDataBuilder):
         elapsed_seconds: float,
     ) -> dict[str, Any]:
         return {
-            "scope": self.scope_id,
+            "stage": self.config.stage,
             "sub_scope": self.sub_scope_id,
             "build_mode": "sub_scope",
             "source_files_scanned": self.source_files_scanned,
@@ -403,8 +394,8 @@ class SubScopeDocsBuilder(DocsDataBuilder):
         }
 
 
-def selected_sub_scope(config: DocsScopeConfig, sub_scope_id: str) -> Any:
+def selected_sub_scope(config: DocsStageConfig, sub_scope_id: str) -> Any:
     for sub_scope in config.sub_scopes:
         if sub_scope.sub_scope == sub_scope_id:
             return sub_scope
-    raise RuntimeError(f"Unknown sub-scope {sub_scope_id!r} for scope {config.scope_id!r}")
+    raise RuntimeError(f"Unknown sub-scope {sub_scope_id!r} in stage {config.stage!r}")

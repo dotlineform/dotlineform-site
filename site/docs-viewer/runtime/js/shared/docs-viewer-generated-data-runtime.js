@@ -19,31 +19,18 @@ export function createDocsViewerGeneratedDataRuntime(options) {
   var reloadRetryAttempts = settings.reloadRetryAttempts || 0;
   var reloadRetryDelayMs = settings.reloadRetryDelayMs || 0;
 
-  function currentViewerScope() {
-    return typeof settings.viewerScope === "function" ? settings.viewerScope() : settings.viewerScope;
-  }
-
   function currentViewerStage() {
     return typeof settings.viewerStage === "function" ? settings.viewerStage() : settings.viewerStage || "";
   }
 
   function requestViewerStage(request) {
-    if (Object.prototype.hasOwnProperty.call(request, "viewerStage")) return request.viewerStage || "";
-    return !request.viewerScope || request.viewerScope === currentViewerScope() ? currentViewerStage() : "";
+    return Object.prototype.hasOwnProperty.call(request, "viewerStage") ? request.viewerStage : currentViewerStage();
   }
 
-  function scopeGeneratedCapability(capabilities, scope, key, stage) {
-    stage = stage === undefined ? requestViewerStage({ viewerScope: scope }) : stage;
+  function stageGeneratedCapability(capabilities, stage, key) {
     if (stage === "published") key = key.replace("generated_", "published_");
-    var scopeCaps = capabilities && capabilities.scopes ? capabilities.scopes[scope] : null;
-    if (scopeCaps && scopeCaps.stages) scopeCaps = scopeCaps.stages[stage === undefined ? requestViewerStage({ viewerScope: scope }) : stage] || null;
-    return Boolean(
-      capabilities &&
-      capabilities.generated_data_reads &&
-      scopeCaps &&
-      scopeCaps.available &&
-      scopeCaps[key]
-    );
+    var stageCaps = capabilities && capabilities.stages ? capabilities.stages[stage] : null;
+    return Boolean(capabilities && capabilities.generated_data_reads && stageCaps && stageCaps.available && stageCaps[key]);
   }
 
   function readGeneratedCapabilities() {
@@ -61,46 +48,20 @@ export function createDocsViewerGeneratedDataRuntime(options) {
       });
   }
 
-  function checkGeneratedDataReadCapability(scope, stage) {
-    var viewerScope = currentViewerScope();
-    var targetScope = String(scope || viewerScope || "").trim();
-    if (!generatedBaseUrl) {
-      generatedData.generatedDataReadChecked = true;
-      generatedData.generatedDataReadAvailable = false;
-      return Promise.resolve(false);
-    }
-    if (generatedData.generatedDataReadChecked) {
-      if (generatedData.generatedDataCapabilities && targetScope) {
-        return Promise.resolve(scopeGeneratedCapability(generatedData.generatedDataCapabilities, targetScope, "generated_data_reads", stage));
-      }
-      return Promise.resolve(generatedData.generatedDataReadAvailable);
-    }
-    if (generatedData.generatedDataReadRequestPromise) {
-      return generatedData.generatedDataReadRequestPromise;
-    }
-
-    generatedData.generatedDataReadRequestPromise = readGeneratedCapabilities()
-      .then(function (payload) {
-        if (!payload) {
-          generatedData.generatedDataReadAvailable = false;
-          generatedData.generatedDataReadChecked = true;
-          return false;
-        }
-        generatedData.generatedDataCapabilities = payload.capabilities || null;
-        generatedData.generatedDataReadAvailable = scopeGeneratedCapability(generatedData.generatedDataCapabilities, viewerScope, "generated_data_reads");
+  function checkGeneratedDataReadCapability(stage) {
+    var targetStage = stage === undefined ? currentViewerStage() : stage;
+    if (!generatedBaseUrl || !targetStage) return Promise.resolve(false);
+    if (!generatedData.generatedDataReadChecked && !generatedData.generatedDataReadRequestPromise) {
+      generatedData.generatedDataReadRequestPromise = readGeneratedCapabilities().then(function (payload) {
+        generatedData.generatedDataCapabilities = payload && payload.capabilities || null;
         generatedData.generatedDataReadChecked = true;
-        return scopeGeneratedCapability(generatedData.generatedDataCapabilities, targetScope || viewerScope, "generated_data_reads", stage);
-      })
-      .catch(function () {
-        generatedData.generatedDataReadAvailable = false;
-        generatedData.generatedDataReadChecked = true;
-        return false;
-      })
-      .finally(function () {
+      }).finally(function () {
         generatedData.generatedDataReadRequestPromise = null;
       });
-
-    return generatedData.generatedDataReadRequestPromise;
+    }
+    return Promise.resolve(generatedData.generatedDataReadRequestPromise).then(function () {
+      return stageGeneratedCapability(generatedData.generatedDataCapabilities, targetStage, "generated_data_reads");
+    });
   }
 
   function dataRequestOptions(overrides) {
@@ -121,14 +82,13 @@ export function createDocsViewerGeneratedDataRuntime(options) {
         return window.setTimeout(resolve, delayMs);
       },
       checkGeneratedDataReadCapability: function () {
-        return checkGeneratedDataReadCapability(requestSettings.viewerScope || currentViewerScope(), requestViewerStage(requestSettings));
+        return checkGeneratedDataReadCapability(requestViewerStage(requestSettings));
       },
-      scopeSupportsGeneratedSearchReads: function () {
-        return scopeGeneratedCapability(
+      stageSupportsGeneratedSearchReads: function () {
+        return stageGeneratedCapability(
           generatedData.generatedDataCapabilities || {},
-          requestSettings.viewerScope || currentViewerScope(),
-          "generated_search_reads",
-          requestViewerStage(requestSettings)
+          requestViewerStage(requestSettings),
+          "generated_search_reads"
         );
       }
     }, requestSettings);
@@ -138,37 +98,32 @@ export function createDocsViewerGeneratedDataRuntime(options) {
     var requestSettings = options || {};
     return fetchIndexTreeWithRetry(dataRequestOptions({
       indexTreeUrl: requestSettings.indexTreeUrl,
-      viewerStage: requestViewerStage(requestSettings),
-      viewerScope: requestSettings.viewerScope || currentViewerScope()
+      viewerStage: requestViewerStage(requestSettings)
     })).then(normalizeDocsIndexTreePayload);
   }
 
   function readDocumentPayload(doc, options) {
     var requestSettings = options || {};
     var docId = String(requestSettings.docId || doc && doc.doc_id || "").trim();
-    var viewerScope = requestSettings.viewerScope || currentViewerScope();
     var contentUrl = String(requestSettings.contentUrl || doc && doc.content_url || "").trim();
     return fetchPreferredGeneratedJson(
       contentUrl,
       "Failed to load " + contentUrl,
-      managementReloadPath("/docs/doc", { scope: viewerScope, stage: requestViewerStage(requestSettings), doc_id: docId }),
+      managementReloadPath("/docs/doc", { stage: requestViewerStage(requestSettings), doc_id: docId }),
       dataRequestOptions(Object.assign({}, requestSettings, {
-        useSearchCapability: false,
-        viewerScope: viewerScope
+        useSearchCapability: false
       }))
     );
   }
 
   function readSearchIndex(options) {
     var requestSettings = options || {};
-    var viewerScope = requestSettings.viewerScope || currentViewerScope();
     return fetchPreferredGeneratedJson(
       requestSettings.searchIndexUrl,
       "Failed to load search data",
-      managementReloadPath("/docs/search", { scope: viewerScope, stage: requestViewerStage(requestSettings) }),
+      managementReloadPath("/docs/search", { stage: requestViewerStage(requestSettings) }),
       dataRequestOptions(Object.assign({}, requestSettings, {
-        useSearchCapability: true,
-        viewerScope: viewerScope
+        useSearchCapability: true
       }))
     );
   }
@@ -179,13 +134,13 @@ export function createDocsViewerGeneratedDataRuntime(options) {
   function readDocumentLinks(target, options) {
     var staticBase = String(options && options.linksByIdUrlBase || "").replace(/\/$/, "");
     var path = managementReloadPath("/docs/links", {
-      scope: target.scope, stage: target.stage, sub_scope: target.sub_scope, doc_id: target.doc_id
+      stage: target.stage, sub_scope: target.sub_scope, doc_id: target.doc_id
     });
     return fetchPreferredGeneratedJson(
       staticBase ? staticBase + "/" + encodeURIComponent(target.doc_id) + ".json" : "",
       "Failed to load Links",
       path,
-      dataRequestOptions({ viewerScope: target.scope, viewerStage: target.stage || "", useSearchCapability: false,
+      dataRequestOptions({ viewerStage: target.stage || "", useSearchCapability: false,
         reloadNonce: "", reloadRetryAttempts: 1 })
     ).catch(function (error) {
       if (error.status === 404) return null;
@@ -195,14 +150,12 @@ export function createDocsViewerGeneratedDataRuntime(options) {
 
   function readRecent(options) {
     var requestSettings = options || {};
-    var viewerScope = requestSettings.viewerScope || currentViewerScope();
     return fetchPreferredGeneratedJson(
       requestSettings.recentUrl,
       "Failed to load Recent docs",
-      managementReloadPath("/docs/recent", { scope: viewerScope, stage: requestViewerStage(requestSettings) }),
+      managementReloadPath("/docs/recent", { stage: requestViewerStage(requestSettings) }),
       dataRequestOptions(Object.assign({}, requestSettings, {
-        useSearchCapability: false,
-        viewerScope: viewerScope
+        useSearchCapability: false
       }))
     ).then(normalizeRecentPayload);
   }
@@ -215,6 +168,6 @@ export function createDocsViewerGeneratedDataRuntime(options) {
     readDocumentLinks: readDocumentLinks,
     readRecent: readRecent,
     readSearchIndex: readSearchIndex,
-    scopeGeneratedCapability: scopeGeneratedCapability
+    stageGeneratedCapability: stageGeneratedCapability
   };
 }

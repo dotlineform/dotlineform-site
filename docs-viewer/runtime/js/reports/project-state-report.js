@@ -2,7 +2,7 @@ import {
   appendProjectSubjectIcon
 } from "./project-subject-icons.js";
 
-const REPORT_SCHEMA = "docs_project_state_report_v3";
+const REPORT_SCHEMA = "docs_project_state_report_v4";
 const LOCAL_TARGET_PREFIX = "dlf-local:";
 const GROUP_KEYS = Object.freeze(["folder", "series"]);
 const COLUMN_KEYS = Object.freeze(["folder", "series", "docs"]);
@@ -83,8 +83,7 @@ function normalizeDocument(value) {
     "document applicable Series"
   ).map(cleanString);
   if (
-    cleanString(target && target.scope) !== "analysis"
-    || cleanString(target && target.stage) !== "working"
+    cleanString(target && target.stage) !== "working"
     || cleanString(target && target.sub_scope) !== "works"
     || !docId
     || !title
@@ -174,7 +173,6 @@ export function normalizeProjectStateResponse(payload) {
     || payload.ok !== true
     || !report
     || report.schema_version !== REPORT_SCHEMA
-    || cleanString(inputs && inputs.scope) !== "analysis"
     || cleanString(inputs && inputs.stage) !== "working"
     || cleanString(inputs && inputs.sub_scope) !== "works"
     || !generation
@@ -410,7 +408,7 @@ function appendDocumentsCell(rowNode, row) {
       documentRecord.title,
       SUBJECT_LABELS[documentRecord.declaredSubject.kind] + " subject " + documentRecord.declaredSubject.key
     ].join(", "));
-    link.dataset.docsViewerScope = cleanString(documentRecord.target && documentRecord.target.scope);
+    link.dataset.docsViewerStage = cleanString(documentRecord.target && documentRecord.target.stage);
     link.dataset.docsViewerSubscope = cleanString(documentRecord.target && documentRecord.target.sub_scope);
     link.dataset.docsViewerDocId = cleanString(documentRecord.target && documentRecord.target.doc_id);
   });

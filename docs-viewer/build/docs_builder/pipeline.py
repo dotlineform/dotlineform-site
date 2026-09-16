@@ -6,18 +6,18 @@ from typing import Any
 from .backlinks import BacklinksMixin
 from .links_builder import build_document_links, prepare_document_links
 from .common import (
-    DocsScopeConfig,
+    DocsStageConfig,
     document_source_path,
     generated_documents_path,
-    is_public_readonly_scope,
+    load_docs_workspace_config,
     load_site_tools_config,
     monotonic_time,
     normalize_doc_ids,
     normalize_viewer_base_url,
-    resolve_scope_path,
+    resolve_workspace_path,
     utc_timestamp,
 )
-from .media_builds import build_scope_media_snapshot
+from .media_builds import build_collection_media_snapshot
 from .payloads import PayloadBuilderMixin
 from .recent_policy import recent_basis_for_route
 from .rendering import ContentRenderingMixin
@@ -41,7 +41,7 @@ class DocsDataBuilder(
         self,
         *,
         repo_root: Path,
-        config: DocsScopeConfig,
+        config: DocsStageConfig,
         source_dir: Path | None = None,
         output_dir: Path | None = None,
         viewer_base_url: str | None = None,
@@ -53,13 +53,12 @@ class DocsDataBuilder(
         self.repo_root = repo_root.resolve()
         self.config = config
         self.media_owner = getattr(self, "sub_scope_config", config)
-        self.scope_id = config.scope_id
+        self.workspace = load_docs_workspace_config(self.repo_root)
         self.report_source_contract = None
-        self.source_dir = resolve_scope_path(self.repo_root, source_dir or document_source_path(config))
-        self.output_dir = resolve_scope_path(self.repo_root, output_dir or generated_documents_path(config))
+        self.source_dir = resolve_workspace_path(self.repo_root, source_dir or document_source_path(config))
+        self.output_dir = resolve_workspace_path(self.repo_root, output_dir or generated_documents_path(config))
         self.items_dir = self.output_dir / "by-id"
-        self.viewer_base_url = normalize_viewer_base_url(viewer_base_url or config.viewer_base_url)
-        self.include_scope_param = config.include_scope_param
+        self.viewer_base_url = normalize_viewer_base_url(viewer_base_url)
         self.non_loadable_doc_ids = normalize_doc_ids(list(config.non_loadable_doc_ids))
         self.manage_only_tree_root_ids = normalize_doc_ids(list(config.manage_only_tree_root_ids))
         self.allow_unresolved_parent_ids = config.allow_unresolved_parent_ids is True
@@ -72,7 +71,6 @@ class DocsDataBuilder(
         self.semantic_token_registry = load_semantic_token_registry(self.repo_root)
         self.source_files_scanned = 0
         self.warnings: list[str] = []
-        self._viewer_scope_for_path: dict[str, str] | None = None
 
     def run(self, *, write: bool, emit_diagnostics: bool = False) -> dict[str, Any]:
         started_at = monotonic_time()
@@ -82,7 +80,7 @@ class DocsDataBuilder(
         media_snapshot = (
             None
             if self.skip_media_builds
-            else build_scope_media_snapshot(self.repo_root, self.media_owner, write=write)
+            else build_collection_media_snapshot(self.repo_root, self.media_owner, write=write)
         )
         media_builds = [] if media_snapshot is None else media_snapshot["producer_builds"]
         target_doc_ids = self.only_doc_ids if self.only_doc_ids is not None else [doc.doc_id for doc in docs]
@@ -123,7 +121,7 @@ class DocsDataBuilder(
                 output_path=self.output_dir / "recent.json",
             )
             public_recent_basis = recent_basis_for_route(
-                self.repo_root, app_kind="public", scope=self.scope_id,
+                self.repo_root, app_kind="public",
             )
             if public_recent_basis:
                 publication_recent_payload = self.recent_payload(
@@ -194,10 +192,3 @@ class DocsDataBuilder(
             "non_loadable_doc_ids": self.non_loadable_doc_ids,
             "manage_only_tree_root_ids": self.manage_only_tree_root_ids,
         }
-
-    @property
-    def public_readonly_scope(self) -> bool:
-        return is_public_readonly_scope(
-            viewer_base_url=self.viewer_base_url,
-            include_scope_param=self.include_scope_param,
-        )

@@ -95,10 +95,10 @@ def resolve_href(
 def parse_docs_target(
     resolved_href: str,
     *,
-    viewer_routes: Iterable[tuple[str, str]],
+    viewer_routes: Iterable[str],
     local_origin: str = LOCAL_ORIGIN,
 ) -> dict[str, str] | None:
-    """Parse viewer identity without substituting unknown explicit scopes.
+    """Parse exact workspace links; retired scope parameters are invalid.
 
     ``doc_id`` remains the route's parent document; ``subdoc`` identifies an
     opened child. Consumers resolve stage defaults and collection ownership.
@@ -118,22 +118,21 @@ def parse_docs_target(
         return None
 
     path = parsed.path or ""
-    query = parse_qs(parsed.query)
+    query = parse_qs(parsed.query, keep_blank_values=True)
     trimmed_path = path.rstrip("/")
     fragment = normalize_text(parsed.fragment)
 
-    for route_scope, viewer_base_url in viewer_routes:
-        normalized_route_scope = normalize_text(route_scope).lower()
+    for viewer_base_url in viewer_routes:
         viewer_path = normalize_text(viewer_base_url).rstrip("/")
         if trimmed_path != viewer_path:
             continue
+        if "scope" in query or any(len(query.get(key, [])) > 1 for key in ("doc", "stage", "subdoc")):
+            return {"kind": "invalid_viewer", "fragment": fragment}
         doc_id = normalize_text(query.get("doc", [""])[0])
         if not doc_id:
             return None
-        explicit_scope = normalize_text(query.get("scope", [""])[0]).lower()
         return {
             "kind": "viewer",
-            "scope": explicit_scope or normalized_route_scope,
             "doc_id": doc_id,
             "stage": normalize_text(query.get("stage", [""])[0]),
             "subdoc": normalize_text(query.get("subdoc", [""])[0]),
@@ -152,7 +151,6 @@ def parse_docs_target(
 
 def is_same_doc_fragment_link(
     *,
-    current_scope: str,
     current_doc_id: str,
     target: dict[str, str],
     current_stage: str = "",
@@ -162,8 +160,6 @@ def is_same_doc_fragment_link(
         return False
     return (
         target.get("kind") == "viewer"
-        and normalize_text(target.get("scope")).lower()
-        == normalize_text(current_scope).lower()
         and normalize_text(target.get("stage")) == current_stage
         and (not target.get("subdoc") or target.get("doc_id") == current_parent_doc_id)
         and normalize_text(target.get("subdoc") or target.get("doc_id"))

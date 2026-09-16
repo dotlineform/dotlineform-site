@@ -41,7 +41,7 @@ from docs_source_model import (
     load_document_collection_docs_for_config,
     recent_edit_content,
     rewrite_front_matter_source_timestamp,
-    scope_doc_sort_key,
+    document_sort_key,
     source_revision,
     split_source_text,
     strictly_later_doc_timestamp,
@@ -53,15 +53,16 @@ from docs_artifact_locations import (
     filesystem_location_root,
 )
 from docs_mermaid_media import produce_mermaid_svg
-from docs_scope_config import (
+from docs_workspace_config import (
     CONFIG_REL_PATH,
-    DOCS_SCOPE_CONFIGS,
+    DocsWorkspaceConfig,
+    load_docs_stage,
     document_source_path,
-    load_docs_scope_configs,
-    resolve_scope_path,
-    select_scope_stage,
+    load_docs_workspace_config,
+    resolve_workspace_path,
+    select_workspace_stage,
 )
-from docs_scope_build_manifest import remove_build_manifest
+from docs_build_manifest import remove_build_manifest
 from docs_write_rebuild import targeted_docs_build_fallback_reason
 from docs_watch_suppression import (
     SUPPRESSION_COMPLETE,
@@ -107,20 +108,6 @@ def python_builder_command(script: str, *args: str) -> list[str]:
     return [PYTHON_EXECUTABLE, script, *args]
 
 
-def snapshot_scope(root: Path, scope: str, *, stage: str = "") -> Dict[str, tuple[int, int]]:
-    if not root.exists():
-        raise FileNotFoundError(f"Source root not found: {root}")
-
-    snapshot: Dict[str, tuple[int, int]] = {}
-    for path in sorted(root.glob("**/*.md")):
-        try:
-            stat = path.stat()
-        except FileNotFoundError:
-            continue
-        snapshot[path.relative_to(root).as_posix()] = (stat.st_mtime_ns, stat.st_size)
-    return snapshot
-
-
 def snapshot_markdown_root(root: Path) -> Dict[str, tuple[int, int]]:
     if not root.exists():
         raise FileNotFoundError(f"Source root not found: {root}")
@@ -153,9 +140,7 @@ def state_snapshot(state: dict[str, Any]) -> Dict[str, tuple[int, int]]:
     root = state["root"]
     if state.get("watch_kind") == "build_media":
         return snapshot_mermaid_root(root)
-    if state.get("sub_scope"):
-        return snapshot_markdown_root(root)
-    return snapshot_scope(root, state["scope"], stage=state.get("stage", ""))
+    return snapshot_markdown_root(root)
 
 
 def try_state_snapshot(state: dict[str, Any]) -> tuple[Optional[Dict[str, tuple[int, int]]], str]:
@@ -183,56 +168,26 @@ def config_file_signature(path: Path) -> tuple[int, int]:
     return (stat.st_mtime_ns, stat.st_size)
 
 
-def sync_scope_config_globals(configs: dict[str, Any]) -> None:
-    DOCS_SCOPE_CONFIGS.clear()
-    DOCS_SCOPE_CONFIGS.update(configs)
-
-
-def desired_watch_state_specs(repo_root: Path, configs: dict[str, Any]) -> dict[str, dict[str, Any]]:
+def desired_watch_state_specs(repo_root: Path, workspace: DocsWorkspaceConfig) -> dict[str, dict[str, Any]]:
+    # Pre-publish has no authoring watcher. Working owns all source-watch writes.
+    config = select_workspace_stage(workspace, "working")
     specs: dict[str, dict[str, Any]] = {}
-
-    for scope, parent in sorted(configs.items()):
-        # Pre-publish is read-only. Only Working owns source-watch writes.
-        selected = [config for config in parent.stages if config.stage == "working"]
-        for config in selected:
-            stage = config.stage
-            owner = f"{scope}/{stage}" if stage else scope
-            specs[owner] = {
-                "scope": scope,
-                "stage": stage,
-                "sub_scope": "",
-                "label": owner,
-                "root": resolve_scope_path(repo_root, document_source_path(config)),
-                "config": config,
-                "watch_kind": "documents",
+    for collection in (config, *config.sub_scopes):
+        child = getattr(collection, "sub_scope", "")
+        label = f"working/{child}" if child else "working"
+        specs[label] = {
+            "stage": "working", "sub_scope": child, "label": label,
+            "root": resolve_workspace_path(repo_root, document_source_path(collection)),
+            "config": config, "watch_kind": "documents",
+        }
+        for build_type, build in sorted(collection.media.build_sources.items()):
+            media_label = f"{label}/media/{build_type}"
+            specs[media_label] = {
+                "stage": "working", "sub_scope": child, "label": media_label,
+                "root": filesystem_location_root(repo_root, build.location),
+                "config": config, "media_config": collection,
+                "watch_kind": "build_media", "build_type": build_type,
             }
-            for collection in (config, *config.sub_scopes):
-                child = getattr(collection, "sub_scope", "")
-                media_owner = f"{owner}/{child}" if child else owner
-                for build_type, build in sorted(collection.media.build_sources.items()):
-                    label = f"{media_owner}/media/{build_type}"
-                    specs[label] = {
-                        "scope": scope,
-                        "stage": stage,
-                        "sub_scope": child,
-                        "label": label,
-                        "root": filesystem_location_root(repo_root, build.location),
-                        "config": config,
-                        "media_config": collection,
-                        "watch_kind": "build_media",
-                        "build_type": build_type,
-                    }
-            for sub_scope in config.sub_scopes:
-                label = f"{owner}/{sub_scope.sub_scope}"
-                specs[label] = {
-                    "scope": scope,
-                    "stage": stage,
-                    "sub_scope": sub_scope.sub_scope,
-                    "label": label,
-                    "root": resolve_scope_path(repo_root, document_source_path(sub_scope)),
-                    "config": config,
-                    "watch_kind": "documents",
-                }
     return specs
 
 
@@ -252,7 +207,6 @@ def new_watch_state(repo_root: Path, spec: dict[str, Any], *, baseline: bool) ->
     if state.get("watch_kind") == "documents":
         doc_snapshot, snapshot_error = try_parsed_doc_snapshot(
             repo_root,
-            state["scope"],
             str(state.get("sub_scope") or ""),
             stage=state.get("stage") or None,
         )
@@ -270,12 +224,11 @@ def new_watch_state(repo_root: Path, spec: dict[str, Any], *, baseline: bool) ->
 def reconcile_watch_states(
     repo_root: Path,
     states: dict[str, dict[str, Any]],
-    configs: dict[str, Any],
+    workspace: DocsWorkspaceConfig,
     *,
     baseline: bool,
 ) -> dict[str, list[str]]:
-    sync_scope_config_globals(configs)
-    desired = desired_watch_state_specs(repo_root, configs)
+    desired = desired_watch_state_specs(repo_root, workspace)
     changes = {"added": [], "removed": [], "reloaded": []}
 
     for key in sorted(set(states) - set(desired)):
@@ -355,15 +308,11 @@ def affected_doc_ids_log_text(doc_ids: Optional[list[str]]) -> str:
 
 def parsed_doc_snapshot(
     repo_root: Path,
-    scope: str,
     sub_scope: str = "",
     *, stage: str | None = None,
 ) -> Dict[str, Dict[str, Any]]:
     normalized_sub_scope = str(sub_scope or "").strip().lower()
-    parent_config = DOCS_SCOPE_CONFIGS.get(scope)
-    if parent_config is None:
-        raise ValueError(f"unknown Docs Viewer scope: {scope}")
-    parent_config = select_scope_stage(parent_config, stage)
+    parent_config = load_docs_stage(repo_root, stage)
     document_config = parent_config
     if normalized_sub_scope:
         matching = [
@@ -373,11 +322,11 @@ def parsed_doc_snapshot(
         ]
         if len(matching) != 1:
             raise ValueError(
-                f"unknown sub_scope {normalized_sub_scope!r} for scope {scope!r}"
+                f"unknown sub_scope {normalized_sub_scope!r} in stage {stage!r}"
             )
         document_config = matching[0]
     docs = load_document_collection_docs_for_config(repo_root, parent_config, document_config)
-    root = resolve_scope_path(repo_root, document_source_path(document_config))
+    root = resolve_workspace_path(repo_root, document_source_path(document_config))
     snapshot: Dict[str, Dict[str, Any]] = {}
     for doc in docs:
         row: Dict[str, Any] = {
@@ -389,7 +338,7 @@ def parsed_doc_snapshot(
             "last_updated": str(doc.front_matter.get("last_updated") or "").strip(),
             "recent_edit_content": recent_edit_content(doc.front_matter, doc.body),
             "source_revision": source_revision(doc.source_text.encode("utf-8")),
-            "sort_key": scope_doc_sort_key(doc),
+            "sort_key": document_sort_key(doc),
         }
         snapshot[doc.path.relative_to(root).as_posix()] = row
     return snapshot
@@ -397,12 +346,11 @@ def parsed_doc_snapshot(
 
 def try_parsed_doc_snapshot(
     repo_root: Path,
-    scope: str,
     sub_scope: str = "",
     *, stage: str | None = None,
 ) -> tuple[Optional[Dict[str, Dict[str, Any]]], str]:
     try:
-        return parsed_doc_snapshot(repo_root, scope, sub_scope, stage=stage), ""
+        return parsed_doc_snapshot(repo_root, sub_scope, stage=stage), ""
     except Exception as exc:  # noqa: BLE001 - watcher must fall back rather than stop on bad source state.
         return None, str(exc)
 
@@ -737,19 +685,18 @@ def adopt_collection_timestamp_rewrites(
     return adopted
 
 
-def rebuild_scope(
+def rebuild_stage(
     repo_root: Path,
-    scope: str,
     docs_doc_ids: Optional[list[str]] = None,
     *, stage: str | None = None, links_doc_ids: Optional[list[str]] = None,
     links_created_doc_ids: Optional[list[str]] = None,
 ) -> bool:
     try:
-        remove_build_manifest(repo_root, select_scope_stage(DOCS_SCOPE_CONFIGS[scope], stage))
+        remove_build_manifest(repo_root, load_docs_stage(repo_root, stage))
     except (KeyError, FileNotFoundError, ValueError) as exc:
-        log(f"{scope} docs rebuild failed before writing: {exc}")
+        log(f"{stage} docs rebuild failed before writing: {exc}")
         return False
-    docs_command = python_builder_command(DOCS_BUILDER_SCRIPT, "--scope", scope, "--write", "--diagnostics")
+    docs_command = python_builder_command(DOCS_BUILDER_SCRIPT, "--write", "--diagnostics")
     if stage:
         docs_command.extend(["--stage", stage, "--skip-browser-config", "--skip-media-builds"])
     if stage == "working" and links_doc_ids is not None:
@@ -758,13 +705,13 @@ def rebuild_scope(
         docs_command.extend(["--links-created-doc-ids", ",".join(ordered_unique(links_created_doc_ids))])
     docs_target_doc_ids = ordered_unique(docs_doc_ids or [])
     if docs_doc_ids is not None and docs_target_doc_ids:
-        fallback_reason = targeted_docs_build_fallback_reason(repo_root, scope, docs_target_doc_ids, stage=stage)
+        fallback_reason = targeted_docs_build_fallback_reason(repo_root, docs_target_doc_ids, stage=stage)
         if fallback_reason:
-            log(f"{scope} targeted docs fallback: {fallback_reason}")
+            log(f"{stage} targeted docs fallback: {fallback_reason}")
         else:
             docs_command.extend(["--only-doc-ids", ",".join(docs_target_doc_ids)])
     commands = [("docs", docs_command)]
-    log(f"Rebuilding {scope} docs. Search remains explicit via Rebuild.")
+    log(f"Rebuilding {stage} docs. Search remains explicit via Rebuild.")
 
     for label, command in commands:
         completed = subprocess.run(
@@ -778,16 +725,16 @@ def rebuild_scope(
         stderr = completed.stderr.strip()
         if completed.returncode != 0:
             detail = stderr or stdout or f"exit {completed.returncode}"
-            log(f"{scope} {label} rebuild failed: {detail}")
+            log(f"{stage} {label} rebuild failed: {detail}")
             return False
         if label == "docs":
             diagnostics = formatted_docs_builder_diagnostics(stdout)
             if diagnostics:
-                log(f"{scope} docs diagnostics:")
+                log(f"{stage} docs diagnostics:")
                 for line in diagnostics:
                     log(f"  {line}")
                 continue
-        log(f"{scope} {label}: {summarize_output(stdout, 'done')}")
+        log(f"{stage} {label}: {summarize_output(stdout, 'done')}")
     return True
 
 
@@ -800,13 +747,11 @@ def process_document_collection_changes(
 ) -> tuple[bool, Optional[Dict[str, Dict[str, Any]]]]:
     """Capture eligible timestamps, then run one exact collection rebuild."""
 
-    scope = str(state["scope"])
     sub_scope = str(state.get("sub_scope") or "")
     stage = state.get("stage") or None
-    label = f"{scope}/{sub_scope}" if sub_scope else scope
+    label = f"{stage}/{sub_scope}" if sub_scope else stage
     current_docs, snapshot_error = try_parsed_doc_snapshot(
         repo_root,
-        scope,
         sub_scope,
         stage=stage,
     )
@@ -830,8 +775,8 @@ def process_document_collection_changes(
             f"{snapshot_error or 'parsed docs snapshot unavailable'}"
         )
         if sub_scope:
-            return rebuild_sub_scope(repo_root, scope, sub_scope, stage=stage, **links_arguments), None
-        return rebuild_scope(repo_root, scope, stage=stage, **links_arguments), None
+            return rebuild_sub_scope(repo_root, sub_scope, stage=stage, **links_arguments), None
+        return rebuild_stage(repo_root, stage=stage, **links_arguments), None
 
     docs_doc_ids: Optional[list[str]] = None
     if not sub_scope:
@@ -843,12 +788,12 @@ def process_document_collection_changes(
         )
         if fallback_reason:
             log(
-                f"{scope} targeted docs fallback; affected ids unavailable: "
+                f"{stage} targeted docs fallback; affected ids unavailable: "
                 f"{fallback_reason}"
             )
         else:
             log(
-                f"{scope} affected docs: "
+                f"{stage} affected docs: "
                 f"{affected_doc_ids_log_text(docs_doc_ids)}."
             )
 
@@ -911,13 +856,12 @@ def process_document_collection_changes(
 
     if sub_scope:
         return (
-            rebuild_sub_scope(repo_root, scope, sub_scope, stage=stage, **links_arguments),
+            rebuild_sub_scope(repo_root, sub_scope, stage=stage, **links_arguments),
             current_docs,
         )
     return (
-        rebuild_scope(
+        rebuild_stage(
             repo_root,
-            scope,
             docs_doc_ids=docs_doc_ids,
             stage=stage,
             **links_arguments,
@@ -927,12 +871,12 @@ def process_document_collection_changes(
 
 
 def rebuild_sub_scope(
-    repo_root: Path, scope: str, sub_scope: str, *, stage: str | None = None,
+    repo_root: Path, sub_scope: str, *, stage: str | None = None,
     links_doc_ids: Optional[list[str]] = None, links_created_doc_ids: Optional[list[str]] = None,
 ) -> bool:
-    label = f"{scope}/{sub_scope}"
+    label = f"{stage}/{sub_scope}"
     try:
-        remove_build_manifest(repo_root, select_scope_stage(DOCS_SCOPE_CONFIGS[scope], stage))
+        remove_build_manifest(repo_root, load_docs_stage(repo_root, stage))
     except (KeyError, FileNotFoundError, ValueError) as exc:
         log(f"{label} sub-scope docs rebuild failed before writing: {exc}")
         return False
@@ -941,8 +885,6 @@ def rebuild_sub_scope(
             "sub-scope docs",
             python_builder_command(
                 DOCS_BUILDER_SCRIPT,
-                "--scope",
-                scope,
                 "--sub-scope",
                 sub_scope,
                 "--write",
@@ -1038,7 +980,7 @@ def rebuild_build_media(
 
 def parse_args() -> argparse.Namespace:
     env = runtime_env()
-    parser = argparse.ArgumentParser(description="Watch docs source roots and rebuild same-scope outputs.")
+    parser = argparse.ArgumentParser(description="Watch docs source roots and rebuild the changed collection outputs.")
     parser.add_argument("--repo-root", default="", help="Override repo root auto-detection.")
     parser.add_argument(
         "--poll-seconds",
@@ -1075,14 +1017,14 @@ def main() -> int:
     reconcile_watch_states(
         repo_root,
         states,
-        load_docs_scope_configs(repo_root),
+        load_docs_workspace_config(repo_root),
         baseline=True,
     )
     for state in states.values():
         if state.get("startup_doc_error"):
             log(
                 f"{state['label']} parsed docs snapshot unavailable at startup; "
-                f"watcher search will use full rebuilds: {state['startup_doc_error']}"
+                f"document rebuild selection needs a fresh source snapshot: {state['startup_doc_error']}"
             )
         if state.get("startup_source_error"):
             log(f"{state['label']} source root unavailable at startup; watcher is waiting: {state['startup_source_error']}")
@@ -1091,7 +1033,7 @@ def main() -> int:
         f"Watching {watch_roots_log_text(states)} "
         f"(poll={args.poll_seconds:.2f}s, debounce={args.debounce_seconds:.2f}s)."
     )
-    log(f"Watching scope config {config_path}; scope and sub-scope state will reconcile after config changes.")
+    log(f"Watching workspace config {config_path}; Working and sub-scope state will reconcile after config changes.")
 
     try:
         while True:
@@ -1103,15 +1045,15 @@ def main() -> int:
                     changes = reconcile_watch_states(
                         repo_root,
                         states,
-                        load_docs_scope_configs(repo_root),
+                        load_docs_workspace_config(repo_root),
                         baseline=False,
                     )
                 except (FileNotFoundError, ValueError) as exc:
-                    log(f"Scope config reload failed; keeping current watch state: {exc}")
+                    raise SystemExit(f"Workspace config reload failed; watcher stopped before further writes: {exc}") from exc
                 else:
                     for change_kind, labels in changes.items():
                         if labels:
-                            log(f"Scope config {change_kind}: {', '.join(labels)}.")
+                            log(f"Workspace config {change_kind}: {', '.join(labels)}.")
 
             for key in list(states):
                 state = states[key]
@@ -1143,11 +1085,9 @@ def main() -> int:
 
             if ready_key:
                 state = states[ready_key]
-                ready_scope = state["scope"]
                 ready_label = state["label"]
                 changed_files = list(state["changed_files"])
                 suppression_owner = watch_suppression_owner(
-                    ready_scope,
                     str(state.get("sub_scope") or ""),
                     stage=state.get("stage") or None,
                 )
@@ -1170,9 +1110,8 @@ def main() -> int:
                             current_doc_snapshot, snapshot_error = (
                                 try_parsed_doc_snapshot(
                                     repo_root,
-                                    ready_scope,
                                     str(state.get("sub_scope") or ""),
-                    stage=state.get("stage") or None,
+                                    stage=state["stage"],
                                 )
                             )
                             if snapshot_error:

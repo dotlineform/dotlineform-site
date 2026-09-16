@@ -1,3 +1,5 @@
+import { indexPanelStorageKey } from "./docs-viewer-saved-state.js";
+
 import {
   firstHostedViewLayoutState,
   hostedViewSupportsLayoutState
@@ -22,8 +24,8 @@ export function normalizeIndexPanelState(value, fallback = INDEX_PANEL_STATE_NOR
   return INDEX_PANEL_STATE_NORMAL;
 }
 
-export function buildIndexPanelStorageKey(scope) {
-  return `dotlineform-docs-viewer-index-panel:${normalizeStorageScope(scope)}`;
+export function buildIndexPanelStorageKey(owner) {
+  return indexPanelStorageKey(owner);
 }
 
 export function readIndexPanelState(options = {}) {
@@ -103,8 +105,4 @@ export function projectIndexPanelState(state, options = {}) {
     expandIcon: "⤢",
     expandLabel: "Expand index panel"
   };
-}
-
-function normalizeStorageScope(scope) {
-  return String(scope || "").trim() || "docs";
 }

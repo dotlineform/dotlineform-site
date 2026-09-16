@@ -7,7 +7,7 @@ from .source import DocRecord
 from docs_rendered_links import collect_anchors, parse_docs_target, resolve_href
 
 
-DOCS_BACKLINKS_SCHEMA_VERSION = "docs_backlinks_v1"
+DOCS_BACKLINKS_SCHEMA_VERSION = "docs_backlinks_v2"
 
 
 class BacklinksMixin:
@@ -26,12 +26,12 @@ class BacklinksMixin:
             if not isinstance(payload, dict):
                 raise RuntimeError(
                     "Backlink generation requires an existing rendered payload for "
-                    f"{self.scope_id}/{doc.doc_id}"
+                    f"{self.config.stage}/{doc.doc_id}"
                 )
             payloads_by_id[doc.doc_id] = payload
 
         source_ids_by_target: dict[str, set[str]] = {}
-        viewer_routes = ((self.scope_id, self.viewer_base_url),)
+        viewer_routes = (self.viewer_base_url, self.workspace.public_viewer_base_url)
         for source_doc in docs:
             content_html = str(
                 payloads_by_id[source_doc.doc_id].get("content_html") or ""
@@ -47,10 +47,10 @@ class BacklinksMixin:
                 )
                 if target is None or target.get("kind") != "viewer":
                     continue
-                target_scope = str(target.get("scope") or "").strip().lower()
                 target_doc_id = str(target.get("doc_id") or "").strip()
                 if (
-                    target_scope != self.scope_id
+                    target.get("stage", "") not in {"", self.config.stage}
+                    or target.get("subdoc")
                     or target_doc_id not in current_ids
                     or target_doc_id == source_doc.doc_id
                 ):
@@ -74,7 +74,7 @@ class BacklinksMixin:
 
         comparable = {
             "schema": DOCS_BACKLINKS_SCHEMA_VERSION,
-            "scope": self.scope_id,
+            "stage": self.config.stage,
             "by_target": by_target,
         }
         return {

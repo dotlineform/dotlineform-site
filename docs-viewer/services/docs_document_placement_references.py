@@ -20,7 +20,7 @@ from docs_document_location import canonical_document_viewer_url, sub_scope_repo
 from docs_document_placement import DocumentPlacement
 from docs_management_document_target import ManagedDocumentTarget, ManagedDocumentCollection, resolve_managed_document_collection, confined_source_path
 from docs_media_inventory import source_media_references
-from docs_scope_config import resolve_location_path, load_docs_scope_configs
+from docs_workspace_config import resolve_location_path, load_docs_workspace_config
 import docs_source_model as source_model
 
 URL_PATTERN = re.compile(r"(?:[A-Za-z][A-Za-z0-9+.-]*://|//|/|docs/|\.\.?/)[^\s<>\"'\[\])|]+|[A-Za-z0-9_.-]+\.md(?:[?#][^\s<>\"'\[\])|]+)?")
@@ -37,7 +37,7 @@ class MediaCopy:
 @dataclass(frozen=True)
 class ReferenceChange:
     sub_scope: str
-    document: source_model.ScopeDoc
+    document: source_model.SourceDoc
     body: str
 
 
@@ -107,13 +107,13 @@ def placement_reference_changes(
     source = placement.source
     destination = placement.destination
     config = source.parent_config
-    route_config = load_docs_scope_configs(repo_root, scope_ids=[source.scope])[source.scope]
-    routes = {owner.viewer_base_url.rstrip("/") for owner in (config, route_config)}
+    route_config = load_docs_workspace_config(repo_root)
+    routes = {"/docs", route_config.public_viewer_base_url.rstrip("/")}
     collections = [resolve_managed_document_collection(
-        repo_root, scope=source.scope, stage=source.stage, sub_scope=name or None,
+        repo_root, stage=source.stage, sub_scope=name or None,
     ) for name in ("", *(owner.sub_scope for owner in config.sub_scopes))]
     hosts = {owner.sub_scope: sub_scope_report_placement(
-        repo_root, source.scope, owner.sub_scope, stage=source.stage,
+        repo_root, owner.sub_scope, stage=source.stage,
     )[2] for owner in collections if owner.sub_scope}
     docs = [(owner, doc) for owner in collections for doc in source_model.load_document_collection_docs_for_config(
         repo_root, config, owner.document_config,
@@ -125,14 +125,14 @@ def placement_reference_changes(
     def document_url(collection: str, doc_id: str) -> str:
         return canonical_document_viewer_url(config, hosts.get(collection, doc_id), subdoc_id=doc_id if collection else "")
 
-    def rewrite_url(url: str, doc: source_model.ScopeDoc, moving: bool) -> str:
+    def rewrite_url(url: str, doc: source_model.SourceDoc, moving: bool) -> str:
         parsed = urlsplit(url)
         if parsed.scheme or parsed.netloc or not parsed.path:
             return url
         params = dict(parse_qsl(parsed.query, keep_blank_values=True))
-        if params.get("stage", source.stage) != source.stage:
+        if "scope" in params or params.get("stage", source.stage) != source.stage:
             return url
-        if parsed.path.rstrip("/") in routes and params.get("scope", source.scope) == source.scope:
+        if parsed.path.rstrip("/") in routes:
             if params.get("doc") != before_host:
                 return url
             if (params.get("subdoc", "") != source.doc_id if source.sub_scope else bool(params.get("subdoc"))):

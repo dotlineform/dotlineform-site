@@ -4,7 +4,6 @@
   "report": {
     "id": "docs_subscope",
     "access": "public",
-    "scope": null,
     "preset": null,
     "sub_scope": "works"
   },

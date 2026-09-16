@@ -30,12 +30,11 @@ export function mountDocsViewerPublicDocumentExtras(context) {
     onSubscopeDocumentState: settings.onSubscopeDocumentState,
     reportRegistryUrl: cleanString(settings.routeContext && settings.routeContext.reportRegistryUrl),
     routeContext: settings.routeContext,
-    scopeConfigs: settings.scopeConfigState && Array.isArray(settings.scopeConfigState.scopeConfigs)
-      ? settings.scopeConfigState.scopeConfigs.slice()
+    stageConfigs: settings.workspaceConfigState && Array.isArray(settings.workspaceConfigState.stageConfigs)
+      ? settings.workspaceConfigState.stageConfigs.slice()
       : [],
     setStatus: settings.setStatus,
-    viewerScope: cleanString(settings.viewerScope),
     viewerStage: cleanString(settings.routeContext && settings.routeContext.viewerStage),
-    viewerUrlForScope: settings.viewerUrlForScope
+    viewerUrlForDocument: settings.viewerUrlForDocument
   });
 }

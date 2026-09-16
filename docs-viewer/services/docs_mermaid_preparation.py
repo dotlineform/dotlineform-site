@@ -11,11 +11,11 @@ from docs_artifact_locations import ArtifactLocation, artifact_location_adapter
 from docs_public_mermaid_payload import project_mermaid_payload
 from docs_public_mermaid_producer import DOCS_VIEWER_THEME_CSS_REL_PATH, produce_public_mermaid_projection
 from docs_public_mermaid_projection import PUBLIC_MERMAID_ASSET_PREFIX, plan_public_mermaid_projection
-from docs_scope_config import DocsScopeConfig, generated_documents_path, resolve_scope_path
+from docs_workspace_config import DocsStageConfig, generated_documents_path, resolve_workspace_path
 from docs_source_model import load_document_collection_docs_for_config
 
 
-def prepare_scope_mermaid(repo_root: Path, config: DocsScopeConfig) -> dict[str, Any] | None:
+def prepare_stage_mermaid(repo_root: Path, config: DocsStageConfig) -> dict[str, Any] | None:
     """Render every prepared collection before its complete Build is recorded.
 
     Working Markdown and payloads retain their fences. Only public Pre-publish
@@ -31,7 +31,7 @@ def prepare_scope_mermaid(repo_root: Path, config: DocsScopeConfig) -> dict[str,
         if collection.public_projection is None:
             continue
         child = getattr(collection, "sub_scope", "")
-        owner = f"{config.scope_id}/{child}" if child else config.scope_id
+        owner = f"{config.stage}/{child}" if child else config.stage
         docs = load_document_collection_docs_for_config(repo_root, config, collection)
         media = collection.media.types.get("svg")
         if media is None:
@@ -44,7 +44,7 @@ def prepare_scope_mermaid(repo_root: Path, config: DocsScopeConfig) -> dict[str,
             if artifact_location_adapter(repo_root, location).list(PUBLIC_MERMAID_ASSET_PREFIX):
                 raise ValueError(f"Mermaid preparation output conflicts with authored media in {owner}/{PUBLIC_MERMAID_ASSET_PREFIX}")
         plan = plan_public_mermaid_projection(
-            scope=owner, documents=((doc.doc_id, doc.body) for doc in docs),
+            collection=owner, documents=((doc.doc_id, doc.body) for doc in docs),
             public_url_prefix=media.served_path_prefix,
         )
         if plan["failures"]:
@@ -54,7 +54,7 @@ def prepare_scope_mermaid(repo_root: Path, config: DocsScopeConfig) -> dict[str,
         by_doc: dict[str, list[dict[str, Any]]] = {}
         for diagram in plan["diagrams"]:
             by_doc.setdefault(diagram["source"]["doc_id"], []).append(diagram)
-        payload_root = resolve_scope_path(repo_root, generated_documents_path(collection)) / "by-id"
+        payload_root = resolve_workspace_path(repo_root, generated_documents_path(collection)) / "by-id"
         payloads = {}
         for doc_id, diagrams in by_doc.items():
             path = payload_root / f"{doc_id}.json"

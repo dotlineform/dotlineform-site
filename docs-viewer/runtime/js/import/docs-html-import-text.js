@@ -14,7 +14,7 @@ var DOCS_HTML_IMPORT_TEXT = {
   collectionPlanHeading: "Collection plan",
   collectionPlanningStatus: "Planning collection {filename}...",
   collectionPreviewButton: "Preview collection",
-  collectionRequired: "A supported staged collection file and target scope are required.",
+  collectionRequired: "A supported staged collection file and target stage are required.",
   collectionReadyStatus: "Collection plan is ready for confirmation.",
   collectionRefreshingReportStatus: "Refreshing the imported collection report...",
   collectionRefreshFailedStatus: "Package import completed, but the collection report refresh failed. Retry the report refresh without importing again.",

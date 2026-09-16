@@ -3,6 +3,8 @@
 
 from __future__ import annotations
 
+from docs_import_common import require_import_stage
+
 import re
 from pathlib import Path
 from typing import Any
@@ -18,12 +20,11 @@ from docs_import_common import (
     MARKDOWN_STAGED_SUFFIXES,
     RASTER_IMAGE_STAGED_SUFFIXES,
     humanize,
-    normalize_scope,
     normalize_space,
     slugify,
 )
 from docs_import_media import build_media_plan
-from docs_scope_config import load_docs_scope_stage, managed_media_config
+from docs_workspace_config import load_docs_stage, managed_media_config
 from studio.shared.python.projects_directories import projects_path_marker
 
 def retarget_markdown_package_media_plans(
@@ -32,7 +33,7 @@ def retarget_markdown_package_media_plans(
     workspace_root: Path,
     package_root: Path,
     summary: dict[str, Any],
-    scope: str,
+    stage: str,
 ) -> None:
     plans = summary.get("media_plans")
     if not isinstance(plans, list) or not plans:
@@ -74,7 +75,7 @@ def retarget_markdown_package_media_plans(
         new_filename = next_package_media_filename(
             repo_root,
             staging_root,
-            scope,
+            stage,
             proposed_doc_id,
             media_class,
             suffix,
@@ -85,7 +86,7 @@ def retarget_markdown_package_media_plans(
             repo_root,
             staging_root,
             workspace_root,
-            scope,
+            stage,
             package_root=package_root,
             source_path=source_path,
             filename=new_filename,
@@ -190,19 +191,19 @@ def package_source_original_path(
 def next_package_media_filename(
     repo_root: Path,
     staging_root: Path,
-    scope: str,
+    stage: str,
     doc_id: str,
     media_class: str,
     suffix: str,
     extension: str,
     used_filenames: set[str],
 ) -> str:
-    normalized_scope = normalize_scope(scope, repo_root)
+    normalized_stage = require_import_stage(stage)
     safe_doc_id = slugify(doc_id or "imported-doc")
     safe_extension = extension.lower().lstrip(".")
     staging_root = staging_root.resolve()
-    scope_config = load_docs_scope_stage(repo_root, normalized_scope, "working")
-    media = managed_media_config(scope_config, media_class)
+    stage_config = load_docs_stage(repo_root, normalized_stage)
+    media = managed_media_config(stage_config, media_class)
     index = 1
     while True:
         filename = f"{safe_doc_id}-{suffix}-{index:02d}.{safe_extension}"
@@ -221,7 +222,7 @@ def build_package_media_plan(
     repo_root: Path,
     staging_root: Path,
     workspace_root: Path,
-    scope: str,
+    stage: str,
     *,
     package_root: Path,
     source_path: Path,
@@ -231,7 +232,7 @@ def build_package_media_plan(
     provenance_label: str = "",
 ) -> dict[str, Any]:
     media_class = "img" if kind == "image" else "files"
-    plan = build_media_plan(scope, media_class, Path(filename), title, repo_root=repo_root)
+    plan = build_media_plan(stage, media_class, Path(filename), title, repo_root=repo_root)
     source_rel = package_source_original_path(
         source_path,
         workspace_root,
@@ -287,7 +288,7 @@ def rewrite_markdown_package_media_links(
     package_root: Path,
     markdown_path: Path,
     summary: dict[str, Any],
-    scope: str,
+    stage: str,
     provenance_label: str = "",
 ) -> None:
     markdown = str(summary.get("markdown_preview") or "")
@@ -317,13 +318,13 @@ def rewrite_markdown_package_media_links(
             warnings.append(f"Unsupported package image type {suffix or '(none)'} for {target}; left the link unchanged.")
             return None
         image_index = len([plan for plan in plans if plan.get("kind") == "image"]) + 1
-        filename = next_package_media_filename(repo_root, staging_root, scope, doc_id, "img", "image", "webp", used_filenames)
+        filename = next_package_media_filename(repo_root, staging_root, stage, doc_id, "img", "image", "webp", used_filenames)
         title = readable_package_image_title(doc_id, image_index)
         plan = build_package_media_plan(
             repo_root,
             staging_root,
             workspace_root,
-            scope,
+            stage,
             package_root=package_root,
             source_path=source,
             filename=filename,
@@ -354,13 +355,13 @@ def rewrite_markdown_package_media_links(
             unsupported_count += 1
             warnings.append(f"Unsupported package attachment type {suffix or '(none)'} for {target}; left the link unchanged.")
             return None
-        filename = next_package_media_filename(repo_root, staging_root, scope, doc_id, "files", "attachment", suffix, used_filenames)
+        filename = next_package_media_filename(repo_root, staging_root, stage, doc_id, "files", "attachment", suffix, used_filenames)
         title = normalize_space(label) or humanize(source.stem) or f"Attachment {len([plan for plan in plans if plan.get('kind') == 'attachment']) + 1:02d}"
         plan = build_package_media_plan(
             repo_root,
             staging_root,
             workspace_root,
-            scope,
+            stage,
             package_root=package_root,
             source_path=source,
             filename=filename,

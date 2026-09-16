@@ -29,8 +29,7 @@ function positiveInteger(value) {
 function sameDocumentTarget(left, right) {
   var first = left || {};
   var second = right || {};
-  return cleanString(first.scope) === cleanString(second.scope)
-    && cleanString(first.stage) === cleanString(second.stage)
+  return cleanString(first.stage) === cleanString(second.stage)
     && cleanString(first.subScope) === cleanString(second.subScope)
     && cleanString(first.docId) === cleanString(second.docId);
 }
@@ -284,12 +283,11 @@ export function createDocsViewerMediaDetailAdapter() {
     var markers = Array.from(root.querySelectorAll(MEDIA_DETAIL_SELECTOR));
     var documentMountGeneration = positiveInteger(context.documentMountGeneration);
     var documentTarget = {
-      scope: cleanString(context.viewerScope),
       ...(context.viewerStage ? { stage: cleanString(context.viewerStage) } : {}),
       subScope: "",
       docId: cleanString(context.doc && context.doc.doc_id)
     };
-    if (!documentMountGeneration || !documentTarget.scope || !documentTarget.docId) {
+    if (!documentMountGeneration || !documentTarget.docId) {
       return { found: markers.length, decorated: 0, skipped: markers.length };
     }
 
@@ -346,7 +344,7 @@ export function createDocsViewerMediaDetailAdapter() {
     var target = context.documentTarget;
     if (!state || state.documentMountGeneration !== context.documentMountGeneration
       || !control || !root.contains(control)
-      || !target || cleanString(target.scope) !== state.documentTarget.scope || !cleanString(target.docId)
+      || !target || !cleanString(target.docId)
       || cleanString(target.stage) !== cleanString(state.documentTarget.stage)
       || (context.isCurrentDocument && !context.isCurrentDocument())) return false;
 
@@ -359,7 +357,7 @@ export function createDocsViewerMediaDetailAdapter() {
       marker: control,
       openControl: control,
       documentTarget: Object.freeze({
-        scope: cleanString(target.scope), ...(target.stage ? { stage: cleanString(target.stage) } : {}),
+        ...(target.stage ? { stage: cleanString(target.stage) } : {}),
         subScope: cleanString(target.subScope), docId: cleanString(target.docId)
       }),
       isCurrentDocument: context.isCurrentDocument,
@@ -377,7 +375,6 @@ export function createDocsViewerMediaDetailAdapter() {
     var state = root && stateByRoot.get(root);
     return state && state.documentMountGeneration === context.documentMountGeneration
       && root.contains(context.invocationControl) && context.documentTarget
-      && context.documentTarget.scope === state.documentTarget.scope
       && cleanString(context.documentTarget.stage) === cleanString(state.documentTarget.stage)
       && Boolean(cleanString(context.documentTarget.docId))
       && (!context.isCurrentDocument || context.isCurrentDocument()) ? state : null;

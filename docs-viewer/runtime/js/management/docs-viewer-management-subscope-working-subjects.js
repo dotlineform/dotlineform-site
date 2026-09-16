@@ -430,8 +430,7 @@ function workingSubjectDetailInfo(context, assignSubjectAvailable) {
   var collection = exactCollection(settings.collection);
   var target = settings.target || {};
   if (
-    cleanString(target.scope).toLowerCase() !== collection.scope
-    || cleanString(target.stage) !== cleanString(collection.stage)
+    cleanString(target.stage) !== cleanString(collection.stage)
     || cleanString(target.sub_scope).toLowerCase() !== collection.sub_scope
     || cleanString(target.doc_id) !== cleanString(settings.document && settings.document.doc_id)
   ) {

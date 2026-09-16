@@ -13,7 +13,7 @@ from docs_artifact_locations import (
     artifact_location_adapter,
     authenticated_remote_client_for_locations,
 )
-from docs_scope_config import DocsScopeConfig, DocsSubScopeConfig, resolve_location_path
+from docs_workspace_config import DocsStageConfig, DocsSubScopeConfig, resolve_location_path
 
 
 MEDIA_REFERENCE_PATTERN = re.compile(r"\[\[(?:media|html-media):(?P<path>[^\]\s]+)(?:[^\]]*)\]\]")
@@ -30,7 +30,8 @@ class DocsMediaReference:
 
 @dataclass(frozen=True)
 class DocsMediaInventoryItem:
-    scope: str
+    stage: str
+    sub_scope: str
     media_type: str
     identity: str
     role: str
@@ -45,25 +46,27 @@ class DocsMediaInventoryItem:
 
 @dataclass(frozen=True)
 class DocsMediaInventory:
-    scope: str
+    stage: str
+    sub_scope: str
     items: tuple[DocsMediaInventoryItem, ...]
     missing_references: tuple[DocsMediaReference, ...]
 
     def as_dict(self) -> dict[str, object]:
         return {
-            "scope": self.scope,
+            "stage": self.stage,
+            "sub_scope": self.sub_scope,
             "items": [asdict(item) for item in self.items],
             "missing_references": [asdict(reference) for reference in self.missing_references],
         }
 
 
 def source_media_references(
-    config: DocsScopeConfig | DocsSubScopeConfig,
+    config: DocsStageConfig | DocsSubScopeConfig,
     source: str,
     *,
     doc_id: str,
 ) -> tuple[DocsMediaReference, ...]:
-    """Return configured, source-scope-owned media references from one document."""
+    """Return configured, source-collection-owned media references from one document."""
 
     found: set[tuple[str, str, str]] = set()
     for match in MEDIA_REFERENCE_PATTERN.finditer(source):
@@ -100,7 +103,7 @@ def source_media_references(
     )
 
 
-def document_media_references(repo_root: Path, config: DocsScopeConfig | DocsSubScopeConfig) -> tuple[DocsMediaReference, ...]:
+def document_media_references(repo_root: Path, config: DocsStageConfig | DocsSubScopeConfig) -> tuple[DocsMediaReference, ...]:
     source_root = resolve_location_path(repo_root, config.source.location)
     documents_root = source_root / config.source.documents_path
     references: list[DocsMediaReference] = []
@@ -114,7 +117,7 @@ def document_media_references(repo_root: Path, config: DocsScopeConfig | DocsSub
 
 def _location_adapters(
     repo_root: Path,
-    config: DocsScopeConfig | DocsSubScopeConfig,
+    config: DocsStageConfig | DocsSubScopeConfig,
     *,
     client: object | None,
     env_files: Iterable[Path] | None,
@@ -147,9 +150,9 @@ def _location_adapters(
     return published, build_source
 
 
-def inventory_scope_media(
+def inventory_collection_media(
     repo_root: Path,
-    config: DocsScopeConfig | DocsSubScopeConfig,
+    config: DocsStageConfig | DocsSubScopeConfig,
     *,
     references: Iterable[DocsMediaReference] | None = None,
     client: object | None = None,
@@ -183,7 +186,8 @@ def inventory_scope_media(
             published_identities.add((media_type, artifact.identity))
             items.append(
                 DocsMediaInventoryItem(
-                    scope=config.scope_id,
+                    stage=config.stage,
+                    sub_scope=getattr(config, "sub_scope", ""),
                     media_type=media_type,
                     identity=artifact.identity,
                     role="source",
@@ -203,7 +207,8 @@ def inventory_scope_media(
                 continue
             items.append(
                 DocsMediaInventoryItem(
-                    scope=config.scope_id,
+                    stage=config.stage,
+                    sub_scope=getattr(config, "sub_scope", ""),
                     media_type=build_type,
                     identity=artifact.identity,
                     role="build-source",
@@ -222,7 +227,8 @@ def inventory_scope_media(
         if (reference.media_type, reference.identity) not in published_identities
     )
     return DocsMediaInventory(
-        scope=config.scope_id,
+        stage=config.stage,
+        sub_scope=getattr(config, "sub_scope", ""),
         items=tuple(sorted(items, key=lambda item: (item.role, item.media_type, item.identity))),
         missing_references=missing,
     )
@@ -233,6 +239,6 @@ __all__ = [
     "DocsMediaInventoryItem",
     "DocsMediaReference",
     "document_media_references",
-    "inventory_scope_media",
+    "inventory_collection_media",
     "source_media_references",
 ]

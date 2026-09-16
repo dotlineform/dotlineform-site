@@ -158,11 +158,11 @@ export function documentPackageProfileLabel(profile) {
 }
 
 export function createDocumentPackagePrepareRequest(options = {}) {
-  const scope = packageText(options.scope).toLowerCase();
+  const stage = packageText(options.stage).toLowerCase();
   const subScope = packageText(options.subScope).toLowerCase();
   const profile = options.profile || null;
   const effectiveDocIds = normalizeIds(options.effectiveDocIds);
-  if (!scope) throw new Error("A Docs Viewer scope is required.");
+  if (!stage) throw new Error("A Docs Viewer stage is required.");
   if (!profile || !packageText(profile.profile_id)) throw new Error("A document-package profile is required.");
   if (!effectiveDocIds.length) throw new Error("No documents remain for package preparation.");
 
@@ -186,7 +186,7 @@ export function createDocumentPackagePrepareRequest(options = {}) {
   }
 
   const request = {
-    scope,
+    stage,
     profile_id: packageText(profile.profile_id),
     doc_ids: effectiveDocIds,
     select_all: false,

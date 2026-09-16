@@ -27,21 +27,20 @@ def recent_route_policies(repo_root: Path) -> list[dict[str, str]]:
             {
                 "route_id": str(route.get("route_id") or "").strip(),
                 "app_kind": str(route.get("app_kind") or "").strip(),
-                "scope": str(route.get("default_scope_id") or "").strip(),
                 "basis": basis,
             }
         )
     return policies
 
 
-def recent_basis_for_route(repo_root: Path, *, app_kind: str, scope: str = "") -> str:
+def recent_basis_for_route(repo_root: Path, *, app_kind: str) -> str:
     matches = [
         policy
         for policy in recent_route_policies(repo_root)
-        if policy["app_kind"] == app_kind and (app_kind == "manage" or policy["scope"] == scope)
+        if policy["app_kind"] == app_kind
     ]
     if not matches:
         return ""
     if len(matches) != 1:
-        raise ValueError(f"ambiguous Recent route policy for {app_kind}:{scope}")
+        raise ValueError(f"ambiguous Recent route policy for {app_kind}")
     return matches[0]["basis"]

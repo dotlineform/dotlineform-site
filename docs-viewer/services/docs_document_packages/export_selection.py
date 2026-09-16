@@ -22,7 +22,7 @@ SKIPPED_REASON_LABELS = {
 @dataclasses.dataclass(frozen=True)
 class ExportContext:
     repo_root: Path
-    scope: str
+    stage: str
     sub_scope: str
     supports_return_import: bool
     data_domain: str
@@ -37,7 +37,7 @@ class ExportContext:
 def source_record_to_export_doc(record: source_records.DocumentPackageSourceRecord) -> dict[str, Any]:
     doc = {
         "doc_id": record.doc_id,
-        "scope": record.scope,
+        "stage": record.stage,
         "title": record.title,
         "summary": record.summary,
         "added_date": record.added_date,
@@ -54,12 +54,12 @@ def source_record_to_export_doc(record: source_records.DocumentPackageSourceReco
 
 def load_source_export_context(
     repo_root: Path,
-    scope: str,
+    stage: str,
     sub_scope: str = "",
 ) -> tuple[docs_source_context.DocumentPackageSourceContext, list[dict[str, Any]]]:
     context = docs_source_context.load_document_package_source_context(
         repo_root,
-        scope,
+        stage,
         sub_scope,
     )
     return context, [source_record_to_export_doc(record) for record in context.records]

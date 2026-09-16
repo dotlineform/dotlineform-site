@@ -35,8 +35,8 @@ from docs_media_storage import (
     validate_media_filename,
 )
 from docs_mermaid_media import produce_mermaid_svg
-from docs_scope_config import (
-    DocsScopeConfig, DocsSubScopeConfig, load_docs_scope_configs,
+from docs_workspace_config import (
+    DocsStageConfig, DocsSubScopeConfig,
     load_docs_media_owner, managed_media_config, require_document_authoring,
 )
 from docs_staged_media_fragments import (
@@ -71,7 +71,7 @@ class PreparedMermaidMedia:
 
 @dataclass(frozen=True)
 class StagedMediaContract:
-    scope: str
+    stage: str
     kind: str
     source_path: Path
     label: str
@@ -81,13 +81,12 @@ class StagedMediaContract:
     source_root: str
     source_directory: str
     source_path_marker: str
-    stage: str = ""
     sub_scope: str = ""
 
 
-def media_owner(repo_root: Path, contract: StagedMediaContract) -> DocsScopeConfig | DocsSubScopeConfig:
+def media_owner(repo_root: Path, contract: StagedMediaContract) -> DocsStageConfig | DocsSubScopeConfig:
     """Resolve the collection validated for this insertion, with no parent fallback."""
-    return load_docs_media_owner(repo_root, contract.scope, stage=contract.stage or None, sub_scope=contract.sub_scope or None)
+    return load_docs_media_owner(repo_root, contract.stage, contract.sub_scope)
 
 
 def normalize_media_kind(value: Any) -> str:
@@ -178,16 +177,13 @@ def _listed_media_files(
 
 def list_staged_media_files(
     repo_root: Path,
-    scope: str,
     kind: str,
-    source_directory: str = "",
+    *,
+    stage: str,
+    sub_scope: str = "",
 ) -> dict[str, Any]:
-    normalized_scope = str(scope or "").strip().lower()
-    configs = load_docs_scope_configs(repo_root, scope_ids=(normalized_scope,))
-    if normalized_scope not in configs:
-        raise ValueError(f"unknown Docs scope: {normalized_scope}")
+    require_document_authoring(load_docs_media_owner(repo_root, stage, sub_scope))
     normalized_kind = normalize_media_kind(kind)
-    del source_directory
 
     status = workspace_status(repo_root, required_paths=("import_staging",))
     if not status["available"]:
@@ -251,8 +247,9 @@ def _prepared_media_source(
 
 def _staged_media_request_contract(repo_root: Path, body: dict[str, Any]) -> StagedMediaContract:
     kind = normalize_media_kind(body.get("media_kind"))
-    scope = str(body.get("scope") or "").strip().lower()
-    config = load_docs_media_owner(repo_root, scope, stage=body.get("stage") or None, sub_scope=body.get("sub_scope") or None)
+    if "scope" in body:
+        raise ValueError("scope is retired; supply stage and optional sub_scope")
+    config = load_docs_media_owner(repo_root, body.get("stage"), body.get("sub_scope", ""))
     require_document_authoring(config)
     workspace = configured_workspace_paths(repo_root)
     source_path = _resolve_staged_media(workspace.import_staging, body.get("staged_filename"), kind)
@@ -275,7 +272,6 @@ def _staged_media_request_contract(repo_root: Path, body: dict[str, Any]) -> Sta
     if media_class == "mermaid":
         media_filename = Path(media_filename).with_suffix(".mmd").name
     return StagedMediaContract(
-        scope=scope,
         stage=config.stage,
         sub_scope=getattr(config, "sub_scope", ""),
         kind=kind,
@@ -287,18 +283,6 @@ def _staged_media_request_contract(repo_root: Path, body: dict[str, Any]) -> Sta
         source_root=source_root,
         source_directory=source_directory,
         source_path_marker=source_path_marker,
-    )
-
-
-def _staged_media_contract(repo_root: Path, body: dict[str, Any]) -> tuple[str, str, Path, str, str, str]:
-    contract = _staged_media_request_contract(repo_root, body)
-    return (
-        contract.scope,
-        contract.kind,
-        contract.source_path,
-        contract.label,
-        contract.media_class,
-        contract.media_filename,
     )
 
 
@@ -332,17 +316,17 @@ def _artifact_status(adapter: ArtifactLocationAdapter, identity: str, data: byte
 
 def _prepared_mermaid_media(
     repo_root: Path,
-    config: DocsScopeConfig | DocsSubScopeConfig,
+    config: DocsStageConfig | DocsSubScopeConfig,
     source_path: Path,
     source_filename: str,
 ) -> PreparedMermaidMedia:
-    scope = config.scope_id
+    stage = config.stage
     build = config.media.build_sources.get("mermaid")
     if build is None or build.producer != "mermaid" or build.publishes_to != "svg":
-        raise ValueError(f"scope {scope!r} does not configure Mermaid source media")
+        raise ValueError(f"stage {stage!r} does not configure Mermaid source media")
     generated_media = config.media.types.get("svg")
     if generated_media is None or "mermaid" not in generated_media.build_inputs:
-        raise ValueError(f"scope {scope!r} does not register Mermaid as an SVG build input")
+        raise ValueError(f"stage {stage!r} does not register Mermaid as an SVG build input")
 
     source_identity = source_filename
     published_identity = Path(source_filename).with_suffix(".svg").as_posix()
@@ -411,7 +395,7 @@ def _mermaid_preview_payload(
     body: dict[str, Any],
 ) -> dict[str, Any]:
     plan = build_media_plan(
-        contract.scope,
+        contract.stage,
         "svg",
         Path(prepared.published_identity),
         contract.label,
@@ -420,7 +404,8 @@ def _mermaid_preview_payload(
     )
     return {
         "ok": True,
-        "scope": contract.scope,
+        "stage": contract.stage,
+        "sub_scope": contract.sub_scope,
         "media_kind": contract.kind,
         "media_format": "mermaid",
         "staged_filename": contract.source_path.name,
@@ -480,7 +465,7 @@ def preview_staged_media(repo_root: Path, body: dict[str, Any]) -> dict[str, Any
         )
         result = publish_docs_media_files(repo_root, [item], write=False, force=True)[0]
         plan = build_media_plan(
-            contract.scope,
+            contract.stage,
             contract.media_class,
             Path(contract.media_filename),
             contract.label,
@@ -490,7 +475,8 @@ def preview_staged_media(repo_root: Path, body: dict[str, Any]) -> dict[str, Any
         collision = "unchanged" if result.status == "unchanged" else "replace" if result.status == "would_overwrite" else "new"
         return {
             "ok": True,
-            "scope": contract.scope,
+            "stage": contract.stage,
+            "sub_scope": contract.sub_scope,
             "media_kind": contract.kind,
             "staged_filename": contract.source_path.name,
             "source_kind": contract.source_kind,
@@ -571,7 +557,8 @@ def apply_staged_media(repo_root: Path, body: dict[str, Any], *, write: bool = T
                 "size": len(prepared.source_bytes),
             },
             "publish": {
-                "scope": contract.scope,
+                "stage": contract.stage,
+                "sub_scope": contract.sub_scope,
                 "media_class": "svg",
                 "filename": prepared.published_identity,
                 "size": len(prepared.published_bytes),

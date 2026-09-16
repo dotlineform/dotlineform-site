@@ -102,21 +102,12 @@ export function createDocsViewerManagementViewDefinitions() {
         renderer: "manage-toolbar-pre-publish"
       },
       {
-        id: "manage-scope",
-        label: "Docs scope",
-        ownerType: "app",
-        surfaceId: "app-management",
-        appKinds: ["manage"],
-        features: ["scope-selection"],
-        renderer: "manage-scope-select"
-      },
-      {
         id: "manage-stage",
-        label: "Analysis stage",
+        label: "Docs stage",
         ownerType: "app",
         surfaceId: "app-management",
         appKinds: ["manage"],
-        features: ["scope-selection"],
+        features: ["workspace-configuration"],
         renderer: "manage-stage-select"
       },
       {

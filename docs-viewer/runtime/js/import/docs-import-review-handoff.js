@@ -36,9 +36,9 @@ function closeReviewWindow(reviewWindow) {
 }
 
 export async function openDocsImportCandidateInReview(options = {}) {
-  const scope = packageText(options.scope).toLowerCase();
+  const stage = packageText(options.stage).toLowerCase();
   const stagedFilename = packageText(options.stagedFilename);
-  if (!scope || !stagedFilename) {
+  if (!stage || !stagedFilename) {
     throw new Error("An exact returned-package identity is required for Docs Review.");
   }
   const review = typeof options.review === "function"
@@ -54,7 +54,7 @@ export async function openDocsImportCandidateInReview(options = {}) {
   try {
     reviewWindow.opener = null;
     const payload = await review({
-      scope,
+      stage,
       staged_filename: stagedFilename,
       dry_run: false
     });

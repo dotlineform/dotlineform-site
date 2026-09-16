@@ -58,22 +58,20 @@ export function createDocsViewerReportService(options) {
 
   return {
     baseUrl: serviceOptions.baseUrl,
-    readScopeLinks: function (request) {
-      return fetchReportJson("/docs/scope-links?" + new URLSearchParams({
-        scope: request.scope,
+    readWorkspaceLinks: function (request) {
+      return fetchReportJson("/docs/workspace-links?" + new URLSearchParams({
         stage: request.stage
       }).toString(), serviceOptions);
     },
     readUnpublishable: function (request) {
       return fetchReportJson("/docs/unpublishable-report?" + new URLSearchParams({
-        scope: request.scope,
         stage: request.stage
       }).toString(), Object.assign({}, serviceOptions, { requireOkEnvelope: true }));
     },
     openPublicationIgnore: function (request) {
       return fetchReportJson("/docs/open-publication-ignore", Object.assign({}, serviceOptions, {
         method: "POST",
-        payload: { scope: request.scope, stage: request.stage },
+        payload: { stage: request.stage },
         requireOkEnvelope: true
       }));
     },
@@ -97,13 +95,11 @@ export function createDocsViewerReportService(options) {
       }));
     },
     readSemanticTokens: function (request) {
-      var scope = cleanString(request && request.scope).toLowerCase();
       var path = serviceOptions.snapshotRole === "published"
         ? "/docs/published/semantic-tokens"
         : "/docs/semantic-tokens";
       return fetchReportJson(
         path + "?" + new URLSearchParams({
-          scope: scope,
           ...(request && request.stage ? { stage: cleanString(request.stage) } : {})
         }).toString(),
         serviceOptions
@@ -111,7 +107,6 @@ export function createDocsViewerReportService(options) {
     },
     runBrokenLinksAudit: function (request) {
       var payload = {
-        scope: cleanString(request && request.scope).toLowerCase(),
         ...(request && request.stage ? { stage: cleanString(request.stage) } : {}),
         report_context: request && request.report_context
       };
@@ -132,8 +127,7 @@ export function createDocsViewerReportService(options) {
       return fetchReportJson("/docs/media-report", Object.assign({}, serviceOptions, {
         method: "POST",
         payload: {
-          scope: cleanString(request && request.scope).toLowerCase(),
-          ...(request && request.stage ? { stage: cleanString(request.stage) } : {})
+            ...(request && request.stage ? { stage: cleanString(request.stage) } : {})
         },
         requireOkEnvelope: true
       }));
@@ -156,6 +150,13 @@ export function createDocsViewerReportService(options) {
       return fetchReportJson("/docs/open-local-target", Object.assign({}, serviceOptions, {
         method: "POST",
         payload: { target: cleanString(target) },
+        requireOkEnvelope: true
+      }));
+    },
+    openDocsMediaSource: function (target) {
+      return fetchReportJson("/docs/open-media-source", Object.assign({}, serviceOptions, {
+        method: "POST",
+        payload: target,
         requireOkEnvelope: true
       }));
     },

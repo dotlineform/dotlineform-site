@@ -55,14 +55,10 @@
     "move": "/docs/move",
     "delete_preview": "/docs/delete-preview",
     "delete_apply": "/docs/delete-apply",
-    "scope_create_preview": "/docs/scopes/create-preview",
-    "scope_create_apply": "/docs/scopes/create-apply",
-    "scope_delete_preview": "/docs/scopes/delete-preview",
-    "scope_delete_apply": "/docs/scopes/delete-apply",
-    "sub_scope_create_preview": "/docs/scopes/sub-scopes/create-preview",
-    "sub_scope_create_apply": "/docs/scopes/sub-scopes/create-apply",
-    "sub_scope_delete_preview": "/docs/scopes/sub-scopes/delete-preview",
-    "sub_scope_delete_apply": "/docs/scopes/sub-scopes/delete-apply"
+    "sub_scope_create_preview": "/docs/sub-scopes/create-preview",
+    "sub_scope_create_apply": "/docs/sub-scopes/create-apply",
+    "sub_scope_delete_preview": "/docs/sub-scopes/delete-preview",
+    "sub_scope_delete_apply": "/docs/sub-scopes/delete-apply"
   },
   "local_state": {
     "backups": "var/docs/backups",

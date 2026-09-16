@@ -51,14 +51,10 @@ export function committedDocumentCreateTarget(payload) {
   var response = payload && typeof payload === "object" ? payload : {};
   var target = normalizeManagedDocumentTarget(response.target);
   var docId = String(response.doc_id || "").trim();
-  var scope = String(response.scope || "").trim().toLowerCase();
   var subScope = String(response.sub_scope || "").trim().toLowerCase();
   var recordDocId = String(response.record && response.record.doc_id || "").trim();
   if (docId !== target.doc_id) {
     throw new Error("Create service target does not match its committed document.");
-  }
-  if (scope !== target.scope) {
-    throw new Error("Create service target does not match its committed scope.");
   }
   if (String(response.stage || "") !== String(target.stage || "")) {
     throw new Error("Create service target does not match its committed stage.");
@@ -72,10 +68,10 @@ export function committedDocumentCreateTarget(payload) {
   return target;
 }
 
-/** Validate a placement result while retaining the requested scope, stage and document identity. */
+/** Validate a placement result while retaining the requested stage and document identity. */
 export function committedDocumentPlacement(response, source) {
   var target = normalizeManagedDocumentTarget(response && response.target);
-  if (target.scope !== source.scope || target.doc_id !== source.doc_id || target.stage !== source.stage) {
+  if (target.doc_id !== source.doc_id || target.stage !== source.stage) {
     throw new Error("Placement service returned a different document identity.");
   }
   var placement = response && response.placement;
@@ -87,7 +83,7 @@ export function committedDocumentPlacement(response, source) {
   if (collectionChanged) {
     var url = new URL(placement.viewer_url, "https://docs.invalid");
     if (url.origin !== "https://docs.invalid" || url.pathname !== "/docs/"
-      || url.searchParams.get("scope") !== target.scope || url.searchParams.get("stage") !== target.stage
+      || url.searchParams.has("scope") || url.searchParams.get("stage") !== target.stage
       || (target.sub_scope ? url.searchParams.get("subdoc") !== target.doc_id || !url.searchParams.get("doc")
         : url.searchParams.get("doc") !== target.doc_id || url.searchParams.has("subdoc"))) {
       throw new Error("Placement service returned an invalid destination URL.");
@@ -121,23 +117,20 @@ export function normalizeManagedSubscopeCollection(value) {
   if (!value || typeof value !== "object" || Array.isArray(value)) {
     throw new Error("Managed sub-scope collection must be an object.");
   }
-  var keys = Object.keys(value).filter(function (key) { return key !== "stage"; }).sort();
+  var keys = Object.keys(value).sort();
   if (
     keys.length !== 2
-    || keys[0] !== "scope"
+    || keys[0] !== "stage"
     || keys[1] !== "sub_scope"
   ) {
-    throw new Error("Managed sub-scope collection must contain exactly scope and sub_scope.");
+    throw new Error("Managed sub-scope collection must contain exactly stage and sub_scope.");
   }
-  var scope = String(value.scope || "").trim().toLowerCase();
   var subScope = String(value.sub_scope || "").trim().toLowerCase();
-  if (!scope) throw new Error("Managed sub-scope collection scope is required.");
   if (!subScope) throw new Error("Managed sub-scope collection sub_scope is required.");
-  if (value.stage !== undefined && !["working", "pre-publish"].includes(value.stage)) {
+  if (!["working", "pre-publish"].includes(value.stage)) {
     throw new Error("Managed sub-scope collection stage is invalid.");
   }
   return Object.freeze({
-    scope: scope,
     ...(value.stage ? { stage: value.stage } : {}),
     sub_scope: subScope
   });
@@ -327,9 +320,6 @@ export function createDocsViewerManagementActionController(options) {
     return callbacks.currentContextMenuDoc ? callbacks.currentContextMenuDoc() : null;
   }
 
-  function viewerScope() {
-    return callbacks.viewerScope ? callbacks.viewerScope() : "";
-  }
 
   function actionTargetDoc(actionId, targetDocId) {
     var resolution = arguments.length > 1
@@ -532,12 +522,6 @@ export function createDocsViewerManagementActionController(options) {
   async function handleCreateSubscopeDocument(collection, optionsForCreate) {
     var targetCollection = normalizeManagedSubscopeCollection(collection);
     var createSettings = optionsForCreate || {};
-    var currentScope = String(
-      callbacks.viewerScope ? callbacks.viewerScope() : ""
-    ).trim().toLowerCase();
-    if (currentScope !== targetCollection.scope) {
-      throw new Error("Mounted sub-scope collection does not match the active scope.");
-    }
     if (String(managementClientOptions().stage || "") !== String(targetCollection.stage || "")) {
       throw new Error("Mounted sub-scope collection does not match the active stage.");
     }
@@ -563,9 +547,7 @@ export function createDocsViewerManagementActionController(options) {
         sub_scope: targetCollection.sub_scope
       },
       {
-        clientOptions: Object.assign({}, managementClientOptions(), {
-          scope: targetCollection.scope
-        }),
+        clientOptions: managementClientOptions(),
         refreshAndSelect: createSettings.refreshAndSelect
       }
     );
@@ -623,7 +605,6 @@ export function createDocsViewerManagementActionController(options) {
   function handlePublishDocs() {
     return runManagedDocsPublishWorkflow({
       root: root,
-      scope: viewerScope(),
       capabilities: management.managementCapabilities,
       clientOptions: managementClientOptions(),
       onPhase: function (phase) {
@@ -846,7 +827,6 @@ export function createDocsViewerManagementActionController(options) {
     if (nextParentId && !documentIndex.docsById.has(nextParentId)) return;
     var clientOptions = managementClientOptions();
     var target = normalizeManagedDocumentTarget({
-      scope: clientOptions.scope,
       ...(clientOptions.stage ? { stage: clientOptions.stage } : {}),
       doc_id: movingDocId
     });

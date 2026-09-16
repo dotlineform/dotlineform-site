@@ -10,45 +10,7 @@ function clearNode(node) {
   while (node.firstChild) node.removeChild(node.firstChild);
 }
 
-function configuredScopes(context) {
-  const scopes = Array.isArray(context && context.scopeConfigs) ? context.scopeConfigs : [];
-  return scopes.map((scope) => ({
-    scopeId: cleanString(scope && scope.scopeId).toLowerCase(),
-    title: cleanString(scope && scope.title) || cleanString(scope && scope.scopeId),
-    viewerBaseUrl: cleanString(scope && scope.viewerBaseUrl)
-  })).filter((scope) => scope.scopeId);
-}
-
 /** Partition audit sources by the owning report, independently of destination URLs. */
-export function brokenLinksReportSelection(context, requestedScope) {
-  const ownerScope = cleanString(context.viewerScope).toLowerCase();
-  const stage = cleanString(context.viewerStage);
-  if (ownerScope === "analysis" && stage !== "working") {
-    throw new Error("Broken Links is available in Analysis Working.");
-  }
-  const scopes = configuredScopes(context).filter((scope) => ownerScope === "analysis"
-    ? scope.scopeId === "analysis"
-    : scope.scopeId !== "analysis");
-  const candidates = [requestedScope, context.reportMeta && context.reportMeta.scope, ownerScope];
-  const selectedScope = candidates.map((value) => cleanString(value).toLowerCase())
-    .find((value) => scopes.some((scope) => scope.scopeId === value)) || (scopes[0] && scopes[0].scopeId) || "";
-  return {
-    scopes,
-    selectedScope,
-    reportContext: { scope: ownerScope, ...(stage ? { stage } : {}) }
-  };
-}
-
-function persistSelectedScope(scopeId) {
-  const url = new URL(window.location.href);
-  if (scopeId) {
-    url.searchParams.set("report_scope", scopeId);
-  } else {
-    url.searchParams.delete("report_scope");
-  }
-  window.history.replaceState({}, "", url.pathname + url.search + url.hash);
-}
-
 function reportService(context) {
   return context && context.reportService && typeof context.reportService.runBrokenLinksAudit === "function"
     ? context.reportService
@@ -61,42 +23,15 @@ function postBrokenLinks(state) {
     return Promise.reject(new Error("Local docs-management server is not configured."));
   }
   return service.runBrokenLinksAudit({
-    scope: state.selectedScope,
     ...(state.reportContext.stage ? { stage: state.reportContext.stage } : {}),
     report_context: state.reportContext
   });
 }
 
-function viewerBaseMatches(pathname, scopes) {
-  const normalized = cleanString(pathname).replace(/\/+$/, "") || "/";
-  return scopes.some((scope) => {
-    const base = cleanString(scope.viewerBaseUrl || "/docs/").replace(/\/+$/, "") || "/";
-    return normalized === base;
-  });
-}
-
-function manageModeHref(href, scopes) {
-  const raw = cleanString(href);
-  if (!raw || raw === "#") return raw || "#";
-  try {
-    const url = new URL(raw, window.location.href);
-    if (viewerBaseMatches(url.pathname, scopes)) {
-      url.searchParams.delete("mode");
-      if (url.origin === window.location.origin) {
-        return url.pathname + url.search + url.hash;
-      }
-      return url.toString();
-    }
-  } catch (_error) {
-    return raw;
-  }
-  return raw;
-}
-
-function appendLinkCell(row, state, className, label, href) {
+function appendLinkCell(row, _state, className, label, href) {
   const link = document.createElement("a");
   link.className = className;
-  link.href = manageModeHref(href, state.scopes);
+  link.href = cleanString(href) || "#";
   link.target = "_blank";
   link.rel = "noopener noreferrer";
   link.textContent = cleanString(label) || cleanString(href) || "link";
@@ -159,17 +94,6 @@ function sortButton(state, key, label) {
   return button;
 }
 
-function renderScopeSelect(state) {
-  clearNode(state.scopeSelectNode);
-  state.scopes.forEach((scope) => {
-    const option = document.createElement("option");
-    option.value = scope.scopeId;
-    option.textContent = scope.title || scope.scopeId;
-    state.scopeSelectNode.appendChild(option);
-  });
-  state.scopeSelectNode.value = state.selectedScope;
-}
-
 function renderHead(state) {
   clearNode(state.headNode);
   state.headNode.appendChild(sortButton(state, "fromPage", "from page"));
@@ -188,7 +112,7 @@ function renderRows(state) {
   }
   state.emptyNode.hidden = entries.length > 0 || state.unavailableSources.length > 0;
   if (!entries.length && !state.unavailableSources.length) {
-    state.emptyNode.textContent = "No broken links found in " + state.selectedScope;
+    state.emptyNode.textContent = "No broken links found in " + state.stage;
     return;
   }
   entries.forEach((entry) => {
@@ -212,20 +136,19 @@ function renderRows(state) {
 
 function setBusy(state, busy) {
   state.isBusy = Boolean(busy);
-  state.runButton.disabled = state.isBusy || !state.selectedScope;
-  state.scopeSelectNode.disabled = state.isBusy;
+  state.runButton.disabled = state.isBusy || !state.stage;
   state.runButton.textContent = state.isBusy ? "Running..." : "Run audit";
 }
 
 function runAudit(state) {
-  if (!state.selectedScope || state.isBusy) return Promise.resolve();
+  if (!state.stage || state.isBusy) return Promise.resolve();
   setBusy(state, true);
   state.statusNode.textContent = "Running broken-links audit...";
   clearNode(state.rowsNode);
   state.emptyNode.hidden = true;
   return postBrokenLinks(state)
     .then((payload) => {
-      if (payload.scope !== state.selectedScope || cleanString(payload.stage) !== cleanString(state.reportContext.stage)) {
+      if (cleanString(payload.stage) !== cleanString(state.reportContext.stage)) {
         throw new Error("Broken Links response does not match the selected source context.");
       }
       state.entries = Array.isArray(payload && payload.entries) ? payload.entries : [];
@@ -249,11 +172,6 @@ function runAudit(state) {
 }
 
 function attachEvents(state) {
-  state.scopeSelectNode.addEventListener("change", () => {
-    state.selectedScope = cleanString(state.scopeSelectNode.value).toLowerCase();
-    persistSelectedScope(state.selectedScope);
-    runAudit(state);
-  });
   state.runButton.addEventListener("click", () => {
     runAudit(state);
   });
@@ -280,14 +198,6 @@ function renderShell(root) {
   const toolbar = document.createElement("div");
   toolbar.className = "docsViewerReport__toolbar";
 
-  const label = document.createElement("label");
-  label.className = "docsViewerReport__selectLabel";
-  label.textContent = "";
-
-  const select = document.createElement("select");
-  select.className = "docsViewerReport__select";
-  label.appendChild(select);
-
   const runButton = document.createElement("button");
   runButton.id = "docsBrokenLinksReportRun";
   runButton.type = "button";
@@ -296,7 +206,6 @@ function renderShell(root) {
 
   const status = document.createElement("p");
   status.className = "docsViewerReport__status";
-  toolbar.appendChild(label);
   toolbar.appendChild(runButton);
   toolbar.appendChild(status);
 
@@ -322,7 +231,6 @@ function renderShell(root) {
   root.appendChild(empty);
 
   return {
-    scopeSelectNode: select,
     runButton,
     statusNode: status,
     headNode: head,
@@ -332,14 +240,13 @@ function renderShell(root) {
 }
 
 export function mountDocsBrokenLinksReport(context) {
-  const selection = brokenLinksReportSelection(context, new URLSearchParams(window.location.search).get("report_scope"));
-  const { scopes, selectedScope, reportContext } = selection;
-  persistSelectedScope(selectedScope);
+  const stage = cleanString(context.viewerStage);
+  if (stage !== "working") throw new Error("Broken Links is available in Working.");
+  const reportContext = { stage };
   const nodes = renderShell(context.reportRoot);
   const state = Object.assign({
     context,
-    scopes,
-    selectedScope,
+    stage,
     reportContext,
     entries: [],
     unavailableSources: [],
@@ -348,14 +255,7 @@ export function mountDocsBrokenLinksReport(context) {
     collator: new Intl.Collator(undefined, { numeric: true, sensitivity: "base" })
   }, nodes);
 
-  renderScopeSelect(state);
-  state.scopeSelectNode.parentNode.hidden = scopes.length === 1;
   renderHead(state);
   attachEvents(state);
-  if (!selectedScope) {
-    state.statusNode.textContent = "No docs scopes are configured.";
-    setBusy(state, false);
-    return Promise.resolve();
-  }
   return runAudit(state);
 }

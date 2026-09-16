@@ -10,20 +10,20 @@ function validLocation(record) {
   if (url.origin !== "https://docs.invalid" || url.hash) return false;
   var params = url.searchParams;
   if (Array.from(params.keys()).some(function (key) {
-    return !["scope", "doc", "subdoc"].includes(key) || params.getAll(key).length !== 1;
+    return !["doc", "subdoc"].includes(key) || params.getAll(key).length !== 1;
   })) return false;
-  if (params.has("scope") && params.get("scope") !== target.scope) return false;
+  if (url.pathname !== "/docs/") return false;
   return target.sub_scope
     ? DOC_ID.test(params.get("doc") || "") && params.get("subdoc") === target.doc_id
     : params.get("doc") === target.doc_id && !params.has("subdoc");
 }
 
-/** Accept only the mounted editor's scope/stage response and complete exact targets. */
+/** Accept only the mounted editor's stage response and complete exact targets. */
 export function normalizeDocumentLinkTargets(payload, context) {
-  if (!payload || payload.schema_version !== "docs_document_link_targets_v1"
-    || payload.scope !== context.scope || payload.stage !== (context.stage || "")
+  if (!payload || payload.schema_version !== "docs_document_link_targets_v2"
+    || payload.stage !== (context.stage || "")
     || !Array.isArray(payload.sub_scopes) || !Array.isArray(payload.documents)) {
-    throw new Error("Document targets do not match the current authoring scope and stage.");
+    throw new Error("Document targets do not match the current authoring stage.");
   }
   var subScopes = payload.sub_scopes;
   if (new Set(subScopes).size !== subScopes.length || subScopes.some(function (name) {
@@ -32,8 +32,8 @@ export function normalizeDocumentLinkTargets(payload, context) {
   var seen = new Set();
   var documents = payload.documents.map(function (record) {
     var target = record && record.target;
-    if (!target || Object.keys(target).sort().join(",") !== "doc_id,scope,sub_scope"
-      || target.scope !== context.scope || !DOC_ID.test(target.doc_id)
+    if (!target || Object.keys(target).sort().join(",") !== "doc_id,stage,sub_scope"
+      || target.stage !== context.stage || !DOC_ID.test(target.doc_id)
       || (target.sub_scope !== "" && !subScopes.includes(target.sub_scope))
       || typeof record.title !== "string" || !record.title.trim() || !validLocation(record)) {
       throw new Error("A document target or location is invalid.");
@@ -46,7 +46,7 @@ export function normalizeDocumentLinkTargets(payload, context) {
   return { subScopes: subScopes.slice(), documents: documents };
 }
 
-/** Keep All (null), scope-level (empty string), and exact child filters distinct. */
+/** Keep All (null), ordinary (empty string), and exact child filters distinct. */
 export function filterDocumentLinkTargets(documents, query, subScope = null) {
   var search = String(query || "").trim().toLowerCase();
   return documents.filter(function (record) {

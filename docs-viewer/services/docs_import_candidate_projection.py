@@ -163,7 +163,7 @@ def _source_record(
 
 
 def _collection_label(collection: ManagedDocumentCollection) -> str:
-    scope_label = source_model.humanize(collection.scope)
+    scope_label = source_model.humanize(collection.stage)
     if not collection.sub_scope:
         return scope_label
     sub_scope_label = (
@@ -241,17 +241,26 @@ def _returned_package_candidate(
     ):
         return None
 
-    scope = _clean_text(record.get("scope")).lower()
+    if record.get("provenance_error"):
+        return _blocked_candidate(
+            record,
+            candidate_kind=RETURNED_PACKAGE_CANDIDATE_KIND,
+            source_format=COLLECTION_SOURCE_FORMAT,
+            code="invalid_package_provenance",
+            message=str(record["provenance_error"]),
+            target_mode=MANIFEST_COLLECTION_TARGET_MODE,
+        )
+
+    stage = _clean_text(record.get("stage")).lower()
     sub_scope = _clean_text(record.get("sub_scope")).lower()
     declared_target = {
-        "scope": scope,
+        "stage": stage,
         **({"sub_scope": sub_scope} if sub_scope else {}),
     }
     try:
         collection = resolve_managed_document_collection(
             repo_root,
-            scope=scope,
-            stage="working",
+            stage=stage,
             sub_scope=sub_scope or None,
         )
     except (FileNotFoundError, OSError, ValueError):
@@ -282,7 +291,7 @@ def _returned_package_candidate(
     review_payload = (
         parse_staged_import(
             repo_root=repo_root,
-            scope=collection.scope,
+            stage=collection.stage,
             sub_scope=collection.sub_scope or None,
             staged_file=path.name,
             staging_root=path.parent,
@@ -295,7 +304,7 @@ def _returned_package_candidate(
     import_payload = (
         parse_staged_import(
             repo_root=repo_root,
-            scope=collection.scope,
+            stage=collection.stage,
             sub_scope=collection.sub_scope or None,
             staged_file=path.name,
             staging_root=path.parent,
@@ -472,8 +481,7 @@ def list_import_candidates(
                         )
                     collection = resolve_managed_document_collection(
                         repo_root,
-                        scope=edited.source_scope,
-                        stage="working",
+                        stage=edited.source_stage,
                         sub_scope=edited.source_sub_scope or None,
                     )
                 except (FileNotFoundError, OSError, RuntimeError, ValueError) as exc:

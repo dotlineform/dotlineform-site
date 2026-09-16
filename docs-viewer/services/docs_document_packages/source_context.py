@@ -15,13 +15,13 @@ if str(DOCS_BUILD_DIR) not in sys.path:
 from build_docs import DocsDataBuilder, DocRecord  # noqa: E402
 from docs_builder.sub_scope import SubScopeDocsBuilder  # noqa: E402
 from docs_management_document_target import resolve_managed_document_collection  # noqa: E402
-from docs_scope_config import (  # noqa: E402
-    DocsScopeConfig,
+from docs_workspace_config import (  # noqa: E402
+    DocsStageConfig,
     document_source_path,
-    load_docs_scope_configs,
-    resolve_scope_path,
-    select_scope_stage,
+    load_docs_stage,
+    resolve_workspace_path,
 )
+from docs_document_packages.provenance import require_package_stage  # noqa: E402
 from docs_document_packages.rendered_content import doc_content_text  # noqa: E402
 from docs_document_packages.source_records import (  # noqa: E402
     DocumentPackageSourceRecord,
@@ -32,10 +32,10 @@ from docs_document_packages.source_records import (  # noqa: E402
 @dataclass
 class DocumentPackageSourceContext:
     repo_root: Path
-    scope: str
+    stage: str
     sub_scope: str
     return_import_enabled: bool
-    scope_config: DocsScopeConfig
+    stage_config: DocsStageConfig
     source_root: Path
     builder: DocsDataBuilder | SubScopeDocsBuilder
     source_docs: list[DocRecord]
@@ -51,34 +51,31 @@ def source_file_path(context: DocumentPackageSourceContext, doc: DocRecord) -> P
     try:
         path.relative_to(context.source_root.resolve())
     except ValueError as exc:
-        raise RuntimeError(f"docs source path escapes scope source root: {path}") from exc
+        raise RuntimeError(f"docs source path escapes stage source root: {path}") from exc
     return path
 
 
-def package_source_scope_config(repo_root: Path, scope: str) -> DocsScopeConfig:
-    """Packages are authoring-source operations owned by the scope's Working stage."""
-    configs = load_docs_scope_configs(repo_root, scope_ids=[scope])
-    config = configs[scope]
-    return select_scope_stage(config, "working")
+def package_source_stage_config(repo_root: Path, stage: str) -> DocsStageConfig:
+    """Resolve the explicitly selected authoring stage for a package."""
+    return load_docs_stage(repo_root, require_package_stage(stage))
 
 
 def load_document_package_source_context(
     repo_root: Path,
-    scope: str,
+    stage: str,
     sub_scope: str = "",
 ) -> DocumentPackageSourceContext:
     root = repo_root.resolve()
-    normalized_scope = str(scope or "").strip().lower()
-    config = package_source_scope_config(root, normalized_scope)
+    normalized_stage = str(stage or "").strip().lower()
+    config = package_source_stage_config(root, normalized_stage)
     normalized_sub_scope = str(sub_scope or "").strip().lower()
     if normalized_sub_scope:
         collection = resolve_managed_document_collection(
             root,
-            scope=scope,
+            stage=stage,
             sub_scope=normalized_sub_scope,
-            stage=config.stage or None,
         )
-        normalized_scope = collection.scope
+        normalized_stage = collection.stage
         config = collection.parent_config
         source_root = collection.source_root
         return_import_enabled = collection.document_config.supports_return_import
@@ -88,10 +85,10 @@ def load_document_package_source_context(
             sub_scope=collection.document_config,
         )
     else:
-        source_root = resolve_scope_path(root, document_source_path(config))
+        source_root = resolve_workspace_path(root, document_source_path(config))
         if not source_root.exists() or not source_root.is_dir():
             raise RuntimeError(
-                f"missing source root for scope {normalized_scope}: "
+                f"missing source root for stage {normalized_stage}: "
                 f"{document_source_path(config).as_posix()}"
             )
         return_import_enabled = True
@@ -103,10 +100,10 @@ def load_document_package_source_context(
     records: list[DocumentPackageSourceRecord] = []
     context = DocumentPackageSourceContext(
         repo_root=root,
-        scope=normalized_scope,
+        stage=normalized_stage,
         sub_scope=normalized_sub_scope,
         return_import_enabled=return_import_enabled,
-        scope_config=config,
+        stage_config=config,
         source_root=source_root,
         builder=builder,
         source_docs=source_docs,
@@ -124,7 +121,7 @@ def load_document_package_source_context(
             source_record_from_doc(
                 repo_root=root,
                 source_root=source_root,
-                scope=normalized_scope,
+                stage=normalized_stage,
                 doc=doc,
                 parent_title=parent.title if parent else "",
                 content_text_length=len(content_text),
@@ -142,7 +139,7 @@ def load_document_package_source_context(
 
 def load_document_package_source_records(
     repo_root: Path,
-    scope: str,
+    stage: str,
     sub_scope: str = "",
 ) -> list[DocumentPackageSourceRecord]:
-    return load_document_package_source_context(repo_root, scope, sub_scope).records
+    return load_document_package_source_context(repo_root, stage, sub_scope).records

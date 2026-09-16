@@ -16,8 +16,6 @@ from .common import (
     MEDIA_TOKEN_PATTERN,
     html_attr,
     local_artifact_path,
-    load_docs_scope_configs,
-    normalize_viewer_base_url,
     normalize_artifact_identity,
     managed_media_config,
 )
@@ -102,11 +100,13 @@ class ContentRenderingMixin:
         path_part = parsed.path or ""
         if not path_part:
             return href
-        # Pre-publish projects Analysis links into its prepared snapshot while
+        # Pre-publish projects Working links into its prepared snapshot while
         # preserving the exact document, child selection, and fragment.
         values = parse_qs(parsed.query)
+        if "scope" in values and path_part in {"/docs/", self.workspace.public_viewer_base_url}:
+            raise RuntimeError("scope-bearing Docs links are retired; update the source link before building")
         if (self.config.stage == "pre-publish" and path_part == "/docs/"
-                and values.get("scope") == [self.scope_id] and values.get("stage") == ["working"]):
+                and values.get("stage") == ["working"]):
             pairs = [(key, "pre-publish" if key == "stage" else value) for key, value in parse_qsl(parsed.query)]
             return html.escape(parsed._replace(query=urlencode(pairs)).geturl(), quote=True)
         # Other authored stage targets retain their exact route and child selection.
@@ -128,20 +128,7 @@ class ContentRenderingMixin:
         return href
 
     def viewer_path_match(self, path_part: str, query_values: dict[str, list[str]]) -> bool:
-        explicit_scope = (query_values.get("scope") or [""])[0]
-        if explicit_scope and explicit_scope != self.scope_id:
-            return False
-        if normalize_viewer_base_url(path_part) == self.viewer_base_url:
-            return True
-        return self.viewer_scope_for_path().get(normalize_viewer_base_url(path_part), "") == self.scope_id
-
-    def viewer_scope_for_path(self) -> dict[str, str]:
-        if self._viewer_scope_for_path is None:
-            configs = load_docs_scope_configs(self.repo_root)
-            self._viewer_scope_for_path = {
-                normalize_viewer_base_url(config.viewer_base_url): scope_id for scope_id, config in configs.items()
-            }
-        return self._viewer_scope_for_path
+        return "scope" not in query_values and path_part in {self.viewer_base_url, self.workspace.public_viewer_base_url}
 
     def resolve_content_tokens(
         self,
@@ -220,14 +207,9 @@ class ContentRenderingMixin:
             if clean_path.startswith(f"{reference_prefix}/"):
                 identity = clean_path.removeprefix(f"{reference_prefix}/")
                 return f"{media.served_path_prefix}/{identity}"
-        if self.config.stage and clean_path.startswith("docs/"):
+        if clean_path.startswith("docs/"):
             raise RuntimeError(
-                f"Docs media reference has no configured role in scope {self.scope_id} "
-                f"stage {self.config.stage}: {clean_path}"
-            )
-        if clean_path.startswith(f"docs/{self.scope_id}/"):
-            raise RuntimeError(
-                f"Docs media reference has no configured published role in scope {self.scope_id}: {clean_path}"
+                f"Docs media reference has no configured role in {self.config.stage}: {clean_path}"
             )
         media = self.site_config.get("media")
         media_base = str(media.get("base") if isinstance(media, dict) else "").strip()
@@ -251,11 +233,11 @@ class ContentRenderingMixin:
         expected_prefix = media.reference_prefix.as_posix().strip("/")
         if media_path != expected_prefix and not media_path.startswith(f"{expected_prefix}/"):
             raise RuntimeError(
-                f"HTML media token must use the configured same-scope prefix {expected_prefix}/"
+                f"HTML media token must use the configured collection prefix {expected_prefix}/"
             )
         asset_path = local_artifact_path(self.repo_root, media.source_location, identity)
         if asset_path is not None and not asset_path.is_file():
-            raise RuntimeError(f"HTML media not found for scope {self.scope_id}: {media_path}")
+            raise RuntimeError(f"HTML media not found for {self.config.stage}: {media_path}")
         public_path = self.resolve_media_url(media_path)
         filename = Path(identity).name
         title = f"Interactive HTML: {filename}"
@@ -272,12 +254,12 @@ class ContentRenderingMixin:
             normalized_path = normalize_artifact_identity(media_path)
         except ValueError as exc:
             raise RuntimeError(f"Invalid HTML media token path {media_path!r}") from exc
-        path_parts = Path(normalized_path).parts
-        if len(path_parts) < 4 or path_parts[0] != "docs" or path_parts[2] != "html":
+        prefix = managed_media_config(self.media_owner, "html").reference_prefix.as_posix() + "/"
+        if not normalized_path.startswith(prefix):
             raise RuntimeError(
-                f"Invalid HTML media token {media_path!r}; use docs/<scope>/html/<filename>.html"
+                f"Invalid HTML media token {media_path!r}; use {prefix}<filename>.html"
             )
-        identity = Path(*path_parts[3:]).as_posix()
+        identity = normalize_artifact_identity(normalized_path.removeprefix(prefix))
         if Path(identity).suffix.lower() != ".html":
             raise RuntimeError(f"Invalid HTML media token {media_path!r}; published HTML media must end in .html")
         token: dict[str, Any] = {"media_path": normalized_path, "identity": identity}

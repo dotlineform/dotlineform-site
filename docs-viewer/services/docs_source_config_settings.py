@@ -8,15 +8,15 @@ import json
 from pathlib import Path
 from typing import Any
 
-from docs_scope_config import CONFIG_REL_PATH, document_source_path, load_docs_scope_configs, resolve_scope_path, select_scope_stage, require_document_authoring
+from docs_workspace_config import CONFIG_REL_PATH, document_source_path, load_docs_workspace_config, load_docs_stage, resolve_workspace_path, select_workspace_stage, require_document_authoring
 import docs_source_model as source_model
 
 
-SCHEMA_VERSION = "docs_source_config_settings_v1"
+SCHEMA_VERSION = "docs_source_config_settings_v2"
 
 
 @dataclass(frozen=True)
-class EditableScopeField:
+class EditableStageField:
     field: str
     value_type: str
     source_path: str
@@ -25,29 +25,26 @@ class EditableScopeField:
     description: str
 
 
-EDITABLE_SCOPE_FIELDS: dict[str, EditableScopeField] = {
-    "default_doc_id": EditableScopeField(
+EDITABLE_STAGE_FIELDS: dict[str, EditableStageField] = {
+    "default_doc_id": EditableStageField(
         field="default_doc_id",
         value_type="string",
-        source_path=f"{CONFIG_REL_PATH.as_posix()} scopes[].stages.<stage>.default_doc_id",
-        generated_path="docs-viewer/config/defaults/docs-viewer-config.json scopes[].stages[].default_doc_id",
+        source_path=f"{CONFIG_REL_PATH.as_posix()} stages.<stage>.default_doc_id",
+        generated_path="docs-viewer/config/defaults/docs-viewer-config.json stages[].default_doc_id",
         requires_rebuild=True,
-        description="Default document id opened for this scope when no document is requested. Leave blank to use the first loadable document.",
+        description="Default document id opened for this stage when no document is requested. Leave blank to use the first loadable document.",
     ),
 }
 
-BLOCKED_SCOPE_FIELDS = {
-    "scope_id": "Scope identity controls route and published-artifact ownership.",
-    "scope_type": "Scope type controls availability labeling and should be guarded with route ownership.",
+BLOCKED_STAGE_FIELDS = {
     "source": "Canonical source roles and locations are install-time config and require manual review.",
     "published": "Published artifact roles and locations are install-time config and affect builders and imports.",
     "public_projection": "Public projections are install-time config and affect publication and public routes.",
     "viewer_base_url": "Route bases are install-time config and affect public URLs.",
-    "include_scope_param": "Route parameter behavior is part of the portable route contract.",
     "non_loadable_doc_ids": "Tree loading behavior depends on published docs structure.",
     "manage_only_tree_root_ids": "Manage-only tree behavior depends on published docs structure.",
     "allow_unresolved_parent_ids": "Parent validation policy affects source validation.",
-    "sub_scopes": "Sub-scope roles and locations are managed through the scope lifecycle workflow.",
+    "sub_scopes": "Sub-scope roles and locations are managed through the sub-scope lifecycle workflow.",
 }
 
 DEFERRED_GLOBAL_FIELDS = {
@@ -68,7 +65,7 @@ def _load_json(path: Path, label: str) -> dict[str, Any]:
 
 
 def _validate_field_value(field: str, value: Any) -> Any:
-    contract = EDITABLE_SCOPE_FIELDS.get(field)
+    contract = EDITABLE_STAGE_FIELDS.get(field)
     if contract is None:
         raise ValueError(f"Source config field is not editable through settings: {field}")
     if contract.value_type == "boolean":
@@ -82,11 +79,11 @@ def _validate_field_value(field: str, value: Any) -> Any:
     raise ValueError(f"Source config field {field} has unsupported value type: {contract.value_type}")
 
 
-def _field_current_value(config: Any, contract: EditableScopeField) -> Any:
+def _field_current_value(config: Any, contract: EditableStageField) -> Any:
     return getattr(config, contract.field)
 
 
-def _scope_field_payload(config: Any, contract: EditableScopeField) -> dict[str, Any]:
+def _stage_field_payload(config: Any, contract: EditableStageField) -> dict[str, Any]:
     return {
         "field": contract.field,
         "type": contract.value_type,
@@ -100,14 +97,13 @@ def _scope_field_payload(config: Any, contract: EditableScopeField) -> dict[str,
     }
 
 
-def _scope_payload(config: Any) -> dict[str, Any]:
+def _stage_payload(config: Any) -> dict[str, Any]:
     return {
-        "scope_id": config.scope_id,
-        **({"stage": config.stage} if config.stage else {}),
+        "stage": config.stage,
         "source_config_path": CONFIG_REL_PATH.as_posix(),
         "fields": [
-            _scope_field_payload(config, contract)
-            for contract in sorted(EDITABLE_SCOPE_FIELDS.values(), key=lambda item: item.field)
+            _stage_field_payload(config, contract)
+            for contract in sorted(EDITABLE_STAGE_FIELDS.values(), key=lambda item: item.field)
         ],
     }
 
@@ -115,10 +111,10 @@ def _scope_payload(config: Any) -> dict[str, Any]:
 def _validate_default_doc_id(repo_root: Path, config: Any, value: str) -> list[str]:
     if not value:
         return []
-    root = resolve_scope_path(repo_root, document_source_path(config))
+    root = resolve_workspace_path(repo_root, document_source_path(config))
     if not root.exists():
         raise ValueError(
-            f"missing source root for scope {config.scope_id}: {document_source_path(config).as_posix()}"
+            f"missing source root for stage {config.stage}: {document_source_path(config).as_posix()}"
         )
     docs = []
     for path in sorted(root.glob("*.md")):
@@ -127,8 +123,7 @@ def _validate_default_doc_id(repo_root: Path, config: Any, value: str) -> list[s
         if not doc_id:
             raise ValueError(f"missing required doc_id in {path.relative_to(root).as_posix()}")
         docs.append(
-            source_model.ScopeDoc(
-                scope=config.scope_id,
+            source_model.SourceDoc(
                 path=path,
                 source_text=path.read_text(encoding="utf-8"),
                 front_matter=dict(front_matter),
@@ -142,24 +137,20 @@ def _validate_default_doc_id(repo_root: Path, config: Any, value: str) -> list[s
     docs_by_id = {doc.doc_id: doc for doc in docs}
     doc = docs_by_id.get(value)
     if doc is None:
-        raise ValueError(f"default_doc_id must match a document in scope {config.scope_id}: {value}")
+        raise ValueError(f"default_doc_id must match a document in stage {config.stage}: {value}")
     if value in set(config.non_loadable_doc_ids):
-        raise ValueError(f"default_doc_id must be loadable in scope {config.scope_id}: {value}")
+        raise ValueError(f"default_doc_id must be loadable in stage {config.stage}: {value}")
     return []
 
 
-def build_settings_contract(repo_root: Path, scope_id: str = "", stage: str | None = None) -> dict[str, Any]:
-    configs = load_docs_scope_configs(repo_root)
-    requested_scope = str(scope_id or "").strip().lower()
-    if requested_scope and requested_scope not in configs:
-        raise ValueError(f"Docs scope is not configured: {requested_scope}")
-
-    scope_ids = [requested_scope] if requested_scope else sorted(configs)
+def build_settings_contract(repo_root: Path, *, stage: str | None = None) -> dict[str, Any]:
+    workspace = load_docs_workspace_config(repo_root)
+    selected_stages = (select_workspace_stage(workspace, stage),) if stage is not None else workspace.stages
     return {
         "ok": True,
         "schema_version": SCHEMA_VERSION,
         "source_config_path": CONFIG_REL_PATH.as_posix(),
-        "editable_scope_fields": [
+        "editable_stage_fields": [
             {
                 "field": contract.field,
                 "type": contract.value_type,
@@ -168,40 +159,24 @@ def build_settings_contract(repo_root: Path, scope_id: str = "", stage: str | No
                 "requires_rebuild": contract.requires_rebuild,
                 "description": contract.description,
             }
-            for contract in sorted(EDITABLE_SCOPE_FIELDS.values(), key=lambda item: item.field)
+            for contract in sorted(EDITABLE_STAGE_FIELDS.values(), key=lambda item: item.field)
         ],
-        "blocked_scope_fields": [
+        "blocked_stage_fields": [
             {"field": field, "reason": reason}
-            for field, reason in sorted(BLOCKED_SCOPE_FIELDS.items())
+            for field, reason in sorted(BLOCKED_STAGE_FIELDS.items())
         ],
         "deferred_global_fields": [
             {"field": field, "reason": reason}
             for field, reason in sorted(DEFERRED_GLOBAL_FIELDS.items())
         ],
-        "scopes": [
-            _scope_payload(selected)
-            for item in scope_ids
-            for selected in (
-                (select_scope_stage(configs[item], stage),) if requested_scope
-                else configs[item].stages
-            )
-        ],
+        "stages": [_stage_payload(config) for config in selected_stages],
     }
 
 
-def validate_scope_settings_change(repo_root: Path, scope_id: str, changes: dict[str, Any], stage: str | None = None) -> dict[str, Any]:
-    if not isinstance(changes, dict):
-        raise ValueError("changes must be a JSON object")
-    configs = load_docs_scope_configs(repo_root)
-    normalized_scope = str(scope_id or "").strip().lower()
-    if not normalized_scope:
-        raise ValueError("scope is required")
-    if normalized_scope not in configs:
-        raise ValueError(f"Docs scope is not configured: {normalized_scope}")
-    if not changes:
-        raise ValueError("At least one source config setting is required")
-
-    config = select_scope_stage(configs[normalized_scope], stage)
+def validate_stage_settings_change(repo_root: Path, changes: dict[str, Any], *, stage: str) -> dict[str, Any]:
+    if not isinstance(changes, dict) or not changes:
+        raise ValueError("changes must be a non-empty JSON object")
+    config = load_docs_stage(repo_root, stage)
     require_document_authoring(config)
     validated_changes: dict[str, Any] = {}
     rejected_fields: list[dict[str, str]] = []
@@ -209,13 +184,13 @@ def validate_scope_settings_change(repo_root: Path, scope_id: str, changes: dict
     affected_artifacts: set[str] = set()
 
     for field, raw_value in sorted(changes.items()):
-        if field in BLOCKED_SCOPE_FIELDS:
-            rejected_fields.append({"field": field, "reason": BLOCKED_SCOPE_FIELDS[field]})
+        if field in BLOCKED_STAGE_FIELDS:
+            rejected_fields.append({"field": field, "reason": BLOCKED_STAGE_FIELDS[field]})
             continue
         if field in DEFERRED_GLOBAL_FIELDS:
             rejected_fields.append({"field": field, "reason": DEFERRED_GLOBAL_FIELDS[field]})
             continue
-        contract = EDITABLE_SCOPE_FIELDS.get(field)
+        contract = EDITABLE_STAGE_FIELDS.get(field)
         value = _validate_field_value(field, raw_value)
         field_warnings: list[str] = []
         if field == "default_doc_id":
@@ -242,7 +217,6 @@ def validate_scope_settings_change(repo_root: Path, scope_id: str, changes: dict
     return {
         "ok": True,
         "schema_version": SCHEMA_VERSION,
-        "scope_id": normalized_scope,
         "stage": config.stage,
         "source_config_path": CONFIG_REL_PATH.as_posix(),
         "changes": validated_changes,
@@ -258,8 +232,8 @@ def _write_text_atomic(path: Path, text: str) -> None:
     temp_path.replace(path)
 
 
-def apply_scope_settings_change(repo_root: Path, scope_id: str, changes: dict[str, Any], *, dry_run: bool = False, stage: str | None = None) -> dict[str, Any]:
-    validation = validate_scope_settings_change(repo_root, scope_id, changes, stage)
+def apply_stage_settings_change(repo_root: Path, changes: dict[str, Any], *, stage: str, dry_run: bool = False) -> dict[str, Any]:
+    validation = validate_stage_settings_change(repo_root, changes, stage=stage)
     changed_fields = {
         field: detail["proposed_value"]
         for field, detail in validation["changes"].items()
@@ -268,27 +242,14 @@ def apply_scope_settings_change(repo_root: Path, scope_id: str, changes: dict[st
     if changed_fields and not dry_run:
         config_path = repo_root / CONFIG_REL_PATH
         payload = _load_json(config_path, CONFIG_REL_PATH.as_posix())
-        raw_scopes = payload.get("scopes")
-        if not isinstance(raw_scopes, list):
-            raise ValueError("docs scope config scopes must be an array")
-
-        updated = False
-        for item in raw_scopes:
-            if not isinstance(item, dict):
-                continue
-            if str(item.get("scope_id") or "").strip().lower() != validation["scope_id"]:
-                continue
-            destination = item["stages"][stage]
-            for field, value in changed_fields.items():
-                destination[field] = value
-            updated = True
-            break
-        if not updated:
-            raise ValueError(f"Docs scope is not configured: {validation['scope_id']}")
+        raw_stages = payload.get("stages")
+        if not isinstance(raw_stages, dict) or not isinstance(raw_stages.get(stage), dict):
+            raise ValueError(f"Docs stage is not configured: {stage}")
+        raw_stages[stage].update(changed_fields)
 
         rendered = json.dumps(payload, ensure_ascii=False, indent=2) + "\n"
         _write_text_atomic(config_path, rendered)
-        load_docs_scope_configs(repo_root)
+        load_docs_workspace_config(repo_root)
 
     return {
         **validation,

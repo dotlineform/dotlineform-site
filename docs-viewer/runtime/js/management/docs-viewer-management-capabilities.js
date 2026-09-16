@@ -3,13 +3,9 @@ import {
   readManagementCapabilities
 } from "./docs-viewer-management-client.js";
 
-function normalizeScopeId(scope) {
-  return String(scope || "").trim();
-}
-
-function scopeLifecycleCapabilities(capabilities) {
-  return capabilities && capabilities.scope_lifecycle && typeof capabilities.scope_lifecycle === "object"
-    ? capabilities.scope_lifecycle
+function subScopeLifecycleCapabilities(capabilities) {
+  return capabilities && capabilities.sub_scope_lifecycle && typeof capabilities.sub_scope_lifecycle === "object"
+    ? capabilities.sub_scope_lifecycle
     : null;
 }
 
@@ -36,101 +32,76 @@ export function documentPackagePrepareCapability(capabilities) {
   return { available: true, reason: "" };
 }
 
-/** Read scope capabilities; the controller owns active-stage selection. */
-export function scopeManagementCapabilities(capabilities, scope, stage) {
-  var scopeId = normalizeScopeId(scope);
-  if (!capabilities || !capabilities.scopes || !scopeId) return null;
-  var scopeCaps = capabilities.scopes[scopeId] || null;
-  if (stage !== undefined && (!scopeCaps || String(scopeCaps.stage || "") !== String(stage || ""))) return null;
-  return scopeCaps;
+/** Read capabilities for one explicit lifecycle stage. */
+export function stageManagementCapabilities(capabilities, stage) {
+  return capabilities && capabilities.stages && capabilities.stages[stage] || null;
 }
 
-export function scopePrePublishSupported(capabilities, scope, stage) {
-  var scopeCaps = scopeManagementCapabilities(capabilities, scope, stage);
-  var operation = scopeCaps && scopeCaps.pre_publish;
-  return Boolean(capabilities && capabilities.docs_management && scopeCaps && scopeCaps.available
+export function stagePrePublishSupported(capabilities, stage) {
+  var stageCaps = stageManagementCapabilities(capabilities, stage);
+  var operation = stageCaps && stageCaps.pre_publish;
+  return Boolean(capabilities && capabilities.docs_management && stageCaps && stageCaps.available
     && operation && operation.preview && operation.apply);
 }
 
-export function scopeCreateSupported(capabilities) {
-  var lifecycle = scopeLifecycleCapabilities(capabilities);
-  return Boolean(lifecycle && lifecycle.create_preview && lifecycle.create_apply);
-}
-
-export function scopeDeleteSupported(capabilities) {
-  var lifecycle = scopeLifecycleCapabilities(capabilities);
-  return Boolean(lifecycle && lifecycle.delete_preview && lifecycle.delete_apply);
-}
-
-export function scopeDeleteNavigationTarget(payload, activeScope) {
-  if (!payload || payload.action !== "delete_scope") return "";
-  if (normalizeScopeId(payload.scope_id) !== normalizeScopeId(activeScope)) return "";
-  return normalizeScopeId(payload.fallback_scope_id);
-}
-
-export function scopeRenameSupported(capabilities) {
-  var lifecycle = scopeLifecycleCapabilities(capabilities);
-  return Boolean(lifecycle && lifecycle.rename_preview && lifecycle.rename_apply);
-}
-
-export function subScopeCreateSupported(capabilities, scope) {
-  var lifecycle = scopeLifecycleCapabilities(capabilities);
-  var scopeCaps = scopeManagementCapabilities(capabilities, scope);
-  var subScopeLifecycle = scopeCaps && scopeCaps.sub_scope_lifecycle && typeof scopeCaps.sub_scope_lifecycle === "object"
-    ? scopeCaps.sub_scope_lifecycle
+export function subScopeCreateSupported(capabilities, stage) {
+  var lifecycle = subScopeLifecycleCapabilities(capabilities);
+  var stageCaps = stageManagementCapabilities(capabilities, stage);
+  var subScopeLifecycle = stageCaps && stageCaps.sub_scope_lifecycle && typeof stageCaps.sub_scope_lifecycle === "object"
+    ? stageCaps.sub_scope_lifecycle
     : null;
   return Boolean(
     lifecycle &&
-    lifecycle.sub_scope_create_preview &&
-    lifecycle.sub_scope_create_apply &&
-    scopeCaps &&
-    scopeCaps.available &&
+    lifecycle.create_preview &&
+    lifecycle.create_apply &&
+    stageCaps &&
+    stageCaps.available &&
     subScopeLifecycle &&
     subScopeLifecycle.create_eligible
   );
 }
 
-export function subScopeDeleteSupported(capabilities, scope) {
-  var lifecycle = scopeLifecycleCapabilities(capabilities);
-  var scopeCaps = scopeManagementCapabilities(capabilities, scope);
+export function subScopeDeleteSupported(capabilities, stage) {
+  var lifecycle = subScopeLifecycleCapabilities(capabilities);
+  var stageCaps = stageManagementCapabilities(capabilities, stage);
   return Boolean(
     lifecycle &&
-    lifecycle.sub_scope_delete_preview &&
-    lifecycle.sub_scope_delete_apply &&
-    scopeCaps &&
-    scopeCaps.available &&
-    scopeCaps.sub_scope_lifecycle &&
-    scopeCaps.sub_scope_lifecycle.delete_eligible
+    lifecycle.delete_preview &&
+    lifecycle.delete_apply &&
+    stageCaps &&
+    stageCaps.available &&
+    stageCaps.sub_scope_lifecycle &&
+    stageCaps.sub_scope_lifecycle.delete_eligible
   );
 }
 
-export function scopePublishSupported(capabilities, scope, stage) {
-  var scopeCaps = scopeManagementCapabilities(capabilities, scope, stage);
+export function stagePublishSupported(capabilities, stage) {
+  var stageCaps = stageManagementCapabilities(capabilities, stage);
   var publishing = capabilities && capabilities.publishing && typeof capabilities.publishing === "object"
     ? capabilities.publishing
     : null;
-  var scopePublishing = scopeCaps && scopeCaps.publishing && typeof scopeCaps.publishing === "object"
-    ? scopeCaps.publishing
+  var stagePublishing = stageCaps && stageCaps.publishing && typeof stageCaps.publishing === "object"
+    ? stageCaps.publishing
     : null;
   return Boolean(
     publishing &&
     publishing.confirm &&
     publishing.apply &&
-    scopeCaps &&
-    scopeCaps.available &&
-    scopePublishing &&
-    scopePublishing.confirm &&
-    scopePublishing.apply
+    stageCaps &&
+    stageCaps.available &&
+    stagePublishing &&
+    stagePublishing.confirm &&
+    stagePublishing.apply
   );
 }
 
-export function scopeDeployRepoCapability(capabilities, scope, stage) {
-  var scopeCaps = scopeManagementCapabilities(capabilities, scope, stage);
+export function stageDeployRepoCapability(capabilities, stage) {
+  var stageCaps = stageManagementCapabilities(capabilities, stage);
   var service = capabilities && capabilities.deploy_repo && typeof capabilities.deploy_repo === "object"
     ? capabilities.deploy_repo
     : null;
-  var scopeCapability = scopeCaps && scopeCaps.deploy_repo && typeof scopeCaps.deploy_repo === "object"
-    ? scopeCaps.deploy_repo
+  var stageCapability = stageCaps && stageCaps.deploy_repo && typeof stageCaps.deploy_repo === "object"
+    ? stageCaps.deploy_repo
     : null;
   if (!service || service.preview !== true || service.apply !== true) {
     return {
@@ -139,38 +110,37 @@ export function scopeDeployRepoCapability(capabilities, scope, stage) {
     };
   }
   if (
-    !scopeCaps
-    || scopeCaps.available !== true
-    || !scopeCapability
-    || scopeCapability.available !== true
-    || scopeCapability.preview !== true
-    || scopeCapability.apply !== true
+    !stageCaps
+    || stageCaps.available !== true
+    || !stageCapability
+    || stageCapability.available !== true
+    || stageCapability.preview !== true
+    || stageCapability.apply !== true
   ) {
     return {
       available: false,
       reason: String(
-        scopeCapability && scopeCapability.reason
-        || "Deploy Repo is unavailable for this scope."
+        stageCapability && stageCapability.reason
+        || "Deploy Repo is unavailable for this stage."
       ).trim()
     };
   }
   return { available: true, reason: "" };
 }
 
-export function scopePublishWorkflowSupported(capabilities, scope, stage) {
-  return scopePublishSupported(capabilities, scope, stage)
-    || scopeDeployRepoCapability(capabilities, scope, stage).available;
+export function stagePublishWorkflowSupported(capabilities, stage) {
+  return stagePublishSupported(capabilities, stage)
+    || stageDeployRepoCapability(capabilities, stage).available;
 }
 
-export function scopeStaticHtmlExportCapability(capabilities, scope, stage) {
-  var scopeCaps = scopeManagementCapabilities(capabilities, scope);
-  if (scopeCaps && scopeCaps.stages) scopeCaps = scopeCaps.stages[stage] || null;
-  if (stage !== undefined && scopeCaps && String(scopeCaps.stage || "") !== String(stage || "")) scopeCaps = null;
+export function stageStaticHtmlExportCapability(capabilities, stage) {
+  var stageCaps = stageManagementCapabilities(capabilities, stage);
+  if (stage !== undefined && stageCaps && String(stageCaps.stage || "") !== String(stage || "")) stageCaps = null;
   var exportCapabilities = capabilities && capabilities.static_html_export && typeof capabilities.static_html_export === "object"
     ? capabilities.static_html_export
     : null;
-  var scopeExport = scopeCaps && scopeCaps.static_html_export && typeof scopeCaps.static_html_export === "object"
-    ? scopeCaps.static_html_export
+  var stageExport = stageCaps && stageCaps.static_html_export && typeof stageCaps.static_html_export === "object"
+    ? stageCaps.static_html_export
     : null;
   if (!exportCapabilities || exportCapabilities.preview !== true || exportCapabilities.apply !== true) {
     return {
@@ -178,76 +148,30 @@ export function scopeStaticHtmlExportCapability(capabilities, scope, stage) {
       reason: String(exportCapabilities && exportCapabilities.error || "Snapshot Export is unavailable.").trim()
     };
   }
-  if (!scopeExport || scopeExport.preview !== true || scopeExport.apply !== true) {
+  if (!stageExport || stageExport.preview !== true || stageExport.apply !== true) {
     return {
       available: false,
-      reason: String(scopeExport && scopeExport.error || "Snapshot Export is unavailable for this scope.").trim()
+      reason: String(stageExport && stageExport.error || "Snapshot Export is unavailable for this stage.").trim()
     };
   }
   return { available: true, reason: "" };
 }
 
-/** Archive is available only from the exact ordinary Working scope. */
-export function archiveSupported(capabilities, source) {
-  if (!source || source.stage !== "working" || source.scope === "notes" || source.sub_scope) return false;
-  var routes = capabilities && capabilities.archive;
-  var scope = capabilities && capabilities.scopes && capabilities.scopes[source.scope];
-  if (scope && scope.stages) scope = scope.stages[source.stage];
-  return Boolean(routes && routes.preview && routes.apply && scope && scope.archive && scope.archive.available);
-}
-
-export function scopeLifecycleDeleteTargets(capabilities) {
-  var scopes = capabilities && capabilities.scopes && typeof capabilities.scopes === "object"
-    ? capabilities.scopes
-    : {};
-  return Object.keys(scopes).sort().map(function (scopeId) {
-    var scopeCaps = scopes[scopeId] || {};
-    if (scopeCaps.stages) scopeCaps = scopeCaps.stages.working || {};
-    var lifecycle = scopeCaps.scope_lifecycle || {};
-    return {
-      scopeId: scopeId,
-      root: String(scopeCaps.root || "").trim(),
-      deleteEligible: lifecycle.delete_eligible === true
-    };
-  }).filter(function (record) {
-    return record.deleteEligible;
-  });
-}
-
-export function scopeLifecycleRenameTargets(capabilities) {
-  var scopes = capabilities && capabilities.scopes && typeof capabilities.scopes === "object"
-    ? capabilities.scopes
-    : {};
-  return Object.keys(scopes).sort().map(function (scopeId) {
-    var scopeCaps = scopes[scopeId] || {};
-    if (scopeCaps.stages) scopeCaps = scopeCaps.stages.working || {};
-    var lifecycle = scopeCaps.scope_lifecycle || {};
-    return {
-      scopeId: scopeId,
-      root: String(scopeCaps.root || "").trim(),
-      renameEligible: lifecycle.rename_eligible === true
-    };
-  }).filter(function (record) {
-    return record.renameEligible;
-  });
-}
-
-export function subScopeLifecycleDeleteTargets(capabilities, scope) {
-  var scopeCaps = scopeManagementCapabilities(capabilities, scope);
-  var lifecycle = scopeCaps && scopeCaps.sub_scope_lifecycle && typeof scopeCaps.sub_scope_lifecycle === "object"
-    ? scopeCaps.sub_scope_lifecycle
+export function subScopeLifecycleDeleteTargets(capabilities, stage) {
+  var stageCaps = stageManagementCapabilities(capabilities, stage);
+  var lifecycle = stageCaps && stageCaps.sub_scope_lifecycle && typeof stageCaps.sub_scope_lifecycle === "object"
+    ? stageCaps.sub_scope_lifecycle
     : null;
   var records = lifecycle && Array.isArray(lifecycle.sub_scopes) ? lifecycle.sub_scopes : [];
   return records.map(function (record) {
     var subScope = String(record && record.sub_scope || "").trim();
     return {
-      parentScope: normalizeScopeId(scope),
       subScope: subScope,
       title: String(record && record.title || "").trim(),
       source: String(record && record.source || "").trim()
     };
   }).filter(function (record) {
-    return record.parentScope && record.subScope;
+    return Boolean(record.subScope);
   });
 }
 
@@ -257,11 +181,7 @@ export function createDocsViewerManagementCapabilityController(options) {
   var context = options.context;
   var callbacks = options.callbacks || {};
 
-  function viewerScope() {
-    return callbacks.viewerScope ? callbacks.viewerScope() : "";
-  }
-
-  function managementClientOptions() {
+    function managementClientOptions() {
     return callbacks.managementClientOptions ? callbacks.managementClientOptions() : {};
   }
 
@@ -293,18 +213,11 @@ export function createDocsViewerManagementCapabilityController(options) {
 
   function applyCapabilities(payload) {
     var capabilities = payload && payload.capabilities ? payload.capabilities : null;
-    var scopeCaps = scopeManagementCapabilities(capabilities, viewerScope());
-    if (scopeCaps && scopeCaps.stages) {
-      var stage = managementClientOptions().stage;
-      scopeCaps = scopeCaps.stages[stage] || null;
-      capabilities = Object.assign({}, capabilities, {
-        scopes: Object.assign({}, capabilities.scopes, { [viewerScope()]: scopeCaps })
-      });
-    }
+    var stageCaps = stageManagementCapabilities(capabilities, managementClientOptions().stage);
     management.managementCapabilities = capabilities;
     management.managementCapabilityError = "";
     management.managementChecked = true;
-    management.managementAvailable = Boolean(capabilities && capabilities.docs_management && scopeCaps && scopeCaps.available);
+    management.managementAvailable = Boolean(capabilities && capabilities.docs_management && stageCaps && stageCaps.available);
     renderManagementUi();
     renderSidebar();
   }

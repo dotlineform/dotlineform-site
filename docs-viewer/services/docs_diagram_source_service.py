@@ -84,17 +84,11 @@ def _verified_diagram_sources(
 
 
 def list_diagram_sources(repo_root: Path, params: dict[str, list[str]]) -> dict[str, object]:
-    request: dict[str, Any] = {
-        "scope": (params.get("scope") or [""])[0],
-        "doc_id": (params.get("doc_id") or [""])[0],
-    }
-    for field in ("stage", "sub_scope"):
-        if field in params:
-            request[field] = (params.get(field) or [""])[0]
+    request = managed_document_target_request({key: values[0] if values else "" for key, values in params.items()})
     target = resolve_managed_document_target(repo_root, request)
     payload: dict[str, object] = {
         "ok": True,
-        "scope": target.scope,
+        "stage": target.stage,
         "doc_id": target.doc_id,
         "sources": _verified_diagram_sources(repo_root, target),
     }
@@ -143,7 +137,7 @@ def open_diagram_source(
         if completed.returncode != 0:
             raise RuntimeError("VS Code could not open the verified Mermaid source")
         event = {
-            "scope": target.scope,
+            "stage": target.stage,
             "doc_id": target.doc_id,
             "media_identity": target_record["media_identity"],
             "source_identity": target_record["source_identity"],
@@ -155,7 +149,7 @@ def open_diagram_source(
 
     payload: dict[str, object] = {
         "ok": True,
-        "scope": target.scope,
+        "stage": target.stage,
         "doc_id": target.doc_id,
         "media_identity": target_record["media_identity"],
         "source_identity": target_record["source_identity"],

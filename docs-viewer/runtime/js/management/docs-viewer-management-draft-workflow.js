@@ -8,7 +8,7 @@ export async function toggleManagedDocDraft(target, options) {
     throw new Error("Draft readiness is available only in Working.");
   }
   const metadata = await readManagedDocMetadata(normalized, options.clientOptions);
-  const metadataTarget = { scope: metadata.scope, stage: metadata.stage, doc_id: metadata.doc_id,
+  const metadataTarget = { stage: metadata.stage, doc_id: metadata.doc_id,
     ...(Object.prototype.hasOwnProperty.call(metadata, "sub_scope") ? { sub_scope: metadata.sub_scope } : {}) };
   if (!managedDocumentTargetsEqual(metadataTarget, normalized)
     || !metadata.record || typeof metadata.record.draft !== "boolean"

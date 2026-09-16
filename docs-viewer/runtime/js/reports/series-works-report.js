@@ -6,7 +6,7 @@ function searchText(value) {
 export function readSeriesWorkPresentation(payload, target, workId) {
   var actual = payload && payload.target;
   var presentation = payload && payload.presentation;
-  if (!actual || actual.scope !== target.scope || actual.doc_id !== target.doc_id
+  if (!actual || actual.doc_id !== target.doc_id
     || (actual.sub_scope || "") !== (target.sub_scope || "")
     || !presentation || !presentation.target
     || presentation.target.kind !== "catalogue-work" || presentation.target.id !== workId) {
@@ -20,7 +20,7 @@ export function readSeriesWorksRows(payload, target) {
   var actual = payload && payload.target;
   if (
     !payload || payload.schema !== "docs_series_works_report_v1"
-    || !actual || actual.scope !== target.scope || actual.doc_id !== target.doc_id
+    || !actual || actual.doc_id !== target.doc_id
     || (actual.sub_scope || "") !== (target.sub_scope || "")
     || !Array.isArray(payload.works)
   ) {
@@ -44,7 +44,6 @@ export function mountSeriesWorksReport(context) {
   var root = context.reportRoot;
   var documentRef = root.ownerDocument;
   var target = context.documentTarget || {
-    scope: context.viewerScope,
     doc_id: context.doc && context.doc.doc_id
   };
   var service = context.reportService;
@@ -135,7 +134,7 @@ export function mountSeriesWorksReport(context) {
       if (typeof context.openMediaPresentation !== "function" || !context.openMediaPresentation({
         presentation: presentation,
         invocationControl: control,
-        documentTarget: { scope: target.scope, ...(target.stage ? { stage: target.stage } : {}), subScope: target.sub_scope || "", docId: target.doc_id },
+        documentTarget: { ...(target.stage ? { stage: target.stage } : {}), subScope: target.sub_scope || "", docId: target.doc_id },
         isCurrentDocument: isCurrent
       })) throw new Error("Media View is unavailable for this document.");
       status.textContent = seriesLabel + " · " + filterSeriesWorks(rows, filter.value).length + " of " + rows.length + " works";

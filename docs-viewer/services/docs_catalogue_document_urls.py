@@ -6,25 +6,24 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any, Mapping, Sequence
 
-from docs_document_location_projection import (
-    load_public_exact_document_location_records,
-)
+from docs_document_location_projection import build_exact_document_location_records
 from docs_document_subjects import normalize_authoring_subject
-from docs_scope_config import load_docs_scope_configs
-from docs_source_model import load_document_collection_docs_for_config
+from docs_workspace_config import load_docs_workspace_config, select_workspace_stage
+from docs_publish import validate_published_snapshot
+from docs_publication_payloads import project_public_view
+import json
 
 
-CatalogueTarget = tuple[str, str, str]
+CatalogueTarget = tuple[str, str]
 CatalogueDocuments = dict[str, dict[str, list[dict[str, str]]]]
 
 
 def exact_location_target(record: Mapping[str, Any]) -> CatalogueTarget:
-    scope_id = str(record.get("scope_id") or "").strip()
     sub_scope = str(record.get("sub_scope") or "").strip().lower()
     doc_id = str(record.get("doc_id") or "").strip()
-    if not scope_id or not doc_id:
-        raise ValueError("public document location must retain exact scope and doc_id")
-    return scope_id, sub_scope, doc_id
+    if "scope_id" in record or "scope" in record or not doc_id:
+        raise ValueError("public document location must retain exact sub_scope and doc_id without scope")
+    return sub_scope, doc_id
 
 
 def project_catalogue_documents(
@@ -40,7 +39,7 @@ def project_catalogue_documents(
         front_matter = front_matter_by_target.get(target)
         if front_matter is None:
             raise ValueError(
-                "public document has no exact canonical source: "
+                "public document has no exact accepted subject record: "
                 + "/".join(part for part in target if part)
             )
         url = str(location.get("url") or "").strip()
@@ -89,19 +88,19 @@ def project_catalogue_documents_from_subject_associations(
         target: {} for target in location_targets
     }
     seen_targets: set[CatalogueTarget] = set()
-    for (scope, sub_scope), payload in sorted(subject_associations_by_collection.items()):
-        if payload.get("schema_version") != "docs_subject_associations_v1":
+    for (stage, sub_scope), payload in sorted(subject_associations_by_collection.items()):
+        if payload.get("schema_version") != "docs_subject_associations_v2":
             raise ValueError(
-                f"accepted subject associations for {scope}/{sub_scope} have an unsupported schema"
+                f"accepted subject associations for {stage}/{sub_scope} have an unsupported schema"
             )
-        if payload.get("scope") != scope or payload.get("sub_scope") != sub_scope:
+        if stage != "published" or "scope" in payload or payload.get("stage") != stage or payload.get("sub_scope") != sub_scope:
             raise ValueError(
-                f"accepted subject associations for {scope}/{sub_scope} have the wrong collection identity"
+                f"accepted subject associations for {stage}/{sub_scope} have the wrong collection identity"
             )
         raw_associations = payload.get("associations")
         if not isinstance(raw_associations, list):
             raise ValueError(
-                f"accepted subject associations for {scope}/{sub_scope} are missing associations"
+                f"accepted subject associations for {stage}/{sub_scope} are missing associations"
             )
         for raw_association in raw_associations:
             if not isinstance(raw_association, Mapping):
@@ -122,13 +121,12 @@ def project_catalogue_documents_from_subject_associations(
                 if not isinstance(raw_target, Mapping):
                     raise ValueError("accepted subject document must contain an exact target")
                 target = (
-                    str(raw_target.get("scope") or "").strip(),
                     str(raw_target.get("sub_scope") or "").strip().lower(),
                     str(raw_target.get("doc_id") or "").strip(),
                 )
-                if not target[0] or not target[2]:
+                if not target[0] or not target[1]:
                     raise ValueError("accepted subject document target is incomplete")
-                if target[:2] != (scope, sub_scope):
+                if "scope" in raw_target or raw_target.get("stage") != stage or target[0] != sub_scope:
                     raise ValueError("accepted subject document has the wrong collection identity")
                 if target not in location_targets:
                     raise ValueError(
@@ -147,56 +145,41 @@ def project_catalogue_documents_from_subject_associations(
 
 
 def load_public_catalogue_documents(repo_root: Path) -> CatalogueDocuments:
-    """Join current public locations to exact canonical source front matter."""
+    """Join the complete accepted document set to its accepted subjects."""
+    workspace = load_docs_workspace_config(repo_root)
+    config = select_workspace_stage(workspace, "pre-publish")
+    _manifest, _root, files = validate_published_snapshot(repo_root)
 
-    configs = load_docs_scope_configs(repo_root, public_only=True)
-    exact_locations: list[dict[str, str]] = []
-    front_matter_by_target: dict[CatalogueTarget, Mapping[str, Any]] = {}
+    def payload(path: Path) -> dict[str, Any]:
+        if path not in files:
+            raise FileNotFoundError(f"Accepted Published snapshot is missing {path}")
+        value = json.loads(files[path].decode("utf-8"))
+        if not isinstance(value, dict):
+            raise ValueError(f"Accepted {path} must be an object")
+        return project_public_view(workspace, value)
 
-    for scope_id in sorted(configs):
-        config = configs[scope_id]
-        scope_locations = load_public_exact_document_location_records(
-            repo_root,
-            config,
-        )
-        exact_locations.extend(scope_locations)
-
-        targets_by_sub_scope: dict[str, set[str]] = {}
-        for location in scope_locations:
-            _, sub_scope, doc_id = exact_location_target(location)
-            targets_by_sub_scope.setdefault(sub_scope, set()).add(doc_id)
-
-        collection_configs = {
-            "": config,
-            **{sub_scope.sub_scope: sub_scope for sub_scope in config.sub_scopes},
-        }
-        for sub_scope, public_doc_ids in sorted(targets_by_sub_scope.items()):
-            collection_config = collection_configs.get(sub_scope)
-            if collection_config is None:
-                raise ValueError(
-                    f"public document location references unconfigured collection "
-                    f"{scope_id}/{sub_scope}"
-                )
-            documents = load_document_collection_docs_for_config(
-                repo_root,
-                config,
-                collection_config,
-            )
-            documents_by_id = {document.doc_id: document for document in documents}
-            for doc_id in sorted(public_doc_ids):
-                document = documents_by_id.get(doc_id)
-                if document is None:
-                    collection = f"{scope_id}/{sub_scope}" if sub_scope else scope_id
-                    raise ValueError(
-                        f"public document {collection}/{doc_id} has no canonical source"
-                    )
-                front_matter_by_target[(scope_id, sub_scope, doc_id)] = (
-                    document.front_matter
-                )
-
-    return project_catalogue_documents(
-        exact_locations=exact_locations,
-        front_matter_by_target=front_matter_by_target,
+    accepted_children = {path.parts[1] for path in files if len(path.parts) > 2 and path.parts[0] == "sub-scopes"}
+    configured_children = {child.sub_scope: child for child in config.sub_scopes}
+    if accepted_children - set(configured_children):
+        raise ValueError("Accepted snapshot contains unconfigured child identities")
+    children = [configured_children[child] for child in sorted(accepted_children)]
+    locations = build_exact_document_location_records(
+        workspace,
+        search_payload=payload(Path("search/index.json")),
+        parent_documents={path.stem: payload(path) for path in files
+                          if len(path.parts) == 3 and path.parts[:2] == ("documents", "by-id") and path.suffix == ".json"},
+        sub_scope_manifests={child.sub_scope: payload(Path("sub-scopes") / child.sub_scope / "documents/manifest.json")
+                             for child in children},
+    )
+    associations = {}
+    for child in children:
+        path = Path("sub-scopes") / child.sub_scope / "documents/subject-associations.json"
+        if path in files:
+            associations[("published", child.sub_scope)] = payload(path)
+        elif child.sub_scope_customisation is not None:
+            raise FileNotFoundError(f"Accepted Published snapshot is missing {path}")
+    return project_catalogue_documents_from_subject_associations(
+        exact_locations=locations, subject_associations_by_collection=associations,
     )
 
 

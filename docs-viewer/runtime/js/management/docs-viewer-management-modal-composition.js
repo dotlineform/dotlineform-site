@@ -15,15 +15,15 @@ function cleanString(value) {
   return String(value == null ? "" : value).trim();
 }
 
-function metadataCustomisationDescriptor(scopeConfig, target) {
+function metadataCustomisationDescriptor(workspaceConfig, target) {
   if (!target || !target.sub_scope) return null;
-  var configs = Array.isArray(scopeConfig && scopeConfig.scopeConfigs)
-    ? scopeConfig.scopeConfigs
+  var configs = Array.isArray(workspaceConfig && workspaceConfig.stageConfigs)
+    ? workspaceConfig.stageConfigs
     : [];
-  var scope = cleanString(target.scope).toLowerCase();
+  var stage = cleanString(target.stage);
   var subScope = cleanString(target.sub_scope).toLowerCase();
   var parent = configs.find(function (config) {
-    return cleanString(config && (config.scope_id || config.scopeId)).toLowerCase() === scope;
+    return cleanString(config && config.stage) === stage;
   });
   var children = parent && Array.isArray(parent.subScopes) ? parent.subScopes : [];
   var child = children.find(function (record) {
@@ -45,7 +45,7 @@ export function createDocsViewerManagementModalComposition(options = {}) {
   var documentIndex = domains.documentIndex || {};
   var management = domains.management || {};
   var routeSession = domains.routeSession || {};
-  var scopeConfig = domains.scopeConfig || {};
+  var workspaceConfig = domains.workspaceConfig || {};
   var context = options.context || {};
   var callbacks = options.callbacks || {};
   var refs = {
@@ -82,7 +82,7 @@ export function createDocsViewerManagementModalComposition(options = {}) {
     settingsForm: shellRef(shellRefs, "settingsForm", "docsViewerSettingsForm"),
     settingsModal: shellRef(shellRefs, "settingsModal", "docsViewerSettingsModal"),
     settingsSaveButton: shellRef(shellRefs, "settingsSaveButton", "docsViewerSettingsSaveButton"),
-    settingsScope: shellRef(shellRefs, "settingsScope", "docsViewerSettingsScope"),
+    settingsStage: shellRef(shellRefs, "settingsStage", "docsViewerSettingsStage"),
     settingsBooleanField: shellRef(shellRefs, "settingsBooleanField", "docsViewerSettingsBooleanField"),
     settingsBooleanInput: shellRef(shellRefs, "settingsBooleanInput", "docsViewerSettingsBooleanInput"),
     settingsBooleanLabel: shellRef(shellRefs, "settingsBooleanLabel", "docsViewerSettingsBooleanLabel"),
@@ -115,10 +115,10 @@ export function createDocsViewerManagementModalComposition(options = {}) {
       onLoadError: callbacks.onMetadataLoadError,
       onSave: callbacks.onMetadataSave,
       resolveMetadataContribution: function (target) {
-        var descriptor = metadataCustomisationDescriptor(scopeConfig, target);
+        var descriptor = metadataCustomisationDescriptor(workspaceConfig, target);
         return resolveManagementDocsSubscopeCustomisation(descriptor, {
           collection: {
-            scope: cleanString(target && target.scope).toLowerCase(),
+            stage: cleanString(target && target.stage),
             sub_scope: cleanString(target && target.sub_scope).toLowerCase()
           }
         });
@@ -144,7 +144,7 @@ export function createDocsViewerManagementModalComposition(options = {}) {
     nav: options.nav || null,
     documentIndex: documentIndex,
     management: management,
-    scopeConfig: scopeConfig,
+    workspaceConfig: workspaceConfig,
     context: context,
     refs: refs,
     callbacks: {
@@ -154,7 +154,7 @@ export function createDocsViewerManagementModalComposition(options = {}) {
       onImportOpen: callbacks.onImportOpen,
       onMetadataSubmit: metadataWorkflow.confirm,
       onSettingsSubmit: callbacks.onSettingsSubmit,
-      viewerScope: callbacks.viewerScope
+      viewerStage: callbacks.viewerStage
     }
   });
 

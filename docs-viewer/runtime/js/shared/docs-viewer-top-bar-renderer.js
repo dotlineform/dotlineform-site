@@ -13,7 +13,7 @@ function appendReaderTopRow(documentRef, mount, topBar, routeContext) {
   homeLink.textContent = "dotlineform";
   var homeUrl = new URL(routeContext.routeViewerBaseUrl, documentRef.baseURI);
   if (routeContext.appContext.kind === "manage") {
-    homeUrl.searchParams.set("scope", "analysis");
+    homeUrl.searchParams.set("stage", routeContext.viewerStage);
   }
   homeLink.href = homeUrl.pathname + homeUrl.search;
   row.append(homeLink, topBar, renderDocsViewerThemeToggle(documentRef));

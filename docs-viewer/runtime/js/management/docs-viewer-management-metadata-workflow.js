@@ -95,7 +95,6 @@ export function createDocsViewerManagementMetadataWorkflow(options = {}) {
       throw new Error("Document metadata could not be loaded.");
     }
     var responseTarget = {
-      scope: response.scope,
       ...(response.stage ? { stage: response.stage } : {}),
       doc_id: response.doc_id
     };

@@ -34,7 +34,7 @@ class DocsSubScopeCustomisationConfig:
 @dataclass(frozen=True)
 class DocsSubScopeManifestProjectionAspect:
     project: Callable[
-        [Mapping[str, Any], Sequence[Any], Path, str, str, str],
+        [Mapping[str, Any], Sequence[Any], Path, str, str],
         dict[str, Any],
     ]
 
@@ -88,24 +88,24 @@ class DocsSubScopeCustomisationDefinition:
 
 def _strict_object(raw: Any, *, field: str, keys: set[str]) -> dict[str, Any]:
     if not isinstance(raw, dict):
-        raise ValueError(f"docs scope config field {field} must be an object")
+        raise ValueError(f"Docs workspace config field {field} must be an object")
     unknown = sorted(set(raw) - keys)
     if unknown:
         raise ValueError(
-            f"docs scope config field {field} contains unknown fields: "
+            f"Docs workspace config field {field} contains unknown fields: "
             f"{', '.join(unknown)}"
         )
     missing = sorted(keys - set(raw))
     if missing:
         raise ValueError(
-            f"docs scope config field {field} is missing required fields: "
+            f"Docs workspace config field {field} is missing required fields: "
             f"{', '.join(missing)}"
         )
     return raw
 
 
 def _project_pre_publish_works_manifest(
-    settings: Mapping[str, Any], documents: Sequence[Any], repo_root: Path, scope: str, sub_scope: str, stage: str = "",
+    settings: Mapping[str, Any], documents: Sequence[Any], repo_root: Path, sub_scope: str, stage: str,
 ) -> dict[str, Any]:
     """Identify the Manage subject contribution; shared subject projection owns its rows."""
     return {"root": {"id": PRE_PUBLISH_WORKS_CUSTOMISATION_ID, "data": {}}, "rows": {}}
@@ -394,11 +394,11 @@ def normalize_docs_subscope_customisation(
     value = _strict_object(raw, field=field, keys={"id", "settings"})
     customisation_id = str(value.get("id") or "").strip()
     if not CUSTOMISATION_ID_PATTERN.fullmatch(customisation_id):
-        raise ValueError(f"docs scope config field {field}.id is invalid")
+        raise ValueError(f"Docs workspace config field {field}.id is invalid")
     definition = SUB_SCOPE_CUSTOMISATION_DEFINITIONS.get(customisation_id)
     if definition is None:
         raise ValueError(
-            f"docs scope config field {field}.id is unknown: {customisation_id!r}"
+            f"Docs workspace config field {field}.id is unknown: {customisation_id!r}"
         )
     definition = _validate_definition(customisation_id, definition)
     return DocsSubScopeCustomisationConfig(
@@ -473,9 +473,8 @@ def project_sub_scope_customisation_manifest(
     *,
     published: bool,
     repo_root: Path,
-    scope: str,
     sub_scope: str,
-    stage: str = "",
+    stage: str,
 ) -> dict[str, Any] | None:
     if customisation is None:
         return None
@@ -494,7 +493,6 @@ def project_sub_scope_customisation_manifest(
         customisation.settings,
         documents,
         repo_root,
-        scope,
         sub_scope,
         stage,
     )

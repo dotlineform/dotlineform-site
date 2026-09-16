@@ -5,19 +5,13 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any, Dict
 
-import docs_document_publication_lineage as publication_lineage
 import docs_management_mutations as mutations
-import docs_public_delete_cleanup as public_delete_cleanup
-import docs_scope_create
-from docs_scope_config import load_docs_scope_stage, require_document_authoring
-import docs_scope_delete
-import docs_scope_manifest
-import docs_scope_rename
+from docs_workspace_config import load_docs_stage, require_document_authoring
 import docs_source_config_settings
 import docs_sub_scope_lifecycle
 import docs_source_model as source_model
 import docs_write_rebuild as write_rebuild
-from docs_scope_config import normalize_sub_scope_id
+from docs_workspace_config import normalize_sub_scope_id
 from docs_management_context import log_event
 
 
@@ -47,29 +41,6 @@ class DocumentPlacementCommittedError(RuntimeError):
 
     def __init__(self, payload: Dict[str, Any]) -> None:
         super().__init__(str(payload["error"]))
-        self.payload = payload
-
-
-class DocumentDeletePublicCleanupError(RuntimeError):
-    """A document Delete committed before required public cleanup failed."""
-
-    def __init__(self, payload: Dict[str, Any]) -> None:
-        super().__init__(
-            str(payload.get("error") or "document Delete public cleanup failed")
-        )
-        self.payload = payload
-
-
-class DocumentDeleteLineageFollowThroughError(RuntimeError):
-    """A document Delete and lineage write committed before a Working rebuild failed."""
-
-    def __init__(self, payload: Dict[str, Any]) -> None:
-        super().__init__(
-            str(
-                payload.get("error")
-                or "document Delete lineage follow-through failed"
-            )
-        )
         self.payload = payload
 
 
@@ -135,12 +106,11 @@ def recover_sub_scope_document_delete(
     try:
         recovery_rebuild = write_rebuild.perform_sub_scope_source_write_and_rebuild(
             repo_root,
-            plan.scope,
             plan.sub_scope,
             [source_delete.path],
             restore_operation,
             suppression_reason="docs-sub-scope-document-delete-recovery",
-            stage=plan.stage or None,
+            stage=plan.stage,
             **({"links_created_doc_ids": []} if plan.stage == "working" else {}),
         )
     except Exception as recovery_error:
@@ -159,7 +129,7 @@ def recover_sub_scope_document_delete(
             "ok": False,
             "operation": "apply",
             "target": target,
-            "scope": plan.scope,
+            "stage": plan.stage,
             "sub_scope": plan.sub_scope,
             "doc_id": plan.response.get("doc_id", ""),
             "source_revision": plan.response.get("source_revision", ""),
@@ -174,7 +144,7 @@ def recover_sub_scope_document_delete(
 
 
 def execute_management_mutation_plan(repo_root: Path, plan: mutations.ManagementMutationPlan, dry_run: bool) -> Dict[str, Any]:
-    require_document_authoring(load_docs_scope_stage(repo_root, plan.scope, plan.stage or None))
+    require_document_authoring(load_docs_stage(repo_root, plan.stage))
     payload = dict(plan.response)
     if plan.stage:
         payload["stage"] = plan.stage
@@ -195,8 +165,7 @@ def execute_management_mutation_plan(repo_root: Path, plan: mutations.Management
                         current_bytes = b""
                     if current_bytes != source_write.original_bytes:
                         target = {
-                            "scope": plan.scope,
-                            **({"stage": plan.stage} if plan.stage else {}),
+                            "stage": plan.stage,
                             "doc_id": str(plan.response.get("doc_id") or ""),
                         }
                         if plan.sub_scope:
@@ -246,11 +215,10 @@ def execute_management_mutation_plan(repo_root: Path, plan: mutations.Management
 
         try:
             if plan.rebuilds:
-                rebuild = write_rebuild.perform_multi_scope_source_write_and_rebuild(
+                rebuild = write_rebuild.perform_multi_collection_source_write_and_rebuild(
                     repo_root,
                     [
                         {
-                            "scope": rebuild_plan.scope,
                             "stage": rebuild_plan.stage,
                             "sub_scope": rebuild_plan.sub_scope,
                             "changed_paths": list(rebuild_plan.changed_paths),
@@ -264,21 +232,19 @@ def execute_management_mutation_plan(repo_root: Path, plan: mutations.Management
             elif plan.sub_scope:
                 rebuild = write_rebuild.perform_sub_scope_source_write_and_rebuild(
                     repo_root,
-                    plan.scope,
                     plan.sub_scope,
                     plan.changed_paths,
                     write_operation,
                     suppression_reason=plan.suppression_reason or "docs-management",
-                    stage=plan.stage or None,
+                    stage=plan.stage,
                 )
             else:
                 rebuild = write_rebuild.perform_source_write_and_rebuild(
                     repo_root,
-                    plan.scope,
                     plan.changed_paths,
                     write_operation,
                     suppression_reason=plan.suppression_reason or "docs-management",
-                    stage=plan.stage or None,
+                    stage=plan.stage,
                     docs_doc_ids=plan.build_doc_ids,
                 )
         except mutations.ManagedDocumentRevisionConflict:
@@ -308,141 +274,6 @@ def execute_management_mutation_plan(repo_root: Path, plan: mutations.Management
                     create_committed_error_payload(plan, error)
                 ) from error
             raise
-    if not dry_run and plan.public_delete_cleanup is not None:
-        try:
-            payload["public_cleanup"] = (
-                public_delete_cleanup.apply_public_document_delete_cleanup(
-                    repo_root,
-                    plan.public_delete_cleanup,
-                )
-            )
-        except public_delete_cleanup.PublicDeleteCleanupApplyError as error:
-            payload.update(
-                {
-                    "ok": False,
-                    "operation": "apply",
-                    "committed": True,
-                    "retry_delete": False,
-                    "failed_stage": error.result.get("stage", "public_cleanup"),
-                    "public_cleanup": error.result,
-                    "dry_run": False,
-                    "summary_text": (
-                        "Document Delete committed, but required public cleanup failed."
-                    ),
-                    "error": (
-                        "document Delete committed but public cleanup failed: "
-                        f"{error}"
-                    ),
-                }
-            )
-            if plan.include_write_result_keys:
-                payload["rebuild"] = rebuild
-            if plan.log_event_name:
-                log_event(
-                    repo_root,
-                    plan.log_event_name,
-                    {
-                        **plan.log_details,
-                        "public_cleanup_ok": False,
-                    },
-                )
-            raise DocumentDeletePublicCleanupError(payload) from error
-
-        if plan.sub_scope:
-            lineage_delete = publication_lineage.apply_document_deletes(
-                repo_root,
-                scope=plan.scope,
-                sub_scope=plan.sub_scope,
-                doc_ids=payload.get("deleted_doc_ids", ()),
-            )
-            if lineage_delete.role:
-                workflow_results = []
-                lineage_follow_through_failures = []
-                for change in lineage_delete.workflows:
-                    lineage_rebuild = None
-                    if change.affected_working_doc_ids:
-                        try:
-                            lineage_rebuild = write_rebuild.rebuild_sub_scope_outputs(
-                                repo_root,
-                                change.table.working_collection.scope,
-                                change.table.working_collection.sub_scope,
-                            )
-                        except Exception as error:
-                            lineage_rebuild = {
-                                "ok": False,
-                                "error": str(error),
-                            }
-                            lineage_follow_through_failures.append(
-                                {
-                                    "contract_id": change.contract_id,
-                                    "scope": change.table.working_collection.scope,
-                                    "sub_scope": (
-                                        change.table.working_collection.sub_scope
-                                    ),
-                                    "error": str(error),
-                                }
-                            )
-                    workflow_results.append(
-                        {
-                            "contract_id": change.contract_id,
-                            "status": (
-                                "updated"
-                                if change.affected_working_doc_ids
-                                else "unchanged"
-                            ),
-                            "affected_working_doc_ids": list(
-                                change.affected_working_doc_ids
-                            ),
-                            "record_count": len(change.table.records),
-                            "rebuild": lineage_rebuild,
-                        }
-                    )
-                payload["lineage"] = {
-                    "schema_version": publication_lineage.LINEAGE_SCHEMA_VERSION,
-                    "status": "updated" if lineage_delete.changed else "unchanged",
-                    "role": lineage_delete.role,
-                    "workflows": workflow_results,
-                }
-                if lineage_follow_through_failures:
-                    failed_targets = ", ".join(
-                        f"{failure['scope']}/{failure['sub_scope']}"
-                        for failure in lineage_follow_through_failures
-                    )
-                    payload.update(
-                        {
-                            "ok": False,
-                            "operation": "apply",
-                            "committed": True,
-                            "retry_delete": False,
-                            "failed_stage": "lineage_follow_through",
-                            "lineage_follow_through_failures": (
-                                lineage_follow_through_failures
-                            ),
-                            "dry_run": False,
-                            "summary_text": (
-                                "Document Delete and lineage update committed, "
-                                "but a Working follow-through Build failed."
-                            ),
-                            "error": (
-                                "document Delete and lineage update committed but "
-                                "Working follow-through Build failed for "
-                                f"{failed_targets}"
-                            ),
-                        }
-                    )
-                    if plan.include_write_result_keys:
-                        payload["rebuild"] = rebuild
-                    if plan.log_event_name:
-                        log_event(
-                            repo_root,
-                            plan.log_event_name,
-                            {
-                                **plan.log_details,
-                                "lineage_follow_through_ok": False,
-                            },
-                        )
-                    raise DocumentDeleteLineageFollowThroughError(payload)
-
     if not dry_run and plan.log_event_name and plan.has_source_changes:
         log_event(repo_root, plan.log_event_name, plan.log_details)
 
@@ -485,108 +316,30 @@ def handle_delete_apply(repo_root: Path, body: Dict[str, Any], dry_run: bool) ->
         )
     plan = mutations.plan_delete_apply(repo_root, body)
     if plan.response.get("default_doc_id_changed") and not dry_run:
-        docs_source_config_settings.apply_scope_settings_change(
+        docs_source_config_settings.apply_stage_settings_change(
             repo_root,
-            plan.scope,
             {"default_doc_id": ""},
-            stage=plan.stage or None,
+            stage=plan.stage,
         )
     return execute_management_mutation_plan(repo_root, plan, dry_run)
 
 
-def handle_scope_create_apply(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dict[str, Any]:
-    scope_id = docs_scope_manifest.normalize_scope_id(body.get("scope_id"))
-    payload = docs_scope_create.apply_create_scope(
-        repo_root,
-        body,
-        dry_run=dry_run,
-        rebuild_scope_outputs=write_rebuild.rebuild_scope_outputs,
-    )
-    if not dry_run:
-        log_event(
-            repo_root,
-            "docs_scope_create_apply",
-            {
-                "scope": scope_id,
-                "created_count": len(payload.get("created_files", [])),
-                "changed_count": len(payload.get("changed_files", [])),
-            },
-        )
-    return payload
-
-
-def handle_scope_delete_apply(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dict[str, Any]:
-    scope_id = docs_scope_manifest.normalize_scope_id(body.get("scope_id") or body.get("scope"))
-    docs_scope_manifest.require_confirmed(body)
-    preview = docs_scope_delete.plan_delete_scope_preview(repo_root, body)
-    if not preview.get("allowed"):
-        blockers = preview.get("blockers") if isinstance(preview.get("blockers"), list) else []
-        raise ValueError("; ".join(str(blocker) for blocker in blockers) or "scope delete is not allowed")
-    payload = docs_scope_delete.apply_delete_scope(
-        repo_root,
-        body,
-        dry_run=dry_run,
-        rebuild_all_docs_outputs=write_rebuild.rebuild_all_docs_outputs,
-    )
-    if not dry_run:
-        log_event(
-            repo_root,
-            "docs_scope_delete_apply",
-            {
-                "scope": scope_id,
-                "deleted_count": len(payload.get("deleted_files", [])),
-                "missing_count": len(payload.get("missing_files", [])),
-                "changed_count": len(payload.get("changed_files", [])),
-            },
-        )
-    return payload
-
-
-def handle_scope_rename_apply(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dict[str, Any]:
-    old_scope_id = docs_scope_manifest.normalize_scope_id(body.get("scope_id") or body.get("old_scope_id"))
-    new_scope_id = docs_scope_manifest.normalize_scope_id(body.get("new_scope_id"))
-    docs_scope_manifest.require_confirmed(body)
-    preview = docs_scope_rename.plan_rename_scope_preview(repo_root, body)
-    if not preview.get("allowed"):
-        blockers = preview.get("blockers") if isinstance(preview.get("blockers"), list) else []
-        raise ValueError("; ".join(str(blocker) for blocker in blockers) or "scope rename is not allowed")
-    payload = docs_scope_rename.apply_rename_scope(
-        repo_root,
-        body,
-        dry_run=dry_run,
-        rebuild_scope_outputs=write_rebuild.rebuild_scope_outputs,
-    )
-    if not dry_run:
-        log_event(
-            repo_root,
-            "docs_scope_rename_apply",
-            {
-                "scope": old_scope_id,
-                "new_scope": new_scope_id,
-                "moved_count": len(payload.get("move_paths", [])),
-                "changed_count": len(payload.get("changed_files", [])),
-            },
-        )
-    return payload
-
-
 def handle_sub_scope_create_apply(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dict[str, Any]:
-    parent_scope = docs_scope_manifest.normalize_scope_id(body.get("parent_scope") or body.get("scope"))
     sub_scope = normalize_sub_scope_id(body.get("sub_scope"), field="sub_scope")
-    docs_scope_manifest.require_confirmed(body)
+    docs_sub_scope_lifecycle.require_confirmed(body)
     payload = docs_sub_scope_lifecycle.apply_create_sub_scope(
         repo_root,
         body,
         dry_run=dry_run,
         rebuild_sub_scope_outputs=write_rebuild.rebuild_sub_scope_outputs,
-        rebuild_scope_outputs=write_rebuild.rebuild_scope_outputs,
+        rebuild_stage_outputs=write_rebuild.rebuild_stage_outputs,
     )
     if not dry_run:
         log_event(
             repo_root,
             "docs_sub_scope_create_apply",
             {
-                "scope": parent_scope,
+                "stage": body["stage"],
                 "sub_scope": sub_scope,
                 "created_count": len(payload.get("created_files", [])),
                 "changed_count": len(payload.get("changed_files", [])),
@@ -596,21 +349,20 @@ def handle_sub_scope_create_apply(repo_root: Path, body: Dict[str, Any], dry_run
 
 
 def handle_sub_scope_delete_apply(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dict[str, Any]:
-    parent_scope = docs_scope_manifest.normalize_scope_id(body.get("parent_scope") or body.get("scope"))
     sub_scope = normalize_sub_scope_id(body.get("sub_scope"), field="sub_scope")
-    docs_scope_manifest.require_confirmed(body)
+    docs_sub_scope_lifecycle.require_confirmed(body)
     payload = docs_sub_scope_lifecycle.apply_delete_sub_scope(
         repo_root,
         body,
         dry_run=dry_run,
-        rebuild_scope_outputs=write_rebuild.rebuild_scope_outputs,
+        rebuild_stage_outputs=write_rebuild.rebuild_stage_outputs,
     )
     if not dry_run:
         log_event(
             repo_root,
             "docs_sub_scope_delete_apply",
             {
-                "scope": parent_scope,
+                "stage": body["stage"],
                 "sub_scope": sub_scope,
                 "deleted_count": len(payload.get("deleted_files", [])),
                 "missing_count": len(payload.get("missing_files", [])),

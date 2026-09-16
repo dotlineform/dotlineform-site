@@ -15,19 +15,19 @@ function valueText(value) {
   return cleanString(value);
 }
 
-function selectedScopeFromRoute(scopes) {
+function selectedStageFromRoute(stages) {
   const params = new URLSearchParams(window.location.search);
-  const selected = cleanString(params.get("report_scope")).toLowerCase();
+  const selected = cleanString(params.get("report_stage")).toLowerCase();
   if (!selected) return "";
-  return scopes.some((scope) => scope.scope_id === selected) ? selected : "";
+  return stages.some((stage) => stage.stage === selected) ? selected : "";
 }
 
-function persistSelectedScope(scopeId) {
+function persistSelectedStage(stage) {
   const url = new URL(window.location.href);
-  if (scopeId) {
-    url.searchParams.set("report_scope", scopeId);
+  if (stage) {
+    url.searchParams.set("report_stage", stage);
   } else {
-    url.searchParams.delete("report_scope");
+    url.searchParams.delete("report_stage");
   }
   try {
     window.history.replaceState({}, "", url.pathname + url.search + url.hash);
@@ -85,13 +85,11 @@ function appendGroup(parent, title, rows) {
   parent.appendChild(group);
 }
 
-function sourceRows(scope) {
-  const config = scope.source_config || {};
+function sourceRows(stage) {
+  const config = stage.source_config || {};
   return [
-    ["scope_id", config.scope_id],
-    ["scope_type", config.scope_type],
+    ["stage", config.stage],
     ["viewer_base_url", config.viewer_base_url],
-    ["include_scope_param", config.include_scope_param],
     ["default_doc_id", config.default_doc_id],
     ["allow_unresolved_parent_ids", config.allow_unresolved_parent_ids],
     ["non_loadable_doc_ids", config.non_loadable_doc_ids],
@@ -99,8 +97,8 @@ function sourceRows(scope) {
   ];
 }
 
-function roleRows(scope) {
-  const roles = scope.roles || {};
+function roleRows(stage) {
+  const roles = stage.roles || {};
   return [
     ["source", roles.source],
     ["published documents", roles.published_documents],
@@ -109,11 +107,10 @@ function roleRows(scope) {
   ];
 }
 
-function browserRows(scope) {
-  const config = scope.browser_config || {};
+function browserRows(stage) {
+  const config = stage.browser_config || {};
   return [
     ["viewer_base_url", config.viewer_base_url],
-    ["include_scope_param", config.include_scope_param],
     ["default_doc_id", config.default_doc_id],
     ["media", config.media],
     ["index_tree_url", config.index_tree_url],
@@ -123,12 +120,12 @@ function browserRows(scope) {
   ];
 }
 
-function artifactRows(scope) {
-  const artifacts = scope.artifacts || {};
+function artifactRows(stage) {
+  const artifacts = stage.artifacts || {};
   return [
-    ["published documents available", artifacts.published_documents_available],
-    ["published search available", artifacts.published_search_available],
-    ["viewer_options", scope.viewer_options || {}]
+    ["generated documents available", artifacts.generated_documents_available],
+    ["generated search available", artifacts.generated_search_available],
+    ["viewer_options", stage.viewer_options || {}]
   ];
 }
 
@@ -151,22 +148,22 @@ function appendWarnings(parent, warnings) {
   parent.appendChild(group);
 }
 
-function appendScope(parent, scope) {
+function appendStage(parent, stage) {
   const section = document.createElement("section");
-  section.className = "docsViewerReport__configScope";
+  section.className = "docsViewerReport__configStage";
   const heading = document.createElement("h2");
   heading.className = "docsViewerReport__configTitle";
-  heading.textContent = cleanString(scope.title) || cleanString(scope.scope_id);
+  heading.textContent = cleanString(stage.title) || cleanString(stage.stage);
   const meta = document.createElement("p");
   meta.className = "docsViewerReport__subtext";
-  meta.textContent = cleanString(scope.scope_id);
+  meta.textContent = cleanString(stage.stage);
   section.appendChild(heading);
   section.appendChild(meta);
-  appendGroup(section, "Source config", sourceRows(scope));
-  appendGroup(section, "Roles and locations", roleRows(scope));
-  appendGroup(section, "Browser projection", browserRows(scope));
-  appendGroup(section, "Published artifacts", artifactRows(scope));
-  appendWarnings(section, scope.warnings);
+  appendGroup(section, "Source config", sourceRows(stage));
+  appendGroup(section, "Roles and locations", roleRows(stage));
+  appendGroup(section, "Browser projection", browserRows(stage));
+  appendGroup(section, "Published artifacts", artifactRows(stage));
+  appendWarnings(section, stage.warnings);
   parent.appendChild(section);
 }
 
@@ -175,43 +172,43 @@ function renderToolbar(root, state) {
   toolbar.className = "docsViewerReport__toolbar";
   const label = document.createElement("label");
   label.className = "docsViewerReport__selectLabel";
-  label.setAttribute("for", "docsViewerSourceConfigScope");
-  label.textContent = "Scope";
+  label.setAttribute("for", "docsViewerSourceConfigStage");
+  label.textContent = "Stage";
   const select = document.createElement("select");
-  select.id = "docsViewerSourceConfigScope";
+  select.id = "docsViewerSourceConfigStage";
   select.className = "docsViewerReport__select";
   const all = document.createElement("option");
   all.value = "";
-  all.textContent = "All scopes";
+  all.textContent = "All stages";
   select.appendChild(all);
-  state.scopes.forEach((scope) => {
+  state.stages.forEach((stage) => {
     const option = document.createElement("option");
-    option.value = scope.scope_id;
-    option.textContent = cleanString(scope.title) || scope.scope_id;
+    option.value = stage.stage;
+    option.textContent = cleanString(stage.title) || stage.stage;
     select.appendChild(option);
   });
-  select.value = state.selectedScope;
+  select.value = state.selectedStage;
   const status = document.createElement("p");
   status.className = "docsViewerReport__status";
   toolbar.appendChild(label);
   toolbar.appendChild(select);
   toolbar.appendChild(status);
   select.addEventListener("change", () => {
-    state.selectedScope = cleanString(select.value);
-    persistSelectedScope(state.selectedScope);
-    renderScopes(state);
+    state.selectedStage = cleanString(select.value);
+    persistSelectedStage(state.selectedStage);
+    renderStages(state);
   });
   state.statusNode = status;
   root.appendChild(toolbar);
 }
 
-function renderScopes(state) {
-  clearNode(state.scopesNode);
-  const visible = state.selectedScope
-    ? state.scopes.filter((scope) => scope.scope_id === state.selectedScope)
-    : state.scopes;
-  state.statusNode.textContent = visible.length === 1 ? "1 scope" : `${visible.length} scopes`;
-  visible.forEach((scope) => appendScope(state.scopesNode, scope));
+function renderStages(state) {
+  clearNode(state.stagesNode);
+  const visible = state.selectedStage
+    ? state.stages.filter((stage) => stage.stage === state.selectedStage)
+    : state.stages;
+  state.statusNode.textContent = visible.length === 1 ? "1 stage" : `${visible.length} stages`;
+  visible.forEach((stage) => appendStage(state.stagesNode, stage));
 }
 
 export function mountSourceConfigReport(context) {
@@ -220,24 +217,24 @@ export function mountSourceConfigReport(context) {
   root.dataset.reportId = "source_config";
   root.innerHTML = '<p class="docsViewerReport__status">Loading source config...</p>';
   return fetchSourceConfig(context).then((payload) => {
-    const scopes = Array.isArray(payload.scopes)
-      ? payload.scopes.map((scope) => Object.assign({}, scope, { scope_id: cleanString(scope.scope_id).toLowerCase() })).filter((scope) => scope.scope_id)
+    const stages = Array.isArray(payload.stages)
+      ? payload.stages.map((stage) => Object.assign({}, stage, { stage: cleanString(stage.stage).toLowerCase() })).filter((stage) => stage.stage)
       : [];
     clearNode(root);
     const state = {
-      scopes,
-      selectedScope: selectedScopeFromRoute(scopes),
+      stages,
+      selectedStage: selectedStageFromRoute(stages),
       statusNode: null,
-      scopesNode: document.createElement("div")
+      stagesNode: document.createElement("div")
     };
-    state.scopesNode.className = "docsViewerReport__configScopes";
+    state.stagesNode.className = "docsViewerReport__configStages";
     renderToolbar(root, state);
     appendGroup(root, "Shared viewer config", [
       ["source", payload.docs_viewer_source || {}],
       ["browser projection", payload.docs_viewer_browser || {}]
     ]);
-    root.appendChild(state.scopesNode);
-    renderScopes(state);
+    root.appendChild(state.stagesNode);
+    renderStages(state);
   }).catch((error) => {
     clearNode(root);
     const status = document.createElement("p");

@@ -1,3 +1,5 @@
+import { convertAnalysisPanelState } from "./docs-viewer-saved-state.js";
+
 import {
   buildIndexPanelStorageKey,
   expandedIndexPanelState,
@@ -17,9 +19,6 @@ import {
   updateDocsViewerViewState
 } from "./docs-viewer-view-state.js";
 
-function normalizeScope(scope) {
-  return String(scope || "").trim() || "docs";
-}
 
 var DEFAULT_INDEX_VIEW = {
   id: "index-tree",
@@ -43,8 +42,9 @@ export function createDocsViewerPanelLayout(options) {
   var infoPanelRefs = settings.infoPanelRefs || {};
   var indexPanelAvailable = settings.indexPanelAvailable || function () { return true; };
   var viewRegistry = settings.viewRegistry || null;
-  var storageScope = normalizeScope(settings.storageScope);
-  var storageKey = buildIndexPanelStorageKey(storageScope);
+  var storageOwner = settings.storageOwner;
+  convertAnalysisPanelState(storage);
+  var storageKey = buildIndexPanelStorageKey(storageOwner);
   var indexPanelState = readStoredIndexPanelState();
   var viewState = createDocsViewerViewState({
     indexPanelState: indexPanelState,
@@ -148,9 +148,9 @@ export function createDocsViewerPanelLayout(options) {
     });
   }
 
-  function setStorageScope(scope) {
-    storageScope = normalizeScope(scope);
-    storageKey = buildIndexPanelStorageKey(storageScope);
+  function setStorageOwner(owner) {
+    storageOwner = owner;
+    storageKey = buildIndexPanelStorageKey(storageOwner);
     indexPanelState = readStoredIndexPanelState();
     viewState = updateDocsViewerViewState(viewState, {
       indexPanelState: indexPanelState
@@ -347,7 +347,7 @@ export function createDocsViewerPanelLayout(options) {
     setActiveMainView: setActiveMainView,
     setMainLayoutState: setMainLayoutState,
     mainLayoutState: function () { return mainLayoutState; },
-    setStorageScope: setStorageScope,
+    setStorageOwner: setStorageOwner,
     toggleIndexPanelState: toggleIndexPanelState
   };
 }

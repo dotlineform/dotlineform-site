@@ -8,13 +8,13 @@ from pathlib import Path
 from typing import Any
 
 from docs_document_packages import source_context as docs_source_context
-from docs_document_packages.returned_common import issue, normalize_text, scope_title
-from docs_scope_config import path_label
+from docs_document_packages.returned_common import issue, normalize_text
+from docs_workspace_config import path_label
 
 
 def load_current_docs_context(
     repo_root: Path,
-    scope: str,
+    stage: str,
     sub_scope: str = "",
 ) -> tuple[dict[str, Any], list[dict[str, Any]]]:
     """Load current records from the exact package collection."""
@@ -31,11 +31,11 @@ def load_current_docs_context(
     try:
         loaded_context = docs_source_context.load_document_package_source_context(
             repo_root,
-            scope,
+            stage,
             sub_scope,
         )
     except (FileNotFoundError, json.JSONDecodeError, ValueError, RuntimeError, OSError) as exc:
-        issues.append(issue("warning", "current_source_unreadable", f"current {scope} docs source context could not be read: {exc}"))
+        issues.append(issue("warning", "current_source_unreadable", f"current {stage} docs source context could not be read: {exc}"))
         return context, issues
 
     docs_by_id: dict[str, dict[str, Any]] = {}
@@ -69,7 +69,7 @@ def add_current_source_report(
     records: list[dict[str, Any]],
     *,
     current: dict[str, Any],
-    scope: str,
+    stage: str,
 ) -> list[dict[str, Any]]:
     if not current.get("source_loaded"):
         return []
@@ -115,7 +115,7 @@ def add_current_source_report(
                 issue(
                     "warning",
                     "unknown_doc_id",
-                    f"record doc_id is not in the current {scope_title(scope)} source context: {doc_id}",
+                    f"record doc_id is not in the current {stage.title()} source context: {doc_id}",
                     record_index=record_index,
                     line=line,
                     doc_id=doc_id,
@@ -126,7 +126,7 @@ def add_current_source_report(
                 issue(
                     "warning",
                     "current_source_unrenderable",
-                    f"record exists in the current {scope_title(scope)} source context but could not be rendered: {doc_id}",
+                    f"record exists in the current {stage.title()} source context but could not be rendered: {doc_id}",
                     record_index=record_index,
                     line=line,
                     doc_id=doc_id,
@@ -143,7 +143,7 @@ def add_current_source_report(
                     issue(
                         "warning",
                         "missing_parent_id",
-                        f"parent_id is not in the current {scope_title(scope)} source context or staged records: {parent_id}",
+                        f"parent_id is not in the current {stage.title()} source context or staged records: {parent_id}",
                         record_index=record_index,
                         line=line,
                         doc_id=doc_id,
@@ -154,7 +154,7 @@ def add_current_source_report(
                     issue(
                         "warning",
                         "parent_source_unrenderable",
-                        f"parent_id points to a current {scope_title(scope)} source context record that could not be rendered: {parent_id}",
+                        f"parent_id points to a current {stage.title()} source context record that could not be rendered: {parent_id}",
                         record_index=record_index,
                         line=line,
                         doc_id=doc_id,

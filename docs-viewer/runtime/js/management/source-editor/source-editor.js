@@ -192,7 +192,7 @@ function createSourceEditorContextAdapter(state) {
       return state.collectionProvider.readCatalogueMediaTargets();
     },
     readDocumentLinkTargets: function () {
-      var target = { scope: state.target.scope };
+      var target = { stage: state.target.stage };
       if (state.target.stage) target.stage = state.target.stage;
       return state.collectionProvider.readDocumentLinkTargets(target);
     },
@@ -252,7 +252,6 @@ function loadSource(context, state) {
   return provider.readSource(state.target)
     .then(function (payload) {
       var responseTarget = {
-        scope: cleanString(payload && payload.scope),
         ...(payload && payload.stage ? { stage: payload.stage } : {}),
         doc_id: cleanString(payload && payload.doc_id)
       };

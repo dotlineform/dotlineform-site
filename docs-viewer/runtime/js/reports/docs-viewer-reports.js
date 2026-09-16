@@ -4,10 +4,10 @@ import {
 import { mountDocsViewerMediaLinks } from "../shared/docs-viewer-media-detail.js";
 
 const REPORT_LOADERS = {
-  scope_links: {
+  workspace_links: {
     load: function () {
-      return import("./scope-links-report.js").then(function (module) {
-        return module.mountScopeLinksReport;
+      return import("./workspace-links-report.js").then(function (module) {
+        return module.mountWorkspaceLinksReport;
       });
     }
   },
@@ -132,7 +132,6 @@ function normalizePreset(raw) {
     presetId: cleanString(raw && raw.preset_id),
     title: cleanString(raw && raw.title),
     description: cleanString(raw && raw.description),
-    defaultScope: cleanString(raw && raw.default_scope),
     columns: normalizeList(raw && raw.columns),
     filters: normalizeList(raw && raw.filters),
     sortable: normalizeList(raw && raw.sortable)
@@ -194,7 +193,6 @@ function normalizeReportMetadata(payload) {
   if (!reportId) return null;
   return {
     reportId,
-    scope: cleanString(report.scope),
     preset: cleanString(report.preset),
     subScope: cleanString(report.sub_scope)
   };
@@ -228,7 +226,7 @@ function registerExpandedPresentation(context, root, reportMeta, mountResult) {
       reportMeta,
       reportRoot: root,
       requestContentDetail: context.requestContentDetail,
-      viewerScope: context.viewerScope
+      viewerStage: context.viewerStage
     });
   } catch (error) {
     console.warn("docs_viewer: expanded report registration unavailable", error);
@@ -282,7 +280,7 @@ export function mountDocsViewerReport(context) {
           var target = child.documentTarget;
           mountDocsViewerMediaLinks({
             content: child.content,
-            documentTarget: { scope: target.scope, ...(target.stage ? { stage: target.stage } : {}),
+            documentTarget: { ...(target.stage ? { stage: target.stage } : {}),
               subScope: target.sub_scope, docId: target.doc_id },
             isCurrentDocument: child.isCurrentDocument,
             openMediaTarget: context.openMediaTarget,

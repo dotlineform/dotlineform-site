@@ -121,9 +121,7 @@ function applyResolvedRouteDataset(root, documentRef, routeContext) {
     root.dataset.docsViewerFeatures = Array.isArray(featurePolicy.ids) ? featurePolicy.ids.join(" ") : "";
     setDatasetBoolean(root, "managementUi", routeAccess.managementUi && featurePolicy.management);
     setDatasetBoolean(root, "sourceService", featurePolicy.sourceEditing && serviceAvailability.source && serviceAvailability.source.available);
-    setDatasetBoolean(root, "includeScopeParam", routeContext && routeContext.includeScopeParam);
     root.dataset.viewerBaseUrl = routeContext && routeContext.viewerBaseUrl ? routeContext.viewerBaseUrl : "";
-    root.dataset.viewerScope = routeContext && routeContext.viewerScope ? routeContext.viewerScope : "";
     if (routeShell.pageTitle) root.dataset.pageTitle = routeShell.pageTitle;
     if (routeShell.bodyClass) root.dataset.bodyClass = routeShell.bodyClass;
   }

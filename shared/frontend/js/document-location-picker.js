@@ -1,7 +1,6 @@
 import {
   committedDocumentLocation,
-  createDocumentLocationProvider,
-  normalizeDocumentLocationScopeIds
+  createDocumentLocationProvider
 } from "/shared/frontend/js/document-location-provider.js";
 import {
   bindSearchList
@@ -21,11 +20,6 @@ function escapeHtml(value) {
     .replace(/'/g, "&#39;");
 }
 
-function scopeLabel(scopeId) {
-  const value = normalizeText(scopeId);
-  return value ? `${value.slice(0, 1).toUpperCase()}${value.slice(1)}` : "";
-}
-
 function currentExcludedUrls(value) {
   const urls = typeof value === "function" ? value() : value;
   return Array.isArray(urls) ? urls : [];
@@ -33,11 +27,10 @@ function currentExcludedUrls(value) {
 
 export function documentLocationOptionHtml(
   record,
-  { showReport = true, showScope = false } = {},
+  { showReport = true } = {},
 ) {
   const context = [
-    showReport ? normalizeText(record && record.report_title) : "",
-    showScope ? scopeLabel(record && record.scope_id) : ""
+    showReport ? normalizeText(record && record.report_title) : ""
   ].filter(Boolean);
   return `
     <span class="sharedDocumentLocationPicker__title">${escapeHtml(record && record.document_title)}</span>
@@ -48,16 +41,14 @@ export function documentLocationOptionHtml(
 /**
  * Bind one app-neutral document-location search field.
  *
- * The consumer owns supported-scope policy, exclusions, durable draft state,
+ * The consumer owns exclusions, durable draft state,
  * modal lifecycle, and all writes. A commit returns one exact location record.
  */
 export function bindDocumentLocationPicker(inputNode, popupNode, options = {}) {
-  const scopeIds = normalizeDocumentLocationScopeIds(options.scopeIds);
   const provider = options.provider || createDocumentLocationProvider();
   if (!provider || typeof provider.search !== "function") {
     throw new Error("document location picker requires a provider");
   }
-  const showScope = scopeIds.length > 1;
   const showReport = options.showReport !== false;
   const controller = bindSearchList(inputNode, popupNode, {
     id: options.id,
@@ -67,13 +58,11 @@ export function bindDocumentLocationPicker(inputNode, popupNode, options = {}) {
     getOptionValue: (record) => normalizeText(record && record.document_title),
     filterOptions: (records) => records,
     loadOptions: (query) => provider.search({
-      scopeIds,
       query,
       excludedUrls: currentExcludedUrls(options.excludedUrls)
     }),
     renderOption: (record) => documentLocationOptionHtml(record, {
-      showReport,
-      showScope
+      showReport
     }),
     renderNoResults: () => (
       `<p class="sharedSearchList__empty">${escapeHtml(options.noResultsText || "No matching documents.")}</p>`

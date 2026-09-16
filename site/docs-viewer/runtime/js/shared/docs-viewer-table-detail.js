@@ -14,7 +14,7 @@ function positiveInteger(value) {
 function sameDocumentTarget(left, right) {
   var first = left || {};
   var second = right || {};
-  return cleanString(first.scope) === cleanString(second.scope)
+  return cleanString(first.stage) === cleanString(second.stage)
     && cleanString(first.subScope) === cleanString(second.subScope)
     && cleanString(first.docId) === cleanString(second.docId);
 }
@@ -163,12 +163,12 @@ export function createDocsViewerTableDetailAdapter(options) {
     var doc = context.doc || {};
     var documentMountGeneration = positiveInteger(context.documentMountGeneration);
     var documentTarget = {
-      scope: cleanString(context.viewerScope),
+      stage: cleanString(context.viewerStage),
       subScope: "",
       docId: cleanString(doc.doc_id)
     };
     var tables = Array.from(root.querySelectorAll(TABLE_DETAIL_SELECTOR));
-    if (!documentRef || !documentMountGeneration || !documentTarget.scope || !documentTarget.docId) {
+    if (!documentRef || !documentMountGeneration || !documentTarget.docId) {
       return { found: tables.length, decorated: 0, skipped: tables.length };
     }
 

@@ -7,7 +7,7 @@ from typing import Any
 
 @dataclass(frozen=True, order=True)
 class DocumentTarget:
-    scope: str
+    stage: str
     sub_scope: str
     doc_id: str
 

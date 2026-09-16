@@ -5,7 +5,7 @@ import {
 import {
   applyViewerRoute,
   buildViewerUrl,
-  buildViewerUrlForScope,
+  buildViewerUrlForDocument,
   handleViewerPopstate,
   loadViewerDoc,
   resolveViewerRouteDocId,
@@ -68,30 +68,21 @@ export function initDocsViewerRouteWorkflow(context) {
   var root = context.root;
   var content = context.content;
   var searchInput = context.searchInput;
-  var scopeConfig = context.scopeConfig || {};
   var statusCommands = context.statusCommands || {};
   var loadedIndex = "";
   var indexRefreshTimer = null;
   var indexRefreshRunning = false;
 
-  function viewerScope() {
-    return currentValue(context.viewerScope);
+  function viewerStage() {
+    return currentValue(context.viewerStage);
   }
 
   function viewerBaseUrl() {
     return currentValue(context.viewerBaseUrl);
   }
 
-  function routeViewerBaseUrl() {
-    return currentValue(context.routeViewerBaseUrl);
-  }
-
   function viewerPathname() {
     return currentValue(context.viewerPathname);
-  }
-
-  function includeScopeParam() {
-    return Boolean(currentValue(context.includeScopeParam));
   }
 
   function preservedQueryParams() {
@@ -111,14 +102,6 @@ export function initDocsViewerRouteWorkflow(context) {
 
   function managementUiEnabled() {
     return Boolean(currentValue(context.managementUiEnabled));
-  }
-
-  function allowScopeQuery() {
-    return Boolean(currentValue(context.allowScopeQuery));
-  }
-
-  function scopeConfigsById() {
-    return scopeConfig.scopeConfigsById || new Map();
   }
 
   function setStatus(message, isError) {
@@ -153,43 +136,30 @@ export function initDocsViewerRouteWorkflow(context) {
     return subdoc ? { subdoc: subdoc } : {};
   }
 
-  function hasCanonicalScopeInUrl() {
-    if (!includeScopeParam() || !viewerScope()) return true;
-    return new URLSearchParams(window.location.search).get("scope") === viewerScope();
-  }
-
   function hasDisallowedModeInUrl() {
     return new URLSearchParams(window.location.search).has("mode");
-  }
-
-  function hasDisallowedScopeInUrl() {
-    return !allowScopeQuery() && new URLSearchParams(window.location.search).has("scope");
   }
 
   function viewerUrl(docId, hash, query, reportParams) {
     return buildViewerUrl({
       docId: docId,
       hash: hash,
-      includeScopeParam: includeScopeParam(),
       origin: window.location.origin,
       preservedQueryParams: preservedQueryParams(),
       query: query,
       reportParams: reportParams,
       viewerBaseUrl: viewerBaseUrl(),
-      viewerScope: viewerScope()
     });
   }
 
-  function viewerUrlForScope(scope, docId, options) {
-    return buildViewerUrlForScope({
+  function viewerUrlForDocument(docId, options) {
+    var stage = options && options.stage !== undefined ? options.stage : viewerStage();
+    if (stage !== viewerStage() && !(context.workspaceConfig.stageConfigsById.has(stage))) throw new Error("Docs link stage is not configured.");
+    return buildViewerUrlForDocument({
       docId: docId,
-      manageRoute: Boolean(options && options.manage && managementUiEnabled()),
       origin: window.location.origin,
-      routeViewerBaseUrl: routeViewerBaseUrl(),
-      scope: scope,
-      scopeConfigsById: scopeConfigsById(),
       viewerBaseUrl: viewerBaseUrl(),
-      viewerScope: viewerScope()
+      stage: stage
     });
   }
 
@@ -198,14 +168,12 @@ export function initDocsViewerRouteWorkflow(context) {
       docId: docId,
       hash: hash,
       history: window.history,
-      includeScopeParam: includeScopeParam(),
       mode: mode,
       origin: window.location.origin,
       preservedQueryParams: preservedQueryParams(),
       query: query,
       reportParams: reportParams || currentReportRouteParams(docId),
       viewerBaseUrl: viewerBaseUrl(),
-      viewerScope: viewerScope()
     });
   }
 
@@ -214,7 +182,6 @@ export function initDocsViewerRouteWorkflow(context) {
       requestedDocId: currentDocId(),
       docsById: state.docsById,
       defaultRouteDocId: defaultRouteDocId(),
-      viewerScope: viewerScope(),
       resolveLoadableDocId: context.resolveLoadableDocId,
       defaultDocId: context.defaultDocId
     });
@@ -269,9 +236,7 @@ export function initDocsViewerRouteWorkflow(context) {
       },
       expandTrail: context.expandTrail,
       hasActiveQuery: context.hasActiveQuery,
-      hasCanonicalScopeInUrl: hasCanonicalScopeInUrl,
       hasDisallowedModeInUrl: hasDisallowedModeInUrl,
-      hasDisallowedScopeInUrl: hasDisallowedScopeInUrl,
       hash: options && options.hash ? options.hash : "",
       historyMode: options && options.historyMode ? options.historyMode : "push",
       loadDoc: loadDoc,
@@ -286,7 +251,6 @@ export function initDocsViewerRouteWorkflow(context) {
       setRecentModeActive: context.setRecentModeActive,
       setStatus: setStatus,
       state: state,
-      viewerScope: viewerScope()
     });
     if (typeof context.updateInfoPanel === "function") {
       context.updateInfoPanel();
@@ -308,7 +272,7 @@ export function initDocsViewerRouteWorkflow(context) {
       context.onIndexReplaced({
         docs: state.docs.slice(),
         managementContext: state.managementContext,
-        scopeId: viewerScope()
+        stage: viewerStage()
       });
     }
 
@@ -332,11 +296,11 @@ export function initDocsViewerRouteWorkflow(context) {
     if (indexRefreshRunning || !managementUiEnabled() || currentValue(context.viewerStage) !== "working"
         || root.ownerDocument.hidden || root.dataset.managementBusy === "true"
         || root.dataset.documentDisplayMode === "markdown-source") return;
-    var scope = viewerScope();
+    var stage = viewerStage();
     indexRefreshRunning = true;
     try {
       var payload = await context.collectionProvider.readIndex();
-      if (scope !== viewerScope() || currentValue(context.viewerStage) !== "working"
+      if (stage !== viewerStage() || currentValue(context.viewerStage) !== "working"
           || root.dataset.managementBusy === "true" || root.dataset.documentDisplayMode === "markdown-source"
           || JSON.stringify(payload) === loadedIndex) return;
       state.payloadCache.clear();
@@ -382,12 +346,9 @@ export function initDocsViewerRouteWorkflow(context) {
 
   function routeFromAnchor(anchor) {
     return routeFromAnchorHref(anchor.href, {
-      allowScopeQuery: allowScopeQuery(),
       currentHref: window.location.href,
-      includeScopeParam: includeScopeParam(),
       origin: window.location.origin,
       viewerPathname: viewerPathname(),
-      viewerScope: viewerScope()
     });
   }
 
@@ -424,6 +385,7 @@ export function initDocsViewerRouteWorkflow(context) {
       if (!route) return;
 
       event.preventDefault();
+      if (route.error) { setStatus(route.error, true); return; }
       if (route.navigateUrl) {
         window.location.assign(route.navigateUrl);
         return;
@@ -445,16 +407,15 @@ export function initDocsViewerRouteWorkflow(context) {
   function bindPopstate() {
     window.addEventListener("popstate", function () {
       handleViewerPopstate({
-        allowScopeQuery: allowScopeQuery(),
         applyCurrentRoute: applyCurrentRoute,
         cancelSearchDebounce: context.cancelSearchDebounce,
         currentHash: currentHash,
         docsAvailable: function () { return state.docs.length > 0; },
         hideContextMenu: context.hideContextMenu,
         reloadWindow: function () { window.location.reload(); },
-        routeScopeFromUrl: context.routeScopeFromUrl,
+        routeStageFromUrl: context.routeStageFromUrl,
+        viewerStage: viewerStage(),
         setStatus: setStatus,
-        viewerScope: viewerScope()
       });
     });
   }
@@ -466,7 +427,7 @@ export function initDocsViewerRouteWorkflow(context) {
     resolveDocId: resolveDocId,
     setHistory: setHistory,
     viewerUrl: viewerUrl,
-    viewerUrlForScope: viewerUrlForScope
+    viewerUrlForDocument: viewerUrlForDocument
   };
 
   return {
@@ -476,14 +437,12 @@ export function initDocsViewerRouteWorkflow(context) {
     currentDocId: currentDocId,
     currentHash: currentHash,
     currentQuery: currentQuery,
-    hasCanonicalScopeInUrl: hasCanonicalScopeInUrl,
     hasDisallowedModeInUrl: hasDisallowedModeInUrl,
-    hasDisallowedScopeInUrl: hasDisallowedScopeInUrl,
     initializeIndex: initializeIndex,
     managementUiEnabled: managementUiEnabled,
     routeFromAnchor: routeFromAnchor,
     shouldUseNativeNavigation: shouldUseNativeNavigation,
     viewerUrl: viewerUrl,
-    viewerUrlForScope: viewerUrlForScope
+    viewerUrlForDocument: viewerUrlForDocument
   };
 }

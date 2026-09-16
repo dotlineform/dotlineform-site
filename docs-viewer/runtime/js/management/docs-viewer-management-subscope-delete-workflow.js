@@ -18,8 +18,7 @@ function cleanString(value) {
 
 function sameTarget(left, right) {
   return (
-    left.scope === right.scope
-    && String(left.stage || "") === String(right.stage || "")
+    String(left.stage || "") === String(right.stage || "")
     && left.sub_scope === right.sub_scope
     && left.doc_id === right.doc_id
   );
@@ -29,7 +28,6 @@ function responseTarget(payload) {
   var candidate = payload && payload.target && typeof payload.target === "object"
     ? payload.target
     : {
-        scope: payload && payload.scope,
         ...(payload && payload.stage ? { stage: payload.stage } : {}),
         sub_scope: payload && payload.sub_scope,
         doc_id: payload && payload.doc_id
@@ -86,7 +84,7 @@ function previewBody(preview, target, title) {
   var body = [
     "Document: " + (cleanString(title) || target.doc_id),
     "Document ID: " + target.doc_id,
-    "Sub-scope: " + target.scope + "/" + target.sub_scope
+    "Sub-scope: " + target.sub_scope
   ];
   return body.concat(buildDocsViewerDeletePreviewBody(preview));
 }

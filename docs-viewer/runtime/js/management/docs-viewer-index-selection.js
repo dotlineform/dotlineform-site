@@ -48,7 +48,7 @@ export function reconcileDocsViewerIndexSelection(state, eligibleDocIds) {
 
 export function createDocsViewerIndexSelectionOwner(options = {}) {
   var current = createDocsViewerIndexSelectionState(options.initialState);
-  var owningScopeId = normalizeDocId(options.initialScopeId);
+  var owningStage = normalizeDocId(options.initialStage);
 
   function transition(nextState) {
     current = nextState;
@@ -58,7 +58,7 @@ export function createDocsViewerIndexSelectionOwner(options = {}) {
   function lifecycleContext(contextOptions) {
     var context = contextOptions || {};
     return {
-      scopeId: normalizeDocId(context.scopeId),
+      stage: normalizeDocId(context.stage),
       managementContext: Boolean(context.managementContext),
       indexViewId: normalizeDocId(context.indexViewId)
     };
@@ -66,11 +66,11 @@ export function createDocsViewerIndexSelectionOwner(options = {}) {
 
   function syncContext(contextOptions) {
     var context = lifecycleContext(contextOptions);
-    var scopeChanged = context.scopeId !== owningScopeId;
-    owningScopeId = context.scopeId;
+    var stageChanged = context.stage !== owningStage;
+    owningStage = context.stage;
     if (
-      scopeChanged
-      || !context.scopeId
+      stageChanged
+      || !context.stage
       || !context.managementContext
       || context.indexViewId !== "index-tree"
     ) {
@@ -101,7 +101,7 @@ export function createDocsViewerIndexSelectionOwner(options = {}) {
       var context = lifecycleContext(contextOptions);
       syncContext(context);
       if (
-        context.scopeId
+        context.stage
         && context.managementContext
         && context.indexViewId === "index-tree"
       ) {

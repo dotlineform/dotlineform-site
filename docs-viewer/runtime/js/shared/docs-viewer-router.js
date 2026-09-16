@@ -4,11 +4,9 @@ export function buildViewerUrl(options) {
   Object.entries(settings.preservedQueryParams || {}).forEach(function (entry) {
     var key = String(entry[0] || "").trim();
     var value = String(entry[1] == null ? "" : entry[1]).trim();
+    if (key === "scope") throw new Error("Scope URLs are retired.");
     if (key && value) url.searchParams.set(key, value);
   });
-  if (settings.includeScopeParam && settings.viewerScope) {
-    url.searchParams.set("scope", settings.viewerScope);
-  }
   url.searchParams.set("doc", settings.docId || "");
   if (typeof settings.query === "string" && settings.query.trim()) {
     url.searchParams.set("q", settings.query.trim());
@@ -16,29 +14,21 @@ export function buildViewerUrl(options) {
   Object.entries(settings.reportParams || {}).forEach(function (entry) {
     var key = String(entry[0] || "").trim();
     var value = String(entry[1] == null ? "" : entry[1]).trim();
+    if (key === "scope") throw new Error("Scope URLs are retired.");
     if (key && value) url.searchParams.set(key, value);
   });
   url.hash = settings.hash || "";
   return url.pathname + url.search + url.hash;
 }
 
-export function buildViewerUrlForScope(options) {
+export function buildViewerUrlForDocument(options) {
   var settings = options || {};
-  var targetScope = String(settings.scope || settings.viewerScope || "").trim().toLowerCase();
-  var targetConfig = settings.scopeConfigsById ? settings.scopeConfigsById.get(targetScope) : null;
-  var useManage = Boolean(settings.manageRoute);
-  var baseUrl = useManage
-    ? (settings.routeViewerBaseUrl || settings.viewerBaseUrl || "/docs/")
-    : ((targetConfig && targetConfig.viewerBaseUrl) || settings.viewerBaseUrl || "/docs/");
-  var url = new URL(baseUrl, settings.origin || window.location.origin);
-  if (useManage) {
-    url.searchParams.set("scope", targetScope);
-  } else if (targetConfig && targetConfig.includeScopeParam && targetScope) {
-    url.searchParams.set("scope", targetScope);
-  }
-  if (targetConfig && targetConfig.stage) url.searchParams.set("stage", targetConfig.stage);
-  url.searchParams.set("doc", settings.docId || "");
-  return url.pathname + url.search;
+  return buildViewerUrl({
+    viewerBaseUrl: settings.viewerBaseUrl,
+    origin: settings.origin,
+    docId: settings.docId,
+    preservedQueryParams: settings.stage ? { stage: settings.stage } : {}
+  });
 }
 
 export function routeFromAnchorHref(href, options) {
@@ -52,17 +42,10 @@ export function routeFromAnchorHref(href, options) {
     return { navigateUrl: url.pathname + url.search + url.hash };
   }
 
-  var scope = String(url.searchParams.get("scope") || "").trim();
-  url.searchParams.delete("mode");
-  if (settings.includeScopeParam && scope && scope !== settings.viewerScope) {
-    if (!settings.allowScopeQuery) {
-      return null;
-    }
-    url.searchParams.delete("mode");
-    return {
-      navigateUrl: url.pathname + url.search + url.hash
-    };
+  if (url.searchParams.has("scope")) {
+    return { error: "Scope URLs are retired; use a current document link." };
   }
+  url.searchParams.delete("mode");
 
   var docId = url.searchParams.get("doc");
   if (!docId) return null;
@@ -106,7 +89,6 @@ export function resolveViewerRouteDocId(options) {
   var resolvedDocId = requestedDocId;
   var docsById = settings.docsById;
   var defaultRouteDocId = settings.defaultRouteDocId || "";
-  var viewerScope = settings.viewerScope || "";
   var resolveLoadableDocId = settings.resolveLoadableDocId;
   var defaultDocId = settings.defaultDocId;
 
@@ -119,14 +101,6 @@ export function resolveViewerRouteDocId(options) {
   }
 
   if (requestedDocId && !docsById.has(requestedDocId)) {
-    if (!defaultRouteDocId && viewerScope && requestedDocId === viewerScope && typeof defaultDocId === "function") {
-      resolvedDocId = defaultDocId();
-      return {
-        requestedDocId: requestedDocId,
-        docId: resolvedDocId,
-        corrected: resolvedDocId !== requestedDocId
-      };
-    }
     return {
       requestedDocId: requestedDocId,
       docId: requestedDocId,
@@ -174,7 +148,6 @@ export function applyViewerRoute(options) {
     requestedDocId: typeof settings.currentDocId === "function" ? settings.currentDocId() : "",
     docsById: state ? state.docsById : null,
     defaultRouteDocId: settings.defaultRouteDocId,
-    viewerScope: settings.viewerScope,
     resolveLoadableDocId: settings.resolveLoadableDocId,
     defaultDocId: settings.defaultDocId
   });
@@ -218,14 +191,8 @@ export function applyViewerRoute(options) {
   }
 
   var shouldReplaceHistory = route.corrected;
-  if (!shouldReplaceHistory && typeof settings.hasCanonicalScopeInUrl === "function") {
-    shouldReplaceHistory = !settings.hasCanonicalScopeInUrl();
-  }
   if (!shouldReplaceHistory && typeof settings.hasDisallowedModeInUrl === "function") {
     shouldReplaceHistory = settings.hasDisallowedModeInUrl();
-  }
-  if (!shouldReplaceHistory && typeof settings.hasDisallowedScopeInUrl === "function") {
-    shouldReplaceHistory = settings.hasDisallowedScopeInUrl();
   }
   if (shouldReplaceHistory && typeof settings.setHistory === "function") {
     settings.setHistory(docId, routeHash, query, "replace");
@@ -355,20 +322,14 @@ export function loadViewerDoc(options) {
 export function handleViewerPopstate(options) {
   var settings = options || {};
   if (typeof settings.docsAvailable === "function" && !settings.docsAvailable()) return;
-  if (settings.allowScopeQuery) {
-    try {
-      if (typeof settings.routeScopeFromUrl === "function" && settings.routeScopeFromUrl() !== settings.viewerScope) {
-        if (typeof settings.reloadWindow === "function") {
-          settings.reloadWindow();
-        }
-        return;
-      }
-    } catch (error) {
-      if (typeof settings.setStatus === "function") {
-        settings.setStatus(error.message || "Unknown docs scope.", true);
-      }
+  try {
+    if (typeof settings.routeStageFromUrl === "function" && settings.routeStageFromUrl() !== settings.viewerStage) {
+      if (typeof settings.reloadWindow === "function") settings.reloadWindow();
       return;
     }
+  } catch (error) {
+    if (typeof settings.setStatus === "function") settings.setStatus(error.message || "Unknown Docs stage.", true);
+    return;
   }
   if (typeof settings.hideContextMenu === "function") {
     settings.hideContextMenu();

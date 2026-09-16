@@ -7,18 +7,18 @@ import json
 from pathlib import Path
 from typing import Any
 
-from docs_scope_config import (
+from docs_workspace_config import (
     CONFIG_REL_PATH,
-    DocsScopeConfig,
-    load_docs_scope_configs,
+    DocsStageConfig,
+    load_docs_workspace_config,
     generated_documents_path,
     generated_search_path,
-    resolve_scope_path,
+    resolve_workspace_path,
 )
 
 
 BROWSER_CONFIG_REL_PATH = Path("docs-viewer/config/defaults/docs-viewer-config.json")
-SCHEMA_VERSION = "docs_source_config_report_v1"
+SCHEMA_VERSION = "docs_source_config_report_v2"
 
 
 def _load_json(path: Path, label: str) -> dict[str, Any]:
@@ -33,33 +33,11 @@ def _load_json(path: Path, label: str) -> dict[str, Any]:
     return payload
 
 
-def _raw_scope_records(repo_root: Path) -> list[dict[str, Any]]:
-    payload = _load_json(repo_root / CONFIG_REL_PATH, str(CONFIG_REL_PATH))
-    raw_scopes = payload.get("scopes")
-    if not isinstance(raw_scopes, list):
-        raise ValueError(f"{CONFIG_REL_PATH} must contain a scopes array")
-    return [item for item in raw_scopes if isinstance(item, dict)]
-
-
-def _browser_scope_records(repo_root: Path) -> dict[str, dict[str, Any]]:
+def _browser_stage_records(repo_root: Path) -> dict[str, dict[str, Any]]:
     payload = _load_json(repo_root / BROWSER_CONFIG_REL_PATH, str(BROWSER_CONFIG_REL_PATH))
-    raw_scopes = payload.get("scopes")
-    if not isinstance(raw_scopes, list):
-        return {}
-    out: dict[str, dict[str, Any]] = {}
-    for item in raw_scopes:
-        if not isinstance(item, dict):
-            continue
-        scope_id = str(item.get("scope_id") or "").strip().lower()
-        if scope_id:
-            out[scope_id] = item
-    return out
-
-
-def _docs_viewer_source_settings(repo_root: Path) -> dict[str, Any]:
-    payload = _load_json(repo_root / CONFIG_REL_PATH, str(CONFIG_REL_PATH))
-    docs_viewer = payload.get("docs_viewer")
-    return docs_viewer if isinstance(docs_viewer, dict) else {}
+    if payload.get("schema_version") != "docs_viewer_config_v2":
+        raise ValueError("Browser configuration requires regeneration with the current builder")
+    return {item["stage"]: item for item in payload.get("stages", []) if isinstance(item, dict) and item.get("stage")}
 
 
 def _browser_docs_viewer_settings(repo_root: Path) -> dict[str, Any]:
@@ -68,14 +46,14 @@ def _browser_docs_viewer_settings(repo_root: Path) -> dict[str, Any]:
     return docs_viewer if isinstance(docs_viewer, dict) else {}
 
 
-def generated_docs_index_tree_path(repo_root: Path, config: DocsScopeConfig) -> Path:
-    return resolve_scope_path(repo_root, generated_documents_path(config)) / "index-tree.json"
+def generated_docs_index_tree_path(repo_root: Path, config: DocsStageConfig) -> Path:
+    return resolve_workspace_path(repo_root, generated_documents_path(config)) / "index-tree.json"
 
 
-def _read_viewer_options(repo_root: Path, config: DocsScopeConfig) -> tuple[dict[str, Any], list[str]]:
+def _read_viewer_options(repo_root: Path, config: DocsStageConfig) -> tuple[dict[str, Any], list[str]]:
     index_tree_path = generated_docs_index_tree_path(repo_root, config)
     warnings: list[str] = []
-    payload = _load_json(index_tree_path, f"generated docs index tree for {config.scope_id}")
+    payload = _load_json(index_tree_path, f"generated docs index tree for {config.stage}")
     if not payload:
         warnings.append("Generated docs index tree is missing.")
         return {}, warnings
@@ -89,19 +67,8 @@ def _read_viewer_options(repo_root: Path, config: DocsScopeConfig) -> tuple[dict
     return viewer_options, warnings
 
 
-def _scope_title(raw: dict[str, Any], scope_id: str) -> str:
-    title = str(raw.get("title") or "").strip()
-    if title:
-        return title
-    return scope_id.replace("_", " ").replace("-", " ").title()
-
-
 def _safe_raw_subset(raw: dict[str, Any]) -> dict[str, Any]:
     allowed = {
-        "scope_id",
-        "scope_type",
-        "viewer_base_url",
-        "include_scope_param",
         "default_doc_id",
         "non_loadable_doc_ids",
         "manage_only_tree_root_ids",
@@ -111,28 +78,19 @@ def _safe_raw_subset(raw: dict[str, Any]) -> dict[str, Any]:
 
 
 def build_source_config_report(repo_root: Path) -> dict[str, Any]:
-    configs = load_docs_scope_configs(repo_root)
-    raw_by_scope = {
-        str(item.get("scope_id") or "").strip().lower(): item
-        for item in _raw_scope_records(repo_root)
-        if str(item.get("scope_id") or "").strip()
-    }
-    browser_by_scope = _browser_scope_records(repo_root)
-    scopes: list[dict[str, Any]] = []
+    workspace = load_docs_workspace_config(repo_root)
+    raw_by_stage = _load_json(repo_root / CONFIG_REL_PATH, str(CONFIG_REL_PATH))["stages"]
+    browser_by_stage = _browser_stage_records(repo_root)
+    stages: list[dict[str, Any]] = []
 
-    for config in (selected for scope in sorted(configs) for selected in configs[scope].stages):
-        scope_id = config.scope_id
-        raw = raw_by_scope.get(scope_id, {})
-        browser = browser_by_scope.get(scope_id, {})
-        if config.stage:
-            raw = {**raw, **raw["stages"][config.stage]}
-            browser = next((item for item in browser.get("stages", []) if item.get("stage") == config.stage), {})
+    for config in workspace.stages:
+        raw = raw_by_stage[config.stage]
+        browser = browser_by_stage.get(config.stage, {})
         viewer_options, warnings = _read_viewer_options(repo_root, config)
-        scopes.append(
+        stages.append(
             {
-                "scope_id": scope_id,
-                **({"stage": config.stage} if config.stage else {}),
-                "title": _scope_title(raw, scope_id) + (f" / {config.stage}" if config.stage else ""),
+                "stage": config.stage,
+                "title": config.stage.replace("-", " ").title(),
                 "source_config": _safe_raw_subset(raw),
                 "source_config_path": CONFIG_REL_PATH.as_posix(),
                 "browser_config": browser,
@@ -140,7 +98,7 @@ def build_source_config_report(repo_root: Path) -> dict[str, Any]:
                 "viewer_options": viewer_options,
                 "artifacts": {
                     "generated_documents_available": generated_docs_index_tree_path(repo_root, config).is_file(),
-                    "generated_search_available": resolve_scope_path(
+                    "generated_search_available": resolve_workspace_path(
                         repo_root,
                         generated_search_path(config),
                     ).is_file(),
@@ -163,7 +121,7 @@ def build_source_config_report(repo_root: Path) -> dict[str, Any]:
                     },
                 },
                 "paths": {
-                    "route_base": config.viewer_base_url,
+                    "route_base": "/docs/",
                 },
                 "warnings": warnings,
             }
@@ -174,7 +132,7 @@ def build_source_config_report(repo_root: Path) -> dict[str, Any]:
         "schema_version": SCHEMA_VERSION,
         "source_config_path": CONFIG_REL_PATH.as_posix(),
         "browser_config_path": BROWSER_CONFIG_REL_PATH.as_posix(),
-        "docs_viewer_source": _docs_viewer_source_settings(repo_root),
+        "docs_viewer_source": {"recent_limit": workspace.recent_limit},
         "docs_viewer_browser": _browser_docs_viewer_settings(repo_root),
-        "scopes": scopes,
+        "stages": stages,
     }

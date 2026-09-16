@@ -18,10 +18,10 @@ from docs_artifact_locations import (
     authenticated_remote_client_for_locations,
     normalize_artifact_identity,
 )
-from docs_scope_config import DocsScopeConfig, public_media_bindings
+from docs_workspace_config import DocsStageConfig, public_media_bindings
 
 
-PUBLIC_MEDIA_RECONCILIATION_SCHEMA_VERSION = "docs_public_media_reconciliation_v1"
+PUBLIC_MEDIA_RECONCILIATION_SCHEMA_VERSION = "docs_public_media_reconciliation_v2"
 IGNORED_PUBLIC_MEDIA_IDENTITIES = frozenset({".DS_Store", ".gitkeep"})
 HTML_START_TAG_PATTERN = re.compile(
     r"<(?P<body>[A-Za-z][A-Za-z0-9:-]*(?:[^>\"']|\"[^\"]*\"|'[^']*')*)>",
@@ -48,7 +48,7 @@ def _media_identity_from_url(value: str, prefix: str) -> str:
 
 
 def referenced_public_media(
-    config: DocsScopeConfig,
+    config: DocsStageConfig,
     payload_collections: Iterable[tuple[str, Mapping[Path, bytes]]],
 ) -> dict[tuple[str, str], tuple[str, ...]]:
     """Return exact media identities referenced by prospective public by-ID payloads."""
@@ -98,14 +98,14 @@ def _is_ignored_public_identity(identity: str) -> bool:
 
 def _type_adapters(
     repo_root: Path,
-    config: DocsScopeConfig,
+    config: DocsStageConfig,
     media_type: str,
     *,
     remote_client: object | None,
 ) -> tuple[ArtifactLocationAdapter, ArtifactLocationAdapter]:
     projection = config.public_projection
     if projection is None:
-        raise ValueError(f"scope {config.scope_id!r} has no public media projection")
+        raise ValueError("workspace has no public media projection")
     collection, public = public_media_bindings(config)[media_type]
     published = collection.media.types[public.media_type]
     return (
@@ -125,7 +125,7 @@ def _type_adapters(
 
 def _remote_client(
     repo_root: Path,
-    config: DocsScopeConfig,
+    config: DocsStageConfig,
     *,
     client: object | None,
     env_files: Iterable[Path] | None,
@@ -133,7 +133,7 @@ def _remote_client(
 ) -> tuple[object | None, str]:
     projection = config.public_projection
     if projection is None:
-        return None, "scope has no public media projection"
+        return None, "workspace has no public media projection"
     locations = [media.location for _collection, media in public_media_bindings(config).values()]
     try:
         return (
@@ -188,7 +188,7 @@ def _published_rows(
 
 def plan_public_media_reconciliation(
     repo_root: Path,
-    config: DocsScopeConfig,
+    config: DocsStageConfig,
     references: Mapping[tuple[str, str], tuple[str, ...]],
     *,
     client: object | None = None,
@@ -199,7 +199,7 @@ def plan_public_media_reconciliation(
 
     projection = config.public_projection
     if projection is None:
-        raise ValueError(f"scope {config.scope_id!r} has no public media projection")
+        raise ValueError("workspace has no public media projection")
     remote_client, remote_error = _remote_client(
         repo_root,
         config,
@@ -345,7 +345,7 @@ def plan_public_media_reconciliation(
     return {
         "schema_version": PUBLIC_MEDIA_RECONCILIATION_SCHEMA_VERSION,
         "operation": "status",
-        "scope": config.scope_id,
+        "stage": "published",
         "referenced_count": len(references),
         "available_count": sum(item["available_count"] for item in types),
         "copy_count": sum(item["copy_count"] for item in types),
@@ -361,7 +361,7 @@ def plan_public_media_reconciliation(
 
 def _apply_type(
     repo_root: Path,
-    config: DocsScopeConfig,
+    config: DocsStageConfig,
     media_type: str,
     references: Mapping[tuple[str, str], tuple[str, ...]],
     *,
@@ -369,7 +369,7 @@ def _apply_type(
 ) -> dict[str, Any]:
     projection = config.public_projection
     if projection is None:
-        raise ValueError(f"scope {config.scope_id!r} has no public media projection")
+        raise ValueError("workspace has no public media projection")
     _collection, public = public_media_bindings(config)[media_type]
     results: list[dict[str, Any]] = []
     errors: list[str] = []
@@ -479,7 +479,7 @@ def _apply_type(
 
 def apply_public_media_reconciliation(
     repo_root: Path,
-    config: DocsScopeConfig,
+    config: DocsStageConfig,
     references: Mapping[tuple[str, str], tuple[str, ...]],
     *,
     client: object | None = None,
@@ -490,7 +490,7 @@ def apply_public_media_reconciliation(
 
     projection = config.public_projection
     if projection is None:
-        raise ValueError(f"scope {config.scope_id!r} has no public media projection")
+        raise ValueError("workspace has no public media projection")
     remote_client, remote_error = _remote_client(
         repo_root,
         config,
@@ -500,7 +500,7 @@ def apply_public_media_reconciliation(
     )
     preflight = plan_public_media_reconciliation(repo_root, config, references, client=remote_client, env_files=env_files, environ=environ)
     if preflight["error_count"]:
-        return failed_public_media_reconciliation(config.scope_id, "apply", RuntimeError("; ".join(preflight["errors"])))
+        return failed_public_media_reconciliation( "apply", RuntimeError("; ".join(preflight["errors"])))
     types: list[dict[str, Any]] = []
     for media_type, (_collection, public) in sorted(public_media_bindings(config).items()):
         if public.location.provider == R2_PROVIDER and remote_error:
@@ -538,7 +538,7 @@ def apply_public_media_reconciliation(
     return {
         "schema_version": PUBLIC_MEDIA_RECONCILIATION_SCHEMA_VERSION,
         "operation": "apply",
-        "scope": config.scope_id,
+        "stage": "published",
         "referenced_count": len(references),
         "copied_count": sum(item["copied_count"] for item in types),
         "unchanged_count": sum(item["unchanged_count"] for item in types),
@@ -551,13 +551,13 @@ def apply_public_media_reconciliation(
     }
 
 
-def failed_public_media_reconciliation(scope: str, operation: str, error: Exception) -> dict[str, Any]:
+def failed_public_media_reconciliation(operation: str, error: Exception) -> dict[str, Any]:
     """Return a non-raising media result so document publication remains complete."""
 
     return {
         "schema_version": PUBLIC_MEDIA_RECONCILIATION_SCHEMA_VERSION,
         "operation": operation,
-        "scope": scope,
+        "stage": "published",
         "referenced_count": 0,
         "available_count": 0,
         "copy_count": 0,

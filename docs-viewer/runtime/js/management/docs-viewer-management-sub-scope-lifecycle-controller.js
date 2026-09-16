@@ -1,10 +1,4 @@
 import {
-  scopeCreateSupported,
-  scopeDeleteSupported,
-  scopeDeleteNavigationTarget,
-  scopeLifecycleDeleteTargets,
-  scopeLifecycleRenameTargets,
-  scopeRenameSupported,
   subScopeCreateSupported,
   subScopeDeleteSupported,
   subScopeLifecycleDeleteTargets
@@ -13,7 +7,7 @@ import {
   normalizeManagedDocumentTarget
 } from "./docs-viewer-management-document-target.js";
 
-var LIFECYCLE_ERROR = "Scope lifecycle unavailable.";
+var LIFECYCLE_ERROR = "Sub-scope lifecycle unavailable.";
 
 export function followCreatedSubScopeReport(payload, options = {}) {
   var target;
@@ -24,7 +18,6 @@ export function followCreatedSubScopeReport(payload, options = {}) {
       || payload.action !== "create_sub_scope"
       || payload.committed !== true
       || Object.prototype.hasOwnProperty.call(target, "sub_scope")
-      || target.scope !== String(options.activeScope || "").trim().toLowerCase()
       || target.stage !== options.activeStage
     ) {
       throw new Error("Created sub-scope report target is invalid.");
@@ -61,29 +54,24 @@ export function followCreatedSubScopeReport(payload, options = {}) {
     });
 }
 
-export function createDocsViewerManagementScopeLifecycleController(options = {}) {
+export function createDocsViewerManagementSubScopeLifecycleController(options = {}) {
   var root = options.root || null;
   var management = options.management || {};
   var callbacks = options.callbacks || {};
   var documentRef = options.document || document;
   var refs = options.refs || {
-    createScopeButton: documentRef.getElementById("docsViewerManageNewScopeButton"),
-    renameScopeButton: documentRef.getElementById("docsViewerManageRenameScopeButton"),
-    deleteScopeButton: documentRef.getElementById("docsViewerManageDeleteScopeButton"),
     createSubScopeButton: documentRef.getElementById("docsViewerManageNewSubScopeButton"),
     deleteSubScopeButton: documentRef.getElementById("docsViewerManageDeleteSubScopeButton")
   };
   var lifecycleRequestPromise = null;
 
-  function viewerScope() {
-    return typeof callbacks.viewerScope === "function" ? callbacks.viewerScope() : "";
+  function viewerStage() {
+    return typeof callbacks.viewerStage === "function" ? callbacks.viewerStage() : "";
   }
 
   function lifecycleCallbacks() {
     return {
       onApplied: function (payload) {
-        if (payload && payload.action === "rename_scope" && typeof callbacks.navigateToScope === "function") return;
-        if (scopeDeleteNavigationTarget(payload, viewerScope()) && typeof callbacks.navigateToScope === "function") return;
         if (payload && payload.action === "create_sub_scope") return;
         var reloadConfig = typeof callbacks.reloadViewerConfiguration === "function"
           ? callbacks.reloadViewerConfiguration()
@@ -97,7 +85,6 @@ export function createDocsViewerManagementScopeLifecycleController(options = {})
       },
       followCreatedSubScopeReport: function (payload) {
         return followCreatedSubScopeReport(payload, {
-          activeScope: viewerScope(),
           activeStage: typeof callbacks.managementClientOptions === "function" ? callbacks.managementClientOptions().stage : undefined,
           reloadViewerConfiguration: callbacks.reloadViewerConfiguration,
           refreshManagementCapabilities: callbacks.refreshManagementCapabilities,
@@ -107,23 +94,19 @@ export function createDocsViewerManagementScopeLifecycleController(options = {})
       render: callbacks.render,
       setBusy: callbacks.setBusy,
       setMessage: callbacks.setMessage,
-      navigateToScope: callbacks.navigateToScope
     };
   }
 
   function loadLifecycleModule() {
     if (lifecycleRequestPromise) return lifecycleRequestPromise;
-    lifecycleRequestPromise = import("./docs-viewer-scope-lifecycle.js")
+    lifecycleRequestPromise = import("./docs-viewer-sub-scope-lifecycle.js")
       .then(function (module) {
         if (
           !module ||
-          typeof module.openCreateScopeFlow !== "function" ||
-          typeof module.openRenameScopeFlow !== "function" ||
-          typeof module.openDeleteScopeFlow !== "function" ||
           typeof module.openCreateSubScopeFlow !== "function" ||
           typeof module.openDeleteSubScopeFlow !== "function"
         ) {
-          throw new Error("Docs Viewer scope lifecycle module is unavailable.");
+          throw new Error("Docs Viewer sub-scope lifecycle module is unavailable.");
         }
         return module;
       })
@@ -134,19 +117,17 @@ export function createDocsViewerManagementScopeLifecycleController(options = {})
     return lifecycleRequestPromise;
   }
 
-  function openFlow(flowName, includeParentScope) {
+  function openFlow(flowName) {
     if (typeof callbacks.hideContextMenu === "function") callbacks.hideContextMenu();
     if (typeof callbacks.hideManageActionsMenu === "function") callbacks.hideManageActionsMenu();
     return loadLifecycleModule()
       .then(function (module) {
         var flowOptions = {
           root: root,
-          activeScope: viewerScope(),
           capabilities: management.managementCapabilities,
           clientOptions: typeof callbacks.managementClientOptions === "function" ? callbacks.managementClientOptions() : {},
           callbacks: lifecycleCallbacks()
         };
-        if (includeParentScope) flowOptions.parentScope = viewerScope();
         return module[flowName](flowOptions);
       })
       .catch(function (error) {
@@ -157,62 +138,30 @@ export function createDocsViewerManagementScopeLifecycleController(options = {})
       });
   }
 
-  function createScope() {
-    return openFlow("openCreateScopeFlow", false);
-  }
-
-  function deleteScope() {
-    return openFlow("openDeleteScopeFlow", false);
-  }
-
-  function renameScope() {
-    return openFlow("openRenameScopeFlow", false);
-  }
-
   function createSubScope() {
-    return openFlow("openCreateSubScopeFlow", true);
+    return openFlow("openCreateSubScopeFlow");
   }
 
   function deleteSubScope() {
-    return openFlow("openDeleteSubScopeFlow", true);
+    return openFlow("openDeleteSubScopeFlow");
   }
 
   function render() {
-    if (refs.createScopeButton) {
-      var createScopeAvailable = management.managementAvailable && scopeCreateSupported(management.managementCapabilities);
-      refs.createScopeButton.hidden = !createScopeAvailable;
-      refs.createScopeButton.disabled = management.managementBusy || !createScopeAvailable;
-    }
-    if (refs.deleteScopeButton) {
-      var deleteScopeAvailable = management.managementAvailable && scopeDeleteSupported(management.managementCapabilities);
-      var deleteScopeTargets = scopeLifecycleDeleteTargets(management.managementCapabilities);
-      refs.deleteScopeButton.hidden = !deleteScopeAvailable;
-      refs.deleteScopeButton.disabled = management.managementBusy || !deleteScopeAvailable || deleteScopeTargets.length === 0;
-    }
-    if (refs.renameScopeButton) {
-      var renameScopeAvailable = management.managementAvailable && scopeRenameSupported(management.managementCapabilities);
-      var renameScopeTargets = scopeLifecycleRenameTargets(management.managementCapabilities);
-      refs.renameScopeButton.hidden = !renameScopeAvailable;
-      refs.renameScopeButton.disabled = management.managementBusy || !renameScopeAvailable || renameScopeTargets.length === 0;
-    }
     if (refs.createSubScopeButton) {
-      var createSubScopeAvailable = management.managementAvailable && subScopeCreateSupported(management.managementCapabilities, viewerScope());
+      var createSubScopeAvailable = management.managementAvailable && subScopeCreateSupported(management.managementCapabilities, viewerStage());
       refs.createSubScopeButton.hidden = !createSubScopeAvailable;
       refs.createSubScopeButton.disabled = management.managementBusy || !createSubScopeAvailable;
     }
     if (refs.deleteSubScopeButton) {
-      var deleteSubScopeAvailable = management.managementAvailable && subScopeDeleteSupported(management.managementCapabilities, viewerScope());
-      var deleteSubScopeTargets = subScopeLifecycleDeleteTargets(management.managementCapabilities, viewerScope());
+      var deleteSubScopeAvailable = management.managementAvailable && subScopeDeleteSupported(management.managementCapabilities, viewerStage());
+      var deleteSubScopeTargets = subScopeLifecycleDeleteTargets(management.managementCapabilities, viewerStage());
       refs.deleteSubScopeButton.hidden = !deleteSubScopeAvailable;
       refs.deleteSubScopeButton.disabled = management.managementBusy || !deleteSubScopeAvailable || deleteSubScopeTargets.length === 0;
     }
   }
 
   return {
-    createScope: createScope,
     createSubScope: createSubScope,
-    deleteScope: deleteScope,
-    renameScope: renameScope,
     deleteSubScope: deleteSubScope,
     render: render
   };

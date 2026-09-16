@@ -31,9 +31,8 @@ def project_manifest(
     settings: Mapping[str, Any],
     documents: Sequence[Any],
     repo_root: Path,
-    scope: str,
     sub_scope: str,
-    stage: str = "",
+    stage: str,
 ) -> dict[str, Any]:
     """Project document-owned subjects without adding a folder inventory."""
 

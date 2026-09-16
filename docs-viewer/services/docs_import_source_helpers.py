@@ -5,8 +5,10 @@ from __future__ import annotations
 
 from pathlib import Path
 from typing import Any, Dict
+from urllib.parse import urlencode
 
-from docs_scope_config import DOCS_SCOPE_CONFIGS, resolve_external_data_root
+from docs_workspace_config import resolve_external_data_root
+from docs_management_document_target import normalize_managed_document_target
 
 
 def relative_path(repo_root: Path, path: Path) -> str:
@@ -21,9 +23,10 @@ def relative_path(repo_root: Path, path: Path) -> str:
         raise ValueError("source path is outside the repo and external Docs Viewer root") from exc
 
 
-def viewer_url_for(scope: str, doc_id: str) -> str:
-    normalized_scope = scope if scope in DOCS_SCOPE_CONFIGS else next(iter(DOCS_SCOPE_CONFIGS))
-    return f"/docs/?scope={normalized_scope}&doc={doc_id}"
+def viewer_url_for(doc_id: str, *, stage: str) -> str:
+    """Link to the exact imported ordinary document without a scope fallback."""
+    target = normalize_managed_document_target({"stage": stage, "doc_id": doc_id})
+    return "/docs/?" + urlencode({"stage": target["stage"], "doc": target["doc_id"]})
 
 
 def import_summary_text(

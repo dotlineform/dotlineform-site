@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Any
 
 import docs_generated_reads
 import docs_catalogue_media
@@ -11,8 +10,7 @@ import docs_diagram_source_service
 import docs_import_source_service as import_source_service
 import docs_management_routes as routes
 import docs_published_reads
-import docs_scope_publish
-from docs_scope_config import load_docs_scope_configs
+import docs_publish
 import docs_source_config_report
 import docs_series_works_report
 import docs_unpublishable_report
@@ -26,44 +24,42 @@ from studio.shared.python.projects_directories import list_projects_directory
 
 
 def docs_api_query_value(params: dict[str, list[str]], key: str) -> str:
-    return (params.get(key) or [""])[0]
-
-
-def normalize_scope(repo_root: Path, value: Any) -> str:
-    scope = str(value or "").strip().lower()
-    configs = load_docs_scope_configs(repo_root)
-    if scope not in configs:
-        raise ValueError(f"scope must be one of: {', '.join(sorted(configs))}")
-    return scope
+    values = params.get(key, [""])
+    if len(values) != 1:
+        raise ValueError(f"{key} must have exactly one value")
+    return values[0]
 
 
 def docs_generated_read_payload(repo_root: Path, path: str, params: dict[str, list[str]]) -> dict[str, object]:
-    scope = normalize_scope(repo_root, docs_api_query_value(params, "scope"))
+    if "scope" in params:
+        raise ValueError("scope is retired")
+    if "sub_scope" in params and path != routes.GENERATED_LINKS_PATH:
+        raise ValueError("Use the configured sub-scope artifact route for child payloads")
 
     stage = docs_api_query_value(params, "stage") if "stage" in params else None
 
     if path == routes.GENERATED_INDEX_TREE_PATH:
-        return docs_generated_reads.read_generated_docs_index_tree(repo_root, scope, stage)
+        return docs_generated_reads.read_generated_docs_index_tree(repo_root, stage)
     if path == routes.GENERATED_RECENT_PATH:
-        return docs_generated_reads.read_generated_recent(repo_root, scope, stage)
+        return docs_generated_reads.read_generated_recent(repo_root, stage)
     if path == routes.GENERATED_BACKLINKS_PATH:
-        return docs_generated_reads.read_generated_backlinks(repo_root, scope, stage)
+        return docs_generated_reads.read_generated_backlinks(repo_root, stage)
     if path == routes.GENERATED_SEARCH_PATH:
-        return docs_generated_reads.read_generated_search_index(repo_root, scope, stage)
+        return docs_generated_reads.read_generated_search_index(repo_root, stage)
     if path == routes.GENERATED_SEMANTIC_TOKENS_PATH:
-        return docs_generated_reads.read_generated_semantic_tokens_index(repo_root, scope, stage)
+        return docs_generated_reads.read_generated_semantic_tokens_index(repo_root, stage)
     if path == routes.GENERATED_LINKS_PATH:
         return docs_generated_reads.read_generated_doc_links(
-            repo_root, scope, docs_api_query_value(params, "doc_id"),
+            repo_root, docs_api_query_value(params, "doc_id"),
             docs_api_query_value(params, "sub_scope"), stage,
         )
-    if path == routes.GENERATED_SCOPE_LINKS_PATH:
-        return docs_generated_reads.read_generated_scope_links(repo_root, scope, stage)
+    if path == routes.GENERATED_WORKSPACE_LINKS_PATH:
+        return docs_generated_reads.read_generated_workspace_links(repo_root, stage)
     if path == routes.GENERATED_PAYLOAD_PATH:
-        doc_id = docs_api_query_value(params, "doc_id") or docs_api_query_value(params, "doc")
+        doc_id = docs_api_query_value(params, "doc_id")
         if not doc_id:
             raise ValueError("doc_id is required")
-        return docs_generated_reads.read_generated_doc_payload(repo_root, scope, doc_id, stage)
+        return docs_generated_reads.read_generated_doc_payload(repo_root, doc_id, stage)
     raise FileNotFoundError("Not found")
 
 
@@ -72,30 +68,36 @@ def docs_published_read_payload(
     path: str,
     params: dict[str, list[str]],
 ) -> dict[str, object]:
-    scope = normalize_scope(repo_root, docs_api_query_value(params, "scope"))
+    if "scope" in params:
+        raise ValueError("scope is retired")
+    if "stage" in params and docs_api_query_value(params, "stage") != "published":
+        raise ValueError("Published reads cannot address a source/generated stage")
+    if "sub_scope" in params:
+        raise ValueError("Use the configured Published sub-scope artifact route for child payloads")
     if path == routes.PUBLISHED_INDEX_TREE_PATH:
-        return docs_published_reads.read_published_docs_index_tree(repo_root, scope)
+        return docs_published_reads.read_published_docs_index_tree(repo_root)
     if path == routes.PUBLISHED_RECENT_PATH:
-        return docs_published_reads.read_published_recent(repo_root, scope)
+        return docs_published_reads.read_published_recent(repo_root)
     if path == routes.PUBLISHED_BACKLINKS_PATH:
-        return docs_published_reads.read_published_backlinks(repo_root, scope)
+        return docs_published_reads.read_published_backlinks(repo_root)
     if path == routes.PUBLISHED_SEARCH_PATH:
-        return docs_published_reads.read_published_search_index(repo_root, scope)
+        return docs_published_reads.read_published_search_index(repo_root)
     if path == routes.PUBLISHED_SEMANTIC_TOKENS_PATH:
-        return docs_published_reads.read_published_semantic_tokens_index(repo_root, scope)
+        return docs_published_reads.read_published_semantic_tokens_index(repo_root)
     if path == routes.PUBLISHED_PAYLOAD_PATH:
-        doc_id = docs_api_query_value(params, "doc_id") or docs_api_query_value(params, "doc")
+        doc_id = docs_api_query_value(params, "doc_id")
         if not doc_id:
             raise ValueError("doc_id is required")
         return docs_published_reads.read_published_doc_payload(
             repo_root,
-            scope,
             doc_id,
         )
     raise FileNotFoundError("Not found")
 
 
 def docs_management_get_payload(repo_root: Path, path: str, params: dict[str, list[str]], *, dry_run: bool = False) -> dict[str, object]:
+    if "scope" in params:
+        raise ValueError("scope is retired; supply an explicit stage and optional sub_scope")
     if path == routes.HEALTH_PATH:
         return {"ok": True, "service": "docs_management", "dry_run": dry_run}
     if path == routes.CAPABILITIES_PATH:
@@ -103,7 +105,6 @@ def docs_management_get_payload(repo_root: Path, path: str, params: dict[str, li
     if path == routes.DOCUMENT_LINK_TARGETS_PATH:
         return read_document_link_targets(
             repo_root,
-            scope=docs_api_query_value(params, "scope"),
             stage=docs_api_query_value(params, "stage") if "stage" in params else None,
         )
     if path == routes.CATALOGUE_MEDIA_TARGETS_PATH:
@@ -119,7 +120,6 @@ def docs_management_get_payload(repo_root: Path, path: str, params: dict[str, li
     if path == routes.UNPUBLISHABLE_REPORT_PATH:
         return docs_unpublishable_report.build_unpublishable_report(
             repo_root,
-            scope=docs_api_query_value(params, "scope"),
             stage=docs_api_query_value(params, "stage"),
         )
     if path in {
@@ -128,7 +128,7 @@ def docs_management_get_payload(repo_root: Path, path: str, params: dict[str, li
         routes.GENERATED_BACKLINKS_PATH,
         routes.GENERATED_PAYLOAD_PATH,
         routes.GENERATED_LINKS_PATH,
-        routes.GENERATED_SCOPE_LINKS_PATH,
+        routes.GENERATED_WORKSPACE_LINKS_PATH,
         routes.GENERATED_SEARCH_PATH,
         routes.GENERATED_SEMANTIC_TOKENS_PATH,
     }:
@@ -147,18 +147,15 @@ def docs_management_get_payload(repo_root: Path, path: str, params: dict[str, li
     if path == routes.SOURCE_CONFIG_SETTINGS_PATH:
         return docs_source_config_settings.build_settings_contract(
             repo_root,
-            docs_api_query_value(params, "scope"),
-            docs_api_query_value(params, "stage") or None,
+            stage=docs_api_query_value(params, "stage") or None,
         )
     if path == routes.SOURCE_BODY_PATH:
         return read_source_body(repo_root, params)
     if path in {routes.METADATA_PATH, routes.SERIES_WORKS_REPORT_PATH, routes.SERIES_WORK_MEDIA_PATH}:
         target = {
-            "scope": docs_api_query_value(params, "scope"),
+            "stage": docs_api_query_value(params, "stage"),
             "doc_id": docs_api_query_value(params, "doc_id"),
         }
-        if "stage" in params:
-            target["stage"] = docs_api_query_value(params, "stage")
         if "sub_scope" in params:
             target["sub_scope"] = docs_api_query_value(params, "sub_scope")
         if path == routes.SERIES_WORKS_REPORT_PATH:
@@ -182,17 +179,15 @@ def docs_management_get_payload(repo_root: Path, path: str, params: dict[str, li
     if path == routes.STAGED_MEDIA_FILES_PATH:
         return docs_staged_media_service.list_staged_media_files(
             repo_root,
-            docs_api_query_value(params, "scope"),
             docs_api_query_value(params, "media_kind"),
-            docs_api_query_value(params, "source_directory"),
+            stage=docs_api_query_value(params, "stage"),
+            sub_scope=docs_api_query_value(params, "sub_scope"),
         )
     if path == routes.DIAGRAM_SOURCES_PATH:
         return docs_diagram_source_service.list_diagram_sources(repo_root, params)
     if path == routes.PUBLISH_STATUS_PATH:
-        return docs_scope_publish.preview_scope_publish(
+        return docs_publish.preview_publish(
             repo_root,
-            {"scope": docs_api_query_value(params, "scope"), "stage": docs_api_query_value(params, "stage")},
+            {"stage": docs_api_query_value(params, "stage")},
         )
-    if docs_api_query_value(params, "scope"):
-        normalize_scope(repo_root, docs_api_query_value(params, "scope"))
     raise FileNotFoundError("Not found")

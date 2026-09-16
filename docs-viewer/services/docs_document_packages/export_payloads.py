@@ -8,10 +8,10 @@ from typing import Any
 
 from docs_document_packages.export_common import RETURNED_PACKAGE_SCHEMA_VERSION, normalize_text
 from docs_document_packages.export_config import (
-    EXPORT_META_SCHEMA_VERSION,
     config_checksum,
     supports_docs_review,
 )
+from docs_document_packages.provenance import EXPORT_META_SCHEMA_VERSION
 from docs_document_packages.export_selection import ExportContext
 from docs_document_packages.workspace import configured_workspace_paths, path_is_relative_to
 
@@ -42,7 +42,7 @@ def export_metadata(
         "adapter_id": "documents",
         "config_id": config_id,
         "profile_id": config_id,
-        "scope": context.scope,
+        "stage": context.stage,
         "target_format": target_format,
         "record_shape": record_shape,
         "generated_at": generated_at,

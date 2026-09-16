@@ -307,7 +307,7 @@ function openPrepareOptions(options) {
       }
       try {
         const request = createDocumentPackagePrepareRequest({
-          scope: options.scope,
+          stage: options.stage,
           subScope: options.subScope,
           profile,
           documents: options.documents,
@@ -359,7 +359,7 @@ function showPrepareResult(options) {
 
 export async function openDocumentPackagePrepareWorkflow(options = {}) {
   const root = options.root || document.body;
-  const scope = packageText(options.scope).toLowerCase();
+  const stage = packageText(options.stage).toLowerCase();
   const subScope = packageText(options.subScope).toLowerCase();
   const checkedDocIds = normalizeCheckedDocIds(options.checkedDocIds);
   const callbacks = options.callbacks || {};
@@ -377,8 +377,8 @@ export async function openDocumentPackagePrepareWorkflow(options = {}) {
   };
 
   if (typeof callbacks.hideManageActionsMenu === "function") callbacks.hideManageActionsMenu();
-  if (!scope || !checkedDocIds.length) {
-    const error = new Error(!scope ? "A Docs Viewer scope is required." : "Select one or more documents.");
+  if (!stage || !checkedDocIds.length) {
+    const error = new Error(!stage ? "A Docs Viewer stage is required." : "Select one or more documents.");
     setMessage(error.message, true);
     return { confirmed: false, error };
   }
@@ -390,8 +390,8 @@ export async function openDocumentPackagePrepareWorkflow(options = {}) {
     setBusy(true);
     setMessage("Loading package options...", false);
     [configPayload, documentsPayload] = await Promise.all([
-      subScope ? client.getConfig(scope, subScope) : client.getConfig(),
-      client.getDocuments(scope, subScope)
+      client.getConfig(stage, subScope),
+      client.getDocuments(stage, subScope)
     ]);
   } catch (error) {
     loadError = error;
@@ -410,19 +410,18 @@ export async function openDocumentPackagePrepareWorkflow(options = {}) {
     if (!workspace || workspace.available !== true) {
       throw new Error(packageText(workspace && workspace.message) || "The document-package workspace is unavailable.");
     }
-    const scopes = Array.isArray(configPayload.scopes) ? configPayload.scopes : [];
-    if (!scopes.some((record) => packageText(record && record.scope) === scope)) {
-      throw new Error("The active Docs Viewer scope is unavailable for package preparation.");
+    if (packageText(configPayload.stage) !== stage || packageText(documentsPayload.stage) !== stage) {
+      throw new Error("Package response does not match the selected stage.");
     }
     if (subScope) {
       if (
-        packageText(configPayload && configPayload.scope).toLowerCase() !== scope
+        packageText(configPayload && configPayload.stage).toLowerCase() !== stage
         || packageText(configPayload && configPayload.sub_scope).toLowerCase() !== subScope
       ) {
         throw new Error("Package configuration did not match the active sub-scope collection.");
       }
       if (
-        packageText(documentsPayload && documentsPayload.scope).toLowerCase() !== scope
+        packageText(documentsPayload && documentsPayload.stage).toLowerCase() !== stage
         || packageText(documentsPayload && documentsPayload.sub_scope).toLowerCase() !== subScope
         || documentsPayload.flat_collection !== true
       ) {
@@ -445,7 +444,7 @@ export async function openDocumentPackagePrepareWorkflow(options = {}) {
     const result = await openPrepareOptions({
       root,
       restoreFocus: options.restoreFocus,
-      scope,
+      stage,
       subScope,
       checkedDocIds,
       profiles,

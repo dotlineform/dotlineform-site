@@ -16,31 +16,28 @@ function frozenIds(values) {
 }
 
 function exactCollection(value) {
-  var keys = Object.keys(value || {}).filter(function (key) { return key !== "stage"; }).sort();
-  var scope = cleanString(value && value.scope).toLowerCase();
+  var keys = Object.keys(value || {}).sort();
   var subScope = cleanString(value && value.sub_scope).toLowerCase();
   if (
     keys.length !== 2
-    || keys[0] !== "scope"
+    || keys[0] !== "stage"
     || keys[1] !== "sub_scope"
-    || (value.stage !== undefined && !["working", "pre-publish"].includes(value.stage))
-    || !scope
+    || !["working", "pre-publish", "published"].includes(value.stage)
     || !subScope
   ) {
     throw new Error("Sub-scope action collection target is invalid.");
   }
-  return Object.freeze({ scope: scope, ...(value.stage ? { stage: value.stage } : {}), sub_scope: subScope });
+  return Object.freeze({ ...(value.stage ? { stage: value.stage } : {}), sub_scope: subScope });
 }
 
 function exactDetail(value, collection) {
-  var keys = Object.keys(value || {}).filter(function (key) { return key !== "stage"; }).sort();
+  var keys = Object.keys(value || {}).sort();
   var docId = cleanString(value && value.doc_id);
   if (
     keys.length !== 3
     || keys[0] !== "doc_id"
-    || keys[1] !== "scope"
+    || keys[1] !== "stage"
     || keys[2] !== "sub_scope"
-    || cleanString(value && value.scope).toLowerCase() !== collection.scope
     || cleanString(value && value.sub_scope).toLowerCase() !== collection.sub_scope
     || cleanString(value && value.stage) !== cleanString(collection.stage)
     || !docId
@@ -48,7 +45,6 @@ function exactDetail(value, collection) {
     throw new Error("Sub-scope action detail target is invalid.");
   }
   return Object.freeze({
-    scope: collection.scope,
     ...(collection.stage ? { stage: collection.stage } : {}),
     sub_scope: collection.sub_scope,
     doc_id: docId
@@ -74,8 +70,7 @@ function actionTarget(targetKind, context) {
     var selected = frozenIds(context.selection && context.selection.checkedDocIds);
     if (!selected.length) return null;
     return Object.freeze({
-      scope: collection.scope,
-    ...(collection.stage ? { stage: collection.stage } : {}),
+      ...(collection.stage ? { stage: collection.stage } : {}),
       sub_scope: collection.sub_scope,
       doc_ids: selected
     });

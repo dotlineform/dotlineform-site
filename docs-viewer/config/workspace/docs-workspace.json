@@ -1,0 +1,182 @@
+{
+  "schema_version": "docs_workspace_v1",
+  "public_viewer_base_url": "/analysis/",
+  "recent_limit": 20,
+  "search_fields": [
+    "title",
+    "heading",
+    "summary",
+    "body",
+    "code"
+  ],
+  "public_projection": {
+    "documents": {
+      "location": {
+        "provider": "repository",
+        "path": "site/assets/data/docs"
+      }
+    },
+    "search": {
+      "location": {
+        "provider": "repository",
+        "path": "site/assets/data/search/analysis/index.json"
+      }
+    },
+    "media": {
+      "img": {
+        "location": {
+          "provider": "r2",
+          "path": "docs/analysis/media/img"
+        },
+        "served_path_prefix": "https://media.dotlineform.com/docs/analysis/media/img"
+      },
+      "svg": {
+        "location": {
+          "provider": "r2",
+          "path": "docs/analysis/media/svg"
+        },
+        "served_path_prefix": "https://media.dotlineform.com/docs/analysis/media/svg"
+      },
+      "files": {
+        "location": {
+          "provider": "r2",
+          "path": "docs/analysis/media/files"
+        },
+        "served_path_prefix": "https://media.dotlineform.com/docs/analysis/media/files"
+      },
+      "html": {
+        "location": {
+          "provider": "r2",
+          "path": "docs/analysis/media/html"
+        },
+        "served_path_prefix": "https://media.dotlineform.com/docs/analysis/media/html"
+      }
+    }
+  },
+  "stages": {
+    "working": {
+      "media": {
+        "types": {
+          "img": {
+            "build_inputs": []
+          },
+          "svg": {
+            "build_inputs": [
+              "mermaid"
+            ]
+          },
+          "files": {
+            "build_inputs": []
+          },
+          "html": {
+            "build_inputs": []
+          }
+        },
+        "build_sources": {
+          "mermaid": {
+            "producer": "mermaid",
+            "publishes_to": "svg"
+          }
+        }
+      },
+      "default_doc_id": "d-20260801-073826-8865a8",
+      "non_loadable_doc_ids": [],
+      "manage_only_tree_root_ids": [],
+      "allow_unresolved_parent_ids": false,
+      "sub_scopes": [
+        {
+          "sub_scope": "works",
+          "title": "Works",
+          "sub_scope_customisation": {
+            "id": "working_works",
+            "settings": {}
+          },
+          "lifecycle": {
+            "tool_id": "docs-viewer-scope-lifecycle",
+            "report_host_doc_id": "d-20260801-073826-8865a8",
+            "report_host_source_revision": "sha256:97a3ee6e3db1ff1a3251ed0a49e7a0c248a8dc9897b3d661abd08630cd94b722"
+          }
+        },
+        {
+          "sub_scope": "concepts",
+          "title": "Concepts",
+          "supports_return_import": true
+        },
+        {
+          "sub_scope": "processing",
+          "title": "Processing",
+          "sub_scope_customisation": {
+            "id": "working_processing",
+            "settings": {}
+          },
+          "lifecycle": {
+            "tool_id": "docs-viewer-scope-lifecycle",
+            "report_host_doc_id": "d-20260901-103244-09e720",
+            "report_host_source_revision": "sha256:9c89b65c8f3e1823e56818d748b76e32291b27a31de8ec4fc4391bd720d213d0"
+          }
+        },
+        {
+          "sub_scope": "moments",
+          "title": "Moments",
+          "lifecycle": {
+            "tool_id": "docs-viewer-scope-lifecycle",
+            "report_host_doc_id": "d-20260907-180859-c425b2",
+            "report_host_source_revision": "sha256:fd60d983cff466dda2f39143ecdded2317e1227f2e8b8c6fc60cfffa76e18ebd"
+          }
+        }
+      ]
+    },
+    "pre-publish": {
+      "media": {
+        "types": {
+          "img": {
+            "build_inputs": []
+          },
+          "svg": {
+            "build_inputs": [
+              "mermaid"
+            ]
+          },
+          "files": {
+            "build_inputs": []
+          },
+          "html": {
+            "build_inputs": []
+          }
+        },
+        "build_sources": {
+          "mermaid": {
+            "producer": "mermaid",
+            "publishes_to": "svg"
+          }
+        }
+      },
+      "default_doc_id": "d-20260426-164043-e14f49",
+      "non_loadable_doc_ids": [],
+      "manage_only_tree_root_ids": [],
+      "allow_unresolved_parent_ids": false,
+      "sub_scopes": [
+        {
+          "sub_scope": "works",
+          "title": "Works",
+          "sub_scope_customisation": {
+            "id": "pre_publish_works",
+            "settings": {}
+          }
+        },
+        {
+          "sub_scope": "concepts",
+          "title": "Concepts"
+        },
+        {
+          "sub_scope": "processing",
+          "title": "Processing"
+        },
+        {
+          "sub_scope": "moments",
+          "title": "Moments"
+        }
+      ]
+    }
+  }
+}

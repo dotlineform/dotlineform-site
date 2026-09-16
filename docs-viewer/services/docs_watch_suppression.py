@@ -44,23 +44,18 @@ def suppressions_dir(repo_root: Path) -> Path:
     return repo_root / SUPPRESSIONS_REL_DIR
 
 
-def watch_suppression_owner(scope: str, sub_scope: str = "", *, stage: str | None = None) -> str:
-    normalized_scope = str(scope or "").strip()
-    if stage is not None:
-        if stage not in {"working", "pre-publish"}:
-            raise ValueError("unknown Docs workflow stage")
-        normalized_scope = f"{normalized_scope}/{stage}"
-    normalized_sub_scope = str(sub_scope or "").strip()
-    return (
-        f"{normalized_scope}{SUB_SCOPE_OWNER_SEPARATOR}{normalized_sub_scope}"
-        if normalized_sub_scope
-        else normalized_scope
-    )
+def watch_suppression_owner(sub_scope: str = "", *, stage: str | None) -> str:
+    if stage not in {"working", "pre-publish"}:
+        raise ValueError("an explicit Docs workflow stage is required")
+    if sub_scope:
+        from docs_workspace_config import normalize_sub_scope_id
+        sub_scope = normalize_sub_scope_id(sub_scope, field="sub_scope")
+    return f"{stage}{SUB_SCOPE_OWNER_SEPARATOR}{sub_scope}" if sub_scope else stage
 
 
-def suppression_path(repo_root: Path, scope: str, filename: str) -> Path:
-    digest = hashlib.sha1(f"{scope}|{filename}".encode("utf-8")).hexdigest()
-    return suppressions_dir(repo_root) / f"{scope}-{digest}.json"
+def suppression_path(repo_root: Path, owner: str, filename: str) -> Path:
+    digest = hashlib.sha1(f"{owner}|{filename}".encode("utf-8")).hexdigest()
+    return suppressions_dir(repo_root) / f"{owner}-{digest}.json"
 
 
 def write_json_atomic(path: Path, payload: Dict[str, Any]) -> None:
@@ -82,7 +77,7 @@ def write_json_atomic(path: Path, payload: Dict[str, Any]) -> None:
 
 def set_watch_suppressions(
     repo_root: Path,
-    scope: str,
+    owner: str,
     filenames: list[str],
     *,
     status: str,
@@ -93,39 +88,39 @@ def set_watch_suppressions(
     expires_at = now + dt.timedelta(seconds=max(1, int(ttl_seconds)))
     for filename in sorted({str(name or "").strip() for name in filenames if str(name or "").strip()}):
         payload = {
-            "scope": scope,
+            "owner": owner,
             "filename": filename,
             "status": status,
             "reason": reason,
             "written_at": isoformat_utc(now),
             "expires_at": isoformat_utc(expires_at),
         }
-        write_json_atomic(suppression_path(repo_root, scope, filename), payload)
+        write_json_atomic(suppression_path(repo_root, owner, filename), payload)
 
 
-def clear_watch_suppressions(repo_root: Path, scope: str, filenames: list[str]) -> None:
+def clear_watch_suppressions(repo_root: Path, owner: str, filenames: list[str]) -> None:
     for filename in sorted({str(name or "").strip() for name in filenames if str(name or "").strip()}):
-        path = suppression_path(repo_root, scope, filename)
+        path = suppression_path(repo_root, owner, filename)
         try:
             path.unlink()
         except FileNotFoundError:
             pass
 
 
-def load_active_watch_suppressions(repo_root: Path, scope: str) -> Dict[str, Dict[str, Any]]:
+def load_active_watch_suppressions(repo_root: Path, owner: str) -> Dict[str, Dict[str, Any]]:
     root = suppressions_dir(repo_root)
     if not root.exists():
         return {}
 
     now = utc_now()
     active: Dict[str, Dict[str, Any]] = {}
-    prefix = f"{scope}-"
+    prefix = f"{owner}-"
     for path in sorted(root.glob(f"{prefix}*.json")):
         try:
             payload = json.loads(path.read_text(encoding="utf-8"))
         except (OSError, json.JSONDecodeError):
             continue
-        if str(payload.get("scope") or "").strip() != scope:
+        if str(payload.get("owner") or "").strip() != owner:
             continue
         filename = str(payload.get("filename") or "").strip()
         expires_at = parse_utc(str(payload.get("expires_at") or ""))

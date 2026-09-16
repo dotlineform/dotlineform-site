@@ -21,6 +21,7 @@ from docs_document_packages.returned_profiles import (
 from docs_document_packages.returned_parser import parse_staged_import
 from docs_document_packages import source_context
 from docs_document_packages.metadata import list_staged_files_with_metadata
+from docs_document_packages.provenance import require_package_stage
 import docs_source_model as source_model
 
 
@@ -49,15 +50,15 @@ def document_selectable_record(doc: Dict[str, Any]) -> Dict[str, Any]:
 def selectable_document_records(
     repo_root: Path,
     *,
-    scope: str,
+    stage: str,
     selection_model: str,
     sub_scope: str = "",
 ) -> Dict[str, Any]:
-    normalized_scope = source_model.normalize_scope(scope)
+    normalized_stage = require_package_stage(stage)
     normalized_sub_scope = str(sub_scope or "").strip().lower()
     docs = source_context.load_document_package_source_records(
         repo_root,
-        normalized_scope,
+        normalized_stage,
         normalized_sub_scope,
     )
     records = [
@@ -74,13 +75,13 @@ def selectable_document_records(
     ]
     payload: Dict[str, Any] = {
         "ok": True,
-        "scope": normalized_scope,
+        "stage": normalized_stage,
         "selection_model": selection_model,
         "records": records,
         "docs": records,
         "source": {
             "kind": "docs_source",
-            "scope": normalized_scope,
+            "stage": normalized_stage,
         },
     }
     if normalized_sub_scope:
@@ -96,7 +97,7 @@ def selectable_document_records(
 def build_document_package(
     repo_root: Path,
     *,
-    scope: str,
+    stage: str,
     data_domain: str,
     config_id: str,
     raw_doc_ids: Any,
@@ -110,7 +111,7 @@ def build_document_package(
     metadata_root: Path,
     sub_scope: str = "",
 ) -> Dict[str, Any]:
-    normalized_scope = source_model.normalize_scope(scope)
+    normalized_stage = require_package_stage(stage)
     normalized_sub_scope = str(sub_scope or "").strip().lower()
     if not config_id:
         raise ValueError("config_id is required")
@@ -125,7 +126,7 @@ def build_document_package(
     return build_export(
         repo_root=repo_root,
         config_id=config_id,
-        scope=normalized_scope,
+        stage=normalized_stage,
         sub_scope=normalized_sub_scope,
         data_domain=data_domain,
         selected_doc_ids=doc_ids,
@@ -144,13 +145,13 @@ def build_document_package(
 def list_returned_document_packages(
     repo_root: Path,
     *,
-    scope: str,
+    stage: str,
     sub_scope: str | None = None,
     required_capability: str = DOCS_REVIEW_CAPABILITY,
     staging_root: Path,
     metadata_root: Path,
 ) -> Dict[str, Any]:
-    """List reviewable packages for a scope or importable packages for one child."""
+    """List reviewable packages for a stage or importable packages for one child."""
 
     if required_capability not in {
         DOCS_REVIEW_CAPABILITY,
@@ -159,7 +160,7 @@ def list_returned_document_packages(
         raise ValueError(
             f"unsupported returned-package capability: {required_capability}"
         )
-    normalized_scope = source_model.normalize_scope(scope)
+    normalized_stage = require_package_stage(stage)
     normalized_sub_scope = (
         None
         if sub_scope is None
@@ -167,15 +168,15 @@ def list_returned_document_packages(
     )
     if sub_scope is not None and not normalized_sub_scope:
         raise ValueError("sub_scope is required for exact returned-package listing")
-    scope_config = source_context.package_source_scope_config(repo_root, normalized_scope)
+    stage_config = source_context.package_source_stage_config(repo_root, normalized_stage)
     sub_scope_labels = {
         record.sub_scope: record.title
-        for record in scope_config.sub_scopes
+        for record in stage_config.sub_scopes
     }
 
     def add_collection_labels(item: dict[str, Any]) -> dict[str, Any]:
         sub_scope = str(item.get("sub_scope") or "").strip().lower()
-        item["scope_label"] = source_model.humanize(normalized_scope)
+        item["stage_label"] = source_model.humanize(normalized_stage)
         item["sub_scope_label"] = (
             sub_scope_labels.get(sub_scope, source_model.humanize(sub_scope))
             if sub_scope
@@ -188,7 +189,7 @@ def list_returned_document_packages(
         staging_root=staging_root,
         metadata_root=metadata_root,
     )
-    report["scope"] = normalized_scope
+    report["stage"] = normalized_stage
     staged_files: list[dict[str, Any]] = []
     unassigned_files: list[dict[str, Any]] = []
     for item in report.get("files", []):
@@ -197,13 +198,13 @@ def list_returned_document_packages(
             continue
         if str(item.get("data_domain") or "").strip() != "documents":
             continue
-        item_scope = str(item.get("scope") or "").strip().lower()
-        if not item_scope:
+        item_stage = str(item.get("stage") or "").strip().lower()
+        if not item_stage:
             unassigned_files.append(item)
             continue
         item_sub_scope = str(item.get("sub_scope") or "").strip().lower()
         if (
-            item_scope == normalized_scope
+            item_stage == normalized_stage
             and (
                 normalized_sub_scope is None
                 or item_sub_scope == normalized_sub_scope
@@ -220,13 +221,16 @@ def list_returned_document_packages(
     for item in report.get("blocked_files", []):
         if str(item.get("data_domain") or "").strip() != "documents":
             continue
-        item_scope = str(item.get("scope") or "").strip().lower()
-        if not item_scope:
+        if item.get("provenance_error"):
+            blocked_files.append(item)
+            continue
+        item_stage = str(item.get("stage") or "").strip().lower()
+        if not item_stage:
             unassigned_files.append(item)
             continue
         item_sub_scope = str(item.get("sub_scope") or "").strip().lower()
         if (
-            item_scope == normalized_scope
+            item_stage == normalized_stage
             and (
                 normalized_sub_scope is None
                 or item_sub_scope == normalized_sub_scope
@@ -269,7 +273,7 @@ def list_returned_document_packages(
             continue
         validation = parse_staged_import(
             repo_root=repo_root,
-            scope=normalized_scope,
+            stage=normalized_stage,
             sub_scope=normalized_sub_scope,
             staged_file=str(item.get("filename") or "").strip(),
             staging_root=staging_root,

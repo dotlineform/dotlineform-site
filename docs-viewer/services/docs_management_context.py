@@ -8,7 +8,6 @@ from typing import Any, Dict, Optional
 from urllib.parse import urlparse
 
 from script_logging import append_script_log
-from docs_scope_config import DOCS_SCOPE_CONFIGS
 
 
 MAX_BODY_BYTES = 64 * 1024
@@ -67,11 +66,6 @@ def allowed_origin(origin: str) -> Optional[str]:
 
 def relative_path(repo_root: Path, path: Path) -> str:
     return path.resolve().relative_to(repo_root.resolve()).as_posix()
-
-
-def viewer_url_for(scope: str, doc_id: str) -> str:
-    normalized_scope = scope if scope in DOCS_SCOPE_CONFIGS else next(iter(DOCS_SCOPE_CONFIGS))
-    return f"/docs/?scope={normalized_scope}&doc={doc_id}"
 
 
 def log_event(repo_root: Path, event: str, details: Dict[str, Any]) -> None:

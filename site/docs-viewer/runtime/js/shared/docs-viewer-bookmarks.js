@@ -30,19 +30,19 @@ export function initDocsViewerBookmarks(context) {
   var routeCommands = context.routeCommands || {};
   var searchResetCommand = context.searchResetCommand || {};
 
-  function bookmarkScope() {
-    return context.bookmarkScope();
+  function bookmarkOwner() {
+    return context.bookmarkOwner();
   }
 
-  function getScopeBookmarks() {
-    var scope = bookmarkScope();
+  function getOwnerBookmarks() {
+    var owner = bookmarkOwner();
     return bookmarkState.bookmarks
-      .filter(function (record) { return record.scope === scope; })
+      .filter(function (record) { return record.owner === owner; })
       .sort(compareBookmarks);
   }
 
   function getBookmarkForDoc(docId) {
-    return findBookmarkByKey(bookmarkKey(bookmarkScope(), docId));
+    return findBookmarkByKey(bookmarkKey(bookmarkOwner(), docId));
   }
 
   function findBookmarkByKey(key) {
@@ -53,7 +53,7 @@ export function initDocsViewerBookmarks(context) {
   }
 
   function nextBookmarkOrder() {
-    var bookmarks = getScopeBookmarks();
+    var bookmarks = getOwnerBookmarks();
     if (!bookmarks.length) return 1;
     return bookmarks[bookmarks.length - 1].order + 1;
   }
@@ -117,7 +117,7 @@ export function initDocsViewerBookmarks(context) {
       return;
     }
 
-    var bookmarks = getScopeBookmarks();
+    var bookmarks = getOwnerBookmarks();
     if (!bookmarks.length) {
       bookmarkRow.hidden = true;
       bookmarkRow.innerHTML = "";
@@ -174,6 +174,7 @@ export function initDocsViewerBookmarks(context) {
       })
       .catch(function (error) {
         handleBookmarkStorageError(error);
+        context.setStatus(error.message || "Failed to load or convert bookmarks.", true);
         bookmarkState.bookmarks = [];
         bookmarkState.bookmarksLoaded = true;
         renderUi();
@@ -185,7 +186,7 @@ export function initDocsViewerBookmarks(context) {
     var now = isoNow();
     var label = defaultBookmarkLabel(doc);
     var record = normalizeBookmarkRecord({
-      scope: bookmarkScope(),
+      owner: bookmarkOwner(),
       doc_id: doc.doc_id,
       label: label,
       default_title: label,
@@ -260,7 +261,7 @@ export function initDocsViewerBookmarks(context) {
 
     var updated = normalizeBookmarkRecord({
       key: record.key,
-      scope: record.scope,
+      owner: record.owner,
       doc_id: record.doc_id,
       label: nextLabel,
       default_title: record.default_title,
@@ -324,14 +325,14 @@ export function initDocsViewerBookmarks(context) {
       var openButton = event.target.closest("[data-bookmark-open]");
       if (!openButton) return;
       event.preventDefault();
-      startRename(bookmarkKey(bookmarkScope(), openButton.dataset.bookmarkOpen));
+      startRename(bookmarkKey(bookmarkOwner(), openButton.dataset.bookmarkOpen));
     });
 
     bookmarkRow.addEventListener("keydown", function (event) {
       var openButton = event.target.closest("[data-bookmark-open]");
       if (openButton && event.key === "F2") {
         event.preventDefault();
-        startRename(bookmarkKey(bookmarkScope(), openButton.dataset.bookmarkOpen));
+        startRename(bookmarkKey(bookmarkOwner(), openButton.dataset.bookmarkOpen));
         return;
       }
 

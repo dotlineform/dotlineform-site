@@ -108,14 +108,11 @@ export function createDocsViewerManagementEventRouter(options = {}) {
     var commandsByAction = new Map([
       ["rebuild-docs", ["rebuild", { hideContextMenu: true, hideManageActionsMenu: true }]],
       ["import", ["openImport", {}]],
-      ["export-scopes", ["exportScopes", { hideContextMenu: true, hideManageActionsMenu: true }]],
+      ["export-workspace", ["exportWorkspace", { hideContextMenu: true, hideManageActionsMenu: true }]],
       ["settings", ["openSettings", {}]],
       ["publish-docs", ["publish", { hideContextMenu: true, hideManageActionsMenu: true }]],
       ["pre-publish-docs", ["prePublish", { hideContextMenu: true, hideManageActionsMenu: true }]],
       ["new", ["createDoc", { hideContextMenu: true, hideManageActionsMenu: true }]],
-      ["new-scope", ["createScope", { hideContextMenu: true, hideManageActionsMenu: true }]],
-      ["rename-scope", ["renameScope", { hideContextMenu: true, hideManageActionsMenu: true }]],
-      ["delete-scope", ["deleteScope", { hideContextMenu: true, hideManageActionsMenu: true }]],
       ["new-sub-scope", ["createSubScope", { hideContextMenu: true, hideManageActionsMenu: true }]],
       ["delete-sub-scope", ["deleteSubScope", { hideContextMenu: true, hideManageActionsMenu: true }]]
     ]);

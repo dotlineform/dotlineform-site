@@ -56,7 +56,6 @@ function setMessage(callbacks, message, isError) {
 
 export function validateStaticHtmlSnapshotPreview(preview, options = {}) {
   var payload = preview && typeof preview === "object" ? preview : {};
-  var scope = String(options.scope || "").trim();
   var requestedDocIds = normalizeIds(options.checkedDocIds);
   var previewDocIds = normalizeIds(payload.doc_ids);
   var rawPreviewDocIds = Array.isArray(payload.doc_ids) ? payload.doc_ids : [];
@@ -70,10 +69,7 @@ export function validateStaticHtmlSnapshotPreview(preview, options = {}) {
   ) {
     throw new Error("Snapshot preview response is invalid.");
   }
-  if (!scope || String(payload.scope || "").trim() !== scope) {
-    throw new Error("Snapshot preview scope no longer matches the active scope.");
-  }
-  if (String(payload.stage || "") !== String(options.stage || "")) {
+  if (!options.stage || payload.stage !== options.stage || Object.prototype.hasOwnProperty.call(payload, "scope")) {
     throw new Error("Snapshot preview stage no longer matches the active stage.");
   }
   if (
@@ -178,14 +174,13 @@ export function staticHtmlSnapshotConfirmationOptions(preview, options = {}) {
 }
 
 export async function openStaticHtmlSnapshotExportWorkflow(options = {}) {
-  var scope = String(options.scope || "").trim();
   var checkedDocIds = normalizeIds(options.checkedDocIds);
   var callbacks = options.callbacks || {};
   var clientOptions = options.clientOptions || {};
   var previewSnapshot = options.previewSnapshot || previewManagedDocsStaticHtmlExport;
   var applySnapshot = options.applySnapshot || applyManagedDocsStaticHtmlExport;
   var confirmSnapshot = options.confirmSnapshot || openDocsViewerConfirmModal;
-  if (!scope) throw new Error("Snapshot Export requires an active scope.");
+  if (!clientOptions.stage) throw new Error("Snapshot Export requires an explicit stage.");
   if (!checkedDocIds.length) throw new Error("Select one or more documents.");
 
   var preview;
@@ -197,7 +192,6 @@ export async function openStaticHtmlSnapshotExportWorkflow(options = {}) {
     setBusy(callbacks, false);
   }
   preview = validateStaticHtmlSnapshotPreview(preview, {
-    scope: scope,
     stage: clientOptions.stage,
     checkedDocIds: checkedDocIds
   });

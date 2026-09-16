@@ -356,12 +356,12 @@ function refreshStagedFiles(state) {
 }
 
 async function openResultSource(state, link) {
-  const scope = normalizeText(link && link.dataset ? link.dataset.scope : "");
+  const stage = normalizeText(link && link.dataset ? link.dataset.stage : "");
   const subScope = normalizeText(link && link.dataset ? link.dataset.subScope : "");
   const docId = normalizeText(link && link.dataset ? link.dataset.docId : "");
-  if (!scope || !docId) return;
+  if (!stage || !docId) return;
   try {
-    const target = { scope, doc_id: docId };
+    const target = { stage, doc_id: docId };
     if (link.dataset.stage) target.stage = link.dataset.stage;
     if (subScope) target.sub_scope = subScope;
     await openManagedDocSource(target, "vscode", managementOptionsForState(state));
@@ -398,7 +398,6 @@ async function runReview(state) {
   setStatus(state.statusNode, "busy", "Preparing the complete package for Docs Review...");
   try {
     const result = await openDocsImportCandidateInReview({
-      scope: target.scope,
       stagedFilename: candidate.filename,
       review: (payload) => fetchManagementJson(
         "/docs/packages/returned/review",
@@ -441,7 +440,6 @@ async function runImport(state) {
   if (selectedCandidateIsCollection(state)) {
     await state.collectionController.preview({
       file: candidate.raw,
-      scope: target.scope,
       stage: target.stage || "",
       subScope: normalizeText(target.sub_scope),
       sourceDirectory: state.sourceDirectory,
@@ -451,7 +449,6 @@ async function runImport(state) {
   }
   await runDocsHtmlImportWorkflow(state, {
     files: [candidate.raw],
-    scope: target.scope,
     stage: target.stage || "",
     subScope: normalizeText(target.sub_scope),
     includePromptMeta: Boolean(state.includePromptMeta.checked),

@@ -3,6 +3,8 @@
 
 from __future__ import annotations
 
+from docs_document_packages.provenance import REEXPORT_MESSAGE
+
 import json
 from pathlib import Path
 import re
@@ -13,8 +15,8 @@ from docs_management_source_service import open_source_path, split_source_exact
 from docs_review_build import build_review_package
 from docs_document_packages.workspace import configured_workspace_paths, marker_path
 
-PACKAGE_SCHEMA_VERSION = "docs_review_validated_package_v1"
-PACKAGES_SCHEMA_VERSION = "docs_review_packages_v1"
+PACKAGE_SCHEMA_VERSION = "docs_review_validated_package_v2"
+PACKAGES_SCHEMA_VERSION = "docs_review_packages_v2"
 SAFE_PACKAGE_ID_PATTERN = re.compile(r"\A[A-Za-z0-9][A-Za-z0-9._-]*\Z")
 SAFE_DOC_ID_PATTERN = re.compile(r"\A[A-Za-z0-9][A-Za-z0-9._-]*\Z")
 INVENTORY_FILENAMES = (
@@ -80,15 +82,17 @@ def _read_json_object(path: Path, label: str) -> dict[str, Any]:
 
 def _validated_manifest(package_path: Path) -> dict[str, Any]:
     manifest = _read_json_object(package_path / "manifest.json", "review package manifest")
+    if "source_scope" in manifest or "scope" in manifest or manifest.get("schema_version") == "docs_review_validated_package_v1":
+        raise ValueError(REEXPORT_MESSAGE)
     if manifest.get("schema_version") != PACKAGE_SCHEMA_VERSION:
         raise ValueError(f"review package manifest schema_version must be {PACKAGE_SCHEMA_VERSION}")
     if str(manifest.get("package_id") or "").strip() != package_path.name:
         raise ValueError("review package manifest package_id does not match its folder")
     if str(manifest.get("status") or "").strip().lower() != "validated":
         raise ValueError("review package manifest status must be validated")
-    source_scope = str(manifest.get("source_scope") or "").strip()
-    if not source_scope:
-        raise ValueError("review package manifest source_scope is required")
+    source_stage = str(manifest.get("source_stage") or "").strip()
+    if source_stage != "working":
+        raise ValueError("review package manifest source_stage must be working")
     if manifest.get("supports_docs_review") is not True:
         raise ValueError("review package manifest supports_docs_review must be true")
     if not isinstance(manifest.get("supports_return_import"), bool):
@@ -242,7 +246,7 @@ def package_record(repo_root: Path, package_path: Path) -> dict[str, Any]:
     return {
         "package_id": package_path.name,
         "title": str(manifest.get("title") or package_path.name),
-        "source_scope": str(manifest.get("source_scope") or ""),
+        "source_stage": str(manifest.get("source_stage") or ""),
         "source_sub_scope": str(manifest.get("source_sub_scope") or ""),
         "supports_docs_review": manifest.get("supports_docs_review"),
         "supports_return_import": manifest.get("supports_return_import"),

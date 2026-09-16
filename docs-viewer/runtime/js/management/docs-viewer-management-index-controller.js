@@ -1,7 +1,6 @@
 import {
   documentPackagePrepareCapability,
-  archiveSupported,
-  scopeStaticHtmlExportCapability
+  stageStaticHtmlExportCapability
 } from "./docs-viewer-management-capabilities.js";
 import {
   DOCS_VIEWER_ACTION_IDS
@@ -47,7 +46,7 @@ export function docsViewerStaticHtmlExportActionControlState(options = {}) {
   } else if (options.managementBusy || options.workflowActive) {
     disabledReason = "Docs management is busy.";
   } else {
-    var capability = scopeStaticHtmlExportCapability(options.capabilities, options.scope);
+    var capability = stageStaticHtmlExportCapability(options.capabilities, options.stage);
     if (!capability.available) disabledReason = capability.reason;
     else if (!resolution || !resolution.enabled) {
       disabledReason = resolution && resolution.disabledReason
@@ -70,18 +69,15 @@ export function createDocsViewerManagementIndexController(options = {}) {
   var searchRecent = options.searchRecent || {};
   var callbacks = options.callbacks || {};
   var documentRef = options.document || document;
-  var windowRef = options.window || window;
   var openSnapshotExportWorkflow = options.openSnapshotExportWorkflow || openStaticHtmlSnapshotExportWorkflow;
   var indexSelection = options.indexSelection || createDocsViewerIndexSelectionOwner({
-    initialScopeId: viewerScope()
+    initialStage: viewerStage()
   });
-  var archiveWorkflowActive = false;
-  var archiveWorkflowRequest = null;
   var preparePackageWorkflowRequest = null;
   var snapshotExportWorkflowActive = false;
 
-  function viewerScope() {
-    return typeof callbacks.viewerScope === "function" ? callbacks.viewerScope() : "";
+  function viewerStage() {
+    return typeof callbacks.viewerStage === "function" ? callbacks.viewerStage() : "";
   }
 
   function activeDocId() {
@@ -112,7 +108,7 @@ export function createDocsViewerManagementIndexController(options = {}) {
 
   function lifecycleContext(indexViewId) {
     return {
-      scopeId: viewerScope(),
+      stage: viewerStage(),
       managementContext: routeSession.managementContext,
       indexViewId: arguments.length ? String(indexViewId || "").trim() : activeIndexViewId()
     };
@@ -151,9 +147,9 @@ export function createDocsViewerManagementIndexController(options = {}) {
   }
 
   function indexSelectionAvailable() {
-    var snapshotCapability = scopeStaticHtmlExportCapability(
+    var snapshotCapability = stageStaticHtmlExportCapability(
       management.managementCapabilities,
-      viewerScope()
+      viewerStage()
     );
     return Boolean(
       routeSession.managementContext
@@ -209,25 +205,13 @@ export function createDocsViewerManagementIndexController(options = {}) {
     };
   }
 
-  function archiveActionControlState() {
-    var source = { scope: viewerScope(), stage: managementClientOptions().stage };
-    var resolution = resolveAction(DOCS_VIEWER_ACTION_IDS.ARCHIVE);
-    var available = archiveSupported(management.managementCapabilities, source);
-    return {
-      hidden: source.stage !== "working" || source.scope === "notes",
-      disabled: !management.managementAvailable || management.managementBusy || archiveWorkflowActive
-        || !available || !resolution || !resolution.enabled,
-      disabledReason: !available ? "Archive is unavailable." : ""
-    };
-  }
-
   function snapshotExportActionControlState() {
     return docsViewerStaticHtmlExportActionControlState({
       capabilities: management.managementCapabilities,
+      stage: viewerStage(),
       managementBusy: management.managementBusy,
       managementChecked: management.managementChecked,
       resolution: resolveAction(DOCS_VIEWER_ACTION_IDS.EXPORT_DOCS),
-      scope: viewerScope(),
       workflowActive: snapshotExportWorkflowActive
     });
   }
@@ -244,7 +228,6 @@ export function createDocsViewerManagementIndexController(options = {}) {
       items: {
         [DOCS_VIEWER_ACTION_IDS.EXPORT_DOCS]: snapshotExportActionControlState(),
         [DOCS_VIEWER_ACTION_IDS.PREPARE_DOCUMENT_PACKAGE]: preparePackageActionControlState(),
-        [DOCS_VIEWER_ACTION_IDS.ARCHIVE]: archiveActionControlState(),
         [DOCS_VIEWER_ACTION_IDS.DELETE]: deleteActionControlState()
       }
     };
@@ -328,7 +311,7 @@ export function createDocsViewerManagementIndexController(options = {}) {
       .then(function (module) {
         return module.openDocumentPackagePrepareWorkflow({
           root: root,
-          scope: viewerScope(),
+          stage: viewerStage(),
           checkedDocIds: checkedDocIds,
           restoreFocus: restoreFocus,
           callbacks: {
@@ -351,40 +334,6 @@ export function createDocsViewerManagementIndexController(options = {}) {
       });
   }
 
-  async function handleArchive() {
-    var resolution = resolveAction(DOCS_VIEWER_ACTION_IDS.ARCHIVE);
-    if (archiveActionControlState().disabled || !resolution || !resolution.enabled) return;
-    var source = { scope: viewerScope(), stage: managementClientOptions().stage };
-    var docIds = resolution.targetDocIds.slice();
-    archiveWorkflowActive = true;
-    renderManagementUi();
-    try {
-      if (!archiveWorkflowRequest) {
-        archiveWorkflowRequest = import("./docs-viewer-archive-workflow.js").catch(function (error) {
-          archiveWorkflowRequest = null;
-          throw error;
-        });
-      }
-      var workflow = await archiveWorkflowRequest;
-      await workflow.openArchiveWorkflow({
-        root: root, restoreFocus: indexActionsButton(), source: source, docIds: docIds,
-        clientOptions: managementClientOptions(),
-        callbacks: {
-          setBusy: setManagementBusy, setMessage: setManagementMessage, render: renderManagementUi,
-          onApplied: function (payload) {
-            if (!payload || !payload.viewer_url) throw new Error("Archive returned no destination.");
-            windowRef.location.assign(new URL(payload.viewer_url, windowRef.location.href).toString());
-          }
-        }
-      });
-    } catch (error) {
-      setManagementMessage(error && error.message ? error.message : "Archive failed.", true);
-    } finally {
-      archiveWorkflowActive = false;
-      renderManagementUi();
-    }
-  }
-
   function handleSnapshotExport() {
     var resolution = resolveAction(DOCS_VIEWER_ACTION_IDS.EXPORT_DOCS);
     var controlState = snapshotExportActionControlState();
@@ -402,7 +351,6 @@ export function createDocsViewerManagementIndexController(options = {}) {
     return openSnapshotExportWorkflow({
       root: root,
       restoreFocus: indexActionsButton(),
-      scope: viewerScope(),
       checkedDocIds: checkedDocIds,
       clientOptions: managementClientOptions(),
       callbacks: {
@@ -485,8 +433,7 @@ export function createDocsViewerManagementIndexController(options = {}) {
       handlePreparePackage();
     } else if (actionId === DOCS_VIEWER_ACTION_IDS.EXPORT_DOCS) {
       handleSnapshotExport();
-    } else if (actionId === DOCS_VIEWER_ACTION_IDS.ARCHIVE) {
-      handleArchive();
+
     } else if (actionId === DOCS_VIEWER_ACTION_IDS.DELETE) {
       if (typeof callbacks.handleDeleteDoc === "function") callbacks.handleDeleteDoc();
     } else {

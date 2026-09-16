@@ -1,14 +1,14 @@
 function identity(value) {
-  if (!value || !/^[a-z][a-z0-9-]*$/.test(value.scope)
+  if (!value || !["working", "pre-publish", "published"].includes(value.stage)
     || typeof value.sub_scope !== "string" || !/^(?:[a-z][a-z0-9-]*)?$/.test(value.sub_scope)
     || !/^d-\d{8}-\d{6}-[a-f0-9]{6}$/.test(value.doc_id)) {
     throw new Error("Links requires an exact document identity.");
   }
-  return { scope: value.scope, sub_scope: value.sub_scope, doc_id: value.doc_id };
+  return { stage: value.stage, sub_scope: value.sub_scope, doc_id: value.doc_id };
 }
 
 function sameTarget(left, right) {
-  return left.scope === right.scope && left.sub_scope === right.sub_scope && left.doc_id === right.doc_id;
+  return left.stage === right.stage && left.sub_scope === right.sub_scope && left.doc_id === right.doc_id;
 }
 
 /** Validate a prepared document summary and apply the explicit local viewing stage.
@@ -23,13 +23,14 @@ export function docsViewerLinksDocumentSummary(value, invokingTarget) {
   }
   var url = new URL(href, "https://docs.invalid");
   var params = url.searchParams;
-  if ((params.has("scope") && params.get("scope") !== target.scope)
+  if (params.has("scope")
     || (target.sub_scope
       ? !params.get("doc") || params.get("subdoc") !== target.doc_id
       : params.get("doc") !== target.doc_id || params.has("subdoc"))) {
     throw new Error("Links navigation does not match its document identity.");
   }
-  if (invokingTarget.stage && target.scope === invokingTarget.scope) params.set("stage", invokingTarget.stage);
+  if (target.stage !== invokingTarget.stage || params.has("stage")) throw new Error("Links stage does not match its document identity.");
+  params.set("stage", invokingTarget.stage);
   return {
     target: target, title: value.title, href: url.pathname + url.search + url.hash,
     subject: value.subject || null
@@ -37,21 +38,21 @@ export function docsViewerLinksDocumentSummary(value, invokingTarget) {
 }
 
 function category(document) {
-  if (document.target.scope === "analysis" && document.target.sub_scope === "concepts") return "Concepts";
+  if (document.target.sub_scope === "concepts") return "Concepts";
   if (document.subject && document.subject.state === "valid" && document.subject.kind === "work") return "Works";
   if (!document.target.sub_scope
-    || (document.target.scope === "analysis" && document.target.sub_scope === "works")) return "References";
+    || (document.target.sub_scope === "works")) return "References";
   return "";
 }
 
-/** Validate one complete version-1 response and project shallow, title-sorted sections.
+/** Validate one complete version-2 response and project shallow, title-sorted sections.
  * Combine both directions by exact identity; keep the supplied directional data unchanged.
  * Runtime stage navigation is separate from the stage-free stored href.
  */
 export function docsViewerLinksPresentation(payload, target) {
   var expected = identity(target);
-  if (!payload || payload.schema_version !== 1 || !Array.isArray(payload.outgoing) || !Array.isArray(payload.incoming)) {
-    throw new Error("Unsupported Links data. Expected schema version 1.");
+  if (!payload || payload.schema_version !== 2 || !Array.isArray(payload.outgoing) || !Array.isArray(payload.incoming)) {
+    throw new Error("Unsupported Links data. Expected schema version 2.");
   }
   var self = docsViewerLinksDocumentSummary(payload.self, target);
   if (!sameTarget(self.target, expected)) throw new Error("Links data does not match the displayed document.");

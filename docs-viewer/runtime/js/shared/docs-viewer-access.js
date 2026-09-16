@@ -26,7 +26,6 @@ export function createDocsViewerAccessProjection(options) {
   var routeAccess = settings.routeAccess || {};
   return {
     appKind: appKind,
-    allowScopeQuery: Boolean(routeAccess.allowScopeQuery),
     managementUi: appKind === DOCS_VIEWER_APP_KINDS.MANAGE && Boolean(routeAccess.managementUi)
   };
 }

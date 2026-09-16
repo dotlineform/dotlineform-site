@@ -1,7 +1,9 @@
+import { RETIRED_ANALYSIS_STATE, isSavedStateOwner } from "./docs-viewer-saved-state.js";
+
 var bookmarkDbPromise = null;
 
-export function bookmarkKey(scope, docId) {
-  return String(scope || "") + "::" + String(docId || "");
+export function bookmarkKey(owner, docId) {
+  return "v2:" + String(owner || "") + "::" + String(docId || "");
 }
 
 export function isoNow() {
@@ -17,13 +19,13 @@ export function compareBookmarks(left, right) {
 
 export function normalizeBookmarkRecord(record) {
   if (!record || typeof record !== "object") return null;
-  var scope = String(record.scope || "").trim();
+  var owner = record.owner;
   var docId = String(record.doc_id || "").trim();
-  if (!scope || !docId) return null;
+  if (!isSavedStateOwner(owner) || !docId) return null;
   var defaultTitle = String(record.default_title || record.label || docId).trim() || docId;
   return {
-    key: bookmarkKey(scope, docId),
-    scope: scope,
+    key: bookmarkKey(owner, docId),
+    owner: owner,
     doc_id: docId,
     label: String(record.label || defaultTitle).trim() || defaultTitle,
     default_title: defaultTitle,
@@ -56,10 +58,34 @@ export function openBookmarksDb(options) {
   bookmarkDbPromise = new Promise(function (resolve, reject) {
     var request = indexedDb.open(dbName, dbVersion);
 
-    request.onupgradeneeded = function () {
+    request.onupgradeneeded = function (event) {
       var db = request.result;
       if (!db.objectStoreNames.contains(storeName)) {
         db.createObjectStore(storeName, { keyPath: "key" });
+        return;
+      }
+      if (event.oldVersion < 2) {
+        var store = request.transaction.objectStore(storeName);
+        var cursorRequest = store.openCursor();
+        cursorRequest.onsuccess = function () {
+          var cursor = cursorRequest.result;
+          if (!cursor) return;
+          var record = cursor.value;
+          var owner = Object.prototype.hasOwnProperty.call(RETIRED_ANALYSIS_STATE, record.scope)
+            ? RETIRED_ANALYSIS_STATE[record.scope] : "";
+          if (owner) {
+            if (typeof record.doc_id !== "string" || !record.doc_id) {
+              request.transaction.abort();
+              return;
+            }
+            var converted = Object.assign({}, record, { owner: owner, key: bookmarkKey(owner, record.doc_id) });
+            delete converted.scope;
+            // add (rather than put) aborts the whole upgrade on a key collision.
+            store.add(converted);
+            cursor.delete();
+          }
+          cursor.continue();
+        };
       }
     };
 
@@ -72,8 +98,11 @@ export function openBookmarksDb(options) {
       resolve(db);
     };
 
+    request.onblocked = function () {
+      reject(bookmarkStorageError("Close older Docs Viewer tabs to convert bookmarks, then reload."));
+    };
     request.onerror = function () {
-      reject(bookmarkStorageError("Failed to open bookmark storage.", request.error));
+      reject(bookmarkStorageError("Failed to open or convert bookmark storage.", request.error));
     };
   }).catch(function (error) {
     bookmarkDbPromise = null;

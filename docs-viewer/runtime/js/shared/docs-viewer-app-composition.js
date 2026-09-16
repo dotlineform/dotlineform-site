@@ -13,8 +13,8 @@ import {
   createDocsViewerGeneratedDataRuntime
 } from "./docs-viewer-generated-data-runtime.js";
 import {
-  createDocsViewerConfiguredScopeProvider
-} from "./docs-viewer-configured-scope-provider.js";
+  createDocsViewerWorkspaceProvider
+} from "./docs-viewer-workspace-provider.js";
 import {
   createDocsViewerConfigService
 } from "./docs-viewer-config-service.js";
@@ -49,10 +49,9 @@ import {
  * @property {Object} generatedData Generated-data read runtime.
  * @property {Object} routeContext Resolved route and application policy.
  * @property {Object} routeSession Route navigation state.
- * @property {Object} scopeConfig Configured-scope state.
+ * @property {Object} workspaceConfig Workspace configuration.
  * @property {Object} serviceContext Available route services.
  * @property {Object|null} [source] Optional source-service adapter.
- * @property {Function} viewerScope Current scope accessor.
  * @property {Object} window Browser window used by the provider.
  */
 
@@ -70,10 +69,9 @@ import {
  * @property {Object} [generatedData] Generated-data read runtime.
  * @property {Object} [routeContext] Resolved route and application policy.
  * @property {Object} [routeSession] Route navigation state.
- * @property {Object} [scopeConfig] Configured-scope state.
+ * @property {Object} [workspaceConfig] Workspace configuration.
  * @property {Object} [serviceContext] Available route services.
  * @property {Object|null} [source] Optional source-service adapter.
- * @property {Function} [viewerScope] Current scope accessor.
  * @property {Object} [window] Browser window used by the provider.
  */
 
@@ -82,7 +80,7 @@ export var DOCS_VIEWER_RUNTIME_DEFAULTS = {
   searchDebounceMs: 140,
   defaultRecentLimit: 20,
   bookmarkDbName: "dotlineform-docs-viewer",
-  bookmarkDbVersion: 1,
+  bookmarkDbVersion: 2,
   bookmarkStoreName: "favorites",
   managementCapabilityRetryAttempts: 60,
   managementCapabilityRetryDelayMs: 500,
@@ -98,9 +96,9 @@ var STARTUP_PHASES = [
     authority: "browser route/config context"
   },
   {
-    id: "load-configured-scope-discovery",
+    id: "load-workspace-configuration",
     authority: "browser-safe config asset",
-    feature: "configured-scope-discovery"
+    feature: "workspace-configuration"
   },
   {
     id: "load-viewer-settings-ui-text",
@@ -175,9 +173,9 @@ function startupAuthorityRecords(routeContext, serviceContext) {
     }
   ];
 
-  if (docsViewerRouteFeatureEnabled(featurePolicy, "configured-scope-discovery")) {
+  if (docsViewerRouteFeatureEnabled(featurePolicy, "workspace-configuration")) {
     output.splice(3, 0, {
-      phase: "configured-scope discovery",
+      phase: "workspace discovery",
       authority: serviceContext.config.authority
     });
   }
@@ -212,7 +210,7 @@ function requireCollectionProviderMethod(provider, methodName) {
  * Create and validate the collection provider for the resolved route.
  *
  * The injected factory, when present, receives the same route/service context
- * as the configured-scope fallback. Additional provider methods are preserved.
+ * as the workspace fallback. Additional provider methods are preserved.
  *
  * @param {DocsViewerCollectionProviderOptions} [options]
  * @returns {DocsViewerCollectionProvider}
@@ -224,16 +222,15 @@ export function createDocsViewerCollectionProvider(options) {
     generatedData: settings.generatedData,
     routeContext: settings.routeContext,
     routeSession: settings.routeSession,
-    scopeConfig: settings.scopeConfig,
+    workspaceConfig: settings.workspaceConfig,
     serviceContext: settings.serviceContext,
     source: settings.source,
-    viewerScope: settings.viewerScope,
     viewerStage: settings.viewerStage,
     window: settings.window
   };
   var provider = typeof settings.createCollectionProvider === "function"
     ? settings.createCollectionProvider(providerContext)
-    : createDocsViewerConfiguredScopeProvider(providerContext);
+    : createDocsViewerWorkspaceProvider(providerContext);
   requireCollectionProviderMethod(provider, "readIndex");
   requireCollectionProviderMethod(provider, "readDocument");
   return provider;
@@ -260,7 +257,7 @@ export function createDocsViewerAppComposition(options) {
   var appShellRefs = settings.appShellRefs || {};
   var routeAccess = appContext.routeAccess || {};
   var featurePolicy = appContext.featurePolicy || {};
-  var bookmarkScope = routeContext.bookmarkScope;
+  var bookmarkOwner = routeContext.bookmarkOwner;
   var viewRegistry = settings.viewRegistry;
   if (!viewRegistry) throw new Error("Docs Viewer app composition requires a view registry.");
   var serviceContext = createDocsViewerServiceContext({
@@ -269,7 +266,7 @@ export function createDocsViewerAppComposition(options) {
   var panelLayout = createDocsViewerPanelLayout({
     root: root,
     storage: window.localStorage,
-    storageScope: bookmarkScope,
+    storageOwner: bookmarkOwner,
     panels: routeConfig.panels,
     routeId: routeConfig.routeId,
     indexPanelRefs: appShellRefs.indexPanel,
@@ -305,7 +302,6 @@ export function createDocsViewerAppComposition(options) {
     generatedData: appSession.domains.generatedData,
     management: appSession.domains.management,
     selectedDocument: appSession.domains.selectedDocument,
-    viewerScope: settings.viewerScope,
     viewerStage: settings.viewerStage,
     window: window
   });
@@ -316,7 +312,6 @@ export function createDocsViewerAppComposition(options) {
   )
     ? settings.createSourceAdapter({
         sourceService: serviceContext.source,
-        viewerScope: settings.viewerScope,
         viewerStage: settings.viewerStage,
         window: window
       })
@@ -326,10 +321,9 @@ export function createDocsViewerAppComposition(options) {
     generatedData: generatedDataRuntime,
     routeContext: routeContext,
     routeSession: appSession.domains.routeSession,
-    scopeConfig: appSession.domains.scopeConfig,
+    workspaceConfig: appSession.domains.workspaceConfig,
     serviceContext: serviceContext,
     source: sourceServiceAdapter,
-    viewerScope: settings.viewerScope,
     viewerStage: settings.viewerStage,
     window: window
   });
@@ -371,7 +365,7 @@ export function createDocsViewerAppComposition(options) {
 /**
  * Run feature-gated startup phases in their shared browser order.
  *
- * Events and busy state start before configured-scope and viewer-settings
+ * Events and busy state start before workspace and viewer-settings
  * reads. Bookmark/management setup precedes the initial index read; an
  * import-on-load request runs last. Rejected phase work is rendered as a
  * startup failure and absorbed, and busy cleanup runs when the chain settles.
@@ -399,11 +393,11 @@ export function startDocsViewerStartupPhases(options) {
     stopInitialBusy = settings.startBusy();
   }
 
-  var configuredScopeDiscovery = docsViewerRouteFeatureEnabled(featurePolicy, "configured-scope-discovery")
-    ? callPhase("loadConfiguredScopes")
+  var workspaceConfiguration = docsViewerRouteFeatureEnabled(featurePolicy, "workspace-configuration")
+    ? callPhase("loadWorkspaceConfiguration")
     : Promise.resolve(null);
 
-  return configuredScopeDiscovery
+  return workspaceConfiguration
     .then(function () {
       if (typeof settings.renderIndexPanelState === "function") settings.renderIndexPanelState();
       return callPhase("loadViewerSettings");

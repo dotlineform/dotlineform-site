@@ -159,7 +159,7 @@ class WritePlanMixin:
         verb = "would write" if mode == "dry-run" else "wrote"
         remove_verb = "would remove" if mode == "dry-run" else "removed"
 
-        print(f"Docs build ({mode}) scope={self.scope_id}")
+        print(f"Docs build ({mode}) stage={self.config.stage}")
         print(f"  docs total: {docs_total}")
         print(f"  docs {verb}: {doc_write_count}")
         print(f"  docs {remove_verb}: {doc_remove_count}")
@@ -179,7 +179,7 @@ class WritePlanMixin:
         target_doc_ids: list[str] | None,
     ) -> dict[str, Any]:
         return {
-            "scope": self.scope_id,
+            "stage": self.config.stage,
             "build_mode": "targeted" if target_doc_ids is not None else "full",
             "only_doc_ids": target_doc_ids or [],
             "source_files_scanned": self.source_files_scanned,

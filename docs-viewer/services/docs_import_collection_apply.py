@@ -24,8 +24,8 @@ from docs_import_document import (
 )
 from docs_management_document_target import ManagedDocumentCollection
 from docs_write_rebuild import (
-    ScopeSourceSnapshotChanged,
-    ScopeWriteRebuildFailure,
+    DocumentSourceSnapshotChanged,
+    DocumentWriteRebuildFailure,
     SubScopeSourceSnapshotChanged,
     SubScopeWriteRebuildFailure,
 )
@@ -42,7 +42,7 @@ def _clean_text(value: Any) -> str:
 
 
 COLLECTION_APPLY_BODY_FIELDS = {
-    "scope",
+    "stage",
     "sub_scope",
     "staged_filename",
     "preview_only",
@@ -310,7 +310,6 @@ def apply_import_content_collection(
         try:
             rebuild = perform_source_write_and_rebuild(
                 repo_root,
-                plan.response["scope"],
                 changed_paths,
                 write_collection_documents,
                 suppression_reason="docs-import-collection-apply",
@@ -334,7 +333,7 @@ def apply_import_content_collection(
         warnings.extend(copy.deepcopy(result.get("warnings") or []))
     result_payload = shape_collection_result(
         source_format=plan.response["source_format"],
-        scope=plan.response["scope"],
+        stage=plan.response["stage"],
         staged_filename=plan.response["staged_filename"],
         package=plan.response.get("package") or {},
         records=results,
@@ -343,12 +342,12 @@ def apply_import_content_collection(
         manual_copy_instructions=list(dict.fromkeys(manual_copy)),
         timestamp=timestamp,
     )
-    result_payload["target"] = {"scope": plan.response["scope"]}
+    result_payload["target"] = {"stage": plan.response["stage"]}
     log_event(
         repo_root,
         "docs-import-collection-apply",
         {
-            "scope": plan.response["scope"],
+            "stage": plan.response["stage"],
             "staged_filename": plan.response["staged_filename"],
             "outcome": result_payload["outcome"],
             "counts": result_payload["counts"],
@@ -374,7 +373,7 @@ def _atomic_collection_result(
         warnings.extend(copy.deepcopy(record.get("warnings") or []))
     result_payload = shape_collection_result(
         source_format=plan.response["source_format"],
-        scope=plan.response["scope"],
+        stage=plan.response["stage"],
         staged_filename=plan.response["staged_filename"],
         package=plan.response.get("package") or {},
         records=records,
@@ -388,7 +387,7 @@ def _atomic_collection_result(
         result_payload["sub_scope"] = collection.sub_scope
     result_payload["rollback"] = copy.deepcopy(rollback)
     event_details = {
-        "scope": collection.scope,
+        "stage": collection.stage,
         "staged_filename": plan.response["staged_filename"],
         "outcome": result_payload["outcome"],
         "counts": result_payload["counts"],
@@ -599,7 +598,6 @@ def apply_import_content_collection_atomic(
     ) -> dict[str, Any]:
         return perform_sub_scope_source_write_and_rebuild(
             repo_root,
-            collection.scope,
             collection.sub_scope,
             changed_paths,
             write_operation,
@@ -623,7 +621,7 @@ def apply_import_content_collection_atomic(
     )
 
 
-def apply_import_content_collection_scope_atomic(
+def apply_import_content_collection_document_atomic(
     repo_root: Path,
     plan: DocumentsCollectionPlan,
     body: dict[str, Any],
@@ -631,12 +629,12 @@ def apply_import_content_collection_scope_atomic(
     workspace_root: Path,
     log_event: LogEvent,
     collection: ManagedDocumentCollection,
-    perform_scope_source_write_and_rebuild_atomic: PerformSourceWriteAndRebuild,
+    perform_source_write_and_rebuild_atomic: PerformSourceWriteAndRebuild,
 ) -> dict[str, Any]:
-    """Apply one exact parent-scope package or restore its complete projection."""
+    """Apply one exact parent-stage package or restore its complete projection."""
 
     if collection.sub_scope:
-        raise ValueError("scope collection apply requires a top-level collection")
+        raise ValueError("stage collection apply requires a top-level collection")
     docs_doc_ids = list(
         dict.fromkeys(
             doc_id
@@ -650,12 +648,11 @@ def apply_import_content_collection_scope_atomic(
         write_operation: Callable[[], None],
         snapshots: dict[Path, bytes],
     ) -> dict[str, Any]:
-        return perform_scope_source_write_and_rebuild_atomic(
+        return perform_source_write_and_rebuild_atomic(
             repo_root,
-            collection.scope,
             changed_paths,
             write_operation,
-            suppression_reason="docs-import-reviewed-scope-collection-apply",
+            suppression_reason="docs-import-reviewed-stage-collection-apply",
             source_snapshots=snapshots,
             stage=collection.stage or None,
             docs_doc_ids=docs_doc_ids,
@@ -669,15 +666,15 @@ def apply_import_content_collection_scope_atomic(
         log_event=log_event,
         collection=collection,
         perform_atomic_boundary=perform_boundary,
-        snapshot_changed_type=ScopeSourceSnapshotChanged,
-        write_rebuild_failure_type=ScopeWriteRebuildFailure,
-        event_name="docs-import-reviewed-scope-collection-apply",
-        target_label="scope",
+        snapshot_changed_type=DocumentSourceSnapshotChanged,
+        write_rebuild_failure_type=DocumentWriteRebuildFailure,
+        event_name="docs-import-reviewed-stage-collection-apply",
+        target_label="stage",
     )
 
 
 __all__ = [
     "apply_import_content_collection",
     "apply_import_content_collection_atomic",
-    "apply_import_content_collection_scope_atomic",
+    "apply_import_content_collection_document_atomic",
 ]

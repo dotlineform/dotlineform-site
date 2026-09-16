@@ -41,17 +41,17 @@ function activeManagedDocument(value, appContext) {
   var context = objectRecord(value);
   var target = objectRecord(context && context.subdocTarget);
   var record = objectRecord(context && context.subdocRecord);
-  var targetKeys = Object.keys(target || {}).filter(function (key) { return key !== "stage"; }).sort();
-  var scope = cleanString(target && target.scope).toLowerCase();
+  var targetKeys = Object.keys(target || {}).sort();
+  var stage = cleanString(target && target.stage);
   var subScope = cleanString(target && target.sub_scope).toLowerCase();
   var docId = cleanString(target && target.doc_id);
   if (
     cleanString(context && context.state).toLowerCase() !== "detail"
     || targetKeys.length !== 3
     || targetKeys[0] !== "doc_id"
-    || targetKeys[1] !== "scope"
+    || targetKeys[1] !== "stage"
     || targetKeys[2] !== "sub_scope"
-    || !scope
+    || !["working", "pre-publish", "published"].includes(stage)
     || !subScope
     || !docId
     || cleanString(record && record.doc_id) !== docId
@@ -59,7 +59,7 @@ function activeManagedDocument(value, appContext) {
   return Object.freeze({
     info: normalizeMetadataInfo(context.subdocInfo),
     record: Object.freeze(Object.assign({}, record, { doc_id: docId })),
-    target: Object.freeze({ scope: scope, ...(target.stage ? { stage: target.stage } : {}), sub_scope: subScope, doc_id: docId })
+    target: Object.freeze({ stage: stage, sub_scope: subScope, doc_id: docId })
   });
 }
 
@@ -149,7 +149,7 @@ export function createDocsViewerHostedViewContext(options = {}) {
       ? options.sourceEditorServices || null
       : null,
     statusLabel: docsViewerStatusLabel(selectedMetadata && selectedMetadata.ui_status, options.uiStatusByValue),
-    viewerScope: cleanString(options.viewerScope)
+    viewerStage: cleanString(options.viewerStage)
   };
 }
 

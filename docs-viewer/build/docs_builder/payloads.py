@@ -1,14 +1,11 @@
 from __future__ import annotations
 
-import json
 from pathlib import Path
 from typing import Any
 from urllib.parse import quote
 
 from .browser_config import browser_sub_scope_output_url_base
 from .common import (
-    CONFIG_REL_PATH,
-    DEFAULT_RECENT_LIMIT,
     DOCS_INDEX_TREE_SCHEMA_VERSION,
     DOCS_RECENT_SCHEMA_VERSION,
     humanize,
@@ -144,17 +141,7 @@ class PayloadBuilderMixin:
         }
 
     def recent_limit(self) -> int:
-        try:
-            payload = json.loads((self.repo_root / CONFIG_REL_PATH).read_text(encoding="utf-8"))
-        except (OSError, json.JSONDecodeError):
-            return DEFAULT_RECENT_LIMIT
-        settings = payload.get("docs_viewer") if isinstance(payload, dict) else None
-        raw_limit = settings.get("recent_limit") if isinstance(settings, dict) else None
-        try:
-            limit = int(raw_limit)
-        except (TypeError, ValueError):
-            return DEFAULT_RECENT_LIMIT
-        return limit if limit > 0 else DEFAULT_RECENT_LIMIT
+        return self.workspace.recent_limit
 
     def recent_entry(
         self,
@@ -178,7 +165,7 @@ class PayloadBuilderMixin:
     def recent_candidates(self, docs: list[DocRecord]) -> list[dict[str, Any]]:
         """Read all stage-local Recent metadata once, without rendering children.
 
-        Full scope builds own this scan. Preparation already selected the stage's
+        Full stage builds own this scan. Preparation already selected the stage's
         documents; report hosts validate destinations and do not filter candidates.
         """
         title_by_id = {doc.doc_id: doc.title for doc in docs}
@@ -194,7 +181,7 @@ class PayloadBuilderMixin:
             ]
             if len(hosts) != 1:
                 raise ValueError(
-                    f"Recent requires exactly one report host for {self.scope_id}/{sub_scope.sub_scope}; "
+                    f"Recent requires exactly one report host for {self.config.stage}/{sub_scope.sub_scope}; "
                     f"found {len(hosts)}"
                 )
             output_base = browser_sub_scope_output_url_base(self.config, sub_scope)

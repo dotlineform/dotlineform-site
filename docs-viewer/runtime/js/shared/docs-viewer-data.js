@@ -116,7 +116,7 @@ export function fetchPreferredGeneratedJson(staticUrl, failureLabel, generatedPa
   };
   return checkGeneratedDataReadCapability().then(function (available) {
     var generatedAvailable = settings.useSearchCapability
-      ? Boolean(settings.scopeSupportsGeneratedSearchReads && settings.scopeSupportsGeneratedSearchReads())
+      ? Boolean(settings.stageSupportsGeneratedSearchReads && settings.stageSupportsGeneratedSearchReads())
       : available;
     if (generatedAvailable) {
       return fetchGeneratedJsonWithRetry(generatedPath, failureLabel, settings);
@@ -150,7 +150,7 @@ export function fetchIndexTreeWithRetry(options) {
   return fetchPreferredGeneratedJson(
     settings.indexTreeUrl,
     "Failed to load docs index tree",
-    managementReloadPath("/docs/index-tree", { scope: settings.viewerScope, stage: settings.viewerStage }),
+    managementReloadPath("/docs/index-tree", { stage: settings.viewerStage }),
     Object.assign({}, settings, { attempt: currentAttempt, useSearchCapability: false })
   )
     .then(function (payload) {

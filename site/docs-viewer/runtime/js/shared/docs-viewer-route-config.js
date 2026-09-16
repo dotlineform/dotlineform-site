@@ -6,7 +6,7 @@ import {
   normalizeDocsViewerRouteFeatures
 } from "./docs-viewer-route-features.js";
 
-export const DOCS_VIEWER_ROUTE_CONFIG_SCHEMA = "docs_viewer_route_config_v4";
+export const DOCS_VIEWER_ROUTE_CONFIG_SCHEMA = "docs_viewer_route_config_v5";
 export const DOCS_VIEWER_ROUTE_CONFIG_REGISTRY_SCHEMA = "docs_viewer_route_config_registry_v1";
 export const DOCS_VIEWER_MANAGEMENT_ROUTE_PATH = "/docs/";
 
@@ -272,13 +272,16 @@ export function resolveDocsViewerRouteConfig(options) {
   if (rawConfig.ui && Object.prototype.hasOwnProperty.call(rawConfig.ui, "main_view_toolbar")) {
     throw new Error("Docs Viewer route config cannot define main_view_toolbar; hide known controls through view_policy.");
   }
+  if (["default_scope_id", "include_scope_param"].some(function (key) { return key in rawConfig; })
+      || rawConfig.access && "allow_scope_query" in rawConfig.access) {
+    throw new Error("Docs Viewer scope configuration is retired.");
+  }
   var access = rawConfig.access && typeof rawConfig.access === "object" ? rawConfig.access : {};
   var appKind = normalizeAppKind(rawConfig.app_kind);
   var requestedAppKind = cleanString(settings.appKind).toLowerCase();
   if (requestedAppKind && requestedAppKind !== appKind) {
     throw new Error("Docs Viewer entrypoint app kind does not match route config app_kind.");
   }
-  var allowScopeQuery = normalizeBoolean(access.allow_scope_query);
   var docsManagementRoute = isDocsManagementRoutePath(routeConfigPath(rawConfig));
   var managementUi = appKind === "manage" && normalizeBoolean(access.management_ui);
   var services = normalizeServiceSurfaces(rawConfig.services);
@@ -299,8 +302,7 @@ export function resolveDocsViewerRouteConfig(options) {
     appKind: appKind,
     routeId: requireRouteConfigField(rawConfig.route_id, "route_id"),
     isDocsManagementRoute: docsManagementRoute,
-    defaultScopeId: requireRouteConfigField(rawConfig.default_scope_id, "default_scope_id"),
-    includeScopeParam: normalizeBoolean(rawConfig.include_scope_param),
+    defaultStage: appKind === "manage" ? requireRouteConfigField(rawConfig.default_stage, "default_stage") : "",
     preserveQueryParams: normalizePreservedQueryParams(rawConfig.preserve_query_params),
     viewerBaseUrl: requireRouteConfigField(rawConfig.viewer_base_url, "viewer_base_url"),
     docsViewerConfigUrl: requireRouteConfigField(configUrls.docs_viewer, "config_urls.docs_viewer"),
@@ -321,7 +323,6 @@ export function resolveDocsViewerRouteConfig(options) {
       ? requireRouteConfigField(docsPaths.search_index_url, "docs_paths.search_index_url")
       : docsPaths.search_index_url),
     access: {
-      allowScopeQuery: allowScopeQuery,
       managementUi: managementUi
     },
     services: services,
@@ -353,19 +354,16 @@ export function resolveDocsViewerRouteConfigAsync(options) {
     });
 }
 
-export function routeConfigScopeProjection(scopeConfig, options) {
+export function routeConfigWorkspaceProjection(workspaceConfig, options) {
   var settings = options || {};
-  var config = scopeConfig && typeof scopeConfig === "object" ? scopeConfig : {};
-  var allowScopeQuery = settings.allowScopeQuery === true;
+  var config = workspaceConfig && typeof workspaceConfig === "object" ? workspaceConfig : {};
   var routeViewerBaseUrl = cleanString(settings.routeViewerBaseUrl);
   var windowRef = settings.window || (typeof window !== "undefined" ? window : null);
   var fallbackPath = windowRef && windowRef.location ? windowRef.location.pathname : "";
-  var viewerBaseUrl = allowScopeQuery ? (routeViewerBaseUrl || fallbackPath) : cleanString(config.viewerBaseUrl);
-  var includeScopeParam = allowScopeQuery ? true : Boolean(config.includeScopeParam);
+  var viewerBaseUrl = routeViewerBaseUrl || cleanString(config.viewerBaseUrl) || fallbackPath;
   var subScopes = Array.isArray(config.subScopes) ? config.subScopes : [];
   return {
     defaultRouteDocId: cleanString(config.defaultDocId),
-    includeScopeParam: includeScopeParam,
     indexTreeUrl: appendAssetVersion(config.indexTreeUrl || "", settings.assetVersion),
     recentUrl: appendAssetVersion(config.recentUrl || "", settings.assetVersion),
     searchIndexUrl: appendAssetVersion(config.searchIndexUrl || "", settings.assetVersion),
@@ -373,7 +371,6 @@ export function routeConfigScopeProjection(scopeConfig, options) {
     viewerPathname: windowRef && windowRef.location
       ? new URL(viewerBaseUrl || fallbackPath, windowRef.location.origin).pathname
       : viewerBaseUrl,
-    viewerScope: cleanString(config.scopeId),
     viewerStage: cleanString(config.stage),
     subScopes: subScopes,
     subScopesById: config.subScopesById instanceof Map

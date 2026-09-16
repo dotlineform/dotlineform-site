@@ -9,16 +9,16 @@ from typing import Any, Mapping
 from urllib.parse import parse_qsl, quote, urlsplit
 
 from docs_document_identity import is_immutable_doc_id
-from docs_scope_config import (
-    DocsScopeConfig,
+from docs_workspace_config import (
+    DocsWorkspaceConfig,
+    select_workspace_stage,
     public_documents_path,
     public_search_path,
-    resolve_scope_path,
+    resolve_workspace_path,
 )
 
 
-DOCUMENT_LOCATION_SCHEMA_VERSION = "docs_document_locations_v1"
-SUPPORTED_DOCUMENT_LOCATION_SCOPE_IDS = ("analysis",)
+DOCUMENT_LOCATION_SCHEMA_VERSION = "docs_document_locations_v2"
 
 
 def json_bytes(payload: Any) -> bytes:
@@ -29,17 +29,17 @@ def clean_text(value: Any) -> str:
     return str(value or "").strip()
 
 
-def document_location_projection_path(config: DocsScopeConfig) -> Path:
-    """Return the public output path owned beside one scope's search index."""
+def document_location_projection_path(config: DocsWorkspaceConfig) -> Path:
+    """Return the public output path owned beside the configured public search index."""
 
     search_path = public_search_path(config)
     if search_path is None:
-        raise ValueError(f"scope {config.scope_id!r} has no public search projection")
+        raise ValueError("Docs workspace has no public search projection")
     return search_path.with_name("document-locations.json")
 
 
 def canonical_search_document(
-    config: DocsScopeConfig,
+    config: DocsWorkspaceConfig,
     raw_document: Any,
     *,
     field: str,
@@ -56,13 +56,9 @@ def canonical_search_document(
         raise ValueError(f"{field}.title must not be empty")
 
     parsed = urlsplit(href)
-    if parsed.scheme or parsed.netloc or parsed.fragment or parsed.path != config.viewer_base_url:
+    if parsed.scheme or parsed.netloc or parsed.fragment or parsed.path != config.public_viewer_base_url:
         raise ValueError(f"{field}.href must use the configured canonical viewer route")
-    expected_query = (
-        [("scope", config.scope_id), ("doc", doc_id)]
-        if config.include_scope_param
-        else [("doc", doc_id)]
-    )
+    expected_query = [("doc", doc_id)]
     if parse_qsl(parsed.query, keep_blank_values=True) != expected_query:
         raise ValueError(f"{field}.href must contain only the canonical document query")
     return doc_id, title, href
@@ -97,21 +93,19 @@ def sub_scope_manifest_records(payload: Any, *, field: str) -> list[tuple[str, s
 
 
 def build_document_location_payload(
-    config: DocsScopeConfig,
+    config: DocsWorkspaceConfig,
     *,
     search_payload: Any,
     parent_documents: Mapping[str, Any],
     sub_scope_manifests: Mapping[str, Any],
 ) -> dict[str, Any]:
-    """Project exact public document and report placements for one scope.
+    """Project exact public document and report placements for the public workspace.
 
     Inputs are already-public search, parent-document, and sub-scope manifest
     projections. Source front matter and manage manifests are intentionally
     outside this boundary.
     """
 
-    if config.scope_id not in SUPPORTED_DOCUMENT_LOCATION_SCOPE_IDS:
-        raise ValueError(f"unsupported document-location scope: {config.scope_id}")
     exact_records = build_exact_document_location_records(
         config,
         search_payload=search_payload,
@@ -120,11 +114,9 @@ def build_document_location_payload(
     )
     return {
         "schema_version": DOCUMENT_LOCATION_SCHEMA_VERSION,
-        "scope_id": config.scope_id,
         "records": [
             {
                 "url": record["url"],
-                "scope_id": record["scope_id"],
                 "document_title": record["document_title"],
                 "report_title": record["report_title"],
             }
@@ -134,7 +126,7 @@ def build_document_location_payload(
 
 
 def build_exact_document_location_records(
-    config: DocsScopeConfig,
+    config: DocsWorkspaceConfig,
     *,
     search_payload: Any,
     parent_documents: Mapping[str, Any],
@@ -152,12 +144,13 @@ def build_exact_document_location_records(
     header = search_payload.get("header")
     if (
         not isinstance(header, dict)
-        or clean_text(header.get("schema")) != "docs_viewer_search_index_v2"
-        or clean_text(header.get("scope")) != config.scope_id
+        or clean_text(header.get("schema")) != "docs_viewer_search_index_v3"
+        or "scope" in header
+        or header.get("stage") != "published"
     ):
-        raise ValueError("public search header scope does not match the requested scope")
+        raise ValueError("public search must describe the accepted Published set")
 
-    configured_sub_scopes = {sub_scope.sub_scope for sub_scope in config.sub_scopes}
+    configured_sub_scopes = {sub_scope.sub_scope for sub_scope in select_workspace_stage(config, "pre-publish").sub_scopes}
     manifest_records: dict[str, list[tuple[str, str]]] = {}
 
     records: list[dict[str, str]] = []
@@ -177,7 +170,6 @@ def build_exact_document_location_records(
         records.append(
             {
                 "url": url,
-                "scope_id": config.scope_id,
                 "sub_scope": sub_scope,
                 "doc_id": doc_id,
                 "document_title": document_title,
@@ -232,17 +224,17 @@ def build_exact_document_location_records(
 
 def load_public_document_location_inputs(
     repo_root: Path,
-    config: DocsScopeConfig,
+    config: DocsWorkspaceConfig,
 ) -> tuple[Any, dict[str, Any], dict[str, Any]]:
     """Load the exact currently public inputs shared by location consumers."""
 
     search_path = public_search_path(config)
     documents_path = public_documents_path(config)
     if search_path is None or documents_path is None:
-        raise ValueError(f"scope {config.scope_id!r} has no public projection")
+        raise ValueError("Docs workspace has no public projection")
 
-    resolved_search_path = resolve_scope_path(repo_root, search_path)
-    resolved_documents_path = resolve_scope_path(repo_root, documents_path)
+    resolved_search_path = resolve_workspace_path(repo_root, search_path)
+    resolved_documents_path = resolve_workspace_path(repo_root, documents_path)
     search_payload = json.loads(resolved_search_path.read_text(encoding="utf-8"))
     search_doc_ids = {
         clean_text(document.get("id"))
@@ -260,7 +252,7 @@ def load_public_document_location_inputs(
     }
     sub_scope_manifests = {}
     configured_sub_scopes = {
-        sub_scope.sub_scope: sub_scope for sub_scope in config.sub_scopes
+        sub_scope.sub_scope: sub_scope for sub_scope in select_workspace_stage(config, "pre-publish").sub_scopes
     }
     placed_sub_scope_ids = {
         clean_text(payload["report"].get("sub_scope")).lower()
@@ -279,9 +271,9 @@ def load_public_document_location_inputs(
         sub_scope_path = public_documents_path(sub_scope)
         if sub_scope_path is None:
             raise ValueError(
-                f"sub-scope {config.scope_id}/{sub_scope.sub_scope} has no public projection"
+                f"sub-scope {sub_scope.sub_scope} has no public projection"
             )
-        manifest_path = resolve_scope_path(repo_root, sub_scope_path) / "manifest.json"
+        manifest_path = resolve_workspace_path(repo_root, sub_scope_path) / "manifest.json"
         sub_scope_manifests[sub_scope.sub_scope] = json.loads(
             manifest_path.read_text(encoding="utf-8")
         )
@@ -290,7 +282,7 @@ def load_public_document_location_inputs(
 
 def load_public_document_location_payload(
     repo_root: Path,
-    config: DocsScopeConfig,
+    config: DocsWorkspaceConfig,
 ) -> dict[str, Any]:
     """Build from the currently published site projection without source reads."""
 
@@ -308,9 +300,9 @@ def load_public_document_location_payload(
 
 def load_public_exact_document_location_records(
     repo_root: Path,
-    config: DocsScopeConfig,
+    config: DocsWorkspaceConfig,
 ) -> list[dict[str, str]]:
-    """Build exact internal records for any configured public scope."""
+    """Build exact internal records for the configured public workspace."""
 
     search_payload, parent_documents, sub_scope_manifests = (
         load_public_document_location_inputs(repo_root, config)
@@ -325,7 +317,6 @@ def load_public_exact_document_location_records(
 
 __all__ = [
     "DOCUMENT_LOCATION_SCHEMA_VERSION",
-    "SUPPORTED_DOCUMENT_LOCATION_SCOPE_IDS",
     "build_document_location_payload",
     "build_exact_document_location_records",
     "canonical_search_document",

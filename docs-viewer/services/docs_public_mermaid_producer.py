@@ -28,7 +28,7 @@ from docs_public_mermaid_projection import (
 )
 
 
-PUBLIC_MERMAID_BUILD_SCHEMA_VERSION = "docs_public_mermaid_projection_build_v1"
+PUBLIC_MERMAID_BUILD_SCHEMA_VERSION = "docs_public_mermaid_projection_build_v2"
 PUBLIC_MERMAID_MANIFEST_IDENTITY = "manifest.json"
 DOCS_VIEWER_THEME_CSS_REL_PATH = Path("docs-viewer/static/css/docs-viewer-theme.css")
 PUBLIC_MERMAID_FONT_FAMILY = (
@@ -324,13 +324,13 @@ def produce_public_mermaid_projection(
         raise ValueError(
             f"public Mermaid projection plan schema_version must be {PUBLIC_MERMAID_PLAN_SCHEMA_VERSION}"
         )
-    scope = str(plan.get("scope") or "").strip()
-    if not scope:
-        raise ValueError("public Mermaid projection plan scope is required")
+    collection = str(plan.get("collection") or "").strip()
+    if not collection:
+        raise ValueError("public Mermaid projection plan collection is required")
     if not write:
         return {
             "schema_version": PUBLIC_MERMAID_BUILD_SCHEMA_VERSION,
-            "scope": scope,
+            "collection": collection,
             "write": False,
             "summary": {
                 "planned_diagram_count": len(plan.get("diagrams") or []),
@@ -347,7 +347,7 @@ def produce_public_mermaid_projection(
     manifest_records = manifest.get("diagrams")
     if (
         manifest.get("schema_version") != PUBLIC_MERMAID_MANIFEST_SCHEMA_VERSION
-        or manifest.get("scope") != scope
+        or manifest.get("collection") != collection
         or not isinstance(manifest_records, list)
     ):
         raise ValueError("public Mermaid projection plan carries an invalid next manifest")
@@ -455,7 +455,7 @@ def produce_public_mermaid_projection(
     successful_manifest_records.sort(key=lambda record: record["projection_id"])
     produced_manifest = {
         "schema_version": PUBLIC_MERMAID_MANIFEST_SCHEMA_VERSION,
-        "scope": scope,
+        "collection": collection,
         "diagrams": successful_manifest_records,
     }
     removal_identities = list(
@@ -474,7 +474,7 @@ def produce_public_mermaid_projection(
     )
     return {
         "schema_version": PUBLIC_MERMAID_BUILD_SCHEMA_VERSION,
-        "scope": scope,
+        "collection": collection,
         "write": True,
         "summary": {
             "successful_diagram_count": len(successful_ids),

@@ -27,19 +27,19 @@ function reportServiceOptions(baseUrl) {
   };
 }
 
-function currentViewerScope(context) {
-  return cleanString(context && context.viewerScope);
+function currentViewerStage(context) {
+  return cleanString(context && context.viewerStage);
 }
 
-function scopeConfigs(context) {
-  var scopeConfig = context && context.scopeConfigState ? context.scopeConfigState : {};
-  return Array.isArray(scopeConfig.scopeConfigs) ? scopeConfig.scopeConfigs : [];
+function stageConfigs(context) {
+  var workspaceConfig = context && context.workspaceConfigState ? context.workspaceConfigState : {};
+  return Array.isArray(workspaceConfig.stageConfigs) ? workspaceConfig.stageConfigs : [];
 }
 
-function fetchDocsIndexTreeForScope(context, scope) {
-  var targetScope = cleanString(scope || currentViewerScope(context)).toLowerCase();
+function fetchDocsIndexTreeForStage(context, stage) {
+  var targetStage = cleanString(stage || currentViewerStage(context));
   return context.collectionProvider.readIndex({
-    scope: targetScope
+    stage: targetStage
   });
 }
 
@@ -55,7 +55,6 @@ function reportSubScope(payload) {
 
 function parentTarget(settings) {
   return normalizeManagedDocumentTarget({
-    scope: currentViewerScope(settings),
     ...(settings.routeContext && settings.routeContext.viewerStage ? { stage: settings.routeContext.viewerStage } : {}),
     doc_id: cleanString(settings && settings.doc && settings.doc.doc_id)
   });
@@ -83,7 +82,6 @@ function publishReportState(settings, parent, subScope, state) {
   if (typeof settings.publishSubscopeReportState !== "function") return;
   var detail = state && typeof state === "object" ? state : {};
   var collectionTarget = normalizeManagedDocumentCollectionTarget({
-    scope: parent.scope,
     ...(parent.stage ? { stage: parent.stage } : {}),
     sub_scope: subScope
   });
@@ -93,8 +91,7 @@ function publishReportState(settings, parent, subScope, state) {
   if (
     subdocTarget
     && (
-      subdocTarget.scope !== parent.scope
-      || cleanString(subdocTarget.stage) !== cleanString(parent.stage)
+      cleanString(subdocTarget.stage) !== cleanString(parent.stage)
       || subdocTarget.sub_scope !== subScope
     )
   ) {
@@ -111,7 +108,7 @@ function publishReportState(settings, parent, subScope, state) {
     collectionTarget: collectionTarget,
     collectionLabel: configuredSubScopeLabel(
       settings,
-      parent.scope,
+      parent.stage,
       subScope
     ),
     subdocTarget: subdocTarget,
@@ -152,20 +149,20 @@ function createSubscopeDocumentAction(settings) {
     : null;
 }
 
-function configuredSubScopeLabel(settings, scope, subScope) {
-  var child = configuredSubScope(settings, scope, subScope);
-  var normalizedScope = cleanString(scope).toLowerCase();
+function configuredSubScopeLabel(settings, stage, subScope) {
+  var child = configuredSubScope(settings, stage, subScope);
+  var selectedStage = cleanString(stage);
   var normalizedSubScope = cleanString(subScope).toLowerCase();
   var childTitle = cleanString(child && child.title) || normalizedSubScope;
-  return normalizedScope + " / " + childTitle;
+  return selectedStage + " / " + childTitle;
 }
 
-function configuredSubScope(settings, scope, subScope) {
-  var normalizedScope = cleanString(scope).toLowerCase();
+function configuredSubScope(settings, stage, subScope) {
+  var selectedStage = cleanString(stage);
   var normalizedSubScope = cleanString(subScope).toLowerCase();
-  var parentConfig = scopeConfigs(settings).find(function (config) {
-    return cleanString(config && (config.scope_id || config.scopeId)).toLowerCase()
-      === normalizedScope;
+  var parentConfig = stageConfigs(settings).find(function (config) {
+    return cleanString(config && config.stage).toLowerCase()
+      === selectedStage;
   });
   var children = parentConfig && Array.isArray(parentConfig.subScopes)
     ? parentConfig.subScopes
@@ -187,14 +184,13 @@ function escapeMarkdownLinkText(value) {
 function markdownLinkForSubscopeDocument(settings, parent, subScope, target, documentRecord) {
   var normalized = normalizeManagedDocumentTarget(target);
   if (
-    normalized.scope !== parent.scope
-    || cleanString(normalized.stage) !== cleanString(parent.stage)
+    cleanString(normalized.stage) !== cleanString(parent.stage)
     || normalized.sub_scope !== subScope
-    || typeof settings.viewerUrlForScope !== "function"
+    || typeof settings.viewerUrlForDocument !== "function"
   ) {
     throw new Error("Copy Link target did not match the mounted sub-scope report.");
   }
-  var base = settings.viewerUrlForScope(parent.scope, parent.doc_id, { manage: false });
+  var base = settings.viewerUrlForDocument(parent.doc_id, { manage: false });
   if (!cleanString(base)) throw new Error("Copy Link viewer URL is unavailable.");
   var url = new URL(base, "http://docs.local");
   url.searchParams.set("subdoc", normalized.doc_id);
@@ -207,10 +203,10 @@ function markdownLinkForSubscopeDocument(settings, parent, subScope, target, doc
 export function loadDocsViewerSubscopeContribution(settings, parent, subScope, options) {
   var contributionOptions = options || {};
   var clientOptions = managementClientOptions(settings);
-  var subScopeConfig = configuredSubScope(settings, parent.scope, subScope);
+  var subScopeConfig = configuredSubScope(settings, parent.stage, subScope);
   if (!subScopeConfig) {
     return Promise.reject(new Error(
-      "Docs sub-scope is not configured: " + parent.scope + "/" + subScope
+      "Docs sub-scope is not configured: " + parent.stage + "/" + subScope
     ));
   }
   var descriptor = subScopeConfig.subScopeCustomisation;
@@ -263,7 +259,7 @@ export function loadDocsViewerSubscopeContribution(settings, parent, subScope, o
             }
           : null,
         clientOptions: clientOptions,
-        collection: { scope: parent.scope, ...(parent.stage ? { stage: parent.stage } : {}), sub_scope: subScope },
+        collection: { ...(parent.stage ? { stage: parent.stage } : {}), sub_scope: subScope },
         openLocalTarget: openLocalTarget,
         publicPreviewBase: cleanString(settings.routeContext && settings.routeContext.publicPreviewBase),
         studioBaseUrl: cleanString(settings.routeContext && settings.routeContext.studioBaseUrl),
@@ -286,12 +282,11 @@ export function loadDocsViewerSubscopeContribution(settings, parent, subScope, o
 
 function openSubscopeCreate(settings, parent, subScope, request, context) {
   var collection = request && typeof request === "object" ? request : {};
-  var keys = Object.keys(collection).filter(function (key) { return key !== "stage"; }).sort();
+  var keys = Object.keys(collection).sort();
   if (
     keys.length !== 2
-    || keys[0] !== "scope"
+    || keys[0] !== "stage"
     || keys[1] !== "sub_scope"
-    || cleanString(collection.scope).toLowerCase() !== parent.scope
     || cleanString(collection.sub_scope).toLowerCase() !== subScope
     || cleanString(collection.stage) !== cleanString(parent.stage)
   ) {
@@ -314,8 +309,7 @@ function openSubscopeCreate(settings, parent, subScope, request, context) {
   }
   return action(
     {
-      scope: parent.scope,
-      ...(parent.stage ? { stage: parent.stage } : {}),
+        ...(parent.stage ? { stage: parent.stage } : {}),
       sub_scope: subScope
     },
     {
@@ -347,7 +341,7 @@ function openSubScopePreparePackage(settings, request, context) {
   return loadPreparePackageWorkflow().then(function (module) {
     return module.openDocumentPackagePrepareWorkflow({
       root: managementModalRoot(settings),
-      scope: cleanString(request && request.scope).toLowerCase(),
+      stage: cleanString(request && request.stage),
       subScope: cleanString(request && request.sub_scope).toLowerCase(),
       checkedDocIds: Array.isArray(request && request.doc_ids)
         ? request.doc_ids.slice()
@@ -396,8 +390,8 @@ export function mountDocsViewerManageDocumentExtras(context) {
       content: settings.content,
       doc: settings.doc,
       documentMountGeneration: settings.documentMountGeneration,
-      fetchDocsIndexTree: function (scope) {
-        return fetchDocsIndexTreeForScope(settings, scope);
+      fetchDocsIndexTree: function (stage) {
+        return fetchDocsIndexTreeForStage(settings, stage);
       },
       managementContext: Boolean(settings.managementContext),
       managementService: managementService,
@@ -416,10 +410,9 @@ export function mountDocsViewerManageDocumentExtras(context) {
         : null,
       requestContentDetail: settings.requestContentDetail,
       setStatus: settings.setStatus,
-      scopeConfigs: scopeConfigs(settings).slice(),
-      viewerScope: currentViewerScope(settings),
+      stageConfigs: stageConfigs(settings).slice(),
       viewerStage: cleanString(settings.routeContext && settings.routeContext.viewerStage),
-      viewerUrlForScope: settings.viewerUrlForScope
+      viewerUrlForDocument: settings.viewerUrlForDocument
     });
   }
 
@@ -428,7 +421,7 @@ export function mountDocsViewerManageDocumentExtras(context) {
     state: "loading",
     reason: "report-mount"
   });
-  var scopeConfig = settings.scopeConfigState || {};
+  var workspaceConfig = settings.workspaceConfigState || {};
   var createAction = createSubscopeDocumentAction(settings);
   var contribution = loadDocsViewerSubscopeContribution(settings, parent, subScope, {
     onCreateDocument: (
@@ -451,8 +444,8 @@ export function mountDocsViewerManageDocumentExtras(context) {
           return openSubScopePreparePackage(settings, request, context);
         }
       : null,
-    uiStatusByValue: scopeConfig.uiStatusByValue instanceof Map
-      ? scopeConfig.uiStatusByValue
+    uiStatusByValue: workspaceConfig.uiStatusByValue instanceof Map
+      ? workspaceConfig.uiStatusByValue
       : new Map()
   }).catch(function (error) {
     publishReportState(settings, parent, subScope, {
@@ -467,8 +460,8 @@ export function mountDocsViewerManageDocumentExtras(context) {
     content: settings.content,
     doc: settings.doc,
     documentMountGeneration: settings.documentMountGeneration,
-    fetchDocsIndexTree: function (scope) {
-      return fetchDocsIndexTreeForScope(settings, scope);
+    fetchDocsIndexTree: function (stage) {
+      return fetchDocsIndexTreeForStage(settings, stage);
     },
     managementContext: Boolean(settings.managementContext),
     managementService: managementService,
@@ -487,10 +480,9 @@ export function mountDocsViewerManageDocumentExtras(context) {
       : null,
     requestContentDetail: settings.requestContentDetail,
     setStatus: settings.setStatus,
-    scopeConfigs: scopeConfigs(settings).slice(),
+    stageConfigs: stageConfigs(settings).slice(),
     subscopeReportContributionPromise: contribution,
-    viewerScope: currentViewerScope(settings),
     viewerStage: cleanString(settings.routeContext && settings.routeContext.viewerStage),
-    viewerUrlForScope: settings.viewerUrlForScope
+    viewerUrlForDocument: settings.viewerUrlForDocument
   });
 }

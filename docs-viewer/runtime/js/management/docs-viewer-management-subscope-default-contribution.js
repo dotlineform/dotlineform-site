@@ -456,7 +456,6 @@ export function createDocsViewerManagementSubscopeDefaultContribution(options = 
           ? createRegistration.invoke()
           : onCreateDocument(
               {
-                scope: collection.scope,
                 ...(collection.stage ? { stage: collection.stage } : {}),
                 sub_scope: collection.sub_scope
               },
@@ -520,7 +519,6 @@ export function createDocsViewerManagementSubscopeDefaultContribution(options = 
       } else {
         prepareRequest = onPreparePackage(
           {
-            scope: collection.scope,
             ...(collection.stage ? { stage: collection.stage } : {}),
             sub_scope: collection.sub_scope,
             doc_ids: resolution.targetDocIds.slice()

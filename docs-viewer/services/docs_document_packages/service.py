@@ -31,9 +31,7 @@ from docs_document_packages.workspace import configured_workspace_paths, workspa
 from docs_import_document_package_content import normalize_documents_import_content
 from docs_management_context import log_event
 from docs_management_document_target import resolve_managed_document_collection
-from docs_scope_config import load_docs_scope_configs
-from docs_document_packages.source_context import package_source_scope_config
-import docs_source_model as source_model
+from docs_document_packages.provenance import require_package_stage
 
 
 DOCUMENTS_DATA_DOMAIN = "documents"
@@ -44,27 +42,13 @@ FORBIDDEN_REQUEST_FIELDS = {
     "operation",
     "record_indices",
     "selection",
+    "scope",
 }
-PACKAGE_COLLECTION_ALIAS_FIELDS = {"collection", "parent_scope", "subscope"}
-
-
-def refresh_source_model_scope_configs(repo_root: Path) -> dict[str, Any]:
-    configs = load_docs_scope_configs(repo_root)
-    source_model.DOCS_SCOPE_CONFIGS.clear()
-    source_model.DOCS_SCOPE_CONFIGS.update(configs)
-    return configs
+PACKAGE_COLLECTION_ALIAS_FIELDS = {"scope", "collection", "parent_scope", "subscope"}
 
 
 def query_value(params: dict[str, list[str]], key: str) -> str:
     return str((params.get(key) or [""])[0] or "").strip()
-
-
-def require_scope(repo_root: Path, value: Any) -> str:
-    scope = str(value or "").strip().lower()
-    configs = refresh_source_model_scope_configs(repo_root)
-    if scope not in configs:
-        raise ValueError(f"scope must be one of: {', '.join(sorted(configs))}")
-    return scope
 
 
 def require_direct_request(body: dict[str, Any]) -> None:
@@ -135,15 +119,14 @@ def config_payload(
     repo_root: Path,
     params: dict[str, list[str]] | None = None,
 ) -> dict[str, Any]:
-    configs = refresh_source_model_scope_configs(repo_root)
     collection = None
     request_params = params or {}
+    stage = require_package_stage(query_value(request_params, "stage"))
     if "sub_scope" in request_params:
         collection = resolve_managed_document_collection(
             repo_root,
-            scope=query_value(request_params, "scope"),
+            stage=query_value(request_params, "stage"),
             sub_scope=query_value(request_params, "sub_scope"),
-            stage=package_source_scope_config(repo_root, query_value(request_params, "scope")).stage or None,
         )
     profile_payload = load_config_file(repo_root)
     errors, warnings = validate_full_config_payload(profile_payload)
@@ -164,10 +147,7 @@ def config_payload(
             for config in profile_payload.get("configs", [])
             if isinstance(config, dict) and config.get("enabled") is not False
         ],
-        "scopes": [
-            {"scope": scope, "label": source_model.humanize(scope)}
-            for scope in sorted(configs)
-        ],
+        "stage": stage,
         "workspace": {
             "available": bool(status.get("available")),
             "message": str(status.get("message") or ""),
@@ -176,7 +156,7 @@ def config_payload(
     }
     if collection is not None:
         payload.update({
-            "scope": collection.scope,
+            "stage": collection.stage,
             "sub_scope": collection.sub_scope,
             "flat_collection": True,
         })
@@ -184,44 +164,42 @@ def config_payload(
 
 
 def documents_payload(repo_root: Path, params: dict[str, list[str]]) -> dict[str, Any]:
-    scope = require_scope(repo_root, query_value(params, "scope"))
+    stage = require_package_stage(query_value(params, "stage"))
     sub_scope = ""
     if "sub_scope" in params:
         collection = resolve_managed_document_collection(
             repo_root,
-            scope=scope,
+            stage=stage,
             sub_scope=query_value(params, "sub_scope"),
-            stage=package_source_scope_config(repo_root, scope).stage or None,
         )
         sub_scope = collection.sub_scope
     return selectable_document_records(
         repo_root,
-        scope=scope,
+        stage=stage,
         sub_scope=sub_scope,
         selection_model="sub_scope_documents" if sub_scope else "documents",
     )
 
 
 def returned_payload(repo_root: Path, params: dict[str, list[str]]) -> dict[str, Any]:
-    scope = require_scope(repo_root, query_value(params, "scope"))
+    stage = require_package_stage(query_value(params, "stage"))
     sub_scope = None
     if "sub_scope" in params:
         collection = resolve_managed_document_collection(
             repo_root,
-            scope=scope,
+            stage=stage,
             sub_scope=query_value(params, "sub_scope"),
-            stage=package_source_scope_config(repo_root, scope).stage or None,
         )
         if not collection.document_config.supports_return_import:
             raise ValueError(
                 "returned-package import is not enabled for configured "
-                f"sub-scope {collection.scope}/{collection.sub_scope}"
+                f"sub-scope {collection.stage}/{collection.sub_scope}"
             )
         sub_scope = collection.sub_scope
     roots = configured_workspace_paths(repo_root)
     report = list_returned_document_packages(
         repo_root,
-        scope=scope,
+        stage=stage,
         sub_scope=sub_scope,
         required_capability=(
             RETURN_IMPORT_CAPABILITY
@@ -249,8 +227,9 @@ def get_payload(
     path: str,
     params: dict[str, list[str]],
 ) -> dict[str, Any]:
-    if query_value(params, "stage") not in {"", "working"}:
-        raise ValueError("Document packages require Working")
+    require_package_stage(query_value(params, "stage"))
+    if "scope" in params:
+        raise ValueError("scope is retired; use stage and optional sub_scope")
     if path == routes.CONFIG_PATH:
         return config_payload(repo_root, params)
     if path == routes.DOCUMENTS_PATH:
@@ -270,18 +249,17 @@ def prepare_package(repo_root: Path, body: dict[str, Any]) -> dict[str, Any]:
     )
     if collection_aliases:
         raise ValueError(
-            "document package prepare accepts only scope and optional sub_scope "
+            "document package prepare accepts only stage and optional sub_scope "
             "for collection identity: "
             + ", ".join(collection_aliases)
         )
-    scope = require_scope(repo_root, body.get("scope"))
+    stage = require_package_stage(body.get("stage"))
     sub_scope = ""
     if "sub_scope" in body:
         collection = resolve_managed_document_collection(
             repo_root,
-            scope=scope,
+            stage=stage,
             sub_scope=body.get("sub_scope"),
-            stage=package_source_scope_config(repo_root, scope).stage or None,
         )
         sub_scope = collection.sub_scope
     profile_id = str(body.get("profile_id") or "").strip()
@@ -300,7 +278,7 @@ def prepare_package(repo_root: Path, body: dict[str, Any]) -> dict[str, Any]:
     roots = configured_workspace_paths(repo_root)
     payload = build_document_package(
         repo_root,
-        scope=scope,
+        stage=stage,
         sub_scope=sub_scope,
         data_domain=DOCUMENTS_DATA_DOMAIN,
         config_id=profile_id,
@@ -324,7 +302,7 @@ def prepare_package(repo_root: Path, body: dict[str, Any]) -> dict[str, Any]:
         repo_root,
         "document-package-prepare",
         {
-            "scope": scope,
+            "stage": stage,
             "profile_id": profile_id,
             "dry_run": dry_run,
             "output_written": bool(payload.get("output_written")),
@@ -382,7 +360,7 @@ def content_review_response(payload: dict[str, Any]) -> dict[str, Any]:
 
 
 def review_returned(repo_root: Path, body: dict[str, Any]) -> dict[str, Any]:
-    scope = require_scope(repo_root, body.get("scope"))
+    stage = require_package_stage(body.get("stage"))
     staged_filename = str(body.get("staged_filename") or "").strip()
     if "sub_scope" in body:
         raise ValueError(
@@ -395,7 +373,7 @@ def review_returned(repo_root: Path, body: dict[str, Any]) -> dict[str, Any]:
     payload = content_review_response(
         create_review_source_folder(
             repo_root,
-            scope=scope,
+            stage=stage,
             staged_filename=staged_filename,
             dry_run=dry_run,
             staging_root=roots.import_staging,
@@ -408,7 +386,7 @@ def review_returned(repo_root: Path, body: dict[str, Any]) -> dict[str, Any]:
         repo_root,
         "document-package-review",
         {
-            "scope": scope,
+            "stage": stage,
             "staged_filename": staged_filename,
             "dry_run": dry_run,
             "ok": bool(payload.get("ok")),
@@ -421,8 +399,7 @@ def post_response(
     body: dict[str, Any],
 ) -> tuple[HTTPStatus, dict[str, Any]]:
     require_direct_request(body)
-    if body.get("stage", "") not in {"", "working"}:
-        raise ValueError("Document packages require Working")
+    require_package_stage(body.get("stage"))
     if path == routes.PREPARE_PATH:
         payload = prepare_package(repo_root, body)
     elif path == routes.RETURNED_REVIEW_PATH:

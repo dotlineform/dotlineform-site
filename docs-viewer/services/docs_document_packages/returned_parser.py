@@ -34,24 +34,24 @@ from docs_document_packages.returned_validation import validate_whole_returned_p
 def parse_staged_import(
     *,
     repo_root: Path,
-    scope: str,
+    stage: str,
     sub_scope: str | None = None,
     staged_file: str,
     staging_root: Path | str | None = None,
     metadata_root: Path | None = None,
     required_capability: str = RETURN_IMPORT_CAPABILITY,
 ) -> dict[str, Any]:
-    """Parse one trusted return against a scope and optional exact child target."""
+    """Parse one trusted return against a stage and optional exact child target."""
 
     if required_capability not in {
         DOCS_REVIEW_CAPABILITY,
         RETURN_IMPORT_CAPABILITY,
     }:
         raise ValueError(f"unsupported returned-package capability: {required_capability}")
-    normalized_scope = normalize_text(scope).lower()
-    report = empty_report(repo_root, normalized_scope, staged_file)
+    normalized_stage = normalize_text(stage).lower()
+    report = empty_report(repo_root, normalized_stage, staged_file)
     try:
-        path = resolve_staged_path(repo_root, normalized_scope, staged_file, staging_root)
+        path = resolve_staged_path(repo_root, normalized_stage, staged_file, staging_root)
     except ValueError as exc:
         report["issues"].append(issue("error", "unsafe_staged_path", str(exc)))
         report["counts"]["errors"] = 1
@@ -162,34 +162,36 @@ def parse_staged_import(
             raw_rows,
             package_metadata,
             repo_root=repo_root,
-            scope=normalized_scope,
+            stage=normalized_stage,
             sub_scope=sub_scope,
             required_capability=required_capability,
         )
     )
     metadata_sub_scope = normalize_text(package_metadata.get("sub_scope")).lower()
-    current_context, current_issues = load_current_docs_context(
-        repo_root,
-        normalized_scope,
-        (
-            metadata_sub_scope
-            if sub_scope is None
-            else normalize_text(sub_scope).lower()
-        ),
-    )
+    current_context, current_issues = {}, []
+    if not any(item.get("level") == "error" for item in report["issues"]):
+        current_context, current_issues = load_current_docs_context(
+            repo_root,
+            normalized_stage,
+            (
+                metadata_sub_scope
+                if sub_scope is None
+                else normalize_text(sub_scope).lower()
+            ),
+        )
     report["issues"].extend(current_issues)
     source_export_id = normalize_text(package_metadata.get("export_id"))
     source_profile_id = normalize_text(package_metadata.get("profile_id"))
     report["source_export_id"] = source_export_id
     report["source_profile_id"] = source_profile_id
-    report["source_scope"] = normalize_text(package_metadata.get("scope"))
+    report["source_stage"] = normalize_text(package_metadata.get("stage"))
     report["generated_at"] = normalize_text(package_metadata.get("generated_at"))
     report["source_metadata"] = package_metadata
     report["unknown_file_metadata"] = unknown_file_metadata
     report["records"] = records
     report["detected_import_type"] = detect_import_type(package_metadata)
     report["current_source"] = current_report_context(current_context)
-    report["issues"].extend(add_current_source_report(records, current=current_context, scope=normalized_scope))
+    report["issues"].extend(add_current_source_report(records, current=current_context, stage=normalized_stage))
 
     supports_return_import = package_metadata.get("supports_return_import") is True
     issue_codes = {

@@ -1,234 +1,213 @@
 {
-  "schema_version": "docs_viewer_config_v1",
-  "default_scope_id": "analysis",
-  "scopes": [
-    {
-      "scope_id": "analysis",
-      "scope_type": "public",
-      "emoji": "䷑",
-      "stages": [
-        {
-          "scope_id": "analysis",
-          "stage": "working",
-          "scope_type": "public",
-          "meta": "public",
-          "viewer_base_url": "/docs/",
-          "include_scope_param": true,
-          "default_doc_id": "d-20260801-073826-8865a8",
-          "media": {
-            "files": {
-              "reference_prefix": "docs/analysis/files",
-              "served_path_prefix": "/docs/media/analysis/working/files"
-            },
-            "html": {
-              "reference_prefix": "docs/analysis/html",
-              "served_path_prefix": "/docs/media/analysis/working/html"
-            },
-            "img": {
-              "reference_prefix": "docs/analysis/img",
-              "served_path_prefix": "/docs/media/analysis/working/img"
-            },
-            "svg": {
-              "reference_prefix": "docs/analysis/svg",
-              "served_path_prefix": "/docs/media/analysis/working/svg"
-            }
-          },
-          "index_tree_url": "/docs/index-tree?scope=analysis&stage=working",
-          "recent_url": "/docs/recent?scope=analysis&stage=working",
-          "search_index_url": "/docs/search?scope=analysis&stage=working",
-          "search": {
-            "domain": "docs_viewer",
-            "schema": "docs_viewer_search_index_v2",
-            "index_url": "/docs/search?scope=analysis&stage=working",
-            "rebuild_policy": "whole_index"
-          },
-          "links_enabled": true,
-          "emoji": "䷑",
-          "backlinks_url": "/docs/backlinks?scope=analysis&stage=working",
-          "sub_scopes": [
-            {
-              "sub_scope": "works",
-              "title": "Works",
-              "manifest_url": "/docs/generated/external/analysis/working/works/manage-manifest.json",
-              "by_id_url_base": "/docs/generated/external/analysis/working/works/by-id",
-              "sub_scope_customisation": {
-                "id": "working_works",
-                "capabilities": {
-                  "assignable_field_groups": [
-                    "authoring_subject"
-                  ]
-                }
-              }
-            },
-            {
-              "sub_scope": "concepts",
-              "title": "Concepts",
-              "manifest_url": "/docs/generated/external/analysis/working/concepts/manage-manifest.json",
-              "by_id_url_base": "/docs/generated/external/analysis/working/concepts/by-id"
-            },
-            {
-              "sub_scope": "processing",
-              "title": "Processing",
-              "manifest_url": "/docs/generated/external/analysis/working/processing/manage-manifest.json",
-              "by_id_url_base": "/docs/generated/external/analysis/working/processing/by-id",
-              "sub_scope_customisation": {
-                "id": "working_processing",
-                "capabilities": {
-                  "assignable_field_groups": [
-                    "authoring_subject"
-                  ]
-                }
-              }
-            },
-            {
-              "sub_scope": "moments",
-              "title": "Moments",
-              "manifest_url": "/docs/generated/external/analysis/working/moments/manage-manifest.json",
-              "by_id_url_base": "/docs/generated/external/analysis/working/moments/by-id"
-            }
-          ]
-        },
-        {
-          "scope_id": "analysis",
-          "stage": "pre-publish",
-          "scope_type": "public",
-          "meta": "public",
-          "viewer_base_url": "/docs/",
-          "include_scope_param": true,
-          "default_doc_id": "d-20260426-164043-e14f49",
-          "media": {
-            "files": {
-              "reference_prefix": "docs/analysis/files",
-              "served_path_prefix": "/docs/media/analysis/pre-publish/files"
-            },
-            "html": {
-              "reference_prefix": "docs/analysis/html",
-              "served_path_prefix": "/docs/media/analysis/pre-publish/html"
-            },
-            "img": {
-              "reference_prefix": "docs/analysis/img",
-              "served_path_prefix": "/docs/media/analysis/pre-publish/img"
-            },
-            "svg": {
-              "reference_prefix": "docs/analysis/svg",
-              "served_path_prefix": "/docs/media/analysis/pre-publish/svg"
-            }
-          },
-          "index_tree_url": "/docs/index-tree?scope=analysis&stage=pre-publish",
-          "recent_url": "/docs/recent?scope=analysis&stage=pre-publish",
-          "search_index_url": "/docs/search?scope=analysis&stage=pre-publish",
-          "search": {
-            "domain": "docs_viewer",
-            "schema": "docs_viewer_search_index_v2",
-            "index_url": "/docs/search?scope=analysis&stage=pre-publish",
-            "rebuild_policy": "whole_index"
-          },
-          "emoji": "䷑",
-          "backlinks_url": "/docs/backlinks?scope=analysis&stage=pre-publish",
-          "sub_scopes": [
-            {
-              "sub_scope": "works",
-              "title": "Works",
-              "manifest_url": "/docs/generated/external/analysis/pre-publish/works/manage-manifest.json",
-              "by_id_url_base": "/docs/generated/external/analysis/pre-publish/works/by-id",
-              "sub_scope_customisation": {
-                "id": "pre_publish_works",
-                "capabilities": {
-                  "assignable_field_groups": [
-                    "authoring_subject"
-                  ]
-                }
-              }
-            },
-            {
-              "sub_scope": "concepts",
-              "title": "Concepts",
-              "manifest_url": "/docs/generated/external/analysis/pre-publish/concepts/manage-manifest.json",
-              "by_id_url_base": "/docs/generated/external/analysis/pre-publish/concepts/by-id"
-            },
-            {
-              "sub_scope": "processing",
-              "title": "Processing",
-              "manifest_url": "/docs/generated/external/analysis/pre-publish/processing/manage-manifest.json",
-              "by_id_url_base": "/docs/generated/external/analysis/pre-publish/processing/by-id"
-            },
-            {
-              "sub_scope": "moments",
-              "title": "Moments",
-              "manifest_url": "/docs/generated/external/analysis/pre-publish/moments/manage-manifest.json",
-              "by_id_url_base": "/docs/generated/external/analysis/pre-publish/moments/by-id"
-            }
-          ]
-        },
-        {
-          "scope_id": "analysis",
-          "stage": "published",
-          "scope_type": "public",
-          "meta": "public",
-          "viewer_base_url": "/docs/",
-          "include_scope_param": true,
-          "default_doc_id": "",
-          "media": {
-            "files": {
-              "reference_prefix": "docs/analysis/files",
-              "served_path_prefix": "/docs/published/media/analysis/files"
-            },
-            "html": {
-              "reference_prefix": "docs/analysis/html",
-              "served_path_prefix": "/docs/published/media/analysis/html"
-            },
-            "img": {
-              "reference_prefix": "docs/analysis/img",
-              "served_path_prefix": "/docs/published/media/analysis/img"
-            },
-            "svg": {
-              "reference_prefix": "docs/analysis/svg",
-              "served_path_prefix": "/docs/published/media/analysis/svg"
-            }
-          },
-          "index_tree_url": "/docs/published/index-tree?scope=analysis",
-          "recent_url": "/docs/published/recent?scope=analysis",
-          "search_index_url": "/docs/published/search?scope=analysis",
-          "search": {
-            "domain": "docs_viewer",
-            "schema": "docs_viewer_search_index_v2",
-            "index_url": "/docs/published/search?scope=analysis",
-            "rebuild_policy": "whole_index"
-          },
-          "emoji": "䷑",
-          "backlinks_url": "/docs/published/backlinks?scope=analysis",
-          "sub_scopes": [
-            {
-              "sub_scope": "works",
-              "title": "Works",
-              "manifest_url": "/docs/published/external/analysis/works/manifest.json",
-              "by_id_url_base": "/docs/published/external/analysis/works/by-id"
-            },
-            {
-              "sub_scope": "concepts",
-              "title": "Concepts",
-              "manifest_url": "/docs/published/external/analysis/concepts/manifest.json",
-              "by_id_url_base": "/docs/published/external/analysis/concepts/by-id"
-            },
-            {
-              "sub_scope": "processing",
-              "title": "Processing",
-              "manifest_url": "/docs/published/external/analysis/processing/manifest.json",
-              "by_id_url_base": "/docs/published/external/analysis/processing/by-id"
-            },
-            {
-              "sub_scope": "moments",
-              "title": "Moments",
-              "manifest_url": "/docs/published/external/analysis/moments/manifest.json",
-              "by_id_url_base": "/docs/published/external/analysis/moments/by-id"
-            }
-          ],
-          "links_enabled": false
-        }
-      ]
-    }
-  ],
+  "schema_version": "docs_viewer_config_v2",
   "docs_viewer": {
     "recent_limit": 20
-  }
+  },
+  "public_viewer_base_url": "/analysis/",
+  "stages": [
+    {
+      "viewer_base_url": "/docs/",
+      "default_doc_id": "d-20260801-073826-8865a8",
+      "media": {
+        "files": {
+          "reference_prefix": "docs/files",
+          "served_path_prefix": "/docs/media/working/files"
+        },
+        "html": {
+          "reference_prefix": "docs/html",
+          "served_path_prefix": "/docs/media/working/html"
+        },
+        "img": {
+          "reference_prefix": "docs/img",
+          "served_path_prefix": "/docs/media/working/img"
+        },
+        "svg": {
+          "reference_prefix": "docs/svg",
+          "served_path_prefix": "/docs/media/working/svg"
+        }
+      },
+      "index_tree_url": "/docs/index-tree?stage=working",
+      "recent_url": "/docs/recent?stage=working",
+      "search_index_url": "/docs/search?stage=working",
+      "search": {
+        "domain": "docs_viewer",
+        "schema": "docs_viewer_search_index_v3",
+        "index_url": "/docs/search?stage=working",
+        "rebuild_policy": "whole_index"
+      },
+      "sub_scopes": [
+        {
+          "sub_scope": "works",
+          "title": "Works",
+          "manifest_url": "/docs/generated/external/working/works/manage-manifest.json",
+          "by_id_url_base": "/docs/generated/external/working/works/by-id",
+          "sub_scope_customisation": {
+            "id": "working_works",
+            "capabilities": {
+              "assignable_field_groups": [
+                "authoring_subject"
+              ]
+            }
+          }
+        },
+        {
+          "sub_scope": "concepts",
+          "title": "Concepts",
+          "manifest_url": "/docs/generated/external/working/concepts/manage-manifest.json",
+          "by_id_url_base": "/docs/generated/external/working/concepts/by-id"
+        },
+        {
+          "sub_scope": "processing",
+          "title": "Processing",
+          "manifest_url": "/docs/generated/external/working/processing/manage-manifest.json",
+          "by_id_url_base": "/docs/generated/external/working/processing/by-id",
+          "sub_scope_customisation": {
+            "id": "working_processing",
+            "capabilities": {
+              "assignable_field_groups": [
+                "authoring_subject"
+              ]
+            }
+          }
+        },
+        {
+          "sub_scope": "moments",
+          "title": "Moments",
+          "manifest_url": "/docs/generated/external/working/moments/manage-manifest.json",
+          "by_id_url_base": "/docs/generated/external/working/moments/by-id"
+        }
+      ],
+      "stage": "working",
+      "links_enabled": true,
+      "backlinks_url": "/docs/backlinks?stage=working"
+    },
+    {
+      "viewer_base_url": "/docs/",
+      "default_doc_id": "d-20260426-164043-e14f49",
+      "media": {
+        "files": {
+          "reference_prefix": "docs/files",
+          "served_path_prefix": "/docs/media/pre-publish/files"
+        },
+        "html": {
+          "reference_prefix": "docs/html",
+          "served_path_prefix": "/docs/media/pre-publish/html"
+        },
+        "img": {
+          "reference_prefix": "docs/img",
+          "served_path_prefix": "/docs/media/pre-publish/img"
+        },
+        "svg": {
+          "reference_prefix": "docs/svg",
+          "served_path_prefix": "/docs/media/pre-publish/svg"
+        }
+      },
+      "index_tree_url": "/docs/index-tree?stage=pre-publish",
+      "recent_url": "/docs/recent?stage=pre-publish",
+      "search_index_url": "/docs/search?stage=pre-publish",
+      "search": {
+        "domain": "docs_viewer",
+        "schema": "docs_viewer_search_index_v3",
+        "index_url": "/docs/search?stage=pre-publish",
+        "rebuild_policy": "whole_index"
+      },
+      "sub_scopes": [
+        {
+          "sub_scope": "works",
+          "title": "Works",
+          "manifest_url": "/docs/generated/external/pre-publish/works/manage-manifest.json",
+          "by_id_url_base": "/docs/generated/external/pre-publish/works/by-id",
+          "sub_scope_customisation": {
+            "id": "pre_publish_works",
+            "capabilities": {
+              "assignable_field_groups": [
+                "authoring_subject"
+              ]
+            }
+          }
+        },
+        {
+          "sub_scope": "concepts",
+          "title": "Concepts",
+          "manifest_url": "/docs/generated/external/pre-publish/concepts/manage-manifest.json",
+          "by_id_url_base": "/docs/generated/external/pre-publish/concepts/by-id"
+        },
+        {
+          "sub_scope": "processing",
+          "title": "Processing",
+          "manifest_url": "/docs/generated/external/pre-publish/processing/manage-manifest.json",
+          "by_id_url_base": "/docs/generated/external/pre-publish/processing/by-id"
+        },
+        {
+          "sub_scope": "moments",
+          "title": "Moments",
+          "manifest_url": "/docs/generated/external/pre-publish/moments/manage-manifest.json",
+          "by_id_url_base": "/docs/generated/external/pre-publish/moments/by-id"
+        }
+      ],
+      "stage": "pre-publish",
+      "links_enabled": false,
+      "backlinks_url": "/docs/backlinks?stage=pre-publish"
+    },
+    {
+      "viewer_base_url": "/docs/",
+      "default_doc_id": "",
+      "media": {
+        "files": {
+          "reference_prefix": "docs/files",
+          "served_path_prefix": "/docs/published/media/files"
+        },
+        "html": {
+          "reference_prefix": "docs/html",
+          "served_path_prefix": "/docs/published/media/html"
+        },
+        "img": {
+          "reference_prefix": "docs/img",
+          "served_path_prefix": "/docs/published/media/img"
+        },
+        "svg": {
+          "reference_prefix": "docs/svg",
+          "served_path_prefix": "/docs/published/media/svg"
+        }
+      },
+      "index_tree_url": "/docs/published/index-tree",
+      "recent_url": "/docs/published/recent",
+      "search_index_url": "/docs/published/search",
+      "search": {
+        "domain": "docs_viewer",
+        "schema": "docs_viewer_search_index_v3",
+        "index_url": "/docs/published/search",
+        "rebuild_policy": "whole_index"
+      },
+      "sub_scopes": [
+        {
+          "sub_scope": "works",
+          "title": "Works",
+          "manifest_url": "/docs/published/external/works/manifest.json",
+          "by_id_url_base": "/docs/published/external/works/by-id"
+        },
+        {
+          "sub_scope": "concepts",
+          "title": "Concepts",
+          "manifest_url": "/docs/published/external/concepts/manifest.json",
+          "by_id_url_base": "/docs/published/external/concepts/by-id"
+        },
+        {
+          "sub_scope": "processing",
+          "title": "Processing",
+          "manifest_url": "/docs/published/external/processing/manifest.json",
+          "by_id_url_base": "/docs/published/external/processing/by-id"
+        },
+        {
+          "sub_scope": "moments",
+          "title": "Moments",
+          "manifest_url": "/docs/published/external/moments/manifest.json",
+          "by_id_url_base": "/docs/published/external/moments/by-id"
+        }
+      ],
+      "stage": "published",
+      "links_enabled": false,
+      "backlinks_url": "/docs/published/backlinks"
+    }
+  ]
 }

@@ -68,11 +68,11 @@ export function createDocsViewerReviewControlRenderers() {
 }
 
 export function reviewCanonicalDocumentHref(packageManifest, docId) {
-  var sourceScope = String(packageManifest && packageManifest.source_scope || "").trim();
+  var sourceStage = String(packageManifest && packageManifest.source_stage || "").trim();
   var sourceSubScope = String(packageManifest && packageManifest.source_sub_scope || "").trim();
   var selectedDocId = String(docId || "").trim();
-  return sourceScope && selectedDocId && !sourceSubScope
-    ? "/docs/?scope=" + encodeURIComponent(sourceScope) + "&doc=" + encodeURIComponent(selectedDocId)
+  return sourceStage === "working" && selectedDocId && !sourceSubScope
+    ? "/docs/?stage=" + encodeURIComponent(sourceStage) + "&doc=" + encodeURIComponent(selectedDocId)
     : "";
 }
 

@@ -9,7 +9,7 @@ GENERATED_RECENT_PATH = "/docs/recent"
 GENERATED_BACKLINKS_PATH = "/docs/backlinks"
 GENERATED_PAYLOAD_PATH = "/docs/doc"
 GENERATED_LINKS_PATH = "/docs/links"
-GENERATED_SCOPE_LINKS_PATH = "/docs/scope-links"
+GENERATED_WORKSPACE_LINKS_PATH = "/docs/workspace-links"
 GENERATED_SEARCH_PATH = "/docs/search"
 GENERATED_SEMANTIC_TOKENS_PATH = "/docs/semantic-tokens"
 PUBLISHED_INDEX_TREE_PATH = "/docs/published/index-tree"
@@ -42,6 +42,7 @@ OPEN_LOCAL_TARGET_PATH = "/docs/open-local-target"
 BROKEN_LINKS_PATH = "/docs/broken-links"
 PROJECT_STATE_PATH = "/docs/project-state"
 DOCS_MEDIA_REPORT_PATH = "/docs/media-report"
+OPEN_MEDIA_SOURCE_PATH = "/docs/open-media-source"
 UNCATALOGED_FILES_PATH = "/docs/uncataloged-files"
 MISSING_SOURCE_FILES_PATH = "/docs/missing-source-files"
 IMPORT_SOURCE_PATH = "/docs/import-source"
@@ -55,20 +56,12 @@ REBUILD_PATH = "/docs/rebuild"
 PRE_PUBLISH_PREVIEW_PATH = "/docs/pre-publish/preview"
 PRE_PUBLISH_APPLY_PATH = "/docs/pre-publish/apply"
 MOVE_PATH = "/docs/move"
-ARCHIVE_PREVIEW_PATH = "/docs/archive-preview"
-ARCHIVE_APPLY_PATH = "/docs/archive-apply"
 DELETE_PREVIEW_PATH = "/docs/delete-preview"
 DELETE_APPLY_PATH = "/docs/delete-apply"
-SCOPE_CREATE_PREVIEW_PATH = "/docs/scopes/create-preview"
-SCOPE_CREATE_APPLY_PATH = "/docs/scopes/create-apply"
-SCOPE_RENAME_PREVIEW_PATH = "/docs/scopes/rename-preview"
-SCOPE_RENAME_APPLY_PATH = "/docs/scopes/rename-apply"
-SCOPE_DELETE_PREVIEW_PATH = "/docs/scopes/delete-preview"
-SCOPE_DELETE_APPLY_PATH = "/docs/scopes/delete-apply"
-SUB_SCOPE_CREATE_PREVIEW_PATH = "/docs/scopes/sub-scopes/create-preview"
-SUB_SCOPE_CREATE_APPLY_PATH = "/docs/scopes/sub-scopes/create-apply"
-SUB_SCOPE_DELETE_PREVIEW_PATH = "/docs/scopes/sub-scopes/delete-preview"
-SUB_SCOPE_DELETE_APPLY_PATH = "/docs/scopes/sub-scopes/delete-apply"
+SUB_SCOPE_CREATE_PREVIEW_PATH = "/docs/sub-scopes/create-preview"
+SUB_SCOPE_CREATE_APPLY_PATH = "/docs/sub-scopes/create-apply"
+SUB_SCOPE_DELETE_PREVIEW_PATH = "/docs/sub-scopes/delete-preview"
+SUB_SCOPE_DELETE_APPLY_PATH = "/docs/sub-scopes/delete-apply"
 PUBLISH_STATUS_PATH = "/docs/publish/status"
 PUBLISH_CONFIRM_PATH = "/docs/publish/confirm"
 PUBLISH_APPLY_PATH = "/docs/publish/apply"
@@ -85,7 +78,7 @@ GET_PATHS = (
     GENERATED_BACKLINKS_PATH,
     GENERATED_PAYLOAD_PATH,
     GENERATED_LINKS_PATH,
-    GENERATED_SCOPE_LINKS_PATH,
+    GENERATED_WORKSPACE_LINKS_PATH,
     GENERATED_SEARCH_PATH,
     GENERATED_SEMANTIC_TOKENS_PATH,
     PUBLISHED_INDEX_TREE_PATH,
@@ -121,6 +114,7 @@ POST_PATHS = (
     BROKEN_LINKS_PATH,
     PROJECT_STATE_PATH,
     DOCS_MEDIA_REPORT_PATH,
+    OPEN_MEDIA_SOURCE_PATH,
     UNCATALOGED_FILES_PATH,
     MISSING_SOURCE_FILES_PATH,
     SOURCE_CONFIG_SETTINGS_PATH,
@@ -135,16 +129,8 @@ POST_PATHS = (
     PRE_PUBLISH_PREVIEW_PATH,
     PRE_PUBLISH_APPLY_PATH,
     MOVE_PATH,
-    ARCHIVE_PREVIEW_PATH,
-    ARCHIVE_APPLY_PATH,
     DELETE_PREVIEW_PATH,
     DELETE_APPLY_PATH,
-    SCOPE_CREATE_PREVIEW_PATH,
-    SCOPE_CREATE_APPLY_PATH,
-    SCOPE_RENAME_PREVIEW_PATH,
-    SCOPE_RENAME_APPLY_PATH,
-    SCOPE_DELETE_PREVIEW_PATH,
-    SCOPE_DELETE_APPLY_PATH,
     SUB_SCOPE_CREATE_PREVIEW_PATH,
     SUB_SCOPE_CREATE_APPLY_PATH,
     SUB_SCOPE_DELETE_PREVIEW_PATH,

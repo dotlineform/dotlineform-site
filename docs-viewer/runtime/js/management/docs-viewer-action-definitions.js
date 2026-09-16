@@ -1,13 +1,11 @@
 export const DOCS_VIEWER_ACTION_IDS = Object.freeze({
   BOOKMARK: "bookmark",
-  ARCHIVE: "archive",
   COPY_LINK: "copy-link",
   DELETE: "delete",
-  DELETE_SCOPE: "delete-scope",
   DELETE_SUB_SCOPE: "delete-sub-scope",
   EDIT_METADATA: "edit-metadata",
   EXPORT_DOCS: "export-docs",
-  EXPORT_SCOPES: "export-scopes",
+  EXPORT_WORKSPACE: "export-workspace",
   IMPORT: "import",
   INFO: "info",
   MARKDOWN_SAVE: "markdown-save",
@@ -19,7 +17,6 @@ export const DOCS_VIEWER_ACTION_IDS = Object.freeze({
   SOURCE_INSERT_DOC_LINK: "source-insert-doc-link",
   NEW: "new",
   NEW_CHILD: "new-child",
-  NEW_SCOPE: "new-scope",
   NEW_SIBLING: "new-sibling",
   NEW_SUB_SCOPE: "new-sub-scope",
   OPEN: "open",
@@ -28,14 +25,13 @@ export const DOCS_VIEWER_ACTION_IDS = Object.freeze({
   PUBLISH_DOCS: "publish-docs",
   PRE_PUBLISH_DOCS: "pre-publish-docs",
   REBUILD_DOCS: "rebuild-docs",
-  RENAME_SCOPE: "rename-scope",
   SETTINGS: "settings"
 });
 
 export const DOCS_VIEWER_ACTION_TARGETS = Object.freeze({
   ACTIVE_DOCUMENT: "active-document",
   DOCUMENT: "document",
-  SCOPE: "scope",
+  WORKSPACE: "workspace",
   SELECTION: "selection"
 });
 
@@ -57,15 +53,13 @@ var IDS = DOCS_VIEWER_ACTION_IDS;
 
 export const DOCS_VIEWER_ACTION_DEFINITIONS = Object.freeze({
   [IDS.BOOKMARK]: actionDefinition(IDS.BOOKMARK, TARGETS.ACTIVE_DOCUMENT),
-  [IDS.ARCHIVE]: actionDefinition(IDS.ARCHIVE, TARGETS.SELECTION, POLICIES.ALL),
   [IDS.COPY_LINK]: actionDefinition(IDS.COPY_LINK, TARGETS.DOCUMENT),
   [IDS.DELETE]: actionDefinition(IDS.DELETE, TARGETS.SELECTION, POLICIES.ALL),
-  [IDS.DELETE_SCOPE]: actionDefinition(IDS.DELETE_SCOPE, TARGETS.SCOPE),
-  [IDS.DELETE_SUB_SCOPE]: actionDefinition(IDS.DELETE_SUB_SCOPE, TARGETS.SCOPE),
+  [IDS.DELETE_SUB_SCOPE]: actionDefinition(IDS.DELETE_SUB_SCOPE, TARGETS.WORKSPACE),
   [IDS.EDIT_METADATA]: actionDefinition(IDS.EDIT_METADATA, TARGETS.ACTIVE_DOCUMENT),
+  [IDS.EXPORT_WORKSPACE]: actionDefinition(IDS.EXPORT_WORKSPACE, TARGETS.WORKSPACE),
   [IDS.EXPORT_DOCS]: actionDefinition(IDS.EXPORT_DOCS, TARGETS.SELECTION, POLICIES.ALL),
-  [IDS.EXPORT_SCOPES]: actionDefinition(IDS.EXPORT_SCOPES, TARGETS.SCOPE),
-  [IDS.IMPORT]: actionDefinition(IDS.IMPORT, TARGETS.SCOPE),
+  [IDS.IMPORT]: actionDefinition(IDS.IMPORT, TARGETS.WORKSPACE),
   [IDS.INFO]: actionDefinition(IDS.INFO, TARGETS.ACTIVE_DOCUMENT),
   [IDS.MARKDOWN_SAVE]: actionDefinition(IDS.MARKDOWN_SAVE, TARGETS.ACTIVE_DOCUMENT),
   [IDS.MARKDOWN_SOURCE]: actionDefinition(IDS.MARKDOWN_SOURCE, TARGETS.ACTIVE_DOCUMENT),
@@ -74,19 +68,17 @@ export const DOCS_VIEWER_ACTION_DEFINITIONS = Object.freeze({
   [IDS.SOURCE_ADD_FILE]: actionDefinition(IDS.SOURCE_ADD_FILE, TARGETS.ACTIVE_DOCUMENT),
   [IDS.SOURCE_ADD_IMAGE]: actionDefinition(IDS.SOURCE_ADD_IMAGE, TARGETS.ACTIVE_DOCUMENT),
   [IDS.SOURCE_INSERT_DOC_LINK]: actionDefinition(IDS.SOURCE_INSERT_DOC_LINK, TARGETS.ACTIVE_DOCUMENT),
-  [IDS.NEW]: actionDefinition(IDS.NEW, TARGETS.SCOPE),
+  [IDS.NEW]: actionDefinition(IDS.NEW, TARGETS.WORKSPACE),
   [IDS.NEW_CHILD]: actionDefinition(IDS.NEW_CHILD, TARGETS.DOCUMENT),
-  [IDS.NEW_SCOPE]: actionDefinition(IDS.NEW_SCOPE, TARGETS.SCOPE),
   [IDS.NEW_SIBLING]: actionDefinition(IDS.NEW_SIBLING, TARGETS.DOCUMENT),
-  [IDS.NEW_SUB_SCOPE]: actionDefinition(IDS.NEW_SUB_SCOPE, TARGETS.SCOPE),
+  [IDS.NEW_SUB_SCOPE]: actionDefinition(IDS.NEW_SUB_SCOPE, TARGETS.WORKSPACE),
   [IDS.OPEN]: actionDefinition(IDS.OPEN, TARGETS.DOCUMENT),
   [IDS.OPEN_VSCODE]: actionDefinition(IDS.OPEN_VSCODE, TARGETS.DOCUMENT),
   [IDS.PREPARE_DOCUMENT_PACKAGE]: actionDefinition(IDS.PREPARE_DOCUMENT_PACKAGE, TARGETS.SELECTION, POLICIES.ALL),
-  [IDS.PUBLISH_DOCS]: actionDefinition(IDS.PUBLISH_DOCS, TARGETS.SCOPE),
-  [IDS.PRE_PUBLISH_DOCS]: actionDefinition(IDS.PRE_PUBLISH_DOCS, TARGETS.SCOPE),
-  [IDS.REBUILD_DOCS]: actionDefinition(IDS.REBUILD_DOCS, TARGETS.SCOPE),
-  [IDS.RENAME_SCOPE]: actionDefinition(IDS.RENAME_SCOPE, TARGETS.SCOPE),
-  [IDS.SETTINGS]: actionDefinition(IDS.SETTINGS, TARGETS.SCOPE)
+  [IDS.PUBLISH_DOCS]: actionDefinition(IDS.PUBLISH_DOCS, TARGETS.WORKSPACE),
+  [IDS.PRE_PUBLISH_DOCS]: actionDefinition(IDS.PRE_PUBLISH_DOCS, TARGETS.WORKSPACE),
+  [IDS.REBUILD_DOCS]: actionDefinition(IDS.REBUILD_DOCS, TARGETS.WORKSPACE),
+  [IDS.SETTINGS]: actionDefinition(IDS.SETTINGS, TARGETS.WORKSPACE)
 });
 
 function normalizeId(value) {

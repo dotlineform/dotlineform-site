@@ -6,7 +6,7 @@ export function normalizeSearchText(value) {
     .trim();
 }
 
-const SEARCH_INDEX_V2_SCHEMA = "docs_viewer_search_index_v2";
+const SEARCH_INDEX_V3_SCHEMA = "docs_viewer_search_index_v3";
 const SEARCH_V2_STOP_WORDS = new Set([
   "a", "an", "and", "are", "as", "at", "be", "by", "for", "from",
   "in", "is", "it", "of", "on", "or", "that", "the", "to", "with"
@@ -85,8 +85,10 @@ function searchScoreV2(index, position, query, matchedFields) {
 }
 
 export function collectSearchMatches(index, rawQuery) {
-  if (!index || !index.header || index.header.schema !== SEARCH_INDEX_V2_SCHEMA) {
-    throw new Error("Docs Viewer v2 search index has an unsupported schema.");
+  if (!index || !index.header || index.header.schema !== SEARCH_INDEX_V3_SCHEMA
+    || Object.prototype.hasOwnProperty.call(index.header, "scope")
+    || !["working", "pre-publish", "published"].includes(index.header.stage)) {
+    throw new Error("Docs Viewer search index has an unsupported schema or stage.");
   }
   var query = normalizeSearchText(rawQuery);
   if (!query) return [];

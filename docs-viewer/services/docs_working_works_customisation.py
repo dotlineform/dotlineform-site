@@ -41,10 +41,10 @@ def publication_front_matter(front_matter: Mapping[str, Any]) -> dict[str, Any]:
 
 def normalize_settings(raw: Any, field: str) -> Mapping[str, Any]:
     if not isinstance(raw, dict):
-        raise ValueError(f"docs scope config field {field} must be an object")
+        raise ValueError(f"Docs workspace config field {field} must be an object")
     if raw:
         raise ValueError(
-            f"docs scope config field {field} contains unknown fields: "
+            f"Docs workspace config field {field} contains unknown fields: "
             + ", ".join(sorted(str(key) for key in raw))
         )
     return {}
@@ -54,9 +54,8 @@ def project_manifest(
     settings: Mapping[str, Any],
     documents: Sequence[Any],
     repo_root: Path,
-    scope: str,
     sub_scope: str,
-    stage: str = "",
+    stage: str,
 ) -> dict[str, Any]:
     if settings:
         raise ValueError("working_works settings must be empty")

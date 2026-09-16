@@ -8,13 +8,28 @@ import shutil
 from pathlib import Path
 from typing import Any
 
-from docs_scope_config import (
+from docs_workspace_config import (
     EXTERNAL_DATA_ROOT_MARKER,
     path_label,
     resolve_external_data_root,
+    resolve_external_data_marker_path,
     safe_relative_path,
-    safe_scope_data_path,
 )
+
+
+def resolve_workspace_data_path(value: str, *, field: str) -> Path:
+    """Confine external lifecycle records to descendants of the explicit root."""
+    root = resolve_external_data_root()
+    if value == EXTERNAL_DATA_ROOT_MARKER or value.startswith(f"{EXTERNAL_DATA_ROOT_MARKER}/"):
+        path = resolve_external_data_marker_path(value, field=field)
+    else:
+        path = Path(value)
+        if not path.is_absolute() or ".." in path.parts:
+            raise ValueError(f"{field} must identify a configured external path")
+        path = path.resolve()
+    if path == root or not path.is_relative_to(root):
+        raise ValueError(f"{field} must stay beneath the Docs workspace root")
+    return path
 
 
 def repo_relative(repo_root: Path, path: Path) -> str:
@@ -96,12 +111,12 @@ def resolve_manifest_path(
 ) -> Path:
     text = str(value or "").strip()
     if text == EXTERNAL_DATA_ROOT_MARKER or text.startswith(f"{EXTERNAL_DATA_ROOT_MARKER}/"):
-        path = safe_scope_data_path(text, field=field, allow_external=True).resolve()
+        path = resolve_workspace_data_path(text, field=field)
         if external_data_root is None or not path_is_relative_to_path(path, external_data_root):
             raise ValueError(f"{field} external path must stay under external_data_root")
         return path
     if Path(text).is_absolute():
-        path = safe_scope_data_path(text, field=field, allow_external=True).resolve()
+        path = resolve_workspace_data_path(text, field=field)
         if external_data_root is None or not path_is_relative_to_path(path, external_data_root):
             raise ValueError(f"{field} external path must stay under external_data_root")
         return path
@@ -115,7 +130,7 @@ def resolve_lifecycle_record_path(repo_root: Path, value: Any, *, field: str) ->
         or text.startswith(f"{EXTERNAL_DATA_ROOT_MARKER}/")
         or Path(text).is_absolute()
     ):
-        return safe_scope_data_path(text, field=field, allow_external=True)
+        return resolve_workspace_data_path(text, field=field)
     return repo_root / safe_relative_path(text, field=field)
 
 

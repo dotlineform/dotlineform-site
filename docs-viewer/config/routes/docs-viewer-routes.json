@@ -2,19 +2,16 @@
   "schema_version": "docs_viewer_route_config_registry_v1",
   "routes": [
     {
-      "schema_version": "docs_viewer_route_config_v4",
+      "schema_version": "docs_viewer_route_config_v5",
       "app_kind": "review",
       "route_id": "docs-review",
       "route_path": "/docs-review/",
-      "default_scope_id": "review",
-      "include_scope_param": false,
       "preserve_query_params": [
         "package"
       ],
       "viewer_base_url": "/docs-review/",
       "features": [],
       "access": {
-        "allow_scope_query": false,
         "management_ui": false
       },
       "services": {
@@ -58,16 +55,13 @@
       }
     },
     {
-      "schema_version": "docs_viewer_route_config_v4",
+      "schema_version": "docs_viewer_route_config_v5",
       "app_kind": "manage",
       "route_id": "docs-manage",
       "route_path": "/docs/",
-      "default_scope_id": "analysis",
-      "include_scope_param": true,
       "viewer_base_url": "/docs/",
       "features": [
-        "configured-scope-discovery",
-        "scope-selection",
+        "workspace-configuration",
         "search",
         "recent",
         "bookmarks",
@@ -77,7 +71,6 @@
       ],
       "recent_basis": "edited",
       "access": {
-        "allow_scope_query": true,
         "management_ui": true
       },
       "preserve_query_params": [
@@ -95,9 +88,9 @@
         }
       },
       "docs_paths": {
-        "index_tree_url": "/docs/index-tree?scope=analysis",
-        "recent_url": "/docs/recent?scope=analysis",
-        "search_index_url": "/docs/search?scope=analysis"
+        "index_tree_url": "/docs/index-tree?stage=working",
+        "recent_url": "/docs/recent?stage=working",
+        "search_index_url": "/docs/search?stage=working"
       },
       "catalogue_paths": {
         "work_thumbnails": {
@@ -124,18 +117,17 @@
           "enabled": true,
           "default_view": "metadata-info"
         }
-      }
+      },
+      "default_stage": "working"
     },
     {
-      "schema_version": "docs_viewer_route_config_v4",
+      "schema_version": "docs_viewer_route_config_v5",
       "app_kind": "public",
       "route_id": "analysis",
       "route_path": "/analysis/",
-      "default_scope_id": "analysis",
-      "include_scope_param": false,
       "viewer_base_url": "/analysis/",
       "features": [
-        "configured-scope-discovery",
+        "workspace-configuration",
         "search",
         "recent",
         "bookmarks",
@@ -143,7 +135,6 @@
       ],
       "recent_basis": "edited",
       "access": {
-        "allow_scope_query": false,
         "management_ui": false
       },
       "services": {
@@ -158,8 +149,8 @@
         }
       },
       "docs_paths": {
-        "index_tree_url": "/assets/data/docs/scopes/analysis/index-tree.json",
-        "recent_url": "/assets/data/docs/scopes/analysis/recent.json",
+        "index_tree_url": "/assets/data/docs/index-tree.json",
+        "recent_url": "/assets/data/docs/recent.json",
         "search_index_url": "/assets/data/search/analysis/index.json"
       },
       "catalogue_paths": {

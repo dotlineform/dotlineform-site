@@ -19,7 +19,7 @@ def add_workspace_arguments(parser: argparse.ArgumentParser) -> None:
 
 
 def workspace_overrides_from_argv(argv: list[str]) -> dict[str, str | None]:
-    """Read workspace overrides before scope-config imports."""
+    """Read workspace overrides before workspace-config imports."""
 
     parser = argparse.ArgumentParser(add_help=False)
     add_workspace_arguments(parser)
@@ -61,10 +61,11 @@ def apply_repo_local_env(
     docs_base_dir: str | Path | None = None,
 ) -> dict[str, str]:
     root = Path(repo_root).expanduser().resolve() if repo_root is not None else Path.cwd().resolve()
-    shared_python_dir = Path(__file__).resolve().parents[3] / "studio" / "shared" / "python"
-    shared_python_text = str(shared_python_dir)
-    if shared_python_text not in sys.path:
-        sys.path.insert(0, shared_python_text)
+    code_root = Path(__file__).resolve().parents[3]
+    shared_python_dir = code_root / "studio" / "shared" / "python"
+    for path in (code_root, shared_python_dir):
+        if str(path) not in sys.path:
+            sys.path.insert(0, str(path))
 
     from local_env import runtime_env
 

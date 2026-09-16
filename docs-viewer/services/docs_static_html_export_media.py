@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Plan and rewrite scope-owned media for static HTML snapshots."""
+"""Plan and rewrite stage-owned media for static HTML snapshots."""
 
 from __future__ import annotations
 
@@ -19,7 +19,7 @@ from docs_artifact_locations import (
     authenticated_remote_client_for_locations,
     normalize_artifact_identity,
 )
-from docs_scope_config import DocsManagedMediaConfig, DocsScopeConfig
+from docs_workspace_config import DocsManagedMediaConfig, DocsStageConfig
 
 
 SIMPLE_URL_ATTRIBUTES = frozenset({"src", "poster", "data"})
@@ -211,12 +211,12 @@ def rewrite_html_url_attributes(html_text: str, transform: UrlTransform) -> str:
 def _strict_path_identity(candidate_path: str, prefix_path: str) -> str | None:
     prefix = prefix_path.rstrip("/")
     if candidate_path == prefix:
-        raise ValueError("scope-owned media reference must include a relative identity")
+        raise ValueError("stage-owned media reference must include a relative identity")
     if not candidate_path.startswith(f"{prefix}/"):
         return None
     decoded = unquote(candidate_path[len(prefix) + 1 :])
     if "\x00" in decoded:
-        raise ValueError("scope-owned media identity contains a null byte")
+        raise ValueError("stage-owned media identity contains a null byte")
     return normalize_artifact_identity(decoded)
 
 
@@ -288,7 +288,7 @@ def _packaged_media_url(item: SnapshotMediaItem, fragment: str) -> str:
 
 def _media_adapters(
     repo_root: Path,
-    config: DocsScopeConfig,
+    config: DocsStageConfig,
     media_types: Iterable[str],
     *,
     remote_client: RemoteArtifactClient | None,
@@ -319,7 +319,7 @@ def _media_adapters(
 
 def plan_snapshot_media(
     repo_root: Path,
-    config: DocsScopeConfig,
+    config: DocsStageConfig,
     doc_payloads: Mapping[str, Mapping[str, Any]],
     *,
     remote_client: RemoteArtifactClient | None = None,
@@ -356,12 +356,12 @@ def plan_snapshot_media(
         try:
             data = adapters[media_type].read(identity)
         except Exception as exc:
-            raise ValueError(f"scope-owned media is unavailable: {media_type}/{identity}") from exc
+            raise ValueError(f"stage-owned media is unavailable: {media_type}/{identity}") from exc
         packaged_path = Path("media") / media_type / Path(identity)
         path_key = _portable_path_key(packaged_path)
         existing = packaged_keys.get(path_key)
         if existing is not None and existing != (media_type, identity):
-            raise ValueError("scope-owned media paths collide in the snapshot package")
+            raise ValueError("stage-owned media paths collide in the snapshot package")
         packaged_keys[path_key] = (media_type, identity)
         items.append(
             SnapshotMediaItem(

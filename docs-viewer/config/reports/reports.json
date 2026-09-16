@@ -2,16 +2,16 @@
   "schema": "docs_viewer_reports_v1",
   "reports": [
     {
-      "report_id": "scope_links",
+      "report_id": "workspace_links",
       "title": "Links",
-      "description": "Lists directed document links from the last Analysis Working scope rebuild.",
-      "loader_id": "scope_links",
+      "description": "Lists directed document links from the last Working Links rebuild.",
+      "loader_id": "workspace_links",
       "presets": []
     },
     {
       "report_id": "unpublishable",
       "title": "Unpublishable",
-      "description": "Reads ordinary document IDs from Analysis Working source/documents/unpublishable.json.",
+      "description": "Reads ordinary document IDs from Working source/documents/unpublishable.json.",
       "loader_id": "unpublishable",
       "presets": []
     },
@@ -25,14 +25,13 @@
     {
       "report_id": "docs_index_table",
       "title": "Docs Index Table",
-      "description": "Displays a sortable Docs Viewer index table for a selected docs scope.",
+      "description": "Displays a sortable Docs Viewer index table for the selected stage.",
       "loader_id": "docs_index_table",
       "presets": [
         {
-          "preset_id": "scope_documents_admin",
-          "title": "Scope Documents Admin",
-          "description": "Management report for reviewing a scope by title and doc_id.",
-          "default_scope": "analysis",
+          "preset_id": "workspace_documents_admin",
+          "title": "Workspace Documents Admin",
+          "description": "Management report for reviewing documents by title and doc_id.",
           "columns": ["title", "doc_id"],
           "filters": [],
           "sortable": ["title", "doc_id"]
@@ -64,28 +63,28 @@
     {
       "report_id": "source_config",
       "title": "Source Config",
-      "description": "Displays Docs Viewer source config for all scopes in manage mode.",
+      "description": "Displays Docs Viewer workspace and stage configuration in manage mode.",
       "loader_id": "source_config",
       "presets": []
     },
     {
       "report_id": "docs_broken_links",
       "title": "Docs Broken Links",
-      "description": "Runs the Docs Viewer broken-links audit for a selected scope.",
+      "description": "Runs the Docs Viewer broken-links audit for Working.",
       "loader_id": "docs_broken_links",
       "presets": []
     },
     {
       "report_id": "docs_backlinks",
       "title": "Documents Linking Here",
-      "description": "Lists current same-scope documents linking to the exact report host document.",
+      "description": "Lists current documents in the selected stage linking to the exact report host document.",
       "loader_id": "docs_backlinks",
       "presets": []
     },
     {
       "report_id": "semantic_tokens",
       "title": "Semantic Tokens",
-      "description": "Lists semantic-token occurrences across all Analysis Working collections.",
+      "description": "Lists semantic-token occurrences across all Working collections.",
       "loader_id": "semantic_tokens",
       "presets": []
     },

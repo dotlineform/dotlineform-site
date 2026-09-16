@@ -110,6 +110,8 @@ def document_package_source_format(
         if parse_issues:
             return ""
         export_id, export_issues = export_id_from_json_payload(payload)
+    if any(item.get("code") == "invalid_package_provenance" for item in export_issues):
+        raise ValueError("; ".join(str(item.get("message") or "") for item in export_issues))
     if export_issues or not export_id:
         return ""
     trusted_metadata, _unknown, metadata_issues, _metadata_path = metadata_from_internal_export_meta(
@@ -118,6 +120,8 @@ def document_package_source_format(
         metadata_root,
     )
     if metadata_issues:
+        if any(item.get("code") == "invalid_package_provenance" for item in metadata_issues):
+            raise ValueError("; ".join(str(item.get("message") or "") for item in metadata_issues))
         return ""
     profile_id = _clean_text(
         trusted_metadata.get("profile_id") or trusted_metadata.get("config_id")
@@ -148,7 +152,7 @@ def document_package_source_format(
 def load_document_package(
     repo_root: Path,
     *,
-    scope: str,
+    stage: str,
     staged_filename: str,
     staging_root: Path,
     metadata_root: Path,
@@ -222,7 +226,7 @@ def load_document_package(
                     raw_rows,
                     trusted_metadata,
                     repo_root=repo_root,
-                    scope=scope,
+                    stage=stage,
                     sub_scope=sub_scope,
                     required_capability=RETURN_IMPORT_CAPABILITY,
                 )

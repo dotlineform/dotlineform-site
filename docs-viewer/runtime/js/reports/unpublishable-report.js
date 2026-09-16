@@ -1,9 +1,9 @@
 const TITLE_ORDER = new Intl.Collator("en", { sensitivity: "base", numeric: true });
 
 /** Validate the report envelope and order documents by title for display. */
-export function readUnpublishableDocuments(payload, scope) {
-  if (!payload || payload.ok !== true || payload.schema_version !== "docs_unpublishable_report_v3"
-    || payload.scope !== scope || !scope || payload.stage !== "working" || !Array.isArray(payload.documents)) {
+export function readUnpublishableDocuments(payload) {
+  if (!payload || payload.ok !== true || payload.schema_version !== "docs_unpublishable_report_v4"
+    || payload.stage !== "working" || !Array.isArray(payload.documents)) {
     throw new Error("Unpublishable report data is invalid.");
   }
   const seen = new Set();
@@ -24,9 +24,9 @@ export function readUnpublishableDocuments(payload, scope) {
   });
 }
 
-/** Mount a read-only source report within the exact scope's Working document. */
+/** Mount a read-only source report within the workspace's Working document. */
 export function mountUnpublishableReport(context) {
-  if (!context.viewerScope || context.viewerStage !== "working") {
+  if (context.viewerStage !== "working") {
     throw new Error("Unpublishable is available only in Working.");
   }
   const service = context.reportService;
@@ -85,12 +85,12 @@ export function mountUnpublishableReport(context) {
     table.hidden = true;
     status.textContent = "Reading unpublishable.json…";
     try {
-      const payload = await service.readUnpublishable({ scope: context.viewerScope, stage: context.viewerStage });
+      const payload = await service.readUnpublishable({ stage: context.viewerStage });
       if (!current(version)) return;
-      const documents = readUnpublishableDocuments(payload, context.viewerScope);
+      const documents = readUnpublishableDocuments(payload);
       documents.forEach(function (record) {
         const tr = documentRef.createElement("tr");
-        const href = "/docs/?" + new URLSearchParams({ scope: context.viewerScope, stage: "working", doc: record.doc_id });
+        const href = "/docs/?" + new URLSearchParams({ stage: "working", doc: record.doc_id });
         [record.title, record.doc_id].forEach(function (value) {
           const cell = documentRef.createElement("td");
           if (value) {
@@ -120,7 +120,7 @@ export function mountUnpublishableReport(context) {
     const version = ++requestVersion;
     setBusy(true);
     try {
-      await service.openPublicationIgnore({ scope: context.viewerScope, stage: context.viewerStage });
+      await service.openPublicationIgnore({ stage: context.viewerStage });
       if (current(version)) status.textContent = "Opened unpublishable.json in VS Code. Refresh after saving.";
     } catch (error) {
       if (current(version)) status.textContent = error.message;

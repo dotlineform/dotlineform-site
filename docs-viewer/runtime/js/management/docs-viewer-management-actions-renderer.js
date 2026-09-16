@@ -18,31 +18,10 @@ var MANAGEMENT_ACTION_MENU_ITEMS = [
     label: "Import"
   },
   {
-    id: "docsViewerManageExportScopesButton",
-    actionId: ACTION_IDS.EXPORT_SCOPES,
+    id: "docsViewerManageExportWorkspaceButton",
+    actionId: ACTION_IDS.EXPORT_WORKSPACE,
     emoji: "⬇️",
     label: "Export"
-  },
-  {
-    id: "docsViewerManageNewScopeButton",
-    actionId: ACTION_IDS.NEW_SCOPE,
-    emoji: "🗂️",
-    label: "New scope",
-    hidden: true
-  },
-  {
-    id: "docsViewerManageRenameScopeButton",
-    actionId: ACTION_IDS.RENAME_SCOPE,
-    emoji: "🏷️",
-    label: "Rename scope",
-    hidden: true
-  },
-  {
-    id: "docsViewerManageDeleteScopeButton",
-    actionId: ACTION_IDS.DELETE_SCOPE,
-    emoji: "🗑️",
-    label: "Delete scope",
-    hidden: true
   },
   {
     id: "docsViewerManageNewSubScopeButton",
@@ -94,21 +73,6 @@ function renderActionMenuItem(item) {
   ].join("");
 }
 
-function renderScopeSelect() {
-  return [
-    '    <label class="docsViewer__scopeField" for="docsViewerScopeSelect" aria-label="Docs scope">',
-    '      <select class="docsViewer__scopeSelectNative visually-hidden" id="docsViewerScopeSelect" tabindex="-1" aria-hidden="true"></select>',
-    '      <div class="docsViewer__scopeSelectMenu" data-docs-viewer-scope-select-menu>',
-    '        <button class="docsViewer__scopeSelectButton" type="button" id="docsViewerScopeSelectButton" aria-haspopup="listbox" aria-expanded="false" aria-controls="docsViewerScopeSelectList" aria-label="Docs scope">',
-    '          <span class="docsViewer__scopeSelectEmoji" aria-hidden="true"></span>',
-    '          <span class="docsViewer__scopeSelectText" data-docs-viewer-scope-select-label></span>',
-    '        </button>',
-    '        <div class="docsViewer__scopeSelectSurface" id="docsViewerScopeSelectList" role="listbox" hidden></div>',
-    '      </div>',
-    '    </label>'
-  ].join("");
-}
-
 function elementFromMarkup(documentRef, markup) {
   var template = documentRef.createElement("template");
   template.innerHTML = markup;
@@ -151,14 +115,6 @@ function renderManagementActionsMenu(context) {
   return { root: root, interactive: root.querySelector("#docsViewerManageActionsButton") };
 }
 
-function renderScopeControl(context) {
-  var root = context.existingRoot;
-  if (!root || !root.querySelector("#docsViewerScopeSelect")) {
-    root = elementFromMarkup(context.document, renderScopeSelect().trim());
-  }
-  return { root: root, interactive: root.querySelector("#docsViewerScopeSelect") };
-}
-
 export function createDocsViewerManagementAppControlRenderers() {
   return {
     "manage-toolbar-import": function (context) {
@@ -193,7 +149,6 @@ export function createDocsViewerManagementAppControlRenderers() {
         text: "Pre-publish"
       });
     },
-    "manage-scope-select": renderScopeControl,
     "manage-stage-select": function (context) {
       var root = context.existingRoot || context.document.createElement("div");
       root.className = "docsViewer__stageButtons";

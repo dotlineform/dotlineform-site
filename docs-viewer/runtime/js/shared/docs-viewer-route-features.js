@@ -1,6 +1,5 @@
 export const DOCS_VIEWER_ROUTE_FEATURE_IDS = [
-  "configured-scope-discovery",
-  "scope-selection",
+  "workspace-configuration",
   "search",
   "recent",
   "bookmarks",
@@ -10,8 +9,7 @@ export const DOCS_VIEWER_ROUTE_FEATURE_IDS = [
 ];
 
 var FEATURE_KEYS = {
-  "configured-scope-discovery": "configuredScopeDiscovery",
-  "scope-selection": "scopeSelection",
+  "workspace-configuration": "workspaceConfiguration",
   "search": "search",
   "recent": "recent",
   "bookmarks": "bookmarks",
@@ -44,9 +42,7 @@ export function normalizeDocsViewerRouteFeatures(rawFeatures) {
     seen.add(featureId);
     ids.push(featureId);
   });
-  if (seen.has("scope-selection") && !seen.has("configured-scope-discovery")) {
-    throw new Error("Docs Viewer route feature scope-selection requires configured-scope-discovery.");
-  }
+
 
   var projection = { ids: ids };
   DOCS_VIEWER_ROUTE_FEATURE_IDS.forEach(function (featureId) {

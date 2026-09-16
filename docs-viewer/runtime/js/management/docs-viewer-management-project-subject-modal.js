@@ -30,7 +30,6 @@ function cleanString(value) {
 
 function exactResponseTarget(response, target) {
   var candidate = {
-    scope: response && response.scope,
     ...(Object.prototype.hasOwnProperty.call(response, "stage") ? { stage: response.stage } : {}),
     sub_scope: response && response.sub_scope,
     doc_id: response && response.doc_id
@@ -128,7 +127,7 @@ function radio(value, label, selected) {
   "</label>";
 }
 
-function modalBody(subject, target) {
+function modalBody(subject) {
   var selected = selectedKind(subject);
   var folderValue = subject.state === "valid" && subject.kind === "folder" ? subject.key : "";
   var evidence = evidenceText(subject);
@@ -137,7 +136,6 @@ function modalBody(subject, target) {
     '<fieldset class="docsViewer__fieldGroup" data-project-subject-options>' +
       '<legend class="visually-hidden">Subject</legend>' +
       radio("none", "None", selected) +
-      (target.scope === "dotlineform" ? radio("folder", "Folder", selected) : "") +
       radio("work", "Work", selected) +
       radio("series", "Series", selected) +
       radio("detail", "Detail", selected) +

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Completion evidence for one full external Docs Viewer scope Build."""
+"""Completion evidence for one full external Docs Viewer stage Build."""
 
 from __future__ import annotations
 
@@ -10,11 +10,11 @@ from pathlib import Path
 from typing import Any, Iterable
 
 from docs_lifecycle_paths import render_json, write_text_atomic
-from docs_scope_config import DocsScopeConfig, resolve_location_path
+from docs_workspace_config import DocsStageConfig, resolve_location_path
 
 
 BUILD_MANIFEST_FILENAME = "build-manifest.json"
-BUILD_MANIFEST_SCHEMA_VERSION = "docs_scope_build_manifest_v1"
+BUILD_MANIFEST_SCHEMA_VERSION = "docs_build_manifest_v1"
 IGNORED_FILENAMES = frozenset({".DS_Store", ".gitkeep"})
 
 
@@ -22,14 +22,14 @@ def utc_now() -> str:
     return dt.datetime.now(dt.timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
 
 
-def _safe_root(repo_root: Path, config: DocsScopeConfig, *, role: str) -> Path:
-    location = config.stage_root if role in {"source", "generated"} else config.scope_root
-    scope_root = resolve_location_path(repo_root, location)
-    root = scope_root / role
-    if scope_root.is_symlink() or root.is_symlink():
-        raise ValueError(f"Docs scope {config.scope_id!r} {role} root must not be a symlink")
-    if not scope_root.is_dir() or not root.is_dir():
-        raise FileNotFoundError(f"Docs scope {config.scope_id!r} {role} root is unavailable")
+def _safe_root(repo_root: Path, config: DocsStageConfig, *, role: str) -> Path:
+    location = config.stage_root if role in {"source", "generated"} else config.workspace_root
+    owner_root = resolve_location_path(repo_root, location)
+    root = owner_root / role
+    if owner_root.is_symlink() or root.is_symlink():
+        raise ValueError(f"Docs stage {config.stage!r} {role} root must not be a symlink")
+    if not owner_root.is_dir() or not root.is_dir():
+        raise FileNotFoundError(f"Docs stage {config.stage!r} {role} root is unavailable")
     return root.resolve()
 
 
@@ -67,21 +67,21 @@ def tree_revision(root: Path, paths: Iterable[Path]) -> str:
     return f"sha256:{digest.hexdigest()}"
 
 
-def build_manifest_path(repo_root: Path, config: DocsScopeConfig) -> Path:
+def build_manifest_path(repo_root: Path, config: DocsStageConfig) -> Path:
     return _safe_root(repo_root, config, role="generated") / BUILD_MANIFEST_FILENAME
 
 
-def remove_build_manifest(repo_root: Path, config: DocsScopeConfig) -> bool:
+def remove_build_manifest(repo_root: Path, config: DocsStageConfig) -> bool:
     path = build_manifest_path(repo_root, config)
     if not path.exists():
         return False
     if path.is_symlink() or not path.is_file():
-        raise ValueError(f"Docs scope {config.scope_id!r} build manifest must be a regular file")
+        raise ValueError(f"Docs stage {config.stage!r} build manifest must be a regular file")
     path.unlink()
     return True
 
 
-def write_build_manifest(repo_root: Path, config: DocsScopeConfig) -> dict[str, Any]:
+def write_build_manifest(repo_root: Path, config: DocsStageConfig) -> dict[str, Any]:
     source_root = _safe_root(repo_root, config, role="source")
     generated_root = _safe_root(repo_root, config, role="generated")
     source_files = _managed_files(source_root)
@@ -96,8 +96,7 @@ def write_build_manifest(repo_root: Path, config: DocsScopeConfig) -> dict[str, 
     ]
     payload: dict[str, Any] = {
         "schema_version": BUILD_MANIFEST_SCHEMA_VERSION,
-        "scope": config.scope_id,
-        **({"stage": config.stage} if config.stage else {}),
+        "stage": config.stage,
         "completed_at": utc_now(),
         "source_revision": tree_revision(source_root, source_files),
         "generated_revision": tree_revision(generated_root, generated_files),
@@ -108,7 +107,7 @@ def write_build_manifest(repo_root: Path, config: DocsScopeConfig) -> dict[str, 
     write_text_atomic(path, render_json(payload))
     persisted = json.loads(path.read_text(encoding="utf-8"))
     if persisted != payload:
-        raise RuntimeError(f"Docs scope {config.scope_id!r} build manifest did not verify")
+        raise RuntimeError(f"Docs stage {config.stage!r} build manifest did not verify")
     return payload
 
 

@@ -531,7 +531,7 @@ class SemanticTokensMixin:
             if not token.supported:
                 return token.raw
             occurrences.append({
-                "source_scope": self.scope_id, "source_doc_id": doc.doc_id,
+                "source_stage": self.config.stage, "source_doc_id": doc.doc_id,
                 "source_range": token.source_range, "raw": token.raw, "title": token.title,
                 "family": token.family, "target_type": token.target_type, "target_id": token.target_id,
                 "detail_id": token.detail_id, "href": "",

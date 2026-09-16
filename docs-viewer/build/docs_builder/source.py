@@ -10,13 +10,10 @@ from urllib.parse import quote
 from .common import (
     FRONT_MATTER_PATTERN,
     INTEGER_PATTERN,
-    browser_path_for_repo_relative,
     humanize,
     normalize_text,
     plain_text_from_html,
-    publication_documents_path,
     read_json,
-    scope_uses_external_data,
 )
 from docs_document_identity import is_immutable_doc_id
 from docs_report_source import ReportDescriptor, ReportSourceContractRequired
@@ -41,7 +38,6 @@ class InvalidDocIdError(Exception):
 
 @dataclass(frozen=True)
 class DocRecord:
-    scope_id: str
     doc_id: str
     title: str
     date: str
@@ -128,12 +124,14 @@ def extract_title(markdown: str) -> str:
 
 class SourceLoadingMixin:
     def load_docs(self) -> list[DocRecord]:
+        if not self.source_dir.is_dir():
+            raise FileNotFoundError(f"Docs source directory is unavailable: {self.source_dir}")
         paths = sorted(self.source_dir.glob("**/*.md"))
         self.source_files_scanned = len(paths)
         nested_paths = [path for path in paths if path.parent != self.source_dir]
         if nested_paths:
             nested = ", ".join(path.relative_to(self.source_dir).as_posix() for path in nested_paths)
-            raise RuntimeError(f"Nested markdown docs are not supported under {self.source_dir}; move these files to the scope root: {nested}")
+            raise RuntimeError(f"Nested markdown docs are not supported under {self.source_dir}; move these files to the collection root: {nested}")
 
         docs: list[DocRecord] = []
         for path in paths:
@@ -190,7 +188,6 @@ class SourceLoadingMixin:
                 raise FrontMatterSyntaxError(str(exc)) from exc
             docs.append(
                 DocRecord(
-                    scope_id=self.scope_id,
                     doc_id=doc_id,
                     title=title,
                     date=date,
@@ -232,11 +229,11 @@ class SourceLoadingMixin:
 
     def validate_targeted_build_prerequisites(self, docs: list[DocRecord], target_doc_ids: list[str]) -> None:
         if not (self.output_dir / "index-tree.json").exists():
-            raise RuntimeError("Targeted docs build requires existing scope index tree; run a full-scope build first")
+            raise RuntimeError("Targeted docs build requires existing stage index tree; run a full-stage build first")
         if not (self.semantic_tokens_dir / "index.json").exists():
             raise RuntimeError(
                 "Targeted docs build requires existing semantic-token index; "
-                "run a full-scope build first"
+                "run a full-stage build first"
             )
         missing = [
             doc.doc_id for doc in docs
@@ -245,37 +242,26 @@ class SourceLoadingMixin:
         if missing:
             raise RuntimeError(
                 "Targeted docs build requires existing payloads for unselected docs; "
-                f"run a full-scope build first: {', '.join(missing)}"
+                f"run a full-stage build first: {', '.join(missing)}"
             )
 
     def viewer_url_for(self, doc_id: str, anchor: str = "") -> str:
         pairs: list[str] = []
-        if self.include_scope_param and self.scope_id:
-            pairs.append(f"scope={quote(self.scope_id)}")
-        if self.config.stage:
-            pairs.append(f"stage={quote(self.config.stage)}")
+        pairs.append(f"stage={quote(self.config.stage)}")
         pairs.append(f"doc={quote(str(doc_id))}")
         url = f"{self.viewer_base_url}?{'&'.join(pairs)}"
         return f"{url}#{anchor}" if anchor else url
 
     def content_url_for(self, doc_id: str) -> str:
-        if scope_uses_external_data(self.config):
-            return f"/docs/doc?scope={quote(self.scope_id)}&doc_id={quote(str(doc_id))}" + (f"&stage={quote(self.config.stage)}" if self.config.stage else "")
-        return f"{self.output_url_base}/by-id/{quote(str(doc_id))}.json"
+        return f"/docs/doc?stage={quote(self.config.stage)}&doc_id={quote(str(doc_id))}"
 
     def output_url_dir(self) -> Path:
-        if self.public_readonly_scope:
-            return self.repo_root / publication_documents_path(self.config)
         return self.output_dir
 
     def output_url_base_for(self, output_dir: Path) -> str:
-        if scope_uses_external_data(self.config):
-            return f"/docs/generated/external/{quote(self.scope_id)}" + (f"/{quote(self.config.stage)}" if self.config.stage else "")
-        try:
-            relative = output_dir.resolve().relative_to(self.repo_root)
-        except ValueError as exc:
-            raise RuntimeError(f"Docs output path must be inside the repo root: {output_dir}") from exc
-        return browser_path_for_repo_relative(relative)
+        child = getattr(self, "sub_scope_config", None)
+        suffix = f"/{quote(child.sub_scope)}" if child is not None else ""
+        return f"/docs/generated/external/{quote(self.config.stage)}{suffix}"
 
     def effective_parent_id(self, doc: DocRecord, docs: list[DocRecord]) -> str:
         if not doc.parent_id:
@@ -321,11 +307,7 @@ class SourceLoadingMixin:
         return entry
 
     def by_id_metadata_entry(self, doc: DocRecord, docs: list[DocRecord]) -> dict[str, Any]:
-        entry = (
-            self.reader_metadata_entry(doc)
-            if self.public_readonly_scope
-            else self.metadata_entry(doc, docs)
-        )
+        entry = self.metadata_entry(doc, docs)
         if doc.report is not None:
             entry["report"] = dict(doc.report.as_payload())
         return entry

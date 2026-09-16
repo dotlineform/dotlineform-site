@@ -16,33 +16,28 @@ export function normalizeManagedDocumentTarget(value) {
   if (!value || typeof value !== "object" || Array.isArray(value)) {
     throw new Error("Managed document target must be an object.");
   }
-  var keys = targetKeys(value).filter(function (key) { return key !== "stage"; });
-  var parentKeys = ["doc_id", "scope"];
-  var subScopeKeys = ["doc_id", "scope", "sub_scope"];
+  var keys = targetKeys(value);
+  var parentKeys = ["doc_id", "stage"];
+  var subScopeKeys = ["doc_id", "stage", "sub_scope"];
   if (!sameKeys(keys, parentKeys) && !sameKeys(keys, subScopeKeys)) {
     throw new Error(
-      "Managed document target must contain exactly scope and doc_id, "
+      "Managed document target must contain exactly stage and doc_id, "
       + "with sub_scope only for a sub-scope document."
     );
   }
 
-  var scope = cleanString(value.scope).toLowerCase();
   var docId = cleanString(value.doc_id);
-  if (!scope) throw new Error("Managed document target scope is required.");
+  if (!["working", "pre-publish", "published"].includes(value.stage)) throw new Error("Managed target stage is required.");
   if (!docId) throw new Error("Managed document target doc_id is required.");
 
   var target = {
-    scope: scope,
+    stage: value.stage,
     doc_id: docId
   };
   if (Object.prototype.hasOwnProperty.call(value, "sub_scope")) {
     var subScope = cleanString(value.sub_scope).toLowerCase();
     if (!subScope) throw new Error("Managed document target sub_scope is required.");
     target.sub_scope = subScope;
-  }
-  if (Object.prototype.hasOwnProperty.call(value, "stage")) {
-    if (!["working", "pre-publish", "published"].includes(value.stage)) throw new Error("Managed target stage is invalid.");
-    target.stage = value.stage;
   }
   return Object.freeze(target);
 }
@@ -51,30 +46,25 @@ export function normalizeManagedDocumentCollectionTarget(value) {
   if (!value || typeof value !== "object" || Array.isArray(value)) {
     throw new Error("Managed document collection target must be an object.");
   }
-  var keys = targetKeys(value).filter(function (key) { return key !== "stage"; });
-  var parentKeys = ["scope"];
-  var subScopeKeys = ["scope", "sub_scope"];
+  var keys = targetKeys(value);
+  var parentKeys = ["stage"];
+  var subScopeKeys = ["stage", "sub_scope"];
   if (!sameKeys(keys, parentKeys) && !sameKeys(keys, subScopeKeys)) {
     throw new Error(
-      "Managed document collection target must contain exactly scope, "
+      "Managed document collection target must contain exactly stage, "
       + "with sub_scope only for a configured child collection."
     );
   }
 
-  var scope = cleanString(value.scope).toLowerCase();
-  if (!scope) throw new Error("Managed document collection target scope is required.");
+  if (!["working", "pre-publish", "published"].includes(value.stage)) throw new Error("Managed collection stage is required.");
 
-  var target = { scope: scope };
+  var target = { stage: value.stage };
   if (Object.prototype.hasOwnProperty.call(value, "sub_scope")) {
     var subScope = cleanString(value.sub_scope).toLowerCase();
     if (!subScope) {
       throw new Error("Managed document collection target sub_scope is required.");
     }
     target.sub_scope = subScope;
-  }
-  if (Object.prototype.hasOwnProperty.call(value, "stage")) {
-    if (!["working", "pre-publish", "published"].includes(value.stage)) throw new Error("Managed target stage is invalid.");
-    target.stage = value.stage;
   }
   return Object.freeze(target);
 }
@@ -83,8 +73,7 @@ export function managedDocumentTargetsEqual(left, right) {
   var normalizedLeft = normalizeManagedDocumentTarget(left);
   var normalizedRight = normalizeManagedDocumentTarget(right);
   return (
-    normalizedLeft.scope === normalizedRight.scope
-    && cleanString(normalizedLeft.stage) === cleanString(normalizedRight.stage)
+    cleanString(normalizedLeft.stage) === cleanString(normalizedRight.stage)
     && normalizedLeft.doc_id === normalizedRight.doc_id
     && cleanString(normalizedLeft.sub_scope) === cleanString(normalizedRight.sub_scope)
   );

@@ -13,14 +13,15 @@ from docs_artifact_locations import (
 )
 from docs_mermaid_media import produce_mermaid_svg
 from docs_media_inventory import source_media_references
-from docs_scope_config import DocsScopeConfig, DocsSubScopeConfig, resolve_location_path
+from docs_workspace_config import DocsStageConfig, DocsSubScopeConfig, resolve_location_path
 
 from .common import MEDIA_TOKEN_PATTERN
 
 
 @dataclass(frozen=True)
 class MediaBuildContext:
-    scope: str
+    stage: str
+    sub_scope: str
     build_type: str
     publishes_to: str
     source: ArtifactLocationAdapter
@@ -36,7 +37,7 @@ IGNORED_MEDIA_FILENAMES = frozenset({".DS_Store", ".gitkeep"})
 
 
 def referenced_build_media_identities(
-    config: DocsScopeConfig | DocsSubScopeConfig,
+    config: DocsStageConfig | DocsSubScopeConfig,
     markdown_sources: Iterable[str],
 ) -> dict[str, tuple[str, ...]]:
     """Collect configured build-media outputs referenced by selected Markdown sources."""
@@ -63,7 +64,7 @@ def referenced_build_media_identities(
 
 def run_registered_media_builds(
     repo_root: Path,
-    config: DocsScopeConfig | DocsSubScopeConfig,
+    config: DocsStageConfig | DocsSubScopeConfig,
     *,
     write: bool,
     producers: Mapping[str, MediaProducer] | None = None,
@@ -99,7 +100,7 @@ def run_registered_media_builds(
         producer = available.get(build.producer)
         if producer is None:
             raise RuntimeError(
-                f"Docs media producer {build.producer!r} is not registered for {config.scope_id}/{build_type}"
+                f"Docs media producer {build.producer!r} is not registered for {config.stage}/{build_type}"
             )
         generated_media = config.media.types[build.publishes_to]
         source = artifact_location_adapter(
@@ -129,7 +130,8 @@ def run_registered_media_builds(
             normalize_artifact_identity(identity)
             for identity in producer(
                 MediaBuildContext(
-                    scope=config.scope_id,
+                    stage=config.stage,
+                    sub_scope=getattr(config, "sub_scope", ""),
                     build_type=build_type,
                     publishes_to=build.publishes_to,
                     source=source,
@@ -163,7 +165,7 @@ def run_registered_media_builds(
     return results
 
 
-def scope_markdown_sources(repo_root: Path, config: DocsScopeConfig | DocsSubScopeConfig) -> tuple[str, ...]:
+def collection_markdown_sources(repo_root: Path, config: DocsStageConfig | DocsSubScopeConfig) -> tuple[str, ...]:
     """Read only the documents belonging to this media owner."""
     roots = [resolve_location_path(repo_root, config.source.location) / config.source.documents_path]
     sources: list[str] = []
@@ -173,7 +175,7 @@ def scope_markdown_sources(repo_root: Path, config: DocsScopeConfig | DocsSubSco
 
 
 def referenced_media_identities(
-    config: DocsScopeConfig | DocsSubScopeConfig,
+    config: DocsStageConfig | DocsSubScopeConfig,
     markdown_sources: Iterable[str],
 ) -> dict[str, tuple[str, ...]]:
     identities: dict[str, set[str]] = {media_type: set() for media_type in config.media.types}
@@ -186,16 +188,16 @@ def referenced_media_identities(
     }
 
 
-def build_scope_media_snapshot(
+def build_collection_media_snapshot(
     repo_root: Path,
-    config: DocsScopeConfig | DocsSubScopeConfig,
+    config: DocsStageConfig | DocsSubScopeConfig,
     *,
     write: bool,
     producers: Mapping[str, MediaProducer] | None = None,
 ) -> dict[str, object]:
     """Reconcile the exact referenced source-media set into generated output."""
 
-    markdown_sources = scope_markdown_sources(repo_root, config)
+    markdown_sources = collection_markdown_sources(repo_root, config)
     referenced = referenced_media_identities(config, markdown_sources)
     requested_builds = referenced_build_media_identities(config, markdown_sources)
     producer_builds = run_registered_media_builds(
@@ -229,7 +231,7 @@ def build_scope_media_snapshot(
             if identity in produced:
                 if source_stat is not None:
                     raise RuntimeError(
-                        f"Docs media {config.scope_id}/{media_type}/{identity} has both direct and producer source authority"
+                        f"Docs media {config.stage}/{media_type}/{identity} has both direct and producer source authority"
                     )
                 expected[identity] = None
                 continue
@@ -250,7 +252,7 @@ def build_scope_media_snapshot(
             if data is None:
                 if write and generated.stat(identity) is None:
                     raise RuntimeError(
-                        f"Docs media producer did not generate {config.scope_id}/{media_type}/{identity}"
+                        f"Docs media producer did not generate {config.stage}/{media_type}/{identity}"
                     )
                 unchanged.append(identity)
                 continue
@@ -266,7 +268,7 @@ def build_scope_media_snapshot(
                 )
                 if not generated.verify_bytes(identity, data):
                     raise RuntimeError(
-                        f"Docs generated media did not verify: {config.scope_id}/{media_type}/{identity}"
+                        f"Docs generated media did not verify: {config.stage}/{media_type}/{identity}"
                     )
         if write:
             for identity in stale:
@@ -280,7 +282,7 @@ def build_scope_media_snapshot(
         }
 
     return {
-        "scope": config.scope_id,
+        "stage": config.stage,
         "write": write,
         "source_documents": len(markdown_sources),
         "missing_references": sorted(missing),
@@ -293,9 +295,9 @@ __all__ = [
     "MediaBuildContext",
     "MediaProducer",
     "REGISTERED_MEDIA_PRODUCERS",
-    "build_scope_media_snapshot",
+    "build_collection_media_snapshot",
     "referenced_media_identities",
     "referenced_build_media_identities",
     "run_registered_media_builds",
-    "scope_markdown_sources",
+    "collection_markdown_sources",
 ]

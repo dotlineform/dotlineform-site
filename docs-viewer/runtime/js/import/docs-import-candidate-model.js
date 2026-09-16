@@ -204,8 +204,8 @@ export function docsImportCollectionLabel(target) {
   if (!target) return "Unavailable";
   const normalized = normalizeManagedDocumentCollectionTarget(target);
   return normalized.sub_scope
-    ? `${normalized.scope} / ${normalized.sub_scope}`
-    : normalized.scope;
+    ? `${normalized.stage} / ${normalized.sub_scope}`
+    : normalized.stage;
 }
 
 export function docsImportCandidateDestinationLabel(

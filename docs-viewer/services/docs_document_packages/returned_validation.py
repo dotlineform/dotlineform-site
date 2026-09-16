@@ -17,7 +17,7 @@ from docs_document_packages.returned_common import (
     normalize_text,
 )
 import docs_source_model as source_model
-from docs_document_packages.source_context import package_source_scope_config
+from docs_document_packages.provenance import package_provenance_error, require_package_stage
 
 
 def validate_whole_returned_package(
@@ -25,7 +25,7 @@ def validate_whole_returned_package(
     trusted_metadata: dict[str, Any],
     *,
     repo_root: Path,
-    scope: str,
+    stage: str,
     sub_scope: str | None = None,
     required_capability: str,
 ) -> list[dict[str, Any]]:
@@ -36,9 +36,13 @@ def validate_whole_returned_package(
         RETURN_IMPORT_CAPABILITY,
     }:
         raise ValueError(f"unsupported returned-package capability: {required_capability}")
+    require_package_stage(stage)
+    provenance_error = package_provenance_error(trusted_metadata)
+    if provenance_error:
+        return [issue("error", "invalid_package_provenance", provenance_error)]
     issues: list[dict[str, Any]] = []
     expected_identity = {
-        "schema_version": "data_sharing_export_meta_v1",
+        "schema_version": "data_sharing_export_meta_v2",
         "app": "docs-viewer",
         "adapter_id": "documents",
         "data_domain": "documents",
@@ -74,16 +78,16 @@ def validate_whole_returned_package(
             )
         )
 
-    metadata_scope = normalize_text(trusted_metadata.get("scope")).lower()
-    expected_scope = normalize_text(scope).lower()
-    if not metadata_scope:
-        issues.append(issue("error", "missing_scope", "trusted package metadata scope is required"))
-    elif metadata_scope != expected_scope:
+    metadata_stage = normalize_text(trusted_metadata.get("stage")).lower()
+    expected_stage = normalize_text(stage).lower()
+    if not metadata_stage:
+        issues.append(issue("error", "missing_stage", "trusted package metadata stage is required"))
+    elif metadata_stage != expected_stage:
         issues.append(
             issue(
                 "error",
-                "scope_mismatch",
-                f"trusted package scope {metadata_scope!r} does not match requested scope {expected_scope!r}",
+                "stage_mismatch",
+                f"trusted package stage {metadata_stage!r} does not match requested stage {expected_stage!r}",
             )
         )
 
@@ -168,7 +172,7 @@ def validate_whole_returned_package(
                 "export_only_sub_scope" if metadata_sub_scope else "export_only_profile",
                 (
                     "trusted sub-scope package does not support Docs Import: "
-                    f"{metadata_scope}/{metadata_sub_scope}"
+                    f"{metadata_stage}/{metadata_sub_scope}"
                     if metadata_sub_scope
                     else f"profile does not support returned-package import: {profile_id or '<missing>'}"
                 ),
@@ -231,23 +235,21 @@ def validate_whole_returned_package(
 
     if (
         metadata_sub_scope
-        and metadata_scope == expected_scope
+        and metadata_stage == expected_stage
         and sub_scope_matches_request
         and expected_seen
     ):
         try:
             collection = resolve_managed_document_collection(
                 repo_root,
-                scope=expected_scope,
+                stage=expected_stage,
                 sub_scope=metadata_sub_scope,
-                stage=package_source_scope_config(repo_root, expected_scope).stage or None,
             )
             collection_docs = [
                 source_doc_from_path(
                     path=path,
-                    scope=collection.scope,
                 )
-                for path in source_model.scope_markdown_paths(
+                for path in source_model.document_markdown_paths(
                     collection.source_root
                 )
             ]
@@ -276,7 +278,7 @@ def validate_whole_returned_package(
                     "cross_collection_selected_documents",
                     (
                         "trusted selected_doc_ids contains documents outside "
-                        f"{expected_scope}/{metadata_sub_scope}: "
+                        f"{expected_stage}/{metadata_sub_scope}: "
                         + ", ".join(cross_collection)
                     ),
                 )

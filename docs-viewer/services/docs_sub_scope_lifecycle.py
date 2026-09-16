@@ -13,30 +13,20 @@ from docs_lifecycle_paths import (
     render_json,
     write_text_atomic,
 )
-from docs_scope_config import (
+from docs_workspace_config import (
     CONFIG_REL_PATH,
-    SCHEMA_VERSION as SCOPE_CONFIG_SCHEMA_VERSION,
-    SCOPE_LIFECYCLE_TOOL_ID,
+    SCHEMA_VERSION as WORKSPACE_CONFIG_SCHEMA_VERSION,
+    SUB_SCOPE_LIFECYCLE_TOOL_ID,
     SOURCE_DOCUMENTS_PATH,
     SOURCE_SUB_SCOPES_PATH,
-    DocsScopeConfig,
+    DocsStageConfig,
     document_source_path,
-    is_public_readonly_scope,
-    load_docs_scope_configs,
-    load_docs_scope_stage,
+    load_docs_stage,
     normalize_sub_scope_id,
     public_documents_path,
     generated_documents_path,
     require_document_authoring,
-    resolve_scope_path,
-    select_scope_stage,
-)
-from docs_scope_manifest import (
-    LIFECYCLE_APPLY_SCHEMA_VERSION,
-    LIFECYCLE_PREVIEW_SCHEMA_VERSION,
-    normalize_scope_id,
-    normalize_title,
-    require_confirmed,
+    resolve_workspace_path,
 )
 import docs_source_model as source_model
 
@@ -50,114 +40,78 @@ class SubScopeLifecycleApplyError(RuntimeError):
         self.payload = payload
 
 
-def find_raw_scope_config(payload: dict[str, Any], scope_id: str) -> dict[str, Any]:
-    scopes = payload.get("scopes")
-    if not isinstance(scopes, list):
-        raise ValueError("docs scope config scopes must be an array")
-    for item in scopes:
-        if isinstance(item, dict) and str(item.get("scope_id") or "").strip() == scope_id:
-            return item
-    raise ValueError(f"scope_id {scope_id!r} is missing from docs scope config")
+LIFECYCLE_APPLY_SCHEMA_VERSION = "docs_sub_scope_lifecycle_apply_v1"
+LIFECYCLE_PREVIEW_SCHEMA_VERSION = "docs_sub_scope_lifecycle_preview_v1"
 
 
-def planned_sub_scope_config_record(
-    parent_config: DocsScopeConfig,
-    sub_scope: str,
-    title: str,
-    lifecycle: dict[str, str],
-) -> dict[str, Any]:
-    projection = None
-    if parent_config.public_projection is not None:
-        projection = {
-            "documents": {
-                "location": {
-                    "provider": "repository",
-                    "path": (parent_config.public_projection.documents.location.path / sub_scope).as_posix(),
-                }
-            },
-            "search": None,
-        }
-    return {
-        "sub_scope": sub_scope,
-        "title": title,
-        "public_projection": projection,
-        "lifecycle": lifecycle,
-    }
+def require_confirmed(body: dict[str, Any]) -> None:
+    if body.get("confirm") is not True:
+        raise ValueError("confirm must be true to apply sub-scope lifecycle changes")
+
+
+def request_stage_config(repo_root: Path, body: dict[str, Any]) -> DocsStageConfig:
+    if "scope" in body or "parent_scope" in body:
+        raise ValueError("scope and parent_scope are retired; supply an explicit stage")
+    return load_docs_stage(repo_root, body.get("stage"))
+
+
+def normalize_title(value: Any) -> str:
+    if not isinstance(value, str) or not value.strip():
+        raise ValueError("title must be a non-blank string")
+    return " ".join(value.split())
+
+
+def planned_sub_scope_config_record(sub_scope: str, title: str, lifecycle: dict[str, str]) -> dict[str, Any]:
+    return {"sub_scope": sub_scope, "title": title, "lifecycle": lifecycle}
 
 
 def append_sub_scope_config(
     repo_root: Path,
-    parent_scope: str,
     sub_scope_config: dict[str, Any],
     *,
-    stage: str | None = None,
+    stage: str,
 ) -> None:
     """Append the collection to its selected source owner, preserving other stages."""
     config_path = repo_root / CONFIG_REL_PATH
-    payload = load_json_object(config_path, "docs scope config")
-    if payload.get("schema_version") != SCOPE_CONFIG_SCHEMA_VERSION:
-        raise ValueError(f"docs scope config schema_version must be {SCOPE_CONFIG_SCHEMA_VERSION}")
-    parent_record = find_raw_scope_config(payload, parent_scope)
-    if stage is not None:
-        stages = parent_record.get("stages")
-        if not isinstance(stages, dict) or not isinstance(stages.get(stage), dict):
-            raise ValueError(f"stage {stage!r} is not configured for scope {parent_scope!r}")
-        parent_record = stages[stage]
+    payload = load_json_object(config_path, "Docs workspace config")
+    if payload.get("schema_version") != WORKSPACE_CONFIG_SCHEMA_VERSION:
+        raise ValueError(f"Docs workspace config schema_version must be {WORKSPACE_CONFIG_SCHEMA_VERSION}")
+    stages = payload.get("stages")
+    if not isinstance(stages, dict) or not isinstance(stages.get(stage), dict):
+        raise ValueError(f"stage {stage!r} is not configured")
+    parent_record = stages[stage]
     sub_scopes = parent_record.setdefault("sub_scopes", [])
     if not isinstance(sub_scopes, list):
-        raise ValueError(f"scope_id {parent_scope!r} sub_scopes must be an array")
+        raise ValueError(f"stage {stage!r} sub_scopes must be an array")
     sub_scope = str(sub_scope_config.get("sub_scope") or "").strip()
     if any(isinstance(item, dict) and str(item.get("sub_scope") or "").strip() == sub_scope for item in sub_scopes):
-        raise ValueError(f"sub_scope {sub_scope!r} already exists in scope {parent_scope!r}")
+        raise ValueError(f"sub_scope {sub_scope!r} already exists in this stage")
     sub_scopes.append(sub_scope_config)
     write_text_atomic(config_path, render_json(payload))
 
-
-
-
-def sub_scope_storage_contract(
-    parent_scope: str,
-    parent_config: DocsScopeConfig,
-    sub_scope: str,
-    sub_scope_config: dict[str, Any],
-    *,
-    public_static_assets: bool,
-) -> dict[str, Any]:
-    projection = sub_scope_config.get("public_projection")
-    source_root = (
-        parent_config.source.location.path / SOURCE_SUB_SCOPES_PATH / sub_scope
-    ).as_posix()
-    generated_docs = (
-        parent_config.generated.documents.location.path.parent / SOURCE_SUB_SCOPES_PATH / sub_scope / "documents"
-    ).as_posix()
-    public_docs = (
-        str(projection["documents"]["location"]["path"])
-        if isinstance(projection, dict)
-        else generated_docs
-    )
+def sub_scope_storage_contract(parent_config: DocsStageConfig, sub_scope: str) -> dict[str, Any]:
+    source_root = parent_config.source.location.path / SOURCE_SUB_SCOPES_PATH / sub_scope
+    generated_docs = parent_config.generated.documents.location.path.parent / SOURCE_SUB_SCOPES_PATH / sub_scope / "documents"
+    public_docs = public_documents_path(parent_config)
     return {
-        "publishing_mode": "parent_scope",
-        "public_static_assets": public_static_assets,
+        "publishing_mode": "workspace",
+        "public_static_assets": public_docs is not None,
         "access": "embedded_detail_documents",
-        "source_root": source_root,
-        "docs_output": generated_docs,
-        "publish_output": public_docs,
+        "source_root": source_root.as_posix(),
+        "docs_output": generated_docs.as_posix(),
+        "publish_output": (public_docs / sub_scope).as_posix() if public_docs else "",
         "search_output": "",
-        "summary": (
-            f"Sub-scope under {parent_scope}: creates nested source and generated payload roots "
-            "plus one parent report host. It does not create a top-level scope, route, or scope "
-            "selector entry."
-        ),
+        "summary": "Creates a sub-scope source/generated collection and its ordinary report host in the selected stage.",
     }
 
 
-def sub_scope_path_records(repo_root: Path, parent_config: DocsScopeConfig, sub_scope: str) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
-    source_root = resolve_scope_path(
+def sub_scope_path_records(repo_root: Path, parent_config: DocsStageConfig, sub_scope: str) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+    source_root = resolve_workspace_path(
         repo_root,
         parent_config.source.location.path / parent_config.source.sub_scopes_path / sub_scope,
     )
     source_documents_root = source_root / SOURCE_DOCUMENTS_PATH
-    docs_output = resolve_scope_path(
+    docs_output = resolve_workspace_path(
         repo_root,
         generated_documents_path(parent_config).parent / SOURCE_SUB_SCOPES_PATH / sub_scope / "documents",
     )
@@ -173,10 +127,7 @@ def sub_scope_path_records(repo_root: Path, parent_config: DocsScopeConfig, sub_
         records.append(path_record(repo_root, "sub_scope_source_media", source_root / "media" / media_type, action="create"))
     for media_type in ("img", "svg", "files", "html"):
         records.append(path_record(repo_root, "sub_scope_generated_media", docs_output.parent / "media" / media_type, action="create"))
-    if not is_public_readonly_scope(
-        viewer_base_url=parent_config.viewer_base_url,
-        include_scope_param=parent_config.include_scope_param,
-    ):
+    if parent_config.stage == "working":
         records.append(
             path_record(
                 repo_root,
@@ -188,7 +139,7 @@ def sub_scope_path_records(repo_root: Path, parent_config: DocsScopeConfig, sub_
     publish_records: list[dict[str, Any]] = []
     public_output = public_documents_path(parent_config)
     if public_output is not None:
-        publish_output = resolve_scope_path(repo_root, public_output / sub_scope)
+        publish_output = resolve_workspace_path(repo_root, public_output / sub_scope)
         publish_records.extend(
             [
                 path_record(repo_root, "sub_scope_public_docs_root", publish_output, action="publish"),
@@ -200,15 +151,15 @@ def sub_scope_path_records(repo_root: Path, parent_config: DocsScopeConfig, sub_
 
 def parent_source_records(
     repo_root: Path,
-    parent_config: DocsScopeConfig,
-) -> list[source_model.ScopeDoc]:
-    return source_model.load_scope_docs_for_config(repo_root, parent_config)
+    parent_config: DocsStageConfig,
+) -> list[source_model.SourceDoc]:
+    return source_model.load_stage_docs_for_config(repo_root, parent_config)
 
 
 def report_claimants(
-    records: list[source_model.ScopeDoc],
+    records: list[source_model.SourceDoc],
     sub_scope: str,
-) -> list[source_model.ScopeDoc]:
+) -> list[source_model.SourceDoc]:
     return [
         document
         for document in records
@@ -238,7 +189,7 @@ def planned_host_identity(body: dict[str, Any], existing: set[str]) -> dict[str,
     return {"doc_id": doc_id, "added_date": added_date}
 
 
-def report_host_source(parent_config: DocsScopeConfig, sub_scope: str, title: str, identity: dict[str, str]) -> str:
+def report_host_source(parent_config: DocsStageConfig, sub_scope: str, title: str, identity: dict[str, str]) -> str:
     front_matter: dict[str, Any] = {
         "doc_id": identity["doc_id"],
         "title": title,
@@ -258,24 +209,19 @@ def report_host_source(parent_config: DocsScopeConfig, sub_scope: str, title: st
 
 
 def plan_create_sub_scope_preview(repo_root: Path, body: dict[str, Any]) -> dict[str, Any]:
-    """Plan a host and collection in one explicit, writable scope or workflow stage."""
-    parent_scope = normalize_scope_id(body.get("parent_scope") or body.get("scope"))
+    """Plan a host and collection in one explicit, writable workflow stage."""
+    parent_config = request_stage_config(repo_root, body)
     sub_scope = normalize_sub_scope_id(body.get("sub_scope"), field="sub_scope")
     title = normalize_title(body.get("title"))
-    configs = load_docs_scope_configs(repo_root)
-    parent_config = configs.get(parent_scope)
-    if parent_config is None:
-        raise ValueError(f"parent scope {parent_scope!r} does not exist")
-    parent_config = select_scope_stage(parent_config, body.get("stage"))
     require_document_authoring(parent_config)
     if any(item.sub_scope == sub_scope for item in parent_config.sub_scopes):
-        raise ValueError(f"sub_scope {sub_scope!r} already exists in scope {parent_scope!r}")
+        raise ValueError(f"sub_scope {sub_scope!r} already exists in this stage")
 
     parent_sources = parent_source_records(repo_root, parent_config)
     claimants = report_claimants(parent_sources, sub_scope)
     if claimants:
         raise ValueError(
-            f"sub-scope creation found an existing report host for {parent_scope}/{sub_scope}: "
+            f"sub-scope creation found an existing report host for {sub_scope}: "
             + ", ".join(document.path.name for document in claimants)
         )
     existing = {
@@ -288,15 +234,15 @@ def plan_create_sub_scope_preview(repo_root: Path, body: dict[str, Any]) -> dict
     host_text = report_host_source(parent_config, sub_scope, title, identity)
     host_revision = source_model.source_revision(host_text.encode("utf-8"))
     association = {
-        "tool_id": SCOPE_LIFECYCLE_TOOL_ID,
+        "tool_id": SUB_SCOPE_LIFECYCLE_TOOL_ID,
         "report_host_doc_id": identity["doc_id"],
         "report_host_source_revision": host_revision,
     }
     planned_sub_scope_config = planned_sub_scope_config_record(
-        parent_config, sub_scope, title, association
+        sub_scope, title, association
     )
     created_files, publish_files = sub_scope_path_records(repo_root, parent_config, sub_scope)
-    host_path = resolve_scope_path(repo_root, document_source_path(parent_config)) / f"{identity['doc_id']}.md"
+    host_path = resolve_workspace_path(repo_root, document_source_path(parent_config)) / f"{identity['doc_id']}.md"
     created_files.append(path_record(repo_root, "report_host_source", host_path, action="create"))
     conflicts = [
         record["path"]
@@ -305,46 +251,36 @@ def plan_create_sub_scope_preview(repo_root: Path, body: dict[str, Any]) -> dict
     ]
     if conflicts:
         raise ValueError(f"sub-scope creation would overwrite existing paths: {', '.join(conflicts)}")
-    public_readonly = parent_config.public_projection is not None
-    stage_target = {"stage": parent_config.stage} if parent_config.stage else {}
-    stage_query = f"&stage={parent_config.stage}" if parent_config.stage else ""
+    stage_target = {"stage": parent_config.stage}
 
     return {
         "ok": True,
         "schema_version": LIFECYCLE_PREVIEW_SCHEMA_VERSION,
         "action": "create_sub_scope",
         "operation": "preview",
-        "scope_id": parent_scope,
-        "parent_scope": parent_scope,
         **stage_target,
         "sub_scope": sub_scope,
         "title": title,
         "planned_report_host_identity": identity,
         "report_host_source_revision": host_revision,
-        "collection_target": {"scope": parent_scope, **stage_target, "sub_scope": sub_scope},
-        "report_host_target": {"scope": parent_scope, **stage_target, "doc_id": identity["doc_id"]},
+        "collection_target": {**stage_target, "sub_scope": sub_scope},
+        "report_host_target": {**stage_target, "doc_id": identity["doc_id"]},
         "association": association,
         "planned_sub_scope_config": planned_sub_scope_config,
-        "storage_contract": sub_scope_storage_contract(
-            parent_scope,
-            parent_config,
-            sub_scope,
-            planned_sub_scope_config,
-            public_static_assets=public_readonly,
-        ),
+        "storage_contract": sub_scope_storage_contract(parent_config, sub_scope),
         "created_files": created_files,
         "publish_files": publish_files,
         "changed_files": [
-            path_record(repo_root, "scope_config", repo_root / CONFIG_REL_PATH, action="change"),
+            path_record(repo_root, "workspace_config", repo_root / CONFIG_REL_PATH, action="change"),
         ],
         "rebuild_plan": ["sub_scope_docs", "parent_docs", "browser_config"],
         "urls": {
-            "management": f"/docs/?scope={parent_scope}{stage_query}&doc={identity['doc_id']}",
+            "management": f"/docs/?stage={parent_config.stage}&doc={identity['doc_id']}",
             "public": "",
         },
         "warnings": [],
         "summary_text": (
-            f"Previewed new Docs Viewer sub-scope {parent_scope}/{sub_scope} "
+            f"Previewed new Docs Viewer sub-scope {sub_scope} "
             f"with report host {identity['doc_id']}."
         ),
     }
@@ -362,7 +298,7 @@ def apply_create_sub_scope(
     *,
     dry_run: bool,
     rebuild_sub_scope_outputs: Callable[..., dict[str, Any]],
-    rebuild_scope_outputs: Callable[..., dict[str, Any]],
+    rebuild_stage_outputs: Callable[..., dict[str, Any]],
 ) -> dict[str, Any]:
     """Create the previewed host/config, then rebuild only that collection and parent stage."""
     require_confirmed(body)
@@ -371,29 +307,28 @@ def apply_create_sub_scope(
     if dry_run:
         return result
 
-    scope = str(preview["parent_scope"])
     sub_scope = str(preview["sub_scope"])
-    parent_config = load_docs_scope_stage(repo_root, scope, preview.get("stage"))
-    build_kwargs = {"stage": parent_config.stage} if parent_config.stage else {}
+    parent_config = load_docs_stage(repo_root, preview.get("stage"))
+    build_kwargs = {"stage": parent_config.stage}
     identity = preview["planned_report_host_identity"]
     host_text = report_host_source(parent_config, sub_scope, str(preview["title"]), identity)
-    host_path = resolve_scope_path(repo_root, document_source_path(parent_config)) / f"{identity['doc_id']}.md"
+    host_path = resolve_workspace_path(repo_root, document_source_path(parent_config)) / f"{identity['doc_id']}.md"
     host_created = False
     try:
         source_model.write_text_atomic_new(host_path, host_text)
         host_created = True
-        append_sub_scope_config(repo_root, scope, preview["planned_sub_scope_config"], **build_kwargs)
+        append_sub_scope_config(repo_root, preview["planned_sub_scope_config"], **build_kwargs)
     except Exception as error:
         if host_created and host_path.exists() and host_path.read_text(encoding="utf-8") == host_text:
             host_path.unlink()
         raise apply_error(result, error, committed=False, stage="config_commit") from error
 
     result.update({"committed": True, "retry_create": False})
-    source_root = resolve_scope_path(
+    source_root = resolve_workspace_path(
         repo_root,
         parent_config.source.location.path / parent_config.source.sub_scopes_path / sub_scope,
     )
-    docs_output = resolve_scope_path(
+    docs_output = resolve_workspace_path(
         repo_root,
         generated_documents_path(parent_config).parent / SOURCE_SUB_SCOPES_PATH / sub_scope / "documents",
     )
@@ -407,13 +342,12 @@ def apply_create_sub_scope(
         for media_type in ("img", "svg", "files", "html"):
             (docs_output.parent / "media" / media_type).mkdir(parents=True, exist_ok=True)
         if public_root is not None:
-            (resolve_scope_path(repo_root, public_root / sub_scope) / "by-id").mkdir(parents=True, exist_ok=False)
+            (resolve_workspace_path(repo_root, public_root / sub_scope) / "by-id").mkdir(parents=True, exist_ok=False)
         stage = "sub_scope_build"
-        result["rebuild"]["sub_scope"] = rebuild_sub_scope_outputs(repo_root, scope, sub_scope, **build_kwargs)
+        result["rebuild"]["sub_scope"] = rebuild_sub_scope_outputs(repo_root, sub_scope, **build_kwargs)
         stage = "parent_rebuild"
-        result["rebuild"]["parent"] = rebuild_scope_outputs(
+        result["rebuild"]["parent"] = rebuild_stage_outputs(
             repo_root,
-            scope,
             include_search=False,
             docs_doc_ids=[identity["doc_id"]],
             **({"links_created_doc_ids": [identity["doc_id"]]} if parent_config.stage == "working" else {}),
@@ -421,20 +355,15 @@ def apply_create_sub_scope(
         )
     except Exception as error:
         raise apply_error(result, error, committed=True, stage=stage) from error
-    result["summary_text"] = f"Created Docs Viewer sub-scope {scope}/{sub_scope} with report host {identity['doc_id']}."
+    result["summary_text"] = f"Created Docs Viewer sub-scope {sub_scope} with report host {identity['doc_id']}."
     return result
 
-
-
-
-def blocked_delete_preview(parent_scope: str, sub_scope: str, blockers: list[str], **details: Any) -> dict[str, Any]:
+def blocked_delete_preview(sub_scope: str, blockers: list[str], **details: Any) -> dict[str, Any]:
     return {
         "ok": True,
         "schema_version": LIFECYCLE_PREVIEW_SCHEMA_VERSION,
         "action": "delete_sub_scope",
         "operation": "preview",
-        "scope_id": parent_scope,
-        "parent_scope": parent_scope,
         "sub_scope": sub_scope,
         "allowed": False,
         "blockers": blockers,
@@ -448,15 +377,10 @@ def blocked_delete_preview(parent_scope: str, sub_scope: str, blockers: list[str
 
 def plan_delete_sub_scope_preview(repo_root: Path, body: dict[str, Any]) -> dict[str, Any]:
     """Keep whole-collection retirement unavailable until its cross-stage contract is defined."""
-    parent_scope = normalize_scope_id(body.get("parent_scope") or body.get("scope"))
+    config = request_stage_config(repo_root, body)
     sub_scope = normalize_sub_scope_id(body.get("sub_scope"), field="sub_scope")
-    config = load_docs_scope_configs(repo_root).get(parent_scope)
-    if config is None:
-        return blocked_delete_preview(parent_scope, sub_scope, [f"parent scope {parent_scope!r} does not exist"])
-    select_scope_stage(config, body.get("stage"))
     return blocked_delete_preview(
-        parent_scope, sub_scope,
-        ["Whole-sub-scope deletion is unavailable in the shared lifecycle."],
+        sub_scope, ["Whole-sub-scope deletion is unavailable in the shared lifecycle."], stage=config.stage,
     )
 
 
@@ -465,7 +389,7 @@ def apply_delete_sub_scope(
     body: dict[str, Any],
     *,
     dry_run: bool,
-    rebuild_scope_outputs: Callable[..., dict[str, Any]],
+    rebuild_stage_outputs: Callable[..., dict[str, Any]],
 ) -> dict[str, Any]:
     """Reject retirement without mutating Working, prepared or accepted collections."""
     require_confirmed(body)

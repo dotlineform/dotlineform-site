@@ -11,8 +11,7 @@ from .config import SiteToolsConfig
 
 
 DOCS_VIEWER_ROUTE_FEATURE_IDS = {
-    "configured-scope-discovery",
-    "scope-selection",
+    "workspace-configuration",
     "search",
     "recent",
     "bookmarks",
@@ -219,10 +218,6 @@ def _validate_docs_viewer_routes(site_root: Path, config: SiteToolsConfig) -> tu
         unknown_features = sorted(features - DOCS_VIEWER_ROUTE_FEATURE_IDS)
         if unknown_features:
             raise RuntimeError(f"Docs Viewer route {route_id} has unknown features: {', '.join(unknown_features)}")
-        if "scope-selection" in features and "configured-scope-discovery" not in features:
-            raise RuntimeError(
-                f"Docs Viewer route {route_id} scope-selection requires configured-scope-discovery"
-            )
         required_fields = {
             ("docs_paths", "index_tree_url"),
             ("config_urls", "docs_viewer"),
@@ -278,35 +273,22 @@ def _validate_docs_viewer_routes(site_root: Path, config: SiteToolsConfig) -> tu
 
 
 def _docs_viewer_default_doc_payload(site_root: Path, route_id: str, route: dict) -> str:
-    default_scope_id = route.get("default_scope_id")
-    if not isinstance(default_scope_id, str) or not default_scope_id:
-        raise RuntimeError(f"Docs Viewer route {route_id} must define default_scope_id")
+    if route.get("schema_version") != "docs_viewer_route_config_v5":
+        raise RuntimeError(f"Docs Viewer route {route_id} requires the current route schema")
     config_url = (route.get("config_urls") or {}).get("docs_viewer")
     config_path = site_root / _site_relative_url_path(
         config_url,
         context=f"Docs Viewer route {route_id} config_urls.docs_viewer",
     )
     config = json.loads(config_path.read_text(encoding="utf-8"))
-    scopes = config.get("scopes") if isinstance(config, dict) else None
-    if not isinstance(scopes, list):
-        raise RuntimeError(f"Docs Viewer config for route {route_id} must contain a scopes list")
-    scope = next(
-        (
-            item
-            for item in scopes
-            if isinstance(item, dict) and item.get("scope_id") == default_scope_id
-        ),
-        None,
-    )
-    if scope is None:
-        raise RuntimeError(
-            f"Docs Viewer config for route {route_id} is missing scope {default_scope_id}"
-        )
-    default_doc_id = scope.get("default_doc_id")
+    if not isinstance(config, dict) or config.get("schema_version") != "docs_viewer_config_v2":
+        raise RuntimeError(f"Docs Viewer config for route {route_id} requires regeneration")
+    workspace = config.get("workspace")
+    if not isinstance(workspace, dict) or "stages" in config or "scopes" in config:
+        raise RuntimeError(f"Public Docs Viewer config for route {route_id} must contain one workspace")
+    default_doc_id = workspace.get("default_doc_id")
     if not isinstance(default_doc_id, str):
-        raise RuntimeError(
-            f"Docs Viewer config scope {default_scope_id} default_doc_id must be a string"
-        )
+        raise RuntimeError(f"Docs Viewer workspace default_doc_id must be a string for {route_id}")
     if not default_doc_id:
         return ""
     index_tree_url = (route.get("docs_paths") or {}).get("index_tree_url")

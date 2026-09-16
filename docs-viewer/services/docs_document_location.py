@@ -9,29 +9,24 @@ from urllib.parse import quote
 
 import docs_source_model as source_model
 from docs_document_identity import is_immutable_doc_id
-from docs_scope_config import (
-    DocsScopeConfig,
+from docs_workspace_config import (
+    DocsStageConfig,
     DocsSubScopeConfig,
-    load_docs_scope_configs,
-    select_scope_stage,
+    load_docs_stage,
+    require_selected_stage,
 )
 
 
 def sub_scope_report_placement(
     repo_root: Path,
-    scope_id: str,
     sub_scope_id: str,
     *,
     eligible_parent_doc_ids: Collection[str] | None = None,
-    stage: str = "",
-) -> tuple[DocsScopeConfig, DocsSubScopeConfig, str]:
+    stage: str,
+) -> tuple[DocsStageConfig, DocsSubScopeConfig, str]:
     """Resolve one configured child collection to its exact eligible report host."""
 
-    configs = load_docs_scope_configs(repo_root, scope_ids=[scope_id])
-    config = configs.get(scope_id)
-    if config is None:
-        raise ValueError(f"unknown Docs Viewer scope: {scope_id}")
-    config = select_scope_stage(config, stage or None)
+    config = load_docs_stage(repo_root, stage)
     matching_sub_scopes = [
         sub_scope
         for sub_scope in config.sub_scopes
@@ -40,7 +35,7 @@ def sub_scope_report_placement(
     if len(matching_sub_scopes) != 1:
         raise ValueError(
             f"Docs Viewer sub-scope must resolve exactly once: "
-            f"{scope_id}/{sub_scope_id}"
+            f"{stage}/{sub_scope_id}"
         )
     sub_scope = matching_sub_scopes[0]
     eligible_ids = (
@@ -50,7 +45,7 @@ def sub_scope_report_placement(
     )
 
     matching_reports: list[str] = []
-    for document in source_model.load_scope_docs_for_config(repo_root, config):
+    for document in source_model.load_stage_docs_for_config(repo_root, config):
         report = document.report
         if (
             report is not None
@@ -67,31 +62,28 @@ def sub_scope_report_placement(
     if len(matching_reports) != 1:
         raise ValueError(
             f"Docs Viewer sub-scope report must resolve exactly once for "
-            f"{scope_id}/{sub_scope_id}; found {len(matching_reports)}"
+            f"{stage}/{sub_scope_id}; found {len(matching_reports)}"
         )
     return config, sub_scope, matching_reports[0]
 
 
-def canonical_document_viewer_url(config: DocsScopeConfig, doc_id: str, *, subdoc_id: str = "") -> str:
+def canonical_document_viewer_url(config: DocsStageConfig, doc_id: str, *, subdoc_id: str = "") -> str:
     """Build an ordinary location from explicit document/host identity, without a workflow stage."""
+    require_selected_stage(config)
     if not is_immutable_doc_id(doc_id) or (subdoc_id and not is_immutable_doc_id(subdoc_id)):
         raise ValueError("doc_id and subdoc_id must use immutable document identity")
-    pairs = []
-    if config.include_scope_param:
-        pairs.append(f"scope={quote(config.scope_id)}")
-    pairs.append(f"doc={quote(doc_id)}")
+    pairs = [f"doc={quote(doc_id)}"]
     if subdoc_id:
         pairs.append(f"subdoc={quote(subdoc_id)}")
-    return f"{config.viewer_base_url}?{'&'.join(pairs)}"
+    return f"/docs/?{'&'.join(pairs)}"
 
 
 def canonical_sub_scope_document_url(
     repo_root: Path,
-    scope_id: str,
     sub_scope_id: str,
     doc_id: str,
     *,
-    stage: str = "",
+    stage: str,
 ) -> str:
     """Resolve the exact stage's report host, returning a stage-free document URL."""
 
@@ -101,7 +93,6 @@ def canonical_sub_scope_document_url(
 
     config, _sub_scope, parent_doc_id = sub_scope_report_placement(
         repo_root,
-        scope_id,
         sub_scope_id,
         stage=stage,
     )
@@ -111,27 +102,19 @@ def canonical_sub_scope_document_url(
 
 def management_collection_viewer_url(
     repo_root: Path,
-    scope_id: str,
     sub_scope_id: str = "",
     *,
-    stage: str = "",
+    stage: str,
 ) -> str:
     """Return the exact local Manage URL for one configured collection."""
 
-    normalized_scope = str(scope_id or "").strip().lower()
     normalized_sub_scope = str(sub_scope_id or "").strip().lower()
-    configs = load_docs_scope_configs(repo_root, scope_ids=[normalized_scope])
-    if normalized_scope not in configs:
-        raise ValueError(f"unknown Docs Viewer scope: {normalized_scope}")
-    config = select_scope_stage(configs[normalized_scope], stage or None)
-    url = f"/docs/?scope={quote(normalized_scope)}"
-    if config.stage:
-        url += f"&stage={quote(config.stage)}"
+    config = load_docs_stage(repo_root, stage)
+    url = f"/docs/?stage={quote(config.stage)}"
     if not normalized_sub_scope:
         return url
     _config, _sub_scope, parent_doc_id = sub_scope_report_placement(
         repo_root,
-        normalized_scope,
         normalized_sub_scope,
         stage=config.stage,
     )

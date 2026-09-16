@@ -5,33 +5,33 @@ const TITLE_ORDER = new Intl.Collator("en", { sensitivity: "base", numeric: true
 
 function documentKey(document) {
   const target = document.target;
-  return JSON.stringify([target.scope, target.sub_scope, target.doc_id]);
+  return JSON.stringify([target.stage, target.sub_scope, target.doc_id]);
 }
 
 /** Project directed pairs from the saved aggregate; incoming mirrors add no rows.
  * Keep complete document summaries so future icon prefixes can use owned metadata.
  */
-export function readScopeLinksRows(payload) {
-  if (!payload || payload.schema_version !== 1 || payload.scope !== "analysis"
+export function readWorkspaceLinksRows(payload) {
+  if (!payload || payload.schema_version !== 2 || Object.prototype.hasOwnProperty.call(payload, "scope")
     || payload.stage !== "working" || !Array.isArray(payload.documents)) {
-    throw new Error("Unsupported scope Links data.");
+    throw new Error("Unsupported workspace Links data.");
   }
   const rows = [];
   const sources = new Set();
   payload.documents.forEach(function (record) {
-    if (!record || record.schema_version !== 1 || !Array.isArray(record.outgoing)
+    if (!record || record.schema_version !== 2 || !Array.isArray(record.outgoing)
       || !Array.isArray(record.incoming)) throw new Error("Invalid document Links record.");
     const from = docsViewerLinksDocumentSummary(record.self, payload);
     const sourceKey = documentKey(from);
-    if (from.target.scope !== payload.scope || sources.has(sourceKey)) {
-      throw new Error("Scope Links contains an invalid source identity.");
+    if (from.target.stage !== payload.stage || sources.has(sourceKey)) {
+      throw new Error("Workspace Links contains an invalid source identity.");
     }
     sources.add(sourceKey);
     const targets = new Set();
     record.outgoing.forEach(function (entry) {
       const to = docsViewerLinksDocumentSummary(entry && entry.document, payload);
       const targetKey = documentKey(to);
-      if (targets.has(targetKey)) throw new Error("Scope Links contains a duplicate directed pair.");
+      if (targets.has(targetKey)) throw new Error("Workspace Links contains a duplicate directed pair.");
       targets.add(targetKey);
       rows.push({ from, to });
     });
@@ -42,7 +42,7 @@ export function readScopeLinksRows(payload) {
 /** Sort by the selected title, then the other title and exact endpoint identities.
  * Icon presentation is independent of these keys. Never reorder the saved dataset.
  */
-export function sortScopeLinksRows(rows, key = "from", direction = "asc") {
+export function sortWorkspaceLinksRows(rows, key = "from", direction = "asc") {
   if (!COLUMNS.includes(key) || !["asc", "desc"].includes(direction)) {
     throw new Error("Invalid Links sort selection.");
   }
@@ -71,12 +71,12 @@ function documentCell(documentRef, summary) {
 /** Mount the local Working report and await its initial snapshot read.
  * Refresh only rereads links.json. Late responses cannot update a departed host.
  */
-export function mountScopeLinksReport(context) {
-  if (context.viewerScope !== "analysis" || context.viewerStage !== "working") {
-    throw new Error("Links is available only in Analysis Working.");
+export function mountWorkspaceLinksReport(context) {
+  if (context.viewerStage !== "working") {
+    throw new Error("Links is available only in Working.");
   }
   const service = context.reportService;
-  if (!service || typeof service.readScopeLinks !== "function") {
+  if (!service || typeof service.readWorkspaceLinks !== "function") {
     throw new Error("Links requires the local report service.");
   }
   const root = context.reportRoot;
@@ -133,13 +133,13 @@ export function mountScopeLinksReport(context) {
       control.indicator.textContent = active ? (sortDir === "asc" ? "▲" : "▼") : "";
     });
     body.replaceChildren();
-    sortScopeLinksRows(rows, sortKey, sortDir).forEach(function (row) {
+    sortWorkspaceLinksRows(rows, sortKey, sortDir).forEach(function (row) {
       const tr = documentRef.createElement("tr");
       tr.append(documentCell(documentRef, row.from), documentCell(documentRef, row.to));
       body.appendChild(tr);
     });
     table.hidden = rows.length === 0;
-    status.textContent = rows.length ? `${rows.length} ${rows.length === 1 ? "link" : "links"}` : "No document links in the last scope rebuild.";
+    status.textContent = rows.length ? `${rows.length} ${rows.length === 1 ? "link" : "links"}` : "No document links in the last workspace rebuild.";
   }
 
   function current(version) {
@@ -154,9 +154,9 @@ export function mountScopeLinksReport(context) {
     body.replaceChildren();
     status.textContent = "Loading links…";
     try {
-      const payload = await service.readScopeLinks({ scope: context.viewerScope, stage: context.viewerStage });
+      const payload = await service.readWorkspaceLinks({ stage: context.viewerStage });
       if (!current(version)) return;
-      rows = readScopeLinksRows(payload);
+      rows = readWorkspaceLinksRows(payload);
       render();
     } catch (error) {
       if (current(version)) {

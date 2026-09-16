@@ -33,7 +33,6 @@
         "docs-viewer-code-config.js",
         "docs-viewer-config-controller.js",
         "docs-viewer-config-service.js",
-        "docs-viewer-configured-scope-provider.js",
         "docs-viewer-content-detail-view.js",
         "docs-viewer-control-surface-host.js",
         "docs-viewer-data.js",
@@ -65,7 +64,7 @@
         "docs-viewer-route-workflow.js",
         "docs-viewer-router.js",
         "docs-viewer-runtime-lazy-controller.js",
-        "docs-viewer-scope-select-menu.js",
+        "docs-viewer-saved-state.js",
         "docs-viewer-search-controller.js",
         "docs-viewer-search.js",
         "docs-viewer-service-context.js",
@@ -80,7 +79,8 @@
         "docs-viewer-view-context.js",
         "docs-viewer-view-registry.js",
         "docs-viewer-view-state.js",
-        "docs-viewer-viewer-toolbar-renderer.js"
+        "docs-viewer-viewer-toolbar-renderer.js",
+        "docs-viewer-workspace-provider.js"
       ]
     },
     {

@@ -1,5 +1,5 @@
 const PRESETS = {
-  scope_documents_admin: {
+  workspace_documents_admin: {
     columns: ["title", "doc_id"],
     filters: [],
     sortable: ["title", "doc_id"],
@@ -17,7 +17,7 @@ const PRESETS = {
   }
 };
 
-const DEFAULT_PRESET = PRESETS.scope_documents_admin;
+const DEFAULT_PRESET = PRESETS.workspace_documents_admin;
 const FILTER_LABELS = {};
 
 function cleanString(value) {
@@ -136,7 +136,7 @@ function appendTextCell(row, className, text) {
 function appendLinkCell(row, state, className, doc, text) {
   const link = document.createElement("a");
   link.className = className;
-  link.href = state.context.viewerUrlForScope(state.sourceScope, docId(doc), {
+  link.href = state.context.viewerUrlForDocument(docId(doc), {
     manage: state.preset.linkMode === "manage" || (state.preset.linkMode === "auto" && state.context.managementContext)
   });
   link.textContent = text;
@@ -146,7 +146,7 @@ function appendLinkCell(row, state, className, doc, text) {
 function appendTitleCell(row, state, doc) {
   const link = document.createElement("a");
   link.className = "docsViewerReport__cellLink docsViewerReport__title docsViewerReport__treeTitle";
-  link.href = state.context.viewerUrlForScope(state.sourceScope, docId(doc), {
+  link.href = state.context.viewerUrlForDocument(docId(doc), {
     manage: state.preset.linkMode === "manage" || (state.preset.linkMode === "auto" && state.context.managementContext)
   });
   link.style.setProperty("--docs-report-tree-indent", `${docTreeDepth(doc) * 1.15}rem`);
@@ -301,20 +301,20 @@ function renderShell(root, preset) {
 
 export function mountDocsIndexTableReport(context) {
   const preset = PRESETS[context.reportMeta.preset] || DEFAULT_PRESET;
-  const sourceScope = context.reportMeta.scope || context.viewerScope;
+  const sourceStage = context.viewerStage;
   const routeState = readRouteState(preset);
   const nodes = renderShell(context.reportRoot, preset);
 
   const state = Object.assign({
     context,
     preset,
-    sourceScope,
+    sourceStage,
     docs: [],
     parentIds: new Set(),
     collator: new Intl.Collator(undefined, { numeric: true, sensitivity: "base" })
   }, routeState, nodes);
 
-  return context.fetchDocsIndexTree(sourceScope).then((payload) => {
+  return context.fetchDocsIndexTree(sourceStage).then((payload) => {
     state.docs = Array.isArray(payload && payload.docs)
       ? payload.docs.filter((doc) => docId(doc))
       : [];

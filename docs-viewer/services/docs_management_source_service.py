@@ -21,7 +21,7 @@ from docs_management_document_target import (  # noqa: E402
     managed_document_target_request,
     resolve_managed_document_target,
 )
-from docs_scope_config import path_label, require_document_authoring  # noqa: E402
+from docs_workspace_config import path_label, require_document_authoring  # noqa: E402
 from local_env import runtime_env  # noqa: E402
 from markdown_renderer import normalize_markdown_blank_lines  # noqa: E402
 from docs_publication_ignore import publication_ignore_path  # noqa: E402
@@ -67,14 +67,7 @@ def split_source_exact(source_text: str) -> tuple[str, Dict[str, Any], str]:
 
 
 def read_source_body(repo_root: Path, params: Dict[str, list[str]]) -> Dict[str, Any]:
-    request_target = {
-        "scope": (params.get("scope") or [""])[0],
-        "doc_id": (params.get("doc_id") or [""])[0],
-    }
-    if "sub_scope" in params:
-        request_target["sub_scope"] = (params.get("sub_scope") or [""])[0]
-    if "stage" in params:
-        request_target["stage"] = (params.get("stage") or [""])[0]
+    request_target = managed_document_target_request({key: values[0] if values else "" for key, values in params.items()})
     resolved = resolve_managed_document_target(repo_root, request_target)
     target = resolved.document
     source_text = target.source_text
@@ -149,25 +142,23 @@ def rebuild_source_body(repo_root: Path, body: Dict[str, Any], dry_run: bool) ->
         if resolved.sub_scope:
             rebuild = write_rebuild.perform_sub_scope_source_write_and_rebuild(
                 repo_root,
-                resolved.scope,
                 resolved.sub_scope,
                 [target.path],
                 write_operation,
                 suppression_reason="docs-source-editor",
-                stage=resolved.stage or None,
+                stage=resolved.stage,
             )
         else:
             rebuild = write_rebuild.perform_source_write_and_rebuild(
                 repo_root,
-                resolved.scope,
                 [target.path],
                 write_operation,
                 suppression_reason="docs-source-editor",
-                stage=resolved.stage or None,
+                stage=resolved.stage,
                 docs_doc_ids=[target.doc_id],
             )
         event_details = {
-            "scope": resolved.scope,
+            "stage": resolved.stage,
             "doc_id": target.doc_id,
             "path": path_label(repo_root, target.path),
         }
@@ -198,13 +189,13 @@ def rebuild_source_body(repo_root: Path, body: Dict[str, Any], dry_run: bool) ->
 
 def open_publication_ignore(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dict[str, Any]:
     """Open only the configured Working ignore file in VS Code, including invalid JSON for repair."""
-    if set(body) != {"scope", "stage"} or body.get("stage") != "working":
-        raise ValueError("Opening the publication ignore file requires only scope and Working stage identity")
-    path = publication_ignore_path(repo_root, body["scope"])
+    if set(body) != {"stage"} or body.get("stage") != "working":
+        raise ValueError("Opening the publication ignore file requires only Working stage identity")
+    path = publication_ignore_path(repo_root)
     if not path.is_file():
         raise FileNotFoundError("Working unpublishable.json is unavailable")
     open_source_path(repo_root, path, editor="vscode", dry_run=dry_run)
-    return {"ok": True, "scope": body["scope"], "stage": "working", "editor": "vscode", "dry_run": dry_run}
+    return {"ok": True, "stage": "working", "editor": "vscode", "dry_run": dry_run}
 
 
 def detect_preferred_markdown_app() -> Optional[str]:
@@ -267,7 +258,7 @@ def open_source_doc(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dic
 
     if not dry_run:
         event_details = {
-            "scope": resolved.scope,
+            "stage": resolved.stage,
             "doc_id": target.doc_id,
             "editor": editor,
             "preferred_app": preferred_app if editor == "default" else "",

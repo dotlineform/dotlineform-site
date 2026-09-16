@@ -13,14 +13,13 @@ from typing import Any
 from docs_import_common import (
     INLINE_RASTER_EXTENSIONS,
     MARKDOWN_INLINE_RASTER_IMAGE_PATTERN,
-    normalize_scope,
     normalize_space,
     slugify,
     source_format_for_path,
 )
-from docs_scope_config import (
-    DOCS_SCOPE_CONFIGS, DocsManagedMediaConfig, DocsScopeConfig, DocsSubScopeConfig,
-    load_docs_media_owner, load_docs_scope_configs, managed_media_config, select_scope_stage,
+from docs_workspace_config import (
+    DocsManagedMediaConfig, DocsStageConfig, DocsSubScopeConfig,
+    load_docs_media_owner, managed_media_config,
 )
 from docs_media_storage import (
     docs_media_file,
@@ -35,13 +34,11 @@ INLINE_SVG_PATTERN = re.compile(r"<svg\b[^>]*>.*?</svg>", re.IGNORECASE | re.DOT
 INLINE_MEDIA_SOURCE_KINDS = {"inline_data_url", "inline_svg"}
 
 
-def scope_configs_for(repo_root: Path | None = None):
-    return load_docs_scope_configs(repo_root) if repo_root is not None else DOCS_SCOPE_CONFIGS
+def media_config_for(stage: str, media_class: str, repo_root: Path | None):
+    if repo_root is None:
+        raise ValueError("repo_root is required to resolve the media owner")
+    return managed_media_config(load_docs_media_owner(repo_root, stage), media_class)
 
-
-def media_config_for(scope: str, media_class: str, repo_root: Path | None = None):
-    normalized_scope = normalize_scope(scope, repo_root)
-    return managed_media_config(select_scope_stage(scope_configs_for(repo_root)[normalized_scope], "working"), media_class)
 
 def next_inline_media_filename(staging_root: Path, doc_id: str, extension: str, used_filenames: set[str]) -> str:
     safe_doc_id = slugify(doc_id or "imported-doc")
@@ -56,7 +53,7 @@ def next_inline_media_filename(staging_root: Path, doc_id: str, extension: str, 
 
 
 def inline_media_plan(
-    scope: str,
+    stage: str,
     filename: str,
     title: str,
     *,
@@ -69,7 +66,7 @@ def inline_media_plan(
     source: str,
 ) -> dict[str, Any]:
     source_path = Path(filename)
-    plan = build_media_plan(scope, media_class, source_path, title, repo_root=repo_root)
+    plan = build_media_plan(stage, media_class, source_path, title, repo_root=repo_root)
     plan.update(
         {
             "source": source,
@@ -86,7 +83,7 @@ def apply_inline_raster_media_plans(
     staging_root: Path,
     workspace_root: Path,
     summary: dict[str, Any],
-    scope: str,
+    stage: str,
 ) -> None:
     markdown = str(summary.get("markdown_preview") or "")
     if "data:image/" not in markdown:
@@ -119,7 +116,7 @@ def apply_inline_raster_media_plans(
         filename = next_inline_media_filename(staging_root, proposed_doc_id, extension, used_filenames)
         title = alt or f"Inline image {len(inline_plans) + 1:02d}"
         plan = inline_media_plan(
-            scope,
+            stage,
             filename,
             title,
             repo_root=repo_root,
@@ -144,7 +141,7 @@ def apply_inline_svg_media_plans(
     staging_root: Path,
     workspace_root: Path,
     summary: dict[str, Any],
-    scope: str,
+    stage: str,
     *,
     source_svg_markup: str = "",
 ) -> None:
@@ -179,7 +176,7 @@ def apply_inline_svg_media_plans(
         filename = next_inline_media_filename(staging_root, proposed_doc_id, "svg", used_filenames)
         title = sanitized.title or f"Inline image {len(inline_plans) + 1:02d}"
         plan = inline_media_plan(
-            scope,
+            stage,
             filename,
             title,
             media_class="svg",
@@ -207,7 +204,7 @@ def retarget_inline_media_plans(
     staging_root: Path,
     workspace_root: Path,
     summary: dict[str, Any],
-    scope: str,
+    stage: str,
 ) -> None:
     plans = summary.get("media_plans")
     if not isinstance(plans, list) or not plans:
@@ -236,7 +233,7 @@ def retarget_inline_media_plans(
         media_class = "svg" if source_kind == "inline_svg" else "img"
         new_filename = next_inline_media_filename(staging_root, proposed_doc_id, extension, used_filenames)
         new_plan = inline_media_plan(
-            scope,
+            stage,
             new_filename,
             str(plan.get("title") or f"Inline image {index + 1:02d}"),
             media_class=media_class,
@@ -250,7 +247,7 @@ def retarget_inline_media_plans(
         if old_token:
             markdown = markdown.replace(old_token, new_plan["media_token"], 1)
         if old_filename != new_filename:
-            old_media_path = media_path_for(scope, media_class, old_filename, repo_root=repo_root)
+            old_media_path = media_path_for(stage, media_class, old_filename, repo_root=repo_root)
             for warning_index, warning in enumerate(warnings):
                 if isinstance(warning, str) and old_filename in warning:
                     warnings[warning_index] = warning.replace(old_filename, new_filename).replace(
@@ -359,7 +356,7 @@ def materialize_import_media(
     include_prompt_meta: bool,
     source_markdown: str = "",
     source_svg_markup: str = "",
-    stage: str = "",
+    stage: str,
     sub_scope: str = "",
 ) -> list[dict[str, Any]]:
     del workspace_root
@@ -373,7 +370,8 @@ def materialize_import_media(
     if not plans:
         return []
 
-    normalized_scope = normalize_scope(str(import_preview.get("scope")), repo_root)
+    if "scope" in import_preview:
+        raise ValueError("scope-bearing import previews are retired; recreate the preview")
     inline_plans = [plan for plan in plans if plan.get("source") in INLINE_MEDIA_SOURCE_KINDS]
     inline_bytes: dict[int, bytes] = {}
     if inline_plans:
@@ -415,7 +413,6 @@ def materialize_import_media(
         source_path=source_path,
         plans=plans,
         inline_bytes=inline_bytes,
-        scope=normalized_scope,
         stage=stage,
         sub_scope=sub_scope,
     )
@@ -428,13 +425,12 @@ def publish_import_media(
     source_path: Path,
     plans: list[dict[str, Any]],
     inline_bytes: dict[int, bytes],
-    scope: str,
-    stage: str = "",
+    stage: str,
     sub_scope: str = "",
 ) -> list[dict[str, Any]]:
     """Prepare one import record's complete media set and publish before its source write."""
 
-    config = load_docs_media_owner(repo_root, scope, stage=stage or None, sub_scope=sub_scope or None)
+    config = load_docs_media_owner(repo_root, stage, sub_scope)
     prepared: list[tuple[dict[str, Any], Path, Path, dict[str, Any]]] = []
     with tempfile.TemporaryDirectory(prefix="docs-media-publish-") as temp_dir:
         temp_root = Path(temp_dir).resolve()
@@ -519,28 +515,28 @@ def publish_import_media(
         ]
 
 
-def media_token(scope: str, media_class: str, filename: str, *, repo_root: Path | None = None) -> str:
-    media_path = media_path_for(scope, media_class, filename, repo_root=repo_root)
+def media_token(stage: str, media_class: str, filename: str, *, repo_root: Path | None = None) -> str:
+    media_path = media_path_for(stage, media_class, filename, repo_root=repo_root)
     return f"[[media:{media_path}]]"
 
 
-def media_path_for(scope: str, media_class: str, filename: str, *, repo_root: Path | None = None) -> str:
-    config = media_config_for(scope, media_class, repo_root)
+def media_path_for(stage: str, media_class: str, filename: str, *, repo_root: Path | None = None) -> str:
+    config = media_config_for(stage, media_class, repo_root)
     return f"{config.reference_prefix.as_posix().strip('/')}/{filename}"
 
 
 def media_link_for(
-    scope: str,
+    stage: str,
     media_class: str,
     filename: str,
     *,
     repo_root: Path | None = None,
 ) -> str:
-    return media_token(scope, media_class, filename, repo_root=repo_root)
+    return media_token(stage, media_class, filename, repo_root=repo_root)
 
 
 def build_media_plan(
-    scope: str,
+    stage: str,
     media_class: str,
     source_path: Path,
     title: str,
@@ -548,7 +544,7 @@ def build_media_plan(
     repo_root: Path | None = None,
     media_config: DocsManagedMediaConfig | None = None,
 ) -> dict[str, Any]:
-    config = media_config if media_config is not None else media_config_for(scope, media_class, repo_root)
+    config = media_config if media_config is not None else media_config_for(stage, media_class, repo_root)
     media_path = f"{config.reference_prefix.as_posix()}/{source_path.name}"
     link = f"[[media:{media_path}]]"
     return {
@@ -565,7 +561,7 @@ def build_media_plan(
 
 
 def bind_import_media_owner(
-    preview: dict[str, Any], config: DocsScopeConfig | DocsSubScopeConfig,
+    preview: dict[str, Any], config: DocsStageConfig | DocsSubScopeConfig,
 ) -> None:
     """Bind newly imported assets and their Markdown tokens to the exact collection."""
     plans = list(preview.get("media_plans") or [])
@@ -575,7 +571,7 @@ def bind_import_media_owner(
     for plan in plans:
         old_token = plan.get("media_token")
         updated = build_media_plan(
-            config.scope_id,
+            config.stage,
             plan["media_class"],
             Path(plan["source_path"]),
             str(plan.get("title") or ""),

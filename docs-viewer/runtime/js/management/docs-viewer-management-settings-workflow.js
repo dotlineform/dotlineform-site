@@ -23,8 +23,10 @@ export function createDocsViewerManagementSettingsWorkflow(options = {}) {
     var clientOptions = typeof callbacks.managementClientOptions === "function" ? callbacks.managementClientOptions() : {};
     return readSourceConfigSettings(clientOptions)
       .then(function (payload) {
-        var scopes = Array.isArray(payload && payload.scopes) ? payload.scopes : [];
-        var fields = scopes[0] && Array.isArray(scopes[0].fields) ? scopes[0].fields : [];
+        var stages = Array.isArray(payload && payload.stages) ? payload.stages : [];
+        var record = stages.find(function (stage) { return stage.stage === clientOptions.stage; });
+        if (!record) throw new Error("Settings response does not match the selected stage.");
+        var fields = Array.isArray(record.fields) ? record.fields : [];
         var field = fields.find(function (candidate) {
           return candidate && candidate.editable !== false;
         }) || null;

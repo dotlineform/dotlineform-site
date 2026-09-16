@@ -42,7 +42,7 @@ from docs_document_packages.returned_validation import validate_whole_returned_p
 from docs_document_packages.workspace import configured_workspace_paths
 
 
-SCHEMA_VERSION = "docs_review_validated_package_v1"
+SCHEMA_VERSION = "docs_review_validated_package_v2"
 FOLDER_ID_SOURCE = "export_metadata"
 SAFE_FOLDER_ID_RE = re.compile(r"\A[A-Za-z0-9][A-Za-z0-9._-]*\Z")
 SAFE_DOC_ID_RE = re.compile(r"\A[A-Za-z0-9][A-Za-z0-9._-]*\Z")
@@ -126,13 +126,13 @@ def markdown_filename(doc_id: str, used: set[str]) -> str:
 def read_staged_rows(
     repo_root: Path,
     *,
-    scope: str,
+    stage: str,
     staged_filename: str,
     staging_root: Path,
 ) -> tuple[Path | None, str, list[Any], dict[str, Any], list[dict[str, Any]]]:
     issues: list[dict[str, Any]] = []
     try:
-        path = resolve_staged_path(repo_root, scope, staged_filename, staging_root)
+        path = resolve_staged_path(repo_root, stage, staged_filename, staging_root)
     except ValueError as exc:
         return None, "", [], {}, [issue("error", "unsafe_staged_path", str(exc))]
 
@@ -286,25 +286,23 @@ def project_flat_package_rows(
 def load_current_collection_docs(
     repo_root: Path,
     *,
-    scope: str,
+    stage: str,
     sub_scope: str,
-) -> list[source_model.ScopeDoc]:
-    from docs_document_packages.source_context import package_source_scope_config
-    config = package_source_scope_config(repo_root, scope)
+) -> list[source_model.SourceDoc]:
+    from docs_document_packages.source_context import package_source_stage_config
+    config = package_source_stage_config(repo_root, stage)
     if not sub_scope:
-        return source_model.load_scope_docs_for_config(repo_root, config)
+        return source_model.load_stage_docs_for_config(repo_root, config)
     collection = resolve_managed_document_collection(
         repo_root,
-        scope=scope,
+        stage=stage,
         sub_scope=sub_scope,
-        stage=config.stage or None,
     )
     docs = [
         source_doc_from_path(
             path=path,
-            scope=collection.scope,
         )
-        for path in source_model.scope_markdown_paths(collection.source_root)
+        for path in source_model.document_markdown_paths(collection.source_root)
     ]
     return docs
 
@@ -323,7 +321,7 @@ def review_front_matter(
         "last_updated": date_value,
         "review_folder_id": folder_id,
         "review_source_export_id": clean_text(metadata.get("export_id")),
-        "review_source_scope": clean_text(metadata.get("scope")),
+        "review_source_stage": clean_text(metadata.get("stage")),
         "review_profile_id": clean_text(metadata.get("profile_id")),
     }
     source_sub_scope = clean_text(metadata.get("sub_scope"))
@@ -461,7 +459,7 @@ def validate_materialized_sources(source_records: list[dict[str, Any]]) -> list[
 def create_review_source_folder(
     repo_root: Path,
     *,
-    scope: str,
+    stage: str,
     staged_filename: str,
     dry_run: bool,
     staging_root: Path,
@@ -471,7 +469,7 @@ def create_review_source_folder(
 ) -> dict[str, Any]:
     path, export_id, raw_rows, package_metadata, parse_issues = read_staged_rows(
         repo_root,
-        scope=scope,
+        stage=stage,
         staged_filename=staged_filename,
         staging_root=staging_root,
     )
@@ -492,7 +490,7 @@ def create_review_source_folder(
                     raw_rows,
                     metadata,
                     repo_root=repo_root,
-                    scope=scope,
+                    stage=stage,
                     required_capability=DOCS_REVIEW_CAPABILITY,
                 )
             )
@@ -509,7 +507,7 @@ def create_review_source_folder(
     valid_rows, skipped_records = validate_returned_rows(raw_rows)
     issues.extend(skipped_records)
     content_format = content_format_from_package(metadata, package_metadata, raw_rows)
-    source_scope = clean_text(metadata.get("scope")) if metadata else ""
+    source_stage = clean_text(metadata.get("stage")) if metadata else ""
     source_sub_scope = clean_text(metadata.get("sub_scope")) if metadata else ""
     if source_sub_scope:
         materialized_rows = project_flat_package_rows(valid_rows)
@@ -522,10 +520,10 @@ def create_review_source_folder(
     current_docs = (
         load_current_collection_docs(
             repo_root,
-            scope=scope,
+            stage=stage,
             sub_scope=source_sub_scope,
         )
-        if not any(item.get("code") == "invalid_sub_scope" for item in issues)
+        if not any(item.get("level") == "error" for item in issues)
         else []
     )
     current_docs_by_id = {doc.doc_id: doc for doc in current_docs}
@@ -586,7 +584,7 @@ def create_review_source_folder(
                 preview = generate_normalized_import_content_preview(
                     record,
                     repo_root=repo_root,
-                    scope=scope,
+                    stage=stage,
                     staging_root=staging_root,
                     workspace_root=workspace_paths.root,
                 )
@@ -656,7 +654,7 @@ def create_review_source_folder(
         "package_id": folder_id,
         "status": "validated" if ok else "",
         "data_domain": clean_text(metadata.get("data_domain")) if metadata else "",
-        "source_scope": source_scope,
+        "source_stage": source_stage,
         "source_sub_scope": source_sub_scope,
         "default_doc_id": default_doc_id,
         "profile_id": source_profile_id,
@@ -795,7 +793,7 @@ def create_review_source_folder(
         "ok": ok,
         "schema_version": SCHEMA_VERSION,
         "source_export_id": export_id,
-        "source_scope": source_scope,
+        "source_stage": source_stage,
         "source_sub_scope": source_sub_scope,
         "source_profile_id": clean_text(metadata.get("profile_id")) if metadata else "",
         "content_format": content_format,

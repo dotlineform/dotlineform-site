@@ -2,15 +2,13 @@
   "schema_version": "docs_viewer_route_config_registry_v1",
   "routes": [
     {
-      "schema_version": "docs_viewer_route_config_v4",
+      "schema_version": "docs_viewer_route_config_v5",
       "app_kind": "public",
       "route_id": "analysis",
       "route_path": "/analysis/",
-      "default_scope_id": "analysis",
-      "include_scope_param": false,
       "viewer_base_url": "/analysis/",
       "features": [
-        "configured-scope-discovery",
+        "workspace-configuration",
         "search",
         "recent",
         "bookmarks",
@@ -18,7 +16,6 @@
       ],
       "recent_basis": "edited",
       "access": {
-        "allow_scope_query": false,
         "management_ui": false
       },
       "services": {
@@ -33,8 +30,8 @@
         }
       },
       "docs_paths": {
-        "index_tree_url": "/assets/data/docs/scopes/analysis/index-tree.json",
-        "recent_url": "/assets/data/docs/scopes/analysis/recent.json",
+        "index_tree_url": "/assets/data/docs/index-tree.json",
+        "recent_url": "/assets/data/docs/recent.json",
         "search_index_url": "/assets/data/search/analysis/index.json"
       },
       "catalogue_paths": {

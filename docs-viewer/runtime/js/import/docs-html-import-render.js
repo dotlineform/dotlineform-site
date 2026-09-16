@@ -34,15 +34,15 @@ function resultDocLinksHtml(payload) {
     && typeof payload.target === "object"
     ? payload.target
     : {};
-  const normalizedScope = normalizeText(returnedTarget.scope || (payload && payload.scope));
+  const stage = normalizeText(returnedTarget.stage || (payload && payload.stage));
   const normalizedSubScope = normalizeText(
     returnedTarget.sub_scope || (payload && payload.sub_scope)
   );
   const normalizedDocId = normalizeText(returnedTarget.doc_id || (payload && payload.doc_id));
-  if (!normalizedScope || !normalizedDocId) return "";
+  if (!stage || !normalizedDocId) return "";
   const sourceLink = [
     `<a href="#" data-doc-source-link="true"`,
-    ` data-scope="${escapeHtml(normalizedScope)}"`,
+    ` data-stage="${escapeHtml(stage)}"`,
     returnedTarget.stage ? ` data-stage="${escapeHtml(returnedTarget.stage)}"` : "",
     normalizedSubScope
       ? ` data-sub-scope="${escapeHtml(normalizedSubScope)}"`

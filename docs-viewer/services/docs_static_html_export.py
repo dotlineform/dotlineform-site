@@ -19,10 +19,9 @@ from typing import Any
 from urllib.parse import parse_qs, urlencode, urlsplit
 
 from docs_static_html_export_media import SnapshotMediaPlan, plan_snapshot_media
-from docs_scope_config import (
-    DocsScopeConfig,
-    load_docs_scope_configs,
-    select_scope_stage,
+from docs_workspace_config import (
+    DocsStageConfig,
+    load_docs_stage,
     resolve_location_path,
 )
 from studio.shared.python.external_workspace_paths import (
@@ -32,7 +31,7 @@ from studio.shared.python.external_workspace_paths import (
 )
 
 
-SNAPSHOT_SCHEMA_VERSION = "docs_static_html_snapshot_v2"
+SNAPSHOT_SCHEMA_VERSION = "docs_static_html_snapshot_v3"
 SNAPSHOT_PREVIEW_SCHEMA_VERSION = "docs_static_html_snapshot_preview_v2"
 SNAPSHOT_APPLY_SCHEMA_VERSION = "docs_static_html_snapshot_apply_v2"
 SNAPSHOT_PROVENANCE_FILENAME = "snapshot.json"
@@ -51,7 +50,7 @@ IGNORED_HOST_METADATA_FILENAMES = frozenset({".DS_Store"})
 
 @dataclass(frozen=True)
 class StaticHtmlSnapshotInputPaths:
-    scope: str
+    stage: str
     generated_root: Path
     index_tree_path: Path
     payload_root: Path
@@ -59,7 +58,7 @@ class StaticHtmlSnapshotInputPaths:
 
 @dataclass(frozen=True)
 class StaticHtmlSnapshotPlan:
-    scope: str
+    stage: str
     doc_ids: tuple[str, ...]
     selection_kind: str
     default_doc_id: str
@@ -74,7 +73,6 @@ class StaticHtmlSnapshotPlan:
     target_state: str
     target_revision: str
     existing_snapshot: dict[str, Any] | None
-    stage: str = ""
 
 
 class StaticHtmlSnapshotApplyConflict(ValueError):
@@ -93,7 +91,7 @@ class StaticHtmlSnapshotApplyConflict(ValueError):
         if plan is not None:
             self.payload.update(
                 {
-                    "scope": plan.scope,
+                    "stage": plan.stage,
                     "doc_ids": list(plan.doc_ids),
                     "destination_label": plan.destination_label,
                     "target_state": plan.target_state,
@@ -101,16 +99,9 @@ class StaticHtmlSnapshotApplyConflict(ValueError):
             )
 
 
-def normalize_snapshot_scope(repo_root: Path, value: Any, stage: str | None = None) -> tuple[str, DocsScopeConfig]:
-    """Resolve one configured snapshot scope without imposing source ownership policy."""
-
-    scope = str(value or "").strip().lower()
-    if not scope:
-        raise ValueError("scope is required")
-    config = load_docs_scope_configs(repo_root, scope_ids=(scope,)).get(scope)
-    if config is None:
-        raise ValueError(f"unsupported docs scope: {scope}")
-    return scope, select_scope_stage(config, stage)
+def normalize_snapshot_stage(repo_root: Path, value: Any) -> DocsStageConfig:
+    """Resolve one explicitly selected generated stage."""
+    return load_docs_stage(repo_root, value)
 
 
 def resolve_docs_export_workspace() -> ExternalWorkspaceRoot:
@@ -124,20 +115,20 @@ def resolve_docs_export_workspace() -> ExternalWorkspaceRoot:
 
 def resolve_snapshot_input_paths(
     repo_root: Path,
-    scope: str,
-    config: DocsScopeConfig,
+    stage: str,
+    config: DocsStageConfig,
 ) -> StaticHtmlSnapshotInputPaths:
-    """Resolve readable generated inputs for any configured filesystem scope."""
+    """Resolve readable generated inputs for any configured filesystem stage."""
 
     generated_root = resolve_location_path(repo_root, config.generated.documents.location)
     index_tree_path = generated_root / "index-tree.json"
     payload_root = generated_root / "by-id"
     if not index_tree_path.is_file():
-        raise FileNotFoundError(f"index-tree.json not found for scope {scope}: {index_tree_path}")
+        raise FileNotFoundError(f"index-tree.json not found for stage {stage}: {index_tree_path}")
     if not payload_root.is_dir():
-        raise FileNotFoundError(f"by-id payload root not found for scope {scope}: {payload_root}")
+        raise FileNotFoundError(f"by-id payload root not found for stage {stage}: {payload_root}")
     return StaticHtmlSnapshotInputPaths(
-        scope=scope,
+        stage=stage,
         generated_root=generated_root,
         index_tree_path=index_tree_path,
         payload_root=payload_root,
@@ -224,7 +215,7 @@ def normalize_snapshot_doc_ids(value: Any, available_doc_ids: list[str]) -> tupl
     available = set(available_doc_ids)
     unknown = sorted(set(requested) - available)
     if unknown:
-        raise ValueError(f"doc_ids are not in the active generated scope: {', '.join(unknown)}")
+        raise ValueError(f"doc_ids are not in the active generated stage: {', '.join(unknown)}")
     requested_set = set(requested)
     return tuple(doc_id for doc_id in available_doc_ids if doc_id in requested_set)
 
@@ -373,7 +364,9 @@ def load_existing_snapshot_summary(destination_root: Path) -> dict[str, Any] | N
         payload = json.loads(provenance_path.read_text(encoding="utf-8"))
         if not isinstance(payload, dict) or payload.get("schema_version") != SNAPSHOT_SCHEMA_VERSION:
             return None
-        scope = validate_doc_id_for_html_filename(str(payload.get("scope") or "").strip())
+        if "scope" in payload or payload.get("stage") not in {"working", "pre-publish"}:
+            return None
+        stage = payload["stage"]
         doc_ids = normalize_snapshot_doc_ids(payload.get("doc_ids"), list(payload.get("doc_ids") or []))
         selection_kind = str(payload.get("selection_kind") or "").strip()
         if selection_kind not in {"single", "partial", "complete"}:
@@ -448,14 +441,14 @@ def load_existing_snapshot_summary(destination_root: Path) -> dict[str, Any] | N
     except (OSError, ValueError, json.JSONDecodeError, TypeError):
         return None
     return {
-        "scope": scope,
+        "stage": stage,
         "selection_kind": selection_kind,
         "document_count": len(doc_ids),
         "media_count": media_count,
         "media_bytes": media_bytes,
         "external_dependency_count": external_dependency_count,
         "generated_at": generated_at,
-        "selection_revision": _revision({"scope": scope, "doc_ids": doc_ids}),
+        "selection_revision": _revision({"stage": stage, "doc_ids": doc_ids}),
     }
 
 
@@ -473,7 +466,6 @@ def inspect_snapshot_destination(destination_root: Path) -> tuple[str, str, dict
 
 def _snapshot_plan_revision(
     *,
-    scope: str,
     stage: str,
     doc_ids: tuple[str, ...],
     export_date: str,
@@ -485,7 +477,6 @@ def _snapshot_plan_revision(
 ) -> str:
     return _revision(
         {
-            "scope": scope,
             "stage": stage,
             "doc_ids": doc_ids,
             "export_date": export_date,
@@ -511,20 +502,21 @@ def plan_static_html_snapshot(
 ) -> StaticHtmlSnapshotPlan:
     """Build a write-free exact-selection snapshot plan from generated payloads."""
 
-    for unsupported_field in ("action", "mode", "include_descendants", "root_doc_id"):
+    for unsupported_field in ("scope", "action", "mode", "include_descendants", "root_doc_id"):
         if unsupported_field in body:
             raise ValueError(f"{unsupported_field} is not supported for static HTML snapshots")
     if str(body.get("sub_scope") or "").strip():
         raise ValueError("sub_scope is not supported for static HTML snapshots")
-    scope, config = normalize_snapshot_scope(repo_root, body.get("scope"), body.get("stage"))
-    paths = resolve_snapshot_input_paths(repo_root, scope, config)
+    config = normalize_snapshot_stage(repo_root, body.get("stage"))
+    stage = config.stage
+    paths = resolve_snapshot_input_paths(repo_root, config.stage, config)
     index_tree = load_index_tree(paths.index_tree_path)
     available_doc_ids = collect_doc_ids_from_tree(index_tree.get("docs"))
     doc_ids = normalize_snapshot_doc_ids(body.get("doc_ids"), available_doc_ids)
     try:
         doc_payloads = {doc_id: load_doc_payload(paths.payload_root, doc_id) for doc_id in doc_ids}
     except FileNotFoundError as exc:
-        raise FileNotFoundError(f"selected document payload not found for scope {scope}") from exc
+        raise FileNotFoundError(f"selected document payload not found for stage {stage}") from exc
     included_doc_ids = set(doc_ids)
     media_plan = plan_snapshot_media(repo_root, config, doc_payloads)
     selected_tree = {**index_tree, "docs": filter_index_tree_rows(index_tree.get("docs"), included_doc_ids)}
@@ -533,9 +525,9 @@ def plan_static_html_snapshot(
     if type(selected_date) is not date:
         raise ValueError("export_date must be a date")
     if selection_kind == "complete":
-        base_label = scope
+        base_label = stage
     else:
-        base_label = f"{scope} selection"
+        base_label = f"{stage} selection"
     folder_name = snapshot_folder_name(base_label, selected_date)
     destination_root = resolve_docs_export_workspace().root / folder_name
     validate_destination_path(destination_root)
@@ -543,8 +535,7 @@ def plan_static_html_snapshot(
     destination_label_value = f"/docs-export/{folder_name}/"
     target_state, target_revision, existing_snapshot = inspect_snapshot_destination(destination_root)
     plan_revision = _snapshot_plan_revision(
-        scope=scope,
-        stage=config.stage,
+        stage=stage,
         doc_ids=doc_ids,
         export_date=selected_date.isoformat(),
         folder_name=folder_name,
@@ -554,8 +545,7 @@ def plan_static_html_snapshot(
         media_plan=media_plan,
     )
     return StaticHtmlSnapshotPlan(
-        scope=scope,
-        stage=config.stage,
+        stage=stage,
         doc_ids=doc_ids,
         selection_kind=selection_kind,
         default_doc_id=default_doc_id,
@@ -585,8 +575,7 @@ def preview_static_html_export(
         "schema_version": SNAPSHOT_PREVIEW_SCHEMA_VERSION,
         "operation": "preview",
         "dry_run": True,
-        "scope": plan.scope,
-        **({"stage": plan.stage} if plan.stage else {}),
+        "stage": plan.stage,
         "doc_ids": list(plan.doc_ids),
         "document_count": len(plan.doc_ids),
         "media_count": len(plan.media_plan.items),
@@ -609,7 +598,7 @@ def preview_static_html_export(
 def rewrite_internal_docs_viewer_links(
     html_text: str,
     *,
-    scope: str,
+    stage: str,
     link_prefix: str,
     link_suffix: str = ".html",
     included_doc_ids: set[str] | None = None,
@@ -621,7 +610,11 @@ def rewrite_internal_docs_viewer_links(
         if split.scheme or split.netloc or split.path != "/docs/":
             return match.group(0)
         params = parse_qs(split.query, keep_blank_values=True)
-        if (params.get("scope") or [""])[0] != scope:
+        if "scope" in params or "subdoc" in params or "sub_scope" in params:
+            return match.group(0)
+        if params.get("stage", [stage]) != [stage]:
+            return match.group(0)
+        if len(params.get("doc", [])) != 1:
             return match.group(0)
         doc_id = (params.get("doc") or [""])[0]
         if not doc_id:
@@ -696,11 +689,11 @@ def replace_images_with_placeholders(html_text: str) -> str:
     return "".join(parser.parts)
 
 
-def markdown_document_link(payload: dict[str, Any], *, scope: str) -> str:
+def markdown_document_link(payload: dict[str, Any], *, stage: str) -> str:
     doc_id = validate_doc_id_for_html_filename(str(payload.get("doc_id") or ""))
     title = str(payload.get("title") or doc_id).strip() or doc_id
     escaped_title = title.replace("\\", "\\\\").replace("[", "\\[").replace("]", "\\]")
-    query = urlencode((("scope", scope), ("doc", doc_id)))
+    query = urlencode((("stage", stage), ("doc", doc_id)))
     return f"[{escaped_title}](/docs/?{query})"
 
 
@@ -847,8 +840,8 @@ def render_tree_rows(
     return "".join(parts)
 
 
-def render_index_html(index_tree: dict[str, Any], *, scope: str, document_count: int) -> str:
-    title = f"{scope} docs"
+def render_index_html(index_tree: dict[str, Any], *, stage: str, document_count: int) -> str:
+    title = f"{stage} docs"
     document_label = "document" if document_count == 1 else "documents"
     return "\n".join(
         [
@@ -876,7 +869,7 @@ def render_index_html(index_tree: dict[str, Any], *, scope: str, document_count:
 def render_doc_html(
     payload: dict[str, Any],
     *,
-    scope: str,
+    stage: str,
     included_doc_ids: set[str] | None = None,
     content_html_override: str | None = None,
 ) -> str:
@@ -889,7 +882,7 @@ def render_doc_html(
     )
     content_html = rewrite_internal_docs_viewer_links(
         content_html,
-        scope=scope,
+        stage=stage,
         link_prefix="",
         included_doc_ids=included_doc_ids,
     )
@@ -908,7 +901,7 @@ def render_doc_html(
             "  <main>",
             f"    {content_html}",
             '    <p class="docsExport__meta"><a href="../index.html">Back to index</a></p>',
-            f'    <p class="docsExport__referenceToken"><code>{html.escape(markdown_document_link(payload, scope=scope))}</code></p>',
+            f'    <p class="docsExport__referenceToken"><code>{html.escape(markdown_document_link(payload, stage=stage))}</code></p>',
             '    <hr class="docsExport__documentFooterRule">',
             "  </main>",
             "</body>",
@@ -930,7 +923,7 @@ def render_portable_html(plan: StaticHtmlSnapshotPlan) -> str:
         payload = plan.doc_payloads[doc_id]
         content_html = rewrite_internal_docs_viewer_links(
             str(payload.get("content_html") or ""),
-            scope=plan.scope,
+            stage=plan.stage,
             link_prefix="#doc-",
             link_suffix="",
             included_doc_ids=included_doc_ids,
@@ -941,7 +934,7 @@ def render_portable_html(plan: StaticHtmlSnapshotPlan) -> str:
                 f'    <article class="docsExport__portableDocument" id="doc-{html.escape(doc_id, quote=True)}">',
                 f"      {replace_images_with_placeholders(content_html)}",
                 '      <p class="docsExport__meta"><a href="#index">Back to index</a></p>',
-                f'      <p class="docsExport__referenceToken"><code>{html.escape(markdown_document_link(payload, scope=plan.scope))}</code></p>',
+                f'      <p class="docsExport__referenceToken"><code>{html.escape(markdown_document_link(payload, stage=plan.stage))}</code></p>',
                 "    </article>",
             ]
         )
@@ -953,7 +946,7 @@ def render_portable_html(plan: StaticHtmlSnapshotPlan) -> str:
             "<head>",
             '  <meta charset="utf-8">',
             '  <meta name="viewport" content="width=device-width, initial-scale=1">',
-            f"  <title>{html.escape(plan.scope)} docs</title>",
+            f"  <title>{html.escape(plan.stage)} docs</title>",
             "  <style>",
             render_portable_styles_css(),
             "  </style>",
@@ -961,7 +954,7 @@ def render_portable_html(plan: StaticHtmlSnapshotPlan) -> str:
             "<body>",
             '  <main id="index">',
             '    <section class="docsExport__portableIndex">',
-            f"      <h1>{html.escape(plan.scope)} docs</h1>",
+            f"      <h1>{html.escape(plan.stage)} docs</h1>",
             f'      <p class="docsExport__meta">{len(plan.doc_ids)} {document_label} exported from generated Docs Viewer payloads.</p>',
             f"      {tree_html}",
             "    </section>",
@@ -977,7 +970,7 @@ def render_portable_html(plan: StaticHtmlSnapshotPlan) -> str:
 def snapshot_provenance(plan: StaticHtmlSnapshotPlan, *, generated_at: str) -> dict[str, Any]:
     return {
         "schema_version": SNAPSHOT_SCHEMA_VERSION,
-        "scope": plan.scope,
+        "stage": plan.stage,
         "doc_ids": list(plan.doc_ids),
         "selection_kind": plan.selection_kind,
         "document_count": len(plan.doc_ids),
@@ -998,7 +991,7 @@ def compute_snapshot_files(plan: StaticHtmlSnapshotPlan, *, generated_at: str) -
     files: dict[Path, bytes] = {
         Path("index.html"): render_index_html(
             plan.index_tree,
-            scope=plan.scope,
+            stage=plan.stage,
             document_count=len(plan.doc_ids),
         ).encode("utf-8"),
         Path("styles.css"): render_styles_css().encode("utf-8"),
@@ -1010,7 +1003,7 @@ def compute_snapshot_files(plan: StaticHtmlSnapshotPlan, *, generated_at: str) -
     for doc_id in plan.doc_ids:
         files[Path("docs") / f"{doc_id}.html"] = render_doc_html(
             plan.doc_payloads[doc_id],
-            scope=plan.scope,
+            stage=plan.stage,
             included_doc_ids=included_doc_ids,
             content_html_override=plan.media_plan.rewritten_html_by_doc[doc_id],
         ).encode("utf-8")
@@ -1109,9 +1102,9 @@ def validate_snapshot_files(
     summary = load_existing_snapshot_summary(destination_root)
     if summary is None:
         raise ValueError("snapshot provenance validation failed")
-    expected_selection_revision = _revision({"scope": plan.scope, "doc_ids": plan.doc_ids})
+    expected_selection_revision = _revision({"stage": plan.stage, "doc_ids": plan.doc_ids})
     if (
-        summary["scope"] != plan.scope
+        summary["stage"] != plan.stage
         or summary["selection_kind"] != plan.selection_kind
         or summary["document_count"] != len(plan.doc_ids)
         or summary["selection_revision"] != expected_selection_revision
@@ -1227,7 +1220,7 @@ def apply_static_html_snapshot(repo_root: Path, body: dict[str, Any]) -> dict[st
         "ok": True,
         "schema_version": SNAPSHOT_APPLY_SCHEMA_VERSION,
         "operation": "apply",
-        "scope": plan.scope,
+        "stage": plan.stage,
         "doc_ids": list(plan.doc_ids),
         "document_count": len(plan.doc_ids),
         "media_count": len(plan.media_plan.items),
@@ -1262,10 +1255,9 @@ def static_html_export_capability() -> dict[str, Any]:
     }
 
 
-def scope_static_html_export_capability(
+def stage_static_html_export_capability(
     repo_root: Path,
-    scope: str,
-    config: DocsScopeConfig,
+    config: DocsStageConfig,
     *,
     workspace_available: bool,
 ) -> dict[str, Any]:
@@ -1275,16 +1267,16 @@ def scope_static_html_export_capability(
         error = "Snapshot workspace is unavailable."
     else:
         try:
-            paths = resolve_snapshot_input_paths(repo_root, scope, config)
+            paths = resolve_snapshot_input_paths(repo_root, config.stage, config)
             index_tree = load_index_tree(paths.index_tree_path)
             doc_ids = collect_doc_ids_from_tree(index_tree.get("docs"))
             for doc_id in doc_ids:
                 load_doc_payload(paths.payload_root, doc_id)
             document_count = len(doc_ids)
             available = document_count > 0
-            error = "" if available else "No generated documents are available for this scope."
+            error = "" if available else "No generated documents are available for this stage."
         except (FileNotFoundError, OSError, ValueError, json.JSONDecodeError):
-            error = "Generated documents are unavailable for this scope."
+            error = "Generated documents are unavailable for this stage."
     return {
         "preview": available,
         "apply": available,

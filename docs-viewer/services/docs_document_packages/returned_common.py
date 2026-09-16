@@ -8,7 +8,7 @@ import re
 from pathlib import Path
 from typing import Any
 
-from docs_scope_config import load_docs_scope_configs
+from docs_document_packages.provenance import require_package_stage
 from docs_document_packages.workspace import configured_workspace_paths, marker_path
 
 
@@ -31,7 +31,7 @@ EXPORT_METADATA_FIELDS = {
     "app",
     "adapter_id",
     "data_domain",
-    "scope",
+    "stage",
     "sub_scope",
     "target_format",
     "record_shape",
@@ -70,15 +70,6 @@ def normalize_text(value: Any) -> str:
     return TEXT_WHITESPACE_RE.sub(" ", str(value or "")).strip()
 
 
-def scope_title(scope: str) -> str:
-    normalized = normalize_text(scope).lower()
-    labels = {
-        "analytics": "Analytics",
-        "catalogue": "Catalogue",
-    }
-    return labels.get(normalized, normalized.title() if normalized else "Docs")
-
-
 def normalize_string_list(value: Any) -> list[str]:
     if value is None:
         return []
@@ -113,23 +104,6 @@ def relative_path(repo_root: Path, path: Path) -> str:
         return path.as_posix()
 
 
-def default_staging_root(repo_root: Path, scope: str) -> Path:
-    del scope
-    return configured_workspace_paths(repo_root).import_staging
-
-
-def supported_scopes(repo_root: Path) -> set[str]:
-    return set(load_docs_scope_configs(repo_root).keys())
-
-
-def validate_scope(repo_root: Path, scope: str) -> str:
-    normalized_scope = normalize_text(scope).lower()
-    scopes = supported_scopes(repo_root)
-    if normalized_scope not in scopes:
-        raise ValueError(f"scope must be one of: {', '.join(sorted(scopes))}")
-    return normalized_scope
-
-
 def issue(
     level: str,
     code: str,
@@ -149,16 +123,16 @@ def issue(
     return item
 
 
-def empty_report(repo_root: Path, scope: str, staged_file: str) -> dict[str, Any]:
+def empty_report(repo_root: Path, stage: str, staged_file: str) -> dict[str, Any]:
     return {
         "ok": False,
-        "scope": scope,
+        "stage": stage,
         "input_file": staged_file,
         "input_format": "",
         "detected_import_type": "unknown",
         "source_export_id": "",
         "source_profile_id": "",
-        "source_scope": "",
+        "source_stage": "",
         "generated_at": "",
         "counts": {
             "records": 0,
@@ -175,9 +149,9 @@ def empty_report(repo_root: Path, scope: str, staged_file: str) -> dict[str, Any
     }
 
 
-def resolve_staged_path(repo_root: Path, scope: str, staged_file: str, staging_root: Path | str | None = None) -> Path:
-    normalized_scope = validate_scope(repo_root, scope)
-    base_root = Path(staging_root) if staging_root else default_staging_root(repo_root, normalized_scope)
+def resolve_staged_path(repo_root: Path, stage: str, staged_file: str, staging_root: Path | str | None = None) -> Path:
+    require_package_stage(stage)
+    base_root = Path(staging_root) if staging_root else configured_workspace_paths(repo_root).import_staging
     raw_path = Path(staged_file)
     path = raw_path if raw_path.is_absolute() else base_root / raw_path
     resolved = path.resolve()
@@ -187,9 +161,9 @@ def resolve_staged_path(repo_root: Path, scope: str, staged_file: str, staging_r
     return resolved
 
 
-def list_staged_import_files(repo_root: Path, scope: str, staging_root: Path | str | None = None) -> list[dict[str, Any]]:
-    normalized_scope = validate_scope(repo_root, scope)
-    base_root = Path(staging_root) if staging_root else default_staging_root(repo_root, normalized_scope)
+def list_staged_import_files(repo_root: Path, stage: str, staging_root: Path | str | None = None) -> list[dict[str, Any]]:
+    require_package_stage(stage)
+    base_root = Path(staging_root) if staging_root else configured_workspace_paths(repo_root).import_staging
     resolved_staging_root = base_root.resolve()
     if not resolved_staging_root.exists():
         return []

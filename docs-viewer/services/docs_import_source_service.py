@@ -83,14 +83,14 @@ PerformSourceWriteAndRebuild = Callable[..., Dict[str, Any]]
 class ImportSourceDependencies:
     log_event: LogEvent
     perform_source_write_and_rebuild: PerformSourceWriteAndRebuild
-    perform_scope_source_write_and_rebuild_atomic: PerformSourceWriteAndRebuild
+    perform_source_write_and_rebuild_atomic: PerformSourceWriteAndRebuild
     perform_sub_scope_source_write_and_rebuild: PerformSourceWriteAndRebuild
 
 
 def load_ordinary_import_collection_docs(
     repo_root: Path,
     collection: ManagedDocumentCollection,
-) -> list[source_model.ScopeDoc]:
+) -> list[source_model.SourceDoc]:
     if not collection.sub_scope:
         return []
     return source_model.load_document_collection_docs_for_config(
@@ -103,13 +103,13 @@ def load_ordinary_import_collection_docs(
 def allocate_ordinary_import_doc_id(
     collection: ManagedDocumentCollection,
     added_date: str,
-    docs: list[source_model.ScopeDoc],
+    docs: list[source_model.SourceDoc],
 ) -> str:
     documents_root = collection.source_root
     if not documents_root.is_dir():
         raise ValueError(
             f"missing source root for import target "
-            f"{collection.scope}/{collection.sub_scope or '(parent)'}: "
+            f"{collection.stage}/{collection.sub_scope or '(parent)'}: "
             f"{documents_root}",
         )
     unavailable = {
@@ -223,7 +223,7 @@ def handle_import_source(
     source_directory: str,
     trusted_sources_allowed: bool,
 ) -> Dict[str, Any]:
-    scope = destination.scope
+    stage = destination.stage
     sub_scope = destination.sub_scope
     staged_filename = str(body.get("staged_filename") or "").strip()
     include_prompt_meta = bool(body.get("include_prompt_meta"))
@@ -258,7 +258,6 @@ def handle_import_source(
         if not (dry_run or preview_only):
             destination_url = management_collection_viewer_url(
                 repo_root,
-                scope,
                 sub_scope,
                 stage=destination.stage,
             )
@@ -270,8 +269,8 @@ def handle_import_source(
                 staging_root=staging_root,
                 workspace_root=workspace_root,
                 log_event=dependencies.log_event,
-                perform_scope_source_write_and_rebuild_atomic=(
-                    dependencies.perform_scope_source_write_and_rebuild_atomic
+                perform_source_write_and_rebuild_atomic=(
+                    dependencies.perform_source_write_and_rebuild_atomic
                 ),
                 perform_sub_scope_source_write_and_rebuild=(
                     dependencies.perform_sub_scope_source_write_and_rebuild
@@ -295,10 +294,10 @@ def handle_import_source(
             (
                 "docs-import-reviewed-sub-scope-collection-preview"
                 if sub_scope
-                else "docs-import-reviewed-scope-collection-preview"
+                else "docs-import-reviewed-stage-collection-preview"
             ),
             {
-                "scope": scope,
+                "stage": stage,
                 **({"sub_scope": sub_scope} if sub_scope else {}),
                 "staged_filename": staged_filename,
                 "source_directory": accepted_source_directory,
@@ -354,13 +353,12 @@ def handle_import_source(
         if not (dry_run or preview_only):
             destination_url = management_collection_viewer_url(
                 repo_root,
-                scope,
                 sub_scope,
                 stage=destination.stage,
             )
             result = apply_document_package_collection(
                 repo_root,
-                scope=scope,
+                stage=stage,
                 staged_filename=staged_filename,
                 body=body,
                 staging_root=staging_root,
@@ -381,7 +379,7 @@ def handle_import_source(
             return result
         plan = plan_document_package_collection(
             repo_root,
-            scope=scope,
+            stage=stage,
             staged_filename=staged_filename,
             staging_root=staging_root,
             workspace_root=workspace_root,
@@ -394,7 +392,7 @@ def handle_import_source(
             repo_root,
             "docs-import-collection-preview",
             {
-                "scope": scope,
+                "stage": stage,
                 "staged_filename": staged_filename,
                 "source_directory": accepted_source_directory,
                 "source_format": source_format,
@@ -417,7 +415,7 @@ def handle_import_source(
         staging_root=staging_root,
         workspace_root=source_projects_base,
         source_path=source_path,
-        scope=scope,
+        stage=stage,
         include_prompt_meta=include_prompt_meta,
         retain_private_media_source=True,
     )
@@ -431,7 +429,6 @@ def handle_import_source(
         repo_root,
         staging_root,
         source_projects_base,
-        scope,
         stage=destination.stage,
         sub_scope=destination.sub_scope,
     )
@@ -455,7 +452,7 @@ def handle_import_source(
 
     if dry_run or preview_only or requires_interactive_html_confirmation:
         preview_event = {
-            "scope": scope,
+            "stage": stage,
             "staged_filename": staged_filename,
             "source_directory": accepted_source_directory,
             "source_format": preview.get("source_format"),
@@ -474,7 +471,7 @@ def handle_import_source(
         )
         response = {
             "ok": True,
-            "scope": scope,
+            "stage": stage,
             "staged_filename": staged_filename,
             "source_directory": accepted_source_directory,
             "include_prompt_meta": include_prompt_meta,
@@ -498,7 +495,6 @@ def handle_import_source(
     )
     destination_url = management_collection_viewer_url(
         repo_root,
-        scope,
         sub_scope,
         stage=destination.stage,
     )
@@ -518,14 +514,14 @@ def handle_import_source(
             source_projects_base,
             source_path,
             preview,
-            scope,
+            stage,
         )
     retarget_inline_media_plans(
         repo_root,
         staging_root,
         source_projects_base,
         preview,
-        scope,
+        stage,
     )
     title = str(preview.get("title") or "Imported Doc").strip()
     record = ImportContent(
@@ -541,7 +537,7 @@ def handle_import_source(
     )
     plan = plan_import_document(
         repo_root,
-        scope,
+        stage,
         record,
         operation=IMPORT_DOCUMENT_CREATE,
         docs=docs,
@@ -572,7 +568,6 @@ def handle_import_source(
     if sub_scope:
         rebuild = dependencies.perform_sub_scope_source_write_and_rebuild(
             repo_root,
-            scope,
             sub_scope,
             plan.changed_paths,
             write_import_document,
@@ -582,7 +577,6 @@ def handle_import_source(
     else:
         rebuild = dependencies.perform_source_write_and_rebuild(
             repo_root,
-            scope,
             plan.changed_paths,
             write_import_document,
             suppression_reason=plan.suppression_reason,
@@ -612,7 +606,7 @@ def handle_import_source(
     )
     response = {
         "ok": True,
-        "scope": scope,
+        "stage": stage,
         "staged_filename": staged_filename,
         "source_directory": accepted_source_directory,
         "include_prompt_meta": include_prompt_meta,

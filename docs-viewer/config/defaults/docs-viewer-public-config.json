@@ -1,59 +1,63 @@
 {
-  "schema_version": "docs_viewer_config_v1",
-  "default_scope_id": "analysis",
-  "scopes": [
-    {
-      "scope_id": "analysis",
-      "scope_type": "public",
-      "meta": "public",
-      "viewer_base_url": "/analysis/",
-      "include_scope_param": false,
-      "default_doc_id": "d-20260426-164043-e14f49",
-      "media": {
-        "files": {
-          "reference_prefix": "docs/analysis/files",
-          "served_path_prefix": "https://media.dotlineform.com/docs/analysis/media/files"
-        },
-        "html": {
-          "reference_prefix": "docs/analysis/html",
-          "served_path_prefix": "https://media.dotlineform.com/docs/analysis/media/html"
-        },
-        "img": {
-          "reference_prefix": "docs/analysis/img",
-          "served_path_prefix": "https://media.dotlineform.com/docs/analysis/media/img"
-        },
-        "svg": {
-          "reference_prefix": "docs/analysis/svg",
-          "served_path_prefix": "https://media.dotlineform.com/docs/analysis/media/svg"
-        }
-      },
-      "index_tree_url": "/assets/data/docs/scopes/analysis/index-tree.json",
-      "recent_url": "/assets/data/docs/scopes/analysis/recent.json",
-      "search_index_url": "/assets/data/search/analysis/index.json",
-      "search": {
-        "domain": "docs_viewer",
-        "schema": "docs_viewer_search_index_v2",
-        "index_url": "/assets/data/search/analysis/index.json",
-        "rebuild_policy": "whole_index"
-      },
-      "emoji": "䷑",
-      "sub_scopes": [
-        {
-          "sub_scope": "tags",
-          "title": "Concepts",
-          "manifest_url": "/assets/data/docs/scopes/analysis/tags/manifest.json",
-          "by_id_url_base": "/assets/data/docs/scopes/analysis/tags/by-id"
-        },
-        {
-          "sub_scope": "works",
-          "title": "Works",
-          "manifest_url": "/assets/data/docs/scopes/analysis/works/manifest.json",
-          "by_id_url_base": "/assets/data/docs/scopes/analysis/works/by-id"
-        }
-      ]
-    }
-  ],
+  "schema_version": "docs_viewer_config_v2",
   "docs_viewer": {
     "recent_limit": 20
+  },
+  "workspace": {
+    "viewer_base_url": "/analysis/",
+    "default_doc_id": "d-20260426-164043-e14f49",
+    "media": {
+      "files": {
+        "reference_prefix": "docs/files",
+        "served_path_prefix": "https://media.dotlineform.com/docs/analysis/media/files"
+      },
+      "html": {
+        "reference_prefix": "docs/html",
+        "served_path_prefix": "https://media.dotlineform.com/docs/analysis/media/html"
+      },
+      "img": {
+        "reference_prefix": "docs/img",
+        "served_path_prefix": "https://media.dotlineform.com/docs/analysis/media/img"
+      },
+      "svg": {
+        "reference_prefix": "docs/svg",
+        "served_path_prefix": "https://media.dotlineform.com/docs/analysis/media/svg"
+      }
+    },
+    "index_tree_url": "/assets/data/docs/index-tree.json",
+    "recent_url": "/assets/data/docs/recent.json",
+    "search_index_url": "/assets/data/search/analysis/index.json",
+    "search": {
+      "domain": "docs_viewer",
+      "schema": "docs_viewer_search_index_v3",
+      "index_url": "/assets/data/search/analysis/index.json",
+      "rebuild_policy": "whole_index"
+    },
+    "sub_scopes": [
+      {
+        "sub_scope": "works",
+        "title": "Works",
+        "manifest_url": "/assets/data/docs/works/manifest.json",
+        "by_id_url_base": "/assets/data/docs/works/by-id"
+      },
+      {
+        "sub_scope": "concepts",
+        "title": "Concepts",
+        "manifest_url": "/assets/data/docs/concepts/manifest.json",
+        "by_id_url_base": "/assets/data/docs/concepts/by-id"
+      },
+      {
+        "sub_scope": "processing",
+        "title": "Processing",
+        "manifest_url": "/assets/data/docs/processing/manifest.json",
+        "by_id_url_base": "/assets/data/docs/processing/by-id"
+      },
+      {
+        "sub_scope": "moments",
+        "title": "Moments",
+        "manifest_url": "/assets/data/docs/moments/manifest.json",
+        "by_id_url_base": "/assets/data/docs/moments/by-id"
+      }
+    ]
   }
 }

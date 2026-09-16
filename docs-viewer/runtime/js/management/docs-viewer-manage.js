@@ -87,7 +87,7 @@ import {
 function mountDocsViewerManageExtras(context) {
   var settings = context || {};
   var routeContext = settings.routeContext || {};
-  var scopeConfigState = settings.scopeConfigState || {};
+  var workspaceConfigState = settings.workspaceConfigState || {};
   mountManagedConfiguredSiteLinks(settings.content, [
     {
       pathPrefix: "/studio/",
@@ -96,8 +96,8 @@ function mountDocsViewerManageExtras(context) {
   ]);
   mountManagedDocsViewerDocumentLinks(settings.content, {
     currentHref: window.location.href,
-    scopeConfigsById: scopeConfigState.scopeConfigsById,
-    viewerUrlForScope: settings.viewerUrlForScope
+    publicViewerBaseUrl: workspaceConfigState.publicViewerBaseUrl,
+    viewerUrlForDocument: settings.viewerUrlForDocument
   });
   return Promise.resolve(mountDocsViewerManageDocumentExtras(settings)).then(function (result) {
     mountSemanticTokenTargetLinks(

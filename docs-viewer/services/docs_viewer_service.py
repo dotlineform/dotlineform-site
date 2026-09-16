@@ -45,6 +45,7 @@ import docs_published_reads as published_reads  # noqa: E402
 import docs_media_storage as media_storage  # noqa: E402
 import docs_review_routes as review_routes  # noqa: E402
 import docs_review_service as review_service  # noqa: E402
+from docs_workspace_config import load_docs_workspace_config  # noqa: E402
 from local_env import SITE_ENV_REL_PATH  # noqa: E402
 
 
@@ -108,7 +109,7 @@ GENERATED_READ_PATHS = {
     routes.GENERATED_BACKLINKS_PATH,
     routes.GENERATED_PAYLOAD_PATH,
     routes.GENERATED_LINKS_PATH,
-    routes.GENERATED_SCOPE_LINKS_PATH,
+    routes.GENERATED_WORKSPACE_LINKS_PATH,
     routes.GENERATED_SEARCH_PATH,
     routes.GENERATED_SEMANTIC_TOKENS_PATH,
 }
@@ -383,14 +384,11 @@ def apply_capability_flags(payload: dict[str, object], config: DocsViewerService
             document_delete["preview"] = False
             document_delete["apply"] = False
             document_delete["sub_scope_detail"] = False
-        lifecycle = capabilities.get("scope_lifecycle")
+        lifecycle = capabilities.get("sub_scope_lifecycle")
         if isinstance(lifecycle, dict):
             for key in (
                 "create_apply",
-                "rename_apply",
                 "delete_apply",
-                "sub_scope_create_apply",
-                "sub_scope_delete_apply",
             ):
                 lifecycle[key] = False
         publishing = capabilities.get("publishing")
@@ -401,31 +399,22 @@ def apply_capability_flags(payload: dict[str, object], config: DocsViewerService
         if isinstance(deploy_repo, dict):
             deploy_repo["preview"] = False
             deploy_repo["apply"] = False
-        scopes = capabilities.get("scopes")
-        if isinstance(scopes, dict):
-            for scope_caps in scopes.values():
-                if not isinstance(scope_caps, dict):
+        stages = capabilities.get("stages")
+        if isinstance(stages, dict):
+            for stage_caps in stages.values():
+                if not isinstance(stage_caps, dict):
                     continue
-                for stage_caps in scope_caps.get("stages", {}).values():
-                    for operation in ("pre_publish", "publishing"):
-                        stage_caps[operation] = {key: False for key in stage_caps.get(operation, {})}
-                scope_deploy_repo = scope_caps.get("deploy_repo")
-                if isinstance(scope_deploy_repo, dict):
-                    scope_deploy_repo.update(
-                        {
-                            "available": False,
-                            "preview": False,
-                            "apply": False,
-                            "reason": "Deploy Repo requires local management.",
-                        }
-                    )
+                stage_caps["document_authoring"] = False
+                for operation in ("pre_publish", "publishing", "deploy_repo", "static_html_export"):
+                    stage_caps[operation] = {key: False for key in stage_caps.get(operation, {})}
+                stage_caps["sub_scope_lifecycle"].update(create_eligible=False, delete_eligible=False)
     if not config.generated_reads_enabled:
-        scopes = capabilities.get("scopes")
-        if isinstance(scopes, dict):
-            for scope_caps in scopes.values():
-                if isinstance(scope_caps, dict):
-                    scope_caps["generated_data_reads"] = False
-                    scope_caps["generated_search_reads"] = False
+        stages = capabilities.get("stages")
+        if isinstance(stages, dict):
+            for stage_caps in stages.values():
+                if isinstance(stage_caps, dict):
+                    for key in ("generated_data_reads", "generated_search_reads", "published_data_reads", "published_search_reads"):
+                        stage_caps[key] = False
     return payload
 
 
@@ -816,9 +805,7 @@ class DocsViewerRequestHandler(QuietErrorLoggingMixin, BaseHTTPRequestHandler):
                 self.repo_root,
                 request_path,
             )
-            scope = request_path.removeprefix(published_reads.EXTERNAL_SUB_SCOPE_PUBLISHED_PREFIX).split("/", 1)[0]
-            payload = published_reads.project_published_view(self.repo_root, scope, json.loads(path.read_bytes()))
-            body = json.dumps(payload, ensure_ascii=False).encode("utf-8")
+            body = path.read_bytes()
             self.send_response(HTTPStatus.OK)
             self.send_cors_headers()
             self.send_header("Content-Type", "application/json; charset=utf-8")
@@ -951,9 +938,9 @@ def main(argv: list[str] | None = None) -> int:
         return 1
 
     try:
-        media_storage.ensure_configured_scope_owned_media_directories(REPO_ROOT)
+        load_docs_workspace_config(REPO_ROOT)
     except (OSError, ValueError) as error:
-        print(f"ERROR: Could not materialize configured Docs media directories: {error}", file=sys.stderr)
+        print(f"ERROR: Docs workspace is unavailable: {error}", file=sys.stderr)
         return 1
 
     try:

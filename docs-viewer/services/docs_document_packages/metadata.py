@@ -8,6 +8,7 @@ import re
 from pathlib import Path
 from typing import Any
 
+from docs_document_packages.provenance import package_provenance_error
 from docs_document_packages.workspace import configured_workspace_paths, marker_path
 
 SUPPORTED_EXTENSIONS = {".json", ".jsonl"}
@@ -70,6 +71,9 @@ def load_export_metadata(export_id: str, *, metadata_root: Path) -> tuple[dict[s
 
 
 def capability_error(metadata: dict[str, Any]) -> str:
+    provenance_error = package_provenance_error(metadata)
+    if provenance_error:
+        return provenance_error
     for field in ("supports_docs_review", "supports_return_import"):
         if not isinstance(metadata.get(field), bool):
             return f"metadata {field} must be true or false"
@@ -115,6 +119,7 @@ def staged_file_record(path: Path, *, metadata_root: Path, workspace_root: Path)
     record.update(
         {
             "metadata_ok": True,
+            "provenance_error": package_provenance_error(metadata),
             "metadata_file": marker_path(metadata_path, workspace_root=workspace_root),
             "export_id": export_id,
             "app": normalize_text(metadata.get("app")),
@@ -122,7 +127,7 @@ def staged_file_record(path: Path, *, metadata_root: Path, workspace_root: Path)
             "adapter_id": normalize_text(metadata.get("adapter_id")),
             "config_id": normalize_text(metadata.get("config_id")),
             "profile_id": normalize_text(metadata.get("profile_id")),
-            "scope": normalize_text(metadata.get("scope")),
+            "stage": normalize_text(metadata.get("stage")),
             "sub_scope": sub_scope,
             "target_format": normalize_text(metadata.get("target_format")),
             "record_shape": normalize_text(metadata.get("record_shape")),

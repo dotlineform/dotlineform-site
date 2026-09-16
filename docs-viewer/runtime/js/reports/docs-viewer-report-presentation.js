@@ -16,7 +16,7 @@ function defaultWarning(message, error) {
 function sameDocumentTarget(left, right) {
   var first = left || {};
   var second = right || {};
-  return cleanString(first.scope) === cleanString(second.scope)
+  return cleanString(first.stage) === cleanString(second.stage)
     && cleanString(first.docId) === cleanString(second.docId);
 }
 
@@ -24,7 +24,6 @@ function sameReportTarget(left, right) {
   var first = left || {};
   var second = right || {};
   return cleanString(first.reportId) === cleanString(second.reportId)
-    && cleanString(first.scope) === cleanString(second.scope)
     && cleanString(first.preset) === cleanString(second.preset)
     && cleanString(first.subScope) === cleanString(second.subScope);
 }
@@ -210,7 +209,7 @@ export function createDocsViewerReportPresentationAdapter(options) {
       documentMountGeneration: positiveInteger(context.documentMountGeneration),
       documentTarget: {
         docId: cleanString(doc.doc_id),
-        scope: cleanString(context.viewerScope)
+        stage: cleanString(context.viewerStage)
       },
       handleClick: null,
       presentation: null,
@@ -219,7 +218,6 @@ export function createDocsViewerReportPresentationAdapter(options) {
       reportTarget: {
         preset: cleanString(reportMeta.preset),
         reportId: cleanString(reportMeta.reportId),
-        scope: cleanString(reportMeta.scope),
         subScope: cleanString(reportMeta.subScope)
       },
       requestContentDetail: typeof context.requestContentDetail === "function"
@@ -229,7 +227,6 @@ export function createDocsViewerReportPresentationAdapter(options) {
     if (
       !documentRef
       || !state.documentMountGeneration
-      || !state.documentTarget.scope
       || !state.documentTarget.docId
       || !state.reportTarget.reportId
     ) {

@@ -358,7 +358,7 @@ export function createDocsViewerInlineMermaidAdapter(options) {
         document: record.document,
         host: host,
         mountGeneration: record.mountGeneration,
-        viewerScope: record.viewerScope,
+        viewerStage: record.viewerStage,
         window: record.window
       });
       if (!detailResult || !detailResult.refreshed) {
@@ -502,7 +502,7 @@ export function createDocsViewerInlineMermaidAdapter(options) {
               document: documentRef,
               host: host,
               mountGeneration: context.mountGeneration,
-              viewerScope: context.viewerScope,
+              viewerStage: context.viewerStage,
               window: windowRef
             });
           } catch (detailError) {
@@ -519,7 +519,7 @@ export function createDocsViewerInlineMermaidAdapter(options) {
           mountGeneration: context.mountGeneration,
           source: source,
           viewerRoot: context.viewerRoot,
-          viewerScope: context.viewerScope,
+          viewerStage: context.viewerStage,
           window: windowRef
         });
       } catch (error) {

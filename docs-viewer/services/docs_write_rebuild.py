@@ -11,18 +11,17 @@ import time
 from pathlib import Path
 from typing import Any, Callable, Dict, Mapping, Optional
 
-from docs_scope_config import (
+from docs_workspace_config import (
     document_source_path,
     generated_documents_path,
-    load_docs_scope_configs,
-    load_docs_scope_stage,
+    load_docs_stage,
     require_document_authoring,
-    resolve_scope_path,
+    resolve_workspace_path,
 )
-from docs_scope_build_manifest import remove_build_manifest, write_build_manifest
-from docs_mermaid_preparation import prepare_scope_mermaid
-from docs_scope_links import write_scope_links
-from docs_source_model import load_scope_docs_for_config, parse_source, write_bytes_atomic
+from docs_build_manifest import remove_build_manifest, write_build_manifest
+from docs_mermaid_preparation import prepare_stage_mermaid
+from docs_workspace_links import write_workspace_links
+from docs_source_model import load_stage_docs_for_config, parse_source, write_bytes_atomic
 from docs_watch_suppression import (
     DEFAULT_COMPLETE_TTL_SECONDS,
     DEFAULT_PENDING_TTL_SECONDS,
@@ -52,7 +51,7 @@ class SubScopeSourceSnapshotChanged(RuntimeError):
     """Stop one child write boundary before mutation when its snapshot changed."""
 
 
-class ScopeWriteRebuildFailure(RuntimeError):
+class DocumentWriteRebuildFailure(RuntimeError):
     """Report one failed top-level write/rebuild after its owned rollback attempt."""
 
     def __init__(self, message: str, *, rollback: dict[str, Any]):
@@ -60,25 +59,25 @@ class ScopeWriteRebuildFailure(RuntimeError):
         self.rollback = rollback
 
 
-class ScopeSourceSnapshotChanged(RuntimeError):
+class DocumentSourceSnapshotChanged(RuntimeError):
     """Stop one top-level write boundary before mutation when its snapshot changed."""
 
 
-def current_scope_source_root(repo_root: Path, scope: str, stage: str | None = None) -> Path:
-    config = load_docs_scope_stage(repo_root, scope, stage)
-    return resolve_scope_path(repo_root, document_source_path(config))
+def current_document_source_root(repo_root: Path, stage: str | None = None) -> Path:
+    config = load_docs_stage(repo_root, stage)
+    return resolve_workspace_path(repo_root, document_source_path(config))
 
 
-def current_sub_scope_source_root(repo_root: Path, scope: str, sub_scope: str, stage: str | None = None) -> Path:
-    config = load_docs_scope_stage(repo_root, scope, stage)
+def current_sub_scope_source_root(repo_root: Path, sub_scope: str, stage: str | None = None) -> Path:
+    config = load_docs_stage(repo_root, stage)
     matching = [
         candidate
         for candidate in config.sub_scopes
         if candidate.sub_scope == sub_scope
     ]
     if not matching:
-        raise ValueError(f"sub-scope {scope}/{sub_scope} is not configured")
-    return resolve_scope_path(repo_root, document_source_path(matching[0]))
+        raise ValueError(f"sub-scope {stage}/{sub_scope} is not configured")
+    return resolve_workspace_path(repo_root, document_source_path(matching[0]))
 
 
 def python_builder_command(script: str, *args: str) -> list[str]:
@@ -138,32 +137,32 @@ def iter_docs_tree_records(docs: Any) -> list[Dict[str, Any]]:
     return records
 
 
-def targeted_docs_build_fallback_reason(repo_root: Path, scope: str, target_doc_ids: list[str], stage: str | None = None) -> str:
+def targeted_docs_build_fallback_reason(repo_root: Path, target_doc_ids: list[str], stage: str | None = None) -> str:
     try:
-        config = load_docs_scope_stage(repo_root, scope, stage)
+        config = load_docs_stage(repo_root, stage)
     except (KeyError, FileNotFoundError, ValueError) as exc:
-        return f"full-scope fallback: docs scope config unavailable: {exc}"
+        return f"full-stage fallback: Docs workspace config unavailable: {exc}"
 
-    output_dir = resolve_scope_path(repo_root, generated_documents_path(config))
+    output_dir = resolve_workspace_path(repo_root, generated_documents_path(config))
     index_tree_path = output_dir / "index-tree.json"
     semantic_token_index_path = output_dir / "semantic-tokens" / "index.json"
     if not index_tree_path.exists():
-        return "full-scope fallback: existing docs index tree missing"
+        return "full-stage fallback: existing docs index tree missing"
     if not semantic_token_index_path.exists():
-        return "full-scope fallback: existing semantic-token index missing"
+        return "full-stage fallback: existing semantic-token index missing"
 
     try:
         index_payload = json.loads(index_tree_path.read_text(encoding="utf-8"))
     except (OSError, json.JSONDecodeError) as exc:
-        return f"full-scope fallback: existing docs index tree unreadable: {exc}"
+        return f"full-stage fallback: existing docs index tree unreadable: {exc}"
     docs = index_payload.get("docs") if isinstance(index_payload, dict) else None
     if not iter_docs_tree_records(docs):
-        return "full-scope fallback: existing docs index tree has no docs array"
+        return "full-stage fallback: existing docs index tree has no docs array"
 
     try:
-        current_docs = load_scope_docs_for_config(repo_root, config)
+        current_docs = load_stage_docs_for_config(repo_root, config)
     except (OSError, ValueError) as exc:
-        return f"full-scope fallback: current source docs unavailable: {exc}"
+        return f"full-stage fallback: current source docs unavailable: {exc}"
 
     target_set = set(target_doc_ids)
     missing_payload_ids = [
@@ -172,7 +171,7 @@ def targeted_docs_build_fallback_reason(repo_root: Path, scope: str, target_doc_
         if doc.doc_id not in target_set and not (output_dir / "by-id" / f"{doc.doc_id}.json").exists()
     ]
     if missing_payload_ids:
-        return "full-scope fallback: existing payloads missing for unselected docs"
+        return "full-stage fallback: existing payloads missing for unselected docs"
     return ""
 
 
@@ -240,9 +239,8 @@ def rebuild_failure_message(prefix: str, detail: str) -> str:
     return f"{prefix}: {clean_detail}"
 
 
-def rebuild_scope_outputs(
+def rebuild_stage_outputs(
     repo_root: Path,
-    scope: str,
     include_search: bool = False,
     search_doc_ids: Optional[list[str]] = None,
     docs_doc_ids: Optional[list[str]] = None,
@@ -251,20 +249,20 @@ def rebuild_scope_outputs(
     links_doc_ids: Optional[list[str]] = None,
     links_created_doc_ids: Optional[list[str]] = None,
 ) -> Dict[str, Any]:
-    """Await document work and requested Search before recording scope completion.
+    """Await document work and requested Search before recording stage completion.
 
     Full Working docs-and-Search rebuilds also combine prepared Links records.
     Individual document operations omit Search and leave that aggregate alone.
     """
     try:
-        scope_config = load_docs_scope_stage(repo_root, scope, stage)
+        stage_config = load_docs_stage(repo_root, stage)
     except KeyError as exc:
-        raise ValueError(f"scope {scope!r} is not configured") from exc
-    remove_build_manifest(repo_root, scope_config)
+        raise ValueError(f"stage {stage!r} is not configured") from exc
+    remove_build_manifest(repo_root, stage_config)
     docs_mode = "full"
     docs_target_doc_ids: list[str] = []
-    docs_reason = "full-scope fallback: no targeted docs payload ids provided"
-    docs_command = python_builder_command(DOCS_BUILDER_SCRIPT, "--scope", scope, "--write", "--diagnostics")
+    docs_reason = "full-stage fallback: no targeted docs payload ids provided"
+    docs_command = python_builder_command(DOCS_BUILDER_SCRIPT, "--write", "--diagnostics")
     if stage:
         docs_command.extend(["--stage", stage])
     if stage == "working":
@@ -276,7 +274,7 @@ def rebuild_scope_outputs(
     if docs_doc_ids is not None:
         docs_target_doc_ids = ordered_docs_doc_ids(docs_doc_ids)
         if docs_target_doc_ids:
-            fallback_reason = targeted_docs_build_fallback_reason(repo_root, scope, docs_target_doc_ids, stage)
+            fallback_reason = targeted_docs_build_fallback_reason(repo_root, docs_target_doc_ids, stage)
             if fallback_reason:
                 docs_reason = fallback_reason
             else:
@@ -284,7 +282,7 @@ def rebuild_scope_outputs(
                 docs_reason = "targeted docs payload ids provided"
                 docs_command.extend(["--only-doc-ids", ",".join(docs_target_doc_ids)])
         else:
-            docs_reason = "full-scope fallback: targeted docs payload ids normalized empty"
+            docs_reason = "full-stage fallback: targeted docs payload ids normalized empty"
     if skip_media_builds:
         docs_command.append("--skip-media-builds")
     commands = [("docs", docs_command)]
@@ -295,24 +293,22 @@ def rebuild_scope_outputs(
                 "sub_scope_docs",
                 python_builder_command(
                     DOCS_BUILDER_SCRIPT,
-                    "--scope",
-                    scope,
                     "--sub-scope",
                     sub_scope.sub_scope,
                     "--write",
                     "--diagnostics",
                     "--skip-browser-config",
-                    *(["--stage", scope_config.stage] if scope_config.stage else []),
+                    *(["--stage", stage_config.stage] if stage_config.stage else []),
                     *(["--skip-media-builds"] if skip_media_builds else []),
                 ),
             )
-            for sub_scope in scope_config.sub_scopes
+            for sub_scope in stage_config.sub_scopes
         )
         if search_doc_ids is None:
             search = {"mode": "full", "doc_ids": []}
             commands.append(("search", python_builder_command(
-                SEARCH_BUILDER_SCRIPT, "--scope", scope, "--write",
-                *(["--stage", scope_config.stage] if scope_config.stage else []),
+                SEARCH_BUILDER_SCRIPT, "--write",
+                *(["--stage", stage_config.stage] if stage_config.stage else []),
             )))
         else:
             target_doc_ids = ordered_search_doc_ids(search_doc_ids)
@@ -323,10 +319,8 @@ def rebuild_scope_outputs(
                         "search",
                         python_builder_command(
                             SEARCH_BUILDER_SCRIPT,
-                            "--scope",
-                            scope,
                             "--write",
-                            *(["--stage", scope_config.stage] if scope_config.stage else []),
+                            *(["--stage", stage_config.stage] if stage_config.stage else []),
                         ),
                     )
                 )
@@ -344,20 +338,20 @@ def rebuild_scope_outputs(
             search_diagnostics["elapsed_seconds"] = step["elapsed_seconds"]
         if step["returncode"] != 0:
             detail = step["stderr"] or step["stdout"] or f"exit {step['returncode']}"
-            raise RuntimeError(rebuild_failure_message(f"rebuild failed for {scope}", detail))
+            raise RuntimeError(rebuild_failure_message(f"rebuild failed for {stage}", detail))
     links = (
-        write_scope_links(repo_root, scope_config)
+        write_workspace_links(repo_root, stage_config)
         if include_search and search["mode"] == "full"
-        and scope == "analysis" and scope_config.stage == "working"
+        and stage_config.stage == "working"
         else None
     )
     mermaid = (
-        prepare_scope_mermaid(repo_root, scope_config)
+        prepare_stage_mermaid(repo_root, stage_config)
         if include_search and search["mode"] == "full"
         else None
     )
     build_manifest = (
-        write_build_manifest(repo_root, scope_config)
+        write_build_manifest(repo_root, stage_config)
         if include_search and search["mode"] == "full"
         else None
     )
@@ -378,7 +372,6 @@ def rebuild_scope_outputs(
 
 def rebuild_sub_scope_outputs(
     repo_root: Path,
-    scope: str,
     sub_scope: str,
     stage: str | None = None,
     links_doc_ids: Optional[list[str]] = None,
@@ -386,8 +379,6 @@ def rebuild_sub_scope_outputs(
 ) -> Dict[str, Any]:
     docs_command = python_builder_command(
         DOCS_BUILDER_SCRIPT,
-        "--scope",
-        scope,
         "--sub-scope",
         sub_scope,
         "--write",
@@ -395,7 +386,7 @@ def rebuild_sub_scope_outputs(
         "--skip-browser-config",
         "--skip-media-builds",
     )
-    load_docs_scope_stage(repo_root, scope, stage)
+    load_docs_stage(repo_root, stage)
     if stage:
         docs_command.extend(["--stage", stage])
     if stage == "working" and links_doc_ids is not None:
@@ -412,7 +403,7 @@ def rebuild_sub_scope_outputs(
         detail = step["stderr"] or step["stdout"] or f"exit {step['returncode']}"
         raise RuntimeError(
             rebuild_failure_message(
-                f"rebuild failed for {scope}/{sub_scope}",
+                f"rebuild failed for {stage}/{sub_scope}",
                 detail,
             )
         )
@@ -434,10 +425,8 @@ def rebuild_sub_scope_outputs(
 
 
 
-
 def perform_source_write_and_rebuild(
     repo_root: Path,
-    scope: str,
     changed_paths: list[Path],
     write_operation: Callable[[], Any],
     *,
@@ -447,9 +436,9 @@ def perform_source_write_and_rebuild(
     skip_media_builds: bool = True,
     stage: str | None = None,
 ) -> Dict[str, Any]:
-    require_document_authoring(load_docs_scope_stage(repo_root, scope, stage))
-    suppression_owner = watch_suppression_owner(scope, stage=stage)
-    root = current_scope_source_root(repo_root, scope, stage)
+    require_document_authoring(load_docs_stage(repo_root, stage))
+    suppression_owner = watch_suppression_owner(stage=stage)
+    root = current_document_source_root(repo_root, stage)
     filenames = sorted(
         {
             path.resolve().relative_to(root.resolve()).as_posix()
@@ -469,9 +458,8 @@ def perform_source_write_and_rebuild(
         )
     try:
         write_operation()
-        rebuild = rebuild_scope_outputs(
+        rebuild = rebuild_stage_outputs(
             repo_root,
-            scope,
             include_search=False,
             docs_doc_ids=docs_doc_ids,
             skip_media_builds=skip_media_builds,
@@ -505,9 +493,8 @@ def perform_source_write_and_rebuild(
     return rebuild
 
 
-def perform_scope_source_write_and_rebuild_atomic(
+def perform_source_write_and_rebuild_atomic(
     repo_root: Path,
-    scope: str,
     changed_paths: list[Path],
     write_operation: Callable[[], Any],
     *,
@@ -518,9 +505,9 @@ def perform_scope_source_write_and_rebuild_atomic(
 ) -> Dict[str, Any]:
     """Write/rebuild one exact parent stage or restore its source snapshot there."""
 
-    require_document_authoring(load_docs_scope_stage(repo_root, scope, stage))
-    root = current_scope_source_root(repo_root, scope, stage)
-    suppression_owner = watch_suppression_owner(scope, stage=stage)
+    require_document_authoring(load_docs_stage(repo_root, stage))
+    root = current_document_source_root(repo_root, stage)
+    suppression_owner = watch_suppression_owner(stage=stage)
     resolved_changed_paths = {
         path.resolve()
         for path in changed_paths
@@ -532,19 +519,19 @@ def perform_scope_source_write_and_rebuild_atomic(
     }
     if set(normalized_snapshots) != resolved_changed_paths:
         raise ValueError(
-            "scope rollback snapshot must cover every changed source exactly",
+            "document rollback snapshot must cover every changed source exactly",
         )
     if any(
         not isinstance(source_bytes, bytes)
         for source_bytes in normalized_snapshots.values()
     ):
-        raise ValueError("scope rollback snapshot values must be bytes")
+        raise ValueError("document rollback snapshot values must be bytes")
     for path in normalized_snapshots:
         try:
             path.relative_to(root.resolve())
         except ValueError as exc:
             raise ValueError(
-                "scope rollback snapshot escapes configured source root",
+                "document rollback snapshot escapes configured source root",
             ) from exc
     filenames = sorted(
         path.relative_to(root.resolve()).as_posix()
@@ -567,21 +554,20 @@ def perform_scope_source_write_and_rebuild_atomic(
             if path.read_bytes() != source_bytes
         ]
         if changed_before_write:
-            raise ScopeSourceSnapshotChanged(
-                "scope sources changed immediately before apply: "
+            raise DocumentSourceSnapshotChanged(
+                "document sources changed immediately before apply: "
                 + ", ".join(sorted(changed_before_write)),
             )
         write_operation()
-        rebuild = rebuild_scope_outputs(
+        rebuild = rebuild_stage_outputs(
             repo_root,
-            scope,
             include_search=False,
             docs_doc_ids=docs_doc_ids,
             skip_media_builds=True,
             stage=stage,
             **links_write_arguments(links_before, changed_paths),
         )
-    except ScopeSourceSnapshotChanged:
+    except DocumentSourceSnapshotChanged:
         if filenames:
             clear_watch_suppressions(repo_root, suppression_owner, filenames)
         raise
@@ -598,9 +584,8 @@ def perform_scope_source_write_and_rebuild_atomic(
         recovery_error = ""
         if not restoration_errors:
             try:
-                recovery_rebuild = rebuild_scope_outputs(
+                recovery_rebuild = rebuild_stage_outputs(
                     repo_root,
-                    scope,
                     include_search=False,
                     docs_doc_ids=docs_doc_ids,
                     skip_media_builds=True,
@@ -629,7 +614,7 @@ def perform_scope_source_write_and_rebuild_atomic(
                 )
             else:
                 clear_watch_suppressions(repo_root, suppression_owner, filenames)
-        raise ScopeWriteRebuildFailure(
+        raise DocumentWriteRebuildFailure(
             str(exc).strip() or exc.__class__.__name__,
             rollback={
                 "status": rollback_status,
@@ -654,7 +639,6 @@ def perform_scope_source_write_and_rebuild_atomic(
 
 def perform_sub_scope_source_write_and_rebuild(
     repo_root: Path,
-    scope: str,
     sub_scope: str,
     changed_paths: list[Path],
     write_operation: Callable[[], Any],
@@ -664,8 +648,8 @@ def perform_sub_scope_source_write_and_rebuild(
     stage: str | None = None,
     links_created_doc_ids: list[str] | None = None,
 ) -> Dict[str, Any]:
-    require_document_authoring(load_docs_scope_stage(repo_root, scope, stage))
-    root = current_sub_scope_source_root(repo_root, scope, sub_scope, stage)
+    require_document_authoring(load_docs_stage(repo_root, stage))
+    root = current_sub_scope_source_root(repo_root, sub_scope, stage)
     resolved_changed_paths = {
         path.resolve()
         for path in changed_paths
@@ -697,7 +681,7 @@ def perform_sub_scope_source_write_and_rebuild(
             if isinstance(path, Path)
         }
     )
-    suppression_owner = watch_suppression_owner(scope, sub_scope, stage=stage)
+    suppression_owner = watch_suppression_owner(sub_scope, stage=stage)
     links_before = changed_source_document_ids(changed_paths) if stage == "working" else None
     if filenames:
         set_watch_suppressions(
@@ -722,7 +706,7 @@ def perform_sub_scope_source_write_and_rebuild(
                 )
         write_operation()
         rebuild = rebuild_sub_scope_outputs(
-            repo_root, scope, sub_scope, stage=stage,
+            repo_root, sub_scope, stage=stage,
             **links_write_arguments(links_before, changed_paths, created_doc_ids=links_created_doc_ids),
         )
     except SubScopeSourceSnapshotChanged:
@@ -746,7 +730,6 @@ def perform_sub_scope_source_write_and_rebuild(
             try:
                 recovery_rebuild = rebuild_sub_scope_outputs(
                     repo_root,
-                    scope,
                     sub_scope,
                     stage=stage,
                     **({"links_doc_ids": links_before} if links_before is not None else {}),
@@ -787,7 +770,7 @@ def perform_sub_scope_source_write_and_rebuild(
     return rebuild
 
 
-def perform_multi_scope_source_write_and_rebuild(
+def perform_multi_collection_source_write_and_rebuild(
     repo_root: Path,
     rebuild_plans: list[Dict[str, Any]],
     write_operation: Callable[[], Any],
@@ -798,12 +781,11 @@ def perform_multi_scope_source_write_and_rebuild(
     suppressions: list[tuple[str, list[str]]] = []
     links_before: dict[str, list[str]] = {}
     for plan in rebuild_plans:
-        scope = str(plan.get("scope") or "").strip()
         stage = plan.get("stage") or None
         sub_scope = str(plan.get("sub_scope") or "")
-        require_document_authoring(load_docs_scope_stage(repo_root, scope, stage))
-        root = current_sub_scope_source_root(repo_root, scope, sub_scope, stage) if sub_scope else current_scope_source_root(repo_root, scope, stage)
-        owner = watch_suppression_owner(scope, sub_scope, stage=stage)
+        require_document_authoring(load_docs_stage(repo_root, stage))
+        root = current_sub_scope_source_root(repo_root, sub_scope, stage) if sub_scope else current_document_source_root(repo_root, stage)
+        owner = watch_suppression_owner(sub_scope, stage=stage)
         if stage == "working":
             links_before[owner] = changed_source_document_ids(plan.get("changed_paths", []))
         filenames = sorted(
@@ -829,34 +811,33 @@ def perform_multi_scope_source_write_and_rebuild(
         rebuilds: Dict[str, Any] = {}
         prepared_rebuilds = []
         for plan in rebuild_plans:
-            owner = watch_suppression_owner(str(plan["scope"]), str(plan.get("sub_scope") or ""), stage=plan.get("stage") or None)
+            owner = watch_suppression_owner(str(plan.get("sub_scope") or ""), stage=plan.get("stage") or None)
             prepared_rebuilds.append((plan, links_write_arguments(links_before.get(owner), plan.get("changed_paths", []))))
         # A collection move keeps its immutable ID and shared Links filename.
         # Prepare the destination first so it can transfer the exact prior
         # record before the former collection processes its deletion identity.
         prepared_rebuilds.sort(key=lambda item: not bool(item[1].get("links_created_doc_ids")))
         for plan, links_arguments in prepared_rebuilds:
-            scope = str(plan.get("scope") or "").strip()
             stage = plan.get("stage") or None
             sub_scope = str(plan.get("sub_scope") or "")
-            owner = watch_suppression_owner(scope, sub_scope, stage=stage)
+            owner = watch_suppression_owner(sub_scope, stage=stage)
             if sub_scope:
-                rebuilds[owner] = rebuild_sub_scope_outputs(repo_root, scope, sub_scope, stage=stage, **links_arguments)
+                rebuilds[owner] = rebuild_sub_scope_outputs(repo_root, sub_scope, stage=stage, **links_arguments)
             else:
-                rebuilds[owner] = rebuild_scope_outputs(
-                    repo_root, scope, include_search=False,
+                rebuilds[owner] = rebuild_stage_outputs(
+                    repo_root, include_search=False,
                     docs_doc_ids=plan.get("docs_doc_ids"),
                     **links_arguments,
                     **({"stage": stage, "skip_media_builds": True} if stage else {}),
                 )
     except Exception:
-        for scope, filenames in suppressions:
-            clear_watch_suppressions(repo_root, scope, filenames)
+        for owner, filenames in suppressions:
+            clear_watch_suppressions(repo_root, owner, filenames)
         raise
-    for scope, filenames in suppressions:
+    for owner, filenames in suppressions:
         set_watch_suppressions(
             repo_root,
-            scope,
+            owner,
             filenames,
             status=SUPPRESSION_COMPLETE,
             reason=suppression_reason,
@@ -864,27 +845,5 @@ def perform_multi_scope_source_write_and_rebuild(
         )
     return {
         "ok": True,
-        "scopes": rebuilds,
-    }
-
-
-def rebuild_all_docs_outputs(repo_root: Path) -> Dict[str, Any]:
-    """Rebuild each remaining authoring scope after a scope lifecycle change."""
-    configs = load_docs_scope_configs(repo_root)
-    results = {}
-    for scope in configs:
-        results[scope] = rebuild_scope_outputs(
-            repo_root, scope, include_search=True, skip_media_builds=True,
-            stage="working",
-        )
-    return {
-        "ok": True,
-        "steps": [step for result in results.values() for step in result["steps"]],
-        "scopes": results,
-        "build_manifests": {scope: result["build_manifest"] for scope, result in results.items()},
-        "diagnostics": {
-            "docs": [result["diagnostics"]["docs"] for result in results.values()],
-            "search": [{**result["diagnostics"]["search"], "scope": scope} for scope, result in results.items()],
-        },
-        "summary_text": f"Working docs and Search rebuilt for {', '.join(results)}.",
+        "collections": rebuilds,
     }

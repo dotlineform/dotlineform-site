@@ -228,10 +228,6 @@
   width: 100%;
 }
 
-.docsViewerImport__field--scope{
-  flex: 0 0 auto;
-}
-
 .docsViewerImport__toggle{
   display: inline-flex;
   align-items: center;

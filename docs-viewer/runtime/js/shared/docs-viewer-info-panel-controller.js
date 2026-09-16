@@ -11,7 +11,7 @@ export function createDocsViewerInfoPanelController(options) {
   var refs = settings.refs || {};
   var documentIndex = settings.documentIndex || {};
   var selectedDocument = settings.selectedDocument || {};
-  var scopeConfig = settings.scopeConfig || {};
+  var workspaceConfig = settings.workspaceConfig || {};
   var panelView = settings.panelView || null;
   var host = createDocsViewerInfoPanelHost({
     refs: refs,
@@ -24,10 +24,6 @@ export function createDocsViewerInfoPanelController(options) {
       renderToggleState();
     }
   });
-
-  function viewerScope() {
-    return typeof settings.viewerScope === "function" ? settings.viewerScope() : settings.viewerScope;
-  }
 
   function appContext() {
     return typeof settings.appContext === "function" ? settings.appContext() : settings.appContext;
@@ -54,8 +50,8 @@ export function createDocsViewerInfoPanelController(options) {
         : settings.managedDocumentContext,
       selectedDocId: selectedDocument.selectedDocId,
       sourceEditorServices: typeof settings.sourceEditorServices === "function" ? settings.sourceEditorServices() : settings.sourceEditorServices,
-      uiStatusByValue: scopeConfig.uiStatusByValue,
-      viewerScope: viewerScope(),
+      uiStatusByValue: workspaceConfig.uiStatusByValue,
+      viewerStage: typeof settings.viewerStage === "function" ? settings.viewerStage() : settings.viewerStage,
       viewerTargetDocId: settings.viewerTargetDocId,
       viewerUrl: settings.viewerUrl
     });

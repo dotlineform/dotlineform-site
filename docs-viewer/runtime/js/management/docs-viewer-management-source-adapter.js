@@ -25,7 +25,6 @@ export function createDocsViewerManagementSourceAdapter(options) {
   function clientOptions(overrides) {
     return Object.assign({
       baseUrl: baseUrl,
-      scope: String(currentValue(settings.viewerScope) || "").trim(),
       stage: String(currentValue(settings.viewerStage) || "").trim(),
       fetch: function (url, requestOptions) {
         return settings.window.fetch(url, requestOptions);

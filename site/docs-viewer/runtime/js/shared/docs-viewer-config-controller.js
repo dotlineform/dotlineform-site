@@ -1,12 +1,6 @@
 import {
-  routeConfigScopeProjection
+  routeConfigWorkspaceProjection
 } from "./docs-viewer-route-config.js";
-import {
-  escapeHtml
-} from "./docs-viewer-render.js";
-import {
-  createDocsViewerScopeSelectMenu
-} from "./docs-viewer-scope-select-menu.js";
 import {
   DOCS_VIEWER_CODE_CONFIG
 } from "./docs-viewer-code-config.js";
@@ -117,20 +111,14 @@ export function hasDocsViewerAssignableFieldGroup(descriptor, groupId) {
 }
 
 export function initDocsViewerConfigController(context) {
-  var scopeConfig = context.scopeConfig || {};
+  var workspaceConfig = context.workspaceConfig || {};
   var documentIndex = context.documentIndex || {};
   var searchRecent = context.searchRecent || {};
   var configService = context.configService || {};
   var routeCommands = context.routeCommands || {};
   var root = context.root;
-  var scopeSelect = context.scopeSelect;
-  var scopeSelectMenu = createDocsViewerScopeSelectMenu({
-    document: document,
-    scopeSelect: scopeSelect,
-    window: window
-  });
-  if (!Array.isArray(scopeConfig.scopeConfigs)) scopeConfig.scopeConfigs = [];
-  if (!scopeConfig.scopeConfigsById) scopeConfig.scopeConfigsById = new Map();
+  if (!Array.isArray(workspaceConfig.stageConfigs)) workspaceConfig.stageConfigs = [];
+  if (!workspaceConfig.stageConfigsById) workspaceConfig.stageConfigsById = new Map();
   if (!Array.isArray(documentIndex.docs)) documentIndex.docs = [];
 
   function normalizeSubScopeConfig(rawSubScope) {
@@ -155,286 +143,159 @@ export function initDocsViewerConfigController(context) {
     };
   }
 
-  function normalizeBrowserScopeConfig(rawScope) {
-    if (!rawScope || typeof rawScope !== "object") return null;
-    var stages = Array.isArray(rawScope.stages) ? rawScope.stages : [];
-    if (stages.length) {
-      var params = new URLSearchParams(window.location.search);
-      var requestedStage = params.get("scope") === rawScope.scope_id ? params.get("stage") : "";
-      var stageId = requestedStage || "working";
-      var selectedStage = stages.find(function (stage) { return stage.stage === stageId; });
-      if (!selectedStage) throw new Error("Unknown Docs stage: " + stageId);
-      rawScope = Object.assign({}, rawScope, selectedStage);
+  function normalizeBrowserConfig(raw) {
+    if (!raw || typeof raw !== "object" || Array.isArray(raw)) throw new Error("Docs Viewer configuration must be an object.");
+    var children = (raw.sub_scopes || []).map(normalizeSubScopeConfig);
+    if (children.some(function (child) { return !child; }) || new Set(children.map(function (child) { return child.subScope; })).size !== children.length) {
+      throw new Error("Docs Viewer sub-scopes require unique configured identities and payload URLs.");
     }
-    var scopeId = String(rawScope.scope_id || "").trim().toLowerCase();
-    if (!scopeId) return null;
-    var rawViewerBaseUrl = String(rawScope.viewer_base_url || "").trim() || "/docs/";
-    var viewerBase = rawViewerBaseUrl.charAt(0) === "/" ? rawViewerBaseUrl : "/" + rawViewerBaseUrl;
-    if (viewerBase.charAt(viewerBase.length - 1) !== "/") {
-      viewerBase += "/";
-    }
-    var subScopes = Array.isArray(rawScope.sub_scopes)
-      ? rawScope.sub_scopes.map(normalizeSubScopeConfig).filter(Boolean)
-      : [];
     var config = {
-      scopeId: scopeId,
-      stage: String(rawScope.stage || ""),
-      stages: stages.map(function (stage) { return stage.stage; }),
-      scopeType: String(rawScope.scope_type || "").trim().toLowerCase(),
-      meta: String(rawScope.meta || "").trim(),
-      emoji: String(rawScope.emoji || "").trim(),
-      viewerBaseUrl: viewerBase,
-      includeScopeParam: rawScope.include_scope_param === true,
-      defaultDocId: String(rawScope.default_doc_id || "").trim(),
-      indexTreeUrl: String(rawScope.index_tree_url || "").trim(),
-      recentUrl: String(rawScope.recent_url || "").trim(),
-      backlinksUrl: String(rawScope.backlinks_url || "").trim(),
-      linksEnabled: rawScope.links_enabled === true,
-      linksByIdUrlBase: String(rawScope.links_by_id_url_base || "").trim(),
-      searchIndexUrl: String(rawScope.search_index_url || "").trim(),
-      subScopes: subScopes,
-      subScopesById: new Map(subScopes.map(function (config) {
-        return [config.subScope, config];
-      }))
+      stage: String(raw.stage || ""),
+      viewerBaseUrl: String(raw.viewer_base_url || ""),
+      defaultDocId: String(raw.default_doc_id || ""),
+      indexTreeUrl: String(raw.index_tree_url || ""),
+      recentUrl: String(raw.recent_url || ""),
+      backlinksUrl: String(raw.backlinks_url || ""),
+      linksEnabled: raw.links_enabled === true,
+      searchIndexUrl: String(raw.search_index_url || ""),
+      subScopes: children,
+      subScopesById: new Map(children.map(function (child) { return [child.subScope, child]; }))
     };
-    var badge = scopeTypeBadge(config);
-    if (!config.emoji && badge) config.emoji = String(badge.emoji || "").trim();
+    if (!config.viewerBaseUrl || !config.indexTreeUrl
+        || context.featurePolicy.recent && !config.recentUrl
+        || context.featurePolicy.search && !config.searchIndexUrl) {
+      throw new Error("Docs Viewer configuration is missing a required reader URL.");
+    }
     return config;
   }
 
   function normalizeConfigEnvelope(payload) {
-    if (!payload || typeof payload !== "object") {
-      throw new Error("Docs Viewer config must be a JSON object.");
-    }
-    if (payload.schema_version !== "docs_viewer_config_v1") {
+    if (!payload || payload.schema_version !== "docs_viewer_config_v2") {
       throw new Error("Docs Viewer config has an unsupported schema.");
     }
     return {
-      rawScopes: payload.scopes,
-      defaultScopeId: String(payload.default_scope_id || "").trim().toLowerCase(),
-      docsViewerSettings: payload.docs_viewer && typeof payload.docs_viewer === "object" && !Array.isArray(payload.docs_viewer)
-        ? payload.docs_viewer
-        : {}
+      publicViewerBaseUrl: String(payload.public_viewer_base_url || ""),
+      rawStages: payload.stages,
+      rawWorkspace: payload.workspace,
+      docsViewerSettings: payload.docs_viewer || {}
     };
   }
 
-  function normalizeConfiguredScopes(envelope) {
-    var configEnvelope = envelope || {};
-    if (!Array.isArray(configEnvelope.rawScopes)) {
-      throw new Error("Docs Viewer config requires a scopes array.");
+  function routeStageFromUrl() {
+    var route = context.routeSession.routeContext.routeConfig;
+    var params = new URLSearchParams(window.location.search);
+    if (params.has("scope")) throw new Error("Scope URLs are retired; use a current document link.");
+    if (route.appKind !== "manage") {
+      if (params.has("stage")) throw new Error("Public Docs cannot select an authoring stage.");
+      return "";
     }
-    var seen = new Set();
-    var scopes = configEnvelope.rawScopes.map(normalizeBrowserScopeConfig).filter(Boolean).filter(function (config) {
-      if (seen.has(config.scopeId)) return false;
-      seen.add(config.scopeId);
-      return true;
-    }).sort(function (left, right) {
-      return left.scopeId.localeCompare(right.scopeId);
+    var stage = params.get("stage") || route.defaultStage;
+    if (!["working", "pre-publish", "published"].includes(stage)) throw new Error("Unknown Docs stage: " + stage);
+    return stage;
+  }
+
+  function applyWorkspaceConfig(config) {
+    workspaceConfig.activeConfig = config;
+    var projection = routeConfigWorkspaceProjection(config, {
+      routeViewerBaseUrl: context.routeViewerBaseUrl, window: window
     });
-    if (!scopes.length) {
-      throw new Error("Docs Viewer config does not define any scopes.");
-    }
-    scopes.forEach(function (config) {
-      if (!config.indexTreeUrl) {
-        throw new Error("Docs Viewer scope " + config.scopeId + " is missing index_tree_url.");
-      }
-      if (context.featurePolicy && context.featurePolicy.recent && !config.recentUrl) {
-        throw new Error("Docs Viewer scope " + config.scopeId + " is missing recent_url.");
-      }
-      if (context.featurePolicy && context.featurePolicy.search && !config.searchIndexUrl) {
-        throw new Error("Docs Viewer scope " + config.scopeId + " is missing search_index_url.");
-      }
-    });
-    return {
-      defaultScopeId: configEnvelope.defaultScopeId || scopes[0].scopeId,
-      scopes: scopes,
-      scopesById: new Map(scopes.map(function (config) {
-        return [config.scopeId, config];
-      }))
-    };
-  }
-
-  function pathMatchesViewerBase(pathname, viewerBaseUrl) {
-    return pathname.replace(/\/+$/, "/") === new URL(viewerBaseUrl, window.location.origin).pathname.replace(/\/+$/, "/");
-  }
-
-  function scopeFromCurrentPath(config) {
-    var pathname = window.location.pathname.replace(/\/+$/, "/") || "/";
-    var scopes = config.scopes || config.scopeConfigs || [];
-    for (var i = 0; i < scopes.length; i += 1) {
-      if (pathMatchesViewerBase(pathname, scopes[i].viewerBaseUrl)) {
-        return scopes[i].scopeId;
-      }
-    }
-    return "";
-  }
-
-  function routeScopeFromUrl() {
-    var requestedScope = String(new URLSearchParams(window.location.search).get("scope") || "").trim().toLowerCase();
-    var viewerScope = context.viewerScope();
-    if (context.allowScopeQuery && requestedScope) {
-      if (!scopeConfig.scopeConfigsById.has(requestedScope)) {
-        throw new Error("Unknown docs scope: " + requestedScope);
-      }
-      return requestedScope;
-    }
-    if (!context.allowScopeQuery) {
-      var pathScope = scopeFromCurrentPath(scopeConfig);
-      if (pathScope) return pathScope;
-      if (viewerScope && scopeConfig.scopeConfigsById.has(viewerScope)) return viewerScope;
-    }
-    if (viewerScope && scopeConfig.scopeConfigsById.has(viewerScope)) return viewerScope;
-    return scopeConfig.defaultScopeId;
-  }
-
-  function scopeTypeBadge(config) {
-    var badges = DOCS_VIEWER_CODE_CONFIG.scopeTypeBadges;
-    return badges && typeof badges === "object" && badges[config.scopeType] && typeof badges[config.scopeType] === "object"
-      ? badges[config.scopeType]
-      : null;
-  }
-
-  function scopeOptionRecord(config) {
-    var badge = scopeTypeBadge(config);
-    var emoji = String(config.emoji || "").trim();
-    if (!emoji && badge) emoji = String(badge.emoji || "").trim();
-    var meta = config.meta || (badge ? String(badge.label || "").trim() : "");
-    return {
-      value: config.scopeId,
-      label: config.scopeId,
-      emoji: emoji,
-      meta: meta
-    };
-  }
-
-  function renderScopeOptions() {
-    if (!scopeSelect) return;
-    var records = scopeConfig.scopeConfigs.map(scopeOptionRecord);
-    scopeSelect.innerHTML = records.map(function (record) {
-      return '<option value="' + escapeHtml(record.value) + '">' + escapeHtml((record.emoji ? record.emoji + " " : "") + record.label) + '</option>';
-    }).join("");
-    scopeSelect.value = context.viewerScope();
-    scopeSelectMenu.render(records);
-  }
-
-  function applyRouteScopeConfig(scope) {
-    var config = scopeConfig.scopeConfigsById.get(scope);
-    if (!config) {
-      throw new Error("Unknown docs scope: " + scope);
-    }
-    var routeProjection = routeConfigScopeProjection(config, {
-      allowScopeQuery: context.allowScopeQuery,
-      routeViewerBaseUrl: context.routeViewerBaseUrl,
-      window: window
-    });
-    if (typeof routeCommands.applyRouteGlobals === "function") {
-      routeCommands.applyRouteGlobals(routeProjection);
-    } else if (typeof context.applyRouteGlobals === "function") {
-      context.applyRouteGlobals(routeProjection);
-    }
-    root.dataset.viewerScope = scope;
+    routeCommands.applyRouteGlobals(projection);
     root.dataset.viewerStage = config.stage;
     var stageControls = root.querySelector("[data-docs-viewer-stages]");
     if (stageControls) {
       stageControls.replaceChildren();
-      stageControls.hidden = !config.stages.length;
-      config.stages.forEach(function (stage) {
+      stageControls.hidden = !workspaceConfig.stageConfigs.length;
+      workspaceConfig.stageConfigs.forEach(function (record) {
         var button = document.createElement("button");
         button.type = "button";
-        button.textContent = { working: "Working", "pre-publish": "Pre-publish", published: "Published" }[stage];
-        button.setAttribute("aria-pressed", String(config.stage === stage));
+        button.textContent = { working: "Working", "pre-publish": "Pre-publish", published: "Published" }[record.stage];
+        button.setAttribute("aria-pressed", String(config.stage === record.stage));
         button.addEventListener("click", function () {
-          if (stage === config.stage) return;
-          var url = new URL(context.routeViewerBaseUrl || "/docs/", window.location.origin);
-          url.searchParams.set("scope", scope);
-          url.searchParams.set("stage", stage);
+          if (record.stage === config.stage) return;
+          var url = new URL(context.routeViewerBaseUrl, window.location.origin);
+          url.searchParams.set("stage", record.stage);
           window.location.assign(url.pathname + url.search);
         });
         stageControls.append(button);
       });
     }
     if (config.stage && !new URLSearchParams(window.location.search).has("stage")) {
-      var stageUrl = new URL(window.location.href);
-      stageUrl.searchParams.set("stage", config.stage);
-      window.history.replaceState(window.history.state, "", stageUrl.pathname + stageUrl.search + stageUrl.hash);
+      var url = new URL(window.location.href);
+      url.searchParams.set("stage", config.stage);
+      window.history.replaceState(window.history.state, "", url.pathname + url.search + url.hash);
     }
     root.dataset.indexTreeUrl = config.indexTreeUrl;
     root.dataset.recentUrl = config.recentUrl;
     root.dataset.searchIndexUrl = config.searchIndexUrl;
     root.dataset.defaultDocId = config.defaultDocId;
-    root.dataset.viewerBaseUrl = routeProjection.viewerBaseUrl;
-    root.dataset.includeScopeParam = routeProjection.includeScopeParam ? "true" : "false";
-    renderScopeOptions();
+    root.dataset.viewerBaseUrl = projection.viewerBaseUrl;
   }
 
   function loadConfigEnvelope(options) {
     var settings = options || {};
     if (settings.force) {
-      scopeConfig.docsViewerConfigLoaded = false;
-      scopeConfig.docsViewerConfigRequestPromise = null;
+      workspaceConfig.docsViewerConfigLoaded = false;
+      workspaceConfig.docsViewerConfigRequestPromise = null;
     }
-    if (scopeConfig.docsViewerConfigLoaded) return Promise.resolve(scopeConfig.docsViewerConfig);
-    if (scopeConfig.docsViewerConfigRequestPromise) return scopeConfig.docsViewerConfigRequestPromise;
+    if (workspaceConfig.docsViewerConfigLoaded) return Promise.resolve(workspaceConfig.docsViewerConfig);
+    if (workspaceConfig.docsViewerConfigRequestPromise) return workspaceConfig.docsViewerConfigRequestPromise;
     if (typeof configService.fetchDocsViewerConfig !== "function") {
       return Promise.reject(new Error("Docs Viewer config service is not configured."));
     }
 
-    scopeConfig.docsViewerConfigRequestPromise = configService.fetchDocsViewerConfig(settings)
+    workspaceConfig.docsViewerConfigRequestPromise = configService.fetchDocsViewerConfig(settings)
       .then(function (payload) {
         var config = normalizeConfigEnvelope(payload);
-        scopeConfig.docsViewerConfig = config;
-        scopeConfig.docsViewerConfigLoaded = true;
+        workspaceConfig.docsViewerConfig = config;
+        workspaceConfig.docsViewerConfigLoaded = true;
         return config;
       })
       .finally(function () {
-        scopeConfig.docsViewerConfigRequestPromise = null;
+        workspaceConfig.docsViewerConfigRequestPromise = null;
       });
 
-    return scopeConfig.docsViewerConfigRequestPromise;
+    return workspaceConfig.docsViewerConfigRequestPromise;
   }
 
-  function loadConfiguredScopes(options) {
+  function loadWorkspaceConfiguration(options) {
     var settings = options || {};
     if (settings.force) {
-      scopeConfig.configuredScopesLoaded = false;
-      scopeConfig.configuredScopesRequestPromise = null;
+      workspaceConfig.workspaceLoaded = false;
+      workspaceConfig.workspaceRequestPromise = null;
     }
-    if (scopeConfig.configuredScopesLoaded) return Promise.resolve(scopeConfig.scopeConfigs);
-    if (scopeConfig.configuredScopesRequestPromise) return scopeConfig.configuredScopesRequestPromise;
+    if (workspaceConfig.workspaceLoaded) return Promise.resolve(workspaceConfig.activeConfig);
+    if (workspaceConfig.workspaceRequestPromise) return workspaceConfig.workspaceRequestPromise;
 
-    scopeConfig.configuredScopesRequestPromise = loadConfigEnvelope(settings)
+    workspaceConfig.workspaceRequestPromise = loadConfigEnvelope(settings)
       .then(function (envelope) {
-        var config = normalizeConfiguredScopes(envelope);
-        scopeConfig.scopeConfigs = config.scopes;
-        scopeConfig.scopeConfigsById = config.scopesById;
-        scopeConfig.defaultScopeId = config.defaultScopeId;
-        scopeConfig.configuredScopesLoaded = true;
-        applyRouteScopeConfig(routeScopeFromUrl());
-        return config.scopes;
+        workspaceConfig.publicViewerBaseUrl = envelope.publicViewerBaseUrl;
+        var stage = routeStageFromUrl();
+        var config;
+        if (stage) {
+          if (!Array.isArray(envelope.rawStages) || envelope.rawWorkspace) throw new Error("Local Docs requires an explicit stages array.");
+          var stages = envelope.rawStages.map(normalizeBrowserConfig);
+          if (stages.length !== 3 || new Set(stages.map(function (item) { return item.stage; })).size !== 3
+              || stages.some(function (item) { return !["working", "pre-publish", "published"].includes(item.stage); })) {
+            throw new Error("Local Docs requires Working, Pre-publish and Published configurations.");
+          }
+          workspaceConfig.stageConfigs = stages;
+          workspaceConfig.stageConfigsById = new Map(stages.map(function (item) { return [item.stage, item]; }));
+          config = workspaceConfig.stageConfigsById.get(stage);
+        } else {
+          if (envelope.rawStages || !envelope.rawWorkspace) throw new Error("Public Docs requires one workspace configuration.");
+          config = normalizeBrowserConfig(envelope.rawWorkspace);
+          if (config.stage) throw new Error("Public Docs cannot select an authoring stage.");
+          workspaceConfig.stageConfigs = [];
+          workspaceConfig.stageConfigsById = new Map();
+        }
+        applyWorkspaceConfig(config);
+        workspaceConfig.workspaceLoaded = true;
+        return config;
       })
       .finally(function () {
-        scopeConfig.configuredScopesRequestPromise = null;
+        workspaceConfig.workspaceRequestPromise = null;
       });
-    return scopeConfig.configuredScopesRequestPromise;
-  }
-
-  function handleScopeChange() {
-    if (!context.allowScopeQuery || !scopeSelect) return;
-    var nextScope = String(scopeSelect.value || "").trim().toLowerCase();
-    var config = scopeConfig.scopeConfigsById.get(nextScope);
-    if (!config) {
-      scopeSelect.value = context.viewerScope();
-      scopeSelectMenu.project();
-      return;
-    }
-
-    var url = new URL(context.routeViewerBaseUrl || context.viewerBaseUrl(), window.location.origin);
-    url.searchParams.set("scope", nextScope);
-    if (config.stage) url.searchParams.set("stage", config.stage);
-    if (config.defaultDocId) {
-      url.searchParams.set("doc", config.defaultDocId);
-    }
-    window.location.assign(url.pathname + url.search);
+    return workspaceConfig.workspaceRequestPromise;
   }
 
   function normalizeUiStatuses() {
@@ -461,12 +322,12 @@ export function initDocsViewerConfigController(context) {
   }
 
   function applyViewerConfig(config) {
-    scopeConfig.viewerConfig = config || {};
-    scopeConfig.viewerConfigLoaded = true;
-    scopeConfig.recentLimit = positiveInteger(getConfigValue(config, "docs_viewer.recent_limit"), context.defaultRecentLimit);
-    searchRecent.recentLimit = scopeConfig.recentLimit;
-    scopeConfig.uiStatuses = normalizeUiStatuses();
-    scopeConfig.uiStatusByValue = new Map(scopeConfig.uiStatuses.map(function (status) {
+    workspaceConfig.viewerConfig = config || {};
+    workspaceConfig.viewerConfigLoaded = true;
+    workspaceConfig.recentLimit = positiveInteger(getConfigValue(config, "docs_viewer.recent_limit"), context.defaultRecentLimit);
+    searchRecent.recentLimit = workspaceConfig.recentLimit;
+    workspaceConfig.uiStatuses = normalizeUiStatuses();
+    workspaceConfig.uiStatusByValue = new Map(workspaceConfig.uiStatuses.map(function (status) {
       return [status.ui_status, status];
     }));
     if (typeof context.setRecentControlLabel === "function") context.setRecentControlLabel("Recent");
@@ -484,17 +345,17 @@ export function initDocsViewerConfigController(context) {
   function loadViewerSettings(options) {
     var settings = options || {};
     if (settings.force) {
-      scopeConfig.viewerConfigLoaded = false;
-      scopeConfig.viewerConfigRequestPromise = null;
+      workspaceConfig.viewerConfigLoaded = false;
+      workspaceConfig.viewerConfigRequestPromise = null;
     }
-    if (scopeConfig.viewerConfigLoaded) return Promise.resolve(null);
-    if (scopeConfig.viewerConfigRequestPromise) return scopeConfig.viewerConfigRequestPromise;
+    if (workspaceConfig.viewerConfigLoaded) return Promise.resolve(null);
+    if (workspaceConfig.viewerConfigRequestPromise) return workspaceConfig.viewerConfigRequestPromise;
     if (typeof configService.fetchDocsViewerConfig !== "function") {
       applyViewerConfig({});
       return Promise.resolve(null);
     }
 
-    scopeConfig.viewerConfigRequestPromise = loadConfigEnvelope(settings)
+    workspaceConfig.viewerConfigRequestPromise = loadConfigEnvelope(settings)
       .then(function (configEnvelope) {
         configEnvelope = configEnvelope || {};
         var config = {
@@ -508,9 +369,9 @@ export function initDocsViewerConfigController(context) {
         return null;
       })
       .finally(function () {
-        scopeConfig.viewerConfigRequestPromise = null;
+        workspaceConfig.viewerConfigRequestPromise = null;
       });
-    return scopeConfig.viewerConfigRequestPromise;
+    return workspaceConfig.viewerConfigRequestPromise;
   }
 
   function reloadViewerConfiguration() {
@@ -518,10 +379,10 @@ export function initDocsViewerConfigController(context) {
       force: true,
       reloadNonce: String(Date.now())
     };
-    scopeConfig.viewerConfigLoaded = false;
-    scopeConfig.viewerConfigRequestPromise = null;
-    var reloadDiscovery = context.featurePolicy && context.featurePolicy.configuredScopeDiscovery
-      ? loadConfiguredScopes(reloadOptions)
+    workspaceConfig.viewerConfigLoaded = false;
+    workspaceConfig.viewerConfigRequestPromise = null;
+    var reloadDiscovery = context.featurePolicy && context.featurePolicy.workspaceConfiguration
+      ? loadWorkspaceConfiguration(reloadOptions)
       : loadConfigEnvelope(reloadOptions);
     return reloadDiscovery.then(function () {
       return loadViewerSettings();
@@ -529,10 +390,9 @@ export function initDocsViewerConfigController(context) {
   }
 
   return {
-    handleScopeChange: handleScopeChange,
-    loadConfiguredScopes: loadConfiguredScopes,
+    loadWorkspaceConfiguration: loadWorkspaceConfiguration,
     loadViewerSettings: loadViewerSettings,
     reloadViewerConfiguration: reloadViewerConfiguration,
-    routeScopeFromUrl: routeScopeFromUrl
+    routeStageFromUrl: routeStageFromUrl
   };
 }

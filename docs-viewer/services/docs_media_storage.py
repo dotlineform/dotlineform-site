@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Scope-aware Docs Viewer media placement and publication."""
+"""Stage-aware Docs Viewer media placement and publication."""
 
 from __future__ import annotations
 
@@ -21,16 +21,15 @@ from docs_artifact_locations import (
     artifact_location_adapter,
     authenticated_remote_client_for_locations,
 )
-from docs_scope_config import (
+from docs_workspace_config import (
     MANAGED_MEDIA_TYPES,
     DocsManagedMediaConfig,
-    DocsScopeConfig,
+    DocsStageConfig,
     DocsSubScopeConfig,
-    load_docs_scope_configs,
+    normalize_sub_scope_id,
     load_docs_media_owner,
     managed_media_config,
     require_document_authoring,
-    resolve_location_path,
 )
 from docs_document_packages.workspace import configured_workspace_paths
 from studio.services.media.publish_media_to_r2 import content_type_for, file_md5
@@ -44,20 +43,20 @@ SUCCESSFUL_UPLOAD_STATUSES = {"unchanged", "uploaded", "overwritten"}
 
 @dataclass(frozen=True)
 class DocsMediaFile:
-    scope: str
+    stage: str
+    sub_scope: str
     media_class: str
     filename: str
     local_path: Path
     source_root: Path
     size: int
     md5: str
-    stage: str = ""
-    sub_scope: str = ""
 
 
 @dataclass(frozen=True)
 class DocsMediaPublishResult:
-    scope: str
+    stage: str
+    sub_scope: str
     media_class: str
     filename: str
     size: int
@@ -95,7 +94,7 @@ def validate_media_filename(value: str) -> str:
 
 
 def docs_media_file(
-    config: DocsScopeConfig | DocsSubScopeConfig,
+    config: DocsStageConfig | DocsSubScopeConfig,
     *,
     media_class: str,
     local_path: Path,
@@ -112,7 +111,6 @@ def docs_media_file(
     if resolved_path.name != normalized_filename:
         raise ValueError("Docs media source filename does not match the planned filename")
     return DocsMediaFile(
-        scope=config.scope_id,
         media_class=normalized_class,
         filename=normalized_filename,
         local_path=resolved_path,
@@ -135,7 +133,8 @@ def artifact_matches(item: DocsMediaFile, stat: ArtifactStat, adapter: ArtifactL
 
 def _result(item: DocsMediaFile, status: str, reason: str = "") -> DocsMediaPublishResult:
     return DocsMediaPublishResult(
-        scope=item.scope,
+        stage=item.stage,
+        sub_scope=item.sub_scope,
         media_class=item.media_class,
         filename=item.filename,
         size=item.size,
@@ -155,9 +154,9 @@ def plan_and_publish_docs_media(
 
     if not files:
         return []
-    identities = [(item.scope, item.media_class, item.filename) for item in files]
+    identities = [(item.stage, item.sub_scope, item.media_class, item.filename) for item in files]
     if len(set(identities)) != len(identities):
-        raise ValueError("Docs media publication contains duplicate scope/class/filename identities")
+        raise ValueError("Docs media publication contains duplicate stage/sub-scope/class/filename identities")
     for media_class in {item.media_class for item in files}:
         adapter = adapters.get(media_class)
         if adapter is None:
@@ -235,9 +234,9 @@ def plan_and_publish_docs_media(
     return results
 
 
-def media_adapters_for_scope(
+def media_adapters_for_collection(
     repo_root: Path,
-    config: DocsScopeConfig | DocsSubScopeConfig,
+    config: DocsStageConfig | DocsSubScopeConfig,
     media_classes: Iterable[str],
     *,
     remote_client: object | None = None,
@@ -266,11 +265,11 @@ def publish_docs_media_files(
 ) -> list[DocsMediaPublishResult]:
     if not files:
         return []
-    targets = {(item.scope, item.stage, item.sub_scope) for item in files}
+    targets = {(item.stage, item.sub_scope) for item in files}
     if len(targets) != 1:
         raise ValueError("One Docs media insertion may target only one exact collection")
-    scope, stage, sub_scope = next(iter(targets))
-    config = load_docs_media_owner(repo_root, scope, stage=stage or None, sub_scope=sub_scope or None)
+    stage, sub_scope = next(iter(targets))
+    config = load_docs_media_owner(repo_root, stage, sub_scope=sub_scope)
     require_document_authoring(config)
 
     media_classes = {item.media_class for item in files}
@@ -282,7 +281,7 @@ def publish_docs_media_files(
         env_files=env_files,
         environ=environ,
     )
-    adapters = media_adapters_for_scope(
+    adapters = media_adapters_for_collection(
         repo_root,
         config,
         media_classes,
@@ -306,7 +305,8 @@ def docs_publish_succeeded(results: Sequence[DocsMediaPublishResult]) -> bool:
 
 def docs_publish_report(
     *,
-    scope: str,
+    stage: str,
+    sub_scope: str = "",
     results: Sequence[DocsMediaPublishResult],
     write: bool,
     force: bool,
@@ -317,7 +317,8 @@ def docs_publish_report(
     return {
         "generated_at": dt.datetime.now(dt.timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z"),
         "scope": "docs",
-        "docs_scope": scope,
+        "stage": stage,
+        "sub_scope": sub_scope,
         "action": "publish",
         "mode": "write" if write else "dry-run",
         "force": force,
@@ -329,7 +330,8 @@ def docs_publish_report(
 def run_docs_staged_media_publish(
     repo_root: Path,
     *,
-    scope: str,
+    stage: str,
+    sub_scope: str = "",
     media_class: str,
     staged_filename: str,
     write: bool,
@@ -339,10 +341,7 @@ def run_docs_staged_media_publish(
     environ: Mapping[str, str] | None = None,
 ) -> dict[str, object]:
     normalized_filename = validate_media_filename(staged_filename)
-    configs = load_docs_scope_configs(repo_root)
-    config = configs.get(str(scope or "").strip().lower())
-    if config is None:
-        raise ValueError(f"Unknown Docs media scope: {scope!r}")
+    config = load_docs_media_owner(repo_root, stage, sub_scope=sub_scope)
     workspace = configured_workspace_paths(repo_root)
     source_path = (workspace.import_staging / normalized_filename).resolve()
     item = docs_media_file(
@@ -361,92 +360,31 @@ def run_docs_staged_media_publish(
         env_files=env_files,
         environ=environ,
     )
-    return docs_publish_report(scope=config.scope_id, results=results, write=write, force=force)
+    return docs_publish_report(stage=config.stage, sub_scope=sub_scope, results=results, write=write, force=force)
 
 
-def local_media_config(config: DocsScopeConfig | DocsSubScopeConfig, media_class: str) -> DocsManagedMediaConfig:
+def local_media_config(config: DocsStageConfig | DocsSubScopeConfig, media_class: str) -> DocsManagedMediaConfig:
     media = managed_media_config(config, validate_media_class(media_class))
     if media.generated_location.provider not in {REPOSITORY_PROVIDER, EXTERNAL_LOCAL_PROVIDER}:
         raise ValueError(
-            f"Docs scope {config.scope_id!r} media role {media_class!r} is not locally served"
+            f"Docs stage {config.stage!r} media role {media_class!r} is not locally served"
         )
     return media
 
 
-def ensure_configured_scope_owned_media_directories(
-    repo_root: Path,
-    configs: Mapping[str, DocsScopeConfig] | None = None,
-) -> dict[str, tuple[Path, ...]]:
-    configured_scopes = configs if configs is not None else load_docs_scope_configs(repo_root)
-    materialized: dict[str, tuple[Path, ...]] = {}
-    for scope_id, config in configured_scopes.items():
-        if config.stages:
-            # Unselected parents have no source/generated owner; scope creation owns stage setup.
-            continue
-        if (
-            config.scope_root.provider == EXTERNAL_LOCAL_PROVIDER
-            and not resolve_location_path(repo_root, config.scope_root).is_dir()
-        ):
-            continue
-        directories: list[Path] = []
-        media_locations = [
-            config.media.source_location,
-            config.media.generated_location,
-            config.media.published_location,
-        ]
-        for media in config.media.types.values():
-            media_locations.extend(
-                (
-                    media.source_location,
-                    media.generated_location,
-                    media.published_location,
-                )
-            )
-        media_locations.extend(build.location for build in config.media.build_sources.values())
-        media_paths = [
-            resolve_location_path(repo_root, location)
-            for location in media_locations
-            if location.provider in {REPOSITORY_PROVIDER, EXTERNAL_LOCAL_PROVIDER}
-        ]
-        media_paths.append(
-            resolve_location_path(repo_root, config.media.source_location)
-            / "build-source"
-            / "mermaid"
-        )
-        media_paths.extend(
-            resolve_location_path(repo_root, config.media.source_location) / media_type
-            for media_type in sorted(MANAGED_MEDIA_TYPES)
-        )
-        for media_root in media_paths:
-            unresolved_root = media_root
-            if unresolved_root.is_symlink():
-                raise ValueError(f"Configured Docs media directory must not be a symlink: {unresolved_root}")
-            if unresolved_root.exists() and not unresolved_root.is_dir():
-                raise NotADirectoryError(f"Configured Docs media directory is not a directory: {unresolved_root}")
-            media_root.mkdir(parents=True, exist_ok=True)
-            directories.append(media_root)
-        if directories:
-            materialized[scope_id] = tuple(sorted(directories))
-    return materialized
-
-
-def local_media_route(scope: str, media_class: str, filename: str) -> str:
-    normalized_scope = str(scope or "").strip().lower()
-    if not normalized_scope or "/" in normalized_scope or "\\" in normalized_scope:
-        raise ValueError("Docs media scope must be one safe scope id")
-    return (
-        f"{DOCS_MEDIA_ROUTE_PREFIX}{normalized_scope}/"
-        f"{validate_route_media_class(media_class)}/{validate_media_filename(filename)}"
-    )
+def local_media_route(stage: str, media_class: str, filename: str, *, sub_scope: str = "") -> str:
+    if stage not in {"working", "pre-publish"}:
+        raise ValueError("Docs media route requires an explicit stage")
+    child = f"sub-scopes/{normalize_sub_scope_id(sub_scope, field='sub_scope')}/" if sub_scope else ""
+    return f"{DOCS_MEDIA_ROUTE_PREFIX}{stage}/{child}{validate_route_media_class(media_class)}/{validate_media_filename(filename)}"
 
 
 def local_media_path_from_route(repo_root: Path, request_path: str) -> tuple[Path, str]:
     if not request_path.startswith(DOCS_MEDIA_ROUTE_PREFIX):
         raise ValueError("Invalid Docs media route")
     parts = request_path.removeprefix(DOCS_MEDIA_ROUTE_PREFIX).split("/")
-    scope = parts.pop(0)
-    stage = parts.pop(0) if parts and parts[0] in {"working", "pre-publish"} else None
-    sub_scope = None
+    stage = parts.pop(0) if parts else None
+    sub_scope = ""
     if parts and parts[0] == "sub-scopes":
         if len(parts) != 4:
             raise ValueError("Invalid Docs child media route")
@@ -456,14 +394,12 @@ def local_media_path_from_route(repo_root: Path, request_path: str) -> tuple[Pat
     media_class, filename = parts
     normalized_class = validate_route_media_class(media_class)
     normalized_filename = validate_media_filename(filename)
-    config = load_docs_media_owner(repo_root, scope, stage=stage, sub_scope=sub_scope)
-    if config is None:
-        raise FileNotFoundError(f"Docs media scope not found: {scope!r}")
+    config = load_docs_media_owner(repo_root, stage, sub_scope=sub_scope)
     media = local_media_config(config, normalized_class)
     adapter = artifact_location_adapter(repo_root, media.generated_location, served_path_prefix=media.served_path_prefix)
     path = adapter.resolve(normalized_filename)  # type: ignore[attr-defined]
     if not path.is_file():
-        raise FileNotFoundError(f"Docs media file not found: {scope}/{normalized_class}/{normalized_filename}")
+        raise FileNotFoundError(f"Docs media file not found: {stage}/{normalized_class}/{normalized_filename}")
     return path, normalized_class
 
 
@@ -481,11 +417,10 @@ __all__ = [
     "docs_media_file",
     "docs_publish_report",
     "docs_publish_succeeded",
-    "ensure_configured_scope_owned_media_directories",
     "local_media_config",
     "local_media_path_from_route",
     "local_media_route",
-    "media_adapters_for_scope",
+    "media_adapters_for_collection",
     "plan_and_publish_docs_media",
     "publish_docs_media_files",
     "run_docs_staged_media_publish",

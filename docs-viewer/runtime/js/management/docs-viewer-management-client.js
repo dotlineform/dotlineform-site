@@ -9,9 +9,9 @@ function defaultFetch(url, options) {
 
 export var DOCS_MANAGEMENT_UNAVAILABLE_MESSAGE = "Docs management service unavailable.";
 
-function scopedPayload(payload, options) {
+function stagedPayload(payload, options) {
   var settings = options || {};
-  return Object.assign({ scope: settings.scope || "" }, settings.stage ? { stage: settings.stage } : {}, payload || {});
+  return Object.assign({ stage: settings.stage }, settings.sub_scope ? { sub_scope: settings.sub_scope } : {}, payload || {});
 }
 
 export function fetchManagementJson(path, method, payload, options) {
@@ -59,11 +59,11 @@ export function readManagementCapabilities(options) {
   return fetchManagementJson("/capabilities", "GET", undefined, options);
 }
 
-/** Read authoring targets in one exact scope/stage; the response supplies ordinary hrefs. */
+/** Read authoring targets in one exact stage; the response supplies ordinary hrefs. */
 export function readDocumentLinkTargets(target, options) {
   var collection = normalizeManagedDocumentCollectionTarget(target);
-  var query = "?scope=" + encodeURIComponent(collection.scope);
-  if (collection.stage) query += "&stage=" + encodeURIComponent(collection.stage);
+  var query = "?stage=" + encodeURIComponent(collection.stage);
+  if (collection.sub_scope) query += "&sub_scope=" + encodeURIComponent(collection.sub_scope);
   return fetchManagementJson("/docs/document-link-targets" + query, "GET", undefined,
     Object.assign({}, options, { cache: "no-store" }));
 }
@@ -85,15 +85,10 @@ export function readCatalogueSeries(seriesId, options) {
     Object.assign({}, options, { cache: "no-store" }));
 }
 
-export function readManagedDocsIndex(scope, options) {
-  var scopeId = String(scope || "").trim().toLowerCase();
-  if (!scopeId) return Promise.reject(new Error("Docs scope is required."));
-  return fetchManagementJson(
-    "/docs/index-tree?scope=" + encodeURIComponent(scopeId) + (options && options.stage ? "&stage=" + encodeURIComponent(options.stage) : ""),
-    "GET",
-    undefined,
-    options
-  );
+export function readManagedDocsIndex(options) {
+  var stage = options && options.stage;
+  if (!["working", "pre-publish", "published"].includes(stage)) return Promise.reject(new Error("Docs stage is required."));
+  return fetchManagementJson("/docs/index-tree?stage=" + encodeURIComponent(stage), "GET", undefined, options);
 }
 
 export function encodeDecodedLocalTarget(target) {
@@ -130,23 +125,23 @@ export function openLocalTarget(target, options) {
 }
 
 export function createManagedDoc(payload, options) {
-  return fetchManagementJson("/docs/create", "POST", scopedPayload(payload, options), options);
+  return fetchManagementJson("/docs/create", "POST", stagedPayload(payload, options), options);
 }
 
 export function rebuildManagedDocs(options) {
-  return fetchManagementJson("/docs/rebuild", "POST", scopedPayload({}, options), options);
+  return fetchManagementJson("/docs/rebuild", "POST", stagedPayload({}, options), options);
 }
 
 export function confirmManagedDocsPublish(options) {
-  return fetchManagementJson("/docs/publish/confirm", "POST", scopedPayload({}, options), options);
+  return fetchManagementJson("/docs/publish/confirm", "POST", stagedPayload({}, options), options);
 }
 
 export function previewManagedDocsPrePublish(options) {
-  return fetchManagementJson("/docs/pre-publish/preview", "POST", scopedPayload({}, options), options);
+  return fetchManagementJson("/docs/pre-publish/preview", "POST", stagedPayload({}, options), options);
 }
 
 export function applyManagedDocsPrePublish(preview, options) {
-  return fetchManagementJson("/docs/pre-publish/apply", "POST", scopedPayload({
+  return fetchManagementJson("/docs/pre-publish/apply", "POST", stagedPayload({
     confirm: true,
     plan_revision: String(preview && preview.plan_revision || "")
   }, options), options);
@@ -154,7 +149,7 @@ export function applyManagedDocsPrePublish(preview, options) {
 
 export function applyManagedDocsPublish(preview, options) {
   var plan = preview && typeof preview === "object" ? preview : {};
-  return fetchManagementJson("/docs/publish/apply", "POST", scopedPayload({
+  return fetchManagementJson("/docs/publish/apply", "POST", stagedPayload({
     confirm: true,
     plan_revision: String(plan.plan_revision || "").trim(),
     target_published_revision: String(plan.target_published_revision || "").trim()
@@ -165,23 +160,24 @@ export function previewManagedDocsDeployRepo(options) {
   return fetchManagementJson(
     "/docs/deploy-repo/preview",
     "POST",
-    scopedPayload({}, options),
+    { stage: "published" },
     options
   );
 }
 
 export function applyManagedDocsDeployRepo(preview, options) {
   var plan = preview && typeof preview === "object" ? preview : {};
-  return fetchManagementJson("/docs/deploy-repo/apply", "POST", scopedPayload({
+  return fetchManagementJson("/docs/deploy-repo/apply", "POST", {
+    stage: "published",
     confirm: true,
     published_revision: String(plan.published_revision || "").trim(),
     deployment_timestamp: String(plan.deployment_timestamp || "").trim(),
     plan_revision: String(plan.plan_revision || "").trim()
-  }, options), options);
+  }, options);
 }
 
 export function previewManagedDocsStaticHtmlExport(docIds, options) {
-  return fetchManagementJson("/docs/export/static-html/preview", "POST", scopedPayload({
+  return fetchManagementJson("/docs/export/static-html/preview", "POST", stagedPayload({
     doc_ids: Array.isArray(docIds) ? docIds.slice() : []
   }, options), options);
 }
@@ -189,13 +185,11 @@ export function previewManagedDocsStaticHtmlExport(docIds, options) {
 export function applyManagedDocsStaticHtmlExport(preview, options) {
   var plan = preview && typeof preview === "object" ? preview : {};
   var settings = options || {};
-  var scope = String(plan.scope || "").trim();
-  if (!scope || scope !== String(settings.scope || "").trim() || String(plan.stage || "") !== String(settings.stage || "")) {
-    return Promise.reject(new Error("Snapshot preview scope no longer matches the active scope."));
+  if (!plan.stage || plan.stage !== settings.stage || Object.prototype.hasOwnProperty.call(plan, "scope")) {
+    return Promise.reject(new Error("Snapshot preview stage no longer matches the active stage."));
   }
   var replaceExisting = plan.target_state === "recognized" || plan.target_state === "unrecognized";
   return fetchManagementJson("/docs/export/static-html/apply", "POST", {
-    scope: scope,
     ...(plan.stage ? { stage: plan.stage } : {}),
     doc_ids: Array.isArray(plan.doc_ids) ? plan.doc_ids.slice() : [],
     export_date: String(plan.export_date || "").trim(),
@@ -208,8 +202,7 @@ export function applyManagedDocsStaticHtmlExport(preview, options) {
 
 function targetQuery(target) {
   var normalized = normalizeManagedDocumentTarget(target);
-  var query = ["scope=" + encodeURIComponent(normalized.scope)];
-  if (normalized.stage) query.push("stage=" + encodeURIComponent(normalized.stage));
+  var query = ["stage=" + encodeURIComponent(normalized.stage)];
   if (normalized.sub_scope) {
     query.push("sub_scope=" + encodeURIComponent(normalized.sub_scope));
   }
@@ -278,8 +271,8 @@ export function openManagedDiagramSource(target, payload, options) {
 export function listStagedMedia(mediaKind, options) {
   var settings = options || {};
   var kind = encodeURIComponent(String(mediaKind || "").trim());
-  var scope = encodeURIComponent(String(settings.scope || "").trim());
-  var query = ["scope=" + scope, "media_kind=" + kind];
+  var query = ["stage=" + encodeURIComponent(settings.stage), "media_kind=" + kind];
+  if (settings.sub_scope) query.push("sub_scope=" + encodeURIComponent(settings.sub_scope));
   var sourceDirectory = String(settings.sourceDirectory || "").trim();
   if (sourceDirectory) {
     query.push("source_directory=" + encodeURIComponent(sourceDirectory));
@@ -293,33 +286,32 @@ export function listStagedMedia(mediaKind, options) {
 }
 
 export function previewStagedMedia(payload, options) {
-  return fetchManagementJson("/docs/staged-media-preview", "POST", scopedPayload(payload, options), options);
+  return fetchManagementJson("/docs/staged-media-preview", "POST", stagedPayload(payload, options), options);
 }
 
 export function applyStagedMedia(payload, options) {
-  return fetchManagementJson("/docs/staged-media-apply", "POST", scopedPayload(payload, options), options);
+  return fetchManagementJson("/docs/staged-media-apply", "POST", stagedPayload(payload, options), options);
 }
 
 export function readSourceConfigSettings(options) {
   var settings = options || {};
-  var scope = encodeURIComponent(String(settings.scope || "").trim());
-  var path = "/docs/source-config-settings" + (scope ? "?scope=" + scope : "");
-  if (settings.stage) path += (scope ? "&" : "?") + "stage=" + encodeURIComponent(settings.stage);
+  var path = "/docs/source-config-settings";
+  if (settings.stage) path += "?stage=" + encodeURIComponent(settings.stage);
   return fetchManagementJson(path, "GET", undefined, options);
 }
 
 export function updateSourceConfigSettings(changes, options) {
-  return fetchManagementJson("/docs/source-config-settings", "POST", scopedPayload({
+  return fetchManagementJson("/docs/source-config-settings", "POST", stagedPayload({
     changes: changes || {}
   }, options), options);
 }
 
 export function previewManagedDocDelete(docIds, options) {
-  return fetchManagementJson("/docs/delete-preview", "POST", scopedPayload({ doc_ids: docIds }, options), options);
+  return fetchManagementJson("/docs/delete-preview", "POST", stagedPayload({ doc_ids: docIds }, options), options);
 }
 
 export function applyManagedDocDelete(docIds, options) {
-  return fetchManagementJson("/docs/delete-apply", "POST", scopedPayload({
+  return fetchManagementJson("/docs/delete-apply", "POST", stagedPayload({
     doc_ids: docIds,
     confirm: true
   }, options), options);
@@ -358,89 +350,36 @@ export function applyManagedSubScopeDocDelete(target, sourceRevision, options) {
   );
 }
 
-export function previewScopeCreate(payload, options) {
-  return fetchManagementJson("/docs/scopes/create-preview", "POST", payload || {}, options);
-}
-
-export function applyScopeCreate(payload, options) {
-  return fetchManagementJson("/docs/scopes/create-apply", "POST", Object.assign({}, payload || {}, {
-    confirm: true
-  }), options);
-}
-
-export function previewScopeRename(scopeId, newScopeId, options) {
-  return fetchManagementJson("/docs/scopes/rename-preview", "POST", {
-    scope_id: scopeId,
-    new_scope_id: newScopeId
-  }, options);
-}
-
-export function applyScopeRename(scopeId, newScopeId, options) {
-  return fetchManagementJson("/docs/scopes/rename-apply", "POST", {
-    scope_id: scopeId,
-    new_scope_id: newScopeId,
-    confirm: true
-  }, options);
-}
-
-export function previewScopeDelete(scopeId, options) {
-  return fetchManagementJson("/docs/scopes/delete-preview", "POST", {
-    scope_id: scopeId
-  }, options);
-}
-
-export function applyScopeDelete(scopeId, options) {
-  return fetchManagementJson("/docs/scopes/delete-apply", "POST", {
-    scope_id: scopeId,
-    confirm: true
-  }, options);
-}
-
 export function previewSubScopeCreate(payload, options) {
-  return fetchManagementJson("/docs/scopes/sub-scopes/create-preview", "POST", Object.assign({ stage: options && options.stage }, payload || {}), options);
+  return fetchManagementJson("/docs/sub-scopes/create-preview", "POST", Object.assign({ stage: options && options.stage }, payload || {}), options);
 }
 
 export function applySubScopeCreate(payload, options) {
-  return fetchManagementJson("/docs/scopes/sub-scopes/create-apply", "POST", Object.assign({ stage: options && options.stage }, payload || {}, {
+  return fetchManagementJson("/docs/sub-scopes/create-apply", "POST", Object.assign({ stage: options && options.stage }, payload || {}, {
     confirm: true
   }), options);
 }
 
-export function previewSubScopeDelete(parentScope, subScope, options) {
-  return fetchManagementJson("/docs/scopes/sub-scopes/delete-preview", "POST", {
-    parent_scope: parentScope,
+export function previewSubScopeDelete(subScope, options) {
+  return fetchManagementJson("/docs/sub-scopes/delete-preview", "POST", {
+    stage: options && options.stage,
     sub_scope: subScope
   }, options);
 }
 
-export function applySubScopeDelete(parentScope, subScope, options) {
-  return fetchManagementJson("/docs/scopes/sub-scopes/delete-apply", "POST", {
-    parent_scope: parentScope,
+export function applySubScopeDelete(subScope, options) {
+  return fetchManagementJson("/docs/sub-scopes/delete-apply", "POST", {
+    stage: options && options.stage,
     sub_scope: subScope,
     confirm: true
   }, options);
 }
 
 export function moveManagedDoc(docId, parentId, options) {
-  return fetchManagementJson("/docs/move", "POST", scopedPayload({
+  return fetchManagementJson("/docs/move", "POST", stagedPayload({
     doc_id: docId,
     parent_id: parentId
   }, options), options);
-}
-
-/** Preview the complete ordinary-document subtree move to Notes. */
-export function previewManagedDocumentArchive(source, docIds, options) {
-  var collection = normalizeManagedDocumentCollectionTarget(source);
-  return fetchManagementJson("/docs/archive-preview", "POST", {
-    ...collection, doc_ids: docIds
-  }, options);
-}
-
-/** Apply the exact receipt accepted in Archive confirmation. */
-export function applyManagedDocumentArchive(receipt, options) {
-  return fetchManagementJson("/docs/archive-apply", "POST", {
-    scope: receipt.scope, stage: receipt.stage, receipt: receipt, confirm: true
-  }, options);
 }
 
 export function openManagedDocSource(target, editor, options) {

@@ -5,15 +5,15 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any
 
-from docs_scope_config import load_docs_scope_stage, document_source_path, resolve_scope_path
-from docs_scope_publish import _files_from_root, _lifecycle_root, files_revision
-from docs_source_model import ScopeDoc, format_source, load_document_collection_docs_for_config
-from docs_write_rebuild import rebuild_scope_outputs
+from docs_workspace_config import load_docs_stage, document_source_path, resolve_workspace_path
+from docs_publish import _files_from_root, _lifecycle_root, files_revision
+from docs_source_model import SourceDoc, format_source, load_document_collection_docs_for_config
+from docs_write_rebuild import rebuild_stage_outputs
 from docs_subscope_customisations import prepare_sub_scope_publication
 from docs_publication_ignore import read_publication_ignore_ids
 
 
-def excluded_documents(docs: list[ScopeDoc], *, ignored_ids: frozenset[str] = frozenset()) -> set[str]:
+def excluded_documents(docs: list[SourceDoc], *, ignored_ids: frozenset[str] = frozenset()) -> set[str]:
     """Exclude draft and explicitly ignored roots together with their descendants."""
     excluded = {
         doc.doc_id for doc in docs
@@ -26,7 +26,7 @@ def excluded_documents(docs: list[ScopeDoc], *, ignored_ids: frozenset[str] = fr
         excluded.update(descendants)
 
 
-def promoted_source(doc: ScopeDoc, collection: Any) -> bytes:
+def promoted_source(doc: SourceDoc, collection: Any) -> bytes:
     """Retain ordinary source bytes; only the collection owner can project its fields."""
     front_matter = prepare_sub_scope_publication(
         getattr(collection, "sub_scope_customisation", None), doc.front_matter,
@@ -39,9 +39,10 @@ def promoted_source(doc: ScopeDoc, collection: Any) -> bytes:
 def _plan(repo_root: Path, body: dict[str, Any]) -> tuple[dict[str, Any], dict[Path, bytes]]:
     if body.get("stage") != "working":
         raise ValueError("Pre-publish requires Working")
-    scope = body.get("scope")
-    working = load_docs_scope_stage(repo_root, scope, "working")
-    target = load_docs_scope_stage(repo_root, scope, "pre-publish")
+    if "scope" in body:
+        raise ValueError("scope is retired; Pre-publish requires stage working")
+    working = load_docs_stage(repo_root, "working")
+    target = load_docs_stage(repo_root, "pre-publish")
     if {child.sub_scope for child in working.sub_scopes} != {child.sub_scope for child in target.sub_scopes}:
         raise ValueError("Working and Pre-publish must configure the same collections")
     source_root = _lifecycle_root(repo_root, working, "source")
@@ -50,7 +51,7 @@ def _plan(repo_root: Path, body: dict[str, Any]) -> tuple[dict[str, Any], dict[P
     source_files = _files_from_root(source_root)
     source_revision = files_revision(source_files)
     ordinary = load_document_collection_docs_for_config(repo_root, working, working)
-    ignored_ids = read_publication_ignore_ids(repo_root, scope)
+    ignored_ids = read_publication_ignore_ids(repo_root)
     ordinary_excluded = excluded_documents(ordinary, ignored_ids=ignored_ids)
     excluded = set(ordinary_excluded)
     hosts: dict[str, list[str]] = {}
@@ -92,7 +93,7 @@ def _plan(repo_root: Path, body: dict[str, Any]) -> tuple[dict[str, Any], dict[P
         Path("target"): target_revision.encode(),
     })
     return {
-        "ok": True, "scope": scope, "stage": "working",
+        "ok": True, "stage": "working",
         "plan_revision": plan_revision, "source_revision": source_revision,
         "target_source_revision": target_revision,
         "document_count": len(eligible), "excluded_document_count": len(excluded),
@@ -113,7 +114,7 @@ def apply_pre_publish(repo_root: Path, body: dict[str, Any]) -> dict[str, Any]:
     preview, desired = _plan(repo_root, body)
     if body.get("plan_revision") != preview["plan_revision"]:
         raise ValueError("Pre-publish preview is stale; preview again")
-    config = load_docs_scope_stage(repo_root, preview["scope"], "pre-publish")
+    config = load_docs_stage(repo_root, "pre-publish")
     source_root = _lifecycle_root(repo_root, config, "source")
     generated_root = _lifecycle_root(repo_root, config, "generated")
     # These are replaceable derivatives. Invalidate completion before any write;
@@ -128,13 +129,13 @@ def apply_pre_publish(repo_root: Path, body: dict[str, Any]) -> dict[str, Any]:
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_bytes(data)
     for collection in (config, *config.sub_scopes):
-        documents = resolve_scope_path(repo_root, document_source_path(collection))
+        documents = resolve_workspace_path(repo_root, document_source_path(collection))
         documents.mkdir(parents=True, exist_ok=True)
         for media_type in ("img", "svg", "files", "html", "build-source/mermaid"):
             (documents.parent / "media" / media_type).mkdir(parents=True, exist_ok=True)
     if files_revision(_files_from_root(source_root)) != preview["target_source_revision"]:
         raise RuntimeError("Pre-publish source snapshot did not verify")
-    build = rebuild_scope_outputs(repo_root, preview["scope"], stage="pre-publish", include_search=True)
+    build = rebuild_stage_outputs(repo_root, stage="pre-publish", include_search=True)
     return {
         **preview, "applied": True, "build": build,
         "summary_text": f"Pre-publish rebuilt: {preview['document_count']} documents and Search. Review Pre-publish before Publish.",

@@ -76,14 +76,13 @@ async function requestImport(
 ) {
   const stagedFilename = normalizeText(file && file.filename);
   const requestBody = {
-    scope: context.scope,
+    stage: context.stage,
     source_directory: context.sourceDirectory,
     staged_filename: stagedFilename,
     include_prompt_meta: docsHtmlImportSourceFormatForRecord(file) === "html" ? Boolean(context.includePromptMeta) : false,
     confirm_interactive_html_overwrite: confirmInteractiveHtmlOverwrite,
     preview_only: false
   };
-  if (context.stage) requestBody.stage = context.stage;
   if (context.subScope) requestBody.sub_scope = context.subScope;
   return fetchManagementJson(
     "/docs/import-source",
@@ -110,7 +109,7 @@ async function importFileWithPrompts(state, file, context = {}) {
       );
     }
     const payload = await requestImport(file, {
-      scope: context.scope,
+      stage: context.stage,
       subScope: context.subScope,
       sourceDirectory: context.sourceDirectory,
       includePromptMeta: context.includePromptMeta,
@@ -135,7 +134,6 @@ export async function runDocsHtmlImportWorkflow(
   state,
   {
     files = [],
-    scope = "",
     stage = "",
     subScope = "",
     sourceDirectory = "",
@@ -147,7 +145,6 @@ export async function runDocsHtmlImportWorkflow(
   } = {}
 ) {
   const workflowContext = {
-    scope: normalizeText(scope),
     stage: normalizeText(stage),
     subScope: normalizeText(subScope).toLowerCase(),
     sourceDirectory: normalizeText(sourceDirectory),
@@ -197,7 +194,7 @@ export async function runDocsHtmlImportWorkflow(
     try {
       const destination = docsImportResultDestination(displayedResult);
       await onTerminalResult({
-        scope: destination.target.scope,
+        stage: destination.target.stage,
         subScope: normalizeText(destination.target.sub_scope),
         docId: destination.target.doc_id,
         target: destination.target,

@@ -16,28 +16,23 @@ if str(BUILD_DIR) not in sys.path:
 from docs_builder.pipeline import DocsDataBuilder  # noqa: E402
 from docs_builder.source import DocRecord  # noqa: E402
 from docs_artifact_locations import ArtifactLocation, EXTERNAL_LOCAL_PROVIDER  # noqa: E402
-from docs_scope_config import (  # noqa: E402
-    LOCAL_SCOPE_TYPE,
+from docs_workspace_config import (  # noqa: E402
     DocsGeneratedConfig,
     DocsMediaConfig,
-    DocsPublishedArtifactConfig,
+    DocsArtifactConfig,
     DocsPublishedConfig,
-    DocsScopeConfig,
+    DocsStageConfig,
     DocsSourceConfig,
 )
 
 
 class DocsReviewDataBuilder(DocsDataBuilder):
-    """Keep generated review URLs package-rooted instead of scope-rooted."""
+    """Keep generated review URLs package-rooted instead of workspace-rooted."""
 
     def __init__(self, *, package_id: str, asset_records: list[dict[str, Any]], **kwargs: Any) -> None:
         self.package_id = package_id
         self.asset_records = asset_records
         super().__init__(**kwargs)
-
-    @property
-    def public_readonly_scope(self) -> bool:
-        return False
 
     def validate_canonical_doc_ids(self, docs: list[DocRecord]) -> None:
         # Review documents retain package record identity until Docs Import maps
@@ -99,15 +94,13 @@ class DocsReviewDataBuilder(DocsDataBuilder):
 
 def synthetic_review_config(
     *,
-    package_id: str,
     source_dir: Path,
     generated_dir: Path,
     default_doc_id: str,
-) -> DocsScopeConfig:
-    return DocsScopeConfig(
-        scope_id=package_id,
-        scope_type=LOCAL_SCOPE_TYPE,
-        scope_root=ArtifactLocation(provider=EXTERNAL_LOCAL_PROVIDER, path=source_dir.parent),
+) -> DocsStageConfig:
+    return DocsStageConfig(
+        stage="review",
+        workspace_root=ArtifactLocation(provider=EXTERNAL_LOCAL_PROVIDER, path=source_dir.parent),
         source=DocsSourceConfig(
             location=ArtifactLocation(provider=EXTERNAL_LOCAL_PROVIDER, path=source_dir),
             documents_path=Path("."),
@@ -130,10 +123,10 @@ def synthetic_review_config(
             build_sources={},
         ),
         generated=DocsGeneratedConfig(
-            documents=DocsPublishedArtifactConfig(
+            documents=DocsArtifactConfig(
                 location=ArtifactLocation(provider=EXTERNAL_LOCAL_PROVIDER, path=generated_dir)
             ),
-            search=DocsPublishedArtifactConfig(
+            search=DocsArtifactConfig(
                 location=ArtifactLocation(
                     provider=EXTERNAL_LOCAL_PROVIDER,
                     path=generated_dir / "search" / "index.json",
@@ -141,10 +134,10 @@ def synthetic_review_config(
             ),
         ),
         published=DocsPublishedConfig(
-            documents=DocsPublishedArtifactConfig(
+            documents=DocsArtifactConfig(
                 location=ArtifactLocation(provider=EXTERNAL_LOCAL_PROVIDER, path=generated_dir.parent / "published")
             ),
-            search=DocsPublishedArtifactConfig(
+            search=DocsArtifactConfig(
                 location=ArtifactLocation(
                     provider=EXTERNAL_LOCAL_PROVIDER,
                     path=generated_dir.parent / "published" / "search" / "index.json",
@@ -152,13 +145,12 @@ def synthetic_review_config(
             ),
         ),
         public_projection=None,
-        viewer_base_url="/docs-review/",
-        include_scope_param=False,
         default_doc_id=default_doc_id,
         non_loadable_doc_ids=(),
         manage_only_tree_root_ids=(),
         allow_unresolved_parent_ids=False,
         sub_scopes=(),
+        search_fields=(),
     )
 
 
@@ -172,7 +164,6 @@ def build_review_package(
     asset_records: list[dict[str, Any]],
 ) -> dict[str, Any]:
     config = synthetic_review_config(
-        package_id=package_id,
         source_dir=source_dir,
         generated_dir=generated_dir,
         default_doc_id=default_doc_id,
@@ -182,6 +173,8 @@ def build_review_package(
         config=config,
         package_id=package_id,
         asset_records=asset_records,
+        viewer_base_url="/docs-review/",
+        skip_media_builds=True,
     ).run(write=True)
     diagnostics = result.get("diagnostics") if isinstance(result.get("diagnostics"), dict) else {}
     return {

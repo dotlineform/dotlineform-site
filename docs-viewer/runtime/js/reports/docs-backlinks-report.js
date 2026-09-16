@@ -7,28 +7,28 @@ function clearNode(node) {
 }
 
 function exactReportTarget(context) {
-  const scope = cleanString(context && context.viewerScope).toLowerCase();
+  const stage = cleanString(context && context.viewerStage).toLowerCase();
   const docId = cleanString(context && context.payload && context.payload.doc_id);
-  if (!scope || !docId) {
+  if (!stage || !docId) {
     throw new Error("Documents Linking Here requires an exact report-host target.");
   }
-  return { scope, docId };
+  return { stage, docId };
 }
 
-function exactScopeConfig(context, scope) {
-  const configs = Array.isArray(context && context.scopeConfigs)
-    ? context.scopeConfigs
+function exactStageConfig(context, stage) {
+  const configs = Array.isArray(context && context.stageConfigs)
+    ? context.stageConfigs
     : [];
   return configs.find(function (config) {
-    return cleanString(config && config.scopeId).toLowerCase() === scope;
+    return cleanString(config && config.stage).toLowerCase() === stage;
   }) || null;
 }
 
 function normalizeRows(payload, target) {
   if (
     !payload
-    || payload.schema !== "docs_backlinks_v1"
-    || cleanString(payload.scope).toLowerCase() !== target.scope
+    || payload.schema !== "docs_backlinks_v2"
+    || cleanString(payload.stage).toLowerCase() !== target.stage
     || !payload.by_target
     || typeof payload.by_target !== "object"
     || Array.isArray(payload.by_target)
@@ -52,11 +52,11 @@ function normalizeRows(payload, target) {
 }
 
 function loadRows(context, target) {
-  const config = exactScopeConfig(context, target.scope);
+  const config = exactStageConfig(context, target.stage);
   const backlinksUrl = cleanString(config && config.backlinksUrl);
   if (!backlinksUrl) {
     return Promise.reject(new Error(
-      "Documents Linking Here data is not configured for this scope."
+      "Documents Linking Here data is not configured for this stage."
     ));
   }
   return fetch(backlinksUrl, {

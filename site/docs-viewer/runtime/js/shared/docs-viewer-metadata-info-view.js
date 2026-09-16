@@ -131,8 +131,8 @@ function renderDiagramSources(context, article, state, requestId) {
     ? adapter.getDocumentTarget()
     : null;
   var documentTarget = sourceTarget || context.managedDocumentTarget || (
-    doc && context.viewerScope
-      ? { scope: context.viewerScope, doc_id: doc.doc_id }
+    doc && context.viewerStage
+      ? { stage: context.viewerStage, doc_id: doc.doc_id }
       : null
   );
   if (

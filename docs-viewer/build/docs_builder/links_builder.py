@@ -23,7 +23,7 @@ from docs_document_identity import is_immutable_doc_id
 from docs_document_location import canonical_document_viewer_url
 from docs_document_subjects import normalize_authoring_subject
 from docs_rendered_links import collect_anchors, parse_docs_target, resolve_href
-from docs_scope_config import DocsScopeConfig, document_source_path, generated_documents_path, load_docs_scope_configs, resolve_scope_path
+from docs_workspace_config import DocsStageConfig, document_source_path, generated_documents_path, resolve_workspace_path
 from docs_source_model import parse_source, write_text_atomic
 from docs_publication_ignore import working_ignored_doc_ids
 
@@ -33,19 +33,17 @@ if TYPE_CHECKING:
     from .pipeline import DocsDataBuilder
 
 
-def links_enabled(repo_root: Path, config: DocsScopeConfig) -> bool:
-    """Enable all configured collections of the selected scope and Working stage."""
+def links_enabled(repo_root: Path, config: DocsStageConfig) -> bool:
+    """Enable the configured Working collections; other stages do not own Links."""
     path = repo_root / CONFIG_PATH
     if not path.is_file():
         return False
     policy = json.loads(path.read_text())
-    if not isinstance(policy, dict) or set(policy) != {"scope", "stage"}:
-        raise ValueError("Links configuration requires only scope and stage")
-    if not isinstance(policy["scope"], str) or not policy["scope"] or policy["scope"] != policy["scope"].strip():
-        raise ValueError("Links configuration requires an exact scope")
+    if not isinstance(policy, dict) or set(policy) != {"stage"}:
+        raise ValueError("Links configuration requires only stage")
     if policy["stage"] != "working":
         raise ValueError("Links configuration requires an explicit Working stage")
-    return policy["scope"] == config.scope_id and policy["stage"] == config.stage
+    return policy["stage"] == config.stage
 
 
 def _safe_path(root: Path, name: str) -> Path:
@@ -83,13 +81,12 @@ class _DocumentRefresh:
         self.collection = getattr(builder, "sub_scope_id", "")
         self.ignored_ids = working_ignored_doc_ids(builder.repo_root, self.config)
         self.owners = {"": self.config, **{owner.sub_scope: owner for owner in self.config.sub_scopes}}
-        self.sources = {name: resolve_scope_path(builder.repo_root, document_source_path(owner)) for name, owner in self.owners.items()}
-        self.outputs = {name: resolve_scope_path(builder.repo_root, generated_documents_path(owner)) / "by-id" for name, owner in self.owners.items()}
+        self.sources = {name: resolve_workspace_path(builder.repo_root, document_source_path(owner)) for name, owner in self.owners.items()}
+        self.outputs = {name: resolve_workspace_path(builder.repo_root, generated_documents_path(owner)) / "by-id" for name, owner in self.owners.items()}
         if builder.source_dir != self.sources[self.collection] or builder.items_dir != self.outputs[self.collection]:
             raise ValueError("Links builder requires the configured source and output locations")
         self.output = self.outputs[""].parent / "links-by-id"
-        route = load_docs_scope_configs(builder.repo_root, scope_ids=[builder.scope_id])[builder.scope_id]
-        self.routes = tuple({(builder.scope_id, self.config.viewer_base_url), (builder.scope_id, route.viewer_base_url)})
+        self.routes = ("/docs/", builder.workspace.public_viewer_base_url)
         self.docs = {self.key(doc.doc_id): doc for doc in plan["documents"]}
         self.pending = {self.key(doc_id) for doc_id in plan["built_doc_ids"]} if not write else set()
         self.records: dict[DocumentTarget, DocumentLinks | None] = {}
@@ -98,10 +95,10 @@ class _DocumentRefresh:
         self.removals: set[DocumentTarget] = set()
 
     def key(self, doc_id: str) -> DocumentTarget:
-        return DocumentTarget(self.config.scope_id, self.collection, doc_id)
+        return DocumentTarget(self.config.stage, self.collection, doc_id)
 
     def validate_target(self, target: DocumentTarget) -> None:
-        if target.scope != self.config.scope_id or target.sub_scope not in self.owners or not is_immutable_doc_id(target.doc_id):
+        if target.stage != self.config.stage or target.sub_scope not in self.owners or not is_immutable_doc_id(target.doc_id):
             raise ValueError("Links requires an exact configured document identity")
 
     def payload(self, target: DocumentTarget, *, require_eligible: bool = True) -> dict[str, Any] | None:
@@ -127,21 +124,21 @@ class _DocumentRefresh:
         return payload
 
     def viewer_target(self, resolved: dict[str, str]) -> DocumentTarget | None:
-        if resolved["scope"] != self.config.scope_id or resolved.get("stage", "") not in {"", self.config.stage}:
+        if resolved.get("kind") != "viewer" or resolved.get("stage", "") not in {"", self.config.stage}:
             return None
         doc_id, child = resolved["doc_id"], resolved.get("subdoc", "")
         if not is_immutable_doc_id(doc_id) or (child and not is_immutable_doc_id(child)):
             return None
         collection = ""
         if child:
-            host = self.payload(DocumentTarget(self.config.scope_id, "", doc_id), require_eligible=False)
+            host = self.payload(DocumentTarget(self.config.stage, "", doc_id), require_eligible=False)
             report = host.get("report") if host else None
             if not isinstance(report, dict) or report.get("id") != "docs_subscope":
                 return None
             collection = report.get("sub_scope", "")
             if not collection or collection not in self.owners:
                 return None
-        target = DocumentTarget(self.config.scope_id, collection, child or doc_id)
+        target = DocumentTarget(self.config.stage, collection, child or doc_id)
         return target if self.payload(target) is not None else None
 
     def summary(self, target: DocumentTarget, doc: DocRecord) -> DocumentSummary:
@@ -162,7 +159,7 @@ class _DocumentRefresh:
         if text is not None and deleted:
             payload = json.loads(text)
             owner = DocumentTarget(**payload["self"]["target"])
-            if owner != target and owner.scope == target.scope and owner.doc_id == target.doc_id:
+            if owner != target and owner.stage == target.stage and owner.doc_id == target.doc_id:
                 # A completed collection move already transferred this shared
                 # filename. The old collection cannot remove the new owner.
                 self.validate_target(owner)
@@ -172,7 +169,7 @@ class _DocumentRefresh:
         self.original[target] = text
         record = read_relationship_payload(json.loads(text), target) if text is not None else None
         if record is None:
-            self.warnings.append(f"Missing Links JSON for {target.scope}/{self.config.stage}/{target.sub_scope or '(parent)'}/{target.doc_id}; Links update skipped")
+            self.warnings.append(f"Missing Links JSON for {target.stage}/{target.sub_scope or '(parent)'}/{target.doc_id}; Links update skipped")
         else:
             for neighbour in record.incoming.keys() | record.outgoing.keys():
                 self.validate_target(neighbour)
@@ -225,7 +222,7 @@ class _DocumentRefresh:
                             metadata = parse_source(source)[0]
                             doc_id = metadata.get("doc_id")
                             if isinstance(doc_id, str) and is_immutable_doc_id(doc_id):
-                                candidate = DocumentTarget(self.config.scope_id, collection, doc_id)
+                                candidate = DocumentTarget(self.config.stage, collection, doc_id)
                                 if self.payload(candidate) is not None:
                                     neighbour = candidate
                             break
@@ -285,7 +282,7 @@ class _DocumentRefresh:
 
 
 def build_document_links(builder: DocsDataBuilder, plan: dict[str, Any] | None, *, write: bool) -> dict[str, Any] | None:
-    """Complete selected refreshes and writes under the existing scope/stage lock."""
+    """Complete selected refreshes and writes under the Working Links lock."""
     if plan is None:
         return None
 
@@ -324,7 +321,7 @@ def build_document_links(builder: DocsDataBuilder, plan: dict[str, Any] | None, 
                 "occurrences_added": added, "occurrences_deleted": deleted, "warnings": refresh.warnings}
 
     if write:
-        private = builder.repo_root / "var/docs-viewer/links-builder" / builder.scope_id / builder.config.stage
+        private = builder.repo_root / "var/docs-viewer/links-builder" / builder.config.stage
         private.mkdir(parents=True, exist_ok=True)
         with _safe_path(private, "build.lock").open("a") as lock:
             fcntl.flock(lock, fcntl.LOCK_EX)

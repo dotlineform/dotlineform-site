@@ -4,37 +4,45 @@ from pathlib import Path
 from typing import Any
 
 from docs_lifecycle_paths import load_json_object, render_json, write_text_atomic
-from docs_scope_config import DocsScopeConfig, generated_documents_path, resolve_scope_path
+from docs_document_identity import is_immutable_doc_id
+from docs_workspace_config import DocsStageConfig, generated_documents_path, resolve_workspace_path
 
 
-def write_scope_links(repo_root: Path, config: DocsScopeConfig) -> dict[str, Any]:
-    """Replace the Working scope aggregate after all contributing builds finish.
+def write_workspace_links(repo_root: Path, config: DocsStageConfig) -> dict[str, Any]:
+    """Replace the Working aggregate after all contributing builds finish.
 
     Only records with both lists empty are omitted. Read every input before
     writing so an unreadable record cannot produce a successful partial result.
     Document Build owns membership, eligibility, summaries and counts.
     """
-    if config.scope_id != "analysis" or config.stage != "working":
-        raise ValueError("Scope Links aggregation is available only in Analysis Working")
-    output = resolve_scope_path(repo_root, generated_documents_path(config))
+    if config.stage != "working":
+        raise ValueError("Workspace Links aggregation is available only in Working")
+    output = resolve_workspace_path(repo_root, generated_documents_path(config))
     directory = output / "links-by-id"
     target = output / "links.json"
     if directory.is_symlink() or target.is_symlink():
-        raise ValueError("Scope Links files must remain in their configured directory")
+        raise ValueError("Workspace Links files must remain in their configured directory")
     if not directory.is_dir():
         raise FileNotFoundError("Prepared links-by-id directory is unavailable")
     documents = []
     for path in sorted(directory.glob("*.json")):
         if path.is_symlink():
-            raise ValueError("Scope Links inputs must remain in their configured directory")
+            raise ValueError("Workspace Links inputs must remain in their configured directory")
         record = load_json_object(path, f"Prepared Links record {path.name}")
+        summary = record.get("self")
+        identity = summary.get("target") if isinstance(summary, dict) else None
+        if (record.get("schema_version") != 2 or not isinstance(identity, dict)
+                or set(identity) != {"stage", "sub_scope", "doc_id"}
+                or identity["stage"] != config.stage or identity["doc_id"] != path.stem
+                or not is_immutable_doc_id(identity["doc_id"])
+                or identity["sub_scope"] not in {"", *(child.sub_scope for child in config.sub_scopes)}):
+            raise ValueError(f"Prepared Links record {path.name} has invalid stage or document identity")
         if not isinstance(record.get("incoming"), list) or not isinstance(record.get("outgoing"), list):
             raise ValueError(f"Prepared Links record {path.name} requires incoming and outgoing lists")
         if record["incoming"] or record["outgoing"]:
             documents.append(record)
     payload = {
-        "schema_version": 1,
-        "scope": config.scope_id,
+        "schema_version": 2,
         "stage": config.stage,
         "documents": documents,
     }
