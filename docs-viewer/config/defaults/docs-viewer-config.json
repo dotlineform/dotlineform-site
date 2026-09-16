@@ -75,6 +75,12 @@
           "title": "Moments",
           "manifest_url": "/docs/generated/external/working/moments/manage-manifest.json",
           "by_id_url_base": "/docs/generated/external/working/moments/by-id"
+        },
+        {
+          "collection": "catalogue",
+          "title": "catalogue",
+          "manifest_url": "/docs/generated/external/working/catalogue/manage-manifest.json",
+          "by_id_url_base": "/docs/generated/external/working/catalogue/by-id"
         }
       ],
       "stage": "working",

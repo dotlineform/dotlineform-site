@@ -123,6 +123,15 @@
             "report_host_doc_id": "d-20260907-180859-c425b2",
             "report_host_source_revision": "sha256:fd60d983cff466dda2f39143ecdded2317e1227f2e8b8c6fc60cfffa76e18ebd"
           }
+        },
+        {
+          "collection": "catalogue",
+          "title": "catalogue",
+          "lifecycle": {
+            "tool_id": "docs-viewer-collection-lifecycle",
+            "report_host_doc_id": "d-20260916-161504-f8c947",
+            "report_host_source_revision": "sha256:6c737e0336eb21427d0e7bd856bbbe9d20112b7c8d9e73c924bdda7077c722de"
+          }
         }
       ]
     },
