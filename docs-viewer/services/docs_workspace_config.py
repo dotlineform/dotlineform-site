@@ -126,6 +126,7 @@ class DocsCollectionLifecycleConfig:
 class DocsCollectionConfig:
     collection: str
     title: str
+    report_host_doc_id: str
     public_title: str
     supports_return_import: bool
     collection_customisation: DocsCollectionCustomisationConfig | None
@@ -401,7 +402,7 @@ def _collections(raw: Any, *, workspace_root: ArtifactLocation, stage: str,
     seen = set()
     for index, raw_item in enumerate(raw):
         field = f"stages.{stage}.collections[{index}]"
-        item = _object(raw_item, field=field, required={"collection", "title"}, optional={
+        item = _object(raw_item, field=field, required={"collection", "title", "report_host_doc_id"}, optional={
             "public_title", "supports_return_import", "collection_customisation", "lifecycle",
         })
         child = normalize_collection_id(item["collection"], field=f"{field}.collection")
@@ -429,6 +430,7 @@ def _collections(raw: Any, *, workspace_root: ArtifactLocation, stage: str,
             )
         result.append(DocsCollectionConfig(
             collection=child, title=item["title"], public_title=item.get("public_title", item["title"]),
+            report_host_doc_id=_doc_id(item["report_host_doc_id"], field=f"{field}.report_host_doc_id"),
             supports_return_import=_boolean(item.get("supports_return_import", False), field=f"{field}.supports_return_import"),
             collection_customisation=normalize_docs_collection_customisation(item.get("collection_customisation"), field=f"{field}.collection_customisation"),
             lifecycle=_lifecycle(item.get("lifecycle"), field=f"{field}.lifecycle"), stage=stage,

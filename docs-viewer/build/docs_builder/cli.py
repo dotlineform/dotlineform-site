@@ -37,8 +37,8 @@ def main(argv: list[str] | None = None) -> int:
     repo_root = Path.cwd().resolve()
     workspace = load_docs_workspace_config(repo_root)
     config = select_workspace_stage(workspace, args.stage)
-    if args.collection and (args.source or args.output or args.viewer_base_url or args.only_doc_ids is not None):
-        raise RuntimeError("--collection cannot be combined with --source, --output, --viewer-base-url, or --only-doc-ids")
+    if args.collection and (args.source or args.output or args.viewer_base_url):
+        raise RuntimeError("--collection cannot be combined with --source, --output, or --viewer-base-url")
     if args.write and not args.skip_browser_config:
         write_browser_config(repo_root, workspace, path=DOCS_VIEWER_BROWSER_CONFIG_PATH, label="Docs Viewer browser config")
     only_doc_ids = None if args.only_doc_ids is None else [item.strip() for item in args.only_doc_ids.split(",") if item.strip()]
@@ -48,6 +48,7 @@ def main(argv: list[str] | None = None) -> int:
         if args.collection:
             builder = CollectionDocsBuilder(
                 repo_root=repo_root, config=config, collection=selected_collection(config, args.collection),
+                only_doc_ids=only_doc_ids,
                 links_doc_ids=links_doc_ids, links_created_doc_ids=links_created_doc_ids,
                 skip_media_builds=args.skip_media_builds,
             )

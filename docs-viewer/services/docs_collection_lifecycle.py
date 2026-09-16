@@ -63,7 +63,12 @@ def normalize_title(value: Any) -> str:
 
 
 def planned_collection_config_record(collection: str, title: str, lifecycle: dict[str, str]) -> dict[str, Any]:
-    return {"collection": collection, "title": title, "lifecycle": lifecycle}
+    return {
+        "collection": collection,
+        "title": title,
+        "report_host_doc_id": lifecycle["report_host_doc_id"],
+        "lifecycle": lifecycle,
+    }
 
 
 def plan_collection_registration(
@@ -92,6 +97,7 @@ def plan_collection_registration(
         collections.append(collection_config if stage == "working" else {
             "collection": collection,
             "title": collection_config["title"],
+            "report_host_doc_id": collection_config["report_host_doc_id"],
         })
     return payload
 

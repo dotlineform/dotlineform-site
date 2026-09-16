@@ -91,11 +91,15 @@ export function serializeCatalogueMediaToken(options = {}) {
   var targetType = cleanString(options.targetType);
   var targetId = cleanString(options.targetId);
   var title = cleanString(options.title);
+  if (!title || /[\r\n]/.test(title)) return "";
+  if (options.useDocumentSubject) {
+    var subjectType = options.subjectType || targetType;
+    return ["work", "series", "detail"].includes(subjectType)
+      ? "[[catalogue:media:" + subjectType + "|" + escapedTitle(title) + "]]" : "";
+  }
   if (
     !LEXICAL_KEY_PATTERN.test(targetType)
     || !LEXICAL_ID_PATTERN.test(targetId)
-    || !title
-    || /[\r\n]/.test(title)
   ) return "";
   var definition = targetDefinition(options.registry, "catalogue", targetType);
   if (definition && definition.idPolicy.canonicalPattern) {
@@ -112,14 +116,14 @@ export function serializeCatalogueImageToken(options = {}) {
   var targetType = cleanString(options.targetType);
   var targetId = cleanString(options.targetId);
   var alt = plainText(options.alt);
-  if (targetType !== "work" || !/^\d{5}$/.test(targetId)) return "";
+  if (targetType !== "work" || (!options.useDocumentSubject && !/^\d{5}$/.test(targetId))) return "";
   if (
     !LEXICAL_KEY_PATTERN.test(targetType)
-    || !LEXICAL_ID_PATTERN.test(targetId)
+    || (!options.useDocumentSubject && !LEXICAL_ID_PATTERN.test(targetId))
     || !alt
   ) return "";
   var definition = targetDefinition(options.registry, "catalogue", targetType);
-  if (definition && definition.idPolicy.canonicalPattern) {
+  if (!options.useDocumentSubject && definition && definition.idPolicy.canonicalPattern) {
     var canonicalPattern = new RegExp(definition.idPolicy.canonicalPattern);
     if (!canonicalPattern.test(targetId)) return "";
   }
@@ -142,7 +146,7 @@ export function serializeCatalogueImageToken(options = {}) {
   var query = fields.map(function (field) {
     return field[0] + "=" + encodeImageValue(field[1]);
   }).join("&");
-  return "[[catalogue:image:" + targetType + ":" + targetId + "|" + query + "]]";
+  return "[[catalogue:image:" + targetType + (options.useDocumentSubject ? "" : ":" + targetId) + "|" + query + "]]";
 }
 
 function parseCatalogueImageFields(rawQuery, options) {
@@ -171,6 +175,7 @@ function parseCatalogueImageFields(rawQuery, options) {
     registry: options.registry,
     targetType: options.targetType,
     targetId: options.targetId,
+    useDocumentSubject: options.useDocumentSubject,
     alt: fields.alt,
     detailId: fields.detail_id || "",
     caption: fields.caption || "",
@@ -196,12 +201,13 @@ export function parseCatalogueToken(raw, options = {}) {
   var separator = body.indexOf("|");
   if (separator < 0) return null;
   var identity = body.slice(0, separator).split(":");
-  var imagePresentation = identity.length === 4 && identity[1] === "image";
-  var mediaPresentation = [4, 5].includes(identity.length) && identity[1] === "media";
+  var imagePresentation = [3, 4].includes(identity.length) && identity[1] === "image";
+  var mediaPresentation = [3, 4, 5].includes(identity.length) && identity[1] === "media";
   if (!imagePresentation && !mediaPresentation) return null;
   var family = identity[0];
   var targetType = identity[2];
-  var targetId = identity[3];
+  var useDocumentSubject = identity.length === 3;
+  var targetId = useDocumentSubject ? "" : identity[3];
   var mediaDetailId = identity.length === 5 ? identity[4] : "";
   if (identity.length === 5 && (!mediaDetailId || normalizeCatalogueDetailId(mediaDetailId) !== mediaDetailId)) return null;
   var rawFields = body.slice(separator + 1);
@@ -209,23 +215,25 @@ export function parseCatalogueToken(raw, options = {}) {
     ? parseCatalogueImageFields(rawFields, {
         registry: options.registry,
         targetType: targetType,
-        targetId: targetId
+        targetId: targetId,
+        useDocumentSubject: useDocumentSubject
       })
     : null;
   var title = imagePresentation
     ? imageFields && (imageFields.caption || imageFields.alt)
     : unescapeTitle(rawFields);
-  if (mediaPresentation && !serializeCatalogueMediaToken({ targetType: targetType, targetId: targetId, detailId: mediaDetailId, title: title })) return null;
+  if (mediaPresentation && !serializeCatalogueMediaToken({ targetType: targetType, targetId: targetId, detailId: mediaDetailId, title: title, useDocumentSubject: useDocumentSubject })) return null;
   if (
     family !== "catalogue"
     || !LEXICAL_KEY_PATTERN.test(family)
     || !LEXICAL_KEY_PATTERN.test(targetType)
-    || !LEXICAL_ID_PATTERN.test(targetId)
+    || (!useDocumentSubject && !LEXICAL_ID_PATTERN.test(targetId))
     || !title
   ) return null;
-  var definition = targetDefinition(options.registry, family, targetType);
+  var registryType = useDocumentSubject && targetType === "detail" ? "work" : targetType;
+  var definition = targetDefinition(options.registry, family, registryType);
   var supported = Boolean(definition);
-  if (supported && definition.idPolicy.canonicalPattern) {
+  if (supported && !useDocumentSubject && definition.idPolicy.canonicalPattern) {
     var canonicalPattern = new RegExp(definition.idPolicy.canonicalPattern);
     if (!canonicalPattern.test(targetId)) return null;
   }
@@ -235,6 +243,8 @@ export function parseCatalogueToken(raw, options = {}) {
     family: family,
     targetType: targetType,
     targetId: targetId,
+    useDocumentSubject: useDocumentSubject,
+    subjectType: useDocumentSubject ? targetType : "",
     title: title,
     start: start,
     end: start + source.length,

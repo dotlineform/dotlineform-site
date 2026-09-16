@@ -529,10 +529,7 @@ class DocsViewerSearchDataBuilder:
             key=lambda item: item.collection,
         ):
             try:
-                if self.config.stage == "pre-publish" and not any(
-                    doc.report is not None and doc.report.id == "docs_collection"
-                    and doc.report.collection == collection.collection for doc in parent_docs
-                ):
+                if self.config.stage == "pre-publish" and collection.report_host_doc_id not in eligible_parent_doc_ids:
                     if self.load_named_collection_docs(collection, report_doc_id=""):
                         raise ValueError(f"Pre-publish collection {collection.collection} has documents without a report host")
                     continue

@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from collections.abc import Mapping, Sequence
 import html
 import re
 from pathlib import Path
@@ -19,7 +20,7 @@ from .common import (
     normalize_artifact_identity,
     managed_media_config,
 )
-from .source import DocRecord
+from .source import DocRecord, DocumentIdentity
 from .semantic_tokens import semantic_token_text_ranges
 from docs_local_links import LocalLinkInputError, decode_relative_target
 
@@ -64,7 +65,7 @@ class ContentRenderingMixin:
             markdown = markdown[:match.start()] + replacement + markdown[match.end():]
         return markdown
 
-    def rewrite_doc_links(self, content_html: str, *, current_doc: DocRecord, docs: list[DocRecord]) -> str:
+    def rewrite_doc_links(self, content_html: str, *, current_doc: DocRecord, docs: Sequence[DocumentIdentity]) -> str:
         docs_by_id = {doc.doc_id: doc for doc in docs}
 
         def replace_href(match: re.Match[str]) -> str:
@@ -90,7 +91,7 @@ class ContentRenderingMixin:
         href: str,
         *,
         current_doc: DocRecord,
-        docs_by_id: dict[str, DocRecord],
+        docs_by_id: Mapping[str, DocumentIdentity],
     ) -> str:
         if not href or href.startswith(("#", "mailto:")) or re.match(r"\A[a-z][a-z0-9+\-.]*:", href, re.IGNORECASE):
             return href

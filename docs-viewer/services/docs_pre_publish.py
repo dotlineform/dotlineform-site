@@ -54,10 +54,6 @@ def _plan(repo_root: Path, body: dict[str, Any]) -> tuple[dict[str, Any], dict[P
     ignored_ids = read_publication_ignore_ids(repo_root)
     ordinary_excluded = excluded_documents(ordinary, ignored_ids=ignored_ids)
     excluded = set(ordinary_excluded)
-    hosts: dict[str, list[str]] = {}
-    for doc in ordinary:
-        if doc.report is not None and doc.report.id == "docs_collection":
-            hosts.setdefault(str(doc.report.collection), []).append(doc.doc_id)
     desired: dict[Path, bytes] = {}
     counts: dict[str, int] = {}
     eligible: list[str] = []
@@ -65,12 +61,8 @@ def _plan(repo_root: Path, body: dict[str, Any]) -> tuple[dict[str, Any], dict[P
         child = str(getattr(collection, "collection", ""))
         docs = ordinary if not child else load_document_collection_docs_for_config(repo_root, working, collection)
         rejected = excluded_documents(docs) if child else set(ordinary_excluded)
-        if child:
-            report_hosts = hosts.get(child, [])
-            if len(report_hosts) != 1:
-                raise ValueError(f"Pre-publish requires exactly one report host for {child}")
-            if report_hosts[0] in ordinary_excluded:
-                rejected.update(doc.doc_id for doc in docs)
+        if child and collection.report_host_doc_id in ordinary_excluded:
+            rejected.update(doc.doc_id for doc in docs)
         excluded.update(rejected)
         accepted = [doc for doc in docs if doc.doc_id not in rejected]
         counts[child or "documents"] = len(accepted)

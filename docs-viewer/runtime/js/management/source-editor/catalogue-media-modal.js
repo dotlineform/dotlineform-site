@@ -1,6 +1,9 @@
 import { escapeHtml, openDocsViewerManagementModal } from "../docs-viewer-management-modal-shell.js";
 import { selectedTextForCatalogueTitle } from "./catalogue-token-contract.js";
-import { catalogueMediaLinkLabel, loadCatalogueMediaSupport, readCatalogueTokenPresentation } from "./catalogue-media-support.js";
+import {
+  catalogueDocumentSubjectTarget, catalogueMediaLinkLabel, loadCatalogueMediaSupport,
+  readCatalogueTokenPresentation, resolveCatalogueTokenSubject
+} from "./catalogue-media-support.js";
 import { collectSemanticTokenTargetMatches } from "./semantic-token-targets.js";
 import { parseCatalogueToken, serializeCatalogueImageToken, serializeCatalogueMediaToken } from "./catalogue-token-parser.js";
 import { createCatalogueTargetPickerList } from "./catalogue-target-picker.js";
@@ -13,10 +16,15 @@ var SEARCH_INPUT_ID = "docsViewerCatalogueImageSearch";
 var RESULTS_ID = "docsViewerCatalogueImageResults";
 var ALT_INPUT_ID = "docsViewerCatalogueImageAlt";
 var DETAIL_INPUT_ID = "docsViewerCatalogueImageDetailId";
+var SUBJECT_INPUT_ID = "docsViewerCatalogueUseDocumentSubject";
 
 function modalBody(searchQuery, alt, imageMode) {
   return (
     '<div class="docsViewerCatalogueTokenModal docsViewerCatalogueImageModal">' +
+      '<label class="docsViewer__field docsViewer__field--checkbox" for="' + SUBJECT_INPUT_ID + '">' +
+        '<input class="docsViewer__checkboxInput" id="' + SUBJECT_INPUT_ID + '" type="checkbox" disabled>' +
+        '<span class="docsViewer__fieldLabel">Use document subject</span>' +
+      '</label>' +
       '<label class="docsViewer__field" for="' + SEARCH_INPUT_ID + '">' +
         '<span class="docsViewer__fieldLabel">Search Catalogue</span>' +
         '<input class="docsViewer__fieldInput" id="' + SEARCH_INPUT_ID + '" type="search" role="combobox" aria-autocomplete="list" aria-controls="' + RESULTS_ID + '" aria-expanded="false" autocomplete="off" spellcheck="false" value="' + escapeHtml(searchQuery) + '" disabled>' +
@@ -41,11 +49,15 @@ export function openCatalogueMediaModal(options = {}) {
   var imageMode = options.presentation === "image";
   var adapter = options.adapter;
   var capture = options.capture;
+  var subject = adapter.getDocumentSubject();
+  var subjectTarget = catalogueDocumentSubjectTarget(subject);
   var initialToken = !imageMode && parseCatalogueToken(capture && capture.text);
   if (initialToken && initialToken.presentation !== "media") initialToken = null;
+  if (initialToken) initialToken = resolveCatalogueTokenSubject(initialToken, subject);
   var selectionText = initialToken ? initialToken.title : selectedTextForCatalogueTitle(capture && capture.text);
   var state = { disposed: false, request: 0, list: null, support: null, target: null,
-    details: [], workTitle: "", captionDefault: "", altDefault: "", replaceDefaults: null };
+    details: [], workTitle: "", captionDefault: "", altDefault: "", replaceDefaults: null,
+    useDocumentSubject: Boolean(initialToken && initialToken.useDocumentSubject) };
   return openDocsViewerManagementModal({
     root: options.root,
     restoreFocus: adapter && typeof adapter.focus === "function" ? { focus: function () { adapter.focus(); } } : null,
@@ -66,6 +78,8 @@ export function openCatalogueMediaModal(options = {}) {
       var results = api.host.querySelector('[data-role="catalogue-results"]');
       var status = api.host.querySelector('[data-role="catalogue-search-status"]');
       var primary = api.host.querySelector('[data-role="modal-primary"]');
+      var subjectCheckbox = api.host.querySelector("#" + SUBJECT_INPUT_ID);
+      subjectCheckbox.checked = state.useDocumentSubject;
       if (modalRoot) modalRoot.id = imageMode ? "catalogue-image-add-modal" : "catalogue-media-link-modal";
       if (imageMode) {
         bindImagePresentation(api.host);
@@ -134,7 +148,7 @@ export function openCatalogueMediaModal(options = {}) {
             option.textContent = item.detail_id + " — " + item.title;
             detail.appendChild(option);
           });
-          detail.disabled = !details.length;
+          detail.disabled = !details.length || (state.useDocumentSubject && !imageMode);
           detail.value = initialDetailId;
           if (initialDetailId && !details.some(function (item) { return item.detail_id === initialDetailId; })) {
             throw new Error("The selected Detail is unavailable. Choose an image.");
@@ -159,6 +173,15 @@ export function openCatalogueMediaModal(options = {}) {
         showResults(true);
         message(search.value.trim() && !matches.length ? (imageMode ? "No matching Catalogue Works." : "No matching Catalogue Works or Series.") : "");
       }
+      function selectSubject() {
+        var target = state.support.targets.find(function (item) {
+          return item.targetType === subjectTarget.targetType && item.targetId === subjectTarget.targetId;
+        });
+        if (target) return selectTarget(target, subjectTarget.detailId);
+        state.target = null;
+        primary.disabled = true;
+        message("The selected Catalogue target is unavailable.", true);
+      }
       state.list = createCatalogueTargetPickerList(results, {
         onActiveChange: function (_target, optionId) {
           [search, results].forEach(function (owner) {
@@ -177,19 +200,32 @@ export function openCatalogueMediaModal(options = {}) {
         owner.addEventListener("keydown", function (event) { state.list.handleKeydown(event); });
       });
       detail.addEventListener("change", chooseImage);
+      subjectCheckbox.addEventListener("change", function () {
+        state.useDocumentSubject = subjectCheckbox.checked;
+        search.disabled = state.useDocumentSubject;
+        if (state.useDocumentSubject) {
+          selectSubject();
+        } else {
+          detail.disabled = !state.details.length;
+          search.focus();
+        }
+      });
       loadCatalogueMediaSupport(adapter, { fetch: options.fetch }).then(function (support) {
         if (state.disposed) return;
         state.support = support;
-        search.disabled = false;
+        subjectCheckbox.disabled = !subjectTarget || (imageMode && subjectTarget.subjectType !== "work");
+        search.disabled = state.useDocumentSubject;
         updateMatches();
-        if (initialToken) {
+        if (state.useDocumentSubject) {
+          selectSubject();
+        } else if (initialToken) {
           var target = support.targets.find(function (item) {
             return item.targetType === initialToken.targetType && item.targetId === initialToken.targetId;
           });
           if (target) selectTarget(target, initialToken.detailId);
           else message("The selected Catalogue target is unavailable.", true);
         }
-        search.focus();
+        (state.useDocumentSubject ? alt : search).focus();
       }).catch(function (error) {
         if (!state.disposed) message(error.message || "Catalogue images are unavailable.", true);
       });
@@ -209,6 +245,10 @@ export function openCatalogueMediaModal(options = {}) {
         return false;
       }
       var fields = { registry: state.support.registry, targetType: state.target.targetType, targetId: state.target.targetId, detailId: detailId, alt: alt, title: alt };
+      if (state.useDocumentSubject) {
+        fields.useDocumentSubject = true;
+        fields.subjectType = subjectTarget.subjectType;
+      }
       if (presentation && presentation.addCaption) {
         Object.assign(fields, { caption: presentation.caption, summary: presentation.summary,
           placement: presentation.placement, fillWidth: presentation.fillWidth });

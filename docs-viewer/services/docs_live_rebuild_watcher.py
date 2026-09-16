@@ -310,7 +310,10 @@ def parsed_doc_snapshot(
     repo_root: Path,
     collection: str = "",
     *, stage: str | None = None,
+    previous_docs: Optional[Dict[str, Dict[str, Any]]] = None,
+    changed_files: list[str] | None = None,
 ) -> Dict[str, Dict[str, Any]]:
+    """Seed source metadata once, then replace changed named-collection entries."""
     normalized_collection = str(collection or "").strip().lower()
     parent_config = load_docs_stage(repo_root, stage)
     document_config = parent_config
@@ -325,9 +328,16 @@ def parsed_doc_snapshot(
                 f"unknown collection {normalized_collection!r} in stage {stage!r}"
             )
         document_config = matching[0]
-    docs = load_document_collection_docs_for_config(repo_root, parent_config, document_config)
+    incremental = bool(normalized_collection) and previous_docs is not None and changed_files is not None
+    docs = load_document_collection_docs_for_config(
+        repo_root, parent_config, document_config,
+        filenames=changed_files if incremental else None,
+    )
     root = resolve_workspace_path(repo_root, document_source_path(document_config))
-    snapshot: Dict[str, Dict[str, Any]] = {}
+    snapshot: Dict[str, Dict[str, Any]] = dict(previous_docs) if incremental else {}
+    if incremental:
+        for filename in changed_files:
+            snapshot.pop(filename, None)
     for doc in docs:
         row: Dict[str, Any] = {
             "filename": doc.path.relative_to(root).as_posix(),
@@ -348,9 +358,14 @@ def try_parsed_doc_snapshot(
     repo_root: Path,
     collection: str = "",
     *, stage: str | None = None,
+    previous_docs: Optional[Dict[str, Dict[str, Any]]] = None,
+    changed_files: list[str] | None = None,
 ) -> tuple[Optional[Dict[str, Dict[str, Any]]], str]:
     try:
-        return parsed_doc_snapshot(repo_root, collection, stage=stage), ""
+        return parsed_doc_snapshot(
+            repo_root, collection, stage=stage,
+            previous_docs=previous_docs, changed_files=changed_files,
+        ), ""
     except Exception as exc:  # noqa: BLE001 - watcher must fall back rather than stop on bad source state.
         return None, str(exc)
 
@@ -745,7 +760,7 @@ def process_document_collection_changes(
     *,
     targeted_docs_threshold: int,
 ) -> tuple[bool, Optional[Dict[str, Dict[str, Any]]]]:
-    """Capture eligible timestamps, then run one exact collection rebuild."""
+    """Capture eligible timestamps, then rebuild the affected document payloads."""
 
     collection = str(state.get("collection") or "")
     stage = state.get("stage") or None
@@ -754,17 +769,20 @@ def process_document_collection_changes(
         repo_root,
         collection,
         stage=stage,
+        previous_docs=state.get("doc_snapshot"),
+        changed_files=changed_files,
     )
-    # This set follows changed source identities, independently of renderer
-    # thresholds, descendant updates and full-child rendering.
+    # These identities remain exact even when ordinary rendering expands its
+    # affected set or exceeds its targeted threshold.
+    changed_doc_ids = sorted({
+        str(row["doc_id"])
+        for snapshot in (state.get("doc_snapshot") or {}, current_docs or {})
+        for filename in changed_files
+        if (row := snapshot.get(filename)) and row.get("doc_id")
+    })
     links_arguments = {}
     if stage == "working":
-        links_arguments["links_doc_ids"] = sorted({
-            str(row["doc_id"])
-            for snapshot in (state.get("doc_snapshot") or {}, current_docs or {})
-            for filename in changed_files
-            if (row := snapshot.get(filename)) and row.get("doc_id")
-        })
+        links_arguments["links_doc_ids"] = changed_doc_ids
         if state.get("doc_snapshot") is not None and current_docs is not None:
             before = {row["doc_id"] for filename in changed_files if (row := state["doc_snapshot"].get(filename)) and row.get("doc_id")}
             after = {row["doc_id"] for filename in changed_files if (row := current_docs.get(filename)) and row.get("doc_id")}
@@ -775,7 +793,7 @@ def process_document_collection_changes(
             f"{snapshot_error or 'parsed docs snapshot unavailable'}"
         )
         if collection:
-            return rebuild_collection(repo_root, collection, stage=stage, **links_arguments), None
+            return rebuild_collection(repo_root, collection, stage=stage, docs_doc_ids=changed_doc_ids, **links_arguments), None
         return rebuild_stage(repo_root, stage=stage, **links_arguments), None
 
     docs_doc_ids: Optional[list[str]] = None
@@ -856,7 +874,7 @@ def process_document_collection_changes(
 
     if collection:
         return (
-            rebuild_collection(repo_root, collection, stage=stage, **links_arguments),
+            rebuild_collection(repo_root, collection, stage=stage, docs_doc_ids=changed_doc_ids, **links_arguments),
             current_docs,
         )
     return (
@@ -872,6 +890,7 @@ def process_document_collection_changes(
 
 def rebuild_collection(
     repo_root: Path, collection: str, *, stage: str | None = None,
+    docs_doc_ids: list[str],
     links_doc_ids: Optional[list[str]] = None, links_created_doc_ids: Optional[list[str]] = None,
 ) -> bool:
     label = f"{stage}/{collection}"
@@ -889,13 +908,15 @@ def rebuild_collection(
                 collection,
                 "--write",
                 "--diagnostics",
+                "--only-doc-ids",
+                ",".join(ordered_unique(docs_doc_ids)),
                 *(["--stage", stage, "--skip-browser-config", "--skip-media-builds"] if stage else []),
                 *(["--links-doc-ids", ",".join(ordered_unique(links_doc_ids))] if stage == "working" and links_doc_ids is not None else []),
                 *(["--links-created-doc-ids", ",".join(ordered_unique(links_created_doc_ids))] if stage == "working" and links_created_doc_ids else []),
             ),
         ),
     ]
-    log(f"Rebuilding {label} collection docs. Parent Search remains explicit via Rebuild.")
+    log(f"Rebuilding {label} selected docs: {affected_doc_ids_log_text(docs_doc_ids)}. Search remains explicit via Rebuild.")
     for step_label, command in commands:
         completed = subprocess.run(
             command,
@@ -1112,6 +1133,8 @@ def main() -> int:
                                     repo_root,
                                     str(state.get("collection") or ""),
                                     stage=state["stage"],
+                                    previous_docs=state.get("doc_snapshot"),
+                                    changed_files=changed_files,
                                 )
                             )
                             if snapshot_error:
@@ -1151,6 +1174,8 @@ def main() -> int:
                     if pause_state_for_missing_source(state):
                         log(f"{ready_label} source root unavailable after rebuild; watcher is waiting: {source_error}")
                     continue
+                if rebuild_succeeded and current_doc_snapshot is not None:
+                    state["doc_snapshot"] = current_doc_snapshot
                 if post_rebuild_snapshot != state["snapshot"]:
                     previous_snapshot = state["snapshot"]
                     state["snapshot"] = post_rebuild_snapshot
@@ -1158,8 +1183,6 @@ def main() -> int:
                     state["dirty_at"] = time.monotonic()
                     log(f"Additional source changes arrived during the {ready_label} rebuild; scheduling another pass.")
                 else:
-                    if rebuild_succeeded and current_doc_snapshot is not None:
-                        state["doc_snapshot"] = current_doc_snapshot
                     state["dirty_at"] = None
                     state["changed_files"] = []
                 continue

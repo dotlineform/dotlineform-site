@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from collections.abc import Sequence
 from pathlib import Path
 from typing import Any
 from urllib.parse import quote
@@ -14,7 +15,7 @@ from .common import (
     utc_timestamp,
 )
 from .rendering import add_missing_image_titles
-from .source import DocRecord, extract_title
+from .source import DocRecord, DocumentIdentity, extract_title
 from docs_document_identity import is_doc_timestamp, is_immutable_doc_id
 from docs_document_subjects import project_reader_subject
 from docs_report_source import project_report_markdown
@@ -25,7 +26,7 @@ class PayloadBuilderMixin:
     def item_entry(
         self,
         doc: DocRecord,
-        docs: list[DocRecord],
+        docs: Sequence[DocumentIdentity],
         semantic_tokens_by_doc: dict[str, list[dict[str, Any]]],
     ) -> dict[str, Any]:
         projected_markdown = project_report_markdown(
@@ -166,7 +167,7 @@ class PayloadBuilderMixin:
         """Read all stage-local Recent metadata once, without rendering children.
 
         Full stage builds own this scan. Preparation already selected the stage's
-        documents; report hosts validate destinations and do not filter candidates.
+        documents; collection configuration supplies their report host IDs.
         """
         title_by_id = {doc.doc_id: doc.title for doc in docs}
         rows = [self.recent_entry(doc, docs, title_by_id) for doc in docs]
@@ -174,16 +175,6 @@ class PayloadBuilderMixin:
             children = load_document_collection_docs_for_config(self.repo_root, self.config, collection)
             if not children:
                 continue
-            hosts = [
-                doc for doc in docs
-                if doc.report is not None and doc.report.id == "docs_collection"
-                and doc.report.collection == collection.collection
-            ]
-            if len(hosts) != 1:
-                raise ValueError(
-                    f"Recent requires exactly one report host for {self.config.stage}/{collection.collection}; "
-                    f"found {len(hosts)}"
-                )
             output_base = browser_collection_output_url_base(self.config, collection)
             for child in children:
                 if not is_immutable_doc_id(child.doc_id):
@@ -196,8 +187,8 @@ class PayloadBuilderMixin:
                     "added_date": str(child.front_matter.get("added_date") or last_updated).strip(),
                     "last_updated": last_updated,
                     "collection": collection.collection,
-                    "report_doc_id": hosts[0].doc_id,
-                    "collection_title": collection.title or hosts[0].title,
+                    "report_doc_id": collection.report_host_doc_id,
+                    "collection_title": collection.title,
                 })
         return rows
 

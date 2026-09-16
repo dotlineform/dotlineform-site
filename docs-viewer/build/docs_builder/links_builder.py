@@ -65,7 +65,7 @@ def prepare_document_links(
     """
     if not links_enabled(builder.repo_root, builder.config):
         return None
-    selected = builder.links_doc_ids
+    selected = builder.links_doc_ids if builder.links_doc_ids is not None else builder.only_doc_ids
     doc_ids = set(selected if selected is not None else set(built_doc_ids) | set(stale_doc_ids))
     created = set(builder.links_created_doc_ids)
     if not created <= doc_ids & {doc.doc_id for doc in docs}:
@@ -81,6 +81,7 @@ class _DocumentRefresh:
         self.config = builder.config
         self.collection = getattr(builder, "collection_id", "")
         self.owners = {"": self.config, **{owner.collection: owner for owner in self.config.collections}}
+        self.collection_by_host = {owner.report_host_doc_id: owner.collection for owner in self.config.collections}
         self.sources = {name: resolve_workspace_path(builder.repo_root, document_source_path(owner)) for name, owner in self.owners.items()}
         self.outputs = {name: resolve_workspace_path(builder.repo_root, generated_documents_path(owner)) / "by-id" for name, owner in self.owners.items()}
         if builder.source_dir != self.sources[self.collection] or builder.items_dir != self.outputs[self.collection]:
@@ -115,7 +116,6 @@ class _DocumentRefresh:
         collections first. A standalone collection Build seeds its own sources.
         Existing records remain the relationship prior state.
         """
-        ordinary = list(self.docs.values()) if not self.collection else []
         owners = {self.collection: self.owners[self.collection]} if self.collection else self.owners
         identities: set[str] = set()
         for collection, owner in owners.items():
@@ -124,10 +124,7 @@ class _DocumentRefresh:
             )
             host_id = ""
             if collection and docs and not self.collection:
-                hosts = [doc.doc_id for doc in ordinary if doc.report and doc.report.id == "docs_collection" and doc.report.collection == collection]
-                if len(hosts) != 1:
-                    raise ValueError(f"Links requires exactly one report host for collection {collection}")
-                host_id = hosts[0]
+                host_id = owner.report_host_doc_id
             for doc in docs:
                 target = DocumentTarget(self.config.stage, collection, doc.doc_id)
                 self.validate_target(target)
@@ -147,7 +144,7 @@ class _DocumentRefresh:
                 self.records[target] = DocumentLinks(summary)
                 self.original[target] = None
 
-    def payload(self, target: DocumentTarget, *, require_eligible: bool = True) -> dict[str, Any] | None:
+    def payload(self, target: DocumentTarget) -> dict[str, Any] | None:
         """Read one exact generated destination, including its source identity guard."""
         self.validate_target(target)
         source = _safe_path(self.sources[target.collection], f"{target.doc_id}.md")
@@ -157,7 +154,7 @@ class _DocumentRefresh:
         metadata = doc.front_matter if doc else parse_source(source)[0]
         if metadata.get("doc_id") != target.doc_id:
             raise ValueError("Links source document identity does not match")
-        if require_eligible and self.excluded(target):
+        if self.excluded(target):
             return None
         path = _safe_path(self.outputs[target.collection], f"{target.doc_id}.json")
         if target in self.pending and doc:
@@ -177,12 +174,8 @@ class _DocumentRefresh:
             return None
         collection = ""
         if child:
-            host = self.payload(DocumentTarget(self.config.stage, "", doc_id), require_eligible=False)
-            report = host.get("report") if host else None
-            if not isinstance(report, dict) or report.get("id") != "docs_collection":
-                return None
-            collection = report.get("collection", "")
-            if not collection or collection not in self.owners:
+            collection = self.collection_by_host.get(doc_id, "")
+            if not collection:
                 return None
         target = DocumentTarget(self.config.stage, collection, child or doc_id)
         return target if self.payload(target) is not None else None

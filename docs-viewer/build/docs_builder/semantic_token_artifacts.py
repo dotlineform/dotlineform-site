@@ -38,7 +38,7 @@ class SemanticTokenArtifactsMixin:
         docs: list[DocRecord],
         occurrences_by_doc: dict[str, list[dict[str, Any]]],
     ) -> dict[str, Any]:
-        """Replace built documents and prune deleted members of this collection only.
+        """Replace selected documents; complete builds also prune other deleted members.
 
         The existing synchronous Build sequence owns ordering. Reuse collected
         occurrences without another source scan or publication eligibility decision.
@@ -66,7 +66,10 @@ class SemanticTokenArtifactsMixin:
                 raise ValueError("Semantic-token occurrence requires explicit collection identity")
             if source_collection not in configured:
                 continue
-            if source_collection == collection and (row["source_doc_id"] in selected or row["source_doc_id"] not in known):
+            if source_collection == collection and (
+                row["source_doc_id"] in selected
+                or (not self.targeted_build and row["source_doc_id"] not in known)
+            ):
                 continue
             retained.append({**row, "source_collection": source_collection})
         occurrences = retained + [

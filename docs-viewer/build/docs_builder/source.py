@@ -1,10 +1,11 @@
 from __future__ import annotations
 
+from collections.abc import Sequence
 import json
 import re
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any
+from typing import Any, Protocol
 from urllib.parse import quote
 
 from .common import (
@@ -34,6 +35,13 @@ class MissingDocIdError(Exception):
 
 class InvalidDocIdError(Exception):
     pass
+
+
+class DocumentIdentity(Protocol):
+    """The saved identity is enough to resolve another document's membership."""
+
+    @property
+    def doc_id(self) -> str: ...
 
 
 @dataclass(frozen=True)
@@ -123,10 +131,22 @@ def extract_title(markdown: str) -> str:
 
 
 class SourceLoadingMixin:
-    def load_docs(self) -> list[DocRecord]:
+    def load_docs(self, doc_ids: list[str] | None = None) -> list[DocRecord]:
+        """Read all sources or only exact canonical filenames selected by ID."""
         if not self.source_dir.is_dir():
             raise FileNotFoundError(f"Docs source directory is unavailable: {self.source_dir}")
-        paths = sorted(self.source_dir.glob("**/*.md"))
+        if doc_ids is None:
+            paths = sorted(self.source_dir.glob("**/*.md"))
+        else:
+            paths = []
+            for doc_id in sorted(set(doc_ids)):
+                if not is_immutable_doc_id(doc_id):
+                    raise InvalidDocIdError(f"Invalid selected document ID: {doc_id}")
+                path = self.source_dir / f"{doc_id}.md"
+                if path.is_symlink():
+                    raise ValueError(f"Selected document source must not be a symlink: {path.name}")
+                if path.is_file():
+                    paths.append(path)
         self.source_files_scanned = len(paths)
         nested_paths = [path for path in paths if path.parent != self.source_dir]
         if nested_paths:
@@ -145,6 +165,8 @@ class SourceLoadingMixin:
             doc_id = str(front_matter.get("doc_id") or "").strip()
             if not doc_id:
                 raise MissingDocIdError(f"Missing required doc_id in {relative_path}")
+            if doc_ids is not None and doc_id != path.stem:
+                raise InvalidDocIdError(f"Selected source identity does not match its filename: {relative_path}")
             title = str(front_matter.get("title") or extract_title(body_markdown) or humanize(stem)).strip()
             parent_id = str(front_matter.get("parent_id") if "parent_id" in front_matter else "").strip()
             date = str(front_matter.get("date") or "").strip()
@@ -263,14 +285,14 @@ class SourceLoadingMixin:
         suffix = f"/{quote(child.collection)}" if child is not None else ""
         return f"/docs/generated/external/{quote(self.config.stage)}{suffix}"
 
-    def effective_parent_id(self, doc: DocRecord, docs: list[DocRecord]) -> str:
+    def effective_parent_id(self, doc: DocRecord, docs: Sequence[DocumentIdentity]) -> str:
         if not doc.parent_id:
             return ""
         if any(candidate.doc_id == doc.parent_id for candidate in docs):
             return doc.parent_id
         return "" if self.allow_unresolved_parent_ids else doc.parent_id
 
-    def metadata_entry(self, doc: DocRecord, docs: list[DocRecord]) -> dict[str, Any]:
+    def metadata_entry(self, doc: DocRecord, docs: Sequence[DocumentIdentity]) -> dict[str, Any]:
         entry = {
             "doc_id": doc.doc_id,
             "title": doc.title,
@@ -306,7 +328,7 @@ class SourceLoadingMixin:
             entry["summary"] = doc.summary
         return entry
 
-    def by_id_metadata_entry(self, doc: DocRecord, docs: list[DocRecord]) -> dict[str, Any]:
+    def by_id_metadata_entry(self, doc: DocRecord, docs: Sequence[DocumentIdentity]) -> dict[str, Any]:
         entry = self.metadata_entry(doc, docs)
         if doc.report is not None:
             entry["report"] = dict(doc.report.as_payload())

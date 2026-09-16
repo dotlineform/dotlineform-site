@@ -188,6 +188,9 @@ function createSourceEditorContextAdapter(state) {
     getDocumentTarget: function () {
       return state.target ? Object.assign({}, state.target) : null;
     },
+    getDocumentSubject: function () {
+      return state.subject ? Object.assign({}, state.subject) : null;
+    },
     readCatalogueMediaTargets: function () {
       return state.collectionProvider.readCatalogueMediaTargets();
     },
@@ -263,6 +266,7 @@ function loadSource(context, state) {
       }
       state.revision = cleanString(payload.source_revision);
       state.lastCleanBody = normalizeBody(payload.source_body);
+      state.subject = payload.subject;
       state.loaded = true;
       if (state.textarea) {
         state.textarea.value = state.lastCleanBody;
@@ -482,6 +486,7 @@ export function createDocsViewerSourceEditorMode() {
     selectionListeners: new Set(),
     sourceActionControlIds: [],
     status: null,
+    subject: null,
     target: null,
     textarea: null,
     projectMainViewControlState: null
@@ -494,6 +499,7 @@ export function createDocsViewerSourceEditorMode() {
       state.bufferRevision = 0;
       state.dirtyValue = false;
       state.lastCleanBody = "";
+      state.subject = null;
       state.loaded = false;
       state.collectionProvider = context.collectionProvider || null;
       state.revision = "";

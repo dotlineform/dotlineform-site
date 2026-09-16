@@ -507,8 +507,14 @@ def load_document_collection_docs_for_config(
     repo_root: Path,
     parent_config: DocsStageConfig,
     document_config: DocsStageConfig | DocsCollectionConfig,
+    *,
+    filenames: list[str] | None = None,
 ) -> list[SourceDoc]:
-    """Load one exact configured parent or collection document collection."""
+    """Load a configured collection or selected filenames for a watcher snapshot.
+
+    A selected read omits deleted paths and leaves whole-collection parent
+    validation to the builder, which has the saved membership metadata.
+    """
 
     root = resolve_workspace_path(repo_root, document_source_path(document_config))
     collection = str(getattr(document_config, "collection", "") or "").strip()
@@ -518,7 +524,17 @@ def load_document_collection_docs_for_config(
 
     report_contract: ReportSourceContract | None = None
     docs: list[SourceDoc] = []
-    for path in document_markdown_paths(root):
+    if filenames is None:
+        paths = document_markdown_paths(root)
+    else:
+        paths = []
+        for filename in sorted(set(filenames)):
+            path = root / filename
+            if path.parent != root or path.suffix != ".md" or path.is_symlink():
+                raise ValueError(f"Selected document must be a Markdown file inside its collection: {filename}")
+            if path.is_file():
+                paths.append(path)
+    for path in paths:
         source_text = path.read_bytes().decode("utf-8")
         front_matter, body = parse_source_text(
             source_text,
@@ -527,6 +543,8 @@ def load_document_collection_docs_for_config(
         doc_id = str(front_matter.get("doc_id") or "").strip()
         if not doc_id:
             raise ValueError(f"missing required doc_id in {path.relative_to(root).as_posix()}")
+        if filenames is not None and doc_id != path.stem:
+            raise ValueError(f"Selected source identity does not match its filename: {path.name}")
         title = str(front_matter.get("title") or humanize(doc_id or path.stem)).strip() or doc_id
         ui_status = normalize_ui_status(front_matter.get("ui_status"))
         parent_id = str(front_matter.get("parent_id") or "").strip()
@@ -571,7 +589,7 @@ def load_document_collection_docs_for_config(
         )
     validate_collection_docs(
         docs,
-        allow_unknown_parent_ids=parent_config.allow_unresolved_parent_ids,
+        allow_unknown_parent_ids=parent_config.allow_unresolved_parent_ids or filenames is not None,
     )
     return docs
 

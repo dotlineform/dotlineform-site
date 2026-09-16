@@ -376,7 +376,9 @@ def rebuild_collection_outputs(
     stage: str | None = None,
     links_doc_ids: Optional[list[str]] = None,
     links_created_doc_ids: Optional[list[str]] = None,
+    docs_doc_ids: Optional[list[str]] = None,
 ) -> Dict[str, Any]:
+    """Build a complete collection or render only its exact changed/deleted IDs."""
     docs_command = python_builder_command(
         DOCS_BUILDER_SCRIPT,
         "--collection",
@@ -389,6 +391,9 @@ def rebuild_collection_outputs(
     load_docs_stage(repo_root, stage)
     if stage:
         docs_command.extend(["--stage", stage])
+    target_doc_ids = None if docs_doc_ids is None else ordered_docs_doc_ids(docs_doc_ids)
+    if target_doc_ids is not None:
+        docs_command.extend(["--only-doc-ids", ",".join(target_doc_ids)])
     if stage == "working" and links_doc_ids is not None:
         docs_command.extend(["--links-doc-ids", ",".join(ordered_docs_doc_ids(links_doc_ids))])
     if stage == "working" and links_created_doc_ids:
@@ -412,10 +417,10 @@ def rebuild_collection_outputs(
         "steps": steps,
         "search": {"mode": "none", "doc_ids": []},
         "docs": {
-            "mode": "collection",
-            "doc_ids": [],
+            "mode": "targeted" if target_doc_ids is not None else "collection",
+            "doc_ids": target_doc_ids or [],
             "collection": collection,
-            "reason": "configured collection rebuild",
+            "reason": "targeted collection document ids provided" if target_doc_ids is not None else "configured collection rebuild",
         },
         "diagnostics": {
             "docs": docs_diagnostics,
@@ -648,6 +653,7 @@ def perform_collection_source_write_and_rebuild(
     stage: str | None = None,
     links_created_doc_ids: list[str] | None = None,
 ) -> Dict[str, Any]:
+    """Capture exact identities around the source write and await a targeted build."""
     require_document_authoring(load_docs_stage(repo_root, stage))
     root = current_collection_source_root(repo_root, collection, stage)
     resolved_changed_paths = {
@@ -682,7 +688,9 @@ def perform_collection_source_write_and_rebuild(
         }
     )
     suppression_owner = watch_suppression_owner(collection, stage=stage)
-    links_before = changed_source_document_ids(changed_paths) if stage == "working" else None
+    source_doc_ids_before = changed_source_document_ids(changed_paths)
+    docs_doc_ids = source_doc_ids_before
+    links_before = source_doc_ids_before if stage == "working" else None
     if filenames:
         set_watch_suppressions(
             repo_root,
@@ -705,8 +713,10 @@ def perform_collection_source_write_and_rebuild(
                     + ", ".join(sorted(changed_before_write))
                 )
         write_operation()
+        docs_doc_ids = sorted(set(source_doc_ids_before) | set(changed_source_document_ids(changed_paths)))
         rebuild = rebuild_collection_outputs(
             repo_root, collection, stage=stage,
+            docs_doc_ids=docs_doc_ids,
             **links_write_arguments(links_before, changed_paths, created_doc_ids=links_created_doc_ids),
         )
     except CollectionSourceSnapshotChanged:
@@ -732,6 +742,7 @@ def perform_collection_source_write_and_rebuild(
                     repo_root,
                     collection,
                     stage=stage,
+                    docs_doc_ids=docs_doc_ids,
                     **({"links_doc_ids": links_before} if links_before is not None else {}),
                 )
             except Exception as recovery_exc:
@@ -812,17 +823,25 @@ def perform_multi_collection_source_write_and_rebuild(
         prepared_rebuilds = []
         for plan in rebuild_plans:
             owner = watch_suppression_owner(str(plan.get("collection") or ""), stage=plan.get("stage") or None)
-            prepared_rebuilds.append((plan, links_write_arguments(links_before.get(owner), plan.get("changed_paths", []))))
+            changed_paths = plan.get("changed_paths", [])
+            docs_doc_ids = ordered_docs_doc_ids([
+                *(plan.get("docs_doc_ids") or []),
+                *links_before.get(owner, []),
+                *changed_source_document_ids(changed_paths),
+            ])
+            prepared_rebuilds.append((plan, links_write_arguments(links_before.get(owner), changed_paths), docs_doc_ids))
         # A collection move keeps its immutable ID and shared Links filename.
         # Prepare the destination first so it can transfer the exact prior
         # record before the former collection processes its deletion identity.
         prepared_rebuilds.sort(key=lambda item: not bool(item[1].get("links_created_doc_ids")))
-        for plan, links_arguments in prepared_rebuilds:
+        for plan, links_arguments, docs_doc_ids in prepared_rebuilds:
             stage = plan.get("stage") or None
             collection = str(plan.get("collection") or "")
             owner = watch_suppression_owner(collection, stage=stage)
             if collection:
-                rebuilds[owner] = rebuild_collection_outputs(repo_root, collection, stage=stage, **links_arguments)
+                rebuilds[owner] = rebuild_collection_outputs(
+                    repo_root, collection, stage=stage, docs_doc_ids=docs_doc_ids, **links_arguments,
+                )
             else:
                 rebuilds[owner] = rebuild_stage_outputs(
                     repo_root, include_search=False,

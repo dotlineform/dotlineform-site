@@ -25,6 +25,7 @@ from docs_workspace_config import path_label, require_document_authoring  # noqa
 from local_env import runtime_env  # noqa: E402
 from markdown_renderer import normalize_markdown_blank_lines  # noqa: E402
 from docs_publication_ignore import publication_ignore_path  # noqa: E402
+from docs_document_subjects import project_reader_subject  # noqa: E402
 
 STRICT_FRONT_MATTER_PATTERN = re.compile(r"\A---[ \t]*\r?\n(.*?)\r?\n---[ \t]*(?:\r?\n|$)", re.DOTALL)
 
@@ -81,6 +82,7 @@ def read_source_body(repo_root: Path, params: Dict[str, list[str]]) -> Dict[str,
         "ok": True,
         **resolved.request_target(),
         "source_body": normalize_source_body(source_body),
+        "subject": project_reader_subject(front_matter),
         "source_revision": source_revision_for_text(source_text),
         "path": path_label(repo_root, target.path),
     }

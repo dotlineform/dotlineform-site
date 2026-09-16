@@ -16,7 +16,7 @@ def read_document_link_targets(repo_root: Path, *, stage: str) -> dict[str, obje
     Stage selects the source and report host, never the authored href. Explicitly
     ignored ordinary targets and their descendants are omitted; draft readiness
     and Subject do not filter selection.
-    Unavailable collections and ambiguous host placement fail without fallback.
+    Collection configuration supplies host IDs without reading host documents.
     """
     resolved_collection = resolve_managed_document_collection(repo_root, stage=stage)
     config = resolved_collection.parent_config

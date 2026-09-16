@@ -87,6 +87,7 @@
         {
           "collection": "works",
           "title": "Works",
+          "report_host_doc_id": "d-20260801-073826-8865a8",
           "collection_customisation": {
             "id": "working_works",
             "settings": {}
@@ -100,11 +101,13 @@
         {
           "collection": "concepts",
           "title": "Concepts",
+          "report_host_doc_id": "d-20260624-213316-478639",
           "supports_return_import": true
         },
         {
           "collection": "processing",
           "title": "Processing",
+          "report_host_doc_id": "d-20260901-103244-09e720",
           "collection_customisation": {
             "id": "working_processing",
             "settings": {}
@@ -118,6 +121,7 @@
         {
           "collection": "moments",
           "title": "Moments",
+          "report_host_doc_id": "d-20260907-180859-c425b2",
           "lifecycle": {
             "tool_id": "docs-viewer-scope-lifecycle",
             "report_host_doc_id": "d-20260907-180859-c425b2",
@@ -127,6 +131,7 @@
         {
           "collection": "catalogue",
           "title": "catalogue",
+          "report_host_doc_id": "d-20260916-161504-f8c947",
           "lifecycle": {
             "tool_id": "docs-viewer-collection-lifecycle",
             "report_host_doc_id": "d-20260916-161504-f8c947",
@@ -168,6 +173,7 @@
         {
           "collection": "works",
           "title": "Works",
+          "report_host_doc_id": "d-20260801-073826-8865a8",
           "collection_customisation": {
             "id": "pre_publish_works",
             "settings": {}
@@ -175,19 +181,23 @@
         },
         {
           "collection": "concepts",
-          "title": "Concepts"
+          "title": "Concepts",
+          "report_host_doc_id": "d-20260624-213316-478639"
         },
         {
           "collection": "processing",
-          "title": "Processing"
+          "title": "Processing",
+          "report_host_doc_id": "d-20260901-103244-09e720"
         },
         {
           "collection": "moments",
-          "title": "Moments"
+          "title": "Moments",
+          "report_host_doc_id": "d-20260907-180859-c425b2"
         },
         {
           "collection": "catalogue",
-          "title": "catalogue"
+          "title": "catalogue",
+          "report_host_doc_id": "d-20260916-161504-f8c947"
         }
       ]
     }

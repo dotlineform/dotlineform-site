@@ -7,7 +7,6 @@ from collections.abc import Collection
 from pathlib import Path
 from urllib.parse import quote
 
-import docs_source_model as source_model
 from docs_document_identity import is_immutable_doc_id
 from docs_workspace_config import (
     DocsStageConfig,
@@ -24,7 +23,10 @@ def collection_report_placement(
     eligible_parent_doc_ids: Collection[str] | None = None,
     stage: str,
 ) -> tuple[DocsStageConfig, DocsCollectionConfig, str]:
-    """Resolve one configured child collection to its exact eligible report host."""
+    """Read the configured host ID without loading or validating its document.
+
+    Callers may restrict placement to an already selected set of document IDs.
+    """
 
     config = load_docs_stage(repo_root, stage)
     matching_collections = [
@@ -44,27 +46,13 @@ def collection_report_placement(
         else None
     )
 
-    matching_reports: list[str] = []
-    for document in source_model.load_stage_docs_for_config(repo_root, config):
-        report = document.report
-        if (
-            report is not None
-            and report.id == "docs_collection"
-            and report.collection == collection_id
-            and (eligible_ids is None or document.doc_id in eligible_ids)
-        ):
-            parent_doc_id = document.doc_id
-            if not is_immutable_doc_id(parent_doc_id):
-                raise ValueError(
-                    f"Docs Viewer collection report has invalid doc_id: {document.path}"
-                )
-            matching_reports.append(parent_doc_id)
-    if len(matching_reports) != 1:
+    host_id = collection.report_host_doc_id
+    if eligible_ids is not None and host_id not in eligible_ids:
         raise ValueError(
-            f"Docs Viewer collection report must resolve exactly once for "
-            f"{stage}/{collection_id}; found {len(matching_reports)}"
+            f"Docs Viewer configured collection report is outside the selected documents: "
+            f"{stage}/{collection_id} ({host_id})"
         )
-    return config, collection, matching_reports[0]
+    return config, collection, host_id
 
 
 def canonical_document_viewer_url(config: DocsStageConfig, doc_id: str, *, subdoc_id: str = "") -> str:

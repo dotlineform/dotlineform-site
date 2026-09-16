@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from collections.abc import Sequence
 from pathlib import Path
 from typing import Any
 from urllib.parse import quote
@@ -15,9 +16,10 @@ from .common import (
     write_text,
 )
 from .pipeline import DocsDataBuilder
+from .collection_metadata import CollectionDocumentSummary, merge_collection_manifest, read_collection_manifest
 from .links_builder import build_document_links, prepare_document_links
 from .media_builds import build_collection_media_snapshot
-from .source import DocRecord
+from .source import DocRecord, DocumentIdentity
 from docs_collection_customisations import (
     project_collection_customisation_manifest,
     collection_customisation_authoring_subject_fields,
@@ -39,6 +41,7 @@ class CollectionDocsBuilder(DocsDataBuilder):
         repo_root: Path,
         config: DocsStageConfig,
         collection: Any,
+        only_doc_ids: list[str] | None = None,
         skip_media_builds: bool = False,
         links_doc_ids: list[str] | None = None,
         links_created_doc_ids: list[str] | None = None,
@@ -49,13 +52,15 @@ class CollectionDocsBuilder(DocsDataBuilder):
             config=config,
             source_dir=document_source_path(collection),
             output_dir=generated_documents_path(collection),
+            only_doc_ids=only_doc_ids,
             skip_media_builds=skip_media_builds,
             links_doc_ids=links_doc_ids,
             links_created_doc_ids=links_created_doc_ids,
         )
         self.collection_id = collection.collection
         self.output_url_base = self.output_url_base_for(self.output_url_dir())
-        self._parent_report_doc_id: str | None = None
+        if self.targeted_build and not self.only_doc_ids:
+            raise ValueError("Targeted collection build requires at least one document ID")
 
     def output_url_dir(self) -> Path:
         output = generated_documents_path(self.collection_config)
@@ -64,35 +69,8 @@ class CollectionDocsBuilder(DocsDataBuilder):
     def content_url_for(self, doc_id: str) -> str:
         return f"{self.output_url_base}/by-id/{quote(doc_id)}.json"
 
-    def parent_report_doc_id(self) -> str:
-        if self._parent_report_doc_id is not None:
-            return self._parent_report_doc_id
-        parent_builder = DocsDataBuilder(repo_root=self.repo_root, config=self.config)
-        parent_docs = parent_builder.load_docs()
-        parent_builder.validate_canonical_doc_ids(parent_docs)
-        matching = [
-            doc.doc_id for doc in parent_docs
-            if (
-                doc.report is not None
-                and doc.report.id == "docs_collection"
-                and doc.report.collection == self.collection_id
-            )
-        ]
-        if len(matching) == 1:
-            self._parent_report_doc_id = matching[0]
-        else:
-            if len(matching) > 1:
-                self.warnings.append(
-                    "Collection detail links are ambiguous for "
-                    f"{self.config.stage}/{self.collection_id}; matching parent reports: {', '.join(sorted(matching))}"
-                )
-            self._parent_report_doc_id = ""
-        return self._parent_report_doc_id
-
     def viewer_url_for(self, doc_id: str, anchor: str = "") -> str:
-        parent_doc_id = self.parent_report_doc_id()
-        if not parent_doc_id:
-            return super().viewer_url_for(doc_id, anchor)
+        parent_doc_id = self.collection_config.report_host_doc_id
         pairs: list[str] = []
         pairs.append(f"stage={quote(self.config.stage)}")
         pairs.append(f"doc={quote(parent_doc_id)}")
@@ -100,7 +78,7 @@ class CollectionDocsBuilder(DocsDataBuilder):
         url = f"{self.viewer_base_url}?{'&'.join(pairs)}"
         return f"{url}#{anchor}" if anchor else url
 
-    def by_id_metadata_entry(self, doc: DocRecord, docs: list[DocRecord]) -> dict[str, Any]:
+    def by_id_metadata_entry(self, doc: DocRecord, docs: Sequence[DocumentIdentity]) -> dict[str, Any]:
         entry = self.metadata_entry(doc, docs)
         if doc.report is not None:
             entry["report"] = dict(doc.report.as_payload())
@@ -211,27 +189,61 @@ class CollectionDocsBuilder(DocsDataBuilder):
             for doc in ordered_docs
         }
 
-    def run(self, *, write: bool, emit_diagnostics: bool = False) -> dict[str, Any]:
-        started_at = monotonic_time()
-        docs = self.load_docs()
-        self.validate_canonical_doc_ids(docs)
-        self.validate_docs(docs)
-        media_snapshot = None if self.skip_media_builds else build_collection_media_snapshot(self.repo_root, self.media_owner, write=write)
-        ordered_docs = sorted(docs, key=self.doc_sort_key)
-        semantic_tokens_by_doc: dict[str, list[dict[str, Any]]] = {}
-        item_payloads = {
-            doc.doc_id: self.item_entry(
-                doc,
-                docs,
-                semantic_tokens_by_doc,
+    def saved_collection_metadata(self) -> tuple[dict[str, Any], dict[str, Any]]:
+        """Load the prior list metadata required for a targeted update."""
+        manifest = read_collection_manifest(self.output_dir / "manifest.json")
+        manage_manifest = read_collection_manifest(self.output_dir / "manage-manifest.json")
+        if {row["doc_id"] for row in manifest["docs"]} != {row["doc_id"] for row in manage_manifest["docs"]}:
+            raise ValueError("Collection manifests disagree on document membership; run a complete Build first")
+        if not (self.semantic_tokens_dir / "index.json").is_file():
+            raise RuntimeError(
+                "Targeted collection build requires the existing semantic-token index; run a complete Build first"
             )
-            for doc in ordered_docs
-        }
+        return manifest, manage_manifest
+
+    def run(self, *, write: bool, emit_diagnostics: bool = False) -> dict[str, Any]:
+        """Build all source documents or merge selected sources into saved metadata."""
+        started_at = monotonic_time()
+        previous_manifest, previous_manage = self.saved_collection_metadata() if self.targeted_build else (None, None)
+        docs = self.load_docs(self.only_doc_ids)
+        self.validate_canonical_doc_ids(docs)
+        if not self.targeted_build:
+            self.validate_docs(docs)
+        ordered_docs = sorted(docs, key=self.doc_sort_key)
         manifest_payload = self.manifest_payload(ordered_docs)
         subjects_by_doc_id = self.private_authoring_subjects(ordered_docs)
-        subject_generation = ""
+        manage_manifest_payload = self.manage_manifest_payload(
+            ordered_docs,
+            subjects_by_doc_id=subjects_by_doc_id,
+        )
+        if self.targeted_build:
+            manifest_payload = merge_collection_manifest(previous_manifest, manifest_payload, self.only_doc_ids)
+            manage_manifest_payload = merge_collection_manifest(previous_manage, manage_manifest_payload, self.only_doc_ids)
+        summaries = [
+            CollectionDocumentSummary(row["doc_id"], row["title"], self.viewer_url_for(row["doc_id"]))
+            for row in manifest_payload["docs"]
+        ]
+        known_ids = {row.doc_id for row in summaries}
+        for doc in docs:
+            if doc.parent_id and doc.parent_id not in known_ids and not self.allow_unresolved_parent_ids:
+                raise RuntimeError(f"Unknown parent_id {doc.parent_id!r} for doc {doc.doc_id!r}")
+        media_snapshot = (
+            None if self.skip_media_builds or self.targeted_build
+            else build_collection_media_snapshot(self.repo_root, self.media_owner, write=write)
+        )
+        semantic_tokens_by_doc: dict[str, list[dict[str, Any]]] = {}
+        item_payloads = {
+            doc.doc_id: self.item_entry(doc, summaries, semantic_tokens_by_doc)
+            for doc in ordered_docs
+        }
         subject_associations_payload: dict[str, Any] | None = None
-        if subjects_by_doc_id is not None:
+        if subjects_by_doc_id is not None or "subject_generation" in manage_manifest_payload:
+            subjects_by_doc_id = {
+                row["doc_id"]: row.setdefault(
+                    "authoring_subject", normalize_authoring_subject({}, folder_supported=self.folder_subject_supported())
+                )
+                for row in manage_manifest_payload["docs"]
+            }
             subject_generation = subject_projection_generation(
                 stage=self.config.stage,
                 collection=self.collection_id,
@@ -240,33 +252,31 @@ class CollectionDocsBuilder(DocsDataBuilder):
             subject_associations_payload = project_subject_associations(
                 stage=self.config.stage,
                 collection=self.collection_id,
-                documents=ordered_docs,
+                documents=summaries,
                 subjects_by_doc_id=subjects_by_doc_id,
                 subject_generation=subject_generation,
             )
-        manage_manifest_payload = self.manage_manifest_payload(
-            ordered_docs,
-            subjects_by_doc_id=subjects_by_doc_id,
-            subject_generation=subject_generation,
-        )
+            manage_manifest_payload["subject_generation"] = subject_generation
         write_plan = self.build_collection_write_plan(
             manifest_payload,
             manage_manifest_payload,
             subject_associations_payload,
             item_payloads,
+            target_doc_ids=self.only_doc_ids,
         )
         semantic_token_payloads = self.build_semantic_token_payloads(docs, semantic_tokens_by_doc)
         write_plan.update(self.build_semantic_token_write_plan(semantic_token_payloads))
         links_plan = prepare_document_links(self, docs, item_payloads, write_plan["stale_item_ids"])
         diagnostics = self.collection_diagnostics_payload(
-            docs=docs,
+            docs_total=len(summaries),
+            docs_emitted=len(item_payloads),
             write_plan=write_plan,
             elapsed_seconds=round(monotonic_time() - started_at, 3),
         )
         if write:
-            self.write_collection_outputs(write_plan, docs_total=len(docs))
+            self.write_collection_outputs(write_plan, docs_total=len(summaries))
         else:
-            self.print_collection_summary(write_plan, mode="dry-run", docs_total=len(docs))
+            self.print_collection_summary(write_plan, mode="dry-run", docs_total=len(summaries))
         links_build = build_document_links(self, links_plan, write=write)
         diagnostics["warning_count"] = len(self.warnings)
         if emit_diagnostics:
@@ -289,7 +299,10 @@ class CollectionDocsBuilder(DocsDataBuilder):
         manage_manifest_payload: dict[str, Any],
         subject_associations_payload: dict[str, Any] | None,
         item_payloads: dict[str, dict[str, Any]],
+        *,
+        target_doc_ids: list[str] | None = None,
     ) -> dict[str, Any]:
+        """Compare selected payloads and confine targeted removals to selected IDs."""
         manifest_text = json_text(manifest_payload)
         manage_manifest_text = json_text(manage_manifest_payload)
         subject_associations_text = (
@@ -304,7 +317,14 @@ class CollectionDocsBuilder(DocsDataBuilder):
             item_text_by_id[doc_id] = text
             if read_text(self.items_dir / f"{doc_id}.json") != text:
                 changed_item_ids.append(doc_id)
-        existing_item_ids = self.existing_doc_payload_ids(self.items_dir)
+        existing_item_ids = (
+            self.existing_doc_payload_ids(self.items_dir)
+            if target_doc_ids is None
+            else [doc_id for doc_id in target_doc_ids if (self.items_dir / f"{doc_id}.json").is_file()]
+        )
+        stale_item_ids = set(existing_item_ids) - set(item_payloads)
+        if target_doc_ids is not None:
+            stale_item_ids &= set(target_doc_ids)
         return {
             "manifest_write": read_text(self.output_dir / "manifest.json") != manifest_text,
             "manifest_text": manifest_text,
@@ -320,7 +340,7 @@ class CollectionDocsBuilder(DocsDataBuilder):
             ),
             "subject_associations_text": subject_associations_text,
             "changed_item_ids": sorted(changed_item_ids),
-            "stale_item_ids": sorted(set(existing_item_ids) - set(item_payloads)),
+            "stale_item_ids": sorted(stale_item_ids),
             "item_text_by_id": item_text_by_id,
         }
 
@@ -351,6 +371,7 @@ class CollectionDocsBuilder(DocsDataBuilder):
         remove_verb = "would remove" if mode == "dry-run" else "removed"
         print(f"Docs collection build ({mode}) stage={self.config.stage} collection={self.collection_id}")
         print(f"  docs total: {docs_total}")
+        print(f"  docs rendered: {len(write_plan['item_text_by_id'])}")
         print(f"  docs {verb}: {len(write_plan['changed_item_ids'])}")
         print(f"  docs {remove_verb}: {len(write_plan['stale_item_ids'])}")
         print(f"  manifest {verb}: {1 if write_plan['manifest_write'] else 0}")
@@ -368,16 +389,19 @@ class CollectionDocsBuilder(DocsDataBuilder):
     def collection_diagnostics_payload(
         self,
         *,
-        docs: list[DocRecord],
+        docs_total: int,
+        docs_emitted: int,
         write_plan: dict[str, Any],
         elapsed_seconds: float,
     ) -> dict[str, Any]:
         return {
             "stage": self.config.stage,
             "collection": self.collection_id,
-            "build_mode": "collection",
+            "build_mode": "targeted_collection" if self.targeted_build else "collection",
             "source_files_scanned": self.source_files_scanned,
-            "docs_emitted": len(docs),
+            "docs_total": docs_total,
+            "docs_emitted": docs_emitted,
+            "target_doc_ids": self.only_doc_ids,
             "doc_payloads_changed": len(write_plan["changed_item_ids"]),
             "doc_payloads_removed": len(write_plan["stale_item_ids"]),
             "manifest_changed": 1 if write_plan["manifest_write"] else 0,

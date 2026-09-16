@@ -3,12 +3,13 @@ from __future__ import annotations
 import html
 import re
 from uuid import uuid4
-from dataclasses import dataclass
-from typing import Any, Callable, Iterable
+from dataclasses import dataclass, replace
+from typing import Any, Callable, Iterable, Mapping
 from urllib.parse import quote, unquote_to_bytes
 
 from .semantic_token_registry import SemanticTokenRegistry
 from .source import DocRecord
+from docs_document_subjects import parse_detail_uid
 from docs_staged_media_fragments import (
     FIGURE_NATURAL_WIDTH_CLASS,
     FIGURE_PLACEMENT_CLASSES,
@@ -39,6 +40,7 @@ class SemanticTokenOccurrence:
     placement: str = ""
     fill_width: bool | None = None
     detail_id: str = ""
+    use_document_subject: bool = False
 
     @property
     def source_range(self) -> dict[str, int]:
@@ -114,10 +116,11 @@ def serialize_catalogue_image_token(
     placement: Any = "",
     fill_width: Any = None,
     detail_id: Any = "",
+    use_document_subject: bool = False,
 ) -> str:
     if (
         target_type != "work"
-        or not re.fullmatch(r"[0-9]{5}", str(target_id or ""))
+        or (not use_document_subject and not re.fullmatch(r"[0-9]{5}", str(target_id or "")))
     ):
         return ""
     alt_text = normalize_plain_text(alt, required=True)
@@ -158,7 +161,8 @@ def serialize_catalogue_image_token(
     query = "&".join(
         f"{key}={encode_catalogue_image_value(value)}" for key, value in fields
     )
-    return f"[[catalogue:image:{target_type}:{target_id}|{query}]]"
+    identity = target_type if use_document_subject else f"{target_type}:{target_id}"
+    return f"[[catalogue:image:{identity}|{query}]]"
 
 
 def parse_catalogue_image_fields(raw_query: str, *, target_type: str) -> dict[str, Any] | None:
@@ -238,18 +242,22 @@ def parse_semantic_token(
     family = parts[0] if parts else ""
     is_image = (
         family == "catalogue"
-        and len(parts) == 4
+        and len(parts) in {3, 4}
         and parts[1] == "image"
     )
-    is_media = family == "catalogue" and len(parts) in {4, 5} and parts[1] == "media"
+    is_media = family == "catalogue" and len(parts) in {3, 4, 5} and parts[1] == "media"
     if not separator or (not is_image and not is_media):
         return None
     target_type = parts[2]
-    target_id = parts[3]
+    use_document_subject = len(parts) == 3
+    target_id = "" if use_document_subject else parts[3]
     media_detail_id = parts[4] if len(parts) == 5 else ""
-    if is_image and (target_type != "work" or not re.fullmatch(r"[0-9]{5}", target_id)):
+    if is_image and (target_type != "work" or (not use_document_subject and not re.fullmatch(r"[0-9]{5}", target_id))):
         return None
-    if is_media:
+    if is_media and use_document_subject:
+        if target_type not in {"work", "series", "detail"}:
+            return None
+    elif is_media:
         if target_type == "work":
             if not re.fullmatch(r"[0-9]{5}", target_id):
                 return None
@@ -260,7 +268,7 @@ def parse_semantic_token(
     if (
         not LEXICAL_KEY_PATTERN.fullmatch(family)
         or not LEXICAL_KEY_PATTERN.fullmatch(target_type)
-        or not LEXICAL_ID_PATTERN.fullmatch(target_id)
+        or (not use_document_subject and not LEXICAL_ID_PATTERN.fullmatch(target_id))
     ):
         return None
     image_fields = (
@@ -276,9 +284,10 @@ def parse_semantic_token(
     if title is None or (is_image and image_fields is None):
         return None
     family_definition = registry.family(family) if registry else None
-    target_definition = family_definition.target_type(target_type) if family_definition else None
+    registry_type = "work" if use_document_subject and target_type == "detail" else target_type
+    target_definition = family_definition.target_type(registry_type) if family_definition else None
     supported = target_definition is not None
-    if supported and not re.fullmatch(target_definition.id_policy.canonical_pattern, target_id):
+    if supported and not use_document_subject and not re.fullmatch(target_definition.id_policy.canonical_pattern, target_id):
         return None
     return SemanticTokenOccurrence(
         raw=raw,
@@ -296,7 +305,20 @@ def parse_semantic_token(
         placement=image_fields["placement"] if image_fields else "",
         fill_width=image_fields["fill_width"] if image_fields else None,
         detail_id=image_fields["detail_id"] if image_fields else media_detail_id,
+        use_document_subject=use_document_subject,
     )
+
+
+def resolve_catalogue_token_subject(
+    token: SemanticTokenOccurrence, front_matter: Mapping[str, Any],
+) -> SemanticTokenOccurrence:
+    """Resolve an abbreviated identity, retaining its authored token and ranges."""
+    if not token.use_document_subject:
+        return token
+    if token.target_type == "detail":
+        work_id, detail_id = parse_detail_uid(front_matter["detail_uid"])
+        return replace(token, target_type="work", target_id=work_id, detail_id=detail_id)
+    return replace(token, target_id=front_matter[f"{token.target_type}_id"])
 
 
 def parse_catalogue_token(
@@ -530,6 +552,7 @@ class SemanticTokensMixin:
         def replace(token: SemanticTokenOccurrence) -> str:
             if not token.supported:
                 return token.raw
+            token = resolve_catalogue_token_subject(token, doc.front_matter)
             occurrences.append({
                 "source_stage": self.config.stage, "source_doc_id": doc.doc_id,
                 "source_range": token.source_range, "raw": token.raw, "title": token.title,
