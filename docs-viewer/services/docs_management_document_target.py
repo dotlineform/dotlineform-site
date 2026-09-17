@@ -150,7 +150,9 @@ def resolve_managed_document_collection(
     *,
     collection: Any | None = None,
     stage: str,
+    require_existing_source_root: bool = True,
 ) -> ManagedDocumentCollection:
+    """Resolve the configured destination; creation skips directory preflight."""
     parent_config = load_docs_stage(repo_root, stage)
 
     normalized_collection = ""
@@ -177,7 +179,7 @@ def resolve_managed_document_collection(
     source_root = resolve_workspace_path(repo_root, document_source_path(document_config)).resolve()
     if not source_root.is_relative_to(parent_config.workspace_root.path):
         raise ValueError("source root escapes the configured Docs workspace")
-    if not source_root.is_dir():
+    if require_existing_source_root and not source_root.is_dir():
         target_label = f"{stage}/{normalized_collection or 'ordinary documents'}"
         raise FileNotFoundError(f"source root not found for managed document target {target_label}")
     return ManagedDocumentCollection(

@@ -212,7 +212,11 @@ class ManagementMutationPlan:
 
 
 def plan_create(repo_root: Path, body: Dict[str, Any]) -> ManagementMutationPlan:
-    """Plan one source write with Catalogue fields present before the creation build."""
+    """Plan one create-only write without reading existing named-collection docs.
+
+    Ordinary documents retain their source inventory for parent resolution.
+    Catalogue fields are present before the creation build.
+    """
     if "scope" in body:
         raise ValueError("scope is retired; supply stage")
     if "viewable" in body:
@@ -224,6 +228,7 @@ def plan_create(repo_root: Path, body: Dict[str, Any]) -> ManagementMutationPlan
         repo_root,
         collection=body.get("collection") if collection_requested else None,
         stage=body.get("stage"),
+        require_existing_source_root=False,
     )
     require_document_authoring(resolved_collection.parent_config)
     stage = resolved_collection.stage
@@ -240,36 +245,36 @@ def plan_create(repo_root: Path, body: Dict[str, Any]) -> ManagementMutationPlan
     elif "work_id" in body:
         raise ValueError("work_id is only accepted when creating a Catalogue collection document")
     target_root = resolved_collection.source_root
-    report_contract = source_model.report_source_contract_for_collection(
-        repo_root,
-        resolved_collection.parent_config,
-        resolved_collection.document_config,
-    )
-    docs: list[source_model.SourceDoc] = []
-    for candidate in source_model.document_markdown_paths(target_root):
-        confined = confined_source_path(target_root, candidate)
-        document = source_doc_from_path(
-            path=confined,
-            requested_doc_id=candidate.stem if collection else None,
-            report_contract=report_contract,
-        )
-        source_model.validate_document_status_front_matter(
-            document.front_matter,
-            collection_config=resolved_collection.document_config,
-            source_name=candidate.name,
-        )
-        docs.append(document)
-    source_model.validate_collection_docs(
-        docs,
-        allow_unknown_parent_ids=resolved_collection.parent_config.allow_unresolved_parent_ids,
-    )
     if collection and "parent_id" in body:
         raise ValueError("parent_id is not accepted for a collection document")
-    docs_by_id = {doc.doc_id: doc for doc in docs}
     parent_id = str(body.get("parent_id") or "").strip()
+    docs: list[source_model.SourceDoc] = []
+    if not collection:
+        report_contract = source_model.report_source_contract_for_collection(
+            repo_root,
+            resolved_collection.parent_config,
+            resolved_collection.document_config,
+        )
+        for candidate in source_model.document_markdown_paths(target_root):
+            confined = confined_source_path(target_root, candidate)
+            document = source_doc_from_path(
+                path=confined,
+                report_contract=report_contract,
+            )
+            source_model.validate_document_status_front_matter(
+                document.front_matter,
+                collection_config=resolved_collection.document_config,
+                source_name=candidate.name,
+            )
+            docs.append(document)
+        source_model.validate_collection_docs(
+            docs,
+            allow_unknown_parent_ids=resolved_collection.parent_config.allow_unresolved_parent_ids,
+        )
+        docs_by_id = {doc.doc_id: doc for doc in docs}
 
-    if not collection and parent_id and parent_id not in docs_by_id:
-        raise ValueError(f"Unknown parent_id {parent_id!r} in stage {stage}")
+        if parent_id and parent_id not in docs_by_id:
+            raise ValueError(f"Unknown parent_id {parent_id!r} in stage {stage}")
 
     timestamp = source_model.current_doc_timestamp()
     doc_id = source_model.allocate_doc_id(
