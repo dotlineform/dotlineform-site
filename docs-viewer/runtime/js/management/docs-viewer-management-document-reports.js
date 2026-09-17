@@ -235,6 +235,10 @@ export function loadDocsViewerCollectionContribution(settings, parent, collectio
         );
       },
       onCreateDocument: contributionOptions.onCreateDocument,
+      onRegenerateCatalogue: settings.managementContext && parent.stage === "working"
+        && collection === "catalogue" && cleanString(clientOptions.baseUrl)
+        ? settings.managementDocumentActions?.regenerateCatalogue
+        : null,
       onToggleDraft: settings.managementContext && parent.stage === "working"
         && cleanString(clientOptions.baseUrl)
         ? settings.managementDocumentActions?.toggleCollectionDocumentDraft
@@ -426,6 +430,7 @@ export function mountDocsViewerManageDocumentExtras(context) {
   var contribution = loadDocsViewerCollectionContribution(settings, parent, collection, {
     onCreateDocument: (
       settings.managementContext
+      && collection !== "catalogue"
       && (!parent.stage || parent.stage === "working")
       && reportManagementBaseUrl
       && createAction

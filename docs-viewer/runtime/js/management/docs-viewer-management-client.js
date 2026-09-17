@@ -79,6 +79,16 @@ export function readCatalogueWork(workId, options) {
     Object.assign({}, options, { cache: "no-store" }));
 }
 
+/** Preview an exact Working Catalogue selection without source writes. */
+export function previewCatalogueRegeneration(payload, options) {
+  return fetchManagementJson("/docs/catalogue/regenerate-preview", "POST", payload, options);
+}
+
+/** Apply the server preview receipt and await source, document and Links outcomes. */
+export function applyCatalogueRegeneration(payload, options) {
+  return fetchManagementJson("/docs/catalogue/regenerate-apply", "POST", payload, options);
+}
+
 /** Read current Series membership without resolving any member Work records. */
 export function readCatalogueSeries(seriesId, options) {
   return fetchManagementJson("/docs/catalogue-series?series_id=" + encodeURIComponent(seriesId), "GET", undefined,

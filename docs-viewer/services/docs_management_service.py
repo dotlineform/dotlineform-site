@@ -39,6 +39,7 @@ import docs_source_config_settings  # noqa: E402
 import docs_static_html_export  # noqa: E402
 import docs_staged_media_service  # noqa: E402
 import docs_collection_lifecycle  # noqa: E402
+import docs_catalogue_regeneration  # noqa: E402
 import docs_source_model as source_model  # noqa: E402
 import docs_write_rebuild as write_rebuild  # noqa: E402
 from docs_management_broken_links_service import handle_broken_links  # noqa: E402
@@ -118,6 +119,17 @@ def docs_management_post_response(
             require_document_authoring(selected)
     if path == routes.PRE_PUBLISH_PREVIEW_PATH:
         return HTTPStatus.OK, docs_pre_publish.preview_pre_publish(repo_root, body)
+    if path == routes.CATALOGUE_REGENERATE_PREVIEW_PATH:
+        return HTTPStatus.OK, docs_catalogue_regeneration.preview_catalogue_regeneration(repo_root, body)
+    if path == routes.CATALOGUE_REGENERATE_APPLY_PATH:
+        if dry_run:
+            raise ValueError("Catalogue Regenerate apply does not support dry_run")
+        try:
+            return HTTPStatus.OK, docs_catalogue_regeneration.apply_catalogue_regeneration(repo_root, body)
+        except docs_catalogue_regeneration.CatalogueRegenerationConflict as error:
+            return HTTPStatus.CONFLICT, {"ok": False, "error": str(error)}
+        except docs_catalogue_regeneration.CatalogueRegenerationApplyError as error:
+            return HTTPStatus.INTERNAL_SERVER_ERROR, error.payload
     if path == routes.PRE_PUBLISH_APPLY_PATH:
         if dry_run:
             raise ValueError("Pre-publish apply does not support dry_run")

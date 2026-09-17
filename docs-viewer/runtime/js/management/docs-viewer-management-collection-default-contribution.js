@@ -100,6 +100,9 @@ export function createDocsViewerManagementCollectionDefaultContribution(options 
   var onCreateDocument = typeof options.onCreateDocument === "function"
     ? options.onCreateDocument
     : null;
+  var onRegenerateCatalogue = typeof options.onRegenerateCatalogue === "function"
+    ? options.onRegenerateCatalogue
+    : null;
   var markdownLinkForDocument = typeof options.markdownLinkForDocument === "function"
     ? options.markdownLinkForDocument
     : null;
@@ -371,6 +374,37 @@ export function createDocsViewerManagementCollectionDefaultContribution(options 
       }
     }
 
+    var regenerateButton = null;
+    if (managementContext && onRegenerateCatalogue) {
+      regenerateButton = documentRef.createElement("button");
+      regenerateButton.type = "button";
+      regenerateButton.className = "docsViewerReport__collectionActionsButton";
+      regenerateButton.dataset.docsCollectionRegenerate = "true";
+      regenerateButton.title = "Regenerate";
+      regenerateButton.setAttribute("aria-label", "Regenerate");
+      regenerateButton.textContent = "🔄";
+      var regenerateAction = settings.registerAction({
+        id: "catalogue-regenerate", placement: "list-toolbar", targetKind: "collection",
+        capability: true, emptyState: "enabled", refreshEffect: "collection",
+        handler: function (target) {
+          return onRegenerateCatalogue(target, {
+            refreshCollection: settings.refreshCollection, restoreFocus: regenerateButton
+          });
+        }
+      });
+      regenerateButton.addEventListener("click", function () {
+        if (regenerateButton.disabled) return;
+        regenerateButton.disabled = true;
+        regenerateButton.setAttribute("aria-busy", "true");
+        regenerateAction.invoke().catch(function (error) {
+          if (typeof options.setStatus === "function") options.setStatus(error.message, true);
+        }).finally(function () {
+          regenerateButton.disabled = false;
+          regenerateButton.removeAttribute("aria-busy");
+        });
+      });
+    }
+
     var actionsHost = documentRef.createElement("div");
     actionsHost.className = "docsViewer__actionsMenuHost docsViewerReport__collectionActionsHost";
     var actionsButton = documentRef.createElement("button");
@@ -415,6 +449,7 @@ export function createDocsViewerManagementCollectionDefaultContribution(options 
       root,
       (sortButton ? [sortButton] : [])
         .concat(createButton ? [createButton] : [])
+        .concat(regenerateButton ? [regenerateButton] : [])
         .concat([actionsHost, selectionControl])
     );
     host.appendChild(root);

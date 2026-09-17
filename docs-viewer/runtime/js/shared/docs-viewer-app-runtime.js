@@ -384,6 +384,14 @@ export function startDocsViewerRuntime(options) {
     },
     managementService: managementService,
     managementDocumentActions: {
+      regenerateCatalogue: function (collection, options) {
+        return loadManagementController().then(function (controller) {
+          if (!controller || typeof controller.regenerateCatalogue !== "function") {
+            throw new Error("Catalogue regeneration is unavailable.");
+          }
+          return controller.regenerateCatalogue(collection, options);
+        });
+      },
       toggleCollectionDocumentDraft: function (target, draft) {
         return loadManagementController().then(function (controller) {
           if (!controller || typeof controller.toggleCollectionDocumentDraft !== "function") {

@@ -25,6 +25,8 @@ SERIES_WORK_MEDIA_PATH = "/docs/series-work-media"
 CATALOGUE_MEDIA_TARGETS_PATH = "/docs/catalogue-media-targets"
 CATALOGUE_WORK_PATH = "/docs/catalogue-work"
 CATALOGUE_SERIES_PATH = "/docs/catalogue-series"
+CATALOGUE_REGENERATE_PREVIEW_PATH = "/docs/catalogue/regenerate-preview"
+CATALOGUE_REGENERATE_APPLY_PATH = "/docs/catalogue/regenerate-apply"
 SOURCE_CONFIG_SETTINGS_PATH = "/docs/source-config-settings"
 IMPORT_SOURCE_DIRECTORIES_PATH = "/docs/import-source-directories"
 IMPORT_SOURCE_FILES_PATH = "/docs/import-source-files"
@@ -106,6 +108,8 @@ GET_PATHS = (
 )
 
 POST_PATHS = (
+    CATALOGUE_REGENERATE_PREVIEW_PATH,
+    CATALOGUE_REGENERATE_APPLY_PATH,
     SOURCE_REBUILD_PATH,
     OPEN_SOURCE_PATH,
     OPEN_PUBLICATION_IGNORE_PATH,

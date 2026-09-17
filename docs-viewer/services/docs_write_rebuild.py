@@ -652,8 +652,14 @@ def perform_collection_source_write_and_rebuild(
     source_snapshots: Mapping[Path, bytes] | None = None,
     stage: str | None = None,
     links_created_doc_ids: list[str] | None = None,
+    links_doc_ids: list[str] | None = None,
+    source_writes_committed: Callable[[], bool] | None = None,
 ) -> Dict[str, Any]:
-    """Capture exact identities around the source write and await a targeted build."""
+    """Await a targeted build; an explicit Links selection preserves other records.
+
+    A caller reporting partial commits can supply its write receipt. On failure,
+    committed writes remain suppressed so the watcher does not retry the build.
+    """
     require_document_authoring(load_docs_stage(repo_root, stage))
     root = current_collection_source_root(repo_root, collection, stage)
     resolved_changed_paths = {
@@ -714,10 +720,13 @@ def perform_collection_source_write_and_rebuild(
                 )
         write_operation()
         docs_doc_ids = sorted(set(source_doc_ids_before) | set(changed_source_document_ids(changed_paths)))
+        links_arguments = links_write_arguments(links_before, changed_paths, created_doc_ids=links_created_doc_ids)
+        if links_doc_ids is not None:
+            links_arguments["links_doc_ids"] = links_doc_ids
         rebuild = rebuild_collection_outputs(
             repo_root, collection, stage=stage,
             docs_doc_ids=docs_doc_ids,
-            **links_write_arguments(links_before, changed_paths, created_doc_ids=links_created_doc_ids),
+            **links_arguments,
         )
     except CollectionSourceSnapshotChanged:
         if filenames:
@@ -726,7 +735,14 @@ def perform_collection_source_write_and_rebuild(
     except Exception as exc:
         if normalized_snapshots is None:
             if filenames:
-                clear_watch_suppressions(repo_root, suppression_owner, filenames)
+                if source_writes_committed is not None and source_writes_committed():
+                    set_watch_suppressions(
+                        repo_root, suppression_owner, filenames,
+                        status=SUPPRESSION_COMPLETE, reason=suppression_reason,
+                        ttl_seconds=DEFAULT_COMPLETE_TTL_SECONDS,
+                    )
+                else:
+                    clear_watch_suppressions(repo_root, suppression_owner, filenames)
             raise
         restoration_errors: list[str] = []
         for path, source_bytes in normalized_snapshots.items():
@@ -743,7 +759,7 @@ def perform_collection_source_write_and_rebuild(
                     collection,
                     stage=stage,
                     docs_doc_ids=docs_doc_ids,
-                    **({"links_doc_ids": links_before} if links_before is not None else {}),
+                    **({"links_doc_ids": links_before if links_doc_ids is None else links_doc_ids} if links_before is not None else {}),
                 )
             except Exception as recovery_exc:
                 recovery_error = str(recovery_exc).strip() or recovery_exc.__class__.__name__

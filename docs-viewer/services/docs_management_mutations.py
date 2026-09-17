@@ -211,11 +211,14 @@ class ManagementMutationPlan:
         return bool(self.source_writes or self.source_deletes)
 
 
-def plan_create(repo_root: Path, body: Dict[str, Any]) -> ManagementMutationPlan:
+def plan_create(
+    repo_root: Path, body: Dict[str, Any], *, body_markdown: str | None = None,
+) -> ManagementMutationPlan:
     """Plan one create-only write without reading existing named-collection docs.
 
     Ordinary documents retain their source inventory for parent resolution.
-    Catalogue fields are present before the creation build.
+    Catalogue fields are present before the creation build. Internal generators
+    may supply body_markdown; the HTTP create request does not expose it.
     """
     if "scope" in body:
         raise ValueError("scope is retired; supply stage")
@@ -296,7 +299,10 @@ def plan_create(repo_root: Path, body: Dict[str, Any]) -> ManagementMutationPlan
         front_matter_seed,
         timestamp=timestamp,
     )
-    source_text = source_model.format_source(front_matter, f"# {title}\n", collection=collection)
+    source_text = source_model.format_source(
+        front_matter, f"# {title}\n" if body_markdown is None else body_markdown,
+        collection=collection,
+    )
     path = relative_path(repo_root, target_path)
     target = {**resolved_collection.request_target(), "doc_id": doc_id}
     if collection:

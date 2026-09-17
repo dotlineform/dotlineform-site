@@ -61,17 +61,23 @@ def _safe_media_url(value: Any) -> str:
     return ""
 
 
-def read_catalogue_media_targets(repo_root: Path) -> dict[str, Any]:
-    """Expose Work and Series search identities from generated indexes, without document filtering."""
+def read_catalogue_work_index(repo_root: Path) -> dict[str, dict[str, Any]]:
+    """Read the generated Work inventory without loading Series or by-ID records."""
     payload = _read_generated(repo_root, "works/works_index.json")
     works = payload.get("works")
     if not isinstance(works, dict):
         raise ValueError("Generated Catalogue Work index is unavailable")
-    targets = []
     for key, work in works.items():
         work_id = _work_identity(key)
         if not isinstance(work, dict) or work.get("work_id") != work_id:
             raise ValueError("Generated Work index identity is mismatched")
+    return works
+
+
+def read_catalogue_media_targets(repo_root: Path) -> dict[str, Any]:
+    """Expose Work and Series search identities from generated indexes, without document filtering."""
+    targets = []
+    for work_id, work in read_catalogue_work_index(repo_root).items():
         year = work.get("year_display")
         targets.append({
             "family": "catalogue", "target_type": "work", "target_id": work_id,

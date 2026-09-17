@@ -15,6 +15,7 @@ import {
 } from "./docs-viewer-action-definitions.js";
 import {
   managedDocumentTargetsEqual,
+  normalizeManagedDocumentCollectionTarget,
   normalizeManagedDocumentTarget
 } from "./docs-viewer-management-document-target.js";
 import {
@@ -28,7 +29,6 @@ import {
   docsViewerPublishWorkflowMessage,
   runManagedDocsPublishWorkflow
 } from "./docs-viewer-management-publish-workflow.js";
-import { openDocsViewerCatalogueCreateModal } from "./docs-viewer-management-catalogue-create-modal.js";
 
 var ACTION_TEXT = {
   cancelButton: "Cancel",
@@ -533,19 +533,12 @@ export function createDocsViewerManagementActionController(options) {
       throw new Error("Docs management is busy.");
     }
 
-    var fields;
-    if (targetCollection.collection === "catalogue") {
-      var catalogueResult = await openDocsViewerCatalogueCreateModal({ root: root });
-      if (!catalogueResult || !catalogueResult.confirmed) return null;
-      fields = catalogueResult.fields;
-    } else {
-      var titleResult = await openCreateTitleModal(
-        ACTION_TEXT.createCollectionDocTitle,
-        { compactLabel: true }
-      );
-      if (!titleResult || !titleResult.confirmed) return null;
-      fields = { title: String(titleResult.value || "").trim() || ACTION_TEXT.createDocDefaultTitle };
-    }
+    var titleResult = await openCreateTitleModal(
+      ACTION_TEXT.createCollectionDocTitle,
+      { compactLabel: true }
+    );
+    if (!titleResult || !titleResult.confirmed) return null;
+    var fields = { title: String(titleResult.value || "").trim() || ACTION_TEXT.createDocDefaultTitle };
     setManagementBusy(true);
     setManagementMessage("Creating doc...", false);
     return createDocumentAndOpenSource(
@@ -558,6 +551,31 @@ export function createDocsViewerManagementActionController(options) {
         refreshAndSelect: createSettings.refreshAndSelect
       }
     );
+  }
+
+  async function handleRegenerateCatalogue(collection, optionsForRegenerate = {}) {
+    var target = normalizeManagedDocumentCollectionTarget(collection);
+    if (management.managementBusy) throw new Error("Docs management is busy.");
+    if (target.stage !== managementClientOptions().stage) throw new Error("Catalogue stage has changed.");
+    setManagementBusy(true);
+    renderManagementUi();
+    try {
+      var module = await import("./docs-viewer-management-catalogue-regenerate.js");
+      var result = await module.openCatalogueRegenerate({
+        root: root, target: target, clientOptions: managementClientOptions(),
+        onBusyChange: function (busy) {
+          setManagementBusy(busy);
+          renderManagementUi();
+        },
+        refreshCollection: optionsForRegenerate.refreshCollection,
+        restoreFocus: optionsForRegenerate.restoreFocus
+      });
+      if (result) setManagementMessage(result.error || "", result.ok === false);
+      return result;
+    } finally {
+      setManagementBusy(false);
+      renderManagementUi();
+    }
   }
 
   function handleEditMetadataSave(target, payload) {
@@ -914,6 +932,7 @@ export function createDocsViewerManagementActionController(options) {
     handleCreateDoc: handleCreateDoc,
     handleCreateRelatedDoc: handleCreateRelatedDoc,
     handleCreateCollectionDocument: handleCreateCollectionDocument,
+    handleRegenerateCatalogue: handleRegenerateCatalogue,
     handleDeleteDoc: handleDeleteDoc,
     handleEditMetadataSave: handleEditMetadataSave,
     handleMarkdownSave: handleMarkdownSave,

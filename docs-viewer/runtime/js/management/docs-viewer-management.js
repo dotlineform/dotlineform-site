@@ -1119,6 +1119,7 @@ export function initDocsViewerManagement(context) {
     applyConfig: applyConfig,
     canDragCurrentDoc: canDragCurrentDoc,
     createCollectionDocument: actionController.handleCreateCollectionDocument,
+    regenerateCatalogue: actionController.handleRegenerateCatalogue,
     toggleCollectionDocumentDraft: toggleCollectionDocumentDraft,
     handleDocumentKeydown: eventRouter.handleDocumentKeydown,
     handleAppManagementControl: handleAppManagementControl,

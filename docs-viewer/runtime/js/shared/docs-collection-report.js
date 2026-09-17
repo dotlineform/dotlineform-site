@@ -391,6 +391,12 @@ function appendDocRow(state, doc) {
     title.setAttribute("aria-label", [titleText.textContent].concat(accessibleLabels).join(", "));
   }
   title.addEventListener("click", function () {
+    var windowRef = row.ownerDocument.defaultView;
+    state.listReturnPosition = windowRef ? {
+      left: windowRef.scrollX,
+      top: windowRef.scrollY,
+      control: title
+    } : null;
     writeSubdocUrl(state, docId, "push");
     renderDetailById(state, docId);
   });
@@ -799,6 +805,7 @@ function invalidateDetailRequest(state) {
 }
 
 function renderListProjection(state) {
+  state.listNeedsRender = true;
   var documents = visibleDocuments(state);
   updateFilterControls(state);
   renderListToolbar(state, documents);
@@ -811,6 +818,7 @@ function renderListProjection(state) {
     sort: state.sortMode,
     reason: "filters-projected"
   });
+  state.listNeedsRender = false;
 }
 
 function renderListProjectionContained(state, reason) {
@@ -833,6 +841,7 @@ function renderListProjectionContained(state, reason) {
   }
 }
 
+/** Reveal the retained list, rebuilding only when its document data changed. */
 function renderListView(state) {
   invalidateDetailRequest(state);
   state.validDetailId = "";
@@ -841,7 +850,7 @@ function renderListView(state) {
   state.tableNode.hidden = false;
   state.statusNode.hidden = false;
   if (state.detailNode) state.detailNode.hidden = true;
-  if (!renderListProjectionContained(state, "list-projection-failed")) return;
+  if (state.listNeedsRender && !renderListProjectionContained(state, "list-projection-failed")) return;
   if (state.listToolbarNode) state.listToolbarNode.hidden = false;
   publishState(state, "list", null, "list-view");
 }
@@ -872,6 +881,12 @@ function renderDetailShell(state, docId) {
   back.addEventListener("click", function () {
     writeSubdocUrl(state, "", "push");
     renderListView(state);
+    var position = state.listReturnPosition;
+    var windowRef = state.root.ownerDocument.defaultView;
+    if (position && windowRef && state.root.dataset.reportState === "list") {
+      windowRef.scrollTo({ left: position.left, top: position.top, behavior: "auto" });
+      if (position.control.isConnected) position.control.focus({ preventScroll: true });
+    }
   });
 
   var body = document.createElement("article");
@@ -1053,6 +1068,7 @@ function focusFirstListRow(state) {
 }
 
 function publishDocumentsRefresh(state, reason) {
+  state.listNeedsRender = true;
   notifyContribution(state, {
     type: "refresh",
     data: state.customisationData,
@@ -1075,6 +1091,7 @@ function applyManifest(state, manifest) {
     );
   }
   state.docs = manifest.documents;
+  state.listNeedsRender = true;
   state.customisationData = manifestCustomisation
     ? Object.freeze(Object.assign({}, manifestCustomisation.data))
     : Object.freeze({});
@@ -1325,6 +1342,8 @@ function mountResolvedDocsCollectionReport(context, contribution) {
     filterValues: new Map(),
     headNode: refs.headNode,
     listToolbarNode: null,
+    listNeedsRender: true,
+    listReturnPosition: null,
     statusNode: refs.statusNode,
     tableNode: refs.tableNode,
     rowsNode: refs.rowsNode,
