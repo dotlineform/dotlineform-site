@@ -20,10 +20,6 @@ function setHidden(node, hidden) {
   if (node) node.hidden = Boolean(hidden);
 }
 
-function clearNode(node) {
-  if (node) node.replaceChildren();
-}
-
 function openLeavePrompt(root) {
   return openDocsViewerManagementModal({
     root: root,
@@ -42,7 +38,6 @@ function openLeavePrompt(root) {
 function renderEditorShell(context, state) {
   var mount = context.mount;
   if (!mount) return;
-  clearNode(mount);
 
   var root = document.createElement("section");
   root.className = "docsViewerSourceEditor";
@@ -517,10 +512,10 @@ function unbindEvents(context, state) {
 }
 
 function restoreRenderedContent(context, state) {
-  if (!context.mount || !state.renderedContent) return;
-  context.mount.replaceChildren(state.renderedContent);
+  if (!context.mount || !state.root) return;
+  state.root.remove();
   context.mount.scrollTop = state.renderedScrollTop;
-  state.renderedContent = null;
+  state.root = null;
 }
 
 export function createDocsViewerSourceEditorMode() {
@@ -539,7 +534,6 @@ export function createDocsViewerSourceEditorMode() {
     loaded: false,
     collectionProvider: null,
     root: null,
-    renderedContent: null,
     renderedScrollTop: 0,
     selectionListeners: new Set(),
     sourceActionControlIds: [],
@@ -567,9 +561,9 @@ export function createDocsViewerSourceEditorMode() {
       state.subject = null;
       state.loaded = false;
       state.collectionProvider = context.collectionProvider || null;
-      state.renderedContent = document.createDocumentFragment();
       state.renderedScrollTop = context.mount.scrollTop;
-      while (context.mount.firstChild) state.renderedContent.appendChild(context.mount.firstChild);
+      // Keep the rendered report mounted so its collection target survives Source.
+      // Source-mode CSS hides it until this editor is removed on return.
       context.documentView.projectToolbar({
         toolbarHidden: false,
         metaHidden: true,

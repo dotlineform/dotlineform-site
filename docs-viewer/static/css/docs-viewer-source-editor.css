@@ -20,6 +20,10 @@
   min-height: max(32rem, calc(100dvh - 8rem));
 }
 
+.docsViewer[data-document-display-mode="markdown-source"] .docsViewer__content > :not([data-docs-viewer-source-editor]){
+  display: none !important;
+}
+
 .docsViewerSourceEditor__header{
   display: flex;
   align-items: flex-start;

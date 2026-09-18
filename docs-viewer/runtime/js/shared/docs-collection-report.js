@@ -15,7 +15,8 @@ import {
  * Render callbacks receive detached hosts that enter the document only when
  * populated. `notify` receives explicit collection-scoped mount, state,
  * complete-manifest refresh, visible-row projection, and unmount events.
- * Detail toolbars receive `commitDocumentDraft(target, draft)` to project a
+ * Detail toolbars are mounted once per detail shell; generated-content refresh
+ * retains them. They receive `commitDocumentDraft(target, draft)` to project a
  * confirmed save into the report's list and detail records without I/O.
  *
  * @typedef {Object} DocsCollectionReportContribution
@@ -935,6 +936,7 @@ function renderDetailToolbar(state, docId) {
   }
 }
 
+/** Update generated content and Info within the existing detail shell. */
 function renderDetailPayload(state, docId, payload) {
   var payloadDocId = cleanString(payload && payload.doc_id);
   if (payloadDocId !== docId) {
@@ -953,7 +955,6 @@ function renderDetailPayload(state, docId, payload) {
   state.detailNode.setAttribute("aria-label", detailTitle(payload, docId));
   state.detailBodyNode.innerHTML = payload && payload.content_html ? payload.content_html : "";
   state.validDetailId = docId;
-  renderDetailToolbar(state, docId);
   var metadata = detailMetadataRecord(state, docId, payload);
   publishState(state, "detail", {
     ...(state.viewerStage ? { stage: state.viewerStage } : {}),
@@ -1028,7 +1029,9 @@ function renderDetailById(state, docId, options) {
   return fetchJson(url, "Failed to load docs collection detail payload", options)
     .then(function (payload) {
       if (requestVersion !== state.detailRequestVersion) return true;
-      return Promise.resolve(renderDetailPayload(state, docId, payload)).then(function () { return true; });
+      var contentReady = renderDetailPayload(state, docId, payload);
+      renderDetailToolbar(state, docId);
+      return Promise.resolve(contentReady).then(function () { return true; });
     })
     .catch(function (error) {
       if (requestVersion !== state.detailRequestVersion) return true;

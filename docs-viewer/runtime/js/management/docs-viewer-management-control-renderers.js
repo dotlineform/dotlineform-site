@@ -158,18 +158,6 @@ export function createDocsViewerManagementControlRenderers() {
       button.replaceChildren(icon);
       return button;
     },
-    "markdown-source-entry": function (context) {
-      return renderDocumentActionButton(context, {
-        id: "docsViewerManageSourceButton",
-        emoji: "☰"
-      });
-    },
-    "subdoc-source-entry": function (context) {
-      return renderDocumentActionButton(context, {
-        id: "docsViewerManageSubdocSourceButton",
-        emoji: "§"
-      });
-    },
     "return-to-doc": function (context) {
       return renderDocumentActionButton(context, {
         id: "docsViewerManageReturnToDocButton",

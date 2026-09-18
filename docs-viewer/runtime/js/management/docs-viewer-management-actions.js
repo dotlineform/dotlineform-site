@@ -905,7 +905,6 @@ export function createDocsViewerManagementActionController(options) {
     handleRegenerateCatalogue: handleRegenerateCatalogue,
     handleDeleteDoc: handleDeleteDoc,
     handleMarkdownSave: handleMarkdownSave,
-    handleMarkdownSource: handleMarkdownSource,
     handleReturnToDoc: handleReturnToDoc,
     handleMoveDoc: handleMoveDoc,
     handleOpenSource: handleOpenSource,

@@ -33,29 +33,18 @@ export function projectDocsViewerReportControlState(options = {}) {
   var editTarget = reportActive
     ? (validDetail ? subdocTarget : (listView ? parentTarget : null))
     : ordinaryTarget;
-  var sourceTarget = reportActive ? parentTarget : ordinaryTarget;
 
   return {
-    editMetadata: control({
+    editDocument: control({
       hidden: hidden || sourceMode,
       disabled: disabled || sourceMode || !editTarget,
-      label: "Edit metadata"
+      label: "Edit document"
     }, editTarget),
     openVsCode: control({
       hidden: hidden,
       disabled: disabled || (!sourceMode && !editTarget),
       label: "Open in VS Code"
     }, sourceMode ? null : editTarget),
-    parentSource: control({
-      hidden: hidden,
-      disabled: disabled || sourceMode || !sourceTarget,
-      label: reportActive ? "Parent Source" : "Source"
-    }, sourceTarget),
-    subdocSource: control({
-      hidden: hidden || !reportActive,
-      disabled: disabled || sourceMode || !validDetail,
-      label: "Subdoc Source"
-    }, validDetail ? subdocTarget : null),
     returnToDoc: control({
       hidden: hidden || !sourceMode,
       disabled: disabled || !sourceMode,

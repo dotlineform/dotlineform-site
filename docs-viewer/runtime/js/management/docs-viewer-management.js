@@ -436,7 +436,7 @@ export function initDocsViewerManagement(context) {
     });
   }
 
-  async function openMetadataSource(target) {
+  async function openDocumentEditor(target) {
     try {
       var sourceTarget = normalizeManagedDocumentTarget(target);
       hideContextMenu();
@@ -521,7 +521,7 @@ export function initDocsViewerManagement(context) {
       subdocTarget: collectionReportState ? collectionReportState.subdocTarget : null
     });
     if (typeof context.projectMainViewControlState === "function") {
-      context.projectMainViewControlState("edit", projectedReportControls.editMetadata.state);
+      context.projectMainViewControlState("edit", projectedReportControls.editDocument.state);
       var draftRecord = currentActiveDoc();
       var draftTarget = sourceTargetForDoc(draftRecord);
       context.projectMainViewControlState("draft", {
@@ -532,8 +532,6 @@ export function initDocsViewerManagement(context) {
         label: draftRecord && draftRecord.draft === true ? "Draft — mark ready" : "Ready — mark as draft"
       });
       context.projectMainViewControlState("open-vscode", projectedReportControls.openVsCode.state);
-      context.projectMainViewControlState("markdown-source", projectedReportControls.parentSource.state);
-      context.projectMainViewControlState("subdoc-source", projectedReportControls.subdocSource.state);
       context.projectMainViewControlState("return-to-doc", projectedReportControls.returnToDoc.state);
       context.projectMainViewControlState("save-markdown-source", {
         hidden: actionsHidden,
@@ -606,7 +604,7 @@ export function initDocsViewerManagement(context) {
     var controlId = String(detail && detail.controlId || "").trim();
     var actionId = String(detail && detail.actionId || "").trim();
     if (controlId === "draft") {
-      var draftControl = projectedReportControls && projectedReportControls.editMetadata;
+      var draftControl = projectedReportControls && projectedReportControls.editDocument;
       if (!draftControl || draftControl.state.hidden || draftControl.state.disabled
         || !draftControl.target || draftControl.target.collection
         || management.managementBusy || viewerStage() !== "working") return;
@@ -616,23 +614,9 @@ export function initDocsViewerManagement(context) {
     }
     var reportControlOwners = new Map([
       ["edit", {
-        projection: "editMetadata",
+        projection: "editDocument",
         run: function (target) {
-          openMetadataSource(target);
-        }
-      }],
-      ["markdown-source", {
-        projection: "parentSource",
-        run: function (target) {
-          sourceSessionReportActive = Boolean(collectionReportState);
-          actionController.handleMarkdownSource(target);
-        }
-      }],
-      ["subdoc-source", {
-        projection: "subdocSource",
-        run: function (target) {
-          sourceSessionReportActive = Boolean(collectionReportState);
-          actionController.handleMarkdownSource(target);
+          openDocumentEditor(target);
         }
       }],
       ["return-to-doc", {
@@ -762,7 +746,7 @@ export function initDocsViewerManagement(context) {
 
     if (!manageRebuildButton || !manageNewButton) return;
 
-    var editAction = resolveAction(DOCS_VIEWER_ACTION_IDS.EDIT_METADATA);
+    var editAction = resolveAction(DOCS_VIEWER_ACTION_IDS.EDIT_DOCUMENT);
     var editDisabled = (
       management.managementBusy ||
       !editAction.enabled ||
@@ -976,7 +960,7 @@ export function initDocsViewerManagement(context) {
         eventRouter.hideManageActionsMenu();
         var doc = documentIndex.docsById.get(docId) || null;
         var target = sourceTargetForDoc(doc);
-        if (target) openMetadataSource(target);
+        if (target) openDocumentEditor(target);
       },
       onIndexSelectionChange: function () {
         indexController.projectSelection();
