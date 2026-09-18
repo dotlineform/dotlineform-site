@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import hashlib
 import re
 import subprocess
 import sys
@@ -15,8 +14,8 @@ if str(SHARED_PYTHON_DIR) not in sys.path:
     sys.path.insert(0, str(SHARED_PYTHON_DIR))
 
 import docs_source_model as source_model  # noqa: E402
-import docs_write_rebuild as write_rebuild  # noqa: E402
 from docs_management_context import DEFAULT_MARKDOWN_APP_ENV, log_event  # noqa: E402
+from docs_management_mutations import normalize_metadata_text, normalize_summary  # noqa: E402
 from docs_management_document_target import (  # noqa: E402
     managed_document_target_request,
     resolve_managed_document_target,
@@ -36,11 +35,6 @@ def normalize_source_body(value: Any) -> str:
 
 def normalize_source_body_for_write(value: Any) -> str:
     return normalize_markdown_blank_lines(normalize_source_body(value))
-
-
-def source_revision_for_text(source_text: str) -> str:
-    digest = hashlib.sha256(source_text.encode("utf-8")).hexdigest()
-    return f"sha256:{digest}"
 
 
 def parse_front_matter_block(front_matter_text: str) -> Dict[str, Any]:
@@ -68,11 +62,12 @@ def split_source_exact(source_text: str) -> tuple[str, Dict[str, Any], str]:
 
 
 def read_source_body(repo_root: Path, params: Dict[str, list[str]]) -> Dict[str, Any]:
+    """Load the complete source snapshot for one exact editor session."""
     request_target = managed_document_target_request({key: values[0] if values else "" for key, values in params.items()})
     resolved = resolve_managed_document_target(repo_root, request_target)
     target = resolved.document
     source_text = target.source_text
-    _front_matter_source, front_matter, source_body = split_source_exact(source_text)
+    front_matter_source, front_matter, source_body = split_source_exact(source_text)
     existing_doc_id = str(front_matter.get("doc_id") or "").strip()
     if not existing_doc_id:
         raise ValueError("existing source front matter is missing doc_id")
@@ -83,7 +78,8 @@ def read_source_body(repo_root: Path, params: Dict[str, list[str]]) -> Dict[str,
         **resolved.request_target(),
         "source_body": normalize_source_body(source_body),
         "subject": project_reader_subject(front_matter),
-        "source_revision": source_revision_for_text(source_text),
+        "source_front_matter": front_matter_source,
+        "metadata": front_matter,
         "path": path_label(repo_root, target.path),
     }
     if resolved.collection:
@@ -91,101 +87,86 @@ def read_source_body(repo_root: Path, params: Dict[str, list[str]]) -> Dict[str,
     return payload
 
 
-def rebuild_source_body(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dict[str, Any]:
-    source_revision = str(body.get("source_revision") or "").strip()
-    if not source_revision:
-        raise ValueError("source_revision is required")
-    if "source_body" not in body:
-        raise ValueError("source_body is required")
+def rewrite_session_metadata(front_matter_source: str, front_matter: Dict[str, Any], metadata: Dict[str, str]) -> str:
+    """Apply only the retained editor fields, preserving all other authored lines."""
+    lines = front_matter_source.splitlines(keepends=True)
+    newline = "\r\n" if lines[0].endswith("\r\n") else "\n"
+    for key, value in metadata.items():
+        normalize = normalize_summary if key == "summary" else normalize_metadata_text
+        if value == normalize(front_matter.get(key)):
+            continue
+        pattern = re.compile(rf"^[ \t]*{key}[ \t]*:")
+        indices = [index for index, line in enumerate(lines) if pattern.match(line)]
+        insertion = indices[0] if indices else len(lines) - 1
+        lines = [line for index, line in enumerate(lines) if index not in indices]
+        if value:
+            lines.insert(insertion, f"{key}: {source_model.format_front_matter_value(value)}{newline}")
+    result = "".join(lines)
+    return result if result.endswith("\n") else result + newline
 
-    resolved = resolve_managed_document_target(
-        repo_root,
-        managed_document_target_request(body),
-    )
+
+def save_source_document(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dict[str, Any]:
+    """Validate and atomically persist the loaded session, without generation or revision checks.
+
+    The loaded front-matter snapshot preserves non-edited fields. Only Title and
+    Summary are editable here; the exact resolved target owns identity and collection.
+    The watcher observes the ordinary source write independently.
+    """
+    required = {"stage", "doc_id", "source_front_matter", "source_body", "metadata"}
+    if not required.issubset(body) or set(body) - required - {"collection"}:
+        raise ValueError("Source Save requires an exact target, loaded front matter, body and metadata")
+    if not isinstance(body["source_body"], str) or not isinstance(body["source_front_matter"], str):
+        raise ValueError("source_body and source_front_matter must be strings")
+    metadata = body["metadata"]
+    if not isinstance(metadata, dict) or set(metadata) != {"title", "summary"}:
+        raise ValueError("Source metadata must contain exactly title and summary")
+    if any(not isinstance(value, str) for value in metadata.values()):
+        raise ValueError("Source metadata values must be strings")
+    metadata = {"title": normalize_metadata_text(metadata["title"]), "summary": normalize_summary(metadata["summary"])}
+    if not metadata["title"]:
+        raise ValueError("title is required")
+
+    resolved = resolve_managed_document_target(repo_root, managed_document_target_request(body))
     require_document_authoring(resolved.parent_config)
     target = resolved.document
-    current_source_text = target.path.read_bytes().decode("utf-8")
-    current_revision = source_revision_for_text(current_source_text)
-    if source_revision != current_revision:
-        raise ValueError("source revision is stale; reload source before rebuilding")
+    front_matter_source, front_matter, trailing_body = split_source_exact(body["source_front_matter"])
+    if trailing_body:
+        raise ValueError("source_front_matter must contain only the loaded front matter")
+    if front_matter.get("doc_id") != target.doc_id:
+        raise ValueError("loaded source doc_id does not match the requested document")
+    if "collection" in front_matter and front_matter["collection"] != resolved.collection:
+        raise ValueError("loaded source collection does not match the requested collection")
 
-    front_matter_source, front_matter, current_source_body = split_source_exact(current_source_text)
-    existing_doc_id = str(front_matter.get("doc_id") or "").strip()
-    if not existing_doc_id:
-        raise ValueError("existing source front matter is missing doc_id")
-    if existing_doc_id != target.doc_id:
-        raise ValueError(f"existing source doc_id {existing_doc_id!r} does not match requested doc {target.doc_id!r}")
+    next_source_body = normalize_source_body_for_write(body["source_body"])
+    next_front_matter_source = rewrite_session_metadata(front_matter_source, front_matter, metadata)
+    next_source_text = source_model.rewrite_source_collection(next_front_matter_source + next_source_body, resolved.collection)
+    source_changed = next_source_text != target.source_text
+    if source_changed and not dry_run:
+        next_front_matter_source, next_metadata, _ = split_source_exact(next_source_text)
+        next_front_matter_source = source_model.rewrite_front_matter_source_timestamp(next_front_matter_source, next_metadata)
+        next_source_text = next_front_matter_source + next_source_body
 
-    next_source_body = normalize_source_body_for_write(body.get("source_body"))
-    body_changed = next_source_body != normalize_source_body(current_source_body)
-    if not body_changed:
-        next_source_body = current_source_body
-    next_source_text = source_model.rewrite_source_collection(front_matter_source + next_source_body, resolved.collection)
-    source_changed = next_source_text != current_source_text
     source_model.parse_collection_document_report(
-        repo_root,
-        resolved.parent_config,
-        resolved.document_config,
-        next_source_text,
-        source_name=target.path.as_posix(),
+        repo_root, resolved.parent_config, resolved.document_config,
+        next_source_text, source_name=target.path.as_posix(),
     )
-    rebuild = None
-
-    if not dry_run and source_changed:
-        next_front_matter_source = source_model.rewrite_front_matter_source_timestamp(
-            front_matter_source,
-            front_matter,
-        ) if body_changed else front_matter_source
-        next_source_text = source_model.rewrite_source_collection(next_front_matter_source + next_source_body, resolved.collection)
-
-        def write_operation() -> None:
-            source_model.write_text_atomic(target.path, next_source_text)
-
-        if resolved.collection:
-            rebuild = write_rebuild.perform_collection_source_write_and_rebuild(
-                repo_root,
-                resolved.collection,
-                [target.path],
-                write_operation,
-                suppression_reason="docs-source-editor",
-                stage=resolved.stage,
-            )
-        else:
-            rebuild = write_rebuild.perform_source_write_and_rebuild(
-                repo_root,
-                [target.path],
-                write_operation,
-                suppression_reason="docs-source-editor",
-                stage=resolved.stage,
-                docs_doc_ids=[target.doc_id],
-            )
-        event_details = {
-            "stage": resolved.stage,
-            "doc_id": target.doc_id,
-            "path": path_label(repo_root, target.path),
-        }
-        if resolved.collection:
-            event_details["collection"] = resolved.collection
-        log_event(repo_root, "docs-source-editor-rebuild", event_details)
-
-    next_revision = source_revision_for_text(next_source_text)
-
+    saved_front_matter, saved_metadata, saved_body = split_source_exact(next_source_text)
     payload = {
         "ok": True,
         **resolved.request_target(),
-        "source_revision": next_revision,
+        "source_front_matter": saved_front_matter,
+        "metadata": saved_metadata,
+        "source_body": normalize_source_body(saved_body),
         "path": path_label(repo_root, target.path),
-        "rebuild": rebuild,
         "summary_text": (
-            f"Rebuilt {target.doc_id}."
-            if source_changed
-            else f"No source changes for {target.doc_id}."
+            f"{'Would save' if dry_run else 'Saved'} {target.doc_id}."
+            if source_changed else f"No source changes for {target.doc_id}."
         ),
         "source_changed": source_changed,
         "dry_run": dry_run,
     }
-    if resolved.collection:
-        payload["collection"] = resolved.collection
+    if source_changed and not dry_run:
+        source_model.write_text_atomic(target.path, next_source_text)
     return payload
 
 

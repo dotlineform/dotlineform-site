@@ -1,9 +1,6 @@
 import {
   catalogueTokenAtSelection,
-  normalizeCatalogueDetailId,
-  parseCatalogueTokens,
-  serializeCatalogueImageToken,
-  serializeCatalogueMediaToken
+  parseCatalogueTokens
 } from "./catalogue-token-parser.js";
 import {
   loadSemanticTokenRegistry
@@ -75,12 +72,6 @@ function currentToken(state) {
     text: token.raw,
     revision: snapshot.revision
   };
-  if (
-    selection.start === selection.end
-    && typeof adapter.selectCapturedRange === "function"
-  ) {
-    adapter.selectCapturedRange(capture);
-  }
   return { token: token, capture: capture };
 }
 
@@ -88,6 +79,8 @@ function renderToken(context, state, active) {
   var mount = context.mount;
   var token = active.token;
   var capture = active.capture;
+  var draft = state.adapter.getTokenDraft(token, capture, state.registry);
+  var values = draft.values;
   var target = state.targetsByKey.get(targetKey(token)) || null;
   var occurrenceHref = target && target.href || "";
   var destinationHref = occurrenceHref
@@ -129,7 +122,7 @@ function renderToken(context, state, active) {
     detailInput.dataset.role = "catalogue-work-detail-id";
     detailInput.inputMode = "numeric";
     detailInput.pattern = "[0-9]*";
-    detailInput.value = token.detailId;
+    detailInput.value = values.detailId;
     detailInput.disabled = token.targetType !== "work";
     detailField.append(detailLabel, detailInput);
   }
@@ -143,7 +136,7 @@ function renderToken(context, state, active) {
   occurrenceInput.className = "docsViewer__fieldInput";
   occurrenceInput.type = "text";
   occurrenceInput.required = true;
-  occurrenceInput.value = token.presentation === "image" ? token.alt : token.title;
+  occurrenceInput.value = values.text;
   occurrenceField.append(occurrenceLabel, occurrenceInput);
 
   var imagePresentation = null;
@@ -152,13 +145,10 @@ function renderToken(context, state, active) {
     imagePresentation.innerHTML = imagePresentationHtml({
       idPrefix: "docsViewerCatalogueImageInfo"
     });
-    hydrateImagePresentation(imagePresentation, {
-      addCaption: Boolean(token.caption),
-      caption: token.caption,
-      summary: token.summary,
-      placement: token.placement || "full",
-      fillWidth: typeof token.fillWidth === "boolean" ? token.fillWidth : true
-    });
+    hydrateImagePresentation(imagePresentation, values);
+    // Keep raw pending input; normalization belongs to the session's Save validation.
+    imagePresentation.querySelector('[data-role="staged-media-caption-text"]').value = values.caption;
+    imagePresentation.querySelector('[data-role="staged-media-summary"]').value = values.summary;
     bindImagePresentation(imagePresentation);
   }
 
@@ -168,10 +158,6 @@ function renderToken(context, state, active) {
 
   var actions = document.createElement("div");
   actions.className = "docsViewerCatalogueTokenInfo__actions";
-  var updateButton = document.createElement("button");
-  updateButton.className = "docsViewer__button";
-  updateButton.type = "button";
-  updateButton.textContent = token.presentation === "image" ? "Update image" : "Update token";
   var removeButton = document.createElement("button");
   removeButton.className = "docsViewer__button";
   removeButton.type = "button";
@@ -183,69 +169,22 @@ function renderToken(context, state, active) {
     status.classList.toggle("is-error", Boolean(isError));
   }
 
-  updateButton.addEventListener("click", async function () {
-    var value = cleanString(occurrenceInput.value);
-    var serialized;
-    if (token.presentation === "image") {
-      var detailId = normalizeCatalogueDetailId(detailInput ? detailInput.value : "");
-      if (detailId === null) {
-        setStatus("Enter a positive Work Detail ID using digits only, or leave it blank.", true);
-        detailInput.focus();
-        return;
-      }
-      var presentation = readImagePresentation(imagePresentation);
-      var serialization = {
-        registry: state.registry,
-        targetType: token.targetType,
-        targetId: token.targetId,
-        detailId: detailId,
-        alt: value
-      };
-      if (presentation.addCaption) {
-        Object.assign(serialization, {
-          caption: presentation.caption,
-          summary: presentation.summary,
-          placement: presentation.placement,
-          fillWidth: presentation.fillWidth
-        });
-      }
-      serialized = serializeCatalogueImageToken(serialization);
-    } else {
-      serialized = serializeCatalogueMediaToken({
-        registry: state.registry,
-        targetType: token.targetType,
-        targetId: token.targetId,
-        detailId: token.detailId,
-        title: value
-      });
-    }
-    if (!serialized) {
-      setStatus(
-        token.presentation === "image"
-          ? "Enter alt text and complete the enabled caption presentation."
-          : "Enter single-line link text.",
-        true
-      );
-      occurrenceInput.focus();
-      return;
-    }
-    var adapter = state.adapter;
-    var controls = Array.from(article.querySelectorAll("input, textarea, button"));
-    var disabled = controls.map(function (control) { return control.disabled; });
-    controls.forEach(function (control) { control.disabled = true; });
-    try {
-      await readCatalogueTokenPresentation(adapter, token, token.presentation === "image" ? detailId : token.detailId);
-      if (state.adapter !== adapter || !mount.contains(article)) return;
-      if (!adapter || typeof adapter.replaceCapturedRange !== "function"
-        || !adapter.replaceCapturedRange(capture, serialized, "select")) {
-        setStatus("Markdown source changed. Select the token again.", true);
-      }
-    } catch (error) {
-      if (state.adapter === adapter && mount.contains(article)) setStatus(error.message || "Catalogue media is unavailable.", true);
-    } finally {
-      controls.forEach(function (control, index) { control.disabled = disabled[index]; });
-    }
-  });
+  var fields = document.createElement("fieldset");
+  fields.className = "docsViewerSourceEditor__metadataFields";
+  fields.disabled = state.adapter.getSessionState().busy;
+  function captureInput() {
+    var presentation = imagePresentation ? Object.assign(readImagePresentation(imagePresentation), {
+      caption: imagePresentation.querySelector('[data-role="staged-media-caption-text"]').value,
+      summary: imagePresentation.querySelector('[data-role="staged-media-summary"]').value
+    }) : {};
+    state.adapter.updateTokenDraft(draft, Object.assign({}, values, {
+      text: occurrenceInput.value,
+      detailId: detailInput ? detailInput.value : token.detailId
+    }, presentation));
+  }
+  fields.addEventListener("input", captureInput);
+  fields.addEventListener("change", captureInput);
+  state.projectBusy = function () { fields.disabled = state.adapter.getSessionState().busy; };
 
   removeButton.addEventListener("click", function () {
     if (
@@ -255,31 +194,37 @@ function renderToken(context, state, active) {
     ) {
       setStatus("Markdown source changed. Select the token again.", true);
       return;
+    } else {
+      state.adapter.removeTokenDraft(draft);
     }
   });
 
-  actions.append(updateButton, removeButton);
+  actions.append(removeButton);
   article.append(heading, list);
-  if (detailField) article.appendChild(detailField);
-  article.appendChild(occurrenceField);
-  if (imagePresentation) article.appendChild(imagePresentation);
-  article.append(status, actions);
+  if (detailField) fields.appendChild(detailField);
+  fields.appendChild(occurrenceField);
+  if (imagePresentation) fields.appendChild(imagePresentation);
+  fields.appendChild(actions);
+  article.append(fields, status);
   mount.appendChild(article);
 }
 
 function render(context, state) {
   if (!context.mount) return;
   if (!state.loaded) {
+    state.renderKey = "";
     emptyMessage(context.mount, "Catalogue token info is loading.");
     return;
   }
   var active = currentToken(state);
   if (!active) {
+    state.renderKey = "";
     emptyMessage(context.mount, "Place the caret inside a Catalogue token to inspect it.");
     return;
   }
   var key = targetKey(active.token) + ":" + active.token.detailId;
   if (state.targetKey !== key) {
+    state.renderKey = "";
     emptyMessage(context.mount, "Catalogue target info is loading.");
     if (state.loadingKey === key) return;
     state.loadingKey = key;
@@ -297,6 +242,10 @@ function render(context, state) {
     });
     return;
   }
+  state.loadingKey = "";
+  var renderKey = [active.capture.revision, active.capture.start, active.capture.end, active.capture.text].join(":");
+  if (state.renderKey === renderKey) return;
+  state.renderKey = renderKey;
   renderToken(context, state, active);
 }
 
@@ -319,7 +268,10 @@ export function createCatalogueTokenInfoView(options = {}) {
     publicPreviewBase: "",
     registry: null,
     targetsByKey: new Map(),
-    unsubscribe: null
+    unsubscribe: null,
+    sessionUnsubscribe: null,
+    projectBusy: null,
+    renderKey: ""
   };
 
   function bind(context) {
@@ -328,6 +280,9 @@ export function createCatalogueTokenInfoView(options = {}) {
       ? services.getActiveSourceEditorContextAdapter()
       : null;
     state.publicPreviewBase = cleanString(services.publicPreviewBase);
+    if (state.adapter) state.sessionUnsubscribe = state.adapter.onSessionChange(function () {
+      if (state.projectBusy) state.projectBusy();
+    });
     if (state.adapter && typeof state.adapter.onSelectionChange === "function") {
       state.unsubscribe = state.adapter.onSelectionChange(function () {
         render(context, state);
@@ -339,6 +294,10 @@ export function createCatalogueTokenInfoView(options = {}) {
     state.generation += 1;
     if (typeof state.unsubscribe === "function") state.unsubscribe();
     state.unsubscribe = null;
+    if (state.sessionUnsubscribe) state.sessionUnsubscribe();
+    state.sessionUnsubscribe = null;
+    state.projectBusy = null;
+    state.renderKey = "";
     state.adapter = null;
     state.targetKey = "";
     state.loadingKey = "";

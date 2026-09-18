@@ -200,7 +200,8 @@ export function initDocsViewerRouteWorkflow(context) {
     }).finally(stopBusy);
   }
 
-  function loadDoc(docId, options) {
+  async function loadDoc(docId, options) {
+    if (!await context.confirmDocumentNavigation()) return null;
     clearManagementMessageForDocChange(docId);
     return loadViewerDoc({
       docId: docId,
@@ -291,23 +292,65 @@ export function initDocsViewerRouteWorkflow(context) {
     return applyCurrentRoute({ historyMode: "replace", hash: currentHash() });
   }
 
-  // Read the existing generated index. The watcher remains the only build owner.
+  function workingPollIsIdle() {
+    return managementUiEnabled() && viewerStage() === "working" && !root.ownerDocument.hidden
+      && root.dataset.managementBusy !== "true" && root.dataset.documentDisplayMode !== "markdown-source";
+  }
+
+  async function refreshDisplayedDocument() {
+    var displayed = context.selectedDocument;
+    var docId = displayed.displayedDocId;
+    var requestId = state.requestId;
+    var href = window.location.href;
+    var report = context.managedDocumentContext();
+    function current() {
+      var view = context.activeViewState();
+      return workingPollIsIdle() && view.activeModeId === "rendered-document"
+        && view.activeViewId === "rendered-document" && state.requestId === requestId
+        && displayed.displayedDocId === docId && state.selectedDocId === docId
+        && window.location.href === href;
+    }
+    if (!docId || !current()) return;
+    if (report && report.state === "detail" && report.subdocTarget) {
+      if (typeof report.refreshDisplayedDocument === "function") {
+        await report.refreshDisplayedDocument(report.subdocTarget, current);
+      }
+      return;
+    }
+    var doc = state.docsById.get(docId);
+    if (!doc) return;
+    var payload = await context.collectionProvider.readDocument(doc, { docId: docId });
+    if (!current() || JSON.stringify(payload) === JSON.stringify(displayed.displayedPayload)) return;
+    state.payloadCache.set(docId, payload);
+    context.refreshRenderedPayload(doc, payload);
+    context.updateInfoPanel();
+  }
+
+  // Read existing generated outputs. Neither refresh path participates in Source Save.
   async function refreshWorkingIndex() {
-    if (indexRefreshRunning || !managementUiEnabled() || currentValue(context.viewerStage) !== "working"
-        || root.ownerDocument.hidden || root.dataset.managementBusy === "true"
-        || root.dataset.documentDisplayMode === "markdown-source") return;
+    if (indexRefreshRunning || !workingPollIsIdle()) return;
     var stage = viewerStage();
     indexRefreshRunning = true;
     try {
-      var payload = await context.collectionProvider.readIndex();
-      if (stage !== viewerStage() || currentValue(context.viewerStage) !== "working"
-          || root.dataset.managementBusy === "true" || root.dataset.documentDisplayMode === "markdown-source"
-          || JSON.stringify(payload) === loadedIndex) return;
-      state.payloadCache.clear();
-      replaceIndex(payload);
-      context.renderManagementUi();
+      var results = await Promise.allSettled([
+        context.collectionProvider.readIndex(), refreshDisplayedDocument()
+      ]);
+      if (stage !== viewerStage() || !workingPollIsIdle()) return;
+      var index = results[0];
+      if (index.status === "fulfilled" && JSON.stringify(index.value) !== loadedIndex) {
+        state.payloadCache.clear();
+        replaceIndex(index.value);
+        var displayed = context.selectedDocument;
+        if (displayed.displayedPayload && displayed.displayedDocId === state.selectedDocId) {
+          state.payloadCache.set(displayed.displayedDocId, displayed.displayedPayload);
+        }
+        context.renderManagementUi();
+      }
+      results.forEach(function (result) {
+        if (result.status === "rejected") throw result.reason;
+      });
     } catch (error) {
-      setStatus(error.message || "Could not refresh the Working index.", true);
+      setStatus(error.message || "Could not refresh Working generated output.", true);
     } finally {
       indexRefreshRunning = false;
     }

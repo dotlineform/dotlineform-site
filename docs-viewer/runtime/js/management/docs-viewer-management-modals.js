@@ -1,5 +1,4 @@
 import {
-  renderMetadataStatusOptionsMarkup,
   renderSettingsWarningsMarkup
 } from "./docs-viewer-management-render.js";
 import {
@@ -9,9 +8,6 @@ import {
 import {
   createDocsViewerModalLifecycle
 } from "./docs-viewer-modal-lifecycle.js";
-import {
-  createDocsViewerMetadataParentPicker
-} from "./docs-viewer-management-parent-picker.js";
 
 export {
   openDocsViewerChoiceModal,
@@ -82,15 +78,7 @@ export function buildDocsViewerDeletePreviewBody(preview) {
 export function createDocsViewerManagementModalController(options = {}) {
   var refs = options.refs || {};
   var management = options.management || {};
-  var workspaceConfig = options.workspaceConfig || {};
-  var context = options.context || {};
-  var nav = options.nav || null;
   var callbacks = options.callbacks || {};
-  var metadataModalResolve = null;
-  var metadataStatusPointerValue = null;
-  var metadataEditingDoc = null;
-  var metadataEditingChoices = null;
-  var metadataCustomisationEditor = null;
   var settingsFieldState = null;
   var importModalCancelButton = null;
   var importLifecycle = null;
@@ -102,27 +90,6 @@ export function createDocsViewerManagementModalController(options = {}) {
   var importCollectionLifecycle = null;
   var importCollectionCommand = null;
   var importCollectionPhase = "idle";
-  var metadataParentPicker = createDocsViewerMetadataParentPicker({
-    refs: refs,
-    callbacks: callbacks
-  });
-  var metadataLifecycle = refs.metadataModal ? createDocsViewerModalLifecycle({
-    cancelElements: Array.from(refs.metadataModal.querySelectorAll("[data-metadata-close]"))
-      .concat(refs.metadataCancelButton || [])
-      .filter(Boolean),
-    document: document,
-    initialFocus: function () { return refs.metadataTitleInput; },
-    modal: refs.metadataModal,
-    onRequestClose: function () { closeMetadataModal(); },
-    consumeEscape: function (event) {
-      if (event.defaultPrevented) return true;
-      if (!refs.metadataParentPopup || refs.metadataParentPopup.hidden) return false;
-      event.preventDefault();
-      metadataParentPicker.hidePopup();
-      return true;
-    },
-    selectInitialFocus: true
-  }) : null;
   var settingsLifecycle = refs.settingsModal ? createDocsViewerModalLifecycle({
     cancelElements: Array.from(refs.settingsModal.querySelectorAll("[data-settings-close]"))
       .concat(refs.settingsCancelButton || [])
@@ -137,69 +104,8 @@ export function createDocsViewerManagementModalController(options = {}) {
     return typeof callbacks.viewerStage === "function" ? callbacks.viewerStage() : "";
   }
 
-  function metadataModalOpen() {
-    return Boolean(refs.metadataModal && !refs.metadataModal.hidden);
-  }
-
   function settingsModalOpen() {
     return Boolean(refs.settingsModal && !refs.settingsModal.hidden);
-  }
-
-  function renderMetadataParentOptions(doc) {
-    metadataParentPicker.renderOptions(doc);
-  }
-
-  function resolveMetadataParentId(doc) {
-    return metadataParentPicker.resolveParentId(doc);
-  }
-
-  function metadataStatusOptions(choices) {
-    var allowedValues = Array.isArray(choices && choices.ui_status)
-      ? new Set(choices.ui_status)
-      : null;
-    var optionRecords = [];
-    (workspaceConfig.uiStatuses || []).forEach(function (status) {
-      if (allowedValues && !allowedValues.has(status.ui_status)) return;
-      optionRecords.push({
-        value: status.ui_status,
-        label: status.emoji + " " + status.label
-      });
-    });
-    if (allowedValues) {
-      allowedValues.forEach(function (value) {
-        if (optionRecords.some(function (option) { return option.value === value; })) return;
-        optionRecords.push({ value: value, label: value });
-      });
-    }
-    return optionRecords;
-  }
-
-  function renderMetadataStatusOptions(doc, choices) {
-    if (!refs.metadataStatusInput) return;
-    var selectedValue = String(doc && doc.ui_status || "").trim();
-    renderMetadataStatusSelection(selectedValue, choices);
-  }
-
-  function renderMetadataStatusSelection(selectedValue, choices) {
-    if (!refs.metadataStatusInput) return;
-    refs.metadataStatusInput.innerHTML = renderMetadataStatusOptionsMarkup(
-      metadataStatusOptions(choices),
-      selectedValue
-    );
-    var selectedOption = Array.from(refs.metadataStatusInput.options).find(function (option) {
-      return option.value === selectedValue;
-    });
-    refs.metadataStatusInput.selectedIndex = selectedOption ? selectedOption.index : -1;
-    refs.metadataStatusInput.size = Math.max(1, refs.metadataStatusInput.options.length);
-  }
-
-  function clearMetadataStatusSelection() {
-    if (!refs.metadataStatusInput || refs.metadataStatusInput.selectedIndex < 0) return false;
-    refs.metadataStatusInput.selectedIndex = -1;
-    ["input", "change"].forEach(function (eventName) {
-      refs.metadataStatusInput.dispatchEvent(new window.Event(eventName, { bubbles: true }));
-    });
-    return true;
   }
 
   function setModalStatus(node, message, stateName) {
@@ -211,14 +117,6 @@ export function createDocsViewerManagementModalController(options = {}) {
     } else {
       delete node.dataset.state;
     }
-  }
-
-  function setMetadataStatus(message, stateName) {
-    setModalStatus(refs.metadataStatus, message, stateName);
-  }
-
-  function dismissMetadataParentSuggestions() {
-    metadataParentPicker.dismissSuggestions();
   }
 
   function focusWithoutScroll(target) {
@@ -241,125 +139,6 @@ export function createDocsViewerManagementModalController(options = {}) {
       && target.getClientRects
       && target.getClientRects().length
     );
-  }
-
-  function metadataReturnTarget(docId) {
-    if (!docId || !nav) return null;
-    var escapeCss = typeof context.cssEscape === "function"
-      ? context.cssEscape
-      : function (value) { return String(value || ""); };
-    return nav.querySelector(
-      '[data-doc-row-id="' + escapeCss(docId) + '"] .docsViewer__navLink'
-    );
-  }
-
-  function closeMetadataModal(result) {
-    if (!refs.metadataModal) return;
-    dismissMetadataParentSuggestions();
-    if (metadataLifecycle) metadataLifecycle.close();
-    refs.metadataModal.hidden = true;
-    destroyMetadataCustomisationEditor();
-    management.metadataEditingDocId = "";
-    metadataEditingDoc = null;
-    metadataEditingChoices = null;
-    if (metadataModalResolve) {
-      var resolve = metadataModalResolve;
-      metadataModalResolve = null;
-      resolve(result || null);
-    }
-  }
-
-  function destroyMetadataCustomisationEditor() {
-    if (
-      metadataCustomisationEditor
-      && typeof metadataCustomisationEditor.destroy === "function"
-    ) {
-      metadataCustomisationEditor.destroy();
-    }
-    metadataCustomisationEditor = null;
-    if (refs.metadataCustomisationHost) {
-      refs.metadataCustomisationHost.replaceChildren();
-      refs.metadataCustomisationHost.hidden = true;
-    }
-  }
-
-  function mountMetadataCustomisationEditor(contribution, doc, target) {
-    destroyMetadataCustomisationEditor();
-    var mount = contribution && contribution.mountMetadataEditor;
-    if (typeof mount !== "function") return;
-    if (!refs.metadataCustomisationHost) {
-      throw new Error("Edit Metadata customisation host is unavailable.");
-    }
-    var editor = mount({
-      host: refs.metadataCustomisationHost,
-      record: doc,
-      target: target
-    });
-    if (
-      !editor
-      || typeof editor.read !== "function"
-      || typeof editor.destroy !== "function"
-    ) {
-      throw new Error("Edit Metadata customisation editor is invalid.");
-    }
-    metadataCustomisationEditor = editor;
-  }
-
-  function readMetadataCustomisation() {
-    if (!metadataCustomisationEditor) return null;
-    var value = metadataCustomisationEditor.read();
-    if (!value || typeof value !== "object" || Array.isArray(value)) {
-      throw new Error("Edit Metadata customisation value is invalid.");
-    }
-    return value;
-  }
-
-  function openMetadataModal(doc, options) {
-    var settings = options || {};
-    var target = settings.target || null;
-    if (!doc || !target || !refs.metadataModal || !refs.metadataForm || !refs.metadataTitleInput || !refs.metadataSummaryInput || !refs.metadataDateInput || !refs.metadataDateDisplayInput || !refs.metadataStatusInput || !refs.metadataParentField || !refs.metadataParentInput) {
-      return Promise.resolve(null);
-    }
-    if (typeof callbacks.hideContextMenu === "function") callbacks.hideContextMenu();
-    metadataEditingDoc = doc;
-    metadataEditingChoices = settings.choices || null;
-    management.metadataEditingDocId = doc.doc_id;
-    if (refs.metadataDocId) {
-      refs.metadataDocId.textContent = doc.doc_id;
-    }
-
-    refs.metadataTitleInput.value = doc.title || "";
-    refs.metadataSummaryInput.value = doc.summary || "";
-    refs.metadataDateInput.value = doc.date || "";
-    refs.metadataDateDisplayInput.value = doc.date_display || "";
-    renderMetadataStatusOptions(doc, metadataEditingChoices);
-    mountMetadataCustomisationEditor(
-      settings.metadataContribution,
-      doc,
-      target
-    );
-    var showParent = settings.showParent === true;
-    var parentLabel = refs.metadataParentField.querySelector("label");
-    if (parentLabel) parentLabel.textContent = doc.location_parent_id !== undefined ? "location" : "parent";
-    refs.metadataParentField.hidden = !showParent;
-    refs.metadataParentInput.disabled = !showParent;
-    if (showParent) {
-      renderMetadataParentOptions(doc);
-    } else {
-      refs.metadataParentInput.value = "";
-      metadataParentPicker.hidePopup();
-    }
-    setMetadataStatus("", "");
-
-    refs.metadataModal.hidden = false;
-    if (metadataLifecycle) {
-      metadataLifecycle.open({
-        restoreFocus: metadataReturnTarget(doc.doc_id)
-      });
-    }
-    return new Promise(function (resolve) {
-      metadataModalResolve = resolve;
-    });
   }
 
   function ensureImportModalCancelButton() {
@@ -873,15 +652,6 @@ export function createDocsViewerManagementModalController(options = {}) {
     settingsFieldState = null;
   }
 
-  function handleRootClick(event) {
-    if (metadataModalOpen()) {
-      if (refs.metadataParentPopup && !refs.metadataParentPopup.hidden && !event.target.closest(".docsViewer__parentPicker")) {
-        metadataParentPicker.hidePopup();
-      }
-    }
-    return false;
-  }
-
   function wireEvents() {
     if (refs.importFolderConfirmButton) {
       refs.importFolderConfirmButton.addEventListener("click", function () {
@@ -898,19 +668,6 @@ export function createDocsViewerManagementModalController(options = {}) {
         invokeImportCollectionCommand(button.dataset.collectionCommand);
       });
     });
-    if (refs.metadataForm) {
-      refs.metadataForm.addEventListener("submit", function (event) {
-        event.preventDefault();
-        if (typeof callbacks.onMetadataSubmit === "function") callbacks.onMetadataSubmit();
-      });
-      ["input", "change"].forEach(function (eventName) {
-        refs.metadataForm.addEventListener(eventName, function () {
-          if (refs.metadataStatus && refs.metadataStatus.dataset.state === "error") {
-            setMetadataStatus("", "");
-          }
-        });
-      });
-    }
     if (refs.settingsForm) {
       refs.settingsForm.addEventListener("submit", function (event) {
         if (typeof callbacks.onSettingsSubmit === "function") callbacks.onSettingsSubmit(event);
@@ -923,86 +680,25 @@ export function createDocsViewerManagementModalController(options = {}) {
         });
       });
     }
-    if (refs.metadataStatusInput) {
-      refs.metadataStatusInput.addEventListener("pointerdown", function (event) {
-        var option = event.target && event.target.closest
-          ? event.target.closest("option")
-          : null;
-        metadataStatusPointerValue = option
-          ? String(refs.metadataStatusInput.value || "").trim()
-          : null;
-      });
-      refs.metadataStatusInput.addEventListener("click", function (event) {
-        var option = event.target && event.target.closest
-          ? event.target.closest("option")
-          : null;
-        var repeatedValue = option
-          && metadataStatusPointerValue !== null
-          && option.value === metadataStatusPointerValue;
-        metadataStatusPointerValue = null;
-        if (repeatedValue) clearMetadataStatusSelection();
-      });
-      refs.metadataStatusInput.addEventListener("keydown", function (event) {
-        if (event.key !== "Backspace" && event.key !== "Delete") return;
-        if (refs.metadataStatusInput.selectedIndex < 0) return;
-        event.preventDefault();
-        clearMetadataStatusSelection();
-      });
-    }
-    if (refs.metadataParentInput) {
-      refs.metadataParentInput.addEventListener("focus", function () {
-        refs.metadataParentInput.select();
-      });
-      refs.metadataParentInput.addEventListener("input", function () {
-        if (metadataEditingDoc) metadataParentPicker.handleInput(metadataEditingDoc);
-      });
-      refs.metadataParentInput.addEventListener("blur", function () {
-        metadataParentPicker.hidePopup();
-      });
-      refs.metadataParentInput.addEventListener("keydown", function (event) {
-        metadataParentPicker.handleInputKeydown(event, metadataEditingDoc);
-      });
-    }
-    if (refs.metadataParentPopup) {
-      refs.metadataParentPopup.addEventListener("mousedown", function (event) {
-        if (event.target.closest("[data-parent-index]")) {
-          event.preventDefault();
-        }
-      });
-      refs.metadataParentPopup.addEventListener("click", function (event) {
-        var button = event.target.closest("[data-parent-index]");
-        if (!button) return;
-        metadataParentPicker.selectOption(Number(button.getAttribute("data-parent-index")));
-      });
-    }
   }
 
   return {
     closeImportModal: closeImportModal,
     closeImportFolderModal: closeImportFolderModal,
-    closeMetadataModal: closeMetadataModal,
     closeSettingsModal: closeSettingsModal,
     getSettingsFieldState: function () {
       return settingsFieldState;
     },
     getSettingsChanges: getSettingsChanges,
-    handleRootClick: handleRootClick,
-    metadataModalOpen: metadataModalOpen,
     openImportModal: openImportModal,
     openImportFolderModal: openImportFolderModal,
-    openMetadataModal: openMetadataModal,
     openSettingsModalShell: openSettingsModalShell,
     projectImportBusy: projectImportBusy,
     projectImportCollectionState: projectImportCollectionState,
-    renderMetadataParentOptions: renderMetadataParentOptions,
-    renderMetadataStatusOptions: renderMetadataStatusOptions,
-    readMetadataCustomisation: readMetadataCustomisation,
     renderSettingsWarnings: renderSettingsWarnings,
-    resolveMetadataParentId: resolveMetadataParentId,
     projectImportTerminalResult: projectImportTerminalResult,
     setSettingsField: setSettingsField,
     setSettingsLoadError: setSettingsLoadError,
-    setMetadataStatus: setMetadataStatus,
     setSettingsStatus: setSettingsStatus,
     settingsModalOpen: settingsModalOpen,
     wireEvents: wireEvents

@@ -2,45 +2,6 @@ import {
   escapeHtml
 } from "../shared/docs-viewer-render.js";
 
-export function renderMetadataParentPopupMarkup(matches, options) {
-  var settings = options || {};
-  var records = Array.isArray(matches) ? matches : [];
-  if (!records.length) {
-    return '<p class="docsViewer__parentPopupEmpty">' + escapeHtml(settings.emptyText || "") + "</p>";
-  }
-  var optionTitle = typeof settings.optionTitle === "function"
-    ? settings.optionTitle
-    : function (option) { return String(option && option.label || ""); };
-  var optionMeta = typeof settings.optionMeta === "function"
-    ? settings.optionMeta
-    : function () { return ""; };
-  return records.map(function (option, index) {
-    var optionId = "docsViewerMetadataParentOption-" + index;
-    var title = optionTitle(option);
-    var meta = optionMeta(option);
-    var isActive = index === 0;
-    return (
-      '<button type="button" class="docsViewer__parentOption' + (isActive ? " is-active" : "") + '" ' +
-        'id="' + optionId + '" role="option" aria-selected="' + (isActive ? "true" : "false") + '" ' +
-        'tabindex="-1" data-parent-index="' + index + '">' +
-        '<span class="docsViewer__parentOptionTitle">' + escapeHtml(title) + "</span>" +
-        (meta
-          ? '<span class="docsViewer__parentOptionMeta">' + escapeHtml(meta) + "</span>"
-          : "") +
-      "</button>"
-    );
-  }).join("");
-}
-
-export function renderMetadataStatusOptionsMarkup(options, selectedValue) {
-  var selected = String(selectedValue || "");
-  return (options || []).map(function (option) {
-    var isSelected = option.value === selected;
-    var selectedAttr = isSelected ? " selected" : "";
-    return '<option value="' + escapeHtml(option.value) + '"' + selectedAttr + ">" + escapeHtml(option.label) + "</option>";
-  }).join("");
-}
-
 export function renderSettingsWarningsMarkup(warnings) {
   var items = Array.isArray(warnings) ? warnings.filter(Boolean) : [];
   return items.length

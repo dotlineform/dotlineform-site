@@ -444,6 +444,12 @@ export function startDocsViewerRuntime(options) {
     viewerUrlForDocument: viewerUrlForDocument
   });
   routeWorkflow = initDocsViewerRouteWorkflow({
+    confirmDocumentNavigation: documentViewCoordinator.confirmDocumentNavigation,
+    activeViewState: documentViewCoordinator.activeViewState,
+    managedDocumentContext: function () { return latestCollectionReportState; },
+    refreshRenderedPayload: function (doc, payload) {
+      documentController.renderPayload(doc, payload, "", { preservePosition: true });
+    },
     managementUiEnabled: function () { return managementUiEnabled; },
     applyDocVisibility: documentIndex.applyDocVisibility,
     cancelSearchDebounce: cancelSearchDebounce,
@@ -637,7 +643,6 @@ export function startDocsViewerRuntime(options) {
       renderRecentMode: renderRecentMode,
       renderSearchMode: renderSearchMode,
       renderSidebar: renderSidebar,
-      reloadMetadataTarget: reloadManagedDocumentTarget,
       root: root,
       routeReload: {
         reloadViewerConfiguration: function () { return configController.reloadViewerConfiguration(); },
@@ -822,38 +827,6 @@ export function startDocsViewerRuntime(options) {
     return configController.loadViewerSettings();
   }
 
-  function reloadGeneratedDoc(targetDocId) {
-    var selectedDocument = appSession.domains.selectedDocument;
-    var searchRecent = appSession.domains.searchRecent;
-    selectedDocument.payloadCache.clear();
-    searchRecent.searchIndex = null;
-    searchRecent.searchLoaded = false;
-    searchRecent.searchRequestPromise = null;
-    selectedDocument.reloadNonce = String(Date.now());
-    selectedDocument.reloadExpectedDocId = String(targetDocId || "").trim();
-    searchRecent.searchQuery = "";
-    searchRecent.searchVisibleCount = SEARCH_BATCH_SIZE;
-    searchRecent.searchRouteActive = false;
-    cancelSearchDebounce();
-    if (searchInput) searchInput.value = "";
-    if (routeWorkflowCommands && typeof routeWorkflowCommands.setHistory === "function" && targetDocId) {
-      routeWorkflowCommands.setHistory(targetDocId, "", "", "replace");
-    }
-    if (routeWorkflowCommands && typeof routeWorkflowCommands.loadIndex === "function") {
-      return routeWorkflowCommands.loadIndex();
-    }
-    return Promise.resolve(null);
-  }
-
-  function reloadManagedDocumentTarget(target) {
-    var managedTarget = target && typeof target === "object" ? target : {};
-    var docId = String(managedTarget.doc_id || "").trim();
-    if (String(managedTarget.collection || "").trim()) {
-      docId = String(appSession.domains.selectedDocument.selectedDocId || "").trim();
-    }
-    return reloadGeneratedDoc(docId);
-  }
-
   function sourceEditorServices() {
     function clearInfoSubscription() {
       sourceEditorInfoRequest += 1;
@@ -861,7 +834,7 @@ export function startDocsViewerRuntime(options) {
         activeSourceEditorInfoUnsubscribe();
       }
       activeSourceEditorInfoUnsubscribe = null;
-      sourceEditorInfoViewId = "metadata-info";
+      sourceEditorInfoViewId = settings.infoPanelDefaultViewByDocumentMode["markdown-source"];
     }
 
     function routeInfoView(adapter) {
@@ -869,10 +842,12 @@ export function startDocsViewerRuntime(options) {
       if (typeof resolver !== "function" || !adapter) return;
       var requestId = ++sourceEditorInfoRequest;
       Promise.resolve(resolver(adapter)).then(function (viewId) {
-        var resolvedViewId = String(viewId || "").trim() || "metadata-info";
+        var resolvedViewId = String(viewId || "").trim() || settings.infoPanelDefaultViewByDocumentMode["markdown-source"];
         if (requestId !== sourceEditorInfoRequest || adapter !== activeSourceEditorContextAdapter) return;
         sourceEditorInfoViewId = resolvedViewId;
-        if (!documentViewCoordinator || !documentViewCoordinator.isInfoOpen()) return;
+        if (!documentViewCoordinator) return;
+        documentViewCoordinator.renderInfoToggle();
+        if (!documentViewCoordinator.isInfoOpen()) return;
         if (documentViewCoordinator.activeInfoViewId() === resolvedViewId) {
           documentViewCoordinator.updateInfoPanel();
         } else {
@@ -882,7 +857,11 @@ export function startDocsViewerRuntime(options) {
     }
 
     return {
-      reloadRenderedDoc: reloadManagedDocumentTarget,
+      openMetadataPanel: function () {
+        if (!activeSourceEditorContextAdapter) return;
+        activeSourceEditorContextAdapter.selectMetadataContext();
+        documentViewCoordinator.openInfoView(settings.infoPanelDefaultViewByDocumentMode["markdown-source"]);
+      },
       localFolderLinksCapability: function () {
         var capabilities = appSession.domains.management.managementCapabilities;
         return capabilities ? capabilities.local_folder_links || null : null;
@@ -900,6 +879,7 @@ export function startDocsViewerRuntime(options) {
       getActiveSourceEditorContextAdapter: function () {
         return activeSourceEditorContextAdapter;
       },
+      getInfoViewId: function () { return sourceEditorInfoViewId; },
       projectMainViewControlState: function (controlId, controlState) {
         projectMainViewControlState("source-editor", controlId, controlState);
       },

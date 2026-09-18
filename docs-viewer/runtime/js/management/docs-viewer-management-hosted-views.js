@@ -14,6 +14,18 @@ export function createDocsViewerManagementViewDefinitions() {
   return {
     views: [
       {
+        id: "source-metadata",
+        label: "Document metadata",
+        panel: "info",
+        appKinds: ["manage"],
+        features: ["source-editing"],
+        load: function () {
+          return import("./source-editor/source-metadata-view.js").then(function (module) {
+            return module.createSourceMetadataView();
+          });
+        }
+      },
+      {
         id: "index-graph",
         label: "Index graph",
         panel: "index",
@@ -26,7 +38,7 @@ export function createDocsViewerManagementViewDefinitions() {
       },
       {
         id: "catalogue-token-info",
-        label: "Catalogue token",
+        label: "Semantic token",
         panel: "info",
         appKinds: ["manage"],
         features: ["source-editing"],

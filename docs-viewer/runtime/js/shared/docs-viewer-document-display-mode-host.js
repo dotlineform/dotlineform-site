@@ -150,6 +150,11 @@ export function createDocsViewerDocumentDisplayModeHost(options) {
 
   return {
     activeModeId: function () { return activeModeId; },
+    confirmNavigation: function () {
+      return activeLifecycle && typeof activeLifecycle.confirmNavigation === "function"
+        ? activeLifecycle.confirmNavigation(modeContext({ mount: mount }))
+        : Promise.resolve(true);
+    },
     modeContext: modeContext,
     requestMode: requestMode,
     resolve: resolve

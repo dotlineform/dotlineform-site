@@ -67,7 +67,10 @@ export function createDocsViewerInfoPanelController(options) {
     var eligible = typeof settings.controlActive !== "function" || settings.controlActive("info");
     var canShow = eligible && Boolean(currentSelectedDoc() && metadataInfoAvailable());
     var open = host.isOpen();
-    var label = open ? "Hide document info" : "Show document info";
+    var defaultViewId = typeof settings.defaultViewId === "function" ? settings.defaultViewId() : settings.defaultViewId;
+    var view = settings.registry.resolveView(open ? host.activeViewId() : defaultViewId);
+    var description = view && view.view && view.view.id !== "metadata-info" ? view.view.label.toLowerCase() : "document info";
+    var label = (open ? "Hide " : "Show ") + description;
     if (typeof settings.projectControlState === "function") {
       settings.projectControlState("info", {
         hidden: !canShow,

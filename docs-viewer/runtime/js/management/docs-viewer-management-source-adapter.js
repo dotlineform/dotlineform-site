@@ -9,7 +9,7 @@ import {
   readCatalogueWork,
   readCatalogueSeries,
   readDocumentLinkTargets,
-  rebuildManagedDocSource
+  saveManagedDocSource
 } from "./docs-viewer-management-client.js";
 
 function currentValue(value) {
@@ -49,7 +49,7 @@ export function createDocsViewerManagementSourceAdapter(options) {
       return readManagedDocSource(target, clientOptions(optionsForRead));
     },
     writeSource: function (target, payload, optionsForWrite) {
-      return rebuildManagedDocSource(target, payload, clientOptions(optionsForWrite));
+      return saveManagedDocSource(target, payload, clientOptions(optionsForWrite));
     },
     readDiagramSources: function (target, optionsForRead) {
       return readManagedDiagramSources(target, clientOptions(optionsForRead));

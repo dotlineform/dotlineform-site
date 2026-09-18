@@ -258,7 +258,7 @@ function detailMetadataRecord(state, docId, payload) {
   ].forEach(function (fieldName) {
     if (Object.prototype.hasOwnProperty.call(payloadRecord, fieldName)) {
       record[fieldName] = payloadRecord[fieldName];
-    } else if (Object.prototype.hasOwnProperty.call(manifestRecord, fieldName)) {
+    } else if (fieldName !== "summary" && Object.prototype.hasOwnProperty.call(manifestRecord, fieldName)) {
       record[fieldName] = manifestRecord[fieldName];
     }
   });
@@ -793,6 +793,9 @@ function publishState(state, reportState, target, reason, detail) {
     refreshDocument: function (documentTarget) {
       return refreshAndOpenDocument(state, documentTarget);
     },
+    refreshDisplayedDocument: function (documentTarget, isCurrent) {
+      return refreshDisplayedDocument(state, documentTarget, isCurrent);
+    },
     refreshCollection: function (collection) {
       return refreshCollection(state, collection);
     }
@@ -937,6 +940,7 @@ function renderDetailPayload(state, docId, payload) {
   if (payloadDocId !== docId) {
     throw new Error("Docs collection detail payload did not match the requested document.");
   }
+  state.detailPayloadSignatures[docId] = JSON.stringify(payload);
   // A saved readiness response is current before the watcher catches up.
   var record = documentRecord(state.docs.find(function (doc) { return doc.docId === docId; }));
   if (typeof record.draft === "boolean") {
@@ -975,6 +979,33 @@ function renderDetailPayload(state, docId, payload) {
         && state.detailRequestVersion === requestVersion;
     }
   });
+}
+
+/** Refresh only this mounted detail; a late read cannot replace navigation or Source. */
+async function refreshDisplayedDocument(state, target, isCurrent) {
+  var docId = assertCreatedCollectionTarget(state, target);
+  var requestVersion = state.detailRequestVersion;
+  function current() {
+    return state.mounted && state.root.isConnected && state.validDetailId === docId
+      && state.detailRequestVersion === requestVersion && isCurrent();
+  }
+  if (!current()) return false;
+  var payload = await fetchJson(byIdPayloadUrl(state, docId), "Failed to refresh docs collection detail", { cache: "no-store" });
+  if (!current() || JSON.stringify(payload) === state.detailPayloadSignatures[docId]) return false;
+  var positions = [];
+  for (var node = state.detailBodyNode; node; node = node.parentElement) {
+    positions.push({ node: node, top: node.scrollTop, left: node.scrollLeft });
+  }
+  var x = window.scrollX;
+  var y = window.scrollY;
+  var completion = renderDetailPayload(state, docId, payload);
+  positions.forEach(function (position) {
+    position.node.scrollTop = position.top;
+    position.node.scrollLeft = position.left;
+  });
+  window.scrollTo(x, y);
+  await completion;
+  return true;
 }
 
 function renderDetailById(state, docId, options) {
@@ -1332,6 +1363,7 @@ function mountResolvedDocsCollectionReport(context, contribution) {
     sortMode: "title-asc",
     detailRequestVersion: 0,
     detailPayloads: {},
+    detailPayloadSignatures: {},
     contribution: contribution,
     managementContext: Boolean(context && context.managementContext),
     filterClearNode: refs.filterClearNode,

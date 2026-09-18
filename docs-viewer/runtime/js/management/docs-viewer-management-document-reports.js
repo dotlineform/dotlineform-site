@@ -114,6 +114,9 @@ function publishReportState(settings, parent, collection, state) {
     subdocTarget: subdocTarget,
     subdocRecord: detailRecord,
     subdocInfo: detailInfo,
+    refreshDisplayedDocument: typeof detail.refreshDisplayedDocument === "function"
+      ? detail.refreshDisplayedDocument
+      : null,
     refreshDocument: typeof detail.refreshDocument === "function"
       ? detail.refreshDocument
       : null,

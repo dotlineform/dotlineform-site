@@ -7,8 +7,7 @@ import {
   previewManagedDocDelete,
   previewManagedDocsPrePublish,
   rebuildManagedDocs,
-  updateSourceConfigSettings,
-  updateManagedDocMetadata
+  updateSourceConfigSettings
 } from "./docs-viewer-management-client.js";
 import {
   DOCS_VIEWER_ACTION_IDS
@@ -578,35 +577,6 @@ export function createDocsViewerManagementActionController(options) {
     }
   }
 
-  function handleEditMetadataSave(target, payload) {
-    if (!target || !payload) return Promise.resolve(null);
-    var normalizedTarget = normalizeManagedDocumentTarget(target);
-
-    setManagementBusy(true);
-    renderManagementUi();
-
-    return updateManagedDocMetadata(normalizedTarget, payload, managementClientOptions())
-      .then(function (response) {
-        setManagementMessage("", false);
-        var placement = committedDocumentPlacement(response, normalizedTarget);
-        if (placement.collection_changed) {
-          return callbacks.reloadPlacedDocument(placement.target, placement.viewer_url);
-        }
-        if (normalizedTarget.collection) {
-          return callbacks.reloadMetadataTarget
-            ? callbacks.reloadMetadataTarget(normalizedTarget, response)
-            : response;
-        }
-        return reloadDocsIndex(normalizedTarget.doc_id, "");
-      })
-      .catch(function (error) {
-        setManagementMessage(error.message || "Metadata update failed.", true);
-      })
-      .finally(function () {
-        setManagementBusy(false);
-        renderManagementUi();
-      });
-  }
 
   function handleRebuildDocs() {
     setManagementBusy(true);
@@ -934,7 +904,6 @@ export function createDocsViewerManagementActionController(options) {
     handleCreateCollectionDocument: handleCreateCollectionDocument,
     handleRegenerateCatalogue: handleRegenerateCatalogue,
     handleDeleteDoc: handleDeleteDoc,
-    handleEditMetadataSave: handleEditMetadataSave,
     handleMarkdownSave: handleMarkdownSave,
     handleMarkdownSource: handleMarkdownSource,
     handleReturnToDoc: handleReturnToDoc,

@@ -785,13 +785,6 @@ select.docsViewer__fieldInput{
   padding-bottom: 0;
 }
 
-select.docsViewer__fieldInput--listbox{
-  height: auto;
-  min-height: 0;
-  padding-top: 0.35rem;
-  padding-bottom: 0.35rem;
-}
-
 .docsViewer__fieldInput--textarea{
   min-height: 6rem;
   resize: vertical;
@@ -808,83 +801,6 @@ select.docsViewer__fieldInput--listbox{
   color: var(--docs-viewer-disabled);
   -webkit-text-fill-color: var(--docs-viewer-disabled);
   cursor: not-allowed;
-}
-
-.docsViewer__parentPicker{
-  position: relative;
-}
-
-.docsViewer__parentPopup{
-  box-sizing: border-box;
-  position: absolute;
-  z-index: 20;
-  top: calc(100% + 0.25rem);
-  left: 0;
-  width: 100%;
-  max-height: min(16rem, 42vh);
-  overflow: auto;
-  border: 1px solid var(--docs-viewer-border);
-  border-radius: 0.55rem;
-  background: var(--docs-viewer-panel);
-  box-shadow: var(--docs-viewer-shadow-pop);
-  padding: 0.35rem;
-}
-
-.docsViewer__parentPopup[hidden]{
-  display: none;
-}
-
-.docsViewer__parentOption{
-  box-sizing: border-box;
-  display: grid;
-  gap: 0.1rem;
-  width: 100%;
-  border: 1px solid transparent;
-  border-radius: 0.45rem;
-  background: transparent;
-  color: var(--docs-viewer-text);
-  font: inherit;
-  font-size: var(--docs-viewer-font-small, var(--font-small, 0.875rem));
-  line-height: var(--docs-viewer-line-snug, var(--line-snug, 1.25));
-  padding: 0.42rem 0.5rem;
-  text-align: left;
-  cursor: pointer;
-}
-
-.docsViewer__parentOption:hover{
-  border-color: var(--docs-viewer-border);
-  background: var(--docs-viewer-panel-2);
-}
-
-.docsViewer__parentOption:focus-visible{
-  border-color: var(--docs-viewer-border);
-  background: var(--docs-viewer-panel-2);
-  outline: 2px solid var(--docs-viewer-focus-ring);
-  outline-offset: -2px;
-}
-
-.docsViewer__parentOption.is-active{
-  border-color: var(--docs-viewer-border-strong);
-  background: var(--docs-viewer-selection-bg);
-  color: var(--docs-viewer-selection-text);
-}
-
-.docsViewer__parentOptionMeta{
-  color: var(--docs-viewer-muted);
-  font-family: var(--docs-viewer-font-mono);
-  font-size: var(--docs-viewer-font-caption, 0.75rem);
-}
-
-.docsViewer__parentOption.is-active .docsViewer__parentOptionMeta{
-  color: inherit;
-  opacity: 0.78;
-}
-
-.docsViewer__parentPopupEmpty{
-  color: var(--docs-viewer-muted);
-  font-size: var(--docs-viewer-font-small, var(--font-small, 0.875rem));
-  margin: 0;
-  padding: 0.42rem 0.5rem;
 }
 
 .docsViewer__modalNote{

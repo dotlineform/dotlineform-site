@@ -76,8 +76,7 @@ export function createDocsViewerManagementEventRouter(options = {}) {
     if (ref("indexActionsMenu") && !event.target.closest('[data-docs-viewer-control="index-actions"]')) {
       hideIndexActionsMenu();
     }
-    var modal = modalController();
-    return modal ? modal.handleRootClick(event) : false;
+    return false;
   }
 
   function handleDocumentKeydown(event) {

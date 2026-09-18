@@ -13,6 +13,8 @@ function cleanString(value) {
 }
 
 function infoPanelDefaultViewId(settings, modeId) {
+  var services = typeof settings.sourceEditorServices === "function" ? settings.sourceEditorServices() : null;
+  if (modeId === "markdown-source" && services && services.getInfoViewId) return services.getInfoViewId();
   var map = settings.infoPanelDefaultViewByDocumentMode;
   if (!map || typeof map !== "object") return "";
   return cleanString(map[cleanString(modeId)]);
@@ -179,6 +181,7 @@ export function createDocsViewerDocumentViewCoordinator(options) {
   return {
     activeInfoViewId: function () { return infoPanelController.activeViewId(); },
     activeViewState: activeViewState,
+    confirmDocumentNavigation: documentDisplayModeHost.confirmNavigation,
     bind: function () { infoPanelController.bind(); },
     closeInfoIfOpen: function () { return infoPanelController.closeIfOpen(); },
     controlActive: controlActive,

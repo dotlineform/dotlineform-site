@@ -19,7 +19,8 @@ export function createCatalogueTokenInfoViewResolver(options = {}) {
       !adapter
       || typeof adapter.getBufferSnapshot !== "function"
       || typeof adapter.getSelection !== "function"
-    ) return Promise.resolve("metadata-info");
+    ) return Promise.resolve("source-metadata");
+    if (adapter.isMetadataContext()) return Promise.resolve("source-metadata");
     return loadRegistry()
       .then(function (registry) {
         var snapshot = adapter.getBufferSnapshot();
@@ -27,10 +28,10 @@ export function createCatalogueTokenInfoViewResolver(options = {}) {
         var tokens = parseCatalogueTokens(snapshot.value, { registry: registry });
         return catalogueTokenAtSelection(tokens, selection)
           ? "catalogue-token-info"
-          : "metadata-info";
+          : "source-metadata";
       })
       .catch(function () {
-        return "metadata-info";
+        return "source-metadata";
       });
   };
 }

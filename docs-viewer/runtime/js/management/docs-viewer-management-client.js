@@ -241,15 +241,6 @@ export function readManagedDocMetadata(target, options) {
   return fetchManagementJson("/docs/metadata?" + targetQuery(target), "GET", undefined, options);
 }
 
-export function updateManagedDocMetadata(target, payload, options) {
-  return fetchManagementJson(
-    "/docs/update-metadata",
-    "POST",
-    targetPayload(target, payload),
-    options
-  );
-}
-
 /** Write readiness using the exact document identity and source revision. */
 export function setManagedDocDraft(target, payload, options) {
   return fetchManagementJson("/docs/set-draft", "POST", targetPayload(target, payload), options);
@@ -264,8 +255,9 @@ export function assignManagedDocFieldGroup(target, payload, options) {
   );
 }
 
-export function rebuildManagedDocSource(target, payload, options) {
-  return fetchManagementJson("/docs/source/rebuild", "POST", targetPayload(target, payload), options);
+/** Persist one loaded source session; generated output is owned by the watcher. */
+export function saveManagedDocSource(target, payload, options) {
+  return fetchManagementJson("/docs/source/save", "POST", targetPayload(target, payload), options);
 }
 
 export function readManagedDiagramSources(target, options) {

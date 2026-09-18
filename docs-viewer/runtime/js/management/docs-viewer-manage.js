@@ -152,9 +152,9 @@ startDocsViewerManageApp({
       }
     )
   ),
-  infoPanelAutoOpenDocumentModes: ["markdown-source"],
+  infoPanelAutoOpenDocumentModes: [],
   infoPanelDefaultViewByDocumentMode: {
-    "markdown-source": "metadata-info",
+    "markdown-source": "source-metadata",
     "rendered-document": "metadata-info"
   },
   inlineMermaidAdapter: docsViewerInlineMermaidAdapter,

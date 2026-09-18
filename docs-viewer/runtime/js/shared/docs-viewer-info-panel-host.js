@@ -20,6 +20,13 @@ export function createDocsViewerInfoPanelHost(options = {}) {
   let activeLifecycle = null;
   let mounted = false;
   let open = false;
+  let request = 0;
+
+  function viewLabel() {
+    if (activeViewId === "metadata-info") return "Info";
+    const resolved = registry && registry.resolveView(activeViewId);
+    return resolved && resolved.view ? resolved.view.label : "Info";
+  }
 
   function viewOptions() {
     return (registry ? registry.listViews("info") : []).map(function (view) {
@@ -36,7 +43,7 @@ export function createDocsViewerInfoPanelHost(options = {}) {
     project(Object.assign({
       activeViewId: activeViewId,
       statusHidden: true,
-      title: "info",
+      title: viewLabel(),
       visible: open
     }, projection || {}));
   }
@@ -56,8 +63,10 @@ export function createDocsViewerInfoPanelHost(options = {}) {
   }
 
   function close() {
+    const currentRequest = ++request;
     open = false;
     return unmountActive().finally(function () {
+      if (currentRequest !== request) return;
       projectPanel({ visible: false, statusText: "", statusHidden: true, statusError: false });
     });
   }
@@ -79,6 +88,7 @@ export function createDocsViewerInfoPanelHost(options = {}) {
   }
 
   function openView(viewId, context) {
+    const currentRequest = ++request;
     const nextViewId = cleanString(viewId);
     activeViewId = nextViewId;
     if (!registry || typeof registry.resolveView !== "function") {
@@ -111,11 +121,13 @@ export function createDocsViewerInfoPanelHost(options = {}) {
         return loadLifecycle(resolved.view);
       })
       .then(function (lifecycle) {
+        if (currentRequest !== request || !open) return false;
         return mountLifecycle(lifecycle, context).then(function () {
           return true;
         });
       })
       .catch(function (error) {
+        if (currentRequest !== request || !open) return false;
         console.warn("docs_viewer: info panel hosted view failed", error);
         activeLifecycle = null;
         mounted = false;
@@ -132,12 +144,15 @@ export function createDocsViewerInfoPanelHost(options = {}) {
 
   function update(context) {
     if (!open || !mounted || !activeLifecycle) return Promise.resolve(false);
+    const currentRequest = request;
     return callLifecycle(activeLifecycle, "update", Object.assign({ mount: refs.body }, context || {}))
       .then(function () {
+        if (currentRequest !== request || !open) return false;
         projectPanel({ statusText: "", statusHidden: true, statusError: false, visible: true });
         return true;
       })
       .catch(function (error) {
+        if (currentRequest !== request || !open) return false;
         console.warn("docs_viewer: info panel hosted view update failed", error);
         projectPanel({
           statusText: "Info view failed to update.",
@@ -150,6 +165,7 @@ export function createDocsViewerInfoPanelHost(options = {}) {
   }
 
   function dispose() {
+    request += 1;
     const lifecycle = activeLifecycle;
     activeLifecycle = null;
     mounted = false;

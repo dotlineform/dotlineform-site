@@ -343,11 +343,19 @@ export function initDocsViewerDocumentController(context) {
     projectDocumentShell({ resultsHidden: false });
   }
 
-  function renderPayload(doc, payload, hash) {
+  function renderPayload(doc, payload, hash, options = {}) {
+    var scrollPositions = [];
+    for (var node = content; options.preservePosition && node; node = node.parentElement) {
+      scrollPositions.push({ node: node, top: node.scrollTop, left: node.scrollLeft });
+    }
+    var scrollX = window.scrollX;
+    var scrollY = window.scrollY;
     var mountGeneration = nextDocumentMountGeneration();
     clearCollectionReportState("document-mount", mountGeneration);
     selectedDocument.selectedDocId = doc.doc_id;
-    context.renderSidebar();
+    selectedDocument.displayedDocId = doc.doc_id;
+    selectedDocument.displayedPayload = payload;
+    if (!options.preservePosition) context.renderSidebar();
     context.renderBookmarkUi();
     context.renderManagementUi();
 
@@ -383,13 +391,19 @@ export function initDocsViewerDocumentController(context) {
     mountDiagramDetails(doc, payload, mountGeneration);
     mountInlineMermaid(doc, payload, mountGeneration);
     mountDocumentExtras(doc, payload, mountGeneration);
-    document.title = doc.title + " | dotlineform";
+    document.title = payload.title + " | dotlineform";
     setStatus("", false);
     context.renderManagementUi();
 
-    window.requestAnimationFrame(function () {
-      scrollToHash(hash);
-    });
+    if (options.preservePosition) {
+      scrollPositions.forEach(function (position) {
+        position.node.scrollTop = position.top;
+        position.node.scrollLeft = position.left;
+      });
+      window.scrollTo(scrollX, scrollY);
+    } else {
+      window.requestAnimationFrame(function () { scrollToHash(hash); });
+    }
   }
 
   function handleMissingDoc() {

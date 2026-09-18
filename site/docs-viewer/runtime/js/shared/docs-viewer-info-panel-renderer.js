@@ -26,7 +26,7 @@ export function renderDocsViewerInfoPanelShell(options = {}) {
   const title = documentRef.createElement("h2");
   title.className = "docsViewer__infoPanelTitle";
   title.id = "docsViewerInfoPanelTitle";
-  title.textContent = "info";
+  title.textContent = "Info";
 
   copy.append(title);
 
@@ -86,7 +86,7 @@ export function applyDocsViewerInfoPanelProjection(options = {}) {
     refs.panel.dataset.activeViewId = projection.activeViewId || "";
   }
   if (refs.title && Object.prototype.hasOwnProperty.call(projection, "title")) {
-    refs.title.textContent = projection.title || "info";
+    refs.title.textContent = projection.title || "Info";
   }
   if (refs.status) {
     if (Object.prototype.hasOwnProperty.call(projection, "statusText")) {

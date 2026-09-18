@@ -40,7 +40,6 @@ import {
   projectDocsViewerReportControlState
 } from "./docs-viewer-management-report-controls.js";
 import {
-  readManagedDocMetadata
 } from "./docs-viewer-management-client.js";
 import {
   DOCS_VIEWER_ACTION_IDS,
@@ -162,7 +161,6 @@ export function initDocsViewerManagement(context) {
   var documentIndex = domains.documentIndex || {};
   var management = domains.management || {};
   var routeSession = domains.routeSession || {};
-  var workspaceConfig = domains.workspaceConfig || {};
   var searchRecent = domains.searchRecent || {};
   var selectedDocument = domains.selectedDocument || {};
   var serviceClient = context.serviceClient || {};
@@ -196,7 +194,6 @@ export function initDocsViewerManagement(context) {
   var eventRouter = null;
   var importController = null;
   var interactionController = null;
-  var metadataWorkflow = null;
   var modalController = null;
   var collectionLifecycleController = null;
   var workspaceExportActive = false;
@@ -439,6 +436,30 @@ export function initDocsViewerManagement(context) {
     });
   }
 
+  async function openMetadataSource(target) {
+    try {
+      var sourceTarget = normalizeManagedDocumentTarget(target);
+      hideContextMenu();
+      var services = typeof context.sourceEditorServices === "function" ? context.sourceEditorServices() : context.sourceEditorServices;
+      var activeTarget = activeSourceTarget();
+      if (activeTarget && managedDocumentTargetsEqual(activeTarget, sourceTarget)) {
+        services.openMetadataPanel();
+        return;
+      }
+      if (!sourceTarget.collection && selectedDocument.selectedDocId !== sourceTarget.doc_id) {
+        var payload = await context.routeCommands.loadDoc(sourceTarget.doc_id);
+        if (!payload) return;
+        if (payload.doc_id !== sourceTarget.doc_id) throw new Error("The document opened did not match the metadata target.");
+      }
+      sourceSessionReportActive = Boolean(collectionReportState);
+      await requestCommittedDocumentSource(sourceTarget, context.requestDocumentMode);
+      services.openMetadataPanel();
+    } catch (error) {
+      setManagementMessage(error.message || "Document source could not be opened.", true);
+      renderManagementUi();
+    }
+  }
+
   function currentContextMenuDoc() {
     return interactionController ? interactionController.currentContextMenuDoc() : null;
   }
@@ -597,7 +618,7 @@ export function initDocsViewerManagement(context) {
       ["edit", {
         projection: "editMetadata",
         run: function (target) {
-          metadataWorkflow.openForTarget(target);
+          openMetadataSource(target);
         }
       }],
       ["markdown-source", {
@@ -806,7 +827,6 @@ export function initDocsViewerManagement(context) {
     manageImportButtons.forEach(function (button) { button.hidden = !authoringAvailable; });
     if (manageSettingsButton) manageSettingsButton.hidden = !authoringAvailable;
     projectDocumentActionButtons(!management.managementChecked || !authoringAvailable, !authoringAvailable || editDisabled);
-    if (metadataWorkflow) metadataWorkflow.render();
     if (settingsWorkflow) settingsWorkflow.render();
   }
 
@@ -888,7 +908,6 @@ export function initDocsViewerManagement(context) {
   }
 
   function applyConfig() {
-    if (metadataWorkflow) metadataWorkflow.refreshEditingOptions();
   }
 
   capabilityController = createDocsViewerManagementCapabilityController({
@@ -957,7 +976,7 @@ export function initDocsViewerManagement(context) {
         eventRouter.hideManageActionsMenu();
         var doc = documentIndex.docsById.get(docId) || null;
         var target = sourceTargetForDoc(doc);
-        if (target) metadataWorkflow.openForTarget(target);
+        if (target) openMetadataSource(target);
       },
       onIndexSelectionChange: function () {
         indexController.projectSelection();
@@ -994,11 +1013,6 @@ export function initDocsViewerManagement(context) {
       },
       openCreatedDocumentSource: openCreatedDocumentSource,
       reloadDocsIndex: reloadDocsIndex,
-      reloadMetadataTarget: function (target, response) {
-        return typeof context.reloadMetadataTarget === "function"
-          ? context.reloadMetadataTarget(target, response)
-          : response;
-      },
       reloadPlacedDocument: function (target, viewerUrl) {
         var url = new URL(viewerUrl, "https://docs.invalid");
         return reloadDocsIndex(url.searchParams.get("doc"), "", target.collection ? { subdoc: target.doc_id } : {});
@@ -1076,14 +1090,7 @@ export function initDocsViewerManagement(context) {
   });
 
   var modalComposition = createDocsViewerManagementModalComposition({
-    nav: nav,
-    domains: {
-      documentIndex: documentIndex,
-      management: management,
-      routeSession: routeSession,
-      workspaceConfig: workspaceConfig
-    },
-    context: context,
+    domains: { management: management },
     shellRefs: shellRefs,
     manageActionsButton: manageActionsButton,
     manageImportButton: manageToolbarImportButton || manageImportButton,
@@ -1092,23 +1099,11 @@ export function initDocsViewerManagement(context) {
       hideContextMenu: hideContextMenu,
       hideManageActionsMenu: eventRouter.hideManageActionsMenu,
       onImportOpen: importController.initialize,
-      loadMetadataDoc: function (target) {
-        return readManagedDocMetadata(target, managementClientOptions());
-      },
-      onMetadataLoadError: function (error) {
-        setManagementMessage(
-          error && error.message ? error.message : "Document metadata could not be loaded.",
-          true
-        );
-        renderManagementUi();
-      },
-      onMetadataSave: actionController.handleEditMetadataSave,
       onSettingsSubmit: actionController.handleSettingsSubmit,
       managementClientOptions: managementClientOptions,
       viewerStage: viewerStage,
     }
   });
-  metadataWorkflow = modalComposition.metadataWorkflow;
   modalController = modalComposition.modalController;
   settingsWorkflow = modalComposition.settingsWorkflow;
 

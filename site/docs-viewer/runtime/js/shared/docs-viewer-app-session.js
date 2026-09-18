@@ -53,6 +53,8 @@ function createStateDefaults(settings) {
     childrenByParent: new Map(),
     payloadCache: new Map(),
     selectedDocId: "",
+    displayedDocId: "",
+    displayedPayload: null,
     expandedDocIds: new Set(),
     requestId: 0,
     searchIndex: null,
@@ -101,7 +103,6 @@ function createStateDefaults(settings) {
     reloadNonce: "",
     reloadExpectedDocId: "",
     pendingBusyCount: 0,
-    metadataEditingDocId: "",
     nonLoadableDocIds: new Set(),
     manageOnlyTreeRootIds: new Set(),
     indexPanelState: panelLayout && typeof panelLayout.indexPanelState === "function"
@@ -168,6 +169,8 @@ function createStateDomains(state, settings) {
     ]),
     selectedDocument: stateDomain("selectedDocument", "generated static data or local generated-read service", state, [
       "selectedDocId",
+      "displayedDocId",
+      "displayedPayload",
       "payloadCache",
       "requestId",
       "reloadNonce",
@@ -207,8 +210,7 @@ function createStateDomains(state, settings) {
       "managementCapabilityError",
       "managementMessage",
       "managementMessageIsError",
-      "managementStatusOwnsViewerStatus",
-      "metadataEditingDocId"
+      "managementStatusOwnsViewerStatus"
     ]),
     generatedData: stateDomain("generatedData", "local generated-read service capability", state, [
       "generatedDataReadChecked",

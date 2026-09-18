@@ -36,7 +36,7 @@ DIAGRAM_SOURCES_PATH = "/docs/diagram-sources"
 SOURCE_BODY_PATH = "/docs/source"
 DOCUMENT_LINK_TARGETS_PATH = "/docs/document-link-targets"
 METADATA_PATH = "/docs/metadata"
-SOURCE_REBUILD_PATH = "/docs/source/rebuild"
+SOURCE_SAVE_PATH = "/docs/source/save"
 OPEN_SOURCE_PATH = "/docs/open-source"
 OPEN_PUBLICATION_IGNORE_PATH = "/docs/open-publication-ignore"
 OPEN_DIAGRAM_SOURCE_PATH = "/docs/open-diagram-source"
@@ -50,7 +50,6 @@ MISSING_SOURCE_FILES_PATH = "/docs/missing-source-files"
 IMPORT_SOURCE_PATH = "/docs/import-source"
 STAGED_MEDIA_PREVIEW_PATH = "/docs/staged-media-preview"
 STAGED_MEDIA_APPLY_PATH = "/docs/staged-media-apply"
-UPDATE_METADATA_PATH = "/docs/update-metadata"
 SET_DRAFT_PATH = "/docs/set-draft"
 ASSIGN_FIELD_GROUP_PATH = "/docs/assign-field-group"
 CREATE_PATH = "/docs/create"
@@ -110,7 +109,7 @@ GET_PATHS = (
 POST_PATHS = (
     CATALOGUE_REGENERATE_PREVIEW_PATH,
     CATALOGUE_REGENERATE_APPLY_PATH,
-    SOURCE_REBUILD_PATH,
+    SOURCE_SAVE_PATH,
     OPEN_SOURCE_PATH,
     OPEN_PUBLICATION_IGNORE_PATH,
     OPEN_DIAGRAM_SOURCE_PATH,
@@ -125,7 +124,6 @@ POST_PATHS = (
     IMPORT_SOURCE_PATH,
     STAGED_MEDIA_PREVIEW_PATH,
     STAGED_MEDIA_APPLY_PATH,
-    UPDATE_METADATA_PATH,
     SET_DRAFT_PATH,
     ASSIGN_FIELD_GROUP_PATH,
     CREATE_PATH,
