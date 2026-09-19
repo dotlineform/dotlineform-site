@@ -667,7 +667,7 @@ main.container:has(> .docsViewer){
   cursor: pointer;
 }
 
-.docsViewer__toolbarIconButton:hover{
+.docsViewer__toolbarIconButton:hover:where(:not(:disabled)){
   background: var(--docs-viewer-toolbar-icon-hover-bg);
 }
 
