@@ -72,6 +72,7 @@
         "docs-viewer-status-controller.js",
         "docs-viewer-table-detail.js",
         "docs-viewer-theme.js",
+        "docs-viewer-toolbar-icon.js",
         "docs-viewer-top-bar-renderer.js",
         "docs-viewer-tree-move-projection.js",
         "docs-viewer-tree-payload-adapter.js",

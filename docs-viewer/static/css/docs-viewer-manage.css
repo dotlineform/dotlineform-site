@@ -45,23 +45,8 @@
   margin-left: auto;
 }
 
-.docsViewer__documentActionButton--svg{
-  border: 0;
-  padding: 0;
-  background: transparent;
-}
-
-.docsViewer__documentActionButton--svg:hover{
-  background: color-mix(in srgb, var(--docs-viewer-panel) 88%, var(--docs-viewer-text));
-}
-
-.docsViewer__editMetadataIcon{
-  display: block;
-  flex: 0 0 auto;
-  width: 24px;
-  height: 24px;
-  background-color: currentColor;
-  mask: url("../icons/pen.svg") center / contain no-repeat;
+.docsViewer__icon--pen{
+  mask-image: url("../icons/pen.svg");
 }
 
 .docsViewer__indexSelectionControl{

@@ -1,3 +1,5 @@
+import { createDocsViewerToolbarIcon } from "../shared/docs-viewer-toolbar-icon.js";
+
 function renderDocumentActionButton(context, options) {
   var settings = options || {};
   var button = context.existingRoot;
@@ -136,11 +138,8 @@ export function createDocsViewerManagementControlRenderers() {
       var button = renderDocumentActionButton(context, {
         id: "docsViewerManageEditButton"
       });
-      button.classList.add("docsViewer__documentActionButton--svg");
-      var icon = context.document.createElement("span");
-      icon.className = "docsViewer__editMetadataIcon";
-      icon.setAttribute("aria-hidden", "true");
-      button.replaceChildren(icon);
+      button.className = "docsViewer__toolbarIconButton";
+      button.replaceChildren(createDocsViewerToolbarIcon(context.document, "docsViewer__icon--pen"));
       return button;
     },
     "manage-draft": function (context) {

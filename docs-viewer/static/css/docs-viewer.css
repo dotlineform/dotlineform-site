@@ -53,6 +53,8 @@
   --docs-viewer-space-4: var(--space-4, 1.125rem);
   --docs-viewer-space-5: var(--space-5, 1.375rem);
   --docs-viewer-sidebar-control-inset: 0.45rem;
+  --docs-viewer-toolbar-icon-size: 24px;
+  --docs-viewer-toolbar-icon-hover-bg: color-mix(in srgb, var(--docs-viewer-panel) 88%, var(--docs-viewer-text));
   font-family: var(--docs-viewer-font-sans);
   color: var(--docs-viewer-text);
 
@@ -721,6 +723,41 @@ main.container:has(> .docsViewer){
   color: var(--docs-viewer-muted);
 }
 
+.docsViewer__toolbarIconButton{
+  box-sizing: border-box;
+  flex: 0 0 auto;
+  width: var(--docs-viewer-control-height);
+  min-width: var(--docs-viewer-control-height);
+  height: var(--docs-viewer-control-height);
+  border: 0;
+  border-radius: 999px;
+  padding: 0;
+  background: transparent;
+  color: var(--docs-viewer-text);
+  font: inherit;
+  font-size: 1rem;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.docsViewer__toolbarIconButton:hover{
+  background: var(--docs-viewer-toolbar-icon-hover-bg);
+}
+
+.docsViewer__toolbarIcon{
+  display: block;
+  flex: 0 0 auto;
+  width: var(--docs-viewer-toolbar-icon-size);
+  height: var(--docs-viewer-toolbar-icon-size);
+  background-color: currentColor;
+  mask-position: center;
+  mask-size: contain;
+  mask-repeat: no-repeat;
+}
+
 .docsViewer__indexViewToggle,
 .docsViewer__infoToggle,
 .docsViewer__documentActionButton,
@@ -745,7 +782,8 @@ main.container:has(> .docsViewer){
 
 .docsViewer__indexViewToggle[hidden],
 .docsViewer__infoToggle[hidden],
-.docsViewer__documentActionButton[hidden]{
+.docsViewer__documentActionButton[hidden],
+.docsViewer__toolbarIconButton[hidden]{
   display: none;
 }
 
@@ -763,7 +801,8 @@ main.container:has(> .docsViewer){
 .docsViewer__indexViewToggle:focus-visible,
 .docsViewer__infoToggle:focus-visible,
 .docsViewer__documentActionButton:focus-visible,
-.docsViewer__bookmarkToggle:focus-visible{
+.docsViewer__bookmarkToggle:focus-visible,
+.docsViewer__toolbarIconButton:focus-visible{
   outline: 2px solid var(--docs-viewer-focus-ring);
   outline-offset: 2px;
 }
@@ -771,13 +810,15 @@ main.container:has(> .docsViewer){
 .docsViewer__indexViewToggle.is-active,
 .docsViewer__infoToggle.is-active,
 .docsViewer__documentActionButton.is-active,
-.docsViewer__bookmarkToggle.is-active{
+.docsViewer__bookmarkToggle.is-active,
+.docsViewer__toolbarIconButton.is-active{
   border-color: var(--docs-viewer-border-strong);
   background: var(--docs-viewer-selection-bg);
   color: var(--docs-viewer-selection-text);
 }
 
-.docsViewer__documentActionButton[disabled]{
+.docsViewer__documentActionButton[disabled],
+.docsViewer__toolbarIconButton[disabled]{
   color: var(--docs-viewer-disabled);
   cursor: default;
   opacity: 1;
