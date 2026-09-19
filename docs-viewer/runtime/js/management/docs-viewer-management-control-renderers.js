@@ -133,10 +133,15 @@ export function createDocsViewerManagementControlRenderers() {
     "manage-index-selection": renderIndexSelectionControl,
     "manage-index-actions": renderIndexActionsControl,
     "manage-edit": function (context) {
-      return renderDocumentActionButton(context, {
-        id: "docsViewerManageEditButton",
-        emoji: "✏️"
+      var button = renderDocumentActionButton(context, {
+        id: "docsViewerManageEditButton"
       });
+      button.classList.add("docsViewer__documentActionButton--svg");
+      var icon = context.document.createElement("span");
+      icon.className = "docsViewer__editMetadataIcon";
+      icon.setAttribute("aria-hidden", "true");
+      button.replaceChildren(icon);
+      return button;
     },
     "manage-draft": function (context) {
       return renderDocumentActionButton(context, {
