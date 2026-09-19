@@ -1,3 +1,5 @@
+import { createDocsViewerToolbarIcon } from "../shared/docs-viewer-toolbar-icon.js";
+
 import { normalizeDocsViewerAuthoringSubject } from "../management/docs-viewer-management-document-subject.js";
 import { appendProjectSubjectIcon } from "./project-subject-icons.js";
 
@@ -379,8 +381,8 @@ function renderShell(root) {
   root.innerHTML = [
     '<div class="docsViewerReport__toolbar">',
     '<button id="docsWorksReportRefresh" type="button"',
-    ' class="docsViewerReport__button docsViewerReport__button--pill"',
-    ' aria-label="Run/Refresh" title="Run/Refresh">🔄</button></div>',
+    ' class="docsViewer__toolbarIconButton"',
+    ' aria-label="Run/Refresh" title="Run/Refresh"></button></div>',
     '<p class="docsViewerReport__status"></p>',
     '<div class="docsViewerReport__table"><div class="docsViewerReport__head">',
     '<span class="docsViewerReport__headLabel">Series</span>',
@@ -388,6 +390,7 @@ function renderShell(root) {
     '<ul class="docsViewerReport__rows"></ul></div>',
     '<p class="docsViewerReport__empty" hidden></p>'
   ].join("");
+  root.querySelector("#docsWorksReportRefresh").appendChild(createDocsViewerToolbarIcon(root.ownerDocument, "docsViewer__icon--refresh-cw"));
   return {
     emptyNode: root.querySelector(".docsViewerReport__empty"),
     refreshButton: root.querySelector("#docsWorksReportRefresh"),

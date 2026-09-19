@@ -1,3 +1,5 @@
+import { createDocsViewerToolbarIcon } from "../shared/docs-viewer-toolbar-icon.js";
+
 import {
   DOCS_VIEWER_ACTION_IDS,
   createDocsViewerActionContext,
@@ -178,7 +180,6 @@ export function createDocsViewerManagementCollectionDefaultContribution(options 
 
     if (listToolbar.createButton) {
       listToolbar.createButton.disabled = createInFlight;
-      listToolbar.createButton.textContent = "📄";
       if (createInFlight) {
         listToolbar.createButton.setAttribute("aria-busy", "true");
       } else {
@@ -326,11 +327,12 @@ export function createDocsViewerManagementCollectionDefaultContribution(options 
     var sortButton = null;
     if (settings.sort && typeof settings.sort.setMode === "function") {
       sortButton = documentRef.createElement("button");
-      sortButton.className = "docsViewerReport__collectionActionsButton docsViewerReport__collectionSortButton";
+      sortButton.className = "docsViewer__toolbarIconButton docsViewerReport__collectionSortButton";
       sortButton.type = "button";
       sortButton.dataset.docsCollectionSort = cleanString(settings.sort.mode);
       var titleMode = cleanString(settings.sort.mode) !== "last-updated-desc";
-      sortButton.textContent = titleMode ? "🔤" : "🕒";
+      sortButton.appendChild(createDocsViewerToolbarIcon(documentRef,
+        titleMode ? "docsViewer__icon--arrow-down-a-z" : "docsViewer__icon--clock-3"));
       sortButton.setAttribute(
         "aria-label",
         titleMode
@@ -348,14 +350,14 @@ export function createDocsViewerManagementCollectionDefaultContribution(options 
     if (managementContext && onCreateDocument) {
       createButton = documentRef.createElement("button");
       createButton.className = (
-        "docsViewerReport__collectionActionsButton "
+        "docsViewer__toolbarIconButton "
         + "docsViewerReport__collectionNewButton"
       );
       createButton.type = "button";
       createButton.dataset.docsCollectionNew = "true";
       createButton.setAttribute("aria-label", "New");
       createButton.title = "New";
-      createButton.textContent = "📄";
+      createButton.appendChild(createDocsViewerToolbarIcon(documentRef, "docsViewer__icon--file"));
       if (typeof settings.registerAction === "function") {
         createRegistration = settings.registerAction({
           id: DOCS_VIEWER_ACTION_IDS.NEW,
@@ -378,11 +380,11 @@ export function createDocsViewerManagementCollectionDefaultContribution(options 
     if (managementContext && onRegenerateCatalogue) {
       regenerateButton = documentRef.createElement("button");
       regenerateButton.type = "button";
-      regenerateButton.className = "docsViewerReport__collectionActionsButton";
+      regenerateButton.className = "docsViewer__toolbarIconButton";
       regenerateButton.dataset.docsCollectionRegenerate = "true";
       regenerateButton.title = "Regenerate";
       regenerateButton.setAttribute("aria-label", "Regenerate");
-      regenerateButton.textContent = "🔄";
+      regenerateButton.appendChild(createDocsViewerToolbarIcon(documentRef, "docsViewer__icon--refresh-cw"));
       var regenerateAction = settings.registerAction({
         id: "catalogue-regenerate", placement: "list-toolbar", targetKind: "collection",
         capability: true, emptyState: "enabled", refreshEffect: "collection",
@@ -408,14 +410,14 @@ export function createDocsViewerManagementCollectionDefaultContribution(options 
     var actionsHost = documentRef.createElement("div");
     actionsHost.className = "docsViewer__actionsMenuHost docsViewerReport__collectionActionsHost";
     var actionsButton = documentRef.createElement("button");
-    actionsButton.className = "docsViewerReport__collectionActionsButton";
+    actionsButton.className = "docsViewer__toolbarIconButton";
     actionsButton.type = "button";
     actionsButton.dataset.docsCollectionActions = "true";
     actionsButton.setAttribute("aria-haspopup", "menu");
     actionsButton.setAttribute("aria-expanded", "false");
     actionsButton.setAttribute("aria-label", "Actions");
     actionsButton.title = "Actions";
-    actionsButton.textContent = "🔧";
+    actionsButton.appendChild(createDocsViewerToolbarIcon(documentRef, "docsViewer__icon--wrench"));
     var menu = documentRef.createElement("div");
     menu.className = "docsViewer__actionsMenu docsViewerReport__collectionActionsMenu";
     menu.setAttribute("role", "menu");
@@ -426,14 +428,11 @@ export function createDocsViewerManagementCollectionDefaultContribution(options 
     prepareButton.id = "docsViewerCollectionPreparePackageButton";
     prepareButton.setAttribute("role", "menuitem");
     prepareButton.dataset.docsViewerAction = DOCS_VIEWER_ACTION_IDS.PREPARE_DOCUMENT_PACKAGE;
-    var prepareEmoji = documentRef.createElement("span");
-    prepareEmoji.className = "docsViewer__actionMenuEmoji";
-    prepareEmoji.setAttribute("aria-hidden", "true");
-    prepareEmoji.textContent = "📦";
+    var prepareIcon = createDocsViewerToolbarIcon(documentRef, "docsViewer__icon--package");
     var prepareLabel = documentRef.createElement("span");
     prepareLabel.className = "docsViewer__actionMenuLabel";
     prepareLabel.textContent = "Prepare package…";
-    prepareButton.replaceChildren(prepareEmoji, prepareLabel);
+    prepareButton.replaceChildren(prepareIcon, prepareLabel);
     menu.replaceChildren(prepareButton);
     actionsHost.replaceChildren(actionsButton, menu);
 
@@ -441,7 +440,7 @@ export function createDocsViewerManagementCollectionDefaultContribution(options 
     selectionControl.className = "docsViewerReport__collectionSelectionControl";
     selectionControl.setAttribute("role", "group");
     selectionControl.setAttribute("aria-label", "Collection selection");
-    var selectAllButton = selectionCommandButton(documentRef, "select-all", "Select all");
+    var selectAllButton = selectionCommandButton(documentRef, "select-all", "All");
     var clearButton = selectionCommandButton(documentRef, "clear", "Clear");
     var doneButton = selectionCommandButton(documentRef, "done", "Done");
     selectionControl.replaceChildren(selectAllButton, clearButton, doneButton);
@@ -615,13 +614,14 @@ export function createDocsViewerManagementCollectionDefaultContribution(options 
         }
       });
       var draftButton = host.ownerDocument.createElement("button");
-      draftButton.className = "docsViewerReport__button docsViewerReport__button--pill docsReportDetail__iconButton";
+      draftButton.className = "docsViewer__toolbarIconButton";
       draftButton.type = "button";
       draftButton.dataset.docsCollectionDraft = "true";
       draftButton.title = draft ? "Draft — mark ready" : "Ready — mark as draft";
       draftButton.setAttribute("aria-label", draftButton.title);
       draftButton.setAttribute("aria-pressed", String(draft));
-      draftButton.textContent = draft ? "📝" : "✅";
+      draftButton.appendChild(createDocsViewerToolbarIcon(host.ownerDocument,
+        draft ? "docsViewer__icon--circle-dashed-check" : "docsViewer__icon--circle-check"));
       draftButton.disabled = !draftRegistration.enabled;
       draftButton.addEventListener("click", function () {
         if (draftButton.disabled) return;
@@ -633,7 +633,8 @@ export function createDocsViewerManagementCollectionDefaultContribution(options 
           draftButton.title = draft ? "Draft — mark ready" : "Ready — mark as draft";
           draftButton.setAttribute("aria-label", draftButton.title);
           draftButton.setAttribute("aria-pressed", String(draft));
-          draftButton.textContent = draft ? "📝" : "✅";
+          draftButton.replaceChildren(createDocsViewerToolbarIcon(host.ownerDocument,
+            draft ? "docsViewer__icon--circle-dashed-check" : "docsViewer__icon--circle-check"));
         }).catch(function (error) {
           if (typeof options.setStatus === "function") {
             options.setStatus(error.message || "Draft readiness could not be saved.", true);
@@ -665,12 +666,12 @@ export function createDocsViewerManagementCollectionDefaultContribution(options 
         }
       });
       var copyButton = host.ownerDocument.createElement("button");
-      copyButton.className = "docsViewerReport__button docsViewerReport__button--pill docsReportDetail__iconButton docsReportDetail__copyLink";
+      copyButton.className = "docsViewer__toolbarIconButton docsReportDetail__copyLink";
       copyButton.type = "button";
       copyButton.dataset.docsCollectionCopyLink = "true";
       copyButton.setAttribute("aria-label", "Copy link");
       copyButton.title = "Copy link";
-      copyButton.textContent = "🔗";
+      copyButton.appendChild(createDocsViewerToolbarIcon(host.ownerDocument, "docsViewer__icon--link"));
       copyButton.disabled = !copyRegistration.enabled;
       copyButton.addEventListener("click", function () {
         copyRegistration.invoke().catch(function (error) {
@@ -706,11 +707,11 @@ export function createDocsViewerManagementCollectionDefaultContribution(options 
     clearDeleteWorkflow();
     var request = deleteWorkflowRequest;
     var button = host.ownerDocument.createElement("button");
-    button.className = "docsViewerReport__button docsReportDetail__iconButton docsReportDetail__delete";
+    button.className = "docsViewer__toolbarIconButton docsReportDetail__delete";
     button.type = "button";
     button.disabled = true;
     button.dataset.docsCollectionDelete = "true";
-    button.textContent = "\uD83D\uDDD1\uFE0F";
+    button.appendChild(createDocsViewerToolbarIcon(host.ownerDocument, "docsViewer__icon--trash"));
     button.setAttribute("aria-label", "Delete. Checking Delete availability.");
     button.title = "Checking Delete availability.";
     host.appendChild(button);

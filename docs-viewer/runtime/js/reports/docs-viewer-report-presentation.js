@@ -1,3 +1,5 @@
+import { createDocsViewerToolbarIcon } from "../shared/docs-viewer-toolbar-icon.js";
+
 function cleanString(value) {
   return String(value == null ? "" : value).trim();
 }
@@ -113,15 +115,11 @@ function createOpenControl(documentRef, label) {
 
   var button = documentRef.createElement("button");
   var controlLabel = "Open " + label + " in expanded view";
-  button.className = "docsViewerReport__detailOpen";
+  button.className = "docsViewer__toolbarIconButton docsViewerReport__detailOpen";
   button.type = "button";
   button.setAttribute("aria-label", controlLabel);
   button.title = controlLabel;
-  button.innerHTML = [
-    '<svg class="docsViewerReport__detailIcon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">',
-    '  <path d="M14 5h5v5M19 5l-8 8M19 13v6H5V5h6"></path>',
-    "</svg>"
-  ].join("");
+  button.appendChild(createDocsViewerToolbarIcon(documentRef, "docsViewer__icon--square-arrow-out-up-right"));
   row.appendChild(button);
   return { button: button, row: row };
 }

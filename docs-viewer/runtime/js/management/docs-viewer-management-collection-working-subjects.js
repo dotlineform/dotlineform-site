@@ -1,3 +1,5 @@
+import { createDocsViewerToolbarIcon } from "../shared/docs-viewer-toolbar-icon.js";
+
 import {
   encodeDecodedLocalTarget
 } from "./docs-viewer-management-client.js";
@@ -316,10 +318,12 @@ function renderOpenInFinder(context, options) {
     }
   });
   var button = host.ownerDocument.createElement("button");
-  button.className = "docsViewerReport__button docsReportDetail__iconButton docsReportDetail__openProjectFolder";
+  button.className = "docsViewer__toolbarIconButton docsReportDetail__openProjectFolder";
   button.type = "button";
   button.dataset.docsProjectsOpenFolder = "true";
-  button.textContent = "Open in Finder";
+  button.appendChild(createDocsViewerToolbarIcon(host.ownerDocument, "docsViewer__icon--folder-open"));
+  button.setAttribute("aria-label", "Open in Finder");
+  button.title = "Open in Finder";
   button.disabled = !registration.enabled;
   if (registration.disabledReason) button.title = registration.disabledReason;
   button.addEventListener("click", function () {
@@ -364,10 +368,14 @@ function renderAssignSubject(context, options, assignSubjectAvailable) {
     }
   });
   if (registration.hidden) return;
-  button.className = "docsViewerReport__button docsReportDetail__iconButton docsReportDetail__assignSubject";
+  button.className = "docsViewer__toolbarIconButton docsReportDetail__assignSubject";
   button.type = "button";
   button.dataset.docsProjectsAssignSubject = "true";
-  button.textContent = "Subject";
+  var assigned = authoringSubject(settings.document).state === "valid";
+  button.appendChild(createDocsViewerToolbarIcon(host.ownerDocument,
+    assigned ? "docsViewer__icon--dlf-subject-assigned" : "docsViewer__icon--dlf-subject"));
+  button.setAttribute("aria-label", assigned ? "Change Subject" : "Assign Subject");
+  button.title = button.getAttribute("aria-label");
   button.disabled = !registration.enabled;
   if (registration.disabledReason) button.title = registration.disabledReason;
   button.addEventListener("click", function () {

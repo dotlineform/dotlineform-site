@@ -1,3 +1,5 @@
+import { createDocsViewerToolbarIcon } from "../shared/docs-viewer-toolbar-icon.js";
+
 import {
   appendProjectSubjectIcon
 } from "./project-subject-icons.js";
@@ -16,31 +18,6 @@ const SUBJECT_LABELS = Object.freeze({
   work: "Work",
   series: "Series"
 });
-const CONTROL_ICON_MARKUP = Object.freeze({
-  copy: [
-    '<svg class="docsViewerReport__buttonIcon" data-report-icon="copy" viewBox="0 0 24 24" aria-hidden="true" focusable="false">',
-    '  <rect x="9" y="9" width="10" height="10" rx="2"></rect>',
-    '  <path d="M15 9V7a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2"></path>',
-    "</svg>"
-  ].join(""),
-  folder: [
-    '<svg class="docsViewerReport__buttonIcon" data-report-icon="folder" viewBox="0 0 24 24" aria-hidden="true" focusable="false">',
-    '  <path d="M3 7.5h18v10A1.5 1.5 0 0 1 19.5 19h-15A1.5 1.5 0 0 1 3 17.5z"></path>',
-    '  <path d="M3 7.5v-1A1.5 1.5 0 0 1 4.5 5h5l2.5 2.5"></path>',
-    "</svg>"
-  ].join(""),
-  list: [
-    '<svg class="docsViewerReport__buttonIcon" data-report-icon="list" viewBox="0 0 24 24" aria-hidden="true" focusable="false">',
-    '  <rect x="4" y="5" width="2.5" height="2.5" rx="1"></rect>',
-    '  <rect x="4" y="10.75" width="2.5" height="2.5" rx="1"></rect>',
-    '  <rect x="4" y="16.5" width="2.5" height="2.5" rx="1"></rect>',
-    '  <path d="M10 6.25H20"></path>',
-    '  <path d="M10 12H20"></path>',
-    '  <path d="M10 17.75H20"></path>',
-    "</svg>"
-  ].join("")
-});
-
 function cleanString(value) {
   return String(value == null ? "" : value).trim();
 }
@@ -54,7 +31,7 @@ function clearNode(node) {
 }
 
 function setIconButton(button, icon, label) {
-  button.innerHTML = CONTROL_ICON_MARKUP[icon] || "";
+  button.replaceChildren(createDocsViewerToolbarIcon(button.ownerDocument, icon));
   button.setAttribute("aria-label", label);
   button.title = label;
 }
@@ -299,68 +276,6 @@ export function serializeProjectStateTsv(projection) {
   return lines.join("\n");
 }
 
-function markdownText(value) {
-  return visibleString(value)
-    .replace(/\\/g, "\\\\")
-    .replace(/\|/g, "\\|")
-    .replace(/\[/g, "\\[")
-    .replace(/\]/g, "\\]");
-}
-
-function markdownLink(label, href) {
-  return "[" + markdownText(label) + "](" + cleanString(href) + ")";
-}
-
-function markdownCell(row, key, publicPreviewBase) {
-  if (key === "folder") return markdownLink(folderLabel(row), row.folder.href);
-  if (key === "series") {
-    return row.series.map((series) => markdownLink(
-      series.title,
-      publicPreviewHref({ publicPreviewBase }, series.href)
-    )).join("; ");
-  }
-  if (key === "docs") {
-    return row.documents.map((documentRecord) => markdownLink(
-      documentRecord.title,
-      documentRecord.href
-    )).join("; ");
-  }
-  return "";
-}
-
-function formatGeneratedGmt(value) {
-  const date = new Date(cleanString(value));
-  if (Number.isNaN(date.getTime())) throw new Error("Project State generation time is invalid.");
-  const pad = (part) => String(part).padStart(2, "0");
-  return [
-    date.getUTCFullYear(),
-    "-",
-    pad(date.getUTCMonth() + 1),
-    "-",
-    pad(date.getUTCDate()),
-    " ",
-    pad(date.getUTCHours()),
-    ":",
-    pad(date.getUTCMinutes())
-  ].join("");
-}
-
-export function serializeProjectStateMarkdown(projection, generatedAt, publicPreviewBase) {
-  const columns = projection && Array.isArray(projection.columns) ? projection.columns : [];
-  const rows = projection && Array.isArray(projection.rows) ? projection.rows : [];
-  const headings = columns.map((key) => markdownText(COLUMN_LABELS[key] || key));
-  const lines = [
-    "Project State - " + formatGeneratedGmt(generatedAt),
-    "",
-    "| " + headings.join(" | ") + " |",
-    "| " + columns.map(() => "---").join(" | ") + " |"
-  ];
-  rows.forEach((row) => {
-    lines.push("| " + columns.map((key) => markdownCell(row, key, publicPreviewBase)).join(" | ") + " |");
-  });
-  return lines.join("\n");
-}
-
 function appendLink(parent, label, href) {
   const link = document.createElement("a");
   link.className = "docsViewerReport__cellLink";
@@ -503,15 +418,17 @@ function updateControls(state) {
   state.runButton.disabled = state.busy;
   state.runButton.setAttribute("aria-busy", state.busy ? "true" : "false");
   const targetGroup = state.groupBy === "folder" ? "series" : "folder";
-  const groupLabel = targetGroup === "series" ? "Group by Series" : "Group by Folder";
+  const groupLabel = state.groupBy === "folder"
+    ? "Grouped by Folder. Switch to Series."
+    : "Grouped by Series. Switch to Folder.";
   state.groupToggleButton.dataset.groupTarget = targetGroup;
-  setIconButton(state.groupToggleButton, targetGroup === "series" ? "list" : "folder", groupLabel);
+  setIconButton(state.groupToggleButton,
+    state.groupBy === "series" ? "docsViewer__icon--dlf-series" : "docsViewer__icon--folder", groupLabel);
   state.groupToggleButton.disabled = state.busy;
   state.searchInputNode.disabled = state.busy;
   state.searchClearNode.hidden = !state.searchText;
   state.searchClearNode.disabled = state.busy || !state.searchText;
   state.copyTableButton.disabled = state.busy || !state.generatedAt;
-  state.copyMarkdownButton.disabled = state.busy || !state.generatedAt;
   state.headNode.querySelectorAll("[data-report-sort]").forEach((button) => {
     button.disabled = state.busy;
   });
@@ -578,15 +495,9 @@ function writeClipboard(state, text) {
   return Promise.resolve(windowRef.navigator.clipboard.writeText(text));
 }
 
-function copyProjection(state, format) {
-  const projection = currentProjection(state);
-  const text = format === "markdown"
-    ? serializeProjectStateMarkdown(projection, state.generatedAt, state.context.publicPreviewBase)
-    : serializeProjectStateTsv(projection);
-  return writeClipboard(state, text).catch(() => {
-    state.statusNode.textContent = format === "markdown"
-      ? "Copy Markdown failed."
-      : "Copy table failed.";
+function copyProjection(state) {
+  return writeClipboard(state, serializeProjectStateTsv(currentProjection(state))).catch(() => {
+    state.statusNode.textContent = "Copy table failed.";
   });
 }
 
@@ -630,8 +541,7 @@ function attachEvents(state) {
     renderRows(state);
     updateControls(state);
   });
-  state.copyTableButton.addEventListener("click", () => copyProjection(state, "tsv"));
-  state.copyMarkdownButton.addEventListener("click", () => copyProjection(state, "markdown"));
+  state.copyTableButton.addEventListener("click", () => copyProjection(state));
 }
 
 function renderShell(root) {
@@ -645,15 +555,15 @@ function renderShell(root) {
   const runButton = document.createElement("button");
   runButton.id = "docsProjectStateReportRun";
   runButton.type = "button";
-  runButton.className = "docsViewerReport__button docsViewerReport__button--pill";
+  runButton.className = "docsViewer__toolbarIconButton";
   runButton.setAttribute("aria-label", "Run/Refresh");
   runButton.title = "Run/Refresh";
-  runButton.textContent = "🔄";
+  runButton.appendChild(createDocsViewerToolbarIcon(document, "docsViewer__icon--refresh-cw"));
 
   const groupToggle = document.createElement("button");
   groupToggle.id = "docsProjectStateReportGroup";
   groupToggle.type = "button";
-  groupToggle.className = "docsViewerReport__button docsViewerReport__button--pill";
+  groupToggle.className = "docsViewer__toolbarIconButton";
 
   const search = document.createElement("span");
   search.className = "docsViewerReport__search";
@@ -665,10 +575,10 @@ function renderShell(root) {
   searchInput.setAttribute("aria-label", "Search Project State");
   const searchClear = document.createElement("button");
   searchClear.type = "button";
-  searchClear.className = "docsViewerReport__searchClear";
+  searchClear.className = "docsViewer__toolbarIconButton docsViewerReport__searchClear";
   searchClear.setAttribute("aria-label", "Clear search");
   searchClear.title = "Clear search";
-  searchClear.textContent = "×";
+  searchClear.appendChild(createDocsViewerToolbarIcon(document, "docsViewer__icon--x"));
   searchClear.hidden = true;
   search.appendChild(searchInput);
   search.appendChild(searchClear);
@@ -676,22 +586,13 @@ function renderShell(root) {
   const copyTable = document.createElement("button");
   copyTable.id = "docsProjectStateReportCopyTable";
   copyTable.type = "button";
-  copyTable.className = "docsViewerReport__button docsViewerReport__button--pill";
-  setIconButton(copyTable, "copy", "Copy table");
-
-  const copyMarkdown = document.createElement("button");
-  copyMarkdown.id = "docsProjectStateReportCopyMarkdown";
-  copyMarkdown.type = "button";
-  copyMarkdown.className = "docsViewerReport__button docsViewerReport__button--pill docsViewerReport__button--markdown";
-  copyMarkdown.setAttribute("aria-label", "Copy Markdown");
-  copyMarkdown.title = "Copy Markdown";
-  copyMarkdown.textContent = "MD";
+  copyTable.className = "docsViewer__toolbarIconButton";
+  setIconButton(copyTable, "docsViewer__icon--copy", "Copy table");
 
   toolbar.appendChild(runButton);
   toolbar.appendChild(groupToggle);
   toolbar.appendChild(search);
   toolbar.appendChild(copyTable);
-  toolbar.appendChild(copyMarkdown);
 
   const status = document.createElement("p");
   status.className = "docsViewerReport__status";
@@ -712,7 +613,6 @@ function renderShell(root) {
   root.appendChild(table);
   root.appendChild(empty);
   return {
-    copyMarkdownButton: copyMarkdown,
     copyTableButton: copyTable,
     emptyNode: empty,
     groupToggleButton: groupToggle,

@@ -22,6 +22,50 @@
   margin-left: auto;
 }
 
+.docsViewer__icon--arrow-down-a-z{
+  mask-image: url("../icons/arrow-down-a-z.svg");
+}
+
+.docsViewer__icon--clock-3{
+  mask-image: url("../icons/clock-3.svg");
+}
+
+.docsViewer__icon--copy{
+  mask-image: url("../icons/copy.svg");
+}
+
+.docsViewer__icon--dlf-series{
+  mask-image: url("../icons/dlf-series.svg");
+}
+
+.docsViewer__icon--dlf-subject{
+  mask-image: url("../icons/dlf-subject.svg");
+}
+
+.docsViewer__icon--dlf-subject-assigned{
+  mask-image: url("../icons/dlf-subject-assigned.svg");
+}
+
+.docsViewer__icon--file-pen{
+  mask-image: url("../icons/file-pen.svg");
+}
+
+.docsViewer__icon--folder-open{
+  mask-image: url("../icons/folder-open.svg");
+}
+
+.docsViewer__icon--link{
+  mask-image: url("../icons/link.svg");
+}
+
+.docsViewer__icon--square-arrow-out-up-right{
+  mask-image: url("../icons/square-arrow-out-up-right.svg");
+}
+
+.docsViewer__icon--unfold-horizontal{
+  mask-image: url("../icons/unfold-horizontal.svg");
+}
+
 .docsViewer__icon--book-image{
   mask-image: url("../icons/book-image.svg");
 }
@@ -170,38 +214,6 @@
 .docsViewer__indexActionsHost{
   position: relative;
   display: inline-flex;
-}
-
-.docsViewerReport__collectionActionsButton{
-  appearance: none;
-  display: inline-flex;
-  width: 1.8rem;
-  height: 1.8rem;
-  align-items: center;
-  justify-content: center;
-  border: 0;
-  border-radius: 0.45rem;
-  padding: 0;
-  background: transparent;
-  color: var(--docs-viewer-text);
-  font: inherit;
-  cursor: pointer;
-}
-
-.docsViewerReport__collectionActionsButton:hover:not(:disabled),
-.docsViewerReport__collectionActionsButton:focus-visible{
-  background: var(--docs-viewer-panel-2);
-}
-
-.docsViewerReport__collectionActionsButton:focus-visible{
-  outline: 2px solid var(--docs-viewer-focus-ring);
-  outline-offset: 1px;
-}
-
-.docsViewerReport__collectionActionsButton:disabled{
-  color: var(--docs-viewer-disabled);
-  cursor: default;
-  opacity: 1;
 }
 
 .docsViewer__indexActionsMenu{
@@ -1150,26 +1162,6 @@ select.docsViewer__fieldInput{
   gap: 0.55rem;
 }
 
-.docsViewer__actionButton--iconOnly{
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: var(--docs-viewer-control-height, 2.3rem);
-  min-width: var(--docs-viewer-control-height, 2.3rem);
-  padding-inline: 0;
-}
-
-.docsViewer__tableToolIcon{
-  width: 1rem;
-  height: 1rem;
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 1.75;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  pointer-events: none;
-}
-
 .docsViewer__content table.docsViewer__tableDetailTable--managedWidths{
   table-layout: fixed;
 }
@@ -1404,14 +1396,6 @@ select.docsViewer__fieldInput{
   text-align: left;
   text-decoration: none;
   cursor: pointer;
-}
-
-.docsViewer__actionMenuEmoji{
-  display: inline-flex;
-  width: 1.35rem;
-  min-width: 1.35rem;
-  justify-content: center;
-  line-height: 1;
 }
 
 .docsViewer__actionMenuItem[hidden]{

@@ -27,46 +27,15 @@
 }
 
 .docsViewerReport__detailControlRow{
+  --docs-viewer-control-height: 2rem;
   display: flex;
   justify-content: flex-end;
   margin: var(--docs-viewer-space-3) 0 calc(-1 * var(--docs-viewer-space-2));
 }
 
-.docsViewerReport__detailOpen{
-  appearance: none;
-  box-sizing: border-box;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 2.75rem;
-  height: 2rem;
-  padding: 0;
-  border: 1px solid var(--docs-viewer-border-strong);
-  border-radius: 999px;
-  background: var(--docs-viewer-panel);
-  box-shadow: 0 1px 4px color-mix(in srgb, var(--docs-viewer-text) 12%, transparent);
-  color: var(--docs-viewer-link);
-  cursor: pointer;
-}
-
-.docsViewerReport__detailOpen:hover{
-  background: var(--docs-viewer-panel-2);
-}
-
-.docsViewerReport__detailOpen:focus-visible,
 .docsViewerReport__expandedViewport:focus-visible{
   outline: 2px solid var(--docs-viewer-focus-ring);
   outline-offset: 2px;
-}
-
-.docsViewerReport__detailIcon{
-  width: 1rem;
-  height: 1rem;
-  fill: none;
-  stroke: currentColor;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  stroke-width: 2;
 }
 
 .docsViewerReport__expandedViewport{
@@ -135,28 +104,10 @@
   padding: 0.36rem 0.52rem;
 }
 
-.docsViewerReport__button--pill{
-  min-width: var(--docs-viewer-report-control-height);
-  width: var(--docs-viewer-report-control-height);
-  border-radius: 999px;
-  padding: 0;
-}
-
-.docsViewerReport__buttonIcon{
-  width: 1rem;
-  height: 1rem;
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 1.75;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  pointer-events: none;
-}
-
-.docsViewerReport__button--markdown{
-  font-size: var(--docs-viewer-font-caption, 0.75rem);
-  font-weight: 700;
-  letter-spacing: 0.02em;
+.docsViewerReport__runText[aria-busy="true"]{
+  width: auto;
+  padding: 0 0.35rem;
+  background: transparent;
 }
 
 .docsViewerReport[data-report-id="reports_list"] .docsViewerReport__head,
@@ -366,8 +317,4 @@
   margin: 0;
   padding-left: 1.1rem;
   color: var(--docs-viewer-muted);
-}
-
-.docsReportDetail__delete{
-  font-size: 0.9rem;
 }

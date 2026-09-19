@@ -1,3 +1,5 @@
+import { createDocsViewerToolbarIcon } from "../shared/docs-viewer-toolbar-icon.js";
+
 const REPORT_SCHEMA = "docs_media_report_v4";
 const DEFAULT_SORT_KEY = "type";
 const DEFAULT_SORT_DIR = "asc";
@@ -390,10 +392,10 @@ function renderShell(root) {
   root.dataset.reportColumns = "3";
   root.innerHTML = [
     '<div class="docsViewerReport__toolbar">',
-    '  <button id="docsMediaReportRun" type="button" class="docsViewerReport__button docsViewerReport__button--pill" aria-label="Run/Refresh" title="Run/Refresh">🔄</button>',
+    '  <button id="docsMediaReportRun" type="button" class="docsViewer__toolbarIconButton" aria-label="Run/Refresh" title="Run/Refresh"></button>',
     '  <span class="docsViewerReport__search">',
     '    <input id="docsMediaReportSearch" class="docsViewerReport__searchInput" type="search" placeholder="Search" aria-label="Search Docs Media">',
-    '    <button type="button" class="docsViewerReport__searchClear" aria-label="Clear search" title="Clear search" hidden>×</button>',
+    '    <button type="button" class="docsViewer__toolbarIconButton docsViewerReport__searchClear" aria-label="Clear search" title="Clear search" hidden></button>',
     "  </span>",
     "</div>",
     '<p class="docsViewerReport__status"></p>',
@@ -403,6 +405,8 @@ function renderShell(root) {
     "</div>",
     '<p class="docsViewerReport__empty" hidden></p>'
   ].join("");
+  root.querySelector("#docsMediaReportRun").appendChild(createDocsViewerToolbarIcon(root.ownerDocument, "docsViewer__icon--refresh-cw"));
+  root.querySelector(".docsViewerReport__searchClear").appendChild(createDocsViewerToolbarIcon(root.ownerDocument, "docsViewer__icon--x"));
   return {
     emptyNode: root.querySelector(".docsViewerReport__empty"),
     headNode: root.querySelector(".docsViewerReport__head"),

@@ -1,3 +1,5 @@
+import { createDocsViewerToolbarIcon } from "../shared/docs-viewer-toolbar-icon.js";
+
 import { docsViewerLinksDocumentSummary } from "../shared/docs-viewer-links-presentation.js";
 
 const COLUMNS = ["from", "to"];
@@ -85,8 +87,8 @@ export function mountWorkspaceLinksReport(context) {
   toolbar.className = "docsViewerReport__toolbar";
   const refresh = documentRef.createElement("button");
   refresh.type = "button";
-  refresh.className = "docsViewerReport__button docsViewerReport__button--pill";
-  refresh.textContent = "🔄";
+  refresh.className = "docsViewer__toolbarIconButton";
+  refresh.appendChild(createDocsViewerToolbarIcon(documentRef, "docsViewer__icon--refresh-cw"));
   refresh.setAttribute("aria-label", "Refresh links");
   refresh.title = "Refresh links";
   const status = documentRef.createElement("p");

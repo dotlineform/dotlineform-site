@@ -1,3 +1,5 @@
+import { createDocsViewerToolbarIcon } from "../shared/docs-viewer-toolbar-icon.js";
+
 const WORKS_SCHEMA = "catalogue_source_works_v2";
 const SERIES_SCHEMA = "catalogue_source_series_v2";
 const WORK_ID_PATTERN = /^[0-9]{5}$/;
@@ -534,17 +536,20 @@ function renderShell(root) {
   searchInput.setAttribute("aria-label", "Search Catalogue Works");
   const searchClear = root.ownerDocument.createElement("button");
   searchClear.id = "docsCatalogueWorksReportClear";
-  searchClear.className = "docsViewerReport__searchClear";
+  searchClear.className = "docsViewer__toolbarIconButton docsViewerReport__searchClear";
   searchClear.type = "button";
   searchClear.setAttribute("aria-label", "Clear Catalogue Works search");
-  searchClear.textContent = "×";
+  searchClear.title = "Clear Catalogue Works search";
+  searchClear.appendChild(createDocsViewerToolbarIcon(root.ownerDocument, "docsViewer__icon--x"));
   search.appendChild(searchInput);
   search.appendChild(searchClear);
   const copyButton = root.ownerDocument.createElement("button");
   copyButton.id = "docsCatalogueWorksReportCopy";
-  copyButton.className = "docsViewerReport__button";
+  copyButton.className = "docsViewer__toolbarIconButton";
   copyButton.type = "button";
-  copyButton.textContent = "Copy table";
+  copyButton.setAttribute("aria-label", "Copy table");
+  copyButton.title = "Copy table";
+  copyButton.appendChild(createDocsViewerToolbarIcon(root.ownerDocument, "docsViewer__icon--copy"));
   toolbar.appendChild(search);
   toolbar.appendChild(copyButton);
 

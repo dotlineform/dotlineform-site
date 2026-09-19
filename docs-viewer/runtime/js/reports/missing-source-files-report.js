@@ -1,3 +1,5 @@
+import { createDocsViewerToolbarIcon } from "../shared/docs-viewer-toolbar-icon.js";
+
 const REPORT_SCHEMA = "docs_missing_source_files_report_v1";
 const WORK_ID_PATTERN = /^[0-9]{5}$/;
 
@@ -168,10 +170,10 @@ function renderShell(root) {
   const runButton = document.createElement("button");
   runButton.id = "docsMissingSourceFilesReportRun";
   runButton.type = "button";
-  runButton.className = "docsViewerReport__button docsViewerReport__button--pill";
+  runButton.className = "docsViewer__toolbarIconButton";
   runButton.setAttribute("aria-label", "Run/Refresh");
   runButton.title = "Run/Refresh";
-  runButton.textContent = "🔄";
+  runButton.appendChild(createDocsViewerToolbarIcon(document, "docsViewer__icon--refresh-cw"));
   toolbar.appendChild(runButton);
 
   const status = document.createElement("p");

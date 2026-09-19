@@ -1,3 +1,5 @@
+import { createDocsViewerToolbarIcon } from "../shared/docs-viewer-toolbar-icon.js";
+
 const TITLE_ORDER = new Intl.Collator("en", { sensitivity: "base", numeric: true });
 
 /** Validate the report envelope and order documents by title for display. */
@@ -39,13 +41,17 @@ export function mountUnpublishableReport(context) {
   toolbar.className = "docsViewerReport__toolbar";
   const refresh = documentRef.createElement("button");
   refresh.type = "button";
-  refresh.className = "docsViewerReport__button";
-  refresh.textContent = "Refresh";
+  refresh.className = "docsViewer__toolbarIconButton";
+  refresh.setAttribute("aria-label", "Refresh");
+  refresh.title = "Refresh";
+  refresh.appendChild(createDocsViewerToolbarIcon(documentRef, "docsViewer__icon--refresh-cw"));
   toolbar.appendChild(refresh);
   const open = documentRef.createElement("button");
   open.type = "button";
-  open.className = "docsViewerReport__button";
-  open.textContent = "Open in VS Code";
+  open.className = "docsViewer__toolbarIconButton";
+  open.setAttribute("aria-label", "Open in VS Code");
+  open.title = "Open in VS Code";
+  open.appendChild(createDocsViewerToolbarIcon(documentRef, "docsViewer__icon--file-pen"));
   toolbar.appendChild(open);
   const status = documentRef.createElement("p");
   status.className = "docsViewerReport__status";

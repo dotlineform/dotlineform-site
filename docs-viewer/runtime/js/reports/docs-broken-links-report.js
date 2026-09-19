@@ -1,3 +1,5 @@
+import { createDocsViewerToolbarIcon } from "../shared/docs-viewer-toolbar-icon.js";
+
 const DEFAULT_SORT_KEY = "fromPage";
 const DEFAULT_SORT_DIR = "asc";
 const SORT_KEYS = Object.freeze(["fromPage", "link"]);
@@ -137,7 +139,12 @@ function renderRows(state) {
 function setBusy(state, busy) {
   state.isBusy = Boolean(busy);
   state.runButton.disabled = state.isBusy || !state.stage;
-  state.runButton.textContent = state.isBusy ? "Running..." : "Run audit";
+  state.runButton.classList.toggle("docsViewerReport__runText", state.isBusy);
+  state.runButton.setAttribute("aria-busy", String(state.isBusy));
+  state.runButton.setAttribute("aria-label", state.isBusy ? "Running audit" : "Run audit");
+  state.runButton.title = state.isBusy ? "Running audit" : "Run audit";
+  if (state.isBusy) state.runButton.textContent = "Running...";
+  else state.runButton.replaceChildren(createDocsViewerToolbarIcon(state.runButton.ownerDocument, "docsViewer__icon--refresh-cw"));
 }
 
 function runAudit(state) {
@@ -201,8 +208,10 @@ function renderShell(root) {
   const runButton = document.createElement("button");
   runButton.id = "docsBrokenLinksReportRun";
   runButton.type = "button";
-  runButton.className = "docsViewerReport__button";
-  runButton.textContent = "Run audit";
+  runButton.className = "docsViewer__toolbarIconButton";
+  runButton.setAttribute("aria-label", "Run audit");
+  runButton.title = "Run audit";
+  runButton.appendChild(createDocsViewerToolbarIcon(document, "docsViewer__icon--refresh-cw"));
 
   const status = document.createElement("p");
   status.className = "docsViewerReport__status";

@@ -1,3 +1,5 @@
+import { createDocsViewerToolbarIcon } from "../shared/docs-viewer-toolbar-icon.js";
+
 export const CONTENT_DETAIL_RESET_WIDTHS_CONTROL_ID = "content-detail-reset-widths";
 export const CONTENT_DETAIL_COPY_TABLE_CONTROL_ID = "content-detail-copy-table";
 
@@ -58,10 +60,10 @@ function resetWidthsControlRenderer(context) {
   var button = context.existingRoot;
   if (!button || button.tagName !== "BUTTON") {
     button = context.document.createElement("button");
-    button.className = "docsViewer__actionButton docsViewer__tableResetWidths";
+    button.className = "docsViewer__toolbarIconButton docsViewer__tableResetWidths";
     button.type = "button";
   }
-  button.textContent = "Reset widths";
+  button.replaceChildren(createDocsViewerToolbarIcon(context.document, "docsViewer__icon--unfold-horizontal"));
   return button;
 }
 
@@ -69,14 +71,9 @@ function copyTableControlRenderer(context) {
   var button = context.existingRoot;
   if (!button || button.tagName !== "BUTTON") {
     button = context.document.createElement("button");
-    button.className = "docsViewer__actionButton docsViewer__actionButton--iconOnly docsViewer__tableCopy";
+    button.className = "docsViewer__toolbarIconButton docsViewer__tableCopy";
     button.type = "button";
-    button.innerHTML = [
-      '<svg class="docsViewer__tableToolIcon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">',
-      '  <rect x="9" y="9" width="10" height="10" rx="2"></rect>',
-      '  <path d="M15 9V7a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2"></path>',
-      "</svg>"
-    ].join("");
+    button.appendChild(createDocsViewerToolbarIcon(context.document, "docsViewer__icon--copy"));
   }
   return button;
 }

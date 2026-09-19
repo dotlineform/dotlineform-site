@@ -1,3 +1,5 @@
+import { createDocsViewerToolbarIcon } from "./docs-viewer-toolbar-icon.js";
+
 import {
   appendAssetVersion
 } from "./docs-viewer-asset-url.js";
@@ -440,9 +442,9 @@ function renderFilterShell(context, collection) {
   input.placeholder = "search";
 
   var clear = document.createElement("button");
-  clear.className = "docsViewerReport__searchClear";
+  clear.className = "docsViewer__toolbarIconButton docsViewerReport__searchClear";
   clear.type = "button";
-  clear.textContent = "\u00D7";
+  clear.appendChild(createDocsViewerToolbarIcon(document, "docsViewer__icon--x"));
   clear.hidden = true;
   search.appendChild(input);
   search.appendChild(clear);
@@ -875,9 +877,9 @@ function renderDetailShell(state, docId) {
   header.className = "docsReportDetail__header";
 
   var back = document.createElement("button");
-  back.className = "docsViewerReport__button docsReportDetail__iconButton docsReportDetail__back";
+  back.className = "docsViewer__toolbarIconButton docsReportDetail__back";
   back.type = "button";
-  back.textContent = "\u2190";
+  back.appendChild(createDocsViewerToolbarIcon(document, "docsViewer__icon--arrow-left"));
   var backLabel = "Back to all "
     + collectionTitle(state.collection, state.collectionId).toLowerCase();
   back.setAttribute("aria-label", backLabel);

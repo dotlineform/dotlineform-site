@@ -1,3 +1,5 @@
+import { createDocsViewerToolbarIcon } from "../shared/docs-viewer-toolbar-icon.js";
+
 function searchText(value) {
   return String(value || "").normalize("NFKC").toLocaleLowerCase("en").trim();
 }
@@ -62,8 +64,10 @@ export function mountSeriesWorksReport(context) {
   label.appendChild(filter);
   var refresh = documentRef.createElement("button");
   refresh.type = "button";
-  refresh.className = "docsViewerReport__button";
-  refresh.textContent = "Refresh";
+  refresh.className = "docsViewer__toolbarIconButton";
+  refresh.setAttribute("aria-label", "Refresh");
+  refresh.title = "Refresh";
+  refresh.appendChild(createDocsViewerToolbarIcon(documentRef, "docsViewer__icon--refresh-cw"));
   toolbar.append(label, refresh);
   var status = documentRef.createElement("p");
   status.className = "docsViewerReport__status";
