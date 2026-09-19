@@ -53,8 +53,8 @@
   --docs-viewer-space-4: var(--space-4, 1.125rem);
   --docs-viewer-space-5: var(--space-5, 1.375rem);
   --docs-viewer-sidebar-control-inset: 0.45rem;
-  --docs-viewer-toolbar-icon-size: 24px;
-  --docs-viewer-toolbar-icon-hover-bg: color-mix(in srgb, var(--docs-viewer-panel) 88%, var(--docs-viewer-text));
+  --docs-viewer-toolbar-icon-size: 20px; /* standard 24px */
+  --docs-viewer-toolbar-icon-hover-bg: color-mix(in srgb, var(--docs-viewer-panel) 92%, var(--docs-viewer-text));
   font-family: var(--docs-viewer-font-sans);
   color: var(--docs-viewer-text);
 
