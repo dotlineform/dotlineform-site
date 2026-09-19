@@ -1,3 +1,5 @@
+import { createDocsViewerToolbarIcon } from "../../shared/docs-viewer-toolbar-icon.js";
+
 import {
   DOCS_VIEWER_ACTION_IDS
 } from "../docs-viewer-action-definitions.js";
@@ -26,11 +28,11 @@ export function catalogueImageControlRenderer(context) {
   var button = context.existingRoot;
   if (!button || button.tagName !== "BUTTON") {
     button = context.document.createElement("button");
-    button.className = "docsViewer__documentActionButton";
+    button.className = "docsViewer__toolbarIconButton";
     button.id = "docsViewerManageSourceAddCatalogueImageButton";
     button.type = "button";
   }
-  button.textContent = "🏞️";
+  button.replaceChildren(createDocsViewerToolbarIcon(context.document, "docsViewer__icon--book-image"));
   return button;
 }
 

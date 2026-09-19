@@ -64,6 +64,11 @@ PROJECTION_POLICIES = {
             }
         ),
     ),
+    "docs-viewer-shared-icons": ProjectionPolicy(
+        source_root="docs-viewer/static/icons",
+        destination_root="site/docs-viewer/static/icons",
+        suffix=".svg",
+    ),
 }
 
 

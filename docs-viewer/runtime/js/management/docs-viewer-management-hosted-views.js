@@ -26,17 +26,6 @@ export function createDocsViewerManagementViewDefinitions() {
         }
       },
       {
-        id: "index-graph",
-        label: "Index graph",
-        panel: "index",
-        appKinds: ["manage"],
-        renderer: "index-placeholder",
-        placeholderText: "Graph index placeholder",
-        capabilities: {
-          layoutStates: ["normal", "collapsed", "expanded"]
-        }
-      },
-      {
         id: "catalogue-token-info",
         label: "Semantic token",
         panel: "info",

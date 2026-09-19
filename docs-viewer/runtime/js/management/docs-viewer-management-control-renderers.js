@@ -5,13 +5,15 @@ function renderDocumentActionButton(context, options) {
   var button = context.existingRoot;
   if (!button || button.tagName !== "BUTTON") {
     button = context.document.createElement("button");
-    button.className = "docsViewer__documentActionButton";
     button.id = settings.id || "";
     button.type = "button";
   }
-  button.textContent = typeof settings.emoji === "function"
-    ? settings.emoji(context.control.state || {})
-    : settings.emoji || "";
+  var artwork = typeof settings.artwork === "function"
+    ? settings.artwork(context.control.state || {})
+    : settings.artwork;
+  button.className = "docsViewer__toolbarIconButton";
+  button.replaceChildren();
+  if (artwork) button.appendChild(createDocsViewerToolbarIcon(context.document, artwork));
   return button;
 }
 
@@ -38,7 +40,7 @@ function renderIndexSelectionControl(context) {
     root.setAttribute("aria-label", "Index selection");
   }
 
-  var selectAllButton = selectionCommandButton(context.document, "select-all", "Select all");
+  var selectAllButton = selectionCommandButton(context.document, "select-all", "All");
   selectAllButton.disabled = disabled || total === 0 || allSelected;
   var clearButton = selectionCommandButton(context.document, "clear", "Clear");
   clearButton.disabled = disabled || !hasSelection;
@@ -52,19 +54,19 @@ var INDEX_ACTION_ITEMS = [
   {
     id: "docsViewerIndexExportButton",
     actionId: "export-docs",
-    emoji: "⬇️",
+    artwork: "docsViewer__icon--square-arrow-right-exit",
     label: "Export…"
   },
   {
     id: "docsViewerIndexPreparePackageButton",
     actionId: "prepare-document-package",
-    emoji: "📦",
+    artwork: "docsViewer__icon--package",
     label: "Prepare package…"
   },
   {
     id: "docsViewerIndexDeleteButton",
     actionId: "delete",
-    emoji: "🗑️",
+    artwork: "docsViewer__icon--trash",
     label: "Delete…"
   }
 ];
@@ -76,14 +78,11 @@ function indexActionItem(documentRef, definition) {
   button.id = definition.id;
   button.setAttribute("role", "menuitem");
   button.dataset.docsViewerAction = definition.actionId;
-  var emoji = documentRef.createElement("span");
-  emoji.className = "docsViewer__actionMenuEmoji";
-  emoji.setAttribute("aria-hidden", "true");
-  emoji.textContent = definition.emoji;
+  var icon = createDocsViewerToolbarIcon(documentRef, definition.artwork);
   var label = documentRef.createElement("span");
   label.className = "docsViewer__actionMenuLabel";
   label.textContent = definition.label;
-  button.replaceChildren(emoji, label);
+  button.replaceChildren(icon, label);
   return button;
 }
 
@@ -93,7 +92,7 @@ function renderIndexActionsControl(context) {
     root = context.document.createElement("div");
     root.className = "docsViewer__indexActionsHost";
     var button = context.document.createElement("button");
-    button.className = "docsViewer__indexActionsButton";
+    button.className = "docsViewer__toolbarIconButton";
     button.type = "button";
     button.id = "docsViewerIndexActionsButton";
     button.setAttribute("aria-haspopup", "menu");
@@ -101,7 +100,7 @@ function renderIndexActionsControl(context) {
     button.setAttribute("aria-controls", "docsViewerIndexActionsMenu");
     button.setAttribute("aria-label", "Index actions");
     button.title = "Index actions";
-    button.textContent = "🛠️";
+    button.appendChild(createDocsViewerToolbarIcon(context.document, "docsViewer__icon--wrench"));
     var menu = context.document.createElement("div");
     menu.className = "docsViewer__actionsMenu docsViewer__indexActionsMenu";
     menu.id = "docsViewerIndexActionsMenu";
@@ -135,23 +134,20 @@ export function createDocsViewerManagementControlRenderers() {
     "manage-index-selection": renderIndexSelectionControl,
     "manage-index-actions": renderIndexActionsControl,
     "manage-edit": function (context) {
-      var button = renderDocumentActionButton(context, {
-        id: "docsViewerManageEditButton"
+      return renderDocumentActionButton(context, {
+        id: "docsViewerManageEditButton",
+        artwork: "docsViewer__icon--pen"
       });
-      button.className = "docsViewer__toolbarIconButton";
-      button.replaceChildren(createDocsViewerToolbarIcon(context.document, "docsViewer__icon--pen"));
-      return button;
     },
     "manage-draft": function (context) {
       return renderDocumentActionButton(context, {
         id: "docsViewerManageDraftButton",
-        emoji: function (state) { return state.pressed === true ? "📝" : "✅"; }
+        artwork: function (state) { return state.pressed === true ? "docsViewer__icon--circle-dashed-check" : "docsViewer__icon--circle-check"; }
       });
     },
     "manage-open-vscode": function (context) {
       var button = renderDocumentActionButton(context, {
-        id: "docsViewerManageOpenVsCodeButton",
-        emoji: ""
+        id: "docsViewerManageOpenVsCodeButton"
       });
       var icon = context.document.createElement("img");
       icon.src = new URL("./icons/vscode.svg", import.meta.url).href;
@@ -165,25 +161,25 @@ export function createDocsViewerManagementControlRenderers() {
     "return-to-doc": function (context) {
       return renderDocumentActionButton(context, {
         id: "docsViewerManageReturnToDocButton",
-        emoji: "↩"
+        artwork: "docsViewer__icon--corner-down-left"
       });
     },
     "markdown-source-save": function (context) {
       return renderDocumentActionButton(context, {
         id: "docsViewerManageSourceSaveButton",
-        emoji: "💾"
+        artwork: "docsViewer__icon--download"
       });
     },
     "source-add-image": function (context) {
       return renderDocumentActionButton(context, {
         id: "docsViewerManageSourceAddImageButton",
-        emoji: "🧜‍♀️"
+        artwork: "docsViewer__icon--image"
       });
     },
     "source-add-file": function (context) {
       return renderDocumentActionButton(context, {
         id: "docsViewerManageSourceAddFileButton",
-        emoji: "📎"
+        artwork: "docsViewer__icon--paperclip"
       });
     }
   };

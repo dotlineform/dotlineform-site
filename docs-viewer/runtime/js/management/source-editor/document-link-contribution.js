@@ -1,3 +1,5 @@
+import { createDocsViewerToolbarIcon } from "../../shared/docs-viewer-toolbar-icon.js";
+
 import { DOCS_VIEWER_ACTION_IDS } from "../docs-viewer-action-definitions.js";
 import { escapeHtml, openDocsViewerManagementModal } from "../docs-viewer-management-modal-shell.js";
 import { createCatalogueTargetPickerList } from "./catalogue-target-picker.js";
@@ -112,9 +114,9 @@ export function documentLinkControlDefinition() {
 
 export function documentLinkControlRenderer(context) {
   var button = context.existingRoot || context.document.createElement("button");
-  button.className = "docsViewer__documentActionButton";
+  button.className = "docsViewer__toolbarIconButton";
   button.type = "button";
-  button.textContent = "📄";
+  button.replaceChildren(createDocsViewerToolbarIcon(context.document, "docsViewer__icon--file-plus-corner"));
   return button;
 }
 

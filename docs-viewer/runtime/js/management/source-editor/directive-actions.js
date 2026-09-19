@@ -1,23 +1,19 @@
+import { createDocsViewerToolbarIcon } from "../../shared/docs-viewer-toolbar-icon.js";
+
 export const DIRECTIVE_ACTIONS_CONTROL_ID = "source-directives";
 
 export const DIRECTIVE_ACTIONS = Object.freeze([
   Object.freeze({
-    emoji: "≡",
+    artwork: "docsViewer__icon--list",
     id: "series-works",
     label: "Works in this Series",
     source: ":::report\nid: series_works\n:::"
   }),
   Object.freeze({
-    emoji: "⊞",
+    artwork: "docsViewer__icon--table",
     id: "table-detail",
     label: "Table detail",
     source: "<!-- dotlineform:table-detail -->"
-  }),
-  Object.freeze({
-    emoji: "↩",
-    id: "docs-backlinks",
-    label: "Documents linking here",
-    source: ":::report\nid: docs_backlinks\n:::"
   })
 ]);
 
@@ -134,14 +130,11 @@ function menuItem(document, directive) {
   item.type = "button";
   item.setAttribute("role", "menuitem");
   item.setAttribute("data-docs-viewer-directive-action", directive.id);
-  var emoji = document.createElement("span");
-  emoji.className = "docsViewer__actionMenuEmoji";
-  emoji.setAttribute("aria-hidden", "true");
-  emoji.textContent = directive.emoji;
+  var icon = createDocsViewerToolbarIcon(document, directive.artwork);
   var label = document.createElement("span");
   label.className = "docsViewer__actionMenuLabel";
   label.textContent = directive.label;
-  item.append(emoji, label);
+  item.append(icon, label);
   return item;
 }
 
@@ -165,10 +158,10 @@ export function directiveActionsControlRenderer(context) {
     root = context.document.createElement("div");
     root.className = "docsViewer__actionsMenuHost docsViewerDirectiveActions";
     var button = context.document.createElement("button");
-    button.className = "docsViewer__documentActionButton";
+    button.className = "docsViewer__toolbarIconButton";
     button.id = "docsViewerManageSourceDirectivesButton";
     button.type = "button";
-    button.textContent = "🧩";
+    button.appendChild(createDocsViewerToolbarIcon(context.document, "docsViewer__icon--puzzle"));
     button.setAttribute("aria-haspopup", "menu");
     button.setAttribute("aria-expanded", "false");
     button.setAttribute("aria-controls", "docsViewerManageSourceDirectivesMenu");

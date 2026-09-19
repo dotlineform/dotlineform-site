@@ -98,28 +98,6 @@ export function createDocsViewerPanelLayout(options) {
     return view && view.capabilities ? view.capabilities : null;
   }
 
-  function viewOptionProjection(activeView) {
-    var activeId = activeView && activeView.id ? activeView.id : "";
-    return availableIndexViews().map(function (view) {
-      return {
-        id: view.id,
-        label: view.label || view.id,
-        active: view.id === activeId
-      };
-    });
-  }
-
-  function nextIndexViewId(activeView) {
-    var options = availableIndexViews();
-    if (options.length <= 1) return "";
-    var activeId = activeView && activeView.id ? activeView.id : "";
-    var activeIndex = options.findIndex(function (view) {
-      return view.id === activeId;
-    });
-    var next = options[(activeIndex + 1) % options.length] || null;
-    return next && next.id ? next.id : "";
-  }
-
   function normalizeCurrentIndexState() {
     var projection = projectIndexPanelState(indexPanelState, {
       available: indexPanelAvailable(),
@@ -169,14 +147,11 @@ export function createDocsViewerPanelLayout(options) {
     projection.activeViewId = activeView && activeView.id ? activeView.id : "";
     projection.activeViewLabel = activeView && activeView.label ? activeView.label : projection.activeViewId;
     projection.activeViewRenderer = activeView && activeView.renderer ? activeView.renderer : "";
-    projection.nextViewId = nextIndexViewId(activeView);
     projection.placeholderText = activeView && activeView.placeholderText
       ? activeView.placeholderText
       : projection.activeViewLabel;
     projection.treeHidden = projection.activeViewRenderer !== "index-tree";
     projection.placeholderHidden = projection.activeViewRenderer !== "index-placeholder";
-    projection.toggleHidden = !projection.nextViewId;
-    projection.viewOptions = viewOptionProjection(activeView);
     viewState = updateDocsViewerViewState(viewState, {
       indexPanelState: projection.activeState,
       indexViewId: projection.activeViewId
@@ -266,38 +241,6 @@ export function createDocsViewerPanelLayout(options) {
     return renderInfoPanelState();
   }
 
-  function setActiveIndexView(viewId) {
-    var targetViewId = String(viewId || "").trim();
-    var resolved = viewRegistry && typeof viewRegistry.resolveView === "function"
-      ? viewRegistry.resolveView(targetViewId)
-      : null;
-    if (!resolved || !resolved.view) return activeIndexView();
-    viewState = updateDocsViewerViewState(viewState, {
-      indexViewId: resolved.view.id
-    });
-    renderIndexPanelState();
-    return resolved.view;
-  }
-
-  function indexViewSwitchControlState() {
-    var activeView = activeIndexView();
-    var activeViewId = activeView && activeView.id ? activeView.id : "";
-    var activeLabel = activeView && activeView.label ? activeView.label : activeViewId || "Index view";
-    if (activeViewId === "index-tree") activeLabel = "Tree index view";
-    if (activeViewId === "index-graph") activeLabel = "Graph index view";
-    return {
-      hidden: !nextIndexViewId(activeView),
-      label: activeLabel
-    };
-  }
-
-  function activateNextIndexView() {
-    var nextViewId = nextIndexViewId(activeIndexView());
-    if (!nextViewId) return activeIndexView();
-    if (typeof settings.onBeforePanelInteraction === "function") settings.onBeforePanelInteraction();
-    return setActiveIndexView(nextViewId);
-  }
-
   function bindPanelChrome() {
     if (indexPanelRefs.sidebarToggle) {
       indexPanelRefs.sidebarToggle.addEventListener("click", function () {
@@ -334,16 +277,13 @@ export function createDocsViewerPanelLayout(options) {
   }
 
   return {
-    activateNextIndexView: activateNextIndexView,
     bindPanelChrome: bindPanelChrome,
     expandIndexPanelState: expandIndexPanelState,
     indexPanelState: function () { return indexPanelState; },
-    indexViewSwitchControlState: indexViewSwitchControlState,
     projectInfoPanel: projectInfoPanel,
     projectMainView: projectMainView,
     projectViewState: projectViewState,
     renderIndexPanelState: renderIndexPanelState,
-    setActiveIndexView: setActiveIndexView,
     setActiveMainView: setActiveMainView,
     setMainLayoutState: setMainLayoutState,
     mainLayoutState: function () { return mainLayoutState; },

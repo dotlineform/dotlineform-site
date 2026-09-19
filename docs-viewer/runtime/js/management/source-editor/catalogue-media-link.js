@@ -1,3 +1,5 @@
+import { createDocsViewerToolbarIcon } from "../../shared/docs-viewer-toolbar-icon.js";
+
 import { DOCS_VIEWER_ACTION_IDS } from "../docs-viewer-action-definitions.js";
 import { openCatalogueMediaModal } from "./catalogue-media-modal.js";
 
@@ -16,9 +18,9 @@ export function catalogueMediaLinkControlDefinition() {
 
 export function catalogueMediaLinkControlRenderer(context) {
   var button = context.existingRoot || context.document.createElement("button");
-  button.className = "docsViewer__documentActionButton";
+  button.className = "docsViewer__toolbarIconButton";
   button.type = "button";
-  button.textContent = "👁️";
+  button.replaceChildren(createDocsViewerToolbarIcon(context.document, "docsViewer__icon--image-plus"));
   return button;
 }
 

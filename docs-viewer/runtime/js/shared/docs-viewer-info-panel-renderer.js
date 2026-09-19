@@ -1,3 +1,5 @@
+import { createDocsViewerToolbarIcon } from "./docs-viewer-toolbar-icon.js";
+
 const INFO_PANEL_MOUNT_SELECTOR = "[data-docs-viewer-info-panel-mount]";
 
 export function infoPanelMount(root) {
@@ -31,12 +33,12 @@ export function renderDocsViewerInfoPanelShell(options = {}) {
   copy.append(title);
 
   const closeButton = documentRef.createElement("button");
-  closeButton.className = "docsViewer__infoPanelClose";
+  closeButton.className = "docsViewer__toolbarIconButton docsViewer__infoPanelClose";
   closeButton.id = "docsViewerInfoPanelClose";
   closeButton.type = "button";
   closeButton.setAttribute("aria-label", "Hide info panel");
   closeButton.title = "Hide info panel";
-  closeButton.textContent = "×";
+  closeButton.appendChild(createDocsViewerToolbarIcon(documentRef, "docsViewer__icon--x"));
 
   header.append(copy, closeButton);
 

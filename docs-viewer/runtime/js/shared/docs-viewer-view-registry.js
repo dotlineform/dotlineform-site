@@ -269,13 +269,6 @@ export function createDocsViewerSharedViewDefinitions() {
         renderer: "search-input"
       },
       {
-        id: "index-view-switch",
-        label: "Tree index view",
-        ownerType: "app",
-        surfaceId: "app-viewer",
-        renderer: "index-view-toggle"
-      },
-      {
         id: "bookmark",
         actionId: "bookmark",
         label: "Bookmark",

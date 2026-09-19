@@ -1,39 +1,16 @@
 .docsViewer__stageButtons{
-  box-sizing: border-box;
   display: inline-flex;
-  align-items: stretch;
+  align-items: center;
   height: var(--docs-viewer-control-height);
   gap: 0.2rem;
-  padding: 0.2rem;
-  border: 1px solid var(--docs-viewer-border);
-  border-radius: 0.5rem;
-  font-size: var(--docs-viewer-font-small);
-  line-height: var(--docs-viewer-line-snug);
 }
 
 .docsViewer__stageButtons[hidden]{
   display: none;
 }
 
-.docsViewer__stageButtons button{
-  border: 0;
-  border-radius: 0.3rem;
-  padding: 0 0.6rem;
-  background: transparent;
-  color: var(--docs-viewer-text);
-  font: inherit;
-  cursor: pointer;
-}
-
-.docsViewer__stageButtons button[aria-pressed="true"]{
-  background: var(--docs-viewer-panel-2);
-  font-weight: 600;
-  box-shadow: inset 0 -2px currentColor;
-}
-
-.docsViewer__stageButtons button:focus-visible{
-  outline: 2px solid var(--docs-viewer-focus-ring);
-  outline-offset: 1px;
+.docsViewer__stageButtons button[aria-pressed="false"]{
+  color: var(--docs-viewer-disabled);
 }
 
 [data-docs-viewer-management-shell-mount]{
@@ -45,8 +22,112 @@
   margin-left: auto;
 }
 
+.docsViewer__icon--book-image{
+  mask-image: url("../icons/book-image.svg");
+}
+
+.docsViewer__icon--book-up{
+  mask-image: url("../icons/book-up.svg");
+}
+
+.docsViewer__icon--circle-arrow-up{
+  mask-image: url("../icons/circle-arrow-up.svg");
+}
+
+.docsViewer__icon--circle-check{
+  mask-image: url("../icons/circle-check.svg");
+}
+
+.docsViewer__icon--circle-dashed-check{
+  mask-image: url("../icons/circle-dashed-check.svg");
+}
+
+.docsViewer__icon--circle-ellipsis{
+  mask-image: url("../icons/circle-ellipsis.svg");
+}
+
+.docsViewer__icon--corner-down-left{
+  mask-image: url("../icons/corner-down-left.svg");
+}
+
+.docsViewer__icon--download{
+  mask-image: url("../icons/download.svg");
+}
+
+.docsViewer__icon--file{
+  mask-image: url("../icons/file.svg");
+}
+
+.docsViewer__icon--file-plus-corner{
+  mask-image: url("../icons/file-plus-corner.svg");
+}
+
+.docsViewer__icon--folder{
+  mask-image: url("../icons/folder.svg");
+}
+
+.docsViewer__icon--folder-x{
+  mask-image: url("../icons/folder-x.svg");
+}
+
+.docsViewer__icon--globe{
+  mask-image: url("../icons/globe.svg");
+}
+
+.docsViewer__icon--image{
+  mask-image: url("../icons/image.svg");
+}
+
+.docsViewer__icon--image-plus{
+  mask-image: url("../icons/image-plus.svg");
+}
+
+.docsViewer__icon--import{
+  mask-image: url("../icons/import.svg");
+}
+
+.docsViewer__icon--list{
+  mask-image: url("../icons/list.svg");
+}
+
+.docsViewer__icon--package{
+  mask-image: url("../icons/package.svg");
+}
+
+.docsViewer__icon--paperclip{
+  mask-image: url("../icons/paperclip.svg");
+}
+
 .docsViewer__icon--pen{
   mask-image: url("../icons/pen.svg");
+}
+
+.docsViewer__icon--puzzle{
+  mask-image: url("../icons/puzzle.svg");
+}
+
+.docsViewer__icon--refresh-cw{
+  mask-image: url("../icons/refresh-cw.svg");
+}
+
+.docsViewer__icon--settings{
+  mask-image: url("../icons/settings.svg");
+}
+
+.docsViewer__icon--square-arrow-right-exit{
+  mask-image: url("../icons/square-arrow-right-exit.svg");
+}
+
+.docsViewer__icon--table{
+  mask-image: url("../icons/table.svg");
+}
+
+.docsViewer__icon--trash{
+  mask-image: url("../icons/trash.svg");
+}
+
+.docsViewer__icon--wrench{
+  mask-image: url("../icons/wrench.svg");
 }
 
 .docsViewer__indexSelectionControl{
@@ -91,7 +172,6 @@
   display: inline-flex;
 }
 
-.docsViewer__indexActionsButton,
 .docsViewerReport__collectionActionsButton{
   appearance: none;
   display: inline-flex;
@@ -108,14 +188,11 @@
   cursor: pointer;
 }
 
-.docsViewer__indexActionsButton:hover,
-.docsViewer__indexActionsButton:focus-visible,
 .docsViewerReport__collectionActionsButton:hover:not(:disabled),
 .docsViewerReport__collectionActionsButton:focus-visible{
   background: var(--docs-viewer-panel-2);
 }
 
-.docsViewer__indexActionsButton:focus-visible,
 .docsViewerReport__collectionActionsButton:focus-visible{
   outline: 2px solid var(--docs-viewer-focus-ring);
   outline-offset: 1px;
@@ -1312,7 +1389,7 @@ select.docsViewer__fieldInput{
 
 .docsViewer__actionMenuItem{
   display: grid;
-  grid-template-columns: 1.35rem minmax(0, 1fr);
+  grid-template-columns: var(--docs-viewer-toolbar-icon-size) minmax(0, 1fr);
   align-items: center;
   gap: 0.48rem;
   width: 100%;
@@ -1335,6 +1412,10 @@ select.docsViewer__fieldInput{
   min-width: 1.35rem;
   justify-content: center;
   line-height: 1;
+}
+
+.docsViewer__actionMenuItem[hidden]{
+  display: none;
 }
 
 .docsViewer__actionMenuLabel{

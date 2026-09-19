@@ -1,3 +1,5 @@
+import { createDocsViewerToolbarIcon } from "../shared/docs-viewer-toolbar-icon.js";
+
 import {
   DOCS_VIEWER_ACTION_IDS
 } from "./docs-viewer-action-definitions.js";
@@ -8,75 +10,58 @@ var MANAGEMENT_ACTION_MENU_ITEMS = [
   {
     id: "docsViewerManageNewButton",
     actionId: ACTION_IDS.NEW,
-    emoji: "📄",
+    artwork: "docsViewer__icon--file",
     label: "New"
   },
   {
     id: "docsViewerManageImportButton",
     actionId: ACTION_IDS.IMPORT,
-    emoji: "📥",
+    artwork: "docsViewer__icon--import",
     label: "Import"
   },
   {
     id: "docsViewerManageExportWorkspaceButton",
     actionId: ACTION_IDS.EXPORT_WORKSPACE,
-    emoji: "⬇️",
+    artwork: "docsViewer__icon--square-arrow-right-exit",
     label: "Export"
   },
   {
     id: "docsViewerManageNewCollectionButton",
     actionId: ACTION_IDS.NEW_COLLECTION,
-    emoji: "📁",
+    artwork: "docsViewer__icon--folder",
     label: "New collection",
     hidden: true
   },
   {
     id: "docsViewerManageDeleteCollectionButton",
     actionId: ACTION_IDS.DELETE_COLLECTION,
-    emoji: "🗑️",
+    artwork: "docsViewer__icon--folder-x",
     label: "Delete collection",
     hidden: true
   },
   {
     id: "docsViewerManageSettingsButton",
     actionId: ACTION_IDS.SETTINGS,
-    emoji: "⚙️",
+    artwork: "docsViewer__icon--settings",
     label: "Settings"
   }
 ];
 
-function escapeHtml(value) {
-  return String(value || "")
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;");
-}
-
-function renderActionMenuItem(item) {
-  var hidden = item.hidden ? " hidden" : "";
-  var action = item.actionId ? ' data-docs-viewer-action="' + escapeHtml(item.actionId) + '"' : "";
-  var label = escapeHtml(item.label);
-  if (item.href) {
-    return [
-      '        <a class="docsViewer__actionMenuItem" role="menuitem" id="' + escapeHtml(item.id) + '" href="' + escapeHtml(item.href) + '" data-docs-viewer-scope-href="' + escapeHtml(item.href) + '" target="_blank" rel="noopener noreferrer" aria-label="' + label + '" title="' + label + '"' + hidden + '>',
-      '          <span class="docsViewer__actionMenuEmoji" aria-hidden="true">' + escapeHtml(item.emoji || "") + "</span>",
-      '          <span class="docsViewer__actionMenuLabel">' + label + "</span>",
-      "        </a>"
-    ].join("");
-  }
-  return [
-    '        <button class="docsViewer__actionMenuItem" role="menuitem" type="button" id="' + escapeHtml(item.id) + '"' + action + ' aria-label="' + label + '" title="' + label + '"' + hidden + ">",
-    '          <span class="docsViewer__actionMenuEmoji" aria-hidden="true">' + escapeHtml(item.emoji || "") + "</span>",
-    '          <span class="docsViewer__actionMenuLabel">' + label + "</span>",
-    "        </button>"
-  ].join("");
-}
-
-function elementFromMarkup(documentRef, markup) {
-  var template = documentRef.createElement("template");
-  template.innerHTML = markup;
-  return template.content.firstElementChild;
+function renderActionMenuItem(documentRef, item) {
+  var button = documentRef.createElement("button");
+  button.className = "docsViewer__actionMenuItem";
+  button.id = item.id;
+  button.type = "button";
+  button.hidden = Boolean(item.hidden);
+  button.dataset.docsViewerAction = item.actionId;
+  button.setAttribute("role", "menuitem");
+  button.setAttribute("aria-label", item.label);
+  button.title = item.label;
+  var label = documentRef.createElement("span");
+  label.className = "docsViewer__actionMenuLabel";
+  label.textContent = item.label;
+  button.append(createDocsViewerToolbarIcon(documentRef, item.artwork), label);
+  return button;
 }
 
 function renderActionButton(context, options) {
@@ -85,32 +70,35 @@ function renderActionButton(context, options) {
   if (!button || button.tagName !== "BUTTON") {
     button = context.document.createElement("button");
   }
-  button.className = settings.className || "docsViewer__actionButton";
+  button.className = "docsViewer__toolbarIconButton";
   button.id = settings.id || "";
   button.type = "button";
-  button.textContent = "";
-  if (settings.iconOnly) {
-    var icon = context.document.createElement("span");
-    icon.setAttribute("aria-hidden", "true");
-    icon.textContent = settings.text || "";
-    button.appendChild(icon);
-  } else {
-    button.textContent = settings.text || context.control.label;
-  }
+  button.replaceChildren(createDocsViewerToolbarIcon(context.document, settings.artwork));
   return button;
 }
 
 function renderManagementActionsMenu(context) {
   var root = context.existingRoot;
   if (!root || !root.querySelector("#docsViewerManageActionsButton")) {
-    root = elementFromMarkup(context.document, [
-      '<div class="docsViewer__actionsMenuHost">',
-      '  <button class="docsViewer__actionButton" type="button" id="docsViewerManageActionsButton" aria-haspopup="menu" aria-expanded="false" aria-controls="docsViewerManageActionsMenu">Actions</button>',
-      '  <div class="docsViewer__actionsMenu" id="docsViewerManageActionsMenu" role="menu" hidden>',
-      MANAGEMENT_ACTION_MENU_ITEMS.map(renderActionMenuItem).join(""),
-      "  </div>",
-      "</div>"
-    ].join(""));
+    root = context.document.createElement("div");
+    root.className = "docsViewer__actionsMenuHost";
+    var button = context.document.createElement("button");
+    button.className = "docsViewer__toolbarIconButton";
+    button.id = "docsViewerManageActionsButton";
+    button.type = "button";
+    button.setAttribute("aria-haspopup", "menu");
+    button.setAttribute("aria-expanded", "false");
+    button.setAttribute("aria-controls", "docsViewerManageActionsMenu");
+    button.appendChild(createDocsViewerToolbarIcon(context.document, "docsViewer__icon--wrench"));
+    var menu = context.document.createElement("div");
+    menu.className = "docsViewer__actionsMenu";
+    menu.id = "docsViewerManageActionsMenu";
+    menu.setAttribute("role", "menu");
+    menu.hidden = true;
+    MANAGEMENT_ACTION_MENU_ITEMS.forEach(function (item) {
+      menu.appendChild(renderActionMenuItem(context.document, item));
+    });
+    root.append(button, menu);
   }
   return { root: root, interactive: root.querySelector("#docsViewerManageActionsButton") };
 }
@@ -119,34 +107,27 @@ export function createDocsViewerManagementAppControlRenderers() {
   return {
     "manage-toolbar-import": function (context) {
       return renderActionButton(context, {
-        className: "docsViewer__actionButton docsViewer__actionButton--iconOnly",
         id: "docsViewerManageToolbarImportButton",
-        iconOnly: true,
-        text: "📥"
+        artwork: "docsViewer__icon--import"
       });
     },
     "manage-actions-menu": renderManagementActionsMenu,
     "manage-toolbar-rebuild": function (context) {
       return renderActionButton(context, {
-        className: "docsViewer__actionButton docsViewer__actionButton--iconOnly",
         id: "docsViewerManageRebuildButton",
-        iconOnly: true,
-        text: "🔄"
+        artwork: "docsViewer__icon--refresh-cw"
       });
     },
     "manage-toolbar-publish": function (context) {
       return renderActionButton(context, {
-        className: "docsViewer__actionButton docsViewer__actionButton--iconOnly",
         id: "docsViewerManageToolbarPublishButton",
-        iconOnly: true,
-        text: "🌍"
+        artwork: "docsViewer__icon--globe"
       });
     },
     "manage-toolbar-pre-publish": function (context) {
       return renderActionButton(context, {
-        className: "docsViewer__actionButton",
         id: "docsViewerManagePrePublishButton",
-        text: "Pre-publish"
+        artwork: "docsViewer__icon--book-up"
       });
     },
     "manage-stage-select": function (context) {

@@ -101,6 +101,26 @@
         "docs-viewer-theme.css",
         "docs-viewer.css"
       ]
+    },
+    {
+      "id": "docs-viewer-shared-icons",
+      "source_root": "docs-viewer/static/icons",
+      "destination_root": "site/docs-viewer/static/icons",
+      "files": [
+        "arrow-left.svg",
+        "bookmark-filled.svg",
+        "bookmark.svg",
+        "chevron-left.svg",
+        "chevron-right.svg",
+        "clock-9.svg",
+        "expand.svg",
+        "external-link.svg",
+        "info.svg",
+        "moon.svg",
+        "sun.svg",
+        "waypoints.svg",
+        "x.svg"
+      ]
     }
   ]
 }

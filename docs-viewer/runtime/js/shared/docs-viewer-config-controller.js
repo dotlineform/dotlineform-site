@@ -1,3 +1,5 @@
+import { createDocsViewerToolbarIcon } from "./docs-viewer-toolbar-icon.js";
+
 import {
   routeConfigWorkspaceProjection
 } from "./docs-viewer-route-config.js";
@@ -208,7 +210,12 @@ export function initDocsViewerConfigController(context) {
       workspaceConfig.stageConfigs.forEach(function (record) {
         var button = document.createElement("button");
         button.type = "button";
-        button.textContent = { working: "Working", "pre-publish": "Pre-publish", published: "Published" }[record.stage];
+        var label = { working: "Working", "pre-publish": "Pre-publish", published: "Published" }[record.stage];
+        var artwork = { working: "circle-ellipsis", "pre-publish": "circle-check", published: "circle-arrow-up" }[record.stage];
+        button.className = "docsViewer__toolbarIconButton";
+        button.title = label;
+        button.setAttribute("aria-label", label);
+        button.appendChild(createDocsViewerToolbarIcon(document, "docsViewer__icon--" + artwork));
         button.setAttribute("aria-pressed", String(config.stage === record.stage));
         button.addEventListener("click", function () {
           if (record.stage === config.stage) return;

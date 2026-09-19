@@ -1,5 +1,6 @@
+import { createDocsViewerToolbarIcon } from "./docs-viewer-toolbar-icon.js";
+
 const INDEX_PANEL_MOUNT_SELECTOR = "[data-docs-viewer-index-panel-mount]";
-const SIDEBAR_TOGGLE_ICON_CLASS = "docsViewer__sidebarToggleIcon";
 
 export function indexPanelMount(root) {
   if (!root) return null;
@@ -32,12 +33,12 @@ export function renderDocsViewerIndexPanelShell(options = {}) {
   const sidebarToggle = renderSidebarToggle(documentRef, {
     id: "docsViewerSidebarToggle",
     label: "Collapse docs index",
-    icon: "‹"
+    icon: "docsViewer__icon--chevron-left"
   });
   const sidebarExpand = renderSidebarToggle(documentRef, {
     id: "docsViewerSidebarExpand",
     label: "Expand docs index",
-    icon: "⤢"
+    icon: "docsViewer__icon--expand"
   });
 
   const nav = documentRef.createElement("nav");
@@ -101,7 +102,7 @@ export function applyDocsViewerIndexPanelProjection(options = {}) {
 
 function renderSidebarToggle(documentRef, options) {
   const button = documentRef.createElement("button");
-  button.className = "docsViewer__sidebarToggle";
+  button.className = "docsViewer__toolbarIconButton";
   button.type = "button";
   button.id = options.id;
   button.setAttribute("aria-controls", "docsViewerNav");
@@ -109,11 +110,7 @@ function renderSidebarToggle(documentRef, options) {
   button.setAttribute("aria-label", options.label);
   button.title = options.label;
 
-  const icon = documentRef.createElement("span");
-  icon.className = SIDEBAR_TOGGLE_ICON_CLASS;
-  icon.setAttribute("aria-hidden", "true");
-  icon.textContent = options.icon;
-  button.appendChild(icon);
+  button.appendChild(createDocsViewerToolbarIcon(documentRef, options.icon));
 
   return button;
 }
@@ -124,8 +121,5 @@ function applyToggleProjection(button, options) {
   button.setAttribute("aria-expanded", options.ariaExpanded || "true");
   button.setAttribute("aria-label", options.label || "");
   button.title = options.label || "";
-  const icon = button.querySelector("." + SIDEBAR_TOGGLE_ICON_CLASS);
-  if (icon) {
-    icon.textContent = options.icon || "";
-  }
+  button.replaceChildren(createDocsViewerToolbarIcon(button.ownerDocument, options.icon));
 }

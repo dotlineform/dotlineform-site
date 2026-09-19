@@ -219,9 +219,6 @@ export function startDocsViewerRuntime(options) {
       if (typeof owner === "function") owner(detail);
     }
   });
-  appViewerControlOwners.set("index-view-switch", function () {
-    panelLayout.activateNextIndexView();
-  });
   appManagementControlHost = createDocsViewerControlSurfaceHost({
     mount: controlSurfaceRefs.appManagement,
     registry: viewRegistry,
@@ -721,8 +718,7 @@ export function startDocsViewerRuntime(options) {
           label: recentControlLabel,
           pressed: appSession.domains.searchRecent.recentModeActive
         },
-        "search": { label: "Search docs" },
-        "index-view-switch": panelLayout.indexViewSwitchControlState()
+        "search": { label: "Search docs" }
       }
     });
   }

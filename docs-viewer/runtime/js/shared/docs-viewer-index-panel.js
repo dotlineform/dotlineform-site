@@ -85,7 +85,7 @@ export function projectIndexPanelState(state, options = {}) {
   const expandAllowed = !capabilities || hostedViewSupportsLayoutState(capabilities, INDEX_PANEL_STATE_EXPANDED);
   const expandHidden = !available || !expandAllowed || activeState !== INDEX_PANEL_STATE_NORMAL;
   const stepHidden = !available || (activeState === INDEX_PANEL_STATE_NORMAL && !collapseAllowed);
-  const stepIcon = activeState === INDEX_PANEL_STATE_COLLAPSED ? "›" : "‹";
+  const stepIcon = activeState === INDEX_PANEL_STATE_COLLAPSED ? "docsViewer__icon--chevron-right" : "docsViewer__icon--chevron-left";
   const stepLabel = activeState === INDEX_PANEL_STATE_NORMAL ? "Collapse index panel" : "Restore index panel";
   return {
     activeState,
@@ -102,7 +102,7 @@ export function projectIndexPanelState(state, options = {}) {
     stepLabel,
     expandHidden,
     expandAriaExpanded: "true",
-    expandIcon: "⤢",
+    expandIcon: "docsViewer__icon--expand",
     expandLabel: "Expand index panel"
   };
 }
