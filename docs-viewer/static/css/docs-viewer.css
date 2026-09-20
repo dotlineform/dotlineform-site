@@ -481,10 +481,15 @@ main.container:has(> .docsViewer){
 .docsViewer__homeLink{
   display: inline-flex;
   align-items: center;
-  min-height: var(--docs-viewer-control-height);
+  justify-content: center;
+  height: var(--docs-viewer-control-height);
   color: var(--docs-viewer-text);
-  font-weight: 700;
   text-decoration: none;
+}
+
+.docsViewer__homeLink .docsViewer__toolbarIcon{
+  width: calc(2 * var(--docs-viewer-toolbar-icon-size));
+  height: calc(2 * var(--docs-viewer-toolbar-icon-size));
 }
 
 .docsViewer__homeLink:visited{
@@ -684,6 +689,10 @@ main.container:has(> .docsViewer){
 
 .docsViewer__icon--arrow-left{
   mask-image: url("../icons/arrow-left.svg");
+}
+
+.docsViewer__icon--dlf-home{
+  mask-image: url("../icons/dlf-home.svg");
 }
 
 .docsViewer__icon--bookmark{

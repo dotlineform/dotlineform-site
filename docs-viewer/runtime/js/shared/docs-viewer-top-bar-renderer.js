@@ -4,13 +4,16 @@ import {
 import {
   renderDocsViewerThemeToggle
 } from "./docs-viewer-theme.js";
+import { createDocsViewerToolbarIcon } from "./docs-viewer-toolbar-icon.js";
 
 function appendReaderTopRow(documentRef, mount, topBar, routeContext) {
   var row = documentRef.createElement("div");
   row.className = "docsViewer__topRow";
   var homeLink = documentRef.createElement("a");
   homeLink.className = "docsViewer__homeLink";
-  homeLink.textContent = "dotlineform";
+  homeLink.setAttribute("aria-label", "dotlineform home");
+  homeLink.title = "dotlineform home";
+  homeLink.appendChild(createDocsViewerToolbarIcon(documentRef, "docsViewer__icon--dlf-home"));
   var homeUrl = new URL(routeContext.routeViewerBaseUrl, documentRef.baseURI);
   if (routeContext.appContext.kind === "manage") {
     homeUrl.searchParams.set("stage", routeContext.viewerStage);
