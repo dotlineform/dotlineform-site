@@ -38,6 +38,14 @@
   mask-image: url("../icons/dlf-series.svg");
 }
 
+.docsViewer__icon--dlf-work{
+  mask-image: url("../icons/dlf-work.svg");
+}
+
+.docsViewer__icon--dlf-detail{
+  mask-image: url("../icons/dlf-detail.svg");
+}
+
 .docsViewer__icon--dlf-subject{
   mask-image: url("../icons/dlf-subject.svg");
 }
@@ -46,8 +54,8 @@
   mask-image: url("../icons/dlf-subject-assigned.svg");
 }
 
-.docsViewer__icon--file-pen{
-  mask-image: url("../icons/file-pen.svg");
+.docsViewer__icon--file-code-corner{
+  mask-image: url("../icons/file-code-corner.svg");
 }
 
 .docsViewer__icon--folder-open{
@@ -80,10 +88,6 @@
 
 .docsViewer__icon--circle-check{
   mask-image: url("../icons/circle-check.svg");
-}
-
-.docsViewer__icon--circle-dashed-check{
-  mask-image: url("../icons/circle-dashed-check.svg");
 }
 
 .docsViewer__icon--circle-ellipsis{
@@ -288,8 +292,6 @@
 }
 
 .docsViewerReport__projectSubjectCue{
-  display: inline-flex;
-  align-items: center;
   margin-right: 0.35rem;
   line-height: 1;
 }
@@ -421,18 +423,6 @@
 
 .docsViewerReport[data-working-subject-columns] .docsViewerReport__sortButton{
   text-transform: none;
-}
-
-.docsViewerReport__projectSubjectIcon{
-  width: 1rem;
-  height: 1rem;
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 1.75;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  transform: translateY(0.125em);
-  pointer-events: none;
 }
 
 .docsViewerReport__projectStateDocumentLink{

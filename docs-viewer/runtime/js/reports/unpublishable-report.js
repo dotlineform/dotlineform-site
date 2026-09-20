@@ -51,7 +51,7 @@ export function mountUnpublishableReport(context) {
   open.className = "docsViewer__toolbarIconButton";
   open.setAttribute("aria-label", "Open in VS Code");
   open.title = "Open in VS Code";
-  open.appendChild(createDocsViewerToolbarIcon(documentRef, "docsViewer__icon--file-pen"));
+  open.appendChild(createDocsViewerToolbarIcon(documentRef, "docsViewer__icon--file-code-corner"));
   toolbar.appendChild(open);
   const status = documentRef.createElement("p");
   status.className = "docsViewerReport__status";

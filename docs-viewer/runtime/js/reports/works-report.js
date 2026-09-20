@@ -83,8 +83,8 @@ function normalizeWorkDocument(value) {
     : "";
   if (
     ![
-      "authoring_subject,doc_id,last_updated,title,ui_status",
-      "authoring_subject,customisation,doc_id,last_updated,title,ui_status"
+      "authoring_subject,doc_id,last_updated,title",
+      "authoring_subject,customisation,doc_id,last_updated,title"
     ].includes(keys)
     || (
       Object.prototype.hasOwnProperty.call(value, "customisation")
@@ -106,7 +106,6 @@ function normalizeWorkDocument(value) {
     !DOC_ID_PATTERN.test(docId)
     || !title
     || typeof value.last_updated !== "string"
-    || typeof value.ui_status !== "string"
   ) {
     throw new Error("Working Works manifest is invalid.");
   }

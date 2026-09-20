@@ -1,3 +1,7 @@
+.docsViewer__icon--file-code-corner{
+  mask-image: url("../icons/file-code-corner.svg");
+}
+
 .docsViewer__reviewControls{
   display: flex;
   flex: 0 1 auto;

@@ -88,16 +88,15 @@ export function initDocsViewerSidebarRenderer(context) {
       var uiStatus = context.statusForIndexDoc(doc);
       if (uiStatus) {
         var statusIcon = document.createElement("span");
-        statusIcon.className = "docsViewer__navStatus";
+        statusIcon.classList.add("docsViewer__listIcon", "docsViewer__navStatus", uiStatus.artwork);
         statusIcon.setAttribute("aria-hidden", "true");
-        statusIcon.textContent = uiStatus.emoji;
+        statusIcon.title = uiStatus.label;
         link.appendChild(statusIcon);
       }
       if (doc.draft === true) {
         var draftIcon = document.createElement("span");
-        draftIcon.className = "docsViewer__draftIndicator";
+        draftIcon.className = "docsViewer__listIcon docsViewer__draftIndicator docsViewer__icon--circle-dashed-check";
         draftIcon.setAttribute("aria-hidden", "true");
-        draftIcon.textContent = "📝";
         draftIcon.title = "Draft";
         link.appendChild(draftIcon);
       }

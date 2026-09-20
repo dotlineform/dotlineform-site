@@ -314,15 +314,15 @@ export function initDocsViewerConfigController(context) {
       if (!rawStatus || typeof rawStatus !== "object") return statuses;
       var value = typeof rawStatus.ui_status === "string" ? rawStatus.ui_status.trim() : "";
       var label = typeof rawStatus.label === "string" ? rawStatus.label.trim() : "";
-      var emoji = typeof rawStatus.emoji === "string" ? rawStatus.emoji.trim() : "";
-      if (!value || !label || !emoji || emoji.length > context.uiStatusEmojiMaxLength || seen.has(value)) {
+      var artwork = typeof rawStatus.artwork === "string" ? rawStatus.artwork.trim() : "";
+      if (!value || !label || !artwork || seen.has(value)) {
         return statuses;
       }
       seen.add(value);
       statuses.push({
         ui_status: value,
         label: label,
-        emoji: emoji
+        artwork: artwork
       });
       return statuses;
     }, []);

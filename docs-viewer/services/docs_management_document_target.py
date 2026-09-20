@@ -350,12 +350,12 @@ def managed_document_metadata(
         "summary": " ".join(str(front_matter.get("summary") or "").split()),
         "date": str(front_matter.get("date") or "").strip(),
         "date_display": str(front_matter.get("date_display") or "").strip(),
-        "ui_status": document.ui_status,
     }
     payload_revision = source_model.source_revision(document.source_text.encode("utf-8"))
     if source_model.collection_supports_draft(resolved.document_config):
         record["draft"] = front_matter.get("draft", True)
     if not resolved.collection:
+        record["ui_status"] = document.ui_status
         record["parent_id"] = document.parent_id
 
     payload: dict[str, object] = {

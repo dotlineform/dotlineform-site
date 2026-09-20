@@ -156,7 +156,6 @@ function renderSubjectCell(context, options, targetLookup) {
   cell.className = "docsViewerReport__projectSubjectCell";
   cell.dataset.projectSubjectState = subject.state;
   if (subject.state === "none") {
-    cell.textContent = "—";
     cell.setAttribute("aria-label", "No subject");
     host.appendChild(cell);
     return;

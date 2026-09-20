@@ -108,7 +108,6 @@ export function startDocsViewerRuntime(options) {
   var BOOKMARK_STORE_NAME = runtimeDefaults.bookmarkStoreName;
   var MANAGEMENT_CAPABILITY_RETRY_ATTEMPTS = runtimeDefaults.managementCapabilityRetryAttempts;
   var MANAGEMENT_CAPABILITY_RETRY_DELAY_MS = runtimeDefaults.managementCapabilityRetryDelayMs;
-  var UI_STATUS_EMOJI_MAX_LENGTH = runtimeDefaults.uiStatusEmojiMaxLength;
   var SIDEBAR_COLLAPSE_MEDIA = runtimeDefaults.sidebarCollapseMedia;
   var bookmarkOwner = routeContext.bookmarkOwner;
   var latestIndexProjection = null;
@@ -569,7 +568,6 @@ export function startDocsViewerRuntime(options) {
     routeSession: appSession.domains.routeSession,
     workspaceConfig: appSession.domains.workspaceConfig,
     searchRecent: appSession.domains.searchRecent,
-    uiStatusEmojiMaxLength: UI_STATUS_EMOJI_MAX_LENGTH,
     viewerBaseUrl: function () { return viewerBaseUrl; },
     viewerStage: function () { return viewerStage; },
   });

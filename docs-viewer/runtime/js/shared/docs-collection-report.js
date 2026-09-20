@@ -256,7 +256,6 @@ function detailMetadataRecord(state, docId, payload) {
     "date_display",
     "added_date",
     "last_updated",
-    "ui_status",
     "draft"
   ].forEach(function (fieldName) {
     if (Object.prototype.hasOwnProperty.call(payloadRecord, fieldName)) {

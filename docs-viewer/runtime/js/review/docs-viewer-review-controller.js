@@ -1,3 +1,5 @@
+import { createDocsViewerToolbarIcon } from "../shared/docs-viewer-toolbar-icon.js";
+
 function createButton(documentRef, label) {
   var button = documentRef.createElement("button");
   button.type = "button";
@@ -45,13 +47,7 @@ function renderReviewPackageControls(context) {
     openVsCodeButton.setAttribute("aria-label", "Open in VS Code");
     openVsCodeButton.setAttribute("data-docs-viewer-action", "open-vscode");
     openVsCodeButton.setAttribute("data-docs-viewer-review-action", "open-vscode");
-    var openVsCodeIcon = context.document.createElement("img");
-    openVsCodeIcon.src = new URL("../management/icons/vscode.svg", import.meta.url).href;
-    openVsCodeIcon.alt = "";
-    openVsCodeIcon.width = 20;
-    openVsCodeIcon.height = 20;
-    openVsCodeIcon.setAttribute("aria-hidden", "true");
-    openVsCodeButton.replaceChildren(openVsCodeIcon);
+    openVsCodeButton.appendChild(createDocsViewerToolbarIcon(context.document, "docsViewer__icon--file-code-corner"));
     var canonicalLink = context.document.createElement("a");
     canonicalLink.className = "docsViewer__actionButton docsViewer__reviewCanonicalLink";
     canonicalLink.textContent = "Open canonical";

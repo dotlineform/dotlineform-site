@@ -80,6 +80,7 @@ class CollectionDocsBuilder(DocsDataBuilder):
 
     def by_id_metadata_entry(self, doc: DocRecord, docs: Sequence[DocumentIdentity]) -> dict[str, Any]:
         entry = self.metadata_entry(doc, docs)
+        entry.pop("ui_status", None)
         if doc.report is not None:
             entry["report"] = dict(doc.report.as_payload())
         return entry
@@ -124,7 +125,6 @@ class CollectionDocsBuilder(DocsDataBuilder):
             row: dict[str, Any] = {
                 "doc_id": doc.doc_id,
                 "title": doc.title,
-                "ui_status": doc.ui_status,
                 "last_updated": doc.last_updated,
             }
             if self.config.stage == "working":

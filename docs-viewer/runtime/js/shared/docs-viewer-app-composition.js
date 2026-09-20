@@ -86,7 +86,6 @@ export var DOCS_VIEWER_RUNTIME_DEFAULTS = {
   managementCapabilityRetryDelayMs: 500,
   reloadRetryAttempts: 12,
   reloadRetryDelayMs: 250,
-  uiStatusEmojiMaxLength: 8,
   sidebarCollapseMedia: "(min-width: 821px)"
 };
 

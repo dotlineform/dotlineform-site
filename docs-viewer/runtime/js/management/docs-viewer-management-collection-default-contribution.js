@@ -26,23 +26,6 @@ function documentIds(documents) {
   });
 }
 
-function statusRecord(statuses, value) {
-  var statusValue = cleanString(value);
-  if (!statusValue || !(statuses instanceof Map)) return null;
-  return statuses.get(statusValue) || null;
-}
-
-function appendIcon(host, className, text) {
-  var iconText = cleanString(text);
-  if (!host || !iconText) return false;
-  var icon = host.ownerDocument.createElement("span");
-  icon.className = className;
-  icon.setAttribute("aria-hidden", "true");
-  icon.textContent = iconText;
-  host.appendChild(icon);
-  return true;
-}
-
 function writeClipboardText(documentRef, text) {
   var windowRef = documentRef && documentRef.defaultView;
   if (
@@ -87,9 +70,6 @@ function writeClipboardText(documentRef, text) {
  * @returns {Object}
  */
 export function createDocsViewerManagementCollectionDefaultContribution(options = {}) {
-  var statuses = options.uiStatusByValue instanceof Map
-    ? options.uiStatusByValue
-    : new Map();
   var onLifecycleEvent = typeof options.onLifecycleEvent === "function"
     ? options.onLifecycleEvent
     : null;
@@ -285,11 +265,11 @@ export function createDocsViewerManagementCollectionDefaultContribution(options 
         host: leadingHost
       });
     }
-    var uiStatus = statusRecord(statuses, doc.ui_status);
-    if (uiStatus && appendIcon(host, "docsViewer__navStatus", uiStatus.emoji)) {
-      accessibleLabels.push(cleanString(uiStatus.label) || cleanString(doc.ui_status));
-    }
-    if (doc.draft === true && appendIcon(host, "docsViewer__draftIndicator", "📝")) {
+    if (doc.draft === true) {
+      var draftIcon = host.ownerDocument.createElement("span");
+      draftIcon.className = "docsViewer__listIcon docsViewer__draftIndicator docsViewer__icon--circle-dashed-check";
+      draftIcon.setAttribute("aria-hidden", "true");
+      host.appendChild(draftIcon);
       accessibleLabels.push("Draft");
     }
     return { accessibleLabels: accessibleLabels };

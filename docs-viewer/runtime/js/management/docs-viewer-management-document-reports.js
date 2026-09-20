@@ -249,8 +249,7 @@ export function loadDocsViewerCollectionContribution(settings, parent, collectio
       onLifecycleEvent: contributionOptions.onLifecycleEvent,
       onPreparePackage: contributionOptions.onPreparePackage,
       root: managementModalRoot(settings),
-      setStatus: settings.setStatus,
-      uiStatusByValue: contributionOptions.uiStatusByValue
+      setStatus: settings.setStatus
     });
     if (parent.stage && !workingCustomisationAvailable) {
       return modules[1].composeDocsViewerManagementCollectionContributions({
@@ -428,7 +427,6 @@ export function mountDocsViewerManageDocumentExtras(context) {
     state: "loading",
     reason: "report-mount"
   });
-  var workspaceConfig = settings.workspaceConfigState || {};
   var createAction = createCollectionDocumentAction(settings);
   var contribution = loadDocsViewerCollectionContribution(settings, parent, collection, {
     onCreateDocument: (
@@ -451,10 +449,7 @@ export function mountDocsViewerManageDocumentExtras(context) {
       ? function (request, context) {
           return openCollectionPreparePackage(settings, request, context);
         }
-      : null,
-    uiStatusByValue: workspaceConfig.uiStatusByValue instanceof Map
-      ? workspaceConfig.uiStatusByValue
-      : new Map()
+      : null
   }).catch(function (error) {
     publishReportState(settings, parent, collection, {
       state: "error",

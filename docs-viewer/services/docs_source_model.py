@@ -212,24 +212,26 @@ def format_front_matter_value(value: Any) -> str:
 
 
 def document_collection_front_matter(front_matter: Mapping[str, Any], collection: str) -> Dict[str, Any]:
-    """Record membership from the resolved destination, never from incoming metadata."""
+    """Apply resolved membership and omit ordinary-only status in named collections."""
     updated = dict(front_matter)
     if collection:
         updated["collection"] = collection
+        updated.pop("ui_status", None)
     else:
         updated.pop("collection", None)
     return updated
 
 
 def rewrite_source_collection(source_text: str, collection: str) -> str:
-    """Maintain membership while preserving other fields, the body and timestamps."""
+    """Apply collection-owned fields while preserving the body and timestamps."""
     prefix, front_matter, body = split_source_text(source_text)
     updated = document_collection_front_matter(front_matter, collection)
     if updated == front_matter:
         return source_text
     lines = prefix.splitlines(keepends=True)
     closing = next(index for index, line in enumerate(lines[1:], 1) if line.strip() == "---")
-    header = [line for line in lines[:closing] if not re.match(r"^[ \t]*collection[ \t]*:", line)]
+    removed_fields = r"(?:collection|ui_status)" if collection else r"collection"
+    header = [line for line in lines[:closing] if not re.match(rf"^[ \t]*{removed_fields}[ \t]*:", line)]
     if collection:
         while header and not header[-1].strip():
             header.pop()
@@ -458,10 +460,8 @@ def front_matter_boolean(front_matter: Dict[str, Any], key: str, default: bool) 
 
 
 def normalize_ui_status(value: Any) -> str:
-    status = str(value or "").strip()
-    if status == "draft":
-        raise ValueError("ui_status draft is no longer supported; use a visual status such as review")
-    return status
+    """Keep ordinary-document status as free text, independent of draft readiness."""
+    return str(value or "").strip()
 
 
 def collection_supports_draft(config: DocsStageConfig | DocsCollectionConfig) -> bool:
@@ -475,9 +475,8 @@ def validate_document_status_front_matter(
     collection_config: DocsStageConfig | DocsCollectionConfig,
     source_name: str,
 ) -> None:
-    """Validate visual status and the availability/types of Working publication fields."""
+    """Validate Working publication fields independently of free-text visual status."""
 
-    normalize_ui_status(front_matter.get("ui_status"))
     if "sub-scope" in front_matter or "sub_scope" in front_matter:
         raise ValueError(f"sub-scope front matter is retired; use collection: {source_name}")
     if "draft" in front_matter:

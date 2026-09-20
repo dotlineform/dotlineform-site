@@ -146,17 +146,10 @@ export function createDocsViewerManagementControlRenderers() {
       });
     },
     "manage-open-vscode": function (context) {
-      var button = renderDocumentActionButton(context, {
-        id: "docsViewerManageOpenVsCodeButton"
+      return renderDocumentActionButton(context, {
+        id: "docsViewerManageOpenVsCodeButton",
+        artwork: "docsViewer__icon--file-code-corner"
       });
-      var icon = context.document.createElement("img");
-      icon.src = new URL("./icons/vscode.svg", import.meta.url).href;
-      icon.alt = "";
-      icon.width = 20;
-      icon.height = 20;
-      icon.setAttribute("aria-hidden", "true");
-      button.replaceChildren(icon);
-      return button;
     },
     "return-to-doc": function (context) {
       return renderDocumentActionButton(context, {

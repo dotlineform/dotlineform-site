@@ -90,7 +90,7 @@ function sortButton(state, key, label) {
   const indicator = document.createElement("span");
   indicator.className = "docsViewerReport__sortIndicator";
   indicator.setAttribute("aria-hidden", "true");
-  indicator.textContent = state.sortKey === key ? (state.sortDir === "asc" ? "asc" : "desc") : "";
+  indicator.textContent = state.sortKey === key ? (state.sortDir === "asc" ? "▲" : "▼") : "";
   button.appendChild(indicator);
   if (state.sortKey === key) button.dataset.state = "active";
   return button;

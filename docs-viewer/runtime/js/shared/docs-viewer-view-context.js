@@ -103,9 +103,7 @@ export function docsViewerStatusLabel(value, uiStatusByValue) {
   if (!statusValue) return "";
   const statusRecord = mapGet(uiStatusByValue, statusValue);
   if (!statusRecord) return statusValue;
-  const emoji = cleanString(statusRecord.emoji);
-  const label = cleanString(statusRecord.label) || statusValue;
-  return emoji ? `${emoji} ${label}` : label;
+  return cleanString(statusRecord.label) || statusValue;
 }
 
 export function createDocsViewerHostedViewContext(options = {}) {

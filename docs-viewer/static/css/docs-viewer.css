@@ -681,10 +681,38 @@ main.container:has(> .docsViewer){
   flex: 0 0 auto;
   width: var(--docs-viewer-toolbar-icon-size);
   height: var(--docs-viewer-toolbar-icon-size);
+}
+
+.docsViewer__listIcon{
+  display: inline-block;
+  flex: 0 0 auto;
+  width: 1rem;
+  height: 1rem;
+  vertical-align: -0.125em;
+}
+
+.docsViewer__toolbarIcon,
+.docsViewer__listIcon{
   background-color: currentColor;
   mask-position: center;
   mask-size: contain;
   mask-repeat: no-repeat;
+}
+
+.docsViewer__icon--chart-column-colour{
+  background-color: transparent;
+  background-image: url("../icons/chart-column-colour.svg");
+  background-position: center;
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+.docsViewer__icon--circle-dashed-check{
+  mask-image: url("../icons/circle-dashed-check.svg");
+}
+
+.docsViewer__icon--sprout{
+  mask-image: url("../icons/sprout.svg");
 }
 
 .docsViewer__icon--arrow-left{
