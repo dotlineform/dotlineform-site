@@ -7,7 +7,6 @@ export function initDocsViewerSidebarRenderer(context) {
   var selectedDocument = context.selectedDocument;
   var nav = context.nav;
   var toolbar = context.toolbar;
-  var pathEl = context.pathEl;
 
   function docChildren(docId) {
     return documentIndex.childrenByParent.get(docId) || [];
@@ -102,9 +101,8 @@ export function initDocsViewerSidebarRenderer(context) {
       }
       if (doc.report_id === "docs_collection") {
         var reportIcon = document.createElement("span");
-        reportIcon.className = "docsViewer__navReportIcon";
+        reportIcon.className = "docsViewer__listIcon docsViewer__navReportIcon docsViewer__icon--menu";
         reportIcon.setAttribute("aria-hidden", "true");
-        reportIcon.textContent = "≡";
         link.appendChild(reportIcon);
         var reportLabel = document.createElement("span");
         reportLabel.className = "visually-hidden";
@@ -131,28 +129,7 @@ export function initDocsViewerSidebarRenderer(context) {
     return list;
   }
 
-  function renderMeta(doc) {
-    var trail = buildTrail(doc.doc_id).slice(0, -1);
-    if (pathEl) {
-      pathEl.textContent = "";
-      pathEl.hidden = trail.length === 0;
-
-      trail.forEach(function (entry, index) {
-        if (index > 0) {
-          var separator = document.createElement("span");
-          separator.className = "docsViewer__pathSep";
-          separator.textContent = "/";
-          pathEl.appendChild(separator);
-        }
-
-        var link = document.createElement("a");
-        link.href = context.viewerUrl(context.viewerTargetDocId(entry.doc_id));
-        link.dataset.docId = entry.doc_id;
-        link.textContent = entry.title;
-        pathEl.appendChild(link);
-      });
-    }
-
+  function renderMeta() {
     if (toolbar) toolbar.hidden = toolbar.hasAttribute("data-docs-viewer-toolbar-disabled");
     context.renderBookmarkToggle();
   }

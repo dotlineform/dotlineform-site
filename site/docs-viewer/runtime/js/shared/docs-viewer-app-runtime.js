@@ -75,7 +75,6 @@ export function startDocsViewerRuntime(options) {
   var mainViewRefs = appShellRefs.mainView;
   var infoPanelRefs = appShellRefs.infoPanel;
   var mainViewToolbar = mainViewRefs.toolbar;
-  var pathEl = mainViewRefs.pathEl;
   var bookmarkRow = appShellRefs.bookmarkRow;
   var content = mainViewRefs.content;
   var searchInput = null;
@@ -313,7 +312,6 @@ export function startDocsViewerRuntime(options) {
     documentIndex: appSession.domains.documentIndex,
     toolbar: mainViewToolbar,
     nav: nav,
-    pathEl: pathEl,
     renderBookmarkToggle: renderBookmarkToggle,
     renderIndexSelectionGutter: function (doc) {
       var controller = managementRuntime ? managementRuntime.controller() : null;
@@ -961,8 +959,8 @@ export function startDocsViewerRuntime(options) {
     sidebarRenderer.renderSidebar();
   }
 
-  function renderMeta(doc) {
-    sidebarRenderer.renderMeta(doc);
+  function renderMeta() {
+    sidebarRenderer.renderMeta();
   }
 
   function clearResultsStatus() {

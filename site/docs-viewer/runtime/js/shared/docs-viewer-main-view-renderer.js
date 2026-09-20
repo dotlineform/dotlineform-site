@@ -30,14 +30,11 @@ export function renderDocsViewerMainView(options = {}) {
     toolbar.setAttribute("aria-label", "Document controls");
   }
 
-  const path = renderParagraph(documentRef, "docsViewerPath", "docsViewer__path small");
-  path.hidden = true;
-
   const actions = documentRef.createElement("div");
   actions.className = "docsViewer__mainViewToolbarActions";
   actions.setAttribute("data-docs-viewer-control-surface-mount", "main-view");
 
-  if (toolbar) toolbar.append(path, actions);
+  if (toolbar) toolbar.appendChild(actions);
   if (toolbarMount && toolbar) {
     toolbarMount.replaceChildren(toolbar);
   } else if (toolbarMount) {
@@ -78,7 +75,6 @@ export function findDocsViewerMainViewRefs(options = {}) {
   return {
     main: root.querySelector(".docsViewer__main"),
     toolbar: root.querySelector("#docsViewerMainViewToolbar"),
-    pathEl: root.querySelector("#docsViewerPath"),
     content: root.querySelector("#docsViewerContent"),
     resultsStatus: root.querySelector("#docsViewerResultsStatus"),
     results: root.querySelector("#docsViewerResults"),
@@ -108,13 +104,6 @@ export function applyDocsViewerMainViewProjection(options = {}) {
   if (refs.more && projection.clearMore) {
     refs.more.innerHTML = "";
   }
-}
-
-function renderParagraph(documentRef, id, className) {
-  const paragraph = documentRef.createElement("p");
-  paragraph.className = className;
-  paragraph.id = id;
-  return paragraph;
 }
 
 function applyHidden(element, projection, key) {

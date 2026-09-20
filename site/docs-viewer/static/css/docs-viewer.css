@@ -177,7 +177,6 @@ main.container:has(> .docsViewer){
   max-width: none;
 }
 
-.docsViewer[data-viewer-layout="expanded-main"] .docsViewer__path,
 .docsViewer[data-viewer-layout="expanded-main"] .docsViewer__sidebar,
 .docsViewer[data-viewer-layout="expanded-main"] .docsViewer__infoPanel{
   display: none !important;
@@ -612,29 +611,10 @@ main.container:has(> .docsViewer){
   margin: 0;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 0.75rem;
-}
-
-.docsViewer__mainViewToolbar:has(.docsViewer__path[hidden]){
-  gap: 0;
+  justify-content: flex-end;
 }
 
 .docsViewer__mainViewToolbar[hidden]{
-  display: none;
-}
-
-.docsViewer__path{
-  margin: 0;
-  min-width: 0;
-  flex: 1 1 auto;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.3rem;
-  align-items: baseline;
-}
-
-.docsViewer__path[hidden]{
   display: none;
 }
 
@@ -646,10 +626,6 @@ main.container:has(> .docsViewer){
   justify-content: flex-end;
   gap: 0.38rem;
   margin-left: auto;
-}
-
-.docsViewer__pathSep{
-  color: var(--docs-viewer-muted);
 }
 
 .docsViewer__toolbarIconButton{
@@ -753,6 +729,10 @@ main.container:has(> .docsViewer){
 
 .docsViewer__icon--info{
   mask-image: url("../icons/info.svg");
+}
+
+.docsViewer__icon--menu{
+  mask-image: url("../icons/menu.svg");
 }
 
 .docsViewer__icon--moon{
