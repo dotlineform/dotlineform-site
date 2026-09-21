@@ -217,8 +217,9 @@ def plan_create(
     """Plan one create-only write without reading existing named-collection docs.
 
     Ordinary documents retain their source inventory for parent resolution.
-    Catalogue fields are present before the creation build. Internal generators
-    may supply body_markdown; the HTTP create request does not expose it.
+    Catalogue records start ready; other documents start as drafts. Catalogue
+    fields are present before the creation build. Internal generators may supply
+    body_markdown; the HTTP create request does not expose it.
     """
     if "scope" in body:
         raise ValueError("scope is retired; supply stage")
@@ -292,7 +293,7 @@ def plan_create(
         **create_fields,
     }
     if source_model.collection_supports_draft(resolved_collection.document_config):
-        front_matter_seed["draft"] = True
+        front_matter_seed["draft"] = collection != "catalogue"
     if not collection:
         front_matter_seed["parent_id"] = parent_id
     front_matter = source_model.advance_doc_front_matter(
@@ -312,7 +313,7 @@ def plan_create(
         "title": title,
     }
     if source_model.collection_supports_draft(resolved_collection.document_config):
-        record["draft"] = True
+        record["draft"] = front_matter["draft"]
     if not collection:
         record["parent_id"] = parent_id
     response: Dict[str, Any] = {
