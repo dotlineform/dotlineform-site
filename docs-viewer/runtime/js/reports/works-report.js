@@ -1,4 +1,5 @@
 import { createDocsViewerToolbarIcon } from "../shared/docs-viewer-toolbar-icon.js";
+import { mountDocsViewerMediaLinks } from "../shared/docs-viewer-media-detail.js";
 
 import { normalizeDocsViewerAuthoringSubject } from "../management/docs-viewer-management-document-subject.js";
 import { appendProjectSubjectIcon } from "./project-subject-icons.js";
@@ -266,20 +267,6 @@ function loadWorksProjection(context) {
   ]).then((inputs) => composeWorksProjection(inputs[0], inputs[1], inputs[2]));
 }
 
-function seriesHref(context, seriesId) {
-  const base = cleanString(context && context.publicPreviewBase).replace(/\/+$/, "");
-  let preview;
-  try {
-    preview = new URL(base);
-  } catch (error) {
-    throw new Error("Local site preview is not configured.", { cause: error });
-  }
-  if (!preview.hostname || !["http:", "https:"].includes(preview.protocol)) {
-    throw new Error("Local site preview is not configured.");
-  }
-  return new URL("/series/?series=" + encodeURIComponent(seriesId), preview.origin).toString();
-}
-
 function workDocumentHref(context, docId) {
   if (typeof context.viewerUrlForDocument !== "function") {
     throw new Error("Working Works document links are not configured.");
@@ -335,14 +322,27 @@ function renderProjection(state, projection) {
     const rowNode = state.rowsNode.ownerDocument.createElement("li");
     rowNode.className = "docsViewerReport__row";
     rowNode.dataset.seriesId = row.seriesId;
-    const seriesLink = rowNode.ownerDocument.createElement("a");
-    seriesLink.className = "docsViewerReport__cellLink docsViewerReport__title";
+    const marker = rowNode.ownerDocument.createElement("span");
+    marker.className = "docsViewerReport__cellStack";
+    marker.dataset.docsContentDetail = "media";
+    marker.dataset.docsMediaKind = "catalogue-series";
+    marker.dataset.docsMediaId = row.seriesId;
+    const seriesLink = rowNode.ownerDocument.createElement("button");
+    seriesLink.type = "button";
+    seriesLink.className = "docsViewer__mediaTextLink docsViewerReport__cellLink docsViewerReport__title";
     seriesLink.dataset.seriesId = row.seriesId;
-    seriesLink.href = seriesHref(state.context, row.seriesId);
+    seriesLink.dataset.docsMediaOpen = "true";
     seriesLink.textContent = row.title;
-    rowNode.appendChild(seriesLink);
+    marker.appendChild(seriesLink);
+    rowNode.appendChild(marker);
     appendDocumentsCell(state, rowNode, row);
     state.rowsNode.appendChild(rowNode);
+  });
+  mountDocsViewerMediaLinks({
+    content: state.rowsNode,
+    documentTarget: { stage: state.context.viewerStage, collection: "", docId: state.context.doc.doc_id },
+    isCurrentDocument: () => state.context.content.contains(state.rowsNode),
+    openMediaTarget: state.context.openMediaTarget
   });
   state.statusNode.textContent = projection.rowCount === 1
     ? "1 published Series"

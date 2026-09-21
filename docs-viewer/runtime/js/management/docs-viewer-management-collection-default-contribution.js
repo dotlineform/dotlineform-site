@@ -389,6 +389,7 @@ export function createDocsViewerManagementCollectionDefaultContribution(options 
 
     var actionsHost = documentRef.createElement("div");
     actionsHost.className = "docsViewer__actionsMenuHost docsViewerReport__collectionActionsHost";
+    actionsHost.hidden = selectionOwner.collection().stage !== "working";
     var actionsButton = documentRef.createElement("button");
     actionsButton.className = "docsViewer__toolbarIconButton";
     actionsButton.type = "button";

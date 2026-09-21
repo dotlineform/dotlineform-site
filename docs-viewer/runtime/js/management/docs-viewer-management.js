@@ -765,7 +765,7 @@ export function initDocsViewerManagement(context) {
       disabled: management.managementBusy || !management.managementAvailable
     });
     projectAppControl("manage-actions", {
-      hidden: managementActionsHidden,
+      hidden: managementActionsHidden || viewerStage() !== "working",
       disabled: management.managementBusy || !management.managementAvailable
     });
     projectAppControl("manage-rebuild", {

@@ -1,4 +1,5 @@
 import { createDocsViewerToolbarIcon } from "../shared/docs-viewer-toolbar-icon.js";
+import { mountDocsViewerMediaLinks } from "../shared/docs-viewer-media-detail.js";
 
 import {
   appendProjectSubjectIcon
@@ -165,15 +166,6 @@ export function normalizeProjectStateResponse(payload) {
   };
 }
 
-function publicPreviewHref(context, href) {
-  const base = cleanString(context && context.publicPreviewBase).replace(/\/+$/, "");
-  const path = cleanString(href);
-  if (!base || !path.startsWith("/series/")) {
-    throw new Error("Project State site preview is not configured.");
-  }
-  return new URL(path, base + "/").toString();
-}
-
 function folderLabel(row) {
   return cleanString(row && row.folder && row.folder.label).slice(1);
 }
@@ -295,11 +287,21 @@ function appendFolderCell(rowNode, row) {
   rowNode.appendChild(cell);
 }
 
-function appendSeriesCell(rowNode, row, context) {
+function appendSeriesCell(rowNode, row) {
   const cell = document.createElement("span");
   cell.className = "docsViewerReport__cellStack";
   row.series.forEach((series) => {
-    appendLink(cell, series.title, publicPreviewHref(context, series.href));
+    const marker = document.createElement("span");
+    marker.dataset.docsContentDetail = "media";
+    marker.dataset.docsMediaKind = "catalogue-series";
+    marker.dataset.docsMediaId = series.target.target_id;
+    const link = document.createElement("button");
+    link.type = "button";
+    link.className = "docsViewer__mediaTextLink docsViewerReport__cellLink";
+    link.dataset.docsMediaOpen = "true";
+    link.textContent = series.title;
+    marker.appendChild(link);
+    cell.appendChild(marker);
   });
   rowNode.appendChild(cell);
 }
@@ -330,9 +332,9 @@ function appendDocumentsCell(rowNode, row) {
   rowNode.appendChild(cell);
 }
 
-function appendColumnCell(rowNode, row, key, context) {
+function appendColumnCell(rowNode, row, key) {
   if (key === "folder") appendFolderCell(rowNode, row);
-  else if (key === "series") appendSeriesCell(rowNode, row, context);
+  else if (key === "series") appendSeriesCell(rowNode, row);
   else appendDocumentsCell(rowNode, row);
 }
 
@@ -393,8 +395,14 @@ function renderRows(state) {
     if (row.series[0]) {
       rowNode.dataset.projectSeriesId = cleanString(row.series[0].target && row.series[0].target.target_id);
     }
-    projection.columns.forEach((key) => appendColumnCell(rowNode, row, key, state.context));
+    projection.columns.forEach((key) => appendColumnCell(rowNode, row, key));
     state.rowsNode.appendChild(rowNode);
+  });
+  mountDocsViewerMediaLinks({
+    content: state.rowsNode,
+    documentTarget: { stage: state.context.viewerStage, collection: "", docId: state.context.doc.doc_id },
+    isCurrentDocument: () => state.context.content.contains(state.rowsNode),
+    openMediaTarget: state.context.openMediaTarget
   });
 }
 

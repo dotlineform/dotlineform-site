@@ -100,8 +100,6 @@ export function mountLocalFolderLinkActivation(context) {
     openLocalTarget(target, {
       baseUrl: settings.managementService && settings.managementService.baseUrl,
       fetch: content.ownerDocument.defaultView.fetch.bind(content.ownerDocument.defaultView)
-    }).then(function (payload) {
-      if (typeof settings.setStatus === "function") settings.setStatus(payload.summary_text || "Local target opened.", false);
     }).catch(function (error) {
       if (typeof settings.setStatus === "function") settings.setStatus(error.message || "Local target could not be opened.", true);
     });

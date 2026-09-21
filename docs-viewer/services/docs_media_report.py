@@ -140,6 +140,8 @@ def build_docs_media_report(
     )
     rows: list[dict[str, Any]] = []
     for item in inventory.items:
+        if Path(item.identity).name == ".DS_Store":
+            continue
         _source_path(repo_root, config, item.role, item.media_type, item.identity)
         documents = list(
             documents_by_media.get((item.media_type, item.identity), {}).values()

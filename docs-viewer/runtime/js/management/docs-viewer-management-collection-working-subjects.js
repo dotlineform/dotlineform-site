@@ -1,4 +1,6 @@
 import { createDocsViewerToolbarIcon } from "../shared/docs-viewer-toolbar-icon.js";
+import { mountDocsViewerMediaLinks } from "../shared/docs-viewer-media-detail.js";
+import { loadWorkingCatalogueDocumentLinks } from "./docs-viewer-management-catalogue-document-links.js";
 
 import {
   encodeDecodedLocalTarget
@@ -147,7 +149,7 @@ function subjectAccessibleLabel(subject) {
     + (subject.state === "unavailable" ? ", unavailable" : "");
 }
 
-function renderSubjectCell(context, options, targetLookup) {
+function renderSubjectCell(context, options, targetLookup, catalogueLinks) {
   var settings = context || {};
   var host = settings.trailingHost;
   if (!host) return;
@@ -181,8 +183,12 @@ function renderSubjectCell(context, options, targetLookup) {
     host.appendChild(cell);
     return;
   }
-  var linkedSubject = ["folder", "work", "series"].includes(subject.kind);
-  var link = host.ownerDocument.createElement(linkedSubject ? "a" : "span");
+  var catalogueNavigation = catalogueLinks instanceof Map;
+  var workHref = catalogueNavigation && subject.kind === "work" ? catalogueLinks.get(subject.key) : "";
+  var mediaSeries = catalogueNavigation && subject.kind === "series";
+  var linkedSubject = ["folder", "series"].includes(subject.kind)
+    || subject.kind === "work" && (!catalogueNavigation || Boolean(workHref));
+  var link = host.ownerDocument.createElement(mediaSeries ? "button" : linkedSubject ? "a" : "span");
   link.className = linkedSubject
     ? "docsViewerReport__cellLink docsViewerReport__projectSubjectLink"
     : "docsViewerReport__projectSubjectLink";
@@ -199,12 +205,31 @@ function renderSubjectCell(context, options, targetLookup) {
     link.href = "#";
     link.dataset.docsViewerLocalTarget = encodedPath;
     link.title = "Open " + subject.key + " in Finder";
+  } else if (mediaSeries) {
+    cell.dataset.docsContentDetail = "media";
+    cell.dataset.docsMediaKind = "catalogue-series";
+    cell.dataset.docsMediaId = subject.key;
+    link.type = "button";
+    link.classList.add("docsViewer__mediaTextLink");
+    link.dataset.docsMediaOpen = "true";
+    link.title = "Open " + subjectAccessibleLabel(subject) + " in Media View";
+  } else if (workHref) {
+    link.href = workHref;
+    link.title = "Open " + subjectAccessibleLabel(subject) + " in Catalogue";
   } else if (linkedSubject) {
     link.href = previewSubjectHref(options, subject);
     link.title = "Open " + subjectAccessibleLabel(subject) + " in local preview";
   }
   cell.appendChild(link);
   host.appendChild(cell);
+  if (mediaSeries) {
+    mountDocsViewerMediaLinks({
+      content: host,
+      documentTarget: options.documentTarget,
+      isCurrentDocument: function () { return options.content.contains(host); },
+      openMediaTarget: options.openMediaTarget
+    });
+  }
 }
 
 function compareText(collator, left, right) {
@@ -286,8 +311,8 @@ function folderPath(documentRecord) {
   return subject.state === "valid" && subject.kind === "folder" ? subject.key : "";
 }
 
-function renderWorkingSubjectRow(context, options, targetLookup) {
-  renderSubjectCell(context, options, targetLookup);
+function renderWorkingSubjectRow(context, options, targetLookup, catalogueLinks) {
+  renderSubjectCell(context, options, targetLookup, catalogueLinks);
   return { accessibleLabels: [] };
 }
 
@@ -308,12 +333,7 @@ function renderOpenInFinder(context, options) {
       var encodedPath = encodeDecodedLocalTarget(path);
       if (!encodedPath) throw new Error("This document has an invalid Folder subject.");
       if (typeof options.openLocalTarget !== "function") throw new Error("Open in Finder is unavailable.");
-      return options.openLocalTarget(encodedPath, options.clientOptions || {}).then(function (response) {
-        if (typeof options.setStatus === "function") {
-          options.setStatus(cleanString(response && response.summary_text) || "Local target opened.", false);
-        }
-        return response;
-      });
+      return options.openLocalTarget(encodedPath, options.clientOptions || {});
     }
   });
   var button = host.ownerDocument.createElement("button");
@@ -456,10 +476,19 @@ function createDocsViewerManagementWorkingSubjects(options, definition) {
   if (descriptorId !== definition.customisationId) {
     throw new Error("Working subject customisation identity did not match its registry entry.");
   }
-  exactCollection(options.collection);
+  var collection = exactCollection(options.collection);
   var assignSubjectAvailable = hasDocsViewerAssignableFieldGroup(options.descriptor, AUTHORING_SUBJECT_GROUP_ID);
   var collator = new Intl.Collator(undefined, { numeric: true, sensitivity: "base" });
-  return loadSubjectTargetTitles(options).then(function (targetLookup) {
+  return Promise.all([
+    loadSubjectTargetTitles(options),
+    collection.stage === "working" && collection.collection === "works"
+      ? loadWorkingCatalogueDocumentLinks({
+        stageConfigs: options.stageConfigs, document: options.content.ownerDocument, fetch: options.fetch
+      })
+      : null
+  ]).then(function (results) {
+    var targetLookup = results[0];
+    var catalogueLinks = results[1];
     var contribution = {
       id: definition.customisationId,
       notify: function (event) {
@@ -490,7 +519,8 @@ function createDocsViewerManagementWorkingSubjects(options, definition) {
         return renderWorkingSubjectRow(
           context,
           options,
-          targetLookup
+          targetLookup,
+          catalogueLinks
         );
       }
     };

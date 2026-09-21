@@ -1,4 +1,6 @@
 import { createDocsViewerToolbarIcon } from "../shared/docs-viewer-toolbar-icon.js";
+import { mountDocsViewerMediaLinks } from "../shared/docs-viewer-media-detail.js";
+import { loadWorkingCatalogueDocumentLinks } from "../management/docs-viewer-management-catalogue-document-links.js";
 
 const WORKS_SCHEMA = "catalogue_source_works_v2";
 const SERIES_SCHEMA = "catalogue_source_series_v2";
@@ -273,37 +275,18 @@ function fetchJson(url, message) {
 function loadCatalogueWorks(context) {
   return Promise.all([
     fetchJson(studioReadUrl(context, "catalogue_works"), "Failed to load Catalogue Works."),
-    fetchJson(studioReadUrl(context, "catalogue_series"), "Failed to load Catalogue Series.")
-  ]).then((inputs) => normalizeCatalogueWorksInputs(inputs[0], inputs[1]));
-}
-
-function publicCatalogueHref(context, kind, recordId) {
-  const base = cleanString(context && context.publicPreviewBase).replace(/\/+$/, "");
-  let preview;
-  try {
-    preview = new URL(base);
-  } catch (error) {
-    throw new Error("Local site preview is not configured.", { cause: error });
-  }
-  if (
-    !["http:", "https:"].includes(preview.protocol)
-    || !preview.hostname
-    || preview.username
-    || preview.password
-  ) {
-    throw new Error("Local site preview is not configured.");
-  }
-  const path = kind === "work" ? "/works/" : "/series/";
-  const key = kind === "work" ? "work" : "series";
-  const url = new URL(path, preview.origin);
-  url.searchParams.set(key, recordId);
-  return url.toString();
+    fetchJson(studioReadUrl(context, "catalogue_series"), "Failed to load Catalogue Series."),
+    loadWorkingCatalogueDocumentLinks({ stageConfigs: context.stageConfigs, document: context.content.ownerDocument })
+  ]).then((inputs) => ({
+    rows: normalizeCatalogueWorksInputs(inputs[0], inputs[1]),
+    documentLinks: inputs[2]
+  }));
 }
 
 function appendLink(cell, className, href, text) {
-  const link = cell.ownerDocument.createElement("a");
-  link.className = className;
-  link.href = href;
+  const link = cell.ownerDocument.createElement(href ? "a" : "span");
+  link.className = href ? className : className.replace("docsViewerReport__cellLink", "").trim();
+  if (href) link.href = href;
   link.textContent = text;
   cell.appendChild(link);
   return link;
@@ -324,7 +307,7 @@ function appendTextCell(rowNode, columnId, text, className) {
   return cell;
 }
 
-function appendSeriesCell(state, rowNode, row) {
+function appendSeriesCell(rowNode, row) {
   const cell = applyColumnPresentation(rowNode.ownerDocument.createElement("td"), "series");
   if (!row.series.length) {
     cell.className = "catalogueWorksReport__cellMeta";
@@ -335,13 +318,18 @@ function appendSeriesCell(state, rowNode, row) {
   const list = rowNode.ownerDocument.createElement("span");
   list.className = "catalogueWorksReport__seriesList";
   row.series.forEach((record) => {
-    const link = appendLink(
-      list,
-      "docsViewerReport__cellLink",
-      publicCatalogueHref(state.context, "series", record.seriesId),
-      record.title + " [" + record.seriesId + "]"
-    );
+    const marker = cell.ownerDocument.createElement("span");
+    marker.dataset.docsContentDetail = "media";
+    marker.dataset.docsMediaKind = "catalogue-series";
+    marker.dataset.docsMediaId = record.seriesId;
+    const link = cell.ownerDocument.createElement("button");
+    link.type = "button";
+    link.className = "docsViewer__mediaTextLink docsViewerReport__cellLink";
+    link.dataset.docsMediaOpen = "true";
+    link.textContent = record.title + " [" + record.seriesId + "]";
     link.dataset.seriesId = record.seriesId;
+    marker.appendChild(link);
+    list.appendChild(marker);
   });
   cell.appendChild(list);
   rowNode.appendChild(cell);
@@ -355,7 +343,7 @@ function appendRow(state, row) {
   appendLink(
     workCell,
     "docsViewerReport__cellLink",
-    publicCatalogueHref(state.context, "work", row.workId),
+    state.documentLinks.get(row.workId),
     row.workId
   );
   rowNode.appendChild(workCell);
@@ -366,12 +354,12 @@ function appendRow(state, row) {
   appendLink(
     titleCell,
     "docsViewerReport__cellLink docsViewerReport__title",
-    publicCatalogueHref(state.context, "work", row.workId),
+    state.documentLinks.get(row.workId),
     row.title
   );
   rowNode.appendChild(titleCell);
 
-  appendSeriesCell(state, rowNode, row);
+  appendSeriesCell(rowNode, row);
 
   appendTextCell(rowNode, "storage", storageCellText(row), "catalogueWorksReport__cellMeta");
   appendTextCell(rowNode, "medium_type", row.mediumType || "—", "catalogueWorksReport__cellMeta");
@@ -444,6 +432,12 @@ function renderCurrent(state) {
     state.statusNode.textContent = "0 of " + projection.totalCount + " Works";
   } else {
     projection.rows.forEach((row) => appendRow(state, row));
+    mountDocsViewerMediaLinks({
+      content: state.rowsNode,
+      documentTarget: { stage: state.context.viewerStage, collection: "", docId: state.context.doc.doc_id },
+      isCurrentDocument: () => state.context.content.contains(state.rowsNode),
+      openMediaTarget: state.context.openMediaTarget
+    });
     state.tableNode.hidden = false;
     state.emptyNode.hidden = true;
     state.emptyNode.textContent = "";
@@ -588,6 +582,7 @@ export function mountCatalogueWorksReport(context) {
   const state = Object.assign({
     busy: true,
     context,
+    documentLinks: new Map(),
     failed: false,
     presentationListeners: new Set(),
     projection: { columns: COPY_COLUMNS.map((column) => column.id), rows: [] },
@@ -602,8 +597,9 @@ export function mountCatalogueWorksReport(context) {
   state.emptyNode.hidden = true;
   state.statusNode.textContent = "Loading Catalogue Works...";
   updateControls(state);
-  return loadCatalogueWorks(context).then((rows) => {
-    state.sourceRows = rows;
+  return loadCatalogueWorks(context).then((data) => {
+    state.sourceRows = data.rows;
+    state.documentLinks = data.documentLinks;
     state.busy = false;
     renderCurrent(state);
     return {

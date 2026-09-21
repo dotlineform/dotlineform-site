@@ -220,6 +220,7 @@ export function createDocsViewerManagementIndexController(options = {}) {
     if (typeof callbacks.projectIndexViewControlState !== "function") return null;
     var visible = Boolean(
       routeSession.managementContext
+      && viewerStage() === "working"
       && activeIndexViewId() === "index-tree"
     );
     var state = {

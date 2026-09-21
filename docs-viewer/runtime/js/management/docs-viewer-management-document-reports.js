@@ -266,9 +266,13 @@ export function loadDocsViewerCollectionContribution(settings, parent, collectio
           : null,
         clientOptions: clientOptions,
         collection: { ...(parent.stage ? { stage: parent.stage } : {}), collection: collection },
+        content: settings.content,
+        documentTarget: { stage: parent.stage, collection: "", docId: parent.doc_id },
+        openMediaTarget: settings.openMediaTarget,
         openLocalTarget: openLocalTarget,
         publicPreviewBase: cleanString(settings.routeContext && settings.routeContext.publicPreviewBase),
         studioBaseUrl: cleanString(settings.routeContext && settings.routeContext.studioBaseUrl),
+        stageConfigs: stageConfigs(settings).slice(),
         readMetadata: mutationAvailable
           ? function (target) {
               return readManagedDocMetadata(target, clientOptions);

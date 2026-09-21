@@ -309,7 +309,9 @@ export function createDocsViewerReportPresentationAdapter(options) {
         if (released) return;
         released = true;
         var releaseSettings = releaseContext || {};
+        // Media View links retain their live invocation controls in the document.
         var restore = Boolean(releaseSettings.restoreDocumentContext)
+          || cleanString(releaseSettings.requestReason) === "content-detail-open"
           || cleanString(releaseSettings.requestReason) === "view-failure";
         try {
           if (extension && typeof extension.release === "function") extension.release();
