@@ -33,11 +33,16 @@ class CatalogueGalleries:
         }
 
 
+def validate_gallery_id(gallery_id: str) -> None:
+    """Require the canonical exact ID without padding or other aliases."""
+    if not isinstance(gallery_id, str) or not re.fullmatch(r"[0-9]{3,}", gallery_id) or f"{int(gallery_id):03d}" != gallery_id:
+        raise ValueError(f"Invalid exact Gallery ID: {gallery_id!r}")
+
+
 def validate_galleries(data: CatalogueGalleries, works: Mapping[str, Any]) -> None:
     """Reject ambiguous identities, copied metadata and dangling membership."""
     for gid, gallery in data.galleries.items():
-        if not isinstance(gid, str) or not re.fullmatch(r"[0-9]{3,}", gid) or f"{int(gid):03d}" != gid:
-            raise ValueError(f"Invalid exact Gallery ID: {gid!r}")
+        validate_gallery_id(gid)
         if not isinstance(gallery, dict) or set(gallery) != {"gallery_id", "title"}:
             raise ValueError(f"Gallery {gid} must contain only gallery_id and title")
         if gallery["gallery_id"] != gid:

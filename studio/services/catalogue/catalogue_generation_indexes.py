@@ -1,9 +1,9 @@
-"""Pure index builders for generated catalogue work and series artifacts."""
+"""Pure index and member-row builders for generated Catalogue artifacts."""
 
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Any, Dict, List, Mapping
+from typing import Any, Dict, List, Mapping, Sequence
 
 from catalogue.catalogue_generation_common import (
     coerce_int,
@@ -94,10 +94,16 @@ def build_series_member_work_records(
     context: SeriesWorkIndexContext,
     series_id: str,
 ) -> List[Dict[str, Any]]:
-    ordered_work_ids = ordered_work_ids_by_series(context).get(series_id, [])
+    return build_member_work_records(context=context, work_ids=context.work_ids_by_series_all.get(series_id, []))
+
+
+def build_member_work_records(
+    *, context: SeriesWorkIndexContext, work_ids: Sequence[str],
+) -> List[Dict[str, Any]]:
+    """Share the compact, ascending Work-ID member projection across groupings."""
     member_works: List[Dict[str, Any]] = []
-    for work_id in ordered_work_ids:
-        work_meta = context.work_meta_by_id.get(work_id, {})
+    for work_id in sorted(work_ids):
+        work_meta = context.work_meta_by_id[work_id]
         year = coerce_int(work_meta.get("year"))
         year_display = coerce_string(work_meta.get("year_display"))
         if year_display is None:

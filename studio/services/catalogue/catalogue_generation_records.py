@@ -14,8 +14,9 @@ from catalogue.catalogue_generation_common import (
 
 
 
-WORK_RECORD_SCHEMA_VERSION = "work_record_v7"
+WORK_RECORD_SCHEMA_VERSION = "work_record_v8"
 SERIES_RECORD_SCHEMA_VERSION = "series_record_v5"
+GALLERY_RECORD_SCHEMA_VERSION = "gallery_record_v1"
 
 
 # Define the Works source-record projection once so adding a new field is a one-line change.
@@ -101,6 +102,8 @@ def build_work_json_payload(
     """Finalize one complete generated Work by-ID payload."""
 
     public_record = dict(work_record)
+    if not isinstance(public_record.get("galleries"), list):
+        raise ValueError("work.galleries must be an array")
     raw_documents = public_record.get("documents", [])
     if not isinstance(raw_documents, list):
         raise ValueError("work.documents must be an array")
@@ -153,3 +156,29 @@ def build_series_json_payload(
             "member_works": public_member_works,
         }
     )
+
+
+def build_gallery_json_payload(
+    *,
+    gallery_id: str,
+    gallery_record: Mapping[str, Any],
+    member_works: Sequence[Mapping[str, Any]],
+    generated_at_utc: str,
+) -> Dict[str, Any]:
+    """Project one independent Gallery and its compact member rows."""
+    public_record = dict(gallery_record)
+    if public_record.get("gallery_id") != gallery_id:
+        raise ValueError(f"gallery.gallery_id must match exact payload target {gallery_id}")
+    public_member_works = [compact_json_object(dict(work)) for work in member_works]
+    version_input = {"schema": GALLERY_RECORD_SCHEMA_VERSION, "gallery": public_record, "member_works": public_member_works}
+    return {
+        "header": {
+            "schema": GALLERY_RECORD_SCHEMA_VERSION,
+            "version": compute_payload_version(version_input),
+            "generated_at_utc": generated_at_utc,
+            "gallery_id": gallery_id,
+            "count": len(public_member_works),
+        },
+        "gallery": public_record,
+        "member_works": public_member_works,
+    }
