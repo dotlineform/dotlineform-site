@@ -1,24 +1,14 @@
 export const AUTHORING_SUBJECT_FIELDS = Object.freeze([
   "folder_path",
   "work_id",
-  "series_id",
-  "detail_uid"
+  "series_id"
 ]);
 
 const SUBJECT_FIELD_BY_KIND = Object.freeze({
   folder: "folder_path",
   work: "work_id",
-  series: "series_id",
-  detail: "detail_uid"
+  series: "series_id"
 });
-
-/** Decode the exact Studio composite identifier without a record lookup. */
-export function parseDocsViewerDetailUid(value) {
-  var match = typeof value === "string" && value.length === 9
-    ? /^([0-9]{5})-([0-9]{3})$/.exec(value)
-    : null;
-  return match ? Object.freeze({ workId: match[1], detailId: match[2] }) : null;
-}
 
 function cleanString(value) {
   return String(value == null ? "" : value).trim();
@@ -67,7 +57,6 @@ export function normalizeDocsViewerAuthoringSubject(value, options = {}) {
     && Boolean(validField)
     && Boolean(key)
     && key === key.trim()
-    && (kind !== "detail" || Boolean(parseDocsViewerDetailUid(key)))
     && fields.length === 1
     && fields[0] === validField
     && !hasEvidence

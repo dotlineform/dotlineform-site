@@ -14,32 +14,19 @@ from docs_local_links import normalize_decoded_relative_target
 FOLDER_PATH_FIELD = "folder_path"
 WORK_ID_FIELD = "work_id"
 SERIES_ID_FIELD = "series_id"
-DETAIL_UID_FIELD = "detail_uid"
 AUTHORING_SUBJECT_FIELDS = (
     FOLDER_PATH_FIELD,
     WORK_ID_FIELD,
     SERIES_ID_FIELD,
-    DETAIL_UID_FIELD,
 )
 SUBJECT_KIND_BY_FIELD = {
     FOLDER_PATH_FIELD: "folder",
     WORK_ID_FIELD: "work",
     SERIES_ID_FIELD: "series",
-    DETAIL_UID_FIELD: "detail",
 }
 SUBJECT_ASSOCIATIONS_SCHEMA_VERSION = "docs_subject_associations_v2"
 WORK_ID_PATTERN = re.compile(r"\A\d{5}\Z")
 SERIES_ID_PATTERN = re.compile(r"\A[a-z0-9][a-z0-9-]*\Z")
-DETAIL_UID_PATTERN = re.compile(r"\A([0-9]{5})-([0-9]{3})\Z")
-
-
-def parse_detail_uid(value: str) -> tuple[str, str]:
-    """Decode Studio's exact composite identity without a Catalogue lookup."""
-
-    match = DETAIL_UID_PATTERN.fullmatch(value)
-    if match is None:
-        raise ValueError("Detail UID must be an exact five-digit Work ID and three-digit Detail ID")
-    return match.group(1), match.group(2)
 
 
 def subject_key_is_canonical(kind: str, key: str) -> bool:
@@ -48,8 +35,6 @@ def subject_key_is_canonical(kind: str, key: str) -> bool:
         return WORK_ID_PATTERN.fullmatch(key) is not None
     if kind == "series":
         return SERIES_ID_PATTERN.fullmatch(key) is not None
-    if kind == "detail":
-        return DETAIL_UID_PATTERN.fullmatch(key) is not None
     return False
 
 
@@ -121,7 +106,7 @@ def project_reader_subject(front_matter: Mapping[str, Any]) -> dict[str, str] | 
     or authoring diagnostics. No Catalogue lookup or identity inference occurs.
     """
     subject = normalize_authoring_subject(front_matter, folder_supported=False)
-    if subject["state"] != "valid" or subject["kind"] not in {"work", "series", "detail"}:
+    if subject["state"] != "valid" or subject["kind"] not in {"work", "series"}:
         return None
     return {"kind": subject["kind"], "key": subject["key"]}
 
@@ -219,14 +204,12 @@ def project_subject_associations(
 
 __all__ = [
     "AUTHORING_SUBJECT_FIELDS",
-    "DETAIL_UID_FIELD",
     "FOLDER_PATH_FIELD",
     "SERIES_ID_FIELD",
     "SUBJECT_ASSOCIATIONS_SCHEMA_VERSION",
     "WORK_ID_FIELD",
     "subject_key_is_canonical",
     "normalize_authoring_subject",
-    "parse_detail_uid",
     "project_reader_subject",
     "project_subject_associations",
     "subject_projection_generation",

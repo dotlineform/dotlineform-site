@@ -2,16 +2,11 @@ import { loadSemanticTokenRegistry } from "./semantic-token-registry.js";
 import { normalizeSemanticTokenTargets } from "./semantic-token-targets.js";
 import { normalizeDocsViewerMediaPresentation } from "../../shared/docs-viewer-media-presentation.js";
 import { catalogueWorkMediaPresentation } from "../../shared/docs-viewer-catalogue-media.js";
-import { parseDocsViewerDetailUid } from "../docs-viewer-management-document-subject.js";
 
 /** Map the source document's Catalogue subject to the existing picker identity. */
 export function catalogueDocumentSubjectTarget(subject) {
-  if (!subject) return null;
-  if (subject.kind === "detail") {
-    var detail = parseDocsViewerDetailUid(subject.key);
-    return { targetType: "work", targetId: detail.workId, detailId: detail.detailId };
-  }
-  return { targetType: subject.kind, targetId: subject.key, detailId: "" };
+  if (!subject || !["work", "series"].includes(subject.kind)) return null;
+  return { targetType: subject.kind, targetId: subject.key };
 }
 
 /** Preserve authored labels while allowing an untouched default to follow selection. */
@@ -42,16 +37,16 @@ export async function loadCatalogueMediaSupport(adapter, options = {}) {
   return { registry: registry, targets: targets };
 }
 
-/** Validate the exact generated Work or Detail before insertion or token inspection. */
-export async function readCatalogueMediaPresentation(adapter, workId, detailId = "") {
+/** Validate the exact generated Work image before insertion or token inspection. */
+export async function readCatalogueMediaPresentation(adapter, workId) {
   var [response, policy] = await Promise.all([adapter.readCatalogueWork(workId), adapter.readCatalogueMediaConfig()]);
-  return normalizeDocsViewerMediaPresentation(catalogueWorkMediaPresentation(response, workId, detailId, policy));
+  return normalizeDocsViewerMediaPresentation(catalogueWorkMediaPresentation(response, workId, policy));
 }
 
 /** Resolve a token target through its existing provider, with no document or image fallback. */
-export async function readCatalogueTokenPresentation(adapter, target, detailId = "") {
-  if (target.targetType === "work") return readCatalogueMediaPresentation(adapter, target.targetId, detailId);
-  if (!["series", "gallery"].includes(target.targetType) || detailId) throw new Error("Unsupported Catalogue target.");
+export async function readCatalogueTokenPresentation(adapter, target) {
+  if (target.targetType === "work") return readCatalogueMediaPresentation(adapter, target.targetId);
+  if (!["series", "gallery"].includes(target.targetType)) throw new Error("Unsupported Catalogue target.");
   var payload = target.targetType === "gallery"
     ? await adapter.readCatalogueGalleryPresentation(target.targetId) : await adapter.readCatalogueSeriesPresentation(target.targetId);
   var presentation = normalizeDocsViewerMediaPresentation(payload);

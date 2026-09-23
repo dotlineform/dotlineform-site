@@ -27,21 +27,22 @@ export function validateCatalogueMediaPolicy(policy) {
     throw new Error("Catalogue image version policy is unavailable.");
   }
   mediaBase(policy.primary.base_urls.works);
-  mediaBase(policy.primary.base_urls.work_details);
   return policy;
 }
 
 /** Resolve unchanged filenames; descriptors use actual widths because the producer never upscales. */
 export function catalogueImageCandidates(target, record, policy) {
   validateCatalogueMediaPolicy(policy);
+  if (!target || target.kind !== "catalogue-work" || typeof target.id !== "string" || !/^\d{5}$/.test(target.id)) {
+    throw new Error("An exact Catalogue Work image target is required.");
+  }
   if (!Number.isInteger(record.media_version) || record.media_version <= 0) {
     throw new Error("Catalogue image media version is unavailable.");
   }
   var primary = policy.primary;
-  var family = target.kind === "catalogue-work-detail" ? "work_details" : "works";
   var widths = Array.from(new Set(primary.widths)).sort(function (a, b) { return a - b; });
   function url(width) {
-    return primary.base_urls[family] + target.id + "-" + primary.suffix + "-" + width + "." + policy.format
+    return primary.base_urls.works + target.id + "-" + primary.suffix + "-" + width + "." + policy.format
       + "?" + primary.version_query_parameter + "=" + record.media_version;
   }
   var candidates = new Map();

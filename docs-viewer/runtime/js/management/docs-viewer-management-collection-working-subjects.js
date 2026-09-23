@@ -140,7 +140,7 @@ function previewSubjectHref(options, subject) {
 }
 
 function subjectAccessibleLabel(subject) {
-  var kindLabel = ({ folder: "Folder", work: "Work", series: "Series", detail: "Detail" })[subject.kind];
+  var kindLabel = ({ folder: "Folder", work: "Work", series: "Series" })[subject.kind];
   if (!kindLabel) return "";
   if (subject.targetTitle) {
     return kindLabel + " subject " + subject.targetTitle + ", " + subject.key;
@@ -418,7 +418,7 @@ function subjectInfoField(subject) {
       id: AUTHORING_SUBJECT_GROUP_ID,
       label: "Subject",
       state: subject.kind,
-      value: ({ folder: "Folder", work: "Work", series: "Series", detail: "Detail" })[subject.kind]
+      value: ({ folder: "Folder", work: "Work", series: "Series" })[subject.kind]
     };
   }
   if (subject.state === "malformed") {

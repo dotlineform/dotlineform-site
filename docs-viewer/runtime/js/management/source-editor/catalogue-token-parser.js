@@ -1,6 +1,6 @@
 var LEXICAL_KEY_PATTERN = /^[a-z][a-z0-9-]*$/;
 var LEXICAL_ID_PATTERN = /^[A-Za-z0-9][A-Za-z0-9._-]*$/;
-var IMAGE_FIELDS = new Set(["alt", "detail_id", "caption", "summary", "placement", "fill_width"]);
+var IMAGE_FIELDS = new Set(["alt", "caption", "summary", "placement", "fill_width"]);
 var IMAGE_PLACEMENTS = new Set(["full", "left", "right"]);
 var MEDIA_TARGET_PATTERNS = { work: /^[0-9]{5}$/, series: /^[0-9]{3}$/, gallery: /^(?:[0-9]{3}|[1-9][0-9]{3,})$/ };
 
@@ -34,15 +34,6 @@ function decodeImageValue(value) {
   } catch (_error) {
     return null;
   }
-}
-
-export function normalizeCatalogueDetailId(value) {
-  var raw = cleanString(value);
-  if (!raw) return "";
-  if (!/^\d+$/.test(raw)) return null;
-  var significant = raw.replace(/^0+/, "");
-  if (!significant) return null;
-  return significant.padStart(3, "0");
 }
 
 function escapedTitle(value) {
@@ -102,10 +93,9 @@ export function serializeCatalogueMediaToken(options = {}) {
     var canonicalPattern = new RegExp(definition.idPolicy.canonicalPattern);
     if (!canonicalPattern.test(targetId)) return "";
   }
-  var detailId = normalizeCatalogueDetailId(options.detailId);
   var targetPattern = Object.prototype.hasOwnProperty.call(MEDIA_TARGET_PATTERNS, targetType) ? MEDIA_TARGET_PATTERNS[targetType] : null;
-  if (detailId === null || !targetPattern || !targetPattern.test(targetId) || (targetType !== "work" && detailId)) return "";
-  return "[[catalogue:media:" + targetType + ":" + targetId + (detailId ? ":" + detailId : "") + "|" + escapedTitle(title) + "]]";
+  if (!targetPattern || !targetPattern.test(targetId)) return "";
+  return "[[catalogue:media:" + targetType + ":" + targetId + "|" + escapedTitle(title) + "]]";
 }
 
 export function serializeCatalogueImageToken(options = {}) {
@@ -127,9 +117,6 @@ export function serializeCatalogueImageToken(options = {}) {
   var summary = summaryText(options.summary);
   var placement = cleanString(options.placement).toLowerCase();
   var fields = [["alt", alt]];
-  var detailId = normalizeCatalogueDetailId(options.detailId);
-  if (detailId === null || (detailId && targetType !== "work")) return "";
-  if (detailId) fields.push(["detail_id", detailId]);
   if (caption) {
     if (!IMAGE_PLACEMENTS.has(placement) || typeof options.fillWidth !== "boolean") return "";
     fields.push(["caption", caption]);
@@ -172,7 +159,6 @@ function parseCatalogueImageFields(rawQuery, options) {
     targetType: options.targetType,
     targetId: options.targetId,
     alt: fields.alt,
-    detailId: fields.detail_id || "",
     caption: fields.caption || "",
     summary: fields.summary || "",
     placement: fields.placement || "",
@@ -181,7 +167,6 @@ function parseCatalogueImageFields(rawQuery, options) {
   if (!serialized || serialized.slice(serialized.indexOf("|") + 1, -2) !== rawQuery) return null;
   return {
     alt: plainText(fields.alt),
-    detailId: normalizeCatalogueDetailId(fields.detail_id),
     caption: plainText(fields.caption),
     summary: summaryText(fields.summary),
     placement: cleanString(fields.placement),
@@ -197,13 +182,11 @@ export function parseCatalogueToken(raw, options = {}) {
   if (separator < 0) return null;
   var identity = body.slice(0, separator).split(":");
   var imagePresentation = identity.length === 4 && identity[1] === "image";
-  var mediaPresentation = [4, 5].includes(identity.length) && identity[1] === "media";
+  var mediaPresentation = identity.length === 4 && identity[1] === "media";
   if (!imagePresentation && !mediaPresentation) return null;
   var family = identity[0];
   var targetType = identity[2];
   var targetId = identity[3];
-  var mediaDetailId = identity.length === 5 ? identity[4] : "";
-  if (identity.length === 5 && (!mediaDetailId || normalizeCatalogueDetailId(mediaDetailId) !== mediaDetailId)) return null;
   var rawFields = body.slice(separator + 1);
   var imageFields = imagePresentation
     ? parseCatalogueImageFields(rawFields, {
@@ -215,7 +198,7 @@ export function parseCatalogueToken(raw, options = {}) {
   var title = imagePresentation
     ? imageFields && (imageFields.caption || imageFields.alt)
     : unescapeTitle(rawFields);
-  if (mediaPresentation && !serializeCatalogueMediaToken({ targetType: targetType, targetId: targetId, detailId: mediaDetailId, title: title })) return null;
+  if (mediaPresentation && !serializeCatalogueMediaToken({ targetType: targetType, targetId: targetId, title: title })) return null;
   if (
     family !== "catalogue"
     || !LEXICAL_KEY_PATTERN.test(family)
@@ -245,8 +228,7 @@ export function parseCatalogueToken(raw, options = {}) {
     caption: imageFields ? imageFields.caption : "",
     summary: imageFields ? imageFields.summary : "",
     placement: imageFields ? imageFields.placement : "",
-    fillWidth: imageFields ? imageFields.fillWidth : null,
-    detailId: imageFields ? imageFields.detailId : mediaDetailId
+    fillWidth: imageFields ? imageFields.fillWidth : null
   };
 }
 

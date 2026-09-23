@@ -103,33 +103,6 @@ def collect_work_sources(records: Any) -> list[WorkSource]:
     return sources
 
 
-def collect_detail_directories(records: Any) -> set[tuple[str, str]]:
-    directories: set[tuple[str, str]] = set()
-    for section in records.work_detail_sections.values():
-        work_id = normalize_text(section.get("work_id"))
-        details_subfolder = normalize_text(section.get("details_subfolder"))
-        work = records.works.get(work_id)
-        folder = normalize_text(work.get("project_folder")) if isinstance(work, dict) else ""
-        if not folder or not details_subfolder:
-            continue
-        parts = [*_canonical_parts(folder, f"work {work_id} project_folder", single=True)]
-        parts.extend(_canonical_parts(details_subfolder, f"work {work_id} details_subfolder"))
-        media_source_id = resolve_work_media_source_id(
-            PIPELINE_CONFIG,
-            work.get("media_source_id") if isinstance(work, dict) else None,
-        )
-        directories.add((media_source_id, PurePosixPath(*parts).as_posix()))
-    return directories
-
-
-def _is_detail_directory(source_id: str, directory: str, detail_directories: set[tuple[str, str]]) -> bool:
-    return any(
-        source_id == detail_source_id
-        and (directory == detail_directory or directory.startswith(f"{detail_directory}/"))
-        for detail_source_id, detail_directory in detail_directories
-    )
-
-
 def _source_roots(paths: UncatalogedFilesPaths, sources: list[WorkSource]) -> dict[str, WorkMediaSourceRoot]:
     roots: dict[str, WorkMediaSourceRoot] = {}
     environ = {"DOTLINEFORM_PROJECTS_BASE_DIR": str(paths.projects_base_dir)}
@@ -172,7 +145,6 @@ def _catalogued_file_identities(
 
 def _uncataloged_rows(
     sources: list[WorkSource],
-    detail_directories: set[tuple[str, str]],
     source_roots: Mapping[str, WorkMediaSourceRoot],
 ) -> list[dict[str, str]]:
     catalogued_identities = _catalogued_file_identities(sources, source_roots)
@@ -182,8 +154,6 @@ def _uncataloged_rows(
     )
     rows: list[dict[str, str]] = []
     for source_id, directory in represented_directories:
-        if _is_detail_directory(source_id, directory, detail_directories):
-            continue
         source_root = source_roots[source_id]
         try:
             resolved_directory = resolve_work_media_path(source_root, directory, require_exists=True)
@@ -243,11 +213,7 @@ class UncatalogedFilesProducer:
         records = records_from_json_source(self.paths.catalogue_source_dir)
         sources = collect_work_sources(records)
         source_roots = _source_roots(self.paths, sources)
-        rows = _uncataloged_rows(
-            sources,
-            collect_detail_directories(records),
-            source_roots,
-        )
+        rows = _uncataloged_rows(sources, source_roots)
         return {
             "report": {
                 "schema_version": REPORT_SCHEMA_VERSION,

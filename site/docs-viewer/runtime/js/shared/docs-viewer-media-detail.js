@@ -85,8 +85,7 @@ function mountCatalogueReferences(context) {
   context.content.querySelectorAll(MEDIA_DETAIL_SELECTOR).forEach(function (marker) {
     var kind = marker.getAttribute("data-docs-media-kind");
     var id = marker.getAttribute("data-docs-media-id");
-    var target = { kind: kind, id: id, ...(kind === "catalogue-work-detail"
-      ? { workId: marker.getAttribute("data-docs-media-work-id") } : {}) };
+    var target = { kind: kind, id: id };
     var control = marker.querySelector(MEDIA_OPEN_SELECTOR);
     if (!control || control.tagName !== "BUTTON" || control.getAttribute("type") !== "button") return;
     try {
@@ -418,7 +417,7 @@ export function createDocsViewerMediaDetailAdapter() {
     return payload;
   }
 
-  /** Resolve one exact Work/Detail, Series or Gallery; group entry reads no Works. */
+  /** Resolve one exact Work, Series or Gallery; group entry reads no Works. */
   async function loadTarget(context) {
     context = Object.assign({}, context, {
       documentTarget: Object.freeze(Object.assign({}, context.documentTarget)),
@@ -434,8 +433,7 @@ export function createDocsViewerMediaDetailAdapter() {
     var workId = catalogueMediaTargetWorkId(context.mediaTarget);
     var [payload, policy] = await readWork(state, workId);
     if (currentTargetState(context) !== state) return null;
-    return catalogueWorkMediaPresentation(payload, workId,
-      context.mediaTarget.kind === "catalogue-work-detail" ? context.mediaTarget.id.slice(6) : "", policy);
+    return catalogueWorkMediaPresentation(payload, workId, policy);
   }
 
   /** Resolve current Catalogue data only for the latest request in this document mount. */
@@ -731,7 +729,7 @@ export function createDocsViewerMediaDetailAdapter() {
         } else {
           var [payload, policy] = await readWork(state, member.target.id);
           if (!isCurrent() || request !== selectionRequest) return;
-          var work = normalizeDocsViewerMediaPresentation(catalogueWorkMediaPresentation(payload, member.target.id, "", policy));
+          var work = normalizeDocsViewerMediaPresentation(catalogueWorkMediaPresentation(payload, member.target.id, policy));
           renderPresentation(work);
         }
         message("");

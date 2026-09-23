@@ -224,7 +224,6 @@ def target_row(
     *,
     series_titles: dict[str, str],
     image_src: str = "",
-    has_details: bool = False,
 ) -> dict[str, Any] | None:
     id_field = str(source["id_field"])
     normalized_id = normalize_semantic_token_id(str(record.get(id_field) or ""), target_type.id_policy)
@@ -240,8 +239,6 @@ def target_row(
         "href": href,
         "meta": target_meta(target_type.key, record, series_titles=series_titles),
     }
-    if has_details:
-        row["has_details"] = True
     if image_src:
         row["image"] = {"src": image_src}
     return row
@@ -324,14 +321,6 @@ class SemanticTargetLookupBuilder:
                         source,
                         series_titles=series_titles,
                         image_src=image_src,
-                        has_details=(
-                            target_type.key == "work"
-                            and (
-                                source_root
-                                / "work_details"
-                                / f"{normalized_id}.json"
-                            ).is_file()
-                        ),
                     )
                     if row is not None:
                         targets.append(row)

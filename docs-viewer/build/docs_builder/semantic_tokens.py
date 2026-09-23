@@ -38,7 +38,6 @@ class SemanticTokenOccurrence:
     summary: str = ""
     placement: str = ""
     fill_width: bool | None = None
-    detail_id: str = ""
 
     @property
     def source_range(self) -> dict[str, int]:
@@ -90,20 +89,6 @@ def decode_catalogue_image_value(value: str) -> str | None:
     return decoded if encode_catalogue_image_value(decoded) == value else None
 
 
-def normalize_catalogue_detail_id(value: Any) -> str | None:
-    if value is None or value == "":
-        return ""
-    if isinstance(value, bool):
-        return None
-    raw = str(value).strip()
-    if not re.fullmatch(r"\d+", raw):
-        return None
-    number = int(raw)
-    if number < 1:
-        return None
-    return str(number).zfill(3)
-
-
 def serialize_catalogue_image_token(
     *,
     target_type: str,
@@ -113,7 +98,6 @@ def serialize_catalogue_image_token(
     summary: Any = "",
     placement: Any = "",
     fill_width: Any = None,
-    detail_id: Any = "",
 ) -> str:
     if (
         target_type != "work"
@@ -123,13 +107,8 @@ def serialize_catalogue_image_token(
     alt_text = normalize_plain_text(alt, required=True)
     if not alt_text:
         return ""
-    detail_id_value = normalize_catalogue_detail_id(detail_id)
-    if detail_id_value is None or (detail_id_value and target_type != "work"):
-        return ""
     caption_text = normalize_plain_text(caption, required=False)
     fields: list[tuple[str, str]] = [("alt", alt_text)]
-    if detail_id_value:
-        fields.append(("detail_id", detail_id_value))
     if caption_text:
         try:
             caption_text, summary_text, placement_value, fill_width_value = (
@@ -169,7 +148,7 @@ def parse_catalogue_image_fields(raw_query: str, *, target_type: str) -> dict[st
         key, separator, encoded_value = pair.partition("=")
         if (
             not separator
-            or key not in {"alt", "detail_id", "caption", "summary", "placement", "fill_width"}
+            or key not in {"alt", "caption", "summary", "placement", "fill_width"}
             or key in fields
             or not encoded_value
         ):
@@ -191,7 +170,6 @@ def parse_catalogue_image_fields(raw_query: str, *, target_type: str) -> dict[st
         target_type=target_type,
         target_id="00000",
         alt=alt,
-        detail_id=fields.get("detail_id", ""),
         caption=caption,
         summary=fields.get("summary", ""),
         placement=fields.get("placement", ""),
@@ -208,7 +186,6 @@ def parse_catalogue_image_fields(raw_query: str, *, target_type: str) -> dict[st
         "summary": normalize_summary_text(fields.get("summary", "")),
         "placement": normalize_plain_text(fields.get("placement", ""), required=False),
         "fill_width": fill_width,
-        "detail_id": normalize_catalogue_detail_id(fields.get("detail_id", "")) or "",
     }
 
 
@@ -241,12 +218,11 @@ def parse_semantic_token(
         and len(parts) == 4
         and parts[1] == "image"
     )
-    is_media = family == "catalogue" and len(parts) in {4, 5} and parts[1] == "media"
+    is_media = family == "catalogue" and len(parts) == 4 and parts[1] == "media"
     if not separator or (not is_image and not is_media):
         return None
     target_type = parts[2]
     target_id = parts[3]
-    media_detail_id = parts[4] if len(parts) == 5 else ""
     if is_image and (target_type != "work" or not re.fullmatch(r"[0-9]{5}", target_id)):
         return None
     if is_media:
@@ -254,11 +230,9 @@ def parse_semantic_token(
             if not re.fullmatch(r"[0-9]{5}", target_id):
                 return None
         elif target_type == "gallery":
-            if not re.fullmatch(r"(?:[0-9]{3}|[1-9][0-9]{3,})", target_id) or len(parts) == 5:
+            if not re.fullmatch(r"(?:[0-9]{3}|[1-9][0-9]{3,})", target_id):
                 return None
-        elif target_type != "series" or not re.fullmatch(r"[0-9]{3}", target_id) or len(parts) == 5:
-            return None
-        if len(parts) == 5 and (not media_detail_id or normalize_catalogue_detail_id(media_detail_id) != media_detail_id):
+        elif target_type != "series" or not re.fullmatch(r"[0-9]{3}", target_id):
             return None
     if (
         not LEXICAL_KEY_PATTERN.fullmatch(family)
@@ -298,7 +272,6 @@ def parse_semantic_token(
         summary=image_fields["summary"] if image_fields else "",
         placement=image_fields["placement"] if image_fields else "",
         fill_width=image_fields["fill_width"] if image_fields else None,
-        detail_id=image_fields["detail_id"] if image_fields else media_detail_id,
     )
 
 
@@ -480,14 +453,12 @@ def replace_catalogue_tokens(
 
 def render_catalogue_media_reference(token: SemanticTokenOccurrence) -> str:
     """Retain only authored text and exact Catalogue identity for runtime resolution."""
-    kind = "catalogue-work-detail" if token.detail_id else f"catalogue-{token.target_type}"
-    identity = f"{token.target_id}-{token.detail_id}" if token.detail_id else token.target_id
+    kind = f"catalogue-{token.target_type}"
+    identity = token.target_id
     attrs = (
         f'data-docs-content-detail="media" data-docs-media-kind="{kind}" '
         f'data-docs-media-id="{html.escape(identity, quote=True)}"'
     )
-    if token.detail_id:
-        attrs += f' data-docs-media-work-id="{html.escape(token.target_id, quote=True)}"'
     if token.presentation == "media":
         return (
             f'<span {attrs}><button type="button" class="docsViewer__mediaTextLink" data-docs-media-open>'
@@ -537,7 +508,7 @@ class SemanticTokensMixin:
                 "source_stage": self.config.stage, "source_doc_id": doc.doc_id,
                 "source_range": token.source_range, "raw": token.raw, "title": token.title,
                 "family": token.family, "target_type": token.target_type, "target_id": token.target_id,
-                "detail_id": token.detail_id, "href": "",
+                "href": "",
             })
             fragment = render_catalogue_media_reference(token)
             marker_id = uuid4().hex

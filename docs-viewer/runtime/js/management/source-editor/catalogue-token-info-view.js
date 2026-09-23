@@ -99,7 +99,6 @@ function renderToken(context, state, active) {
   appendReadOnlyRow(list, "Family", "Catalogue");
   appendReadOnlyRow(list, "Target type", token.targetType);
   appendReadOnlyRow(list, "Target ID", token.targetId);
-  if (token.detailId) appendReadOnlyRow(list, "Detail UID", token.targetId + "-" + token.detailId);
   appendReadOnlyRow(list, "Catalogue title", target ? target.title : "Target not resolved");
   appendReadOnlyRow(
     list,
@@ -108,25 +107,6 @@ function renderToken(context, state, active) {
       : token.targetType === "series" ? "Series gallery in Media View" : "No resolved destination"),
     destinationHref
   );
-
-  var detailField = null;
-  var detailInput = null;
-  if (token.presentation === "image") {
-    detailField = document.createElement("label");
-    detailField.className = "docsViewer__field";
-    var detailLabel = document.createElement("span");
-    detailLabel.className = "docsViewer__fieldLabel";
-    detailLabel.textContent = "Work Detail ID";
-    detailInput = document.createElement("input");
-    detailInput.className = "docsViewer__fieldInput";
-    detailInput.type = "text";
-    detailInput.dataset.role = "catalogue-work-detail-id";
-    detailInput.inputMode = "numeric";
-    detailInput.pattern = "[0-9]*";
-    detailInput.value = values.detailId;
-    detailInput.disabled = token.targetType !== "work";
-    detailField.append(detailLabel, detailInput);
-  }
 
   var occurrenceField = document.createElement("label");
   occurrenceField.className = "docsViewer__field";
@@ -179,8 +159,7 @@ function renderToken(context, state, active) {
       summary: imagePresentation.querySelector('[data-role="staged-media-summary"]').value
     }) : {};
     state.adapter.updateTokenDraft(draft, Object.assign({}, values, {
-      text: occurrenceInput.value,
-      detailId: detailInput ? detailInput.value : token.detailId
+      text: occurrenceInput.value
     }, presentation));
   }
   fields.addEventListener("input", captureInput);
@@ -202,7 +181,6 @@ function renderToken(context, state, active) {
 
   actions.append(removeButton);
   article.append(heading, list);
-  if (detailField) fields.appendChild(detailField);
   fields.appendChild(occurrenceField);
   if (imagePresentation) fields.appendChild(imagePresentation);
   fields.appendChild(actions);
@@ -223,14 +201,14 @@ function render(context, state) {
     emptyMessage(context.mount, "Place the caret inside a Catalogue token to inspect it.");
     return;
   }
-  var key = targetKey(active.token) + ":" + active.token.detailId;
+  var key = targetKey(active.token);
   if (state.targetKey !== key) {
     state.renderKey = "";
     emptyMessage(context.mount, "Catalogue target info is loading.");
     if (state.loadingKey === key) return;
     state.loadingKey = key;
     var adapter = state.adapter;
-    var load = readCatalogueTokenPresentation(adapter, active.token, active.token.detailId).then(function (presentation) {
+    var load = readCatalogueTokenPresentation(adapter, active.token).then(function (presentation) {
           return [{ family: "catalogue", targetType: active.token.targetType, targetId: active.token.targetId,
             title: presentation.label, href: presentation.newTabTarget }];
         });

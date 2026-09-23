@@ -169,9 +169,9 @@ def semantic_token_broken_entries(
                     elif token.target_type == "gallery":
                         read_catalogue_gallery(repo_root, token.target_id)
                     else:
-                        catalogue_media_record(read_catalogue_work(repo_root, token.target_id), token.target_id, token.detail_id)
+                        catalogue_media_record(read_catalogue_work(repo_root, token.target_id), token.target_id)
                 except ValueError:
-                    reason = f"missing_{token.target_type}" if token.target_type in {"series", "gallery"} else "missing_detail_image" if token.detail_id else "missing_media"
+                    reason = f"missing_{token.target_type}" if token.target_type in {"series", "gallery"} else "missing_media"
             if not reason:
                 continue
             entries.append(
@@ -185,7 +185,6 @@ def semantic_token_broken_entries(
                     "family": token.family,
                     "target_type": token.target_type,
                     "target_id": token.target_id,
-                    "detail_id": token.detail_id,
                     "reason": reason,
                     "link_text": token.title,
                     "link_url": "",

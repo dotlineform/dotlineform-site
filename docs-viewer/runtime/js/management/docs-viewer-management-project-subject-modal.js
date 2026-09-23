@@ -8,8 +8,7 @@ import {
 } from "./docs-viewer-management-document-target.js";
 import {
   AUTHORING_SUBJECT_FIELDS,
-  normalizeDocsViewerAuthoringSubject,
-  parseDocsViewerDetailUid
+  normalizeDocsViewerAuthoringSubject
 } from "./docs-viewer-management-document-subject.js";
 import {
   collectCatalogueTargetMatches,
@@ -143,7 +142,6 @@ function modalBody(subject, folderSupported) {
       (folderSupported ? radio("folder", "Folder", selected) : "") +
       radio("work", "Work", selected) +
       radio("series", "Series", selected) +
-      radio("detail", "Detail", selected) +
     "</fieldset>" +
     '<label class="docsViewer__field" data-project-subject-folder' +
       (selected === "folder" ? "" : " hidden") + ">" +
@@ -151,12 +149,6 @@ function modalBody(subject, folderSupported) {
       '<input class="docsViewer__fieldInput" data-project-subject-folder-input type="text" ' +
         'autocomplete="off" spellcheck="false" value="' + escapeHtml(folderValue) + '">' +
     "</label>" +
-    '<label class="docsViewer__field" data-project-subject-detail' + (selected === "detail" ? "" : " hidden") + '>' +
-      '<span class="docsViewer__fieldLabel">Detail UID</span>' +
-      '<input class="docsViewer__fieldInput" data-project-subject-detail-input type="text" autocomplete="off" spellcheck="false" placeholder="00008-001" value="' +
-        escapeHtml(subject.state === "valid" && subject.kind === "detail" ? subject.key : "") + '">' +
-      '<span class="docsViewer__fieldHint">Five-digit Work ID, a hyphen, then three-digit Detail ID.</span>' +
-    '</label>' +
     '<section class="docsViewerProjectSubjectModal__catalogue" data-project-subject-catalogue' +
       (["work", "series"].includes(selected) ? "" : " hidden") + ">" +
       '<label class="docsViewer__field" for="' + SEARCH_INPUT_ID + '">' +
@@ -190,8 +182,6 @@ function openSubjectModal(options, target, loaded) {
     onOpen: function (api) {
       var folderField = api.host.querySelector("[data-project-subject-folder]");
       var folderInput = api.host.querySelector("[data-project-subject-folder-input]");
-      var detailField = api.host.querySelector("[data-project-subject-detail]");
-      var detailInput = api.host.querySelector("[data-project-subject-detail-input]");
       var catalogue = api.host.querySelector("[data-project-subject-catalogue]");
       var searchInput = api.host.querySelector("#" + SEARCH_INPUT_ID);
       var results = api.host.querySelector("[data-project-subject-results]");
@@ -311,8 +301,6 @@ function openSubjectModal(options, target, loaded) {
         var catalogueSelected = ["work", "series"].includes(kind);
         if (folderField) folderField.hidden = !folderSelected;
         if (folderInput) folderInput.disabled = busy || !folderSelected;
-        if (detailField) detailField.hidden = kind !== "detail";
-        if (detailInput) detailInput.disabled = busy || kind !== "detail";
         if (catalogue) catalogue.hidden = !catalogueSelected;
         if (searchInput) searchInput.disabled = busy || !catalogueSelected || !state.support;
         if (catalogueSelected) {
@@ -365,15 +353,6 @@ function openSubjectModal(options, target, loaded) {
         return false;
       }
       var fields = Object.fromEntries(AUTHORING_SUBJECT_FIELDS.map(function (field) { return [field, ""]; }));
-      if (selected.value === "detail") {
-        var detailInput = api.host.querySelector("[data-project-subject-detail-input]");
-        fields.detail_uid = detailInput ? detailInput.value.trim() : "";
-        if (!parseDocsViewerDetailUid(fields.detail_uid)) {
-          api.setStatus("Enter a Detail UID such as 00008-001.");
-          if (detailInput) detailInput.focus();
-          return false;
-        }
-      }
       if (selected.value === "folder") {
         fields.folder_path = folderInput ? folderInput.value : "";
         if (!cleanString(fields.folder_path)) {

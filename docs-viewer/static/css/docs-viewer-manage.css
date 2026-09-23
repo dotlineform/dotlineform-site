@@ -42,10 +42,6 @@
   mask-image: url("../icons/dlf-work.svg");
 }
 
-.docsViewer__icon--dlf-detail{
-  mask-image: url("../icons/dlf-detail.svg");
-}
-
 .docsViewer__icon--dlf-subject{
   mask-image: url("../icons/dlf-subject.svg");
 }

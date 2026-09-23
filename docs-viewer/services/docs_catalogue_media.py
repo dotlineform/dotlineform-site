@@ -78,7 +78,7 @@ def read_catalogue_media_config(repo_root: Path) -> dict[str, Any]:
         raise ValueError("Generated Catalogue rendition policy is unavailable")
     bases = primary.get("base_urls", {})
     if not isinstance(bases, dict) or any(not _safe_media_url(bases.get(family)) or not bases[family].endswith("/")
-           or any(char in bases[family] for char in "?#,") for family in ("works", "work_details")):
+           or any(char in bases[family] for char in "?#,") for family in ("works",)):
         raise ValueError("Generated Catalogue image bases are unsafe")
     for settings, key in ((primary, "widths"), (thumbnails, "sizes")):
         values = settings.get(key)
@@ -223,28 +223,12 @@ def catalogue_thumbnail_path(repo_root: Path, request_path: str) -> Path:
     return path
 
 
-def catalogue_media_record(payload: dict[str, Any], work_id: str, detail_id: str = "") -> dict[str, Any]:
-    """Validate only the exact requested image; a Detail does not require a Work primary."""
+def catalogue_media_record(payload: dict[str, Any], work_id: str) -> dict[str, Any]:
+    """Validate the exact requested Work image without inferring another identity."""
     work_id = _work_identity(work_id)
     record = payload.get("work")
     if not isinstance(record, dict) or record.get("work_id") != work_id:
         raise ValueError(f"Generated data does not match Work {work_id}")
-    if detail_id:
-        if not re.fullmatch(r"(?:[0-9]{3}|[1-9][0-9]{3,})", detail_id) or not int(detail_id):
-            raise ValueError("An exact Catalogue Detail ID is required")
-        detail_uid = f"{work_id}-{detail_id}"
-        sections = payload.get("sections")
-        if not isinstance(sections, list) or any(
-            not isinstance(section, dict) or not isinstance(section.get("details"), list) for section in sections
-        ):
-            raise ValueError("Generated Detail sections are unavailable")
-        matches = [
-            detail for section in sections
-            for detail in section["details"] if isinstance(detail, dict) and detail.get("detail_uid") == detail_uid
-        ]
-        if len(matches) != 1 or matches[0].get("work_id") != work_id or matches[0].get("detail_id") != detail_id:
-            raise ValueError(f"Generated Detail {detail_uid} is unavailable or mismatched")
-        record = matches[0]
     _text(record.get("title"), "image title")
     if not all(_positive_integer(record.get(field)) for field in ("width_px", "height_px")):
         raise ValueError("Generated image dimensions are unavailable")

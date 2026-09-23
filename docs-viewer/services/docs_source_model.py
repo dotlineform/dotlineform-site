@@ -256,7 +256,6 @@ def format_source(front_matter: Dict[str, Any], body: str, *, collection: str | 
         "folder_path",
         "work_id",
         "series_id",
-        "detail_uid",
         "parent_id",
         "draft",
     ]

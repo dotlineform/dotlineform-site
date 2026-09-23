@@ -1,5 +1,4 @@
 import {
-  normalizeCatalogueDetailId,
   serializeCatalogueImageToken,
   serializeCatalogueMediaToken
 } from "./catalogue-token-parser.js";
@@ -8,7 +7,6 @@ import { readCatalogueTokenPresentation } from "./catalogue-media-support.js";
 function valuesForToken(token) {
   return {
     text: token.presentation === "image" ? token.alt : token.title,
-    detailId: token.detailId,
     addCaption: Boolean(token.caption),
     caption: token.caption || "",
     summary: token.summary || "",
@@ -88,11 +86,9 @@ export function createSourceEditorTokenDrafts() {
         if (capture.revision !== snapshot.revision || snapshot.value.slice(capture.start, capture.end) !== capture.text) {
           throw new Error("Markdown changed at a token with pending edits. Select that occurrence again before saving.");
         }
-        var detailId = normalizeCatalogueDetailId(values.detailId);
-        if (detailId === null) throw new Error("Enter a positive Work Detail ID using digits only, or leave it blank.");
         var fields = {
           registry: draft.registry, targetType: token.targetType,
-          targetId: token.targetId, detailId: detailId
+          targetId: token.targetId
         };
         var serialized;
         if (token.presentation === "image") {
@@ -109,7 +105,7 @@ export function createSourceEditorTokenDrafts() {
         if (!serialized) throw new Error(token.presentation === "image"
           ? "Enter alt text and complete the enabled caption presentation."
           : "Enter single-line link text.");
-        await readCatalogueTokenPresentation(adapter, token, detailId);
+        await readCatalogueTokenPresentation(adapter, token);
         replacements.push({ capture: capture, value: serialized });
       }
       var body = snapshot.value;

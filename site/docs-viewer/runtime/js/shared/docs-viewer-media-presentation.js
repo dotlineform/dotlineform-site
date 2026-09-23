@@ -61,11 +61,7 @@ function normalizeWorkPresentation(value) {
   }
   var targetKind = cleanString(targetSource.kind);
   var targetId = cleanString(targetSource.id);
-  var detail = targetKind === "catalogue-work-detail";
-  var workId = detail ? targetSource.workId : targetId;
-  if (typeof workId !== "string" || !/^\d{5}$/.test(workId) || (detail
-    ? !targetId.startsWith(workId + "-") || !/^(?:\d{3}|[1-9]\d{3,})$/.test(targetId.slice(6)) || /^0+$/.test(targetId.slice(6))
-    : targetKind !== "catalogue-work")) {
+  if (targetKind !== "catalogue-work" || !/^\d{5}$/.test(targetId)) {
     throw new Error("Media View requires an exact Catalogue Work target.");
   }
 
@@ -111,7 +107,7 @@ function normalizeWorkPresentation(value) {
 
   return Object.freeze({
     schemaVersion: "docs_media_view_v1",
-    target: Object.freeze({ kind: targetKind, id: targetId, ...(detail ? { workId: workId } : {}) }),
+    target: Object.freeze({ kind: targetKind, id: targetId }),
     label: normalizedTextField(value.label, "a label"),
     image: Object.freeze({
       src: imageSrc,
