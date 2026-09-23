@@ -7,7 +7,6 @@ export const DEFAULT_STUDIO_UI_TEXT = {
     "search_no_match": "No matching work ids.",
     "missing_work_param": "Search for a work by work id.",
     "unknown_work_error": "Unknown work id: {work_id}.",
-    "open_button": "Open",
     "new_button": "New",
     "save_button": "Save",
     "delete_button": "Delete",

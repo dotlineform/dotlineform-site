@@ -229,7 +229,6 @@ function updateEditorState(state) {
   }
   renderEditorMessage(state, { hasRecord, dirty, errors });
 
-  state.saveButton.textContent = t(state, "save_button", "Save");
   state.saveButton.disabled = catalogueSaveDisabled({
     hasRecord,
     isSaving: state.isSaving || state.isBuilding || state.isDeleting,
@@ -352,10 +351,15 @@ function updateSummary(state) {
 function applyWorkEditorText(state, elements) {
   setOpenInputMode(state);
   applyWorkFormText(state, workFormOptions(state));
-  elements.openButton.textContent = t(state, "open_button", "Open");
-  elements.newButton.textContent = t(state, "new_button", "New");
-  elements.saveButton.textContent = t(state, "save_button", "Save");
-  elements.deleteButton.textContent = t(state, "delete_button", "Delete");
+  for (const [button, key, fallback] of [
+    [elements.newButton, "new_button", "New"],
+    [elements.saveButton, "save_button", "Save"],
+    [elements.deleteButton, "delete_button", "Delete"]
+  ]) {
+    const label = t(state, key, fallback);
+    button.title = label;
+    button.setAttribute("aria-label", label);
+  }
 }
 
 async function configureWorkEditorRuntime(state, elements) {

@@ -300,15 +300,6 @@ export function bindWorkSelectionControls(state, context) {
     });
   });
 
-  state.openButton.addEventListener("click", () => {
-    if (state.mode === "new") {
-      context.setEmptySearchMode({ keepSearchValue: true });
-    }
-    openWorkSelection(state, state.searchNode.value, context).catch((error) => {
-      console.warn("catalogue_work_editor: failed to open requested work selection", error);
-    });
-  });
-
   document.addEventListener("click", (event) => {
     if (event.target === state.searchNode || state.popupNode.contains(event.target) || state.popupListNode.contains(event.target)) return;
     setWorkSelectionPopupVisibility(state, false);

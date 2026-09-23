@@ -1149,10 +1149,6 @@ button.studioList__cellLink {
   border-color: var(--text);
 }
 
-.catalogueWorkPage__grid {
-  margin-top: 1rem;
-}
-
 .studio-local-app:has(#catalogueWorkRoot) {
   --container: 1500px;
 }
@@ -1182,6 +1178,11 @@ button.studioList__cellLink {
   grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
 }
 
+.catalogueWorkPage__toolbar {
+  display: grid;
+  min-width: 0;
+}
+
 .catalogueWorkSeriesBrowser {
   position: sticky;
   top: 1rem;
@@ -1192,14 +1193,16 @@ button.studioList__cellLink {
   box-sizing: border-box;
 }
 
-.catalogueWorkSeriesBrowser__searchRow {
+.catalogueWorkSeriesBrowser__searchRow,
+.catalogueWorkPage__searchRow {
   display: flex;
   align-items: center;
   gap: 0.45rem;
   flex: none;
 }
 
-.catalogueWorkSeriesBrowser__searchRow > .sharedSearchList__control {
+.catalogueWorkSeriesBrowser__searchRow > .sharedSearchList__control,
+.catalogueWorkPage__searchRow > .sharedSearchList__control {
   flex: 1;
   min-width: 0;
 }
@@ -1227,15 +1230,6 @@ button.studioList__cellLink {
   grid-template-columns: minmax(0, 1fr);
 }
 
-.catalogueWorkPage__searchWrap {
-  flex: 0 1 26rem;
-  min-width: 0;
-}
-
-.catalogueWorkPage__searchControl {
-  display: block;
-}
-
 .catalogueWorkSearch__option,
 .catalogueSeriesSearch__option {
   grid-template-columns: auto minmax(0, 1fr);
@@ -1254,29 +1248,6 @@ button.studioList__cellLink {
   min-width: 0;
   overflow-wrap: anywhere;
   color: var(--muted, var(--studio-muted-body));
-}
-
-.catalogueEditorMessage {
-  display: inline-flex;
-  flex: 1 1 18rem;
-  align-items: center;
-  min-width: 10rem;
-  min-height: 2.2rem;
-  color: var(--muted, var(--studio-muted-body));
-  overflow-wrap: anywhere;
-  white-space: normal;
-}
-
-.catalogueEditorMessage:empty {
-  display: inline-flex;
-  visibility: hidden;
-}
-
-.catalogueWorkPage__actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.45rem;
-  justify-content: flex-start;
 }
 
 .catalogueWorkPage__updateToggle {
