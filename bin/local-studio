@@ -103,7 +103,7 @@ trap cleanup EXIT INT TERM
 
 echo "Starting Local Studio from $ROOT_DIR"
 if [ "$STUDIO_APP_ENABLED" != "0" ]; then
-  echo "Local Studio App: http://$STUDIO_APP_HOST:$STUDIO_APP_PORT"
+  echo "Local Studio App: http://$STUDIO_APP_HOST:$STUDIO_APP_PORT/studio/catalogue-work/"
   case "$STUDIO_APP_ACCESS_LOG" in
     1|on|true|yes)
       echo "Local Studio App access log: enabled"

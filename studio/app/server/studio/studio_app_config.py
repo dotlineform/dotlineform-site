@@ -25,10 +25,6 @@ STUDIO_ROUTE_REQUIRED_FIELDS: tuple[str, ...] = (
 STUDIO_SHELL_ROUTE_TYPES: frozenset[str] = frozenset(("html-template",))
 STUDIO_SUPPORTED_SHELL_TYPES: frozenset[str] = STUDIO_SHELL_ROUTE_TYPES
 
-STUDIO_ROUTE_PATHS_WITH_COMPAT_KEYS: dict[str, tuple[str, ...]] = {
-    "catalogue_field_registry": ("catalogue_field_registry_review",),
-}
-
 STUDIO_ROUTE_REGISTRY_PATH = ("app", "routes")
 
 STUDIO_ROUTE_COPY_FIELDS: tuple[str, ...] = (
@@ -165,13 +161,7 @@ def validate_studio_route_registry(repo_root: Path, payload: dict[str, object]) 
     paths_routes = payload.get("paths") if isinstance(payload.get("paths"), dict) else {}
     paths_routes = paths_routes.get("routes") if isinstance(paths_routes.get("routes"), dict) else {}
     if isinstance(paths_routes, dict):
-        route_ids = set(raw_routes)
-        compat_route_keys = {
-            compat_key
-            for compat_keys in STUDIO_ROUTE_PATHS_WITH_COMPAT_KEYS.values()
-            for compat_key in compat_keys
-        }
-        duplicate_keys = sorted((route_ids | compat_route_keys) & set(paths_routes))
+        duplicate_keys = sorted(set(raw_routes) & set(paths_routes))
         for key in duplicate_keys:
             errors.append(f"{key}: Studio route metadata must live in app.routes, not paths.routes")
 
@@ -226,12 +216,8 @@ def asset_version(repo_root: Path) -> str:
         repo_root / "studio" / "app" / "frontend" / "js" / "studio-ui-text.js",
         repo_root / "studio" / "app" / "frontend" / "js" / "studio-route-registry.js",
         repo_root / "studio" / "app" / "frontend" / "js" / "studio-route-templates.js",
-        repo_root / "studio" / "app" / "frontend" / "js" / "studio-home.js",
         repo_root / "studio" / "app" / "frontend" / "js" / "catalogue-editor-shell-media.js",
-        repo_root / "studio" / "app" / "frontend" / "routes" / "studio-home.html",
-        repo_root / "studio" / "app" / "frontend" / "routes" / "catalogue-field-registry.html",
         repo_root / "studio" / "app" / "frontend" / "routes" / "catalogue-work.html",
-        repo_root / "studio" / "app" / "frontend" / "js" / "catalogue-field-registry-review.js",
         repo_root / "studio" / "app" / "frontend" / "js" / "catalogue-project-media-picker.js",
         repo_root / "studio" / "app" / "frontend" / "js" / "catalogue-work-editor.js",
         repo_root / "studio" / "app" / "assets" / "css" / "studio.css",

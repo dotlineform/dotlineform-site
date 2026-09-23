@@ -1,5 +1,5 @@
 import { loadStudioConfig } from "./studio-config.js";
-import { buildStudioShellContract, listStudioRoutes } from "./studio-route-registry.js";
+import { buildStudioShellContract } from "./studio-route-registry.js";
 import { loadStudioRouteTemplate } from "./studio-route-templates.js";
 import { initStudioThemeToggle } from "./studio-theme.js";
 
@@ -17,7 +17,6 @@ async function bootStudioApp() {
 
     document.title = `${contract.route.title} | dotlineform Studio`;
     root.innerHTML = renderStudioShell(
-      config,
       contract.route,
       await loadStudioRouteTemplate(contract.route)
     );
@@ -29,8 +28,8 @@ async function bootStudioApp() {
   }
 }
 
-function renderStudioShell(config, activeRoute, bodyHtml) {
-  return `${renderHeader(config, activeRoute)}
+function renderStudioShell(activeRoute, bodyHtml) {
+  return `${renderHeader(activeRoute)}
   <main class="container">
     <div class="studio">
       <div class="studio__headerRow">
@@ -43,14 +42,11 @@ function renderStudioShell(config, activeRoute, bodyHtml) {
   </main>`;
 }
 
-function renderHeader(config, activeRoute) {
+function renderHeader(activeRoute) {
   return `<header class="site-header">
     <div class="container">
-      <div class="site-title"><a href="/studio/">dotlineform studio</a></div>
+      <div class="site-title"><a href="${escapeHtml(activeRoute.path, true)}">dotlineform studio</a></div>
       <div class="studioHeader__actions">
-        <nav class="site-nav" aria-label="Studio">
-          ${renderNavItems(config, activeRoute)}
-        </nav>
         <button class="studioThemeToggle" type="button" data-studio-theme-toggle aria-label="Switch to dark mode" title="Switch to dark mode">
           <svg class="studioThemeToggle__icon" data-studio-theme-icon="light" viewBox="0 0 24 24" aria-hidden="true">
             <circle cx="12" cy="12" r="4"></circle>
@@ -70,16 +66,6 @@ function renderHeader(config, activeRoute) {
       </div>
     </div>
   </header>`;
-}
-
-function renderNavItems(config, activeRoute) {
-  return listStudioRoutes(config)
-    .filter((route) => route.nav)
-    .map((route) => {
-      const activeClass = route.id === activeRoute.id ? " is-active" : "";
-      return `<a class="nav-item${activeClass}" href="${escapeHtml(route.path, true)}" data-studio-navigate="${escapeHtml(route.id, true)}">${escapeHtml(route.label)}</a>`;
-    })
-    .join("\n          ");
 }
 
 function renderAppError(root, message) {

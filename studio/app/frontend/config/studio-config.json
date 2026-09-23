@@ -1,28 +1,8 @@
 {
   "studio_config_version": "studio_config_v1",
-  "updated_at_utc": "2026-05-31T00:00:00Z",
+  "updated_at_utc": "2026-09-23T17:47:31Z",
   "app": {
     "routes": {
-      "studio_home": {
-        "label": "home",
-        "title": "",
-        "path": "/studio/",
-        "template": "/studio/app/frontend/routes/studio-home.html",
-        "script": "/studio/app/frontend/js/studio-home.js",
-        "nav": false,
-        "shell_type": "html-template",
-        "ready_state_route_id": "studio-home"
-      },
-      "catalogue_field_registry": {
-        "label": "field registry",
-        "title": "Catalogue Field Registry",
-        "path": "/studio/catalogue-field-registry/",
-        "template": "/studio/app/frontend/routes/catalogue-field-registry.html",
-        "script": "/studio/app/frontend/js/catalogue-field-registry-review.js",
-        "nav": false,
-        "shell_type": "html-template",
-        "ready_state_route_id": "catalogue-field-registry"
-      },
       "catalogue_work_editor": {
         "label": "work editor",
         "title": "Catalogue Work Editor",
@@ -43,8 +23,7 @@
         "catalogue_lookup_work_search": "/studio/data/generated/catalogue-lookup/work_search.json",
         "catalogue_lookup_series_search": "/studio/data/generated/catalogue-lookup/series_search.json",
         "catalogue_lookup_series_base": "/studio/data/generated/catalogue-lookup/series/",
-        "catalogue_work_record": "/studio/api/catalogue/read?key=catalogue_work_record",
-        "catalogue_field_registry": "/studio/data/config/catalogue/catalogue-field-registry.json"
+        "catalogue_work_record": "/studio/api/catalogue/read?key=catalogue_work_record"
       }
     }
   }

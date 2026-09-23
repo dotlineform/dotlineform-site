@@ -335,7 +335,7 @@ def main(argv: list[str] | None = None) -> int:
     args = parse_args(argv)
     server = StudioAppServer((args.host, args.port), REPO_ROOT, access_log_enabled=args.access_log)
     host, port = server.server_address
-    print(f"Studio app server: http://{host}:{port}/studio/", flush=True)
+    print(f"Studio app server: http://{host}:{port}/studio/catalogue-work/", flush=True)
     try:
         server.serve_forever()
     except KeyboardInterrupt:

@@ -1,16 +1,4 @@
 export const DEFAULT_STUDIO_UI_TEXT = {
-  "catalogue_field_registry_review": {
-    "page_heading": "catalogue field registry",
-    "context_hint": "Read-only inventory of Catalogue fields and the outputs maintained by Save.",
-    "loading": "loading catalogue field registry...",
-    "empty_state": "",
-    "search_placeholder": "field name",
-    "output_label": "registry extract",
-    "status_loaded": "Registry loaded.",
-    "meta_all": "Showing full registry.",
-    "meta_exact": "Showing {count} exact rule match(es) for field `{field}`.",
-    "meta_partial": "Showing {count} partial rule match(es) for field search `{field}`."
-  },
   "catalogue_work_editor": {
     "load_failed_error": "Failed to load catalogue source data for the work editor.",
     "load_requested_work_failed": "Failed to load the requested work.",
