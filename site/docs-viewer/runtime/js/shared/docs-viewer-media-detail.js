@@ -4,6 +4,7 @@ import {
 } from "./docs-viewer-media-presentation.js";
 import { CONTENT_DETAIL_LABEL_CONTROL_ID } from "./docs-viewer-content-detail-view.js";
 import { catalogueMediaTargetWorkId, catalogueWorkMediaPresentation, catalogueSeriesTarget } from "./docs-viewer-catalogue-media.js";
+import { mountDocsViewerResponsiveImage } from "./docs-viewer-responsive-image.js";
 import {
   DOCS_VIEWER_MEDIA_GALLERY_LAYOUT,
   docsViewerMediaGalleryPage,
@@ -91,6 +92,7 @@ function mountCatalogueReferences(context) {
     status.hidden = true;
     marker.appendChild(status);
     var released = false;
+    var releaseImage = function () {};
     function isCurrent() {
       return !released && context.content.contains(control) && context.isCurrentDocument();
     }
@@ -100,12 +102,11 @@ function mountCatalogueReferences(context) {
     }
     function projectInlineImage(presentation) {
       if (!inlineImage || !isCurrent()) return;
-      var data = presentation.image;
-      inlineImage.width = data.width_px;
-      inlineImage.height = data.height_px;
-      inlineImage.src = data.src;
+      var data = normalizeDocsViewerMediaPresentation(presentation).image;
+      releaseImage();
       inlineImage.hidden = false;
       if (placeholder) placeholder.hidden = true;
+      releaseImage = mountDocsViewerResponsiveImage(inlineImage, data);
     }
     function imageFailed() {
       if (!isCurrent()) return;
@@ -160,6 +161,7 @@ function mountCatalogueReferences(context) {
     }
     cleanups.push(function () {
       released = true;
+      releaseImage();
       control.removeEventListener("click", handleClick);
       if (inlineImage) inlineImage.removeEventListener("error", imageFailed);
       control.disabled = false;
@@ -384,8 +386,10 @@ export function createDocsViewerMediaDetailAdapter() {
   function readWork(state, workId) {
     if (!state.workReads.has(workId)) {
       var provider = state.collectionProvider;
-      if (!provider || typeof provider.readCatalogueWork !== "function") throw new Error("Catalogue media is unavailable in this view.");
-      var read = Promise.resolve().then(function () { return provider.readCatalogueWork(workId); })
+      if (!provider || typeof provider.readCatalogueWork !== "function" || typeof provider.readCatalogueMediaConfig !== "function") {
+        throw new Error("Catalogue media is unavailable in this view.");
+      }
+      var read = Promise.all([provider.readCatalogueWork(workId), provider.readCatalogueMediaConfig()])
         .finally(function () { state.workReads.delete(workId); });
       state.workReads.set(workId, read);
     }
@@ -413,10 +417,10 @@ export function createDocsViewerMediaDetailAdapter() {
       return series;
     }
     var workId = catalogueMediaTargetWorkId(context.mediaTarget);
-    var payload = await readWork(state, workId);
+    var [payload, policy] = await readWork(state, workId);
     if (currentTargetState(context) !== state) return null;
     return catalogueWorkMediaPresentation(payload, workId,
-      context.mediaTarget.kind === "catalogue-work-detail" ? context.mediaTarget.id.slice(6) : "");
+      context.mediaTarget.kind === "catalogue-work-detail" ? context.mediaTarget.id.slice(6) : "", policy);
   }
 
   /** Resolve current Catalogue data only for the latest request in this document mount. */
@@ -475,6 +479,7 @@ export function createDocsViewerMediaDetailAdapter() {
     var selectionRequest = 0;
     var galleryPage = 0;
     var failedImage = null;
+    var imageCleanups = [];
     var feedback = documentRef.createElement("p");
     feedback.setAttribute("role", "status");
     feedback.hidden = true;
@@ -501,10 +506,10 @@ export function createDocsViewerMediaDetailAdapter() {
     function imageElement(data, className) {
       var image = documentRef.createElement("img");
       image.className = className;
-      image.src = data.src;
       image.alt = data.alt;
-      image.width = data.widthPx;
-      image.height = data.heightPx;
+      image.style.setProperty("--docs-media-image-width", data.widthPx + "px");
+      image.style.setProperty("--docs-media-image-ratio", String(data.widthPx / data.heightPx));
+      imageCleanups.push(mountDocsViewerResponsiveImage(image, data));
       image.addEventListener("error", function () {
         if (!isCurrent() || !viewport.contains(image)) return;
         message("Image unavailable. ", function () {
@@ -657,6 +662,8 @@ export function createDocsViewerMediaDetailAdapter() {
         galleryPage = docsViewerMediaGalleryPosition(supplied.gallery, next.target).pageIndex;
       }
       current = next;
+      imageCleanups.forEach(function (cleanup) { cleanup(); });
+      imageCleanups = [];
       viewport.replaceChildren(current.target.kind === "catalogue-series"
         ? renderGallery(current)
         : renderWork(current));
@@ -693,9 +700,9 @@ export function createDocsViewerMediaDetailAdapter() {
       section.setAttribute("aria-busy", "true");
       message("Loading " + member.label + "…");
       try {
-        var payload = await readWork(state, member.target.id);
+        var [payload, policy] = await readWork(state, member.target.id);
         if (!isCurrent() || request !== selectionRequest) return;
-        var work = normalizeDocsViewerMediaPresentation(catalogueWorkMediaPresentation(payload, member.target.id));
+        var work = normalizeDocsViewerMediaPresentation(catalogueWorkMediaPresentation(payload, member.target.id, "", policy));
         renderPresentation(work);
         message("");
         viewport.focus({ preventScroll: true });
@@ -723,6 +730,8 @@ export function createDocsViewerMediaDetailAdapter() {
         if (released) return;
         released = true;
         selectionRequest += 1;
+        imageCleanups.forEach(function (cleanup) { cleanup(); });
+        imageCleanups = [];
         controls = null;
         viewport.replaceChildren();
         section.remove();

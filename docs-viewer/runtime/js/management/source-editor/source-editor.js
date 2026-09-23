@@ -221,6 +221,9 @@ function createSourceEditorContextAdapter(state) {
     readCatalogueWork: function (workId) {
       return state.collectionProvider.readCatalogueWork(workId);
     },
+    readCatalogueMediaConfig: function () {
+      return state.collectionProvider.readCatalogueMediaConfig();
+    },
     readCatalogueSeriesPresentation: function (seriesId) {
       return state.collectionProvider.readCatalogueSeriesPresentation(seriesId);
     },

@@ -1,4 +1,5 @@
 import { readPublicCatalogueWork, readPublicCatalogueSeries, catalogueSeriesMediaPresentation } from "./docs-viewer-catalogue-media.js";
+import { readPublicCatalogueMediaConfig, validateCatalogueMediaPolicy } from "./docs-viewer-catalogue-media-policy.js";
 
 function cleanString(value) {
   return String(value == null ? "" : value).trim();
@@ -104,6 +105,22 @@ export function createDocsViewerWorkspaceProvider(options) {
       return source.readCatalogueMediaTargets();
     };
   }
+  var mediaPolicyRead = null;
+  if (source && typeof source.readCatalogueMediaConfig === "function"
+    || routeContext().routeConfig && routeContext().routeConfig.appKind === "public") {
+    provider.readCatalogueMediaConfig = function () {
+      // Coalesce concurrent image reads, then revalidate policy on the next activation.
+      if (!mediaPolicyRead) {
+        mediaPolicyRead = Promise.resolve().then(function () {
+          if (source && typeof source.readCatalogueMediaConfig === "function") return source.readCatalogueMediaConfig();
+          return readPublicCatalogueMediaConfig(routeContext().routeConfig.catalogueMediaConfigUrl, function (url, optionsForFetch) {
+            return settings.window.fetch(url, optionsForFetch);
+          });
+        }).then(validateCatalogueMediaPolicy).finally(function () { mediaPolicyRead = null; });
+      }
+      return mediaPolicyRead;
+    };
+  }
   if (source && typeof source.readCatalogueWork === "function") {
     provider.readCatalogueWork = function (workId) {
       return source.readCatalogueWork(workId);
@@ -126,9 +143,9 @@ export function createDocsViewerWorkspaceProvider(options) {
   }
   if (provider.readCatalogueSeries) {
     provider.readCatalogueSeriesPresentation = async function (seriesId) {
-      var payload = await provider.readCatalogueSeries(seriesId);
+      var [payload, policy] = await Promise.all([provider.readCatalogueSeries(seriesId), provider.readCatalogueMediaConfig()]);
       var config = routeContext().routeConfig || {};
-      return catalogueSeriesMediaPresentation(payload, seriesId, config.catalogueWorkThumbnails);
+      return catalogueSeriesMediaPresentation(payload, seriesId, policy, config.catalogueWorkThumbnailsBaseUrl);
     };
   }
   if (source && typeof source.writeSource === "function") {

@@ -1,4 +1,5 @@
 import { docsViewerSafeMediaTarget, normalizeDocsViewerMediaPresentation } from "./docs-viewer-media-presentation.js";
+import { catalogueImageCandidates, catalogueThumbnailSettings } from "./docs-viewer-catalogue-media-policy.js";
 
 export function catalogueMediaTarget(workId, detailId = "") {
   if (typeof workId !== "string" || !/^\d{5}$/.test(workId)
@@ -58,8 +59,9 @@ export function catalogueWorkThumbnail(workId, title, settings) {
 }
 
 /** Project ordered references only; complete Work records are obtained when selected. */
-export function catalogueSeriesMediaPresentation(payload, seriesId, thumbnailSettings) {
+export function catalogueSeriesMediaPresentation(payload, seriesId, mediaPolicy, thumbnailBaseUrl) {
   var series = seriesRecord(payload, seriesId);
+  var thumbnailSettings = catalogueThumbnailSettings(mediaPolicy, thumbnailBaseUrl);
   var target = catalogueSeriesTarget(seriesId);
   var presentation = {
     schema_version: "docs_media_gallery_v1", target: target,
@@ -98,7 +100,7 @@ export function catalogueWorkDetails(payload, workId) {
 }
 
 /** Build a presentation from the exact current Catalogue consumer record, locally or publicly. */
-export function catalogueWorkMediaPresentation(payload, workId, detailId = "") {
+export function catalogueWorkMediaPresentation(payload, workId, detailId, mediaPolicy) {
   var work = workRecord(payload, workId);
   var target = catalogueMediaTarget(workId, detailId);
   var record = detailId ? catalogueWorkDetails(payload, workId).find(function (item) { return item.detail_id === detailId; }) : work;
@@ -107,12 +109,7 @@ export function catalogueWorkMediaPresentation(payload, workId, detailId = "") {
     || !Number.isInteger(record.height_px) || record.height_px <= 0) {
     throw new Error("Catalogue image dimensions are unavailable.");
   }
-  var primary = record.media && record.media.primary;
-  if (!Array.isArray(primary) || !primary.length || primary.some(function (item) {
-    return !item || !Number.isInteger(item.width) || item.width <= 0
-      || typeof item.url !== "string" || /\s/.test(item.url) || !docsViewerSafeMediaTarget(item.url);
-  })) throw new Error("Catalogue Work media is unavailable or unsafe.");
-  var image = primary.reduce(function (largest, item) { return item.width > largest.width ? item : largest; });
+  var image = catalogueImageCandidates(target, record, mediaPolicy);
   var metadata = detailId ? [{ label: "Work", value: work.title }] : [];
   (detailId ? [] : [["Year", "year_display"], ["Medium", "medium_caption"]]).forEach(function (entry) {
     if (typeof work[entry[1]] === "string" && work[entry[1]].trim()) {
@@ -130,9 +127,10 @@ export function catalogueWorkMediaPresentation(payload, workId, detailId = "") {
     schema_version: "docs_media_view_v1",
     target: target,
     label: record.title,
-    image: { src: image.url, alt: record.title, width_px: record.width_px, height_px: record.height_px },
+    image: { src: image.candidates[0].src, candidates: image.candidates,
+      alt: record.title, width_px: record.width_px, height_px: record.height_px },
     metadata: metadata,
-    new_tab_target: image.url
+    new_tab_target: image.largest
   };
   normalizeDocsViewerMediaPresentation(presentation);
   return presentation;

@@ -73,6 +73,12 @@ export function readCatalogueMediaTargets(options) {
   return fetchManagementJson("/docs/catalogue-media-targets", "GET", undefined, options);
 }
 
+/** Read the generated rendition policy shared by all Catalogue records. */
+export function readCatalogueMediaConfig(options) {
+  return fetchManagementJson("/docs/catalogue-media-config", "GET", undefined,
+    Object.assign({}, options, { cache: "no-store" }));
+}
+
 /** Read the current generated Work consumer record independently of Document Build. */
 export function readCatalogueWork(workId, options) {
   return fetchManagementJson("/docs/catalogue-work?work_id=" + encodeURIComponent(workId), "GET", undefined,

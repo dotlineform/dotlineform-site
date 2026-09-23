@@ -78,6 +78,22 @@ function normalizeWorkPresentation(value) {
   var imageHeight = positiveInteger(imageSource.height_px);
   if (!imageSrc) throw new Error("Media View image target is unsupported.");
   if (!imageWidth || !imageHeight) throw new Error("Media View image dimensions must be positive integers.");
+  var candidates = imageSource.candidates;
+  var srcset = "";
+  if (candidates !== undefined) {
+    var seenWidths = new Set();
+    if (!Array.isArray(candidates) || !candidates.length) throw new Error("Media View image candidates are unavailable.");
+    srcset = candidates.map(function (candidate) {
+      var src = candidate && candidate.src;
+      var width = candidate && candidate.width_px;
+      if (typeof src !== "string" || /[\s,]/.test(src) || !docsViewerSafeMediaTarget(src)
+        || !Number.isInteger(width) || width <= 0 || width > imageWidth || seenWidths.has(width)) {
+        throw new Error("Media View image candidate is unsafe or has invalid dimensions.");
+      }
+      seenWidths.add(width);
+      return src + " " + width + "w";
+    }).join(", ");
+  }
 
   var metadata = normalizedMetadata(value.metadata);
 
@@ -90,6 +106,7 @@ function normalizeWorkPresentation(value) {
     label: normalizedTextField(value.label, "a label"),
     image: Object.freeze({
       src: imageSrc,
+      srcset: srcset,
       alt: normalizedTextField(imageSource.alt, "image alternative text"),
       widthPx: imageWidth,
       heightPx: imageHeight

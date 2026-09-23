@@ -37,12 +37,8 @@
       "catalogue_paths": {
         "work_records_base_url": "/assets/data/catalogue/works/index/",
         "series_records_base_url": "/assets/data/catalogue/series/index/",
-        "work_thumbnails": {
-          "base_url": "/assets/data/catalogue/works/thumbs/",
-          "size": 96,
-          "suffix": "thumb",
-          "format": "webp"
-        }
+        "media_config_url": "/assets/data/catalogue/media-config.json",
+        "work_thumbnails_base_url": "/assets/data/catalogue/works/thumbs/"
       },
       "config_urls": {
         "docs_viewer": "/docs-viewer/config/defaults/docs-viewer-public-config.json",

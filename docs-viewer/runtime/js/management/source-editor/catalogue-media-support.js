@@ -43,8 +43,8 @@ export async function loadCatalogueMediaSupport(adapter, options = {}) {
 
 /** Validate the exact generated Work or Detail before insertion or token inspection. */
 export async function readCatalogueMediaPresentation(adapter, workId, detailId = "") {
-  var response = await adapter.readCatalogueWork(workId);
-  return normalizeDocsViewerMediaPresentation(catalogueWorkMediaPresentation(response, workId, detailId));
+  var [response, policy] = await Promise.all([adapter.readCatalogueWork(workId), adapter.readCatalogueMediaConfig()]);
+  return normalizeDocsViewerMediaPresentation(catalogueWorkMediaPresentation(response, workId, detailId, policy));
 }
 
 /** Resolve a token target through its existing provider, with no document or image fallback. */

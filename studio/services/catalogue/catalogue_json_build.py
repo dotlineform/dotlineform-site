@@ -15,27 +15,24 @@ from studio.shared.python.studio_python_paths import ensure_studio_python_paths
 REPO_ROOT = ensure_studio_python_paths(__file__)
 
 from catalogue.catalogue_output_paths import catalogue_output_workspace, output_path
+from catalogue.catalogue_media_policy import catalogue_thumbnail_paths
 from catalogue.catalogue_source import DEFAULT_SOURCE_DIR, records_from_json_source
-from catalogue.generate_work_pages import catalogue_payloads, generate_catalogue_json
+from catalogue.generate_work_pages import generate_catalogue_json
 
 
 def populate_catalogue_output(repo_root: Path, *, write: bool) -> dict:
     """Preserve canonical data and existing media while producing current JSON."""
     source_dir = repo_root / DEFAULT_SOURCE_DIR
     records = records_from_json_source(source_dir)
-    payloads = catalogue_payloads(repo_root, records, timestamp="")
     workspace = catalogue_output_workspace(repo_root)
     missing = []
     existing_count = 0
-    for family in ("works", "work_details"):
-        for record in payloads[f"{family}/{family}_index.json"][family].values():
-            for thumbnail in record.get("media", {}).get("thumbnails", []):
-                relative = thumbnail["path"]
-                destination = output_path(workspace, relative)
-                if destination.is_file():
-                    existing_count += 1
-                    continue
-                missing.append(relative)
+    for relative in sorted(catalogue_thumbnail_paths(repo_root, records)):
+        destination = output_path(workspace, relative)
+        if destination.is_file():
+            existing_count += 1
+        else:
+            missing.append(relative)
     output = generate_catalogue_json(repo_root, source_dir, write=write)
     return {
         "status": "incomplete" if missing else ("completed" if write else "planned"),

@@ -1482,7 +1482,7 @@ main.container:has(> .docsViewer){
 
 .docsViewer__mediaDetailImage{
   display: block;
-  width: auto;
+  width: min(100%, var(--docs-media-image-width), calc((100vh - 12rem) * var(--docs-media-image-ratio)));
   max-width: 100%;
   height: auto;
   max-height: calc(100vh - 12rem);

@@ -47,7 +47,7 @@ from docs_builder.semantic_tokens import (  # noqa: E402
 )
 from docs_source_model import load_document_collection_docs_for_config  # noqa: E402
 # The workspace and builder imports initialize repository and shared Python paths.
-from docs_catalogue_media import catalogue_media_record, read_catalogue_series, read_catalogue_work  # noqa: E402
+from docs_catalogue_media import catalogue_media_record, read_catalogue_media_config, read_catalogue_series, read_catalogue_work  # noqa: E402
 
 
 @dataclass(frozen=True)
@@ -148,6 +148,7 @@ def semantic_token_broken_entries(
     if registry is None:
         raise ValueError("Semantic-token registry is unavailable.")
     entries: list[dict[str, Any]] = []
+    media_policy_available: bool | None = None
     for meta, body in sources:
         for token in parse_semantic_tokens(body, registry=registry):
             reason = ""
@@ -155,6 +156,14 @@ def semantic_token_broken_entries(
                 reason = "unsupported_kind"
             else:
                 try:
+                    if media_policy_available is None:
+                        try:
+                            read_catalogue_media_config(repo_root)
+                            media_policy_available = True
+                        except ValueError:
+                            media_policy_available = False
+                    if not media_policy_available:
+                        raise ValueError("Generated Catalogue media configuration is unavailable")
                     if token.target_type == "series":
                         read_catalogue_series(repo_root, token.target_id)
                     else:

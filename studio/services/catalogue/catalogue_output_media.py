@@ -93,14 +93,14 @@ def complete_catalogue_media(
         payload = json.loads(path.read_text())
         if payload.get("work", {}).get("work_id") != wid:
             raise ValueError(f"Generated Work identity does not match {path}")
-        if payload["work"].get("media") and not records.works.get(wid, {}).get("project_filename"):
+        if not records.works.get(wid, {}).get("project_filename"):
             removed.append(("works", wid))
         for section in payload.get("sections", []):
             for detail in section.get("details", []):
                 uid = normalize_detail_uid_value(detail["detail_uid"])
                 if not uid.startswith(wid + "-"):
                     raise ValueError(f"Detail {uid} is outside Work {wid}")
-                if detail.get("media") and not records.work_details.get(uid, {}).get("project_filename"):
+                if not records.work_details.get(uid, {}).get("project_filename"):
                     removed.append(("work_details", uid))
         output_downloads = {_download_filename(item["filename"]) for item in payload["work"].get("downloads", [])}
         generated_downloads.update(output_downloads)

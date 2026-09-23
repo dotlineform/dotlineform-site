@@ -23,6 +23,7 @@ SERIES_WORKS_REPORT_PATH = "/docs/series-works-report"
 UNPUBLISHABLE_REPORT_PATH = "/docs/unpublishable-report"
 SERIES_WORK_MEDIA_PATH = "/docs/series-work-media"
 CATALOGUE_MEDIA_TARGETS_PATH = "/docs/catalogue-media-targets"
+CATALOGUE_MEDIA_CONFIG_PATH = "/docs/catalogue-media-config"
 CATALOGUE_WORK_PATH = "/docs/catalogue-work"
 CATALOGUE_SERIES_PATH = "/docs/catalogue-series"
 CATALOGUE_REGENERATE_PREVIEW_PATH = "/docs/catalogue/regenerate-preview"
@@ -94,6 +95,7 @@ GET_PATHS = (
     SERIES_WORK_MEDIA_PATH,
     CATALOGUE_MEDIA_TARGETS_PATH,
     CATALOGUE_WORK_PATH,
+    CATALOGUE_MEDIA_CONFIG_PATH,
     CATALOGUE_SERIES_PATH,
     SOURCE_CONFIG_SETTINGS_PATH,
     SOURCE_BODY_PATH,

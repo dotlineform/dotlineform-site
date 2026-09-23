@@ -61,6 +61,30 @@ def _safe_media_url(value: Any) -> str:
     return ""
 
 
+def read_catalogue_media_config(repo_root: Path) -> dict[str, Any]:
+    """Read the producer's shared public policy without exposing private pipeline inputs."""
+    payload = _read_generated(repo_root, "media-config.json")
+    header = payload.get("header")
+    if not isinstance(header, dict) or header.get("schema") != "catalogue_media_config_v1":
+        raise ValueError("Generated Catalogue media configuration is unavailable")
+    primary, thumbnails = payload.get("primary", {}), payload.get("thumbnails", {})
+    if not isinstance(primary, dict) or not isinstance(thumbnails, dict):
+        raise ValueError("Generated Catalogue rendition policy is unavailable")
+    bases = primary.get("base_urls", {})
+    if not isinstance(bases, dict) or any(not _safe_media_url(bases.get(family)) or not bases[family].endswith("/")
+           or any(char in bases[family] for char in "?#,") for family in ("works", "work_details")):
+        raise ValueError("Generated Catalogue image bases are unsafe")
+    for settings, key in ((primary, "widths"), (thumbnails, "sizes")):
+        values = settings.get(key)
+        if not isinstance(values, list) or not values or any(not _positive_integer(value) for value in values):
+            raise ValueError("Generated Catalogue rendition sizes are unavailable")
+        if not isinstance(settings.get("suffix"), str) or not re.fullmatch(r"[a-z0-9-]+", settings["suffix"]):
+            raise ValueError("Generated Catalogue rendition suffix is unavailable")
+    if payload.get("format") not in ("webp", "avif", "png", "jpg") or primary.get("version_query_parameter") != "v":
+        raise ValueError("Generated Catalogue media format or version policy is unsupported")
+    return payload
+
+
 def read_catalogue_work_index(repo_root: Path) -> dict[str, dict[str, Any]]:
     """Read the generated Work inventory without loading Series or by-ID records."""
     payload = _read_generated(repo_root, "works/works_index.json")
@@ -179,11 +203,6 @@ def catalogue_media_record(payload: dict[str, Any], work_id: str, detail_id: str
     _text(record.get("title"), "image title")
     if not all(_positive_integer(record.get(field)) for field in ("width_px", "height_px")):
         raise ValueError("Generated image dimensions are unavailable")
-    media = record.get("media")
-    primary = media.get("primary") if isinstance(media, dict) else None
-    if not isinstance(primary, list) or not primary or any(
-        not isinstance(item, dict) or not _positive_integer(item.get("width")) or not _safe_media_url(item.get("url"))
-        for item in primary
-    ):
-        raise ValueError(f"Generated media for Work {work_id} is unavailable or unsafe")
+    if not _positive_integer(record.get("media_version")):
+        raise ValueError(f"Generated media version for Work {work_id} is unavailable")
     return record

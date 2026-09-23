@@ -14,7 +14,7 @@ from catalogue.catalogue_generation_common import (
 
 
 
-WORK_RECORD_SCHEMA_VERSION = "work_record_v6"
+WORK_RECORD_SCHEMA_VERSION = "work_record_v7"
 SERIES_RECORD_SCHEMA_VERSION = "series_record_v5"
 
 

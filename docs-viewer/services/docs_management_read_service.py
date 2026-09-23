@@ -115,6 +115,8 @@ def docs_management_get_payload(repo_root: Path, path: str, params: dict[str, li
         )
     if path == routes.CATALOGUE_MEDIA_TARGETS_PATH:
         return docs_catalogue_media.read_catalogue_media_targets(repo_root)
+    if path == routes.CATALOGUE_MEDIA_CONFIG_PATH:
+        return docs_catalogue_media.read_catalogue_media_config(repo_root)
     if path == routes.CATALOGUE_WORK_PATH:
         return docs_catalogue_media.read_catalogue_work(
             repo_root, docs_api_query_value(params, "work_id"),

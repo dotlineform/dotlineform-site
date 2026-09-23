@@ -12,32 +12,10 @@ from urllib.parse import quote
 from catalogue import catalogue_generation_indexes as indexes
 from catalogue import catalogue_generation_records as projection
 from catalogue.catalogue_generation_common import compact_json_object, compute_payload_version
+from catalogue.catalogue_media_policy import catalogue_media_policy, catalogue_thumbnail_paths
 from catalogue.catalogue_output_paths import catalogue_output_workspace, output_path
 from catalogue.catalogue_source import CatalogueSourceRecords, records_from_json_source, validate_source_records, slug_id, section_sort_key, detail_sort_key_for_section
 from catalogue.series_ids import normalize_series_id
-from pipeline_config import load_pipeline_config
-
-
-def media_references(config: Mapping[str, Any], media: Mapping[str, Any], family: str, item_id: str, record: Mapping[str, Any]) -> dict[str, Any]:
-    """Project explicit consumer references from checked media policy and exact identity."""
-    if not record.get("project_filename"):
-        return {}
-    key = "image_works" if family == "works" else "image_work_details"
-    prefix = str(media[key]).strip("/")
-    if prefix == "archive" or prefix.startswith("archive/") or ".." in prefix.split("/"):
-        raise ValueError(f"invalid active Catalogue media prefix: {prefix}")
-    extension = config["encoding"]["format"]
-    version = int(record.get("media_version") or 1)
-    return {
-        "thumbnails": [
-            {"path": f"{family}/thumbs/{item_id}-{config['variants']['thumb']['suffix']}-{size}.{extension}", "size": size}
-            for size in config["variants"]["thumb"]["sizes"]
-        ],
-        "primary": [
-            {"url": f"{media['base'].rstrip('/')}/{prefix}/{item_id}-{config['variants']['primary']['suffix']}-{width}.{extension}?v={version}", "width": width}
-            for width in config["variants"]["primary"]["widths"]
-        ],
-    }
 
 
 def _index(family: str, items: Mapping[str, Any], timestamp: str) -> dict[str, Any]:
@@ -56,14 +34,13 @@ def catalogue_payloads(repo_root: Path, records: CatalogueSourceRecords, *, time
     works_index: dict[str, Any] = {}
     details_index: dict[str, Any] = {}
     media_config = json.loads((repo_root / "site-tools/config/site-tools.json").read_text())["media"]
-    pipeline = load_pipeline_config(repo_root=repo_root)
+    payloads["media-config.json"] = catalogue_media_policy(repo_root, timestamp=timestamp)
     details_by_section: dict[str, list[dict[str, Any]]] = {}
     for uid, source in records.work_details.items():
         detail = projection.build_canonical_detail_record(
             source["work_id"], source["detail_id"], source.get("title"), source.get("width_px"),
             source.get("height_px"), source.get("media_version"),
         )
-        detail["media"] = media_references(pipeline, media_config, "work_details", uid, source)
         details_by_section.setdefault(source["section_id"], []).append(detail)
         details_index[uid] = {**detail, "section_id": source["section_id"]}
     sections_by_work: dict[str, list[dict[str, Any]]] = {}
@@ -86,13 +63,12 @@ def catalogue_payloads(repo_root: Path, records: CatalogueSourceRecords, *, time
                 for download in source["downloads"]
             ]
         work["documents"] = []
-        work["media"] = media_references(pipeline, media_config, "works", wid, source)
         sections = sorted(sections_by_work.get(wid, []), key=section_sort_key)
         payloads[f"works/index/{wid}.json"] = projection.build_work_json_payload(
             work_id=wid, work_record=work, sections=sections, generated_at_utc=timestamp,
             count=sum(len(section["details"]) for section in sections),
         )
-        works_index[wid] = {key: work[key] for key in ("work_id", "title", "year", "year_display", "series_id", "media") if key in work}
+        works_index[wid] = {key: work[key] for key in ("work_id", "title", "year", "year_display", "series_id") if key in work}
     for sid, source in records.series.items():
         series = {**source, "documents": []}
         payloads[f"series/index/{sid}.json"] = projection.build_series_json_payload(
@@ -140,11 +116,7 @@ def generate_catalogue_json(
             selected.update(path.relative_to(workspace.root).as_posix() for path in output_path(workspace, f"{family}/index").glob("*.json"))
     written, deleted = [], []
     if full:
-        expected_thumbs = {
-            thumbnail["path"] for family in ("works", "work_details")
-            for record in payloads[f"{family}/{family}_index.json"][family].values()
-            for thumbnail in record.get("media", {}).get("thumbnails", [])
-        }
+        expected_thumbs = catalogue_thumbnail_paths(repo_root, records)
         for family in ("works", "work_details"):
             for existing in output_path(workspace, f"{family}/thumbs").glob("*"):
                 if not re.fullmatch(r"\d{5}(?:-\d+)?-thumb-\d+\.webp", existing.name):
