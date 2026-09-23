@@ -1392,14 +1392,6 @@ button.studioList__cellLink {
   align-items: center;
 }
 
-.catalogueWorkSeriesPicker__chipLink {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--studio-pill-gap);
-  color: inherit;
-  text-decoration: none;
-}
-
 .catalogueWorkSeriesPicker__chipId {
   color: var(--muted, var(--studio-muted));
   font-size: var(--font-caption);

@@ -1,8 +1,6 @@
 import { displayValue } from "./catalogue-editor-records.js";
 import { createWorkGalleryPicker, renderWorkGalleryPicker, setWorkGalleryPickerAvailability } from "./catalogue-work-gallery-picker.js";
-import {
-  buildStudioRouteUrl
-} from "./studio-config.js";
+import { bindSearchList } from "/shared/frontend/js/search-list.js";
 import { WORK_EDITABLE_FIELDS as EDITABLE_FIELDS, WORK_READONLY_FIELDS as READONLY_FIELDS, normalizeSeriesId, normalizeText } from "./catalogue-work-fields.js";
 import {
   openProjectMediaPickerForCurrentDraft,
@@ -107,21 +105,11 @@ function formatSeriesChoice(state, seriesId) {
   return title === seriesId ? seriesId : `${title} (${seriesId})`;
 }
 
-function seriesEditorHref(state, seriesId) {
-  try {
-    return buildStudioRouteUrl(state.config, "catalogue_series_editor", {series: seriesId});
-  } catch (_error) {
-    return "";
-  }
-}
-
 function seriesSearchMatches(state, queryText) {
   const query = normalizeText(queryText).toLowerCase();
-  const selected = new Set([normalizeSeriesId(state.draft?.series_id)]);
   if (!query) return [];
   return Array.from(state.seriesById.entries())
     .filter(([seriesId, record]) => {
-      if (selected.has(seriesId)) return false;
       const title = normalizeText(record && record.title).toLowerCase();
       return seriesId.includes(query) || title.includes(query);
     })
@@ -139,53 +127,16 @@ function setSeriesDraftId(state, seriesId, options) {
   if (node) node.value = state.draft.series_id;
   if (state.seriesPicker) state.seriesPicker.bulkInput.value = state.draft.series_id;
   if (state.mode === "bulk") state.bulkTouchedFields.add("series_id");
-  renderSeriesPicker(state, options);
+  renderSeriesPicker(state);
   notifyStateChange(options);
 }
 
-function addSeriesDraftId(state, seriesId, options) { setSeriesDraftId(state, seriesId, options); }
-
-function removeSeriesDraftId(state, seriesId, options) { if (normalizeSeriesId(seriesId) === state.draft.series_id) setSeriesDraftId(state, "", options); }
-
-function renderSeriesPickerMatches(state, _options) {
+function renderSeriesPicker(state) {
   if (!state.seriesPicker) return;
-  const matches = seriesSearchMatches(state, state.seriesPicker.searchInput.value);
-  if (!matches.length) {
-    state.seriesPicker.popupNode.hidden = true;
-    state.seriesPicker.popupNode.innerHTML = "";
-    return;
-  }
-  state.seriesPicker.popupNode.innerHTML = matches.map(([seriesId]) => `
-    <button type="button" class="studioSuggest__workButton catalogueWorkSeriesPicker__option" data-series-id="${escapeHtml(seriesId)}">
-      <span class="studioSuggest__workTitle">${escapeHtml(seriesDisplayTitle(state, seriesId))}</span>
-      <span class="studioSuggest__workMeta">${escapeHtml(seriesId)}</span>
-    </button>
-  `).join("");
-  state.seriesPicker.popupNode.hidden = false;
-}
-
-function renderSeriesPicker(state, options = {}) {
-  if (!state.seriesPicker) return;
-  const seriesIds = [normalizeSeriesId(state.draft?.series_id)].filter(Boolean);
-  state.seriesPicker.hiddenInput.value = seriesIds[0] || "";
-  state.seriesPicker.chipsNode.innerHTML = seriesIds.length
-    ? seriesIds.map((seriesId) => {
-      const title = seriesDisplayTitle(state, seriesId);
-      const href = seriesEditorHref(state, seriesId);
-      const labelHtml = `
-        <span class="studioUi__chipText">${escapeHtml(title)}</span>
-        <span class="catalogueWorkSeriesPicker__chipId">${escapeHtml(seriesId)}</span>
-      `;
-      return `
-      <span class="studioUi__chip catalogueWorkSeriesPicker__chip">
-        ${href
-          ? `<a class="catalogueWorkSeriesPicker__chipLink" href="${escapeHtml(href)}" target="_blank" rel="noopener">${labelHtml}</a>`
-          : labelHtml}
-        <button type="button" class="studioUi__chipRemove" data-remove-series-id="${escapeHtml(seriesId)}" aria-label="${escapeHtml(`Remove ${formatSeriesChoice(state, seriesId)}`)}">×</button>
-      </span>
-    `;
-    }).join("")
-    : `<span class="studioForm__meta">${escapeHtml(formText(options, "series_picker_empty", "No series selected."))}</span>`;
+  const seriesId = normalizeSeriesId(state.draft?.series_id);
+  state.seriesPicker.hiddenInput.value = seriesId;
+  state.seriesPicker.searchInput.value = seriesId ? formatSeriesChoice(state, seriesId) : "";
+  state.seriesPicker.searchController.close();
 }
 
 function renderField(field, fieldsNode, state, options) {
@@ -403,10 +354,6 @@ function renderSeriesField(field, fieldsNode, state, options) {
   const pickerNode = document.createElement("div");
   pickerNode.className = "catalogueWorkSeriesPicker__control";
 
-  const chipsNode = document.createElement("div");
-  chipsNode.className = "catalogueWorkSeriesPicker__chips";
-  pickerNode.appendChild(chipsNode);
-
   const searchWrap = document.createElement("div");
   searchWrap.className = "catalogueWorkSeriesPicker__searchWrap";
   const searchInput = document.createElement("input");
@@ -443,28 +390,30 @@ function renderSeriesField(field, fieldsNode, state, options) {
   message.dataset.fieldStatus = field.key;
   wrapper.appendChild(message);
 
-  searchInput.addEventListener("input", () => renderSeriesPickerMatches(state, options));
-  searchInput.addEventListener("keydown", (event) => {
-    if (event.key !== "Enter") return;
-    const matches = seriesSearchMatches(state, searchInput.value);
-    if (!matches.length) return;
-    event.preventDefault();
-    addSeriesDraftId(state, matches[0][0], options);
-    searchInput.value = "";
-    popupNode.hidden = true;
+  const searchController = bindSearchList(searchInput, popupNode, {
+    id: "catalogueWorkSeriesSearchList",
+    openOnFocus: false,
+    shouldOpen: () => !searchInput.disabled,
+    loadOptions: () => Array.from(state.seriesById.entries()),
+    filterOptions: (_items, query) => seriesSearchMatches(state, query),
+    getOptionValue: ([seriesId]) => formatSeriesChoice(state, seriesId),
+    renderOption: ([seriesId]) => `
+      <span class="studioSuggest__workTitle">${escapeHtml(seriesDisplayTitle(state, seriesId))}</span>
+      <span class="studioSuggest__workMeta">${escapeHtml(seriesId)}</span>
+    `,
+    classNames: { option: "studioSuggest__workButton catalogueWorkSeriesPicker__option" },
+    noResultsText: "No matching series.",
+    onCommit: ([seriesId]) => {
+      if (searchInput.disabled) return;
+      setSeriesDraftId(state, seriesId, options);
+      searchInput.focus();
+    },
+    onCancel: () => renderSeriesPicker(state)
   });
-  popupNode.addEventListener("click", (event) => {
-    const button = event.target && event.target.closest ? event.target.closest("[data-series-id]") : null;
-    if (!button) return;
-    addSeriesDraftId(state, button.getAttribute("data-series-id"), options);
-    searchInput.value = "";
-    popupNode.hidden = true;
-    searchInput.focus();
-  });
-  chipsNode.addEventListener("click", (event) => {
-    const button = event.target && event.target.closest ? event.target.closest("[data-remove-series-id]") : null;
-    if (!button) return;
-    removeSeriesDraftId(state, button.getAttribute("data-remove-series-id"), options);
+  searchInput.addEventListener("blur", () => renderSeriesPicker(state));
+  popupNode.addEventListener("mousedown", event => {
+    // Preserve the query and results until click commits the exact Series selection.
+    if (event.button === 0 && event.target.closest("[data-search-list-index]")) event.preventDefault();
   });
   bulkInput.addEventListener("input", () => {
     state.draft.series_id = bulkInput.value;
@@ -474,10 +423,10 @@ function renderSeriesField(field, fieldsNode, state, options) {
   });
 
   fieldsNode.appendChild(wrapper);
-  state.seriesPicker = { wrapper, pickerNode, chipsNode, searchWrap, searchInput, popupNode, bulkInput, hiddenInput };
+  state.seriesPicker = { wrapper, pickerNode, searchWrap, searchInput, popupNode, bulkInput, hiddenInput, searchController };
   state.fieldNodes.set(field.key, hiddenInput);
   state.fieldStatusNodes.set(field.key, message);
-  renderSeriesPicker(state, options);
+  renderSeriesPicker(state);
 }
 
 function renderReadonlyField(field, readonlyNode, state) {
@@ -535,7 +484,7 @@ export function getFieldNodeValue(node) {
   return normalizeText(node.textContent);
 }
 
-export function applyDraftToInputs(state, options = {}) {
+export function applyDraftToInputs(state) {
   renderWorkGalleryPicker(state);
   EDITABLE_FIELDS.forEach((field) => {
     const node = state.fieldNodes.get(field.key);
@@ -545,7 +494,7 @@ export function applyDraftToInputs(state, options = {}) {
       if (state.seriesPicker && state.seriesPicker.bulkInput) {
         state.seriesPicker.bulkInput.value = normalizeText(state.draft[field.key]);
       }
-      renderSeriesPicker(state, options);
+      renderSeriesPicker(state);
       return;
     }
     setFieldNodeValue(node, normalizeText(state.draft[field.key]));
@@ -573,13 +522,12 @@ export function setModeFieldAvailability(state) {
   if (state.seriesPicker) {
     const isBulk = state.mode === "bulk";
     state.seriesPicker.pickerNode.hidden = false;
-    state.seriesPicker.chipsNode.hidden = isBulk;
     state.seriesPicker.searchWrap.hidden = isBulk;
     state.seriesPicker.bulkInput.hidden = !isBulk;
     state.seriesPicker.searchInput.disabled = isBulk || state.isSaving || state.isBuilding || state.isDeleting;
     state.seriesPicker.bulkInput.disabled = !isBulk || state.isSaving || state.isBuilding || state.isDeleting;
-    if (isBulk) {
-      state.seriesPicker.popupNode.hidden = true;
+    if (state.seriesPicker.searchInput.disabled) {
+      renderSeriesPicker(state);
     }
   }
   if (state.projectMediaChooseButton) {
