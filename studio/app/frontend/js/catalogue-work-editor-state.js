@@ -80,6 +80,8 @@ export function createWorkEditorState(elements, options = {}) {
     mode: "single",
     workSearchById: new Map(),
     seriesById: new Map(),
+    galleriesById: new Map(),
+    galleryPicker: null,
     sourceWorkRecordsById: new Map(),
     currentLookup: null,
     currentWorkId: "",

@@ -32,7 +32,13 @@ function setTextWithState(context, node, text, state = "") {
 
 function buildPayload(state) {
   const record = buildWorkRecordFromDraft(state.draft, { downloadFields: DOWNLOAD_FIELDS, linkFields: LINK_FIELDS });
-  if (state.mode !== "bulk") return {work_id: state.currentWorkId, expected_record_hash: state.currentRecordHash, record};
+  if (state.mode !== "bulk") return {
+    work_id: state.currentWorkId,
+    expected_record_hash: state.currentRecordHash,
+    record,
+    gallery_ids: state.draft.gallery_ids.slice(),
+    expected_gallery_ids: state.baselineDraft.gallery_ids.slice()
+  };
   const setFields = {};
   for (const field of EDITABLE_FIELDS) {
     if (state.bulkTouchedFields.has(field.key)) setFields[field.key] = record[field.key] ?? null;
@@ -60,7 +66,7 @@ export async function saveCurrentWork(state, context) {
   }
 
   state.isSaving = true;
-  state.saveButton.disabled = true;
+  context.updateEditorState();
   setTextWithState(
     context,
     state.statusNode,
@@ -84,7 +90,9 @@ export async function saveCurrentWork(state, context) {
     const payload = buildPayload(state);
     const response = await saveCatalogueWork(payload);
     savedResponse = response;
-    const record = response && response.record && typeof response.record === "object" ? response.record : null;
+    const record = response && response.record && typeof response.record === "object" && Array.isArray(response.gallery_ids)
+      ? { ...response.record, gallery_ids: response.gallery_ids }
+      : null;
     if (!record) {
       throw new Error("save response missing record");
     }

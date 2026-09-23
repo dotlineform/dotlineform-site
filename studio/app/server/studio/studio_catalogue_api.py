@@ -28,6 +28,7 @@ for candidate in (SCRIPTS_DIR, STUDIO_DIR):
 from catalogue import catalogue_lookup_refresh as lookup_refresh  # noqa: E402
 from catalogue import catalogue_write_service  # noqa: E402
 from catalogue.catalogue_revisions import CatalogueRevisionConflict  # noqa: E402
+from catalogue.catalogue_galleries import read_galleries  # noqa: E402
 from catalogue.catalogue_build_media import PIPELINE_CONFIG  # noqa: E402
 from catalogue.catalogue_lookup import (  # noqa: E402
     DEFAULT_LOOKUP_DIR,
@@ -61,6 +62,7 @@ LOGS_REL_DIR = Path("var/studio/catalogue/logs")
 CATALOGUE_READ_KEYS = {
     "catalogue_works",
     "catalogue_series",
+    "catalogue_galleries",
     "catalogue_lookup_work_search",
     "catalogue_lookup_series_search",
     "catalogue_lookup_series_base",
@@ -119,6 +121,9 @@ def catalogue_read_payload(repo_root: Path, query: Mapping[str, list[str]]) -> d
         return load_source_payload(paths["series_path"], "series")
 
     source_records = records_from_json_source(paths["source_dir"])
+    if key == "catalogue_galleries":
+        galleries = read_galleries(paths["source_dir"], source_records.works)
+        return {"galleries": galleries.galleries}
     if key == "catalogue_lookup_work_search":
         return build_work_search_payload(source_records)
     if key == "catalogue_lookup_series_search":
@@ -127,7 +132,10 @@ def catalogue_read_payload(repo_root: Path, query: Mapping[str, list[str]]) -> d
         work_id = slug_id(record_id)
         if not work_id:
             raise ValueError("record_id is required for work lookup reads")
-        return build_work_lookup_payload(source_records, work_id)
+        payload = build_work_lookup_payload(source_records, work_id)
+        galleries = read_galleries(paths["source_dir"], source_records.works)
+        payload["gallery_ids"] = sorted(galleries.works.get(work_id, []))
+        return payload
     if key == "catalogue_lookup_series_base":
         series_id = normalize_series_id(record_id)
         if not series_id:

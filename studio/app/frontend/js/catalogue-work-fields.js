@@ -1,6 +1,7 @@
 const WORK_FIELD_DEFINITIONS = Object.freeze({
   work_id: Object.freeze({ key: "work_id", label: "work id", type: "text" }),
   series_id: Object.freeze({ key: "series_id", label: "series", type: "text", description: "search by series title" }),
+  gallery_ids: Object.freeze({ key: "gallery_ids", label: "galleries", type: "galleries" }),
   media_source_id: Object.freeze({ key: "media_source_id", label: "media source", type: "media-source" }),
   project_folder: Object.freeze({ key: "project_folder", label: "project folder", type: "text" }),
   project_subfolder: Object.freeze({ key: "project_subfolder", label: "project subfolder", type: "text" }),
@@ -21,6 +22,7 @@ const WORK_FIELD_DEFINITIONS = Object.freeze({
 
 const WORK_EDITABLE_FIELDS = Object.freeze([
   WORK_FIELD_DEFINITIONS.series_id,
+  WORK_FIELD_DEFINITIONS.gallery_ids,
   WORK_FIELD_DEFINITIONS.media_source_id,
   WORK_FIELD_DEFINITIONS.project_folder,
   WORK_FIELD_DEFINITIONS.project_subfolder,
@@ -43,6 +45,7 @@ const NEW_WORK_EDITABLE_FIELDS = Object.freeze([
   WORK_FIELD_DEFINITIONS.work_id,
   WORK_FIELD_DEFINITIONS.title,
   WORK_FIELD_DEFINITIONS.series_id,
+  WORK_FIELD_DEFINITIONS.gallery_ids,
   WORK_FIELD_DEFINITIONS.media_source_id,
   WORK_FIELD_DEFINITIONS.project_folder,
   WORK_FIELD_DEFINITIONS.project_subfolder,
@@ -82,6 +85,7 @@ function normalizeSeriesId(value) {
 
 
 function canonicalizeWorkScalar(field, value) {
+  if (field.key === "gallery_ids") return JSON.stringify((value || []).slice().sort());
   return field.key === "series_id" ? normalizeSeriesId(value) : normalizeText(value);
 }
 
@@ -123,6 +127,7 @@ function embeddedEntriesEqual(a, b, fields) {
 function buildWorkDraftFromRecord(record, options = {}) {
   const fields = Array.isArray(options.fields) ? options.fields : WORK_EDITABLE_FIELDS;
   const draft = Object.fromEntries(fields.map(field => [field.key, formatNumberText(record && record[field.key])]));
+  draft.gallery_ids = Array.isArray(record?.gallery_ids) ? record.gallery_ids.slice().sort() : [];
   if (options.downloadFields) draft.downloads = cloneEmbeddedEntries(record && record.downloads, options.downloadFields);
   if (options.linkFields) draft.links = cloneEmbeddedEntries(record && record.links, options.linkFields);
   return draft;
@@ -163,7 +168,7 @@ function buildWorkRecordFromDraft(draft, options = {}) {
 
 function buildCreateWorkPayload(draft) {
   const workId = normalizeWorkId(draft.work_id);
-  return { work_id: workId, record: buildWorkRecordFromDraft(draft, { includeWorkId: true, workId }) };
+  return { work_id: workId, record: buildWorkRecordFromDraft(draft, { includeWorkId: true, workId }), gallery_ids: draft.gallery_ids.slice() };
 }
 
 function suggestNextWorkId(workItems) {

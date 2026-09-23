@@ -51,6 +51,10 @@ function buildBulkDraftFromRecords(records) {
   const draft = {};
   const mixedFields = new Set();
   EDITABLE_FIELDS.forEach((field) => {
+    if (field.key === "gallery_ids") {
+      draft.gallery_ids = [];
+      return;
+    }
     const values = drafts.map((item) => canonicalizeScalar(field, item[field.key]));
     const first = values[0] || "";
     const allSame = values.every((value) => value === first);
@@ -195,6 +199,7 @@ export function setNewWorkMode(state, options = {}) {
   EDITABLE_FIELDS.forEach((field) => {
     state.draft[field.key] = "";
   });
+  state.draft.gallery_ids = [];
   state.draft.downloads = [];
   state.draft.links = [];
   state.draft.series_id = normalizeSeriesId(options.seriesId);
@@ -227,6 +232,7 @@ export function setEmptySearchMode(state, options = {}) {
   EDITABLE_FIELDS.forEach((field) => {
     state.draft[field.key] = "";
   });
+  state.draft.gallery_ids = [];
   state.draft.downloads = [];
   state.draft.links = [];
   clearBuildState(state);

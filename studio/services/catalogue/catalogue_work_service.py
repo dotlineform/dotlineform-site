@@ -5,6 +5,12 @@ from __future__ import annotations
 from typing import Any, Mapping
 
 from catalogue import catalogue_source_mutation as source_mutation
+from catalogue.catalogue_galleries import (
+    MEMBERSHIPS_FILE,
+    read_galleries,
+    require_work_membership_revision,
+    with_work_memberships,
+)
 from catalogue.catalogue_revisions import record_hash, require_record_revision
 from catalogue import catalogue_transactions as transactions
 from catalogue.catalogue_service_context import (
@@ -36,11 +42,20 @@ def work_create_payload(context: CatalogueWriteContext, body: Mapping[str, Any])
     if mutation_plan.validation_errors:
         raise ValueError("source validation failed: " + "; ".join(mutation_plan.validation_errors[:20]))
 
+    galleries = read_galleries(context.source_dir, works)
+    updated_galleries = with_work_memberships(
+        galleries, {**works, work_id: mutation_plan.updated_record}, work_id, body.get("gallery_ids", []),
+    )
+    membership_changed = galleries.works != updated_galleries.works
+    changed_fields = mutation_plan.changed_fields + (["gallery_ids"] if membership_changed else [])
     target_path = context.works_path.resolve()
-    if target_path not in context.allowed_write_paths:
+    writes = {target_path: mutation_plan.payload}
+    if membership_changed:
+        writes[(context.source_dir / MEMBERSHIPS_FILE).resolve()] = updated_galleries.payloads()[MEMBERSHIPS_FILE]
+    if not set(writes).issubset(context.allowed_write_paths):
         raise ValueError("write target not allowlisted")
     transactions.execute_source_json_write(
-        {target_path: mutation_plan.payload},
+        writes,
         dry_run=context.dry_run,
         repo_root=context.repo_root,
     )
@@ -51,8 +66,10 @@ def work_create_payload(context: CatalogueWriteContext, body: Mapping[str, Any])
         "record_hash": record_hash(mutation_plan.updated_record),
         "created": True,
         "changed": True,
-        "changed_fields": mutation_plan.changed_fields,
+        "changed_fields": changed_fields,
         "record": mutation_plan.updated_record,
+        "gallery_ids": updated_galleries.works.get(work_id, []),
+        "affected_gallery_ids": updated_galleries.works.get(work_id, []),
     }
     if context.dry_run:
         payload["dry_run"] = True
@@ -81,30 +98,44 @@ def work_save_payload(context: CatalogueWriteContext, body: Mapping[str, Any]) -
     if not isinstance(current_record, dict):
         raise ValueError(f"work_id not found: {work_id}")
     require_record_revision(current_record, body.get("expected_record_hash"))
+    galleries = read_galleries(context.source_dir, works)
+    updated_galleries = galleries
+    if "gallery_ids" in body:
+        require_work_membership_revision(galleries, work_id, body.get("expected_gallery_ids"))
+        updated_galleries = with_work_memberships(galleries, works, work_id, body["gallery_ids"])
     plan = source_mutation.plan_work_save(
         records_from_json_source(context.source_dir), works, work_id, current_record, work_update,
     )
     if plan.validation_errors:
         raise ValueError("source validation failed: " + "; ".join(plan.validation_errors[:20]))
+    membership_changed = galleries.works != updated_galleries.works
+    changed = plan.changed or membership_changed
+    changed_fields = plan.changed_fields + (["gallery_ids"] if membership_changed else [])
+    writes = {}
     if plan.changed:
-        target_path = context.works_path.resolve()
-        if target_path not in context.allowed_write_paths:
-            raise ValueError("write target not allowlisted")
+        writes[context.works_path.resolve()] = plan.payload
+    if membership_changed:
+        writes[(context.source_dir / MEMBERSHIPS_FILE).resolve()] = updated_galleries.payloads()[MEMBERSHIPS_FILE]
+    if not set(writes).issubset(context.allowed_write_paths):
+        raise ValueError("write target not allowlisted")
+    if writes:
         transactions.execute_source_json_write(
-            {target_path: plan.payload}, dry_run=context.dry_run, repo_root=context.repo_root,
+            writes, dry_run=context.dry_run, repo_root=context.repo_root,
         )
     payload: dict[str, Any] = {
-        "ok": True, "work_id": work_id, "changed": plan.changed,
-        "changed_fields": plan.changed_fields, "record": plan.updated_record,
+        "ok": True, "work_id": work_id, "changed": changed,
+        "changed_fields": changed_fields, "record": plan.updated_record,
         "record_hash": record_hash(plan.updated_record),
+        "gallery_ids": sorted(updated_galleries.works.get(work_id, [])),
+        "affected_gallery_ids": sorted(set(galleries.works.get(work_id, [])) | set(updated_galleries.works.get(work_id, []))),
     }
     if context.dry_run:
-        payload.update(dry_run=True, would_write=plan.changed)
-    elif plan.changed:
+        payload.update(dry_run=True, would_write=changed)
+    elif changed:
         payload["saved_at_utc"] = utc_now()
     log_event(context.repo_root, "catalogue_work_save", {
-        "work_id": work_id, "changed": plan.changed,
-        "changed_fields": plan.changed_fields, "dry_run": context.dry_run,
+        "work_id": work_id, "changed": changed,
+        "changed_fields": changed_fields, "dry_run": context.dry_run,
     })
     return payload
 

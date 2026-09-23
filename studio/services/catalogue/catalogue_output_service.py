@@ -43,6 +43,7 @@ def complete_saved_catalogue_output(
         complete_catalogue_media(context.repo_root, context.source_dir, records=current, previous=previous, work_ids=work_ids, write=True)
         response["output"] = generate_catalogue_json(
             context.repo_root, context.source_dir, write=True, work_ids=work_ids, series_ids=series_ids,
+            gallery_ids=response.get("affected_gallery_ids", ()),
         )
     except (Exception, SystemExit) as error:
         response["output"] = {"status": "failed", "error": str(error), "message": "Data saved, but output generation did not complete."}

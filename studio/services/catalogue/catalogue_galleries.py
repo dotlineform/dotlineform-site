@@ -8,6 +8,8 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Mapping
 
+from catalogue.catalogue_revisions import CatalogueRevisionConflict
+
 
 GALLERIES_FILE = "galleries.json"
 MEMBERSHIPS_FILE = "galleries-by-work.json"
@@ -81,3 +83,26 @@ def read_galleries(source_dir: Path, works: Mapping[str, Any]) -> CatalogueGalle
     data = CatalogueGalleries(galleries=maps[0], works=maps[1])
     validate_galleries(data, works)
     return data
+
+
+def require_work_membership_revision(data: CatalogueGalleries, work_id: str, expected: Any) -> None:
+    """Check the editor's exact membership set independently of Work metadata."""
+    if not isinstance(expected, list) or any(not isinstance(gid, str) for gid in expected):
+        raise ValueError("expected_gallery_ids must be an array of Gallery IDs")
+    if sorted(expected) != sorted(data.works.get(work_id, [])):
+        raise CatalogueRevisionConflict("Work Gallery membership changed; reload before saving.")
+
+
+def with_work_memberships(
+    data: CatalogueGalleries, works: Mapping[str, Any], work_id: str, gallery_ids: Any,
+) -> CatalogueGalleries:
+    """Return validated replacement membership; an empty selection removes the entry."""
+    memberships = dict(data.works)
+    memberships[work_id] = gallery_ids
+    updated = CatalogueGalleries(data.galleries, memberships)
+    validate_galleries(updated, works)
+    if gallery_ids:
+        memberships[work_id] = sorted(gallery_ids)
+    else:
+        del memberships[work_id]
+    return updated

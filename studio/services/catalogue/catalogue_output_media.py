@@ -32,7 +32,7 @@ def _download_filename(value: str) -> str:
 
 
 def _downloads(records: CatalogueSourceRecords, work_ids: Sequence[str]) -> set[str]:
-    return {_download_filename(item["filename"]) for wid in work_ids for item in records.works.get(wid, {}).get("downloads", [])}
+    return {_download_filename(item["filename"]) for wid in work_ids for item in (records.works.get(wid, {}).get("downloads") or [])}
 
 
 def _save_dimensions(repo_root: Path, source_dir: Path, tasks: list[dict[str, Any]]) -> None:

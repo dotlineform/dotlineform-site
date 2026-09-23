@@ -9,7 +9,7 @@ import {
   loadCatalogueMediaConfig
 } from "./catalogue-media-preview.js";
 import {
-  loadStudioLookupRecordJson
+  loadStudioServerReadJson
 } from "./studio-data.js";
 import {
   configureCatalogueEditorRouteRuntime,
@@ -82,11 +82,10 @@ function setOpenInputMode(state) {
   state.searchNode.setAttribute("aria-label", t(state, "search_label", "Find work by id"));
 }
 
-async function loadWorkLookupRecord(state, workId) {
-  return loadStudioLookupRecordJson(state.config, "catalogue_work_record", workId, {
-    cache: "no-store",
-    catalogueServerAvailable: state.serverAvailable
-  });
+async function loadWorkLookupRecord(workId) {
+  const lookup = await loadStudioServerReadJson("catalogue_work_record", workId, { cache: "no-store" });
+  if (!Array.isArray(lookup.gallery_ids)) throw new Error("Work Gallery membership is unavailable.");
+  return { ...lookup, work: { ...lookup.work, gallery_ids: lookup.gallery_ids } };
 }
 
 async function openEmbeddedEntryModal(state, kind, index = null) {
@@ -160,6 +159,10 @@ function validateDraft(state) {
     else if (!state.seriesById.has(normalizeSeriesId(series))) errors.set("series_id", "Unknown Series id: " + series + ".");
   }
   if (state.mode !== "bulk") {
+    const ids = state.draft.gallery_ids;
+    if (!Array.isArray(ids) || ids.some(id => !state.galleriesById.has(id)) || new Set(ids).size !== ids.length) {
+      errors.set("gallery_ids", "Select distinct existing galleries.");
+    }
     const sources = state.workMediaSourceConfig?.mediaSourceIds || [];
     if (!sources.includes(resolvedWorkMediaSourceId(state))) errors.set("media_source_id", "Select a configured media source.");
     validateWorkEmbeddedItems(state.draft, {text: (key, fallback, tokens) => t(state, key, fallback, tokens)}).forEach((message, key) => errors.set(key, message));
@@ -174,7 +177,7 @@ function clearActionMessages(state) {
 function firstBulkMixedMessage(state) {
   if (state.mode !== "bulk") return "";
   for (const field of EDITABLE_FIELDS) {
-    if (field.key === "media_source_id") continue;
+    if (field.key === "media_source_id" || field.key === "gallery_ids") continue;
     if (!state.bulkMixedFields.has(field.key) || state.bulkTouchedFields.has(field.key)) continue;
     return field.key === "series_id"
       ? t(state, "bulk_field_mixed_series", "Mixed values. Leave untouched to preserve, enter one Series id to reassign, or clear to remove membership.")
@@ -289,7 +292,7 @@ function workRouteStateOptions(state, overrides = {}) {
 function workSelectionOptions(state) {
   return {
     text: (key, fallback, tokens) => t(state, key, fallback, tokens),
-    loadWorkLookupRecord: (workId) => loadWorkLookupRecord(state, workId),
+    loadWorkLookupRecord,
     setLoadedBulkWorks: (workIds, recordsById, recordHashes) => {
       setLoadedBulkWorks(state, workIds, recordsById, recordHashes, workRouteStateOptions(state));
     },
@@ -312,7 +315,7 @@ function workActionOptions(state) {
     updateFieldMessages: (errors) => updateFieldMessages(state, errors, workFormOptions(state)),
     draftHasChanges: () => draftHasChanges(state),
     updateEditorState: () => updateEditorState(state),
-    loadWorkLookupRecord: (workId) => loadWorkLookupRecord(state, workId),
+    loadWorkLookupRecord,
     workRouteStateOptions: (overrides = {}) => workRouteStateOptions(state, overrides),
     renderCurrentPreview: () => renderCurrentPreview(state),
     renderReadiness: () => renderReadiness(state),
@@ -372,8 +375,9 @@ async function configureWorkEditorRuntime(state, elements) {
 }
 
 async function loadInitialWorkEditorData(state) {
-  const [sourcePayload] = await Promise.all([
+  const [sourcePayload, galleryPayload] = await Promise.all([
     readWorkMediaSources(),
+    loadStudioServerReadJson("catalogue_galleries", "", { cache: "no-store" }),
     loadCatalogueEditorLookupMaps(state, [
     {
       configKey: "catalogue_lookup_work_search",
@@ -390,6 +394,10 @@ async function loadInitialWorkEditorData(state) {
     }
     ])
   ]);
+  if (!galleryPayload.galleries || typeof galleryPayload.galleries !== "object" || Array.isArray(galleryPayload.galleries)) {
+    throw new Error("Gallery lookup is unavailable.");
+  }
+  state.galleriesById = new Map(Object.entries(galleryPayload.galleries));
   applyWorkMediaSourceConfig(state, sourcePayload);
 }
 

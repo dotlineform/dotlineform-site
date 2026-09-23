@@ -1,4 +1,5 @@
 import { displayValue } from "./catalogue-editor-records.js";
+import { createWorkGalleryPicker, renderWorkGalleryPicker, setWorkGalleryPickerAvailability } from "./catalogue-work-gallery-picker.js";
 import {
   buildStudioRouteUrl
 } from "./studio-config.js";
@@ -188,6 +189,10 @@ function renderSeriesPicker(state, options = {}) {
 }
 
 function renderField(field, fieldsNode, state, options) {
+  if (field.key === "gallery_ids") {
+    createWorkGalleryPicker(field, fieldsNode, state, options);
+    return;
+  }
   if (field.key === "series_id") {
     renderSeriesField(field, fieldsNode, state, options);
     return;
@@ -531,6 +536,7 @@ export function getFieldNodeValue(node) {
 }
 
 export function applyDraftToInputs(state, options = {}) {
+  renderWorkGalleryPicker(state);
   EDITABLE_FIELDS.forEach((field) => {
     const node = state.fieldNodes.get(field.key);
     if (!node) return;
@@ -563,6 +569,7 @@ export function clearReadonlyFields(state) {
 }
 
 export function setModeFieldAvailability(state) {
+  setWorkGalleryPickerAvailability(state);
   if (state.seriesPicker) {
     const isBulk = state.mode === "bulk";
     state.seriesPicker.pickerNode.hidden = false;
