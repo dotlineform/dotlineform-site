@@ -6,10 +6,9 @@
     "series_id": "075",
     "title": "harmony",
     "year": 2009,
-    "year_display": "2009",
-    "sort_fields": "title,work_id"
+    "year_display": "2009"
   },
-  "record_hash": "b2237ae933d4ff22e8f2ebc04dac567625a9291c904ac3f8450d06e18a04dec7",
+  "record_hash": "f8a027f8c8f9349323befe63ca9d6da6f1410783819a80812e11f20797b709ba",
   "member_works": [
     {
       "work_id": "00379",
@@ -55,14 +54,144 @@
       "year_display": "2009",
       "series_id": "075",
       "project_folder": "harmony"
+    },
+    {
+      "work_id": "03112",
+      "record_hash": "54d4790934ee9115aa10267b059143f4d6293dee7ec1013f7919521e20779188",
+      "title": "harmony 3.1",
+      "year": 2009,
+      "year_display": "2009",
+      "series_id": "075",
+      "project_folder": "harmony"
+    },
+    {
+      "work_id": "03113",
+      "record_hash": "7ebba9572af02ecb0eb4f8cd5c30cfb741cbe5f3e1cb909ee3b69b6156c11eaf",
+      "title": "harmony 3.2",
+      "year": 2009,
+      "year_display": "2009",
+      "series_id": "075",
+      "project_folder": "harmony"
+    },
+    {
+      "work_id": "03114",
+      "record_hash": "0941cdb91e58aa25b8f9c9b7adb115d575992d33ec8e882962aca33afdc2b17c",
+      "title": "harmony 3.3",
+      "year": 2009,
+      "year_display": "2009",
+      "series_id": "075",
+      "project_folder": "harmony"
+    },
+    {
+      "work_id": "03115",
+      "record_hash": "a072ebdb787eeeafb6de6c243bd9875365434c367f5a46cc2990528acbe2fd84",
+      "title": "harmony 3.4",
+      "year": 2009,
+      "year_display": "2009",
+      "series_id": "075",
+      "project_folder": "harmony"
+    },
+    {
+      "work_id": "03116",
+      "record_hash": "c21fb60cb59860c419d64e07a2f67402b91242c8aca5a011cc3b7719a559fc38",
+      "title": "harmony 3.5",
+      "year": 2009,
+      "year_display": "2009",
+      "series_id": "075",
+      "project_folder": "harmony"
+    },
+    {
+      "work_id": "03117",
+      "record_hash": "1e7551b89002598760c1465823029f9ad2f97504a241b2989329c187b9a844a6",
+      "title": "harmony 3.6",
+      "year": 2009,
+      "year_display": "2009",
+      "series_id": "075",
+      "project_folder": "harmony"
+    },
+    {
+      "work_id": "03118",
+      "record_hash": "2c5cbad860fd116c7c33063e4009063d1fe7ba09ee9ee287a2faf5dde294e66b",
+      "title": "harmony 3.7",
+      "year": 2009,
+      "year_display": "2009",
+      "series_id": "075",
+      "project_folder": "harmony"
+    },
+    {
+      "work_id": "03119",
+      "record_hash": "9a673633e73fc3579d20b5d0be82000dba43c73823a38b246c69fe3d49327bb8",
+      "title": "harmony 3.8",
+      "year": 2009,
+      "year_display": "2009",
+      "series_id": "075",
+      "project_folder": "harmony"
+    },
+    {
+      "work_id": "03120",
+      "record_hash": "bd4e342730d8f3da5762328de5a98fab6d470c9320f0b29d6d863b05ee01ece4",
+      "title": "harmony 3.9",
+      "year": 2009,
+      "year_display": "2009",
+      "series_id": "075",
+      "project_folder": "harmony"
+    },
+    {
+      "work_id": "03121",
+      "record_hash": "7607691290b318f1d05d4292400defccb8eef18b86e6ccebed4465cef3da7123",
+      "title": "harmony 3.10",
+      "year": 2009,
+      "year_display": "2009",
+      "series_id": "075",
+      "project_folder": "harmony"
+    },
+    {
+      "work_id": "03122",
+      "record_hash": "2fa4b9a264a8b761a58a62b0e79049c5e496bf830d7e9650e213c09f207d24e5",
+      "title": "harmony 3.11",
+      "year": 2009,
+      "year_display": "2009",
+      "series_id": "075",
+      "project_folder": "harmony"
+    },
+    {
+      "work_id": "03123",
+      "record_hash": "3cdc38882b55da2aa7ec34f742e9f46d9df0f436145492ff981772fa9844a808",
+      "title": "harmony 3.12",
+      "year": 2009,
+      "year_display": "2009",
+      "series_id": "075",
+      "project_folder": "harmony"
+    },
+    {
+      "work_id": "03124",
+      "record_hash": "044d448650b958db43d153b54efed3b9d637dd6e0fc8eb269153892fd6b9f6c4",
+      "title": "harmony 3.13",
+      "year": 2009,
+      "year_display": "2009",
+      "series_id": "075",
+      "project_folder": "harmony"
     }
   ],
   "ordered_work_ids": [
+    "00379",
     "00380",
     "00381",
     "00382",
-    "00379",
-    "00620"
+    "00620",
+    "03112",
+    "03113",
+    "03114",
+    "03115",
+    "03116",
+    "03117",
+    "03118",
+    "03119",
+    "03120",
+    "03121",
+    "03122",
+    "03123",
+    "03124"
   ],
   "project_folders": [
     "harmony"

@@ -36,11 +36,7 @@ import {
   openWorkEmbeddedEntryModal
 } from "./catalogue-work-editor-modals.js";
 import {
-  openProjectMediaMultiFileModal
-} from "./catalogue-project-media-picker.js";
-import {
   applyCatalogueDelete,
-  createCatalogueWorkDetailSection,
   previewCatalogueDelete,
   readProjectMediaFiles,
   readProjectMediaFolders,
@@ -138,87 +134,6 @@ async function deleteEmbeddedEntry(state, kind, index) {
   clearActionMessages(state);
   state.draft[result.entriesKey] = result.entries;
   updateEditorState(state);
-}
-
-function usedDetailSubfolders(state) {
-  const sections = state.currentLookup && Array.isArray(state.currentLookup.detail_sections)
-    ? state.currentLookup.detail_sections
-    : [];
-  return sections
-    .map((section) => normalizeText(section && section.details_subfolder))
-    .filter(Boolean);
-}
-
-async function openDetailSectionPicker(state) {
-  if (!state.currentRecord || state.mode === "bulk") return null;
-  clearActionMessages(state);
-  const mediaSourceId = normalizeText(state.currentRecord.media_source_id)
-    || normalizeText(state.workMediaSourceConfig && state.workMediaSourceConfig.defaultMediaSourceId);
-  const result = await openProjectMediaMultiFileModal(state, {
-    text: (key, fallback, tokens) => t(state, key, fallback, tokens),
-    initialSelection: {
-      project_folder: state.currentRecord.project_folder || state.draft.project_folder || ""
-    },
-    mediaSourceId,
-    disabledSubfolders: usedDetailSubfolders(state),
-    loadProjectFolders: (sourceId, query) => readProjectMediaFolders(sourceId, query),
-    loadProjectFiles: (request) => readProjectMediaFiles(request)
-  });
-  if (!result || !result.confirmed) return result;
-  const selection = result.selection || {};
-  const filenames = Array.isArray(selection.filenames) ? selection.filenames : [];
-  state.isSaving = true;
-  syncWorkRouteBusyState(state);
-  renderEditorMessage(state);
-  let savedResponse = null;
-  try {
-    state.messageController.setActionTextWithState(
-      state.statusNode,
-      t(state, "detail_section_create_status_running", "Creating detail section..."),
-      "info"
-    );
-    const payload = await createCatalogueWorkDetailSection({
-      work_id: state.currentWorkId,
-      project_folder: selection.project_folder,
-      project_subfolder: selection.project_subfolder,
-      filenames
-    });
-    savedResponse = payload;
-    const outputError = catalogueOutputError(payload);
-    const sectionId = normalizeText(payload && payload.section_id);
-    if (sectionId) state.detailBrowserSelectedSectionId = sectionId;
-    state.currentLookup = await loadWorkLookupRecord(state, state.currentWorkId);
-    if (sectionId) state.detailBrowserSelectedSectionId = sectionId;
-    updateSummary(state);
-    if (outputError) {
-      state.messageController.setActionTextWithState(state.resultNode, outputError, "error");
-    } else if (payload && payload.reason === "section_exists") {
-      state.messageController.setActionTextWithState(
-        state.resultNode,
-        t(state, "detail_section_create_status_exists", "Detail section already exists."),
-        "info"
-      );
-    } else {
-      state.messageController.setActionTextWithState(
-        state.resultNode,
-        t(state, "detail_section_create_status_created", "Created detail section with {count} detail file(s).", {
-          count: String(payload && payload.created_count != null ? payload.created_count : filenames.length)
-        }),
-        "success"
-      );
-    }
-  } catch (error) {
-    state.messageController.setActionTextWithState(
-      state.resultNode,
-      catalogueSavedActionError(savedResponse, error) || normalizeText(error && error.message) || t(state, "detail_section_create_status_failed", "Detail section create failed."),
-      "error"
-    );
-  } finally {
-    state.isSaving = false;
-    syncWorkRouteBusyState(state);
-    renderEditorMessage(state);
-  }
-  return result;
 }
 
 async function editDetailSection(state, row, rows = []) {
@@ -581,7 +496,6 @@ function workSectionOptions(state) {
   return {
     text: (key, fallback, tokens) => t(state, key, fallback, tokens),
     draftHasChanges,
-    openDetailSectionPicker: () => openDetailSectionPicker(state),
     editDetailSection: (row, rows) => editDetailSection(state, row, rows),
     deleteDetailSection: (row) => deleteDetailSection(state, row),
     openEmbeddedEntryModal: (kind, index) => openEmbeddedEntryModal(state, kind, index),

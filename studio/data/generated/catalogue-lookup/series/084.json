@@ -6,10 +6,9 @@
     "series_id": "084",
     "title": "kylie structures",
     "year": 2023,
-    "year_display": "2023",
-    "sort_fields": "work_id"
+    "year_display": "2023"
   },
-  "record_hash": "0def42470cebe4d26cc432e37b017e4e3abdf22c5a896862c472d5a25069b3db",
+  "record_hash": "074a8b4b2bcd1c0704a873ebd379a7e9afb9cbd253781095b0b8fd06dd1b9754",
   "member_works": [
     {
       "work_id": "00520",
@@ -46,13 +45,173 @@
       "year_display": "2023",
       "series_id": "084",
       "project_folder": "kylie structures"
+    },
+    {
+      "work_id": "03058",
+      "record_hash": "aff4e5288c2c931dfd1cc7c1899fa2833127eae39c5d5c46dd0681c2cf1b3f0b",
+      "title": "kylie structure 1.1",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "084",
+      "project_folder": "kylie structures"
+    },
+    {
+      "work_id": "03059",
+      "record_hash": "0dbcc35beb2bb8717e03bf6fcd2d82255f57e34759acd1f46d42bd8f39434821",
+      "title": "kylie structure 1.2",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "084",
+      "project_folder": "kylie structures"
+    },
+    {
+      "work_id": "03060",
+      "record_hash": "e494255f5afe5b50d6cb3aaa2770428ef871c6e4ce26ba22f6369be0fced2a53",
+      "title": "kylie structure 1.3",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "084",
+      "project_folder": "kylie structures"
+    },
+    {
+      "work_id": "03061",
+      "record_hash": "25aa8b170a9a8b45590e8306d0e011f62a1b19ab090135358d0305b3276700d1",
+      "title": "kylie structure 1.4",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "084",
+      "project_folder": "kylie structures"
+    },
+    {
+      "work_id": "03062",
+      "record_hash": "bcc3c3c6766ff5bce95f66dcf78ab142fcd09cbcc1471393c46d3f1c41e8f2bb",
+      "title": "kylie structure 1.5",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "084",
+      "project_folder": "kylie structures"
+    },
+    {
+      "work_id": "03063",
+      "record_hash": "ad2430e0bbf5d0f02317217be422636d00ab87f47677497d60d392594fe7fb07",
+      "title": "kylie structure 1.6",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "084",
+      "project_folder": "kylie structures"
+    },
+    {
+      "work_id": "03064",
+      "record_hash": "841140b9ba425d1ae7b34b2b8f0d499a8b2bf7e9d1d0922bc71b20f24ee845ab",
+      "title": "kylie structure 2.1",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "084",
+      "project_folder": "kylie structures"
+    },
+    {
+      "work_id": "03065",
+      "record_hash": "bc2a167f654d70fb519517696a0be8db4f7d7753e069705696620fc152b8f9cb",
+      "title": "kylie structure 2.2",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "084",
+      "project_folder": "kylie structures"
+    },
+    {
+      "work_id": "03066",
+      "record_hash": "242cb69973b25195d912944cd2691aa2c23c6c863e96e04264b375ba20d41e55",
+      "title": "kylie structure 2.3",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "084",
+      "project_folder": "kylie structures"
+    },
+    {
+      "work_id": "03067",
+      "record_hash": "3805c6e32ea62d095a0bcbea574f44ec7379238057285e229685e2d9924c9d62",
+      "title": "kylie structure 2.4",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "084",
+      "project_folder": "kylie structures"
+    },
+    {
+      "work_id": "03068",
+      "record_hash": "83d83e0701ee72a5554ef76d67f1ce0441f03ac94e41f46cbb5a4a2ad14f0ca0",
+      "title": "kylie structure 2.5",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "084",
+      "project_folder": "kylie structures"
+    },
+    {
+      "work_id": "03069",
+      "record_hash": "ec79a900a303e99bbb1a23a249e0f4092f53fecf8eccf147c43605335c193aea",
+      "title": "kylie structure 2.6",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "084",
+      "project_folder": "kylie structures"
+    },
+    {
+      "work_id": "03070",
+      "record_hash": "4d80362aafdd15e7a11237d14910d5b1093c8ccfe7c046e29d14bc35abb14eb2",
+      "title": "kylie structure 3.1",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "084",
+      "project_folder": "kylie structures"
+    },
+    {
+      "work_id": "03071",
+      "record_hash": "e2dededb8c48d2ce36bfd3ec35d33bb5de009c792414b0fb497c87c3acc330a4",
+      "title": "kylie structure 3.2",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "084",
+      "project_folder": "kylie structures"
+    },
+    {
+      "work_id": "03072",
+      "record_hash": "1ee613378960698313d55a8a4de4b295050bb21c664a65c199f3a81cafe9f0a6",
+      "title": "kylie structure 4.1",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "084",
+      "project_folder": "kylie structures"
+    },
+    {
+      "work_id": "03073",
+      "record_hash": "2bcb0132a634fabea5c23b3ec67ea02bd42c8bd80fe17ef459ad55cfc7cad7be",
+      "title": "kylie structure 4.2",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "084",
+      "project_folder": "kylie structures"
     }
   ],
   "ordered_work_ids": [
     "00520",
     "00521",
     "00522",
-    "00523"
+    "00523",
+    "03058",
+    "03059",
+    "03060",
+    "03061",
+    "03062",
+    "03063",
+    "03064",
+    "03065",
+    "03066",
+    "03067",
+    "03068",
+    "03069",
+    "03070",
+    "03071",
+    "03072",
+    "03073"
   ],
   "project_folders": [
     "kylie structures"

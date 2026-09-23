@@ -6,10 +6,9 @@
     "series_id": "060",
     "title": "forest (2024)",
     "year": 2024,
-    "year_display": "2024",
-    "sort_fields": "work_id"
+    "year_display": "2024"
   },
-  "record_hash": "3670e46ef8c1b8386d1f8a9d29dc68d3201ac63905adc56d94a678d5daf534e2",
+  "record_hash": "8fe4e431851f721b97493001f9c66adcedcc72ff7a7085a3f8f313b38bfb26df",
   "member_works": [
     {
       "work_id": "01175",
@@ -19,10 +18,170 @@
       "year_display": "2024",
       "series_id": "060",
       "project_folder": "forest (2024)"
+    },
+    {
+      "work_id": "04048",
+      "record_hash": "19df22bd867a17a4cfd3ede16123514a998074638ba398d3c53d9c75d8735408",
+      "title": "forest detail 1",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "060",
+      "project_folder": "forest (2024)"
+    },
+    {
+      "work_id": "04049",
+      "record_hash": "d78ad9edb5c186b2976cecb3a4879ec7b25ca8241590b074fddc728d522abcb3",
+      "title": "forest detail 2",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "060",
+      "project_folder": "forest (2024)"
+    },
+    {
+      "work_id": "04050",
+      "record_hash": "75445aea965ae074d91d60ed1be42bea0d326416caaed838f503cbfeb0b091f5",
+      "title": "forest detail 3",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "060",
+      "project_folder": "forest (2024)"
+    },
+    {
+      "work_id": "04051",
+      "record_hash": "c090a3904c459128c2d30e7af0e03a05ab51c6b98c3f610e5838218836675d07",
+      "title": "forest detail 4",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "060",
+      "project_folder": "forest (2024)"
+    },
+    {
+      "work_id": "04052",
+      "record_hash": "20578bfe7ea60e5bc7ae97cf83d6c873527aa2eb8733d67cbceb84d23d81c11d",
+      "title": "forest detail 5",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "060",
+      "project_folder": "forest (2024)"
+    },
+    {
+      "work_id": "04053",
+      "record_hash": "b105aa34139a0e18c74768b00fae6b76bf70da29b154ad2059df7710500d296c",
+      "title": "forest detail 6",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "060",
+      "project_folder": "forest (2024)"
+    },
+    {
+      "work_id": "04054",
+      "record_hash": "f9e20776e3f4ec3a94e26a2b2443f923b8dab8b5cce86a9ebfac58680f7585ba",
+      "title": "forest detail 7",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "060",
+      "project_folder": "forest (2024)"
+    },
+    {
+      "work_id": "04055",
+      "record_hash": "771e68cf40a128c0016f1ae4c0cd5fae7eada45e072d3f8759ea77442be0de7c",
+      "title": "forest detail 8",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "060",
+      "project_folder": "forest (2024)"
+    },
+    {
+      "work_id": "04056",
+      "record_hash": "3d0768df755c7deded35a3af3e57240a53bc45eec8b0de0eabc40e06c107be1c",
+      "title": "forest detail 9",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "060",
+      "project_folder": "forest (2024)"
+    },
+    {
+      "work_id": "04057",
+      "record_hash": "bb4e25ba63ee3f7c6a841cb607adbfc8406cc84123a53e98d58caf2ab172e9ad",
+      "title": "forest detail 10",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "060",
+      "project_folder": "forest (2024)"
+    },
+    {
+      "work_id": "04058",
+      "record_hash": "fc6495d2691efdfeaa5a0060cc3072d15de5f62d8ee65da503802638ac454ad2",
+      "title": "forest detail 11",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "060",
+      "project_folder": "forest (2024)"
+    },
+    {
+      "work_id": "04059",
+      "record_hash": "606a1dc920c3f26050be486550ba3114b008aa6cd81e613436dbe83fe510100a",
+      "title": "forest detail 12",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "060",
+      "project_folder": "forest (2024)"
+    },
+    {
+      "work_id": "04060",
+      "record_hash": "4a59e26ed786de7854f90d133cc45054230a7cebcd7c3b52c34fafdf26af7f57",
+      "title": "forest detail 13",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "060",
+      "project_folder": "forest (2024)"
+    },
+    {
+      "work_id": "04061",
+      "record_hash": "e0162624936e328c51e95fc6c4c38de0af19e85a04b4f512a7a9af27a2a66287",
+      "title": "forest detail 14",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "060",
+      "project_folder": "forest (2024)"
+    },
+    {
+      "work_id": "04062",
+      "record_hash": "908a664ab9a21c2ea585d5eabc7bec55638ba85ae02691d47f187bf17b3e4c99",
+      "title": "forest detail 15",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "060",
+      "project_folder": "forest (2024)"
+    },
+    {
+      "work_id": "04063",
+      "record_hash": "5784e9c03000133b5f6a93d4f5d2a09829c76aa278fc00367fb01d7b5da34280",
+      "title": "forest detail 16",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "060",
+      "project_folder": "forest (2024)"
     }
   ],
   "ordered_work_ids": [
-    "01175"
+    "01175",
+    "04048",
+    "04049",
+    "04050",
+    "04051",
+    "04052",
+    "04053",
+    "04054",
+    "04055",
+    "04056",
+    "04057",
+    "04058",
+    "04059",
+    "04060",
+    "04061",
+    "04062",
+    "04063"
   ],
   "project_folders": [
     "forest (2024)"

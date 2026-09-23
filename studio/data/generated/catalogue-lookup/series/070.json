@@ -6,10 +6,9 @@
     "series_id": "070",
     "title": "glass forms",
     "year": 2010,
-    "year_display": "c. 2010?",
-    "sort_fields": "work_id"
+    "year_display": "c. 2010?"
   },
-  "record_hash": "695c7c118786dcf2af5e440fd19411806b3cdbcc588d127b7e468c2de2b54b38",
+  "record_hash": "33300e0d19c4ec0e4efab0fa5738d296da46387f6543056cdff1d68289996034",
   "member_works": [
     {
       "work_id": "00384",
@@ -19,10 +18,50 @@
       "year_display": "c. 2010?",
       "series_id": "070",
       "project_folder": "glass forms"
+    },
+    {
+      "work_id": "02015",
+      "record_hash": "2cc61586d4ec1d10bdf164643d8d30e7e769152a9fe264530b415b3d36088c91",
+      "title": "glass forms 001",
+      "year": 2010,
+      "year_display": "c. 2010?",
+      "series_id": "070",
+      "project_folder": "glass forms"
+    },
+    {
+      "work_id": "02016",
+      "record_hash": "f6bb1f26837cc9ad557e2702a0354c4e9138c89fdd02ebf1cac2841748cd3408",
+      "title": "glass forms 002",
+      "year": 2010,
+      "year_display": "c. 2010?",
+      "series_id": "070",
+      "project_folder": "glass forms"
+    },
+    {
+      "work_id": "02017",
+      "record_hash": "fa6168aa0196560bdaf7101cae5cf689d92dbea17bc25655e3b9b47d69baeb0d",
+      "title": "glass forms 003",
+      "year": 2010,
+      "year_display": "c. 2010?",
+      "series_id": "070",
+      "project_folder": "glass forms"
+    },
+    {
+      "work_id": "02018",
+      "record_hash": "67bdc61a994ede1aaba17f5fd98ce12fe486d2bc313cd7fdd54bfd832ea02ad8",
+      "title": "glass forms 004",
+      "year": 2010,
+      "year_display": "c. 2010?",
+      "series_id": "070",
+      "project_folder": "glass forms"
     }
   ],
   "ordered_work_ids": [
-    "00384"
+    "00384",
+    "02015",
+    "02016",
+    "02017",
+    "02018"
   ],
   "project_folders": [
     "glass forms"

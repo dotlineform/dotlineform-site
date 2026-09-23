@@ -6,10 +6,9 @@
     "series_id": "076",
     "title": "heaven and earth",
     "year": 2011,
-    "year_display": "2011",
-    "sort_fields": "work_id"
+    "year_display": "2011"
   },
-  "record_hash": "22f3e73c980c51a2e54cccd0fb0dd67b4469f9f33d0ee816bc10f87d285d420d",
+  "record_hash": "306072124ac99ff95663b3059e96f86499811c241156070fcc05a733ed7f373b",
   "member_works": [
     {
       "work_id": "00469",
@@ -37,12 +36,72 @@
       "year_display": "2011",
       "series_id": "076",
       "project_folder": "heaven and earth"
+    },
+    {
+      "work_id": "04228",
+      "record_hash": "681c8faf0a93a80529d0a0b23df2e579ec490fcea70aa03fd6ced2fc7b3c582e",
+      "title": "heaven and earth (grey 1)",
+      "year": 2011,
+      "year_display": "2011",
+      "series_id": "076",
+      "project_folder": "heaven and earth"
+    },
+    {
+      "work_id": "04229",
+      "record_hash": "d8e6c2d869ed4b0a77eba1a607967cb062daad044332b2abaa5a3cbc188171a4",
+      "title": "heaven and earth (grey 2)",
+      "year": 2011,
+      "year_display": "2011",
+      "series_id": "076",
+      "project_folder": "heaven and earth"
+    },
+    {
+      "work_id": "04230",
+      "record_hash": "b0a7d2c8b94766ec10596ef48adf2bc6367734233476dab2584d578b64fe1997",
+      "title": "heaven and earth (grey 3)",
+      "year": 2011,
+      "year_display": "2011",
+      "series_id": "076",
+      "project_folder": "heaven and earth"
+    },
+    {
+      "work_id": "04231",
+      "record_hash": "f2053155e90865c276b38343fa9f94d40cbc501ba8ec635b1174be2d82b4e8fa",
+      "title": "heaven and earth (blue)",
+      "year": 2011,
+      "year_display": "2011",
+      "series_id": "076",
+      "project_folder": "heaven and earth"
+    },
+    {
+      "work_id": "04232",
+      "record_hash": "b0c67625f81ba0699ed9e425f03506533b4459a2f611999d1b37790849a49531",
+      "title": "heaven and earth (cyan)",
+      "year": 2011,
+      "year_display": "2011",
+      "series_id": "076",
+      "project_folder": "heaven and earth"
+    },
+    {
+      "work_id": "04233",
+      "record_hash": "83bca3f76c1696ed6ad34e27fc5344f5942d6d968293b782b7321b8fb2addc9e",
+      "title": "heaven and earth (green)",
+      "year": 2011,
+      "year_display": "2011",
+      "series_id": "076",
+      "project_folder": "heaven and earth"
     }
   ],
   "ordered_work_ids": [
     "00469",
     "01365",
-    "01366"
+    "01366",
+    "04228",
+    "04229",
+    "04230",
+    "04231",
+    "04232",
+    "04233"
   ],
   "project_folders": [
     "heaven and earth"

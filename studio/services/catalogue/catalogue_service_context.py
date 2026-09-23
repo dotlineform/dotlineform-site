@@ -10,6 +10,7 @@ from typing import Any, Mapping
 from catalogue.catalogue_lookup import DEFAULT_LOOKUP_DIR
 from catalogue import catalogue_lookup_refresh as lookup_refresh
 from catalogue.catalogue_source import DEFAULT_SOURCE_DIR, SOURCE_FILES, load_json_file
+from catalogue.catalogue_galleries import MEMBERSHIPS_FILE
 from script_logging import append_script_log
 
 
@@ -53,7 +54,7 @@ def build_catalogue_write_context(repo_root: Path, *, dry_run: bool = False) -> 
             (source_dir / filename).resolve()
             for kind, filename in SOURCE_FILES.items()
             if kind != "meta"
-        },
+        } | {(source_dir / MEMBERSHIPS_FILE).resolve()},
         allowed_write_roots=set(),
         dry_run=dry_run,
     )

@@ -61,8 +61,7 @@
         "series_id",
         "title",
         "year",
-        "year_display",
-        "sort_fields"
+        "year_display"
       ],
       "artifacts": [
         "source-json",

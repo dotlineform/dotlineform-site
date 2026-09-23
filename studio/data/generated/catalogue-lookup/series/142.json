@@ -6,10 +6,9 @@
     "series_id": "142",
     "title": "water sea pond",
     "year": 2023,
-    "year_display": "2023",
-    "sort_fields": "work_id"
+    "year_display": "2023"
   },
-  "record_hash": "52f06c379087bf0997d000f49467ff0cc06a61a53baba9b2fcaa67ba3d84c679",
+  "record_hash": "b128f704966916a23ca4008edbd690772a43c3d9472a4661dae52a666908cdf1",
   "member_works": [
     {
       "work_id": "01938",
@@ -37,12 +36,132 @@
       "year_display": "2023",
       "series_id": "142",
       "project_folder": "water sea pond"
+    },
+    {
+      "work_id": "04612",
+      "record_hash": "cfc623b76cd1c05434361650966f2aebc68a2de83905f4ff886a9e4729aca324",
+      "title": "water - detail 1",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "142",
+      "project_folder": "water sea pond"
+    },
+    {
+      "work_id": "04613",
+      "record_hash": "c7797e68530e4248ee5d75477c366b9ee1c38e100da9850af258b438eccfb57d",
+      "title": "water - detail 2",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "142",
+      "project_folder": "water sea pond"
+    },
+    {
+      "work_id": "04614",
+      "record_hash": "bb6a2d94d7132296ea48f9c9c01265ff92ac7d1456eab5a45bfc19fc30884d6a",
+      "title": "water - detail 3",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "142",
+      "project_folder": "water sea pond"
+    },
+    {
+      "work_id": "04615",
+      "record_hash": "72e1ef72acdf8daa8b1e41f532b701d5c2c8931cd9c97a6e9e37027ecf03c237",
+      "title": "water - detail 4",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "142",
+      "project_folder": "water sea pond"
+    },
+    {
+      "work_id": "04616",
+      "record_hash": "4df108838078709842ebb142e34290f4c5ba7bb8a23369ad6e1585af120f65cb",
+      "title": "sea - detail 1",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "142",
+      "project_folder": "water sea pond"
+    },
+    {
+      "work_id": "04617",
+      "record_hash": "70f9d335f61ae299e0ebb570095c8d3f96c31116e23e3929705e48bfa5c4b7cf",
+      "title": "sea - detail 2",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "142",
+      "project_folder": "water sea pond"
+    },
+    {
+      "work_id": "04618",
+      "record_hash": "a77b44c8ce2860b7ef7512303351c3c9173a74577e09d5a6fba2150d4d286b71",
+      "title": "sea - detail 3",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "142",
+      "project_folder": "water sea pond"
+    },
+    {
+      "work_id": "04619",
+      "record_hash": "982f4a05f6a0a74df89dc4927bd698041092adf5afe216a04f7d8c2f1a785f62",
+      "title": "sea - detail 4",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "142",
+      "project_folder": "water sea pond"
+    },
+    {
+      "work_id": "04620",
+      "record_hash": "5aef4cc3aa5a1404735463618adb5b48b97c8a0146439b60adffe0c12ec22b9b",
+      "title": "pond - detail 1",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "142",
+      "project_folder": "water sea pond"
+    },
+    {
+      "work_id": "04621",
+      "record_hash": "e50c9d1d84a0d6e0762b9c4813174e328286df0973e6f4e7b500b9f25a98b158",
+      "title": "pond - detail 2",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "142",
+      "project_folder": "water sea pond"
+    },
+    {
+      "work_id": "04622",
+      "record_hash": "e3d5bbef306a52fd46f966a66d4c323734ca3b6668cafb6e967f74bf081cd227",
+      "title": "pond - detail 3",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "142",
+      "project_folder": "water sea pond"
+    },
+    {
+      "work_id": "04623",
+      "record_hash": "741111029eb7411fe90ad531ec8ef5aaebd28ec20ce86384f577cee9781ffdf9",
+      "title": "pond - detail 4",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "142",
+      "project_folder": "water sea pond"
     }
   ],
   "ordered_work_ids": [
     "01938",
     "01939",
-    "01940"
+    "01940",
+    "04612",
+    "04613",
+    "04614",
+    "04615",
+    "04616",
+    "04617",
+    "04618",
+    "04619",
+    "04620",
+    "04621",
+    "04622",
+    "04623"
   ],
   "project_folders": [
     "water sea pond"

@@ -6,10 +6,9 @@
     "series_id": "001",
     "title": "10,000",
     "year": 2009,
-    "year_display": "2009",
-    "sort_fields": "work_id"
+    "year_display": "2009"
   },
-  "record_hash": "17c704f94fa46c5bf826073c0876014027a74a93855c1c752380fc47d430fc95",
+  "record_hash": "0ec8c45648db25b159e585324317783e9ce24b5a22d5d41bdd6d64faa6c250f2",
   "member_works": [
     {
       "work_id": "00635",
@@ -37,12 +36,102 @@
       "year_display": "2009",
       "series_id": "001",
       "project_folder": "10000"
+    },
+    {
+      "work_id": "03179",
+      "record_hash": "fe5129cf19803995d19954ab91cb79c086fd6b32275fb05471d2a6dac90f871e",
+      "title": "10,000 (1.1)",
+      "year": 2009,
+      "year_display": "2009",
+      "series_id": "001",
+      "project_folder": "10000"
+    },
+    {
+      "work_id": "03180",
+      "record_hash": "ba8006b3196d5e7f99dab5223d7d486629717a1dfd08521cd612ef4dfee2b842",
+      "title": "10,000 (1.2)",
+      "year": 2009,
+      "year_display": "2009",
+      "series_id": "001",
+      "project_folder": "10000"
+    },
+    {
+      "work_id": "03181",
+      "record_hash": "2807221254761693ce3827e7fff7f1358f8c59f844f1735599300299f840ba1b",
+      "title": "10,000 (1.3)",
+      "year": 2009,
+      "year_display": "2009",
+      "series_id": "001",
+      "project_folder": "10000"
+    },
+    {
+      "work_id": "03182",
+      "record_hash": "5b5ff46a809ae0b4b75d1dbcc6ca2c85b727a0284653dc4b5cfffa2c4a7a4930",
+      "title": "10,000 (2.1)",
+      "year": 2009,
+      "year_display": "2009",
+      "series_id": "001",
+      "project_folder": "10000"
+    },
+    {
+      "work_id": "03183",
+      "record_hash": "b26536edfe605e8c41956c64ccfd8ffc3c3ee3b8d5cfabd755f0b14589f87731",
+      "title": "10,000 (2.2)",
+      "year": 2009,
+      "year_display": "2009",
+      "series_id": "001",
+      "project_folder": "10000"
+    },
+    {
+      "work_id": "03184",
+      "record_hash": "0a8bfeeeced0732cd0f249704d1b80558be9f577430bbb18b35404761cd3a286",
+      "title": "10,000 (2.3)",
+      "year": 2009,
+      "year_display": "2009",
+      "series_id": "001",
+      "project_folder": "10000"
+    },
+    {
+      "work_id": "03185",
+      "record_hash": "69205e5904c4edbf872e8974cb14340a220ea3a241351c5453938b37d6a17898",
+      "title": "10,000 (3.1)",
+      "year": 2009,
+      "year_display": "2009",
+      "series_id": "001",
+      "project_folder": "10000"
+    },
+    {
+      "work_id": "03186",
+      "record_hash": "23be4d73e53be8f68a24d2511a7be5030b76386ae4eba690fcf74def04bdaf4c",
+      "title": "10,000 (3.2)",
+      "year": 2009,
+      "year_display": "2009",
+      "series_id": "001",
+      "project_folder": "10000"
+    },
+    {
+      "work_id": "03187",
+      "record_hash": "5c5f66257921624b1cbd8b2d3fbbd8146a0ebe76c72e4985aba93297f3b1925b",
+      "title": "10,000 (3.3)",
+      "year": 2009,
+      "year_display": "2009",
+      "series_id": "001",
+      "project_folder": "10000"
     }
   ],
   "ordered_work_ids": [
     "00635",
     "00636",
-    "00637"
+    "00637",
+    "03179",
+    "03180",
+    "03181",
+    "03182",
+    "03183",
+    "03184",
+    "03185",
+    "03186",
+    "03187"
   ],
   "project_folders": [
     "10000"

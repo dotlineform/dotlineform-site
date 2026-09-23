@@ -6,10 +6,9 @@
     "series_id": "050",
     "title": "field",
     "year": 2025,
-    "year_display": "2025",
-    "sort_fields": "work_id"
+    "year_display": "2025"
   },
-  "record_hash": "79841d8e20b16cf073d04b3f57a9d5a44065b21bc889bfbb690a81a9cc510af7",
+  "record_hash": "532a36c3b76f32ab7dca0e34f395b63f063f77cd3cd7eebb1ab65228c5619d37",
   "member_works": [
     {
       "work_id": "01047",
@@ -28,11 +27,71 @@
       "year_display": "2025",
       "series_id": "050",
       "project_folder": "field"
+    },
+    {
+      "work_id": "03654",
+      "record_hash": "4bd8d475ad4a5de3b92d934d8e9905e553c996dc50bde9f11d8d9097413feb08",
+      "title": "field I - detail 1",
+      "year": 2025,
+      "year_display": "2025",
+      "series_id": "050",
+      "project_folder": "field"
+    },
+    {
+      "work_id": "03655",
+      "record_hash": "632922967840eea49583ecb02d847c4d01602c352af0d8a05f1798924355f316",
+      "title": "field I - detail 2",
+      "year": 2025,
+      "year_display": "2025",
+      "series_id": "050",
+      "project_folder": "field"
+    },
+    {
+      "work_id": "03656",
+      "record_hash": "0638c3ac9bd72d7b869a748cd7bd49f4065c6f1ac024f19188993183a7076101",
+      "title": "field I - detail 3",
+      "year": 2025,
+      "year_display": "2025",
+      "series_id": "050",
+      "project_folder": "field"
+    },
+    {
+      "work_id": "03657",
+      "record_hash": "356cafa507467474c5a15b123a0ad33dddd4ce54a9a4c87b550066cda58e73dd",
+      "title": "field II - detail 1",
+      "year": 2025,
+      "year_display": "2025",
+      "series_id": "050",
+      "project_folder": "field"
+    },
+    {
+      "work_id": "03658",
+      "record_hash": "8bccd2a8d2b3fbf3b7ad45949be9f354dd4a77e27b63e3ab52411bda0daf2e62",
+      "title": "field II - detail 2",
+      "year": 2025,
+      "year_display": "2025",
+      "series_id": "050",
+      "project_folder": "field"
+    },
+    {
+      "work_id": "03659",
+      "record_hash": "6a52e85e1dabd9093e39d9ae7d69d7e2512d5e12bec6b30f5a23b31b209ec4a5",
+      "title": "field II - detail 3",
+      "year": 2025,
+      "year_display": "2025",
+      "series_id": "050",
+      "project_folder": "field"
     }
   ],
   "ordered_work_ids": [
     "01047",
-    "01048"
+    "01048",
+    "03654",
+    "03655",
+    "03656",
+    "03657",
+    "03658",
+    "03659"
   ],
   "project_folders": [
     "field"

@@ -6,10 +6,9 @@
     "series_id": "042",
     "title": "dotlineform (2021)",
     "year": 2021,
-    "year_display": "2021",
-    "sort_fields": "work_id"
+    "year_display": "2021"
   },
-  "record_hash": "e5ffcfec909d3251cd69ac675f907adc41aea963ba51820920d84b057b0346ee",
+  "record_hash": "4497c91073e62ba3a4677cc22a08bd0ceeddca04db730a4cb493b3d8099c2f6d",
   "member_works": [
     {
       "work_id": "00949",
@@ -325,6 +324,51 @@
       "year_display": "2021",
       "series_id": "042",
       "project_folder": "dotlineform (2021)"
+    },
+    {
+      "work_id": "03565",
+      "record_hash": "3fefedafe875cf63b7f554029867369614f21ce745b558bf934da8370777a7d3",
+      "title": "001 - 2021-08-27 20꞉06",
+      "year": 2021,
+      "year_display": "2021",
+      "series_id": "042",
+      "project_folder": "dotlineform (2021)"
+    },
+    {
+      "work_id": "03566",
+      "record_hash": "6f28e97e172651031276023830f71a554a227b7f362b4efff39115109307deac",
+      "title": "002 - 2021-08-27 20꞉07",
+      "year": 2021,
+      "year_display": "2021",
+      "series_id": "042",
+      "project_folder": "dotlineform (2021)"
+    },
+    {
+      "work_id": "03567",
+      "record_hash": "74e7b1fed80e2b22d72d5aeec367328c774a22435edc36d8c0b5262e6e831e5b",
+      "title": "003 - 2021-08-27 20꞉07",
+      "year": 2021,
+      "year_display": "2021",
+      "series_id": "042",
+      "project_folder": "dotlineform (2021)"
+    },
+    {
+      "work_id": "03568",
+      "record_hash": "1557dda7d8351c11ca1221226dec13b0ebd7d7a540c20b11df526056ea0d1610",
+      "title": "004 - 2021-08-27 20꞉07",
+      "year": 2021,
+      "year_display": "2021",
+      "series_id": "042",
+      "project_folder": "dotlineform (2021)"
+    },
+    {
+      "work_id": "03569",
+      "record_hash": "f8fe076b844b6874bd2ceca7090310c89ca37bc83d5fe2e4e6f66282f82ce5d2",
+      "title": "005 - 2024-05-10 18꞉52",
+      "year": 2021,
+      "year_display": "2021",
+      "series_id": "042",
+      "project_folder": "dotlineform (2021)"
     }
   ],
   "ordered_work_ids": [
@@ -362,7 +406,12 @@
     "00980",
     "00981",
     "00982",
-    "00983"
+    "00983",
+    "03565",
+    "03566",
+    "03567",
+    "03568",
+    "03569"
   ],
   "project_folders": [
     "dotlineform (2021)"

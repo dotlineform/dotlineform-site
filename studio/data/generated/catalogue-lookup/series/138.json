@@ -6,10 +6,9 @@
     "series_id": "138",
     "title": "untitled composites",
     "year": 2023,
-    "year_display": "2023",
-    "sort_fields": "work_id"
+    "year_display": "2023"
   },
-  "record_hash": "f605db64c564f0003ca7a665b5d77c08633648572aa831e2d879735c4dc2c056",
+  "record_hash": "a8bc84fe57fc63de2d1b9ce77403a6ccef519b7f32d7b7b500166ae68414a644",
   "member_works": [
     {
       "work_id": "01874",
@@ -91,6 +90,222 @@
       "year_display": "2023",
       "series_id": "138",
       "project_folder": "untitled composites"
+    },
+    {
+      "work_id": "04588",
+      "record_hash": "30296c350dc876c99e9d620e0ee9fc13a4e5e041f2d7d95a376592b74908607b",
+      "title": "untitled composite 1 - detail 1",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "138",
+      "project_folder": "untitled composites"
+    },
+    {
+      "work_id": "04589",
+      "record_hash": "826513bbdf4b2e59ab26ffba540c6bed0d25c77b4f9e13ab96d82da848713347",
+      "title": "untitled composite 1 - detail 2",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "138",
+      "project_folder": "untitled composites"
+    },
+    {
+      "work_id": "04590",
+      "record_hash": "f3872658c6b4e25264acd63c4c45d609e87345da3371f4690ffa54ac4ba3901b",
+      "title": "untitled composite 1 - detail 3",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "138",
+      "project_folder": "untitled composites"
+    },
+    {
+      "work_id": "04591",
+      "record_hash": "0f3d3523be961fa16ec41e48ae67d9551055e31d3bcaa5e5f876864d10666bc6",
+      "title": "untitled composite 1 - detail 4",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "138",
+      "project_folder": "untitled composites"
+    },
+    {
+      "work_id": "04592",
+      "record_hash": "690e09f118660a1922be14f5532894ba4116cbae89371ef154a9b7a8511fc46a",
+      "title": "untitled composite 2 - detail 1",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "138",
+      "project_folder": "untitled composites"
+    },
+    {
+      "work_id": "04593",
+      "record_hash": "88625c314481b6805e90c2c5a262a6ab39cedc0cf67168ce873908ce644a1a53",
+      "title": "untitled composite 2 - detail 2",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "138",
+      "project_folder": "untitled composites"
+    },
+    {
+      "work_id": "04594",
+      "record_hash": "5fa0c989d1af997ea52f180dfa29133d4420d4140e7a8ab3df0a3b9728ba8e59",
+      "title": "untitled composite 2 - detail 3",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "138",
+      "project_folder": "untitled composites"
+    },
+    {
+      "work_id": "04595",
+      "record_hash": "8ecf73abf0965d95baeca0536999f551b050803079c079cf634a0cfa53176342",
+      "title": "untitled composite 2 - detail 4",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "138",
+      "project_folder": "untitled composites"
+    },
+    {
+      "work_id": "04596",
+      "record_hash": "318a9e6281e358dc64c2b5ce95104396c8452f6b6797b7a6073c936bead2143c",
+      "title": "untitled composite 3 - detail 1",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "138",
+      "project_folder": "untitled composites"
+    },
+    {
+      "work_id": "04597",
+      "record_hash": "3247c6c6b106bd16256240720ab3c7aff93ea5117e9d2b6c90d958208b53cda0",
+      "title": "untitled composite 3 - detail 2",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "138",
+      "project_folder": "untitled composites"
+    },
+    {
+      "work_id": "04598",
+      "record_hash": "d18a46b97d029b1c3faf26dac2602a52864e8349342ed3bc62209b872b662ec5",
+      "title": "untitled composite 3 - detail 3",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "138",
+      "project_folder": "untitled composites"
+    },
+    {
+      "work_id": "04599",
+      "record_hash": "3c18afab956527fa3b2260294d3e66ba49268d989277a4ab44b6d5d67742aa5b",
+      "title": "untitled composite 3 - detail 4",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "138",
+      "project_folder": "untitled composites"
+    },
+    {
+      "work_id": "04600",
+      "record_hash": "2e3c87b9172e7ed05b7bbf6cd21e4a59d83366a1d4ca1ed41da5c8020754748d",
+      "title": "untitled composite 4 - detail 1",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "138",
+      "project_folder": "untitled composites"
+    },
+    {
+      "work_id": "04601",
+      "record_hash": "cae28e4652b8ed4c33b185ac830adb3413cef3991802e2b1895b83cc835325ce",
+      "title": "untitled composite 4 - detail 2",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "138",
+      "project_folder": "untitled composites"
+    },
+    {
+      "work_id": "04602",
+      "record_hash": "aeb1927f04cbcedf27b8c05066372039db992beff0bb88e44eeb2e2a0ff0bb12",
+      "title": "untitled composite 4 - detail 3",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "138",
+      "project_folder": "untitled composites"
+    },
+    {
+      "work_id": "04603",
+      "record_hash": "66c8380604a6992faf12995b6250c22550579dc20c1a3be418083d28c20c0b39",
+      "title": "untitled composite 4 - detail 4",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "138",
+      "project_folder": "untitled composites"
+    },
+    {
+      "work_id": "04604",
+      "record_hash": "c2ec754cab72225304015d05e62dcdf7732148e2473c069460ef0eaaa575db67",
+      "title": "untitled composite 5 - detail 1",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "138",
+      "project_folder": "untitled composites"
+    },
+    {
+      "work_id": "04605",
+      "record_hash": "0000b21fb837b85cb04fbd0dc0db3fab0c78fe2c43fcf09c3566870fd6d48ad5",
+      "title": "untitled composite 5 - detail 2",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "138",
+      "project_folder": "untitled composites"
+    },
+    {
+      "work_id": "04606",
+      "record_hash": "36935a71e7635c88c2662fc27d27932de8fbc09b7c3bfa5b3cdfeee8768d778f",
+      "title": "untitled composite 5 - detail 3",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "138",
+      "project_folder": "untitled composites"
+    },
+    {
+      "work_id": "04607",
+      "record_hash": "a764ccc562504baa15698e62bb6d3b8d0447ad57fcc8f0ffb6c9c68252a995ae",
+      "title": "untitled composite 5 - detail 4",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "138",
+      "project_folder": "untitled composites"
+    },
+    {
+      "work_id": "04608",
+      "record_hash": "07d076b11bea6c6163f4389c2dbea806a2e25ed94d3616c3cd17b0d6825b8382",
+      "title": "untitled composite 6 - detail 1",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "138",
+      "project_folder": "untitled composites"
+    },
+    {
+      "work_id": "04609",
+      "record_hash": "580145d9f923f9c7fa17fdc2e0a4890f9dfb44d734845970afcbefc597067a48",
+      "title": "untitled composite 6 - detail 2",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "138",
+      "project_folder": "untitled composites"
+    },
+    {
+      "work_id": "04610",
+      "record_hash": "63f17dee0b507409038221d752ccc88e20d8a053eb2b0345552a76c8c9562d1a",
+      "title": "untitled composite 6 - detail 3",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "138",
+      "project_folder": "untitled composites"
+    },
+    {
+      "work_id": "04611",
+      "record_hash": "09fdfc3df0d124c15206066c797c7f21c102e84eee704a603aed14cd1f223780",
+      "title": "untitled composite 6 - detail 4",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "138",
+      "project_folder": "untitled composites"
     }
   ],
   "ordered_work_ids": [
@@ -102,7 +317,31 @@
     "01879",
     "01880",
     "01881",
-    "01882"
+    "01882",
+    "04588",
+    "04589",
+    "04590",
+    "04591",
+    "04592",
+    "04593",
+    "04594",
+    "04595",
+    "04596",
+    "04597",
+    "04598",
+    "04599",
+    "04600",
+    "04601",
+    "04602",
+    "04603",
+    "04604",
+    "04605",
+    "04606",
+    "04607",
+    "04608",
+    "04609",
+    "04610",
+    "04611"
   ],
   "project_folders": [
     "untitled composites"

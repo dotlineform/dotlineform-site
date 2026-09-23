@@ -6,10 +6,9 @@
     "series_id": "003",
     "title": "16 forms",
     "year": 2023,
-    "year_display": "2023",
-    "sort_fields": "work_id"
+    "year_display": "2023"
   },
-  "record_hash": "63d997e088e32a4c9b40c1fbb01d7206c4c56e8b2890e76a51f8b3173e1d482f",
+  "record_hash": "bb8b9ab43a48fb236b4a5e668f68050a6a81a31af99e80ee940189b879023189",
   "member_works": [
     {
       "work_id": "00639",
@@ -19,10 +18,490 @@
       "year_display": "2023",
       "series_id": "003",
       "project_folder": "16 forms"
+    },
+    {
+      "work_id": "03241",
+      "record_hash": "3ac253721c6eddb73b7a6eddf615e78dd7e36e20963ef64bb0784e8ba883be86",
+      "title": "16 forms - source photo",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "003",
+      "project_folder": "16 forms"
+    },
+    {
+      "work_id": "03242",
+      "record_hash": "f9554c8e05a8dc15033fab3915d68e686ad69ce234539c258e4966631a404390",
+      "title": "form 1",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "003",
+      "project_folder": "16 forms"
+    },
+    {
+      "work_id": "03243",
+      "record_hash": "3492791489510e5e1ebb7d40003d8491420833518e40d25884e2c7e09d31f89b",
+      "title": "form 2",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "003",
+      "project_folder": "16 forms"
+    },
+    {
+      "work_id": "03244",
+      "record_hash": "007e16d668386dca32acec4da1991490f7b639179c35a3d6278316f09b0f4b5c",
+      "title": "form 3",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "003",
+      "project_folder": "16 forms"
+    },
+    {
+      "work_id": "03245",
+      "record_hash": "dc32b982be2ba27370d4314470160fb6d80a3aae7204cbb50b663e7231183e66",
+      "title": "form 4",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "003",
+      "project_folder": "16 forms"
+    },
+    {
+      "work_id": "03246",
+      "record_hash": "11afdf75180858042a9b9cd2bf39c25334d8d348dd257756d65a16055759ecfc",
+      "title": "form 5",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "003",
+      "project_folder": "16 forms"
+    },
+    {
+      "work_id": "03247",
+      "record_hash": "8987f857f340e58eebc2b28bc79db529ff8cadfca7c304051cd75db32a6aa4aa",
+      "title": "form 6",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "003",
+      "project_folder": "16 forms"
+    },
+    {
+      "work_id": "03248",
+      "record_hash": "a72d56e41fe2a37c841c45a9448c4ddcad5d61904592e25d31a930cff819d444",
+      "title": "form 7",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "003",
+      "project_folder": "16 forms"
+    },
+    {
+      "work_id": "03249",
+      "record_hash": "a1ebcc779615b09918bb5c0d7b9aa18bc7fe0f85295c4c725bceb1c4a50a2146",
+      "title": "form 8",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "003",
+      "project_folder": "16 forms"
+    },
+    {
+      "work_id": "03250",
+      "record_hash": "194bfaf8daffe4bb44dae20f35b7e8c5f9520154177d412ba1c5e1bc13ad3819",
+      "title": "form 9",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "003",
+      "project_folder": "16 forms"
+    },
+    {
+      "work_id": "03251",
+      "record_hash": "abd48909d5da5135f523acf7fe07469274a3c4ffef126bc07d3a7ca104127336",
+      "title": "form 10",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "003",
+      "project_folder": "16 forms"
+    },
+    {
+      "work_id": "03252",
+      "record_hash": "8a14e14ec7eef096513c3b99c72d0b9cbd17972d5400d3b105cb73daf77dcc82",
+      "title": "form 11",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "003",
+      "project_folder": "16 forms"
+    },
+    {
+      "work_id": "03253",
+      "record_hash": "8c1be1ff7810bf41210d9b2427416be34c1a87af79ead25f37bb3dbafb28344b",
+      "title": "form 12",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "003",
+      "project_folder": "16 forms"
+    },
+    {
+      "work_id": "03254",
+      "record_hash": "34239ccaf1b94fd89a2bdb0ea2c798e2c1400e6b3ba5acd61db7407a1be5cdfc",
+      "title": "form 13",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "003",
+      "project_folder": "16 forms"
+    },
+    {
+      "work_id": "03255",
+      "record_hash": "e7228d670c68e37211cbea4f1fb3b528ba60053954f736b86f764028c2846f23",
+      "title": "form 14",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "003",
+      "project_folder": "16 forms"
+    },
+    {
+      "work_id": "03256",
+      "record_hash": "cde935fbe7ff10831205844d0f9e4cbfc67e3d70b4acdb6d6ddd87c5e3270ae7",
+      "title": "form 15",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "003",
+      "project_folder": "16 forms"
+    },
+    {
+      "work_id": "03257",
+      "record_hash": "7cdd6e66088be5ee10d8b6438660f8f3520a5c2a29c1f7666aafcd165f6df8fd",
+      "title": "form 16",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "003",
+      "project_folder": "16 forms"
+    },
+    {
+      "work_id": "03258",
+      "record_hash": "8e60904bd6883d13082e68bbf40392f849157127d88d9ba1c572e506d0b16522",
+      "title": "form 17",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "003",
+      "project_folder": "16 forms"
+    },
+    {
+      "work_id": "03259",
+      "record_hash": "75b2d5254098ae4ffd7d473c02312d38cd3e84a8517b6a86bdb31ec9e945cf21",
+      "title": "form 18",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "003",
+      "project_folder": "16 forms"
+    },
+    {
+      "work_id": "03260",
+      "record_hash": "db2a7930d619c1fd99bcbb6693c407fa7ae1cd2df2f809e2f8e579deb7890e47",
+      "title": "form 19",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "003",
+      "project_folder": "16 forms"
+    },
+    {
+      "work_id": "03261",
+      "record_hash": "4d42b030631ad5d6a27c4ef9c14d1ae0b1ef4d47ed387d8098d08a2fa2f8bd51",
+      "title": "form 20",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "003",
+      "project_folder": "16 forms"
+    },
+    {
+      "work_id": "03262",
+      "record_hash": "9ffb00edc8847f94a07fc2aff9126dc6cc7fbb3c03955a141b4f05da229c36d5",
+      "title": "form 21",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "003",
+      "project_folder": "16 forms"
+    },
+    {
+      "work_id": "03263",
+      "record_hash": "e8671e050624c2a2a77a147690bfd0487476c0a1cfb73289bb9159b0a6b1eceb",
+      "title": "form 22",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "003",
+      "project_folder": "16 forms"
+    },
+    {
+      "work_id": "03264",
+      "record_hash": "47638fed5c8d298a157a7d45a886dd4aa1097e2a22dd8f97d619c943c97cb6d2",
+      "title": "form 23",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "003",
+      "project_folder": "16 forms"
+    },
+    {
+      "work_id": "03265",
+      "record_hash": "969c033648b3f1d9b24a05d3f712994585be147f41f9d86b4df4730ae6b8e105",
+      "title": "form 24",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "003",
+      "project_folder": "16 forms"
+    },
+    {
+      "work_id": "03266",
+      "record_hash": "71828dedb25e9d4328cfc05a288147d80eed04218d2d69e8f808f89919eb6344",
+      "title": "form 25",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "003",
+      "project_folder": "16 forms"
+    },
+    {
+      "work_id": "03267",
+      "record_hash": "7a8632ed97b6f9efab0728d405a411e8ae8092a8b28d452bfe203720e7325f2b",
+      "title": "form 26",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "003",
+      "project_folder": "16 forms"
+    },
+    {
+      "work_id": "03268",
+      "record_hash": "5f0407d09c560246ff3dac923bd7b6c4c5f303048b8fb162540380494f713c44",
+      "title": "form 27",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "003",
+      "project_folder": "16 forms"
+    },
+    {
+      "work_id": "03269",
+      "record_hash": "24d2a1dcc986021aeb24e8a5d657ab30f07a016028f1edb82eb802c294112f62",
+      "title": "form 28",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "003",
+      "project_folder": "16 forms"
+    },
+    {
+      "work_id": "03270",
+      "record_hash": "bd0271b1a22371a677d4ca48d0f8b4c67db2ac2c4df58a389f1974790681643b",
+      "title": "form 29",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "003",
+      "project_folder": "16 forms"
+    },
+    {
+      "work_id": "03271",
+      "record_hash": "6593d602be798c46330e00ae8b1bedf6f34c747462090d8084d2dbee58909e93",
+      "title": "form 30",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "003",
+      "project_folder": "16 forms"
+    },
+    {
+      "work_id": "03272",
+      "record_hash": "2c2a48c380c6d5b4bdce001cb5f3042bd6e18889bac28142524efe0842ff0471",
+      "title": "form 31",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "003",
+      "project_folder": "16 forms"
+    },
+    {
+      "work_id": "03273",
+      "record_hash": "b843c8cfa1d46c2c31609e8ed2f8f148540fb2eade95db29db75b3b0014a8718",
+      "title": "transformed form 1",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "003",
+      "project_folder": "16 forms"
+    },
+    {
+      "work_id": "03274",
+      "record_hash": "46df6f9967e4bfe12f78b3a81dafad40f6abdb6f843ada0c84f3c6aa256b587b",
+      "title": "transformed form 2",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "003",
+      "project_folder": "16 forms"
+    },
+    {
+      "work_id": "03275",
+      "record_hash": "8edfa71d7f15f0b016fe940b5089380c1c4e7b4c77592d21fec415a2a21e1d9f",
+      "title": "transformed form 3",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "003",
+      "project_folder": "16 forms"
+    },
+    {
+      "work_id": "03276",
+      "record_hash": "9b3e9e74fd7a2fb035a41ed3ca17b8b152e22371e1c7fe0ad355fd75d3c0e422",
+      "title": "transformed form 4",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "003",
+      "project_folder": "16 forms"
+    },
+    {
+      "work_id": "03277",
+      "record_hash": "42df07a0a8a5df8d639ab8b8ce14d93ea03cab5065202f2553d95c05376f1a47",
+      "title": "transformed form 5",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "003",
+      "project_folder": "16 forms"
+    },
+    {
+      "work_id": "03278",
+      "record_hash": "4357a78e51d544724c4dcc65ff3cc63d38b1d6a165ab8bfc1e89cf1423ec1182",
+      "title": "transformed form 6",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "003",
+      "project_folder": "16 forms"
+    },
+    {
+      "work_id": "03279",
+      "record_hash": "ec69c122efc5396ee250ceadec0be00820a3e543e437c2cdb8d2ca1a89f72145",
+      "title": "transformed form 7",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "003",
+      "project_folder": "16 forms"
+    },
+    {
+      "work_id": "03280",
+      "record_hash": "d09be86e9020755a7ca290b5ee38b0c5a1deb974c2021ee351bdded5dfa9fefc",
+      "title": "transformed form 8",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "003",
+      "project_folder": "16 forms"
+    },
+    {
+      "work_id": "03281",
+      "record_hash": "8911ea7e5f7d13f43dd980753a9f2d7b020152d3928bf74e7db88cc11db99b8d",
+      "title": "transformed form 9",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "003",
+      "project_folder": "16 forms"
+    },
+    {
+      "work_id": "03282",
+      "record_hash": "e884d8cf98be71967ecb8f1bfe73351ea882c3d0d717091a5341d1dfe9d6a0ad",
+      "title": "transformed form 10",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "003",
+      "project_folder": "16 forms"
+    },
+    {
+      "work_id": "03283",
+      "record_hash": "cb2f8504b394344ad32df8521ee2e0af689c6b225482782803656a67a92360bc",
+      "title": "transformed form 11",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "003",
+      "project_folder": "16 forms"
+    },
+    {
+      "work_id": "03284",
+      "record_hash": "eafdfc8366e158691f700dc0fce88029f8f5c2b3b4bc193edfcf1913afedf50f",
+      "title": "transformed form 12",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "003",
+      "project_folder": "16 forms"
+    },
+    {
+      "work_id": "03285",
+      "record_hash": "db0ef752f3cba4b4705faa32c0813c2073cc0fe7ab6a7ecc4ee6193135b794f9",
+      "title": "transformed form 13",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "003",
+      "project_folder": "16 forms"
+    },
+    {
+      "work_id": "03286",
+      "record_hash": "f1a5c1d74a612874f99ccbf0add7fb2f35380232b212fe7a37f5cc12ae9dcb81",
+      "title": "transformed form 14",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "003",
+      "project_folder": "16 forms"
+    },
+    {
+      "work_id": "03287",
+      "record_hash": "daa17f715f9e46e71c7964631f15fe8d69b2b562849a0fa29531eda5e6de7614",
+      "title": "transformed form 15",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "003",
+      "project_folder": "16 forms"
+    },
+    {
+      "work_id": "03288",
+      "record_hash": "27de531c925907a65d18db216dfa90bc0bcff0aad650d7e73fe7e7d5fa73c626",
+      "title": "transformed form 16",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "003",
+      "project_folder": "16 forms"
     }
   ],
   "ordered_work_ids": [
-    "00639"
+    "00639",
+    "03241",
+    "03242",
+    "03243",
+    "03244",
+    "03245",
+    "03246",
+    "03247",
+    "03248",
+    "03249",
+    "03250",
+    "03251",
+    "03252",
+    "03253",
+    "03254",
+    "03255",
+    "03256",
+    "03257",
+    "03258",
+    "03259",
+    "03260",
+    "03261",
+    "03262",
+    "03263",
+    "03264",
+    "03265",
+    "03266",
+    "03267",
+    "03268",
+    "03269",
+    "03270",
+    "03271",
+    "03272",
+    "03273",
+    "03274",
+    "03275",
+    "03276",
+    "03277",
+    "03278",
+    "03279",
+    "03280",
+    "03281",
+    "03282",
+    "03283",
+    "03284",
+    "03285",
+    "03286",
+    "03287",
+    "03288"
   ],
   "project_folders": [
     "16 forms"

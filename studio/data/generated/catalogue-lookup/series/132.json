@@ -6,10 +6,9 @@
     "series_id": "132",
     "title": "tabula rasa",
     "year": 2008,
-    "year_display": "2008",
-    "sort_fields": "work_id"
+    "year_display": "2008"
   },
-  "record_hash": "772004820b917db515d3d974cf8acaca757419990bef63a1601fb664e98fa7a9",
+  "record_hash": "1fb5d140ad0ac836f073571c0e524cfe49e703e18f5dc40de58a2c898ccdfc96",
   "member_works": [
     {
       "work_id": "01744",
@@ -19,10 +18,110 @@
       "year_display": "2008",
       "series_id": "132",
       "project_folder": "tabula rasa"
+    },
+    {
+      "work_id": "04557",
+      "record_hash": "d22a76be661c3303b8d296d4efe757c2e16d88a93b89f55557984aff54bcdc24",
+      "title": "tabula rasa - detail 1",
+      "year": 2008,
+      "year_display": "2008",
+      "series_id": "132",
+      "project_folder": "tabula rasa"
+    },
+    {
+      "work_id": "04558",
+      "record_hash": "ec3a2c1be37d9fe72850750aec49d460d205f529da96d226963a13a927e7d6ea",
+      "title": "tabula rasa - detail 1",
+      "year": 2008,
+      "year_display": "2008",
+      "series_id": "132",
+      "project_folder": "tabula rasa"
+    },
+    {
+      "work_id": "04559",
+      "record_hash": "3caa6f85bbfbb3009283bb2f0813516afd58faab6fe5e28c85c58fe4d3919c98",
+      "title": "tabula rasa - detail 1",
+      "year": 2008,
+      "year_display": "2008",
+      "series_id": "132",
+      "project_folder": "tabula rasa"
+    },
+    {
+      "work_id": "04560",
+      "record_hash": "8add246ed655b042e8e56f0c6d03772ff34800f064ca52c7df32140c96495f2e",
+      "title": "tabula rasa - detail 1",
+      "year": 2008,
+      "year_display": "2008",
+      "series_id": "132",
+      "project_folder": "tabula rasa"
+    },
+    {
+      "work_id": "04561",
+      "record_hash": "6ff01c1d55c167ef61fffad4fc5cd48f27e04f0597128dcffc3d8b2cc3a66a9a",
+      "title": "tabula rasa - detail 1",
+      "year": 2008,
+      "year_display": "2008",
+      "series_id": "132",
+      "project_folder": "tabula rasa"
+    },
+    {
+      "work_id": "04562",
+      "record_hash": "69ccb2ba836034e8eaf609a04534b4f7f920ffc950a61781a5580b91ee6b5e20",
+      "title": "tabula rasa - detail 1",
+      "year": 2008,
+      "year_display": "2008",
+      "series_id": "132",
+      "project_folder": "tabula rasa"
+    },
+    {
+      "work_id": "04563",
+      "record_hash": "9dc1ab5f0123cd931b16760d2d1c72ce706c9d496787bb95ac05aa1f0aea8b49",
+      "title": "tabula rasa - detail 1",
+      "year": 2008,
+      "year_display": "2008",
+      "series_id": "132",
+      "project_folder": "tabula rasa"
+    },
+    {
+      "work_id": "04564",
+      "record_hash": "af7adb4b5da013b4d3796f6ec67bef23d1dcbeb49932be4048c704ed31c6bf03",
+      "title": "tabula rasa - detail 1",
+      "year": 2008,
+      "year_display": "2008",
+      "series_id": "132",
+      "project_folder": "tabula rasa"
+    },
+    {
+      "work_id": "04565",
+      "record_hash": "19aad53be88347c4860ef299c918640fde606288c4a208e4d373b9aeca0b0e3b",
+      "title": "tabula rasa - detail 1",
+      "year": 2008,
+      "year_display": "2008",
+      "series_id": "132",
+      "project_folder": "tabula rasa"
+    },
+    {
+      "work_id": "04566",
+      "record_hash": "0b805e9e625722f524d61f1cb5c8f0482d7f0ff19daf405315412e47004bef58",
+      "title": "tabula rasa - source",
+      "year": 2008,
+      "year_display": "2008",
+      "series_id": "132",
+      "project_folder": "tabula rasa"
     }
   ],
   "ordered_work_ids": [
-    "01744"
+    "01744",
+    "04557",
+    "04558",
+    "04559",
+    "04560",
+    "04561",
+    "04562",
+    "04563",
+    "04564",
+    "04565",
+    "04566"
   ],
   "project_folders": [
     "tabula rasa"

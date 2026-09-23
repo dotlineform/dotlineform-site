@@ -6,10 +6,9 @@
     "series_id": "089",
     "title": "learning to draw landscapes",
     "year": 2010,
-    "year_display": "c. 2010?, 2022",
-    "sort_fields": "work_id"
+    "year_display": "c. 2010?, 2022"
   },
-  "record_hash": "c5024be8f65ac93eff262ff6bd6376c4b8c2dcafe245ce01ddd994038fb7aecb",
+  "record_hash": "08041f59a491fa8db63e614f84ceb7ffb9484dc3c1fb48704ed2a6280197db0c",
   "member_works": [
     {
       "work_id": "00114",
@@ -163,6 +162,681 @@
       "year_display": "c. 2022?",
       "series_id": "089",
       "project_folder": "learning to draw landscapes"
+    },
+    {
+      "work_id": "02983",
+      "record_hash": "3ba7fefee15d53705ff7ef560abe47ad17199bdf6f618959329a2c466c7186de",
+      "title": "version dall-e - 1.0 (run source)",
+      "year": 2022,
+      "year_display": "c. 2022?",
+      "series_id": "089",
+      "project_folder": "learning to draw landscapes"
+    },
+    {
+      "work_id": "02984",
+      "record_hash": "97426bb371be645727517378bf3998ab16c60bbb507e0fc0f7584d55a186d72e",
+      "title": "version dall-e - 1.1",
+      "year": 2022,
+      "year_display": "c. 2022?",
+      "series_id": "089",
+      "project_folder": "learning to draw landscapes"
+    },
+    {
+      "work_id": "02985",
+      "record_hash": "9f9cbab965021d7abf32b621248011cee99b8fc625cec9fb5f890bb4ce90debf",
+      "title": "version dall-e - 1.2",
+      "year": 2022,
+      "year_display": "c. 2022?",
+      "series_id": "089",
+      "project_folder": "learning to draw landscapes"
+    },
+    {
+      "work_id": "02986",
+      "record_hash": "58965200c17aacbbb94e7396e869de21d7189a2a62d0ad75078b59a3c6a8b455",
+      "title": "version dall-e - 1.3",
+      "year": 2022,
+      "year_display": "c. 2022?",
+      "series_id": "089",
+      "project_folder": "learning to draw landscapes"
+    },
+    {
+      "work_id": "02987",
+      "record_hash": "934bef142e6083dc3ad659b94347b8c9d01b1ee7b3559ee781b264dc9e2bc411",
+      "title": "version dall-e - 1.4",
+      "year": 2022,
+      "year_display": "c. 2022?",
+      "series_id": "089",
+      "project_folder": "learning to draw landscapes"
+    },
+    {
+      "work_id": "02988",
+      "record_hash": "b976d41617042f780c3590c5e5cf0c50168ee6dd49723535aa60cbc0ec055630",
+      "title": "version dall-e - 2.0 (run source)",
+      "year": 2022,
+      "year_display": "c. 2022?",
+      "series_id": "089",
+      "project_folder": "learning to draw landscapes"
+    },
+    {
+      "work_id": "02989",
+      "record_hash": "e9f7e9753637b7e41fd6c9652c8d2261773b7adba36c13df04d485496469b5c5",
+      "title": "version dall-e - 2.1",
+      "year": 2022,
+      "year_display": "c. 2022?",
+      "series_id": "089",
+      "project_folder": "learning to draw landscapes"
+    },
+    {
+      "work_id": "02990",
+      "record_hash": "5122c9e4657d71eaf7e898e1cf16c5b5ffe0c5aa38244165cc3d585445e1c950",
+      "title": "version dall-e - 2.2",
+      "year": 2022,
+      "year_display": "c. 2022?",
+      "series_id": "089",
+      "project_folder": "learning to draw landscapes"
+    },
+    {
+      "work_id": "02991",
+      "record_hash": "46f3e12e091225d175aa4151f2f5bde9f955033635189b3424b48b145f661234",
+      "title": "version dall-e - 2.3",
+      "year": 2022,
+      "year_display": "c. 2022?",
+      "series_id": "089",
+      "project_folder": "learning to draw landscapes"
+    },
+    {
+      "work_id": "02992",
+      "record_hash": "42f38cd6007ff8d9d6b0bca386e4e19509a3df7d84b4c4590d299b5e07cb0bcc",
+      "title": "version dall-e - 2.4",
+      "year": 2022,
+      "year_display": "c. 2022?",
+      "series_id": "089",
+      "project_folder": "learning to draw landscapes"
+    },
+    {
+      "work_id": "02993",
+      "record_hash": "657c05ab8ce4c8e9231a277188bc4cc05be2c2218ffdde6f5d14c6b0bba01e4d",
+      "title": "version dall-e - 3.0 (run source)",
+      "year": 2022,
+      "year_display": "c. 2022?",
+      "series_id": "089",
+      "project_folder": "learning to draw landscapes"
+    },
+    {
+      "work_id": "02994",
+      "record_hash": "b4999817d337a4e9bd9cf8b17962e439ca9a4867792f727f516245311b2e694a",
+      "title": "version dall-e - 3.1",
+      "year": 2022,
+      "year_display": "c. 2022?",
+      "series_id": "089",
+      "project_folder": "learning to draw landscapes"
+    },
+    {
+      "work_id": "02995",
+      "record_hash": "b3fd04bb69e7acb0c83b980842ef26aee9f7f80c2ba85e47aa6cca8e8751a67e",
+      "title": "version dall-e - 3.2",
+      "year": 2022,
+      "year_display": "c. 2022?",
+      "series_id": "089",
+      "project_folder": "learning to draw landscapes"
+    },
+    {
+      "work_id": "02996",
+      "record_hash": "ba3a5fe5209a1073edf3d6c210d58c3d7fae995ec741742c43260b6273cd2246",
+      "title": "version dall-e - 3.3",
+      "year": 2022,
+      "year_display": "c. 2022?",
+      "series_id": "089",
+      "project_folder": "learning to draw landscapes"
+    },
+    {
+      "work_id": "02997",
+      "record_hash": "0d7def920f14fb0d19aeb195b332b2c700b57e135688ae5b7ecb9fc3c31d98d2",
+      "title": "version dall-e - 3.4",
+      "year": 2022,
+      "year_display": "c. 2022?",
+      "series_id": "089",
+      "project_folder": "learning to draw landscapes"
+    },
+    {
+      "work_id": "02998",
+      "record_hash": "d37dd6a183447dde622aaa56800bf8c3d5825873a72f612c186343a3ae73e5ec",
+      "title": "version dall-e - 4.0 (run source)",
+      "year": 2022,
+      "year_display": "c. 2022?",
+      "series_id": "089",
+      "project_folder": "learning to draw landscapes"
+    },
+    {
+      "work_id": "02999",
+      "record_hash": "c157d39ca8d2ddf06ee018e7389dbd8a4d7ca8ccbf8f86149df018778e6dd03f",
+      "title": "version dall-e - 4.1",
+      "year": 2022,
+      "year_display": "c. 2022?",
+      "series_id": "089",
+      "project_folder": "learning to draw landscapes"
+    },
+    {
+      "work_id": "03000",
+      "record_hash": "dfa7caf06985cfcb8c2d44dec3abd3a86ffbb8607307fb5e3349d6ef10072e92",
+      "title": "version dall-e - 4.2",
+      "year": 2022,
+      "year_display": "c. 2022?",
+      "series_id": "089",
+      "project_folder": "learning to draw landscapes"
+    },
+    {
+      "work_id": "03001",
+      "record_hash": "649448d8cf6265f9b5869aacce4747487c005e72143aa7bccf9839875de6d408",
+      "title": "version dall-e - 4.3",
+      "year": 2022,
+      "year_display": "c. 2022?",
+      "series_id": "089",
+      "project_folder": "learning to draw landscapes"
+    },
+    {
+      "work_id": "03002",
+      "record_hash": "95444a2f482f9ce3e51ad6dc688844e4abb07d091d2c5e6bc59d6e9072315d69",
+      "title": "version dall-e - 4.4",
+      "year": 2022,
+      "year_display": "c. 2022?",
+      "series_id": "089",
+      "project_folder": "learning to draw landscapes"
+    },
+    {
+      "work_id": "03003",
+      "record_hash": "5d1df262549ba6e2452787d45363cd806174a8d67f281e808adfcd1ff2008153",
+      "title": "version dall-e - 5.0 (run source)",
+      "year": 2022,
+      "year_display": "c. 2022?",
+      "series_id": "089",
+      "project_folder": "learning to draw landscapes"
+    },
+    {
+      "work_id": "03004",
+      "record_hash": "5e46a6c8282e0c941c5ed9de79938e57889051a223b0f46a092eda9c410700cf",
+      "title": "version dall-e - 5.1",
+      "year": 2022,
+      "year_display": "c. 2022?",
+      "series_id": "089",
+      "project_folder": "learning to draw landscapes"
+    },
+    {
+      "work_id": "03005",
+      "record_hash": "716a39966931fe73b83985644671e5b64856a6738f0cdf136bb03b1e625d52ba",
+      "title": "version dall-e - 5.2",
+      "year": 2022,
+      "year_display": "c. 2022?",
+      "series_id": "089",
+      "project_folder": "learning to draw landscapes"
+    },
+    {
+      "work_id": "03006",
+      "record_hash": "6c696784b55b25d3b82315c7ed1c3b0ca361a59ed8fd3c80e51477504c5c1ac6",
+      "title": "version dall-e - 5.3",
+      "year": 2022,
+      "year_display": "c. 2022?",
+      "series_id": "089",
+      "project_folder": "learning to draw landscapes"
+    },
+    {
+      "work_id": "03007",
+      "record_hash": "874531aa4db53fb178b36e35b73b069c6f0081ed8467d29efcdf1fcc9595a115",
+      "title": "version dall-e - 5.4",
+      "year": 2022,
+      "year_display": "c. 2022?",
+      "series_id": "089",
+      "project_folder": "learning to draw landscapes"
+    },
+    {
+      "work_id": "03008",
+      "record_hash": "4d0f29346ff60db86905059a34c3b0e91fda3c66c6b2297c9e6b2ba3eda61e43",
+      "title": "version dall-e - 6.0 (run source)",
+      "year": 2022,
+      "year_display": "c. 2022?",
+      "series_id": "089",
+      "project_folder": "learning to draw landscapes"
+    },
+    {
+      "work_id": "03009",
+      "record_hash": "83d89c5985187e5b2382312d05821805c9d4c2ca3b82b42926d6caa4957ca34d",
+      "title": "version dall-e - 6.1",
+      "year": 2022,
+      "year_display": "c. 2022?",
+      "series_id": "089",
+      "project_folder": "learning to draw landscapes"
+    },
+    {
+      "work_id": "03010",
+      "record_hash": "3f14ef31ad3ea9539b68047eed8e6f61783bf28fbd0567408e450fef2fe2556f",
+      "title": "version dall-e - 6.2",
+      "year": 2022,
+      "year_display": "c. 2022?",
+      "series_id": "089",
+      "project_folder": "learning to draw landscapes"
+    },
+    {
+      "work_id": "03011",
+      "record_hash": "81a0186a7904f1a9f1c01432d04d9f0bfcdedd1210454f6cb3a17a40e8835ca3",
+      "title": "version dall-e - 6.3",
+      "year": 2022,
+      "year_display": "c. 2022?",
+      "series_id": "089",
+      "project_folder": "learning to draw landscapes"
+    },
+    {
+      "work_id": "03012",
+      "record_hash": "2efa9900f8bd7905caac3b65cee3feec15a0fe02471613c0ed1f145385bbb223",
+      "title": "version dall-e - 6.4",
+      "year": 2022,
+      "year_display": "c. 2022?",
+      "series_id": "089",
+      "project_folder": "learning to draw landscapes"
+    },
+    {
+      "work_id": "03013",
+      "record_hash": "50dd11ca07cd5716cb868ac70baab06999736d66154d7c11580739637449cdc7",
+      "title": "version dall-e - 7.0 (run source)",
+      "year": 2022,
+      "year_display": "c. 2022?",
+      "series_id": "089",
+      "project_folder": "learning to draw landscapes"
+    },
+    {
+      "work_id": "03014",
+      "record_hash": "077167424b19a0d5b387fff1452dbe16d6b292953b735bd72b7c77d91715915a",
+      "title": "version dall-e - 7.1",
+      "year": 2022,
+      "year_display": "c. 2022?",
+      "series_id": "089",
+      "project_folder": "learning to draw landscapes"
+    },
+    {
+      "work_id": "03015",
+      "record_hash": "a6099361be1a1444a6d0afb6332d259e08ba75e49e0252da333e49772b2bc961",
+      "title": "version dall-e - 7.2",
+      "year": 2022,
+      "year_display": "c. 2022?",
+      "series_id": "089",
+      "project_folder": "learning to draw landscapes"
+    },
+    {
+      "work_id": "03016",
+      "record_hash": "0b0e8d5f307bdc993c4aa2940b9cb3f48166d6abd5e7062266a8af41d5ffb37b",
+      "title": "version dall-e - 7.3",
+      "year": 2022,
+      "year_display": "c. 2022?",
+      "series_id": "089",
+      "project_folder": "learning to draw landscapes"
+    },
+    {
+      "work_id": "03017",
+      "record_hash": "8989be66011ae789e63db20d15f10e9d357845130dd790cc0fb6f4c878b556a5",
+      "title": "version dall-e - 7.4",
+      "year": 2022,
+      "year_display": "c. 2022?",
+      "series_id": "089",
+      "project_folder": "learning to draw landscapes"
+    },
+    {
+      "work_id": "03018",
+      "record_hash": "515dfc3817b22c1eee6878a7883e44a52a7593a2692efd5897f6a90b9c2d2ba9",
+      "title": "version dall-e - 8.0 (run source)",
+      "year": 2022,
+      "year_display": "c. 2022?",
+      "series_id": "089",
+      "project_folder": "learning to draw landscapes"
+    },
+    {
+      "work_id": "03019",
+      "record_hash": "e6967568f47ca07775fe3342ff453f071142ca1eb74a87bf86dec8fb14028316",
+      "title": "version dall-e - 8.1",
+      "year": 2022,
+      "year_display": "c. 2022?",
+      "series_id": "089",
+      "project_folder": "learning to draw landscapes"
+    },
+    {
+      "work_id": "03020",
+      "record_hash": "0af2f34683f5ef19c744c8cde377c05ab993adf75d3e63395e9b7e89ef608e50",
+      "title": "version dall-e - 8.2",
+      "year": 2022,
+      "year_display": "c. 2022?",
+      "series_id": "089",
+      "project_folder": "learning to draw landscapes"
+    },
+    {
+      "work_id": "03021",
+      "record_hash": "3a51125299ea64d964bdd86674b0a1f42b05f59719a524a1e7350c05b891f900",
+      "title": "version dall-e - 8.3",
+      "year": 2022,
+      "year_display": "c. 2022?",
+      "series_id": "089",
+      "project_folder": "learning to draw landscapes"
+    },
+    {
+      "work_id": "03022",
+      "record_hash": "1fc2f5202c5186724e3147413e3054c734b32491069450e84bccaf38ce2ee05a",
+      "title": "version dall-e - 8.4",
+      "year": 2022,
+      "year_display": "c. 2022?",
+      "series_id": "089",
+      "project_folder": "learning to draw landscapes"
+    },
+    {
+      "work_id": "03023",
+      "record_hash": "ec1a02f2a2cb9a4ea586f9c9d055a604753a5a63ffccfbcf5ad9def187106ffd",
+      "title": "version dall-e - 9.0 (run source)",
+      "year": 2022,
+      "year_display": "c. 2022?",
+      "series_id": "089",
+      "project_folder": "learning to draw landscapes"
+    },
+    {
+      "work_id": "03024",
+      "record_hash": "90f76edfbf5f6390385bc2758004c6a58fea3f59e8580c20be04749281e0529c",
+      "title": "version dall-e - 9.1",
+      "year": 2022,
+      "year_display": "c. 2022?",
+      "series_id": "089",
+      "project_folder": "learning to draw landscapes"
+    },
+    {
+      "work_id": "03025",
+      "record_hash": "13884bbefb9473f2a7138785cec8a7f3e9bb2ee0272d32cee0117cda1df04ae9",
+      "title": "version dall-e - 9.2",
+      "year": 2022,
+      "year_display": "c. 2022?",
+      "series_id": "089",
+      "project_folder": "learning to draw landscapes"
+    },
+    {
+      "work_id": "03026",
+      "record_hash": "48e08227d4f3f253b30f7f39eed0537af9ff1569320e153d93668f8053200fbb",
+      "title": "version dall-e - 9.3",
+      "year": 2022,
+      "year_display": "c. 2022?",
+      "series_id": "089",
+      "project_folder": "learning to draw landscapes"
+    },
+    {
+      "work_id": "03027",
+      "record_hash": "e426de5924fde7257296a1c0ac656594cf9aba3f95fa345dd31b9f31772a7275",
+      "title": "version dall-e - 9.4",
+      "year": 2022,
+      "year_display": "c. 2022?",
+      "series_id": "089",
+      "project_folder": "learning to draw landscapes"
+    },
+    {
+      "work_id": "03028",
+      "record_hash": "c2da25334671ee3981aeb174bdc0e10edebd8867e1996a2db8980ee9ad634544",
+      "title": "version dall-e - 10.0 (run source)",
+      "year": 2022,
+      "year_display": "c. 2022?",
+      "series_id": "089",
+      "project_folder": "learning to draw landscapes"
+    },
+    {
+      "work_id": "03029",
+      "record_hash": "c5db04aba480e79492d9f7852142231faba663fd8be99bfd48e5679642807458",
+      "title": "version dall-e - 10.1",
+      "year": 2022,
+      "year_display": "c. 2022?",
+      "series_id": "089",
+      "project_folder": "learning to draw landscapes"
+    },
+    {
+      "work_id": "03030",
+      "record_hash": "d9d8b3a76a5ee039da665d32893e3b0f2c9b3e0d57cd5bd81cf518f7fdc922de",
+      "title": "version dall-e - 10.2",
+      "year": 2022,
+      "year_display": "c. 2022?",
+      "series_id": "089",
+      "project_folder": "learning to draw landscapes"
+    },
+    {
+      "work_id": "03031",
+      "record_hash": "b18bf59622749ad8fe14426c62bb86b5f907716e7687f0d1137ad06102b5d4e1",
+      "title": "version dall-e - 10.3",
+      "year": 2022,
+      "year_display": "c. 2022?",
+      "series_id": "089",
+      "project_folder": "learning to draw landscapes"
+    },
+    {
+      "work_id": "03032",
+      "record_hash": "12c281be861154fe54e6b4231ac8207fd40140e1d4233b0746b4ca55a0ba277c",
+      "title": "version dall-e - 10.4",
+      "year": 2022,
+      "year_display": "c. 2022?",
+      "series_id": "089",
+      "project_folder": "learning to draw landscapes"
+    },
+    {
+      "work_id": "03033",
+      "record_hash": "fceeb6b3f0586c6f9f41a6c22390250213d83191cc28c725188f7ac3713b5177",
+      "title": "version dall-e - 11.0 (run source)",
+      "year": 2022,
+      "year_display": "c. 2022?",
+      "series_id": "089",
+      "project_folder": "learning to draw landscapes"
+    },
+    {
+      "work_id": "03034",
+      "record_hash": "ae0afa0e6290f32e126b4cb0e4e1466cd9bfe56a2f4a0c06c8fcdf5c56d15966",
+      "title": "version dall-e - 11.1",
+      "year": 2022,
+      "year_display": "c. 2022?",
+      "series_id": "089",
+      "project_folder": "learning to draw landscapes"
+    },
+    {
+      "work_id": "03035",
+      "record_hash": "b1c4aa88ec58a77e8e380c47e7d5b5c4bd6af236a0d61a649b10ecf5dce71a01",
+      "title": "version dall-e - 11.2",
+      "year": 2022,
+      "year_display": "c. 2022?",
+      "series_id": "089",
+      "project_folder": "learning to draw landscapes"
+    },
+    {
+      "work_id": "03036",
+      "record_hash": "057d488f1d15c9164367baf15e262819d3f3f1ef7ecac584609de2b1a63c0104",
+      "title": "version dall-e - 11.3",
+      "year": 2022,
+      "year_display": "c. 2022?",
+      "series_id": "089",
+      "project_folder": "learning to draw landscapes"
+    },
+    {
+      "work_id": "03037",
+      "record_hash": "54b2054a429d81509dd400ca4f4273b782058651948799d442f4b238604ee9a9",
+      "title": "version dall-e - 11.4",
+      "year": 2022,
+      "year_display": "c. 2022?",
+      "series_id": "089",
+      "project_folder": "learning to draw landscapes"
+    },
+    {
+      "work_id": "03038",
+      "record_hash": "5f5931a86268cdb712bdf14f5ebe5dbadafaaef9290d542b7f99e757aab220a1",
+      "title": "version dall-e - 12.0 (run source)",
+      "year": 2022,
+      "year_display": "c. 2022?",
+      "series_id": "089",
+      "project_folder": "learning to draw landscapes"
+    },
+    {
+      "work_id": "03039",
+      "record_hash": "add5cad1eceaa7cca7b31cfe6909e1e64eaccc31cb6cc4307574a982b494a475",
+      "title": "version dall-e - 12.1",
+      "year": 2022,
+      "year_display": "c. 2022?",
+      "series_id": "089",
+      "project_folder": "learning to draw landscapes"
+    },
+    {
+      "work_id": "03040",
+      "record_hash": "338e4691174f39a14505eb0ca8bc90b80ded61ce036f423adf3b17cff18e36b4",
+      "title": "version dall-e - 12.2",
+      "year": 2022,
+      "year_display": "c. 2022?",
+      "series_id": "089",
+      "project_folder": "learning to draw landscapes"
+    },
+    {
+      "work_id": "03041",
+      "record_hash": "181f27a2ca3cba9c9cc3069df397468f0c19184d7b8b05a594bbc6c8cc90a8a4",
+      "title": "version dall-e - 12.3",
+      "year": 2022,
+      "year_display": "c. 2022?",
+      "series_id": "089",
+      "project_folder": "learning to draw landscapes"
+    },
+    {
+      "work_id": "03042",
+      "record_hash": "5a85659c8c29ae3ecbc4686dc92873d822be124d69490323fb5964ca4eb36ace",
+      "title": "version dall-e - 12.4",
+      "year": 2022,
+      "year_display": "c. 2022?",
+      "series_id": "089",
+      "project_folder": "learning to draw landscapes"
+    },
+    {
+      "work_id": "03043",
+      "record_hash": "4c4a76d0531269d42b62fa607aacaadc657edd61d55e3ff9fbc38aa53cd9e157",
+      "title": "version dall-e - 13.0 (run source)",
+      "year": 2022,
+      "year_display": "c. 2022?",
+      "series_id": "089",
+      "project_folder": "learning to draw landscapes"
+    },
+    {
+      "work_id": "03044",
+      "record_hash": "1123e7c68f82f10096f6164093ff52df217e9036e24495118105f45f2af454db",
+      "title": "version dall-e - 13.1",
+      "year": 2022,
+      "year_display": "c. 2022?",
+      "series_id": "089",
+      "project_folder": "learning to draw landscapes"
+    },
+    {
+      "work_id": "03045",
+      "record_hash": "ee770f47c9c53e56184896fd9b54fe5899e321103188c40627473ef321c6153f",
+      "title": "version dall-e - 13.2",
+      "year": 2022,
+      "year_display": "c. 2022?",
+      "series_id": "089",
+      "project_folder": "learning to draw landscapes"
+    },
+    {
+      "work_id": "03046",
+      "record_hash": "8be8ffc27e6a03b26f30e969fad32e757367b2bbe9c502e4b8e767e447aa4e9f",
+      "title": "version dall-e - 13.3",
+      "year": 2022,
+      "year_display": "c. 2022?",
+      "series_id": "089",
+      "project_folder": "learning to draw landscapes"
+    },
+    {
+      "work_id": "03047",
+      "record_hash": "1cf1278df46b87e001a1d0f03af45f57eeeaf8997fa2e29b89d80a4f521c4e18",
+      "title": "version dall-e - 13.4",
+      "year": 2022,
+      "year_display": "c. 2022?",
+      "series_id": "089",
+      "project_folder": "learning to draw landscapes"
+    },
+    {
+      "work_id": "03048",
+      "record_hash": "7a3001b0686e28eb9a1ed177f32752e78bb9f49050cf9d654646da81836afd3f",
+      "title": "version dall-e - 14.0 (run source)",
+      "year": 2022,
+      "year_display": "c. 2022?",
+      "series_id": "089",
+      "project_folder": "learning to draw landscapes"
+    },
+    {
+      "work_id": "03049",
+      "record_hash": "54f4d4628f7e5608cd60fd5417afbbe70762cd1bff4811f8c106bdbd5dde0b72",
+      "title": "version dall-e - 14.1",
+      "year": 2022,
+      "year_display": "c. 2022?",
+      "series_id": "089",
+      "project_folder": "learning to draw landscapes"
+    },
+    {
+      "work_id": "03050",
+      "record_hash": "7458f992b4842c174c0536a8e3a222d2cee3b2fee8b10bbe50cffcbe5f2a4168",
+      "title": "version dall-e - 14.2",
+      "year": 2022,
+      "year_display": "c. 2022?",
+      "series_id": "089",
+      "project_folder": "learning to draw landscapes"
+    },
+    {
+      "work_id": "03051",
+      "record_hash": "c0e813f72187e6b098f2a37dbe7dc4e7bf3fb65451e1378a059e2c78520f3bf2",
+      "title": "version dall-e - 14.3",
+      "year": 2022,
+      "year_display": "c. 2022?",
+      "series_id": "089",
+      "project_folder": "learning to draw landscapes"
+    },
+    {
+      "work_id": "03052",
+      "record_hash": "c1c0cf0b69eb46e318fdab3707a63fe41daa25b0062d80508a74a4e617fadf15",
+      "title": "version dall-e - 14.4",
+      "year": 2022,
+      "year_display": "c. 2022?",
+      "series_id": "089",
+      "project_folder": "learning to draw landscapes"
+    },
+    {
+      "work_id": "03053",
+      "record_hash": "6d2204a597664c1f6f91aa5da41b594e1df3538759bc021e7d1a6f984346a970",
+      "title": "version dall-e - 15.0 (run source)",
+      "year": 2022,
+      "year_display": "c. 2022?",
+      "series_id": "089",
+      "project_folder": "learning to draw landscapes"
+    },
+    {
+      "work_id": "03054",
+      "record_hash": "aaf91be871cb149ab727f9ef661eb089ef5eb3e63dff7de175c10520bc86b06e",
+      "title": "version dall-e - 15.1",
+      "year": 2022,
+      "year_display": "c. 2022?",
+      "series_id": "089",
+      "project_folder": "learning to draw landscapes"
+    },
+    {
+      "work_id": "03055",
+      "record_hash": "4d392b630a7d3748ad7078f4a6843a30e28317bfcb91651a55f81ef3d07746bd",
+      "title": "version dall-e - 15.2",
+      "year": 2022,
+      "year_display": "c. 2022?",
+      "series_id": "089",
+      "project_folder": "learning to draw landscapes"
+    },
+    {
+      "work_id": "03056",
+      "record_hash": "483bac038bbfd4e893b3846e263f067ded982f6054813bfe494b03f59c80ed51",
+      "title": "version dall-e - 15.3",
+      "year": 2022,
+      "year_display": "c. 2022?",
+      "series_id": "089",
+      "project_folder": "learning to draw landscapes"
+    },
+    {
+      "work_id": "03057",
+      "record_hash": "86b7f6269e73d1cd408ef5faa47def18c133c23f44d9a9a87649691c6fe1a463",
+      "title": "version dall-e - 15.4",
+      "year": 2022,
+      "year_display": "c. 2022?",
+      "series_id": "089",
+      "project_folder": "learning to draw landscapes"
     }
   ],
   "ordered_work_ids": [
@@ -182,7 +856,82 @@
     "00127",
     "00128",
     "00129",
-    "00519"
+    "00519",
+    "02983",
+    "02984",
+    "02985",
+    "02986",
+    "02987",
+    "02988",
+    "02989",
+    "02990",
+    "02991",
+    "02992",
+    "02993",
+    "02994",
+    "02995",
+    "02996",
+    "02997",
+    "02998",
+    "02999",
+    "03000",
+    "03001",
+    "03002",
+    "03003",
+    "03004",
+    "03005",
+    "03006",
+    "03007",
+    "03008",
+    "03009",
+    "03010",
+    "03011",
+    "03012",
+    "03013",
+    "03014",
+    "03015",
+    "03016",
+    "03017",
+    "03018",
+    "03019",
+    "03020",
+    "03021",
+    "03022",
+    "03023",
+    "03024",
+    "03025",
+    "03026",
+    "03027",
+    "03028",
+    "03029",
+    "03030",
+    "03031",
+    "03032",
+    "03033",
+    "03034",
+    "03035",
+    "03036",
+    "03037",
+    "03038",
+    "03039",
+    "03040",
+    "03041",
+    "03042",
+    "03043",
+    "03044",
+    "03045",
+    "03046",
+    "03047",
+    "03048",
+    "03049",
+    "03050",
+    "03051",
+    "03052",
+    "03053",
+    "03054",
+    "03055",
+    "03056",
+    "03057"
   ],
   "project_folders": [
     "learning to draw landscapes"

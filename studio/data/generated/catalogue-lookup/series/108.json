@@ -6,10 +6,9 @@
     "series_id": "108",
     "title": "olive tree",
     "year": 2012,
-    "year_display": "2012",
-    "sort_fields": "work_id"
+    "year_display": "2012"
   },
-  "record_hash": "3896b9023778670426429e09f83fb6b2c48527faf93765eac7bb4f791758d33a",
+  "record_hash": "874dcae7bfc7017c6d416c1abb8e3745c6d6bdfd6388a1529b09e4e507aa000b",
   "member_works": [
     {
       "work_id": "01479",
@@ -19,10 +18,50 @@
       "year_display": "2012",
       "series_id": "108",
       "project_folder": "olive tree"
+    },
+    {
+      "work_id": "04309",
+      "record_hash": "feebd1b76352e297b0490302c0cb0fcbdfc21273b715be993f4f245a60167d48",
+      "title": "olive tree - detail 1",
+      "year": 2012,
+      "year_display": "2012",
+      "series_id": "108",
+      "project_folder": "olive tree"
+    },
+    {
+      "work_id": "04310",
+      "record_hash": "b0daa0027bf8c066a33272717152650a0931d5ad96aeec48f5bd6c25bbbda125",
+      "title": "olive tree - detail 2",
+      "year": 2012,
+      "year_display": "2012",
+      "series_id": "108",
+      "project_folder": "olive tree"
+    },
+    {
+      "work_id": "04311",
+      "record_hash": "a6fc9c32c99fff970b3bf5f4300502de11697ca31bb89ada4980be7ac09a5194",
+      "title": "olive tree - detail 3",
+      "year": 2012,
+      "year_display": "2012",
+      "series_id": "108",
+      "project_folder": "olive tree"
+    },
+    {
+      "work_id": "04312",
+      "record_hash": "f5bc96fd5c68a8ac60b7751ab165ed1be86c62f6534c6fa81d6941655b274d71",
+      "title": "olive tree - detail 4",
+      "year": 2012,
+      "year_display": "2012",
+      "series_id": "108",
+      "project_folder": "olive tree"
     }
   ],
   "ordered_work_ids": [
-    "01479"
+    "01479",
+    "04309",
+    "04310",
+    "04311",
+    "04312"
   ],
   "project_folders": [
     "olive tree"

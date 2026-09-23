@@ -6,10 +6,9 @@
     "series_id": "036",
     "title": "curve poems",
     "year": 2025,
-    "year_display": "2024-25",
-    "sort_fields": "work_id"
+    "year_display": "2024-25"
   },
-  "record_hash": "9bd0c56224e105a01ab826697132f0b8f388fd8729ae9afff88248c2f659af01",
+  "record_hash": "b927e868f5e7491c2ef5daf9d8a4a1deab2db5fb1c45a43d4ae2e873ba672363",
   "member_works": [
     {
       "work_id": "00286",
@@ -793,6 +792,42 @@
       "year_display": "2025",
       "series_id": "036",
       "project_folder": "curve poems (2025)"
+    },
+    {
+      "work_id": "02011",
+      "record_hash": "785d721b3b87dcac5fbaa727bbb14fd6e301ed96f4df0e2035198282c1b4e1f5",
+      "title": "the eye - detail 1",
+      "year": 2025,
+      "year_display": "2025",
+      "series_id": "036",
+      "project_folder": "curve poems (2025)"
+    },
+    {
+      "work_id": "02012",
+      "record_hash": "b988e1025e69c742202cecfafddf917ebeb7f0fc1477890f7a14a889f0fe7e59",
+      "title": "the eye - detail 2",
+      "year": 2025,
+      "year_display": "2025",
+      "series_id": "036",
+      "project_folder": "curve poems (2025)"
+    },
+    {
+      "work_id": "02013",
+      "record_hash": "f0c2438f52c772f12dd34dd7d3a8e8cb9ca949f302ecd1aa3c00e6d2a8e46769",
+      "title": "the eye - detail 3",
+      "year": 2025,
+      "year_display": "2025",
+      "series_id": "036",
+      "project_folder": "curve poems (2025)"
+    },
+    {
+      "work_id": "02014",
+      "record_hash": "84dedd00303e009d3571f912668db4a75f747af3d9722e9511ec714c08022665",
+      "title": "the eye - detail 4",
+      "year": 2025,
+      "year_display": "2025",
+      "series_id": "036",
+      "project_folder": "curve poems (2025)"
     }
   ],
   "ordered_work_ids": [
@@ -882,7 +917,11 @@
     "00370",
     "00371",
     "00372",
-    "00454"
+    "00454",
+    "02011",
+    "02012",
+    "02013",
+    "02014"
   ],
   "project_folders": [
     "curve poems (2025)"

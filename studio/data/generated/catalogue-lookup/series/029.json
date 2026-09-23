@@ -6,10 +6,9 @@
     "series_id": "029",
     "title": "colours",
     "year": 2008,
-    "year_display": "2008",
-    "sort_fields": "work_id"
+    "year_display": "2008"
   },
-  "record_hash": "a5dc4295d1200f795d1b8fab906fb19695e70184986715a6c20d75d550abf87a",
+  "record_hash": "7f60f4b6bebf17e4d85d206bb694ae469d0d752aba1666ed144d272d5fc2cfc6",
   "member_works": [
     {
       "work_id": "00813",
@@ -55,6 +54,159 @@
       "year_display": "2008",
       "series_id": "029",
       "project_folder": "colours"
+    },
+    {
+      "work_id": "03502",
+      "record_hash": "d1d40b0464545000abb5f7dc4f00c0b4ca0aab43a955ef146d11041617dc5584",
+      "title": "colours 1958-2001.1",
+      "year": 2008,
+      "year_display": "2008",
+      "series_id": "029",
+      "project_folder": "colours"
+    },
+    {
+      "work_id": "03503",
+      "record_hash": "ac755999b47b68b6f4a308742ddda4ec5663109155724888490f307ec2ccf7c3",
+      "title": "colours 1958-2001.2",
+      "year": 2008,
+      "year_display": "2008",
+      "series_id": "029",
+      "project_folder": "colours"
+    },
+    {
+      "work_id": "03504",
+      "record_hash": "cdc9c96c501dba0b3895d69c56ad92dbaf93060e2334ee748a6ffc0d238da46c",
+      "title": "colours 1958-2001.3",
+      "year": 2008,
+      "year_display": "2008",
+      "series_id": "029",
+      "project_folder": "colours"
+    },
+    {
+      "work_id": "03505",
+      "record_hash": "3b30e1769eb1790185bbf04f0b6cf31ba3d0c4861304ca89543aeabc7b44626a",
+      "title": "colours 1958-2001.4",
+      "year": 2008,
+      "year_display": "2008",
+      "series_id": "029",
+      "project_folder": "colours"
+    },
+    {
+      "work_id": "03506",
+      "record_hash": "b579d7a036bd21bffb58d1322fb5c4ec4e07255eb992f48251aa48968d273796",
+      "title": "colours 1958-2001.5",
+      "year": 2008,
+      "year_display": "2008",
+      "series_id": "029",
+      "project_folder": "colours"
+    },
+    {
+      "work_id": "03507",
+      "record_hash": "0006d61ae17d6b7b6cfcc9c3c919d85bafdb7f0ecbedea8303b0f021fe9d2151",
+      "title": "colours belsen.1",
+      "year": 2008,
+      "year_display": "2008",
+      "series_id": "029",
+      "project_folder": "colours"
+    },
+    {
+      "work_id": "03508",
+      "record_hash": "d4c6b70d07aca033efd4df75e71bffbdd594eae4d5c674b6b502f1bfe5dd4b46",
+      "title": "colours dachau.1",
+      "year": 2008,
+      "year_display": "2008",
+      "series_id": "029",
+      "project_folder": "colours"
+    },
+    {
+      "work_id": "03509",
+      "record_hash": "8da0c25249a4034c5ea7cfbfc6e009f218c2a3237297cfdf95d1163d619798f1",
+      "title": "colours kylie.1",
+      "year": 2008,
+      "year_display": "2008",
+      "series_id": "029",
+      "project_folder": "colours"
+    },
+    {
+      "work_id": "03510",
+      "record_hash": "e5e11702d8e638a867d4fe5002e4d4348b5d6ebc940ce2a0d2e41fe3da3d9ff7",
+      "title": "colours kylie.2",
+      "year": 2008,
+      "year_display": "2008",
+      "series_id": "029",
+      "project_folder": "colours"
+    },
+    {
+      "work_id": "03511",
+      "record_hash": "d42b40f3ce61e8dcf9e31eef71104b3fcd3ab682e98676365ceb9910f527dc6d",
+      "title": "colours kylie.3",
+      "year": 2008,
+      "year_display": "2008",
+      "series_id": "029",
+      "project_folder": "colours"
+    },
+    {
+      "work_id": "03512",
+      "record_hash": "b20b3620a9bef5af5be0dfb559c7432ddacaa40c5caf933bed50b09385c87967",
+      "title": "colours kylie.4",
+      "year": 2008,
+      "year_display": "2008",
+      "series_id": "029",
+      "project_folder": "colours"
+    },
+    {
+      "work_id": "03513",
+      "record_hash": "92cb91954f402e0b17eedd23ba32c69e41077d9297ee7d8c62c33f73c48de6e7",
+      "title": "colours kylie.5",
+      "year": 2008,
+      "year_display": "2008",
+      "series_id": "029",
+      "project_folder": "colours"
+    },
+    {
+      "work_id": "03514",
+      "record_hash": "f6af4b1b414805c2df4fe518842a9bd7491dbb150430b874079a963000cf0842",
+      "title": "colours marilyn.1",
+      "year": 2008,
+      "year_display": "2008",
+      "series_id": "029",
+      "project_folder": "colours"
+    },
+    {
+      "work_id": "03515",
+      "record_hash": "6cef549ae62cb5277b0b3eabbc6a601f90b55263768ae7fa18d91d122c1c3044",
+      "title": "colours marilyn.2",
+      "year": 2008,
+      "year_display": "2008",
+      "series_id": "029",
+      "project_folder": "colours"
+    },
+    {
+      "work_id": "03516",
+      "record_hash": "4a68254db389132c36a1c307fdfa70b7fa334e09fcc2e271947816a94009e70d",
+      "title": "colours marilyn.3",
+      "year": 2008,
+      "year_display": "2008",
+      "series_id": "029",
+      "project_folder": "colours"
+    },
+    {
+      "work_id": "03517",
+      "record_hash": "7e3bbd9bb88a37ced3db3cb5d52d2c69934d481d2472d6c41b1d20c7710913fb",
+      "title": "colours marilyn.4",
+      "year": 2008,
+      "year_display": "2008",
+      "series_id": "029",
+      "project_folder": "colours"
+    },
+    {
+      "work_id": "03518",
+      "record_hash": "68515cf74e5206088b722e0b7468c636454e12bc0a10038666defb31e4f70db6",
+      "title": "colours marilyn.5",
+      "year": 2008,
+      "year_display": "2008",
+      "series_id": "029",
+      "project_folder": "colours"
     }
   ],
   "ordered_work_ids": [
@@ -62,7 +214,24 @@
     "00814",
     "00815",
     "00816",
-    "00817"
+    "00817",
+    "03502",
+    "03503",
+    "03504",
+    "03505",
+    "03506",
+    "03507",
+    "03508",
+    "03509",
+    "03510",
+    "03511",
+    "03512",
+    "03513",
+    "03514",
+    "03515",
+    "03516",
+    "03517",
+    "03518"
   ],
   "project_folders": [
     "colours"

@@ -6,10 +6,9 @@
     "series_id": "014",
     "title": "assembly codes",
     "year": 2023,
-    "year_display": "2023",
-    "sort_fields": "work_id"
+    "year_display": "2023"
   },
-  "record_hash": "173a46010c319926a13ff881d2d4ac0cccf82b36e5417b4ddbc996a0b9c3c226",
+  "record_hash": "158e42e2d8bcaeb5623ef5b35d7a662233f55810ed6a6359cf672ff884ed1896",
   "member_works": [
     {
       "work_id": "00753",
@@ -37,12 +36,102 @@
       "year_display": "2023",
       "series_id": "014",
       "project_folder": "assembly codes"
+    },
+    {
+      "work_id": "03367",
+      "record_hash": "9b1b2cdbe73d9d664b2e5bb07cfc817836105efe343de10f9e47b82edcd6f81e",
+      "title": "assembly code 1 (detail 1)",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "014",
+      "project_folder": "assembly codes"
+    },
+    {
+      "work_id": "03368",
+      "record_hash": "c295ac915fbfe254d8eb671f593a79150a68a8e34666141d18fb31f1babce6b8",
+      "title": "assembly code 1 (detail 2)",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "014",
+      "project_folder": "assembly codes"
+    },
+    {
+      "work_id": "03369",
+      "record_hash": "e5c26a54eade64464a0d036cc12931c473633dcb5026b2f6571ac000b3c3aff9",
+      "title": "assembly code 1 (detail 3)",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "014",
+      "project_folder": "assembly codes"
+    },
+    {
+      "work_id": "03370",
+      "record_hash": "0feb20199b6c94636a61d0702c3729ae5f2471ca75fbf5fb91d63c947e3cbef1",
+      "title": "assembly code 2 (detail 1)",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "014",
+      "project_folder": "assembly codes"
+    },
+    {
+      "work_id": "03371",
+      "record_hash": "37f1f4a2fdbac5d8db857fed1ec12f5ccb5bee841c6864d46e7279b90a1a40ff",
+      "title": "assembly code 2 (detail 2)",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "014",
+      "project_folder": "assembly codes"
+    },
+    {
+      "work_id": "03372",
+      "record_hash": "3b8e1a47e2cb201bcdc57b032f19ec014d955295aef1269f93a95ffef097c333",
+      "title": "assembly code 2 (detail 3)",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "014",
+      "project_folder": "assembly codes"
+    },
+    {
+      "work_id": "03373",
+      "record_hash": "8c397f1aa3951fd22379a0dae0f8f8ee667b48c7193eeca4de22426feed2e0a9",
+      "title": "assembly code 3 (detail 1)",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "014",
+      "project_folder": "assembly codes"
+    },
+    {
+      "work_id": "03374",
+      "record_hash": "74b731b3756ef61d6cd8e604f01d6fb95c30efe616069c92716f4b4cd73cb2de",
+      "title": "assembly code 3 (detail 2)",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "014",
+      "project_folder": "assembly codes"
+    },
+    {
+      "work_id": "03375",
+      "record_hash": "0dde56f785fa340120ebb81110964cd55a22c6d1a167c6b6aa7788f4528f8e7a",
+      "title": "assembly code 3 (detail 3)",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "014",
+      "project_folder": "assembly codes"
     }
   ],
   "ordered_work_ids": [
     "00753",
     "00754",
-    "00755"
+    "00755",
+    "03367",
+    "03368",
+    "03369",
+    "03370",
+    "03371",
+    "03372",
+    "03373",
+    "03374",
+    "03375"
   ],
   "project_folders": [
     "assembly codes"

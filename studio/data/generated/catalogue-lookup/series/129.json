@@ -6,10 +6,9 @@
     "series_id": "129",
     "title": "string theory",
     "year": 2012,
-    "year_display": "2005-12",
-    "sort_fields": "work_id"
+    "year_display": "2005-12"
   },
-  "record_hash": "1ee9b18db10807d70376115114f418b3550c48f1f454655c388ca0493725dabf",
+  "record_hash": "27ae3dcffceafeb2c521c78f9bb716bdd8e92b532eec15fa39eeb06f033bb1d2",
   "member_works": [
     {
       "work_id": "00554",
@@ -253,6 +252,15 @@
       "year_display": "2012",
       "series_id": "129",
       "project_folder": "string theory"
+    },
+    {
+      "work_id": "03111",
+      "record_hash": "7264d44b5fbded617027b531531090617fab65cbaff5d36f33db2b989d877761",
+      "title": "2012-01-06 - 12-30-44",
+      "year": 2005,
+      "year_display": "2005",
+      "series_id": "129",
+      "project_folder": "string theory"
     }
   ],
   "ordered_work_ids": [
@@ -282,7 +290,8 @@
     "00577",
     "00578",
     "00579",
-    "00580"
+    "00580",
+    "03111"
   ],
   "project_folders": [
     "string theory"

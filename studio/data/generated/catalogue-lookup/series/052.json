@@ -6,10 +6,9 @@
     "series_id": "052",
     "title": "flowers",
     "year": 2023,
-    "year_display": "2023",
-    "sort_fields": "work_id"
+    "year_display": "2023"
   },
-  "record_hash": "6a7c8238ecdc020bf178314307a15f63dd9ed1901b20c82323c83a6cb5c9b611",
+  "record_hash": "fc52010d2135163b7d0ba4e56015ce479e5b47264be1735c8d6c821d18c06f97",
   "member_works": [
     {
       "work_id": "01052",
@@ -37,12 +36,102 @@
       "year_display": "2023",
       "series_id": "052",
       "project_folder": "flowers"
+    },
+    {
+      "work_id": "04039",
+      "record_hash": "07cd90c3215399431da3e2478bbb410eca366c71431bcd7985d6735d0677a0a0",
+      "title": "flowers 1 - detail 1",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "052",
+      "project_folder": "flowers"
+    },
+    {
+      "work_id": "04040",
+      "record_hash": "48f27771d591df2208e440692e65cd57c9ae93f8d7466a7eda842bfce7bdfc67",
+      "title": "flowers 1 - detail 2",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "052",
+      "project_folder": "flowers"
+    },
+    {
+      "work_id": "04041",
+      "record_hash": "503ccc6999bcc560381c33eb4c9f86f608cbeb1e19be2dd529722357772d1087",
+      "title": "flowers 1 - detail 3",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "052",
+      "project_folder": "flowers"
+    },
+    {
+      "work_id": "04042",
+      "record_hash": "1b3276c43ebd2a1be0f9effd92c7a3c3c16995661fee053e1d4ae2c8d63cf8b5",
+      "title": "flowers 2 - detail 1",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "052",
+      "project_folder": "flowers"
+    },
+    {
+      "work_id": "04043",
+      "record_hash": "b9b38e5418be761be52943004ce2cf4e3372415372f8cc592b1ef0914f529709",
+      "title": "flowers 2 - detail 2",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "052",
+      "project_folder": "flowers"
+    },
+    {
+      "work_id": "04044",
+      "record_hash": "3a1288c615ef240b7f3374925ca494d8b77b0d5cde1af2753e5983d81f021e2b",
+      "title": "flowers 2 - detail 3",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "052",
+      "project_folder": "flowers"
+    },
+    {
+      "work_id": "04045",
+      "record_hash": "83df008cfcf0143942f2e36ee1faddce3b4e304a9ec54dd27bb30302c3300aac",
+      "title": "flowers 3 - detail 1",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "052",
+      "project_folder": "flowers"
+    },
+    {
+      "work_id": "04046",
+      "record_hash": "e18fc112d44baa0e4721b71ee34d1c414679acb7532b77773e25ba6981bfc58c",
+      "title": "flowers 3 - detail 2",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "052",
+      "project_folder": "flowers"
+    },
+    {
+      "work_id": "04047",
+      "record_hash": "dd864ee93be3feaadbb9953cbb4f5597a878b11976385478e2e513fae5c652ca",
+      "title": "flowers 3 - detail 3",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "052",
+      "project_folder": "flowers"
     }
   ],
   "ordered_work_ids": [
     "01052",
     "01053",
-    "01054"
+    "01054",
+    "04039",
+    "04040",
+    "04041",
+    "04042",
+    "04043",
+    "04044",
+    "04045",
+    "04046",
+    "04047"
   ],
   "project_folders": [
     "flowers"

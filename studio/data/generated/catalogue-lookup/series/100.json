@@ -6,10 +6,9 @@
     "series_id": "100",
     "title": "molecule forms",
     "year": 2013,
-    "year_display": "2013",
-    "sort_fields": "work_id"
+    "year_display": "2013"
   },
-  "record_hash": "35b8b2c29907961affd93019e38cd78e5e3c32a076eb1006e855f1cc83d5fd02",
+  "record_hash": "47e3354ad5c08cf9a43d796cbc773142fbaea86bdca1b634382dcac8d759803c",
   "member_works": [
     {
       "work_id": "00459",
@@ -19,10 +18,2570 @@
       "year_display": "2013",
       "series_id": "100",
       "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02603",
+      "record_hash": "49361e6d122b6ed3dcb6800fa329a02f229689e02383292ec25b9592e9452859",
+      "title": "molecule form 1 (2004-06-25)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02604",
+      "record_hash": "a084fe64c2dc55cb4171681e1668a4b8117e37544115fb7f642f5aa925c8d7b5",
+      "title": "molecule form 2 (2004-06-25)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02605",
+      "record_hash": "14570c761a9d66fa71643d481f252f1ab354c97164b74d8110385ecaf6f7efed",
+      "title": "molecule form 3 (2004-06-25)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02606",
+      "record_hash": "47a36f9305afbf8ad1b13dfbc89da7d8c5c2b76ba6a0e8aa496e216ea953f6f6",
+      "title": "molecule form 4 (2006-05-06)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02607",
+      "record_hash": "0b67f5eced89b4094ce8e2e5022c17394e4b6700ade12a85e00632859a791d3d",
+      "title": "molecule form 5 (2006-05-21)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02608",
+      "record_hash": "c4618130c341b8b3b5797e79ec7087e80ae900d88da50a723410abee07af0e0b",
+      "title": "molecule form 6 (2006-05-21)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02609",
+      "record_hash": "fd5d8a668b7c4610ff9300f1c3feccdeb2faf0ecde90c08d46d8c8e3066e670f",
+      "title": "molecule form 7 (2006-05-28)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02610",
+      "record_hash": "5ac44f57bc3c8b49cf8c35595be8d399150091c9247b053b359a1a8dc71e65a0",
+      "title": "molecule form 8 (2006-06-25)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02611",
+      "record_hash": "6107568a373752b47e677e73266515e641cd687da2910e3d1c4d8d80a270262f",
+      "title": "molecule form 9 (2006-08-06)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02612",
+      "record_hash": "31a712fa0047665a99e4c51d14f333137327ca76e00ab8301055a85410429ed3",
+      "title": "molecule form 10 (2006-08-15)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02613",
+      "record_hash": "2a7b7b87468378144f426f37d7fd57a4536357385ffc147debf14ef7e3b80a6c",
+      "title": "molecule form 11 (2006-09-30)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02614",
+      "record_hash": "d9f86d820a955ec306c497779c4384863dacdb350d5acc65c1e0e90648c5bd89",
+      "title": "molecule form 12 (2006-10-22)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02615",
+      "record_hash": "7df9b3574a81cac23b8780426ada88a225c769959c7100f602822b97d37dd921",
+      "title": "molecule form 13 (2006-10-29)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02616",
+      "record_hash": "e13053f6049efe2460ba171909ce31cbc59f416aff0270b97119bd4ad7f22893",
+      "title": "molecule form 14 (2006-11-05)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02617",
+      "record_hash": "44619b44939c424f653167048a56aa328ab019df7c0ebe0a400811b98a9c4668",
+      "title": "molecule form 15 (2006-11-05)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02618",
+      "record_hash": "804743b317cc78fdbbef44b645a6a4794c1f19ea0934f5a9df8cf96b51a4dfeb",
+      "title": "molecule form 16 (2006-11-05)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02619",
+      "record_hash": "37b7f1fda08fcc57b64d644ca9061c5b7e25c98fe8141fafe5e78327f7c77073",
+      "title": "molecule form 17 (2006-11-05)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02620",
+      "record_hash": "fe8a48ecd3c77b7a88041ca9d1c035e2f44f4d292d7c5a1e16f884bf63fe4cec",
+      "title": "molecule form 18 (2006-11-06)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02621",
+      "record_hash": "92c0bc0c5f76b28314d32a3858552cb12b8119d552f35ccc9ef036bfa7cc6e07",
+      "title": "molecule form 19 (2006-11-06)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02622",
+      "record_hash": "82ce28f0a447b82a755a5f3ea44e4481a5a292e88a035bda39eb3ab498d0538c",
+      "title": "molecule form 20 (2006-11-09)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02623",
+      "record_hash": "667528e7788e0dffdd32803b571d9857409488d365fcd3276bbcdb5bbf8bedb4",
+      "title": "molecule form 21 (2006-12-02)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02624",
+      "record_hash": "798802f549ad985bf981af7f0fb0785b71e52331ce1187c1aef94d0d1710c32b",
+      "title": "molecule form 22 (2006-12-26)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02625",
+      "record_hash": "6d32c225c6a29ec0aac5bd701b6aca9106f8409c057f30cdb78498d54fca0858",
+      "title": "molecule form 23 (2006-12-27)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02626",
+      "record_hash": "c732d49e155b2ec89c7d783c30e8d00831d62ed30b5fcc4aeb6d23c2b90c0545",
+      "title": "molecule form 24 (2006-12-29)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02627",
+      "record_hash": "5200fa8f1fe7344b9ffa2f104929e2c2ba2ab87da7e5417292f49d847c1cf435",
+      "title": "molecule form 25 (2006-12-29)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02628",
+      "record_hash": "2820709a7e004e0ed4c3981956e7542d67c881ccfcc020f3b082795c55bcaebe",
+      "title": "molecule form 26 (2006-12-31)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02629",
+      "record_hash": "2d409cefa5b60d7d6ae737d7494e7c18ce3d816840664c5cb2f9bd7581573e6b",
+      "title": "molecule form 27 (2007-01-02)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02630",
+      "record_hash": "d810a518344f70b84edf44f0c3a5fb83994a52fdb14c209a98e84cd51a1046e0",
+      "title": "molecule form 28 (2007-03-18)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02631",
+      "record_hash": "8edb9e43d707ea986003f07046ff275ad75a99f7ede50a7819e71855ac795111",
+      "title": "molecule form 29 (2007-03-18)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02632",
+      "record_hash": "5359355cb3b8285d5b43f9b790a652472643d136141a9eede0f5447f533dced3",
+      "title": "molecule form 30 (2007-04-05)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02633",
+      "record_hash": "f8f9f44b35bdaf225cf1666f7275215be45be78e134ab5ef84367c1d3b7cbf90",
+      "title": "molecule form 31 (2007-04-05)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02634",
+      "record_hash": "bc39e40ddf3d7f320ca76f86e26ccb794ea13ad3433b7e1a4968bafa2c6df0df",
+      "title": "molecule form 32 (2007-04-08)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02635",
+      "record_hash": "185bc985c045adacef84bfa655a63b8e4f426abd70a108249d087f73c0521794",
+      "title": "molecule form 33 (2007-04-21)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02636",
+      "record_hash": "330539bd16b97efae36bc7ce094dba8acd4233d70fffde539dc3189017991c10",
+      "title": "molecule form 34 (2007-04-28)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02637",
+      "record_hash": "87af08a30a3d7087c83303219c8bbc757ca6a2ecea2c7af3b47e1bcb6d7855d2",
+      "title": "molecule form 35 (2007-04-29)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02638",
+      "record_hash": "800dc0f0d1084db6b059ccde9ec1baf1152fbbcfb02d93c2f7aa202106968f75",
+      "title": "molecule form 36 (2007-04-30)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02639",
+      "record_hash": "14bafd0f3f252fa7c6f55809f5636e73390a7dbb2506e808c8880a67964bbf12",
+      "title": "molecule form 37 (2007-05-02)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02640",
+      "record_hash": "59938cd22f1e3736b398aaa65ab94cf90f8b46b63bdc364ab22969739a9237e8",
+      "title": "molecule form 38 (2007-05-18)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02641",
+      "record_hash": "9a6c9b2034b3dd4df097b546adebe50eb577dd4518b6117419a043b57c339be8",
+      "title": "molecule form 39 (2007-05-19)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02642",
+      "record_hash": "843d685f7ee985c2ee1d304f04916c97a4bf730eb551e601bfd475e903c9eb38",
+      "title": "molecule form 40 (2007-05-24)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02643",
+      "record_hash": "9c77f0203548b21d4c654cd3f57e0bc1d797df1b2fd3cf3d19b6eb712e885f6b",
+      "title": "molecule form 41 (2007-05-24)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02644",
+      "record_hash": "f99598099088b5ffde7b1a77435b720c6ae092f6751c606831cffc9a5c1b470d",
+      "title": "molecule form 42 (2007-06-28)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02645",
+      "record_hash": "06327c3c6f96ce87a894de9af35124d9e5d69cc157ee017df068db0fb4e4339d",
+      "title": "molecule form 43 (2007-07-16)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02646",
+      "record_hash": "b7d2695cf966b4b1d3fbb9bfac818b8d88ed2e00e194b6cb684cfce16025d325",
+      "title": "molecule form 44 (2007-07-18)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02647",
+      "record_hash": "c562bda19406f2f1a3ac50804b9a598aa27050e6266ec2f76ae6e6d681093c0f",
+      "title": "molecule form 45 (2007-09-02)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02648",
+      "record_hash": "3703af0844378ebafa9f3d2716726dbdbaedcfb48c9e4f55fa2fcc6c54e44dfe",
+      "title": "molecule form 46 (2007-09-02)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02649",
+      "record_hash": "366ea208dab48844e71fc6da65323b9767a48d56cc04d4d30528123b47f7bce0",
+      "title": "molecule form 47 (2007-09-04)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02650",
+      "record_hash": "64c121f73b415062b5b04f5b89dca5e84036b8f6dafc705e5a1f1d6b4e402b3d",
+      "title": "molecule form 48 (2007-09-04)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02651",
+      "record_hash": "b170c1e8ee2a117d3b721b3611b334b74626948d1b79c75814f660b17f3091ca",
+      "title": "molecule form 49 (2007-09-15)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02652",
+      "record_hash": "1358ec2c15c481cb73530d84658221ab73c1c7b3c001f328e7e57e8929ee13d9",
+      "title": "molecule form 50 (2008-05-29)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02653",
+      "record_hash": "5e26fd694007813a37561195ef88590dfcdcf36b9f5236318a2ccce8d5242ea3",
+      "title": "molecule form 51 (2008-06-08)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02654",
+      "record_hash": "9ac44af6fd41fa964be1b71141fb14fb47957974d40f8c33692291bbbe8328aa",
+      "title": "molecule form 52 (2008-07-21)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02655",
+      "record_hash": "d61f6ed245396916e75138d4ae19bb1ab522689d88a562d27b2e072435991331",
+      "title": "molecule form 53 (2008-07-21)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02656",
+      "record_hash": "1d42292f0eeab69ae35fb6b892f14fbda25d51b674e6b53375627749ee973f37",
+      "title": "molecule form 54 (2008-07-21)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02657",
+      "record_hash": "c548ad1462a2c21aab49558de34b473e6a15cebba5d2d147a0fb6ae419597a7c",
+      "title": "molecule form 55 (2008-10-02)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02658",
+      "record_hash": "5adaf39f467bcc31fa695c645fcdd441b548db9f4689d0cf9168d044552fc908",
+      "title": "molecule form 56 (2009-02-03)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02659",
+      "record_hash": "53356b9887ada64375bff08f42cbee8f657bfb18612974c61f8d2386ad8dfcd6",
+      "title": "molecule form 57 (2009-06-28)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02660",
+      "record_hash": "3b09da4eaa4a2aa6c40c7ac26cb26fad9915d4bcb1b04529c27aec4d27b1d983",
+      "title": "molecule form 58 (2009-07-06)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02661",
+      "record_hash": "816ad11a4de76408ac67b16998cb8bb7f42d010c15692352cb4d83502ea922b8",
+      "title": "molecule form 59 (2009-07-07)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02662",
+      "record_hash": "9cd6d9193d8bb60cda674c55eb464e7abcd40afe3980b1e66715ef0baeecfdbd",
+      "title": "molecule form 60 (2009-09-05)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02663",
+      "record_hash": "d15781ab153dd5dd4731609a82f26040bf6d2b210c3887a5d7b8456602b9fec3",
+      "title": "molecule form 61 (2010-01-23)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02664",
+      "record_hash": "624e5ca13446d6a3afc69511c785ebaec234cf7e8e0c25936d817395fef56fb4",
+      "title": "molecule form 62 (2010-01-23)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02665",
+      "record_hash": "09dedfd846a07f504dbcf652dcaf27dbdff6bd5ac16529da6edd8dee6aec5f94",
+      "title": "molecule form 63 (2010-02-09)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02666",
+      "record_hash": "24ece69f31e9c5e0eee8b61f6b10ec17e4d20c3195147dd408aae8ccc310035e",
+      "title": "molecule form 64 (2010-02-09)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02667",
+      "record_hash": "af103696c99d6c85884f4ebee06c2bb98997c49f1506f33733ffa95733b93722",
+      "title": "molecule form 65 (2010-03-01)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02668",
+      "record_hash": "57220ef8831f316e785926cdc74233ecb8990cc0b3f764b4938e76ca1746bedb",
+      "title": "molecule form 66 (2010-04-21)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02669",
+      "record_hash": "a60d51ba2c646ad60857039c8b58bb8a71a8b0c90eee7fc1f837f44a300ba53d",
+      "title": "molecule form 67 (2010-05-26)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02670",
+      "record_hash": "ccdd90d224e4a3092c3a26ebeba0aa6fc5e2a7bcb89c744678aa7260cd289e6d",
+      "title": "molecule form 68 (2010-05-30)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02671",
+      "record_hash": "d49d0d56ad58da73b6b1cf8fb00c9187a90964d1ece000a2b1d80ef59e1fd170",
+      "title": "molecule form 69 (2010-05-30)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02672",
+      "record_hash": "5aca2a9d7ee7da7f5d3dae26c98be15eb1a257a0640942e6973fe7782a717f3d",
+      "title": "molecule form 70 (2010-06-02)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02673",
+      "record_hash": "d82f031c2be006a78bd9da5ace38123cd93de904793e8a81515f39adf7c068b7",
+      "title": "molecule form 71 (2010-07-20)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02674",
+      "record_hash": "150043f2fd0dc367d7062e9daa6f775270fc8be7828b0c2413a92ba652cc41dc",
+      "title": "molecule form 72 (2010-07-21)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02675",
+      "record_hash": "14a1213228a63a3311fe0c745ed2951741e54c04032c0de79f4c3deb2dd40862",
+      "title": "molecule form 73 (2010-08-14)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02676",
+      "record_hash": "4437b6f312798fddb4c11880b6dbf51e26610d974fd18682da3b341e0a9a1fd0",
+      "title": "molecule form 74 (2010-10-25)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02677",
+      "record_hash": "828479ca8e43f081f8bc014eac67b88dd43b8877d13ac48934e3b46b4545aa56",
+      "title": "molecule form 75 (2010-11-17)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02678",
+      "record_hash": "35c3f533823e71628882424a365220ce0cb702b913d0371ba715941e4ad05f8b",
+      "title": "molecule form 76 (2010-12-30)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02679",
+      "record_hash": "c058001413acdfd09859b86d41c66c707a30cc1a1032ae850378f37dd23c1d06",
+      "title": "molecule form 77 (2011-01-06)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02680",
+      "record_hash": "d835610d9025d906d11a1e7f110797724878fd564ccf3b957fe808db8e80c74d",
+      "title": "molecule form 78 (2011-02-19)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02681",
+      "record_hash": "ac4ff4a60a2038e77ec91ff003be207f17662b5dfa3e2bc2d2a8ec351a54a669",
+      "title": "molecule form 79 (2011-03-13)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02682",
+      "record_hash": "c32b9f60063954bb02ac39e12a663cf8ede00ea093b0e4c43cd6275de90e7a13",
+      "title": "molecule form 80 (2011-04-13)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02683",
+      "record_hash": "24ed603d041552980888362e8629f28c6a0fe1ccf31ee374ace6115d5b757646",
+      "title": "molecule form 81 (2011-04-13)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02684",
+      "record_hash": "741565f24ca408e67bedfa39e332c028ecb3780b9dfc2b87525d59154fa34d4d",
+      "title": "molecule form 82 (2011-04-24)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02685",
+      "record_hash": "2d0ec8923d0dd27961aa855af12c4d762adee1824186d16ccf0dc034e8c6f801",
+      "title": "molecule form 83 (2011-05-01)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02686",
+      "record_hash": "8c1d9f47b8b3f0ca0fa425746bdfb728246ae3f5214c6a81a2230ddcdc669563",
+      "title": "molecule form 84 (2011-05-21)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02687",
+      "record_hash": "2371027d454132db0411bd2352ef6f130a720620ec818c55ee3685626c6b52a1",
+      "title": "molecule form 85 (2011-08-13)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02688",
+      "record_hash": "e8eeda382185d9c73a0cbb10e923f1530b1c350faa4c07bc6b217e47cfb89e72",
+      "title": "molecule form 86 (2011-12-14)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02689",
+      "record_hash": "b613266737304ff683fdd58ce0ac2b5581d47bdf3715722f569be89f75d4f341",
+      "title": "molecule form 87 (2011-12-17)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02690",
+      "record_hash": "c74919aae26c9db02be082f9dbc37e3906dfedc03208759f80aa219063eae423",
+      "title": "molecule form 88 (2011-12-21)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02691",
+      "record_hash": "248285294b75d9cf9ef264fce554cf36758b2a632ef3a4c4084570da22f5a8f6",
+      "title": "molecule form 89 (2011-12-30)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02692",
+      "record_hash": "b007ea1468ac313e97339ac08e4407b5d3bc8a14a0a791452eb48a38293835dc",
+      "title": "molecule form 90 (2011-12-31)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02693",
+      "record_hash": "41147a6633d0caecbf921c39426732b58d4d7b81a379d100ea64e6b75072d9ab",
+      "title": "molecule form 91 (2011-12-31)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02694",
+      "record_hash": "ea071f67d291e7f25aaa7b8830f79ef78e2063e6d0a8b67f3cdc099a152448dd",
+      "title": "molecule form 92 (2012-01-02)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02695",
+      "record_hash": "ebe64f4b8999809631e7864ed44de3a99bee7abdd4e1201e0291fbb5b48ae3d2",
+      "title": "molecule form 93 (2012-01-06)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02696",
+      "record_hash": "e31ddc88f7b00085b2d3dbc8cb84933f4fde8ccde21b5a06c6361bad13513dff",
+      "title": "molecule form 94 (2012-01-18)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02697",
+      "record_hash": "016f077efc9e41ac659b7a5f2072e6eb4fccab5da2b53ee465245c95f636e4b5",
+      "title": "molecule form 95 (2012-01-22)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02698",
+      "record_hash": "39b1e7595f4bb2e1192ea54c318b675eaa1488a3113e9867de6600f80e9656a8",
+      "title": "molecule form 96 (2012-01-29)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02699",
+      "record_hash": "dba44812a44671a44545ca40184d8d01c103bb9560a988abaf8e4bf5e71d615e",
+      "title": "molecule form 97 (2012-02-04)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02700",
+      "record_hash": "44eea8a9a380ab4ef8fbe171ba072a8553234bddb5448a1a5f95b4628ccea517",
+      "title": "molecule form 98 (2012-02-04)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02701",
+      "record_hash": "db2db98f3d7bf821707e42df2d7f2bef0f32025963dfda4e1117d56b1e1ff673",
+      "title": "molecule form 99 (2012-02-27)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02702",
+      "record_hash": "39ab4cbe6fec993747d68ddacd6047c9114d1c1ac1039445d5bb8f032a695d95",
+      "title": "molecule form 100 (2012-03-05)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02703",
+      "record_hash": "95c3206992ef1382400b87ac8ef5501a5cd642d71faccd7e72e34741f4733b18",
+      "title": "molecule form 101 (2012-03-05)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02704",
+      "record_hash": "9b528cf954c13d20c1c6c55573d1f118b7b8f5b1bef0f170e8a01156d8b8f9e0",
+      "title": "molecule form 102 (2012-03-27)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02705",
+      "record_hash": "1727c444d1db34f16b7680f3eb908043071a4de5586cd89fcd46bbfc2bd21b5d",
+      "title": "molecule form 103 (2012-03-30)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02706",
+      "record_hash": "4bbd10bdf6064b944c38f549428fa10d95844dc48d689c755bf99ad4a6eb3d6b",
+      "title": "molecule form 104 (2012-03-30)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02707",
+      "record_hash": "feb10c3a5b5e138ada19d29f3ac21a8cd0aed89ba3c8233f6a3cac1de3229df6",
+      "title": "molecule form 105 (2012-04-25)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02708",
+      "record_hash": "c12e567ad5365e7317f488a4bbe1fff80683259b702e8330d4a6bd4c43541994",
+      "title": "molecule form 106 (2012-05-05)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02709",
+      "record_hash": "bd13879131158bcbc17c781ce491e144c3022231ded0f8c6f64d80038aa24294",
+      "title": "molecule form 107 (2012-05-22)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02710",
+      "record_hash": "f54309f1ab0b20c1d7ca1dce99521cd386448691be50f84a9a925353293144b5",
+      "title": "molecule form 108 (2012-05-22)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02711",
+      "record_hash": "283be3ea44bee1f841e0633a1c63592c4622bf0693a1a0668ee966682229844c",
+      "title": "molecule form 109 (2012-05-22)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02712",
+      "record_hash": "305a1742896463fb337a203926d713d44fcebb67c5caca0bff8680ec2b205fdd",
+      "title": "molecule form 110 (2012-05-26)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02713",
+      "record_hash": "d0040b3fe0d07b63325a47b06550c46cdbe1bb356829e88061ba05d9006afadb",
+      "title": "molecule form 111 (2012-05-26)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02714",
+      "record_hash": "6ebc62dc0c8736135e8aa00c68167463f462ad4d61cd883999b28af4f49ba023",
+      "title": "molecule form 112 (2012-05-26)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02715",
+      "record_hash": "6ebb8c548413fc013840e34d43b445272a37e3cd3df17554e245b259d4fbf93a",
+      "title": "molecule form 113 (2012-05-28)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02716",
+      "record_hash": "a2189bae19194786d5d26c5821c4dfe8eedf0bc8e4620d24279e189a31ea0f14",
+      "title": "molecule form 114 (2012-06-08)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02717",
+      "record_hash": "69a02a92a6632ab06bd4c7553a7aa5bd3d8b23aa70f5959153c11c3ac439b515",
+      "title": "molecule form 115 (2012-06-22)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02718",
+      "record_hash": "561f13fd5cd3b72e41b936b973902219f17a6c4afcae793cf3db381f964fcbe8",
+      "title": "molecule form 116 (2012-06-29)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02719",
+      "record_hash": "09d89477c27c8819ef4febd5bfa485b3301e2d54b30628ebc9480af279c1d1c0",
+      "title": "molecule form 117 (2012-07-13)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02720",
+      "record_hash": "506b9e5f332b0543ea59bc5fc209e9c4fae349011af32fd0cda731da0b12ce1c",
+      "title": "molecule form 118 (2012-07-14)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02721",
+      "record_hash": "681bb966d1556d69b8f6bdc24ee84da1bc0dac1bf53f9fe21b90da27430aff6e",
+      "title": "molecule form 119 (2012-07-15)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02722",
+      "record_hash": "95174a1c312eff41977c79755479638b693dc2b053089fca12eb47c8a0a36b38",
+      "title": "molecule form 120 (2012-07-29)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02723",
+      "record_hash": "9f28255f10db05161151ef59732bf96d561ade8b29d9ba23fd6453b091d70511",
+      "title": "molecule form 121 (2012-07-29)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02724",
+      "record_hash": "1c1d0845b4c250ce77ae80b3f931c5b3f77c1ea6bfecc325649367d98987bf6d",
+      "title": "molecule form 122 (2012-08-11)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02725",
+      "record_hash": "5937e50462cd6d20609ce072485b1ee34fa5b8dcd52166d283a50f5412f1b0ff",
+      "title": "molecule form 123 (2012-08-22)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02726",
+      "record_hash": "d0c3cb4622ee2b22783e85b3106824f021ca93fa7df851ae20fe61e5b09a3ca9",
+      "title": "molecule form 124 (2012-08-28)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02727",
+      "record_hash": "5d8a8bbd7efcf59fbee281969fe9368b9e3ec1521b08e8ff72c02e0327a2ff60",
+      "title": "molecule form 125 (2012-09-11)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02728",
+      "record_hash": "1e408312bbd0c303b037e68340bc511945618f158f51fa14a2b2b4e117b6ec3e",
+      "title": "molecule form 126 (2012-09-15)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02729",
+      "record_hash": "3941faf04b2dcbdb954efe1193faa204c5fcf21a45c1e5aa2cc37d30e3466b6b",
+      "title": "molecule form 127 (2012-09-17)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02730",
+      "record_hash": "56b7a7ccd30679724446c3731fc97ecbd3db1b01c4f281383e9b23441156edbb",
+      "title": "molecule form 128 (2012-09-18)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02731",
+      "record_hash": "6abcb3b17f6f452f23101da25b227416f4376e31357f3e54016f44fe5064f204",
+      "title": "molecule form 129 (2012-09-27)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02732",
+      "record_hash": "7d65e27ae58cc82a81a817e1d7eb52fe751bf13ee480ae9aff59bb7688e138ef",
+      "title": "molecule form 130 (2012-09-27)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02733",
+      "record_hash": "c9ed6302f0372adac86555c79926e66f75d8359efcc83dc9506c25f34bf641dd",
+      "title": "molecule form 131 (2012-09-28)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02734",
+      "record_hash": "97ad2e55266164e33f7db9fc67bd396eabdc7ee3beac598cb774b139a5acc556",
+      "title": "molecule form 132 (2012-09-30)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02735",
+      "record_hash": "27a3182cbe4e4e7f203e6f31c8b0848dcff712f2cc1ab2e6038577c95a30082d",
+      "title": "molecule form 133 (2012-10-05)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02736",
+      "record_hash": "caceb24b35dac3f2f1515c12e08e0465a18ab0e345ec4f73cdeb32584342021b",
+      "title": "molecule form 134 (2012-10-06)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02737",
+      "record_hash": "18fb6e8fac26a2bfd709655be72192260fd66ba51e56f0162d89a7b271130b98",
+      "title": "molecule form 135 (2012-10-07)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02738",
+      "record_hash": "5c8d62575dae0a952724db866446e112ae8be6c3d413d13dbb63842392a27986",
+      "title": "molecule form 136 (2012-10-10)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02739",
+      "record_hash": "4610cb67c5dd41703893077dcc10d3a7b825290eea4720219561e70007d8d780",
+      "title": "molecule form 137 (2012-10-17)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02740",
+      "record_hash": "100b4c4398919b1ba494d51d4ab69779ac235da3b018058016659c5c19ec2b18",
+      "title": "molecule form 138 (2012-10-18)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02741",
+      "record_hash": "60f55d2f86a527a7dbebc3ee6bed8ad3f096dd737ab2402246e95dfee0846df5",
+      "title": "molecule form 139 (2012-10-21)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02742",
+      "record_hash": "877f7e20043ce3c6bcf32b7245d2b6f5213e546e1e4d15b46f599dda994b4ed9",
+      "title": "molecule form 140 (2012-10-25)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02743",
+      "record_hash": "7d7ac9296e648f9c94ac1a08fbdcf49d48b102fa692f55a58c50b2eb445fe1e5",
+      "title": "molecule form 141 (2012-10-26)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02744",
+      "record_hash": "ab8d33de0be5cf988c689663e06ce1a279ba933036133456edb4a7ad20addacc",
+      "title": "molecule form 142 (2012-10-31)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02745",
+      "record_hash": "ce0fdda22097f2331ced19211ddede5e1f356022f02036aa69b28c0581f48249",
+      "title": "molecule form 143 (2012-11-03)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02746",
+      "record_hash": "5bc4591be0554274531e4234e0cb997ea879ae053f319b9bbaa33c1a434b69ef",
+      "title": "molecule form 144 (2012-11-06)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02747",
+      "record_hash": "19abd8c20ce67a4fa98374fb311925d49b4d5ee79c8f9959c8e325cc14d2f5fb",
+      "title": "molecule form 145 (2012-11-25)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02748",
+      "record_hash": "ec55a123bfa8860bf0f72e2dd98e26667cbb483a4460af5d246e23d65ce5fa3f",
+      "title": "molecule form 146 (2012-12-06)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02749",
+      "record_hash": "11460266f5bcefef6958e15a18890cfca68babec5b2cb06a8092ae3b6bf2a335",
+      "title": "molecule form 147 (2012-12-13)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02750",
+      "record_hash": "ed6de14ca4175e095c9ff24e0c7be2463cc4ef88cbe59f085c9f8620232fcdf8",
+      "title": "molecule form 148 (2012-12-22)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02751",
+      "record_hash": "0c0addbe237874ccb6eb82e0446460564856df2608cc4a1df08ec1c4fb354282",
+      "title": "molecule form 149 (2012-12-22)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02752",
+      "record_hash": "b280e88cd27c5bab6f3f686abfbeb6f2b9e7c1dd23413049cf59eba3e128d1e5",
+      "title": "molecule form 150 (2012-12-23)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02753",
+      "record_hash": "c655a35a72e87bf5efbaa49927610940ae0422ab2a092ddd6826026eb0861c35",
+      "title": "molecule form 151 (2012-12-25)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02754",
+      "record_hash": "2e3234702d304a50c3cc47da7d7f291d50c9be5d83b2122b5b3b0f08738c524d",
+      "title": "molecule form 152 (2012-12-26)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02755",
+      "record_hash": "3098fd110a7837efe4b8f26547e7c7e62871bb34066823da710530ae6c96889a",
+      "title": "molecule form 153 (2012-12-26)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02756",
+      "record_hash": "19c3b3773b8f0f124684707f2088b8bbe2a2a480367c8973fa5397067d8868eb",
+      "title": "molecule form 154 (2012-12-26)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02757",
+      "record_hash": "d414a63785758ab21e48356aa947e13d38f431acce2b6bb62ab0298699bd39c1",
+      "title": "molecule form 155 (2012-12-26)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02758",
+      "record_hash": "728eea2de46e6745e877c87ea38d226e48d7b6175a6617e4208500811e7e85e5",
+      "title": "molecule form 156 (2012-12-27)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02759",
+      "record_hash": "81def3aa9395062a2274bba1195579b80d8772a89385b48b99601b7ce9121081",
+      "title": "molecule form 157 (2012-12-28)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02760",
+      "record_hash": "9e0014f6622f3222d3cf0af299103b09f50d297f91cd97d6575979550c501e22",
+      "title": "molecule form 158 (2012-12-31)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02761",
+      "record_hash": "9109c2e1fc722404cb94f6d31cabc013b41ae6fde5bf384ade652456eaf12d5f",
+      "title": "molecule form 159 (2012-12-31)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02762",
+      "record_hash": "6fb8b2a01fa8ef4122a20072c2ab326f6957cc4dc3d1b3a176375b053f7f8a19",
+      "title": "molecule form 160 (2013-01-04)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02763",
+      "record_hash": "3d3e6472e6e8189342b204e9145ba1f4b1222a8b150db3c39a9528e43be20aa9",
+      "title": "molecule form 161 (2013-01-04)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02764",
+      "record_hash": "d0133f9022e7cb982917b8ebcdc4172cb413be3501d9e9cc22877400b12f31bc",
+      "title": "molecule form 162 (2013-01-04)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02765",
+      "record_hash": "ee5bc0bd701375ad3064de4f286f39b2dfed444c4b39b92944a5f659c48b6e7a",
+      "title": "molecule form 163 (2013-01-08)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02766",
+      "record_hash": "1779095998da7b11e785480fc89f8b0a4249aa1f8f943e4a32022e859efc6b62",
+      "title": "molecule form 164 (2013-01-16)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02767",
+      "record_hash": "a0ef98e7ba224fc0b8252c950a1afa14fcecd8482c59098924824be942dcea9e",
+      "title": "molecule form 165 (2013-01-20)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02768",
+      "record_hash": "78506fb0e2e385959fc7351b8902c7e2b07b48f7d2bd6ae73ec641d8796823fe",
+      "title": "molecule form 166 (2013-01-25)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02769",
+      "record_hash": "9cdb05af19b8cb876df6c6d301625a07ad7ef907b5d5f36d94a6c40574d9c60f",
+      "title": "molecule form 167 (2013-01-28)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02770",
+      "record_hash": "13b43fe7db0265e70f9f27c82e351f22d9b1d997962b1b4b269623c56e991e3c",
+      "title": "molecule form 168 (2013-01-28)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02771",
+      "record_hash": "1d6fb448cc30a8b1f3110ee9e24865e5a11cbc24e8d129bf376af16d774d8a7c",
+      "title": "molecule form 169 (2013-01-29)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02772",
+      "record_hash": "02ab54e14df1bcc961014d3f79ebf23d2308d3340b7c81ce95f2fb4ed1583b44",
+      "title": "molecule form 170 (2013-02-08)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02773",
+      "record_hash": "20f41b7088afb8c8db1ffe10053a62f8b2739ebe0acb05df58ff00ffb40093f1",
+      "title": "molecule form 171 (2013-02-16)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02774",
+      "record_hash": "0aac2992a05d6443fcc9d4f493a3e98059056bdfda60ab8f7c3308be94b2e0ee",
+      "title": "molecule form 172 (2013-02-21)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02775",
+      "record_hash": "fabfdaa8f79ec53c1af1e6756a9cdf0b93509e74250f5586fd187ae24d528b94",
+      "title": "molecule form 173 (2013-02-28)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02776",
+      "record_hash": "3f3903960a1f39fb03e429a2cf588b110f71f8383f616a2bf1d8f50cfc6fd842",
+      "title": "molecule form 174 (2013-02-28)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02777",
+      "record_hash": "872a051ca1a0c9c2a7dc73673dc73ccb68c119868f7226586fbe07ef1984f9d5",
+      "title": "molecule form 175 (2013-03-02)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02778",
+      "record_hash": "7716c92fba3dac9d944ae71f6ce38306dd127251b83269883ec64033b1820e87",
+      "title": "molecule form 176 (2013-03-02)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02779",
+      "record_hash": "f8999ac77d2fa6f046b6a2736ab32a35444d2a9c26cdee7e27c9e04106421a42",
+      "title": "molecule form 177 (2013-03-02)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02780",
+      "record_hash": "f08e939458c251f27ae9c0981f8c43aeefd1b47d466f793e7b18654e33d04087",
+      "title": "molecule form 178 (2013-03-02)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02781",
+      "record_hash": "f34c70290761bba71d2f156d5f50ce9bfc8ecbcedd3ad21730a15dcd123c7496",
+      "title": "molecule form 179 (2013-03-02)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02782",
+      "record_hash": "eacb14d6d4b83b5fd92a6fce55bc4a59f6cc394cc98b539efc3071159a1fe285",
+      "title": "molecule form 180 (2013-03-10)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02783",
+      "record_hash": "b8fbbc88235b60c64b485cb877adf0034c5f33bcf624a68393fcd18b28d7d9cf",
+      "title": "molecule form 181 (2013-03-11)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02784",
+      "record_hash": "986db3cef404645bf31cfc0128e1f1080c406497c41b34c9b7f931ece8e84bec",
+      "title": "molecule form 182 (2013-03-11)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02785",
+      "record_hash": "fa474abd25c7baf743259fffe702a80776505e9b2773d3ed3d22b5f1b8e7479c",
+      "title": "molecule form 183 (2013-03-15)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02786",
+      "record_hash": "3f31eafcbf7ba1b6a277c5742206871020839667c6d0003f0f51cf9bf3d82377",
+      "title": "molecule form 184 (2013-03-16)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02787",
+      "record_hash": "fe4e0267d2fc2b976b2361ec55a62c50578c3b6cc369ae7d0e70fac7e92e4f2d",
+      "title": "molecule form 185 (2013-03-17)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02788",
+      "record_hash": "81a48654d7b95f2258bad7a96f817b23ec5967a9a97eb9b210b6079b2e745e3f",
+      "title": "molecule form 186 (2013-03-17)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02789",
+      "record_hash": "63b01cdc4c9173b814d3cc16b9430195ba030446f6fa3cd27ab707a64f709f17",
+      "title": "molecule form 187 (2013-03-18)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02790",
+      "record_hash": "190bfd52daa2208e0ba38850ec960937b916dd661eae5d2dec4fe4ce663aeaa5",
+      "title": "molecule form 188 (2013-03-22)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02791",
+      "record_hash": "3cc6067859c759fd380a0d1ed5fc90c11893ac8dda9945603a0765a82cb878ea",
+      "title": "molecule form 189 (2013-03-23)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02792",
+      "record_hash": "566a7e4fc5b5ee2034f2318751b04449eece277b5ca3d02680addc13d776d0bc",
+      "title": "molecule form 190 (2013-04-02)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02793",
+      "record_hash": "f9cb3592a28159d47130fec0e7b91fdd7f53fa5976f6e3b2835a66ba496e6616",
+      "title": "molecule form 191 (2013-04-02)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02794",
+      "record_hash": "b33dc9689f3a6e9b9cb3641af172f8138da64ea8f4eef37eed1542f1983cc295",
+      "title": "molecule form 192 (2013-04-02)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02795",
+      "record_hash": "84f4cb0695fc9df84b15fde909458ebb0f28c223548df9787819439eced9c540",
+      "title": "molecule form 193 (2013-04-02)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02796",
+      "record_hash": "552be3c102ecc5ee24d783d182db61a8894b7255bb979d75f049672b37260608",
+      "title": "molecule form 194 (2013-04-02)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02797",
+      "record_hash": "1f89aac2c93696bc06e685d73a392dafb7b8a62d6efec6d41d305657e51c8b47",
+      "title": "molecule form 195 (2013-04-04)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02798",
+      "record_hash": "4a6905e7d895c986eeaca9e712220462ee5354010e026a102836292d938c4346",
+      "title": "molecule form 196 (2013-04-06)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02799",
+      "record_hash": "9bb696b100d0ea0f05a9740e1e735c5d5084408888dce50cdcd86a9a711b5bd0",
+      "title": "molecule form 197 (2013-04-12)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02800",
+      "record_hash": "d85f0c166489afe9e55bf85f84c207d892b80c93b4cfedf3efd95ed0c646e551",
+      "title": "molecule form 198 (2013-04-12)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02801",
+      "record_hash": "7b985bf79dd1b9f34aedd85175056ef90bbce34fa9c4a82c2540eae8f0bf0c57",
+      "title": "molecule form 199 (2013-04-12)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02802",
+      "record_hash": "8dbb24fe096a415bdf8dd87ae6b4d392ded6d7184a8c3fed96aaf6932ff26298",
+      "title": "molecule form 200 (2013-04-15)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02803",
+      "record_hash": "41a7f2db7836ad31fd918af427b0fd07caf092116765583d2c2764070d2a36a8",
+      "title": "molecule form 201 (2013-04-15)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02804",
+      "record_hash": "bffd8d84c000123ac15b452b0097e7ece3fb8f31d540f5cb62a6dc39cfd822a0",
+      "title": "molecule form 202 (2013-04-18)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02805",
+      "record_hash": "6f338ed097942c5b9090e0114326cad11acc673e9247fd60ae88501d784c928d",
+      "title": "molecule form 203 (2013-04-18)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02806",
+      "record_hash": "ed40440551f6cb177b335271d167869c7061053c3e39be0a6b1cd318511a0ef2",
+      "title": "molecule form 204 (2013-04-18)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02807",
+      "record_hash": "c2b1c2f2bba12be3ba9713cce58c09b171b7b8bfcd8f6c5d27fa0a194e503b0a",
+      "title": "molecule form 205 (2013-04-18)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02808",
+      "record_hash": "7e3d8baca1ba146c4b4c54683de62febd83f73ed8fd8a32693752a24ca750fef",
+      "title": "molecule form 206 (2013-04-18)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02809",
+      "record_hash": "c842a202a650bc0b49793868b8800cd25aa59e069f50bd2c46a6c8338f34ef17",
+      "title": "molecule form 207 (2013-04-28)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02810",
+      "record_hash": "a2e07c44ccd696e961edd23381b77fc3e9e2b77872d1de3c3687cd266bc202ac",
+      "title": "molecule form 208 (2013-04-30)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02811",
+      "record_hash": "0402dbab5978207975f65984a72ae72aba74ef7af5699be443fd4bd721841734",
+      "title": "molecule form 209 (2013-05-03)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02812",
+      "record_hash": "8a696809c816817a1377a8a9d6f2930092684712c4f1d060bf0fde83ef4dabd8",
+      "title": "molecule form 210 (2013-05-03)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02813",
+      "record_hash": "12b84ad073c42e9c755ddafb311b60fc9a3a7d9d64b92d46a6c5e70559d71528",
+      "title": "molecule form 211 (2013-05-07)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02814",
+      "record_hash": "b28255a0a906eb182d631acd456f2c9ce5ce15aa2d4c0072173709c0a89cb77c",
+      "title": "molecule form 212 (2013-05-07)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02815",
+      "record_hash": "6662b5d99b6a244b3e2460c6224699c5186d536302615ef9fb52c96a0fe6b20e",
+      "title": "molecule form 213 (2013-05-09)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02816",
+      "record_hash": "35196fadfcd143874c752ab6e826ea4621bcac68ddff2b3dc776126c8d6c8771",
+      "title": "molecule form 214 (2013-05-09)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02817",
+      "record_hash": "62be5c561e3a19c43dbe9897e9ae0cdefac2873afbe89968eef2613295a6c2ac",
+      "title": "molecule form 215 (2013-05-10)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02818",
+      "record_hash": "5417fad8632844111d4ad4a70c85149274b5f63c44cbc55b3155bd7b6807ac70",
+      "title": "molecule form 216 (2013-05-10)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02819",
+      "record_hash": "a750bf7703bbc64803a65fa4fb9a013efca20623d3f8dbd64e49188ce36e9fa2",
+      "title": "molecule form 217 (2013-05-11)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02820",
+      "record_hash": "439b9e3d715c35a4f908298989a50d88273330461dbbd6cef557cd62938e0796",
+      "title": "molecule form 218 (2013-05-11)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02821",
+      "record_hash": "db33fb24db50f2b0a1cfa49938a366f685880a61de87f377f8c30d5acaac6023",
+      "title": "molecule form 219 (2013-05-11)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02822",
+      "record_hash": "87e7acac51a1e49d96f071f6a2e868274996ae48f7cfd2355b8f7b5fabda7522",
+      "title": "molecule form 220 (2013-05-11)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02823",
+      "record_hash": "fd6b1c67c434ffcd0d02f32c0722de186e5879b243f5c2439322b61a7c97b2b3",
+      "title": "molecule form 221 (2013-05-11)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02824",
+      "record_hash": "6c132ef5fa4449256d1419dad3e778f887f7115a0039a76e05ea9c0aeff2fe40",
+      "title": "molecule form 222 (2013-05-11)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02825",
+      "record_hash": "dedaf65fb5953ab4bcb1d0162495a1e9b7ae886b04cb7b687adc5dab089fd8e4",
+      "title": "molecule form 223 (2013-05-15)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02826",
+      "record_hash": "d1056bb15998f216b17e6140582f2e2eedd6b4bfe5992d1dcaa867c37b336055",
+      "title": "molecule form 224 (2013-05-15)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02827",
+      "record_hash": "c67f83207233de4e8ef32f5238b0af6e7e6c7befaaf77781524ddba5211a00bf",
+      "title": "molecule form 225 (2013-06-07)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02828",
+      "record_hash": "7f720a0f7b90511be77b37ae1e116b3e4bf2f95477b118f8affec77c652d3a09",
+      "title": "molecule form 226 (2013-06-07)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02829",
+      "record_hash": "501f60908c4c5fb28d42ae586adda78b740f922af49438a69974ba330a6e2dfe",
+      "title": "molecule form 227 (2013-06-07)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02830",
+      "record_hash": "7d6918cdfd1037ab52a8d1ff0df585b1427404d098a80597bf6f890fc3837010",
+      "title": "molecule form 228 (2013-06-10)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02831",
+      "record_hash": "7422c34dcc309ea741a2987200df9d48c469ae47de35a2bad9eb491f9b78f73d",
+      "title": "molecule form 229 (2013-06-10)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02832",
+      "record_hash": "f00505189656a194f4590e1ed1cb2eb885fce00876c412745ef1a23c6c2228a4",
+      "title": "molecule form 230 (2013-06-12)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02833",
+      "record_hash": "c41e5d9f17a742bab272c8e0411b2c010ca161b872fdf1af943a9ec739c7b7a6",
+      "title": "molecule form 231 (2013-06-20)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02834",
+      "record_hash": "2d1b0295123e8db8a4aa404a286a7731659a4d615a13898eee280d3b574a3f87",
+      "title": "molecule form 232 (2013-06-22)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02835",
+      "record_hash": "6589227d71b5e5a1298f1baef98bbdb251ca1ce2278b59079018a90df1e525fc",
+      "title": "molecule form 233 (2013-06-28)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02836",
+      "record_hash": "ca865ee2437b53d73fa5d81650e9f8e6ea7d72b6fb8fedaf806498d3efcf7b56",
+      "title": "molecule form 234 (2013-07-22)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02837",
+      "record_hash": "42146d7f84864d3955e4410df2dc28c49697f12211f8e7060f63bbf63fab7f04",
+      "title": "molecule form 235 (2013-07-23)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02838",
+      "record_hash": "44cba68b3674a9d771b015bf2d9b1bffd5a58ca32e1c92dd63dd959e88fef867",
+      "title": "molecule form 236 (2013-07-23)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02839",
+      "record_hash": "dfc4dc8fc52148c69c0a5d7102b638bde4d2c133d0c3814c177d93ebf1ce8711",
+      "title": "molecule form 237 (2013-07-23)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02840",
+      "record_hash": "cd9b72b3dcb46be0bf1c114462102fe6ee210645b131f223f45daad343e8e772",
+      "title": "molecule form 238 (2013-07-23)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02841",
+      "record_hash": "5eaddcd126047af2ed593ccb6e06dd059c13c3d1071733fcce40e3ae3340a88e",
+      "title": "molecule form 239 (2013-07-23)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02842",
+      "record_hash": "5e03ccd8a2814745fe519b8c3852399861f957d13448b468ec358d5295e63739",
+      "title": "molecule form 240 (2013-07-23)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02843",
+      "record_hash": "81b6f4dbf4df0785bdf547a046b8e9ddf51f74560bdaf6fabe7e0eb44d25f8e4",
+      "title": "molecule form 241 (2013-07-23)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02844",
+      "record_hash": "b53155f2a919cde1bc125edf1819629dc7f49c8d0becae5600736d3cee7de586",
+      "title": "molecule form 242 (2013-07-23)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02845",
+      "record_hash": "1153709ecf4bb90e62bf6b00ecaf5caaf27c283c3a6787b6d49c1534accb32ae",
+      "title": "molecule form 243 (2013-07-26)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02846",
+      "record_hash": "75e2fa135b85d47152dda66a048b2aa30aeebb47b44f70c2029287500f5d5a28",
+      "title": "molecule form 244 (2013-07-29)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02847",
+      "record_hash": "5f82ee7e97ca52eaf5d71ad85b93bb8ff96f3b69167d07d9cd9b82316f164294",
+      "title": "molecule form 245 (2013-08-01)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02848",
+      "record_hash": "7612fca7c4ec7f55665ffd3034d1bc13685822c3584957304925917814c80102",
+      "title": "molecule form 246 (2013-08-01)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02849",
+      "record_hash": "12d8419aa2fd79002233b0ba27bf1a5a7f6d3d74c49419c3da1f98cbee09d3bb",
+      "title": "molecule form 247 (2013-08-03)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02850",
+      "record_hash": "a69dbf91670bb23d9fa306bd67ab2ee224a908290eead4b94c09478908ee5cea",
+      "title": "molecule form 248 (2013-08-05)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02851",
+      "record_hash": "283a5de503ae22412849a9fa377488f12428d3a8cd6d1432b985289639297f32",
+      "title": "molecule form 249 (2013-08-05)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02852",
+      "record_hash": "9493abc77b103cacfdb3489ecd65ce342927c19795c84f1d602b1b635a85c82a",
+      "title": "molecule form 250 (2013-08-05)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02853",
+      "record_hash": "882bbb87d26e8a4a45f6ce9762225142180bbeb1cb46f6f3c96976b878cc85cb",
+      "title": "molecule form 251 (2013-08-08)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02854",
+      "record_hash": "481c290d8cffeca70df4c40aaf202702f125030d2498fd8b19cc86ca92a91fd3",
+      "title": "molecule form 252 (2013-08-16)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02855",
+      "record_hash": "aaf9abca4d320de975d67030aba2a4168bc9f016830c5fa7b85ecf7bf455cdfb",
+      "title": "molecule form 253 (2013-08-18)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02856",
+      "record_hash": "d9889ca81daec0ff83b8de3378918936d533f550e5712e96121efdc7212a3538",
+      "title": "molecule form 254 (2013-08-18)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02857",
+      "record_hash": "1db27a9b631bf1ffd93585b7f7031801ebf7c001873b6bd766265c2b720dda5c",
+      "title": "molecule form 255 (2013-08-18)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
+    },
+    {
+      "work_id": "02858",
+      "record_hash": "17b73af8309725dcb7fda0e35e711d3818a51e5f6e2065c5feecc1afb1415125",
+      "title": "molecule form 256 (2013-08-18)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "100",
+      "project_folder": "molecule forms"
     }
   ],
   "ordered_work_ids": [
-    "00459"
+    "00459",
+    "02603",
+    "02604",
+    "02605",
+    "02606",
+    "02607",
+    "02608",
+    "02609",
+    "02610",
+    "02611",
+    "02612",
+    "02613",
+    "02614",
+    "02615",
+    "02616",
+    "02617",
+    "02618",
+    "02619",
+    "02620",
+    "02621",
+    "02622",
+    "02623",
+    "02624",
+    "02625",
+    "02626",
+    "02627",
+    "02628",
+    "02629",
+    "02630",
+    "02631",
+    "02632",
+    "02633",
+    "02634",
+    "02635",
+    "02636",
+    "02637",
+    "02638",
+    "02639",
+    "02640",
+    "02641",
+    "02642",
+    "02643",
+    "02644",
+    "02645",
+    "02646",
+    "02647",
+    "02648",
+    "02649",
+    "02650",
+    "02651",
+    "02652",
+    "02653",
+    "02654",
+    "02655",
+    "02656",
+    "02657",
+    "02658",
+    "02659",
+    "02660",
+    "02661",
+    "02662",
+    "02663",
+    "02664",
+    "02665",
+    "02666",
+    "02667",
+    "02668",
+    "02669",
+    "02670",
+    "02671",
+    "02672",
+    "02673",
+    "02674",
+    "02675",
+    "02676",
+    "02677",
+    "02678",
+    "02679",
+    "02680",
+    "02681",
+    "02682",
+    "02683",
+    "02684",
+    "02685",
+    "02686",
+    "02687",
+    "02688",
+    "02689",
+    "02690",
+    "02691",
+    "02692",
+    "02693",
+    "02694",
+    "02695",
+    "02696",
+    "02697",
+    "02698",
+    "02699",
+    "02700",
+    "02701",
+    "02702",
+    "02703",
+    "02704",
+    "02705",
+    "02706",
+    "02707",
+    "02708",
+    "02709",
+    "02710",
+    "02711",
+    "02712",
+    "02713",
+    "02714",
+    "02715",
+    "02716",
+    "02717",
+    "02718",
+    "02719",
+    "02720",
+    "02721",
+    "02722",
+    "02723",
+    "02724",
+    "02725",
+    "02726",
+    "02727",
+    "02728",
+    "02729",
+    "02730",
+    "02731",
+    "02732",
+    "02733",
+    "02734",
+    "02735",
+    "02736",
+    "02737",
+    "02738",
+    "02739",
+    "02740",
+    "02741",
+    "02742",
+    "02743",
+    "02744",
+    "02745",
+    "02746",
+    "02747",
+    "02748",
+    "02749",
+    "02750",
+    "02751",
+    "02752",
+    "02753",
+    "02754",
+    "02755",
+    "02756",
+    "02757",
+    "02758",
+    "02759",
+    "02760",
+    "02761",
+    "02762",
+    "02763",
+    "02764",
+    "02765",
+    "02766",
+    "02767",
+    "02768",
+    "02769",
+    "02770",
+    "02771",
+    "02772",
+    "02773",
+    "02774",
+    "02775",
+    "02776",
+    "02777",
+    "02778",
+    "02779",
+    "02780",
+    "02781",
+    "02782",
+    "02783",
+    "02784",
+    "02785",
+    "02786",
+    "02787",
+    "02788",
+    "02789",
+    "02790",
+    "02791",
+    "02792",
+    "02793",
+    "02794",
+    "02795",
+    "02796",
+    "02797",
+    "02798",
+    "02799",
+    "02800",
+    "02801",
+    "02802",
+    "02803",
+    "02804",
+    "02805",
+    "02806",
+    "02807",
+    "02808",
+    "02809",
+    "02810",
+    "02811",
+    "02812",
+    "02813",
+    "02814",
+    "02815",
+    "02816",
+    "02817",
+    "02818",
+    "02819",
+    "02820",
+    "02821",
+    "02822",
+    "02823",
+    "02824",
+    "02825",
+    "02826",
+    "02827",
+    "02828",
+    "02829",
+    "02830",
+    "02831",
+    "02832",
+    "02833",
+    "02834",
+    "02835",
+    "02836",
+    "02837",
+    "02838",
+    "02839",
+    "02840",
+    "02841",
+    "02842",
+    "02843",
+    "02844",
+    "02845",
+    "02846",
+    "02847",
+    "02848",
+    "02849",
+    "02850",
+    "02851",
+    "02852",
+    "02853",
+    "02854",
+    "02855",
+    "02856",
+    "02857",
+    "02858"
   ],
   "project_folders": [
     "molecule forms"

@@ -6,10 +6,9 @@
     "series_id": "065",
     "title": "forms",
     "year": 2011,
-    "year_display": "2011",
-    "sort_fields": "work_id"
+    "year_display": "2011"
   },
-  "record_hash": "c504abb207251604bfa140f4381dc3a36425f3106be9765b86f19d69706c365f",
+  "record_hash": "5c479f12df3865e16d77448d80e71351cbe716cd16b321df031775d9a5e469e4",
   "member_works": [
     {
       "work_id": "01196",
@@ -46,13 +45,1163 @@
       "year_display": "2011",
       "series_id": "065",
       "project_folder": "forms"
+    },
+    {
+      "work_id": "04108",
+      "record_hash": "fa50211955e36f97306fe3753ba0bbdcc1fddd34dab280ea7beaee12897ce2d7",
+      "title": "source - form 27",
+      "year": 2011,
+      "year_display": "2011",
+      "series_id": "065",
+      "project_folder": "forms"
+    },
+    {
+      "work_id": "04109",
+      "record_hash": "18def027121e653bd4a987cc9da2ea70a9bc7c27dc9e3571142438676b731a32",
+      "title": "form 01",
+      "year": 2011,
+      "year_display": "2011",
+      "series_id": "065",
+      "project_folder": "forms"
+    },
+    {
+      "work_id": "04110",
+      "record_hash": "06085915dca220c309a773b83c5c19851e7f2593dc324d285f2f702293398528",
+      "title": "form 02",
+      "year": 2011,
+      "year_display": "2011",
+      "series_id": "065",
+      "project_folder": "forms"
+    },
+    {
+      "work_id": "04111",
+      "record_hash": "b65f7fad590c00aabf5886c79734d26f3b22a22a01724d1e4cf1e36ea7f1727f",
+      "title": "form 03",
+      "year": 2011,
+      "year_display": "2011",
+      "series_id": "065",
+      "project_folder": "forms"
+    },
+    {
+      "work_id": "04112",
+      "record_hash": "ac0650589a3b0c25edf44f42758e4d4d361481ea6f3cbb964a7939cc5aa6f2db",
+      "title": "form 04",
+      "year": 2011,
+      "year_display": "2011",
+      "series_id": "065",
+      "project_folder": "forms"
+    },
+    {
+      "work_id": "04113",
+      "record_hash": "0ab110fdf11008e67b849342ed3029d4fbe846714d177f2ee019e6025d330a29",
+      "title": "form 05",
+      "year": 2011,
+      "year_display": "2011",
+      "series_id": "065",
+      "project_folder": "forms"
+    },
+    {
+      "work_id": "04114",
+      "record_hash": "a0de14e04af3d6018b6cb3e4de21a22e9132af167abdbe05e09a5718b1e65adc",
+      "title": "form 06",
+      "year": 2011,
+      "year_display": "2011",
+      "series_id": "065",
+      "project_folder": "forms"
+    },
+    {
+      "work_id": "04115",
+      "record_hash": "973b9d7ca664051f391af0bbd3e80acde98cf407d89521122bae597c4c50dbdd",
+      "title": "form 07",
+      "year": 2011,
+      "year_display": "2011",
+      "series_id": "065",
+      "project_folder": "forms"
+    },
+    {
+      "work_id": "04116",
+      "record_hash": "a43fe603d1876cab70bd8f34f9d4237a9bc1af08d468356ec430361f4cfbf11e",
+      "title": "form 08",
+      "year": 2011,
+      "year_display": "2011",
+      "series_id": "065",
+      "project_folder": "forms"
+    },
+    {
+      "work_id": "04117",
+      "record_hash": "953cc460e4c8ce58f45db4abca6c7ef2b18ada0b2af83349817dff81e9298101",
+      "title": "form 09",
+      "year": 2011,
+      "year_display": "2011",
+      "series_id": "065",
+      "project_folder": "forms"
+    },
+    {
+      "work_id": "04118",
+      "record_hash": "41e64ccc99450ab4f9cb8c5681c8ca7c34de435a5277890375adfcaab4039742",
+      "title": "form 10",
+      "year": 2011,
+      "year_display": "2011",
+      "series_id": "065",
+      "project_folder": "forms"
+    },
+    {
+      "work_id": "04119",
+      "record_hash": "35fd6c759ce065261d33327d61b70ef2b34977e88a7a0b28ada1dcaf525d3522",
+      "title": "form 11",
+      "year": 2011,
+      "year_display": "2011",
+      "series_id": "065",
+      "project_folder": "forms"
+    },
+    {
+      "work_id": "04120",
+      "record_hash": "5b2e67d32101cbd727c32b494eb87c692d4045a4a8a77962646346ce8b9d93ab",
+      "title": "form 12",
+      "year": 2011,
+      "year_display": "2011",
+      "series_id": "065",
+      "project_folder": "forms"
+    },
+    {
+      "work_id": "04121",
+      "record_hash": "dd492381817d2be55374e566d5dda6afc0e4c0d0f7220a185242511829bc2e61",
+      "title": "form 13",
+      "year": 2011,
+      "year_display": "2011",
+      "series_id": "065",
+      "project_folder": "forms"
+    },
+    {
+      "work_id": "04122",
+      "record_hash": "79120856a74c5332c059f70cace8faa9b15086f32b320ce088fb6afff934a4fc",
+      "title": "form 14",
+      "year": 2011,
+      "year_display": "2011",
+      "series_id": "065",
+      "project_folder": "forms"
+    },
+    {
+      "work_id": "04123",
+      "record_hash": "6b2fac172b1e696744017ef9e13d3588aece4b6d3bf87f0fa172538370ee3c60",
+      "title": "form 15",
+      "year": 2011,
+      "year_display": "2011",
+      "series_id": "065",
+      "project_folder": "forms"
+    },
+    {
+      "work_id": "04124",
+      "record_hash": "bea1f8de9ae48c8707e15370149954292709d5c00d8fd12ea805516469686831",
+      "title": "form 16",
+      "year": 2011,
+      "year_display": "2011",
+      "series_id": "065",
+      "project_folder": "forms"
+    },
+    {
+      "work_id": "04125",
+      "record_hash": "c3fa59cf8b136533bc6fe75e003a168a56451ee9ddcfd30343ae5bfe2041c100",
+      "title": "form 17",
+      "year": 2011,
+      "year_display": "2011",
+      "series_id": "065",
+      "project_folder": "forms"
+    },
+    {
+      "work_id": "04126",
+      "record_hash": "9e4ed67ecceb59091d13277ac668c1ba46748d9d895c9876af47410a481c7f22",
+      "title": "form 18",
+      "year": 2011,
+      "year_display": "2011",
+      "series_id": "065",
+      "project_folder": "forms"
+    },
+    {
+      "work_id": "04127",
+      "record_hash": "cbfaff8dfff6c16f43a387843d0f7fff2e87332a0731c7b45c3df8a04005983f",
+      "title": "form 19",
+      "year": 2011,
+      "year_display": "2011",
+      "series_id": "065",
+      "project_folder": "forms"
+    },
+    {
+      "work_id": "04128",
+      "record_hash": "7acc904fb2aef58bf50009fc17d9c2172617a139cfe212e138d9e03155da9432",
+      "title": "form 20",
+      "year": 2011,
+      "year_display": "2011",
+      "series_id": "065",
+      "project_folder": "forms"
+    },
+    {
+      "work_id": "04129",
+      "record_hash": "170fe01f12c6e5fe9f9b8667193ec612893b4b66be8b77b6c8ee2bf02c2a5b86",
+      "title": "form 21",
+      "year": 2011,
+      "year_display": "2011",
+      "series_id": "065",
+      "project_folder": "forms"
+    },
+    {
+      "work_id": "04130",
+      "record_hash": "b405e3c1b7e6fa230432c635b5f84752ab20efa2576b245c1d5e32424a48ead9",
+      "title": "form 22",
+      "year": 2011,
+      "year_display": "2011",
+      "series_id": "065",
+      "project_folder": "forms"
+    },
+    {
+      "work_id": "04131",
+      "record_hash": "170d4931a7bfb3a27c1290f0b71fd3f52c8c833ed0a4ee39962fea65f5f0f565",
+      "title": "form 23",
+      "year": 2011,
+      "year_display": "2011",
+      "series_id": "065",
+      "project_folder": "forms"
+    },
+    {
+      "work_id": "04132",
+      "record_hash": "a504546372fa71aee1b65a1079470833e0b6fa74875950290e33b603ddfa5616",
+      "title": "form 24",
+      "year": 2011,
+      "year_display": "2011",
+      "series_id": "065",
+      "project_folder": "forms"
+    },
+    {
+      "work_id": "04133",
+      "record_hash": "8e07530766adfb81a226047abcc36ccd81689d9317221d84023306f6ea643794",
+      "title": "form 25",
+      "year": 2011,
+      "year_display": "2011",
+      "series_id": "065",
+      "project_folder": "forms"
+    },
+    {
+      "work_id": "04134",
+      "record_hash": "f646f7ad1b78b7d6b615bdebb523edd35c0455f79161b1802c6d2f7d4ef025f8",
+      "title": "form 26",
+      "year": 2011,
+      "year_display": "2011",
+      "series_id": "065",
+      "project_folder": "forms"
+    },
+    {
+      "work_id": "04135",
+      "record_hash": "f930e2b4e9a13d3f07db90cf335dec58b255d4303e590eaf62c0809a8da05012",
+      "title": "form 27",
+      "year": 2011,
+      "year_display": "2011",
+      "series_id": "065",
+      "project_folder": "forms"
+    },
+    {
+      "work_id": "04136",
+      "record_hash": "ab6023dfe608cdc663d7e22e8ae27864eab4a50df77e64c4b248465ea5d3c064",
+      "title": "form 28",
+      "year": 2011,
+      "year_display": "2011",
+      "series_id": "065",
+      "project_folder": "forms"
+    },
+    {
+      "work_id": "04137",
+      "record_hash": "252165f18846c1a491bfb50cc769fbd3bf4d6a0ca4b8ddb7ade3c611b14e55e2",
+      "title": "form 29",
+      "year": 2011,
+      "year_display": "2011",
+      "series_id": "065",
+      "project_folder": "forms"
+    },
+    {
+      "work_id": "04138",
+      "record_hash": "eb56ad2a71807eb54f1e86ecc2d0893221af4cf634dd3260151547915dd9b12f",
+      "title": "form 30",
+      "year": 2011,
+      "year_display": "2011",
+      "series_id": "065",
+      "project_folder": "forms"
+    },
+    {
+      "work_id": "04139",
+      "record_hash": "e315c081ae97f1e19ad3f2d6c51262bb6f6155aac6e704360513c6ebab28ae43",
+      "title": "form 31",
+      "year": 2011,
+      "year_display": "2011",
+      "series_id": "065",
+      "project_folder": "forms"
+    },
+    {
+      "work_id": "04140",
+      "record_hash": "3a8fc5699ec5a14dc014a944d388fd2dc46fffed95526a4bd528ae5b36ae5421",
+      "title": "form 32",
+      "year": 2011,
+      "year_display": "2011",
+      "series_id": "065",
+      "project_folder": "forms"
+    },
+    {
+      "work_id": "04141",
+      "record_hash": "5033d0b54116b02127620f7162d4ba332f754a154bc9b7fd1b7ee908666b2b8b",
+      "title": "form 33",
+      "year": 2011,
+      "year_display": "2011",
+      "series_id": "065",
+      "project_folder": "forms"
+    },
+    {
+      "work_id": "04142",
+      "record_hash": "82b3098007855aaeaba23d50fbe1a5aaf4aaf72adff6891fb86041ffb9b40029",
+      "title": "form 34",
+      "year": 2011,
+      "year_display": "2011",
+      "series_id": "065",
+      "project_folder": "forms"
+    },
+    {
+      "work_id": "04143",
+      "record_hash": "1b03637052ca9d8e96de5175a4f47bdb3402f52e2e55e2dd134923edc8964fec",
+      "title": "form 35",
+      "year": 2011,
+      "year_display": "2011",
+      "series_id": "065",
+      "project_folder": "forms"
+    },
+    {
+      "work_id": "04144",
+      "record_hash": "f85536efd5cb7e824e3e0ea08a877981856b4b942b873b9b944288463b34e6d7",
+      "title": "form 36",
+      "year": 2011,
+      "year_display": "2011",
+      "series_id": "065",
+      "project_folder": "forms"
+    },
+    {
+      "work_id": "04145",
+      "record_hash": "40d97c731dac00a91fd77c8a7035379c78598de756add16742e23f286383304b",
+      "title": "form 37",
+      "year": 2011,
+      "year_display": "2011",
+      "series_id": "065",
+      "project_folder": "forms"
+    },
+    {
+      "work_id": "04146",
+      "record_hash": "b77562191b52b821dffb0d3142e056eecca33b421b396ab3fb8e7be759dd454c",
+      "title": "form 38",
+      "year": 2011,
+      "year_display": "2011",
+      "series_id": "065",
+      "project_folder": "forms"
+    },
+    {
+      "work_id": "04147",
+      "record_hash": "af82665437c5ab7c71aca5ab11a16ad2e0aef40e0142e87f144cf80bd4ef752d",
+      "title": "form 39",
+      "year": 2011,
+      "year_display": "2011",
+      "series_id": "065",
+      "project_folder": "forms"
+    },
+    {
+      "work_id": "04148",
+      "record_hash": "fd36474794d317b4fab8778319ee0acdc9233cbad5dadb9ba66bf77a8b0410f3",
+      "title": "form 40",
+      "year": 2011,
+      "year_display": "2011",
+      "series_id": "065",
+      "project_folder": "forms"
+    },
+    {
+      "work_id": "04149",
+      "record_hash": "3252c466f5cf229e6295964232e213b32f363231943dbb18f1d635b5634d1d0f",
+      "title": "form 41",
+      "year": 2011,
+      "year_display": "2011",
+      "series_id": "065",
+      "project_folder": "forms"
+    },
+    {
+      "work_id": "04150",
+      "record_hash": "9b7d83d179f91adb8064dc0c19a442117e0b4ced536467f387a07c2dfe781a82",
+      "title": "form 42",
+      "year": 2011,
+      "year_display": "2011",
+      "series_id": "065",
+      "project_folder": "forms"
+    },
+    {
+      "work_id": "04151",
+      "record_hash": "6e84e726ccf4d61a7170dbc35d8809f7b68d4ce0b04725a1eff0336e151fcba2",
+      "title": "form 43",
+      "year": 2011,
+      "year_display": "2011",
+      "series_id": "065",
+      "project_folder": "forms"
+    },
+    {
+      "work_id": "04152",
+      "record_hash": "bbf4debc3267c9296f749389cbdb7a15359bab1e4c06136c8b502a05954d9d1b",
+      "title": "form 44",
+      "year": 2011,
+      "year_display": "2011",
+      "series_id": "065",
+      "project_folder": "forms"
+    },
+    {
+      "work_id": "04153",
+      "record_hash": "f521ec666a2e8e414fbf4242744b6248e37e51e936a346f48c4b1d4faa287798",
+      "title": "form 45",
+      "year": 2011,
+      "year_display": "2011",
+      "series_id": "065",
+      "project_folder": "forms"
+    },
+    {
+      "work_id": "04154",
+      "record_hash": "4bba7a5946752bf2715693972730d0609d284a893ba737d0d21af4130ea2d223",
+      "title": "form 46",
+      "year": 2011,
+      "year_display": "2011",
+      "series_id": "065",
+      "project_folder": "forms"
+    },
+    {
+      "work_id": "04155",
+      "record_hash": "5bca684619bce67ba9389b405c0d8a7fcfe9be121a9737ea80417a06f314569c",
+      "title": "form 47",
+      "year": 2011,
+      "year_display": "2011",
+      "series_id": "065",
+      "project_folder": "forms"
+    },
+    {
+      "work_id": "04156",
+      "record_hash": "a16f87ac4bdcb485824a5209d0a59474bdd5f3fd084add198c2d797b2922d9ff",
+      "title": "form 48",
+      "year": 2011,
+      "year_display": "2011",
+      "series_id": "065",
+      "project_folder": "forms"
+    },
+    {
+      "work_id": "04157",
+      "record_hash": "73eb52f87e35fdeca7dec96b0e1ec593eb3b4277e973648888b2ab35287ae876",
+      "title": "form 49",
+      "year": 2011,
+      "year_display": "2011",
+      "series_id": "065",
+      "project_folder": "forms"
+    },
+    {
+      "work_id": "04158",
+      "record_hash": "2786c89635fbd42604c7e8efbbfdde8b62fc19215399a2804ad8818be8df5102",
+      "title": "form 50",
+      "year": 2011,
+      "year_display": "2011",
+      "series_id": "065",
+      "project_folder": "forms"
+    },
+    {
+      "work_id": "04159",
+      "record_hash": "e251c354f750ae849490f0047b7a815c869d4fbf50ab97a66c6721276f876416",
+      "title": "form 51",
+      "year": 2011,
+      "year_display": "2011",
+      "series_id": "065",
+      "project_folder": "forms"
+    },
+    {
+      "work_id": "04160",
+      "record_hash": "e483aedbadedb786c43e83d716744d9c1a90bc0fa0fdac56c88f50ceb145404b",
+      "title": "form 52",
+      "year": 2011,
+      "year_display": "2011",
+      "series_id": "065",
+      "project_folder": "forms"
+    },
+    {
+      "work_id": "04161",
+      "record_hash": "e8605daeb3b75b0b8c2c1ecf08daa809eef89694564a6df1486ffc0f52d1e4d2",
+      "title": "form 53",
+      "year": 2011,
+      "year_display": "2011",
+      "series_id": "065",
+      "project_folder": "forms"
+    },
+    {
+      "work_id": "04162",
+      "record_hash": "3bb45954cf8d659132f1231bfe02d863baff70c6f117fe49a1b8bab8cd08de56",
+      "title": "form 54",
+      "year": 2011,
+      "year_display": "2011",
+      "series_id": "065",
+      "project_folder": "forms"
+    },
+    {
+      "work_id": "04163",
+      "record_hash": "061c0e03eb718f55501db459a0060f81cf7185d45169154c7bf1a1c4dce0d2ba",
+      "title": "form 55",
+      "year": 2011,
+      "year_display": "2011",
+      "series_id": "065",
+      "project_folder": "forms"
+    },
+    {
+      "work_id": "04164",
+      "record_hash": "0a109073201afc75babf8b38b1849c537e9dd231f1db9bd6880aaf0bdd00d6fc",
+      "title": "form 56",
+      "year": 2011,
+      "year_display": "2011",
+      "series_id": "065",
+      "project_folder": "forms"
+    },
+    {
+      "work_id": "04165",
+      "record_hash": "a985d2bfa6972cad73cc2114405f8aec9fbd5c95721f46a7dd2b32563e93146b",
+      "title": "form 57",
+      "year": 2011,
+      "year_display": "2011",
+      "series_id": "065",
+      "project_folder": "forms"
+    },
+    {
+      "work_id": "04166",
+      "record_hash": "49501412999faff3084abef4e0da3f5b8303800eb83552419fd04c2dcd440919",
+      "title": "form 58",
+      "year": 2011,
+      "year_display": "2011",
+      "series_id": "065",
+      "project_folder": "forms"
+    },
+    {
+      "work_id": "04167",
+      "record_hash": "6af302e7644f053724ad9ba7643309e8a031f05f06840177abb80d788a27f7b8",
+      "title": "form 59",
+      "year": 2011,
+      "year_display": "2011",
+      "series_id": "065",
+      "project_folder": "forms"
+    },
+    {
+      "work_id": "04168",
+      "record_hash": "5decf7f66fed24f882e80ad1f29f1a6b60ab9fe92e0c3e9bfd72221565fcc7b3",
+      "title": "form 60",
+      "year": 2011,
+      "year_display": "2011",
+      "series_id": "065",
+      "project_folder": "forms"
+    },
+    {
+      "work_id": "04169",
+      "record_hash": "db6fccf8bfdf4ae939f0326addbfe1c539750f209c5257f82ecf594499c7771e",
+      "title": "form 61",
+      "year": 2011,
+      "year_display": "2011",
+      "series_id": "065",
+      "project_folder": "forms"
+    },
+    {
+      "work_id": "04170",
+      "record_hash": "b691f6aad166bf247934039120351161d72cc90dcba48eb05b11a928a1286029",
+      "title": "form 62",
+      "year": 2011,
+      "year_display": "2011",
+      "series_id": "065",
+      "project_folder": "forms"
+    },
+    {
+      "work_id": "04171",
+      "record_hash": "25542f1e1dc4009a0507b98808b5018ea5cc63f7ddc3f4b893f3f97d7e4f69c8",
+      "title": "form 63",
+      "year": 2011,
+      "year_display": "2011",
+      "series_id": "065",
+      "project_folder": "forms"
+    },
+    {
+      "work_id": "04172",
+      "record_hash": "5c0871810c2a7600be8bd471f2731332ba9f2111df830fa7a2aca3ec8d90cc90",
+      "title": "form 64",
+      "year": 2011,
+      "year_display": "2011",
+      "series_id": "065",
+      "project_folder": "forms"
+    },
+    {
+      "work_id": "04173",
+      "record_hash": "a0d8aa4f75a3d90f3c83ec4f9f03ee3db2fb2ccbef5635ec1308ec8cabda6f91",
+      "title": "form paths 1-8",
+      "year": 2011,
+      "year_display": "2011",
+      "series_id": "065",
+      "project_folder": "forms"
+    },
+    {
+      "work_id": "04174",
+      "record_hash": "0a43f73ff67af847219ffe9c848afb2e6164a281fe62fda2058e65b157ba34a5",
+      "title": "form paths 9-16",
+      "year": 2011,
+      "year_display": "2011",
+      "series_id": "065",
+      "project_folder": "forms"
+    },
+    {
+      "work_id": "04175",
+      "record_hash": "f7fd30c52566a3c8b86a904f37c5616a6afbba26aad0507347ad9f5cb964dd48",
+      "title": "form paths 17-24",
+      "year": 2011,
+      "year_display": "2011",
+      "series_id": "065",
+      "project_folder": "forms"
+    },
+    {
+      "work_id": "04176",
+      "record_hash": "7cff18d16c653503b7a51ead1b81c28ba98737dcb05dbc951f1d2eb4ee8eb944",
+      "title": "form paths 25-32",
+      "year": 2011,
+      "year_display": "2011",
+      "series_id": "065",
+      "project_folder": "forms"
+    },
+    {
+      "work_id": "04177",
+      "record_hash": "328737134d4a90b573dfdee27918594bae5e6ddfd4983409b5763ca7be4e73ad",
+      "title": "form paths 33-40",
+      "year": 2011,
+      "year_display": "2011",
+      "series_id": "065",
+      "project_folder": "forms"
+    },
+    {
+      "work_id": "04178",
+      "record_hash": "21c17acfcf0a9f197bb0551de30832fe163028db92ffbbee1eea1e71c03ace79",
+      "title": "form paths 41-48",
+      "year": 2011,
+      "year_display": "2011",
+      "series_id": "065",
+      "project_folder": "forms"
+    },
+    {
+      "work_id": "04179",
+      "record_hash": "12eb8d9313c346e0cf51c518e6f4383f8a877b96ae7a8853984071c5cf0cba39",
+      "title": "form paths 49-56",
+      "year": 2011,
+      "year_display": "2011",
+      "series_id": "065",
+      "project_folder": "forms"
+    },
+    {
+      "work_id": "04180",
+      "record_hash": "645dd6ce0454c5eb188fae73df928b9056daec9cf2a27c922b88447d96e3a184",
+      "title": "form paths 57-64",
+      "year": 2011,
+      "year_display": "2011",
+      "series_id": "065",
+      "project_folder": "forms"
+    },
+    {
+      "work_id": "04181",
+      "record_hash": "63ab1c56b815b146c5aa4c912ee13fb9393e14dbc33de0b03db0e75c42b537cc",
+      "title": "particle (3 symbols)",
+      "year": 2011,
+      "year_display": "2011",
+      "series_id": "065",
+      "project_folder": "forms"
+    },
+    {
+      "work_id": "04182",
+      "record_hash": "6d650cced005f9ddc7ba1a272ee7dad5e7ce78f83a8d8a893eaf4814cecdd6f5",
+      "title": "particle (10000)",
+      "year": 2011,
+      "year_display": "2011",
+      "series_id": "065",
+      "project_folder": "forms"
+    },
+    {
+      "work_id": "04183",
+      "record_hash": "ed4402bd22d252eacbd2988f37499c55a4755b65efe5416d8a1d78514143d86b",
+      "title": "particle (a world of non-linearity)",
+      "year": 2011,
+      "year_display": "2011",
+      "series_id": "065",
+      "project_folder": "forms"
+    },
+    {
+      "work_id": "04184",
+      "record_hash": "17051bc5b8dbd163b79265e0d88383215880a78bdef313e8e52b27a823adaff8",
+      "title": "particle (architecture)",
+      "year": 2011,
+      "year_display": "2011",
+      "series_id": "065",
+      "project_folder": "forms"
+    },
+    {
+      "work_id": "04185",
+      "record_hash": "5733037638eef3009a10294726c4d1b53b5f670951b55bb35b6be3154e4ee56f",
+      "title": "particle (balance machine)",
+      "year": 2011,
+      "year_display": "2011",
+      "series_id": "065",
+      "project_folder": "forms"
+    },
+    {
+      "work_id": "04186",
+      "record_hash": "5224553956468300e8abc0778f08c20f84d8e6facaa08c2f3f2f07a1079fb91f",
+      "title": "particle (base series)",
+      "year": 2011,
+      "year_display": "2011",
+      "series_id": "065",
+      "project_folder": "forms"
+    },
+    {
+      "work_id": "04187",
+      "record_hash": "fb75f6c48e29ce00b4604db38419c461aa8621dfc202ff491106344709b3f79e",
+      "title": "particle (bird nature)",
+      "year": 2011,
+      "year_display": "2011",
+      "series_id": "065",
+      "project_folder": "forms"
+    },
+    {
+      "work_id": "04188",
+      "record_hash": "4a69285bf726d4400572bfe5cfc3fd4396cf16b9ffde077dcfe41b3656d525f3",
+      "title": "particle (body space)",
+      "year": 2011,
+      "year_display": "2011",
+      "series_id": "065",
+      "project_folder": "forms"
+    },
+    {
+      "work_id": "04189",
+      "record_hash": "d8b1167e6768e1c079b05d901a700e212d4a333f0a2d3ca2272807089e26750b",
+      "title": "particle (colours)",
+      "year": 2011,
+      "year_display": "2011",
+      "series_id": "065",
+      "project_folder": "forms"
+    },
+    {
+      "work_id": "04190",
+      "record_hash": "86ad5b0653c72c56b9df564886482c19b0374aed1fe5e49d69788fe26484f5fb",
+      "title": "particle (composit red blue smoke)",
+      "year": 2011,
+      "year_display": "2011",
+      "series_id": "065",
+      "project_folder": "forms"
+    },
+    {
+      "work_id": "04191",
+      "record_hash": "2c574fd7f7005765d162e52ef54ebc7882b8599dd3133d25d81f2879572002fc",
+      "title": "particle (dependent origination)",
+      "year": 2011,
+      "year_display": "2011",
+      "series_id": "065",
+      "project_folder": "forms"
+    },
+    {
+      "work_id": "04192",
+      "record_hash": "9a001e091e27317c98c553765763365bfb660a0fd36dcdf2e322be39b537eeba",
+      "title": "particle (doll dissection)",
+      "year": 2011,
+      "year_display": "2011",
+      "series_id": "065",
+      "project_folder": "forms"
+    },
+    {
+      "work_id": "04193",
+      "record_hash": "b435ec17e3109241da027868055a45924b348bcffcfa470dfc8446a275bd76c7",
+      "title": "particle (doll forest)",
+      "year": 2011,
+      "year_display": "2011",
+      "series_id": "065",
+      "project_folder": "forms"
+    },
+    {
+      "work_id": "04194",
+      "record_hash": "866fa2ae9792991b5e1381f55143bc1745eccf066f5afa3c5852fd22e97fe9f7",
+      "title": "particle (doll internal)",
+      "year": 2011,
+      "year_display": "2011",
+      "series_id": "065",
+      "project_folder": "forms"
+    },
+    {
+      "work_id": "04195",
+      "record_hash": "71c77d7f7db73d5846c96c4066ce117bfff23f75eb8e260c1f46d5eb3487b064",
+      "title": "particle (doll still life)",
+      "year": 2011,
+      "year_display": "2011",
+      "series_id": "065",
+      "project_folder": "forms"
+    },
+    {
+      "work_id": "04196",
+      "record_hash": "651da9f505e68a952c4aa40ce59998802af981da5c610de9217c760925cce3c4",
+      "title": "particle (dots)",
+      "year": 2011,
+      "year_display": "2011",
+      "series_id": "065",
+      "project_folder": "forms"
+    },
+    {
+      "work_id": "04197",
+      "record_hash": "587a0c54addf1f774e713683ae47fb7d27de814b65594fe38cc319c8af2b11ba",
+      "title": "particle (forest)",
+      "year": 2011,
+      "year_display": "2011",
+      "series_id": "065",
+      "project_folder": "forms"
+    },
+    {
+      "work_id": "04198",
+      "record_hash": "bdebb9de5ea26a03971cd2533a55a586bc139b78c1e6974a9923f71286501f2e",
+      "title": "particle (form space)",
+      "year": 2011,
+      "year_display": "2011",
+      "series_id": "065",
+      "project_folder": "forms"
+    },
+    {
+      "work_id": "04199",
+      "record_hash": "2714ba08e8d87d5a4d803d4a466a2b9b91af2af4a7fc28168d95588b1b771ff1",
+      "title": "particle (fur map)",
+      "year": 2011,
+      "year_display": "2011",
+      "series_id": "065",
+      "project_folder": "forms"
+    },
+    {
+      "work_id": "04200",
+      "record_hash": "91ef5d65f9695be2ba8ef57801827063225ef48018862b27b259a673806751e0",
+      "title": "particle (gesture)",
+      "year": 2011,
+      "year_display": "2011",
+      "series_id": "065",
+      "project_folder": "forms"
+    },
+    {
+      "work_id": "04201",
+      "record_hash": "4e9c4575e03dad22f95c4b061dfd58812e63a8cf29b72ae51ace860fda4fcd47",
+      "title": "particle (harmony)",
+      "year": 2011,
+      "year_display": "2011",
+      "series_id": "065",
+      "project_folder": "forms"
+    },
+    {
+      "work_id": "04202",
+      "record_hash": "9a6fd162b1e6a1630e0aaed1804b54cac08a3439d1be774ccccc9f566baa140a",
+      "title": "particle (interior design)",
+      "year": 2011,
+      "year_display": "2011",
+      "series_id": "065",
+      "project_folder": "forms"
+    },
+    {
+      "work_id": "04203",
+      "record_hash": "da1c465daedbf171e8740a456c4a18dedf8386b2c29af6f2568c727e47e7a141",
+      "title": "particle (lava disco)",
+      "year": 2011,
+      "year_display": "2011",
+      "series_id": "065",
+      "project_folder": "forms"
+    },
+    {
+      "work_id": "04204",
+      "record_hash": "d881b8b28b88879a5f4edbc0ca0293c8536469c50136bc1a484524c361569393",
+      "title": "particle (lipseyes)",
+      "year": 2011,
+      "year_display": "2011",
+      "series_id": "065",
+      "project_folder": "forms"
+    },
+    {
+      "work_id": "04205",
+      "record_hash": "301e66ce1a96054dab43942a090903c46ccf067d38e9b5e0a4664b84d3cf43a2",
+      "title": "particle (memory loss hope)",
+      "year": 2011,
+      "year_display": "2011",
+      "series_id": "065",
+      "project_folder": "forms"
+    },
+    {
+      "work_id": "04206",
+      "record_hash": "caa55ee73cea5b0839f3aa62d3c42e4e1b8178b054dc4b259cac04314543bac9",
+      "title": "particle (mm)",
+      "year": 2011,
+      "year_display": "2011",
+      "series_id": "065",
+      "project_folder": "forms"
+    },
+    {
+      "work_id": "04207",
+      "record_hash": "603c7b128936a0c4dac4e1cd4051d1ffc6573603f3f206c4f63d77a8ef97f1de",
+      "title": "particle (nerve text)",
+      "year": 2011,
+      "year_display": "2011",
+      "series_id": "065",
+      "project_folder": "forms"
+    },
+    {
+      "work_id": "04208",
+      "record_hash": "fba543e8d6a4c91346b01001a5de342089da383988e35325125c3b43b8dcfc7b",
+      "title": "particle (nerve)",
+      "year": 2011,
+      "year_display": "2011",
+      "series_id": "065",
+      "project_folder": "forms"
+    },
+    {
+      "work_id": "04209",
+      "record_hash": "843b5b5c3e43a1b038b49f047423e3d4e32f610d4f6ccb06dc1b5c8b163330e4",
+      "title": "particle (particle forms)",
+      "year": 2011,
+      "year_display": "2011",
+      "series_id": "065",
+      "project_folder": "forms"
+    },
+    {
+      "work_id": "04210",
+      "record_hash": "7461666ef4433410728fbdc9fee5d677035742069ae6793069bab7ee185ff166",
+      "title": "particle (particle theory)",
+      "year": 2011,
+      "year_display": "2011",
+      "series_id": "065",
+      "project_folder": "forms"
+    },
+    {
+      "work_id": "04211",
+      "record_hash": "8646ab155a29ed5ac8f79c4cbeb9889a55df6a6d7526efe8aa44b48b9ee9fd09",
+      "title": "particle (petri)",
+      "year": 2011,
+      "year_display": "2011",
+      "series_id": "065",
+      "project_folder": "forms"
+    },
+    {
+      "work_id": "04212",
+      "record_hash": "5bdbe128573d6e602f8ab6f1c24721e101f935f5629f0ee777fcbcd7f4f12635",
+      "title": "particle (poa4)",
+      "year": 2011,
+      "year_display": "2011",
+      "series_id": "065",
+      "project_folder": "forms"
+    },
+    {
+      "work_id": "04213",
+      "record_hash": "c1b1068245f1d4b71fe0497324c71d387b11ae27d30c6c927067b12c83358abc",
+      "title": "particle (pole vault)",
+      "year": 2011,
+      "year_display": "2011",
+      "series_id": "065",
+      "project_folder": "forms"
+    },
+    {
+      "work_id": "04214",
+      "record_hash": "7584f468fd67924d719d66ffcf459ec5e6dd35197141669d3f722756f9076c1b",
+      "title": "particle (qrnt)",
+      "year": 2011,
+      "year_display": "2011",
+      "series_id": "065",
+      "project_folder": "forms"
+    },
+    {
+      "work_id": "04215",
+      "record_hash": "a7f07c01ace684f5dc72e39d3cbd4b0083b7ebb0e85c2ac6fc7e5268c9745545",
+      "title": "particle (qtot)",
+      "year": 2011,
+      "year_display": "2011",
+      "series_id": "065",
+      "project_folder": "forms"
+    },
+    {
+      "work_id": "04216",
+      "record_hash": "afe9981ef0a2c13a0e5761f21e923673bd0c76f91ff5c1e5e84cd9f18c1c5c26",
+      "title": "particle (reduce and return)",
+      "year": 2011,
+      "year_display": "2011",
+      "series_id": "065",
+      "project_folder": "forms"
+    },
+    {
+      "work_id": "04217",
+      "record_hash": "9627f6bc4ffb1dbee29280e24e25ab99aca64ddc9b947ca3de8aa0fc4e23f84d",
+      "title": "particle (string theory)",
+      "year": 2011,
+      "year_display": "2011",
+      "series_id": "065",
+      "project_folder": "forms"
+    },
+    {
+      "work_id": "04218",
+      "record_hash": "09c573a022405c6bcf61fe93c66818424a2f80c58b862ca22ac4f003806430a8",
+      "title": "particle (structure)",
+      "year": 2011,
+      "year_display": "2011",
+      "series_id": "065",
+      "project_folder": "forms"
+    },
+    {
+      "work_id": "04219",
+      "record_hash": "351b93fa972e259b8dde5ec1a4403722e5afec2ae0e323b3954baf2fb0f0534e",
+      "title": "particle (theory of happiness)",
+      "year": 2011,
+      "year_display": "2011",
+      "series_id": "065",
+      "project_folder": "forms"
+    },
+    {
+      "work_id": "04220",
+      "record_hash": "721bd5a99ed5ec585ace80ed1b76ab2b133d8bc5551f24e9ccf4b55c757437ef",
+      "title": "particle (train moments)",
+      "year": 2011,
+      "year_display": "2011",
+      "series_id": "065",
+      "project_folder": "forms"
+    },
+    {
+      "work_id": "04221",
+      "record_hash": "033db7a1e5de85caa8c736a4965c3f30a9391e5b9d1b93004b102b2cc9683c6e",
+      "title": "particle (wa)",
+      "year": 2011,
+      "year_display": "2011",
+      "series_id": "065",
+      "project_folder": "forms"
+    },
+    {
+      "work_id": "04222",
+      "record_hash": "cbe99bed810ef105d08063c4fc84cfc62afd74f4dc1709db4fff80084dcf64bf",
+      "title": "particle (water)",
+      "year": 2011,
+      "year_display": "2011",
+      "series_id": "065",
+      "project_folder": "forms"
     }
   ],
   "ordered_work_ids": [
     "01196",
     "01197",
     "01198",
-    "01199"
+    "01199",
+    "04108",
+    "04109",
+    "04110",
+    "04111",
+    "04112",
+    "04113",
+    "04114",
+    "04115",
+    "04116",
+    "04117",
+    "04118",
+    "04119",
+    "04120",
+    "04121",
+    "04122",
+    "04123",
+    "04124",
+    "04125",
+    "04126",
+    "04127",
+    "04128",
+    "04129",
+    "04130",
+    "04131",
+    "04132",
+    "04133",
+    "04134",
+    "04135",
+    "04136",
+    "04137",
+    "04138",
+    "04139",
+    "04140",
+    "04141",
+    "04142",
+    "04143",
+    "04144",
+    "04145",
+    "04146",
+    "04147",
+    "04148",
+    "04149",
+    "04150",
+    "04151",
+    "04152",
+    "04153",
+    "04154",
+    "04155",
+    "04156",
+    "04157",
+    "04158",
+    "04159",
+    "04160",
+    "04161",
+    "04162",
+    "04163",
+    "04164",
+    "04165",
+    "04166",
+    "04167",
+    "04168",
+    "04169",
+    "04170",
+    "04171",
+    "04172",
+    "04173",
+    "04174",
+    "04175",
+    "04176",
+    "04177",
+    "04178",
+    "04179",
+    "04180",
+    "04181",
+    "04182",
+    "04183",
+    "04184",
+    "04185",
+    "04186",
+    "04187",
+    "04188",
+    "04189",
+    "04190",
+    "04191",
+    "04192",
+    "04193",
+    "04194",
+    "04195",
+    "04196",
+    "04197",
+    "04198",
+    "04199",
+    "04200",
+    "04201",
+    "04202",
+    "04203",
+    "04204",
+    "04205",
+    "04206",
+    "04207",
+    "04208",
+    "04209",
+    "04210",
+    "04211",
+    "04212",
+    "04213",
+    "04214",
+    "04215",
+    "04216",
+    "04217",
+    "04218",
+    "04219",
+    "04220",
+    "04221",
+    "04222"
   ],
   "project_folders": [
     "forms"

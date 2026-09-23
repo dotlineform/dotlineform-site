@@ -6,10 +6,9 @@
     "series_id": "087",
     "title": "landscapes",
     "year": 2023,
-    "year_display": "2023",
-    "sort_fields": "work_id"
+    "year_display": "2023"
   },
-  "record_hash": "191a7cefd302730fa4c4b735b97c1286518c51fec0764836a234bbc829fa65e3",
+  "record_hash": "4c2b19aef3cb48d090c91950f6b00d5dcd116b2beb85ca45243ae67edab09039",
   "member_works": [
     {
       "work_id": "00516",
@@ -37,12 +36,102 @@
       "year_display": "2023",
       "series_id": "087",
       "project_folder": "landscapes"
+    },
+    {
+      "work_id": "02974",
+      "record_hash": "7d5c5113a41673c50d3d0ab285841783b650cd301e1f2217020e00552b244621",
+      "title": "landscape 1 - detail 1",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "087",
+      "project_folder": "landscapes"
+    },
+    {
+      "work_id": "02975",
+      "record_hash": "72ffa3366cccb3859453f57bd671e880f455a25d609f7fb1e13f3e8724e9ae31",
+      "title": "landscape 1 - detail 2",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "087",
+      "project_folder": "landscapes"
+    },
+    {
+      "work_id": "02976",
+      "record_hash": "e05d1476e5358d9cca94674143ec86d9e2a6fc5b63716f3bede12575319fa03e",
+      "title": "landscape 1 - detail 3",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "087",
+      "project_folder": "landscapes"
+    },
+    {
+      "work_id": "02977",
+      "record_hash": "30829ce7d22ac70ac9011ce891c7fb455e2b05008691fd0d714ab69e8fbdd2bb",
+      "title": "landscape 2 - detail 1",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "087",
+      "project_folder": "landscapes"
+    },
+    {
+      "work_id": "02978",
+      "record_hash": "dfb984871aefa17c0cc9116891c710c408efa2531f6a3ba5e3928cdc54e311c7",
+      "title": "landscape 2 - detail 2",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "087",
+      "project_folder": "landscapes"
+    },
+    {
+      "work_id": "02979",
+      "record_hash": "97c79b139ba7914ec39891eaaf78f3438cabb2bec46d9e5aff7c9f3d7a2ac49e",
+      "title": "landscape 2 - detail 3",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "087",
+      "project_folder": "landscapes"
+    },
+    {
+      "work_id": "02980",
+      "record_hash": "93d8a72c77b0e33b8ef49275095435b6d1455c8e2a60b323e76bac20293dc99d",
+      "title": "landscape 2.1 - detail 1",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "087",
+      "project_folder": "landscapes"
+    },
+    {
+      "work_id": "02981",
+      "record_hash": "6971dc244438d5be2244b6c9d0efc0e5927660621eaf4c55ddfc77a31411954c",
+      "title": "landscape 2.1 - detail 2",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "087",
+      "project_folder": "landscapes"
+    },
+    {
+      "work_id": "02982",
+      "record_hash": "bc20231c5f114fa41628cf67eb69d1037796a32b2f50f75e63d9d79d073139d6",
+      "title": "landscape 2.1 - detail 3",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "087",
+      "project_folder": "landscapes"
     }
   ],
   "ordered_work_ids": [
     "00516",
     "00517",
-    "00518"
+    "00518",
+    "02974",
+    "02975",
+    "02976",
+    "02977",
+    "02978",
+    "02979",
+    "02980",
+    "02981",
+    "02982"
   ],
   "project_folders": [
     "landscapes"

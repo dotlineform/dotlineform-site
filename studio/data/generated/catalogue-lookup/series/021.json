@@ -6,10 +6,9 @@
     "series_id": "021",
     "title": "book dna",
     "year": 2010,
-    "year_display": "2010",
-    "sort_fields": "work_id"
+    "year_display": "2010"
   },
-  "record_hash": "e1d54e947ca3e75ae9ca2e726ba3c945f00ef99e16d73ec268963b4ef8066a61",
+  "record_hash": "c1e5a835745bcc94e90cccd63b697649089a67a46e33aad48f6d6472e675cf91",
   "member_works": [
     {
       "work_id": "00801",
@@ -55,6 +54,726 @@
       "year_display": "2010",
       "series_id": "021",
       "project_folder": "book dna"
+    },
+    {
+      "work_id": "03422",
+      "record_hash": "0eba0c920bf9c766f0f246cca76e736fc5db98b0cf4ae5f2c38fce33e9100cec",
+      "title": "book dna 1",
+      "year": 2010,
+      "year_display": "2010",
+      "series_id": "021",
+      "project_folder": "book dna"
+    },
+    {
+      "work_id": "03423",
+      "record_hash": "0618a1d74834f2322bfc8e4275c1a6ad303321ca167e1dcf0cec1000da72bb4b",
+      "title": "book dna 2",
+      "year": 2010,
+      "year_display": "2010",
+      "series_id": "021",
+      "project_folder": "book dna"
+    },
+    {
+      "work_id": "03424",
+      "record_hash": "7fdeeb5ce4cdf977fbbf4699f3dee3d2af945dc2b0d9081f06915045109a8f9e",
+      "title": "book dna 3",
+      "year": 2010,
+      "year_display": "2010",
+      "series_id": "021",
+      "project_folder": "book dna"
+    },
+    {
+      "work_id": "03425",
+      "record_hash": "ec4d94693d7ad47b66d421596f3edf85db05e08020be4e7d5dd88b3dcc30e7d8",
+      "title": "book dna 4",
+      "year": 2010,
+      "year_display": "2010",
+      "series_id": "021",
+      "project_folder": "book dna"
+    },
+    {
+      "work_id": "03426",
+      "record_hash": "0e6bca630a0a2bb756b612d01d18a98e96226edcddb7bcab7f590dcb12445480",
+      "title": "book dna 5",
+      "year": 2010,
+      "year_display": "2010",
+      "series_id": "021",
+      "project_folder": "book dna"
+    },
+    {
+      "work_id": "03427",
+      "record_hash": "ee9716bd8a64005b09ec5b9e72b2a451c53d48cc80193b060aca44cfbb924ca6",
+      "title": "book dna 6",
+      "year": 2010,
+      "year_display": "2010",
+      "series_id": "021",
+      "project_folder": "book dna"
+    },
+    {
+      "work_id": "03428",
+      "record_hash": "6f7c9062ca2c157e6fedffb21061fbc3b3d17a86cbeeaf83812ab448e98e7f6d",
+      "title": "book dna 7",
+      "year": 2010,
+      "year_display": "2010",
+      "series_id": "021",
+      "project_folder": "book dna"
+    },
+    {
+      "work_id": "03429",
+      "record_hash": "7ad83a8ecc2a5e289bfab01868a6c69e9b32a89102f34683592641c0182a832d",
+      "title": "book dna 8",
+      "year": 2010,
+      "year_display": "2010",
+      "series_id": "021",
+      "project_folder": "book dna"
+    },
+    {
+      "work_id": "03430",
+      "record_hash": "a639ace02f07cee6f1d2b362daafd2a2b83f779a7fbaa4b9a793e5a8b3b79ae4",
+      "title": "book dna 9",
+      "year": 2010,
+      "year_display": "2010",
+      "series_id": "021",
+      "project_folder": "book dna"
+    },
+    {
+      "work_id": "03431",
+      "record_hash": "637d78e129a9792760f7b1baea00062d2622184e6f46fcdcf7756ba086451151",
+      "title": "book dna 10",
+      "year": 2010,
+      "year_display": "2010",
+      "series_id": "021",
+      "project_folder": "book dna"
+    },
+    {
+      "work_id": "03432",
+      "record_hash": "7296b1c61edd5a8863c70352c9501b3b34fca63593b53764352c335d83bb0bc7",
+      "title": "book dna 11",
+      "year": 2010,
+      "year_display": "2010",
+      "series_id": "021",
+      "project_folder": "book dna"
+    },
+    {
+      "work_id": "03433",
+      "record_hash": "4a35a08337d23365367370c779cda66258c2b010b0ac7730594927dd06d47169",
+      "title": "book dna 12",
+      "year": 2010,
+      "year_display": "2010",
+      "series_id": "021",
+      "project_folder": "book dna"
+    },
+    {
+      "work_id": "03434",
+      "record_hash": "eeb651b3adfe90d6d0894509300cf402a37c48761bf203efcc8895532b9f34bd",
+      "title": "book dna 13",
+      "year": 2010,
+      "year_display": "2010",
+      "series_id": "021",
+      "project_folder": "book dna"
+    },
+    {
+      "work_id": "03435",
+      "record_hash": "67177e09058f16adc94a268f8c15ae6f54b10757256843c63669b7136b1591d5",
+      "title": "book dna 14",
+      "year": 2010,
+      "year_display": "2010",
+      "series_id": "021",
+      "project_folder": "book dna"
+    },
+    {
+      "work_id": "03436",
+      "record_hash": "a89eba7ad8083b3c3161c218256e25683575cd2a571fdeb1cf09a73a45b5c51a",
+      "title": "book dna 15",
+      "year": 2010,
+      "year_display": "2010",
+      "series_id": "021",
+      "project_folder": "book dna"
+    },
+    {
+      "work_id": "03437",
+      "record_hash": "4bb6bd669ccb14cbe2ffd09c97ac53983bf0c0aa48ce2109596fc2802fe40550",
+      "title": "book dna 16",
+      "year": 2010,
+      "year_display": "2010",
+      "series_id": "021",
+      "project_folder": "book dna"
+    },
+    {
+      "work_id": "03438",
+      "record_hash": "223246108e7e51eeefe24c1de88f95879a8a0dd5167a3ba83dbeaf290e143c78",
+      "title": "book dna 17",
+      "year": 2010,
+      "year_display": "2010",
+      "series_id": "021",
+      "project_folder": "book dna"
+    },
+    {
+      "work_id": "03439",
+      "record_hash": "a9fc64ed074e64d22e1a5f34d6ba24ec279d8227800e55c246e39e2492c3c294",
+      "title": "book dna 18",
+      "year": 2010,
+      "year_display": "2010",
+      "series_id": "021",
+      "project_folder": "book dna"
+    },
+    {
+      "work_id": "03440",
+      "record_hash": "257c7216f48cae968ef5c72151cffaae01ba52f92ba01ab93cf2330410f9e138",
+      "title": "book dna 19",
+      "year": 2010,
+      "year_display": "2010",
+      "series_id": "021",
+      "project_folder": "book dna"
+    },
+    {
+      "work_id": "03441",
+      "record_hash": "7abf5b92bccec9c54d917e1a79efa9665d33aaf4fb403c3eb206f4a3d9ba608b",
+      "title": "book dna 20",
+      "year": 2010,
+      "year_display": "2010",
+      "series_id": "021",
+      "project_folder": "book dna"
+    },
+    {
+      "work_id": "03442",
+      "record_hash": "9036e772488c7f8cb4a79316ea1c40abebe2bb934d53d5db882500146d3dc4c6",
+      "title": "book dna 21",
+      "year": 2010,
+      "year_display": "2010",
+      "series_id": "021",
+      "project_folder": "book dna"
+    },
+    {
+      "work_id": "03443",
+      "record_hash": "5f77102f500e34833d2db0dfcbd493bc899f335e9b5072bd107dd887ffe9c787",
+      "title": "book dna 22",
+      "year": 2010,
+      "year_display": "2010",
+      "series_id": "021",
+      "project_folder": "book dna"
+    },
+    {
+      "work_id": "03444",
+      "record_hash": "f28441f7fded152a124773ce7bab5488c8e196d2595a790be87e60a3cfa0713c",
+      "title": "book dna 23",
+      "year": 2010,
+      "year_display": "2010",
+      "series_id": "021",
+      "project_folder": "book dna"
+    },
+    {
+      "work_id": "03445",
+      "record_hash": "7b33e7a41368edde72a5bd97bd10b50e85468fcb9fb2469f8d42fcb0c642958e",
+      "title": "book dna 24",
+      "year": 2010,
+      "year_display": "2010",
+      "series_id": "021",
+      "project_folder": "book dna"
+    },
+    {
+      "work_id": "03446",
+      "record_hash": "41d5f73609b92167f29d0abf4e253b020f3b7a4d7c022b8f1e8de03aeab6087b",
+      "title": "book dna 25",
+      "year": 2010,
+      "year_display": "2010",
+      "series_id": "021",
+      "project_folder": "book dna"
+    },
+    {
+      "work_id": "03447",
+      "record_hash": "7b6b315a84c26d735e6bfe99e09e368f826ca8c0a6d05abe19fb1a4af166a21c",
+      "title": "book dna 26",
+      "year": 2010,
+      "year_display": "2010",
+      "series_id": "021",
+      "project_folder": "book dna"
+    },
+    {
+      "work_id": "03448",
+      "record_hash": "c87d45e9e05d1b4317fad43a69be012741b4a84af7a1aee15cc1e5a71e5ce119",
+      "title": "book dna 27",
+      "year": 2010,
+      "year_display": "2010",
+      "series_id": "021",
+      "project_folder": "book dna"
+    },
+    {
+      "work_id": "03449",
+      "record_hash": "c348ec644beda9aefd3e262b2c300c71862712d2257756f139a9b237aea11758",
+      "title": "book dna 28",
+      "year": 2010,
+      "year_display": "2010",
+      "series_id": "021",
+      "project_folder": "book dna"
+    },
+    {
+      "work_id": "03450",
+      "record_hash": "deda3b8be2825ed9e072029bcf158ed4d3e34ef0d33f74c8ff4af8f03150281c",
+      "title": "book dna 29",
+      "year": 2010,
+      "year_display": "2010",
+      "series_id": "021",
+      "project_folder": "book dna"
+    },
+    {
+      "work_id": "03451",
+      "record_hash": "e064df891b917a9f1ac2f023c1e1536a800d6ac8be5d6e88c864ea46eff06401",
+      "title": "book dna 30",
+      "year": 2010,
+      "year_display": "2010",
+      "series_id": "021",
+      "project_folder": "book dna"
+    },
+    {
+      "work_id": "03452",
+      "record_hash": "f7d85356ddf376e3f6100e103901a01b4ceb6b7e077d25c33bc0af832d8a6cb0",
+      "title": "book dna 31",
+      "year": 2010,
+      "year_display": "2010",
+      "series_id": "021",
+      "project_folder": "book dna"
+    },
+    {
+      "work_id": "03453",
+      "record_hash": "504a587d672becfda51b71d9baaf3917708f1e1ababdf2977171e6905c202b80",
+      "title": "book dna 32",
+      "year": 2010,
+      "year_display": "2010",
+      "series_id": "021",
+      "project_folder": "book dna"
+    },
+    {
+      "work_id": "03454",
+      "record_hash": "42c63f30d6be3c7ce17014a19c13982d90aefa36073a593fc3f57c4284c9f27b",
+      "title": "book dna 33",
+      "year": 2010,
+      "year_display": "2010",
+      "series_id": "021",
+      "project_folder": "book dna"
+    },
+    {
+      "work_id": "03455",
+      "record_hash": "8e9e14da93f91e9dbc396782eb10164323a4598c04f083cf6230d03bcc2d76bf",
+      "title": "book dna 34",
+      "year": 2010,
+      "year_display": "2010",
+      "series_id": "021",
+      "project_folder": "book dna"
+    },
+    {
+      "work_id": "03456",
+      "record_hash": "0602f682b925480e13b887984f7ef143b844b41fec37f4c3cd33514c83ceed9d",
+      "title": "book dna 35",
+      "year": 2010,
+      "year_display": "2010",
+      "series_id": "021",
+      "project_folder": "book dna"
+    },
+    {
+      "work_id": "03457",
+      "record_hash": "a622b6915d214067caafd8dd364ffe2c186d08c9605313fcd05e2de1357ad3d4",
+      "title": "book dna 36",
+      "year": 2010,
+      "year_display": "2010",
+      "series_id": "021",
+      "project_folder": "book dna"
+    },
+    {
+      "work_id": "03458",
+      "record_hash": "9132987e76768a325db89bc90991796b96b00c379dab11da84182783f6ffb964",
+      "title": "book dna 37",
+      "year": 2010,
+      "year_display": "2010",
+      "series_id": "021",
+      "project_folder": "book dna"
+    },
+    {
+      "work_id": "03459",
+      "record_hash": "b47a207fd2dabb799dde2db445962fd944319bdaceb22a9b6108b388cf570687",
+      "title": "book dna 38",
+      "year": 2010,
+      "year_display": "2010",
+      "series_id": "021",
+      "project_folder": "book dna"
+    },
+    {
+      "work_id": "03460",
+      "record_hash": "2035501cde728bc04472295cbdad7986ecc40054088b1a04064a3b74210ab848",
+      "title": "book dna 39",
+      "year": 2010,
+      "year_display": "2010",
+      "series_id": "021",
+      "project_folder": "book dna"
+    },
+    {
+      "work_id": "03461",
+      "record_hash": "01f4ab83a2ce9e3bc098236fb7541f86d37f425ad683fe013a8db3cd6d2ff849",
+      "title": "book dna 40",
+      "year": 2010,
+      "year_display": "2010",
+      "series_id": "021",
+      "project_folder": "book dna"
+    },
+    {
+      "work_id": "03462",
+      "record_hash": "2ab9265d340f74de51b9f7f7c7dcce6474fb57f06875222f4db916a367e2d296",
+      "title": "book dna 41",
+      "year": 2010,
+      "year_display": "2010",
+      "series_id": "021",
+      "project_folder": "book dna"
+    },
+    {
+      "work_id": "03463",
+      "record_hash": "3fa689ccc2ea0baedc18e9138c1a2e5df9efbaebd2ce360b82d52244a4e5aaaf",
+      "title": "book dna 42",
+      "year": 2010,
+      "year_display": "2010",
+      "series_id": "021",
+      "project_folder": "book dna"
+    },
+    {
+      "work_id": "03464",
+      "record_hash": "9c537cf57bc4d1f4bad39adda8ad2b31b721cc90b5949cde16e403e27d1326a7",
+      "title": "book dna 43",
+      "year": 2010,
+      "year_display": "2010",
+      "series_id": "021",
+      "project_folder": "book dna"
+    },
+    {
+      "work_id": "03465",
+      "record_hash": "3ccf22c25c9d870521867a673d649f321c5377b0fc87e476eb39ae678a39ebc7",
+      "title": "book dna 44",
+      "year": 2010,
+      "year_display": "2010",
+      "series_id": "021",
+      "project_folder": "book dna"
+    },
+    {
+      "work_id": "03466",
+      "record_hash": "e168cd80da26c349f5c155964226ba56c93aae2858832c7dc0596ce627ad3f32",
+      "title": "book dna 45",
+      "year": 2010,
+      "year_display": "2010",
+      "series_id": "021",
+      "project_folder": "book dna"
+    },
+    {
+      "work_id": "03467",
+      "record_hash": "340166f844d03457f6c6817f82859d26042a8da897ee96acd9427e296aae4547",
+      "title": "book dna 46",
+      "year": 2010,
+      "year_display": "2010",
+      "series_id": "021",
+      "project_folder": "book dna"
+    },
+    {
+      "work_id": "03468",
+      "record_hash": "3a782d9d8f053c4a6495d85a3abfacc839c7a6f16797a04807f8e61bf00f0105",
+      "title": "book dna 47",
+      "year": 2010,
+      "year_display": "2010",
+      "series_id": "021",
+      "project_folder": "book dna"
+    },
+    {
+      "work_id": "03469",
+      "record_hash": "f2e133c0cc772629391b30eff60d4b56ece9abc7841f580752f6eb93e5946aea",
+      "title": "book dna 48",
+      "year": 2010,
+      "year_display": "2010",
+      "series_id": "021",
+      "project_folder": "book dna"
+    },
+    {
+      "work_id": "03470",
+      "record_hash": "3f2d0d46ee9bf6098b44f86956b613955e4c1a3de1a93df4c8e769a21eac6acc",
+      "title": "book dna 49",
+      "year": 2010,
+      "year_display": "2010",
+      "series_id": "021",
+      "project_folder": "book dna"
+    },
+    {
+      "work_id": "03471",
+      "record_hash": "f96b8b2281054deface12f53e7df6c42c8a0d2c861d6cb91572be801220de8c2",
+      "title": "book dna 50",
+      "year": 2010,
+      "year_display": "2010",
+      "series_id": "021",
+      "project_folder": "book dna"
+    },
+    {
+      "work_id": "03472",
+      "record_hash": "812ca7b28108c889f4d688808cd2614fdd39b13801dec1bb6b09728f18577013",
+      "title": "book dna 51",
+      "year": 2010,
+      "year_display": "2010",
+      "series_id": "021",
+      "project_folder": "book dna"
+    },
+    {
+      "work_id": "03473",
+      "record_hash": "3a7eb35177e00fa3e8300c8b5412a98a36f0e46639f3ac6c01bb077f453a9244",
+      "title": "book dna 52",
+      "year": 2010,
+      "year_display": "2010",
+      "series_id": "021",
+      "project_folder": "book dna"
+    },
+    {
+      "work_id": "03474",
+      "record_hash": "247228b38a8ad296a7c1070714c47551a1f0e2e0345fa4a23a61e15b6ad17e98",
+      "title": "book dna 53",
+      "year": 2010,
+      "year_display": "2010",
+      "series_id": "021",
+      "project_folder": "book dna"
+    },
+    {
+      "work_id": "03475",
+      "record_hash": "469b7286dda7ca551749bf9bdc8a5901764b14992da4fe5335489166964cea30",
+      "title": "book dna 54",
+      "year": 2010,
+      "year_display": "2010",
+      "series_id": "021",
+      "project_folder": "book dna"
+    },
+    {
+      "work_id": "03476",
+      "record_hash": "a23eba8b561aff843a7b1ad744be3642da6b5acc4218ac0d149b00135d7a03e2",
+      "title": "book dna 55",
+      "year": 2010,
+      "year_display": "2010",
+      "series_id": "021",
+      "project_folder": "book dna"
+    },
+    {
+      "work_id": "03477",
+      "record_hash": "b589b6a5b9f08385edb86e9d8172bc30b8a008f79f9503f382b50de4941f6cc0",
+      "title": "book dna 56",
+      "year": 2010,
+      "year_display": "2010",
+      "series_id": "021",
+      "project_folder": "book dna"
+    },
+    {
+      "work_id": "03478",
+      "record_hash": "97d8a081be19f982000bd17139f4d4d6ad283ebab1dff329d6cf944712e685c2",
+      "title": "book dna 57",
+      "year": 2010,
+      "year_display": "2010",
+      "series_id": "021",
+      "project_folder": "book dna"
+    },
+    {
+      "work_id": "03479",
+      "record_hash": "871db776e6db5b6d7b315c91cba5f4d276589827825d0510c60d4e223582addd",
+      "title": "book dna 58",
+      "year": 2010,
+      "year_display": "2010",
+      "series_id": "021",
+      "project_folder": "book dna"
+    },
+    {
+      "work_id": "03480",
+      "record_hash": "574a35c13f2e73d94801101d241e020c236a119f9fd14f6b24e9dfa7ae1d1546",
+      "title": "book dna 59",
+      "year": 2010,
+      "year_display": "2010",
+      "series_id": "021",
+      "project_folder": "book dna"
+    },
+    {
+      "work_id": "03481",
+      "record_hash": "106a17cd11c5503b5f30784e3cdd76bb1ee3bab2e187d98bd7e4e7a0d08b3b41",
+      "title": "book dna 60",
+      "year": 2010,
+      "year_display": "2010",
+      "series_id": "021",
+      "project_folder": "book dna"
+    },
+    {
+      "work_id": "03482",
+      "record_hash": "5a7709793754181b23b36a97e6f6a2a63ca7878632b3f6b05e00a316cf7f188f",
+      "title": "book dna 61",
+      "year": 2010,
+      "year_display": "2010",
+      "series_id": "021",
+      "project_folder": "book dna"
+    },
+    {
+      "work_id": "03483",
+      "record_hash": "949a35235279425d9f3d48e6ba2a1d54aca27e58f52a13e68e0278cf58048729",
+      "title": "book dna 62",
+      "year": 2010,
+      "year_display": "2010",
+      "series_id": "021",
+      "project_folder": "book dna"
+    },
+    {
+      "work_id": "03484",
+      "record_hash": "4c67fce0f25d5fba0325b4662e1cc7a10c29ed95b4502224bf899e82626ec684",
+      "title": "book dna 63",
+      "year": 2010,
+      "year_display": "2010",
+      "series_id": "021",
+      "project_folder": "book dna"
+    },
+    {
+      "work_id": "03485",
+      "record_hash": "9be981faad58188f65fc1138620fd7e7146ec6f141159389ce6b9775385297c9",
+      "title": "book dna 64",
+      "year": 2010,
+      "year_display": "2010",
+      "series_id": "021",
+      "project_folder": "book dna"
+    },
+    {
+      "work_id": "03486",
+      "record_hash": "25041d7e71182c158ea02a0dadb635dc8b79962c98ca14a729c8dab4a6f10093",
+      "title": "book dna 65",
+      "year": 2010,
+      "year_display": "2010",
+      "series_id": "021",
+      "project_folder": "book dna"
+    },
+    {
+      "work_id": "03487",
+      "record_hash": "c9bb66872f539e80c5f33838346eb5ab1e4ab3ab62770f92fba98cf556207699",
+      "title": "book dna 66",
+      "year": 2010,
+      "year_display": "2010",
+      "series_id": "021",
+      "project_folder": "book dna"
+    },
+    {
+      "work_id": "03488",
+      "record_hash": "6b809673977be6046766cea77373ef7f55803ff247ee70a064b187c82e40a893",
+      "title": "book dna 67",
+      "year": 2010,
+      "year_display": "2010",
+      "series_id": "021",
+      "project_folder": "book dna"
+    },
+    {
+      "work_id": "03489",
+      "record_hash": "328619957863f1ed5a17ed292a809c1393748a34674341aef6e4db2d0d5ba530",
+      "title": "book dna 68",
+      "year": 2010,
+      "year_display": "2010",
+      "series_id": "021",
+      "project_folder": "book dna"
+    },
+    {
+      "work_id": "03490",
+      "record_hash": "7d2a57290dbe9eae47a33f0364a36c2da115de81191d414a88d8276f75f94dd8",
+      "title": "book dna 69",
+      "year": 2010,
+      "year_display": "2010",
+      "series_id": "021",
+      "project_folder": "book dna"
+    },
+    {
+      "work_id": "03491",
+      "record_hash": "f695fccfdbf2c49d6388624a48f4957ec36641720ad160d046b2353310dc70dc",
+      "title": "book dna 70",
+      "year": 2010,
+      "year_display": "2010",
+      "series_id": "021",
+      "project_folder": "book dna"
+    },
+    {
+      "work_id": "03492",
+      "record_hash": "4d05c520cfbca4b65f188384745486d236a00fb7be1dabaa20accee8bead8d33",
+      "title": "book dna 71",
+      "year": 2010,
+      "year_display": "2010",
+      "series_id": "021",
+      "project_folder": "book dna"
+    },
+    {
+      "work_id": "03493",
+      "record_hash": "71a6458068f0ab1e19ddfb7a13a8a75683e2442a21db63b897e0c3fd41f96f81",
+      "title": "book dna 72",
+      "year": 2010,
+      "year_display": "2010",
+      "series_id": "021",
+      "project_folder": "book dna"
+    },
+    {
+      "work_id": "03494",
+      "record_hash": "4b0aa58b72ac5ad582f4adbd3b5109bae0c209406aeacc3d85a234471632aaa6",
+      "title": "book dna 73",
+      "year": 2010,
+      "year_display": "2010",
+      "series_id": "021",
+      "project_folder": "book dna"
+    },
+    {
+      "work_id": "03495",
+      "record_hash": "552be80f928b6325c87bf9cfcefb50f6e9ea68c0a90ea899ea2abb69ef0391e1",
+      "title": "book dna 74",
+      "year": 2010,
+      "year_display": "2010",
+      "series_id": "021",
+      "project_folder": "book dna"
+    },
+    {
+      "work_id": "03496",
+      "record_hash": "9b76f75ad7f6923c78219bfce14603c402f8c61bc2e7277a00cdc8369aa792cf",
+      "title": "book dna 75",
+      "year": 2010,
+      "year_display": "2010",
+      "series_id": "021",
+      "project_folder": "book dna"
+    },
+    {
+      "work_id": "03497",
+      "record_hash": "c37fbb8a4e3897da75a8700d70c8ffc52f537e130aea615e50a9eeb6d220459b",
+      "title": "book dna 76",
+      "year": 2010,
+      "year_display": "2010",
+      "series_id": "021",
+      "project_folder": "book dna"
+    },
+    {
+      "work_id": "03498",
+      "record_hash": "64fc538b168a4024bc112726b5033b111b37409e7a4255a8687af18cb4d03f78",
+      "title": "book dna 77",
+      "year": 2010,
+      "year_display": "2010",
+      "series_id": "021",
+      "project_folder": "book dna"
+    },
+    {
+      "work_id": "03499",
+      "record_hash": "f3632ee5743d905a1ccad9bbadbb4d95ee31e677ee64fe153436ad3698df1d0d",
+      "title": "book dna 78",
+      "year": 2010,
+      "year_display": "2010",
+      "series_id": "021",
+      "project_folder": "book dna"
+    },
+    {
+      "work_id": "03500",
+      "record_hash": "023213b3576215257c72f00d2b32be80e36bdf5a90f883eb0c1120c66753f9a5",
+      "title": "book dna 79",
+      "year": 2010,
+      "year_display": "2010",
+      "series_id": "021",
+      "project_folder": "book dna"
+    },
+    {
+      "work_id": "03501",
+      "record_hash": "761bbe2b9e4dd28f0af1abc269e590f3d3d09f774a57644be9a0b360acb3b396",
+      "title": "book dna 80",
+      "year": 2010,
+      "year_display": "2010",
+      "series_id": "021",
+      "project_folder": "book dna"
     }
   ],
   "ordered_work_ids": [
@@ -62,7 +781,87 @@
     "00802",
     "00803",
     "00804",
-    "00805"
+    "00805",
+    "03422",
+    "03423",
+    "03424",
+    "03425",
+    "03426",
+    "03427",
+    "03428",
+    "03429",
+    "03430",
+    "03431",
+    "03432",
+    "03433",
+    "03434",
+    "03435",
+    "03436",
+    "03437",
+    "03438",
+    "03439",
+    "03440",
+    "03441",
+    "03442",
+    "03443",
+    "03444",
+    "03445",
+    "03446",
+    "03447",
+    "03448",
+    "03449",
+    "03450",
+    "03451",
+    "03452",
+    "03453",
+    "03454",
+    "03455",
+    "03456",
+    "03457",
+    "03458",
+    "03459",
+    "03460",
+    "03461",
+    "03462",
+    "03463",
+    "03464",
+    "03465",
+    "03466",
+    "03467",
+    "03468",
+    "03469",
+    "03470",
+    "03471",
+    "03472",
+    "03473",
+    "03474",
+    "03475",
+    "03476",
+    "03477",
+    "03478",
+    "03479",
+    "03480",
+    "03481",
+    "03482",
+    "03483",
+    "03484",
+    "03485",
+    "03486",
+    "03487",
+    "03488",
+    "03489",
+    "03490",
+    "03491",
+    "03492",
+    "03493",
+    "03494",
+    "03495",
+    "03496",
+    "03497",
+    "03498",
+    "03499",
+    "03500",
+    "03501"
   ],
   "project_folders": [
     "book dna"

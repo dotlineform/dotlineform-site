@@ -6,10 +6,9 @@
     "series_id": "009",
     "title": "a poem divided into 4 parts",
     "year": 2025,
-    "year_display": "2025",
-    "sort_fields": "work_id"
+    "year_display": "2025"
   },
-  "record_hash": "d89de19b4d79f4fa2b5db5be7cff555c7ed9b207312cee92fabe175c4bd7b65e",
+  "record_hash": "085cec4aaee2230d6719ed25404d9a02aa7daf871528b3d7d78ef21c11bc5d4b",
   "member_works": [
     {
       "work_id": "00001",
@@ -46,13 +45,183 @@
       "year_display": "2025",
       "series_id": "009",
       "project_folder": "a poem divided into 4 parts"
+    },
+    {
+      "work_id": "01943",
+      "record_hash": "c468252c0197a88c5eeb1fd4533dde866872a81c9547c6e12dbbb3c7eb0e40e0",
+      "title": "a poem divided into 4 parts - end 1",
+      "year": 2025,
+      "year_display": "2025",
+      "series_id": "009",
+      "project_folder": "a poem divided into 4 parts"
+    },
+    {
+      "work_id": "01944",
+      "record_hash": "daad8792414526ea49046dff695994fe793503cb0dc1a2ff87078895c7238aec",
+      "title": "a poem divided into 4 parts - end 2",
+      "year": 2025,
+      "year_display": "2025",
+      "series_id": "009",
+      "project_folder": "a poem divided into 4 parts"
+    },
+    {
+      "work_id": "01945",
+      "record_hash": "b7c438125217d38c8f05c48ea0d0f932c9a1ee4e40b7fb04790f50bc63962046",
+      "title": "a poem divided into 4 parts - end 3",
+      "year": 2025,
+      "year_display": "2025",
+      "series_id": "009",
+      "project_folder": "a poem divided into 4 parts"
+    },
+    {
+      "work_id": "01946",
+      "record_hash": "fe829277001d014f830d94515267861352343ae7d368a23024ee0d8df2da2344",
+      "title": "a poem divided into 4 parts - end 4",
+      "year": 2025,
+      "year_display": "2025",
+      "series_id": "009",
+      "project_folder": "a poem divided into 4 parts"
+    },
+    {
+      "work_id": "01947",
+      "record_hash": "c1d33c2997644c2bb729e3088a2660230fe7a1b93606a8e636703d5a995231f3",
+      "title": "a poem divided into 4 parts - end 5",
+      "year": 2025,
+      "year_display": "2025",
+      "series_id": "009",
+      "project_folder": "a poem divided into 4 parts"
+    },
+    {
+      "work_id": "01948",
+      "record_hash": "20d95941b6641dc08efc830868455f9fc981a52fc6f154b32c4da08fa65bad0a",
+      "title": "a poem divided into 4 parts - end 6",
+      "year": 2025,
+      "year_display": "2025",
+      "series_id": "009",
+      "project_folder": "a poem divided into 4 parts"
+    },
+    {
+      "work_id": "01949",
+      "record_hash": "beb4d0db0ee7200b4d788390377283ee28335441998aa0959c12bcad59b6532d",
+      "title": "a poem divided into 4 parts - end 7",
+      "year": 2025,
+      "year_display": "2025",
+      "series_id": "009",
+      "project_folder": "a poem divided into 4 parts"
+    },
+    {
+      "work_id": "01950",
+      "record_hash": "30aef8cd8f5da9eaa956ae7f63e51e1451190cf10dd4e9197dffb60f02f1e42b",
+      "title": "a poem divided into 4 parts - end 8",
+      "year": 2025,
+      "year_display": "2025",
+      "series_id": "009",
+      "project_folder": "a poem divided into 4 parts"
+    },
+    {
+      "work_id": "01951",
+      "record_hash": "e839e62b9963eaefa0c3ca3e4c9c7ed5de194288554ea385eea6bc7da284e309",
+      "title": "a poem divided into 4 parts - end 9",
+      "year": 2025,
+      "year_display": "2025",
+      "series_id": "009",
+      "project_folder": "a poem divided into 4 parts"
+    },
+    {
+      "work_id": "01952",
+      "record_hash": "0894a1704ef0b127ec703f8d7295dc2e0d9f65d21af1e6d96197737413b0a592",
+      "title": "a poem divided into 4 parts - end 10",
+      "year": 2025,
+      "year_display": "2025",
+      "series_id": "009",
+      "project_folder": "a poem divided into 4 parts"
+    },
+    {
+      "work_id": "01953",
+      "record_hash": "6955cc7825f9bf43251b96efbccfecaad85d5fc8cb06cf3769ba53bf39f7b428",
+      "title": "a poem divided into 4 parts - end 11",
+      "year": 2025,
+      "year_display": "2025",
+      "series_id": "009",
+      "project_folder": "a poem divided into 4 parts"
+    },
+    {
+      "work_id": "01954",
+      "record_hash": "d635c9329e28a6f25c987c9abfc91a923616e5b49e308cc737f9dade552f1c8d",
+      "title": "a poem divided into 4 parts - end 12",
+      "year": 2025,
+      "year_display": "2025",
+      "series_id": "009",
+      "project_folder": "a poem divided into 4 parts"
+    },
+    {
+      "work_id": "01955",
+      "record_hash": "22e248a686269648b7205bfcee87deb2ad31421bc3d5e7128d5342bdcc3af66e",
+      "title": "a poem divided into 4 parts - end 13",
+      "year": 2025,
+      "year_display": "2025",
+      "series_id": "009",
+      "project_folder": "a poem divided into 4 parts"
+    },
+    {
+      "work_id": "01956",
+      "record_hash": "eef064351c4b8213e9dc1f6d5aca148d710abe164d922ecf8faffceea9a946d7",
+      "title": "a poem divided into 4 parts - end 14",
+      "year": 2025,
+      "year_display": "2025",
+      "series_id": "009",
+      "project_folder": "a poem divided into 4 parts"
+    },
+    {
+      "work_id": "01957",
+      "record_hash": "17b6a5d54e9077aadae0e58f0c9f244f229abdf31d573c4f04a2b450975fdce7",
+      "title": "a poem divided into 4 parts - end 15",
+      "year": 2025,
+      "year_display": "2025",
+      "series_id": "009",
+      "project_folder": "a poem divided into 4 parts"
+    },
+    {
+      "work_id": "01958",
+      "record_hash": "039bd894c61abde3616c87c6e08aada84be8b6cbda9540f0a8001246221fcd81",
+      "title": "a poem divided into 4 parts - end 16",
+      "year": 2025,
+      "year_display": "2025",
+      "series_id": "009",
+      "project_folder": "a poem divided into 4 parts"
+    },
+    {
+      "work_id": "01959",
+      "record_hash": "dc3794049225e6e7a8637be1850f11b651ff991991db264b1730b9ee95aa1486",
+      "title": "a poem divided into 4 parts - end 17",
+      "year": 2025,
+      "year_display": "2025",
+      "series_id": "009",
+      "project_folder": "a poem divided into 4 parts"
     }
   ],
   "ordered_work_ids": [
     "00001",
     "00002",
     "00003",
-    "00004"
+    "00004",
+    "01943",
+    "01944",
+    "01945",
+    "01946",
+    "01947",
+    "01948",
+    "01949",
+    "01950",
+    "01951",
+    "01952",
+    "01953",
+    "01954",
+    "01955",
+    "01956",
+    "01957",
+    "01958",
+    "01959"
   ],
   "project_folders": [
     "a poem divided into 4 parts"

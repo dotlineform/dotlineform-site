@@ -6,10 +6,9 @@
     "series_id": "080",
     "title": "interior design",
     "year": 2005,
-    "year_display": "2005",
-    "sort_fields": "work_id"
+    "year_display": "2005"
   },
-  "record_hash": "07c2e6b291d71887acdfba10c985e32fc765d04e5014d43a0aede5a012eaf4fa",
+  "record_hash": "119e0a05ea56a3429aa1217281acc2edd5a6588dc1492176aa1fbd680667adbc",
   "member_works": [
     {
       "work_id": "01391",
@@ -37,12 +36,102 @@
       "year_display": "2005",
       "series_id": "080",
       "project_folder": "interior design"
+    },
+    {
+      "work_id": "04254",
+      "record_hash": "a1edfad2dc113bb12b810466f8d08158622c99d1e6f01b4e50af4b655998bc07",
+      "title": "interior design 1 - detail 1",
+      "year": 2005,
+      "year_display": "2005",
+      "series_id": "080",
+      "project_folder": "interior design"
+    },
+    {
+      "work_id": "04255",
+      "record_hash": "1193818b554b81ed5a23eeca24b54f7c4a49c16cf7d113e7d3c1192d815d1896",
+      "title": "interior design 1 - detail 2",
+      "year": 2005,
+      "year_display": "2005",
+      "series_id": "080",
+      "project_folder": "interior design"
+    },
+    {
+      "work_id": "04256",
+      "record_hash": "4195dd509a08ec34df4f44bd437ceb26890360f0cc8b50d04411c0c7212639cb",
+      "title": "interior design 1 - detail 3",
+      "year": 2005,
+      "year_display": "2005",
+      "series_id": "080",
+      "project_folder": "interior design"
+    },
+    {
+      "work_id": "04257",
+      "record_hash": "87a0b6cb23400750ca0e416c02b8be0e0d96612aad645682e419339944533846",
+      "title": "interior design 2 - detail 1",
+      "year": 2005,
+      "year_display": "2005",
+      "series_id": "080",
+      "project_folder": "interior design"
+    },
+    {
+      "work_id": "04258",
+      "record_hash": "31913e9056500522f0b6db8cfca978f8a12e4cb800f2be0f105746393c2270ac",
+      "title": "interior design 2 - detail 2",
+      "year": 2005,
+      "year_display": "2005",
+      "series_id": "080",
+      "project_folder": "interior design"
+    },
+    {
+      "work_id": "04259",
+      "record_hash": "b39ca59c2d0cf084e80708bf3b85dfd501fd647631614b1dd87fcb533271c403",
+      "title": "interior design 2 - detail 3",
+      "year": 2005,
+      "year_display": "2005",
+      "series_id": "080",
+      "project_folder": "interior design"
+    },
+    {
+      "work_id": "04260",
+      "record_hash": "71e854bf2454c584649f7bcad2b38806065f8766c024a4cc1e227f4fef69a306",
+      "title": "interior design 3 - detail 1",
+      "year": 2005,
+      "year_display": "2005",
+      "series_id": "080",
+      "project_folder": "interior design"
+    },
+    {
+      "work_id": "04261",
+      "record_hash": "682a8ea737dd05502242e5d8e280ad5426de7c8bf52b8005ee3414e85a22f361",
+      "title": "interior design 3 - detail 2",
+      "year": 2005,
+      "year_display": "2005",
+      "series_id": "080",
+      "project_folder": "interior design"
+    },
+    {
+      "work_id": "04262",
+      "record_hash": "c518ef8494b0e6a8805d482772dbf8fac58df6219c6e41d16dcb11284f9022d0",
+      "title": "interior design 3 - detail 3",
+      "year": 2005,
+      "year_display": "2005",
+      "series_id": "080",
+      "project_folder": "interior design"
     }
   ],
   "ordered_work_ids": [
     "01391",
     "01392",
-    "01393"
+    "01393",
+    "04254",
+    "04255",
+    "04256",
+    "04257",
+    "04258",
+    "04259",
+    "04260",
+    "04261",
+    "04262"
   ],
   "project_folders": [
     "interior design"

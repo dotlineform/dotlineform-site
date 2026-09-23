@@ -6,10 +6,9 @@
     "series_id": "049",
     "title": "espresso",
     "year": 2012,
-    "year_display": "2012",
-    "sort_fields": "work_id"
+    "year_display": "2012"
   },
-  "record_hash": "c66533a8ee3a86cb28031ab93d801a25b75bfce7c5a5b6f74b10712bd98d1365",
+  "record_hash": "5f8acd3e840831fc4fcd0a40d3c9ad8d70c3d87777071f984e3aa840babc5af6",
   "member_works": [
     {
       "work_id": "01046",
@@ -19,10 +18,260 @@
       "year_display": "2012",
       "series_id": "049",
       "project_folder": "espresso"
+    },
+    {
+      "work_id": "03629",
+      "record_hash": "f01a8e89c37d8df01f1a693f6d0d1e590ab1d84e45df64220921a7938c536f88",
+      "title": "espresso 1",
+      "year": 2012,
+      "year_display": "2012",
+      "series_id": "049",
+      "project_folder": "espresso"
+    },
+    {
+      "work_id": "03630",
+      "record_hash": "abe1bc178054d56ddb30cb703e10ee794b0a865829a3c1c86b059d0a24c89d8e",
+      "title": "espresso 2",
+      "year": 2012,
+      "year_display": "2012",
+      "series_id": "049",
+      "project_folder": "espresso"
+    },
+    {
+      "work_id": "03631",
+      "record_hash": "3ce5b3b4a31d7ad1e5c0d19e4b64fb7fd6fe700a95c28963f56ccb8d9c61f65d",
+      "title": "espresso 3",
+      "year": 2012,
+      "year_display": "2012",
+      "series_id": "049",
+      "project_folder": "espresso"
+    },
+    {
+      "work_id": "03632",
+      "record_hash": "bc2d07f3d50a11ccac8593d8d0770c8f8cb495637d2d5e1d0ff3ba5217b29127",
+      "title": "espresso 4",
+      "year": 2012,
+      "year_display": "2012",
+      "series_id": "049",
+      "project_folder": "espresso"
+    },
+    {
+      "work_id": "03633",
+      "record_hash": "bc96cc21c96e87135e2679c5d3f627a9a9cdac9d7eac101ce216b09f318489f0",
+      "title": "espresso 5",
+      "year": 2012,
+      "year_display": "2012",
+      "series_id": "049",
+      "project_folder": "espresso"
+    },
+    {
+      "work_id": "03634",
+      "record_hash": "7133b839b19664bc15fae4d8024c0874fd9e0e68e25b0db17eaeb4a9bda5e5cc",
+      "title": "espresso 6",
+      "year": 2012,
+      "year_display": "2012",
+      "series_id": "049",
+      "project_folder": "espresso"
+    },
+    {
+      "work_id": "03635",
+      "record_hash": "cb09cb0e948417a49d5e7cd82050a8703a04a80336a6aa06c5550a96a1a80c9c",
+      "title": "espresso 7",
+      "year": 2012,
+      "year_display": "2012",
+      "series_id": "049",
+      "project_folder": "espresso"
+    },
+    {
+      "work_id": "03636",
+      "record_hash": "cbe91805eaffdc66b10aabaf7bb9db9dfa7f98fe087464731423a8997347d97f",
+      "title": "espresso 8",
+      "year": 2012,
+      "year_display": "2012",
+      "series_id": "049",
+      "project_folder": "espresso"
+    },
+    {
+      "work_id": "03637",
+      "record_hash": "c92976730f0c044d4c2ae2562debfe8862e66d99098cf2743e5b5a935f3e5ae7",
+      "title": "espresso 9",
+      "year": 2012,
+      "year_display": "2012",
+      "series_id": "049",
+      "project_folder": "espresso"
+    },
+    {
+      "work_id": "03638",
+      "record_hash": "647bb118d365c5c0893f9fbd64a58c9901302935c61ab6f8f99acf6bb2a57f41",
+      "title": "espresso 10",
+      "year": 2012,
+      "year_display": "2012",
+      "series_id": "049",
+      "project_folder": "espresso"
+    },
+    {
+      "work_id": "03639",
+      "record_hash": "4b7ed398f4210700c8f7f60b14a815883c8462f03a692a11b1a29c559f4b3e73",
+      "title": "espresso 11",
+      "year": 2012,
+      "year_display": "2012",
+      "series_id": "049",
+      "project_folder": "espresso"
+    },
+    {
+      "work_id": "03640",
+      "record_hash": "7e06e69a706d43cd1f63e048cc76502f0437c21b323e2b8e1c1927ec511f74ee",
+      "title": "espresso 12",
+      "year": 2012,
+      "year_display": "2012",
+      "series_id": "049",
+      "project_folder": "espresso"
+    },
+    {
+      "work_id": "03641",
+      "record_hash": "d2e8cb862db84abb13073712f9d82c7bc49f001ed96ce925cea6cc08c1680d45",
+      "title": "espresso 13",
+      "year": 2012,
+      "year_display": "2012",
+      "series_id": "049",
+      "project_folder": "espresso"
+    },
+    {
+      "work_id": "03642",
+      "record_hash": "d535defc262118062d4e6acd25e6501fe4cc03fe9a9b809cab7582bc6c82c160",
+      "title": "espresso 14",
+      "year": 2012,
+      "year_display": "2012",
+      "series_id": "049",
+      "project_folder": "espresso"
+    },
+    {
+      "work_id": "03643",
+      "record_hash": "e2b9e4ba5735a239e9a72da6720a910409f9a887a81b7f22eb57c5e4db5e797f",
+      "title": "espresso 15",
+      "year": 2012,
+      "year_display": "2012",
+      "series_id": "049",
+      "project_folder": "espresso"
+    },
+    {
+      "work_id": "03644",
+      "record_hash": "fdd1caa0eecf5d8c1cac56fedf630e6a9caf2f9faa9ac88562b1f6220d1a0879",
+      "title": "espresso 16",
+      "year": 2012,
+      "year_display": "2012",
+      "series_id": "049",
+      "project_folder": "espresso"
+    },
+    {
+      "work_id": "03645",
+      "record_hash": "7ee1be97ad298ab2aba5d09ed3f6dc2d3ebd844a67b2d21d3b300cdc09f72e91",
+      "title": "espresso 17",
+      "year": 2012,
+      "year_display": "2012",
+      "series_id": "049",
+      "project_folder": "espresso"
+    },
+    {
+      "work_id": "03646",
+      "record_hash": "04110b50f89b8743e660544c4366aa0c58e16033f96ef24e9c6f58c62c6c2baf",
+      "title": "espresso 18",
+      "year": 2012,
+      "year_display": "2012",
+      "series_id": "049",
+      "project_folder": "espresso"
+    },
+    {
+      "work_id": "03647",
+      "record_hash": "f3d66a53c462793f58d6930fb240a8c01ae7ed6b4bcb60447838c9bc8cb5f53e",
+      "title": "espresso 19",
+      "year": 2012,
+      "year_display": "2012",
+      "series_id": "049",
+      "project_folder": "espresso"
+    },
+    {
+      "work_id": "03648",
+      "record_hash": "fbeaca30678d9ad160c47325ae823bef04b4c0751cbde07a659342e10e3f4d59",
+      "title": "espresso 20",
+      "year": 2012,
+      "year_display": "2012",
+      "series_id": "049",
+      "project_folder": "espresso"
+    },
+    {
+      "work_id": "03649",
+      "record_hash": "ac5d813bc906f640a4d5d463b14bd25ebfb084dd7dc0ff20b624c3d511951d85",
+      "title": "espresso 21",
+      "year": 2012,
+      "year_display": "2012",
+      "series_id": "049",
+      "project_folder": "espresso"
+    },
+    {
+      "work_id": "03650",
+      "record_hash": "c5d5c6bebed9603a68f6538593e531f6dcbfe7e0b45d033c0e486d877c91c5e3",
+      "title": "espresso 22",
+      "year": 2012,
+      "year_display": "2012",
+      "series_id": "049",
+      "project_folder": "espresso"
+    },
+    {
+      "work_id": "03651",
+      "record_hash": "75000a184cdc649e0e037151d861843c7c12922a2c78d99918420d90279fd39c",
+      "title": "espresso 23",
+      "year": 2012,
+      "year_display": "2012",
+      "series_id": "049",
+      "project_folder": "espresso"
+    },
+    {
+      "work_id": "03652",
+      "record_hash": "10b244529f562fda8f230cfed19909386a195852efd19aad4cfae7ec840570c4",
+      "title": "espresso 24",
+      "year": 2012,
+      "year_display": "2012",
+      "series_id": "049",
+      "project_folder": "espresso"
+    },
+    {
+      "work_id": "03653",
+      "record_hash": "cb54cd2d1ab471ad6502d61fcfda7fc468df849911f042cd09301a444d16a54f",
+      "title": "espresso 25",
+      "year": 2012,
+      "year_display": "2012",
+      "series_id": "049",
+      "project_folder": "espresso"
     }
   ],
   "ordered_work_ids": [
-    "01046"
+    "01046",
+    "03629",
+    "03630",
+    "03631",
+    "03632",
+    "03633",
+    "03634",
+    "03635",
+    "03636",
+    "03637",
+    "03638",
+    "03639",
+    "03640",
+    "03641",
+    "03642",
+    "03643",
+    "03644",
+    "03645",
+    "03646",
+    "03647",
+    "03648",
+    "03649",
+    "03650",
+    "03651",
+    "03652",
+    "03653"
   ],
   "project_folders": [
     "espresso"

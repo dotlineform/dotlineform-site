@@ -7,7 +7,6 @@ from pathlib import Path
 from typing import Any, Mapping
 
 from catalogue.catalogue_bulk_service import bulk_save_payload
-from catalogue.catalogue_detail_section_service import create_detail_section_payload, save_detail_section_payload
 from catalogue.catalogue_delete_service import delete_apply_response, delete_preview_payload
 from catalogue.catalogue_series_service import series_create_payload, series_save_payload
 from catalogue.catalogue_service_context import CatalogueWriteContext, build_catalogue_write_context
@@ -18,8 +17,6 @@ from catalogue.catalogue_source import records_from_json_source
 
 SERVICE_POST_PATHS = {
     "/bulk-save",
-    "/work-detail-section/create",
-    "/work-detail-section/save",
     "/work/create",
     "/work/save",
     "/series/create",
@@ -49,10 +46,6 @@ def _dispatch_mutation(context: CatalogueWriteContext, api_path: str, body: Mapp
         return HTTPStatus.OK, work_create_payload(context, body)
     if api_path == "/bulk-save":
         return HTTPStatus.OK, bulk_save_payload(context, body)
-    if api_path == "/work-detail-section/create":
-        return HTTPStatus.OK, create_detail_section_payload(context, body)
-    if api_path == "/work-detail-section/save":
-        return HTTPStatus.OK, save_detail_section_payload(context, body)
     if api_path == "/work/save":
         return HTTPStatus.OK, work_save_payload(context, body)
     if api_path == "/series/create":

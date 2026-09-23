@@ -6,10 +6,9 @@
     "series_id": "017",
     "title": "birth of healing forms",
     "year": 2023,
-    "year_display": "2023",
-    "sort_fields": "work_id"
+    "year_display": "2023"
   },
-  "record_hash": "9b7b53d36bb6e40ae35672b9ef1db411f1bab704004a5468c7a0512a21e8bd01",
+  "record_hash": "03e4b539441caaac9e50d0e45a86e7a7b5ee26e4a539257c763d3dc8bbe3a9b3",
   "member_works": [
     {
       "work_id": "00782",
@@ -19,10 +18,470 @@
       "year_display": "2023",
       "series_id": "017",
       "project_folder": "birth of healing forms"
+    },
+    {
+      "work_id": "03376",
+      "record_hash": "35eb6668acc90c52004605c3679d13d32f81246cb86c6939db7d107c9abe0947",
+      "title": "birth of forms - detail 1",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "017",
+      "project_folder": "birth of healing forms"
+    },
+    {
+      "work_id": "03377",
+      "record_hash": "b264dea19b47fd7ed342090013b667946212ef61d11ad6acd096473fd1c84cdf",
+      "title": "birth of forms - detail 2",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "017",
+      "project_folder": "birth of healing forms"
+    },
+    {
+      "work_id": "03378",
+      "record_hash": "cfdde1babf2197fac7b52adb1087f2c72db35c06a40c91cfc85045faa8de99b1",
+      "title": "birth of forms - detail 3",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "017",
+      "project_folder": "birth of healing forms"
+    },
+    {
+      "work_id": "03379",
+      "record_hash": "fd9752bdfb26afb9964d92895d1a6b250acfbfda620f13577b9f72102d52d73d",
+      "title": "birth of forms - detail 4",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "017",
+      "project_folder": "birth of healing forms"
+    },
+    {
+      "work_id": "03380",
+      "record_hash": "80723731f63a38169ccb2852a15905fc3d8be853a3e9722a00300dd172513849",
+      "title": "birth of forms (generation 3 version 1)",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "017",
+      "project_folder": "birth of healing forms"
+    },
+    {
+      "work_id": "03381",
+      "record_hash": "176f63c3547f924d060b81f16c933511d7880d6b1e183d3ae3b1abaac9709cca",
+      "title": "birth of forms (generation 3 version 2)",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "017",
+      "project_folder": "birth of healing forms"
+    },
+    {
+      "work_id": "03382",
+      "record_hash": "799daefdef79c29602a0c2afb27c03f6a29dee964942117eeb527a4fb7d0c3f1",
+      "title": "birth of forms (generation 3 version 3)",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "017",
+      "project_folder": "birth of healing forms"
+    },
+    {
+      "work_id": "03383",
+      "record_hash": "0e44ffa4fa2ca9e3890cc6251cb200c82602b5af051414dcd053a6af6aeca698",
+      "title": "birth of forms (generation 3 version 4)",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "017",
+      "project_folder": "birth of healing forms"
+    },
+    {
+      "work_id": "03384",
+      "record_hash": "ced1dbb259fda1358f194d1fc8ea52cf8441fef3507ef2c7f8f30dd7f6125467",
+      "title": "birth of healing forms - 1.01",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "017",
+      "project_folder": "birth of healing forms"
+    },
+    {
+      "work_id": "03385",
+      "record_hash": "0404f3df65c420f42155a3480181780229340ea7935d0e9e701b51b48194f667",
+      "title": "birth of healing forms - 1.02",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "017",
+      "project_folder": "birth of healing forms"
+    },
+    {
+      "work_id": "03386",
+      "record_hash": "5f5210f25968321765083b66a17e33e802044707d08055d9f8ed91d3c5db222b",
+      "title": "birth of healing forms - 1.03",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "017",
+      "project_folder": "birth of healing forms"
+    },
+    {
+      "work_id": "03387",
+      "record_hash": "9b68832640b44252d1e9f80808f64aa71b30618b9d9e64c29b3dc8fe055747f8",
+      "title": "birth of healing forms - 1.04",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "017",
+      "project_folder": "birth of healing forms"
+    },
+    {
+      "work_id": "03388",
+      "record_hash": "14a27a7389b5ba79840eb6e59c1e1c15be1a6b9789d83643cf33af11ae4ac6bd",
+      "title": "birth of healing forms - 2.01",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "017",
+      "project_folder": "birth of healing forms"
+    },
+    {
+      "work_id": "03389",
+      "record_hash": "272047f8125657d8a7708a193941329d01c9f05bd551a2aeb3b14f21149b704e",
+      "title": "birth of healing forms - 2.02",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "017",
+      "project_folder": "birth of healing forms"
+    },
+    {
+      "work_id": "03390",
+      "record_hash": "0711480c3e3746dad7ad7d7298ce40470cade613223bee9a1d9c776c9c7ca556",
+      "title": "birth of healing forms - 2.03",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "017",
+      "project_folder": "birth of healing forms"
+    },
+    {
+      "work_id": "03391",
+      "record_hash": "b525337f855d30f128d2b3e3e2a54e624bf71ca7e6c2d3de7e45798ef7c0abb7",
+      "title": "birth of healing forms - 2.04",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "017",
+      "project_folder": "birth of healing forms"
+    },
+    {
+      "work_id": "03392",
+      "record_hash": "8327bc7609d3fa08df9f9441db559b6cbb521d522aa7e45485ab6b0802f18e12",
+      "title": "birth of healing forms - 2.05",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "017",
+      "project_folder": "birth of healing forms"
+    },
+    {
+      "work_id": "03393",
+      "record_hash": "cf609e67ce030550539cdb80b8c409b3c42436bf12414281c5ca5270ccd0a785",
+      "title": "birth of healing forms - 2.06",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "017",
+      "project_folder": "birth of healing forms"
+    },
+    {
+      "work_id": "03394",
+      "record_hash": "e2ab5374793a7e5e366b6172a6913c5b1e6bb0f9078deb2a9384c9876f840d29",
+      "title": "birth of healing forms - 2.07",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "017",
+      "project_folder": "birth of healing forms"
+    },
+    {
+      "work_id": "03395",
+      "record_hash": "59ffe7b02986be7953ecbccdd735ff9d68daa5632e6d6393529fee48d22a0b2b",
+      "title": "birth of healing forms - 2.09",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "017",
+      "project_folder": "birth of healing forms"
+    },
+    {
+      "work_id": "03396",
+      "record_hash": "d47cfa1ec789bdfe1c3174dcf143e840c560bb280d8b52235ac11c034127d3b5",
+      "title": "birth of healing forms - 2.10",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "017",
+      "project_folder": "birth of healing forms"
+    },
+    {
+      "work_id": "03397",
+      "record_hash": "c362f3a3b4c4e85701295a689c51f2ba7bb434b0614f50624abb78e1814769c2",
+      "title": "birth of healing forms - 2.11",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "017",
+      "project_folder": "birth of healing forms"
+    },
+    {
+      "work_id": "03398",
+      "record_hash": "8acfd05c3d4f97ea4f062d4d4fd97e24a2127144512c9cb27763f043e89cbfdd",
+      "title": "birth of healing forms - 2.12",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "017",
+      "project_folder": "birth of healing forms"
+    },
+    {
+      "work_id": "03399",
+      "record_hash": "85fd18fdc1b072f98b38af7ebe035a08425a2270ad4d60a032cc1f6ca760a773",
+      "title": "birth of healing forms - 2.13",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "017",
+      "project_folder": "birth of healing forms"
+    },
+    {
+      "work_id": "03400",
+      "record_hash": "8e5cee9061886438748f01e023f20bd7496858b404eac596ad72e1459dc69edf",
+      "title": "birth of healing forms - 2.14",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "017",
+      "project_folder": "birth of healing forms"
+    },
+    {
+      "work_id": "03401",
+      "record_hash": "ee881884620b2bffd2f0dd627556cdc752f75e32e9e579c743d10e4ab6a9d136",
+      "title": "birth of healing forms - 2.15",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "017",
+      "project_folder": "birth of healing forms"
+    },
+    {
+      "work_id": "03402",
+      "record_hash": "1ba6d02b7a2cb6e205b84a2965ef17d782b9a0753355b6b69f73148dbf6e227b",
+      "title": "birth of healing forms - 2.16",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "017",
+      "project_folder": "birth of healing forms"
+    },
+    {
+      "work_id": "03403",
+      "record_hash": "d547f8b1f9ac754272cef4fd3d4b4fc3140a4c524dd45c08823b7036e08b945a",
+      "title": "birth of healing forms - 2.17",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "017",
+      "project_folder": "birth of healing forms"
+    },
+    {
+      "work_id": "03404",
+      "record_hash": "ed951afeedd4f823351a91d96b5b294cdfa01ce0b7a12ff2fed9898b2ac359d7",
+      "title": "birth of healing forms - 2.18",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "017",
+      "project_folder": "birth of healing forms"
+    },
+    {
+      "work_id": "03405",
+      "record_hash": "20d26fac6c49ce85a9ec88f1e727d107f0060b1e545b0ee6945a5611d443db2f",
+      "title": "birth of healing forms - 2.19",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "017",
+      "project_folder": "birth of healing forms"
+    },
+    {
+      "work_id": "03406",
+      "record_hash": "7e8ce18dc410fed268afd03ce8fed0a61751b8630ca71eb8415b1a6d3e03b214",
+      "title": "birth of healing forms - 2.20",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "017",
+      "project_folder": "birth of healing forms"
+    },
+    {
+      "work_id": "03407",
+      "record_hash": "e15a148f6ba461b32c3b57e245bf0b4f043143680f1515ae0fd6d921e5f7a7ae",
+      "title": "birth of healing forms - 2.25",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "017",
+      "project_folder": "birth of healing forms"
+    },
+    {
+      "work_id": "03408",
+      "record_hash": "283a7de144b69073ca1a3d06451447c68e67f4ff41ee6d216f60407e97d280b1",
+      "title": "birth of healing forms - 2.26",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "017",
+      "project_folder": "birth of healing forms"
+    },
+    {
+      "work_id": "03409",
+      "record_hash": "eabbfc3c5f96b1bad437cdeea8a5e3699ff1589d5c9b9b481e1f98005d487d35",
+      "title": "birth of healing forms - 2.27",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "017",
+      "project_folder": "birth of healing forms"
+    },
+    {
+      "work_id": "03410",
+      "record_hash": "cfbc5d80431b4f94376351b0a5fbe0cb1ff71483547fb3ac2ea00ecfca97e6c5",
+      "title": "birth of healing forms - 2.28",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "017",
+      "project_folder": "birth of healing forms"
+    },
+    {
+      "work_id": "03411",
+      "record_hash": "ff88f3f5a3eef4be99dff4cbab72ecf481196acd20789ab0c4ebcf1bcfd6683e",
+      "title": "birth of healing forms - 2.29",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "017",
+      "project_folder": "birth of healing forms"
+    },
+    {
+      "work_id": "03412",
+      "record_hash": "4ec15abd1173c41baff3e44a796816eee75ea76a32bbca01d84d5ef2740d1681",
+      "title": "birth of healing forms - 2.30",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "017",
+      "project_folder": "birth of healing forms"
+    },
+    {
+      "work_id": "03413",
+      "record_hash": "0669c217a48917ed01d5fcc4f4627a71762f27034952bef05dc46b1fe5f76025",
+      "title": "birth of healing forms - 2.31",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "017",
+      "project_folder": "birth of healing forms"
+    },
+    {
+      "work_id": "03414",
+      "record_hash": "819f37e68a8f64ef2c6f6761b399cbdd21b19e4c5adc6633b36e60ba511d85f9",
+      "title": "birth of healing forms - 2.32",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "017",
+      "project_folder": "birth of healing forms"
+    },
+    {
+      "work_id": "03415",
+      "record_hash": "4609e2c3142e5c95bbf6b657f852190b7419112ac8812dc0f66a0bc48af30c17",
+      "title": "birth of healing forms - 3.01",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "017",
+      "project_folder": "birth of healing forms"
+    },
+    {
+      "work_id": "03416",
+      "record_hash": "543a6a9c209b00240a9bf82000eed761bb5662eae4a6b0ea9d9fadd528a06781",
+      "title": "birth of healing forms - 3.02",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "017",
+      "project_folder": "birth of healing forms"
+    },
+    {
+      "work_id": "03417",
+      "record_hash": "46ed6db0596f5642f0ebed77b2745ad23f535056078af3f1539f3653cedba54d",
+      "title": "birth of healing forms - 3.04",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "017",
+      "project_folder": "birth of healing forms"
+    },
+    {
+      "work_id": "03418",
+      "record_hash": "8fe84e6f4de599e1a1e6d8462c99fd6066e45cf317c00f62a6e64855b8584a8f",
+      "title": "birth of healing forms - 3.05",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "017",
+      "project_folder": "birth of healing forms"
+    },
+    {
+      "work_id": "03419",
+      "record_hash": "a9a798004dcea47098b6066aabc06cceeca1c9b69db1ee64918c159e4b0c9e7f",
+      "title": "birth of healing forms - 3.06",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "017",
+      "project_folder": "birth of healing forms"
+    },
+    {
+      "work_id": "03420",
+      "record_hash": "793e743b5dec8a526c51b1a08783182b423a1dd14cbe5112fbc8542929eb92c9",
+      "title": "birth of healing forms - 3.07",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "017",
+      "project_folder": "birth of healing forms"
+    },
+    {
+      "work_id": "03421",
+      "record_hash": "105c71ddb4d1d3bedc73d046c0be5ac22007840f48c9f19d512340a947a3f413",
+      "title": "birth of healing forms - 3.08",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "017",
+      "project_folder": "birth of healing forms"
     }
   ],
   "ordered_work_ids": [
-    "00782"
+    "00782",
+    "03376",
+    "03377",
+    "03378",
+    "03379",
+    "03380",
+    "03381",
+    "03382",
+    "03383",
+    "03384",
+    "03385",
+    "03386",
+    "03387",
+    "03388",
+    "03389",
+    "03390",
+    "03391",
+    "03392",
+    "03393",
+    "03394",
+    "03395",
+    "03396",
+    "03397",
+    "03398",
+    "03399",
+    "03400",
+    "03401",
+    "03402",
+    "03403",
+    "03404",
+    "03405",
+    "03406",
+    "03407",
+    "03408",
+    "03409",
+    "03410",
+    "03411",
+    "03412",
+    "03413",
+    "03414",
+    "03415",
+    "03416",
+    "03417",
+    "03418",
+    "03419",
+    "03420",
+    "03421"
   ],
   "project_folders": [
     "birth of healing forms"

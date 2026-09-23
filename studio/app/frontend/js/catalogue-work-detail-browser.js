@@ -125,7 +125,6 @@ function selectedSection(rows, selectedId) {
   return rows.find((row) => row.id === selectedId) || rows[0];
 }
 
-function canCreateDetail(state) { return Boolean(state.currentRecord && state.serverAvailable); }
 
 function detailRows(state, options, details) {
   return details.map((detail) => {
@@ -169,7 +168,6 @@ function renderSectionActions(state, options, { list = null, hasSections = false
   if (!state.detailBrowserSectionActionsNode) return;
   clearSectionActions(state);
   if (!state.currentWorkId) return;
-  const createEnabled = canCreateDetail(state, options);
   const actions = [
     ...(hasSections ? [{
       key: "edit",
@@ -185,14 +183,6 @@ function renderSectionActions(state, options, { list = null, hasSections = false
       ariaLabel: text(state, options, "detail_section_delete_button", "Delete"),
       appearance: "icon",
       tone: "danger"
-    }] : []),
-    ...(createEnabled ? [{
-      key: "new",
-      label: "📄",
-      title: text(state, options, "detail_section_new_button", "New"),
-      ariaLabel: text(state, options, "detail_section_new_button", "New"),
-      appearance: "icon",
-      requiresSelection: false
     }] : [])
   ];
   state.detailBrowserSectionActionsController = createRecordListActions(state.detailBrowserSectionActionsNode, {
@@ -200,13 +190,6 @@ function renderSectionActions(state, options, { list = null, hasSections = false
     list,
     actions,
     onAction: ({ actionKey, selection, records }) => {
-      if (actionKey === "new") {
-        if (!canCreateDetail(state, options)) return;
-        if (typeof options.openDetailSectionPicker === "function") {
-          options.openDetailSectionPicker();
-        }
-        return;
-      }
       const sectionId = selection && selection.record ? selection.record.id : "";
       if (!sectionId) return;
       if (actionKey === "edit" && typeof options.editDetailSection === "function") {
@@ -308,23 +291,13 @@ export function updateWorkDetailBrowser(state, options = {}) {
   }
 
   const rows = sectionRows(state);
-  const createEnabled = canCreateDetail(state, options);
-  if (!createEnabled && !rows.length) {
+  if (!rows.length) {
     state.detailBrowserPanelNode.hidden = true;
     resetDetailBrowser(state);
     return;
   }
   state.detailBrowserPanelNode.hidden = false;
   const hasDetails = rows.some((row) => row.count > 0);
-  if (!rows.length) {
-    state.detailBrowserSelectedSectionId = "";
-    state.detailBrowserSelectedDetailUid = "";
-    state.detailBrowserSectionsNode.innerHTML = `<p class="studioForm__meta">${escapeHtml(text(state, options, "detail_browser_empty", "No work details for this work."))}</p>`;
-    renderSelectedImages(state, options, null);
-    renderSectionActions(state, options, { list: null, hasSections: false });
-    renderDetailActions(state, options, { hasDetails: false, showNew: false });
-    return;
-  }
 
   const selected = selectedSection(rows, state.detailBrowserSelectedSectionId);
   state.detailBrowserSelectedSectionId = selected ? selected.id : "";

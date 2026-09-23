@@ -6,10 +6,9 @@
     "series_id": "104",
     "title": "mouse story",
     "year": 1993,
-    "year_display": "1991-93",
-    "sort_fields": "work_id"
+    "year_display": "1991-93"
   },
-  "record_hash": "24c9bb91b92f1a9f1a95f9f15760bd4cd6d5a74fd0a854ca983443626ea8ce59",
+  "record_hash": "dd73134472d12dd374e129df92789fd83d216c9ec65e8f3edb3c7abb3a39fe4d",
   "member_works": [
     {
       "work_id": "00160",
@@ -37,12 +36,112 @@
       "year_display": "c. 1993?",
       "series_id": "104",
       "project_folder": "mouse story"
+    },
+    {
+      "work_id": "01971",
+      "record_hash": "6c2774cddaad923a5540210f6354328a47bcc135e155d4cab719b8ca57abe963",
+      "title": "mouse story - 1",
+      "year": 1991,
+      "year_display": "1991",
+      "series_id": "104",
+      "project_folder": "mouse story"
+    },
+    {
+      "work_id": "01972",
+      "record_hash": "304f3b4b68abb5c12e1d9423039c80f709abd9b65c99fbd6c17b5bec32b2adc1",
+      "title": "mouse story - 2",
+      "year": 1991,
+      "year_display": "1991",
+      "series_id": "104",
+      "project_folder": "mouse story"
+    },
+    {
+      "work_id": "01973",
+      "record_hash": "21b78ae346029fc3e7859a4368a102ad49476ab585bc60af6dd5f30cc0c07557",
+      "title": "mouse story - 3",
+      "year": 1991,
+      "year_display": "1991",
+      "series_id": "104",
+      "project_folder": "mouse story"
+    },
+    {
+      "work_id": "01974",
+      "record_hash": "8dd296174d9412bd371154e1a952d198a04b3f74a08bb17567bd3393c8e38c5a",
+      "title": "mouse story - 4",
+      "year": 1991,
+      "year_display": "1991",
+      "series_id": "104",
+      "project_folder": "mouse story"
+    },
+    {
+      "work_id": "01975",
+      "record_hash": "4202f119599aa467f0130bf9ea73bbc78857e6073ce0370a041feabf6960e568",
+      "title": "mouse story - 5",
+      "year": 1991,
+      "year_display": "1991",
+      "series_id": "104",
+      "project_folder": "mouse story"
+    },
+    {
+      "work_id": "01976",
+      "record_hash": "edf3f012dba6a3eb9583b445a48803a833ed59717617b525026c0372bf59eddb",
+      "title": "mouse story - detail 1",
+      "year": 1991,
+      "year_display": "1991",
+      "series_id": "104",
+      "project_folder": "mouse story"
+    },
+    {
+      "work_id": "01977",
+      "record_hash": "5b108ed038dfd351441ee9303cd01d5d61d9780b80c0e3b62a3ce63845c35890",
+      "title": "mouse story - detail 2",
+      "year": 1991,
+      "year_display": "1991",
+      "series_id": "104",
+      "project_folder": "mouse story"
+    },
+    {
+      "work_id": "01978",
+      "record_hash": "22fd92c67f55619b7347241be74cb8e852dfaa8f762c8c2a60dfa042dd58e3f8",
+      "title": "mouse story - detail 3",
+      "year": 1991,
+      "year_display": "1991",
+      "series_id": "104",
+      "project_folder": "mouse story"
+    },
+    {
+      "work_id": "01979",
+      "record_hash": "eb29709ac35dc20e25e2a51f5fb1cdfbf4ef8b6399256188120ecca31a0e448b",
+      "title": "mouse story - detail 4",
+      "year": 1991,
+      "year_display": "1991",
+      "series_id": "104",
+      "project_folder": "mouse story"
+    },
+    {
+      "work_id": "01980",
+      "record_hash": "bf7f1a9435fbb961f7c100ef1e716730c72e5f81883c166101c5de8ca28fa276",
+      "title": "mouse story - detail 5",
+      "year": 1991,
+      "year_display": "1991",
+      "series_id": "104",
+      "project_folder": "mouse story"
     }
   ],
   "ordered_work_ids": [
     "00160",
     "00161",
-    "00162"
+    "00162",
+    "01971",
+    "01972",
+    "01973",
+    "01974",
+    "01975",
+    "01976",
+    "01977",
+    "01978",
+    "01979",
+    "01980"
   ],
   "project_folders": [
     "mouse story"

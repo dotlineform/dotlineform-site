@@ -6,10 +6,9 @@
     "series_id": "077",
     "title": "home",
     "year": 2023,
-    "year_display": "2023",
-    "sort_fields": "work_id"
+    "year_display": "2023"
   },
-  "record_hash": "9f90cd15f7539815bc7e8f64aca10a300378409485b92ab41353ffeaecf63940",
+  "record_hash": "b61f4089af6d31a55b4a936346d426e3a2145cea5a601ecf159b3e2d1f4c29a6",
   "member_works": [
     {
       "work_id": "01367",
@@ -55,6 +54,186 @@
       "year_display": "2023",
       "series_id": "077",
       "project_folder": "home"
+    },
+    {
+      "work_id": "04234",
+      "record_hash": "bf72339a82c54f05fb6a16450fb5ad5463da2d1e2a7d8623bd4f2486c89ad4f6",
+      "title": "home 1 - detail 1",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "077",
+      "project_folder": "home"
+    },
+    {
+      "work_id": "04235",
+      "record_hash": "97affd1a4b98f0527ad5f981103d07752ec1d8308e59a66bba46601ffa6e87e4",
+      "title": "home 1 - detail 2",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "077",
+      "project_folder": "home"
+    },
+    {
+      "work_id": "04236",
+      "record_hash": "35f786f7a73a8c172fefbfffca1d4a6e2dca70f7957a16d869f12c9f5f0cbaf9",
+      "title": "home 1 - detail 3",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "077",
+      "project_folder": "home"
+    },
+    {
+      "work_id": "04237",
+      "record_hash": "71d5d577221b868c530cd9d2857787a7f9dae7f93c6c304123990e56f35c3d0c",
+      "title": "home 1 - detail 4",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "077",
+      "project_folder": "home"
+    },
+    {
+      "work_id": "04238",
+      "record_hash": "20e4de0ddb5905b1a37c9f9723d46293b5c732145fc36baca2991dd632f10aa0",
+      "title": "home 2 - detail 1",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "077",
+      "project_folder": "home"
+    },
+    {
+      "work_id": "04239",
+      "record_hash": "f017516038cf2910f4a586e85eb010a9b2678c271ff7b6bc22dcef53a190086e",
+      "title": "home 2 - detail 2",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "077",
+      "project_folder": "home"
+    },
+    {
+      "work_id": "04240",
+      "record_hash": "10230a3931e338c9bae788717b104e6ded9bb0a6664322d89fd6a30a2b00aee0",
+      "title": "home 2 - detail 3",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "077",
+      "project_folder": "home"
+    },
+    {
+      "work_id": "04241",
+      "record_hash": "a301bc99bf84900a7eb608893baf4f20bdf4320f0b39ee49272707cb2b8762cc",
+      "title": "home 2 - detail 4",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "077",
+      "project_folder": "home"
+    },
+    {
+      "work_id": "04242",
+      "record_hash": "671f277aa651a358d1ea8bcaf350c8b86ffc949a1a42e85c8e7d07f488f697a4",
+      "title": "home 3 - detail 1",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "077",
+      "project_folder": "home"
+    },
+    {
+      "work_id": "04243",
+      "record_hash": "31bb260321c2ab54c56ea5b75c0b30fd44023bd288f6d790e0677a86de311fd9",
+      "title": "home 3 - detail 2",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "077",
+      "project_folder": "home"
+    },
+    {
+      "work_id": "04244",
+      "record_hash": "a700a6dbb3a57280f5d48c35a70cd3e72b73821d209a6e673f1976d5da1cee4c",
+      "title": "home 3 - detail 3",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "077",
+      "project_folder": "home"
+    },
+    {
+      "work_id": "04245",
+      "record_hash": "75b08a040e4a776a33790c4d0d289ca24b5c57cae3f6a82666944511239bd1f1",
+      "title": "home 3 - detail 4",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "077",
+      "project_folder": "home"
+    },
+    {
+      "work_id": "04246",
+      "record_hash": "155f62aa9ccf96e93d51be0737d4ad1146124748c829dcdecf71675578535404",
+      "title": "home 4 - detail 1",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "077",
+      "project_folder": "home"
+    },
+    {
+      "work_id": "04247",
+      "record_hash": "9b8ed956fa9ba43dd07009a297b11cac939e8c3b2131b0f02491b94bd1117049",
+      "title": "home 4 - detail 2",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "077",
+      "project_folder": "home"
+    },
+    {
+      "work_id": "04248",
+      "record_hash": "9ea0aa3681566495249832a1d014646635bcf8ed43e223f5fbb15dde5778e35b",
+      "title": "home 4 - detail 3",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "077",
+      "project_folder": "home"
+    },
+    {
+      "work_id": "04249",
+      "record_hash": "64d8e5f5e2a9839e2c3d65385270bf72604e18428ccb9bb7e0b75d50e21a4081",
+      "title": "home 4 - detail 4",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "077",
+      "project_folder": "home"
+    },
+    {
+      "work_id": "04250",
+      "record_hash": "bf06c3b0d234c0d987caba5956e8cfc423e96a06d49b232b49461f263ce9ca05",
+      "title": "home 5 - detail 1",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "077",
+      "project_folder": "home"
+    },
+    {
+      "work_id": "04251",
+      "record_hash": "ee4d0a9c4e4e29b711ecda4e32359d2ae601c36f2cdbc35764372a851a418267",
+      "title": "home 5 - detail 2",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "077",
+      "project_folder": "home"
+    },
+    {
+      "work_id": "04252",
+      "record_hash": "bdfaf1c3c963cc6940b2c611367399371a5706ca0edd031ead812e88db39f2ba",
+      "title": "home 5 - detail 3",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "077",
+      "project_folder": "home"
+    },
+    {
+      "work_id": "04253",
+      "record_hash": "cc5109c73cd303d5368fae90624877c3daa2319bc4a1a72a2ca9b7cc748f9dbe",
+      "title": "home 5 - detail 4",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "077",
+      "project_folder": "home"
     }
   ],
   "ordered_work_ids": [
@@ -62,7 +241,27 @@
     "01368",
     "01369",
     "01370",
-    "01371"
+    "01371",
+    "04234",
+    "04235",
+    "04236",
+    "04237",
+    "04238",
+    "04239",
+    "04240",
+    "04241",
+    "04242",
+    "04243",
+    "04244",
+    "04245",
+    "04246",
+    "04247",
+    "04248",
+    "04249",
+    "04250",
+    "04251",
+    "04252",
+    "04253"
   ],
   "project_folders": [
     "home"

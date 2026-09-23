@@ -6,10 +6,9 @@
     "series_id": "035",
     "title": "curve machine",
     "year": 2020,
-    "year_display": "2020",
-    "sort_fields": "work_id"
+    "year_display": "2020"
   },
-  "record_hash": "437157c5afd020341b150fca29db0465bbe45108dcc38e057ea64deccee5ca7b",
+  "record_hash": "9995f7cfeda6869d5790688d48ec0087349fc5f1082f76fe185349b83f1f92bf",
   "member_works": [
     {
       "work_id": "00867",
@@ -55,6 +54,195 @@
       "year_display": "2020",
       "series_id": "035",
       "project_folder": "curve machine"
+    },
+    {
+      "work_id": "03519",
+      "record_hash": "e5e3b3eb61c7ebfa7c44b3ba5deb47c7ce6dc575ff7d55c19fbf72b519732940",
+      "title": "curve machine [1]",
+      "year": 2020,
+      "year_display": "2020",
+      "series_id": "035",
+      "project_folder": "curve machine"
+    },
+    {
+      "work_id": "03520",
+      "record_hash": "25442adce0c365c5766930d365a1d48cb22f65012c607031bdc8e4160107c7c7",
+      "title": "curve machine [2]",
+      "year": 2020,
+      "year_display": "2020",
+      "series_id": "035",
+      "project_folder": "curve machine"
+    },
+    {
+      "work_id": "03521",
+      "record_hash": "c4f5bae3f3d25206d0c8ee1c4c113d8355fe796630d85c48e0e2eaa1f2c08625",
+      "title": "curve machine [3]",
+      "year": 2020,
+      "year_display": "2020",
+      "series_id": "035",
+      "project_folder": "curve machine"
+    },
+    {
+      "work_id": "03522",
+      "record_hash": "e841594d01e101d3bbe24e32eb1686e401321fe2f0b911a5cc4c4e9330edc4f5",
+      "title": "curve machine [4]",
+      "year": 2020,
+      "year_display": "2020",
+      "series_id": "035",
+      "project_folder": "curve machine"
+    },
+    {
+      "work_id": "03523",
+      "record_hash": "c44479dd6d838f3029cd4f7e3b3dec960985dc8acde8e3318c41a9883ddd4e12",
+      "title": "curve machine [5]",
+      "year": 2020,
+      "year_display": "2020",
+      "series_id": "035",
+      "project_folder": "curve machine"
+    },
+    {
+      "work_id": "03524",
+      "record_hash": "c8e597b3413347ec070425c4d468e78a8f7c2d1688fda2d3819ae9b26e1cc198",
+      "title": "curve machine [6]",
+      "year": 2020,
+      "year_display": "2020",
+      "series_id": "035",
+      "project_folder": "curve machine"
+    },
+    {
+      "work_id": "03525",
+      "record_hash": "f99cb41ba2c0b2c962aec0d0ec7363d2ca054f067cd457928badf28c87e4849b",
+      "title": "curve machine [7]",
+      "year": 2020,
+      "year_display": "2020",
+      "series_id": "035",
+      "project_folder": "curve machine"
+    },
+    {
+      "work_id": "03526",
+      "record_hash": "cc0f2131a387e9575ba9625f6e5c1d2c6420c19d9dc956ec574598d87f11a3e6",
+      "title": "curve machine [8]",
+      "year": 2020,
+      "year_display": "2020",
+      "series_id": "035",
+      "project_folder": "curve machine"
+    },
+    {
+      "work_id": "03527",
+      "record_hash": "2b7203f1926c393df2bfacf659d599da7f5aa0ccc42517bbe31dcbedee09305b",
+      "title": "curve machine [9]",
+      "year": 2020,
+      "year_display": "2020",
+      "series_id": "035",
+      "project_folder": "curve machine"
+    },
+    {
+      "work_id": "03528",
+      "record_hash": "cc4b0f4950aa15f08aaf3527428d08a044474221c20d5d8a0fce50046efaf54d",
+      "title": "curve machine [10]",
+      "year": 2020,
+      "year_display": "2020",
+      "series_id": "035",
+      "project_folder": "curve machine"
+    },
+    {
+      "work_id": "03529",
+      "record_hash": "83e60652cffaef57738dc7856491a482b1ceb6ca1206138bc931af45efcbe4ea",
+      "title": "curve machine [11]",
+      "year": 2020,
+      "year_display": "2020",
+      "series_id": "035",
+      "project_folder": "curve machine"
+    },
+    {
+      "work_id": "03530",
+      "record_hash": "38bdee7a994f05450f8fdf8da055868fb527c84b473d5d173bf7174846ea2c0e",
+      "title": "curve machine [12]",
+      "year": 2020,
+      "year_display": "2020",
+      "series_id": "035",
+      "project_folder": "curve machine"
+    },
+    {
+      "work_id": "03531",
+      "record_hash": "58f1db137b0ee4ec82aac726e95f61fcf6a82d530fa52d8550f195fbf08cc5aa",
+      "title": "dots 1",
+      "year": 2020,
+      "year_display": "2020",
+      "series_id": "035",
+      "project_folder": "curve machine"
+    },
+    {
+      "work_id": "03532",
+      "record_hash": "baeb974a81fb056cdec69d0721d70459a650a107f5676cb1492fef1529c520ca",
+      "title": "dots 2",
+      "year": 2020,
+      "year_display": "2020",
+      "series_id": "035",
+      "project_folder": "curve machine"
+    },
+    {
+      "work_id": "03533",
+      "record_hash": "fd56612ad5df3728b25bd4f2fd204ad571a11a88249c677057767fc99a7b25c3",
+      "title": "dots 3",
+      "year": 2020,
+      "year_display": "2020",
+      "series_id": "035",
+      "project_folder": "curve machine"
+    },
+    {
+      "work_id": "03534",
+      "record_hash": "21472a92c06e3109ba2da4df6e379ea448ae30535bd063b44b026a4e9ad63be2",
+      "title": "dots 4",
+      "year": 2020,
+      "year_display": "2020",
+      "series_id": "035",
+      "project_folder": "curve machine"
+    },
+    {
+      "work_id": "03535",
+      "record_hash": "a8841891cb4f19ffd3072f059671637dd7988f8890a6975b7c44253510aeb62b",
+      "title": "dots 5",
+      "year": 2020,
+      "year_display": "2020",
+      "series_id": "035",
+      "project_folder": "curve machine"
+    },
+    {
+      "work_id": "03536",
+      "record_hash": "e3649c8bbc8d5a20eecc90049b2073a78eaabb2ca629bd562ec7806f41334ec2",
+      "title": "dots 6",
+      "year": 2020,
+      "year_display": "2020",
+      "series_id": "035",
+      "project_folder": "curve machine"
+    },
+    {
+      "work_id": "03537",
+      "record_hash": "56b80f729c2b507f928408f793c60071b0646a69f3f00a9c5a23d4617ef1e493",
+      "title": "dots 7",
+      "year": 2020,
+      "year_display": "2020",
+      "series_id": "035",
+      "project_folder": "curve machine"
+    },
+    {
+      "work_id": "03538",
+      "record_hash": "ef22ec816ca483715cc6f5de2f25851e7396e5f36a78bca92c44daa852b6748d",
+      "title": "dots 8",
+      "year": 2020,
+      "year_display": "2020",
+      "series_id": "035",
+      "project_folder": "curve machine"
+    },
+    {
+      "work_id": "03539",
+      "record_hash": "107e45081e994748813c7123ce381910a04a6b064d9359295bec2a329237814d",
+      "title": "dots 9",
+      "year": 2020,
+      "year_display": "2020",
+      "series_id": "035",
+      "project_folder": "curve machine"
     }
   ],
   "ordered_work_ids": [
@@ -62,7 +250,28 @@
     "00868",
     "00869",
     "00870",
-    "00871"
+    "00871",
+    "03519",
+    "03520",
+    "03521",
+    "03522",
+    "03523",
+    "03524",
+    "03525",
+    "03526",
+    "03527",
+    "03528",
+    "03529",
+    "03530",
+    "03531",
+    "03532",
+    "03533",
+    "03534",
+    "03535",
+    "03536",
+    "03537",
+    "03538",
+    "03539"
   ],
   "project_folders": [
     "curve machine"

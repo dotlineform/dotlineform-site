@@ -6,10 +6,9 @@
     "series_id": "037",
     "title": "doll",
     "year": 1989,
-    "year_display": "1989-2008",
-    "sort_fields": "year,work_id"
+    "year_display": "1989-2008"
   },
-  "record_hash": "3c60fdac808378d4b0a1577706ddaf5d75fe2b530655abf2252e423ccee9a120",
+  "record_hash": "54cf74e1f75fd3101b87e05118044b125bb1ff998d8fb8c62fb67ccbb9986896",
   "member_works": [
     {
       "work_id": "00872",
@@ -271,38 +270,258 @@
       "year_display": "2007",
       "series_id": "037",
       "project_folder": "doll"
+    },
+    {
+      "work_id": "03540",
+      "record_hash": "e832dc9146222143c5f178d8f4bfa4d0454a4e7780f7ba59fa8ca0c64a3c1b39",
+      "title": "doll cell - 2007-04-03 - 14-17-59",
+      "year": 2007,
+      "year_display": "2007",
+      "series_id": "037",
+      "project_folder": "doll"
+    },
+    {
+      "work_id": "03541",
+      "record_hash": "5e93a54728c362759a4cc1cb8a98ecfd2bd8f69fcdffaab2a4ead1fe144708d1",
+      "title": "doll cell - 2007-04-08 - 22-13-45",
+      "year": 2007,
+      "year_display": "2007",
+      "series_id": "037",
+      "project_folder": "doll"
+    },
+    {
+      "work_id": "03542",
+      "record_hash": "740cb26c541bdba74906df0f62ba9dbdef7f4516d0de8ee09d21d3cee4d39565",
+      "title": "doll cell - 2007-04-08 - 22-14-01",
+      "year": 2007,
+      "year_display": "2007",
+      "series_id": "037",
+      "project_folder": "doll"
+    },
+    {
+      "work_id": "03543",
+      "record_hash": "f56550c2db332fc3592ac5ac94c0c8d3ad392d455596967521f1d8dc35b1b537",
+      "title": "doll cell - 2007-04-08 - 22-14-13",
+      "year": 2007,
+      "year_display": "2007",
+      "series_id": "037",
+      "project_folder": "doll"
+    },
+    {
+      "work_id": "03544",
+      "record_hash": "d0a5278461c75714bf58457878f99ae6232491da079551352ef74a07ac2e3462",
+      "title": "doll moiré (version 1)",
+      "year": 2008,
+      "year_display": "c. 2008",
+      "series_id": "037",
+      "project_folder": "doll"
+    },
+    {
+      "work_id": "03545",
+      "record_hash": "0661e0dcb8f69a535c1618eff2a82ec166ef811a1d7b585951fedbc17e5731f8",
+      "title": "doll moiré (version 2)",
+      "year": 2008,
+      "year_display": "c. 2008",
+      "series_id": "037",
+      "project_folder": "doll"
+    },
+    {
+      "work_id": "03546",
+      "record_hash": "c36facf54bf7502e65438f7198d9d351b6d0bdf139d0a647b67f3b7e9fd38aab",
+      "title": "doll moiré (version 3)",
+      "year": 2008,
+      "year_display": "c. 2008",
+      "series_id": "037",
+      "project_folder": "doll"
+    },
+    {
+      "work_id": "03547",
+      "record_hash": "e34c85ac0fec6c6a3dc0595bd21a7595cd1abdf8e065678b791235b1b222dd7d",
+      "title": "doll moiré (version 4)",
+      "year": 2008,
+      "year_display": "c. 2008",
+      "series_id": "037",
+      "project_folder": "doll"
+    },
+    {
+      "work_id": "03548",
+      "record_hash": "d8e7daa1f74d694506b8c506a0a718cc2ea6ddf298fad51330a721390dc85ce8",
+      "title": "doll moiré (version 4.1)",
+      "year": 2008,
+      "year_display": "c. 2008",
+      "series_id": "037",
+      "project_folder": "doll"
+    },
+    {
+      "work_id": "03549",
+      "record_hash": "ad7eaad2e3660606575efff959e9449fcda4a9e365701d34c895c72ecba50b8a",
+      "title": "doll moiré (version 4.2)",
+      "year": 2008,
+      "year_display": "c. 2008",
+      "series_id": "037",
+      "project_folder": "doll"
+    },
+    {
+      "work_id": "03550",
+      "record_hash": "3d458a9e781885e5eb3f62f55813969115450fc578495c6b6d8225498f29d881",
+      "title": "doll moiré (version 4.3)",
+      "year": 2008,
+      "year_display": "c. 2008",
+      "series_id": "037",
+      "project_folder": "doll"
+    },
+    {
+      "work_id": "03551",
+      "record_hash": "679ac38d9b0e9870154c949ce592ef7413dcf12e35999a8f3aa74e6e1cc78255",
+      "title": "doll moiré (version 4.4)",
+      "year": 2008,
+      "year_display": "c. 2008",
+      "series_id": "037",
+      "project_folder": "doll"
+    },
+    {
+      "work_id": "03552",
+      "record_hash": "488714a3f067a2c14d21ad2e0fea13c6635250cdcf0cc90a6b60f34a0f4e494f",
+      "title": "doll moiré reduced (version 1)",
+      "year": 2008,
+      "year_display": "c. 2008",
+      "series_id": "037",
+      "project_folder": "doll"
+    },
+    {
+      "work_id": "03553",
+      "record_hash": "e1b0a3441543bab77b358f89cd9e84b5c983dc248c97adb4e54fb58472599671",
+      "title": "doll moiré reduced (version 2)",
+      "year": 2008,
+      "year_display": "c. 2008",
+      "series_id": "037",
+      "project_folder": "doll"
+    },
+    {
+      "work_id": "03554",
+      "record_hash": "c328f0452aa279630929a47c0842fdc0e95e08c13078e8fcb9d4573f2fbb5fed",
+      "title": "doll moiré reduced (version 3)",
+      "year": 2008,
+      "year_display": "c. 2008",
+      "series_id": "037",
+      "project_folder": "doll"
+    },
+    {
+      "work_id": "03555",
+      "record_hash": "0a764dcd53acfc4d08d063f142a22683ba9608c61199437405a1187fa719aa22",
+      "title": "doll moiré reduced (version 4)",
+      "year": 2008,
+      "year_display": "c. 2008",
+      "series_id": "037",
+      "project_folder": "doll"
+    },
+    {
+      "work_id": "03556",
+      "record_hash": "a15ee92e174c7a009d0e1ef0bdacea99afdbeefe41fde7fe2e5da0e63abd8d8c",
+      "title": "doll still life 1 (version 1)",
+      "year": 2005,
+      "year_display": "2005",
+      "series_id": "037",
+      "project_folder": "doll"
+    },
+    {
+      "work_id": "03557",
+      "record_hash": "79d42b97633f46129465adf815d52f8db1dd29b6627f27751492ab2f0e0d8e72",
+      "title": "doll still life 1 (version 2)",
+      "year": 2005,
+      "year_display": "2005",
+      "series_id": "037",
+      "project_folder": "doll"
+    },
+    {
+      "work_id": "03558",
+      "record_hash": "f92c8e1e0e1ace4bb049e6ef56d9e5ec76708acdffca46ab24e579a81c6a39d1",
+      "title": "doll still life 1 (version 3)",
+      "year": 2005,
+      "year_display": "2005",
+      "series_id": "037",
+      "project_folder": "doll"
+    },
+    {
+      "work_id": "03559",
+      "record_hash": "47b3fc5a26653ffa257cb0f8be72a4a7f95b5f1799afcf2e27df6f12118c7e40",
+      "title": "doll still life 1 (version 4)",
+      "year": 2005,
+      "year_display": "2005",
+      "series_id": "037",
+      "project_folder": "doll"
+    },
+    {
+      "work_id": "03560",
+      "record_hash": "4dca90e007f30874eccfdc4f9a26bfb7e1f936a6660c9e20eccf6e3fb2b3fb73",
+      "title": "doll still life 1 (version 5)",
+      "year": 2005,
+      "year_display": "2005",
+      "series_id": "037",
+      "project_folder": "doll"
+    },
+    {
+      "work_id": "03561",
+      "record_hash": "828dc02f3cdf272555238eee3a9364ba0dbebb4562c00ecac4fd15b10baadb4a",
+      "title": "doll still life 1 (version 6)",
+      "year": 2005,
+      "year_display": "2005",
+      "series_id": "037",
+      "project_folder": "doll"
     }
   ],
   "ordered_work_ids": [
     "00872",
+    "00873",
+    "00874",
+    "00875",
+    "00876",
     "00877",
     "00878",
     "00879",
     "00880",
     "00881",
-    "00892",
-    "00887",
-    "00888",
-    "00889",
-    "00890",
-    "00891",
-    "00876",
-    "00896",
-    "00897",
-    "00898",
-    "00899",
-    "00873",
-    "00874",
-    "00875",
     "00882",
     "00883",
     "00884",
     "00885",
     "00886",
-    "00900",
+    "00887",
+    "00888",
+    "00889",
+    "00890",
+    "00891",
+    "00892",
     "00893",
     "00894",
-    "00895"
+    "00895",
+    "00896",
+    "00897",
+    "00898",
+    "00899",
+    "00900",
+    "03540",
+    "03541",
+    "03542",
+    "03543",
+    "03544",
+    "03545",
+    "03546",
+    "03547",
+    "03548",
+    "03549",
+    "03550",
+    "03551",
+    "03552",
+    "03553",
+    "03554",
+    "03555",
+    "03556",
+    "03557",
+    "03558",
+    "03559",
+    "03560",
+    "03561"
   ],
   "project_folders": [
     "doll"

@@ -6,10 +6,9 @@
     "series_id": "082",
     "title": "k crystals",
     "year": 2009,
-    "year_display": "2009",
-    "sort_fields": "work_id"
+    "year_display": "2009"
   },
-  "record_hash": "1111a7deed83a11ccc33d3e9a77b846798d3a6138d612532a38ab90fe7bdbba8",
+  "record_hash": "e0e19ca20a8387f2ff04940ebe1e5f4f82d8ddabea4143b2f27f411a19ae23e5",
   "member_works": [
     {
       "work_id": "00621",
@@ -82,6 +81,114 @@
       "year_display": "2009",
       "series_id": "082",
       "project_folder": "k crystals"
+    },
+    {
+      "work_id": "03125",
+      "record_hash": "2c3774bc4f1b53947998f8b9b5a875c127b483fef1aecba2845da2e0b7358bb1",
+      "title": "k source",
+      "year": 2009,
+      "year_display": "2009",
+      "series_id": "082",
+      "project_folder": "k crystals"
+    },
+    {
+      "work_id": "03126",
+      "record_hash": "2ce6e2568e94e0a59a289c7bc84c4b8a1e71cabd326bac38518f410863e6521b",
+      "title": "k crystals bits - detail",
+      "year": 2009,
+      "year_display": "2009",
+      "series_id": "082",
+      "project_folder": "k crystals"
+    },
+    {
+      "work_id": "03127",
+      "record_hash": "a0a5b82f859e6b85377710ea6faa81dd9c0655bfe943a809c6532eb4eecbe36f",
+      "title": "k crystals bits - screenshot - detail",
+      "year": 2009,
+      "year_display": "2009",
+      "series_id": "082",
+      "project_folder": "k crystals"
+    },
+    {
+      "work_id": "03128",
+      "record_hash": "00c20a7c86c63ecf68520e7aaddf8dcac67c5100c09fd7c58534b27609a80d65",
+      "title": "k crystals bits - screenshot",
+      "year": 2009,
+      "year_display": "2009",
+      "series_id": "082",
+      "project_folder": "k crystals"
+    },
+    {
+      "work_id": "03129",
+      "record_hash": "16d01b8d2f1aab21d66a29fe0c3d2fe76c71eb82ceb65011bf921bc0989fb661",
+      "title": "k crystals bits",
+      "year": 2009,
+      "year_display": "2009",
+      "series_id": "082",
+      "project_folder": "k crystals"
+    },
+    {
+      "work_id": "03130",
+      "record_hash": "05cf37ce61ae4399e22b215114b879c7cda3fce5e8b1ffce315070c60e492599",
+      "title": "k crystals colours",
+      "year": 2009,
+      "year_display": "2009",
+      "series_id": "082",
+      "project_folder": "k crystals"
+    },
+    {
+      "work_id": "03131",
+      "record_hash": "a93d96c9165a9a4b95c04a80e6d52ab14595d052252e8e12404c9f3d45aabb55",
+      "title": "k crystals (transparent) - detail 1",
+      "year": 2009,
+      "year_display": "2009",
+      "series_id": "082",
+      "project_folder": "k crystals"
+    },
+    {
+      "work_id": "03132",
+      "record_hash": "88105bbb11da3826b4eb08df4a021996942643330cda981bf7d6ff60bb8c6674",
+      "title": "k crystals (transparent) - detail 2",
+      "year": 2009,
+      "year_display": "2009",
+      "series_id": "082",
+      "project_folder": "k crystals"
+    },
+    {
+      "work_id": "03133",
+      "record_hash": "74f0925363576e44e3d9121b56aa7dad8f00450fb4053c3d5ff51958a3273954",
+      "title": "k crystals (transparent) - detail 3",
+      "year": 2009,
+      "year_display": "2009",
+      "series_id": "082",
+      "project_folder": "k crystals"
+    },
+    {
+      "work_id": "03134",
+      "record_hash": "cd297bfde567661347184d256bbf69f9cf3d7d0dc49b768af28d590d27c34d06",
+      "title": "k crystals (squared transparent) - detail 1",
+      "year": 2009,
+      "year_display": "2009",
+      "series_id": "082",
+      "project_folder": "k crystals"
+    },
+    {
+      "work_id": "03135",
+      "record_hash": "6590a17b0d9f8d6e1325d1fba2923e59546ad28ecb81693c399264e8aa5862a2",
+      "title": "k crystals (squared transparent) - detail 2",
+      "year": 2009,
+      "year_display": "2009",
+      "series_id": "082",
+      "project_folder": "k crystals"
+    },
+    {
+      "work_id": "03136",
+      "record_hash": "0fc2ab2a1c2f18eeecfaf62feae4a6818a000fcce34c25ba1876eca06761eeb6",
+      "title": "k crystals (squared transparent) - detail 3",
+      "year": 2009,
+      "year_display": "2009",
+      "series_id": "082",
+      "project_folder": "k crystals"
     }
   ],
   "ordered_work_ids": [
@@ -92,7 +199,19 @@
     "00625",
     "00626",
     "00627",
-    "00628"
+    "00628",
+    "03125",
+    "03126",
+    "03127",
+    "03128",
+    "03129",
+    "03130",
+    "03131",
+    "03132",
+    "03133",
+    "03134",
+    "03135",
+    "03136"
   ],
   "project_folders": [
     "k crystals"

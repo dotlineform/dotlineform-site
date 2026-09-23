@@ -6,10 +6,9 @@
     "series_id": "005",
     "title": "3 symbols",
     "year": 2007,
-    "year_display": "2007",
-    "sort_fields": "work_id"
+    "year_display": "2007"
   },
-  "record_hash": "beb8e0c0e458c3a60a7d25ed3448b20b02e8d7672f46182d63324319cce75101",
+  "record_hash": "9726314884e396e48e0b0589b1d0215dc3ef5029c37ee5a023eae5655884513f",
   "member_works": [
     {
       "work_id": "00638",
@@ -19,10 +18,540 @@
       "year_display": "2007",
       "series_id": "005",
       "project_folder": "3 symbols"
+    },
+    {
+      "work_id": "03188",
+      "record_hash": "99597c4d6c8dcf0bfc15112291f36a623d306334c8efb5f66dca2afc57565a04",
+      "title": "3 symbols (composite)",
+      "year": 2007,
+      "year_display": "2007",
+      "series_id": "005",
+      "project_folder": "3 symbols"
+    },
+    {
+      "work_id": "03189",
+      "record_hash": "b727fdf48564bf69e627ec53295ac239909a0583c146c9093af342c1017b650e",
+      "title": "3 symbols (untreated)",
+      "year": 2007,
+      "year_display": "2007",
+      "series_id": "005",
+      "project_folder": "3 symbols"
+    },
+    {
+      "work_id": "03190",
+      "record_hash": "e93f05e2b193b3f33c4a322c606180a6e7995ea91c2b90002bcb283381cd5f03",
+      "title": "3 symbols (detail 1)",
+      "year": 2007,
+      "year_display": "2007",
+      "series_id": "005",
+      "project_folder": "3 symbols"
+    },
+    {
+      "work_id": "03191",
+      "record_hash": "b14e11f04301d047b7ae08171751d018e1f5817d6b7398a9be3052a45d9dc4b7",
+      "title": "3 symbols (detail 2)",
+      "year": 2007,
+      "year_display": "2007",
+      "series_id": "005",
+      "project_folder": "3 symbols"
+    },
+    {
+      "work_id": "03192",
+      "record_hash": "19690cda6ffd3d0d65c05f5bfef99e9065ac2d8c696fe636ccc9dfe5aa842cd6",
+      "title": "3 symbols (detail 3)",
+      "year": 2007,
+      "year_display": "2007",
+      "series_id": "005",
+      "project_folder": "3 symbols"
+    },
+    {
+      "work_id": "03193",
+      "record_hash": "aa32419741f5a7db0eee80f239cd0fd0481ae78258b220b126bf33d8af245803",
+      "title": "3 symbols (detail 4)",
+      "year": 2007,
+      "year_display": "2007",
+      "series_id": "005",
+      "project_folder": "3 symbols"
+    },
+    {
+      "work_id": "03194",
+      "record_hash": "c2c311b6ff1ac1f839d89bfc06a77af261cb1a4c5e9852af1a578016333cd3b3",
+      "title": "3 symbols (detail 5)",
+      "year": 2007,
+      "year_display": "2007",
+      "series_id": "005",
+      "project_folder": "3 symbols"
+    },
+    {
+      "work_id": "03195",
+      "record_hash": "4a6cb772badd9a8f3b551f78b3da73629ed0fa5607f881e404dd6cb6844902bf",
+      "title": "3 symbols (detail 6)",
+      "year": 2007,
+      "year_display": "2007",
+      "series_id": "005",
+      "project_folder": "3 symbols"
+    },
+    {
+      "work_id": "03196",
+      "record_hash": "95ee47f8015ebde1827ab0effb2e2fe4fd33cf0c6a3291cdfce988ed7bb2d149",
+      "title": "3 symbols (detail 7)",
+      "year": 2007,
+      "year_display": "2007",
+      "series_id": "005",
+      "project_folder": "3 symbols"
+    },
+    {
+      "work_id": "03197",
+      "record_hash": "6e2da7dc06aca33a74077f669167eaccec86469ea5fa4d074685e7593b89fcde",
+      "title": "3 symbols (detail 8)",
+      "year": 2007,
+      "year_display": "2007",
+      "series_id": "005",
+      "project_folder": "3 symbols"
+    },
+    {
+      "work_id": "03198",
+      "record_hash": "2dbfe64ab165480747f956c576b69796eac75e03804416074646d1ec559d0a83",
+      "title": "source - bandage",
+      "year": 2007,
+      "year_display": "2007",
+      "series_id": "005",
+      "project_folder": "3 symbols"
+    },
+    {
+      "work_id": "03199",
+      "record_hash": "740e12a54cd60d02189f7348685c492e671f1c2156d05442bcfd6fd56e356ab8",
+      "title": "source - before",
+      "year": 2007,
+      "year_display": "2007",
+      "series_id": "005",
+      "project_folder": "3 symbols"
+    },
+    {
+      "work_id": "03200",
+      "record_hash": "adfd1f654f877a89c2ceb772e0b9bf9ab94d23aa358fefcac6a1aad81bb64225",
+      "title": "source - blessing",
+      "year": 2007,
+      "year_display": "2007",
+      "series_id": "005",
+      "project_folder": "3 symbols"
+    },
+    {
+      "work_id": "03201",
+      "record_hash": "790808e685d7d39f44f6d6bf6ff53fe1ca8859e90828cfc93d6fb798906989a1",
+      "title": "source - blindness",
+      "year": 2007,
+      "year_display": "2007",
+      "series_id": "005",
+      "project_folder": "3 symbols"
+    },
+    {
+      "work_id": "03202",
+      "record_hash": "9d404b35858340ce57d44421fd1d6685e8c40168360577cb9fcdc2923d5b40eb",
+      "title": "source - bridge",
+      "year": 2007,
+      "year_display": "2007",
+      "series_id": "005",
+      "project_folder": "3 symbols"
+    },
+    {
+      "work_id": "03203",
+      "record_hash": "2c1a033dfe6ea780476b884685dae0b59e6e30851d8678ecbe8f3f794430e8ea",
+      "title": "source - burma",
+      "year": 2007,
+      "year_display": "2007",
+      "series_id": "005",
+      "project_folder": "3 symbols"
+    },
+    {
+      "work_id": "03204",
+      "record_hash": "57166db28745bcd85e7fc599667e60c2d7314e3fc084ceba3907bbd5fc742229",
+      "title": "source - burn",
+      "year": 2007,
+      "year_display": "2007",
+      "series_id": "005",
+      "project_folder": "3 symbols"
+    },
+    {
+      "work_id": "03205",
+      "record_hash": "da31cfcb6e1fc5f6f1b766533009df7a4107093194af242e00ad1670e75449e9",
+      "title": "source - genocide",
+      "year": 2007,
+      "year_display": "2007",
+      "series_id": "005",
+      "project_folder": "3 symbols"
+    },
+    {
+      "work_id": "03206",
+      "record_hash": "29f0b996e0847c0ad4360c96923e68d2bed6a8e41578f2f79b8ffcdf2df1c72c",
+      "title": "source - gesture",
+      "year": 2007,
+      "year_display": "2007",
+      "series_id": "005",
+      "project_folder": "3 symbols"
+    },
+    {
+      "work_id": "03207",
+      "record_hash": "94e5251205f5015ea940dbdc7ff0d901bf4b9f1166ae2e1afd701fb171073d7d",
+      "title": "source - give",
+      "year": 2007,
+      "year_display": "2007",
+      "series_id": "005",
+      "project_folder": "3 symbols"
+    },
+    {
+      "work_id": "03208",
+      "record_hash": "239c4a1052443b8de01114acc50cf17fc31a0cac767dea326f8b432afeeade17",
+      "title": "source - grave",
+      "year": 2007,
+      "year_display": "2007",
+      "series_id": "005",
+      "project_folder": "3 symbols"
+    },
+    {
+      "work_id": "03209",
+      "record_hash": "0583c95260b6feb6999c5ca682bdd9404ad496e2055309981a15c03718e7081d",
+      "title": "source - grieve",
+      "year": 2007,
+      "year_display": "2007",
+      "series_id": "005",
+      "project_folder": "3 symbols"
+    },
+    {
+      "work_id": "03210",
+      "record_hash": "7ceec58ee630a12fd452193c1950a77c79950385d058b2fba825b4e2761e0bdf",
+      "title": "source - grow",
+      "year": 2007,
+      "year_display": "2007",
+      "series_id": "005",
+      "project_folder": "3 symbols"
+    },
+    {
+      "work_id": "03211",
+      "record_hash": "aaa8f29c461d91b4abe31ae4818afa02aa32ea9b0713ff7e9edef476b94a8972",
+      "title": "source - guilt",
+      "year": 2007,
+      "year_display": "2007",
+      "series_id": "005",
+      "project_folder": "3 symbols"
+    },
+    {
+      "work_id": "03212",
+      "record_hash": "63e4033e902036055224a78ba30a60b8742721599be3359fdc74240a40e0d636",
+      "title": "source - radius",
+      "year": 2007,
+      "year_display": "2007",
+      "series_id": "005",
+      "project_folder": "3 symbols"
+    },
+    {
+      "work_id": "03213",
+      "record_hash": "6a1df885ef7d3e0c7841ea86d7fd44ddc76c445786c40faa82171b98bf84ec32",
+      "title": "source - rarefied",
+      "year": 2007,
+      "year_display": "2007",
+      "series_id": "005",
+      "project_folder": "3 symbols"
+    },
+    {
+      "work_id": "03214",
+      "record_hash": "872d351ae9f458e12e4b9fd98a180c5287726f4c9e40f057f077783677db375e",
+      "title": "source - reincarnation",
+      "year": 2007,
+      "year_display": "2007",
+      "series_id": "005",
+      "project_folder": "3 symbols"
+    },
+    {
+      "work_id": "03215",
+      "record_hash": "4479c789d94a88f06561a6bd52f1d42308d6f0287e666c9c07c8b2ba38c8efb1",
+      "title": "source - replenish",
+      "year": 2007,
+      "year_display": "2007",
+      "series_id": "005",
+      "project_folder": "3 symbols"
+    },
+    {
+      "work_id": "03216",
+      "record_hash": "93c1a41b79e7d7a8a3f24dcf656d2f8949c5a7ac6a6252e47e73cb305783a0d4",
+      "title": "source - restrict",
+      "year": 2007,
+      "year_display": "2007",
+      "series_id": "005",
+      "project_folder": "3 symbols"
+    },
+    {
+      "work_id": "03217",
+      "record_hash": "b2c621e9aafff736a08e5a255e0c810073b6189b1b52f622e63b6d9067282a13",
+      "title": "source - ruin",
+      "year": 2007,
+      "year_display": "2007",
+      "series_id": "005",
+      "project_folder": "3 symbols"
+    },
+    {
+      "work_id": "03218",
+      "record_hash": "b8d30f3fe93377f1867d9af5985088987d32fafdde984573a291565ab63b3014",
+      "title": "source - rwanda",
+      "year": 2007,
+      "year_display": "2007",
+      "series_id": "005",
+      "project_folder": "3 symbols"
+    },
+    {
+      "work_id": "03219",
+      "record_hash": "5fe113de2ffd2fb0b32ca086c2b7697f99a1ceb3465976594428f7039e329285",
+      "title": "source grid",
+      "year": 2007,
+      "year_display": "2007",
+      "series_id": "005",
+      "project_folder": "3 symbols"
+    },
+    {
+      "work_id": "03220",
+      "record_hash": "a274c5193e0c958fc39d61a2d876db1e57dbdbaaf1e91d90ebd5e62b7c7bbbb8",
+      "title": "composite - bandage",
+      "year": 2007,
+      "year_display": "2007",
+      "series_id": "005",
+      "project_folder": "3 symbols"
+    },
+    {
+      "work_id": "03221",
+      "record_hash": "833c5b440f9c8af75699d35c38446f65236fc61018029fb7f81f90e383f247c5",
+      "title": "composite - before",
+      "year": 2007,
+      "year_display": "2007",
+      "series_id": "005",
+      "project_folder": "3 symbols"
+    },
+    {
+      "work_id": "03222",
+      "record_hash": "8d72ec5facb167dbfe38da3a26d67b8b3e6fbdf5c1101144929a8d043f1b14b6",
+      "title": "composite - blessing",
+      "year": 2007,
+      "year_display": "2007",
+      "series_id": "005",
+      "project_folder": "3 symbols"
+    },
+    {
+      "work_id": "03223",
+      "record_hash": "1501ef51cc766d98ae8b79b4a004f827b2e8f5f4c6fb76eb2c99aaaa8aee2dfd",
+      "title": "composite - blindness",
+      "year": 2007,
+      "year_display": "2007",
+      "series_id": "005",
+      "project_folder": "3 symbols"
+    },
+    {
+      "work_id": "03224",
+      "record_hash": "38fb74d61fd878322eed474b9ad8b89290ffde1c30d8a8206bc7cee88f573803",
+      "title": "composite - bridge",
+      "year": 2007,
+      "year_display": "2007",
+      "series_id": "005",
+      "project_folder": "3 symbols"
+    },
+    {
+      "work_id": "03225",
+      "record_hash": "f3b6beea59b8dd726cb3b726606399903193e17cc6afa82fc8c797b8af2d9f8f",
+      "title": "composite - burma",
+      "year": 2007,
+      "year_display": "2007",
+      "series_id": "005",
+      "project_folder": "3 symbols"
+    },
+    {
+      "work_id": "03226",
+      "record_hash": "5c52ddef348f788fc4cb34386cf06fc5dc568e24c3d66bdf488ea32a8b3079a6",
+      "title": "composite - burn",
+      "year": 2007,
+      "year_display": "2007",
+      "series_id": "005",
+      "project_folder": "3 symbols"
+    },
+    {
+      "work_id": "03227",
+      "record_hash": "ef42b52e0cd4367e193c0b43692bfb069fc20904aeeaa62d7cc7a1f19cc50ade",
+      "title": "composite - genocide",
+      "year": 2007,
+      "year_display": "2007",
+      "series_id": "005",
+      "project_folder": "3 symbols"
+    },
+    {
+      "work_id": "03228",
+      "record_hash": "5e6c0f663d4c068c6e5fef5f8c982e8d939af66be792453a5df5002f733a2ec2",
+      "title": "composite - gesture",
+      "year": 2007,
+      "year_display": "2007",
+      "series_id": "005",
+      "project_folder": "3 symbols"
+    },
+    {
+      "work_id": "03229",
+      "record_hash": "e1a49023eb2a2c8d566f9c0849cc7f96e19c986952845a282f26d197a7529976",
+      "title": "composite - give",
+      "year": 2007,
+      "year_display": "2007",
+      "series_id": "005",
+      "project_folder": "3 symbols"
+    },
+    {
+      "work_id": "03230",
+      "record_hash": "f6fc89c87c8bab3c3a9147eea1f3ec1274f68a1b106af2cf4dcb0c84412eb26c",
+      "title": "composite - grave",
+      "year": 2007,
+      "year_display": "2007",
+      "series_id": "005",
+      "project_folder": "3 symbols"
+    },
+    {
+      "work_id": "03231",
+      "record_hash": "5026f60b51323d31d9d08663061ed769b47d017649b2ccc6473ee0ff2eae458a",
+      "title": "composite - grieve",
+      "year": 2007,
+      "year_display": "2007",
+      "series_id": "005",
+      "project_folder": "3 symbols"
+    },
+    {
+      "work_id": "03232",
+      "record_hash": "32b5c36b6e28951cac5ba690ecbf770b6bf6319c4fe9a4f571b8f4f773418eff",
+      "title": "composite - grow",
+      "year": 2007,
+      "year_display": "2007",
+      "series_id": "005",
+      "project_folder": "3 symbols"
+    },
+    {
+      "work_id": "03233",
+      "record_hash": "252356607b9f473ab853344c7e8218331809627f5243f82ae8d3c7e925247f4a",
+      "title": "composite - guilt",
+      "year": 2007,
+      "year_display": "2007",
+      "series_id": "005",
+      "project_folder": "3 symbols"
+    },
+    {
+      "work_id": "03234",
+      "record_hash": "d1f7eded96726c7c4183fe6835d531cfaa704114565ad6d1210cd3b0a9939c56",
+      "title": "composite - radius",
+      "year": 2007,
+      "year_display": "2007",
+      "series_id": "005",
+      "project_folder": "3 symbols"
+    },
+    {
+      "work_id": "03235",
+      "record_hash": "c56e9406aa76cb008af649f5a07f415b866cd3975f914b8bea13915e6b704d55",
+      "title": "composite - rarefied",
+      "year": 2007,
+      "year_display": "2007",
+      "series_id": "005",
+      "project_folder": "3 symbols"
+    },
+    {
+      "work_id": "03236",
+      "record_hash": "771f04aa0ad83833d3fb10f59bc172d84d66aa44c9f7f44d26e9ba5952995e55",
+      "title": "composite - reincarnation",
+      "year": 2007,
+      "year_display": "2007",
+      "series_id": "005",
+      "project_folder": "3 symbols"
+    },
+    {
+      "work_id": "03237",
+      "record_hash": "e26765c7cbdf4da6662155b8154b92930784cf3ba2f051266fff4818abdf4653",
+      "title": "composite - replenish",
+      "year": 2007,
+      "year_display": "2007",
+      "series_id": "005",
+      "project_folder": "3 symbols"
+    },
+    {
+      "work_id": "03238",
+      "record_hash": "4c36912972cebac782798803d07ee1ad43bf13ab986f400fd3e3e2318bf22018",
+      "title": "composite - restrict",
+      "year": 2007,
+      "year_display": "2007",
+      "series_id": "005",
+      "project_folder": "3 symbols"
+    },
+    {
+      "work_id": "03239",
+      "record_hash": "98c63f0df0839817f10e4f3ca9c2e9caea8e3ed82e92bc37ef9211b3af3c3893",
+      "title": "composite - ruin",
+      "year": 2007,
+      "year_display": "2007",
+      "series_id": "005",
+      "project_folder": "3 symbols"
+    },
+    {
+      "work_id": "03240",
+      "record_hash": "cee5c08f2b343177d215c6fac835b240bac82f8b61e1fb7f2c973463fa265990",
+      "title": "composite - rwanda",
+      "year": 2007,
+      "year_display": "2007",
+      "series_id": "005",
+      "project_folder": "3 symbols"
     }
   ],
   "ordered_work_ids": [
-    "00638"
+    "00638",
+    "03188",
+    "03189",
+    "03190",
+    "03191",
+    "03192",
+    "03193",
+    "03194",
+    "03195",
+    "03196",
+    "03197",
+    "03198",
+    "03199",
+    "03200",
+    "03201",
+    "03202",
+    "03203",
+    "03204",
+    "03205",
+    "03206",
+    "03207",
+    "03208",
+    "03209",
+    "03210",
+    "03211",
+    "03212",
+    "03213",
+    "03214",
+    "03215",
+    "03216",
+    "03217",
+    "03218",
+    "03219",
+    "03220",
+    "03221",
+    "03222",
+    "03223",
+    "03224",
+    "03225",
+    "03226",
+    "03227",
+    "03228",
+    "03229",
+    "03230",
+    "03231",
+    "03232",
+    "03233",
+    "03234",
+    "03235",
+    "03236",
+    "03237",
+    "03238",
+    "03239",
+    "03240"
   ],
   "project_folders": [
     "3 symbols"

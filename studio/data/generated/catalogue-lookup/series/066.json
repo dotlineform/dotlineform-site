@@ -6,10 +6,9 @@
     "series_id": "066",
     "title": "forms painting",
     "year": 1990,
-    "year_display": "c. 1990-92?",
-    "sort_fields": "work_id"
+    "year_display": "c. 1990-92?"
   },
-  "record_hash": "c60be387b5faf40e0a486e6e8a95a045db9fcaaced61d35cb0e60f02ab36d0d1",
+  "record_hash": "1355faedf4bfb365966d8834df6f52c80bcc8ca4397bf627524cb9b4faa40a31",
   "member_works": [
     {
       "work_id": "01200",
@@ -28,11 +27,61 @@
       "year_display": "c. 1990-92?",
       "series_id": "066",
       "project_folder": "forms painting"
+    },
+    {
+      "work_id": "04223",
+      "record_hash": "f7f93063a17ebe038da97449fa0c8c9c4397cb64b5f3e860ab1093fe5668c8b8",
+      "title": "forms painting - detail 1",
+      "year": 1990,
+      "year_display": "c. 1990-92?",
+      "series_id": "066",
+      "project_folder": "forms painting"
+    },
+    {
+      "work_id": "04224",
+      "record_hash": "61acc5fa746c7f850e0550619918d65eedb3c563046a1a187b1c689c17b30c12",
+      "title": "forms painting - detail 2",
+      "year": 1990,
+      "year_display": "c. 1990-92?",
+      "series_id": "066",
+      "project_folder": "forms painting"
+    },
+    {
+      "work_id": "04225",
+      "record_hash": "c5d8726e62fcd993d6a74305b547f701e0fb200db31f16d9de5c2bb109ed48fa",
+      "title": "forms painting - detail 3",
+      "year": 1990,
+      "year_display": "c. 1990-92?",
+      "series_id": "066",
+      "project_folder": "forms painting"
+    },
+    {
+      "work_id": "04226",
+      "record_hash": "dd325b6e6e04ae0b9387f1c05820771f03faca6aa3637af90677d3bfec810e84",
+      "title": "forms painting - detail 4",
+      "year": 1990,
+      "year_display": "c. 1990-92?",
+      "series_id": "066",
+      "project_folder": "forms painting"
+    },
+    {
+      "work_id": "04227",
+      "record_hash": "b8f1b54d9c6c411a499fcfd48b88b0b2fa5f20ed7715a178f4be8b0ac320238f",
+      "title": "forms painting - detail 5",
+      "year": 1990,
+      "year_display": "c. 1990-92?",
+      "series_id": "066",
+      "project_folder": "forms painting"
     }
   ],
   "ordered_work_ids": [
     "01200",
-    "01201"
+    "01201",
+    "04223",
+    "04224",
+    "04225",
+    "04226",
+    "04227"
   ],
   "project_folders": [
     "forms painting"

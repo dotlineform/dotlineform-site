@@ -7,17 +7,13 @@ from typing import Any, Dict, List, Mapping
 
 from catalogue.catalogue_generation_common import (
     coerce_int,
-    coerce_numeric,
     coerce_string,
     compact_json_object,
     compute_payload_version,
     is_empty,
-    normalize_text,
-    numeric_aware_sort_key,
     slug_id,
 )
 
-from catalogue.catalogue_source import WORK_FIELDS
 from catalogue.series_ids import normalize_series_id
 
 
@@ -31,8 +27,6 @@ class SeriesWorkIndexContext:
     series_project_folders_by_id: Dict[str, List[str]]
     work_meta_by_id: Dict[str, Dict[str, Any]]
     work_ids_by_series_all: Dict[str, List[str]]
-    series_sort_by_series_id: Dict[str, Dict[str, str]]
-    series_sort_fields_by_series_id: Dict[str, List[str]]
 
 
 def build_series_work_index_context(
@@ -66,9 +60,6 @@ def build_series_work_index_context(
     for sid, folder_set in project_folder_sets_by_series.items():
         series_project_folders_by_id[sid] = sorted(folder_set, key=lambda value: value.lower())
 
-    works_sortable_fields = set(WORK_FIELDS)
-    works_sortable_fields.update({"work_id", "series_title", "title_sort"})
-    numeric_sort_fields = {"year", "height_cm", "width_cm", "depth_cm"}
     work_meta_by_id: Dict[str, Dict[str, Any]] = {}
     work_ids_by_series_all: Dict[str, List[str]] = {}
     for work_record in work_records.values():
@@ -86,93 +77,16 @@ def build_series_work_index_context(
         for series_id in series_ids:
             work_ids_by_series_all.setdefault(series_id, []).append(wid)
 
-    series_sort_by_series_id: Dict[str, Dict[str, str]] = {
-        sid: {wid: wid for wid in work_ids}
-        for sid, work_ids in work_ids_by_series_all.items()
-    }
-    series_sort_fields_by_series_id: Dict[str, List[str]] = {
-        sid: ["work_id"] for sid in work_ids_by_series_all.keys()
-    }
-
-    for series_record in series_records.values():
-        sid_raw = series_record.get("series_id")
-        if is_empty(sid_raw):
-            continue
-        sid = normalize_series_id(sid_raw)
-        sort_fields_raw = coerce_string(series_record.get("sort_fields")) or "work_id"
-
-        parsed_fields: List[tuple[str, bool]] = []
-        display_fields: List[str] = []
-        for raw_token in sort_fields_raw.split(","):
-            token = normalize_text(raw_token)
-            if token == "":
-                continue
-            desc = token.startswith("-")
-            field = normalize_text(token[1:] if desc else token).lower()
-            display_field = field
-            if field == "title":
-                field = "title_sort"
-                display_field = "title"
-            elif field == "title_sort":
-                display_field = "title"
-            if field not in works_sortable_fields:
-                raise CatalogueGenerationIndexError(
-                    f"Series source has unknown sort field '{field}' for series_id '{sid}'"
-                )
-            if field == "work_id":
-                continue
-            parsed_fields.append((field, desc))
-            display_fields.append(f"-{display_field}" if desc else display_field)
-
-        parsed_fields.append(("work_id", False))
-        display_fields.append("work_id")
-        series_sort_fields_by_series_id[sid] = display_fields
-        series_work_ids = list(work_ids_by_series_all.get(sid, []))
-        if not series_work_ids:
-            continue
-
-        def sortable_value(wid: str, field: str) -> Any:
-            if field == "title_sort":
-                value = numeric_aware_sort_key(work_meta_by_id[wid].get("title"))
-            else:
-                value = work_meta_by_id[wid].get(field)
-            if field in numeric_sort_fields:
-                nv = coerce_numeric(value)
-                return float("-inf") if nv is None else nv
-            return normalize_text(value).lower()
-
-        for field, desc in reversed(parsed_fields):
-            series_work_ids.sort(
-                key=lambda current_wid, current_field=field: sortable_value(current_wid, current_field),
-                reverse=desc,
-            )
-
-        rank_width = max(3, len(str(len(series_work_ids))))
-        for idx, wid in enumerate(series_work_ids, start=1):
-            series_sort_by_series_id.setdefault(sid, {})[wid] = f"{idx:0{rank_width}d}-{wid}"
-
     return SeriesWorkIndexContext(
         series_title_by_id=series_title_by_id,
         series_project_folders_by_id=series_project_folders_by_id,
         work_meta_by_id=work_meta_by_id,
         work_ids_by_series_all=work_ids_by_series_all,
-        series_sort_by_series_id=series_sort_by_series_id,
-        series_sort_fields_by_series_id=series_sort_fields_by_series_id,
     )
 
 
 def ordered_work_ids_by_series(context: SeriesWorkIndexContext) -> Dict[str, List[str]]:
-    work_rows_by_series: Dict[str, List[tuple[str, str]]] = {}
-    for sid, work_ids in context.work_ids_by_series_all.items():
-        for wid in work_ids:
-            series_sort = context.series_sort_by_series_id.get(sid, {}).get(wid, wid)
-            work_rows_by_series.setdefault(sid, []).append((series_sort, wid))
-
-    ordered: Dict[str, List[str]] = {}
-    for sid, rows in work_rows_by_series.items():
-        rows_sorted = sorted(rows, key=lambda item: (item[0], item[1]))
-        ordered[sid] = [wid for _, wid in rows_sorted]
-    return ordered
+    return {sid: sorted(ids) for sid, ids in context.work_ids_by_series_all.items()}
 
 
 def build_series_member_work_records(

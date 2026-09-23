@@ -6,10 +6,9 @@
     "series_id": "027",
     "title": "collected digital c. 1998",
     "year": 1998,
-    "year_display": "c. 1998",
-    "sort_fields": "work_id"
+    "year_display": "c. 1998"
   },
-  "record_hash": "08b59f23b771de9c2d81942dd622e3e7c408f4ccb027b47a5a6559411ac382a6",
+  "record_hash": "03f4c5b8de506afdcf96e075d4ebc5dea5c5e1524da0b8b47d5ca292c386397d",
   "member_works": [
     {
       "work_id": "00226",
@@ -523,6 +522,15 @@
       "year_display": "c. 1998",
       "series_id": "027",
       "project_folder": "collected digital c. 1998"
+    },
+    {
+      "work_id": "02010",
+      "record_hash": "17c331f5f3228bf018ba79e5ee0dca881aa1e2ddf7f4cc598db7ace34a5ffccf",
+      "title": "untitled [227] reverse",
+      "year": 1998,
+      "year_display": "c. 1998",
+      "series_id": "027",
+      "project_folder": "collected digital c. 1998"
     }
   ],
   "ordered_work_ids": [
@@ -582,7 +590,8 @@
     "00282",
     "00283",
     "00284",
-    "00285"
+    "00285",
+    "02010"
   ],
   "project_folders": [
     "collected digital c. 1998"

@@ -6,10 +6,9 @@
     "series_id": "113",
     "title": "pi particles",
     "year": 2012,
-    "year_display": "2012",
-    "sort_fields": "work_id"
+    "year_display": "2012"
   },
-  "record_hash": "cb0164b83b3fb133e24fa81ad0498201074658dce64d7343e487a3d9a41eaac4",
+  "record_hash": "eaa9aa5a75a9417ac9b96c46494c8b05a8a5b25d4b8a2d1761bdd2015ab6fbf8",
   "member_works": [
     {
       "work_id": "01523",
@@ -46,13 +45,163 @@
       "year_display": "2012",
       "series_id": "113",
       "project_folder": "pi particles"
+    },
+    {
+      "work_id": "04321",
+      "record_hash": "9d96ee16d8994dfd2d4df9ec83144e4c7038c8bcf321ac6deea047ebdfdf994a",
+      "title": "pi - detail 1",
+      "year": 2012,
+      "year_display": "2012",
+      "series_id": "113",
+      "project_folder": "pi particles"
+    },
+    {
+      "work_id": "04322",
+      "record_hash": "939449a908eeb4dc5b801213513db6cefaf1da5666d1dbb7b77bbea293258853",
+      "title": "pi - detail 2",
+      "year": 2012,
+      "year_display": "2012",
+      "series_id": "113",
+      "project_folder": "pi particles"
+    },
+    {
+      "work_id": "04323",
+      "record_hash": "026fd3c2979b463ae6c2239dd38f07ae507b8cffc1211b3eaa21a7efd660de69",
+      "title": "pi - detail 3",
+      "year": 2012,
+      "year_display": "2012",
+      "series_id": "113",
+      "project_folder": "pi particles"
+    },
+    {
+      "work_id": "04324",
+      "record_hash": "4af7d8726e4a565178f179ccc1ac25c82b5314d211e6955bc591f5dc7ac109d4",
+      "title": "pi - detail 4",
+      "year": 2012,
+      "year_display": "2012",
+      "series_id": "113",
+      "project_folder": "pi particles"
+    },
+    {
+      "work_id": "04325",
+      "record_hash": "8681f99902861c7eb891e98536e0a3e7a5f1dd1be23a880f8e52a6742f7efb06",
+      "title": "pi - detail 5",
+      "year": 2012,
+      "year_display": "2012",
+      "series_id": "113",
+      "project_folder": "pi particles"
+    },
+    {
+      "work_id": "04326",
+      "record_hash": "3b57051cecfcd65e1a3bfd509db50d6d6dc81c4cf4a70bfd0097a0763eca99eb",
+      "title": "pi molecule grid - detail 1",
+      "year": 2012,
+      "year_display": "2012",
+      "series_id": "113",
+      "project_folder": "pi particles"
+    },
+    {
+      "work_id": "04327",
+      "record_hash": "45fb9fab98e471c3453efc304a2066832d9946ac133b3fde5312634a5f32d64b",
+      "title": "pi molecule grid - detail 2",
+      "year": 2012,
+      "year_display": "2012",
+      "series_id": "113",
+      "project_folder": "pi particles"
+    },
+    {
+      "work_id": "04328",
+      "record_hash": "d8636f9fc0f78f8813f9a69a99874b19978915df0726bf6044790031876919e2",
+      "title": "pi molecule grid - detail 3",
+      "year": 2012,
+      "year_display": "2012",
+      "series_id": "113",
+      "project_folder": "pi particles"
+    },
+    {
+      "work_id": "04329",
+      "record_hash": "7b842e21c9b039d9208e03daa5f2fc03876afbc86217c677fe685b553bebdd09",
+      "title": "pi circle - detail 1",
+      "year": 2012,
+      "year_display": "2012",
+      "series_id": "113",
+      "project_folder": "pi particles"
+    },
+    {
+      "work_id": "04330",
+      "record_hash": "b5830ad2e67035cfe29e72ad7dbf90d6f00a52d97e8237aaf43a9aa58496b9b5",
+      "title": "pi circle - detail 2",
+      "year": 2012,
+      "year_display": "2012",
+      "series_id": "113",
+      "project_folder": "pi particles"
+    },
+    {
+      "work_id": "04331",
+      "record_hash": "6d0746b20cbf41d1a458adff5ed28bc2712e19a13688e8681bf73f8f89bddf3c",
+      "title": "pi circle - detail 3",
+      "year": 2012,
+      "year_display": "2012",
+      "series_id": "113",
+      "project_folder": "pi particles"
+    },
+    {
+      "work_id": "04332",
+      "record_hash": "39f885194d370521394c2befd80becc7dc0f89b5e1bacfd619f88ada28ae571d",
+      "title": "all the particles are connected - detail 1",
+      "year": 2012,
+      "year_display": "2012",
+      "series_id": "113",
+      "project_folder": "pi particles"
+    },
+    {
+      "work_id": "04333",
+      "record_hash": "15f0e68429fa242070fae8ed6388f64610b1713d97311c940623d51bfae9d5f8",
+      "title": "all the particles are connected - detail 2",
+      "year": 2012,
+      "year_display": "2012",
+      "series_id": "113",
+      "project_folder": "pi particles"
+    },
+    {
+      "work_id": "04334",
+      "record_hash": "91d3ad8ce528e407e707218ee5c7bbb5adbbaaefc8de41d9efdd71995ec4238b",
+      "title": "all the particles are connected - detail 3",
+      "year": 2012,
+      "year_display": "2012",
+      "series_id": "113",
+      "project_folder": "pi particles"
+    },
+    {
+      "work_id": "04335",
+      "record_hash": "883b531228865c4f9f1432b7975f3c64eaf825cb70f2b4afb72004bdcf7691a1",
+      "title": "all the particles are connected - detail 4",
+      "year": 2012,
+      "year_display": "2012",
+      "series_id": "113",
+      "project_folder": "pi particles"
     }
   ],
   "ordered_work_ids": [
     "01523",
     "01524",
     "01525",
-    "01526"
+    "01526",
+    "04321",
+    "04322",
+    "04323",
+    "04324",
+    "04325",
+    "04326",
+    "04327",
+    "04328",
+    "04329",
+    "04330",
+    "04331",
+    "04332",
+    "04333",
+    "04334",
+    "04335"
   ],
   "project_folders": [
     "pi particles"

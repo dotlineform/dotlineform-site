@@ -6,10 +6,9 @@
     "series_id": "064",
     "title": "form space",
     "year": 2007,
-    "year_display": "2007",
-    "sort_fields": "work_id"
+    "year_display": "2007"
   },
-  "record_hash": "7311287f76be06856b9dc74657a1c487e8f5537868a7993b44922e6b26804800",
+  "record_hash": "64b56b95ec90cd459f887f717311ca1ec0ed54e2111dbf8b9c90bbba31285949",
   "member_works": [
     {
       "work_id": "01176",
@@ -190,6 +189,402 @@
       "year_display": "2007",
       "series_id": "064",
       "project_folder": "form space"
+    },
+    {
+      "work_id": "04064",
+      "record_hash": "8b232cebcdcf76542dbdc6c1de8092029f287e89e7cfb04c60a11c79c527b8c6",
+      "title": "form space noise 1",
+      "year": 2007,
+      "year_display": "2007",
+      "series_id": "064",
+      "project_folder": "form space"
+    },
+    {
+      "work_id": "04065",
+      "record_hash": "7adc07b4c4a5af28c855bdce2f87d883f0a0b383bceb4ae4f6ecb2316ee03305",
+      "title": "form space noise 2",
+      "year": 2007,
+      "year_display": "2007",
+      "series_id": "064",
+      "project_folder": "form space"
+    },
+    {
+      "work_id": "04066",
+      "record_hash": "c25ad9547e47b1bb1d1517a05cae21453c1f59a8ee40ab807b1baa11e618fa6c",
+      "title": "form space noise 3",
+      "year": 2007,
+      "year_display": "2007",
+      "series_id": "064",
+      "project_folder": "form space"
+    },
+    {
+      "work_id": "04067",
+      "record_hash": "25cbc89ffe0a38cb9bfccc6c623e74eb84af8012361d047026e24016f9fe618c",
+      "title": "form space noise 4",
+      "year": 2007,
+      "year_display": "2007",
+      "series_id": "064",
+      "project_folder": "form space"
+    },
+    {
+      "work_id": "04068",
+      "record_hash": "7ae2fc1229fbeff15ea0d21013fc47bfa9c8aa5e223d97352c8b4532a1ba9002",
+      "title": "form space noise 5",
+      "year": 2007,
+      "year_display": "2007",
+      "series_id": "064",
+      "project_folder": "form space"
+    },
+    {
+      "work_id": "04069",
+      "record_hash": "091fe480ca978a19282a287cd87846cf6efd0439e6bed1d80bb90b0eac7c48c2",
+      "title": "form space noise 6",
+      "year": 2007,
+      "year_display": "2007",
+      "series_id": "064",
+      "project_folder": "form space"
+    },
+    {
+      "work_id": "04070",
+      "record_hash": "68c79d54ee2b8dd39f53fc4e50835dc7aa0ba866b39d063a523e51f68fbf2afc",
+      "title": "form space noise 7",
+      "year": 2007,
+      "year_display": "2007",
+      "series_id": "064",
+      "project_folder": "form space"
+    },
+    {
+      "work_id": "04071",
+      "record_hash": "40897057f3f97bc94e096f054cab8440b9b1d8e0bde50cd2a9faf4118d0e54f4",
+      "title": "form space noise 8",
+      "year": 2007,
+      "year_display": "2007",
+      "series_id": "064",
+      "project_folder": "form space"
+    },
+    {
+      "work_id": "04072",
+      "record_hash": "3f6542865aa7c41e82e7c91f9aa31a30c5f5893371a2384267ed1a673f15ac47",
+      "title": "form space noise 9",
+      "year": 2007,
+      "year_display": "2007",
+      "series_id": "064",
+      "project_folder": "form space"
+    },
+    {
+      "work_id": "04073",
+      "record_hash": "6010392234253e397c56ab836dbfdfc7066c7a6e1760881458f118bc36c1a8a4",
+      "title": "form space noise 10",
+      "year": 2007,
+      "year_display": "2007",
+      "series_id": "064",
+      "project_folder": "form space"
+    },
+    {
+      "work_id": "04074",
+      "record_hash": "898d1cd200f2c343b77f7933630429e951e61de3ccfdd64e0f1f195411aa965c",
+      "title": "form space noise 11",
+      "year": 2007,
+      "year_display": "2007",
+      "series_id": "064",
+      "project_folder": "form space"
+    },
+    {
+      "work_id": "04075",
+      "record_hash": "1bc2ab3b00c9f2a5419da700b90d16c75daf7d6d00125b547e09e67ac2d9c62b",
+      "title": "form space noise 12",
+      "year": 2007,
+      "year_display": "2007",
+      "series_id": "064",
+      "project_folder": "form space"
+    },
+    {
+      "work_id": "04076",
+      "record_hash": "bfe31c692a21f205a972f13b1dd4b186db5efb8f642e683c18ecb1187cb806ef",
+      "title": "form space noise 13",
+      "year": 2007,
+      "year_display": "2007",
+      "series_id": "064",
+      "project_folder": "form space"
+    },
+    {
+      "work_id": "04077",
+      "record_hash": "b04ad36d13963c35391947548c1bd8644d21bd9e80387334f7cf923b2b0c1b5a",
+      "title": "form space noise 14",
+      "year": 2007,
+      "year_display": "2007",
+      "series_id": "064",
+      "project_folder": "form space"
+    },
+    {
+      "work_id": "04078",
+      "record_hash": "77901acbcce25fde19ea7a5a44c0dd5060dff4a7384cc0ac1ceaa5294ed95565",
+      "title": "form space noise 15",
+      "year": 2007,
+      "year_display": "2007",
+      "series_id": "064",
+      "project_folder": "form space"
+    },
+    {
+      "work_id": "04079",
+      "record_hash": "3d8cf428fcb61f888662c03d545b14616c88acb9ede453f05aa17fb4e33dcf0b",
+      "title": "form space noise 16",
+      "year": 2007,
+      "year_display": "2007",
+      "series_id": "064",
+      "project_folder": "form space"
+    },
+    {
+      "work_id": "04080",
+      "record_hash": "c42effc9f9dde1199d315f7ec0e3aedcf79cc483f3c08b7c13d03c6306622660",
+      "title": "form space noise 17",
+      "year": 2007,
+      "year_display": "2007",
+      "series_id": "064",
+      "project_folder": "form space"
+    },
+    {
+      "work_id": "04081",
+      "record_hash": "f89f2bf0e67bb9c21a0135c38f3336d4d5c000054d60f8ed74ec6b8984ebc55f",
+      "title": "form space noise 18",
+      "year": 2007,
+      "year_display": "2007",
+      "series_id": "064",
+      "project_folder": "form space"
+    },
+    {
+      "work_id": "04082",
+      "record_hash": "72ccf9185b94be6387ecfc124bcadedae3ec9a90584e9bf9b7fc07fd32cd0de4",
+      "title": "form space noise 19",
+      "year": 2007,
+      "year_display": "2007",
+      "series_id": "064",
+      "project_folder": "form space"
+    },
+    {
+      "work_id": "04083",
+      "record_hash": "7e6f9a17e48edd6fed8fffca97b713e4f9887559b2dc5fd8a3c72034c667c0e9",
+      "title": "form space noise 20",
+      "year": 2007,
+      "year_display": "2007",
+      "series_id": "064",
+      "project_folder": "form space"
+    },
+    {
+      "work_id": "04084",
+      "record_hash": "e2b38cc2f402a13cf39ae51bade244ce631c1cbd055523c8140ae1536e310f4f",
+      "title": "form space noise 21",
+      "year": 2007,
+      "year_display": "2007",
+      "series_id": "064",
+      "project_folder": "form space"
+    },
+    {
+      "work_id": "04085",
+      "record_hash": "93863418519c7f0c60ca6b7b85cebd2b2b34a9d383a392d70e04ac35f64b4462",
+      "title": "form space noise 22",
+      "year": 2007,
+      "year_display": "2007",
+      "series_id": "064",
+      "project_folder": "form space"
+    },
+    {
+      "work_id": "04086",
+      "record_hash": "6831aac2c455f28d5e16e129ae8679f5fd307aa115aca357e48ca37a06da17b8",
+      "title": "form space noise 23",
+      "year": 2007,
+      "year_display": "2007",
+      "series_id": "064",
+      "project_folder": "form space"
+    },
+    {
+      "work_id": "04087",
+      "record_hash": "c846587e35f8fb176ea6a913551a374a09f82ba148d59fe5f19fc1017973e294",
+      "title": "form space noise 24",
+      "year": 2007,
+      "year_display": "2007",
+      "series_id": "064",
+      "project_folder": "form space"
+    },
+    {
+      "work_id": "04088",
+      "record_hash": "e4a2dacc435faf43323af31c97567f18431a36283e5e680349086165dc5627fe",
+      "title": "form space noise 25",
+      "year": 2007,
+      "year_display": "2007",
+      "series_id": "064",
+      "project_folder": "form space"
+    },
+    {
+      "work_id": "04089",
+      "record_hash": "a3a41e1dd3a0d61b91d9aeba1a7d96dc6ddebe1b78724806304b9b0ea8ac9e0f",
+      "title": "form space noise 26",
+      "year": 2007,
+      "year_display": "2007",
+      "series_id": "064",
+      "project_folder": "form space"
+    },
+    {
+      "work_id": "04090",
+      "record_hash": "f78ab773ece0400d31904ffc0a8f5b8191568f6cac8a300176bc89d7a4a5a9e9",
+      "title": "form space noise 27",
+      "year": 2007,
+      "year_display": "2007",
+      "series_id": "064",
+      "project_folder": "form space"
+    },
+    {
+      "work_id": "04091",
+      "record_hash": "62a57529580f1f11806789d6d63cfaa3f44bed6f42a4e6f738efa89079970424",
+      "title": "form space noise 28",
+      "year": 2007,
+      "year_display": "2007",
+      "series_id": "064",
+      "project_folder": "form space"
+    },
+    {
+      "work_id": "04092",
+      "record_hash": "2832c92fdc30acfa9fe5ba94d811f09dc164cbf9bf618f3311725657dfb0f77a",
+      "title": "form space noise 29",
+      "year": 2007,
+      "year_display": "2007",
+      "series_id": "064",
+      "project_folder": "form space"
+    },
+    {
+      "work_id": "04093",
+      "record_hash": "6d81cfdf81b9b6006c814792113b4de550e0ed321bfb7235a9cec0ca6710a799",
+      "title": "form space noise 30",
+      "year": 2007,
+      "year_display": "2007",
+      "series_id": "064",
+      "project_folder": "form space"
+    },
+    {
+      "work_id": "04094",
+      "record_hash": "fc027e53810565277e24d26712d4db6a6e308530dcb7bef846a1c82f55460aa8",
+      "title": "form space noise 31",
+      "year": 2007,
+      "year_display": "2007",
+      "series_id": "064",
+      "project_folder": "form space"
+    },
+    {
+      "work_id": "04095",
+      "record_hash": "f2fdddb550568200440d1e41bd70928509484b6075401ba8696779249a6af216",
+      "title": "form space noise 32",
+      "year": 2007,
+      "year_display": "2007",
+      "series_id": "064",
+      "project_folder": "form space"
+    },
+    {
+      "work_id": "04096",
+      "record_hash": "b2d73c8c8d1d9d53bbd95e39614078c0035f3887b74e7226eab28f1465104558",
+      "title": "form space noise 33",
+      "year": 2007,
+      "year_display": "2007",
+      "series_id": "064",
+      "project_folder": "form space"
+    },
+    {
+      "work_id": "04097",
+      "record_hash": "9ffce782f86567084fed67c677972cd6fb8e53d9dfcfce2de46923f0dca060a1",
+      "title": "form space noise 34",
+      "year": 2007,
+      "year_display": "2007",
+      "series_id": "064",
+      "project_folder": "form space"
+    },
+    {
+      "work_id": "04098",
+      "record_hash": "a31f89dba3dfbfb8ceaea9ed8ec42c8ed69bd46005b2d8382dc7d7f243f57ac6",
+      "title": "form space noise 35",
+      "year": 2007,
+      "year_display": "2007",
+      "series_id": "064",
+      "project_folder": "form space"
+    },
+    {
+      "work_id": "04099",
+      "record_hash": "d9a738097594f7bcda5cedc848057a749ef68071eb5e8fa8bb8c958ab3422e07",
+      "title": "form space noise 36",
+      "year": 2007,
+      "year_display": "2007",
+      "series_id": "064",
+      "project_folder": "form space"
+    },
+    {
+      "work_id": "04100",
+      "record_hash": "84762dfb6313e98ce92159cba356fb8d2397850e409363fd8bc5d004e9ad694e",
+      "title": "form space noise 37",
+      "year": 2007,
+      "year_display": "2007",
+      "series_id": "064",
+      "project_folder": "form space"
+    },
+    {
+      "work_id": "04101",
+      "record_hash": "22f47c4118237a747beb2be7560ef270feba2e1fae9ffa1f7c748776a20ce807",
+      "title": "form space noise 38",
+      "year": 2007,
+      "year_display": "2007",
+      "series_id": "064",
+      "project_folder": "form space"
+    },
+    {
+      "work_id": "04102",
+      "record_hash": "3048736a4aa8baade2afa3a3116bee4527c46fde2c2d649bc99f59dbcf4c3b72",
+      "title": "form space noise 39",
+      "year": 2007,
+      "year_display": "2007",
+      "series_id": "064",
+      "project_folder": "form space"
+    },
+    {
+      "work_id": "04103",
+      "record_hash": "794b0895d12aa72a6a20bb40b6a0744e94358c71919e4c91b8db3927c1cb7684",
+      "title": "form space noise 40",
+      "year": 2007,
+      "year_display": "2007",
+      "series_id": "064",
+      "project_folder": "form space"
+    },
+    {
+      "work_id": "04104",
+      "record_hash": "52504c33e44aef94dd05568e85aa1b4dafe91be5aa79f7bb14b8ee620ca0bfe3",
+      "title": "form space noise 41",
+      "year": 2007,
+      "year_display": "2007",
+      "series_id": "064",
+      "project_folder": "form space"
+    },
+    {
+      "work_id": "04105",
+      "record_hash": "23f2e717232e04f8be1d880cb58416047a21dfcaf50c85ef7cb6e4a9a8178690",
+      "title": "form space noise 42",
+      "year": 2007,
+      "year_display": "2007",
+      "series_id": "064",
+      "project_folder": "form space"
+    },
+    {
+      "work_id": "04106",
+      "record_hash": "a6f22a45e3629c5197b3b40dee8432d88f53ab0bd2395d32bdd5346c60a22c79",
+      "title": "form space noise 43",
+      "year": 2007,
+      "year_display": "2007",
+      "series_id": "064",
+      "project_folder": "form space"
+    },
+    {
+      "work_id": "04107",
+      "record_hash": "f2d59c6f92ac900a4ebcb726a52105d7311a2f9b1cf78b15d69693bcf42d5aa1",
+      "title": "form space noise 44",
+      "year": 2007,
+      "year_display": "2007",
+      "series_id": "064",
+      "project_folder": "form space"
     }
   ],
   "ordered_work_ids": [
@@ -212,7 +607,51 @@
     "01192",
     "01193",
     "01194",
-    "01195"
+    "01195",
+    "04064",
+    "04065",
+    "04066",
+    "04067",
+    "04068",
+    "04069",
+    "04070",
+    "04071",
+    "04072",
+    "04073",
+    "04074",
+    "04075",
+    "04076",
+    "04077",
+    "04078",
+    "04079",
+    "04080",
+    "04081",
+    "04082",
+    "04083",
+    "04084",
+    "04085",
+    "04086",
+    "04087",
+    "04088",
+    "04089",
+    "04090",
+    "04091",
+    "04092",
+    "04093",
+    "04094",
+    "04095",
+    "04096",
+    "04097",
+    "04098",
+    "04099",
+    "04100",
+    "04101",
+    "04102",
+    "04103",
+    "04104",
+    "04105",
+    "04106",
+    "04107"
   ],
   "project_folders": [
     "form space"

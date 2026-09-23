@@ -6,10 +6,9 @@
     "series_id": "041",
     "title": "dot theory",
     "year": 2009,
-    "year_display": "2009",
-    "sort_fields": "work_id"
+    "year_display": "2009"
   },
-  "record_hash": "2abd64ef4982adfae01669ef21cc4f0d8765eb0aef6ff048157649774372f9ab",
+  "record_hash": "34ef9af26f9d6eee5f6588e198f9e781a77f7b1316c82d7cc5f4da21b646eea4",
   "member_works": [
     {
       "work_id": "00937",
@@ -118,6 +117,33 @@
       "year_display": "2009",
       "series_id": "041",
       "project_folder": "dot theory"
+    },
+    {
+      "work_id": "03562",
+      "record_hash": "066c15c198a5cc5af7ca74015d303c9ca109281f55c930a146cdec980adf46a5",
+      "title": "edges 1.1",
+      "year": 2009,
+      "year_display": "2009",
+      "series_id": "041",
+      "project_folder": "dot theory"
+    },
+    {
+      "work_id": "03563",
+      "record_hash": "5215dc0d3291d8ba0cb9976de3bb8c720ecd1d64df3ccc2f3b0c1bcdfbee41c2",
+      "title": "edges 1.2",
+      "year": 2009,
+      "year_display": "2009",
+      "series_id": "041",
+      "project_folder": "dot theory"
+    },
+    {
+      "work_id": "03564",
+      "record_hash": "a444b9e7ab54665d9d1667fd222405b9c4b34bd7aafe0ed138b25234afdf14c0",
+      "title": "edges 1.3",
+      "year": 2009,
+      "year_display": "2009",
+      "series_id": "041",
+      "project_folder": "dot theory"
     }
   ],
   "ordered_work_ids": [
@@ -132,7 +158,10 @@
     "00945",
     "00946",
     "00947",
-    "00948"
+    "00948",
+    "03562",
+    "03563",
+    "03564"
   ],
   "project_folders": [
     "dot theory"

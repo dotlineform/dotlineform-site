@@ -6,10 +6,9 @@
     "series_id": "101",
     "title": "molecules",
     "year": 2013,
-    "year_display": "2013",
-    "sort_fields": "work_id"
+    "year_display": "2013"
   },
-  "record_hash": "9e272ebf010f0f079b36e0c9b125371f2ac419b7a28233e7f820b04f1224d3fb",
+  "record_hash": "0b4028a5d01edccb8977e78124cbdf86169beb2ce68a56ee07561f109d9283d4",
   "member_works": [
     {
       "work_id": "00460",
@@ -37,12 +36,212 @@
       "year_display": "2013",
       "series_id": "101",
       "project_folder": "molecules"
+    },
+    {
+      "work_id": "02859",
+      "record_hash": "71243dd648680e11ed5db5e1ec85ba51094b4bcb4db2e9db561873324bb36c93",
+      "title": "molecules (positive)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "101",
+      "project_folder": "molecules"
+    },
+    {
+      "work_id": "02860",
+      "record_hash": "28d650e973024fc41a0d285df10754a0d14163f51bc6344cc5887ff39cb12c48",
+      "title": "molecules (negative)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "101",
+      "project_folder": "molecules"
+    },
+    {
+      "work_id": "02861",
+      "record_hash": "fd8b8dd1e72eeaaaf60280fd2be3025979ca3183d49f57278e0426ebbf462c61",
+      "title": "molecules mist (positive)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "101",
+      "project_folder": "molecules"
+    },
+    {
+      "work_id": "02862",
+      "record_hash": "8612fcd56ce4ac5ed60b0dd174ccb1bdd6d39a6811e7e138dbcf687b80b18d40",
+      "title": "molecules mist (negative)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "101",
+      "project_folder": "molecules"
+    },
+    {
+      "work_id": "02863",
+      "record_hash": "5f04982ead32f3511dfea7fc9d735e629e9865b5b23841012658ae523a941c8a",
+      "title": "molecules (detail 1)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "101",
+      "project_folder": "molecules"
+    },
+    {
+      "work_id": "02864",
+      "record_hash": "57acfcef69a8253d55668e493d710cdb8bdee4b197c4c38065345079f26651c0",
+      "title": "molecules (detail 2)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "101",
+      "project_folder": "molecules"
+    },
+    {
+      "work_id": "02865",
+      "record_hash": "5b573525cf03c1881b0f184781e09a0dab8c4138b77c6f4baf6fba166d509244",
+      "title": "molecules (detail 3)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "101",
+      "project_folder": "molecules"
+    },
+    {
+      "work_id": "02866",
+      "record_hash": "620280bd062fd90540b057ed52cae4a492760bd5e96dd4d8605f884eb56e80a2",
+      "title": "molecules (detail 4)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "101",
+      "project_folder": "molecules"
+    },
+    {
+      "work_id": "02867",
+      "record_hash": "0c0a2164aa4392babfd73a0e379419f9acf08702bb546183e3ffedd43c1fd780",
+      "title": "molecules (detail 5)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "101",
+      "project_folder": "molecules"
+    },
+    {
+      "work_id": "02868",
+      "record_hash": "e1c97dc332b4c888e826aae4bd0935eb6efad040a79ea3f77559d4ef97301f45",
+      "title": "molecules (detail 6)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "101",
+      "project_folder": "molecules"
+    },
+    {
+      "work_id": "02869",
+      "record_hash": "74e09a801b92ebcf95815cfaca98a2bbe6eb53dc8b04507c60642ffb3d2c1fb4",
+      "title": "molecules (detail 7)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "101",
+      "project_folder": "molecules"
+    },
+    {
+      "work_id": "02870",
+      "record_hash": "33514d463906eeacb47ae4b9eb801581df145fde9bd7824dbc0b8934ab3c9557",
+      "title": "molecules (detail 8)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "101",
+      "project_folder": "molecules"
+    },
+    {
+      "work_id": "02871",
+      "record_hash": "b57d562260d5781d4c755cb9574382a116a584ff57d20785739dd305b55ddb2b",
+      "title": "molecules (detail 9)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "101",
+      "project_folder": "molecules"
+    },
+    {
+      "work_id": "02872",
+      "record_hash": "d02dd58cf1f626d463c64b3dcf2d49a0b936c348ba3b9bd2c548c0a76f7fb195",
+      "title": "molecules (detail 10)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "101",
+      "project_folder": "molecules"
+    },
+    {
+      "work_id": "02873",
+      "record_hash": "f6ced1b8945e0b729d771c2fc4c880875ba9bf9007cee4b2e49ab771fb24e694",
+      "title": "molecules (detail 11)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "101",
+      "project_folder": "molecules"
+    },
+    {
+      "work_id": "02874",
+      "record_hash": "86d3ef00eee5762953c6a06b8d2a204c7d931a1bd900e7f975a72b80b1fecd46",
+      "title": "molecules (detail 12)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "101",
+      "project_folder": "molecules"
+    },
+    {
+      "work_id": "02875",
+      "record_hash": "f88b2d9c52004709a59a58d672a78b4f07d2da5f9f48c82e77e34642727c90d5",
+      "title": "molecules (detail 13)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "101",
+      "project_folder": "molecules"
+    },
+    {
+      "work_id": "02876",
+      "record_hash": "b4ab43097c35518726a8a0541e25b0c5044c9fccf6571983538dd26c2e8afda7",
+      "title": "molecules (detail 14)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "101",
+      "project_folder": "molecules"
+    },
+    {
+      "work_id": "02877",
+      "record_hash": "806960ae7d9ea5a00470a1cdc29b4f344ab1357361066b99776f648d4031792d",
+      "title": "molecules (detail 15)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "101",
+      "project_folder": "molecules"
+    },
+    {
+      "work_id": "02878",
+      "record_hash": "ed2f1af6f82b03cf186fcd70d5799b2cac1538535e02c6ebd5c612a6e8fb8df7",
+      "title": "molecules (detail 16)",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "101",
+      "project_folder": "molecules"
     }
   ],
   "ordered_work_ids": [
     "00460",
     "00461",
-    "00462"
+    "00462",
+    "02859",
+    "02860",
+    "02861",
+    "02862",
+    "02863",
+    "02864",
+    "02865",
+    "02866",
+    "02867",
+    "02868",
+    "02869",
+    "02870",
+    "02871",
+    "02872",
+    "02873",
+    "02874",
+    "02875",
+    "02876",
+    "02877",
+    "02878"
   ],
   "project_folders": [
     "molecules"

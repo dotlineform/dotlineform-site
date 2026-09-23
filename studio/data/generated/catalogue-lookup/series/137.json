@@ -6,10 +6,9 @@
     "series_id": "137",
     "title": "tulips",
     "year": 2023,
-    "year_display": "2023",
-    "sort_fields": "work_id"
+    "year_display": "2023"
   },
-  "record_hash": "200abef143f29a4cbaf11d398635cb7d0dff4d45b5ba8887cc0e1d0b1e6ecef4",
+  "record_hash": "eda1ecd976f83db717fc1afff33992ce87e861b3bcd38b70aa518105cfb4c165",
   "member_works": [
     {
       "work_id": "01869",
@@ -55,6 +54,195 @@
       "year_display": "2023",
       "series_id": "137",
       "project_folder": "tulips"
+    },
+    {
+      "work_id": "04567",
+      "record_hash": "0b4965de944d9e8f8cca97244cff83e313bc37a216aa41a292d2fb1dbe9e25fc",
+      "title": "tulips 1 - detail 1",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "137",
+      "project_folder": "tulips"
+    },
+    {
+      "work_id": "04568",
+      "record_hash": "cf6621ab0ab3823873b1b8995ce720916273f3e05315825f273d36533f101f09",
+      "title": "tulips 1 - detail 2",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "137",
+      "project_folder": "tulips"
+    },
+    {
+      "work_id": "04569",
+      "record_hash": "bc2a33824cd5efb2712824b6617d1e8d5b6a6b816f63ee91de61e7902b8f7f8a",
+      "title": "tulips 1 - detail 3",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "137",
+      "project_folder": "tulips"
+    },
+    {
+      "work_id": "04570",
+      "record_hash": "36e69491a218f35e8379d120d3bba8ccf03e49293f349ee1afe3cc2331a66f29",
+      "title": "tulips 1 - detail 4",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "137",
+      "project_folder": "tulips"
+    },
+    {
+      "work_id": "04571",
+      "record_hash": "66493de0b5d1dd9cb8c88ae7af8f50a6627992575e6a0d2c3627fc6b93477239",
+      "title": "tulips 2 - detail 1",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "137",
+      "project_folder": "tulips"
+    },
+    {
+      "work_id": "04572",
+      "record_hash": "8e4cb9421542257137c5ddf25c77a48df94c70311e31442da6476aa8fa359053",
+      "title": "tulips 2 - detail 2",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "137",
+      "project_folder": "tulips"
+    },
+    {
+      "work_id": "04573",
+      "record_hash": "678b2895b44d3680954e8199bd5a59f4cbc3b320d38f204c8d1e8a52da3b92cc",
+      "title": "tulips 2 - detail 3",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "137",
+      "project_folder": "tulips"
+    },
+    {
+      "work_id": "04574",
+      "record_hash": "d0beba4f19036db7b4ae1c1eefaae40753a8d180dc1570b04bdf2a1f27429503",
+      "title": "tulips 2 - detail 4",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "137",
+      "project_folder": "tulips"
+    },
+    {
+      "work_id": "04575",
+      "record_hash": "7a8f372a37bc7a8a588fb014a17dd32deb7067e31c7b6c9ef7278eb8a3490e22",
+      "title": "tulips 3 - detail 1",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "137",
+      "project_folder": "tulips"
+    },
+    {
+      "work_id": "04576",
+      "record_hash": "e1bb5459c7f2854280959f252ba57e1ac5f8643a47a934ac68fe29e081785ed5",
+      "title": "tulips 3 - detail 2",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "137",
+      "project_folder": "tulips"
+    },
+    {
+      "work_id": "04577",
+      "record_hash": "bf7a68f02a857dca1e20a2a269d07cabf147a59a317b56108a22521e092fbd22",
+      "title": "tulips 3 - detail 3",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "137",
+      "project_folder": "tulips"
+    },
+    {
+      "work_id": "04578",
+      "record_hash": "52dabf79e1ef3a4db181df54636e5aa0b843cacbb3cfe76041aae68a01ddc531",
+      "title": "tulips 3 - detail 4",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "137",
+      "project_folder": "tulips"
+    },
+    {
+      "work_id": "04579",
+      "record_hash": "d2e852ff8747ac17954b346dd8f583fefd2e351355309607486a83879f4198d2",
+      "title": "tulips 4 - detail 1",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "137",
+      "project_folder": "tulips"
+    },
+    {
+      "work_id": "04580",
+      "record_hash": "f369ea9a5ec196d368c187ccbe3825b68a474dfb7cbc51f1a1ffe8a3d98ffda5",
+      "title": "tulips 4 - detail 2",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "137",
+      "project_folder": "tulips"
+    },
+    {
+      "work_id": "04581",
+      "record_hash": "5e62fc56f9f70b14aa6be544299f13eea3ff7e4ae4e7e2b7cd6578504104f6e8",
+      "title": "tulips 4 - detail 3",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "137",
+      "project_folder": "tulips"
+    },
+    {
+      "work_id": "04582",
+      "record_hash": "be921df520d44a1baa9ec905dec8b2145ca96e54ff3ef0bba954bea8627f7f56",
+      "title": "tulips 4 - detail 4",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "137",
+      "project_folder": "tulips"
+    },
+    {
+      "work_id": "04583",
+      "record_hash": "a776c44cbc0ef1d7d4ef49e423b8da4158eb43181d377f9d99ec6d378205faa9",
+      "title": "tulips 4 - detail 5",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "137",
+      "project_folder": "tulips"
+    },
+    {
+      "work_id": "04584",
+      "record_hash": "c17833a442b5020efa546ce45ef004cc4c5649842f32896993ac22ba9822ebd0",
+      "title": "tulips 5 - detail 1",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "137",
+      "project_folder": "tulips"
+    },
+    {
+      "work_id": "04585",
+      "record_hash": "cd5230069dbb0ab5c8e3ae1788804bca4c62affa2a7468c62ce72a22501bc3f8",
+      "title": "tulips 5 - detail 2",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "137",
+      "project_folder": "tulips"
+    },
+    {
+      "work_id": "04586",
+      "record_hash": "bc2c518f94f23b017d1f246d5b35a5413f084fac2051526e9ffa1602bd0a1281",
+      "title": "tulips 5 - detail 3",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "137",
+      "project_folder": "tulips"
+    },
+    {
+      "work_id": "04587",
+      "record_hash": "a913638dc7493f133ecbb91b0be54d219a5e7c68e7409426efefc2bbb5710e53",
+      "title": "tulips 5 - detail 4",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "137",
+      "project_folder": "tulips"
     }
   ],
   "ordered_work_ids": [
@@ -62,7 +250,28 @@
     "01870",
     "01871",
     "01872",
-    "01873"
+    "01873",
+    "04567",
+    "04568",
+    "04569",
+    "04570",
+    "04571",
+    "04572",
+    "04573",
+    "04574",
+    "04575",
+    "04576",
+    "04577",
+    "04578",
+    "04579",
+    "04580",
+    "04581",
+    "04582",
+    "04583",
+    "04584",
+    "04585",
+    "04586",
+    "04587"
   ],
   "project_folders": [
     "tulips"

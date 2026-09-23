@@ -6,10 +6,9 @@
     "series_id": "092",
     "title": "living surface hand form",
     "year": 2004,
-    "year_display": "1989, 2004",
-    "sort_fields": "work_id"
+    "year_display": "1989, 2004"
   },
-  "record_hash": "4076168a98e97449a13b435a92634861c90c1880eaf152d2013a359794522f72",
+  "record_hash": "30c1192e82a498acf68ccb8f509365c12aa64475f98af931b33911ff848a644b",
   "member_works": [
     {
       "work_id": "00463",
@@ -19,10 +18,80 @@
       "year_display": "1989, 2004",
       "series_id": "092",
       "project_folder": "living surface hand form"
+    },
+    {
+      "work_id": "02879",
+      "record_hash": "6e6ecd00a508a1039a2d912b1f3640c39089f60f759241e364167f1949c4efb9",
+      "title": "living surface hand form (original painting, 1989)",
+      "year": 2004,
+      "year_display": "1989, 2004",
+      "series_id": "092",
+      "project_folder": "living surface hand form"
+    },
+    {
+      "work_id": "02880",
+      "record_hash": "6f714b1d05598ddc2ac76f794d976ac6eb7c2163874e480c53af591c6c102150",
+      "title": "living surface (version 1)",
+      "year": 2004,
+      "year_display": "1989, 2004",
+      "series_id": "092",
+      "project_folder": "living surface hand form"
+    },
+    {
+      "work_id": "02881",
+      "record_hash": "14efd68cd725171bdf46d75c78b2989dd0c9f5bb785bec875a35bdb74a0728f8",
+      "title": "living surface (version 2)",
+      "year": 2004,
+      "year_display": "1989, 2004",
+      "series_id": "092",
+      "project_folder": "living surface hand form"
+    },
+    {
+      "work_id": "02882",
+      "record_hash": "dc368695c600c6c478c8102c82aba52c507d80975b5ff5d6638b8f5367ae27a9",
+      "title": "living surface (version 3)",
+      "year": 2004,
+      "year_display": "1989, 2004",
+      "series_id": "092",
+      "project_folder": "living surface hand form"
+    },
+    {
+      "work_id": "02883",
+      "record_hash": "d51fa0e092ff8eb6f328a0cb91df7f1c19081fcb8d202caa3e9256465f3a1046",
+      "title": "living surface (version 3) detail",
+      "year": 2004,
+      "year_display": "1989, 2004",
+      "series_id": "092",
+      "project_folder": "living surface hand form"
+    },
+    {
+      "work_id": "02884",
+      "record_hash": "85bd497a1827378a138f9dbe7b517029b2a39860bb157359dec13e0ee7c6caae",
+      "title": "living surface (version 4)",
+      "year": 2004,
+      "year_display": "1989, 2004",
+      "series_id": "092",
+      "project_folder": "living surface hand form"
+    },
+    {
+      "work_id": "02885",
+      "record_hash": "54cb68a75532aa8e5cbf068fb4a7558460acf01d0121bd5bd4c48c8f67e20824",
+      "title": "living surface (version 4) detail",
+      "year": 2004,
+      "year_display": "1989, 2004",
+      "series_id": "092",
+      "project_folder": "living surface hand form"
     }
   ],
   "ordered_work_ids": [
-    "00463"
+    "00463",
+    "02879",
+    "02880",
+    "02881",
+    "02882",
+    "02883",
+    "02884",
+    "02885"
   ],
   "project_folders": [
     "living surface hand form"

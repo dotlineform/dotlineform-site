@@ -6,10 +6,9 @@
     "series_id": "118",
     "title": "quantum random number theory",
     "year": 2015,
-    "year_display": "2009, 2015",
-    "sort_fields": "work_id"
+    "year_display": "2009, 2015"
   },
-  "record_hash": "aa4c0ba25191ce42e1d252f773a85f84f3263ccd7fd394be9f2be47f44a13062",
+  "record_hash": "78405301ad1fdcf9d58ce87a4480af3c0b8d5feac4578b5cfa5269fba230d744",
   "member_works": [
     {
       "work_id": "00383",
@@ -73,6 +72,384 @@
       "year_display": "2009",
       "series_id": "118",
       "project_folder": "qrnt (bits symbols)"
+    },
+    {
+      "work_id": "03137",
+      "record_hash": "72d08dc20e28753dc6f112fa97e19b2908728e90376311388c6c51d05017f3f0",
+      "title": "quantum random number theory (10,000) 1",
+      "year": 2009,
+      "year_display": "2009",
+      "series_id": "118",
+      "project_folder": "qrnt"
+    },
+    {
+      "work_id": "03138",
+      "record_hash": "c2939a3238cde1c356be3f109745c868396b57d9263343c60cef6c57d807ebff",
+      "title": "quantum random number theory (10,000) 2",
+      "year": 2009,
+      "year_display": "2009",
+      "series_id": "118",
+      "project_folder": "qrnt"
+    },
+    {
+      "work_id": "03139",
+      "record_hash": "e17d400a26264787fc8ee548952e0f62f4fc37128ab7c618fde50ca8e06eaf80",
+      "title": "quantum random number theory (10,000) 3",
+      "year": 2009,
+      "year_display": "2009",
+      "series_id": "118",
+      "project_folder": "qrnt"
+    },
+    {
+      "work_id": "03140",
+      "record_hash": "27bf725930117af8fdbe99ffebffa7c12a71588e441bd4c20c49d91a05af8f37",
+      "title": "quantum random number theory (10,000) 4",
+      "year": 2009,
+      "year_display": "2009",
+      "series_id": "118",
+      "project_folder": "qrnt"
+    },
+    {
+      "work_id": "03141",
+      "record_hash": "ad89b977c7ffb56d4f625cd02afbde8352550a0a458dcf0486b28778320d0e60",
+      "title": "quantum random number theory (10,000) 5",
+      "year": 2009,
+      "year_display": "2009",
+      "series_id": "118",
+      "project_folder": "qrnt"
+    },
+    {
+      "work_id": "03142",
+      "record_hash": "c295dc3826a07421d2b17d86a215e612abb9e487b99039d8ff3c0fbfdf0eaa27",
+      "title": "quantum random number theory (10,000) 6",
+      "year": 2009,
+      "year_display": "2009",
+      "series_id": "118",
+      "project_folder": "qrnt"
+    },
+    {
+      "work_id": "03143",
+      "record_hash": "590894a437850b72c69552d8f28da5744e3c8fd21711d80a8f6a7c40527353ca",
+      "title": "quantum random number theory (10,000) 7",
+      "year": 2009,
+      "year_display": "2009",
+      "series_id": "118",
+      "project_folder": "qrnt"
+    },
+    {
+      "work_id": "03144",
+      "record_hash": "0dbcd7beb598e459777318e360e289ea5f6c44c72e0bd3c295f9a8ae12410672",
+      "title": "quantum random number theory (10,000) 8",
+      "year": 2009,
+      "year_display": "2009",
+      "series_id": "118",
+      "project_folder": "qrnt"
+    },
+    {
+      "work_id": "03145",
+      "record_hash": "03aedb0552bd73acc8d46ce28f7160a75f790133c738a1cba07c5dda3a21f775",
+      "title": "quantum random number theory (10,000) 9",
+      "year": 2009,
+      "year_display": "2009",
+      "series_id": "118",
+      "project_folder": "qrnt"
+    },
+    {
+      "work_id": "03146",
+      "record_hash": "2edfa855b7ca04df6b6ad31f83d297b8bdae18d0be45674b715ad2b1cccdd119",
+      "title": "quantum random number theory (10,000) 10",
+      "year": 2009,
+      "year_display": "2009",
+      "series_id": "118",
+      "project_folder": "qrnt"
+    },
+    {
+      "work_id": "03147",
+      "record_hash": "b112f84352a766f7bdf61e0bc85adbba82348b2ece78cfb7cdfa0175962dd355",
+      "title": "qrnt - Searching for God exhibition - install 1",
+      "year": 2009,
+      "year_display": "2009",
+      "series_id": "118",
+      "project_folder": "qrnt"
+    },
+    {
+      "work_id": "03148",
+      "record_hash": "b78c725b6ea3a033710781a1a3eb4d27ccc3267ff8ea584a6371ff6cb874a0ea",
+      "title": "qrnt - Searching for God exhibition - install 2",
+      "year": 2009,
+      "year_display": "2009",
+      "series_id": "118",
+      "project_folder": "qrnt"
+    },
+    {
+      "work_id": "03149",
+      "record_hash": "ec2cbba292c832c38fb4b1d2b7ff4396048903a106077df28c57efd774643dfe",
+      "title": "qrnt - Searching for God exhibition - install 3",
+      "year": 2009,
+      "year_display": "2009",
+      "series_id": "118",
+      "project_folder": "qrnt"
+    },
+    {
+      "work_id": "03150",
+      "record_hash": "1f0e4e489c38e3c8df2c9eedabe1f5e5e0cd6649d35d9a33fd522305842e18c6",
+      "title": "qrnt form (2015-06-06)",
+      "year": 2015,
+      "year_display": "2015",
+      "series_id": "118",
+      "project_folder": "qrnt"
+    },
+    {
+      "work_id": "03151",
+      "record_hash": "af558ab596c3492d8209283efcd87e88e39326ae7d5fc0fdb835bb208842f7e4",
+      "title": "qrnt form (2015-06-06) detail 1",
+      "year": 2015,
+      "year_display": "2015",
+      "series_id": "118",
+      "project_folder": "qrnt"
+    },
+    {
+      "work_id": "03152",
+      "record_hash": "19aae439408df1bfb561a0cb2406153e5cf4c8baf83356b3fd82dce8ccfa9595",
+      "title": "qrnt form (2015-06-06) detail 2",
+      "year": 2015,
+      "year_display": "2015",
+      "series_id": "118",
+      "project_folder": "qrnt"
+    },
+    {
+      "work_id": "03153",
+      "record_hash": "eccde5a6d46e3ac498995305262d43ef5e3ff03e9d42f0ee4afdf66db20088f6",
+      "title": "qrnt form (2015-06-06) detail 3",
+      "year": 2015,
+      "year_display": "2015",
+      "series_id": "118",
+      "project_folder": "qrnt"
+    },
+    {
+      "work_id": "03154",
+      "record_hash": "3711f622019fa6da6c02e2310e241741bdf903b1ef42357a93de85e142eaf074",
+      "title": "bits symbols 1",
+      "year": 2009,
+      "year_display": "2009",
+      "series_id": "118",
+      "project_folder": "qrnt (bits symbols)"
+    },
+    {
+      "work_id": "03155",
+      "record_hash": "dd5cf956ad6f5fd704364f95c1754aa685bb3a621b63e3143a22db8cd4842317",
+      "title": "bits symbols 2",
+      "year": 2009,
+      "year_display": "2009",
+      "series_id": "118",
+      "project_folder": "qrnt (bits symbols)"
+    },
+    {
+      "work_id": "03156",
+      "record_hash": "69ccbbbb717547027baf3a7e1d351efce651814a88f9f24277026384daeff21b",
+      "title": "bits symbols 3",
+      "year": 2009,
+      "year_display": "2009",
+      "series_id": "118",
+      "project_folder": "qrnt (bits symbols)"
+    },
+    {
+      "work_id": "03157",
+      "record_hash": "8c2fd7c8ba9d898ed874857a9719a86ba19bddf076b38b7e3bd44860299b87ed",
+      "title": "bits symbols 4",
+      "year": 2009,
+      "year_display": "2009",
+      "series_id": "118",
+      "project_folder": "qrnt (bits symbols)"
+    },
+    {
+      "work_id": "03158",
+      "record_hash": "356879310f9577128b60a5ade64e08aa08dff689851de409f78549ae703c5cb4",
+      "title": "bits symbols 1.1",
+      "year": 2009,
+      "year_display": "2009",
+      "series_id": "118",
+      "project_folder": "qrnt (bits symbols)"
+    },
+    {
+      "work_id": "03159",
+      "record_hash": "2b5302f7d01f807137fcc9dd5abd7ac5a7f53f4bffa8375a42bdc75b669525b8",
+      "title": "bits symbols 1.2",
+      "year": 2009,
+      "year_display": "2009",
+      "series_id": "118",
+      "project_folder": "qrnt (bits symbols)"
+    },
+    {
+      "work_id": "03160",
+      "record_hash": "6cd251144328c43492a7cf1608e8015ff06a5081d4d4d827a1f6de86672cae69",
+      "title": "bits symbols 1.3",
+      "year": 2009,
+      "year_display": "2009",
+      "series_id": "118",
+      "project_folder": "qrnt (bits symbols)"
+    },
+    {
+      "work_id": "03161",
+      "record_hash": "0e5ee41fc9273e003f85628973b3b2d9542ee268c021fa45f07a518ce5acd786",
+      "title": "bits symbols 2.1",
+      "year": 2009,
+      "year_display": "2009",
+      "series_id": "118",
+      "project_folder": "qrnt (bits symbols)"
+    },
+    {
+      "work_id": "03162",
+      "record_hash": "6a295f668bef48b74928650ac0907c18c926ff31698fec133580407319361474",
+      "title": "bits symbols 2.2",
+      "year": 2009,
+      "year_display": "2009",
+      "series_id": "118",
+      "project_folder": "qrnt (bits symbols)"
+    },
+    {
+      "work_id": "03163",
+      "record_hash": "f1a6148aabdac47e0f91f6c4cb2ebbea0916901064a4095e6477ff6dc3e6b12c",
+      "title": "bits symbols 2.3",
+      "year": 2009,
+      "year_display": "2009",
+      "series_id": "118",
+      "project_folder": "qrnt (bits symbols)"
+    },
+    {
+      "work_id": "03164",
+      "record_hash": "7af3247c14099a0ca7171f4c861497135c827685bdd1aa5263c267dedd08c603",
+      "title": "bits symbols 3.1",
+      "year": 2009,
+      "year_display": "2009",
+      "series_id": "118",
+      "project_folder": "qrnt (bits symbols)"
+    },
+    {
+      "work_id": "03165",
+      "record_hash": "d48411938572832da5ea7d8c1da84e8f2872328dbcb843dab44c446ab8dfd3a8",
+      "title": "bits symbols 3.2",
+      "year": 2009,
+      "year_display": "2009",
+      "series_id": "118",
+      "project_folder": "qrnt (bits symbols)"
+    },
+    {
+      "work_id": "03166",
+      "record_hash": "f54215287aa16c01ba8909d782f852e88605adc84d791de16eeba94e93a71882",
+      "title": "bits symbols 3.3",
+      "year": 2009,
+      "year_display": "2009",
+      "series_id": "118",
+      "project_folder": "qrnt (bits symbols)"
+    },
+    {
+      "work_id": "03167",
+      "record_hash": "3e55ec4fa6e6147c02c038a36989e23ea4171e68256c3cd2f8caeb7878ab66cf",
+      "title": "bits symbols 4.1",
+      "year": 2009,
+      "year_display": "2009",
+      "series_id": "118",
+      "project_folder": "qrnt (bits symbols)"
+    },
+    {
+      "work_id": "03168",
+      "record_hash": "d02653bca681ad730ab02f3f35238e104e00294b0302a087fbdc4ea50e252ffa",
+      "title": "bits symbols 4.2",
+      "year": 2009,
+      "year_display": "2009",
+      "series_id": "118",
+      "project_folder": "qrnt (bits symbols)"
+    },
+    {
+      "work_id": "03169",
+      "record_hash": "cb11a028815d58f9b0b8b65a906c23450ead905c79752e13901ef440c4e3f6d6",
+      "title": "bits symbols 4.3",
+      "year": 2009,
+      "year_display": "2009",
+      "series_id": "118",
+      "project_folder": "qrnt (bits symbols)"
+    },
+    {
+      "work_id": "03170",
+      "record_hash": "14b6f61e3769197f3a4f874e45a49e52ef04ca307da45f3453908dad8b38cb8b",
+      "title": "bits symbols 1.1.1",
+      "year": 2009,
+      "year_display": "2009",
+      "series_id": "118",
+      "project_folder": "qrnt (bits symbols)"
+    },
+    {
+      "work_id": "03171",
+      "record_hash": "15ef1d506d0abe16b51443e9a7ce8635bcd29d2fdfbcc2a35cf8abe5af345247",
+      "title": "bits symbols 1.1.2",
+      "year": 2009,
+      "year_display": "2009",
+      "series_id": "118",
+      "project_folder": "qrnt (bits symbols)"
+    },
+    {
+      "work_id": "03172",
+      "record_hash": "aef6d8d07906f0b1541d07479970d5bdbb307fa106c99b0633dd954a124a5b7f",
+      "title": "bits symbols 1.1.3",
+      "year": 2009,
+      "year_display": "2009",
+      "series_id": "118",
+      "project_folder": "qrnt (bits symbols)"
+    },
+    {
+      "work_id": "03173",
+      "record_hash": "10a129387bb2bcb4c9478e08ce656bf26fad922fdf5f980dbfd18e9b13f7ae8b",
+      "title": "bits symbols 1.2.1",
+      "year": 2009,
+      "year_display": "2009",
+      "series_id": "118",
+      "project_folder": "qrnt (bits symbols)"
+    },
+    {
+      "work_id": "03174",
+      "record_hash": "351c92cae99fa9f04f74b2bf8b0ba764827a745a55701ca3fcd43283f9428c72",
+      "title": "bits symbols 1.2.2",
+      "year": 2009,
+      "year_display": "2009",
+      "series_id": "118",
+      "project_folder": "qrnt (bits symbols)"
+    },
+    {
+      "work_id": "03175",
+      "record_hash": "f72f89dc4862ac5623a820024332eb26a3e9a1e52cbaa7514b43006a1ba20e6f",
+      "title": "bits symbols 1.2.3",
+      "year": 2009,
+      "year_display": "2009",
+      "series_id": "118",
+      "project_folder": "qrnt (bits symbols)"
+    },
+    {
+      "work_id": "03176",
+      "record_hash": "0a0656d3353aa0087e21341fff12207542e034774f25325e3e8874d16c64146b",
+      "title": "bits symbols 1.3.1",
+      "year": 2009,
+      "year_display": "2009",
+      "series_id": "118",
+      "project_folder": "qrnt (bits symbols)"
+    },
+    {
+      "work_id": "03177",
+      "record_hash": "35574b0f9610191298f9823ad7bdda014ccc6cd2cf51f792889ed1c05773c86d",
+      "title": "bits symbols 1.3.2",
+      "year": 2009,
+      "year_display": "2009",
+      "series_id": "118",
+      "project_folder": "qrnt (bits symbols)"
+    },
+    {
+      "work_id": "03178",
+      "record_hash": "527c4bfca433cf2063209d0261d62015e36ca9c2e6d2841e97c67fea5a1aec5d",
+      "title": "bits symbols 1.3.3",
+      "year": 2009,
+      "year_display": "2009",
+      "series_id": "118",
+      "project_folder": "qrnt (bits symbols)"
     }
   ],
   "ordered_work_ids": [
@@ -82,7 +459,49 @@
     "00631",
     "00632",
     "00633",
-    "00634"
+    "00634",
+    "03137",
+    "03138",
+    "03139",
+    "03140",
+    "03141",
+    "03142",
+    "03143",
+    "03144",
+    "03145",
+    "03146",
+    "03147",
+    "03148",
+    "03149",
+    "03150",
+    "03151",
+    "03152",
+    "03153",
+    "03154",
+    "03155",
+    "03156",
+    "03157",
+    "03158",
+    "03159",
+    "03160",
+    "03161",
+    "03162",
+    "03163",
+    "03164",
+    "03165",
+    "03166",
+    "03167",
+    "03168",
+    "03169",
+    "03170",
+    "03171",
+    "03172",
+    "03173",
+    "03174",
+    "03175",
+    "03176",
+    "03177",
+    "03178"
   ],
   "project_folders": [
     "qrnt",

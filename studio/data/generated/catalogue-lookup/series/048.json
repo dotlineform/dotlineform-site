@@ -6,10 +6,9 @@
     "series_id": "048",
     "title": "entangled form",
     "year": 2023,
-    "year_display": "2023",
-    "sort_fields": "work_id"
+    "year_display": "2023"
   },
-  "record_hash": "46a4ab5726f0bbb3547b20918c4f40abe3677730332d56bc91556869a6008aed",
+  "record_hash": "fc80272e3909dc458a956beaaf798b3d5a95ba4b0229437d4cf0e217c6a84e0f",
   "member_works": [
     {
       "work_id": "01044",
@@ -28,11 +27,31 @@
       "year_display": "2023",
       "series_id": "048",
       "project_folder": "entangled form"
+    },
+    {
+      "work_id": "03627",
+      "record_hash": "8d565f5c74f1613c2676cbf9bae38585e3b24fa577afe88984d0aa712cc57470",
+      "title": "entangled form' - spider",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "048",
+      "project_folder": "entangled form"
+    },
+    {
+      "work_id": "03628",
+      "record_hash": "33b193c049554d93b90d339d9ccae5bb31caa251e2d4af0a74904d2af3097117",
+      "title": "entangled form' - spider (detail)",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "048",
+      "project_folder": "entangled form"
     }
   ],
   "ordered_work_ids": [
     "01044",
-    "01045"
+    "01045",
+    "03627",
+    "03628"
   ],
   "project_folders": [
     "entangled form"

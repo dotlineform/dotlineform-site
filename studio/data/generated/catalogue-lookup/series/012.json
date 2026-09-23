@@ -6,10 +6,9 @@
     "series_id": "012",
     "title": "all the little cracks",
     "year": 2010,
-    "year_display": "2010, 2016",
-    "sort_fields": "work_id"
+    "year_display": "2010, 2016"
   },
-  "record_hash": "18b0ac16f7ef52d0e8a016858e892843968ed8d4c2cfe02852e4b64a73fbc4c9",
+  "record_hash": "9cbfdfbb41e7a19814e94a2bb104f9adf76e8b744a40b0ac67e89793869c9535",
   "member_works": [
     {
       "work_id": "00751",
@@ -28,11 +27,91 @@
       "year_display": "2016",
       "series_id": "012",
       "project_folder": "all the little cracks"
+    },
+    {
+      "work_id": "03359",
+      "record_hash": "df3d80d1fb1b08085de70afa4c800ca2515713323b4f5a0ba39f340d0165f425",
+      "title": "all the little cracks - detail 1",
+      "year": 2010,
+      "year_display": "2010",
+      "series_id": "012",
+      "project_folder": "all the little cracks"
+    },
+    {
+      "work_id": "03360",
+      "record_hash": "2a3800820d0431e64fd289af463d5135c597ea1470c7ab21a401586733fdd489",
+      "title": "all the little cracks - detail 2",
+      "year": 2010,
+      "year_display": "2010",
+      "series_id": "012",
+      "project_folder": "all the little cracks"
+    },
+    {
+      "work_id": "03361",
+      "record_hash": "a0790623509cec95a69180b4158ba313924430d443b05a04db8338091f2d3f32",
+      "title": "all the little cracks - detail 3",
+      "year": 2010,
+      "year_display": "2010",
+      "series_id": "012",
+      "project_folder": "all the little cracks"
+    },
+    {
+      "work_id": "03362",
+      "record_hash": "e927150acdc4dbdf84daf873376709db2b0674259c62dda534dcd6fe67fe3c3e",
+      "title": "all the little cracks - detail 4",
+      "year": 2010,
+      "year_display": "2010",
+      "series_id": "012",
+      "project_folder": "all the little cracks"
+    },
+    {
+      "work_id": "03363",
+      "record_hash": "2c099d9aca1495b07e7b77ad6581f98da2dc4c96c38fd1fee2652d7bb5f49be6",
+      "title": "all the little cracks again - detail 1",
+      "year": 2016,
+      "year_display": "2016",
+      "series_id": "012",
+      "project_folder": "all the little cracks"
+    },
+    {
+      "work_id": "03364",
+      "record_hash": "dce9b46bb380dcf75176a2524ef1d5052963d89bb5ab37c1bce4709f09583ad3",
+      "title": "all the little cracks again - detail 2",
+      "year": 2016,
+      "year_display": "2016",
+      "series_id": "012",
+      "project_folder": "all the little cracks"
+    },
+    {
+      "work_id": "03365",
+      "record_hash": "62ddbf605df108edf603c09a8ee8ca1edd9f1f648f3e6d87196b593acbb86a42",
+      "title": "all the little cracks again - detail 3",
+      "year": 2016,
+      "year_display": "2016",
+      "series_id": "012",
+      "project_folder": "all the little cracks"
+    },
+    {
+      "work_id": "03366",
+      "record_hash": "6d5eef2ac15f0e9ac369c31274b55282342256ac9e069920fdc70441920de6f5",
+      "title": "all the little cracks again - detail 4",
+      "year": 2016,
+      "year_display": "2016",
+      "series_id": "012",
+      "project_folder": "all the little cracks"
     }
   ],
   "ordered_work_ids": [
     "00751",
-    "00752"
+    "00752",
+    "03359",
+    "03360",
+    "03361",
+    "03362",
+    "03363",
+    "03364",
+    "03365",
+    "03366"
   ],
   "project_folders": [
     "all the little cracks"

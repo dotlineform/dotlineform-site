@@ -6,10 +6,9 @@
     "series_id": "105",
     "title": "nerve",
     "year": 1995,
-    "year_display": "1990-95",
-    "sort_fields": "work_id"
+    "year_display": "1990-95"
   },
-  "record_hash": "21bc3ab34c220f99838df8f447beb9af8a3a6c79be2101a8559b344ed48ca37a",
+  "record_hash": "bc01af93e4f8a7391d23936603fb413522f521d574179b373855effa55e17983",
   "member_works": [
     {
       "work_id": "00008",
@@ -37,12 +36,302 @@
       "year_display": "1993",
       "series_id": "105",
       "project_folder": "nerve (formaldehyde form)"
+    },
+    {
+      "work_id": "01981",
+      "record_hash": "8225598a48ca4849cc9874cc1eb6fd33ee42ec941cc3f1dcacf36268476577e2",
+      "title": "nerve (abattoir) - front cover",
+      "year": 1995,
+      "year_display": "1990-95",
+      "series_id": "105",
+      "project_folder": "nerve (abattoir)"
+    },
+    {
+      "work_id": "01982",
+      "record_hash": "32da27df3d1873b1ecbd3f8cf8d29feef8432ca37dc12cec9458a69f9174d15d",
+      "title": "nerve (abattoir) - inside cover",
+      "year": 1995,
+      "year_display": "1990-95",
+      "series_id": "105",
+      "project_folder": "nerve (abattoir)"
+    },
+    {
+      "work_id": "01983",
+      "record_hash": "e21d50e289720aaff9c3fb67ccce7a1237c9621cc6cfd385d30aa3ab99877778",
+      "title": "nerve (abattoir) - 1",
+      "year": 1995,
+      "year_display": "1990-95",
+      "series_id": "105",
+      "project_folder": "nerve (abattoir)"
+    },
+    {
+      "work_id": "01984",
+      "record_hash": "05ac3d91eee54a35bcf78e906f636162f16638e94fd96e5d198b8058272d335c",
+      "title": "nerve (abattoir) - 2",
+      "year": 1995,
+      "year_display": "1990-95",
+      "series_id": "105",
+      "project_folder": "nerve (abattoir)"
+    },
+    {
+      "work_id": "01985",
+      "record_hash": "c1958bf9017cdee6cd4415c81668f610ba301fa68f82b9102790de46c44bbd60",
+      "title": "nerve (abattoir) - 3",
+      "year": 1995,
+      "year_display": "1990-95",
+      "series_id": "105",
+      "project_folder": "nerve (abattoir)"
+    },
+    {
+      "work_id": "01986",
+      "record_hash": "1d6813c629622d5f5f92c0379ef34da02e2f5d9130d7c2b4a72ce0bd4076ccad",
+      "title": "nerve (abattoir) - 4",
+      "year": 1995,
+      "year_display": "1990-95",
+      "series_id": "105",
+      "project_folder": "nerve (abattoir)"
+    },
+    {
+      "work_id": "01987",
+      "record_hash": "8372a75ee14ecd3fafc998cd3746b214de11add3e9960a0e344c3d7d4845564e",
+      "title": "nerve (abattoir) - 5",
+      "year": 1995,
+      "year_display": "1990-95",
+      "series_id": "105",
+      "project_folder": "nerve (abattoir)"
+    },
+    {
+      "work_id": "01988",
+      "record_hash": "078e4d3e095b148fa6d27e54f24a455a6f5077af7e4ee67f991003139437256f",
+      "title": "nerve (abattoir) - 6",
+      "year": 1995,
+      "year_display": "1990-95",
+      "series_id": "105",
+      "project_folder": "nerve (abattoir)"
+    },
+    {
+      "work_id": "01989",
+      "record_hash": "440bec72ea579e9c72ac9dd8559a2b6af31eb2911b5865bd79be47e89f3ae52d",
+      "title": "nerve (abattoir) - 7",
+      "year": 1995,
+      "year_display": "1990-95",
+      "series_id": "105",
+      "project_folder": "nerve (abattoir)"
+    },
+    {
+      "work_id": "01990",
+      "record_hash": "cb1522d6c0c325b662cfd50a5568c3a6eb78cccaf8b27fd23975614ecd5bcac2",
+      "title": "nerve (abattoir) - back cover",
+      "year": 1995,
+      "year_display": "1990-95",
+      "series_id": "105",
+      "project_folder": "nerve (abattoir)"
+    },
+    {
+      "work_id": "01991",
+      "record_hash": "e99e1e3d1c3aef1845dec3f4223d58aedf948c9507c070347e6cadffd0b44efa",
+      "title": "nerve (formaldehyde form) - front cover",
+      "year": 1993,
+      "year_display": "1993",
+      "series_id": "105",
+      "project_folder": "nerve (formaldehyde form)"
+    },
+    {
+      "work_id": "01992",
+      "record_hash": "7588ecb639684781ea8237faeace7a53f1269d9f8bade1540e5c85aa46fcbcaa",
+      "title": "nerve (formaldehyde form) - 1",
+      "year": 1993,
+      "year_display": "1993",
+      "series_id": "105",
+      "project_folder": "nerve (formaldehyde form)"
+    },
+    {
+      "work_id": "01993",
+      "record_hash": "5b793a53e83d9ff48b384e15edcecfec8844b2df952640049dd6d92b5a3d6919",
+      "title": "nerve (formaldehyde form) - 2",
+      "year": 1993,
+      "year_display": "1993",
+      "series_id": "105",
+      "project_folder": "nerve (formaldehyde form)"
+    },
+    {
+      "work_id": "01994",
+      "record_hash": "327edd2930dbcc0a873f598972c28b4a052546583e4e6df30f47cfcd99192cf7",
+      "title": "nerve (formaldehyde form) - 3",
+      "year": 1993,
+      "year_display": "1993",
+      "series_id": "105",
+      "project_folder": "nerve (formaldehyde form)"
+    },
+    {
+      "work_id": "01995",
+      "record_hash": "c350ba2ac5965c06fe38fe3376f42cdad0b40b498c69c16f7cd059c64c3d0e88",
+      "title": "nerve (formaldehyde form) - 4",
+      "year": 1993,
+      "year_display": "1993",
+      "series_id": "105",
+      "project_folder": "nerve (formaldehyde form)"
+    },
+    {
+      "work_id": "01996",
+      "record_hash": "6414d2c3954e05ffbdcf0f45e4bbf89cf430506ab4f29b34fffc08e552ae52fb",
+      "title": "nerve (formaldehyde form) - 5",
+      "year": 1993,
+      "year_display": "1993",
+      "series_id": "105",
+      "project_folder": "nerve (formaldehyde form)"
+    },
+    {
+      "work_id": "01997",
+      "record_hash": "b4cbff5099b47b38f65fe51aa335070affcc7569d1a182fef05d087c9fae50be",
+      "title": "nerve (formaldehyde form) - 6",
+      "year": 1993,
+      "year_display": "1993",
+      "series_id": "105",
+      "project_folder": "nerve (formaldehyde form)"
+    },
+    {
+      "work_id": "01998",
+      "record_hash": "cec8be975410eec6c01f42e63b1a90a09cc8e81b0562fd01599bb404c8bc3e07",
+      "title": "nerve (formaldehyde form) - 7",
+      "year": 1993,
+      "year_display": "1993",
+      "series_id": "105",
+      "project_folder": "nerve (formaldehyde form)"
+    },
+    {
+      "work_id": "01999",
+      "record_hash": "a1f1ef34e5cbd83132699c6f0ff409fdb227a0f97d2f71a4449ddaa91ef97332",
+      "title": "nerve (formaldehyde form) - 8",
+      "year": 1993,
+      "year_display": "1993",
+      "series_id": "105",
+      "project_folder": "nerve (formaldehyde form)"
+    },
+    {
+      "work_id": "02000",
+      "record_hash": "cf61dcdddbea760bcfddeb1eacf0c6aa26e4ac83fb0f6b498a3d42ab781e4df0",
+      "title": "nerve (formaldehyde form) - 9",
+      "year": 1993,
+      "year_display": "1993",
+      "series_id": "105",
+      "project_folder": "nerve (formaldehyde form)"
+    },
+    {
+      "work_id": "02001",
+      "record_hash": "5768f51cdbfc562cf85da4d3e780cd84a2ffbf89eb38874f0b8596e17526efa7",
+      "title": "nerve (formaldehyde form) - 10",
+      "year": 1993,
+      "year_display": "1993",
+      "series_id": "105",
+      "project_folder": "nerve (formaldehyde form)"
+    },
+    {
+      "work_id": "02002",
+      "record_hash": "041ef86b5a09f15cfce272bb4109e9fb816c1bb441f23445df593632c4559cb0",
+      "title": "nerve (formaldehyde form) - 11",
+      "year": 1993,
+      "year_display": "1993",
+      "series_id": "105",
+      "project_folder": "nerve (formaldehyde form)"
+    },
+    {
+      "work_id": "02003",
+      "record_hash": "5bdd7fa1ce60684a245f491eb8db21a8963982a4eefcc8d91a58a340e50b74c3",
+      "title": "nerve (formaldehyde form) - 12",
+      "year": 1993,
+      "year_display": "1993",
+      "series_id": "105",
+      "project_folder": "nerve (formaldehyde form)"
+    },
+    {
+      "work_id": "02004",
+      "record_hash": "a491da4f1192e16a3475b40d63f903dcee76c7936de9fb94e9d72e305fc27680",
+      "title": "nerve (formaldehyde form) - 13",
+      "year": 1993,
+      "year_display": "1993",
+      "series_id": "105",
+      "project_folder": "nerve (formaldehyde form)"
+    },
+    {
+      "work_id": "02005",
+      "record_hash": "3803f54485d69e30b73b7fa31dc8d756dbc455dabd8a32015f954ed58b8ac867",
+      "title": "nerve (formaldehyde form) - 14",
+      "year": 1993,
+      "year_display": "1993",
+      "series_id": "105",
+      "project_folder": "nerve (formaldehyde form)"
+    },
+    {
+      "work_id": "02006",
+      "record_hash": "a626aa3a04d378c368c57f13450bee4d0c91da7ae4a2f7cff8f3e59dbfd8fd5b",
+      "title": "nerve (formaldehyde form) - 15",
+      "year": 1993,
+      "year_display": "1993",
+      "series_id": "105",
+      "project_folder": "nerve (formaldehyde form)"
+    },
+    {
+      "work_id": "02007",
+      "record_hash": "175396da0dcbe186d9849ab55ef48415aeaacf17c137156a48e32bf79ac3efd3",
+      "title": "nerve (formaldehyde form) - 16",
+      "year": 1993,
+      "year_display": "1993",
+      "series_id": "105",
+      "project_folder": "nerve (formaldehyde form)"
+    },
+    {
+      "work_id": "02008",
+      "record_hash": "cbdc3067f71ace7356ab6e82f635eea6342ca519b3187bc03a6f676fe40d18da",
+      "title": "nerve (formaldehyde form) - 17",
+      "year": 1993,
+      "year_display": "1993",
+      "series_id": "105",
+      "project_folder": "nerve (formaldehyde form)"
+    },
+    {
+      "work_id": "02009",
+      "record_hash": "4fa38a4d62033607aed684e521a43a93b61af8c4141fd92f221f91bf128baf44",
+      "title": "nerve (formaldehyde form) - back cover",
+      "year": 1993,
+      "year_display": "1993",
+      "series_id": "105",
+      "project_folder": "nerve (formaldehyde form)"
     }
   ],
   "ordered_work_ids": [
     "00008",
     "00163",
-    "00166"
+    "00166",
+    "01981",
+    "01982",
+    "01983",
+    "01984",
+    "01985",
+    "01986",
+    "01987",
+    "01988",
+    "01989",
+    "01990",
+    "01991",
+    "01992",
+    "01993",
+    "01994",
+    "01995",
+    "01996",
+    "01997",
+    "01998",
+    "01999",
+    "02000",
+    "02001",
+    "02002",
+    "02003",
+    "02004",
+    "02005",
+    "02006",
+    "02007",
+    "02008",
+    "02009"
   ],
   "project_folders": [
     "nerve",

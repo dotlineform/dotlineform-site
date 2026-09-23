@@ -6,10 +6,9 @@
     "series_id": "122",
     "title": "room",
     "year": 2007,
-    "year_display": "2007-08",
-    "sort_fields": "work_id"
+    "year_display": "2007-08"
   },
-  "record_hash": "752d456bf8aa18585e677e9861aca2be2bc887503e1fbf819632000359fd435d",
+  "record_hash": "e0ef19cd79b2c3728586056287f4e5a970b38f4a9f5953273565c09a49a08807",
   "member_works": [
     {
       "work_id": "01629",
@@ -46,13 +45,133 @@
       "year_display": "2008",
       "series_id": "122",
       "project_folder": "room"
+    },
+    {
+      "work_id": "04353",
+      "record_hash": "e19ada2210e0e69986bd15057a180330af3a132706130535f29d6f406c753e1e",
+      "title": "room 1 - detail 1",
+      "year": 2007,
+      "year_display": "2007",
+      "series_id": "122",
+      "project_folder": "room"
+    },
+    {
+      "work_id": "04354",
+      "record_hash": "b5a3f8077470caf9b5621520dc7fd28b05014cdd75c9fb937d7143f03ce7a545",
+      "title": "room 1 - detail 2",
+      "year": 2007,
+      "year_display": "2007",
+      "series_id": "122",
+      "project_folder": "room"
+    },
+    {
+      "work_id": "04355",
+      "record_hash": "8d262db10f77ea2f524c05b68ac9c9887871fa047d1e87fccf6fdbbbc7db4a5f",
+      "title": "room 1 - detail 3",
+      "year": 2007,
+      "year_display": "2007",
+      "series_id": "122",
+      "project_folder": "room"
+    },
+    {
+      "work_id": "04356",
+      "record_hash": "379e07e9ee947fd09dcc94759a4decc925f3b2176d3aa669a46622aa74e8c594",
+      "title": "room 2 - detail 1",
+      "year": 2007,
+      "year_display": "2007",
+      "series_id": "122",
+      "project_folder": "room"
+    },
+    {
+      "work_id": "04357",
+      "record_hash": "4abb07f0ff8ca1105cced9dc09976322221467a9120db9c7c43e3472d8a4fdc2",
+      "title": "room 2 - detail 2",
+      "year": 2007,
+      "year_display": "2007",
+      "series_id": "122",
+      "project_folder": "room"
+    },
+    {
+      "work_id": "04358",
+      "record_hash": "e15df6df5dd087dfaf07f2fb04ad9ba2ebb848c925fae01f5b1320d3b6b7bed3",
+      "title": "room 2 - detail 3",
+      "year": 2007,
+      "year_display": "2007",
+      "series_id": "122",
+      "project_folder": "room"
+    },
+    {
+      "work_id": "04359",
+      "record_hash": "e8fc44bc924ef31a9eebc6ab9c3db5a59a60665b061284444edfff87c6d383d9",
+      "title": "room 3 - detail 1",
+      "year": 2008,
+      "year_display": "2008",
+      "series_id": "122",
+      "project_folder": "room"
+    },
+    {
+      "work_id": "04360",
+      "record_hash": "fc4b0db5a56d8edae355f62571470177e35f12fa7914da942606dbcba9a29fac",
+      "title": "room 3 - detail 2",
+      "year": 2008,
+      "year_display": "2008",
+      "series_id": "122",
+      "project_folder": "room"
+    },
+    {
+      "work_id": "04361",
+      "record_hash": "a354330204399292716d6377c287a385269c1a347b4989a062d8cb9a3a2397f7",
+      "title": "room 3 - detail 3",
+      "year": 2008,
+      "year_display": "2008",
+      "series_id": "122",
+      "project_folder": "room"
+    },
+    {
+      "work_id": "04362",
+      "record_hash": "fea7466ca52017b56430750a24ad4e0ef38107b316e815fec772ee5305b88c89",
+      "title": "room 4 - detail 1",
+      "year": 2008,
+      "year_display": "2008",
+      "series_id": "122",
+      "project_folder": "room"
+    },
+    {
+      "work_id": "04363",
+      "record_hash": "e951bbace96877b2f38b7f03c33781f1039696e92ab48dd144f416718782e3f8",
+      "title": "room 4 - detail 2",
+      "year": 2008,
+      "year_display": "2008",
+      "series_id": "122",
+      "project_folder": "room"
+    },
+    {
+      "work_id": "04364",
+      "record_hash": "18da4c7fc4c07b00808f6404c89c7fe3bb309265495fee6791b6ad42a7a90103",
+      "title": "room 4 - detail 3",
+      "year": 2008,
+      "year_display": "2008",
+      "series_id": "122",
+      "project_folder": "room"
     }
   ],
   "ordered_work_ids": [
     "01629",
     "01630",
     "01631",
-    "01632"
+    "01632",
+    "04353",
+    "04354",
+    "04355",
+    "04356",
+    "04357",
+    "04358",
+    "04359",
+    "04360",
+    "04361",
+    "04362",
+    "04363",
+    "04364"
   ],
   "project_folders": [
     "room"

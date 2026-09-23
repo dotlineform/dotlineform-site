@@ -6,10 +6,9 @@
     "series_id": "123",
     "title": "snow",
     "year": 2018,
-    "year_display": "2018",
-    "sort_fields": "work_id"
+    "year_display": "2018"
   },
-  "record_hash": "25d78987f09f4296d662b0899085bcb29d37dbe45654848f8e60ccfe523d2b90",
+  "record_hash": "ae2c8c1442a333c380b3656eaf1cf4195420fd1e43ece3450e159f71e9c2c671",
   "member_works": [
     {
       "work_id": "01655",

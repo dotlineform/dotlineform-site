@@ -6,10 +6,9 @@
     "series_id": "126",
     "title": "spine symbols",
     "year": 2008,
-    "year_display": "2008",
-    "sort_fields": "work_id"
+    "year_display": "2008"
   },
-  "record_hash": "382c0c63f1a5d9b78fbd0ecd36a4dc975f4bf657cd0165e52d1feb6ec87a8986",
+  "record_hash": "f8f2ddbbbdce42ff0f3b583b5c16ff148c940601e08644b1da6a2d049bd667ee",
   "member_works": [
     {
       "work_id": "01720",
@@ -19,10 +18,740 @@
       "year_display": "2008",
       "series_id": "126",
       "project_folder": "spine symbols"
+    },
+    {
+      "work_id": "04365",
+      "record_hash": "6f1a6746edb44e5285656a6946e70cb63fb92d7a7cb14b46b5cca86c02e11051",
+      "title": "bounce silly nosey messy",
+      "year": 2008,
+      "year_display": "2008",
+      "series_id": "126",
+      "project_folder": "spine symbols"
+    },
+    {
+      "work_id": "04366",
+      "record_hash": "afbc201fed08d20ce6d96072a4d88311241fd12f2d74c37bc0b3271010d70d79",
+      "title": "bounce silly",
+      "year": 2008,
+      "year_display": "2008",
+      "series_id": "126",
+      "project_folder": "spine symbols"
+    },
+    {
+      "work_id": "04367",
+      "record_hash": "bd02791b7c1f3eb85624e41440d04b4cfd1b2e3c6f11c784ff51fde77bae5c59",
+      "title": "bounce silly'",
+      "year": 2008,
+      "year_display": "2008",
+      "series_id": "126",
+      "project_folder": "spine symbols"
+    },
+    {
+      "work_id": "04368",
+      "record_hash": "d2c17b4dd9dea63aa87014c6568d2c0ba59cef1da90a211fc3c592c29afb940c",
+      "title": "bounce",
+      "year": 2008,
+      "year_display": "2008",
+      "series_id": "126",
+      "project_folder": "spine symbols"
+    },
+    {
+      "work_id": "04369",
+      "record_hash": "6924017e21a368572b948e3c7ba0e9636ac00e6cdf5cd02776cf6778f093c683",
+      "title": "chatterbox (lower)",
+      "year": 2008,
+      "year_display": "2008",
+      "series_id": "126",
+      "project_folder": "spine symbols"
+    },
+    {
+      "work_id": "04370",
+      "record_hash": "7da3cf22a7a731fcc1294c77c2d6e3b80bd8fab64c61c9931817ec1cd8ca26e8",
+      "title": "chatterbox (upper)",
+      "year": 2008,
+      "year_display": "2008",
+      "series_id": "126",
+      "project_folder": "spine symbols"
+    },
+    {
+      "work_id": "04371",
+      "record_hash": "17b02376a74c0c5125bf2496fc8694c21312ae2a5f282b1bfe23f2233d6ba402",
+      "title": "chatterbox greedy",
+      "year": 2008,
+      "year_display": "2008",
+      "series_id": "126",
+      "project_folder": "spine symbols"
+    },
+    {
+      "work_id": "04372",
+      "record_hash": "b6d33ad343a17323fffd7d2fd892291394de2763294103533c89170eacc9f08b",
+      "title": "chatterbox greedy'",
+      "year": 2008,
+      "year_display": "2008",
+      "series_id": "126",
+      "project_folder": "spine symbols"
+    },
+    {
+      "work_id": "04373",
+      "record_hash": "5d85d166d7e54679916f42bc016a8750511b56e55d59ef9d15a3bc8c57853c61",
+      "title": "chatterbox",
+      "year": 2008,
+      "year_display": "2008",
+      "series_id": "126",
+      "project_folder": "spine symbols"
+    },
+    {
+      "work_id": "04374",
+      "record_hash": "60bd84759f2879e3a0b567afda4ae130b6ff5297cc80f49b7f1e9de2510d75b3",
+      "title": "chatterbox'",
+      "year": 2008,
+      "year_display": "2008",
+      "series_id": "126",
+      "project_folder": "spine symbols"
+    },
+    {
+      "work_id": "04375",
+      "record_hash": "8915ce1e5d3e50ac35b7f829e3e1a51deef3061e1ab87010128df60e64c67133",
+      "title": "clever funny wrong",
+      "year": 2008,
+      "year_display": "2008",
+      "series_id": "126",
+      "project_folder": "spine symbols"
+    },
+    {
+      "work_id": "04376",
+      "record_hash": "3718fd6895a6563e03e55f4ade62151a28e67b06f8d7a75c79997d37e3653b96",
+      "title": "clever funny wrong'",
+      "year": 2008,
+      "year_display": "2008",
+      "series_id": "126",
+      "project_folder": "spine symbols"
+    },
+    {
+      "work_id": "04377",
+      "record_hash": "7c71c81e484ac8d33aac4a73623c7929c77f401953799f01eca9edaaea85481f",
+      "title": "daydream skinny forgetful",
+      "year": 2008,
+      "year_display": "2008",
+      "series_id": "126",
+      "project_folder": "spine symbols"
+    },
+    {
+      "work_id": "04378",
+      "record_hash": "c59f277d1ecb507fb353a662155cc6d0f8e06e5d8dad95a8b456f73172a8e978",
+      "title": "daydream skinny",
+      "year": 2008,
+      "year_display": "2008",
+      "series_id": "126",
+      "project_folder": "spine symbols"
+    },
+    {
+      "work_id": "04379",
+      "record_hash": "69f0e3ce7ecd9c07542742f990a9b63c9c0a680b4f330d79e1f698b8a398db16",
+      "title": "daydream",
+      "year": 2008,
+      "year_display": "2008",
+      "series_id": "126",
+      "project_folder": "spine symbols"
+    },
+    {
+      "work_id": "04380",
+      "record_hash": "137e5404d7dbbfa16c9aa51e98a7e20d24c8309ddf24dec570a341df6dd99df9",
+      "title": "dizzy (clever) funny",
+      "year": 2008,
+      "year_display": "2008",
+      "series_id": "126",
+      "project_folder": "spine symbols"
+    },
+    {
+      "work_id": "04381",
+      "record_hash": "8d2c1fed14b650e3a7695055593e3735bf9ca1bdf3afdfc66a86fc0e828963c6",
+      "title": "dizzy",
+      "year": 2008,
+      "year_display": "2008",
+      "series_id": "126",
+      "project_folder": "spine symbols"
+    },
+    {
+      "work_id": "04382",
+      "record_hash": "25c63543f957e0a62d4738e34ec6627b3414d46d9f1192abc5e9a53f3b1d7343",
+      "title": "forgetful",
+      "year": 2008,
+      "year_display": "2008",
+      "series_id": "126",
+      "project_folder": "spine symbols"
+    },
+    {
+      "work_id": "04383",
+      "record_hash": "af77babafe8322e8da4fc0bdf911d3d5f361a742f1fe4df9aa324e711601da73",
+      "title": "funny (wrong rude) impossible",
+      "year": 2008,
+      "year_display": "2008",
+      "series_id": "126",
+      "project_folder": "spine symbols"
+    },
+    {
+      "work_id": "04384",
+      "record_hash": "f3b2da842ac34228d0253ab33363cbe855080f9d108fe531c08cd3a26d05be0b",
+      "title": "funny",
+      "year": 2008,
+      "year_display": "2008",
+      "series_id": "126",
+      "project_folder": "spine symbols"
+    },
+    {
+      "work_id": "04385",
+      "record_hash": "e62baaba67880f5b71e433e122e9698ff8b6e56d40cb658f5894177d78696293",
+      "title": "funny'",
+      "year": 2008,
+      "year_display": "2008",
+      "series_id": "126",
+      "project_folder": "spine symbols"
+    },
+    {
+      "work_id": "04386",
+      "record_hash": "8d376e2c8a2170b064158f59c92aea6575bd9603b4023d75d27c5d64e589705e",
+      "title": "fussy (lower)",
+      "year": 2008,
+      "year_display": "2008",
+      "series_id": "126",
+      "project_folder": "spine symbols"
+    },
+    {
+      "work_id": "04387",
+      "record_hash": "3b809d72c67038eba50a97ad3e32d4ec9dc77ebfaba0544461da71c9f30222e3",
+      "title": "fussy (unknown)",
+      "year": 2008,
+      "year_display": "2008",
+      "series_id": "126",
+      "project_folder": "spine symbols"
+    },
+    {
+      "work_id": "04388",
+      "record_hash": "c930fee4063acecebe52b063a1d6644a544429eef78d6803dbcb11be9f58ec50",
+      "title": "fussy (upper)",
+      "year": 2008,
+      "year_display": "2008",
+      "series_id": "126",
+      "project_folder": "spine symbols"
+    },
+    {
+      "work_id": "04389",
+      "record_hash": "0180a5d3ac167b0d4086ed790604d68e2d732231fb949e81f77ddd1b207f5a9c",
+      "title": "fussy",
+      "year": 2008,
+      "year_display": "2008",
+      "series_id": "126",
+      "project_folder": "spine symbols"
+    },
+    {
+      "work_id": "04390",
+      "record_hash": "901f60fdbca68ad0ff5fbf1234371ee2414d0c159e4b894fbf22ceed4ff1718d",
+      "title": "fussy'",
+      "year": 2008,
+      "year_display": "2008",
+      "series_id": "126",
+      "project_folder": "spine symbols"
+    },
+    {
+      "work_id": "04391",
+      "record_hash": "c0774a02945955de6220072557089244e03d65cd54be5b633b4873f07768b022",
+      "title": "grumpy bump",
+      "year": 2008,
+      "year_display": "2008",
+      "series_id": "126",
+      "project_folder": "spine symbols"
+    },
+    {
+      "work_id": "04392",
+      "record_hash": "ec8a2e395f3bfc39d492b1ae9baa66cc04e74fbb2164b9dba597e3b1294a1c87",
+      "title": "grumpy half-bounce",
+      "year": 2008,
+      "year_display": "2008",
+      "series_id": "126",
+      "project_folder": "spine symbols"
+    },
+    {
+      "work_id": "04393",
+      "record_hash": "b7cdadd585d314f703da0f943618d90b3757f29fbca486a74111a06f53f09b0b",
+      "title": "grumpy",
+      "year": 2008,
+      "year_display": "2008",
+      "series_id": "126",
+      "project_folder": "spine symbols"
+    },
+    {
+      "work_id": "04394",
+      "record_hash": "211ecfd181cd086fde17e7561c4386373ea831a8999ccf4e53af73fcc002ff00",
+      "title": "grumpy'",
+      "year": 2008,
+      "year_display": "2008",
+      "series_id": "126",
+      "project_folder": "spine symbols"
+    },
+    {
+      "work_id": "04395",
+      "record_hash": "e94eb6d15cb23fd9ee13c643acdaa5e53557981c53bbcb189cb7e8b0d4c30076",
+      "title": "half-bounce silly nosey messy",
+      "year": 2008,
+      "year_display": "2008",
+      "series_id": "126",
+      "project_folder": "spine symbols"
+    },
+    {
+      "work_id": "04396",
+      "record_hash": "97965076afa98de0de610dd05639bf985fcf9e8d631a6f65388c03dfbb56f3dc",
+      "title": "happy snow",
+      "year": 2008,
+      "year_display": "2008",
+      "series_id": "126",
+      "project_folder": "spine symbols"
+    },
+    {
+      "work_id": "04397",
+      "record_hash": "9d3e18a73b18f1e6db36ad105786fa79caa54be156758860bf6f8138dbfab509",
+      "title": "happy snow'",
+      "year": 2008,
+      "year_display": "2008",
+      "series_id": "126",
+      "project_folder": "spine symbols"
+    },
+    {
+      "work_id": "04398",
+      "record_hash": "b406baa89d64a28e9e4b15bdf3c0d2d916dfd405a6d091cdd97eb85f00ccf7c0",
+      "title": "impossible sneeze fussy",
+      "year": 2008,
+      "year_display": "2008",
+      "series_id": "126",
+      "project_folder": "spine symbols"
+    },
+    {
+      "work_id": "04399",
+      "record_hash": "62f9285e99773d40744ddf980caa829d7d5eea18b682c568f1bbfc438bed19cf",
+      "title": "impossible sneeze fussy'",
+      "year": 2008,
+      "year_display": "2008",
+      "series_id": "126",
+      "project_folder": "spine symbols"
+    },
+    {
+      "work_id": "04400",
+      "record_hash": "ec7c3c326ce7e7f93b60a23c80e179e7113fa8bb402953fdc92fe164ef1e0e49",
+      "title": "impossible",
+      "year": 2008,
+      "year_display": "2008",
+      "series_id": "126",
+      "project_folder": "spine symbols"
+    },
+    {
+      "work_id": "04401",
+      "record_hash": "517f4045b53c51a72207f431d39da0569b58008d9eb2e693a2c4680453d8efb6",
+      "title": "lazy forgetful",
+      "year": 2008,
+      "year_display": "2008",
+      "series_id": "126",
+      "project_folder": "spine symbols"
+    },
+    {
+      "work_id": "04402",
+      "record_hash": "8ae68f06fd20288b988b01e8adc671ac6273af9d3607744ba5ce0ab5b21d7750",
+      "title": "lazy forgetful'",
+      "year": 2008,
+      "year_display": "2008",
+      "series_id": "126",
+      "project_folder": "spine symbols"
+    },
+    {
+      "work_id": "04403",
+      "record_hash": "85887663b45223b6693fddea6d5d617b80c7c2fc741712e1506774713027b083",
+      "title": "lazy rush (cheerful) slow",
+      "year": 2008,
+      "year_display": "2008",
+      "series_id": "126",
+      "project_folder": "spine symbols"
+    },
+    {
+      "work_id": "04404",
+      "record_hash": "b8c5fa5e2b290264bc12a05e544e7e0af4cb8bd9e495a65d3d75a0cfa5e2483a",
+      "title": "lazy rush",
+      "year": 2008,
+      "year_display": "2008",
+      "series_id": "126",
+      "project_folder": "spine symbols"
+    },
+    {
+      "work_id": "04405",
+      "record_hash": "40f704ded51d061aeaa4e4fe05162134520d34dd04f9fd0f5d1174d838347e98",
+      "title": "lazy",
+      "year": 2008,
+      "year_display": "2008",
+      "series_id": "126",
+      "project_folder": "spine symbols"
+    },
+    {
+      "work_id": "04406",
+      "record_hash": "57ae7096b40c123989c1cbcb2ca971071fa040c1d430207abc6b9bb280d2c263",
+      "title": "mean lazy",
+      "year": 2008,
+      "year_display": "2008",
+      "series_id": "126",
+      "project_folder": "spine symbols"
+    },
+    {
+      "work_id": "04407",
+      "record_hash": "fa16103b4fee752e8d9e8949dee9a946bc37022a96caba5674e24f3e7e9dce22",
+      "title": "mean quiet busy mischief",
+      "year": 2008,
+      "year_display": "2008",
+      "series_id": "126",
+      "project_folder": "spine symbols"
+    },
+    {
+      "work_id": "04408",
+      "record_hash": "ee7ba5096ed1f8746b9ca62f4fe73c68369d84ca7350161bf53cac0112ff0059",
+      "title": "mean rush",
+      "year": 2008,
+      "year_display": "2008",
+      "series_id": "126",
+      "project_folder": "spine symbols"
+    },
+    {
+      "work_id": "04409",
+      "record_hash": "277fb6a94c1fd32591650f3f85a6f044ba8490e4afc1c1d9bd19270e41642c3a",
+      "title": "mean",
+      "year": 2008,
+      "year_display": "2008",
+      "series_id": "126",
+      "project_folder": "spine symbols"
+    },
+    {
+      "work_id": "04410",
+      "record_hash": "a234f7db01c619564cb151ef8f3f2dcf481e881a2fe35cdb2bf05d93612982f7",
+      "title": "messy daydream",
+      "year": 2008,
+      "year_display": "2008",
+      "series_id": "126",
+      "project_folder": "spine symbols"
+    },
+    {
+      "work_id": "04411",
+      "record_hash": "75127f294d488bbeaadaa678495df235ce1caa9effdd184f923e84e5a3cfe73b",
+      "title": "messy small chatterbox",
+      "year": 2008,
+      "year_display": "2008",
+      "series_id": "126",
+      "project_folder": "spine symbols"
+    },
+    {
+      "work_id": "04412",
+      "record_hash": "03dc3f44a928b69edf868a39fc0289e22dfc541b644db0e043c2ac89f06d7b8a",
+      "title": "muddle [1]",
+      "year": 2008,
+      "year_display": "2008",
+      "series_id": "126",
+      "project_folder": "spine symbols"
+    },
+    {
+      "work_id": "04413",
+      "record_hash": "c6b054099e0614a5db90e22bff1f9c8fa1a6cb162b8295e57847a38b98a0f462",
+      "title": "muddle [2]",
+      "year": 2008,
+      "year_display": "2008",
+      "series_id": "126",
+      "project_folder": "spine symbols"
+    },
+    {
+      "work_id": "04414",
+      "record_hash": "dd7c2b1a6566873e76b5e1ed20b6db76e736db092a8fe34d732d6074b3d16002",
+      "title": "muddle [3]",
+      "year": 2008,
+      "year_display": "2008",
+      "series_id": "126",
+      "project_folder": "spine symbols"
+    },
+    {
+      "work_id": "04415",
+      "record_hash": "1becfa4b2086b580375932dcf1f4c187f2873fa1cfdc6ff5fbab53c95d3993c7",
+      "title": "muddle tickle",
+      "year": 2008,
+      "year_display": "2008",
+      "series_id": "126",
+      "project_folder": "spine symbols"
+    },
+    {
+      "work_id": "04416",
+      "record_hash": "23a89771b2607001a81da4ee5adb1826194adb97fb08fa7d952860cd01e6bb78",
+      "title": "muddle",
+      "year": 2008,
+      "year_display": "2008",
+      "series_id": "126",
+      "project_folder": "spine symbols"
+    },
+    {
+      "work_id": "04417",
+      "record_hash": "3da7a29450ef5ec76781886cb6a495a2b7e6672cee3fc2021eca1b978b8385fd",
+      "title": "muddle'",
+      "year": 2008,
+      "year_display": "2008",
+      "series_id": "126",
+      "project_folder": "spine symbols"
+    },
+    {
+      "work_id": "04418",
+      "record_hash": "53230f881191a4d442a06efdd048e902c662a81025a2e93f5a33832ac011969f",
+      "title": "noisy jelly mean [version]",
+      "year": 2008,
+      "year_display": "2008",
+      "series_id": "126",
+      "project_folder": "spine symbols"
+    },
+    {
+      "work_id": "04419",
+      "record_hash": "96e9adf5149ecd7e2bffedeabc37d3aa79033d8cc17d3b9d674004a9e1d1d4e6",
+      "title": "noisy jelly mean rush",
+      "year": 2008,
+      "year_display": "2008",
+      "series_id": "126",
+      "project_folder": "spine symbols"
+    },
+    {
+      "work_id": "04420",
+      "record_hash": "3fb591cbd098cde98d43cd4f2b432576de665e9a1e8442a9772fac47a9dadce6",
+      "title": "noisy jelly mean",
+      "year": 2008,
+      "year_display": "2008",
+      "series_id": "126",
+      "project_folder": "spine symbols"
+    },
+    {
+      "work_id": "04421",
+      "record_hash": "491992054a1869178cb5e0a137b32275d6d0e004663f73e82cba7bfe5aef38ef",
+      "title": "noisy jelly mean'",
+      "year": 2008,
+      "year_display": "2008",
+      "series_id": "126",
+      "project_folder": "spine symbols"
+    },
+    {
+      "work_id": "04422",
+      "record_hash": "f567c58c9d5067bc152108b6e2234a827df1c0aeba81eaf7f0d892f3b78a26d5",
+      "title": "quiet",
+      "year": 2008,
+      "year_display": "2008",
+      "series_id": "126",
+      "project_folder": "spine symbols"
+    },
+    {
+      "work_id": "04423",
+      "record_hash": "71b9cc4f456684d2550fcf4d964a9f926b277a606d0fcafbe839b25bd967f630",
+      "title": "quiet'",
+      "year": 2008,
+      "year_display": "2008",
+      "series_id": "126",
+      "project_folder": "spine symbols"
+    },
+    {
+      "work_id": "04424",
+      "record_hash": "ddf067747ecc73fc848eac1b2e84384f8098d473a08f564b06cc4135f955c81b",
+      "title": "rush (cheerful) slow",
+      "year": 2008,
+      "year_display": "2008",
+      "series_id": "126",
+      "project_folder": "spine symbols"
+    },
+    {
+      "work_id": "04425",
+      "record_hash": "a1a658fab18d4ce09280da5e4dc8f3ebfb8a7a834e0d5eea1f10af12bfac7d44",
+      "title": "slow bump",
+      "year": 2008,
+      "year_display": "2008",
+      "series_id": "126",
+      "project_folder": "spine symbols"
+    },
+    {
+      "work_id": "04426",
+      "record_hash": "57c56ecc21e289becccfefaf54e27d1ca1cbd69e9757d8c9732d77062f2e6883",
+      "title": "small chatterbox",
+      "year": 2008,
+      "year_display": "2008",
+      "series_id": "126",
+      "project_folder": "spine symbols"
+    },
+    {
+      "work_id": "04427",
+      "record_hash": "ef5a87764c93381440c17ad538af490d8cc2921ce568ee1789776432506bfce9",
+      "title": "strong clumsy nonsense",
+      "year": 2008,
+      "year_display": "2008",
+      "series_id": "126",
+      "project_folder": "spine symbols"
+    },
+    {
+      "work_id": "04428",
+      "record_hash": "861e575a99415b4354ff47115c0f09f3547e225e0664e051b49f324a186defc7",
+      "title": "strong clumsy nonsense'",
+      "year": 2008,
+      "year_display": "2008",
+      "series_id": "126",
+      "project_folder": "spine symbols"
+    },
+    {
+      "work_id": "04429",
+      "record_hash": "8dc8d0c3be757d7031c7340516887bbf57131e482132e6c0daeb74274eb7c9e5",
+      "title": "strong clumsy",
+      "year": 2008,
+      "year_display": "2008",
+      "series_id": "126",
+      "project_folder": "spine symbols"
+    },
+    {
+      "work_id": "04430",
+      "record_hash": "31a372f653271d001be97ed31cffb712fda5d67fe3d7dafdaaf0502552fb071f",
+      "title": "strong clumsy'",
+      "year": 2008,
+      "year_display": "2008",
+      "series_id": "126",
+      "project_folder": "spine symbols"
+    },
+    {
+      "work_id": "04431",
+      "record_hash": "5936c9195cf7850c6ed5f681acf7a0c28dff4ae8a7b103217b3e191fa861e489",
+      "title": "tickle quiet busy mischief",
+      "year": 2008,
+      "year_display": "2008",
+      "series_id": "126",
+      "project_folder": "spine symbols"
+    },
+    {
+      "work_id": "04432",
+      "record_hash": "12cb0282ca1aa8439e5595edb64bad736523fbe49209e6adb9384fa99a00eb4b",
+      "title": "worry topsy-turvy [1']",
+      "year": 2008,
+      "year_display": "2008",
+      "series_id": "126",
+      "project_folder": "spine symbols"
+    },
+    {
+      "work_id": "04433",
+      "record_hash": "1d3bf4db99e27d2addb2e51a2aaf9f543bc45205e339b358fa70525a3a251b2f",
+      "title": "worry topsy-turvy [1]",
+      "year": 2008,
+      "year_display": "2008",
+      "series_id": "126",
+      "project_folder": "spine symbols"
+    },
+    {
+      "work_id": "04434",
+      "record_hash": "f54ecc847f801e50d1ecb0c638880ed34746aeee374bfbdf2c4254efe59b3e41",
+      "title": "worry topsy-turvy",
+      "year": 2008,
+      "year_display": "2008",
+      "series_id": "126",
+      "project_folder": "spine symbols"
+    },
+    {
+      "work_id": "04435",
+      "record_hash": "467c6bb31d9b84a795877af9f1dfd13f65915bcde0ac30f33af3148241183c25",
+      "title": "worry topsy-turvy'",
+      "year": 2008,
+      "year_display": "2008",
+      "series_id": "126",
+      "project_folder": "spine symbols"
+    },
+    {
+      "work_id": "04436",
+      "record_hash": "f95ba8c67c4429ce9a91c2daf761caf8abfa5340bf6c48178e5c876b110b79a0",
+      "title": "spine names",
+      "year": 2008,
+      "year_display": "2008",
+      "series_id": "126",
+      "project_folder": "spine symbols"
+    },
+    {
+      "work_id": "04437",
+      "record_hash": "5b81a55d69b02ae47bde5b8d850a39eee84e7f7ac411c21e443a1523066f923e",
+      "title": "symbols decoded",
+      "year": 2008,
+      "year_display": "2008",
+      "series_id": "126",
+      "project_folder": "spine symbols"
     }
   ],
   "ordered_work_ids": [
-    "01720"
+    "01720",
+    "04365",
+    "04366",
+    "04367",
+    "04368",
+    "04369",
+    "04370",
+    "04371",
+    "04372",
+    "04373",
+    "04374",
+    "04375",
+    "04376",
+    "04377",
+    "04378",
+    "04379",
+    "04380",
+    "04381",
+    "04382",
+    "04383",
+    "04384",
+    "04385",
+    "04386",
+    "04387",
+    "04388",
+    "04389",
+    "04390",
+    "04391",
+    "04392",
+    "04393",
+    "04394",
+    "04395",
+    "04396",
+    "04397",
+    "04398",
+    "04399",
+    "04400",
+    "04401",
+    "04402",
+    "04403",
+    "04404",
+    "04405",
+    "04406",
+    "04407",
+    "04408",
+    "04409",
+    "04410",
+    "04411",
+    "04412",
+    "04413",
+    "04414",
+    "04415",
+    "04416",
+    "04417",
+    "04418",
+    "04419",
+    "04420",
+    "04421",
+    "04422",
+    "04423",
+    "04424",
+    "04425",
+    "04426",
+    "04427",
+    "04428",
+    "04429",
+    "04430",
+    "04431",
+    "04432",
+    "04433",
+    "04434",
+    "04435",
+    "04436",
+    "04437"
   ],
   "project_folders": [
     "spine symbols"

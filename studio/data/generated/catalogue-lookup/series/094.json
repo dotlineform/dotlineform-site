@@ -6,10 +6,9 @@
     "series_id": "094",
     "title": "matter",
     "year": 2023,
-    "year_display": "2023",
-    "sort_fields": "work_id"
+    "year_display": "2023"
   },
-  "record_hash": "1b8248c09659a0a57cac2899ee10582b94d83d1e3257b098717781b322817939",
+  "record_hash": "647fb606d6005dd7a707f4f30d5141e5481ee24a7de37af9139ae467bbcb5471",
   "member_works": [
     {
       "work_id": "01422",
@@ -19,10 +18,100 @@
       "year_display": "2023",
       "series_id": "094",
       "project_folder": "matter"
+    },
+    {
+      "work_id": "04300",
+      "record_hash": "6c8e156cf8bb62c002c2c4081bb64ea8eec1a2e0954f359db34b76385953efb0",
+      "title": "matter - detail 1",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "094",
+      "project_folder": "matter"
+    },
+    {
+      "work_id": "04301",
+      "record_hash": "d1cc955b56c1bf1c54cc6b7f064e719d21b1b6fa2c6b343b68cb25c8764d5518",
+      "title": "matter - detail 2",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "094",
+      "project_folder": "matter"
+    },
+    {
+      "work_id": "04302",
+      "record_hash": "520853999cdfc6fc086f633614a2244494a928ea6e3321f7d60a8557f0dee372",
+      "title": "matter - detail 3",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "094",
+      "project_folder": "matter"
+    },
+    {
+      "work_id": "04303",
+      "record_hash": "6743353f14c955879dabcdc5be2b5918966726d3702bf2d9517227443dd1e675",
+      "title": "matter - detail 4",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "094",
+      "project_folder": "matter"
+    },
+    {
+      "work_id": "04304",
+      "record_hash": "e97c583f1b9eb37e35124b28fa705fda8ef1f512c81455adca20e630d14e75a9",
+      "title": "matter - detail 5",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "094",
+      "project_folder": "matter"
+    },
+    {
+      "work_id": "04305",
+      "record_hash": "534a727b2cd13edbeba3a90e557ec7b48fffba97bdf9ee1b1754f64d46ee545b",
+      "title": "matter - detail 6",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "094",
+      "project_folder": "matter"
+    },
+    {
+      "work_id": "04306",
+      "record_hash": "354d1c419f3711dd22127819c659da0920b454ab7e4f92b3e8744e4134c43b14",
+      "title": "matter - detail 7",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "094",
+      "project_folder": "matter"
+    },
+    {
+      "work_id": "04307",
+      "record_hash": "8b2669ecc1043cc50a138a4644a0d017eda61c3b2868138782f7def57fcf6c52",
+      "title": "matter - detail 8",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "094",
+      "project_folder": "matter"
+    },
+    {
+      "work_id": "04308",
+      "record_hash": "b79ce70470a4ac7baef605de8b4297fa023732ac74160b40cd182e0332f2ef03",
+      "title": "matter - detail 9",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "094",
+      "project_folder": "matter"
     }
   ],
   "ordered_work_ids": [
-    "01422"
+    "01422",
+    "04300",
+    "04301",
+    "04302",
+    "04303",
+    "04304",
+    "04305",
+    "04306",
+    "04307",
+    "04308"
   ],
   "project_folders": [
     "matter"

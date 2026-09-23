@@ -6,10 +6,9 @@
     "series_id": "059",
     "title": "forest",
     "year": 2003,
-    "year_display": "2003",
-    "sort_fields": "title,work_id"
+    "year_display": "2003"
   },
-  "record_hash": "dff826e79fff819d71cf98bd83ab55b381d009631c470e43351f01fa75a47094",
+  "record_hash": "bab0ecfe6ea7eb142858e934e3d9c9a0bc4532a83c90177d06509e04841231e5",
   "member_works": [
     {
       "work_id": "00390",
@@ -58,11 +57,11 @@
     }
   ],
   "ordered_work_ids": [
-    "00619",
-    "00392",
-    "00618",
     "00390",
-    "00393"
+    "00392",
+    "00393",
+    "00618",
+    "00619"
   ],
   "project_folders": [
     "forest"

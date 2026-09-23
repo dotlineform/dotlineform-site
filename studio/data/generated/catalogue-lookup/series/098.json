@@ -6,10 +6,9 @@
     "series_id": "098",
     "title": "mm",
     "year": 2009,
-    "year_display": "2004-15",
-    "sort_fields": "work_id"
+    "year_display": "2004-15"
   },
-  "record_hash": "a85b25c0771c60583f9c8174b1f1f3427549c3251bd182776d7ec072f22cb67e",
+  "record_hash": "f7c987d3be4513fcac33452bdc866890dc7261006413d318f4630577199401e7",
   "member_works": [
     {
       "work_id": "00378",
@@ -433,6 +432,123 @@
       "year_display": "2009",
       "series_id": "098",
       "project_folder": "mm"
+    },
+    {
+      "work_id": "02961",
+      "record_hash": "90d449696c0d5df52036ea35dbfca3f7e850a36c3b2e5f5ec455d197405273ea",
+      "title": "mm negative future .1",
+      "year": 2004,
+      "year_display": "2004",
+      "series_id": "098",
+      "project_folder": "mm"
+    },
+    {
+      "work_id": "02962",
+      "record_hash": "3d3ee8b8b5dece2a141abb405dc01aa12cdc9caadba778280e4cf89166a4dd85",
+      "title": "mm negative future .2",
+      "year": 2004,
+      "year_display": "2004",
+      "series_id": "098",
+      "project_folder": "mm"
+    },
+    {
+      "work_id": "02963",
+      "record_hash": "2ed6c1f5a0e0a08b9004d15532170bc747fe3e27279f8a44b227ab7a63d329a8",
+      "title": "mm negative future .3",
+      "year": 2004,
+      "year_display": "2004",
+      "series_id": "098",
+      "project_folder": "mm"
+    },
+    {
+      "work_id": "02964",
+      "record_hash": "acae0f59d1c1bc50f5dc96c3f563395a882080629d7268aaa5745447796ecc93",
+      "title": "mm negative future .4.1",
+      "year": 2004,
+      "year_display": "2004",
+      "series_id": "098",
+      "project_folder": "mm"
+    },
+    {
+      "work_id": "02965",
+      "record_hash": "42266ce289e1aa5ec1581c9cfdd8abc452662687adf8f9194d334c61b343a565",
+      "title": "mm negative future .4.2",
+      "year": 2004,
+      "year_display": "2004",
+      "series_id": "098",
+      "project_folder": "mm"
+    },
+    {
+      "work_id": "02966",
+      "record_hash": "cc6e076144685fbead504d348801a2796711eb06840cc2858f93eae5c5dcbe0c",
+      "title": "mm negative future .4.3",
+      "year": 2004,
+      "year_display": "2004",
+      "series_id": "098",
+      "project_folder": "mm"
+    },
+    {
+      "work_id": "02967",
+      "record_hash": "9b0194f84caca1a31bd4b8a1e4648d386eeda2089cbbb9a0fb9311a518e131f1",
+      "title": "mm negative future .4.4.1",
+      "year": 2004,
+      "year_display": "2004",
+      "series_id": "098",
+      "project_folder": "mm"
+    },
+    {
+      "work_id": "02968",
+      "record_hash": "14b63b39157c348b3e529d4ef8ea3de7a8fffdede5ba142b64d05a299993a60e",
+      "title": "mm negative future .4.4.2",
+      "year": 2004,
+      "year_display": "2004",
+      "series_id": "098",
+      "project_folder": "mm"
+    },
+    {
+      "work_id": "02969",
+      "record_hash": "a7ba002a0e8ea426b892854333861e5cfed9f555519bbf27802043127ac2a80b",
+      "title": "mm negative future .4.4.3",
+      "year": 2004,
+      "year_display": "2004",
+      "series_id": "098",
+      "project_folder": "mm"
+    },
+    {
+      "work_id": "02970",
+      "record_hash": "ae99d4c56d1ad752449909465c18b4b78e29f6959e0f875682627d596778fcb0",
+      "title": "mm negative future .4.4.4",
+      "year": 2004,
+      "year_display": "2004",
+      "series_id": "098",
+      "project_folder": "mm"
+    },
+    {
+      "work_id": "02971",
+      "record_hash": "e67f726787388158c161501c8f691c5d8b113fef5967aef146d3e87001097e7e",
+      "title": "mm negative future .4.4",
+      "year": 2004,
+      "year_display": "2004",
+      "series_id": "098",
+      "project_folder": "mm"
+    },
+    {
+      "work_id": "02972",
+      "record_hash": "d2fccf943b6dd4bd30a20d5903ff61d6c3a00a5491cd0997f71986a5011ba872",
+      "title": "mm negative future .4",
+      "year": 2004,
+      "year_display": "2004",
+      "series_id": "098",
+      "project_folder": "mm"
+    },
+    {
+      "work_id": "02973",
+      "record_hash": "8ce41901ba9b3b8b8189fb7645fbc380fd92c10cd4a429fc31f2a4782f8453bf",
+      "title": "versions II (mm)",
+      "year": 2004,
+      "year_display": "2004",
+      "series_id": "098",
+      "project_folder": "mm"
     }
   ],
   "ordered_work_ids": [
@@ -482,7 +598,20 @@
     "00512",
     "00513",
     "00514",
-    "00515"
+    "00515",
+    "02961",
+    "02962",
+    "02963",
+    "02964",
+    "02965",
+    "02966",
+    "02967",
+    "02968",
+    "02969",
+    "02970",
+    "02971",
+    "02972",
+    "02973"
   ],
   "project_folders": [
     "mm"

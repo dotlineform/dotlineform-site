@@ -6,10 +6,9 @@
     "series_id": "044",
     "title": "dots",
     "year": 2010,
-    "year_display": "2010",
-    "sort_fields": "work_id"
+    "year_display": "2010"
   },
-  "record_hash": "7ccab51fe1fe9d6c3d42f3e0bf997ceb061401e1d9043118690da3c41c6f3953",
+  "record_hash": "b97375394aa0ce1075a2dcfaff12ee07657d52f4892eaf5980b477e6a3bed2ad",
   "member_works": [
     {
       "work_id": "00456",
@@ -73,6 +72,213 @@
       "year_display": "2010",
       "series_id": "044",
       "project_folder": "dots"
+    },
+    {
+      "work_id": "02598",
+      "record_hash": "db4a837af2d6dbf86cf922c41f39208091796cc57da75499759d2454258f6267",
+      "title": "dots [detail 1]",
+      "year": 2010,
+      "year_display": "2010",
+      "series_id": "044",
+      "project_folder": "dots"
+    },
+    {
+      "work_id": "02599",
+      "record_hash": "40c14fc2d46f0dccd928dd94da1fea2780f05ca0685dc1b75cbedcda121b0165",
+      "title": "dots [detail 2]",
+      "year": 2010,
+      "year_display": "2010",
+      "series_id": "044",
+      "project_folder": "dots"
+    },
+    {
+      "work_id": "02600",
+      "record_hash": "3bc79738edadd83ce802c315e83598b1daa2eb54a4e190b214908e2c563383fd",
+      "title": "dots [detail 3]",
+      "year": 2010,
+      "year_display": "2010",
+      "series_id": "044",
+      "project_folder": "dots"
+    },
+    {
+      "work_id": "02601",
+      "record_hash": "4786d23cecb0f3cd3830a07b6145132a757a431616c45c05816a05ee9d431aeb",
+      "title": "dots [detail 4]",
+      "year": 2010,
+      "year_display": "2010",
+      "series_id": "044",
+      "project_folder": "dots"
+    },
+    {
+      "work_id": "02602",
+      "record_hash": "9f701a6c3fc2689e52993109f4c487e019af5c950908188656cb60336ca02f1e",
+      "title": "dots [detail 5]",
+      "year": 2010,
+      "year_display": "2010",
+      "series_id": "044",
+      "project_folder": "dots"
+    },
+    {
+      "work_id": "03570",
+      "record_hash": "a6bab279b719268076e7f9d1c3f6b0de0148050e7043ea4003a8a98099800195",
+      "title": "dots (inside) [detail 1]",
+      "year": 2010,
+      "year_display": "2010",
+      "series_id": "044",
+      "project_folder": "dots"
+    },
+    {
+      "work_id": "03571",
+      "record_hash": "95af511e7740f69f5967f0ce7f1179b6c01006b811b4373376b4a149f19d0904",
+      "title": "dots (inside) [detail 2]",
+      "year": 2010,
+      "year_display": "2010",
+      "series_id": "044",
+      "project_folder": "dots"
+    },
+    {
+      "work_id": "03572",
+      "record_hash": "fc340a660d4de096b2be44fbb1af332d524f63a19eef1010b951bcbaa29f4be4",
+      "title": "dots (inside) [detail 3]",
+      "year": 2010,
+      "year_display": "2010",
+      "series_id": "044",
+      "project_folder": "dots"
+    },
+    {
+      "work_id": "03573",
+      "record_hash": "2bc9755393221566edfb0118770b81ec84bbfb36e9e4662af476f0b9843a4e3e",
+      "title": "dots (inside) [detail 4]",
+      "year": 2010,
+      "year_display": "2010",
+      "series_id": "044",
+      "project_folder": "dots"
+    },
+    {
+      "work_id": "03574",
+      "record_hash": "28cfa5ac8bc130865888c0c1045ca98cb378071f595edba2c36dfa78d99db87f",
+      "title": "dots (inside) [detail 5]",
+      "year": 2010,
+      "year_display": "2010",
+      "series_id": "044",
+      "project_folder": "dots"
+    },
+    {
+      "work_id": "03575",
+      "record_hash": "933c4a3466c1ca769f07de8c9daddfb539f4b02a1d4184bc5d5c7882e180ec7d",
+      "title": "dots (first normal form) [detail 1]",
+      "year": 2010,
+      "year_display": "2010",
+      "series_id": "044",
+      "project_folder": "dots"
+    },
+    {
+      "work_id": "03576",
+      "record_hash": "b4312b6394e921e76f66060413da026128598d32306e1a0cf5f3889454f42173",
+      "title": "dots (first normal form) [detail 2]",
+      "year": 2010,
+      "year_display": "2010",
+      "series_id": "044",
+      "project_folder": "dots"
+    },
+    {
+      "work_id": "03577",
+      "record_hash": "af88e0e6f4d072ca816f4da37e2d5645951cf6c457e938503991eeeb1523a76e",
+      "title": "dots (first normal form) [detail 3]",
+      "year": 2010,
+      "year_display": "2010",
+      "series_id": "044",
+      "project_folder": "dots"
+    },
+    {
+      "work_id": "03578",
+      "record_hash": "2002f339b5f0e8178201c79437489aca4e2d766c5693e97031f6338d6c51c80e",
+      "title": "dots (second normal form) [detail 1]",
+      "year": 2010,
+      "year_display": "2010",
+      "series_id": "044",
+      "project_folder": "dots"
+    },
+    {
+      "work_id": "03579",
+      "record_hash": "f5fdb3472957e9765dfea71bd16034933be03b9d1ab231562b8c43e428dfe291",
+      "title": "dots (second normal form) [detail 2]",
+      "year": 2010,
+      "year_display": "2010",
+      "series_id": "044",
+      "project_folder": "dots"
+    },
+    {
+      "work_id": "03580",
+      "record_hash": "bf4a459d2823424a160704218e847373933f82157b0cf57f80f87111de03aeb5",
+      "title": "dots (second normal form) [detail 3]",
+      "year": 2010,
+      "year_display": "2010",
+      "series_id": "044",
+      "project_folder": "dots"
+    },
+    {
+      "work_id": "03581",
+      "record_hash": "848f029542e722a5460a39957dffc93ff1f5bbc7192d742fea3cac773dd5a819",
+      "title": "dots (equations) [detail 1]",
+      "year": 2010,
+      "year_display": "2010",
+      "series_id": "044",
+      "project_folder": "dots"
+    },
+    {
+      "work_id": "03582",
+      "record_hash": "acc165a763b57ffbc3fe1d0c6f4fc07594c3072b00e37e4e704822e6887fe1c6",
+      "title": "dots (equations) [detail 2]",
+      "year": 2010,
+      "year_display": "2010",
+      "series_id": "044",
+      "project_folder": "dots"
+    },
+    {
+      "work_id": "03583",
+      "record_hash": "e16db4ca19a16f379c4c5485d7328c61dc4396cbb78b867512f158230bd13cdc",
+      "title": "dots (equations) [detail 3]",
+      "year": 2010,
+      "year_display": "2010",
+      "series_id": "044",
+      "project_folder": "dots"
+    },
+    {
+      "work_id": "03584",
+      "record_hash": "ae5bd66bd0b8fdada5162c9c52621efbe6d14c633e04d2512d98e8dbe4b15bc3",
+      "title": "dots (equations) [detail 4]",
+      "year": 2010,
+      "year_display": "2010",
+      "series_id": "044",
+      "project_folder": "dots"
+    },
+    {
+      "work_id": "03585",
+      "record_hash": "625d39a2f1eb0e94124898384fd7f8312642bb36b77a61270bdc9c10b3ddad2e",
+      "title": "dots (equations particles) [detail 1]",
+      "year": 2010,
+      "year_display": "2010",
+      "series_id": "044",
+      "project_folder": "dots"
+    },
+    {
+      "work_id": "03586",
+      "record_hash": "e21ab26122859f13decefe1ea6a635fbfd0668851fd9ee4b6f1b02fe251e4e04",
+      "title": "dots (equations particles) [detail 2]",
+      "year": 2010,
+      "year_display": "2010",
+      "series_id": "044",
+      "project_folder": "dots"
+    },
+    {
+      "work_id": "03587",
+      "record_hash": "79a75a4f121915069e0d8164bc7b8762a1ad1fcfc94e1b7aaa1c1940dd507f23",
+      "title": "dots (equations particles) [detail 3]",
+      "year": 2010,
+      "year_display": "2010",
+      "series_id": "044",
+      "project_folder": "dots"
     }
   ],
   "ordered_work_ids": [
@@ -82,7 +288,30 @@
     "01003",
     "01004",
     "01005",
-    "01006"
+    "01006",
+    "02598",
+    "02599",
+    "02600",
+    "02601",
+    "02602",
+    "03570",
+    "03571",
+    "03572",
+    "03573",
+    "03574",
+    "03575",
+    "03576",
+    "03577",
+    "03578",
+    "03579",
+    "03580",
+    "03581",
+    "03582",
+    "03583",
+    "03584",
+    "03585",
+    "03586",
+    "03587"
   ],
   "project_folders": [
     "dots"

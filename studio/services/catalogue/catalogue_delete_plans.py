@@ -13,7 +13,9 @@ from catalogue.catalogue_source import (
     records_from_json_source,
     validate_source_records,
     work_details_payload_for_maps,
+    load_json_file,
 )
+from catalogue.catalogue_galleries import read_galleries, validate_galleries, MEMBERSHIPS_FILE
 
 
 @dataclass(frozen=True)
@@ -110,4 +112,9 @@ def build_delete_apply_plan(
         payloads[(source_dir / SOURCE_FILES["work_details"]).resolve()] = work_details_payload_for_maps(
             source.work_detail_sections, source.work_details,
         )
+    if kind == "work":
+        galleries = read_galleries(source_dir, load_json_file(source_dir / "works.json")["works"])
+        galleries.works.pop(record_id, None)
+        validate_galleries(galleries, source.works)
+        payloads[(source_dir / MEMBERSHIPS_FILE).resolve()] = galleries.payloads()[MEMBERSHIPS_FILE]
     return DeleteApplyPlan(kind, record_id, payloads, affected)

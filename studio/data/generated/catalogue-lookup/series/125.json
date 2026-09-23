@@ -6,10 +6,9 @@
     "series_id": "125",
     "title": "spiders",
     "year": 2006,
-    "year_display": "2006",
-    "sort_fields": "work_id"
+    "year_display": "2006"
   },
-  "record_hash": "f1387ac234af46133d15f63f30ac7b6ba3c3fcc5d587176ded943ea079254cf0",
+  "record_hash": "f46e9d7757e1efa04302111af161e7eaf59c88d60e0bf69ac754d870e091af33",
   "member_works": [
     {
       "work_id": "00402",
@@ -19,10 +18,70 @@
       "year_display": "2006",
       "series_id": "125",
       "project_folder": "spiders"
+    },
+    {
+      "work_id": "02542",
+      "record_hash": "fc5f418da85e34fde67433a72cd65878da42dd2a0faa8bc450ff302e3ac58d24",
+      "title": "spiders (2006-06-08 - 21-26-10)",
+      "year": 2006,
+      "year_display": "2006",
+      "series_id": "125",
+      "project_folder": "spiders"
+    },
+    {
+      "work_id": "02543",
+      "record_hash": "afa8155af32940f1e1760a65c894323d0b9f8ad2c50b9efd972cc0d677ab284b",
+      "title": "spiders (2006-06-08 - 21-25-05)",
+      "year": 2006,
+      "year_display": "2006",
+      "series_id": "125",
+      "project_folder": "spiders"
+    },
+    {
+      "work_id": "02544",
+      "record_hash": "4825a85282209d81a6483a5ada68dc0678bd9431303dfa52351fe6db964bb55b",
+      "title": "spiders (2006-06-08 - 20-19-05)",
+      "year": 2006,
+      "year_display": "2006",
+      "series_id": "125",
+      "project_folder": "spiders"
+    },
+    {
+      "work_id": "02545",
+      "record_hash": "0faae1e17f1bc018f0f0021f5c3e04d557240624802a90534f101eda362f7f44",
+      "title": "spiders (2006-06-08 - 20-18-27)",
+      "year": 2006,
+      "year_display": "2006",
+      "series_id": "125",
+      "project_folder": "spiders"
+    },
+    {
+      "work_id": "02546",
+      "record_hash": "e1756e4358e434c373e0c15a8f00c88d34d1c8748392c47dc643583c97a74583",
+      "title": "spiders (2006-06-08 - 20-16-41)",
+      "year": 2006,
+      "year_display": "2006",
+      "series_id": "125",
+      "project_folder": "spiders"
+    },
+    {
+      "work_id": "02547",
+      "record_hash": "eb2d7904f0cd8fdc0f1a8d02f35129ccad6799192e2d6c564a1c8eeb40a0b196",
+      "title": "spiders (2006-06-08 - 20-15-37)",
+      "year": 2006,
+      "year_display": "2006",
+      "series_id": "125",
+      "project_folder": "spiders"
     }
   ],
   "ordered_work_ids": [
-    "00402"
+    "00402",
+    "02542",
+    "02543",
+    "02544",
+    "02545",
+    "02546",
+    "02547"
   ],
   "project_folders": [
     "spiders"

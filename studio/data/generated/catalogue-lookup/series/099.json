@@ -6,10 +6,9 @@
     "series_id": "099",
     "title": "models",
     "year": 1994,
-    "year_display": "1994",
-    "sort_fields": "work_id"
+    "year_display": "1994"
   },
-  "record_hash": "a1c10d93a35a42532d6cb99ea78e015c4a9ed49ec28f88f8bc53c5e33a7f8b14",
+  "record_hash": "ea6287ada10f53370792845894c13a7c7d2ca9fd8c19b5d44ceeb6126b58bf5c",
   "member_works": [
     {
       "work_id": "00130",
@@ -109,6 +108,15 @@
       "year_display": "1994",
       "series_id": "099",
       "project_folder": "models"
+    },
+    {
+      "work_id": "03110",
+      "record_hash": "7399febe651ca6f4ec6669dac0b6b8938011990191454e0a76d9746179fa85d8",
+      "title": "model 2 - 001",
+      "year": 1994,
+      "year_display": "1994",
+      "series_id": "099",
+      "project_folder": "models"
     }
   ],
   "ordered_work_ids": [
@@ -122,7 +130,8 @@
     "00542",
     "00543",
     "00544",
-    "00545"
+    "00545",
+    "03110"
   ],
   "project_folders": [
     "models"

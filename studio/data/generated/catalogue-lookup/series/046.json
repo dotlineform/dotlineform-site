@@ -6,10 +6,9 @@
     "series_id": "046",
     "title": "egg forms",
     "year": 2024,
-    "year_display": "2024",
-    "sort_fields": "work_id"
+    "year_display": "2024"
   },
-  "record_hash": "035b8db8bba18557d8330b465333efbc396c0db4be7e28fa860ff79597ede049",
+  "record_hash": "41b1f381dc53a6e3ba0bdc2428b908bb31d4ac3c4599ffaceb8e3e0d9dee15f8",
   "member_works": [
     {
       "work_id": "01037",
@@ -19,10 +18,400 @@
       "year_display": "2024",
       "series_id": "046",
       "project_folder": "egg forms"
+    },
+    {
+      "work_id": "03588",
+      "record_hash": "628a59fc14175cacff44c4f10477cdbcfa82475a3007ba8939ad3d24202e754a",
+      "title": "egg forms - detail 1",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "046",
+      "project_folder": "egg forms"
+    },
+    {
+      "work_id": "03589",
+      "record_hash": "44210ea2e7b83994f95987891ef7c93e892edb097ff5e3aad2788c646ad68f85",
+      "title": "egg forms - detail 2",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "046",
+      "project_folder": "egg forms"
+    },
+    {
+      "work_id": "03590",
+      "record_hash": "d64c8cc88eea09acd7ff5dbfc5fa0ae4a73f39de551e96b1738e925befd20982",
+      "title": "egg forms - detail 3",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "046",
+      "project_folder": "egg forms"
+    },
+    {
+      "work_id": "03591",
+      "record_hash": "434e586f62ba70b4665d24908798ee15bb6d1f3302734fb210182b07ddfa1050",
+      "title": "egg forms - detail 4",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "046",
+      "project_folder": "egg forms"
+    },
+    {
+      "work_id": "03592",
+      "record_hash": "bbb61744b733ab85bdc301cc5d53e8768c1c86a26e58d9e4bc82e53d79e50894",
+      "title": "egg forms - detail 5",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "046",
+      "project_folder": "egg forms"
+    },
+    {
+      "work_id": "03593",
+      "record_hash": "e91f009b05cfa4c38c93bc0c8e0cda5f3a81370ccc93e903c77e62d40d89eb62",
+      "title": "egg forms - detail 6",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "046",
+      "project_folder": "egg forms"
+    },
+    {
+      "work_id": "03594",
+      "record_hash": "403e57e77860e578d7febbe839e358405b913dac1010b16de144a7a51bdc8aa9",
+      "title": "egg forms - detail 7",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "046",
+      "project_folder": "egg forms"
+    },
+    {
+      "work_id": "03595",
+      "record_hash": "441d769ebf737f9e2de2240e66f29778a831b773bfa7e5ce99c469d0feaf8194",
+      "title": "2024-05-30 17-32",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "046",
+      "project_folder": "egg forms"
+    },
+    {
+      "work_id": "03596",
+      "record_hash": "88b70e963a7a24325adc599184e258a9b6ccb522db73e059c7c6834bedbac815",
+      "title": "2024-05-30 17-32 2",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "046",
+      "project_folder": "egg forms"
+    },
+    {
+      "work_id": "03597",
+      "record_hash": "763f911b993d83c81455a70c1f0665e23cb6cdd313440f4357228bcadfd1ab50",
+      "title": "2024-05-30 17-32 3",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "046",
+      "project_folder": "egg forms"
+    },
+    {
+      "work_id": "03598",
+      "record_hash": "cea8189ea8e19abe4a824f60f270391c0b5dc751ec53d847adc7015f31d6f664",
+      "title": "2024-05-30 17-32 4",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "046",
+      "project_folder": "egg forms"
+    },
+    {
+      "work_id": "03599",
+      "record_hash": "9700453cd2e37f978fe7cc8d9c74d4b64455fb7775e7846224d3f2b895192cc9",
+      "title": "2024-05-30 17-32 5",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "046",
+      "project_folder": "egg forms"
+    },
+    {
+      "work_id": "03600",
+      "record_hash": "36c67108bf22e86451c63d76f52f465c5cbbd33bf5f4374d6f35ad0ecdaba10b",
+      "title": "2024-05-30 17-32 6",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "046",
+      "project_folder": "egg forms"
+    },
+    {
+      "work_id": "03601",
+      "record_hash": "899f8d14d9a8c3bbfb531fd977306cfa9e1cdbb6bf52b8945e931cfc8735bce3",
+      "title": "2024-05-30 17-32 7",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "046",
+      "project_folder": "egg forms"
+    },
+    {
+      "work_id": "03602",
+      "record_hash": "5c25bfaa40b71d62eac215035822519af8f9177a05e34757baca1ee87fa20b3c",
+      "title": "2024-05-30 17-32 8",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "046",
+      "project_folder": "egg forms"
+    },
+    {
+      "work_id": "03603",
+      "record_hash": "9568aac08ffaf930c6c1fd42f07e4febc54621bc2f8e841fc9dd3735104b54a7",
+      "title": "2024-05-30 17-33",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "046",
+      "project_folder": "egg forms"
+    },
+    {
+      "work_id": "03604",
+      "record_hash": "6301b057f24bcaa78aac1fbbf0361115fcb1fd6eab7ccbc676d59cd29dab1d4b",
+      "title": "2024-05-30 19-11",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "046",
+      "project_folder": "egg forms"
+    },
+    {
+      "work_id": "03605",
+      "record_hash": "e9c94ab73b09eff94ef4d844b585c04c1493725bb7c21721539629f1bbbe7362",
+      "title": "2024-05-30 22-38",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "046",
+      "project_folder": "egg forms"
+    },
+    {
+      "work_id": "03606",
+      "record_hash": "c42b5197879da2b57ac0e38c4482fb6817a923f0da5c751621be14a09cd89e8c",
+      "title": "2024-05-31 00-12",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "046",
+      "project_folder": "egg forms"
+    },
+    {
+      "work_id": "03607",
+      "record_hash": "35d25b006f04d470b8bad29dcb4dcf11140516c71e855bf28198534543e6e78c",
+      "title": "2024-05-31 00-12 2",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "046",
+      "project_folder": "egg forms"
+    },
+    {
+      "work_id": "03608",
+      "record_hash": "b0c6f4dd79a7f81282dbb30919a926d433da11f8b38359d19f4171d3d3d999f9",
+      "title": "2024-05-31 00-12 3",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "046",
+      "project_folder": "egg forms"
+    },
+    {
+      "work_id": "03609",
+      "record_hash": "93896c95bd1832a18e707263a372f26a780fb76e1235773cbe33c2b85565e51d",
+      "title": "2024-05-31 00-12 4",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "046",
+      "project_folder": "egg forms"
+    },
+    {
+      "work_id": "03610",
+      "record_hash": "ae1172f2f00bd78b4fc6a7543bbcb6fcedcc4f3f95be4fdb6cf99eaf5ad21769",
+      "title": "2024-05-31 00-12 5",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "046",
+      "project_folder": "egg forms"
+    },
+    {
+      "work_id": "03611",
+      "record_hash": "c56de0091eddc8b4fbe3a7c33601a2638a9ccdf19a5f3fd2d4db3fdcf6a3f20d",
+      "title": "2024-05-31 00-13",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "046",
+      "project_folder": "egg forms"
+    },
+    {
+      "work_id": "03612",
+      "record_hash": "69d2c980b3416c1ce75583d3e3a2631e33131097be6aec90849c296dccd05d07",
+      "title": "2024-05-31 22-57",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "046",
+      "project_folder": "egg forms"
+    },
+    {
+      "work_id": "03613",
+      "record_hash": "02fec5c207c61126f92a0733d3ab279a903cd0fa4b543af48947f8be97cff3d1",
+      "title": "2024-05-31 22-58",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "046",
+      "project_folder": "egg forms"
+    },
+    {
+      "work_id": "03614",
+      "record_hash": "ed203ce39b9eff0b033887322c3e2469cafbf5dd8aa480181521b473a2220406",
+      "title": "2024-05-31 22-58 2",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "046",
+      "project_folder": "egg forms"
+    },
+    {
+      "work_id": "03615",
+      "record_hash": "de274d5c72fea4be87835d0131cfa507f366beb75c7251d0ccdb233db16a3f99",
+      "title": "2024-06-02 22-06",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "046",
+      "project_folder": "egg forms"
+    },
+    {
+      "work_id": "03616",
+      "record_hash": "4964fc7157e68045cd810a7b5a9a7941ebb708eedbd5683ee9490bf1801760ff",
+      "title": "2024-06-02 22-06 2",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "046",
+      "project_folder": "egg forms"
+    },
+    {
+      "work_id": "03617",
+      "record_hash": "575445cdbca7967be1088fd242479511108d951f7cd9e92c567055469cd7b409",
+      "title": "2024-06-02 22-06 3",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "046",
+      "project_folder": "egg forms"
+    },
+    {
+      "work_id": "03618",
+      "record_hash": "5c285f7ad724576585748f60a689f064d1afb53cb2d00e7bd458a7b4cec52233",
+      "title": "2024-06-02 22-34",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "046",
+      "project_folder": "egg forms"
+    },
+    {
+      "work_id": "03619",
+      "record_hash": "901ef654f8819ca759116b77cac4b03557884e1a9fc53991484a380322bbabc2",
+      "title": "2024-06-02 22-44",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "046",
+      "project_folder": "egg forms"
+    },
+    {
+      "work_id": "03620",
+      "record_hash": "e88b194746e3b4ce4a2f1b5170f572e9337ff0c4f52cdda459076ce060a601df",
+      "title": "2024-06-02 22-44 2",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "046",
+      "project_folder": "egg forms"
+    },
+    {
+      "work_id": "03621",
+      "record_hash": "00de9ad28e5a071df7094fa77253311e990e1484cb14593429f3feb78b3f4a70",
+      "title": "2024-06-02 23-29",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "046",
+      "project_folder": "egg forms"
+    },
+    {
+      "work_id": "03622",
+      "record_hash": "615a600877d9ec55dffb33de2ad39509f7935aacd92aa4db546be0efac9d686d",
+      "title": "2024-06-02 23-29 2",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "046",
+      "project_folder": "egg forms"
+    },
+    {
+      "work_id": "03623",
+      "record_hash": "7b7c311833be7376bbc98da49a6c1f44877813d2a994bc75aacb3305a16a8277",
+      "title": "2024-06-02 23-30",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "046",
+      "project_folder": "egg forms"
+    },
+    {
+      "work_id": "03624",
+      "record_hash": "2c054f08eb3fcc806cb954a45e2d01f7a797199b0f9bec60b0e22c72d6ef356e",
+      "title": "2024-06-02 23-30 2",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "046",
+      "project_folder": "egg forms"
+    },
+    {
+      "work_id": "03625",
+      "record_hash": "6cd3d8e93f9c6985bd3f0846c46807b661d56b51c8696f74ce70e0df36129dc6",
+      "title": "2024-06-02 23-30 3",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "046",
+      "project_folder": "egg forms"
+    },
+    {
+      "work_id": "03626",
+      "record_hash": "c17b0ed18b2e86a3bbd83abb5132c7098acf34d79247d77da6189dcb9fbcb67a",
+      "title": "2024-06-03 00-45",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "046",
+      "project_folder": "egg forms"
     }
   ],
   "ordered_work_ids": [
-    "01037"
+    "01037",
+    "03588",
+    "03589",
+    "03590",
+    "03591",
+    "03592",
+    "03593",
+    "03594",
+    "03595",
+    "03596",
+    "03597",
+    "03598",
+    "03599",
+    "03600",
+    "03601",
+    "03602",
+    "03603",
+    "03604",
+    "03605",
+    "03606",
+    "03607",
+    "03608",
+    "03609",
+    "03610",
+    "03611",
+    "03612",
+    "03613",
+    "03614",
+    "03615",
+    "03616",
+    "03617",
+    "03618",
+    "03619",
+    "03620",
+    "03621",
+    "03622",
+    "03623",
+    "03624",
+    "03625",
+    "03626"
   ],
   "project_folders": [
     "egg forms"

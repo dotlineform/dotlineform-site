@@ -6,10 +6,9 @@
     "series_id": "127",
     "title": "state of mind",
     "year": 2023,
-    "year_display": "2023",
-    "sort_fields": "work_id"
+    "year_display": "2023"
   },
-  "record_hash": "faa66581f787ca5ac3c65ffa85edaa4ae056a043000d2f96f3a84cf37a4c4d5d",
+  "record_hash": "9064f1dd1036847d078641ede47643d61f96b06ca910d01ec67498910d317b9d",
   "member_works": [
     {
       "work_id": "01721",
@@ -19,10 +18,1200 @@
       "year_display": "2023",
       "series_id": "127",
       "project_folder": "state of mind"
+    },
+    {
+      "work_id": "04438",
+      "record_hash": "e0745b6a57d9f7434e1e964d620849b337305d55a483f821bd0ffb36c9eb6a95",
+      "title": "state of mind - detail (jewels)",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "127",
+      "project_folder": "state of mind"
+    },
+    {
+      "work_id": "04439",
+      "record_hash": "b651e69e893d35b4b89bb437015667eb164ed0d4de6f4858d3e5cde52b085e54",
+      "title": "state of mind - detail (leaf)",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "127",
+      "project_folder": "state of mind"
+    },
+    {
+      "work_id": "04440",
+      "record_hash": "c983c74d05e0774ff67e9e22e8137c407e971214e1a23742dcdd6dc0482abf11",
+      "title": "state of mind - detail (thorns)",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "127",
+      "project_folder": "state of mind"
+    },
+    {
+      "work_id": "04441",
+      "record_hash": "9fceefc96b93fde6b89be926b1d71e5de58c66ef33a9b8bc284a15fe5444409d",
+      "title": "state of mind - detail 1",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "127",
+      "project_folder": "state of mind"
+    },
+    {
+      "work_id": "04442",
+      "record_hash": "f1e8591d0bcd5f6563f6b33a62a8f6ad035356d326b6cdcf6c2a84d4228e0c1f",
+      "title": "state of mind - detail 2",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "127",
+      "project_folder": "state of mind"
+    },
+    {
+      "work_id": "04443",
+      "record_hash": "d7367360e87829b03b391dac3457022a19963e7313252d18a124c1b56ac46679",
+      "title": "state of mind - detail 3",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "127",
+      "project_folder": "state of mind"
+    },
+    {
+      "work_id": "04444",
+      "record_hash": "08b99795216de54a879350e9400b0df2c43708810b16ab3ebdd82317db1ecf33",
+      "title": "state of mind - source 1",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "127",
+      "project_folder": "state of mind"
+    },
+    {
+      "work_id": "04445",
+      "record_hash": "969e1952b8be9d2812b7074f6f11f4d29e161a898804a250b677e58085e3c589",
+      "title": "state of mind - source 2",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "127",
+      "project_folder": "state of mind"
+    },
+    {
+      "work_id": "04446",
+      "record_hash": "b481f25958a0b50d38effff76e4e0584b6e2939471cc0677244f3020e948ba48",
+      "title": "state of mind - source 3",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "127",
+      "project_folder": "state of mind"
+    },
+    {
+      "work_id": "04447",
+      "record_hash": "be114198c8676248a18f8b97bd829cc6f9e5b5f92343b7b604b6b911e1577d9b",
+      "title": "state of mind - source 4",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "127",
+      "project_folder": "state of mind"
+    },
+    {
+      "work_id": "04448",
+      "record_hash": "631d9eff319a09fec3b13068eda9eebf4b0d51603cddc009770b2aba2b1c4854",
+      "title": "state of mind - source 5",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "127",
+      "project_folder": "state of mind"
+    },
+    {
+      "work_id": "04449",
+      "record_hash": "1e197acecfeb4c392841a95b92f54b4314d401fbce12b4d1b0366ac9a9680a5f",
+      "title": "state of mind - source 6",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "127",
+      "project_folder": "state of mind"
+    },
+    {
+      "work_id": "04450",
+      "record_hash": "e5a152f542cdd5aae344ceabee7129836256faf760d0f7fa6aa19a370ed9ad77",
+      "title": "state of mind - source 7",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "127",
+      "project_folder": "state of mind"
+    },
+    {
+      "work_id": "04451",
+      "record_hash": "51e8c510b676e3b2c2f2050b11fee21834c5c1cc9555e5bbbf7cd575f1adae17",
+      "title": "state of mind - source 8",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "127",
+      "project_folder": "state of mind"
+    },
+    {
+      "work_id": "04452",
+      "record_hash": "8aa8e6cd69bed2300d8197b861070c9a6a27ad806174f83b26fc35381762eab1",
+      "title": "state of mind - source 9",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "127",
+      "project_folder": "state of mind"
+    },
+    {
+      "work_id": "04453",
+      "record_hash": "291f275965ae04a2817e16ab2c60903730ac5f8ee2517f40addbd2f94ba79761",
+      "title": "state of mind - source 10",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "127",
+      "project_folder": "state of mind"
+    },
+    {
+      "work_id": "04454",
+      "record_hash": "e1641cec6194c32bed6786758317e2930102f6e4f3c7742fcf404e68ed491837",
+      "title": "state of mind - source 11",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "127",
+      "project_folder": "state of mind"
+    },
+    {
+      "work_id": "04455",
+      "record_hash": "1e483a0ece799d86b8f3e48a68a43d096389f81804379a439df5edda28c874ee",
+      "title": "state of mind - source 12",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "127",
+      "project_folder": "state of mind"
+    },
+    {
+      "work_id": "04456",
+      "record_hash": "5ca4f5954762eb997af81374faedd53f9043b25eee23b0408f3c0b54d6fcb6ee",
+      "title": "state of mind - source 13",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "127",
+      "project_folder": "state of mind"
+    },
+    {
+      "work_id": "04457",
+      "record_hash": "9245ce468ba106e5109fa8f96b31f04aff73a83a72b690b4f863b6960c1789cf",
+      "title": "state of mind - source 14",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "127",
+      "project_folder": "state of mind"
+    },
+    {
+      "work_id": "04458",
+      "record_hash": "977f342c8b0db0c1dcb45edef527775cf1d58f6d7c7ec6a5ba947926c31d7a13",
+      "title": "state of mind - source 15",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "127",
+      "project_folder": "state of mind"
+    },
+    {
+      "work_id": "04459",
+      "record_hash": "b6d0b7f9259cd9260dfe00f29ddb70db0d0bd01a17d5a3f231912d5ecb427f2b",
+      "title": "state of mind - source 16",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "127",
+      "project_folder": "state of mind"
+    },
+    {
+      "work_id": "04460",
+      "record_hash": "d0ae1edec59b512b6769116dd38caa5b461c36ca5590b5586769e515eb405a37",
+      "title": "state of mind - source 17",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "127",
+      "project_folder": "state of mind"
+    },
+    {
+      "work_id": "04461",
+      "record_hash": "9b70cacecc8acacfe3b46c70a731ab0eaa3a325933d590b53c68cc95971c1ce8",
+      "title": "state of mind - source 18",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "127",
+      "project_folder": "state of mind"
+    },
+    {
+      "work_id": "04462",
+      "record_hash": "df1fab63f16b982fcb0cc2a28942d0247b812cf3764523d1d83f444ce41b448a",
+      "title": "state of mind - source 19",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "127",
+      "project_folder": "state of mind"
+    },
+    {
+      "work_id": "04463",
+      "record_hash": "fd96961359bdd1cfcfe87df60fc1fb5334f22e8190b425758aad6ad970b235d9",
+      "title": "state of mind - source 20",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "127",
+      "project_folder": "state of mind"
+    },
+    {
+      "work_id": "04464",
+      "record_hash": "d26d2ae32a56c1edd5f75be078b0c437707fec1dfa21264f622afe63c9726ae9",
+      "title": "state of mind - source 21",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "127",
+      "project_folder": "state of mind"
+    },
+    {
+      "work_id": "04465",
+      "record_hash": "1f4cd38aa6aa283edaeaf233e7f81515145420fa01b4bf211027c4ecd26f3d52",
+      "title": "state of mind - source 22",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "127",
+      "project_folder": "state of mind"
+    },
+    {
+      "work_id": "04466",
+      "record_hash": "35d2130713132bfd601856164f0bb0aceca84db0161aa9a29acf731e0137f942",
+      "title": "state of mind - source 23",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "127",
+      "project_folder": "state of mind"
+    },
+    {
+      "work_id": "04467",
+      "record_hash": "cb95493d4944fa48792115b58198901f079c059304a8dd780c7f690f2b4b71cf",
+      "title": "state of mind - source 24",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "127",
+      "project_folder": "state of mind"
+    },
+    {
+      "work_id": "04468",
+      "record_hash": "8f4c2b3c67fee6157292f386710f748e89856da0205aafe62c175826ee50922a",
+      "title": "state of mind - source 25",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "127",
+      "project_folder": "state of mind"
+    },
+    {
+      "work_id": "04469",
+      "record_hash": "1bcd31c223eca5be93fff901801c97370147819fa37f586b42600dc15354857c",
+      "title": "state of mind - source 26",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "127",
+      "project_folder": "state of mind"
+    },
+    {
+      "work_id": "04470",
+      "record_hash": "b49ef84b14765ecc019562a4c280446b676fbc53eebaf6ea9e04f56371156f9b",
+      "title": "state of mind - source 27",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "127",
+      "project_folder": "state of mind"
+    },
+    {
+      "work_id": "04471",
+      "record_hash": "a3bac51102da6607d333a9558a47ec0b2fe561976a5349d613f303f729dcd924",
+      "title": "state of mind - source 28",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "127",
+      "project_folder": "state of mind"
+    },
+    {
+      "work_id": "04472",
+      "record_hash": "a8f0fa899b727106e5621cf7b75f86b4dbfec725b74efe1b778def5f00e25fa8",
+      "title": "state of mind - source 29",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "127",
+      "project_folder": "state of mind"
+    },
+    {
+      "work_id": "04473",
+      "record_hash": "3facfb76b54549b98b13527af033b196be624d8735cc91827dd3ef0942ec1a3b",
+      "title": "state of mind - source 30",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "127",
+      "project_folder": "state of mind"
+    },
+    {
+      "work_id": "04474",
+      "record_hash": "91168347ee734439ffa717e59e125342df5ddf50450f67af0f4adabb51469fb7",
+      "title": "state of mind - source 31",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "127",
+      "project_folder": "state of mind"
+    },
+    {
+      "work_id": "04475",
+      "record_hash": "e3a6b5fdd18056266be08d77272faae0cfea2e7b3a2dedc294fb3279ea7d6d38",
+      "title": "state of mind - source 32",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "127",
+      "project_folder": "state of mind"
+    },
+    {
+      "work_id": "04476",
+      "record_hash": "d09b04abb20cfbbaeb3e741dad7337d7ccac1ab46f76542e08095d012330a532",
+      "title": "state of mind - source 33",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "127",
+      "project_folder": "state of mind"
+    },
+    {
+      "work_id": "04477",
+      "record_hash": "3bca8bc6ff46aae4dab8bed0fcc317f776a485c4387e881f800b734eb9440d5f",
+      "title": "state of mind - source 34",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "127",
+      "project_folder": "state of mind"
+    },
+    {
+      "work_id": "04478",
+      "record_hash": "a438a57eaf2c049187c9df773cb7ef558488bdbd03e45b767df9f54b0a296775",
+      "title": "state of mind - source 35",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "127",
+      "project_folder": "state of mind"
+    },
+    {
+      "work_id": "04479",
+      "record_hash": "0030bc8ffb528a581e8b7ec3a239aa843c022316197beb70a029f1fa55c94a0e",
+      "title": "state of mind - source 36",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "127",
+      "project_folder": "state of mind"
+    },
+    {
+      "work_id": "04480",
+      "record_hash": "72e26c6db29fc376adba05770da7ed984eaa8a10d0e9a54e4161dacbe070a415",
+      "title": "state of mind - source 37",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "127",
+      "project_folder": "state of mind"
+    },
+    {
+      "work_id": "04481",
+      "record_hash": "72aaa2827402c5d3f21db790754f0507ed734dc350a18097a6c1f4c06989d367",
+      "title": "state of mind - source 38",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "127",
+      "project_folder": "state of mind"
+    },
+    {
+      "work_id": "04482",
+      "record_hash": "67fe8e57a77c8cf65a7da587a8263405f104ce9b1654710336dbc44bc0197fea",
+      "title": "state of mind - source 39",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "127",
+      "project_folder": "state of mind"
+    },
+    {
+      "work_id": "04483",
+      "record_hash": "0f22dbd920d12b74198792071493482769e34dfd8438c356bd3446bd263ff9ae",
+      "title": "state of mind - source 40",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "127",
+      "project_folder": "state of mind"
+    },
+    {
+      "work_id": "04484",
+      "record_hash": "77f456ae74302c60130c1d02d7767590ff303f305c76a05d903abd14a8c24105",
+      "title": "state of mind - source 41",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "127",
+      "project_folder": "state of mind"
+    },
+    {
+      "work_id": "04485",
+      "record_hash": "11cba32870b6f90debe0be179cb12fe3f964016b784d13b9a67f4b97b675fa07",
+      "title": "state of mind - source 42",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "127",
+      "project_folder": "state of mind"
+    },
+    {
+      "work_id": "04486",
+      "record_hash": "b7ddf6125a20dbf4091e7315a520b2ea7d23228e61c92a80d86e10c46f9bfcd4",
+      "title": "state of mind - source 43",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "127",
+      "project_folder": "state of mind"
+    },
+    {
+      "work_id": "04487",
+      "record_hash": "2f978b5852922c6f33744ec9647ae4d54c810013c3bc76afa4f8d9e53f517c54",
+      "title": "state of mind - source 44",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "127",
+      "project_folder": "state of mind"
+    },
+    {
+      "work_id": "04488",
+      "record_hash": "44ef1855c7b2034285eb29f30d51ccf2193e9e33cb8d40a76c51db17a40c8da3",
+      "title": "state of mind - source 45",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "127",
+      "project_folder": "state of mind"
+    },
+    {
+      "work_id": "04489",
+      "record_hash": "f304449746ae7eb862b91be701dfda4fe2c918d7b0d32672aff64dc746deec12",
+      "title": "state of mind - source 46",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "127",
+      "project_folder": "state of mind"
+    },
+    {
+      "work_id": "04490",
+      "record_hash": "cd834c5275b235dccdc48413dc15c96aec98cc15dcf66b7343b23a8f5c7ab21b",
+      "title": "state of mind - source 47",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "127",
+      "project_folder": "state of mind"
+    },
+    {
+      "work_id": "04491",
+      "record_hash": "4688dbcf6477851b2ee1d98daf836a034590cd1195f0113282491135312878c4",
+      "title": "state of mind - source 48",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "127",
+      "project_folder": "state of mind"
+    },
+    {
+      "work_id": "04492",
+      "record_hash": "cd8ce698dd5653913d170385fa80a6ab0a0e3b65e1ca93f983aae534eae73b44",
+      "title": "state of mind - source 49",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "127",
+      "project_folder": "state of mind"
+    },
+    {
+      "work_id": "04493",
+      "record_hash": "0e01126f54fdbcb9d24be185384e2e180390b03a5295f6f6decd4a2fe0c33013",
+      "title": "state of mind - source 50",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "127",
+      "project_folder": "state of mind"
+    },
+    {
+      "work_id": "04494",
+      "record_hash": "8b2924c26e7a6af5eb112afe7896b011bbc45ce1a0f2a08aaf9d1de1bf76d86b",
+      "title": "state of mind - source 51",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "127",
+      "project_folder": "state of mind"
+    },
+    {
+      "work_id": "04495",
+      "record_hash": "e8826ac7ae31d374843be7596cd8c7eed28ab9b7d4bcb9501b0c674794dee09f",
+      "title": "state of mind - source 52",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "127",
+      "project_folder": "state of mind"
+    },
+    {
+      "work_id": "04496",
+      "record_hash": "63b72b6a9f8d6befaacad209a362e035d9f9235db46e6139460f6b7c3a256140",
+      "title": "state of mind - source 53",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "127",
+      "project_folder": "state of mind"
+    },
+    {
+      "work_id": "04497",
+      "record_hash": "39b2a19aa4418e0eb1806c46a09aa690f43397b88bfca713ce8a124fe40ab451",
+      "title": "state of mind - source 54",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "127",
+      "project_folder": "state of mind"
+    },
+    {
+      "work_id": "04498",
+      "record_hash": "c225ffa209180c689995361cb33cbe047e03d645805ef071cd3fd9625c2ccb6e",
+      "title": "state of mind - source 55",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "127",
+      "project_folder": "state of mind"
+    },
+    {
+      "work_id": "04499",
+      "record_hash": "07e9ae4c64dad57da7f3b2e270978b6153bf8c51edbded1ad5f9cc000cd8a4af",
+      "title": "state of mind - source 56",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "127",
+      "project_folder": "state of mind"
+    },
+    {
+      "work_id": "04500",
+      "record_hash": "ef19b68354795e1bc037d62453033d987fda85f87d2251fa06ad051e24c017ff",
+      "title": "state of mind - source 57",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "127",
+      "project_folder": "state of mind"
+    },
+    {
+      "work_id": "04501",
+      "record_hash": "cc81529b370311cfd1e887c38a7161a97e400094bd90ceddd8c344bc6e8464c2",
+      "title": "state of mind - source 58",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "127",
+      "project_folder": "state of mind"
+    },
+    {
+      "work_id": "04502",
+      "record_hash": "bc8ee2868ffc9b417aae575954ce5ca87551ad01ba9410f1a02d3f6121fe9deb",
+      "title": "state of mind - source 59",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "127",
+      "project_folder": "state of mind"
+    },
+    {
+      "work_id": "04503",
+      "record_hash": "fb8f49c8c52fdab327523fe7edf2fa016ae763f67fb89f2ac29e6b8f5df53f58",
+      "title": "state of mind - source 60",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "127",
+      "project_folder": "state of mind"
+    },
+    {
+      "work_id": "04504",
+      "record_hash": "b8f0c759342c354cd91992ecb9a2f280d9e94de2f98146d0d2849b2f79aaed96",
+      "title": "state of mind - source 61",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "127",
+      "project_folder": "state of mind"
+    },
+    {
+      "work_id": "04505",
+      "record_hash": "267cfd49f13c242287ad1fdd9490a38943100fac55aa758dcbcc3b7c089ef347",
+      "title": "state of mind - source 62",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "127",
+      "project_folder": "state of mind"
+    },
+    {
+      "work_id": "04506",
+      "record_hash": "9fadad117cf9f93eac403eb03adcb9e968772721867acd9d76e17088063836c0",
+      "title": "state of mind - source 63",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "127",
+      "project_folder": "state of mind"
+    },
+    {
+      "work_id": "04507",
+      "record_hash": "e5dde16dba98585c09d504adf4b7e1a9e457d007d3bcb674cd296b5a5005710b",
+      "title": "state of mind - source 64",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "127",
+      "project_folder": "state of mind"
+    },
+    {
+      "work_id": "04508",
+      "record_hash": "bfd50fce37f055106ef395a0cf3ede8d808d27df15e8e9fe3a7e6a79e092b5b1",
+      "title": "state of mind - source 65",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "127",
+      "project_folder": "state of mind"
+    },
+    {
+      "work_id": "04509",
+      "record_hash": "670a4a650fa802693f795fdf437c1be96472b0f7f5e9973d4f7f47ec13ee72e5",
+      "title": "state of mind - source 66",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "127",
+      "project_folder": "state of mind"
+    },
+    {
+      "work_id": "04510",
+      "record_hash": "8328a83453ff406bb56eefae3014a452dbd12bb9e6f790e64e154e66f3984386",
+      "title": "state of mind - source 67",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "127",
+      "project_folder": "state of mind"
+    },
+    {
+      "work_id": "04511",
+      "record_hash": "46f45e9c92e86cf0e4d2d25c996e842a71d3353382e2343132ef6d072b46cbc5",
+      "title": "state of mind - source 68",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "127",
+      "project_folder": "state of mind"
+    },
+    {
+      "work_id": "04512",
+      "record_hash": "7199114863d2907e04252a1d873cb34b17e8a24ddfff1e9d85a88d8f13aef7c3",
+      "title": "state of mind - source 69",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "127",
+      "project_folder": "state of mind"
+    },
+    {
+      "work_id": "04513",
+      "record_hash": "b2c1d11221080f6f14ef7b99cdfa91c342553e87eb749fd6a8261c59829cd34c",
+      "title": "state of mind - source 70",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "127",
+      "project_folder": "state of mind"
+    },
+    {
+      "work_id": "04514",
+      "record_hash": "6eb2a48f71ee229af2fcc3112856b36534b3d389719cae13e62e4792c9a7c1e9",
+      "title": "state of mind - source 71",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "127",
+      "project_folder": "state of mind"
+    },
+    {
+      "work_id": "04515",
+      "record_hash": "7968a16f5b791d1c04efd5356d808f4ceb474f9be446eb30abd0cbb7db20bfcf",
+      "title": "state of mind - source 72",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "127",
+      "project_folder": "state of mind"
+    },
+    {
+      "work_id": "04516",
+      "record_hash": "00ecc935b8c430b644b5a46ef1106c10b59d6bd11cea718f2b9080aaab999e07",
+      "title": "state of mind - source 73",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "127",
+      "project_folder": "state of mind"
+    },
+    {
+      "work_id": "04517",
+      "record_hash": "7b1fb09d2dd75cf0321de11cce64bef2d9d7fdc12cd773180bf10ee8d7e5de6f",
+      "title": "state of mind - source 74",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "127",
+      "project_folder": "state of mind"
+    },
+    {
+      "work_id": "04518",
+      "record_hash": "839a7584ef5a619dda5f0e3013ee11500ebcc9adaa58212991043f59d86d3087",
+      "title": "state of mind - source 75",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "127",
+      "project_folder": "state of mind"
+    },
+    {
+      "work_id": "04519",
+      "record_hash": "188a3a1db685231899756f38bcce08107ad7dceb5627d7478fc84561791fd794",
+      "title": "state of mind - source 76",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "127",
+      "project_folder": "state of mind"
+    },
+    {
+      "work_id": "04520",
+      "record_hash": "00ac0881cb6925da902de5222c1ea5fe7c2cbbf86ca256352db06cb838d8985d",
+      "title": "state of mind - source 77",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "127",
+      "project_folder": "state of mind"
+    },
+    {
+      "work_id": "04521",
+      "record_hash": "66fd15865be3027cbfc28b1f71d948bfce0d10fd3f50f06b6950c9492784951f",
+      "title": "state of mind - source 78",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "127",
+      "project_folder": "state of mind"
+    },
+    {
+      "work_id": "04522",
+      "record_hash": "cf69e83fcb4f747ecaf4e5349a422ccb95a9ebae0ef9837f443ebebee8cf55bd",
+      "title": "state of mind - source 79",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "127",
+      "project_folder": "state of mind"
+    },
+    {
+      "work_id": "04523",
+      "record_hash": "a6ee829742ba63ac7d6850f34365783bff51e222db64ef87c90cb98ef9697769",
+      "title": "state of mind - source 80",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "127",
+      "project_folder": "state of mind"
+    },
+    {
+      "work_id": "04524",
+      "record_hash": "ab025c4a3716357d9b7ff9424ea8da619130f7a085c70cc70f987b476d468e3c",
+      "title": "state of mind - source 81",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "127",
+      "project_folder": "state of mind"
+    },
+    {
+      "work_id": "04525",
+      "record_hash": "2b6c5c04e16573d79eeb673dc5abfdc626e3bbf7d5e2e2fde7ad0b5bd28caaab",
+      "title": "state of mind - source 82",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "127",
+      "project_folder": "state of mind"
+    },
+    {
+      "work_id": "04526",
+      "record_hash": "46f37a4b8fcaf1369c624984d44bb8c5f58488e35e2e85c1f341de2fdb428427",
+      "title": "state of mind - source 83",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "127",
+      "project_folder": "state of mind"
+    },
+    {
+      "work_id": "04527",
+      "record_hash": "3f824994bbcb3a78d1a4c11e09e63bf49ca04458a56ab2c2310094940c1e80df",
+      "title": "state of mind - source 84",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "127",
+      "project_folder": "state of mind"
+    },
+    {
+      "work_id": "04528",
+      "record_hash": "199b5e48afcc0856b534351d1d88ef3d87005839d1c77748ce65b76c7bb62140",
+      "title": "state of mind - source 85",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "127",
+      "project_folder": "state of mind"
+    },
+    {
+      "work_id": "04529",
+      "record_hash": "cd3d16c74e0b155683cccd70f1b6eff0904c20e69562ce95c8545d85ecc0f507",
+      "title": "state of mind - source 86",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "127",
+      "project_folder": "state of mind"
+    },
+    {
+      "work_id": "04530",
+      "record_hash": "5d1fe33de1722fe5ed1268c3aa193af75182a8c69b668f7f1a4fdb275963cfc8",
+      "title": "state of mind - source 87",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "127",
+      "project_folder": "state of mind"
+    },
+    {
+      "work_id": "04531",
+      "record_hash": "faecd7b36b3c51baea882d497d465b8f4786db399d9e7fc5174bb8b681b5d010",
+      "title": "state of mind - source 88",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "127",
+      "project_folder": "state of mind"
+    },
+    {
+      "work_id": "04532",
+      "record_hash": "fb8dc2dfe8045d54df20c9a2196b60181d87632823d0ab88fc8690a8e9426d4f",
+      "title": "state of mind - source 89",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "127",
+      "project_folder": "state of mind"
+    },
+    {
+      "work_id": "04533",
+      "record_hash": "3d5802b944d3950aad671b6f5ec969d16a7a7764f81c60704a8b9c174545d008",
+      "title": "state of mind - source 90",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "127",
+      "project_folder": "state of mind"
+    },
+    {
+      "work_id": "04534",
+      "record_hash": "5210725db118f678c46c9bd71d943f1d86914dd33384b70e4352eae8d8b5b69d",
+      "title": "state of mind - source 91",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "127",
+      "project_folder": "state of mind"
+    },
+    {
+      "work_id": "04535",
+      "record_hash": "3ea2523d514e191d0512bddaffcb7301395f91319f871db3d373f0623a7b5ab6",
+      "title": "state of mind - source 92",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "127",
+      "project_folder": "state of mind"
+    },
+    {
+      "work_id": "04536",
+      "record_hash": "923a15479873fb8460e5a8f6c1d34395b6720d5b53d0d6408a2ccc52bd92b263",
+      "title": "state of mind - source 93",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "127",
+      "project_folder": "state of mind"
+    },
+    {
+      "work_id": "04537",
+      "record_hash": "992e65c8a7ef64a16c359cb7155aaa15ac72689e56c43021d981a618ebed2ade",
+      "title": "state of mind - source 94",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "127",
+      "project_folder": "state of mind"
+    },
+    {
+      "work_id": "04538",
+      "record_hash": "f7609eeeadb4f1936e1110153e2b5bef2cd79ef7a9a4bb6fa1f495ed214b870f",
+      "title": "state of mind - source 95",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "127",
+      "project_folder": "state of mind"
+    },
+    {
+      "work_id": "04539",
+      "record_hash": "71247d9b40646e64e49da8aad75641ca1eb29ff7a92c5b0feaecfb6f937b625d",
+      "title": "state of mind - source 96",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "127",
+      "project_folder": "state of mind"
+    },
+    {
+      "work_id": "04540",
+      "record_hash": "3676949d2062fa4bc4cd9147f2a3ed032bd583354b170cbcbc7e7c60f6facc42",
+      "title": "state of mind - source 97",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "127",
+      "project_folder": "state of mind"
+    },
+    {
+      "work_id": "04541",
+      "record_hash": "3e5965c4c55312d612147c6a2e4b4cfebc3b025189b72a98020b78ccd68fae8d",
+      "title": "state of mind - source 98",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "127",
+      "project_folder": "state of mind"
+    },
+    {
+      "work_id": "04542",
+      "record_hash": "be1c24a0a3e9ca91d32e0cfcfe2295df1dc22425ab4837174f4750ca785b5e71",
+      "title": "state of mind - source 99",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "127",
+      "project_folder": "state of mind"
+    },
+    {
+      "work_id": "04543",
+      "record_hash": "d7073b12d274c33c0cbafb0eae9dc5428674cd3d7d26a6ed960ddc4528754607",
+      "title": "state of mind - source 100",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "127",
+      "project_folder": "state of mind"
+    },
+    {
+      "work_id": "04544",
+      "record_hash": "41661ec767b36dd2c38234ddb73c0c863f07b1327d6a26c8488a551cbf005a59",
+      "title": "state of mind - source 101",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "127",
+      "project_folder": "state of mind"
+    },
+    {
+      "work_id": "04545",
+      "record_hash": "6c0053e02a42ecfd819b1a343b6893ad4946cff3928b523a7ebc6f58ce15820b",
+      "title": "state of mind - source 102",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "127",
+      "project_folder": "state of mind"
+    },
+    {
+      "work_id": "04546",
+      "record_hash": "65b3e904da0ba901b55c51247b9952b8bc4317dbc347d300a9f4e69107b9c814",
+      "title": "state of mind - source 103",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "127",
+      "project_folder": "state of mind"
+    },
+    {
+      "work_id": "04547",
+      "record_hash": "52ec2f217321fdb926cbe3b68aca4656dd2d0ba0124104d79da23bace467b30c",
+      "title": "state of mind - source 104",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "127",
+      "project_folder": "state of mind"
+    },
+    {
+      "work_id": "04548",
+      "record_hash": "ee631cdc93c8de50db7411a4b4a26479a0dabe1c9021081e010779ea9779770b",
+      "title": "state of mind - source 105",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "127",
+      "project_folder": "state of mind"
+    },
+    {
+      "work_id": "04549",
+      "record_hash": "328bf2f253ce268dcf603e8c5d703c7bf3a5d1c9ffe85178da63c2509821706c",
+      "title": "state of mind - source 106",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "127",
+      "project_folder": "state of mind"
+    },
+    {
+      "work_id": "04550",
+      "record_hash": "f5183d0d841168f684b5ff116dbc7d3feecdda0c70e8c289ae883dfa57a8ece4",
+      "title": "state of mind - source 107",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "127",
+      "project_folder": "state of mind"
+    },
+    {
+      "work_id": "04551",
+      "record_hash": "13f867d8a46948a28e1752c3f4c39f14c1ca87e38ba40c90d1d958b41d9fc03b",
+      "title": "state of mind - source 108",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "127",
+      "project_folder": "state of mind"
+    },
+    {
+      "work_id": "04552",
+      "record_hash": "f85757de0681bd576df5505490a5222bf7d6a56c19337e8e3dcc0ec49a28fbc9",
+      "title": "state of mind - source 109",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "127",
+      "project_folder": "state of mind"
+    },
+    {
+      "work_id": "04553",
+      "record_hash": "7b9e8ed31c0762b2485b051252c9fbe8337980fd53c17b21ff3dbc127913009d",
+      "title": "state of mind - source 110",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "127",
+      "project_folder": "state of mind"
+    },
+    {
+      "work_id": "04554",
+      "record_hash": "4cd8ab28cdd0ad3326920b75b2f4d9bc1f06e41b9ca7c43a1b86e459f432b97a",
+      "title": "state of mind - source 111",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "127",
+      "project_folder": "state of mind"
+    },
+    {
+      "work_id": "04555",
+      "record_hash": "f4823f0f1f68d2aecbc3c119e7ec6b14f7164afa6f13f56c84e172303c735f88",
+      "title": "state of mind - source 112",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "127",
+      "project_folder": "state of mind"
+    },
+    {
+      "work_id": "04556",
+      "record_hash": "e76f16ebf8a5eca71c5599ace50ac29a81850b52e0ce2b6ad7956ba42f3e370a",
+      "title": "state of mind - source 113",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "127",
+      "project_folder": "state of mind"
     }
   ],
   "ordered_work_ids": [
-    "01721"
+    "01721",
+    "04438",
+    "04439",
+    "04440",
+    "04441",
+    "04442",
+    "04443",
+    "04444",
+    "04445",
+    "04446",
+    "04447",
+    "04448",
+    "04449",
+    "04450",
+    "04451",
+    "04452",
+    "04453",
+    "04454",
+    "04455",
+    "04456",
+    "04457",
+    "04458",
+    "04459",
+    "04460",
+    "04461",
+    "04462",
+    "04463",
+    "04464",
+    "04465",
+    "04466",
+    "04467",
+    "04468",
+    "04469",
+    "04470",
+    "04471",
+    "04472",
+    "04473",
+    "04474",
+    "04475",
+    "04476",
+    "04477",
+    "04478",
+    "04479",
+    "04480",
+    "04481",
+    "04482",
+    "04483",
+    "04484",
+    "04485",
+    "04486",
+    "04487",
+    "04488",
+    "04489",
+    "04490",
+    "04491",
+    "04492",
+    "04493",
+    "04494",
+    "04495",
+    "04496",
+    "04497",
+    "04498",
+    "04499",
+    "04500",
+    "04501",
+    "04502",
+    "04503",
+    "04504",
+    "04505",
+    "04506",
+    "04507",
+    "04508",
+    "04509",
+    "04510",
+    "04511",
+    "04512",
+    "04513",
+    "04514",
+    "04515",
+    "04516",
+    "04517",
+    "04518",
+    "04519",
+    "04520",
+    "04521",
+    "04522",
+    "04523",
+    "04524",
+    "04525",
+    "04526",
+    "04527",
+    "04528",
+    "04529",
+    "04530",
+    "04531",
+    "04532",
+    "04533",
+    "04534",
+    "04535",
+    "04536",
+    "04537",
+    "04538",
+    "04539",
+    "04540",
+    "04541",
+    "04542",
+    "04543",
+    "04544",
+    "04545",
+    "04546",
+    "04547",
+    "04548",
+    "04549",
+    "04550",
+    "04551",
+    "04552",
+    "04553",
+    "04554",
+    "04555",
+    "04556"
   ],
   "project_folders": [
     "state of mind"

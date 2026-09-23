@@ -15,6 +15,7 @@ from catalogue_work_media_sources import (
 from pipeline_config import load_pipeline_config
 
 from catalogue.series_ids import normalize_series_id, parse_series_ids
+from catalogue.catalogue_galleries import read_galleries
 
 
 DEFAULT_SOURCE_DIR = Path("studio/data/canonical/catalogue")
@@ -67,7 +68,6 @@ SERIES_FIELDS = [
     "title",
     "year",
     "year_display",
-    "sort_fields",
 ]
 
 DETAIL_FIELDS = [
@@ -741,31 +741,25 @@ def records_from_json_source(source_dir: Path) -> CatalogueSourceRecords:
     old_flat_path = source_dir / "work_details.json"
     if old_flat_path.exists():
         raise ValueError(f"Retired source file must not exist at runtime: {old_flat_path}")
+    if any((source_dir / "work_details").glob("*.json")):
+        raise ValueError("Retired Detail source records require the explicit Gallery conversion")
     maps: Dict[str, Dict[str, Dict[str, Any]]] = {}
-    section_maps: Dict[str, Dict[str, Any]] = {}
-    for kind in ["works", "work_details", "series"]:
+    for kind in ["works", "series"]:
         path = source_dir / SOURCE_FILES[kind]
         payload = load_json_file(path)
         record_map = payload.get(kind)
         if not isinstance(record_map, dict):
             raise ValueError(f"Invalid source file shape in {path}: missing object key {kind!r}")
-        if kind == "work_details":
-            raw_sections = payload.get("work_detail_sections")
-            if isinstance(raw_sections, dict):
-                section_maps = {
-                    str(record_id): dict(record)
-                    for record_id, record in raw_sections.items()
-                    if isinstance(record, dict)
-                }
         maps[kind] = {
             str(record_id): dict(record)
             for record_id, record in record_map.items()
             if isinstance(record, dict)
         }
+    read_galleries(source_dir, maps["works"])
     return CatalogueSourceRecords(
         works=sort_record_map(maps["works"]),
-        work_detail_sections=sort_record_map(section_maps),
-        work_details=sort_record_map(maps["work_details"]),
+        work_detail_sections={},
+        work_details={},
         series=sort_record_map(maps["series"]),
     )
 
@@ -895,6 +889,8 @@ def validate_source_records(
         if key != work_id:
             errors.append(f"works {key}: key does not match normalized work_id {work_id}")
         all_work_ids.add(work_id)
+        if "series_id" not in record:
+            errors.append(f"works {key}: exactly one series_id is required")
         if "series_id" in record:
             raw_series_id = record["series_id"]
             try:
@@ -943,10 +939,6 @@ def validate_source_records(
         if key != series_id:
             errors.append(f"series {key}: key does not match normalized series_id {series_id}")
         all_series_ids.add(series_id)
-        for token in normalize_text(record.get("sort_fields")).split(","):
-            field = token.strip().removeprefix("-").lower()
-            if field and field not in {*WORK_FIELDS, "title_sort", "series_title"}:
-                errors.append(f"series {key}: unknown sort field {field!r}")
 
     for work_id, series_id in work_series_by_work_id.items():
         if series_id not in all_series_ids:

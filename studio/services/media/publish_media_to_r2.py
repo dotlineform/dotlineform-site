@@ -4,9 +4,11 @@
 from __future__ import annotations
 
 import argparse
+import base64
 import datetime as dt
 import hashlib
 import hmac
+import http.client
 import json
 import mimetypes
 import sys
@@ -1072,6 +1074,51 @@ class R2Client:
         except urllib.error.HTTPError as exc:
             raise RuntimeError(f"PUT {key} failed with HTTP {exc.code}") from exc
 
+    def copy_objects(self, objects: Sequence[Mapping[str, object]]) -> None:
+        """Copy a bounded batch using one connection and exact source conditions."""
+        parsed = urllib.parse.urlparse(self.credentials.endpoint)
+        connection_type = http.client.HTTPSConnection if parsed.scheme == "https" else http.client.HTTPConnection
+        connection = connection_type(parsed.hostname, parsed.port, timeout=120)
+        try:
+            for item in objects:
+                source, destination = str(item["source"]), str(item["destination"])
+                request = self._request("PUT", destination, body=b"", extra_headers={
+                    "X-Amz-Copy-Source": urllib.parse.quote(f"/{self.credentials.bucket}/{source}", safe="/"),
+                    "X-Amz-Copy-Source-If-Match": str(item["etag"]),
+                    "X-Amz-Metadata-Directive": "COPY",
+                    "Cf-Copy-Destination-If-None-Match": "*",
+                })
+                connection.request("PUT", request.selector, body=b"", headers=dict(request.header_items()))
+                response = connection.getresponse()
+                body = response.read()
+                if response.status != 200:
+                    raise RuntimeError(f"COPY {source} to {destination} failed with HTTP {response.status}")
+                payload = ET.fromstring(body)
+                if payload.tag.rsplit("}", 1)[-1] != "CopyObjectResult":
+                    raise RuntimeError(f"COPY {source} to {destination} failed: invalid CopyObject result")
+        finally:
+            connection.close()
+
+    def delete_objects(self, keys: Sequence[str]) -> None:
+        """Delete an explicit batch of at most 1000 keys; propagate per-key errors."""
+        if not keys or len(keys) > 1000 or len(set(keys)) != len(keys):
+            raise ValueError("R2 deletion requires 1–1000 distinct keys")
+        root = ET.Element("Delete", xmlns="http://s3.amazonaws.com/doc/2006-03-01/")
+        for key in keys:
+            ET.SubElement(ET.SubElement(root, "Object"), "Key").text = key
+        ET.SubElement(root, "Quiet").text = "true"
+        body = ET.tostring(root, encoding="utf-8")
+        request = self._request("POST", "", body=body, query={"delete": ""}, content_type="application/xml",
+                                extra_headers={"Content-MD5": base64.b64encode(hashlib.md5(body, usedforsecurity=False).digest()).decode("ascii")})
+        try:
+            with urllib.request.urlopen(request, timeout=120) as response:
+                payload = ET.fromstring(response.read())
+                errors = [node for node in payload.iter() if node.tag.rsplit("}", 1)[-1] == "Error"]
+                if payload.tag.rsplit("}", 1)[-1] != "DeleteResult" or errors:
+                    raise RuntimeError(f"R2 batch deletion failed: {len(errors)} object error(s)")
+        except urllib.error.HTTPError as exc:
+            raise RuntimeError(f"R2 batch deletion failed with HTTP {exc.code}") from exc
+
     def delete_object(self, key: str) -> None:
         request = self._request("DELETE", key, body=b"")
         try:
@@ -1089,6 +1136,7 @@ class R2Client:
         body: bytes,
         content_type: str = "",
         query: Mapping[str, str] | None = None,
+        extra_headers: Mapping[str, str] | None = None,
     ) -> urllib.request.Request:
         parsed = urllib.parse.urlparse(self.credentials.endpoint)
         encoded_key = "/".join(urllib.parse.quote(part, safe="") for part in key.split("/"))
@@ -1109,9 +1157,11 @@ class R2Client:
             "X-Amz-Content-Sha256": payload_hash,
             "X-Amz-Date": amz_date,
         }
-        if method == "PUT":
+        if method in {"PUT", "POST"}:
             headers["Content-Length"] = str(len(body))
-            headers["Content-Type"] = content_type
+            if content_type:
+                headers["Content-Type"] = content_type
+        headers.update(extra_headers or {})
 
         authorization = self._authorization(
             method=method,
@@ -1123,7 +1173,7 @@ class R2Client:
             date_stamp=date_stamp,
         )
         headers["Authorization"] = authorization
-        return urllib.request.Request(url, data=body if method == "PUT" else None, headers=headers, method=method)
+        return urllib.request.Request(url, data=body if method in {"PUT", "POST"} else None, headers=headers, method=method)
 
     def _authorization(
         self,
