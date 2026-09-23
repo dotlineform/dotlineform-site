@@ -96,6 +96,15 @@ function normalizeWorkPresentation(value) {
   }
 
   var metadata = normalizedMetadata(value.metadata);
+  var galleryIds = new Set();
+  var galleries = value.galleries === undefined ? [] : value.galleries;
+  if (!Array.isArray(galleries)) throw new Error("Media View requires an array of Gallery links.");
+  galleries = galleries.map(function (entry) {
+    var target = normalizeDocsViewerCatalogueGroupTarget(entry && entry.target);
+    if (target.kind !== "catalogue-gallery" || galleryIds.has(target.id)) throw new Error("Media View Gallery links are invalid or duplicated.");
+    galleryIds.add(target.id);
+    return Object.freeze({ target: target, label: normalizedTextField(entry.label, "a Gallery label") });
+  });
 
   var newTabTarget = docsViewerSafeMediaTarget(value.new_tab_target);
   if (!newTabTarget) throw new Error("Media View new-tab target is unsupported.");
@@ -112,13 +121,17 @@ function normalizeWorkPresentation(value) {
       heightPx: imageHeight
     }),
     metadata: metadata,
+    galleries: Object.freeze(galleries),
     newTabTarget: newTabTarget
   });
 }
 
-function normalizedSeriesTarget(value) {
-  if (!value || value.kind !== "catalogue-series" || typeof value.id !== "string" || !/^\d{3}$/.test(value.id)) {
-    throw new Error("Media View requires an exact Catalogue Series target.");
+/** Keep Series and Gallery identity separate even when their numeric IDs match. */
+export function normalizeDocsViewerCatalogueGroupTarget(value) {
+  var pattern = value && (value.kind === "catalogue-series" ? /^[0-9]{3}$/
+    : value.kind === "catalogue-gallery" ? /^(?:[0-9]{3}|[1-9][0-9]{3,})$/ : null);
+  if (!pattern || typeof value.id !== "string" || value.id !== value.id.trim() || !pattern.test(value.id)) {
+    throw new Error("Media View requires an exact Catalogue Series or Gallery target.");
   }
   return Object.freeze({ kind: value.kind, id: value.id });
 }
@@ -178,7 +191,7 @@ export function normalizeDocsViewerMediaPresentation(value) {
       work: work, thumbnail: normalizeThumbnail(entry.thumbnail) });
   });
   var gallery = Object.freeze({
-    target: normalizedSeriesTarget(source.target),
+    target: normalizeDocsViewerCatalogueGroupTarget(source.target),
     label: normalizedTextField(source.label, "a gallery label"),
     metadata: normalizedMetadata(source.metadata === undefined ? [] : source.metadata),
     members: Object.freeze(members),

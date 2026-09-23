@@ -1,9 +1,10 @@
 import {
   docsViewerMediaPresentationForTarget,
-  normalizeDocsViewerMediaPresentation
+  normalizeDocsViewerMediaPresentation,
+  normalizeDocsViewerCatalogueGroupTarget
 } from "./docs-viewer-media-presentation.js";
 import { CONTENT_DETAIL_LABEL_CONTROL_ID } from "./docs-viewer-content-detail-view.js";
-import { catalogueMediaTargetWorkId, catalogueWorkMediaPresentation, catalogueSeriesTarget } from "./docs-viewer-catalogue-media.js";
+import { catalogueMediaTargetWorkId, catalogueWorkMediaPresentation } from "./docs-viewer-catalogue-media.js";
 import { mountDocsViewerResponsiveImage } from "./docs-viewer-responsive-image.js";
 import {
   DOCS_VIEWER_MEDIA_GALLERY_LAYOUT,
@@ -20,6 +21,14 @@ const MEDIA_PRESENTATION_SELECTOR = [
 
 function cleanString(value) {
   return String(value == null ? "" : value).trim();
+}
+
+function groupTarget(target) {
+  return target && ["catalogue-series", "catalogue-gallery"].includes(target.kind);
+}
+
+function groupLabel(target) {
+  return target.kind === "catalogue-series" ? "Series" : "Gallery";
 }
 
 function positiveInteger(value) {
@@ -81,11 +90,11 @@ function mountCatalogueReferences(context) {
     var control = marker.querySelector(MEDIA_OPEN_SELECTOR);
     if (!control || control.tagName !== "BUTTON" || control.getAttribute("type") !== "button") return;
     try {
-      if (kind === "catalogue-series") catalogueSeriesTarget(id);
+      if (groupTarget(target)) normalizeDocsViewerCatalogueGroupTarget(target);
       else catalogueMediaTargetWorkId(target);
     } catch (_error) { return; }
     var inlineImage = control.querySelector("[data-docs-media-image]");
-    if (kind === "catalogue-series" && inlineImage) return;
+    if (groupTarget(target) && inlineImage) return;
     var placeholder = control.querySelector("[data-docs-media-placeholder]");
     var status = marker.ownerDocument.createElement("span");
     status.setAttribute("role", "status");
@@ -396,7 +405,20 @@ export function createDocsViewerMediaDetailAdapter() {
     return state.workReads.get(workId);
   }
 
-  /** Resolve one exact Work/Detail or a lightweight Series; gallery entry reads no Works. */
+  async function readGroup(state, target) {
+    normalizeDocsViewerCatalogueGroupTarget(target);
+    var provider = state.collectionProvider;
+    var method = target.kind === "catalogue-gallery" ? "readCatalogueGalleryPresentation" : "readCatalogueSeriesPresentation";
+    if (!provider || typeof provider[method] !== "function") {
+      throw new Error("Catalogue " + groupLabel(target) + " data is unavailable in this view.");
+    }
+    var payload = await provider[method](target.id);
+    var normalized = normalizeDocsViewerMediaPresentation(payload);
+    if (!normalized.gallery || !sameMediaTarget(normalized.target, target)) throw new Error("Catalogue group identity is mismatched.");
+    return payload;
+  }
+
+  /** Resolve one exact Work/Detail, Series or Gallery; group entry reads no Works. */
   async function loadTarget(context) {
     context = Object.assign({}, context, {
       documentTarget: Object.freeze(Object.assign({}, context.documentTarget)),
@@ -404,17 +426,10 @@ export function createDocsViewerMediaDetailAdapter() {
     });
     var state = currentTargetState(context);
     if (!state) return null;
-    if (context.mediaTarget.kind === "catalogue-series") {
-      catalogueSeriesTarget(context.mediaTarget.id);
-      var provider = state.collectionProvider;
-      if (!provider || typeof provider.readCatalogueSeriesPresentation !== "function") {
-        throw new Error("Catalogue Series data is unavailable in this view.");
-      }
-      var series = await provider.readCatalogueSeriesPresentation(context.mediaTarget.id);
+    if (groupTarget(context.mediaTarget)) {
+      var group = await readGroup(state, context.mediaTarget);
       if (currentTargetState(context) !== state) return null;
-      var normalized = normalizeDocsViewerMediaPresentation(series);
-      if (!sameMediaTarget(normalized.target, context.mediaTarget)) throw new Error("Catalogue Series identity is mismatched.");
-      return series;
+      return group;
     }
     var workId = catalogueMediaTargetWorkId(context.mediaTarget);
     var [payload, policy] = await readWork(state, workId);
@@ -577,22 +592,28 @@ export function createDocsViewerMediaDetailAdapter() {
       caption.className = "docsViewer__mediaDetailCaption";
       caption.appendChild(titleElement(work.label));
       var metadata = appendMetadata(documentRef, caption, work.metadata);
-      if (supplied.gallery) {
+      var groups = work.galleries.slice();
+      if (supplied.gallery && !groups.some(function (entry) { return sameMediaTarget(entry.target, supplied.gallery.target); })) {
+        groups.unshift({ target: supplied.gallery.target, label: supplied.gallery.label });
+      }
+      groups.forEach(function (entry) {
         var row = documentRef.createElement("div");
         row.className = "docsViewer__mediaDetailMetadataRow";
         var term = documentRef.createElement("dt");
-        term.textContent = "Series";
+        term.textContent = groupLabel(entry.target);
         var description = documentRef.createElement("dd");
         var link = targetButton(
-          "Open gallery: " + supplied.gallery.label,
-          "docsViewer__mediaDetailSeriesLink",
-          supplied.gallery.target
+          "Open " + groupLabel(entry.target) + ": " + entry.label,
+          "docsViewer__mediaDetailGroupLink",
+          entry.target
         );
-        link.textContent = supplied.gallery.label;
+        link.textContent = entry.label;
         description.appendChild(link);
         row.appendChild(term);
         row.appendChild(description);
         metadata.appendChild(row);
+      });
+      if (supplied.gallery) {
         var position = docsViewerMediaGalleryPosition(supplied.gallery, work.target);
         caption.appendChild(navigationControls("Work", position.index + 1, position.total,
           position.previous ? function () { selectTarget(position.previous); } : null,
@@ -628,7 +649,7 @@ export function createDocsViewerMediaDetailAdapter() {
       canvas.appendChild(list);
       if (!gallery.members.length) {
         var empty = documentRef.createElement("p");
-        empty.textContent = "This Series has no Works.";
+        empty.textContent = "This " + groupLabel(gallery.target) + " has no Works.";
         canvas.appendChild(empty);
       }
       container.appendChild(canvas);
@@ -636,7 +657,7 @@ export function createDocsViewerMediaDetailAdapter() {
       information.className = "docsViewer__mediaDetailCaption";
       information.appendChild(titleElement(gallery.label));
       appendMetadata(documentRef, information, gallery.metadata.concat([
-        { label: "Series", value: gallery.target.id }, { label: "Works", value: String(page.total) }
+        { label: groupLabel(gallery.target), value: gallery.target.id }, { label: "Works", value: String(page.total) }
       ]));
       if (page.pageCount) {
         var pagination = navigationControls("page", page.pageIndex + 1, page.pageCount,
@@ -664,10 +685,10 @@ export function createDocsViewerMediaDetailAdapter() {
       current = next;
       imageCleanups.forEach(function (cleanup) { cleanup(); });
       imageCleanups = [];
-      viewport.replaceChildren(current.target.kind === "catalogue-series"
+      viewport.replaceChildren(groupTarget(current.target)
         ? renderGallery(current)
         : renderWork(current));
-      viewport.setAttribute("aria-label", current.label + (current.target.kind === "catalogue-series" && current.members.length
+      viewport.setAttribute("aria-label", current.label + (groupTarget(current.target) && current.members.length
         ? ", page " + (galleryPage + 1) : ""));
       section.setAttribute("data-docs-media-kind", current.target.kind);
       section.setAttribute("data-docs-media-id", current.target.id);
@@ -677,7 +698,7 @@ export function createDocsViewerMediaDetailAdapter() {
     }
 
     function selectGalleryPage(pageIndex) {
-      if (!isCurrent() || current.target.kind !== "catalogue-series") return;
+      if (!isCurrent() || !groupTarget(current.target)) return;
       galleryPage = docsViewerMediaGalleryPage(supplied.gallery, pageIndex).pageIndex;
       selectTarget(supplied.gallery.target);
     }
@@ -696,19 +717,28 @@ export function createDocsViewerMediaDetailAdapter() {
       var member = supplied.gallery && supplied.gallery.members.find(function (entry) {
         return sameMediaTarget(entry.target, target);
       });
-      if (!member) throw new Error("Media View target is not in the supplied gallery.");
+      var galleryLink = current.galleries && current.galleries.find(function (entry) { return sameMediaTarget(entry.target, target); });
+      if (!member && !galleryLink) throw new Error("Media View target is not a supplied member or Gallery link.");
       section.setAttribute("aria-busy", "true");
-      message("Loading " + member.label + "…");
+      message("Loading " + (member || galleryLink).label + "…");
       try {
-        var [payload, policy] = await readWork(state, member.target.id);
-        if (!isCurrent() || request !== selectionRequest) return;
-        var work = normalizeDocsViewerMediaPresentation(catalogueWorkMediaPresentation(payload, member.target.id, "", policy));
-        renderPresentation(work);
+        if (galleryLink) {
+          var group = normalizeDocsViewerMediaPresentation(await readGroup(state, galleryLink.target));
+          if (!isCurrent() || request !== selectionRequest) return;
+          supplied = group;
+          galleryPage = 0;
+          renderPresentation(group.gallery);
+        } else {
+          var [payload, policy] = await readWork(state, member.target.id);
+          if (!isCurrent() || request !== selectionRequest) return;
+          var work = normalizeDocsViewerMediaPresentation(catalogueWorkMediaPresentation(payload, member.target.id, "", policy));
+          renderPresentation(work);
+        }
         message("");
         viewport.focus({ preventScroll: true });
       } catch (error) {
         if (isCurrent() && request === selectionRequest) {
-          message((error.message || "Catalogue Work is unavailable.") + " ", function () { selectTarget(target); });
+          message((error.message || "Catalogue media is unavailable.") + " ", function () { selectTarget(target); });
         }
       } finally {
         if (isCurrent() && request === selectionRequest) section.removeAttribute("aria-busy");

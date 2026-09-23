@@ -23,6 +23,18 @@
       },
       "target_types": [
         {
+          "key": "gallery",
+          "label": "Gallery",
+          "id_policy": {
+            "normalizer": "digits_left_pad",
+            "width": 3,
+            "input_pattern": "^(?:[0-9]{3}|[1-9][0-9]{3,})$",
+            "canonical_pattern": "^(?:[0-9]{3}|[1-9][0-9]{3,})$"
+          },
+          "lookup_adapter": "catalogue-gallery-target-lookup",
+          "lookup_fields": ["title", "href", "meta"]
+        },
+        {
           "key": "work",
           "label": "Work",
           "id_policy": {

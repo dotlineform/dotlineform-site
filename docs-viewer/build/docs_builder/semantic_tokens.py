@@ -253,6 +253,9 @@ def parse_semantic_token(
         if target_type == "work":
             if not re.fullmatch(r"[0-9]{5}", target_id):
                 return None
+        elif target_type == "gallery":
+            if not re.fullmatch(r"(?:[0-9]{3}|[1-9][0-9]{3,})", target_id) or len(parts) == 5:
+                return None
         elif target_type != "series" or not re.fullmatch(r"[0-9]{3}", target_id) or len(parts) == 5:
             return None
         if len(parts) == 5 and (not media_detail_id or normalize_catalogue_detail_id(media_detail_id) != media_detail_id):

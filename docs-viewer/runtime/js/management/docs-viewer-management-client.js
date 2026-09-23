@@ -101,6 +101,12 @@ export function readCatalogueSeries(seriesId, options) {
     Object.assign({}, options, { cache: "no-store" }));
 }
 
+/** Read exact Gallery membership from current Studio-generated output. */
+export function readCatalogueGallery(galleryId, options) {
+  return fetchManagementJson("/docs/catalogue-gallery?gallery_id=" + encodeURIComponent(galleryId), "GET", undefined,
+    Object.assign({}, options, { cache: "no-store" }));
+}
+
 export function readManagedDocsIndex(options) {
   var stage = options && options.stage;
   if (!["working", "pre-publish", "published"].includes(stage)) return Promise.reject(new Error("Docs stage is required."));

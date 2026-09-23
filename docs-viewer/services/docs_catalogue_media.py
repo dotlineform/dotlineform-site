@@ -35,6 +35,12 @@ def _work_identity(value: Any) -> str:
     return value
 
 
+def _gallery_identity(value: Any) -> str:
+    if not isinstance(value, str) or not re.fullmatch(r"(?:[0-9]{3}|[1-9][0-9]{3,})", value):
+        raise ValueError("An exact Catalogue Gallery ID is required")
+    return value
+
+
 def _text(value: Any, label: str) -> str:
     if not isinstance(value, str) or not value.strip():
         raise ValueError(f"Generated Work {label} is unavailable")
@@ -99,7 +105,7 @@ def read_catalogue_work_index(repo_root: Path) -> dict[str, dict[str, Any]]:
 
 
 def read_catalogue_media_targets(repo_root: Path) -> dict[str, Any]:
-    """Expose Work and Series search identities from generated indexes, without document filtering."""
+    """Expose Work, Series and Gallery search identities from generated indexes."""
     targets = []
     for work_id, work in read_catalogue_work_index(repo_root).items():
         year = work.get("year_display")
@@ -121,6 +127,21 @@ def read_catalogue_media_targets(repo_root: Path) -> dict[str, Any]:
         targets.append({
             "family": "catalogue", "target_type": "series", "target_id": series_id,
             "title": title.strip(), "meta": [year] if isinstance(year, str) and year else [],
+        })
+    payload = _read_generated(repo_root, "galleries/galleries_index.json")
+    galleries, header = payload.get("galleries"), payload.get("header")
+    if not isinstance(galleries, dict) or not isinstance(header, dict) or header.get("schema") != "catalogue_galleries_index_v1" or type(header.get("count")) is not int or header["count"] != len(galleries):
+        raise ValueError("Generated Catalogue Gallery index is unavailable")
+    for gallery_id, record in galleries.items():
+        _gallery_identity(gallery_id)
+        if not isinstance(record, dict) or record.get("gallery_id") != gallery_id:
+            raise ValueError("Generated Gallery index identity is mismatched")
+        title, count = record.get("title"), record.get("work_count")
+        if not isinstance(title, str) or not title.strip() or type(count) is not int or count < 0:
+            raise ValueError("Generated Gallery title or Work count is unavailable")
+        targets.append({
+            "family": "catalogue", "target_type": "gallery", "target_id": gallery_id,
+            "title": title.strip(), "meta": [f"{count} Work" + ("s" if count != 1 else "")],
         })
     return {"ok": True, "schema_version": "docs_semantic_token_target_lookup_v2", "targets": targets}
 
@@ -157,6 +178,30 @@ def read_catalogue_series(repo_root: Path, series_id: str) -> dict[str, Any]:
         if work_id in seen:
             raise ValueError("Generated Series has a duplicate Work")
         seen.add(work_id)
+        _text(member.get("title"), "title")
+    return payload
+
+
+def read_catalogue_gallery(repo_root: Path, gallery_id: str) -> dict[str, Any]:
+    """Read one exact Gallery and its ordered Work references without member reads."""
+    gallery_id = _gallery_identity(gallery_id)
+    payload = _read_generated(repo_root, f"galleries/index/{gallery_id}.json")
+    gallery, header = payload.get("gallery"), payload.get("header")
+    if not isinstance(gallery, dict) or gallery.get("gallery_id") != gallery_id or not isinstance(header, dict) or header.get("gallery_id") != gallery_id or header.get("schema") != "gallery_record_v1":
+        raise ValueError("Generated Gallery data does not match the selected Gallery")
+    if not isinstance(gallery.get("title"), str) or not gallery["title"].strip():
+        raise ValueError("Generated Gallery title is unavailable")
+    members = payload.get("member_works")
+    if not isinstance(members, list) or type(header.get("count")) is not int or header["count"] != len(members):
+        raise ValueError("Generated Gallery membership is unavailable")
+    previous_id = ""
+    for member in members:
+        if not isinstance(member, dict):
+            raise ValueError("Generated Gallery member must be an object")
+        work_id = _work_identity(member.get("work_id"))
+        if work_id <= previous_id:
+            raise ValueError("Generated Gallery Works must be distinct and in ascending ID order")
+        previous_id = work_id
         _text(member.get("title"), "title")
     return payload
 

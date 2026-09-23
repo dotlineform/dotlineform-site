@@ -2,6 +2,7 @@ var LEXICAL_KEY_PATTERN = /^[a-z][a-z0-9-]*$/;
 var LEXICAL_ID_PATTERN = /^[A-Za-z0-9][A-Za-z0-9._-]*$/;
 var IMAGE_FIELDS = new Set(["alt", "detail_id", "caption", "summary", "placement", "fill_width"]);
 var IMAGE_PLACEMENTS = new Set(["full", "left", "right"]);
+var MEDIA_TARGET_PATTERNS = { work: /^[0-9]{5}$/, series: /^[0-9]{3}$/, gallery: /^(?:[0-9]{3}|[1-9][0-9]{3,})$/ };
 
 function cleanString(value) {
   return String(value == null ? "" : value).trim();
@@ -102,8 +103,8 @@ export function serializeCatalogueMediaToken(options = {}) {
     if (!canonicalPattern.test(targetId)) return "";
   }
   var detailId = normalizeCatalogueDetailId(options.detailId);
-  if (detailId === null || (targetType === "work" ? !/^\d{5}$/.test(targetId)
-    : targetType !== "series" || !/^\d{3}$/.test(targetId) || detailId)) return "";
+  var targetPattern = Object.prototype.hasOwnProperty.call(MEDIA_TARGET_PATTERNS, targetType) ? MEDIA_TARGET_PATTERNS[targetType] : null;
+  if (detailId === null || !targetPattern || !targetPattern.test(targetId) || (targetType !== "work" && detailId)) return "";
   return "[[catalogue:media:" + targetType + ":" + targetId + (detailId ? ":" + detailId : "") + "|" + escapedTitle(title) + "]]";
 }
 

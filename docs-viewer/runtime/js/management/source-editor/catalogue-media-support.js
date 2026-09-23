@@ -20,7 +20,7 @@ export function catalogueMediaLinkLabel(target, current, previous, preserveLabel
   return !current || (previous && current === previous.title) ? target.title : current;
 }
 
-/** Read exact generated Work and Series search identities, independently of documents. */
+/** Read exact generated Work, Series and Gallery search identities, independently of documents. */
 export async function loadCatalogueMediaSupport(adapter, options = {}) {
   var [registry, payload] = await Promise.all([
     loadSemanticTokenRegistry(options), adapter.readCatalogueMediaTargets()
@@ -32,7 +32,8 @@ export async function loadCatalogueMediaSupport(adapter, options = {}) {
   var identities = new Set();
   if (targets.length !== payload.targets.length || targets.some(function (target) {
     var valid = target.targetType === "work" ? /^\d{5}$/.test(target.targetId)
-      : target.targetType === "series" && /^\d{3}$/.test(target.targetId);
+      : target.targetType === "series" ? /^\d{3}$/.test(target.targetId)
+        : target.targetType === "gallery" && /^(?:[0-9]{3}|[1-9][0-9]{3,})$/.test(target.targetId);
     var key = target.targetType + ":" + target.targetId;
     if (target.family !== "catalogue" || !valid || identities.has(key)) return true;
     identities.add(key);
@@ -50,9 +51,11 @@ export async function readCatalogueMediaPresentation(adapter, workId, detailId =
 /** Resolve a token target through its existing provider, with no document or image fallback. */
 export async function readCatalogueTokenPresentation(adapter, target, detailId = "") {
   if (target.targetType === "work") return readCatalogueMediaPresentation(adapter, target.targetId, detailId);
-  if (target.targetType !== "series" || detailId) throw new Error("Unsupported Catalogue target.");
-  var presentation = normalizeDocsViewerMediaPresentation(await adapter.readCatalogueSeriesPresentation(target.targetId));
-  if (!presentation || !presentation.gallery || presentation.target.kind !== "catalogue-series"
-    || presentation.target.id !== target.targetId) throw new Error("Generated Series identity is mismatched.");
+  if (!["series", "gallery"].includes(target.targetType) || detailId) throw new Error("Unsupported Catalogue target.");
+  var payload = target.targetType === "gallery"
+    ? await adapter.readCatalogueGalleryPresentation(target.targetId) : await adapter.readCatalogueSeriesPresentation(target.targetId);
+  var presentation = normalizeDocsViewerMediaPresentation(payload);
+  if (!presentation || !presentation.gallery || presentation.target.kind !== "catalogue-" + target.targetType
+    || presentation.target.id !== target.targetId) throw new Error("Generated Catalogue identity is mismatched.");
   return presentation;
 }

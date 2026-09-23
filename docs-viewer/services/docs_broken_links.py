@@ -47,7 +47,7 @@ from docs_builder.semantic_tokens import (  # noqa: E402
 )
 from docs_source_model import load_document_collection_docs_for_config  # noqa: E402
 # The workspace and builder imports initialize repository and shared Python paths.
-from docs_catalogue_media import catalogue_media_record, read_catalogue_media_config, read_catalogue_series, read_catalogue_work  # noqa: E402
+from docs_catalogue_media import catalogue_media_record, read_catalogue_media_config, read_catalogue_series, read_catalogue_gallery, read_catalogue_work  # noqa: E402
 
 
 @dataclass(frozen=True)
@@ -166,10 +166,12 @@ def semantic_token_broken_entries(
                         raise ValueError("Generated Catalogue media configuration is unavailable")
                     if token.target_type == "series":
                         read_catalogue_series(repo_root, token.target_id)
+                    elif token.target_type == "gallery":
+                        read_catalogue_gallery(repo_root, token.target_id)
                     else:
                         catalogue_media_record(read_catalogue_work(repo_root, token.target_id), token.target_id, token.detail_id)
                 except ValueError:
-                    reason = "missing_series" if token.target_type == "series" else "missing_detail_image" if token.detail_id else "missing_media"
+                    reason = f"missing_{token.target_type}" if token.target_type in {"series", "gallery"} else "missing_detail_image" if token.detail_id else "missing_media"
             if not reason:
                 continue
             entries.append(

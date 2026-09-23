@@ -227,6 +227,9 @@ function createSourceEditorContextAdapter(state) {
     readCatalogueSeriesPresentation: function (seriesId) {
       return state.collectionProvider.readCatalogueSeriesPresentation(seriesId);
     },
+    readCatalogueGalleryPresentation: function (galleryId) {
+      return state.collectionProvider.readCatalogueGalleryPresentation(galleryId);
+    },
     getSelection: function () {
       return sourceSelection(state);
     },

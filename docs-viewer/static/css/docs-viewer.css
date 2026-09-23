@@ -1521,7 +1521,7 @@ main.container:has(> .docsViewer){
   overflow-wrap: anywhere;
 }
 
-.docsViewer__mediaDetailSeriesLink{
+.docsViewer__mediaDetailGroupLink{
   padding: 0;
   border: 0;
   background: none;
@@ -1574,7 +1574,7 @@ main.container:has(> .docsViewer){
 }
 
 .docsViewer__mediaDetailThumbnail:focus-visible,
-.docsViewer__mediaDetailSeriesLink:focus-visible{
+.docsViewer__mediaDetailGroupLink:focus-visible{
   outline: 2px solid var(--docs-viewer-focus-ring);
   outline-offset: 2px;
 }

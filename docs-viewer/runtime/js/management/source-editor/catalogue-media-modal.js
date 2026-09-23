@@ -30,7 +30,7 @@ function modalBody(searchQuery, alt, imageMode) {
         '<input class="docsViewer__fieldInput" id="' + SEARCH_INPUT_ID + '" type="search" role="combobox" aria-autocomplete="list" aria-controls="' + RESULTS_ID + '" aria-expanded="false" autocomplete="off" spellcheck="false" value="' + escapeHtml(searchQuery) + '" disabled>' +
       "</label>" +
       '<p class="docsViewerCatalogueTokenModal__searchStatus muted small" data-role="catalogue-search-status">Loading Catalogue…</p>' +
-      '<div class="docsViewerCatalogueTargetPicker__results docsViewerCatalogueTokenModal__results" id="' + RESULTS_ID + '" role="listbox" aria-label="' + (imageMode ? "Catalogue Works" : "Catalogue Works and Series") + '" data-role="catalogue-results" tabindex="0" hidden></div>' +
+      '<div class="docsViewerCatalogueTargetPicker__results docsViewerCatalogueTokenModal__results" id="' + RESULTS_ID + '" role="listbox" aria-label="' + (imageMode ? "Catalogue Works" : "Catalogue Works, Series and Galleries") + '" data-role="catalogue-results" tabindex="0" hidden></div>' +
       '<label class="docsViewer__field" data-role="catalogue-image-choice" for="' + DETAIL_INPUT_ID + '">' +
         '<span class="docsViewer__fieldLabel">Image</span>' +
         '<select class="docsViewer__fieldInput" id="' + DETAIL_INPUT_ID + '" disabled><option value="">Primary image</option></select>' +
@@ -117,16 +117,17 @@ export function openCatalogueMediaModal(options = {}) {
         primary.disabled = true;
         detail.disabled = true;
         detail.replaceChildren();
-        api.host.querySelector('[data-role="catalogue-image-choice"]').hidden = target.targetType === "series";
+        var group = target.targetType !== "work";
+        api.host.querySelector('[data-role="catalogue-image-choice"]').hidden = group;
         search.value = target.title;
         state.list.setTargets([]);
         showResults(false);
-        message(target.targetType === "series" ? "Loading Series…" : "Loading Work images…");
+        message(group ? (target.targetType === "gallery" ? "Loading Gallery…" : "Loading Series…") : "Loading Work images…");
         try {
-          if (target.targetType === "series") {
-            var series = await readCatalogueTokenPresentation(adapter, target);
+          if (group) {
+            var presentation = await readCatalogueTokenPresentation(adapter, target);
             if (state.disposed || request !== state.request) return;
-            state.replaceDefaults(series.label);
+            state.replaceDefaults(presentation.label);
             primary.disabled = false;
             message("");
             return;
@@ -170,7 +171,7 @@ export function openCatalogueMediaModal(options = {}) {
         var matches = collectSemanticTokenTargetMatches(targets, search.value, state.support.registry, 20);
         state.list.setTargets(matches);
         showResults(true);
-        message(search.value.trim() && !matches.length ? (imageMode ? "No matching Catalogue Works." : "No matching Catalogue Works or Series.") : "");
+        message(search.value.trim() && !matches.length ? (imageMode ? "No matching Catalogue Works." : "No matching Catalogue Works, Series or Galleries.") : "");
       }
       function selectSubject() {
         var target = state.support.targets.find(function (item) {
@@ -230,7 +231,7 @@ export function openCatalogueMediaModal(options = {}) {
     onSubmit: async function (api) {
       if (!state.target) { api.setStatus("Choose a Catalogue target."); return false; }
       var detail = api.host.querySelector("#" + DETAIL_INPUT_ID);
-      var detailId = state.target.targetType === "series" ? "" : detail.value;
+      var detailId = state.target.targetType === "work" ? detail.value : "";
       // Revalidate current media before writing source, including Details removed while the modal was open.
       var current = await readCatalogueTokenPresentation(adapter, state.target, detailId);
       state.replaceDefaults(current.label);
