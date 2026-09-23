@@ -23,16 +23,6 @@
         "shell_type": "html-template",
         "ready_state_route_id": "catalogue-field-registry"
       },
-      "catalogue_series_editor": {
-        "label": "series editor",
-        "title": "Catalogue Series Editor",
-        "path": "/studio/catalogue-series/",
-        "template": "/studio/app/frontend/routes/catalogue-series.html",
-        "script": "/studio/app/frontend/js/catalogue-series-editor.js",
-        "nav": false,
-        "shell_type": "html-template",
-        "ready_state_route_id": "catalogue-series"
-      },
       "catalogue_work_editor": {
         "label": "work editor",
         "title": "Catalogue Work Editor",

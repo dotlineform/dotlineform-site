@@ -2,7 +2,7 @@ import { createRecordList } from "/shared/frontend/js/record-list.js";
 import { bindSearchList } from "/shared/frontend/js/search-list.js";
 import { confirmCatalogueActionModal } from "./catalogue-editor-action-modals.js";
 import { buildWorkThumbPreview } from "./catalogue-media-preview.js";
-import { getSeriesSearchMatches } from "./catalogue-series-selection.js";
+import { getSeriesSearchMatches } from "./catalogue-series-records.js";
 import { catalogueOutputError, catalogueSavedActionError } from "./catalogue-output-result.js";
 import { openWorkSeriesTitleModal } from "./catalogue-work-series-modal.js";
 import { deleteEmptyWorkSeries } from "./catalogue-work-series-actions.js";
@@ -212,7 +212,7 @@ export function createWorkSeriesBrowser(state, elements, options) {
     id: "catalogueWorkSeriesBrowseList",
     openOnFocus: false,
     shouldOpen: () => !busy(),
-    loadOptions: query => getSeriesSearchMatches(state, query),
+    loadOptions: query => getSeriesSearchMatches(state.seriesById, query),
     filterOptions: records => records,
     getOptionValue: option => seriesLabel(option.seriesId),
     renderOption: ({ seriesId, record }) => `

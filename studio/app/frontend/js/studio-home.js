@@ -5,7 +5,6 @@ const HOME_COLUMNS = Object.freeze([
   Object.freeze({
     label: "catalogue",
     links: Object.freeze([
-      Object.freeze({ routeId: "catalogue_series_editor" }),
       Object.freeze({ routeId: "catalogue_work_editor" }),
       Object.freeze({ routeId: "catalogue_field_registry" })
     ])

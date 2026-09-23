@@ -1,6 +1,6 @@
 import { createCatalogueSeries, saveCatalogueSeries } from "./catalogue-editor-service-client.js";
 import { catalogueSavedActionError } from "./catalogue-output-result.js";
-import { suggestNextSeriesId } from "./catalogue-series-fields.js";
+import { suggestNextSeriesId } from "./catalogue-series-records.js";
 import { loadStudioServerReadJson } from "./studio-data.js";
 import { activateStudioModalFrame, renderStudioModalFrame } from "./studio-modal.js";
 

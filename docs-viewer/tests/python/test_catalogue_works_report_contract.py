@@ -113,5 +113,4 @@ def test_catalogue_drafts_removed_and_exact_editors_remain_registered() -> None:
     routes = studio_config["app"]["routes"]
 
     assert "catalogue_status" not in routes
-    assert routes["catalogue_series_editor"]["path"] == "/studio/catalogue-series/"
     assert routes["catalogue_work_editor"]["path"] == "/studio/catalogue-work/"

@@ -66,7 +66,6 @@ def test_runtime_config_exposes_adapter_contract() -> None:
     assert "bulk_add_work" not in payload["app"]["routes"]
     assert payload["app"]["routes"]["catalogue_field_registry"]["shell_type"] == "html-template"
     assert "catalogue_status" not in payload["app"]["routes"]
-    assert payload["app"]["routes"]["catalogue_series_editor"]["shell_type"] == "html-template"
     assert payload["app"]["routes"]["catalogue_work_editor"]["shell_type"] == "html-template"
     assert "catalogue_moment_editor" not in payload["app"]["routes"]
     assert not any(route["shell_type"] == "python" for route in payload["app"]["routes"].values())
@@ -86,7 +85,6 @@ def test_runtime_config_exposes_adapter_contract() -> None:
     assert any(view["id"] == "catalogue_field_registry" and view["path"] == "/studio/catalogue-field-registry/" for view in runtime["views"])
     assert not any(view["id"] == "catalogue_status" and view["path"] == "/studio/catalogue-status/" for view in runtime["views"])
     assert not any(view["id"] == "studio_works" or view["path"] == "/studio/studio-works/" for view in runtime["views"])
-    assert any(view["id"] == "catalogue_series_editor" and view["path"] == "/studio/catalogue-series/" for view in runtime["views"])
     assert any(view["id"] == "catalogue_work_editor" and view["path"] == "/studio/catalogue-work/" for view in runtime["views"])
     assert not any(view["id"] == "catalogue_moment_editor" or view["path"] == "/studio/catalogue-moment/" for view in runtime["views"])
     assert runtime["navigation"]["primary"] == []

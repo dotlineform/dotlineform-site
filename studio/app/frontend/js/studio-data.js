@@ -36,15 +36,6 @@ export async function loadStudioServerReadJson(key, recordId = "", options = {})
   return fetchJson(buildCatalogueReadUrl(key, recordId), options);
 }
 
-export async function loadStudioLookupRecordJson(config, baseKey, recordId, options) {
-  if (shouldUseCatalogueServerRead(baseKey, options)) {
-    return fetchJson(buildCatalogueReadUrl(baseKey, recordId), options);
-  }
-  const { getStudioDataPath } = await loadStudioConfigModule();
-  const basePath = getStudioDataPath(config, baseKey);
-  return fetchJson(buildLookupRecordPath(basePath, recordId), options);
-}
-
 function shouldUseCatalogueServerRead(key, options = {}) {
   return Boolean(options && options.catalogueServerAvailable && CATALOGUE_SERVER_READ_KEYS.has(key));
 }
@@ -56,15 +47,6 @@ function buildCatalogueReadUrl(key, recordId = "") {
     url.searchParams.set("record_id", String(recordId));
   }
   return url.toString();
-}
-
-function buildLookupRecordPath(basePath, recordId) {
-  const rawBase = String(basePath || "");
-  const [beforeHash, hash = ""] = rawBase.split("#", 2);
-  const [beforeQuery, query = ""] = beforeHash.split("?", 2);
-  const normalizedBase = beforeQuery.endsWith("/") ? beforeQuery : `${beforeQuery}/`;
-  const encodedId = encodeURIComponent(String(recordId || ""));
-  return `${normalizedBase}${encodedId}.json${query ? `?${query}` : ""}${hash ? `#${hash}` : ""}`;
 }
 
 async function loadStudioConfigModule() {

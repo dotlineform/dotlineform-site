@@ -1674,18 +1674,3 @@ button.studioList__cellLink {
   gap: 0.4rem;
   justify-content: flex-end;
 }
-
-.catalogueSeriesMembers {
-  margin-top: 1rem;
-}
-
-.catalogueSeriesMembers__results {
-  margin-top: 0.75rem;
-}
-
-.catalogueSeriesMembers__actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.35rem;
-  justify-content: flex-end;
-}
