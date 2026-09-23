@@ -1132,6 +1132,11 @@ select.docsViewer__fieldInput{
   outline-offset: 2px;
 }
 
+/* Automatic radio focus should not inherit the browser's previous input mode. */
+.docsViewer__modal:not([data-keyboard-navigation="true"]) [data-project-subject-options] .docsViewer__checkboxInput:focus{
+  outline: none;
+}
+
 .docsViewer__manageRow{
   flex: 0 0 auto;
   display: flex;

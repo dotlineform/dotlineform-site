@@ -373,6 +373,7 @@ def managed_document_metadata(
             resolved.document_config.collection_customisation
         )
         folder_supported = resolved.stage == "working" and FOLDER_PATH_FIELD in subject_fields
+        payload["folder_subject_supported"] = folder_supported
         if subject_fields or any(
             field_name in front_matter for field_name in AUTHORING_SUBJECT_FIELDS
         ):

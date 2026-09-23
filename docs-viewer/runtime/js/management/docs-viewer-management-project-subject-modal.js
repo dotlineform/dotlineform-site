@@ -78,8 +78,12 @@ export function subjectMetadataFromResponse(response, target) {
   if (!/^sha256:[0-9a-f]{64}$/.test(revision)) {
     throw new Error("Document subject source revision could not be loaded.");
   }
+  if (typeof response.folder_subject_supported !== "boolean") {
+    throw new Error("Document Folder subject capability could not be loaded.");
+  }
   return Object.freeze({
     subject: normalizedSubject(response.record),
+    folderSupported: response.folder_subject_supported,
     sourceRevision: revision
   });
 }
@@ -127,7 +131,7 @@ function radio(value, label, selected) {
   "</label>";
 }
 
-function modalBody(subject) {
+function modalBody(subject, folderSupported) {
   var selected = selectedKind(subject);
   var folderValue = subject.state === "valid" && subject.kind === "folder" ? subject.key : "";
   var evidence = evidenceText(subject);
@@ -136,6 +140,7 @@ function modalBody(subject) {
     '<fieldset class="docsViewer__fieldGroup" data-project-subject-options>' +
       '<legend class="visually-hidden">Subject</legend>' +
       radio("none", "None", selected) +
+      (folderSupported ? radio("folder", "Folder", selected) : "") +
       radio("work", "Work", selected) +
       radio("series", "Series", selected) +
       radio("detail", "Detail", selected) +
@@ -176,8 +181,8 @@ function openSubjectModal(options, target, loaded) {
     restoreFocus: options.restoreFocus,
     title: "Assign subject",
     size: "document",
-    bodyHtml: modalBody(loaded.subject, target),
-    focusSelector: 'input[name="docs-project-subject"]:checked, input[name="docs-project-subject"]',
+    bodyHtml: modalBody(loaded.subject, loaded.folderSupported),
+    focusSelector: 'input[name="docs-project-subject"]' + (selectedKind(loaded.subject) ? ':checked' : ''),
     actions: [
       { role: "modal-primary", label: "OK" },
       { role: "modal-cancel", label: "Cancel" }
