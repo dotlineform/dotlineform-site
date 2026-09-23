@@ -1,5 +1,6 @@
 import { saveCurrentWork } from "./catalogue-work-actions.js";
 import { createWorkSeriesBrowser } from "./catalogue-work-series-browser.js";
+import { createWorkEditorLayout } from "./catalogue-work-layout.js";
 import { applyWorkRecordMutation } from "./catalogue-work-action-records.js";
 import {
   getStudioText
@@ -422,6 +423,7 @@ async function init() {
 
   initializeWorkRouteState(elements.root);
   const state = createWorkEditorState(elements);
+  state.layout = createWorkEditorLayout(elements);
   state.messageController = createCatalogueEditorMessageController({
     statusNode: state.statusNode,
     setTextWithState: setNodeTextWithState

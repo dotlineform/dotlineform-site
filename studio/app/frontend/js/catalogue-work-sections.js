@@ -45,11 +45,6 @@ function setTextWithState(options, node, value, state = "") {
   else delete node.dataset.state;
 }
 
-function setSecondaryPresentationVisible(state, visible) {
-  if (state.summaryPanelNode) state.summaryPanelNode.hidden = !visible;
-  if (state.root) state.root.classList.toggle("catalogueWorkPage--primaryOnly", !visible);
-}
-
 function runMaybeAsync(result, label) {
   if (result && typeof result.catch === "function") {
     result.catch((error) => console.warn(label, error));
@@ -326,7 +321,7 @@ export function updateWorkResourcesSection(state, options = {}) {
 
 export function updateWorkSummary(state, options = {}) {
   if (state.mode === "new") {
-    setSecondaryPresentationVisible(state, false);
+    state.layout.setPreviewAvailable(false);
     state.metaNode.hidden = true;
     state.metaNode.textContent = "";
     state.summaryNode.innerHTML = "";
@@ -340,7 +335,7 @@ export function updateWorkSummary(state, options = {}) {
   }
 
   if (state.mode === "bulk") {
-    setSecondaryPresentationVisible(state, true);
+    state.layout.setPreviewAvailable(true);
     const selectedCount = state.bulkWorkIds.length;
     const selectedRecords = state.bulkWorkIds.map((workId) => state.bulkRecords.get(workId)).filter(Boolean);
     const seriesIds = Array.from(new Set(selectedRecords.map(record => normalizeText(record.series_id)).filter(Boolean)));
@@ -373,7 +368,7 @@ export function updateWorkSummary(state, options = {}) {
 
   state.metaNode.textContent = "";
   state.metaNode.hidden = true;
-  setSecondaryPresentationVisible(state, Boolean(state.currentRecord));
+  state.layout.setPreviewAvailable(Boolean(state.currentRecord));
 
   state.summaryNode.innerHTML = "";
 

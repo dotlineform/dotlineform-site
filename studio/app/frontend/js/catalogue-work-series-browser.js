@@ -22,7 +22,7 @@ function escapeHtml(value) {
 export function createWorkSeriesBrowser(state, elements, options) {
   const { seriesBrowseSearch: search, seriesBrowsePopup: popup, seriesBrowseMembers: members,
     seriesBrowseStatus: status, seriesBrowseCount: count, seriesBrowseEdit: edit,
-    seriesBrowseDelete: remove, editorPane } = elements;
+    seriesBrowseDelete: remove, editorPane, summaryPanelNode } = elements;
   let seriesId = "";
   let list = null;
   let renderedMembersKey = "";
@@ -60,6 +60,7 @@ export function createWorkSeriesBrowser(state, elements, options) {
     members.inert = busy();
     members.setAttribute("aria-busy", String(opening));
     editorPane.inert = opening || editingSeries || deletingSeries;
+    summaryPanelNode.inert = editorPane.inert;
     if (busy()) restoreSearch();
   }
 

@@ -1155,27 +1155,45 @@ button.studioList__cellLink {
 
 .studio-local-app .studio:has(#catalogueWorkRoot) {
   max-width: none;
+  container: catalogue-work / inline-size;
 }
 
-.catalogueWorkPage--withBrowser {
+.catalogueWorkPage {
+  --work-list-width: 22rem;
+  --work-list-column: minmax(17rem, var(--work-list-width));
+  --work-editor-column: minmax(0, 1.5fr);
+  --work-preview-column: minmax(0, 1fr);
   display: grid;
-  grid-template-columns: minmax(17rem, 22rem) minmax(0, 1fr);
+  grid-template-columns: var(--work-list-column) var(--work-editor-column) var(--work-preview-column);
+  grid-template-areas: "list editor preview";
   gap: 1rem;
   max-width: none;
   align-items: start;
 }
 
-.catalogueWorkPage--withBrowser > [data-studio-modal-host] {
+.catalogueWorkPage[data-work-layout="without-preview"] {
+  grid-template-columns: var(--work-list-column) minmax(0, 1fr);
+  grid-template-areas: "list editor";
+}
+
+.catalogueWorkPage[data-work-layout="expanded-list"] {
+  /* The list spans its original track and the released preview track. */
+  grid-template-columns: var(--work-list-column) var(--work-preview-column) var(--work-editor-column);
+  grid-template-areas: "list list editor";
+}
+
+.catalogueWorkPage > [data-studio-modal-host] {
   display: contents;
 }
 
 .catalogueWorkPage__editor {
+  grid-area: editor;
   min-width: 0;
-  container-type: inline-size;
 }
 
-.catalogueWorkPage__editor .catalogueWorkPage__grid {
-  grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+.catalogueWorkPage__preview {
+  grid-area: preview;
+  min-width: 0;
 }
 
 .catalogueWorkPage__toolbar {
@@ -1183,7 +1201,16 @@ button.studioList__cellLink {
   min-width: 0;
 }
 
+.catalogueWorkPage__panelHeading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.45rem;
+  min-height: var(--shared-record-list-icon-action-size, 2rem);
+}
+
 .catalogueWorkSeriesBrowser {
+  grid-area: list;
   position: sticky;
   top: 1rem;
   display: flex;
@@ -1220,14 +1247,16 @@ button.studioList__cellLink {
   overflow-y: auto;
 }
 
-@container (max-width: 52rem) {
-  .catalogueWorkPage__editor .catalogueWorkPage__grid {
-    grid-template-columns: minmax(0, 1fr);
+@container catalogue-work (max-width: 75rem) {
+  .catalogueWorkPage[data-work-layout="standard"] {
+    grid-template-columns: var(--work-list-column) minmax(0, 1fr);
+    grid-template-areas: "list editor" "list preview";
   }
-}
 
-.catalogueWorkPage--primaryOnly .catalogueWorkPage__grid {
-  grid-template-columns: minmax(0, 1fr);
+  .catalogueWorkPage[data-work-layout="expanded-list"] {
+    grid-template-columns: minmax(var(--work-list-width), 1fr) minmax(0, 1fr);
+    grid-template-areas: "list editor";
+  }
 }
 
 .catalogueWorkSearch__option,
