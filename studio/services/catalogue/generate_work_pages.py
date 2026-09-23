@@ -91,6 +91,10 @@ def catalogue_payloads(
         )
     payloads["works/works_index.json"] = _index("works", works_index, timestamp)
     payloads["series/series_index.json"] = _index("series", indexes.build_series_index_records(series_records=records.series, context=context), timestamp)
+    payloads["galleries/galleries_index.json"] = _index("galleries", {
+        gid: {"gallery_id": gid, "title": galleries.galleries[gid]["title"], "work_count": len(works_by_gallery[gid])}
+        for gid in sorted(galleries.galleries)
+    }, timestamp)
     payloads["work_details/work_details_index.json"] = _index("work_details", details_index, timestamp)
     return payloads
 
