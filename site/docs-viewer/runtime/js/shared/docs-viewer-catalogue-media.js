@@ -79,8 +79,7 @@ export function catalogueWorkThumbnail(workId, title, settings) {
 export function catalogueSeriesMediaPresentation(payload, seriesId, mediaPolicy, thumbnailBaseUrl) {
   var series = seriesRecord(payload, seriesId);
   return groupMediaPresentation(payload, catalogueSeriesTarget(seriesId), series.title,
-    typeof series.year_display === "string" && series.year_display.trim()
-      ? [{ label: "Year", value: series.year_display.trim() }] : [], mediaPolicy, thumbnailBaseUrl);
+    [], mediaPolicy, thumbnailBaseUrl);
 }
 
 /** Gallery selection reads one generated membership record, with no Series inference. */

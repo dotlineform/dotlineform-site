@@ -4,11 +4,9 @@
   },
   "series": {
     "series_id": "129",
-    "title": "string theory",
-    "year": 2012,
-    "year_display": "2005-12"
+    "title": "string theory"
   },
-  "record_hash": "27ae3dcffceafeb2c521c78f9bb716bdd8e92b532eec15fa39eeb06f033bb1d2",
+  "record_hash": "b47e437e9cd03f84a2a88ea4475812bdae1094c45d275b75c50c973f814c2a2d",
   "member_works": [
     {
       "work_id": "00554",

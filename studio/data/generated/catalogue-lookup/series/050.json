@@ -4,11 +4,9 @@
   },
   "series": {
     "series_id": "050",
-    "title": "field",
-    "year": 2025,
-    "year_display": "2025"
+    "title": "field"
   },
-  "record_hash": "532a36c3b76f32ab7dca0e34f395b63f063f77cd3cd7eebb1ab65228c5619d37",
+  "record_hash": "d956d66acdfe95868085625ae2816e1d6dc2861b5a26b51232b0c48985655993",
   "member_works": [
     {
       "work_id": "01047",

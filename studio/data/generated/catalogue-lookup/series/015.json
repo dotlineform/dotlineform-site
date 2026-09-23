@@ -4,11 +4,9 @@
   },
   "series": {
     "series_id": "015",
-    "title": "base series",
-    "year": 2007,
-    "year_display": "2007"
+    "title": "base series"
   },
-  "record_hash": "4708a784ed0cabba5fcfa1fac86e217332e4b945d1cf091944bbca08372b18b9",
+  "record_hash": "5b9c9f7693ddf06b81388073e05bb8f0559274345d8072068466249d30ab9889",
   "member_works": [
     {
       "work_id": "00756",

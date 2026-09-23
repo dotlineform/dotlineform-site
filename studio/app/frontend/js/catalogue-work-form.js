@@ -131,7 +131,8 @@ function setSeriesDraftId(state, seriesId, options) {
   notifyStateChange(options);
 }
 
-function renderSeriesPicker(state) {
+/** Refresh the selected Series label without applying or resetting the Work draft. */
+export function renderSeriesPicker(state) {
   if (!state.seriesPicker) return;
   const seriesId = normalizeSeriesId(state.draft?.series_id);
   state.seriesPicker.hiddenInput.value = seriesId;

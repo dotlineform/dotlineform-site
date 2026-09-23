@@ -4,11 +4,9 @@
   },
   "series": {
     "series_id": "001",
-    "title": "10,000",
-    "year": 2009,
-    "year_display": "2009"
+    "title": "10,000"
   },
-  "record_hash": "0ec8c45648db25b159e585324317783e9ce24b5a22d5d41bdd6d64faa6c250f2",
+  "record_hash": "da8741d30b36717a027411dcc175fc9bbd03f11f063a456c1e8836f018a1ffba",
   "member_works": [
     {
       "work_id": "00635",

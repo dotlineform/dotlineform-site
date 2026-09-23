@@ -1271,6 +1271,76 @@ button.studioList__cellLink {
   margin-top: 1rem;
 }
 
+.studio-local-app:has(#catalogueWorkRoot) {
+  --container: 1500px;
+}
+
+.studio-local-app .studio:has(#catalogueWorkRoot) {
+  max-width: none;
+}
+
+.catalogueWorkPage--withBrowser {
+  display: grid;
+  grid-template-columns: minmax(17rem, 22rem) minmax(0, 1fr);
+  gap: 1rem;
+  max-width: none;
+  align-items: start;
+}
+
+.catalogueWorkPage--withBrowser > [data-studio-modal-host] {
+  display: contents;
+}
+
+.catalogueWorkPage__editor {
+  min-width: 0;
+  container-type: inline-size;
+}
+
+.catalogueWorkPage__editor .catalogueWorkPage__grid {
+  grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+}
+
+.catalogueWorkSeriesBrowser {
+  position: sticky;
+  top: 1rem;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  max-height: calc(100vh - 2rem);
+  box-sizing: border-box;
+}
+
+.catalogueWorkSeriesBrowser__searchRow {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  flex: none;
+}
+
+.catalogueWorkSeriesBrowser__searchRow > .sharedSearchList__control {
+  flex: 1;
+  min-width: 0;
+}
+
+.catalogueWorkSeriesBrowser__heading {
+  margin-top: 1rem;
+}
+
+.catalogueWorkSeriesBrowser__heading .studioForm__meta {
+  margin: 0;
+}
+
+.catalogueWorkSeriesBrowser__members {
+  min-height: 0;
+  overflow-y: auto;
+}
+
+@container (max-width: 52rem) {
+  .catalogueWorkPage__editor .catalogueWorkPage__grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
 .catalogueWorkPage--primaryOnly .catalogueWorkPage__grid {
   grid-template-columns: minmax(0, 1fr);
 }

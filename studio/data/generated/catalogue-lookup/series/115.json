@@ -4,11 +4,9 @@
   },
   "series": {
     "series_id": "115",
-    "title": "poa",
-    "year": 2001,
-    "year_display": "2001-04"
+    "title": "poa"
   },
-  "record_hash": "cb44f3e008d69b993b95cf84479148a36c1b3578b04260a64913018200004650",
+  "record_hash": "c03d437202d92393596a8730fd8d8722b92cf0831206c9338db9c079f1366d44",
   "member_works": [
     {
       "work_id": "01534",

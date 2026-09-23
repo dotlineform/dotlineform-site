@@ -43,7 +43,15 @@ export function collectWorkEditorElements() {
     saveButton: "catalogueWorkSave",
     deleteButton: "catalogueWorkDelete",
     statusNode: "catalogueWorkStatus",
-    metaNode: "catalogueWorkMeta"
+    metaNode: "catalogueWorkMeta",
+    editorPane: "catalogueWorkEditorPane",
+    seriesBrowseSearch: "catalogueWorkSeriesBrowseSearch",
+    seriesBrowseEdit: "catalogueWorkSeriesBrowseEdit",
+    seriesBrowseDelete: "catalogueWorkSeriesBrowseDelete",
+    seriesBrowsePopup: "catalogueWorkSeriesBrowsePopup",
+    seriesBrowseMembers: "catalogueWorkSeriesBrowseMembers",
+    seriesBrowseStatus: "catalogueWorkSeriesBrowseStatus",
+    seriesBrowseCount: "catalogueWorkSeriesBrowseCount"
   });
 }
 
@@ -82,6 +90,7 @@ export function createWorkEditorState(elements, options = {}) {
     seriesById: new Map(),
     galleriesById: new Map(),
     galleryPicker: null,
+    seriesBrowser: null,
     sourceWorkRecordsById: new Map(),
     currentLookup: null,
     currentWorkId: "",

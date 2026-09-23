@@ -4,11 +4,9 @@
   },
   "series": {
     "series_id": "100",
-    "title": "molecule forms",
-    "year": 2013,
-    "year_display": "2013"
+    "title": "molecule forms"
   },
-  "record_hash": "47e3354ad5c08cf9a43d796cbc773142fbaea86bdca1b634382dcac8d759803c",
+  "record_hash": "bfbea2f70e68746b55dbde9c0a8b86e720595ec8e66ef35f855879f056fd7105",
   "member_works": [
     {
       "work_id": "00459",

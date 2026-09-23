@@ -4,11 +4,9 @@
   },
   "series": {
     "series_id": "116",
-    "title": "pole vault",
-    "year": 2004,
-    "year_display": "2004"
+    "title": "pole vault"
   },
-  "record_hash": "f3cd995c9f4942736c5b100bc2183c882d5c54041110edd1631fdec3770f3fa3",
+  "record_hash": "44ceea72abcf17e8392c8c4e8b35341e978117cd2433781e7d07eab562769add",
   "member_works": [
     {
       "work_id": "01566",

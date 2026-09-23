@@ -4,11 +4,9 @@
   },
   "series": {
     "series_id": "090",
-    "title": "lights",
-    "year": 2012,
-    "year_display": "2012-13"
+    "title": "lights"
   },
-  "record_hash": "92aa995683b21f707149c3655b7460b851e3e741551fa4d74d669f5b0d4e14cd",
+  "record_hash": "ed92c87db406cc77e42b7158d3c337b734122564a987c073527265aab9757631",
   "member_works": [
     {
       "work_id": "01401",

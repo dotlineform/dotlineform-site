@@ -4,11 +4,9 @@
   },
   "series": {
     "series_id": "021",
-    "title": "book dna",
-    "year": 2010,
-    "year_display": "2010"
+    "title": "book dna"
   },
-  "record_hash": "c1e5a835745bcc94e90cccd63b697649089a67a46e33aad48f6d6472e675cf91",
+  "record_hash": "89e3edd0273e16ab0d150b8959a12e18d28ce2945c98bf2c6710d501df0dfbd7",
   "member_works": [
     {
       "work_id": "00801",

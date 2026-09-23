@@ -4,11 +4,9 @@
   },
   "series": {
     "series_id": "034",
-    "title": "curl",
-    "year": 2017,
-    "year_display": "2017, 2022"
+    "title": "curl"
   },
-  "record_hash": "ba9e644bfd4ef225a7c31c0a9b9bc5be3fc65b6276aff8d531f273adf4fcce9d",
+  "record_hash": "a4ef21fc9388a6691180743af5662254c8f8ce831cfbf0baa42084ffa5a43388",
   "member_works": [
     {
       "work_id": "00850",

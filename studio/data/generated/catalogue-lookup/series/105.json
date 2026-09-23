@@ -4,11 +4,9 @@
   },
   "series": {
     "series_id": "105",
-    "title": "nerve",
-    "year": 1995,
-    "year_display": "1990-95"
+    "title": "nerve"
   },
-  "record_hash": "bc01af93e4f8a7391d23936603fb413522f521d574179b373855effa55e17983",
+  "record_hash": "9c27f0cf24021c4f3855711601f7628e195ec48f0b327a3b1c9ec0b56a71966d",
   "member_works": [
     {
       "work_id": "00008",

@@ -4,11 +4,9 @@
   },
   "series": {
     "series_id": "022",
-    "title": "book of curves",
-    "year": 2011,
-    "year_display": "2011"
+    "title": "book of curves"
   },
-  "record_hash": "afe15ed997bcf8a1aca87d337ffcaea8934b07ef04ea12d461fa54cb0ac7a38d",
+  "record_hash": "5f48a844fc7399510a0e00e45f04e71bf434ca812f25a48664a9eaa679b22c42",
   "member_works": [
     {
       "work_id": "00806",

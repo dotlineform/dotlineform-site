@@ -4,11 +4,9 @@
   },
   "series": {
     "series_id": "031",
-    "title": "concrete",
-    "year": 2012,
-    "year_display": "2012"
+    "title": "concrete"
   },
-  "record_hash": "d9e4bad6b3de59bd3d559af827e3278e1c9519c5f77019bec7ba49c44f952f54",
+  "record_hash": "dd8e98d6fd03b701d946a14076655b5fbd7d63326d02d6eef2bcfae2172d4fee",
   "member_works": [
     {
       "work_id": "00818",

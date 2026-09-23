@@ -4,11 +4,9 @@
   },
   "series": {
     "series_id": "052",
-    "title": "flowers",
-    "year": 2023,
-    "year_display": "2023"
+    "title": "flowers"
   },
-  "record_hash": "fc52010d2135163b7d0ba4e56015ce479e5b47264be1735c8d6c821d18c06f97",
+  "record_hash": "b70f6e3c7b971f6c4d19d5d926a7a3cc1f2d41e8395892071ea17ecfaeb7c469",
   "member_works": [
     {
       "work_id": "01052",

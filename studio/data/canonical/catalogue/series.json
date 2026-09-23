@@ -6,837 +6,559 @@
   "series": {
     "001": {
       "series_id": "001",
-      "title": "10,000",
-      "year": 2009,
-      "year_display": "2009"
+      "title": "10,000"
     },
     "003": {
       "series_id": "003",
-      "title": "16 forms",
-      "year": 2023,
-      "year_display": "2023"
+      "title": "16 forms"
     },
     "004": {
       "series_id": "004",
-      "title": "2 bodies",
-      "year": 2025,
-      "year_display": "2025"
+      "title": "2 bodies"
     },
     "005": {
       "series_id": "005",
-      "title": "3 symbols",
-      "year": 2007,
-      "year_display": "2007"
+      "title": "3 symbols"
     },
     "006": {
       "series_id": "006",
-      "title": "a doll story",
-      "year": 2024,
-      "year_display": "2024"
+      "title": "a doll story"
     },
     "007": {
       "series_id": "007",
-      "title": "a feeling that we are part of a structure",
-      "year": 2024,
-      "year_display": "2024"
+      "title": "a feeling that we are part of a structure"
     },
     "008": {
       "series_id": "008",
-      "title": "a humid home full of light",
-      "year": 2013,
-      "year_display": "2013"
+      "title": "a humid home full of light"
     },
     "009": {
       "series_id": "009",
-      "title": "a poem divided into 4 parts",
-      "year": 2025,
-      "year_display": "2025"
+      "title": "a poem divided into 4 parts"
     },
     "010": {
       "series_id": "010",
-      "title": "a theory of happiness is a theory of everything",
-      "year": 2008,
-      "year_display": "2008-10"
+      "title": "a theory of happiness is a theory of everything"
     },
     "012": {
       "series_id": "012",
-      "title": "all the little cracks",
-      "year": 2010,
-      "year_display": "2010, 2016"
+      "title": "all the little cracks"
     },
     "013": {
       "series_id": "013",
-      "title": "an act of kindness",
-      "year": 2024,
-      "year_display": "2024"
+      "title": "an act of kindness"
     },
     "014": {
       "series_id": "014",
-      "title": "assembly codes",
-      "year": 2023,
-      "year_display": "2023"
+      "title": "assembly codes"
     },
     "015": {
       "series_id": "015",
-      "title": "base series",
-      "year": 2007,
-      "year_display": "2007"
+      "title": "base series"
     },
     "016": {
       "series_id": "016",
-      "title": "birds",
-      "year": 2020,
-      "year_display": "2020"
+      "title": "birds"
     },
     "017": {
       "series_id": "017",
-      "title": "birth of healing forms",
-      "year": 2023,
-      "year_display": "2023"
+      "title": "birth of healing forms"
     },
     "018": {
       "series_id": "018",
-      "title": "body form",
-      "year": 2008,
-      "year_display": "2008"
+      "title": "body form"
     },
     "019": {
       "series_id": "019",
-      "title": "body space",
-      "year": 2007,
-      "year_display": "2007"
+      "title": "body space"
     },
     "020": {
       "series_id": "020",
-      "title": "body space (reclining state)",
-      "year": 2019,
-      "year_display": "2019"
+      "title": "body space (reclining state)"
     },
     "021": {
       "series_id": "021",
-      "title": "book dna",
-      "year": 2010,
-      "year_display": "2010"
+      "title": "book dna"
     },
     "022": {
       "series_id": "022",
-      "title": "book of curves",
-      "year": 2011,
-      "year_display": "2011"
+      "title": "book of curves"
     },
     "023": {
       "series_id": "023",
-      "title": "certainty",
-      "year": 2026,
-      "year_display": "2001-26"
+      "title": "certainty"
     },
     "024": {
       "series_id": "024",
-      "title": "changed photos",
-      "year": 2023,
-      "year_display": "2022-23"
+      "title": "changed photos"
     },
     "025": {
       "series_id": "025",
-      "title": "closeness",
-      "year": 2017,
-      "year_display": "2017"
+      "title": "closeness"
     },
     "026": {
       "series_id": "026",
-      "title": "collected 1989-1998",
-      "year": 1998,
-      "year_display": "c. 1989-98"
+      "title": "collected 1989-1998"
     },
     "027": {
       "series_id": "027",
-      "title": "collected digital c. 1998",
-      "year": 1998,
-      "year_display": "c. 1998"
+      "title": "collected digital c. 1998"
     },
     "028": {
       "series_id": "028",
-      "title": "colouring book",
-      "year": 1996,
-      "year_display": "1996"
+      "title": "colouring book"
     },
     "029": {
       "series_id": "029",
-      "title": "colours",
-      "year": 2008,
-      "year_display": "2008"
+      "title": "colours"
     },
     "030": {
       "series_id": "030",
-      "title": "composite (blue red smoke)",
-      "year": 2004,
-      "year_display": "2004"
+      "title": "composite (blue red smoke)"
     },
     "031": {
       "series_id": "031",
-      "title": "concrete",
-      "year": 2012,
-      "year_display": "2012"
+      "title": "concrete"
     },
     "032": {
       "series_id": "032",
-      "title": "creases",
-      "year": 2016,
-      "year_display": "2016"
+      "title": "creases"
     },
     "033": {
       "series_id": "033",
-      "title": "cube structure",
-      "year": 2011,
-      "year_display": "2011"
+      "title": "cube structure"
     },
     "034": {
       "series_id": "034",
-      "title": "curl",
-      "year": 2017,
-      "year_display": "2017, 2022"
+      "title": "curl"
     },
     "035": {
       "series_id": "035",
-      "title": "curve machine",
-      "year": 2020,
-      "year_display": "2020"
+      "title": "curve machine"
     },
     "036": {
       "series_id": "036",
-      "title": "curve poems",
-      "year": 2025,
-      "year_display": "2024-25"
+      "title": "curve poems"
     },
     "037": {
       "series_id": "037",
-      "title": "doll",
-      "year": 1989,
-      "year_display": "1989-2008"
+      "title": "doll"
     },
     "038": {
       "series_id": "038",
-      "title": "doll faces",
-      "year": 2024,
-      "year_display": "2024"
+      "title": "doll faces"
     },
     "039": {
       "series_id": "039",
-      "title": "doll sees everything",
-      "year": 2023,
-      "year_display": "2023"
+      "title": "doll sees everything"
     },
     "040": {
       "series_id": "040",
-      "title": "dot",
-      "year": 2010,
-      "year_display": "2010, 2012"
+      "title": "dot"
     },
     "041": {
       "series_id": "041",
-      "title": "dot theory",
-      "year": 2009,
-      "year_display": "2009"
+      "title": "dot theory"
     },
     "042": {
       "series_id": "042",
-      "title": "dotlineform (2021)",
-      "year": 2021,
-      "year_display": "2021"
+      "title": "dotlineform (2021)"
     },
     "043": {
       "series_id": "043",
-      "title": "dotlineform (2023)",
-      "year": 2023,
-      "year_display": "2023"
+      "title": "dotlineform (2023)"
     },
     "044": {
       "series_id": "044",
-      "title": "dots",
-      "year": 2010,
-      "year_display": "2010"
+      "title": "dots"
     },
     "045": {
       "series_id": "045",
-      "title": "droplets",
-      "year": 2016,
-      "year_display": "2014-16"
+      "title": "droplets"
     },
     "046": {
       "series_id": "046",
-      "title": "egg forms",
-      "year": 2024,
-      "year_display": "2024"
+      "title": "egg forms"
     },
     "047": {
       "series_id": "047",
-      "title": "egg prints",
-      "year": 2012,
-      "year_display": "2012"
+      "title": "egg prints"
     },
     "048": {
       "series_id": "048",
-      "title": "entangled form",
-      "year": 2023,
-      "year_display": "2023"
+      "title": "entangled form"
     },
     "049": {
       "series_id": "049",
-      "title": "espresso",
-      "year": 2012,
-      "year_display": "2012"
+      "title": "espresso"
     },
     "050": {
       "series_id": "050",
-      "title": "field",
-      "year": 2025,
-      "year_display": "2025"
+      "title": "field"
     },
     "051": {
       "series_id": "051",
-      "title": "fireworks form",
-      "year": 2023,
-      "year_display": "2023"
+      "title": "fireworks form"
     },
     "052": {
       "series_id": "052",
-      "title": "flowers",
-      "year": 2023,
-      "year_display": "2023"
+      "title": "flowers"
     },
     "053": {
       "series_id": "053",
-      "title": "fluid forms",
-      "year": 2012,
-      "year_display": "2012"
+      "title": "fluid forms"
     },
     "055": {
       "series_id": "055",
-      "title": "fog",
-      "year": 2006,
-      "year_display": "2006-19"
+      "title": "fog"
     },
     "056": {
       "series_id": "056",
-      "title": "folding forms",
-      "year": 2012,
-      "year_display": "2012, 2022"
+      "title": "folding forms"
     },
     "057": {
       "series_id": "057",
-      "title": "folding structure",
-      "year": 2013,
-      "year_display": "2013-20"
+      "title": "folding structure"
     },
     "058": {
       "series_id": "058",
-      "title": "for David Lynch (2025)",
-      "year": 2025,
-      "year_display": "2025"
+      "title": "for David Lynch (2025)"
     },
     "059": {
       "series_id": "059",
-      "title": "forest",
-      "year": 2003,
-      "year_display": "2003"
+      "title": "forest"
     },
     "060": {
       "series_id": "060",
-      "title": "forest (2024)",
-      "year": 2024,
-      "year_display": "2024"
+      "title": "forest (2024)"
     },
     "061": {
       "series_id": "061",
-      "title": "forest memories 1-48",
-      "year": 2023,
-      "year_display": "2023"
+      "title": "forest memories 1-48"
     },
     "062": {
       "series_id": "062",
-      "title": "forests (2023)",
-      "year": 2023,
-      "year_display": "2023"
+      "title": "forests (2023)"
     },
     "063": {
       "series_id": "063",
-      "title": "form mobile",
-      "year": 2021,
-      "year_display": "2021"
+      "title": "form mobile"
     },
     "064": {
       "series_id": "064",
-      "title": "form space",
-      "year": 2007,
-      "year_display": "2007"
+      "title": "form space"
     },
     "065": {
       "series_id": "065",
-      "title": "forms",
-      "year": 2011,
-      "year_display": "2011"
+      "title": "forms"
     },
     "066": {
       "series_id": "066",
-      "title": "forms painting",
-      "year": 1990,
-      "year_display": "c. 1990-92?"
+      "title": "forms painting"
     },
     "067": {
       "series_id": "067",
-      "title": "found forms",
-      "year": 2025,
-      "year_display": "2017-25"
+      "title": "found forms"
     },
     "068": {
       "series_id": "068",
-      "title": "fragments",
-      "year": 1990,
-      "year_display": "1990"
+      "title": "fragments"
     },
     "069": {
       "series_id": "069",
-      "title": "genetic (2020)",
-      "year": 2020,
-      "year_display": "c. 2001-11"
+      "title": "genetic (2020)"
     },
     "070": {
       "series_id": "070",
-      "title": "glass forms",
-      "year": 2010,
-      "year_display": "c. 2010?"
+      "title": "glass forms"
     },
     "071": {
       "series_id": "071",
-      "title": "grey series",
-      "year": 2025,
-      "year_display": "2025"
+      "title": "grey series"
     },
     "072": {
       "series_id": "072",
-      "title": "grid cells",
-      "year": 2013,
-      "year_display": "2013"
+      "title": "grid cells"
     },
     "073": {
       "series_id": "073",
-      "title": "grid fields",
-      "year": 2018,
-      "year_display": "2018"
+      "title": "grid fields"
     },
     "074": {
       "series_id": "074",
-      "title": "grid theory",
-      "year": 2008,
-      "year_display": "2008"
+      "title": "grid theory"
     },
     "075": {
       "series_id": "075",
-      "title": "harmony",
-      "year": 2009,
-      "year_display": "2009"
+      "title": "harmony"
     },
     "076": {
       "series_id": "076",
-      "title": "heaven and earth",
-      "year": 2011,
-      "year_display": "2011"
+      "title": "heaven and earth"
     },
     "077": {
       "series_id": "077",
-      "title": "home",
-      "year": 2023,
-      "year_display": "2023"
+      "title": "home"
     },
     "078": {
       "series_id": "078",
-      "title": "home land loss",
-      "year": 2021,
-      "year_display": "2021"
+      "title": "home land loss"
     },
     "079": {
       "series_id": "079",
-      "title": "in the end we'll know",
-      "year": 2024,
-      "year_display": "2024"
+      "title": "in the end we'll know"
     },
     "080": {
       "series_id": "080",
-      "title": "interior design",
-      "year": 2005,
-      "year_display": "2005"
+      "title": "interior design"
     },
     "081": {
       "series_id": "081",
-      "title": "intuition (2020)",
-      "year": 2020,
-      "year_display": "c. 2001-11"
+      "title": "intuition (2020)"
     },
     "082": {
       "series_id": "082",
-      "title": "k crystals",
-      "year": 2009,
-      "year_display": "2009"
+      "title": "k crystals"
     },
     "083": {
       "series_id": "083",
-      "title": "k particles",
-      "year": 2008,
-      "year_display": "2008"
+      "title": "k particles"
     },
     "084": {
       "series_id": "084",
-      "title": "kylie structures",
-      "year": 2023,
-      "year_display": "2023"
+      "title": "kylie structures"
     },
     "085": {
       "series_id": "085",
-      "title": "kylie wax model",
-      "year": 2024,
-      "year_display": "2024"
+      "title": "kylie wax model"
     },
     "086": {
       "series_id": "086",
-      "title": "landscape for symbols",
-      "year": 2021,
-      "year_display": "2021"
+      "title": "landscape for symbols"
     },
     "087": {
       "series_id": "087",
-      "title": "landscapes",
-      "year": 2023,
-      "year_display": "2023"
+      "title": "landscapes"
     },
     "088": {
       "series_id": "088",
-      "title": "leaf",
-      "year": 2016,
-      "year_display": "2016"
+      "title": "leaf"
     },
     "089": {
       "series_id": "089",
-      "title": "learning to draw landscapes",
-      "year": 2010,
-      "year_display": "c. 2010?, 2022"
+      "title": "learning to draw landscapes"
     },
     "090": {
       "series_id": "090",
-      "title": "lights",
-      "year": 2012,
-      "year_display": "2012-13"
+      "title": "lights"
     },
     "091": {
       "series_id": "091",
-      "title": "lipseyes",
-      "year": 2003,
-      "year_display": "2003"
+      "title": "lipseyes"
     },
     "092": {
       "series_id": "092",
-      "title": "living surface hand form",
-      "year": 2004,
-      "year_display": "1989, 2004"
+      "title": "living surface hand form"
     },
     "093": {
       "series_id": "093",
-      "title": "maps",
-      "year": 2004,
-      "year_display": "2004, 2011"
+      "title": "maps"
     },
     "094": {
       "series_id": "094",
-      "title": "matter",
-      "year": 2023,
-      "year_display": "2023"
+      "title": "matter"
     },
     "095": {
       "series_id": "095",
-      "title": "melancholy hope cell",
-      "year": 2016,
-      "year_display": "2016-17"
+      "title": "melancholy hope cell"
     },
     "096": {
       "series_id": "096",
-      "title": "memory loss hope",
-      "year": 2010,
-      "year_display": "2010"
+      "title": "memory loss hope"
     },
     "097": {
       "series_id": "097",
-      "title": "memory loss vessels",
-      "year": 2023,
-      "year_display": "2023"
+      "title": "memory loss vessels"
     },
     "098": {
       "series_id": "098",
-      "title": "mm",
-      "year": 2009,
-      "year_display": "2004-15"
+      "title": "mm"
     },
     "099": {
       "series_id": "099",
-      "title": "models",
-      "year": 1994,
-      "year_display": "1994"
+      "title": "models"
     },
     "100": {
       "series_id": "100",
-      "title": "molecule forms",
-      "year": 2013,
-      "year_display": "2013"
+      "title": "molecule forms"
     },
     "101": {
       "series_id": "101",
-      "title": "molecules",
-      "year": 2013,
-      "year_display": "2013"
+      "title": "molecules"
     },
     "103": {
       "series_id": "103",
-      "title": "mother and child",
-      "year": 1995,
-      "year_display": "1995"
+      "title": "mother and child"
     },
     "104": {
       "series_id": "104",
-      "title": "mouse story",
-      "year": 1993,
-      "year_display": "1991-93"
+      "title": "mouse story"
     },
     "105": {
       "series_id": "105",
-      "title": "nerve",
-      "year": 1995,
-      "year_display": "1990-95"
+      "title": "nerve"
     },
     "106": {
       "series_id": "106",
-      "title": "nerve forms",
-      "year": 2004,
-      "year_display": "2004"
+      "title": "nerve forms"
     },
     "107": {
       "series_id": "107",
-      "title": "nothing is missing",
-      "year": 2023,
-      "year_display": "2023"
+      "title": "nothing is missing"
     },
     "108": {
       "series_id": "108",
-      "title": "olive tree",
-      "year": 2012,
-      "year_display": "2012"
+      "title": "olive tree"
     },
     "109": {
       "series_id": "109",
-      "title": "particle machine",
-      "year": 2020,
-      "year_display": "2020"
+      "title": "particle machine"
     },
     "110": {
       "series_id": "110",
-      "title": "particle theory",
-      "year": 2008,
-      "year_display": "2008"
+      "title": "particle theory"
     },
     "111": {
       "series_id": "111",
-      "title": "particles",
-      "year": 2013,
-      "year_display": "2013"
+      "title": "particles"
     },
     "112": {
       "series_id": "112",
-      "title": "petri",
-      "year": 2004,
-      "year_display": "2004"
+      "title": "petri"
     },
     "113": {
       "series_id": "113",
-      "title": "pi particles",
-      "year": 2012,
-      "year_display": "2012"
+      "title": "pi particles"
     },
     "114": {
       "series_id": "114",
-      "title": "plant forms",
-      "year": 2022,
-      "year_display": "2022"
+      "title": "plant forms"
     },
     "115": {
       "series_id": "115",
-      "title": "poa",
-      "year": 2001,
-      "year_display": "2001-04"
+      "title": "poa"
     },
     "116": {
       "series_id": "116",
-      "title": "pole vault",
-      "year": 2004,
-      "year_display": "2004"
+      "title": "pole vault"
     },
     "117": {
       "series_id": "117",
-      "title": "porto santo",
-      "year": 2025,
-      "year_display": "2025"
+      "title": "porto santo"
     },
     "118": {
       "series_id": "118",
-      "title": "quantum random number theory",
-      "year": 2015,
-      "year_display": "2009, 2015"
+      "title": "quantum random number theory"
     },
     "119": {
       "series_id": "119",
-      "title": "r",
-      "year": 2001,
-      "year_display": "2001"
+      "title": "r"
     },
     "120": {
       "series_id": "120",
-      "title": "reduce and return",
-      "year": 2005,
-      "year_display": "2005-07"
+      "title": "reduce and return"
     },
     "121": {
       "series_id": "121",
-      "title": "residues",
-      "year": 2012,
-      "year_display": "2012, 2021"
+      "title": "residues"
     },
     "122": {
       "series_id": "122",
-      "title": "room",
-      "year": 2007,
-      "year_display": "2007-08"
+      "title": "room"
     },
     "123": {
       "series_id": "123",
-      "title": "snow",
-      "year": 2018,
-      "year_display": "2018"
+      "title": "snow"
     },
     "124": {
       "series_id": "124",
-      "title": "spider webs",
-      "year": 2023,
-      "year_display": "2023-24"
+      "title": "spider webs"
     },
     "125": {
       "series_id": "125",
-      "title": "spiders",
-      "year": 2006,
-      "year_display": "2006"
+      "title": "spiders"
     },
     "126": {
       "series_id": "126",
-      "title": "spine symbols",
-      "year": 2008,
-      "year_display": "2008"
+      "title": "spine symbols"
     },
     "127": {
       "series_id": "127",
-      "title": "state of mind",
-      "year": 2023,
-      "year_display": "2023"
+      "title": "state of mind"
     },
     "128": {
       "series_id": "128",
-      "title": "still life",
-      "year": 2014,
-      "year_display": "2014"
+      "title": "still life"
     },
     "129": {
       "series_id": "129",
-      "title": "string theory",
-      "year": 2012,
-      "year_display": "2005-12"
+      "title": "string theory"
     },
     "130": {
       "series_id": "130",
-      "title": "sunflower",
-      "year": 2012,
-      "year_display": "2012"
+      "title": "sunflower"
     },
     "131": {
       "series_id": "131",
-      "title": "surface history",
-      "year": 2018,
-      "year_display": "2017-18"
+      "title": "surface history"
     },
     "132": {
       "series_id": "132",
-      "title": "tabula rasa",
-      "year": 2008,
-      "year_display": "2008"
+      "title": "tabula rasa"
     },
     "133": {
       "series_id": "133",
-      "title": "thorns",
-      "year": 2006,
-      "year_display": "2006"
+      "title": "thorns"
     },
     "134": {
       "series_id": "134",
-      "title": "through a glass clearly",
-      "year": 2023,
-      "year_display": "2023"
+      "title": "through a glass clearly"
     },
     "135": {
       "series_id": "135",
-      "title": "train moments",
-      "year": 2019,
-      "year_display": "2006-19"
+      "title": "train moments"
     },
     "136": {
       "series_id": "136",
-      "title": "tree",
-      "year": 2024,
-      "year_display": "2024"
+      "title": "tree"
     },
     "137": {
       "series_id": "137",
-      "title": "tulips",
-      "year": 2023,
-      "year_display": "2023"
+      "title": "tulips"
     },
     "138": {
       "series_id": "138",
-      "title": "untitled composites",
-      "year": 2023,
-      "year_display": "2023"
+      "title": "untitled composites"
     },
     "139": {
       "series_id": "139",
-      "title": "untitled (destroyed)",
-      "year": 2025,
-      "year_display": "2025"
+      "title": "untitled (destroyed)"
     },
     "140": {
       "series_id": "140",
-      "title": "wa",
-      "year": 2008,
-      "year_display": "2008, 2011"
+      "title": "wa"
     },
     "141": {
       "series_id": "141",
-      "title": "water",
-      "year": 2013,
-      "year_display": "2005-13"
+      "title": "water"
     },
     "142": {
       "series_id": "142",
-      "title": "water sea pond",
-      "year": 2023,
-      "year_display": "2023"
+      "title": "water sea pond"
     },
     "143": {
       "series_id": "143",
-      "title": "simultaneous equations",
-      "year": 2026,
-      "year_display": "2026"
+      "title": "simultaneous equations"
     }
   }
 }

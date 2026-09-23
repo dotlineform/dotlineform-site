@@ -130,16 +130,10 @@ def build_series_index_records(
             continue
         sid = normalize_series_id(sid_raw)
         series_title = coerce_string(series_record.get("title")) or sid
-        year = coerce_int(series_record.get("year"))
-        year_display = coerce_string(series_record.get("year_display"))
-        if year_display is None:
-            year_display = str(year) if year is not None else None
         ordered_work_ids = member_ids_by_series.get(sid, [])
         series_payload_unsorted[sid] = compact_json_object({
             "series_id": sid,
             "title": series_title,
-            "year": year,
-            "year_display": year_display,
             "work_count": len(ordered_work_ids),
         })
 

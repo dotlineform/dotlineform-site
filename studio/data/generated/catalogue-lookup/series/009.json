@@ -4,11 +4,9 @@
   },
   "series": {
     "series_id": "009",
-    "title": "a poem divided into 4 parts",
-    "year": 2025,
-    "year_display": "2025"
+    "title": "a poem divided into 4 parts"
   },
-  "record_hash": "085cec4aaee2230d6719ed25404d9a02aa7daf871528b3d7d78ef21c11bc5d4b",
+  "record_hash": "51aed2dae5d4f1298f92fddf7ba893abe189a2c480aa56cfe2c0956869d1582d",
   "member_works": [
     {
       "work_id": "00001",

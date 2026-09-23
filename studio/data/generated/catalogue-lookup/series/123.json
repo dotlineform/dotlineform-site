@@ -4,11 +4,9 @@
   },
   "series": {
     "series_id": "123",
-    "title": "snow",
-    "year": 2018,
-    "year_display": "2018"
+    "title": "snow"
   },
-  "record_hash": "ae2c8c1442a333c380b3656eaf1cf4195420fd1e43ece3450e159f71e9c2c671",
+  "record_hash": "73526830c8deae569feb9bfba63d4ece0bc5d164ae128fc4c01810db4a072231",
   "member_works": [
     {
       "work_id": "01655",

@@ -4,11 +4,9 @@
   },
   "series": {
     "series_id": "035",
-    "title": "curve machine",
-    "year": 2020,
-    "year_display": "2020"
+    "title": "curve machine"
   },
-  "record_hash": "9995f7cfeda6869d5790688d48ec0087349fc5f1082f76fe185349b83f1f92bf",
+  "record_hash": "e46dd40f115939b0b70cebe8f9a8910dbd0062db106ff5b07dd62a100bb72afb",
   "member_works": [
     {
       "work_id": "00867",

@@ -79,15 +79,8 @@ def normalize_series_update(
 
 def validate_series_save_record(record: Mapping[str, Any]) -> list[str]:
     errors: list[str] = []
-    if not normalize_text(record.get("year")):
-        errors.append("series year is required")
-    else:
-        try:
-            int(normalize_text(record.get("year")))
-        except ValueError:
-            errors.append("series year must be a whole number")
-    if not normalize_text(record.get("year_display")):
-        errors.append("series year_display is required")
+    if not normalize_text(record.get("title")):
+        errors.append("series title is required")
     return errors
 
 

@@ -66,8 +66,6 @@ WORK_FIELDS = [
 SERIES_FIELDS = [
     "series_id",
     "title",
-    "year",
-    "year_display",
 ]
 
 DETAIL_FIELDS = [
@@ -107,7 +105,7 @@ WORK_TEXT_FIELDS = set(WORK_FIELDS) - {
     "height_px",
     MEDIA_VERSION_FIELD,
 }
-SERIES_TEXT_FIELDS = set(SERIES_FIELDS) - {"year"}
+SERIES_TEXT_FIELDS = set(SERIES_FIELDS)
 DETAIL_TEXT_FIELDS = set(DETAIL_FIELDS) - {"width_px", "height_px", MEDIA_VERSION_FIELD}
 OMIT_EMPTY_SOURCE_FIELDS = {
     "series_id",

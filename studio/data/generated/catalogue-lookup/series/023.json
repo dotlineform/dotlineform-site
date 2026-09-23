@@ -4,11 +4,9 @@
   },
   "series": {
     "series_id": "023",
-    "title": "certainty",
-    "year": 2026,
-    "year_display": "2001-26"
+    "title": "certainty"
   },
-  "record_hash": "0c27207ce57dd0dc945bfd1c3a4e8fb2c299004e2e5f406298001122a1f60c76",
+  "record_hash": "ff6b78637aa4dd329158626a98e629e6591b716b4a5767bd053ea8ff5beb71e6",
   "member_works": [
     {
       "work_id": "00389",

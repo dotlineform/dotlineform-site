@@ -4,11 +4,9 @@
   },
   "series": {
     "series_id": "025",
-    "title": "closeness",
-    "year": 2017,
-    "year_display": "2017"
+    "title": "closeness"
   },
-  "record_hash": "ae7756f378b5f9062b427cf31e93bd94cd44647e2cc525d905c163c0e6243a79",
+  "record_hash": "929c2d1e6cc1ccfff492cf5965f3aa092160fb0467c8fdabf065c5e99a773ce9",
   "member_works": [
     {
       "work_id": "00811",

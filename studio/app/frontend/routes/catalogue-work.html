@@ -1,55 +1,75 @@
 <div
-  class="studioPage catalogueWorkPage"
+  class="studioPage catalogueWorkPage catalogueWorkPage--withBrowser"
   id="catalogueWorkRoot"
   hidden
   data-studio-route="catalogue-work"
   data-studio-ready="false"
   data-studio-busy="false"
 >
-  <section class="studioUi__panel studioUi__panel--editor">
-    <div class="studioUi__inputRow studioUi__inputRow--editor">
-      <div class="studioForm__searchWrap catalogueWorkPage__searchWrap">
-        <label class="visually-hidden" for="catalogueWorkSearch">Find work by id</label>
-        <div class="sharedSearchList__control catalogueWorkPage__searchControl" id="catalogueWorkPopup">
-          <input type="text" class="studioUi__input" id="catalogueWorkSearch" placeholder="find work by id" autocomplete="off">
-          <span id="catalogueWorkPopupList" hidden></span>
-        </div>
+  <aside class="studioUi__panel catalogueWorkSeriesBrowser" aria-label="Browse Series works">
+    <label class="studioForm__label" for="catalogueWorkSeriesBrowseSearch">series</label>
+    <div class="catalogueWorkSeriesBrowser__searchRow">
+      <div class="sharedSearchList__control">
+        <input type="text" class="studioUi__input" id="catalogueWorkSeriesBrowseSearch" placeholder="find series by title or id" autocomplete="off" disabled>
+        <div id="catalogueWorkSeriesBrowsePopup" hidden></div>
       </div>
-      <button type="button" class="studioUi__button studioUi__button--defaultWidth" id="catalogueWorkOpen">Open</button>
-      <button type="button" class="studioUi__button studioUi__button--defaultWidth" id="catalogueWorkNew">New</button>
-      <p class="studioUi__status catalogueEditorMessage catalogueWorkPage__message" id="catalogueWorkStatus" aria-live="polite"></p>
+      <button type="button" class="sharedRecordListActions__button" data-appearance="icon" id="catalogueWorkSeriesBrowseEdit" title="Edit or create Series" aria-label="Edit or create Series" disabled><span aria-hidden="true">✏️</span></button>
+      <button type="button" class="sharedRecordListActions__button" data-appearance="icon" data-tone="danger" id="catalogueWorkSeriesBrowseDelete" title="Delete empty Series" aria-label="Delete empty Series" disabled><span aria-hidden="true">🗑️</span></button>
     </div>
-  </section>
+    <div class="studioUi__headingRow catalogueWorkSeriesBrowser__heading">
+      <h2 class="studioUi__heading">member works</h2>
+      <span class="studioForm__meta" id="catalogueWorkSeriesBrowseCount"></span>
+    </div>
+    <p class="studioUi__status" id="catalogueWorkSeriesBrowseStatus" aria-live="polite"></p>
+    <div class="catalogueWorkSeriesBrowser__members" id="catalogueWorkSeriesBrowseMembers"></div>
+  </aside>
 
-  <p class="studioForm__meta">Save updates the record, generated Catalogue and media.</p>
-  <div class="studioUi__grid catalogueWorkPage__grid">
+  <div class="catalogueWorkPage__editor" id="catalogueWorkEditorPane">
     <section class="studioUi__panel studioUi__panel--editor">
-      <div class="studioUi__headingRow">
-        <div class="catalogueWorkPage__actions">
-          <button type="button" class="studioUi__button studioUi__button--defaultWidth" id="catalogueWorkSave">Save</button>
-          <button type="button" class="studioUi__button studioUi__button--defaultWidth" id="catalogueWorkDelete">Delete</button>
+      <div class="studioUi__inputRow studioUi__inputRow--editor">
+        <div class="studioForm__searchWrap catalogueWorkPage__searchWrap">
+          <label class="visually-hidden" for="catalogueWorkSearch">Find work by id</label>
+          <div class="sharedSearchList__control catalogueWorkPage__searchControl" id="catalogueWorkPopup">
+            <input type="text" class="studioUi__input" id="catalogueWorkSearch" placeholder="find work by id" autocomplete="off">
+            <span id="catalogueWorkPopupList" hidden></span>
+          </div>
         </div>
+        <button type="button" class="studioUi__button studioUi__button--defaultWidth" id="catalogueWorkOpen">Open</button>
+        <button type="button" class="studioUi__button studioUi__button--defaultWidth" id="catalogueWorkNew">New</button>
+        <p class="studioUi__status catalogueEditorMessage catalogueWorkPage__message" id="catalogueWorkStatus" aria-live="polite"></p>
       </div>
-      <p class="studioForm__meta" id="catalogueWorkMeta"></p>
-      <div class="studioForm__fields catalogueWorkForm__fields" id="catalogueWorkFields"></div>
     </section>
 
-    <aside class="studioUi__panel catalogueWorkSummary" id="catalogueWorkSummaryPanel">
-      <div id="catalogueWorkPreview"></div>
-      <div class="catalogueWorkResources" id="catalogueWorkResourcesPanel">
-        <div class="studioUi__headingRow catalogueWorkResources__actionRow">
-          <span class="studioForm__label">links</span>
-          <div class="catalogueEditor__rowActions" id="catalogueWorkResourcesActions" aria-label="Resource actions"></div>
+    <p class="studioForm__meta">Save updates the record, generated Catalogue and media.</p>
+    <div class="studioUi__grid catalogueWorkPage__grid">
+      <section class="studioUi__panel studioUi__panel--editor">
+        <div class="studioUi__headingRow">
+          <div class="catalogueWorkPage__actions">
+            <button type="button" class="studioUi__button studioUi__button--defaultWidth" id="catalogueWorkSave">Save</button>
+            <button type="button" class="studioUi__button studioUi__button--defaultWidth" id="catalogueWorkDelete">Delete</button>
+          </div>
         </div>
-        <p class="studioForm__meta" id="catalogueWorkResourcesMeta"></p>
-        <div class="catalogueWorkResources__results" id="catalogueWorkResourcesResults"></div>
-      </div>
-      <div class="studioForm__fields" id="catalogueWorkReadonly"></div>
-      <p class="studioForm__impact" id="catalogueWorkRuntimeState"></p>
-      <p class="studioForm__impact" id="catalogueWorkBuildImpact"></p>
-      <div class="studioForm__fields" id="catalogueWorkSummary"></div>
-      <div class="studioForm__fields" id="catalogueWorkReadiness"></div>
-    </aside>
+        <p class="studioForm__meta" id="catalogueWorkMeta"></p>
+        <div class="studioForm__fields catalogueWorkForm__fields" id="catalogueWorkFields"></div>
+      </section>
+
+      <aside class="studioUi__panel catalogueWorkSummary" id="catalogueWorkSummaryPanel">
+        <div id="catalogueWorkPreview"></div>
+        <div class="catalogueWorkResources" id="catalogueWorkResourcesPanel">
+          <div class="studioUi__headingRow catalogueWorkResources__actionRow">
+            <span class="studioForm__label">links</span>
+            <div class="catalogueEditor__rowActions" id="catalogueWorkResourcesActions" aria-label="Resource actions"></div>
+          </div>
+          <p class="studioForm__meta" id="catalogueWorkResourcesMeta"></p>
+          <div class="catalogueWorkResources__results" id="catalogueWorkResourcesResults"></div>
+        </div>
+        <div class="studioForm__fields" id="catalogueWorkReadonly"></div>
+        <p class="studioForm__impact" id="catalogueWorkRuntimeState"></p>
+        <p class="studioForm__impact" id="catalogueWorkBuildImpact"></p>
+        <div class="studioForm__fields" id="catalogueWorkSummary"></div>
+        <div class="studioForm__fields" id="catalogueWorkReadiness"></div>
+      </aside>
+    </div>
   </div>
 </div>
 <p class="studioUi__status" id="catalogueWorkLoading">loading catalogue work editor...</p>

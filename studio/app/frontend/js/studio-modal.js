@@ -138,6 +138,7 @@ export function renderStudioModalFrame(options = {}) {
   `;
 }
 
+/** Bind modal actions and focus; canCancel may block dismissal while an owner awaits a write. */
 export function activateStudioModalFrame(host, options = {}) {
   const restoreFocus = options.restoreFocus || document.activeElement;
   const modal = host && host.querySelector('[data-role="studio-modal"], .studioModal');
@@ -188,6 +189,7 @@ export function activateStudioModalFrame(host, options = {}) {
       setRoleMessage(host, "modal-status", "studioForm__status studioModal__status", kind, message);
     },
     cancel(settleOptions = {}) {
+      if (typeof options.canCancel === "function" && !options.canCancel()) return;
       settle({ confirmed: false }, settleOptions);
     },
     close(result = { confirmed: false }, settleOptions = {}) {

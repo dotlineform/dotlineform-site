@@ -4,11 +4,9 @@
   },
   "series": {
     "series_id": "101",
-    "title": "molecules",
-    "year": 2013,
-    "year_display": "2013"
+    "title": "molecules"
   },
-  "record_hash": "0b4028a5d01edccb8977e78124cbdf86169beb2ce68a56ee07561f109d9283d4",
+  "record_hash": "ef6de14ffee46437dce825a0de7744f1a3d985af6de72997c28f9c107275b7d3",
   "member_works": [
     {
       "work_id": "00460",

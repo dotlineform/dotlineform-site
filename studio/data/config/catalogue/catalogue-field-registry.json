@@ -59,9 +59,7 @@
       "operation": "save_create_delete",
       "fields": [
         "series_id",
-        "title",
-        "year",
-        "year_display"
+        "title"
       ],
       "artifacts": [
         "source-json",

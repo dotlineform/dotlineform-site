@@ -4,11 +4,9 @@
   },
   "series": {
     "series_id": "006",
-    "title": "a doll story",
-    "year": 2024,
-    "year_display": "2024"
+    "title": "a doll story"
   },
-  "record_hash": "106ec88d3ccf21e366912cadd8d5405e147fe0e8f0c68b3ce485eacd844db69b",
+  "record_hash": "2b26df457f4cdf669691627ec0ebcf94dd0921efba046682f943aee4dee67548",
   "member_works": [
     {
       "work_id": "00641",

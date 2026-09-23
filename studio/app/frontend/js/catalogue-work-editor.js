@@ -1,4 +1,6 @@
 import { saveCurrentWork } from "./catalogue-work-actions.js";
+import { createWorkSeriesBrowser } from "./catalogue-work-series-browser.js";
+import { applyWorkRecordMutation } from "./catalogue-work-action-records.js";
 import {
   getStudioText
 } from "./studio-config.js";
@@ -43,7 +45,7 @@ import {
   renderWorkReadiness,
   updateWorkSummary
 } from "./catalogue-work-sections.js";
-import { applyDraftToInputs, applyWorkMediaSourceConfig, applyReadonly, applyWorkFormText, clearReadonlyFields, getFieldNodeValue, renderWorkEditorFields, resolvedWorkMediaSourceId, setModeFieldAvailability, updateFieldMessages } from "./catalogue-work-form.js";
+import { applyDraftToInputs, applyWorkMediaSourceConfig, applyReadonly, applyWorkFormText, clearReadonlyFields, getFieldNodeValue, renderSeriesPicker, renderWorkEditorFields, resolvedWorkMediaSourceId, setModeFieldAvailability, updateFieldMessages } from "./catalogue-work-form.js";
 import {
   initializeWorkRouteState,
   setEmptySearchMode,
@@ -210,6 +212,7 @@ function renderEditorMessage(state, snapshot = {}) {
 
 
 function updateEditorState(state) {
+  state.seriesBrowser?.sync();
   const hasRecord = state.mode === "new" ? true : state.mode === "bulk" ? state.bulkWorkIds.length > 0 : Boolean(state.currentRecord);
   const errors = hasRecord ? validateDraft(state) : new Map();
   state.validationErrors = errors;
@@ -297,6 +300,7 @@ function workSelectionOptions(state) {
       setLoadedBulkWorks(state, workIds, recordsById, recordHashes, workRouteStateOptions(state));
     },
     setLoadedWorkRecord: (workId, record, options = {}) => {
+      applyWorkRecordMutation(state, { workId, record, recordHash: options.recordHash });
       setLoadedWorkRecord(state, workId, record, workRouteStateOptions(state, options));
     },
     updateEditorState: () => updateEditorState(state),
@@ -429,6 +433,14 @@ async function init() {
     }
 
     await loadInitialWorkEditorData(state);
+    state.seriesBrowser = createWorkSeriesBrowser(state, elements, {
+      draftHasChanges: () => draftHasChanges(state),
+      onSeriesChanged: () => {
+        renderSeriesPicker(state);
+        updateEditorState(state);
+      },
+      openWork: workId => openWorkById(state, workId, workSelectionOptions(state))
+    });
     bindWorkEditorEvents(state, {
       bindSelectionControls: () => bindWorkSelectionControls(state, workSelectionOptions(state)),
       renderEditorMessage: () => renderEditorMessage(state),

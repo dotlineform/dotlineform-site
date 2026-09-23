@@ -4,11 +4,9 @@
   },
   "series": {
     "series_id": "121",
-    "title": "residues",
-    "year": 2012,
-    "year_display": "2012, 2021"
+    "title": "residues"
   },
-  "record_hash": "7a5eeaa19357151382f6c1a103369b8ce31f25a8c049af69491f846337705d23",
+  "record_hash": "f837826ba3f92749e32b7ad60d963d7ce78bf3f49a894b96a889ab44096fc526",
   "member_works": [
     {
       "work_id": "01606",
