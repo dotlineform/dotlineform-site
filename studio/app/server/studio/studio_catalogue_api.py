@@ -33,7 +33,6 @@ from catalogue.catalogue_lookup import (  # noqa: E402
     DEFAULT_LOOKUP_DIR,
     build_series_lookup_payload,
     build_series_search_payload,
-    build_work_detail_lookup_payload,
     build_work_lookup_payload,
     build_work_search_payload,
 )
@@ -43,7 +42,6 @@ from catalogue.catalogue_source import (  # noqa: E402
     SOURCE_FILES,
     load_json_file,
     normalize_text,
-    normalize_detail_uid_value,
     records_from_json_source,
     slug_id,
 )
@@ -67,7 +65,6 @@ CATALOGUE_READ_KEYS = {
     "catalogue_lookup_series_search",
     "catalogue_lookup_series_base",
     "catalogue_work_record",
-    "catalogue_work_detail_record",
 }
 
 def catalogue_get_payload(repo_root: Path, api_path: str, query: Mapping[str, list[str]] | None = None) -> dict[str, Any]:
@@ -131,11 +128,6 @@ def catalogue_read_payload(repo_root: Path, query: Mapping[str, list[str]]) -> d
         if not work_id:
             raise ValueError("record_id is required for work lookup reads")
         return build_work_lookup_payload(source_records, work_id)
-    if key == "catalogue_work_detail_record":
-        detail_uid = normalize_detail_uid_value(record_id)
-        if not detail_uid:
-            raise ValueError("record_id is required for work detail lookup reads")
-        return build_work_detail_lookup_payload(source_records, detail_uid)
     if key == "catalogue_lookup_series_base":
         series_id = normalize_series_id(record_id)
         if not series_id:

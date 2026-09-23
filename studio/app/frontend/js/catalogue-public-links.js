@@ -17,13 +17,6 @@ export function buildPublicSeriesUrl(config, seriesId, params = {}) {
   });
 }
 
-export function buildPublicWorkDetailUrl(config, detailUid, params = {}) {
-  return buildPublicCatalogueUrl(config, "/work-details/", {
-    ...params,
-    detail: normalizeText(detailUid)
-  });
-}
-
 function buildPublicSiteUrl(config, path = "/", params = {}, options = {}) {
   const siteKey = options && options.site === "production" ? "production" : "public_preview";
   const base = getStudioSiteBase(config, siteKey);

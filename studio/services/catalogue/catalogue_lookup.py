@@ -9,9 +9,7 @@ from catalogue import catalogue_generation_indexes as generation_indexes
 from catalogue.catalogue_revisions import record_hash
 from catalogue.catalogue_source import (
     CatalogueSourceRecords,
-    build_detail_section_resolution_by_uid,
     normalize_text,
-    ordered_work_detail_sections,
     records_from_json_source,
 )
 
@@ -21,9 +19,7 @@ DEFAULT_LOOKUP_DIR = Path("studio/data/generated/catalogue-lookup")
 SCHEMAS = {
     "work_search": "studio_catalogue_lookup_work_search_v2",
     "series_search": "studio_catalogue_lookup_series_search_v2",
-    "work_detail_search": "studio_catalogue_lookup_work_detail_search_v1",
-    "work_record": "studio_catalogue_work_record_v2",
-    "work_detail_record": "studio_catalogue_work_detail_record_v2",
+    "work_record": "studio_catalogue_work_record_v3",
     "series_record": "studio_catalogue_lookup_series_record_v3",
 }
 
@@ -36,32 +32,6 @@ SERIES_MEMBER_WORK_FIELDS = frozenset({
     "series_id",
     "project_folder",
 })
-WORK_DETAIL_WORK_SUMMARY_FIELDS = frozenset({"title"})
-
-WORK_DETAIL_SEARCH_FIELDS = frozenset({
-    "detail_uid",
-    "work_id",
-    "detail_id",
-    "title",
-    "section_id",
-    "section_title",
-    "section_order",
-    "detail_sort",
-    "details_subfolder",
-    "project_filename",
-})
-WORK_DETAIL_PARENT_WORK_FIELDS = frozenset({
-    "work_id",
-    "detail_id",
-    "title",
-    "section_id",
-    "section_title",
-    "section_order",
-    "detail_sort",
-    "details_subfolder",
-    "project_filename",
-})
-
 SERIES_SEARCH_FIELDS = frozenset({"series_id", "title"})
 WORK_SERIES_SUMMARY_FIELDS = frozenset({"title"})
 
@@ -74,17 +44,6 @@ def normalize_optional_int(value: Any) -> int | None:
         return int(text)
     except ValueError:
         return None
-
-
-def build_resolved_work_detail_record(record: Mapping[str, Any], section_resolution: Mapping[str, Any]) -> Dict[str, Any]:
-    detail_payload = dict(record)
-    detail_payload.pop("project_subfolder", None)
-    detail_payload.pop("media_version", None)
-    for field in ("section_id", "section_title", "details_subfolder", "section_order", "detail_sort"):
-        value = section_resolution.get(field)
-        if value is not None and value != "":
-            detail_payload[field] = value
-    return detail_payload
 
 
 def build_work_search_item(work_id: str, record: Mapping[str, Any]) -> Dict[str, Any]:
@@ -117,25 +76,6 @@ def build_series_search_item(series_id: str, record: Mapping[str, Any]) -> Dict[
     }
 
 
-def build_work_detail_search_item(
-    detail_uid: str,
-    record: Mapping[str, Any],
-    section_resolution: Mapping[str, Any],
-) -> Dict[str, Any]:
-    return {
-        "detail_uid": detail_uid,
-        "work_id": normalize_text(record.get("work_id")),
-        "detail_id": normalize_text(record.get("detail_id")),
-        "title": normalize_text(record.get("title")),
-        "section_id": normalize_text(section_resolution.get("section_id")),
-        "section_title": normalize_text(section_resolution.get("section_title")),
-        "section_order": section_resolution.get("section_order"),
-        "detail_sort": normalize_text(section_resolution.get("detail_sort")),
-        "details_subfolder": normalize_text(section_resolution.get("details_subfolder")),
-        "project_filename": normalize_text(record.get("project_filename")),
-    }
-
-
 def build_work_lookup_payload(records: CatalogueSourceRecords, work_id: str) -> Dict[str, Any]:
     record = records.works.get(work_id)
     if not isinstance(record, Mapping):
@@ -145,31 +85,6 @@ def build_work_lookup_payload(records: CatalogueSourceRecords, work_id: str) -> 
         series_id: normalize_text(series_record.get("title"))
         for series_id, series_record in records.series.items()
     }
-
-    detail_sections = []
-    for section in ordered_work_detail_sections(records, work_id):
-        items = [
-            {
-                "detail_uid": normalize_text(item.get("detail_uid")),
-                "detail_id": normalize_text(item.get("detail_id")),
-                "title": normalize_text(item.get("title")),
-                "project_filename": normalize_text(item.get("project_filename")),
-            }
-            for item in section.get("details", [])
-            if isinstance(item, Mapping)
-        ]
-        detail_sections.append(
-            {
-                "section_id": normalize_text(section.get("section_id")),
-                "record_hash": record_hash(records.work_detail_sections[section["section_id"]]),
-                "details_subfolder": normalize_text(section.get("details_subfolder")),
-                "section_title": normalize_text(section.get("section_title")),
-                "section_order": section.get("section_order"),
-                "detail_sort": section.get("detail_sort"),
-                "count": len(items),
-                "details": items,
-            }
-        )
 
     series_summary = [
         {
@@ -185,34 +100,9 @@ def build_work_lookup_payload(records: CatalogueSourceRecords, work_id: str) -> 
         },
         "work": dict(record),
         "record_hash": record_hash(record),
-        "detail_sections": detail_sections,
         "downloads": list(record.get("downloads", [])) if isinstance(record.get("downloads"), list) else [],
         "links": list(record.get("links", [])) if isinstance(record.get("links"), list) else [],
         "series_summary": series_summary,
-    }
-
-
-def build_work_detail_lookup_payload(records: CatalogueSourceRecords, detail_uid: str) -> Dict[str, Any]:
-    record = records.work_details.get(detail_uid)
-    if not isinstance(record, Mapping):
-        raise KeyError(f"detail_uid not found: {detail_uid}")
-    section_resolution = build_detail_section_resolution_by_uid(
-        records.work_details,
-        records.work_detail_sections,
-    ).get(detail_uid, {})
-    detail_payload = build_resolved_work_detail_record(record, section_resolution)
-    work_id = normalize_text(record.get("work_id"))
-    work_record = records.works.get(work_id) or {}
-    return {
-        "header": {
-            "schema": SCHEMAS["work_detail_record"],
-        },
-        "work_detail": detail_payload,
-        "record_hash": record_hash(record),
-        "work_summary": {
-            "work_id": work_id,
-            "title": normalize_text(work_record.get("title")),
-        },
     }
 
 
@@ -276,24 +166,6 @@ def build_series_search_payload(records: CatalogueSourceRecords) -> Dict[str, An
     return {
         "header": {
             "schema": SCHEMAS["series_search"],
-            "count": len(items),
-        },
-        "items": items,
-    }
-
-
-def build_work_detail_search_payload(records: CatalogueSourceRecords) -> Dict[str, Any]:
-    items = []
-    section_resolution_by_uid = build_detail_section_resolution_by_uid(
-        records.work_details,
-        records.work_detail_sections,
-    )
-    for detail_uid, record in records.work_details.items():
-        items.append(build_work_detail_search_item(detail_uid, record, section_resolution_by_uid.get(detail_uid, {})))
-    items.sort(key=lambda item: item["detail_uid"])
-    return {
-        "header": {
-            "schema": SCHEMAS["work_detail_search"],
             "count": len(items),
         },
         "items": items,
@@ -394,14 +266,6 @@ def write_work_lookup_payload(lookup_dir: Path, work_id: str, payload: Mapping[s
     works_dir = lookup_dir / "works"
     works_dir.mkdir(parents=True, exist_ok=True)
     path = works_dir / f"{work_id}.json"
-    _atomic_write_json(path, payload)
-    return path
-
-
-def write_detail_lookup_payload(lookup_dir: Path, detail_uid: str, payload: Mapping[str, Any]) -> Path:
-    target_dir = lookup_dir / "work_details"
-    target_dir.mkdir(parents=True, exist_ok=True)
-    path = target_dir / f"{detail_uid}.json"
     _atomic_write_json(path, payload)
     return path
 

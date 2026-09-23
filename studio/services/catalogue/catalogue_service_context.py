@@ -27,7 +27,6 @@ class CatalogueWriteContext:
     source_dir: Path
     lookup_dir: Path
     works_path: Path
-    work_details_path: Path
     series_path: Path
     allowed_write_paths: set[Path]
     allowed_write_roots: set[Path]
@@ -48,12 +47,11 @@ def build_catalogue_write_context(repo_root: Path, *, dry_run: bool = False) -> 
         source_dir=source_dir,
         lookup_dir=(resolved_root / DEFAULT_LOOKUP_DIR).resolve(),
         works_path=(source_dir / SOURCE_FILES["works"]).resolve(),
-        work_details_path=(source_dir / SOURCE_FILES["work_details"]).resolve(),
         series_path=(source_dir / SOURCE_FILES["series"]).resolve(),
         allowed_write_paths={
             (source_dir / filename).resolve()
             for kind, filename in SOURCE_FILES.items()
-            if kind != "meta"
+            if kind in {"works", "series"}
         } | {(source_dir / MEMBERSHIPS_FILE).resolve()},
         allowed_write_roots=set(),
         dry_run=dry_run,
@@ -65,14 +63,6 @@ def load_works_payload(path: Path) -> dict[str, Any]:
     works = payload.get("works")
     if not isinstance(works, dict):
         raise ValueError("works source file must include a works object")
-    return payload
-
-
-def load_work_details_payload(path: Path) -> dict[str, Any]:
-    payload = load_json_file(path)
-    work_details = payload.get("work_details")
-    if not isinstance(work_details, dict):
-        raise ValueError("work details source file must include a work_details object")
     return payload
 
 
@@ -126,39 +116,6 @@ def refresh_lookup_payloads_for_work_change(
             "lookup_dir": context.rel_path(context.lookup_dir),
             "mode": result["mode"],
             "work_id": work_id,
-            "artifacts": result["artifacts"],
-            "written_count": result["written_count"],
-        },
-    )
-    return result
-
-
-def refresh_lookup_payloads_for_detail_change(
-    context: CatalogueWriteContext,
-    detail_uid: str,
-    current_record: Mapping[str, Any],
-    updated_record: Mapping[str, Any],
-    build_plan: Mapping[str, Any],
-) -> dict[str, Any]:
-    lookup_plan = lookup_refresh.derive_lookup_refresh_plan(
-        record_family="work_detail",
-        changed_field_names=list(build_plan.get("fields") or []),
-    )
-    result = lookup_refresh.detail_change_lookup_refresh(
-        context.source_dir,
-        context.lookup_dir,
-        context.repo_root,
-        detail_uid=detail_uid,
-        updated_record=updated_record,
-        lookup_plan=lookup_plan,
-    )
-    log_event(
-        context.repo_root,
-        "catalogue_lookup_refresh",
-        {
-            "lookup_dir": context.rel_path(context.lookup_dir),
-            "mode": result["mode"],
-            "detail_uid": detail_uid,
             "artifacts": result["artifacts"],
             "written_count": result["written_count"],
         },

@@ -6,8 +6,6 @@ from dataclasses import dataclass
 from typing import Any, Dict, Mapping
 
 from catalogue.catalogue_source import (
-    DETAIL_FIELDS,
-    DETAIL_TEXT_FIELDS,
     MEDIA_VERSION_FIELD,
     SERIES_FIELDS,
     SERIES_TEXT_FIELDS,
@@ -64,31 +62,6 @@ def normalize_work_update(work_id: str, current_record: Mapping[str, Any], updat
         merged[MEDIA_VERSION_FIELD] = 1
 
     return normalize_source_record(merged, WORK_FIELDS, text_fields=WORK_TEXT_FIELDS)
-
-
-def normalize_work_detail_update(
-    detail_uid: str,
-    current_record: Mapping[str, Any],
-    update: Mapping[str, Any],
-) -> Dict[str, Any]:
-    merged = dict(current_record)
-    merged.update(update)
-    merged["detail_uid"] = str(merged.get("detail_uid") or detail_uid).strip()
-    if merged["detail_uid"] != detail_uid:
-        raise ValueError("record.detail_uid must match detail_uid")
-
-    work_id = slug_id(merged.get("work_id"))
-    detail_id = slug_id(merged.get("detail_id"), width=3)
-    normalized_uid = f"{work_id}-{detail_id}"
-    if normalized_uid != detail_uid:
-        raise ValueError("record.work_id/detail_id do not match detail_uid")
-
-    merged["work_id"] = work_id
-    merged["detail_id"] = detail_id
-    merged["detail_uid"] = normalized_uid
-    if not is_empty(merged.get("project_filename")) and is_empty(merged.get(MEDIA_VERSION_FIELD)):
-        merged[MEDIA_VERSION_FIELD] = 1
-    return normalize_source_record(merged, DETAIL_FIELDS, text_fields=DETAIL_TEXT_FIELDS)
 
 
 def normalize_series_update(

@@ -9,11 +9,8 @@ from catalogue.catalogue_lookup import (
     build_and_write_catalogue_lookup,
     build_series_lookup_payload,
     build_series_search_payload,
-    build_work_detail_lookup_payload,
     build_work_lookup_payload,
     build_work_search_payload,
-    normalize_text,
-    write_detail_lookup_payload,
     write_lookup_root_payload,
     write_series_lookup_payload,
     write_work_lookup_payload,
@@ -51,11 +48,9 @@ def _lookup_artifacts_for_fields(record_family: str, changed_fields: set[str]) -
         return set()
     if record_family == "work":
         # Every projection carrying a revision must change even for metadata-only edits.
-        return {"work_record", "work_search", "related_series_records", "related_work_detail_records"}
+        return {"work_record", "work_search", "related_series_records"}
     if record_family == "series":
         return {"series_record", "series_search", "related_work_records"}
-    if record_family == "work_detail":
-        return {"full_lookup_refresh"}
     raise ValueError(f"unknown Catalogue record family: {record_family}")
 
 
@@ -181,58 +176,11 @@ def work_change_lookup_refresh(
                 )
             )
 
-    if "related_work_detail_records" in artifacts:
-        for detail_uid, detail_record in source_records.work_details.items():
-            if normalize_text(detail_record.get("work_id")) != work_id:
-                continue
-            written_paths.append(
-                rel_path(
-                    repo_root,
-                    write_detail_lookup_payload(
-                        lookup_dir,
-                        detail_uid,
-                        build_work_detail_lookup_payload(source_records, detail_uid),
-                    ),
-                )
-            )
-
     return {
         "mode": "targeted-multi-record",
         "artifacts": sorted(artifacts),
         "written_count": len(written_paths),
         "written_paths": written_paths,
-        "invalidation_class": lookup_plan["class"],
-        "unknown_fields": list(lookup_plan.get("unknown_fields") or []),
-    }
-
-
-def detail_change_lookup_refresh(
-    source_dir: Path,
-    lookup_dir: Path,
-    repo_root: Path,
-    *,
-    detail_uid: str,
-    updated_record: Mapping[str, Any],
-    lookup_plan: Mapping[str, Any],
-) -> dict[str, Any]:
-    if lookup_plan["class"] == LOOKUP_REFRESH_NONE:
-        return {
-            "mode": "none",
-            "artifacts": [],
-            "written_count": 0,
-            "written_paths": [],
-            "invalidation_class": lookup_plan["class"],
-            "unknown_fields": list(lookup_plan.get("unknown_fields") or []),
-        }
-
-    if lookup_plan["class"] != LOOKUP_REFRESH_TARGETED_MULTI_RECORD:
-        return _with_lookup_plan(full_lookup_refresh(source_dir, lookup_dir, repo_root), lookup_plan)
-
-    return {
-        "mode": "none",
-        "artifacts": [],
-        "written_count": 0,
-        "written_paths": [],
         "invalidation_class": lookup_plan["class"],
         "unknown_fields": list(lookup_plan.get("unknown_fields") or []),
     }

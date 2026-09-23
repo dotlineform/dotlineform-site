@@ -210,8 +210,8 @@ export function updateWorkResourcesSection(state, options = {}) {
   const actionDisabled = state.isSaving || state.isBuilding || state.isDeleting || state.mode === "bulk";
   const addDisabled = !state.currentRecord || actionDisabled;
   state.resourcesResultsNode.innerHTML = `
-    <section class="catalogueWorkDetails__section">
-      <div class="catalogueWorkDetails__rows" data-role="catalogue-work-resources-list"></div>
+    <section class="catalogueWorkResources__section">
+      <div class="catalogueWorkResources__rows" data-role="catalogue-work-resources-list"></div>
     </section>
   `;
   const listRoot = state.resourcesResultsNode.querySelector('[data-role="catalogue-work-resources-list"]');

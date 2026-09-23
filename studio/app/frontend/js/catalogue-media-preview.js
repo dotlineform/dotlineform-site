@@ -39,7 +39,6 @@ export function loadCatalogueMediaConfig(root) {
   return {
     worksPrimaryBase: normalizeText(dataset.worksPrimaryBase),
     worksThumbBase: normalizeText(dataset.thumbWorksBase),
-    workDetailsThumbBase: normalizeText(dataset.thumbWorkDetailsBase),
     primaryDisplayWidth: Number(dataset.primaryDisplayWidth || 800) || 800,
     primaryFullWidth: Number(dataset.primaryFullWidth || dataset.primaryDisplayWidth || 1600) || 1600,
     primarySuffix: normalizeText(dataset.primarySuffix) || "primary",
@@ -76,20 +75,6 @@ export function buildWorkThumbPreview(config, workId) {
   return {
     src: joinAssetPath(config && config.worksThumbBase, stem, suffix, primarySize, format),
     srcset: buildSrcset((size) => joinAssetPath(config && config.worksThumbBase, stem, suffix, size, format), sizes),
-    width: primarySize,
-    height: primarySize
-  };
-}
-
-export function buildDetailThumbPreview(config, detailUid) {
-  const stem = normalizeText(detailUid);
-  const sizes = Array.isArray(config && config.thumbSizes) && config.thumbSizes.length ? config.thumbSizes : [96, 192];
-  const format = normalizeText(config && config.assetFormat) || "webp";
-  const suffix = normalizeText(config && config.thumbSuffix) || "thumb";
-  const primarySize = sizes[0];
-  return {
-    src: joinAssetPath(config && config.workDetailsThumbBase, stem, suffix, primarySize, format),
-    srcset: buildSrcset((size) => joinAssetPath(config && config.workDetailsThumbBase, stem, suffix, size, format), sizes),
     width: primarySize,
     height: primarySize
   };

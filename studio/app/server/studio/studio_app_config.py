@@ -46,13 +46,11 @@ STUDIO_MEDIA: dict[str, object] = {
     "thumbs": {
         "base": "",
         "works": "/studio/catalogue-output/works/thumbs",
-        "work_details": "/studio/catalogue-output/work_details/thumbs",
     },
     "media": {
         "base": "https://media.dotlineform.com",
         "works_images": "/works/img",
         "works_files": "/works/files",
-        "work_details_images": "/work_details/img",
     },
 }
 
@@ -64,7 +62,6 @@ STUDIO_SERVICE_ENDPOINTS: dict[str, object] = {
         "bulk_save": "/studio/api/catalogue/bulk-save",
         "delete_preview": "/studio/api/catalogue/delete-preview",
         "delete_apply": "/studio/api/catalogue/delete-apply",
-        "create_work_detail_section": "/studio/api/catalogue/work-detail-section/create",
         "create_work": "/studio/api/catalogue/work/create",
         "save_work": "/studio/api/catalogue/work/save",
         "create_series": "/studio/api/catalogue/series/create",

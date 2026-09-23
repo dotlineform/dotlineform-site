@@ -1,5 +1,4 @@
 import { saveCurrentWork } from "./catalogue-work-actions.js";
-import { catalogueOutputError, catalogueSavedActionError } from "./catalogue-output-result.js";
 import {
   getStudioText
 } from "./studio-config.js";
@@ -32,35 +31,18 @@ import {
 } from "./catalogue-editor-embedded-items.js";
 import {
   confirmWorkEmbeddedDeleteModal,
-  openWorkDetailSectionEditModal,
   openWorkEmbeddedEntryModal
 } from "./catalogue-work-editor-modals.js";
 import {
-  applyCatalogueDelete,
-  previewCatalogueDelete,
   readProjectMediaFiles,
   readProjectMediaFolders,
-  readWorkMediaSources,
-  saveCatalogueWorkDetailSection
+  readWorkMediaSources
 } from "./catalogue-editor-service-client.js";
-import {
-  formatCatalogueDeletePreview
-} from "./catalogue-editor-modal-formatters.js";
-import {
-  confirmCatalogueActionModal
-} from "./catalogue-editor-action-modals.js";
-import {
-  extractCatalogueActionPreview,
-  getCataloguePreviewBlocker
-} from "./catalogue-editor-action-workflow.js";
 import {
   renderWorkCurrentPreview,
   renderWorkReadiness,
   updateWorkSummary
 } from "./catalogue-work-sections.js";
-import {
-  updateWorkDetailBrowser
-} from "./catalogue-work-detail-browser.js";
 import { applyDraftToInputs, applyWorkMediaSourceConfig, applyReadonly, applyWorkFormText, clearReadonlyFields, getFieldNodeValue, renderWorkEditorFields, resolvedWorkMediaSourceId, setModeFieldAvailability, updateFieldMessages } from "./catalogue-work-form.js";
 import {
   initializeWorkRouteState,
@@ -134,160 +116,6 @@ async function deleteEmbeddedEntry(state, kind, index) {
   clearActionMessages(state);
   state.draft[result.entriesKey] = result.entries;
   updateEditorState(state);
-}
-
-async function editDetailSection(state, row, rows = []) {
-  if (!state.currentRecord || state.mode === "bulk" || !state.serverAvailable) return;
-  const sectionId = normalizeText(row && row.id);
-  if (!sectionId) return;
-  clearActionMessages(state);
-  const result = await openWorkDetailSectionEditModal(state, row, rows, {
-    text: (key, fallback, tokens) => t(state, key, fallback, tokens)
-  });
-  if (!result || !result.confirmed) return;
-  if (!result.changed) {
-    state.messageController.setActionTextWithState(
-      state.resultNode,
-      t(state, "detail_section_edit_status_unchanged", "Detail section already matches the current values."),
-      "info"
-    );
-    return;
-  }
-  state.isSaving = true;
-  syncWorkRouteBusyState(state);
-  renderEditorMessage(state);
-  state.messageController.setActionTextWithState(
-    state.statusNode,
-    t(state, "detail_section_edit_status_saving", "Saving detail section..."),
-    "info"
-  );
-  state.messageController.setActionTextWithState(state.resultNode, "");
-  let savedResponse = null;
-  try {
-    const response = await saveCatalogueWorkDetailSection({
-      work_id: state.currentWorkId,
-      ...(result.payload || {}),
-      expected_record_hash: state.currentLookup.detail_sections.find(section => section.section_id === sectionId)?.record_hash
-    });
-    savedResponse = response;
-    state.currentLookup = await loadWorkLookupRecord(state, state.currentWorkId);
-    state.detailBrowserSelectedSectionId = sectionId;
-    updateSummary(state);
-    state.messageController.setActionTextWithState(
-      state.resultNode,
-      t(state, "detail_section_edit_status_saved", "Saved detail section {section_id}.", {
-        section_id: sectionId
-      }),
-      "success"
-    );
-    state.messageController.setActionTextWithState(state.statusNode, "");
-    const outputError = catalogueOutputError(response);
-    if (outputError) state.messageController.setActionTextWithState(state.resultNode, outputError, "error");
-  } catch (error) {
-    state.messageController.setActionTextWithState(
-      state.statusNode,
-      catalogueSavedActionError(savedResponse, error) || `${t(state, "detail_section_edit_status_failed", "Detail section save failed.")} ${normalizeText(error && error.message)}`.trim(),
-      "error"
-    );
-  } finally {
-    state.isSaving = false;
-    syncWorkRouteBusyState(state);
-    renderEditorMessage(state);
-  }
-}
-
-async function deleteDetailSection(state, row) {
-  if (!state.currentRecord || state.mode === "bulk" || !state.serverAvailable) return;
-  const sectionId = normalizeText(row && row.id);
-  if (!sectionId) return;
-  const restoreFocus = document.activeElement instanceof HTMLElement
-    ? document.activeElement
-    : state.detailBrowserSectionActionsNode;
-  state.isDeleting = true;
-  syncWorkRouteBusyState(state);
-  renderEditorMessage(state);
-  state.messageController.setActionTextWithState(
-    state.statusNode,
-    t(state, "detail_section_delete_status_running", "Preparing detail section delete preview..."),
-    "info"
-  );
-  state.messageController.setActionTextWithState(state.resultNode, "");
-  const request = {
-    kind: "work_detail_section",
-    section_id: sectionId,
-    expected_record_hash: state.currentLookup.detail_sections.find(section => section.section_id === sectionId)?.record_hash
-  };
-  let savedResponse = null;
-  try {
-    const previewResponse = await previewCatalogueDelete(request);
-    const preview = extractCatalogueActionPreview(previewResponse);
-    const blocker = getCataloguePreviewBlocker(preview, {
-      includeValidationErrors: true,
-      fallback: t(state, "detail_section_delete_status_blocked", "Detail section delete is blocked.")
-    });
-    if (blocker) {
-      state.messageController.setActionTextWithState(state.statusNode, blocker, "error");
-      return;
-    }
-    const summary = formatCatalogueDeletePreview(preview, {
-      text: (key, fallback, tokens) => t(state, key, fallback, tokens),
-      defaultText: "Delete this detail section?"
-    });
-    state.isDeleting = false;
-    syncWorkRouteBusyState(state);
-    renderEditorMessage(state);
-    const confirmed = await confirmCatalogueActionModal(state, {
-      title: t(state, "detail_section_delete_confirm_title", "Confirm detail section delete"),
-      message: summary,
-      primaryLabel: t(state, "detail_section_delete_confirm_button", "Delete"),
-      cancelLabel: t(state, "confirm_cancel_button", "Cancel"),
-      defaultAction: "cancel",
-      restoreFocus
-    });
-    if (!confirmed) {
-      state.messageController.setActionTextWithState(
-        state.statusNode,
-        t(state, "detail_section_delete_status_cancelled", "Detail section delete cancelled.")
-      );
-      return;
-    }
-    state.isDeleting = true;
-    syncWorkRouteBusyState(state);
-    renderEditorMessage(state);
-    state.messageController.setActionTextWithState(
-      state.statusNode,
-      t(state, "detail_section_delete_status_deleting", "Deleting detail section..."),
-      "info"
-    );
-    const response = await applyCatalogueDelete(request);
-    savedResponse = response;
-    state.currentLookup = await loadWorkLookupRecord(state, state.currentWorkId);
-    state.detailBrowserSelectedSectionId = "";
-    state.detailBrowserSelectedDetailUid = "";
-    updateSummary(state);
-    {
-      state.messageController.setActionTextWithState(
-        state.resultNode,
-        t(state, "detail_section_delete_status_deleted", "Deleted detail section {section_id}.", {
-          section_id: sectionId
-        }),
-        "success"
-      );
-      state.messageController.setActionTextWithState(state.statusNode, "");
-      const outputError = catalogueOutputError(response);
-      if (outputError) state.messageController.setActionTextWithState(state.resultNode, outputError, "error");
-    }
-  } catch (error) {
-    state.messageController.setActionTextWithState(
-      state.statusNode,
-      catalogueSavedActionError(savedResponse, error) || `${t(state, "detail_section_delete_status_failed", "Detail section delete failed.")} ${normalizeText(error && error.message)}`.trim(),
-      "error"
-    );
-  } finally {
-    state.isDeleting = false;
-    syncWorkRouteBusyState(state);
-    renderEditorMessage(state);
-  }
 }
 
 function draftHasChanges(state) {
@@ -496,8 +324,6 @@ function workSectionOptions(state) {
   return {
     text: (key, fallback, tokens) => t(state, key, fallback, tokens),
     draftHasChanges,
-    editDetailSection: (row, rows) => editDetailSection(state, row, rows),
-    deleteDetailSection: (row) => deleteDetailSection(state, row),
     openEmbeddedEntryModal: (kind, index) => openEmbeddedEntryModal(state, kind, index),
     deleteEmbeddedEntry: (kind, index) => deleteEmbeddedEntry(state, kind, index),
     setTextWithState: (node, text, tone) => state.messageController.setActionTextWithState(node, text, tone)
@@ -512,19 +338,13 @@ function renderReadiness(state) {
   renderWorkReadiness(state, workSectionOptions(state));
 }
 
-function updateDetailBrowser(state) {
-  updateWorkDetailBrowser(state, workSectionOptions(state));
-}
-
 function updateSummary(state) {
-  updateDetailBrowser(state);
   updateWorkSummary(state, workSectionOptions(state));
 }
 
 function applyWorkEditorText(state, elements) {
   setOpenInputMode(state);
   applyWorkFormText(state, workFormOptions(state));
-  elements.detailBrowserSearchNode.placeholder = t(state, "detail_browser_search_placeholder", "find detail id");
   elements.openButton.textContent = t(state, "open_button", "Open");
   elements.newButton.textContent = t(state, "new_button", "New");
   elements.saveButton.textContent = t(state, "save_button", "Save");
@@ -538,7 +358,6 @@ async function configureWorkEditorRuntime(state, elements) {
       applyCatalogueEditorMediaAttrs(elements.root, config, [
         "worksPrimaryBase",
         "thumbWorksBase",
-        "thumbWorkDetailsBase",
         "primaryDisplayWidth",
         "primaryFullWidth",
         "primarySuffix",
@@ -605,7 +424,6 @@ async function init() {
     bindWorkEditorEvents(state, {
       bindSelectionControls: () => bindWorkSelectionControls(state, workSelectionOptions(state)),
       renderEditorMessage: () => renderEditorMessage(state),
-      updateWorkDetailBrowser: () => updateDetailBrowser(state),
       openEmbeddedEntryModal: (kind, index) => openEmbeddedEntryModal(state, kind, index),
       deleteEmbeddedEntry: (kind, index) => deleteEmbeddedEntry(state, kind, index),
       setNewWorkMode: () => setNewWorkMode(state, workRouteStateOptions(state)),

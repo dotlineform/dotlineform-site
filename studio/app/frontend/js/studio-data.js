@@ -8,8 +8,7 @@ const CATALOGUE_SERVER_READ_KEYS = new Set([
   "catalogue_lookup_work_search",
   "catalogue_lookup_series_search",
   "catalogue_lookup_series_base",
-  "catalogue_work_record",
-  "catalogue_work_detail_record"
+  "catalogue_work_record"
 ]);
 
 export async function fetchJson(url, options = {}) {

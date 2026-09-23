@@ -202,7 +202,6 @@ export function setNewWorkMode(state, options = {}) {
   state.searchNode.value = state.draft.work_id;
   state.searchNode.placeholder = text(options, "new_work_id_placeholder", "new work id");
   state.searchNode.setAttribute("aria-label", text(options, "new_work_id_label", "New work id"));
-  state.detailBrowserSearchNode.value = "";
   clearBuildState(state);
   callback(options, "applyDraftToInputs");
   callback(options, "clearReadonlyFields");
@@ -230,7 +229,6 @@ export function setEmptySearchMode(state, options = {}) {
   });
   state.draft.downloads = [];
   state.draft.links = [];
-  state.detailBrowserSearchNode.value = "";
   clearBuildState(state);
   callback(options, "setOpenInputMode");
   if (!options.keepSearchValue) {

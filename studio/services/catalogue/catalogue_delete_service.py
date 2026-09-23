@@ -8,7 +8,7 @@ from typing import Any, Mapping
 from catalogue import catalogue_delete_plans
 from catalogue.catalogue_revisions import require_record_revision
 from catalogue import catalogue_transactions as transactions
-from catalogue.catalogue_source import normalize_detail_uid_value, normalize_text, slug_id
+from catalogue.catalogue_source import slug_id
 from catalogue.catalogue_service_context import CatalogueWriteContext, utc_now
 from catalogue.series_ids import normalize_series_id
 
@@ -51,16 +51,10 @@ def delete_apply_response(
 
 def extract_delete_request(body: Mapping[str, Any]) -> dict[str, str]:
     kind = str(body.get("kind") or "").strip().lower()
-    if kind not in {"work", "work_detail", "work_detail_section", "series"}:
-        raise ValueError("delete kind must be work, work_detail, work_detail_section, or series")
+    if kind not in {"work", "series"}:
+        raise ValueError("delete kind must be work or series")
     if kind == "work":
         record_id = slug_id(body.get("work_id") or body.get("id"))
-    elif kind == "work_detail":
-        record_id = normalize_detail_uid_value(body.get("detail_uid") or body.get("id"))
-    elif kind == "work_detail_section":
-        record_id = normalize_text(body.get("section_id") or body.get("id"))
-        if not record_id:
-            raise ValueError("section_id is required")
     elif kind == "series":
         record_id = normalize_series_id(body.get("series_id") or body.get("id"))
     return {
