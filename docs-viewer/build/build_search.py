@@ -36,34 +36,28 @@ for path in (BUILD_DIR, DOCS_SERVICES_DIR, SHARED_PYTHON_DIR):
         sys.path.insert(0, str(path))
 
 from build_docs import (  # noqa: E402
-    FrontMatterSyntaxError,
     HTML_MEDIA_TOKEN_PATTERN,
     MEDIA_TOKEN_PATTERN,
-    extract_title,
-    humanize,
 )
+from docs_builder.common import DOCS_INDEX_TREE_SCHEMA_VERSION  # noqa: E402
 from docs_builder.semantic_tokens import replace_semantic_tokens  # noqa: E402
-from docs_builder.source import parse_source_text  # noqa: E402
 from docs_workspace_config import (  # noqa: E402
     DocsCollectionConfig,
-    document_source_path,
+    DocsStageConfig,
     load_docs_stage,
     generated_documents_path,
     generated_search_path,
     resolve_workspace_path,
 )
-from docs_document_location import collection_report_placement  # noqa: E402
 from docs_document_identity import is_immutable_doc_id  # noqa: E402
+from docs_publication_ignore import read_publication_ignore_ids  # noqa: E402
 from docs_report_source import (  # noqa: E402
     ReportDescriptor,
-    ReportSourceContractRequired,
     project_report_markdown,
 )
 from docs_source_model import (  # noqa: E402
+    SourceDoc,
     load_document_collection_docs_for_config,
-    parse_document_report,
-    report_source_contract_for_collection,
-    validate_document_status_front_matter,
 )
 from markdown_renderer import extract_markdown_search_fields  # noqa: E402
 
@@ -290,7 +284,8 @@ def relative_path(path: Path | None, repo_root: Path) -> str:
 class DocsViewerSearchDataBuilder:
     """Build the Working source corpus; downstream snapshots copy its index.
 
-    The selected configuration owns source/output paths and child placements.
+    Working tree and management metadata select eligible IDs before any content
+    reads. Configuration owns collection coverage and exact host placements.
     The index contains document identity and searchable data; readers own routes.
     """
 
@@ -308,7 +303,6 @@ class DocsViewerSearchDataBuilder:
         self.content_search_enabled = bool(
             SEARCH_V2_CONTENT_FIELDS.intersection(self.config.search_fields)
         )
-        self.report_source_contract = None
         self.output_path = self.resolve_path(output_path or generated_search_path(self.config))
 
     def run(
@@ -325,74 +319,121 @@ class DocsViewerSearchDataBuilder:
             return None
         return resolve_workspace_path(self.repo_root, Path(path))
 
-    def load_source_docs(self) -> list[SearchDocRecord]:
-        source_dir = resolve_workspace_path(self.repo_root, document_source_path(self.config))
-        paths = sorted(source_dir.glob("**/*.md"))
-        nested_paths = [path for path in paths if path.parent != source_dir]
-        if nested_paths:
-            nested = ", ".join(path.relative_to(source_dir).as_posix() for path in nested_paths)
-            raise SystemExit(f"Nested markdown docs are not supported under {source_dir}; move these files to the collection root: {nested}")
+    def read_metadata(self, path: Path) -> dict[str, Any]:
+        """Require current Working metadata; never fall back to source discovery."""
+        try:
+            payload = json.loads(path.read_text(encoding="utf-8"))
+        except (OSError, ValueError) as exc:
+            raise ValueError(f"Docs Viewer search requires readable Working metadata: {path}") from exc
+        if not isinstance(payload, dict) or not isinstance(payload.get("docs"), list):
+            raise ValueError(f"Docs Viewer search metadata docs must be an array: {path}")
+        return payload
 
-        raw_records: list[dict[str, Any]] = []
-        for path in paths:
-            source_text = path.read_text(encoding="utf-8")
-            source_name = path.relative_to(source_dir).as_posix()
-            try:
-                front_matter, body_markdown = parse_source_text(
-                    source_text,
-                    source_name=source_name,
-                )
-            except FrontMatterSyntaxError as exc:
-                raise SystemExit(str(exc)) from exc
-            stem = path.stem
-            doc_id = normalize_text(front_matter.get("doc_id") or stem)
-            title = normalize_text(front_matter.get("title") or extract_title(body_markdown) or humanize(stem))
-            if not doc_id or not title:
+    def validate_metadata_row(self, row: Any, *, field: str, seen_ids: set[str]) -> str:
+        if not isinstance(row, dict):
+            raise ValueError(f"{field} must be an object")
+        doc_id = row.get("doc_id")
+        if not isinstance(doc_id, str) or not is_immutable_doc_id(doc_id) or doc_id != doc_id.strip():
+            raise ValueError(f"{field}.doc_id must use exact immutable document identity")
+        if doc_id in seen_ids:
+            raise ValueError(f"{field} contains duplicate doc_id {doc_id!r}")
+        seen_ids.add(doc_id)
+        if not isinstance(row.get("title"), str) or not row["title"].strip():
+            raise ValueError(f"{field}.title must not be empty")
+        if not isinstance(row.get("draft"), bool):
+            raise ValueError(f"{field}.draft must be an explicit boolean")
+        return doc_id
+
+    def select_ordinary_docs(self, ignored_ids: frozenset[str]) -> dict[str, dict[str, Any]]:
+        """Prune draft and unpublishable ordinary branches in one tree traversal."""
+        path = resolve_workspace_path(self.repo_root, generated_documents_path(self.config)) / "index-tree.json"
+        tree = self.read_metadata(path)
+        if tree.get("schema") != DOCS_INDEX_TREE_SCHEMA_VERSION:
+            raise ValueError(f"Docs Viewer search requires {DOCS_INDEX_TREE_SCHEMA_VERSION}: {path}")
+        selected: dict[str, dict[str, Any]] = {}
+        seen_ids: set[str] = set()
+
+        def visit(rows: list[Any], parent_id: str) -> None:
+            for row in rows:
+                doc_id = self.validate_metadata_row(row, field=str(path), seen_ids=seen_ids)
+                if row["draft"] or doc_id in ignored_ids:
+                    continue
+                selected[doc_id] = {**row, "parent_id": parent_id}
+                children = row.get("children", [])
+                if not isinstance(children, list):
+                    raise ValueError(f"{path}: children must be an array for {doc_id}")
+                visit(children, doc_id)
+
+        visit(tree["docs"], "")
+        return selected
+
+    def select_collection_docs(
+        self, ordinary_ids: set[str],
+    ) -> list[tuple[DocsCollectionConfig, dict[str, dict[str, Any]]]]:
+        """Read only included, eligible-host manifests and filter their flat entries."""
+        selections = []
+        for collection in sorted(self.config.site_search_collections, key=lambda item: item.collection):
+            if collection.report_host_doc_id not in ordinary_ids:
                 continue
-            try:
-                validate_document_status_front_matter(
-                    front_matter,
-                    collection_config=self.config,
-                    source_name=source_name,
-                )
-            except ValueError as exc:
-                raise SystemExit(str(exc)) from exc
-            try:
-                try:
-                    report = parse_document_report(
-                        source_text,
-                        front_matter,
-                        body_markdown,
-                        source_name=source_name,
-                        contract=self.report_source_contract,
-                    )
-                except ReportSourceContractRequired:
-                    self.report_source_contract = report_source_contract_for_collection(
-                        self.repo_root,
-                        self.config,
-                        self.config,
-                    )
-                    report = parse_document_report(
-                        source_text,
-                        front_matter,
-                        body_markdown,
-                        source_name=source_name,
-                        contract=self.report_source_contract,
-                    )
-            except ValueError as exc:
-                raise SystemExit(str(exc)) from exc
-            raw_records.append(
-                {
-                    "doc_id": doc_id,
-                    "title": title,
-                    "summary": normalize_text(front_matter.get("summary")),
-                    "last_updated": normalize_text(front_matter.get("last_updated")),
-                    "parent_id": normalize_text(front_matter.get("parent_id") if "parent_id" in front_matter else ""),
-                    "body_markdown": body_markdown,
-                    "report": report,
-                }
+            path = resolve_workspace_path(self.repo_root, generated_documents_path(collection)) / "manage-manifest.json"
+            manifest = self.read_metadata(path)
+            selected: dict[str, dict[str, Any]] = {}
+            seen_ids: set[str] = set()
+            for index, row in enumerate(manifest["docs"]):
+                field = f"{path}.docs[{index}]"
+                doc_id = self.validate_metadata_row(row, field=field, seen_ids=seen_ids)
+                if row["draft"]:
+                    continue
+                if not isinstance(row.get("last_updated"), str):
+                    raise ValueError(f"{field}.last_updated must be a string")
+                selected[doc_id] = row
+            selections.append((collection, selected))
+        return selections
+
+    def load_selected_sources(
+        self, config: DocsStageConfig | DocsCollectionConfig, selected: dict[str, dict[str, Any]],
+    ) -> dict[str, SourceDoc]:
+        """Load exact selected IDs and fail on missing or stale selected sources.
+
+        The shared filename loader omits deleted files for watcher use. Search
+        requires every selected file and does not infer replacements or scan.
+        """
+        if not selected:
+            return {}
+        sources = load_document_collection_docs_for_config(
+            self.repo_root, self.config, config,
+            filenames=[f"{doc_id}.md" for doc_id in selected],
+        )
+        source_by_id = {document.doc_id: document for document in sources}
+        for doc_id, row in selected.items():
+            document = source_by_id.get(doc_id)
+            target = f"working/{getattr(config, 'collection', 'documents')}/{doc_id}"
+            if document is None:
+                raise ValueError(f"Search selected document has no source: {target}")
+            if (
+                document.front_matter.get("doc_id") != doc_id
+                or normalize_text(document.title) != normalize_text(row["title"])
+                or document.front_matter["draft"] is not False
+            ):
+                raise ValueError(f"Search metadata and source identity, title or draft are stale: {target}")
+            if isinstance(config, DocsStageConfig) and document.parent_id != row["parent_id"]:
+                raise ValueError(f"Search tree and source parent_id are stale: {target}")
+        return source_by_id
+
+    def load_source_docs(self, selected: dict[str, dict[str, Any]]) -> list[SearchDocRecord]:
+        source_by_id = self.load_selected_sources(self.config, selected)
+        return [
+            SearchDocRecord(
+                doc_id=doc_id,
+                title=normalize_text(row["title"]),
+                last_updated=normalize_text(source_by_id[doc_id].front_matter.get("last_updated")),
+                parent_id=row["parent_id"],
+                summary=normalize_text(source_by_id[doc_id].front_matter.get("summary")),
+                body_markdown=source_by_id[doc_id].body,
+                report=source_by_id[doc_id].report,
             )
-        return self.search_records_from_source_rows(raw_records)
+            for doc_id, row in selected.items()
+        ]
 
     def viewer_url_for(self, doc_id: str) -> str:
         """Resolve generated by-ID input URLs for source/output consistency checks."""
@@ -401,67 +442,19 @@ class DocsViewerSearchDataBuilder:
         pairs.append(f"doc={quote(str(doc_id))}")
         return f"/docs/?{'&'.join(pairs)}"
 
-    def search_records_from_source_rows(self, rows: list[dict[str, Any]]) -> list[SearchDocRecord]:
-        all_doc_ids = {normalize_text(row.get("doc_id")) for row in rows if isinstance(row, dict)}
-        records: list[SearchDocRecord] = []
-        for row in rows:
-            if not isinstance(row, dict):
-                continue
-            doc_id = normalize_text(row.get("doc_id"))
-            title = normalize_text(row.get("title"))
-            if not doc_id or not title:
-                continue
-            parent_id = normalize_text(row.get("parent_id"))
-            if parent_id and parent_id not in all_doc_ids:
-                parent_id = ""
-            records.append(
-                SearchDocRecord(
-                    doc_id=doc_id,
-                    title=title,
-                    last_updated=normalize_text(row.get("last_updated")),
-                    parent_id=parent_id,
-                    summary=normalize_text(row.get("summary")),
-                    body_markdown=str(row.get("body_markdown") or ""),
-                    report=row.get("report") if isinstance(row.get("report"), ReportDescriptor) else None,
-                )
-            )
-        return records
-
-    def hidden_doc_ids(self, docs: list[Any]) -> set[str]:
-        roots = [
-            normalize_text(value)
-            for value in self.config.manage_only_tree_root_ids
-        ]
-        roots = [value for value in roots if value]
-        if not roots:
-            return set()
-        by_parent: dict[str, list[str]] = {}
-        for row in docs:
-            if not isinstance(row, dict):
-                continue
-            doc_id = normalize_text(row.get("doc_id"))
-            parent_id = normalize_text(row.get("parent_id"))
-            if doc_id and parent_id:
-                by_parent.setdefault(parent_id, []).append(doc_id)
-        manage_only = set(roots)
-        queue = list(roots)
-        while queue:
-            current = queue.pop(0)
-            for child_id in by_parent.get(current, []):
-                if child_id in manage_only:
-                    continue
-                manage_only.add(child_id)
-                queue.append(child_id)
-        return manage_only
-
     def build_docs_v2_payload(
         self,
         *,
         generated_at_utc: str | None = None,
     ) -> dict[str, Any]:
-        docs = self.load_source_docs()
+        ignored_ids = read_publication_ignore_ids(self.repo_root)
+        ordinary_selection = self.select_ordinary_docs(ignored_ids)
+        collection_selections = self.select_collection_docs(set(ordinary_selection))
+        docs = self.load_source_docs(ordinary_selection)
         title_by_id = {doc.doc_id: doc.title for doc in docs}
-        combined_docs = [*docs, *self.load_collection_docs(docs)]
+        combined_docs = list(docs)
+        for collection, selected in collection_selections:
+            combined_docs.extend(self.load_named_collection_docs(collection, selected))
         records: list[dict[str, Any]] = []
         for doc in combined_docs:
             parent_title = "" if not doc.parent_id else normalize_text(title_by_id.get(doc.parent_id))
@@ -504,91 +497,27 @@ class DocsViewerSearchDataBuilder:
             generated_at_utc=generated_at_utc,
         )
 
-    def load_collection_docs(
-        self,
-        parent_docs: list[SearchDocRecord],
-    ) -> list[SearchDocRecord]:
-        """Load the manifest-owned child corpus for every exact visible placement."""
-
-        eligible_parent_doc_ids = {document.doc_id for document in parent_docs}
-        records: list[SearchDocRecord] = []
-        for collection in sorted(
-            self.config.collections,
-            key=lambda item: item.collection,
-        ):
-            try:
-                _config, _collection, report_doc_id = collection_report_placement(
-                    self.repo_root,
-                    collection.collection,
-                    eligible_parent_doc_ids=eligible_parent_doc_ids,
-                    stage=self.config.stage,
-                )
-                records.extend(
-                    self.load_named_collection_docs(
-                        collection,
-                        report_doc_id=report_doc_id,
-                    )
-                )
-            except (OSError, ValueError) as exc:
-                raise SystemExit(str(exc)) from exc
-        return records
-
     def load_named_collection_docs(
         self,
         collection: DocsCollectionConfig,
-        *,
-        report_doc_id: str,
+        selected: dict[str, dict[str, Any]],
     ) -> list[SearchDocRecord]:
+        """Retain selected subdoc source/manifest/by-ID consistency before indexing."""
         output_root = resolve_workspace_path(
             self.repo_root,
             generated_documents_path(collection),
         )
-        manifest_path = output_root / "manage-manifest.json"
-        try:
-            manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
-        except (OSError, json.JSONDecodeError) as exc:
-            raise ValueError(
-                f"Docs Viewer search requires readable collection manifest: {manifest_path}"
-            ) from exc
-        manifest_rows = manifest.get("docs") if isinstance(manifest, dict) else None
-        if not isinstance(manifest_rows, list):
-            raise ValueError(
-                f"Docs Viewer search collection manifest docs must be an array: {manifest_path}"
-            )
-
-        source_docs = load_document_collection_docs_for_config(
-            self.repo_root,
-            self.config,
-            collection,
-        )
-        source_by_id = {document.doc_id: document for document in source_docs}
-        seen_doc_ids: set[str] = set()
+        source_by_id = self.load_selected_sources(collection, selected)
+        report_doc_id = collection.report_host_doc_id
         collection_title = normalize_text(collection.title)
         records: list[SearchDocRecord] = []
-        for index, raw_row in enumerate(manifest_rows):
-            field = f"{manifest_path}.docs[{index}]"
-            if not isinstance(raw_row, dict):
-                raise ValueError(f"{field} must be an object")
-            doc_id = normalize_text(raw_row.get("doc_id"))
-            title = normalize_text(raw_row.get("title"))
-            if not is_immutable_doc_id(doc_id):
-                raise ValueError(f"{field}.doc_id must use immutable document identity")
-            if not title:
-                raise ValueError(f"{field}.title must not be empty")
-            if doc_id in seen_doc_ids:
-                raise ValueError(f"{manifest_path} contains duplicate doc_id {doc_id!r}")
-            seen_doc_ids.add(doc_id)
-
-            source_doc = source_by_id.get(doc_id)
-            if source_doc is None:
-                raise ValueError(
-                    f"collection manifest document {self.config.stage}/{collection.collection}/{doc_id} "
-                    "has no source document"
-                )
+        for doc_id, row in selected.items():
+            title = normalize_text(row["title"])
+            source_doc = source_by_id[doc_id]
             by_id_path = output_root / "by-id" / f"{doc_id}.json"
             try:
                 by_id = json.loads(by_id_path.read_text(encoding="utf-8"))
-            except (OSError, json.JSONDecodeError) as exc:
+            except (OSError, ValueError) as exc:
                 raise ValueError(
                     f"Docs Viewer search requires readable collection by-id payload: {by_id_path}"
                 ) from exc
@@ -596,25 +525,27 @@ class DocsViewerSearchDataBuilder:
                 raise ValueError(f"collection by-id payload must be an object: {by_id_path}")
 
             expected_url = f"{self.viewer_url_for(report_doc_id)}&subdoc={quote(doc_id)}"
-            source_title = normalize_text(source_doc.title)
             by_id_title = normalize_text(by_id.get("title"))
-            if title != source_title or title != by_id_title:
+            if title != by_id_title:
                 raise ValueError(
                     f"collection manifest, source, and by-id titles must match for "
                     f"{self.config.stage}/{collection.collection}/{doc_id}"
                 )
             if (
-                normalize_text(by_id.get("doc_id")) != doc_id
-                or normalize_text(by_id.get("viewer_url")) != expected_url
+                by_id.get("doc_id") != doc_id
+                or by_id.get("viewer_url") != expected_url
             ):
                 raise ValueError(
                     f"collection by-id identity or viewer_url is stale for "
                     f"{self.config.stage}/{collection.collection}/{doc_id}"
                 )
             last_updated = normalize_text(by_id.get("last_updated"))
-            if last_updated != normalize_text(source_doc.front_matter.get("last_updated")):
+            if (
+                last_updated != normalize_text(source_doc.front_matter.get("last_updated"))
+                or last_updated != normalize_text(row["last_updated"])
+            ):
                 raise ValueError(
-                    f"collection source and by-id last_updated must match for "
+                    f"collection manifest, source and by-id last_updated must match for "
                     f"{self.config.stage}/{collection.collection}/{doc_id}"
                 )
             records.append(
@@ -708,15 +639,18 @@ def main(argv: list[str] | None = None) -> int:
     args = parse_args(argv or sys.argv[1:])
     apply_workspace_overrides(args)
     repo_root = Path.cwd().resolve()
-    builder = DocsViewerSearchDataBuilder(
-        repo_root=repo_root,
-        stage=args.stage,
-        output_path=Path(args.output) if args.output else None,
-    )
-    builder.run(
-        write=args.write,
-        force=args.force,
-    )
+    try:
+        builder = DocsViewerSearchDataBuilder(
+            repo_root=repo_root,
+            stage=args.stage,
+            output_path=Path(args.output) if args.output else None,
+        )
+        builder.run(
+            write=args.write,
+            force=args.force,
+        )
+    except (OSError, ValueError) as exc:
+        raise SystemExit(f"Search build failed: {exc}") from exc
     return 0
 
 

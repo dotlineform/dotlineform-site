@@ -86,6 +86,7 @@
       "collections": [
         {
           "collection": "works",
+          "include_in_site_search": true,
           "title": "Works",
           "report_host_doc_id": "d-20260801-073826-8865a8",
           "collection_customisation": {
@@ -100,12 +101,14 @@
         },
         {
           "collection": "concepts",
+          "include_in_site_search": false,
           "title": "Concepts",
           "report_host_doc_id": "d-20260624-213316-478639",
           "supports_return_import": true
         },
         {
           "collection": "processing",
+          "include_in_site_search": true,
           "title": "Processing",
           "report_host_doc_id": "d-20260901-103244-09e720",
           "collection_customisation": {
@@ -120,6 +123,7 @@
         },
         {
           "collection": "moments",
+          "include_in_site_search": false,
           "title": "Moments",
           "report_host_doc_id": "d-20260907-180859-c425b2",
           "lifecycle": {
@@ -130,6 +134,7 @@
         },
         {
           "collection": "catalogue",
+          "include_in_site_search": false,
           "title": "catalogue",
           "report_host_doc_id": "d-20260916-161504-f8c947",
           "lifecycle": {

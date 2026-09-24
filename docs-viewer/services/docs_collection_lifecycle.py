@@ -66,6 +66,7 @@ def planned_collection_config_record(collection: str, title: str, lifecycle: dic
         "collection": collection,
         "title": title,
         "report_host_doc_id": lifecycle["report_host_doc_id"],
+        "include_in_site_search": False,
         "lifecycle": lifecycle,
     }
 
