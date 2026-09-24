@@ -51,7 +51,6 @@ import {
 } from "./docs-viewer-index-selection.js";
 
 var MANAGEMENT_TEXT = {
-  clearSearchNote: "Clear search to manage the current doc.",
   unavailableNote: "Docs management service unavailable."
 };
 
@@ -405,14 +404,6 @@ export function initDocsViewerManagement(context) {
     if (interactionController) interactionController.updateNavDragState();
   }
 
-  function managementNoteText() {
-    if (management.managementMessage) return management.managementMessage;
-    if (searchRecent.searchRouteActive) {
-      return MANAGEMENT_TEXT.clearSearchNote;
-    }
-    return "";
-  }
-
   function syncManagementStatus(noteText, isError) {
     var text = String(noteText || "");
     var hasManagementStatus = Boolean(text);
@@ -642,7 +633,7 @@ export function initDocsViewerManagement(context) {
       noteText = management.managementCapabilityError || MANAGEMENT_TEXT.unavailableNote;
       noteIsError = true;
     } else {
-      noteText = managementNoteText();
+      noteText = management.managementMessage || "";
       noteIsError = management.managementMessageIsError;
     }
     syncManagementStatus(noteText, noteIsError);
