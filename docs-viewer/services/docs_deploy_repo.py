@@ -366,12 +366,10 @@ def project_public_search(
     docs = payload.get("docs")
     if (
         not isinstance(header, dict)
-        or header.get("schema") != "docs_viewer_search_index_v3"
-        or "scope" in header
-        or header.get("stage") != "published"
+        or header.get("schema") != "docs_viewer_search_index_v4"
         or not isinstance(docs, list)
     ):
-        raise ValueError("accepted Search has the wrong schema or public identity")
+        raise ValueError("accepted Search has an unsupported schema")
     public_titles = {
         collection.collection: collection.public_title
         for collection in config.collections
@@ -404,7 +402,6 @@ def project_public_search(
     projected = {**payload, "docs": projected_docs}
     version_payload = {
         "schema": header["schema"],
-        "stage": header["stage"],
         "fields": projected.get("fields", []),
         "docs": projected_docs,
         "terms": projected.get("terms", {}),

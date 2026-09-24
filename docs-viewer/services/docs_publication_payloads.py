@@ -2,9 +2,7 @@
 
 from __future__ import annotations
 
-import hashlib
 import html
-import json
 import re
 from pathlib import Path
 from typing import Any
@@ -20,7 +18,7 @@ from docs_workspace_config import (
 
 
 def project_public_view(config: DocsWorkspaceConfig, payload: dict[str, Any]) -> dict[str, Any]:
-    """Project accepted local URLs to the configured public section and assets."""
+    """Project accepted local URLs; Search passes through with reader-owned routes."""
     def asset_url(path: Path | None) -> str:
         if path is None or not path.parts or path.parts[0] != "site":
             raise ValueError("Public document destinations must remain beneath site/")
@@ -62,6 +60,9 @@ def project_public_view(config: DocsWorkspaceConfig, payload: dict[str, Any]) ->
 
     def project(value: Any) -> Any:
         if isinstance(value, dict):
+            header = value.get("header")
+            if isinstance(header, dict) and header.get("schema") == "docs_viewer_search_index_v4":
+                return value
             return {key: "published" if key in {"stage", "source_stage"} and item == "preview" else project(item) for key, item in value.items()}
         if isinstance(value, list):
             return [project(item) for item in value]
@@ -80,11 +81,11 @@ def project_public_view(config: DocsWorkspaceConfig, payload: dict[str, Any]) ->
             return re.sub(r"(\b(?:href|src)\s*=\s*)([\"'])(.*?)\2", attribute, match[0], flags=re.IGNORECASE | re.DOTALL)
         return re.sub(r"<[^>]+>", tag, value)
 
-    return refresh_search_version(project(payload))
+    return project(payload)
 
 
 def project_preview_view(config: DocsWorkspaceConfig, payload: dict[str, Any]) -> dict[str, Any]:
-    """Project prepared payload identities and URLs into the Preview snapshot."""
+    """Project prepared document routes into Preview, leaving Search data unchanged."""
     def project_url(value: str) -> str:
         parsed = urlsplit(html.unescape(value))
         if parsed.scheme or parsed.netloc or not parsed.path.startswith("/"):
@@ -108,6 +109,9 @@ def project_preview_view(config: DocsWorkspaceConfig, payload: dict[str, Any]) -
 
     def project(value: Any) -> Any:
         if isinstance(value, dict):
+            header = value.get("header")
+            if isinstance(header, dict) and header.get("schema") == "docs_viewer_search_index_v4":
+                return value
             return {key: project(item) for key, item in value.items()}
         if isinstance(value, list):
             return [project(item) for item in value]
@@ -126,18 +130,4 @@ def project_preview_view(config: DocsWorkspaceConfig, payload: dict[str, Any]) -
             return re.sub(r"(\b(?:href|src)\s*=\s*)([\"'])(.*?)\2", attribute, match[0], flags=re.IGNORECASE | re.DOTALL)
         return re.sub(r"<[^>]+>", tag, value)
 
-    return refresh_search_version(project(payload))
-
-
-def refresh_search_version(payload: dict[str, Any]) -> dict[str, Any]:
-    """Refresh the content receipt after projecting Search identity or URLs."""
-    header = payload.get("header")
-    if isinstance(header, dict) and header.get("schema") == "docs_viewer_search_index_v3":
-        version_payload = {
-            "schema": header["schema"], "stage": header["stage"],
-            "fields": payload["fields"], "docs": payload["docs"], "terms": payload["terms"],
-        }
-        canonical = json.dumps(version_payload, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8")
-        version = hashlib.blake2b(canonical, digest_size=64).digest()[:16].hex()
-        payload["header"] = {**header, "version": f"blake2b-{version}"}
-    return payload
+    return project(payload)

@@ -57,10 +57,8 @@ export function createDocsViewerWorkspaceProvider(options) {
   function readSearch(optionsForRead) {
     var config = collectionConfig(optionsForRead);
     return generatedData.readSearchIndex({ searchIndexUrl: config.searchIndexUrl, viewerStage: config.stage }).then(function (payload) {
-      if (!payload || !payload.header || payload.header.schema !== "docs_viewer_search_index_v3"
-        || Object.prototype.hasOwnProperty.call(payload.header, "scope")
-        || payload.header.stage !== (config.stage || "published")) {
-        throw new Error("Search data does not match the selected lifecycle stage.");
+      if (!payload || !payload.header || payload.header.schema !== "docs_viewer_search_index_v4") {
+        throw new Error("Search data has an unsupported schema.");
       }
       return payload;
     });

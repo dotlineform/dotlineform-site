@@ -6,7 +6,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 from typing import Any, Mapping
-from urllib.parse import parse_qsl, quote, urlsplit
+from urllib.parse import quote
 
 from docs_document_identity import is_immutable_doc_id
 from docs_workspace_config import (
@@ -44,24 +44,18 @@ def canonical_search_document(
     *,
     field: str,
 ) -> tuple[str, str, str]:
+    """Resolve an ordinary Search identity through the configured public route."""
     if not isinstance(raw_document, dict):
         raise ValueError(f"{field} must be an object")
 
     doc_id = clean_text(raw_document.get("id"))
     title = clean_text(raw_document.get("title"))
-    href = clean_text(raw_document.get("href"))
     if not is_immutable_doc_id(doc_id):
         raise ValueError(f"{field}.id must use immutable document identity")
     if not title:
         raise ValueError(f"{field}.title must not be empty")
 
-    parsed = urlsplit(href)
-    if parsed.scheme or parsed.netloc or parsed.fragment or parsed.path != config.public_viewer_base_url:
-        raise ValueError(f"{field}.href must use the configured canonical viewer route")
-    expected_query = [("doc", doc_id)]
-    if parse_qsl(parsed.query, keep_blank_values=True) != expected_query:
-        raise ValueError(f"{field}.href must contain only the canonical document query")
-    return doc_id, title, href
+    return doc_id, title, f"{config.public_viewer_base_url}?doc={quote(doc_id)}"
 
 
 def canonical_collection_url(parent_url: str, doc_id: str) -> str:
@@ -144,11 +138,9 @@ def build_exact_document_location_records(
     header = search_payload.get("header")
     if (
         not isinstance(header, dict)
-        or clean_text(header.get("schema")) != "docs_viewer_search_index_v3"
-        or "scope" in header
-        or header.get("stage") != "published"
+        or clean_text(header.get("schema")) != "docs_viewer_search_index_v4"
     ):
-        raise ValueError("public search must describe the deployed document set")
+        raise ValueError("public search has an unsupported schema")
 
     configured_collections = {collection.collection for collection in select_workspace_stage(config, "preview").collections}
     manifest_records: dict[str, list[tuple[str, str]]] = {}

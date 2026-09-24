@@ -1,8 +1,7 @@
 {
   "header": {
-    "schema": "docs_viewer_search_index_v3",
-    "stage": "published",
-    "version": "blake2b-bf024b10a7acb1fe488007d4926f2293",
+    "schema": "docs_viewer_search_index_v4",
+    "version": "blake2b-495339e872933442e61cc87864b28ebc",
     "generated_at_utc": "2026-09-16T13:39:50Z",
     "count": 318
   },
@@ -17,7 +16,6 @@
     {
       "id": "d-20260215-000000-02a1a4",
       "title": "13 moments in october",
-      "href": "/analysis/?doc=d-20260907-180859-c425b2&subdoc=d-20260215-000000-02a1a4",
       "last_updated": "2026-09-07 20:40:56",
       "display_meta": "2026-09-07 20:40:56 • Moments",
       "collection": "moments",
@@ -27,7 +25,6 @@
     {
       "id": "d-20260215-000000-09861a",
       "title": "droplets",
-      "href": "/analysis/?doc=d-20260907-180859-c425b2&subdoc=d-20260215-000000-09861a",
       "last_updated": "2026-09-07 20:40:56",
       "display_meta": "2026-09-07 20:40:56 • Moments",
       "collection": "moments",
@@ -37,7 +34,6 @@
     {
       "id": "d-20260215-000000-1caadb",
       "title": "the moon and the sun",
-      "href": "/analysis/?doc=d-20260907-180859-c425b2&subdoc=d-20260215-000000-1caadb",
       "display_meta": "Moments",
       "collection": "moments",
       "report_doc_id": "d-20260907-180859-c425b2",
@@ -46,7 +42,6 @@
     {
       "id": "d-20260215-000000-1d5e31",
       "title": "keys",
-      "href": "/analysis/?doc=d-20260907-180859-c425b2&subdoc=d-20260215-000000-1d5e31",
       "last_updated": "2026-09-07 20:40:56",
       "display_meta": "2026-09-07 20:40:56 • Moments",
       "collection": "moments",
@@ -56,7 +51,6 @@
     {
       "id": "d-20260215-000000-1de7e9",
       "title": "dream sleep",
-      "href": "/analysis/?doc=d-20260907-180859-c425b2&subdoc=d-20260215-000000-1de7e9",
       "last_updated": "2026-09-07 20:40:56",
       "display_meta": "2026-09-07 20:40:56 • Moments",
       "collection": "moments",
@@ -66,7 +60,6 @@
     {
       "id": "d-20260215-000000-216ea9",
       "title": "clouds",
-      "href": "/analysis/?doc=d-20260907-180859-c425b2&subdoc=d-20260215-000000-216ea9",
       "display_meta": "Moments",
       "collection": "moments",
       "report_doc_id": "d-20260907-180859-c425b2",
@@ -75,7 +68,6 @@
     {
       "id": "d-20260215-000000-22de5f",
       "title": "peace of mind",
-      "href": "/analysis/?doc=d-20260907-180859-c425b2&subdoc=d-20260215-000000-22de5f",
       "last_updated": "2026-09-07 20:40:56",
       "display_meta": "2026-09-07 20:40:56 • Moments",
       "collection": "moments",
@@ -85,7 +77,6 @@
     {
       "id": "d-20260215-000000-24f316",
       "title": "where words end",
-      "href": "/analysis/?doc=d-20260907-180859-c425b2&subdoc=d-20260215-000000-24f316",
       "last_updated": "2026-09-07 20:40:56",
       "display_meta": "2026-09-07 20:40:56 • Moments",
       "collection": "moments",
@@ -95,7 +86,6 @@
     {
       "id": "d-20260215-000000-2d8bed",
       "title": "a beautiful route",
-      "href": "/analysis/?doc=d-20260907-180859-c425b2&subdoc=d-20260215-000000-2d8bed",
       "last_updated": "2026-09-07 20:40:56",
       "display_meta": "2026-09-07 20:40:56 • Moments",
       "collection": "moments",
@@ -105,7 +95,6 @@
     {
       "id": "d-20260215-000000-2f1eb6",
       "title": "creatures who understand light",
-      "href": "/analysis/?doc=d-20260907-180859-c425b2&subdoc=d-20260215-000000-2f1eb6",
       "last_updated": "2026-09-07 20:40:56",
       "display_meta": "2026-09-07 20:40:56 • Moments",
       "collection": "moments",
@@ -115,7 +104,6 @@
     {
       "id": "d-20260215-000000-30b26e",
       "title": "occasionally",
-      "href": "/analysis/?doc=d-20260907-180859-c425b2&subdoc=d-20260215-000000-30b26e",
       "last_updated": "2026-09-07 20:40:56",
       "display_meta": "2026-09-07 20:40:56 • Moments",
       "collection": "moments",
@@ -125,7 +113,6 @@
     {
       "id": "d-20260215-000000-33aca1",
       "title": "leaves",
-      "href": "/analysis/?doc=d-20260907-180859-c425b2&subdoc=d-20260215-000000-33aca1",
       "last_updated": "2026-09-07 20:40:56",
       "display_meta": "2026-09-07 20:40:56 • Moments",
       "collection": "moments",
@@ -135,7 +122,6 @@
     {
       "id": "d-20260215-000000-382817",
       "title": "i felt my self sinking",
-      "href": "/analysis/?doc=d-20260907-180859-c425b2&subdoc=d-20260215-000000-382817",
       "last_updated": "2026-09-07 20:40:56",
       "display_meta": "2026-09-07 20:40:56 • Moments",
       "collection": "moments",
@@ -145,7 +131,6 @@
     {
       "id": "d-20260215-000000-3b0cc8",
       "title": "angels",
-      "href": "/analysis/?doc=d-20260907-180859-c425b2&subdoc=d-20260215-000000-3b0cc8",
       "last_updated": "2026-09-07 20:40:56",
       "display_meta": "2026-09-07 20:40:56 • Moments",
       "collection": "moments",
@@ -155,7 +140,6 @@
     {
       "id": "d-20260215-000000-4ddc7d",
       "title": "rose",
-      "href": "/analysis/?doc=d-20260907-180859-c425b2&subdoc=d-20260215-000000-4ddc7d",
       "display_meta": "Moments",
       "collection": "moments",
       "report_doc_id": "d-20260907-180859-c425b2",
@@ -164,7 +148,6 @@
     {
       "id": "d-20260215-000000-55070c",
       "title": "sleep",
-      "href": "/analysis/?doc=d-20260907-180859-c425b2&subdoc=d-20260215-000000-55070c",
       "display_meta": "Moments",
       "collection": "moments",
       "report_doc_id": "d-20260907-180859-c425b2",
@@ -173,7 +156,6 @@
     {
       "id": "d-20260215-000000-6ce9cf",
       "title": "lotus pond",
-      "href": "/analysis/?doc=d-20260907-180859-c425b2&subdoc=d-20260215-000000-6ce9cf",
       "display_meta": "Moments",
       "collection": "moments",
       "report_doc_id": "d-20260907-180859-c425b2",
@@ -182,7 +164,6 @@
     {
       "id": "d-20260215-000000-6e2f83",
       "title": "without words",
-      "href": "/analysis/?doc=d-20260907-180859-c425b2&subdoc=d-20260215-000000-6e2f83",
       "display_meta": "Moments",
       "collection": "moments",
       "report_doc_id": "d-20260907-180859-c425b2",
@@ -191,7 +172,6 @@
     {
       "id": "d-20260215-000000-6ea535",
       "title": "timeless",
-      "href": "/analysis/?doc=d-20260907-180859-c425b2&subdoc=d-20260215-000000-6ea535",
       "display_meta": "Moments",
       "collection": "moments",
       "report_doc_id": "d-20260907-180859-c425b2",
@@ -200,7 +180,6 @@
     {
       "id": "d-20260215-000000-6fd4d4",
       "title": "blue sky",
-      "href": "/analysis/?doc=d-20260907-180859-c425b2&subdoc=d-20260215-000000-6fd4d4",
       "last_updated": "2026-09-07 20:40:56",
       "display_meta": "2026-09-07 20:40:56 • Moments",
       "collection": "moments",
@@ -210,7 +189,6 @@
     {
       "id": "d-20260215-000000-74539e",
       "title": "sleepy moments",
-      "href": "/analysis/?doc=d-20260907-180859-c425b2&subdoc=d-20260215-000000-74539e",
       "last_updated": "2026-09-07 20:40:56",
       "display_meta": "2026-09-07 20:40:56 • Moments",
       "collection": "moments",
@@ -220,7 +198,6 @@
     {
       "id": "d-20260215-000000-7614a2",
       "title": "where",
-      "href": "/analysis/?doc=d-20260907-180859-c425b2&subdoc=d-20260215-000000-7614a2",
       "display_meta": "Moments",
       "collection": "moments",
       "report_doc_id": "d-20260907-180859-c425b2",
@@ -229,7 +206,6 @@
     {
       "id": "d-20260215-000000-7f201c",
       "title": "a doll story",
-      "href": "/analysis/?doc=d-20260907-180859-c425b2&subdoc=d-20260215-000000-7f201c",
       "last_updated": "2026-09-07 20:40:56",
       "display_meta": "2026-09-07 20:40:56 • Moments",
       "collection": "moments",
@@ -239,7 +215,6 @@
     {
       "id": "d-20260215-000000-8c3fcc",
       "title": "a feeling of free will",
-      "href": "/analysis/?doc=d-20260907-180859-c425b2&subdoc=d-20260215-000000-8c3fcc",
       "last_updated": "2026-09-07 20:40:56",
       "display_meta": "2026-09-07 20:40:56 • Moments",
       "collection": "moments",
@@ -249,7 +224,6 @@
     {
       "id": "d-20260215-000000-a15495",
       "title": "impenetrable",
-      "href": "/analysis/?doc=d-20260907-180859-c425b2&subdoc=d-20260215-000000-a15495",
       "last_updated": "2026-09-07 20:40:56",
       "display_meta": "2026-09-07 20:40:56 • Moments",
       "collection": "moments",
@@ -259,7 +233,6 @@
     {
       "id": "d-20260215-000000-a56da5",
       "title": "the watch keeper",
-      "href": "/analysis/?doc=d-20260907-180859-c425b2&subdoc=d-20260215-000000-a56da5",
       "last_updated": "2026-09-07 20:40:56",
       "display_meta": "2026-09-07 20:40:56 • Moments",
       "collection": "moments",
@@ -269,7 +242,6 @@
     {
       "id": "d-20260215-000000-ab1a77",
       "title": "snow",
-      "href": "/analysis/?doc=d-20260907-180859-c425b2&subdoc=d-20260215-000000-ab1a77",
       "last_updated": "2026-09-07 20:40:56",
       "display_meta": "2026-09-07 20:40:56 • Moments",
       "collection": "moments",
@@ -279,7 +251,6 @@
     {
       "id": "d-20260215-000000-b16a4f",
       "title": "warmth",
-      "href": "/analysis/?doc=d-20260907-180859-c425b2&subdoc=d-20260215-000000-b16a4f",
       "last_updated": "2026-09-07 20:40:56",
       "display_meta": "2026-09-07 20:40:56 • Moments",
       "collection": "moments",
@@ -289,7 +260,6 @@
     {
       "id": "d-20260215-000000-b24b4f",
       "title": "will we leave residues",
-      "href": "/analysis/?doc=d-20260907-180859-c425b2&subdoc=d-20260215-000000-b24b4f",
       "last_updated": "2026-09-07 20:40:56",
       "display_meta": "2026-09-07 20:40:56 • Moments",
       "collection": "moments",
@@ -299,7 +269,6 @@
     {
       "id": "d-20260215-000000-b5c568",
       "title": "a lemon tart poem",
-      "href": "/analysis/?doc=d-20260907-180859-c425b2&subdoc=d-20260215-000000-b5c568",
       "last_updated": "2026-09-07 20:40:56",
       "display_meta": "2026-09-07 20:40:56 • Moments",
       "collection": "moments",
@@ -309,7 +278,6 @@
     {
       "id": "d-20260215-000000-bdb6fe",
       "title": "exit dreams",
-      "href": "/analysis/?doc=d-20260907-180859-c425b2&subdoc=d-20260215-000000-bdb6fe",
       "display_meta": "Moments",
       "collection": "moments",
       "report_doc_id": "d-20260907-180859-c425b2",
@@ -318,7 +286,6 @@
     {
       "id": "d-20260215-000000-c04e75",
       "title": "hi honey",
-      "href": "/analysis/?doc=d-20260907-180859-c425b2&subdoc=d-20260215-000000-c04e75",
       "last_updated": "2026-09-07 20:40:56",
       "display_meta": "2026-09-07 20:40:56 • Moments",
       "collection": "moments",
@@ -328,7 +295,6 @@
     {
       "id": "d-20260215-000000-c218f2",
       "title": "circle",
-      "href": "/analysis/?doc=d-20260907-180859-c425b2&subdoc=d-20260215-000000-c218f2",
       "display_meta": "Moments",
       "collection": "moments",
       "report_doc_id": "d-20260907-180859-c425b2",
@@ -337,7 +303,6 @@
     {
       "id": "d-20260215-000000-c27a38",
       "title": "we are the vessel",
-      "href": "/analysis/?doc=d-20260907-180859-c425b2&subdoc=d-20260215-000000-c27a38",
       "last_updated": "2026-09-07 20:40:56",
       "display_meta": "2026-09-07 20:40:56 • Moments",
       "collection": "moments",
@@ -347,7 +312,6 @@
     {
       "id": "d-20260215-000000-c518f2",
       "title": "winter",
-      "href": "/analysis/?doc=d-20260907-180859-c425b2&subdoc=d-20260215-000000-c518f2",
       "last_updated": "2026-09-07 20:40:56",
       "display_meta": "2026-09-07 20:40:56 • Moments",
       "collection": "moments",
@@ -357,7 +321,6 @@
     {
       "id": "d-20260215-000000-c53845",
       "title": "a poem about love",
-      "href": "/analysis/?doc=d-20260907-180859-c425b2&subdoc=d-20260215-000000-c53845",
       "last_updated": "2026-09-07 20:40:56",
       "display_meta": "2026-09-07 20:40:56 • Moments",
       "collection": "moments",
@@ -367,7 +330,6 @@
     {
       "id": "d-20260215-000000-c5e2d1",
       "title": "boundary conditions",
-      "href": "/analysis/?doc=d-20260907-180859-c425b2&subdoc=d-20260215-000000-c5e2d1",
       "display_meta": "Moments",
       "collection": "moments",
       "report_doc_id": "d-20260907-180859-c425b2",
@@ -376,7 +338,6 @@
     {
       "id": "d-20260215-000000-c6f320",
       "title": "a question",
-      "href": "/analysis/?doc=d-20260907-180859-c425b2&subdoc=d-20260215-000000-c6f320",
       "display_meta": "Moments",
       "collection": "moments",
       "report_doc_id": "d-20260907-180859-c425b2",
@@ -385,7 +346,6 @@
     {
       "id": "d-20260215-000000-c7da35",
       "title": "cascading waterfalls",
-      "href": "/analysis/?doc=d-20260907-180859-c425b2&subdoc=d-20260215-000000-c7da35",
       "display_meta": "Moments",
       "collection": "moments",
       "report_doc_id": "d-20260907-180859-c425b2",
@@ -394,7 +354,6 @@
     {
       "id": "d-20260215-000000-cb455c",
       "title": "a dance",
-      "href": "/analysis/?doc=d-20260907-180859-c425b2&subdoc=d-20260215-000000-cb455c",
       "display_meta": "Moments",
       "collection": "moments",
       "report_doc_id": "d-20260907-180859-c425b2",
@@ -403,7 +362,6 @@
     {
       "id": "d-20260215-000000-cb83ef",
       "title": "we make ghosts",
-      "href": "/analysis/?doc=d-20260907-180859-c425b2&subdoc=d-20260215-000000-cb83ef",
       "last_updated": "2026-09-07 20:40:56",
       "display_meta": "2026-09-07 20:40:56 • Moments",
       "collection": "moments",
@@ -413,7 +371,6 @@
     {
       "id": "d-20260215-000000-cd5956",
       "title": "memory",
-      "href": "/analysis/?doc=d-20260907-180859-c425b2&subdoc=d-20260215-000000-cd5956",
       "display_meta": "Moments",
       "collection": "moments",
       "report_doc_id": "d-20260907-180859-c425b2",
@@ -422,7 +379,6 @@
     {
       "id": "d-20260215-000000-cfd2a7",
       "title": "vessels",
-      "href": "/analysis/?doc=d-20260907-180859-c425b2&subdoc=d-20260215-000000-cfd2a7",
       "display_meta": "Moments",
       "collection": "moments",
       "report_doc_id": "d-20260907-180859-c425b2",
@@ -431,7 +387,6 @@
     {
       "id": "d-20260215-000000-d01949",
       "title": "compiled",
-      "href": "/analysis/?doc=d-20260907-180859-c425b2&subdoc=d-20260215-000000-d01949",
       "display_meta": "Moments",
       "collection": "moments",
       "report_doc_id": "d-20260907-180859-c425b2",
@@ -440,7 +395,6 @@
     {
       "id": "d-20260215-000000-d37a8a",
       "title": "a poem about purity",
-      "href": "/analysis/?doc=d-20260907-180859-c425b2&subdoc=d-20260215-000000-d37a8a",
       "last_updated": "2026-09-07 20:40:56",
       "display_meta": "2026-09-07 20:40:56 • Moments",
       "collection": "moments",
@@ -450,7 +404,6 @@
     {
       "id": "d-20260215-000000-d446d8",
       "title": "perfection of flowers",
-      "href": "/analysis/?doc=d-20260907-180859-c425b2&subdoc=d-20260215-000000-d446d8",
       "last_updated": "2026-09-07 20:40:56",
       "display_meta": "2026-09-07 20:40:56 • Moments",
       "collection": "moments",
@@ -460,7 +413,6 @@
     {
       "id": "d-20260215-000000-da0340",
       "title": "little clear vessel",
-      "href": "/analysis/?doc=d-20260907-180859-c425b2&subdoc=d-20260215-000000-da0340",
       "last_updated": "2026-09-07 20:40:56",
       "display_meta": "2026-09-07 20:40:56 • Moments",
       "collection": "moments",
@@ -470,7 +422,6 @@
     {
       "id": "d-20260215-000000-e2a906",
       "title": "a light inside a flower",
-      "href": "/analysis/?doc=d-20260907-180859-c425b2&subdoc=d-20260215-000000-e2a906",
       "last_updated": "2026-09-07 20:40:56",
       "display_meta": "2026-09-07 20:40:56 • Moments",
       "collection": "moments",
@@ -480,7 +431,6 @@
     {
       "id": "d-20260215-000000-e6723f",
       "title": "Samuel Beckett",
-      "href": "/analysis/?doc=d-20260907-180859-c425b2&subdoc=d-20260215-000000-e6723f",
       "last_updated": "2026-09-07 20:40:56",
       "display_meta": "2026-09-07 20:40:56 • Moments",
       "collection": "moments",
@@ -490,7 +440,6 @@
     {
       "id": "d-20260215-000000-ee27e1",
       "title": "healing forms",
-      "href": "/analysis/?doc=d-20260907-180859-c425b2&subdoc=d-20260215-000000-ee27e1",
       "last_updated": "2026-06-18 00:11:52",
       "display_meta": "2026-06-18 00:11:52 • Moments",
       "collection": "moments",
@@ -500,7 +449,6 @@
     {
       "id": "d-20260215-000000-f1b2bb",
       "title": "the moment collector",
-      "href": "/analysis/?doc=d-20260907-180859-c425b2&subdoc=d-20260215-000000-f1b2bb",
       "last_updated": "2026-09-07 20:40:56",
       "display_meta": "2026-09-07 20:40:56 • Moments",
       "collection": "moments",
@@ -510,7 +458,6 @@
     {
       "id": "d-20260215-000000-f5f727",
       "title": "all the little cracks",
-      "href": "/analysis/?doc=d-20260907-180859-c425b2&subdoc=d-20260215-000000-f5f727",
       "last_updated": "2026-09-07 21:10:32",
       "display_meta": "2026-09-07 21:10:32 • Moments",
       "collection": "moments",
@@ -520,7 +467,6 @@
     {
       "id": "d-20260215-000000-f81753",
       "title": "sadness love",
-      "href": "/analysis/?doc=d-20260907-180859-c425b2&subdoc=d-20260215-000000-f81753",
       "last_updated": "2026-09-07 20:40:56",
       "display_meta": "2026-09-07 20:40:56 • Moments",
       "collection": "moments",
@@ -530,7 +476,6 @@
     {
       "id": "d-20260215-000000-fb286f",
       "title": "particles",
-      "href": "/analysis/?doc=d-20260907-180859-c425b2&subdoc=d-20260215-000000-fb286f",
       "last_updated": "2026-09-07 20:40:56",
       "display_meta": "2026-09-07 20:40:56 • Moments",
       "collection": "moments",
@@ -540,7 +485,6 @@
     {
       "id": "d-20260215-000000-ff9762",
       "title": "a selina",
-      "href": "/analysis/?doc=d-20260907-180859-c425b2&subdoc=d-20260215-000000-ff9762",
       "last_updated": "2026-06-18 00:11:52",
       "display_meta": "2026-06-18 00:11:52 • Moments",
       "collection": "moments",
@@ -550,7 +494,6 @@
     {
       "id": "d-20260401-000000-2d7630",
       "title": "4 stories",
-      "href": "/analysis/?doc=d-20260907-180859-c425b2&subdoc=d-20260401-000000-2d7630",
       "last_updated": "2026-09-07 20:40:56",
       "display_meta": "2026-09-07 20:40:56 • Moments",
       "collection": "moments",
@@ -560,14 +503,12 @@
     {
       "id": "d-20260426-164043-e14f49",
       "title": "Analysis",
-      "href": "/analysis/?doc=d-20260426-164043-e14f49",
       "last_updated": "2026-09-07 22:03:29",
       "display_meta": "2026-09-07 22:03:29"
     },
     {
       "id": "d-20260624-204534-0d6ae2",
       "title": "bird",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260624-204534-0d6ae2",
       "last_updated": "2026-06-24",
       "display_meta": "2026-06-24 • Concepts",
       "collection": "concepts",
@@ -577,7 +518,6 @@
     {
       "id": "d-20260624-204534-e3de0b",
       "title": "ordered",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260624-204534-e3de0b",
       "last_updated": "2026-06-24",
       "display_meta": "2026-06-24 • Concepts",
       "collection": "concepts",
@@ -587,7 +527,6 @@
     {
       "id": "d-20260624-204534-ecfc12",
       "title": "nerve",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260624-204534-ecfc12",
       "last_updated": "2026-07-27 21:46:03",
       "display_meta": "2026-07-27 21:46:03 • Concepts",
       "collection": "concepts",
@@ -597,14 +536,12 @@
     {
       "id": "d-20260624-213316-478639",
       "title": "Concepts",
-      "href": "/analysis/?doc=d-20260624-213316-478639",
       "last_updated": "2026-07-29 11:30:02",
       "display_meta": "2026-07-29 11:30:02"
     },
     {
       "id": "d-20260727-225608-0066f5",
       "title": "fragility",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-0066f5",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -614,7 +551,6 @@
     {
       "id": "d-20260727-225608-012951",
       "title": "margin",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-012951",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -624,7 +560,6 @@
     {
       "id": "d-20260727-225608-03e966",
       "title": "nature",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-03e966",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -634,7 +569,6 @@
     {
       "id": "d-20260727-225608-04889f",
       "title": "eye",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-04889f",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -644,7 +578,6 @@
     {
       "id": "d-20260727-225608-07e0eb",
       "title": "materiality",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-07e0eb",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -654,7 +587,6 @@
     {
       "id": "d-20260727-225608-0813e3",
       "title": "smooth",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-0813e3",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -664,7 +596,6 @@
     {
       "id": "d-20260727-225608-085a6c",
       "title": "rain",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-085a6c",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -674,7 +605,6 @@
     {
       "id": "d-20260727-225608-0b3df4",
       "title": "photography",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-0b3df4",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -684,7 +614,6 @@
     {
       "id": "d-20260727-225608-0ccf1f",
       "title": "emptiness",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-0ccf1f",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -694,7 +623,6 @@
     {
       "id": "d-20260727-225608-0d540d",
       "title": "clarity",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-0d540d",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -704,7 +632,6 @@
     {
       "id": "d-20260727-225608-0d87ce",
       "title": "embodiment",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-0d87ce",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -714,7 +641,6 @@
     {
       "id": "d-20260727-225608-0e1745",
       "title": "open",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-0e1745",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -724,7 +650,6 @@
     {
       "id": "d-20260727-225608-0fa362",
       "title": "cloudlike",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-0fa362",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -734,7 +659,6 @@
     {
       "id": "d-20260727-225608-107781",
       "title": "joy",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-107781",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -744,7 +668,6 @@
     {
       "id": "d-20260727-225608-1091be",
       "title": "i-ching",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-1091be",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -754,7 +677,6 @@
     {
       "id": "d-20260727-225608-10fc9c",
       "title": "biology",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-10fc9c",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -764,7 +686,6 @@
     {
       "id": "d-20260727-225608-11de40",
       "title": "encoding",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-11de40",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -774,7 +695,6 @@
     {
       "id": "d-20260727-225608-124217",
       "title": "surface",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-124217",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -784,7 +704,6 @@
     {
       "id": "d-20260727-225608-12c5ee",
       "title": "transformation",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-12c5ee",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -794,7 +713,6 @@
     {
       "id": "d-20260727-225608-13749a",
       "title": "identity",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-13749a",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -804,7 +722,6 @@
     {
       "id": "d-20260727-225608-169780",
       "title": "memory",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-169780",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -814,7 +731,6 @@
     {
       "id": "d-20260727-225608-16b7b8",
       "title": "perception",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-16b7b8",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -824,7 +740,6 @@
     {
       "id": "d-20260727-225608-1864ea",
       "title": "wall",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-1864ea",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -834,7 +749,6 @@
     {
       "id": "d-20260727-225608-1bf2c3",
       "title": "number",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-1bf2c3",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -844,7 +758,6 @@
     {
       "id": "d-20260727-225608-1e1df9",
       "title": "calm",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-1e1df9",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -854,7 +767,6 @@
     {
       "id": "d-20260727-225608-1ee86d",
       "title": "diagram",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-1ee86d",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -864,7 +776,6 @@
     {
       "id": "d-20260727-225608-200179",
       "title": "light",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-200179",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -874,7 +785,6 @@
     {
       "id": "d-20260727-225608-208450",
       "title": "architecture",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-208450",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -884,7 +794,6 @@
     {
       "id": "d-20260727-225608-20f785",
       "title": "map",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-20f785",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -894,7 +803,6 @@
     {
       "id": "d-20260727-225608-21836e",
       "title": "curve",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-21836e",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -904,7 +812,6 @@
     {
       "id": "d-20260727-225608-22f690",
       "title": "drawing",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-22f690",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -914,7 +821,6 @@
     {
       "id": "d-20260727-225608-23cb8e",
       "title": "object",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-23cb8e",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -924,7 +830,6 @@
     {
       "id": "d-20260727-225608-2497a8",
       "title": "continuous",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-2497a8",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -934,7 +839,6 @@
     {
       "id": "d-20260727-225608-24dfb5",
       "title": "astronomy",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-24dfb5",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -944,7 +848,6 @@
     {
       "id": "d-20260727-225608-24efce",
       "title": "sparse",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-24efce",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -954,7 +857,6 @@
     {
       "id": "d-20260727-225608-25c814",
       "title": "splash",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-25c814",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -964,7 +866,6 @@
     {
       "id": "d-20260727-225608-2617b3",
       "title": "wire",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-2617b3",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -974,7 +875,6 @@
     {
       "id": "d-20260727-225608-27bc3b",
       "title": "polychrome",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-27bc3b",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -984,7 +884,6 @@
     {
       "id": "d-20260727-225608-295b0c",
       "title": "entanglement",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-295b0c",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -994,7 +893,6 @@
     {
       "id": "d-20260727-225608-2a27c8",
       "title": "window",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-2a27c8",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -1004,7 +902,6 @@
     {
       "id": "d-20260727-225608-2a8ef3",
       "title": "resistance",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-2a8ef3",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -1014,7 +911,6 @@
     {
       "id": "d-20260727-225608-2af018",
       "title": "dense",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-2af018",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -1024,7 +920,6 @@
     {
       "id": "d-20260727-225608-2c1750",
       "title": "tension",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-2c1750",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -1034,7 +929,6 @@
     {
       "id": "d-20260727-225608-2c1b7a",
       "title": "letter",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-2c1b7a",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -1044,7 +938,6 @@
     {
       "id": "d-20260727-225608-2d38a1",
       "title": "hard",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-2d38a1",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -1054,7 +947,6 @@
     {
       "id": "d-20260727-225608-2dd29d",
       "title": "scale",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-2dd29d",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -1064,7 +956,6 @@
     {
       "id": "d-20260727-225608-2ded48",
       "title": "seed",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-2ded48",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -1074,7 +965,6 @@
     {
       "id": "d-20260727-225608-2f1649",
       "title": "presence",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-2f1649",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -1084,7 +974,6 @@
     {
       "id": "d-20260727-225608-2fffa8",
       "title": "weed",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-2fffa8",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -1094,7 +983,6 @@
     {
       "id": "d-20260727-225608-30dfef",
       "title": "change",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-30dfef",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -1104,7 +992,6 @@
     {
       "id": "d-20260727-225608-31a370",
       "title": "hope",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-31a370",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -1114,7 +1001,6 @@
     {
       "id": "d-20260727-225608-3239cc",
       "title": "slaughter",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-3239cc",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -1124,7 +1010,6 @@
     {
       "id": "d-20260727-225608-32e172",
       "title": "awe",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-32e172",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -1134,7 +1019,6 @@
     {
       "id": "d-20260727-225608-32eda3",
       "title": "fear",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-32eda3",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -1144,7 +1028,6 @@
     {
       "id": "d-20260727-225608-330a89",
       "title": "contour",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-330a89",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -1154,7 +1037,6 @@
     {
       "id": "d-20260727-225608-3374bd",
       "title": "contemplation",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-3374bd",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -1164,7 +1046,6 @@
     {
       "id": "d-20260727-225608-34d9fb",
       "title": "grainy",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-34d9fb",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -1174,7 +1055,6 @@
     {
       "id": "d-20260727-225608-36c93d",
       "title": "rock",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-36c93d",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -1184,7 +1064,6 @@
     {
       "id": "d-20260727-225608-37bb5c",
       "title": "interpretation",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-37bb5c",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -1194,7 +1073,6 @@
     {
       "id": "d-20260727-225608-381c61",
       "title": "botany",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-381c61",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -1204,7 +1082,6 @@
     {
       "id": "d-20260727-225608-388a29",
       "title": "shadow",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-388a29",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -1214,7 +1091,6 @@
     {
       "id": "d-20260727-225608-3899cc",
       "title": "flat",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-3899cc",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -1224,7 +1100,6 @@
     {
       "id": "d-20260727-225608-38c206",
       "title": "memory-trace",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-38c206",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -1234,7 +1109,6 @@
     {
       "id": "d-20260727-225608-391f5b",
       "title": "spiralling",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-391f5b",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -1244,7 +1118,6 @@
     {
       "id": "d-20260727-225608-3a5f20",
       "title": "geology",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-3a5f20",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -1254,7 +1127,6 @@
     {
       "id": "d-20260727-225608-3bf2bc",
       "title": "fragment",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-3bf2bc",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -1264,7 +1136,6 @@
     {
       "id": "d-20260727-225608-3ccb9e",
       "title": "system",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-3ccb9e",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -1274,7 +1145,6 @@
     {
       "id": "d-20260727-225608-3cd1dd",
       "title": "face",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-3cd1dd",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -1284,7 +1154,6 @@
     {
       "id": "d-20260727-225608-3eabe1",
       "title": "renewal",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-3eabe1",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -1294,7 +1163,6 @@
     {
       "id": "d-20260727-225608-422df7",
       "title": "movement",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-422df7",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -1304,7 +1172,6 @@
     {
       "id": "d-20260727-225608-42c9e0",
       "title": "science",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-42c9e0",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -1314,7 +1181,6 @@
     {
       "id": "d-20260727-225608-438fab",
       "title": "net",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-438fab",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -1324,7 +1190,6 @@
     {
       "id": "d-20260727-225608-43e86d",
       "title": "symbol",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-43e86d",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -1334,7 +1199,6 @@
     {
       "id": "d-20260727-225608-440ecd",
       "title": "boundary",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-440ecd",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -1344,7 +1208,6 @@
     {
       "id": "d-20260727-225608-44902d",
       "title": "droplet",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-44902d",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -1354,7 +1217,6 @@
     {
       "id": "d-20260727-225608-44c370",
       "title": "overwhelm",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-44c370",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -1364,7 +1226,6 @@
     {
       "id": "d-20260727-225608-452c13",
       "title": "mark",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-452c13",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -1374,7 +1235,6 @@
     {
       "id": "d-20260727-225608-45ac22",
       "title": "connection",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-45ac22",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -1384,7 +1244,6 @@
     {
       "id": "d-20260727-225608-476c0b",
       "title": "low-contrast",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-476c0b",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -1394,7 +1253,6 @@
     {
       "id": "d-20260727-225608-482c64",
       "title": "sorrow",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-482c64",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -1404,7 +1262,6 @@
     {
       "id": "d-20260727-225608-49e2d4",
       "title": "sun",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-49e2d4",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -1414,7 +1271,6 @@
     {
       "id": "d-20260727-225608-4ab240",
       "title": "figure",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-4ab240",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -1424,7 +1280,6 @@
     {
       "id": "d-20260727-225608-4c0762",
       "title": "water",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-4c0762",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -1434,7 +1289,6 @@
     {
       "id": "d-20260727-225608-4c4195",
       "title": "technology",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-4c4195",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -1444,7 +1298,6 @@
     {
       "id": "d-20260727-225608-4c56a9",
       "title": "overlay",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-4c56a9",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -1454,7 +1307,6 @@
     {
       "id": "d-20260727-225608-4e62cb",
       "title": "porous",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-4e62cb",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -1464,7 +1316,6 @@
     {
       "id": "d-20260727-225608-51df31",
       "title": "ambiguity",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-51df31",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -1474,7 +1325,6 @@
     {
       "id": "d-20260727-225608-520788",
       "title": "repair",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-520788",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -1484,7 +1334,6 @@
     {
       "id": "d-20260727-225608-5296a2",
       "title": "root",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-5296a2",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -1494,7 +1343,6 @@
     {
       "id": "d-20260727-225608-52dcb3",
       "title": "road",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-52dcb3",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -1504,7 +1352,6 @@
     {
       "id": "d-20260727-225608-531c17",
       "title": "fiber",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-531c17",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -1514,7 +1361,6 @@
     {
       "id": "d-20260727-225608-557834",
       "title": "symmetric",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-557834",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -1524,7 +1370,6 @@
     {
       "id": "d-20260727-225608-55e44d",
       "title": "emergence",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-55e44d",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -1534,7 +1379,6 @@
     {
       "id": "d-20260727-225608-579c27",
       "title": "absence",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-579c27",
       "last_updated": "2026-09-07 16:49:56",
       "display_meta": "2026-09-07 16:49:56 • Concepts",
       "collection": "concepts",
@@ -1544,7 +1388,6 @@
     {
       "id": "d-20260727-225608-57a4c7",
       "title": "edge",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-57a4c7",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -1554,7 +1397,6 @@
     {
       "id": "d-20260727-225608-58741a",
       "title": "physics",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-58741a",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -1564,7 +1406,6 @@
     {
       "id": "d-20260727-225608-591e49",
       "title": "branching",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-591e49",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -1574,7 +1415,6 @@
     {
       "id": "d-20260727-225608-5b31e2",
       "title": "rhythmic",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-5b31e2",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -1584,7 +1424,6 @@
     {
       "id": "d-20260727-225608-5cb64c",
       "title": "melancholy",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-5cb64c",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -1594,7 +1433,6 @@
     {
       "id": "d-20260727-225608-603ccd",
       "title": "loop",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-603ccd",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -1604,7 +1442,6 @@
     {
       "id": "d-20260727-225608-60991f",
       "title": "recurrence",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-60991f",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -1614,7 +1451,6 @@
     {
       "id": "d-20260727-225608-616fda",
       "title": "confusion",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-616fda",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -1624,7 +1460,6 @@
     {
       "id": "d-20260727-225608-6250bf",
       "title": "peripheral",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-6250bf",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -1634,7 +1469,6 @@
     {
       "id": "d-20260727-225608-626b4c",
       "title": "myth",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-626b4c",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -1644,7 +1478,6 @@
     {
       "id": "d-20260727-225608-63967a",
       "title": "flower",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-63967a",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -1654,7 +1487,6 @@
     {
       "id": "d-20260727-225608-651586",
       "title": "anxiety",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-651586",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -1664,7 +1496,6 @@
     {
       "id": "d-20260727-225608-6555f7",
       "title": "restlessness",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-6555f7",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -1674,7 +1505,6 @@
     {
       "id": "d-20260727-225608-6796ef",
       "title": "noise",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-6796ef",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -1684,7 +1514,6 @@
     {
       "id": "d-20260727-225608-686651",
       "title": "containment",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-686651",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -1694,7 +1523,6 @@
     {
       "id": "d-20260727-225608-6b3825",
       "title": "netted",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-6b3825",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -1704,7 +1532,6 @@
     {
       "id": "d-20260727-225608-6bdf47",
       "title": "sharp",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-6bdf47",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -1714,7 +1541,6 @@
     {
       "id": "d-20260727-225608-6c146c",
       "title": "fieldlike",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-6c146c",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -1724,7 +1550,6 @@
     {
       "id": "d-20260727-225608-6c7384",
       "title": "text",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-6c7384",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -1734,7 +1559,6 @@
     {
       "id": "d-20260727-225608-6c8101",
       "title": "door",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-6c8101",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -1744,7 +1568,6 @@
     {
       "id": "d-20260727-225608-6cac49",
       "title": "moon",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-6cac49",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -1754,7 +1577,6 @@
     {
       "id": "d-20260727-225608-6d8930",
       "title": "craft",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-6d8930",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -1764,7 +1586,6 @@
     {
       "id": "d-20260727-225608-6e036f",
       "title": "path",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-6e036f",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -1774,7 +1595,6 @@
     {
       "id": "d-20260727-225608-6e75fd",
       "title": "linear",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-6e75fd",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -1784,7 +1604,6 @@
     {
       "id": "d-20260727-225608-6f0bef",
       "title": "fog",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-6f0bef",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -1794,7 +1613,6 @@
     {
       "id": "d-20260727-225608-6f785e",
       "title": "stone",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-6f785e",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -1804,7 +1622,6 @@
     {
       "id": "d-20260727-225608-708a9e",
       "title": "repetition",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-708a9e",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -1814,7 +1631,6 @@
     {
       "id": "d-20260727-225608-723889",
       "title": "grid",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-723889",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -1824,7 +1640,6 @@
     {
       "id": "d-20260727-225608-753567",
       "title": "mirror",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-753567",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -1834,7 +1649,6 @@
     {
       "id": "d-20260727-225608-759902",
       "title": "print",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-759902",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -1844,7 +1658,6 @@
     {
       "id": "d-20260727-225608-75f272",
       "title": "central",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-75f272",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -1854,7 +1667,6 @@
     {
       "id": "d-20260727-225608-761a32",
       "title": "quiet",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-761a32",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -1864,7 +1676,6 @@
     {
       "id": "d-20260727-225608-7893a2",
       "title": "trace",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-7893a2",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -1874,7 +1685,6 @@
     {
       "id": "d-20260727-225608-78ee39",
       "title": "decay",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-78ee39",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -1884,7 +1694,6 @@
     {
       "id": "d-20260727-225608-7927df",
       "title": "knotted",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-7927df",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -1894,7 +1703,6 @@
     {
       "id": "d-20260727-225608-79f04e",
       "title": "angular",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-79f04e",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -1904,7 +1712,6 @@
     {
       "id": "d-20260727-225608-7abff3",
       "title": "layered",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-7abff3",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -1914,7 +1721,6 @@
     {
       "id": "d-20260727-225608-7be84b",
       "title": "stroke",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-7be84b",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -1924,7 +1730,6 @@
     {
       "id": "d-20260727-225608-7d2c08",
       "title": "moss",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-7d2c08",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -1934,7 +1739,6 @@
     {
       "id": "d-20260727-225608-7fbfa5",
       "title": "body",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-7fbfa5",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -1944,7 +1748,6 @@
     {
       "id": "d-20260727-225608-7fe018",
       "title": "micro-macro",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-7fe018",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -1954,7 +1757,6 @@
     {
       "id": "d-20260727-225608-80e8b0",
       "title": "volumetric",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-80e8b0",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -1964,7 +1766,6 @@
     {
       "id": "d-20260727-225608-8104f2",
       "title": "networks",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-8104f2",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -1974,7 +1775,6 @@
     {
       "id": "d-20260727-225608-812ad8",
       "title": "radial",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-812ad8",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -1984,7 +1784,6 @@
     {
       "id": "d-20260727-225608-8258a1",
       "title": "reconstruction",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-8258a1",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -1994,7 +1793,6 @@
     {
       "id": "d-20260727-225608-82cce1",
       "title": "enclosed",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-82cce1",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -2004,7 +1802,6 @@
     {
       "id": "d-20260727-225608-833b94",
       "title": "braided",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-833b94",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -2014,7 +1811,6 @@
     {
       "id": "d-20260727-225608-84860c",
       "title": "music",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-84860c",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -2024,7 +1820,6 @@
     {
       "id": "d-20260727-225608-84a22b",
       "title": "branch",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-84a22b",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -2034,7 +1829,6 @@
     {
       "id": "d-20260727-225608-84a2a1",
       "title": "animal",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-84a2a1",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -2044,7 +1838,6 @@
     {
       "id": "d-20260727-225608-85a70e",
       "title": "line",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-85a70e",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -2054,7 +1847,6 @@
     {
       "id": "d-20260727-225608-87a3e0",
       "title": "becoming",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-87a3e0",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -2064,7 +1856,6 @@
     {
       "id": "d-20260727-225608-8a0601",
       "title": "filament",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-8a0601",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -2074,7 +1865,6 @@
     {
       "id": "d-20260727-225608-8a8d26",
       "title": "violent",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-8a8d26",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -2084,7 +1874,6 @@
     {
       "id": "d-20260727-225608-8b320d",
       "title": "communication",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-8b320d",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -2094,7 +1883,6 @@
     {
       "id": "d-20260727-225608-8be4b8",
       "title": "translation",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-8be4b8",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -2104,7 +1892,6 @@
     {
       "id": "d-20260727-225608-8d3c1d",
       "title": "screen",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-8d3c1d",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -2114,7 +1901,6 @@
     {
       "id": "d-20260727-225608-8d753d",
       "title": "chance",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-8d753d",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -2124,7 +1910,6 @@
     {
       "id": "d-20260727-225608-8dc973",
       "title": "control",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-8dc973",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -2134,7 +1919,6 @@
     {
       "id": "d-20260727-225608-8fec97",
       "title": "sand",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-8fec97",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -2144,7 +1928,6 @@
     {
       "id": "d-20260727-225608-90eabc",
       "title": "dot",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-90eabc",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -2154,7 +1937,6 @@
     {
       "id": "d-20260727-225608-932f79",
       "title": "blurred",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-932f79",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -2164,7 +1946,6 @@
     {
       "id": "d-20260727-225608-933750",
       "title": "stairs",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-933750",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -2174,7 +1955,6 @@
     {
       "id": "d-20260727-225608-93f7d5",
       "title": "grass",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-93f7d5",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -2184,7 +1964,6 @@
     {
       "id": "d-20260727-225608-955195",
       "title": "monochrome",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-955195",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -2194,7 +1973,6 @@
     {
       "id": "d-20260727-225608-96dc3a",
       "title": "minimal",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-96dc3a",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -2204,7 +1982,6 @@
     {
       "id": "d-20260727-225608-99c3be",
       "title": "skin",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-99c3be",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -2214,7 +1991,6 @@
     {
       "id": "d-20260727-225608-9b8192",
       "title": "silhouette",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-9b8192",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -2224,7 +2000,6 @@
     {
       "id": "d-20260727-225608-9c842f",
       "title": "release",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-9c842f",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -2234,7 +2009,6 @@
     {
       "id": "d-20260727-225608-9e62b8",
       "title": "point",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-9e62b8",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -2244,7 +2018,6 @@
     {
       "id": "d-20260727-225608-9eb839",
       "title": "language",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-9eb839",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -2254,7 +2027,6 @@
     {
       "id": "d-20260727-225608-a05992",
       "title": "wave",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-a05992",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -2264,7 +2036,6 @@
     {
       "id": "d-20260727-225608-a34891",
       "title": "curvilinear",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-a34891",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -2274,7 +2045,6 @@
     {
       "id": "d-20260727-225608-a45198",
       "title": "dispersed",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-a45198",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -2284,7 +2054,6 @@
     {
       "id": "d-20260727-225608-a4d142",
       "title": "reflection",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-a4d142",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -2294,7 +2063,6 @@
     {
       "id": "d-20260727-225608-a607e0",
       "title": "fence",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-a607e0",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -2304,7 +2072,6 @@
     {
       "id": "d-20260727-225608-a60c24",
       "title": "dark",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-a60c24",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -2314,7 +2081,6 @@
     {
       "id": "d-20260727-225608-aa54c9",
       "title": "grief",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-aa54c9",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -2324,7 +2090,6 @@
     {
       "id": "d-20260727-225608-ab4327",
       "title": "wonder",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-ab4327",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -2334,7 +2099,6 @@
     {
       "id": "d-20260727-225608-ac0827",
       "title": "asymmetric",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-ac0827",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -2344,7 +2108,6 @@
     {
       "id": "d-20260727-225608-ae606d",
       "title": "threadlike",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-ae606d",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -2354,7 +2117,6 @@
     {
       "id": "d-20260727-225608-afb0a7",
       "title": "chaotic",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-afb0a7",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -2364,7 +2126,6 @@
     {
       "id": "d-20260727-225608-b10f2d",
       "title": "random",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-b10f2d",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -2374,7 +2135,6 @@
     {
       "id": "d-20260727-225608-b235c6",
       "title": "weather",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-b235c6",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -2384,7 +2144,6 @@
     {
       "id": "d-20260727-225608-b2a6f0",
       "title": "looped",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-b2a6f0",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -2394,7 +2153,6 @@
     {
       "id": "d-20260727-225608-b2d217",
       "title": "shape",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-b2d217",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -2404,7 +2162,6 @@
     {
       "id": "d-20260727-225608-b5542c",
       "title": "drift",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-b5542c",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -2414,7 +2171,6 @@
     {
       "id": "d-20260727-225608-b5e4f7",
       "title": "alienation",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-b5e4f7",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -2424,7 +2180,6 @@
     {
       "id": "d-20260727-225608-b61c55",
       "title": "landscape",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-b61c55",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -2434,7 +2189,6 @@
     {
       "id": "d-20260727-225608-b7eb37",
       "title": "maximal",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-b7eb37",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -2444,7 +2198,6 @@
     {
       "id": "d-20260727-225608-b84d7e",
       "title": "play",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-b84d7e",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -2454,7 +2207,6 @@
     {
       "id": "d-20260727-225608-b85e09",
       "title": "broken",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-b85e09",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -2464,7 +2216,6 @@
     {
       "id": "d-20260727-225608-ba99c7",
       "title": "gesture",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-ba99c7",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -2474,7 +2225,6 @@
     {
       "id": "d-20260727-225608-bd3137",
       "title": "leaf",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-bd3137",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -2484,7 +2234,6 @@
     {
       "id": "d-20260727-225608-be5e27",
       "title": "digital",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-be5e27",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -2494,7 +2243,6 @@
     {
       "id": "d-20260727-225608-bed170",
       "title": "consciousness",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-bed170",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -2504,7 +2252,6 @@
     {
       "id": "d-20260727-225608-c04eca",
       "title": "cycle",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-c04eca",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -2514,7 +2261,6 @@
     {
       "id": "d-20260727-225608-c11b96",
       "title": "signal",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-c11b96",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -2524,7 +2270,6 @@
     {
       "id": "d-20260727-225608-c21bf0",
       "title": "flow",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-c21bf0",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -2534,7 +2279,6 @@
     {
       "id": "d-20260727-225608-c474d0",
       "title": "granular",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-c474d0",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -2544,7 +2288,6 @@
     {
       "id": "d-20260727-225608-c4b45c",
       "title": "balanced",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-c4b45c",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -2554,7 +2297,6 @@
     {
       "id": "d-20260727-225608-c7b1f6",
       "title": "unbalanced",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-c7b1f6",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -2564,7 +2306,6 @@
     {
       "id": "d-20260727-225608-c844db",
       "title": "uncertainty",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-c844db",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -2574,7 +2315,6 @@
     {
       "id": "d-20260727-225608-c88144",
       "title": "depth",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-c88144",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -2584,7 +2324,6 @@
     {
       "id": "d-20260727-225608-c913bf",
       "title": "field",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-c913bf",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -2594,7 +2333,6 @@
     {
       "id": "d-20260727-225608-ca7056",
       "title": "decoding",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-ca7056",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -2604,7 +2342,6 @@
     {
       "id": "d-20260727-225608-cbb3d7",
       "title": "threshold",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-cbb3d7",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -2614,7 +2351,6 @@
     {
       "id": "d-20260727-225608-ce80bb",
       "title": "insect",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-ce80bb",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -2624,7 +2360,6 @@
     {
       "id": "d-20260727-225608-cfc88e",
       "title": "compressed",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-cfc88e",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -2634,7 +2369,6 @@
     {
       "id": "d-20260727-225608-d0194d",
       "title": "woven",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-d0194d",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -2644,7 +2378,6 @@
     {
       "id": "d-20260727-225608-d2e201",
       "title": "quantum",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-d2e201",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -2654,7 +2387,6 @@
     {
       "id": "d-20260727-225608-d39666",
       "title": "mathematics",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-d39666",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -2664,7 +2396,6 @@
     {
       "id": "d-20260727-225608-d41939",
       "title": "ruin",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-d41939",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -2674,7 +2405,6 @@
     {
       "id": "d-20260727-225608-d6cc89",
       "title": "ritual",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-d6cc89",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -2684,7 +2414,6 @@
     {
       "id": "d-20260727-225608-d81ffc",
       "title": "urban",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-d81ffc",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -2694,7 +2423,6 @@
     {
       "id": "d-20260727-225608-d9afd4",
       "title": "glitch",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-d9afd4",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -2704,7 +2432,6 @@
     {
       "id": "d-20260727-225608-db297c",
       "title": "cutoff",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-db297c",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -2714,7 +2441,6 @@
     {
       "id": "d-20260727-225608-dbeb69",
       "title": "order",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-dbeb69",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -2724,7 +2450,6 @@
     {
       "id": "d-20260727-225608-dc0028",
       "title": "soft",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-dc0028",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -2734,7 +2459,6 @@
     {
       "id": "d-20260727-225608-dc2548",
       "title": "hand",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-dc2548",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -2744,7 +2468,6 @@
     {
       "id": "d-20260727-225608-dd62ff",
       "title": "information",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-dd62ff",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -2754,7 +2477,6 @@
     {
       "id": "d-20260727-225608-defa99",
       "title": "writing",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-defa99",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -2764,7 +2486,6 @@
     {
       "id": "d-20260727-225608-e0e993",
       "title": "tree",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-e0e993",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -2774,7 +2495,6 @@
     {
       "id": "d-20260727-225608-e124eb",
       "title": "fragmentation",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-e124eb",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -2784,7 +2504,6 @@
     {
       "id": "d-20260727-225608-e18b6c",
       "title": "shallow",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-e18b6c",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -2794,7 +2513,6 @@
     {
       "id": "d-20260727-225608-e3851f",
       "title": "stacked",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-e3851f",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -2804,7 +2522,6 @@
     {
       "id": "d-20260727-225608-e546d0",
       "title": "cloud",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-e546d0",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -2814,7 +2531,6 @@
     {
       "id": "d-20260727-225608-e8d7a7",
       "title": "fragmented",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-e8d7a7",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -2824,7 +2540,6 @@
     {
       "id": "d-20260727-225608-e943ff",
       "title": "lichen",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-e943ff",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -2834,7 +2549,6 @@
     {
       "id": "d-20260727-225608-e97d11",
       "title": "resilience",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-e97d11",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -2844,7 +2558,6 @@
     {
       "id": "d-20260727-225608-ecb267",
       "title": "cellular",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-ecb267",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -2854,7 +2567,6 @@
     {
       "id": "d-20260727-225608-ecb7a9",
       "title": "attention",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-ecb7a9",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -2864,7 +2576,6 @@
     {
       "id": "d-20260727-225608-ecf994",
       "title": "building",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-ecf994",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -2874,7 +2585,6 @@
     {
       "id": "d-20260727-225608-ed1025",
       "title": "sky",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-ed1025",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -2884,7 +2594,6 @@
     {
       "id": "d-20260727-225608-edadc1",
       "title": "time",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-edadc1",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -2894,7 +2603,6 @@
     {
       "id": "d-20260727-225608-ef31f9",
       "title": "freedom",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-ef31f9",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -2904,7 +2612,6 @@
     {
       "id": "d-20260727-225608-ef7408",
       "title": "intimacy",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-ef7408",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -2914,7 +2621,6 @@
     {
       "id": "d-20260727-225608-f16645",
       "title": "tangled",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-f16645",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -2924,7 +2630,6 @@
     {
       "id": "d-20260727-225608-f1e271",
       "title": "duration",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-f1e271",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -2934,7 +2639,6 @@
     {
       "id": "d-20260727-225608-f3f980",
       "title": "form",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-f3f980",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -2944,7 +2648,6 @@
     {
       "id": "d-20260727-225608-f543c8",
       "title": "stain",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-f543c8",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -2954,7 +2657,6 @@
     {
       "id": "d-20260727-225608-f5791d",
       "title": "pattern",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-f5791d",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -2964,7 +2666,6 @@
     {
       "id": "d-20260727-225608-f589fc",
       "title": "return",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-f589fc",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -2974,7 +2675,6 @@
     {
       "id": "d-20260727-225608-f5ddde",
       "title": "stillness",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-f5ddde",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -2984,7 +2684,6 @@
     {
       "id": "d-20260727-225608-f8abb3",
       "title": "contoured",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-f8abb3",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -2994,7 +2693,6 @@
     {
       "id": "d-20260727-225608-f9d97a",
       "title": "frame",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-f9d97a",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -3004,7 +2702,6 @@
     {
       "id": "d-20260727-225608-fb0e11",
       "title": "textured",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-fb0e11",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -3014,7 +2711,6 @@
     {
       "id": "d-20260727-225608-fb78ac",
       "title": "ecology",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-fb78ac",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -3024,7 +2720,6 @@
     {
       "id": "d-20260727-225608-fd71ef",
       "title": "growth",
-      "href": "/analysis/?doc=d-20260624-213316-478639&subdoc=d-20260727-225608-fd71ef",
       "last_updated": "2026-07-27",
       "display_meta": "2026-07-27 • Concepts",
       "collection": "concepts",
@@ -3034,14 +2729,12 @@
     {
       "id": "d-20260801-073826-8865a8",
       "title": "Works",
-      "href": "/analysis/?doc=d-20260801-073826-8865a8",
       "last_updated": "2026-09-12 14:51:38",
       "display_meta": "2026-09-12 14:51:38"
     },
     {
       "id": "d-20260801-212422-081a73",
       "title": "16 forms",
-      "href": "/analysis/?doc=d-20260801-073826-8865a8&subdoc=d-20260801-212422-081a73",
       "last_updated": "2026-09-13 22:37:11",
       "display_meta": "2026-09-13 22:37:11 • Works",
       "collection": "works",
@@ -3051,7 +2744,6 @@
     {
       "id": "d-20260801-212422-186a69",
       "title": "a theory of happiness",
-      "href": "/analysis/?doc=d-20260801-073826-8865a8&subdoc=d-20260801-212422-186a69",
       "last_updated": "2026-09-13 22:53:57",
       "display_meta": "2026-09-13 22:53:57 • Works",
       "collection": "works",
@@ -3061,7 +2753,6 @@
     {
       "id": "d-20260801-212422-3a2da4",
       "title": "a doll story",
-      "href": "/analysis/?doc=d-20260801-073826-8865a8&subdoc=d-20260801-212422-3a2da4",
       "last_updated": "2026-09-13 22:41:01",
       "display_meta": "2026-09-13 22:41:01 • Works",
       "collection": "works",
@@ -3071,7 +2762,6 @@
     {
       "id": "d-20260801-212422-3aa736",
       "title": "10,000 - original text",
-      "href": "/analysis/?doc=d-20260801-073826-8865a8&subdoc=d-20260801-212422-3aa736",
       "last_updated": "2026-09-13 22:33:48",
       "display_meta": "2026-09-13 22:33:48 • Works",
       "collection": "works",
@@ -3081,7 +2771,6 @@
     {
       "id": "d-20260801-212422-43b47c",
       "title": "10,000",
-      "href": "/analysis/?doc=d-20260801-073826-8865a8&subdoc=d-20260801-212422-43b47c",
       "last_updated": "2026-09-13 22:35:41",
       "display_meta": "2026-09-13 22:35:41 • Works",
       "collection": "works",
@@ -3091,7 +2780,6 @@
     {
       "id": "d-20260801-212422-632af5",
       "title": "64 forms",
-      "href": "/analysis/?doc=d-20260801-073826-8865a8&subdoc=d-20260801-212422-632af5",
       "last_updated": "2026-09-13 22:39:03",
       "display_meta": "2026-09-13 22:39:03 • Works",
       "collection": "works",
@@ -3101,7 +2789,6 @@
     {
       "id": "d-20260801-212422-773b86",
       "title": "a feeling that we are part of a structure",
-      "href": "/analysis/?doc=d-20260801-073826-8865a8&subdoc=d-20260801-212422-773b86",
       "last_updated": "2026-09-13 22:42:34",
       "display_meta": "2026-09-13 22:42:34 • Works",
       "collection": "works",
@@ -3111,7 +2798,6 @@
     {
       "id": "d-20260801-212422-9f0121",
       "title": "20 photos",
-      "href": "/analysis/?doc=d-20260801-073826-8865a8&subdoc=d-20260801-212422-9f0121",
       "last_updated": "2026-08-06 22:42:40",
       "display_meta": "2026-08-06 22:42:40 • Works",
       "collection": "works",
@@ -3121,7 +2807,6 @@
     {
       "id": "d-20260801-212422-bc7ae1",
       "title": "a humid home full of light",
-      "href": "/analysis/?doc=d-20260801-073826-8865a8&subdoc=d-20260801-212422-bc7ae1",
       "last_updated": "2026-09-13 22:43:46",
       "display_meta": "2026-09-13 22:43:46 • Works",
       "collection": "works",
@@ -3131,7 +2816,6 @@
     {
       "id": "d-20260801-212422-d91151",
       "title": "a poem divided into 4 parts",
-      "href": "/analysis/?doc=d-20260801-073826-8865a8&subdoc=d-20260801-212422-d91151",
       "last_updated": "2026-09-13 22:48:49",
       "display_meta": "2026-09-13 22:48:49 • Works",
       "collection": "works",
@@ -3141,7 +2825,6 @@
     {
       "id": "d-20260801-212422-df11f3",
       "title": "3 symbols",
-      "href": "/analysis/?doc=d-20260801-073826-8865a8&subdoc=d-20260801-212422-df11f3",
       "last_updated": "2026-09-13 22:32:12",
       "display_meta": "2026-09-13 22:32:12 • Works",
       "collection": "works",
@@ -3151,14 +2834,12 @@
     {
       "id": "d-20260907-180859-c425b2",
       "title": "Moments",
-      "href": "/analysis/?doc=d-20260907-180859-c425b2",
       "last_updated": "2026-09-07 18:08:59",
       "display_meta": "2026-09-07 18:08:59"
     },
     {
       "id": "d-20260909-131042-bcb7af",
       "title": "algorithm",
-      "href": "/analysis/?doc=d-20260907-180859-c425b2&subdoc=d-20260909-131042-bcb7af",
       "last_updated": "2026-09-09 13:13:33",
       "display_meta": "2026-09-09 13:13:33 • Moments",
       "collection": "moments",

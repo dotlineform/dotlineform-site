@@ -247,8 +247,8 @@ def _validate_prepared_index(path: Path, data: bytes, stage: str) -> None:
             raise RuntimeError("generated Search payload has an unsupported shape")
         if not isinstance(payload.get("header"), dict) or not isinstance(payload.get("fields"), list):
             raise RuntimeError("generated Search payload is missing header or fields")
-        if payload["header"].get("schema") != "docs_viewer_search_index_v3" or payload["header"].get("stage") != stage or "scope" in payload["header"]:
-            raise RuntimeError("generated Search payload has the wrong schema or stage identity")
+        if payload["header"].get("schema") != "docs_viewer_search_index_v4":
+            raise RuntimeError("generated Search payload has an unsupported schema")
         for postings in payload["terms"].values():
             if not isinstance(postings, dict):
                 raise RuntimeError("generated Search term postings must be objects")

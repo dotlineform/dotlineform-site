@@ -125,7 +125,7 @@ export function initDocsViewerSearchController(context) {
 
     searchRecent.searchRequestPromise = context.collectionProvider.readSearch()
       .then(function (payload) {
-        if (!payload || !payload.header || payload.header.schema !== "docs_viewer_search_index_v3") {
+        if (!payload || !payload.header || payload.header.schema !== "docs_viewer_search_index_v4") {
           throw new Error("Docs Viewer search index has an unsupported schema.");
         }
         searchRecent.searchIndex = payload;

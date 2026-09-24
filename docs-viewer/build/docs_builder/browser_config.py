@@ -40,7 +40,7 @@ def browser_search_index_url(config: DocsStageConfig, *, published: bool = False
 
 
 def browser_search_policy_payload(config: DocsStageConfig, *, published: bool = False) -> dict[str, Any]:
-    return {"domain": "docs_viewer", "schema": "docs_viewer_search_index_v3",
+    return {"domain": "docs_viewer", "schema": "docs_viewer_search_index_v4",
             "index_url": browser_search_index_url(config, published=published), "rebuild_policy": "whole_index"}
 
 

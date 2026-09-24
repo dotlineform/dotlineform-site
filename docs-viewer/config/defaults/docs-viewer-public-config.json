@@ -29,7 +29,7 @@
     "search_index_url": "/assets/data/search/analysis/index.json",
     "search": {
       "domain": "docs_viewer",
-      "schema": "docs_viewer_search_index_v3",
+      "schema": "docs_viewer_search_index_v4",
       "index_url": "/assets/data/search/analysis/index.json",
       "rebuild_policy": "whole_index"
     },
