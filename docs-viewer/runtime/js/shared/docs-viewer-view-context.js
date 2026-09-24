@@ -39,8 +39,8 @@ function normalizeMetadataInfo(value) {
 function activeManagedDocument(value, appContext) {
   if (!appContext || appContext.kind !== "manage") return null;
   var context = objectRecord(value);
-  var target = objectRecord(context && context.subdocTarget);
-  var record = objectRecord(context && context.subdocRecord);
+  var target = objectRecord(context && context.documentTarget);
+  var record = objectRecord(context && context.documentRecord);
   var targetKeys = Object.keys(target || {}).sort();
   var stage = cleanString(target && target.stage);
   var collection = cleanString(target && target.collection).toLowerCase();
@@ -57,7 +57,7 @@ function activeManagedDocument(value, appContext) {
     || cleanString(record && record.doc_id) !== docId
   ) return null;
   return Object.freeze({
-    info: normalizeMetadataInfo(context.subdocInfo),
+    info: normalizeMetadataInfo(context.documentInfo),
     record: Object.freeze(Object.assign({}, record, { doc_id: docId })),
     target: Object.freeze({ stage: stage, collection: collection, doc_id: docId })
   });

@@ -202,7 +202,6 @@ export function initDocsViewerManagement(context) {
   var actionController = null;
   var resolveAction = null;
   var projectedReportControls = null;
-  var sourceSessionReportActive = false;
   var collectionReportState = null;
   var indexController = createDocsViewerManagementIndexController({
     root: root,
@@ -277,7 +276,7 @@ export function initDocsViewerManagement(context) {
 
   function currentImportDisplayContextLabel() {
     if (collectionReportState && collectionReportState.collectionTarget) {
-      return String(collectionReportState.collectionLabel || "").trim();
+      return viewerStage() + " / " + String(collectionReportState.collectionLabel || "").trim();
     }
     return viewerStage();
   }
@@ -325,11 +324,6 @@ export function initDocsViewerManagement(context) {
     return documentIndex.docsById.get(selectedDocument.selectedDocId) || null;
   }
 
-  function actionTargetDoc(resolution) {
-    if (!resolution || !resolution.enabled || resolution.targetDocIds.length !== 1) return null;
-    return documentIndex.docsById.get(resolution.targetDocIds[0]) || null;
-  }
-
   function sourceTargetForDoc(doc) {
     if (!doc || !doc.doc_id) return null;
     return normalizeManagedDocumentTarget({
@@ -339,81 +333,7 @@ export function initDocsViewerManagement(context) {
   }
 
   function publishCollectionReportState(value) {
-    var state = value && typeof value === "object" ? value : {};
-    var stateName = String(state.state || "").trim().toLowerCase();
-    var activeStateNames = ["list", "loading", "detail", "invalid", "error"];
-    var parentTarget = null;
-    var collectionTarget = null;
-    var subdocTarget = null;
-    var subdocRecord = null;
-    var subdocInfo = null;
-    try {
-      if (activeStateNames.indexOf(stateName) !== -1) {
-        parentTarget = normalizeManagedDocumentTarget(state.parentTarget);
-        collectionTarget = normalizeManagedDocumentCollectionTarget(
-          state.collectionTarget
-        );
-        if (
-          !collectionTarget.collection
-          || String(collectionTarget.stage || "") !== String(parentTarget.stage || "")
-        ) {
-          throw new Error(
-            "Validated collection report collection does not match its parent."
-          );
-        }
-        if (stateName === "detail") {
-          subdocTarget = normalizeManagedDocumentTarget(state.subdocTarget);
-          if (
-            !subdocTarget.collection
-            || String(subdocTarget.stage || "") !== String(parentTarget.stage || "")
-            || subdocTarget.collection !== collectionTarget.collection
-          ) {
-            throw new Error("Validated collection report target does not match its parent report.");
-          }
-          if (
-            !state.subdocRecord
-            || typeof state.subdocRecord !== "object"
-            || Array.isArray(state.subdocRecord)
-            || String(state.subdocRecord.doc_id || "").trim() !== subdocTarget.doc_id
-          ) {
-            throw new Error("Validated collection report record does not match its target.");
-          }
-          subdocRecord = Object.freeze(Object.assign({}, state.subdocRecord));
-          subdocInfo = state.subdocInfo && typeof state.subdocInfo === "object"
-            ? Object.freeze(Object.assign({}, state.subdocInfo))
-            : null;
-        }
-      }
-    } catch (_error) {
-      stateName = "inactive";
-      parentTarget = null;
-      subdocTarget = null;
-      subdocRecord = null;
-      subdocInfo = null;
-    }
-    collectionReportState = parentTarget
-      ? {
-          state: stateName,
-          parentTarget: parentTarget,
-          collectionTarget: collectionTarget,
-          collectionLabel: String(state.collectionLabel || "").trim(),
-          subdocTarget: subdocTarget,
-          subdocRecord: subdocRecord,
-          subdocInfo: subdocInfo,
-          refreshDocument: typeof state.refreshDocument === "function"
-            ? state.refreshDocument
-            : null,
-          refreshCollection: typeof state.refreshCollection === "function"
-            ? state.refreshCollection
-            : null
-        }
-      : null;
-    var documentMode = root && root.dataset
-      ? String(root.dataset.documentDisplayMode || "")
-      : "";
-    if (documentMode !== "markdown-source") {
-      sourceSessionReportActive = false;
-    }
+    collectionReportState = value && value.parentTarget ? value : null;
     renderManagementUi();
   }
 
@@ -430,7 +350,6 @@ export function initDocsViewerManagement(context) {
   }
 
   function openCreatedDocumentSource(target) {
-    sourceSessionReportActive = Boolean(collectionReportState);
     return requestCommittedDocumentSource(target, function (modeId, options) {
       return context.requestDocumentMode(modeId, options);
     });
@@ -451,7 +370,6 @@ export function initDocsViewerManagement(context) {
         if (!payload) return;
         if (payload.doc_id !== sourceTarget.doc_id) throw new Error("The document opened did not match the metadata target.");
       }
-      sourceSessionReportActive = Boolean(collectionReportState);
       await requestCommittedDocumentSource(sourceTarget, context.requestDocumentMode);
       services.openMetadataPanel();
     } catch (error) {
@@ -509,24 +427,21 @@ export function initDocsViewerManagement(context) {
     var actionsDisabled = Boolean(disabled);
     var documentMode = root && root.dataset ? String(root.dataset.documentDisplayMode || "") : "";
     var markdownMode = documentMode === "markdown-source";
-    var reportActive = Boolean(collectionReportState) || (markdownMode && sourceSessionReportActive);
+    var actionContext = context.documentActionContext();
     projectedReportControls = projectDocsViewerReportControlState({
       disabled: actionsDisabled,
       documentMode: documentMode,
       hidden: actionsHidden,
-      ordinaryTarget: sourceTargetForDoc(currentActiveDoc()),
-      parentTarget: collectionReportState ? collectionReportState.parentTarget : null,
-      reportActive: reportActive,
-      reportState: collectionReportState ? collectionReportState.state : "",
-      subdocTarget: collectionReportState ? collectionReportState.subdocTarget : null
+      actionContext: actionContext,
+      sourceTarget: markdownMode ? activeSourceTarget() : null
     });
     if (typeof context.projectMainViewControlState === "function") {
       context.projectMainViewControlState("edit", projectedReportControls.editDocument.state);
-      var draftRecord = currentActiveDoc();
-      var draftTarget = sourceTargetForDoc(draftRecord);
+      var draftRecord = actionContext.documentRecord;
+      var draftTarget = actionContext.documentTarget;
       context.projectMainViewControlState("draft", {
-        hidden: actionsHidden || markdownMode || viewerStage() !== "working"
-          || (reportActive && collectionReportState?.state !== "list"),
+        hidden: actionsHidden || markdownMode || !draftTarget || viewerStage() !== "working"
+          || Boolean(draftTarget && draftTarget.collection),
         disabled: actionsDisabled || !draftTarget || !draftRecord,
         pressed: Boolean(draftRecord && draftRecord.draft === true),
         label: draftRecord && draftRecord.draft === true ? "Draft — mark ready" : "Ready — mark as draft"
@@ -593,7 +508,7 @@ export function initDocsViewerManagement(context) {
   function toggleCollectionDocumentDraft(target, draft) {
     if (management.managementBusy || viewerStage() !== "working"
       || collectionReportState?.state !== "detail"
-      || !managedDocumentTargetsEqual(target, collectionReportState.subdocTarget)
+      || !managedDocumentTargetsEqual(target, collectionReportState.documentTarget)
     ) {
       return Promise.reject(new Error("Draft readiness is unavailable for this collection document."));
     }
@@ -608,7 +523,7 @@ export function initDocsViewerManagement(context) {
       if (!draftControl || draftControl.state.hidden || draftControl.state.disabled
         || !draftControl.target || draftControl.target.collection
         || management.managementBusy || viewerStage() !== "working") return;
-      var draftRecord = currentActiveDoc();
+      var draftRecord = context.documentActionContext().documentRecord;
       if (!draftRecord || draftRecord.doc_id !== draftControl.target.doc_id) return;
       return runDraftToggle(draftControl.target, draftRecord.draft !== true);
     }
@@ -623,6 +538,14 @@ export function initDocsViewerManagement(context) {
         projection: "returnToDoc",
         run: function () {
           actionController.handleReturnToDoc();
+        }
+      }],
+      ["open-vscode", {
+        projection: "openVsCode",
+        run: function (target) {
+          var record = context.documentActionContext().documentRecord;
+          actionController.handleOpenSource("vscode", target,
+            record && record.doc_id === target.doc_id ? record.title : target.doc_id);
         }
       }]
     ]);
@@ -649,26 +572,6 @@ export function initDocsViewerManagement(context) {
     var resolution = actionId ? resolveAction(actionId) : null;
     if (actionId && (!resolution || !resolution.enabled)) return false;
     var owners = new Map([
-      ["open-vscode", function () {
-        var doc = actionTargetDoc(resolution);
-        var mountedTarget = activeSourceTarget();
-        var projectedOpen = projectedReportControls
-          ? projectedReportControls.openVsCode
-          : null;
-        var projectedTarget = (
-          projectedOpen
-          && !projectedOpen.state.hidden
-          && !projectedOpen.state.disabled
-        ) ? projectedOpen.target : null;
-        var target = mountedTarget || projectedTarget;
-        if (target) {
-          actionController.handleOpenSource(
-            "vscode",
-            target,
-            doc && target.doc_id === doc.doc_id ? doc.title : target.doc_id
-          );
-        }
-      }],
       ["save-markdown-source", function () { actionController.handleMarkdownSave(); }],
       ["source-add-image", function () {
         if (root && typeof root.dispatchEvent === "function") {

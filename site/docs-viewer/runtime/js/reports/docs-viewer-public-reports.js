@@ -171,7 +171,9 @@ export function mountDocsViewerPublicReport(context) {
           });
           if (typeof context.mountThemedDiagrams === "function") context.mountThemedDiagrams();
           if (!child.payload.report) return Promise.resolve();
-          return mountDocsViewerPublicReport(Object.assign({}, context, child));
+          return mountDocsViewerPublicReport(Object.assign({}, context, child, {
+            onCollectionDocumentState: null
+          }));
         }
       }))).then(function () {
         if (!isCurrent()) return false;

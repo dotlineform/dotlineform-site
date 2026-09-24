@@ -1,14 +1,5 @@
-import {
-  normalizeManagedDocumentTarget
-} from "./docs-viewer-management-document-target.js";
-
 function cleanString(value) {
   return String(value == null ? "" : value).trim().toLowerCase();
-}
-
-function optionalTarget(value) {
-  if (!value) return null;
-  return normalizeManagedDocumentTarget(value);
 }
 
 function control(state, target) {
@@ -21,18 +12,10 @@ function control(state, target) {
 export function projectDocsViewerReportControlState(options = {}) {
   var mode = cleanString(options.documentMode) || "rendered-document";
   var sourceMode = mode === "markdown-source";
-  var reportState = cleanString(options.reportState);
-  var reportActive = Boolean(options.reportActive);
   var hidden = Boolean(options.hidden);
   var disabled = Boolean(options.disabled);
-  var ordinaryTarget = optionalTarget(options.ordinaryTarget);
-  var parentTarget = optionalTarget(options.parentTarget);
-  var subdocTarget = optionalTarget(options.subdocTarget);
-  var validDetail = reportActive && reportState === "detail" && Boolean(subdocTarget);
-  var listView = reportActive && reportState === "list";
-  var editTarget = reportActive
-    ? (validDetail ? subdocTarget : (listView ? parentTarget : null))
-    : ordinaryTarget;
+  var editTarget = options.actionContext && options.actionContext.documentTarget;
+  var sourceTarget = sourceMode ? options.sourceTarget : editTarget;
 
   return {
     editDocument: control({
@@ -42,9 +25,9 @@ export function projectDocsViewerReportControlState(options = {}) {
     }, editTarget),
     openVsCode: control({
       hidden: hidden,
-      disabled: disabled || (!sourceMode && !editTarget),
+      disabled: disabled || !sourceTarget,
       label: "Open in VS Code"
-    }, sourceMode ? null : editTarget),
+    }, sourceTarget),
     returnToDoc: control({
       hidden: hidden || !sourceMode,
       disabled: disabled || !sourceMode,

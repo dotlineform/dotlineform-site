@@ -5,7 +5,6 @@ import {
   mountDocsViewerReport
 } from "../reports/docs-viewer-reports.js";
 import {
-  normalizeManagedDocumentCollectionTarget,
   normalizeManagedDocumentTarget
 } from "./docs-viewer-management-document-target.js";
 import {
@@ -60,76 +59,6 @@ function parentTarget(settings) {
   });
 }
 
-function exactSubdocRecord(value, target) {
-  if (!value || typeof value !== "object" || Array.isArray(value)) {
-    throw new Error("Docs collection report detail record is invalid.");
-  }
-  if (cleanString(value.doc_id) !== target.doc_id) {
-    throw new Error("Docs collection report detail record did not match its target.");
-  }
-  return Object.freeze(Object.assign({}, value, { doc_id: target.doc_id }));
-}
-
-function optionalSubdocInfo(value) {
-  if (value == null) return null;
-  if (typeof value !== "object" || Array.isArray(value)) {
-    throw new Error("Docs collection report detail information is invalid.");
-  }
-  return Object.freeze(Object.assign({}, value));
-}
-
-function publishReportState(settings, parent, collection, state) {
-  if (typeof settings.publishCollectionReportState !== "function") return;
-  var detail = state && typeof state === "object" ? state : {};
-  var collectionTarget = normalizeManagedDocumentCollectionTarget({
-    ...(parent.stage ? { stage: parent.stage } : {}),
-    collection: collection
-  });
-  var subdocTarget = detail.target
-    ? normalizeManagedDocumentTarget(detail.target)
-    : null;
-  if (
-    subdocTarget
-    && (
-      cleanString(subdocTarget.stage) !== cleanString(parent.stage)
-      || subdocTarget.collection !== collection
-    )
-  ) {
-    throw new Error("Docs collection report published a target outside its mounted collection.");
-  }
-  var detailRecord = subdocTarget
-    ? exactSubdocRecord(detail.record, subdocTarget)
-    : null;
-  var detailInfo = subdocTarget ? optionalSubdocInfo(detail.info) : null;
-  var published = {
-    state: cleanString(detail.state) || "inactive",
-    reason: cleanString(detail.reason),
-    parentTarget: parent,
-    collectionTarget: collectionTarget,
-    collectionLabel: configuredCollectionLabel(
-      settings,
-      parent.stage,
-      collection
-    ),
-    subdocTarget: subdocTarget,
-    subdocRecord: detailRecord,
-    subdocInfo: detailInfo,
-    refreshDisplayedDocument: typeof detail.refreshDisplayedDocument === "function"
-      ? detail.refreshDisplayedDocument
-      : null,
-    refreshDocument: typeof detail.refreshDocument === "function"
-      ? detail.refreshDocument
-      : null,
-    refreshCollection: typeof detail.refreshCollection === "function"
-      ? detail.refreshCollection
-      : null
-  };
-  if (Number.isInteger(settings.documentMountGeneration)) {
-    published.documentMountGeneration = settings.documentMountGeneration;
-  }
-  settings.publishCollectionReportState(published);
-}
-
 function managementClientOptions(settings) {
   var managementService = settings.managementService || null;
   return {
@@ -150,14 +79,6 @@ function createCollectionDocumentAction(settings) {
   return actions && typeof actions.createCollectionDocument === "function"
     ? actions.createCollectionDocument
     : null;
-}
-
-function configuredCollectionLabel(settings, stage, collection) {
-  var child = configuredCollection(settings, stage, collection);
-  var selectedStage = cleanString(stage);
-  var normalizedCollection = cleanString(collection).toLowerCase();
-  var childTitle = cleanString(child && child.title) || normalizedCollection;
-  return selectedStage + " / " + childTitle;
 }
 
 function configuredCollection(settings, stage, collection) {
@@ -246,7 +167,6 @@ export function loadDocsViewerCollectionContribution(settings, parent, collectio
         && cleanString(clientOptions.baseUrl)
         ? settings.managementDocumentActions?.toggleCollectionDocumentDraft
         : null,
-      onLifecycleEvent: contributionOptions.onLifecycleEvent,
       onPreparePackage: contributionOptions.onPreparePackage,
       root: managementModalRoot(settings),
       setStatus: settings.setStatus
@@ -368,27 +288,7 @@ export function mountDocsViewerManageDocumentExtras(context) {
   var settings = context || {};
   var payload = settings.payload || {};
   var routeContext = settings.routeContext || {};
-  if (!payloadHasReport(payload)) {
-    if (typeof settings.publishCollectionReportState === "function") {
-      var inactive = {
-        state: "inactive",
-        reason: "non-report-document",
-        parentTarget: null,
-        collectionTarget: null,
-        collectionLabel: "",
-        subdocTarget: null,
-        subdocRecord: null,
-        subdocInfo: null,
-        refreshDocument: null,
-        refreshCollection: null
-      };
-      if (Number.isInteger(settings.documentMountGeneration)) {
-        inactive.documentMountGeneration = settings.documentMountGeneration;
-      }
-      settings.publishCollectionReportState(inactive);
-    }
-    return Promise.resolve(false);
-  }
+  if (!payloadHasReport(payload)) return Promise.resolve(false);
 
   var managementService = settings.managementService || null;
   var reportManagementBaseUrl = cleanString(managementService && managementService.baseUrl);
@@ -427,10 +327,6 @@ export function mountDocsViewerManageDocumentExtras(context) {
   }
 
   var parent = parentTarget(settings);
-  publishReportState(settings, parent, collection, {
-    state: "loading",
-    reason: "report-mount"
-  });
   var createAction = createCollectionDocumentAction(settings);
   var contribution = loadDocsViewerCollectionContribution(settings, parent, collection, {
     onCreateDocument: (
@@ -444,22 +340,11 @@ export function mountDocsViewerManageDocumentExtras(context) {
           return openCollectionCreate(settings, parent, collection, request, context);
         }
       : null,
-    onLifecycleEvent: function (event) {
-      if (event && event.type === "state") {
-        publishReportState(settings, parent, collection, event);
-      }
-    },
     onPreparePackage: !parent.stage && reportManagementBaseUrl
       ? function (request, context) {
           return openCollectionPreparePackage(settings, request, context);
         }
       : null
-  }).catch(function (error) {
-    publishReportState(settings, parent, collection, {
-      state: "error",
-      reason: "customisation-resolution-failed"
-    });
-    throw error;
   });
   return mountDocsViewerReport({
     appContext: settings.appContext,

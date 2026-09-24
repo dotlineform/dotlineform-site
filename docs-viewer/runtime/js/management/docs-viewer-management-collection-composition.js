@@ -15,42 +15,6 @@ function frozenIds(values) {
   }));
 }
 
-function exactCollection(value) {
-  var keys = Object.keys(value || {}).sort();
-  var collection = cleanString(value && value.collection).toLowerCase();
-  if (
-    keys.length !== 2
-    || keys[0] !== "collection"
-    || keys[1] !== "stage"
-    || !["working", "pre-publish", "published"].includes(value.stage)
-    || !collection
-  ) {
-    throw new Error("Collection action collection target is invalid.");
-  }
-  return Object.freeze({ ...(value.stage ? { stage: value.stage } : {}), collection: collection });
-}
-
-function exactDetail(value, collection) {
-  var keys = Object.keys(value || {}).sort();
-  var docId = cleanString(value && value.doc_id);
-  if (
-    keys.length !== 3
-    || keys[0] !== "collection"
-    || keys[1] !== "doc_id"
-    || keys[2] !== "stage"
-    || cleanString(value && value.collection).toLowerCase() !== collection.collection
-    || cleanString(value && value.stage) !== cleanString(collection.stage)
-    || !docId
-  ) {
-    throw new Error("Collection action detail target is invalid.");
-  }
-  return Object.freeze({
-    ...(collection.stage ? { stage: collection.stage } : {}),
-    collection: collection.collection,
-    doc_id: docId
-  });
-}
-
 function capabilityState(value) {
   if (value == null || value === true) return { available: true, reason: "" };
   if (value === false) return { available: false, reason: "Action capability is unavailable." };
@@ -64,7 +28,8 @@ function capabilityState(value) {
 }
 
 function actionTarget(targetKind, context) {
-  var collection = exactCollection(context.collection);
+  var actions = context.actionContext;
+  var collection = actions.collectionTarget;
   if (targetKind === "collection") return collection;
   if (targetKind === "selection") {
     var selected = frozenIds(context.selection && context.selection.checkedDocIds);
@@ -76,7 +41,11 @@ function actionTarget(targetKind, context) {
     });
   }
   if (targetKind === "validated-detail") {
-    return exactDetail(context.target, collection);
+    var target = actions.documentTarget;
+    if (!target || target.collection !== collection.collection || target.stage !== collection.stage) {
+      throw new Error("Collection action requires the resolved detail target.");
+    }
+    return target;
   }
   throw new Error("Unknown collection action target kind: " + targetKind);
 }
@@ -197,7 +166,7 @@ export function composeDocsViewerManagementCollectionContributions(options = {})
       host: host,
       reason: cleanString(reason),
       registerAction: actionRegistrar({
-        collection: currentList.context.collection,
+        actionContext: currentList.context.actionContext,
         refreshAndOpenDocument: currentList.context.refreshAndOpenDocument,
         refreshCollection: currentList.context.refreshCollection,
         selection: selectionSnapshot
@@ -316,20 +285,22 @@ export function composeDocsViewerManagementCollectionContributions(options = {})
       if (!render) return;
       var ownerId = contributionId(owner, index === 0 ? "default" : "customisation");
       var child = createHost(host, "div", ownerId, "list-toolbar");
+      var actions = createHost(context.actionHost, "div", ownerId, "list-actions");
       render(Object.assign({}, context, {
         access: "manage",
         host: child,
+        actionHost: actions,
         publishSelection: publishSelection,
         sort: index === 0 && customListHead ? null : context.sort,
         registerAction: actionRegistrar({
-          collection: context.collection,
+          actionContext: context.actionContext,
           refreshAndOpenDocument: context.refreshAndOpenDocument,
           refreshCollection: context.refreshCollection,
           selection: selectionSnapshot
         }, "list-toolbar"),
         registerSelectionAction: function (definition, snapshot) {
           return actionRegistrar({
-            collection: context.collection,
+            actionContext: context.actionContext,
             refreshAndOpenDocument: context.refreshAndOpenDocument,
             refreshCollection: context.refreshCollection,
             selection: normalizedSelection(snapshot)
@@ -337,6 +308,7 @@ export function composeDocsViewerManagementCollectionContributions(options = {})
         }
       }));
       appendWhenPopulated(host, child);
+      appendWhenPopulated(context.actionHost, actions);
     });
     renderSelectionContribution("list-toolbar-rendered");
   }
@@ -351,10 +323,9 @@ export function composeDocsViewerManagementCollectionContributions(options = {})
         access: "manage",
         host: child,
         registerAction: actionRegistrar({
-          collection: context.collection,
+          actionContext: context.actionContext,
           refreshAndOpenDocument: context.refreshAndOpenDocument,
-          refreshCollection: context.refreshCollection,
-          target: context.target
+          refreshCollection: context.refreshCollection
         }, "detail-toolbar")
       }));
       appendWhenPopulated(context.host, child);

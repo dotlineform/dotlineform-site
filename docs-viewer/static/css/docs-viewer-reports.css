@@ -10,8 +10,7 @@
   line-height: var(--docs-viewer-line-snug);
 }
 
-.docsViewerReport__toolbar,
-.docsReportDetail__header{
+.docsViewerReport__toolbar{
   --docs-viewer-control-height: var(--docs-viewer-report-control-height);
 }
 
@@ -214,17 +213,6 @@
   max-width: var(--docs-viewer-measure);
   font-size: 1rem;
   line-height: var(--line-loose, 1.7);
-}
-
-.docsReportDetail__header{
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.7rem;
-  align-items: center;
-  padding-bottom: var(--docs-viewer-space-3);
-  border-bottom: 1px solid var(--docs-viewer-border);
-  font-size: var(--text-sm, var(--docs-viewer-font-small));
-  line-height: var(--docs-viewer-line-snug);
 }
 
 .docsReportDetail__body{

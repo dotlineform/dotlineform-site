@@ -719,6 +719,7 @@ function renderListHead(state, documents) {
 }
 
 function renderListToolbar(state, documents) {
+  state.listActionHost.replaceChildren();
   if (state.listToolbarNode) {
     state.listToolbarNode.remove();
     state.listToolbarNode = null;
@@ -729,7 +730,8 @@ function renderListToolbar(state, documents) {
   host.className = "docsViewerReport__contributionToolbar docsViewerReport__contributionToolbar--list";
   host.dataset.reportContributionHost = "list-toolbar";
   renderToolbar({
-    collection: collectionTarget(state.collectionId, state.viewerStage),
+    actionContext: state.actionContext,
+    collection: state.actionContext.collectionTarget,
     documents: Object.freeze(documents.map(documentRecord)),
     handleContributionError: function (error, reason) {
       try {
@@ -745,6 +747,7 @@ function renderListToolbar(state, documents) {
       );
     },
     host: host,
+    actionHost: state.listActionHost,
     refreshAndOpenDocument: function (target) {
       return refreshAndOpenDocument(state, target);
     },
@@ -784,23 +787,46 @@ function renderRows(state, docs) {
 }
 
 function publishState(state, reportState, target, reason, detail) {
+  var record = detail && detail.record || null;
+  if (reportState === "detail" && (!target || target.doc_id !== state.validDetailId
+    || target.collection !== state.collectionId || cleanString(target.stage) !== state.viewerStage
+    || !record || record.doc_id !== target.doc_id)) {
+    throw new Error("Collection action context did not match the validated document.");
+  }
+  if (record) {
+    record = Object.freeze(Object.assign({}, documentRecord(state.docs.find(function (doc) {
+      return doc.docId === target.doc_id;
+    })), record));
+  }
+  var active = !["inactive", "unmounted"].includes(reportState);
+  var context = Object.freeze({
+    state: reportState,
+    reason: reason,
+    parentTarget: active ? state.parentTarget : null,
+    collectionTarget: active ? state.collectionTarget : null,
+    collectionLabel: collectionTitle(state.collection, state.collectionId),
+    documentTarget: reportState === "detail" ? Object.freeze(target)
+      : (reportState === "list" ? state.parentTarget : null),
+    documentRecord: reportState === "detail" ? record
+      : (reportState === "list" ? state.parentRecord : null),
+    documentInfo: detail && detail.info || null,
+    actionHost: reportState === "detail" ? state.detailActionHost
+      : (reportState === "list" ? state.listActionHost : null),
+    returnToList: reportState === "detail" ? function () { returnToList(state); } : null,
+    refreshDocument: function (documentTarget) { return refreshAndOpenDocument(state, documentTarget); },
+    refreshDisplayedDocument: function (documentTarget, isCurrent) {
+      return refreshDisplayedDocument(state, documentTarget, isCurrent);
+    },
+    refreshCollection: function (collection) { return refreshCollection(state, collection); }
+  });
+  state.actionContext = context;
   if (typeof state.onDocumentState === "function") {
-    state.onDocumentState(Object.assign({ state: reportState, target: target }, detail || {}));
+    state.onDocumentState(context);
   }
   notifyContribution(state, Object.assign({
     type: "state",
     state: cleanString(reportState),
-    reason: cleanString(reason),
-    target: target || null,
-    refreshDocument: function (documentTarget) {
-      return refreshAndOpenDocument(state, documentTarget);
-    },
-    refreshDisplayedDocument: function (documentTarget, isCurrent) {
-      return refreshDisplayedDocument(state, documentTarget, isCurrent);
-    },
-    refreshCollection: function (collection) {
-      return refreshCollection(state, collection);
-    }
+    reason: cleanString(reason)
   }, detail || {}));
 }
 
@@ -855,9 +881,21 @@ function renderListView(state) {
   state.tableNode.hidden = false;
   state.statusNode.hidden = false;
   if (state.detailNode) state.detailNode.hidden = true;
+  publishState(state, "list", null, "list-view");
   if (state.listNeedsRender && !renderListProjectionContained(state, "list-projection-failed")) return;
   if (state.listToolbarNode) state.listToolbarNode.hidden = false;
-  publishState(state, "list", null, "list-view");
+}
+
+function returnToList(state) {
+  if (!state.mounted || !state.root.isConnected) return;
+  writeSubdocUrl(state, "", "push");
+  renderListView(state);
+  var position = state.listReturnPosition;
+  var windowRef = state.root.ownerDocument.defaultView;
+  if (position && windowRef && state.root.dataset.reportState === "list") {
+    windowRef.scrollTo({ left: position.left, top: position.top, behavior: "auto" });
+    if (position.control.isConnected) position.control.focus({ preventScroll: true });
+  }
 }
 
 function detailTitle(payload, fallback) {
@@ -872,49 +910,25 @@ function renderDetailShell(state, docId) {
   section.className = "docsReportDetail";
   section.setAttribute("aria-label", "Loading " + (humanize(docId) || docId));
 
-  var header = document.createElement("div");
-  header.className = "docsReportDetail__header";
-
-  var back = document.createElement("button");
-  back.className = "docsViewer__toolbarIconButton docsReportDetail__back";
-  back.type = "button";
-  back.appendChild(createDocsViewerToolbarIcon(document, "docsViewer__icon--arrow-left"));
-  var backLabel = "Back to all "
-    + collectionTitle(state.collection, state.collectionId).toLowerCase();
-  back.setAttribute("aria-label", backLabel);
-  back.title = backLabel;
-  back.addEventListener("click", function () {
-    writeSubdocUrl(state, "", "push");
-    renderListView(state);
-    var position = state.listReturnPosition;
-    var windowRef = state.root.ownerDocument.defaultView;
-    if (position && windowRef && state.root.dataset.reportState === "list") {
-      windowRef.scrollTo({ left: position.left, top: position.top, behavior: "auto" });
-      if (position.control.isConnected) position.control.focus({ preventScroll: true });
-    }
-  });
-
   var body = document.createElement("article");
   body.className = "docsReportDetail__body docsViewer__content content";
 
-  header.appendChild(back);
-  section.appendChild(header);
   section.appendChild(body);
   state.root.appendChild(section);
   state.detailNode = section;
-  state.detailHeaderNode = header;
+  state.detailActionHost = document.createElement("div");
+  state.detailActionHost.className = "docsViewer__collectionActions";
   state.detailBodyNode = body;
 }
 
-function renderDetailToolbar(state, docId) {
+function renderDetailToolbar(state) {
   var renderToolbar = contributionCallback(state.contribution, "renderDetailToolbar");
-  if (!renderToolbar || !state.detailHeaderNode) return;
-  var host = document.createElement("div");
-  host.className = "docsViewerReport__contributionToolbar docsViewerReport__contributionToolbar--detail";
+  if (!renderToolbar || !state.detailActionHost) return;
+  var host = state.detailActionHost;
   host.dataset.reportContributionHost = "detail-toolbar";
-  var doc = state.docs.find(function (record) { return record.docId === docId; });
   renderToolbar({
-    collection: collectionTarget(state.collectionId, state.viewerStage),
+    actionContext: state.actionContext,
+    collection: state.actionContext.collectionTarget,
     commitDeletedDocument: function (target) {
       return reconcileCommittedDeletion(state, target);
     },
@@ -922,7 +936,7 @@ function renderDetailToolbar(state, docId) {
       return reconcileCommittedDraft(state, target, draft);
     },
     data: state.customisationData,
-    document: documentRecord(doc),
+    document: state.actionContext.documentRecord,
     host: host,
     refreshAndOpenDocument: function (target) {
       return refreshAndOpenDocument(state, target);
@@ -930,11 +944,8 @@ function renderDetailToolbar(state, docId) {
     refreshCollection: function (target) {
       return refreshCollection(state, target);
     },
-    target: detailTarget(state, docId)
+    target: state.actionContext.documentTarget
   });
-  if (host.childNodes.length) {
-    state.detailHeaderNode.appendChild(host);
-  }
 }
 
 /** Update generated content and Info within the existing detail shell. */
@@ -1031,7 +1042,7 @@ function renderDetailById(state, docId, options) {
     .then(function (payload) {
       if (requestVersion !== state.detailRequestVersion) return true;
       var contentReady = renderDetailPayload(state, docId, payload);
-      renderDetailToolbar(state, docId);
+      renderDetailToolbar(state);
       return Promise.resolve(contentReady).then(function () { return true; });
     })
     .catch(function (error) {
@@ -1226,7 +1237,7 @@ function returnFromDeletedDetail(state, docId) {
   if (state.validDetailId === docId) {
     if (state.detailNode) state.detailNode.remove();
     state.detailNode = null;
-    state.detailHeaderNode = null;
+    state.detailActionHost = null;
     state.detailBodyNode = null;
     writeSubdocUrl(state, "", "replace");
     renderListView(state);
@@ -1356,6 +1367,13 @@ function mountResolvedDocsCollectionReport(context, contribution) {
     mountDocumentContent: context.mountCollectionDocumentContent,
     onDocumentState: context.onCollectionDocumentState,
     parentDocId: cleanString(context && context.doc && context.doc.doc_id),
+    parentTarget: Object.freeze({
+      ...(context.viewerStage ? { stage: context.viewerStage } : {}),
+      doc_id: cleanString(context.doc && context.doc.doc_id)
+    }),
+    parentRecord: context.doc,
+    collectionTarget: Object.freeze(collectionTarget(collectionIdValue, context.viewerStage)),
+    listActionHost: root.ownerDocument.createElement("div"),
     collection: collection,
     collectionId: collectionIdValue,
     manifestUrl: url,
@@ -1387,12 +1405,13 @@ function mountResolvedDocsCollectionReport(context, contribution) {
     viewerStage: cleanString(context && context.viewerStage),
     mounted: true
   };
+  state.listActionHost.className = "docsViewer__collectionActions";
   bindFilterControls(state);
   updateFilterControls(state);
 
   var parent = root.parentNode;
   var windowRef = root.ownerDocument && root.ownerDocument.defaultView;
-  if (state.contribution && parent && windowRef && typeof windowRef.MutationObserver === "function") {
+  if (parent && windowRef && typeof windowRef.MutationObserver === "function") {
     state.unmountObserver = new windowRef.MutationObserver(function () {
       if (root.parentNode === parent) return;
       state.unmountObserver.disconnect();
@@ -1464,6 +1483,13 @@ export function mountDocsCollectionReport(context) {
           ? error.message
           : "Failed to resolve docs collection customisation."
       );
+      if (typeof context.onCollectionDocumentState === "function") {
+        context.onCollectionDocumentState({
+          state: "error",
+          parentTarget: { ...(context.viewerStage ? { stage: context.viewerStage } : {}), doc_id: context.doc.doc_id },
+          documentTarget: null
+        });
+      }
       return true;
     });
 }

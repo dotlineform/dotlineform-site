@@ -1,3 +1,5 @@
+import { createDocsViewerToolbarIcon } from "./docs-viewer-toolbar-icon.js";
+
 const MAIN_VIEW_MOUNT_SELECTOR = "[data-docs-viewer-main-view-mount]";
 
 export function mainViewMount(root) {
@@ -34,7 +36,19 @@ export function renderDocsViewerMainView(options = {}) {
   actions.className = "docsViewer__mainViewToolbarActions";
   actions.setAttribute("data-docs-viewer-control-surface-mount", "main-view");
 
-  if (toolbar) toolbar.appendChild(actions);
+  if (toolbar) {
+    const back = documentRef.createElement("button");
+    back.type = "button";
+    back.className = "docsViewer__toolbarIconButton docsViewer__collectionBack";
+    back.hidden = true;
+    back.appendChild(createDocsViewerToolbarIcon(documentRef, "docsViewer__icon--arrow-left"));
+    const controlGroup = documentRef.createElement("div");
+    controlGroup.className = "docsViewer__mainViewToolbarControlGroup";
+    const collectionActions = documentRef.createElement("div");
+    collectionActions.className = "docsViewer__collectionActionMount";
+    controlGroup.append(actions, collectionActions);
+    toolbar.append(back, controlGroup);
+  }
   if (toolbarMount && toolbar) {
     toolbarMount.replaceChildren(toolbar);
   } else if (toolbarMount) {
@@ -75,6 +89,8 @@ export function findDocsViewerMainViewRefs(options = {}) {
   return {
     main: root.querySelector(".docsViewer__main"),
     toolbar: root.querySelector("#docsViewerMainViewToolbar"),
+    collectionBack: root.querySelector(".docsViewer__collectionBack"),
+    collectionActions: root.querySelector(".docsViewer__collectionActionMount"),
     content: root.querySelector("#docsViewerContent"),
     resultsStatus: root.querySelector("#docsViewerResultsStatus"),
     results: root.querySelector("#docsViewerResults"),

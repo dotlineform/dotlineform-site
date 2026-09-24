@@ -70,9 +70,6 @@ function writeClipboardText(documentRef, text) {
  * @returns {Object}
  */
 export function createDocsViewerManagementCollectionDefaultContribution(options = {}) {
-  var onLifecycleEvent = typeof options.onLifecycleEvent === "function"
-    ? options.onLifecycleEvent
-    : null;
   var onPreparePackage = typeof options.onPreparePackage === "function"
     ? options.onPreparePackage
     : null;
@@ -231,7 +228,6 @@ export function createDocsViewerManagementCollectionDefaultContribution(options 
       rowSelections.clear();
     }
     projectSelection();
-    if (onLifecycleEvent) onLifecycleEvent(event);
   }
 
   function renderRow(context) {
@@ -287,7 +283,7 @@ export function createDocsViewerManagementCollectionDefaultContribution(options 
   function renderListToolbar(context) {
     var settings = context || {};
     var host = settings.host;
-    if (!host) return;
+    if (!host || !settings.actionHost) return;
     clearListToolbar();
     rowSelections.clear();
     currentDocuments = Array.isArray(settings.documents) ? settings.documents.slice() : [];
@@ -425,17 +421,18 @@ export function createDocsViewerManagementCollectionDefaultContribution(options 
     var clearButton = selectionCommandButton(documentRef, "clear", "Clear");
     var doneButton = selectionCommandButton(documentRef, "done", "Done");
     selectionControl.replaceChildren(selectAllButton, clearButton, doneButton);
-    root.replaceChildren.apply(
-      root,
-      (sortButton ? [sortButton] : [])
-        .concat(createButton ? [createButton] : [])
+    settings.actionHost.replaceChildren.apply(
+      settings.actionHost,
+      (createButton ? [createButton] : [])
         .concat(regenerateButton ? [regenerateButton] : [])
-        .concat([actionsHost, selectionControl])
+        .concat([actionsHost])
     );
+    if (sortButton) root.appendChild(sortButton);
+    root.appendChild(selectionControl);
     host.appendChild(root);
 
     function handleDocumentClick(event) {
-      if (!root.contains(event.target)) hideActionsMenu(false);
+      if (!settings.actionHost.contains(event.target)) hideActionsMenu(false);
     }
 
     function handleDocumentKeydown(event) {
@@ -464,21 +461,9 @@ export function createDocsViewerManagementCollectionDefaultContribution(options 
     if (createButton) {
       createButton.addEventListener("click", function () {
         if (createButton.disabled || createInFlight) return;
-        var collection = selectionOwner.collection();
         createInFlight = true;
         projectSelection();
-        var createRequest = createRegistration
-          ? createRegistration.invoke()
-          : onCreateDocument(
-              {
-                ...(collection.stage ? { stage: collection.stage } : {}),
-                collection: collection.collection
-              },
-              {
-                refreshAndOpenDocument: settings.refreshAndOpenDocument,
-                restoreFocus: createButton
-              }
-            );
+        var createRequest = createRegistration.invoke();
         Promise.resolve(createRequest).catch(function (error) {
           if (typeof options.setStatus === "function") {
             options.setStatus(
@@ -511,38 +496,23 @@ export function createDocsViewerManagementCollectionDefaultContribution(options 
       var resolution = prepareResolution();
       if (!resolution.enabled) return;
       hideActionsMenu(true);
-      var collection = selectionOwner.collection();
       prepareInFlight = true;
       projectSelection();
-      var prepareRequest;
-      if (typeof settings.registerSelectionAction === "function") {
-        prepareRequest = settings.registerSelectionAction({
-          id: DOCS_VIEWER_ACTION_IDS.PREPARE_DOCUMENT_PACKAGE,
-          placement: "selection",
-          targetKind: "selection",
-          capability: Boolean(onPreparePackage),
-          emptyState: "disabled",
-          refreshEffect: "none",
-          handler: function (target) {
-            return onPreparePackage(target, { restoreFocus: actionsButton });
-          }
-        }, {
-          active: selectionOwner.snapshot().selectionModeActive,
-          checkedDocIds: resolution.targetDocIds,
-          eligibleDocIds: eligibleDocIds()
-        }).invoke();
-      } else {
-        prepareRequest = onPreparePackage(
-          {
-            ...(collection.stage ? { stage: collection.stage } : {}),
-            collection: collection.collection,
-            doc_ids: resolution.targetDocIds.slice()
-          },
-          {
-            restoreFocus: actionsButton
-          }
-        );
-      }
+      var prepareRequest = settings.registerSelectionAction({
+        id: DOCS_VIEWER_ACTION_IDS.PREPARE_DOCUMENT_PACKAGE,
+        placement: "selection",
+        targetKind: "selection",
+        capability: Boolean(onPreparePackage),
+        emptyState: "disabled",
+        refreshEffect: "none",
+        handler: function (target) {
+          return onPreparePackage(target, { restoreFocus: actionsButton });
+        }
+      }, {
+        active: selectionOwner.snapshot().selectionModeActive,
+        checkedDocIds: resolution.targetDocIds,
+        eligibleDocIds: eligibleDocIds()
+      }).invoke();
       Promise.resolve(prepareRequest).catch(function (error) {
         if (typeof options.setStatus === "function") {
           options.setStatus(

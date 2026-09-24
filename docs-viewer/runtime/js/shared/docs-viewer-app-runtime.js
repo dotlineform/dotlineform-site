@@ -158,9 +158,9 @@ export function startDocsViewerRuntime(options) {
     parentTarget: null,
     collectionTarget: null,
     collectionLabel: "",
-    subdocTarget: null,
-    subdocRecord: null,
-    subdocInfo: null,
+    documentTarget: null,
+    documentRecord: null,
+    documentInfo: null,
     refreshDocument: null,
     refreshCollection: null
   };
@@ -188,9 +188,9 @@ export function startDocsViewerRuntime(options) {
           parentTarget: null,
           collectionTarget: null,
           collectionLabel: "",
-          subdocTarget: null,
-          subdocRecord: null,
-          subdocInfo: null,
+          documentTarget: null,
+          documentRecord: null,
+          documentInfo: null,
           refreshDocument: null,
           refreshCollection: null
         };
@@ -199,6 +199,19 @@ export function startDocsViewerRuntime(options) {
       controller.publishCollectionReportState(latestCollectionReportState);
     }
     if (documentViewCoordinator) documentViewCoordinator.updateInfoPanel();
+    renderMainViewControls();
+  }
+
+  function documentActionContext() {
+    if (latestCollectionReportState.parentTarget) return latestCollectionReportState;
+    var displayed = appSession.domains.selectedDocument;
+    var doc = displayed.selectedDocId === displayed.displayedDocId && displayed.displayedPayload
+      && displayed.displayedPayload.doc_id === displayed.displayedDocId
+      ? appSession.domains.documentIndex.docsById.get(displayed.displayedDocId) : null;
+    return {
+      documentTarget: doc ? { ...(viewerStage ? { stage: viewerStage } : {}), doc_id: doc.doc_id } : null,
+      documentRecord: doc || null
+    };
   }
 
   var appSession = composition.appSession;
@@ -291,6 +304,12 @@ export function startDocsViewerRuntime(options) {
         reason: "back",
         warn: false
       });
+    });
+  }
+  if (mainViewRefs.collectionBack) {
+    mainViewRefs.collectionBack.addEventListener("click", function () {
+      if (mainViewRefs.collectionBack.hidden || mainViewRefs.collectionBack.disabled) return;
+      if (typeof latestCollectionReportState.returnToList === "function") latestCollectionReportState.returnToList();
     });
   }
   renderAppViewerControls();
@@ -622,6 +641,7 @@ export function startDocsViewerRuntime(options) {
       },
       managementShellRefs: appShellRefs.managementShell || {},
       mainViewControlHandlerContributions: settings.mainViewControlHandlerContributions || {},
+      documentActionContext: documentActionContext,
       sourceEditorServices: sourceEditorServices,
       viewRegistry: viewRegistry,
       activeViewState: documentViewCoordinator.activeViewState,
@@ -799,6 +819,22 @@ export function startDocsViewerRuntime(options) {
     viewRegistry.listControls({ surfaceId: "main-view" }).forEach(function (control) {
       controlStateById[control.id] = mergedMainViewControlState(control.id);
     });
+    var rendered = activeState.activeViewId === "rendered-document"
+      && activeState.activeModeId === "rendered-document";
+    var report = latestCollectionReportState;
+    if (mainViewRefs.collectionBack) {
+      mainViewRefs.collectionBack.hidden = !rendered || typeof report.returnToList !== "function";
+      mainViewRefs.collectionBack.disabled = root.dataset.managementBusy === "true";
+      var label = "Back to all " + String(report.collectionLabel || "").toLowerCase();
+      mainViewRefs.collectionBack.title = label;
+      mainViewRefs.collectionBack.setAttribute("aria-label", label);
+    }
+    var mount = mainViewRefs.collectionActions;
+    if (mount) {
+      var host = report.actionHost || null;
+      if (mount.firstChild !== host) mount.replaceChildren(...(host ? [host] : []));
+      mount.hidden = !rendered;
+    }
     return mainViewControlHost.render({
       activeViewId: activeState.activeViewId,
       activeModeId: activeState.activeModeId,

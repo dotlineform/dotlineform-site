@@ -311,9 +311,9 @@ export function initDocsViewerRouteWorkflow(context) {
         && window.location.href === href;
     }
     if (!docId || !current()) return;
-    if (report && report.state === "detail" && report.subdocTarget) {
+    if (report && report.state === "detail" && report.documentTarget) {
       if (typeof report.refreshDisplayedDocument === "function") {
-        await report.refreshDisplayedDocument(report.subdocTarget, current);
+        await report.refreshDisplayedDocument(report.documentTarget, current);
       }
       return;
     }

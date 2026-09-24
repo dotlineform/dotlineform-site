@@ -26,7 +26,7 @@ export function initDocsViewerDocumentController(context) {
       reason: String(reason || "document-navigation"),
       documentMountGeneration: mountGeneration,
       parentTarget: null,
-      subdocTarget: null
+      documentTarget: null
     });
   }
 
@@ -40,6 +40,16 @@ export function initDocsViewerDocumentController(context) {
 
   function mountDocumentExtras(doc, payload, mountGeneration) {
     if (typeof context.mountDocumentExtras !== "function") return;
+    if (payload.report && payload.report.id === "docs_collection") {
+      context.publishCollectionReportState({
+        state: "loading",
+        documentMountGeneration: mountGeneration,
+        parentTarget: { ...(context.viewerStage() ? { stage: context.viewerStage() } : {}), doc_id: doc.doc_id },
+        collectionTarget: { ...(context.viewerStage() ? { stage: context.viewerStage() } : {}), collection: payload.report.collection },
+        collectionLabel: payload.report.collection,
+        documentTarget: null
+      });
+    }
     Promise.resolve(context.mountDocumentExtras({
       appContext: context.appContext || {},
       checkGeneratedDataReadCapability: context.checkGeneratedDataReadCapability,
@@ -77,14 +87,20 @@ export function initDocsViewerDocumentController(context) {
       },
       requestContentDetail: context.requestContentDetail,
       onCollectionDocumentState: function (state) {
+        if (mountGeneration !== documentMountGeneration) return;
+        if (state.parentTarget && state.parentTarget.doc_id !== doc.doc_id) return;
+        if (state.collectionTarget && (state.collectionTarget.collection !== payload.report.collection
+          || String(state.collectionTarget.stage || "") !== String(context.viewerStage() || ""))) return;
+        context.publishCollectionReportState(Object.assign({}, state, {
+          documentMountGeneration: mountGeneration
+        }));
         var adapter = context.linksDetailAdapter;
-        if (mountGeneration !== documentMountGeneration || !adapter) return;
-        var target = state.state === "detail" ? state.target : null;
+        if (!adapter) return;
+        var target = state.state === "detail" ? state.documentTarget : null;
         if (target && (target.collection !== payload.report.collection
           || String(target.stage || "") !== String(context.viewerStage() || ""))) return;
-        adapter.setDocument({ content: content, target: target, title: state.record && state.record.title });
+        adapter.setDocument({ content: content, target: target, title: state.documentRecord && state.documentRecord.title });
       },
-      publishCollectionReportState: context.publishCollectionReportState,
       routeContext: typeof context.routeContext === "function" ? context.routeContext() : context.routeContext,
       workspaceConfigState: workspaceConfigState,
       setStatus: setStatus,

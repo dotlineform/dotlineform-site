@@ -291,7 +291,8 @@ export function mountDocsViewerReport(context) {
           if (!child.payload.report) return Promise.resolve();
           return mountDocsViewerReport(Object.assign({}, context, child, {
             // Child reports mount inline; the outer document owns Content Detail.
-            reportPresentationAdapter: null
+            reportPresentationAdapter: null,
+            onCollectionDocumentState: null
           }));
         }
       }))).then(function (mountResult) {
