@@ -47,13 +47,11 @@ function normalizeRecentDoc(row) {
   if (!row || typeof row !== "object" || Array.isArray(row)) return null;
   var docId = cleanString(row.doc_id);
   var title = cleanString(row.title);
-  var contentUrl = cleanString(row.content_url);
   var timestamp = cleanString(row.timestamp);
-  if (!docId || !title || !contentUrl || !timestamp) return null;
+  if (!docId || !title || !timestamp) return null;
   var doc = {
     doc_id: docId,
     title: title,
-    content_url: contentUrl,
     timestamp: timestamp
   };
   var parentId = optionalStringRecordValue(row, "parent_id");

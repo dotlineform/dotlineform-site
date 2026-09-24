@@ -44,3 +44,12 @@ def recent_basis_for_route(repo_root: Path, *, app_kind: str) -> str:
     if len(matches) != 1:
         raise ValueError(f"ambiguous Recent route policy for {app_kind}")
     return matches[0]["basis"]
+
+
+def working_recent_basis(repo_root: Path) -> str:
+    """Require all enabled readers to use the one Working-generated date basis."""
+    policies = recent_route_policies(repo_root)
+    bases = {policy["basis"] for policy in policies if policy["basis"]}
+    if len(bases) != 1:
+        raise ValueError("Recents readers must share one date basis for the copied Working payload")
+    return bases.pop()

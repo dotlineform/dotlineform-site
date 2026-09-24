@@ -25,6 +25,7 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
     parser.add_argument("--links-doc-ids", help="Exact changed/deleted document ids for Links, independently of ordinary rendering; an empty value selects none.")
     parser.add_argument("--links-created-doc-ids", help="Exact documents created by this operation that require initial Links records.")
     parser.add_argument("--skip-media-builds", action="store_true", help="Skip registered media producers during a controlled rebuild.")
+    parser.add_argument("--skip-recent", action="store_true", help="Preserve saved Recents during authoring follow-through.")
     parser.add_argument("--skip-browser-config", action="store_true", help="Skip browser-config writes during a controlled rebuild.")
     parser.add_argument("--diagnostics", action="store_true", help="Print machine-readable diagnostics for automation.")
     parser.add_argument("--write", action="store_true", help="Write generated files.")
@@ -60,6 +61,7 @@ def main(argv: list[str] | None = None) -> int:
                 source_dir=Path(args.source) if args.source else None,
                 output_dir=Path(args.output) if args.output else None,
                 viewer_base_url=args.viewer_base_url, only_doc_ids=only_doc_ids,
+                skip_recent=args.skip_recent,
                 links_doc_ids=links_doc_ids, links_created_doc_ids=links_created_doc_ids,
                 skip_media_builds=args.skip_media_builds,
             )

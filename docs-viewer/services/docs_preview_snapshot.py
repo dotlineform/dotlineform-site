@@ -17,6 +17,7 @@ from docs_build_manifest import (
     BUILD_MANIFEST_SCHEMA_VERSION,
 )
 from docs_publication_payloads import project_preview_view
+from docs_recent_payload import validate_recent_payload
 from docs_public_mermaid_payload import public_mermaid_payload_requires_projection
 from docs_workspace_config import (
     DocsStageConfig,
@@ -29,6 +30,7 @@ from docs_workspace_config import (
 PREVIEW_MANIFEST_FILENAME = "preview-manifest.json"
 PREVIEW_MANIFEST_SCHEMA_VERSION = "docs_preview_manifest_v1"
 IGNORED_FILENAMES = frozenset({".DS_Store", ".gitkeep"})
+COPIED_WORKING_PAYLOAD_PATHS = frozenset({Path("search/index.json"), Path("documents/recent.json")})
 HTML_START_TAG_PATTERN = re.compile(
     r"<(?P<body>[A-Za-z][A-Za-z0-9:-]*(?:[^>\"']|\"[^\"]*\"|'[^']*')*)>",
     re.DOTALL,
@@ -254,9 +256,11 @@ def _validate_prepared_index(path: Path, data: bytes, stage: str) -> None:
                 raise RuntimeError("generated Search term postings must be objects")
             if any(not isinstance(indexes, list) for indexes in postings.values()):
                 raise RuntimeError("generated Search postings must be arrays")
+    elif path == Path("documents/recent.json"):
+        validate_recent_payload(_read_json_bytes(data, "saved Recents payload"))
     else:
         key = ""
-        if path == Path("documents/recent.json") or (child_index and path.name == "manifest.json"):
+        if child_index and path.name == "manifest.json":
             key = "docs"
         elif path == Path("documents/backlinks.json"):
             key = "by_target"
@@ -414,14 +418,12 @@ def build_preview_snapshot_files(
                 raise ValueError("Preview Mermaid preparation is incomplete; prepare Preview again")
             document_ids.add(relative_path.stem)
             files[relative_path] = _project_preview_media_urls(config, data)
-        elif relative_path == Path("documents/recent.json"):
-            files[relative_path] = generated_files.get(Path("documents/.publish/recent.json"), data)
         else:
             files[relative_path] = data
 
     workspace = load_docs_workspace_config(repo_root)
     for path, data in list(files.items()):
-        if path.suffix == ".json" and path != Path("search/index.json"):
+        if path.suffix == ".json" and path not in COPIED_WORKING_PAYLOAD_PATHS:
             files[path] = json_bytes(project_preview_view(workspace, _read_json_bytes(data, f"prepared {path}")))
     for path, data in files.items():
         _validate_prepared_index(path, data, "preview")

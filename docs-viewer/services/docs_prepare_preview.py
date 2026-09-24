@@ -44,7 +44,7 @@ def promoted_source(doc: SourceDoc, collection: Any) -> bytes:
     return format_source(front_matter, doc.body).encode("utf-8")
 
 
-def _plan(repo_root: Path, body: dict[str, Any]) -> tuple[dict[str, Any], dict[Path, bytes], bytes]:
+def _plan(repo_root: Path, body: dict[str, Any]) -> tuple[dict[str, Any], dict[Path, bytes], bytes, bytes]:
     if body.get("stage") != "working" or "scope" in body:
         raise ValueError("Prepare Preview requires stage working")
     working = load_docs_stage(repo_root, "working")
@@ -53,6 +53,11 @@ def _plan(repo_root: Path, body: dict[str, Any]) -> tuple[dict[str, Any], dict[P
         raise FileNotFoundError("Working Search index is unavailable; rebuild Search in Working before preparing Preview")
     search_index = search_path.read_bytes()
     _validate_prepared_index(Path("search/index.json"), search_index, "working")
+    recent_path = generated_documents_path(working) / "recent.json"
+    if recent_path.is_symlink() or not recent_path.is_file():
+        raise FileNotFoundError("Working Recents is unavailable; run a full Working Build before preparing Preview")
+    recent_payload = recent_path.read_bytes()
+    _validate_prepared_index(Path("documents/recent.json"), recent_payload, "working")
     source_root = _lifecycle_root(repo_root, working, "source")
     source_files = _files_from_root(source_root)
     source_revision = files_revision(source_files)
@@ -89,6 +94,7 @@ def _plan(repo_root: Path, body: dict[str, Any]) -> tuple[dict[str, Any], dict[P
         Path("configuration"): (repo_root / CONFIG_REL_PATH).read_bytes(),
         Path("prepared-source"): files_revision(desired).encode(),
         Path("working-search"): search_index,
+        Path("working-recent"): recent_payload,
     })
     return {
         "ok": True, "stage": "working", "plan_revision": plan_revision,
@@ -96,17 +102,17 @@ def _plan(repo_root: Path, body: dict[str, Any]) -> tuple[dict[str, Any], dict[P
         "excluded_document_count": len(excluded), "collections": counts,
         "eligible_doc_ids": sorted(eligible), "excluded_doc_ids": sorted(excluded),
         "summary_text": f"Prepare Preview with {len(eligible)} documents.",
-    }, desired, search_index
+    }, desired, search_index, recent_payload
 
 
 def plan_prepare_preview(repo_root: Path, body: dict[str, Any]) -> dict[str, Any]:
-    """Bind confirmation to selected source, existing Search and current Preview."""
-    preview, _files, _search_index = _plan(repo_root, body)
+    """Bind confirmation to source, saved Search/Recents and current Preview."""
+    preview, _files, _search_index, _recent_payload = _plan(repo_root, body)
     return preview
 
 
 def build_captured_preview(
-    repo_root: Path, source_files: dict[Path, bytes], search_index: bytes,
+    repo_root: Path, source_files: dict[Path, bytes], search_index: bytes, recent_payload: bytes,
 ) -> tuple[dict[Path, bytes], dict[str, Any]]:
     """Build captured inputs in temporary storage without replacing live Preview."""
     build_parent = repo_root / "var"
@@ -118,6 +124,8 @@ def build_captured_preview(
         generated_root = config.generated.documents.location.path.parent
         captured_search = build_root / "working-search.json"
         captured_search.write_bytes(search_index)
+        captured_recent = build_root / "working-recent.json"
+        captured_recent.write_bytes(recent_payload)
         for relative, data in source_files.items():
             path = source_root / relative
             path.parent.mkdir(parents=True, exist_ok=True)
@@ -130,7 +138,8 @@ def build_captured_preview(
                 (documents.parent / "media" / media_type).mkdir(parents=True, exist_ok=True)
         result = subprocess.run(
             [sys.executable, str(repo_root / "docs-viewer/build/build_preview.py"),
-             "--docs-base-dir", str(build_root), "--search-index", str(captured_search)],
+             "--docs-base-dir", str(build_root), "--search-index", str(captured_search),
+             "--recent-payload", str(captured_recent)],
             cwd=repo_root, capture_output=True, text=True, check=False,
         )
         if result.returncode:
@@ -144,18 +153,18 @@ def apply_prepare_preview(repo_root: Path, body: dict[str, Any]) -> dict[str, An
     """Build temporary inputs synchronously, then replace the complete Preview."""
     if body.get("confirm") is not True:
         raise ValueError("confirm must be true to prepare Preview")
-    plan, desired, search_index = _plan(repo_root, body)
+    plan, desired, search_index, recent_payload = _plan(repo_root, body)
     if body.get("plan_revision") != plan["plan_revision"]:
         raise ValueError("Prepare Preview plan is stale; preview again")
-    files, build_manifest = build_captured_preview(repo_root, desired, search_index)
+    files, build_manifest = build_captured_preview(repo_root, desired, search_index, recent_payload)
     current = plan_prepare_preview(repo_root, {"stage": "working"})
     if current["plan_revision"] != plan["plan_revision"]:
-        raise ValueError("Working source, Search, configuration or Preview changed during preparation; prepare again")
+        raise ValueError("Working source, Search, Recents, configuration or Preview changed during preparation; prepare again")
     manifest = write_preview_snapshot(
         repo_root, files=files, generated_revision=build_manifest["generated_revision"],
         source_revision=plan["source_revision"],
     )
     return {
         **plan, "applied": True, "preview_manifest": manifest,
-        "summary_text": f"Preview prepared: {plan['document_count']} documents and Search. Review Preview before Deploy Repo.",
+        "summary_text": f"Preview prepared: {plan['document_count']} documents, Search and Recents. Review Preview before Deploy Repo.",
     }

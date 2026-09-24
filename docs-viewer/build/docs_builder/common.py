@@ -39,7 +39,6 @@ DOCS_VIEWER_PUBLIC_BROWSER_CONFIG_PATH = Path("docs-viewer/config/defaults/docs-
 SITE_DOCS_VIEWER_PUBLIC_BROWSER_CONFIG_PATH = Path("site/docs-viewer/config/defaults/docs-viewer-public-config.json")
 DOCS_VIEWER_BROWSER_CONFIG_SCHEMA_VERSION = "docs_viewer_config_v3"
 DOCS_INDEX_TREE_SCHEMA_VERSION = "docs_index_tree_v1"
-DOCS_RECENT_SCHEMA_VERSION = "docs_recent_v1"
 DEFAULT_RECENT_LIMIT = 20
 FRONT_MATTER_PATTERN = re.compile(r"\A---\s*\n(.*?)\n---\s*\n?", re.DOTALL)
 MEDIA_TOKEN_PATTERN = re.compile(r"\[\[media:(.+?)\]\]")

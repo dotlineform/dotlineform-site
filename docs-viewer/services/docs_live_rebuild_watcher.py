@@ -711,7 +711,7 @@ def rebuild_stage(
     except (KeyError, FileNotFoundError, ValueError) as exc:
         log(f"{stage} docs rebuild failed before writing: {exc}")
         return False
-    docs_command = python_builder_command(DOCS_BUILDER_SCRIPT, "--write", "--diagnostics")
+    docs_command = python_builder_command(DOCS_BUILDER_SCRIPT, "--write", "--diagnostics", "--skip-recent")
     if stage:
         docs_command.extend(["--stage", stage, "--skip-browser-config", "--skip-media-builds"])
     if stage == "working" and links_doc_ids is not None:

@@ -19,7 +19,7 @@ from .common import (
 )
 from .media_builds import build_collection_media_snapshot
 from .payloads import PayloadBuilderMixin
-from .recent_policy import recent_basis_for_route
+from .recent_policy import working_recent_basis
 from .rendering import ContentRenderingMixin
 from .semantic_token_artifacts import SemanticTokenArtifactsMixin
 from .semantic_token_registry import load_semantic_token_registry
@@ -49,6 +49,7 @@ class DocsDataBuilder(
         links_doc_ids: list[str] | None = None,
         links_created_doc_ids: list[str] | None = None,
         skip_media_builds: bool = False,
+        skip_recent: bool = False,
     ) -> None:
         self.repo_root = repo_root.resolve()
         self.config = config
@@ -66,6 +67,7 @@ class DocsDataBuilder(
         self.links_doc_ids = None if links_doc_ids is None else normalize_doc_ids(links_doc_ids)
         self.links_created_doc_ids = normalize_doc_ids(links_created_doc_ids or [])
         self.skip_media_builds = skip_media_builds is True
+        self.skip_recent = skip_recent is True
         self.output_url_base = self.output_url_base_for(self.output_url_dir())
         self.site_config = load_site_tools_config(self.repo_root)
         self.semantic_token_registry = load_semantic_token_registry(self.repo_root)
@@ -110,32 +112,20 @@ class DocsDataBuilder(
             "docs": flat_doc_rows,
         }
         index_tree_payload = self.index_tree_payload(docs, viewer_options)
-        # Targeted builds leave every Recent projection untouched, even if missing.
+        # Preview, targeted builds and authoring follow-through preserve saved Recents.
         recent_payload = None
-        publication_recent_payload = None
-        if not self.targeted_build:
-            recent_candidates = self.recent_candidates(docs)
+        if self.config.stage == "working" and not self.targeted_build and not self.skip_recent:
+            recent_candidates = self.recent_candidates(docs, index_tree_payload["docs"])
             recent_payload = self.recent_payload(
                 recent_candidates,
-                basis=recent_basis_for_route(self.repo_root, app_kind="manage"),
+                basis=working_recent_basis(self.repo_root),
                 output_path=self.output_dir / "recent.json",
             )
-            public_recent_basis = recent_basis_for_route(
-                self.repo_root, app_kind="public",
-            )
-            if public_recent_basis:
-                publication_recent_payload = self.recent_payload(
-                    recent_candidates,
-                    basis=public_recent_basis,
-                    output_path=self.output_dir / ".publish/recent.json",
-                    published=True,
-                )
         semantic_token_payloads = self.build_semantic_token_payloads(docs, semantic_tokens_by_doc)
         backlinks_payload = self.backlinks_payload(docs, item_payloads)
         write_plan = self.build_write_plan(
             index_tree_payload,
             recent_payload,
-            publication_recent_payload,
             item_payloads,
             semantic_token_payloads,
             backlinks_payload=backlinks_payload,
@@ -172,7 +162,6 @@ class DocsDataBuilder(
             "index_payload": index_payload,
             "index_tree_payload": index_tree_payload,
             "recent_payload": recent_payload,
-            "publication_recent_payload": publication_recent_payload,
             "item_payloads": item_payloads,
             "semantic_token_payloads": semantic_token_payloads,
             "backlinks_payload": backlinks_payload,

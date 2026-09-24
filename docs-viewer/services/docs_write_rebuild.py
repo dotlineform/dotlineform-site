@@ -251,8 +251,9 @@ def rebuild_stage_outputs(
     links_created_doc_ids: Optional[list[str]] = None,
     docs_base_dir: Path | None = None,
     copied_search_index: bytes | None = None,
+    copied_recent_payload: bytes | None = None,
 ) -> Dict[str, Any]:
-    """Await document work and built/copied Search before recording completion.
+    """Await document work and built/copied discovery data before completion.
 
     Full Working docs-and-Search rebuilds also combine prepared Links records.
     Individual document operations omit Search and leave that aggregate alone.
@@ -261,12 +262,15 @@ def rebuild_stage_outputs(
         raise ValueError("Preview builds require an explicit temporary workspace")
     if include_search and stage != "working":
         raise ValueError("Search rebuilds require Working; Preview copies the existing index")
+    if (copied_search_index is None) != (copied_recent_payload is None):
+        raise ValueError("Preview requires both captured Working Search and Recents")
     if copied_search_index is not None:
         if stage != "preview":
             raise ValueError("Only Preview copies an existing Search index")
         from docs_preview_snapshot import _validate_prepared_index
 
         _validate_prepared_index(Path("search/index.json"), copied_search_index, "working")
+        _validate_prepared_index(Path("documents/recent.json"), copied_recent_payload, "working")
     try:
         stage_config = load_docs_stage(repo_root, stage)
     except KeyError as exc:
@@ -276,6 +280,8 @@ def rebuild_stage_outputs(
     docs_target_doc_ids: list[str] = []
     docs_reason = "full-stage fallback: no targeted docs payload ids provided"
     docs_command = python_builder_command(DOCS_BUILDER_SCRIPT, "--write", "--diagnostics")
+    if not include_search:
+        docs_command.append("--skip-recent")
     if stage:
         docs_command.extend(["--stage", stage])
     if stage == "working":
@@ -301,8 +307,8 @@ def rebuild_stage_outputs(
     commands = [("docs", docs_command)]
     search = {"mode": "copy" if copied_search_index is not None else "none", "doc_ids": []}
     if include_search or copied_search_index is not None:
-        commands.extend(
-            (
+        collection_commands = [
+            (collection, (
                 "collection_docs",
                 python_builder_command(
                     DOCS_BUILDER_SCRIPT,
@@ -314,9 +320,18 @@ def rebuild_stage_outputs(
                     *(["--stage", stage_config.stage] if stage_config.stage else []),
                     *(["--skip-media-builds"] if skip_media_builds else []),
                 ),
-            )
+            ))
             for collection in stage_config.collections
-        )
+        ]
+        if stage_config.stage == "working":
+            # Recents consumes current collection metadata inside the ordinary build.
+            commands = [
+                *(command for collection, command in collection_commands if collection.include_in_site_search),
+                *commands,
+                *(command for collection, command in collection_commands if not collection.include_in_site_search),
+            ]
+        else:
+            commands.extend(command for _collection, command in collection_commands)
     if include_search:
         if search_doc_ids is None:
             search = {"mode": "full", "doc_ids": []}
@@ -361,6 +376,8 @@ def rebuild_stage_outputs(
         output_path = resolve_workspace_path(repo_root, generated_search_path(stage_config))
         output_path.parent.mkdir(parents=True, exist_ok=True)
         output_path.write_bytes(copied_search_index)
+        recent_path = resolve_workspace_path(repo_root, generated_documents_path(stage_config)) / "recent.json"
+        recent_path.write_bytes(copied_recent_payload)
     complete_build = search["mode"] in {"full", "copy"}
     links = (
         write_workspace_links(repo_root, stage_config)

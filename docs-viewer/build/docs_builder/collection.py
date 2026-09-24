@@ -126,6 +126,7 @@ class CollectionDocsBuilder(DocsDataBuilder):
                 "doc_id": doc.doc_id,
                 "title": doc.title,
                 "last_updated": doc.last_updated,
+                "added_date": doc.added_date,
             }
             if self.config.stage == "working":
                 row["draft"] = doc.front_matter["draft"]

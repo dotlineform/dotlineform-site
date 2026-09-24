@@ -49,6 +49,9 @@ from docs_workspace_config import (  # noqa: E402
     generated_search_path,
     resolve_workspace_path,
 )
+from docs_discovery_selection import (  # noqa: E402
+    read_discovery_metadata, select_collection_documents, select_ordinary_documents,
+)
 from docs_document_identity import is_immutable_doc_id  # noqa: E402
 from docs_publication_ignore import read_publication_ignore_ids  # noqa: E402
 from docs_report_source import (  # noqa: E402
@@ -319,76 +322,13 @@ class DocsViewerSearchDataBuilder:
             return None
         return resolve_workspace_path(self.repo_root, Path(path))
 
-    def read_metadata(self, path: Path) -> dict[str, Any]:
-        """Require current Working metadata; never fall back to source discovery."""
-        try:
-            payload = json.loads(path.read_text(encoding="utf-8"))
-        except (OSError, ValueError) as exc:
-            raise ValueError(f"Docs Viewer search requires readable Working metadata: {path}") from exc
-        if not isinstance(payload, dict) or not isinstance(payload.get("docs"), list):
-            raise ValueError(f"Docs Viewer search metadata docs must be an array: {path}")
-        return payload
-
-    def validate_metadata_row(self, row: Any, *, field: str, seen_ids: set[str]) -> str:
-        if not isinstance(row, dict):
-            raise ValueError(f"{field} must be an object")
-        doc_id = row.get("doc_id")
-        if not isinstance(doc_id, str) or not is_immutable_doc_id(doc_id) or doc_id != doc_id.strip():
-            raise ValueError(f"{field}.doc_id must use exact immutable document identity")
-        if doc_id in seen_ids:
-            raise ValueError(f"{field} contains duplicate doc_id {doc_id!r}")
-        seen_ids.add(doc_id)
-        if not isinstance(row.get("title"), str) or not row["title"].strip():
-            raise ValueError(f"{field}.title must not be empty")
-        if not isinstance(row.get("draft"), bool):
-            raise ValueError(f"{field}.draft must be an explicit boolean")
-        return doc_id
-
     def select_ordinary_docs(self, ignored_ids: frozenset[str]) -> dict[str, dict[str, Any]]:
-        """Prune draft and unpublishable ordinary branches in one tree traversal."""
+        """Read current Working tree metadata through the shared eligibility owner."""
         path = resolve_workspace_path(self.repo_root, generated_documents_path(self.config)) / "index-tree.json"
-        tree = self.read_metadata(path)
+        tree = read_discovery_metadata(path)
         if tree.get("schema") != DOCS_INDEX_TREE_SCHEMA_VERSION:
             raise ValueError(f"Docs Viewer search requires {DOCS_INDEX_TREE_SCHEMA_VERSION}: {path}")
-        selected: dict[str, dict[str, Any]] = {}
-        seen_ids: set[str] = set()
-
-        def visit(rows: list[Any], parent_id: str) -> None:
-            for row in rows:
-                doc_id = self.validate_metadata_row(row, field=str(path), seen_ids=seen_ids)
-                if row["draft"] or doc_id in ignored_ids:
-                    continue
-                selected[doc_id] = {**row, "parent_id": parent_id}
-                children = row.get("children", [])
-                if not isinstance(children, list):
-                    raise ValueError(f"{path}: children must be an array for {doc_id}")
-                visit(children, doc_id)
-
-        visit(tree["docs"], "")
-        return selected
-
-    def select_collection_docs(
-        self, ordinary_ids: set[str],
-    ) -> list[tuple[DocsCollectionConfig, dict[str, dict[str, Any]]]]:
-        """Read only included, eligible-host manifests and filter their flat entries."""
-        selections = []
-        for collection in sorted(self.config.site_search_collections, key=lambda item: item.collection):
-            if collection.report_host_doc_id not in ordinary_ids:
-                continue
-            path = resolve_workspace_path(self.repo_root, generated_documents_path(collection)) / "manage-manifest.json"
-            manifest = self.read_metadata(path)
-            selected: dict[str, dict[str, Any]] = {}
-            seen_ids: set[str] = set()
-            for index, row in enumerate(manifest["docs"]):
-                field = f"{path}.docs[{index}]"
-                doc_id = self.validate_metadata_row(row, field=field, seen_ids=seen_ids)
-                if row["draft"]:
-                    continue
-                if not isinstance(row.get("last_updated"), str):
-                    raise ValueError(f"{field}.last_updated must be a string")
-                selected[doc_id] = row
-            selections.append((collection, selected))
-        return selections
+        return select_ordinary_documents(tree["docs"], ignored_ids, field=str(path))
 
     def load_selected_sources(
         self, config: DocsStageConfig | DocsCollectionConfig, selected: dict[str, dict[str, Any]],
@@ -449,7 +389,7 @@ class DocsViewerSearchDataBuilder:
     ) -> dict[str, Any]:
         ignored_ids = read_publication_ignore_ids(self.repo_root)
         ordinary_selection = self.select_ordinary_docs(ignored_ids)
-        collection_selections = self.select_collection_docs(set(ordinary_selection))
+        collection_selections = select_collection_documents(self.repo_root, self.config, set(ordinary_selection))
         docs = self.load_source_docs(ordinary_selection)
         title_by_id = {doc.doc_id: doc.title for doc in docs}
         combined_docs = list(docs)

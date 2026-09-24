@@ -21,7 +21,6 @@ class WritePlanMixin:
         self,
         index_tree_payload: dict[str, Any],
         recent_payload: dict[str, Any] | None,
-        publication_recent_payload: dict[str, Any] | None,
         item_payloads: dict[str, dict[str, Any]],
         semantic_token_payloads: dict[str, Any],
         *,
@@ -32,12 +31,11 @@ class WritePlanMixin:
 
         A targeted build may remove stale document and semantic-token payloads
         only when their identities are in ``target_doc_ids``. A missing Recent
-        payload means generation was not requested; leave both projections alone.
+        payload means generation was not requested; leave saved Recents alone.
         """
 
         index_tree_text = json_text(index_tree_payload)
         recent_text = json_text(recent_payload) if recent_payload is not None else ""
-        publication_recent_text = json_text(publication_recent_payload) if publication_recent_payload else ""
         item_text_by_id: dict[str, str] = {}
         changed_item_ids: list[str] = []
         for doc_id, payload in item_payloads.items():
@@ -60,13 +58,7 @@ class WritePlanMixin:
             "index_tree_text": index_tree_text,
             "recent_write": recent_payload is not None and read_text(self.output_dir / "recent.json") != recent_text,
             "recent_text": recent_text,
-            "publication_recent_write": (
-                read_text(self.output_dir / ".publish/recent.json") != publication_recent_text
-                if publication_recent_payload
-                else False
-            ),
-            "publication_recent_text": publication_recent_text,
-            "publication_recent_remove": recent_payload is not None and publication_recent_payload is None and (self.output_dir / ".publish/recent.json").exists(),
+            "retired_recent_remove": recent_payload is not None and (self.output_dir / ".publish/recent.json").exists(),
             "changed_item_ids": sorted(changed_item_ids),
             "stale_item_ids": stale_item_ids,
             "item_text_by_id": item_text_by_id,
@@ -96,9 +88,7 @@ class WritePlanMixin:
         self.items_dir.mkdir(parents=True, exist_ok=True)
         if write_plan["recent_write"]:
             write_text(self.output_dir / "recent.json", write_plan["recent_text"])
-        if write_plan["publication_recent_write"]:
-            write_text(self.output_dir / ".publish/recent.json", write_plan["publication_recent_text"])
-        if write_plan["publication_recent_remove"]:
+        if write_plan["retired_recent_remove"]:
             (self.output_dir / ".publish/recent.json").unlink(missing_ok=True)
         if write_plan["backlinks_write"]:
             write_text(self.output_dir / "backlinks.json", write_plan["backlinks_text"])
@@ -152,7 +142,6 @@ class WritePlanMixin:
         index_write_count = (
             (1 if write_plan["index_tree_write"] else 0)
             + (1 if write_plan["recent_write"] else 0)
-            + (1 if write_plan["publication_recent_write"] else 0)
             + (1 if write_plan["semantic_token_index_write"] else 0)
             + (1 if write_plan["backlinks_write"] else 0)
         )
@@ -188,7 +177,6 @@ class WritePlanMixin:
             "doc_payloads_removed": len(write_plan["stale_item_ids"]),
             "index_tree_changed": 1 if write_plan["index_tree_write"] else 0,
             "recent_changed": 1 if write_plan["recent_write"] else 0,
-            "publication_recent_changed": 1 if write_plan["publication_recent_write"] else 0,
             "semantic_token_index_changed": 1 if write_plan["semantic_token_index_write"] else 0,
             "backlinks_changed": 1 if write_plan["backlinks_write"] else 0,
             "warning_count": len(self.warnings),

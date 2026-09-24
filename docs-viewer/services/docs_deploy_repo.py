@@ -33,7 +33,7 @@ from docs_workspace_config import (
     public_search_path,
     public_media_bindings,
 )
-from docs_preview_snapshot import _validate_prepared_index, validate_preview_snapshot
+from docs_preview_snapshot import COPIED_WORKING_PAYLOAD_PATHS, _validate_prepared_index, validate_preview_snapshot
 from docs_publication_payloads import project_public_view
 from docs_write_rebuild import rebuild_collection_outputs
 
@@ -355,7 +355,7 @@ def accepted_document_collections(
     workspace = load_docs_workspace_config(repo_root)
     published_files = {
         path: json_bytes(project_public_view(workspace, read_json_bytes(data, f"accepted {path}")))
-        if path.suffix == ".json" and path != Path("search/index.json") else data
+        if path.suffix == ".json" and path not in COPIED_WORKING_PAYLOAD_PATHS else data
         for path, data in published_files.items()
     }
     media_projection = public_media_url_projection(config)
@@ -375,16 +375,8 @@ def accepted_document_collections(
             parent_prefix,
         )
     )
-    parent_files[Path("recent.json")] = json_bytes(
-        project_content_urls(
-            read_json_bytes(published_files[recent_path], "accepted Recent"),
-            parent_prefix,
-            collection_prefixes={
-                child.collection: collection_public_url_prefix(child)
-                for child in config.collections if child.public_projection is not None
-            },
-        )
-    )
+    _validate_prepared_index(recent_path, published_files[recent_path], "preview")
+    parent_files[Path("recent.json")] = published_files[recent_path]
     for relative_path, data in published_files.items():
         if (
             len(relative_path.parts) == 3
