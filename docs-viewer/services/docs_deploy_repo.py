@@ -33,7 +33,7 @@ from docs_workspace_config import (
     public_search_path,
     public_media_bindings,
 )
-from docs_preview_snapshot import validate_preview_snapshot
+from docs_preview_snapshot import _validate_prepared_index, validate_preview_snapshot
 from docs_publication_payloads import project_public_view
 from docs_write_rebuild import rebuild_collection_outputs
 
@@ -342,67 +342,6 @@ def project_document_payload(
     return json_bytes(payload)
 
 
-def project_public_search(
-    config: DocsStageConfig,
-    payload: dict[str, Any],
-) -> dict[str, Any]:
-    """Project configured public collection names without rebuilding postings."""
-
-    header = payload.get("header")
-    docs = payload.get("docs")
-    if (
-        not isinstance(header, dict)
-        or header.get("schema") != "docs_viewer_search_index_v4"
-        or not isinstance(docs, list)
-    ):
-        raise ValueError("accepted Search has an unsupported schema")
-    public_titles = {
-        collection.collection: collection.public_title
-        for collection in config.collections
-        if collection.public_title
-    }
-    changed = False
-    projected_docs: list[Any] = []
-    for raw_document in docs:
-        if not isinstance(raw_document, dict):
-            projected_docs.append(raw_document)
-            continue
-        document = dict(raw_document)
-        collection = str(document.get("collection") or "").strip().lower()
-        public_title = public_titles.get(collection, "")
-        current_title = str(document.get("collection_title") or "").strip()
-        if public_title and current_title and public_title != current_title:
-            document["collection_title"] = public_title
-            display_meta = str(document.get("display_meta") or "").strip()
-            if display_meta == current_title:
-                document["display_meta"] = public_title
-            elif display_meta.endswith(f" • {current_title}"):
-                document["display_meta"] = (
-                    display_meta.removesuffix(current_title) + public_title
-                )
-            changed = True
-        projected_docs.append(document)
-    if not changed:
-        return payload
-
-    projected = {**payload, "docs": projected_docs}
-    version_payload = {
-        "schema": header["schema"],
-        "fields": projected.get("fields", []),
-        "docs": projected_docs,
-        "terms": projected.get("terms", {}),
-    }
-    canonical = json.dumps(
-        version_payload,
-        ensure_ascii=False,
-        sort_keys=True,
-        separators=(",", ":"),
-    ).encode("utf-8")
-    version = hashlib.blake2b(canonical, digest_size=64).digest()[:16].hex()
-    projected["header"] = {**header, "version": f"blake2b-{version}"}
-    return projected
-
-
 def accepted_document_collections(
     repo_root: Path,
     config: DocsStageConfig,
@@ -410,13 +349,13 @@ def accepted_document_collections(
 ) -> tuple[
     dict[Path, bytes],
     dict[str, dict[Path, bytes]],
-    dict[str, Any],
+    bytes,
     dict[str, set[str]],
 ]:
     workspace = load_docs_workspace_config(repo_root)
     published_files = {
         path: json_bytes(project_public_view(workspace, read_json_bytes(data, f"accepted {path}")))
-        if path.suffix == ".json" else data
+        if path.suffix == ".json" and path != Path("search/index.json") else data
         for path, data in published_files.items()
     }
     media_projection = public_media_url_projection(config)
@@ -503,12 +442,9 @@ def accepted_document_collections(
             manifest_bytes,
             f"accepted collection manifest {collection.collection}",
         )
-    search_payload = project_public_search(
-        config,
-        read_json_bytes(published_files[search_path], "accepted Search"),
-    )
+    search_index = published_files[search_path]
+    _validate_prepared_index(search_path, search_index, "preview")
     document_ids = _validate_complete_document_set(
-        search_payload,
         parent_doc_ids,
         collection_files,
         collection_manifests,
@@ -516,25 +452,16 @@ def accepted_document_collections(
     return (
         parent_files,
         collection_files,
-        search_payload,
+        search_index,
         document_ids,
     )
 
 
 def _validate_complete_document_set(
-    search_payload: Mapping[str, Any],
     parent_doc_ids: set[str],
     collection_files: Mapping[str, Mapping[Path, bytes]],
     collection_manifests: Mapping[str, Mapping[str, Any]],
 ) -> dict[str, set[str]]:
-    raw_search_docs = search_payload.get("docs")
-    if not isinstance(raw_search_docs, list):
-        raise ValueError("accepted Search docs must be an array")
-    search_ids = {
-        str(row.get("id") or "").strip()
-        for row in raw_search_docs
-        if isinstance(row, Mapping) and str(row.get("id") or "").strip()
-    }
     document_ids = {"": parent_doc_ids}
     for collection, files in collection_files.items():
         by_id_ids = {
@@ -555,9 +482,6 @@ def _validate_complete_document_set(
                 f"accepted {collection} manifest and by-ID document identities do not match"
             )
         document_ids[collection] = by_id_ids
-    accepted_ids = set().union(*document_ids.values())
-    if search_ids != accepted_ids:
-        raise RuntimeError("accepted Search and document identities do not match")
     return document_ids
 
 
@@ -573,7 +497,7 @@ def desired_repository_projection(
     (
         parent_files,
         collection_files,
-        search_payload,
+        search_index,
         document_ids,
     ) = accepted_document_collections(repo_root, config, published_files)
     parent_root_path = public_documents_path(config)
@@ -595,7 +519,7 @@ def desired_repository_projection(
             {collection_root / relative_path: data for relative_path, data in files.items()}
         )
     search_target = repository_path(repo_root, search_target_path)
-    desired[search_target] = json_bytes(search_payload)
+    desired[search_target] = search_index
 
     payload_collections: list[tuple[str, Mapping[Path, bytes]]] = [
         ("documents", parent_files),

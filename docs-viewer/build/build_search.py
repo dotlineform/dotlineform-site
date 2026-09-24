@@ -288,7 +288,7 @@ def relative_path(path: Path | None, repo_root: Path) -> str:
 
 
 class DocsViewerSearchDataBuilder:
-    """Build one exact source corpus selected by its explicit authoring stage.
+    """Build the Working source corpus; downstream snapshots copy its index.
 
     The selected configuration owns source/output paths and child placements.
     The index contains document identity and searchable data; readers own routes.
@@ -301,6 +301,8 @@ class DocsViewerSearchDataBuilder:
         output_path: Path | None = None,
         stage: str,
     ) -> None:
+        if stage != "working":
+            raise ValueError("Search builds require Working; Preview copies the existing index")
         self.repo_root = repo_root.resolve()
         self.config = load_docs_stage(self.repo_root, stage)
         self.content_search_enabled = bool(
@@ -515,10 +517,6 @@ class DocsViewerSearchDataBuilder:
             key=lambda item: item.collection,
         ):
             try:
-                if self.config.stage == "preview" and collection.report_host_doc_id not in eligible_parent_doc_ids:
-                    if self.load_named_collection_docs(collection, report_doc_id=""):
-                        raise ValueError(f"Preview collection {collection.collection} has documents without a report host")
-                    continue
                 _config, _collection, report_doc_id = collection_report_placement(
                     self.repo_root,
                     collection.collection,
@@ -698,7 +696,7 @@ class DocsViewerSearchDataBuilder:
 
 def parse_args(argv: list[str]) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Build Docs Viewer search indexes.")
-    parser.add_argument("--stage", required=True, choices=("working", "preview"), help="Exact authoring stage to index.")
+    parser.add_argument("--stage", required=True, choices=("working",), help="Working owns Search generation.")
     add_workspace_arguments(parser)
     parser.add_argument("--output", help="Generated search index output path.")
     parser.add_argument("--write", action="store_true", help="Persist generated files; default is dry-run.")
@@ -708,8 +706,6 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
 
 def main(argv: list[str] | None = None) -> int:
     args = parse_args(argv or sys.argv[1:])
-    if args.stage == "preview" and not args.docs_base_dir:
-        raise ValueError("Preview builds require explicit temporary --docs-base-dir inputs; use Prepare Preview")
     apply_workspace_overrides(args)
     repo_root = Path.cwd().resolve()
     builder = DocsViewerSearchDataBuilder(

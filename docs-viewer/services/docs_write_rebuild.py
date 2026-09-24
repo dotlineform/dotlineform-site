@@ -14,6 +14,7 @@ from typing import Any, Callable, Dict, Mapping, Optional
 from docs_workspace_config import (
     document_source_path,
     generated_documents_path,
+    generated_search_path,
     load_docs_stage,
     require_document_authoring,
     resolve_workspace_path,
@@ -249,14 +250,23 @@ def rebuild_stage_outputs(
     links_doc_ids: Optional[list[str]] = None,
     links_created_doc_ids: Optional[list[str]] = None,
     docs_base_dir: Path | None = None,
+    copied_search_index: bytes | None = None,
 ) -> Dict[str, Any]:
-    """Await document work and requested Search before recording stage completion.
+    """Await document work and built/copied Search before recording completion.
 
     Full Working docs-and-Search rebuilds also combine prepared Links records.
     Individual document operations omit Search and leave that aggregate alone.
     """
     if stage == "preview" and docs_base_dir is None:
         raise ValueError("Preview builds require an explicit temporary workspace")
+    if include_search and stage != "working":
+        raise ValueError("Search rebuilds require Working; Preview copies the existing index")
+    if copied_search_index is not None:
+        if stage != "preview":
+            raise ValueError("Only Preview copies an existing Search index")
+        from docs_preview_snapshot import _validate_prepared_index
+
+        _validate_prepared_index(Path("search/index.json"), copied_search_index, "working")
     try:
         stage_config = load_docs_stage(repo_root, stage)
     except KeyError as exc:
@@ -289,8 +299,8 @@ def rebuild_stage_outputs(
     if skip_media_builds:
         docs_command.append("--skip-media-builds")
     commands = [("docs", docs_command)]
-    search = {"mode": "none", "doc_ids": []}
-    if include_search:
+    search = {"mode": "copy" if copied_search_index is not None else "none", "doc_ids": []}
+    if include_search or copied_search_index is not None:
         commands.extend(
             (
                 "collection_docs",
@@ -307,6 +317,7 @@ def rebuild_stage_outputs(
             )
             for collection in stage_config.collections
         )
+    if include_search:
         if search_doc_ids is None:
             search = {"mode": "full", "doc_ids": []}
             commands.append(("search", python_builder_command(
@@ -346,20 +357,25 @@ def rebuild_stage_outputs(
         if step["returncode"] != 0:
             detail = step["stderr"] or step["stdout"] or f"exit {step['returncode']}"
             raise RuntimeError(rebuild_failure_message(f"rebuild failed for {stage}", detail))
+    if copied_search_index is not None:
+        output_path = resolve_workspace_path(repo_root, generated_search_path(stage_config))
+        output_path.parent.mkdir(parents=True, exist_ok=True)
+        output_path.write_bytes(copied_search_index)
+    complete_build = search["mode"] in {"full", "copy"}
     links = (
         write_workspace_links(repo_root, stage_config)
-        if include_search and search["mode"] == "full"
+        if complete_build
         and stage_config.stage == "working"
         else None
     )
     mermaid = (
         prepare_stage_mermaid(repo_root, stage_config)
-        if include_search and search["mode"] == "full"
+        if complete_build
         else None
     )
     build_manifest = (
         write_build_manifest(repo_root, stage_config)
-        if include_search and search["mode"] == "full"
+        if complete_build
         else None
     )
     return {

@@ -421,7 +421,7 @@ def build_preview_snapshot_files(
 
     workspace = load_docs_workspace_config(repo_root)
     for path, data in list(files.items()):
-        if path.suffix == ".json":
+        if path.suffix == ".json" and path != Path("search/index.json"):
             files[path] = json_bytes(project_preview_view(workspace, _read_json_bytes(data, f"prepared {path}")))
     for path, data in files.items():
         _validate_prepared_index(path, data, "preview")
