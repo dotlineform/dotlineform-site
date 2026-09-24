@@ -171,12 +171,12 @@ export function fetchIndexTreeWithRetry(options) {
 
 export function managementReloadPath(path, params) {
   if (!path || !params) return "";
-  if (params.stage === "published") {
+  if (params.stage === "preview") {
     const reads = ["index-tree", "recent", "backlinks", "doc", "search", "semantic-tokens"];
     if (!reads.some(function (name) { return path === "/docs/" + name; })) {
-      throw new Error("This operation is unavailable in Published.");
+      throw new Error("This operation is unavailable in Preview.");
     }
-    path = path.replace("/docs/", "/docs/published/");
+    path = path.replace("/docs/", "/docs/preview/");
     params = Object.assign({}, params);
     delete params.stage;
   }

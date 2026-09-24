@@ -169,7 +169,7 @@ def config_file_signature(path: Path) -> tuple[int, int]:
 
 
 def desired_watch_state_specs(repo_root: Path, workspace: DocsWorkspaceConfig) -> dict[str, dict[str, Any]]:
-    # Pre-publish has no authoring watcher. Working owns all source-watch writes.
+    # Preview has no authoring watcher. Working owns all source-watch writes.
     config = select_workspace_stage(workspace, "working")
     specs: dict[str, dict[str, Any]] = {}
     for collection in (config, *config.collections):

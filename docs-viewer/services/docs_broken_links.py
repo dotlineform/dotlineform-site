@@ -23,7 +23,7 @@ from docs_workspace_config import (
     DocsCollectionConfig,
     DocsWorkspaceConfig,
     generated_documents_path,
-    published_documents_path,
+    preview_documents_path,
     load_docs_workspace_config,
     select_workspace_stage,
     resolve_workspace_path,
@@ -106,7 +106,7 @@ def target_stage_config(
         return None
     stage = target.get("stage")
     try:
-        return select_workspace_stage(workspace, "pre-publish" if stage == "published" else stage)
+        return select_workspace_stage(workspace, stage)
     except ValueError:
         return None
 
@@ -118,7 +118,7 @@ def target_payload_exists(
     doc_id = target["doc_id"]
     if not is_immutable_doc_id(doc_id):
         return False
-    documents_path = published_documents_path if target["stage"] == "published" else generated_documents_path
+    documents_path = preview_documents_path if target["stage"] == "preview" else generated_documents_path
     path = resolve_workspace_path(repo_root, documents_path(config)) / "by-id" / f"{doc_id}.json"
     if not path.is_file():
         return False
@@ -279,7 +279,7 @@ def rendered_link_broken_entries(
             if is_public and "stage" in parse_qs(parsed.query, keep_blank_values=True):
                 target["kind"] = "invalid_viewer"
             elif "stage" not in parse_qs(parsed.query, keep_blank_values=True):
-                target["stage"] = "published" if is_public else "working"
+                target["stage"] = "preview" if is_public else "working"
         target_config = target_stage_config(target, workspace)
         if is_same_doc_fragment_link(
             current_doc_id=meta.doc_id,
@@ -332,7 +332,7 @@ def print_human_summary(payload: dict[str, Any]) -> None:
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Audit Docs Viewer links for missing targets.")
-    parser.add_argument("--stage", required=True, choices=("working", "pre-publish"), help="Exact authoring stage to audit")
+    parser.add_argument("--stage", required=True, choices=("working",), help="Exact authoring stage to audit")
     parser.add_argument("--repo-root", help="Override repo root auto-detection")
     parser.add_argument("--json", action="store_true", help="Print JSON payload")
     args = parser.parse_args(argv)

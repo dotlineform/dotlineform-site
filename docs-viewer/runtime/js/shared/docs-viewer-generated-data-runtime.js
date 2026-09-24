@@ -28,7 +28,7 @@ export function createDocsViewerGeneratedDataRuntime(options) {
   }
 
   function stageGeneratedCapability(capabilities, stage, key) {
-    if (stage === "published") key = key.replace("generated_", "published_");
+    if (stage === "preview") key = key.replace("generated_", "preview_");
     var stageCaps = capabilities && capabilities.stages ? capabilities.stages[stage] : null;
     return Boolean(capabilities && capabilities.generated_data_reads && stageCaps && stageCaps.available && stageCaps[key]);
   }

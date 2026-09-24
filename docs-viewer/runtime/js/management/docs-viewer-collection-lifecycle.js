@@ -202,7 +202,7 @@ function lifecycleRelativePath(value, root) {
   if (!path) return "";
   if (root && path.startsWith(root + "/")) return path.slice(root.length + 1);
   if (root) {
-    var anchors = ["/source/", "/published/"];
+    var anchors = ["/source/", "/preview/"];
     var anchor = anchors.find(function (candidate) {
       return path.includes(candidate);
     });
@@ -216,7 +216,7 @@ function lifecycleFileRows(payload, records) {
     default_source_doc: "default doc",
     published_docs_index_tree: "index",
     published_docs_recent: "Recent",
-    published_search_index: "search index",
+    preview_search_index: "search index",
     public_docs_index_tree: "public index",
     public_docs_recent: "public Recent",
     public_search_index: "public search index",
@@ -228,12 +228,12 @@ function lifecycleFileRows(payload, records) {
   var omittedKinds = new Set([
     "source_root",
     "scope_root",
-    "published_docs_root",
+    "preview_docs_root",
     "published_docs_payload_root",
     "public_docs_root",
     "public_docs_payload_root",
     "collection_source_root",
-    "collection_published_docs_root",
+    "collection_preview_docs_root",
     "collection_published_docs_payload_root",
     "collection_public_docs_root",
     "collection_public_docs_payload_root"
@@ -260,8 +260,8 @@ function lifecycleStorageRows(payload, root) {
     ? payload.storage_contract
     : {};
   var sourceRecord = lifecycleRecord(payload, ["source_root", "collection_source_root"]);
-  var publishedRecord = lifecycleRecord(payload, ["published_docs_root", "collection_published_docs_root"]);
-  var publishedSearchRecord = lifecycleRecord(payload, "published_search_index");
+  var publishedRecord = lifecycleRecord(payload, ["preview_docs_root", "collection_preview_docs_root"]);
+  var publishedSearchRecord = lifecycleRecord(payload, "preview_search_index");
   var publicRecord = lifecycleRecord(payload, ["public_docs_root", "collection_public_docs_root"]);
   var publicSearchRecord = lifecycleRecord(payload, "public_search_index");
   var docsOutput = normalizeText(contract.docs_output);

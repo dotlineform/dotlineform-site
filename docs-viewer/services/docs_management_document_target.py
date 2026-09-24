@@ -79,7 +79,7 @@ def required_target_text(value: Any, *, field: str, lowercase: bool = False) -> 
 def required_target_stage(value: Any) -> str:
     stage = required_target_text(value, field="stage")
     if stage not in STAGES:
-        raise ValueError("stage must be working or pre-publish")
+        raise ValueError("stage must be working or preview")
     return stage
 
 
@@ -353,7 +353,7 @@ def managed_document_metadata(
     }
     payload_revision = source_model.source_revision(document.source_text.encode("utf-8"))
     if source_model.collection_supports_draft(resolved.document_config):
-        record["draft"] = front_matter.get("draft", True)
+        record["draft"] = front_matter["draft"]
     if not resolved.collection:
         record["ui_status"] = document.ui_status
         record["parent_id"] = document.parent_id

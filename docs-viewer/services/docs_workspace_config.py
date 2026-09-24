@@ -1,7 +1,7 @@
 """One explicitly configured Docs workspace and its lifecycle storage.
 
 Loading is read-only and never creates a root. Source/generated access requires
-an explicit Working or Pre-publish stage; Published belongs to the workspace.
+an explicit Working stage or temporary Preview build; Preview belongs to the workspace.
 There is no scope registry, process-global configuration, or alternate root.
 """
 
@@ -25,14 +25,16 @@ from docs_document_identity import is_immutable_doc_id
 from docs_collection_customisations import (
     DocsCollectionCustomisationConfig,
     normalize_docs_collection_customisation,
+    PREVIEW_WORKS_CUSTOMISATION_ID,
+    WORKING_WORKS_CUSTOMISATION_ID,
 )
 
 
 CONFIG_REL_PATH = Path("docs-viewer/config/workspace/docs-workspace.json")
-SCHEMA_VERSION = "docs_workspace_v2"
+SCHEMA_VERSION = "docs_workspace_v3"
 DOTLINEFORM_DOCS_BASE_DIR_ENV = "DOTLINEFORM_DOCS_BASE_DIR"
 EXTERNAL_DATA_ROOT_MARKER = f"${DOTLINEFORM_DOCS_BASE_DIR_ENV}"
-STAGES = ("working", "pre-publish")
+STAGES = ("working", "preview")
 SOURCE_DOCUMENTS_PATH = Path("documents")
 SOURCE_COLLECTIONS_PATH = Path("collections")
 PUBLIC_DOCS_OUTPUT_ROOT = Path("site/assets/data/docs")
@@ -68,7 +70,7 @@ class DocsGeneratedConfig:
 
 
 @dataclass(frozen=True)
-class DocsPublishedConfig:
+class DocsPreviewConfig:
     documents: DocsArtifactConfig
     search: DocsArtifactConfig
 
@@ -86,7 +88,7 @@ class DocsManagedMediaConfig:
     reference_prefix: Path
     source_location: ArtifactLocation
     generated_location: ArtifactLocation
-    published_location: ArtifactLocation
+    preview_location: ArtifactLocation
     served_path_prefix: str
     build_inputs: tuple[str, ...]
 
@@ -95,7 +97,7 @@ class DocsManagedMediaConfig:
 class DocsMediaConfig:
     source_location: ArtifactLocation
     generated_location: ArtifactLocation
-    published_location: ArtifactLocation
+    preview_location: ArtifactLocation
     types: Mapping[str, DocsManagedMediaConfig]
     build_sources: Mapping[str, DocsBuildMediaConfig]
 
@@ -135,7 +137,7 @@ class DocsCollectionConfig:
     source: DocsSourceConfig
     media: DocsMediaConfig
     generated: DocsGeneratedConfig
-    published: DocsPublishedConfig
+    preview: DocsPreviewConfig
     public_projection: DocsPublicProjectionConfig | None
 
 
@@ -146,7 +148,7 @@ class DocsStageConfig:
     source: DocsSourceConfig
     media: DocsMediaConfig
     generated: DocsGeneratedConfig
-    published: DocsPublishedConfig
+    preview: DocsPreviewConfig
     public_projection: DocsPublicProjectionConfig | None
     default_doc_id: str
     non_loadable_doc_ids: tuple[str, ...]
@@ -157,7 +159,7 @@ class DocsStageConfig:
 
     @property
     def stage_root(self) -> ArtifactLocation:
-        """Return this stage's source/generated owner, excluding Published."""
+        """Return Working storage or the temporary Preview build owner."""
         return location_child(self.workspace_root, Path(self.stage))
 
 
@@ -166,7 +168,7 @@ class DocsWorkspaceConfig:
     workspace_root: ArtifactLocation
     public_viewer_base_url: str
     public_projection: DocsPublicProjectionConfig
-    published: DocsPublishedConfig
+    preview: DocsPreviewConfig
     search_fields: tuple[str, ...]
     recent_limit: int
     stages: tuple[DocsStageConfig, ...]
@@ -179,9 +181,9 @@ def default_repo_root() -> Path:
     raise ValueError("could not resolve repository root")
 
 
-def resolve_external_data_root() -> Path:
+def resolve_external_data_root(docs_base_dir: Path | None = None) -> Path:
     """Require the existing explicit Docs root without creating or inferring it."""
-    value = str(os.environ.get(DOTLINEFORM_DOCS_BASE_DIR_ENV) or "").strip()
+    value = str(docs_base_dir if docs_base_dir is not None else os.environ.get(DOTLINEFORM_DOCS_BASE_DIR_ENV) or "").strip()
     if not value:
         raise ValueError(f"{DOTLINEFORM_DOCS_BASE_DIR_ENV} is required")
     path = Path(value).expanduser()
@@ -337,7 +339,7 @@ def _public_projection(raw: Any) -> DocsPublicProjectionConfig:
 
 
 def _media(raw: Any, *, source_root: ArtifactLocation, generated_root: ArtifactLocation,
-           published_root: ArtifactLocation, stage: str, collection: str = "") -> DocsMediaConfig:
+           preview_root: ArtifactLocation, stage: str, collection: str = "") -> DocsMediaConfig:
     field = f"stages.{stage}.media"
     item = _object(raw, field=field, required={"types", "build_sources"})
     types = item["types"]
@@ -345,7 +347,7 @@ def _media(raw: Any, *, source_root: ArtifactLocation, generated_root: ArtifactL
         raise ValueError(f"{field}.types must configure supported media types")
     source_media = location_child(source_root, Path("media"))
     generated_media = location_child(generated_root, Path("media"))
-    published_media = location_child(published_root, Path("media"))
+    published_media = location_child(preview_root, Path("media"))
     reference_root = MEDIA_REFERENCE_ROOT / "collections" / collection if collection else MEDIA_REFERENCE_ROOT
     served_root = f"/docs/media/{stage}" + (f"/collections/{collection}" if collection else "")
     raw_builds = item["build_sources"]
@@ -371,8 +373,8 @@ def _media(raw: Any, *, source_root: ArtifactLocation, generated_root: ArtifactL
     return DocsMediaConfig(source_media, generated_media, published_media, managed, builds)
 
 
-def _published(root: ArtifactLocation) -> DocsPublishedConfig:
-    return DocsPublishedConfig(DocsArtifactConfig(location_child(root, Path("documents"))),
+def _preview(root: ArtifactLocation) -> DocsPreviewConfig:
+    return DocsPreviewConfig(DocsArtifactConfig(location_child(root, Path("documents"))),
                                DocsArtifactConfig(location_child(root, Path("search/index.json"))))
 
 
@@ -405,6 +407,13 @@ def _collections(raw: Any, *, workspace_root: ArtifactLocation, stage: str,
         item = _object(raw_item, field=field, required={"collection", "title", "report_host_doc_id"}, optional={
             "public_title", "supports_return_import", "collection_customisation", "lifecycle",
         })
+        if stage == "preview":
+            customisation = item.get("collection_customisation")
+            item = {**item, "supports_return_import": False, "lifecycle": None,
+                    "collection_customisation": (
+                        {"id": PREVIEW_WORKS_CUSTOMISATION_ID, "settings": {}}
+                        if customisation and customisation.get("id") == WORKING_WORKS_CUSTOMISATION_ID else None
+                    )}
         child = normalize_collection_id(item["collection"], field=f"{field}.collection")
         if child in seen:
             raise ValueError(f"{field}.collection is duplicated: {child}")
@@ -413,7 +422,7 @@ def _collections(raw: Any, *, workspace_root: ArtifactLocation, stage: str,
             raise ValueError(f"{field} titles must be strings")
         source_root = location_child(workspace_root, Path(stage) / "source/collections" / child)
         generated_root = location_child(workspace_root, Path(stage) / "generated/collections" / child)
-        published_root = location_child(workspace_root, Path("published/collections") / child)
+        preview_root = location_child(workspace_root, Path("preview/collections") / child)
         child_projection = None
         if projection is not None:
             public_media = {}
@@ -434,19 +443,20 @@ def _collections(raw: Any, *, workspace_root: ArtifactLocation, stage: str,
             supports_return_import=_boolean(item.get("supports_return_import", False), field=f"{field}.supports_return_import"),
             collection_customisation=normalize_docs_collection_customisation(item.get("collection_customisation"), field=f"{field}.collection_customisation"),
             lifecycle=_lifecycle(item.get("lifecycle"), field=f"{field}.lifecycle"), stage=stage,
-            source=DocsSourceConfig(source_root), generated=_generated(generated_root), published=_published(published_root),
+            source=DocsSourceConfig(source_root), generated=_generated(generated_root), preview=_preview(preview_root),
             media=_media(media_settings, source_root=source_root, generated_root=generated_root,
-                         published_root=published_root, stage=stage, collection=child),
+                         preview_root=preview_root, stage=stage, collection=child),
             public_projection=child_projection,
         ))
     return tuple(result)
 
 
-def load_docs_workspace_config(repo_root: Path | None = None) -> DocsWorkspaceConfig:
+def load_docs_workspace_config(repo_root: Path | None = None, *, docs_base_dir: Path | None = None) -> DocsWorkspaceConfig:
     """Read checked workspace settings and resolve the existing external root.
 
     Stage paths are derived without creating them. Callers must check the
-    selected source/generated/Published artifact before reading or writing it.
+    selected Working or Preview artifact before reading or writing it. An explicit
+    build root isolates temporary Preview source/generated inputs from live storage.
     """
     root = repo_root or default_repo_root()
     try:
@@ -454,7 +464,7 @@ def load_docs_workspace_config(repo_root: Path | None = None) -> DocsWorkspaceCo
     except json.JSONDecodeError as exc:
         raise ValueError(f"invalid Docs workspace JSON: {exc}") from exc
     payload = _object(raw, field="Docs workspace", required={
-        "schema_version", "public_viewer_base_url", "public_projection", "search_fields", "recent_limit", "stages",
+        "schema_version", "public_viewer_base_url", "public_projection", "search_fields", "recent_limit", "stages", "preview",
     })
     if payload["schema_version"] != SCHEMA_VERSION:
         raise ValueError(f"Docs workspace schema_version must be {SCHEMA_VERSION}")
@@ -470,27 +480,32 @@ def load_docs_workspace_config(repo_root: Path | None = None) -> DocsWorkspaceCo
     recent_limit = payload["recent_limit"]
     if type(recent_limit) is not int or recent_limit < 1:
         raise ValueError("recent_limit must be a positive integer")
-    settings = _object(payload["stages"], field="stages", required=set(STAGES))
-    workspace_root = ArtifactLocation(EXTERNAL_LOCAL_PROVIDER, resolve_external_data_root())
-    published = _published(location_child(workspace_root, Path("published")))
+    settings = _object(payload["stages"], field="stages", required={"working"})
+    preview_settings = _object(payload["preview"], field="preview", required={"default_doc_id"})
+    workspace_root = ArtifactLocation(EXTERNAL_LOCAL_PROVIDER, resolve_external_data_root(docs_base_dir))
+    preview = _preview(location_child(workspace_root, Path("preview")))
     projection = _public_projection(payload["public_projection"])
     stages = []
     for stage in STAGES:
         field = f"stages.{stage}"
-        item = _object(settings[stage], field=field, required={
+        item = _object(settings["working"], field="stages.working", required={
             "media", "default_doc_id", "collections", "non_loadable_doc_ids",
             "manage_only_tree_root_ids", "allow_unresolved_parent_ids",
         })
+        if stage == "preview":
+            item = {**item, "default_doc_id": preview_settings["default_doc_id"],
+                    "non_loadable_doc_ids": [], "manage_only_tree_root_ids": [],
+                    "allow_unresolved_parent_ids": False}
         source_root = location_child(workspace_root, Path(stage) / "source")
         generated_root = location_child(workspace_root, Path(stage) / "generated")
         media = _media(item["media"], source_root=source_root, generated_root=generated_root,
-                       published_root=location_child(workspace_root, Path("published")), stage=stage)
+                       preview_root=location_child(workspace_root, Path("preview")), stage=stage)
         if set(media.types) != set(projection.media):
             raise ValueError(f"{field}.media types must match the public projection")
-        stage_projection = projection if stage == "pre-publish" else None
+        stage_projection = projection if stage == "preview" else None
         stages.append(DocsStageConfig(
             workspace_root=workspace_root, stage=stage, source=DocsSourceConfig(source_root),
-            generated=_generated(generated_root), media=media, published=published, public_projection=stage_projection,
+            generated=_generated(generated_root), media=media, preview=preview, public_projection=stage_projection,
             default_doc_id=_doc_id(item["default_doc_id"], field=f"{field}.default_doc_id", allow_empty=True),
             non_loadable_doc_ids=_doc_ids(item["non_loadable_doc_ids"], field=f"{field}.non_loadable_doc_ids"),
             manage_only_tree_root_ids=_doc_ids(item["manage_only_tree_root_ids"], field=f"{field}.manage_only_tree_root_ids"),
@@ -498,15 +513,15 @@ def load_docs_workspace_config(repo_root: Path | None = None) -> DocsWorkspaceCo
             collections=_collections(item["collections"], workspace_root=workspace_root, stage=stage,
                                    media_settings=item["media"], projection=stage_projection), search_fields=fields,
         ))
-    return DocsWorkspaceConfig(workspace_root, public_url, projection, published, fields, recent_limit, tuple(stages))
+    return DocsWorkspaceConfig(workspace_root, public_url, projection, preview, fields, recent_limit, tuple(stages))
 
 
 def select_workspace_stage(config: DocsWorkspaceConfig, stage: str | None) -> DocsStageConfig:
-    """Select Working or Pre-publish explicitly; never default to another owner."""
+    """Select Working or Preview explicitly; never default to another owner."""
     for candidate in config.stages:
         if candidate.stage == stage:
             return candidate
-    raise ValueError("stage must be working or pre-publish")
+    raise ValueError("stage must be working or preview")
 
 
 def load_docs_stage(repo_root: Path, stage: str | None) -> DocsStageConfig:
@@ -515,7 +530,7 @@ def load_docs_stage(repo_root: Path, stage: str | None) -> DocsStageConfig:
 
 def require_selected_stage(config: DocsStageConfig | DocsCollectionConfig) -> None:
     if not isinstance(config, (DocsStageConfig, DocsCollectionConfig)) or config.stage not in STAGES:
-        raise ValueError("an explicit Working or Pre-publish stage is required")
+        raise ValueError("an explicit Working or Preview stage is required")
 
 
 def require_document_authoring(config: DocsStageConfig | DocsCollectionConfig) -> None:
@@ -543,12 +558,12 @@ def generated_search_path(config: DocsStageConfig | DocsCollectionConfig) -> Pat
     return config.generated.search.location.path
 
 
-def published_documents_path(config: DocsWorkspaceConfig | DocsStageConfig | DocsCollectionConfig) -> Path:
-    return config.published.documents.location.path
+def preview_documents_path(config: DocsWorkspaceConfig | DocsStageConfig | DocsCollectionConfig) -> Path:
+    return config.preview.documents.location.path
 
 
-def published_search_path(config: DocsWorkspaceConfig | DocsStageConfig | DocsCollectionConfig) -> Path:
-    return config.published.search.location.path
+def preview_search_path(config: DocsWorkspaceConfig | DocsStageConfig | DocsCollectionConfig) -> Path:
+    return config.preview.search.location.path
 
 
 def public_documents_path(config: DocsWorkspaceConfig | DocsStageConfig | DocsCollectionConfig) -> Path | None:

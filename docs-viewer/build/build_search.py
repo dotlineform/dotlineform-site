@@ -176,7 +176,7 @@ def build_search_index_v3(
 
     Source builders pass their stage; publication owns the accepted-stage projection.
     """
-    if stage not in {"working", "pre-publish", "published"}:
+    if stage not in {"working", "preview", "published"}:
         raise ValueError("Search requires an exact lifecycle stage")
     doc_fields = (
         "id",
@@ -529,9 +529,9 @@ class DocsViewerSearchDataBuilder:
             key=lambda item: item.collection,
         ):
             try:
-                if self.config.stage == "pre-publish" and collection.report_host_doc_id not in eligible_parent_doc_ids:
+                if self.config.stage == "preview" and collection.report_host_doc_id not in eligible_parent_doc_ids:
                     if self.load_named_collection_docs(collection, report_doc_id=""):
-                        raise ValueError(f"Pre-publish collection {collection.collection} has documents without a report host")
+                        raise ValueError(f"Preview collection {collection.collection} has documents without a report host")
                     continue
                 _config, _collection, report_doc_id = collection_report_placement(
                     self.repo_root,
@@ -713,7 +713,7 @@ class DocsViewerSearchDataBuilder:
 
 def parse_args(argv: list[str]) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Build Docs Viewer search indexes.")
-    parser.add_argument("--stage", required=True, choices=("working", "pre-publish"), help="Exact authoring stage to index.")
+    parser.add_argument("--stage", required=True, choices=("working", "preview"), help="Exact authoring stage to index.")
     add_workspace_arguments(parser)
     parser.add_argument("--output", help="Generated search index output path.")
     parser.add_argument("--write", action="store_true", help="Persist generated files; default is dry-run.")
@@ -723,6 +723,8 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
 
 def main(argv: list[str] | None = None) -> int:
     args = parse_args(argv or sys.argv[1:])
+    if args.stage == "preview" and not args.docs_base_dir:
+        raise ValueError("Preview builds require explicit temporary --docs-base-dir inputs; use Prepare Preview")
     apply_workspace_overrides(args)
     repo_root = Path.cwd().resolve()
     builder = DocsViewerSearchDataBuilder(

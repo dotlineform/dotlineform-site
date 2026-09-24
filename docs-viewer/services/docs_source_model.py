@@ -474,15 +474,14 @@ def validate_document_status_front_matter(
     collection_config: DocsStageConfig | DocsCollectionConfig,
     source_name: str,
 ) -> None:
-    """Validate Working publication fields independently of free-text visual status."""
+    """Require explicit source readiness independently of free-text visual status."""
 
     if "sub-scope" in front_matter or "sub_scope" in front_matter:
         raise ValueError(f"sub-scope front matter is retired; use collection: {source_name}")
-    if "draft" in front_matter:
-        if collection_config.stage not in {"working", "pre-publish"}:
-            raise ValueError(f"draft front matter requires a workflow stage: {source_name}")
-        if not isinstance(front_matter["draft"], bool):
-            raise ValueError(f"draft front matter must be a boolean in {source_name}")
+    if collection_config.stage not in {"working", "preview"}:
+        raise ValueError(f"draft front matter requires a workflow stage: {source_name}")
+    if "draft" not in front_matter or not isinstance(front_matter["draft"], bool):
+        raise ValueError(f"draft front matter must be an explicit boolean in {source_name}")
     if "viewable" in front_matter:
         raise ValueError(
             f"legacy viewable front matter is not supported in {source_name}; "

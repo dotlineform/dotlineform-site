@@ -34,7 +34,7 @@ def set_draft(repo_root: Path, body: dict[str, Any], *, dry_run: bool = False) -
         ))
     front_matter = {**document.front_matter, "draft": body["draft"]}
     source = source_model.format_source(front_matter, document.body, collection=resolved.collection)
-    changed = document.front_matter.get("draft") is not body["draft"]
+    changed = document.front_matter["draft"] is not body["draft"]
     if changed and not dry_run:
         # A completed earlier management save must not hide this new watcher write.
         clear_watch_suppressions(repo_root, watch_suppression_owner(

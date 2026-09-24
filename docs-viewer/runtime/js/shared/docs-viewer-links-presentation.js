@@ -1,5 +1,5 @@
 function identity(value) {
-  if (!value || !["working", "pre-publish", "published"].includes(value.stage)
+  if (!value || !["working", "preview"].includes(value.stage)
     || typeof value.collection !== "string" || !/^(?:[a-z][a-z0-9-]*)?$/.test(value.collection)
     || !/^d-\d{8}-\d{6}-[a-f0-9]{6}$/.test(value.doc_id)) {
     throw new Error("Links requires an exact document identity.");

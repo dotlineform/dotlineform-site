@@ -20,7 +20,7 @@ from docs_workspace_config import (  # noqa: E402
     DocsGeneratedConfig,
     DocsMediaConfig,
     DocsArtifactConfig,
-    DocsPublishedConfig,
+    DocsPreviewConfig,
     DocsStageConfig,
     DocsSourceConfig,
 )
@@ -115,9 +115,9 @@ def synthetic_review_config(
                 provider=EXTERNAL_LOCAL_PROVIDER,
                 path=generated_dir / "media",
             ),
-            published_location=ArtifactLocation(
+            preview_location=ArtifactLocation(
                 provider=EXTERNAL_LOCAL_PROVIDER,
-                path=generated_dir.parent / "published" / "media",
+                path=generated_dir.parent / "preview" / "media",
             ),
             types={},
             build_sources={},
@@ -133,14 +133,14 @@ def synthetic_review_config(
                 )
             ),
         ),
-        published=DocsPublishedConfig(
+        preview=DocsPreviewConfig(
             documents=DocsArtifactConfig(
-                location=ArtifactLocation(provider=EXTERNAL_LOCAL_PROVIDER, path=generated_dir.parent / "published")
+                location=ArtifactLocation(provider=EXTERNAL_LOCAL_PROVIDER, path=generated_dir.parent / "preview")
             ),
             search=DocsArtifactConfig(
                 location=ArtifactLocation(
                     provider=EXTERNAL_LOCAL_PROVIDER,
-                    path=generated_dir.parent / "published" / "search" / "index.json",
+                    path=generated_dir.parent / "preview" / "search" / "index.json",
                 )
             ),
         ),

@@ -80,7 +80,7 @@ export var DOCS_VIEWER_RUNTIME_DEFAULTS = {
   searchDebounceMs: 140,
   defaultRecentLimit: 20,
   bookmarkDbName: "dotlineform-docs-viewer",
-  bookmarkDbVersion: 2,
+  bookmarkDbVersion: 3,
   bookmarkStoreName: "favorites",
   managementCapabilityRetryAttempts: 60,
   managementCapabilityRetryDelayMs: 500,

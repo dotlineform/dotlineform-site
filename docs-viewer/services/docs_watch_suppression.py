@@ -45,7 +45,7 @@ def suppressions_dir(repo_root: Path) -> Path:
 
 
 def watch_suppression_owner(collection: str = "", *, stage: str | None) -> str:
-    if stage not in {"working", "pre-publish"}:
+    if stage not in {"working", "preview"}:
         raise ValueError("an explicit Docs workflow stage is required")
     if collection:
         from docs_workspace_config import normalize_collection_id

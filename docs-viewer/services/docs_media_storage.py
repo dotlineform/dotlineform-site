@@ -373,7 +373,7 @@ def local_media_config(config: DocsStageConfig | DocsCollectionConfig, media_cla
 
 
 def local_media_route(stage: str, media_class: str, filename: str, *, collection: str = "") -> str:
-    if stage not in {"working", "pre-publish"}:
+    if stage not in {"working", "preview"}:
         raise ValueError("Docs media route requires an explicit stage")
     child = f"collections/{normalize_collection_id(collection, field='collection')}/" if collection else ""
     return f"{DOCS_MEDIA_ROUTE_PREFIX}{stage}/{child}{validate_route_media_class(media_class)}/{validate_media_filename(filename)}"

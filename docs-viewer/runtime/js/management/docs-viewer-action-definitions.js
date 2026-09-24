@@ -21,8 +21,8 @@ export const DOCS_VIEWER_ACTION_IDS = Object.freeze({
   OPEN: "open",
   OPEN_VSCODE: "open-vscode",
   PREPARE_DOCUMENT_PACKAGE: "prepare-document-package",
-  PUBLISH_DOCS: "publish-docs",
-  PRE_PUBLISH_DOCS: "pre-publish-docs",
+  DEPLOY_REPO: "deploy-repo",
+  PREPARE_PREVIEW: "prepare-preview",
   REBUILD_DOCS: "rebuild-docs",
   SETTINGS: "settings"
 });
@@ -73,8 +73,8 @@ export const DOCS_VIEWER_ACTION_DEFINITIONS = Object.freeze({
   [IDS.OPEN]: actionDefinition(IDS.OPEN, TARGETS.DOCUMENT),
   [IDS.OPEN_VSCODE]: actionDefinition(IDS.OPEN_VSCODE, TARGETS.DOCUMENT),
   [IDS.PREPARE_DOCUMENT_PACKAGE]: actionDefinition(IDS.PREPARE_DOCUMENT_PACKAGE, TARGETS.SELECTION, POLICIES.ALL),
-  [IDS.PUBLISH_DOCS]: actionDefinition(IDS.PUBLISH_DOCS, TARGETS.WORKSPACE),
-  [IDS.PRE_PUBLISH_DOCS]: actionDefinition(IDS.PRE_PUBLISH_DOCS, TARGETS.WORKSPACE),
+  [IDS.DEPLOY_REPO]: actionDefinition(IDS.DEPLOY_REPO, TARGETS.WORKSPACE),
+  [IDS.PREPARE_PREVIEW]: actionDefinition(IDS.PREPARE_PREVIEW, TARGETS.WORKSPACE),
   [IDS.REBUILD_DOCS]: actionDefinition(IDS.REBUILD_DOCS, TARGETS.WORKSPACE),
   [IDS.SETTINGS]: actionDefinition(IDS.SETTINGS, TARGETS.WORKSPACE)
 });

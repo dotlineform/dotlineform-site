@@ -1,11 +1,10 @@
-const OWNERS = new Set(["public", "working", "pre-publish", "published"]);
+const OWNERS = new Set(["public", "working", "preview"]);
 
 // Used only by the one-time storage conversions, never by runtime lookups.
 export const RETIRED_ANALYSIS_STATE = Object.freeze({
   analysis: "public",
   "analysis/working": "working",
-  "analysis/pre-publish": "pre-publish",
-  "analysis/published": "published"
+  "analysis/published": "preview"
 });
 
 export function isSavedStateOwner(owner) {
@@ -27,16 +26,21 @@ export function indexPanelStorageKey(owner) {
 
 export function convertAnalysisPanelState(storage) {
   if (!storage) return;
-  const marker = "dotlineform-docs-viewer-analysis-state-v2";
+  const marker = "dotlineform-docs-viewer-preview-state-v3";
   if (storage.getItem(marker) === "complete") return;
-  const changes = Object.entries(RETIRED_ANALYSIS_STATE).map(([legacy, owner]) => {
-    const oldKey = "dotlineform-docs-viewer-index-panel:" + legacy;
+  const sources = Object.entries(RETIRED_ANALYSIS_STATE).map(([legacy, owner]) => [
+    "dotlineform-docs-viewer-index-panel:" + legacy, owner
+  ]);
+  sources.push(["dotlineform-docs-viewer-index-panel:v2:published", "preview"]);
+  const pending = new Map();
+  const changes = sources.map(([oldKey, owner]) => {
     const newKey = indexPanelStorageKey(owner);
     const value = storage.getItem(oldKey);
-    const existing = storage.getItem(newKey);
+    const existing = pending.has(newKey) ? pending.get(newKey) : storage.getItem(newKey);
     if (value !== null && existing !== null && existing !== value) {
       throw new Error("Docs panel conversion found conflicting saved settings.");
     }
+    if (value !== null) pending.set(newKey, value);
     return { oldKey, newKey, value };
   });
   // Copy before removal. An interrupted conversion can resume with identical values.

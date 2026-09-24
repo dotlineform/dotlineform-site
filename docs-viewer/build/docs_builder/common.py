@@ -26,8 +26,8 @@ from docs_workspace_config import (  # noqa: E402
     public_documents_path,
     public_search_path,
     managed_media_config,
-    published_documents_path,
-    published_search_path,
+    preview_documents_path,
+    preview_search_path,
     resolve_workspace_path,
 )
 from docs_artifact_locations import local_artifact_path, normalize_artifact_identity  # noqa: E402

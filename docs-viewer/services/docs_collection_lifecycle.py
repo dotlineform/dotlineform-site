@@ -17,7 +17,6 @@ from docs_workspace_config import (
     CONFIG_REL_PATH,
     SCHEMA_VERSION as WORKSPACE_CONFIG_SCHEMA_VERSION,
     COLLECTION_LIFECYCLE_TOOL_ID,
-    STAGES,
     SOURCE_DOCUMENTS_PATH,
     SOURCE_COLLECTIONS_PATH,
     DocsStageConfig,
@@ -75,10 +74,9 @@ def plan_collection_registration(
     repo_root: Path,
     collection_config: dict[str, Any],
 ) -> dict[str, Any]:
-    """Plan both stage registrations, retaining creation provenance in Working only.
+    """Plan one Working registration shared with Preview preparation.
 
-    Validate both destinations before any write; the caller commits the complete
-    workspace configuration once. Pre-publish owns preparing its source/output.
+    Validate registration before writing; Preview derives its collections from Working.
     """
     config_path = repo_root / CONFIG_REL_PATH
     payload = load_json_object(config_path, "Docs workspace config")
@@ -86,7 +84,7 @@ def plan_collection_registration(
         raise ValueError(f"Docs workspace config schema_version must be {WORKSPACE_CONFIG_SCHEMA_VERSION}")
     stages = payload.get("stages")
     collection = str(collection_config.get("collection") or "").strip()
-    for stage in STAGES:
+    for stage in ("working",):
         if not isinstance(stages, dict) or not isinstance(stages.get(stage), dict):
             raise ValueError(f"stage {stage!r} is not configured")
         collections = stages[stage].setdefault("collections", [])
@@ -94,11 +92,7 @@ def plan_collection_registration(
             raise ValueError(f"stage {stage!r} collections must be an array")
         if any(isinstance(item, dict) and str(item.get("collection") or "").strip() == collection for item in collections):
             raise ValueError(f"collection {collection!r} already exists in stage {stage!r}")
-        collections.append(collection_config if stage == "working" else {
-            "collection": collection,
-            "title": collection_config["title"],
-            "report_host_doc_id": collection_config["report_host_doc_id"],
-        })
+        collections.append(collection_config)
     return payload
 
 def collection_storage_contract(parent_config: DocsStageConfig, collection: str) -> dict[str, Any]:
@@ -113,7 +107,7 @@ def collection_storage_contract(parent_config: DocsStageConfig, collection: str)
         "docs_output": generated_docs.as_posix(),
         "publish_output": (public_docs / collection).as_posix() if public_docs else "",
         "search_output": "",
-        "summary": "Registers the collection in Working and Pre-publish, then creates its source/generated collection and ordinary report host in Working. Pre-publish prepares its contents separately.",
+        "summary": "Registers the collection once in Working, then creates its source/generated collection and ordinary report host. Prepare Preview selects its eligible contents.",
     }
 
 
@@ -221,7 +215,7 @@ def report_host_source(parent_config: DocsStageConfig, collection: str, title: s
 
 
 def plan_create_collection_preview(repo_root: Path, body: dict[str, Any]) -> dict[str, Any]:
-    """Plan a Working host/collection and matching Pre-publish registration."""
+    """Plan a Working host and collection registration."""
     parent_config = request_stage_config(repo_root, body)
     collection = normalize_collection_id(body.get("collection"), field="collection")
     title = normalize_title(body.get("title"))

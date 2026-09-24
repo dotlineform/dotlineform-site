@@ -534,12 +534,6 @@ export function createDocsViewerManagementCollectionWorkingWorks(options = {}) {
   });
 }
 
-export function createDocsViewerManagementCollectionPrePublishWorks(options = {}) {
-  return createDocsViewerManagementWorkingSubjects(options, {
-    customisationId: "pre_publish_works"
-  });
-}
-
 export function createDocsViewerManagementCollectionWorkingProcessing(options = {}) {
   return createDocsViewerManagementWorkingSubjects(options, {
     customisationId: PROCESSING_CUSTOMISATION_ID

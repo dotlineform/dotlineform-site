@@ -308,7 +308,7 @@ class SourceLoadingMixin:
         if parent_id:
             entry["parent_id"] = parent_id
         if self.config.stage == "working":
-            entry["draft"] = doc.front_matter.get("draft", True)
+            entry["draft"] = doc.front_matter["draft"]
         if doc.summary:
             entry["summary"] = doc.summary
         if doc.ui_status:

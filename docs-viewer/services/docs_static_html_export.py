@@ -101,6 +101,8 @@ class StaticHtmlSnapshotApplyConflict(ValueError):
 
 def normalize_snapshot_stage(repo_root: Path, value: Any) -> DocsStageConfig:
     """Resolve one explicitly selected generated stage."""
+    if value != "working":
+        raise ValueError("Static HTML export requires Working generated documents")
     return load_docs_stage(repo_root, value)
 
 
@@ -364,7 +366,7 @@ def load_existing_snapshot_summary(destination_root: Path) -> dict[str, Any] | N
         payload = json.loads(provenance_path.read_text(encoding="utf-8"))
         if not isinstance(payload, dict) or payload.get("schema_version") != SNAPSHOT_SCHEMA_VERSION:
             return None
-        if "scope" in payload or payload.get("stage") not in {"working", "pre-publish"}:
+        if "scope" in payload or payload.get("stage") not in {"working", "preview"}:
             return None
         stage = payload["stage"]
         doc_ids = normalize_snapshot_doc_ids(payload.get("doc_ids"), list(payload.get("doc_ids") or []))

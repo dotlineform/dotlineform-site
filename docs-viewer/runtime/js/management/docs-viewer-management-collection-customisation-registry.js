@@ -3,11 +3,6 @@ function cleanString(value) {
 }
 
 const MANAGEMENT_CUSTOMISATION_LOADERS = Object.freeze({
-  pre_publish_works: function () {
-    return import("./docs-viewer-management-collection-working-subjects.js").then(function (module) {
-      return module.createDocsViewerManagementCollectionPrePublishWorks;
-    });
-  },
   working_works: function () {
     return import("./docs-viewer-management-collection-working-subjects.js").then(function (module) {
       return module.createDocsViewerManagementCollectionWorkingWorks;

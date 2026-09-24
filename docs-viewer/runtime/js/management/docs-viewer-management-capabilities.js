@@ -37,9 +37,9 @@ export function stageManagementCapabilities(capabilities, stage) {
   return capabilities && capabilities.stages && capabilities.stages[stage] || null;
 }
 
-export function stagePrePublishSupported(capabilities, stage) {
+export function stagePreparePreviewSupported(capabilities, stage) {
   var stageCaps = stageManagementCapabilities(capabilities, stage);
-  var operation = stageCaps && stageCaps.pre_publish;
+  var operation = stageCaps && stageCaps.prepare_preview;
   return Boolean(capabilities && capabilities.docs_management && stageCaps && stageCaps.available
     && operation && operation.preview && operation.apply);
 }
@@ -72,26 +72,6 @@ export function collectionDeleteSupported(capabilities, stage) {
     stageCaps.available &&
     stageCaps.collection_lifecycle &&
     stageCaps.collection_lifecycle.delete_eligible
-  );
-}
-
-export function stagePublishSupported(capabilities, stage) {
-  var stageCaps = stageManagementCapabilities(capabilities, stage);
-  var publishing = capabilities && capabilities.publishing && typeof capabilities.publishing === "object"
-    ? capabilities.publishing
-    : null;
-  var stagePublishing = stageCaps && stageCaps.publishing && typeof stageCaps.publishing === "object"
-    ? stageCaps.publishing
-    : null;
-  return Boolean(
-    publishing &&
-    publishing.confirm &&
-    publishing.apply &&
-    stageCaps &&
-    stageCaps.available &&
-    stagePublishing &&
-    stagePublishing.confirm &&
-    stagePublishing.apply
   );
 }
 
@@ -128,9 +108,8 @@ export function stageDeployRepoCapability(capabilities, stage) {
   return { available: true, reason: "" };
 }
 
-export function stagePublishWorkflowSupported(capabilities, stage) {
-  return stagePublishSupported(capabilities, stage)
-    || stageDeployRepoCapability(capabilities, stage).available;
+export function stageDeployRepoSupported(capabilities, stage) {
+  return stageDeployRepoCapability(capabilities, stage).available;
 }
 
 export function stageStaticHtmlExportCapability(capabilities, stage) {

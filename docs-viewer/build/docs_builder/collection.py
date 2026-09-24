@@ -128,7 +128,7 @@ class CollectionDocsBuilder(DocsDataBuilder):
                 "last_updated": doc.last_updated,
             }
             if self.config.stage == "working":
-                row["draft"] = doc.front_matter.get("draft", True)
+                row["draft"] = doc.front_matter["draft"]
             rows.append(row)
         payload: dict[str, Any] = {"docs": rows}
         if subjects_by_doc_id is not None:

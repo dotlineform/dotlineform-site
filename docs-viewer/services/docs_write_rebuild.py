@@ -248,12 +248,15 @@ def rebuild_stage_outputs(
     stage: str | None = None,
     links_doc_ids: Optional[list[str]] = None,
     links_created_doc_ids: Optional[list[str]] = None,
+    docs_base_dir: Path | None = None,
 ) -> Dict[str, Any]:
     """Await document work and requested Search before recording stage completion.
 
     Full Working docs-and-Search rebuilds also combine prepared Links records.
     Individual document operations omit Search and leave that aggregate alone.
     """
+    if stage == "preview" and docs_base_dir is None:
+        raise ValueError("Preview builds require an explicit temporary workspace")
     try:
         stage_config = load_docs_stage(repo_root, stage)
     except KeyError as exc:
@@ -328,6 +331,10 @@ def rebuild_stage_outputs(
     docs_diagnostics: Optional[Dict[str, Any]] = None
     search_diagnostics = extract_search_step_diagnostics("", search)
     for label, command in commands:
+        if docs_base_dir is not None:
+            command.extend(["--docs-base-dir", str(docs_base_dir)])
+        if stage == "preview" and command[1] == DOCS_BUILDER_SCRIPT and "--skip-browser-config" not in command:
+            command.append("--skip-browser-config")
         step = run_rebuild_command(command, repo_root)
         steps.append(step)
         if label == "docs":

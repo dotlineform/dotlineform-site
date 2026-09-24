@@ -27,7 +27,7 @@ export function normalizeManagedDocumentTarget(value) {
   }
 
   var docId = cleanString(value.doc_id);
-  if (!["working", "pre-publish", "published"].includes(value.stage)) throw new Error("Managed target stage is required.");
+  if (!["working", "preview"].includes(value.stage)) throw new Error("Managed target stage is required.");
   if (!docId) throw new Error("Managed document target doc_id is required.");
 
   var target = {
@@ -56,7 +56,7 @@ export function normalizeManagedDocumentCollectionTarget(value) {
     );
   }
 
-  if (!["working", "pre-publish", "published"].includes(value.stage)) throw new Error("Managed collection stage is required.");
+  if (!["working", "preview"].includes(value.stage)) throw new Error("Managed collection stage is required.");
 
   var target = { stage: value.stage };
   if (Object.prototype.hasOwnProperty.call(value, "collection")) {

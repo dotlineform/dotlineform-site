@@ -51,8 +51,8 @@ export function createDocsViewerReportService(options) {
   var serviceOptions = {
     baseUrl: cleanBaseUrl(settings.baseUrl),
     fetch: settings.fetch,
-    snapshotRole: cleanString(settings.snapshotRole).toLowerCase() === "published"
-      ? "published"
+    snapshotRole: cleanString(settings.snapshotRole).toLowerCase() === "preview"
+      ? "preview"
       : "generated"
   };
 
@@ -95,8 +95,8 @@ export function createDocsViewerReportService(options) {
       }));
     },
     readSemanticTokens: function (request) {
-      var path = serviceOptions.snapshotRole === "published"
-        ? "/docs/published/semantic-tokens"
+      var path = serviceOptions.snapshotRole === "preview"
+        ? "/docs/preview/semantic-tokens"
         : "/docs/semantic-tokens";
       return fetchReportJson(
         path + "?" + new URLSearchParams({

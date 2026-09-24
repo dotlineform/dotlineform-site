@@ -9,7 +9,7 @@ from typing import Any, Mapping, Sequence
 from docs_document_location_projection import build_exact_document_location_records
 from docs_document_subjects import normalize_authoring_subject
 from docs_workspace_config import load_docs_workspace_config, select_workspace_stage
-from docs_publish import validate_published_snapshot
+from docs_preview_snapshot import validate_preview_snapshot
 from docs_publication_payloads import project_public_view
 import json
 
@@ -147,12 +147,12 @@ def project_catalogue_documents_from_subject_associations(
 def load_public_catalogue_documents(repo_root: Path) -> CatalogueDocuments:
     """Join the complete accepted document set to its accepted subjects."""
     workspace = load_docs_workspace_config(repo_root)
-    config = select_workspace_stage(workspace, "pre-publish")
-    _manifest, _root, files = validate_published_snapshot(repo_root)
+    config = select_workspace_stage(workspace, "preview")
+    _manifest, _root, files = validate_preview_snapshot(repo_root)
 
     def payload(path: Path) -> dict[str, Any]:
         if path not in files:
-            raise FileNotFoundError(f"Accepted Published snapshot is missing {path}")
+            raise FileNotFoundError(f"Preview snapshot is missing {path}")
         value = json.loads(files[path].decode("utf-8"))
         if not isinstance(value, dict):
             raise ValueError(f"Accepted {path} must be an object")
@@ -177,7 +177,7 @@ def load_public_catalogue_documents(repo_root: Path) -> CatalogueDocuments:
         if path in files:
             associations[("published", child.collection)] = payload(path)
         elif child.collection_customisation is not None:
-            raise FileNotFoundError(f"Accepted Published snapshot is missing {path}")
+            raise FileNotFoundError(f"Preview snapshot is missing {path}")
     return project_catalogue_documents_from_subject_associations(
         exact_locations=locations, subject_associations_by_collection=associations,
     )

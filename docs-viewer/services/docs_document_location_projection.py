@@ -148,9 +148,9 @@ def build_exact_document_location_records(
         or "scope" in header
         or header.get("stage") != "published"
     ):
-        raise ValueError("public search must describe the accepted Published set")
+        raise ValueError("public search must describe the deployed document set")
 
-    configured_collections = {collection.collection for collection in select_workspace_stage(config, "pre-publish").collections}
+    configured_collections = {collection.collection for collection in select_workspace_stage(config, "preview").collections}
     manifest_records: dict[str, list[tuple[str, str]]] = {}
 
     records: list[dict[str, str]] = []
@@ -252,7 +252,7 @@ def load_public_document_location_inputs(
     }
     collection_manifests = {}
     configured_collections = {
-        collection.collection: collection for collection in select_workspace_stage(config, "pre-publish").collections
+        collection.collection: collection for collection in select_workspace_stage(config, "preview").collections
     }
     placed_collection_ids = {
         clean_text(payload["report"].get("collection")).lower()

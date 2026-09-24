@@ -101,9 +101,9 @@ function roleRows(stage) {
   const roles = stage.roles || {};
   return [
     ["source", roles.source],
-    ["published documents", roles.published_documents],
-    ["published search", roles.published_search],
-    ["published media", roles.media]
+    ["preview documents", roles.preview_documents],
+    ["preview search", roles.preview_search],
+    ["preview media", roles.media]
   ];
 }
 
@@ -162,7 +162,7 @@ function appendStage(parent, stage) {
   appendGroup(section, "Source config", sourceRows(stage));
   appendGroup(section, "Roles and locations", roleRows(stage));
   appendGroup(section, "Browser projection", browserRows(stage));
-  appendGroup(section, "Published artifacts", artifactRows(stage));
+  appendGroup(section, "Preview artifacts", artifactRows(stage));
   appendWarnings(section, stage.warnings);
   parent.appendChild(section);
 }

@@ -14,7 +14,7 @@ from docs_document_subjects import AUTHORING_SUBJECT_FIELDS, FOLDER_PATH_FIELD
 
 
 CUSTOMISATION_ID_PATTERN = re.compile(r"\A[a-z][a-z0-9_]*\Z")
-PRE_PUBLISH_WORKS_CUSTOMISATION_ID = "pre_publish_works"
+PREVIEW_WORKS_CUSTOMISATION_ID = "preview_works"
 WORKING_WORKS_CUSTOMISATION_ID = working_works.CUSTOMISATION_ID
 WORKING_PROCESSING_CUSTOMISATION_ID = working_processing.CUSTOMISATION_ID
 PUBLIC_ACCESS = "public"
@@ -104,11 +104,11 @@ def _strict_object(raw: Any, *, field: str, keys: set[str]) -> dict[str, Any]:
     return raw
 
 
-def _project_pre_publish_works_manifest(
+def _project_preview_works_manifest(
     settings: Mapping[str, Any], documents: Sequence[Any], repo_root: Path, collection: str, stage: str,
 ) -> dict[str, Any]:
     """Identify the Manage subject contribution; shared subject projection owns its rows."""
-    return {"root": {"id": PRE_PUBLISH_WORKS_CUSTOMISATION_ID, "data": {}}, "rows": {}}
+    return {"root": {"id": PREVIEW_WORKS_CUSTOMISATION_ID, "data": {}}, "rows": {}}
 
 
 def _normalize_empty_settings(raw: Any, field: str) -> Mapping[str, Any]:
@@ -117,10 +117,10 @@ def _normalize_empty_settings(raw: Any, field: str) -> Mapping[str, Any]:
 
 
 COLLECTION_CUSTOMISATION_DEFINITIONS = {
-    PRE_PUBLISH_WORKS_CUSTOMISATION_ID: DocsCollectionCustomisationDefinition(
-        customisation_id=PRE_PUBLISH_WORKS_CUSTOMISATION_ID,
+    PREVIEW_WORKS_CUSTOMISATION_ID: DocsCollectionCustomisationDefinition(
+        customisation_id=PREVIEW_WORKS_CUSTOMISATION_ID,
         normalize_settings=_normalize_empty_settings,
-        manifest_projection=DocsCollectionManifestProjectionAspect(project=_project_pre_publish_works_manifest),
+        manifest_projection=DocsCollectionManifestProjectionAspect(project=_project_preview_works_manifest),
         authoring_subject=DocsCollectionAuthoringSubjectAspect(
             field_names=tuple(field for field in AUTHORING_SUBJECT_FIELDS if field != FOLDER_PATH_FIELD),
         ),
@@ -577,7 +577,7 @@ def registered_collection_customisation_access() -> dict[str, tuple[str, ...]]:
 
 
 __all__ = [
-    "PRE_PUBLISH_WORKS_CUSTOMISATION_ID",
+    "PREVIEW_WORKS_CUSTOMISATION_ID",
     "WORKING_WORKS_CUSTOMISATION_ID",
     "WORKING_PROCESSING_CUSTOMISATION_ID",
     "DocsCollectionAssignableFieldGroup",

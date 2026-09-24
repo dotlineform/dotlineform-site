@@ -136,6 +136,11 @@ def save_source_document(repo_root: Path, body: Dict[str, Any], dry_run: bool) -
         raise ValueError("loaded source doc_id does not match the requested document")
     if "collection" in front_matter and front_matter["collection"] != resolved.collection:
         raise ValueError("loaded source collection does not match the requested collection")
+    source_model.validate_document_status_front_matter(
+        front_matter,
+        collection_config=resolved.document_config,
+        source_name=target.path.name,
+    )
 
     next_source_body = normalize_source_body_for_write(body["source_body"])
     next_front_matter_source = rewrite_session_metadata(front_matter_source, front_matter, metadata)

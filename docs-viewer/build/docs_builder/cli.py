@@ -15,7 +15,7 @@ from docs_workspace_config import select_workspace_stage
 
 def parse_args(argv: list[str]) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Build Docs Viewer generated document payloads.")
-    parser.add_argument("--stage", choices=("working", "pre-publish"), required=True, help="Select the exact source/generated stage.")
+    parser.add_argument("--stage", choices=("working", "preview"), required=True, help="Select the exact source/generated stage.")
     add_workspace_arguments(parser)
     parser.add_argument("--source", help="Override the selected stage's docs source directory.")
     parser.add_argument("--output", help="Override the selected stage's generated document directory.")
@@ -33,6 +33,8 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
 
 def main(argv: list[str] | None = None) -> int:
     args = parse_args(sys.argv[1:] if argv is None else argv)
+    if args.stage == "preview" and not args.docs_base_dir:
+        raise ValueError("Preview builds require explicit temporary --docs-base-dir inputs; use Prepare Preview")
     apply_workspace_overrides(args)
     repo_root = Path.cwd().resolve()
     workspace = load_docs_workspace_config(repo_root)

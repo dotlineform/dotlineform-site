@@ -8,15 +8,14 @@ from typing import Any, Dict
 import docs_deploy_repo
 import docs_local_links
 import docs_static_html_export
-from docs_publish import PUBLISH_MANIFEST_FILENAME
+from docs_preview_snapshot import PREVIEW_MANIFEST_FILENAME
 from docs_workspace_config import (
     load_docs_workspace_config,
     document_source_path,
     path_label,
     generated_documents_path,
     generated_search_path,
-    published_documents_path,
-    published_search_path,
+    preview_documents_path,
     resolve_workspace_path,
 )
 from docs_document_packages.workspace import workspace_status
@@ -26,16 +25,16 @@ def stage_capabilities(repo_root: Path, config: Any, static_html_export: dict[st
     """Project one exact source stage's capabilities through the owning services."""
     root = resolve_workspace_path(repo_root, document_source_path(config))
     generated_data_path = resolve_workspace_path(repo_root, generated_documents_path(config)) / "index-tree.json"
-    published_root = resolve_workspace_path(repo_root, published_documents_path(config)).parent
-    published_manifest_path = published_root / PUBLISH_MANIFEST_FILENAME
-    published_available = published_manifest_path.is_file() and not published_manifest_path.is_symlink()
+    preview_root = resolve_workspace_path(repo_root, preview_documents_path(config)).parent
+    preview_manifest_path = preview_root / PREVIEW_MANIFEST_FILENAME
+    preview_available = preview_manifest_path.is_file() and not preview_manifest_path.is_symlink()
     record = {
         "available": root.exists(),
         "root": path_label(repo_root, document_source_path(config)),
         "generated_data_reads": generated_data_path.exists(),
         "generated_search_reads": resolve_workspace_path(repo_root, generated_search_path(config)).exists(),
-        "published_data_reads": published_available,
-        "published_search_reads": published_available,
+        "preview_data_reads": preview_available,
+        "preview_search_reads": preview_available,
         "collection_lifecycle": {
             "create_eligible": True,
             "delete_eligible": False,
@@ -45,25 +44,11 @@ def stage_capabilities(repo_root: Path, config: Any, static_html_export: dict[st
                     "title": collection.title,
                     "source": path_label(repo_root, document_source_path(collection)),
                     "output": path_label(repo_root, generated_documents_path(collection)),
-                    "publish_output": path_label(repo_root, published_documents_path(collection)),
+                    "publish_output": path_label(repo_root, preview_documents_path(collection)),
                 }
                 for collection in config.collections
                 if collection.lifecycle is not None
             ],
-        },
-        "publishing": {
-            "status": True,
-            "confirm": True,
-            "apply": True,
-            "published_available": published_available,
-            "published_docs_root": path_label(
-                repo_root,
-                published_documents_path(config),
-            ),
-            "published_search_index": path_label(
-                repo_root,
-                published_search_path(config),
-            ),
         },
         "deploy_repo": {"available": False, "preview": False, "apply": False},
         "static_html_export": docs_static_html_export.stage_static_html_export_capability(
@@ -77,8 +62,7 @@ def stage_capabilities(repo_root: Path, config: Any, static_html_export: dict[st
     record["document_authoring"] = record["available"] and authoring
     if config.stage:
         record["stage"] = config.stage
-        record["pre_publish"] = {"preview": authoring, "apply": authoring}
-        record["publishing"].update({key: config.stage == "pre-publish" for key in ("status", "confirm", "apply")})
+        record["prepare_preview"] = {"preview": authoring, "apply": authoring}
         record["deploy_repo"] = {"available": False, "preview": False, "apply": False}
         if not authoring:
             record["collection_lifecycle"].update(create_eligible=False, delete_eligible=False)
@@ -92,19 +76,17 @@ def capabilities_payload(repo_root: Path) -> Dict[str, Any]:
     workspace = load_docs_workspace_config(repo_root)
     stages = {
         selected.stage: stage_capabilities(repo_root, selected, static_html_export)
-        for selected in workspace.stages
+        for selected in workspace.stages if selected.stage == "working"
     }
     deployment = docs_deploy_repo.deploy_repo_capability(repo_root, workspace)
-    stages["pre-publish"]["deploy_repo"] = deployment
-    published_root = resolve_workspace_path(repo_root, published_documents_path(workspace)).parent
-    completion = published_root / PUBLISH_MANIFEST_FILENAME
-    published_available = completion.is_file() and not completion.is_symlink()
-    stages["published"] = {
-        "available": published_available, "stage": "published", "document_authoring": False,
+    preview_root = resolve_workspace_path(repo_root, preview_documents_path(workspace)).parent
+    completion = preview_root / PREVIEW_MANIFEST_FILENAME
+    preview_available = completion.is_file() and not completion.is_symlink()
+    stages["preview"] = {
+        "available": preview_available, "stage": "preview", "document_authoring": False,
         "generated_data_reads": False, "generated_search_reads": False,
-        "published_data_reads": published_available, "published_search_reads": published_available,
-        "pre_publish": {"preview": False, "apply": False},
-        "publishing": {"status": False, "confirm": False, "apply": False},
+        "preview_data_reads": preview_available, "preview_search_reads": preview_available,
+        "prepare_preview": {"preview": False, "apply": False},
         "deploy_repo": deployment,
         "collection_lifecycle": {"create_eligible": False, "delete_eligible": False, "collections": []},
         "static_html_export": {"preview": False, "apply": False},
@@ -153,11 +135,6 @@ def capabilities_payload(repo_root: Path) -> Dict[str, Any]:
                 "create_apply": True,
                 "delete_preview": True,
                 "delete_apply": True,
-            },
-            "publishing": {
-                "status": True,
-                "confirm": True,
-                "apply": True,
             },
             "deploy_repo": {
                 "preview": True,

@@ -3,8 +3,8 @@ import { stageStaticHtmlExportCapability } from "./docs-viewer-management-capabi
 import { toggleManagedDocDraft } from "./docs-viewer-management-draft-workflow.js";
 import {
   createDocsViewerManagementCapabilityController,
-  stagePrePublishSupported,
-  stagePublishWorkflowSupported
+  stagePreparePreviewSupported,
+  stageDeployRepoSupported
 } from "./docs-viewer-management-capabilities.js";
 import {
   createDocsViewerManagementEventRouter
@@ -80,9 +80,9 @@ export function createDocsViewerManagementActionResolver(options = {}) {
     if (arguments.length > 1) contextOptions.invocationDocId = targetDocId;
     var stage = options.viewerStage ? options.viewerStage() : "";
     var stageActions = ["bookmark", "copy-link", "info", "open"];
-    if (stage === "pre-publish" || stage === "published") stageActions.push(DOCS_VIEWER_ACTION_IDS.PUBLISH_DOCS);
-    if (stage === "working" && actionId === DOCS_VIEWER_ACTION_IDS.PUBLISH_DOCS) {
-      return { enabled: false, hidden: true, disabledReason: "Review Pre-publish before publishing." };
+    if (stage === "preview") stageActions.push(DOCS_VIEWER_ACTION_IDS.DEPLOY_REPO);
+    if (stage === "working" && actionId === DOCS_VIEWER_ACTION_IDS.DEPLOY_REPO) {
+      return { enabled: false, hidden: true, disabledReason: "Review Preview before deploying." };
     }
     if (stage && stage !== "working" && !stageActions.includes(actionId)) {
       return Object.assign({}, resolveDocsViewerAction(actionId, createDocsViewerManagementActionContext(contextOptions)), {
@@ -181,9 +181,9 @@ export function initDocsViewerManagement(context) {
   var manageActionsMenu = document.getElementById("docsViewerManageActionsMenu");
   var manageRebuildButton = document.getElementById("docsViewerManageRebuildButton");
   var manageSettingsButton = document.getElementById("docsViewerManageSettingsButton");
-  var managePublishButton = document.getElementById("docsViewerManagePublishButton");
-  var manageToolbarPublishButton = document.getElementById("docsViewerManageToolbarPublishButton");
-  var managePublishButtons = [managePublishButton, manageToolbarPublishButton].filter(Boolean);
+  var manageDeployRepoButton = document.getElementById("docsViewerManageDeployRepoButton");
+  var manageToolbarDeployRepoButton = document.getElementById("docsViewerManageToolbarDeployRepoButton");
+  var manageDeployRepoButtons = [manageDeployRepoButton, manageToolbarDeployRepoButton].filter(Boolean);
   var manageImportButton = document.getElementById("docsViewerManageImportButton");
   var manageToolbarImportButton = document.getElementById("docsViewerManageToolbarImportButton");
   var manageImportButtons = [manageImportButton, manageToolbarImportButton].filter(Boolean);
@@ -474,8 +474,8 @@ export function initDocsViewerManagement(context) {
       "manage-import",
       "manage-actions",
       "manage-rebuild",
-      "manage-publish",
-      "manage-pre-publish",
+      "manage-deploy-repo",
+      "manage-prepare-preview",
       "manage-stage"
     ].forEach(function (controlId) {
       projectAppControl(controlId, { hidden: true, disabled: true });
@@ -655,11 +655,11 @@ export function initDocsViewerManagement(context) {
       !editAction.enabled ||
       searchRecent.searchRouteActive
     );
-    var publishAvailable = management.managementAvailable && stagePublishWorkflowSupported(
+    var deployRepoAvailable = management.managementAvailable && stageDeployRepoSupported(
       management.managementCapabilities,
       viewerStage()
     );
-    var prePublishAvailable = management.managementAvailable && stagePrePublishSupported(
+    var preparePreviewAvailable = management.managementAvailable && stagePreparePreviewSupported(
       management.managementCapabilities, viewerStage()
     );
 
@@ -675,13 +675,13 @@ export function initDocsViewerManagement(context) {
       hidden: managementActionsHidden || (Boolean(viewerStage()) && viewerStage() !== "working"),
       disabled: management.managementBusy || !management.managementAvailable
     });
-    projectAppControl("manage-publish", {
-      hidden: managementActionsHidden || !publishAvailable,
-      disabled: management.managementBusy || !publishAvailable
+    projectAppControl("manage-deploy-repo", {
+      hidden: managementActionsHidden || !deployRepoAvailable,
+      disabled: management.managementBusy || !deployRepoAvailable
     });
-    projectAppControl("manage-pre-publish", {
-      hidden: managementActionsHidden || !prePublishAvailable,
-      disabled: management.managementBusy || !prePublishAvailable
+    projectAppControl("manage-prepare-preview", {
+      hidden: managementActionsHidden || !preparePreviewAvailable,
+      disabled: management.managementBusy || !preparePreviewAvailable
     });
     projectAppControl("manage-stage", { hidden: managementActionsHidden || !viewerStage() });
 
@@ -698,10 +698,10 @@ export function initDocsViewerManagement(context) {
       workspaceExportButton.disabled = management.managementBusy || workspaceExportActive || !exportCapability.available;
       workspaceExportButton.title = exportCapability.available ? "Export workspace" : exportCapability.reason;
     }
-    managePublishButtons.forEach(function (button) {
-      button.disabled = management.managementBusy || !publishAvailable;
+    manageDeployRepoButtons.forEach(function (button) {
+      button.disabled = management.managementBusy || !deployRepoAvailable;
     });
-    if (manageToolbarPublishButton) manageToolbarPublishButton.hidden = !publishAvailable;
+    if (manageToolbarDeployRepoButton) manageToolbarDeployRepoButton.hidden = !deployRepoAvailable;
     manageImportButtons.forEach(function (button) {
       button.disabled = management.managementBusy || !management.managementAvailable;
     });
@@ -928,8 +928,8 @@ export function initDocsViewerManagement(context) {
       deleteCollection: function () { collectionLifecycleController.deleteCollection(); },
       openImport: openAppImport,
       openSettings: function () { settingsWorkflow.open(); },
-      publish: function () { actionController.handlePublishDocs(); },
-      prePublish: function () { actionController.handlePrePublishDocs(); },
+      deployRepo: function () { actionController.handleDeployRepo(); },
+      preparePreview: function () { actionController.handlePreparePreview(); },
       rebuild: function () { actionController.handleRebuildDocs(); }
     },
     controllers: {

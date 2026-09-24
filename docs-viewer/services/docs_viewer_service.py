@@ -41,7 +41,7 @@ import docs_management_service as docs_service  # noqa: E402
 import docs_document_package_routes as package_routes  # noqa: E402
 from docs_document_packages import service as package_service  # noqa: E402
 import docs_generated_reads as generated_reads  # noqa: E402
-import docs_published_reads as published_reads  # noqa: E402
+import docs_preview_reads  # noqa: E402
 import docs_media_storage as media_storage  # noqa: E402
 import docs_review_routes as review_routes  # noqa: E402
 import docs_review_service as review_service  # noqa: E402
@@ -113,13 +113,13 @@ GENERATED_READ_PATHS = {
     routes.GENERATED_SEARCH_PATH,
     routes.GENERATED_SEMANTIC_TOKENS_PATH,
 }
-PUBLISHED_READ_PATHS = {
-    routes.PUBLISHED_INDEX_TREE_PATH,
-    routes.PUBLISHED_RECENT_PATH,
-    routes.PUBLISHED_BACKLINKS_PATH,
-    routes.PUBLISHED_PAYLOAD_PATH,
-    routes.PUBLISHED_SEARCH_PATH,
-    routes.PUBLISHED_SEMANTIC_TOKENS_PATH,
+PREVIEW_READ_PATHS = {
+    routes.PREVIEW_INDEX_TREE_PATH,
+    routes.PREVIEW_RECENT_PATH,
+    routes.PREVIEW_BACKLINKS_PATH,
+    routes.PREVIEW_PAYLOAD_PATH,
+    routes.PREVIEW_SEARCH_PATH,
+    routes.PREVIEW_SEMANTIC_TOKENS_PATH,
 }
 
 
@@ -391,10 +391,6 @@ def apply_capability_flags(payload: dict[str, object], config: DocsViewerService
                 "delete_apply",
             ):
                 lifecycle[key] = False
-        publishing = capabilities.get("publishing")
-        if isinstance(publishing, dict):
-            publishing["apply"] = False
-            publishing["confirm"] = False
         deploy_repo = capabilities.get("deploy_repo")
         if isinstance(deploy_repo, dict):
             deploy_repo["preview"] = False
@@ -405,7 +401,7 @@ def apply_capability_flags(payload: dict[str, object], config: DocsViewerService
                 if not isinstance(stage_caps, dict):
                     continue
                 stage_caps["document_authoring"] = False
-                for operation in ("pre_publish", "publishing", "deploy_repo", "static_html_export"):
+                for operation in ("prepare_preview", "deploy_repo", "static_html_export"):
                     stage_caps[operation] = {key: False for key in stage_caps.get(operation, {})}
                 stage_caps["collection_lifecycle"].update(create_eligible=False, delete_eligible=False)
     if not config.generated_reads_enabled:
@@ -413,7 +409,7 @@ def apply_capability_flags(payload: dict[str, object], config: DocsViewerService
         if isinstance(stages, dict):
             for stage_caps in stages.values():
                 if isinstance(stage_caps, dict):
-                    for key in ("generated_data_reads", "generated_search_reads", "published_data_reads", "published_search_reads"):
+                    for key in ("generated_data_reads", "generated_search_reads", "preview_data_reads", "preview_search_reads"):
                         stage_caps[key] = False
     return payload
 
@@ -471,7 +467,7 @@ class DocsViewerRequestHandler(QuietErrorLoggingMixin, BaseHTTPRequestHandler):
                 return
             self.send_document_package_json(path, query)
             return
-        if path in GENERATED_READ_PATHS | PUBLISHED_READ_PATHS and not self.config.generated_reads_enabled:
+        if path in GENERATED_READ_PATHS | PREVIEW_READ_PATHS and not self.config.generated_reads_enabled:
             self.send_json({"ok": False, "error": "Generated reads are disabled"}, HTTPStatus.FORBIDDEN)
             return
         if path in {routes.SOURCE_BODY_PATH, routes.METADATA_PATH, routes.DOCUMENT_LINK_TARGETS_PATH}:
@@ -508,9 +504,9 @@ class DocsViewerRequestHandler(QuietErrorLoggingMixin, BaseHTTPRequestHandler):
                 return
             self.send_catalogue_thumbnail(path)
             return
-        if path.startswith(published_reads.PUBLISHED_MEDIA_PREFIX):
+        if path.startswith(docs_preview_reads.PREVIEW_MEDIA_PREFIX):
             if not self.config.generated_reads_enabled:
-                self.send_json({"ok": False, "error": "Published reads are disabled"}, HTTPStatus.FORBIDDEN)
+                self.send_json({"ok": False, "error": "Preview reads are disabled"}, HTTPStatus.FORBIDDEN)
                 return
             self.send_published_docs_media(path)
             return
@@ -520,11 +516,11 @@ class DocsViewerRequestHandler(QuietErrorLoggingMixin, BaseHTTPRequestHandler):
                 return
             self.send_external_collection_payload(path)
             return
-        if path.startswith(published_reads.EXTERNAL_COLLECTION_PUBLISHED_PREFIX):
+        if path.startswith(docs_preview_reads.EXTERNAL_COLLECTION_PREVIEW_PREFIX):
             if not self.config.generated_reads_enabled:
-                self.send_json({"ok": False, "error": "Published reads are disabled"}, HTTPStatus.FORBIDDEN)
+                self.send_json({"ok": False, "error": "Preview reads are disabled"}, HTTPStatus.FORBIDDEN)
                 return
-            self.send_external_published_collection_payload(path)
+            self.send_external_preview_collection_payload(path)
             return
         if path in routes.GET_PATHS:
             self.send_docs_api_json(path, query)
@@ -752,7 +748,7 @@ class DocsViewerRequestHandler(QuietErrorLoggingMixin, BaseHTTPRequestHandler):
 
     def send_published_docs_media(self, request_path: str) -> None:
         try:
-            path, media_class = published_reads.published_media_path(
+            path, media_class = docs_preview_reads.preview_media_path(
                 self.repo_root,
                 request_path,
             )
@@ -799,9 +795,9 @@ class DocsViewerRequestHandler(QuietErrorLoggingMixin, BaseHTTPRequestHandler):
         except ValueError as error:
             self.send_json({"ok": False, "error": str(error)}, HTTPStatus.BAD_REQUEST)
 
-    def send_external_published_collection_payload(self, request_path: str) -> None:
+    def send_external_preview_collection_payload(self, request_path: str) -> None:
         try:
-            path = published_reads.external_collection_payload_path(
+            path = docs_preview_reads.external_collection_payload_path(
                 self.repo_root,
                 request_path,
             )

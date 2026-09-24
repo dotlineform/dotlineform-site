@@ -16,29 +16,19 @@ from docs_build_manifest import (
     BUILD_MANIFEST_FILENAME,
     BUILD_MANIFEST_SCHEMA_VERSION,
 )
-from docs_publication_payloads import project_published_view
+from docs_publication_payloads import project_preview_view
 from docs_public_mermaid_payload import public_mermaid_payload_requires_projection
 from docs_workspace_config import (
     DocsStageConfig,
     DocsWorkspaceConfig,
     load_docs_workspace_config,
-    load_docs_stage,
     resolve_location_path,
 )
 
 
-PUBLISH_MANIFEST_FILENAME = "publish-manifest.json"
-PUBLISH_MANIFEST_SCHEMA_VERSION = "docs_publish_manifest_v2"
-PUBLISH_PREVIEW_SCHEMA_VERSION = "docs_publish_preview_v1"
+PREVIEW_MANIFEST_FILENAME = "preview-manifest.json"
+PREVIEW_MANIFEST_SCHEMA_VERSION = "docs_preview_manifest_v1"
 IGNORED_FILENAMES = frozenset({".DS_Store", ".gitkeep"})
-STANDARD_DIRECTORIES = (
-    Path("documents"),
-    Path("search"),
-    Path("references"),
-    Path("reports"),
-    Path("media"),
-    Path("collections"),
-)
 HTML_START_TAG_PATTERN = re.compile(
     r"<(?P<body>[A-Za-z][A-Za-z0-9:-]*(?:[^>\"']|\"[^\"]*\"|'[^']*')*)>",
     re.DOTALL,
@@ -86,7 +76,7 @@ def _lifecycle_root(repo_root: Path, config: DocsStageConfig | DocsWorkspaceConf
         if not isinstance(config, DocsStageConfig):
             raise ValueError("Source and generated roots require an explicit stage")
         location = config.stage_root
-    elif role == "published":
+    elif role == "preview":
         location = config.workspace_root
     else:
         raise ValueError(f"Unknown Docs lifecycle role: {role}")
@@ -295,7 +285,7 @@ def _media_identity_from_url(value: str, prefix: str) -> str:
     return path.as_posix()
 
 
-def _published_media_bindings(config: DocsStageConfig) -> dict[str, tuple[str, str, Path]]:
+def _preview_media_bindings(config: DocsStageConfig) -> dict[str, tuple[str, str, Path]]:
     """Map every collection's generated URL to its accepted URL and snapshot path."""
     bindings = {}
     for collection in (config, *config.collections):
@@ -303,16 +293,16 @@ def _published_media_bindings(config: DocsStageConfig) -> dict[str, tuple[str, s
         suffix = f"/collections/{child}" if child else ""
         for media_type, media in collection.media.types.items():
             key = f"{child}/{media_type}" if child else media_type
-            relative = media.published_location.path.relative_to(config.workspace_root.path / "published")
+            relative = media.preview_location.path.relative_to(config.workspace_root.path / "preview")
             bindings[key] = (
                 media.served_path_prefix.rstrip("/"),
-                f"/docs/published/media{suffix}/{media_type}",
+                f"/docs/preview/media{suffix}/{media_type}",
                 relative,
             )
     return bindings
 
 
-def _project_published_media_urls(
+def _project_preview_media_urls(
     config: DocsStageConfig,
     data: bytes,
 ) -> bytes:
@@ -320,7 +310,7 @@ def _project_published_media_urls(
     content_html = payload.get("content_html")
     if not isinstance(content_html, str):
         return data
-    bindings = _published_media_bindings(config)
+    bindings = _preview_media_bindings(config)
 
     def replace_tag(tag: re.Match[str]) -> str:
         def replace_attribute(attribute: re.Match[str]) -> str:
@@ -354,7 +344,7 @@ def _referenced_media(
     config: DocsStageConfig,
     files: Mapping[Path, bytes],
 ) -> dict[str, set[str]]:
-    prefixes = {key: (source, published) for key, (source, published, _path) in _published_media_bindings(config).items()}
+    prefixes = {key: (source, published) for key, (source, published, _path) in _preview_media_bindings(config).items()}
     references = {media_type: set() for media_type in prefixes}
     for relative_path, data in files.items():
         if relative_path.suffix.lower() not in {".json", ".html"}:
@@ -392,7 +382,7 @@ def _referenced_media(
     return references
 
 
-def _published_files(
+def build_preview_snapshot_files(
     repo_root: Path,
     config: DocsStageConfig,
     generated_files: Mapping[Path, bytes],
@@ -401,13 +391,13 @@ def _published_files(
     if index_path not in generated_files:
         raise FileNotFoundError("generated documents/index-tree.json is missing")
     index_tree = _read_json_bytes(generated_files[index_path], "generated index tree")
-    # Pre-publish owns document selection. Accept every prepared collection and
-    # its indexes together; Publish only projects lifecycle paths and media.
+    # Preparation owns selection. Project every prepared collection and its
+    # indexes together, retaining only reader payloads and referenced media.
     document_ids: set[str] = set()
     files: dict[Path, bytes] = {}
     for relative_path, data in generated_files.items():
         parts = relative_path.parts
-        _validate_prepared_index(relative_path, data, "pre-publish")
+        _validate_prepared_index(relative_path, data, "preview")
         if parts and (parts[0] == "media" or (
             len(parts) >= 4 and parts[0] == "collections" and parts[2] == "media"
         )):
@@ -421,9 +411,9 @@ def _published_files(
             if payload.get("doc_id") != relative_path.stem:
                 raise ValueError("Prepared document identity does not match its file")
             if config.public_projection is not None and public_mermaid_payload_requires_projection(payload):
-                raise ValueError("Pre-publish Mermaid preparation is incomplete; rebuild Pre-publish before Publish")
+                raise ValueError("Preview Mermaid preparation is incomplete; prepare Preview again")
             document_ids.add(relative_path.stem)
-            files[relative_path] = _project_published_media_urls(config, data)
+            files[relative_path] = _project_preview_media_urls(config, data)
         elif relative_path == Path("documents/recent.json"):
             files[relative_path] = generated_files.get(Path("documents/.publish/recent.json"), data)
         else:
@@ -432,9 +422,9 @@ def _published_files(
     workspace = load_docs_workspace_config(repo_root)
     for path, data in list(files.items()):
         if path.suffix == ".json":
-            files[path] = json_bytes(project_published_view(workspace, _read_json_bytes(data, f"prepared {path}")))
+            files[path] = json_bytes(project_preview_view(workspace, _read_json_bytes(data, f"prepared {path}")))
     for path, data in files.items():
-        _validate_prepared_index(path, data, "published")
+        _validate_prepared_index(path, data, "preview")
 
     tree_ids = {row["doc_id"] for row in _flatten_tree(index_tree.get("docs"))}
     ordinary_ids = {path.stem for path in files if len(path.parts) == 3 and path.parts[:2] == ("documents", "by-id") and path.suffix == ".json"}
@@ -442,7 +432,7 @@ def _published_files(
         raise ValueError("Prepared index tree and ordinary document set do not match")
 
     media_references = _referenced_media(config, files)
-    bindings = _published_media_bindings(config)
+    bindings = _preview_media_bindings(config)
     for media_type, identities in sorted(media_references.items()):
         for identity in sorted(identities):
             relative_path = bindings[media_type][2] / identity
@@ -464,137 +454,51 @@ def _published_files(
     }
 
 
-def _path_rows(paths: Iterable[Path]) -> list[str]:
-    return [path.as_posix() for path in sorted(paths)]
-
-
-def _plan_revision(payload: Mapping[str, Any]) -> str:
-    canonical = json.dumps(
-        payload,
-        ensure_ascii=False,
-        sort_keys=True,
-        separators=(",", ":"),
-    ).encode("utf-8")
-    return f"sha256:{hashlib.sha256(canonical).hexdigest()}"
-
-
-def _publish_config(repo_root: Path, body: dict[str, Any]) -> DocsStageConfig:
-    if "scope" in body:
-        raise ValueError("scope is retired; Publish requires stage pre-publish")
-    if body.get("stage") != "pre-publish":
-        raise ValueError("Publish requires the Pre-publish stage")
-    return load_docs_stage(repo_root, "pre-publish")
-
-
-def preview_publish(repo_root: Path, body: dict[str, Any]) -> dict[str, Any]:
-    config = _publish_config(repo_root, body)
-    generated_root = _lifecycle_root(repo_root, config, "generated")
-    published_root = _lifecycle_root(repo_root, config, "published")
-    build_manifest, generated_files = _validate_generated_manifest(
-        generated_root,
-        config.stage,
-    )
-    desired_files, eligibility = _published_files(repo_root, config, generated_files)
-    current_files = _files_from_root(
-        published_root,
-        excluded=(PUBLISH_MANIFEST_FILENAME,),
-    )
-    desired_paths = set(desired_files)
-    current_paths = set(current_files)
-    added = desired_paths - current_paths
-    removed = current_paths - desired_paths
-    changed = {
-        path
-        for path in desired_paths & current_paths
-        if desired_files[path] != current_files[path]
-    }
-    unchanged = (desired_paths & current_paths) - changed
-    target_revision = files_revision(desired_files)
-    current_revision = files_revision(current_files)
-    plan_basis = {
-        "stage": config.stage,
-        "generated_revision": build_manifest["generated_revision"],
-        "current_published_revision": current_revision,
-        "target_published_revision": target_revision,
-        "added": _path_rows(added),
-        "changed": _path_rows(changed),
-        "removed": _path_rows(removed),
-    }
-    return {
-        "ok": True,
-        "schema_version": PUBLISH_PREVIEW_SCHEMA_VERSION,
-        "operation": "preview",
-        "stage": config.stage,
-        "generated_revision": build_manifest["generated_revision"],
-        "current_published_revision": current_revision,
-        "target_published_revision": target_revision,
-        "plan_revision": _plan_revision(plan_basis),
-        "added": _path_rows(added),
-        "changed": _path_rows(changed),
-        "removed": _path_rows(removed),
-        "unchanged_count": len(unchanged),
-        "added_count": len(added),
-        "changed_count": len(changed),
-        "removed_count": len(removed),
-        "file_count": len(desired_files),
-        "document_count": len(eligibility["eligible_doc_ids"]),
-        "excluded_document_count": len(eligibility["excluded_doc_ids"]),
-        "eligible_doc_ids": eligibility["eligible_doc_ids"],
-        "excluded_doc_ids": eligibility["excluded_doc_ids"],
-        "media_references": eligibility["media_references"],
-        "up_to_date": not added and not changed and not removed,
-        "summary_text": (
-            f"Publish preview for the workspace: {len(added)} add, "
-            f"{len(changed)} change, {len(removed)} remove, "
-            f"{len(eligibility['eligible_doc_ids'])} documents accepted, "
-            f"{len(eligibility['excluded_doc_ids'])} excluded."
-        ),
-    }
-
-
-def _publish_manifest_payload(
+def _preview_manifest_payload(
     generated_revision: str,
     files: Mapping[Path, bytes],
+    *, source_revision: str,
 ) -> dict[str, Any]:
     records = [
         file_record(relative_path.as_posix(), data)
         for relative_path, data in sorted(files.items(), key=lambda item: item[0].as_posix())
     ]
     return {
-        "schema_version": PUBLISH_MANIFEST_SCHEMA_VERSION,
-        "stage": "published",
+        "schema_version": PREVIEW_MANIFEST_SCHEMA_VERSION,
+        "stage": "preview",
         "completed_at": utc_now(),
         "generated_revision": generated_revision,
-        "published_revision": files_revision(files),
+        "source_revision": source_revision,
+        "preview_revision": files_revision(files),
         "file_count": len(records),
         "files": records,
     }
 
 
-def validate_published_snapshot(
+def validate_preview_snapshot(
     repo_root: Path,
 ) -> tuple[dict[str, Any], Path, dict[Path, bytes]]:
-    """Reject missing, incomplete, or externally changed published state."""
+    """Reject missing, incomplete, or externally changed Preview state."""
 
     config = load_docs_workspace_config(repo_root)
-    published_root = _lifecycle_root(repo_root, config, "published")
-    manifest_path = published_root / PUBLISH_MANIFEST_FILENAME
+    preview_root = _lifecycle_root(repo_root, config, "preview")
+    manifest_path = preview_root / PREVIEW_MANIFEST_FILENAME
     if not manifest_path.is_file() or manifest_path.is_symlink():
         raise FileNotFoundError(
-            f"published snapshot for the workspace is unavailable: "
-            f"{PUBLISH_MANIFEST_FILENAME} is missing"
+            f"Preview snapshot for the workspace is unavailable: "
+            f"{PREVIEW_MANIFEST_FILENAME} is missing"
         )
     manifest = _read_json_bytes(
         manifest_path.read_bytes(),
-        "published snapshot manifest for the workspace",
+        "Preview snapshot manifest for the workspace",
     )
-    if manifest.get("schema_version") != PUBLISH_MANIFEST_SCHEMA_VERSION:
-        raise RuntimeError("published snapshot for the workspace has an unsupported manifest")
-    if "scope" in manifest or manifest.get("stage") != "published":
-        raise RuntimeError("published snapshot must identify Published without scope; prepare and publish a fresh snapshot before activation")
+    if manifest.get("schema_version") != PREVIEW_MANIFEST_SCHEMA_VERSION:
+        raise RuntimeError("Preview snapshot for the workspace has an unsupported manifest")
+    if "scope" in manifest or manifest.get("stage") != "preview":
+        raise RuntimeError("Preview snapshot must identify Preview without scope; prepare a fresh snapshot before activation")
     files = _files_from_root(
-        published_root,
-        excluded=(PUBLISH_MANIFEST_FILENAME,),
+        preview_root,
+        excluded=(PREVIEW_MANIFEST_FILENAME,),
     )
     records = [
         file_record(relative_path.as_posix(), data)
@@ -602,98 +506,48 @@ def validate_published_snapshot(
     ]
     if manifest.get("files") != records or manifest.get("file_count") != len(records):
         raise RuntimeError(
-            f"published snapshot for the workspace is stale: files do not match "
-            f"{PUBLISH_MANIFEST_FILENAME}"
+            f"Preview snapshot for the workspace is stale: files do not match "
+            f"{PREVIEW_MANIFEST_FILENAME}"
         )
     revision = files_revision(files)
-    if manifest.get("published_revision") != revision:
+    if manifest.get("preview_revision") != revision:
         raise RuntimeError(
-            "published snapshot for the workspace is stale: revision does not match"
+            "Preview snapshot for the workspace is stale: revision does not match"
         )
-    return manifest, published_root, files
+    return manifest, preview_root, files
 
 
-def apply_publish(repo_root: Path, body: dict[str, Any]) -> dict[str, Any]:
-    if body.get("confirm") is not True:
-        raise ValueError("confirm must be true to publish a stage snapshot")
-    preview = preview_publish(repo_root, body)
-    if body.get("plan_revision") != preview["plan_revision"]:
-        raise ValueError("Publish preview is stale; preview the stage again")
-    if body.get("target_published_revision") != preview["target_published_revision"]:
-        raise ValueError("Publish target revision does not match the confirmed preview")
+def write_preview_snapshot(
+    repo_root: Path, *, files: Mapping[Path, bytes], generated_revision: str, source_revision: str,
+) -> dict[str, Any]:
+    """Replace the prepared snapshot and record completion only after byte verification.
 
-    config = _publish_config(repo_root, body)
-    generated_root = _lifecycle_root(repo_root, config, "generated")
-    published_root = _lifecycle_root(repo_root, config, "published")
-    build_manifest, generated_files = _validate_generated_manifest(
-        generated_root,
-        config.stage,
-    )
-    desired_files, _eligibility = _published_files(repo_root, config, generated_files)
-    if files_revision(desired_files) != preview["target_published_revision"]:
-        raise ValueError("generated output changed after Publish confirmation")
-
-    completion_path = published_root / PUBLISH_MANIFEST_FILENAME
-    if completion_path.is_symlink():
-        raise ValueError("publish-manifest.json must not be a symlink")
-    completion_path.unlink(missing_ok=True)
-
-    for directory in STANDARD_DIRECTORIES:
-        (published_root / directory).mkdir(parents=True, exist_ok=True)
-    for _source_url, _published_url, relative in _published_media_bindings(config).values():
-        (published_root / relative).mkdir(parents=True, exist_ok=True)
-
-    for relative in preview["removed"]:
-        target = published_root / Path(relative)
-        if target.is_symlink():
-            raise ValueError(f"published file must not be a symlink: {relative}")
-        target.unlink(missing_ok=True)
-    for relative in [*preview["added"], *preview["changed"]]:
-        relative_path = Path(relative)
-        target = published_root / relative_path
+    Preparation supplies the complete projected file set. Failure after mutation
+    leaves no valid completion receipt; Prepare Preview is the recovery operation.
+    """
+    config = load_docs_workspace_config(repo_root)
+    preview_root = config.workspace_root.path / "preview"
+    if preview_root.is_symlink():
+        raise ValueError("Preview root must not be a symlink")
+    preview_root.mkdir(exist_ok=True)
+    current = _files_from_root(preview_root, excluded=(PREVIEW_MANIFEST_FILENAME,))
+    completion = preview_root / PREVIEW_MANIFEST_FILENAME
+    if completion.is_symlink():
+        raise ValueError("Preview completion must not be a symlink")
+    completion.unlink(missing_ok=True)
+    for relative in set(current) - set(files):
+        (preview_root / relative).unlink()
+    for relative, data in files.items():
+        if relative.is_absolute() or ".." in relative.parts:
+            raise ValueError("Preview file must use a confined relative path")
+        target = preview_root / relative
         target.parent.mkdir(parents=True, exist_ok=True)
-        if target.is_symlink():
-            raise ValueError(f"published file must not be a symlink: {relative}")
-        target.write_bytes(desired_files[relative_path])
-
-    actual_files = _files_from_root(
-        published_root,
-        excluded=(PUBLISH_MANIFEST_FILENAME,),
-    )
-    if set(actual_files) != set(desired_files):
-        raise RuntimeError("published snapshot file set did not verify")
-    for relative_path, expected in desired_files.items():
-        if actual_files[relative_path] != expected:
-            raise RuntimeError(
-                f"published snapshot bytes did not verify: {relative_path.as_posix()}"
-            )
-
-    manifest = _publish_manifest_payload(
-        str(build_manifest["generated_revision"]),
-        desired_files,
-    )
-    completion_path.write_bytes(json_bytes(manifest))
-    if _read_json_bytes(completion_path.read_bytes(), "published completion manifest") != manifest:
-        raise RuntimeError("published completion manifest did not verify")
-    return {
-        **preview,
-        "operation": "apply",
-        "applied": True,
-        "publish_manifest": manifest,
-        "summary_text": (
-            f"Published accepted snapshot for the workspace: "
-            f"{preview['added_count']} added, {preview['changed_count']} changed, "
-            f"{preview['removed_count']} removed."
-        ),
-    }
-
-
-__all__ = [
-    "PUBLISH_MANIFEST_FILENAME",
-    "PUBLISH_MANIFEST_SCHEMA_VERSION",
-    "PUBLISH_PREVIEW_SCHEMA_VERSION",
-    "apply_publish",
-    "files_revision",
-    "preview_publish",
-    "validate_published_snapshot",
-]
+        if current.get(relative) != data:
+            target.write_bytes(data)
+    actual = _files_from_root(preview_root, excluded=(PREVIEW_MANIFEST_FILENAME,))
+    if actual != files:
+        raise RuntimeError("Preview snapshot bytes did not verify")
+    manifest = _preview_manifest_payload(generated_revision, files, source_revision=source_revision)
+    completion.write_bytes(json_bytes(manifest))
+    validate_preview_snapshot(repo_root)
+    return manifest

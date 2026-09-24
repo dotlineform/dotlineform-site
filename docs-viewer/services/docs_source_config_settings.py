@@ -38,7 +38,7 @@ EDITABLE_STAGE_FIELDS: dict[str, EditableStageField] = {
 
 BLOCKED_STAGE_FIELDS = {
     "source": "Canonical source roles and locations are install-time config and require manual review.",
-    "published": "Published artifact roles and locations are install-time config and affect builders and imports.",
+    "preview": "Preview artifact roles and locations are install-time config and affect builders and imports.",
     "public_projection": "Public projections are install-time config and affect publication and public routes.",
     "viewer_base_url": "Route bases are install-time config and affect public URLs.",
     "non_loadable_doc_ids": "Tree loading behavior depends on published docs structure.",
@@ -89,7 +89,10 @@ def _stage_field_payload(config: Any, contract: EditableStageField) -> dict[str,
         "type": contract.value_type,
         "current_value": _field_current_value(config, contract),
         "editable": config.stage == "working",
-        "source_path": contract.source_path.replace("<stage>", config.stage),
+        "source_path": (
+            f"{CONFIG_REL_PATH.as_posix()} preview.{contract.field}"
+            if config.stage == "preview" else contract.source_path.replace("<stage>", config.stage)
+        ),
         "generated_path": contract.generated_path,
         "requires_rebuild": contract.requires_rebuild,
         "description": contract.description,

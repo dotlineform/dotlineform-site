@@ -93,139 +93,65 @@
       "media": {
         "files": {
           "reference_prefix": "docs/files",
-          "served_path_prefix": "/docs/media/pre-publish/files"
+          "served_path_prefix": "/docs/preview/media/files"
         },
         "html": {
           "reference_prefix": "docs/html",
-          "served_path_prefix": "/docs/media/pre-publish/html"
+          "served_path_prefix": "/docs/preview/media/html"
         },
         "img": {
           "reference_prefix": "docs/img",
-          "served_path_prefix": "/docs/media/pre-publish/img"
+          "served_path_prefix": "/docs/preview/media/img"
         },
         "svg": {
           "reference_prefix": "docs/svg",
-          "served_path_prefix": "/docs/media/pre-publish/svg"
+          "served_path_prefix": "/docs/preview/media/svg"
         }
       },
-      "index_tree_url": "/docs/index-tree?stage=pre-publish",
-      "recent_url": "/docs/recent?stage=pre-publish",
-      "search_index_url": "/docs/search?stage=pre-publish",
+      "index_tree_url": "/docs/preview/index-tree",
+      "recent_url": "/docs/preview/recent",
+      "search_index_url": "/docs/preview/search",
       "search": {
         "domain": "docs_viewer",
         "schema": "docs_viewer_search_index_v3",
-        "index_url": "/docs/search?stage=pre-publish",
+        "index_url": "/docs/preview/search",
         "rebuild_policy": "whole_index"
       },
       "collections": [
         {
           "collection": "works",
           "title": "Works",
-          "manifest_url": "/docs/generated/external/pre-publish/works/manage-manifest.json",
-          "by_id_url_base": "/docs/generated/external/pre-publish/works/by-id",
-          "collection_customisation": {
-            "id": "pre_publish_works",
-            "capabilities": {
-              "assignable_field_groups": [
-                "authoring_subject"
-              ]
-            }
-          }
+          "manifest_url": "/docs/preview/external/works/manifest.json",
+          "by_id_url_base": "/docs/preview/external/works/by-id"
         },
         {
           "collection": "concepts",
           "title": "Concepts",
-          "manifest_url": "/docs/generated/external/pre-publish/concepts/manage-manifest.json",
-          "by_id_url_base": "/docs/generated/external/pre-publish/concepts/by-id"
+          "manifest_url": "/docs/preview/external/concepts/manifest.json",
+          "by_id_url_base": "/docs/preview/external/concepts/by-id"
         },
         {
           "collection": "processing",
           "title": "Processing",
-          "manifest_url": "/docs/generated/external/pre-publish/processing/manage-manifest.json",
-          "by_id_url_base": "/docs/generated/external/pre-publish/processing/by-id"
+          "manifest_url": "/docs/preview/external/processing/manifest.json",
+          "by_id_url_base": "/docs/preview/external/processing/by-id"
         },
         {
           "collection": "moments",
           "title": "Moments",
-          "manifest_url": "/docs/generated/external/pre-publish/moments/manage-manifest.json",
-          "by_id_url_base": "/docs/generated/external/pre-publish/moments/by-id"
+          "manifest_url": "/docs/preview/external/moments/manifest.json",
+          "by_id_url_base": "/docs/preview/external/moments/by-id"
         },
         {
           "collection": "catalogue",
           "title": "catalogue",
-          "manifest_url": "/docs/generated/external/pre-publish/catalogue/manage-manifest.json",
-          "by_id_url_base": "/docs/generated/external/pre-publish/catalogue/by-id"
+          "manifest_url": "/docs/preview/external/catalogue/manifest.json",
+          "by_id_url_base": "/docs/preview/external/catalogue/by-id"
         }
       ],
-      "stage": "pre-publish",
+      "stage": "preview",
       "links_enabled": false,
-      "backlinks_url": "/docs/backlinks?stage=pre-publish"
-    },
-    {
-      "viewer_base_url": "/docs/",
-      "default_doc_id": "",
-      "media": {
-        "files": {
-          "reference_prefix": "docs/files",
-          "served_path_prefix": "/docs/published/media/files"
-        },
-        "html": {
-          "reference_prefix": "docs/html",
-          "served_path_prefix": "/docs/published/media/html"
-        },
-        "img": {
-          "reference_prefix": "docs/img",
-          "served_path_prefix": "/docs/published/media/img"
-        },
-        "svg": {
-          "reference_prefix": "docs/svg",
-          "served_path_prefix": "/docs/published/media/svg"
-        }
-      },
-      "index_tree_url": "/docs/published/index-tree",
-      "recent_url": "/docs/published/recent",
-      "search_index_url": "/docs/published/search",
-      "search": {
-        "domain": "docs_viewer",
-        "schema": "docs_viewer_search_index_v3",
-        "index_url": "/docs/published/search",
-        "rebuild_policy": "whole_index"
-      },
-      "collections": [
-        {
-          "collection": "works",
-          "title": "Works",
-          "manifest_url": "/docs/published/external/works/manifest.json",
-          "by_id_url_base": "/docs/published/external/works/by-id"
-        },
-        {
-          "collection": "concepts",
-          "title": "Concepts",
-          "manifest_url": "/docs/published/external/concepts/manifest.json",
-          "by_id_url_base": "/docs/published/external/concepts/by-id"
-        },
-        {
-          "collection": "processing",
-          "title": "Processing",
-          "manifest_url": "/docs/published/external/processing/manifest.json",
-          "by_id_url_base": "/docs/published/external/processing/by-id"
-        },
-        {
-          "collection": "moments",
-          "title": "Moments",
-          "manifest_url": "/docs/published/external/moments/manifest.json",
-          "by_id_url_base": "/docs/published/external/moments/by-id"
-        },
-        {
-          "collection": "catalogue",
-          "title": "catalogue",
-          "manifest_url": "/docs/published/external/catalogue/manifest.json",
-          "by_id_url_base": "/docs/published/external/catalogue/by-id"
-        }
-      ],
-      "stage": "published",
-      "links_enabled": false,
-      "backlinks_url": "/docs/published/backlinks"
+      "backlinks_url": "/docs/preview/backlinks"
     }
   ]
 }

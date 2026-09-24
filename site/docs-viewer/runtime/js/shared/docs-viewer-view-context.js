@@ -51,7 +51,7 @@ function activeManagedDocument(value, appContext) {
     || targetKeys[0] !== "collection"
     || targetKeys[1] !== "doc_id"
     || targetKeys[2] !== "stage"
-    || !["working", "pre-publish", "published"].includes(stage)
+    || !["working", "preview"].includes(stage)
     || !collection
     || !docId
     || cleanString(record && record.doc_id) !== docId

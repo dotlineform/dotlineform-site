@@ -192,7 +192,7 @@ export function initDocsViewerConfigController(context) {
       return "";
     }
     var stage = params.get("stage") || route.defaultStage;
-    if (!["working", "pre-publish", "published"].includes(stage)) throw new Error("Unknown Docs stage: " + stage);
+    if (!["working", "preview"].includes(stage)) throw new Error("Unknown Docs stage: " + stage);
     return stage;
   }
 
@@ -210,8 +210,8 @@ export function initDocsViewerConfigController(context) {
       workspaceConfig.stageConfigs.forEach(function (record) {
         var button = document.createElement("button");
         button.type = "button";
-        var label = { working: "Working", "pre-publish": "Pre-publish", published: "Published" }[record.stage];
-        var artwork = { working: "circle-ellipsis", "pre-publish": "circle-check", published: "circle-arrow-up" }[record.stage];
+        var label = { working: "Working", preview: "Preview" }[record.stage];
+        var artwork = { working: "circle-ellipsis", preview: "circle-check" }[record.stage];
         button.className = "docsViewer__toolbarIconButton";
         button.title = label;
         button.setAttribute("aria-label", label);
@@ -281,9 +281,9 @@ export function initDocsViewerConfigController(context) {
         if (stage) {
           if (!Array.isArray(envelope.rawStages) || envelope.rawWorkspace) throw new Error("Local Docs requires an explicit stages array.");
           var stages = envelope.rawStages.map(normalizeBrowserConfig);
-          if (stages.length !== 3 || new Set(stages.map(function (item) { return item.stage; })).size !== 3
-              || stages.some(function (item) { return !["working", "pre-publish", "published"].includes(item.stage); })) {
-            throw new Error("Local Docs requires Working, Pre-publish and Published configurations.");
+          if (stages.length !== 2 || new Set(stages.map(function (item) { return item.stage; })).size !== 2
+              || stages.some(function (item) { return !["working", "preview"].includes(item.stage); })) {
+            throw new Error("Local Docs requires Working and Preview configurations.");
           }
           workspaceConfig.stageConfigs = stages;
           workspaceConfig.stageConfigsById = new Map(stages.map(function (item) { return [item.stage, item]; }));

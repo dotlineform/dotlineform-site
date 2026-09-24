@@ -87,7 +87,7 @@ function searchScoreV2(index, position, query, matchedFields) {
 export function collectSearchMatches(index, rawQuery) {
   if (!index || !index.header || index.header.schema !== SEARCH_INDEX_V3_SCHEMA
     || Object.prototype.hasOwnProperty.call(index.header, "scope")
-    || !["working", "pre-publish", "published"].includes(index.header.stage)) {
+    || !["working", "preview", "published"].includes(index.header.stage)) {
     throw new Error("Docs Viewer search index has an unsupported schema or stage.");
   }
   var query = normalizeSearchText(rawQuery);

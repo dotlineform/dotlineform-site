@@ -94,7 +94,7 @@ class PayloadBuilderMixin:
             "content_url": doc.content_url,
         }
         if self.config.stage == "working":
-            entry["draft"] = doc.front_matter.get("draft", True)
+            entry["draft"] = doc.front_matter["draft"]
         if doc.ui_status:
             entry["ui_status"] = doc.ui_status
         if doc.report is not None:

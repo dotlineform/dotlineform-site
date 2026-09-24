@@ -84,6 +84,8 @@ def build_source_config_report(repo_root: Path) -> dict[str, Any]:
     stages: list[dict[str, Any]] = []
 
     for config in workspace.stages:
+        if config.stage != "working":
+            continue
         raw = raw_by_stage[config.stage]
         browser = browser_by_stage.get(config.stage, {})
         viewer_options, warnings = _read_viewer_options(repo_root, config)
@@ -107,13 +109,13 @@ def build_source_config_report(repo_root: Path) -> dict[str, Any]:
                     "source": {"provider": config.source.location.provider},
                     "generated_documents": {"provider": config.generated.documents.location.provider},
                     "generated_search": {"provider": config.generated.search.location.provider},
-                    "published_documents": {"provider": config.published.documents.location.provider},
-                    "published_search": {"provider": config.published.search.location.provider},
+                    "preview_documents": {"provider": config.preview.documents.location.provider},
+                    "preview_search": {"provider": config.preview.search.location.provider},
                     "media": {
                         media_type: {
                             "source_provider": media.source_location.provider,
                             "generated_provider": media.generated_location.provider,
-                            "published_provider": media.published_location.provider,
+                            "preview_provider": media.preview_location.provider,
                             "reference_prefix": media.reference_prefix.as_posix(),
                             "served_path_prefix": media.served_path_prefix,
                         }

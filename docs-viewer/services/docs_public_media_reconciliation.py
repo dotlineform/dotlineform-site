@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Plan and apply public media deployment from one accepted Published snapshot."""
+"""Plan and apply public media deployment from one accepted Preview snapshot."""
 
 from __future__ import annotations
 
@@ -111,7 +111,7 @@ def _type_adapters(
     return (
         artifact_location_adapter(
             repo_root,
-            published.published_location,
+            published.preview_location,
             served_path_prefix=published.served_path_prefix,
         ),
         artifact_location_adapter(
@@ -345,7 +345,7 @@ def plan_public_media_reconciliation(
     return {
         "schema_version": PUBLIC_MEDIA_RECONCILIATION_SCHEMA_VERSION,
         "operation": "status",
-        "stage": "published",
+        "stage": "preview",
         "referenced_count": len(references),
         "available_count": sum(item["available_count"] for item in types),
         "copy_count": sum(item["copy_count"] for item in types),
@@ -538,7 +538,7 @@ def apply_public_media_reconciliation(
     return {
         "schema_version": PUBLIC_MEDIA_RECONCILIATION_SCHEMA_VERSION,
         "operation": "apply",
-        "stage": "published",
+        "stage": "preview",
         "referenced_count": len(references),
         "copied_count": sum(item["copied_count"] for item in types),
         "unchanged_count": sum(item["unchanged_count"] for item in types),
@@ -557,7 +557,7 @@ def failed_public_media_reconciliation(operation: str, error: Exception) -> dict
     return {
         "schema_version": PUBLIC_MEDIA_RECONCILIATION_SCHEMA_VERSION,
         "operation": operation,
-        "stage": "published",
+        "stage": "preview",
         "referenced_count": 0,
         "available_count": 0,
         "copy_count": 0,

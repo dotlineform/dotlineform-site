@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Deploy one accepted Analysis Published snapshot to configured public outputs."""
+"""Deploy one accepted Preview snapshot to configured public outputs."""
 
 from __future__ import annotations
 
@@ -42,7 +42,7 @@ from docs_workspace_config import (
     public_search_path,
     public_media_bindings,
 )
-from docs_publish import validate_published_snapshot
+from docs_preview_snapshot import validate_preview_snapshot
 from docs_publication_payloads import project_public_view
 from docs_collection_customisations import (
     collection_customisation_authoring_subject_fields,
@@ -118,9 +118,9 @@ def plan_revision(payload: Mapping[str, Any]) -> str:
 
 
 def deployable_config(repo_root: Path) -> DocsStageConfig:
-    # Pre-publish configuration describes collection destinations; no source or
+    # Preview configuration describes collection destinations; no source or
     # generated artifact is read by deployment.
-    config = load_docs_stage(repo_root, "pre-publish")
+    config = load_docs_stage(repo_root, "preview")
     if config.public_projection is None or public_documents_path(config) is None or public_search_path(config) is None:
         raise ValueError("Public documents and Search destinations are required")
     return config
@@ -167,7 +167,7 @@ def deploy_repo_capability(
         "reason": "The configured repository projection is unavailable.",
     }
     try:
-        deployable = select_workspace_stage(config, "pre-publish")
+        deployable = select_workspace_stage(config, "preview")
     except (FileNotFoundError, ValueError):
         return {
             **unavailable,
@@ -299,7 +299,7 @@ def public_media_url_projection(config: DocsStageConfig) -> dict[str, str]:
     for collection, media in public_media_bindings(config).values():
         child = getattr(collection, "collection", "")
         suffix = f"/collections/{child}" if child else ""
-        urls[f"/docs/published/media{suffix}/{media.media_type}"] = media.served_path_prefix.rstrip("/")
+        urls[f"/docs/preview/media{suffix}/{media.media_type}"] = media.served_path_prefix.rstrip("/")
     return urls
 
 
@@ -351,7 +351,7 @@ def project_document_payload(
         )
     if public_mermaid_payload_requires_projection(payload):
         raise RuntimeError(
-            f"{label} requires a public Mermaid projection that is not present in the accepted Published snapshot"
+            f"{label} requires a public Mermaid projection that is not present in the accepted Preview snapshot"
         )
     return json_bytes(payload)
 
@@ -371,7 +371,7 @@ def project_public_search(
         or header.get("stage") != "published"
         or not isinstance(docs, list)
     ):
-        raise ValueError("accepted Search has the wrong schema or Published identity")
+        raise ValueError("accepted Search has the wrong schema or public identity")
     public_titles = {
         collection.collection: collection.public_title
         for collection in config.collections
@@ -446,7 +446,7 @@ def accepted_document_collections(
     search_path = Path("search/index.json")
     for required in (index_path, recent_path, search_path):
         if required not in published_files:
-            raise FileNotFoundError(f"accepted Published snapshot is missing {required.as_posix()}")
+            raise FileNotFoundError(f"accepted Preview snapshot is missing {required.as_posix()}")
 
     parent_files[Path("index-tree.json")] = json_bytes(
         project_content_urls(
@@ -521,7 +521,7 @@ def accepted_document_collections(
         manifest_bytes = files.get(Path("manifest.json"))
         if manifest_bytes is None:
             raise FileNotFoundError(
-                f"accepted Published snapshot is missing {prefix.as_posix()}/manifest.json"
+                f"accepted Preview snapshot is missing {prefix.as_posix()}/manifest.json"
             )
         collection_files[collection.collection] = files
         collection_manifests[collection.collection] = read_json_bytes(
@@ -535,7 +535,7 @@ def accepted_document_collections(
             and ("published", collection.collection) not in subject_associations
         ):
             raise FileNotFoundError(
-                f"accepted Published snapshot is missing deployment subject associations for "
+                f"accepted Preview snapshot is missing deployment subject associations for "
                 f"{collection.collection}"
             )
 
@@ -871,10 +871,10 @@ def build_deploy_repo_plan(
     environ: Mapping[str, str] | None = None,
 ) -> DeployRepoPlan:
     repo_root = repo_root.resolve()
-    if "scope" in body or body.get("stage") != "published":
-        raise ValueError("Deploy Repo requires the Published stage without scope")
+    if "scope" in body or body.get("stage") != "preview":
+        raise ValueError("Deploy Repo requires the Preview stage without scope")
     config = deployable_config(repo_root)
-    manifest, _published_root, published_files = validate_published_snapshot(
+    manifest, _preview_root, published_files = validate_preview_snapshot(
         repo_root,
     )
     timestamp = str(body.get("deployment_timestamp") or "").strip() or utc_now()
@@ -920,8 +920,8 @@ def build_deploy_repo_plan(
         desired_lineages,
     )
     plan_basis = {
-        "stage": "published",
-        "published_revision": manifest["published_revision"],
+        "stage": "preview",
+        "preview_revision": manifest["preview_revision"],
         "deployment_timestamp": timestamp,
         "repository": repository,
         "media": media,
@@ -942,8 +942,8 @@ def build_deploy_repo_plan(
         "ok": True,
         "schema_version": DEPLOY_REPO_PREVIEW_SCHEMA_VERSION,
         "operation": "preview",
-        "stage": "published",
-        "published_revision": manifest["published_revision"],
+        "stage": "preview",
+        "preview_revision": manifest["preview_revision"],
         "deployment_timestamp": timestamp,
         "plan_revision": revision,
         "repository": repository,
@@ -955,7 +955,7 @@ def build_deploy_repo_plan(
         "error_count": int(media.get("error_count") or 0),
         "up_to_date": change_count == 0 and int(media.get("error_count") or 0) == 0,
         "summary_text": (
-            f"Deploy Repo preview for the workspace at {manifest['published_revision']}: "
+            f"Deploy Repo preview for the workspace at {manifest['preview_revision']}: "
             f"{repository['added_count']} repository add, "
             f"{repository['changed_count']} change, {repository['removed_count']} remove; "
             f"{media.get('copy_count', 0)} media copy, {media.get('remove_count', 0)} remove; "
@@ -1038,8 +1038,8 @@ def apply_deploy_repo(
         environ=environ,
     )
     preview = plan.preview
-    if body.get("published_revision") != preview["published_revision"]:
-        raise ValueError("accepted Published revision does not match the reviewed Deploy Repo preview")
+    if body.get("preview_revision") != preview["preview_revision"]:
+        raise ValueError("accepted Preview revision does not match the reviewed Deploy Repo preview")
     if body.get("plan_revision") != preview["plan_revision"]:
         raise ValueError("Deploy Repo preview is stale; preview again")
 
@@ -1164,7 +1164,7 @@ def apply_deploy_repo(
                 ],
             },
             "summary_text": (
-                f"Deployed accepted Analysis revision {preview['published_revision']} to the repository projection. "
+                f"Deployed Preview revision {preview['preview_revision']} to the repository projection. "
                 f"Media: {media.get('copied_count', 0)} copied, {media.get('removed_count', 0)} removed, "
                 f"{media.get('error_count', 0)} errors. "
                 f"Catalogue: {catalogue_status}. "

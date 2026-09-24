@@ -118,15 +118,15 @@ export function createDocsViewerManagementAppControlRenderers() {
         artwork: "docsViewer__icon--refresh-cw"
       });
     },
-    "manage-toolbar-publish": function (context) {
+    "manage-toolbar-deploy-repo": function (context) {
       return renderActionButton(context, {
-        id: "docsViewerManageToolbarPublishButton",
+        id: "docsViewerManageToolbarDeployRepoButton",
         artwork: "docsViewer__icon--globe"
       });
     },
-    "manage-toolbar-pre-publish": function (context) {
+    "manage-toolbar-prepare-preview": function (context) {
       return renderActionButton(context, {
-        id: "docsViewerManagePrePublishButton",
+        id: "docsViewerManagePreparePreviewButton",
         artwork: "docsViewer__icon--book-up"
       });
     },

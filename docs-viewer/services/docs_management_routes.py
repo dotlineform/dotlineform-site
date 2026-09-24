@@ -12,12 +12,12 @@ GENERATED_LINKS_PATH = "/docs/links"
 GENERATED_WORKSPACE_LINKS_PATH = "/docs/workspace-links"
 GENERATED_SEARCH_PATH = "/docs/search"
 GENERATED_SEMANTIC_TOKENS_PATH = "/docs/semantic-tokens"
-PUBLISHED_INDEX_TREE_PATH = "/docs/published/index-tree"
-PUBLISHED_RECENT_PATH = "/docs/published/recent"
-PUBLISHED_BACKLINKS_PATH = "/docs/published/backlinks"
-PUBLISHED_PAYLOAD_PATH = "/docs/published/doc"
-PUBLISHED_SEARCH_PATH = "/docs/published/search"
-PUBLISHED_SEMANTIC_TOKENS_PATH = "/docs/published/semantic-tokens"
+PREVIEW_INDEX_TREE_PATH = "/docs/preview/index-tree"
+PREVIEW_RECENT_PATH = "/docs/preview/recent"
+PREVIEW_BACKLINKS_PATH = "/docs/preview/backlinks"
+PREVIEW_PAYLOAD_PATH = "/docs/preview/doc"
+PREVIEW_SEARCH_PATH = "/docs/preview/search"
+PREVIEW_SEMANTIC_TOKENS_PATH = "/docs/preview/semantic-tokens"
 SOURCE_CONFIG_PATH = "/docs/source-config"
 SERIES_WORKS_REPORT_PATH = "/docs/series-works-report"
 UNPUBLISHABLE_REPORT_PATH = "/docs/unpublishable-report"
@@ -56,8 +56,8 @@ SET_DRAFT_PATH = "/docs/set-draft"
 ASSIGN_FIELD_GROUP_PATH = "/docs/assign-field-group"
 CREATE_PATH = "/docs/create"
 REBUILD_PATH = "/docs/rebuild"
-PRE_PUBLISH_PREVIEW_PATH = "/docs/pre-publish/preview"
-PRE_PUBLISH_APPLY_PATH = "/docs/pre-publish/apply"
+PREPARE_PREVIEW_PLAN_PATH = "/docs/prepare-preview/plan"
+PREPARE_PREVIEW_APPLY_PATH = "/docs/prepare-preview/apply"
 MOVE_PATH = "/docs/move"
 DELETE_PREVIEW_PATH = "/docs/delete-preview"
 DELETE_APPLY_PATH = "/docs/delete-apply"
@@ -65,9 +65,6 @@ COLLECTION_CREATE_PREVIEW_PATH = "/docs/collections/create-preview"
 COLLECTION_CREATE_APPLY_PATH = "/docs/collections/create-apply"
 COLLECTION_DELETE_PREVIEW_PATH = "/docs/collections/delete-preview"
 COLLECTION_DELETE_APPLY_PATH = "/docs/collections/delete-apply"
-PUBLISH_STATUS_PATH = "/docs/publish/status"
-PUBLISH_CONFIRM_PATH = "/docs/publish/confirm"
-PUBLISH_APPLY_PATH = "/docs/publish/apply"
 DEPLOY_REPO_PREVIEW_PATH = "/docs/deploy-repo/preview"
 DEPLOY_REPO_APPLY_PATH = "/docs/deploy-repo/apply"
 STATIC_HTML_EXPORT_PREVIEW_PATH = "/docs/export/static-html/preview"
@@ -84,12 +81,12 @@ GET_PATHS = (
     GENERATED_WORKSPACE_LINKS_PATH,
     GENERATED_SEARCH_PATH,
     GENERATED_SEMANTIC_TOKENS_PATH,
-    PUBLISHED_INDEX_TREE_PATH,
-    PUBLISHED_RECENT_PATH,
-    PUBLISHED_BACKLINKS_PATH,
-    PUBLISHED_PAYLOAD_PATH,
-    PUBLISHED_SEARCH_PATH,
-    PUBLISHED_SEMANTIC_TOKENS_PATH,
+    PREVIEW_INDEX_TREE_PATH,
+    PREVIEW_RECENT_PATH,
+    PREVIEW_BACKLINKS_PATH,
+    PREVIEW_PAYLOAD_PATH,
+    PREVIEW_SEARCH_PATH,
+    PREVIEW_SEMANTIC_TOKENS_PATH,
     SOURCE_CONFIG_PATH,
     SERIES_WORKS_REPORT_PATH,
     UNPUBLISHABLE_REPORT_PATH,
@@ -107,7 +104,6 @@ GET_PATHS = (
     IMPORT_SOURCE_FILES_PATH,
     STAGED_MEDIA_FILES_PATH,
     DIAGRAM_SOURCES_PATH,
-    PUBLISH_STATUS_PATH,
 )
 
 POST_PATHS = (
@@ -132,8 +128,8 @@ POST_PATHS = (
     ASSIGN_FIELD_GROUP_PATH,
     CREATE_PATH,
     REBUILD_PATH,
-    PRE_PUBLISH_PREVIEW_PATH,
-    PRE_PUBLISH_APPLY_PATH,
+    PREPARE_PREVIEW_PLAN_PATH,
+    PREPARE_PREVIEW_APPLY_PATH,
     MOVE_PATH,
     DELETE_PREVIEW_PATH,
     DELETE_APPLY_PATH,
@@ -141,8 +137,6 @@ POST_PATHS = (
     COLLECTION_CREATE_APPLY_PATH,
     COLLECTION_DELETE_PREVIEW_PATH,
     COLLECTION_DELETE_APPLY_PATH,
-    PUBLISH_CONFIRM_PATH,
-    PUBLISH_APPLY_PATH,
     DEPLOY_REPO_PREVIEW_PATH,
     DEPLOY_REPO_APPLY_PATH,
     STATIC_HTML_EXPORT_PREVIEW_PATH,

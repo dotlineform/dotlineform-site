@@ -1,11 +1,11 @@
 import {
   applyManagedDocDelete,
-  applyManagedDocsPrePublish,
+  prepareManagedDocsPreview,
   createManagedDoc,
   moveManagedDoc,
   openManagedDocSource,
   previewManagedDocDelete,
-  previewManagedDocsPrePublish,
+  planManagedDocsPreview,
   rebuildManagedDocs,
   updateSourceConfigSettings
 } from "./docs-viewer-management-client.js";
@@ -24,10 +24,10 @@ import {
   openDocsViewerTextInputModal
 } from "./docs-viewer-management-modals.js";
 import {
-  docsViewerPublishWorkflowHasFailure,
-  docsViewerPublishWorkflowMessage,
-  runManagedDocsPublishWorkflow
-} from "./docs-viewer-management-publish-workflow.js";
+  docsViewerDeployRepoWorkflowHasFailure,
+  docsViewerDeployRepoWorkflowMessage,
+  runManagedDocsDeployRepoWorkflow
+} from "./docs-viewer-management-deploy-workflow.js";
 
 var ACTION_TEXT = {
   cancelButton: "Cancel",
@@ -43,7 +43,7 @@ var ACTION_TEXT = {
   settingsSaving: "Saving settings...",
   settingsSaved: "Settings saved.",
   settingsSaveFailed: "Settings save failed.",
-  publishFailed: "Publish failed.",
+  deployFailed: "Deploy Repo failed.",
   copyLinkFailed: "Copy link failed."
 };
 
@@ -127,7 +127,7 @@ export function normalizeManagedCollectionCreateTarget(value) {
   }
   var collection = String(value.collection || "").trim().toLowerCase();
   if (!collection) throw new Error("Managed collection create target requires a collection ID.");
-  if (!["working", "pre-publish"].includes(value.stage)) {
+  if (!["working", "preview"].includes(value.stage)) {
     throw new Error("Managed collection create target stage is invalid.");
   }
   return Object.freeze({
@@ -597,8 +597,8 @@ export function createDocsViewerManagementActionController(options) {
       });
   }
 
-  function handlePublishDocs() {
-    return runManagedDocsPublishWorkflow({
+  function handleDeployRepo() {
+    return runManagedDocsDeployRepoWorkflow({
       root: root,
       capabilities: management.managementCapabilities,
       clientOptions: managementClientOptions(),
@@ -611,18 +611,18 @@ export function createDocsViewerManagementActionController(options) {
       .then(function (result) {
         if (
           !result
-          || (result.cancelled === true && !docsViewerPublishWorkflowMessage(result))
+          || (result.cancelled === true && !docsViewerDeployRepoWorkflowMessage(result))
         ) {
           setManagementMessage("", false);
           return result;
         }
         setManagementMessage(
-          docsViewerPublishWorkflowMessage(result),
-          docsViewerPublishWorkflowHasFailure(result)
+          docsViewerDeployRepoWorkflowMessage(result),
+          docsViewerDeployRepoWorkflowHasFailure(result)
         );
         if (
           callbacks.refreshManagementCapabilities
-          && [result.publish, result.deploy_repo].some(function (outcome) {
+          && [result.deploy_repo].some(function (outcome) {
             return outcome && (outcome.status === "applied" || outcome.status === "partial");
           })
         ) {
@@ -631,7 +631,7 @@ export function createDocsViewerManagementActionController(options) {
         return result;
       })
       .catch(function (error) {
-        setManagementMessage(error.message || ACTION_TEXT.publishFailed, true);
+        setManagementMessage(error.message || ACTION_TEXT.deployFailed, true);
         return null;
       })
       .finally(function () {
@@ -640,21 +640,21 @@ export function createDocsViewerManagementActionController(options) {
       });
   }
 
-  async function handlePrePublishDocs() {
+  async function handlePreparePreview() {
     var clientOptions = managementClientOptions();
     try {
       setManagementBusy(true);
       setManagementMessage("", false);
       renderManagementUi();
-      var preview = await previewManagedDocsPrePublish(clientOptions);
+      var preview = await planManagedDocsPreview(clientOptions);
       setManagementBusy(false);
       setManagementMessage("", false);
       renderManagementUi();
       var confirmed = await openDocsViewerConfirmModal({
         root: root,
-        title: "Pre-publish",
+        title: "Prepare Preview",
         body: preview.document_count + " documents",
-        primaryLabel: "Pre-publish",
+        primaryLabel: "Prepare Preview",
         cancelLabel: ACTION_TEXT.cancelButton
       });
       if (!confirmed) {
@@ -662,13 +662,13 @@ export function createDocsViewerManagementActionController(options) {
         return;
       }
       setManagementBusy(true);
-      setManagementMessage("Building Pre-publish documents and Search...", false);
+      setManagementMessage("Preparing Preview...", false);
       renderManagementUi();
-      var result = await applyManagedDocsPrePublish(preview, clientOptions);
+      var result = await prepareManagedDocsPreview(preview, clientOptions);
       setManagementMessage(result.summary_text, false);
       if (callbacks.refreshManagementCapabilities) await callbacks.refreshManagementCapabilities();
     } catch (error) {
-      setManagementMessage(error.message || "Pre-publish failed.", true);
+      setManagementMessage(error.message || "Prepare Preview failed.", true);
     } finally {
       setManagementBusy(false);
       renderManagementUi();
@@ -908,8 +908,8 @@ export function createDocsViewerManagementActionController(options) {
     handleReturnToDoc: handleReturnToDoc,
     handleMoveDoc: handleMoveDoc,
     handleOpenSource: handleOpenSource,
-    handlePublishDocs: handlePublishDocs,
-    handlePrePublishDocs: handlePrePublishDocs,
+    handleDeployRepo: handleDeployRepo,
+    handlePreparePreview: handlePreparePreview,
     handleRebuildDocs: handleRebuildDocs,
     handleSettingsSubmit: handleSettingsSubmit
   };

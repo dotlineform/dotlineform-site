@@ -434,8 +434,8 @@ export function mountDocsMediaReport(context) {
   renderHead(state);
   attachEvents(state);
   updateControls(state);
-  if (!["working", "pre-publish"].includes(stage)) {
-    state.statusNode.textContent = "Docs Media requires Working or Pre-publish.";
+  if (stage !== "working") {
+    state.statusNode.textContent = "Docs Media requires Working.";
     state.emptyNode.hidden = false;
     state.emptyNode.textContent = "Docs Media could not run in this viewer context.";
     return Promise.resolve();

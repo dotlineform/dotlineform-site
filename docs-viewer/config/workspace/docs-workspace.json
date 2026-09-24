@@ -1,5 +1,5 @@
 {
-  "schema_version": "docs_workspace_v2",
+  "schema_version": "docs_workspace_v3",
   "public_viewer_base_url": "/analysis/",
   "recent_limit": 20,
   "search_fields": [
@@ -139,67 +139,9 @@
           }
         }
       ]
-    },
-    "pre-publish": {
-      "media": {
-        "types": {
-          "img": {
-            "build_inputs": []
-          },
-          "svg": {
-            "build_inputs": [
-              "mermaid"
-            ]
-          },
-          "files": {
-            "build_inputs": []
-          },
-          "html": {
-            "build_inputs": []
-          }
-        },
-        "build_sources": {
-          "mermaid": {
-            "producer": "mermaid",
-            "publishes_to": "svg"
-          }
-        }
-      },
-      "default_doc_id": "d-20260426-164043-e14f49",
-      "non_loadable_doc_ids": [],
-      "manage_only_tree_root_ids": [],
-      "allow_unresolved_parent_ids": false,
-      "collections": [
-        {
-          "collection": "works",
-          "title": "Works",
-          "report_host_doc_id": "d-20260801-073826-8865a8",
-          "collection_customisation": {
-            "id": "pre_publish_works",
-            "settings": {}
-          }
-        },
-        {
-          "collection": "concepts",
-          "title": "Concepts",
-          "report_host_doc_id": "d-20260624-213316-478639"
-        },
-        {
-          "collection": "processing",
-          "title": "Processing",
-          "report_host_doc_id": "d-20260901-103244-09e720"
-        },
-        {
-          "collection": "moments",
-          "title": "Moments",
-          "report_host_doc_id": "d-20260907-180859-c425b2"
-        },
-        {
-          "collection": "catalogue",
-          "title": "catalogue",
-          "report_host_doc_id": "d-20260916-161504-f8c947"
-        }
-      ]
     }
+  },
+  "preview": {
+    "default_doc_id": "d-20260426-164043-e14f49"
   }
 }

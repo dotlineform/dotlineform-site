@@ -9,8 +9,7 @@ import docs_catalogue_media
 import docs_diagram_source_service
 import docs_import_source_service as import_source_service
 import docs_management_routes as routes
-import docs_published_reads
-import docs_publish
+import docs_preview_reads
 import docs_source_config_report
 import docs_series_works_report
 import docs_unpublishable_report
@@ -65,7 +64,7 @@ def docs_generated_read_payload(repo_root: Path, path: str, params: dict[str, li
     raise FileNotFoundError("Not found")
 
 
-def docs_published_read_payload(
+def docs_preview_read_payload(
     repo_root: Path,
     path: str,
     params: dict[str, list[str]],
@@ -74,25 +73,25 @@ def docs_published_read_payload(
         raise ValueError("sub_scope is retired; use collection")
     if "scope" in params:
         raise ValueError("scope is retired")
-    if "stage" in params and docs_api_query_value(params, "stage") != "published":
-        raise ValueError("Published reads cannot address a source/generated stage")
+    if "stage" in params and docs_api_query_value(params, "stage") != "preview":
+        raise ValueError("Preview reads cannot address a source/generated stage")
     if "collection" in params:
-        raise ValueError("Use the configured Published collection artifact route for child payloads")
-    if path == routes.PUBLISHED_INDEX_TREE_PATH:
-        return docs_published_reads.read_published_docs_index_tree(repo_root)
-    if path == routes.PUBLISHED_RECENT_PATH:
-        return docs_published_reads.read_published_recent(repo_root)
-    if path == routes.PUBLISHED_BACKLINKS_PATH:
-        return docs_published_reads.read_published_backlinks(repo_root)
-    if path == routes.PUBLISHED_SEARCH_PATH:
-        return docs_published_reads.read_published_search_index(repo_root)
-    if path == routes.PUBLISHED_SEMANTIC_TOKENS_PATH:
-        return docs_published_reads.read_published_semantic_tokens_index(repo_root)
-    if path == routes.PUBLISHED_PAYLOAD_PATH:
+        raise ValueError("Use the configured Preview collection artifact route for child payloads")
+    if path == routes.PREVIEW_INDEX_TREE_PATH:
+        return docs_preview_reads.read_preview_docs_index_tree(repo_root)
+    if path == routes.PREVIEW_RECENT_PATH:
+        return docs_preview_reads.read_preview_recent(repo_root)
+    if path == routes.PREVIEW_BACKLINKS_PATH:
+        return docs_preview_reads.read_preview_backlinks(repo_root)
+    if path == routes.PREVIEW_SEARCH_PATH:
+        return docs_preview_reads.read_preview_search_index(repo_root)
+    if path == routes.PREVIEW_SEMANTIC_TOKENS_PATH:
+        return docs_preview_reads.read_preview_semantic_tokens_index(repo_root)
+    if path == routes.PREVIEW_PAYLOAD_PATH:
         doc_id = docs_api_query_value(params, "doc_id")
         if not doc_id:
             raise ValueError("doc_id is required")
-        return docs_published_reads.read_published_doc_payload(
+        return docs_preview_reads.read_preview_doc_payload(
             repo_root,
             doc_id,
         )
@@ -146,14 +145,14 @@ def docs_management_get_payload(repo_root: Path, path: str, params: dict[str, li
     }:
         return docs_generated_read_payload(repo_root, path, params)
     if path in {
-        routes.PUBLISHED_INDEX_TREE_PATH,
-        routes.PUBLISHED_RECENT_PATH,
-        routes.PUBLISHED_BACKLINKS_PATH,
-        routes.PUBLISHED_PAYLOAD_PATH,
-        routes.PUBLISHED_SEARCH_PATH,
-        routes.PUBLISHED_SEMANTIC_TOKENS_PATH,
+        routes.PREVIEW_INDEX_TREE_PATH,
+        routes.PREVIEW_RECENT_PATH,
+        routes.PREVIEW_BACKLINKS_PATH,
+        routes.PREVIEW_PAYLOAD_PATH,
+        routes.PREVIEW_SEARCH_PATH,
+        routes.PREVIEW_SEMANTIC_TOKENS_PATH,
     }:
-        return docs_published_read_payload(repo_root, path, params)
+        return docs_preview_read_payload(repo_root, path, params)
     if path == routes.SOURCE_CONFIG_PATH:
         return docs_source_config_report.build_source_config_report(repo_root)
     if path == routes.SOURCE_CONFIG_SETTINGS_PATH:
@@ -197,9 +196,4 @@ def docs_management_get_payload(repo_root: Path, path: str, params: dict[str, li
         )
     if path == routes.DIAGRAM_SOURCES_PATH:
         return docs_diagram_source_service.list_diagram_sources(repo_root, params)
-    if path == routes.PUBLISH_STATUS_PATH:
-        return docs_publish.preview_publish(
-            repo_root,
-            {"stage": docs_api_query_value(params, "stage")},
-        )
     raise FileNotFoundError("Not found")

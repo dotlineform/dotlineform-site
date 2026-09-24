@@ -29,8 +29,7 @@ import docs_local_links  # noqa: E402
 import docs_media_report  # noqa: E402
 import docs_management_mutations as mutations  # noqa: E402
 import docs_management_routes as routes  # noqa: E402
-import docs_publish  # noqa: E402
-import docs_pre_publish  # noqa: E402
+import docs_prepare_preview  # noqa: E402
 import docs_project_state  # noqa: E402
 import docs_missing_source_files  # noqa: E402
 import docs_uncataloged_files  # noqa: E402
@@ -101,23 +100,13 @@ def docs_management_post_response(
     if "sub_scope" in body:
         raise ValueError("sub_scope is retired; use collection")
     if path in {routes.DEPLOY_REPO_PREVIEW_PATH, routes.DEPLOY_REPO_APPLY_PATH}:
-        if body.get("stage") != "published":
-            raise ValueError("Deploy Repo requires stage published")
+        if body.get("stage") != "preview":
+            raise ValueError("Deploy Repo requires stage preview")
     elif "stage" in body:
         selected = load_docs_stage(repo_root, body["stage"])
-        if path in {routes.DOCS_MEDIA_REPORT_PATH, routes.BROKEN_LINKS_PATH, routes.OPEN_MEDIA_SOURCE_PATH}:
-            pass
-        elif path in {
-            routes.PRE_PUBLISH_PREVIEW_PATH, routes.PRE_PUBLISH_APPLY_PATH,
-            routes.PUBLISH_CONFIRM_PATH, routes.PUBLISH_APPLY_PATH,
-        }:
-            required_stage = "working" if path in {routes.PRE_PUBLISH_PREVIEW_PATH, routes.PRE_PUBLISH_APPLY_PATH} else "pre-publish"
-            if selected.stage != required_stage:
-                raise ValueError(f"This action requires stage {required_stage}")
-        else:
-            require_document_authoring(selected)
-    if path == routes.PRE_PUBLISH_PREVIEW_PATH:
-        return HTTPStatus.OK, docs_pre_publish.preview_pre_publish(repo_root, body)
+        require_document_authoring(selected)
+    if path == routes.PREPARE_PREVIEW_PLAN_PATH:
+        return HTTPStatus.OK, docs_prepare_preview.plan_prepare_preview(repo_root, body)
     if path == routes.CATALOGUE_REGENERATE_PREVIEW_PATH:
         return HTTPStatus.OK, docs_catalogue_regeneration.preview_catalogue_regeneration(repo_root, body)
     if path == routes.CATALOGUE_REGENERATE_APPLY_PATH:
@@ -129,10 +118,10 @@ def docs_management_post_response(
             return HTTPStatus.CONFLICT, {"ok": False, "error": str(error)}
         except docs_catalogue_regeneration.CatalogueRegenerationApplyError as error:
             return HTTPStatus.INTERNAL_SERVER_ERROR, error.payload
-    if path == routes.PRE_PUBLISH_APPLY_PATH:
+    if path == routes.PREPARE_PREVIEW_APPLY_PATH:
         if dry_run:
-            raise ValueError("Pre-publish apply does not support dry_run")
-        return HTTPStatus.OK, docs_pre_publish.apply_pre_publish(repo_root, body)
+            raise ValueError("Prepare Preview apply does not support dry_run")
+        return HTTPStatus.OK, docs_prepare_preview.apply_prepare_preview(repo_root, body)
     if path == routes.SET_DRAFT_PATH:
         try:
             return HTTPStatus.OK, docs_management_draft.set_draft(repo_root, body, dry_run=dry_run)
@@ -290,12 +279,6 @@ def docs_management_post_response(
             return HTTPStatus.OK, handle_collection_delete_apply(repo_root, body, dry_run)
         except docs_collection_lifecycle.CollectionLifecycleApplyError as error:
             return HTTPStatus.INTERNAL_SERVER_ERROR, error.payload
-    if path == routes.PUBLISH_CONFIRM_PATH:
-        return HTTPStatus.OK, docs_publish.preview_publish(repo_root, body)
-    if path == routes.PUBLISH_APPLY_PATH:
-        if dry_run:
-            raise ValueError("Publish apply does not support dry_run")
-        return HTTPStatus.OK, docs_publish.apply_publish(repo_root, body)
     if path == routes.DEPLOY_REPO_PREVIEW_PATH:
         return HTTPStatus.OK, docs_deploy_repo.preview_deploy_repo(repo_root, body)
     if path == routes.DEPLOY_REPO_APPLY_PATH:

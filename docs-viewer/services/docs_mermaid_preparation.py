@@ -1,4 +1,4 @@
-"""Prepare document-owned Mermaid media inside the Pre-publish generated snapshot."""
+"""Prepare document-owned Mermaid media inside the Preview generated snapshot."""
 
 from __future__ import annotations
 
@@ -18,13 +18,13 @@ from docs_source_model import load_document_collection_docs_for_config
 def prepare_stage_mermaid(repo_root: Path, config: DocsStageConfig) -> dict[str, Any] | None:
     """Render every prepared collection before its complete Build is recorded.
 
-    Working Markdown and payloads retain their fences. Only public Pre-publish
+    Working Markdown and payloads retain their fences. Only public Preview
     collections receive SVG pairs and projected HTML. Temporary rendering must
     succeed before that collection's generated media or payloads are replaced;
     any failure propagates to the Build owner, leaving completion invalidated.
-    Publish and Deploy subsequently consume only these generated/accepted bytes.
+    Snapshot preparation and Deploy Repo subsequently consume only these bytes.
     """
-    if config.stage != "pre-publish" or config.public_projection is None:
+    if config.stage != "preview" or config.public_projection is None:
         return None
     results = []
     for collection in (config, *config.collections):

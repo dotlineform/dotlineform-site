@@ -69,7 +69,7 @@ def browser_collection_records(repo_root: Path, config: DocsStageConfig, *, publ
 
 def browser_stage_record(repo_root: Path, config: DocsStageConfig, *, public_viewer_base_url: str = "", published: bool = False) -> dict[str, Any]:
     if published and config.public_projection is None:
-        raise ValueError("public reader settings require Pre-publish configuration")
+        raise ValueError("public reader settings require Preview configuration")
     media = config.public_projection.media if published else config.media.types
     record = {
         "viewer_base_url": public_viewer_base_url if published else "/docs/",
@@ -87,19 +87,19 @@ def browser_stage_record(repo_root: Path, config: DocsStageConfig, *, public_vie
     return record
 
 
-def browser_published_record(repo_root: Path, workspace: DocsWorkspaceConfig) -> dict[str, Any]:
+def browser_preview_record(repo_root: Path, workspace: DocsWorkspaceConfig) -> dict[str, Any]:
     """Expose the accepted local snapshot without source/generated write authority."""
-    prepared = select_workspace_stage(workspace, "pre-publish")
+    prepared = select_workspace_stage(workspace, "preview")
     record = browser_stage_record(repo_root, prepared)
-    record.update(stage="published", default_doc_id="", links_enabled=False)
+    record.update(stage="preview", links_enabled=False)
     for key, route in (("index_tree_url", "index-tree"), ("recent_url", "recent"), ("backlinks_url", "backlinks"), ("search_index_url", "search")):
-        record[key] = f"/docs/published/{route}"
+        record[key] = f"/docs/preview/{route}"
     record["search"] = {**record["search"], "index_url": record["search_index_url"]}
     for kind, media in record["media"].items():
-        media["served_path_prefix"] = f"/docs/published/media/{kind}"
+        media["served_path_prefix"] = f"/docs/preview/media/{kind}"
     record["collections"] = browser_collection_records(repo_root, prepared, published=True)
     for child in record["collections"]:
-        base = f"/docs/published/external/{quote(child['collection'])}"
+        base = f"/docs/preview/external/{quote(child['collection'])}"
         child.update(manifest_url=f"{base}/manifest.json", by_id_url_base=f"{base}/by-id")
     return record
 
@@ -107,11 +107,11 @@ def browser_published_record(repo_root: Path, workspace: DocsWorkspaceConfig) ->
 def browser_workspace_config_payload(repo_root: Path, workspace: DocsWorkspaceConfig, *, published: bool = False) -> dict[str, Any]:
     payload = {"schema_version": DOCS_VIEWER_BROWSER_CONFIG_SCHEMA_VERSION, "docs_viewer": {"recent_limit": workspace.recent_limit}}
     if published:
-        payload["workspace"] = browser_stage_record(repo_root, select_workspace_stage(workspace, "pre-publish"),
+        payload["workspace"] = browser_stage_record(repo_root, select_workspace_stage(workspace, "preview"),
                                                     published=True, public_viewer_base_url=workspace.public_viewer_base_url)
     else:
         payload["public_viewer_base_url"] = workspace.public_viewer_base_url
-        payload["stages"] = [browser_stage_record(repo_root, stage) for stage in workspace.stages] + [browser_published_record(repo_root, workspace)]
+        payload["stages"] = [browser_stage_record(repo_root, select_workspace_stage(workspace, "working")), browser_preview_record(repo_root, workspace)]
     return payload
 
 

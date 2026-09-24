@@ -23,6 +23,8 @@ EXTERNAL_COLLECTION_GENERATED_PREFIX = "/docs/generated/external/"
 
 
 def generated_stage_config(repo_root: Path, stage: str | None = None) -> DocsStageConfig:
+    if stage != "working":
+        raise ValueError("Generated reads require Working; use the Preview snapshot reader for Preview")
     return load_docs_stage(repo_root, stage)
 
 
@@ -40,7 +42,7 @@ def external_collection_payload_path(repo_root: Path, request_path: str, stage: 
     route_stage, collection, *artifact = parts
     if stage is not None and stage != route_stage:
         raise ValueError("Conflicting generated stage target")
-    config = load_docs_stage(repo_root, route_stage)
+    config = generated_stage_config(repo_root, route_stage)
     selected = next((child for child in config.collections if child.collection == collection), None)
     if selected is None:
         raise FileNotFoundError(f"Docs collection not found: {collection}")

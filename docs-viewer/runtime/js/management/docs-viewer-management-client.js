@@ -109,7 +109,7 @@ export function readCatalogueGallery(galleryId, options) {
 
 export function readManagedDocsIndex(options) {
   var stage = options && options.stage;
-  if (!["working", "pre-publish", "published"].includes(stage)) return Promise.reject(new Error("Docs stage is required."));
+  if (!["working", "preview"].includes(stage)) return Promise.reject(new Error("Docs stage is required."));
   return fetchManagementJson("/docs/index-tree?stage=" + encodeURIComponent(stage), "GET", undefined, options);
 }
 
@@ -154,27 +154,14 @@ export function rebuildManagedDocs(options) {
   return fetchManagementJson("/docs/rebuild", "POST", stagedPayload({}, options), options);
 }
 
-export function confirmManagedDocsPublish(options) {
-  return fetchManagementJson("/docs/publish/confirm", "POST", stagedPayload({}, options), options);
+export function planManagedDocsPreview(options) {
+  return fetchManagementJson("/docs/prepare-preview/plan", "POST", stagedPayload({}, options), options);
 }
 
-export function previewManagedDocsPrePublish(options) {
-  return fetchManagementJson("/docs/pre-publish/preview", "POST", stagedPayload({}, options), options);
-}
-
-export function applyManagedDocsPrePublish(preview, options) {
-  return fetchManagementJson("/docs/pre-publish/apply", "POST", stagedPayload({
+export function prepareManagedDocsPreview(preview, options) {
+  return fetchManagementJson("/docs/prepare-preview/apply", "POST", stagedPayload({
     confirm: true,
     plan_revision: String(preview && preview.plan_revision || "")
-  }, options), options);
-}
-
-export function applyManagedDocsPublish(preview, options) {
-  var plan = preview && typeof preview === "object" ? preview : {};
-  return fetchManagementJson("/docs/publish/apply", "POST", stagedPayload({
-    confirm: true,
-    plan_revision: String(plan.plan_revision || "").trim(),
-    target_published_revision: String(plan.target_published_revision || "").trim()
   }, options), options);
 }
 
@@ -182,7 +169,7 @@ export function previewManagedDocsDeployRepo(options) {
   return fetchManagementJson(
     "/docs/deploy-repo/preview",
     "POST",
-    { stage: "published" },
+    { stage: "preview" },
     options
   );
 }
@@ -190,9 +177,9 @@ export function previewManagedDocsDeployRepo(options) {
 export function applyManagedDocsDeployRepo(preview, options) {
   var plan = preview && typeof preview === "object" ? preview : {};
   return fetchManagementJson("/docs/deploy-repo/apply", "POST", {
-    stage: "published",
+    stage: "preview",
     confirm: true,
-    published_revision: String(plan.published_revision || "").trim(),
+    preview_revision: String(plan.preview_revision || "").trim(),
     deployment_timestamp: String(plan.deployment_timestamp || "").trim(),
     plan_revision: String(plan.plan_revision || "").trim()
   }, options);
