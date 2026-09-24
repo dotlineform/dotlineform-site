@@ -10,15 +10,15 @@
   <aside class="studioUi__panel catalogueWorkSeriesBrowser" aria-label="Browse Series works">
     <div class="catalogueWorkPage__panelHeading">
       <label class="studioForm__label" for="catalogueWorkSeriesBrowseSearch">series</label>
-      <button type="button" class="sharedRecordListActions__button" data-appearance="icon" id="catalogueWorkListExpand" title="Expand member works list" aria-label="Expand member works list" aria-expanded="false" aria-controls="catalogueWorkSeriesBrowseMembers catalogueWorkEditorPane catalogueWorkSummaryPanel"><span aria-hidden="true">&gt;</span></button>
+      <button type="button" class="studioUi__iconButton" id="catalogueWorkListExpand" title="Expand member works list" aria-label="Expand member works list" aria-expanded="false" aria-controls="catalogueWorkSeriesBrowseMembers catalogueWorkEditorPane catalogueWorkSummaryPanel"><span class="studioUi__icon studioUi__icon--chevron-right" aria-hidden="true"></span></button>
     </div>
     <div class="catalogueWorkSeriesBrowser__searchRow">
       <div class="sharedSearchList__control">
         <input type="text" class="studioUi__input" id="catalogueWorkSeriesBrowseSearch" placeholder="find series by title or id" autocomplete="off" disabled>
         <div id="catalogueWorkSeriesBrowsePopup" hidden></div>
       </div>
-      <button type="button" class="sharedRecordListActions__button" data-appearance="icon" id="catalogueWorkSeriesBrowseEdit" title="Edit Series" aria-label="Edit Series" disabled><span aria-hidden="true">✏️</span></button>
-      <button type="button" class="studioUi__button" id="catalogueWorkSeriesBrowseNew" aria-label="New Series" disabled>New</button>
+      <button type="button" class="studioUi__iconButton" id="catalogueWorkSeriesBrowseEdit" title="Edit Series" aria-label="Edit Series" disabled><span class="studioUi__icon studioUi__icon--pen" aria-hidden="true"></span></button>
+      <button type="button" class="studioUi__iconButton" id="catalogueWorkSeriesBrowseNew" title="New Series" aria-label="New Series" disabled><span class="studioUi__icon studioUi__icon--file" aria-hidden="true"></span></button>
     </div>
     <div class="studioUi__headingRow catalogueWorkSeriesBrowser__heading">
       <h2 class="studioUi__heading">member works</h2>
@@ -38,9 +38,9 @@
           <input type="text" class="studioUi__input" id="catalogueWorkSearch" placeholder="find work by id" autocomplete="off">
           <span id="catalogueWorkPopupList" hidden></span>
         </div>
-        <button type="button" class="sharedRecordListActions__button" data-appearance="icon" id="catalogueWorkNew" title="New" aria-label="New"><span aria-hidden="true">➕</span></button>
-        <button type="button" class="sharedRecordListActions__button" data-appearance="icon" id="catalogueWorkSave" title="Save" aria-label="Save"><span aria-hidden="true">💾</span></button>
-        <button type="button" class="sharedRecordListActions__button" data-appearance="icon" data-tone="danger" id="catalogueWorkDelete" title="Delete" aria-label="Delete"><span aria-hidden="true">🗑️</span></button>
+        <button type="button" class="studioUi__iconButton" id="catalogueWorkNew" title="New" aria-label="New"><span class="studioUi__icon studioUi__icon--file" aria-hidden="true"></span></button>
+        <button type="button" class="studioUi__iconButton" id="catalogueWorkSave" title="Save" aria-label="Save"><span class="studioUi__icon studioUi__icon--download" aria-hidden="true"></span></button>
+        <button type="button" class="studioUi__iconButton" data-tone="danger" id="catalogueWorkDelete" title="Delete" aria-label="Delete"><span class="studioUi__icon studioUi__icon--trash" aria-hidden="true"></span></button>
       </div>
     </div>
     <p class="studioForm__meta">Save updates the record, generated Catalogue and media.</p>

@@ -1,4 +1,5 @@
 import { displayValue } from "./catalogue-editor-records.js";
+import { createStudioIcon } from "./studio-icon.js";
 import { createWorkGalleryPicker, renderWorkGalleryPicker, setWorkGalleryPickerAvailability } from "./catalogue-work-gallery-picker.js";
 import { bindSearchList } from "/shared/frontend/js/search-list.js";
 import { WORK_EDITABLE_FIELDS as EDITABLE_FIELDS, WORK_READONLY_FIELDS as READONLY_FIELDS, normalizeSeriesId, normalizeText } from "./catalogue-work-fields.js";
@@ -311,9 +312,9 @@ function renderProjectMediaDisplayField(field, fieldsNode, state, options) {
   if (field.key === "project_filename") {
     const button = document.createElement("button");
     button.type = "button";
-    button.className = "catalogueProjectMediaPicker__chooseButton";
+    button.className = "studioUi__iconButton";
     button.dataset.projectMediaChoose = "work";
-    button.textContent = "📂";
+    button.append(createStudioIcon(document, "folder-open"));
     button.title = formText(options, "project_media_choose_button", "Choose image...");
     button.setAttribute("aria-label", formText(options, "project_media_choose_button", "Choose image..."));
     button.addEventListener("click", () => {
@@ -374,16 +375,18 @@ function renderSeriesField(field, fieldsNode, state, options) {
   actions.className = "catalogueWorkSeriesPicker__actions";
   const editButton = document.createElement("button");
   editButton.type = "button";
-  editButton.className = "studioUi__button";
-  editButton.textContent = "Edit";
+  editButton.className = "studioUi__iconButton";
+  editButton.append(createStudioIcon(document, "pen"));
+  editButton.title = "Edit Series";
   editButton.setAttribute("aria-label", "Edit Series");
   editButton.addEventListener("click", () => {
     if (!editButton.disabled) void options.onEditDefinition("Series", state.draft.series_id, searchInput);
   });
   const newButton = document.createElement("button");
   newButton.type = "button";
-  newButton.className = "studioUi__button";
-  newButton.textContent = "New";
+  newButton.className = "studioUi__iconButton";
+  newButton.append(createStudioIcon(document, "file"));
+  newButton.title = "New Series";
   newButton.setAttribute("aria-label", "New Series");
   newButton.addEventListener("click", () => {
     if (!newButton.disabled) void options.onEditDefinition("Series", "", searchInput);
@@ -468,7 +471,6 @@ export function applyWorkFormText(state, options = {}) {
     state.seriesPicker.searchInput.setAttribute("aria-label", formText(options, "series_picker_label", "Find series by title"));
   }
   if (state.projectMediaChooseButton) {
-    state.projectMediaChooseButton.textContent = "📂";
     state.projectMediaChooseButton.title = formText(options, "project_media_choose_button", "Choose image...");
     state.projectMediaChooseButton.setAttribute("aria-label", formText(options, "project_media_choose_button", "Choose image..."));
   }

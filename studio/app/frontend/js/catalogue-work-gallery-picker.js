@@ -1,4 +1,5 @@
 import { normalizeText } from "./catalogue-work-fields.js";
+import { createStudioIcon } from "./studio-icon.js";
 
 function disabled(state) {
   return state.isSaving || state.isBuilding || state.isDeleting || !state.serverAvailable;
@@ -51,10 +52,12 @@ export function renderWorkGalleryPicker(state) {
     edit.type = "button";
     edit.dataset.editGalleryId = id;
     edit.setAttribute("aria-label", `Edit Gallery ${title} (${id})`);
-    const remove = node("button", "studioUi__chipRemove", "×");
+    const remove = node("button", "studioUi__chipRemove");
+    remove.append(createStudioIcon(document, "x"));
     remove.type = "button";
     remove.dataset.removeGalleryId = id;
     remove.setAttribute("aria-label", `Remove ${title} (${id})`);
+    remove.title = `Remove ${title} (${id})`;
     edit.append(node("span", "catalogueWorkSeriesPicker__chipId", id));
     chip.append(edit, remove);
     picker.chipsNode.append(chip);
@@ -92,7 +95,9 @@ export function createWorkGalleryPicker(field, fieldsNode, state, options) {
   popupNode.hidden = true;
   searchWrap.append(searchInput, popupNode);
   const searchRow = node("div", "catalogueWorkSeriesPicker__searchRow");
-  const newButton = node("button", "studioUi__button", "New");
+  const newButton = node("button", "studioUi__iconButton");
+  newButton.append(createStudioIcon(document, "file"));
+  newButton.title = "New Gallery";
   newButton.type = "button";
   newButton.setAttribute("aria-label", "New Gallery");
   newButton.addEventListener("click", () => {

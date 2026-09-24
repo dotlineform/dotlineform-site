@@ -74,6 +74,20 @@ function setText(node, value) {
   node.textContent = valueText(value);
 }
 
+function appendIcon(node, className, label = "") {
+  if (!normalizeText(className)) throw new Error("Record list icons require an artwork class.");
+  const icon = node.ownerDocument.createElement("span");
+  icon.className = className;
+  if (label) {
+    icon.setAttribute("role", "img");
+    icon.setAttribute("aria-label", label);
+    icon.title = label;
+  } else {
+    icon.setAttribute("aria-hidden", "true");
+  }
+  node.appendChild(icon);
+}
+
 function appendImageCellContent(cell, column, record, index, rawValue) {
   cell.classList.add("sharedRecordList__cell--image");
   const frame = document.createElement("span");
@@ -130,6 +144,13 @@ function appendCell(rowNode, column, record, index, role) {
 
   const rawValue = columnValue(column, record, index);
   const text = valueText(rawValue);
+  if (column.type === "icon") {
+    const iconClass = typeof column.iconClass === "function"
+      ? column.iconClass(record, { index, column }) : column.iconClass;
+    appendIcon(cell, iconClass, text);
+    rowNode.appendChild(cell);
+    return;
+  }
   if (column.type === "image") {
     appendImageCellContent(cell, column, record, index, rawValue);
     rowNode.appendChild(cell);
@@ -413,13 +434,20 @@ function renderActions(controller) {
     if (title) button.title = title;
     const ariaLabel = actionAriaLabel(action, selection, records);
     if (ariaLabel) button.setAttribute("aria-label", ariaLabel);
-    button.textContent = normalizeText(action.label || key);
+    if (action.iconClass) {
+      if (!ariaLabel) throw new Error("Record list icon actions require an accessible name.");
+      appendIcon(button, action.iconClass);
+    } else {
+      button.textContent = normalizeText(action.label || key);
+    }
     rootNode.appendChild(button);
   });
 }
 
 /** Render a record list. Multiple selection is opt-in; selection() returns one item only.
  * selections() and selection-change payloads expose all selected items in row order.
+ * Icon columns supply type="icon" and iconClass (string or record callback); their value is the accessible label.
+ * The caller owns artwork CSS. updateCells remains restricted to text columns.
  */
 export function createRecordList(rootNode, options = {}) {
   if (!rootNode) {
@@ -553,6 +581,7 @@ export function createRecordList(rootNode, options = {}) {
   return controller;
 }
 
+/** Render selection-aware actions. Optional iconClass is decorative and requires ariaLabel; callers own its CSS. */
 export function createRecordListActions(rootNode, options = {}) {
   if (!rootNode) {
     throw new Error("createRecordListActions requires a root node");

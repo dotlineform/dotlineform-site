@@ -11,7 +11,8 @@ export function createWorkEditorLayout({ root, listExpandButton, summaryPanelNod
   function render() {
     root.dataset.workLayout = expanded ? "expanded-list" : previewAvailable ? "standard" : "without-preview";
     summaryPanelNode.hidden = expanded || !previewAvailable;
-    indicator.textContent = expanded ? "<" : ">";
+    indicator.classList.toggle("studioUi__icon--chevron-left", expanded);
+    indicator.classList.toggle("studioUi__icon--chevron-right", !expanded);
     const label = expanded ? "Restore normal panel layout" : "Expand member works list";
     listExpandButton.title = label;
     listExpandButton.setAttribute("aria-label", label);

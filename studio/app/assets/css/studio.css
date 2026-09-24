@@ -596,6 +596,75 @@ span.studioUi__input--readonlyDisplay {
   pointer-events: none;
 }
 
+/* Artwork stays canonical in Docs Viewer; Studio owns control presentation. */
+.studio-local-app .studioUi__iconButton {
+  box-sizing: border-box;
+  flex: 0 0 auto;
+  inline-size: var(--studio-control-height);
+  min-inline-size: var(--studio-control-height);
+  block-size: var(--studio-control-height);
+  min-block-size: var(--studio-control-height);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: 999px;
+  padding: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.studio-local-app .studioUi__iconButton:hover:where(:not(:disabled)) {
+  background: var(--border);
+}
+
+.studio-local-app .studioUi__iconButton:focus-visible {
+  outline: 2px solid var(--studio-focus);
+  outline-offset: 2px;
+}
+
+.studio-local-app .studioUi__iconButton:disabled {
+  color: var(--muted, var(--studio-muted));
+  cursor: default;
+  opacity: 1;
+}
+
+.studioUi__icon {
+  display: inline-block;
+  flex: 0 0 auto;
+  inline-size: 20px;
+  block-size: 20px;
+  background-color: currentColor;
+  mask-position: center;
+  mask-size: contain;
+  mask-repeat: no-repeat;
+  vertical-align: middle;
+}
+
+.studioUi__icon--small {
+  inline-size: 16px;
+  block-size: 16px;
+}
+
+.studioUi__chipRemove .studioUi__icon {
+  inline-size: 12px;
+  block-size: 12px;
+}
+
+.studioUi__icon--chevron-left { mask-image: url("/docs-viewer/static/icons/chevron-left.svg"); }
+.studioUi__icon--chevron-right { mask-image: url("/docs-viewer/static/icons/chevron-right.svg"); }
+.studioUi__icon--pen { mask-image: url("/docs-viewer/static/icons/pen.svg"); }
+.studioUi__icon--file { mask-image: url("/docs-viewer/static/icons/file.svg"); }
+.studioUi__icon--download { mask-image: url("/docs-viewer/static/icons/download.svg"); }
+.studioUi__icon--trash { mask-image: url("/docs-viewer/static/icons/trash.svg"); }
+.studioUi__icon--x { mask-image: url("/docs-viewer/static/icons/x.svg"); }
+.studioUi__icon--folder-open { mask-image: url("/docs-viewer/static/icons/folder-open.svg"); }
+.studioUi__icon--paperclip { mask-image: url("/docs-viewer/static/icons/paperclip.svg"); }
+.studioUi__icon--link { mask-image: url("/docs-viewer/static/icons/link.svg"); }
+
 .studioUi__popup {
   position: relative;
 }
@@ -1427,26 +1496,6 @@ button.studioList__cellLink {
 
 .catalogueProjectMediaPicker__displayValue {
   min-width: 0;
-}
-
-.catalogueProjectMediaPicker__chooseButton {
-  border: 0;
-  background: transparent;
-  color: inherit;
-  font: inherit;
-  font-size: 1.2rem;
-  line-height: 1;
-  padding: 0.2rem;
-  margin: 0;
-  appearance: none;
-}
-
-.catalogueProjectMediaPicker__chooseButton:not(:disabled):hover {
-  cursor: pointer;
-}
-
-.catalogueProjectMediaPicker__chooseButton:disabled {
-  opacity: 0.45;
 }
 
 .catalogueWorkForm__fieldMeta {

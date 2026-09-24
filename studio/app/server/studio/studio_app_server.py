@@ -144,6 +144,8 @@ class StudioAppRequestHandler(QuietErrorLoggingMixin, BaseHTTPRequestHandler):
         self.end_headers()
 
     def is_allowed_static_path(self, path: str) -> bool:
+        if path.startswith("/docs-viewer/static/icons/"):
+            return path.endswith(".svg")
         return path in STATIC_FILES or any(path.startswith(prefix) for prefix in STATIC_PREFIXES)
 
     def is_catalogue_media_path(self, path: str) -> bool:

@@ -169,7 +169,7 @@ function buildWorkResourceRows(state, options = {}) {
   const downloads = getWorkEmbeddedItems(state.draft, "download").map((item, index) => ({
     kind: "download",
     index,
-    type: "📄",
+    type: "File",
     label: item.label || "",
     target: item.filename || "",
     targetHref: buildWorkDownloadHref(state, item.filename, options)
@@ -177,7 +177,7 @@ function buildWorkResourceRows(state, options = {}) {
   const links = getWorkEmbeddedItems(state.draft, "link").map((item, index) => ({
     kind: "link",
     index,
-    type: "🔗",
+    type: "Link",
     label: item.label || "",
     target: item.url || "",
     targetHref: item.url || ""
@@ -221,6 +221,8 @@ export function updateWorkResourcesSection(state, options = {}) {
       {
         key: "type",
         label: "type",
+        type: "icon",
+        iconClass: record => `studioUi__icon studioUi__icon--small studioUi__icon--${record.kind === "download" ? "file" : "link"}`,
         width: "2rem",
         truncate: false
       },
@@ -244,7 +246,8 @@ export function updateWorkResourcesSection(state, options = {}) {
   const rowActions = items.length ? [
     {
       key: "edit",
-      label: "✏️",
+      className: "studioUi__iconButton",
+      iconClass: "studioUi__icon studioUi__icon--pen",
       title: text(state, options, "files_edit_button", "Edit"),
       ariaLabel: text(state, options, "files_edit_button", "Edit"),
       appearance: "icon",
@@ -252,7 +255,8 @@ export function updateWorkResourcesSection(state, options = {}) {
     },
     {
       key: "delete",
-      label: "🗑️",
+      className: "studioUi__iconButton",
+      iconClass: "studioUi__icon studioUi__icon--trash",
       title: text(state, options, "files_delete_button", "Delete"),
       ariaLabel: text(state, options, "files_delete_button", "Delete"),
       appearance: "icon",
@@ -267,7 +271,8 @@ export function updateWorkResourcesSection(state, options = {}) {
       ...rowActions,
       {
         key: "new-download",
-        label: "📄",
+        className: "studioUi__iconButton",
+        iconClass: "studioUi__icon studioUi__icon--paperclip",
         title: text(state, options, "files_add_button", "Add file"),
         ariaLabel: text(state, options, "files_add_button", "Add file"),
         appearance: "icon",
@@ -276,7 +281,8 @@ export function updateWorkResourcesSection(state, options = {}) {
       },
       {
         key: "new-link",
-        label: "🔗",
+        className: "studioUi__iconButton",
+        iconClass: "studioUi__icon studioUi__icon--link",
         title: text(state, options, "links_add_button", "Add link"),
         ariaLabel: text(state, options, "links_add_button", "Add link"),
         appearance: "icon",
