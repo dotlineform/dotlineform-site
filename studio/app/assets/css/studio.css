@@ -1171,6 +1171,11 @@ button.studioList__cellLink {
   align-items: start;
 }
 
+#catalogueWorkRoot[data-work-saving="true"],
+#catalogueWorkRoot[data-work-saving="true"] * {
+  cursor: wait;
+}
+
 .catalogueWorkPage[data-work-layout="without-preview"] {
   grid-template-columns: var(--work-list-column) minmax(0, 1fr);
   grid-template-areas: "list editor";
@@ -1243,8 +1248,28 @@ button.studioList__cellLink {
 }
 
 .catalogueWorkSeriesBrowser__members {
+  --shared-record-list-columns: 48px minmax(3.5rem, 4.9rem) minmax(0, 1fr);
   min-height: 0;
   overflow-y: auto;
+  overflow-anchor: none;
+}
+
+.catalogueWorkSeriesBrowser__members [data-record-list-cell="galleries"] {
+  display: none;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+
+.catalogueWorkSeriesBrowser__members .sharedRecordList__row {
+  user-select: none;
+}
+
+.catalogueWorkPage[data-work-layout="expanded-list"] .catalogueWorkSeriesBrowser__members {
+  --shared-record-list-columns: 48px minmax(3.5rem, 4.9rem) minmax(0, 1fr) minmax(0, 1fr);
+}
+
+.catalogueWorkPage[data-work-layout="expanded-list"] [data-record-list-cell="galleries"] {
+  display: block;
 }
 
 @container catalogue-work (max-width: 75rem) {

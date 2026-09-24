@@ -94,15 +94,15 @@ def require_work_membership_revision(data: CatalogueGalleries, work_id: str, exp
 
 
 def with_work_memberships(
-    data: CatalogueGalleries, works: Mapping[str, Any], work_id: str, gallery_ids: Any,
+    data: CatalogueGalleries, works: Mapping[str, Any], replacements: Mapping[str, Any],
 ) -> CatalogueGalleries:
-    """Return validated replacement membership; an empty selection removes the entry."""
-    memberships = dict(data.works)
-    memberships[work_id] = gallery_ids
+    """Validate all replacements together; empty selections remove their entries."""
+    memberships = {**data.works, **replacements}
     updated = CatalogueGalleries(data.galleries, memberships)
     validate_galleries(updated, works)
-    if gallery_ids:
-        memberships[work_id] = sorted(gallery_ids)
-    else:
-        del memberships[work_id]
+    for work_id, gallery_ids in replacements.items():
+        if gallery_ids:
+            memberships[work_id] = sorted(gallery_ids)
+        else:
+            del memberships[work_id]
     return updated

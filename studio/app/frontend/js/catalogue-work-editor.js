@@ -61,6 +61,7 @@ import {
   applyInitialWorkRouteSelection,
   bindWorkSelectionControls,
   openWorkById,
+  openWorkSelection,
   setWorkSelectionPopupVisibility
 } from "./catalogue-work-selection.js";
 import { WORK_DIMENSION_FIELD_KEYS, WORK_EDITABLE_FIELDS as EDITABLE_FIELDS, WORK_SERIES_ID_RE as SERIES_ID_RE, canonicalizeWorkScalar as canonicalizeScalar, embeddedEntriesEqual, normalizeSeriesId, normalizeText, normalizeWorkId, suggestNextWorkId } from "./catalogue-work-fields.js";
@@ -161,11 +162,13 @@ function validateDraft(state) {
     if (!SERIES_ID_RE.test(series)) errors.set("series_id", "Use one numeric Series id or leave blank.");
     else if (!state.seriesById.has(normalizeSeriesId(series))) errors.set("series_id", "Unknown Series id: " + series + ".");
   }
-  if (state.mode !== "bulk") {
+  if (active("gallery_ids")) {
     const ids = state.draft.gallery_ids;
     if (!Array.isArray(ids) || ids.some(id => !state.galleriesById.has(id)) || new Set(ids).size !== ids.length) {
       errors.set("gallery_ids", "Select distinct existing galleries.");
     }
+  }
+  if (state.mode !== "bulk") {
     const sources = state.workMediaSourceConfig?.mediaSourceIds || [];
     if (!sources.includes(resolvedWorkMediaSourceId(state))) errors.set("media_source_id", "Select a configured media source.");
     validateWorkEmbeddedItems(state.draft, {text: (key, fallback, tokens) => t(state, key, fallback, tokens)}).forEach((message, key) => errors.set(key, message));
@@ -175,18 +178,6 @@ function validateDraft(state) {
 
 function clearActionMessages(state) {
   state.messageController.clearActionMessages();
-}
-
-function firstBulkMixedMessage(state) {
-  if (state.mode !== "bulk") return "";
-  for (const field of EDITABLE_FIELDS) {
-    if (field.key === "media_source_id" || field.key === "gallery_ids") continue;
-    if (!state.bulkMixedFields.has(field.key) || state.bulkTouchedFields.has(field.key)) continue;
-    return field.key === "series_id"
-      ? t(state, "bulk_field_mixed_series", "Mixed values. Leave untouched to preserve, enter one Series id to reassign, or clear to remove membership.")
-      : t(state, "bulk_field_mixed", "Mixed values across selection. Leave untouched to preserve per-record values.");
-  }
-  return "";
 }
 
 function renderEditorMessage(state, snapshot = {}) {
@@ -202,7 +193,6 @@ function renderEditorMessage(state, snapshot = {}) {
   state.messageController.render({
     busy: state.isSaving || state.isBuilding || state.isDeleting,
     validationMessage: firstCatalogueValidationMessage(errors),
-    mixedMessage: firstBulkMixedMessage(state),
     dirtyMessage: state.mode === "new" ? "" : catalogueDirtyWarningText({
       dirty,
       mode: state.mode,
@@ -213,6 +203,11 @@ function renderEditorMessage(state, snapshot = {}) {
 
 
 function updateEditorState(state) {
+  const busy = state.isSaving || state.isBuilding || state.isDeleting;
+  state.root.dataset.workSaving = String(state.isSaving);
+  state.searchNode.disabled = busy;
+  state.newButton.disabled = busy;
+  if (busy) state.workSearchController?.close();
   state.seriesBrowser?.sync();
   const hasRecord = state.mode === "new" ? true : state.mode === "bulk" ? state.bulkWorkIds.length > 0 : Boolean(state.currentRecord);
   const errors = hasRecord ? validateDraft(state) : new Map();
@@ -250,13 +245,11 @@ function updateEditorState(state) {
 }
 
 function onFieldInput(state, fieldKey) {
+  if (state.mode === "bulk") return;
   const node = state.fieldNodes.get(fieldKey);
   if (!node) return;
   clearActionMessages(state);
   state.draft[fieldKey] = getFieldNodeValue(node);
-  if (state.mode === "bulk") {
-    state.bulkTouchedFields.add(fieldKey);
-  }
   updateEditorState(state);
 }
 
@@ -297,6 +290,9 @@ function workSelectionOptions(state) {
     text: (key, fallback, tokens) => t(state, key, fallback, tokens),
     loadWorkLookupRecord,
     setLoadedBulkWorks: (workIds, recordsById, recordHashes) => {
+      for (const workId of workIds) {
+        applyWorkRecordMutation(state, { workId, record: recordsById.get(workId), recordHash: recordHashes.get(workId) });
+      }
       setLoadedBulkWorks(state, workIds, recordsById, recordHashes, workRouteStateOptions(state));
     },
     setLoadedWorkRecord: (workId, record, options = {}) => {
@@ -423,7 +419,10 @@ async function init() {
 
   initializeWorkRouteState(elements.root);
   const state = createWorkEditorState(elements);
-  state.layout = createWorkEditorLayout(elements);
+  state.layout = createWorkEditorLayout(elements, change => {
+    if (state.seriesBrowser) state.seriesBrowser.preserveScrollAnchor(change);
+    else change();
+  });
   state.messageController = createCatalogueEditorMessageController({
     statusNode: state.statusNode,
     setTextWithState: setNodeTextWithState
@@ -445,7 +444,8 @@ async function init() {
         renderSeriesPicker(state);
         updateEditorState(state);
       },
-      openWork: workId => openWorkById(state, workId, workSelectionOptions(state))
+      openWorks: workIds => openWorkSelection(state, workIds.join(","), workSelectionOptions(state)),
+      clearWork: () => setEmptySearchMode(state, workRouteStateOptions(state))
     });
     bindWorkEditorEvents(state, {
       bindSelectionControls: () => bindWorkSelectionControls(state, workSelectionOptions(state)),

@@ -10,6 +10,7 @@ export function projectWorkSearchRecord(workId, record, recordHash = "") {
     title: normalizeText(record && record.title),
     year_display: normalizeText(record && record.year_display),
     series_id: normalizeText(record?.series_id),
+    gallery_ids: record.gallery_ids.slice(),
     record_hash: normalizeText(recordHash)
   };
 }
@@ -40,10 +41,13 @@ export function applyWorkRecordMutation(state, {
 
 export function applyBulkWorkRecordMutations(state, items = []) {
   if (!Array.isArray(items)) return [];
+  if (items.some(item => !item.record || !Array.isArray(item.gallery_ids))) {
+    throw new Error("Saved Work response is missing records or Gallery memberships.");
+  }
   return items
     .map((item) => applyWorkRecordMutation(state, {
       workId: item && item.work_id,
-      record: item && item.record,
+      record: { ...item.record, gallery_ids: item.gallery_ids },
       recordHash: item && item.record_hash,
       updateBulk: true
     }))

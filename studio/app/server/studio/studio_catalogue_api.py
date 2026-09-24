@@ -125,7 +125,11 @@ def catalogue_read_payload(repo_root: Path, query: Mapping[str, list[str]]) -> d
         galleries = read_galleries(paths["source_dir"], source_records.works)
         return {"galleries": galleries.galleries}
     if key == "catalogue_lookup_work_search":
-        return build_work_search_payload(source_records)
+        payload = build_work_search_payload(source_records)
+        galleries = read_galleries(paths["source_dir"], source_records.works)
+        for item in payload["items"]:
+            item["gallery_ids"] = sorted(galleries.works.get(item["work_id"], []))
+        return payload
     if key == "catalogue_lookup_series_search":
         return build_series_search_payload(source_records)
     if key == "catalogue_work_record":

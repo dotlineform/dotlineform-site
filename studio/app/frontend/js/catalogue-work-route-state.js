@@ -49,10 +49,9 @@ function buildDraftFromRecord(record) {
 function buildBulkDraftFromRecords(records) {
   const drafts = records.map((record) => buildDraftFromRecord(record));
   const draft = {};
-  const mixedFields = new Set();
   EDITABLE_FIELDS.forEach((field) => {
     if (field.key === "gallery_ids") {
-      draft.gallery_ids = [];
+      draft.gallery_ids = (drafts[0]?.gallery_ids || []).filter(id => drafts.every(item => item.gallery_ids.includes(id)));
       return;
     }
     const values = drafts.map((item) => canonicalizeScalar(field, item[field.key]));
@@ -62,10 +61,9 @@ function buildBulkDraftFromRecords(records) {
       draft[field.key] = drafts[0][field.key];
     } else {
       draft[field.key] = "";
-      mixedFields.add(field.key);
     }
   });
-  return { draft, mixedFields };
+  return draft;
 }
 
 function syncUrl(workValue, mode = "") {
@@ -87,7 +85,6 @@ function resetBulkState(state) {
   state.bulkWorkIds = [];
   state.bulkRecords = new Map();
   state.bulkRecordHashes = new Map();
-  state.bulkMixedFields = new Set();
   state.bulkTouchedFields = new Set();
   state.bulkBuildTargets = [];
 }
@@ -166,9 +163,8 @@ export function setLoadedBulkWorks(state, workIds, recordsById, recordHashes, op
   state.bulkBuildTargets = Array.isArray(options.buildTargets) ? options.buildTargets.slice() : [];
   const records = workIds.map((workId) => recordsById.get(workId)).filter(Boolean);
   const bulkDraft = buildBulkDraftFromRecords(records);
-  state.baselineDraft = { ...bulkDraft.draft };
-  state.draft = { ...bulkDraft.draft };
-  state.bulkMixedFields = bulkDraft.mixedFields;
+  state.baselineDraft = { ...bulkDraft };
+  state.draft = { ...bulkDraft };
   state.bulkTouchedFields = new Set();
   callback(options, "setOpenInputMode");
   callback(options, "applyDraftToInputs");

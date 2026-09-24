@@ -14,7 +14,7 @@ import {
   WORK_LINK_FIELDS as LINK_FIELDS
 } from "./catalogue-editor-embedded-items.js";
 
-import { WORK_EDITABLE_FIELDS as EDITABLE_FIELDS, buildCreateWorkPayload, buildWorkRecordFromDraft, normalizeText, normalizeWorkId } from "./catalogue-work-fields.js";
+import { buildCreateWorkPayload, buildWorkRecordFromDraft, normalizeText, normalizeWorkId } from "./catalogue-work-fields.js";
 import {
   applyBulkWorkRecordMutations,
   applyWorkRecordMutation
@@ -39,11 +39,15 @@ function buildPayload(state) {
     gallery_ids: state.draft.gallery_ids.slice(),
     expected_gallery_ids: state.baselineDraft.gallery_ids.slice()
   };
-  const setFields = {};
-  for (const field of EDITABLE_FIELDS) {
-    if (state.bulkTouchedFields.has(field.key)) setFields[field.key] = record[field.key] ?? null;
+  const payload = {
+    kind: "works", ids: state.bulkWorkIds.slice(),
+    expected_record_hashes: Object.fromEntries(state.bulkRecordHashes)
+  };
+  if (state.bulkTouchedFields.has("gallery_ids")) {
+    payload.gallery_ids = state.draft.gallery_ids.slice();
+    payload.expected_gallery_ids_by_work = Object.fromEntries(state.bulkWorkIds.map(id => [id, state.bulkRecords.get(id).gallery_ids.slice()]));
   }
-  return {kind: "works", ids: state.bulkWorkIds.slice(), expected_record_hashes: Object.fromEntries(state.bulkRecordHashes), set_fields: setFields};
+  return payload;
 }
 
 
@@ -80,6 +84,9 @@ export async function saveCurrentWork(state, context) {
       const response = await saveCatalogueBulkRecords(buildPayload(state));
       savedResponse = response;
       const changedRecords = Array.isArray(response && response.records) ? response.records : [];
+      if (changedRecords.map(item => item.work_id).sort().join(",") !== state.bulkWorkIds.slice().sort().join(",")) {
+        throw new Error("Saved Work response does not match the selected Works.");
+      }
       applyBulkWorkRecordMutations(state, changedRecords);
       setLoadedBulkWorks(state, state.bulkWorkIds, state.bulkRecords, state.bulkRecordHashes, context.workRouteStateOptions({keepResult: true}));
       const outputError = catalogueOutputError(response);
@@ -148,7 +155,8 @@ export async function saveNewWork(state, context) {
     const response = await createCatalogueWork(createPayload);
     savedResponse = response;
     const workId = normalizeWorkId(response && response.work_id);
-    const record = response && response.record && typeof response.record === "object" ? response.record : null;
+    const record = response && response.record && typeof response.record === "object" && Array.isArray(response.gallery_ids)
+      ? { ...response.record, gallery_ids: response.gallery_ids } : null;
     if (!workId) {
       throw new Error("create response missing work id");
     }

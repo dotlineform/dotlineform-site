@@ -8,6 +8,12 @@ from typing import Any, Mapping
 from catalogue import catalogue_source_mutation as source_mutation
 from catalogue.catalogue_revisions import record_hash, require_record_revision
 from catalogue import catalogue_transactions as transactions
+from catalogue.catalogue_galleries import (
+    MEMBERSHIPS_FILE,
+    read_galleries,
+    require_work_membership_revision,
+    with_work_memberships,
+)
 from catalogue.catalogue_service_context import (
     CatalogueWriteContext,
     load_works_payload,
@@ -45,12 +51,13 @@ BULK_WORK_EDITABLE_FIELDS = {
 
 
 def bulk_save_payload(context: CatalogueWriteContext, body: Mapping[str, Any]) -> dict[str, Any]:
+    """Validate every selected revision before one metadata/membership transaction."""
     request = extract_bulk_save_request(body)
     kind = request["kind"]
     selected_ids: list[str] = request["ids"]
     set_fields: dict[str, Any] = request["set_fields"]
 
-    changed_record_payloads: list[dict[str, Any]] = []
+    record_payloads: list[dict[str, Any]] = []
     changed_ids: list[str] = []
     changed_field_names: set[str] = set()
     affected_work_ids: list[str] = []
@@ -58,29 +65,54 @@ def bulk_save_payload(context: CatalogueWriteContext, body: Mapping[str, Any]) -
 
     works_payload = load_works_payload(context.works_path)
     works_map = works_payload["works"]
+    galleries = read_galleries(context.source_dir, works_map)
+    updated_galleries = galleries
+    if "gallery_ids" in body:
+        expected = body.get("expected_gallery_ids_by_work")
+        if not isinstance(expected, dict) or set(expected) != set(selected_ids):
+            raise ValueError("expected_gallery_ids_by_work must cover exactly the selected Works")
+        for work_id in selected_ids:
+            require_work_membership_revision(galleries, work_id, expected[work_id])
+        updated_galleries = with_work_memberships(
+            galleries, works_map, dict.fromkeys(selected_ids, body["gallery_ids"]),
+        )
     pending_updates: dict[str, dict[str, Any]] = {}
     for work_id in selected_ids:
         current_record = works_map.get(work_id)
         if not isinstance(current_record, dict):
             raise ValueError(f"work_id not found: {work_id}")
         require_record_revision(current_record, (body.get("expected_record_hashes") or {}).get(work_id))
-        update = dict(set_fields)
-        pending_updates[work_id] = source_mutation.normalize_work_update(work_id, current_record, update)
+        pending_updates[work_id] = (
+            source_mutation.normalize_work_update(work_id, current_record, set_fields)
+            if set_fields else dict(current_record)
+        )
 
     validation_errors = validate_bulk_records(context.source_dir, work_updates=pending_updates)
     if validation_errors:
         raise ValueError("source validation failed: " + "; ".join(validation_errors[:20]))
 
     updated_works = dict(works_map)
+    metadata_changed = False
+    affected_gallery_ids: set[str] = set()
     for work_id in selected_ids:
         current_record = works_map[work_id]
         updated_record = pending_updates[work_id]
         fields_changed = source_mutation.changed_fields(current_record, updated_record)
+        metadata_changed = metadata_changed or bool(fields_changed)
+        previous_ids = galleries.works.get(work_id, [])
+        gallery_ids = updated_galleries.works.get(work_id, [])
+        if sorted(previous_ids) != sorted(gallery_ids):
+            fields_changed.append("gallery_ids")
+            affected_gallery_ids.update(previous_ids)
+            affected_gallery_ids.update(gallery_ids)
+        record_payloads.append({
+            "work_id": work_id, "record": updated_record,
+            "record_hash": record_hash(updated_record), "gallery_ids": sorted(gallery_ids),
+        })
         if not fields_changed:
             continue
         changed_ids.append(work_id)
         changed_field_names.update(fields_changed)
-        changed_record_payloads.append({"work_id": work_id, "record": updated_record, "record_hash": record_hash(updated_record)})
         affected_work_ids.append(work_id)
         affected_series_ids.update(
             str(record["series_id"]) for record in (current_record, updated_record) if record.get("series_id")
@@ -88,12 +120,16 @@ def bulk_save_payload(context: CatalogueWriteContext, body: Mapping[str, Any]) -
         updated_works[work_id] = updated_record
 
     changed = bool(changed_ids)
-    if changed:
-        target_path = context.works_path.resolve()
-        if target_path not in context.allowed_write_paths:
-            raise ValueError("write target not allowlisted")
+    writes = {}
+    if metadata_changed:
+        writes[context.works_path.resolve()] = payload_for_map("works", updated_works)
+    if galleries.works != updated_galleries.works:
+        writes[(context.source_dir / MEMBERSHIPS_FILE).resolve()] = updated_galleries.payloads()[MEMBERSHIPS_FILE]
+    if not set(writes).issubset(context.allowed_write_paths):
+        raise ValueError("write target not allowlisted")
+    if writes:
         transactions.execute_source_json_write(
-            {target_path: payload_for_map("works", updated_works)},
+            writes,
             dry_run=context.dry_run,
             repo_root=context.repo_root,
         )
@@ -107,9 +143,10 @@ def bulk_save_payload(context: CatalogueWriteContext, body: Mapping[str, Any]) -
         "changed_ids": changed_ids,
         "changed_count": len(changed_ids),
         "changed_fields": sorted(changed_field_names),
-        "records": changed_record_payloads,
+        "records": record_payloads,
         "affected_work_ids": affected_work_ids,
         "affected_series_ids": sorted(affected_series_ids),
+        "affected_gallery_ids": sorted(affected_gallery_ids),
     }
     _finish_bulk_payload(
         context,

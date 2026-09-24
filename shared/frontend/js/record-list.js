@@ -53,18 +53,17 @@ function recordId(options, record, index) {
 }
 
 function isSelectable(options = {}) {
-  return options.selectionMode === "single";
+  return options.selectionMode === "single" || options.selectionMode === "multiple";
 }
 
-function initialSelectedId(options, records) {
+function initialSelectedIds(options, records) {
   const initial = options.initialSelection;
-  if (initial == null) return "";
+  if (initial == null) return [];
   if (Number.isInteger(initial) && initial >= 0 && initial < records.length) {
-    return recordId(options, records[initial], initial);
+    return [recordId(options, records[initial], initial)];
   }
-  const initialId = normalizeText(initial);
-  const match = records.find((record, index) => recordId(options, record, index) === initialId);
-  return match ? initialId : "";
+  const ids = new Set((Array.isArray(initial) ? initial : [initial]).map(normalizeText));
+  return records.map((record, index) => recordId(options, record, index)).filter(id => ids.has(id));
 }
 
 function clearNode(node) {
@@ -179,7 +178,7 @@ function renderHeader(rootNode, columns, options) {
   const header = document.createElement("div");
   header.className = "sharedRecordList__header";
   header.setAttribute("role", "row");
-  header.style.gridTemplateColumns = columnTemplate(columns);
+  header.style.gridTemplateColumns = `var(--shared-record-list-columns, ${columnTemplate(columns)})`;
   columns.forEach((column) => {
     const cell = document.createElement("div");
     cell.className = "sharedRecordList__headerCell";
@@ -199,22 +198,19 @@ function renderEmpty(rootNode, options) {
   rootNode.appendChild(empty);
 }
 
-function selectionFor(controller) {
+function selectionsFor(controller) {
   const records = Array.isArray(controller.options.records) ? controller.options.records : [];
-  const selectedId = normalizeText(controller.selectedId);
-  if (!selectedId) return null;
-  const index = records.findIndex((record, recordIndex) => recordId(controller.options, record, recordIndex) === selectedId);
-  if (index < 0) return null;
-  return {
-    id: selectedId,
-    index,
-    record: records[index]
-  };
+  return records.map((record, index) => ({ id: recordId(controller.options, record, index), index, record }))
+    .filter(item => controller.selectedIds.has(item.id));
+}
+
+function selectionFor(controller) {
+  const selections = selectionsFor(controller);
+  return selections.length === 1 ? selections[0] : null;
 }
 
 function selectedRowIndex(controller) {
-  const selection = selectionFor(controller);
-  return selection ? selection.index : -1;
+  return controller.options.records.findIndex((record, index) => recordId(controller.options, record, index) === controller.focusedId);
 }
 
 function setRovingTabIndex(controller) {
@@ -232,16 +228,16 @@ function setRovingTabIndex(controller) {
 
 function syncSelectionState(controller) {
   const rows = [...controller.rootNode.querySelectorAll("[data-record-list-row='true']")];
-  const selectedId = normalizeText(controller.selectedId);
-  let selectedStillExists = !selectedId;
+  const availableIds = new Set(rows.map(row => row.dataset.recordListRecordId));
+  controller.selectedIds = new Set([...controller.selectedIds].filter(id => availableIds.has(id)));
+  if (!availableIds.has(controller.focusedId)) controller.focusedId = [...controller.selectedIds][0] || "";
+  if (!availableIds.has(controller.anchorId)) controller.anchorId = controller.focusedId;
   rows.forEach((row) => {
-    const selected = Boolean(selectedId && row.dataset.recordListRecordId === selectedId);
-    if (selected) selectedStillExists = true;
+    const selected = controller.selectedIds.has(row.dataset.recordListRecordId);
     row.classList.toggle("sharedRecordList__row--selected", selected);
     row.setAttribute("aria-selected", selected ? "true" : "false");
   });
-  if (!selectedStillExists) controller.selectedId = "";
-  controller.rootNode.dataset.recordListSelectedId = controller.selectedId || "";
+  controller.rootNode.dataset.recordListSelectedId = selectionFor(controller)?.id || "";
   setRovingTabIndex(controller);
 }
 
@@ -249,6 +245,7 @@ function emitSelectionChange(controller) {
   const records = Array.isArray(controller.options.records) ? controller.options.records : [];
   const payload = {
     selection: selectionFor(controller),
+    selections: selectionsFor(controller),
     records
   };
   if (typeof controller.options.onSelectionChange === "function") {
@@ -257,17 +254,36 @@ function emitSelectionChange(controller) {
   controller.selectionListeners.forEach((listener) => listener(payload));
 }
 
-function selectRow(controller, row, { focus = false, emit = true } = {}) {
+function selectRow(controller, row, { focus = false, emit = true, shiftKey = false, metaKey = false, ctrlKey = false } = {}) {
   if (!row || !isSelectable(controller.options)) return;
-  controller.selectedId = normalizeText(row.dataset.recordListRecordId);
+  const id = row.dataset.recordListRecordId;
+  const previous = [...controller.selectedIds].sort().join(",");
+  const multiple = controller.options.selectionMode === "multiple";
+  const ids = controller.options.records.map((record, index) => recordId(controller.options, record, index));
+  const anchor = ids.indexOf(controller.anchorId);
+  if (multiple && shiftKey && anchor >= 0) {
+    const end = ids.indexOf(id);
+    const range = ids.slice(Math.min(anchor, end), Math.max(anchor, end) + 1);
+    controller.selectedIds = new Set(metaKey || ctrlKey ? [...controller.selectedIds, ...range] : range);
+  } else if (multiple && (metaKey || ctrlKey)) {
+    if (controller.selectedIds.has(id)) controller.selectedIds.delete(id);
+    else controller.selectedIds.add(id);
+    controller.anchorId = id;
+  } else {
+    controller.selectedIds = new Set([id]);
+    controller.anchorId = id;
+  }
+  controller.focusedId = id;
   syncSelectionState(controller);
   if (focus) row.focus();
-  if (emit) emitSelectionChange(controller);
+  if (emit && (!multiple || previous !== [...controller.selectedIds].sort().join(","))) emitSelectionChange(controller);
 }
 
 function clearSelection(controller, { emit = true } = {}) {
-  if (!controller.selectedId) return;
-  controller.selectedId = "";
+  if (!controller.selectedIds.size) return;
+  controller.selectedIds.clear();
+  controller.focusedId = "";
+  controller.anchorId = "";
   syncSelectionState(controller);
   if (emit) emitSelectionChange(controller);
 }
@@ -287,13 +303,13 @@ function maybeClearSelectionFromOutsideTarget(controller, target) {
   clearSelection(controller);
 }
 
-function focusRelativeRow(controller, row, offset) {
+function focusRelativeRow(controller, row, offset, modifiers) {
   if (!row || !isSelectable(controller.options)) return;
   const rows = [...controller.rootNode.querySelectorAll("[data-record-list-row='true']")];
   const currentIndex = rows.indexOf(row);
   if (currentIndex < 0) return;
   const nextIndex = Math.max(0, Math.min(rows.length - 1, currentIndex + offset));
-  selectRow(controller, rows[nextIndex], { focus: true });
+  selectRow(controller, rows[nextIndex], { ...modifiers, focus: true });
 }
 
 function renderRows(controller, options) {
@@ -304,14 +320,14 @@ function renderRows(controller, options) {
   rootNode.classList.add("sharedRecordList");
   rootNode.dataset.recordListId = controller.id;
   rootNode.setAttribute("role", isSelectable(options) ? "grid" : "table");
-  if (isSelectable(options)) rootNode.setAttribute("aria-multiselectable", "false");
+  if (isSelectable(options)) rootNode.setAttribute("aria-multiselectable", String(options.selectionMode === "multiple"));
   else rootNode.removeAttribute("aria-multiselectable");
   const selectedBackground = normalizeText(options.selectedBackground);
   if (selectedBackground) rootNode.style.setProperty("--shared-record-list-selected-bg", selectedBackground);
   else rootNode.style.removeProperty("--shared-record-list-selected-bg");
 
   if (!columns.length) {
-    controller.selectedId = "";
+    controller.selectedIds.clear();
     rootNode.dataset.recordListSelectedId = "";
     renderEmpty(rootNode, { ...options, emptyText: options.emptyText || "No columns." });
     return;
@@ -320,13 +336,11 @@ function renderRows(controller, options) {
   renderHeader(rootNode, columns, options);
 
   if (!records.length) {
-    controller.selectedId = "";
+    controller.selectedIds.clear();
     rootNode.dataset.recordListSelectedId = "";
     renderEmpty(rootNode, options);
     return;
   }
-
-  if (!controller.selectedId) controller.selectedId = initialSelectedId(options, records);
 
   const rowsNode = document.createElement("div");
   rowsNode.className = "sharedRecordList__rows";
@@ -338,7 +352,7 @@ function renderRows(controller, options) {
     row.className = "sharedRecordList__row";
     if (hasImageColumn(columns)) row.classList.add("sharedRecordList__row--withImage");
     row.setAttribute("role", "row");
-    row.style.gridTemplateColumns = columnTemplate(columns);
+    row.style.gridTemplateColumns = `var(--shared-record-list-columns, ${columnTemplate(columns)})`;
     row.dataset.recordListRow = "true";
     row.dataset.recordListIndex = String(index);
     row.dataset.recordListRecordId = recordId(options, record, index);
@@ -404,6 +418,9 @@ function renderActions(controller) {
   });
 }
 
+/** Render a record list. Multiple selection is opt-in; selection() returns one item only.
+ * selections() and selection-change payloads expose all selected items in row order.
+ */
 export function createRecordList(rootNode, options = {}) {
   if (!rootNode) {
     throw new Error("createRecordList requires a root node");
@@ -413,11 +430,56 @@ export function createRecordList(rootNode, options = {}) {
     id: normalizeText(options.id) || `sharedRecordList-${++recordListId}`,
     rootNode,
     options: { ...options },
-    selectedId: "",
+    selectedIds: new Set(initialSelectedIds(options, options.records || [])),
+    focusedId: "",
+    anchorId: "",
     focusBoundaryNodes: new Set(),
     selectionListeners: new Set(),
     selection() {
       return selectionFor(controller);
+    },
+    selections() {
+      return selectionsFor(controller);
+    },
+    /** Synchronize exact selection IDs without emitting a user selection event. */
+    setSelection(ids) {
+      const next = new Set(ids);
+      if ([...next].sort().join(",") === [...controller.selectedIds].sort().join(",")) return;
+      controller.selectedIds = next;
+      controller.focusedId = ids[0] || "";
+      controller.anchorId = controller.focusedId;
+      syncSelectionState(controller);
+    },
+    /** Keep the first visible row at its current offset through a height change. */
+    preserveScrollAnchor(change) {
+      const top = rootNode.getBoundingClientRect().top;
+      const anchor = [...rootNode.querySelectorAll("[data-record-list-row]")]
+        .find(row => row.getBoundingClientRect().bottom > top);
+      const before = anchor?.getBoundingClientRect().top;
+      change();
+      if (anchor?.isConnected) rootNode.scrollTop += anchor.getBoundingClientRect().top - before;
+    },
+    /** Patch named text cells by exact record ID, preserving rows, images and selection. */
+    updateCells(updates) {
+      const records = controller.options.records.slice();
+      controller.preserveScrollAnchor(() => {
+        for (const { id, values } of updates) {
+          const index = records.findIndex((record, i) => recordId(controller.options, record, i) === id);
+          if (index < 0) throw new Error(`Unknown record list ID: ${id}`);
+          const row = rootNode.querySelector(`[data-record-list-index="${index}"]`);
+          const record = { ...records[index], ...values };
+          for (const key of Object.keys(values)) {
+            const column = controller.options.columns.find(item => item.key === key);
+            if (!column || (column.type && column.type !== "text")) throw new Error(`Not a text column: ${key}`);
+            const cell = [...row.children].find(node => node.dataset.recordListCell === key);
+            const text = valueText(columnValue(column, record, index));
+            cell.textContent = text;
+            if (column.truncate !== false) cell.title = text;
+          }
+          records[index] = record;
+        }
+        controller.options.records = records;
+      });
     },
     subscribeSelectionChange(listener) {
       if (typeof listener !== "function") return () => {};
@@ -452,25 +514,26 @@ export function createRecordList(rootNode, options = {}) {
   function onClick(event) {
     const row = event.target && event.target.closest ? event.target.closest("[data-record-list-row='true']") : null;
     if (!row || !rootNode.contains(row)) return;
-    selectRow(controller, row, { focus: true });
+    selectRow(controller, row, { focus: true, shiftKey: event.shiftKey, metaKey: event.metaKey, ctrlKey: event.ctrlKey });
   }
 
   function onKeyDown(event) {
     const row = event.target && event.target.closest ? event.target.closest("[data-record-list-row='true']") : null;
     if (!row || !rootNode.contains(row) || !isSelectable(controller.options)) return;
+    const modifiers = { shiftKey: event.shiftKey, metaKey: event.metaKey, ctrlKey: event.ctrlKey };
     if (event.key === "Enter" || event.key === " ") {
       event.preventDefault();
-      selectRow(controller, row);
+      selectRow(controller, row, modifiers);
       return;
     }
     if (event.key === "ArrowDown") {
       event.preventDefault();
-      focusRelativeRow(controller, row, 1);
+      focusRelativeRow(controller, row, 1, modifiers);
       return;
     }
     if (event.key === "ArrowUp") {
       event.preventDefault();
-      focusRelativeRow(controller, row, -1);
+      focusRelativeRow(controller, row, -1, modifiers);
     }
   }
 

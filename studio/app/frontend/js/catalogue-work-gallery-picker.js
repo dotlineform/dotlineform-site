@@ -1,7 +1,7 @@
 import { normalizeText } from "./catalogue-work-fields.js";
 
 function disabled(state) {
-  return state.mode === "bulk" || state.isSaving || state.isBuilding || state.isDeleting || !state.serverAvailable;
+  return state.isSaving || state.isBuilding || state.isDeleting || !state.serverAvailable;
 }
 
 function matches(state) {
@@ -60,11 +60,10 @@ export function renderWorkGalleryPicker(state) {
   setWorkGalleryPickerAvailability(state);
 }
 
-/** Bulk membership semantics are deferred; single/new editing shares Work busy state. */
+/** Share the Work busy state in single, new and bulk editing. */
 export function setWorkGalleryPickerAvailability(state) {
   const picker = state.galleryPicker;
   if (!picker) return;
-  picker.wrapper.hidden = state.mode === "bulk";
   const busy = disabled(state);
   picker.searchInput.disabled = busy;
   picker.wrapper.querySelectorAll("button").forEach(button => { button.disabled = busy; });
@@ -95,6 +94,7 @@ export function createWorkGalleryPicker(field, fieldsNode, state, options) {
   function changeSelection(ids) {
     if (disabled(state)) return;
     state.draft.gallery_ids = ids.slice().sort();
+    if (state.mode === "bulk") state.bulkTouchedFields.add("gallery_ids");
     renderWorkGalleryPicker(state);
     options.onStateChange?.();
   }

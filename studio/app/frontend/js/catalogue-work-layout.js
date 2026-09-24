@@ -1,8 +1,9 @@
 /** Own panel presentation without rebuilding the member list or changing the Work draft.
  * Expansion lasts for this page session; record changes only update preview availability.
  * @param {{ root: HTMLElement, listExpandButton: HTMLButtonElement, summaryPanelNode: HTMLElement }} elements
+ * @param {(change: () => void) => void} preserveListAnchor Apply layout with the list's visible row retained.
  */
-export function createWorkEditorLayout({ root, listExpandButton, summaryPanelNode }) {
+export function createWorkEditorLayout({ root, listExpandButton, summaryPanelNode }, preserveListAnchor) {
   let expanded = false;
   let previewAvailable = false;
   const indicator = listExpandButton.querySelector("span");
@@ -19,7 +20,7 @@ export function createWorkEditorLayout({ root, listExpandButton, summaryPanelNod
 
   listExpandButton.addEventListener("click", () => {
     expanded = !expanded;
-    render();
+    preserveListAnchor(render);
   });
   render();
 

@@ -54,8 +54,7 @@ def complete_saved_catalogue_output(
             record = current.series.get(response.get("series_id")) if response.get("series_id") else current.works.get(response.get("work_id"))
             if record:
                 response.update(record=record, record_hash=record_hash(record))
-        if response.get("selected_ids"):
-            response["records"] = [{"work_id": item_id} for item_id in response["selected_ids"]]
+        # Bulk mutation responses already include every selected Work and its saved memberships.
         for key in ("records", "work_records"):
             for entry in response.get(key, []):
                 record = current.works.get(entry.get("work_id"))

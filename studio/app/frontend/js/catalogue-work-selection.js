@@ -98,6 +98,20 @@ export function parseWorkSelection(rawValue) {
   return workIds;
 }
 
+function formatWorkSelection(workIds) {
+  const ids = workIds.slice().sort((a, b) => Number(a) - Number(b));
+  const ranges = [];
+  for (let index = 0; index < ids.length; index += 1) {
+    const start = ids[index];
+    while (index + 1 < ids.length && Number(ids[index + 1]) === Number(ids[index]) + 1) {
+      index += 1;
+    }
+    const end = ids[index];
+    ranges.push(start === end ? start : `${start}-${end}`);
+  }
+  return ranges.join(", ");
+}
+
 export function isWorkBulkQuery(rawValue) {
   try {
     return parseWorkSelection(rawValue).length > 1;
@@ -189,7 +203,7 @@ export async function openWorkSelection(state, requestedValue, context) {
     return;
   }
 
-  state.searchNode.value = workIds.join(", ");
+  state.searchNode.value = formatWorkSelection(workIds);
   setWorkSelectionPopupVisibility(state, false);
   state.pendingBuildExtraSeriesIds = [];
   state.rebuildPending = false;

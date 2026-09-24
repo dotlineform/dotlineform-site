@@ -44,7 +44,7 @@ def work_create_payload(context: CatalogueWriteContext, body: Mapping[str, Any])
 
     galleries = read_galleries(context.source_dir, works)
     updated_galleries = with_work_memberships(
-        galleries, {**works, work_id: mutation_plan.updated_record}, work_id, body.get("gallery_ids", []),
+        galleries, {**works, work_id: mutation_plan.updated_record}, {work_id: body.get("gallery_ids", [])},
     )
     membership_changed = galleries.works != updated_galleries.works
     changed_fields = mutation_plan.changed_fields + (["gallery_ids"] if membership_changed else [])
@@ -102,7 +102,7 @@ def work_save_payload(context: CatalogueWriteContext, body: Mapping[str, Any]) -
     updated_galleries = galleries
     if "gallery_ids" in body:
         require_work_membership_revision(galleries, work_id, body.get("expected_gallery_ids"))
-        updated_galleries = with_work_memberships(galleries, works, work_id, body["gallery_ids"])
+        updated_galleries = with_work_memberships(galleries, works, {work_id: body["gallery_ids"]})
     plan = source_mutation.plan_work_save(
         records_from_json_source(context.source_dir), works, work_id, current_record, work_update,
     )

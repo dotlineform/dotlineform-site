@@ -72,15 +72,21 @@ export function createWorkSeriesBrowser(state, elements, options) {
         const preview = buildWorkThumbPreview(state.mediaConfig, record.work_id);
         return {
           workId: record.work_id, title: record.title || "—",
+          galleries: record.gallery_ids.map(id => state.galleriesById.get(id)?.title || id).join(", "),
           thumbSrc: preview.src, thumbSrcset: preview.srcset, thumbSizes: "48px",
           thumbWidth: 48, thumbHeight: 48, thumbAlt: "", thumbFallback: "No preview"
         };
       });
-    const selectedId = state.mode === "single" && records.some(record => record.workId === state.currentWorkId)
-      ? state.currentWorkId : "";
-    const membersKey = JSON.stringify([seriesId, records]);
-    // Opening a row should preserve its mounted thumbnails and the list's scroll position.
-    if (list && membersKey === renderedMembersKey && (list.selection()?.id || "") === selectedId) return;
+    const visibleIds = new Set(records.map(record => record.workId));
+    const selectedIds = selectedWorkIds().filter(id => visibleIds.has(id));
+    const membersKey = JSON.stringify([seriesId, records.map(({ galleries: _galleries, ...record }) => record)]);
+    if (list && membersKey === renderedMembersKey) {
+      const updates = records.filter((record, index) => record.galleries !== list.options.records[index].galleries)
+        .map(record => ({ id: record.workId, values: { galleries: record.galleries } }));
+      if (updates.length) list.updateCells(updates);
+      list.setSelection(selectedIds);
+      return;
+    }
     const scrollTop = members.scrollTop;
     list?.destroy();
     count.textContent = seriesId ? `${records.length} ${records.length === 1 ? "work" : "works"}` : "";
@@ -95,31 +101,36 @@ export function createWorkSeriesBrowser(state, elements, options) {
           fallbackTextKey: "thumbFallback", truncate: false
         },
         { key: "workId", label: "work", width: "minmax(3.5rem, 4.9rem)", truncate: false },
-        { key: "title", label: "title", width: "minmax(0, 1fr)", truncate: true }
+        { key: "title", label: "title", width: "minmax(0, 1fr)", truncate: true },
+        { key: "galleries", label: "galleries", width: "minmax(0, 1fr)", truncate: false }
       ],
       showHeader: false,
       emptyText: seriesId ? "No works currently belong to this series." : "Find a series to see its works.",
-      selectionMode: "single",
-      initialSelection: selectedId,
+      selectionMode: "multiple",
+      initialSelection: selectedIds,
       getRecordId: record => record.workId,
-      onSelectionChange: ({ selection }) => {
-        if (selection?.record) void openMember(selection.record.workId);
+      onSelectionChange: ({ selections }) => {
+        void openMembers(selections.map(selection => selection.id));
       }
     });
     renderedMembersKey = membersKey;
     members.scrollTop = scrollTop;
   }
 
-  async function openMember(workId) {
-    if (busy() || (state.mode === "single" && state.currentWorkId === workId)) return;
+  function selectedWorkIds() {
+    return state.mode === "bulk" ? state.bulkWorkIds : state.currentWorkId ? [state.currentWorkId] : [];
+  }
+
+  async function openMembers(workIds) {
+    if (busy() || workIds.slice().sort().join(",") === selectedWorkIds().slice().sort().join(",")) return;
     const previousSearch = state.searchNode.value;
     opening = true;
     syncAvailability();
     try {
-      if (options.draftHasChanges()) {
+      if (state.mode !== "bulk" && options.draftHasChanges()) {
         const confirmed = await confirmCatalogueActionModal(state, {
           title: "Discard unsaved Work changes?",
-          message: `Open Work ${workId} and discard the current unsaved changes?`,
+          message: "Change the Work selection and discard the current unsaved changes?",
           primaryLabel: "Discard and open", cancelLabel: "Cancel", defaultAction: "cancel",
           restoreFocus: search
         });
@@ -127,16 +138,17 @@ export function createWorkSeriesBrowser(state, elements, options) {
       }
       status.textContent = "";
       delete status.dataset.state;
-      await options.openWork(workId);
+      if (workIds.length) await options.openWorks(workIds);
+      else options.clearWork();
     } catch (error) {
       state.searchNode.value = previousSearch;
-      status.textContent = `Could not open Work ${workId}. ${error.message}`;
+      status.textContent = `Could not change the Work selection. ${error.message}`;
       status.dataset.state = "error";
     } finally {
       opening = false;
       renderMembers();
       syncAvailability();
-      const selectedRow = members.querySelector('[data-record-list-row="true"][aria-selected="true"]');
+      const selectedRow = members.querySelector('[data-record-list-row="true"][tabindex="0"]');
       (selectedRow || search).focus({ preventScroll: true });
     }
   }
@@ -240,7 +252,9 @@ export function createWorkSeriesBrowser(state, elements, options) {
     bulkRecords = state.bulkRecords;
     currentWorkId = state.currentWorkId;
     mode = state.mode;
-    const initialSeriesId = currentRecord?.series_id || (mode === "new" ? state.draft.series_id : "");
+    const bulkSeriesIds = new Set([...state.bulkRecords.values()].map(record => record.series_id));
+    const initialSeriesId = currentRecord?.series_id || (mode === "new" ? state.draft.series_id
+      : bulkSeriesIds.size === 1 ? [...bulkSeriesIds][0] : "");
     if (!seriesId && initialSeriesId && state.seriesById.has(initialSeriesId)) {
       seriesId = initialSeriesId;
       restoreSearch();
@@ -250,5 +264,5 @@ export function createWorkSeriesBrowser(state, elements, options) {
   }
 
   sync();
-  return { sync };
+  return { sync, preserveScrollAnchor: change => list ? list.preserveScrollAnchor(change) : change() };
 }

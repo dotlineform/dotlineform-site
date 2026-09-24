@@ -99,7 +99,6 @@ export function createWorkEditorState(elements, options = {}) {
     bulkWorkIds: [],
     bulkRecords: new Map(),
     bulkRecordHashes: new Map(),
-    bulkMixedFields: new Set(),
     bulkTouchedFields: new Set(),
     bulkBuildTargets: [],
     baselineDraft: null,
