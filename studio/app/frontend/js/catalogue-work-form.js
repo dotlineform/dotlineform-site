@@ -135,6 +135,8 @@ export function renderSeriesPicker(state) {
   const seriesId = normalizeSeriesId(state.draft?.series_id);
   state.seriesPicker.hiddenInput.value = seriesId;
   state.seriesPicker.searchInput.value = seriesId ? formatSeriesChoice(state, seriesId) : "";
+  state.seriesPicker.editButton.disabled = !seriesId || state.mode === "bulk"
+    || state.isSaving || state.isBuilding || state.isDeleting || !state.serverAvailable;
   state.seriesPicker.searchController.close();
 }
 
@@ -366,7 +368,29 @@ function renderSeriesField(field, fieldsNode, state, options) {
   popupNode.hidden = true;
   searchWrap.appendChild(searchInput);
   searchWrap.appendChild(popupNode);
-  pickerNode.appendChild(searchWrap);
+  const searchRow = document.createElement("div");
+  searchRow.className = "catalogueWorkSeriesPicker__searchRow";
+  const actions = document.createElement("div");
+  actions.className = "catalogueWorkSeriesPicker__actions";
+  const editButton = document.createElement("button");
+  editButton.type = "button";
+  editButton.className = "studioUi__button";
+  editButton.textContent = "Edit";
+  editButton.setAttribute("aria-label", "Edit Series");
+  editButton.addEventListener("click", () => {
+    if (!editButton.disabled) void options.onEditDefinition("Series", state.draft.series_id, searchInput);
+  });
+  const newButton = document.createElement("button");
+  newButton.type = "button";
+  newButton.className = "studioUi__button";
+  newButton.textContent = "New";
+  newButton.setAttribute("aria-label", "New Series");
+  newButton.addEventListener("click", () => {
+    if (!newButton.disabled) void options.onEditDefinition("Series", "", searchInput);
+  });
+  actions.append(editButton, newButton);
+  searchRow.append(searchWrap, actions);
+  pickerNode.append(searchRow);
 
   wrapper.appendChild(pickerNode);
 
@@ -408,7 +432,7 @@ function renderSeriesField(field, fieldsNode, state, options) {
     if (event.button === 0 && event.target.closest("[data-search-list-index]")) event.preventDefault();
   });
   fieldsNode.appendChild(wrapper);
-  state.seriesPicker = { wrapper, pickerNode, searchWrap, searchInput, popupNode, hiddenInput, searchController };
+  state.seriesPicker = { wrapper, pickerNode, editButton, newButton, searchWrap, searchInput, popupNode, hiddenInput, searchController };
   state.fieldNodes.set(field.key, hiddenInput);
   state.fieldStatusNodes.set(field.key, message);
   renderSeriesPicker(state);
@@ -510,7 +534,9 @@ export function setModeFieldAvailability(state) {
   if (state.seriesPicker) {
     state.seriesPicker.pickerNode.hidden = false;
     state.seriesPicker.searchWrap.hidden = false;
-    state.seriesPicker.searchInput.disabled = isBulk || state.isSaving || state.isBuilding || state.isDeleting;
+    state.seriesPicker.searchInput.disabled = isBulk || busy || !state.serverAvailable;
+    state.seriesPicker.newButton.disabled = state.seriesPicker.searchInput.disabled;
+    state.seriesPicker.editButton.disabled = state.seriesPicker.searchInput.disabled || !state.draft.series_id;
     if (state.seriesPicker.searchInput.disabled) {
       renderSeriesPicker(state);
     }

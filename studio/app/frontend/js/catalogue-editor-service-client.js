@@ -32,6 +32,18 @@ export function saveCatalogueSeries(payload) {
   return postJson(CATALOGUE_WRITE_ENDPOINTS.saveSeries, payload);
 }
 
+export function createCatalogueGallery(payload) {
+  return postJson(CATALOGUE_WRITE_ENDPOINTS.createGallery, payload);
+}
+
+export function saveCatalogueGallery(payload) {
+  return postJson(CATALOGUE_WRITE_ENDPOINTS.saveGallery, payload);
+}
+
+export function deleteCatalogueGallery(payload) {
+  return postJson(CATALOGUE_WRITE_ENDPOINTS.deleteGallery, payload);
+}
+
 function queryString(params = {}) {
   const search = new URLSearchParams();
   Object.entries(params).forEach(([key, value]) => {

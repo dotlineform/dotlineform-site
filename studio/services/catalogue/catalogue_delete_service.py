@@ -32,6 +32,8 @@ def delete_apply_response(
     kind, record_id = request["kind"], request["id"]
     preview = catalogue_delete_plans.build_delete_preview(context.source_dir, kind, record_id)
     require_record_revision(preview["record"], body.get("expected_record_hash"))
+    if kind == "series" and preview["affected"]["works"]:
+        raise ValueError("Only Series with no member Works can be deleted.")
     if preview["blocked"]:
         return HTTPStatus.BAD_REQUEST, {"ok": False, "error": "delete preview contains blockers", "preview": preview}
     plan = catalogue_delete_plans.build_delete_apply_plan(context.source_dir, kind, record_id)

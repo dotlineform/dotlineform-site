@@ -9,6 +9,7 @@ from typing import Any, Mapping
 from catalogue.catalogue_bulk_service import bulk_save_payload
 from catalogue.catalogue_delete_service import delete_apply_response, delete_preview_payload
 from catalogue.catalogue_series_service import series_create_payload, series_save_payload
+from catalogue.catalogue_gallery_service import mutate_gallery_payload
 from catalogue.catalogue_service_context import CatalogueWriteContext, build_catalogue_write_context
 from catalogue.catalogue_work_service import work_create_payload, work_save_payload
 from catalogue.catalogue_output_service import complete_saved_catalogue_output
@@ -21,6 +22,9 @@ SERVICE_POST_PATHS = {
     "/work/save",
     "/series/create",
     "/series/save",
+    "/gallery/create",
+    "/gallery/save",
+    "/gallery/delete",
     "/delete-preview",
     "/delete-apply",
 }
@@ -52,6 +56,8 @@ def _dispatch_mutation(context: CatalogueWriteContext, api_path: str, body: Mapp
         return HTTPStatus.OK, series_create_payload(context, body)
     if api_path == "/series/save":
         return HTTPStatus.OK, series_save_payload(context, body)
+    if api_path in {"/gallery/create", "/gallery/save", "/gallery/delete"}:
+        return HTTPStatus.OK, mutate_gallery_payload(context, api_path.rsplit("/", 1)[1], body)
     if api_path == "/delete-preview":
         return HTTPStatus.OK, delete_preview_payload(context, body)
     if api_path == "/delete-apply":

@@ -1374,6 +1374,34 @@ button.studioList__cellLink {
   font-size: var(--font-caption);
 }
 
+.catalogueWorkSeriesPicker__edit {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  border: 0;
+  padding: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+.catalogueWorkSeriesPicker__edit:disabled {
+  cursor: default;
+}
+
+.catalogueWorkSeriesPicker__searchRow {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.catalogueWorkSeriesPicker__actions {
+  display: flex;
+  gap: 0.35rem;
+}
+
 .catalogueWorkSeriesPicker__searchWrap {
   position: relative;
 }

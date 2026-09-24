@@ -54,15 +54,19 @@ from catalogue_work_media_sources import (  # noqa: E402
 )
 from pipeline_config import default_work_media_source_id, work_media_source_ids  # noqa: E402
 from catalogue.series_ids import normalize_series_id  # noqa: E402
+from catalogue.catalogue_gallery_service import gallery_record_payload  # noqa: E402
 from local_env import runtime_env  # noqa: E402
 from script_logging import append_script_log  # noqa: E402
 
 
 LOGS_REL_DIR = Path("var/studio/catalogue/logs")
+
+
 CATALOGUE_READ_KEYS = {
     "catalogue_works",
     "catalogue_series",
     "catalogue_galleries",
+    "catalogue_gallery_record",
     "catalogue_lookup_work_search",
     "catalogue_lookup_series_search",
     "catalogue_lookup_series_base",
@@ -83,6 +87,9 @@ def catalogue_get_payload(repo_root: Path, api_path: str, query: Mapping[str, li
                 "work/save",
                 "series/create",
                 "series/save",
+                "gallery/create",
+                "gallery/save",
+                "gallery/delete",
                 "project-media",
             ],
         }
@@ -124,6 +131,9 @@ def catalogue_read_payload(repo_root: Path, query: Mapping[str, list[str]]) -> d
     if key == "catalogue_galleries":
         galleries = read_galleries(paths["source_dir"], source_records.works)
         return {"galleries": galleries.galleries}
+    if key == "catalogue_gallery_record":
+        galleries = read_galleries(paths["source_dir"], source_records.works)
+        return gallery_record_payload(galleries, record_id)
     if key == "catalogue_lookup_work_search":
         payload = build_work_search_payload(source_records)
         galleries = read_galleries(paths["source_dir"], source_records.works)

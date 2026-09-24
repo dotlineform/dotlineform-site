@@ -3,9 +3,6 @@ import { bindSearchList } from "/shared/frontend/js/search-list.js";
 import { confirmCatalogueActionModal } from "./catalogue-editor-action-modals.js";
 import { buildWorkThumbPreview } from "./catalogue-media-preview.js";
 import { getSeriesSearchMatches } from "./catalogue-series-records.js";
-import { catalogueOutputError, catalogueSavedActionError } from "./catalogue-output-result.js";
-import { openWorkSeriesTitleModal } from "./catalogue-work-series-modal.js";
-import { deleteEmptyWorkSeries } from "./catalogue-work-series-actions.js";
 
 function escapeHtml(value) {
   return String(value ?? "")
@@ -22,25 +19,19 @@ function escapeHtml(value) {
 export function createWorkSeriesBrowser(state, elements, options) {
   const { seriesBrowseSearch: search, seriesBrowsePopup: popup, seriesBrowseMembers: members,
     seriesBrowseStatus: status, seriesBrowseCount: count, seriesBrowseEdit: edit,
-    seriesBrowseDelete: remove, editorPane, summaryPanelNode } = elements;
+    seriesBrowseNew: newButton, editorPane, summaryPanelNode } = elements;
   let seriesId = "";
   let list = null;
   let renderedMembersKey = "";
   let opening = false;
   let editingSeries = false;
-  let deletingSeries = false;
   let currentRecord = null;
   let bulkRecords = null;
   let currentWorkId = "";
   let mode = "";
 
   function busy() {
-    return opening || editingSeries || deletingSeries || state.isSaving || state.isBuilding || state.isDeleting || !state.serverAvailable;
-  }
-
-  function canDeleteSeries() {
-    return Boolean(seriesId && state.seriesById.has(seriesId))
-      && !Array.from(state.workSearchById.values()).some(record => record.series_id === seriesId);
+    return opening || editingSeries || state.isEditingDefinition || state.isSaving || state.isBuilding || state.isDeleting || !state.serverAvailable;
   }
 
   function seriesLabel(id) {
@@ -55,11 +46,11 @@ export function createWorkSeriesBrowser(state, elements, options) {
 
   function syncAvailability() {
     search.disabled = busy();
-    edit.disabled = busy();
-    remove.disabled = busy() || !canDeleteSeries();
+    edit.disabled = busy() || !seriesId;
+    newButton.disabled = busy();
     members.inert = busy();
     members.setAttribute("aria-busy", String(opening));
-    editorPane.inert = opening || editingSeries || deletingSeries;
+    editorPane.inert = opening || editingSeries || state.isEditingDefinition;
     summaryPanelNode.inert = editorPane.inert;
     if (busy()) restoreSearch();
   }
@@ -164,60 +155,25 @@ export function createWorkSeriesBrowser(state, elements, options) {
     syncAvailability();
   }
 
-  async function editSeries() {
+  async function editSeries(create = false) {
     if (busy()) return;
     editingSeries = true;
     syncAvailability();
     try {
-      const result = await openWorkSeriesTitleModal(state, { seriesId, restoreFocus: edit });
-      if (!result.confirmed) return;
-      const { response } = result;
-      state.seriesById.set(result.seriesId, { ...response.record, record_hash: response.record_hash });
-      const changedSeries = seriesId !== result.seriesId;
-      seriesId = result.seriesId;
+      const result = await options.onEditDefinition("Series", create ? "" : seriesId, create ? newButton : edit);
+      if (!result?.confirmed) return;
+      if (result.response.created) seriesId = result.response.series_id;
+      if (result.response.deleted) seriesId = "";
       restoreSearch();
       renderMembers();
-      if (changedSeries) members.scrollTop = 0;
-      options.onSeriesChanged();
-      status.textContent = catalogueOutputError(response);
-      if (status.textContent) status.dataset.state = "error";
-      else delete status.dataset.state;
+      if (result.response.created) members.scrollTop = 0;
     } catch (error) {
       status.textContent = error.message;
       status.dataset.state = "error";
     } finally {
       editingSeries = false;
       syncAvailability();
-      edit.focus({ preventScroll: true });
-    }
-  }
-
-  async function deleteSeries() {
-    if (busy() || !canDeleteSeries()) return;
-    deletingSeries = true;
-    syncAvailability();
-    let response = null;
-    try {
-      response = await deleteEmptyWorkSeries(state, { seriesId, restoreFocus: remove });
-      if (!response) return;
-      if (!response.deleted || response.kind !== "series" || response.id !== seriesId) {
-        throw new Error("Delete response does not match the selected Series.");
-      }
-      state.seriesById.delete(seriesId);
-      seriesId = "";
-      restoreSearch();
-      renderMembers();
-      options.onSeriesChanged();
-      status.textContent = catalogueOutputError(response);
-      if (status.textContent) status.dataset.state = "error";
-      else delete status.dataset.state;
-    } catch (error) {
-      status.textContent = catalogueSavedActionError(response, error) || error.message;
-      status.dataset.state = "error";
-    } finally {
-      deletingSeries = false;
-      syncAvailability();
-      (remove.disabled ? search : remove).focus({ preventScroll: true });
+      (create ? newButton : edit.disabled ? search : edit).focus({ preventScroll: true });
     }
   }
 
@@ -242,7 +198,7 @@ export function createWorkSeriesBrowser(state, elements, options) {
     if (event.button === 0 && event.target.closest("[data-search-list-index]")) event.preventDefault();
   });
   edit.addEventListener("click", () => { void editSeries(); });
-  remove.addEventListener("click", () => { void deleteSeries(); });
+  newButton.addEventListener("click", () => { void editSeries(true); });
 
   function sync() {
     syncAvailability();
@@ -264,5 +220,14 @@ export function createWorkSeriesBrowser(state, elements, options) {
   }
 
   sync();
-  return { sync, preserveScrollAnchor: change => list ? list.preserveScrollAnchor(change) : change() };
+  return {
+    sync,
+    refresh() {
+      if (seriesId && !state.seriesById.has(seriesId)) seriesId = "";
+      restoreSearch();
+      renderMembers();
+      syncAvailability();
+    },
+    preserveScrollAnchor: change => list ? list.preserveScrollAnchor(change) : change()
+  };
 }

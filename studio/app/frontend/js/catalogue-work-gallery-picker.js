@@ -47,11 +47,16 @@ export function renderWorkGalleryPicker(state) {
   for (const id of ids) {
     const title = state.galleriesById.get(id)?.title || id;
     const chip = node("span", "studioUi__chip catalogueWorkSeriesPicker__chip");
+    const edit = node("button", "catalogueWorkSeriesPicker__edit", title);
+    edit.type = "button";
+    edit.dataset.editGalleryId = id;
+    edit.setAttribute("aria-label", `Edit Gallery ${title} (${id})`);
     const remove = node("button", "studioUi__chipRemove", "×");
     remove.type = "button";
     remove.dataset.removeGalleryId = id;
     remove.setAttribute("aria-label", `Remove ${title} (${id})`);
-    chip.append(node("span", "studioUi__chipText", title), node("span", "catalogueWorkSeriesPicker__chipId", id), remove);
+    edit.append(node("span", "catalogueWorkSeriesPicker__chipId", id));
+    chip.append(edit, remove);
     picker.chipsNode.append(chip);
   }
   if (!ids.length) picker.chipsNode.append(node("span", "studioForm__meta", "No galleries selected."));
@@ -86,7 +91,15 @@ export function createWorkGalleryPicker(field, fieldsNode, state, options) {
   const popupNode = node("div", "studioUi__popupInner catalogueWorkSeriesPicker__popup");
   popupNode.hidden = true;
   searchWrap.append(searchInput, popupNode);
-  control.append(chipsNode, searchWrap);
+  const searchRow = node("div", "catalogueWorkSeriesPicker__searchRow");
+  const newButton = node("button", "studioUi__button", "New");
+  newButton.type = "button";
+  newButton.setAttribute("aria-label", "New Gallery");
+  newButton.addEventListener("click", () => {
+    if (!disabled(state)) void options.onEditDefinition("Gallery", "", searchInput);
+  });
+  searchRow.append(searchWrap, newButton);
+  control.append(chipsNode, searchRow);
   wrapper.append(label, control);
   fieldsNode.append(wrapper);
   state.galleryPicker = { wrapper, chipsNode, searchInput, popupNode };
@@ -124,6 +137,11 @@ export function createWorkGalleryPicker(field, fieldsNode, state, options) {
     searchInput.focus();
   });
   chipsNode.addEventListener("click", event => {
+    const edit = event.target.closest("[data-edit-gallery-id]");
+    if (edit && !disabled(state)) {
+      void options.onEditDefinition("Gallery", edit.dataset.editGalleryId, searchInput);
+      return;
+    }
     const button = event.target.closest("[data-remove-gallery-id]");
     if (!button || disabled(state)) return;
     changeSelection(state.draft.gallery_ids.filter(id => id !== button.dataset.removeGalleryId));

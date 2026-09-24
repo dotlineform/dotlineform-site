@@ -1,6 +1,7 @@
 import { saveCurrentWork } from "./catalogue-work-actions.js";
 import { createWorkSeriesBrowser } from "./catalogue-work-series-browser.js";
 import { createWorkEditorLayout } from "./catalogue-work-layout.js";
+import { editWorkDefinition } from "./catalogue-work-definitions.js";
 import { applyWorkRecordMutation } from "./catalogue-work-action-records.js";
 import {
   getStudioText
@@ -46,7 +47,7 @@ import {
   renderWorkReadiness,
   updateWorkSummary
 } from "./catalogue-work-sections.js";
-import { applyDraftToInputs, applyWorkMediaSourceConfig, applyReadonly, applyWorkFormText, clearReadonlyFields, getFieldNodeValue, renderSeriesPicker, renderWorkEditorFields, resolvedWorkMediaSourceId, setModeFieldAvailability, updateFieldMessages } from "./catalogue-work-form.js";
+import { applyDraftToInputs, applyWorkMediaSourceConfig, applyReadonly, applyWorkFormText, clearReadonlyFields, getFieldNodeValue, renderWorkEditorFields, resolvedWorkMediaSourceId, setModeFieldAvailability, updateFieldMessages } from "./catalogue-work-form.js";
 import {
   initializeWorkRouteState,
   setEmptySearchMode,
@@ -261,6 +262,13 @@ function workFormOptions(state) {
   return {
     text: (key, fallback, tokens) => t(state, key, fallback, tokens),
     onFieldInput: (fieldKey) => onFieldInput(state, fieldKey),
+    onEditDefinition: (kind, id, restoreFocus) => editWorkDefinition(state, {
+      kind, id, restoreFocus,
+      refresh: () => {
+        applyDraftToInputs(state);
+        updateEditorState(state);
+      }
+    }),
     onStateChange: () => {
       clearActionMessages(state);
       updateEditorState(state);
@@ -440,10 +448,7 @@ async function init() {
     await loadInitialWorkEditorData(state);
     state.seriesBrowser = createWorkSeriesBrowser(state, elements, {
       draftHasChanges: () => draftHasChanges(state),
-      onSeriesChanged: () => {
-        renderSeriesPicker(state);
-        updateEditorState(state);
-      },
+      onEditDefinition: workFormOptions(state).onEditDefinition,
       openWorks: workIds => openWorkSelection(state, workIds.join(","), workSelectionOptions(state)),
       clearWork: () => setEmptySearchMode(state, workRouteStateOptions(state))
     });

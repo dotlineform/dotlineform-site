@@ -38,19 +38,23 @@ def complete_saved_catalogue_output(
         selected = response.get("selected_ids", [])
         if response.get("kind") == "works":
             work_ids = sorted(set(work_ids) | set(selected))
-        if not work_ids and not series_ids:
+        gallery_ids = response.get("affected_gallery_ids", ())
+        if not work_ids and not series_ids and not gallery_ids:
             return
-        complete_catalogue_media(context.repo_root, context.source_dir, records=current, previous=previous, work_ids=work_ids, write=True)
+        # Definition-only Gallery mutations change references, never Work media.
+        if work_ids or series_ids:
+            complete_catalogue_media(context.repo_root, context.source_dir, records=current, previous=previous, work_ids=work_ids, write=True)
+        output_work_ids = sorted(set(work_ids) | set(response.get("affected_work_ids", ())))
         response["output"] = generate_catalogue_json(
-            context.repo_root, context.source_dir, write=True, work_ids=work_ids, series_ids=series_ids,
-            gallery_ids=response.get("affected_gallery_ids", ()),
+            context.repo_root, context.source_dir, write=True, work_ids=output_work_ids, series_ids=series_ids,
+            gallery_ids=gallery_ids,
         )
     except (Exception, SystemExit) as error:
         response["output"] = {"status": "failed", "error": str(error), "message": "Data saved, but output generation did not complete."}
     try:
         # Media promotion can change revisions, including before a later failure.
         current = records_from_json_source(context.source_dir)
-        if "record" in response:
+        if "record" in response and "gallery_id" not in response:
             record = current.series.get(response.get("series_id")) if response.get("series_id") else current.works.get(response.get("work_id"))
             if record:
                 response.update(record=record, record_hash=record_hash(record))
