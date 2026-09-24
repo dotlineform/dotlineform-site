@@ -9,7 +9,6 @@ function cleanString(value) {
 export function docsViewerDeployRepoConfirmBody(preview) {
   var repository = preview && preview.repository || {};
   var media = preview && preview.media || {};
-  var catalogue = preview && preview.catalogue_document_urls || {};
   var lineage = preview && preview.publication_lineage || {};
   var lines = [
     "Deploy this Preview snapshot to its configured repository and public-media destinations?",
@@ -20,9 +19,6 @@ export function docsViewerDeployRepoConfirmBody(preview) {
     "Media copies: " + Number(media.copy_count || 0),
     "Media removals: " + Number(media.remove_count || 0),
     "Media errors: " + Number(media.error_count || 0),
-    catalogue.status === "paused"
-      ? cleanString(catalogue.reason)
-      : "Catalogue paths changed: " + Number(catalogue.changed_count || 0),
     "Publication lineage: " + (lineage.changed === true ? "change" : "unchanged"),
     "Preview revision: " + cleanString(preview && preview.preview_revision),
     "Deploy Repo plan: " + cleanString(preview && preview.plan_revision)

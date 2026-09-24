@@ -12,18 +12,9 @@ import re
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Iterable, Mapping
+from urllib.parse import quote
 
-import docs_catalogue_document_url_follow_through as catalogue_follow_through
 import docs_document_publication_lineage as publication_lineage
-from docs_catalogue_document_urls import (
-    project_catalogue_documents_from_subject_associations,
-)
-from docs_document_location_projection import (
-    build_document_location_payload,
-    build_exact_document_location_records,
-    document_location_projection_path,
-    json_bytes as document_location_json_bytes,
-)
 from docs_public_media_reconciliation import (
     apply_public_media_reconciliation,
     plan_public_media_reconciliation,
@@ -44,13 +35,10 @@ from docs_workspace_config import (
 )
 from docs_preview_snapshot import validate_preview_snapshot
 from docs_publication_payloads import project_public_view
-from docs_collection_customisations import (
-    collection_customisation_authoring_subject_fields,
-)
 from docs_write_rebuild import rebuild_collection_outputs
 
 
-DEPLOY_REPO_PREVIEW_SCHEMA_VERSION = "docs_deploy_repo_preview_v2"
+DEPLOY_REPO_PREVIEW_SCHEMA_VERSION = "docs_deploy_repo_preview_v3"
 IGNORED_FILENAMES = frozenset({".DS_Store", ".gitkeep"})
 LOCAL_FOLDER_ANCHOR_PATTERN = re.compile(
     r"<a\b(?P<attrs>(?:[^>\"']|\"[^\"]*\"|'[^']*')*)>(?P<label>.*?)</a\s*>",
@@ -74,7 +62,6 @@ class DeployRepoPlan:
     desired_repository_files: Mapping[Path, bytes]
     current_repository_files: Mapping[Path, bytes]
     media_references: Mapping[tuple[str, str], tuple[str, ...]]
-    catalogue_plan: Any
     lineage_workflows: tuple[publication_lineage.DocumentLineageWorkflow, ...]
     current_lineages: Mapping[str, publication_lineage.DocumentLineageTable | None]
     desired_lineages: Mapping[str, publication_lineage.DocumentLineageTable | None]
@@ -183,7 +170,6 @@ def deploy_repo_capability(
     destinations: list[tuple[Path, bool]] = [
         (projection.documents.location.path, True),
         (projection.search.location.path, False),
-        (document_location_projection_path(config), False),
     ]
     destinations.extend(
         (collection.public_projection.documents.location.path, True)
@@ -425,8 +411,7 @@ def accepted_document_collections(
     dict[Path, bytes],
     dict[str, dict[Path, bytes]],
     dict[str, Any],
-    dict[str, dict[str, Any]],
-    dict[str, Any],
+    dict[str, set[str]],
 ]:
     workspace = load_docs_workspace_config(repo_root)
     published_files = {
@@ -436,7 +421,7 @@ def accepted_document_collections(
     }
     media_projection = public_media_url_projection(config)
     parent_files: dict[Path, bytes] = {}
-    parent_documents: dict[str, dict[str, Any]] = {}
+    parent_doc_ids: set[str] = set()
     parent_prefix = collection_public_url_prefix(config)
     index_path = Path("documents/index-tree.json")
     recent_path = Path("documents/recent.json")
@@ -473,14 +458,10 @@ def accepted_document_collections(
                 media_projection=media_projection,
             )
             parent_files[Path("by-id") / relative_path.name] = projected
-            parent_documents[relative_path.stem] = read_json_bytes(
-                projected,
-                f"projected parent document {relative_path.stem}",
-            )
+            parent_doc_ids.add(relative_path.stem)
 
     collection_files: dict[str, dict[Path, bytes]] = {}
     collection_manifests: dict[str, dict[str, Any]] = {}
-    subject_associations: dict[tuple[str, str], Mapping[str, Any]] = {}
     accepted_children = {path.parts[1] for path in published_files if len(path.parts) > 2 and path.parts[0] == "collections"}
     configured_children = {child.collection: child for child in config.collections}
     if accepted_children - set(configured_children):
@@ -495,10 +476,7 @@ def accepted_document_collections(
             except ValueError:
                 continue
             if collection_relative == Path("subject-associations.json"):
-                subject_associations[("published", collection.collection)] = read_json_bytes(
-                    data,
-                    f"accepted subject associations {collection.collection}",
-                )
+                # The local association index has no public reader.
                 continue
             if (
                 len(collection_relative.parts) == 2
@@ -525,24 +503,13 @@ def accepted_document_collections(
             manifest_bytes,
             f"accepted collection manifest {collection.collection}",
         )
-        if (
-            collection_customisation_authoring_subject_fields(
-                collection.collection_customisation
-            )
-            and ("published", collection.collection) not in subject_associations
-        ):
-            raise FileNotFoundError(
-                f"accepted Preview snapshot is missing deployment subject associations for "
-                f"{collection.collection}"
-            )
-
     search_payload = project_public_search(
         config,
         read_json_bytes(published_files[search_path], "accepted Search"),
     )
-    _validate_complete_document_set(
+    document_ids = _validate_complete_document_set(
         search_payload,
-        parent_documents,
+        parent_doc_ids,
         collection_files,
         collection_manifests,
     )
@@ -550,17 +517,16 @@ def accepted_document_collections(
         parent_files,
         collection_files,
         search_payload,
-        collection_manifests,
-        subject_associations,
+        document_ids,
     )
 
 
 def _validate_complete_document_set(
     search_payload: Mapping[str, Any],
-    parent_documents: Mapping[str, Any],
+    parent_doc_ids: set[str],
     collection_files: Mapping[str, Mapping[Path, bytes]],
     collection_manifests: Mapping[str, Mapping[str, Any]],
-) -> None:
+) -> dict[str, set[str]]:
     raw_search_docs = search_payload.get("docs")
     if not isinstance(raw_search_docs, list):
         raise ValueError("accepted Search docs must be an array")
@@ -569,7 +535,7 @@ def _validate_complete_document_set(
         for row in raw_search_docs
         if isinstance(row, Mapping) and str(row.get("id") or "").strip()
     }
-    accepted_ids = set(parent_documents)
+    document_ids = {"": parent_doc_ids}
     for collection, files in collection_files.items():
         by_id_ids = {
             path.stem
@@ -588,9 +554,11 @@ def _validate_complete_document_set(
             raise RuntimeError(
                 f"accepted {collection} manifest and by-ID document identities do not match"
             )
-        accepted_ids.update(by_id_ids)
+        document_ids[collection] = by_id_ids
+    accepted_ids = set().union(*document_ids.values())
     if search_ids != accepted_ids:
         raise RuntimeError("accepted Search and document identities do not match")
+    return document_ids
 
 
 def desired_repository_projection(
@@ -600,15 +568,13 @@ def desired_repository_projection(
 ) -> tuple[
     dict[Path, bytes],
     dict[tuple[str, str], tuple[str, ...]],
-    list[dict[str, str]],
-    Mapping[str, Mapping[str, list[str]]],
+    dict[str, set[str]],
 ]:
     (
         parent_files,
         collection_files,
         search_payload,
-        collection_manifests,
-        subject_associations,
+        document_ids,
     ) = accepted_document_collections(repo_root, config, published_files)
     parent_root_path = public_documents_path(config)
     search_target_path = public_search_path(config)
@@ -631,33 +597,6 @@ def desired_repository_projection(
     search_target = repository_path(repo_root, search_target_path)
     desired[search_target] = json_bytes(search_payload)
 
-    workspace = load_docs_workspace_config(repo_root)
-    exact_locations = build_exact_document_location_records(
-        workspace,
-        search_payload=search_payload,
-        parent_documents={
-            path.stem: read_json_bytes(data, f"projected parent document {path.stem}")
-            for path, data in parent_files.items()
-            if len(path.parts) == 2 and path.parts[0] == "by-id"
-        },
-        collection_manifests=collection_manifests,
-    )
-    location_payload = build_document_location_payload(
-        workspace,
-        search_payload=search_payload,
-        parent_documents={
-            path.stem: read_json_bytes(data, f"projected parent document {path.stem}")
-            for path, data in parent_files.items()
-            if len(path.parts) == 2 and path.parts[0] == "by-id"
-        },
-        collection_manifests=collection_manifests,
-    )
-    location_target = repository_path(
-        repo_root,
-        document_location_projection_path(workspace),
-    )
-    desired[location_target] = document_location_json_bytes(location_payload)
-
     payload_collections: list[tuple[str, Mapping[Path, bytes]]] = [
         ("documents", parent_files),
         *[
@@ -666,11 +605,7 @@ def desired_repository_projection(
         ],
     ]
     media_references = referenced_public_media(config, payload_collections)
-    catalogue_projection = project_catalogue_documents_from_subject_associations(
-        exact_locations=exact_locations,
-        subject_associations_by_collection=subject_associations,
-    )
-    return desired, media_references, exact_locations, catalogue_projection
+    return desired, media_references, document_ids
 
 
 def iter_managed_files(root: Path) -> Iterable[Path]:
@@ -719,9 +654,6 @@ def current_repository_projection(
     search_target = repository_path(repo_root, search_path)
     if search_target.is_file():
         current[search_target] = search_target.read_bytes()
-    location_target = repository_path(repo_root, document_location_projection_path(load_docs_workspace_config(repo_root)))
-    if location_target.is_file():
-        current[location_target] = location_target.read_bytes()
     return current
 
 
@@ -769,11 +701,15 @@ def repository_diff(
 
 
 def lineage_projections(
-    exact_locations: Iterable[Mapping[str, Any]],
+    config: DocsWorkspaceConfig,
+    document_ids: Mapping[str, set[str]],
     workflows: Iterable[publication_lineage.DocumentLineageWorkflow],
     current: Mapping[str, publication_lineage.DocumentLineageTable | None],
 ) -> dict[str, publication_lineage.DocumentLineageTable | None]:
-    locations = tuple(exact_locations)
+    collections = {
+        child.collection: child
+        for child in select_workspace_stage(config, "preview").collections
+    }
     desired: dict[str, publication_lineage.DocumentLineageTable | None] = {}
     for workflow in workflows:
         table = current[workflow.contract_id]
@@ -781,12 +717,16 @@ def lineage_projections(
             desired[workflow.contract_id] = None
             continue
         editorial = workflow.editorial_collection
+        child = collections[editorial.collection]
+        accepted_ids = document_ids.get(editorial.collection, set())
+        if accepted_ids and child.report_host_doc_id not in document_ids[""]:
+            raise ValueError(f"accepted collection {editorial.collection} has no accepted report host")
         publication_urls = {
-            str(record.get("doc_id") or "").strip(): str(record.get("url") or "").strip()
-            for record in locations
-            if str(record.get("collection") or "").strip().lower() == editorial.collection
-            and str(record.get("doc_id") or "").strip()
-            and str(record.get("url") or "").strip()
+            doc_id: (
+                f"{config.public_viewer_base_url}?doc={quote(child.report_host_doc_id)}"
+                f"&subdoc={quote(doc_id)}"
+            )
+            for doc_id in sorted(accepted_ids)
         }
         desired[workflow.contract_id] = publication_lineage.project_publications(
             table,
@@ -842,23 +782,6 @@ def lineage_preview(
     }
 
 
-def catalogue_preview(repo_root: Path, plan: Any) -> dict[str, Any]:
-    paths = [
-        {
-            "path": repo_relative(repo_root, path),
-            "sha256": sha256_bytes(json_bytes(payload)),
-        }
-        for path, payload in sorted(plan.payloads_by_path.items())
-    ]
-    return {
-        "affected_targets": [
-            {"kind": kind, "key": key} for kind, key in plan.affected_targets
-        ],
-        "changed_paths": paths,
-        "changed_count": len(paths),
-    }
-
-
 def build_deploy_repo_plan(
     repo_root: Path,
     body: Mapping[str, Any],
@@ -875,7 +798,7 @@ def build_deploy_repo_plan(
         repo_root,
     )
     timestamp = str(body.get("deployment_timestamp") or "").strip() or utc_now()
-    desired, media_references, exact_locations, catalogue_projection = (
+    desired, media_references, document_ids = (
         desired_repository_projection(repo_root, config, published_files)
     )
     current = current_repository_projection(repo_root, config)
@@ -888,26 +811,11 @@ def build_deploy_repo_plan(
         env_files=env_files,
         environ=environ,
     )
-    if catalogue_follow_through.CATALOGUE_SITE_PROJECTION_PAUSED:
-        catalogue_plan = None
-        catalogue = catalogue_follow_through.paused_result()
-        catalogue_summary = "Catalogue paused"
-    else:
-        from catalogue.catalogue_document_url_refresh import (
-            build_catalogue_document_url_refresh_plan,
-        )
-
-        catalogue_plan = build_catalogue_document_url_refresh_plan(
-            repo_root,
-            catalogue_projection,
-            generated_at_utc=timestamp,
-        )
-        catalogue = catalogue_preview(repo_root, catalogue_plan)
-        catalogue_summary = f"{catalogue['changed_count']} Catalogue change"
     lineage_workflows = publication_lineage.configured_workflows(repo_root)
     current_lineages = publication_lineage.load_tables(repo_root)
     desired_lineages = lineage_projections(
-        exact_locations,
+        load_docs_workspace_config(repo_root),
+        document_ids,
         lineage_workflows,
         current_lineages,
     )
@@ -922,7 +830,6 @@ def build_deploy_repo_plan(
         "deployment_timestamp": timestamp,
         "repository": repository,
         "media": media,
-        "catalogue": catalogue,
         "lineage": lineage,
     }
     revision = plan_revision(plan_basis)
@@ -932,7 +839,6 @@ def build_deploy_repo_plan(
         + repository["removed_count"]
         + int(media.get("copy_count") or 0)
         + int(media.get("remove_count") or 0)
-        + catalogue["changed_count"]
         + int(lineage["changed_count"])
     )
     preview = {
@@ -945,9 +851,8 @@ def build_deploy_repo_plan(
         "plan_revision": revision,
         "repository": repository,
         "media": media,
-        "catalogue_document_urls": catalogue,
         "publication_lineage": lineage,
-        "document_count": len(exact_locations),
+        "document_count": sum(len(ids) for ids in document_ids.values()),
         "change_count": change_count,
         "error_count": int(media.get("error_count") or 0),
         "up_to_date": change_count == 0 and int(media.get("error_count") or 0) == 0,
@@ -956,7 +861,6 @@ def build_deploy_repo_plan(
             f"{repository['added_count']} repository add, "
             f"{repository['changed_count']} change, {repository['removed_count']} remove; "
             f"{media.get('copy_count', 0)} media copy, {media.get('remove_count', 0)} remove; "
-            f"{catalogue_summary}; "
             f"{lineage['changed_count']} lineage change"
             f"{'s' if lineage['changed_count'] != 1 else ''}."
         ),
@@ -967,7 +871,6 @@ def build_deploy_repo_plan(
         desired_repository_files=desired,
         current_repository_files=current,
         media_references=media_references,
-        catalogue_plan=catalogue_plan,
         lineage_workflows=lineage_workflows,
         current_lineages=current_lineages,
         desired_lineages=desired_lineages,
@@ -1050,25 +953,6 @@ def apply_deploy_repo(
         environ=environ,
     )
 
-    catalogue_error = ""
-    catalogue_written: list[str] = []
-    if catalogue_follow_through.CATALOGUE_SITE_PROJECTION_PAUSED:
-        catalogue_status = "paused"
-    else:
-        from catalogue.catalogue_document_url_refresh import (
-            apply_catalogue_document_url_refresh_plan,
-        )
-
-        try:
-            catalogue_result = apply_catalogue_document_url_refresh_plan(plan.catalogue_plan)
-            catalogue_written = [
-                repo_relative(repo_root.resolve(), path)
-                for path in catalogue_result.written_paths
-            ]
-        except Exception as exc:
-            catalogue_error = str(exc)
-        catalogue_status = "stale" if catalogue_error else ("updated" if catalogue_written else "unchanged")
-
     lineage_results = []
     for workflow in plan.lineage_workflows:
         current_lineage = plan.current_lineages[workflow.contract_id]
@@ -1127,7 +1011,6 @@ def apply_deploy_repo(
 
     error_count = (
         int(media.get("error_count") or 0)
-        + int(bool(catalogue_error))
         + lineage_errors
     )
     result = dict(preview)
@@ -1138,12 +1021,6 @@ def apply_deploy_repo(
             "complete": error_count == 0,
             "error_count": error_count,
             "media": media,
-            "catalogue_document_urls": {
-                **preview["catalogue_document_urls"],
-                "status": catalogue_status,
-                "updated_paths": catalogue_written,
-                "error": catalogue_error,
-            },
             "publication_lineage": {
                 **preview["publication_lineage"],
                 "status": lineage_status,
@@ -1164,7 +1041,6 @@ def apply_deploy_repo(
                 f"Deployed Preview revision {preview['preview_revision']} to the repository projection. "
                 f"Media: {media.get('copied_count', 0)} copied, {media.get('removed_count', 0)} removed, "
                 f"{media.get('error_count', 0)} errors. "
-                f"Catalogue: {catalogue_status}. "
                 f"Lineage: {lineage_status}; "
                 f"{sum(int(record['working_rebuild']['status'] == 'updated') for record in lineage_results)} "
                 "Working rebuilds updated."
