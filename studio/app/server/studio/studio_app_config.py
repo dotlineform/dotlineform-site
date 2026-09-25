@@ -11,6 +11,8 @@ from studio.shared.python.studio_python_paths import ensure_studio_python_paths
 
 ensure_studio_python_paths(__file__)
 
+from catalogue.catalogue_output_paths import catalogue_workspace_config  # noqa: E402
+
 STUDIO_ROUTE_REQUIRED_FIELDS: tuple[str, ...] = (
     "label",
     "title",
@@ -38,17 +40,14 @@ STUDIO_ROUTE_COPY_FIELDS: tuple[str, ...] = (
     "ready_state_route_id",
 )
 
-STUDIO_MEDIA: dict[str, object] = {
-    "thumbs": {
-        "base": "",
-        "works": "/studio/catalogue-output/works/thumbs",
-    },
-    "media": {
-        "base": "https://media.dotlineform.com",
-        "works_images": "/works/img",
-        "works_files": "/works/files",
-    },
-}
+def studio_media_config(repo_root: Path) -> dict[str, object]:
+    """Project current shared local assets into Studio's existing reader contract."""
+    assets = catalogue_workspace_config(repo_root).assets
+    return {
+        "thumbs": {"base": "", "works": assets.url(assets.work_thumbnails)},
+        "media": {"base": "", "works_images": assets.url(assets.work_primary), "works_files": assets.url(assets.work_files)},
+    }
+
 
 STUDIO_SERVICE_ENDPOINTS: dict[str, object] = {
     "catalogue": {
@@ -256,7 +255,7 @@ def runtime_config(repo_root: Path, version: str) -> dict[str, object]:
         "services": studio_service_endpoints(repo_root),
         "sites": runtime_site_bases(),
         "data_paths": data_paths,
-        "media": STUDIO_MEDIA,
+        "media": studio_media_config(repo_root),
         "pipeline": {
             "variants": pipeline_variants,
             "encoding": pipeline_encoding,

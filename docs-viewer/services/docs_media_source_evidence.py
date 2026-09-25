@@ -10,7 +10,7 @@ from typing import Any
 
 from docs_artifact_locations import artifact_location_adapter
 from docs_media_storage import validate_media_filename
-from docs_workspace_config import DocsStageConfig, DocsCollectionConfig, load_docs_media_owner
+from docs_workspace_config import DocsStageConfig, DocsCollectionConfig, load_docs_media_owner, location_child
 from studio.shared.python.projects_directories import (
     PROJECTS_ROOT_MARKER,
     normalize_projects_directory_marker,
@@ -71,7 +71,8 @@ def _normalize_record(raw: Any, *, config: DocsStageConfig | DocsCollectionConfi
 
 
 def _adapter(repo_root: Path, config: DocsStageConfig | DocsCollectionConfig):
-    return artifact_location_adapter(repo_root, config.media.source_location)
+    # Provenance remains editable source metadata, separate from reader assets.
+    return artifact_location_adapter(repo_root, location_child(config.source.location, Path("media")))
 
 
 def load_media_source_evidence(

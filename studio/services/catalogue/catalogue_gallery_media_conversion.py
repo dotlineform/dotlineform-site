@@ -8,10 +8,11 @@ import re
 from pathlib import Path
 from typing import Any
 
-from catalogue.catalogue_output_paths import catalogue_output_workspace, output_path
+from external_workspace_paths import resolve_external_workspace_root, resolve_workspace_path
 from catalogue_media_paths import configured_catalogue_media_workspace
 from media.publish_media_to_r2 import R2Client
 from pipeline_config import load_pipeline_config
+from local_env import runtime_env
 
 
 def file_sha256(path: Path) -> str:
@@ -19,7 +20,8 @@ def file_sha256(path: Path) -> str:
 
 
 def media_workspaces(repo_root: Path) -> dict:
-    return {"generated": catalogue_output_workspace(repo_root),
+    # Frozen conversion inputs retain their historical Projects owner.
+    return {"generated": resolve_external_workspace_root("catalogue/generated", environ=runtime_env(repo_root=repo_root), require_exists=True),
             "staging": configured_catalogue_media_workspace(repo_root)}
 
 
@@ -53,7 +55,7 @@ def plan_media_conversion(repo_root: Path, conversions: dict, client: R2Client, 
     local = []
     workspaces = media_workspaces(repo_root)
     for name, workspace in workspaces.items():
-        family = output_path(workspace, "work_details")
+        family = resolve_workspace_path(workspace, "work_details")
         for path in sorted(family.rglob("*")):
             if not path.is_file() or path.name == ".DS_Store" or path.suffix == ".json":
                 continue
@@ -64,11 +66,11 @@ def plan_media_conversion(repo_root: Path, conversions: dict, client: R2Client, 
             suffix = path.name[len(uid):]
             relative = path.relative_to(workspace.root)
             destination = Path("works", *relative.parts[1:-1], conversions[uid]["work_id"] + suffix)
-            target = output_path(workspace, destination)
+            target = resolve_workspace_path(workspace, destination)
             if target.exists() and (not allow_matching_copies or file_sha256(target) != file_sha256(path)):
                 raise ValueError(f"Local destination already exists or differs: {destination}")
             local.append({"workspace": name, "source": str(relative), "destination": str(destination),
-                          "sha256": file_sha256(output_path(workspace, relative))})
+                          "sha256": file_sha256(resolve_workspace_path(workspace, relative))})
     expected = {
         f"work_details/thumbs/{uid}-{pipeline['variants']['thumb']['suffix']}-{size}.{pipeline['encoding']['format']}"
         for uid in conversions for size in pipeline["variants"]["thumb"]["sizes"]

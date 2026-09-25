@@ -23,12 +23,13 @@ from docs_workspace_config import (
     DocsStageConfig,
     DocsWorkspaceConfig,
     load_docs_workspace_config,
+    location_child,
     resolve_location_path,
 )
 
 
 PREVIEW_MANIFEST_FILENAME = "preview-manifest.json"
-PREVIEW_MANIFEST_SCHEMA_VERSION = "docs_preview_manifest_v1"
+PREVIEW_MANIFEST_SCHEMA_VERSION = "docs_preview_manifest_v2"
 IGNORED_FILENAMES = frozenset({".DS_Store", ".gitkeep"})
 COPIED_WORKING_PAYLOAD_PATHS = frozenset({Path("search/index.json"), Path("documents/recent.json")})
 HTML_START_TAG_PATTERN = re.compile(
@@ -289,66 +290,26 @@ def _media_identity_from_url(value: str, prefix: str) -> str:
     return path.as_posix()
 
 
-def _preview_media_bindings(config: DocsStageConfig) -> dict[str, tuple[str, str, Path]]:
-    """Map every collection's generated URL to its accepted URL and snapshot path."""
+def _preview_media_bindings(config: DocsStageConfig) -> dict[str, tuple[str, Path]]:
+    """Map each shared local URL to its asset-root-relative family."""
     bindings = {}
     for collection in (config, *config.collections):
         child = getattr(collection, "collection", "")
-        suffix = f"/collections/{child}" if child else ""
         for media_type, media in collection.media.types.items():
             key = f"{child}/{media_type}" if child else media_type
-            relative = media.preview_location.path.relative_to(config.workspace_root.path / "preview")
+            relative = media.asset_location.path.relative_to(collection.media.asset_root.path)
             bindings[key] = (
                 media.served_path_prefix.rstrip("/"),
-                f"/docs/preview/media{suffix}/{media_type}",
                 relative,
             )
     return bindings
-
-
-def _project_preview_media_urls(
-    config: DocsStageConfig,
-    data: bytes,
-) -> bytes:
-    payload = _read_json_bytes(data, "generated document payload")
-    content_html = payload.get("content_html")
-    if not isinstance(content_html, str):
-        return data
-    bindings = _preview_media_bindings(config)
-
-    def replace_tag(tag: re.Match[str]) -> str:
-        def replace_attribute(attribute: re.Match[str]) -> str:
-            quote = attribute.group("quote") or ""
-            value = (
-                attribute.group("quoted_value")
-                if quote
-                else attribute.group("unquoted_value")
-            )
-            projected = value
-            for prefix, published_prefix, _relative in bindings.values():
-                identity = _media_identity_from_url(value, prefix)
-                if identity:
-                    raw_identity = value[len(prefix) + 1:]
-                    suffix_match = re.search(r"[?#]", raw_identity)
-                    suffix = raw_identity[suffix_match.start():] if suffix_match else ""
-                    projected = f"{published_prefix}/{identity}{suffix}"
-                    break
-            return f"{attribute.group('prefix')}{quote}{projected}{quote}"
-
-        return f"<{MEDIA_URL_ATTRIBUTE_PATTERN.sub(replace_attribute, tag.group('body'))}>"
-
-    projected_html = HTML_START_TAG_PATTERN.sub(replace_tag, content_html)
-    if projected_html == content_html:
-        return data
-    payload["content_html"] = projected_html
-    return json_bytes(payload)
 
 
 def _referenced_media(
     config: DocsStageConfig,
     files: Mapping[Path, bytes],
 ) -> dict[str, set[str]]:
-    prefixes = {key: (source, published) for key, (source, published, _path) in _preview_media_bindings(config).items()}
+    prefixes = {key: prefix for key, (prefix, _path) in _preview_media_bindings(config).items()}
     references = {media_type: set() for media_type in prefixes}
     for relative_path, data in files.items():
         if relative_path.suffix.lower() not in {".json", ".html"}:
@@ -373,15 +334,10 @@ def _referenced_media(
                     if attribute.group("quote")
                     else attribute.group("unquoted_value")
                 )
-                found_identity = False
-                for media_type, type_prefixes in prefixes.items():
-                    for prefix in type_prefixes:
-                        identity = _media_identity_from_url(value, prefix)
-                        if identity:
-                            references[media_type].add(identity)
-                            found_identity = True
-                            break
-                    if found_identity:
+                for media_type, prefix in prefixes.items():
+                    identity = _media_identity_from_url(value, prefix)
+                    if identity:
+                        references[media_type].add(identity)
                         break
     return references
 
@@ -417,7 +373,7 @@ def build_preview_snapshot_files(
             if config.public_projection is not None and public_mermaid_payload_requires_projection(payload):
                 raise ValueError("Preview Mermaid preparation is incomplete; prepare Preview again")
             document_ids.add(relative_path.stem)
-            files[relative_path] = _project_preview_media_urls(config, data)
+            files[relative_path] = data
         else:
             files[relative_path] = data
 
@@ -435,20 +391,22 @@ def build_preview_snapshot_files(
 
     media_references = _referenced_media(config, files)
     bindings = _preview_media_bindings(config)
+    asset_references = []
     for media_type, identities in sorted(media_references.items()):
         for identity in sorted(identities):
-            relative_path = bindings[media_type][2] / identity
-            data = generated_files.get(relative_path)
-            if data is None:
+            relative_path = bindings[media_type][1] / identity
+            path = location_child(config.media.asset_root, relative_path).path
+            if not path.is_file():
                 raise FileNotFoundError(
-                    "generated media required by accepted documents is missing: "
+                    "shared media required by prepared documents is missing: "
                     f"{relative_path.as_posix()}"
                 )
-            files[relative_path] = data
+            asset_references.append(relative_path.as_posix())
 
     return files, {
         "eligible_doc_ids": sorted(document_ids),
         "excluded_doc_ids": [],
+        "asset_references": sorted(set(asset_references)),
         "media_references": {
             media_type: sorted(identities)
             for media_type, identities in sorted(media_references.items())
@@ -456,10 +414,15 @@ def build_preview_snapshot_files(
     }
 
 
+def snapshot_revision(files: Mapping[Path, bytes], asset_references: list[str]) -> str:
+    """Bind captured JSON and reference identities, never current asset bytes."""
+    return "sha256:" + sha256_bytes(json_bytes({"files": files_revision(files), "asset_references": asset_references}))
+
+
 def _preview_manifest_payload(
     generated_revision: str,
     files: Mapping[Path, bytes],
-    *, source_revision: str,
+    *, source_revision: str, asset_references: list[str],
 ) -> dict[str, Any]:
     records = [
         file_record(relative_path.as_posix(), data)
@@ -471,10 +434,21 @@ def _preview_manifest_payload(
         "completed_at": utc_now(),
         "generated_revision": generated_revision,
         "source_revision": source_revision,
-        "preview_revision": files_revision(files),
+        "preview_revision": snapshot_revision(files, asset_references),
         "file_count": len(records),
         "files": records,
+        "asset_references": asset_references,
     }
+
+
+def _validate_asset_references(config: DocsWorkspaceConfig, references: Any) -> None:
+    """Validate identities only; changing current asset bytes never invalidates Preview."""
+    if not isinstance(references, list) or any(not isinstance(item, str) for item in references):
+        raise ValueError("Preview asset_references must be an array of identities")
+    if references != sorted(set(references)):
+        raise ValueError("Preview asset_references must be sorted and unique")
+    for identity in references:
+        config.assets.reference_path(identity)
 
 
 def validate_preview_snapshot(
@@ -498,6 +472,7 @@ def validate_preview_snapshot(
         raise RuntimeError("Preview snapshot for the workspace has an unsupported manifest")
     if "scope" in manifest or manifest.get("stage") != "preview":
         raise RuntimeError("Preview snapshot must identify Preview without scope; prepare a fresh snapshot before activation")
+    _validate_asset_references(config, manifest.get("asset_references"))
     files = _files_from_root(
         preview_root,
         excluded=(PREVIEW_MANIFEST_FILENAME,),
@@ -511,7 +486,7 @@ def validate_preview_snapshot(
             f"Preview snapshot for the workspace is stale: files do not match "
             f"{PREVIEW_MANIFEST_FILENAME}"
         )
-    revision = files_revision(files)
+    revision = snapshot_revision(files, manifest["asset_references"])
     if manifest.get("preview_revision") != revision:
         raise RuntimeError(
             "Preview snapshot for the workspace is stale: revision does not match"
@@ -521,6 +496,7 @@ def validate_preview_snapshot(
 
 def write_preview_snapshot(
     repo_root: Path, *, files: Mapping[Path, bytes], generated_revision: str, source_revision: str,
+    asset_references: list[str],
 ) -> dict[str, Any]:
     """Replace the prepared snapshot and record completion only after byte verification.
 
@@ -528,6 +504,7 @@ def write_preview_snapshot(
     leaves no valid completion receipt; Prepare Preview is the recovery operation.
     """
     config = load_docs_workspace_config(repo_root)
+    _validate_asset_references(config, asset_references)
     preview_root = config.workspace_root.path / "preview"
     if preview_root.is_symlink():
         raise ValueError("Preview root must not be a symlink")
@@ -549,7 +526,7 @@ def write_preview_snapshot(
     actual = _files_from_root(preview_root, excluded=(PREVIEW_MANIFEST_FILENAME,))
     if actual != files:
         raise RuntimeError("Preview snapshot bytes did not verify")
-    manifest = _preview_manifest_payload(generated_revision, files, source_revision=source_revision)
+    manifest = _preview_manifest_payload(generated_revision, files, source_revision=source_revision, asset_references=asset_references)
     completion.write_bytes(json_bytes(manifest))
     validate_preview_snapshot(repo_root)
     return manifest

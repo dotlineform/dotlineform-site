@@ -113,20 +113,20 @@ def docs_management_get_payload(repo_root: Path, path: str, params: dict[str, li
             stage=docs_api_query_value(params, "stage") if "stage" in params else None,
         )
     if path == routes.CATALOGUE_MEDIA_TARGETS_PATH:
-        return docs_catalogue_media.read_catalogue_media_targets(repo_root)
+        return docs_catalogue_media.read_catalogue_media_targets(repo_root, stage=docs_api_query_value(params, "stage"))
     if path == routes.CATALOGUE_MEDIA_CONFIG_PATH:
-        return docs_catalogue_media.read_catalogue_media_config(repo_root)
+        return docs_catalogue_media.local_catalogue_media_config(repo_root, stage=docs_api_query_value(params, "stage"))
     if path == routes.CATALOGUE_WORK_PATH:
-        return docs_catalogue_media.read_catalogue_work(
-            repo_root, docs_api_query_value(params, "work_id"),
+        return docs_catalogue_media.local_catalogue_work(
+            repo_root, docs_api_query_value(params, "work_id"), stage=docs_api_query_value(params, "stage"),
         )
     if path == routes.CATALOGUE_SERIES_PATH:
         return docs_catalogue_media.read_catalogue_series(
-            repo_root, docs_api_query_value(params, "series_id"),
+            repo_root, docs_api_query_value(params, "series_id"), stage=docs_api_query_value(params, "stage"),
         )
     if path == routes.CATALOGUE_GALLERY_PATH:
         return docs_catalogue_media.read_catalogue_gallery(
-            repo_root, docs_api_query_value(params, "gallery_id"),
+            repo_root, docs_api_query_value(params, "gallery_id"), stage=docs_api_query_value(params, "stage"),
         )
     if path == routes.UNPUBLISHABLE_REPORT_PATH:
         return docs_unpublishable_report.build_unpublishable_report(

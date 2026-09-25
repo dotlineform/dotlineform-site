@@ -10,18 +10,23 @@ import json
 from pathlib import Path
 import re
 from typing import Any
-from urllib.parse import urlsplit
+from urllib.parse import quote, urlsplit
 
-from pipeline_config import load_pipeline_config
-from studio.services.catalogue.catalogue_output_paths import catalogue_output_workspace, output_path
-
-CATALOGUE_THUMBNAIL_PREFIX = "/docs/catalogue-thumbnails/"
+from studio.services.catalogue.catalogue_output_paths import catalogue_workspace_config, output_path
 
 
-def _read_generated(repo_root: Path, relative: str) -> dict[str, Any]:
+def _read_generated(repo_root: Path, relative: str, *, stage: str) -> dict[str, Any]:
     try:
-        workspace = catalogue_output_workspace(repo_root)
-        payload = json.loads(output_path(workspace, relative).read_text(encoding="utf-8"))
+        workspace = catalogue_workspace_config(repo_root)
+        location = workspace.catalogue.stage_location(stage)
+        if stage == "preview":
+            from docs_preview_reads import _snapshot_file
+
+            prefix = location.path.relative_to(workspace.workspace_root.path / "preview")
+            data = _snapshot_file(repo_root, prefix / relative)
+        else:
+            data = output_path(location, relative).read_bytes()
+        payload = json.loads(data)
     except (OSError, ValueError) as exc:
         raise ValueError("Generated Catalogue data is unavailable") from exc
     if not isinstance(payload, dict):
@@ -67,9 +72,13 @@ def _safe_media_url(value: Any) -> str:
     return ""
 
 
-def read_catalogue_media_config(repo_root: Path) -> dict[str, Any]:
+def read_catalogue_media_config(repo_root: Path, *, stage: str) -> dict[str, Any]:
     """Read the producer's shared public policy without exposing private pipeline inputs."""
-    payload = _read_generated(repo_root, "media-config.json")
+    return validate_catalogue_media_config(_read_generated(repo_root, "media-config.json", stage=stage))
+
+
+def validate_catalogue_media_config(payload: dict[str, Any]) -> dict[str, Any]:
+    """Validate captured policy without reading another stage or canonical data."""
     header = payload.get("header")
     if not isinstance(header, dict) or header.get("schema") != "catalogue_media_config_v1":
         raise ValueError("Generated Catalogue media configuration is unavailable")
@@ -91,9 +100,9 @@ def read_catalogue_media_config(repo_root: Path) -> dict[str, Any]:
     return payload
 
 
-def read_catalogue_work_index(repo_root: Path) -> dict[str, dict[str, Any]]:
+def read_catalogue_work_index(repo_root: Path, *, stage: str) -> dict[str, dict[str, Any]]:
     """Read the generated Work inventory without loading Series or by-ID records."""
-    payload = _read_generated(repo_root, "works/works_index.json")
+    payload = _read_generated(repo_root, "works/works_index.json", stage=stage)
     works = payload.get("works")
     if not isinstance(works, dict):
         raise ValueError("Generated Catalogue Work index is unavailable")
@@ -104,17 +113,17 @@ def read_catalogue_work_index(repo_root: Path) -> dict[str, dict[str, Any]]:
     return works
 
 
-def read_catalogue_media_targets(repo_root: Path) -> dict[str, Any]:
+def read_catalogue_media_targets(repo_root: Path, *, stage: str) -> dict[str, Any]:
     """Expose Work, Series and Gallery search identities from generated indexes."""
     targets = []
-    for work_id, work in read_catalogue_work_index(repo_root).items():
+    for work_id, work in read_catalogue_work_index(repo_root, stage=stage).items():
         year = work.get("year_display")
         targets.append({
             "family": "catalogue", "target_type": "work", "target_id": work_id,
             "title": _text(work.get("title"), "title"),
             "meta": [year] if isinstance(year, str) and year else [],
         })
-    series = _read_generated(repo_root, "series/series_index.json").get("series")
+    series = _read_generated(repo_root, "series/series_index.json", stage=stage).get("series")
     if not isinstance(series, dict):
         raise ValueError("Generated Catalogue Series index is unavailable")
     for series_id, record in series.items():
@@ -128,7 +137,7 @@ def read_catalogue_media_targets(repo_root: Path) -> dict[str, Any]:
             "family": "catalogue", "target_type": "series", "target_id": series_id,
             "title": title.strip(), "meta": [year] if isinstance(year, str) and year else [],
         })
-    payload = _read_generated(repo_root, "galleries/galleries_index.json")
+    payload = _read_generated(repo_root, "galleries/galleries_index.json", stage=stage)
     galleries, header = payload.get("galleries"), payload.get("header")
     if not isinstance(galleries, dict) or not isinstance(header, dict) or header.get("schema") != "catalogue_galleries_index_v1" or type(header.get("count")) is not int or header["count"] != len(galleries):
         raise ValueError("Generated Catalogue Gallery index is unavailable")
@@ -146,10 +155,10 @@ def read_catalogue_media_targets(repo_root: Path) -> dict[str, Any]:
     return {"ok": True, "schema_version": "docs_semantic_token_target_lookup_v2", "targets": targets}
 
 
-def read_catalogue_work(repo_root: Path, work_id: str) -> dict[str, Any]:
+def read_catalogue_work(repo_root: Path, work_id: str, *, stage: str) -> dict[str, Any]:
     """Return the generated consumer record; browser presentation belongs to the shared renderer."""
     work_id = _work_identity(work_id)
-    payload = _read_generated(repo_root, f"works/index/{work_id}.json")
+    payload = _read_generated(repo_root, f"works/index/{work_id}.json", stage=stage)
     work = payload.get("work")
     if not isinstance(work, dict) or work.get("work_id") != work_id:
         raise ValueError(f"Generated data does not match Work {work_id}")
@@ -157,11 +166,11 @@ def read_catalogue_work(repo_root: Path, work_id: str) -> dict[str, Any]:
     return payload
 
 
-def read_catalogue_series(repo_root: Path, series_id: str) -> dict[str, Any]:
+def read_catalogue_series(repo_root: Path, series_id: str, *, stage: str) -> dict[str, Any]:
     """Read exact ordered membership without requiring documents or member Work reads."""
     if not isinstance(series_id, str) or not re.fullmatch(r"[0-9]{3}", series_id):
         raise ValueError("An exact three-digit Catalogue Series ID is required")
-    payload = _read_generated(repo_root, f"series/index/{series_id}.json")
+    payload = _read_generated(repo_root, f"series/index/{series_id}.json", stage=stage)
     series = payload.get("series")
     if not isinstance(series, dict) or series.get("series_id") != series_id:
         raise ValueError("Generated Series data does not match the selected Series")
@@ -182,10 +191,10 @@ def read_catalogue_series(repo_root: Path, series_id: str) -> dict[str, Any]:
     return payload
 
 
-def read_catalogue_gallery(repo_root: Path, gallery_id: str) -> dict[str, Any]:
+def read_catalogue_gallery(repo_root: Path, gallery_id: str, *, stage: str) -> dict[str, Any]:
     """Read one exact Gallery and its ordered Work references without member reads."""
     gallery_id = _gallery_identity(gallery_id)
-    payload = _read_generated(repo_root, f"galleries/index/{gallery_id}.json")
+    payload = _read_generated(repo_root, f"galleries/index/{gallery_id}.json", stage=stage)
     gallery, header = payload.get("gallery"), payload.get("header")
     if not isinstance(gallery, dict) or gallery.get("gallery_id") != gallery_id or not isinstance(header, dict) or header.get("gallery_id") != gallery_id or header.get("schema") != "gallery_record_v1":
         raise ValueError("Generated Gallery data does not match the selected Gallery")
@@ -206,21 +215,21 @@ def read_catalogue_gallery(repo_root: Path, gallery_id: str) -> dict[str, Any]:
     return payload
 
 
-def catalogue_thumbnail_path(repo_root: Path, request_path: str) -> Path:
-    """Serve only configured Work thumbnail variants within generated Catalogue output."""
-    if not request_path.startswith(CATALOGUE_THUMBNAIL_PREFIX):
-        raise ValueError("Unsupported Catalogue thumbnail path")
-    filename = request_path[len(CATALOGUE_THUMBNAIL_PREFIX):]
-    pipeline = load_pipeline_config(repo_root=repo_root)
-    variant = pipeline["variants"]["thumb"]
-    sizes = "|".join(re.escape(str(size)) for size in variant["sizes"])
-    pattern = rf"[0-9]{{5}}-{re.escape(variant['suffix'])}-(?:{sizes})\.{re.escape(pipeline['encoding']['format'])}"
-    if not re.fullmatch(pattern, filename):
-        raise ValueError("An exact configured Work thumbnail is required")
-    path = output_path(catalogue_output_workspace(repo_root), f"works/thumbs/{filename}")
-    if not path.is_file():
-        raise FileNotFoundError("Generated Catalogue thumbnail is unavailable")
-    return path
+def local_catalogue_media_config(repo_root: Path, *, stage: str) -> dict[str, Any]:
+    """Project local URLs at the API boundary, preserving stored stage JSON."""
+    payload = read_catalogue_media_config(repo_root, stage=stage)
+    assets = catalogue_workspace_config(repo_root).assets
+    payload["primary"]["base_urls"]["works"] = assets.url(assets.work_primary) + "/"
+    return payload
+
+
+def local_catalogue_work(repo_root: Path, work_id: str, *, stage: str) -> dict[str, Any]:
+    """Resolve owned downloads locally; user-authored external links stay external."""
+    payload = read_catalogue_work(repo_root, work_id, stage=stage)
+    assets = catalogue_workspace_config(repo_root).assets
+    for download in payload["work"].get("downloads", []):
+        download["url"] = assets.url(assets.work_files) + "/" + quote(download["filename"], safe="")
+    return payload
 
 
 def catalogue_media_record(payload: dict[str, Any], work_id: str) -> dict[str, Any]:

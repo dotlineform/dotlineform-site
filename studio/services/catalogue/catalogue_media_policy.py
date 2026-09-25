@@ -36,7 +36,7 @@ def catalogue_thumbnail_paths(repo_root: Path, records: CatalogueSourceRecords) 
     pipeline = load_pipeline_config(repo_root=repo_root)
     thumb = pipeline["variants"]["thumb"]
     return {
-        f"works/thumbs/{item_id}-{thumb['suffix']}-{size}.{pipeline['encoding']['format']}"
+        f"{item_id}-{thumb['suffix']}-{size}.{pipeline['encoding']['format']}"
         for item_id, record in records.works.items() if record.get("project_filename")
         for size in thumb["sizes"]
     }

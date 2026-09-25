@@ -103,28 +103,29 @@ export function createDocsViewerWorkspaceProvider(options) {
   }
   if (source && typeof source.readCatalogueMediaTargets === "function") {
     provider.readCatalogueMediaTargets = function () {
-      return source.readCatalogueMediaTargets();
+      return source.readCatalogueMediaTargets(activeStage());
     };
   }
-  var mediaPolicyRead = null;
+  var mediaPolicyReads = new Map();
   if (source && typeof source.readCatalogueMediaConfig === "function"
     || routeContext().routeConfig && routeContext().routeConfig.appKind === "public") {
     provider.readCatalogueMediaConfig = function () {
       // Coalesce concurrent image reads, then revalidate policy on the next activation.
-      if (!mediaPolicyRead) {
-        mediaPolicyRead = Promise.resolve().then(function () {
-          if (source && typeof source.readCatalogueMediaConfig === "function") return source.readCatalogueMediaConfig();
+      var stage = activeStage();
+      if (!mediaPolicyReads.has(stage)) {
+        mediaPolicyReads.set(stage, Promise.resolve().then(function () {
+          if (source && typeof source.readCatalogueMediaConfig === "function") return source.readCatalogueMediaConfig(stage);
           return readPublicCatalogueMediaConfig(routeContext().routeConfig.catalogueMediaConfigUrl, function (url, optionsForFetch) {
             return settings.window.fetch(url, optionsForFetch);
           });
-        }).then(validateCatalogueMediaPolicy).finally(function () { mediaPolicyRead = null; });
+        }).then(validateCatalogueMediaPolicy).finally(function () { mediaPolicyReads.delete(stage); }));
       }
-      return mediaPolicyRead;
+      return mediaPolicyReads.get(stage);
     };
   }
   if (source && typeof source.readCatalogueWork === "function") {
     provider.readCatalogueWork = function (workId) {
-      return source.readCatalogueWork(workId);
+      return source.readCatalogueWork(workId, activeStage());
     };
   } else if (routeContext().routeConfig && routeContext().routeConfig.appKind === "public") {
     provider.readCatalogueWork = function (workId) {
@@ -134,7 +135,7 @@ export function createDocsViewerWorkspaceProvider(options) {
     };
   }
   if (source && typeof source.readCatalogueSeries === "function") {
-    provider.readCatalogueSeries = function (seriesId) { return source.readCatalogueSeries(seriesId); };
+    provider.readCatalogueSeries = function (seriesId) { return source.readCatalogueSeries(seriesId, activeStage()); };
   } else if (routeContext().routeConfig && routeContext().routeConfig.appKind === "public") {
     provider.readCatalogueSeries = function (seriesId) {
       return readPublicCatalogueSeries(routeContext().routeConfig.catalogueSeriesRecordsBaseUrl, seriesId, function (url, optionsForFetch) {
@@ -150,7 +151,7 @@ export function createDocsViewerWorkspaceProvider(options) {
     };
   }
   if (source && typeof source.readCatalogueGallery === "function") {
-    provider.readCatalogueGallery = function (galleryId) { return source.readCatalogueGallery(galleryId); };
+    provider.readCatalogueGallery = function (galleryId) { return source.readCatalogueGallery(galleryId, activeStage()); };
   } else if (routeContext().routeConfig && routeContext().routeConfig.appKind === "public") {
     provider.readCatalogueGallery = function (galleryId) {
       return readPublicCatalogueGallery(routeContext().routeConfig.catalogueGalleryRecordsBaseUrl, galleryId, function (url, optionsForFetch) {

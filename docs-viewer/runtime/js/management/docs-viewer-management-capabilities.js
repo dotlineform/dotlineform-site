@@ -86,7 +86,7 @@ export function stageDeployRepoCapability(capabilities, stage) {
   if (!service || service.preview !== true || service.apply !== true) {
     return {
       available: false,
-      reason: "Deploy Repo requires a writable local management service."
+      reason: "Publish requires a writable local management service."
     };
   }
   if (
@@ -101,7 +101,7 @@ export function stageDeployRepoCapability(capabilities, stage) {
       available: false,
       reason: String(
         stageCapability && stageCapability.reason
-        || "Deploy Repo is unavailable for this stage."
+        || "Publish is unavailable for this stage."
       ).trim()
     };
   }

@@ -148,7 +148,7 @@ def semantic_token_broken_entries(
     if registry is None:
         raise ValueError("Semantic-token registry is unavailable.")
     entries: list[dict[str, Any]] = []
-    media_policy_available: bool | None = None
+    media_policy_available: dict[str, bool] = {}
     for meta, body in sources:
         for token in parse_semantic_tokens(body, registry=registry):
             reason = ""
@@ -156,20 +156,20 @@ def semantic_token_broken_entries(
                 reason = "unsupported_kind"
             else:
                 try:
-                    if media_policy_available is None:
+                    if meta.stage not in media_policy_available:
                         try:
-                            read_catalogue_media_config(repo_root)
-                            media_policy_available = True
+                            read_catalogue_media_config(repo_root, stage=meta.stage)
+                            media_policy_available[meta.stage] = True
                         except ValueError:
-                            media_policy_available = False
-                    if not media_policy_available:
+                            media_policy_available[meta.stage] = False
+                    if not media_policy_available[meta.stage]:
                         raise ValueError("Generated Catalogue media configuration is unavailable")
                     if token.target_type == "series":
-                        read_catalogue_series(repo_root, token.target_id)
+                        read_catalogue_series(repo_root, token.target_id, stage=meta.stage)
                     elif token.target_type == "gallery":
-                        read_catalogue_gallery(repo_root, token.target_id)
+                        read_catalogue_gallery(repo_root, token.target_id, stage=meta.stage)
                     else:
-                        catalogue_media_record(read_catalogue_work(repo_root, token.target_id), token.target_id)
+                        catalogue_media_record(read_catalogue_work(repo_root, token.target_id, stage=meta.stage), token.target_id)
                 except ValueError:
                     reason = f"missing_{token.target_type}" if token.target_type in {"series", "gallery"} else "missing_media"
             if not reason:

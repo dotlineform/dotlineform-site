@@ -38,20 +38,20 @@ export function createDocsViewerManagementSourceAdapter(options) {
     readDocumentLinkTargets: function (target) {
       return readDocumentLinkTargets(target, clientOptions());
     },
-    readCatalogueMediaTargets: function () {
-      return readCatalogueMediaTargets(clientOptions());
+    readCatalogueMediaTargets: function (stage) {
+      return readCatalogueMediaTargets(stage, clientOptions());
     },
-    readCatalogueMediaConfig: function () {
-      return readCatalogueMediaConfig(clientOptions());
+    readCatalogueMediaConfig: function (stage) {
+      return readCatalogueMediaConfig(stage, clientOptions());
     },
-    readCatalogueWork: function (workId) {
-      return readCatalogueWork(workId, clientOptions());
+    readCatalogueWork: function (workId, stage) {
+      return readCatalogueWork(workId, stage, clientOptions());
     },
-    readCatalogueSeries: function (seriesId) {
-      return readCatalogueSeries(seriesId, clientOptions());
+    readCatalogueSeries: function (seriesId, stage) {
+      return readCatalogueSeries(seriesId, stage, clientOptions());
     },
-    readCatalogueGallery: function (galleryId) {
-      return readCatalogueGallery(galleryId, clientOptions());
+    readCatalogueGallery: function (galleryId, stage) {
+      return readCatalogueGallery(galleryId, stage, clientOptions());
     },
     readSource: function (target, optionsForRead) {
       return readManagedDocSource(target, clientOptions(optionsForRead));

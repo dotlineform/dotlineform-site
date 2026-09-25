@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-import mimetypes
 from pathlib import Path
 from typing import Callable, Iterable, Mapping
 
@@ -33,7 +32,6 @@ class MediaBuildContext:
 
 MediaProducer = Callable[[MediaBuildContext], Iterable[str]]
 REGISTERED_MEDIA_PRODUCERS: dict[str, MediaProducer] = {"mermaid": produce_mermaid_svg}
-IGNORED_MEDIA_FILENAMES = frozenset({".DS_Store", ".gitkeep"})
 
 
 def referenced_build_media_identities(
@@ -72,7 +70,7 @@ def run_registered_media_builds(
     requested_generated_identities: Mapping[str, Iterable[str]] | None = None,
     replace_existing: bool = True,
 ) -> list[dict[str, object]]:
-    """Run explicitly configured media producers directly into generated locations."""
+    """Run explicitly configured media producers directly into shared assets."""
 
     if not config.media.build_sources:
         return []
@@ -87,7 +85,7 @@ def run_registered_media_builds(
             )
     available = producers if producers is not None else REGISTERED_MEDIA_PRODUCERS
     target_locations = [
-        config.media.types[build.publishes_to].generated_location
+        config.media.types[build.publishes_to].asset_location
         for build in config.media.build_sources.values()
     ]
     remote_client = authenticated_remote_client_for_locations(
@@ -109,7 +107,7 @@ def run_registered_media_builds(
         )
         generated = artifact_location_adapter(
             repo_root,
-            generated_media.generated_location,
+            generated_media.asset_location,
             served_path_prefix=generated_media.served_path_prefix,
             remote_client=remote_client,
         )
@@ -195,7 +193,7 @@ def build_collection_media_snapshot(
     write: bool,
     producers: Mapping[str, MediaProducer] | None = None,
 ) -> dict[str, object]:
-    """Reconcile the exact referenced source-media set into generated output."""
+    """Produce referenced build outputs and record shared identities without media copies."""
 
     markdown_sources = collection_markdown_sources(repo_root, config)
     referenced = referenced_media_identities(config, markdown_sources)
@@ -217,75 +215,31 @@ def build_collection_media_snapshot(
 
     type_results: dict[str, dict[str, object]] = {}
     missing: list[str] = []
+    asset_references = set()
     for media_type, media in sorted(config.media.types.items()):
-        source = artifact_location_adapter(repo_root, media.source_location)
-        generated = artifact_location_adapter(
-            repo_root,
-            media.generated_location,
-            served_path_prefix=media.served_path_prefix,
-        )
-        produced = produced_by_type[media_type]
-        expected: dict[str, bytes | None] = {}
+        assets = artifact_location_adapter(repo_root, media.asset_location)
+        available = []
         for identity in referenced[media_type]:
-            source_stat = source.stat(identity)
-            if identity in produced:
-                if source_stat is not None:
-                    raise RuntimeError(
-                        f"Docs media {config.stage}/{media_type}/{identity} has both direct and producer source authority"
-                    )
-                expected[identity] = None
-                continue
-            if source_stat is None:
+            if assets.stat(identity) is None and (write or identity not in produced_by_type[media_type]):
                 missing.append(f"{media.reference_prefix.as_posix()}/{identity}")
                 continue
-            expected[identity] = source.read(identity)
-
-        existing = {
-            item.identity
-            for item in generated.list()
-            if Path(item.identity).name not in IGNORED_MEDIA_FILENAMES
-        }
-        stale = sorted(existing - set(expected))
-        changed: list[str] = []
-        unchanged: list[str] = []
-        for identity, data in sorted(expected.items()):
-            if data is None:
-                if write and generated.stat(identity) is None:
-                    raise RuntimeError(
-                        f"Docs media producer did not generate {config.stage}/{media_type}/{identity}"
-                    )
-                unchanged.append(identity)
-                continue
-            if generated.stat(identity) is not None and generated.verify_bytes(identity, data):
-                unchanged.append(identity)
-                continue
-            changed.append(identity)
-            if write:
-                generated.replace(
-                    identity,
-                    data,
-                    content_type=mimetypes.guess_type(identity)[0] or "application/octet-stream",
-                )
-                if not generated.verify_bytes(identity, data):
-                    raise RuntimeError(
-                        f"Docs generated media did not verify: {config.stage}/{media_type}/{identity}"
-                    )
-        if write:
-            for identity in stale:
-                generated.delete(identity)
+            available.append(identity)
+            relative = media.asset_location.path.relative_to(config.media.asset_root.path) / identity
+            asset_references.add(relative.as_posix())
         type_results[media_type] = {
-            "referenced": len(referenced[media_type]),
-            "generated": len(expected),
-            "changed": changed,
-            "unchanged": unchanged,
-            "removed": stale,
+            "referenced": len(referenced[media_type]), "available": len(available),
+            "identities": available,
         }
+
+    if write and missing:
+        raise FileNotFoundError("Required shared document media is unavailable: " + ", ".join(sorted(missing)))
 
     return {
         "stage": config.stage,
         "write": write,
         "source_documents": len(markdown_sources),
         "missing_references": sorted(missing),
+        "asset_references": sorted(asset_references),
         "types": type_results,
         "producer_builds": producer_builds,
     }

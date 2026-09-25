@@ -160,8 +160,8 @@ function buildWorkDownloadHref(state, filename) {
   const mediaConfig = runtime && runtime.media && typeof runtime.media === "object" ? runtime.media : {};
   const media = mediaConfig.media && typeof mediaConfig.media === "object" ? mediaConfig.media : mediaConfig;
   const base = normalizeText(media.base).replace(/\/+$/, "");
-  const worksFiles = normalizeText(media.works_files || (media.paths && media.paths.works_files)).replace(/^\/?/, "/").replace(/\/+$/, "");
-  if (!base || !worksFiles) return "";
+  const worksFiles = normalizeText(media.works_files).replace(/^\/?/, "/").replace(/\/+$/, "");
+  if (!worksFiles) return "";
   return `${base}${worksFiles}/${encodeURIComponent(normalizeText(filename))}`;
 }
 

@@ -10,7 +10,7 @@ from pathlib import Path
 from typing import Any, Iterable
 
 from docs_lifecycle_paths import render_json, write_text_atomic
-from docs_workspace_config import DocsStageConfig, resolve_location_path
+from docs_workspace_config import DocsStageConfig, load_docs_workspace_config, resolve_location_path
 
 
 BUILD_MANIFEST_FILENAME = "build-manifest.json"
@@ -42,7 +42,7 @@ def _managed_files(root: Path, *, excluded: Iterable[str] = ()) -> list[Path]:
         if not path.is_file() or path.name in IGNORED_FILENAMES:
             continue
         relative = path.relative_to(root).as_posix()
-        if relative in excluded_set:
+        if any(Path(relative).is_relative_to(entry) for entry in excluded_set):
             continue
         paths.append(path)
     return paths
@@ -85,7 +85,11 @@ def write_build_manifest(repo_root: Path, config: DocsStageConfig) -> dict[str, 
     source_root = _safe_root(repo_root, config, role="source")
     generated_root = _safe_root(repo_root, config, role="generated")
     source_files = _managed_files(source_root)
-    generated_files = _managed_files(generated_root, excluded=(BUILD_MANIFEST_FILENAME,))
+    excluded = [BUILD_MANIFEST_FILENAME]
+    if config.stage == "working":
+        workspace = load_docs_workspace_config(repo_root, docs_base_dir=config.workspace_root.path)
+        excluded.append(workspace.catalogue.working.path.relative_to(generated_root).as_posix())
+    generated_files = _managed_files(generated_root, excluded=excluded)
     records = [
         {
             "path": path.relative_to(generated_root).as_posix(),

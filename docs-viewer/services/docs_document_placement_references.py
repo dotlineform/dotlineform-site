@@ -207,7 +207,7 @@ def relocate_document_media(
         target_media = target_owner.media.types.get(media_type)
         if target_media is None:
             raise ValueError(f"Destination does not support {media_type} media")
-        copy_asset(asset_path(source_media.source_location, identity), asset_path(target_media.source_location, identity))
+        copy_asset(asset_path(source_media.asset_location, identity), asset_path(target_media.asset_location, identity))
         for source_prefix, target_prefix in (
             (source_media.reference_prefix.as_posix(), target_media.reference_prefix.as_posix()),
             (source_media.served_path_prefix, target_media.served_path_prefix),
@@ -243,7 +243,7 @@ def relocate_document_media(
         if path.startswith(("../", "./")) and not path.endswith(".md"):
             original = (source.document.path.parent / unquote(path)).resolve()
             for media_type, media in source_owner.media.types.items():
-                root = resolve_location_path(repo_root, media.source_location).resolve()
+                root = resolve_location_path(repo_root, media.asset_location).resolve()
                 if original.is_relative_to(root):
                     identity = quote(original.relative_to(root).as_posix(), safe="/-._~")
                     confined_source_path(root, original)

@@ -87,7 +87,7 @@ def _source_path(
         location = media.location if media is not None else None
     elif role == "source":
         media = config.media.types.get(media_type)
-        location = media.source_location if media is not None else None
+        location = media.asset_location if media is not None else None
     else:
         raise ValueError(f"unsupported Docs media inventory role: {role}")
     if location is None:

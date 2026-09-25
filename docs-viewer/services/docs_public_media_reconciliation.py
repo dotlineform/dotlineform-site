@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+import hashlib
 import html
 import json
 import mimetypes
@@ -13,16 +14,20 @@ from urllib.parse import unquote
 
 from docs_artifact_locations import (
     R2_PROVIDER,
+    ArtifactLocation,
+    ArtifactStat,
     ArtifactLocationAdapter,
     artifact_location_adapter,
     authenticated_remote_client_for_locations,
     normalize_artifact_identity,
 )
-from docs_workspace_config import DocsStageConfig, public_media_bindings
+from docs_workspace_config import (
+    DocsStageConfig, DocsPublicMediaConfig, public_media_bindings,
+    load_docs_workspace_config, safe_relative_path,
+)
 
 
 PUBLIC_MEDIA_RECONCILIATION_SCHEMA_VERSION = "docs_public_media_reconciliation_v2"
-IGNORED_PUBLIC_MEDIA_IDENTITIES = frozenset({".DS_Store", ".gitkeep"})
 HTML_START_TAG_PATTERN = re.compile(
     r"<(?P<body>[A-Za-z][A-Za-z0-9:-]*(?:[^>\"']|\"[^\"]*\"|'[^']*')*)>",
     re.DOTALL,
@@ -92,491 +97,173 @@ def referenced_public_media(
     }
 
 
-def _is_ignored_public_identity(identity: str) -> bool:
-    return Path(identity).name in IGNORED_PUBLIC_MEDIA_IDENTITIES
+def publication_media_bindings(repo_root: Path, config: DocsStageConfig) -> dict[str, tuple[ArtifactLocation, DocsPublicMediaConfig]]:
+    """Pair each shared family with its unchanged configured public destination."""
+    bindings = {
+        key: (collection.media.types[public.media_type].asset_location, public)
+        for key, (collection, public) in public_media_bindings(config).items()
+    }
+    workspace = load_docs_workspace_config(repo_root)
+    settings = json.loads((repo_root / "site-tools/config/site-tools.json").read_bytes())["media"]
+    for key, source, prefix_key in (
+        ("works/primary", workspace.assets.work_primary, "image_works"),
+        ("works/files", workspace.assets.work_files, "files_works"),
+    ):
+        prefix = safe_relative_path(settings[prefix_key].strip("/"), field=f"media.{prefix_key}")
+        if prefix.parts[0] == "archive":
+            raise ValueError("Catalogue publication cannot write the archive")
+        bindings[key] = (source, DocsPublicMediaConfig(
+            key, prefix, ArtifactLocation(R2_PROVIDER, prefix),
+            settings["base"].rstrip("/") + "/" + prefix.as_posix(),
+        ))
+    destination = workspace.catalogue.public_projection.location
+    bindings["works/thumbs"] = (workspace.assets.work_thumbnails, DocsPublicMediaConfig(
+        "works/thumbs", Path("works/thumbs"),
+        ArtifactLocation(destination.provider, destination.path / "works/thumbs"),
+        "/" + (destination.path / "works/thumbs").relative_to("site").as_posix(),
+    ))
+    return bindings
 
 
-def _type_adapters(
-    repo_root: Path,
-    config: DocsStageConfig,
-    media_type: str,
-    *,
-    remote_client: object | None,
-) -> tuple[ArtifactLocationAdapter, ArtifactLocationAdapter]:
-    projection = config.public_projection
-    if projection is None:
-        raise ValueError("workspace has no public media projection")
-    collection, public = public_media_bindings(config)[media_type]
-    published = collection.media.types[public.media_type]
-    return (
-        artifact_location_adapter(
-            repo_root,
-            published.preview_location,
-            served_path_prefix=published.served_path_prefix,
-        ),
-        artifact_location_adapter(
-            repo_root,
-            public.location,
-            served_path_prefix=public.served_path_prefix,
-            remote_client=remote_client,  # type: ignore[arg-type]
-        ),
-    )
+def publication_asset_references(repo_root: Path, config: DocsStageConfig, identities: list[str]) -> dict[tuple[str, str], tuple[str, ...]]:
+    """Resolve exactly the identities recorded by Prepare Preview."""
+    assets = load_docs_workspace_config(repo_root).assets
+    bindings = publication_media_bindings(repo_root, config)
+    references = {}
+    for identity in identities:
+        source = assets.reference_path(identity)
+        matches = [(key, source.relative_to(location.path).as_posix())
+                   for key, (location, _public) in bindings.items()
+                   if source.is_relative_to(location.path) and source != location.path]
+        if len(matches) != 1:
+            raise ValueError(f"Asset has no exact public destination: {identity}")
+        references[matches[0]] = ("Preview",)
+    return references
 
 
-def _remote_client(
-    repo_root: Path,
-    config: DocsStageConfig,
-    *,
-    client: object | None,
-    env_files: Iterable[Path] | None,
-    environ: Mapping[str, str] | None,
-) -> tuple[object | None, str]:
-    projection = config.public_projection
-    if projection is None:
-        return None, "workspace has no public media projection"
-    locations = [media.location for _collection, media in public_media_bindings(config).values()]
+def _matches_public(adapter: ArtifactLocationAdapter, identity: str, data: bytes, stat: ArtifactStat | None, *, remote: bool) -> bool:
+    if stat is None or stat.size != len(data):
+        return False
+    if remote:
+        # Transient transfer comparison, never a persisted asset hash/version.
+        return stat.etag.strip('"').lower() == hashlib.md5(data, usedforsecurity=False).hexdigest()
+    return adapter.read(identity) == data
+
+
+def _reconcile(
+    repo_root: Path, config: DocsStageConfig, references: Mapping[tuple[str, str], tuple[str, ...]],
+    *, write: bool, client: object | None, env_files: Iterable[Path] | None, environ: Mapping[str, str] | None,
+) -> dict[str, Any]:
+    """Transfer only captured references. Listings compare metadata, never select or delete assets."""
+    bindings = publication_media_bindings(repo_root, config)
+    selected = sorted({key for key, _identity in references})
+    if set(selected) - bindings.keys():
+        raise ValueError("Preview references an unconfigured public asset family")
+    remote_error = ""
     try:
-        return (
-            authenticated_remote_client_for_locations(
-                repo_root,
-                locations,
-                client=client,  # type: ignore[arg-type]
-                env_files=env_files,
-                environ=environ,
-            ),
-            "",
-        )
-    except Exception as exc:  # Media status must not block document publication.
-        return None, str(exc)
-
-
-def _public_stats(adapter: ArtifactLocationAdapter) -> tuple[dict[str, Any], str]:
-    try:
-        return (
-            {
-                item.identity: item
-                for item in adapter.list()
-                if not _is_ignored_public_identity(item.identity)
-            },
-            "",
+        remote_client = authenticated_remote_client_for_locations(
+            repo_root, [bindings[key][1].location for key in selected],
+            client=client, env_files=env_files, environ=environ,
         )
     except Exception as exc:
-        return {}, str(exc)
-
-
-def _reference_rows(
-    references: Mapping[tuple[str, str], tuple[str, ...]],
-    media_type: str,
-) -> list[tuple[str, tuple[str, ...]]]:
-    return [
-        (identity, referenced_by)
-        for (candidate_type, identity), referenced_by in references.items()
-        if candidate_type == media_type
-    ]
-
-
-def _published_rows(
-    adapter: ArtifactLocationAdapter,
-    references: Mapping[tuple[str, str], tuple[str, ...]],
-    media_type: str,
-) -> list[tuple[str, tuple[str, ...]]]:
-    """Use the accepted file set; references only supply diagnostics and labels."""
-    identities = {item.identity for item in adapter.list() if not _is_ignored_public_identity(item.identity)}
-    identities.update(identity for identity, _labels in _reference_rows(references, media_type))
-    return [(identity, references.get((media_type, identity), ())) for identity in sorted(identities)]
+        remote_client, remote_error = None, str(exc)
+    types = []
+    for key in selected:
+        source, public = bindings[key]
+        remote = public.location.provider == R2_PROVIDER
+        rows = sorted((identity, labels) for (family, identity), labels in references.items() if family == key)
+        items, errors = [], []
+        try:
+            source_adapter = artifact_location_adapter(repo_root, source)
+            if remote and remote_error:
+                raise RuntimeError(remote_error)
+            destination = artifact_location_adapter(
+                repo_root, public.location, served_path_prefix=public.served_path_prefix, remote_client=remote_client,
+            )
+            # One metadata LIST per remote family avoids thousands of HEAD/body reads.
+            stats = {item.identity: item for item in destination.list()} if remote else {}
+            setup_error = ""
+        except Exception as exc:
+            source_adapter = destination = None
+            stats, setup_error = {}, str(exc)
+            errors.append(setup_error)
+        for identity, labels in rows:
+            item = {
+                "media_type": key, "identity": identity, "provider": public.location.provider,
+                "referenced_by": list(labels), "source_status": "unavailable", "public_status": "unavailable",
+                "action": "unavailable", "status": "error", "size": 0, "error": setup_error,
+            }
+            try:
+                if source_adapter is None or destination is None:
+                    raise RuntimeError(setup_error)
+                data = source_adapter.read(identity)
+                if not data:
+                    raise ValueError(f"Required shared asset is empty: {key}/{identity}")
+                item.update(source_status="available", size=len(data))
+                stat = stats.get(identity) if remote else destination.stat(identity)
+                if _matches_public(destination, identity, data, stat, remote=remote):
+                    item.update(action="unchanged", status="unchanged", public_status="current")
+                else:
+                    item.update(action="copy", status="pending", public_status="different" if stat else "missing")
+                    if write:
+                        destination.replace(identity, data, content_type=mimetypes.guess_type(identity)[0] or "application/octet-stream")
+                        if not _matches_public(destination, identity, data, destination.stat(identity), remote=remote):
+                            raise RuntimeError(f"Published asset did not verify: {key}/{identity}")
+                        item.update(status="copied", public_status="current")
+            except FileNotFoundError:
+                item.update(action="missing", status="error", source_status="missing",
+                            error=f"Required shared asset is missing: {key}/{identity}")
+                errors.append(item["error"])
+            except Exception as exc:
+                item.update(status="error", error=str(exc))
+                errors.append(str(exc))
+            items.append(item)
+        errors = sorted(set(errors))
+        types.append({
+            "media_type": key, "provider": public.location.provider, "referenced_count": len(rows),
+            "available_count": sum(item["source_status"] == "available" for item in items),
+            "copy_count": sum(item["action"] == "copy" for item in items),
+            "copied_count": sum(item["status"] == "copied" for item in items),
+            "unchanged_count": sum(item["action"] == "unchanged" for item in items),
+            "missing_count": sum(item["source_status"] in {"missing", "unavailable"} for item in items),
+            "retained_count": 0, "remove_count": 0, "removed_count": 0,
+            "error_count": len(errors), "errors": errors, "items": items,
+        })
+    errors = sorted({f"{item['media_type']}: {error}" for item in types for error in item["errors"]})
+    counts = ("available_count", "copy_count", "copied_count", "unchanged_count", "missing_count",
+              "retained_count", "remove_count", "removed_count")
+    return {
+        "schema_version": PUBLIC_MEDIA_RECONCILIATION_SCHEMA_VERSION,
+        "operation": "apply" if write else "status", "stage": "preview", "referenced_count": len(references),
+        **{key: sum(item[key] for item in types) for key in counts},
+        "error_count": len(errors), "errors": errors, "types": types,
+    }
 
 
 def plan_public_media_reconciliation(
-    repo_root: Path,
-    config: DocsStageConfig,
-    references: Mapping[tuple[str, str], tuple[str, ...]],
-    *,
-    client: object | None = None,
-    env_files: Iterable[Path] | None = None,
-    environ: Mapping[str, str] | None = None,
+    repo_root: Path, config: DocsStageConfig, references: Mapping[tuple[str, str], tuple[str, ...]],
+    *, client: object | None = None, env_files: Iterable[Path] | None = None, environ: Mapping[str, str] | None = None,
 ) -> dict[str, Any]:
-    """Describe accepted media copies, missing files and exact stale-public actions."""
-
-    projection = config.public_projection
-    if projection is None:
-        raise ValueError("workspace has no public media projection")
-    remote_client, remote_error = _remote_client(
-        repo_root,
-        config,
-        client=client,
-        env_files=env_files,
-        environ=environ,
-    )
-    types: list[dict[str, Any]] = []
-    all_errors: list[str] = []
-    for media_type, (_collection, public) in sorted(public_media_bindings(config).items()):
-        rows = _reference_rows(references, media_type)
-        type_errors: list[str] = []
-        items: list[dict[str, Any]] = []
-        if public.location.provider == R2_PROVIDER and remote_error:
-            type_errors.append(remote_error)
-            published_adapter = public_adapter = None
-        else:
-            try:
-                published_adapter, public_adapter = _type_adapters(
-                    repo_root,
-                    config,
-                    media_type,
-                    remote_client=remote_client,
-                )
-            except Exception as exc:
-                type_errors.append(str(exc))
-                published_adapter = public_adapter = None
-        public_stats: dict[str, Any] = {}
-        public_list_error = ""
-        if public_adapter is not None:
-            public_stats, public_list_error = _public_stats(public_adapter)
-            if public_list_error:
-                type_errors.append(public_list_error)
-        if published_adapter is not None:
-            try:
-                rows = _published_rows(published_adapter, references, media_type)
-            except Exception as exc:
-                type_errors.append(str(exc))
-
-        for identity, referenced_by in rows:
-            source_status = "unavailable"
-            public_status = "unavailable" if public_adapter is None else "missing"
-            action = "unavailable"
-            size = 0
-            error = ""
-            published_bytes: bytes | None = None
-            if published_adapter is not None:
-                try:
-                    published_stat = published_adapter.stat(identity)
-                    if published_stat is None:
-                        source_status = "missing"
-                    else:
-                        published_bytes = published_adapter.read(identity)
-                        source_status = "available"
-                        size = len(published_bytes)
-                except Exception as exc:
-                    source_status = "unavailable"
-                    error = str(exc)
-                    type_errors.append(error)
-            public_present = identity in public_stats
-            if public_adapter is not None and not public_list_error:
-                public_status = "present" if public_present else "missing"
-            if published_bytes is None:
-                if public_adapter is not None and public_list_error:
-                    try:
-                        public_present = public_adapter.stat(identity) is not None
-                        public_status = "present" if public_present else "missing"
-                    except Exception as exc:
-                        error = str(exc)
-                        type_errors.append(error)
-                action = "missing"
-                error = error or f"Accepted media is unavailable: {media_type}/{identity}"
-                type_errors.append(error)
-            elif public_adapter is None:
-                action = "unavailable"
-            else:
-                try:
-                    public_stat = public_adapter.stat(identity)
-                    public_present = public_stat is not None
-                    public_status = "present" if public_present else "missing"
-                    if public_present and public_adapter.read(identity) == published_bytes:
-                        action = "unchanged"
-                        public_status = "current"
-                    else:
-                        action = "copy"
-                        public_status = "different" if public_present else "missing"
-                except Exception as exc:
-                    action = "copy"
-                    public_status = "unavailable"
-                    error = str(exc)
-                    type_errors.append(error)
-            items.append(
-                {
-                    "media_type": media_type,
-                    "identity": identity,
-                    "provider": public.location.provider,
-                    "referenced_by": list(referenced_by),
-                    "source_status": source_status,
-                    "public_status": public_status,
-                    "action": action,
-                    "size": size,
-                    "error": error,
-                }
-            )
-
-        if public_adapter is not None and not public_list_error:
-            referenced_identities = {identity for identity, _referenced_by in rows}
-            for identity in sorted(set(public_stats) - referenced_identities):
-                items.append(
-                    {
-                        "media_type": media_type,
-                        "identity": identity,
-                        "provider": public.location.provider,
-                        "referenced_by": [],
-                        "source_status": "not_checked",
-                        "public_status": "stale",
-                        "action": "remove",
-                        "size": int(public_stats[identity].size),
-                        "error": "",
-                    }
-                )
-        unique_errors = sorted(set(error for error in type_errors if error))
-        all_errors.extend(f"{media_type}: {error}" for error in unique_errors)
-        types.append(
-            {
-                "media_type": media_type,
-                "provider": public.location.provider,
-                "referenced_count": len(_reference_rows(references, media_type)),
-                "available_count": sum(item["source_status"] == "available" for item in items),
-                "copy_count": sum(item["action"] == "copy" for item in items),
-                "unchanged_count": sum(item["action"] == "unchanged" for item in items),
-                "retained_count": sum(item["action"] == "retain" for item in items),
-                "missing_count": sum(
-                    item["source_status"] in {"missing", "unavailable"}
-                    for item in items
-                    if item["action"] != "remove"
-                ),
-                "remove_count": sum(item["action"] == "remove" for item in items),
-                "errors": unique_errors,
-                "items": sorted(items, key=lambda item: (item["identity"], item["action"])),
-            }
-        )
-    return {
-        "schema_version": PUBLIC_MEDIA_RECONCILIATION_SCHEMA_VERSION,
-        "operation": "status",
-        "stage": "preview",
-        "referenced_count": len(references),
-        "available_count": sum(item["available_count"] for item in types),
-        "copy_count": sum(item["copy_count"] for item in types),
-        "unchanged_count": sum(item["unchanged_count"] for item in types),
-        "retained_count": sum(item["retained_count"] for item in types),
-        "missing_count": sum(item["missing_count"] for item in types),
-        "remove_count": sum(item["remove_count"] for item in types),
-        "error_count": len(set(all_errors)),
-        "errors": sorted(set(all_errors)),
-        "types": types,
-    }
-
-
-def _apply_type(
-    repo_root: Path,
-    config: DocsStageConfig,
-    media_type: str,
-    references: Mapping[tuple[str, str], tuple[str, ...]],
-    *,
-    remote_client: object | None,
-) -> dict[str, Any]:
-    projection = config.public_projection
-    if projection is None:
-        raise ValueError("workspace has no public media projection")
-    _collection, public = public_media_bindings(config)[media_type]
-    results: list[dict[str, Any]] = []
-    errors: list[str] = []
-    try:
-        published_adapter, public_adapter = _type_adapters(
-            repo_root,
-            config,
-            media_type,
-            remote_client=remote_client,
-        )
-        rows = _published_rows(published_adapter, references, media_type)
-    except Exception as exc:
-        error = str(exc)
-        return {
-            "media_type": media_type,
-            "provider": public.location.provider,
-            "copied_count": 0,
-            "unchanged_count": 0,
-            "retained_count": 0,
-            "missing_count": 0,
-            "removed_count": 0,
-            "error_count": 1,
-            "errors": [error],
-            "items": [],
-        }
-
-    for identity, referenced_by in rows:
-        result = {
-            "media_type": media_type,
-            "identity": identity,
-            "provider": public.location.provider,
-            "referenced_by": list(referenced_by),
-            "status": "",
-            "error": "",
-        }
-        try:
-            published_bytes = published_adapter.read(identity)
-        except FileNotFoundError:
-            result["status"] = "error"
-            result["error"] = f"Accepted media disappeared during deployment: {media_type}/{identity}"
-            errors.append(result["error"])
-            results.append(result)
-            continue
-        except Exception as exc:
-            result["status"] = "error"
-            result["error"] = str(exc)
-            errors.append(str(exc))
-            results.append(result)
-            continue
-        try:
-            if public_adapter.stat(identity) is not None and public_adapter.read(identity) == published_bytes:
-                result["status"] = "unchanged"
-            else:
-                content_type = mimetypes.guess_type(identity)[0] or "application/octet-stream"
-                public_adapter.replace(identity, published_bytes, content_type=content_type)
-                if not public_adapter.verify_bytes(identity, published_bytes):
-                    raise RuntimeError("public media bytes did not verify")
-                result["status"] = "copied"
-        except Exception as exc:
-            result["status"] = "error"
-            result["error"] = str(exc)
-            errors.append(str(exc))
-        results.append(result)
-
-    referenced_identities = {identity for identity, _referenced_by in rows}
-    try:
-        public_stats = {
-            item.identity: item
-            for item in public_adapter.list()
-            if not _is_ignored_public_identity(item.identity)
-        }
-    except Exception as exc:
-        errors.append(str(exc))
-        public_stats = {}
-    for identity in sorted(set(public_stats) - referenced_identities) if not errors else ():
-        result = {
-            "media_type": media_type,
-            "identity": identity,
-            "provider": public.location.provider,
-            "referenced_by": [],
-            "status": "",
-            "error": "",
-        }
-        try:
-            public_adapter.delete(identity)
-            result["status"] = "removed"
-        except Exception as exc:
-            result["status"] = "error"
-            result["error"] = str(exc)
-            errors.append(str(exc))
-        results.append(result)
-
-    unique_errors = sorted(set(error for error in errors if error))
-    return {
-        "media_type": media_type,
-        "provider": public.location.provider,
-        "copied_count": sum(item["status"] == "copied" for item in results),
-        "unchanged_count": sum(item["status"] == "unchanged" for item in results),
-        "retained_count": sum(item["status"] == "retained" for item in results),
-        "missing_count": sum(item["status"] == "missing" for item in results),
-        "removed_count": sum(item["status"] == "removed" for item in results),
-        "error_count": len(unique_errors),
-        "errors": unique_errors,
-        "items": sorted(results, key=lambda item: (item["identity"], item["status"])),
-    }
+    """Describe referenced current transfers and missing files without writes."""
+    return _reconcile(repo_root, config, references, write=False, client=client, env_files=env_files, environ=environ)
 
 
 def apply_public_media_reconciliation(
-    repo_root: Path,
-    config: DocsStageConfig,
-    references: Mapping[tuple[str, str], tuple[str, ...]],
-    *,
-    client: object | None = None,
-    env_files: Iterable[Path] | None = None,
-    environ: Mapping[str, str] | None = None,
+    repo_root: Path, config: DocsStageConfig, references: Mapping[tuple[str, str], tuple[str, ...]],
+    *, client: object | None = None, env_files: Iterable[Path] | None = None, environ: Mapping[str, str] | None = None,
 ) -> dict[str, Any]:
-    """Copy accepted media and remove stale files within each owned projection."""
-
-    projection = config.public_projection
-    if projection is None:
-        raise ValueError("workspace has no public media projection")
-    remote_client, remote_error = _remote_client(
-        repo_root,
-        config,
-        client=client,
-        env_files=env_files,
-        environ=environ,
-    )
-    preflight = plan_public_media_reconciliation(repo_root, config, references, client=remote_client, env_files=env_files, environ=environ)
+    """Copy referenced current bytes after preflight; asset cleanup is never implicit."""
+    preflight = plan_public_media_reconciliation(repo_root, config, references, client=client, env_files=env_files, environ=environ)
     if preflight["error_count"]:
-        return failed_public_media_reconciliation( "apply", RuntimeError("; ".join(preflight["errors"])))
-    types: list[dict[str, Any]] = []
-    for media_type, (_collection, public) in sorted(public_media_bindings(config).items()):
-        if public.location.provider == R2_PROVIDER and remote_error:
-            types.append(
-                {
-                    "media_type": media_type,
-                    "provider": public.location.provider,
-                    "copied_count": 0,
-                    "unchanged_count": 0,
-                    "retained_count": 0,
-                    "missing_count": 0,
-                    "removed_count": 0,
-                    "error_count": 1,
-                    "errors": [remote_error],
-                    "items": [],
-                }
-            )
-            continue
-        types.append(
-            _apply_type(
-                repo_root,
-                config,
-                media_type,
-                references,
-                remote_client=remote_client,
-            )
-        )
-    errors = sorted(
-        {
-            f"{item['media_type']}: {error}"
-            for item in types
-            for error in item["errors"]
-        }
-    )
-    return {
-        "schema_version": PUBLIC_MEDIA_RECONCILIATION_SCHEMA_VERSION,
-        "operation": "apply",
-        "stage": "preview",
-        "referenced_count": len(references),
-        "copied_count": sum(item["copied_count"] for item in types),
-        "unchanged_count": sum(item["unchanged_count"] for item in types),
-        "retained_count": sum(item["retained_count"] for item in types),
-        "missing_count": sum(item["missing_count"] for item in types),
-        "removed_count": sum(item["removed_count"] for item in types),
-        "error_count": sum(item["error_count"] for item in types),
-        "errors": errors,
-        "types": types,
-    }
+        return failed_public_media_reconciliation("apply", RuntimeError("; ".join(preflight["errors"])))
+    return _reconcile(repo_root, config, references, write=True, client=client, env_files=env_files, environ=environ)
 
 
 def failed_public_media_reconciliation(operation: str, error: Exception) -> dict[str, Any]:
-    """Return a non-raising media result so document publication remains complete."""
-
+    """Keep partial distribution failures in the owning completion/error flow."""
     return {
-        "schema_version": PUBLIC_MEDIA_RECONCILIATION_SCHEMA_VERSION,
-        "operation": operation,
-        "stage": "preview",
-        "referenced_count": 0,
-        "available_count": 0,
-        "copy_count": 0,
-        "copied_count": 0,
-        "unchanged_count": 0,
-        "retained_count": 0,
-        "missing_count": 0,
-        "remove_count": 0,
-        "removed_count": 0,
-        "error_count": 1,
-        "errors": [str(error)],
-        "types": [],
+        "schema_version": PUBLIC_MEDIA_RECONCILIATION_SCHEMA_VERSION, "operation": operation, "stage": "preview",
+        "referenced_count": 0, "available_count": 0, "copy_count": 0, "copied_count": 0, "unchanged_count": 0,
+        "retained_count": 0, "missing_count": 0, "remove_count": 0, "removed_count": 0,
+        "error_count": 1, "errors": [str(error)], "types": [],
     }
-
-
-__all__ = [
-    "PUBLIC_MEDIA_RECONCILIATION_SCHEMA_VERSION",
-    "apply_public_media_reconciliation",
-    "failed_public_media_reconciliation",
-    "plan_public_media_reconciliation",
-    "referenced_public_media",
-]

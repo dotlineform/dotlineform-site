@@ -548,7 +548,7 @@ def build_media_plan(
     media_path = f"{config.reference_prefix.as_posix()}/{source_path.name}"
     link = f"[[media:{media_path}]]"
     return {
-        "location_provider": config.source_location.provider,
+        "location_provider": config.asset_location.provider,
         "artifact_identity": source_path.name,
         "media_class": media_class,
         "source_path": source_path.name,

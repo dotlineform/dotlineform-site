@@ -250,6 +250,7 @@ def rebuild_stage_outputs(
     links_doc_ids: Optional[list[str]] = None,
     links_created_doc_ids: Optional[list[str]] = None,
     docs_base_dir: Path | None = None,
+    assets_base_dir: Path | None = None,
     copied_search_index: bytes | None = None,
     copied_recent_payload: bytes | None = None,
 ) -> Dict[str, Any]:
@@ -359,6 +360,8 @@ def rebuild_stage_outputs(
     for label, command in commands:
         if docs_base_dir is not None:
             command.extend(["--docs-base-dir", str(docs_base_dir)])
+        if assets_base_dir is not None:
+            command.extend(["--assets-base-dir", str(assets_base_dir)])
         if stage == "preview" and command[1] == DOCS_BUILDER_SCRIPT and "--skip-browser-config" not in command:
             command.append("--skip-browser-config")
         step = run_rebuild_command(command, repo_root)

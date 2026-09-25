@@ -101,7 +101,7 @@ def docs_management_post_response(
         raise ValueError("sub_scope is retired; use collection")
     if path in {routes.DEPLOY_REPO_PREVIEW_PATH, routes.DEPLOY_REPO_APPLY_PATH}:
         if body.get("stage") != "preview":
-            raise ValueError("Deploy Repo requires stage preview")
+            raise ValueError("Publish requires stage preview")
     elif "stage" in body:
         selected = load_docs_stage(repo_root, body["stage"])
         require_document_authoring(selected)
@@ -283,7 +283,7 @@ def docs_management_post_response(
         return HTTPStatus.OK, docs_deploy_repo.preview_deploy_repo(repo_root, body)
     if path == routes.DEPLOY_REPO_APPLY_PATH:
         if dry_run:
-            raise ValueError("Deploy Repo apply does not support dry_run")
+            raise ValueError("Publish apply does not support dry_run")
         return HTTPStatus.OK, docs_deploy_repo.apply_deploy_repo(repo_root, body)
     if path == routes.STATIC_HTML_EXPORT_PREVIEW_PATH:
         return HTTPStatus.OK, docs_static_html_export.preview_static_html_export(repo_root, body)

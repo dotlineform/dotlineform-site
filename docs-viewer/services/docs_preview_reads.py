@@ -8,12 +8,11 @@ from pathlib import Path
 from typing import Any
 
 from docs_document_identity import is_immutable_doc_id
-from docs_workspace_config import load_docs_stage, safe_relative_path
+from docs_workspace_config import load_docs_stage
 from docs_preview_snapshot import validate_preview_snapshot
 
 
 EXTERNAL_COLLECTION_PREVIEW_PREFIX = "/docs/preview/external/"
-PREVIEW_MEDIA_PREFIX = "/docs/preview/media/"
 
 
 
@@ -134,37 +133,8 @@ def external_collection_payload_path(repo_root: Path, request_path: str) -> Path
     return root / relative_path
 
 
-def preview_media_path(repo_root: Path, request_path: str) -> tuple[Path, str]:
-    if not request_path.startswith(PREVIEW_MEDIA_PREFIX):
-        raise ValueError("Invalid preview Docs media route")
-    parts = request_path.removeprefix(PREVIEW_MEDIA_PREFIX).split("/")
-    if len(parts) < 2:
-        raise ValueError("Preview Docs media route requires type and identity")
-    collection = ""
-    if parts[0] == "collections":
-        if len(parts) < 4:
-            raise ValueError("Preview child media requires collection, type, and identity")
-        _, collection, *parts = parts
-    media_type, *identity_parts = parts
-    identity = safe_relative_path("/".join(identity_parts), field="preview media identity")
-    config = load_docs_stage(repo_root, "preview")
-    resolved_collection = config
-    if collection:
-        resolved_collection = next((child for child in config.collections if child.collection == collection), None)
-    if resolved_collection is None or media_type not in resolved_collection.media.types:
-        raise FileNotFoundError(f"Preview Docs media type not found: {media_type}")
-    relative_path = resolved_collection.media.types[media_type].preview_location.path.relative_to(config.workspace_root.path / "preview") / identity
-    _manifest, root, files = validate_preview_snapshot(repo_root)
-    if relative_path not in files:
-        raise FileNotFoundError(
-            f"Preview Docs media not found: {media_type}/{identity.as_posix()}"
-        )
-    return root / relative_path, media_type
-
-
 __all__ = [
     "EXTERNAL_COLLECTION_PREVIEW_PREFIX",
-    "PREVIEW_MEDIA_PREFIX",
     "external_collection_payload_path",
     "read_preview_backlinks",
     "read_preview_doc_payload",
@@ -172,5 +142,4 @@ __all__ = [
     "read_preview_recent",
     "read_preview_search_index",
     "read_preview_semantic_tokens_index",
-    "preview_media_path",
 ]

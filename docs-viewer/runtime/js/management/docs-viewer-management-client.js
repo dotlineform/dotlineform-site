@@ -68,20 +68,25 @@ export function readDocumentLinkTargets(target, options) {
     Object.assign({}, options, { cache: "no-store" }));
 }
 
+function catalogueStageQuery(stage) {
+  if (!["working", "preview"].includes(stage)) throw new Error("Catalogue stage is required.");
+  return "stage=" + encodeURIComponent(stage);
+}
+
 /** Read generated Catalogue targets independently of document scope and association. */
-export function readCatalogueMediaTargets(options) {
-  return fetchManagementJson("/docs/catalogue-media-targets", "GET", undefined, options);
+export function readCatalogueMediaTargets(stage, options) {
+  return fetchManagementJson("/docs/catalogue-media-targets?" + catalogueStageQuery(stage), "GET", undefined, options);
 }
 
 /** Read the generated rendition policy shared by all Catalogue records. */
-export function readCatalogueMediaConfig(options) {
-  return fetchManagementJson("/docs/catalogue-media-config", "GET", undefined,
+export function readCatalogueMediaConfig(stage, options) {
+  return fetchManagementJson("/docs/catalogue-media-config?" + catalogueStageQuery(stage), "GET", undefined,
     Object.assign({}, options, { cache: "no-store" }));
 }
 
 /** Read the current generated Work consumer record independently of Document Build. */
-export function readCatalogueWork(workId, options) {
-  return fetchManagementJson("/docs/catalogue-work?work_id=" + encodeURIComponent(workId), "GET", undefined,
+export function readCatalogueWork(workId, stage, options) {
+  return fetchManagementJson("/docs/catalogue-work?work_id=" + encodeURIComponent(workId) + "&" + catalogueStageQuery(stage), "GET", undefined,
     Object.assign({}, options, { cache: "no-store" }));
 }
 
@@ -96,14 +101,14 @@ export function applyCatalogueRegeneration(payload, options) {
 }
 
 /** Read current Series membership without resolving any member Work records. */
-export function readCatalogueSeries(seriesId, options) {
-  return fetchManagementJson("/docs/catalogue-series?series_id=" + encodeURIComponent(seriesId), "GET", undefined,
+export function readCatalogueSeries(seriesId, stage, options) {
+  return fetchManagementJson("/docs/catalogue-series?series_id=" + encodeURIComponent(seriesId) + "&" + catalogueStageQuery(stage), "GET", undefined,
     Object.assign({}, options, { cache: "no-store" }));
 }
 
 /** Read exact Gallery membership from current Studio-generated output. */
-export function readCatalogueGallery(galleryId, options) {
-  return fetchManagementJson("/docs/catalogue-gallery?gallery_id=" + encodeURIComponent(galleryId), "GET", undefined,
+export function readCatalogueGallery(galleryId, stage, options) {
+  return fetchManagementJson("/docs/catalogue-gallery?gallery_id=" + encodeURIComponent(galleryId) + "&" + catalogueStageQuery(stage), "GET", undefined,
     Object.assign({}, options, { cache: "no-store" }));
 }
 

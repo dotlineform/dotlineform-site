@@ -10,11 +10,12 @@ from pathlib import Path
 
 PROJECTS_BASE_DIR_ENV = "DOTLINEFORM_PROJECTS_BASE_DIR"
 DOCS_BASE_DIR_ENV = "DOTLINEFORM_DOCS_BASE_DIR"
+BUILD_ASSETS_DIR_ENV = "DOTLINEFORM_DOCS_BUILD_ASSETS_DIR"
 
 
 def add_workspace_arguments(parser: argparse.ArgumentParser) -> None:
     """Expose independent workspace overrides that take precedence over .env.local."""
-    for option, environment in (("projects", PROJECTS_BASE_DIR_ENV), ("docs", DOCS_BASE_DIR_ENV)):
+    for option, environment in (("projects", PROJECTS_BASE_DIR_ENV), ("docs", DOCS_BASE_DIR_ENV), ("assets", BUILD_ASSETS_DIR_ENV)):
         parser.add_argument(f"--{option}-base-dir", help=f"Override {environment} after loading .env.local.")
 
 
@@ -36,12 +37,14 @@ def normalize_base_dir(value: str | Path, *, option: str) -> Path:
 
 def workspace_env_overrides(
     *, projects_base_dir: str | Path | None = None, docs_base_dir: str | Path | None = None,
+    assets_base_dir: str | Path | None = None,
 ) -> dict[str, str]:
     return {
         environment: str(normalize_base_dir(value, option=option))
         for option, environment, value in (
             ("projects", PROJECTS_BASE_DIR_ENV, projects_base_dir),
             ("docs", DOCS_BASE_DIR_ENV, docs_base_dir),
+            ("assets", BUILD_ASSETS_DIR_ENV, assets_base_dir),
         )
         if value is not None
     }
@@ -50,7 +53,7 @@ def workspace_env_overrides(
 def apply_workspace_overrides(args: argparse.Namespace) -> None:
     """Apply parsed overrides for in-process CLI calls without reloading local env."""
     os.environ.update(workspace_env_overrides(
-        projects_base_dir=args.projects_base_dir, docs_base_dir=args.docs_base_dir,
+        projects_base_dir=args.projects_base_dir, docs_base_dir=args.docs_base_dir, assets_base_dir=args.assets_base_dir,
     ))
 
 
@@ -59,6 +62,7 @@ def apply_repo_local_env(
     *,
     projects_base_dir: str | Path | None = None,
     docs_base_dir: str | Path | None = None,
+    assets_base_dir: str | Path | None = None,
 ) -> dict[str, str]:
     root = Path(repo_root).expanduser().resolve() if repo_root is not None else Path.cwd().resolve()
     code_root = Path(__file__).resolve().parents[3]
@@ -70,7 +74,7 @@ def apply_repo_local_env(
     from local_env import runtime_env
 
     values = runtime_env(repo_root=root)
-    values.update(workspace_env_overrides(projects_base_dir=projects_base_dir, docs_base_dir=docs_base_dir))
+    values.update(workspace_env_overrides(projects_base_dir=projects_base_dir, docs_base_dir=docs_base_dir, assets_base_dir=assets_base_dir))
     os.environ.update(values)
     return values
 

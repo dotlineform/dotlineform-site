@@ -1,5 +1,23 @@
 {
-  "schema_version": "docs_workspace_v3",
+  "schema_version": "docs_workspace_v4",
+  "assets": {
+    "root": "assets",
+    "document_media": "media",
+    "work_primary": "works/primary",
+    "work_thumbnails": "works/thumbs",
+    "work_files": "works/media/files",
+    "served_path_prefix": "/docs/assets"
+  },
+  "catalogue": {
+    "working": "working/generated/catalogue",
+    "preview": "preview/catalogue",
+    "public_projection": {
+      "location": {
+        "provider": "repository",
+        "path": "site/assets/data/catalogue"
+      }
+    }
+  },
   "public_viewer_base_url": "/analysis/",
   "recent_limit": 20,
   "search_fields": [

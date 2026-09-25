@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import datetime as dt
 import json
-import re
 from pathlib import Path
 from typing import Any, Mapping, Sequence
 from urllib.parse import quote
@@ -13,7 +12,7 @@ from catalogue import catalogue_generation_indexes as indexes
 from catalogue import catalogue_generation_records as projection
 from catalogue.catalogue_galleries import CatalogueGalleries, read_galleries, validate_galleries
 from catalogue.catalogue_generation_common import compact_json_object, compute_payload_version
-from catalogue.catalogue_media_policy import catalogue_media_policy, catalogue_thumbnail_paths
+from catalogue.catalogue_media_policy import catalogue_media_policy
 from catalogue.catalogue_output_paths import catalogue_output_workspace, output_path
 from catalogue.catalogue_output_selection import selected_output_paths
 from catalogue.catalogue_source import CatalogueSourceRecords, records_from_json_source, validate_source_records
@@ -95,21 +94,9 @@ def generate_catalogue_json(
     galleries = read_galleries(source_dir, records.works)
     timestamp = dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
     payloads = catalogue_payloads(repo_root, records, galleries, timestamp=timestamp)
-    full = work_ids is None
     selected = selected_output_paths(workspace, records, galleries, work_ids=work_ids, series_ids=series_ids, gallery_ids=gallery_ids)
     selected.update(path for path in payloads if "/index/" not in path)
     written, deleted = [], []
-    if full:
-        expected_thumbs = catalogue_thumbnail_paths(repo_root, records)
-        for existing in output_path(workspace, "works/thumbs").glob("*"):
-            if not re.fullmatch(r"\d{5}-thumb-\d+\.webp", existing.name):
-                continue
-            relative = existing.relative_to(workspace.root).as_posix()
-            if relative not in expected_thumbs:
-                checked = output_path(workspace, relative)
-                deleted.append(relative)
-                if write:
-                    checked.unlink()
     for relative in sorted(selected):
         path = output_path(workspace, relative)
         payload = payloads.get(relative)

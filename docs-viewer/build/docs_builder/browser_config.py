@@ -95,8 +95,6 @@ def browser_preview_record(repo_root: Path, workspace: DocsWorkspaceConfig) -> d
     for key, route in (("index_tree_url", "index-tree"), ("recent_url", "recent"), ("backlinks_url", "backlinks"), ("search_index_url", "search")):
         record[key] = f"/docs/preview/{route}"
     record["search"] = {**record["search"], "index_url": record["search_index_url"]}
-    for kind, media in record["media"].items():
-        media["served_path_prefix"] = f"/docs/preview/media/{kind}"
     record["collections"] = browser_collection_records(repo_root, prepared, published=True)
     for child in record["collections"]:
         base = f"/docs/preview/external/{quote(child['collection'])}"

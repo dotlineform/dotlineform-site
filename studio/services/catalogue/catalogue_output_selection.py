@@ -6,7 +6,7 @@ import json
 import re
 from typing import Any, Sequence
 
-from external_workspace_paths import ExternalWorkspaceRoot
+from docs_artifact_locations import ArtifactLocation
 
 from catalogue.catalogue_galleries import CatalogueGalleries, validate_gallery_id
 from catalogue.catalogue_output_paths import output_path
@@ -14,7 +14,7 @@ from catalogue.catalogue_source import CatalogueSourceRecords, slug_id
 from catalogue.series_ids import normalize_series_id
 
 
-def _previous_payload(workspace: ExternalWorkspaceRoot, family: str, identity: str) -> dict[str, Any] | None:
+def _previous_payload(workspace: ArtifactLocation, family: str, identity: str) -> dict[str, Any] | None:
     directory = {"work": "works", "gallery": "galleries"}[family]
     path = output_path(workspace, f"{directory}/index/{identity}.json")
     if not path.exists():
@@ -29,7 +29,7 @@ def _previous_payload(workspace: ExternalWorkspaceRoot, family: str, identity: s
 
 
 def selected_output_paths(
-    workspace: ExternalWorkspaceRoot, records: CatalogueSourceRecords, galleries: CatalogueGalleries,
+    workspace: ArtifactLocation, records: CatalogueSourceRecords, galleries: CatalogueGalleries,
     *, work_ids: Sequence[str] | None, series_ids: Sequence[str], gallery_ids: Sequence[str],
 ) -> set[str]:
     """Previous generated membership invalidates outputs; canonical data owns content."""
@@ -37,7 +37,7 @@ def selected_output_paths(
         selected = set()
         for family, ids in (("works", records.works), ("series", records.series), ("galleries", galleries.galleries)):
             selected.update(f"{family}/index/{identity}.json" for identity in ids)
-            selected.update(path.relative_to(workspace.root).as_posix() for path in output_path(workspace, f"{family}/index").glob("*.json"))
+            selected.update(path.relative_to(workspace.path).as_posix() for path in output_path(workspace, f"{family}/index").glob("*.json"))
         return selected
 
     selected_works = {slug_id(wid) for wid in work_ids}

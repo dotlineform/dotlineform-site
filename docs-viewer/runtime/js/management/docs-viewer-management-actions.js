@@ -43,7 +43,7 @@ var ACTION_TEXT = {
   settingsSaving: "Saving settings...",
   settingsSaved: "Settings saved.",
   settingsSaveFailed: "Settings save failed.",
-  deployFailed: "Deploy Repo failed.",
+  deployFailed: "Publish failed.",
   copyLinkFailed: "Copy link failed."
 };
 

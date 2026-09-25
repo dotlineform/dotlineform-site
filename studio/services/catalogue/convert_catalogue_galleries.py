@@ -22,7 +22,7 @@ from catalogue.catalogue_gallery_media_conversion import (
 from catalogue.catalogue_galleries import read_galleries
 from catalogue.catalogue_json_build import populate_catalogue_output
 from catalogue.catalogue_lookup import DEFAULT_LOOKUP_DIR, build_and_write_catalogue_lookup
-from catalogue.catalogue_output_paths import output_path
+from external_workspace_paths import resolve_workspace_path
 from catalogue.catalogue_source import DEFAULT_SOURCE_DIR
 from catalogue.catalogue_transactions import atomic_write_many
 from media.publish_media_to_r2 import R2Client, load_r2_credentials
@@ -72,7 +72,7 @@ def apply_conversion(repo_root: Path, plan: dict, client: R2Client) -> None:
             raise ValueError(f"R2 destination collision: {item['destination']}")
     for item in media["local"]:
         workspace = workspaces[item["workspace"]]
-        source, target = output_path(workspace, item["source"]), output_path(workspace, item["destination"])
+        source, target = resolve_workspace_path(workspace, item["source"]), resolve_workspace_path(workspace, item["destination"])
         if file_sha256(source) != item["sha256"]:
             raise ValueError(f"Local source changed: {item['source']}")
         if target.exists() and file_sha256(target) != item["sha256"]:
@@ -83,7 +83,7 @@ def apply_conversion(repo_root: Path, plan: dict, client: R2Client) -> None:
     verify_remote_copies(client, media["r2"])
     for item in media["local"]:
         workspace = workspaces[item["workspace"]]
-        source, target = output_path(workspace, item["source"]), output_path(workspace, item["destination"])
+        source, target = resolve_workspace_path(workspace, item["source"]), resolve_workspace_path(workspace, item["destination"])
         if not target.exists():
             target.parent.mkdir(parents=True, exist_ok=True)
             with target.open("xb") as handle:
@@ -111,7 +111,7 @@ def finish_conversion(repo_root: Path, plan: dict, client: R2Client) -> None:
         raise ValueError("Canonical conversion saved; Catalogue output is incomplete")
     build_and_write_catalogue_lookup(source_dir, repo_root / DEFAULT_LOOKUP_DIR)
     for item in media["local"]:
-        source = output_path(workspaces[item["workspace"]], item["source"])
+        source = resolve_workspace_path(workspaces[item["workspace"]], item["source"])
         if source.exists():
             if file_sha256(source) != item["sha256"]:
                 raise ValueError(f"Old local media changed; retained: {item['source']}")

@@ -22,7 +22,7 @@ def prepare_stage_mermaid(repo_root: Path, config: DocsStageConfig) -> dict[str,
     collections receive SVG pairs and projected HTML. Temporary rendering must
     succeed before that collection's generated media or payloads are replaced;
     any failure propagates to the Build owner, leaving completion invalidated.
-    Snapshot preparation and Deploy Repo subsequently consume only these bytes.
+    Snapshot preparation and Publish subsequently consume only these bytes.
     """
     if config.stage != "preview" or config.public_projection is None:
         return None
@@ -36,7 +36,7 @@ def prepare_stage_mermaid(repo_root: Path, config: DocsStageConfig) -> dict[str,
         media = collection.media.types.get("svg")
         if media is None:
             raise ValueError(f"Mermaid preparation requires SVG media for {owner}")
-        source_locations = [media.source_location]
+        source_locations = []
         build = collection.media.build_sources.get("mermaid")
         if build is not None:
             source_locations.append(build.location)
@@ -63,7 +63,7 @@ def prepare_stage_mermaid(repo_root: Path, config: DocsStageConfig) -> dict[str,
                 raise ValueError(f"Mermaid payload identity does not match {owner}/{doc_id}")
             payloads[path] = project_mermaid_payload(payload, diagrams)
 
-        generated = artifact_location_adapter(repo_root, media.generated_location)
+        generated = artifact_location_adapter(repo_root, media.asset_location)
         identities: set[str] = set()
         if plan["diagrams"]:
             with tempfile.TemporaryDirectory(prefix="docs-mermaid-preparation-") as temporary:
@@ -82,9 +82,6 @@ def prepare_stage_mermaid(repo_root: Path, config: DocsStageConfig) -> dict[str,
                     generated.replace(identity, data, content_type="image/svg+xml")
                     if not generated.verify_bytes(identity, data):
                         raise RuntimeError(f"Mermaid generated media did not verify: {owner}/{identity}")
-        for item in generated.list():
-            if Path(item.identity).is_relative_to(PUBLIC_MERMAID_ASSET_PREFIX) and item.identity not in identities:
-                generated.delete(item.identity)
         for path, payload in payloads.items():
             path.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
         results.append({"collection": owner, "diagrams": len(plan["diagrams"]), "variants": len(identities)})

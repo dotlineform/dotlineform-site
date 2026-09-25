@@ -92,9 +92,6 @@
         "recent_url": "/docs/recent?stage=working",
         "search_index_url": "/docs/search?stage=working"
       },
-      "catalogue_paths": {
-        "work_thumbnails_base_url": "/docs/catalogue-thumbnails/"
-      },
       "config_urls": {
         "docs_viewer": "/docs-viewer/config/defaults/docs-viewer-config.json",
         "report_registry": "/docs-viewer/config/reports/reports.json"

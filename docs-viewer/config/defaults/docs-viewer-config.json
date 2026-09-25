@@ -11,19 +11,19 @@
       "media": {
         "files": {
           "reference_prefix": "docs/files",
-          "served_path_prefix": "/docs/media/working/files"
+          "served_path_prefix": "/docs/assets/media/workspace/files"
         },
         "html": {
           "reference_prefix": "docs/html",
-          "served_path_prefix": "/docs/media/working/html"
+          "served_path_prefix": "/docs/assets/media/workspace/html"
         },
         "img": {
           "reference_prefix": "docs/img",
-          "served_path_prefix": "/docs/media/working/img"
+          "served_path_prefix": "/docs/assets/media/workspace/img"
         },
         "svg": {
           "reference_prefix": "docs/svg",
-          "served_path_prefix": "/docs/media/working/svg"
+          "served_path_prefix": "/docs/assets/media/workspace/svg"
         }
       },
       "index_tree_url": "/docs/index-tree?stage=working",
@@ -93,19 +93,19 @@
       "media": {
         "files": {
           "reference_prefix": "docs/files",
-          "served_path_prefix": "/docs/preview/media/files"
+          "served_path_prefix": "/docs/assets/media/workspace/files"
         },
         "html": {
           "reference_prefix": "docs/html",
-          "served_path_prefix": "/docs/preview/media/html"
+          "served_path_prefix": "/docs/assets/media/workspace/html"
         },
         "img": {
           "reference_prefix": "docs/img",
-          "served_path_prefix": "/docs/preview/media/img"
+          "served_path_prefix": "/docs/assets/media/workspace/img"
         },
         "svg": {
           "reference_prefix": "docs/svg",
-          "served_path_prefix": "/docs/preview/media/svg"
+          "served_path_prefix": "/docs/assets/media/workspace/svg"
         }
       },
       "index_tree_url": "/docs/preview/index-tree",

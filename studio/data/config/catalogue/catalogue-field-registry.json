@@ -9,7 +9,7 @@
     "work-json": "catalogue/generated/works/index/<work_id>.json, including ordered Detail sections.",
     "series-json": "catalogue/generated/series/index/<series_id>.json and ordered members.",
     "catalogue-indexes": "Compact Work, Series and Detail indexes beneath catalogue/generated.",
-    "local-media": "Configured media-staging inputs/primary derivatives and generated Work/Detail thumbs.",
+    "local-media": "Shared local Work primary images, thumbnails and downloads in the Docs workspace.",
     "remote-media": "Active Work/Detail primary variants and downloads; the archive is excluded."
   },
   "rules": [

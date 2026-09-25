@@ -19,6 +19,7 @@ from docs_public_media_reconciliation import (
     apply_public_media_reconciliation,
     plan_public_media_reconciliation,
     referenced_public_media,
+    publication_asset_references,
 )
 from docs_public_mermaid_payload import public_mermaid_payload_requires_projection
 from docs_report_source import REPORT_HOST_HTML
@@ -35,7 +36,7 @@ from docs_workspace_config import (
 )
 from docs_preview_snapshot import COPIED_WORKING_PAYLOAD_PATHS, _validate_prepared_index, validate_preview_snapshot
 from docs_publication_payloads import project_public_view
-from docs_write_rebuild import rebuild_collection_outputs
+from docs_catalogue_artifacts import load_catalogue_artifact_inventory, select_catalogue_artifacts
 
 
 DEPLOY_REPO_PREVIEW_SCHEMA_VERSION = "docs_deploy_repo_preview_v3"
@@ -170,6 +171,7 @@ def deploy_repo_capability(
     destinations: list[tuple[Path, bool]] = [
         (projection.documents.location.path, True),
         (projection.search.location.path, False),
+        (config.catalogue.public_projection.location.path, True),
     ]
     destinations.extend(
         (collection.public_projection.documents.location.path, True)
@@ -283,9 +285,7 @@ def public_media_url_projection(config: DocsStageConfig) -> dict[str, str]:
         return {}
     urls = {}
     for collection, media in public_media_bindings(config).values():
-        child = getattr(collection, "collection", "")
-        suffix = f"/collections/{child}" if child else ""
-        urls[f"/docs/preview/media{suffix}/{media.media_type}"] = media.served_path_prefix.rstrip("/")
+        urls[collection.media.types[media.media_type].served_path_prefix.rstrip("/")] = media.served_path_prefix.rstrip("/")
     return urls
 
 
@@ -353,10 +353,11 @@ def accepted_document_collections(
     dict[str, set[str]],
 ]:
     workspace = load_docs_workspace_config(repo_root)
+    catalogue_prefix = workspace.catalogue.preview.path.relative_to(workspace.workspace_root.path / "preview")
     published_files = {
         path: json_bytes(project_public_view(workspace, read_json_bytes(data, f"accepted {path}")))
         if path.suffix == ".json" and path not in COPIED_WORKING_PAYLOAD_PATHS else data
-        for path, data in published_files.items()
+        for path, data in published_files.items() if not path.is_relative_to(catalogue_prefix)
     }
     media_projection = public_media_url_projection(config)
     parent_files: dict[Path, bytes] = {}
@@ -521,6 +522,14 @@ def desired_repository_projection(
         ],
     ]
     media_references = referenced_public_media(config, payload_collections)
+    workspace = load_docs_workspace_config(repo_root)
+    prefix = workspace.catalogue.preview.path.relative_to(workspace.workspace_root.path / "preview")
+    catalogue = select_catalogue_artifacts({
+        path.relative_to(prefix).as_posix(): data
+        for path, data in published_files.items() if path.is_relative_to(prefix)
+    }, load_catalogue_artifact_inventory(repo_root))
+    destination = repository_path(repo_root, workspace.catalogue.public_projection.location.path)
+    desired.update({destination / identity: data for identity, data in catalogue.items()})
     return desired, media_references, document_ids
 
 
@@ -570,6 +579,21 @@ def current_repository_projection(
     search_target = repository_path(repo_root, search_path)
     if search_target.is_file():
         current[search_target] = search_target.read_bytes()
+    workspace = load_docs_workspace_config(repo_root)
+    catalogue_root = repository_path(repo_root, workspace.catalogue.public_projection.location.path)
+    inventory = load_catalogue_artifact_inventory(repo_root)
+    selected = [catalogue_root / path for path in inventory.system_files]
+    for relative in inventory.by_id_directories:
+        directory = catalogue_root / relative
+        if directory.is_symlink():
+            raise ValueError("Catalogue repository directories must not be symlinks")
+        if directory.is_dir():
+            selected.extend(path for path in directory.iterdir() if path.suffix == ".json")
+    for path in selected:
+        if path.is_symlink():
+            raise ValueError("Catalogue repository JSON must not be symlinks")
+        if path.is_file():
+            current[path] = path.read_bytes()
     return current
 
 
@@ -708,7 +732,7 @@ def build_deploy_repo_plan(
 ) -> DeployRepoPlan:
     repo_root = repo_root.resolve()
     if "scope" in body or body.get("stage") != "preview":
-        raise ValueError("Deploy Repo requires the Preview stage without scope")
+        raise ValueError("Publish requires the Preview stage without scope")
     config = deployable_config(repo_root)
     manifest, _preview_root, published_files = validate_preview_snapshot(
         repo_root,
@@ -717,6 +741,12 @@ def build_deploy_repo_plan(
     desired, media_references, document_ids = (
         desired_repository_projection(repo_root, config, published_files)
     )
+    # The completion manifest owns selection; public HTML extraction only checks
+    # that document projection did not introduce an uncaptured managed reference.
+    captured_references = publication_asset_references(repo_root, config, manifest["asset_references"])
+    if not media_references.keys() <= captured_references.keys():
+        raise ValueError("Preview is missing required document asset references; prepare again")
+    media_references = captured_references
     current = current_repository_projection(repo_root, config)
     repository = repository_diff(repo_root, current, desired)
     media = plan_public_media_reconciliation(
@@ -754,7 +784,6 @@ def build_deploy_repo_plan(
         + repository["changed_count"]
         + repository["removed_count"]
         + int(media.get("copy_count") or 0)
-        + int(media.get("remove_count") or 0)
         + int(lineage["changed_count"])
     )
     preview = {
@@ -773,10 +802,10 @@ def build_deploy_repo_plan(
         "error_count": int(media.get("error_count") or 0),
         "up_to_date": change_count == 0 and int(media.get("error_count") or 0) == 0,
         "summary_text": (
-            f"Deploy Repo preview for the workspace at {manifest['preview_revision']}: "
+            f"Publish preview for the workspace at {manifest['preview_revision']}: "
             f"{repository['added_count']} repository add, "
             f"{repository['changed_count']} change, {repository['removed_count']} remove; "
-            f"{media.get('copy_count', 0)} media copy, {media.get('remove_count', 0)} remove; "
+            f"{media.get('copy_count', 0)} media copy; "
             f"{lineage['changed_count']} lineage change"
             f"{'s' if lineage['changed_count'] != 1 else ''}."
         ),
@@ -842,10 +871,10 @@ def apply_deploy_repo(
     environ: Mapping[str, str] | None = None,
 ) -> dict[str, Any]:
     if body.get("confirm") is not True:
-        raise ValueError("confirm must be true to Deploy Repo")
+        raise ValueError("confirm must be true to Publish")
     timestamp = str(body.get("deployment_timestamp") or "").strip()
     if not timestamp:
-        raise ValueError("deployment_timestamp must match the reviewed Deploy Repo preview")
+        raise ValueError("deployment_timestamp must match the reviewed Publish preview")
     plan = build_deploy_repo_plan(
         repo_root,
         body,
@@ -855,10 +884,12 @@ def apply_deploy_repo(
     )
     preview = plan.preview
     if body.get("preview_revision") != preview["preview_revision"]:
-        raise ValueError("accepted Preview revision does not match the reviewed Deploy Repo preview")
+        raise ValueError("accepted Preview revision does not match the reviewed Publish preview")
     if body.get("plan_revision") != preview["plan_revision"]:
-        raise ValueError("Deploy Repo preview is stale; preview again")
+        raise ValueError("Publish preview is stale; preview again")
 
+    if preview["error_count"]:
+        raise ValueError("Publish plan has destination or missing-asset errors; fix them and review again")
     apply_repository_projection(repo_root.resolve(), plan)
     media = apply_public_media_reconciliation(
         repo_root.resolve(),
@@ -875,10 +906,7 @@ def apply_deploy_repo(
         desired_lineage = plan.desired_lineages[workflow.contract_id]
         lineage_status = "unchanged"
         lineage_error = ""
-        rebuild_status = "not_required"
-        rebuild_error = ""
         if desired_lineage is not None and desired_lineage != current_lineage:
-            rebuild_status = "not_run"
             try:
                 publication_lineage.write_table_atomic(
                     repo_root.resolve(),
@@ -889,32 +917,16 @@ def apply_deploy_repo(
             except Exception as exc:
                 lineage_status = "stale"
                 lineage_error = str(exc)
-            else:
-                try:
-                    rebuild_collection_outputs(
-                        repo_root.resolve(),
-                        workflow.working_collection.collection,
-                        stage=workflow.working_collection.stage,
-                    )
-                    rebuild_status = "updated"
-                except Exception as exc:
-                    rebuild_status = "stale"
-                    rebuild_error = str(exc)
         lineage_results.append(
             {
                 "contract_id": workflow.contract_id,
                 "status": lineage_status,
                 "error": lineage_error,
-                "working_rebuild": {
-                    "status": rebuild_status,
-                    "error": rebuild_error,
-                },
             }
         )
 
     lineage_errors = sum(
         int(bool(record["error"]))
-        + int(bool(record["working_rebuild"]["error"]))
         for record in lineage_results
     )
     lineage_status = (
@@ -954,12 +966,10 @@ def apply_deploy_repo(
                 ],
             },
             "summary_text": (
-                f"Deployed Preview revision {preview['preview_revision']} to the repository projection. "
-                f"Media: {media.get('copied_count', 0)} copied, {media.get('removed_count', 0)} removed, "
+                f"Published Preview revision {preview['preview_revision']} to the repository projection. "
+                f"Media: {media.get('copied_count', 0)} copied, "
                 f"{media.get('error_count', 0)} errors. "
-                f"Lineage: {lineage_status}; "
-                f"{sum(int(record['working_rebuild']['status'] == 'updated') for record in lineage_results)} "
-                "Working rebuilds updated."
+                f"Lineage: {lineage_status}."
             ),
         }
     )

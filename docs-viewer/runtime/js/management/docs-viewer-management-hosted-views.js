@@ -85,7 +85,7 @@ export function createDocsViewerManagementViewDefinitions() {
       {
         id: "manage-deploy-repo",
         actionId: DOCS_VIEWER_ACTION_IDS.DEPLOY_REPO,
-        label: "Deploy Repo",
+        label: "Publish",
         ownerType: "app",
         surfaceId: "app-management",
         appKinds: ["manage"],

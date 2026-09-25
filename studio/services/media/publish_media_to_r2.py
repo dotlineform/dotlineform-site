@@ -32,18 +32,15 @@ from studio.shared.python.studio_python_paths import ensure_studio_python_paths
 REPO_ROOT = ensure_studio_python_paths(__file__)
 SCRIPTS_DIR = REPO_ROOT / "scripts"
 
-from catalogue_media_paths import catalogue_media_display_path, configured_catalogue_media_workspace
+from catalogue.catalogue_output_paths import catalogue_workspace_config
 from pipeline_config import (
     load_pipeline_config,
-    media_mode_output_subdir,
 )
 from local_env import SITE_ENV_REL_PATH, runtime_env
-from catalogue.catalogue_media_version import finalize_catalogue_media_versions
 
 
 PIPELINE_CONFIG = load_pipeline_config(Path(__file__))
 PRIMARY_SUFFIX = str(PIPELINE_CONFIG["variants"]["primary"]["suffix"])
-PRIMARY_OUTPUT_SUBDIR = str(PIPELINE_CONFIG["variants"]["primary"]["output_subdir"])
 OUTPUT_FORMAT = str(PIPELINE_CONFIG["encoding"]["format"])
 PRIMARY_WIDTHS = [int(v) for v in PIPELINE_CONFIG["variants"]["primary"]["widths"]]
 
@@ -63,12 +60,11 @@ DEFAULT_ENV_FILES = (
 @dataclass(frozen=True)
 class CatalogueKind:
     cli_name: str
-    pipeline_mode: str
     config_prefix_key: str
 
 
 CATALOGUE_KINDS: Dict[str, CatalogueKind] = {
-    "works": CatalogueKind("works", "work", "media_image_works"),
+    "works": CatalogueKind("works", "media_image_works"),
 }
 
 
@@ -143,19 +139,6 @@ class MissingVariant:
     item_id: str
     missing_widths: List[int]
     present_widths: List[int]
-
-
-@dataclass
-class MediaVersionResult:
-    kind: str
-    item_id: str
-    status: str
-    work_id: str = ""
-    previous_version: int | None = None
-    media_version: int | None = None
-    advanced: bool = False
-    output_json_path: str = ""
-    reason: str = ""
 
 
 class RemoteClient(Protocol):
@@ -290,11 +273,7 @@ def main(argv: Sequence[str] | None = None) -> int:
 
     failed = report["counts"].get("failed", 0)
     blocked = sum(count for status, count in report["counts"].items() if status.startswith("blocked"))
-    version_failed = any(
-        isinstance(item, Mapping) and item.get("status") == "failed"
-        for item in report.get("media_versions", [])
-    )
-    return 1 if failed or blocked or version_failed else 0
+    return 1 if failed or blocked else 0
 
 
 def run_catalogue_upload(
@@ -334,8 +313,7 @@ def run_catalogue_upload(
     ]
     try:
         combined_env = runtime_env(environ=environ, env_files=selected_env_files)
-        media_workspace = configured_catalogue_media_workspace(resolved_root, environ=combined_env)
-        media_root = media_workspace.root
+        media_root = catalogue_workspace_config(resolved_root, environ=combined_env).assets.work_primary.path
     except ValueError as exc:
         raise SystemExit(f"Error: {exc}") from exc
 
@@ -354,7 +332,7 @@ def run_catalogue_upload(
         selected_kind = kind or "any catalogue kind"
         raise SystemExit(
             "Error: no matching catalogue primary derivatives found for "
-            f"{selected_kind} id {item_id!r} under {catalogue_media_display_path(media_root, media_workspace)}."
+            f"{selected_kind} id {item_id!r} in the configured shared primary assets."
         )
     results = plan_and_publish(
         objects=objects,
@@ -363,11 +341,6 @@ def run_catalogue_upload(
         force=force,
         changed_only=changed_only,
     )
-    media_versions = (
-        finalize_complete_catalogue_uploads(repo_root=resolved_root, results=results)
-        if write
-        else []
-    )
     return build_report(
         results=results,
         missing=missing,
@@ -375,7 +348,6 @@ def run_catalogue_upload(
         force=force,
         changed_only=changed_only,
         action="upload",
-        media_versions=media_versions,
     )
 
 
@@ -390,7 +362,6 @@ def run_catalogue_upload_targets(
     client: RemoteClient | None = None,
     env_files: Iterable[Path] | None = None,
     environ: Mapping[str, str] | None = None,
-    refresh_output: bool = True,
 ) -> Dict[str, object]:
     """Publish exact catalogue media targets through one remote client."""
 
@@ -413,8 +384,7 @@ def run_catalogue_upload_targets(
     ]
     try:
         combined_env = runtime_env(environ=environ, env_files=selected_env_files)
-        media_workspace = configured_catalogue_media_workspace(resolved_root, environ=combined_env)
-        media_root = media_workspace.root
+        media_root = catalogue_workspace_config(resolved_root, environ=combined_env).assets.work_primary.path
     except ValueError as exc:
         raise SystemExit(f"Error: {exc}") from exc
 
@@ -436,7 +406,7 @@ def run_catalogue_upload_targets(
             raise SystemExit(
                 "Error: no matching catalogue primary derivatives found for "
                 f"{kind_name} id {item_id!r} under "
-                f"{catalogue_media_display_path(media_root, media_workspace)}."
+                "the configured shared primary assets."
             )
         objects.extend(target_objects)
         missing.extend(target_missing)
@@ -448,11 +418,6 @@ def run_catalogue_upload_targets(
         force=force,
         changed_only=changed_only,
     )
-    media_versions = (
-        finalize_complete_catalogue_uploads(repo_root=resolved_root, results=results, refresh_output=refresh_output)
-        if write
-        else []
-    )
     return build_report(
         results=results,
         missing=missing,
@@ -460,7 +425,6 @@ def run_catalogue_upload_targets(
         force=force,
         changed_only=changed_only,
         action="upload",
-        media_versions=media_versions,
     )
 
 
@@ -577,11 +541,7 @@ def discover_catalogue_primary_objects(
 
     for kind_name in kinds:
         kind = CATALOGUE_KINDS[kind_name]
-        source_root = (
-            media_root
-            / media_mode_output_subdir(PIPELINE_CONFIG, kind.pipeline_mode)
-            / PRIMARY_OUTPUT_SUBDIR
-        ).resolve()
+        source_root = media_root
         groups = collect_primary_groups(source_root, item_id=item_id)
         remote_prefix = prefixes[kind.config_prefix_key]
 
@@ -779,38 +739,6 @@ def plan_and_publish(
     return results
 
 
-def finalize_complete_catalogue_uploads(
-    *, repo_root: Path, results: Sequence[PublishResult], refresh_output: bool = True,
-) -> List[MediaVersionResult]:
-    """Promote only complete successful groups through one canonical transaction."""
-    grouped: Dict[tuple[str, str], List[PublishResult]] = {}
-    for result in results:
-        grouped.setdefault((result.kind, result.item_id), []).append(result)
-    finalizations: List[MediaVersionResult] = []
-    eligible: Dict[tuple[str, str], bool] = {}
-    for target, group in sorted(grouped.items()):
-        complete = {item.width for item in group} == set(PRIMARY_WIDTHS)
-        successful = all(item.status in {"unchanged", "uploaded", "overwritten"} for item in group)
-        if complete and successful:
-            eligible[target] = any(item.status in {"uploaded", "overwritten"} for item in group)
-        else:
-            finalizations.append(MediaVersionResult(*target, status="not_promoted", reason="complete successful primary variant set is required"))
-    if eligible:
-        try:
-            finalized = finalize_catalogue_media_versions(repo_root, eligible, refresh_output=refresh_output)
-            finalizations.extend(
-                MediaVersionResult(
-                    kind=item.kind, item_id=item.item_id, status="promoted" if item.advanced else "current",
-                    work_id=item.work_id, previous_version=item.previous_version, media_version=item.media_version,
-                    advanced=item.advanced, output_json_path=item.output_json_path,
-                    reason="complete remote variant set confirmed",
-                ) for item in finalized
-            )
-        except Exception as exc:
-            finalizations.extend(MediaVersionResult(*target, status="failed", reason=f"media-version finalization failed: {exc}") for target in eligible)
-    return finalizations
-
-
 def plan_and_delete(
     *,
     objects: Sequence[RemoteMediaObject],
@@ -905,7 +833,6 @@ def build_report(
     force: bool,
     changed_only: bool,
     action: str,
-    media_versions: Sequence[MediaVersionResult] = (),
 ) -> Dict[str, object]:
     visible_results = [result for result in results if not (changed_only and result.status == "unchanged")]
     counts: Dict[str, int] = {}
@@ -921,7 +848,6 @@ def build_report(
         "counts": dict(sorted(counts.items())),
         "missing_variants": [asdict(item) for item in missing],
         "objects": [asdict(result) for result in visible_results],
-        "media_versions": [asdict(result) for result in media_versions],
     }
 
 
@@ -955,19 +881,6 @@ def print_report(report: Mapping[str, object]) -> None:
             print(
                 f"{item.get('status')}: {item.get('kind')} {item.get('item_id')} "
                 f"{item.get('width')} -> {item.get('object_key')}{reason}"
-            )
-
-    media_versions = report.get("media_versions", [])
-    if isinstance(media_versions, list):
-        for item in media_versions:
-            if not isinstance(item, Mapping):
-                continue
-            version = item.get("media_version")
-            version_text = f" -> v={version}" if version is not None else ""
-            reason = f" - {item.get('reason')}" if item.get("reason") else ""
-            print(
-                f"media_version_{item.get('status')}: {item.get('kind')} {item.get('item_id')}"
-                f"{version_text}{reason}"
             )
 
 

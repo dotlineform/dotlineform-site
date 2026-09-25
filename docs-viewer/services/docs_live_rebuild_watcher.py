@@ -971,7 +971,7 @@ def rebuild_build_media(
         remove_build_manifest(repo_root, config)
         remote_client = authenticated_remote_client_for_locations(
             repo_root,
-            [generated_media.generated_location],
+            [generated_media.asset_location],
         )
         source = artifact_location_adapter(
             repo_root,
@@ -979,7 +979,7 @@ def rebuild_build_media(
         )
         generated = artifact_location_adapter(
             repo_root,
-            generated_media.generated_location,
+            generated_media.asset_location,
             served_path_prefix=generated_media.served_path_prefix,
             remote_client=remote_client,
         )

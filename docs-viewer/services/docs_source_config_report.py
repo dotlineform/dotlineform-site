@@ -113,9 +113,7 @@ def build_source_config_report(repo_root: Path) -> dict[str, Any]:
                     "preview_search": {"provider": config.preview.search.location.provider},
                     "media": {
                         media_type: {
-                            "source_provider": media.source_location.provider,
-                            "generated_provider": media.generated_location.provider,
-                            "preview_provider": media.preview_location.provider,
+                            "asset_provider": media.asset_location.provider,
                             "reference_prefix": media.reference_prefix.as_posix(),
                             "served_path_prefix": media.served_path_prefix,
                         }

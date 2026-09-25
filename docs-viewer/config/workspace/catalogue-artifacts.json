@@ -1,0 +1,14 @@
+{
+  "schema_version": "docs_catalogue_artifacts_v1",
+  "by_id_directories": [
+    "works/index",
+    "series/index",
+    "galleries/index"
+  ],
+  "system_files": [
+    "media-config.json",
+    "works/works_index.json",
+    "series/series_index.json",
+    "galleries/galleries_index.json"
+  ]
+}

@@ -31,7 +31,7 @@ from docs_collection_customisations import (
 
 
 CONFIG_REL_PATH = Path("docs-viewer/config/workspace/docs-workspace.json")
-SCHEMA_VERSION = "docs_workspace_v3"
+SCHEMA_VERSION = "docs_workspace_v4"
 DOTLINEFORM_DOCS_BASE_DIR_ENV = "DOTLINEFORM_DOCS_BASE_DIR"
 EXTERNAL_DATA_ROOT_MARKER = f"${DOTLINEFORM_DOCS_BASE_DIR_ENV}"
 STAGES = ("working", "preview")
@@ -86,18 +86,15 @@ class DocsBuildMediaConfig:
 class DocsManagedMediaConfig:
     media_type: str
     reference_prefix: Path
-    source_location: ArtifactLocation
-    generated_location: ArtifactLocation
-    preview_location: ArtifactLocation
+    asset_location: ArtifactLocation
     served_path_prefix: str
     build_inputs: tuple[str, ...]
 
 
 @dataclass(frozen=True)
 class DocsMediaConfig:
-    source_location: ArtifactLocation
-    generated_location: ArtifactLocation
-    preview_location: ArtifactLocation
+    asset_location: ArtifactLocation
+    asset_root: ArtifactLocation
     types: Mapping[str, DocsManagedMediaConfig]
     build_sources: Mapping[str, DocsBuildMediaConfig]
 
@@ -174,6 +171,75 @@ class DocsStageConfig:
 
 
 @dataclass(frozen=True)
+class DocsAssetsConfig:
+    """Shared current reader bytes; stages record identities relative to root."""
+
+    root: ArtifactLocation
+    document_media: ArtifactLocation
+    work_primary: ArtifactLocation
+    work_thumbnails: ArtifactLocation
+    work_files: ArtifactLocation
+    served_path_prefix: str
+    collection_ids: tuple[str, ...]
+    media_types: tuple[str, ...]
+
+    def url(self, location: ArtifactLocation) -> str:
+        """Return the one local URL for a configured shared asset location."""
+        relative = location.path.relative_to(self.root.path)
+        return self.served_path_prefix.rstrip("/") + "/" + relative.as_posix()
+
+    def document_media_location(self, *, collection: str | None, media_type: str) -> ArtifactLocation:
+        """Select the workspace or an exact registered collection's asset family."""
+        if media_type not in self.media_types:
+            raise ValueError("asset media_type must be registered in the workspace")
+        if collection is None:
+            owner = Path("workspace")
+        elif collection in self.collection_ids:
+            owner = Path("collections") / collection
+        else:
+            raise ValueError("asset collection must be an exact registered collection ID")
+        return location_child(self.document_media, owner / media_type)
+
+    def reference_path(self, identity: str) -> Path:
+        """Validate a captured identity without observing mutable asset bytes."""
+        relative = safe_relative_path(identity, field="asset reference")
+        if relative.as_posix() != identity:
+            raise ValueError("asset reference must use its exact workspace-relative identity")
+        path = self.root.path / relative
+        families = [self.work_primary.path, self.work_thumbnails.path, self.work_files.path]
+        families.extend(
+            self.document_media.path / owner / media_type
+            for owner in (Path("workspace"), *(Path("collections") / child for child in self.collection_ids))
+            for media_type in self.media_types
+        )
+        if not any(path != family and path.is_relative_to(family) for family in families):
+            raise ValueError("asset reference must identify a file in a configured asset family")
+        return path
+
+    def resolve_reference(self, identity: str) -> ArtifactLocation:
+        """Resolve a confined current file, rejecting filesystem redirects."""
+        path = self.reference_path(identity)
+        return location_child(self.root, path.relative_to(self.root.path))
+
+
+@dataclass(frozen=True)
+class DocsCatalogueConfig:
+    """Catalogue JSON destinations, independent of document eligibility."""
+
+    working: ArtifactLocation
+    preview: ArtifactLocation
+    public_projection: DocsArtifactConfig
+
+    def stage_location(self, stage: str) -> ArtifactLocation:
+        """Require an explicit stage; never read another stage on failure."""
+        if stage == "working":
+            return self.working
+        if stage == "preview":
+            return self.preview
+        raise ValueError("Catalogue stage must be working or preview")
+
+
+@dataclass(frozen=True)
 class DocsWorkspaceConfig:
     workspace_root: ArtifactLocation
     public_viewer_base_url: str
@@ -182,6 +248,8 @@ class DocsWorkspaceConfig:
     search_fields: tuple[str, ...]
     recent_limit: int
     stages: tuple[DocsStageConfig, ...]
+    assets: DocsAssetsConfig
+    catalogue: DocsCatalogueConfig
 
 
 def default_repo_root() -> Path:
@@ -348,18 +416,18 @@ def _public_projection(raw: Any) -> DocsPublicProjectionConfig:
     return DocsPublicProjectionConfig(documents, search, media)
 
 
-def _media(raw: Any, *, source_root: ArtifactLocation, generated_root: ArtifactLocation,
-           preview_root: ArtifactLocation, stage: str, collection: str = "") -> DocsMediaConfig:
+def _media(raw: Any, *, source_root: ArtifactLocation, assets: DocsAssetsConfig,
+           stage: str, collection: str = "") -> DocsMediaConfig:
     field = f"stages.{stage}.media"
     item = _object(raw, field=field, required={"types", "build_sources"})
     types = item["types"]
     if not isinstance(types, dict) or not types or set(types) - MANAGED_MEDIA_TYPES:
         raise ValueError(f"{field}.types must configure supported media types")
     source_media = location_child(source_root, Path("media"))
-    generated_media = location_child(generated_root, Path("media"))
-    published_media = location_child(preview_root, Path("media"))
+    owner = Path("collections") / collection if collection else Path("workspace")
+    asset_media = location_child(assets.document_media, owner)
     reference_root = MEDIA_REFERENCE_ROOT / "collections" / collection if collection else MEDIA_REFERENCE_ROOT
-    served_root = f"/docs/media/{stage}" + (f"/collections/{collection}" if collection else "")
+    served_root = assets.url(asset_media)
     raw_builds = item["build_sources"]
     if not isinstance(raw_builds, dict) or set(raw_builds) - BUILD_MEDIA_TYPES:
         raise ValueError(f"{field}.build_sources contains unsupported producers")
@@ -377,10 +445,10 @@ def _media(raw: Any, *, source_root: ArtifactLocation, generated_root: ArtifactL
             raise ValueError(f"{field}.types.{media_type}.build_inputs must name a matching configured producer")
         managed[media_type] = DocsManagedMediaConfig(
             media_type, reference_root / media_type,
-            location_child(source_media, Path(media_type)), location_child(generated_media, Path(media_type)),
-            location_child(published_media, Path(media_type)), f"{served_root}/{media_type}", inputs,
+            assets.document_media_location(collection=collection or None, media_type=media_type),
+            f"{served_root}/{media_type}", inputs,
         )
-    return DocsMediaConfig(source_media, generated_media, published_media, managed, builds)
+    return DocsMediaConfig(asset_media, assets.root, managed, builds)
 
 
 def _preview(root: ArtifactLocation) -> DocsPreviewConfig:
@@ -407,7 +475,8 @@ def _lifecycle(raw: Any, *, field: str) -> DocsCollectionLifecycleConfig | None:
 
 
 def _collections(raw: Any, *, workspace_root: ArtifactLocation, stage: str,
-                media_settings: Any, projection: DocsPublicProjectionConfig | None) -> tuple[DocsCollectionConfig, ...]:
+                media_settings: Any, assets: DocsAssetsConfig,
+                projection: DocsPublicProjectionConfig | None) -> tuple[DocsCollectionConfig, ...]:
     if not isinstance(raw, list):
         raise ValueError(f"stages.{stage}.collections must be an array")
     result = []
@@ -455,14 +524,59 @@ def _collections(raw: Any, *, workspace_root: ArtifactLocation, stage: str,
             collection_customisation=normalize_docs_collection_customisation(item.get("collection_customisation"), field=f"{field}.collection_customisation"),
             lifecycle=_lifecycle(item.get("lifecycle"), field=f"{field}.lifecycle"), stage=stage,
             source=DocsSourceConfig(source_root), generated=_generated(generated_root), preview=_preview(preview_root),
-            media=_media(media_settings, source_root=source_root, generated_root=generated_root,
-                         preview_root=preview_root, stage=stage, collection=child),
+            media=_media(media_settings, source_root=source_root, assets=assets, stage=stage, collection=child),
             public_projection=child_projection,
         ))
     return tuple(result)
 
 
-def load_docs_workspace_config(repo_root: Path | None = None, *, docs_base_dir: Path | None = None) -> DocsWorkspaceConfig:
+def _assets(raw: Any, *, workspace_root: ArtifactLocation,
+            collection_ids: tuple[str, ...], media_types: tuple[str, ...], assets_base_dir: Path | None) -> DocsAssetsConfig:
+    item = _object(raw, field="assets", required={
+        "root", "document_media", "work_primary", "work_thumbnails", "work_files", "served_path_prefix",
+    })
+    relative_root = safe_relative_path(item["root"], field="assets.root")
+    if relative_root.parts[0] != "assets":
+        raise ValueError("assets.root must remain in the workspace assets tree")
+    root = location_child(workspace_root, relative_root)
+    if assets_base_dir is not None:
+        if not assets_base_dir.is_absolute() or ".." in assets_base_dir.parts or assets_base_dir.is_symlink() or not assets_base_dir.is_dir():
+            raise ValueError("Temporary build assets must name an existing absolute shared asset directory")
+        root = ArtifactLocation(EXTERNAL_LOCAL_PROVIDER, assets_base_dir)
+    paths = {
+        key: safe_relative_path(item[key], field=f"assets.{key}")
+        for key in ("document_media", "work_primary", "work_thumbnails", "work_files")
+    }
+    for key, path in paths.items():
+        if any(path.is_relative_to(other) or other.is_relative_to(path) for other_key, other in paths.items() if key != other_key):
+            raise ValueError("asset families must have distinct, non-overlapping destinations")
+    prefix = _served_prefix(item["served_path_prefix"], field="assets.served_path_prefix")
+    if not prefix.startswith("/"):
+        raise ValueError("assets.served_path_prefix must be a local URL prefix")
+    return DocsAssetsConfig(
+        root=root, **{key: location_child(root, path) for key, path in paths.items()},
+        served_path_prefix=prefix, collection_ids=collection_ids, media_types=media_types,
+    )
+
+
+def _catalogue(raw: Any, *, workspace_root: ArtifactLocation) -> DocsCatalogueConfig:
+    item = _object(raw, field="catalogue", required={"working", "preview", "public_projection"})
+    locations = {}
+    for stage, parent in (("working", Path("working/generated")), ("preview", Path("preview"))):
+        relative = safe_relative_path(item[stage], field=f"catalogue.{stage}")
+        if not relative.is_relative_to(parent) or relative == parent:
+            raise ValueError(f"catalogue.{stage} must be a directory within {parent}")
+        if relative.relative_to(parent).parts[0] in {"documents", "collections", "search"}:
+            raise ValueError(f"catalogue.{stage} must not overlap document or Search ownership")
+        locations[stage] = location_child(workspace_root, relative)
+    return DocsCatalogueConfig(
+        **locations, public_projection=_public_artifact(
+            item["public_projection"], field="catalogue.public_projection", root=Path("site/assets/data/catalogue"),
+        ),
+    )
+
+
+def load_docs_workspace_config(repo_root: Path | None = None, *, docs_base_dir: Path | None = None, assets_base_dir: Path | None = None) -> DocsWorkspaceConfig:
     """Read checked workspace settings and resolve the existing external root.
 
     Stage paths are derived without creating them. Callers must check the
@@ -476,6 +590,7 @@ def load_docs_workspace_config(repo_root: Path | None = None, *, docs_base_dir: 
         raise ValueError(f"invalid Docs workspace JSON: {exc}") from exc
     payload = _object(raw, field="Docs workspace", required={
         "schema_version", "public_viewer_base_url", "public_projection", "search_fields", "recent_limit", "stages", "preview",
+        "assets", "catalogue",
     })
     if payload["schema_version"] != SCHEMA_VERSION:
         raise ValueError(f"Docs workspace schema_version must be {SCHEMA_VERSION}")
@@ -496,21 +611,34 @@ def load_docs_workspace_config(repo_root: Path | None = None, *, docs_base_dir: 
     workspace_root = ArtifactLocation(EXTERNAL_LOCAL_PROVIDER, resolve_external_data_root(docs_base_dir))
     preview = _preview(location_child(workspace_root, Path("preview")))
     projection = _public_projection(payload["public_projection"])
+    working = _object(settings["working"], field="stages.working", required={
+        "media", "default_doc_id", "collections", "non_loadable_doc_ids",
+        "manage_only_tree_root_ids", "allow_unresolved_parent_ids",
+    })
+    if not isinstance(working["collections"], list):
+        raise ValueError("stages.working.collections must be an array")
+    collection_ids = tuple(
+        normalize_collection_id(child.get("collection") if isinstance(child, dict) else None, field="collection")
+        for child in working["collections"]
+    )
+    # CLI transport for explicitly isolated Preview builds; ordinary storage still
+    # derives from the workspace. No assets are copied into the temporary root.
+    if assets_base_dir is None and os.environ.get("DOTLINEFORM_DOCS_BUILD_ASSETS_DIR"):
+        assets_base_dir = Path(os.environ["DOTLINEFORM_DOCS_BUILD_ASSETS_DIR"])
+    assets = _assets(payload["assets"], workspace_root=workspace_root,
+                     collection_ids=collection_ids, media_types=tuple(projection.media),
+                     assets_base_dir=assets_base_dir)
     stages = []
     for stage in STAGES:
         field = f"stages.{stage}"
-        item = _object(settings["working"], field="stages.working", required={
-            "media", "default_doc_id", "collections", "non_loadable_doc_ids",
-            "manage_only_tree_root_ids", "allow_unresolved_parent_ids",
-        })
+        item = working
         if stage == "preview":
             item = {**item, "default_doc_id": preview_settings["default_doc_id"],
                     "non_loadable_doc_ids": [], "manage_only_tree_root_ids": [],
                     "allow_unresolved_parent_ids": False}
         source_root = location_child(workspace_root, Path(stage) / "source")
         generated_root = location_child(workspace_root, Path(stage) / "generated")
-        media = _media(item["media"], source_root=source_root, generated_root=generated_root,
-                       preview_root=location_child(workspace_root, Path("preview")), stage=stage)
+        media = _media(item["media"], source_root=source_root, assets=assets, stage=stage)
         if set(media.types) != set(projection.media):
             raise ValueError(f"{field}.media types must match the public projection")
         stage_projection = projection if stage == "preview" else None
@@ -522,9 +650,13 @@ def load_docs_workspace_config(repo_root: Path | None = None, *, docs_base_dir: 
             manage_only_tree_root_ids=_doc_ids(item["manage_only_tree_root_ids"], field=f"{field}.manage_only_tree_root_ids"),
             allow_unresolved_parent_ids=_boolean(item["allow_unresolved_parent_ids"], field=f"{field}.allow_unresolved_parent_ids"),
             collections=_collections(item["collections"], workspace_root=workspace_root, stage=stage,
-                                   media_settings=item["media"], projection=stage_projection), search_fields=fields,
+                                   media_settings=item["media"], assets=assets, projection=stage_projection), search_fields=fields,
         ))
-    return DocsWorkspaceConfig(workspace_root, public_url, projection, preview, fields, recent_limit, tuple(stages))
+    return DocsWorkspaceConfig(
+        workspace_root, public_url, projection, preview, fields, recent_limit, tuple(stages),
+        assets,
+        _catalogue(payload["catalogue"], workspace_root=workspace_root),
+    )
 
 
 def select_workspace_stage(config: DocsWorkspaceConfig, stage: str | None) -> DocsStageConfig:

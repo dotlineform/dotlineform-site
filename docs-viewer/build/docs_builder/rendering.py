@@ -236,7 +236,7 @@ class ContentRenderingMixin:
             raise RuntimeError(
                 f"HTML media token must use the configured collection prefix {expected_prefix}/"
             )
-        asset_path = local_artifact_path(self.repo_root, media.source_location, identity)
+        asset_path = local_artifact_path(self.repo_root, media.asset_location, identity)
         if asset_path is not None and not asset_path.is_file():
             raise RuntimeError(f"HTML media not found for {self.config.stage}: {media_path}")
         public_path = self.resolve_media_url(media_path)

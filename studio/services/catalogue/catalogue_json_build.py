@@ -14,7 +14,7 @@ from studio.shared.python.studio_python_paths import ensure_studio_python_paths
 
 REPO_ROOT = ensure_studio_python_paths(__file__)
 
-from catalogue.catalogue_output_paths import catalogue_output_workspace, output_path
+from catalogue.catalogue_output_paths import catalogue_workspace_config, output_path
 from catalogue.catalogue_media_policy import catalogue_thumbnail_paths
 from catalogue.catalogue_source import DEFAULT_SOURCE_DIR, records_from_json_source
 from catalogue.generate_work_pages import generate_catalogue_json
@@ -24,7 +24,7 @@ def populate_catalogue_output(repo_root: Path, *, write: bool) -> dict:
     """Preserve canonical data and existing media while producing current JSON."""
     source_dir = repo_root / DEFAULT_SOURCE_DIR
     records = records_from_json_source(source_dir)
-    workspace = catalogue_output_workspace(repo_root)
+    workspace = catalogue_workspace_config(repo_root).assets.work_thumbnails
     missing = []
     existing_count = 0
     for relative in sorted(catalogue_thumbnail_paths(repo_root, records)):

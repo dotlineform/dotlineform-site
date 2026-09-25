@@ -335,7 +335,7 @@ def _prepared_mermaid_media(
     source_bytes = source_path.read_bytes()
     remote_client = authenticated_remote_client_for_locations(
         repo_root,
-        [generated_media.generated_location],
+        [generated_media.asset_location],
     )
     source_adapter = artifact_location_adapter(
         repo_root,
@@ -343,7 +343,7 @@ def _prepared_mermaid_media(
     )
     published_adapter = artifact_location_adapter(
         repo_root,
-        generated_media.generated_location,
+        generated_media.asset_location,
         served_path_prefix=generated_media.served_path_prefix,
         remote_client=remote_client,
     )

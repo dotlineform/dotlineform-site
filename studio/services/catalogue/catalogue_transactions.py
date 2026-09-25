@@ -97,23 +97,33 @@ def unique_paths(paths: Iterable[Path]) -> list[Path]:
     return out
 
 
-def atomic_write_many(payloads_by_path: Dict[Path, Dict[str, Any]], *, delete_paths: Iterable[Path] = ()) -> list[Path]:
+def atomic_write_many(
+    payloads_by_path: Dict[Path, Dict[str, Any]], *, delete_paths: Iterable[Path] = (),
+    media_files: Mapping[Path, bytes] | None = None,
+) -> list[Path]:
+    """Commit Catalogue JSON and any prepared current media through the same rollback owner."""
     temp_paths: Dict[Path, Path] = {}
     replaced_paths: list[Path] = []
     originals: Dict[Path, bytes | None] = {}
     deleted_originals: Dict[Path, bytes] = {}
 
     try:
-        for path, payload in payloads_by_path.items():
+        data_by_path = {
+            path: (json.dumps(payload, ensure_ascii=False, indent=2, sort_keys=False) + "\n").encode("utf-8")
+            for path, payload in payloads_by_path.items()
+        }
+        if set(data_by_path).intersection(media_files or {}):
+            raise ValueError("Catalogue JSON and media write destinations must be distinct")
+        data_by_path.update(media_files or {})
+        for path, data in data_by_path.items():
             path.parent.mkdir(parents=True, exist_ok=True)
             originals[path] = path.read_bytes() if path.exists() else None
 
             fd, temp_name = tempfile.mkstemp(prefix=f"{path.name}.", suffix=".tmp", dir=str(path.parent))
             temp_path = Path(temp_name)
-            with os.fdopen(fd, "w", encoding="utf-8") as handle:
-                json.dump(payload, handle, ensure_ascii=False, indent=2, sort_keys=False)
-                handle.write("\n")
             temp_paths[path] = temp_path
+            with os.fdopen(fd, "wb") as handle:
+                handle.write(data)
 
         for path, temp_path in temp_paths.items():
             os.replace(temp_path, path)
@@ -147,4 +157,4 @@ def atomic_write_many(payloads_by_path: Dict[Path, Dict[str, Any]], *, delete_pa
                 except OSError:
                     pass
 
-    return [*payloads_by_path.keys()]
+    return list(data_by_path)

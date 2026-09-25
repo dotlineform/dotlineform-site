@@ -1,29 +1,39 @@
-"""Confine replaceable Catalogue output to its existing external workspace."""
+"""Resolve Working Catalogue JSON and shared assets in the configured Docs workspace."""
 
 from pathlib import Path
 from typing import Mapping
 
-from external_workspace_paths import ExternalWorkspaceRoot, resolve_external_workspace_root, resolve_workspace_path
+from docs_artifact_locations import ArtifactLocation
+from docs_workspace_config import (
+    DOTLINEFORM_DOCS_BASE_DIR_ENV, DocsWorkspaceConfig, load_docs_workspace_config,
+    location_child, safe_relative_path,
+)
 from local_env import runtime_env
 
 CATALOGUE_OUTPUT_ROUTE_PREFIX = "/studio/catalogue-output/"
 
 
-def catalogue_output_workspace(repo_root: Path, *, environ: Mapping[str, str] | None = None) -> ExternalWorkspaceRoot:
-    """Require the configured workspace; never create a replacement root."""
-    return resolve_external_workspace_root(
-        "catalogue/generated", environ=environ if environ is not None else runtime_env(repo_root=repo_root),
-        require_exists=True,
-    )
+def catalogue_workspace_config(repo_root: Path, *, environ: Mapping[str, str] | None = None) -> DocsWorkspaceConfig:
+    """Use the explicit Docs environment binding, independently of Projects sources."""
+    env = runtime_env(repo_root=repo_root, environ=environ)
+    value = env.get(DOTLINEFORM_DOCS_BASE_DIR_ENV, "").strip()
+    if not value:
+        raise ValueError(f"{DOTLINEFORM_DOCS_BASE_DIR_ENV} is required")
+    return load_docs_workspace_config(repo_root, docs_base_dir=Path(value))
 
 
-def output_path(workspace: ExternalWorkspaceRoot, relative: str | Path) -> Path:
-    """Resolve an owned path, rejecting symlinks that leave the output root."""
-    return resolve_workspace_path(workspace, relative)
+def catalogue_output_workspace(repo_root: Path, *, environ: Mapping[str, str] | None = None) -> ArtifactLocation:
+    """Select the configured Working JSON destination; no creation or old-root fallback."""
+    return catalogue_workspace_config(repo_root, environ=environ).catalogue.working
+
+
+def output_path(workspace: ArtifactLocation, relative: str | Path) -> Path:
+    """Resolve an owned descendant without traversal or symlinks."""
+    return location_child(workspace, safe_relative_path(str(relative), field="Catalogue output")).path
 
 
 def thumbnail_directory(repo_root: Path, kind: str) -> Path:
     """Return the Work thumbnail destination used by Studio."""
     if kind != "work":
         raise ValueError(f"unsupported Catalogue media kind: {kind}")
-    return output_path(catalogue_output_workspace(repo_root), "works/thumbs")
+    return catalogue_workspace_config(repo_root).assets.work_thumbnails.path

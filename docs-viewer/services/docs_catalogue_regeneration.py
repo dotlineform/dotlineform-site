@@ -78,13 +78,13 @@ def _plan(repo_root: Path, only_create_new: bool) -> tuple[list[RegenerationEntr
         if work_id in documents:
             raise ValueError(f"Work {work_id} has multiple Catalogue documents")
         documents[work_id] = document
-    works = read_catalogue_work_index(repo_root)
+    works = read_catalogue_work_index(repo_root, stage="working")
     candidates = [work_id for work_id in sorted(works) if not only_create_new or work_id not in documents]
     entries = []
     revision_records = []
     for work_id in candidates:
         try:
-            record = catalogue_work_record(read_catalogue_work(repo_root, work_id)["work"])
+            record = catalogue_work_record(read_catalogue_work(repo_root, work_id, stage="working")["work"])
         except (OSError, ValueError) as error:
             raise ValueError(f"Work {work_id}: {error}") from error
         document = documents.get(work_id)

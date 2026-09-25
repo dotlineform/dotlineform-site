@@ -30,7 +30,7 @@ export function readCatalogueEditorMediaAttrs(config) {
   const fullWidth = primary.preferred_width || (renderWidths.length ? renderWidths[renderWidths.length - 1] : 1600);
 
   return {
-    worksPrimaryBase: joinBasePath(mediaConfig.base, mediaConfig.works_images || "/works/img"),
+    worksPrimaryBase: joinBasePath(mediaConfig.base, mediaConfig.works_images),
     thumbWorksBase: joinBasePath(thumbsConfig.base, thumbsConfig.works),
     primaryDisplayWidth: displayWidth,
     primaryFullWidth: fullWidth,

@@ -26,7 +26,7 @@ from docs_workspace_config import (
     DocsManagedMediaConfig,
     DocsStageConfig,
     DocsCollectionConfig,
-    normalize_collection_id,
+    load_docs_workspace_config,
     load_docs_media_owner,
     managed_media_config,
     require_document_authoring,
@@ -37,7 +37,6 @@ from studio.services.media.publish_media_to_r2 import content_type_for, file_md5
 
 DOCS_MEDIA_CLASSES = set(MANAGED_MEDIA_TYPES)
 DOCS_MEDIA_ROUTE_CLASSES = set(MANAGED_MEDIA_TYPES)
-DOCS_MEDIA_ROUTE_PREFIX = "/docs/media/"
 SUCCESSFUL_UPLOAD_STATUSES = {"unchanged", "uploaded", "overwritten"}
 
 
@@ -246,7 +245,7 @@ def media_adapters_for_collection(
         media = managed_media_config(config, media_class)
         adapters[media_class] = artifact_location_adapter(
             repo_root,
-            media.source_location,
+            media.asset_location,
             served_path_prefix=media.served_path_prefix,
             remote_client=remote_client,  # type: ignore[arg-type]
         )
@@ -273,7 +272,7 @@ def publish_docs_media_files(
     require_document_authoring(config)
 
     media_classes = {item.media_class for item in files}
-    locations = [managed_media_config(config, media_class).source_location for media_class in media_classes]
+    locations = [managed_media_config(config, media_class).asset_location for media_class in media_classes]
     remote_client = authenticated_remote_client_for_locations(
         repo_root,
         locations,
@@ -288,14 +287,6 @@ def publish_docs_media_files(
         remote_client=remote_client,
     )
     results = plan_and_publish_docs_media(files, adapters=adapters, write=write, force=force)
-    if write and docs_publish_succeeded(results):
-        for item in files:
-            media = managed_media_config(config, item.media_class)
-            generated = artifact_location_adapter(repo_root, media.generated_location)
-            data = adapters[item.media_class].read(item.filename)
-            generated.replace(item.filename, data, content_type=safe_content_type(item.local_path))
-            if not generated.verify_bytes(item.filename, data):
-                raise RuntimeError("Generated media verification failed after source insertion")
     return results
 
 
@@ -365,42 +356,30 @@ def run_docs_staged_media_publish(
 
 def local_media_config(config: DocsStageConfig | DocsCollectionConfig, media_class: str) -> DocsManagedMediaConfig:
     media = managed_media_config(config, validate_media_class(media_class))
-    if media.generated_location.provider not in {REPOSITORY_PROVIDER, EXTERNAL_LOCAL_PROVIDER}:
+    if media.asset_location.provider not in {REPOSITORY_PROVIDER, EXTERNAL_LOCAL_PROVIDER}:
         raise ValueError(
             f"Docs stage {config.stage!r} media role {media_class!r} is not locally served"
         )
     return media
 
 
-def local_media_route(stage: str, media_class: str, filename: str, *, collection: str = "") -> str:
-    if stage not in {"working", "preview"}:
-        raise ValueError("Docs media route requires an explicit stage")
-    child = f"collections/{normalize_collection_id(collection, field='collection')}/" if collection else ""
-    return f"{DOCS_MEDIA_ROUTE_PREFIX}{stage}/{child}{validate_route_media_class(media_class)}/{validate_media_filename(filename)}"
-
-
-def local_media_path_from_route(repo_root: Path, request_path: str) -> tuple[Path, str]:
-    if not request_path.startswith(DOCS_MEDIA_ROUTE_PREFIX):
-        raise ValueError("Invalid Docs media route")
-    parts = request_path.removeprefix(DOCS_MEDIA_ROUTE_PREFIX).split("/")
-    stage = parts.pop(0) if parts else None
-    collection = ""
-    if parts and parts[0] == "collections":
-        if len(parts) != 4:
-            raise ValueError("Invalid Docs child media route")
-        _, collection, *parts = parts
-    if len(parts) != 2:
-        raise ValueError("Invalid Docs media route")
-    media_class, filename = parts
-    normalized_class = validate_route_media_class(media_class)
-    normalized_filename = validate_media_filename(filename)
-    config = load_docs_media_owner(repo_root, stage, collection=collection)
-    media = local_media_config(config, normalized_class)
-    adapter = artifact_location_adapter(repo_root, media.generated_location, served_path_prefix=media.served_path_prefix)
-    path = adapter.resolve(normalized_filename)  # type: ignore[attr-defined]
+def local_asset_path_from_route(repo_root: Path, request_path: str) -> tuple[Path, str]:
+    """Serve one confined current asset, independent of the selected JSON stage."""
+    assets = load_docs_workspace_config(repo_root).assets
+    prefix = assets.served_path_prefix.rstrip("/") + "/"
+    if not request_path.startswith(prefix):
+        raise ValueError("Invalid shared asset route")
+    path = assets.resolve_reference(request_path.removeprefix(prefix)).path
     if not path.is_file():
-        raise FileNotFoundError(f"Docs media file not found: {stage}/{normalized_class}/{normalized_filename}")
-    return path, normalized_class
+        raise FileNotFoundError("Required shared asset is unavailable")
+    if path.is_relative_to(assets.work_files.path):
+        media_type = "files"
+    elif path.is_relative_to(assets.document_media.path):
+        relative = path.relative_to(assets.document_media.path)
+        media_type = relative.parts[1] if relative.parts[0] == "workspace" else relative.parts[2]
+    else:
+        media_type = "img"
+    return path, media_type
 
 
 def safe_content_type(path: Path) -> str:
@@ -409,7 +388,6 @@ def safe_content_type(path: Path) -> str:
 
 __all__ = [
     "DOCS_MEDIA_CLASSES",
-    "DOCS_MEDIA_ROUTE_PREFIX",
     "DOCS_MEDIA_ROUTE_CLASSES",
     "DocsMediaFile",
     "DocsMediaPublishResult",
@@ -418,8 +396,7 @@ __all__ = [
     "docs_publish_report",
     "docs_publish_succeeded",
     "local_media_config",
-    "local_media_path_from_route",
-    "local_media_route",
+    "local_asset_path_from_route",
     "media_adapters_for_collection",
     "plan_and_publish_docs_media",
     "publish_docs_media_files",
