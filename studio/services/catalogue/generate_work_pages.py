@@ -16,7 +16,7 @@ from catalogue.catalogue_generation_common import compact_json_object, compute_p
 from catalogue.catalogue_media_policy import catalogue_media_policy, catalogue_thumbnail_paths
 from catalogue.catalogue_output_paths import catalogue_output_workspace, output_path
 from catalogue.catalogue_output_selection import selected_output_paths
-from catalogue.catalogue_source import CatalogueSourceRecords, records_from_json_source, validate_source_records, section_sort_key, detail_sort_key_for_section
+from catalogue.catalogue_source import CatalogueSourceRecords, records_from_json_source, validate_source_records
 
 
 def _index(family: str, items: Mapping[str, Any], timestamp: str) -> dict[str, Any]:
@@ -40,25 +40,8 @@ def catalogue_payloads(
             works_by_gallery[gid].append(wid)
     payloads: dict[str, dict[str, Any]] = {}
     works_index: dict[str, Any] = {}
-    details_index: dict[str, Any] = {}
     media_config = json.loads((repo_root / "site-tools/config/site-tools.json").read_text())["media"]
     payloads["media-config.json"] = catalogue_media_policy(repo_root, timestamp=timestamp)
-    details_by_section: dict[str, list[dict[str, Any]]] = {}
-    for uid, source in records.work_details.items():
-        detail = projection.build_canonical_detail_record(
-            source["work_id"], source["detail_id"], source.get("title"), source.get("width_px"),
-            source.get("height_px"), source.get("media_version"),
-        )
-        details_by_section.setdefault(source["section_id"], []).append(detail)
-        details_index[uid] = {**detail, "section_id": source["section_id"]}
-    sections_by_work: dict[str, list[dict[str, Any]]] = {}
-    for section in records.work_detail_sections.values():
-        details = details_by_section.get(section["section_id"], [])
-        details.sort(key=lambda item: detail_sort_key_for_section(section, item))
-        sections_by_work.setdefault(section["work_id"], []).append({
-            **{key: section[key] for key in ("section_id", "section_title", "section_order", "detail_sort") if key in section},
-            "details": details,
-        })
     for wid, source in records.works.items():
         work = compact_json_object({"work_id": wid, **projection.build_work_record_projection(source)})
         if source.get("series_id"):
@@ -72,10 +55,8 @@ def catalogue_payloads(
             ]
         work["documents"] = []
         work["galleries"] = [dict(galleries.galleries[gid]) for gid in sorted(galleries.works.get(wid, []))]
-        sections = sorted(sections_by_work.get(wid, []), key=section_sort_key)
         payloads[f"works/index/{wid}.json"] = projection.build_work_json_payload(
-            work_id=wid, work_record=work, sections=sections, generated_at_utc=timestamp,
-            count=sum(len(section["details"]) for section in sections),
+            work_id=wid, work_record=work, sections=[], generated_at_utc=timestamp, count=0,
         )
         works_index[wid] = {key: work[key] for key in ("work_id", "title", "year", "year_display", "series_id") if key in work}
     for sid, source in records.series.items():
@@ -95,7 +76,6 @@ def catalogue_payloads(
         gid: {"gallery_id": gid, "title": galleries.galleries[gid]["title"], "work_count": len(works_by_gallery[gid])}
         for gid in sorted(galleries.galleries)
     }, timestamp)
-    payloads["work_details/work_details_index.json"] = _index("work_details", details_index, timestamp)
     return payloads
 
 
@@ -121,16 +101,15 @@ def generate_catalogue_json(
     written, deleted = [], []
     if full:
         expected_thumbs = catalogue_thumbnail_paths(repo_root, records)
-        for family in ("works", "work_details"):
-            for existing in output_path(workspace, f"{family}/thumbs").glob("*"):
-                if not re.fullmatch(r"\d{5}(?:-\d+)?-thumb-\d+\.webp", existing.name):
-                    continue
-                relative = existing.relative_to(workspace.root).as_posix()
-                if relative not in expected_thumbs:
-                    checked = output_path(workspace, relative)
-                    deleted.append(relative)
-                    if write:
-                        checked.unlink()
+        for existing in output_path(workspace, "works/thumbs").glob("*"):
+            if not re.fullmatch(r"\d{5}-thumb-\d+\.webp", existing.name):
+                continue
+            relative = existing.relative_to(workspace.root).as_posix()
+            if relative not in expected_thumbs:
+                checked = output_path(workspace, relative)
+                deleted.append(relative)
+                if write:
+                    checked.unlink()
     for relative in sorted(selected):
         path = output_path(workspace, relative)
         payload = payloads.get(relative)
@@ -149,4 +128,4 @@ def generate_catalogue_json(
             path.parent.mkdir(parents=True, exist_ok=True)
             path.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     return {"status": "completed", "write": write, "written": written, "deleted": deleted,
-            "counts": {"works": len(records.works), "series": len(records.series), "galleries": len(galleries.galleries), "details": len(records.work_details)}}
+            "counts": {"works": len(records.works), "series": len(records.series), "galleries": len(galleries.galleries)}}

@@ -15,12 +15,10 @@ def catalogue_media_policy(repo_root: Path, *, timestamp: str) -> dict[str, Any]
     """Expose only rendition policy; routes supply their own thumbnail base URL."""
     pipeline = load_pipeline_config(repo_root=repo_root)
     media = json.loads((repo_root / "site-tools/config/site-tools.json").read_text())["media"]
-    bases = {}
-    for family, key in (("works", "image_works"), ("work_details", "image_work_details")):
-        prefix = str(media[key]).strip("/")
-        if prefix == "archive" or prefix.startswith("archive/") or ".." in prefix.split("/"):
-            raise ValueError(f"invalid active Catalogue media prefix: {prefix}")
-        bases[family] = f"{media['base'].rstrip('/')}/{prefix}/"
+    prefix = str(media["image_works"]).strip("/")
+    if prefix == "archive" or prefix.startswith("archive/") or ".." in prefix.split("/"):
+        raise ValueError(f"invalid active Catalogue media prefix: {prefix}")
+    bases = {"works": f"{media['base'].rstrip('/')}/{prefix}/"}
     primary, thumb = pipeline["variants"]["primary"], pipeline["variants"]["thumb"]
     policy = {
         "format": pipeline["encoding"]["format"],
@@ -38,8 +36,7 @@ def catalogue_thumbnail_paths(repo_root: Path, records: CatalogueSourceRecords) 
     pipeline = load_pipeline_config(repo_root=repo_root)
     thumb = pipeline["variants"]["thumb"]
     return {
-        f"{family}/thumbs/{item_id}-{thumb['suffix']}-{size}.{pipeline['encoding']['format']}"
-        for family, sources in (("works", records.works), ("work_details", records.work_details))
-        for item_id, record in sources.items() if record.get("project_filename")
+        f"works/thumbs/{item_id}-{thumb['suffix']}-{size}.{pipeline['encoding']['format']}"
+        for item_id, record in records.works.items() if record.get("project_filename")
         for size in thumb["sizes"]
     }

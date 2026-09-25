@@ -736,11 +736,7 @@ def load_json_file(path: Path) -> Dict[str, Any]:
 
 
 def records_from_json_source(source_dir: Path) -> CatalogueSourceRecords:
-    old_flat_path = source_dir / "work_details.json"
-    if old_flat_path.exists():
-        raise ValueError(f"Retired source file must not exist at runtime: {old_flat_path}")
-    if any((source_dir / "work_details").glob("*.json")):
-        raise ValueError("Retired Detail source records require the explicit Gallery conversion")
+    """Read current Catalogue authorities without probing retired Detail storage."""
     maps: Dict[str, Dict[str, Dict[str, Any]]] = {}
     for kind in ["works", "series"]:
         path = source_dir / SOURCE_FILES[kind]

@@ -26,9 +26,10 @@ def media_workspaces(repo_root: Path) -> dict:
 def plan_media_conversion(repo_root: Path, conversions: dict, client: R2Client, *, allow_matching_copies: bool = False) -> dict[str, Any]:
     pipeline = load_pipeline_config(repo_root=repo_root)
     media = json.loads((repo_root / "site-tools/config/site-tools.json").read_text())["media"]
-    detail_prefix = media["image_work_details"].strip("/") + "/"
+    # The one-time conversion owns its retired source, outside active media policy.
+    detail_prefix = "work_details/img/"
     work_prefix = media["image_works"].strip("/") + "/"
-    if detail_prefix != "work_details/img/" or work_prefix != "works/img/":
+    if work_prefix != "works/img/":
         raise ValueError("Review conversion for changed Catalogue media prefixes")
     remote_sources = {obj.key: obj for obj in client.list_objects(detail_prefix)}
     remote_destinations = {obj.key: obj for obj in client.list_objects(work_prefix)}

@@ -9,7 +9,7 @@ import subprocess
 from pathlib import Path
 from typing import Any, Callable, Dict, Mapping, Sequence
 
-from catalogue.catalogue_source import records_from_json_source, slug_id
+from catalogue.catalogue_source import records_from_json_source
 from catalogue.catalogue_output_paths import thumbnail_directory
 from catalogue_media_paths import (
     catalogue_media_display_path,
@@ -172,44 +172,6 @@ def resolve_work_media_source(
     return None, "missing_project_filename", projects_base_dir, availability_error
 
 
-def resolve_detail_media_source(
-    records: Any,
-    detail_uid: str,
-    *,
-    env: Dict[str, str] | None = None,
-) -> tuple[Path | None, str, Path | None, str]:
-    detail_record = records.work_details.get(detail_uid)
-    if not isinstance(detail_record, dict):
-        raise ValueError(f"detail_uid not found: {detail_uid}")
-
-    work_id = slug_id(detail_record.get("work_id"))
-    work_record = records.works.get(work_id)
-    if not isinstance(work_record, dict):
-        raise ValueError(f"parent work_id not found: {work_id}")
-    source_root, projects_base_dir, availability_error = resolve_record_work_media_root(work_record, env=env)
-    project_folder = str(work_record.get("project_folder") or "").strip() if isinstance(work_record, dict) else ""
-    section_id = str(detail_record.get("section_id") or "").strip()
-    section_record = records.work_detail_sections.get(section_id) if hasattr(records, "work_detail_sections") else {}
-    details_subfolder = str((section_record or {}).get("details_subfolder") or "").strip()
-    project_filename = normalize_filename(detail_record.get("project_filename"))
-    if not project_filename:
-        return None, "missing_project_filename", projects_base_dir, availability_error
-    if not project_folder:
-        return None, "missing_project_folder", projects_base_dir, availability_error
-    if source_root is None:
-        return None, "", projects_base_dir, availability_error
-    try:
-        media_path = resolve_work_media_path(
-            source_root,
-            project_folder,
-            details_subfolder,
-            project_filename,
-        )
-    except ValueError as exc:
-        return None, "", projects_base_dir, str(exc)
-    return media_path, "", projects_base_dir, availability_error
-
-
 def thumb_output_dir(repo_root: Path, kind: str) -> Path:
     return thumbnail_directory(repo_root, kind)
 
@@ -217,8 +179,6 @@ def thumb_output_dir(repo_root: Path, kind: str) -> Path:
 def media_staging_kind_dir(kind: str) -> str:
     if kind == "work":
         return "works"
-    if kind == "work_details":
-        return "work_details"
     raise ValueError(f"unsupported local media kind: {kind}")
 
 
@@ -454,24 +414,6 @@ def build_local_media_plan(
                 public_thumbnail_projection=public_thumbnail_projection,
             )
         )
-    detail_uids = list(scope.get("detail_uids") or [])
-    if scope.get("detail_uid"):
-        detail_uids.append(str(scope["detail_uid"]))
-    for detail_uid in dict.fromkeys(detail_uids):
-        source_path, missing_reason, projects_base_dir, availability_error = resolve_detail_media_source(records, detail_uid, env=env)
-        tasks.append(
-            build_local_media_task(
-                repo_root=repo_root,
-                kind="work_details",
-                item_id=detail_uid,
-                source_path=source_path,
-                availability_error=availability_error,
-                blocked_reason=missing_reason,
-                projects_base_dir=projects_base_dir,
-                force=force,
-                public_thumbnail_projection=public_thumbnail_projection,
-            )
-        )
     counts = {
         "pending": sum(1 for task in tasks if task.get("status") == "pending"),
         "current": sum(1 for task in tasks if task.get("status") == "current"),
@@ -560,10 +502,10 @@ def execute_local_media_plan(
             "label": "Generate Local Media Derivatives",
             "status": "skipped",
             "summary": "No local media targets in this scope.",
-            "generated": {"work": [], "work_details": []},
-            "planned": {"work": [], "work_details": []},
-            "current": {"work": [], "work_details": []},
-            "blocked": {"work": [], "work_details": []},
+            "generated": {"work": []},
+            "planned": {"work": []},
+            "current": {"work": []},
+            "blocked": {"work": []},
             "exit_code": 0,
         }
 
@@ -573,19 +515,19 @@ def execute_local_media_plan(
             "label": "Generate Local Media Derivatives",
             "status": "failed",
             "summary": "ffmpeg is required for local media generation.",
-            "generated": {"work": [], "work_details": []},
-            "planned": {"work": [], "work_details": []},
-            "current": {"work": [], "work_details": []},
-            "blocked": {"work": [], "work_details": []},
+            "generated": {"work": []},
+            "planned": {"work": []},
+            "current": {"work": []},
+            "blocked": {"work": []},
             "exit_code": 1,
             "stderr_tail": "ffmpeg not found on PATH",
         }
 
-    generated: Dict[str, list[str]] = {"work": [], "work_details": []}
-    planned: Dict[str, list[str]] = {"work": [], "work_details": []}
-    current: Dict[str, list[str]] = {"work": [], "work_details": []}
-    blocked: Dict[str, list[str]] = {"work": [], "work_details": []}
-    cleaned_staged_thumbs: Dict[str, list[str]] = {"work": [], "work_details": []}
+    generated: Dict[str, list[str]] = {"work": []}
+    planned: Dict[str, list[str]] = {"work": []}
+    current: Dict[str, list[str]] = {"work": []}
+    blocked: Dict[str, list[str]] = {"work": []}
+    cleaned_staged_thumbs: Dict[str, list[str]] = {"work": []}
     messages: list[str] = []
 
     for task in tasks:

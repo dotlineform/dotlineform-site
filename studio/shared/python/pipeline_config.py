@@ -42,10 +42,6 @@ DEFAULT_PIPELINE_CONFIG: Dict[str, Any] = {
                 "input_subdir": "works/make_srcset_images",
                 "output_subdir": "works/srcset_images",
             },
-            "work_details": {
-                "input_subdir": "work_details/make_srcset_images",
-                "output_subdir": "work_details/srcset_images",
-            },
             "work_files_subdir": "works/files",
         },
     },

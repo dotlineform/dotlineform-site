@@ -9,7 +9,7 @@ from typing import Any, Sequence
 
 from catalogue import catalogue_build_media as media
 from catalogue.catalogue_output_paths import catalogue_output_workspace, output_path
-from catalogue.catalogue_source import CatalogueSourceRecords, normalize_detail_uid_value, records_from_json_source, payload_for_map, slug_id, validate_source_records, work_detail_record_payload_for_work, work_detail_source_path
+from catalogue.catalogue_source import CatalogueSourceRecords, records_from_json_source, payload_for_map, slug_id, validate_source_records
 from catalogue.catalogue_transactions import execute_source_json_write
 from catalogue_media_paths import configured_catalogue_media_workspace
 from external_workspace_paths import resolve_workspace_path
@@ -38,25 +38,19 @@ def _downloads(records: CatalogueSourceRecords, work_ids: Sequence[str]) -> set[
 def _save_dimensions(repo_root: Path, source_dir: Path, tasks: list[dict[str, Any]]) -> None:
     current = records_from_json_source(source_dir)
     changed_works = False
-    detail_works: set[str] = set()
     for task in tasks:
         dimensions = {key: task.get(key) for key in ("source_width_px", "source_height_px")}
         if not all(isinstance(value, int) and value > 0 for value in dimensions.values()):
             continue
-        record = (current.works if task["kind"] == "work" else current.work_details)[task["id"]]
+        record = current.works[task["id"]]
         updated = {"width_px": dimensions["source_width_px"], "height_px": dimensions["source_height_px"]}
         if all(record.get(key) == value for key, value in updated.items()):
             continue
         record.update(updated)
-        if task["kind"] == "work":
-            changed_works = True
-        else:
-            detail_works.add(record["work_id"])
+        changed_works = True
     payloads = {}
     if changed_works:
         payloads[source_dir / "works.json"] = payload_for_map("works", current.works)
-    for wid in detail_works:
-        payloads[work_detail_source_path(source_dir, wid)] = work_detail_record_payload_for_work(wid, current.work_detail_sections, current.work_details)
     if payloads:
         execute_source_json_write(payloads, dry_run=False, repo_root=repo_root)
 
@@ -95,13 +89,6 @@ def complete_catalogue_media(
             raise ValueError(f"Generated Work identity does not match {path}")
         if not records.works.get(wid, {}).get("project_filename"):
             removed.append(("works", wid))
-        for section in payload.get("sections", []):
-            for detail in section.get("details", []):
-                uid = normalize_detail_uid_value(detail["detail_uid"])
-                if not uid.startswith(wid + "-"):
-                    raise ValueError(f"Detail {uid} is outside Work {wid}")
-                if not records.work_details.get(uid, {}).get("project_filename"):
-                    removed.append(("work_details", uid))
         output_downloads = {_download_filename(item["filename"]) for item in payload["work"].get("downloads", [])}
         generated_downloads.update(output_downloads)
         previous_downloads = _downloads(previous, [wid]) if previous else set()
@@ -111,41 +98,29 @@ def complete_catalogue_media(
     removed_downloads = old_downloads - _downloads(records, list(records.works))
     tasks: list[dict[str, Any]] = []
     source_fields = ("media_source_id", "project_folder", "project_subfolder", "project_filename")
-    for kind, family, current_map, old_map in (
-        ("work", "works", records.works, previous.works if previous else {}),
-        ("work_details", "work_details", records.work_details, previous.work_details if previous else {}),
-    ):
-        ids = set(work_ids) if kind == "work" else {
-            uid for uid, record in {**old_map, **current_map}.items() if record["work_id"] in work_ids
-        }
-        for item_id in sorted(ids):
-            record, old = current_map.get(item_id), old_map.get(item_id)
-            if not record or not record.get("project_filename"):
-                if old and old.get("project_filename"):
-                    removed.append((family, item_id))
-                continue
-            if not staging.root.is_dir():
-                raise ValueError(f"Catalogue staging is unavailable: {staging.marker}")
-            resolve = media.resolve_work_media_source if kind == "work" else media.resolve_detail_media_source
-            source, reason, base, error = resolve(records, item_id, env=env)
-            if error or reason or source is None or not source.is_file():
-                raise ValueError(f"{source or item_id}: {error or reason or 'source media file is missing'}")
-            force = old is not None and any(old.get(field) != record.get(field) for field in source_fields)
-            if kind == "work_details" and previous:
-                wid = record["work_id"]
-                force = force or any(previous.works.get(wid, {}).get(field) != records.works[wid].get(field) for field in source_fields)
-                section_id = record["section_id"]
-                force = force or previous.work_detail_sections.get(section_id, {}).get("details_subfolder") != records.work_detail_sections[section_id].get("details_subfolder")
-            staged_paths = [media.media_staging_input_path(staging.projects_base, kind, item_id, source),
-                            *media.staged_primary_output_paths(staging.projects_base, kind, item_id),
-                            *media.staged_thumb_output_paths(staging.projects_base, kind, item_id)]
-            for staged_path in staged_paths:
-                resolve_workspace_path(staging, staged_path.relative_to(staging.root))
-            tasks.append(media.build_local_media_task(
-                repo_root=repo_root, kind=kind, item_id=item_id, source_path=source,
-                projects_base_dir=base, force=force,
-            ))
-            targets.append((family, item_id))
+    for item_id in work_ids:
+        record = records.works.get(item_id)
+        old = previous.works.get(item_id) if previous else None
+        if not record or not record.get("project_filename"):
+            if old and old.get("project_filename"):
+                removed.append(("works", item_id))
+            continue
+        if not staging.root.is_dir():
+            raise ValueError(f"Catalogue staging is unavailable: {staging.marker}")
+        source, reason, base, error = media.resolve_work_media_source(records, item_id, env=env)
+        if error or reason or source is None or not source.is_file():
+            raise ValueError(f"{source or item_id}: {error or reason or 'source media file is missing'}")
+        force = old is not None and any(old.get(field) != record.get(field) for field in source_fields)
+        staged_paths = [media.media_staging_input_path(staging.projects_base, "work", item_id, source),
+                        *media.staged_primary_output_paths(staging.projects_base, "work", item_id),
+                        *media.staged_thumb_output_paths(staging.projects_base, "work", item_id)]
+        for staged_path in staged_paths:
+            resolve_workspace_path(staging, staged_path.relative_to(staging.root))
+        tasks.append(media.build_local_media_task(
+            repo_root=repo_root, kind="work", item_id=item_id, source_path=source,
+            projects_base_dir=base, force=force,
+        ))
+        targets.append(("works", item_id))
     result = media.execute_local_media_plan(
         repo_root, scope={"source_dir": str(source_dir)}, write=write, env=env,
         plan_builder=lambda *args, **kwargs: {"tasks": tasks},
@@ -199,8 +174,7 @@ def complete_catalogue_media(
         report["deleted_media"] = deleted
         _require_complete(deleted)
         for family, item_id in removed:
-            kind = "work" if family == "works" else "work_details"
-            paths = [*media.thumb_output_paths(repo_root, kind, item_id), *media.staged_primary_output_paths(staging.projects_base, kind, item_id)]
+            paths = [*media.thumb_output_paths(repo_root, "work", item_id), *media.staged_primary_output_paths(staging.projects_base, "work", item_id)]
             paths.extend(resolve_workspace_path(staging, f"{family}/make_srcset_images").glob(f"{item_id}.*"))
             for path in paths:
                 checked = output_path(workspace, path.relative_to(workspace.root)) if path.is_relative_to(workspace.root) else resolve_workspace_path(staging, path.relative_to(staging.root))

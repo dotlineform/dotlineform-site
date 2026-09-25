@@ -19,8 +19,6 @@ CATALOGUE_SEARCH_INDEX_JSON_PATH = PUBLIC_DATA_ROOT / "search" / "catalogue" / "
 def thumb_output_dir(kind: str) -> Path:
     if kind == "work":
         return PUBLIC_ASSETS_ROOT / "works" / "img"
-    if kind == "work_details":
-        return PUBLIC_ASSETS_ROOT / "work_details" / "img"
     raise ValueError(f"unsupported local media kind: {kind}")
 
 

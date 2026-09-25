@@ -10,13 +10,11 @@
   "media": {
     "base": "https://media.dotlineform.com",
     "image_works": "/works/img",
-    "files_works": "/works/files",
-    "image_work_details": "/work_details/img"
+    "files_works": "/works/files"
   },
   "thumbs": {
     "base": "",
-    "works": "/assets/works/img",
-    "work_details": "/assets/work_details/img"
+    "works": "/assets/works/img"
   },
   "home_media": {
     "base": "https://media.dotlineform.com",

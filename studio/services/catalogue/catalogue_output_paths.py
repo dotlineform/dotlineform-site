@@ -23,8 +23,7 @@ def output_path(workspace: ExternalWorkspaceRoot, relative: str | Path) -> Path:
 
 
 def thumbnail_directory(repo_root: Path, kind: str) -> Path:
-    """Return the Work or Detail thumbnail destination used by Studio."""
-    families = {"work": "works", "work_details": "work_details"}
-    if kind not in families:
+    """Return the Work thumbnail destination used by Studio."""
+    if kind != "work":
         raise ValueError(f"unsupported Catalogue media kind: {kind}")
-    return output_path(catalogue_output_workspace(repo_root), f"{families[kind]}/thumbs")
+    return output_path(catalogue_output_workspace(repo_root), "works/thumbs")

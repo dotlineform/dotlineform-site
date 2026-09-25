@@ -69,7 +69,6 @@ class CatalogueKind:
 
 CATALOGUE_KINDS: Dict[str, CatalogueKind] = {
     "works": CatalogueKind("works", "work", "media_image_works"),
-    "work_details": CatalogueKind("work_details", "work_details", "media_image_work_details"),
 }
 
 
@@ -180,7 +179,7 @@ def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
         choices=sorted({*CATALOGUE_KINDS, "files", "img"}),
         help="Catalogue kind or Docs media class to publish",
     )
-    ap.add_argument("--id", dest="item_id", help="Specific work or work-detail id")
+    ap.add_argument("--id", dest="item_id", help="Specific Work ID")
     ap.add_argument("--docs-stage", choices=("working",), help="Explicit Working stage for --scope docs")
     ap.add_argument("--docs-collection", help="Optional configured Docs collection for --scope docs")
     ap.add_argument(
@@ -239,7 +238,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     if args.docs_stage or args.docs_collection or args.staged_filename:
         raise SystemExit("Error: --docs-stage, --docs-collection and --staged-filename require --scope docs.")
     if args.kind in {"files", "img"}:
-        raise SystemExit("Error: catalogue publishing requires --kind works or --kind work_details.")
+        raise SystemExit("Error: catalogue publishing requires --kind works.")
     if args.delete and not args.item_id:
         raise SystemExit("Error: remote delete requires --kind and --id.")
     if args.delete and not args.kind:
@@ -690,17 +689,8 @@ def load_media_prefixes(repo_root: Path) -> Dict[str, str]:
     media = payload.get("media") if isinstance(payload, dict) else None
     if not isinstance(media, dict):
         raise SystemExit(f"Error: site-tools media config missing in {config_path}")
-    defaults = {
-        "media_image_works": "works/img",
-        "media_image_work_details": "work_details/img",
-    }
-    config_keys = {
-        "media_image_works": "image_works",
-        "media_image_work_details": "image_work_details",
-    }
     return {
-        key: normalize_remote_prefix(str(media.get(config_keys[key], default_value)))
-        for key, default_value in defaults.items()
+        "media_image_works": normalize_remote_prefix(str(media["image_works"]))
     }
 
 
