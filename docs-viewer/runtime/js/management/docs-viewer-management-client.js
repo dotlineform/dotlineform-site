@@ -90,13 +90,13 @@ export function readCatalogueMediaTargets(stage, options) {
 /** Read the generated rendition policy shared by all Catalogue records. */
 export function readCatalogueMediaConfig(stage, options) {
   return fetchManagementJson("/docs/catalogue-media-config?" + catalogueStageQuery(stage), "GET", undefined,
-    Object.assign({}, options, { cache: "no-store" }));
+    Object.assign({}, options, { cache: "no-cache" }));
 }
 
 /** Read the current generated Work consumer record independently of Document Build. */
 export function readCatalogueWork(workId, stage, options) {
   return fetchManagementJson("/docs/catalogue-work?work_id=" + encodeURIComponent(workId) + "&" + catalogueStageQuery(stage), "GET", undefined,
-    Object.assign({}, options, { cache: "no-store" }));
+    Object.assign({}, options, { cache: "no-cache" }));
 }
 
 /** Preview an exact Working Catalogue selection without source writes. */
@@ -112,13 +112,13 @@ export function applyCatalogueRegeneration(payload, options) {
 /** Read current Series membership without resolving any member Work records. */
 export function readCatalogueSeries(seriesId, stage, options) {
   return fetchManagementJson("/docs/catalogue-series?series_id=" + encodeURIComponent(seriesId) + "&" + catalogueStageQuery(stage), "GET", undefined,
-    Object.assign({}, options, { cache: "no-store" }));
+    Object.assign({}, options, { cache: "no-cache" }));
 }
 
 /** Read exact Gallery membership from current Studio-generated output. */
 export function readCatalogueGallery(galleryId, stage, options) {
   return fetchManagementJson("/docs/catalogue-gallery?gallery_id=" + encodeURIComponent(galleryId) + "&" + catalogueStageQuery(stage), "GET", undefined,
-    Object.assign({}, options, { cache: "no-store" }));
+    Object.assign({}, options, { cache: "no-cache" }));
 }
 
 export function readManagedDocsIndex(options) {

@@ -4,7 +4,7 @@ export async function mountSelectedDocumentsReport(context) {
   const root = context.reportRoot;
   const documentRef = root.ownerDocument;
   if (!context.selectedUrl) throw new Error("Selected Documents data is not configured.");
-  const response = await fetch(context.selectedUrl, { headers: { Accept: "application/json" }, cache: "no-store" });
+  const response = await fetch(context.selectedUrl, { headers: { Accept: "application/json" }, cache: "no-cache" });
   if (!response.ok) throw new Error("Failed to load Selected Documents.");
   const rows = selectedDocumentRows(await response.json());
   if (!root.isConnected) return false;

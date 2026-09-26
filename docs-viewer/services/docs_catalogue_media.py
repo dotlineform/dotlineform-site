@@ -1,6 +1,6 @@
 """Read current generated Catalogue data for authoring, runtime and availability audits.
 
-Reads are confined to the configured generated workspace. No document, canonical
+Reads are confined to the configured Working or Preview output. No document, canonical
 Catalogue record, archive lookup or inferred media filename is a dependency.
 """
 
@@ -19,13 +19,7 @@ def _read_generated(repo_root: Path, relative: str, *, stage: str) -> dict[str, 
     try:
         workspace = catalogue_workspace_config(repo_root)
         location = workspace.catalogue.stage_location(stage)
-        if stage == "preview":
-            from docs_preview_reads import _snapshot_file
-
-            prefix = location.path.relative_to(workspace.workspace_root.path / "preview")
-            data = _snapshot_file(repo_root, prefix / relative)
-        else:
-            data = output_path(location, relative).read_bytes()
+        data = output_path(location, relative).read_bytes()
         payload = json.loads(data)
     except (OSError, ValueError) as exc:
         raise ValueError("Generated Catalogue data is unavailable") from exc

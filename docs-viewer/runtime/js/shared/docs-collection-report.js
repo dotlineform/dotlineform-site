@@ -65,7 +65,7 @@ function fetchJson(url, failureMessage, options) {
   var settings = options || {};
   return fetch(appendAssetVersion(url), {
     headers: { Accept: "application/json" },
-    cache: settings.cache || "default"
+    cache: settings.cache || "no-cache"
   }).then(function (response) {
     if (!response.ok) throw new Error(failureMessage + " (" + response.status + ")");
     return response.json();
@@ -1098,7 +1098,7 @@ async function refreshDisplayedDocument(state, target, isCurrent) {
       && state.detailRequestVersion === requestVersion && isCurrent();
   }
   if (!current()) return false;
-  var payload = await fetchJson(byIdPayloadUrl(state, docId), "Failed to refresh docs collection detail", { cache: "no-store" });
+  var payload = await fetchJson(byIdPayloadUrl(state, docId), "Failed to refresh docs collection detail", { cache: "no-cache" });
   if (!current() || JSON.stringify(payload) === state.detailPayloadSignatures[docId]) return false;
   var positions = [];
   for (var node = state.detailBodyNode; node; node = node.parentElement) {
@@ -1255,7 +1255,7 @@ function refreshAndOpenDocument(state, target) {
   return fetchJson(
     state.manifestUrl,
     "Failed to refresh docs collection manifest",
-    { cache: "no-store" }
+    { cache: "no-cache" }
   )
     .then(manifestPayload)
     .then(function (manifest) {
@@ -1273,7 +1273,7 @@ function refreshAndOpenDocument(state, target) {
       }
       publishDocumentsRefresh(state, "document-created-refresh");
       writeSubdocUrl(state, docId, "replace");
-      return renderDetailById(state, docId, { cache: "no-store" });
+      return renderDetailById(state, docId, { cache: "no-cache" });
     })
     .then(function () {
       if (state.validDetailId !== docId) {
@@ -1299,7 +1299,7 @@ function refreshCollection(state, target) {
   return fetchJson(
     state.manifestUrl,
     "Failed to refresh docs collection manifest",
-    { cache: "no-store" }
+    { cache: "no-cache" }
   )
     .then(manifestPayload)
     .then(function (manifest) {
@@ -1322,7 +1322,7 @@ function refreshCollection(state, target) {
           "Package import completed, but the current report detail is no longer available."
         );
       }
-      return renderDetailById(state, activeDetailId, { cache: "no-store" })
+      return renderDetailById(state, activeDetailId, { cache: "no-cache" })
         .then(function () {
           if (state.validDetailId !== activeDetailId) {
             throw new Error(

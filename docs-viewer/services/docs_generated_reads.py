@@ -6,7 +6,6 @@ from __future__ import annotations
 import json
 from pathlib import Path
 from typing import Any, Dict
-from urllib.parse import parse_qs, urlparse
 
 from docs_document_identity import is_immutable_doc_id
 from docs_document_location import management_collection_viewer_url, management_document_viewer_url
@@ -220,37 +219,8 @@ def read_generated_search_index(repo_root: Path, stage: str | None = None) -> Di
 
 
 def read_generated_doc_payload(repo_root: Path, doc_id: str, stage: str | None = None) -> Dict[str, Any]:
-    if not is_immutable_doc_id(doc_id):
-        raise ValueError("doc_id must use the immutable document ID format")
-
-    index_payload = read_generated_docs_index_tree(repo_root, stage)
-    docs = index_payload.get("docs")
-    if not isinstance(docs, list):
-        raise RuntimeError(f"generated docs index tree for {stage} is missing docs")
-
-    record = find_generated_doc_record(docs, doc_id)
-    if record is None:
-        raise FileNotFoundError(f"generated doc payload for {doc_id} not found")
-
-    config = generated_stage_config(repo_root, stage)
-    content_url = str(record.get("content_url") or "").strip()
-    parsed = urlparse(content_url)
-    if parsed.scheme or parsed.netloc or parsed.path != "/docs/doc" or parse_qs(parsed.query) != {"stage": [config.stage], "doc_id": [doc_id]}:
-        raise RuntimeError(f"generated docs index tree has an unexpected payload target for {doc_id}")
-
+    """Read the exact Working by-ID file without consulting the document index."""
     return read_generated_json(
         generated_doc_payload_path(repo_root, doc_id, stage),
         f"generated doc payload for {doc_id}",
     )
-
-
-def find_generated_doc_record(docs: list[Any], doc_id: str) -> Dict[str, Any] | None:
-    stack = [doc for doc in docs if isinstance(doc, dict)]
-    while stack:
-        record = stack.pop(0)
-        if record.get("doc_id") == doc_id:
-            return record
-        children = record.get("children")
-        if isinstance(children, list):
-            stack.extend(child for child in children if isinstance(child, dict))
-    return None

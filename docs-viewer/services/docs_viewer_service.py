@@ -42,6 +42,7 @@ from docs_document_packages import service as package_service  # noqa: E402
 import docs_generated_reads as generated_reads  # noqa: E402
 import docs_preview_reads  # noqa: E402
 import docs_media_storage as media_storage  # noqa: E402
+import docs_http_cache as http_cache  # noqa: E402
 import docs_review_routes as review_routes  # noqa: E402
 import docs_review_service as review_service  # noqa: E402
 from docs_workspace_config import load_docs_workspace_config  # noqa: E402
@@ -120,6 +121,23 @@ PREVIEW_READ_PATHS = {
     routes.PREVIEW_PAYLOAD_PATH,
     routes.PREVIEW_SEARCH_PATH,
     routes.PREVIEW_SEMANTIC_TOKENS_PATH,
+}
+REVALIDATED_READ_PATHS = GENERATED_READ_PATHS | PREVIEW_READ_PATHS | {
+    routes.SELECTED_PATH,
+    routes.CATALOGUE_MEDIA_TARGETS_PATH,
+    routes.CATALOGUE_MEDIA_CONFIG_PATH,
+    routes.CATALOGUE_WORK_PATH,
+    routes.CATALOGUE_SERIES_PATH,
+    routes.CATALOGUE_GALLERY_PATH,
+    routes.SERIES_WORKS_REPORT_PATH,
+    routes.SERIES_WORK_MEDIA_PATH,
+    routes.UNPUBLISHABLE_REPORT_PATH,
+    routes.BROKEN_LINKS_PATH,
+    routes.PROJECT_STATE_PATH,
+    routes.MEDIA_FILES_PATH,
+    routes.MEDIA_REFERENCES_PATH,
+    routes.UNCATALOGED_FILES_PATH,
+    routes.MISSING_SOURCE_FILES_PATH,
 }
 
 
@@ -444,7 +462,7 @@ class DocsViewerRequestHandler(QuietErrorLoggingMixin, BaseHTTPRequestHandler):
             self.send_static_html(review_page_path(self.repo_root))
             return
         if path == "/docs-viewer/config/routes/docs-viewer-routes.json":
-            self.send_json(render_route_config_registry(self.repo_root, self.config))
+            self.send_json(render_route_config_registry(self.repo_root, self.config), cache_control=http_cache.REVALIDATE)
             return
         if path == routes.HEALTH_PATH:
             self.send_json(
@@ -497,11 +515,16 @@ class DocsViewerRequestHandler(QuietErrorLoggingMixin, BaseHTTPRequestHandler):
                 return
             self.send_review_asset(path)
             return
-        if path.startswith(load_docs_workspace_config(self.repo_root).assets.served_path_prefix.rstrip("/") + "/"):
+        # Static route ownership does not depend on Docs workspace configuration.
+        if self.is_allowed_static_path(path):
+            self.send_static(path)
+            return
+        assets = load_docs_workspace_config(self.repo_root).assets
+        if path.startswith(assets.served_path_prefix.rstrip("/") + "/"):
             if not self.config.generated_reads_enabled:
                 self.send_json({"ok": False, "error": "Generated reads are disabled"}, HTTPStatus.FORBIDDEN)
                 return
-            self.send_docs_media(path)
+            self.send_docs_media(path, assets.work_primary.path, query)
             return
         if path.startswith(generated_reads.EXTERNAL_COLLECTION_GENERATED_PREFIX):
             if not self.config.generated_reads_enabled:
@@ -517,9 +540,6 @@ class DocsViewerRequestHandler(QuietErrorLoggingMixin, BaseHTTPRequestHandler):
             return
         if path in routes.GET_PATHS:
             self.send_docs_api_json(path, query)
-            return
-        if self.is_allowed_static_path(path):
-            self.send_static(path)
             return
 
         self.send_error(HTTPStatus.NOT_FOUND, "Not found")
@@ -583,18 +603,19 @@ class DocsViewerRequestHandler(QuietErrorLoggingMixin, BaseHTTPRequestHandler):
         return not origin or bool(docs_service.allowed_origin(origin))
 
     def send_cors_headers(self) -> None:
+        # Cached API representations must distinguish same-origin and CORS reads.
+        self.send_header("Vary", "Origin")
         origin = docs_service.allowed_origin(self.headers.get("Origin", ""))
         if not origin:
             return
         self.send_header("Access-Control-Allow-Origin", origin)
-        self.send_header("Vary", "Origin")
         self.send_header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
         self.send_header("Access-Control-Allow-Headers", "Content-Type")
 
     def send_docs_api_json(self, api_path: str, query: dict[str, list[str]]) -> None:
         try:
             payload = docs_service.docs_management_get_payload(self.repo_root, api_path, query)
-            self.send_json(payload)
+            self.send_json(payload, cache_control=http_cache.REVALIDATE if api_path in REVALIDATED_READ_PATHS else "no-store")
         except FileNotFoundError as error:
             self.send_json({"ok": False, "error": str(error)}, HTTPStatus.NOT_FOUND)
         except ValueError as error:
@@ -697,14 +718,16 @@ class DocsViewerRequestHandler(QuietErrorLoggingMixin, BaseHTTPRequestHandler):
         except ValueError as error:
             self.send_json({"ok": False, "error": str(error)}, HTTPStatus.BAD_REQUEST)
 
-    def send_docs_media(self, request_path: str) -> None:
+    def send_docs_media(self, request_path: str, work_primary: Path, query: dict[str, list[str]]) -> None:
+        """Serve current shared bytes, long-caching only versioned Catalogue primary images."""
         try:
             path, media_class = media_storage.local_asset_path_from_route(self.repo_root, request_path)
-            body = path.read_bytes()
-            self.send_response(HTTPStatus.OK)
-            self.send_cors_headers()
+            etag, body = http_cache.read_file_response(path, self.headers.get("If-None-Match"))
+            if not self.begin_cached_response(
+                etag, http_cache.media_cache_control(path, work_primary, query), cors=True,
+            ):
+                return
             self.send_header("Content-Type", media_storage.safe_content_type(path))
-            self.send_header("Cache-Control", "no-store")
             self.send_header("X-Content-Type-Options", "nosniff")
             if media_class == "files":
                 self.send_header("Content-Disposition", f"attachment; filename*=UTF-8''{quote(path.name, safe='')}")
@@ -724,11 +747,10 @@ class DocsViewerRequestHandler(QuietErrorLoggingMixin, BaseHTTPRequestHandler):
     def send_external_collection_payload(self, request_path: str) -> None:
         try:
             path = generated_reads.external_collection_payload_path(self.repo_root, request_path)
-            body = path.read_bytes()
-            self.send_response(HTTPStatus.OK)
-            self.send_cors_headers()
+            etag, body = http_cache.read_file_response(path, self.headers.get("If-None-Match"))
+            if not self.begin_cached_response(etag, http_cache.REVALIDATE, cors=True):
+                return
             self.send_header("Content-Type", "application/json; charset=utf-8")
-            self.send_header("Cache-Control", "no-store")
             self.send_header("X-Content-Type-Options", "nosniff")
             self.send_header("Content-Length", str(len(body)))
             self.end_headers()
@@ -744,11 +766,10 @@ class DocsViewerRequestHandler(QuietErrorLoggingMixin, BaseHTTPRequestHandler):
                 self.repo_root,
                 request_path,
             )
-            body = path.read_bytes()
-            self.send_response(HTTPStatus.OK)
-            self.send_cors_headers()
+            etag, body = http_cache.read_file_response(path, self.headers.get("If-None-Match"))
+            if not self.begin_cached_response(etag, http_cache.REVALIDATE, cors=True):
+                return
             self.send_header("Content-Type", "application/json; charset=utf-8")
-            self.send_header("Cache-Control", "no-store")
             self.send_header("X-Content-Type-Options", "nosniff")
             self.send_header("Content-Length", str(len(body)))
             self.end_headers()
@@ -777,12 +798,28 @@ class DocsViewerRequestHandler(QuietErrorLoggingMixin, BaseHTTPRequestHandler):
             raise ValueError("Request body must be a JSON object")
         return payload
 
-    def send_json(self, payload: object, status: HTTPStatus = HTTPStatus.OK) -> None:
+    def begin_cached_response(self, etag: str, cache_control: str, *, cors: bool = False) -> bool:
+        """Finish an unchanged GET with 304, or start the response for current bytes."""
+        unchanged = http_cache.matches_etag(self.headers.get("If-None-Match"), etag)
+        self.send_response(HTTPStatus.NOT_MODIFIED if unchanged else HTTPStatus.OK)
+        if cors:
+            self.send_cors_headers()
+        self.send_header("Cache-Control", cache_control)
+        self.send_header("ETag", etag)
+        if unchanged:
+            self.end_headers()
+        return not unchanged
+
+    def send_json(self, payload: object, status: HTTPStatus = HTTPStatus.OK, *, cache_control: str = "no-store") -> None:
         body = (json.dumps(payload, sort_keys=True) + "\n").encode("utf-8")
-        self.send_response(status)
-        self.send_cors_headers()
+        if self.command == "GET" and status == HTTPStatus.OK and cache_control != "no-store":
+            if not self.begin_cached_response(http_cache.bytes_etag(body), cache_control, cors=True):
+                return
+        else:
+            self.send_response(status)
+            self.send_cors_headers()
+            self.send_header("Cache-Control", "no-store")
         self.send_header("Content-Type", "application/json; charset=utf-8")
-        self.send_header("Cache-Control", "no-store")
         self.send_header("Content-Length", str(len(body)))
         self.end_headers()
         self.wfile.write(body)
@@ -799,9 +836,13 @@ class DocsViewerRequestHandler(QuietErrorLoggingMixin, BaseHTTPRequestHandler):
             return
         shell = resolved_path.read_text(encoding="utf-8")
         body = render_local_browser_icon_links(shell).encode("utf-8")
-        self.send_response(status)
+        if status == HTTPStatus.OK:
+            if not self.begin_cached_response(http_cache.bytes_etag(body), http_cache.REVALIDATE):
+                return
+        else:
+            self.send_response(status)
+            self.send_header("Cache-Control", "no-store")
         self.send_header("Content-Type", "text/html; charset=utf-8")
-        self.send_header("Cache-Control", "no-store")
         self.send_header("Content-Length", str(len(body)))
         self.end_headers()
         self.wfile.write(body)
@@ -830,10 +871,15 @@ class DocsViewerRequestHandler(QuietErrorLoggingMixin, BaseHTTPRequestHandler):
             self.send_error(HTTPStatus.NOT_FOUND, "Not found")
             return
         content_type = mimetypes.guess_type(path.name)[0] or "application/octet-stream"
-        body = path.read_bytes()
-        self.send_response(HTTPStatus.OK)
+        app_asset = path.suffix.lower() in http_cache.APP_ASSET_SUFFIXES and (
+            request_path in STATIC_FILES or runtime_relative_path is not None
+            or shared_relative_path is not None or request_path.startswith("/docs-viewer/static/")
+        )
+        cache_control = http_cache.APP_ASSET_CACHE if app_asset else http_cache.REVALIDATE
+        etag, body = http_cache.read_file_response(path, self.headers.get("If-None-Match"))
+        if not self.begin_cached_response(etag, cache_control):
+            return
         self.send_header("Content-Type", content_type)
-        self.send_header("Cache-Control", "no-store")
         self.send_header("Content-Length", str(len(body)))
         self.end_headers()
         self.wfile.write(body)

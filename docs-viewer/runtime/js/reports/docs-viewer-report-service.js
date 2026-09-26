@@ -26,7 +26,7 @@ function fetchReportJson(path, options) {
     headers: {
       Accept: "application/json"
     },
-    cache: "no-store"
+    cache: (settings.method || "GET") === "GET" ? "no-cache" : "no-store"
   };
   if (settings.payload !== undefined) {
     requestOptions.headers["Content-Type"] = "application/json";

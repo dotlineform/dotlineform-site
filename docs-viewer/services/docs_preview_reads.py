@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Validated reads from accepted Docs Viewer workspace snapshots."""
+"""Read requested Preview files; preparation and deployment validate the snapshot."""
 
 from __future__ import annotations
 
@@ -8,8 +8,7 @@ from pathlib import Path
 from typing import Any
 
 from docs_document_identity import is_immutable_doc_id
-from docs_workspace_config import load_docs_stage
-from docs_preview_snapshot import validate_preview_snapshot
+from docs_workspace_config import load_docs_stage, location_child, safe_relative_path
 from docs_selected_documents import validate_selected_payload
 
 
@@ -28,13 +27,15 @@ def _read_json(data: bytes, label: str) -> dict[str, Any]:
 
 
 def _snapshot_file(repo_root: Path, relative_path: Path) -> bytes:
-    _manifest, _root, files = validate_preview_snapshot(repo_root)
-    data = files.get(relative_path)
-    if data is None:
+    """Open one confined file without reading a completion manifest or other files."""
+    config = load_docs_stage(repo_root, "preview")
+    relative_path = safe_relative_path(relative_path.as_posix(), field="Preview file")
+    path = location_child(config.workspace_root, Path("preview") / relative_path).path
+    if not path.is_file():
         raise FileNotFoundError(
             f"preview snapshot file not found: {relative_path.as_posix()}"
         )
-    return data
+    return path.read_bytes()
 
 
 def read_preview_docs_index_tree(repo_root: Path) -> dict[str, Any]:
@@ -85,21 +86,9 @@ def read_preview_doc_payload(
     repo_root: Path,
     doc_id: str,
 ) -> dict[str, Any]:
+    """Read the exact by-ID document without an index-membership lookup."""
     if not is_immutable_doc_id(doc_id):
         raise ValueError("doc_id must use the immutable document ID format")
-    index = read_preview_docs_index_tree(repo_root)
-    stack = [row for row in index.get("docs", []) if isinstance(row, dict)]
-    found = False
-    while stack:
-        row = stack.pop(0)
-        if row.get("doc_id") == doc_id:
-            found = True
-            break
-        stack.extend(
-            child for child in row.get("children", []) if isinstance(child, dict)
-        )
-    if not found:
-        raise FileNotFoundError(f"preview doc payload for {doc_id} not found")
     return _read_json(
         _snapshot_file(
             repo_root,
@@ -110,6 +99,7 @@ def read_preview_doc_payload(
 
 
 def external_collection_payload_path(repo_root: Path, request_path: str) -> Path:
+    """Resolve only the requested artifact within its configured Preview collection."""
     if not request_path.startswith(EXTERNAL_COLLECTION_PREVIEW_PREFIX):
         raise ValueError("Invalid preview Docs collection payload route")
     parts = request_path.removeprefix(EXTERNAL_COLLECTION_PREVIEW_PREFIX).split("/")
@@ -118,26 +108,27 @@ def external_collection_payload_path(repo_root: Path, request_path: str) -> Path
         "subject-associations.json",
     }:
         collection, filename = parts
-        relative_path = Path("collections") / collection / "documents" / filename
+        relative_path = Path(filename)
     elif len(parts) == 3 and parts[1] == "by-id" and parts[2].endswith(".json"):
         collection, _, filename = parts
         doc_id = filename.removesuffix(".json")
         if not is_immutable_doc_id(doc_id):
             raise ValueError("Preview Docs collection payload doc_id must use immutable identity")
-        relative_path = Path("collections") / collection / "documents/by-id" / filename
+        relative_path = Path("by-id") / filename
     else:
         raise ValueError("Invalid preview Docs collection payload route")
 
     config = load_docs_stage(repo_root, "preview")
-    if not any(item.collection == collection for item in config.collections):
+    selected = next((item for item in config.collections if item.collection == collection), None)
+    if selected is None:
         raise FileNotFoundError(f"Docs collection not found: {collection}")
-    _manifest, root, files = validate_preview_snapshot(repo_root)
-    if relative_path not in files:
+    path = location_child(selected.preview.documents.location, relative_path).path
+    if not path.is_file():
         raise FileNotFoundError(
             f"Preview Docs collection payload not found: "
             f"{collection}/{Path(*parts[1:]).as_posix()}"
         )
-    return root / relative_path
+    return path
 
 
 __all__ = [

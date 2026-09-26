@@ -61,7 +61,7 @@ function loadRows(context, target) {
   }
   return fetch(backlinksUrl, {
     headers: { Accept: "application/json" },
-    cache: "no-store"
+    cache: "no-cache"
   }).then(function (response) {
     if (!response.ok) {
       throw new Error("Failed to load Documents Linking Here data.");
