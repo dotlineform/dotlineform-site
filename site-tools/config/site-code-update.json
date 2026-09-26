@@ -16,7 +16,7 @@
       "source_root": "docs-viewer/runtime/js/shared",
       "destination_root": "site/docs-viewer/runtime/js/shared",
       "files": [
-        "docs-catalogue-collection.js",
+        "docs-collection-browsing.js",
         "docs-collection-customisation-registry.js",
         "docs-collection-report-filter.js",
         "docs-collection-report.js",

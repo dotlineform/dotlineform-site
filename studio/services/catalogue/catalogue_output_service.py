@@ -10,6 +10,7 @@ from catalogue.catalogue_service_context import CatalogueWriteContext, refresh_l
 from catalogue.catalogue_source import CatalogueSourceRecords, records_from_json_source
 from catalogue.generate_work_pages import generate_catalogue_json
 from catalogue.catalogue_works_metadata import update_catalogue_works_metadata
+from catalogue.works_collection_metadata import update_works_collection_metadata
 
 
 def changed_output_ids(previous: CatalogueSourceRecords, current: CatalogueSourceRecords) -> tuple[list[str], list[str]]:
@@ -71,6 +72,15 @@ def complete_saved_catalogue_output(
             gallery_ids=gallery_ids,
         )
         _update_report_metadata(context, response, current)
+        if work_ids or series_ids:
+            response["works_collection_metadata"] = update_works_collection_metadata(
+                context.repo_root, current,
+                work_ids=[key for key in work_ids if key in current.works],
+                series_ids=[key for key in series_ids if key in current.series],
+                deleted_work_ids=[key for key in work_ids if key not in current.works],
+                deleted_series_ids=[key for key in series_ids if key not in current.series],
+                write=True,
+            )
     except (Exception, SystemExit) as error:
         response["output"] = {"status": "failed", "error": str(error), "message": "Data saved, but output generation did not complete."}
     try:

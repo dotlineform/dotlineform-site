@@ -1,6 +1,7 @@
 import { createDocsViewerToolbarIcon } from "../shared/docs-viewer-toolbar-icon.js";
 import { mountDocsViewerMediaLinks } from "../shared/docs-viewer-media-detail.js";
 import { loadWorkingCatalogueDocumentLinks } from "./docs-viewer-management-catalogue-document-links.js";
+import { loadWorksCollectionSubjectTitles } from "./docs-viewer-management-works-metadata.js";
 
 import {
   encodeDecodedLocalTarget
@@ -301,7 +302,7 @@ function renderListHead(context) {
   selection.className = "docsViewerReport__projectSelectionHead";
   selection.setAttribute("aria-hidden", "true");
   host.appendChild(selection);
-  host.appendChild(listSortButton(settings, "title", "Doc title"));
+  host.appendChild(listSortButton(settings, "title", settings.collection.collection === "works" ? "Title" : "Doc title"));
   host.appendChild(listSortButton(settings, "subject", "Subject"));
 
 }
@@ -478,11 +479,12 @@ function createDocsViewerManagementWorkingSubjects(options, definition) {
     throw new Error("Working subject customisation identity did not match its registry entry.");
   }
   var collection = exactCollection(options.collection);
+  var generatedWorks = collection.stage === "working" && collection.collection === "works";
   var assignSubjectAvailable = hasDocsViewerAssignableFieldGroup(options.descriptor, AUTHORING_SUBJECT_GROUP_ID);
   var collator = new Intl.Collator(undefined, { numeric: true, sensitivity: "base" });
   return Promise.all([
-    loadSubjectTargetTitles(options),
-    collection.stage === "working" && collection.collection === "works"
+    generatedWorks ? loadWorksCollectionSubjectTitles(options) : loadSubjectTargetTitles(options),
+    generatedWorks
       ? loadWorkingCatalogueDocumentLinks({
         stageConfigs: options.stageConfigs, document: options.content.ownerDocument, fetch: options.fetch
       })

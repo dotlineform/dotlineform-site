@@ -96,11 +96,13 @@ class CollectionDocsBuilder(DocsDataBuilder):
             if self.collection_id == "catalogue":
                 if subject is None or subject["kind"] != "work":
                     raise ValueError(f"Catalogue document {doc.doc_id} requires one valid work_id")
-                if not is_doc_timestamp(doc.last_updated):
-                    raise ValueError(f"Catalogue document {doc.doc_id} requires a valid last_updated timestamp")
-                row.update(work_id=subject["key"], last_updated=doc.last_updated)
+                row["work_id"] = subject["key"]
             else:
                 row["subject"] = subject
+            if self.collection_id in {"catalogue", "works"}:
+                if not is_doc_timestamp(doc.last_updated):
+                    raise ValueError(f"{self.collection_id} document {doc.doc_id} requires a valid last_updated timestamp")
+                row["last_updated"] = doc.last_updated
             rows.append(row)
         payload: dict[str, Any] = {
             "docs": rows
@@ -203,14 +205,16 @@ class CollectionDocsBuilder(DocsDataBuilder):
         """Load the prior list metadata required for a targeted update."""
         manifest = read_collection_manifest(self.output_dir / "manifest.json")
         manage_manifest = read_collection_manifest(self.output_dir / "manage-manifest.json")
+        if self.collection_id in {"catalogue", "works"}:
+            for row in manifest["docs"]:
+                if not isinstance(row.get("last_updated"), str) or not is_doc_timestamp(row["last_updated"]):
+                    raise ValueError(f"{self.collection_id} manifest requires last_updated; run a complete collection Build first")
         if self.collection_id == "catalogue":
             for row in manifest["docs"]:
                 if (
                     "subject" in row
                     or not isinstance(row.get("work_id"), str)
                     or not subject_key_is_canonical("work", row["work_id"])
-                    or not isinstance(row.get("last_updated"), str)
-                    or not is_doc_timestamp(row["last_updated"])
                 ):
                     raise ValueError("Catalogue manifest requires work_id and last_updated; run a complete Catalogue Build first")
         if {row["doc_id"] for row in manifest["docs"]} != {row["doc_id"] for row in manage_manifest["docs"]}:
