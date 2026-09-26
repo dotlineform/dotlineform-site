@@ -1,0 +1,142 @@
+{
+  "header": {
+    "schema": "series_record_v5",
+    "version": "blake2b-11e6abc86dc90979426abaf4fb4e8319",
+    "generated_at_utc": "2026-09-23T17:18:58Z",
+    "series_id": "009",
+    "count": 21
+  },
+  "series": {
+    "series_id": "009",
+    "title": "a poem divided into 4 parts",
+    "documents": []
+  },
+  "member_works": [
+    {
+      "work_id": "00001",
+      "title": "a poem divided into 4 parts (\"our dreams are real\")",
+      "year": 2025,
+      "year_display": "2025"
+    },
+    {
+      "work_id": "00002",
+      "title": "a poem divided into 4 parts (\"there must be hope\")",
+      "year": 2025,
+      "year_display": "2025"
+    },
+    {
+      "work_id": "00003",
+      "title": "a poem divided into 4 parts (\"we are not lost\")",
+      "year": 2025,
+      "year_display": "2025"
+    },
+    {
+      "work_id": "00004",
+      "title": "a poem divided into 4 parts (\"we only feel love\")",
+      "year": 2025,
+      "year_display": "2025"
+    },
+    {
+      "work_id": "01943",
+      "title": "a poem divided into 4 parts - end 1",
+      "year": 2025,
+      "year_display": "2025"
+    },
+    {
+      "work_id": "01944",
+      "title": "a poem divided into 4 parts - end 2",
+      "year": 2025,
+      "year_display": "2025"
+    },
+    {
+      "work_id": "01945",
+      "title": "a poem divided into 4 parts - end 3",
+      "year": 2025,
+      "year_display": "2025"
+    },
+    {
+      "work_id": "01946",
+      "title": "a poem divided into 4 parts - end 4",
+      "year": 2025,
+      "year_display": "2025"
+    },
+    {
+      "work_id": "01947",
+      "title": "a poem divided into 4 parts - end 5",
+      "year": 2025,
+      "year_display": "2025"
+    },
+    {
+      "work_id": "01948",
+      "title": "a poem divided into 4 parts - end 6",
+      "year": 2025,
+      "year_display": "2025"
+    },
+    {
+      "work_id": "01949",
+      "title": "a poem divided into 4 parts - end 7",
+      "year": 2025,
+      "year_display": "2025"
+    },
+    {
+      "work_id": "01950",
+      "title": "a poem divided into 4 parts - end 8",
+      "year": 2025,
+      "year_display": "2025"
+    },
+    {
+      "work_id": "01951",
+      "title": "a poem divided into 4 parts - end 9",
+      "year": 2025,
+      "year_display": "2025"
+    },
+    {
+      "work_id": "01952",
+      "title": "a poem divided into 4 parts - end 10",
+      "year": 2025,
+      "year_display": "2025"
+    },
+    {
+      "work_id": "01953",
+      "title": "a poem divided into 4 parts - end 11",
+      "year": 2025,
+      "year_display": "2025"
+    },
+    {
+      "work_id": "01954",
+      "title": "a poem divided into 4 parts - end 12",
+      "year": 2025,
+      "year_display": "2025"
+    },
+    {
+      "work_id": "01955",
+      "title": "a poem divided into 4 parts - end 13",
+      "year": 2025,
+      "year_display": "2025"
+    },
+    {
+      "work_id": "01956",
+      "title": "a poem divided into 4 parts - end 14",
+      "year": 2025,
+      "year_display": "2025"
+    },
+    {
+      "work_id": "01957",
+      "title": "a poem divided into 4 parts - end 15",
+      "year": 2025,
+      "year_display": "2025"
+    },
+    {
+      "work_id": "01958",
+      "title": "a poem divided into 4 parts - end 16",
+      "year": 2025,
+      "year_display": "2025"
+    },
+    {
+      "work_id": "01959",
+      "title": "a poem divided into 4 parts - end 17",
+      "year": 2025,
+      "year_display": "2025"
+    }
+  ]
+}

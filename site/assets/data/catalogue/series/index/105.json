@@ -1,0 +1,208 @@
+{
+  "header": {
+    "schema": "series_record_v5",
+    "version": "blake2b-50dc227bf52a49d4962580f6ea15eafa",
+    "generated_at_utc": "2026-09-26T07:24:01Z",
+    "series_id": "105",
+    "count": 32
+  },
+  "series": {
+    "series_id": "105",
+    "title": "nerve",
+    "documents": []
+  },
+  "member_works": [
+    {
+      "work_id": "00008",
+      "title": "nerve",
+      "year": 1995,
+      "year_display": "July 1990 – January 1995"
+    },
+    {
+      "work_id": "00163",
+      "title": "nerve (abattoir)",
+      "year": 1995,
+      "year_display": "1990-95"
+    },
+    {
+      "work_id": "00166",
+      "title": "nerve (formaldehyde form)",
+      "year": 1993,
+      "year_display": "1993"
+    },
+    {
+      "work_id": "01981",
+      "title": "nerve (abattoir) - front cover",
+      "year": 1995,
+      "year_display": "1990-95"
+    },
+    {
+      "work_id": "01982",
+      "title": "nerve (abattoir) - inside cover",
+      "year": 1995,
+      "year_display": "1990-95"
+    },
+    {
+      "work_id": "01983",
+      "title": "nerve (abattoir) - 1",
+      "year": 1995,
+      "year_display": "1990-95"
+    },
+    {
+      "work_id": "01984",
+      "title": "nerve (abattoir) - 2",
+      "year": 1995,
+      "year_display": "1990-95"
+    },
+    {
+      "work_id": "01985",
+      "title": "nerve (abattoir) - 3",
+      "year": 1995,
+      "year_display": "1990-95"
+    },
+    {
+      "work_id": "01986",
+      "title": "nerve (abattoir) - 4",
+      "year": 1995,
+      "year_display": "1990-95"
+    },
+    {
+      "work_id": "01987",
+      "title": "nerve (abattoir) - 5",
+      "year": 1995,
+      "year_display": "1990-95"
+    },
+    {
+      "work_id": "01988",
+      "title": "nerve (abattoir) - 6",
+      "year": 1995,
+      "year_display": "1990-95"
+    },
+    {
+      "work_id": "01989",
+      "title": "nerve (abattoir) - 7",
+      "year": 1995,
+      "year_display": "1990-95"
+    },
+    {
+      "work_id": "01990",
+      "title": "nerve (abattoir) - back cover",
+      "year": 1995,
+      "year_display": "1990-95"
+    },
+    {
+      "work_id": "01991",
+      "title": "nerve (formaldehyde form) - front cover",
+      "year": 1993,
+      "year_display": "1993"
+    },
+    {
+      "work_id": "01992",
+      "title": "nerve (formaldehyde form) - 1",
+      "year": 1993,
+      "year_display": "1993"
+    },
+    {
+      "work_id": "01993",
+      "title": "nerve (formaldehyde form) - 2",
+      "year": 1993,
+      "year_display": "1993"
+    },
+    {
+      "work_id": "01994",
+      "title": "nerve (formaldehyde form) - 3",
+      "year": 1993,
+      "year_display": "1993"
+    },
+    {
+      "work_id": "01995",
+      "title": "nerve (formaldehyde form) - 4",
+      "year": 1993,
+      "year_display": "1993"
+    },
+    {
+      "work_id": "01996",
+      "title": "nerve (formaldehyde form) - 5",
+      "year": 1993,
+      "year_display": "1993"
+    },
+    {
+      "work_id": "01997",
+      "title": "nerve (formaldehyde form) - 6",
+      "year": 1993,
+      "year_display": "1993"
+    },
+    {
+      "work_id": "01998",
+      "title": "nerve (formaldehyde form) - 7",
+      "year": 1993,
+      "year_display": "1993"
+    },
+    {
+      "work_id": "01999",
+      "title": "nerve (formaldehyde form) - 8",
+      "year": 1993,
+      "year_display": "1993"
+    },
+    {
+      "work_id": "02000",
+      "title": "nerve (formaldehyde form) - 9",
+      "year": 1993,
+      "year_display": "1993"
+    },
+    {
+      "work_id": "02001",
+      "title": "nerve (formaldehyde form) - 10",
+      "year": 1993,
+      "year_display": "1993"
+    },
+    {
+      "work_id": "02002",
+      "title": "nerve (formaldehyde form) - 11",
+      "year": 1993,
+      "year_display": "1993"
+    },
+    {
+      "work_id": "02003",
+      "title": "nerve (formaldehyde form) - 12",
+      "year": 1993,
+      "year_display": "1993"
+    },
+    {
+      "work_id": "02004",
+      "title": "nerve (formaldehyde form) - 13",
+      "year": 1993,
+      "year_display": "1993"
+    },
+    {
+      "work_id": "02005",
+      "title": "nerve (formaldehyde form) - 14",
+      "year": 1993,
+      "year_display": "1993"
+    },
+    {
+      "work_id": "02006",
+      "title": "nerve (formaldehyde form) - 15",
+      "year": 1993,
+      "year_display": "1993"
+    },
+    {
+      "work_id": "02007",
+      "title": "nerve (formaldehyde form) - 16",
+      "year": 1993,
+      "year_display": "1993"
+    },
+    {
+      "work_id": "02008",
+      "title": "nerve (formaldehyde form) - 17",
+      "year": 1993,
+      "year_display": "1993"
+    },
+    {
+      "work_id": "02009",
+      "title": "nerve (formaldehyde form) - back cover",
+      "year": 1993,
+      "year_display": "1993"
+    }
+  ]
+}

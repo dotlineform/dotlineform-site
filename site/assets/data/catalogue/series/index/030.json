@@ -1,0 +1,34 @@
+{
+  "header": {
+    "schema": "series_record_v5",
+    "version": "blake2b-9383d7d4b3b96aa6c50572ed863f3a72",
+    "generated_at_utc": "2026-09-23T17:18:58Z",
+    "series_id": "030",
+    "count": 3
+  },
+  "series": {
+    "series_id": "030",
+    "title": "composite (blue red smoke)",
+    "documents": []
+  },
+  "member_works": [
+    {
+      "work_id": "00391",
+      "title": "composite (blue)",
+      "year": 2004,
+      "year_display": "2004"
+    },
+    {
+      "work_id": "00616",
+      "title": "composite (smoke)",
+      "year": 2004,
+      "year_display": "2004"
+    },
+    {
+      "work_id": "00617",
+      "title": "composite (red)",
+      "year": 2004,
+      "year_display": "2004"
+    }
+  ]
+}

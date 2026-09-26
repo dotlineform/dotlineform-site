@@ -1,0 +1,34 @@
+{
+  "header": {
+    "schema": "series_record_v5",
+    "version": "blake2b-407eee22ef0667458c96a0a3fa59df88",
+    "generated_at_utc": "2026-09-23T17:18:58Z",
+    "series_id": "136",
+    "count": 3
+  },
+  "series": {
+    "series_id": "136",
+    "title": "tree",
+    "documents": []
+  },
+  "member_works": [
+    {
+      "work_id": "00546",
+      "title": "tree",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00547",
+      "title": "tree (tint)",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00548",
+      "title": "tree source",
+      "year": 2024,
+      "year_display": "2024"
+    }
+  ]
+}

@@ -1,0 +1,88 @@
+{
+  "header": {
+    "schema": "series_record_v5",
+    "version": "blake2b-073139e2fe38c556dd2b3e4aa77b1f59",
+    "generated_at_utc": "2026-09-23T17:18:58Z",
+    "series_id": "087",
+    "count": 12
+  },
+  "series": {
+    "series_id": "087",
+    "title": "landscapes",
+    "documents": []
+  },
+  "member_works": [
+    {
+      "work_id": "00516",
+      "title": "landscape 1",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "00517",
+      "title": "landscape 2",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "00518",
+      "title": "landscape 2.1",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "02974",
+      "title": "landscape 1 - detail 1",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "02975",
+      "title": "landscape 1 - detail 2",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "02976",
+      "title": "landscape 1 - detail 3",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "02977",
+      "title": "landscape 2 - detail 1",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "02978",
+      "title": "landscape 2 - detail 2",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "02979",
+      "title": "landscape 2 - detail 3",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "02980",
+      "title": "landscape 2.1 - detail 1",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "02981",
+      "title": "landscape 2.1 - detail 2",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "02982",
+      "title": "landscape 2.1 - detail 3",
+      "year": 2023,
+      "year_display": "2023"
+    }
+  ]
+}

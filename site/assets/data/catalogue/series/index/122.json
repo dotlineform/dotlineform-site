@@ -1,0 +1,112 @@
+{
+  "header": {
+    "schema": "series_record_v5",
+    "version": "blake2b-9ad08444f940c895ec950ecf4e6f3baa",
+    "generated_at_utc": "2026-09-23T17:18:58Z",
+    "series_id": "122",
+    "count": 16
+  },
+  "series": {
+    "series_id": "122",
+    "title": "room",
+    "documents": []
+  },
+  "member_works": [
+    {
+      "work_id": "01629",
+      "title": "room 1",
+      "year": 2007,
+      "year_display": "2007"
+    },
+    {
+      "work_id": "01630",
+      "title": "room 2",
+      "year": 2007,
+      "year_display": "2007"
+    },
+    {
+      "work_id": "01631",
+      "title": "room 3",
+      "year": 2008,
+      "year_display": "2008"
+    },
+    {
+      "work_id": "01632",
+      "title": "room 4",
+      "year": 2008,
+      "year_display": "2008"
+    },
+    {
+      "work_id": "04353",
+      "title": "room 1 - detail 1",
+      "year": 2007,
+      "year_display": "2007"
+    },
+    {
+      "work_id": "04354",
+      "title": "room 1 - detail 2",
+      "year": 2007,
+      "year_display": "2007"
+    },
+    {
+      "work_id": "04355",
+      "title": "room 1 - detail 3",
+      "year": 2007,
+      "year_display": "2007"
+    },
+    {
+      "work_id": "04356",
+      "title": "room 2 - detail 1",
+      "year": 2007,
+      "year_display": "2007"
+    },
+    {
+      "work_id": "04357",
+      "title": "room 2 - detail 2",
+      "year": 2007,
+      "year_display": "2007"
+    },
+    {
+      "work_id": "04358",
+      "title": "room 2 - detail 3",
+      "year": 2007,
+      "year_display": "2007"
+    },
+    {
+      "work_id": "04359",
+      "title": "room 3 - detail 1",
+      "year": 2008,
+      "year_display": "2008"
+    },
+    {
+      "work_id": "04360",
+      "title": "room 3 - detail 2",
+      "year": 2008,
+      "year_display": "2008"
+    },
+    {
+      "work_id": "04361",
+      "title": "room 3 - detail 3",
+      "year": 2008,
+      "year_display": "2008"
+    },
+    {
+      "work_id": "04362",
+      "title": "room 4 - detail 1",
+      "year": 2008,
+      "year_display": "2008"
+    },
+    {
+      "work_id": "04363",
+      "title": "room 4 - detail 2",
+      "year": 2008,
+      "year_display": "2008"
+    },
+    {
+      "work_id": "04364",
+      "title": "room 4 - detail 3",
+      "year": 2008,
+      "year_display": "2008"
+    }
+  ]
+}

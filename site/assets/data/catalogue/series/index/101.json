@@ -1,0 +1,154 @@
+{
+  "header": {
+    "schema": "series_record_v5",
+    "version": "blake2b-33b0a228ba9f1b03d23d4f4f1fee3b2e",
+    "generated_at_utc": "2026-09-23T17:18:58Z",
+    "series_id": "101",
+    "count": 23
+  },
+  "series": {
+    "series_id": "101",
+    "title": "molecules",
+    "documents": []
+  },
+  "member_works": [
+    {
+      "work_id": "00460",
+      "title": "molecules",
+      "year": 2013,
+      "year_display": "2013"
+    },
+    {
+      "work_id": "00461",
+      "title": "molecules symbols",
+      "year": 2013,
+      "year_display": "2013"
+    },
+    {
+      "work_id": "00462",
+      "title": "equilibrium",
+      "year": 2013,
+      "year_display": "2013"
+    },
+    {
+      "work_id": "02859",
+      "title": "molecules (positive)",
+      "year": 2013,
+      "year_display": "2013"
+    },
+    {
+      "work_id": "02860",
+      "title": "molecules (negative)",
+      "year": 2013,
+      "year_display": "2013"
+    },
+    {
+      "work_id": "02861",
+      "title": "molecules mist (positive)",
+      "year": 2013,
+      "year_display": "2013"
+    },
+    {
+      "work_id": "02862",
+      "title": "molecules mist (negative)",
+      "year": 2013,
+      "year_display": "2013"
+    },
+    {
+      "work_id": "02863",
+      "title": "molecules (detail 1)",
+      "year": 2013,
+      "year_display": "2013"
+    },
+    {
+      "work_id": "02864",
+      "title": "molecules (detail 2)",
+      "year": 2013,
+      "year_display": "2013"
+    },
+    {
+      "work_id": "02865",
+      "title": "molecules (detail 3)",
+      "year": 2013,
+      "year_display": "2013"
+    },
+    {
+      "work_id": "02866",
+      "title": "molecules (detail 4)",
+      "year": 2013,
+      "year_display": "2013"
+    },
+    {
+      "work_id": "02867",
+      "title": "molecules (detail 5)",
+      "year": 2013,
+      "year_display": "2013"
+    },
+    {
+      "work_id": "02868",
+      "title": "molecules (detail 6)",
+      "year": 2013,
+      "year_display": "2013"
+    },
+    {
+      "work_id": "02869",
+      "title": "molecules (detail 7)",
+      "year": 2013,
+      "year_display": "2013"
+    },
+    {
+      "work_id": "02870",
+      "title": "molecules (detail 8)",
+      "year": 2013,
+      "year_display": "2013"
+    },
+    {
+      "work_id": "02871",
+      "title": "molecules (detail 9)",
+      "year": 2013,
+      "year_display": "2013"
+    },
+    {
+      "work_id": "02872",
+      "title": "molecules (detail 10)",
+      "year": 2013,
+      "year_display": "2013"
+    },
+    {
+      "work_id": "02873",
+      "title": "molecules (detail 11)",
+      "year": 2013,
+      "year_display": "2013"
+    },
+    {
+      "work_id": "02874",
+      "title": "molecules (detail 12)",
+      "year": 2013,
+      "year_display": "2013"
+    },
+    {
+      "work_id": "02875",
+      "title": "molecules (detail 13)",
+      "year": 2013,
+      "year_display": "2013"
+    },
+    {
+      "work_id": "02876",
+      "title": "molecules (detail 14)",
+      "year": 2013,
+      "year_display": "2013"
+    },
+    {
+      "work_id": "02877",
+      "title": "molecules (detail 15)",
+      "year": 2013,
+      "year_display": "2013"
+    },
+    {
+      "work_id": "02878",
+      "title": "molecules (detail 16)",
+      "year": 2013,
+      "year_display": "2013"
+    }
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "header": {
+    "schema": "series_record_v5",
+    "version": "blake2b-a02c0b1ced7d2ef4166c453195960bfd",
+    "generated_at_utc": "2026-09-23T17:18:58Z",
+    "series_id": "072",
+    "count": 2
+  },
+  "series": {
+    "series_id": "072",
+    "title": "grid cells",
+    "documents": []
+  },
+  "member_works": [
+    {
+      "work_id": "01363",
+      "title": "grid cells",
+      "year": 2013,
+      "year_display": "2013"
+    },
+    {
+      "work_id": "01364",
+      "title": "grid",
+      "year": 2013,
+      "year_display": "2013"
+    }
+  ]
+}

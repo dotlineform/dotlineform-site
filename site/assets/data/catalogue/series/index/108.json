@@ -1,0 +1,46 @@
+{
+  "header": {
+    "schema": "series_record_v5",
+    "version": "blake2b-6160146559495b6642106ced17d45cb5",
+    "generated_at_utc": "2026-09-23T17:18:58Z",
+    "series_id": "108",
+    "count": 5
+  },
+  "series": {
+    "series_id": "108",
+    "title": "olive tree",
+    "documents": []
+  },
+  "member_works": [
+    {
+      "work_id": "01479",
+      "title": "olive tree",
+      "year": 2012,
+      "year_display": "2012"
+    },
+    {
+      "work_id": "04309",
+      "title": "olive tree - detail 1",
+      "year": 2012,
+      "year_display": "2012"
+    },
+    {
+      "work_id": "04310",
+      "title": "olive tree - detail 2",
+      "year": 2012,
+      "year_display": "2012"
+    },
+    {
+      "work_id": "04311",
+      "title": "olive tree - detail 3",
+      "year": 2012,
+      "year_display": "2012"
+    },
+    {
+      "work_id": "04312",
+      "title": "olive tree - detail 4",
+      "year": 2012,
+      "year_display": "2012"
+    }
+  ]
+}

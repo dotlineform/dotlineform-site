@@ -1,0 +1,52 @@
+{
+  "header": {
+    "schema": "series_record_v5",
+    "version": "blake2b-68301fbcb4a25e4f35ee1527b1f989e1",
+    "generated_at_utc": "2026-09-23T17:18:58Z",
+    "series_id": "007",
+    "count": 6
+  },
+  "series": {
+    "series_id": "007",
+    "title": "a feeling that we are part of a structure",
+    "documents": []
+  },
+  "member_works": [
+    {
+      "work_id": "00716",
+      "title": "a feeling that we are part of a structure - 01",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00717",
+      "title": "a feeling that we are part of a structure - 02",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00718",
+      "title": "a feeling that we are part of a structure - 03",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00719",
+      "title": "a feeling that we are part of a structure - 04",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00720",
+      "title": "a feeling that we are part of a structure - 05",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "00721",
+      "title": "a feeling that we are part of a structure - 06",
+      "year": 2024,
+      "year_display": "2024"
+    }
+  ]
+}

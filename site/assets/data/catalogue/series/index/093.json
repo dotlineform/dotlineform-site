@@ -1,0 +1,46 @@
+{
+  "header": {
+    "schema": "series_record_v5",
+    "version": "blake2b-d1a524e78d18928d9009a6a6597e0fe6",
+    "generated_at_utc": "2026-09-23T17:18:58Z",
+    "series_id": "093",
+    "count": 5
+  },
+  "series": {
+    "series_id": "093",
+    "title": "maps",
+    "documents": []
+  },
+  "member_works": [
+    {
+      "work_id": "01417",
+      "title": "fur map",
+      "year": 2004,
+      "year_display": "2004, 2011"
+    },
+    {
+      "work_id": "01418",
+      "title": "hudf (black)",
+      "year": 2004,
+      "year_display": "2004, 2011"
+    },
+    {
+      "work_id": "01419",
+      "title": "hudf (white)",
+      "year": 2004,
+      "year_display": "2004, 2011"
+    },
+    {
+      "work_id": "01420",
+      "title": "kylie grid map",
+      "year": 2004,
+      "year_display": "2004, 2011"
+    },
+    {
+      "work_id": "01421",
+      "title": "kylie map",
+      "year": 2004,
+      "year_display": "2004, 2011"
+    }
+  ]
+}

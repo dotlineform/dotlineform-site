@@ -1,0 +1,148 @@
+{
+  "header": {
+    "schema": "series_record_v5",
+    "version": "blake2b-78ea0c992c2d4988181e51b638d069b8",
+    "generated_at_utc": "2026-09-23T17:18:58Z",
+    "series_id": "029",
+    "count": 22
+  },
+  "series": {
+    "series_id": "029",
+    "title": "colours",
+    "documents": []
+  },
+  "member_works": [
+    {
+      "work_id": "00813",
+      "title": "colours 1958-2001",
+      "year": 2008,
+      "year_display": "2008"
+    },
+    {
+      "work_id": "00814",
+      "title": "colours belsen",
+      "year": 2008,
+      "year_display": "2008"
+    },
+    {
+      "work_id": "00815",
+      "title": "colours dachau",
+      "year": 2008,
+      "year_display": "2008"
+    },
+    {
+      "work_id": "00816",
+      "title": "colours kylie",
+      "year": 2008,
+      "year_display": "2008"
+    },
+    {
+      "work_id": "00817",
+      "title": "colours marilyn",
+      "year": 2008,
+      "year_display": "2008"
+    },
+    {
+      "work_id": "03502",
+      "title": "colours 1958-2001.1",
+      "year": 2008,
+      "year_display": "2008"
+    },
+    {
+      "work_id": "03503",
+      "title": "colours 1958-2001.2",
+      "year": 2008,
+      "year_display": "2008"
+    },
+    {
+      "work_id": "03504",
+      "title": "colours 1958-2001.3",
+      "year": 2008,
+      "year_display": "2008"
+    },
+    {
+      "work_id": "03505",
+      "title": "colours 1958-2001.4",
+      "year": 2008,
+      "year_display": "2008"
+    },
+    {
+      "work_id": "03506",
+      "title": "colours 1958-2001.5",
+      "year": 2008,
+      "year_display": "2008"
+    },
+    {
+      "work_id": "03507",
+      "title": "colours belsen.1",
+      "year": 2008,
+      "year_display": "2008"
+    },
+    {
+      "work_id": "03508",
+      "title": "colours dachau.1",
+      "year": 2008,
+      "year_display": "2008"
+    },
+    {
+      "work_id": "03509",
+      "title": "colours kylie.1",
+      "year": 2008,
+      "year_display": "2008"
+    },
+    {
+      "work_id": "03510",
+      "title": "colours kylie.2",
+      "year": 2008,
+      "year_display": "2008"
+    },
+    {
+      "work_id": "03511",
+      "title": "colours kylie.3",
+      "year": 2008,
+      "year_display": "2008"
+    },
+    {
+      "work_id": "03512",
+      "title": "colours kylie.4",
+      "year": 2008,
+      "year_display": "2008"
+    },
+    {
+      "work_id": "03513",
+      "title": "colours kylie.5",
+      "year": 2008,
+      "year_display": "2008"
+    },
+    {
+      "work_id": "03514",
+      "title": "colours marilyn.1",
+      "year": 2008,
+      "year_display": "2008"
+    },
+    {
+      "work_id": "03515",
+      "title": "colours marilyn.2",
+      "year": 2008,
+      "year_display": "2008"
+    },
+    {
+      "work_id": "03516",
+      "title": "colours marilyn.3",
+      "year": 2008,
+      "year_display": "2008"
+    },
+    {
+      "work_id": "03517",
+      "title": "colours marilyn.4",
+      "year": 2008,
+      "year_display": "2008"
+    },
+    {
+      "work_id": "03518",
+      "title": "colours marilyn.5",
+      "year": 2008,
+      "year_display": "2008"
+    }
+  ]
+}

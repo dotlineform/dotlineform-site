@@ -1,0 +1,286 @@
+{
+  "header": {
+    "schema": "series_record_v5",
+    "version": "blake2b-fcea18a2ddbfba05b4187676cae32b5e",
+    "generated_at_utc": "2026-09-23T17:18:58Z",
+    "series_id": "004",
+    "count": 45
+  },
+  "series": {
+    "series_id": "004",
+    "title": "2 bodies",
+    "documents": []
+  },
+  "member_works": [
+    {
+      "work_id": "00526",
+      "title": "body",
+      "year": 2025,
+      "year_display": "2025"
+    },
+    {
+      "work_id": "00527",
+      "title": "body",
+      "year": 2025,
+      "year_display": "2025"
+    },
+    {
+      "work_id": "00528",
+      "title": "body",
+      "year": 2025,
+      "year_display": "2025"
+    },
+    {
+      "work_id": "00529",
+      "title": "body residue",
+      "year": 2025,
+      "year_display": "2025"
+    },
+    {
+      "work_id": "00530",
+      "title": "body curves",
+      "year": 2025,
+      "year_display": "2025"
+    },
+    {
+      "work_id": "00531",
+      "title": "body monoprint",
+      "year": 2025,
+      "year_display": "2025"
+    },
+    {
+      "work_id": "00532",
+      "title": "body monoprint petals",
+      "year": 2025,
+      "year_display": "2025"
+    },
+    {
+      "work_id": "00533",
+      "title": "2 bodies monoprint",
+      "year": 2025,
+      "year_display": "2025"
+    },
+    {
+      "work_id": "00534",
+      "title": "2 bodies monoprint",
+      "year": 2025,
+      "year_display": "2025"
+    },
+    {
+      "work_id": "03074",
+      "title": "body detail",
+      "year": 2025,
+      "year_display": "2025"
+    },
+    {
+      "work_id": "03075",
+      "title": "body detail",
+      "year": 2025,
+      "year_display": "2025"
+    },
+    {
+      "work_id": "03076",
+      "title": "body detail",
+      "year": 2025,
+      "year_display": "2025"
+    },
+    {
+      "work_id": "03077",
+      "title": "body detail",
+      "year": 2025,
+      "year_display": "2025"
+    },
+    {
+      "work_id": "03078",
+      "title": "body detail",
+      "year": 2025,
+      "year_display": "2025"
+    },
+    {
+      "work_id": "03079",
+      "title": "body detail",
+      "year": 2025,
+      "year_display": "2025"
+    },
+    {
+      "work_id": "03080",
+      "title": "body detail",
+      "year": 2025,
+      "year_display": "2025"
+    },
+    {
+      "work_id": "03081",
+      "title": "body detail",
+      "year": 2025,
+      "year_display": "2025"
+    },
+    {
+      "work_id": "03082",
+      "title": "body detail",
+      "year": 2025,
+      "year_display": "2025"
+    },
+    {
+      "work_id": "03083",
+      "title": "body detail",
+      "year": 2025,
+      "year_display": "2025"
+    },
+    {
+      "work_id": "03084",
+      "title": "body detail",
+      "year": 2025,
+      "year_display": "2025"
+    },
+    {
+      "work_id": "03085",
+      "title": "body detail",
+      "year": 2025,
+      "year_display": "2025"
+    },
+    {
+      "work_id": "03086",
+      "title": "body detail",
+      "year": 2025,
+      "year_display": "2025"
+    },
+    {
+      "work_id": "03087",
+      "title": "body detail",
+      "year": 2025,
+      "year_display": "2025"
+    },
+    {
+      "work_id": "03088",
+      "title": "body detail",
+      "year": 2025,
+      "year_display": "2025"
+    },
+    {
+      "work_id": "03089",
+      "title": "body detail",
+      "year": 2025,
+      "year_display": "2025"
+    },
+    {
+      "work_id": "03090",
+      "title": "body detail",
+      "year": 2025,
+      "year_display": "2025"
+    },
+    {
+      "work_id": "03091",
+      "title": "body detail",
+      "year": 2025,
+      "year_display": "2025"
+    },
+    {
+      "work_id": "03092",
+      "title": "body detail",
+      "year": 2025,
+      "year_display": "2025"
+    },
+    {
+      "work_id": "03093",
+      "title": "body detail",
+      "year": 2025,
+      "year_display": "2025"
+    },
+    {
+      "work_id": "03094",
+      "title": "body detail",
+      "year": 2025,
+      "year_display": "2025"
+    },
+    {
+      "work_id": "03095",
+      "title": "body detail",
+      "year": 2025,
+      "year_display": "2025"
+    },
+    {
+      "work_id": "03096",
+      "title": "body detail",
+      "year": 2025,
+      "year_display": "2025"
+    },
+    {
+      "work_id": "03097",
+      "title": "body detail",
+      "year": 2025,
+      "year_display": "2025"
+    },
+    {
+      "work_id": "03098",
+      "title": "body detail",
+      "year": 2025,
+      "year_display": "2025"
+    },
+    {
+      "work_id": "03099",
+      "title": "body detail",
+      "year": 2025,
+      "year_display": "2025"
+    },
+    {
+      "work_id": "03100",
+      "title": "body detail",
+      "year": 2025,
+      "year_display": "2025"
+    },
+    {
+      "work_id": "03101",
+      "title": "body detail",
+      "year": 2025,
+      "year_display": "2025"
+    },
+    {
+      "work_id": "03102",
+      "title": "body detail",
+      "year": 2025,
+      "year_display": "2025"
+    },
+    {
+      "work_id": "03103",
+      "title": "body detail",
+      "year": 2025,
+      "year_display": "2025"
+    },
+    {
+      "work_id": "03104",
+      "title": "body detail",
+      "year": 2025,
+      "year_display": "2025"
+    },
+    {
+      "work_id": "03105",
+      "title": "body detail",
+      "year": 2025,
+      "year_display": "2025"
+    },
+    {
+      "work_id": "03106",
+      "title": "body detail",
+      "year": 2025,
+      "year_display": "2025"
+    },
+    {
+      "work_id": "03107",
+      "title": "body detail",
+      "year": 2025,
+      "year_display": "2025"
+    },
+    {
+      "work_id": "03108",
+      "title": "body detail",
+      "year": 2025,
+      "year_display": "2025"
+    },
+    {
+      "work_id": "03109",
+      "title": "body detail",
+      "year": 2025,
+      "year_display": "2025"
+    }
+  ]
+}

@@ -1,0 +1,106 @@
+{
+  "header": {
+    "schema": "series_record_v5",
+    "version": "blake2b-ca6c60a3d43922e33d5abad5587bec33",
+    "generated_at_utc": "2026-09-23T17:18:58Z",
+    "series_id": "142",
+    "count": 15
+  },
+  "series": {
+    "series_id": "142",
+    "title": "water sea pond",
+    "documents": []
+  },
+  "member_works": [
+    {
+      "work_id": "01938",
+      "title": "water",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "01939",
+      "title": "sea",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "01940",
+      "title": "pond",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04612",
+      "title": "water - detail 1",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04613",
+      "title": "water - detail 2",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04614",
+      "title": "water - detail 3",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04615",
+      "title": "water - detail 4",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04616",
+      "title": "sea - detail 1",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04617",
+      "title": "sea - detail 2",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04618",
+      "title": "sea - detail 3",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04619",
+      "title": "sea - detail 4",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04620",
+      "title": "pond - detail 1",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04621",
+      "title": "pond - detail 2",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04622",
+      "title": "pond - detail 3",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04623",
+      "title": "pond - detail 4",
+      "year": 2023,
+      "year_display": "2023"
+    }
+  ]
+}

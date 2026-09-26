@@ -1,0 +1,705 @@
+{
+  "header": {
+    "schema": "catalogue_series_index_v1",
+    "version": "blake2b-57b2fc7f6fdb58324ab43eb56f361e64",
+    "generated_at_utc": "2026-09-23T17:31:36Z",
+    "count": 139
+  },
+  "series": {
+    "001": {
+      "series_id": "001",
+      "title": "10,000",
+      "work_count": 12
+    },
+    "003": {
+      "series_id": "003",
+      "title": "16 forms",
+      "work_count": 49
+    },
+    "004": {
+      "series_id": "004",
+      "title": "2 bodies",
+      "work_count": 45
+    },
+    "005": {
+      "series_id": "005",
+      "title": "3 symbols",
+      "work_count": 54
+    },
+    "006": {
+      "series_id": "006",
+      "title": "a doll story",
+      "work_count": 75
+    },
+    "007": {
+      "series_id": "007",
+      "title": "a feeling that we are part of a structure",
+      "work_count": 6
+    },
+    "008": {
+      "series_id": "008",
+      "title": "a humid home full of light",
+      "work_count": 12
+    },
+    "009": {
+      "series_id": "009",
+      "title": "a poem divided into 4 parts",
+      "work_count": 21
+    },
+    "010": {
+      "series_id": "010",
+      "title": "a theory of happiness is a theory of everything",
+      "work_count": 72
+    },
+    "012": {
+      "series_id": "012",
+      "title": "all the little cracks",
+      "work_count": 10
+    },
+    "013": {
+      "series_id": "013",
+      "title": "an act of kindness",
+      "work_count": 15
+    },
+    "014": {
+      "series_id": "014",
+      "title": "assembly codes",
+      "work_count": 12
+    },
+    "015": {
+      "series_id": "015",
+      "title": "base series",
+      "work_count": 18
+    },
+    "016": {
+      "series_id": "016",
+      "title": "birds",
+      "work_count": 8
+    },
+    "017": {
+      "series_id": "017",
+      "title": "birth of healing forms",
+      "work_count": 47
+    },
+    "018": {
+      "series_id": "018",
+      "title": "body form",
+      "work_count": 1
+    },
+    "019": {
+      "series_id": "019",
+      "title": "body space",
+      "work_count": 9
+    },
+    "020": {
+      "series_id": "020",
+      "title": "body space (reclining state)",
+      "work_count": 9
+    },
+    "021": {
+      "series_id": "021",
+      "title": "book dna",
+      "work_count": 85
+    },
+    "022": {
+      "series_id": "022",
+      "title": "book of curves",
+      "work_count": 5
+    },
+    "023": {
+      "series_id": "023",
+      "title": "certainty",
+      "work_count": 524
+    },
+    "024": {
+      "series_id": "024",
+      "title": "changed photos",
+      "work_count": 21
+    },
+    "025": {
+      "series_id": "025",
+      "title": "closeness",
+      "work_count": 2
+    },
+    "026": {
+      "series_id": "026",
+      "title": "collected 1989-1998",
+      "work_count": 176
+    },
+    "027": {
+      "series_id": "027",
+      "title": "collected digital c. 1998",
+      "work_count": 58
+    },
+    "028": {
+      "series_id": "028",
+      "title": "colouring book",
+      "work_count": 9
+    },
+    "029": {
+      "series_id": "029",
+      "title": "colours",
+      "work_count": 22
+    },
+    "030": {
+      "series_id": "030",
+      "title": "composite (blue red smoke)",
+      "work_count": 3
+    },
+    "031": {
+      "series_id": "031",
+      "title": "concrete",
+      "work_count": 14
+    },
+    "032": {
+      "series_id": "032",
+      "title": "creases",
+      "work_count": 6
+    },
+    "033": {
+      "series_id": "033",
+      "title": "cube structure",
+      "work_count": 12
+    },
+    "034": {
+      "series_id": "034",
+      "title": "curl",
+      "work_count": 17
+    },
+    "035": {
+      "series_id": "035",
+      "title": "curve machine",
+      "work_count": 26
+    },
+    "036": {
+      "series_id": "036",
+      "title": "curve poems",
+      "work_count": 91
+    },
+    "037": {
+      "series_id": "037",
+      "title": "doll",
+      "work_count": 51
+    },
+    "038": {
+      "series_id": "038",
+      "title": "doll faces",
+      "work_count": 8
+    },
+    "039": {
+      "series_id": "039",
+      "title": "doll sees everything",
+      "work_count": 17
+    },
+    "040": {
+      "series_id": "040",
+      "title": "dot",
+      "work_count": 11
+    },
+    "041": {
+      "series_id": "041",
+      "title": "dot theory",
+      "work_count": 15
+    },
+    "042": {
+      "series_id": "042",
+      "title": "dotlineform (2021)",
+      "work_count": 40
+    },
+    "043": {
+      "series_id": "043",
+      "title": "dotlineform (2023)",
+      "work_count": 68
+    },
+    "044": {
+      "series_id": "044",
+      "title": "dots",
+      "work_count": 30
+    },
+    "045": {
+      "series_id": "045",
+      "title": "droplets",
+      "work_count": 30
+    },
+    "046": {
+      "series_id": "046",
+      "title": "egg forms",
+      "work_count": 40
+    },
+    "047": {
+      "series_id": "047",
+      "title": "egg prints",
+      "work_count": 6
+    },
+    "048": {
+      "series_id": "048",
+      "title": "entangled form",
+      "work_count": 4
+    },
+    "049": {
+      "series_id": "049",
+      "title": "espresso",
+      "work_count": 26
+    },
+    "050": {
+      "series_id": "050",
+      "title": "field",
+      "work_count": 8
+    },
+    "051": {
+      "series_id": "051",
+      "title": "fireworks form",
+      "work_count": 382
+    },
+    "052": {
+      "series_id": "052",
+      "title": "flowers",
+      "work_count": 12
+    },
+    "053": {
+      "series_id": "053",
+      "title": "fluid forms",
+      "work_count": 16
+    },
+    "055": {
+      "series_id": "055",
+      "title": "fog",
+      "work_count": 36
+    },
+    "056": {
+      "series_id": "056",
+      "title": "folding forms",
+      "work_count": 54
+    },
+    "057": {
+      "series_id": "057",
+      "title": "folding structure",
+      "work_count": 13
+    },
+    "058": {
+      "series_id": "058",
+      "title": "for David Lynch (2025)",
+      "work_count": 1
+    },
+    "059": {
+      "series_id": "059",
+      "title": "forest",
+      "work_count": 5
+    },
+    "060": {
+      "series_id": "060",
+      "title": "forest (2024)",
+      "work_count": 17
+    },
+    "061": {
+      "series_id": "061",
+      "title": "forest memories 1-48",
+      "work_count": 61
+    },
+    "062": {
+      "series_id": "062",
+      "title": "forests (2023)",
+      "work_count": 19
+    },
+    "063": {
+      "series_id": "063",
+      "title": "form mobile",
+      "work_count": 19
+    },
+    "064": {
+      "series_id": "064",
+      "title": "form space",
+      "work_count": 64
+    },
+    "065": {
+      "series_id": "065",
+      "title": "forms",
+      "work_count": 119
+    },
+    "066": {
+      "series_id": "066",
+      "title": "forms painting",
+      "work_count": 7
+    },
+    "067": {
+      "series_id": "067",
+      "title": "found forms",
+      "work_count": 51
+    },
+    "068": {
+      "series_id": "068",
+      "title": "fragments",
+      "work_count": 48
+    },
+    "069": {
+      "series_id": "069",
+      "title": "genetic (2020)",
+      "work_count": 1
+    },
+    "070": {
+      "series_id": "070",
+      "title": "glass forms",
+      "work_count": 5
+    },
+    "071": {
+      "series_id": "071",
+      "title": "grey series",
+      "work_count": 13
+    },
+    "072": {
+      "series_id": "072",
+      "title": "grid cells",
+      "work_count": 2
+    },
+    "073": {
+      "series_id": "073",
+      "title": "grid fields",
+      "work_count": 95
+    },
+    "074": {
+      "series_id": "074",
+      "title": "grid theory",
+      "work_count": 4
+    },
+    "075": {
+      "series_id": "075",
+      "title": "harmony",
+      "work_count": 18
+    },
+    "076": {
+      "series_id": "076",
+      "title": "heaven and earth",
+      "work_count": 9
+    },
+    "077": {
+      "series_id": "077",
+      "title": "home",
+      "work_count": 25
+    },
+    "078": {
+      "series_id": "078",
+      "title": "home land loss",
+      "work_count": 3
+    },
+    "079": {
+      "series_id": "079",
+      "title": "in the end we'll know",
+      "work_count": 16
+    },
+    "080": {
+      "series_id": "080",
+      "title": "interior design",
+      "work_count": 12
+    },
+    "081": {
+      "series_id": "081",
+      "title": "intuition (2020)",
+      "work_count": 1
+    },
+    "082": {
+      "series_id": "082",
+      "title": "k crystals",
+      "work_count": 20
+    },
+    "083": {
+      "series_id": "083",
+      "title": "k particles",
+      "work_count": 11
+    },
+    "084": {
+      "series_id": "084",
+      "title": "kylie structures",
+      "work_count": 20
+    },
+    "085": {
+      "series_id": "085",
+      "title": "kylie wax model",
+      "work_count": 43
+    },
+    "086": {
+      "series_id": "086",
+      "title": "landscape for symbols",
+      "work_count": 1
+    },
+    "087": {
+      "series_id": "087",
+      "title": "landscapes",
+      "work_count": 12
+    },
+    "088": {
+      "series_id": "088",
+      "title": "leaf",
+      "work_count": 1
+    },
+    "089": {
+      "series_id": "089",
+      "title": "learning to draw landscapes",
+      "work_count": 92
+    },
+    "090": {
+      "series_id": "090",
+      "title": "lights",
+      "work_count": 16
+    },
+    "091": {
+      "series_id": "091",
+      "title": "lipseyes",
+      "work_count": 1
+    },
+    "092": {
+      "series_id": "092",
+      "title": "living surface hand form",
+      "work_count": 8
+    },
+    "093": {
+      "series_id": "093",
+      "title": "maps",
+      "work_count": 5
+    },
+    "094": {
+      "series_id": "094",
+      "title": "matter",
+      "work_count": 10
+    },
+    "095": {
+      "series_id": "095",
+      "title": "melancholy hope cell",
+      "work_count": 18
+    },
+    "096": {
+      "series_id": "096",
+      "title": "memory loss hope",
+      "work_count": 2
+    },
+    "097": {
+      "series_id": "097",
+      "title": "memory loss vessels",
+      "work_count": 4
+    },
+    "098": {
+      "series_id": "098",
+      "title": "mm",
+      "work_count": 60
+    },
+    "099": {
+      "series_id": "099",
+      "title": "models",
+      "work_count": 12
+    },
+    "100": {
+      "series_id": "100",
+      "title": "molecule forms",
+      "work_count": 257
+    },
+    "101": {
+      "series_id": "101",
+      "title": "molecules",
+      "work_count": 23
+    },
+    "103": {
+      "series_id": "103",
+      "title": "mother and child",
+      "work_count": 2
+    },
+    "104": {
+      "series_id": "104",
+      "title": "mouse story",
+      "work_count": 13
+    },
+    "105": {
+      "series_id": "105",
+      "title": "nerve",
+      "work_count": 32
+    },
+    "106": {
+      "series_id": "106",
+      "title": "nerve forms",
+      "work_count": 5
+    },
+    "107": {
+      "series_id": "107",
+      "title": "nothing is missing",
+      "work_count": 31
+    },
+    "108": {
+      "series_id": "108",
+      "title": "olive tree",
+      "work_count": 5
+    },
+    "109": {
+      "series_id": "109",
+      "title": "particle machine",
+      "work_count": 11
+    },
+    "110": {
+      "series_id": "110",
+      "title": "particle theory",
+      "work_count": 5
+    },
+    "111": {
+      "series_id": "111",
+      "title": "particles",
+      "work_count": 7
+    },
+    "112": {
+      "series_id": "112",
+      "title": "petri",
+      "work_count": 22
+    },
+    "113": {
+      "series_id": "113",
+      "title": "pi particles",
+      "work_count": 19
+    },
+    "114": {
+      "series_id": "114",
+      "title": "plant forms",
+      "work_count": 7
+    },
+    "115": {
+      "series_id": "115",
+      "title": "poa",
+      "work_count": 49
+    },
+    "116": {
+      "series_id": "116",
+      "title": "pole vault",
+      "work_count": 17
+    },
+    "117": {
+      "series_id": "117",
+      "title": "porto santo",
+      "work_count": 13
+    },
+    "118": {
+      "series_id": "118",
+      "title": "quantum random number theory",
+      "work_count": 49
+    },
+    "119": {
+      "series_id": "119",
+      "title": "r",
+      "work_count": 27
+    },
+    "120": {
+      "series_id": "120",
+      "title": "reduce and return",
+      "work_count": 10
+    },
+    "121": {
+      "series_id": "121",
+      "title": "residues",
+      "work_count": 23
+    },
+    "122": {
+      "series_id": "122",
+      "title": "room",
+      "work_count": 16
+    },
+    "123": {
+      "series_id": "123",
+      "title": "snow",
+      "work_count": 20
+    },
+    "124": {
+      "series_id": "124",
+      "title": "spider webs",
+      "work_count": 45
+    },
+    "125": {
+      "series_id": "125",
+      "title": "spiders",
+      "work_count": 7
+    },
+    "126": {
+      "series_id": "126",
+      "title": "spine symbols",
+      "work_count": 74
+    },
+    "127": {
+      "series_id": "127",
+      "title": "state of mind",
+      "work_count": 120
+    },
+    "128": {
+      "series_id": "128",
+      "title": "still life",
+      "work_count": 13
+    },
+    "129": {
+      "series_id": "129",
+      "title": "string theory",
+      "work_count": 28
+    },
+    "130": {
+      "series_id": "130",
+      "title": "sunflower",
+      "work_count": 3
+    },
+    "131": {
+      "series_id": "131",
+      "title": "surface history",
+      "work_count": 6
+    },
+    "132": {
+      "series_id": "132",
+      "title": "tabula rasa",
+      "work_count": 11
+    },
+    "133": {
+      "series_id": "133",
+      "title": "thorns",
+      "work_count": 18
+    },
+    "134": {
+      "series_id": "134",
+      "title": "through a glass clearly",
+      "work_count": 7
+    },
+    "135": {
+      "series_id": "135",
+      "title": "train moments",
+      "work_count": 99
+    },
+    "136": {
+      "series_id": "136",
+      "title": "tree",
+      "work_count": 3
+    },
+    "137": {
+      "series_id": "137",
+      "title": "tulips",
+      "work_count": 26
+    },
+    "138": {
+      "series_id": "138",
+      "title": "untitled composites",
+      "work_count": 33
+    },
+    "139": {
+      "series_id": "139",
+      "title": "untitled (destroyed)",
+      "work_count": 27
+    },
+    "140": {
+      "series_id": "140",
+      "title": "wa",
+      "work_count": 24
+    },
+    "141": {
+      "series_id": "141",
+      "title": "water",
+      "work_count": 28
+    },
+    "142": {
+      "series_id": "142",
+      "title": "water sea pond",
+      "work_count": 15
+    },
+    "143": {
+      "series_id": "143",
+      "title": "simultaneous equations",
+      "work_count": 2
+    }
+  }
+}

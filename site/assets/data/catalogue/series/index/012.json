@@ -1,0 +1,76 @@
+{
+  "header": {
+    "schema": "series_record_v5",
+    "version": "blake2b-039e51a55b52917c2aaacc2f5519ea23",
+    "generated_at_utc": "2026-09-23T17:18:58Z",
+    "series_id": "012",
+    "count": 10
+  },
+  "series": {
+    "series_id": "012",
+    "title": "all the little cracks",
+    "documents": []
+  },
+  "member_works": [
+    {
+      "work_id": "00751",
+      "title": "all the little cracks",
+      "year": 2010,
+      "year_display": "2010"
+    },
+    {
+      "work_id": "00752",
+      "title": "all the little cracks again",
+      "year": 2016,
+      "year_display": "2016"
+    },
+    {
+      "work_id": "03359",
+      "title": "all the little cracks - detail 1",
+      "year": 2010,
+      "year_display": "2010"
+    },
+    {
+      "work_id": "03360",
+      "title": "all the little cracks - detail 2",
+      "year": 2010,
+      "year_display": "2010"
+    },
+    {
+      "work_id": "03361",
+      "title": "all the little cracks - detail 3",
+      "year": 2010,
+      "year_display": "2010"
+    },
+    {
+      "work_id": "03362",
+      "title": "all the little cracks - detail 4",
+      "year": 2010,
+      "year_display": "2010"
+    },
+    {
+      "work_id": "03363",
+      "title": "all the little cracks again - detail 1",
+      "year": 2016,
+      "year_display": "2016"
+    },
+    {
+      "work_id": "03364",
+      "title": "all the little cracks again - detail 2",
+      "year": 2016,
+      "year_display": "2016"
+    },
+    {
+      "work_id": "03365",
+      "title": "all the little cracks again - detail 3",
+      "year": 2016,
+      "year_display": "2016"
+    },
+    {
+      "work_id": "03366",
+      "title": "all the little cracks again - detail 4",
+      "year": 2016,
+      "year_display": "2016"
+    }
+  ]
+}

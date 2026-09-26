@@ -1,0 +1,310 @@
+{
+  "header": {
+    "schema": "series_record_v5",
+    "version": "blake2b-dc2f84597428dbd1c7542aae6dcb96d8",
+    "generated_at_utc": "2026-09-23T17:18:58Z",
+    "series_id": "118",
+    "count": 49
+  },
+  "series": {
+    "series_id": "118",
+    "title": "quantum random number theory",
+    "documents": []
+  },
+  "member_works": [
+    {
+      "work_id": "00383",
+      "title": "qrnt",
+      "year": 2009,
+      "year_display": "2009"
+    },
+    {
+      "work_id": "00629",
+      "title": "quantum random number theory",
+      "year": 2009,
+      "year_display": "2009"
+    },
+    {
+      "work_id": "00630",
+      "title": "quantum random number theory (version)",
+      "year": 2010,
+      "year_display": "2010"
+    },
+    {
+      "work_id": "00631",
+      "title": "quantum random number theory (form)",
+      "year": 2015,
+      "year_display": "2015"
+    },
+    {
+      "work_id": "00632",
+      "title": "quantum random number theory (circle)",
+      "year": 2009,
+      "year_display": "2009"
+    },
+    {
+      "work_id": "00633",
+      "title": "quantum random number theory (4 circles)",
+      "year": 2009,
+      "year_display": "2009"
+    },
+    {
+      "work_id": "00634",
+      "title": "bits symbols 1",
+      "year": 2009,
+      "year_display": "2009"
+    },
+    {
+      "work_id": "03137",
+      "title": "quantum random number theory (10,000) 1",
+      "year": 2009,
+      "year_display": "2009"
+    },
+    {
+      "work_id": "03138",
+      "title": "quantum random number theory (10,000) 2",
+      "year": 2009,
+      "year_display": "2009"
+    },
+    {
+      "work_id": "03139",
+      "title": "quantum random number theory (10,000) 3",
+      "year": 2009,
+      "year_display": "2009"
+    },
+    {
+      "work_id": "03140",
+      "title": "quantum random number theory (10,000) 4",
+      "year": 2009,
+      "year_display": "2009"
+    },
+    {
+      "work_id": "03141",
+      "title": "quantum random number theory (10,000) 5",
+      "year": 2009,
+      "year_display": "2009"
+    },
+    {
+      "work_id": "03142",
+      "title": "quantum random number theory (10,000) 6",
+      "year": 2009,
+      "year_display": "2009"
+    },
+    {
+      "work_id": "03143",
+      "title": "quantum random number theory (10,000) 7",
+      "year": 2009,
+      "year_display": "2009"
+    },
+    {
+      "work_id": "03144",
+      "title": "quantum random number theory (10,000) 8",
+      "year": 2009,
+      "year_display": "2009"
+    },
+    {
+      "work_id": "03145",
+      "title": "quantum random number theory (10,000) 9",
+      "year": 2009,
+      "year_display": "2009"
+    },
+    {
+      "work_id": "03146",
+      "title": "quantum random number theory (10,000) 10",
+      "year": 2009,
+      "year_display": "2009"
+    },
+    {
+      "work_id": "03147",
+      "title": "qrnt - Searching for God exhibition - install 1",
+      "year": 2009,
+      "year_display": "2009"
+    },
+    {
+      "work_id": "03148",
+      "title": "qrnt - Searching for God exhibition - install 2",
+      "year": 2009,
+      "year_display": "2009"
+    },
+    {
+      "work_id": "03149",
+      "title": "qrnt - Searching for God exhibition - install 3",
+      "year": 2009,
+      "year_display": "2009"
+    },
+    {
+      "work_id": "03150",
+      "title": "qrnt form (2015-06-06)",
+      "year": 2015,
+      "year_display": "2015"
+    },
+    {
+      "work_id": "03151",
+      "title": "qrnt form (2015-06-06) detail 1",
+      "year": 2015,
+      "year_display": "2015"
+    },
+    {
+      "work_id": "03152",
+      "title": "qrnt form (2015-06-06) detail 2",
+      "year": 2015,
+      "year_display": "2015"
+    },
+    {
+      "work_id": "03153",
+      "title": "qrnt form (2015-06-06) detail 3",
+      "year": 2015,
+      "year_display": "2015"
+    },
+    {
+      "work_id": "03154",
+      "title": "bits symbols 1",
+      "year": 2009,
+      "year_display": "2009"
+    },
+    {
+      "work_id": "03155",
+      "title": "bits symbols 2",
+      "year": 2009,
+      "year_display": "2009"
+    },
+    {
+      "work_id": "03156",
+      "title": "bits symbols 3",
+      "year": 2009,
+      "year_display": "2009"
+    },
+    {
+      "work_id": "03157",
+      "title": "bits symbols 4",
+      "year": 2009,
+      "year_display": "2009"
+    },
+    {
+      "work_id": "03158",
+      "title": "bits symbols 1.1",
+      "year": 2009,
+      "year_display": "2009"
+    },
+    {
+      "work_id": "03159",
+      "title": "bits symbols 1.2",
+      "year": 2009,
+      "year_display": "2009"
+    },
+    {
+      "work_id": "03160",
+      "title": "bits symbols 1.3",
+      "year": 2009,
+      "year_display": "2009"
+    },
+    {
+      "work_id": "03161",
+      "title": "bits symbols 2.1",
+      "year": 2009,
+      "year_display": "2009"
+    },
+    {
+      "work_id": "03162",
+      "title": "bits symbols 2.2",
+      "year": 2009,
+      "year_display": "2009"
+    },
+    {
+      "work_id": "03163",
+      "title": "bits symbols 2.3",
+      "year": 2009,
+      "year_display": "2009"
+    },
+    {
+      "work_id": "03164",
+      "title": "bits symbols 3.1",
+      "year": 2009,
+      "year_display": "2009"
+    },
+    {
+      "work_id": "03165",
+      "title": "bits symbols 3.2",
+      "year": 2009,
+      "year_display": "2009"
+    },
+    {
+      "work_id": "03166",
+      "title": "bits symbols 3.3",
+      "year": 2009,
+      "year_display": "2009"
+    },
+    {
+      "work_id": "03167",
+      "title": "bits symbols 4.1",
+      "year": 2009,
+      "year_display": "2009"
+    },
+    {
+      "work_id": "03168",
+      "title": "bits symbols 4.2",
+      "year": 2009,
+      "year_display": "2009"
+    },
+    {
+      "work_id": "03169",
+      "title": "bits symbols 4.3",
+      "year": 2009,
+      "year_display": "2009"
+    },
+    {
+      "work_id": "03170",
+      "title": "bits symbols 1.1.1",
+      "year": 2009,
+      "year_display": "2009"
+    },
+    {
+      "work_id": "03171",
+      "title": "bits symbols 1.1.2",
+      "year": 2009,
+      "year_display": "2009"
+    },
+    {
+      "work_id": "03172",
+      "title": "bits symbols 1.1.3",
+      "year": 2009,
+      "year_display": "2009"
+    },
+    {
+      "work_id": "03173",
+      "title": "bits symbols 1.2.1",
+      "year": 2009,
+      "year_display": "2009"
+    },
+    {
+      "work_id": "03174",
+      "title": "bits symbols 1.2.2",
+      "year": 2009,
+      "year_display": "2009"
+    },
+    {
+      "work_id": "03175",
+      "title": "bits symbols 1.2.3",
+      "year": 2009,
+      "year_display": "2009"
+    },
+    {
+      "work_id": "03176",
+      "title": "bits symbols 1.3.1",
+      "year": 2009,
+      "year_display": "2009"
+    },
+    {
+      "work_id": "03177",
+      "title": "bits symbols 1.3.2",
+      "year": 2009,
+      "year_display": "2009"
+    },
+    {
+      "work_id": "03178",
+      "title": "bits symbols 1.3.3",
+      "year": 2009,
+      "year_display": "2009"
+    }
+  ]
+}

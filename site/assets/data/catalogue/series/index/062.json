@@ -1,0 +1,130 @@
+{
+  "header": {
+    "schema": "series_record_v5",
+    "version": "blake2b-6e8e4e7f4dad5ef53e5ec09bd3662427",
+    "generated_at_utc": "2026-09-23T17:18:58Z",
+    "series_id": "062",
+    "count": 19
+  },
+  "series": {
+    "series_id": "062",
+    "title": "forests (2023)",
+    "documents": []
+  },
+  "member_works": [
+    {
+      "work_id": "00465",
+      "title": "forest 1",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "00466",
+      "title": "forest 2",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "00467",
+      "title": "forest 3",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "00468",
+      "title": "forest 4",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "02946",
+      "title": "forest 1 - detail 1",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "02947",
+      "title": "forest 1 - detail 2",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "02948",
+      "title": "forest 1 - detail 3",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "02949",
+      "title": "forest 2 - detail 1",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "02950",
+      "title": "forest 2 - detail 2",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "02951",
+      "title": "forest 2 - detail 3",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "02952",
+      "title": "forest 3 - detail 1",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "02953",
+      "title": "forest 3 - detail 2",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "02954",
+      "title": "forest 3 - detail 3",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "02955",
+      "title": "forest 4 - detail 1",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "02956",
+      "title": "forest 4 - detail 2",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "02957",
+      "title": "forest 4 - detail 3",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "02958",
+      "title": "forest 4 - detail 4",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "02959",
+      "title": "forest 4 - detail 5",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "02960",
+      "title": "forest 4 - detail 6",
+      "year": 2023,
+      "year_display": "2023"
+    }
+  ]
+}

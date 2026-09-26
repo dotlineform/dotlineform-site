@@ -1,0 +1,64 @@
+{
+  "header": {
+    "schema": "series_record_v5",
+    "version": "blake2b-75de3beefc9ba4f0d2ee8839f4b91a6c",
+    "generated_at_utc": "2026-09-23T17:18:58Z",
+    "series_id": "092",
+    "count": 8
+  },
+  "series": {
+    "series_id": "092",
+    "title": "living surface hand form",
+    "documents": []
+  },
+  "member_works": [
+    {
+      "work_id": "00463",
+      "title": "living surface hand form",
+      "year": 2004,
+      "year_display": "1989, 2004"
+    },
+    {
+      "work_id": "02879",
+      "title": "living surface hand form (original painting, 1989)",
+      "year": 2004,
+      "year_display": "1989, 2004"
+    },
+    {
+      "work_id": "02880",
+      "title": "living surface (version 1)",
+      "year": 2004,
+      "year_display": "1989, 2004"
+    },
+    {
+      "work_id": "02881",
+      "title": "living surface (version 2)",
+      "year": 2004,
+      "year_display": "1989, 2004"
+    },
+    {
+      "work_id": "02882",
+      "title": "living surface (version 3)",
+      "year": 2004,
+      "year_display": "1989, 2004"
+    },
+    {
+      "work_id": "02883",
+      "title": "living surface (version 3) detail",
+      "year": 2004,
+      "year_display": "1989, 2004"
+    },
+    {
+      "work_id": "02884",
+      "title": "living surface (version 4)",
+      "year": 2004,
+      "year_display": "1989, 2004"
+    },
+    {
+      "work_id": "02885",
+      "title": "living surface (version 4) detail",
+      "year": 2004,
+      "year_display": "1989, 2004"
+    }
+  ]
+}

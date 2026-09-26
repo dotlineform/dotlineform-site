@@ -1,0 +1,88 @@
+{
+  "header": {
+    "schema": "series_record_v5",
+    "version": "blake2b-93b0b21e7f459c1dee9efb57bb30622c",
+    "generated_at_utc": "2026-09-23T17:18:58Z",
+    "series_id": "033",
+    "count": 12
+  },
+  "series": {
+    "series_id": "033",
+    "title": "cube structure",
+    "documents": []
+  },
+  "member_works": [
+    {
+      "work_id": "00838",
+      "title": "structure a",
+      "year": 2011,
+      "year_display": "2011"
+    },
+    {
+      "work_id": "00839",
+      "title": "structure b",
+      "year": 2011,
+      "year_display": "2011"
+    },
+    {
+      "work_id": "00840",
+      "title": "structure c",
+      "year": 2011,
+      "year_display": "2011"
+    },
+    {
+      "work_id": "00841",
+      "title": "structure d",
+      "year": 2011,
+      "year_display": "2011"
+    },
+    {
+      "work_id": "00842",
+      "title": "structure i",
+      "year": 2011,
+      "year_display": "2011"
+    },
+    {
+      "work_id": "00843",
+      "title": "structure ii ~",
+      "year": 2011,
+      "year_display": "2011"
+    },
+    {
+      "work_id": "00844",
+      "title": "structure ii",
+      "year": 2011,
+      "year_display": "2011"
+    },
+    {
+      "work_id": "00845",
+      "title": "structure iii",
+      "year": 2011,
+      "year_display": "2011"
+    },
+    {
+      "work_id": "00846",
+      "title": "structure iv",
+      "year": 2011,
+      "year_display": "2011"
+    },
+    {
+      "work_id": "00847",
+      "title": "structure v composite",
+      "year": 2011,
+      "year_display": "2011"
+    },
+    {
+      "work_id": "00848",
+      "title": "structure v",
+      "year": 2011,
+      "year_display": "2011"
+    },
+    {
+      "work_id": "00849",
+      "title": "structure vi",
+      "year": 2011,
+      "year_display": "2011"
+    }
+  ]
+}

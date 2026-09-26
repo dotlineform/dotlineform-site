@@ -1,0 +1,40 @@
+{
+  "header": {
+    "schema": "series_record_v5",
+    "version": "blake2b-efd1e82353e70275bada6e990dcfaa94",
+    "generated_at_utc": "2026-09-23T17:18:58Z",
+    "series_id": "097",
+    "count": 4
+  },
+  "series": {
+    "series_id": "097",
+    "title": "memory loss vessels",
+    "documents": []
+  },
+  "member_works": [
+    {
+      "work_id": "01443",
+      "title": "memory loss vessels I",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "01444",
+      "title": "memory loss vessels II",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "01445",
+      "title": "memory loss vessels III",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "01446",
+      "title": "memory loss",
+      "year": 2023,
+      "year_display": "2023"
+    }
+  ]
+}

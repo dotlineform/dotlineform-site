@@ -1,0 +1,58 @@
+{
+  "header": {
+    "schema": "series_record_v5",
+    "version": "blake2b-5b19e083279010e20810e1303c55a79f",
+    "generated_at_utc": "2026-09-23T17:18:58Z",
+    "series_id": "134",
+    "count": 7
+  },
+  "series": {
+    "series_id": "134",
+    "title": "through a glass clearly",
+    "documents": []
+  },
+  "member_works": [
+    {
+      "work_id": "01763",
+      "title": "through a glass clearly (1)",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "01764",
+      "title": "through a glass clearly (2)",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "01765",
+      "title": "through a glass clearly (3)",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "01766",
+      "title": "through a glass clearly (4)",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "01767",
+      "title": "through a glass clearly (5)",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "01768",
+      "title": "through a glass clearly (6)",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "01769",
+      "title": "through a glass clearly (7)",
+      "year": 2023,
+      "year_display": "2023"
+    }
+  ]
+}

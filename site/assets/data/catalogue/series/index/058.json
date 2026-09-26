@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "series_record_v5",
+    "version": "blake2b-975400b052a28a38b859c1b0e18aed07",
+    "generated_at_utc": "2026-09-23T17:18:58Z",
+    "series_id": "058",
+    "count": 1
+  },
+  "series": {
+    "series_id": "058",
+    "title": "for David Lynch (2025)",
+    "documents": []
+  },
+  "member_works": [
+    {
+      "work_id": "00346",
+      "title": "for David Lynch",
+      "year": 2025,
+      "year_display": "2025"
+    }
+  ]
+}

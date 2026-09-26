@@ -1,0 +1,124 @@
+{
+  "header": {
+    "schema": "series_record_v5",
+    "version": "blake2b-803dfa28afeef6857d426b1605e56a35",
+    "generated_at_utc": "2026-09-23T17:18:58Z",
+    "series_id": "015",
+    "count": 18
+  },
+  "series": {
+    "series_id": "015",
+    "title": "base series",
+    "documents": []
+  },
+  "member_works": [
+    {
+      "work_id": "00756",
+      "title": "base cs",
+      "year": 2007,
+      "year_display": "2007"
+    },
+    {
+      "work_id": "00757",
+      "title": "base k (1)",
+      "year": 2007,
+      "year_display": "2007"
+    },
+    {
+      "work_id": "00758",
+      "title": "base k (2)",
+      "year": 2007,
+      "year_display": "2007"
+    },
+    {
+      "work_id": "00759",
+      "title": "base k (2) dissected 1",
+      "year": 2007,
+      "year_display": "2007"
+    },
+    {
+      "work_id": "00760",
+      "title": "base k (2) dissected 2",
+      "year": 2007,
+      "year_display": "2007"
+    },
+    {
+      "work_id": "00761",
+      "title": "base k (2) edit",
+      "year": 2007,
+      "year_display": "2007"
+    },
+    {
+      "work_id": "00762",
+      "title": "base k (3)",
+      "year": 2007,
+      "year_display": "2007"
+    },
+    {
+      "work_id": "00763",
+      "title": "base m",
+      "year": 2007,
+      "year_display": "2007"
+    },
+    {
+      "work_id": "00764",
+      "title": "base nerve (1)",
+      "year": 2007,
+      "year_display": "2007"
+    },
+    {
+      "work_id": "00765",
+      "title": "base nerve (2)",
+      "year": 2007,
+      "year_display": "2007"
+    },
+    {
+      "work_id": "00766",
+      "title": "base nerve (2) edges 1",
+      "year": 2007,
+      "year_display": "2007"
+    },
+    {
+      "work_id": "00767",
+      "title": "base nerve (2) edges 2",
+      "year": 2007,
+      "year_display": "2007"
+    },
+    {
+      "work_id": "00768",
+      "title": "base nerve (2) edges 3",
+      "year": 2007,
+      "year_display": "2007"
+    },
+    {
+      "work_id": "00769",
+      "title": "base nerve (2) edges 4",
+      "year": 2007,
+      "year_display": "2007"
+    },
+    {
+      "work_id": "00770",
+      "title": "base nerve (3)",
+      "year": 2007,
+      "year_display": "2007"
+    },
+    {
+      "work_id": "00771",
+      "title": "base pearls",
+      "year": 2007,
+      "year_display": "2007"
+    },
+    {
+      "work_id": "00772",
+      "title": "base s",
+      "year": 2007,
+      "year_display": "2007"
+    },
+    {
+      "work_id": "00773",
+      "title": "base sb",
+      "year": 2007,
+      "year_display": "2007"
+    }
+  ]
+}

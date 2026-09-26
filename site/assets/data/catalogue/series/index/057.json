@@ -1,0 +1,94 @@
+{
+  "header": {
+    "schema": "series_record_v5",
+    "version": "blake2b-22a4096670752a5f4dc0ae0c3b653d35",
+    "generated_at_utc": "2026-09-23T17:18:58Z",
+    "series_id": "057",
+    "count": 13
+  },
+  "series": {
+    "series_id": "057",
+    "title": "folding structure",
+    "documents": []
+  },
+  "member_works": [
+    {
+      "work_id": "01161",
+      "title": "folding structure 1",
+      "year": 2016,
+      "year_display": "2016"
+    },
+    {
+      "work_id": "01162",
+      "title": "folding structure 2",
+      "year": 2016,
+      "year_display": "2016"
+    },
+    {
+      "work_id": "01163",
+      "title": "folding structure 3",
+      "year": 2016,
+      "year_display": "2016"
+    },
+    {
+      "work_id": "01164",
+      "title": "folding structure 4",
+      "year": 2016,
+      "year_display": "2016"
+    },
+    {
+      "work_id": "01165",
+      "title": "folding structure 5",
+      "year": 2016,
+      "year_display": "2016"
+    },
+    {
+      "work_id": "01166",
+      "title": "folding structure 6",
+      "year": 2016,
+      "year_display": "2016"
+    },
+    {
+      "work_id": "01167",
+      "title": "folding structure 7",
+      "year": 2016,
+      "year_display": "2016"
+    },
+    {
+      "work_id": "01169",
+      "title": "folding structure 8",
+      "year": 2013,
+      "year_display": "2013"
+    },
+    {
+      "work_id": "01170",
+      "title": "folding structure 9",
+      "year": 2013,
+      "year_display": "2013"
+    },
+    {
+      "work_id": "01171",
+      "title": "folding structure - version 1",
+      "year": 2020,
+      "year_display": "2020"
+    },
+    {
+      "work_id": "01172",
+      "title": "folding structure - version 2",
+      "year": 2020,
+      "year_display": "2020"
+    },
+    {
+      "work_id": "01173",
+      "title": "folding structure - version 2 (detail)",
+      "year": 2020,
+      "year_display": "2020"
+    },
+    {
+      "work_id": "01174",
+      "title": "folding structure - version 3",
+      "year": 2020,
+      "year_display": "2020"
+    }
+  ]
+}

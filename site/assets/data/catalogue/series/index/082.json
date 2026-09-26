@@ -1,0 +1,136 @@
+{
+  "header": {
+    "schema": "series_record_v5",
+    "version": "blake2b-643a1f1fcfdfea14e4faeee688690176",
+    "generated_at_utc": "2026-09-23T17:18:58Z",
+    "series_id": "082",
+    "count": 20
+  },
+  "series": {
+    "series_id": "082",
+    "title": "k crystals",
+    "documents": []
+  },
+  "member_works": [
+    {
+      "work_id": "00621",
+      "title": "crystal",
+      "year": 2009,
+      "year_display": "2009"
+    },
+    {
+      "work_id": "00622",
+      "title": "k crystals",
+      "year": 2009,
+      "year_display": "2009"
+    },
+    {
+      "work_id": "00623",
+      "title": "k crystals (transparent)",
+      "year": 2009,
+      "year_display": "2009"
+    },
+    {
+      "work_id": "00624",
+      "title": "k crystals (squared transparent)",
+      "year": 2009,
+      "year_display": "2009"
+    },
+    {
+      "work_id": "00625",
+      "title": "k crystals (squared solid)",
+      "year": 2009,
+      "year_display": "2009"
+    },
+    {
+      "work_id": "00626",
+      "title": "k-crystals source",
+      "year": 2009,
+      "year_display": "2009"
+    },
+    {
+      "work_id": "00627",
+      "title": "k-crystals squared source",
+      "year": 2009,
+      "year_display": "2009"
+    },
+    {
+      "work_id": "00628",
+      "title": "group theory",
+      "year": 2009,
+      "year_display": "2009"
+    },
+    {
+      "work_id": "03125",
+      "title": "k source",
+      "year": 2009,
+      "year_display": "2009"
+    },
+    {
+      "work_id": "03126",
+      "title": "k crystals bits - detail",
+      "year": 2009,
+      "year_display": "2009"
+    },
+    {
+      "work_id": "03127",
+      "title": "k crystals bits - screenshot - detail",
+      "year": 2009,
+      "year_display": "2009"
+    },
+    {
+      "work_id": "03128",
+      "title": "k crystals bits - screenshot",
+      "year": 2009,
+      "year_display": "2009"
+    },
+    {
+      "work_id": "03129",
+      "title": "k crystals bits",
+      "year": 2009,
+      "year_display": "2009"
+    },
+    {
+      "work_id": "03130",
+      "title": "k crystals colours",
+      "year": 2009,
+      "year_display": "2009"
+    },
+    {
+      "work_id": "03131",
+      "title": "k crystals (transparent) - detail 1",
+      "year": 2009,
+      "year_display": "2009"
+    },
+    {
+      "work_id": "03132",
+      "title": "k crystals (transparent) - detail 2",
+      "year": 2009,
+      "year_display": "2009"
+    },
+    {
+      "work_id": "03133",
+      "title": "k crystals (transparent) - detail 3",
+      "year": 2009,
+      "year_display": "2009"
+    },
+    {
+      "work_id": "03134",
+      "title": "k crystals (squared transparent) - detail 1",
+      "year": 2009,
+      "year_display": "2009"
+    },
+    {
+      "work_id": "03135",
+      "title": "k crystals (squared transparent) - detail 2",
+      "year": 2009,
+      "year_display": "2009"
+    },
+    {
+      "work_id": "03136",
+      "title": "k crystals (squared transparent) - detail 3",
+      "year": 2009,
+      "year_display": "2009"
+    }
+  ]
+}

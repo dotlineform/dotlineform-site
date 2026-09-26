@@ -1,0 +1,112 @@
+{
+  "header": {
+    "schema": "series_record_v5",
+    "version": "blake2b-275c7c5da59903cbcace264e208061ee",
+    "generated_at_utc": "2026-09-23T17:18:58Z",
+    "series_id": "079",
+    "count": 16
+  },
+  "series": {
+    "series_id": "079",
+    "title": "in the end we'll know",
+    "documents": []
+  },
+  "member_works": [
+    {
+      "work_id": "01375",
+      "title": "in the end we'll know [1]",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "01376",
+      "title": "in the end we'll know [2]",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "01377",
+      "title": "in the end we'll know [3]",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "01378",
+      "title": "in the end we'll know [4]",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "01379",
+      "title": "in the end we'll know [5]",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "01380",
+      "title": "in the end we'll know [6]",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "01381",
+      "title": "in the end we'll know [7]",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "01382",
+      "title": "in the end we'll know [8]",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "01383",
+      "title": "in the end we'll know [9]",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "01384",
+      "title": "in the end we'll know [10]",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "01385",
+      "title": "in the end we'll know [11]",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "01386",
+      "title": "in the end we'll know [12]",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "01387",
+      "title": "in the end we'll know [13]",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "01388",
+      "title": "in the end we'll know [14]",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "01389",
+      "title": "in the end we'll know [15]",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "01390",
+      "title": "in the end we'll know [16]",
+      "year": 2024,
+      "year_display": "2024"
+    }
+  ]
+}

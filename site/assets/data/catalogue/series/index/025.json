@@ -1,0 +1,28 @@
+{
+  "header": {
+    "schema": "series_record_v5",
+    "version": "blake2b-52392415b950a6539f6f697ddfd8761c",
+    "generated_at_utc": "2026-09-23T17:18:58Z",
+    "series_id": "025",
+    "count": 2
+  },
+  "series": {
+    "series_id": "025",
+    "title": "closeness",
+    "documents": []
+  },
+  "member_works": [
+    {
+      "work_id": "00811",
+      "title": "close",
+      "year": 2017,
+      "year_display": "2017"
+    },
+    {
+      "work_id": "00812",
+      "title": "closer",
+      "year": 2017,
+      "year_display": "2017"
+    }
+  ]
+}

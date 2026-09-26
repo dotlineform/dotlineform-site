@@ -1,0 +1,118 @@
+{
+  "header": {
+    "schema": "series_record_v5",
+    "version": "blake2b-b61c4dc4f562d484519fb0bf1d0cf9f1",
+    "generated_at_utc": "2026-09-23T17:18:58Z",
+    "series_id": "039",
+    "count": 17
+  },
+  "series": {
+    "series_id": "039",
+    "title": "doll sees everything",
+    "documents": []
+  },
+  "member_works": [
+    {
+      "work_id": "00909",
+      "title": "doll sees everything (1)",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "00910",
+      "title": "doll sees everything (2)",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "00911",
+      "title": "doll sees everything (3)",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "00912",
+      "title": "doll sees everything (4)",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "00913",
+      "title": "doll sees everything (5)",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "00914",
+      "title": "doll sees everything (6)",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "00915",
+      "title": "doll sees everything (7)",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "00916",
+      "title": "doll sees everything (8)",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "00917",
+      "title": "doll sees everything (9)",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "00918",
+      "title": "doll sees everything (10)",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "00919",
+      "title": "doll sees everything (11)",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "00920",
+      "title": "doll sees everything (12)",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "00921",
+      "title": "doll sees everything (13)",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "00922",
+      "title": "doll sees everything (14)",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "00923",
+      "title": "doll sees everything (15)",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "00924",
+      "title": "doll sees everything (16)",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "00925",
+      "title": "doll sees everything (17)",
+      "year": 2023,
+      "year_display": "2023"
+    }
+  ]
+}

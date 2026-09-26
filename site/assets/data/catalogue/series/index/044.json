@@ -1,0 +1,196 @@
+{
+  "header": {
+    "schema": "series_record_v5",
+    "version": "blake2b-2f0eea7e2a4d1da71ca9f08e340e2337",
+    "generated_at_utc": "2026-09-23T17:18:58Z",
+    "series_id": "044",
+    "count": 30
+  },
+  "series": {
+    "series_id": "044",
+    "title": "dots",
+    "documents": []
+  },
+  "member_works": [
+    {
+      "work_id": "00456",
+      "title": "dots",
+      "year": 2010,
+      "year_display": "2010"
+    },
+    {
+      "work_id": "01001",
+      "title": "dots (inside)",
+      "year": 2010,
+      "year_display": "2010"
+    },
+    {
+      "work_id": "01002",
+      "title": "dots (first normal form)",
+      "year": 2010,
+      "year_display": "2010"
+    },
+    {
+      "work_id": "01003",
+      "title": "dots (second normal form)",
+      "year": 2010,
+      "year_display": "2010"
+    },
+    {
+      "work_id": "01004",
+      "title": "dots (equations)",
+      "year": 2010,
+      "year_display": "2010"
+    },
+    {
+      "work_id": "01005",
+      "title": "dots (equations particles)",
+      "year": 2010,
+      "year_display": "2010"
+    },
+    {
+      "work_id": "01006",
+      "title": "dots (equations sample grid)",
+      "year": 2010,
+      "year_display": "2010"
+    },
+    {
+      "work_id": "02598",
+      "title": "dots [detail 1]",
+      "year": 2010,
+      "year_display": "2010"
+    },
+    {
+      "work_id": "02599",
+      "title": "dots [detail 2]",
+      "year": 2010,
+      "year_display": "2010"
+    },
+    {
+      "work_id": "02600",
+      "title": "dots [detail 3]",
+      "year": 2010,
+      "year_display": "2010"
+    },
+    {
+      "work_id": "02601",
+      "title": "dots [detail 4]",
+      "year": 2010,
+      "year_display": "2010"
+    },
+    {
+      "work_id": "02602",
+      "title": "dots [detail 5]",
+      "year": 2010,
+      "year_display": "2010"
+    },
+    {
+      "work_id": "03570",
+      "title": "dots (inside) [detail 1]",
+      "year": 2010,
+      "year_display": "2010"
+    },
+    {
+      "work_id": "03571",
+      "title": "dots (inside) [detail 2]",
+      "year": 2010,
+      "year_display": "2010"
+    },
+    {
+      "work_id": "03572",
+      "title": "dots (inside) [detail 3]",
+      "year": 2010,
+      "year_display": "2010"
+    },
+    {
+      "work_id": "03573",
+      "title": "dots (inside) [detail 4]",
+      "year": 2010,
+      "year_display": "2010"
+    },
+    {
+      "work_id": "03574",
+      "title": "dots (inside) [detail 5]",
+      "year": 2010,
+      "year_display": "2010"
+    },
+    {
+      "work_id": "03575",
+      "title": "dots (first normal form) [detail 1]",
+      "year": 2010,
+      "year_display": "2010"
+    },
+    {
+      "work_id": "03576",
+      "title": "dots (first normal form) [detail 2]",
+      "year": 2010,
+      "year_display": "2010"
+    },
+    {
+      "work_id": "03577",
+      "title": "dots (first normal form) [detail 3]",
+      "year": 2010,
+      "year_display": "2010"
+    },
+    {
+      "work_id": "03578",
+      "title": "dots (second normal form) [detail 1]",
+      "year": 2010,
+      "year_display": "2010"
+    },
+    {
+      "work_id": "03579",
+      "title": "dots (second normal form) [detail 2]",
+      "year": 2010,
+      "year_display": "2010"
+    },
+    {
+      "work_id": "03580",
+      "title": "dots (second normal form) [detail 3]",
+      "year": 2010,
+      "year_display": "2010"
+    },
+    {
+      "work_id": "03581",
+      "title": "dots (equations) [detail 1]",
+      "year": 2010,
+      "year_display": "2010"
+    },
+    {
+      "work_id": "03582",
+      "title": "dots (equations) [detail 2]",
+      "year": 2010,
+      "year_display": "2010"
+    },
+    {
+      "work_id": "03583",
+      "title": "dots (equations) [detail 3]",
+      "year": 2010,
+      "year_display": "2010"
+    },
+    {
+      "work_id": "03584",
+      "title": "dots (equations) [detail 4]",
+      "year": 2010,
+      "year_display": "2010"
+    },
+    {
+      "work_id": "03585",
+      "title": "dots (equations particles) [detail 1]",
+      "year": 2010,
+      "year_display": "2010"
+    },
+    {
+      "work_id": "03586",
+      "title": "dots (equations particles) [detail 2]",
+      "year": 2010,
+      "year_display": "2010"
+    },
+    {
+      "work_id": "03587",
+      "title": "dots (equations particles) [detail 3]",
+      "year": 2010,
+      "year_display": "2010"
+    }
+  ]
+}

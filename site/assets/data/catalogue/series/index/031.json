@@ -1,0 +1,100 @@
+{
+  "header": {
+    "schema": "series_record_v5",
+    "version": "blake2b-3c35d6ad9bd6b2b7a2133d0a7b305185",
+    "generated_at_utc": "2026-09-23T17:18:58Z",
+    "series_id": "031",
+    "count": 14
+  },
+  "series": {
+    "series_id": "031",
+    "title": "concrete",
+    "documents": []
+  },
+  "member_works": [
+    {
+      "work_id": "00818",
+      "title": "concrete [1]",
+      "year": 2012,
+      "year_display": "2012"
+    },
+    {
+      "work_id": "00819",
+      "title": "concrete [2]",
+      "year": 2012,
+      "year_display": "2012"
+    },
+    {
+      "work_id": "00820",
+      "title": "concrete [3]",
+      "year": 2012,
+      "year_display": "2012"
+    },
+    {
+      "work_id": "00821",
+      "title": "concrete [4]",
+      "year": 2012,
+      "year_display": "2012"
+    },
+    {
+      "work_id": "00822",
+      "title": "concrete [5]",
+      "year": 2012,
+      "year_display": "2012"
+    },
+    {
+      "work_id": "00823",
+      "title": "concrete [6]",
+      "year": 2012,
+      "year_display": "2012"
+    },
+    {
+      "work_id": "00824",
+      "title": "concrete [7]",
+      "year": 2012,
+      "year_display": "2012"
+    },
+    {
+      "work_id": "00825",
+      "title": "concrete [8]",
+      "year": 2012,
+      "year_display": "2012"
+    },
+    {
+      "work_id": "00826",
+      "title": "concrete [9]",
+      "year": 2012,
+      "year_display": "2012"
+    },
+    {
+      "work_id": "00827",
+      "title": "concrete [10]",
+      "year": 2012,
+      "year_display": "2012"
+    },
+    {
+      "work_id": "00828",
+      "title": "concrete [11]",
+      "year": 2012,
+      "year_display": "2012"
+    },
+    {
+      "work_id": "00829",
+      "title": "concrete [12]",
+      "year": 2012,
+      "year_display": "2012"
+    },
+    {
+      "work_id": "00830",
+      "title": "concrete [13]",
+      "year": 2012,
+      "year_display": "2012"
+    },
+    {
+      "work_id": "00831",
+      "title": "concrete [14]",
+      "year": 2012,
+      "year_display": "2012"
+    }
+  ]
+}

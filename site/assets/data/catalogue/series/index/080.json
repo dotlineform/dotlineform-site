@@ -1,0 +1,88 @@
+{
+  "header": {
+    "schema": "series_record_v5",
+    "version": "blake2b-9de680750d9977c16cd492278c4446a0",
+    "generated_at_utc": "2026-09-23T17:18:58Z",
+    "series_id": "080",
+    "count": 12
+  },
+  "series": {
+    "series_id": "080",
+    "title": "interior design",
+    "documents": []
+  },
+  "member_works": [
+    {
+      "work_id": "01391",
+      "title": "interior design 1",
+      "year": 2005,
+      "year_display": "2005"
+    },
+    {
+      "work_id": "01392",
+      "title": "interior design 2",
+      "year": 2005,
+      "year_display": "2005"
+    },
+    {
+      "work_id": "01393",
+      "title": "interior design 3",
+      "year": 2005,
+      "year_display": "2005"
+    },
+    {
+      "work_id": "04254",
+      "title": "interior design 1 - detail 1",
+      "year": 2005,
+      "year_display": "2005"
+    },
+    {
+      "work_id": "04255",
+      "title": "interior design 1 - detail 2",
+      "year": 2005,
+      "year_display": "2005"
+    },
+    {
+      "work_id": "04256",
+      "title": "interior design 1 - detail 3",
+      "year": 2005,
+      "year_display": "2005"
+    },
+    {
+      "work_id": "04257",
+      "title": "interior design 2 - detail 1",
+      "year": 2005,
+      "year_display": "2005"
+    },
+    {
+      "work_id": "04258",
+      "title": "interior design 2 - detail 2",
+      "year": 2005,
+      "year_display": "2005"
+    },
+    {
+      "work_id": "04259",
+      "title": "interior design 2 - detail 3",
+      "year": 2005,
+      "year_display": "2005"
+    },
+    {
+      "work_id": "04260",
+      "title": "interior design 3 - detail 1",
+      "year": 2005,
+      "year_display": "2005"
+    },
+    {
+      "work_id": "04261",
+      "title": "interior design 3 - detail 2",
+      "year": 2005,
+      "year_display": "2005"
+    },
+    {
+      "work_id": "04262",
+      "title": "interior design 3 - detail 3",
+      "year": 2005,
+      "year_display": "2005"
+    }
+  ]
+}

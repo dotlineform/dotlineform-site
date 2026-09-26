@@ -1,0 +1,40 @@
+{
+  "header": {
+    "schema": "series_record_v5",
+    "version": "blake2b-af5ac2888fbff7b700c73c80fc1449f1",
+    "generated_at_utc": "2026-09-23T17:18:58Z",
+    "series_id": "048",
+    "count": 4
+  },
+  "series": {
+    "series_id": "048",
+    "title": "entangled form",
+    "documents": []
+  },
+  "member_works": [
+    {
+      "work_id": "01044",
+      "title": "entangled form",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "01045",
+      "title": "entangled form'",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03627",
+      "title": "entangled form' - spider",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03628",
+      "title": "entangled form' - spider (detail)",
+      "year": 2023,
+      "year_display": "2023"
+    }
+  ]
+}

@@ -1,0 +1,70 @@
+{
+  "header": {
+    "schema": "series_record_v5",
+    "version": "blake2b-2439471dcba0110ab616fbc01ae001b7",
+    "generated_at_utc": "2026-09-23T17:18:58Z",
+    "series_id": "028",
+    "count": 9
+  },
+  "series": {
+    "series_id": "028",
+    "title": "colouring book",
+    "documents": []
+  },
+  "member_works": [
+    {
+      "work_id": "00217",
+      "title": "colouring book 1",
+      "year": 1996,
+      "year_display": "1996"
+    },
+    {
+      "work_id": "00218",
+      "title": "colouring book 2",
+      "year": 1996,
+      "year_display": "1996"
+    },
+    {
+      "work_id": "00219",
+      "title": "colouring book 3",
+      "year": 1996,
+      "year_display": "1996"
+    },
+    {
+      "work_id": "00220",
+      "title": "colouring book 4",
+      "year": 1996,
+      "year_display": "1996"
+    },
+    {
+      "work_id": "00221",
+      "title": "colouring book 5",
+      "year": 1996,
+      "year_display": "1996"
+    },
+    {
+      "work_id": "00222",
+      "title": "colouring book 6",
+      "year": 1996,
+      "year_display": "1996"
+    },
+    {
+      "work_id": "00223",
+      "title": "colouring book 7",
+      "year": 1996,
+      "year_display": "1996"
+    },
+    {
+      "work_id": "00224",
+      "title": "colouring book 8",
+      "year": 1996,
+      "year_display": "1996"
+    },
+    {
+      "work_id": "00225",
+      "title": "colouring book 9",
+      "year": 1996,
+      "year_display": "1996"
+    }
+  ]
+}

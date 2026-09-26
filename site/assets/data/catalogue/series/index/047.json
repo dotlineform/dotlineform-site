@@ -1,0 +1,52 @@
+{
+  "header": {
+    "schema": "series_record_v5",
+    "version": "blake2b-2161a77656dba9e4ed2268c4254e2917",
+    "generated_at_utc": "2026-09-23T17:18:58Z",
+    "series_id": "047",
+    "count": 6
+  },
+  "series": {
+    "series_id": "047",
+    "title": "egg prints",
+    "documents": []
+  },
+  "member_works": [
+    {
+      "work_id": "01038",
+      "title": "egg print 1",
+      "year": 2012,
+      "year_display": "2012"
+    },
+    {
+      "work_id": "01039",
+      "title": "egg print 2",
+      "year": 2012,
+      "year_display": "2012"
+    },
+    {
+      "work_id": "01040",
+      "title": "egg print 2 (reverse)",
+      "year": 2012,
+      "year_display": "2012"
+    },
+    {
+      "work_id": "01041",
+      "title": "egg print 3",
+      "year": 2012,
+      "year_display": "2012"
+    },
+    {
+      "work_id": "01042",
+      "title": "egg print 4",
+      "year": 2012,
+      "year_display": "2012"
+    },
+    {
+      "work_id": "01043",
+      "title": "egg print 5",
+      "year": 2012,
+      "year_display": "2012"
+    }
+  ]
+}

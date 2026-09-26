@@ -1,0 +1,424 @@
+{
+  "header": {
+    "schema": "series_record_v5",
+    "version": "blake2b-e53f90e3c26f78b586d645f64a72c52d",
+    "generated_at_utc": "2026-09-23T17:18:58Z",
+    "series_id": "043",
+    "count": 68
+  },
+  "series": {
+    "series_id": "043",
+    "title": "dotlineform (2023)",
+    "documents": []
+  },
+  "member_works": [
+    {
+      "work_id": "00455",
+      "title": "dotlineform",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "00984",
+      "title": "dotlineform - monoprint 1",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "00985",
+      "title": "dotlineform - monoprint 2",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "00986",
+      "title": "dotlineform - monoprint 3",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "00987",
+      "title": "dotlineform - monoprint 4",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "00988",
+      "title": "dotlineform - monoprint 5",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "00989",
+      "title": "dotlineform - monoprint 6",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "00990",
+      "title": "dotlineform - monoprint 7",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "00991",
+      "title": "dotlineform - monoprint 7 (detail)",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "00992",
+      "title": "dotlineform - monoprint 8",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "00993",
+      "title": "dotlineform - monoprint 9",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "00994",
+      "title": "dotlineform - monoprint 10",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "00995",
+      "title": "dotlineform - monoprint 11",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "00996",
+      "title": "dotlineform - monoprint 12",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "00997",
+      "title": "dotlineform - monoprint 13",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "00998",
+      "title": "dotlineform - monoprint 14",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "00999",
+      "title": "dotlineform - monoprint 15",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "01000",
+      "title": "dotlineform - monoprint 16",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "02548",
+      "title": "dotlineform - detail 1",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "02549",
+      "title": "dotlineform - detail 2",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "02550",
+      "title": "dotlineform - detail 3",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "02551",
+      "title": "dotlineform - detail 4",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "02552",
+      "title": "dotlineform - detail 5",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "02553",
+      "title": "dotlineform - detail 6",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "02554",
+      "title": "2023-10-01 17꞉53",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "02555",
+      "title": "2015-01-21 13꞉21",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "02556",
+      "title": "2015-06-13 02꞉30",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "02557",
+      "title": "2023-10-01 17꞉53 2",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "02558",
+      "title": "2023-10-01 18꞉07 2",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "02559",
+      "title": "2023-10-01 18꞉07 3",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "02560",
+      "title": "2023-10-01 18꞉07",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "02561",
+      "title": "2023-10-01 19꞉18",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "02562",
+      "title": "2023-10-02 00꞉03 2",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "02563",
+      "title": "2023-10-02 00꞉03",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "02564",
+      "title": "2023-10-02 19꞉13 2",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "02565",
+      "title": "2023-10-02 19꞉13 3",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "02566",
+      "title": "2023-10-02 19꞉13",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "02567",
+      "title": "2023-10-02 20꞉44",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "02568",
+      "title": "2023-10-02 20꞉45",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "02569",
+      "title": "2023-10-03 20꞉59 2",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "02570",
+      "title": "2023-10-03 20꞉59 3",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "02571",
+      "title": "2023-10-03 20꞉59",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "02572",
+      "title": "2023-10-03 22꞉12 2",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "02573",
+      "title": "2023-10-03 22꞉12",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "02574",
+      "title": "2023-10-05 01꞉17",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "02575",
+      "title": "2023-10-05 01꞉18",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "02576",
+      "title": "2023-10-05 01꞉19",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "02577",
+      "title": "2023-10-05 20꞉23",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "02578",
+      "title": "2023-10-05 21꞉35",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "02579",
+      "title": "2023-10-06 00꞉43 2",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "02580",
+      "title": "2023-10-06 00꞉43",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "02581",
+      "title": "2023-10-06 19꞉26",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "02582",
+      "title": "2023-10-06 19꞉35",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "02583",
+      "title": "2023-10-06 20꞉39",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "02584",
+      "title": "2023-10-06 23꞉49",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "02585",
+      "title": "2023-10-08 00꞉22",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "02586",
+      "title": "2023-10-09 22꞉32",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "02587",
+      "title": "2023-10-09 22꞉33 2",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "02588",
+      "title": "2023-10-09 22꞉33",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "02589",
+      "title": "2023-10-09 22꞉34",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "02590",
+      "title": "2023-10-09 23꞉13",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "02591",
+      "title": "2023-10-09 23꞉43",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "02592",
+      "title": "2023-11-13 18꞉51 2",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "02593",
+      "title": "2023-11-13 18꞉51 3",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "02594",
+      "title": "2023-11-13 18꞉51",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "02595",
+      "title": "2023-11-13 18꞉52",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "02596",
+      "title": "2023-11-13 18꞉54 2",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "02597",
+      "title": "2023-11-13 18꞉54",
+      "year": 2023,
+      "year_display": "2023"
+    }
+  ]
+}

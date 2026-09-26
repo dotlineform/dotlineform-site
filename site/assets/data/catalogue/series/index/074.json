@@ -1,0 +1,40 @@
+{
+  "header": {
+    "schema": "series_record_v5",
+    "version": "blake2b-c4e87e606ebb5a4c0e0b36efeaa7fe9d",
+    "generated_at_utc": "2026-09-23T17:18:58Z",
+    "series_id": "074",
+    "count": 4
+  },
+  "series": {
+    "series_id": "074",
+    "title": "grid theory",
+    "documents": []
+  },
+  "member_works": [
+    {
+      "work_id": "01359",
+      "title": "grid theory 1.1",
+      "year": 2008,
+      "year_display": "2008"
+    },
+    {
+      "work_id": "01360",
+      "title": "grid theory 1.2",
+      "year": 2008,
+      "year_display": "2008"
+    },
+    {
+      "work_id": "01361",
+      "title": "grid theory 1.3",
+      "year": 2008,
+      "year_display": "2008"
+    },
+    {
+      "work_id": "01362",
+      "title": "grid theory 1.3 version",
+      "year": 2008,
+      "year_display": "2008"
+    }
+  ]
+}

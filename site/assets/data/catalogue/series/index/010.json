@@ -1,0 +1,448 @@
+{
+  "header": {
+    "schema": "series_record_v5",
+    "version": "blake2b-c102293008a3c72b26f649763e831bd4",
+    "generated_at_utc": "2026-09-23T17:18:58Z",
+    "series_id": "010",
+    "count": 72
+  },
+  "series": {
+    "series_id": "010",
+    "title": "a theory of happiness is a theory of everything",
+    "documents": []
+  },
+  "member_works": [
+    {
+      "work_id": "00734",
+      "title": "a theory of happiness is a theory of everything",
+      "year": 2008,
+      "year_display": "2008"
+    },
+    {
+      "work_id": "00735",
+      "title": "a theory of happiness is a theory of everything (64°)",
+      "year": 2010,
+      "year_display": "2010"
+    },
+    {
+      "work_id": "03289",
+      "title": "buddhism",
+      "year": 2008,
+      "year_display": "2008"
+    },
+    {
+      "work_id": "03290",
+      "title": "chemicals",
+      "year": 2008,
+      "year_display": "2008"
+    },
+    {
+      "work_id": "03291",
+      "title": "colour",
+      "year": 2008,
+      "year_display": "2008"
+    },
+    {
+      "work_id": "03292",
+      "title": "music",
+      "year": 2008,
+      "year_display": "2008"
+    },
+    {
+      "work_id": "03293",
+      "title": "physics",
+      "year": 2008,
+      "year_display": "2008"
+    },
+    {
+      "work_id": "03294",
+      "title": "words",
+      "year": 2008,
+      "year_display": "2008"
+    },
+    {
+      "work_id": "03295",
+      "title": "happiness 1°",
+      "year": 2010,
+      "year_display": "2010"
+    },
+    {
+      "work_id": "03296",
+      "title": "happiness 2°",
+      "year": 2010,
+      "year_display": "2010"
+    },
+    {
+      "work_id": "03297",
+      "title": "happiness 3°",
+      "year": 2010,
+      "year_display": "2010"
+    },
+    {
+      "work_id": "03298",
+      "title": "happiness 4°",
+      "year": 2010,
+      "year_display": "2010"
+    },
+    {
+      "work_id": "03299",
+      "title": "happiness 5°",
+      "year": 2010,
+      "year_display": "2010"
+    },
+    {
+      "work_id": "03300",
+      "title": "happiness 6°",
+      "year": 2010,
+      "year_display": "2010"
+    },
+    {
+      "work_id": "03301",
+      "title": "happiness 7°",
+      "year": 2010,
+      "year_display": "2010"
+    },
+    {
+      "work_id": "03302",
+      "title": "happiness 8°",
+      "year": 2010,
+      "year_display": "2010"
+    },
+    {
+      "work_id": "03303",
+      "title": "happiness 9°",
+      "year": 2010,
+      "year_display": "2010"
+    },
+    {
+      "work_id": "03304",
+      "title": "happiness 10°",
+      "year": 2010,
+      "year_display": "2010"
+    },
+    {
+      "work_id": "03305",
+      "title": "happiness 11°",
+      "year": 2010,
+      "year_display": "2010"
+    },
+    {
+      "work_id": "03306",
+      "title": "happiness 12°",
+      "year": 2010,
+      "year_display": "2010"
+    },
+    {
+      "work_id": "03307",
+      "title": "happiness 13°",
+      "year": 2010,
+      "year_display": "2010"
+    },
+    {
+      "work_id": "03308",
+      "title": "happiness 14°",
+      "year": 2010,
+      "year_display": "2010"
+    },
+    {
+      "work_id": "03309",
+      "title": "happiness 15°",
+      "year": 2010,
+      "year_display": "2010"
+    },
+    {
+      "work_id": "03310",
+      "title": "happiness 16°",
+      "year": 2010,
+      "year_display": "2010"
+    },
+    {
+      "work_id": "03311",
+      "title": "happiness 17°",
+      "year": 2010,
+      "year_display": "2010"
+    },
+    {
+      "work_id": "03312",
+      "title": "happiness 18°",
+      "year": 2010,
+      "year_display": "2010"
+    },
+    {
+      "work_id": "03313",
+      "title": "happiness 19°",
+      "year": 2010,
+      "year_display": "2010"
+    },
+    {
+      "work_id": "03314",
+      "title": "happiness 20°",
+      "year": 2010,
+      "year_display": "2010"
+    },
+    {
+      "work_id": "03315",
+      "title": "happiness 21°",
+      "year": 2010,
+      "year_display": "2010"
+    },
+    {
+      "work_id": "03316",
+      "title": "happiness 22°",
+      "year": 2010,
+      "year_display": "2010"
+    },
+    {
+      "work_id": "03317",
+      "title": "happiness 23°",
+      "year": 2010,
+      "year_display": "2010"
+    },
+    {
+      "work_id": "03318",
+      "title": "happiness 24°",
+      "year": 2010,
+      "year_display": "2010"
+    },
+    {
+      "work_id": "03319",
+      "title": "happiness 25°",
+      "year": 2010,
+      "year_display": "2010"
+    },
+    {
+      "work_id": "03320",
+      "title": "happiness 26°",
+      "year": 2010,
+      "year_display": "2010"
+    },
+    {
+      "work_id": "03321",
+      "title": "happiness 27°",
+      "year": 2010,
+      "year_display": "2010"
+    },
+    {
+      "work_id": "03322",
+      "title": "happiness 28°",
+      "year": 2010,
+      "year_display": "2010"
+    },
+    {
+      "work_id": "03323",
+      "title": "happiness 29°",
+      "year": 2010,
+      "year_display": "2010"
+    },
+    {
+      "work_id": "03324",
+      "title": "happiness 30°",
+      "year": 2010,
+      "year_display": "2010"
+    },
+    {
+      "work_id": "03325",
+      "title": "happiness 31°",
+      "year": 2010,
+      "year_display": "2010"
+    },
+    {
+      "work_id": "03326",
+      "title": "happiness 32°",
+      "year": 2010,
+      "year_display": "2010"
+    },
+    {
+      "work_id": "03327",
+      "title": "happiness 33°",
+      "year": 2010,
+      "year_display": "2010"
+    },
+    {
+      "work_id": "03328",
+      "title": "happiness 34°",
+      "year": 2010,
+      "year_display": "2010"
+    },
+    {
+      "work_id": "03329",
+      "title": "happiness 35°",
+      "year": 2010,
+      "year_display": "2010"
+    },
+    {
+      "work_id": "03330",
+      "title": "happiness 36°",
+      "year": 2010,
+      "year_display": "2010"
+    },
+    {
+      "work_id": "03331",
+      "title": "happiness 37°",
+      "year": 2010,
+      "year_display": "2010"
+    },
+    {
+      "work_id": "03332",
+      "title": "happiness 38°",
+      "year": 2010,
+      "year_display": "2010"
+    },
+    {
+      "work_id": "03333",
+      "title": "happiness 39°",
+      "year": 2010,
+      "year_display": "2010"
+    },
+    {
+      "work_id": "03334",
+      "title": "happiness 40°",
+      "year": 2010,
+      "year_display": "2010"
+    },
+    {
+      "work_id": "03335",
+      "title": "happiness 41°",
+      "year": 2010,
+      "year_display": "2010"
+    },
+    {
+      "work_id": "03336",
+      "title": "happiness 42°",
+      "year": 2010,
+      "year_display": "2010"
+    },
+    {
+      "work_id": "03337",
+      "title": "happiness 43°",
+      "year": 2010,
+      "year_display": "2010"
+    },
+    {
+      "work_id": "03338",
+      "title": "happiness 44°",
+      "year": 2010,
+      "year_display": "2010"
+    },
+    {
+      "work_id": "03339",
+      "title": "happiness 45°",
+      "year": 2010,
+      "year_display": "2010"
+    },
+    {
+      "work_id": "03340",
+      "title": "happiness 46°",
+      "year": 2010,
+      "year_display": "2010"
+    },
+    {
+      "work_id": "03341",
+      "title": "happiness 47°",
+      "year": 2010,
+      "year_display": "2010"
+    },
+    {
+      "work_id": "03342",
+      "title": "happiness 48°",
+      "year": 2010,
+      "year_display": "2010"
+    },
+    {
+      "work_id": "03343",
+      "title": "happiness 49°",
+      "year": 2010,
+      "year_display": "2010"
+    },
+    {
+      "work_id": "03344",
+      "title": "happiness 50°",
+      "year": 2010,
+      "year_display": "2010"
+    },
+    {
+      "work_id": "03345",
+      "title": "happiness 51°",
+      "year": 2010,
+      "year_display": "2010"
+    },
+    {
+      "work_id": "03346",
+      "title": "happiness 52°",
+      "year": 2010,
+      "year_display": "2010"
+    },
+    {
+      "work_id": "03347",
+      "title": "happiness 53°",
+      "year": 2010,
+      "year_display": "2010"
+    },
+    {
+      "work_id": "03348",
+      "title": "happiness 54°",
+      "year": 2010,
+      "year_display": "2010"
+    },
+    {
+      "work_id": "03349",
+      "title": "happiness 55°",
+      "year": 2010,
+      "year_display": "2010"
+    },
+    {
+      "work_id": "03350",
+      "title": "happiness 56°",
+      "year": 2010,
+      "year_display": "2010"
+    },
+    {
+      "work_id": "03351",
+      "title": "happiness 57°",
+      "year": 2010,
+      "year_display": "2010"
+    },
+    {
+      "work_id": "03352",
+      "title": "happiness 58°",
+      "year": 2010,
+      "year_display": "2010"
+    },
+    {
+      "work_id": "03353",
+      "title": "happiness 59°",
+      "year": 2010,
+      "year_display": "2010"
+    },
+    {
+      "work_id": "03354",
+      "title": "happiness 60°",
+      "year": 2010,
+      "year_display": "2010"
+    },
+    {
+      "work_id": "03355",
+      "title": "happiness 61°",
+      "year": 2010,
+      "year_display": "2010"
+    },
+    {
+      "work_id": "03356",
+      "title": "happiness 62°",
+      "year": 2010,
+      "year_display": "2010"
+    },
+    {
+      "work_id": "03357",
+      "title": "happiness 63°",
+      "year": 2010,
+      "year_display": "2010"
+    },
+    {
+      "work_id": "03358",
+      "title": "happiness 64°",
+      "year": 2010,
+      "year_display": "2010"
+    }
+  ]
+}

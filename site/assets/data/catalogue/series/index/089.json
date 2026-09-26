@@ -1,0 +1,568 @@
+{
+  "header": {
+    "schema": "series_record_v5",
+    "version": "blake2b-c1f6466d016853a94ca7574f683d1676",
+    "generated_at_utc": "2026-09-23T17:18:58Z",
+    "series_id": "089",
+    "count": 92
+  },
+  "series": {
+    "series_id": "089",
+    "title": "learning to draw landscapes",
+    "documents": []
+  },
+  "member_works": [
+    {
+      "work_id": "00114",
+      "title": "learning to draw landscapes 1",
+      "year": 2010,
+      "year_display": "c. 2010?"
+    },
+    {
+      "work_id": "00115",
+      "title": "learning to draw landscapes 2",
+      "year": 2010,
+      "year_display": "c. 2010?"
+    },
+    {
+      "work_id": "00116",
+      "title": "learning to draw landscapes 3",
+      "year": 2010,
+      "year_display": "c. 2010?"
+    },
+    {
+      "work_id": "00117",
+      "title": "learning to draw landscapes 4",
+      "year": 2010,
+      "year_display": "c. 2010?"
+    },
+    {
+      "work_id": "00118",
+      "title": "learning to draw landscapes 5",
+      "year": 2010,
+      "year_display": "c. 2010?"
+    },
+    {
+      "work_id": "00119",
+      "title": "learning to draw landscapes 6",
+      "year": 2010,
+      "year_display": "c. 2010?"
+    },
+    {
+      "work_id": "00120",
+      "title": "learning to draw landscapes 7",
+      "year": 2010,
+      "year_display": "c. 2010?"
+    },
+    {
+      "work_id": "00121",
+      "title": "learning to draw landscapes 8",
+      "year": 2010,
+      "year_display": "c. 2010?"
+    },
+    {
+      "work_id": "00122",
+      "title": "learning to draw landscapes 9",
+      "year": 2010,
+      "year_display": "c. 2010?"
+    },
+    {
+      "work_id": "00123",
+      "title": "learning to draw landscapes 10",
+      "year": 2010,
+      "year_display": "c. 2010?"
+    },
+    {
+      "work_id": "00124",
+      "title": "learning to draw landscapes 11",
+      "year": 2010,
+      "year_display": "c. 2010?"
+    },
+    {
+      "work_id": "00125",
+      "title": "learning to draw landscapes 12",
+      "year": 2010,
+      "year_display": "c. 2010?"
+    },
+    {
+      "work_id": "00126",
+      "title": "learning to draw landscapes 13",
+      "year": 2010,
+      "year_display": "c. 2010?"
+    },
+    {
+      "work_id": "00127",
+      "title": "learning to draw landscapes 14",
+      "year": 2010,
+      "year_display": "c. 2010?"
+    },
+    {
+      "work_id": "00128",
+      "title": "learning to draw landscapes 15",
+      "year": 2010,
+      "year_display": "c. 2010?"
+    },
+    {
+      "work_id": "00129",
+      "title": "learning to draw landscapes 16",
+      "year": 2010,
+      "year_display": "c. 2010?"
+    },
+    {
+      "work_id": "00519",
+      "title": "learning to draw landscapes (versions)",
+      "year": 2022,
+      "year_display": "c. 2022?"
+    },
+    {
+      "work_id": "02983",
+      "title": "version dall-e - 1.0 (run source)",
+      "year": 2022,
+      "year_display": "c. 2022?"
+    },
+    {
+      "work_id": "02984",
+      "title": "version dall-e - 1.1",
+      "year": 2022,
+      "year_display": "c. 2022?"
+    },
+    {
+      "work_id": "02985",
+      "title": "version dall-e - 1.2",
+      "year": 2022,
+      "year_display": "c. 2022?"
+    },
+    {
+      "work_id": "02986",
+      "title": "version dall-e - 1.3",
+      "year": 2022,
+      "year_display": "c. 2022?"
+    },
+    {
+      "work_id": "02987",
+      "title": "version dall-e - 1.4",
+      "year": 2022,
+      "year_display": "c. 2022?"
+    },
+    {
+      "work_id": "02988",
+      "title": "version dall-e - 2.0 (run source)",
+      "year": 2022,
+      "year_display": "c. 2022?"
+    },
+    {
+      "work_id": "02989",
+      "title": "version dall-e - 2.1",
+      "year": 2022,
+      "year_display": "c. 2022?"
+    },
+    {
+      "work_id": "02990",
+      "title": "version dall-e - 2.2",
+      "year": 2022,
+      "year_display": "c. 2022?"
+    },
+    {
+      "work_id": "02991",
+      "title": "version dall-e - 2.3",
+      "year": 2022,
+      "year_display": "c. 2022?"
+    },
+    {
+      "work_id": "02992",
+      "title": "version dall-e - 2.4",
+      "year": 2022,
+      "year_display": "c. 2022?"
+    },
+    {
+      "work_id": "02993",
+      "title": "version dall-e - 3.0 (run source)",
+      "year": 2022,
+      "year_display": "c. 2022?"
+    },
+    {
+      "work_id": "02994",
+      "title": "version dall-e - 3.1",
+      "year": 2022,
+      "year_display": "c. 2022?"
+    },
+    {
+      "work_id": "02995",
+      "title": "version dall-e - 3.2",
+      "year": 2022,
+      "year_display": "c. 2022?"
+    },
+    {
+      "work_id": "02996",
+      "title": "version dall-e - 3.3",
+      "year": 2022,
+      "year_display": "c. 2022?"
+    },
+    {
+      "work_id": "02997",
+      "title": "version dall-e - 3.4",
+      "year": 2022,
+      "year_display": "c. 2022?"
+    },
+    {
+      "work_id": "02998",
+      "title": "version dall-e - 4.0 (run source)",
+      "year": 2022,
+      "year_display": "c. 2022?"
+    },
+    {
+      "work_id": "02999",
+      "title": "version dall-e - 4.1",
+      "year": 2022,
+      "year_display": "c. 2022?"
+    },
+    {
+      "work_id": "03000",
+      "title": "version dall-e - 4.2",
+      "year": 2022,
+      "year_display": "c. 2022?"
+    },
+    {
+      "work_id": "03001",
+      "title": "version dall-e - 4.3",
+      "year": 2022,
+      "year_display": "c. 2022?"
+    },
+    {
+      "work_id": "03002",
+      "title": "version dall-e - 4.4",
+      "year": 2022,
+      "year_display": "c. 2022?"
+    },
+    {
+      "work_id": "03003",
+      "title": "version dall-e - 5.0 (run source)",
+      "year": 2022,
+      "year_display": "c. 2022?"
+    },
+    {
+      "work_id": "03004",
+      "title": "version dall-e - 5.1",
+      "year": 2022,
+      "year_display": "c. 2022?"
+    },
+    {
+      "work_id": "03005",
+      "title": "version dall-e - 5.2",
+      "year": 2022,
+      "year_display": "c. 2022?"
+    },
+    {
+      "work_id": "03006",
+      "title": "version dall-e - 5.3",
+      "year": 2022,
+      "year_display": "c. 2022?"
+    },
+    {
+      "work_id": "03007",
+      "title": "version dall-e - 5.4",
+      "year": 2022,
+      "year_display": "c. 2022?"
+    },
+    {
+      "work_id": "03008",
+      "title": "version dall-e - 6.0 (run source)",
+      "year": 2022,
+      "year_display": "c. 2022?"
+    },
+    {
+      "work_id": "03009",
+      "title": "version dall-e - 6.1",
+      "year": 2022,
+      "year_display": "c. 2022?"
+    },
+    {
+      "work_id": "03010",
+      "title": "version dall-e - 6.2",
+      "year": 2022,
+      "year_display": "c. 2022?"
+    },
+    {
+      "work_id": "03011",
+      "title": "version dall-e - 6.3",
+      "year": 2022,
+      "year_display": "c. 2022?"
+    },
+    {
+      "work_id": "03012",
+      "title": "version dall-e - 6.4",
+      "year": 2022,
+      "year_display": "c. 2022?"
+    },
+    {
+      "work_id": "03013",
+      "title": "version dall-e - 7.0 (run source)",
+      "year": 2022,
+      "year_display": "c. 2022?"
+    },
+    {
+      "work_id": "03014",
+      "title": "version dall-e - 7.1",
+      "year": 2022,
+      "year_display": "c. 2022?"
+    },
+    {
+      "work_id": "03015",
+      "title": "version dall-e - 7.2",
+      "year": 2022,
+      "year_display": "c. 2022?"
+    },
+    {
+      "work_id": "03016",
+      "title": "version dall-e - 7.3",
+      "year": 2022,
+      "year_display": "c. 2022?"
+    },
+    {
+      "work_id": "03017",
+      "title": "version dall-e - 7.4",
+      "year": 2022,
+      "year_display": "c. 2022?"
+    },
+    {
+      "work_id": "03018",
+      "title": "version dall-e - 8.0 (run source)",
+      "year": 2022,
+      "year_display": "c. 2022?"
+    },
+    {
+      "work_id": "03019",
+      "title": "version dall-e - 8.1",
+      "year": 2022,
+      "year_display": "c. 2022?"
+    },
+    {
+      "work_id": "03020",
+      "title": "version dall-e - 8.2",
+      "year": 2022,
+      "year_display": "c. 2022?"
+    },
+    {
+      "work_id": "03021",
+      "title": "version dall-e - 8.3",
+      "year": 2022,
+      "year_display": "c. 2022?"
+    },
+    {
+      "work_id": "03022",
+      "title": "version dall-e - 8.4",
+      "year": 2022,
+      "year_display": "c. 2022?"
+    },
+    {
+      "work_id": "03023",
+      "title": "version dall-e - 9.0 (run source)",
+      "year": 2022,
+      "year_display": "c. 2022?"
+    },
+    {
+      "work_id": "03024",
+      "title": "version dall-e - 9.1",
+      "year": 2022,
+      "year_display": "c. 2022?"
+    },
+    {
+      "work_id": "03025",
+      "title": "version dall-e - 9.2",
+      "year": 2022,
+      "year_display": "c. 2022?"
+    },
+    {
+      "work_id": "03026",
+      "title": "version dall-e - 9.3",
+      "year": 2022,
+      "year_display": "c. 2022?"
+    },
+    {
+      "work_id": "03027",
+      "title": "version dall-e - 9.4",
+      "year": 2022,
+      "year_display": "c. 2022?"
+    },
+    {
+      "work_id": "03028",
+      "title": "version dall-e - 10.0 (run source)",
+      "year": 2022,
+      "year_display": "c. 2022?"
+    },
+    {
+      "work_id": "03029",
+      "title": "version dall-e - 10.1",
+      "year": 2022,
+      "year_display": "c. 2022?"
+    },
+    {
+      "work_id": "03030",
+      "title": "version dall-e - 10.2",
+      "year": 2022,
+      "year_display": "c. 2022?"
+    },
+    {
+      "work_id": "03031",
+      "title": "version dall-e - 10.3",
+      "year": 2022,
+      "year_display": "c. 2022?"
+    },
+    {
+      "work_id": "03032",
+      "title": "version dall-e - 10.4",
+      "year": 2022,
+      "year_display": "c. 2022?"
+    },
+    {
+      "work_id": "03033",
+      "title": "version dall-e - 11.0 (run source)",
+      "year": 2022,
+      "year_display": "c. 2022?"
+    },
+    {
+      "work_id": "03034",
+      "title": "version dall-e - 11.1",
+      "year": 2022,
+      "year_display": "c. 2022?"
+    },
+    {
+      "work_id": "03035",
+      "title": "version dall-e - 11.2",
+      "year": 2022,
+      "year_display": "c. 2022?"
+    },
+    {
+      "work_id": "03036",
+      "title": "version dall-e - 11.3",
+      "year": 2022,
+      "year_display": "c. 2022?"
+    },
+    {
+      "work_id": "03037",
+      "title": "version dall-e - 11.4",
+      "year": 2022,
+      "year_display": "c. 2022?"
+    },
+    {
+      "work_id": "03038",
+      "title": "version dall-e - 12.0 (run source)",
+      "year": 2022,
+      "year_display": "c. 2022?"
+    },
+    {
+      "work_id": "03039",
+      "title": "version dall-e - 12.1",
+      "year": 2022,
+      "year_display": "c. 2022?"
+    },
+    {
+      "work_id": "03040",
+      "title": "version dall-e - 12.2",
+      "year": 2022,
+      "year_display": "c. 2022?"
+    },
+    {
+      "work_id": "03041",
+      "title": "version dall-e - 12.3",
+      "year": 2022,
+      "year_display": "c. 2022?"
+    },
+    {
+      "work_id": "03042",
+      "title": "version dall-e - 12.4",
+      "year": 2022,
+      "year_display": "c. 2022?"
+    },
+    {
+      "work_id": "03043",
+      "title": "version dall-e - 13.0 (run source)",
+      "year": 2022,
+      "year_display": "c. 2022?"
+    },
+    {
+      "work_id": "03044",
+      "title": "version dall-e - 13.1",
+      "year": 2022,
+      "year_display": "c. 2022?"
+    },
+    {
+      "work_id": "03045",
+      "title": "version dall-e - 13.2",
+      "year": 2022,
+      "year_display": "c. 2022?"
+    },
+    {
+      "work_id": "03046",
+      "title": "version dall-e - 13.3",
+      "year": 2022,
+      "year_display": "c. 2022?"
+    },
+    {
+      "work_id": "03047",
+      "title": "version dall-e - 13.4",
+      "year": 2022,
+      "year_display": "c. 2022?"
+    },
+    {
+      "work_id": "03048",
+      "title": "version dall-e - 14.0 (run source)",
+      "year": 2022,
+      "year_display": "c. 2022?"
+    },
+    {
+      "work_id": "03049",
+      "title": "version dall-e - 14.1",
+      "year": 2022,
+      "year_display": "c. 2022?"
+    },
+    {
+      "work_id": "03050",
+      "title": "version dall-e - 14.2",
+      "year": 2022,
+      "year_display": "c. 2022?"
+    },
+    {
+      "work_id": "03051",
+      "title": "version dall-e - 14.3",
+      "year": 2022,
+      "year_display": "c. 2022?"
+    },
+    {
+      "work_id": "03052",
+      "title": "version dall-e - 14.4",
+      "year": 2022,
+      "year_display": "c. 2022?"
+    },
+    {
+      "work_id": "03053",
+      "title": "version dall-e - 15.0 (run source)",
+      "year": 2022,
+      "year_display": "c. 2022?"
+    },
+    {
+      "work_id": "03054",
+      "title": "version dall-e - 15.1",
+      "year": 2022,
+      "year_display": "c. 2022?"
+    },
+    {
+      "work_id": "03055",
+      "title": "version dall-e - 15.2",
+      "year": 2022,
+      "year_display": "c. 2022?"
+    },
+    {
+      "work_id": "03056",
+      "title": "version dall-e - 15.3",
+      "year": 2022,
+      "year_display": "c. 2022?"
+    },
+    {
+      "work_id": "03057",
+      "title": "version dall-e - 15.4",
+      "year": 2022,
+      "year_display": "c. 2022?"
+    }
+  ]
+}

@@ -1,0 +1,58 @@
+{
+  "header": {
+    "schema": "series_record_v5",
+    "version": "blake2b-5a6844503d14966cf8c6a7054fde446e",
+    "generated_at_utc": "2026-09-23T17:18:58Z",
+    "series_id": "066",
+    "count": 7
+  },
+  "series": {
+    "series_id": "066",
+    "title": "forms painting",
+    "documents": []
+  },
+  "member_works": [
+    {
+      "work_id": "01200",
+      "title": "forms painting",
+      "year": 1990,
+      "year_display": "c. 1990-92?"
+    },
+    {
+      "work_id": "01201",
+      "title": "forms painting (reverse)",
+      "year": 1990,
+      "year_display": "c. 1990-92?"
+    },
+    {
+      "work_id": "04223",
+      "title": "forms painting - detail 1",
+      "year": 1990,
+      "year_display": "c. 1990-92?"
+    },
+    {
+      "work_id": "04224",
+      "title": "forms painting - detail 2",
+      "year": 1990,
+      "year_display": "c. 1990-92?"
+    },
+    {
+      "work_id": "04225",
+      "title": "forms painting - detail 3",
+      "year": 1990,
+      "year_display": "c. 1990-92?"
+    },
+    {
+      "work_id": "04226",
+      "title": "forms painting - detail 4",
+      "year": 1990,
+      "year_display": "c. 1990-92?"
+    },
+    {
+      "work_id": "04227",
+      "title": "forms painting - detail 5",
+      "year": 1990,
+      "year_display": "c. 1990-92?"
+    }
+  ]
+}

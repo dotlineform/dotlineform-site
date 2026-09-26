@@ -1,0 +1,136 @@
+{
+  "header": {
+    "schema": "series_record_v5",
+    "version": "blake2b-df57bdbba9cbf5e9398b51e646d1051e",
+    "generated_at_utc": "2026-09-23T17:18:58Z",
+    "series_id": "084",
+    "count": 20
+  },
+  "series": {
+    "series_id": "084",
+    "title": "kylie structures",
+    "documents": []
+  },
+  "member_works": [
+    {
+      "work_id": "00520",
+      "title": "kylie structure 1",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "00521",
+      "title": "kylie structure 2",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "00522",
+      "title": "kylie structure 3",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "00523",
+      "title": "kylie structure 4",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03058",
+      "title": "kylie structure 1.1",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03059",
+      "title": "kylie structure 1.2",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03060",
+      "title": "kylie structure 1.3",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03061",
+      "title": "kylie structure 1.4",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03062",
+      "title": "kylie structure 1.5",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03063",
+      "title": "kylie structure 1.6",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03064",
+      "title": "kylie structure 2.1",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03065",
+      "title": "kylie structure 2.2",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03066",
+      "title": "kylie structure 2.3",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03067",
+      "title": "kylie structure 2.4",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03068",
+      "title": "kylie structure 2.5",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03069",
+      "title": "kylie structure 2.6",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03070",
+      "title": "kylie structure 3.1",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03071",
+      "title": "kylie structure 3.2",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03072",
+      "title": "kylie structure 4.1",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03073",
+      "title": "kylie structure 4.2",
+      "year": 2023,
+      "year_display": "2023"
+    }
+  ]
+}

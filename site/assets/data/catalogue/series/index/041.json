@@ -1,0 +1,106 @@
+{
+  "header": {
+    "schema": "series_record_v5",
+    "version": "blake2b-65166f18b3cdbc695ab1d89d622be7f9",
+    "generated_at_utc": "2026-09-23T17:18:58Z",
+    "series_id": "041",
+    "count": 15
+  },
+  "series": {
+    "series_id": "041",
+    "title": "dot theory",
+    "documents": []
+  },
+  "member_works": [
+    {
+      "work_id": "00937",
+      "title": "dot theory (dot)",
+      "year": 2009,
+      "year_display": "2009"
+    },
+    {
+      "work_id": "00938",
+      "title": "dot theory (dots) I",
+      "year": 2009,
+      "year_display": "2009"
+    },
+    {
+      "work_id": "00939",
+      "title": "dot theory (dots) version",
+      "year": 2009,
+      "year_display": "2009"
+    },
+    {
+      "work_id": "00940",
+      "title": "dot theory (dots splash)",
+      "year": 2009,
+      "year_display": "2009"
+    },
+    {
+      "work_id": "00941",
+      "title": "dot theory (dots) grid",
+      "year": 2009,
+      "year_display": "2009"
+    },
+    {
+      "work_id": "00942",
+      "title": "dot theory (dots composite)",
+      "year": 2009,
+      "year_display": "2009"
+    },
+    {
+      "work_id": "00943",
+      "title": "dot theory (dots composite) grid",
+      "year": 2009,
+      "year_display": "2009"
+    },
+    {
+      "work_id": "00944",
+      "title": "dot theory (dots edges)",
+      "year": 2009,
+      "year_display": "2009"
+    },
+    {
+      "work_id": "00945",
+      "title": "dot theory (edge line)",
+      "year": 2009,
+      "year_display": "2009"
+    },
+    {
+      "work_id": "00946",
+      "title": "dot theory (lines)",
+      "year": 2009,
+      "year_display": "2009"
+    },
+    {
+      "work_id": "00947",
+      "title": "dot theory (lines concentric)",
+      "year": 2009,
+      "year_display": "2009"
+    },
+    {
+      "work_id": "00948",
+      "title": "dot theory (strings)",
+      "year": 2009,
+      "year_display": "2009"
+    },
+    {
+      "work_id": "03562",
+      "title": "edges 1.1",
+      "year": 2009,
+      "year_display": "2009"
+    },
+    {
+      "work_id": "03563",
+      "title": "edges 1.2",
+      "year": 2009,
+      "year_display": "2009"
+    },
+    {
+      "work_id": "03564",
+      "title": "edges 1.3",
+      "year": 2009,
+      "year_display": "2009"
+    }
+  ]
+}

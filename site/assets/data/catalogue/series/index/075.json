@@ -1,0 +1,124 @@
+{
+  "header": {
+    "schema": "series_record_v5",
+    "version": "blake2b-d50b9e1d62d1d2e2c5f1434f6ef6f973",
+    "generated_at_utc": "2026-09-23T17:18:58Z",
+    "series_id": "075",
+    "count": 18
+  },
+  "series": {
+    "series_id": "075",
+    "title": "harmony",
+    "documents": []
+  },
+  "member_works": [
+    {
+      "work_id": "00379",
+      "title": "harmony 3",
+      "year": 2009,
+      "year_display": "2009"
+    },
+    {
+      "work_id": "00380",
+      "title": "harmony 1",
+      "year": 2009,
+      "year_display": "2009"
+    },
+    {
+      "work_id": "00381",
+      "title": "harmony 2",
+      "year": 2009,
+      "year_display": "2009"
+    },
+    {
+      "work_id": "00382",
+      "title": "harmony 2 residue",
+      "year": 2009,
+      "year_display": "2009"
+    },
+    {
+      "work_id": "00620",
+      "title": "harmony 3 (version)",
+      "year": 2009,
+      "year_display": "2009"
+    },
+    {
+      "work_id": "03112",
+      "title": "harmony 3.1",
+      "year": 2009,
+      "year_display": "2009"
+    },
+    {
+      "work_id": "03113",
+      "title": "harmony 3.2",
+      "year": 2009,
+      "year_display": "2009"
+    },
+    {
+      "work_id": "03114",
+      "title": "harmony 3.3",
+      "year": 2009,
+      "year_display": "2009"
+    },
+    {
+      "work_id": "03115",
+      "title": "harmony 3.4",
+      "year": 2009,
+      "year_display": "2009"
+    },
+    {
+      "work_id": "03116",
+      "title": "harmony 3.5",
+      "year": 2009,
+      "year_display": "2009"
+    },
+    {
+      "work_id": "03117",
+      "title": "harmony 3.6",
+      "year": 2009,
+      "year_display": "2009"
+    },
+    {
+      "work_id": "03118",
+      "title": "harmony 3.7",
+      "year": 2009,
+      "year_display": "2009"
+    },
+    {
+      "work_id": "03119",
+      "title": "harmony 3.8",
+      "year": 2009,
+      "year_display": "2009"
+    },
+    {
+      "work_id": "03120",
+      "title": "harmony 3.9",
+      "year": 2009,
+      "year_display": "2009"
+    },
+    {
+      "work_id": "03121",
+      "title": "harmony 3.10",
+      "year": 2009,
+      "year_display": "2009"
+    },
+    {
+      "work_id": "03122",
+      "title": "harmony 3.11",
+      "year": 2009,
+      "year_display": "2009"
+    },
+    {
+      "work_id": "03123",
+      "title": "harmony 3.12",
+      "year": 2009,
+      "year_display": "2009"
+    },
+    {
+      "work_id": "03124",
+      "title": "harmony 3.13",
+      "year": 2009,
+      "year_display": "2009"
+    }
+  ]
+}

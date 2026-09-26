@@ -1,0 +1,400 @@
+{
+  "header": {
+    "schema": "series_record_v5",
+    "version": "blake2b-08280014651de367b1486a3cb622806c",
+    "generated_at_utc": "2026-09-23T17:18:58Z",
+    "series_id": "064",
+    "count": 64
+  },
+  "series": {
+    "series_id": "064",
+    "title": "form space",
+    "documents": []
+  },
+  "member_works": [
+    {
+      "work_id": "01176",
+      "title": "form space 1",
+      "year": 2007,
+      "year_display": "2007"
+    },
+    {
+      "work_id": "01177",
+      "title": "form space 2",
+      "year": 2007,
+      "year_display": "2007"
+    },
+    {
+      "work_id": "01178",
+      "title": "form space 3",
+      "year": 2007,
+      "year_display": "2007"
+    },
+    {
+      "work_id": "01179",
+      "title": "form space 4",
+      "year": 2007,
+      "year_display": "2007"
+    },
+    {
+      "work_id": "01180",
+      "title": "form space 5",
+      "year": 2007,
+      "year_display": "2007"
+    },
+    {
+      "work_id": "01181",
+      "title": "form space 6",
+      "year": 2007,
+      "year_display": "2007"
+    },
+    {
+      "work_id": "01182",
+      "title": "form space 7",
+      "year": 2007,
+      "year_display": "2007"
+    },
+    {
+      "work_id": "01183",
+      "title": "form space 8",
+      "year": 2007,
+      "year_display": "2007"
+    },
+    {
+      "work_id": "01184",
+      "title": "form space 9",
+      "year": 2007,
+      "year_display": "2007"
+    },
+    {
+      "work_id": "01185",
+      "title": "form space 10",
+      "year": 2007,
+      "year_display": "2007"
+    },
+    {
+      "work_id": "01186",
+      "title": "form space 11",
+      "year": 2007,
+      "year_display": "2007"
+    },
+    {
+      "work_id": "01187",
+      "title": "form space 12",
+      "year": 2007,
+      "year_display": "2007"
+    },
+    {
+      "work_id": "01188",
+      "title": "form space 13",
+      "year": 2007,
+      "year_display": "2007"
+    },
+    {
+      "work_id": "01189",
+      "title": "form space 14",
+      "year": 2007,
+      "year_display": "2007"
+    },
+    {
+      "work_id": "01190",
+      "title": "form space 15",
+      "year": 2007,
+      "year_display": "2007"
+    },
+    {
+      "work_id": "01191",
+      "title": "form space 16",
+      "year": 2007,
+      "year_display": "2007"
+    },
+    {
+      "work_id": "01192",
+      "title": "form space 17",
+      "year": 2007,
+      "year_display": "2007"
+    },
+    {
+      "work_id": "01193",
+      "title": "form space 18",
+      "year": 2007,
+      "year_display": "2007"
+    },
+    {
+      "work_id": "01194",
+      "title": "form space 19",
+      "year": 2007,
+      "year_display": "2007"
+    },
+    {
+      "work_id": "01195",
+      "title": "form space 20",
+      "year": 2007,
+      "year_display": "2007"
+    },
+    {
+      "work_id": "04064",
+      "title": "form space noise 1",
+      "year": 2007,
+      "year_display": "2007"
+    },
+    {
+      "work_id": "04065",
+      "title": "form space noise 2",
+      "year": 2007,
+      "year_display": "2007"
+    },
+    {
+      "work_id": "04066",
+      "title": "form space noise 3",
+      "year": 2007,
+      "year_display": "2007"
+    },
+    {
+      "work_id": "04067",
+      "title": "form space noise 4",
+      "year": 2007,
+      "year_display": "2007"
+    },
+    {
+      "work_id": "04068",
+      "title": "form space noise 5",
+      "year": 2007,
+      "year_display": "2007"
+    },
+    {
+      "work_id": "04069",
+      "title": "form space noise 6",
+      "year": 2007,
+      "year_display": "2007"
+    },
+    {
+      "work_id": "04070",
+      "title": "form space noise 7",
+      "year": 2007,
+      "year_display": "2007"
+    },
+    {
+      "work_id": "04071",
+      "title": "form space noise 8",
+      "year": 2007,
+      "year_display": "2007"
+    },
+    {
+      "work_id": "04072",
+      "title": "form space noise 9",
+      "year": 2007,
+      "year_display": "2007"
+    },
+    {
+      "work_id": "04073",
+      "title": "form space noise 10",
+      "year": 2007,
+      "year_display": "2007"
+    },
+    {
+      "work_id": "04074",
+      "title": "form space noise 11",
+      "year": 2007,
+      "year_display": "2007"
+    },
+    {
+      "work_id": "04075",
+      "title": "form space noise 12",
+      "year": 2007,
+      "year_display": "2007"
+    },
+    {
+      "work_id": "04076",
+      "title": "form space noise 13",
+      "year": 2007,
+      "year_display": "2007"
+    },
+    {
+      "work_id": "04077",
+      "title": "form space noise 14",
+      "year": 2007,
+      "year_display": "2007"
+    },
+    {
+      "work_id": "04078",
+      "title": "form space noise 15",
+      "year": 2007,
+      "year_display": "2007"
+    },
+    {
+      "work_id": "04079",
+      "title": "form space noise 16",
+      "year": 2007,
+      "year_display": "2007"
+    },
+    {
+      "work_id": "04080",
+      "title": "form space noise 17",
+      "year": 2007,
+      "year_display": "2007"
+    },
+    {
+      "work_id": "04081",
+      "title": "form space noise 18",
+      "year": 2007,
+      "year_display": "2007"
+    },
+    {
+      "work_id": "04082",
+      "title": "form space noise 19",
+      "year": 2007,
+      "year_display": "2007"
+    },
+    {
+      "work_id": "04083",
+      "title": "form space noise 20",
+      "year": 2007,
+      "year_display": "2007"
+    },
+    {
+      "work_id": "04084",
+      "title": "form space noise 21",
+      "year": 2007,
+      "year_display": "2007"
+    },
+    {
+      "work_id": "04085",
+      "title": "form space noise 22",
+      "year": 2007,
+      "year_display": "2007"
+    },
+    {
+      "work_id": "04086",
+      "title": "form space noise 23",
+      "year": 2007,
+      "year_display": "2007"
+    },
+    {
+      "work_id": "04087",
+      "title": "form space noise 24",
+      "year": 2007,
+      "year_display": "2007"
+    },
+    {
+      "work_id": "04088",
+      "title": "form space noise 25",
+      "year": 2007,
+      "year_display": "2007"
+    },
+    {
+      "work_id": "04089",
+      "title": "form space noise 26",
+      "year": 2007,
+      "year_display": "2007"
+    },
+    {
+      "work_id": "04090",
+      "title": "form space noise 27",
+      "year": 2007,
+      "year_display": "2007"
+    },
+    {
+      "work_id": "04091",
+      "title": "form space noise 28",
+      "year": 2007,
+      "year_display": "2007"
+    },
+    {
+      "work_id": "04092",
+      "title": "form space noise 29",
+      "year": 2007,
+      "year_display": "2007"
+    },
+    {
+      "work_id": "04093",
+      "title": "form space noise 30",
+      "year": 2007,
+      "year_display": "2007"
+    },
+    {
+      "work_id": "04094",
+      "title": "form space noise 31",
+      "year": 2007,
+      "year_display": "2007"
+    },
+    {
+      "work_id": "04095",
+      "title": "form space noise 32",
+      "year": 2007,
+      "year_display": "2007"
+    },
+    {
+      "work_id": "04096",
+      "title": "form space noise 33",
+      "year": 2007,
+      "year_display": "2007"
+    },
+    {
+      "work_id": "04097",
+      "title": "form space noise 34",
+      "year": 2007,
+      "year_display": "2007"
+    },
+    {
+      "work_id": "04098",
+      "title": "form space noise 35",
+      "year": 2007,
+      "year_display": "2007"
+    },
+    {
+      "work_id": "04099",
+      "title": "form space noise 36",
+      "year": 2007,
+      "year_display": "2007"
+    },
+    {
+      "work_id": "04100",
+      "title": "form space noise 37",
+      "year": 2007,
+      "year_display": "2007"
+    },
+    {
+      "work_id": "04101",
+      "title": "form space noise 38",
+      "year": 2007,
+      "year_display": "2007"
+    },
+    {
+      "work_id": "04102",
+      "title": "form space noise 39",
+      "year": 2007,
+      "year_display": "2007"
+    },
+    {
+      "work_id": "04103",
+      "title": "form space noise 40",
+      "year": 2007,
+      "year_display": "2007"
+    },
+    {
+      "work_id": "04104",
+      "title": "form space noise 41",
+      "year": 2007,
+      "year_display": "2007"
+    },
+    {
+      "work_id": "04105",
+      "title": "form space noise 42",
+      "year": 2007,
+      "year_display": "2007"
+    },
+    {
+      "work_id": "04106",
+      "title": "form space noise 43",
+      "year": 2007,
+      "year_display": "2007"
+    },
+    {
+      "work_id": "04107",
+      "title": "form space noise 44",
+      "year": 2007,
+      "year_display": "2007"
+    }
+  ]
+}

@@ -1,0 +1,118 @@
+{
+  "header": {
+    "schema": "series_record_v5",
+    "version": "blake2b-4a72c6729dd5d50b5353d86db4ee60a5",
+    "generated_at_utc": "2026-09-23T17:18:58Z",
+    "series_id": "060",
+    "count": 17
+  },
+  "series": {
+    "series_id": "060",
+    "title": "forest (2024)",
+    "documents": []
+  },
+  "member_works": [
+    {
+      "work_id": "01175",
+      "title": "forest",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "04048",
+      "title": "forest detail 1",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "04049",
+      "title": "forest detail 2",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "04050",
+      "title": "forest detail 3",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "04051",
+      "title": "forest detail 4",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "04052",
+      "title": "forest detail 5",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "04053",
+      "title": "forest detail 6",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "04054",
+      "title": "forest detail 7",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "04055",
+      "title": "forest detail 8",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "04056",
+      "title": "forest detail 9",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "04057",
+      "title": "forest detail 10",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "04058",
+      "title": "forest detail 11",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "04059",
+      "title": "forest detail 12",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "04060",
+      "title": "forest detail 13",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "04061",
+      "title": "forest detail 14",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "04062",
+      "title": "forest detail 15",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "04063",
+      "title": "forest detail 16",
+      "year": 2024,
+      "year_display": "2024"
+    }
+  ]
+}

@@ -1,0 +1,64 @@
+{
+  "header": {
+    "schema": "series_record_v5",
+    "version": "blake2b-87f5517f1d8d672dbda56f24a544fe90",
+    "generated_at_utc": "2026-09-23T17:18:58Z",
+    "series_id": "050",
+    "count": 8
+  },
+  "series": {
+    "series_id": "050",
+    "title": "field",
+    "documents": []
+  },
+  "member_works": [
+    {
+      "work_id": "01047",
+      "title": "field I",
+      "year": 2025,
+      "year_display": "2025"
+    },
+    {
+      "work_id": "01048",
+      "title": "field II",
+      "year": 2025,
+      "year_display": "2025"
+    },
+    {
+      "work_id": "03654",
+      "title": "field I - detail 1",
+      "year": 2025,
+      "year_display": "2025"
+    },
+    {
+      "work_id": "03655",
+      "title": "field I - detail 2",
+      "year": 2025,
+      "year_display": "2025"
+    },
+    {
+      "work_id": "03656",
+      "title": "field I - detail 3",
+      "year": 2025,
+      "year_display": "2025"
+    },
+    {
+      "work_id": "03657",
+      "title": "field II - detail 1",
+      "year": 2025,
+      "year_display": "2025"
+    },
+    {
+      "work_id": "03658",
+      "title": "field II - detail 2",
+      "year": 2025,
+      "year_display": "2025"
+    },
+    {
+      "work_id": "03659",
+      "title": "field II - detail 3",
+      "year": 2025,
+      "year_display": "2025"
+    }
+  ]
+}

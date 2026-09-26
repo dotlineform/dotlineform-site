@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "series_record_v5",
+    "version": "blake2b-1f260ba156f17619368ad1a066fffb29",
+    "generated_at_utc": "2026-09-23T17:18:58Z",
+    "series_id": "018",
+    "count": 1
+  },
+  "series": {
+    "series_id": "018",
+    "title": "body form",
+    "documents": []
+  },
+  "member_works": [
+    {
+      "work_id": "01633",
+      "title": "body form",
+      "year": 2008,
+      "year_display": "2008"
+    }
+  ]
+}

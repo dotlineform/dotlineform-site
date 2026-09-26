@@ -1,0 +1,136 @@
+{
+  "header": {
+    "schema": "series_record_v5",
+    "version": "blake2b-628e8cc4e0afdf792740bd4be078c23f",
+    "generated_at_utc": "2026-09-23T17:18:58Z",
+    "series_id": "123",
+    "count": 20
+  },
+  "series": {
+    "series_id": "123",
+    "title": "snow",
+    "documents": []
+  },
+  "member_works": [
+    {
+      "work_id": "01655",
+      "title": "snow",
+      "year": 2018,
+      "year_display": "2018"
+    },
+    {
+      "work_id": "01656",
+      "title": "snow",
+      "year": 2018,
+      "year_display": "2018"
+    },
+    {
+      "work_id": "01657",
+      "title": "snow",
+      "year": 2018,
+      "year_display": "2018"
+    },
+    {
+      "work_id": "01658",
+      "title": "snow",
+      "year": 2018,
+      "year_display": "2018"
+    },
+    {
+      "work_id": "01659",
+      "title": "snow",
+      "year": 2018,
+      "year_display": "2018"
+    },
+    {
+      "work_id": "01660",
+      "title": "snow",
+      "year": 2018,
+      "year_display": "2018"
+    },
+    {
+      "work_id": "01661",
+      "title": "snow",
+      "year": 2018,
+      "year_display": "2018"
+    },
+    {
+      "work_id": "01662",
+      "title": "snow",
+      "year": 2018,
+      "year_display": "2018"
+    },
+    {
+      "work_id": "01663",
+      "title": "snow",
+      "year": 2018,
+      "year_display": "2018"
+    },
+    {
+      "work_id": "01664",
+      "title": "snow",
+      "year": 2018,
+      "year_display": "2018"
+    },
+    {
+      "work_id": "01665",
+      "title": "snow",
+      "year": 2018,
+      "year_display": "2018"
+    },
+    {
+      "work_id": "01666",
+      "title": "snow",
+      "year": 2018,
+      "year_display": "2018"
+    },
+    {
+      "work_id": "01667",
+      "title": "snow",
+      "year": 2018,
+      "year_display": "2018"
+    },
+    {
+      "work_id": "01668",
+      "title": "snow",
+      "year": 2018,
+      "year_display": "2018"
+    },
+    {
+      "work_id": "01669",
+      "title": "snow",
+      "year": 2018,
+      "year_display": "2018"
+    },
+    {
+      "work_id": "01670",
+      "title": "snow",
+      "year": 2018,
+      "year_display": "2018"
+    },
+    {
+      "work_id": "01671",
+      "title": "snow",
+      "year": 2018,
+      "year_display": "2018"
+    },
+    {
+      "work_id": "01672",
+      "title": "snow",
+      "year": 2018,
+      "year_display": "2018"
+    },
+    {
+      "work_id": "01673",
+      "title": "snow",
+      "year": 2018,
+      "year_display": "2018"
+    },
+    {
+      "work_id": "01674",
+      "title": "snow",
+      "year": 2018,
+      "year_display": "2018"
+    }
+  ]
+}

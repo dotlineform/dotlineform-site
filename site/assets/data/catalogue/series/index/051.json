@@ -1,0 +1,2308 @@
+{
+  "header": {
+    "schema": "series_record_v5",
+    "version": "blake2b-46dc3b9361ffd6544c9de2c91f0f0efc",
+    "generated_at_utc": "2026-09-23T17:18:58Z",
+    "series_id": "051",
+    "count": 382
+  },
+  "series": {
+    "series_id": "051",
+    "title": "fireworks form",
+    "documents": []
+  },
+  "member_works": [
+    {
+      "work_id": "01049",
+      "title": "fireworks form",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "01050",
+      "title": "fireworks particles",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "01051",
+      "title": "fireworks particles version",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03660",
+      "title": "fireworks form - detail 1",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03661",
+      "title": "fireworks form - detail 2",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03662",
+      "title": "fireworks form - detail 3",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03663",
+      "title": "fireworks form - detail 4",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03664",
+      "title": "fireworks form - detail 5",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03665",
+      "title": "fireworks form - detail 6",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03666",
+      "title": "fireworks particles - detail 1",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03667",
+      "title": "fireworks particles - detail 2",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03668",
+      "title": "fireworks particles - detail 3",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03669",
+      "title": "fireworks particles - detail 4",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03670",
+      "title": "fireworks particles - detail 5",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03671",
+      "title": "fireworks particles - detail 6",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03672",
+      "title": "particle 1",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03673",
+      "title": "particle 2",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03674",
+      "title": "particle 3",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03675",
+      "title": "particle 4",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03676",
+      "title": "particle 5",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03677",
+      "title": "particle 6",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03678",
+      "title": "particle 7",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03679",
+      "title": "particle 8",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03680",
+      "title": "particle 9",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03681",
+      "title": "particle 10",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03682",
+      "title": "particle 11",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03683",
+      "title": "particle 12",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03684",
+      "title": "particle 13",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03685",
+      "title": "particle 14",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03686",
+      "title": "particle 15",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03687",
+      "title": "particle 16",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03688",
+      "title": "particle 17",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03689",
+      "title": "particle 18",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03690",
+      "title": "particle 19",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03691",
+      "title": "particle 20",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03692",
+      "title": "particle 21",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03693",
+      "title": "particle 22",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03694",
+      "title": "particle 23",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03695",
+      "title": "particle 24",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03696",
+      "title": "particle 25",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03697",
+      "title": "particle 26",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03698",
+      "title": "particle 27",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03699",
+      "title": "particle 28",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03700",
+      "title": "particle 29",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03701",
+      "title": "particle 30",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03702",
+      "title": "particle 31",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03703",
+      "title": "particle 32",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03704",
+      "title": "particle 33",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03705",
+      "title": "particle 34",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03706",
+      "title": "particle 35",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03707",
+      "title": "particle 36",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03708",
+      "title": "particle 37",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03709",
+      "title": "particle 38",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03710",
+      "title": "particle 39",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03711",
+      "title": "particle 40",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03712",
+      "title": "particle 41",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03713",
+      "title": "particle 42",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03714",
+      "title": "particle 43",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03715",
+      "title": "particle 44",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03716",
+      "title": "particle 45",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03717",
+      "title": "particle 46",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03718",
+      "title": "particle 47",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03719",
+      "title": "particle 48",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03720",
+      "title": "particle 49",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03721",
+      "title": "particle 50",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03722",
+      "title": "particle 51",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03723",
+      "title": "particle 52",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03724",
+      "title": "particle 53",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03725",
+      "title": "particle 54",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03726",
+      "title": "particle 55",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03727",
+      "title": "particle 56",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03728",
+      "title": "particle 57",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03729",
+      "title": "particle 58",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03730",
+      "title": "particle 59",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03731",
+      "title": "particle 60",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03732",
+      "title": "particle 61",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03733",
+      "title": "particle 62",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03734",
+      "title": "particle 63",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03735",
+      "title": "particle 64",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03736",
+      "title": "particle 65",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03737",
+      "title": "particle 66",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03738",
+      "title": "particle 67",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03739",
+      "title": "particle 68",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03740",
+      "title": "particle 69",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03741",
+      "title": "particle 70",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03742",
+      "title": "particle 71",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03743",
+      "title": "particle 72",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03744",
+      "title": "particle 73",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03745",
+      "title": "particle 74",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03746",
+      "title": "particle 75",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03747",
+      "title": "particle 76",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03748",
+      "title": "particle 77",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03749",
+      "title": "particle 78",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03750",
+      "title": "particle 79",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03751",
+      "title": "particle 80",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03752",
+      "title": "particle 81",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03753",
+      "title": "particle 82",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03754",
+      "title": "particle 83",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03755",
+      "title": "particle 84",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03756",
+      "title": "particle 85",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03757",
+      "title": "particle 86",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03758",
+      "title": "particle 87",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03759",
+      "title": "particle 88",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03760",
+      "title": "particle 89",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03761",
+      "title": "particle 90",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03762",
+      "title": "particle 91",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03763",
+      "title": "particle 92",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03764",
+      "title": "particle 93",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03765",
+      "title": "particle 94",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03766",
+      "title": "particle 95",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03767",
+      "title": "particle 96",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03768",
+      "title": "particle 97",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03769",
+      "title": "particle 98",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03770",
+      "title": "particle 99",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03771",
+      "title": "particle 100",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03772",
+      "title": "particle 101",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03773",
+      "title": "particle 102",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03774",
+      "title": "particle 103",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03775",
+      "title": "particle 104",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03776",
+      "title": "particle 105",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03777",
+      "title": "particle 106",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03778",
+      "title": "particle 107",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03779",
+      "title": "particle 108",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03780",
+      "title": "particle 109",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03781",
+      "title": "particle 110",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03782",
+      "title": "particle 111",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03783",
+      "title": "particle 112",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03784",
+      "title": "particle 113",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03785",
+      "title": "particle 114",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03786",
+      "title": "particle 115",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03787",
+      "title": "particle 116",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03788",
+      "title": "particle 117",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03789",
+      "title": "particle 118",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03790",
+      "title": "particle 119",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03791",
+      "title": "particle 120",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03792",
+      "title": "particle 121",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03793",
+      "title": "particle 122",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03794",
+      "title": "particle 123",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03795",
+      "title": "particle 124",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03796",
+      "title": "particle 125",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03797",
+      "title": "particle 126",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03798",
+      "title": "particle 127",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03799",
+      "title": "particle 128",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03800",
+      "title": "particle 129",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03801",
+      "title": "particle 130",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03802",
+      "title": "particle 131",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03803",
+      "title": "particle 132",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03804",
+      "title": "particle 133",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03805",
+      "title": "particle 134",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03806",
+      "title": "particle 135",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03807",
+      "title": "particle 136",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03808",
+      "title": "particle 137",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03809",
+      "title": "particle 138",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03810",
+      "title": "particle 139",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03811",
+      "title": "particle 140",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03812",
+      "title": "particle 141",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03813",
+      "title": "particle 142",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03814",
+      "title": "particle 143",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03815",
+      "title": "particle 144",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03816",
+      "title": "particle 145",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03817",
+      "title": "particle 146",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03818",
+      "title": "particle 147",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03819",
+      "title": "particle 148",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03820",
+      "title": "particle 149",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03821",
+      "title": "particle 150",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03822",
+      "title": "particle 151",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03823",
+      "title": "particle 152",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03824",
+      "title": "particle 153",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03825",
+      "title": "particle 154",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03826",
+      "title": "particle 155",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03827",
+      "title": "particle 156",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03828",
+      "title": "particle 157",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03829",
+      "title": "particle 158",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03830",
+      "title": "particle 159",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03831",
+      "title": "particle 160",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03832",
+      "title": "particle 161",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03833",
+      "title": "particle 162",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03834",
+      "title": "particle 163",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03835",
+      "title": "particle 164",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03836",
+      "title": "particle 165",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03837",
+      "title": "particle 166",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03838",
+      "title": "particle 167",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03839",
+      "title": "particle 168",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03840",
+      "title": "particle 169",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03841",
+      "title": "particle 170",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03842",
+      "title": "particle 171",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03843",
+      "title": "particle 172",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03844",
+      "title": "particle 173",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03845",
+      "title": "particle 174",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03846",
+      "title": "particle 175",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03847",
+      "title": "particle 176",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03848",
+      "title": "particle 177",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03849",
+      "title": "particle 178",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03850",
+      "title": "particle 179",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03851",
+      "title": "particle 180",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03852",
+      "title": "particle 181",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03853",
+      "title": "particle 182",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03854",
+      "title": "particle 183",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03855",
+      "title": "particle 184",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03856",
+      "title": "particle 185",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03857",
+      "title": "particle 186",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03858",
+      "title": "particle 187",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03859",
+      "title": "particle 188",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03860",
+      "title": "particle 189",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03861",
+      "title": "particle 190",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03862",
+      "title": "particle 191",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03863",
+      "title": "particle 192",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03864",
+      "title": "particle 193",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03865",
+      "title": "particle 194",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03866",
+      "title": "particle 195",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03867",
+      "title": "particle 196",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03868",
+      "title": "particle 197",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03869",
+      "title": "particle 198",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03870",
+      "title": "particle 199",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03871",
+      "title": "particle 200",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03872",
+      "title": "particle 201",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03873",
+      "title": "particle 202",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03874",
+      "title": "particle 203",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03875",
+      "title": "particle 204",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03876",
+      "title": "particle 205",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03877",
+      "title": "particle 206",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03878",
+      "title": "particle 207",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03879",
+      "title": "particle 208",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03880",
+      "title": "particle 209",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03881",
+      "title": "particle 210",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03882",
+      "title": "particle 211",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03883",
+      "title": "particle 212",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03884",
+      "title": "particle 213",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03885",
+      "title": "particle 214",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03886",
+      "title": "particle 215",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03887",
+      "title": "particle 216",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03888",
+      "title": "particle 217",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03889",
+      "title": "particle 218",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03890",
+      "title": "particle 219",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03891",
+      "title": "particle 220",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03892",
+      "title": "particle 221",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03893",
+      "title": "particle 222",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03894",
+      "title": "particle 223",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03895",
+      "title": "particle 224",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03896",
+      "title": "particle 225",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03897",
+      "title": "particle 226",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03898",
+      "title": "particle 227",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03899",
+      "title": "particle 228",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03900",
+      "title": "particle 229",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03901",
+      "title": "particle 230",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03902",
+      "title": "particle 231",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03903",
+      "title": "particle 232",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03904",
+      "title": "particle 233",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03905",
+      "title": "particle 234",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03906",
+      "title": "particle 235",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03907",
+      "title": "particle 236",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03908",
+      "title": "particle 237",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03909",
+      "title": "particle 238",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03910",
+      "title": "particle 239",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03911",
+      "title": "particle 240",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03912",
+      "title": "particle 241",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03913",
+      "title": "particle 242",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03914",
+      "title": "particle 243",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03915",
+      "title": "particle 244",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03916",
+      "title": "particle 245",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03917",
+      "title": "particle 246",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03918",
+      "title": "particle 247",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03919",
+      "title": "particle 248",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03920",
+      "title": "particle 249",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03921",
+      "title": "particle 250",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03922",
+      "title": "particle 251",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03923",
+      "title": "particle 252",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03924",
+      "title": "particle 253",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03925",
+      "title": "particle 254",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03926",
+      "title": "particle 255",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03927",
+      "title": "particle 256",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03928",
+      "title": "particle 257",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03929",
+      "title": "particle 258",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03930",
+      "title": "particle 259",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03931",
+      "title": "particle 260",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03932",
+      "title": "particle 261",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03933",
+      "title": "particle 262",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03934",
+      "title": "particle 263",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03935",
+      "title": "particle 264",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03936",
+      "title": "particle 265",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03937",
+      "title": "particle 266",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03938",
+      "title": "particle 267",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03939",
+      "title": "particle 268",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03940",
+      "title": "particle 269",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03941",
+      "title": "particle 270",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03942",
+      "title": "particle 271",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03943",
+      "title": "particle 272",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03944",
+      "title": "particle 273",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03945",
+      "title": "particle 274",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03946",
+      "title": "particle 275",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03947",
+      "title": "particle 276",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03948",
+      "title": "particle 277",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03949",
+      "title": "particle 278",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03950",
+      "title": "particle 279",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03951",
+      "title": "particle 280",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03952",
+      "title": "particle 281",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03953",
+      "title": "particle 282",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03954",
+      "title": "particle 283",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03955",
+      "title": "particle 284",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03956",
+      "title": "particle 285",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03957",
+      "title": "particle 286",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03958",
+      "title": "particle 287",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03959",
+      "title": "particle 288",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03960",
+      "title": "particle 289",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03961",
+      "title": "particle 290",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03962",
+      "title": "particle 291",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03963",
+      "title": "particle 292",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03964",
+      "title": "particle 293",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03965",
+      "title": "particle 294",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03966",
+      "title": "particle 295",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03967",
+      "title": "particle 296",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03968",
+      "title": "particle 297",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03969",
+      "title": "particle 298",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03970",
+      "title": "particle 299",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03971",
+      "title": "particle 300",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03972",
+      "title": "particle 301",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03973",
+      "title": "particle 302",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03974",
+      "title": "particle 303",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03975",
+      "title": "particle 304",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03976",
+      "title": "particle 305",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03977",
+      "title": "particle 306",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03978",
+      "title": "particle 307",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03979",
+      "title": "particle 308",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03980",
+      "title": "particle 309",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03981",
+      "title": "particle 310",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03982",
+      "title": "particle 311",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03983",
+      "title": "particle 312",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03984",
+      "title": "particle 313",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03985",
+      "title": "particle 314",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03986",
+      "title": "particle 315",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03987",
+      "title": "particle 316",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03988",
+      "title": "particle 317",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03989",
+      "title": "particle 318",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03990",
+      "title": "particle 319",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03991",
+      "title": "particle 320",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03992",
+      "title": "particle 321",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03993",
+      "title": "particle 322",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03994",
+      "title": "particle 323",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03995",
+      "title": "particle 324",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03996",
+      "title": "particle 325",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03997",
+      "title": "particle 326",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03998",
+      "title": "particle 327",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03999",
+      "title": "particle 328",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04000",
+      "title": "particle 329",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04001",
+      "title": "particle 330",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04002",
+      "title": "particle 331",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04003",
+      "title": "particle 332",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04004",
+      "title": "particle 333",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04005",
+      "title": "particle 334",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04006",
+      "title": "particle 335",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04007",
+      "title": "particle 336",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04008",
+      "title": "particle 337",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04009",
+      "title": "particle 338",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04010",
+      "title": "particle 339",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04011",
+      "title": "particle 340",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04012",
+      "title": "particle 341",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04013",
+      "title": "particle 342",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04014",
+      "title": "particle 343",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04015",
+      "title": "particle 344",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04016",
+      "title": "particle 345",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04017",
+      "title": "particle 346",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04018",
+      "title": "particle 347",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04019",
+      "title": "particle 348",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04020",
+      "title": "particle 349",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04021",
+      "title": "particle 350",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04022",
+      "title": "particle 351",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04023",
+      "title": "particle 352",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04024",
+      "title": "particle 353",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04025",
+      "title": "particle 354",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04026",
+      "title": "particle 355",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04027",
+      "title": "particle 356",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04028",
+      "title": "particle 357",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04029",
+      "title": "particle 358",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04030",
+      "title": "particle 359",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04031",
+      "title": "particle 360",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04032",
+      "title": "particle 361",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04033",
+      "title": "fireworks particles version - detail 1",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04034",
+      "title": "fireworks particles version - detail 2",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04035",
+      "title": "fireworks particles version - detail 3",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04036",
+      "title": "fireworks particles version - detail 4",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04037",
+      "title": "fireworks particles version - detail 5",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04038",
+      "title": "fireworks particles version - detail 6",
+      "year": 2023,
+      "year_display": "2023"
+    }
+  ]
+}

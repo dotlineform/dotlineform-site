@@ -1,0 +1,46 @@
+{
+  "header": {
+    "schema": "series_record_v5",
+    "version": "blake2b-a6d6643ac1a51a99c2e6fc82c9b13ae2",
+    "generated_at_utc": "2026-09-23T17:18:58Z",
+    "series_id": "022",
+    "count": 5
+  },
+  "series": {
+    "series_id": "022",
+    "title": "book of curves",
+    "documents": []
+  },
+  "member_works": [
+    {
+      "work_id": "00806",
+      "title": "book of curves 0",
+      "year": 2011,
+      "year_display": "2011"
+    },
+    {
+      "work_id": "00807",
+      "title": "book of curves 1 and 10",
+      "year": 2011,
+      "year_display": "2011"
+    },
+    {
+      "work_id": "00808",
+      "title": "book of curves 2-6",
+      "year": 2011,
+      "year_display": "2011"
+    },
+    {
+      "work_id": "00809",
+      "title": "book of curves 7 and 8",
+      "year": 2011,
+      "year_display": "2011"
+    },
+    {
+      "work_id": "00810",
+      "title": "book of curves 9 and 11",
+      "year": 2011,
+      "year_display": "2011"
+    }
+  ]
+}
