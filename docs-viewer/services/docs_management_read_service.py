@@ -10,6 +10,7 @@ import docs_diagram_source_service
 import docs_import_source_service as import_source_service
 import docs_management_routes as routes
 import docs_preview_reads
+import docs_media_reads
 import docs_series_works_report
 import docs_unpublishable_report
 import docs_source_config_settings
@@ -106,6 +107,14 @@ def docs_management_get_payload(repo_root: Path, path: str, params: dict[str, li
         return {"ok": True, "service": "docs_management", "dry_run": dry_run}
     if path == routes.CAPABILITIES_PATH:
         return capabilities_payload(repo_root)
+    if path in {routes.MEDIA_FILES_PATH, routes.MEDIA_REFERENCES_PATH}:
+        if set(params) not in ({"stage"}, {"stage", "collection"}):
+            raise ValueError("Docs media reads require stage and optional collection only")
+        reader = docs_media_reads.read_media_files if path == routes.MEDIA_FILES_PATH else docs_media_reads.read_media_references
+        return reader(
+            repo_root, stage=docs_api_query_value(params, "stage"),
+            collection=docs_api_query_value(params, "collection"),
+        )
     if path == routes.DOCUMENT_LINK_TARGETS_PATH:
         return read_document_link_targets(
             repo_root,

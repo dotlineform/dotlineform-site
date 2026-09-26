@@ -26,7 +26,7 @@ import docs_management_document_target  # noqa: E402
 import docs_management_draft  # noqa: E402
 import docs_import_source_service as import_source_service  # noqa: E402
 import docs_local_links  # noqa: E402
-import docs_media_report  # noqa: E402
+import docs_media_actions  # noqa: E402
 import docs_management_mutations as mutations  # noqa: E402
 import docs_management_routes as routes  # noqa: E402
 import docs_prepare_preview  # noqa: E402
@@ -137,7 +137,7 @@ def docs_management_post_response(
     if path == routes.OPEN_LOCAL_TARGET_PATH:
         return docs_local_links.open_local_target_response(repo_root, body, dry_run=dry_run)
     if path == routes.OPEN_MEDIA_SOURCE_PATH:
-        return HTTPStatus.OK, docs_media_report.open_media_source(repo_root, body, dry_run=dry_run)
+        return HTTPStatus.OK, docs_media_actions.open_media_source(repo_root, body, dry_run=dry_run)
     if path == routes.BROKEN_LINKS_PATH:
         payload = handle_broken_links(repo_root, body)
         return HTTPStatus.OK, payload
@@ -147,19 +147,6 @@ def docs_management_post_response(
         payload["dry_run"] = dry_run
         payload["summary_text"] = "Project State refreshed."
         return HTTPStatus.OK, payload
-    if path == routes.DOCS_MEDIA_REPORT_PATH:
-        if set(body) != {"stage"}:
-            raise ValueError("Docs Media request must contain only stage")
-        report = docs_media_report.build_docs_media_report(
-            repo_root,
-            load_docs_stage(repo_root, body["stage"]),
-        )
-        return HTTPStatus.OK, {
-            "ok": True,
-            "dry_run": dry_run,
-            "summary_text": "Docs Media refreshed.",
-            "report": report,
-        }
     if path == routes.UNCATALOGED_FILES_PATH:
         if body:
             raise ValueError("Uncataloged Files request must be empty")

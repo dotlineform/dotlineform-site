@@ -4,7 +4,6 @@
 from __future__ import annotations
 
 import re
-import subprocess
 import sys
 from http import HTTPStatus
 from pathlib import Path
@@ -12,6 +11,7 @@ from typing import Any
 from urllib.parse import quote, unquote_to_bytes, urlsplit
 
 from studio.shared.python.local_env import runtime_env
+from docs_local_files import FinderUnavailableError, open_in_finder
 
 
 PROJECTS_BASE_DIR_ENV = "DOTLINEFORM_PROJECTS_BASE_DIR"
@@ -213,13 +213,13 @@ def open_local_target_response(
     if resolved is None:
         return status, payload
     target = str(payload["target"])
-    if sys.platform != "darwin":
+    try:
+        open_in_finder(
+            repo_root, resolved, reveal=not resolved.is_dir(), dry_run=dry_run,
+            failure_message="Local target could not be opened.",
+        )
+    except FinderUnavailableError:
         return _response(HTTPStatus.NOT_IMPLEMENTED, "unsupported_platform", target=target)
-    command = ["open", str(resolved)] if resolved.is_dir() else ["open", "-R", str(resolved)]
-    if not dry_run:
-        completed = subprocess.run(command, cwd=repo_root, capture_output=True, text=True, check=False)
-        if completed.returncode != 0:
-            raise RuntimeError("Local target could not be opened.")
     return HTTPStatus.OK, {
         "ok": True, "state": "opened",
         "summary_text": "Local target opened." if not dry_run else "Local target validated.",

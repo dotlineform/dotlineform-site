@@ -118,14 +118,17 @@ export function createDocsViewerReportService(options) {
         requireOkEnvelope: true
       }));
     },
-    runDocsMedia: function (request) {
-      return fetchReportJson("/docs/media-report", Object.assign({}, serviceOptions, {
-        method: "POST",
-        payload: {
-            ...(request && request.stage ? { stage: cleanString(request.stage) } : {})
-        },
-        requireOkEnvelope: true
-      }));
+    readMediaFiles: function (request) {
+      return fetchReportJson("/docs/media-files?" + new URLSearchParams({
+        stage: request.stage,
+        ...(request.collection ? { collection: request.collection } : {})
+      }).toString(), Object.assign({}, serviceOptions, { requireOkEnvelope: true }));
+    },
+    readMediaReferences: function (request) {
+      return fetchReportJson("/docs/media-references?" + new URLSearchParams({
+        stage: request.stage,
+        ...(request.collection ? { collection: request.collection } : {})
+      }).toString(), Object.assign({}, serviceOptions, { requireOkEnvelope: true }));
     },
     runUncatalogedFiles: function () {
       return fetchReportJson("/docs/uncataloged-files", Object.assign({}, serviceOptions, {

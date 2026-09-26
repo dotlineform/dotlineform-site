@@ -1,6 +1,6 @@
 import { createDocsViewerToolbarIcon } from "../shared/docs-viewer-toolbar-icon.js";
+import { buildDocsMediaRows } from "./docs-media-data.js";
 
-const REPORT_SCHEMA = "docs_media_report_v4";
 const DEFAULT_SORT_KEY = "type";
 const DEFAULT_SORT_DIR = "asc";
 const SORT_KEYS = Object.freeze(["type", "file", "documents"]);
@@ -16,15 +16,6 @@ function cleanString(value) {
 
 function clearNode(node) {
   while (node.firstChild) node.removeChild(node.firstChild);
-}
-
-function exactKeys(value, expected) {
-  return Boolean(
-    value
-    && typeof value === "object"
-    && !Array.isArray(value)
-    && Object.keys(value).sort().join(",") === expected.slice().sort().join(",")
-  );
 }
 
 function replaceRouteParams(mutator) {
@@ -59,79 +50,10 @@ function reportService(context) {
   const service = context && context.reportService;
   return (
     service
-    && typeof service.runDocsMedia === "function"
+    && typeof service.readMediaFiles === "function"
+    && typeof service.readMediaReferences === "function"
     && typeof service.openDocsMediaSource === "function"
   ) ? service : null;
-}
-
-function normalizeDocument(value, stage) {
-  const target = value && value.target;
-  const collection = cleanString(target && target.collection).toLowerCase();
-  const docId = cleanString(target && target.doc_id);
-  const title = cleanString(value && value.title);
-  const href = cleanString(value && value.href);
-  if (
-    !exactKeys(value, ["target", "title", "href"])
-    || !exactKeys(target, ["stage", "collection", "doc_id"])
-    || cleanString(target && target.stage) !== stage
-    || !docId
-    || !title
-    || !href.startsWith("/docs/?")
-  ) {
-    throw new Error("Docs Media document target is invalid.");
-  }
-  return {
-    target: { stage, collection, docId },
-    title,
-    href
-  };
-}
-
-function normalizeRow(value, stage) {
-  const collection = cleanString(value && value.collection);
-  const mediaType = cleanString(value && value.media_type).toLowerCase();
-  const identity = cleanString(value && value.identity);
-  const role = cleanString(value && value.role);
-  const documents = value && value.documents;
-  if (
-    !exactKeys(value, ["stage", "collection", "media_type", "identity", "role", "documents"])
-    || value.stage !== stage
-    || !mediaType
-    || !identity
-    || identity.startsWith("/")
-    || !["source", "build-source"].includes(role)
-    || !Array.isArray(documents)
-  ) {
-    throw new Error("Docs Media row is invalid.");
-  }
-  return {
-    stage,
-    collection,
-    mediaType,
-    identity,
-    mediaTarget: { stage, collection: collection, role, media_type: mediaType, identity },
-    documents: documents.map((documentRecord) => normalizeDocument(documentRecord, stage))
-  };
-}
-
-/** Require the response and document targets to match the exact requested stage. */
-export function normalizeDocsMediaResponse(payload, requestedCollection) {
-  const report = payload && payload.report;
-  const stage = cleanString(requestedCollection && requestedCollection.stage);
-  if (
-    !exactKeys(payload, ["ok", "dry_run", "summary_text", "report"])
-    || payload.ok !== true
-    || !exactKeys(report, ["schema_version", "stage", "rows"])
-    || report.schema_version !== REPORT_SCHEMA
-    || cleanString(report.stage) !== stage
-    || !Array.isArray(report.rows)
-  ) {
-    throw new Error("Docs Media report is invalid.");
-  }
-  return {
-    stage,
-    rows: report.rows.map((row) => normalizeRow(row, stage))
-  };
 }
 
 function searchableText(row) {
@@ -305,11 +227,11 @@ function loadStage(state) {
   state.sourceRows = [];
   clearNode(state.rowsNode);
   state.emptyNode.hidden = true;
-  const request = { stage: state.stage };
-  return service.runDocsMedia(request)
-    .then((payload) => normalizeDocsMediaResponse(payload, request))
-    .then((report) => {
-      state.sourceRows = report.rows;
+  const request = { stage: state.stage, collection: "" };
+  return Promise.all([service.readMediaFiles(request), service.readMediaReferences(request)])
+    .then(([files, references]) => buildDocsMediaRows(files, references, request, state.context))
+    .then((rows) => {
+      state.sourceRows = rows;
       state.statusNode.textContent = resultStatus(state);
       renderRows(state);
     })
