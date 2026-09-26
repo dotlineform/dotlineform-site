@@ -32,13 +32,6 @@ const REPORT_LOADERS = {
       });
     }
   },
-  source_config: {
-    load: function () {
-      return import("./source-config-report.js").then(function (module) {
-        return module.mountSourceConfigReport;
-      });
-    }
-  },
   docs_collection: {
     load: function () {
       return import("../shared/docs-collection-report.js").then(function (module) {

@@ -18,7 +18,6 @@ PREVIEW_BACKLINKS_PATH = "/docs/preview/backlinks"
 PREVIEW_PAYLOAD_PATH = "/docs/preview/doc"
 PREVIEW_SEARCH_PATH = "/docs/preview/search"
 PREVIEW_SEMANTIC_TOKENS_PATH = "/docs/preview/semantic-tokens"
-SOURCE_CONFIG_PATH = "/docs/source-config"
 SERIES_WORKS_REPORT_PATH = "/docs/series-works-report"
 UNPUBLISHABLE_REPORT_PATH = "/docs/unpublishable-report"
 SERIES_WORK_MEDIA_PATH = "/docs/series-work-media"
@@ -87,7 +86,6 @@ GET_PATHS = (
     PREVIEW_PAYLOAD_PATH,
     PREVIEW_SEARCH_PATH,
     PREVIEW_SEMANTIC_TOKENS_PATH,
-    SOURCE_CONFIG_PATH,
     SERIES_WORKS_REPORT_PATH,
     UNPUBLISHABLE_REPORT_PATH,
     SERIES_WORK_MEDIA_PATH,

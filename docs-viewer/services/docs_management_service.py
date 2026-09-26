@@ -33,7 +33,6 @@ import docs_prepare_preview  # noqa: E402
 import docs_project_state  # noqa: E402
 import docs_missing_source_files  # noqa: E402
 import docs_uncataloged_files  # noqa: E402
-import docs_source_config_report  # noqa: E402
 import docs_source_config_settings  # noqa: E402
 import docs_static_html_export  # noqa: E402
 import docs_staged_media_service  # noqa: E402

@@ -89,11 +89,6 @@ export function createDocsViewerReportService(options) {
         requireOkEnvelope: true
       }));
     },
-    readSourceConfig: function () {
-      return fetchReportJson("/docs/source-config", Object.assign({}, serviceOptions, {
-        requireOkEnvelope: true
-      }));
-    },
     readSemanticTokens: function (request) {
       var path = serviceOptions.snapshotRole === "preview"
         ? "/docs/preview/semantic-tokens"

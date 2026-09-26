@@ -37,13 +37,6 @@
       "presets": []
     },
     {
-      "report_id": "source_config",
-      "title": "Source Config",
-      "description": "Displays Docs Viewer workspace and stage configuration in manage mode.",
-      "loader_id": "source_config",
-      "presets": []
-    },
-    {
       "report_id": "docs_broken_links",
       "title": "Docs Broken Links",
       "description": "Runs the Docs Viewer broken-links audit for Working.",

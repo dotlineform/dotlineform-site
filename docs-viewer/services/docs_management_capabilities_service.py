@@ -96,7 +96,6 @@ def capabilities_payload(repo_root: Path) -> Dict[str, Any]:
         "capabilities": {
             "docs_management": True,
             "generated_data_reads": True,
-            "source_config_reads": True,
             "source_config_settings_reads": True,
             "source_config_settings_writes": True,
             "source_editor": True,

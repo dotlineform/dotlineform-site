@@ -37,7 +37,6 @@
     "generated_payload": "/docs/doc",
     "generated_search": "/docs/search",
     "generated_semantic_tokens": "/docs/semantic-tokens",
-    "source_config": "/docs/source-config",
     "source_config_settings": "/docs/source-config-settings",
     "source_body": "/docs/source",
     "document_link_targets": "/docs/document-link-targets",

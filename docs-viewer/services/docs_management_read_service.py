@@ -10,7 +10,6 @@ import docs_diagram_source_service
 import docs_import_source_service as import_source_service
 import docs_management_routes as routes
 import docs_preview_reads
-import docs_source_config_report
 import docs_series_works_report
 import docs_unpublishable_report
 import docs_source_config_settings
@@ -153,8 +152,6 @@ def docs_management_get_payload(repo_root: Path, path: str, params: dict[str, li
         routes.PREVIEW_SEMANTIC_TOKENS_PATH,
     }:
         return docs_preview_read_payload(repo_root, path, params)
-    if path == routes.SOURCE_CONFIG_PATH:
-        return docs_source_config_report.build_source_config_report(repo_root)
     if path == routes.SOURCE_CONFIG_SETTINGS_PATH:
         return docs_source_config_settings.build_settings_contract(
             repo_root,
